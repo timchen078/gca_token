@@ -16,6 +16,7 @@
 - Public whitepaper URL is live at `https://timchen078.github.io/gca_token/whitepaper.html`.
 - Official contact email `cxy070800@gmail.com` is published on the official website for BaseScan verification.
 - BaseScan token update form submitted from the owner's browser session.
+- BaseScan review follow-up runbook prepared.
 - Liquidity pool default plan selected.
 - Base Mainnet Uniswap v3 GCA/WETH liquidity position created.
 - Audit scope prepared.

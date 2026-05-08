@@ -39,6 +39,7 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "docs" / "whitepaper.md",
             ROOT / "docs" / "mainnet_public_profile.md",
             ROOT / "launch" / "basescan_token_submission.md",
+            ROOT / "launch" / "basescan_review_followup.md",
             ROOT / "launch" / "liquidity_pool_runbook.md",
             ROOT / "launch" / "launch_status.md",
         ]
@@ -60,6 +61,18 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("https://basescan.org/tokenupdate/", submission)
         self.assertIn(MAINNET_ADDRESS, submission)
 
+    def test_basescan_review_followup_is_actionable(self):
+        followup = (ROOT / "launch" / "basescan_review_followup.md").read_text()
+        self.assertIn("awaiting BaseScan review", followup)
+        self.assertIn("cxy070800@gmail.com", followup)
+        self.assertIn("Base Mainnet", followup)
+        self.assertIn("Chain ID: 8453", followup)
+        self.assertIn(MAINNET_ADDRESS, followup)
+        self.assertIn("If BaseScan Approves", followup)
+        self.assertIn("If BaseScan Requests Changes", followup)
+        self.assertIn("Reply Template", followup)
+        self.assertIn("Do not describe the BaseScan token profile as complete", followup)
+
     def test_basescan_form_values_are_copyable(self):
         values = json.loads((ROOT / "launch" / "basescan_form_values.json").read_text())
         self.assertEqual(values["network"], "Base Mainnet")
@@ -71,6 +84,27 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Gmail address", values["officialEmailNote"])
         self.assertEqual(values["submissionStatus"], "submitted")
         self.assertEqual(values["reviewStatus"], "awaiting BaseScan review")
+
+    def test_public_materials_do_not_overstate_basescan_review(self):
+        paths = [
+            ROOT / "site" / "index.html",
+            ROOT / "site" / "whitepaper.html",
+            ROOT / "docs" / "whitepaper.md",
+            ROOT / "docs" / "mainnet_public_profile.md",
+            ROOT / "launch" / "launch_status.md",
+        ]
+        forbidden = [
+            "BaseScan profile complete",
+            "BaseScan approved",
+            "BaseScan token profile is complete",
+            "BaseScan token profile has been accepted",
+            "BaseScan token profile is live",
+        ]
+        for path in paths:
+            text = path.read_text()
+            with self.subTest(path=path.name):
+                for phrase in forbidden:
+                    self.assertNotIn(phrase, text)
 
     def test_liquidity_runbook_records_execution(self):
         runbook = (ROOT / "launch" / "liquidity_pool_runbook.md").read_text()
