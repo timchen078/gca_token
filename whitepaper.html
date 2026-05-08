@@ -100,6 +100,24 @@
         overflow-wrap: anywhere;
       }
 
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 12px;
+      }
+
+      th,
+      td {
+        border-top: 1px solid var(--line);
+        padding: 10px 8px;
+        text-align: left;
+        color: var(--muted);
+      }
+
+      th {
+        color: var(--ink);
+      }
+
       footer {
         border-top: 1px solid var(--line);
         padding: 24px 0;
@@ -147,7 +165,29 @@
         <p>GCA is deployed on Base Mainnet because Base is an EVM-compatible Layer 2 network that uses ETH for gas and supports common ERC-20 wallet and DEX workflows.</p>
 
         <h2>Distribution Status</h2>
-        <p>At deployment, the full token supply was assigned to the deployer wallet: <code>0x18d007bcb6be029f8ccd7cb13e324aa21891092d</code>. A starter Uniswap v3 GCA/WETH liquidity position has since been created on Base Mainnet, with LP NFT token ID <code>5087977</code> held by the deployer wallet. Any future treasury, liquidity, contributor, community, or ecosystem distribution should be executed only after a written allocation table exists and each transfer can be verified on-chain.</p>
+        <p>At deployment, the full token supply was assigned to the deployer wallet: <code>0x18d007bcb6be029f8ccd7cb13e324aa21891092d</code>. A starter Uniswap v3 GCA/WETH liquidity position has since been created on Base Mainnet, with LP NFT token ID <code>5087977</code> held by the deployer wallet.</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Allocation</th>
+              <th>Amount</th>
+              <th>Percent</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Public circulation, ecosystem, and liquidity allocation</td>
+              <td>700,000,000 GCA</td>
+              <td>70%</td>
+            </tr>
+            <tr>
+              <td>Owner-held reserve</td>
+              <td>300,000,000 GCA</td>
+              <td>30%</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>The 70/30 split is a target allocation plan and does not by itself move tokens on-chain. The owner-held reserve should not be described as circulating while held as a reserve.</p>
 
         <h2>Liquidity Approach</h2>
         <p>The initial live liquidity position is a Base Mainnet Uniswap v3 GCA/WETH pool with a 1% fee tier and full-range liquidity. The execution transaction is <code>0xef94e020c8b431151b789ca3e96c45ab0c18d20d15bf8d7d543630f1370fc158</code>.</p>
