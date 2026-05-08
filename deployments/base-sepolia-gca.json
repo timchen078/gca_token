@@ -11,6 +11,16 @@
   "blockNumber": 41245202,
   "gasUsed": "431991",
   "deployedAt": "2026-05-08T16:44:52.000Z",
+  "sourceVerification": {
+    "status": "verified",
+    "verifiedAt": "2026-05-08T17:00:11Z",
+    "compilerType": "Solidity (Standard-Json-Input)",
+    "compilerVersion": "v0.8.24+commit.e11b9ed9",
+    "optimizerEnabled": true,
+    "optimizerRuns": 200,
+    "license": "MIT",
+    "standardJsonInput": "verification/GCAToken.standard-json-input.json"
+  },
   "explorer": {
     "transaction": "https://sepolia.basescan.org/tx/0xb7db856bd08dad76422d281eaa18c7bf9009ffb1d6263331507e411b76b8285e",
     "contract": "https://sepolia.basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6"

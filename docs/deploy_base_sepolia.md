@@ -48,6 +48,8 @@ Then open `http://127.0.0.1:5177/tools/metamask_deploy.html`, connect MetaMask, 
 - Contract: `0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`
 - Transaction: `0xb7db856bd08dad76422d281eaa18c7bf9009ffb1d6263331507e411b76b8285e`
 - Explorer: `https://sepolia.basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`
+- Source verification: verified on BaseScan with Solidity Standard JSON input, `v0.8.24+commit.e11b9ed9`, optimizer enabled with 200 runs, MIT license.
+- Verification input: `verification/GCAToken.standard-json-input.json`
 - Deployment record: `deployments/base-sepolia-gca.json`
 
 ## Remote Repository
