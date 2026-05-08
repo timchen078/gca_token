@@ -20,7 +20,6 @@
 
 ## Needs Owner Input Or External Service
 
-- Confirm the owner-provided contact email spelling and inbox access: `cxy070800@gmai.com`.
 - Choose official social links or decide there are none.
 - Log into BaseScan, claim contract ownership with the deployer wallet, and submit the token update form.
 - Hire or request a third-party audit if public launch materials need an external audit badge.

@@ -25,7 +25,7 @@ Source verification is complete. The public BaseScan token profile update is pre
 
 - BaseScan account login
 - Deployer-wallet ownership signature
-- Owner-provided contact email confirmation
+- Owner-provided Gmail contact email
 - Official social links, or an explicit decision to omit them
 
 Do not describe the BaseScan token profile as complete until the token update form is submitted and accepted by BaseScan.

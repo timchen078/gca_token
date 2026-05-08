@@ -37,8 +37,8 @@ GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. The contract create
 
 ## Fields That Still Need Owner Input
 
-- Official contact email: `cxy070800@gmai.com`
-- Email note: owner-provided. Confirm spelling and inbox access before final BaseScan submission.
+- Official contact email: `cxy070800@gmail.com`
+- Email note: owner-provided Gmail address for BaseScan submission.
 - Official social links, using full URLs: still needs owner-provided links or an explicit decision to omit
 - BaseScan account session: owner must log in
 - Contract ownership signature: owner must sign with deployer wallet `0x18d007bcb6be029f8ccd7cb13e324aa21891092d`
@@ -53,6 +53,6 @@ GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. The contract create
 
 ## Current Submission Status
 
-Prepared but not submitted. Website, logo, whitepaper URL, and owner-provided contact email are ready. BaseScan account login, contract ownership signature, social links or explicit omission, and final form submission still require the owner's browser session and wallet signature.
+Prepared but not submitted. Website, logo, whitepaper URL, and owner-provided Gmail contact email are ready. BaseScan account login, contract ownership signature, social links or explicit omission, and final form submission still require the owner's browser session and wallet signature.
 
 Copyable form values are also stored in `launch/basescan_form_values.json`.
