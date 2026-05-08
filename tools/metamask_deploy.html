@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Deploy GCAToken</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: #0d1117;
+        color: #e6edf3;
+      }
+
+      body {
+        margin: 0;
+        padding: 32px;
+      }
+
+      main {
+        max-width: 720px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        margin: 0 0 8px;
+        font-size: 28px;
+      }
+
+      p {
+        color: #9da7b3;
+        line-height: 1.5;
+      }
+
+      button {
+        border: 0;
+        border-radius: 6px;
+        padding: 12px 16px;
+        margin-right: 8px;
+        color: #061018;
+        background: #58a6ff;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      button:disabled {
+        cursor: not-allowed;
+        opacity: 0.5;
+      }
+
+      code,
+      pre {
+        background: #161b22;
+        border: 1px solid #30363d;
+        border-radius: 6px;
+      }
+
+      code {
+        padding: 2px 5px;
+      }
+
+      pre {
+        min-height: 132px;
+        overflow-wrap: anywhere;
+        white-space: pre-wrap;
+        padding: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Deploy GCAToken</h1>
+      <p>
+        This page deploys the compiled fixed-supply GCA token artifact through MetaMask.
+        It only allows Base Sepolia testnet, chain ID <code>84532</code>.
+      </p>
+
+      <p>
+        <button id="connect" type="button" onclick="connectWallet()">Connect MetaMask</button>
+        <button id="deploy" type="button" onclick="deployToken()" disabled>Deploy GCAToken</button>
+        <button id="watch" type="button" onclick="watchGcaToken()" disabled>Add GCA to MetaMask</button>
+      </p>
+
+      <pre id="log">Ready.</pre>
+    </main>
+
+    <script>
+      const BASE_SEPOLIA_CHAIN_ID = "0x14a34";
+      const BASE_SEPOLIA_PARAMS = {
+        chainId: BASE_SEPOLIA_CHAIN_ID,
+        chainName: "Base Sepolia",
+        nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
+        rpcUrls: ["https://sepolia.base.org"],
+        blockExplorerUrls: ["https://sepolia.basescan.org"],
+      };
+      const KNOWN_GCA_BASE_SEPOLIA_ADDRESS = "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6";
+
+      const connectButton = document.getElementById("connect");
+      const deployButton = document.getElementById("deploy");
+      const watchButton = document.getElementById("watch");
+      const logElement = document.getElementById("log");
+      let account = null;
+      let artifact = null;
+      let provider = null;
+      let deployedContractAddress = KNOWN_GCA_BASE_SEPOLIA_ADDRESS;
+
+      function log(message) {
+        logElement.textContent += `\n${message}`;
+      }
+
+      function sleep(milliseconds) {
+        return new Promise((resolve) => setTimeout(resolve, milliseconds));
+      }
+
+      async function discoverMetaMaskProvider() {
+        const announced = [];
+        function onAnnouncement(event) {
+          announced.push(event.detail);
+        }
+
+        window.addEventListener("eip6963:announceProvider", onAnnouncement);
+        window.dispatchEvent(new Event("eip6963:requestProvider"));
+        await new Promise((resolve) => setTimeout(resolve, 500));
+        window.removeEventListener("eip6963:announceProvider", onAnnouncement);
+
+        for (const detail of announced) {
+          const info = detail.info || {};
+          log(`Wallet provider: ${info.name || "unknown"} ${info.rdns || ""}`.trim());
+        }
+
+        const metaMaskAnnouncement = announced.find((detail) => {
+          const info = detail.info || {};
+          return info.rdns === "io.metamask" || info.name === "MetaMask";
+        });
+        if (metaMaskAnnouncement) {
+          return metaMaskAnnouncement.provider;
+        }
+
+        if (!window.ethereum) {
+          return null;
+        }
+
+        if (Array.isArray(window.ethereum.providers)) {
+          return window.ethereum.providers.find((wallet) => wallet.isMetaMask && !wallet.isCoinbaseWallet) || null;
+        }
+
+        return window.ethereum.isMetaMask ? window.ethereum : null;
+      }
+
+      async function ensureBaseSepolia() {
+        const chainId = await provider.request({ method: "eth_chainId" });
+        if (chainId === BASE_SEPOLIA_CHAIN_ID) {
+          return;
+        }
+
+        try {
+          await provider.request({
+            method: "wallet_switchEthereumChain",
+            params: [{ chainId: BASE_SEPOLIA_CHAIN_ID }],
+          });
+        } catch (error) {
+          if (error.code !== 4902) {
+            throw error;
+          }
+
+          await provider.request({
+            method: "wallet_addEthereumChain",
+            params: [BASE_SEPOLIA_PARAMS],
+          });
+        }
+
+        const switchedChainId = await provider.request({ method: "eth_chainId" });
+        if (switchedChainId !== BASE_SEPOLIA_CHAIN_ID) {
+          throw new Error(`Wrong chain: ${switchedChainId}`);
+        }
+      }
+
+      log("Script loaded.");
+
+      async function connectWallet() {
+        try {
+          log("Connecting MetaMask...");
+          provider = await discoverMetaMaskProvider();
+          if (!provider) {
+            log("MetaMask is not available in this browser.");
+            return;
+          }
+
+          const accounts = await provider.request({ method: "eth_requestAccounts" });
+          account = accounts[0];
+          await ensureBaseSepolia();
+          artifact = await fetch("../token/build/GCAToken.artifact.json").then((response) =>
+            response.json()
+          );
+          deployButton.disabled = false;
+          watchButton.disabled = false;
+          log(`Connected: ${account}`);
+          log(`Artifact: ${artifact.contractName}`);
+          log(`Supply: ${artifact.token.totalSupplyTokens} ${artifact.token.symbol}`);
+          log(`Known Base Sepolia token: ${KNOWN_GCA_BASE_SEPOLIA_ADDRESS}`);
+        } catch (error) {
+          log(`Connect failed: ${error.message || error}`);
+        }
+      }
+
+      async function waitForReceipt(txHash) {
+        for (let attempt = 1; attempt <= 60; attempt += 1) {
+          const receipt = await provider.request({
+            method: "eth_getTransactionReceipt",
+            params: [txHash],
+          });
+          if (receipt) {
+            return receipt;
+          }
+
+          log(`Waiting for receipt... ${attempt}/60`);
+          await sleep(2000);
+        }
+
+        throw new Error("Transaction was submitted, but no receipt was found after 120 seconds.");
+      }
+
+      async function deployToken() {
+        try {
+          if (!account || !artifact) {
+            log("Connect MetaMask first.");
+            return;
+          }
+
+          await ensureBaseSepolia();
+          log("Requesting MetaMask transaction confirmation...");
+          const txHash = await provider.request({
+            method: "eth_sendTransaction",
+            params: [{ from: account, data: artifact.bytecode }],
+          });
+          log(`Transaction: ${txHash}`);
+          log(`Explorer: https://sepolia.basescan.org/tx/${txHash}`);
+          const receipt = await waitForReceipt(txHash);
+          if (receipt.status !== "0x1") {
+            throw new Error(`Transaction failed with status ${receipt.status}`);
+          }
+
+          deployedContractAddress = receipt.contractAddress;
+          watchButton.disabled = false;
+          log(`Contract: ${deployedContractAddress}`);
+          log(`Token explorer: https://sepolia.basescan.org/address/${deployedContractAddress}`);
+        } catch (error) {
+          log(`Deploy failed: ${error.message || error}`);
+        }
+      }
+
+      async function watchGcaToken() {
+        try {
+          if (!provider) {
+            provider = await discoverMetaMaskProvider();
+          }
+          if (!provider) {
+            log("MetaMask is not available in this browser.");
+            return;
+          }
+
+          await ensureBaseSepolia();
+          const wasAdded = await provider.request({
+            method: "wallet_watchAsset",
+            params: {
+              type: "ERC20",
+              options: {
+                address: deployedContractAddress,
+                symbol: "GCA",
+                decimals: 18,
+              },
+            },
+          });
+          log(wasAdded ? "MetaMask token add request accepted." : "MetaMask token add request rejected.");
+        } catch (error) {
+          log(`Add token failed: ${error.message || error}`);
+        }
+      }
+    </script>
+  </body>
+</html>

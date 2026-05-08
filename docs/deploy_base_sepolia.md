@@ -32,6 +32,24 @@ Use a wallet that holds only Base Sepolia test ETH. Do not use a main wallet or 
 
 The script refuses to deploy unless the connected network reports chain ID `84532`.
 
+## MetaMask Browser Deploy
+
+If you prefer not to export a private key, use the local MetaMask deployment page:
+
+```bash
+cd /Users/abc/Desktop/gca_token
+.venv/bin/python -m http.server 5177 --bind 127.0.0.1
+```
+
+Then open `http://127.0.0.1:5177/tools/metamask_deploy.html`, connect MetaMask, and deploy on Base Sepolia. The page only uses MetaMask RPC requests and never asks for a private key.
+
+## Current Base Sepolia Deployment
+
+- Contract: `0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`
+- Transaction: `0xb7db856bd08dad76422d281eaa18c7bf9009ffb1d6263331507e411b76b8285e`
+- Explorer: `https://sepolia.basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`
+- Deployment record: `deployments/base-sepolia-gca.json`
+
 ## Remote Repository
 
 After you create a separate GitHub repository for this token project:
