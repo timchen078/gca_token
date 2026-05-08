@@ -140,7 +140,7 @@
     <main class="shell">
       <article>
         <h1>GCA Whitepaper</h1>
-        <p>Version 0.2</p>
+        <p>Version 0.3</p>
 
         <h2>Summary</h2>
         <p>GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. The contract creates the entire supply at deployment and does not include post-deployment minting, burning, taxes, blacklist logic, or privileged admin controls.</p>
@@ -187,7 +187,8 @@
             </tr>
           </tbody>
         </table>
-        <p>The 70/30 split is a target allocation plan and does not by itself move tokens on-chain. The owner-held reserve should not be described as circulating while held as a reserve.</p>
+        <p>The 300,000,000 GCA reserve has been transferred to owner reserve wallet <code>0x5e8F84748612B913aAcC937492AC25dc5630E246</code>. The reserve transfer transaction is <a href="https://basescan.org/tx/0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67" target="_blank" rel="noreferrer">0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67</a> at block 45,739,653.</p>
+        <p>The owner-held reserve should not be described as circulating while held as a reserve. This wallet is a normal owner-controlled wallet, not a lock, vesting contract, or Safe multisig. The 70/30 split remains a target allocation plan for public reporting.</p>
 
         <h2>Liquidity Approach</h2>
         <p>The initial live liquidity position is a Base Mainnet Uniswap v3 GCA/WETH pool with a 1% fee tier and full-range liquidity. The execution transaction is <code>0xef94e020c8b431151b789ca3e96c45ab0c18d20d15bf8d7d543630f1370fc158</code>.</p>
