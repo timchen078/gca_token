@@ -25,7 +25,9 @@ class LaunchPackageTests(unittest.TestCase):
 
     def test_public_site_discloses_current_operational_status(self):
         site = (ROOT / "site" / "index.html").read_text()
-        self.assertIn("BaseScan token profile update is still pending", site)
+        self.assertIn("BaseScan token profile update is pending final form submission", site)
+        self.assertIn("mailto:cxy070800@gmail.com", site)
+        self.assertIn("Project contact email", site)
         self.assertIn("No third-party audit has been completed", site)
         self.assertIn("pool is shallow", site)
         self.assertIn("high price impact and slippage", site)
@@ -52,7 +54,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("cxy070800@gmail.com", submission)
         self.assertIn("Gmail address", submission)
         self.assertIn("Prepared but not submitted", submission)
-        self.assertIn("Contract ownership signature", submission)
+        self.assertIn("deployer-wallet ownership verification are ready", submission)
+        self.assertIn("publicly listed on the official website", submission)
         self.assertIn("Public logo download URL", submission)
         self.assertIn("https://basescan.org/tokenupdate/", submission)
         self.assertIn(MAINNET_ADDRESS, submission)
@@ -124,7 +127,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn('href="whitepaper.html"', index)
         self.assertIn("GCA Whitepaper", whitepaper)
         self.assertIn("Version 0.2", whitepaper)
-        self.assertIn("BaseScan token profile update still requires", whitepaper)
+        self.assertIn("deployer-wallet ownership verification are complete", whitepaper)
+        self.assertIn("mailto:cxy070800@gmail.com", whitepaper)
         self.assertIn("starter liquidity only", whitepaper)
         self.assertIn(MAINNET_ADDRESS, whitepaper)
 

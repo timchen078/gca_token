@@ -63,7 +63,11 @@ The current contract has been source-verified on BaseScan and covered by reposit
 
 ## BaseScan Token Profile Status
 
-BaseScan source verification is complete. The public BaseScan token profile update still requires BaseScan account login, deployer-wallet ownership signature, an official project email, and any official social links before final submission.
+BaseScan source verification and deployer-wallet ownership verification are complete. The public BaseScan token profile update is pending final form submission and BaseScan review.
+
+## Official Contact
+
+Project contact email: `cxy070800@gmail.com`
 
 ## Risk Notice
 

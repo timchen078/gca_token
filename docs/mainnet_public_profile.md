@@ -19,14 +19,17 @@
 
 GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. The contract creates 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls.
 
+## Official Contact
+
+- Project contact email: `cxy070800@gmail.com`
+- The contact email is publicly listed on the official website for BaseScan verification.
+
 ## BaseScan Token Profile Status
 
-Source verification is complete. The public BaseScan token profile update is prepared but not yet submitted because it still requires:
+Source verification and deployer-wallet ownership verification are complete. The public BaseScan token profile update is prepared but not yet submitted because it still requires:
 
-- BaseScan account login
-- Deployer-wallet ownership signature
-- Owner-provided Gmail contact email
 - Official social links, or an explicit decision to omit them
+- Final form submission and BaseScan review
 
 Do not describe the BaseScan token profile as complete until the token update form is submitted and accepted by BaseScan.
 

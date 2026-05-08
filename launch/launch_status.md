@@ -4,6 +4,7 @@
 
 - Base Mainnet token deployed.
 - BaseScan source verification completed.
+- BaseScan deployer-wallet ownership verification completed.
 - MetaMask Base Mainnet token display confirmed.
 - Canonical public profile drafted.
 - Draft whitepaper created.
@@ -13,6 +14,7 @@
 - GitHub Pages site live at `https://timchen078.github.io/gca_token/`.
 - Public logo URL is live at `https://timchen078.github.io/gca_token/assets/gca-logo.svg`.
 - Public whitepaper URL is live at `https://timchen078.github.io/gca_token/whitepaper.html`.
+- Official contact email `cxy070800@gmail.com` is published on the official website for BaseScan verification.
 - Liquidity pool default plan selected.
 - Base Mainnet Uniswap v3 GCA/WETH liquidity position created.
 - Audit scope prepared.
@@ -21,12 +23,12 @@
 ## Needs Owner Input Or External Service
 
 - Choose official social links or decide there are none.
-- Log into BaseScan, claim contract ownership with the deployer wallet, and submit the token update form.
+- Submit the BaseScan token update form from the owner's browser session.
 - Hire or request a third-party audit if public launch materials need an external audit badge.
 
 ## Public Communication Rules
 
-- BaseScan source verification is complete, but the public BaseScan token profile update is not submitted yet.
+- BaseScan source and ownership verification are complete, but the public BaseScan token profile update is not submitted yet.
 - Internal engineering review is complete, but no third-party audit has been completed.
 - Current Uniswap liquidity is starter-depth only; trades can have high price impact and slippage.
 - Do not claim return promises, price stability, liquidity depth, or external audit completion.

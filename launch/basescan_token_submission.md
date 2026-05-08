@@ -34,14 +34,13 @@ GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. The contract create
 - Official website URL: `https://timchen078.github.io/gca_token/`
 - Public logo download URL: `https://timchen078.github.io/gca_token/assets/gca-logo.svg`
 - Public whitepaper URL: `https://timchen078.github.io/gca_token/whitepaper.html`
+- Official contact email: `cxy070800@gmail.com`
+- Email note: owner-provided Gmail address, publicly listed on the official website for BaseScan verification.
 
 ## Fields That Still Need Owner Input
 
-- Official contact email: `cxy070800@gmail.com`
-- Email note: owner-provided Gmail address for BaseScan submission.
 - Official social links, using full URLs: still needs owner-provided links or an explicit decision to omit
-- BaseScan account session: owner must log in
-- Contract ownership signature: owner must sign with deployer wallet `0x18d007bcb6be029f8ccd7cb13e324aa21891092d`
+- BaseScan token update form final submission from the owner's browser session
 
 ## Submission Rules
 
@@ -49,10 +48,10 @@ GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. The contract create
 - Do not use exaggerated claims such as best, fastest, guaranteed, stable, or most used.
 - Use the production identity exactly as `Base Mainnet / chainId 8453 / 0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`.
 - Do not submit the Base Sepolia explorer as the production token link.
-- Claim ownership from the deployer wallet before attempting the token update.
+- Ownership has been verified from the deployer wallet before attempting the token update.
 
 ## Current Submission Status
 
-Prepared but not submitted. Website, logo, whitepaper URL, and owner-provided Gmail contact email are ready. BaseScan account login, contract ownership signature, social links or explicit omission, and final form submission still require the owner's browser session and wallet signature.
+Prepared but not submitted. Website, logo, whitepaper URL, owner-provided Gmail contact email, BaseScan login, and deployer-wallet ownership verification are ready. Social links or explicit omission and final form submission still require the owner's browser session.
 
 Copyable form values are also stored in `launch/basescan_form_values.json`.
