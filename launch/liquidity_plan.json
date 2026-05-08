@@ -1,5 +1,5 @@
 {
-  "status": "planned_not_executed",
+  "status": "executed",
   "venue": "Uniswap",
   "network": "Base Mainnet",
   "chainId": 8453,
@@ -25,6 +25,17 @@
     "impliedPriceEthPerGca": "0.00000001",
     "impliedFullyDilutedValueEth": "10",
     "reason": "Small current-wallet pilot that preserves ETH for gas while creating a real Base Mainnet pool."
+  },
+  "execution": {
+    "transactionHash": "0xef94e020c8b431151b789ca3e96c45ab0c18d20d15bf8d7d543630f1370fc158",
+    "blockNumber": 45736696,
+    "executedAt": "2026-05-08T17:52:19.000Z",
+    "positionTokenId": "5087977",
+    "poolAddress": "0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff",
+    "positionOwner": "0x18d007bcb6be029f8ccd7cb13e324aa21891092d",
+    "actualGcaDeposited": "99999.99999999996738248",
+    "actualEthDeposited": "0.000999901772375952",
+    "deploymentRecord": "deployments/base-mainnet-gca-liquidity.json"
   },
   "scaleOptions": [
     {

@@ -54,15 +54,16 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["whitepaperUrl"], "https://timchen078.github.io/gca_token/whitepaper.html")
         self.assertEqual(values["officialEmail"], "OWNER_REQUIRED_DOMAIN_EMAIL")
 
-    def test_liquidity_runbook_is_prepared_but_not_executed(self):
+    def test_liquidity_runbook_records_execution(self):
         runbook = (ROOT / "launch" / "liquidity_pool_runbook.md").read_text()
-        self.assertIn("Planned. Not executed.", runbook)
-        self.assertIn("final wallet approvals", runbook)
+        self.assertIn("Executed on Base Mainnet.", runbook)
+        self.assertIn("5087977", runbook)
+        self.assertIn("0xef94e020c8b431151b789ca3e96c45ab0c18d20d15bf8d7d543630f1370fc158", runbook)
         self.assertIn(MAINNET_ADDRESS, runbook)
 
     def test_liquidity_plan_has_selected_mainnet_defaults(self):
         plan = json.loads((ROOT / "launch" / "liquidity_plan.json").read_text())
-        self.assertEqual(plan["status"], "planned_not_executed")
+        self.assertEqual(plan["status"], "executed")
         self.assertEqual(plan["network"], "Base Mainnet")
         self.assertEqual(plan["chainId"], 8453)
         self.assertEqual(plan["protocolVersion"], "v3")
@@ -71,6 +72,20 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(plan["selectedPlan"]["ethAmount"], "0.001")
         self.assertEqual(plan["selectedPlan"]["impliedFullyDilutedValueEth"], "10")
         self.assertEqual(plan["pair"]["baseToken"]["address"], MAINNET_ADDRESS)
+        self.assertEqual(plan["execution"]["positionTokenId"], "5087977")
+        self.assertEqual(plan["execution"]["poolAddress"], "0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff")
+
+    def test_liquidity_deployment_record_is_on_base_mainnet(self):
+        record = json.loads((ROOT / "deployments" / "base-mainnet-gca-liquidity.json").read_text())
+        self.assertEqual(record["status"], "executed")
+        self.assertEqual(record["network"], "Base Mainnet")
+        self.assertEqual(record["chainId"], 8453)
+        self.assertEqual(record["tokenId"], "5087977")
+        self.assertEqual(record["transactionHash"], "0xef94e020c8b431151b789ca3e96c45ab0c18d20d15bf8d7d543630f1370fc158")
+        self.assertEqual(record["tokens"]["token0"]["address"], MAINNET_ADDRESS)
+        self.assertEqual(record["tokens"]["token1"]["symbol"], "WETH")
+        self.assertEqual(record["position"]["tickLower"], -887200)
+        self.assertEqual(record["position"]["tickUpper"], 887200)
 
     def test_launch_status_separates_done_from_external_blockers(self):
         status = (ROOT / "launch" / "launch_status.md").read_text()

@@ -1,0 +1,61 @@
+{
+  "status": "executed",
+  "network": "Base Mainnet",
+  "chainId": 8453,
+  "venue": "Uniswap",
+  "protocolVersion": "v3",
+  "pair": "GCA/WETH",
+  "feeTier": "1%",
+  "range": "full_range",
+  "positionStatus": "in_range",
+  "tokenId": "5087977",
+  "positionOwner": "0x18d007bcb6be029f8ccd7cb13e324aa21891092d",
+  "transactionHash": "0xef94e020c8b431151b789ca3e96c45ab0c18d20d15bf8d7d543630f1370fc158",
+  "blockNumber": 45736696,
+  "executedAt": "2026-05-08T17:52:19.000Z",
+  "poolAddress": "0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff",
+  "nonfungiblePositionManager": "0x03a520b32c04bf3beef7beb72e919cf822ed34f1",
+  "tokens": {
+    "token0": {
+      "symbol": "GCA",
+      "address": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+      "decimals": 18,
+      "amountPlanned": "100000",
+      "amountDeposited": "99999.99999999996738248",
+      "rawAmountDeposited": "99999999999999967382480"
+    },
+    "token1": {
+      "symbol": "WETH",
+      "address": "0x4200000000000000000000000000000000000006",
+      "decimals": 18,
+      "amountPlanned": "0.001",
+      "amountDeposited": "0.000999901772375952",
+      "rawAmountDeposited": "999901772375952"
+    }
+  },
+  "approval": {
+    "spender": "0x03a520b32c04bf3beef7beb72e919cf822ed34f1",
+    "approvedAmount": "100000",
+    "rawApprovedAmount": "100000000000000000000000",
+    "remainingAllowanceAfterMint": "0.00000000003261752",
+    "rawRemainingAllowanceAfterMint": "32617520"
+  },
+  "position": {
+    "token0": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+    "token1": "0x4200000000000000000000000000000000000006",
+    "fee": 10000,
+    "tickLower": -887200,
+    "tickUpper": 887200,
+    "liquidity": "9999508849818336042"
+  },
+  "gas": {
+    "gasUsed": "5234602",
+    "effectiveGasPriceWei": "16021106",
+    "feeWei": "83864113509812"
+  },
+  "explorer": {
+    "transaction": "https://basescan.org/tx/0xef94e020c8b431151b789ca3e96c45ab0c18d20d15bf8d7d543630f1370fc158",
+    "position": "https://app.uniswap.org/positions/v3/base/5087977",
+    "pool": "https://app.uniswap.org/explore/pools/base/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff"
+  }
+}

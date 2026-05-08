@@ -11,19 +11,30 @@
 - 32x32 SVG logo created.
 - Static website created.
 - GitHub Pages site live at `https://timchen078.github.io/gca_token/`.
+- Public logo URL is live at `https://timchen078.github.io/gca_token/assets/gca-logo.svg`.
+- Public whitepaper URL is live at `https://timchen078.github.io/gca_token/whitepaper.html`.
 - Liquidity pool default plan selected.
+- Base Mainnet Uniswap v3 GCA/WETH liquidity position created.
 - Audit scope prepared.
 - Internal security review completed.
 
 ## Needs Owner Input Or External Service
 
 - Create an official project email address on that domain.
-- Public logo URL is live on GitHub Pages.
-- Public whitepaper URL is live on GitHub Pages.
 - Choose official social links or decide there are none.
 - Log into BaseScan, claim contract ownership with the deployer wallet, and submit the token update form.
-- Review and approve the selected Uniswap liquidity plan in the wallet.
 - Hire or request a third-party audit if public launch materials need an external audit badge.
+
+## Liquidity Position
+
+- Venue: Uniswap v3 on Base Mainnet
+- Pair: GCA/WETH
+- Fee tier: 1%
+- Range: full range
+- Transaction: `0xef94e020c8b431151b789ca3e96c45ab0c18d20d15bf8d7d543630f1370fc158`
+- Position token ID: `5087977`
+- Pool address: `0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff`
+- Position owner: `0x18d007bcb6be029f8ccd7cb13e324aa21891092d`
 
 ## Canonical Production Identity
 
