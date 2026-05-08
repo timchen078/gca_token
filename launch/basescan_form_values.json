@@ -1,0 +1,19 @@
+{
+  "network": "Base Mainnet",
+  "chainId": 8453,
+  "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+  "tokenName": "GCA",
+  "tokenSymbol": "GCA",
+  "decimals": 18,
+  "totalSupply": "1000000000",
+  "tokenStandard": "ERC-20",
+  "website": "https://timchen078.github.io/gca_token/",
+  "logoUrl": "https://timchen078.github.io/gca_token/assets/gca-logo.svg",
+  "whitepaperUrl": "https://timchen078.github.io/gca_token/whitepaper.html",
+  "description": "GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. The contract creates 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls.",
+  "sourceVerification": "verified",
+  "deployer": "0x18d007bcb6be029f8ccd7cb13e324aa21891092d",
+  "baseScanContract": "https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+  "officialEmail": "OWNER_REQUIRED_DOMAIN_EMAIL",
+  "socialLinks": []
+}

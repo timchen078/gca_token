@@ -10,17 +10,16 @@
 - BaseScan token information submission package prepared.
 - 32x32 SVG logo created.
 - Static website created.
-- GitHub Pages `gh-pages` source prepared.
+- GitHub Pages site live at `https://timchen078.github.io/gca_token/`.
 - Liquidity pool default plan selected.
 - Audit scope prepared.
 - Internal security review completed.
 
 ## Needs Owner Input Or External Service
 
-- Enable GitHub Pages for the pushed `gh-pages` branch or publish `site/index.html` to an official HTTPS domain.
 - Create an official project email address on that domain.
-- Public logo URL is live on GitHub raw.
-- Public whitepaper URL is live on GitHub raw.
+- Public logo URL is live on GitHub Pages.
+- Public whitepaper URL is live on GitHub Pages.
 - Choose official social links or decide there are none.
 - Log into BaseScan, claim contract ownership with the deployer wallet, and submit the token update form.
 - Review and approve the selected Uniswap liquidity plan in the wallet.

@@ -22,7 +22,7 @@ BaseScan token updates must be submitted through the official BaseScan token upd
 - Source code status: verified
 - Deployer: `0x18d007bcb6be029f8ccd7cb13e324aa21891092d`
 - Logo source file: `brand/gca-logo.svg`
-- Website source file: `site/index.html`
+- Website: `https://timchen078.github.io/gca_token/`
 - Whitepaper source file: `docs/whitepaper.md`
 
 ## Neutral Project Description
@@ -31,10 +31,10 @@ GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. The contract create
 
 ## Fields That Need Public URLs Before Submission
 
-- Official website URL: `https://timchen078.github.io/gca_token/` after GitHub Pages is enabled for the pushed `gh-pages` branch
+- Official website URL: `https://timchen078.github.io/gca_token/`
 - Official domain email address: still needs owner-provided domain email
-- Public logo download URL: `https://raw.githubusercontent.com/timchen078/gca_token/main/brand/gca-logo.svg`
-- Public whitepaper URL: `https://raw.githubusercontent.com/timchen078/gca_token/main/docs/whitepaper.md`
+- Public logo download URL: `https://timchen078.github.io/gca_token/assets/gca-logo.svg`
+- Public whitepaper URL: `https://timchen078.github.io/gca_token/whitepaper.html`
 - Official social links, using full URLs: still needs owner-provided links or an explicit decision to omit
 
 ## Submission Rules
@@ -47,4 +47,6 @@ GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. The contract create
 
 ## Current Submission Status
 
-Prepared. Public logo and whitepaper URLs are live. Website URL depends on GitHub Pages being enabled for the `gh-pages` branch. BaseScan account login, contract ownership signature, official email, and final form submission still require the owner's browser session and wallet signature.
+Prepared. Website, logo, and whitepaper URLs are live on GitHub Pages. BaseScan account login, contract ownership signature, official email, social links, and final form submission still require the owner's browser session and wallet signature.
+
+Copyable form values are also stored in `launch/basescan_form_values.json`.

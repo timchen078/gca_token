@@ -39,11 +39,20 @@ class LaunchPackageTests(unittest.TestCase):
 
     def test_basescan_submission_has_required_public_placeholders(self):
         submission = (ROOT / "launch" / "basescan_token_submission.md").read_text()
-        self.assertIn("Official website URL", submission)
+        self.assertIn("https://timchen078.github.io/gca_token/", submission)
         self.assertIn("Official domain email address", submission)
         self.assertIn("Public logo download URL", submission)
         self.assertIn("https://basescan.org/tokenupdate/", submission)
         self.assertIn(MAINNET_ADDRESS, submission)
+
+    def test_basescan_form_values_are_copyable(self):
+        values = json.loads((ROOT / "launch" / "basescan_form_values.json").read_text())
+        self.assertEqual(values["network"], "Base Mainnet")
+        self.assertEqual(values["contractAddress"], MAINNET_ADDRESS)
+        self.assertEqual(values["website"], "https://timchen078.github.io/gca_token/")
+        self.assertEqual(values["logoUrl"], "https://timchen078.github.io/gca_token/assets/gca-logo.svg")
+        self.assertEqual(values["whitepaperUrl"], "https://timchen078.github.io/gca_token/whitepaper.html")
+        self.assertEqual(values["officialEmail"], "OWNER_REQUIRED_DOMAIN_EMAIL")
 
     def test_liquidity_runbook_is_prepared_but_not_executed(self):
         runbook = (ROOT / "launch" / "liquidity_pool_runbook.md").read_text()
@@ -67,6 +76,7 @@ class LaunchPackageTests(unittest.TestCase):
         status = (ROOT / "launch" / "launch_status.md").read_text()
         self.assertIn("## Done", status)
         self.assertIn("## Needs Owner Input Or External Service", status)
+        self.assertIn("https://timchen078.github.io/gca_token/", status)
         self.assertIn("Base Mainnet / chainId 8453", status)
         self.assertIn("Base Sepolia / chainId 84532", status)
 
