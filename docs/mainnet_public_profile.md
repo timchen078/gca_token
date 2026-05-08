@@ -24,7 +24,15 @@ GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. The contract create
 - Public circulation, ecosystem, and liquidity allocation: 700,000,000 GCA (70%)
 - Owner-held reserve: 300,000,000 GCA (30%)
 
-The full fixed supply was minted to the deployer wallet at deployment. The 70/30 split is a target allocation plan and does not by itself move tokens on-chain. Do not claim that exactly 700,000,000 GCA is currently circulating until the reserve custody and public distribution are visible on-chain.
+The 300,000,000 GCA owner-held reserve has been moved to a separate publicly disclosed wallet:
+
+- Owner reserve wallet: `0x5e8F84748612B913aAcC937492AC25dc5630E246`
+- Reserve transfer transaction: `https://basescan.org/tx/0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67`
+- Reserve transfer block: 45,739,653
+
+This is a normal owner-controlled wallet. It is not a lock, vesting contract, or Safe multisig. Do not claim that the reserve is locked unless it is later moved to a lock/vesting contract or a published multisig with the correct disclosure.
+
+The full fixed supply was minted to the deployer wallet at deployment. The 70/30 split remains a target allocation plan for public reporting. Do not claim that exactly 700,000,000 GCA is currently circulating until reserve treatment and public distribution are accepted by the relevant data provider and visible on-chain.
 
 ## Official Contact
 

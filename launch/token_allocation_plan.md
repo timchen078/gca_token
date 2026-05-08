@@ -12,24 +12,27 @@ Deployer wallet:
 
 `0x18d007bcb6be029f8ccd7cb13e324aa21891092d`
 
-This plan does not move tokens by itself. It documents the intended public allocation so future transfers can be checked against a written source of truth.
+This plan documents the intended public allocation and the executed owner-reserve transfer so future transfers can be checked against a written source of truth.
 
 ## Target Allocation
 
 | Allocation | Amount | Percent | Status |
 | --- | ---: | ---: | --- |
-| Public circulation, ecosystem, and liquidity allocation | 700,000,000 GCA | 70% | Planned |
-| Owner-held reserve | 300,000,000 GCA | 30% | Planned |
+| Public circulation, ecosystem, and liquidity allocation | 700,000,000 GCA | 70% | Target allocation |
+| Owner-held reserve | 300,000,000 GCA | 30% | Transferred to owner reserve wallet |
 
 ## Owner-Held Reserve
 
-The `300,000,000 GCA` reserve is intended to be held by the owner/founder. It should be publicly disclosed and should not be described as circulating while held as a reserve.
+The `300,000,000 GCA` reserve is held by the owner/founder in a separate publicly disclosed wallet. It should not be described as circulating while held as a reserve.
 
-Recommended custody path:
+Reserve custody:
 
-1. Move the reserve to a clearly labeled owner reserve wallet, Safe multisig, or lock/vesting contract.
-2. Publish the reserve wallet or lock contract address after the transaction is complete.
-3. Keep public materials clear that the reserve is owner-held and not a return promise, dividend right, or redeemable asset.
+1. Reserve wallet: `0x5e8F84748612B913aAcC937492AC25dc5630E246`
+2. Transfer transaction: `0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67`
+3. Transfer block: `45739653`
+4. Keep public materials clear that the reserve is owner-held and not a return promise, dividend right, or redeemable asset.
+
+This is the minimum custody approach: a normal owner-controlled wallet. It is not a lock, vesting contract, or Safe multisig.
 
 ## Public Circulation Allocation
 
@@ -46,10 +49,11 @@ Current executed liquidity:
 
 ## Circulating Supply Caution
 
-Data providers can calculate circulating supply differently. Until the 300,000,000 GCA owner reserve is moved to a clearly labeled reserve wallet, multisig, or lock/vesting contract, public materials should say "target allocation" instead of claiming that exactly 700,000,000 GCA is currently circulating.
+Data providers can calculate circulating supply differently. The 300,000,000 GCA owner reserve is now visible in a separate wallet, but public materials should still say "target allocation" unless a data provider accepts the reserve treatment and the rest of the distribution is visible on-chain.
 
 ## Do Not Say
 
 - 70% is already circulating unless the on-chain distribution proves it.
 - The owner reserve is locked unless a lock or vesting contract is deployed and funded.
+- The owner reserve is controlled by a multisig unless it is moved to a Safe or another published multisig.
 - The owner reserve guarantees support, returns, redemptions, or liquidity.

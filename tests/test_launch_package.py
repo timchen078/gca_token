@@ -6,6 +6,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 MAINNET_ADDRESS = "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6"
+RESERVE_WALLET = "0x5e8F84748612B913aAcC937492AC25dc5630E246"
+RESERVE_TX = "0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67"
 
 
 class LaunchPackageTests(unittest.TestCase):
@@ -28,7 +30,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("BaseScan token profile update has been submitted", site)
         self.assertIn("700,000,000 GCA / 70%", site)
         self.assertIn("300,000,000 GCA / 30%", site)
-        self.assertIn("exact circulating supply should be verified on-chain", site)
+        self.assertIn("exact circulating supply should still be verified", site)
+        self.assertIn(RESERVE_WALLET, site)
+        self.assertIn(RESERVE_TX, site)
         self.assertIn("mailto:cxy070800@gmail.com", site)
         self.assertIn("Project contact email", site)
         self.assertIn("No third-party audit has been completed", site)
@@ -90,6 +94,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["targetPublicAllocationPercent"], 70)
         self.assertEqual(values["ownerHeldReserve"], "300000000")
         self.assertEqual(values["ownerHeldReservePercent"], 30)
+        self.assertEqual(values["ownerReserveWallet"], RESERVE_WALLET)
+        self.assertEqual(values["ownerReserveTransferTx"], RESERVE_TX)
+        self.assertIn("normal owner-controlled wallet", values["ownerReserveCustodyNote"])
         self.assertEqual(values["submissionStatus"], "submitted")
         self.assertEqual(values["reviewStatus"], "awaiting BaseScan review")
 
@@ -97,15 +104,22 @@ class LaunchPackageTests(unittest.TestCase):
         plan = json.loads((ROOT / "launch" / "token_allocation_plan.json").read_text())
         doc = (ROOT / "launch" / "token_allocation_plan.md").read_text()
         self.assertEqual(plan["totalSupply"], "1000000000")
-        self.assertEqual(plan["allocationPlanStatus"], "planned")
+        self.assertEqual(plan["allocationPlanStatus"], "owner-reserve-transferred")
         self.assertEqual(plan["allocations"][0]["amount"], "700000000")
         self.assertEqual(plan["allocations"][0]["percent"], 70)
         self.assertEqual(plan["allocations"][1]["amount"], "300000000")
         self.assertEqual(plan["allocations"][1]["percent"], 30)
+        self.assertEqual(plan["allocations"][1]["holder"], RESERVE_WALLET)
+        self.assertEqual(plan["allocations"][1]["transferTransactionHash"], RESERVE_TX)
+        self.assertEqual(plan["executedOwnerReserveTransfer"]["to"], RESERVE_WALLET)
+        self.assertEqual(plan["executedOwnerReserveTransfer"]["transactionHash"], RESERVE_TX)
         self.assertIn("owner/founder", plan["allocations"][1]["notes"])
         self.assertIn("target allocation", doc)
         self.assertIn("300,000,000 GCA", doc)
         self.assertIn("not be described as circulating", doc)
+        self.assertIn("not a lock, vesting contract, or Safe multisig", doc)
+        self.assertIn(RESERVE_WALLET, doc)
+        self.assertIn(RESERVE_TX, doc)
         self.assertIn(MAINNET_ADDRESS, doc)
 
     def test_public_materials_do_not_overstate_basescan_review(self):
@@ -169,6 +183,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("https://timchen078.github.io/gca_token/", status)
         self.assertIn("Base Mainnet / chainId 8453", status)
         self.assertIn("Base Sepolia / chainId 84532", status)
+        self.assertIn(RESERVE_WALLET, status)
+        self.assertIn(RESERVE_TX, status)
 
     def test_internal_security_review_is_not_third_party_audit(self):
         report = (ROOT / "audit" / "gca_internal_security_review.md").read_text()
@@ -185,10 +201,13 @@ class LaunchPackageTests(unittest.TestCase):
         whitepaper = (ROOT / "site" / "whitepaper.html").read_text()
         self.assertIn('href="whitepaper.html"', index)
         self.assertIn("GCA Whitepaper", whitepaper)
-        self.assertIn("Version 0.2", whitepaper)
+        self.assertIn("Version 0.3", whitepaper)
         self.assertIn("deployer-wallet ownership verification are complete", whitepaper)
         self.assertIn("Owner-held reserve", whitepaper)
         self.assertIn("300,000,000 GCA", whitepaper)
+        self.assertIn(RESERVE_WALLET, whitepaper)
+        self.assertIn(RESERVE_TX, whitepaper)
+        self.assertIn("not a lock, vesting contract, or Safe multisig", whitepaper)
         self.assertIn("mailto:cxy070800@gmail.com", whitepaper)
         self.assertIn("starter liquidity only", whitepaper)
         self.assertIn(MAINNET_ADDRESS, whitepaper)
