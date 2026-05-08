@@ -25,7 +25,7 @@ class LaunchPackageTests(unittest.TestCase):
 
     def test_public_site_discloses_current_operational_status(self):
         site = (ROOT / "site" / "index.html").read_text()
-        self.assertIn("BaseScan token profile update is pending final form submission", site)
+        self.assertIn("BaseScan token profile update has been submitted", site)
         self.assertIn("mailto:cxy070800@gmail.com", site)
         self.assertIn("Project contact email", site)
         self.assertIn("No third-party audit has been completed", site)
@@ -53,8 +53,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Official contact email", submission)
         self.assertIn("cxy070800@gmail.com", submission)
         self.assertIn("Gmail address", submission)
-        self.assertIn("Prepared but not submitted", submission)
-        self.assertIn("deployer-wallet ownership verification are ready", submission)
+        self.assertIn("Submitted from the owner's browser session on 2026-05-09", submission)
+        self.assertIn("deployer-wallet ownership verification were included", submission)
         self.assertIn("publicly listed on the official website", submission)
         self.assertIn("Public logo download URL", submission)
         self.assertIn("https://basescan.org/tokenupdate/", submission)
@@ -69,6 +69,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["whitepaperUrl"], "https://timchen078.github.io/gca_token/whitepaper.html")
         self.assertEqual(values["officialEmail"], "cxy070800@gmail.com")
         self.assertIn("Gmail address", values["officialEmailNote"])
+        self.assertEqual(values["submissionStatus"], "submitted")
+        self.assertEqual(values["reviewStatus"], "awaiting BaseScan review")
 
     def test_liquidity_runbook_records_execution(self):
         runbook = (ROOT / "launch" / "liquidity_pool_runbook.md").read_text()

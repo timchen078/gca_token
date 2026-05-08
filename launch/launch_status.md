@@ -15,6 +15,7 @@
 - Public logo URL is live at `https://timchen078.github.io/gca_token/assets/gca-logo.svg`.
 - Public whitepaper URL is live at `https://timchen078.github.io/gca_token/whitepaper.html`.
 - Official contact email `cxy070800@gmail.com` is published on the official website for BaseScan verification.
+- BaseScan token update form submitted from the owner's browser session.
 - Liquidity pool default plan selected.
 - Base Mainnet Uniswap v3 GCA/WETH liquidity position created.
 - Audit scope prepared.
@@ -22,13 +23,12 @@
 
 ## Needs Owner Input Or External Service
 
-- Choose official social links or decide there are none.
-- Submit the BaseScan token update form from the owner's browser session.
+- Wait for BaseScan review or an email reply to `cxy070800@gmail.com`.
 - Hire or request a third-party audit if public launch materials need an external audit badge.
 
 ## Public Communication Rules
 
-- BaseScan source and ownership verification are complete, but the public BaseScan token profile update is not submitted yet.
+- BaseScan source and ownership verification are complete. The public BaseScan token profile update has been submitted, but it is not complete until BaseScan accepts and publishes it.
 - Internal engineering review is complete, but no third-party audit has been completed.
 - Current Uniswap liquidity is starter-depth only; trades can have high price impact and slippage.
 - Do not claim return promises, price stability, liquidity depth, or external audit completion.

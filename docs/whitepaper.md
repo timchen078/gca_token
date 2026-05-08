@@ -63,7 +63,7 @@ The current contract has been source-verified on BaseScan and covered by reposit
 
 ## BaseScan Token Profile Status
 
-BaseScan source verification and deployer-wallet ownership verification are complete. The public BaseScan token profile update is pending final form submission and BaseScan review.
+BaseScan source verification and deployer-wallet ownership verification are complete. The public BaseScan token profile update has been submitted and is awaiting BaseScan review.
 
 ## Official Contact
 

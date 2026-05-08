@@ -39,8 +39,8 @@ GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. The contract create
 
 ## Fields That Still Need Owner Input
 
-- Official social links, using full URLs: still needs owner-provided links or an explicit decision to omit
-- BaseScan token update form final submission from the owner's browser session
+- No further owner input is recorded for the initial token profile submission.
+- Wait for BaseScan review or an email reply to `cxy070800@gmail.com`.
 
 ## Submission Rules
 
@@ -52,6 +52,6 @@ GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. The contract create
 
 ## Current Submission Status
 
-Prepared but not submitted. Website, logo, whitepaper URL, owner-provided Gmail contact email, BaseScan login, and deployer-wallet ownership verification are ready. Social links or explicit omission and final form submission still require the owner's browser session.
+Submitted from the owner's browser session on 2026-05-09. Website, logo, whitepaper URL, owner-provided Gmail contact email, BaseScan login, and deployer-wallet ownership verification were included. The public token profile is not complete until BaseScan accepts and publishes the submitted update.
 
 Copyable form values are also stored in `launch/basescan_form_values.json`.

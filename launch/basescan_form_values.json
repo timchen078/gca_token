@@ -16,5 +16,8 @@
   "baseScanContract": "https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "officialEmail": "cxy070800@gmail.com",
   "officialEmailNote": "Owner-provided Gmail address for BaseScan submission.",
+  "submissionStatus": "submitted",
+  "submissionDate": "2026-05-09",
+  "reviewStatus": "awaiting BaseScan review",
   "socialLinks": []
 }

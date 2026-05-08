@@ -26,12 +26,9 @@ GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. The contract create
 
 ## BaseScan Token Profile Status
 
-Source verification and deployer-wallet ownership verification are complete. The public BaseScan token profile update is prepared but not yet submitted because it still requires:
+Source verification and deployer-wallet ownership verification are complete. The public BaseScan token profile update was submitted from the owner's browser session on 2026-05-09 and is awaiting BaseScan review.
 
-- Official social links, or an explicit decision to omit them
-- Final form submission and BaseScan review
-
-Do not describe the BaseScan token profile as complete until the token update form is submitted and accepted by BaseScan.
+Do not describe the BaseScan token profile as complete or visible until BaseScan accepts and publishes the submitted update.
 
 ## Liquidity Status
 
