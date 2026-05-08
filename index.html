@@ -232,6 +232,7 @@
         <div class="nav-links">
           <a href="#facts">Facts</a>
           <a href="#contract">Contract</a>
+          <a href="#status">Status</a>
           <a href="#risk">Risk Notice</a>
         </div>
       </nav>
@@ -277,18 +278,28 @@
         <p><code>Base Mainnet / chainId 8453 / 0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6</code></p>
       </section>
 
+      <section class="panel" id="status" aria-labelledby="statusTitle">
+        <h2 id="statusTitle">Launch Status</h2>
+        <p class="note">Source code is verified on BaseScan. The public BaseScan token profile update is still pending BaseScan login, deployer-wallet ownership signature, official project email, and any official social links.</p>
+      </section>
+
       <section class="grid" aria-label="Project references">
         <div class="panel">
           <h2>Token Standard</h2>
           <p class="note">ERC-20 interface with transfer, approval, and allowance support.</p>
         </div>
         <div class="panel">
-          <h2>Supply Policy</h2>
-          <p class="note">Fixed supply. No mint function, burn function, tax logic, blacklist, or privileged admin path.</p>
+          <h2>Security Status</h2>
+          <p class="note">Internal engineering review is complete. No third-party audit has been completed, so GCA should not be described as externally audited.</p>
+        </div>
+        <div class="panel">
+          <h2>Liquidity Status</h2>
+          <p class="note">Starter Uniswap v3 GCA/WETH liquidity exists on Base. The pool is shallow, so trades can have high price impact and slippage.</p>
+          <p><a href="https://app.uniswap.org/positions/v3/base/5087977" target="_blank" rel="noreferrer">View liquidity position</a></p>
         </div>
         <div class="panel" id="risk">
           <h2>Risk Notice</h2>
-          <p class="note">GCA does not represent return guarantees, fee distributions, custody, or a right to redeem assets.</p>
+          <p class="note">GCA does not represent return guarantees, fee distributions, custody, or a right to redeem assets. Always verify Base Mainnet chain ID 8453, the contract address, and pool details before interacting.</p>
         </div>
       </section>
     </main>
