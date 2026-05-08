@@ -19,6 +19,35 @@
 
 GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. The contract creates 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls.
 
+## BaseScan Token Profile Status
+
+Source verification is complete. The public BaseScan token profile update is prepared but not yet submitted because it still requires:
+
+- BaseScan account login
+- Deployer-wallet ownership signature
+- Official project email
+- Official social links, or an explicit decision to omit them
+
+Do not describe the BaseScan token profile as complete until the token update form is submitted and accepted by BaseScan.
+
+## Liquidity Status
+
+Starter liquidity is live on Base Mainnet:
+
+- Venue: Uniswap v3
+- Pair: GCA/WETH
+- Fee tier: 1%
+- Range: full range
+- Position token ID: `5087977`
+- Pool address: `0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff`
+- Transaction: `0xef94e020c8b431151b789ca3e96c45ab0c18d20d15bf8d7d543630f1370fc158`
+
+The pool is shallow, so trades can have high price impact and slippage.
+
+## Audit Status
+
+Internal engineering review is complete. No third-party audit has been completed. Do not describe GCA as externally audited unless an independent auditor provides a report or public verification page.
+
 ## Same Address Notice
 
 The Base Mainnet and Base Sepolia deployments currently use the same contract address:
@@ -33,4 +62,4 @@ Do not publish the Sepolia explorer link as the production token link.
 
 ## Risk Notice
 
-GCA does not represent return guarantees, fee distributions, custody, or a right to redeem assets. Users should verify the contract and chain before interacting.
+GCA does not represent return guarantees, fee distributions, custody, or a right to redeem assets. Users should verify the contract, chain, audit status, and pool details before interacting.

@@ -29,13 +29,18 @@ BaseScan token updates must be submitted through the official BaseScan token upd
 
 GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. The contract creates 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls.
 
-## Fields That Need Public URLs Before Submission
+## Submission-Ready Public Fields
 
 - Official website URL: `https://timchen078.github.io/gca_token/`
-- Official domain email address: still needs owner-provided domain email
 - Public logo download URL: `https://timchen078.github.io/gca_token/assets/gca-logo.svg`
 - Public whitepaper URL: `https://timchen078.github.io/gca_token/whitepaper.html`
+
+## Fields That Still Need Owner Input
+
+- Official domain email address: still needs owner-provided domain email
 - Official social links, using full URLs: still needs owner-provided links or an explicit decision to omit
+- BaseScan account session: owner must log in
+- Contract ownership signature: owner must sign with deployer wallet `0x18d007bcb6be029f8ccd7cb13e324aa21891092d`
 
 ## Submission Rules
 
@@ -47,6 +52,6 @@ GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. The contract create
 
 ## Current Submission Status
 
-Prepared. Website, logo, and whitepaper URLs are live on GitHub Pages. BaseScan account login, contract ownership signature, official email, social links, and final form submission still require the owner's browser session and wallet signature.
+Prepared but not submitted. Website, logo, and whitepaper URLs are live on GitHub Pages. BaseScan account login, contract ownership signature, official email, social links, and final form submission still require the owner's browser session and wallet signature.
 
 Copyable form values are also stored in `launch/basescan_form_values.json`.

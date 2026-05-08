@@ -25,6 +25,13 @@
 - Log into BaseScan, claim contract ownership with the deployer wallet, and submit the token update form.
 - Hire or request a third-party audit if public launch materials need an external audit badge.
 
+## Public Communication Rules
+
+- BaseScan source verification is complete, but the public BaseScan token profile update is not submitted yet.
+- Internal engineering review is complete, but no third-party audit has been completed.
+- Current Uniswap liquidity is starter-depth only; trades can have high price impact and slippage.
+- Do not claim return promises, price stability, liquidity depth, or external audit completion.
+
 ## Liquidity Position
 
 - Venue: Uniswap v3 on Base Mainnet

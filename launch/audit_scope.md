@@ -4,6 +4,8 @@
 
 Repository tests, BaseScan source verification, and internal security review are complete. No third-party audit has been completed.
 
+Public materials may say "internal engineering review complete" and "source verified on BaseScan". Public materials must not say "audited", "third-party audited", or "externally audited" until an independent auditor provides a report or public verification page.
+
 ## Contract Scope
 
 - `token/contracts/GCAToken.sol`
@@ -30,6 +32,10 @@ Contract: `0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`
 Network: Base Mainnet, chain ID 8453
 
 Source file: `token/contracts/GCAToken.sol`
+
+Internal review: `audit/gca_internal_security_review.md`
+
+Please provide either a signed PDF report or a public verification page that can be linked from the official website after review completion.
 
 ## Internal Review
 

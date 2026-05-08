@@ -57,6 +57,7 @@ Selected default:
 - Do not publish a pool link until the transaction is confirmed on Base Mainnet.
 - Do not promise price stability, yield, or guaranteed liquidity depth.
 - Keep enough ETH in the wallet for gas after approvals and pool creation.
+- Describe the current pool as starter liquidity. It is shallow and can have high price impact and slippage.
 
 ## Status
 

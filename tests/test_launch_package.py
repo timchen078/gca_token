@@ -23,6 +23,14 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("https://basescan.org/address/", site)
         self.assertNotIn("sepolia.basescan.org", site)
 
+    def test_public_site_discloses_current_operational_status(self):
+        site = (ROOT / "site" / "index.html").read_text()
+        self.assertIn("BaseScan token profile update is still pending", site)
+        self.assertIn("No third-party audit has been completed", site)
+        self.assertIn("pool is shallow", site)
+        self.assertIn("high price impact and slippage", site)
+        self.assertIn("https://app.uniswap.org/positions/v3/base/5087977", site)
+
     def test_public_materials_avoid_investment_promises(self):
         paths = [
             ROOT / "site" / "index.html",
@@ -41,6 +49,8 @@ class LaunchPackageTests(unittest.TestCase):
         submission = (ROOT / "launch" / "basescan_token_submission.md").read_text()
         self.assertIn("https://timchen078.github.io/gca_token/", submission)
         self.assertIn("Official domain email address", submission)
+        self.assertIn("Prepared but not submitted", submission)
+        self.assertIn("Contract ownership signature", submission)
         self.assertIn("Public logo download URL", submission)
         self.assertIn("https://basescan.org/tokenupdate/", submission)
         self.assertIn(MAINNET_ADDRESS, submission)
@@ -97,7 +107,10 @@ class LaunchPackageTests(unittest.TestCase):
 
     def test_internal_security_review_is_not_third_party_audit(self):
         report = (ROOT / "audit" / "gca_internal_security_review.md").read_text()
+        scope = (ROOT / "launch" / "audit_scope.md").read_text()
         self.assertIn("not a third-party audit", report)
+        self.assertIn("No third-party audit has been completed", scope)
+        self.assertIn("must not say", scope)
         self.assertIn("No mint function exists", report)
         self.assertIn("No owner or admin role exists", report)
         self.assertIn(MAINNET_ADDRESS, report)
@@ -107,6 +120,9 @@ class LaunchPackageTests(unittest.TestCase):
         whitepaper = (ROOT / "site" / "whitepaper.html").read_text()
         self.assertIn('href="whitepaper.html"', index)
         self.assertIn("GCA Whitepaper", whitepaper)
+        self.assertIn("Version 0.2", whitepaper)
+        self.assertIn("BaseScan token profile update still requires", whitepaper)
+        self.assertIn("starter liquidity only", whitepaper)
         self.assertIn(MAINNET_ADDRESS, whitepaper)
 
 

@@ -1,6 +1,6 @@
 # GCA Whitepaper
 
-Version: 0.1
+Version: 0.2
 
 ## Summary
 
@@ -37,30 +37,34 @@ GCA is deployed on Base Mainnet because Base is an EVM-compatible Layer 2 networ
 
 ## Distribution Status
 
-At launch, the full token supply is held by the deployer wallet:
+At deployment, the full token supply was assigned to the deployer wallet:
 
 `0x18d007bcb6be029f8ccd7cb13e324aa21891092d`
+
+A starter Uniswap v3 GCA/WETH liquidity position has since been created on Base Mainnet, with LP NFT token ID `5087977` held by the deployer wallet.
 
 Any future treasury, liquidity, contributor, community, or ecosystem distribution should be executed only after a written allocation table exists and each transfer can be verified on-chain.
 
 ## Liquidity Approach
 
-The recommended first pool is a Base Mainnet DEX pool paired against a Base asset such as ETH or USDC. The initial pool price is set by the ratio of GCA and the paired asset deposited into the pool. Adding liquidity requires wallet approvals and one or more irreversible on-chain transactions.
+The initial live liquidity position is a Base Mainnet Uniswap v3 GCA/WETH pool with a 1% fee tier and full-range liquidity.
 
-Before creating liquidity, define:
+- Position token ID: `5087977`
+- Pool address: `0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff`
+- Transaction: `0xef94e020c8b431151b789ca3e96c45ab0c18d20d15bf8d7d543630f1370fc158`
+- Deposited GCA: `99999.99999999996738248`
+- Deposited ETH/WETH: `0.000999901772375952`
 
-- Pair asset
-- Amount of GCA
-- Amount of paired asset
-- Initial implied price
-- Fee tier or pool type
-- Whether liquidity will be locked, time-locked, or retained by the deployer
-- Public communication plan
+This is starter liquidity only. The current pool is shallow, so trades can have high price impact, wide slippage, and volatile execution prices.
 
 ## Security Notes
 
-The current contract has been source-verified on BaseScan and covered by repository tests for fixed supply, public ERC-20 functions, compiler output, deployment pages, and deployment records. This is not a substitute for a third-party audit.
+The current contract has been source-verified on BaseScan and covered by repository tests for fixed supply, public ERC-20 functions, compiler output, deployment pages, and deployment records. An internal engineering review is complete. This is not a substitute for a third-party audit, and no third-party audit has been completed.
+
+## BaseScan Token Profile Status
+
+BaseScan source verification is complete. The public BaseScan token profile update still requires BaseScan account login, deployer-wallet ownership signature, an official project email, and any official social links before final submission.
 
 ## Risk Notice
 
-GCA does not represent return guarantees, fee distributions, custody, or a right to redeem assets. Public materials should not describe GCA as an investment product or make price, yield, or liquidity guarantees.
+GCA does not represent return guarantees, fee distributions, custody, or a right to redeem assets. Public materials should not describe GCA as an investment product or make price, yield, audit, or liquidity guarantees.
