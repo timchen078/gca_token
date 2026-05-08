@@ -1,0 +1,41 @@
+{
+  "network": "Base Mainnet",
+  "chainId": 8453,
+  "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+  "totalSupply": "1000000000",
+  "decimals": 18,
+  "allocationPlanStatus": "planned",
+  "lastUpdated": "2026-05-09",
+  "notes": [
+    "The contract minted the full fixed supply to the deployer wallet at deployment.",
+    "This allocation plan is a public target and does not by itself move tokens on-chain.",
+    "Circulating supply reporting can vary by data provider; owner-held reserve should be disclosed and ideally held in a labeled wallet, multisig, or lock/vesting contract."
+  ],
+  "allocations": [
+    {
+      "name": "Public circulation, ecosystem, and liquidity allocation",
+      "amount": "700000000",
+      "percent": 70,
+      "status": "planned",
+      "notes": "Includes liquidity, community, ecosystem, and future public distribution. Not all of this allocation is immediately circulating until on-chain transfers, liquidity, or distribution events occur."
+    },
+    {
+      "name": "Owner-held reserve",
+      "amount": "300000000",
+      "percent": 30,
+      "status": "planned",
+      "holder": "0x18d007bcb6be029f8ccd7cb13e324aa21891092d",
+      "notes": "Reserved for the owner/founder. It should be publicly disclosed and should not be described as circulating while held as a reserve."
+    }
+  ],
+  "executedLiquidity": {
+    "amountGca": "99999.99999999996738248",
+    "pair": "GCA/WETH",
+    "protocol": "Uniswap v3",
+    "network": "Base Mainnet",
+    "positionTokenId": "5087977",
+    "poolAddress": "0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff",
+    "transactionHash": "0xef94e020c8b431151b789ca3e96c45ab0c18d20d15bf8d7d543630f1370fc158"
+  },
+  "recommendedNextStep": "Move the 300,000,000 GCA owner reserve to a clearly labeled owner reserve wallet, Safe multisig, or lock/vesting contract before using exact circulating-supply claims in public listings."
+}

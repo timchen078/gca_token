@@ -43,7 +43,14 @@ At deployment, the full token supply was assigned to the deployer wallet:
 
 A starter Uniswap v3 GCA/WETH liquidity position has since been created on Base Mainnet, with LP NFT token ID `5087977` held by the deployer wallet.
 
-Any future treasury, liquidity, contributor, community, or ecosystem distribution should be executed only after a written allocation table exists and each transfer can be verified on-chain.
+The target allocation plan is:
+
+| Allocation | Amount | Percent |
+| --- | ---: | ---: |
+| Public circulation, ecosystem, and liquidity allocation | 700,000,000 GCA | 70% |
+| Owner-held reserve | 300,000,000 GCA | 30% |
+
+The 300,000,000 GCA reserve is intended to be owner-held and should not be described as circulating while held as a reserve. The 70/30 split is a target allocation plan and does not by itself move tokens on-chain. Future treasury, liquidity, contributor, community, or ecosystem transfers should be executed only after each transfer can be verified on-chain.
 
 ## Liquidity Approach
 

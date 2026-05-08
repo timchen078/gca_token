@@ -189,6 +189,26 @@
         color: var(--muted);
       }
 
+      .allocation-list {
+        display: grid;
+        gap: 10px;
+        margin-top: 12px;
+      }
+
+      .allocation-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 12px;
+        align-items: start;
+        border-top: 1px solid var(--line);
+        padding-top: 10px;
+      }
+
+      .allocation-amount {
+        font-weight: 800;
+        white-space: nowrap;
+      }
+
       code {
         padding: 2px 5px;
         border-radius: 6px;
@@ -218,6 +238,14 @@
 
         .nav-links {
           flex-wrap: wrap;
+        }
+
+        .allocation-row {
+          grid-template-columns: 1fr;
+        }
+
+        .allocation-amount {
+          white-space: normal;
         }
       }
     </style>
@@ -282,6 +310,21 @@
       <section class="panel" id="status" aria-labelledby="statusTitle">
         <h2 id="statusTitle">Launch Status</h2>
         <p class="note">Source code and deployer-wallet ownership are verified on BaseScan. The public BaseScan token profile update has been submitted and is awaiting BaseScan review.</p>
+      </section>
+
+      <section class="panel" id="allocation" aria-labelledby="allocationTitle">
+        <h2 id="allocationTitle">Target Allocation</h2>
+        <p class="note">Total supply is fixed at 1,000,000,000 GCA. The target plan is 70% for public circulation, ecosystem, and liquidity, with 30% held as an owner reserve. This is a target allocation; exact circulating supply should be verified on-chain.</p>
+        <div class="allocation-list">
+          <div class="allocation-row">
+            <span>Public circulation, ecosystem, and liquidity allocation</span>
+            <span class="allocation-amount">700,000,000 GCA / 70%</span>
+          </div>
+          <div class="allocation-row">
+            <span>Owner-held reserve</span>
+            <span class="allocation-amount">300,000,000 GCA / 30%</span>
+          </div>
+        </div>
       </section>
 
       <section class="grid" aria-label="Project references">

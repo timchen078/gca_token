@@ -17,6 +17,7 @@
 - Official contact email `cxy070800@gmail.com` is published on the official website for BaseScan verification.
 - BaseScan token update form submitted from the owner's browser session.
 - BaseScan review follow-up runbook prepared.
+- Token allocation plan drafted: 700,000,000 GCA target public allocation and 300,000,000 GCA owner-held reserve.
 - Liquidity pool default plan selected.
 - Base Mainnet Uniswap v3 GCA/WETH liquidity position created.
 - Audit scope prepared.

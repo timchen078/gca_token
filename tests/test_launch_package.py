@@ -26,6 +26,9 @@ class LaunchPackageTests(unittest.TestCase):
     def test_public_site_discloses_current_operational_status(self):
         site = (ROOT / "site" / "index.html").read_text()
         self.assertIn("BaseScan token profile update has been submitted", site)
+        self.assertIn("700,000,000 GCA / 70%", site)
+        self.assertIn("300,000,000 GCA / 30%", site)
+        self.assertIn("exact circulating supply should be verified on-chain", site)
         self.assertIn("mailto:cxy070800@gmail.com", site)
         self.assertIn("Project contact email", site)
         self.assertIn("No third-party audit has been completed", site)
@@ -40,6 +43,7 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "docs" / "mainnet_public_profile.md",
             ROOT / "launch" / "basescan_token_submission.md",
             ROOT / "launch" / "basescan_review_followup.md",
+            ROOT / "launch" / "token_allocation_plan.md",
             ROOT / "launch" / "liquidity_pool_runbook.md",
             ROOT / "launch" / "launch_status.md",
         ]
@@ -82,8 +86,27 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["whitepaperUrl"], "https://timchen078.github.io/gca_token/whitepaper.html")
         self.assertEqual(values["officialEmail"], "cxy070800@gmail.com")
         self.assertIn("Gmail address", values["officialEmailNote"])
+        self.assertEqual(values["targetPublicAllocation"], "700000000")
+        self.assertEqual(values["targetPublicAllocationPercent"], 70)
+        self.assertEqual(values["ownerHeldReserve"], "300000000")
+        self.assertEqual(values["ownerHeldReservePercent"], 30)
         self.assertEqual(values["submissionStatus"], "submitted")
         self.assertEqual(values["reviewStatus"], "awaiting BaseScan review")
+
+    def test_token_allocation_plan_records_owner_reserve(self):
+        plan = json.loads((ROOT / "launch" / "token_allocation_plan.json").read_text())
+        doc = (ROOT / "launch" / "token_allocation_plan.md").read_text()
+        self.assertEqual(plan["totalSupply"], "1000000000")
+        self.assertEqual(plan["allocationPlanStatus"], "planned")
+        self.assertEqual(plan["allocations"][0]["amount"], "700000000")
+        self.assertEqual(plan["allocations"][0]["percent"], 70)
+        self.assertEqual(plan["allocations"][1]["amount"], "300000000")
+        self.assertEqual(plan["allocations"][1]["percent"], 30)
+        self.assertIn("owner/founder", plan["allocations"][1]["notes"])
+        self.assertIn("target allocation", doc)
+        self.assertIn("300,000,000 GCA", doc)
+        self.assertIn("not be described as circulating", doc)
+        self.assertIn(MAINNET_ADDRESS, doc)
 
     def test_public_materials_do_not_overstate_basescan_review(self):
         paths = [
@@ -164,6 +187,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("GCA Whitepaper", whitepaper)
         self.assertIn("Version 0.2", whitepaper)
         self.assertIn("deployer-wallet ownership verification are complete", whitepaper)
+        self.assertIn("Owner-held reserve", whitepaper)
+        self.assertIn("300,000,000 GCA", whitepaper)
         self.assertIn("mailto:cxy070800@gmail.com", whitepaper)
         self.assertIn("starter liquidity only", whitepaper)
         self.assertIn(MAINNET_ADDRESS, whitepaper)

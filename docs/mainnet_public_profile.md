@@ -19,6 +19,13 @@
 
 GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. The contract creates 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls.
 
+## Target Allocation
+
+- Public circulation, ecosystem, and liquidity allocation: 700,000,000 GCA (70%)
+- Owner-held reserve: 300,000,000 GCA (30%)
+
+The full fixed supply was minted to the deployer wallet at deployment. The 70/30 split is a target allocation plan and does not by itself move tokens on-chain. Do not claim that exactly 700,000,000 GCA is currently circulating until the reserve custody and public distribution are visible on-chain.
+
 ## Official Contact
 
 - Project contact email: `cxy070800@gmail.com`
