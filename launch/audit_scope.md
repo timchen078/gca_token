@@ -2,7 +2,7 @@
 
 ## Current Status
 
-Repository tests and BaseScan source verification are complete. No third-party audit has been completed.
+Repository tests, BaseScan source verification, and internal security review are complete. No third-party audit has been completed.
 
 ## Contract Scope
 
@@ -30,3 +30,9 @@ Contract: `0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`
 Network: Base Mainnet, chain ID 8453
 
 Source file: `token/contracts/GCAToken.sol`
+
+## Internal Review
+
+Internal report: `audit/gca_internal_security_review.md`
+
+This can be shared with an external reviewer as context, but it must not be marketed as a third-party audit.

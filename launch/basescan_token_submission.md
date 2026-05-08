@@ -31,11 +31,11 @@ GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. The contract create
 
 ## Fields That Need Public URLs Before Submission
 
-- Official website URL
-- Official domain email address
-- Public logo download URL for `brand/gca-logo.svg`
-- Public whitepaper URL
-- Official social links, using full URLs
+- Official website URL: `https://timchen078.github.io/gca_token/` after GitHub Pages is enabled for the pushed `gh-pages` branch
+- Official domain email address: still needs owner-provided domain email
+- Public logo download URL: `https://raw.githubusercontent.com/timchen078/gca_token/main/brand/gca-logo.svg`
+- Public whitepaper URL: `https://raw.githubusercontent.com/timchen078/gca_token/main/docs/whitepaper.md`
+- Official social links, using full URLs: still needs owner-provided links or an explicit decision to omit
 
 ## Submission Rules
 
@@ -44,3 +44,7 @@ GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. The contract create
 - Use the production identity exactly as `Base Mainnet / chainId 8453 / 0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`.
 - Do not submit the Base Sepolia explorer as the production token link.
 - Claim ownership from the deployer wallet before attempting the token update.
+
+## Current Submission Status
+
+Prepared. Public logo and whitepaper URLs are live. Website URL depends on GitHub Pages being enabled for the `gh-pages` branch. BaseScan account login, contract ownership signature, official email, and final form submission still require the owner's browser session and wallet signature.

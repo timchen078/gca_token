@@ -21,8 +21,10 @@ Deployment notes are in `docs/deploy_base_sepolia.md` and `docs/deploy_base_main
 - Canonical public facts: `docs/mainnet_public_profile.md`
 - Draft whitepaper: `docs/whitepaper.md`
 - BaseScan submission package: `launch/basescan_token_submission.md`
+- Liquidity plan: `launch/liquidity_plan.json`
 - Liquidity pool runbook: `launch/liquidity_pool_runbook.md`
 - Audit scope: `launch/audit_scope.md`
+- Internal security review: `audit/gca_internal_security_review.md`
 - Launch status: `launch/launch_status.md`
 - Logo: `brand/gca-logo.svg`
 - Static website: `site/index.html`

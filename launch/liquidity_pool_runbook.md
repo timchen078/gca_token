@@ -11,16 +11,19 @@ This runbook prepares the liquidity step without executing any wallet transactio
 
 ## Required Decisions
 
-Before opening a pool, choose all of the following:
+The default launch decision is now:
 
-- Pair asset: ETH or USDC on Base
-- GCA amount to deposit
-- ETH or USDC amount to deposit
-- Initial implied price
-- Pool version and fee tier
-- Slippage tolerance
-- Whether LP position will be kept, transferred, or locked
-- Public announcement timing
+- Pair asset: ETH on Base
+- Pool version: Uniswap v3
+- Fee tier: 1%
+- Range: full range
+- GCA amount: 100,000 GCA
+- ETH amount: 0.001 ETH
+- Initial implied price: 0.00000001 ETH per GCA
+- Implied fully diluted value: 10 ETH
+- LP position custody: deployer wallet until a separate locking plan is chosen
+
+This is a small current-wallet pilot that preserves ETH for gas while creating a real Base Mainnet pool. Scale options with the same implied price are stored in `launch/liquidity_plan.json`.
 
 ## Price Formula
 
@@ -28,10 +31,11 @@ Initial price is set by the first liquidity deposit:
 
 `paired asset amount / GCA amount = paired asset price per GCA`
 
-Example only, not a recommendation:
+Selected default:
 
-- Deposit: 10,000,000 GCA and 1 ETH
-- Implied price: 0.0000001 ETH per GCA
+- Deposit: 100,000 GCA and 0.001 ETH
+- Implied price: 0.00000001 ETH per GCA
+- Implied fully diluted value: 10 ETH
 
 ## Wallet Steps
 
@@ -56,4 +60,4 @@ Example only, not a recommendation:
 
 ## Status
 
-Prepared. Not executed. Blocked on the owner's chosen pair asset, amounts, fee tier, and final wallet confirmation.
+Planned. Not executed. Blocked only on final wallet approvals and live Uniswap transaction review.

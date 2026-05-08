@@ -1,0 +1,51 @@
+{
+  "status": "planned_not_executed",
+  "venue": "Uniswap",
+  "network": "Base Mainnet",
+  "chainId": 8453,
+  "protocolVersion": "v3",
+  "feeTier": "1%",
+  "range": "full_range",
+  "pair": {
+    "baseToken": {
+      "symbol": "GCA",
+      "address": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+      "decimals": 18
+    },
+    "quoteToken": {
+      "symbol": "ETH",
+      "address": "native",
+      "decimals": 18
+    }
+  },
+  "selectedPlan": {
+    "name": "starter_current_wallet",
+    "gcaAmount": "100000",
+    "ethAmount": "0.001",
+    "impliedPriceEthPerGca": "0.00000001",
+    "impliedFullyDilutedValueEth": "10",
+    "reason": "Small current-wallet pilot that preserves ETH for gas while creating a real Base Mainnet pool."
+  },
+  "scaleOptions": [
+    {
+      "name": "scaled_launch",
+      "gcaAmount": "1000000",
+      "ethAmount": "0.01",
+      "impliedPriceEthPerGca": "0.00000001",
+      "impliedFullyDilutedValueEth": "10"
+    },
+    {
+      "name": "larger_launch",
+      "gcaAmount": "10000000",
+      "ethAmount": "0.1",
+      "impliedPriceEthPerGca": "0.00000001",
+      "impliedFullyDilutedValueEth": "10"
+    }
+  ],
+  "executionRules": [
+    "Do not create liquidity on Base Sepolia.",
+    "Do not approve unlimited token spend.",
+    "Final wallet approvals must be completed by the owner.",
+    "Record the approval and pool transaction hashes after execution."
+  ]
+}

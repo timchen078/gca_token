@@ -10,17 +10,20 @@
 - BaseScan token information submission package prepared.
 - 32x32 SVG logo created.
 - Static website created.
-- Liquidity pool runbook prepared.
+- GitHub Pages `gh-pages` source prepared.
+- Liquidity pool default plan selected.
 - Audit scope prepared.
+- Internal security review completed.
 
 ## Needs Owner Input Or External Service
 
-- Publish `site/index.html` to an official HTTPS domain.
+- Enable GitHub Pages for the pushed `gh-pages` branch or publish `site/index.html` to an official HTTPS domain.
 - Create an official project email address on that domain.
-- Publish `brand/gca-logo.svg` and `docs/whitepaper.md` at public URLs.
+- Public logo URL is live on GitHub raw.
+- Public whitepaper URL is live on GitHub raw.
 - Choose official social links or decide there are none.
 - Log into BaseScan, claim contract ownership with the deployer wallet, and submit the token update form.
-- Choose liquidity pair asset, amounts, fee tier, and final wallet approvals.
+- Review and approve the selected Uniswap liquidity plan in the wallet.
 - Hire or request a third-party audit if public launch materials need an external audit badge.
 
 ## Canonical Production Identity
