@@ -10,7 +10,8 @@ GCA is a fixed-supply ERC-20 token contract intended for testnet deployment firs
 - Total supply: `1,000,000,000 GCA`
 - Minting after deploy: disabled
 - Admin controls: none
-- Recommended first network: Base Sepolia testnet
+- Production network: Base Mainnet
+- Test network: Base Sepolia
 
 ## Safety Notes
 
@@ -28,6 +29,13 @@ GCA is a fixed-supply ERC-20 token contract intended for testnet deployment firs
 5. Verify the contract source on the explorer.
 6. Transfer treasury/community/liquidity allocations from the deployer wallet only after a written distribution plan exists.
 7. Deploy to mainnet only after external legal, tokenomics, and security review.
+
+## Base Mainnet Parameters
+
+- Chain ID: `8453`
+- Contract: `0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`
+- Explorer: `https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`
+- Source verification: verified
 
 ## Base Sepolia Parameters
 

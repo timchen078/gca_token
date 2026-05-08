@@ -14,4 +14,15 @@ python3 -m venv .venv
 .venv/bin/python -m unittest tests.test_gca_token_contract tests.test_gca_token_compile tests.test_gca_token_deploy_script -v
 ```
 
-Deployment notes are in `docs/deploy_base_sepolia.md`.
+Deployment notes are in `docs/deploy_base_sepolia.md` and `docs/deploy_base_mainnet.md`.
+
+## Mainnet Launch Package
+
+- Canonical public facts: `docs/mainnet_public_profile.md`
+- Draft whitepaper: `docs/whitepaper.md`
+- BaseScan submission package: `launch/basescan_token_submission.md`
+- Liquidity pool runbook: `launch/liquidity_pool_runbook.md`
+- Audit scope: `launch/audit_scope.md`
+- Launch status: `launch/launch_status.md`
+- Logo: `brand/gca-logo.svg`
+- Static website: `site/index.html`

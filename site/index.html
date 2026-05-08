@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GCA</title>
+    <meta name="description" content="GCA is a fixed-supply ERC-20 token deployed on Base Mainnet.">
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #0b1220;
+        --muted: #526070;
+        --line: #d9e1ea;
+        --panel: #ffffff;
+        --soft: #f4f7fb;
+        --blue: #0052ff;
+        --green: #059669;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: #f8fafc;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.5;
+      }
+
+      a {
+        color: var(--blue);
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .shell {
+        width: min(1120px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      header {
+        border-bottom: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.92);
+        position: sticky;
+        top: 0;
+        z-index: 2;
+      }
+
+      nav {
+        min-height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 800;
+        letter-spacing: 0;
+      }
+
+      .brand img {
+        width: 32px;
+        height: 32px;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 18px;
+        align-items: center;
+        font-size: 14px;
+      }
+
+      main {
+        padding: 48px 0 56px;
+      }
+
+      .intro {
+        display: grid;
+        grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
+        gap: 32px;
+        align-items: start;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(46px, 7vw, 84px);
+        line-height: 0.95;
+        letter-spacing: 0;
+      }
+
+      .lead {
+        max-width: 720px;
+        margin: 22px 0 0;
+        color: var(--muted);
+        font-size: 18px;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 26px;
+      }
+
+      .button {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        color: var(--ink);
+        min-height: 42px;
+        padding: 10px 14px;
+        font: inherit;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .button.primary {
+        border-color: var(--blue);
+        background: var(--blue);
+        color: #fff;
+      }
+
+      .facts {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .fact,
+      .panel {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+      }
+
+      .fact {
+        min-height: 92px;
+        padding: 16px;
+      }
+
+      .label {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+
+      .value {
+        display: block;
+        margin-top: 8px;
+        font-size: 18px;
+        font-weight: 800;
+        overflow-wrap: anywhere;
+      }
+
+      .value.good {
+        color: var(--green);
+      }
+
+      .panel {
+        margin-top: 28px;
+        padding: 24px;
+      }
+
+      h2 {
+        margin: 0 0 14px;
+        font-size: 22px;
+        letter-spacing: 0;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .note {
+        margin: 0;
+        color: var(--muted);
+      }
+
+      code {
+        padding: 2px 5px;
+        border-radius: 6px;
+        background: var(--soft);
+        overflow-wrap: anywhere;
+      }
+
+      footer {
+        border-top: 1px solid var(--line);
+        padding: 24px 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      @media (max-width: 800px) {
+        .intro,
+        .grid,
+        .facts {
+          grid-template-columns: 1fr;
+        }
+
+        nav {
+          align-items: flex-start;
+          flex-direction: column;
+          padding: 14px 0;
+        }
+
+        .nav-links {
+          flex-wrap: wrap;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav class="shell" aria-label="Primary">
+        <a class="brand" href="#top" aria-label="GCA home">
+          <img src="assets/gca-logo.svg" alt="GCA logo">
+          <span>GCA</span>
+        </a>
+        <div class="nav-links">
+          <a href="#facts">Facts</a>
+          <a href="#contract">Contract</a>
+          <a href="#risk">Risk Notice</a>
+        </div>
+      </nav>
+    </header>
+
+    <main id="top" class="shell">
+      <section class="intro" aria-labelledby="title">
+        <div>
+          <h1 id="title">GCA</h1>
+          <p class="lead">Fixed-supply ERC-20 token deployed on Base Mainnet. The contract creates 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls.</p>
+          <div class="actions">
+            <a class="button primary" href="https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6" target="_blank" rel="noreferrer">BaseScan Contract</a>
+            <a class="button" href="https://basescan.org/tx/0xae8ae4d0bd89c03b39946564a5b63bb20cd38879a1aa1fdcb20a6f1c4802e74e" target="_blank" rel="noreferrer">Deployment Tx</a>
+            <button class="button" type="button" id="copyContract">Copy Contract</button>
+            <button class="button" type="button" id="addToken">Add to MetaMask</button>
+          </div>
+        </div>
+
+        <div class="facts" id="facts">
+          <div class="fact">
+            <span class="label">Network</span>
+            <span class="value">Base Mainnet</span>
+          </div>
+          <div class="fact">
+            <span class="label">Chain ID</span>
+            <span class="value">8453</span>
+          </div>
+          <div class="fact">
+            <span class="label">Supply</span>
+            <span class="value">1,000,000,000</span>
+          </div>
+          <div class="fact">
+            <span class="label">Source</span>
+            <span class="value good">Verified</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="contract" aria-labelledby="contractTitle">
+        <h2 id="contractTitle">Canonical Contract</h2>
+        <p class="note">Use the chain and contract together. The same contract address also exists on Base Sepolia because deterministic deployment data can produce the same address on different chains.</p>
+        <p><code>Base Mainnet / chainId 8453 / 0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6</code></p>
+      </section>
+
+      <section class="grid" aria-label="Project references">
+        <div class="panel">
+          <h2>Token Standard</h2>
+          <p class="note">ERC-20 interface with transfer, approval, and allowance support.</p>
+        </div>
+        <div class="panel">
+          <h2>Supply Policy</h2>
+          <p class="note">Fixed supply. No mint function, burn function, tax logic, blacklist, or privileged admin path.</p>
+        </div>
+        <div class="panel" id="risk">
+          <h2>Risk Notice</h2>
+          <p class="note">GCA does not represent return guarantees, fee distributions, custody, or a right to redeem assets.</p>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="shell">GCA public facts page. Always verify contract details on BaseScan before interacting.</div>
+    </footer>
+
+    <script>
+      const CONTRACT = "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6";
+      const BASE_MAINNET = "0x2105";
+
+      document.getElementById("copyContract").addEventListener("click", async () => {
+        await navigator.clipboard.writeText(CONTRACT);
+      });
+
+      document.getElementById("addToken").addEventListener("click", async () => {
+        if (!window.ethereum) return;
+        const currentChainId = await window.ethereum.request({ method: "eth_chainId" });
+        if (currentChainId !== BASE_MAINNET) {
+          await window.ethereum.request({
+            method: "wallet_switchEthereumChain",
+            params: [{ chainId: BASE_MAINNET }]
+          });
+        }
+        await window.ethereum.request({
+          method: "wallet_watchAsset",
+          params: {
+            type: "ERC20",
+            options: {
+              address: CONTRACT,
+              symbol: "GCA",
+              decimals: 18,
+              image: new URL("assets/gca-logo.svg", window.location.href).href
+            }
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

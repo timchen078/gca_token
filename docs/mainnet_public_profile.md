@@ -1,0 +1,36 @@
+# GCA Mainnet Public Profile
+
+## Canonical Token Facts
+
+- Token name: GCA
+- Token symbol: GCA
+- Network: Base Mainnet
+- Chain ID: 8453
+- Contract address: `0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`
+- Decimals: 18
+- Total supply: 1,000,000,000 GCA
+- Source status: verified on BaseScan
+- Deployer: `0x18d007bcb6be029f8ccd7cb13e324aa21891092d`
+- Deployment transaction: `0xae8ae4d0bd89c03b39946564a5b63bb20cd38879a1aa1fdcb20a6f1c4802e74e`
+- BaseScan contract: `https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`
+- BaseScan transaction: `https://basescan.org/tx/0xae8ae4d0bd89c03b39946564a5b63bb20cd38879a1aa1fdcb20a6f1c4802e74e`
+
+## Public Contract Description
+
+GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. The contract creates 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls.
+
+## Same Address Notice
+
+The Base Mainnet and Base Sepolia deployments currently use the same contract address:
+
+`0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`
+
+This is possible because contract addresses are derived from deployment data on each chain. Treat the chain ID as part of the identity. For production references, always publish:
+
+`Base Mainnet / chainId 8453 / 0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`
+
+Do not publish the Sepolia explorer link as the production token link.
+
+## Risk Notice
+
+GCA does not represent return guarantees, fee distributions, custody, or a right to redeem assets. Users should verify the contract and chain before interacting.
