@@ -17,4 +17,4 @@ Do not mix it with `/Users/abc/Desktop/web3_radar` or any trading-system code.
 
 - Install development dependency: `.venv/bin/python -m pip install -r requirements-token-dev.txt`
 - Build artifacts: `.venv/bin/python token/scripts/build_gca_artifact.py`
-- Run checks: `.venv/bin/python -m unittest tests.test_gca_token_contract tests.test_gca_token_compile -v`
+- Run checks: `.venv/bin/python -m unittest tests.test_gca_token_contract tests.test_gca_token_compile tests.test_gca_token_deploy_script -v`

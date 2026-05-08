@@ -11,5 +11,7 @@ See `token/README.md` for token parameters, safety notes, and deployment flow.
 python3 -m venv .venv
 .venv/bin/python -m pip install -r requirements-token-dev.txt
 .venv/bin/python token/scripts/build_gca_artifact.py
-.venv/bin/python -m unittest tests.test_gca_token_contract tests.test_gca_token_compile -v
+.venv/bin/python -m unittest tests.test_gca_token_contract tests.test_gca_token_compile tests.test_gca_token_deploy_script -v
 ```
+
+Deployment notes are in `docs/deploy_base_sepolia.md`.

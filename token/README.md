@@ -23,7 +23,7 @@ GCA is a fixed-supply ERC-20 token contract intended for testnet deployment firs
 
 1. Install the token dev dependency: `.venv/bin/python -m pip install -r requirements-token-dev.txt`
 2. Compile and refresh ABI/artifacts: `.venv/bin/python token/scripts/build_gca_artifact.py`
-3. Run token checks: `.venv/bin/python -m unittest tests.test_gca_token_contract tests.test_gca_token_compile -v`
+3. Run token checks: `.venv/bin/python -m unittest tests.test_gca_token_contract tests.test_gca_token_compile tests.test_gca_token_deploy_script -v`
 4. Deploy to Base Sepolia testnet with a wallet that holds only test ETH.
 5. Verify the contract source on the explorer.
 6. Transfer treasury/community/liquidity allocations from the deployer wallet only after a written distribution plan exists.
