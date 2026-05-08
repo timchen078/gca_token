@@ -1,0 +1,30 @@
+{
+  "network": "Base Mainnet",
+  "chainId": 8453,
+  "name": "GCA",
+  "symbol": "GCA",
+  "decimals": 18,
+  "totalSupply": "1000000000",
+  "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+  "deployer": "0x18d007bcb6be029f8ccd7cb13e324aa21891092d",
+  "transactionHash": "0xae8ae4d0bd89c03b39946564a5b63bb20cd38879a1aa1fdcb20a6f1c4802e74e",
+  "blockNumber": 45735688,
+  "gasUsed": "431991",
+  "effectiveGasPriceWei": "9281496",
+  "feeWei": "4009522738536",
+  "deployedAt": "2026-05-08T17:18:43.000Z",
+  "sourceVerification": {
+    "status": "verified",
+    "verifiedAt": "2026-05-08T17:27:07Z",
+    "compilerType": "Solidity (Standard-Json-Input)",
+    "compilerVersion": "v0.8.24+commit.e11b9ed9",
+    "optimizerEnabled": true,
+    "optimizerRuns": 200,
+    "license": "MIT",
+    "standardJsonInput": "verification/GCAToken.standard-json-input.json"
+  },
+  "explorer": {
+    "transaction": "https://basescan.org/tx/0xae8ae4d0bd89c03b39946564a5b63bb20cd38879a1aa1fdcb20a6f1c4802e74e",
+    "contract": "https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6"
+  }
+}
