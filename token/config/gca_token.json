@@ -1,0 +1,15 @@
+{
+  "contractName": "GCAToken",
+  "source": "token/contracts/GCAToken.sol",
+  "name": "GCA",
+  "symbol": "GCA",
+  "decimals": 18,
+  "totalSupplyTokens": "1000000000",
+  "totalSupplyBaseUnits": "1000000000000000000000000000",
+  "mintingEnabled": false,
+  "recommendedFirstNetwork": {
+    "name": "Base Sepolia",
+    "chainId": 84532,
+    "explorer": "https://sepolia.basescan.org"
+  }
+}
