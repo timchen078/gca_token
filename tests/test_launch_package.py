@@ -48,7 +48,9 @@ class LaunchPackageTests(unittest.TestCase):
     def test_basescan_submission_has_required_public_placeholders(self):
         submission = (ROOT / "launch" / "basescan_token_submission.md").read_text()
         self.assertIn("https://timchen078.github.io/gca_token/", submission)
-        self.assertIn("Official domain email address", submission)
+        self.assertIn("Official contact email", submission)
+        self.assertIn("cxy070800@gmai.com", submission)
+        self.assertIn("Confirm spelling and inbox access", submission)
         self.assertIn("Prepared but not submitted", submission)
         self.assertIn("Contract ownership signature", submission)
         self.assertIn("Public logo download URL", submission)
@@ -62,7 +64,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["website"], "https://timchen078.github.io/gca_token/")
         self.assertEqual(values["logoUrl"], "https://timchen078.github.io/gca_token/assets/gca-logo.svg")
         self.assertEqual(values["whitepaperUrl"], "https://timchen078.github.io/gca_token/whitepaper.html")
-        self.assertEqual(values["officialEmail"], "OWNER_REQUIRED_DOMAIN_EMAIL")
+        self.assertEqual(values["officialEmail"], "cxy070800@gmai.com")
+        self.assertIn("Confirm spelling", values["officialEmailNote"])
 
     def test_liquidity_runbook_records_execution(self):
         runbook = (ROOT / "launch" / "liquidity_pool_runbook.md").read_text()
