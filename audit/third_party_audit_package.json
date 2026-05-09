@@ -1,5 +1,5 @@
 {
-  "status": "quote-requests-submitted",
+  "status": "audit-deferred-after-quote-requests",
   "lastUpdated": "2026-05-10",
   "project": {
     "name": "GCA",
@@ -37,6 +37,11 @@
       "no risk",
       "exploit-proof"
     ]
+  },
+  "ownerDecision": {
+    "date": "2026-05-10",
+    "status": "deferred",
+    "summary": "Owner decided not to commission or pay for a third-party audit now. Revisit only if the project later needs an external report for user trust, listings, partners, or larger liquidity."
   },
   "auditorShortlist": [
     {
@@ -104,5 +109,5 @@
       "notes": "Requested a smart-contract security audit, set expected completion date to 2026-06-30, and provided repository, documentation, scope, Solidity language, and Telegram handle."
     }
   ],
-  "nextRequiredOwnerAction": "Monitor GCAgochina@outlook.com and Telegram for auditor replies, compare quote price/timeline/report terms, then approve one auditor and any required payment before claiming a third-party audit."
+  "nextRequiredOwnerAction": "No immediate audit action. Archive any replies from QuillAudits, Hacken, or OpenZeppelin. Do not approve payment or claim a third-party audit unless the owner later reopens the audit process."
 }

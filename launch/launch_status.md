@@ -28,6 +28,7 @@
 - Internal security review completed.
 - Third-party audit outreach package prepared.
 - Third-party audit quote requests submitted to QuillAudits, Hacken, and OpenZeppelin on 2026-05-10; no external audit has been commissioned, paid for, or completed yet.
+- Owner decided on 2026-05-10 to defer third-party audit for now and revisit later if needed.
 - Website updated with the Go China Access concept-stage project direction.
 - Data platform submission package prepared for DEX Screener, GeckoTerminal, CoinGecko, and CoinMarketCap.
 - GeckoTerminal token info update runbook prepared.
@@ -45,16 +46,15 @@
 - Wait for stronger public activity and market volume before submitting CoinGecko or CoinMarketCap listing requests.
 - Add the official Telegram link to any BaseScan or GeckoTerminal follow-up if those reviewers ask for social links.
 - Move the owner reserve to a Safe multisig or lock/vesting contract if stronger reserve assurances are needed.
-- Wait for audit quote replies to `GCAgochina@outlook.com` or Telegram from QuillAudits, Hacken, and OpenZeppelin.
-- Compare audit cost, timeline, public report terms, Base Mainnet address coverage, and retest/remediation terms before choosing an auditor.
-- Approve the selected auditor and any required budget/payment before claiming a third-party audit.
+- Archive any audit quote replies from QuillAudits, Hacken, or OpenZeppelin; do not approve payment while audit is deferred.
+- Reopen third-party audit only if user trust, listings, partners, or larger liquidity make an external report necessary.
 
 ## Public Communication Rules
 
 - BaseScan source and ownership verification are complete. The public BaseScan token profile update has been submitted, but it is not complete until BaseScan accepts and publishes it.
 - GeckoTerminal token information update has been submitted, but it is not complete until GeckoTerminal accepts and publishes it.
 - Internal engineering review is complete, but no third-party audit has been completed.
-- Audit quote requests have been submitted, but quote submission is not an audit and does not allow any public "audited" claim.
+- Audit quote requests have been submitted and then deferred by owner decision, but quote submission is not an audit and does not allow any public "audited" claim.
 - Current Uniswap liquidity is starter-depth only; trades can have high price impact and slippage.
 - The owner reserve is in a normal owner-controlled wallet. Do not describe it as locked, vested, or multisig-controlled unless custody changes on-chain.
 - The product direction is still concept-stage. Do not describe GCA as a finished platform or as having guaranteed utility.

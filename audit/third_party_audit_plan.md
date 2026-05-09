@@ -2,7 +2,9 @@
 
 ## Status
 
-Third-party audit is not complete. Quote requests were submitted to QuillAudits, Hacken, and OpenZeppelin on 2026-05-10, but no auditor has been selected, paid, or commissioned yet.
+Third-party audit is not complete. Quote requests were submitted to QuillAudits, Hacken, and OpenZeppelin on 2026-05-10, but no auditor has been selected, paid, or commissioned.
+
+Owner decision on 2026-05-10: defer third-party audit for now and revisit later only if the project needs an external report for user trust, listings, partners, or larger liquidity.
 
 Do not publish "audited", "third-party audited", "externally audited", or an auditor logo until an independent auditor provides a signed report or public verification page that names the GCA Base Mainnet contract.
 
@@ -49,9 +51,9 @@ Out of scope unless separately quoted:
 
 ## Recommended Outreach Order
 
-1. Monitor `GCAgochina@outlook.com` and Telegram for replies from QuillAudits, Hacken, and OpenZeppelin.
-2. Compare quote cost, start date, delivery date, public report terms, Base Mainnet address coverage, and retest/remediation terms.
-3. Choose and pay one auditor only after the quote is acceptable.
+1. Archive any replies from QuillAudits, Hacken, or OpenZeppelin; do not approve payment while audit is deferred.
+2. If the audit process is reopened later, compare quote cost, start date, delivery date, public report terms, Base Mainnet address coverage, and retest/remediation terms.
+3. Choose and pay one auditor only after the owner explicitly reopens the audit process.
 4. Use Quantstamp, ChainSecurity, or Trail of Bits only if the project budget supports a more expensive review or if the token grows into a broader protocol.
 
 ## Minimum Acceptance Criteria
@@ -69,6 +71,7 @@ Before publicizing an audit:
 Allowed before completion:
 
 - "Third-party audit quote requests have been submitted."
+- "Third-party audit is currently deferred."
 - "Internal engineering review complete."
 - "BaseScan source verification complete."
 

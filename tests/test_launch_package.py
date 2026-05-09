@@ -223,7 +223,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Telegram channel runbook prepared", status)
         self.assertIn("First official Telegram announcement pinned on 2026-05-10", status)
         self.assertIn("Third-party audit quote requests submitted to QuillAudits, Hacken, and OpenZeppelin on 2026-05-10", status)
-        self.assertIn("Wait for audit quote replies", status)
+        self.assertIn("Owner decided on 2026-05-10 to defer third-party audit", status)
+        self.assertIn("Archive any audit quote replies", status)
         self.assertIn("quote submission is not an audit", status)
         self.assertNotIn("Pin the first Telegram announcement manually", status)
         self.assertNotIn("wait for GitHub Pages HTTPS to become active", status)
@@ -325,10 +326,12 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(MAINNET_ADDRESS, report)
         self.assertIn("Third-party audit is not complete", plan)
         self.assertIn("Quote request", request)
-        self.assertEqual(package["status"], "quote-requests-submitted")
+        self.assertEqual(package["status"], "audit-deferred-after-quote-requests")
         self.assertFalse(package["publicClaimState"]["thirdPartyAuditCompleted"])
-        self.assertIn("Monitor GCAgochina@outlook.com", package["nextRequiredOwnerAction"])
-        self.assertIn("before claiming a third-party audit", package["nextRequiredOwnerAction"])
+        self.assertEqual(package["ownerDecision"]["status"], "deferred")
+        self.assertIn("not to commission or pay", package["ownerDecision"]["summary"])
+        self.assertIn("No immediate audit action", package["nextRequiredOwnerAction"])
+        self.assertIn("Do not approve payment", package["nextRequiredOwnerAction"])
         self.assertEqual(
             [entry["name"] for entry in package["submissionLog"]],
             ["QuillAudits", "Hacken", "OpenZeppelin"],
