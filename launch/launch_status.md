@@ -11,11 +11,10 @@
 - BaseScan token information submission package prepared.
 - 32x32 SVG logo created.
 - Static website created.
-- GitHub Pages site live at `https://timchen078.github.io/gca_token/`.
-- Public logo URL is live at `https://timchen078.github.io/gca_token/assets/gca-logo.svg`.
-- Public whitepaper URL is live at `https://timchen078.github.io/gca_token/whitepaper.html`.
+- GitHub Pages custom domain prepared for `https://gcagochina.com/`.
+- Public logo URL target: `https://gcagochina.com/assets/gca-logo.svg`.
+- Public whitepaper URL target: `https://gcagochina.com/whitepaper.html`.
 - Official contact email `cxy070800@gmail.com` is published on the official website for BaseScan verification.
-- Official X profile is live at `https://x.com/GCAgochina`.
 - BaseScan token update form submitted from the owner's browser session.
 - BaseScan review follow-up runbook prepared.
 - Token allocation plan drafted: 700,000,000 GCA target public allocation and 300,000,000 GCA owner-held reserve.
@@ -29,6 +28,7 @@
 ## Needs Owner Input Or External Service
 
 - Wait for BaseScan review or an email reply to `cxy070800@gmail.com`.
+- Configure DNS records for `gcagochina.com` and wait for GitHub Pages HTTPS to become active.
 - Move the owner reserve to a Safe multisig or lock/vesting contract if stronger reserve assurances are needed.
 - Hire or request a third-party audit if public launch materials need an external audit badge.
 

@@ -22,7 +22,7 @@ BaseScan token updates must be submitted through the official BaseScan token upd
 - Source code status: verified
 - Deployer: `0x18d007bcb6be029f8ccd7cb13e324aa21891092d`
 - Logo source file: `brand/gca-logo.svg`
-- Website: `https://timchen078.github.io/gca_token/`
+- Website: `https://gcagochina.com/`
 - Whitepaper source file: `docs/whitepaper.md`
 
 ## Neutral Project Description
@@ -31,10 +31,9 @@ GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stand
 
 ## Submission-Ready Public Fields
 
-- Official website URL: `https://timchen078.github.io/gca_token/`
-- Public logo download URL: `https://timchen078.github.io/gca_token/assets/gca-logo.svg`
-- Public whitepaper URL: `https://timchen078.github.io/gca_token/whitepaper.html`
-- Official X profile: `https://x.com/GCAgochina`
+- Official website URL: `https://gcagochina.com/`
+- Public logo download URL: `https://gcagochina.com/assets/gca-logo.svg`
+- Public whitepaper URL: `https://gcagochina.com/whitepaper.html`
 - Official contact email: `cxy070800@gmail.com`
 - Email note: owner-provided Gmail address, publicly listed on the official website for BaseScan verification.
 

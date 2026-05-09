@@ -19,9 +19,9 @@ Check these daily until there is a response:
 - Gmail inbox and spam folder for `cxy070800@gmail.com`
 - BaseScan account notifications
 - Contract page: `https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`
-- Public website remains live: `https://timchen078.github.io/gca_token/`
-- Public logo remains live: `https://timchen078.github.io/gca_token/assets/gca-logo.svg`
-- Public whitepaper remains live: `https://timchen078.github.io/gca_token/whitepaper.html`
+- Public website remains live after DNS is configured: `https://gcagochina.com/`
+- Public logo remains live after DNS is configured: `https://gcagochina.com/assets/gca-logo.svg`
+- Public whitepaper remains live after DNS is configured: `https://gcagochina.com/whitepaper.html`
 
 ## If BaseScan Approves
 
@@ -66,10 +66,9 @@ Thank you for reviewing the GCA token profile submission.
 
 Network: Base Mainnet / chainId 8453
 Contract: 0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6
-Official website: https://timchen078.github.io/gca_token/
-Official logo: https://timchen078.github.io/gca_token/assets/gca-logo.svg
-Whitepaper: https://timchen078.github.io/gca_token/whitepaper.html
-Official X profile: https://x.com/GCAgochina
+Official website: https://gcagochina.com/
+Official logo: https://gcagochina.com/assets/gca-logo.svg
+Whitepaper: https://gcagochina.com/whitepaper.html
 Official contact email: cxy070800@gmail.com
 
 Please let us know if any additional verification or field correction is required.

@@ -25,6 +25,10 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("https://basescan.org/address/", site)
         self.assertNotIn("sepolia.basescan.org", site)
 
+    def test_public_site_sets_custom_domain(self):
+        cname = (ROOT / "site" / "CNAME").read_text().strip()
+        self.assertEqual(cname, "gcagochina.com")
+
     def test_public_site_discloses_current_operational_status(self):
         site = (ROOT / "site" / "index.html").read_text()
         self.assertIn("BaseScan token profile update has been submitted", site)
@@ -38,8 +42,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(RESERVE_TX, site)
         self.assertIn("mailto:cxy070800@gmail.com", site)
         self.assertIn("Project contact email", site)
-        self.assertIn("https://x.com/GCAgochina", site)
-        self.assertIn("Official X profile", site)
+        self.assertNotIn("https://x.com/GCAgochina", site)
+        self.assertNotIn("Official X profile", site)
         self.assertIn("No third-party audit has been completed", site)
         self.assertIn("pool is shallow", site)
         self.assertIn("high price impact and slippage", site)
@@ -63,7 +67,7 @@ class LaunchPackageTests(unittest.TestCase):
 
     def test_basescan_submission_has_required_public_placeholders(self):
         submission = (ROOT / "launch" / "basescan_token_submission.md").read_text()
-        self.assertIn("https://timchen078.github.io/gca_token/", submission)
+        self.assertIn("https://gcagochina.com/", submission)
         self.assertIn("Official contact email", submission)
         self.assertIn("cxy070800@gmail.com", submission)
         self.assertIn("Gmail address", submission)
@@ -71,7 +75,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("deployer-wallet ownership verification were included", submission)
         self.assertIn("publicly listed on the official website", submission)
         self.assertIn("Public logo download URL", submission)
-        self.assertIn("https://x.com/GCAgochina", submission)
+        self.assertNotIn("https://x.com/GCAgochina", submission)
         self.assertIn("https://basescan.org/tokenupdate/", submission)
         self.assertIn(MAINNET_ADDRESS, submission)
 
@@ -91,9 +95,9 @@ class LaunchPackageTests(unittest.TestCase):
         values = json.loads((ROOT / "launch" / "basescan_form_values.json").read_text())
         self.assertEqual(values["network"], "Base Mainnet")
         self.assertEqual(values["contractAddress"], MAINNET_ADDRESS)
-        self.assertEqual(values["website"], "https://timchen078.github.io/gca_token/")
-        self.assertEqual(values["logoUrl"], "https://timchen078.github.io/gca_token/assets/gca-logo.svg")
-        self.assertEqual(values["whitepaperUrl"], "https://timchen078.github.io/gca_token/whitepaper.html")
+        self.assertEqual(values["website"], "https://gcagochina.com/")
+        self.assertEqual(values["logoUrl"], "https://gcagochina.com/assets/gca-logo.svg")
+        self.assertEqual(values["whitepaperUrl"], "https://gcagochina.com/whitepaper.html")
         self.assertEqual(values["officialEmail"], "cxy070800@gmail.com")
         self.assertIn("Gmail address", values["officialEmailNote"])
         self.assertEqual(values["targetPublicAllocation"], "700000000")
@@ -107,8 +111,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("concept-stage community direction", values["description"])
         self.assertEqual(values["submissionStatus"], "submitted")
         self.assertEqual(values["reviewStatus"], "awaiting BaseScan review")
-        self.assertEqual(values["socialLinks"][0]["platform"], "X")
-        self.assertEqual(values["socialLinks"][0]["url"], "https://x.com/GCAgochina")
+        self.assertEqual(values["socialLinks"], [])
 
     def test_token_allocation_plan_records_owner_reserve(self):
         plan = json.loads((ROOT / "launch" / "token_allocation_plan.json").read_text())
@@ -190,7 +193,8 @@ class LaunchPackageTests(unittest.TestCase):
         status = (ROOT / "launch" / "launch_status.md").read_text()
         self.assertIn("## Done", status)
         self.assertIn("## Needs Owner Input Or External Service", status)
-        self.assertIn("https://timchen078.github.io/gca_token/", status)
+        self.assertIn("https://gcagochina.com/", status)
+        self.assertIn("DNS records for `gcagochina.com`", status)
         self.assertIn("Base Mainnet / chainId 8453", status)
         self.assertIn("Base Sepolia / chainId 84532", status)
         self.assertIn(RESERVE_WALLET, status)
