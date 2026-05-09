@@ -39,6 +39,7 @@ The full fixed supply was minted to the deployer wallet at deployment. The 70/30
 ## Official Contact
 
 - Project contact email: `cxy070800@gmail.com`
+- Official X profile: `https://x.com/GCAgochina`
 - The contact email is publicly listed on the official website for BaseScan verification.
 
 ## Project Direction

@@ -69,6 +69,7 @@ Contract: 0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6
 Official website: https://timchen078.github.io/gca_token/
 Official logo: https://timchen078.github.io/gca_token/assets/gca-logo.svg
 Whitepaper: https://timchen078.github.io/gca_token/whitepaper.html
+Official X profile: https://x.com/GCAgochina
 Official contact email: cxy070800@gmail.com
 
 Please let us know if any additional verification or field correction is required.

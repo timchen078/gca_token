@@ -15,6 +15,7 @@
 - Public logo URL is live at `https://timchen078.github.io/gca_token/assets/gca-logo.svg`.
 - Public whitepaper URL is live at `https://timchen078.github.io/gca_token/whitepaper.html`.
 - Official contact email `cxy070800@gmail.com` is published on the official website for BaseScan verification.
+- Official X profile is live at `https://x.com/GCAgochina`.
 - BaseScan token update form submitted from the owner's browser session.
 - BaseScan review follow-up runbook prepared.
 - Token allocation plan drafted: 700,000,000 GCA target public allocation and 300,000,000 GCA owner-held reserve.

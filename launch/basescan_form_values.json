@@ -26,5 +26,10 @@
   "submissionStatus": "submitted",
   "submissionDate": "2026-05-09",
   "reviewStatus": "awaiting BaseScan review",
-  "socialLinks": []
+  "socialLinks": [
+    {
+      "platform": "X",
+      "url": "https://x.com/GCAgochina"
+    }
+  ]
 }

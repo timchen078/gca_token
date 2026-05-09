@@ -34,6 +34,7 @@ GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stand
 - Official website URL: `https://timchen078.github.io/gca_token/`
 - Public logo download URL: `https://timchen078.github.io/gca_token/assets/gca-logo.svg`
 - Public whitepaper URL: `https://timchen078.github.io/gca_token/whitepaper.html`
+- Official X profile: `https://x.com/GCAgochina`
 - Official contact email: `cxy070800@gmail.com`
 - Email note: owner-provided Gmail address, publicly listed on the official website for BaseScan verification.
 

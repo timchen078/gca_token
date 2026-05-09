@@ -38,6 +38,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(RESERVE_TX, site)
         self.assertIn("mailto:cxy070800@gmail.com", site)
         self.assertIn("Project contact email", site)
+        self.assertIn("https://x.com/GCAgochina", site)
+        self.assertIn("Official X profile", site)
         self.assertIn("No third-party audit has been completed", site)
         self.assertIn("pool is shallow", site)
         self.assertIn("high price impact and slippage", site)
@@ -69,6 +71,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("deployer-wallet ownership verification were included", submission)
         self.assertIn("publicly listed on the official website", submission)
         self.assertIn("Public logo download URL", submission)
+        self.assertIn("https://x.com/GCAgochina", submission)
         self.assertIn("https://basescan.org/tokenupdate/", submission)
         self.assertIn(MAINNET_ADDRESS, submission)
 
@@ -104,6 +107,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("concept-stage community direction", values["description"])
         self.assertEqual(values["submissionStatus"], "submitted")
         self.assertEqual(values["reviewStatus"], "awaiting BaseScan review")
+        self.assertEqual(values["socialLinks"][0]["platform"], "X")
+        self.assertEqual(values["socialLinks"][0]["url"], "https://x.com/GCAgochina")
 
     def test_token_allocation_plan_records_owner_reserve(self):
         plan = json.loads((ROOT / "launch" / "token_allocation_plan.json").read_text())
