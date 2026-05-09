@@ -207,7 +207,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("GitHub Pages HTTPS certificate issued", status)
         self.assertIn("Data platform submission package prepared", status)
         self.assertIn("GeckoTerminal token info update runbook prepared", status)
-        self.assertIn("Submit GeckoTerminal token info update", status)
+        self.assertIn("GeckoTerminal token info update submitted on 2026-05-09", status)
+        self.assertIn("Wait for GeckoTerminal review", status)
         self.assertNotIn("wait for GitHub Pages HTTPS to become active", status)
         self.assertIn("Base Mainnet / chainId 8453", status)
         self.assertIn("Base Sepolia / chainId 84532", status)
@@ -240,7 +241,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["website"], "https://gcagochina.com/")
         self.assertEqual(values["logoUrl"], "https://gcagochina.com/assets/gca-logo.svg")
         self.assertEqual(values["liquidity"]["poolAddress"], "0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff")
-        self.assertEqual(values["platformReadiness"]["geckoTerminal"]["status"], "ready-for-token-info-update")
+        self.assertEqual(values["platformReadiness"]["geckoTerminal"]["status"], "submitted-awaiting-review")
         self.assertIn("prepared-but-weak-readiness", values["platformReadiness"]["coinGecko"]["status"])
         self.assertIn("prepared-but-weak-readiness", values["platformReadiness"]["coinMarketCap"]["status"])
         self.assertEqual(values["socialLinks"], [])
@@ -250,7 +251,8 @@ class LaunchPackageTests(unittest.TestCase):
         runbook = (ROOT / "launch" / "geckoterminal_update_runbook.md").read_text()
         values = json.loads((ROOT / "launch" / "geckoterminal_form_values.json").read_text())
 
-        self.assertIn("prepared, not submitted", runbook)
+        self.assertIn("submitted on 2026-05-09", runbook)
+        self.assertIn("Your form was submitted successfully", runbook)
         self.assertIn("Update Token Info", runbook)
         self.assertIn("launch/geckoterminal_form_values.json", runbook)
         self.assertIn("https://www.geckoterminal.com/base/pools/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff", runbook)
@@ -262,7 +264,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(MAINNET_ADDRESS, runbook)
         self.assertIn(RESERVE_WALLET, runbook)
 
-        self.assertEqual(values["submissionStatus"], "prepared-not-submitted")
+        self.assertEqual(values["submissionStatus"], "submitted")
+        self.assertEqual(values["reviewStatus"], "awaiting GeckoTerminal review")
         self.assertEqual(values["platform"], "GeckoTerminal")
         self.assertEqual(values["chainId"], 8453)
         self.assertEqual(values["contractAddress"], MAINNET_ADDRESS)
@@ -273,7 +276,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["socialLinks"], [])
         self.assertEqual(values["liquidity"]["poolAddress"], "0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff")
         self.assertEqual(values["supplyDisclosure"]["ownerReserveWallet"], RESERVE_WALLET)
-        self.assertIn("Use only if the owner confirms", values["officialEmailUse"])
+        self.assertIn("completed OTP verification", values["officialEmailUse"])
 
     def test_internal_security_review_is_not_third_party_audit(self):
         report = (ROOT / "audit" / "gca_internal_security_review.md").read_text()

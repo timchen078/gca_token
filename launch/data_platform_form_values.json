@@ -53,8 +53,8 @@
       "nextAction": "Use the pair URL; direct metadata is normally pulled from external token lists or Enhanced Token Info."
     },
     "geckoTerminal": {
-      "status": "ready-for-token-info-update",
-      "nextAction": "Submit once from the pool page after confirming use of the official email."
+      "status": "submitted-awaiting-review",
+      "nextAction": "Wait for GeckoTerminal review or an email reply to GCAgochina@outlook.com; do not submit duplicate requests while pending."
     },
     "coinGecko": {
       "status": "prepared-but-weak-readiness",

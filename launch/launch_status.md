@@ -29,11 +29,12 @@
 - Website updated with the Go China Access concept-stage project direction.
 - Data platform submission package prepared for DEX Screener, GeckoTerminal, CoinGecko, and CoinMarketCap.
 - GeckoTerminal token info update runbook prepared.
+- GeckoTerminal token info update submitted on 2026-05-09 with `GCAgochina@outlook.com`; owner completed OTP verification in the browser and GeckoTerminal confirmed the form was submitted successfully.
 
 ## Needs Owner Input Or External Service
 
 - Wait for BaseScan review or an email reply to `cxy070800@gmail.com`.
-- Submit GeckoTerminal token info update once from the live pool page using `launch/geckoterminal_update_runbook.md` if the owner confirms use of the official email.
+- Wait for GeckoTerminal review or an email reply to `GCAgochina@outlook.com`; GeckoTerminal showed a review window of up to 5 working days.
 - Wait for stronger public activity and market volume before submitting CoinGecko or CoinMarketCap listing requests.
 - Move the owner reserve to a Safe multisig or lock/vesting contract if stronger reserve assurances are needed.
 - Hire or request a third-party audit if public launch materials need an external audit badge.
@@ -41,6 +42,7 @@
 ## Public Communication Rules
 
 - BaseScan source and ownership verification are complete. The public BaseScan token profile update has been submitted, but it is not complete until BaseScan accepts and publishes it.
+- GeckoTerminal token information update has been submitted, but it is not complete until GeckoTerminal accepts and publishes it.
 - Internal engineering review is complete, but no third-party audit has been completed.
 - Current Uniswap liquidity is starter-depth only; trades can have high price impact and slippage.
 - The owner reserve is in a normal owner-controlled wallet. Do not describe it as locked, vested, or multisig-controlled unless custody changes on-chain.

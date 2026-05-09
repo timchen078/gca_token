@@ -1,5 +1,8 @@
 {
-  "submissionStatus": "prepared-not-submitted",
+  "submissionStatus": "submitted",
+  "submittedDate": "2026-05-09",
+  "reviewStatus": "awaiting GeckoTerminal review",
+  "submissionConfirmation": "GeckoTerminal displayed: Your form was submitted successfully. Review window: up to 5 working days.",
   "platform": "GeckoTerminal",
   "targetPoolUrl": "https://www.geckoterminal.com/base/pools/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff",
   "network": "Base Mainnet",
@@ -16,7 +19,7 @@
   "whitepaperUrl": "https://gcagochina.com/whitepaper.html",
   "explorerUrl": "https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "officialEmail": "GCAgochina@outlook.com",
-  "officialEmailUse": "Use only if the owner confirms the browser submission.",
+  "officialEmailUse": "Submitted after the owner confirmed use of this email and completed OTP verification in the browser.",
   "socialLinks": [],
   "description": "GCA, short for Go China Access, is a fixed-supply ERC-20 token on Base Mainnet. It is a concept-stage community direction focused on China-facing Web3 culture, creators, bilingual education, and public market narrative research. The contract created 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls. The token has starter Uniswap v3 GCA/WETH liquidity on Base Mainnet and a disclosed owner-held reserve wallet.",
   "liquidity": {

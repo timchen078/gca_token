@@ -1,10 +1,12 @@
 # GeckoTerminal Token Info Update Runbook
 
-This runbook is for one accurate GeckoTerminal token information update request for GCA. It should be used only after the owner is ready to submit the official contact email in the browser.
+This runbook records the accurate GeckoTerminal token information update request for GCA. Use it for audit trail and follow-up only unless GeckoTerminal asks for a corrected resubmission.
 
 ## Status
 
-- Current status: prepared, not submitted from this runbook.
+- Current status: submitted on 2026-05-09, awaiting GeckoTerminal review.
+- Submission email: `GCAgochina@outlook.com`
+- Browser confirmation: owner completed OTP verification; GeckoTerminal displayed "Your form was submitted successfully" and a review window of up to 5 working days.
 - Target pool: `https://www.geckoterminal.com/base/pools/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff`
 - Network: Base Mainnet
 - Pair: GCA/WETH
@@ -14,9 +16,9 @@ This runbook is for one accurate GeckoTerminal token information update request 
 - Owner reserve wallet: `0x5e8F84748612B913aAcC937492AC25dc5630E246`
 - Owner reserve transfer: `0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67`
 
-## Before Submitting
+## Before Resubmitting
 
-Confirm these are still true before sending the request:
+Do not submit a duplicate request while the 2026-05-09 request is pending. If GeckoTerminal asks for corrections, confirm these are still true before sending a corrected request:
 
 1. The website opens over HTTPS at `https://gcagochina.com/`.
 2. The logo opens publicly at `https://gcagochina.com/assets/gca-logo.svg`.
@@ -26,16 +28,19 @@ Confirm these are still true before sending the request:
 6. No active official X link is submitted while the `@GCAgochina` account is frozen.
 7. The request is not a duplicate of a pending GeckoTerminal token info update.
 
-## Browser Steps
+## Historical Browser Steps
 
-1. Open the GeckoTerminal pool page:
+These steps were completed from the owner's browser session on 2026-05-09:
+
+1. Opened the GeckoTerminal pool page:
    `https://www.geckoterminal.com/base/pools/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff`
-2. Find the token information section for GCA.
-3. Click `Update Token Info`.
-4. Fill the form using `launch/geckoterminal_form_values.json`.
-5. Leave social link fields blank unless an active official account exists.
-6. Submit once.
-7. Save the date, email used, and any confirmation text in `launch/launch_status.md`.
+2. Opened the `Update Token Info` form.
+3. Filled the form using `launch/geckoterminal_form_values.json`.
+4. Left social link fields blank because no active official social account exists.
+5. Uploaded `site/assets/gca-logo.png` as the icon image.
+6. Submitted with the regular, no-fee pass.
+7. Confirmed `GCAgochina@outlook.com` by OTP.
+8. Recorded GeckoTerminal's successful submission message in `launch/launch_status.md`.
 
 ## Copyable Description
 
