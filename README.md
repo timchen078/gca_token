@@ -27,6 +27,8 @@ Deployment notes are in `docs/deploy_base_sepolia.md` and `docs/deploy_base_main
 - Liquidity plan: `launch/liquidity_plan.json`
 - Liquidity pool runbook: `launch/liquidity_pool_runbook.md`
 - Liquidity deployment record: `deployments/base-mainnet-gca-liquidity.json`
+- Data platform submission package: `launch/data_platform_package.md`
+- Data platform form values: `launch/data_platform_form_values.json`
 - Audit scope: `launch/audit_scope.md`
 - Internal security review: `audit/gca_internal_security_review.md`
 - Launch status: `launch/launch_status.md`

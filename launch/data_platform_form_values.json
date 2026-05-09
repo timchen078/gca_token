@@ -1,0 +1,85 @@
+{
+  "packageStatus": "prepared",
+  "lastReviewedDate": "2026-05-09",
+  "network": "Base Mainnet",
+  "chainId": 8453,
+  "tokenName": "GCA",
+  "tokenSymbol": "GCA",
+  "conceptExpansion": "Go China Access",
+  "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+  "tokenStandard": "ERC-20",
+  "decimals": 18,
+  "totalSupply": "1000000000",
+  "mintingSupported": false,
+  "burningSupportedByCustomFunction": false,
+  "taxes": false,
+  "blacklist": false,
+  "adminControls": false,
+  "website": "https://gcagochina.com/",
+  "logoUrl": "https://gcagochina.com/assets/gca-logo.svg",
+  "whitepaperUrl": "https://gcagochina.com/whitepaper.html",
+  "explorerUrl": "https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+  "officialEmail": "cxy070800@gmail.com",
+  "socialLinks": [],
+  "shortDescription": "GCA, short for Go China Access, is a fixed-supply ERC-20 token on Base Mainnet. It is a concept-stage community direction focused on China-facing Web3 culture, creators, bilingual education, and public market narrative research.",
+  "longDescription": "GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stands for Go China Access, a concept-stage community direction focused on China-facing Web3 culture, creators, bilingual education, and public market narrative research. The contract created 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls. The token has a starter Uniswap v3 GCA/WETH pool on Base Mainnet and a disclosed owner-held reserve wallet. The project is early-stage and should not be described as externally audited, price-backed, yield-bearing, or backed by guaranteed liquidity.",
+  "liquidity": {
+    "status": "starter-liquidity-live",
+    "network": "Base Mainnet",
+    "dex": "Uniswap v3",
+    "pair": "GCA/WETH",
+    "poolAddress": "0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff",
+    "feeTier": "1%",
+    "positionTokenId": "5087977",
+    "dexScreenerUrl": "https://dexscreener.com/base/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff",
+    "geckoTerminalUrl": "https://www.geckoterminal.com/base/pools/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff",
+    "coinMarketCapDexScanUrl": "https://dex.coinmarketcap.com/base/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff/",
+    "uniswapPositionUrl": "https://app.uniswap.org/positions/v3/base/5087977",
+    "liquidityDepthNote": "Starter-depth only; trades can have high price impact and slippage."
+  },
+  "supplyDisclosure": {
+    "targetPublicAllocation": "700000000",
+    "targetPublicAllocationPercent": 70,
+    "ownerHeldReserve": "300000000",
+    "ownerHeldReservePercent": 30,
+    "ownerReserveWallet": "0x5e8F84748612B913aAcC937492AC25dc5630E246",
+    "ownerReserveTransferTx": "0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67",
+    "ownerReserveCustodyNote": "Normal owner-controlled wallet; not locked, vested, or multisig-controlled."
+  },
+  "platformReadiness": {
+    "dexScreener": {
+      "status": "discoverable",
+      "nextAction": "Use the pair URL; direct metadata is normally pulled from external token lists or Enhanced Token Info."
+    },
+    "geckoTerminal": {
+      "status": "ready-for-token-info-update",
+      "nextAction": "Submit once from the pool page after confirming use of the official email."
+    },
+    "coinGecko": {
+      "status": "prepared-but-weak-readiness",
+      "nextAction": "Wait for stronger public activity, social presence, and exchange volume before a listing request."
+    },
+    "coinMarketCap": {
+      "status": "prepared-but-weak-readiness",
+      "nextAction": "Wait for stronger liquidity, material volume, and public activity before a tracked listing request."
+    }
+  },
+  "doNotClaim": [
+    "BaseScan profile complete before approval",
+    "third-party audited",
+    "externally audited",
+    "locked reserve",
+    "deep liquidity",
+    "stable price",
+    "guaranteed liquidity",
+    "yield-bearing token",
+    "price-backed token"
+  ],
+  "officialSourceReferences": {
+    "dexScreenerTokenListing": "https://docs.dexscreener.com/token-listing",
+    "geckoTerminalTokenInfo": "https://support.coingecko.com/hc/en-us/articles/22612245806745-How-do-I-update-token-information-on-GeckoTerminal",
+    "coinGeckoMethodology": "https://www.coingecko.com/en/methodology",
+    "coinGeckoSelfServeGuide": "https://support.coingecko.com/hc/en-us/articles/33084534107289-Guide-to-the-CoinGecko-Self-Serve-Request-Form",
+    "coinMarketCapListingsCriteria": "https://support.coinmarketcap.com/hc/en-us/articles/360043659351-Listings-Criteria/"
+  }
+}

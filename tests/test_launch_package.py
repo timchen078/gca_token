@@ -59,6 +59,7 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "launch" / "token_allocation_plan.md",
             ROOT / "launch" / "liquidity_pool_runbook.md",
             ROOT / "launch" / "launch_status.md",
+            ROOT / "launch" / "data_platform_package.md",
         ]
         forbidden = re.compile(r"\b(guaranteed returns?|profit sharing|risk[- ]?free|稳赚|保本|拉盘|炒币)\b", re.I)
         for path in paths:
@@ -196,11 +197,45 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("https://gcagochina.com/", status)
         self.assertIn("DNS records for `gcagochina.com`", status)
         self.assertIn("GitHub Pages HTTPS certificate issued", status)
+        self.assertIn("Data platform submission package prepared", status)
+        self.assertIn("Submit GeckoTerminal token info update", status)
         self.assertNotIn("wait for GitHub Pages HTTPS to become active", status)
         self.assertIn("Base Mainnet / chainId 8453", status)
         self.assertIn("Base Sepolia / chainId 84532", status)
         self.assertIn(RESERVE_WALLET, status)
         self.assertIn(RESERVE_TX, status)
+
+    def test_data_platform_package_is_copyable_and_conservative(self):
+        package = (ROOT / "launch" / "data_platform_package.md").read_text()
+        values = json.loads((ROOT / "launch" / "data_platform_form_values.json").read_text())
+
+        self.assertIn("DEX Screener", package)
+        self.assertIn("GeckoTerminal", package)
+        self.assertIn("CoinGecko", package)
+        self.assertIn("CoinMarketCap", package)
+        self.assertIn("https://gcagochina.com/", package)
+        self.assertIn("https://gcagochina.com/assets/gca-logo.svg", package)
+        self.assertIn("https://gcagochina.com/whitepaper.html", package)
+        self.assertIn("https://dexscreener.com/base/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff", package)
+        self.assertIn("https://www.geckoterminal.com/base/pools/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff", package)
+        self.assertIn("starter-depth only", package)
+        self.assertIn("not completed", package)
+        self.assertIn("frozen", package)
+        self.assertIn(MAINNET_ADDRESS, package)
+        self.assertIn(RESERVE_WALLET, package)
+        self.assertIn(RESERVE_TX, package)
+
+        self.assertEqual(values["packageStatus"], "prepared")
+        self.assertEqual(values["chainId"], 8453)
+        self.assertEqual(values["contractAddress"], MAINNET_ADDRESS)
+        self.assertEqual(values["website"], "https://gcagochina.com/")
+        self.assertEqual(values["logoUrl"], "https://gcagochina.com/assets/gca-logo.svg")
+        self.assertEqual(values["liquidity"]["poolAddress"], "0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff")
+        self.assertEqual(values["platformReadiness"]["geckoTerminal"]["status"], "ready-for-token-info-update")
+        self.assertIn("prepared-but-weak-readiness", values["platformReadiness"]["coinGecko"]["status"])
+        self.assertIn("prepared-but-weak-readiness", values["platformReadiness"]["coinMarketCap"]["status"])
+        self.assertEqual(values["socialLinks"], [])
+        self.assertIn("third-party audited", values["doNotClaim"])
 
     def test_internal_security_review_is_not_third_party_audit(self):
         report = (ROOT / "audit" / "gca_internal_security_review.md").read_text()
