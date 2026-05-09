@@ -1,10 +1,12 @@
 # GCA Whitepaper
 
-Version: 0.3
+Version: 0.4
 
 ## Summary
 
-GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. The contract creates the entire supply at deployment and does not include post-deployment minting, burning, taxes, blacklist logic, or privileged admin controls.
+GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stands for Go China Access, a concept-stage community direction focused on China-facing Web3 culture, creators, bilingual education, and public market narrative research.
+
+The contract creates the entire supply at deployment and does not include post-deployment minting, burning, taxes, blacklist logic, or privileged admin controls. The product roadmap is still being developed publicly, so GCA should not be described as a finished platform or as having guaranteed utility.
 
 ## Token Parameters
 
@@ -34,6 +36,19 @@ The supply is assigned to the deployer in the constructor. There is no owner rol
 ## Network Selection
 
 GCA is deployed on Base Mainnet because Base is an EVM-compatible Layer 2 network that uses ETH for gas and supports common ERC-20 wallet and DEX workflows.
+
+## Project Direction
+
+The current public concept is Go China Access. The intended direction is to build a public community around China-facing Web3 activity, bilingual crypto education, creator/community access, and curated research about market narratives.
+
+Near-term work should focus on:
+
+- Creating official community channels
+- Publishing a clearer community thesis
+- Collecting feedback before committing to a specific product direction
+- Keeping public disclosures accurate as the project evolves
+
+This concept does not imply a price target, return promise, revenue share, or completed application.
 
 ## Distribution Status
 

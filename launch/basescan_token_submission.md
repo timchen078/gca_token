@@ -27,7 +27,7 @@ BaseScan token updates must be submitted through the official BaseScan token upd
 
 ## Neutral Project Description
 
-GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. The contract creates 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls.
+GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stands for Go China Access, a concept-stage community direction focused on China-facing Web3 culture, creators, bilingual education, and public market narrative research. The contract creates 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls.
 
 ## Submission-Ready Public Fields
 

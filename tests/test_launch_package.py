@@ -28,6 +28,9 @@ class LaunchPackageTests(unittest.TestCase):
     def test_public_site_discloses_current_operational_status(self):
         site = (ROOT / "site" / "index.html").read_text()
         self.assertIn("BaseScan token profile update has been submitted", site)
+        self.assertIn("Go China Access", site)
+        self.assertIn("concept phase", site)
+        self.assertIn("concept-stage project", site)
         self.assertIn("700,000,000 GCA / 70%", site)
         self.assertIn("300,000,000 GCA / 30%", site)
         self.assertIn("exact circulating supply should still be verified", site)
@@ -51,7 +54,7 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "launch" / "liquidity_pool_runbook.md",
             ROOT / "launch" / "launch_status.md",
         ]
-        forbidden = re.compile(r"\b(guaranteed returns?|profit sharing|risk[- ]?free|稳赚|保本)\b", re.I)
+        forbidden = re.compile(r"\b(guaranteed returns?|profit sharing|risk[- ]?free|稳赚|保本|拉盘|炒币)\b", re.I)
         for path in paths:
             with self.subTest(path=path.name):
                 self.assertIsNone(forbidden.search(path.read_text()))
@@ -97,6 +100,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["ownerReserveWallet"], RESERVE_WALLET)
         self.assertEqual(values["ownerReserveTransferTx"], RESERVE_TX)
         self.assertIn("normal owner-controlled wallet", values["ownerReserveCustodyNote"])
+        self.assertIn("Go China Access", values["description"])
+        self.assertIn("concept-stage community direction", values["description"])
         self.assertEqual(values["submissionStatus"], "submitted")
         self.assertEqual(values["reviewStatus"], "awaiting BaseScan review")
 
@@ -201,7 +206,10 @@ class LaunchPackageTests(unittest.TestCase):
         whitepaper = (ROOT / "site" / "whitepaper.html").read_text()
         self.assertIn('href="whitepaper.html"', index)
         self.assertIn("GCA Whitepaper", whitepaper)
-        self.assertIn("Version 0.3", whitepaper)
+        self.assertIn("Version 0.4", whitepaper)
+        self.assertIn("Go China Access", index)
+        self.assertIn("Go China Access", whitepaper)
+        self.assertIn("concept-stage community direction", whitepaper)
         self.assertIn("deployer-wallet ownership verification are complete", whitepaper)
         self.assertIn("Owner-held reserve", whitepaper)
         self.assertIn("300,000,000 GCA", whitepaper)

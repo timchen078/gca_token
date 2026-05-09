@@ -23,6 +23,7 @@
 - Base Mainnet Uniswap v3 GCA/WETH liquidity position created.
 - Audit scope prepared.
 - Internal security review completed.
+- Website updated with the Go China Access concept-stage project direction.
 
 ## Needs Owner Input Or External Service
 
@@ -36,6 +37,7 @@
 - Internal engineering review is complete, but no third-party audit has been completed.
 - Current Uniswap liquidity is starter-depth only; trades can have high price impact and slippage.
 - The owner reserve is in a normal owner-controlled wallet. Do not describe it as locked, vested, or multisig-controlled unless custody changes on-chain.
+- The product direction is still concept-stage. Do not describe GCA as a finished platform or as having guaranteed utility.
 - Do not claim return promises, price stability, liquidity depth, or external audit completion.
 
 ## Owner Reserve
