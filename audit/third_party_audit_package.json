@@ -1,5 +1,5 @@
 {
-  "status": "prepared-not-submitted",
+  "status": "quote-requests-submitted",
   "lastUpdated": "2026-05-10",
   "project": {
     "name": "GCA",
@@ -70,5 +70,39 @@
       "fit": "top-tier security assessment"
     }
   ],
-  "nextRequiredOwnerAction": "Choose auditor(s), approve sending the quote request, and approve any budget or payment."
+  "submissionLog": [
+    {
+      "name": "QuillAudits",
+      "officialUrl": "https://www.quillaudits.com/contact",
+      "status": "submitted",
+      "submittedAt": "2026-05-09T18:00:45.740Z",
+      "localSubmissionDate": "2026-05-10",
+      "contact": "GCAgochina@outlook.com",
+      "evidence": "Contact form showed: Form submitted successfully! We'll be in touch soon. API response returned success=true with id=69ff764fef9d6e0aa30257f6.",
+      "notes": "The pricing calculator estimated USD 1000, but the ERP pricing endpoint required an access token, so the contact form was used for the real quote request."
+    },
+    {
+      "name": "Hacken",
+      "officialUrl": "https://hacken.io/a/services/blockchain-security/smart-contract-security-audit/",
+      "status": "submitted",
+      "submittedAt": "2026-05-09T18:15:04Z",
+      "localSubmissionDate": "2026-05-10",
+      "contact": "GCAgochina@outlook.com",
+      "telegram": "gcagochinaofficial",
+      "evidence": "The form confirmation showed: Thank you! We've received your request! Our team is reviewing your information and will be in touch shortly.",
+      "notes": "Submitted as a Crypto-Native project in Asia Pacific with the official Telegram handle."
+    },
+    {
+      "name": "OpenZeppelin",
+      "officialUrl": "https://www.openzeppelin.com/request",
+      "status": "submitted",
+      "submittedAt": "2026-05-09T18:18:05Z",
+      "localSubmissionDate": "2026-05-10",
+      "contact": "GCAgochina@outlook.com",
+      "telegram": "@gcagochinaofficial",
+      "evidence": "The HubSpot form accepted the submission and returned conversionId=9b09cc7a-a53b-44b9-9763-98ac7e482434. The page showed: Thank you! We received your request.",
+      "notes": "Requested a smart-contract security audit, set expected completion date to 2026-06-30, and provided repository, documentation, scope, Solidity language, and Telegram handle."
+    }
+  ],
+  "nextRequiredOwnerAction": "Monitor GCAgochina@outlook.com and Telegram for auditor replies, compare quote price/timeline/report terms, then approve one auditor and any required payment before claiming a third-party audit."
 }

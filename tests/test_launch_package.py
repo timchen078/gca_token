@@ -222,6 +222,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(TELEGRAM_URL, status)
         self.assertIn("Telegram channel runbook prepared", status)
         self.assertIn("First official Telegram announcement pinned on 2026-05-10", status)
+        self.assertIn("Third-party audit quote requests submitted to QuillAudits, Hacken, and OpenZeppelin on 2026-05-10", status)
+        self.assertIn("Wait for audit quote replies", status)
+        self.assertIn("quote submission is not an audit", status)
         self.assertNotIn("Pin the first Telegram announcement manually", status)
         self.assertNotIn("wait for GitHub Pages HTTPS to become active", status)
         self.assertIn("Base Mainnet / chainId 8453", status)
@@ -322,9 +325,18 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(MAINNET_ADDRESS, report)
         self.assertIn("Third-party audit is not complete", plan)
         self.assertIn("Quote request", request)
-        self.assertEqual(package["status"], "prepared-not-submitted")
+        self.assertEqual(package["status"], "quote-requests-submitted")
         self.assertFalse(package["publicClaimState"]["thirdPartyAuditCompleted"])
-        self.assertIn("Choose auditor", package["nextRequiredOwnerAction"])
+        self.assertIn("Monitor GCAgochina@outlook.com", package["nextRequiredOwnerAction"])
+        self.assertIn("before claiming a third-party audit", package["nextRequiredOwnerAction"])
+        self.assertEqual(
+            [entry["name"] for entry in package["submissionLog"]],
+            ["QuillAudits", "Hacken", "OpenZeppelin"],
+        )
+        self.assertTrue(all(entry["status"] == "submitted" for entry in package["submissionLog"]))
+        self.assertIn("69ff764fef9d6e0aa30257f6", package["submissionLog"][0]["evidence"])
+        self.assertIn("We've received your request", package["submissionLog"][1]["evidence"])
+        self.assertIn("9b09cc7a-a53b-44b9-9763-98ac7e482434", package["submissionLog"][2]["evidence"])
 
     def test_site_has_whitepaper_page(self):
         index = (ROOT / "site" / "index.html").read_text()
