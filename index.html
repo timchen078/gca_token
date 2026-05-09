@@ -3,28 +3,34 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>GCA</title>
-    <meta name="description" content="GCA is a fixed-supply ERC-20 token deployed on Base Mainnet.">
+    <title>GCA | Go China Access</title>
+    <meta name="description" content="GCA is a fixed-supply ERC-20 token on Base Mainnet, exploring the Go China Access community concept.">
     <style>
       :root {
         color-scheme: light;
-        --ink: #0b1220;
-        --muted: #526070;
-        --line: #d9e1ea;
+        --ink: #111318;
+        --muted: #5f6773;
+        --line: #dfe3ea;
         --panel: #ffffff;
-        --soft: #f4f7fb;
+        --soft: #f6f7f9;
+        --red: #d71920;
         --blue: #0052ff;
-        --green: #059669;
+        --green: #087f5b;
+        --gold: #b88714;
       }
 
       * {
         box-sizing: border-box;
       }
 
+      html {
+        scroll-behavior: smooth;
+      }
+
       body {
         margin: 0;
         color: var(--ink);
-        background: #f8fafc;
+        background: #fbfbfc;
         font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         line-height: 1.5;
       }
@@ -45,7 +51,7 @@
 
       header {
         border-bottom: 1px solid var(--line);
-        background: rgba(255, 255, 255, 0.92);
+        background: rgba(255, 255, 255, 0.94);
         position: sticky;
         top: 0;
         z-index: 2;
@@ -63,7 +69,8 @@
         display: flex;
         align-items: center;
         gap: 10px;
-        font-weight: 800;
+        color: var(--ink);
+        font-weight: 850;
         letter-spacing: 0;
       }
 
@@ -80,20 +87,42 @@
       }
 
       main {
-        padding: 48px 0 56px;
+        padding: 44px 0 56px;
       }
 
-      .intro {
+      .hero {
         display: grid;
-        grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
-        gap: 32px;
-        align-items: start;
+        grid-template-columns: minmax(0, 1.1fr) minmax(310px, 0.9fr);
+        gap: 34px;
+        align-items: center;
+        min-height: min(680px, calc(100vh - 96px));
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin: 0 0 18px;
+        color: var(--red);
+        font-size: 13px;
+        font-weight: 850;
+        letter-spacing: 0;
+        text-transform: uppercase;
+      }
+
+      .eyebrow::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: var(--red);
       }
 
       h1 {
         margin: 0;
-        font-size: clamp(46px, 7vw, 84px);
-        line-height: 0.95;
+        max-width: 800px;
+        font-size: clamp(48px, 7vw, 88px);
+        line-height: 0.96;
         letter-spacing: 0;
       }
 
@@ -119,20 +148,47 @@
         min-height: 42px;
         padding: 10px 14px;
         font: inherit;
-        font-weight: 700;
+        font-weight: 750;
         cursor: pointer;
       }
 
       .button.primary {
-        border-color: var(--blue);
-        background: var(--blue);
+        border-color: var(--red);
+        background: var(--red);
         color: #fff;
+      }
+
+      .hero-panel {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        padding: 24px;
+      }
+
+      .logo-lockup {
+        display: grid;
+        grid-template-columns: 88px minmax(0, 1fr);
+        gap: 18px;
+        align-items: center;
+      }
+
+      .logo-lockup img {
+        width: 88px;
+        height: 88px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+      }
+
+      .tagline {
+        margin: 6px 0 0;
+        color: var(--muted);
       }
 
       .facts {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 12px;
+        margin-top: 20px;
       }
 
       .fact,
@@ -143,23 +199,23 @@
       }
 
       .fact {
-        min-height: 92px;
-        padding: 16px;
+        min-height: 90px;
+        padding: 15px;
       }
 
       .label {
         display: block;
         color: var(--muted);
         font-size: 12px;
-        font-weight: 700;
+        font-weight: 750;
         text-transform: uppercase;
       }
 
       .value {
         display: block;
         margin-top: 8px;
-        font-size: 18px;
-        font-weight: 800;
+        font-size: 17px;
+        font-weight: 850;
         overflow-wrap: anywhere;
       }
 
@@ -167,15 +223,28 @@
         color: var(--green);
       }
 
+      .section {
+        margin-top: 34px;
+      }
+
       .panel {
-        margin-top: 28px;
         padding: 24px;
       }
 
       h2 {
         margin: 0 0 14px;
-        font-size: 22px;
+        font-size: 24px;
         letter-spacing: 0;
+      }
+
+      h3 {
+        margin: 0 0 8px;
+        font-size: 17px;
+      }
+
+      .note {
+        margin: 0;
+        color: var(--muted);
       }
 
       .grid {
@@ -184,18 +253,24 @@
         gap: 14px;
       }
 
-      .note {
-        margin: 0;
-        color: var(--muted);
+      .two {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
       }
 
-      .allocation-list {
+      .stack {
+        display: grid;
+        gap: 12px;
+      }
+
+      .list {
         display: grid;
         gap: 10px;
         margin-top: 12px;
       }
 
-      .allocation-row {
+      .row {
         display: grid;
         grid-template-columns: minmax(0, 1fr) auto;
         gap: 12px;
@@ -204,9 +279,17 @@
         padding-top: 10px;
       }
 
-      .allocation-amount {
-        font-weight: 800;
+      .row strong {
         white-space: nowrap;
+      }
+
+      .phase {
+        border-left: 3px solid var(--red);
+        padding-left: 14px;
+      }
+
+      .phase.current {
+        border-left-color: var(--gold);
       }
 
       code {
@@ -223,11 +306,16 @@
         font-size: 14px;
       }
 
-      @media (max-width: 800px) {
-        .intro,
+      @media (max-width: 860px) {
+        .hero,
         .grid,
+        .two,
         .facts {
           grid-template-columns: 1fr;
+        }
+
+        .hero {
+          min-height: auto;
         }
 
         nav {
@@ -240,12 +328,18 @@
           flex-wrap: wrap;
         }
 
-        .allocation-row {
+        .row {
           grid-template-columns: 1fr;
         }
 
-        .allocation-amount {
+        .row strong {
           white-space: normal;
+        }
+      }
+
+      @media (max-width: 520px) {
+        .logo-lockup {
+          grid-template-columns: 1fr;
         }
       }
     </style>
@@ -258,103 +352,149 @@
           <span>GCA</span>
         </a>
         <div class="nav-links">
+          <a href="#concept">Concept</a>
           <a href="#facts">Facts</a>
+          <a href="#roadmap">Roadmap</a>
           <a href="#contract">Contract</a>
-          <a href="#status">Status</a>
-          <a href="#contact">Contact</a>
-          <a href="#risk">Risk Notice</a>
+          <a href="#risk">Risk</a>
         </div>
       </nav>
     </header>
 
     <main id="top" class="shell">
-      <section class="intro" aria-labelledby="title">
+      <section class="hero" aria-labelledby="title">
         <div>
+          <p class="eyebrow">Go China Access</p>
           <h1 id="title">GCA</h1>
-          <p class="lead">Fixed-supply ERC-20 token deployed on Base Mainnet. The contract creates 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls.</p>
+          <p class="lead">GCA is a fixed-supply ERC-20 token on Base Mainnet exploring a simple idea: make a public Web3 community around the Go China narrative, China-facing culture, creator access, and bilingual crypto education.</p>
+          <p class="lead">The project is in concept phase. The token, verified contract, reserve wallet, and starter liquidity are live; the product roadmap is being developed publicly without return, price, audit, or liquidity guarantees.</p>
           <div class="actions">
-          <a class="button primary" href="https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6" target="_blank" rel="noreferrer">BaseScan Contract</a>
-          <a class="button" href="https://basescan.org/tx/0xae8ae4d0bd89c03b39946564a5b63bb20cd38879a1aa1fdcb20a6f1c4802e74e" target="_blank" rel="noreferrer">Deployment Tx</a>
-          <a class="button" href="whitepaper.html">Whitepaper</a>
-          <button class="button" type="button" id="copyContract">Copy Contract</button>
-          <button class="button" type="button" id="addToken">Add to MetaMask</button>
+            <a class="button primary" href="https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6" target="_blank" rel="noreferrer">BaseScan Contract</a>
+            <a class="button" href="whitepaper.html">Whitepaper</a>
+            <a class="button" href="https://app.uniswap.org/positions/v3/base/5087977" target="_blank" rel="noreferrer">Liquidity</a>
+            <button class="button" type="button" id="copyContract">Copy Contract</button>
+            <button class="button" type="button" id="addToken">Add to MetaMask</button>
           </div>
         </div>
 
-        <div class="facts" id="facts">
-          <div class="fact">
-            <span class="label">Network</span>
-            <span class="value">Base Mainnet</span>
+        <aside class="hero-panel" aria-label="GCA status">
+          <div class="logo-lockup">
+            <img src="assets/gca-logo.svg" alt="GCA token mark">
+            <div>
+              <h2>Go China Access</h2>
+              <p class="tagline">A public token concept for China-facing Web3 community building.</p>
+            </div>
           </div>
-          <div class="fact">
-            <span class="label">Chain ID</span>
-            <span class="value">8453</span>
+          <div class="facts" id="facts">
+            <div class="fact">
+              <span class="label">Network</span>
+              <span class="value">Base Mainnet</span>
+            </div>
+            <div class="fact">
+              <span class="label">Chain ID</span>
+              <span class="value">8453</span>
+            </div>
+            <div class="fact">
+              <span class="label">Supply</span>
+              <span class="value">1,000,000,000</span>
+            </div>
+            <div class="fact">
+              <span class="label">Source</span>
+              <span class="value good">Verified</span>
+            </div>
           </div>
-          <div class="fact">
-            <span class="label">Supply</span>
-            <span class="value">1,000,000,000</span>
+        </aside>
+      </section>
+
+      <section class="section two" id="concept" aria-label="Concept">
+        <div class="panel">
+          <h2>Project Direction</h2>
+          <p class="note">GCA currently stands for Go China Access. The intended direction is to build a community layer for people who want to follow China-facing Web3 culture, creators, education, and cross-border community activity. The practical product is still being shaped, so public materials describe it as a concept-stage project.</p>
+        </div>
+        <div class="panel">
+          <h2>What It Is Not</h2>
+          <p class="note">GCA is not an investment product, does not promise price performance, does not distribute platform revenue, and has not completed a third-party audit. Public claims should stay focused on verifiable facts and roadmap progress.</p>
+        </div>
+      </section>
+
+      <section class="section grid" aria-label="Use directions">
+        <div class="panel">
+          <h3>Culture</h3>
+          <p class="note">A place to organize China-facing crypto culture, stories, launch notes, translations, and community updates.</p>
+        </div>
+        <div class="panel">
+          <h3>Community</h3>
+          <p class="note">A token-backed identity layer for future community access, campaigns, and bilingual educational activity.</p>
+        </div>
+        <div class="panel">
+          <h3>Access</h3>
+          <p class="note">A long-term path toward curated resources for users trying to understand Chinese market narratives and Web3 activity.</p>
+        </div>
+      </section>
+
+      <section class="section panel" id="roadmap" aria-labelledby="roadmapTitle">
+        <h2 id="roadmapTitle">Roadmap</h2>
+        <div class="grid">
+          <div class="phase current">
+            <h3>Phase 1: Public Facts</h3>
+            <p class="note">Contract deployed, source verified, official website live, owner reserve disclosed, and starter liquidity created on Base Mainnet.</p>
           </div>
-          <div class="fact">
-            <span class="label">Source</span>
-            <span class="value good">Verified</span>
+          <div class="phase">
+            <h3>Phase 2: Community Setup</h3>
+            <p class="note">Create official social channels, publish a clearer community thesis, and collect feedback before committing to a product direction.</p>
+          </div>
+          <div class="phase">
+            <h3>Phase 3: Product Definition</h3>
+            <p class="note">Choose one concrete utility path, then update the roadmap, documentation, and risk disclosures before asking users to rely on it.</p>
           </div>
         </div>
       </section>
 
-      <section class="panel" id="contract" aria-labelledby="contractTitle">
+      <section class="section panel" id="contract" aria-labelledby="contractTitle">
         <h2 id="contractTitle">Canonical Contract</h2>
         <p class="note">Use the chain and contract together. The same contract address also exists on Base Sepolia because deterministic deployment data can produce the same address on different chains.</p>
         <p><code>Base Mainnet / chainId 8453 / 0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6</code></p>
       </section>
 
-      <section class="panel" id="status" aria-labelledby="statusTitle">
-        <h2 id="statusTitle">Launch Status</h2>
-        <p class="note">Source code and deployer-wallet ownership are verified on BaseScan. The public BaseScan token profile update has been submitted and is awaiting BaseScan review.</p>
-      </section>
-
-      <section class="panel" id="allocation" aria-labelledby="allocationTitle">
-        <h2 id="allocationTitle">Target Allocation</h2>
+      <section class="section panel" id="allocation" aria-labelledby="allocationTitle">
+        <h2 id="allocationTitle">Allocation</h2>
         <p class="note">Total supply is fixed at 1,000,000,000 GCA. The target plan is 70% for public circulation, ecosystem, and liquidity, with 30% held as an owner reserve. The reserve transfer is visible on-chain; exact circulating supply should still be verified by each data provider.</p>
-        <div class="allocation-list">
-          <div class="allocation-row">
+        <div class="list">
+          <div class="row">
             <span>Public circulation, ecosystem, and liquidity allocation</span>
-            <span class="allocation-amount">700,000,000 GCA / 70%</span>
+            <strong>700,000,000 GCA / 70%</strong>
           </div>
-          <div class="allocation-row">
+          <div class="row">
             <span>Owner-held reserve</span>
-            <span class="allocation-amount">300,000,000 GCA / 30%</span>
+            <strong>300,000,000 GCA / 30%</strong>
           </div>
         </div>
         <p class="note">Owner reserve wallet: <code>0x5e8F84748612B913aAcC937492AC25dc5630E246</code>. Reserve transfer: <a href="https://basescan.org/tx/0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67" target="_blank" rel="noreferrer">BaseScan transaction</a>. This is a normal owner-controlled wallet, not a lock, vesting contract, or multisig.</p>
       </section>
 
-      <section class="grid" aria-label="Project references">
+      <section class="section grid" aria-label="Project references">
         <div class="panel" id="contact">
           <h2>Official Contact</h2>
           <p class="note">Project contact email: <a href="mailto:cxy070800@gmail.com">cxy070800@gmail.com</a>.</p>
         </div>
         <div class="panel">
-          <h2>Token Standard</h2>
-          <p class="note">ERC-20 interface with transfer, approval, and allowance support.</p>
-        </div>
-        <div class="panel">
-          <h2>Security Status</h2>
-          <p class="note">Internal engineering review is complete. No third-party audit has been completed, so GCA should not be described as externally audited.</p>
+          <h2>BaseScan Status</h2>
+          <p class="note">Source code and deployer-wallet ownership are verified. The public BaseScan token profile update has been submitted and is awaiting BaseScan review.</p>
         </div>
         <div class="panel">
           <h2>Liquidity Status</h2>
           <p class="note">Starter Uniswap v3 GCA/WETH liquidity exists on Base. The pool is shallow, so trades can have high price impact and slippage.</p>
-          <p><a href="https://app.uniswap.org/positions/v3/base/5087977" target="_blank" rel="noreferrer">View liquidity position</a></p>
         </div>
-        <div class="panel" id="risk">
-          <h2>Risk Notice</h2>
-          <p class="note">GCA does not represent return guarantees, fee distributions, custody, or a right to redeem assets. Always verify Base Mainnet chain ID 8453, the contract address, and pool details before interacting.</p>
-        </div>
+      </section>
+
+      <section class="section panel" id="risk" aria-labelledby="riskTitle">
+        <h2 id="riskTitle">Risk Notice</h2>
+        <p class="note">GCA does not represent return guarantees, fee distributions, custody, or a right to redeem assets. The project is in concept phase and the current liquidity pool is small. No third-party audit has been completed. Public materials should not describe GCA as externally audited, locked, price-backed, or yield-bearing.</p>
       </section>
     </main>
 
     <footer>
-      <div class="shell">GCA public facts page. Always verify contract details on BaseScan before interacting.</div>
+      <div class="shell">GCA public facts page. Always verify Base Mainnet chain ID 8453, the contract address, and pool details before interacting.</div>
     </footer>
 
     <script>
