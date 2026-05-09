@@ -70,6 +70,7 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "launch" / "launch_status.md",
             ROOT / "launch" / "data_platform_package.md",
             ROOT / "launch" / "geckoterminal_update_runbook.md",
+            ROOT / "launch" / "telegram_channel_runbook.md",
         ]
         forbidden = re.compile(r"\b(guaranteed returns?|profit sharing|risk[- ]?free|稳赚|保本|拉盘|炒币)\b", re.I)
         for path in paths:
@@ -215,11 +216,23 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("GeckoTerminal token info update submitted on 2026-05-09", status)
         self.assertIn("Wait for GeckoTerminal review", status)
         self.assertIn(TELEGRAM_URL, status)
+        self.assertIn("Telegram channel runbook prepared", status)
+        self.assertIn("Pin the first Telegram announcement manually", status)
         self.assertNotIn("wait for GitHub Pages HTTPS to become active", status)
         self.assertIn("Base Mainnet / chainId 8453", status)
         self.assertIn("Base Sepolia / chainId 84532", status)
         self.assertIn(RESERVE_WALLET, status)
         self.assertIn(RESERVE_TX, status)
+
+    def test_telegram_channel_runbook_records_official_channel(self):
+        runbook = (ROOT / "launch" / "telegram_channel_runbook.md").read_text()
+        self.assertIn(TELEGRAM_URL, runbook)
+        self.assertIn("First public announcement: posted on 2026-05-09", runbook)
+        self.assertIn("Pin status: not confirmed", runbook)
+        self.assertIn(MAINNET_ADDRESS, runbook)
+        self.assertIn("No third-party audit has been completed", runbook)
+        self.assertIn("starter-depth only", runbook)
+        self.assertIn("Do not submit the frozen X account", runbook)
 
     def test_data_platform_package_is_copyable_and_conservative(self):
         package = (ROOT / "launch" / "data_platform_package.md").read_text()
