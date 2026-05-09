@@ -102,7 +102,7 @@ BaseScan source verification and deployer-wallet ownership verification are comp
 
 ## Official Contact
 
-Project contact email: `cxy070800@gmail.com`
+Project contact email: `GCAgochina@outlook.com`
 
 ## Risk Notice
 

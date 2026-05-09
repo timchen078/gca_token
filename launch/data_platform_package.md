@@ -29,7 +29,7 @@ This package prepares GCA information for token data and DEX discovery platforms
 - Taxes: none
 - Blacklist: none
 - Admin controls: none
-- Official email: `cxy070800@gmail.com`
+- Official email for data platform submissions: `GCAgochina@outlook.com`
 
 ## Public URLs
 
@@ -94,7 +94,7 @@ GeckoTerminal support says to navigate to the token pool, open the Token Info se
 Recommended action:
 
 1. Submit once using the GeckoTerminal pool URL.
-2. Use `cxy070800@gmail.com` only after confirming the email submission step in the browser.
+2. Use `GCAgochina@outlook.com` only after confirming the email submission step in the browser.
 3. Use the website, logo, whitepaper, BaseScan contract, and neutral descriptions above.
 4. Do not include frozen X as an official social link.
 

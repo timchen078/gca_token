@@ -16,7 +16,8 @@
 - GitHub Pages HTTPS certificate issued and Enforce HTTPS enabled.
 - Public logo URL is live at `https://gcagochina.com/assets/gca-logo.svg`.
 - Public whitepaper URL is live at `https://gcagochina.com/whitepaper.html`.
-- Official contact email `cxy070800@gmail.com` is published on the official website for BaseScan verification.
+- Current public contact email `GCAgochina@outlook.com` is published on the official website for data platform verification.
+- BaseScan token update was submitted with `cxy070800@gmail.com`; monitor that inbox while the BaseScan review is pending.
 - BaseScan token update form submitted from the owner's browser session.
 - BaseScan review follow-up runbook prepared.
 - Token allocation plan drafted: 700,000,000 GCA target public allocation and 300,000,000 GCA owner-held reserve.

@@ -10,7 +10,7 @@ This runbook is for one accurate GeckoTerminal token information update request 
 - Pair: GCA/WETH
 - Contract address: `0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`
 - Official website: `https://gcagochina.com/`
-- Official contact email: `cxy070800@gmail.com`
+- Official contact email for GeckoTerminal submission: `GCAgochina@outlook.com`
 - Owner reserve wallet: `0x5e8F84748612B913aAcC937492AC25dc5630E246`
 - Owner reserve transfer: `0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67`
 
