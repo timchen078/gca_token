@@ -8,7 +8,7 @@ This runbook records the current official Telegram channel state for GCA and the
 - Channel name: `GCA | Go China Access`
 - Channel photo: updated with the GCA logo.
 - First public announcement: posted on 2026-05-09.
-- Pin status: not confirmed. Telegram Web and the installed Telegram client did not expose a reliable pin control during automation.
+- Pin status: confirmed on 2026-05-10. The first public announcement is pinned in the official channel.
 
 ## First Announcement Text
 
@@ -23,15 +23,14 @@ BaseScan: https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c
 GCA is concept-stage. No third-party audit has been completed. Current liquidity is starter-depth only and trades may have high price impact.
 ```
 
-## Manual Pin Steps
+## Pin Verification
 
-Use the phone app or a Telegram client that exposes full channel admin controls:
+The pinned announcement should remain the first public reference point for visitors. If it is ever replaced:
 
 1. Open `GCA | Go China Access`.
-2. Long-press or right-click the first public announcement.
-3. Choose `Pin` or `Pin Message`.
-4. Confirm the pin. If there is a notification option, use the quiet/no-notification option unless a new public alert is intended.
-5. Reopen the channel and verify the announcement appears in the pinned message bar.
+2. Verify the pinned message bar points to the official links announcement.
+3. Keep the replacement pinned message limited to official links and conservative risk disclosures.
+4. Do not pin market-price claims, external audit claims, or launch promises.
 
 ## Use In Platform Follow-Ups
 

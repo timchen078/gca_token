@@ -32,6 +32,7 @@
 - GeckoTerminal token info update submitted on 2026-05-09 with `GCAgochina@outlook.com`; owner completed OTP verification in the browser and GeckoTerminal confirmed the form was submitted successfully.
 - Official Telegram channel created at `https://t.me/gcagochinaofficial`.
 - Official Telegram channel photo updated and first public announcement posted on 2026-05-09.
+- First official Telegram announcement pinned on 2026-05-10.
 - Telegram channel runbook prepared.
 
 ## Needs Owner Input Or External Service
@@ -40,7 +41,6 @@
 - Wait for GeckoTerminal review or an email reply to `GCAgochina@outlook.com`; GeckoTerminal showed a review window of up to 5 working days.
 - Wait for stronger public activity and market volume before submitting CoinGecko or CoinMarketCap listing requests.
 - Add the official Telegram link to any BaseScan or GeckoTerminal follow-up if those reviewers ask for social links.
-- Pin the first Telegram announcement manually from a Telegram client that exposes `Pin Message`; automation could not reliably access that control.
 - Move the owner reserve to a Safe multisig or lock/vesting contract if stronger reserve assurances are needed.
 - Hire or request a third-party audit if public launch materials need an external audit badge.
 
