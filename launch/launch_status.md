@@ -31,6 +31,7 @@
 - GeckoTerminal token info update runbook prepared.
 - GeckoTerminal token info update submitted on 2026-05-09 with `GCAgochina@outlook.com`; owner completed OTP verification in the browser and GeckoTerminal confirmed the form was submitted successfully.
 - Official Telegram channel created at `https://t.me/gcagochinaofficial`.
+- Official Telegram channel photo updated and first public announcement posted on 2026-05-09.
 
 ## Needs Owner Input Or External Service
 
