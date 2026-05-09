@@ -48,6 +48,11 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("pool is shallow", site)
         self.assertIn("high price impact and slippage", site)
         self.assertIn("https://app.uniswap.org/positions/v3/base/5087977", site)
+        self.assertIn("Market References", site)
+        self.assertIn("https://dexscreener.com/base/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff", site)
+        self.assertIn("https://www.geckoterminal.com/base/pools/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff", site)
+        self.assertIn("https://dex.coinmarketcap.com/base/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff/", site)
+        self.assertIn("starter liquidity only", site)
 
     def test_public_materials_avoid_investment_promises(self):
         paths = [
@@ -293,6 +298,10 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("not a lock, vesting contract, or Safe multisig", whitepaper)
         self.assertIn("mailto:cxy070800@gmail.com", whitepaper)
         self.assertIn("starter liquidity only", whitepaper)
+        self.assertIn("https://app.uniswap.org/positions/v3/base/5087977", whitepaper)
+        self.assertIn("https://dexscreener.com/base/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff", whitepaper)
+        self.assertIn("https://www.geckoterminal.com/base/pools/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff", whitepaper)
+        self.assertIn("https://dex.coinmarketcap.com/base/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff/", whitepaper)
         self.assertIn(MAINNET_ADDRESS, whitepaper)
 
 

@@ -85,6 +85,13 @@ The initial live liquidity position is a Base Mainnet Uniswap v3 GCA/WETH pool w
 
 This is starter liquidity only. The current pool is shallow, so trades can have high price impact, wide slippage, and volatile execution prices.
 
+Market reference links:
+
+- DEX Screener pair: `https://dexscreener.com/base/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff`
+- GeckoTerminal pool: `https://www.geckoterminal.com/base/pools/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff`
+- CoinMarketCap DexScan pool: `https://dex.coinmarketcap.com/base/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff/`
+- Uniswap v3 liquidity position: `https://app.uniswap.org/positions/v3/base/5087977`
+
 ## Security Notes
 
 The current contract has been source-verified on BaseScan and covered by repository tests for fixed supply, public ERC-20 functions, compiler output, deployment pages, and deployment records. An internal engineering review is complete. This is not a substitute for a third-party audit, and no third-party audit has been completed.

@@ -69,6 +69,13 @@ Starter liquidity is live on Base Mainnet:
 
 The pool is shallow, so trades can have high price impact and slippage.
 
+Market reference links:
+
+- DEX Screener pair: `https://dexscreener.com/base/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff`
+- GeckoTerminal pool: `https://www.geckoterminal.com/base/pools/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff`
+- CoinMarketCap DexScan pool: `https://dex.coinmarketcap.com/base/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff/`
+- Uniswap v3 liquidity position: `https://app.uniswap.org/positions/v3/base/5087977`
+
 ## Audit Status
 
 Internal engineering review is complete. No third-party audit has been completed. Do not describe GCA as externally audited unless an independent auditor provides a report or public verification page.
