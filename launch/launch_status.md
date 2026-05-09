@@ -27,11 +27,12 @@
 - Internal security review completed.
 - Website updated with the Go China Access concept-stage project direction.
 - Data platform submission package prepared for DEX Screener, GeckoTerminal, CoinGecko, and CoinMarketCap.
+- GeckoTerminal token info update runbook prepared.
 
 ## Needs Owner Input Or External Service
 
 - Wait for BaseScan review or an email reply to `cxy070800@gmail.com`.
-- Submit GeckoTerminal token info update once from the live pool page if the owner confirms use of the official email.
+- Submit GeckoTerminal token info update once from the live pool page using `launch/geckoterminal_update_runbook.md` if the owner confirms use of the official email.
 - Wait for stronger public activity and market volume before submitting CoinGecko or CoinMarketCap listing requests.
 - Move the owner reserve to a Safe multisig or lock/vesting contract if stronger reserve assurances are needed.
 - Hire or request a third-party audit if public launch materials need an external audit badge.

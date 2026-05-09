@@ -60,6 +60,7 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "launch" / "liquidity_pool_runbook.md",
             ROOT / "launch" / "launch_status.md",
             ROOT / "launch" / "data_platform_package.md",
+            ROOT / "launch" / "geckoterminal_update_runbook.md",
         ]
         forbidden = re.compile(r"\b(guaranteed returns?|profit sharing|risk[- ]?free|稳赚|保本|拉盘|炒币)\b", re.I)
         for path in paths:
@@ -198,6 +199,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("DNS records for `gcagochina.com`", status)
         self.assertIn("GitHub Pages HTTPS certificate issued", status)
         self.assertIn("Data platform submission package prepared", status)
+        self.assertIn("GeckoTerminal token info update runbook prepared", status)
         self.assertIn("Submit GeckoTerminal token info update", status)
         self.assertNotIn("wait for GitHub Pages HTTPS to become active", status)
         self.assertIn("Base Mainnet / chainId 8453", status)
@@ -236,6 +238,33 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("prepared-but-weak-readiness", values["platformReadiness"]["coinMarketCap"]["status"])
         self.assertEqual(values["socialLinks"], [])
         self.assertIn("third-party audited", values["doNotClaim"])
+
+    def test_geckoterminal_runbook_is_copyable_and_conservative(self):
+        runbook = (ROOT / "launch" / "geckoterminal_update_runbook.md").read_text()
+        values = json.loads((ROOT / "launch" / "geckoterminal_form_values.json").read_text())
+
+        self.assertIn("prepared, not submitted", runbook)
+        self.assertIn("Update Token Info", runbook)
+        self.assertIn("launch/geckoterminal_form_values.json", runbook)
+        self.assertIn("https://www.geckoterminal.com/base/pools/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff", runbook)
+        self.assertIn("https://gcagochina.com/", runbook)
+        self.assertIn("https://gcagochina.com/assets/gca-logo.svg", runbook)
+        self.assertIn("https://gcagochina.com/whitepaper.html", runbook)
+        self.assertIn("no completed third-party audit", runbook)
+        self.assertIn("account is frozen", runbook)
+        self.assertIn(MAINNET_ADDRESS, runbook)
+        self.assertIn(RESERVE_WALLET, runbook)
+
+        self.assertEqual(values["submissionStatus"], "prepared-not-submitted")
+        self.assertEqual(values["platform"], "GeckoTerminal")
+        self.assertEqual(values["chainId"], 8453)
+        self.assertEqual(values["contractAddress"], MAINNET_ADDRESS)
+        self.assertEqual(values["website"], "https://gcagochina.com/")
+        self.assertEqual(values["logoUrl"], "https://gcagochina.com/assets/gca-logo.svg")
+        self.assertEqual(values["socialLinks"], [])
+        self.assertEqual(values["liquidity"]["poolAddress"], "0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff")
+        self.assertEqual(values["supplyDisclosure"]["ownerReserveWallet"], RESERVE_WALLET)
+        self.assertIn("Use only if the owner confirms", values["officialEmailUse"])
 
     def test_internal_security_review_is_not_third_party_audit(self):
         report = (ROOT / "audit" / "gca_internal_security_review.md").read_text()
