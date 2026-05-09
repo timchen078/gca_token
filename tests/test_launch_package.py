@@ -8,6 +8,7 @@ ROOT = Path(__file__).resolve().parents[1]
 MAINNET_ADDRESS = "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6"
 RESERVE_WALLET = "0x5e8F84748612B913aAcC937492AC25dc5630E246"
 RESERVE_TX = "0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67"
+TELEGRAM_URL = "https://t.me/gcagochinaofficial"
 
 
 class LaunchPackageTests(unittest.TestCase):
@@ -43,6 +44,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(RESERVE_WALLET, site)
         self.assertIn(RESERVE_TX, site)
         self.assertIn("mailto:GCAgochina@outlook.com", site)
+        self.assertIn(TELEGRAM_URL, site)
         self.assertIn("Project contact email", site)
         self.assertNotIn("https://x.com/GCAgochina", site)
         self.assertNotIn("Official X profile", site)
@@ -79,6 +81,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("https://gcagochina.com/", submission)
         self.assertIn("Official contact email", submission)
         self.assertIn("cxy070800@gmail.com", submission)
+        self.assertIn(TELEGRAM_URL, submission)
         self.assertIn("Gmail address", submission)
         self.assertIn("Submitted from the owner's browser session on 2026-05-09", submission)
         self.assertIn("deployer-wallet ownership verification were included", submission)
@@ -120,7 +123,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("concept-stage community direction", values["description"])
         self.assertEqual(values["submissionStatus"], "submitted")
         self.assertEqual(values["reviewStatus"], "awaiting BaseScan review")
-        self.assertEqual(values["socialLinks"], [])
+        self.assertEqual(values["socialLinks"][0]["platform"], "Telegram")
+        self.assertEqual(values["socialLinks"][0]["url"], TELEGRAM_URL)
+        self.assertIn("after the initial BaseScan submission", values["socialLinkNote"])
 
     def test_token_allocation_plan_records_owner_reserve(self):
         plan = json.loads((ROOT / "launch" / "token_allocation_plan.json").read_text())
@@ -209,6 +214,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("GeckoTerminal token info update runbook prepared", status)
         self.assertIn("GeckoTerminal token info update submitted on 2026-05-09", status)
         self.assertIn("Wait for GeckoTerminal review", status)
+        self.assertIn(TELEGRAM_URL, status)
         self.assertNotIn("wait for GitHub Pages HTTPS to become active", status)
         self.assertIn("Base Mainnet / chainId 8453", status)
         self.assertIn("Base Sepolia / chainId 84532", status)
@@ -231,6 +237,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("starter-depth only", package)
         self.assertIn("not completed", package)
         self.assertIn("frozen", package)
+        self.assertIn(TELEGRAM_URL, package)
         self.assertIn(MAINNET_ADDRESS, package)
         self.assertIn(RESERVE_WALLET, package)
         self.assertIn(RESERVE_TX, package)
@@ -244,7 +251,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["platformReadiness"]["geckoTerminal"]["status"], "submitted-awaiting-review")
         self.assertIn("prepared-but-weak-readiness", values["platformReadiness"]["coinGecko"]["status"])
         self.assertIn("prepared-but-weak-readiness", values["platformReadiness"]["coinMarketCap"]["status"])
-        self.assertEqual(values["socialLinks"], [])
+        self.assertEqual(values["socialLinks"][0]["platform"], "Telegram")
+        self.assertEqual(values["socialLinks"][0]["url"], TELEGRAM_URL)
         self.assertIn("third-party audited", values["doNotClaim"])
 
     def test_geckoterminal_runbook_is_copyable_and_conservative(self):
@@ -261,6 +269,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("https://gcagochina.com/whitepaper.html", runbook)
         self.assertIn("no completed third-party audit", runbook)
         self.assertIn("account is frozen", runbook)
+        self.assertIn(TELEGRAM_URL, runbook)
         self.assertIn(MAINNET_ADDRESS, runbook)
         self.assertIn(RESERVE_WALLET, runbook)
 
@@ -273,7 +282,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["logoUrl"], "https://gcagochina.com/assets/gca-logo.svg")
         self.assertEqual(values["logoPngUrl"], "https://gcagochina.com/assets/gca-logo.png")
         self.assertEqual(values["officialEmail"], "GCAgochina@outlook.com")
-        self.assertEqual(values["socialLinks"], [])
+        self.assertEqual(values["socialLinks"][0]["platform"], "Telegram")
+        self.assertEqual(values["socialLinks"][0]["url"], TELEGRAM_URL)
         self.assertEqual(values["liquidity"]["poolAddress"], "0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff")
         self.assertEqual(values["supplyDisclosure"]["ownerReserveWallet"], RESERVE_WALLET)
         self.assertIn("completed OTP verification", values["officialEmailUse"])
@@ -304,6 +314,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(RESERVE_TX, whitepaper)
         self.assertIn("not a lock, vesting contract, or Safe multisig", whitepaper)
         self.assertIn("mailto:GCAgochina@outlook.com", whitepaper)
+        self.assertIn(TELEGRAM_URL, whitepaper)
         self.assertIn("starter liquidity only", whitepaper)
         self.assertIn("https://app.uniswap.org/positions/v3/base/5087977", whitepaper)
         self.assertIn("https://dexscreener.com/base/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff", whitepaper)

@@ -104,6 +104,8 @@ BaseScan source verification and deployer-wallet ownership verification are comp
 
 Project contact email: `GCAgochina@outlook.com`
 
+Official Telegram: `https://t.me/gcagochinaofficial`
+
 ## Risk Notice
 
 GCA does not represent return guarantees, fee distributions, custody, or a right to redeem assets. Public materials should not describe GCA as an investment product or make price, yield, audit, or liquidity guarantees.

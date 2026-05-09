@@ -35,6 +35,7 @@ GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stand
 - Public logo download URL: `https://gcagochina.com/assets/gca-logo.svg`
 - Public whitepaper URL: `https://gcagochina.com/whitepaper.html`
 - Official contact email: `cxy070800@gmail.com`
+- Official Telegram: `https://t.me/gcagochinaofficial`
 - Email note: owner-provided Gmail address, publicly listed on the official website for BaseScan verification.
 
 ## Fields That Still Need Owner Input
@@ -52,6 +53,6 @@ GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stand
 
 ## Current Submission Status
 
-Submitted from the owner's browser session on 2026-05-09. Website, logo, whitepaper URL, owner-provided Gmail contact email, BaseScan login, and deployer-wallet ownership verification were included. The public token profile is not complete until BaseScan accepts and publishes the submitted update.
+Submitted from the owner's browser session on 2026-05-09. Website, logo, whitepaper URL, owner-provided Gmail contact email, BaseScan login, and deployer-wallet ownership verification were included. The official Telegram channel was created after the initial submission and should be included in any BaseScan follow-up or future correction. The public token profile is not complete until BaseScan accepts and publishes the submitted update.
 
 Copyable form values are also stored in `launch/basescan_form_values.json`.

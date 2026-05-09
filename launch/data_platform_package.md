@@ -11,7 +11,7 @@ This package prepares GCA information for token data and DEX discovery platforms
 - BaseScan token profile: submitted and awaiting BaseScan review
 - GeckoTerminal token info update: submitted on 2026-05-09 and awaiting GeckoTerminal review
 - Liquidity: starter Uniswap v3 GCA/WETH pool exists on Base Mainnet
-- Social links: no active official social link is currently published because the X account was frozen
+- Social links: official Telegram is live at `https://t.me/gcagochinaofficial`; the frozen X account is not used
 - Third-party audit: not completed
 
 ## Canonical Identity
@@ -40,6 +40,7 @@ This package prepares GCA information for token data and DEX discovery platforms
 - Whitepaper: `https://gcagochina.com/whitepaper.html`
 - BaseScan contract: `https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`
 - BaseScan reserve transfer: `https://basescan.org/tx/0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67`
+- Official Telegram: `https://t.me/gcagochinaofficial`
 
 ## Liquidity And Market Pages
 
@@ -98,7 +99,7 @@ Recommended action:
 1. Do not submit a duplicate GeckoTerminal update while the request is pending.
 2. Monitor `GCAgochina@outlook.com` for GeckoTerminal review messages.
 3. If GeckoTerminal asks for changes, use the website, logo, whitepaper, BaseScan contract, and neutral descriptions above.
-4. Do not include frozen X as an official social link.
+4. Include the official Telegram link if GeckoTerminal asks for social links; do not include frozen X as an official social link.
 
 ### CoinGecko
 

@@ -26,5 +26,11 @@
   "submissionStatus": "submitted",
   "submissionDate": "2026-05-09",
   "reviewStatus": "awaiting BaseScan review",
-  "socialLinks": []
+  "socialLinks": [
+    {
+      "platform": "Telegram",
+      "url": "https://t.me/gcagochinaofficial"
+    }
+  ],
+  "socialLinkNote": "Official Telegram was created after the initial BaseScan submission; include it in any BaseScan follow-up or future token profile correction."
 }

@@ -20,7 +20,12 @@
   "explorerUrl": "https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "officialEmail": "GCAgochina@outlook.com",
   "officialEmailUse": "Submitted after the owner confirmed use of this email and completed OTP verification in the browser.",
-  "socialLinks": [],
+  "socialLinks": [
+    {
+      "platform": "Telegram",
+      "url": "https://t.me/gcagochinaofficial"
+    }
+  ],
   "description": "GCA, short for Go China Access, is a fixed-supply ERC-20 token on Base Mainnet. It is a concept-stage community direction focused on China-facing Web3 culture, creators, bilingual education, and public market narrative research. The contract created 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls. The token has starter Uniswap v3 GCA/WETH liquidity on Base Mainnet and a disclosed owner-held reserve wallet.",
   "liquidity": {
     "dex": "Uniswap v3",

@@ -13,6 +13,7 @@ This runbook records the accurate GeckoTerminal token information update request
 - Contract address: `0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`
 - Official website: `https://gcagochina.com/`
 - Official contact email for GeckoTerminal submission: `GCAgochina@outlook.com`
+- Official Telegram: `https://t.me/gcagochinaofficial`
 - Owner reserve wallet: `0x5e8F84748612B913aAcC937492AC25dc5630E246`
 - Owner reserve transfer: `0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67`
 
@@ -25,8 +26,9 @@ Do not submit a duplicate request while the 2026-05-09 request is pending. If Ge
 3. The PNG logo opens publicly at `https://gcagochina.com/assets/gca-logo.png`.
 4. The whitepaper opens publicly at `https://gcagochina.com/whitepaper.html`.
 5. The BaseScan contract page opens at `https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`.
-6. No active official X link is submitted while the `@GCAgochina` account is frozen.
-7. The request is not a duplicate of a pending GeckoTerminal token info update.
+6. The official Telegram link is available at `https://t.me/gcagochinaofficial`.
+7. No active official X link is submitted while the `@GCAgochina` account is frozen.
+8. The request is not a duplicate of a pending GeckoTerminal token info update.
 
 ## Historical Browser Steps
 
@@ -36,7 +38,7 @@ These steps were completed from the owner's browser session on 2026-05-09:
    `https://www.geckoterminal.com/base/pools/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff`
 2. Opened the `Update Token Info` form.
 3. Filled the form using `launch/geckoterminal_form_values.json`.
-4. Left social link fields blank because no active official social account exists.
+4. Left social link fields blank because the official Telegram channel did not exist yet and the X account was frozen.
 5. Uploaded `site/assets/gca-logo.png` as the icon image.
 6. Submitted with the regular, no-fee pass.
 7. Confirmed `GCAgochina@outlook.com` by OTP.
@@ -55,6 +57,7 @@ GCA, short for Go China Access, is a fixed-supply ERC-20 token on Base Mainnet. 
 - Explorer: `https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`
 - Pool: `https://www.geckoterminal.com/base/pools/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff`
 - DEX Screener pair: `https://dexscreener.com/base/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff`
+- Official Telegram: `https://t.me/gcagochinaofficial`
 
 ## Do Not Submit Or Claim
 
@@ -78,6 +81,7 @@ Whitepaper: https://gcagochina.com/whitepaper.html
 BaseScan contract: https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6
 Pool: https://www.geckoterminal.com/base/pools/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff
 Owner reserve wallet: 0x5e8F84748612B913aAcC937492AC25dc5630E246
+Official Telegram: https://t.me/gcagochinaofficial
 
 The X account is not included because it is not currently active. The token is fixed-supply and concept-stage, with starter liquidity and no completed third-party audit.
 

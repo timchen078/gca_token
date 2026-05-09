@@ -39,6 +39,7 @@ The full fixed supply was minted to the deployer wallet at deployment. The 70/30
 ## Official Contact
 
 - Project contact email: `GCAgochina@outlook.com`
+- Official Telegram: `https://t.me/gcagochinaofficial`
 - The contact email is publicly listed on the official website for data platform verification.
 
 ## Project Direction

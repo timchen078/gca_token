@@ -22,6 +22,7 @@ Check these daily until there is a response:
 - Public website remains live: `https://gcagochina.com/`
 - Public logo remains live: `https://gcagochina.com/assets/gca-logo.svg`
 - Public whitepaper remains live: `https://gcagochina.com/whitepaper.html`
+- Official Telegram remains live: `https://t.me/gcagochinaofficial`
 - HTTPS remains active for the website, logo, and whitepaper URLs.
 
 ## If BaseScan Approves
@@ -70,6 +71,7 @@ Contract: 0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6
 Official website: https://gcagochina.com/
 Official logo: https://gcagochina.com/assets/gca-logo.svg
 Whitepaper: https://gcagochina.com/whitepaper.html
+Official Telegram: https://t.me/gcagochinaofficial
 Official contact email: cxy070800@gmail.com
 
 Please let us know if any additional verification or field correction is required.
