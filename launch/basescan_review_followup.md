@@ -19,9 +19,10 @@ Check these daily until there is a response:
 - Gmail inbox and spam folder for `cxy070800@gmail.com`
 - BaseScan account notifications
 - Contract page: `https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`
-- Public website remains live after DNS is configured: `https://gcagochina.com/`
-- Public logo remains live after DNS is configured: `https://gcagochina.com/assets/gca-logo.svg`
-- Public whitepaper remains live after DNS is configured: `https://gcagochina.com/whitepaper.html`
+- Public website remains live: `https://gcagochina.com/`
+- Public logo remains live: `https://gcagochina.com/assets/gca-logo.svg`
+- Public whitepaper remains live: `https://gcagochina.com/whitepaper.html`
+- HTTPS remains active for the website, logo, and whitepaper URLs.
 
 ## If BaseScan Approves
 

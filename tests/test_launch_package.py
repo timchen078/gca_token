@@ -195,6 +195,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("## Needs Owner Input Or External Service", status)
         self.assertIn("https://gcagochina.com/", status)
         self.assertIn("DNS records for `gcagochina.com`", status)
+        self.assertIn("GitHub Pages HTTPS certificate issued", status)
+        self.assertNotIn("wait for GitHub Pages HTTPS to become active", status)
         self.assertIn("Base Mainnet / chainId 8453", status)
         self.assertIn("Base Sepolia / chainId 84532", status)
         self.assertIn(RESERVE_WALLET, status)

@@ -11,9 +11,11 @@
 - BaseScan token information submission package prepared.
 - 32x32 SVG logo created.
 - Static website created.
-- GitHub Pages custom domain prepared for `https://gcagochina.com/`.
-- Public logo URL target: `https://gcagochina.com/assets/gca-logo.svg`.
-- Public whitepaper URL target: `https://gcagochina.com/whitepaper.html`.
+- GitHub Pages custom domain configured for `https://gcagochina.com/`.
+- DNS records for `gcagochina.com` configured in Cloudflare.
+- GitHub Pages HTTPS certificate issued and Enforce HTTPS enabled.
+- Public logo URL is live at `https://gcagochina.com/assets/gca-logo.svg`.
+- Public whitepaper URL is live at `https://gcagochina.com/whitepaper.html`.
 - Official contact email `cxy070800@gmail.com` is published on the official website for BaseScan verification.
 - BaseScan token update form submitted from the owner's browser session.
 - BaseScan review follow-up runbook prepared.
@@ -28,7 +30,6 @@
 ## Needs Owner Input Or External Service
 
 - Wait for BaseScan review or an email reply to `cxy070800@gmail.com`.
-- Configure DNS records for `gcagochina.com` and wait for GitHub Pages HTTPS to become active.
 - Move the owner reserve to a Safe multisig or lock/vesting contract if stronger reserve assurances are needed.
 - Hire or request a third-party audit if public launch materials need an external audit badge.
 
