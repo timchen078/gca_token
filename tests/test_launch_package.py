@@ -311,12 +311,20 @@ class LaunchPackageTests(unittest.TestCase):
     def test_internal_security_review_is_not_third_party_audit(self):
         report = (ROOT / "audit" / "gca_internal_security_review.md").read_text()
         scope = (ROOT / "launch" / "audit_scope.md").read_text()
+        plan = (ROOT / "audit" / "third_party_audit_plan.md").read_text()
+        request = (ROOT / "audit" / "third_party_audit_request.md").read_text()
+        package = json.loads((ROOT / "audit" / "third_party_audit_package.json").read_text())
         self.assertIn("not a third-party audit", report)
         self.assertIn("No third-party audit has been completed", scope)
         self.assertIn("must not say", scope)
         self.assertIn("No mint function exists", report)
         self.assertIn("No owner or admin role exists", report)
         self.assertIn(MAINNET_ADDRESS, report)
+        self.assertIn("Third-party audit is not complete", plan)
+        self.assertIn("Quote request", request)
+        self.assertEqual(package["status"], "prepared-not-submitted")
+        self.assertFalse(package["publicClaimState"]["thirdPartyAuditCompleted"])
+        self.assertIn("Choose auditor", package["nextRequiredOwnerAction"])
 
     def test_site_has_whitepaper_page(self):
         index = (ROOT / "site" / "index.html").read_text()

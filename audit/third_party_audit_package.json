@@ -1,0 +1,74 @@
+{
+  "status": "prepared-not-submitted",
+  "lastUpdated": "2026-05-10",
+  "project": {
+    "name": "GCA",
+    "conceptExpansion": "Go China Access",
+    "website": "https://gcagochina.com/",
+    "contactEmail": "GCAgochina@outlook.com"
+  },
+  "contract": {
+    "network": "Base Mainnet",
+    "chainId": 8453,
+    "address": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+    "baseScanUrl": "https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+    "sourcePath": "token/contracts/GCAToken.sol",
+    "standardJsonInputPath": "verification/GCAToken.standard-json-input.json",
+    "compiler": "v0.8.24+commit.e11b9ed9",
+    "optimizer": {
+      "enabled": true,
+      "runs": 200
+    }
+  },
+  "auditObjective": [
+    "Verify deployed bytecode/source match through BaseScan-verified artifacts.",
+    "Confirm fixed supply and no post-deployment minting.",
+    "Confirm no owner/admin role, proxy, upgrade path, blacklist, pause, transfer tax, hidden fee, custody, or withdrawal path.",
+    "Review ERC-20 transfer and allowance behavior."
+  ],
+  "publicClaimState": {
+    "thirdPartyAuditCompleted": false,
+    "allowedPublicClaim": "No third-party audit has been completed. Internal engineering review and BaseScan source verification are complete.",
+    "forbiddenClaims": [
+      "audited",
+      "third-party audited",
+      "externally audited",
+      "audit passed",
+      "no risk",
+      "exploit-proof"
+    ]
+  },
+  "auditorShortlist": [
+    {
+      "name": "OpenZeppelin",
+      "officialUrl": "https://www.openzeppelin.com/security-audits",
+      "fit": "premium smart-contract audit credibility"
+    },
+    {
+      "name": "Hacken",
+      "officialUrl": "https://hacken.io/a/services/blockchain-security/smart-contract-security-audit/",
+      "fit": "commercial Web3 smart-contract audit quote"
+    },
+    {
+      "name": "QuillAudits",
+      "officialUrl": "https://www.quillaudits.com/pricing",
+      "fit": "cost and turnaround sensitive ERC-20 audit quote"
+    },
+    {
+      "name": "Quantstamp",
+      "officialUrl": "https://quantstamp.com/",
+      "fit": "established Web3 security firm"
+    },
+    {
+      "name": "ChainSecurity",
+      "officialUrl": "https://www.chainsecurity.com/",
+      "fit": "high-end smart-contract review"
+    },
+    {
+      "name": "Trail of Bits",
+      "officialUrl": "https://trailofbits.com/services/software-assurance/blockchain/",
+      "fit": "top-tier security assessment"
+    }
+  ],
+  "nextRequiredOwnerAction": "Choose auditor(s), approve sending the quote request, and approve any budget or payment."
+}

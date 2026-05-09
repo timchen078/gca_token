@@ -26,6 +26,7 @@
 - Base Mainnet Uniswap v3 GCA/WETH liquidity position created.
 - Audit scope prepared.
 - Internal security review completed.
+- Third-party audit outreach package prepared; no external audit has been commissioned or completed yet.
 - Website updated with the Go China Access concept-stage project direction.
 - Data platform submission package prepared for DEX Screener, GeckoTerminal, CoinGecko, and CoinMarketCap.
 - GeckoTerminal token info update runbook prepared.
@@ -43,7 +44,7 @@
 - Wait for stronger public activity and market volume before submitting CoinGecko or CoinMarketCap listing requests.
 - Add the official Telegram link to any BaseScan or GeckoTerminal follow-up if those reviewers ask for social links.
 - Move the owner reserve to a Safe multisig or lock/vesting contract if stronger reserve assurances are needed.
-- Hire or request a third-party audit if public launch materials need an external audit badge.
+- Choose an independent auditor, approve quote-request submission, and approve any budget/payment before claiming a third-party audit.
 
 ## Public Communication Rules
 
