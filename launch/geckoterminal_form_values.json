@@ -11,6 +11,8 @@
   "totalSupply": "1000000000",
   "website": "https://gcagochina.com/",
   "logoUrl": "https://gcagochina.com/assets/gca-logo.svg",
+  "logoPngUrl": "https://gcagochina.com/assets/gca-logo.png",
+  "logoUploadFile": "site/assets/gca-logo.png",
   "whitepaperUrl": "https://gcagochina.com/whitepaper.html",
   "explorerUrl": "https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "officialEmail": "GCAgochina@outlook.com",

@@ -20,10 +20,11 @@ Confirm these are still true before sending the request:
 
 1. The website opens over HTTPS at `https://gcagochina.com/`.
 2. The logo opens publicly at `https://gcagochina.com/assets/gca-logo.svg`.
-3. The whitepaper opens publicly at `https://gcagochina.com/whitepaper.html`.
-4. The BaseScan contract page opens at `https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`.
-5. No active official X link is submitted while the `@GCAgochina` account is frozen.
-6. The request is not a duplicate of a pending GeckoTerminal token info update.
+3. The PNG logo opens publicly at `https://gcagochina.com/assets/gca-logo.png`.
+4. The whitepaper opens publicly at `https://gcagochina.com/whitepaper.html`.
+5. The BaseScan contract page opens at `https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`.
+6. No active official X link is submitted while the `@GCAgochina` account is frozen.
+7. The request is not a duplicate of a pending GeckoTerminal token info update.
 
 ## Browser Steps
 
@@ -44,6 +45,7 @@ GCA, short for Go China Access, is a fixed-supply ERC-20 token on Base Mainnet. 
 
 - Website: `https://gcagochina.com/`
 - Logo: `https://gcagochina.com/assets/gca-logo.svg`
+- Logo PNG for upload: `https://gcagochina.com/assets/gca-logo.png`
 - Whitepaper: `https://gcagochina.com/whitepaper.html`
 - Explorer: `https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`
 - Pool: `https://www.geckoterminal.com/base/pools/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff`

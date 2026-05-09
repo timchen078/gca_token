@@ -35,6 +35,7 @@ This package prepares GCA information for token data and DEX discovery platforms
 
 - Website: `https://gcagochina.com/`
 - Logo SVG: `https://gcagochina.com/assets/gca-logo.svg`
+- Logo PNG: `https://gcagochina.com/assets/gca-logo.png`
 - Whitepaper: `https://gcagochina.com/whitepaper.html`
 - BaseScan contract: `https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`
 - BaseScan reserve transfer: `https://basescan.org/tx/0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67`

@@ -16,6 +16,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn('width="32"', logo)
         self.assertIn('height="32"', logo)
         self.assertIn("GCA token logo", logo)
+        self.assertTrue((ROOT / "brand" / "gca-logo.png").exists())
+        self.assertTrue((ROOT / "site" / "assets" / "gca-logo.png").exists())
 
     def test_public_site_uses_mainnet_identity(self):
         site = (ROOT / "site" / "index.html").read_text()
@@ -266,6 +268,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["contractAddress"], MAINNET_ADDRESS)
         self.assertEqual(values["website"], "https://gcagochina.com/")
         self.assertEqual(values["logoUrl"], "https://gcagochina.com/assets/gca-logo.svg")
+        self.assertEqual(values["logoPngUrl"], "https://gcagochina.com/assets/gca-logo.png")
         self.assertEqual(values["officialEmail"], "GCAgochina@outlook.com")
         self.assertEqual(values["socialLinks"], [])
         self.assertEqual(values["liquidity"]["poolAddress"], "0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff")
