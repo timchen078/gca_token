@@ -20,8 +20,8 @@
 - BaseScan token update was submitted with `cxy070800@gmail.com`; monitor that inbox while the BaseScan review is pending.
 - BaseScan token update form submitted from the owner's browser session.
 - BaseScan review follow-up runbook prepared.
-- Token allocation plan drafted: 700,000,000 GCA target public allocation and 300,000,000 GCA owner-held reserve.
-- Owner reserve transfer completed: 300,000,000 GCA moved to `0x5e8F84748612B913aAcC937492AC25dc5630E246`.
+- Token allocation plan updated: 400,000,000 GCA target public allocation and 600,000,000 GCA owner-held reserve.
+- Owner reserve transfers completed: total 600,000,000 GCA moved to `0x5e8F84748612B913aAcC937492AC25dc5630E246`.
 - Liquidity pool default plan selected.
 - Base Mainnet Uniswap v3 GCA/WETH liquidity position created.
 - Audit scope prepared.
@@ -39,6 +39,7 @@
 
 - Wait for BaseScan review or an email reply to `cxy070800@gmail.com`.
 - Wait for GeckoTerminal review or an email reply to `GCAgochina@outlook.com`; GeckoTerminal showed a review window of up to 5 working days.
+- If BaseScan or GeckoTerminal asks for supply details during review, use the updated 40/60 allocation and both reserve transfer transactions.
 - Wait for stronger public activity and market volume before submitting CoinGecko or CoinMarketCap listing requests.
 - Add the official Telegram link to any BaseScan or GeckoTerminal follow-up if those reviewers ask for social links.
 - Move the owner reserve to a Safe multisig or lock/vesting contract if stronger reserve assurances are needed.
@@ -56,10 +57,12 @@
 
 ## Owner Reserve
 
-- Amount: 300,000,000 GCA
+- Current amount after second reserve transfer: 600,000,000 GCA
 - Wallet: `0x5e8F84748612B913aAcC937492AC25dc5630E246`
-- Transfer transaction: `0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67`
-- Transfer block: 45,739,653
+- First transfer transaction: `0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67`
+- First transfer block: 45,739,653
+- Second transfer transaction: `0xfffb674448abdbd3af45bb0a30c48e5fbb0e675542b971f031381254b5dc5317`
+- Second transfer block: 45,779,081
 - Custody type: normal owner-controlled wallet; not a lock, vesting contract, or multisig.
 
 ## Liquidity Position

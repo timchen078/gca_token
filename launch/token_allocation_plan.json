@@ -4,8 +4,8 @@
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "totalSupply": "1000000000",
   "decimals": 18,
-  "allocationPlanStatus": "owner-reserve-transferred",
-  "lastUpdated": "2026-05-09",
+  "allocationPlanStatus": "owner-reserve-increased",
+  "lastUpdated": "2026-05-10",
   "notes": [
     "The contract minted the full fixed supply to the deployer wallet at deployment.",
     "The owner-held reserve has been transferred to a separate publicly disclosed wallet.",
@@ -14,21 +14,25 @@
   "allocations": [
     {
       "name": "Public circulation, ecosystem, and liquidity allocation",
-      "amount": "700000000",
-      "percent": 70,
+      "amount": "400000000",
+      "percent": 40,
       "status": "target allocation",
       "notes": "Includes liquidity, community, ecosystem, and future public distribution. Not all of this allocation is immediately circulating until on-chain transfers, liquidity, or distribution events occur."
     },
     {
       "name": "Owner-held reserve",
-      "amount": "300000000",
-      "percent": 30,
+      "amount": "600000000",
+      "percent": 60,
       "status": "transferred to owner reserve wallet",
       "holder": "0x5e8F84748612B913aAcC937492AC25dc5630E246",
       "transferFrom": "0x18d007bcb6be029f8ccd7cb13e324aa21891092d",
-      "transferTransactionHash": "0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67",
-      "transferBlockNumber": 45739653,
-      "transferTimestampUtc": "2026-05-08T19:30:53Z",
+      "transferTransactionHashes": [
+        "0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67",
+        "0xfffb674448abdbd3af45bb0a30c48e5fbb0e675542b971f031381254b5dc5317"
+      ],
+      "latestTransferTransactionHash": "0xfffb674448abdbd3af45bb0a30c48e5fbb0e675542b971f031381254b5dc5317",
+      "latestTransferBlockNumber": 45779081,
+      "latestTransferTimestampUtc": "2026-05-09T17:25:09Z",
       "notes": "Reserved for the owner/founder in a separate owner-controlled wallet. It should be publicly disclosed and should not be described as circulating while held as a reserve. This wallet is not a lock, vesting contract, or multisig."
     }
   ],
@@ -41,14 +45,26 @@
     "poolAddress": "0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff",
     "transactionHash": "0xef94e020c8b431151b789ca3e96c45ab0c18d20d15bf8d7d543630f1370fc158"
   },
-  "executedOwnerReserveTransfer": {
-    "amountGca": "300000000",
-    "from": "0x18d007bcb6be029f8ccd7cb13e324aa21891092d",
-    "to": "0x5e8F84748612B913aAcC937492AC25dc5630E246",
-    "network": "Base Mainnet",
-    "transactionHash": "0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67",
-    "blockNumber": 45739653,
-    "timestampUtc": "2026-05-08T19:30:53Z"
-  },
-  "recommendedNextStep": "For stronger reserve credibility, move the 300,000,000 GCA reserve from the normal owner-controlled wallet to a Safe multisig or lock/vesting contract and publish that address."
+  "executedOwnerReserveTransfers": [
+    {
+      "amountGca": "300000000",
+      "from": "0x18d007bcb6be029f8ccd7cb13e324aa21891092d",
+      "to": "0x5e8F84748612B913aAcC937492AC25dc5630E246",
+      "network": "Base Mainnet",
+      "transactionHash": "0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67",
+      "blockNumber": 45739653,
+      "timestampUtc": "2026-05-08T19:30:53Z"
+    },
+    {
+      "amountGca": "300000000",
+      "from": "0x18d007bcb6be029f8ccd7cb13e324aa21891092d",
+      "to": "0x5e8F84748612B913aAcC937492AC25dc5630E246",
+      "network": "Base Mainnet",
+      "transactionHash": "0xfffb674448abdbd3af45bb0a30c48e5fbb0e675542b971f031381254b5dc5317",
+      "blockNumber": 45779081,
+      "timestampUtc": "2026-05-09T17:25:09Z"
+    }
+  ],
+  "ownerReserveWalletBalanceGca": "600000000",
+  "recommendedNextStep": "For stronger reserve credibility, move the 600,000,000 GCA reserve from the normal owner-controlled wallet to a Safe multisig or lock/vesting contract and publish that address."
 }

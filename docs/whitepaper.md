@@ -1,6 +1,6 @@
 # GCA Whitepaper
 
-Version: 0.4
+Version: 0.5
 
 ## Summary
 
@@ -62,16 +62,18 @@ The target allocation plan is:
 
 | Allocation | Amount | Percent |
 | --- | ---: | ---: |
-| Public circulation, ecosystem, and liquidity allocation | 700,000,000 GCA | 70% |
-| Owner-held reserve | 300,000,000 GCA | 30% |
+| Public circulation, ecosystem, and liquidity allocation | 400,000,000 GCA | 40% |
+| Owner-held reserve | 600,000,000 GCA | 60% |
 
-The 300,000,000 GCA reserve has been transferred to a separate owner reserve wallet:
+The 600,000,000 GCA reserve has been transferred to a separate owner reserve wallet through two on-chain transfers:
 
 - Owner reserve wallet: `0x5e8F84748612B913aAcC937492AC25dc5630E246`
-- Reserve transfer transaction: `0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67`
-- Reserve transfer block: 45,739,653
+- First reserve transfer transaction: `0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67`
+- First reserve transfer block: 45,739,653
+- Second reserve transfer transaction: `0xfffb674448abdbd3af45bb0a30c48e5fbb0e675542b971f031381254b5dc5317`
+- Second reserve transfer block: 45,779,081
 
-The owner-held reserve should not be described as circulating while held as a reserve. This wallet is a normal owner-controlled wallet, not a lock, vesting contract, or Safe multisig. The 70/30 split remains a target allocation plan for public reporting. Future treasury, liquidity, contributor, community, or ecosystem transfers should be executed only after each transfer can be verified on-chain.
+The owner-held reserve should not be described as circulating while held as a reserve. This wallet is a normal owner-controlled wallet, not a lock, vesting contract, or Safe multisig. The 40/60 split remains a target allocation plan for public reporting. Future treasury, liquidity, contributor, community, or ecosystem transfers should be executed only after each transfer can be verified on-chain.
 
 ## Liquidity Approach
 

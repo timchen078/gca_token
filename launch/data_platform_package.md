@@ -39,7 +39,8 @@ This package prepares GCA information for token data and DEX discovery platforms
 - Logo PNG: `https://gcagochina.com/assets/gca-logo.png`
 - Whitepaper: `https://gcagochina.com/whitepaper.html`
 - BaseScan contract: `https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`
-- BaseScan reserve transfer: `https://basescan.org/tx/0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67`
+- BaseScan reserve transfer 1: `https://basescan.org/tx/0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67`
+- BaseScan reserve transfer 2: `https://basescan.org/tx/0xfffb674448abdbd3af45bb0a30c48e5fbb0e675542b971f031381254b5dc5317`
 - Official Telegram: `https://t.me/gcagochinaofficial`
 
 ## Liquidity And Market Pages
@@ -58,10 +59,13 @@ Current liquidity is starter-depth only. It should not be described as deep, sta
 
 ## Supply And Reserve
 
-- Target public circulation, ecosystem, and liquidity allocation: 700,000,000 GCA / 70%
-- Owner-held reserve: 300,000,000 GCA / 30%
+- Supply disclosure updated on 2026-05-10 after the second reserve transfer. Use these values for any BaseScan, GeckoTerminal, CoinGecko, or CoinMarketCap follow-up correction.
+- Target public circulation, ecosystem, and liquidity allocation: 400,000,000 GCA / 40%
+- Owner-held reserve: 600,000,000 GCA / 60%
 - Owner reserve wallet: `0x5e8F84748612B913aAcC937492AC25dc5630E246`
-- Reserve transfer transaction: `0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67`
+- Reserve transfer transactions:
+  - `0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67`
+  - `0xfffb674448abdbd3af45bb0a30c48e5fbb0e675542b971f031381254b5dc5317`
 - Reserve custody note: normal owner-controlled wallet; not locked, vested, or multisig-controlled
 
 For CoinGecko-style circulating supply review, state clearly that the reserve wallet is owner-controlled and should not be treated as locked unless custody is later moved to a lock, vesting contract, or Safe multisig.

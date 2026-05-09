@@ -1,6 +1,6 @@
 {
   "packageStatus": "prepared",
-  "lastReviewedDate": "2026-05-09",
+  "lastReviewedDate": "2026-05-10",
   "network": "Base Mainnet",
   "chainId": 8453,
   "tokenName": "GCA",
@@ -44,12 +44,16 @@
     "liquidityDepthNote": "Starter-depth only; trades can have high price impact and slippage."
   },
   "supplyDisclosure": {
-    "targetPublicAllocation": "700000000",
-    "targetPublicAllocationPercent": 70,
-    "ownerHeldReserve": "300000000",
-    "ownerHeldReservePercent": 30,
+    "lastUpdatedDate": "2026-05-10",
+    "targetPublicAllocation": "400000000",
+    "targetPublicAllocationPercent": 40,
+    "ownerHeldReserve": "600000000",
+    "ownerHeldReservePercent": 60,
     "ownerReserveWallet": "0x5e8F84748612B913aAcC937492AC25dc5630E246",
-    "ownerReserveTransferTx": "0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67",
+    "ownerReserveTransferTxs": [
+      "0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67",
+      "0xfffb674448abdbd3af45bb0a30c48e5fbb0e675542b971f031381254b5dc5317"
+    ],
     "ownerReserveCustodyNote": "Normal owner-controlled wallet; not locked, vested, or multisig-controlled."
   },
   "platformReadiness": {

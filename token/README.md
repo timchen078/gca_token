@@ -8,7 +8,7 @@ GCA is a fixed-supply ERC-20 token contract intended for testnet deployment firs
 - Symbol: `GCA`
 - Decimals: `18`
 - Total supply: `1,000,000,000 GCA`
-- Target allocation: `700,000,000 GCA` public circulation/ecosystem/liquidity and `300,000,000 GCA` owner-held reserve
+- Target allocation: `400,000,000 GCA` public circulation/ecosystem/liquidity and `600,000,000 GCA` owner-held reserve
 - Owner reserve wallet: `0x5e8F84748612B913aAcC937492AC25dc5630E246`
 - Minting after deploy: disabled
 - Admin controls: none

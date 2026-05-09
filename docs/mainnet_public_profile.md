@@ -23,18 +23,20 @@ The contract creates 1,000,000,000 GCA at deployment and includes no post-deploy
 
 ## Target Allocation
 
-- Public circulation, ecosystem, and liquidity allocation: 700,000,000 GCA (70%)
-- Owner-held reserve: 300,000,000 GCA (30%)
+- Public circulation, ecosystem, and liquidity allocation: 400,000,000 GCA (40%)
+- Owner-held reserve: 600,000,000 GCA (60%)
 
-The 300,000,000 GCA owner-held reserve has been moved to a separate publicly disclosed wallet:
+The 600,000,000 GCA owner-held reserve has been moved to a separate publicly disclosed wallet:
 
 - Owner reserve wallet: `0x5e8F84748612B913aAcC937492AC25dc5630E246`
-- Reserve transfer transaction: `https://basescan.org/tx/0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67`
-- Reserve transfer block: 45,739,653
+- First reserve transfer transaction: `https://basescan.org/tx/0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67`
+- First reserve transfer block: 45,739,653
+- Second reserve transfer transaction: `https://basescan.org/tx/0xfffb674448abdbd3af45bb0a30c48e5fbb0e675542b971f031381254b5dc5317`
+- Second reserve transfer block: 45,779,081
 
 This is a normal owner-controlled wallet. It is not a lock, vesting contract, or Safe multisig. Do not claim that the reserve is locked unless it is later moved to a lock/vesting contract or a published multisig with the correct disclosure.
 
-The full fixed supply was minted to the deployer wallet at deployment. The 70/30 split remains a target allocation plan for public reporting. Do not claim that exactly 700,000,000 GCA is currently circulating until reserve treatment and public distribution are accepted by the relevant data provider and visible on-chain.
+The full fixed supply was minted to the deployer wallet at deployment. The 40/60 split remains a target allocation plan for public reporting. Do not claim that exactly 400,000,000 GCA is currently circulating until reserve treatment and public distribution are accepted by the relevant data provider and visible on-chain.
 
 ## Official Contact
 
