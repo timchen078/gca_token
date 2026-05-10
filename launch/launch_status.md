@@ -35,7 +35,7 @@
 - Verified GCA Member backend documented: each registered user may verify one wallet holding at least 1,000,000 GCA and qualify for GCA Member status in the Web3 Radar member ledger.
 - Member pre-registration page prepared at `https://gcagochina.com/members.html`; it generates local-only registration packets and does not create a live account.
 - Member pre-registration page now has a configurable direct submission endpoint placeholder; collection remains copy/download/email until an approved HTTPS endpoint is configured.
-- Web3 Radar local access bridge paths are prepared: `POST /gca/pre-registrations`, `POST /gca/wallet-verifications`, `GET /gca/credit-ledger`, `GET /gca/member-ledger`, and `GET /gca/member-review`; the public static page is not connected to them yet.
+- Web3 Radar local access bridge paths are prepared: `GET /gca/member-access`, `POST /gca/pre-registrations`, `POST /gca/wallet-verifications`, `GET /gca/credit-ledger`, `GET /gca/member-ledger`, and `GET /gca/member-review`; the public static page is not connected to them yet.
 - Public utility thesis page prepared at `https://gcagochina.com/utility.html`.
 - Data platform submission package prepared for DEX Screener, GeckoTerminal, CoinGecko, and CoinMarketCap.
 - GeckoTerminal token info update runbook prepared.

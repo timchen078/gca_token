@@ -343,7 +343,7 @@
     <main class="shell">
       <section aria-labelledby="title">
         <h1 id="title">GCA Member Pre-Registration</h1>
-        <p class="lead">This page creates a local pre-registration packet for the GCA x Web3 Radar access bridge. Web3 Radar now has backend wallet balance verification, a 100 credits ledger, and a GCA Member ledger, but this public static page does not create a live Web3 Radar account or make any holder benefit claimable from the browser.</p>
+        <p class="lead">This page creates a local pre-registration packet for the GCA x Web3 Radar access bridge. Web3 Radar now has backend wallet balance verification, a 100 credits ledger, a GCA Member ledger, and a same-origin member access page prepared at <code>/gca/member-access</code>. This public static page still does not create a live Web3 Radar account or make any holder benefit claimable from this domain by itself.</p>
       </section>
 
       <section class="section grid" aria-label="Planned holder programs">
@@ -445,8 +445,9 @@
 
       <section class="section panel" aria-labelledby="reviewTitle">
         <h2 id="reviewTitle">Review Pipeline</h2>
-        <p class="note">Web3 Radar now has local intake, wallet verification, 100 credits, and GCA Member ledgers prepared for deployment. The public page remains copy/download/email until the API is placed behind a controlled HTTPS origin.</p>
+        <p class="note">Web3 Radar now has local intake, wallet verification, 100 credits, GCA Member ledgers, and a same-origin user access page prepared for deployment. The public page remains copy/download/email until the API and member access page are placed behind a controlled HTTPS origin.</p>
         <div class="list">
+          <div class="row"><span>Prepared Web3 Radar user access page</span><strong><code>/gca/member-access</code></strong></div>
           <div class="row"><span>Prepared Web3 Radar intake path</span><strong><code>/gca/pre-registrations</code></strong></div>
           <div class="row"><span>Prepared wallet verification path</span><strong><code>/gca/wallet-verifications</code></strong></div>
           <div class="row"><span>Prepared credit ledger path</span><strong><code>/gca/credit-ledger</code></strong></div>
@@ -459,7 +460,7 @@
     </main>
 
     <footer>
-      <div class="shell">GCA member pre-registration is a local-only preview until the Web3 Radar access bridge is exposed through controlled HTTPS account UI.</div>
+      <div class="shell">GCA member pre-registration is a local-only preview until the Web3 Radar access bridge and /gca/member-access page are exposed through controlled HTTPS account UI.</div>
     </footer>
 
     <script>
@@ -470,6 +471,7 @@
       const WALLET_VERIFICATION_ENDPOINT_PATH = "/gca/wallet-verifications";
       const CREDIT_LEDGER_ENDPOINT_PATH = "/gca/credit-ledger";
       const MEMBER_LEDGER_ENDPOINT_PATH = "/gca/member-ledger";
+      const MEMBER_ACCESS_PAGE_PATH = "/gca/member-access";
       const HOLDER_THRESHOLD = 10000;
       const MEMBER_THRESHOLD = 1000000;
 
@@ -598,7 +600,7 @@
         submitPacket.disabled = !endpointConfigured();
         submissionStatus.textContent = endpointConfigured()
           ? "Direct submission endpoint is configured. You can submit the packet from this page."
-          : `Direct submission is not connected yet. Prepared backend paths: ${REVIEWED_WEB3_RADAR_ENDPOINT_PATH}, ${WALLET_VERIFICATION_ENDPOINT_PATH}, ${CREDIT_LEDGER_ENDPOINT_PATH}, ${MEMBER_LEDGER_ENDPOINT_PATH}. Use copy, download, or email for now.`;
+          : `Direct submission is not connected yet. Prepared Web3 Radar user page: ${MEMBER_ACCESS_PAGE_PATH}. Prepared backend paths: ${REVIEWED_WEB3_RADAR_ENDPOINT_PATH}, ${WALLET_VERIFICATION_ENDPOINT_PATH}, ${CREDIT_LEDGER_ENDPOINT_PATH}, ${MEMBER_LEDGER_ENDPOINT_PATH}. Use copy, download, or email for now.`;
         return packet;
       }
 
@@ -629,7 +631,7 @@
       submitPacket.addEventListener("click", async () => {
         const packet = refreshPacket();
         if (!endpointConfigured()) {
-          submissionStatus.textContent = `Direct submission is not connected yet. Prepared backend paths: ${REVIEWED_WEB3_RADAR_ENDPOINT_PATH}, ${WALLET_VERIFICATION_ENDPOINT_PATH}, ${CREDIT_LEDGER_ENDPOINT_PATH}, ${MEMBER_LEDGER_ENDPOINT_PATH}. Use copy, download, or email for now.`;
+          submissionStatus.textContent = `Direct submission is not connected yet. Prepared Web3 Radar user page: ${MEMBER_ACCESS_PAGE_PATH}. Prepared backend paths: ${REVIEWED_WEB3_RADAR_ENDPOINT_PATH}, ${WALLET_VERIFICATION_ENDPOINT_PATH}, ${CREDIT_LEDGER_ENDPOINT_PATH}, ${MEMBER_LEDGER_ENDPOINT_PATH}. Use copy, download, or email for now.`;
           return;
         }
         if (!terms.checked || !security.checked) {

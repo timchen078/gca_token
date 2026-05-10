@@ -9,6 +9,7 @@ This runbook keeps the current static member pre-registration flow operationally
 - Direct submission endpoint: not connected on the public static page
 - Fallback collection methods: copy packet, download JSON, or email packet to `GCAgochina@outlook.com`
 - Public claim status: not connected
+- Prepared Web3 Radar user access page: `/gca/member-access`
 - Prepared Web3 Radar intake path: `/gca/pre-registrations`
 - Prepared Web3 Radar wallet verification path: `/gca/wallet-verifications`
 - Prepared Web3 Radar credit ledger path: `/gca/credit-ledger`
@@ -45,6 +46,8 @@ Endpoint requirements:
 
 Web3 Radar now has a local access bridge prepared:
 
+- `GET /gca/member-access`
+- `GET /radar/gca/member-access`
 - `POST /gca/pre-registrations`
 - `POST /radar/gca/pre-registrations`
 - `POST /gca/wallet-verifications`
