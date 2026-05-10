@@ -98,9 +98,13 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("GCA Member", members)
         self.assertIn("Connect Wallet", members)
         self.assertIn("Generate Packet", members)
+        self.assertIn("Submit Packet", members)
         self.assertIn("Copy Packet", members)
         self.assertIn("Download JSON", members)
         self.assertIn("Email Packet", members)
+        self.assertIn('const SUBMISSION_ENDPOINT = "";', members)
+        self.assertIn("fetch(SUBMISSION_ENDPOINT", members)
+        self.assertIn("Direct submission is not configured yet", members)
         self.assertIn("local-only-pre-registration-not-live-entitlement", members)
         self.assertIn("No private key, seed phrase, exchange API secret, withdrawal permission, or custody request", members)
         self.assertIn("No cash, token rebate, income, reimbursement, trading permission, or risk-control bypass", members)
@@ -167,6 +171,7 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "launch" / "launch_status.md",
             ROOT / "launch" / "data_platform_package.md",
             ROOT / "launch" / "geckoterminal_update_runbook.md",
+            ROOT / "launch" / "member_pre_registration_runbook.md",
             ROOT / "launch" / "telegram_channel_runbook.md",
             ROOT / "launch" / "telegram_pinned_buy_announcement.md",
         ]

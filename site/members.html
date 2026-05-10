@@ -259,6 +259,11 @@
         border-left-color: var(--red);
       }
 
+      .status-line {
+        color: var(--muted);
+        font-size: 13px;
+      }
+
       .list {
         display: grid;
         gap: 10px;
@@ -400,10 +405,12 @@
             </label>
             <div class="actions">
               <button class="button primary" type="submit">Generate Packet</button>
+              <button class="button" type="button" id="submitPacket">Submit Packet</button>
               <button class="button" type="button" id="copyPacket">Copy Packet</button>
               <button class="button" type="button" id="downloadPacket">Download JSON</button>
               <a class="button" id="emailPacket" href="mailto:GCAgochina@outlook.com">Email Packet</a>
             </div>
+            <div class="status-line" id="submissionStatus">Direct submission is not configured yet. Use copy, download, or email for now.</div>
           </form>
         </div>
 
@@ -444,6 +451,7 @@
     <script>
       const CONTRACT = "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6";
       const CONTACT_EMAIL = "GCAgochina@outlook.com";
+      const SUBMISSION_ENDPOINT = "";
       const HOLDER_THRESHOLD = 10000;
       const MEMBER_THRESHOLD = 1000000;
 
@@ -458,6 +466,8 @@
       const packetOutput = document.getElementById("packetOutput");
       const result = document.getElementById("eligibilityResult");
       const emailPacket = document.getElementById("emailPacket");
+      const submitPacket = document.getElementById("submitPacket");
+      const submissionStatus = document.getElementById("submissionStatus");
 
       function parseBalance(value) {
         const normalized = String(value || "").replace(/,/g, "").trim();
@@ -543,6 +553,10 @@
         };
       }
 
+      function endpointConfigured() {
+        return Boolean(SUBMISSION_ENDPOINT && SUBMISSION_ENDPOINT.trim());
+      }
+
       function renderResult(packet) {
         const balance = parseBalance(packet.declaredGcaBalance);
         const tier = classify(balance);
@@ -563,6 +577,10 @@
         const subject = encodeURIComponent(`GCA pre-registration packet - ${packet.user.walletAddress || "wallet pending"}`);
         const body = encodeURIComponent(packetOutput.value);
         emailPacket.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
+        submitPacket.disabled = !endpointConfigured();
+        submissionStatus.textContent = endpointConfigured()
+          ? "Direct submission endpoint is configured. You can submit the packet from this page."
+          : "Direct submission is not configured yet. Use copy, download, or email for now.";
         return packet;
       }
 
@@ -588,6 +606,37 @@
       document.getElementById("copyPacket").addEventListener("click", async () => {
         refreshPacket();
         await navigator.clipboard.writeText(packetOutput.value);
+      });
+
+      submitPacket.addEventListener("click", async () => {
+        const packet = refreshPacket();
+        if (!endpointConfigured()) {
+          submissionStatus.textContent = "Direct submission is not configured yet. Use copy, download, or email for now.";
+          return;
+        }
+        if (!terms.checked || !security.checked) {
+          submissionStatus.textContent = "Please confirm both safety acknowledgements before submitting.";
+          return;
+        }
+        submitPacket.disabled = true;
+        submissionStatus.textContent = "Submitting packet...";
+        try {
+          const response = await fetch(SUBMISSION_ENDPOINT, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(packet)
+          });
+          if (!response.ok) {
+            throw new Error(`Submission failed with HTTP ${response.status}`);
+          }
+          submissionStatus.textContent = "Packet submitted. Save a local copy for your records.";
+        } catch (error) {
+          submissionStatus.textContent = `${error.message}. Use copy, download, or email as fallback.`;
+        } finally {
+          submitPacket.disabled = !endpointConfigured();
+        }
       });
 
       document.getElementById("downloadPacket").addEventListener("click", () => {

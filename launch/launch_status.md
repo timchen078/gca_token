@@ -34,6 +34,7 @@
 - Planned first holder campaign documented: each registered user may verify one wallet holding at least 10,000 GCA and receive a one-time 100 Web3 Radar utility credits bonus after the access bridge is live.
 - Planned GCA Member tier documented: each registered user may verify one wallet holding at least 1,000,000 GCA and qualify for GCA Member status after the access bridge is live.
 - Member pre-registration page prepared at `https://gcagochina.com/members.html`; it generates local-only registration packets and does not create a live account.
+- Member pre-registration page now has a configurable direct submission endpoint placeholder; collection remains copy/download/email until an approved HTTPS endpoint is configured.
 - Public utility thesis page prepared at `https://gcagochina.com/utility.html`.
 - Data platform submission package prepared for DEX Screener, GeckoTerminal, CoinGecko, and CoinMarketCap.
 - GeckoTerminal token info update runbook prepared.
@@ -56,6 +57,7 @@
 - Implement the Web3 Radar access bridge before describing any report credits, backtest quotas, ENTRY_READY reviews, or calculators as live token-gated features.
 - Implement the Web3 Radar credit ledger, wallet verification, one-claim-per-user controls, and support workflow before describing the 10,000 GCA holder bonus as claimable.
 - Implement the Web3 Radar membership ledger, ongoing balance checks, member benefit limits, and support workflow before describing the 1,000,000 GCA Member tier as claimable.
+- Configure a controlled HTTPS collection endpoint in `site/members.html` before asking users to rely on direct packet submission.
 - Add the official Telegram link to any BaseScan or GeckoTerminal follow-up if those reviewers ask for social links.
 - Replace the Telegram pinned message with `launch/telegram_pinned_buy_announcement.md` when ready.
 - Move the owner reserve to a Safe multisig or lock/vesting contract if stronger reserve assurances are needed.
