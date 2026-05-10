@@ -232,6 +232,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("First official Telegram announcement pinned on 2026-05-10", status)
         self.assertIn("buy/sell functional swap tests observed on 2026-05-10", status)
         self.assertIn("launch/swap_test_evidence.md", status)
+        self.assertIn("Blockaid false-positive report submitted on 2026-05-10", status)
+        self.assertIn("does not mean the warning has been removed", status)
         self.assertIn("must not be described as proof of organic volume", status)
         self.assertIn("Third-party audit quote requests submitted to QuillAudits, Hacken, and OpenZeppelin on 2026-05-10", status)
         self.assertIn("Owner decided on 2026-05-10 to defer third-party audit", status)
@@ -368,6 +370,18 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("not proof of organic demand", evidence)
         self.assertIn("Risk warning removed", evidence)
         self.assertIn("Deep liquidity", evidence)
+
+    def test_blockaid_false_positive_report_records_submission(self):
+        report = (ROOT / "launch" / "blockaid_false_positive_report.md").read_text()
+        self.assertIn("Submitted on 2026-05-10", report)
+        self.assertIn("https://report.blockaid.io/mistake", report)
+        self.assertIn("https://report.blockaid.io/submittionSuccessfully", report)
+        self.assertIn("Report Sent", report)
+        self.assertIn("Thank you for reporting", report)
+        self.assertIn(MAINNET_ADDRESS, report)
+        self.assertIn(SWAP_TEST_BUY_TX, report)
+        self.assertIn(SWAP_TEST_SELL_TX, report)
+        self.assertIn("not a claim that the warning has been removed", report)
 
     def test_site_has_whitepaper_page(self):
         index = (ROOT / "site" / "index.html").read_text()
