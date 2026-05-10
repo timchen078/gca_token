@@ -50,8 +50,10 @@ The full fixed supply was minted to the deployer wallet at deployment. The 40/60
 - Status: concept-stage community project
 - Intended themes: China-facing Web3 culture, Go China macro narrative research, community access, bilingual education, risk-control education, and curated public information
 - Planned Web3 Radar bridge: liquidation replay reports, risk-warning credits, realistic backtest usage, ENTRY_READY signal review, position-size calculators, subscription discounts, and risk-control training
+- Planned first campaign: each registered user may verify one wallet holding at least 10,000 GCA and receive a one-time 100 Web3 Radar utility credits bonus after the access bridge is live
 
 Do not describe the current project as having a finished product, guaranteed utility, guaranteed market demand, return promise, or revenue distribution model.
+Do not describe the planned holder bonus as cash, tokens, income, reimbursement, trading permission, or a way to bypass Web3 Radar risk controls.
 
 ## BaseScan Token Profile Status
 

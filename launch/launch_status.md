@@ -31,6 +31,7 @@
 - Owner decided on 2026-05-10 to defer third-party audit for now and revisit later if needed.
 - Website updated with the Go China Access concept-stage project direction.
 - Website updated with the GCA x Web3 Radar utility thesis: Go China macro narrative plus planned access to non-custodial quant risk reports, backtests, ENTRY_READY review, position sizing, and risk-control education.
+- Planned first holder campaign documented: each registered user may verify one wallet holding at least 10,000 GCA and receive a one-time 100 Web3 Radar utility credits bonus after the access bridge is live.
 - Public utility thesis page prepared at `https://gcagochina.com/utility.html`.
 - Data platform submission package prepared for DEX Screener, GeckoTerminal, CoinGecko, and CoinMarketCap.
 - GeckoTerminal token info update runbook prepared.
@@ -51,6 +52,7 @@
 - If BaseScan or GeckoTerminal asks for supply details during review, use the updated 40/60 allocation and both reserve transfer transactions.
 - Wait for stronger public activity and market volume before submitting CoinGecko or CoinMarketCap listing requests.
 - Implement the Web3 Radar access bridge before describing any report credits, backtest quotas, ENTRY_READY reviews, or calculators as live token-gated features.
+- Implement the Web3 Radar credit ledger, wallet verification, one-claim-per-user controls, and support workflow before describing the 10,000 GCA holder bonus as claimable.
 - Add the official Telegram link to any BaseScan or GeckoTerminal follow-up if those reviewers ask for social links.
 - Replace the Telegram pinned message with `launch/telegram_pinned_buy_announcement.md` when ready.
 - Move the owner reserve to a Safe multisig or lock/vesting contract if stronger reserve assurances are needed.
@@ -69,6 +71,7 @@
 - The owner reserve is in a normal owner-controlled wallet. Do not describe it as locked, vested, or multisig-controlled unless custody changes on-chain.
 - The product direction is still concept-stage. Do not describe GCA as a finished platform or as having guaranteed utility.
 - The Web3 Radar bridge is a planned utility direction only. Do not describe it as live until a product release implements access control, credits, support rules, and risk disclosures.
+- The planned 10,000 GCA holder bonus is not live yet. It must be described as 100 Web3 Radar utility credits only, not as cash, tokens, income, reimbursement, trading permission, or a way to bypass risk controls.
 - Do not claim return promises, price stability, liquidity depth, or external audit completion.
 
 ## Owner Reserve

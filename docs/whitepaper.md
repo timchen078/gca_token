@@ -54,6 +54,7 @@ The planned product bridge is to connect GCA with Web3 Radar-style non-custodial
 - Position-size calculators
 - Subscription discounts
 - Risk-control training
+- Planned first campaign: each registered user may verify one wallet holding at least 10,000 GCA and receive a one-time 100 Web3 Radar utility credits bonus after the access bridge is live
 
 Near-term work should focus on:
 
@@ -68,6 +69,8 @@ This concept does not imply a price target, return promise, revenue share, or co
 ## Planned Utility Boundaries
 
 GCA should be positioned as an access and membership layer, not as a yield product. Token utility should unlock reports, credits, education, and research workflows. It should not distribute platform revenue, promise outcomes, provide custody, request withdrawal permission, or bypass trading risk checks.
+
+The planned 10,000 GCA holder bonus is an account-level service credit campaign, not a token rebate. The 100 Web3 Radar utility credits should only be usable for reports, backtests, risk warnings, ENTRY_READY signal review, position calculators, or education access. They should not be cash, tokens, income, reimbursement, trading permission, or a reason to bypass risk controls.
 
 ## Distribution Status
 

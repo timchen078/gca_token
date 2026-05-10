@@ -41,8 +41,18 @@
       "ENTRY_READY signal review",
       "position-size calculators",
       "subscription discounts",
-      "risk-control training"
+      "risk-control training",
+      "one-time 100 Web3 Radar utility credits bonus for each registered user who verifies one wallet holding at least 10000 GCA after the access bridge is live"
     ],
+    "plannedFirstCampaign": {
+      "status": "planned-not-live",
+      "registeredUserLimit": "one bonus per registered user",
+      "walletLimit": "one verified wallet per registered user",
+      "minimumHolding": "10000 GCA",
+      "bonus": "100 Web3 Radar utility credits",
+      "creditUse": "reports, backtests, risk warnings, ENTRY_READY signal review, position calculators, or education access",
+      "notCreditUse": "cash, tokens, income, reimbursement, trading permission, or risk-control bypass"
+    },
     "notUtility": [
       "custody",
       "redemption rights",

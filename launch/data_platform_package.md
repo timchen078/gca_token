@@ -86,6 +86,8 @@ GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stand
 
 Suitable GCA utility is access-based: reports, credits, education, backtest usage, signal review, position calculators, and membership discounts. It should not be positioned as custody, redemption rights, platform revenue distribution, automatic live trading permission, or a return promise.
 
+Planned first campaign: each registered user may verify one wallet holding at least 10,000 GCA and receive a one-time 100 Web3 Radar utility credits bonus after the access bridge is live. This should be described only as account-level service credits for reports, backtests, risk warnings, ENTRY_READY signal review, calculators, or education access; it is not cash, tokens, income, reimbursement, or trading permission.
+
 ## Platform-Specific Notes
 
 ### DEX Screener
