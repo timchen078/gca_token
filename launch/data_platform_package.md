@@ -88,6 +88,8 @@ Suitable GCA utility is access-based: reports, credits, education, backtest usag
 
 Planned first campaign: each registered user may verify one wallet holding at least 10,000 GCA and receive a one-time 100 Web3 Radar utility credits bonus after the access bridge is live. This should be described only as account-level service credits for reports, backtests, risk warnings, ENTRY_READY signal review, calculators, or education access; it is not cash, tokens, income, reimbursement, or trading permission.
 
+Planned GCA Member tier: each registered user may verify one wallet holding at least 1,000,000 GCA and qualify for GCA Member status after the access bridge is live. Possible GCA Member benefits should be limited to higher utility credit limits, member research notes, priority report queue, member training sessions, and priority support; it is not cash, tokens, income, reimbursement, voting control, guaranteed lifetime access, trading permission, or risk-control bypass.
+
 ## Platform-Specific Notes
 
 ### DEX Screener
