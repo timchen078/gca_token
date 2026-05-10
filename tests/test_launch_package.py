@@ -10,6 +10,8 @@ RESERVE_WALLET = "0x5e8F84748612B913aAcC937492AC25dc5630E246"
 RESERVE_TX = "0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67"
 SECOND_RESERVE_TX = "0xfffb674448abdbd3af45bb0a30c48e5fbb0e675542b971f031381254b5dc5317"
 TELEGRAM_URL = "https://t.me/gcagochinaofficial"
+SWAP_TEST_BUY_TX = "0xf79e52ea56a299a30c2d297be99c970295864ed262c01fdcb7e3f60ca669b040"
+SWAP_TEST_SELL_TX = "0x0ff618062abc6e28933699d4e3bd723026f8505e4a0155db3068073b6fdc86e7"
 
 
 class LaunchPackageTests(unittest.TestCase):
@@ -228,6 +230,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(TELEGRAM_URL, status)
         self.assertIn("Telegram channel runbook prepared", status)
         self.assertIn("First official Telegram announcement pinned on 2026-05-10", status)
+        self.assertIn("buy/sell functional swap tests observed on 2026-05-10", status)
+        self.assertIn("launch/swap_test_evidence.md", status)
+        self.assertIn("must not be described as proof of organic volume", status)
         self.assertIn("Third-party audit quote requests submitted to QuillAudits, Hacken, and OpenZeppelin on 2026-05-10", status)
         self.assertIn("Owner decided on 2026-05-10 to defer third-party audit", status)
         self.assertIn("Archive any audit quote replies", status)
@@ -264,6 +269,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("https://dexscreener.com/base/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff", package)
         self.assertIn("https://www.geckoterminal.com/base/pools/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff", package)
         self.assertIn("starter-depth only", package)
+        self.assertIn("buy/sell functional swap tests were observed on 2026-05-10", package)
+        self.assertIn("not as proof of organic demand or strong liquidity", package)
         self.assertIn("not completed", package)
         self.assertIn("quote requests were submitted on 2026-05-10 and then deferred by owner decision", package)
         self.assertIn("frozen", package)
@@ -348,6 +355,19 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("69ff764fef9d6e0aa30257f6", package["submissionLog"][0]["evidence"])
         self.assertIn("We've received your request", package["submissionLog"][1]["evidence"])
         self.assertIn("9b09cc7a-a53b-44b9-9763-98ac7e482434", package["submissionLog"][2]["evidence"])
+
+    def test_swap_test_evidence_is_conservative(self):
+        evidence = (ROOT / "launch" / "swap_test_evidence.md").read_text()
+        self.assertIn("Functional Swap Test Evidence", evidence)
+        self.assertIn("GCA/WETH", evidence)
+        self.assertIn("0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff", evidence)
+        self.assertIn(MAINNET_ADDRESS, evidence)
+        self.assertIn(SWAP_TEST_BUY_TX, evidence)
+        self.assertIn(SWAP_TEST_SELL_TX, evidence)
+        self.assertIn("both buy and sell swaps", evidence)
+        self.assertIn("not proof of organic demand", evidence)
+        self.assertIn("Risk warning removed", evidence)
+        self.assertIn("Deep liquidity", evidence)
 
     def test_site_has_whitepaper_page(self):
         index = (ROOT / "site" / "index.html").read_text()

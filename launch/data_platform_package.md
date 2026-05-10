@@ -57,6 +57,8 @@ This package prepares GCA information for token data and DEX discovery platforms
 
 Current liquidity is starter-depth only. It should not be described as deep, stable, guaranteed, or sufficient for large trades.
 
+Small Base Mainnet Uniswap v3 buy/sell functional swap tests were observed on 2026-05-10 and recorded in `launch/swap_test_evidence.md`. Treat these only as functional swap evidence, not as proof of organic demand or strong liquidity.
+
 ## Supply And Reserve
 
 - Supply disclosure updated on 2026-05-10 after the second reserve transfer. Use these values for any BaseScan, GeckoTerminal, CoinGecko, or CoinMarketCap follow-up correction.

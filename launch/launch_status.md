@@ -37,6 +37,7 @@
 - Official Telegram channel photo updated and first public announcement posted on 2026-05-09.
 - First official Telegram announcement pinned on 2026-05-10.
 - Telegram channel runbook prepared.
+- Small Base Mainnet Uniswap v3 buy/sell functional swap tests observed on 2026-05-10 and documented in `launch/swap_test_evidence.md`.
 
 ## Needs Owner Input Or External Service
 
@@ -56,6 +57,7 @@
 - Internal engineering review is complete, but no third-party audit has been completed.
 - Audit quote requests have been submitted and then deferred by owner decision, but quote submission is not an audit and does not allow any public "audited" claim.
 - Current Uniswap liquidity is starter-depth only; trades can have high price impact and slippage.
+- Functional buy/sell swap tests do not remove wallet risk warnings and must not be described as proof of organic volume or deep liquidity.
 - The owner reserve is in a normal owner-controlled wallet. Do not describe it as locked, vested, or multisig-controlled unless custody changes on-chain.
 - The product direction is still concept-stage. Do not describe GCA as a finished platform or as having guaranteed utility.
 - Do not claim return promises, price stability, liquidity depth, or external audit completion.
