@@ -27,11 +27,14 @@ class LaunchPackageTests(unittest.TestCase):
         site = (ROOT / "site" / "index.html").read_text()
         buy = (ROOT / "site" / "buy.html").read_text()
         utility = (ROOT / "site" / "utility.html").read_text()
+        members = (ROOT / "site" / "members.html").read_text()
         self.assertIn("Base Mainnet", site)
         self.assertIn("chainId 8453", site)
         self.assertIn(MAINNET_ADDRESS, site)
         self.assertIn(MAINNET_ADDRESS, buy)
         self.assertIn(MAINNET_ADDRESS, utility)
+        self.assertIn(MAINNET_ADDRESS, members)
+        self.assertIn("Base Mainnet", members)
         self.assertIn("Base Mainnet", buy)
         self.assertIn("chainId 8453", buy)
         self.assertIn("https://basescan.org/address/", site)
@@ -84,6 +87,27 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("https://dex.coinmarketcap.com/base/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff/", site)
         self.assertIn("starter liquidity only", site)
 
+    def test_members_page_supports_local_pre_registration_safely(self):
+        members = (ROOT / "site" / "members.html").read_text()
+        self.assertIn("GCA Member Pre-Registration", members)
+        self.assertIn("This page creates a local pre-registration packet", members)
+        self.assertIn("does not create a live Web3 Radar account", members)
+        self.assertIn("10,000 GCA", members)
+        self.assertIn("100 Web3 Radar utility credits", members)
+        self.assertIn("1,000,000 GCA", members)
+        self.assertIn("GCA Member", members)
+        self.assertIn("Connect Wallet", members)
+        self.assertIn("Generate Packet", members)
+        self.assertIn("Copy Packet", members)
+        self.assertIn("Download JSON", members)
+        self.assertIn("Email Packet", members)
+        self.assertIn("local-only-pre-registration-not-live-entitlement", members)
+        self.assertIn("No private key, seed phrase, exchange API secret, withdrawal permission, or custody request", members)
+        self.assertIn("No cash, token rebate, income, reimbursement, trading permission, or risk-control bypass", members)
+        self.assertIn("walletAddressFormatOk", members)
+        self.assertIn("eth_requestAccounts", members)
+        self.assertIn("GCAgochina@outlook.com", members)
+
     def test_utility_page_connects_gca_to_quant_tools_safely(self):
         utility = (ROOT / "site" / "utility.html").read_text()
         self.assertIn("GCA Utility Thesis", utility)
@@ -132,6 +156,7 @@ class LaunchPackageTests(unittest.TestCase):
         paths = [
             ROOT / "site" / "index.html",
             ROOT / "site" / "buy.html",
+            ROOT / "site" / "members.html",
             ROOT / "site" / "utility.html",
             ROOT / "docs" / "whitepaper.md",
             ROOT / "docs" / "mainnet_public_profile.md",
@@ -341,6 +366,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("CoinMarketCap", package)
         self.assertIn("https://gcagochina.com/", package)
         self.assertIn("https://gcagochina.com/buy.html", package)
+        self.assertIn("https://gcagochina.com/members.html", package)
         self.assertIn("https://gcagochina.com/utility.html", package)
         self.assertIn("https://gcagochina.com/assets/gca-logo.svg", package)
         self.assertIn("https://gcagochina.com/whitepaper.html", package)
@@ -363,6 +389,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["contractAddress"], MAINNET_ADDRESS)
         self.assertEqual(values["website"], "https://gcagochina.com/")
         self.assertEqual(values["buyGuideUrl"], "https://gcagochina.com/buy.html")
+        self.assertEqual(values["memberPreRegistrationUrl"], "https://gcagochina.com/members.html")
         self.assertEqual(values["utilityThesisUrl"], "https://gcagochina.com/utility.html")
         self.assertEqual(values["logoUrl"], "https://gcagochina.com/assets/gca-logo.svg")
         self.assertEqual(values["utilityPositioning"]["connectedProduct"], "Web3 Radar non-custodial quant risk toolkit")

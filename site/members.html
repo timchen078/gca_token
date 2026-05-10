@@ -1,0 +1,610 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GCA Members | Pre-Registration</title>
+    <meta name="description" content="GCA planned holder bonus and member pre-registration page for future Web3 Radar access bridge integration.">
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #111318;
+        --muted: #5f6773;
+        --line: #dfe3ea;
+        --panel: #ffffff;
+        --soft: #f6f7f9;
+        --red: #d71920;
+        --blue: #0052ff;
+        --green: #087f5b;
+        --gold: #b88714;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: #fbfbfc;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.5;
+      }
+
+      a {
+        color: var(--blue);
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .shell {
+        width: min(1080px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      header {
+        border-bottom: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.94);
+        position: sticky;
+        top: 0;
+        z-index: 2;
+      }
+
+      nav {
+        min-height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--ink);
+        font-weight: 850;
+      }
+
+      .brand img {
+        width: 32px;
+        height: 32px;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 18px;
+        align-items: center;
+        font-size: 14px;
+      }
+
+      main {
+        padding: 42px 0 56px;
+      }
+
+      h1 {
+        margin: 0;
+        max-width: 840px;
+        font-size: clamp(40px, 6vw, 72px);
+        line-height: 1;
+        letter-spacing: 0;
+      }
+
+      h2 {
+        margin: 0 0 14px;
+        font-size: 24px;
+      }
+
+      h3 {
+        margin: 0 0 8px;
+        font-size: 17px;
+      }
+
+      .lead {
+        max-width: 820px;
+        margin: 18px 0 0;
+        color: var(--muted);
+        font-size: 18px;
+      }
+
+      .section {
+        margin-top: 30px;
+      }
+
+      .panel,
+      .fact {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+      }
+
+      .panel {
+        padding: 24px;
+      }
+
+      .grid,
+      .two {
+        display: grid;
+        gap: 14px;
+      }
+
+      .grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .two {
+        grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+      }
+
+      .fact {
+        min-height: 124px;
+        padding: 18px;
+      }
+
+      .label {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 750;
+        text-transform: uppercase;
+      }
+
+      .value {
+        display: block;
+        margin-top: 8px;
+        font-size: 17px;
+        font-weight: 850;
+        overflow-wrap: anywhere;
+      }
+
+      .note,
+      li {
+        color: var(--muted);
+      }
+
+      .note {
+        margin: 0;
+      }
+
+      .form {
+        display: grid;
+        gap: 14px;
+      }
+
+      .field {
+        display: grid;
+        gap: 6px;
+      }
+
+      label {
+        font-size: 13px;
+        font-weight: 800;
+      }
+
+      input,
+      select,
+      textarea {
+        width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fff;
+        color: var(--ink);
+        font: inherit;
+        min-height: 42px;
+        padding: 10px 12px;
+      }
+
+      textarea {
+        min-height: 230px;
+        resize: vertical;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+        font-size: 12px;
+      }
+
+      .check {
+        display: grid;
+        grid-template-columns: 18px minmax(0, 1fr);
+        gap: 10px;
+        align-items: start;
+      }
+
+      .check input {
+        min-height: auto;
+        margin-top: 4px;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .button {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        color: var(--ink);
+        min-height: 42px;
+        padding: 10px 14px;
+        font: inherit;
+        font-weight: 750;
+        cursor: pointer;
+      }
+
+      .button.primary {
+        border-color: var(--red);
+        background: var(--red);
+        color: #fff;
+      }
+
+      .button[disabled] {
+        cursor: not-allowed;
+        opacity: 0.55;
+      }
+
+      .result {
+        border-left: 3px solid var(--gold);
+        padding: 14px;
+        background: var(--soft);
+      }
+
+      .result.good {
+        border-left-color: var(--green);
+      }
+
+      .result.warn {
+        border-left-color: var(--red);
+      }
+
+      .list {
+        display: grid;
+        gap: 10px;
+        margin-top: 12px;
+      }
+
+      .row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 12px;
+        align-items: start;
+        border-top: 1px solid var(--line);
+        padding-top: 10px;
+      }
+
+      .row strong {
+        white-space: nowrap;
+      }
+
+      code {
+        padding: 2px 5px;
+        border-radius: 6px;
+        background: var(--soft);
+        overflow-wrap: anywhere;
+      }
+
+      footer {
+        border-top: 1px solid var(--line);
+        padding: 24px 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      @media (max-width: 860px) {
+        .grid,
+        .two {
+          grid-template-columns: 1fr;
+        }
+
+        nav {
+          align-items: flex-start;
+          flex-direction: column;
+          padding: 14px 0;
+        }
+
+        .nav-links {
+          flex-wrap: wrap;
+        }
+
+        .row {
+          grid-template-columns: 1fr;
+        }
+
+        .row strong {
+          white-space: normal;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav class="shell" aria-label="Primary">
+        <a class="brand" href="index.html" aria-label="GCA home">
+          <img src="assets/gca-logo.svg" alt="GCA logo">
+          <span>GCA</span>
+        </a>
+        <div class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="buy.html">Buy Guide</a>
+          <a href="utility.html">Utility Thesis</a>
+          <a href="whitepaper.html">Whitepaper</a>
+          <a href="https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6" target="_blank" rel="noreferrer">BaseScan</a>
+        </div>
+      </nav>
+    </header>
+
+    <main class="shell">
+      <section aria-labelledby="title">
+        <h1 id="title">GCA Member Pre-Registration</h1>
+        <p class="lead">This page creates a local pre-registration packet for the planned GCA x Web3 Radar access bridge. It does not create a live Web3 Radar account, does not verify balances on-chain yet, and does not make any holder benefit claimable today.</p>
+      </section>
+
+      <section class="section grid" aria-label="Planned holder programs">
+        <div class="fact">
+          <span class="label">Registered User</span>
+          <span class="value">Pre-registration packet</span>
+          <p class="note">Submit an email, Telegram handle, and Base wallet for future support follow-up.</p>
+        </div>
+        <div class="fact">
+          <span class="label">Holder Bonus</span>
+          <span class="value">10,000 GCA</span>
+          <p class="note">Planned one-time 100 Web3 Radar utility credits after the access bridge is live.</p>
+        </div>
+        <div class="fact">
+          <span class="label">GCA Member</span>
+          <span class="value">1,000,000 GCA</span>
+          <p class="note">Planned member status with higher utility limits, member research notes, training, and priority support.</p>
+        </div>
+      </section>
+
+      <section class="section two" aria-label="Pre-registration form">
+        <div class="panel">
+          <h2>Pre-Register</h2>
+          <form class="form" id="registrationForm">
+            <div class="field">
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" autocomplete="email" placeholder="name@example.com">
+            </div>
+            <div class="field">
+              <label for="telegram">Telegram Handle</label>
+              <input id="telegram" name="telegram" type="text" autocomplete="off" placeholder="@username">
+            </div>
+            <div class="field">
+              <label for="wallet">Base Wallet Address</label>
+              <div class="actions">
+                <input id="wallet" name="wallet" type="text" autocomplete="off" placeholder="0x...">
+                <button class="button" type="button" id="connectWallet">Connect Wallet</button>
+              </div>
+            </div>
+            <div class="field">
+              <label for="declaredBalance">Declared GCA Balance</label>
+              <input id="declaredBalance" name="declaredBalance" type="text" inputmode="decimal" placeholder="10000 or 1000000">
+            </div>
+            <div class="field">
+              <label for="programIntent">Primary Interest</label>
+              <select id="programIntent" name="programIntent">
+                <option value="holder_bonus">Holder Bonus - 10,000 GCA</option>
+                <option value="gca_member">GCA Member - 1,000,000 GCA</option>
+                <option value="general_waitlist">General Waitlist</option>
+              </select>
+            </div>
+            <label class="check">
+              <input id="terms" type="checkbox">
+              <span>I understand this is pre-registration only. No benefit is live or claimable until the Web3 Radar access bridge, wallet verification, and membership ledger are released.</span>
+            </label>
+            <label class="check">
+              <input id="security" type="checkbox">
+              <span>I understand GCA will never ask for a private key, seed phrase, exchange API secret, withdrawal permission, or custody of funds.</span>
+            </label>
+            <div class="actions">
+              <button class="button primary" type="submit">Generate Packet</button>
+              <button class="button" type="button" id="copyPacket">Copy Packet</button>
+              <button class="button" type="button" id="downloadPacket">Download JSON</button>
+              <a class="button" id="emailPacket" href="mailto:GCAgochina@outlook.com">Email Packet</a>
+            </div>
+          </form>
+        </div>
+
+        <div class="panel">
+          <h2>Eligibility Preview</h2>
+          <div id="eligibilityResult" class="result">
+            <strong>Waiting for input</strong>
+            <p class="note">Enter a declared GCA balance to preview the planned holder tier.</p>
+          </div>
+          <div class="field" style="margin-top: 14px;">
+            <label for="packetOutput">Local Registration Packet</label>
+            <textarea id="packetOutput" readonly></textarea>
+          </div>
+        </div>
+      </section>
+
+      <section class="section two" aria-label="Rules and boundaries">
+        <div class="panel">
+          <h2>Program Rules</h2>
+          <div class="list">
+            <div class="row"><span>One pre-registration packet per user email and verified wallet</span><strong>Planned</strong></div>
+            <div class="row"><span>Holder Bonus threshold</span><strong>10,000 GCA</strong></div>
+            <div class="row"><span>GCA Member threshold</span><strong>1,000,000 GCA</strong></div>
+            <div class="row"><span>Verification method</span><strong>Future wallet check</strong></div>
+          </div>
+        </div>
+        <div class="panel">
+          <h2>Safety Boundary</h2>
+          <p class="note">This page does not store data on a server. The packet stays in your browser until you copy, download, or email it. Pre-registration is not financial advice, not a token rebate, not cash, not income, not reimbursement, not trading permission, and not a way to bypass Web3 Radar risk controls.</p>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="shell">GCA member pre-registration is a local-only preview until the Web3 Radar access bridge is released.</div>
+    </footer>
+
+    <script>
+      const CONTRACT = "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6";
+      const CONTACT_EMAIL = "GCAgochina@outlook.com";
+      const HOLDER_THRESHOLD = 10000;
+      const MEMBER_THRESHOLD = 1000000;
+
+      const form = document.getElementById("registrationForm");
+      const email = document.getElementById("email");
+      const telegram = document.getElementById("telegram");
+      const wallet = document.getElementById("wallet");
+      const declaredBalance = document.getElementById("declaredBalance");
+      const programIntent = document.getElementById("programIntent");
+      const terms = document.getElementById("terms");
+      const security = document.getElementById("security");
+      const packetOutput = document.getElementById("packetOutput");
+      const result = document.getElementById("eligibilityResult");
+      const emailPacket = document.getElementById("emailPacket");
+
+      function parseBalance(value) {
+        const normalized = String(value || "").replace(/,/g, "").trim();
+        const parsed = Number(normalized);
+        if (!Number.isFinite(parsed) || parsed < 0) return 0;
+        return parsed;
+      }
+
+      function isWalletAddress(value) {
+        return /^0x[a-fA-F0-9]{40}$/.test(String(value || "").trim());
+      }
+
+      function classify(balance) {
+        if (balance >= MEMBER_THRESHOLD) {
+          return {
+            tier: "GCA Member candidate",
+            eligiblePrograms: ["Holder Bonus", "GCA Member"],
+            message: "Declared balance meets the planned 1,000,000 GCA Member threshold and the 10,000 GCA holder bonus threshold.",
+            className: "good"
+          };
+        }
+        if (balance >= HOLDER_THRESHOLD) {
+          return {
+            tier: "Holder Bonus candidate",
+            eligiblePrograms: ["Holder Bonus"],
+            message: "Declared balance meets the planned 10,000 GCA holder bonus threshold.",
+            className: "good"
+          };
+        }
+        return {
+          tier: "General waitlist",
+          eligiblePrograms: ["General Waitlist"],
+          message: "Declared balance is below the planned holder thresholds. You can still create a pre-registration packet.",
+          className: "warn"
+        };
+      }
+
+      function buildPacket() {
+        const balance = parseBalance(declaredBalance.value);
+        const tier = classify(balance);
+        return {
+          packetVersion: "gca_member_preregistration_v1",
+          createdAt: new Date().toISOString(),
+          status: "local-only-pre-registration-not-live-entitlement",
+          network: "Base Mainnet",
+          chainId: 8453,
+          token: {
+            name: "GCA",
+            contractAddress: CONTRACT
+          },
+          user: {
+            email: email.value.trim(),
+            telegram: telegram.value.trim(),
+            walletAddress: wallet.value.trim(),
+            walletAddressFormatOk: isWalletAddress(wallet.value)
+          },
+          declaredGcaBalance: String(declaredBalance.value || "").trim(),
+          plannedTierPreview: tier.tier,
+          eligibleProgramsPreview: tier.eligiblePrograms,
+          programIntent: programIntent.value,
+          plannedPrograms: {
+            holderBonus: {
+              minimumHolding: "10000 GCA",
+              benefit: "one-time 100 Web3 Radar utility credits",
+              status: "planned-not-live"
+            },
+            gcaMember: {
+              minimumHolding: "1000000 GCA",
+              benefit: "GCA Member status",
+              status: "planned-not-live"
+            }
+          },
+          acknowledgements: {
+            preRegistrationOnly: terms.checked,
+            noSecretsNoCustody: security.checked
+          },
+          boundaries: [
+            "No private key, seed phrase, exchange API secret, withdrawal permission, or custody request.",
+            "No cash, token rebate, income, reimbursement, trading permission, or risk-control bypass.",
+            "Final eligibility requires future Web3 Radar account, wallet verification, and membership ledger."
+          ],
+          officialContactEmail: CONTACT_EMAIL
+        };
+      }
+
+      function renderResult(packet) {
+        const balance = parseBalance(packet.declaredGcaBalance);
+        const tier = classify(balance);
+        result.className = `result ${tier.className}`;
+        result.textContent = "";
+        const title = document.createElement("strong");
+        title.textContent = tier.tier;
+        const body = document.createElement("p");
+        body.className = "note";
+        body.textContent = tier.message;
+        result.append(title, body);
+      }
+
+      function refreshPacket() {
+        const packet = buildPacket();
+        packetOutput.value = JSON.stringify(packet, null, 2);
+        renderResult(packet);
+        const subject = encodeURIComponent(`GCA pre-registration packet - ${packet.user.walletAddress || "wallet pending"}`);
+        const body = encodeURIComponent(packetOutput.value);
+        emailPacket.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
+        return packet;
+      }
+
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        refreshPacket();
+      });
+
+      form.addEventListener("input", refreshPacket);
+
+      document.getElementById("connectWallet").addEventListener("click", async () => {
+        if (!window.ethereum) {
+          alert("No browser wallet detected. You can paste your Base wallet address manually.");
+          return;
+        }
+        const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+        if (accounts && accounts[0]) {
+          wallet.value = accounts[0];
+          refreshPacket();
+        }
+      });
+
+      document.getElementById("copyPacket").addEventListener("click", async () => {
+        refreshPacket();
+        await navigator.clipboard.writeText(packetOutput.value);
+      });
+
+      document.getElementById("downloadPacket").addEventListener("click", () => {
+        refreshPacket();
+        const blob = new Blob([packetOutput.value], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        const cleanWallet = wallet.value.trim().slice(0, 10) || "wallet";
+        link.href = url;
+        link.download = `gca-preregistration-${cleanWallet}.json`;
+        document.body.append(link);
+        link.click();
+        link.remove();
+        URL.revokeObjectURL(url);
+      });
+
+      refreshPacket();
+    </script>
+  </body>
+</html>
