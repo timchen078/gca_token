@@ -410,7 +410,7 @@
               <button class="button" type="button" id="downloadPacket">Download JSON</button>
               <a class="button" id="emailPacket" href="mailto:GCAgochina@outlook.com">Email Packet</a>
             </div>
-            <div class="status-line" id="submissionStatus">Direct submission is not configured yet. Use copy, download, or email for now.</div>
+            <div class="status-line" id="submissionStatus">Direct submission is not connected on this public static page yet. Use copy, download, or email for now.</div>
           </form>
         </div>
 
@@ -439,7 +439,18 @@
         </div>
         <div class="panel">
           <h2>Safety Boundary</h2>
-          <p class="note">This page does not store data on a server. The packet stays in your browser until you copy, download, or email it. Pre-registration is not financial advice, not a token rebate, not cash, not income, not reimbursement, not trading permission, and not a way to bypass Web3 Radar risk controls.</p>
+          <p class="note">This public static page does not store data on a server. The packet stays in your browser until you copy, download, or email it. When a reviewed HTTPS endpoint is connected, it may store only the pre-registration review fields. Pre-registration is not financial advice, not a token rebate, not cash, not income, not reimbursement, not trading permission, and not a way to bypass Web3 Radar risk controls.</p>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="reviewTitle">
+        <h2 id="reviewTitle">Review Pipeline</h2>
+        <p class="note">Web3 Radar now has a local intake contract prepared for future deployment. The public page remains copy/download/email until the API is placed behind a controlled HTTPS origin.</p>
+        <div class="list">
+          <div class="row"><span>Prepared Web3 Radar intake path</span><strong><code>/gca/pre-registrations</code></strong></div>
+          <div class="row"><span>Prepared review queue path</span><strong><code>/gca/member-review</code></strong></div>
+          <div class="row"><span>Current public submission mode</span><strong>Manual packet collection</strong></div>
+          <div class="row"><span>Live entitlement status</span><strong>Not live</strong></div>
         </div>
       </section>
     </main>
@@ -452,6 +463,7 @@
       const CONTRACT = "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6";
       const CONTACT_EMAIL = "GCAgochina@outlook.com";
       const SUBMISSION_ENDPOINT = "";
+      const REVIEWED_WEB3_RADAR_ENDPOINT_PATH = "/gca/pre-registrations";
       const HOLDER_THRESHOLD = 10000;
       const MEMBER_THRESHOLD = 1000000;
 
@@ -580,7 +592,7 @@
         submitPacket.disabled = !endpointConfigured();
         submissionStatus.textContent = endpointConfigured()
           ? "Direct submission endpoint is configured. You can submit the packet from this page."
-          : "Direct submission is not configured yet. Use copy, download, or email for now.";
+          : `Direct submission is not connected yet. Prepared backend path: ${REVIEWED_WEB3_RADAR_ENDPOINT_PATH}. Use copy, download, or email for now.`;
         return packet;
       }
 
@@ -611,7 +623,7 @@
       submitPacket.addEventListener("click", async () => {
         const packet = refreshPacket();
         if (!endpointConfigured()) {
-          submissionStatus.textContent = "Direct submission is not configured yet. Use copy, download, or email for now.";
+          submissionStatus.textContent = `Direct submission is not connected yet. Prepared backend path: ${REVIEWED_WEB3_RADAR_ENDPOINT_PATH}. Use copy, download, or email for now.`;
           return;
         }
         if (!terms.checked || !security.checked) {
