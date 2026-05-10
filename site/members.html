@@ -343,7 +343,7 @@
     <main class="shell">
       <section aria-labelledby="title">
         <h1 id="title">GCA Member Pre-Registration</h1>
-        <p class="lead">This page creates a local pre-registration packet for the planned GCA x Web3 Radar access bridge. It does not create a live Web3 Radar account, does not verify balances on-chain yet, and does not make any holder benefit claimable today.</p>
+        <p class="lead">This page creates a local pre-registration packet for the GCA x Web3 Radar access bridge. Web3 Radar now has backend wallet balance verification, a 100 credits ledger, and a GCA Member ledger, but this public static page does not create a live Web3 Radar account or make any holder benefit claimable from the browser.</p>
       </section>
 
       <section class="section grid" aria-label="Planned holder programs">
@@ -355,12 +355,12 @@
         <div class="fact">
           <span class="label">Holder Bonus</span>
           <span class="value">10,000 GCA</span>
-          <p class="note">Planned one-time 100 Web3 Radar utility credits after the access bridge is live.</p>
+          <p class="note">Backend-supported one-time 100 Web3 Radar utility credits after wallet balance verification.</p>
         </div>
         <div class="fact">
           <span class="label">GCA Member</span>
           <span class="value">1,000,000 GCA</span>
-          <p class="note">Planned member status with higher utility limits, member research notes, training, and priority support.</p>
+          <p class="note">Backend-supported member status with higher utility limits, member research notes, training, and priority support.</p>
         </div>
       </section>
 
@@ -397,7 +397,7 @@
             </div>
             <label class="check">
               <input id="terms" type="checkbox">
-              <span>I understand this is pre-registration only. No benefit is live or claimable until the Web3 Radar access bridge, wallet verification, and membership ledger are released.</span>
+              <span>I understand this page is pre-registration only. No benefit is claimable from this browser page until Web3 Radar releases controlled HTTPS account UI for wallet verification and ledger records.</span>
             </label>
             <label class="check">
               <input id="security" type="checkbox">
@@ -434,29 +434,32 @@
             <div class="row"><span>One pre-registration packet per user email and verified wallet</span><strong>Planned</strong></div>
             <div class="row"><span>Holder Bonus threshold</span><strong>10,000 GCA</strong></div>
             <div class="row"><span>GCA Member threshold</span><strong>1,000,000 GCA</strong></div>
-            <div class="row"><span>Verification method</span><strong>Future wallet check</strong></div>
+            <div class="row"><span>Verification method</span><strong>Backend balanceOf check</strong></div>
           </div>
         </div>
         <div class="panel">
           <h2>Safety Boundary</h2>
-          <p class="note">This public static page does not store data on a server. The packet stays in your browser until you copy, download, or email it. When a reviewed HTTPS endpoint is connected, it may store only the pre-registration review fields. Pre-registration is not financial advice, not a token rebate, not cash, not income, not reimbursement, not trading permission, and not a way to bypass Web3 Radar risk controls.</p>
+          <p class="note">This public static page does not store data on a server. The packet stays in your browser until you copy, download, or email it. When a reviewed HTTPS endpoint is connected, it may store only the pre-registration review fields, then Web3 Radar may verify the queued wallet with an ERC-20 balanceOf read. Pre-registration is not financial advice, not a token rebate, not cash, not income, not reimbursement, not trading permission, and not a way to bypass Web3 Radar risk controls.</p>
         </div>
       </section>
 
       <section class="section panel" aria-labelledby="reviewTitle">
         <h2 id="reviewTitle">Review Pipeline</h2>
-        <p class="note">Web3 Radar now has a local intake contract prepared for future deployment. The public page remains copy/download/email until the API is placed behind a controlled HTTPS origin.</p>
+        <p class="note">Web3 Radar now has local intake, wallet verification, 100 credits, and GCA Member ledgers prepared for deployment. The public page remains copy/download/email until the API is placed behind a controlled HTTPS origin.</p>
         <div class="list">
           <div class="row"><span>Prepared Web3 Radar intake path</span><strong><code>/gca/pre-registrations</code></strong></div>
+          <div class="row"><span>Prepared wallet verification path</span><strong><code>/gca/wallet-verifications</code></strong></div>
+          <div class="row"><span>Prepared credit ledger path</span><strong><code>/gca/credit-ledger</code></strong></div>
+          <div class="row"><span>Prepared member ledger path</span><strong><code>/gca/member-ledger</code></strong></div>
           <div class="row"><span>Prepared review queue path</span><strong><code>/gca/member-review</code></strong></div>
           <div class="row"><span>Current public submission mode</span><strong>Manual packet collection</strong></div>
-          <div class="row"><span>Live entitlement status</span><strong>Not live</strong></div>
+          <div class="row"><span>Public claim status</span><strong>Not connected</strong></div>
         </div>
       </section>
     </main>
 
     <footer>
-      <div class="shell">GCA member pre-registration is a local-only preview until the Web3 Radar access bridge is released.</div>
+      <div class="shell">GCA member pre-registration is a local-only preview until the Web3 Radar access bridge is exposed through controlled HTTPS account UI.</div>
     </footer>
 
     <script>
@@ -464,6 +467,9 @@
       const CONTACT_EMAIL = "GCAgochina@outlook.com";
       const SUBMISSION_ENDPOINT = "";
       const REVIEWED_WEB3_RADAR_ENDPOINT_PATH = "/gca/pre-registrations";
+      const WALLET_VERIFICATION_ENDPOINT_PATH = "/gca/wallet-verifications";
+      const CREDIT_LEDGER_ENDPOINT_PATH = "/gca/credit-ledger";
+      const MEMBER_LEDGER_ENDPOINT_PATH = "/gca/member-ledger";
       const HOLDER_THRESHOLD = 10000;
       const MEMBER_THRESHOLD = 1000000;
 
@@ -523,7 +529,7 @@
         return {
           packetVersion: "gca_member_preregistration_v1",
           createdAt: new Date().toISOString(),
-          status: "local-only-pre-registration-not-live-entitlement",
+          status: "local-only-pre-registration-backend-verification-ready-public-claim-not-connected",
           network: "Base Mainnet",
           chainId: 8453,
           token: {
@@ -544,12 +550,12 @@
             holderBonus: {
               minimumHolding: "10000 GCA",
               benefit: "one-time 100 Web3 Radar utility credits",
-              status: "planned-not-live"
+              status: "backend-ledger-ready-public-claim-not-connected"
             },
             gcaMember: {
               minimumHolding: "1000000 GCA",
               benefit: "GCA Member status",
-              status: "planned-not-live"
+              status: "backend-ledger-ready-public-claim-not-connected"
             }
           },
           acknowledgements: {
@@ -559,7 +565,7 @@
           boundaries: [
             "No private key, seed phrase, exchange API secret, withdrawal permission, or custody request.",
             "No cash, token rebate, income, reimbursement, trading permission, or risk-control bypass.",
-            "Final eligibility requires future Web3 Radar account, wallet verification, and membership ledger."
+            "Final eligibility requires Web3 Radar account release, wallet balance verification, and ledger record."
           ],
           officialContactEmail: CONTACT_EMAIL
         };
@@ -592,7 +598,7 @@
         submitPacket.disabled = !endpointConfigured();
         submissionStatus.textContent = endpointConfigured()
           ? "Direct submission endpoint is configured. You can submit the packet from this page."
-          : `Direct submission is not connected yet. Prepared backend path: ${REVIEWED_WEB3_RADAR_ENDPOINT_PATH}. Use copy, download, or email for now.`;
+          : `Direct submission is not connected yet. Prepared backend paths: ${REVIEWED_WEB3_RADAR_ENDPOINT_PATH}, ${WALLET_VERIFICATION_ENDPOINT_PATH}, ${CREDIT_LEDGER_ENDPOINT_PATH}, ${MEMBER_LEDGER_ENDPOINT_PATH}. Use copy, download, or email for now.`;
         return packet;
       }
 
@@ -623,7 +629,7 @@
       submitPacket.addEventListener("click", async () => {
         const packet = refreshPacket();
         if (!endpointConfigured()) {
-          submissionStatus.textContent = `Direct submission is not connected yet. Prepared backend path: ${REVIEWED_WEB3_RADAR_ENDPOINT_PATH}. Use copy, download, or email for now.`;
+          submissionStatus.textContent = `Direct submission is not connected yet. Prepared backend paths: ${REVIEWED_WEB3_RADAR_ENDPOINT_PATH}, ${WALLET_VERIFICATION_ENDPOINT_PATH}, ${CREDIT_LEDGER_ENDPOINT_PATH}, ${MEMBER_LEDGER_ENDPOINT_PATH}. Use copy, download, or email for now.`;
           return;
         }
         if (!terms.checked || !security.checked) {

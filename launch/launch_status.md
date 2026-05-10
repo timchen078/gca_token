@@ -31,11 +31,11 @@
 - Owner decided on 2026-05-10 to defer third-party audit for now and revisit later if needed.
 - Website updated with the Go China Access concept-stage project direction.
 - Website updated with the GCA x Web3 Radar utility thesis: Go China macro narrative plus planned access to non-custodial quant risk reports, backtests, ENTRY_READY review, position sizing, and risk-control education.
-- Planned first holder campaign documented: each registered user may verify one wallet holding at least 10,000 GCA and receive a one-time 100 Web3 Radar utility credits bonus after the access bridge is live.
-- Planned GCA Member tier documented: each registered user may verify one wallet holding at least 1,000,000 GCA and qualify for GCA Member status after the access bridge is live.
+- Verified first holder campaign backend documented: each registered user may verify one wallet holding at least 10,000 GCA and receive a one-time 100 Web3 Radar utility credits ledger record.
+- Verified GCA Member backend documented: each registered user may verify one wallet holding at least 1,000,000 GCA and qualify for GCA Member status in the Web3 Radar member ledger.
 - Member pre-registration page prepared at `https://gcagochina.com/members.html`; it generates local-only registration packets and does not create a live account.
 - Member pre-registration page now has a configurable direct submission endpoint placeholder; collection remains copy/download/email until an approved HTTPS endpoint is configured.
-- Web3 Radar local intake paths are prepared for future deployment: `POST /gca/pre-registrations` and `GET /gca/member-review`; the public static page is not connected to them yet.
+- Web3 Radar local access bridge paths are prepared: `POST /gca/pre-registrations`, `POST /gca/wallet-verifications`, `GET /gca/credit-ledger`, `GET /gca/member-ledger`, and `GET /gca/member-review`; the public static page is not connected to them yet.
 - Public utility thesis page prepared at `https://gcagochina.com/utility.html`.
 - Data platform submission package prepared for DEX Screener, GeckoTerminal, CoinGecko, and CoinMarketCap.
 - GeckoTerminal token info update runbook prepared.
@@ -55,9 +55,9 @@
 - Wait for GeckoTerminal review or an email reply to `GCAgochina@outlook.com`; GeckoTerminal showed a review window of up to 5 working days.
 - If BaseScan or GeckoTerminal asks for supply details during review, use the updated 40/60 allocation and both reserve transfer transactions.
 - Wait for stronger public activity and market volume before submitting CoinGecko or CoinMarketCap listing requests.
-- Implement the Web3 Radar access bridge before describing any report credits, backtest quotas, ENTRY_READY reviews, or calculators as live token-gated features.
-- Implement the Web3 Radar credit ledger, wallet verification, one-claim-per-user controls, and support workflow before describing the 10,000 GCA holder bonus as claimable.
-- Implement the Web3 Radar membership ledger, ongoing balance checks, member benefit limits, and support workflow before describing the 1,000,000 GCA Member tier as claimable.
+- Expose the Web3 Radar access bridge through controlled HTTPS account UI before describing report credits, backtest quotas, ENTRY_READY reviews, or calculators as public self-service token-gated features.
+- Add public UI, spend/expiry rules, and support workflow before describing the 10,000 GCA holder bonus as claimable by users without operator help.
+- Add public UI, refresh cadence, member benefit limits, and support workflow before describing the 1,000,000 GCA Member tier as self-service claimable by users.
 - Configure a controlled HTTPS collection endpoint in `site/members.html` before asking users to rely on direct packet submission.
 - Deploy the Web3 Radar GCA intake behind the same official HTTPS origin or a reviewed reverse proxy before enabling the public `Submit Packet` button.
 - Add the official Telegram link to any BaseScan or GeckoTerminal follow-up if those reviewers ask for social links.
@@ -77,9 +77,9 @@
 - Blockaid report submission does not mean the warning has been removed; wait for Blockaid/MetaMask review or verify directly in the wallet UI.
 - The owner reserve is in a normal owner-controlled wallet. Do not describe it as locked, vested, or multisig-controlled unless custody changes on-chain.
 - The product direction is still concept-stage. Do not describe GCA as a finished platform or as having guaranteed utility.
-- The Web3 Radar bridge is a planned utility direction only. Do not describe it as live until a product release implements access control, credits, support rules, and risk disclosures.
-- The planned 10,000 GCA holder bonus is not live yet. It must be described as 100 Web3 Radar utility credits only, not as cash, tokens, income, reimbursement, trading permission, or a way to bypass risk controls.
-- The planned 1,000,000 GCA Member tier is not live yet. It must be described as service access only, not as cash, tokens, income, reimbursement, voting control, guaranteed lifetime access, trading permission, or a way to bypass risk controls.
+- The Web3 Radar bridge has a local verified-access backend, but public self-service claiming is not live until controlled HTTPS account UI, support rules, and risk disclosures are released.
+- The 10,000 GCA holder bonus must be described as 100 Web3 Radar utility credits only, not as cash, tokens, income, reimbursement, trading permission, or a way to bypass risk controls.
+- The 1,000,000 GCA Member tier must be described as service access only, not as cash, tokens, income, reimbursement, voting control, guaranteed lifetime access, trading permission, or a way to bypass risk controls.
 - Do not claim return promises, price stability, liquidity depth, or external audit completion.
 
 ## Owner Reserve

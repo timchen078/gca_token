@@ -1,6 +1,6 @@
 # GCA Member Pre-Registration Runbook
 
-This runbook keeps the current static member pre-registration flow operationally clear until Web3 Radar has a real account, wallet verification, credit ledger, and membership ledger.
+This runbook keeps the current static member pre-registration flow operationally clear now that Web3 Radar has local wallet verification, a 100 credits ledger, and a GCA Member ledger, while the public page still waits for controlled HTTPS account UI.
 
 ## Current State
 
@@ -8,8 +8,11 @@ This runbook keeps the current static member pre-registration flow operationally
 - Page mode: static browser-only pre-registration
 - Direct submission endpoint: not connected on the public static page
 - Fallback collection methods: copy packet, download JSON, or email packet to `GCAgochina@outlook.com`
-- Live entitlement status: not live
+- Public claim status: not connected
 - Prepared Web3 Radar intake path: `/gca/pre-registrations`
+- Prepared Web3 Radar wallet verification path: `/gca/wallet-verifications`
+- Prepared Web3 Radar credit ledger path: `/gca/credit-ledger`
+- Prepared Web3 Radar member ledger path: `/gca/member-ledger`
 - Prepared Web3 Radar review path: `/gca/member-review`
 
 The page can generate a local registration packet for:
@@ -40,14 +43,20 @@ Endpoint requirements:
 
 ## Web3 Radar Prepared Intake
 
-Web3 Radar now has a local intake contract prepared:
+Web3 Radar now has a local access bridge prepared:
 
 - `POST /gca/pre-registrations`
 - `POST /radar/gca/pre-registrations`
+- `POST /gca/wallet-verifications`
+- `POST /radar/gca/wallet-verifications`
+- `GET /gca/credit-ledger`
+- `GET /radar/gca/credit-ledger`
+- `GET /gca/member-ledger`
+- `GET /radar/gca/member-ledger`
 - `GET /gca/member-review`
 - `GET /radar/gca/member-review`
 
-This endpoint stores a pending review record only. It does not activate utility credits, GCA Member status, trading permission, order-size changes, leverage changes, live execution, or any risk-control bypass.
+Pre-registration stores a pending review record only. Wallet verification reads the queued wallet's GCA balance with an ERC-20 `balanceOf` call, then records one-time 100 utility credits for verified 10,000 GCA holders and GCA Member status for verified 1,000,000 GCA holders. None of these endpoints activate trading permission, order-size changes, leverage changes, live execution, or any risk-control bypass.
 
 ## Review Workflow
 
@@ -55,8 +64,10 @@ This endpoint stores a pending review record only. It does not activate utility 
 2. Deduplicate by email and wallet address.
 3. Mark packet status as `received`.
 4. Mark wallet verification status as `pending`.
-5. Do not mark Holder Bonus or GCA Member benefits as active until Web3 Radar has released the access bridge and verification ledger.
+5. Run wallet verification only for queued wallets and only through the Web3 Radar backend.
+6. Confirm the credit and member ledgers show service-access records only.
+7. Do not describe the public page as self-service claimable until the controlled HTTPS account UI is released.
 
 ## Public Boundary
 
-Pre-registration is not a token rebate, cash benefit, income, reimbursement, trading permission, or risk-control bypass. It is an early contact and eligibility-intent packet only.
+Pre-registration, 100 utility credits, and GCA Member status are not token rebates, cash benefits, income, reimbursement, trading permission, or risk-control bypass. They are service-access records only.

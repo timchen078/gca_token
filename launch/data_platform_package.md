@@ -87,9 +87,9 @@ GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stand
 
 Suitable GCA utility is access-based: reports, credits, education, backtest usage, signal review, position calculators, and membership discounts. It should not be positioned as custody, redemption rights, platform revenue distribution, automatic live trading permission, or a return promise.
 
-Planned first campaign: each registered user may verify one wallet holding at least 10,000 GCA and receive a one-time 100 Web3 Radar utility credits bonus after the access bridge is live. This should be described only as account-level service credits for reports, backtests, risk warnings, ENTRY_READY signal review, calculators, or education access; it is not cash, tokens, income, reimbursement, or trading permission.
+Verified first campaign backend: each registered user may verify one wallet holding at least 10,000 GCA and receive a one-time 100 Web3 Radar utility credits ledger record. This should be described only as account-level service credits for reports, backtests, risk warnings, ENTRY_READY signal review, calculators, or education access; it is not cash, tokens, income, reimbursement, or trading permission.
 
-Planned GCA Member tier: each registered user may verify one wallet holding at least 1,000,000 GCA and qualify for GCA Member status after the access bridge is live. Possible GCA Member benefits should be limited to higher utility credit limits, member research notes, priority report queue, member training sessions, and priority support; it is not cash, tokens, income, reimbursement, voting control, guaranteed lifetime access, trading permission, or risk-control bypass.
+Verified GCA Member backend: each registered user may verify one wallet holding at least 1,000,000 GCA and qualify for GCA Member status in the Web3 Radar member ledger. Possible GCA Member benefits should be limited to higher utility credit limits, member research notes, priority report queue, member training sessions, and priority support; it is not cash, tokens, income, reimbursement, voting control, guaranteed lifetime access, trading permission, or risk-control bypass.
 
 ## Platform-Specific Notes
 

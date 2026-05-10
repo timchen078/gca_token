@@ -33,7 +33,7 @@
   "shortDescription": "GCA, short for Go China Access, is a fixed-supply ERC-20 token on Base Mainnet. It is a concept-stage community direction focused on the Go China macro narrative, bilingual Web3 education, public market research, and planned access to non-custodial quant risk tools.",
   "longDescription": "GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stands for Go China Access, a concept-stage community direction focused on the Go China macro narrative, bilingual Web3 education, public market research, and planned access to non-custodial quant risk tools. The intended Web3 Radar bridge is to make GCA an access and membership layer for liquidation replay reports, risk-warning credits, realistic backtests, ENTRY_READY signal review, position-size calculators, subscription discounts, and risk-control training. The contract created 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls. The token has a starter Uniswap v3 GCA/WETH pool on Base Mainnet and a disclosed owner-held reserve wallet. Third-party audit quote requests were submitted and then deferred by owner decision. The project is early-stage and should not be described as externally audited, price-backed, yield-bearing, or backed by guaranteed liquidity.",
   "utilityPositioning": {
-    "status": "planned-product-bridge",
+    "status": "local-verified-access-backend-ready-public-claim-not-connected",
     "connectedProduct": "Web3 Radar non-custodial quant risk toolkit",
     "suitableUtility": [
       "liquidation replay reports",
@@ -43,11 +43,11 @@
       "position-size calculators",
       "subscription discounts",
       "risk-control training",
-      "one-time 100 Web3 Radar utility credits bonus for each registered user who verifies one wallet holding at least 10000 GCA after the access bridge is live",
-      "GCA Member status for each registered user who verifies one wallet holding at least 1000000 GCA after the access bridge is live"
+      "one-time 100 Web3 Radar utility credits ledger record for each registered user who verifies one wallet holding at least 10000 GCA",
+      "GCA Member status in the Web3 Radar member ledger for each registered user who verifies one wallet holding at least 1000000 GCA"
     ],
     "plannedFirstCampaign": {
-      "status": "planned-not-live",
+      "status": "backend-ledger-ready-public-claim-not-connected",
       "registeredUserLimit": "one bonus per registered user",
       "walletLimit": "one verified wallet per registered user",
       "minimumHolding": "10000 GCA",
@@ -56,7 +56,7 @@
       "notCreditUse": "cash, tokens, income, reimbursement, trading permission, or risk-control bypass"
     },
     "plannedMemberTier": {
-      "status": "planned-not-live",
+      "status": "backend-ledger-ready-public-claim-not-connected",
       "tierName": "GCA Member",
       "registeredUserLimit": "one membership status per registered user",
       "walletLimit": "one verified wallet per registered user",
