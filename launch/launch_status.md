@@ -30,6 +30,8 @@
 - Third-party audit quote requests submitted to QuillAudits, Hacken, and OpenZeppelin on 2026-05-10; no external audit has been commissioned, paid for, or completed yet.
 - Owner decided on 2026-05-10 to defer third-party audit for now and revisit later if needed.
 - Website updated with the Go China Access concept-stage project direction.
+- Website updated with the GCA x Web3 Radar utility thesis: Go China macro narrative plus planned access to non-custodial quant risk reports, backtests, ENTRY_READY review, position sizing, and risk-control education.
+- Public utility thesis page prepared at `https://gcagochina.com/utility.html`.
 - Data platform submission package prepared for DEX Screener, GeckoTerminal, CoinGecko, and CoinMarketCap.
 - GeckoTerminal token info update runbook prepared.
 - GeckoTerminal token info update submitted on 2026-05-09 with `GCAgochina@outlook.com`; owner completed OTP verification in the browser and GeckoTerminal confirmed the form was submitted successfully.
@@ -48,6 +50,7 @@
 - Wait for GeckoTerminal review or an email reply to `GCAgochina@outlook.com`; GeckoTerminal showed a review window of up to 5 working days.
 - If BaseScan or GeckoTerminal asks for supply details during review, use the updated 40/60 allocation and both reserve transfer transactions.
 - Wait for stronger public activity and market volume before submitting CoinGecko or CoinMarketCap listing requests.
+- Implement the Web3 Radar access bridge before describing any report credits, backtest quotas, ENTRY_READY reviews, or calculators as live token-gated features.
 - Add the official Telegram link to any BaseScan or GeckoTerminal follow-up if those reviewers ask for social links.
 - Replace the Telegram pinned message with `launch/telegram_pinned_buy_announcement.md` when ready.
 - Move the owner reserve to a Safe multisig or lock/vesting contract if stronger reserve assurances are needed.
@@ -65,6 +68,7 @@
 - Blockaid report submission does not mean the warning has been removed; wait for Blockaid/MetaMask review or verify directly in the wallet UI.
 - The owner reserve is in a normal owner-controlled wallet. Do not describe it as locked, vested, or multisig-controlled unless custody changes on-chain.
 - The product direction is still concept-stage. Do not describe GCA as a finished platform or as having guaranteed utility.
+- The Web3 Radar bridge is a planned utility direction only. Do not describe it as live until a product release implements access control, credits, support rules, and risk disclosures.
 - Do not claim return promises, price stability, liquidity depth, or external audit completion.
 
 ## Owner Reserve

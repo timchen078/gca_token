@@ -46,7 +46,7 @@ These steps were completed from the owner's browser session on 2026-05-09:
 
 ## Copyable Description
 
-GCA, short for Go China Access, is a fixed-supply ERC-20 token on Base Mainnet. It is a concept-stage community direction focused on China-facing Web3 culture, creators, bilingual education, and public market narrative research. The contract created 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls. The token has starter Uniswap v3 GCA/WETH liquidity on Base Mainnet and a disclosed owner-held reserve wallet.
+GCA, short for Go China Access, is a fixed-supply ERC-20 token on Base Mainnet. It is a concept-stage community direction focused on the Go China macro narrative, bilingual Web3 education, public market research, and planned access to non-custodial quant risk tools. The intended Web3 Radar bridge is an access and membership layer for reports, risk-warning credits, backtests, ENTRY_READY signal review, position-size calculators, subscription discounts, and risk-control training. The contract created 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls. The token has starter Uniswap v3 GCA/WETH liquidity on Base Mainnet and a disclosed owner-held reserve wallet.
 
 ## Submit These Links
 
@@ -54,6 +54,7 @@ GCA, short for Go China Access, is a fixed-supply ERC-20 token on Base Mainnet. 
 - Logo: `https://gcagochina.com/assets/gca-logo.svg`
 - Logo PNG for upload: `https://gcagochina.com/assets/gca-logo.png`
 - Whitepaper: `https://gcagochina.com/whitepaper.html`
+- Utility thesis: `https://gcagochina.com/utility.html`
 - Explorer: `https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`
 - Pool: `https://www.geckoterminal.com/base/pools/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff`
 - DEX Screener pair: `https://dexscreener.com/base/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff`
@@ -66,6 +67,7 @@ GCA, short for Go China Access, is a fixed-supply ERC-20 token on Base Mainnet. 
 - Do not describe the owner reserve as locked, vested, or multisig-controlled.
 - Do not describe liquidity as deep or stable.
 - Do not claim price support, yield, return promises, or finished product utility.
+- Do not claim platform revenue distribution or automatic live trading permission.
 
 ## If GeckoTerminal Rejects Or Asks For More Information
 

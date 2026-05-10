@@ -4,9 +4,11 @@ Version: 0.5
 
 Official buy guide: `https://gcagochina.com/buy.html`
 
+Utility thesis: `https://gcagochina.com/utility.html`
+
 ## Summary
 
-GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stands for Go China Access, a concept-stage community direction focused on China-facing Web3 culture, creators, bilingual education, and public market narrative research.
+GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stands for Go China Access, a concept-stage community direction focused on China-facing Web3 culture, bilingual education, public market narrative research, and planned access to non-custodial quant risk tools.
 
 The contract creates the entire supply at deployment and does not include post-deployment minting, burning, taxes, blacklist logic, or privileged admin controls. The product roadmap is still being developed publicly, so GCA should not be described as a finished platform or as having guaranteed utility.
 
@@ -41,16 +43,31 @@ GCA is deployed on Base Mainnet because Base is an EVM-compatible Layer 2 networ
 
 ## Project Direction
 
-The current public concept is Go China Access. The intended direction is to build a public community around China-facing Web3 activity, bilingual crypto education, creator/community access, and curated research about market narratives.
+The current public concept is Go China Access. The intended direction is to build a public community around China-facing Web3 activity, bilingual crypto education, creator/community access, curated research about market narratives, and practical trading-risk education.
+
+The planned product bridge is to connect GCA with Web3 Radar-style non-custodial quant tooling. Suitable utility includes:
+
+- Liquidation replay reports
+- Risk-warning credits
+- Backtest usage
+- ENTRY_READY signal review
+- Position-size calculators
+- Subscription discounts
+- Risk-control training
 
 Near-term work should focus on:
 
 - Creating official community channels
 - Publishing a clearer community thesis
-- Collecting feedback before committing to a specific product direction
+- Collecting feedback before committing to a specific product release
+- Defining the Web3 Radar access bridge
 - Keeping public disclosures accurate as the project evolves
 
 This concept does not imply a price target, return promise, revenue share, or completed application.
+
+## Planned Utility Boundaries
+
+GCA should be positioned as an access and membership layer, not as a yield product. Token utility should unlock reports, credits, education, and research workflows. It should not distribute platform revenue, promise outcomes, provide custody, request withdrawal permission, or bypass trading risk checks.
 
 ## Distribution Status
 

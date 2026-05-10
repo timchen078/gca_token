@@ -17,7 +17,7 @@
 
 ## Public Contract Description
 
-GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stands for Go China Access, a concept-stage community direction focused on China-facing Web3 culture, creators, bilingual education, and public market narrative research. The practical product direction is still being developed publicly.
+GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stands for Go China Access, a concept-stage community direction focused on China-facing Web3 culture, bilingual education, public market narrative research, and planned access to non-custodial quant risk tools. The practical product direction is still being developed publicly.
 
 The contract creates 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls.
 
@@ -48,7 +48,8 @@ The full fixed supply was minted to the deployer wallet at deployment. The 40/60
 
 - Current concept: Go China Access
 - Status: concept-stage community project
-- Intended themes: China-facing Web3 culture, community access, bilingual education, creator/community activity, and curated public information
+- Intended themes: China-facing Web3 culture, Go China macro narrative research, community access, bilingual education, risk-control education, and curated public information
+- Planned Web3 Radar bridge: liquidation replay reports, risk-warning credits, realistic backtest usage, ENTRY_READY signal review, position-size calculators, subscription discounts, and risk-control training
 
 Do not describe the current project as having a finished product, guaranteed utility, guaranteed market demand, return promise, or revenue distribution model.
 

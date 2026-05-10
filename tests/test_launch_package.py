@@ -26,10 +26,12 @@ class LaunchPackageTests(unittest.TestCase):
     def test_public_site_uses_mainnet_identity(self):
         site = (ROOT / "site" / "index.html").read_text()
         buy = (ROOT / "site" / "buy.html").read_text()
+        utility = (ROOT / "site" / "utility.html").read_text()
         self.assertIn("Base Mainnet", site)
         self.assertIn("chainId 8453", site)
         self.assertIn(MAINNET_ADDRESS, site)
         self.assertIn(MAINNET_ADDRESS, buy)
+        self.assertIn(MAINNET_ADDRESS, utility)
         self.assertIn("Base Mainnet", buy)
         self.assertIn("chainId 8453", buy)
         self.assertIn("https://basescan.org/address/", site)
@@ -45,8 +47,11 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("BaseScan token profile update has been submitted", site)
         self.assertIn('href="buy.html"', site)
         self.assertIn("Go China Access", site)
-        self.assertIn("concept phase", site)
-        self.assertIn("concept-stage project", site)
+        self.assertIn("Go China macro narrative", site)
+        self.assertIn("Web3 Radar-style quant research", site)
+        self.assertIn("planned access path for liquidation replay, backtesting, risk alerts, ENTRY_READY review, and position sizing", site)
+        self.assertIn("platform utility is still planned", site)
+        self.assertIn("Planned Utility: Web3 Radar Access Layer", site)
         self.assertIn("400,000,000 GCA / 40%", site)
         self.assertIn("600,000,000 GCA / 60%", site)
         self.assertIn("exact circulating supply should still be verified", site)
@@ -74,6 +79,23 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("https://dex.coinmarketcap.com/base/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff/", site)
         self.assertIn("starter liquidity only", site)
 
+    def test_utility_page_connects_gca_to_quant_tools_safely(self):
+        utility = (ROOT / "site" / "utility.html").read_text()
+        self.assertIn("GCA Utility Thesis", utility)
+        self.assertIn("Go China macro-narrative token", utility)
+        self.assertIn("Web3 Radar-style non-custodial quant tools", utility)
+        self.assertIn("liquidation replay reports", utility)
+        self.assertIn("risk-warning credits", utility)
+        self.assertIn("realistic backtests", utility)
+        self.assertIn("ENTRY_READY signal review", utility)
+        self.assertIn("Position calculator", utility)
+        self.assertIn("risk-control training", utility)
+        self.assertIn("Platform revenue distribution", utility)
+        self.assertIn("Token ownership bypassing risk controls", utility)
+        self.assertIn("planned utility path", utility)
+        self.assertIn("does not represent custody, redemption rights", utility)
+        self.assertIn("return guarantees", utility)
+
     def test_buy_page_is_official_and_conservative(self):
         buy = (ROOT / "site" / "buy.html").read_text()
         self.assertIn("Buy GCA", buy)
@@ -98,6 +120,7 @@ class LaunchPackageTests(unittest.TestCase):
         paths = [
             ROOT / "site" / "index.html",
             ROOT / "site" / "buy.html",
+            ROOT / "site" / "utility.html",
             ROOT / "docs" / "whitepaper.md",
             ROOT / "docs" / "mainnet_public_profile.md",
             ROOT / "launch" / "basescan_token_submission.md",
@@ -147,6 +170,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["network"], "Base Mainnet")
         self.assertEqual(values["contractAddress"], MAINNET_ADDRESS)
         self.assertEqual(values["website"], "https://gcagochina.com/")
+        self.assertEqual(values["utilityThesisUrl"], "https://gcagochina.com/utility.html")
         self.assertEqual(values["logoUrl"], "https://gcagochina.com/assets/gca-logo.svg")
         self.assertEqual(values["whitepaperUrl"], "https://gcagochina.com/whitepaper.html")
         self.assertEqual(values["officialEmail"], "cxy070800@gmail.com")
@@ -159,7 +183,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["ownerReserveTransferTxs"], [RESERVE_TX, SECOND_RESERVE_TX])
         self.assertIn("normal owner-controlled wallet", values["ownerReserveCustodyNote"])
         self.assertIn("Go China Access", values["description"])
-        self.assertIn("concept-stage community direction", values["description"])
+        self.assertIn("Go China macro narrative", values["description"])
+        self.assertIn("non-custodial quant risk tools", values["description"])
+        self.assertIn("ENTRY_READY signal review", values["description"])
         self.assertEqual(values["submissionStatus"], "submitted")
         self.assertEqual(values["reviewStatus"], "awaiting BaseScan review")
         self.assertEqual(values["socialLinks"][0]["platform"], "Telegram")
@@ -194,6 +220,7 @@ class LaunchPackageTests(unittest.TestCase):
         paths = [
             ROOT / "site" / "index.html",
             ROOT / "site" / "whitepaper.html",
+            ROOT / "site" / "utility.html",
             ROOT / "docs" / "whitepaper.md",
             ROOT / "docs" / "mainnet_public_profile.md",
             ROOT / "launch" / "launch_status.md",
@@ -302,6 +329,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("CoinMarketCap", package)
         self.assertIn("https://gcagochina.com/", package)
         self.assertIn("https://gcagochina.com/buy.html", package)
+        self.assertIn("https://gcagochina.com/utility.html", package)
         self.assertIn("https://gcagochina.com/assets/gca-logo.svg", package)
         self.assertIn("https://gcagochina.com/whitepaper.html", package)
         self.assertIn("https://dexscreener.com/base/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff", package)
@@ -323,7 +351,11 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["contractAddress"], MAINNET_ADDRESS)
         self.assertEqual(values["website"], "https://gcagochina.com/")
         self.assertEqual(values["buyGuideUrl"], "https://gcagochina.com/buy.html")
+        self.assertEqual(values["utilityThesisUrl"], "https://gcagochina.com/utility.html")
         self.assertEqual(values["logoUrl"], "https://gcagochina.com/assets/gca-logo.svg")
+        self.assertEqual(values["utilityPositioning"]["connectedProduct"], "Web3 Radar non-custodial quant risk toolkit")
+        self.assertIn("ENTRY_READY signal review", values["utilityPositioning"]["suitableUtility"])
+        self.assertIn("platform revenue distribution", values["utilityPositioning"]["notUtility"])
         self.assertEqual(values["liquidity"]["poolAddress"], "0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff")
         self.assertEqual(values["platformReadiness"]["geckoTerminal"]["status"], "submitted-awaiting-review")
         self.assertIn("prepared-but-weak-readiness", values["platformReadiness"]["coinGecko"]["status"])
@@ -345,6 +377,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("https://gcagochina.com/", runbook)
         self.assertIn("https://gcagochina.com/assets/gca-logo.svg", runbook)
         self.assertIn("https://gcagochina.com/whitepaper.html", runbook)
+        self.assertIn("https://gcagochina.com/utility.html", runbook)
         self.assertIn("no completed third-party audit", runbook)
         self.assertIn("account is frozen", runbook)
         self.assertIn(TELEGRAM_URL, runbook)
@@ -359,6 +392,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["website"], "https://gcagochina.com/")
         self.assertEqual(values["logoUrl"], "https://gcagochina.com/assets/gca-logo.svg")
         self.assertEqual(values["logoPngUrl"], "https://gcagochina.com/assets/gca-logo.png")
+        self.assertEqual(values["utilityThesisUrl"], "https://gcagochina.com/utility.html")
         self.assertEqual(values["officialEmail"], "GCAgochina@outlook.com")
         self.assertEqual(values["socialLinks"][0]["platform"], "Telegram")
         self.assertEqual(values["socialLinks"][0]["url"], TELEGRAM_URL)
@@ -428,7 +462,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Version 0.5", whitepaper)
         self.assertIn("Go China Access", index)
         self.assertIn("Go China Access", whitepaper)
-        self.assertIn("concept-stage community direction", whitepaper)
+        self.assertIn("planned access to non-custodial quant risk tools", whitepaper)
+        self.assertIn("ENTRY_READY signal review", whitepaper)
+        self.assertIn("Planned Utility Boundaries", whitepaper)
         self.assertIn("deployer-wallet ownership verification are complete", whitepaper)
         self.assertIn("Owner-held reserve", whitepaper)
         self.assertIn("600,000,000 GCA", whitepaper)
@@ -438,6 +474,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("not a lock, vesting contract, or Safe multisig", whitepaper)
         self.assertIn("mailto:GCAgochina@outlook.com", whitepaper)
         self.assertIn("https://gcagochina.com/buy.html", whitepaper)
+        self.assertIn("https://gcagochina.com/utility.html", whitepaper)
         self.assertIn(TELEGRAM_URL, whitepaper)
         self.assertIn("starter liquidity only", whitepaper)
         self.assertIn("Third-party audit quote requests were submitted to QuillAudits, Hacken, and OpenZeppelin on 2026-05-10", whitepaper)

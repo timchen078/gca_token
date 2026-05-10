@@ -36,6 +36,7 @@ This package prepares GCA information for token data and DEX discovery platforms
 
 - Website: `https://gcagochina.com/`
 - Buy guide: `https://gcagochina.com/buy.html`
+- Utility thesis: `https://gcagochina.com/utility.html`
 - Logo SVG: `https://gcagochina.com/assets/gca-logo.svg`
 - Logo PNG: `https://gcagochina.com/assets/gca-logo.png`
 - Whitepaper: `https://gcagochina.com/whitepaper.html`
@@ -75,11 +76,15 @@ For CoinGecko-style circulating supply review, state clearly that the reserve wa
 
 ## Copyable Short Description
 
-GCA, short for Go China Access, is a fixed-supply ERC-20 token on Base Mainnet. It is a concept-stage community direction focused on China-facing Web3 culture, creators, bilingual education, and public market narrative research.
+GCA, short for Go China Access, is a fixed-supply ERC-20 token on Base Mainnet. It is a concept-stage community direction focused on the Go China macro narrative, bilingual Web3 education, public market research, and planned access to non-custodial quant risk tools.
 
 ## Copyable Long Description
 
-GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stands for Go China Access, a concept-stage community direction focused on China-facing Web3 culture, creators, bilingual education, and public market narrative research. The contract created 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls. The token has a starter Uniswap v3 GCA/WETH pool on Base Mainnet and a disclosed owner-held reserve wallet. The project is early-stage. Third-party audit quote requests were submitted and then deferred by owner decision; the project should not be described as externally audited, price-backed, yield-bearing, or backed by guaranteed liquidity.
+GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stands for Go China Access, a concept-stage community direction focused on the Go China macro narrative, bilingual Web3 education, public market research, and planned access to non-custodial quant risk tools. The intended Web3 Radar bridge is to make GCA an access and membership layer for liquidation replay reports, risk-warning credits, realistic backtests, ENTRY_READY signal review, position-size calculators, subscription discounts, and risk-control training. The contract created 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls. The token has a starter Uniswap v3 GCA/WETH pool on Base Mainnet and a disclosed owner-held reserve wallet. The project is early-stage. Third-party audit quote requests were submitted and then deferred by owner decision; the project should not be described as externally audited, price-backed, yield-bearing, or backed by guaranteed liquidity.
+
+## Utility Positioning
+
+Suitable GCA utility is access-based: reports, credits, education, backtest usage, signal review, position calculators, and membership discounts. It should not be positioned as custody, redemption rights, platform revenue distribution, automatic live trading permission, or a return promise.
 
 ## Platform-Specific Notes
 
