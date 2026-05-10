@@ -6,9 +6,11 @@ This runbook keeps the current static member pre-registration flow operationally
 
 - Public page: `https://gcagochina.com/members.html`
 - Page mode: static browser-only pre-registration
-- Direct submission endpoint: not configured
+- Direct submission endpoint: not connected on the public static page
 - Fallback collection methods: copy packet, download JSON, or email packet to `GCAgochina@outlook.com`
 - Live entitlement status: not live
+- Prepared Web3 Radar intake path: `/gca/pre-registrations`
+- Prepared Web3 Radar review path: `/gca/member-review`
 
 The page can generate a local registration packet for:
 
@@ -24,7 +26,7 @@ Allowed endpoint options:
 
 - Formspree form endpoint
 - Supabase Edge Function endpoint
-- Web3 Radar account API endpoint after the product is ready
+- Web3 Radar account API endpoint after it is deployed behind the same official HTTPS origin or a reviewed same-origin reverse proxy
 - Other HTTPS endpoint controlled by the project
 
 Endpoint requirements:
@@ -34,6 +36,18 @@ Endpoint requirements:
 - Do not ask for private keys, seed phrases, exchange API secrets, withdrawal permissions, or custody.
 - Do not activate live benefits from submission alone.
 - Return a 2xx response only after the packet is stored.
+- Keep broad cross-origin writes blocked unless a separate security review approves a narrow origin policy.
+
+## Web3 Radar Prepared Intake
+
+Web3 Radar now has a local intake contract prepared:
+
+- `POST /gca/pre-registrations`
+- `POST /radar/gca/pre-registrations`
+- `GET /gca/member-review`
+- `GET /radar/gca/member-review`
+
+This endpoint stores a pending review record only. It does not activate utility credits, GCA Member status, trading permission, order-size changes, leverage changes, live execution, or any risk-control bypass.
 
 ## Review Workflow
 
