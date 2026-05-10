@@ -98,6 +98,8 @@ Market reference links:
 
 The current contract has been source-verified on BaseScan and covered by repository tests for fixed supply, public ERC-20 functions, compiler output, deployment pages, and deployment records. An internal engineering review is complete. This is not a substitute for a third-party audit, and no third-party audit has been completed.
 
+Third-party audit quote requests were submitted to QuillAudits, Hacken, and OpenZeppelin on 2026-05-10, then deferred by owner decision. GCA should not be described as audited, externally audited, or audit-approved unless an independent auditor later provides a verifiable report.
+
 ## BaseScan Token Profile Status
 
 BaseScan source verification and deployer-wallet ownership verification are complete. The public BaseScan token profile update has been submitted and is awaiting BaseScan review.

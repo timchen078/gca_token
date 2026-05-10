@@ -81,7 +81,7 @@ Market reference links:
 
 ## Audit Status
 
-Internal engineering review is complete. No third-party audit has been completed. Do not describe GCA as externally audited unless an independent auditor provides a report or public verification page.
+Internal engineering review is complete. Third-party audit quote requests were submitted to QuillAudits, Hacken, and OpenZeppelin on 2026-05-10, then deferred by owner decision. No third-party audit has been completed. Do not describe GCA as externally audited unless an independent auditor provides a report or public verification page.
 
 ## Same Address Notice
 

@@ -12,7 +12,7 @@ This package prepares GCA information for token data and DEX discovery platforms
 - GeckoTerminal token info update: submitted on 2026-05-09 and awaiting GeckoTerminal review
 - Liquidity: starter Uniswap v3 GCA/WETH pool exists on Base Mainnet
 - Social links: official Telegram is live at `https://t.me/gcagochinaofficial`; the frozen X account is not used
-- Third-party audit: not completed
+- Third-party audit: not completed; quote requests were submitted on 2026-05-10 and then deferred by owner decision
 
 ## Canonical Identity
 
@@ -76,7 +76,7 @@ GCA, short for Go China Access, is a fixed-supply ERC-20 token on Base Mainnet. 
 
 ## Copyable Long Description
 
-GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stands for Go China Access, a concept-stage community direction focused on China-facing Web3 culture, creators, bilingual education, and public market narrative research. The contract created 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls. The token has a starter Uniswap v3 GCA/WETH pool on Base Mainnet and a disclosed owner-held reserve wallet. The project is early-stage and should not be described as externally audited, price-backed, yield-bearing, or backed by guaranteed liquidity.
+GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stands for Go China Access, a concept-stage community direction focused on China-facing Web3 culture, creators, bilingual education, and public market narrative research. The contract created 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls. The token has a starter Uniswap v3 GCA/WETH pool on Base Mainnet and a disclosed owner-held reserve wallet. The project is early-stage. Third-party audit quote requests were submitted and then deferred by owner decision; the project should not be described as externally audited, price-backed, yield-bearing, or backed by guaranteed liquidity.
 
 ## Platform-Specific Notes
 

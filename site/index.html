@@ -355,6 +355,7 @@
           <a href="#concept">Concept</a>
           <a href="#facts">Facts</a>
           <a href="#markets">Markets</a>
+          <a href="#security">Security</a>
           <a href="#roadmap">Roadmap</a>
           <a href="#contract">Contract</a>
           <a href="#risk">Risk</a>
@@ -494,6 +495,25 @@
           </div>
         </div>
         <p class="note">Owner reserve wallet: <code>0x5e8F84748612B913aAcC937492AC25dc5630E246</code>. Reserve transfers: <a href="https://basescan.org/tx/0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67" target="_blank" rel="noreferrer">first transfer</a> and <a href="https://basescan.org/tx/0xfffb674448abdbd3af45bb0a30c48e5fbb0e675542b971f031381254b5dc5317" target="_blank" rel="noreferrer">second transfer</a>. This is a normal owner-controlled wallet, not a lock, vesting contract, or multisig.</p>
+      </section>
+
+      <section class="section panel" id="security" aria-labelledby="securityTitle">
+        <h2 id="securityTitle">Security &amp; Transparency</h2>
+        <p class="note">The contract source is verified on BaseScan and the repository includes tests and an internal engineering review. Third-party audit quote requests were submitted to QuillAudits, Hacken, and OpenZeppelin on 2026-05-10, then deferred by owner decision. No third-party audit has been completed.</p>
+        <div class="grid">
+          <div class="phase">
+            <h3>Fixed Supply</h3>
+            <p class="note">The full 1,000,000,000 GCA supply was created at deployment. The contract has no post-deployment mint function.</p>
+          </div>
+          <div class="phase">
+            <h3>No Admin Controls</h3>
+            <p class="note">The token contract has no owner/admin role, proxy or upgrade path, pause switch, blacklist, transfer tax, hidden fee, custody, or withdrawal path.</p>
+          </div>
+          <div class="phase">
+            <h3>Audit Status</h3>
+            <p class="note">Internal review is complete, but it is not a third-party audit. GCA should not be described as audited, externally audited, or audit-approved.</p>
+          </div>
+        </div>
       </section>
 
       <section class="section grid" aria-label="Project references">
