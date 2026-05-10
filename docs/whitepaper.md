@@ -2,6 +2,8 @@
 
 Version: 0.5
 
+Official buy guide: `https://gcagochina.com/buy.html`
+
 ## Summary
 
 GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stands for Go China Access, a concept-stage community direction focused on China-facing Web3 culture, creators, bilingual education, and public market narrative research.

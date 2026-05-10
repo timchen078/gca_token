@@ -9,6 +9,7 @@ This runbook records the current official Telegram channel state for GCA and the
 - Channel photo: updated with the GCA logo.
 - First public announcement: posted on 2026-05-09.
 - Pin status: confirmed on 2026-05-10. The first public announcement is pinned in the official channel.
+- Recommended replacement pinned buy announcement prepared at `launch/telegram_pinned_buy_announcement.md`.
 
 ## First Announcement Text
 
@@ -31,6 +32,7 @@ The pinned announcement should remain the first public reference point for visit
 2. Verify the pinned message bar points to the official links announcement.
 3. Keep the replacement pinned message limited to official links and conservative risk disclosures.
 4. Do not pin market-price claims, external audit claims, or launch promises.
+5. Use `launch/telegram_pinned_buy_announcement.md` if replacing the first announcement with a buy-guide-focused pin.
 
 ## Use In Platform Follow-Ups
 

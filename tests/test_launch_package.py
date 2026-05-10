@@ -25,11 +25,16 @@ class LaunchPackageTests(unittest.TestCase):
 
     def test_public_site_uses_mainnet_identity(self):
         site = (ROOT / "site" / "index.html").read_text()
+        buy = (ROOT / "site" / "buy.html").read_text()
         self.assertIn("Base Mainnet", site)
         self.assertIn("chainId 8453", site)
         self.assertIn(MAINNET_ADDRESS, site)
+        self.assertIn(MAINNET_ADDRESS, buy)
+        self.assertIn("Base Mainnet", buy)
+        self.assertIn("chainId 8453", buy)
         self.assertIn("https://basescan.org/address/", site)
         self.assertNotIn("sepolia.basescan.org", site)
+        self.assertNotIn("sepolia.basescan.org", buy)
 
     def test_public_site_sets_custom_domain(self):
         cname = (ROOT / "site" / "CNAME").read_text().strip()
@@ -38,6 +43,7 @@ class LaunchPackageTests(unittest.TestCase):
     def test_public_site_discloses_current_operational_status(self):
         site = (ROOT / "site" / "index.html").read_text()
         self.assertIn("BaseScan token profile update has been submitted", site)
+        self.assertIn('href="buy.html"', site)
         self.assertIn("Go China Access", site)
         self.assertIn("concept phase", site)
         self.assertIn("concept-stage project", site)
@@ -68,9 +74,30 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("https://dex.coinmarketcap.com/base/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff/", site)
         self.assertIn("starter liquidity only", site)
 
+    def test_buy_page_is_official_and_conservative(self):
+        buy = (ROOT / "site" / "buy.html").read_text()
+        self.assertIn("Buy GCA", buy)
+        self.assertIn("Open Uniswap Swap", buy)
+        self.assertIn("https://app.uniswap.org/swap?chain=base&outputCurrency=", buy)
+        self.assertIn(MAINNET_ADDRESS, buy)
+        self.assertIn("Base Mainnet", buy)
+        self.assertIn("Chain ID", buy)
+        self.assertIn("8453", buy)
+        self.assertIn("MetaMask Import", buy)
+        self.assertIn("Add to MetaMask", buy)
+        self.assertIn("GeckoTerminal pool", buy)
+        self.assertIn("0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff", buy)
+        self.assertIn("A Blockaid / MetaMask false-positive report was submitted on 2026-05-10", buy)
+        self.assertIn("does not mean wallet warnings have been removed", buy)
+        self.assertIn("no third-party audit has been completed", buy)
+        self.assertIn("This is not investment advice", buy)
+        self.assertIn("does not guarantee price, liquidity, execution, or safety", buy)
+        self.assertIn("If a wallet or DEX warning appears, stop and verify", buy)
+
     def test_public_materials_avoid_investment_promises(self):
         paths = [
             ROOT / "site" / "index.html",
+            ROOT / "site" / "buy.html",
             ROOT / "docs" / "whitepaper.md",
             ROOT / "docs" / "mainnet_public_profile.md",
             ROOT / "launch" / "basescan_token_submission.md",
@@ -81,6 +108,7 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "launch" / "data_platform_package.md",
             ROOT / "launch" / "geckoterminal_update_runbook.md",
             ROOT / "launch" / "telegram_channel_runbook.md",
+            ROOT / "launch" / "telegram_pinned_buy_announcement.md",
         ]
         forbidden = re.compile(r"\b(guaranteed returns?|profit sharing|risk[- ]?free|稳赚|保本|拉盘|炒币)\b", re.I)
         for path in paths:
@@ -230,6 +258,11 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(TELEGRAM_URL, status)
         self.assertIn("Telegram channel runbook prepared", status)
         self.assertIn("First official Telegram announcement pinned on 2026-05-10", status)
+        self.assertIn("Official buy guide page prepared", status)
+        self.assertIn("https://gcagochina.com/buy.html", status)
+        self.assertIn("Telegram replacement pinned buy announcement template prepared", status)
+        self.assertIn("launch/telegram_pinned_buy_announcement.md", status)
+        self.assertIn("Replace the Telegram pinned message", status)
         self.assertIn("buy/sell functional swap tests observed on 2026-05-10", status)
         self.assertIn("launch/swap_test_evidence.md", status)
         self.assertIn("Blockaid false-positive report submitted on 2026-05-10", status)
@@ -252,6 +285,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(TELEGRAM_URL, runbook)
         self.assertIn("First public announcement: posted on 2026-05-09", runbook)
         self.assertIn("Pin status: confirmed on 2026-05-10", runbook)
+        self.assertIn("Recommended replacement pinned buy announcement prepared", runbook)
+        self.assertIn("launch/telegram_pinned_buy_announcement.md", runbook)
         self.assertIn(MAINNET_ADDRESS, runbook)
         self.assertIn("No third-party audit has been completed", runbook)
         self.assertIn("starter-depth only", runbook)
@@ -266,6 +301,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("CoinGecko", package)
         self.assertIn("CoinMarketCap", package)
         self.assertIn("https://gcagochina.com/", package)
+        self.assertIn("https://gcagochina.com/buy.html", package)
         self.assertIn("https://gcagochina.com/assets/gca-logo.svg", package)
         self.assertIn("https://gcagochina.com/whitepaper.html", package)
         self.assertIn("https://dexscreener.com/base/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff", package)
@@ -286,6 +322,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["chainId"], 8453)
         self.assertEqual(values["contractAddress"], MAINNET_ADDRESS)
         self.assertEqual(values["website"], "https://gcagochina.com/")
+        self.assertEqual(values["buyGuideUrl"], "https://gcagochina.com/buy.html")
         self.assertEqual(values["logoUrl"], "https://gcagochina.com/assets/gca-logo.svg")
         self.assertEqual(values["liquidity"]["poolAddress"], "0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff")
         self.assertEqual(values["platformReadiness"]["geckoTerminal"]["status"], "submitted-awaiting-review")
@@ -400,6 +437,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(SECOND_RESERVE_TX, whitepaper)
         self.assertIn("not a lock, vesting contract, or Safe multisig", whitepaper)
         self.assertIn("mailto:GCAgochina@outlook.com", whitepaper)
+        self.assertIn("https://gcagochina.com/buy.html", whitepaper)
         self.assertIn(TELEGRAM_URL, whitepaper)
         self.assertIn("starter liquidity only", whitepaper)
         self.assertIn("Third-party audit quote requests were submitted to QuillAudits, Hacken, and OpenZeppelin on 2026-05-10", whitepaper)
@@ -409,6 +447,20 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("https://www.geckoterminal.com/base/pools/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff", whitepaper)
         self.assertIn("https://dex.coinmarketcap.com/base/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff/", whitepaper)
         self.assertIn(MAINNET_ADDRESS, whitepaper)
+
+    def test_telegram_pinned_buy_announcement_is_safe_to_post(self):
+        pin = (ROOT / "launch" / "telegram_pinned_buy_announcement.md").read_text()
+        self.assertIn("Buy guide", pin)
+        self.assertIn("https://gcagochina.com/buy.html", pin)
+        self.assertIn("Uniswap swap", pin)
+        self.assertIn("https://app.uniswap.org/swap?chain=base&outputCurrency=", pin)
+        self.assertIn(MAINNET_ADDRESS, pin)
+        self.assertIn("GCA is on Base Mainnet only", pin)
+        self.assertIn("No third-party audit has been completed", pin)
+        self.assertIn("starter-depth only", pin)
+        self.assertIn("If MetaMask or Uniswap shows a warning", pin)
+        self.assertIn("Do not add price targets", pin)
+        self.assertIn("Do not say the Blockaid / MetaMask warning has been removed", pin)
 
 
 if __name__ == "__main__":

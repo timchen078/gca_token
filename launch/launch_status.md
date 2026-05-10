@@ -39,6 +39,8 @@
 - Telegram channel runbook prepared.
 - Small Base Mainnet Uniswap v3 buy/sell functional swap tests observed on 2026-05-10 and documented in `launch/swap_test_evidence.md`.
 - Blockaid false-positive report submitted on 2026-05-10 for the MetaMask/Uniswap suspected-honeypot warning.
+- Official buy guide page prepared at `https://gcagochina.com/buy.html`.
+- Telegram replacement pinned buy announcement template prepared at `launch/telegram_pinned_buy_announcement.md`.
 
 ## Needs Owner Input Or External Service
 
@@ -47,6 +49,7 @@
 - If BaseScan or GeckoTerminal asks for supply details during review, use the updated 40/60 allocation and both reserve transfer transactions.
 - Wait for stronger public activity and market volume before submitting CoinGecko or CoinMarketCap listing requests.
 - Add the official Telegram link to any BaseScan or GeckoTerminal follow-up if those reviewers ask for social links.
+- Replace the Telegram pinned message with `launch/telegram_pinned_buy_announcement.md` when ready.
 - Move the owner reserve to a Safe multisig or lock/vesting contract if stronger reserve assurances are needed.
 - Archive any audit quote replies from QuillAudits, Hacken, or OpenZeppelin; do not approve payment while audit is deferred.
 - Reopen third-party audit only if user trust, listings, partners, or larger liquidity make an external report necessary.

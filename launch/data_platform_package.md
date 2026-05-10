@@ -35,6 +35,7 @@ This package prepares GCA information for token data and DEX discovery platforms
 ## Public URLs
 
 - Website: `https://gcagochina.com/`
+- Buy guide: `https://gcagochina.com/buy.html`
 - Logo SVG: `https://gcagochina.com/assets/gca-logo.svg`
 - Logo PNG: `https://gcagochina.com/assets/gca-logo.png`
 - Whitepaper: `https://gcagochina.com/whitepaper.html`
