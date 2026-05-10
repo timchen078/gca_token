@@ -36,6 +36,8 @@ GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stand
 - Public logo download URL: `https://gcagochina.com/assets/gca-logo.svg`
 - Public whitepaper URL: `https://gcagochina.com/whitepaper.html`
 - Public utility thesis URL: `https://gcagochina.com/utility.html`
+- Official GCA/USDT pool URL: `https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0`
+- Official swap route: `https://app.uniswap.org/swap?chain=base&inputCurrency=0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2&outputCurrency=0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`
 - Official contact email: `cxy070800@gmail.com`
 - Official Telegram: `https://t.me/gcagochinaofficial`
 - Email note: owner-provided Gmail address, publicly listed on the official website for BaseScan verification.

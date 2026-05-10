@@ -17,10 +17,13 @@ Contract on Base Mainnet:
 0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6
 
 Uniswap swap:
-https://app.uniswap.org/swap?chain=base&outputCurrency=0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6
+https://app.uniswap.org/swap?chain=base&inputCurrency=0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2&outputCurrency=0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6
 
-Pool:
-https://www.geckoterminal.com/base/pools/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff
+Official GCA/USDT pool:
+https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0
+
+DEX Screener:
+https://dexscreener.com/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0
 
 BaseScan:
 https://basescan.org/token/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6

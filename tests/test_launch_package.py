@@ -12,6 +12,17 @@ SECOND_RESERVE_TX = "0xfffb674448abdbd3af45bb0a30c48e5fbb0e675542b971f031381254b
 TELEGRAM_URL = "https://t.me/gcagochinaofficial"
 SWAP_TEST_BUY_TX = "0xf79e52ea56a299a30c2d297be99c970295864ed262c01fdcb7e3f60ca669b040"
 SWAP_TEST_SELL_TX = "0x0ff618062abc6e28933699d4e3bd723026f8505e4a0155db3068073b6fdc86e7"
+OFFICIAL_POOL_ADDRESS = "0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0"
+BASE_USDT_ADDRESS = "0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2"
+OFFICIAL_DEXSCREENER_URL = f"https://dexscreener.com/base/{OFFICIAL_POOL_ADDRESS}"
+OFFICIAL_GECKOTERMINAL_URL = f"https://www.geckoterminal.com/base/pools/{OFFICIAL_POOL_ADDRESS}"
+OFFICIAL_UNISWAP_POOL_URL = f"https://app.uniswap.org/explore/pools/base/{OFFICIAL_POOL_ADDRESS}"
+OFFICIAL_SWAP_URL = (
+    f"https://app.uniswap.org/swap?chain=base&inputCurrency={BASE_USDT_ADDRESS}"
+    f"&outputCurrency={MAINNET_ADDRESS}"
+)
+OFFICIAL_SWAP_URL_HTML = OFFICIAL_SWAP_URL.replace("&", "&amp;")
+OLD_WETH_POOL_ADDRESS = "0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff"
 
 
 class LaunchPackageTests(unittest.TestCase):
@@ -84,11 +95,14 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("no owner/admin role, proxy or upgrade path, pause switch, blacklist, transfer tax, hidden fee, custody, or withdrawal path", site)
         self.assertIn("pool is shallow", site)
         self.assertIn("high price impact and slippage", site)
-        self.assertIn("https://app.uniswap.org/positions/v3/base/5087977", site)
+        self.assertIn(OFFICIAL_POOL_ADDRESS, site)
+        self.assertIn(OFFICIAL_UNISWAP_POOL_URL, site)
         self.assertIn("Market References", site)
-        self.assertIn("https://dexscreener.com/base/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff", site)
-        self.assertIn("https://www.geckoterminal.com/base/pools/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff", site)
-        self.assertIn("https://dex.coinmarketcap.com/base/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff/", site)
+        self.assertIn("GCA/USDT", site)
+        self.assertIn(OFFICIAL_DEXSCREENER_URL, site)
+        self.assertIn(OFFICIAL_GECKOTERMINAL_URL, site)
+        self.assertIn(OFFICIAL_SWAP_URL_HTML, site)
+        self.assertNotIn(OLD_WETH_POOL_ADDRESS, site)
         self.assertIn("starter liquidity only", site)
 
     def test_members_page_supports_local_pre_registration_safely(self):
@@ -153,15 +167,20 @@ class LaunchPackageTests(unittest.TestCase):
         buy = (ROOT / "site" / "buy.html").read_text()
         self.assertIn("Buy GCA", buy)
         self.assertIn("Open Uniswap Swap", buy)
-        self.assertIn("https://app.uniswap.org/swap?chain=base&outputCurrency=", buy)
+        self.assertIn(OFFICIAL_SWAP_URL_HTML, buy)
         self.assertIn(MAINNET_ADDRESS, buy)
+        self.assertIn(BASE_USDT_ADDRESS, buy)
         self.assertIn("Base Mainnet", buy)
         self.assertIn("Chain ID", buy)
         self.assertIn("8453", buy)
         self.assertIn("MetaMask Import", buy)
         self.assertIn("Add to MetaMask", buy)
         self.assertIn("GeckoTerminal pool", buy)
-        self.assertIn("0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff", buy)
+        self.assertIn("GCA/USDT", buy)
+        self.assertIn(OFFICIAL_POOL_ADDRESS, buy)
+        self.assertIn(OFFICIAL_GECKOTERMINAL_URL, buy)
+        self.assertIn(OFFICIAL_DEXSCREENER_URL, buy)
+        self.assertNotIn(OLD_WETH_POOL_ADDRESS, buy)
         self.assertIn("A Blockaid / MetaMask false-positive report was submitted on 2026-05-10", buy)
         self.assertIn("does not mean wallet warnings have been removed", buy)
         self.assertIn("no third-party audit has been completed", buy)
@@ -219,6 +238,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("If BaseScan Requests Changes", followup)
         self.assertIn("Reply Template", followup)
         self.assertIn("Do not describe the BaseScan token profile as complete", followup)
+        self.assertIn("Official GCA/USDT pool", followup)
+        self.assertIn(OFFICIAL_GECKOTERMINAL_URL, followup)
 
     def test_basescan_form_values_are_copyable(self):
         values = json.loads((ROOT / "launch" / "basescan_form_values.json").read_text())
@@ -246,6 +267,11 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["socialLinks"][0]["platform"], "Telegram")
         self.assertEqual(values["socialLinks"][0]["url"], TELEGRAM_URL)
         self.assertIn("after the initial BaseScan submission", values["socialLinkNote"])
+        self.assertEqual(values["officialMarketPool"]["pair"], "GCA/USDT")
+        self.assertEqual(values["officialMarketPool"]["poolAddress"], OFFICIAL_POOL_ADDRESS)
+        self.assertEqual(values["officialMarketPool"]["geckoTerminalUrl"], OFFICIAL_GECKOTERMINAL_URL)
+        self.assertEqual(values["officialMarketPool"]["dexScreenerUrl"], OFFICIAL_DEXSCREENER_URL)
+        self.assertEqual(values["officialMarketPool"]["officialSwapUrl"], OFFICIAL_SWAP_URL)
 
     def test_token_allocation_plan_records_owner_reserve(self):
         plan = json.loads((ROOT / "launch" / "token_allocation_plan.json").read_text())
@@ -270,6 +296,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(RESERVE_TX, doc)
         self.assertIn(SECOND_RESERVE_TX, doc)
         self.assertIn(MAINNET_ADDRESS, doc)
+        self.assertEqual(plan["officialMarketPool"]["pair"], "GCA/USDT")
+        self.assertEqual(plan["officialMarketPool"]["poolAddress"], OFFICIAL_POOL_ADDRESS)
+        self.assertIn(OFFICIAL_GECKOTERMINAL_URL, doc)
 
     def test_public_materials_do_not_overstate_basescan_review(self):
         paths = [
@@ -370,6 +399,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Recommended replacement pinned buy announcement prepared", runbook)
         self.assertIn("launch/telegram_pinned_buy_announcement.md", runbook)
         self.assertIn(MAINNET_ADDRESS, runbook)
+        self.assertIn("Official GCA/USDT pool", runbook)
+        self.assertIn(OFFICIAL_GECKOTERMINAL_URL, runbook)
         self.assertIn("No third-party audit has been completed", runbook)
         self.assertIn("starter-depth only", runbook)
         self.assertIn("Do not submit the frozen X account", runbook)
@@ -388,8 +419,11 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("https://gcagochina.com/utility.html", package)
         self.assertIn("https://gcagochina.com/assets/gca-logo.svg", package)
         self.assertIn("https://gcagochina.com/whitepaper.html", package)
-        self.assertIn("https://dexscreener.com/base/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff", package)
-        self.assertIn("https://www.geckoterminal.com/base/pools/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff", package)
+        self.assertIn(OFFICIAL_DEXSCREENER_URL, package)
+        self.assertIn(OFFICIAL_GECKOTERMINAL_URL, package)
+        self.assertIn(OFFICIAL_UNISWAP_POOL_URL, package)
+        self.assertIn(OFFICIAL_SWAP_URL, package)
+        self.assertIn("GCA/USDT", package)
         self.assertIn("starter-depth only", package)
         self.assertIn("buy/sell functional swap tests were observed on 2026-05-10", package)
         self.assertIn("not as proof of organic demand or strong liquidity", package)
@@ -424,7 +458,14 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("higher utility credit limits", values["utilityPositioning"]["plannedMemberTier"]["memberAccess"])
         self.assertIn("guaranteed lifetime access", values["utilityPositioning"]["plannedMemberTier"]["notMemberAccess"])
         self.assertIn("platform revenue distribution", values["utilityPositioning"]["notUtility"])
-        self.assertEqual(values["liquidity"]["poolAddress"], "0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff")
+        self.assertEqual(values["liquidity"]["dex"], "Uniswap v4")
+        self.assertEqual(values["liquidity"]["pair"], "GCA/USDT")
+        self.assertEqual(values["liquidity"]["poolAddress"], OFFICIAL_POOL_ADDRESS)
+        self.assertEqual(values["liquidity"]["quoteAssetAddress"], BASE_USDT_ADDRESS)
+        self.assertEqual(values["liquidity"]["dexScreenerUrl"], OFFICIAL_DEXSCREENER_URL)
+        self.assertEqual(values["liquidity"]["geckoTerminalUrl"], OFFICIAL_GECKOTERMINAL_URL)
+        self.assertEqual(values["liquidity"]["uniswapPoolUrl"], OFFICIAL_UNISWAP_POOL_URL)
+        self.assertEqual(values["liquidity"]["officialSwapUrl"], OFFICIAL_SWAP_URL)
         self.assertEqual(values["platformReadiness"]["geckoTerminal"]["status"], "submitted-awaiting-review")
         self.assertIn("prepared-but-weak-readiness", values["platformReadiness"]["coinGecko"]["status"])
         self.assertIn("prepared-but-weak-readiness", values["platformReadiness"]["coinMarketCap"]["status"])
@@ -441,7 +482,11 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Your form was submitted successfully", runbook)
         self.assertIn("Update Token Info", runbook)
         self.assertIn("launch/geckoterminal_form_values.json", runbook)
-        self.assertIn("https://www.geckoterminal.com/base/pools/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff", runbook)
+        self.assertIn(OFFICIAL_GECKOTERMINAL_URL, runbook)
+        self.assertIn(OFFICIAL_DEXSCREENER_URL, runbook)
+        self.assertIn(OFFICIAL_UNISWAP_POOL_URL, runbook)
+        self.assertIn(OFFICIAL_SWAP_URL, runbook)
+        self.assertIn("GCA/USDT", runbook)
         self.assertIn("https://gcagochina.com/", runbook)
         self.assertIn("https://gcagochina.com/assets/gca-logo.svg", runbook)
         self.assertIn("https://gcagochina.com/whitepaper.html", runbook)
@@ -464,7 +509,15 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["officialEmail"], "GCAgochina@outlook.com")
         self.assertEqual(values["socialLinks"][0]["platform"], "Telegram")
         self.assertEqual(values["socialLinks"][0]["url"], TELEGRAM_URL)
-        self.assertEqual(values["liquidity"]["poolAddress"], "0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff")
+        self.assertEqual(values["targetPoolUrl"], OFFICIAL_GECKOTERMINAL_URL)
+        self.assertEqual(values["liquidity"]["dex"], "Uniswap v4")
+        self.assertEqual(values["liquidity"]["pair"], "GCA/USDT")
+        self.assertEqual(values["liquidity"]["poolAddress"], OFFICIAL_POOL_ADDRESS)
+        self.assertEqual(values["liquidity"]["quoteAssetAddress"], BASE_USDT_ADDRESS)
+        self.assertEqual(values["liquidity"]["dexScreenerUrl"], OFFICIAL_DEXSCREENER_URL)
+        self.assertEqual(values["liquidity"]["geckoTerminalUrl"], OFFICIAL_GECKOTERMINAL_URL)
+        self.assertEqual(values["liquidity"]["uniswapPoolUrl"], OFFICIAL_UNISWAP_POOL_URL)
+        self.assertEqual(values["liquidity"]["officialSwapUrl"], OFFICIAL_SWAP_URL)
         self.assertEqual(values["supplyDisclosure"]["ownerReserveWallet"], RESERVE_WALLET)
         self.assertIn("completed OTP verification", values["officialEmailUse"])
 
@@ -553,10 +606,13 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("starter liquidity only", whitepaper)
         self.assertIn("Third-party audit quote requests were submitted to QuillAudits, Hacken, and OpenZeppelin on 2026-05-10", whitepaper)
         self.assertIn("then deferred by owner decision", whitepaper)
-        self.assertIn("https://app.uniswap.org/positions/v3/base/5087977", whitepaper)
-        self.assertIn("https://dexscreener.com/base/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff", whitepaper)
-        self.assertIn("https://www.geckoterminal.com/base/pools/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff", whitepaper)
-        self.assertIn("https://dex.coinmarketcap.com/base/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff/", whitepaper)
+        self.assertIn("GCA/USDT", whitepaper)
+        self.assertIn(OFFICIAL_POOL_ADDRESS, whitepaper)
+        self.assertIn(BASE_USDT_ADDRESS, whitepaper)
+        self.assertIn(OFFICIAL_UNISWAP_POOL_URL, whitepaper)
+        self.assertIn(OFFICIAL_DEXSCREENER_URL, whitepaper)
+        self.assertIn(OFFICIAL_GECKOTERMINAL_URL, whitepaper)
+        self.assertNotIn(OLD_WETH_POOL_ADDRESS, whitepaper)
         self.assertIn(MAINNET_ADDRESS, whitepaper)
 
     def test_telegram_pinned_buy_announcement_is_safe_to_post(self):
@@ -564,7 +620,10 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Buy guide", pin)
         self.assertIn("https://gcagochina.com/buy.html", pin)
         self.assertIn("Uniswap swap", pin)
-        self.assertIn("https://app.uniswap.org/swap?chain=base&outputCurrency=", pin)
+        self.assertIn(OFFICIAL_SWAP_URL, pin)
+        self.assertIn(OFFICIAL_GECKOTERMINAL_URL, pin)
+        self.assertIn(OFFICIAL_DEXSCREENER_URL, pin)
+        self.assertIn("Official GCA/USDT pool", pin)
         self.assertIn(MAINNET_ADDRESS, pin)
         self.assertIn("GCA is on Base Mainnet only", pin)
         self.assertIn("No third-party audit has been completed", pin)

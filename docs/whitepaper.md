@@ -81,7 +81,7 @@ At deployment, the full token supply was assigned to the deployer wallet:
 
 `0x18d007bcb6be029f8ccd7cb13e324aa21891092d`
 
-A starter Uniswap v3 GCA/WETH liquidity position has since been created on Base Mainnet, with LP NFT token ID `5087977` held by the deployer wallet.
+The current official public trading route is the Base Mainnet Uniswap v4 GCA/USDT pool. Earlier pilot liquidity existed, but public materials should point users to the current GCA/USDT pool.
 
 The target allocation plan is:
 
@@ -102,22 +102,21 @@ The owner-held reserve should not be described as circulating while held as a re
 
 ## Liquidity Approach
 
-The initial live liquidity position is a Base Mainnet Uniswap v3 GCA/WETH pool with a 1% fee tier and full-range liquidity.
+The current official public pool is a Base Mainnet Uniswap v4 GCA/USDT pool with a 0.01% fee tier.
 
-- Position token ID: `5087977`
-- Pool address: `0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff`
-- Transaction: `0xef94e020c8b431151b789ca3e96c45ab0c18d20d15bf8d7d543630f1370fc158`
-- Deposited GCA: `99999.99999999996738248`
-- Deposited ETH/WETH: `0.000999901772375952`
+- Pair: GCA/USDT
+- Pool address: `0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0`
+- Quote asset: Base USDT `0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2`
+- Uniswap pool: `https://app.uniswap.org/explore/pools/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0`
+- Official swap route: `https://app.uniswap.org/swap?chain=base&inputCurrency=0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2&outputCurrency=0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`
 
 This is starter liquidity only. The current pool is shallow, so trades can have high price impact, wide slippage, and volatile execution prices.
 
 Market reference links:
 
-- DEX Screener pair: `https://dexscreener.com/base/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff`
-- GeckoTerminal pool: `https://www.geckoterminal.com/base/pools/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff`
-- CoinMarketCap DexScan pool: `https://dex.coinmarketcap.com/base/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff/`
-- Uniswap v3 liquidity position: `https://app.uniswap.org/positions/v3/base/5087977`
+- DEX Screener pair: `https://dexscreener.com/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0`
+- GeckoTerminal pool: `https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0`
+- Uniswap pool: `https://app.uniswap.org/explore/pools/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0`
 
 ## Security Notes
 

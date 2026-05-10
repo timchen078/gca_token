@@ -21,6 +21,14 @@
   "tokenStandard": "ERC-20",
   "website": "https://gcagochina.com/",
   "utilityThesisUrl": "https://gcagochina.com/utility.html",
+  "officialMarketPool": {
+    "pair": "GCA/USDT",
+    "dex": "Uniswap v4",
+    "poolAddress": "0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "geckoTerminalUrl": "https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "dexScreenerUrl": "https://dexscreener.com/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "officialSwapUrl": "https://app.uniswap.org/swap?chain=base&inputCurrency=0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2&outputCurrency=0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6"
+  },
   "logoUrl": "https://gcagochina.com/assets/gca-logo.svg",
   "whitepaperUrl": "https://gcagochina.com/whitepaper.html",
   "description": "GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stands for Go China Access, a concept-stage community direction focused on the Go China macro narrative, bilingual Web3 education, public market research, and planned access to non-custodial quant risk tools. The intended Web3 Radar bridge is an access and membership layer for reports, risk-warning credits, backtests, ENTRY_READY signal review, position-size calculators, subscription discounts, and risk-control training. The contract creates 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls.",

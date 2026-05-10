@@ -18,7 +18,7 @@ Official GCA Links
 
 Website: https://gcagochina.com/
 Contract Base Mainnet: 0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6
-GeckoTerminal: https://www.geckoterminal.com/base/pools/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff
+Official GCA/USDT pool: https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0
 BaseScan: https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6
 
 GCA is concept-stage. No third-party audit has been completed. Current liquidity is starter-depth only and trades may have high price impact.

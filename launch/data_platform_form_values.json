@@ -31,7 +31,7 @@
     }
   ],
   "shortDescription": "GCA, short for Go China Access, is a fixed-supply ERC-20 token on Base Mainnet. It is a concept-stage community direction focused on the Go China macro narrative, bilingual Web3 education, public market research, and planned access to non-custodial quant risk tools.",
-  "longDescription": "GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stands for Go China Access, a concept-stage community direction focused on the Go China macro narrative, bilingual Web3 education, public market research, and planned access to non-custodial quant risk tools. The intended Web3 Radar bridge is to make GCA an access and membership layer for liquidation replay reports, risk-warning credits, realistic backtests, ENTRY_READY signal review, position-size calculators, subscription discounts, and risk-control training. The contract created 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls. The token has a starter Uniswap v3 GCA/WETH pool on Base Mainnet and a disclosed owner-held reserve wallet. Third-party audit quote requests were submitted and then deferred by owner decision. The project is early-stage and should not be described as externally audited, price-backed, yield-bearing, or backed by guaranteed liquidity.",
+  "longDescription": "GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stands for Go China Access, a concept-stage community direction focused on the Go China macro narrative, bilingual Web3 education, public market research, and planned access to non-custodial quant risk tools. The intended Web3 Radar bridge is to make GCA an access and membership layer for liquidation replay reports, risk-warning credits, realistic backtests, ENTRY_READY signal review, position-size calculators, subscription discounts, and risk-control training. The contract created 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls. The official public pool is the Base Mainnet Uniswap v4 GCA/USDT pool, and the project has a disclosed owner-held reserve wallet. Third-party audit quote requests were submitted and then deferred by owner decision. The project is early-stage and should not be described as externally audited, price-backed, yield-bearing, or backed by guaranteed liquidity.",
   "utilityPositioning": {
     "status": "local-verified-access-backend-ready-public-claim-not-connected",
     "connectedProduct": "Web3 Radar non-custodial quant risk toolkit",
@@ -75,15 +75,16 @@
   "liquidity": {
     "status": "starter-liquidity-live",
     "network": "Base Mainnet",
-    "dex": "Uniswap v3",
-    "pair": "GCA/WETH",
-    "poolAddress": "0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff",
-    "feeTier": "1%",
-    "positionTokenId": "5087977",
-    "dexScreenerUrl": "https://dexscreener.com/base/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff",
-    "geckoTerminalUrl": "https://www.geckoterminal.com/base/pools/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff",
-    "coinMarketCapDexScanUrl": "https://dex.coinmarketcap.com/base/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff/",
-    "uniswapPositionUrl": "https://app.uniswap.org/positions/v3/base/5087977",
+    "dex": "Uniswap v4",
+    "pair": "GCA/USDT",
+    "poolAddress": "0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "feeTier": "0.01%",
+    "quoteAsset": "USDT",
+    "quoteAssetAddress": "0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2",
+    "dexScreenerUrl": "https://dexscreener.com/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "geckoTerminalUrl": "https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "uniswapPoolUrl": "https://app.uniswap.org/explore/pools/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "officialSwapUrl": "https://app.uniswap.org/swap?chain=base&inputCurrency=0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2&outputCurrency=0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
     "liquidityDepthNote": "Starter-depth only; trades can have high price impact and slippage."
   },
   "supplyDisclosure": {

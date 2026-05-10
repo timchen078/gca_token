@@ -66,22 +66,20 @@ Do not describe the BaseScan token profile as complete or visible until BaseScan
 
 Starter liquidity is live on Base Mainnet:
 
-- Venue: Uniswap v3
-- Pair: GCA/WETH
-- Fee tier: 1%
-- Range: full range
-- Position token ID: `5087977`
-- Pool address: `0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff`
-- Transaction: `0xef94e020c8b431151b789ca3e96c45ab0c18d20d15bf8d7d543630f1370fc158`
+- Venue: Uniswap v4
+- Pair: GCA/USDT
+- Fee tier: 0.01%
+- Pool address: `0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0`
+- Quote asset: Base USDT `0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2`
 
 The pool is shallow, so trades can have high price impact and slippage.
 
 Market reference links:
 
-- DEX Screener pair: `https://dexscreener.com/base/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff`
-- GeckoTerminal pool: `https://www.geckoterminal.com/base/pools/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff`
-- CoinMarketCap DexScan pool: `https://dex.coinmarketcap.com/base/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff/`
-- Uniswap v3 liquidity position: `https://app.uniswap.org/positions/v3/base/5087977`
+- DEX Screener pair: `https://dexscreener.com/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0`
+- GeckoTerminal pool: `https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0`
+- Uniswap pool: `https://app.uniswap.org/explore/pools/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0`
+- Official swap route: `https://app.uniswap.org/swap?chain=base&inputCurrency=0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2&outputCurrency=0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`
 
 ## Audit Status
 

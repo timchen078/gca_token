@@ -45,6 +45,18 @@
     "poolAddress": "0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff",
     "transactionHash": "0xef94e020c8b431151b789ca3e96c45ab0c18d20d15bf8d7d543630f1370fc158"
   },
+  "officialMarketPool": {
+    "pair": "GCA/USDT",
+    "protocol": "Uniswap v4",
+    "network": "Base Mainnet",
+    "feeTier": "0.01%",
+    "poolAddress": "0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "quoteAsset": "USDT",
+    "quoteAssetAddress": "0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2",
+    "geckoTerminalUrl": "https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "dexScreenerUrl": "https://dexscreener.com/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "officialSwapUrl": "https://app.uniswap.org/swap?chain=base&inputCurrency=0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2&outputCurrency=0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6"
+  },
   "executedOwnerReserveTransfers": [
     {
       "amountGca": "300000000",

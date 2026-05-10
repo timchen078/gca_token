@@ -9,8 +9,8 @@ This package prepares GCA information for token data and DEX discovery platforms
 - Whitepaper: live at `https://gcagochina.com/whitepaper.html`
 - Contract source: verified on BaseScan
 - BaseScan token profile: submitted and awaiting BaseScan review
-- GeckoTerminal token info update: submitted on 2026-05-09 and awaiting GeckoTerminal review
-- Liquidity: starter Uniswap v3 GCA/WETH pool exists on Base Mainnet
+- GeckoTerminal token info update: submitted on 2026-05-09 and awaiting GeckoTerminal review; use the GCA/USDT pool for any follow-up correction
+- Liquidity: official starter Uniswap v4 GCA/USDT pool exists on Base Mainnet
 - Social links: official Telegram is live at `https://t.me/gcagochinaofficial`; the frozen X account is not used
 - Third-party audit: not completed; quote requests were submitted on 2026-05-10 and then deferred by owner decision
 
@@ -48,19 +48,19 @@ This package prepares GCA information for token data and DEX discovery platforms
 
 ## Liquidity And Market Pages
 
-- DEX: Uniswap v3 on Base Mainnet
-- Pair: GCA/WETH
-- Pool address: `0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff`
-- Fee tier: 1%
-- Position token ID: `5087977`
-- DEX Screener pair: `https://dexscreener.com/base/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff`
-- GeckoTerminal pool: `https://www.geckoterminal.com/base/pools/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff`
-- CoinMarketCap DexScan pool: `https://dex.coinmarketcap.com/base/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff/`
-- Uniswap position: `https://app.uniswap.org/positions/v3/base/5087977`
+- DEX: Uniswap v4 on Base Mainnet
+- Pair: GCA/USDT
+- Pool address: `0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0`
+- Fee tier: 0.01%
+- Quote asset: Base USDT `0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2`
+- DEX Screener pair: `https://dexscreener.com/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0`
+- GeckoTerminal pool: `https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0`
+- Uniswap pool: `https://app.uniswap.org/explore/pools/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0`
+- Official swap route: `https://app.uniswap.org/swap?chain=base&inputCurrency=0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2&outputCurrency=0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`
 
 Current liquidity is starter-depth only. It should not be described as deep, stable, guaranteed, or sufficient for large trades.
 
-Small Base Mainnet Uniswap v3 buy/sell functional swap tests were observed on 2026-05-10 and recorded in `launch/swap_test_evidence.md`. Treat these only as functional swap evidence, not as proof of organic demand or strong liquidity.
+Earlier small Base Mainnet buy/sell functional swap tests were observed on 2026-05-10 and recorded in `launch/swap_test_evidence.md`. Treat these only as functional swap evidence, not as proof of organic demand or strong liquidity. Public market links should now point to the GCA/USDT pool above.
 
 ## Supply And Reserve
 
@@ -81,7 +81,7 @@ GCA, short for Go China Access, is a fixed-supply ERC-20 token on Base Mainnet. 
 
 ## Copyable Long Description
 
-GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stands for Go China Access, a concept-stage community direction focused on the Go China macro narrative, bilingual Web3 education, public market research, and planned access to non-custodial quant risk tools. The intended Web3 Radar bridge is to make GCA an access and membership layer for liquidation replay reports, risk-warning credits, realistic backtests, ENTRY_READY signal review, position-size calculators, subscription discounts, and risk-control training. The contract created 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls. The token has a starter Uniswap v3 GCA/WETH pool on Base Mainnet and a disclosed owner-held reserve wallet. The project is early-stage. Third-party audit quote requests were submitted and then deferred by owner decision; the project should not be described as externally audited, price-backed, yield-bearing, or backed by guaranteed liquidity.
+GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stands for Go China Access, a concept-stage community direction focused on the Go China macro narrative, bilingual Web3 education, public market research, and planned access to non-custodial quant risk tools. The intended Web3 Radar bridge is to make GCA an access and membership layer for liquidation replay reports, risk-warning credits, realistic backtests, ENTRY_READY signal review, position-size calculators, subscription discounts, and risk-control training. The contract created 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls. The official public pool is the Base Mainnet Uniswap v4 GCA/USDT pool, and the project has a disclosed owner-held reserve wallet. The project is early-stage. Third-party audit quote requests were submitted and then deferred by owner decision; the project should not be described as externally audited, price-backed, yield-bearing, or backed by guaranteed liquidity.
 
 ## Utility Positioning
 
@@ -95,19 +95,19 @@ Verified GCA Member backend: each registered user may verify one wallet holding 
 
 ### DEX Screener
 
-Status: discoverable through the live Base Mainnet Uniswap v3 pool.
+Status: discoverable through the live Base Mainnet Uniswap v4 GCA/USDT pool.
 
 DEX Screener documents that tokens are listed automatically after they are added to a liquidity pool and have at least one transaction. It also states that token descriptions and social links are normally pulled from external token lists such as CoinGecko, with Enhanced Token Info as the faster direct route.
 
 Recommended action:
 
-1. Use the DEX Screener pair URL for public market visibility.
+1. Use the GCA/USDT DEX Screener pair URL for public market visibility.
 2. Do not pay for Enhanced Token Info unless the project is ready to spend marketing budget.
 3. Improve CoinGecko/GeckoTerminal metadata first because DEX Screener can pull from external token lists.
 
 ### GeckoTerminal
 
-Status: submitted on 2026-05-09 and awaiting GeckoTerminal review.
+Status: submitted on 2026-05-09 and awaiting GeckoTerminal review. The current official market pool is now GCA/USDT; use the GCA/USDT pool URL for any correction or follow-up request.
 
 GeckoTerminal support says to navigate to the token pool, open the Token Info section, click Update Token Info, and submit accurate information. It warns that requests may be rejected for insufficient verification, incorrect information, wrong channel, or duplicates. The GCA request was submitted from the owner's browser session with `GCAgochina@outlook.com`; owner OTP verification was completed and GeckoTerminal displayed a successful submission message with a review window of up to 5 working days.
 
@@ -115,7 +115,7 @@ Recommended action:
 
 1. Do not submit a duplicate GeckoTerminal update while the request is pending.
 2. Monitor `GCAgochina@outlook.com` for GeckoTerminal review messages.
-3. If GeckoTerminal asks for changes, use the website, logo, whitepaper, BaseScan contract, and neutral descriptions above.
+3. If GeckoTerminal asks for changes, use the website, logo, whitepaper, BaseScan contract, GCA/USDT pool URL, and neutral descriptions above.
 4. Include the official Telegram link if GeckoTerminal asks for social links; do not include frozen X as an official social link.
 
 ### CoinGecko

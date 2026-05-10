@@ -23,7 +23,8 @@
 - Token allocation plan updated: 400,000,000 GCA target public allocation and 600,000,000 GCA owner-held reserve.
 - Owner reserve transfers completed: total 600,000,000 GCA moved to `0x5e8F84748612B913aAcC937492AC25dc5630E246`.
 - Liquidity pool default plan selected.
-- Base Mainnet Uniswap v3 GCA/WETH liquidity position created.
+- Earlier Base Mainnet Uniswap v3 GCA/WETH pilot liquidity position created as a historical record only.
+- Official public market route updated to the Base Mainnet Uniswap v4 GCA/USDT pool.
 - Audit scope prepared.
 - Internal security review completed.
 - Third-party audit outreach package prepared.
@@ -52,7 +53,7 @@
 ## Needs Owner Input Or External Service
 
 - Wait for BaseScan review or an email reply to `cxy070800@gmail.com`.
-- Wait for GeckoTerminal review or an email reply to `GCAgochina@outlook.com`; GeckoTerminal showed a review window of up to 5 working days.
+- Wait for GeckoTerminal review or an email reply to `GCAgochina@outlook.com`; GeckoTerminal showed a review window of up to 5 working days. Use the GCA/USDT pool in any correction or follow-up.
 - If BaseScan or GeckoTerminal asks for supply details during review, use the updated 40/60 allocation and both reserve transfer transactions.
 - Wait for stronger public activity and market volume before submitting CoinGecko or CoinMarketCap listing requests.
 - Expose the Web3 Radar access bridge through controlled HTTPS account UI before describing report credits, backtest quotas, ENTRY_READY reviews, or calculators as public self-service token-gated features.
@@ -72,7 +73,7 @@
 - GeckoTerminal token information update has been submitted, but it is not complete until GeckoTerminal accepts and publishes it.
 - Internal engineering review is complete, but no third-party audit has been completed.
 - Audit quote requests have been submitted and then deferred by owner decision, but quote submission is not an audit and does not allow any public "audited" claim.
-- Current Uniswap liquidity is starter-depth only; trades can have high price impact and slippage.
+- Current official Uniswap GCA/USDT liquidity is starter-depth only; trades can have high price impact and slippage.
 - Functional buy/sell swap tests do not remove wallet risk warnings and must not be described as proof of organic volume or deep liquidity.
 - Blockaid report submission does not mean the warning has been removed; wait for Blockaid/MetaMask review or verify directly in the wallet UI.
 - The owner reserve is in a normal owner-controlled wallet. Do not describe it as locked, vested, or multisig-controlled unless custody changes on-chain.
@@ -92,16 +93,17 @@
 - Second transfer block: 45,779,081
 - Custody type: normal owner-controlled wallet; not a lock, vesting contract, or multisig.
 
-## Liquidity Position
+## Official Market Pool
 
-- Venue: Uniswap v3 on Base Mainnet
-- Pair: GCA/WETH
-- Fee tier: 1%
-- Range: full range
-- Transaction: `0xef94e020c8b431151b789ca3e96c45ab0c18d20d15bf8d7d543630f1370fc158`
-- Position token ID: `5087977`
-- Pool address: `0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff`
-- Position owner: `0x18d007bcb6be029f8ccd7cb13e324aa21891092d`
+- Venue: Uniswap v4 on Base Mainnet
+- Pair: GCA/USDT
+- Fee tier: 0.01%
+- Pool address: `0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0`
+- Quote asset: Base USDT `0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2`
+- GeckoTerminal: `https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0`
+- DEX Screener: `https://dexscreener.com/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0`
+- Uniswap pool: `https://app.uniswap.org/explore/pools/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0`
+- Official swap route: `https://app.uniswap.org/swap?chain=base&inputCurrency=0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2&outputCurrency=0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`
 
 ## Canonical Production Identity
 

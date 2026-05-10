@@ -1,21 +1,22 @@
 # GeckoTerminal Token Info Update Runbook
 
-This runbook records the accurate GeckoTerminal token information update request for GCA. Use it for audit trail and follow-up only unless GeckoTerminal asks for a corrected resubmission.
+This runbook records the accurate GeckoTerminal token information update request for GCA. Use it for audit trail and follow-up only unless GeckoTerminal asks for a corrected resubmission. The current official market pool is GCA/USDT.
 
 ## Status
 
-- Current status: submitted on 2026-05-09, awaiting GeckoTerminal review.
+- Current status: submitted on 2026-05-09, awaiting GeckoTerminal review; corrected GCA/USDT pool values are prepared for any follow-up.
 - Submission email: `GCAgochina@outlook.com`
 - Browser confirmation: owner completed OTP verification; GeckoTerminal displayed "Your form was submitted successfully" and a review window of up to 5 working days.
-- Target pool: `https://www.geckoterminal.com/base/pools/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff`
+- Target pool: `https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0`
 - Network: Base Mainnet
-- Pair: GCA/WETH
+- Pair: GCA/USDT
 - Contract address: `0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`
 - Official website: `https://gcagochina.com/`
 - Official contact email for GeckoTerminal submission: `GCAgochina@outlook.com`
 - Official Telegram: `https://t.me/gcagochinaofficial`
 - Owner reserve wallet: `0x5e8F84748612B913aAcC937492AC25dc5630E246`
 - Owner reserve transfer: `0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67`
+- Official swap route: `https://app.uniswap.org/swap?chain=base&inputCurrency=0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2&outputCurrency=0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`
 
 ## Before Resubmitting
 
@@ -34,8 +35,7 @@ Do not submit a duplicate request while the 2026-05-09 request is pending. If Ge
 
 These steps were completed from the owner's browser session on 2026-05-09:
 
-1. Opened the GeckoTerminal pool page:
-   `https://www.geckoterminal.com/base/pools/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff`
+1. Opened the earlier GeckoTerminal pool page. That was the original 2026-05-09 submission context; do not use it as the current public pool link.
 2. Opened the `Update Token Info` form.
 3. Filled the form using `launch/geckoterminal_form_values.json`.
 4. Left social link fields blank because the official Telegram channel did not exist yet and the X account was frozen.
@@ -46,7 +46,7 @@ These steps were completed from the owner's browser session on 2026-05-09:
 
 ## Copyable Description
 
-GCA, short for Go China Access, is a fixed-supply ERC-20 token on Base Mainnet. It is a concept-stage community direction focused on the Go China macro narrative, bilingual Web3 education, public market research, and planned access to non-custodial quant risk tools. The intended Web3 Radar bridge is an access and membership layer for reports, risk-warning credits, backtests, ENTRY_READY signal review, position-size calculators, subscription discounts, and risk-control training. The contract created 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls. The token has starter Uniswap v3 GCA/WETH liquidity on Base Mainnet and a disclosed owner-held reserve wallet.
+GCA, short for Go China Access, is a fixed-supply ERC-20 token on Base Mainnet. It is a concept-stage community direction focused on the Go China macro narrative, bilingual Web3 education, public market research, and planned access to non-custodial quant risk tools. The intended Web3 Radar bridge is an access and membership layer for reports, risk-warning credits, backtests, ENTRY_READY signal review, position-size calculators, subscription discounts, and risk-control training. The contract created 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls. The official public pool is the Base Mainnet Uniswap v4 GCA/USDT pool, and the project has a disclosed owner-held reserve wallet.
 
 ## Submit These Links
 
@@ -56,8 +56,10 @@ GCA, short for Go China Access, is a fixed-supply ERC-20 token on Base Mainnet. 
 - Whitepaper: `https://gcagochina.com/whitepaper.html`
 - Utility thesis: `https://gcagochina.com/utility.html`
 - Explorer: `https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`
-- Pool: `https://www.geckoterminal.com/base/pools/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff`
-- DEX Screener pair: `https://dexscreener.com/base/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff`
+- Pool: `https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0`
+- DEX Screener pair: `https://dexscreener.com/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0`
+- Uniswap pool: `https://app.uniswap.org/explore/pools/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0`
+- Official swap route: `https://app.uniswap.org/swap?chain=base&inputCurrency=0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2&outputCurrency=0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`
 - Official Telegram: `https://t.me/gcagochinaofficial`
 
 ## Do Not Submit Or Claim
@@ -81,7 +83,8 @@ Official website: https://gcagochina.com/
 Official logo: https://gcagochina.com/assets/gca-logo.svg
 Whitepaper: https://gcagochina.com/whitepaper.html
 BaseScan contract: https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6
-Pool: https://www.geckoterminal.com/base/pools/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff
+Pool: https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0
+DEX Screener: https://dexscreener.com/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0
 Owner reserve wallet: 0x5e8F84748612B913aAcC937492AC25dc5630E246
 Official Telegram: https://t.me/gcagochinaofficial
 
