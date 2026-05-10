@@ -133,17 +133,25 @@
           <img src="assets/gca-logo.svg" alt="GCA logo">
           <span>GCA</span>
         </a>
-        <a href="https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6" target="_blank" rel="noreferrer">BaseScan</a>
+        <span>
+          <a href="buy.html">Buy Guide</a>
+          &nbsp;|&nbsp;
+          <a href="utility.html">Utility Thesis</a>
+          &nbsp;|&nbsp;
+          <a href="https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6" target="_blank" rel="noreferrer">BaseScan</a>
+        </span>
       </nav>
     </header>
 
     <main class="shell">
       <article>
         <h1>GCA Whitepaper</h1>
-        <p>Version 0.4</p>
+        <p>Version 0.5</p>
+        <p>Official buy guide: <a href="buy.html">https://gcagochina.com/buy.html</a>.</p>
+        <p>Utility thesis: <a href="utility.html">https://gcagochina.com/utility.html</a>.</p>
 
         <h2>Summary</h2>
-        <p>GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stands for Go China Access, a concept-stage community direction focused on China-facing Web3 culture, creators, bilingual education, and public market narrative research.</p>
+        <p>GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stands for Go China Access, a concept-stage community direction focused on China-facing Web3 culture, bilingual education, public market narrative research, and planned access to non-custodial quant risk tools.</p>
         <p>The contract creates the entire supply at deployment and does not include post-deployment minting, burning, taxes, blacklist logic, or privileged admin controls. The product roadmap is still being developed publicly, so GCA should not be described as a finished platform or as having guaranteed utility.</p>
 
         <h2>Token Parameters</h2>
@@ -166,9 +174,15 @@
         <p>GCA is deployed on Base Mainnet because Base is an EVM-compatible Layer 2 network that uses ETH for gas and supports common ERC-20 wallet and DEX workflows.</p>
 
         <h2>Project Direction</h2>
-        <p>The current public concept is Go China Access. The intended direction is to build a public community around China-facing Web3 activity, bilingual crypto education, creator/community access, and curated research about market narratives.</p>
-        <p>Near-term work should focus on creating official community channels, publishing a clearer community thesis, collecting feedback before committing to a specific product direction, and keeping public disclosures accurate as the project evolves.</p>
+        <p>The current public concept is Go China Access. The intended direction is to build a public community around China-facing Web3 activity, bilingual crypto education, creator/community access, curated research about market narratives, and practical trading-risk education.</p>
+        <p>The planned product bridge is to connect GCA with Web3 Radar-style non-custodial quant tooling. Suitable utility includes liquidation replay reports, risk-warning credits, backtest usage, ENTRY_READY signal review, position-size calculators, subscription discounts, and risk-control training.</p>
+        <p>Planned first campaign: each registered user may verify one wallet holding at least 10,000 GCA and receive a one-time 100 Web3 Radar utility credits bonus after the access bridge is live.</p>
+        <p>Near-term work should focus on creating official community channels, publishing a clearer community thesis, collecting feedback, defining the Web3 Radar access bridge, and keeping public disclosures accurate as the project evolves.</p>
         <p>This concept does not imply a price target, return promise, revenue share, or completed application.</p>
+
+        <h2>Planned Utility Boundaries</h2>
+        <p>GCA should be positioned as an access and membership layer, not as a yield product. Token utility should unlock reports, credits, education, and research workflows. It should not distribute platform revenue, promise outcomes, provide custody, request withdrawal permission, or bypass trading risk checks.</p>
+        <p>The planned 10,000 GCA holder bonus is an account-level service credit campaign, not a token rebate. The 100 Web3 Radar utility credits should only be usable for reports, backtests, risk warnings, ENTRY_READY signal review, position calculators, or education access. They should not be cash, tokens, income, reimbursement, trading permission, or a reason to bypass risk controls.</p>
 
         <h2>Distribution Status</h2>
         <p>At deployment, the full token supply was assigned to the deployer wallet: <code>0x18d007bcb6be029f8ccd7cb13e324aa21891092d</code>. A starter Uniswap v3 GCA/WETH liquidity position has since been created on Base Mainnet, with LP NFT token ID <code>5087977</code> held by the deployer wallet.</p>
@@ -183,18 +197,18 @@
           <tbody>
             <tr>
               <td>Public circulation, ecosystem, and liquidity allocation</td>
-              <td>700,000,000 GCA</td>
-              <td>70%</td>
+              <td>400,000,000 GCA</td>
+              <td>40%</td>
             </tr>
             <tr>
               <td>Owner-held reserve</td>
-              <td>300,000,000 GCA</td>
-              <td>30%</td>
+              <td>600,000,000 GCA</td>
+              <td>60%</td>
             </tr>
           </tbody>
         </table>
-        <p>The 300,000,000 GCA reserve has been transferred to owner reserve wallet <code>0x5e8F84748612B913aAcC937492AC25dc5630E246</code>. The reserve transfer transaction is <a href="https://basescan.org/tx/0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67" target="_blank" rel="noreferrer">0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67</a> at block 45,739,653.</p>
-        <p>The owner-held reserve should not be described as circulating while held as a reserve. This wallet is a normal owner-controlled wallet, not a lock, vesting contract, or Safe multisig. The 70/30 split remains a target allocation plan for public reporting.</p>
+        <p>The 600,000,000 GCA reserve has been transferred to owner reserve wallet <code>0x5e8F84748612B913aAcC937492AC25dc5630E246</code>. The reserve transfer transactions are <a href="https://basescan.org/tx/0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67" target="_blank" rel="noreferrer">0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67</a> at block 45,739,653 and <a href="https://basescan.org/tx/0xfffb674448abdbd3af45bb0a30c48e5fbb0e675542b971f031381254b5dc5317" target="_blank" rel="noreferrer">0xfffb674448abdbd3af45bb0a30c48e5fbb0e675542b971f031381254b5dc5317</a> at block 45,779,081.</p>
+        <p>The owner-held reserve should not be described as circulating while held as a reserve. This wallet is a normal owner-controlled wallet, not a lock, vesting contract, or Safe multisig. The 40/60 split remains a target allocation plan for public reporting.</p>
 
         <h2>Liquidity Approach</h2>
         <p>The initial live liquidity position is a Base Mainnet Uniswap v3 GCA/WETH pool with a 1% fee tier and full-range liquidity. The execution transaction is <code>0xef94e020c8b431151b789ca3e96c45ab0c18d20d15bf8d7d543630f1370fc158</code>.</p>
@@ -209,6 +223,7 @@
 
         <h2>Security Notes</h2>
         <p>The current contract has been source-verified on BaseScan and covered by repository tests for fixed supply, public ERC-20 functions, compiler output, deployment pages, and deployment records. An internal engineering review is complete. This is not a substitute for a third-party audit, and no third-party audit has been completed.</p>
+        <p>Third-party audit quote requests were submitted to QuillAudits, Hacken, and OpenZeppelin on 2026-05-10, then deferred by owner decision. GCA should not be described as audited, externally audited, or audit-approved unless an independent auditor later provides a verifiable report.</p>
 
         <h2>BaseScan Token Profile Status</h2>
         <p>BaseScan source verification and deployer-wallet ownership verification are complete. The public BaseScan token profile update has been submitted and is awaiting BaseScan review.</p>
