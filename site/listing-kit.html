@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GCA Listing Kit | Go China Access</title>
+    <meta name="description" content="Official GCA listing kit with token identity, public URLs, logo links, GCA/USDT pool, social links, descriptions, and disclosure boundaries.">
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #111318;
+        --muted: #5f6773;
+        --line: #dfe3ea;
+        --panel: #ffffff;
+        --soft: #f6f7f9;
+        --red: #d71920;
+        --blue: #0052ff;
+        --green: #087f5b;
+        --gold: #8a650d;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: #fbfbfc;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.5;
+      }
+
+      a {
+        color: var(--blue);
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .shell {
+        width: min(1080px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      header {
+        border-bottom: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.94);
+        position: sticky;
+        top: 0;
+        z-index: 2;
+      }
+
+      nav {
+        min-height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--ink);
+        font-weight: 850;
+      }
+
+      .brand img {
+        width: 32px;
+        height: 32px;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 18px;
+        align-items: center;
+        font-size: 14px;
+      }
+
+      main {
+        padding: 42px 0 56px;
+      }
+
+      h1 {
+        margin: 0;
+        max-width: 820px;
+        font-size: clamp(40px, 6vw, 72px);
+        line-height: 1;
+        letter-spacing: 0;
+      }
+
+      h2 {
+        margin: 0 0 14px;
+        font-size: 24px;
+      }
+
+      h3 {
+        margin: 0 0 8px;
+        font-size: 17px;
+      }
+
+      .lead {
+        max-width: 800px;
+        margin: 18px 0 0;
+        color: var(--muted);
+        font-size: 18px;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 24px;
+      }
+
+      .button {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        color: var(--ink);
+        min-height: 42px;
+        padding: 10px 14px;
+        font: inherit;
+        font-weight: 750;
+      }
+
+      .button.primary {
+        border-color: var(--red);
+        background: var(--red);
+        color: #fff;
+      }
+
+      .section {
+        margin-top: 30px;
+      }
+
+      .panel,
+      .fact {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+      }
+
+      .panel {
+        padding: 24px;
+      }
+
+      .facts,
+      .grid,
+      .two {
+        display: grid;
+        gap: 14px;
+      }
+
+      .facts {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        margin-top: 22px;
+      }
+
+      .grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .two {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .fact {
+        min-height: 96px;
+        padding: 15px;
+      }
+
+      .label {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 750;
+        text-transform: uppercase;
+      }
+
+      .value {
+        display: block;
+        margin-top: 8px;
+        font-size: 16px;
+        font-weight: 850;
+        overflow-wrap: anywhere;
+      }
+
+      .good {
+        color: var(--green);
+      }
+
+      .pending {
+        color: var(--gold);
+      }
+
+      .note,
+      li {
+        color: var(--muted);
+      }
+
+      .note {
+        margin: 0;
+      }
+
+      .list {
+        display: grid;
+        gap: 10px;
+        margin-top: 12px;
+      }
+
+      .row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 12px;
+        align-items: start;
+        border-top: 1px solid var(--line);
+        padding-top: 10px;
+      }
+
+      .row strong {
+        white-space: nowrap;
+        overflow-wrap: anywhere;
+      }
+
+      .copy {
+        margin: 0;
+        padding: 14px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--soft);
+        color: var(--ink);
+        overflow-wrap: anywhere;
+        white-space: pre-wrap;
+      }
+
+      .warning {
+        border-color: #ecd28c;
+        background: #fff9e8;
+      }
+
+      code {
+        padding: 2px 5px;
+        border-radius: 6px;
+        background: var(--soft);
+        overflow-wrap: anywhere;
+      }
+
+      footer {
+        border-top: 1px solid var(--line);
+        padding: 24px 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      @media (max-width: 860px) {
+        .facts,
+        .grid,
+        .two {
+          grid-template-columns: 1fr;
+        }
+
+        nav {
+          align-items: flex-start;
+          flex-direction: column;
+          padding: 14px 0;
+        }
+
+        .nav-links {
+          flex-wrap: wrap;
+        }
+
+        .row {
+          grid-template-columns: 1fr;
+        }
+
+        .row strong {
+          white-space: normal;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav class="shell" aria-label="Primary">
+        <a class="brand" href="index.html" aria-label="GCA home">
+          <img src="assets/gca-logo.svg" alt="GCA logo">
+          <span>GCA</span>
+        </a>
+        <div class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="buy.html">Buy Guide</a>
+          <a href="status.html">Status</a>
+          <a href="members.html">Members</a>
+          <a href="utility.html">Utility Thesis</a>
+          <a href="whitepaper.html">Whitepaper</a>
+          <a href="https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6" target="_blank" rel="noreferrer">BaseScan</a>
+        </div>
+      </nav>
+    </header>
+
+    <main class="shell">
+      <section aria-labelledby="title">
+        <h1 id="title">GCA Listing Kit</h1>
+        <p class="lead">Use this page when a wallet, data platform, exchange, community moderator, or reviewer needs official GCA token facts. This kit is factual metadata only and does not guarantee listing, ranking, pricing, liquidity, or acceptance by any platform.</p>
+        <div class="actions">
+          <a class="button primary" href="status.html">Project Status</a>
+          <a class="button" href="project.json">Machine-Readable JSON</a>
+          <a class="button" href="assets/gca-logo.svg">Logo SVG</a>
+          <a class="button" href="assets/gca-logo.png">Logo PNG</a>
+        </div>
+      </section>
+
+      <section class="facts" aria-label="Core facts">
+        <div class="fact">
+          <span class="label">Project</span>
+          <span class="value">GCA / Go China Access</span>
+        </div>
+        <div class="fact">
+          <span class="label">Network</span>
+          <span class="value">Base Mainnet</span>
+        </div>
+        <div class="fact">
+          <span class="label">Token Standard</span>
+          <span class="value">ERC-20</span>
+        </div>
+        <div class="fact">
+          <span class="label">GeckoTerminal</span>
+          <span class="value good">Approved 2026-05-11</span>
+        </div>
+      </section>
+
+      <section class="section two" aria-label="Identity">
+        <div class="panel">
+          <h2>Canonical Identity</h2>
+          <div class="list">
+            <div class="row"><span>Token name</span><strong>GCA</strong></div>
+            <div class="row"><span>Token symbol</span><strong>GCA</strong></div>
+            <div class="row"><span>Contract</span><strong>0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6</strong></div>
+            <div class="row"><span>Decimals</span><strong>18</strong></div>
+            <div class="row"><span>Total supply</span><strong>1,000,000,000 GCA</strong></div>
+            <div class="row"><span>Minting after deployment</span><strong>No</strong></div>
+            <div class="row"><span>Taxes, blacklist, admin controls</span><strong>No</strong></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2>Public URLs</h2>
+          <div class="list">
+            <div class="row"><span><a href="https://gcagochina.com/" target="_blank" rel="noreferrer">Website</a></span><strong>gcagochina.com</strong></div>
+            <div class="row"><span><a href="https://gcagochina.com/status.html" target="_blank" rel="noreferrer">Status page</a></span><strong>Verification</strong></div>
+            <div class="row"><span><a href="https://gcagochina.com/whitepaper.html" target="_blank" rel="noreferrer">Whitepaper</a></span><strong>Public</strong></div>
+            <div class="row"><span><a href="https://gcagochina.com/project.json" target="_blank" rel="noreferrer">Project JSON</a></span><strong>Machine readable</strong></div>
+            <div class="row"><span><a href="https://t.me/gcagochinaofficial" target="_blank" rel="noreferrer">Telegram</a></span><strong>Official</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="marketTitle">
+        <h2 id="marketTitle">Market References</h2>
+        <p class="note">The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool. Liquidity remains starter-depth only.</p>
+        <div class="list">
+          <div class="row"><span>Pool</span><strong>0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0</strong></div>
+          <div class="row"><span>Quote asset</span><strong>USDT on Base</strong></div>
+          <div class="row"><span>USDT contract</span><strong>0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2</strong></div>
+          <div class="row"><span><a href="https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0" target="_blank" rel="noreferrer">GeckoTerminal</a></span><strong>Approved</strong></div>
+          <div class="row"><span><a href="https://dexscreener.com/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0" target="_blank" rel="noreferrer">DEX Screener</a></span><strong>GCA/USDT</strong></div>
+          <div class="row"><span><a href="https://app.uniswap.org/swap?chain=base&amp;inputCurrency=0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2&amp;outputCurrency=0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6" target="_blank" rel="noreferrer">Uniswap swap</a></span><strong>USDT to GCA</strong></div>
+        </div>
+      </section>
+
+      <section class="section two" aria-label="Descriptions">
+        <div class="panel">
+          <h2>Short Description</h2>
+          <p class="copy">GCA, short for Go China Access, is a fixed-supply ERC-20 token on Base Mainnet. It is a concept-stage community direction focused on the Go China macro narrative, bilingual Web3 education, public market research, and planned access to non-custodial quant risk tools.</p>
+        </div>
+
+        <div class="panel">
+          <h2>Long Description</h2>
+          <p class="copy">GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stands for Go China Access, a concept-stage community direction focused on the Go China macro narrative, bilingual Web3 education, public market research, and planned access to non-custodial quant risk tools. The intended Web3 Radar bridge is to make GCA an access and membership layer for liquidation replay reports, risk-warning credits, realistic backtests, ENTRY_READY signal review, position-size calculators, subscription discounts, and risk-control training. The contract created 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls. The official public pool is the Base Mainnet Uniswap v4 GCA/USDT pool, and the project has a disclosed owner-held reserve wallet. The project is early-stage, has no completed third-party audit, and should not be described as externally audited, price-backed, yield-bearing, or backed by guaranteed liquidity.</p>
+        </div>
+      </section>
+
+      <section class="section grid" aria-label="Review status">
+        <div class="panel">
+          <h3>BaseScan</h3>
+          <p class="note">Source and deployer-wallet ownership are verified. Public token profile update is submitted and awaiting review.</p>
+        </div>
+        <div class="panel">
+          <h3>GeckoTerminal</h3>
+          <p class="note">Token information update was approved on 2026-05-11. Keep the official website linked to the GCA/USDT pool.</p>
+        </div>
+        <div class="panel">
+          <h3>CoinGecko / CMC</h3>
+          <p class="note">Prepared but not submitted for tracked listing. Current liquidity, public activity, and volume are still weak for tracked listing readiness.</p>
+        </div>
+      </section>
+
+      <section class="section panel warning" aria-labelledby="limitsTitle">
+        <h2 id="limitsTitle">Do Not Claim</h2>
+        <ul>
+          <li>Do not claim BaseScan profile approval until BaseScan publishes the profile.</li>
+          <li>Do not claim third-party audit completion.</li>
+          <li>Do not claim locked reserves, deep liquidity, price support, stable price, yield, returns, or platform revenue distribution.</li>
+          <li>Do not claim holder credits or GCA Member status are cash, tokens, income, reimbursement, or trading permission.</li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <div class="shell">GCA listing kit. Always verify Base Mainnet chain ID 8453, the contract address, and pool details before using this data.</div>
+    </footer>
+  </body>
+</html>

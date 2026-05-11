@@ -38,6 +38,8 @@ class LaunchPackageTests(unittest.TestCase):
         site = (ROOT / "site" / "index.html").read_text()
         buy = (ROOT / "site" / "buy.html").read_text()
         status = (ROOT / "site" / "status.html").read_text()
+        listing = (ROOT / "site" / "listing-kit.html").read_text()
+        project = json.loads((ROOT / "site" / "project.json").read_text())
         utility = (ROOT / "site" / "utility.html").read_text()
         members = (ROOT / "site" / "members.html").read_text()
         self.assertIn("Base Mainnet", site)
@@ -45,6 +47,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(MAINNET_ADDRESS, site)
         self.assertIn(MAINNET_ADDRESS, buy)
         self.assertIn(MAINNET_ADDRESS, status)
+        self.assertIn(MAINNET_ADDRESS, listing)
+        self.assertEqual(project["contractAddress"], MAINNET_ADDRESS)
         self.assertIn(MAINNET_ADDRESS, utility)
         self.assertIn(MAINNET_ADDRESS, members)
         self.assertIn("Base Mainnet", members)
@@ -54,16 +58,32 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertNotIn("sepolia.basescan.org", site)
         self.assertNotIn("sepolia.basescan.org", buy)
         self.assertNotIn("sepolia.basescan.org", status)
+        self.assertNotIn("sepolia.basescan.org", listing)
 
     def test_public_site_sets_custom_domain(self):
         cname = (ROOT / "site" / "CNAME").read_text().strip()
         self.assertEqual(cname, "gcagochina.com")
+
+    def test_site_has_discovery_files(self):
+        robots = (ROOT / "site" / "robots.txt").read_text()
+        sitemap = (ROOT / "site" / "sitemap.xml").read_text()
+
+        self.assertIn("User-agent: *", robots)
+        self.assertIn("Allow: /", robots)
+        self.assertIn("Sitemap: https://gcagochina.com/sitemap.xml", robots)
+        self.assertIn("https://gcagochina.com/", sitemap)
+        self.assertIn("https://gcagochina.com/status.html", sitemap)
+        self.assertIn("https://gcagochina.com/listing-kit.html", sitemap)
+        self.assertIn("https://gcagochina.com/project.json", sitemap)
+        self.assertIn("https://gcagochina.com/buy.html", sitemap)
+        self.assertIn("https://gcagochina.com/whitepaper.html", sitemap)
 
     def test_public_site_discloses_current_operational_status(self):
         site = (ROOT / "site" / "index.html").read_text()
         self.assertIn("BaseScan token profile update has been submitted", site)
         self.assertIn('href="buy.html"', site)
         self.assertIn('href="status.html"', site)
+        self.assertIn('href="listing-kit.html"', site)
         self.assertIn("Go China Access", site)
         self.assertIn("Go China AI Quant Access", site)
         self.assertIn("Go China macro narrative", site)
@@ -227,12 +247,56 @@ class LaunchPackageTests(unittest.TestCase):
 
         for page in (index, buy, members, utility, whitepaper):
             self.assertIn('href="status.html"', page)
+            self.assertIn('href="listing-kit.html"', page)
+
+    def test_listing_kit_and_project_json_are_copyable(self):
+        kit = (ROOT / "site" / "listing-kit.html").read_text()
+        project = json.loads((ROOT / "site" / "project.json").read_text())
+
+        self.assertIn("GCA Listing Kit", kit)
+        self.assertIn("Machine-Readable JSON", kit)
+        self.assertIn("project.json", kit)
+        self.assertIn("Token name", kit)
+        self.assertIn("GCA / Go China Access", kit)
+        self.assertIn(MAINNET_ADDRESS, kit)
+        self.assertIn(OFFICIAL_POOL_ADDRESS, kit)
+        self.assertIn(BASE_USDT_ADDRESS, kit)
+        self.assertIn(OFFICIAL_GECKOTERMINAL_URL, kit)
+        self.assertIn(OFFICIAL_DEXSCREENER_URL, kit)
+        self.assertIn(OFFICIAL_SWAP_URL_HTML, kit)
+        self.assertIn("Short Description", kit)
+        self.assertIn("Long Description", kit)
+        self.assertIn("BaseScan", kit)
+        self.assertIn("submitted and awaiting review", kit)
+        self.assertIn("GeckoTerminal", kit)
+        self.assertIn("approved on 2026-05-11", kit)
+        self.assertIn("CoinGecko / CMC", kit)
+        self.assertIn("not submitted", kit)
+        self.assertIn("Do Not Claim", kit)
+        self.assertNotIn(OLD_WETH_POOL_ADDRESS, kit)
+
+        self.assertEqual(project["projectName"], "GCA")
+        self.assertEqual(project["network"], "Base Mainnet")
+        self.assertEqual(project["chainId"], 8453)
+        self.assertEqual(project["contractAddress"], MAINNET_ADDRESS)
+        self.assertEqual(project["listingKitUrl"], "https://gcagochina.com/listing-kit.html")
+        self.assertEqual(project["market"]["officialPair"], "GCA/USDT")
+        self.assertEqual(project["market"]["poolAddress"], OFFICIAL_POOL_ADDRESS)
+        self.assertEqual(project["market"]["quoteAssetAddress"], BASE_USDT_ADDRESS)
+        self.assertEqual(project["market"]["geckoTerminalUrl"], OFFICIAL_GECKOTERMINAL_URL)
+        self.assertEqual(project["market"]["dexScreenerUrl"], OFFICIAL_DEXSCREENER_URL)
+        self.assertEqual(project["market"]["officialSwapUrl"], OFFICIAL_SWAP_URL)
+        self.assertEqual(project["supplyDisclosure"]["ownerReserveWallet"], RESERVE_WALLET)
+        self.assertEqual(project["platformStatus"]["baseScanTokenProfile"], "submitted-awaiting-review")
+        self.assertEqual(project["platformStatus"]["geckoTerminalTokenInfo"], "approved-2026-05-11")
+        self.assertEqual(project["platformStatus"]["thirdPartyAudit"], "not-completed")
 
     def test_public_materials_avoid_investment_promises(self):
         paths = [
             ROOT / "site" / "index.html",
             ROOT / "site" / "buy.html",
             ROOT / "site" / "status.html",
+            ROOT / "site" / "listing-kit.html",
             ROOT / "site" / "members.html",
             ROOT / "site" / "utility.html",
             ROOT / "docs" / "whitepaper.md",
@@ -345,6 +409,9 @@ class LaunchPackageTests(unittest.TestCase):
     def test_public_materials_do_not_overstate_basescan_review(self):
         paths = [
             ROOT / "site" / "index.html",
+            ROOT / "site" / "buy.html",
+            ROOT / "site" / "status.html",
+            ROOT / "site" / "listing-kit.html",
             ROOT / "site" / "whitepaper.html",
             ROOT / "site" / "utility.html",
             ROOT / "docs" / "whitepaper.md",
@@ -409,6 +476,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("GeckoTerminal token info update submitted on 2026-05-09", status)
         self.assertIn("GeckoTerminal token information update approved on 2026-05-11", status)
         self.assertIn("Public project status page prepared", status)
+        self.assertIn("Public listing kit and machine-readable project JSON prepared", status)
         self.assertNotIn("Wait for GeckoTerminal review", status)
         self.assertIn(TELEGRAM_URL, status)
         self.assertIn("Telegram channel runbook prepared", status)
@@ -459,6 +527,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("CoinMarketCap", package)
         self.assertIn("https://gcagochina.com/", package)
         self.assertIn("https://gcagochina.com/status.html", package)
+        self.assertIn("https://gcagochina.com/listing-kit.html", package)
+        self.assertIn("https://gcagochina.com/project.json", package)
         self.assertIn("https://gcagochina.com/buy.html", package)
         self.assertIn("https://gcagochina.com/members.html", package)
         self.assertIn("https://gcagochina.com/utility.html", package)
@@ -487,6 +557,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["contractAddress"], MAINNET_ADDRESS)
         self.assertEqual(values["website"], "https://gcagochina.com/")
         self.assertEqual(values["statusPageUrl"], "https://gcagochina.com/status.html")
+        self.assertEqual(values["listingKitUrl"], "https://gcagochina.com/listing-kit.html")
+        self.assertEqual(values["projectJsonUrl"], "https://gcagochina.com/project.json")
         self.assertEqual(values["buyGuideUrl"], "https://gcagochina.com/buy.html")
         self.assertEqual(values["memberPreRegistrationUrl"], "https://gcagochina.com/members.html")
         self.assertEqual(values["utilityThesisUrl"], "https://gcagochina.com/utility.html")

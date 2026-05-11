@@ -36,6 +36,8 @@ This package prepares GCA information for token data and DEX discovery platforms
 
 - Website: `https://gcagochina.com/`
 - Project status: `https://gcagochina.com/status.html`
+- Listing kit: `https://gcagochina.com/listing-kit.html`
+- Machine-readable project JSON: `https://gcagochina.com/project.json`
 - Buy guide: `https://gcagochina.com/buy.html`
 - Member pre-registration: `https://gcagochina.com/members.html`
 - Utility thesis: `https://gcagochina.com/utility.html`
