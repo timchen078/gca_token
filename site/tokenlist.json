@@ -1,0 +1,43 @@
+{
+  "name": "GCA Official Token List",
+  "timestamp": "2026-05-11T00:00:00+07:00",
+  "version": {
+    "major": 1,
+    "minor": 0,
+    "patch": 0
+  },
+  "keywords": [
+    "gca",
+    "go-china-access",
+    "base",
+    "erc20"
+  ],
+  "tokens": [
+    {
+      "chainId": 8453,
+      "address": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+      "name": "GCA",
+      "symbol": "GCA",
+      "decimals": 18,
+      "logoURI": "https://gcagochina.com/assets/gca-logo.png",
+      "extensions": {
+        "projectName": "Go China Access",
+        "website": "https://gcagochina.com/",
+        "statusPage": "https://gcagochina.com/status.html",
+        "listingKit": "https://gcagochina.com/listing-kit.html",
+        "projectJson": "https://gcagochina.com/project.json",
+        "whitepaper": "https://gcagochina.com/whitepaper.html",
+        "officialTelegram": "https://t.me/gcagochinaofficial",
+        "baseScan": "https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+        "geckoTerminal": "https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+        "dexScreener": "https://dexscreener.com/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+        "officialSwap": "https://app.uniswap.org/swap?chain=base&inputCurrency=0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2&outputCurrency=0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+        "officialPair": "GCA/USDT",
+        "officialPool": "0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+        "geckoTerminalStatus": "approved-2026-05-11",
+        "baseScanTokenProfileStatus": "submitted-awaiting-review",
+        "thirdPartyAuditStatus": "not-completed"
+      }
+    }
+  ]
+}

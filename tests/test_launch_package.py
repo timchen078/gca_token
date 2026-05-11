@@ -75,6 +75,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("https://gcagochina.com/status.html", sitemap)
         self.assertIn("https://gcagochina.com/listing-kit.html", sitemap)
         self.assertIn("https://gcagochina.com/project.json", sitemap)
+        self.assertIn("https://gcagochina.com/tokenlist.json", sitemap)
         self.assertIn("https://gcagochina.com/buy.html", sitemap)
         self.assertIn("https://gcagochina.com/whitepaper.html", sitemap)
 
@@ -256,6 +257,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("GCA Listing Kit", kit)
         self.assertIn("Machine-Readable JSON", kit)
         self.assertIn("project.json", kit)
+        self.assertIn("Token List JSON", kit)
+        self.assertIn("tokenlist.json", kit)
         self.assertIn("Token name", kit)
         self.assertIn("GCA / Go China Access", kit)
         self.assertIn(MAINNET_ADDRESS, kit)
@@ -280,6 +283,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(project["chainId"], 8453)
         self.assertEqual(project["contractAddress"], MAINNET_ADDRESS)
         self.assertEqual(project["listingKitUrl"], "https://gcagochina.com/listing-kit.html")
+        self.assertEqual(project["tokenListUrl"], "https://gcagochina.com/tokenlist.json")
         self.assertEqual(project["market"]["officialPair"], "GCA/USDT")
         self.assertEqual(project["market"]["poolAddress"], OFFICIAL_POOL_ADDRESS)
         self.assertEqual(project["market"]["quoteAssetAddress"], BASE_USDT_ADDRESS)
@@ -290,6 +294,37 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(project["platformStatus"]["baseScanTokenProfile"], "submitted-awaiting-review")
         self.assertEqual(project["platformStatus"]["geckoTerminalTokenInfo"], "approved-2026-05-11")
         self.assertEqual(project["platformStatus"]["thirdPartyAudit"], "not-completed")
+
+    def test_token_list_json_is_official_and_conservative(self):
+        tokenlist = json.loads((ROOT / "site" / "tokenlist.json").read_text())
+        self.assertEqual(tokenlist["name"], "GCA Official Token List")
+        self.assertEqual(tokenlist["version"], {"major": 1, "minor": 0, "patch": 0})
+        self.assertIn("base", tokenlist["keywords"])
+        self.assertEqual(len(tokenlist["tokens"]), 1)
+
+        token = tokenlist["tokens"][0]
+        self.assertEqual(token["chainId"], 8453)
+        self.assertEqual(token["address"], MAINNET_ADDRESS)
+        self.assertEqual(token["name"], "GCA")
+        self.assertEqual(token["symbol"], "GCA")
+        self.assertEqual(token["decimals"], 18)
+        self.assertEqual(token["logoURI"], "https://gcagochina.com/assets/gca-logo.png")
+
+        extensions = token["extensions"]
+        self.assertEqual(extensions["website"], "https://gcagochina.com/")
+        self.assertEqual(extensions["statusPage"], "https://gcagochina.com/status.html")
+        self.assertEqual(extensions["listingKit"], "https://gcagochina.com/listing-kit.html")
+        self.assertEqual(extensions["projectJson"], "https://gcagochina.com/project.json")
+        self.assertEqual(extensions["officialTelegram"], TELEGRAM_URL)
+        self.assertEqual(extensions["geckoTerminal"], OFFICIAL_GECKOTERMINAL_URL)
+        self.assertEqual(extensions["dexScreener"], OFFICIAL_DEXSCREENER_URL)
+        self.assertEqual(extensions["officialSwap"], OFFICIAL_SWAP_URL)
+        self.assertEqual(extensions["officialPair"], "GCA/USDT")
+        self.assertEqual(extensions["officialPool"], OFFICIAL_POOL_ADDRESS)
+        self.assertEqual(extensions["geckoTerminalStatus"], "approved-2026-05-11")
+        self.assertEqual(extensions["baseScanTokenProfileStatus"], "submitted-awaiting-review")
+        self.assertEqual(extensions["thirdPartyAuditStatus"], "not-completed")
+        self.assertNotIn(OLD_WETH_POOL_ADDRESS, json.dumps(tokenlist))
 
     def test_public_materials_avoid_investment_promises(self):
         paths = [
@@ -477,6 +512,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("GeckoTerminal token information update approved on 2026-05-11", status)
         self.assertIn("Public project status page prepared", status)
         self.assertIn("Public listing kit and machine-readable project JSON prepared", status)
+        self.assertIn("Official token list JSON prepared", status)
         self.assertNotIn("Wait for GeckoTerminal review", status)
         self.assertIn(TELEGRAM_URL, status)
         self.assertIn("Telegram channel runbook prepared", status)
@@ -529,6 +565,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("https://gcagochina.com/status.html", package)
         self.assertIn("https://gcagochina.com/listing-kit.html", package)
         self.assertIn("https://gcagochina.com/project.json", package)
+        self.assertIn("https://gcagochina.com/tokenlist.json", package)
         self.assertIn("https://gcagochina.com/buy.html", package)
         self.assertIn("https://gcagochina.com/members.html", package)
         self.assertIn("https://gcagochina.com/utility.html", package)
@@ -559,6 +596,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["statusPageUrl"], "https://gcagochina.com/status.html")
         self.assertEqual(values["listingKitUrl"], "https://gcagochina.com/listing-kit.html")
         self.assertEqual(values["projectJsonUrl"], "https://gcagochina.com/project.json")
+        self.assertEqual(values["tokenListUrl"], "https://gcagochina.com/tokenlist.json")
         self.assertEqual(values["buyGuideUrl"], "https://gcagochina.com/buy.html")
         self.assertEqual(values["memberPreRegistrationUrl"], "https://gcagochina.com/members.html")
         self.assertEqual(values["utilityThesisUrl"], "https://gcagochina.com/utility.html")
