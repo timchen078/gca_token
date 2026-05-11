@@ -42,6 +42,7 @@ This package prepares GCA information for token data and DEX discovery platforms
 - Buy guide: `https://gcagochina.com/buy.html`
 - Official market page: `https://gcagochina.com/markets.html`
 - Supply and reserve page: `https://gcagochina.com/supply.html`
+- Security page: `https://gcagochina.com/security.html`
 - FAQ: `https://gcagochina.com/faq.html`
 - Member pre-registration: `https://gcagochina.com/members.html`
 - Utility thesis: `https://gcagochina.com/utility.html`
