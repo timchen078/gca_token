@@ -128,6 +128,8 @@ Third-party audit quote requests were submitted to QuillAudits, Hacken, and Open
 
 BaseScan source verification and deployer-wallet ownership verification are complete. The public BaseScan token profile update has been submitted and is awaiting BaseScan review.
 
+GeckoTerminal token information was approved on 2026-05-11. The official website links to the current GCA/USDT GeckoTerminal pool.
+
 ## Official Contact
 
 Project contact email: `GCAgochina@outlook.com`

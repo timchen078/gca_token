@@ -1,12 +1,13 @@
 # GeckoTerminal Token Info Update Runbook
 
-This runbook records the accurate GeckoTerminal token information update request for GCA. Use it for audit trail and follow-up only unless GeckoTerminal asks for a corrected resubmission. The current official market pool is GCA/USDT.
+This runbook records the accurate GeckoTerminal token information update request for GCA. Use it for audit trail and follow-up only. The current official market pool is GCA/USDT.
 
 ## Status
 
-- Current status: submitted on 2026-05-09, awaiting GeckoTerminal review; corrected GCA/USDT pool values are prepared for any follow-up.
+- Current status: approved on 2026-05-11.
 - Submission email: `GCAgochina@outlook.com`
-- Browser confirmation: owner completed OTP verification; GeckoTerminal displayed "Your form was submitted successfully" and a review window of up to 5 working days.
+- Browser confirmation: owner completed OTP verification; GeckoTerminal displayed "Your form was submitted successfully" and later emailed approval.
+- Approval evidence: owner-provided email screenshot says "Your request to update information for GCA has been approved."
 - Target pool: `https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0`
 - Network: Base Mainnet
 - Pair: GCA/USDT
@@ -18,9 +19,9 @@ This runbook records the accurate GeckoTerminal token information update request
 - Owner reserve transfer: `0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67`
 - Official swap route: `https://app.uniswap.org/swap?chain=base&inputCurrency=0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2&outputCurrency=0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`
 
-## Before Resubmitting
+## After Approval
 
-Do not submit a duplicate request while the 2026-05-09 request is pending. If GeckoTerminal asks for corrections, confirm these are still true before sending a corrected request:
+Do not submit a duplicate request after approval unless GeckoTerminal asks for a correction or the official project details change. Keep these public links live:
 
 1. The website opens over HTTPS at `https://gcagochina.com/`.
 2. The logo opens publicly at `https://gcagochina.com/assets/gca-logo.svg`.
@@ -29,7 +30,7 @@ Do not submit a duplicate request while the 2026-05-09 request is pending. If Ge
 5. The BaseScan contract page opens at `https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`.
 6. The official Telegram link is available at `https://t.me/gcagochinaofficial`.
 7. No active official X link is submitted while the `@GCAgochina` account is frozen.
-8. The request is not a duplicate of a pending GeckoTerminal token info update.
+8. The official website keeps linking to the current GCA/USDT GeckoTerminal pool.
 
 ## Historical Browser Steps
 
@@ -71,7 +72,7 @@ GCA, short for Go China Access, is a fixed-supply ERC-20 token on Base Mainnet. 
 - Do not claim price support, yield, return promises, or finished product utility.
 - Do not claim platform revenue distribution or automatic live trading permission.
 
-## If GeckoTerminal Rejects Or Asks For More Information
+## If GeckoTerminal Later Asks For More Information
 
 Use this reply:
 

@@ -62,6 +62,8 @@ Source verification and deployer-wallet ownership verification are complete. The
 
 Do not describe the BaseScan token profile as complete or visible until BaseScan accepts and publishes the submitted update.
 
+GeckoTerminal token information was approved on 2026-05-11. The official website links to the current GCA/USDT GeckoTerminal pool.
+
 ## Liquidity Status
 
 Starter liquidity is live on Base Mainnet:

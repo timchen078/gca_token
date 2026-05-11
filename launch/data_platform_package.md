@@ -9,7 +9,7 @@ This package prepares GCA information for token data and DEX discovery platforms
 - Whitepaper: live at `https://gcagochina.com/whitepaper.html`
 - Contract source: verified on BaseScan
 - BaseScan token profile: submitted and awaiting BaseScan review
-- GeckoTerminal token info update: submitted on 2026-05-09 and awaiting GeckoTerminal review; use the GCA/USDT pool for any follow-up correction
+- GeckoTerminal token info update: approved on 2026-05-11
 - Liquidity: official starter Uniswap v4 GCA/USDT pool exists on Base Mainnet
 - Social links: official Telegram is live at `https://t.me/gcagochinaofficial`; the frozen X account is not used
 - Third-party audit: not completed; quote requests were submitted on 2026-05-10 and then deferred by owner decision
@@ -107,16 +107,16 @@ Recommended action:
 
 ### GeckoTerminal
 
-Status: submitted on 2026-05-09 and awaiting GeckoTerminal review. The current official market pool is now GCA/USDT; use the GCA/USDT pool URL for any correction or follow-up request.
+Status: approved on 2026-05-11. The current official market pool is GCA/USDT, and the official website links to the GCA/USDT GeckoTerminal pool.
 
-GeckoTerminal support says to navigate to the token pool, open the Token Info section, click Update Token Info, and submit accurate information. It warns that requests may be rejected for insufficient verification, incorrect information, wrong channel, or duplicates. The GCA request was submitted from the owner's browser session with `GCAgochina@outlook.com`; owner OTP verification was completed and GeckoTerminal displayed a successful submission message with a review window of up to 5 working days.
+GeckoTerminal support says to navigate to the token pool, open the Token Info section, click Update Token Info, and submit accurate information. It warns that requests may be rejected for insufficient verification, incorrect information, wrong channel, or duplicates. The GCA request was submitted from the owner's browser session with `GCAgochina@outlook.com`; owner OTP verification was completed, GeckoTerminal displayed a successful submission message, and an approval email was received on 2026-05-11.
 
 Recommended action:
 
-1. Do not submit a duplicate GeckoTerminal update while the request is pending.
-2. Monitor `GCAgochina@outlook.com` for GeckoTerminal review messages.
-3. If GeckoTerminal asks for changes, use the website, logo, whitepaper, BaseScan contract, GCA/USDT pool URL, and neutral descriptions above.
-4. Include the official Telegram link if GeckoTerminal asks for social links; do not include frozen X as an official social link.
+1. Do not submit a duplicate GeckoTerminal update unless project details change or GeckoTerminal asks for a correction.
+2. Keep the website, logo, whitepaper, BaseScan contract, GCA/USDT pool URL, and Telegram link live.
+3. If GeckoTerminal asks for changes later, use the neutral descriptions above.
+4. Do not include the frozen X account as an official social link.
 
 ### CoinGecko
 

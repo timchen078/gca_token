@@ -1,6 +1,6 @@
 {
   "packageStatus": "prepared",
-  "lastReviewedDate": "2026-05-10",
+  "lastReviewedDate": "2026-05-11",
   "network": "Base Mainnet",
   "chainId": 8453,
   "tokenName": "GCA",
@@ -106,8 +106,9 @@
       "nextAction": "Use the pair URL; direct metadata is normally pulled from external token lists or Enhanced Token Info."
     },
     "geckoTerminal": {
-      "status": "submitted-awaiting-review",
-      "nextAction": "Wait for GeckoTerminal review or an email reply to GCAgochina@outlook.com; do not submit duplicate requests while pending."
+      "status": "approved",
+      "approvalDate": "2026-05-11",
+      "nextAction": "Keep the official website linked to the GCA/USDT GeckoTerminal pool; do not submit duplicate requests unless project details change or GeckoTerminal asks for a correction."
     },
     "coinGecko": {
       "status": "prepared-but-weak-readiness",

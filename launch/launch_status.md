@@ -41,6 +41,7 @@
 - Data platform submission package prepared for DEX Screener, GeckoTerminal, CoinGecko, and CoinMarketCap.
 - GeckoTerminal token info update runbook prepared.
 - GeckoTerminal token info update submitted on 2026-05-09 with `GCAgochina@outlook.com`; owner completed OTP verification in the browser and GeckoTerminal confirmed the form was submitted successfully.
+- GeckoTerminal token information update approved on 2026-05-11; the official website links to the GCA/USDT GeckoTerminal pool.
 - Official Telegram channel created at `https://t.me/gcagochinaofficial`.
 - Official Telegram channel photo updated and first public announcement posted on 2026-05-09.
 - First official Telegram announcement pinned on 2026-05-10.
@@ -53,8 +54,7 @@
 ## Needs Owner Input Or External Service
 
 - Wait for BaseScan review or an email reply to `cxy070800@gmail.com`.
-- Wait for GeckoTerminal review or an email reply to `GCAgochina@outlook.com`; GeckoTerminal showed a review window of up to 5 working days. Use the GCA/USDT pool in any correction or follow-up.
-- If BaseScan or GeckoTerminal asks for supply details during review, use the updated 40/60 allocation and both reserve transfer transactions.
+- If BaseScan asks for supply details during review, use the updated 40/60 allocation and both reserve transfer transactions.
 - Wait for stronger public activity and market volume before submitting CoinGecko or CoinMarketCap listing requests.
 - Expose the Web3 Radar access bridge through controlled HTTPS account UI before describing report credits, backtest quotas, ENTRY_READY reviews, or calculators as public self-service token-gated features.
 - Add public UI, spend/expiry rules, and support workflow before describing the 10,000 GCA holder bonus as claimable by users without operator help.
@@ -70,7 +70,7 @@
 ## Public Communication Rules
 
 - BaseScan source and ownership verification are complete. The public BaseScan token profile update has been submitted, but it is not complete until BaseScan accepts and publishes it.
-- GeckoTerminal token information update has been submitted, but it is not complete until GeckoTerminal accepts and publishes it.
+- GeckoTerminal token information update was approved on 2026-05-11. Keep linking users to the official GCA/USDT pool and do not submit duplicate updates unless project details change.
 - Internal engineering review is complete, but no third-party audit has been completed.
 - Audit quote requests have been submitted and then deferred by owner decision, but quote submission is not an audit and does not allow any public "audited" claim.
 - Current official Uniswap GCA/USDT liquidity is starter-depth only; trades can have high price impact and slippage.
