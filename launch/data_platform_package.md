@@ -41,6 +41,7 @@ This package prepares GCA information for token data and DEX discovery platforms
 - Token list JSON: `https://gcagochina.com/tokenlist.json`
 - Buy guide: `https://gcagochina.com/buy.html`
 - Official market page: `https://gcagochina.com/markets.html`
+- Supply and reserve page: `https://gcagochina.com/supply.html`
 - Member pre-registration: `https://gcagochina.com/members.html`
 - Utility thesis: `https://gcagochina.com/utility.html`
 - Logo SVG: `https://gcagochina.com/assets/gca-logo.svg`
@@ -70,6 +71,7 @@ Earlier small Base Mainnet buy/sell functional swap tests were observed on 2026-
 
 ## Supply And Reserve
 
+- Official supply page: `https://gcagochina.com/supply.html`
 - Supply disclosure updated on 2026-05-10 after the second reserve transfer. Use these values for any BaseScan, GeckoTerminal, CoinGecko, or CoinMarketCap follow-up correction.
 - Target public circulation, ecosystem, and liquidity allocation: 400,000,000 GCA / 40%
 - Owner-held reserve: 600,000,000 GCA / 60%
