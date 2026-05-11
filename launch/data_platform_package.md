@@ -40,6 +40,7 @@ This package prepares GCA information for token data and DEX discovery platforms
 - Machine-readable project JSON: `https://gcagochina.com/project.json`
 - Token list JSON: `https://gcagochina.com/tokenlist.json`
 - Buy guide: `https://gcagochina.com/buy.html`
+- Official market page: `https://gcagochina.com/markets.html`
 - Member pre-registration: `https://gcagochina.com/members.html`
 - Utility thesis: `https://gcagochina.com/utility.html`
 - Logo SVG: `https://gcagochina.com/assets/gca-logo.svg`
@@ -54,6 +55,7 @@ This package prepares GCA information for token data and DEX discovery platforms
 
 - DEX: Uniswap v4 on Base Mainnet
 - Pair: GCA/USDT
+- Official market page: `https://gcagochina.com/markets.html`
 - Pool address: `0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0`
 - Fee tier: 0.01%
 - Quote asset: Base USDT `0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2`
