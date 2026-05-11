@@ -16,6 +16,7 @@
   "blacklist": false,
   "adminControls": false,
   "website": "https://gcagochina.com/",
+  "statusPageUrl": "https://gcagochina.com/status.html",
   "buyGuideUrl": "https://gcagochina.com/buy.html",
   "memberPreRegistrationUrl": "https://gcagochina.com/members.html",
   "utilityThesisUrl": "https://gcagochina.com/utility.html",

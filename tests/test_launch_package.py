@@ -37,12 +37,14 @@ class LaunchPackageTests(unittest.TestCase):
     def test_public_site_uses_mainnet_identity(self):
         site = (ROOT / "site" / "index.html").read_text()
         buy = (ROOT / "site" / "buy.html").read_text()
+        status = (ROOT / "site" / "status.html").read_text()
         utility = (ROOT / "site" / "utility.html").read_text()
         members = (ROOT / "site" / "members.html").read_text()
         self.assertIn("Base Mainnet", site)
         self.assertIn("chainId 8453", site)
         self.assertIn(MAINNET_ADDRESS, site)
         self.assertIn(MAINNET_ADDRESS, buy)
+        self.assertIn(MAINNET_ADDRESS, status)
         self.assertIn(MAINNET_ADDRESS, utility)
         self.assertIn(MAINNET_ADDRESS, members)
         self.assertIn("Base Mainnet", members)
@@ -51,6 +53,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("https://basescan.org/address/", site)
         self.assertNotIn("sepolia.basescan.org", site)
         self.assertNotIn("sepolia.basescan.org", buy)
+        self.assertNotIn("sepolia.basescan.org", status)
 
     def test_public_site_sets_custom_domain(self):
         cname = (ROOT / "site" / "CNAME").read_text().strip()
@@ -60,6 +63,7 @@ class LaunchPackageTests(unittest.TestCase):
         site = (ROOT / "site" / "index.html").read_text()
         self.assertIn("BaseScan token profile update has been submitted", site)
         self.assertIn('href="buy.html"', site)
+        self.assertIn('href="status.html"', site)
         self.assertIn("Go China Access", site)
         self.assertIn("Go China AI Quant Access", site)
         self.assertIn("Go China macro narrative", site)
@@ -190,10 +194,45 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("does not guarantee price, liquidity, execution, or safety", buy)
         self.assertIn("If a wallet or DEX warning appears, stop and verify", buy)
 
+    def test_status_page_centralizes_public_verification(self):
+        status = (ROOT / "site" / "status.html").read_text()
+        index = (ROOT / "site" / "index.html").read_text()
+        buy = (ROOT / "site" / "buy.html").read_text()
+        members = (ROOT / "site" / "members.html").read_text()
+        utility = (ROOT / "site" / "utility.html").read_text()
+        whitepaper = (ROOT / "site" / "whitepaper.html").read_text()
+
+        self.assertIn("GCA Project Status", status)
+        self.assertIn("Base Mainnet / chainId 8453", status)
+        self.assertIn(MAINNET_ADDRESS, status)
+        self.assertIn(OFFICIAL_POOL_ADDRESS, status)
+        self.assertIn(BASE_USDT_ADDRESS, status)
+        self.assertIn(OFFICIAL_GECKOTERMINAL_URL, status)
+        self.assertIn(OFFICIAL_DEXSCREENER_URL, status)
+        self.assertIn(OFFICIAL_SWAP_URL_HTML, status)
+        self.assertIn("Approved 2026-05-11", status)
+        self.assertIn("Submitted, awaiting review", status)
+        self.assertIn("BaseScan public token profile publication", status)
+        self.assertIn("Wallet warning removal after Blockaid report", status)
+        self.assertIn("CoinGecko tracked listing", status)
+        self.assertIn("CoinMarketCap tracked listing", status)
+        self.assertIn("No third-party audit has been completed", status)
+        self.assertIn("600,000,000 GCA", status)
+        self.assertIn("normal owner-controlled wallet", status)
+        self.assertIn("Do not say the BaseScan token profile is approved", status)
+        self.assertIn("Do not say GCA is externally audited", status)
+        self.assertIn("Do not describe liquidity as deep", status)
+        self.assertIn("Do not claim price support", status)
+        self.assertNotIn(OLD_WETH_POOL_ADDRESS, status)
+
+        for page in (index, buy, members, utility, whitepaper):
+            self.assertIn('href="status.html"', page)
+
     def test_public_materials_avoid_investment_promises(self):
         paths = [
             ROOT / "site" / "index.html",
             ROOT / "site" / "buy.html",
+            ROOT / "site" / "status.html",
             ROOT / "site" / "members.html",
             ROOT / "site" / "utility.html",
             ROOT / "docs" / "whitepaper.md",
@@ -240,6 +279,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("If BaseScan Requests Changes", followup)
         self.assertIn("Reply Template", followup)
         self.assertIn("Do not describe the BaseScan token profile as complete", followup)
+        self.assertIn("https://gcagochina.com/status.html", followup)
         self.assertIn("Official GCA/USDT pool", followup)
         self.assertIn(OFFICIAL_GECKOTERMINAL_URL, followup)
 
@@ -368,6 +408,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("GeckoTerminal token info update runbook prepared", status)
         self.assertIn("GeckoTerminal token info update submitted on 2026-05-09", status)
         self.assertIn("GeckoTerminal token information update approved on 2026-05-11", status)
+        self.assertIn("Public project status page prepared", status)
         self.assertNotIn("Wait for GeckoTerminal review", status)
         self.assertIn(TELEGRAM_URL, status)
         self.assertIn("Telegram channel runbook prepared", status)
@@ -417,6 +458,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("CoinGecko", package)
         self.assertIn("CoinMarketCap", package)
         self.assertIn("https://gcagochina.com/", package)
+        self.assertIn("https://gcagochina.com/status.html", package)
         self.assertIn("https://gcagochina.com/buy.html", package)
         self.assertIn("https://gcagochina.com/members.html", package)
         self.assertIn("https://gcagochina.com/utility.html", package)
@@ -444,6 +486,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["chainId"], 8453)
         self.assertEqual(values["contractAddress"], MAINNET_ADDRESS)
         self.assertEqual(values["website"], "https://gcagochina.com/")
+        self.assertEqual(values["statusPageUrl"], "https://gcagochina.com/status.html")
         self.assertEqual(values["buyGuideUrl"], "https://gcagochina.com/buy.html")
         self.assertEqual(values["memberPreRegistrationUrl"], "https://gcagochina.com/members.html")
         self.assertEqual(values["utilityThesisUrl"], "https://gcagochina.com/utility.html")

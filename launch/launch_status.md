@@ -38,6 +38,7 @@
 - Member pre-registration page now has a configurable direct submission endpoint placeholder; collection remains copy/download/email until an approved HTTPS endpoint is configured.
 - Web3 Radar local access bridge paths are prepared: `GET /gca/member-access`, `POST /gca/pre-registrations`, `POST /gca/wallet-verifications`, `GET /gca/credit-ledger`, `GET /gca/member-ledger`, and `GET /gca/member-review`; the public static page is not connected to them yet.
 - Public utility thesis page prepared at `https://gcagochina.com/utility.html`.
+- Public project status page prepared at `https://gcagochina.com/status.html`.
 - Data platform submission package prepared for DEX Screener, GeckoTerminal, CoinGecko, and CoinMarketCap.
 - GeckoTerminal token info update runbook prepared.
 - GeckoTerminal token info update submitted on 2026-05-09 with `GCAgochina@outlook.com`; owner completed OTP verification in the browser and GeckoTerminal confirmed the form was submitted successfully.
