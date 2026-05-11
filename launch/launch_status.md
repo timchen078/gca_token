@@ -54,6 +54,7 @@
 - Official buy guide page prepared at `https://gcagochina.com/buy.html`.
 - Official market page prepared at `https://gcagochina.com/markets.html` to centralize the GCA/USDT pool, USDT contract, Uniswap, GeckoTerminal, DEX Screener, and market risk disclosures.
 - Official supply and reserve page prepared at `https://gcagochina.com/supply.html` to explain fixed total supply, 40/60 target allocation, reserve wallet evidence, and circulating supply cautions.
+- Official FAQ page prepared at `https://gcagochina.com/faq.html` to answer wallet import, price display, risk warning, pool mechanics, supply, reserve, audit, and public-claim questions.
 - Telegram replacement pinned buy announcement template prepared at `launch/telegram_pinned_buy_announcement.md`.
 
 ## Needs Owner Input Or External Service

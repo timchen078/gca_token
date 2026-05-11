@@ -42,6 +42,7 @@ This package prepares GCA information for token data and DEX discovery platforms
 - Buy guide: `https://gcagochina.com/buy.html`
 - Official market page: `https://gcagochina.com/markets.html`
 - Supply and reserve page: `https://gcagochina.com/supply.html`
+- FAQ: `https://gcagochina.com/faq.html`
 - Member pre-registration: `https://gcagochina.com/members.html`
 - Utility thesis: `https://gcagochina.com/utility.html`
 - Logo SVG: `https://gcagochina.com/assets/gca-logo.svg`
