@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>GCA Security | Contract Controls and Audit Status</title>
-    <meta name="description" content="Official GCA security page covering fixed supply, no minting, no tax, no blacklist, no admin controls, source verification, internal review, and third-party audit status.">
+    <title>GCA Risk | Public Risk Disclosures</title>
+    <meta name="description" content="Official GCA risk page covering early-stage status, starter liquidity, wallet warnings, audit limits, owner reserve custody, DEX execution risk, and public claim boundaries.">
     <style>
       :root {
         color-scheme: light;
@@ -191,10 +191,6 @@
         overflow-wrap: anywhere;
       }
 
-      .good {
-        color: var(--green);
-      }
-
       .pending {
         color: var(--gold);
       }
@@ -297,131 +293,97 @@
 
     <main class="shell">
       <section aria-labelledby="title">
-        <h1 id="title">GCA Security</h1>
-        <p class="lead">This page summarizes the verified contract controls and the current audit status for GCA. It is meant for users, wallets, moderators, and reviewers who need a concise security reference.</p>
+        <h1 id="title">GCA Risk Disclosures</h1>
+        <p class="lead">This page is the public risk reference for GCA. It does not tell anyone to buy or sell. It explains the known limitations around liquidity, wallet warnings, supply reporting, owner reserve custody, audits, utility readiness, and public communications.</p>
         <div class="actions">
-          <a class="button primary" href="https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6#code" target="_blank" rel="noreferrer">BaseScan Source</a>
-          <a class="button" href="status.html">Status</a>
-          <a class="button" href="faq.html">FAQ</a>
-          <a class="button" href="risk.html">Risk</a>
+          <a class="button primary" href="status.html">Project Status</a>
+          <a class="button" href="security.html">Security</a>
           <a class="button" href="supply.html">Supply</a>
-          <button class="button" type="button" id="copyContract">Copy Contract</button>
+          <a class="button" href="markets.html">Markets</a>
+          <a class="button" href="faq.html">FAQ</a>
+          <a class="button" href="listing-kit.html">Listing Kit</a>
         </div>
       </section>
 
-      <section class="facts" aria-label="Security facts">
+      <section class="facts" aria-label="Top risks">
         <div class="fact">
-          <span class="label">Source</span>
-          <span class="value good">Verified on BaseScan</span>
-        </div>
-        <div class="fact">
-          <span class="label">Supply</span>
-          <span class="value good">Fixed at 1B GCA</span>
+          <span class="label">Stage</span>
+          <span class="value pending">Early-stage</span>
         </div>
         <div class="fact">
-          <span class="label">Admin Role</span>
-          <span class="value good">None</span>
+          <span class="label">Liquidity</span>
+          <span class="value pending">Starter depth</span>
         </div>
         <div class="fact">
-          <span class="label">Third-Party Audit</span>
-          <span class="value pending">Not completed</span>
+          <span class="label">Audit</span>
+          <span class="value pending">No third-party audit</span>
+        </div>
+        <div class="fact">
+          <span class="label">Reserve</span>
+          <span class="value pending">Owner-controlled</span>
+        </div>
+        <div class="fact">
+          <span class="label">Contract</span>
+          <span class="value">0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6</span>
         </div>
       </section>
 
-      <section class="section panel" aria-labelledby="controlsTitle">
-        <h2 id="controlsTitle">Verified Contract Controls</h2>
-        <p class="note">The deployed GCA token is a fixed-supply ERC-20 contract on Base Mainnet. These controls are visible in the verified source and protected by repository tests.</p>
-        <div class="grid" style="margin-top: 16px;">
-          <div class="fact">
-            <span class="label">Minting</span>
-            <span class="value good">No mint function</span>
-            <p class="note">The full supply was created once in the constructor.</p>
-          </div>
-          <div class="fact">
-            <span class="label">Tax</span>
-            <span class="value good">No transfer tax</span>
-            <p class="note">Transfers do not route fees to a project wallet.</p>
-          </div>
-          <div class="fact">
-            <span class="label">Blacklist</span>
-            <span class="value good">No blacklist</span>
-            <p class="note">There is no token-level address blocking path.</p>
-          </div>
-          <div class="fact">
-            <span class="label">Admin</span>
-            <span class="value good">No owner role</span>
-            <p class="note">The token contract has no post-deployment admin account.</p>
-          </div>
-          <div class="fact">
-            <span class="label">Upgrade</span>
-            <span class="value good">No proxy</span>
-            <p class="note">There is no upgrade mechanism or proxy controller.</p>
-          </div>
-          <div class="fact">
-            <span class="label">Custody</span>
-            <span class="value good">No withdrawal path</span>
-            <p class="note">The token contract cannot custody or withdraw user funds.</p>
-          </div>
+      <section class="section two" aria-label="Trading risks">
+        <div class="panel">
+          <h2>Market and Liquidity</h2>
+          <p class="note">The official GCA/USDT pool on Base Mainnet has starter-depth liquidity only. Small trades can move price sharply, execution can vary, slippage can be high, and data platforms may show delayed or incomplete price data.</p>
+        </div>
+        <div class="panel">
+          <h2>Wallet and DEX Warnings</h2>
+          <p class="note">Wallets and DEX interfaces can show high-risk warnings for new, low-liquidity, or lightly indexed tokens. A Blockaid false-positive report was submitted on 2026-05-10, but report submission does not mean warnings have been removed.</p>
         </div>
       </section>
 
-      <section class="section two" aria-label="Review status">
+      <section class="section grid" aria-label="Project risks">
         <div class="panel">
-          <h2>Internal Review</h2>
-          <p class="note">An internal engineering review was completed on 2026-05-08. No critical, high, medium, or low severity contract issues were found in the reviewed fixed-supply token logic.</p>
-          <div class="list">
-            <div class="row"><span>Reviewed contract</span><strong>token/contracts/GCAToken.sol</strong></div>
-            <div class="row"><span>Compiler</span><strong>Solidity 0.8.24</strong></div>
-            <div class="row"><span>Source SHA-256</span><strong>6ba294fe0f6e20485f90297eede83ce620291ab525c92abb3bcf6547d1cf4cce</strong></div>
-          </div>
+          <h3>Audit Status</h3>
+          <p class="note">Internal engineering review is complete, but no independent third-party audit report exists. GCA should not be described as externally audited or audit-approved.</p>
         </div>
-
         <div class="panel">
-          <h2>Third-Party Audit</h2>
-          <p class="note">No independent third-party audit has been completed. Quote requests were submitted to QuillAudits, Hacken, and OpenZeppelin on 2026-05-10, then deferred by owner decision. GCA should not be described as externally audited, audit-approved, or third-party audited.</p>
-          <div class="list">
-            <div class="row"><span>Audit quote requests</span><strong>Submitted then deferred</strong></div>
-            <div class="row"><span>Paid external audit</span><strong>Not commissioned</strong></div>
-            <div class="row"><span>Public audit report</span><strong>Not available</strong></div>
-          </div>
+          <h3>Reserve Custody</h3>
+          <p class="note">The 600,000,000 GCA owner reserve is held in a disclosed owner-controlled wallet. It is not locked, vested, or multisig-controlled unless custody changes on-chain later.</p>
+        </div>
+        <div class="panel">
+          <h3>Utility Readiness</h3>
+          <p class="note">The Web3 Radar access bridge is still not public self-service from this website. Holder credits and GCA Member status are planned service-access records, not cash, tokens, income, reimbursement, or trading permission.</p>
         </div>
       </section>
 
-      <section class="section grid" aria-label="Residual risks">
+      <section class="section two" aria-label="Supply and platform risks">
         <div class="panel">
-          <h3>Operational Distribution</h3>
-          <p class="note">The contract can be simple while distribution remains operationally sensitive. Reserve custody, liquidity management, and public communications must stay transparent.</p>
+          <h2>Supply Reporting</h2>
+          <p class="note">The contract total supply is fixed at 1,000,000,000 GCA. The 40/60 allocation is a public reporting target. Data platforms can apply their own circulating-supply methods and may not immediately accept the reserve treatment.</p>
         </div>
         <div class="panel">
-          <h3>Liquidity Risk</h3>
-          <p class="note">The current official GCA/USDT pool has starter-depth liquidity. Slippage, price impact, and execution volatility can be high.</p>
-        </div>
-        <div class="panel">
-          <h3>Wallet Warnings</h3>
-          <p class="note">Risk-warning removal is controlled by wallet and security vendors. A false-positive report was submitted, but that does not prove removal.</p>
+          <h2>Listing and Metadata</h2>
+          <p class="note">GeckoTerminal token information was approved on 2026-05-11, while the BaseScan token profile is still awaiting review. CoinGecko and CoinMarketCap tracked listing requests are not submitted because current liquidity and public activity are still weak.</p>
         </div>
       </section>
 
-      <section class="section panel warning" aria-labelledby="claimsTitle">
-        <h2 id="claimsTitle">Safe Public Claims</h2>
+      <section class="section panel warning" aria-labelledby="prohibitedTitle">
+        <h2 id="prohibitedTitle">Do Not Use These Claims</h2>
         <ul>
-          <li>Safe to say: source verified, fixed supply, no mint function, no owner/admin role, no blacklist, no transfer tax, no proxy, and no withdrawal path.</li>
-          <li>Do not say: third-party audited, externally audited, audit-approved, locked reserve, deep liquidity, price support, or wallet-warning removed.</li>
+          <li>Do not claim price support, yield, redemption rights, guaranteed liquidity, deep liquidity, or investment outcomes.</li>
+          <li>Do not claim third-party audit completion, external audit approval, locked reserve, or multisig reserve control.</li>
+          <li>Do not claim wallet warnings are removed until the wallet or security vendor confirms it in practice.</li>
+          <li>Do not use artificial volume, self-trading, wash trading, or fake activity as a listing or trust strategy.</li>
           <li>Do not ask users for private keys, seed phrases, exchange API secrets, withdrawal permission, or custody of funds.</li>
         </ul>
+      </section>
+
+      <section class="section panel" aria-labelledby="saferTitle">
+        <h2 id="saferTitle">Safer Public Framing</h2>
+        <p class="note">Use verifiable facts: Base Mainnet chain ID 8453, the official token contract, source verification, fixed supply, no mint function, no token tax, official GCA/USDT pool, disclosed owner reserve wallet, GeckoTerminal approval, pending BaseScan profile, no third-party audit, and starter-depth liquidity.</p>
       </section>
     </main>
 
     <footer>
-      <div class="shell">GCA security page. Always verify Base Mainnet chain ID 8453, the contract source, and current status before interacting.</div>
+      <div class="shell">GCA risk page. Verify the official contract, pool, security page, and status page before interacting or sharing project information.</div>
     </footer>
-
-    <script>
-      const CONTRACT = "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6";
-
-      document.getElementById("copyContract").addEventListener("click", async () => {
-        await navigator.clipboard.writeText(CONTRACT);
-      });
-    </script>
   </body>
 </html>

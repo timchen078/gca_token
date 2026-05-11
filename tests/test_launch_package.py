@@ -25,6 +25,7 @@ OFFICIAL_SWAP_URL_HTML = OFFICIAL_SWAP_URL.replace("&", "&amp;")
 MARKET_PAGE_URL = "https://gcagochina.com/markets.html"
 SUPPLY_PAGE_URL = "https://gcagochina.com/supply.html"
 SECURITY_PAGE_URL = "https://gcagochina.com/security.html"
+RISK_PAGE_URL = "https://gcagochina.com/risk.html"
 FAQ_URL = "https://gcagochina.com/faq.html"
 OLD_WETH_POOL_ADDRESS = "0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff"
 
@@ -44,6 +45,7 @@ class LaunchPackageTests(unittest.TestCase):
         markets = (ROOT / "site" / "markets.html").read_text()
         supply = (ROOT / "site" / "supply.html").read_text()
         security = (ROOT / "site" / "security.html").read_text()
+        risk = (ROOT / "site" / "risk.html").read_text()
         faq = (ROOT / "site" / "faq.html").read_text()
         status = (ROOT / "site" / "status.html").read_text()
         listing = (ROOT / "site" / "listing-kit.html").read_text()
@@ -57,6 +59,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(MAINNET_ADDRESS, markets)
         self.assertIn(MAINNET_ADDRESS, supply)
         self.assertIn(MAINNET_ADDRESS, security)
+        self.assertIn(MAINNET_ADDRESS, risk)
         self.assertIn(MAINNET_ADDRESS, faq)
         self.assertIn(MAINNET_ADDRESS, status)
         self.assertIn(MAINNET_ADDRESS, listing)
@@ -72,6 +75,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertNotIn("sepolia.basescan.org", markets)
         self.assertNotIn("sepolia.basescan.org", supply)
         self.assertNotIn("sepolia.basescan.org", security)
+        self.assertNotIn("sepolia.basescan.org", risk)
         self.assertNotIn("sepolia.basescan.org", faq)
         self.assertNotIn("sepolia.basescan.org", status)
         self.assertNotIn("sepolia.basescan.org", listing)
@@ -96,6 +100,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("https://gcagochina.com/markets.html", sitemap)
         self.assertIn("https://gcagochina.com/supply.html", sitemap)
         self.assertIn("https://gcagochina.com/security.html", sitemap)
+        self.assertIn("https://gcagochina.com/risk.html", sitemap)
         self.assertIn("https://gcagochina.com/faq.html", sitemap)
         self.assertIn("https://gcagochina.com/whitepaper.html", sitemap)
 
@@ -106,6 +111,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn('href="markets.html"', site)
         self.assertIn('href="supply.html"', site)
         self.assertIn('href="security.html"', site)
+        self.assertIn('href="risk.html"', site)
         self.assertIn('href="faq.html"', site)
         self.assertIn('href="status.html"', site)
         self.assertIn('href="listing-kit.html"', site)
@@ -331,6 +337,49 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn('href="listing-kit.html"', security)
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, security)
 
+    def test_risk_page_centralizes_public_disclosures(self):
+        risk = (ROOT / "site" / "risk.html").read_text()
+
+        self.assertIn("GCA Risk Disclosures", risk)
+        self.assertIn("does not tell anyone to buy or sell", risk)
+        self.assertIn("Stage", risk)
+        self.assertIn("Early-stage", risk)
+        self.assertIn("Starter depth", risk)
+        self.assertIn("No third-party audit", risk)
+        self.assertIn("Owner-controlled", risk)
+        self.assertIn("Market and Liquidity", risk)
+        self.assertIn("starter-depth liquidity only", risk)
+        self.assertIn("slippage can be high", risk)
+        self.assertIn("Wallet and DEX Warnings", risk)
+        self.assertIn("Blockaid false-positive report was submitted on 2026-05-10", risk)
+        self.assertIn("report submission does not mean warnings have been removed", risk)
+        self.assertIn("Audit Status", risk)
+        self.assertIn("no independent third-party audit report exists", risk)
+        self.assertIn("Reserve Custody", risk)
+        self.assertIn("600,000,000 GCA owner reserve", risk)
+        self.assertIn("not locked, vested, or multisig-controlled", risk)
+        self.assertIn("Utility Readiness", risk)
+        self.assertIn("not public self-service", risk)
+        self.assertIn("Supply Reporting", risk)
+        self.assertIn("1,000,000,000 GCA", risk)
+        self.assertIn("40/60 allocation", risk)
+        self.assertIn("Listing and Metadata", risk)
+        self.assertIn("GeckoTerminal token information was approved on 2026-05-11", risk)
+        self.assertIn("BaseScan token profile is still awaiting review", risk)
+        self.assertIn("Do not claim price support", risk)
+        self.assertIn("Do not claim third-party audit completion", risk)
+        self.assertIn("Do not claim wallet warnings are removed", risk)
+        self.assertIn("Do not use artificial volume, self-trading, wash trading, or fake activity", risk)
+        self.assertIn("Safer Public Framing", risk)
+        self.assertIn("Base Mainnet chain ID 8453", risk)
+        self.assertIn("official GCA/USDT pool", risk)
+        self.assertIn('href="status.html"', risk)
+        self.assertIn('href="security.html"', risk)
+        self.assertIn('href="supply.html"', risk)
+        self.assertIn('href="markets.html"', risk)
+        self.assertIn('href="faq.html"', risk)
+        self.assertNotIn(OLD_WETH_POOL_ADDRESS, risk)
+
     def test_faq_page_answers_common_user_questions_safely(self):
         faq = (ROOT / "site" / "faq.html").read_text()
 
@@ -380,6 +429,7 @@ class LaunchPackageTests(unittest.TestCase):
         markets = (ROOT / "site" / "markets.html").read_text()
         supply = (ROOT / "site" / "supply.html").read_text()
         security = (ROOT / "site" / "security.html").read_text()
+        risk = (ROOT / "site" / "risk.html").read_text()
         faq = (ROOT / "site" / "faq.html").read_text()
 
         self.assertIn("GCA Project Status", status)
@@ -405,12 +455,13 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Do not claim price support", status)
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, status)
 
-        for page in (index, buy, markets, supply, security, faq, members, utility, whitepaper):
+        for page in (index, buy, markets, supply, security, risk, faq, members, utility, whitepaper):
             self.assertIn('href="status.html"', page)
             self.assertIn('href="listing-kit.html"', page)
             self.assertIn('href="markets.html"', page)
             self.assertIn('href="supply.html"', page)
             self.assertIn('href="security.html"', page)
+            self.assertIn('href="risk.html"', page)
             self.assertIn('href="faq.html"', page)
 
     def test_listing_kit_and_project_json_are_copyable(self):
@@ -428,6 +479,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(SUPPLY_PAGE_URL, kit)
         self.assertIn("Security page", kit)
         self.assertIn(SECURITY_PAGE_URL, kit)
+        self.assertIn("Risk page", kit)
+        self.assertIn(RISK_PAGE_URL, kit)
         self.assertIn("FAQ", kit)
         self.assertIn(FAQ_URL, kit)
         self.assertIn("Token name", kit)
@@ -458,6 +511,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(project["marketPageUrl"], MARKET_PAGE_URL)
         self.assertEqual(project["supplyPageUrl"], SUPPLY_PAGE_URL)
         self.assertEqual(project["securityPageUrl"], SECURITY_PAGE_URL)
+        self.assertEqual(project["riskPageUrl"], RISK_PAGE_URL)
         self.assertEqual(project["faqUrl"], FAQ_URL)
         self.assertEqual(project["market"]["officialPair"], "GCA/USDT")
         self.assertEqual(project["market"]["poolAddress"], OFFICIAL_POOL_ADDRESS)
@@ -493,6 +547,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(extensions["marketPage"], MARKET_PAGE_URL)
         self.assertEqual(extensions["supplyPage"], SUPPLY_PAGE_URL)
         self.assertEqual(extensions["securityPage"], SECURITY_PAGE_URL)
+        self.assertEqual(extensions["riskPage"], RISK_PAGE_URL)
         self.assertEqual(extensions["faq"], FAQ_URL)
         self.assertEqual(extensions["officialTelegram"], TELEGRAM_URL)
         self.assertEqual(extensions["geckoTerminal"], OFFICIAL_GECKOTERMINAL_URL)
@@ -512,6 +567,7 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "site" / "markets.html",
             ROOT / "site" / "supply.html",
             ROOT / "site" / "security.html",
+            ROOT / "site" / "risk.html",
             ROOT / "site" / "faq.html",
             ROOT / "site" / "status.html",
             ROOT / "site" / "listing-kit.html",
@@ -631,6 +687,7 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "site" / "markets.html",
             ROOT / "site" / "supply.html",
             ROOT / "site" / "security.html",
+            ROOT / "site" / "risk.html",
             ROOT / "site" / "faq.html",
             ROOT / "site" / "status.html",
             ROOT / "site" / "listing-kit.html",
@@ -715,6 +772,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Official security page prepared", status)
         self.assertIn("https://gcagochina.com/security.html", status)
         self.assertIn("no mint, no tax, no blacklist, no admin controls", status)
+        self.assertIn("Official risk disclosure page prepared", status)
+        self.assertIn("https://gcagochina.com/risk.html", status)
+        self.assertIn("starter-liquidity, wallet-warning, audit, reserve-custody", status)
         self.assertIn("Official FAQ page prepared", status)
         self.assertIn("https://gcagochina.com/faq.html", status)
         self.assertIn("wallet import, price display, risk warning", status)
@@ -769,6 +829,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("https://gcagochina.com/markets.html", package)
         self.assertIn("https://gcagochina.com/supply.html", package)
         self.assertIn("https://gcagochina.com/security.html", package)
+        self.assertIn("https://gcagochina.com/risk.html", package)
         self.assertIn("https://gcagochina.com/faq.html", package)
         self.assertIn("https://gcagochina.com/members.html", package)
         self.assertIn("https://gcagochina.com/utility.html", package)
@@ -804,6 +865,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["marketPageUrl"], MARKET_PAGE_URL)
         self.assertEqual(values["supplyPageUrl"], SUPPLY_PAGE_URL)
         self.assertEqual(values["securityPageUrl"], SECURITY_PAGE_URL)
+        self.assertEqual(values["riskPageUrl"], RISK_PAGE_URL)
         self.assertEqual(values["faqUrl"], FAQ_URL)
         self.assertEqual(values["memberPreRegistrationUrl"], "https://gcagochina.com/members.html")
         self.assertEqual(values["utilityThesisUrl"], "https://gcagochina.com/utility.html")
