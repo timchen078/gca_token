@@ -1,0 +1,5 @@
+Contact: mailto:GCAgochina@outlook.com
+Preferred-Languages: en, zh
+Canonical: https://gcagochina.com/.well-known/security.txt
+Policy: https://gcagochina.com/security.html
+Expires: 2027-05-12T00:00:00+07:00

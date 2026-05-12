@@ -58,6 +58,14 @@
   </url>
   <url>
     <loc>https://gcagochina.com/tokenlist.json</loc>
-    <lastmod>2026-05-11</lastmod>
+    <lastmod>2026-05-12</lastmod>
+  </url>
+  <url>
+    <loc>https://gcagochina.com/.well-known/gca-token.json</loc>
+    <lastmod>2026-05-12</lastmod>
+  </url>
+  <url>
+    <loc>https://gcagochina.com/.well-known/security.txt</loc>
+    <lastmod>2026-05-12</lastmod>
   </url>
 </urlset>

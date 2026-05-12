@@ -1,0 +1,116 @@
+{
+  "schema": "https://gcagochina.com/.well-known/gca-token.json",
+  "lastUpdated": "2026-05-12",
+  "projectName": "GCA",
+  "tokenName": "GCA",
+  "tokenSymbol": "GCA",
+  "conceptExpansion": "Go China Access",
+  "network": {
+    "name": "Base Mainnet",
+    "chainId": 8453
+  },
+  "token": {
+    "standard": "ERC-20",
+    "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+    "decimals": 18,
+    "totalSupply": "1000000000",
+    "mintingSupportedAfterDeployment": false,
+    "taxes": false,
+    "blacklist": false,
+    "adminControls": false
+  },
+  "officialUrls": {
+    "website": "https://gcagochina.com/",
+    "verify": "https://gcagochina.com/verify.html",
+    "status": "https://gcagochina.com/status.html",
+    "listingKit": "https://gcagochina.com/listing-kit.html",
+    "projectJson": "https://gcagochina.com/project.json",
+    "tokenList": "https://gcagochina.com/tokenlist.json",
+    "wellKnownTokenIdentity": "https://gcagochina.com/.well-known/gca-token.json",
+    "securityContact": "https://gcagochina.com/.well-known/security.txt",
+    "buyGuide": "https://gcagochina.com/buy.html",
+    "marketPage": "https://gcagochina.com/markets.html",
+    "supplyPage": "https://gcagochina.com/supply.html",
+    "securityPage": "https://gcagochina.com/security.html",
+    "riskPage": "https://gcagochina.com/risk.html",
+    "faq": "https://gcagochina.com/faq.html",
+    "memberPreRegistration": "https://gcagochina.com/members.html",
+    "utilityThesis": "https://gcagochina.com/utility.html",
+    "whitepaper": "https://gcagochina.com/whitepaper.html",
+    "logoSvg": "https://gcagochina.com/assets/gca-logo.svg",
+    "logoPng": "https://gcagochina.com/assets/gca-logo.png",
+    "baseScanContract": "https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+    "telegram": "https://t.me/gcagochinaofficial"
+  },
+  "market": {
+    "officialPair": "GCA/USDT",
+    "dex": "Uniswap v4",
+    "network": "Base Mainnet",
+    "feeTier": "0.01%",
+    "poolAddress": "0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "quoteAsset": "USDT",
+    "quoteAssetAddress": "0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2",
+    "geckoTerminal": "https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "dexScreener": "https://dexscreener.com/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "uniswapPool": "https://app.uniswap.org/explore/pools/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "officialSwap": "https://app.uniswap.org/swap?chain=base&inputCurrency=0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2&outputCurrency=0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+    "liquidityDepthNote": "Starter-depth only; trades can have high price impact and slippage."
+  },
+  "supplyDisclosure": {
+    "targetPublicAllocation": "400000000",
+    "targetPublicAllocationPercent": 40,
+    "ownerHeldReserve": "600000000",
+    "ownerHeldReservePercent": 60,
+    "ownerReserveWallet": "0x5e8F84748612B913aAcC937492AC25dc5630E246",
+    "ownerReserveCustodyNote": "Normal owner-controlled wallet; not locked, vested, or multisig-controlled.",
+    "ownerReserveTransferTxs": [
+      "0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67",
+      "0xfffb674448abdbd3af45bb0a30c48e5fbb0e675542b971f031381254b5dc5317"
+    ]
+  },
+  "platformStatus": {
+    "baseScanSource": "verified",
+    "baseScanOwnership": "verified",
+    "baseScanTokenProfile": "submitted-awaiting-review",
+    "geckoTerminalTokenInfo": "approved-2026-05-11",
+    "blockaidFalsePositiveReport": "submitted-2026-05-10-warning-removal-not-confirmed",
+    "coinGeckoTrackedListing": "not-submitted",
+    "coinMarketCapTrackedListing": "not-submitted",
+    "thirdPartyAudit": "not-completed"
+  },
+  "securityFacts": {
+    "sourceVerifiedOnBaseScan": true,
+    "fixedSupply": true,
+    "postDeploymentMintFunction": false,
+    "ownerOrAdminRole": false,
+    "proxyOrUpgradePath": false,
+    "blacklistFunction": false,
+    "pauseFunction": false,
+    "transferTaxOrHiddenFee": false,
+    "custodyOrWithdrawalPath": false,
+    "thirdPartyAuditCompleted": false
+  },
+  "publicClaimBoundaries": {
+    "safeClaims": [
+      "Base Mainnet token contract is deployed and source-verified.",
+      "GCA has fixed total supply and no post-deployment mint function.",
+      "GeckoTerminal token information was approved on 2026-05-11.",
+      "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool.",
+      "Current liquidity is starter-depth only.",
+      "No third-party audit has been completed."
+    ],
+    "doNotClaim": [
+      "BaseScan token profile approval before publication",
+      "Blockaid or MetaMask warning removal before visible confirmation",
+      "CoinGecko or CoinMarketCap listing before publication",
+      "locked reserve before on-chain custody changes",
+      "external audit completion before an independent report is published",
+      "deep liquidity, price backing, or return promises"
+    ]
+  },
+  "officialContact": {
+    "dataPlatformEmail": "GCAgochina@outlook.com",
+    "baseScanSubmissionEmail": "cxy070800@gmail.com",
+    "telegram": "https://t.me/gcagochinaofficial"
+  }
+}

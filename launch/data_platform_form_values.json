@@ -21,6 +21,8 @@
   "listingKitUrl": "https://gcagochina.com/listing-kit.html",
   "projectJsonUrl": "https://gcagochina.com/project.json",
   "tokenListUrl": "https://gcagochina.com/tokenlist.json",
+  "wellKnownTokenIdentityUrl": "https://gcagochina.com/.well-known/gca-token.json",
+  "securityContactUrl": "https://gcagochina.com/.well-known/security.txt",
   "buyGuideUrl": "https://gcagochina.com/buy.html",
   "marketPageUrl": "https://gcagochina.com/markets.html",
   "supplyPageUrl": "https://gcagochina.com/supply.html",

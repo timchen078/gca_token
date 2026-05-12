@@ -40,6 +40,8 @@ This package prepares GCA information for token data and DEX discovery platforms
 - Listing kit: `https://gcagochina.com/listing-kit.html`
 - Machine-readable project JSON: `https://gcagochina.com/project.json`
 - Token list JSON: `https://gcagochina.com/tokenlist.json`
+- Well-known token identity JSON: `https://gcagochina.com/.well-known/gca-token.json`
+- Security contact file: `https://gcagochina.com/.well-known/security.txt`
 - Internal external review tracker: `launch/external_review_followup_tracker.md`
 - Buy guide: `https://gcagochina.com/buy.html`
 - Official market page: `https://gcagochina.com/markets.html`

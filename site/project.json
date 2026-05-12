@@ -18,6 +18,8 @@
   "statusPageUrl": "https://gcagochina.com/status.html",
   "listingKitUrl": "https://gcagochina.com/listing-kit.html",
   "tokenListUrl": "https://gcagochina.com/tokenlist.json",
+  "wellKnownTokenIdentityUrl": "https://gcagochina.com/.well-known/gca-token.json",
+  "securityContactUrl": "https://gcagochina.com/.well-known/security.txt",
   "buyGuideUrl": "https://gcagochina.com/buy.html",
   "marketPageUrl": "https://gcagochina.com/markets.html",
   "supplyPageUrl": "https://gcagochina.com/supply.html",
@@ -74,5 +76,5 @@
   },
   "shortDescription": "GCA, short for Go China Access, is a fixed-supply ERC-20 token on Base Mainnet. It is a concept-stage community direction focused on the Go China macro narrative, bilingual Web3 education, public market research, and planned access to non-custodial quant risk tools.",
   "longDescription": "GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stands for Go China Access, a concept-stage community direction focused on the Go China macro narrative, bilingual Web3 education, public market research, and planned access to non-custodial quant risk tools. The intended Web3 Radar bridge is to make GCA an access and membership layer for liquidation replay reports, risk-warning credits, realistic backtests, ENTRY_READY signal review, position-size calculators, subscription discounts, and risk-control training. The contract created 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls. The official public pool is the Base Mainnet Uniswap v4 GCA/USDT pool, and the project has a disclosed owner-held reserve wallet. The project is early-stage, has no completed third-party audit, and should not be described as externally audited, price-backed, yield-bearing, or backed by guaranteed liquidity.",
-  "lastUpdated": "2026-05-11"
+  "lastUpdated": "2026-05-12"
 }

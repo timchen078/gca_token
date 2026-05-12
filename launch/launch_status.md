@@ -42,6 +42,7 @@
 - Public project status page prepared at `https://gcagochina.com/status.html`.
 - Public listing kit and machine-readable project JSON prepared at `https://gcagochina.com/listing-kit.html` and `https://gcagochina.com/project.json`.
 - Official token list JSON prepared at `https://gcagochina.com/tokenlist.json`.
+- Public well-known token identity JSON and security contact files prepared at `https://gcagochina.com/.well-known/gca-token.json` and `https://gcagochina.com/.well-known/security.txt`.
 - Data platform submission package prepared for DEX Screener, GeckoTerminal, CoinGecko, and CoinMarketCap.
 - External review follow-up tracker prepared at `launch/external_review_followup_tracker.md`.
 - GeckoTerminal token info update runbook prepared.

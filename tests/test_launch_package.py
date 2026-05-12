@@ -29,6 +29,8 @@ SECURITY_PAGE_URL = "https://gcagochina.com/security.html"
 RISK_PAGE_URL = "https://gcagochina.com/risk.html"
 FAQ_URL = "https://gcagochina.com/faq.html"
 OLD_WETH_POOL_ADDRESS = "0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff"
+WELL_KNOWN_TOKEN_URL = "https://gcagochina.com/.well-known/gca-token.json"
+SECURITY_CONTACT_URL = "https://gcagochina.com/.well-known/security.txt"
 
 
 class LaunchPackageTests(unittest.TestCase):
@@ -92,8 +94,11 @@ class LaunchPackageTests(unittest.TestCase):
         robots = (ROOT / "site" / "robots.txt").read_text()
         sitemap = (ROOT / "site" / "sitemap.xml").read_text()
 
+        self.assertTrue((ROOT / "site" / ".nojekyll").exists())
         self.assertIn("User-agent: *", robots)
         self.assertIn("Allow: /", robots)
+        self.assertIn("Allow: /.well-known/gca-token.json", robots)
+        self.assertIn("Allow: /.well-known/security.txt", robots)
         self.assertIn("Sitemap: https://gcagochina.com/sitemap.xml", robots)
         self.assertIn("https://gcagochina.com/", sitemap)
         self.assertIn(VERIFY_PAGE_URL, sitemap)
@@ -108,6 +113,53 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("https://gcagochina.com/risk.html", sitemap)
         self.assertIn("https://gcagochina.com/faq.html", sitemap)
         self.assertIn("https://gcagochina.com/whitepaper.html", sitemap)
+        self.assertIn(WELL_KNOWN_TOKEN_URL, sitemap)
+        self.assertIn(SECURITY_CONTACT_URL, sitemap)
+
+    def test_well_known_identity_files_are_public_and_conservative(self):
+        identity = json.loads((ROOT / "site" / ".well-known" / "gca-token.json").read_text())
+        security = (ROOT / "site" / ".well-known" / "security.txt").read_text()
+
+        self.assertEqual(identity["schema"], WELL_KNOWN_TOKEN_URL)
+        self.assertEqual(identity["lastUpdated"], "2026-05-12")
+        self.assertEqual(identity["network"]["name"], "Base Mainnet")
+        self.assertEqual(identity["network"]["chainId"], 8453)
+        self.assertEqual(identity["token"]["contractAddress"], MAINNET_ADDRESS)
+        self.assertEqual(identity["token"]["decimals"], 18)
+        self.assertEqual(identity["token"]["totalSupply"], "1000000000")
+        self.assertFalse(identity["token"]["mintingSupportedAfterDeployment"])
+        self.assertFalse(identity["token"]["taxes"])
+        self.assertFalse(identity["token"]["blacklist"])
+        self.assertFalse(identity["token"]["adminControls"])
+        self.assertEqual(identity["officialUrls"]["verify"], VERIFY_PAGE_URL)
+        self.assertEqual(identity["officialUrls"]["wellKnownTokenIdentity"], WELL_KNOWN_TOKEN_URL)
+        self.assertEqual(identity["officialUrls"]["securityContact"], SECURITY_CONTACT_URL)
+        self.assertEqual(identity["officialUrls"]["telegram"], TELEGRAM_URL)
+        self.assertEqual(identity["market"]["officialPair"], "GCA/USDT")
+        self.assertEqual(identity["market"]["poolAddress"], OFFICIAL_POOL_ADDRESS)
+        self.assertEqual(identity["market"]["quoteAssetAddress"], BASE_USDT_ADDRESS)
+        self.assertEqual(identity["market"]["geckoTerminal"], OFFICIAL_GECKOTERMINAL_URL)
+        self.assertEqual(identity["market"]["dexScreener"], OFFICIAL_DEXSCREENER_URL)
+        self.assertEqual(identity["market"]["officialSwap"], OFFICIAL_SWAP_URL)
+        self.assertEqual(identity["supplyDisclosure"]["ownerReserveWallet"], RESERVE_WALLET)
+        self.assertEqual(identity["supplyDisclosure"]["ownerReserveTransferTxs"], [RESERVE_TX, SECOND_RESERVE_TX])
+        self.assertEqual(identity["platformStatus"]["baseScanTokenProfile"], "submitted-awaiting-review")
+        self.assertEqual(identity["platformStatus"]["geckoTerminalTokenInfo"], "approved-2026-05-11")
+        self.assertEqual(identity["platformStatus"]["thirdPartyAudit"], "not-completed")
+        self.assertTrue(identity["securityFacts"]["sourceVerifiedOnBaseScan"])
+        self.assertTrue(identity["securityFacts"]["fixedSupply"])
+        self.assertFalse(identity["securityFacts"]["postDeploymentMintFunction"])
+        self.assertFalse(identity["securityFacts"]["ownerOrAdminRole"])
+        self.assertFalse(identity["securityFacts"]["thirdPartyAuditCompleted"])
+        self.assertIn("No third-party audit has been completed.", identity["publicClaimBoundaries"]["safeClaims"])
+        self.assertIn("deep liquidity, price backing, or return promises", identity["publicClaimBoundaries"]["doNotClaim"])
+        self.assertNotIn(OLD_WETH_POOL_ADDRESS, json.dumps(identity))
+
+        self.assertIn("Contact: mailto:GCAgochina@outlook.com", security)
+        self.assertIn(f"Canonical: {SECURITY_CONTACT_URL}", security)
+        self.assertIn("Policy: https://gcagochina.com/security.html", security)
+        self.assertIn("Preferred-Languages: en, zh", security)
+        self.assertIn("Expires: 2027-05-12T00:00:00+07:00", security)
 
     def test_public_site_discloses_current_operational_status(self):
         site = (ROOT / "site" / "index.html").read_text()
@@ -262,6 +314,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("private keys, seed phrases, exchange API secrets", verify)
         self.assertIn('href="project.json"', verify)
         self.assertIn('href="tokenlist.json"', verify)
+        self.assertIn('href=".well-known/gca-token.json"', verify)
+        self.assertIn("well-known token identity", verify)
         self.assertIn('href="status.html"', verify)
         self.assertIn('href="listing-kit.html"', verify)
         self.assertIn("copyContract", verify)
@@ -522,6 +576,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("project.json", kit)
         self.assertIn("Token List JSON", kit)
         self.assertIn("tokenlist.json", kit)
+        self.assertIn("Well-Known JSON", kit)
+        self.assertIn(WELL_KNOWN_TOKEN_URL, kit)
+        self.assertIn(SECURITY_CONTACT_URL, kit)
         self.assertIn("Market page", kit)
         self.assertIn(MARKET_PAGE_URL, kit)
         self.assertIn("Verify page", kit)
@@ -560,6 +617,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(project["verifyUrl"], VERIFY_PAGE_URL)
         self.assertEqual(project["listingKitUrl"], "https://gcagochina.com/listing-kit.html")
         self.assertEqual(project["tokenListUrl"], "https://gcagochina.com/tokenlist.json")
+        self.assertEqual(project["wellKnownTokenIdentityUrl"], WELL_KNOWN_TOKEN_URL)
+        self.assertEqual(project["securityContactUrl"], SECURITY_CONTACT_URL)
+        self.assertEqual(project["lastUpdated"], "2026-05-12")
         self.assertEqual(project["marketPageUrl"], MARKET_PAGE_URL)
         self.assertEqual(project["supplyPageUrl"], SUPPLY_PAGE_URL)
         self.assertEqual(project["securityPageUrl"], SECURITY_PAGE_URL)
@@ -579,6 +639,7 @@ class LaunchPackageTests(unittest.TestCase):
     def test_token_list_json_is_official_and_conservative(self):
         tokenlist = json.loads((ROOT / "site" / "tokenlist.json").read_text())
         self.assertEqual(tokenlist["name"], "GCA Official Token List")
+        self.assertEqual(tokenlist["timestamp"], "2026-05-12T00:00:00+07:00")
         self.assertEqual(tokenlist["version"], {"major": 1, "minor": 0, "patch": 0})
         self.assertIn("base", tokenlist["keywords"])
         self.assertEqual(len(tokenlist["tokens"]), 1)
@@ -597,6 +658,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(extensions["statusPage"], "https://gcagochina.com/status.html")
         self.assertEqual(extensions["listingKit"], "https://gcagochina.com/listing-kit.html")
         self.assertEqual(extensions["projectJson"], "https://gcagochina.com/project.json")
+        self.assertEqual(extensions["wellKnownTokenIdentity"], WELL_KNOWN_TOKEN_URL)
+        self.assertEqual(extensions["securityContact"], SECURITY_CONTACT_URL)
         self.assertEqual(extensions["marketPage"], MARKET_PAGE_URL)
         self.assertEqual(extensions["supplyPage"], SUPPLY_PAGE_URL)
         self.assertEqual(extensions["securityPage"], SECURITY_PAGE_URL)
@@ -627,6 +690,8 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "site" / "listing-kit.html",
             ROOT / "site" / "members.html",
             ROOT / "site" / "utility.html",
+            ROOT / "site" / ".well-known" / "gca-token.json",
+            ROOT / "site" / ".well-known" / "security.txt",
             ROOT / "docs" / "whitepaper.md",
             ROOT / "docs" / "mainnet_public_profile.md",
             ROOT / "launch" / "basescan_token_submission.md",
@@ -817,6 +882,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Public project status page prepared", status)
         self.assertIn("Public listing kit and machine-readable project JSON prepared", status)
         self.assertIn("Official token list JSON prepared", status)
+        self.assertIn("Public well-known token identity JSON and security contact files prepared", status)
+        self.assertIn(WELL_KNOWN_TOKEN_URL, status)
+        self.assertIn(SECURITY_CONTACT_URL, status)
         self.assertNotIn("Wait for GeckoTerminal review", status)
         self.assertIn(TELEGRAM_URL, status)
         self.assertIn("Telegram channel runbook prepared", status)
@@ -887,6 +955,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("https://gcagochina.com/listing-kit.html", package)
         self.assertIn("https://gcagochina.com/project.json", package)
         self.assertIn("https://gcagochina.com/tokenlist.json", package)
+        self.assertIn(WELL_KNOWN_TOKEN_URL, package)
+        self.assertIn(SECURITY_CONTACT_URL, package)
         self.assertIn("launch/external_review_followup_tracker.md", package)
         self.assertIn("External Review Follow-Up Tracker", package)
         self.assertIn("https://gcagochina.com/buy.html", package)
@@ -926,6 +996,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["listingKitUrl"], "https://gcagochina.com/listing-kit.html")
         self.assertEqual(values["projectJsonUrl"], "https://gcagochina.com/project.json")
         self.assertEqual(values["tokenListUrl"], "https://gcagochina.com/tokenlist.json")
+        self.assertEqual(values["wellKnownTokenIdentityUrl"], WELL_KNOWN_TOKEN_URL)
+        self.assertEqual(values["securityContactUrl"], SECURITY_CONTACT_URL)
         self.assertEqual(values["buyGuideUrl"], "https://gcagochina.com/buy.html")
         self.assertEqual(values["marketPageUrl"], MARKET_PAGE_URL)
         self.assertEqual(values["supplyPageUrl"], SUPPLY_PAGE_URL)
