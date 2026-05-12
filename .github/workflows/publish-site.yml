@@ -20,12 +20,28 @@ jobs:
   publish:
     name: Publish site directory to gh-pages
     runs-on: ubuntu-latest
+    timeout-minutes: 20
 
     steps:
       - name: Check out main
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install validation dependencies
+        shell: bash
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-token-dev.txt
+
+      - name: Run full validation suite
+        shell: bash
+        run: python -m unittest -v
 
       - name: Publish site to gh-pages
         shell: bash
