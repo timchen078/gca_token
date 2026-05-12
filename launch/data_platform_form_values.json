@@ -27,6 +27,8 @@
   "securityContactUrl": "https://gcagochina.com/.well-known/security.txt",
   "buyGuideUrl": "https://gcagochina.com/buy.html",
   "marketPageUrl": "https://gcagochina.com/markets.html",
+  "marketQualityPageUrl": "https://gcagochina.com/market-quality.html",
+  "marketQualityUrl": "https://gcagochina.com/market-quality.json",
   "supplyPageUrl": "https://gcagochina.com/supply.html",
   "securityPageUrl": "https://gcagochina.com/security.html",
   "riskPageUrl": "https://gcagochina.com/risk.html",
@@ -115,6 +117,12 @@
     "uniswapPoolUrl": "https://app.uniswap.org/explore/pools/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
     "officialSwapUrl": "https://app.uniswap.org/swap?chain=base&inputCurrency=0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2&outputCurrency=0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
     "liquidityDepthNote": "Starter-depth only; trades can have high price impact and slippage."
+  },
+  "marketQuality": {
+    "status": "early-stage-market-quality-plan",
+    "pageUrl": "https://gcagochina.com/market-quality.html",
+    "url": "https://gcagochina.com/market-quality.json",
+    "nextAction": "Use the market quality page before presenting market-growth updates; do not use artificial activity, self-trading, wash trading, or misleading volume."
   },
   "supplyDisclosure": {
     "lastUpdatedDate": "2026-05-10",

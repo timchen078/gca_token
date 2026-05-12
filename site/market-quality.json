@@ -1,0 +1,113 @@
+{
+  "schema": "https://gcagochina.com/market-quality.json",
+  "pageUrl": "https://gcagochina.com/market-quality.html",
+  "lastUpdated": "2026-05-12",
+  "projectName": "GCA",
+  "tokenSymbol": "GCA",
+  "network": "Base Mainnet",
+  "chainId": 8453,
+  "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+  "status": "early-stage-market-quality-plan",
+  "officialMarket": {
+    "pair": "GCA/USDT",
+    "dex": "Uniswap v4",
+    "poolAddress": "0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "quoteAsset": "USDT",
+    "quoteAssetAddress": "0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2",
+    "geckoTerminal": "https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "dexScreener": "https://dexscreener.com/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0"
+  },
+  "principles": [
+    "Use the GCA/USDT pool as the single public market route.",
+    "Improve market quality through transparent liquidity, useful product delivery, and legitimate public participation.",
+    "Disclose starter-depth liquidity, owner reserve custody, external review status, and third-party audit status plainly.",
+    "Do not use artificial activity, self-trading, wash trading, misleading volume, or paid listing promises as a trust strategy."
+  ],
+  "currentState": {
+    "liquidityDepth": "starter-depth-only",
+    "geckoTerminalTokenInfo": "approved-2026-05-11",
+    "baseScanTokenProfile": "submitted-awaiting-review",
+    "blockaidWarningRemoval": "not-confirmed",
+    "coinGeckoTrackedListing": "defer",
+    "coinMarketCapTrackedListing": "defer",
+    "thirdPartyAudit": "not-completed",
+    "memberUtilityAccess": "rules-published-public-claim-not-connected"
+  },
+  "legitimateActions": [
+    {
+      "id": "metadata-consistency",
+      "label": "Keep public metadata consistent",
+      "status": "active",
+      "actions": [
+        "Keep website, verify page, token list, well-known identity, listing kit, market page, and readiness pages aligned.",
+        "Keep all public routes pointed to the GCA/USDT pool.",
+        "Do not promote the old GCA/WETH pilot pool as the current market route."
+      ]
+    },
+    {
+      "id": "transparent-liquidity",
+      "label": "Deepen liquidity transparently",
+      "status": "owner-controlled",
+      "actions": [
+        "Add liquidity only when the owner intentionally funds both sides of the pool.",
+        "Record pool, position, and transaction details before presenting the change publicly.",
+        "Continue to warn that starter-depth or early liquidity can have high price impact and slippage."
+      ]
+    },
+    {
+      "id": "utility-delivery",
+      "label": "Deliver usable utility",
+      "status": "in-progress",
+      "actions": [
+        "Connect the GCA member and 100-credit workflows to controlled HTTPS account UI.",
+        "Keep holder credits scoped to reports, backtests, risk warnings, ENTRY_READY review, calculators, or education access.",
+        "Do not describe credits or member status as cash, tokens, income, reimbursement, or trading permission."
+      ]
+    },
+    {
+      "id": "community-trust",
+      "label": "Build public trust",
+      "status": "in-progress",
+      "actions": [
+        "Keep Telegram, website, whitepaper, logo, and public disclosures live.",
+        "Publish conservative updates when BaseScan, Blockaid, wallet, or data platform status changes.",
+        "Answer common pool, reserve, and wallet-warning questions with official links."
+      ]
+    },
+    {
+      "id": "review-readiness",
+      "label": "Prepare for platform review",
+      "status": "deferred-for-tracked-listing",
+      "actions": [
+        "Wait for BaseScan token profile publication before tracked listing outreach.",
+        "Wait for stronger legitimate public activity and exchange volume before CoinGecko or CoinMarketCap submission.",
+        "Use the listing readiness page before any external listing or exchange outreach."
+      ]
+    }
+  ],
+  "doNotUse": [
+    "artificial activity",
+    "self-trading",
+    "wash trading",
+    "misleading volume",
+    "paid services claiming certain exchange or data-platform listing",
+    "claims of mature liquidity before market data supports it",
+    "claims of external audit completion before an independent report is published"
+  ],
+  "watchMetrics": [
+    "official GCA/USDT pool depth",
+    "unique holder growth",
+    "public utility registrations",
+    "Telegram activity quality",
+    "website and metadata uptime",
+    "BaseScan, Blockaid, wallet, and data platform review status",
+    "support response quality"
+  ],
+  "nextActions": [
+    "Keep current public metadata synchronized.",
+    "Publish any future liquidity changes with exact pool and transaction references.",
+    "Connect controlled HTTPS account UI for member and credit workflows.",
+    "Wait for stronger legitimate activity before CoinGecko or CoinMarketCap submission.",
+    "Revisit third-party audit only when trust, partner, listing, or liquidity requirements justify it."
+  ]
+}

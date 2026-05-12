@@ -10,6 +10,8 @@ Use this file as the single operating checklist for external review, wallet-warn
 - Official website: `https://gcagochina.com/`
 - Official verify page: `https://gcagochina.com/verify.html`
 - Official market page: `https://gcagochina.com/markets.html`
+- Market quality page: `https://gcagochina.com/market-quality.html`
+- Market quality JSON: `https://gcagochina.com/market-quality.json`
 - Listing readiness page: `https://gcagochina.com/listing-readiness.html`
 - Listing readiness gate: `https://gcagochina.com/listing-readiness.json`
 - Official Telegram: `https://t.me/gcagochinaofficial`
@@ -41,6 +43,7 @@ Use this file as the single operating checklist for external review, wallet-warn
 2. If the Blockaid warning is still visible, prepare a short follow-up using the template below and attach the existing buy/sell test evidence.
 3. Recheck GeckoTerminal, DEX Screener, and BaseScan links for broken URLs or stale pool references.
 4. Re-evaluate CoinGecko and CoinMarketCap readiness only after there is stronger public activity and market depth.
+5. Use the market quality page before presenting market-growth updates; do not use artificial activity, self-trading, wash trading, or misleading volume.
 
 ## Safe Public Claims
 
@@ -118,3 +121,10 @@ Do not submit CoinGecko or CoinMarketCap yet unless these conditions are materia
 - Liquidity and public trading activity are stronger than current starter-depth conditions.
 - Public holder activity is not based on self-trading, wash trading, or fake volume.
 - The project can still describe audit, reserve, utility, and liquidity status conservatively.
+
+## Market Quality Plan
+
+Public page: `https://gcagochina.com/market-quality.html`
+Machine-readable JSON: `https://gcagochina.com/market-quality.json`
+
+Use this page for legitimate market-growth communication. The approved public direction is transparent liquidity, useful product delivery, consistent metadata, community support, and conservative external-review updates. Do not use artificial activity, self-trading, wash trading, misleading volume, or paid listing promises as a trust strategy.

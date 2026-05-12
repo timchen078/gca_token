@@ -8,6 +8,8 @@
     "website": "https://gcagochina.com/",
     "verifyUrl": "https://gcagochina.com/verify.html",
     "marketPageUrl": "https://gcagochina.com/markets.html",
+    "marketQualityPageUrl": "https://gcagochina.com/market-quality.html",
+    "marketQualityUrl": "https://gcagochina.com/market-quality.json",
     "listingReadinessPageUrl": "https://gcagochina.com/listing-readiness.html",
     "listingReadinessUrl": "https://gcagochina.com/listing-readiness.json",
     "telegramUrl": "https://t.me/gcagochinaofficial",
@@ -78,6 +80,18 @@
       "stronger liquidity and public trading activity than current starter-depth conditions",
       "public holder activity not based on self-trading, wash trading, or fake volume",
       "conservative public audit, reserve, utility, and liquidity disclosures"
+    ]
+  }
+  ,
+  "marketQualityPlan": {
+    "status": "early-stage-market-quality-plan",
+    "publicPageUrl": "https://gcagochina.com/market-quality.html",
+    "publicUrl": "https://gcagochina.com/market-quality.json",
+    "doNotUse": [
+      "artificial activity",
+      "self-trading",
+      "wash trading",
+      "misleading volume"
     ]
   }
 }

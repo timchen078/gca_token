@@ -12,6 +12,8 @@ This package prepares GCA information for token data and DEX discovery platforms
 - GeckoTerminal token info update: approved on 2026-05-11
 - Listing readiness page: `https://gcagochina.com/listing-readiness.html`
 - Listing readiness JSON: `https://gcagochina.com/listing-readiness.json`
+- Market quality page: `https://gcagochina.com/market-quality.html`
+- Market quality JSON: `https://gcagochina.com/market-quality.json`
 - Liquidity: official starter Uniswap v4 GCA/USDT pool exists on Base Mainnet
 - Social links: official Telegram is live at `https://t.me/gcagochinaofficial`; the frozen X account is not used
 - Third-party audit: not completed; quote requests were submitted on 2026-05-10 and then deferred by owner decision
@@ -49,6 +51,8 @@ This package prepares GCA information for token data and DEX discovery platforms
 - Internal external review tracker: `launch/external_review_followup_tracker.md`
 - Buy guide: `https://gcagochina.com/buy.html`
 - Official market page: `https://gcagochina.com/markets.html`
+- Market quality page: `https://gcagochina.com/market-quality.html`
+- Market quality JSON: `https://gcagochina.com/market-quality.json`
 - Supply and reserve page: `https://gcagochina.com/supply.html`
 - Security page: `https://gcagochina.com/security.html`
 - Risk page: `https://gcagochina.com/risk.html`
@@ -79,6 +83,8 @@ This package prepares GCA information for token data and DEX discovery platforms
 Current liquidity is starter-depth only. It should not be described as deep, stable, guaranteed, or sufficient for large trades.
 
 Earlier small Base Mainnet buy/sell functional swap tests were observed on 2026-05-10 and recorded in `launch/swap_test_evidence.md`. Treat these only as functional swap evidence, not as proof of organic demand or strong liquidity. Public market links should now point to the GCA/USDT pool above.
+
+Use `https://gcagochina.com/market-quality.html` and `https://gcagochina.com/market-quality.json` before presenting market-growth updates. The public path is transparent liquidity, useful product delivery, consistent metadata, and legitimate public participation. Do not use artificial activity, self-trading, wash trading, misleading volume, or paid listing promises as a trust strategy.
 
 ## External Review Follow-Up Tracker
 

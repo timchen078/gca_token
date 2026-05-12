@@ -24,6 +24,8 @@ OFFICIAL_DEXSCREENER_URL = f"https://dexscreener.com/base/{OFFICIAL_POOL_ADDRESS
 MEMBER_PROGRAM_URL = "https://gcagochina.com/member-program.json"
 LISTING_READINESS_PAGE_URL = "https://gcagochina.com/listing-readiness.html"
 LISTING_READINESS_URL = "https://gcagochina.com/listing-readiness.json"
+MARKET_QUALITY_PAGE_URL = "https://gcagochina.com/market-quality.html"
+MARKET_QUALITY_URL = "https://gcagochina.com/market-quality.json"
 FORBIDDEN_PUBLIC_CLAIM_PATTERNS = [
     r"\bguaranteed returns?\b",
     r"\bprofit sharing\b",
@@ -98,6 +100,7 @@ def validate_verify(text: str) -> None:
 def validate_markets(text: str) -> None:
     label = "/markets.html"
     assert_contains(text, "Official GCA Markets", label)
+    assert_contains(text, "Market Quality", label)
     assert_contains(text, BASE_USDT_ADDRESS, label)
     assert_contains(text, OFFICIAL_GECKOTERMINAL_URL, label)
     assert_current_pool_text(text, label)
@@ -135,6 +138,10 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong listingReadinessPageUrl")
     if payload.get("listingReadinessUrl") != LISTING_READINESS_URL:
         raise SiteCheckError(f"{label}: wrong listingReadinessUrl")
+    if payload.get("marketQualityPageUrl") != MARKET_QUALITY_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong marketQualityPageUrl")
+    if payload.get("marketQualityUrl") != MARKET_QUALITY_URL:
+        raise SiteCheckError(f"{label}: wrong marketQualityUrl")
     if market.get("officialPair") != "GCA/USDT":
         raise SiteCheckError(f"{label}: wrong officialPair")
     if market.get("poolAddress") != OFFICIAL_POOL_ADDRESS:
@@ -149,6 +156,8 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: unexpected member program status")
     if payload.get("listingReadiness", {}).get("status") != "not-ready":
         raise SiteCheckError(f"{label}: unexpected listing readiness status")
+    if payload.get("marketQuality", {}).get("status") != "early-stage-market-quality-plan":
+        raise SiteCheckError(f"{label}: unexpected market quality status")
     assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
 
 
@@ -177,6 +186,10 @@ def validate_tokenlist_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong listingReadinessPage")
     if extensions.get("listingReadiness") != LISTING_READINESS_URL:
         raise SiteCheckError(f"{label}: wrong listingReadiness")
+    if extensions.get("marketQualityPage") != MARKET_QUALITY_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong marketQualityPage")
+    if extensions.get("marketQuality") != MARKET_QUALITY_URL:
+        raise SiteCheckError(f"{label}: wrong marketQuality")
     assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
 
 
@@ -199,6 +212,10 @@ def validate_well_known_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong listingReadinessPage")
     if urls.get("listingReadiness") != LISTING_READINESS_URL:
         raise SiteCheckError(f"{label}: wrong listingReadiness")
+    if urls.get("marketQualityPage") != MARKET_QUALITY_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong marketQualityPage")
+    if urls.get("marketQuality") != MARKET_QUALITY_URL:
+        raise SiteCheckError(f"{label}: wrong marketQuality")
     if market.get("officialPair") != "GCA/USDT":
         raise SiteCheckError(f"{label}: wrong officialPair")
     if market.get("poolAddress") != OFFICIAL_POOL_ADDRESS:
@@ -272,6 +289,10 @@ def validate_listing_readiness_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong poolAddress")
     if market.get("quoteAssetAddress") != BASE_USDT_ADDRESS:
         raise SiteCheckError(f"{label}: wrong quoteAssetAddress")
+    if payload.get("canonicalLinks", {}).get("marketQualityPage") != MARKET_QUALITY_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong marketQualityPage")
+    if payload.get("canonicalLinks", {}).get("marketQuality") != MARKET_QUALITY_URL:
+        raise SiteCheckError(f"{label}: wrong marketQuality")
     if platforms.get("geckoTerminal", {}).get("status") != "approved":
         raise SiteCheckError(f"{label}: wrong GeckoTerminal status")
     if platforms.get("coinGecko", {}).get("status") != "defer":
@@ -285,6 +306,57 @@ def validate_listing_readiness_json(text: str) -> None:
     if "CoinMarketCap tracked listing request" not in payload.get("notReadyFor", []):
         raise SiteCheckError(f"{label}: missing CoinMarketCap defer boundary")
     assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
+
+
+def validate_market_quality_json(text: str) -> None:
+    label = "/market-quality.json"
+    payload = load_json(text, label)
+    market = payload.get("officialMarket", {})
+    current = payload.get("currentState", {})
+
+    if payload.get("schema") != MARKET_QUALITY_URL:
+        raise SiteCheckError(f"{label}: wrong schema")
+    if payload.get("pageUrl") != MARKET_QUALITY_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong pageUrl")
+    if payload.get("status") != "early-stage-market-quality-plan":
+        raise SiteCheckError(f"{label}: wrong status")
+    if payload.get("chainId") != 8453:
+        raise SiteCheckError(f"{label}: wrong chainId")
+    if payload.get("contractAddress") != MAINNET_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong contractAddress")
+    if market.get("pair") != "GCA/USDT":
+        raise SiteCheckError(f"{label}: wrong pair")
+    if market.get("poolAddress") != OFFICIAL_POOL_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong poolAddress")
+    if market.get("quoteAssetAddress") != BASE_USDT_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong quoteAssetAddress")
+    if current.get("liquidityDepth") != "starter-depth-only":
+        raise SiteCheckError(f"{label}: wrong liquidity depth")
+    if current.get("coinGeckoTrackedListing") != "defer":
+        raise SiteCheckError(f"{label}: wrong CoinGecko status")
+    if current.get("coinMarketCapTrackedListing") != "defer":
+        raise SiteCheckError(f"{label}: wrong CoinMarketCap status")
+    if "artificial activity" not in payload.get("doNotUse", []):
+        raise SiteCheckError(f"{label}: missing artificial activity boundary")
+    if "wash trading" not in payload.get("doNotUse", []):
+        raise SiteCheckError(f"{label}: missing wash trading boundary")
+    assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
+
+
+def validate_market_quality_page(text: str) -> None:
+    label = "/market-quality.html"
+    assert_contains(text, "GCA Market Quality Plan", label)
+    assert_contains(text, "transparent liquidity", label)
+    assert_contains(text, "legitimate public participation", label)
+    assert_contains(text, "Starter-depth only", label)
+    assert_contains(text, "Market Quality JSON", label)
+    assert_contains(text, "Do not use artificial activity", label)
+    assert_contains(text, "Self-trading or wash trading", label)
+    assert_contains(text, "Misleading volume", label)
+    assert_contains(text, "CoinGecko or CoinMarketCap submission", label)
+    assert_contains(text, OFFICIAL_DEXSCREENER_URL, label)
+    assert_contains(text, OFFICIAL_GECKOTERMINAL_URL, label)
+    assert_current_pool_text(text, label)
 
 
 def validate_listing_readiness_page(text: str) -> None:
@@ -315,6 +387,8 @@ def validate_sitemap(text: str) -> None:
     for expected in (
         "https://gcagochina.com/verify.html",
         "https://gcagochina.com/markets.html",
+        "https://gcagochina.com/market-quality.html",
+        "https://gcagochina.com/market-quality.json",
         "https://gcagochina.com/member-program.json",
         "https://gcagochina.com/listing-readiness.html",
         "https://gcagochina.com/listing-readiness.json",
@@ -330,6 +404,8 @@ def validate_robots(text: str) -> None:
     label = "/robots.txt"
     assert_contains(text, "Allow: /listing-readiness.html", label)
     assert_contains(text, "Allow: /listing-readiness.json", label)
+    assert_contains(text, "Allow: /market-quality.html", label)
+    assert_contains(text, "Allow: /market-quality.json", label)
     assert_contains(text, "Allow: /member-program.json", label)
     assert_contains(text, "Allow: /.well-known/gca-token.json", label)
     assert_contains(text, "Allow: /.well-known/security.txt", label)
@@ -340,6 +416,8 @@ CHECKS: list[EndpointCheck] = [
     ("/", validate_root),
     ("/verify.html", validate_verify),
     ("/markets.html", validate_markets),
+    ("/market-quality.html", validate_market_quality_page),
+    ("/market-quality.json", validate_market_quality_json),
     ("/members.html", validate_members),
     ("/member-program.json", validate_member_program_json),
     ("/listing-readiness.html", validate_listing_readiness_page),

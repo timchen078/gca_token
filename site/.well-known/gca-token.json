@@ -32,6 +32,8 @@
     "securityContact": "https://gcagochina.com/.well-known/security.txt",
     "buyGuide": "https://gcagochina.com/buy.html",
     "marketPage": "https://gcagochina.com/markets.html",
+    "marketQualityPage": "https://gcagochina.com/market-quality.html",
+    "marketQuality": "https://gcagochina.com/market-quality.json",
     "supplyPage": "https://gcagochina.com/supply.html",
     "securityPage": "https://gcagochina.com/security.html",
     "riskPage": "https://gcagochina.com/risk.html",

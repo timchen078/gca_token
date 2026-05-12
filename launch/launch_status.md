@@ -62,6 +62,7 @@
 - Blockaid follow-up context updated to use the current GCA/USDT pool while keeping the old GCA/WETH transactions as historical functional evidence only.
 - Official buy guide page prepared at `https://gcagochina.com/buy.html`.
 - Official market page prepared at `https://gcagochina.com/markets.html` to centralize the GCA/USDT pool, USDT contract, Uniswap, GeckoTerminal, DEX Screener, and market risk disclosures.
+- Official market quality page and JSON prepared at `https://gcagochina.com/market-quality.html` and `https://gcagochina.com/market-quality.json` to define legitimate market-growth actions and reject artificial activity, self-trading, wash trading, and misleading volume.
 - Official supply and reserve page prepared at `https://gcagochina.com/supply.html` to explain fixed total supply, 40/60 target allocation, reserve wallet evidence, and circulating supply cautions.
 - Official security page prepared at `https://gcagochina.com/security.html` to summarize fixed supply, no mint, no tax, no blacklist, no admin controls, source verification, internal review, residual risks, and third-party audit status.
 - Official risk disclosure page prepared at `https://gcagochina.com/risk.html` to centralize early-stage, starter-liquidity, wallet-warning, audit, reserve-custody, utility-readiness, listing, and public-claim risks.
@@ -74,6 +75,7 @@
 - Use `launch/external_review_followup_tracker.md` for BaseScan, Blockaid, GeckoTerminal, DEX Screener, CoinGecko, CoinMarketCap, and audit follow-up status before sending any new platform request.
 - If BaseScan asks for supply details during review, use the updated 40/60 allocation and both reserve transfer transactions.
 - Wait for stronger public activity and market volume before submitting CoinGecko or CoinMarketCap listing requests.
+- Use `https://gcagochina.com/market-quality.html` before presenting market-growth updates or new liquidity actions.
 - Use `https://gcagochina.com/listing-readiness.html` and `https://gcagochina.com/listing-readiness.json` before any tracked-listing or exchange outreach; the current status is `not-ready`.
 - Expose the Web3 Radar access bridge through controlled HTTPS account UI before describing report credits, backtest quotas, ENTRY_READY reviews, or calculators as public self-service token-gated features.
 - Connect controlled HTTPS account UI before describing the 10,000 GCA holder bonus as claimable by users without operator help.

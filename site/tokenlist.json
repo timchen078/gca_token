@@ -32,6 +32,8 @@
         "wellKnownTokenIdentity": "https://gcagochina.com/.well-known/gca-token.json",
         "securityContact": "https://gcagochina.com/.well-known/security.txt",
         "marketPage": "https://gcagochina.com/markets.html",
+        "marketQualityPage": "https://gcagochina.com/market-quality.html",
+        "marketQuality": "https://gcagochina.com/market-quality.json",
         "supplyPage": "https://gcagochina.com/supply.html",
         "securityPage": "https://gcagochina.com/security.html",
         "riskPage": "https://gcagochina.com/risk.html",
