@@ -1,0 +1,80 @@
+{
+  "projectName": "GCA",
+  "tokenName": "GCA",
+  "tokenSymbol": "GCA",
+  "conceptExpansion": "Go China Access",
+  "network": "Base Mainnet",
+  "chainId": 8453,
+  "tokenStandard": "ERC-20",
+  "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+  "decimals": 18,
+  "totalSupply": "1000000000",
+  "mintingSupportedAfterDeployment": false,
+  "taxes": false,
+  "blacklist": false,
+  "adminControls": false,
+  "website": "https://gcagochina.com/",
+  "verifyUrl": "https://gcagochina.com/verify.html",
+  "statusPageUrl": "https://gcagochina.com/status.html",
+  "listingKitUrl": "https://gcagochina.com/listing-kit.html",
+  "tokenListUrl": "https://gcagochina.com/tokenlist.json",
+  "wellKnownTokenIdentityUrl": "https://gcagochina.com/.well-known/gca-token.json",
+  "securityContactUrl": "https://gcagochina.com/.well-known/security.txt",
+  "buyGuideUrl": "https://gcagochina.com/buy.html",
+  "marketPageUrl": "https://gcagochina.com/markets.html",
+  "supplyPageUrl": "https://gcagochina.com/supply.html",
+  "securityPageUrl": "https://gcagochina.com/security.html",
+  "riskPageUrl": "https://gcagochina.com/risk.html",
+  "faqUrl": "https://gcagochina.com/faq.html",
+  "memberPreRegistrationUrl": "https://gcagochina.com/members.html",
+  "utilityThesisUrl": "https://gcagochina.com/utility.html",
+  "whitepaperUrl": "https://gcagochina.com/whitepaper.html",
+  "logoSvgUrl": "https://gcagochina.com/assets/gca-logo.svg",
+  "logoPngUrl": "https://gcagochina.com/assets/gca-logo.png",
+  "baseScanContractUrl": "https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+  "officialEmail": "GCAgochina@outlook.com",
+  "officialSocialLinks": [
+    {
+      "platform": "Telegram",
+      "url": "https://t.me/gcagochinaofficial"
+    }
+  ],
+  "market": {
+    "officialPair": "GCA/USDT",
+    "dex": "Uniswap v4",
+    "network": "Base Mainnet",
+    "feeTier": "0.01%",
+    "poolAddress": "0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "quoteAsset": "USDT",
+    "quoteAssetAddress": "0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2",
+    "geckoTerminalUrl": "https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "dexScreenerUrl": "https://dexscreener.com/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "uniswapPoolUrl": "https://app.uniswap.org/explore/pools/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "officialSwapUrl": "https://app.uniswap.org/swap?chain=base&inputCurrency=0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2&outputCurrency=0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+    "liquidityDepthNote": "Starter-depth only; trades can have high price impact and slippage."
+  },
+  "supplyDisclosure": {
+    "targetPublicAllocation": "400000000",
+    "targetPublicAllocationPercent": 40,
+    "ownerHeldReserve": "600000000",
+    "ownerHeldReservePercent": 60,
+    "ownerReserveWallet": "0x5e8F84748612B913aAcC937492AC25dc5630E246",
+    "ownerReserveCustodyNote": "Normal owner-controlled wallet; not locked, vested, or multisig-controlled.",
+    "ownerReserveTransferTxs": [
+      "0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67",
+      "0xfffb674448abdbd3af45bb0a30c48e5fbb0e675542b971f031381254b5dc5317"
+    ]
+  },
+  "platformStatus": {
+    "baseScanSource": "verified",
+    "baseScanOwnership": "verified",
+    "baseScanTokenProfile": "submitted-awaiting-review",
+    "geckoTerminalTokenInfo": "approved-2026-05-11",
+    "coinGeckoTrackedListing": "not-submitted",
+    "coinMarketCapTrackedListing": "not-submitted",
+    "thirdPartyAudit": "not-completed"
+  },
+  "shortDescription": "GCA, short for Go China Access, is a fixed-supply ERC-20 token on Base Mainnet. It is a concept-stage community direction focused on the Go China macro narrative, bilingual Web3 education, public market research, and planned access to non-custodial quant risk tools.",
+  "longDescription": "GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stands for Go China Access, a concept-stage community direction focused on the Go China macro narrative, bilingual Web3 education, public market research, and planned access to non-custodial quant risk tools. The intended Web3 Radar bridge is to make GCA an access and membership layer for liquidation replay reports, risk-warning credits, realistic backtests, ENTRY_READY signal review, position-size calculators, subscription discounts, and risk-control training. The contract created 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls. The official public pool is the Base Mainnet Uniswap v4 GCA/USDT pool, and the project has a disclosed owner-held reserve wallet. The project is early-stage, has no completed third-party audit, and should not be described as externally audited, price-backed, yield-bearing, or backed by guaranteed liquidity.",
+  "lastUpdated": "2026-05-12"
+}

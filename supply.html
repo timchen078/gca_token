@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GCA Supply | Allocation and Reserve</title>
+    <meta name="description" content="Official GCA supply page explaining total supply, target public allocation, owner reserve wallet, reserve transfer transactions, and circulating supply cautions.">
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #111318;
+        --muted: #5f6773;
+        --line: #dfe3ea;
+        --panel: #ffffff;
+        --soft: #f6f7f9;
+        --red: #d71920;
+        --blue: #0052ff;
+        --green: #087f5b;
+        --gold: #8a650d;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: #fbfbfc;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.5;
+      }
+
+      a {
+        color: var(--blue);
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .shell {
+        width: min(1080px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      header {
+        border-bottom: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.94);
+        position: sticky;
+        top: 0;
+        z-index: 2;
+      }
+
+      nav {
+        min-height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--ink);
+        font-weight: 850;
+      }
+
+      .brand img {
+        width: 32px;
+        height: 32px;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 18px;
+        align-items: center;
+        font-size: 14px;
+      }
+
+      main {
+        padding: 42px 0 56px;
+      }
+
+      h1 {
+        margin: 0;
+        max-width: 860px;
+        font-size: clamp(40px, 6vw, 72px);
+        line-height: 1;
+        letter-spacing: 0;
+      }
+
+      h2 {
+        margin: 0 0 14px;
+        font-size: 24px;
+      }
+
+      h3 {
+        margin: 0 0 8px;
+        font-size: 17px;
+      }
+
+      .lead {
+        max-width: 820px;
+        margin: 18px 0 0;
+        color: var(--muted);
+        font-size: 18px;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 24px;
+      }
+
+      .button {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        color: var(--ink);
+        min-height: 42px;
+        padding: 10px 14px;
+        font: inherit;
+        font-weight: 750;
+        cursor: pointer;
+      }
+
+      .button.primary {
+        border-color: var(--red);
+        background: var(--red);
+        color: #fff;
+      }
+
+      .section {
+        margin-top: 30px;
+      }
+
+      .panel,
+      .fact {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+      }
+
+      .panel {
+        padding: 24px;
+      }
+
+      .facts,
+      .grid,
+      .two {
+        display: grid;
+        gap: 14px;
+      }
+
+      .facts {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        margin-top: 22px;
+      }
+
+      .grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .two {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .fact {
+        min-height: 100px;
+        padding: 15px;
+      }
+
+      .label {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 750;
+        text-transform: uppercase;
+      }
+
+      .value {
+        display: block;
+        margin-top: 8px;
+        font-size: 16px;
+        font-weight: 850;
+        overflow-wrap: anywhere;
+      }
+
+      .good {
+        color: var(--green);
+      }
+
+      .pending {
+        color: var(--gold);
+      }
+
+      .note,
+      li {
+        color: var(--muted);
+      }
+
+      .note {
+        margin: 0;
+      }
+
+      .list {
+        display: grid;
+        gap: 10px;
+        margin-top: 12px;
+      }
+
+      .row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 12px;
+        align-items: start;
+        border-top: 1px solid var(--line);
+        padding-top: 10px;
+      }
+
+      .row strong {
+        white-space: nowrap;
+        overflow-wrap: anywhere;
+      }
+
+      .warning {
+        border-color: #ecd28c;
+        background: #fff9e8;
+      }
+
+      code {
+        padding: 2px 5px;
+        border-radius: 6px;
+        background: var(--soft);
+        overflow-wrap: anywhere;
+      }
+
+      footer {
+        border-top: 1px solid var(--line);
+        padding: 24px 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      @media (max-width: 860px) {
+        .facts,
+        .grid,
+        .two {
+          grid-template-columns: 1fr;
+        }
+
+        nav {
+          align-items: flex-start;
+          flex-direction: column;
+          padding: 14px 0;
+        }
+
+        .nav-links {
+          flex-wrap: wrap;
+        }
+
+        .row {
+          grid-template-columns: 1fr;
+        }
+
+        .row strong {
+          white-space: normal;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav class="shell" aria-label="Primary">
+        <a class="brand" href="index.html" aria-label="GCA home">
+          <img src="assets/gca-logo.svg" alt="GCA logo">
+          <span>GCA</span>
+        </a>
+        <div class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="verify.html">Verify</a>
+          <a href="buy.html">Buy Guide</a>
+          <a href="markets.html">Markets</a>
+          <a href="supply.html">Supply</a>
+          <a href="security.html">Security</a>
+          <a href="risk.html">Risk</a>
+          <a href="faq.html">FAQ</a>
+          <a href="status.html">Status</a>
+          <a href="listing-kit.html">Listing Kit</a>
+          <a href="members.html">Members</a>
+          <a href="utility.html">Utility Thesis</a>
+          <a href="whitepaper.html">Whitepaper</a>
+        </div>
+      </nav>
+    </header>
+
+    <main class="shell">
+      <section aria-labelledby="title">
+        <h1 id="title">GCA Supply and Reserve</h1>
+        <p class="lead">This page explains the public supply view for GCA. The smart contract total supply is fixed at 1,000,000,000 GCA. The public reporting target is 400,000,000 GCA for public circulation, ecosystem, and liquidity, with 600,000,000 GCA held in a disclosed owner reserve wallet.</p>
+        <div class="actions">
+          <a class="button" href="verify.html">Verify GCA</a>
+          <a class="button primary" href="https://basescan.org/token/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6" target="_blank" rel="noreferrer">BaseScan Token</a>
+          <a class="button" href="status.html">Project Status</a>
+          <a class="button" href="markets.html">Markets</a>
+          <a class="button" href="faq.html">FAQ</a>
+          <a class="button" href="risk.html">Risk</a>
+          <button class="button" type="button" id="copyReserve">Copy Reserve Wallet</button>
+          <button class="button" type="button" id="copyContract">Copy Contract</button>
+        </div>
+      </section>
+
+      <section class="facts" aria-label="Supply facts">
+        <div class="fact">
+          <span class="label">Total Supply</span>
+          <span class="value">1,000,000,000 GCA</span>
+        </div>
+        <div class="fact">
+          <span class="label">Public Target</span>
+          <span class="value">400,000,000 GCA / 40%</span>
+        </div>
+        <div class="fact">
+          <span class="label">Owner Reserve</span>
+          <span class="value">600,000,000 GCA / 60%</span>
+        </div>
+        <div class="fact">
+          <span class="label">Minting</span>
+          <span class="value good">No post-deploy mint</span>
+        </div>
+      </section>
+
+      <section class="section two" aria-label="Supply explanation">
+        <div class="panel">
+          <h2>Why Explorers Show 1B</h2>
+          <p class="note">Block explorers read the ERC-20 totalSupply value from the contract. Because GCA minted the full fixed supply once at deployment, the on-chain total supply is always 1,000,000,000 GCA. Moving tokens between wallets or into liquidity does not reduce totalSupply.</p>
+        </div>
+        <div class="panel">
+          <h2>What 40/60 Means</h2>
+          <p class="note">The 40/60 split is a public allocation target, not a different token supply. The 600,000,000 GCA reserve is separated into a disclosed owner wallet so users and data providers can inspect it directly. The remaining 400,000,000 GCA is the target pool for public circulation, ecosystem, community, liquidity, and future distribution.</p>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="reserveTitle">
+        <h2 id="reserveTitle">Owner Reserve Evidence</h2>
+        <p class="note">The reserve wallet is publicly disclosed. It is a normal owner-controlled wallet and should not be described as locked, vested, or multisig-controlled unless custody changes on-chain.</p>
+        <div class="list">
+          <div class="row"><span>Reserve wallet</span><strong>0x5e8F84748612B913aAcC937492AC25dc5630E246</strong></div>
+          <div class="row"><span>Reserve amount after second transfer</span><strong>600,000,000 GCA</strong></div>
+          <div class="row"><span><a href="https://basescan.org/tx/0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67" target="_blank" rel="noreferrer">First reserve transfer</a></span><strong>300,000,000 GCA</strong></div>
+          <div class="row"><span><a href="https://basescan.org/tx/0xfffb674448abdbd3af45bb0a30c48e5fbb0e675542b971f031381254b5dc5317" target="_blank" rel="noreferrer">Second reserve transfer</a></span><strong>300,000,000 GCA</strong></div>
+          <div class="row"><span>Custody status</span><strong>Owner wallet, not locked</strong></div>
+        </div>
+      </section>
+
+      <section class="section grid" aria-label="Data provider notes">
+        <div class="panel">
+          <h3>For Wallets</h3>
+          <p class="note">Wallets may show token balances and total supply based on on-chain data. They may not calculate circulating supply or reserve treatment.</p>
+        </div>
+        <div class="panel">
+          <h3>For Data Platforms</h3>
+          <p class="note">CoinGecko, CoinMarketCap, DEX Screener, and similar platforms can apply their own circulating-supply methods. This page provides public evidence, but each platform decides what it accepts.</p>
+        </div>
+        <div class="panel">
+          <h3>For Public Updates</h3>
+          <p class="note">Use the phrase target public allocation unless distribution is proven on-chain and accepted by the specific data platform.</p>
+        </div>
+      </section>
+
+      <section class="section panel warning" aria-labelledby="limitsTitle">
+        <h2 id="limitsTitle">Do Not Overstate</h2>
+        <ul>
+          <li>Do not say 400,000,000 GCA is fully circulating unless the on-chain distribution proves it.</li>
+          <li>Do not say the 600,000,000 GCA reserve is locked unless it is moved to a lock or vesting contract.</li>
+          <li>Do not say the reserve is multisig-controlled unless it is moved to a published Safe or other multisig.</li>
+          <li>Do not claim the reserve provides price support, redemption rights, yield, or liquidity backing.</li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <div class="shell">GCA supply page. Always verify Base Mainnet chain ID 8453, the token contract, and reserve transfers on BaseScan.</div>
+    </footer>
+
+    <script>
+      const CONTRACT = "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6";
+      const RESERVE = "0x5e8F84748612B913aAcC937492AC25dc5630E246";
+
+      document.getElementById("copyReserve").addEventListener("click", async () => {
+        await navigator.clipboard.writeText(RESERVE);
+      });
+
+      document.getElementById("copyContract").addEventListener("click", async () => {
+        await navigator.clipboard.writeText(CONTRACT);
+      });
+    </script>
+  </body>
+</html>

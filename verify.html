@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Verify GCA | Official Links and Identity</title>
+    <meta name="description" content="Official GCA verification page with canonical contract, Base Mainnet chain ID, GCA/USDT pool, website, Telegram, metadata files, and anti-scam link checks.">
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #111318;
+        --muted: #5f6773;
+        --line: #dfe3ea;
+        --panel: #ffffff;
+        --soft: #f6f7f9;
+        --red: #d71920;
+        --blue: #0052ff;
+        --green: #087f5b;
+        --gold: #8a650d;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: #fbfbfc;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.5;
+      }
+
+      a {
+        color: var(--blue);
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .shell {
+        width: min(1080px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      header {
+        border-bottom: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.94);
+        position: sticky;
+        top: 0;
+        z-index: 2;
+      }
+
+      nav {
+        min-height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--ink);
+        font-weight: 850;
+      }
+
+      .brand img {
+        width: 32px;
+        height: 32px;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 18px;
+        align-items: center;
+        font-size: 14px;
+      }
+
+      main {
+        padding: 42px 0 56px;
+      }
+
+      h1 {
+        margin: 0;
+        max-width: 900px;
+        font-size: clamp(40px, 6vw, 72px);
+        line-height: 1;
+        letter-spacing: 0;
+      }
+
+      h2 {
+        margin: 0 0 14px;
+        font-size: 24px;
+      }
+
+      h3 {
+        margin: 0 0 8px;
+        font-size: 17px;
+      }
+
+      .lead {
+        max-width: 840px;
+        margin: 18px 0 0;
+        color: var(--muted);
+        font-size: 18px;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 24px;
+      }
+
+      .button {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        color: var(--ink);
+        min-height: 42px;
+        padding: 10px 14px;
+        font: inherit;
+        font-weight: 750;
+        cursor: pointer;
+      }
+
+      .button.primary {
+        border-color: var(--red);
+        background: var(--red);
+        color: #fff;
+      }
+
+      .section {
+        margin-top: 30px;
+      }
+
+      .panel,
+      .fact {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+      }
+
+      .panel {
+        padding: 24px;
+      }
+
+      .facts,
+      .grid,
+      .two {
+        display: grid;
+        gap: 14px;
+      }
+
+      .facts {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        margin-top: 22px;
+      }
+
+      .grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .two {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .fact {
+        min-height: 104px;
+        padding: 15px;
+      }
+
+      .label {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 750;
+        text-transform: uppercase;
+      }
+
+      .value {
+        display: block;
+        margin-top: 8px;
+        font-size: 16px;
+        font-weight: 850;
+        overflow-wrap: anywhere;
+      }
+
+      .good {
+        color: var(--green);
+      }
+
+      .pending {
+        color: var(--gold);
+      }
+
+      .note,
+      li {
+        color: var(--muted);
+      }
+
+      .note {
+        margin: 0;
+      }
+
+      .list {
+        display: grid;
+        gap: 10px;
+        margin-top: 12px;
+      }
+
+      .row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 12px;
+        align-items: start;
+        border-top: 1px solid var(--line);
+        padding-top: 10px;
+      }
+
+      .row strong {
+        white-space: nowrap;
+        overflow-wrap: anywhere;
+      }
+
+      .warning {
+        border-color: #ecd28c;
+        background: #fff9e8;
+      }
+
+      code {
+        padding: 2px 5px;
+        border-radius: 6px;
+        background: var(--soft);
+        overflow-wrap: anywhere;
+      }
+
+      footer {
+        border-top: 1px solid var(--line);
+        padding: 24px 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      @media (max-width: 860px) {
+        .facts,
+        .grid,
+        .two {
+          grid-template-columns: 1fr;
+        }
+
+        nav {
+          align-items: flex-start;
+          flex-direction: column;
+          padding: 14px 0;
+        }
+
+        .nav-links {
+          flex-wrap: wrap;
+        }
+
+        .row {
+          grid-template-columns: 1fr;
+        }
+
+        .row strong {
+          white-space: normal;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav class="shell" aria-label="Primary">
+        <a class="brand" href="index.html" aria-label="GCA home">
+          <img src="assets/gca-logo.svg" alt="GCA logo">
+          <span>GCA</span>
+        </a>
+        <div class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="verify.html">Verify</a>
+          <a href="buy.html">Buy Guide</a>
+          <a href="markets.html">Markets</a>
+          <a href="supply.html">Supply</a>
+          <a href="security.html">Security</a>
+          <a href="risk.html">Risk</a>
+          <a href="faq.html">FAQ</a>
+          <a href="listing-kit.html">Listing Kit</a>
+        </div>
+      </nav>
+    </header>
+
+    <main class="shell">
+      <section aria-labelledby="title">
+        <h1 id="title">Verify GCA</h1>
+        <p class="lead">Use this page before interacting with GCA links, pools, or social channels. The safest workflow is to verify the chain, contract, official pool, website domain, and current status from this page.</p>
+        <div class="actions">
+          <a class="button primary" href="https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6" target="_blank" rel="noreferrer">BaseScan Contract</a>
+          <a class="button" href="markets.html">Markets</a>
+          <a class="button" href="security.html">Security</a>
+          <a class="button" href="risk.html">Risk</a>
+          <a class="button" href="listing-kit.html">Listing Kit</a>
+          <button class="button" type="button" id="copyContract">Copy Contract</button>
+        </div>
+      </section>
+
+      <section class="facts" aria-label="Verification facts">
+        <div class="fact">
+          <span class="label">Network</span>
+          <span class="value">Base Mainnet / 8453</span>
+        </div>
+        <div class="fact">
+          <span class="label">Contract</span>
+          <span class="value">0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6</span>
+        </div>
+        <div class="fact">
+          <span class="label">Official Pool</span>
+          <span class="value">GCA/USDT</span>
+        </div>
+        <div class="fact">
+          <span class="label">Website</span>
+          <span class="value">gcagochina.com</span>
+        </div>
+      </section>
+
+      <section class="section two" aria-label="Canonical identity">
+        <div class="panel">
+          <h2>Canonical Token Identity</h2>
+          <div class="list">
+            <div class="row"><span>Token name</span><strong>GCA</strong></div>
+            <div class="row"><span>Token symbol</span><strong>GCA</strong></div>
+            <div class="row"><span>Network</span><strong>Base Mainnet</strong></div>
+            <div class="row"><span>Chain ID</span><strong>8453</strong></div>
+            <div class="row"><span>Contract</span><strong>0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6</strong></div>
+            <div class="row"><span>Decimals</span><strong>18</strong></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2>Official Market Identity</h2>
+          <div class="list">
+            <div class="row"><span>Pair</span><strong>GCA/USDT</strong></div>
+            <div class="row"><span>DEX</span><strong>Uniswap v4</strong></div>
+            <div class="row"><span>Pool</span><strong>0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0</strong></div>
+            <div class="row"><span>USDT on Base</span><strong>0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2</strong></div>
+            <div class="row"><span>Fee tier</span><strong>0.01%</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="officialLinksTitle">
+        <h2 id="officialLinksTitle">Official Links</h2>
+        <div class="list">
+          <div class="row"><span><a href="https://gcagochina.com/" target="_blank" rel="noreferrer">Website</a></span><strong>gcagochina.com</strong></div>
+          <div class="row"><span><a href="https://t.me/gcagochinaofficial" target="_blank" rel="noreferrer">Telegram</a></span><strong>Official channel</strong></div>
+          <div class="row"><span><a href="https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6" target="_blank" rel="noreferrer">BaseScan contract</a></span><strong>Source verified</strong></div>
+          <div class="row"><span><a href="https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0" target="_blank" rel="noreferrer">GeckoTerminal pool</a></span><strong>Approved token info</strong></div>
+          <div class="row"><span><a href="https://dexscreener.com/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0" target="_blank" rel="noreferrer">DEX Screener pair</a></span><strong>GCA/USDT</strong></div>
+          <div class="row"><span><a href="https://app.uniswap.org/swap?chain=base&amp;inputCurrency=0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2&amp;outputCurrency=0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6" target="_blank" rel="noreferrer">Uniswap swap route</a></span><strong>USDT to GCA</strong></div>
+        </div>
+      </section>
+
+      <section class="section grid" aria-label="Verification pages">
+        <div class="panel">
+          <h3>Status</h3>
+          <p class="note"><a href="status.html">Project status</a> tracks BaseScan, GeckoTerminal, Blockaid, audit, liquidity, and listing readiness.</p>
+        </div>
+        <div class="panel">
+          <h3>Supply</h3>
+          <p class="note"><a href="supply.html">Supply and reserve</a> explains total supply, target public allocation, and the owner reserve wallet.</p>
+        </div>
+        <div class="panel">
+          <h3>Security</h3>
+          <p class="note"><a href="security.html">Security</a> summarizes source verification, no mint, no tax, no blacklist, no admin role, and audit status.</p>
+        </div>
+        <div class="panel">
+          <h3>Risk</h3>
+          <p class="note"><a href="risk.html">Risk disclosures</a> list early-stage, liquidity, warning, reserve, utility, and listing limitations.</p>
+        </div>
+        <div class="panel">
+          <h3>Listing Kit</h3>
+          <p class="note"><a href="listing-kit.html">Listing Kit</a> provides copyable facts for data platforms, wallets, moderators, and community posts.</p>
+        </div>
+        <div class="panel">
+          <h3>Machine Data</h3>
+          <p class="note"><a href="project.json">Project JSON</a>, <a href="tokenlist.json">Token List JSON</a>, and <a href=".well-known/gca-token.json">well-known token identity</a> provide machine-readable public metadata.</p>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="reviewStatusTitle">
+        <h2 id="reviewStatusTitle">Current Review Status</h2>
+        <div class="list">
+          <div class="row"><span>BaseScan source code</span><strong class="good">Verified</strong></div>
+          <div class="row"><span>BaseScan token profile</span><strong class="pending">Submitted, awaiting review</strong></div>
+          <div class="row"><span>GeckoTerminal token information</span><strong class="good">Approved 2026-05-11</strong></div>
+          <div class="row"><span>Blockaid / wallet warning feedback</span><strong class="pending">Submitted 2026-05-10; removal not confirmed</strong></div>
+          <div class="row"><span>Third-party audit</span><strong class="pending">Not completed</strong></div>
+          <div class="row"><span>Liquidity status</span><strong class="pending">Starter-depth only; high slippage possible</strong></div>
+        </div>
+        <p class="note" style="margin-top: 14px;">Do not describe GCA as externally audited, BaseScan-profile approved, warning-free, deeply liquid, or supported by guaranteed price/liquidity.</p>
+      </section>
+
+      <section class="section panel warning" aria-labelledby="avoidTitle">
+        <h2 id="avoidTitle">Avoid Unverified Links</h2>
+        <ul>
+          <li>Do not trust direct messages, private support chats, or links asking for private keys, seed phrases, exchange API secrets, withdrawal permission, or custody of funds.</li>
+          <li>Do not use any claimed official X profile unless it is later published on this website; the previously attempted X account is not used as an official social link.</li>
+          <li>Do not trust listing agents, paid callers, or third parties claiming guaranteed exchange, CoinGecko, or CoinMarketCap listing.</li>
+          <li>Do not use artificial volume, self-trading, or fake activity as a trust signal.</li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <div class="shell">GCA verification page. Always confirm Base Mainnet chain ID 8453, the contract, the pool, and official domain before interacting.</div>
+    </footer>
+
+    <script>
+      const CONTRACT = "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6";
+
+      document.getElementById("copyContract").addEventListener("click", async () => {
+        await navigator.clipboard.writeText(CONTRACT);
+      });
+    </script>
+  </body>
+</html>

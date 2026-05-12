@@ -352,12 +352,19 @@
           <span>GCA</span>
         </a>
         <div class="nav-links">
+          <a href="verify.html">Verify</a>
           <a href="buy.html">Buy Guide</a>
+          <a href="markets.html">Markets</a>
+          <a href="supply.html">Supply</a>
+          <a href="security.html">Security</a>
+          <a href="risk.html">Risk</a>
+          <a href="faq.html">FAQ</a>
+          <a href="status.html">Status</a>
+          <a href="listing-kit.html">Listing Kit</a>
           <a href="members.html">Members</a>
           <a href="#concept">Concept</a>
           <a href="#utility">Utility</a>
           <a href="#facts">Facts</a>
-          <a href="#markets">Markets</a>
           <a href="#security">Security</a>
           <a href="#roadmap">Roadmap</a>
           <a href="#contract">Contract</a>
@@ -374,12 +381,20 @@
           <p class="lead">GCA is a fixed-supply ERC-20 token on Base Mainnet exploring a simple idea: connect the Go China macro narrative with practical risk-control tools for crypto traders.</p>
           <p class="lead">The working product thesis is Go China AI Quant Access: make GCA an access and membership layer for Web3 Radar-style quant research, liquidation replay, backtesting, risk alerts, ENTRY_READY signal review, and position sizing. The token, verified contract, reserve wallet, and starter liquidity are live; Web3 Radar now has a local verified-access backend, while public self-service claiming still needs HTTPS deployment and account UI before users rely on it.</p>
           <div class="actions">
+            <a class="button primary" href="verify.html">Verify GCA</a>
             <a class="button primary" href="buy.html">Buy Guide</a>
+            <a class="button" href="markets.html">Markets</a>
+            <a class="button" href="supply.html">Supply</a>
+            <a class="button" href="security.html">Security</a>
+            <a class="button" href="risk.html">Risk</a>
+            <a class="button" href="faq.html">FAQ</a>
+            <a class="button" href="status.html">Project Status</a>
+            <a class="button" href="listing-kit.html">Listing Kit</a>
             <a class="button primary" href="https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6" target="_blank" rel="noreferrer">BaseScan Contract</a>
             <a class="button" href="members.html">Member Pre-Registration</a>
             <a class="button" href="whitepaper.html">Whitepaper</a>
             <a class="button" href="utility.html">Utility Thesis</a>
-            <a class="button" href="https://app.uniswap.org/positions/v3/base/5087977" target="_blank" rel="noreferrer">Liquidity</a>
+            <a class="button" href="https://app.uniswap.org/explore/pools/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0" target="_blank" rel="noreferrer">Official Pool</a>
             <button class="button" type="button" id="copyContract">Copy Contract</button>
             <button class="button" type="button" id="addToken">Add to MetaMask</button>
           </div>
@@ -513,23 +528,27 @@
 
       <section class="section panel" id="markets" aria-labelledby="marketsTitle">
         <h2 id="marketsTitle">Market References</h2>
-        <p class="note">These links are provided for verification and discovery. The live pool is starter liquidity only, so quoted prices and execution can move sharply on small trades.</p>
+        <p class="note">These links are provided for verification and discovery. The official public trading route is the GCA/USDT pool on Base. Liquidity is still starter liquidity only, so quoted prices and execution can move sharply on small trades.</p>
         <div class="list">
           <div class="row">
-            <span><a href="https://dexscreener.com/base/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff" target="_blank" rel="noreferrer">DEX Screener pair</a></span>
-            <strong>GCA/WETH</strong>
+            <span><a href="markets.html">Official market page</a></span>
+            <strong>Canonical route</strong>
           </div>
           <div class="row">
-            <span><a href="https://www.geckoterminal.com/base/pools/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff" target="_blank" rel="noreferrer">GeckoTerminal pool</a></span>
-            <strong>Base Mainnet</strong>
+            <span><a href="https://dexscreener.com/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0" target="_blank" rel="noreferrer">DEX Screener pair</a></span>
+            <strong>GCA/USDT</strong>
           </div>
           <div class="row">
-            <span><a href="https://app.uniswap.org/positions/v3/base/5087977" target="_blank" rel="noreferrer">Uniswap v3 liquidity position</a></span>
-            <strong>Position 5087977</strong>
+            <span><a href="https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0" target="_blank" rel="noreferrer">GeckoTerminal pool</a></span>
+            <strong>Info approved</strong>
           </div>
           <div class="row">
-            <span><a href="https://dex.coinmarketcap.com/base/0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff/" target="_blank" rel="noreferrer">CoinMarketCap DexScan pool</a></span>
-            <strong>Discovery only</strong>
+            <span><a href="https://app.uniswap.org/explore/pools/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0" target="_blank" rel="noreferrer">Uniswap pool</a></span>
+            <strong>v4 / 0.01%</strong>
+          </div>
+          <div class="row">
+            <span><a href="https://app.uniswap.org/swap?chain=base&amp;inputCurrency=0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2&amp;outputCurrency=0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6" target="_blank" rel="noreferrer">Official swap route</a></span>
+            <strong>USDT to GCA</strong>
           </div>
         </div>
       </section>
@@ -538,6 +557,10 @@
         <h2 id="allocationTitle">Allocation</h2>
         <p class="note">Total supply is fixed at 1,000,000,000 GCA. The target plan is 40% for public circulation, ecosystem, and liquidity, with 60% held as an owner reserve. The reserve transfers are visible on-chain; exact circulating supply should still be verified by each data provider.</p>
         <div class="list">
+          <div class="row">
+            <span><a href="supply.html">Official supply page</a></span>
+            <strong>Allocation and reserve</strong>
+          </div>
           <div class="row">
             <span>Public circulation, ecosystem, and liquidity allocation</span>
             <strong>400,000,000 GCA / 40%</strong>
@@ -576,12 +599,12 @@
           <p class="note">Official Telegram: <a href="https://t.me/gcagochinaofficial" target="_blank" rel="noreferrer">t.me/gcagochinaofficial</a>.</p>
         </div>
         <div class="panel">
-          <h2>BaseScan Status</h2>
-          <p class="note">Source code and deployer-wallet ownership are verified. The public BaseScan token profile update has been submitted and is awaiting BaseScan review.</p>
+          <h2>Explorer Status</h2>
+          <p class="note">BaseScan source code and deployer-wallet ownership are verified. The public BaseScan token profile update has been submitted and is awaiting BaseScan review. GeckoTerminal token information was approved on 2026-05-11.</p>
         </div>
         <div class="panel">
           <h2>Liquidity Status</h2>
-          <p class="note">Starter Uniswap v3 GCA/WETH liquidity exists on Base. The pool is shallow, so trades can have high price impact and slippage.</p>
+          <p class="note">The official public pool is Uniswap v4 GCA/USDT on Base. The pool is shallow, so trades can have high price impact and slippage.</p>
         </div>
       </section>
 

@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Allow: /.well-known/gca-token.json
+Allow: /.well-known/security.txt
+
+Sitemap: https://gcagochina.com/sitemap.xml

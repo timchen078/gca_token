@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GCA Security | Contract Controls and Audit Status</title>
+    <meta name="description" content="Official GCA security page covering fixed supply, no minting, no tax, no blacklist, no admin controls, source verification, internal review, and third-party audit status.">
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #111318;
+        --muted: #5f6773;
+        --line: #dfe3ea;
+        --panel: #ffffff;
+        --soft: #f6f7f9;
+        --red: #d71920;
+        --blue: #0052ff;
+        --green: #087f5b;
+        --gold: #8a650d;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: #fbfbfc;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.5;
+      }
+
+      a {
+        color: var(--blue);
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .shell {
+        width: min(1080px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      header {
+        border-bottom: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.94);
+        position: sticky;
+        top: 0;
+        z-index: 2;
+      }
+
+      nav {
+        min-height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--ink);
+        font-weight: 850;
+      }
+
+      .brand img {
+        width: 32px;
+        height: 32px;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 18px;
+        align-items: center;
+        font-size: 14px;
+      }
+
+      main {
+        padding: 42px 0 56px;
+      }
+
+      h1 {
+        margin: 0;
+        max-width: 900px;
+        font-size: clamp(40px, 6vw, 72px);
+        line-height: 1;
+        letter-spacing: 0;
+      }
+
+      h2 {
+        margin: 0 0 14px;
+        font-size: 24px;
+      }
+
+      h3 {
+        margin: 0 0 8px;
+        font-size: 17px;
+      }
+
+      .lead {
+        max-width: 840px;
+        margin: 18px 0 0;
+        color: var(--muted);
+        font-size: 18px;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 24px;
+      }
+
+      .button {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        color: var(--ink);
+        min-height: 42px;
+        padding: 10px 14px;
+        font: inherit;
+        font-weight: 750;
+        cursor: pointer;
+      }
+
+      .button.primary {
+        border-color: var(--red);
+        background: var(--red);
+        color: #fff;
+      }
+
+      .section {
+        margin-top: 30px;
+      }
+
+      .panel,
+      .fact {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+      }
+
+      .panel {
+        padding: 24px;
+      }
+
+      .facts,
+      .grid,
+      .two {
+        display: grid;
+        gap: 14px;
+      }
+
+      .facts {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        margin-top: 22px;
+      }
+
+      .grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .two {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .fact {
+        min-height: 104px;
+        padding: 15px;
+      }
+
+      .label {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 750;
+        text-transform: uppercase;
+      }
+
+      .value {
+        display: block;
+        margin-top: 8px;
+        font-size: 16px;
+        font-weight: 850;
+        overflow-wrap: anywhere;
+      }
+
+      .good {
+        color: var(--green);
+      }
+
+      .pending {
+        color: var(--gold);
+      }
+
+      .note,
+      li {
+        color: var(--muted);
+      }
+
+      .note {
+        margin: 0;
+      }
+
+      .list {
+        display: grid;
+        gap: 10px;
+        margin-top: 12px;
+      }
+
+      .row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 12px;
+        align-items: start;
+        border-top: 1px solid var(--line);
+        padding-top: 10px;
+      }
+
+      .row strong {
+        white-space: nowrap;
+        overflow-wrap: anywhere;
+      }
+
+      .warning {
+        border-color: #ecd28c;
+        background: #fff9e8;
+      }
+
+      code {
+        padding: 2px 5px;
+        border-radius: 6px;
+        background: var(--soft);
+        overflow-wrap: anywhere;
+      }
+
+      footer {
+        border-top: 1px solid var(--line);
+        padding: 24px 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      @media (max-width: 860px) {
+        .facts,
+        .grid,
+        .two {
+          grid-template-columns: 1fr;
+        }
+
+        nav {
+          align-items: flex-start;
+          flex-direction: column;
+          padding: 14px 0;
+        }
+
+        .nav-links {
+          flex-wrap: wrap;
+        }
+
+        .row {
+          grid-template-columns: 1fr;
+        }
+
+        .row strong {
+          white-space: normal;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav class="shell" aria-label="Primary">
+        <a class="brand" href="index.html" aria-label="GCA home">
+          <img src="assets/gca-logo.svg" alt="GCA logo">
+          <span>GCA</span>
+        </a>
+        <div class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="verify.html">Verify</a>
+          <a href="buy.html">Buy Guide</a>
+          <a href="markets.html">Markets</a>
+          <a href="supply.html">Supply</a>
+          <a href="security.html">Security</a>
+          <a href="risk.html">Risk</a>
+          <a href="faq.html">FAQ</a>
+          <a href="status.html">Status</a>
+          <a href="listing-kit.html">Listing Kit</a>
+        </div>
+      </nav>
+    </header>
+
+    <main class="shell">
+      <section aria-labelledby="title">
+        <h1 id="title">GCA Security</h1>
+        <p class="lead">This page summarizes the verified contract controls and the current audit status for GCA. It is meant for users, wallets, moderators, and reviewers who need a concise security reference.</p>
+        <div class="actions">
+          <a class="button" href="verify.html">Verify GCA</a>
+          <a class="button primary" href="https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6#code" target="_blank" rel="noreferrer">BaseScan Source</a>
+          <a class="button" href="status.html">Status</a>
+          <a class="button" href="faq.html">FAQ</a>
+          <a class="button" href="risk.html">Risk</a>
+          <a class="button" href="supply.html">Supply</a>
+          <button class="button" type="button" id="copyContract">Copy Contract</button>
+        </div>
+      </section>
+
+      <section class="facts" aria-label="Security facts">
+        <div class="fact">
+          <span class="label">Source</span>
+          <span class="value good">Verified on BaseScan</span>
+        </div>
+        <div class="fact">
+          <span class="label">Supply</span>
+          <span class="value good">Fixed at 1B GCA</span>
+        </div>
+        <div class="fact">
+          <span class="label">Admin Role</span>
+          <span class="value good">None</span>
+        </div>
+        <div class="fact">
+          <span class="label">Third-Party Audit</span>
+          <span class="value pending">Not completed</span>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="controlsTitle">
+        <h2 id="controlsTitle">Verified Contract Controls</h2>
+        <p class="note">The deployed GCA token is a fixed-supply ERC-20 contract on Base Mainnet. These controls are visible in the verified source and protected by repository tests.</p>
+        <div class="grid" style="margin-top: 16px;">
+          <div class="fact">
+            <span class="label">Minting</span>
+            <span class="value good">No mint function</span>
+            <p class="note">The full supply was created once in the constructor.</p>
+          </div>
+          <div class="fact">
+            <span class="label">Tax</span>
+            <span class="value good">No transfer tax</span>
+            <p class="note">Transfers do not route fees to a project wallet.</p>
+          </div>
+          <div class="fact">
+            <span class="label">Blacklist</span>
+            <span class="value good">No blacklist</span>
+            <p class="note">There is no token-level address blocking path.</p>
+          </div>
+          <div class="fact">
+            <span class="label">Admin</span>
+            <span class="value good">No owner role</span>
+            <p class="note">The token contract has no post-deployment admin account.</p>
+          </div>
+          <div class="fact">
+            <span class="label">Upgrade</span>
+            <span class="value good">No proxy</span>
+            <p class="note">There is no upgrade mechanism or proxy controller.</p>
+          </div>
+          <div class="fact">
+            <span class="label">Custody</span>
+            <span class="value good">No withdrawal path</span>
+            <p class="note">The token contract cannot custody or withdraw user funds.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section two" aria-label="Review status">
+        <div class="panel">
+          <h2>Internal Review</h2>
+          <p class="note">An internal engineering review was completed on 2026-05-08. No critical, high, medium, or low severity contract issues were found in the reviewed fixed-supply token logic.</p>
+          <div class="list">
+            <div class="row"><span>Reviewed contract</span><strong>token/contracts/GCAToken.sol</strong></div>
+            <div class="row"><span>Compiler</span><strong>Solidity 0.8.24</strong></div>
+            <div class="row"><span>Source SHA-256</span><strong>6ba294fe0f6e20485f90297eede83ce620291ab525c92abb3bcf6547d1cf4cce</strong></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2>Third-Party Audit</h2>
+          <p class="note">No independent third-party audit has been completed. Quote requests were submitted to QuillAudits, Hacken, and OpenZeppelin on 2026-05-10, then deferred by owner decision. GCA should not be described as externally audited, audit-approved, or third-party audited.</p>
+          <div class="list">
+            <div class="row"><span>Audit quote requests</span><strong>Submitted then deferred</strong></div>
+            <div class="row"><span>Paid external audit</span><strong>Not commissioned</strong></div>
+            <div class="row"><span>Public audit report</span><strong>Not available</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section grid" aria-label="Residual risks">
+        <div class="panel">
+          <h3>Operational Distribution</h3>
+          <p class="note">The contract can be simple while distribution remains operationally sensitive. Reserve custody, liquidity management, and public communications must stay transparent.</p>
+        </div>
+        <div class="panel">
+          <h3>Liquidity Risk</h3>
+          <p class="note">The current official GCA/USDT pool has starter-depth liquidity. Slippage, price impact, and execution volatility can be high.</p>
+        </div>
+        <div class="panel">
+          <h3>Wallet Warnings</h3>
+          <p class="note">Risk-warning removal is controlled by wallet and security vendors. A false-positive report was submitted, but that does not prove removal.</p>
+        </div>
+      </section>
+
+      <section class="section panel warning" aria-labelledby="claimsTitle">
+        <h2 id="claimsTitle">Safe Public Claims</h2>
+        <ul>
+          <li>Safe to say: source verified, fixed supply, no mint function, no owner/admin role, no blacklist, no transfer tax, no proxy, and no withdrawal path.</li>
+          <li>Do not say: third-party audited, externally audited, audit-approved, locked reserve, deep liquidity, price support, or wallet-warning removed.</li>
+          <li>Do not ask users for private keys, seed phrases, exchange API secrets, withdrawal permission, or custody of funds.</li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <div class="shell">GCA security page. Always verify Base Mainnet chain ID 8453, the contract source, and current status before interacting.</div>
+    </footer>
+
+    <script>
+      const CONTRACT = "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6";
+
+      document.getElementById("copyContract").addEventListener("click", async () => {
+        await navigator.clipboard.writeText(CONTRACT);
+      });
+    </script>
+  </body>
+</html>

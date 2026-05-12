@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GCA Status | Go China Access</title>
+    <meta name="description" content="Official GCA project status page with Base Mainnet contract, GCA/USDT pool, GeckoTerminal approval, BaseScan review status, and risk disclosures.">
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #111318;
+        --muted: #5f6773;
+        --line: #dfe3ea;
+        --panel: #ffffff;
+        --soft: #f6f7f9;
+        --red: #d71920;
+        --blue: #0052ff;
+        --green: #087f5b;
+        --gold: #8a650d;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: #fbfbfc;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.5;
+      }
+
+      a {
+        color: var(--blue);
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .shell {
+        width: min(1080px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      header {
+        border-bottom: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.94);
+        position: sticky;
+        top: 0;
+        z-index: 2;
+      }
+
+      nav {
+        min-height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--ink);
+        font-weight: 850;
+      }
+
+      .brand img {
+        width: 32px;
+        height: 32px;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 18px;
+        align-items: center;
+        font-size: 14px;
+      }
+
+      main {
+        padding: 42px 0 56px;
+      }
+
+      h1 {
+        margin: 0;
+        max-width: 820px;
+        font-size: clamp(40px, 6vw, 72px);
+        line-height: 1;
+        letter-spacing: 0;
+      }
+
+      h2 {
+        margin: 0 0 14px;
+        font-size: 24px;
+      }
+
+      h3 {
+        margin: 0 0 8px;
+        font-size: 17px;
+      }
+
+      .lead {
+        max-width: 780px;
+        margin: 18px 0 0;
+        color: var(--muted);
+        font-size: 18px;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 24px;
+      }
+
+      .button {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        color: var(--ink);
+        min-height: 42px;
+        padding: 10px 14px;
+        font: inherit;
+        font-weight: 750;
+        cursor: pointer;
+      }
+
+      .button.primary {
+        border-color: var(--red);
+        background: var(--red);
+        color: #fff;
+      }
+
+      .section {
+        margin-top: 30px;
+      }
+
+      .panel,
+      .fact {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+      }
+
+      .panel {
+        padding: 24px;
+      }
+
+      .facts,
+      .grid,
+      .two {
+        display: grid;
+        gap: 14px;
+      }
+
+      .facts {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        margin-top: 22px;
+      }
+
+      .grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .two {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .fact {
+        min-height: 104px;
+        padding: 15px;
+      }
+
+      .label {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 750;
+        text-transform: uppercase;
+      }
+
+      .value {
+        display: block;
+        margin-top: 8px;
+        font-size: 16px;
+        font-weight: 850;
+        overflow-wrap: anywhere;
+      }
+
+      .good {
+        color: var(--green);
+      }
+
+      .pending {
+        color: var(--gold);
+      }
+
+      .note,
+      li {
+        color: var(--muted);
+      }
+
+      .note {
+        margin: 0;
+      }
+
+      .list {
+        display: grid;
+        gap: 10px;
+        margin-top: 12px;
+      }
+
+      .row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 12px;
+        align-items: start;
+        border-top: 1px solid var(--line);
+        padding-top: 10px;
+      }
+
+      .row strong {
+        white-space: nowrap;
+      }
+
+      .warning {
+        border-color: #ecd28c;
+        background: #fff9e8;
+      }
+
+      code {
+        padding: 2px 5px;
+        border-radius: 6px;
+        background: var(--soft);
+        overflow-wrap: anywhere;
+      }
+
+      footer {
+        border-top: 1px solid var(--line);
+        padding: 24px 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      @media (max-width: 860px) {
+        .facts,
+        .grid,
+        .two {
+          grid-template-columns: 1fr;
+        }
+
+        nav {
+          align-items: flex-start;
+          flex-direction: column;
+          padding: 14px 0;
+        }
+
+        .nav-links {
+          flex-wrap: wrap;
+        }
+
+        .row {
+          grid-template-columns: 1fr;
+        }
+
+        .row strong {
+          white-space: normal;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav class="shell" aria-label="Primary">
+        <a class="brand" href="index.html" aria-label="GCA home">
+          <img src="assets/gca-logo.svg" alt="GCA logo">
+          <span>GCA</span>
+        </a>
+        <div class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="verify.html">Verify</a>
+          <a href="buy.html">Buy Guide</a>
+          <a href="markets.html">Markets</a>
+          <a href="supply.html">Supply</a>
+          <a href="security.html">Security</a>
+          <a href="risk.html">Risk</a>
+          <a href="faq.html">FAQ</a>
+          <a href="listing-kit.html">Listing Kit</a>
+          <a href="members.html">Members</a>
+          <a href="utility.html">Utility Thesis</a>
+          <a href="whitepaper.html">Whitepaper</a>
+          <a href="https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6" target="_blank" rel="noreferrer">BaseScan</a>
+        </div>
+      </nav>
+    </header>
+
+    <main class="shell">
+      <section aria-labelledby="title">
+        <h1 id="title">GCA Project Status</h1>
+        <p class="lead">This page is the public verification record for the GCA Base Mainnet token, official GCA/USDT pool, metadata status, reserve disclosure, product readiness, and risk boundaries.</p>
+        <div class="actions">
+          <a class="button" href="verify.html">Verify GCA</a>
+          <a class="button primary" href="buy.html">Buy Guide</a>
+          <a class="button" href="markets.html">Market Page</a>
+          <a class="button" href="supply.html">Supply Page</a>
+          <a class="button" href="security.html">Security</a>
+          <a class="button" href="risk.html">Risk</a>
+          <a class="button" href="faq.html">FAQ</a>
+          <a class="button" href="listing-kit.html">Listing Kit</a>
+          <a class="button" href="https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0" target="_blank" rel="noreferrer">GeckoTerminal</a>
+          <a class="button" href="https://dexscreener.com/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0" target="_blank" rel="noreferrer">DEX Screener</a>
+          <a class="button" href="https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6" target="_blank" rel="noreferrer">BaseScan Contract</a>
+        </div>
+      </section>
+
+      <section class="facts" aria-label="Top status">
+        <div class="fact">
+          <span class="label">Network</span>
+          <span class="value">Base Mainnet / chainId 8453</span>
+        </div>
+        <div class="fact">
+          <span class="label">Contract</span>
+          <span class="value">0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6</span>
+        </div>
+        <div class="fact">
+          <span class="label">GeckoTerminal</span>
+          <span class="value good">Approved 2026-05-11</span>
+        </div>
+        <div class="fact">
+          <span class="label">BaseScan Profile</span>
+          <span class="value pending">Submitted, awaiting review</span>
+        </div>
+      </section>
+
+      <section class="section two" aria-label="Verification status">
+        <div class="panel">
+          <h2>Completed</h2>
+          <div class="list">
+            <div class="row"><span>Contract source verified on BaseScan</span><strong class="good">Done</strong></div>
+            <div class="row"><span>Deployer-wallet ownership verified on BaseScan</span><strong class="good">Done</strong></div>
+            <div class="row"><span>GeckoTerminal token information update</span><strong class="good">Approved</strong></div>
+            <div class="row"><span>Official GCA/USDT pool linked from website</span><strong class="good">Live</strong></div>
+            <div class="row"><span>Official Telegram channel</span><strong class="good">Live</strong></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2>Still Pending</h2>
+          <div class="list">
+            <div class="row"><span>BaseScan public token profile publication</span><strong class="pending">Awaiting review</strong></div>
+            <div class="row"><span>Wallet warning removal after Blockaid report</span><strong class="pending">Not confirmed</strong></div>
+            <div class="row"><span>CoinGecko tracked listing</span><strong class="pending">Not submitted</strong></div>
+            <div class="row"><span>CoinMarketCap tracked listing</span><strong class="pending">Not submitted</strong></div>
+            <div class="row"><span>Third-party audit report</span><strong class="pending">Deferred</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="marketTitle">
+        <h2 id="marketTitle">Official Market Route</h2>
+        <p class="note">The current official public trading route is the Base Mainnet Uniswap v4 GCA/USDT pool. Liquidity is starter-depth only, so trades can have high price impact and slippage.</p>
+        <div class="list">
+          <div class="row">
+            <span><a href="markets.html">Official market page</a></span>
+            <strong>Canonical route</strong>
+          </div>
+          <div class="row">
+            <span>Pool address</span>
+            <strong>0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0</strong>
+          </div>
+          <div class="row">
+            <span>Quote asset</span>
+            <strong>Base USDT</strong>
+          </div>
+          <div class="row">
+            <span>USDT contract</span>
+            <strong>0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2</strong>
+          </div>
+          <div class="row">
+            <span><a href="https://app.uniswap.org/swap?chain=base&amp;inputCurrency=0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2&amp;outputCurrency=0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6" target="_blank" rel="noreferrer">Official swap route</a></span>
+            <strong>USDT to GCA</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="section grid" aria-label="Public disclosures">
+        <div class="panel">
+          <h3>Supply</h3>
+          <p class="note">Total supply is fixed at 1,000,000,000 GCA. The contract has no post-deployment mint function.</p>
+        </div>
+        <div class="panel">
+          <h3>Owner Reserve</h3>
+          <p class="note">600,000,000 GCA is held in the disclosed owner reserve wallet. It is a normal owner-controlled wallet, not a lock, vesting contract, or multisig.</p>
+        </div>
+        <div class="panel">
+          <h3>Audit</h3>
+          <p class="note">Internal review is complete. No third-party audit has been completed, and audit quote requests were deferred by owner decision.</p>
+        </div>
+      </section>
+
+      <section class="section panel warning" aria-labelledby="riskTitle">
+        <h2 id="riskTitle">Public Claim Boundaries</h2>
+        <ul>
+          <li>Do not say the BaseScan token profile is approved until BaseScan publishes it.</li>
+          <li>Do not say GCA is externally audited unless an independent audit report exists.</li>
+          <li>Do not describe liquidity as deep, stable, or sufficient for large trades.</li>
+          <li>Do not describe the owner reserve as locked, vested, or multisig-controlled.</li>
+          <li>Do not claim price support, yield, return promises, platform revenue distribution, custody, or automatic live trading permission.</li>
+          <li>Do not describe holder credits or GCA Member status as cash, tokens, income, reimbursement, or a way to bypass Web3 Radar risk controls.</li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <div class="shell">GCA status page. Always verify Base Mainnet chain ID 8453, the contract address, and pool details before interacting.</div>
+    </footer>
+  </body>
+</html>

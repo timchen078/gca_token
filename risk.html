@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GCA Risk | Public Risk Disclosures</title>
+    <meta name="description" content="Official GCA risk page covering early-stage status, starter liquidity, wallet warnings, audit limits, owner reserve custody, DEX execution risk, and public claim boundaries.">
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #111318;
+        --muted: #5f6773;
+        --line: #dfe3ea;
+        --panel: #ffffff;
+        --soft: #f6f7f9;
+        --red: #d71920;
+        --blue: #0052ff;
+        --green: #087f5b;
+        --gold: #8a650d;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: #fbfbfc;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.5;
+      }
+
+      a {
+        color: var(--blue);
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .shell {
+        width: min(1080px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      header {
+        border-bottom: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.94);
+        position: sticky;
+        top: 0;
+        z-index: 2;
+      }
+
+      nav {
+        min-height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--ink);
+        font-weight: 850;
+      }
+
+      .brand img {
+        width: 32px;
+        height: 32px;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 18px;
+        align-items: center;
+        font-size: 14px;
+      }
+
+      main {
+        padding: 42px 0 56px;
+      }
+
+      h1 {
+        margin: 0;
+        max-width: 900px;
+        font-size: clamp(40px, 6vw, 72px);
+        line-height: 1;
+        letter-spacing: 0;
+      }
+
+      h2 {
+        margin: 0 0 14px;
+        font-size: 24px;
+      }
+
+      h3 {
+        margin: 0 0 8px;
+        font-size: 17px;
+      }
+
+      .lead {
+        max-width: 840px;
+        margin: 18px 0 0;
+        color: var(--muted);
+        font-size: 18px;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 24px;
+      }
+
+      .button {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        color: var(--ink);
+        min-height: 42px;
+        padding: 10px 14px;
+        font: inherit;
+        font-weight: 750;
+        cursor: pointer;
+      }
+
+      .button.primary {
+        border-color: var(--red);
+        background: var(--red);
+        color: #fff;
+      }
+
+      .section {
+        margin-top: 30px;
+      }
+
+      .panel,
+      .fact {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+      }
+
+      .panel {
+        padding: 24px;
+      }
+
+      .facts,
+      .grid,
+      .two {
+        display: grid;
+        gap: 14px;
+      }
+
+      .facts {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        margin-top: 22px;
+      }
+
+      .grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .two {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .fact {
+        min-height: 104px;
+        padding: 15px;
+      }
+
+      .label {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 750;
+        text-transform: uppercase;
+      }
+
+      .value {
+        display: block;
+        margin-top: 8px;
+        font-size: 16px;
+        font-weight: 850;
+        overflow-wrap: anywhere;
+      }
+
+      .pending {
+        color: var(--gold);
+      }
+
+      .note,
+      li {
+        color: var(--muted);
+      }
+
+      .note {
+        margin: 0;
+      }
+
+      .list {
+        display: grid;
+        gap: 10px;
+        margin-top: 12px;
+      }
+
+      .row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 12px;
+        align-items: start;
+        border-top: 1px solid var(--line);
+        padding-top: 10px;
+      }
+
+      .row strong {
+        white-space: nowrap;
+        overflow-wrap: anywhere;
+      }
+
+      .warning {
+        border-color: #ecd28c;
+        background: #fff9e8;
+      }
+
+      code {
+        padding: 2px 5px;
+        border-radius: 6px;
+        background: var(--soft);
+        overflow-wrap: anywhere;
+      }
+
+      footer {
+        border-top: 1px solid var(--line);
+        padding: 24px 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      @media (max-width: 860px) {
+        .facts,
+        .grid,
+        .two {
+          grid-template-columns: 1fr;
+        }
+
+        nav {
+          align-items: flex-start;
+          flex-direction: column;
+          padding: 14px 0;
+        }
+
+        .nav-links {
+          flex-wrap: wrap;
+        }
+
+        .row {
+          grid-template-columns: 1fr;
+        }
+
+        .row strong {
+          white-space: normal;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav class="shell" aria-label="Primary">
+        <a class="brand" href="index.html" aria-label="GCA home">
+          <img src="assets/gca-logo.svg" alt="GCA logo">
+          <span>GCA</span>
+        </a>
+        <div class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="verify.html">Verify</a>
+          <a href="buy.html">Buy Guide</a>
+          <a href="markets.html">Markets</a>
+          <a href="supply.html">Supply</a>
+          <a href="security.html">Security</a>
+          <a href="risk.html">Risk</a>
+          <a href="faq.html">FAQ</a>
+          <a href="status.html">Status</a>
+          <a href="listing-kit.html">Listing Kit</a>
+        </div>
+      </nav>
+    </header>
+
+    <main class="shell">
+      <section aria-labelledby="title">
+        <h1 id="title">GCA Risk Disclosures</h1>
+        <p class="lead">This page is the public risk reference for GCA. It does not tell anyone to buy or sell. It explains the known limitations around liquidity, wallet warnings, supply reporting, owner reserve custody, audits, utility readiness, and public communications.</p>
+        <div class="actions">
+          <a class="button" href="verify.html">Verify GCA</a>
+          <a class="button primary" href="status.html">Project Status</a>
+          <a class="button" href="security.html">Security</a>
+          <a class="button" href="supply.html">Supply</a>
+          <a class="button" href="markets.html">Markets</a>
+          <a class="button" href="faq.html">FAQ</a>
+          <a class="button" href="listing-kit.html">Listing Kit</a>
+        </div>
+      </section>
+
+      <section class="facts" aria-label="Top risks">
+        <div class="fact">
+          <span class="label">Stage</span>
+          <span class="value pending">Early-stage</span>
+        </div>
+        <div class="fact">
+          <span class="label">Liquidity</span>
+          <span class="value pending">Starter depth</span>
+        </div>
+        <div class="fact">
+          <span class="label">Audit</span>
+          <span class="value pending">No third-party audit</span>
+        </div>
+        <div class="fact">
+          <span class="label">Reserve</span>
+          <span class="value pending">Owner-controlled</span>
+        </div>
+        <div class="fact">
+          <span class="label">Contract</span>
+          <span class="value">0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6</span>
+        </div>
+      </section>
+
+      <section class="section two" aria-label="Trading risks">
+        <div class="panel">
+          <h2>Market and Liquidity</h2>
+          <p class="note">The official GCA/USDT pool on Base Mainnet has starter-depth liquidity only. Small trades can move price sharply, execution can vary, slippage can be high, and data platforms may show delayed or incomplete price data.</p>
+        </div>
+        <div class="panel">
+          <h2>Wallet and DEX Warnings</h2>
+          <p class="note">Wallets and DEX interfaces can show high-risk warnings for new, low-liquidity, or lightly indexed tokens. A Blockaid false-positive report was submitted on 2026-05-10, but report submission does not mean warnings have been removed.</p>
+        </div>
+      </section>
+
+      <section class="section grid" aria-label="Project risks">
+        <div class="panel">
+          <h3>Audit Status</h3>
+          <p class="note">Internal engineering review is complete, but no independent third-party audit report exists. GCA should not be described as externally audited or audit-approved.</p>
+        </div>
+        <div class="panel">
+          <h3>Reserve Custody</h3>
+          <p class="note">The 600,000,000 GCA owner reserve is held in a disclosed owner-controlled wallet. It is not locked, vested, or multisig-controlled unless custody changes on-chain later.</p>
+        </div>
+        <div class="panel">
+          <h3>Utility Readiness</h3>
+          <p class="note">The Web3 Radar access bridge is still not public self-service from this website. Holder credits and GCA Member status are planned service-access records, not cash, tokens, income, reimbursement, or trading permission.</p>
+        </div>
+      </section>
+
+      <section class="section two" aria-label="Supply and platform risks">
+        <div class="panel">
+          <h2>Supply Reporting</h2>
+          <p class="note">The contract total supply is fixed at 1,000,000,000 GCA. The 40/60 allocation is a public reporting target. Data platforms can apply their own circulating-supply methods and may not immediately accept the reserve treatment.</p>
+        </div>
+        <div class="panel">
+          <h2>Listing and Metadata</h2>
+          <p class="note">GeckoTerminal token information was approved on 2026-05-11, while the BaseScan token profile is still awaiting review. CoinGecko and CoinMarketCap tracked listing requests are not submitted because current liquidity and public activity are still weak.</p>
+        </div>
+      </section>
+
+      <section class="section panel warning" aria-labelledby="prohibitedTitle">
+        <h2 id="prohibitedTitle">Do Not Use These Claims</h2>
+        <ul>
+          <li>Do not claim price support, yield, redemption rights, guaranteed liquidity, deep liquidity, or investment outcomes.</li>
+          <li>Do not claim third-party audit completion, external audit approval, locked reserve, or multisig reserve control.</li>
+          <li>Do not claim wallet warnings are removed until the wallet or security vendor confirms it in practice.</li>
+          <li>Do not use artificial volume, self-trading, wash trading, or fake activity as a listing or trust strategy.</li>
+          <li>Do not ask users for private keys, seed phrases, exchange API secrets, withdrawal permission, or custody of funds.</li>
+        </ul>
+      </section>
+
+      <section class="section panel" aria-labelledby="saferTitle">
+        <h2 id="saferTitle">Safer Public Framing</h2>
+        <p class="note">Use verifiable facts: Base Mainnet chain ID 8453, the official token contract, source verification, fixed supply, no mint function, no token tax, official GCA/USDT pool, disclosed owner reserve wallet, GeckoTerminal approval, pending BaseScan profile, no third-party audit, and starter-depth liquidity.</p>
+      </section>
+    </main>
+
+    <footer>
+      <div class="shell">GCA risk page. Verify the official contract, pool, security page, and status page before interacting or sharing project information.</div>
+    </footer>
+  </body>
+</html>
