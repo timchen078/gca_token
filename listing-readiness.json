@@ -26,6 +26,8 @@
     "verify": "https://gcagochina.com/verify.html",
     "status": "https://gcagochina.com/status.html",
     "listingKit": "https://gcagochina.com/listing-kit.html",
+    "externalReviewStatusPage": "https://gcagochina.com/external-reviews.html",
+    "externalReviewStatus": "https://gcagochina.com/external-reviews.json",
     "projectJson": "https://gcagochina.com/project.json",
     "tokenList": "https://gcagochina.com/tokenlist.json",
     "wellKnownTokenIdentity": "https://gcagochina.com/.well-known/gca-token.json",
