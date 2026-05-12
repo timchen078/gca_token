@@ -54,8 +54,9 @@
 - Official Telegram channel photo updated and first public announcement posted on 2026-05-09.
 - First official Telegram announcement pinned on 2026-05-10.
 - Telegram channel runbook prepared.
-- Small Base Mainnet Uniswap v3 buy/sell functional swap tests observed on 2026-05-10 and documented in `launch/swap_test_evidence.md`.
+- Small historical Base Mainnet Uniswap v3 GCA/WETH buy/sell functional swap tests observed on 2026-05-10 and documented in `launch/swap_test_evidence.md`; current public market links remain centralized on the GCA/USDT pool.
 - Blockaid false-positive report submitted on 2026-05-10 for the MetaMask/Uniswap suspected-honeypot warning.
+- Blockaid follow-up context updated to use the current GCA/USDT pool while keeping the old GCA/WETH transactions as historical functional evidence only.
 - Official buy guide page prepared at `https://gcagochina.com/buy.html`.
 - Official market page prepared at `https://gcagochina.com/markets.html` to centralize the GCA/USDT pool, USDT contract, Uniswap, GeckoTerminal, DEX Screener, and market risk disclosures.
 - Official supply and reserve page prepared at `https://gcagochina.com/supply.html` to explain fixed total supply, 40/60 target allocation, reserve wallet evidence, and circulating supply cautions.

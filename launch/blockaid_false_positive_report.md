@@ -18,7 +18,19 @@ This report is for risk-provider review only. It is not a claim that the warning
 - Address: `0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`
 - Email: `GCAgochina@outlook.com`
 
-## Report Message
+## Current Follow-Up Context
+
+The original 2026-05-10 report used the then-observed GCA/WETH functional swap evidence. That pool is historical evidence only. The current official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool:
+
+- Pair: `GCA/USDT`
+- Pool address: `0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0`
+- GeckoTerminal: `https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0`
+- DEX Screener: `https://dexscreener.com/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0`
+- Official markets page: `https://gcagochina.com/markets.html`
+
+Any future Blockaid / MetaMask follow-up should include the current GCA/USDT market route plus the historical buy/sell transactions below as narrow functional evidence only.
+
+## Submitted Report Message
 
 ```text
 GCA on Base Mainnet appears to be flagged as a suspected honeypot / suspicious token in MetaMask or Uniswap via Blockaid, but the token contract is a simple fixed-supply ERC-20 and the Base Mainnet Uniswap v3 pool has processed both buy and sell swaps.
@@ -43,6 +55,30 @@ Contract facts: fixed supply 1,000,000,000 GCA; no post-deployment mint function
 Please review this as a possible false positive.
 ```
 
+## Current Follow-Up Message Template
+
+Use this only if the warning remains visible after the initial report has had time to be reviewed.
+
+```text
+Hello Blockaid team,
+
+We submitted a false-positive report for GCA on Base Mainnet on 2026-05-10. The token contract is a fixed-supply ERC-20 with no post-deployment mint function, owner/admin role, proxy, blacklist, pause function, transfer tax, or hidden fee. The source is verified on BaseScan.
+
+Network: Base Mainnet / chainId 8453
+Contract: 0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6
+Official website: https://gcagochina.com/
+Official verify page: https://gcagochina.com/verify.html
+Official market page: https://gcagochina.com/markets.html
+Current official pool: Uniswap v4 GCA/USDT
+Current official pool address: 0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0
+Current GeckoTerminal pool: https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0
+
+Historical functional buy test transaction: 0xf79e52ea56a299a30c2d297be99c970295864ed262c01fdcb7e3f60ca669b040
+Historical functional sell test transaction: 0x0ff618062abc6e28933699d4e3bd723026f8505e4a0155db3068073b6fdc86e7
+
+Please review whether the suspected-honeypot warning can be corrected.
+```
+
 ## Evidence Links
 
 - Functional swap evidence: `launch/swap_test_evidence.md`
@@ -50,6 +86,7 @@ Please review this as a possible false positive.
 - Audit status: `audit/third_party_audit_package.json`
 - Public website: `https://gcagochina.com/`
 - Whitepaper: `https://gcagochina.com/whitepaper.html`
+- Current official market page: `https://gcagochina.com/markets.html`
 
 ## Follow-Up Rules
 

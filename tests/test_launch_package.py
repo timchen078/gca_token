@@ -977,6 +977,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("buy/sell functional swap tests observed on 2026-05-10", status)
         self.assertIn("launch/swap_test_evidence.md", status)
         self.assertIn("Blockaid false-positive report submitted on 2026-05-10", status)
+        self.assertIn("Blockaid follow-up context updated to use the current GCA/USDT pool", status)
         self.assertIn("does not mean the warning has been removed", status)
         self.assertIn("must not be described as proof of organic volume", status)
         self.assertIn("Third-party audit quote requests submitted to QuillAudits, Hacken, and OpenZeppelin on 2026-05-10", status)
@@ -1238,6 +1239,11 @@ class LaunchPackageTests(unittest.TestCase):
     def test_swap_test_evidence_is_conservative(self):
         evidence = (ROOT / "launch" / "swap_test_evidence.md").read_text()
         self.assertIn("Functional Swap Test Evidence", evidence)
+        self.assertIn("Current Official Market Route", evidence)
+        self.assertIn("GCA/USDT", evidence)
+        self.assertIn(OFFICIAL_POOL_ADDRESS, evidence)
+        self.assertIn(OFFICIAL_GECKOTERMINAL_URL, evidence)
+        self.assertIn("historical functional evidence only", evidence.lower())
         self.assertIn("GCA/WETH", evidence)
         self.assertIn("0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff", evidence)
         self.assertIn(MAINNET_ADDRESS, evidence)
@@ -1259,6 +1265,11 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(SWAP_TEST_BUY_TX, report)
         self.assertIn(SWAP_TEST_SELL_TX, report)
         self.assertIn("not a claim that the warning has been removed", report)
+        self.assertIn("Current Follow-Up Context", report)
+        self.assertIn("Current Follow-Up Message Template", report)
+        self.assertIn("GCA/USDT", report)
+        self.assertIn(OFFICIAL_POOL_ADDRESS, report)
+        self.assertIn(OFFICIAL_GECKOTERMINAL_URL, report)
 
     def test_site_has_whitepaper_page(self):
         index = (ROOT / "site" / "index.html").read_text()

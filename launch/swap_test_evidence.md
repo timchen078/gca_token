@@ -5,8 +5,19 @@
 A small Base Mainnet Uniswap v3 buy/sell functional test was observed through the GeckoTerminal pool trade feed on 2026-05-10. This file is for transparency and support follow-up only.
 
 This is not a market-making report, not proof of organic demand, not a third-party audit, and not evidence that wallet risk providers will remove warnings.
+It is historical functional evidence only; it should not be used as the current official market link.
 
-## Pool
+## Current Official Market Route
+
+The current official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool. Use this route for public market links, BaseScan follow-up, GeckoTerminal references, Telegram announcements, and website materials.
+
+- Pair: GCA/USDT
+- Pool address: `0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0`
+- GeckoTerminal pool: `https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0`
+- DEX Screener pool: `https://dexscreener.com/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0`
+- Official markets page: `https://gcagochina.com/markets.html`
+
+## Historical Functional Test Pool
 
 - Network: Base Mainnet
 - Pair: GCA/WETH
@@ -27,8 +38,9 @@ These transactions show that the pool has processed both GCA buys and GCA sells:
 
 ## Current Interpretation
 
-- The pool has accepted both buy and sell swaps.
-- The test supports a narrow functional claim: GCA has been bought and sold through the Base Mainnet Uniswap v3 pool.
+- The historical GCA/WETH pool accepted both buy and sell swaps.
+- The test supports a narrow functional claim: GCA has been bought and sold through a Base Mainnet Uniswap v3 pool.
+- The test does not make GCA/WETH the current official market route; the current public route is GCA/USDT.
 - The test does not prove strong liquidity, organic market demand, external audit completion, token-list acceptance, or removal of Blockaid/MetaMask warnings.
 - The pool remains starter-depth only and can still have high price impact and slippage.
 
@@ -36,7 +48,7 @@ These transactions show that the pool has processed both GCA buys and GCA sells:
 
 Allowed:
 
-`Small Base Mainnet Uniswap v3 buy/sell tests have been observed on-chain. The pool remains shallow and GCA has not completed a third-party audit.`
+`Historical Base Mainnet Uniswap v3 GCA/WETH buy/sell tests have been observed on-chain. The current official public market route is the GCA/USDT pool. Liquidity remains shallow and GCA has not completed a third-party audit.`
 
 Do not say:
 

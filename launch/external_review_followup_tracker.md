@@ -95,6 +95,9 @@ Network: Base Mainnet / chainId 8453
 Contract: 0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6
 Official verify page: https://gcagochina.com/verify.html
 Official market page: https://gcagochina.com/markets.html
+Current official pool: Uniswap v4 GCA/USDT
+Current official pool address: 0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0
+Current GeckoTerminal pool: https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0
 Buy test transaction: 0xf79e52ea56a299a30c2d297be99c970295864ed262c01fdcb7e3f60ca669b040
 Sell test transaction: 0x0ff618062abc6e28933699d4e3bd723026f8505e4a0155db3068073b6fdc86e7
 
