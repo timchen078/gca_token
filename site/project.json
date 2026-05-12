@@ -17,6 +17,8 @@
   "verifyUrl": "https://gcagochina.com/verify.html",
   "statusPageUrl": "https://gcagochina.com/status.html",
   "listingKitUrl": "https://gcagochina.com/listing-kit.html",
+  "onchainProofsPageUrl": "https://gcagochina.com/onchain-proofs.html",
+  "onchainProofsUrl": "https://gcagochina.com/onchain-proofs.json",
   "walletWarningEvidencePageUrl": "https://gcagochina.com/wallet-warning.html",
   "walletWarningEvidenceUrl": "https://gcagochina.com/wallet-warning.json",
   "externalReviewStatusPageUrl": "https://gcagochina.com/external-reviews.html",
@@ -73,6 +75,16 @@
       "0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67",
       "0xfffb674448abdbd3af45bb0a30c48e5fbb0e675542b971f031381254b5dc5317"
     ]
+  },
+  "onchainProofs": {
+    "status": "public-onchain-proofs-published",
+    "pageUrl": "https://gcagochina.com/onchain-proofs.html",
+    "url": "https://gcagochina.com/onchain-proofs.json",
+    "deploymentTx": "0xae8ae4d0bd89c03b39946564a5b63bb20cd38879a1aa1fdcb20a6f1c4802e74e",
+    "sourceVerification": "verified",
+    "ownerReserveWallet": "0x5e8F84748612B913aAcC937492AC25dc5630E246",
+    "officialMarketRoute": "GCA/USDT",
+    "thirdPartyAudit": "not-completed"
   },
   "platformStatus": {
     "baseScanSource": "verified",

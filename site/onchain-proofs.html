@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>GCA Wallet Warning Evidence | Go China Access</title>
-    <meta name="description" content="Official GCA wallet-warning evidence page for Blockaid, MetaMask, DEX interfaces, reviewers, contract facts, functional swap evidence, and public claim boundaries.">
+    <title>GCA On-chain Proofs | Go China Access</title>
+    <meta name="description" content="Official GCA on-chain proofs page for Base Mainnet deployment, source verification, fixed supply, owner reserve transfers, official GCA/USDT market route, and functional swap evidence.">
     <style>
       :root {
         color-scheme: light;
@@ -291,6 +291,7 @@
           <a href="faq.html">FAQ</a>
           <a href="status.html">Status</a>
           <a href="listing-kit.html">Listing Kit</a>
+          <a href="wallet-warning.html">Wallet Warning</a>
           <a href="external-reviews.html">External Reviews</a>
           <a href="https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6" target="_blank" rel="noreferrer">BaseScan</a>
         </div>
@@ -299,82 +300,90 @@
 
     <main class="shell">
       <section aria-labelledby="title">
-        <h1 id="title">GCA Wallet Warning Evidence</h1>
-        <p class="lead">This page gives wallet security vendors, DEX interfaces, reviewers, and community moderators a single public evidence packet for GCA wallet-warning review. It records what was submitted, what is verified, and what is still not confirmed.</p>
+        <h1 id="title">GCA On-chain Proofs</h1>
+        <p class="lead">This page centralizes the public on-chain proof set for GCA: deployment, source verification, fixed supply, owner reserve transfers, official GCA/USDT market route, and narrow historical buy/sell test evidence.</p>
         <div class="actions">
-          <a class="button primary" href="wallet-warning.json">Wallet Warning JSON</a>
+          <a class="button primary" href="onchain-proofs.json">On-chain Proofs JSON</a>
           <a class="button primary" href="verify.html">Verify GCA</a>
-          <a class="button" href="onchain-proofs.html">On-chain Proofs</a>
-          <a class="button" href="external-reviews.html">External Reviews</a>
+          <a class="button" href="supply.html">Supply</a>
           <a class="button" href="markets.html">Official Market</a>
           <a class="button" href="security.html">Security</a>
-          <a class="button" href="risk.html">Risk Page</a>
+          <a class="button" href="wallet-warning.html">Wallet Warning</a>
+          <a class="button" href="external-reviews.html">External Reviews</a>
           <a class="button" href="status.html">Project Status</a>
           <a class="button" href="listing-kit.html">Listing Kit</a>
-          <a class="button" href="project.json">Project JSON</a>
         </div>
       </section>
 
-      <section class="facts" aria-label="Wallet warning summary">
+      <section class="facts" aria-label="Proof summary">
         <div class="fact">
-          <span class="label">Blockaid report</span>
-          <span class="value pending">Submitted 2026-05-10</span>
+          <span class="label">Deployment</span>
+          <span class="value good">Base Mainnet</span>
         </div>
         <div class="fact">
-          <span class="label">Warning removal</span>
-          <span class="value pending">Not confirmed</span>
+          <span class="label">Source</span>
+          <span class="value good">Verified</span>
         </div>
         <div class="fact">
-          <span class="label">Contract source</span>
-          <span class="value good">Verified on BaseScan</span>
+          <span class="label">Supply</span>
+          <span class="value good">Fixed 1B GCA</span>
         </div>
         <div class="fact">
-          <span class="label">Third-party audit</span>
-          <span class="value pending">Not completed</span>
+          <span class="label">Reserve proof</span>
+          <span class="value pending">Owner wallet, not locked</span>
         </div>
       </section>
 
-      <section class="section two" aria-label="Warning and market context">
+      <section class="section two" aria-label="Deployment and source verification">
         <div class="panel">
-          <h2>Warning Context</h2>
-          <p class="note">Wallet and DEX warnings can appear for new tokens, starter-depth liquidity, limited public history, missing third-party audit, or automated model checks. GCA has submitted a Blockaid false-positive report, but submission does not mean the warning has been removed.</p>
+          <h2>Deployment Proof</h2>
           <div class="list">
-            <div class="row"><span>Reported domain</span><strong>gcagochina.com</strong></div>
-            <div class="row"><span>Reported surface</span><strong>MetaMask / Uniswap token warning</strong></div>
-            <div class="row"><span>Contact</span><strong>GCAgochina@outlook.com</strong></div>
+            <div class="row"><span>Contract</span><strong>0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6</strong></div>
+            <div class="row"><span>Deployer</span><strong>0x18d007bcb6be029f8ccd7cb13e324aa21891092d</strong></div>
+            <div class="row"><span><a href="https://basescan.org/tx/0xae8ae4d0bd89c03b39946564a5b63bb20cd38879a1aa1fdcb20a6f1c4802e74e" target="_blank" rel="noreferrer">Deployment transaction</a></span><strong>0xae8ae4d0bd89c03b39946564a5b63bb20cd38879a1aa1fdcb20a6f1c4802e74e</strong></div>
+            <div class="row"><span>Deployment block</span><strong>45,735,688</strong></div>
           </div>
         </div>
 
         <div class="panel">
-          <h2>Current Official Market</h2>
-          <p class="note">The current official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool. Liquidity is starter-depth only.</p>
+          <h2>Source Verification</h2>
           <div class="list">
-            <div class="row"><span>Pair</span><strong>GCA/USDT</strong></div>
-            <div class="row"><span>Pool</span><strong>0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0</strong></div>
-            <div class="row"><span>USDT on Base</span><strong>0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2</strong></div>
-            <div class="row"><span><a href="https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0" target="_blank" rel="noreferrer">GeckoTerminal</a></span><strong>Approved 2026-05-11</strong></div>
-            <div class="row"><span><a href="https://dexscreener.com/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0" target="_blank" rel="noreferrer">DEX Screener</a></span><strong>GCA/USDT</strong></div>
+            <div class="row"><span>BaseScan source verification</span><strong class="good">Complete</strong></div>
+            <div class="row"><span>Verified at</span><strong>2026-05-08T17:27:07Z</strong></div>
+            <div class="row"><span>Compiler</span><strong>Solidity v0.8.24</strong></div>
+            <div class="row"><span>License</span><strong>MIT</strong></div>
           </div>
         </div>
       </section>
 
-      <section class="section panel" aria-labelledby="contractFactsTitle">
-        <h2 id="contractFactsTitle">Contract Facts For Review</h2>
+      <section class="section panel" aria-labelledby="supplyTitle">
+        <h2 id="supplyTitle">Fixed Supply And Reserve Proof</h2>
+        <p class="note">GCA total supply is fixed at 1,000,000,000 GCA. The 600,000,000 GCA reserve is held in a disclosed normal owner-controlled wallet. It is not a lock, vesting contract, or multisig unless custody changes on-chain later.</p>
         <div class="list">
-          <div class="row"><span>BaseScan source verification</span><strong class="good">Complete</strong></div>
-          <div class="row"><span>Fixed total supply</span><strong class="good">1,000,000,000 GCA</strong></div>
+          <div class="row"><span>Total supply</span><strong>1,000,000,000 GCA</strong></div>
+          <div class="row"><span>Owner reserve wallet</span><strong>0x5e8F84748612B913aAcC937492AC25dc5630E246</strong></div>
+          <div class="row"><span><a href="https://basescan.org/tx/0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67" target="_blank" rel="noreferrer">Reserve transfer 1</a></span><strong>300,000,000 GCA</strong></div>
+          <div class="row"><span><a href="https://basescan.org/tx/0xfffb674448abdbd3af45bb0a30c48e5fbb0e675542b971f031381254b5dc5317" target="_blank" rel="noreferrer">Reserve transfer 2</a></span><strong>300,000,000 GCA</strong></div>
           <div class="row"><span>Post-deployment mint function</span><strong class="good">No</strong></div>
-          <div class="row"><span>Owner/admin role</span><strong class="good">No</strong></div>
-          <div class="row"><span>Proxy or upgrade path</span><strong class="good">No</strong></div>
-          <div class="row"><span>Blacklist or pause function</span><strong class="good">No</strong></div>
-          <div class="row"><span>Transfer tax or hidden fee</span><strong class="good">No</strong></div>
-          <div class="row"><span>Custody or withdrawal path</span><strong class="good">No</strong></div>
+          <div class="row"><span>Tax, blacklist, admin controls</span><strong class="good">No</strong></div>
         </div>
       </section>
 
-      <section class="section panel" aria-labelledby="txTitle">
-        <h2 id="txTitle">Historical Functional Swap Evidence</h2>
-        <p class="note">Small Base Mainnet DEX buy and sell transactions were observed on 2026-05-10. These transaction hashes are historical functional evidence only. They do not replace the current official GCA/USDT market route.</p>
+      <section class="section panel" aria-labelledby="marketTitle">
+        <h2 id="marketTitle">Official Market Proof</h2>
+        <p class="note">The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool. Liquidity is starter-depth only, so this proof should not be read as deep market depth.</p>
+        <div class="list">
+          <div class="row"><span>Pair</span><strong>GCA/USDT</strong></div>
+          <div class="row"><span>Pool</span><strong>0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0</strong></div>
+          <div class="row"><span>USDT on Base</span><strong>0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2</strong></div>
+          <div class="row"><span><a href="https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0" target="_blank" rel="noreferrer">GeckoTerminal</a></span><strong>Approved 2026-05-11</strong></div>
+          <div class="row"><span><a href="https://dexscreener.com/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0" target="_blank" rel="noreferrer">DEX Screener</a></span><strong>GCA/USDT</strong></div>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="functionalTitle">
+        <h2 id="functionalTitle">Historical Functional Buy/Sell Evidence</h2>
+        <p class="note">Small Base Mainnet DEX buy and sell transactions were observed on 2026-05-10. These transaction hashes are functional evidence only; they do not prove mature liquidity, organic demand, listing acceptance, audit completion, or wallet-warning removal.</p>
         <div class="list">
           <div class="row"><span><a href="https://basescan.org/tx/0xf79e52ea56a299a30c2d297be99c970295864ed262c01fdcb7e3f60ca669b040" target="_blank" rel="noreferrer">Buy test transaction</a></span><strong>Observed</strong></div>
           <div class="row"><span><a href="https://basescan.org/tx/0x9e88f36125e0b54eb6d334b3159d6875909553e530dda49af4482d96401a05ac" target="_blank" rel="noreferrer">Buy test transaction</a></span><strong>Observed</strong></div>
@@ -383,37 +392,23 @@
         </div>
       </section>
 
-      <section class="section grid" aria-label="Evidence limitations">
-        <div class="panel">
-          <h3>What This Shows</h3>
-          <p class="note">GCA source is verified, the token has fixed supply, and small buy/sell transactions have been observed on Base Mainnet.</p>
-        </div>
-        <div class="panel">
-          <h3>What This Does Not Show</h3>
-          <p class="note">It does not prove wallet-warning removal, mature liquidity, organic demand, or listing acceptance. No third-party audit has been completed.</p>
-        </div>
-        <div class="panel">
-          <h3>Next Action</h3>
-          <p class="note">Use this page and <a href="wallet-warning.json">wallet-warning.json</a> only if a wallet provider or security reviewer asks for current evidence.</p>
-        </div>
-      </section>
-
       <section class="section panel warning" aria-labelledby="boundariesTitle">
         <h2 id="boundariesTitle">Public Claim Boundaries</h2>
         <ul>
-          <li>Safe to say: a Blockaid false-positive report was submitted on 2026-05-10.</li>
-          <li>Safe to say: wallet-warning removal is not confirmed.</li>
-          <li>Safe to say: BaseScan source verification is complete and GCA has no post-deployment mint function.</li>
+          <li>Safe to say: GCA was deployed on Base Mainnet and source verification is complete on BaseScan.</li>
+          <li>Safe to say: GCA has fixed total supply and no post-deployment mint function.</li>
+          <li>Safe to say: owner reserve transfer transaction hashes are public.</li>
           <li>Safe to say: the official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool.</li>
-          <li>Do not say Blockaid, MetaMask, or any wallet provider has cleared the warning before visible confirmation.</li>
-          <li>Do not say GCA is externally audited before an independent audit report exists.</li>
-          <li>Do not claim mature liquidity, price support, return promises, or warning-free status.</li>
+          <li>Safe to say: No third-party audit has been completed.</li>
+          <li>Do not say the reserve is locked, vested, or multisig-controlled before on-chain custody changes.</li>
+          <li>Do not say exact circulating supply has been accepted by data platforms before publication.</li>
+          <li>Do not claim mature liquidity, price support, return promises, warning-free status, or third-party audit completion.</li>
         </ul>
       </section>
     </main>
 
     <footer>
-      <div class="shell">GCA wallet-warning evidence. Always verify Base Mainnet chain ID 8453, the contract address, and the official GCA/USDT pool before using this data.</div>
+      <div class="shell">GCA on-chain proofs. Always verify Base Mainnet chain ID 8453, the contract address, and the official GCA/USDT pool before using this data.</div>
     </footer>
   </body>
 </html>

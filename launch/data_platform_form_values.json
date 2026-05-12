@@ -25,6 +25,8 @@
   "externalReviewStatusUrl": "https://gcagochina.com/external-reviews.json",
   "listingReadinessPageUrl": "https://gcagochina.com/listing-readiness.html",
   "listingReadinessUrl": "https://gcagochina.com/listing-readiness.json",
+  "onchainProofsPageUrl": "https://gcagochina.com/onchain-proofs.html",
+  "onchainProofsUrl": "https://gcagochina.com/onchain-proofs.json",
   "projectJsonUrl": "https://gcagochina.com/project.json",
   "tokenListUrl": "https://gcagochina.com/tokenlist.json",
   "wellKnownTokenIdentityUrl": "https://gcagochina.com/.well-known/gca-token.json",
@@ -147,6 +149,12 @@
       "pageUrl": "https://gcagochina.com/listing-readiness.html",
       "url": "https://gcagochina.com/listing-readiness.json",
       "nextAction": "Use this gate before CoinGecko, CoinMarketCap, or centralized exchange outreach; current tracked listing submissions should wait for stronger legitimate liquidity depth, public activity, and exchange volume."
+    },
+    "onchainProofs": {
+      "status": "public-onchain-proofs-published",
+      "pageUrl": "https://gcagochina.com/onchain-proofs.html",
+      "url": "https://gcagochina.com/onchain-proofs.json",
+      "nextAction": "Use this public proof set for deployment, source verification, reserve transfer, official market, and functional swap evidence."
     },
     "walletWarningEvidence": {
       "status": "warning-report-submitted-removal-not-confirmed",

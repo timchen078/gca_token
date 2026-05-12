@@ -18,6 +18,8 @@ Use this file as the single operating checklist for external review, wallet-warn
 - Market quality JSON: `https://gcagochina.com/market-quality.json`
 - Listing readiness page: `https://gcagochina.com/listing-readiness.html`
 - Listing readiness gate: `https://gcagochina.com/listing-readiness.json`
+- Public on-chain proofs page: `https://gcagochina.com/onchain-proofs.html`
+- Public on-chain proofs JSON: `https://gcagochina.com/onchain-proofs.json`
 - Official Telegram: `https://t.me/gcagochinaofficial`
 - Official GCA/USDT pool: `https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0`
 
@@ -146,3 +148,10 @@ Public page: `https://gcagochina.com/wallet-warning.html`
 Machine-readable JSON: `https://gcagochina.com/wallet-warning.json`
 
 Use this page if Blockaid, MetaMask, Uniswap, or another wallet-security reviewer asks for public evidence. It summarizes the submitted report, source verification, no-mint/no-tax/no-admin contract facts, current GCA/USDT market route, historical functional swap transaction hashes, and the boundary that warning removal is not confirmed.
+
+## Public On-chain Proofs
+
+Public page: `https://gcagochina.com/onchain-proofs.html`
+Machine-readable JSON: `https://gcagochina.com/onchain-proofs.json`
+
+Use this page when BaseScan, Blockaid, wallets, DEX frontends, data platforms, or community reviewers need one public proof set for deployment, source verification, fixed supply, owner reserve transfers, official GCA/USDT market route, and functional swap evidence.

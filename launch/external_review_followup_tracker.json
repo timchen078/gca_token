@@ -16,6 +16,8 @@
     "marketQualityUrl": "https://gcagochina.com/market-quality.json",
     "listingReadinessPageUrl": "https://gcagochina.com/listing-readiness.html",
     "listingReadinessUrl": "https://gcagochina.com/listing-readiness.json",
+    "onchainProofsPageUrl": "https://gcagochina.com/onchain-proofs.html",
+    "onchainProofsUrl": "https://gcagochina.com/onchain-proofs.json",
     "telegramUrl": "https://t.me/gcagochinaofficial",
     "officialPoolPair": "GCA/USDT",
     "officialPoolAddress": "0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
@@ -86,6 +88,12 @@
     "publicUrl": "https://gcagochina.com/wallet-warning.json",
     "useCase": "Public evidence packet for Blockaid, MetaMask, Uniswap, and wallet-security follow-up."
   },
+  "publicOnchainProofs": {
+    "status": "public-onchain-proofs-published",
+    "publicPageUrl": "https://gcagochina.com/onchain-proofs.html",
+    "publicUrl": "https://gcagochina.com/onchain-proofs.json",
+    "useCase": "Public proof set for deployment, source verification, reserve transfer, official market, and functional swap evidence."
+  },
   "coinGeckoCoinMarketCapGate": {
     "ready": false,
     "publicPageUrl": "https://gcagochina.com/listing-readiness.html",
@@ -97,8 +105,7 @@
       "public holder activity not based on self-trading, wash trading, or fake volume",
       "conservative public audit, reserve, utility, and liquidity disclosures"
     ]
-  }
-  ,
+  },
   "marketQualityPlan": {
     "status": "early-stage-market-quality-plan",
     "publicPageUrl": "https://gcagochina.com/market-quality.html",
