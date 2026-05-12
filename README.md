@@ -32,11 +32,12 @@ Deployment notes are in `docs/deploy_base_sepolia.md` and `docs/deploy_base_main
 - GeckoTerminal update runbook: `launch/geckoterminal_update_runbook.md`
 - GeckoTerminal form values: `launch/geckoterminal_form_values.json`
 - Public member program rules: `site/member-program.json`
+- Public listing readiness gate: `site/listing-readiness.json`
 - Telegram channel runbook: `launch/telegram_channel_runbook.md`
 - Audit scope: `launch/audit_scope.md`
 - Internal security review: `audit/gca_internal_security_review.md`
 - Launch status: `launch/launch_status.md`
 - Logo: `brand/gca-logo.svg`
 - Static website: `site/index.html`
-- Live public site check, including market identity, member program rules, and high-risk public-claim guardrails: `.venv/bin/python tools/check_public_site.py`
+- Live public site check, including market identity, member program rules, listing readiness, and high-risk public-claim guardrails: `.venv/bin/python tools/check_public_site.py`
 - GitHub Actions public site check: `.github/workflows/check-public-site.yml`

@@ -19,6 +19,7 @@
   "verifyUrl": "https://gcagochina.com/verify.html",
   "statusPageUrl": "https://gcagochina.com/status.html",
   "listingKitUrl": "https://gcagochina.com/listing-kit.html",
+  "listingReadinessUrl": "https://gcagochina.com/listing-readiness.json",
   "projectJsonUrl": "https://gcagochina.com/project.json",
   "tokenListUrl": "https://gcagochina.com/tokenlist.json",
   "wellKnownTokenIdentityUrl": "https://gcagochina.com/.well-known/gca-token.json",
@@ -128,6 +129,11 @@
     "ownerReserveCustodyNote": "Normal owner-controlled wallet; not locked, vested, or multisig-controlled."
   },
   "platformReadiness": {
+    "listingReadiness": {
+      "status": "not-ready",
+      "url": "https://gcagochina.com/listing-readiness.json",
+      "nextAction": "Use this gate before CoinGecko, CoinMarketCap, or centralized exchange outreach; current tracked listing submissions should wait for stronger legitimate liquidity depth, public activity, and exchange volume."
+    },
     "dexScreener": {
       "status": "discoverable",
       "nextAction": "Use the pair URL; direct metadata is normally pulled from external token lists or Enhanced Token Info."

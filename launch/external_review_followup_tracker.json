@@ -8,6 +8,7 @@
     "website": "https://gcagochina.com/",
     "verifyUrl": "https://gcagochina.com/verify.html",
     "marketPageUrl": "https://gcagochina.com/markets.html",
+    "listingReadinessUrl": "https://gcagochina.com/listing-readiness.json",
     "telegramUrl": "https://t.me/gcagochinaofficial",
     "officialPoolPair": "GCA/USDT",
     "officialPoolAddress": "0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
@@ -68,6 +69,7 @@
   ],
   "coinGeckoCoinMarketCapGate": {
     "ready": false,
+    "publicUrl": "https://gcagochina.com/listing-readiness.json",
     "requiredBeforeSubmission": [
       "BaseScan token profile publication",
       "stable website, verify page, logo, whitepaper, Telegram, and GCA/USDT pool links",

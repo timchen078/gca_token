@@ -1,0 +1,149 @@
+{
+  "schema": "https://gcagochina.com/listing-readiness.json",
+  "lastUpdated": "2026-05-12",
+  "projectName": "GCA",
+  "tokenSymbol": "GCA",
+  "network": "Base Mainnet",
+  "chainId": 8453,
+  "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+  "status": "not-ready",
+  "summary": "GCA has enough public material for DEX metadata review and wallet identity checks, but tracked CoinGecko and CoinMarketCap submissions should be deferred until public activity, legitimate liquidity depth, and exchange volume are stronger.",
+  "readyFor": [
+    "DEX metadata correction packages",
+    "wallet identity review",
+    "community due-diligence links",
+    "BaseScan and Blockaid follow-up context"
+  ],
+  "notReadyFor": [
+    "CoinGecko tracked listing request",
+    "CoinMarketCap tracked listing request",
+    "centralized exchange listing outreach",
+    "public claims of mature liquidity or completed external audit"
+  ],
+  "canonicalLinks": {
+    "website": "https://gcagochina.com/",
+    "verify": "https://gcagochina.com/verify.html",
+    "status": "https://gcagochina.com/status.html",
+    "listingKit": "https://gcagochina.com/listing-kit.html",
+    "projectJson": "https://gcagochina.com/project.json",
+    "tokenList": "https://gcagochina.com/tokenlist.json",
+    "wellKnownTokenIdentity": "https://gcagochina.com/.well-known/gca-token.json",
+    "memberProgramRules": "https://gcagochina.com/member-program.json",
+    "marketPage": "https://gcagochina.com/markets.html",
+    "supplyPage": "https://gcagochina.com/supply.html",
+    "riskPage": "https://gcagochina.com/risk.html",
+    "whitepaper": "https://gcagochina.com/whitepaper.html",
+    "telegram": "https://t.me/gcagochinaofficial"
+  },
+  "market": {
+    "officialPair": "GCA/USDT",
+    "dex": "Uniswap v4",
+    "poolAddress": "0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "quoteAsset": "USDT",
+    "quoteAssetAddress": "0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2",
+    "geckoTerminal": "https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "dexScreener": "https://dexscreener.com/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "officialSwap": "https://app.uniswap.org/swap?chain=base&inputCurrency=0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2&outputCurrency=0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+    "liquidityDepthStatus": "starter-depth-only"
+  },
+  "readinessChecks": [
+    {
+      "id": "canonical-identity",
+      "label": "Canonical token identity",
+      "status": "ready",
+      "evidence": "Base Mainnet chain ID 8453, contract address, logo, official website, token list, and well-known token identity are published."
+    },
+    {
+      "id": "contract-verification",
+      "label": "Contract source and owner verification",
+      "status": "ready",
+      "evidence": "BaseScan source verification and deployer-wallet ownership verification are complete."
+    },
+    {
+      "id": "basescan-token-profile",
+      "label": "BaseScan token profile",
+      "status": "pending-external-review",
+      "evidence": "Token information update was submitted and is awaiting BaseScan publication."
+    },
+    {
+      "id": "geckoterminal-token-info",
+      "label": "GeckoTerminal token information",
+      "status": "ready",
+      "evidence": "GeckoTerminal approved the token information update on 2026-05-11."
+    },
+    {
+      "id": "public-social-presence",
+      "label": "Public social presence",
+      "status": "partial",
+      "evidence": "Official Telegram is live. X is not used because the prior account was frozen."
+    },
+    {
+      "id": "legitimate-market-activity",
+      "label": "Legitimate market activity",
+      "status": "not-ready",
+      "evidence": "The official GCA/USDT pool is live, but depth, public activity, and volume remain early and small."
+    },
+    {
+      "id": "utility-access",
+      "label": "Utility access and member ledger",
+      "status": "partial",
+      "evidence": "Public rules are published, but the HTTPS self-service claim flow is not connected."
+    },
+    {
+      "id": "third-party-audit",
+      "label": "Third-party audit",
+      "status": "not-completed",
+      "evidence": "Audit quote requests were submitted and then deferred; no independent report has been completed."
+    },
+    {
+      "id": "no-artificial-activity-policy",
+      "label": "No artificial activity policy",
+      "status": "required",
+      "evidence": "Listing readiness must be based on legitimate users, transparent liquidity, and truthful public materials; do not use artificial activity, self-trading, wash trading, or misleading volume."
+    }
+  ],
+  "platformDecisions": {
+    "dexScreener": {
+      "status": "discoverable",
+      "action": "Use the live GCA/USDT pair URL and keep official metadata consistent."
+    },
+    "geckoTerminal": {
+      "status": "approved",
+      "approvalDate": "2026-05-11",
+      "action": "Do not submit duplicate updates unless facts change or GeckoTerminal requests a correction."
+    },
+    "coinGecko": {
+      "status": "defer",
+      "action": "Wait for stronger public activity, legitimate liquidity depth, social presence, and exchange volume before submission."
+    },
+    "coinMarketCap": {
+      "status": "defer",
+      "action": "Wait for stronger public activity, legitimate liquidity depth, material volume, and BaseScan profile publication before submission."
+    }
+  },
+  "publicClaimBoundaries": {
+    "safeClaims": [
+      "GCA is deployed on Base Mainnet with fixed total supply.",
+      "The official public market route is the Uniswap v4 GCA/USDT pool.",
+      "GeckoTerminal token information was approved on 2026-05-11.",
+      "CoinGecko and CoinMarketCap tracked listing submissions are prepared but deferred.",
+      "Current liquidity is starter-depth only.",
+      "No third-party audit has been completed."
+    ],
+    "doNotClaim": [
+      "CoinGecko or CoinMarketCap listing before publication",
+      "BaseScan token profile approval before BaseScan publishes it",
+      "Blockaid or MetaMask warning removal before visible confirmation",
+      "locked reserve before on-chain custody changes",
+      "external audit completion before an independent report is published",
+      "mature liquidity, price support, return promises, or ranking acceptance"
+    ]
+  },
+  "nextActions": [
+    "Wait for BaseScan token profile review.",
+    "Keep the GCA/USDT pool, website, logo, whitepaper, Telegram, and metadata files live.",
+    "Grow legitimate public activity and liquidity depth before CoinGecko or CoinMarketCap submission.",
+    "Connect the member and credit claim flow through a controlled HTTPS account UI before calling it public self-service.",
+    "Revisit third-party audit only when partner, listing, trust, or liquidity requirements justify it."
+  ]
+}

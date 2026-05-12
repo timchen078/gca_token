@@ -22,6 +22,7 @@ OLD_WETH_POOL_ADDRESS = "0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff"
 OFFICIAL_GECKOTERMINAL_URL = f"https://www.geckoterminal.com/base/pools/{OFFICIAL_POOL_ADDRESS}"
 OFFICIAL_DEXSCREENER_URL = f"https://dexscreener.com/base/{OFFICIAL_POOL_ADDRESS}"
 MEMBER_PROGRAM_URL = "https://gcagochina.com/member-program.json"
+LISTING_READINESS_URL = "https://gcagochina.com/listing-readiness.json"
 FORBIDDEN_PUBLIC_CLAIM_PATTERNS = [
     r"\bguaranteed returns?\b",
     r"\bprofit sharing\b",
@@ -128,6 +129,8 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong chainId")
     if payload.get("memberProgramRulesUrl") != MEMBER_PROGRAM_URL:
         raise SiteCheckError(f"{label}: wrong memberProgramRulesUrl")
+    if payload.get("listingReadinessUrl") != LISTING_READINESS_URL:
+        raise SiteCheckError(f"{label}: wrong listingReadinessUrl")
     if market.get("officialPair") != "GCA/USDT":
         raise SiteCheckError(f"{label}: wrong officialPair")
     if market.get("poolAddress") != OFFICIAL_POOL_ADDRESS:
@@ -140,6 +143,8 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: unexpected GeckoTerminal status")
     if member_program.get("status") != "rules-published-public-claim-not-connected":
         raise SiteCheckError(f"{label}: unexpected member program status")
+    if payload.get("listingReadiness", {}).get("status") != "not-ready":
+        raise SiteCheckError(f"{label}: unexpected listing readiness status")
     assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
 
 
@@ -182,6 +187,8 @@ def validate_well_known_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong contractAddress")
     if urls.get("memberProgramRules") != MEMBER_PROGRAM_URL:
         raise SiteCheckError(f"{label}: wrong memberProgramRules")
+    if urls.get("listingReadiness") != LISTING_READINESS_URL:
+        raise SiteCheckError(f"{label}: wrong listingReadiness")
     if market.get("officialPair") != "GCA/USDT":
         raise SiteCheckError(f"{label}: wrong officialPair")
     if market.get("poolAddress") != OFFICIAL_POOL_ADDRESS:
@@ -232,6 +239,42 @@ def validate_member_program_json(text: str) -> None:
     assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
 
 
+def validate_listing_readiness_json(text: str) -> None:
+    label = "/listing-readiness.json"
+    payload = load_json(text, label)
+    market = payload.get("market", {})
+    platforms = payload.get("platformDecisions", {})
+    checks = payload.get("readinessChecks", [])
+
+    if payload.get("schema") != LISTING_READINESS_URL:
+        raise SiteCheckError(f"{label}: wrong schema")
+    if payload.get("status") != "not-ready":
+        raise SiteCheckError(f"{label}: wrong status")
+    if payload.get("chainId") != 8453:
+        raise SiteCheckError(f"{label}: wrong chainId")
+    if payload.get("contractAddress") != MAINNET_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong contractAddress")
+    if market.get("officialPair") != "GCA/USDT":
+        raise SiteCheckError(f"{label}: wrong officialPair")
+    if market.get("poolAddress") != OFFICIAL_POOL_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong poolAddress")
+    if market.get("quoteAssetAddress") != BASE_USDT_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong quoteAssetAddress")
+    if platforms.get("geckoTerminal", {}).get("status") != "approved":
+        raise SiteCheckError(f"{label}: wrong GeckoTerminal status")
+    if platforms.get("coinGecko", {}).get("status") != "defer":
+        raise SiteCheckError(f"{label}: wrong CoinGecko status")
+    if platforms.get("coinMarketCap", {}).get("status") != "defer":
+        raise SiteCheckError(f"{label}: wrong CoinMarketCap status")
+    if not any(check.get("id") == "no-artificial-activity-policy" for check in checks):
+        raise SiteCheckError(f"{label}: missing artificial activity policy")
+    if "CoinGecko tracked listing request" not in payload.get("notReadyFor", []):
+        raise SiteCheckError(f"{label}: missing CoinGecko defer boundary")
+    if "CoinMarketCap tracked listing request" not in payload.get("notReadyFor", []):
+        raise SiteCheckError(f"{label}: missing CoinMarketCap defer boundary")
+    assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
+
+
 def validate_security_txt(text: str) -> None:
     label = "/.well-known/security.txt"
     assert_contains(text, "Contact: mailto:GCAgochina@outlook.com", label)
@@ -245,6 +288,7 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/verify.html",
         "https://gcagochina.com/markets.html",
         "https://gcagochina.com/member-program.json",
+        "https://gcagochina.com/listing-readiness.json",
         "https://gcagochina.com/project.json",
         "https://gcagochina.com/tokenlist.json",
         "https://gcagochina.com/.well-known/gca-token.json",
@@ -255,6 +299,7 @@ def validate_sitemap(text: str) -> None:
 
 def validate_robots(text: str) -> None:
     label = "/robots.txt"
+    assert_contains(text, "Allow: /listing-readiness.json", label)
     assert_contains(text, "Allow: /member-program.json", label)
     assert_contains(text, "Allow: /.well-known/gca-token.json", label)
     assert_contains(text, "Allow: /.well-known/security.txt", label)
@@ -267,6 +312,7 @@ CHECKS: list[EndpointCheck] = [
     ("/markets.html", validate_markets),
     ("/members.html", validate_members),
     ("/member-program.json", validate_member_program_json),
+    ("/listing-readiness.json", validate_listing_readiness_json),
     ("/project.json", validate_project_json),
     ("/tokenlist.json", validate_tokenlist_json),
     ("/.well-known/gca-token.json", validate_well_known_json),
