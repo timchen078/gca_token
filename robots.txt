@@ -1,5 +1,6 @@
 User-agent: *
 Allow: /
+Allow: /listing-readiness.html
 Allow: /listing-readiness.json
 Allow: /member-program.json
 Allow: /.well-known/gca-token.json
