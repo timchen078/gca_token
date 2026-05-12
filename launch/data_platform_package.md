@@ -40,6 +40,7 @@ This package prepares GCA information for token data and DEX discovery platforms
 - Listing kit: `https://gcagochina.com/listing-kit.html`
 - Machine-readable project JSON: `https://gcagochina.com/project.json`
 - Token list JSON: `https://gcagochina.com/tokenlist.json`
+- Internal external review tracker: `launch/external_review_followup_tracker.md`
 - Buy guide: `https://gcagochina.com/buy.html`
 - Official market page: `https://gcagochina.com/markets.html`
 - Supply and reserve page: `https://gcagochina.com/supply.html`
@@ -72,6 +73,10 @@ This package prepares GCA information for token data and DEX discovery platforms
 Current liquidity is starter-depth only. It should not be described as deep, stable, guaranteed, or sufficient for large trades.
 
 Earlier small Base Mainnet buy/sell functional swap tests were observed on 2026-05-10 and recorded in `launch/swap_test_evidence.md`. Treat these only as functional swap evidence, not as proof of organic demand or strong liquidity. Public market links should now point to the GCA/USDT pool above.
+
+## External Review Follow-Up Tracker
+
+Use `launch/external_review_followup_tracker.md` before any BaseScan, Blockaid, GeckoTerminal, DEX Screener, CoinGecko, CoinMarketCap, or audit follow-up. It records which reviews are approved, pending, not submitted, or deferred, plus safe public claims and reply templates. This reduces duplicate requests and keeps the official GCA/USDT pool, verify page, and status disclosures consistent.
 
 ## Supply And Reserve
 

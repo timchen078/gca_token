@@ -1,0 +1,112 @@
+# GCA External Review Follow-Up Tracker
+
+Use this file as the single operating checklist for external review, wallet-warning, and market-data follow-up. It prevents duplicate submissions, premature public claims, and inconsistent links while GCA is still in early public operations.
+
+## Canonical Identity
+
+- Network: Base Mainnet
+- Chain ID: 8453
+- Token contract: `0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`
+- Official website: `https://gcagochina.com/`
+- Official verify page: `https://gcagochina.com/verify.html`
+- Official market page: `https://gcagochina.com/markets.html`
+- Official Telegram: `https://t.me/gcagochinaofficial`
+- Official GCA/USDT pool: `https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0`
+
+## Platform Status
+
+| Platform | Current status | Contact / inbox | Next action |
+| --- | --- | --- | --- |
+| BaseScan token profile | Submitted on 2026-05-09 and awaiting BaseScan review | `cxy070800@gmail.com` | Check inbox, spam, BaseScan notifications, and the contract page. Do not submit again unless BaseScan asks for changes. |
+| Blockaid / MetaMask warning | False-positive report submitted on 2026-05-10; warning removal not confirmed | Owner browser / wallet UI | Recheck the wallet and Uniswap warning UI. If the warning remains after several business days, send one follow-up with buy/sell test evidence and official links. |
+| GeckoTerminal | Token information update approved on 2026-05-11 | `GCAgochina@outlook.com` | No duplicate update unless official details change or GeckoTerminal asks for a correction. |
+| DEX Screener | Discoverable through the live GCA/USDT pool | Not submitted as a direct paid metadata update | Keep the GCA/USDT pool, website, token list, and GeckoTerminal data consistent. |
+| CoinGecko | Not submitted | Not applicable yet | Wait for stronger liquidity, organic holders, public activity, and BaseScan profile publication. |
+| CoinMarketCap | Not submitted | Not applicable yet | Wait for stronger liquidity, organic holders, public activity, and BaseScan profile publication. |
+| Third-party audit | Deferred by owner decision after quote requests | Audit vendor inboxes if replies arrive | Archive quote replies only. Do not claim an external audit unless an independent report is commissioned and published. |
+
+## Daily Check While BaseScan Is Pending
+
+1. Check `cxy070800@gmail.com` inbox and spam.
+2. Check BaseScan account notifications.
+3. Open the BaseScan contract page and confirm whether logo, website, whitepaper, and socials are visible.
+4. Confirm `https://gcagochina.com/verify.html`, `https://gcagochina.com/markets.html`, and the GCA/USDT GeckoTerminal pool still load.
+5. If there is no reply, do not create a duplicate BaseScan request. Keep waiting unless BaseScan rejects the submission or asks for corrections.
+
+## Weekly Check
+
+1. Recheck MetaMask or Uniswap risk warning state for the GCA token.
+2. If the Blockaid warning is still visible, prepare a short follow-up using the template below and attach the existing buy/sell test evidence.
+3. Recheck GeckoTerminal, DEX Screener, and BaseScan links for broken URLs or stale pool references.
+4. Re-evaluate CoinGecko and CoinMarketCap readiness only after there is stronger public activity and market depth.
+
+## Safe Public Claims
+
+- BaseScan source verification is complete.
+- BaseScan deployer-wallet ownership verification is complete.
+- The public BaseScan token profile update has been submitted and is awaiting review.
+- GeckoTerminal token information was approved on 2026-05-11.
+- A Blockaid false-positive report was submitted on 2026-05-10, but wallet-warning removal is not confirmed.
+- The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool.
+- Current liquidity is starter-depth only, and trades can have high price impact and slippage.
+- No third-party audit has been completed.
+
+## Claims To Avoid
+
+- Do not say the BaseScan token profile is approved until BaseScan publishes it.
+- Do not say the Blockaid / MetaMask warning has been removed until it is visibly gone in wallet UI.
+- Do not say GCA is listed on CoinGecko or CoinMarketCap before the relevant platform publishes a listing.
+- Do not say the owner reserve is locked, vested, or multisig-controlled unless custody changes on-chain.
+- Do not describe the project as externally audited, deeply liquid, price-backed, or warning-free.
+
+## BaseScan Follow-Up Template
+
+Use this only if BaseScan replies or asks for more information. Avoid sending repeated unsolicited follow-ups while the original request is still open.
+
+```text
+Hello BaseScan team,
+
+Thank you for reviewing the GCA token profile submission.
+
+Network: Base Mainnet / chainId 8453
+Contract: 0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6
+Official website: https://gcagochina.com/
+Official verify page: https://gcagochina.com/verify.html
+Official market page: https://gcagochina.com/markets.html
+Official logo: https://gcagochina.com/assets/gca-logo.svg
+Whitepaper: https://gcagochina.com/whitepaper.html
+Official GCA/USDT pool: https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0
+Official Telegram: https://t.me/gcagochinaofficial
+Official contact email: cxy070800@gmail.com
+
+Please let us know if any field correction or additional verification is required.
+```
+
+## Blockaid Follow-Up Template
+
+Use this if the warning remains visible after the initial report has had time to be reviewed.
+
+```text
+Hello Blockaid team,
+
+We submitted a false-positive report for GCA on Base Mainnet on 2026-05-10. The token contract is a fixed-supply ERC-20 with no post-deployment mint function, owner/admin role, proxy, blacklist, pause function, transfer tax, or hidden fee. The source is verified on BaseScan.
+
+Network: Base Mainnet / chainId 8453
+Contract: 0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6
+Official verify page: https://gcagochina.com/verify.html
+Official market page: https://gcagochina.com/markets.html
+Buy test transaction: 0xf79e52ea56a299a30c2d297be99c970295864ed262c01fdcb7e3f60ca669b040
+Sell test transaction: 0x0ff618062abc6e28933699d4e3bd723026f8505e4a0155db3068073b6fdc86e7
+
+Please review whether the suspected-honeypot warning can be corrected.
+```
+
+## Listing Readiness Gate
+
+Do not submit CoinGecko or CoinMarketCap yet unless these conditions are materially stronger:
+
+- BaseScan token profile is published.
+- Website, verify page, logo, whitepaper, Telegram, and GCA/USDT pool links are stable.
+- Liquidity and public trading activity are stronger than current starter-depth conditions.
+- Public holder activity is not based on self-trading, wash trading, or fake volume.
+- The project can still describe audit, reserve, utility, and liquidity status conservatively.

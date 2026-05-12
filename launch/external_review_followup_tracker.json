@@ -1,0 +1,79 @@
+{
+  "documentStatus": "prepared",
+  "lastReviewedDate": "2026-05-12",
+  "canonicalIdentity": {
+    "network": "Base Mainnet",
+    "chainId": 8453,
+    "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+    "website": "https://gcagochina.com/",
+    "verifyUrl": "https://gcagochina.com/verify.html",
+    "marketPageUrl": "https://gcagochina.com/markets.html",
+    "telegramUrl": "https://t.me/gcagochinaofficial",
+    "officialPoolPair": "GCA/USDT",
+    "officialPoolAddress": "0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "geckoTerminalPoolUrl": "https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0"
+  },
+  "platforms": {
+    "baseScan": {
+      "profileStatus": "submitted-awaiting-review",
+      "submissionDate": "2026-05-09",
+      "replyInbox": "cxy070800@gmail.com",
+      "nextAction": "Check inbox, spam, BaseScan notifications, and the public contract page. Do not submit again unless BaseScan asks for changes."
+    },
+    "blockaid": {
+      "reportStatus": "submitted-warning-removal-not-confirmed",
+      "submissionDate": "2026-05-10",
+      "nextAction": "Recheck wallet and Uniswap warning UI. If the warning remains after several business days, send one follow-up with buy/sell test evidence and official links."
+    },
+    "geckoTerminal": {
+      "profileStatus": "approved",
+      "approvalDate": "2026-05-11",
+      "submissionEmail": "GCAgochina@outlook.com",
+      "nextAction": "Do not submit a duplicate update unless official details change or GeckoTerminal asks for a correction."
+    },
+    "dexScreener": {
+      "status": "discoverable-through-gca-usdt-pool",
+      "nextAction": "Keep the GCA/USDT pool, website, token list, and GeckoTerminal data consistent."
+    },
+    "coinGecko": {
+      "status": "not-submitted",
+      "nextAction": "Wait for stronger liquidity, organic holders, public activity, and BaseScan profile publication."
+    },
+    "coinMarketCap": {
+      "status": "not-submitted",
+      "nextAction": "Wait for stronger liquidity, organic holders, public activity, and BaseScan profile publication."
+    },
+    "thirdPartyAudit": {
+      "status": "deferred-after-quote-requests",
+      "nextAction": "Archive quote replies only. Do not claim an external audit unless an independent report is commissioned and published."
+    }
+  },
+  "safePublicClaims": [
+    "BaseScan source verification is complete.",
+    "BaseScan deployer-wallet ownership verification is complete.",
+    "The public BaseScan token profile update has been submitted and is awaiting review.",
+    "GeckoTerminal token information was approved on 2026-05-11.",
+    "A Blockaid false-positive report was submitted on 2026-05-10, but wallet-warning removal is not confirmed.",
+    "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool.",
+    "Current liquidity is starter-depth only, and trades can have high price impact and slippage.",
+    "No third-party audit has been completed."
+  ],
+  "doNotClaim": [
+    "BaseScan token profile approval before publication",
+    "Blockaid or MetaMask warning removal before visible confirmation",
+    "CoinGecko or CoinMarketCap listing before publication",
+    "locked reserve before on-chain custody change",
+    "external audit completion before an independent report is commissioned and published",
+    "deep liquidity or price backing"
+  ],
+  "coinGeckoCoinMarketCapGate": {
+    "ready": false,
+    "requiredBeforeSubmission": [
+      "BaseScan token profile publication",
+      "stable website, verify page, logo, whitepaper, Telegram, and GCA/USDT pool links",
+      "stronger liquidity and public trading activity than current starter-depth conditions",
+      "public holder activity not based on self-trading, wash trading, or fake volume",
+      "conservative public audit, reserve, utility, and liquidity disclosures"
+    ]
+  }
+}
