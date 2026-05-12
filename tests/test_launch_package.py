@@ -54,6 +54,13 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("/member-program.json", script)
         self.assertIn("validate_members", script)
         self.assertIn("validate_member_program_json", script)
+        self.assertIn("FORBIDDEN_PUBLIC_CLAIM_PATTERNS", script)
+        self.assertIn("assert_no_forbidden_public_claims", script)
+        self.assertIn("profit sharing", script)
+        self.assertIn("risk[- ]?free", script)
+        self.assertIn("保本", script)
+        self.assertIn("刷量", script)
+        self.assertIn("对倒", script)
         self.assertIn("[ok]", script)
         self.assertIn("[fail]", script)
 
@@ -68,9 +75,14 @@ class LaunchPackageTests(unittest.TestCase):
         module.validate_security_txt((ROOT / "site" / ".well-known" / "security.txt").read_text())
         module.validate_sitemap((ROOT / "site" / "sitemap.xml").read_text())
         module.validate_robots((ROOT / "site" / "robots.txt").read_text())
+        module.assert_no_forbidden_public_claims((ROOT / "site" / "index.html").read_text(), "/")
 
         with self.assertRaises(module.SiteCheckError):
             module.validate_root(f"GCA/WETH {OLD_WETH_POOL_ADDRESS}")
+        with self.assertRaises(module.SiteCheckError):
+            module.assert_no_forbidden_public_claims("GCA has guaranteed returns", "/bad")
+        with self.assertRaises(module.SiteCheckError):
+            module.assert_no_forbidden_public_claims("GCA 可以保本", "/bad")
 
     def test_pages_publish_workflow_syncs_site_to_gh_pages(self):
         workflow = (ROOT / ".github" / "workflows" / "publish-site.yml").read_text()

@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import ssl
 import sys
 from typing import Callable
@@ -21,6 +22,17 @@ OLD_WETH_POOL_ADDRESS = "0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff"
 OFFICIAL_GECKOTERMINAL_URL = f"https://www.geckoterminal.com/base/pools/{OFFICIAL_POOL_ADDRESS}"
 OFFICIAL_DEXSCREENER_URL = f"https://dexscreener.com/base/{OFFICIAL_POOL_ADDRESS}"
 MEMBER_PROGRAM_URL = "https://gcagochina.com/member-program.json"
+FORBIDDEN_PUBLIC_CLAIM_PATTERNS = [
+    r"\bguaranteed returns?\b",
+    r"\bprofit sharing\b",
+    r"\brisk[- ]?free\b",
+    "稳赚",
+    "保本",
+    "拉盘",
+    "炒币",
+    "刷量",
+    "对倒",
+]
 
 
 class SiteCheckError(AssertionError):
@@ -38,6 +50,12 @@ def assert_contains(text: str, expected: str, label: str) -> None:
 def assert_not_contains(text: str, forbidden: str, label: str) -> None:
     if forbidden in text:
         raise SiteCheckError(f"{label}: found forbidden {forbidden!r}")
+
+
+def assert_no_forbidden_public_claims(text: str, label: str) -> None:
+    for pattern in FORBIDDEN_PUBLIC_CLAIM_PATTERNS:
+        if re.search(pattern, text, flags=re.IGNORECASE):
+            raise SiteCheckError(f"{label}: forbidden public claim pattern {pattern!r}")
 
 
 def assert_current_pool_text(text: str, label: str) -> None:
@@ -300,6 +318,7 @@ def run_checks(base_url: str, timeout: float, allow_insecure_tls: bool = False) 
         try:
             url, body = fetch_text(base_url, path, timeout, context)
             validator(body)
+            assert_no_forbidden_public_claims(body, path)
         except SiteCheckError as exc:
             failures.append(str(exc))
             print(f"[fail] {path}: {exc}", file=sys.stderr)
