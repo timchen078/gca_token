@@ -11,6 +11,7 @@
 - BaseScan token information submission package prepared.
 - 32x32 SVG logo created.
 - Static website created.
+- Public site health-check script prepared at `tools/check_public_site.py`.
 - GitHub Pages custom domain configured for `https://gcagochina.com/`.
 - DNS records for `gcagochina.com` configured in Cloudflare.
 - GitHub Pages HTTPS certificate issued and Enforce HTTPS enabled.

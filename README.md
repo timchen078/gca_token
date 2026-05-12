@@ -37,3 +37,4 @@ Deployment notes are in `docs/deploy_base_sepolia.md` and `docs/deploy_base_main
 - Launch status: `launch/launch_status.md`
 - Logo: `brand/gca-logo.svg`
 - Static website: `site/index.html`
+- Live public site check: `.venv/bin/python tools/check_public_site.py`

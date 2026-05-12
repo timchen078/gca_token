@@ -1,3 +1,4 @@
+import importlib.util
 import json
 import re
 import unittest
@@ -34,6 +35,36 @@ SECURITY_CONTACT_URL = "https://gcagochina.com/.well-known/security.txt"
 
 
 class LaunchPackageTests(unittest.TestCase):
+    def test_public_site_health_check_script_matches_canonical_identity(self):
+        script_path = ROOT / "tools" / "check_public_site.py"
+        script = script_path.read_text()
+        spec = importlib.util.spec_from_file_location("check_public_site", script_path)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+
+        self.assertIn("DEFAULT_BASE_URL = \"https://gcagochina.com/\"", script)
+        self.assertIn(MAINNET_ADDRESS, script)
+        self.assertIn(OFFICIAL_POOL_ADDRESS, script)
+        self.assertIn(BASE_USDT_ADDRESS, script)
+        self.assertIn(OLD_WETH_POOL_ADDRESS, script)
+        self.assertIn("/.well-known/gca-token.json", script)
+        self.assertIn("/.well-known/security.txt", script)
+        self.assertIn("[ok]", script)
+        self.assertIn("[fail]", script)
+
+        module.validate_root((ROOT / "site" / "index.html").read_text())
+        module.validate_verify((ROOT / "site" / "verify.html").read_text())
+        module.validate_markets((ROOT / "site" / "markets.html").read_text())
+        module.validate_project_json((ROOT / "site" / "project.json").read_text())
+        module.validate_tokenlist_json((ROOT / "site" / "tokenlist.json").read_text())
+        module.validate_well_known_json((ROOT / "site" / ".well-known" / "gca-token.json").read_text())
+        module.validate_security_txt((ROOT / "site" / ".well-known" / "security.txt").read_text())
+        module.validate_sitemap((ROOT / "site" / "sitemap.xml").read_text())
+        module.validate_robots((ROOT / "site" / "robots.txt").read_text())
+
+        with self.assertRaises(module.SiteCheckError):
+            module.validate_root(f"GCA/WETH {OLD_WETH_POOL_ADDRESS}")
+
     def test_pages_publish_workflow_syncs_site_to_gh_pages(self):
         workflow = (ROOT / ".github" / "workflows" / "publish-site.yml").read_text()
 
@@ -901,6 +932,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("## Done", status)
         self.assertIn("## Needs Owner Input Or External Service", status)
         self.assertIn("https://gcagochina.com/", status)
+        self.assertIn("Public site health-check script prepared", status)
+        self.assertIn("tools/check_public_site.py", status)
         self.assertIn("DNS records for `gcagochina.com`", status)
         self.assertIn("GitHub Pages HTTPS certificate issued", status)
         self.assertIn("GitHub Actions publishing workflow prepared", status)
