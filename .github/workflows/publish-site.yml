@@ -1,0 +1,52 @@
+name: Publish GCA Site
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "site/**"
+      - ".github/workflows/publish-site.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gca-site-publish
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    name: Publish site directory to gh-pages
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Publish site to gh-pages
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git fetch origin gh-pages
+          git worktree add ../gh-pages origin/gh-pages
+
+          rsync -a --delete --exclude .git site/ ../gh-pages/
+
+          cd ../gh-pages
+          git add -A
+
+          if git diff --quiet && git diff --cached --quiet; then
+            echo "No website changes to publish."
+            exit 0
+          fi
+
+          git commit -m "Publish site from ${GITHUB_SHA::7} [skip ci]"
+          git push origin HEAD:gh-pages

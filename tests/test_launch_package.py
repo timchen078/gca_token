@@ -34,6 +34,30 @@ SECURITY_CONTACT_URL = "https://gcagochina.com/.well-known/security.txt"
 
 
 class LaunchPackageTests(unittest.TestCase):
+    def test_pages_publish_workflow_syncs_site_to_gh_pages(self):
+        workflow = (ROOT / ".github" / "workflows" / "publish-site.yml").read_text()
+
+        self.assertIn("name: Publish GCA Site", workflow)
+        self.assertIn("branches:", workflow)
+        self.assertIn("- main", workflow)
+        self.assertIn('"site/**"', workflow)
+        self.assertIn('".github/workflows/publish-site.yml"', workflow)
+        self.assertIn("workflow_dispatch:", workflow)
+        self.assertIn("contents: write", workflow)
+        self.assertIn("concurrency:", workflow)
+        self.assertIn("actions/checkout@v4", workflow)
+        self.assertIn("fetch-depth: 0", workflow)
+        self.assertIn("git fetch origin gh-pages", workflow)
+        self.assertIn("git worktree add ../gh-pages origin/gh-pages", workflow)
+        self.assertIn("rsync -a --delete --exclude .git site/ ../gh-pages/", workflow)
+        self.assertIn("git add -A", workflow)
+        self.assertIn("No website changes to publish.", workflow)
+        self.assertIn('git commit -m "Publish site from ${GITHUB_SHA::7} [skip ci]"', workflow)
+        self.assertIn("git push origin HEAD:gh-pages", workflow)
+        self.assertNotIn("secrets.", workflow)
+        self.assertNotIn("PRIVATE", workflow)
+        self.assertNotIn("mnemonic", workflow.lower())
+
     def test_logo_matches_basescan_size_target(self):
         logo = (ROOT / "brand" / "gca-logo.svg").read_text()
         self.assertIn('width="32"', logo)
@@ -873,6 +897,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("https://gcagochina.com/", status)
         self.assertIn("DNS records for `gcagochina.com`", status)
         self.assertIn("GitHub Pages HTTPS certificate issued", status)
+        self.assertIn("GitHub Actions publishing workflow prepared", status)
+        self.assertIn("sync `site/` to the `gh-pages` branch", status)
         self.assertIn("Data platform submission package prepared", status)
         self.assertIn("External review follow-up tracker prepared", status)
         self.assertIn("launch/external_review_followup_tracker.md", status)

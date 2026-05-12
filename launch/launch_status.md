@@ -14,6 +14,7 @@
 - GitHub Pages custom domain configured for `https://gcagochina.com/`.
 - DNS records for `gcagochina.com` configured in Cloudflare.
 - GitHub Pages HTTPS certificate issued and Enforce HTTPS enabled.
+- GitHub Actions publishing workflow prepared to sync `site/` to the `gh-pages` branch after `main` site changes.
 - Public logo URL is live at `https://gcagochina.com/assets/gca-logo.svg`.
 - Public whitepaper URL is live at `https://gcagochina.com/whitepaper.html`.
 - Current public contact email `GCAgochina@outlook.com` is published on the official website for data platform verification.
