@@ -38,6 +38,7 @@
 - Verified first holder campaign backend documented: each registered user may verify one wallet holding at least 10,000 GCA and receive a one-time 100 Web3 Radar utility credits ledger record.
 - Verified GCA Member backend documented: each registered user may verify one wallet holding at least 1,000,000 GCA and qualify for GCA Member status in the Web3 Radar member ledger.
 - Member pre-registration page prepared at `https://gcagochina.com/members.html`; it generates local-only registration packets and does not create a live account.
+- Public member program rules prepared at `https://gcagochina.com/member-program.json`, including 100 credit spend scope, 180-day credit expiry, 30-day member refresh cadence, and support status workflow.
 - Member pre-registration page now has a configurable direct submission endpoint placeholder; collection remains copy/download/email until an approved HTTPS endpoint is configured.
 - Web3 Radar local access bridge paths are prepared: `GET /gca/member-access`, `POST /gca/pre-registrations`, `POST /gca/wallet-verifications`, `GET /gca/credit-ledger`, `GET /gca/member-ledger`, and `GET /gca/member-review`; the public static page is not connected to them yet.
 - Public utility thesis page prepared at `https://gcagochina.com/utility.html`.
@@ -73,8 +74,8 @@
 - If BaseScan asks for supply details during review, use the updated 40/60 allocation and both reserve transfer transactions.
 - Wait for stronger public activity and market volume before submitting CoinGecko or CoinMarketCap listing requests.
 - Expose the Web3 Radar access bridge through controlled HTTPS account UI before describing report credits, backtest quotas, ENTRY_READY reviews, or calculators as public self-service token-gated features.
-- Add public UI, spend/expiry rules, and support workflow before describing the 10,000 GCA holder bonus as claimable by users without operator help.
-- Add public UI, refresh cadence, member benefit limits, and support workflow before describing the 1,000,000 GCA Member tier as self-service claimable by users.
+- Connect controlled HTTPS account UI before describing the 10,000 GCA holder bonus as claimable by users without operator help.
+- Connect controlled HTTPS account UI before describing the 1,000,000 GCA Member tier as self-service claimable by users.
 - Configure a controlled HTTPS collection endpoint in `site/members.html` before asking users to rely on direct packet submission.
 - Deploy the Web3 Radar GCA intake behind the same official HTTPS origin or a reviewed reverse proxy before enabling the public `Submit Packet` button.
 - Add the official Telegram link to any BaseScan or GeckoTerminal follow-up if those reviewers ask for social links.

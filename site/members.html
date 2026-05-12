@@ -363,12 +363,12 @@
         <div class="fact">
           <span class="label">Holder Bonus</span>
           <span class="value">10,000 GCA</span>
-          <p class="note">Backend-supported one-time 100 Web3 Radar utility credits after wallet balance verification.</p>
+          <p class="note">Backend-supported one-time 100 Web3 Radar utility credits after wallet balance verification, with a planned 180-day use window after ledger activation.</p>
         </div>
         <div class="fact">
           <span class="label">GCA Member</span>
           <span class="value">1,000,000 GCA</span>
-          <p class="note">Backend-supported member status with higher utility limits, member research notes, training, and priority support.</p>
+          <p class="note">Backend-supported member status with higher utility limits, member research notes, training, priority support, and a planned 30-day balance refresh cadence.</p>
         </div>
       </section>
 
@@ -443,12 +443,32 @@
             <div class="row"><span>Holder Bonus threshold</span><strong>10,000 GCA</strong></div>
             <div class="row"><span>GCA Member threshold</span><strong>1,000,000 GCA</strong></div>
             <div class="row"><span>Verification method</span><strong>Backend balanceOf check</strong></div>
+            <div class="row"><span>100 credits use window after ledger activation</span><strong>180 days</strong></div>
+            <div class="row"><span>GCA Member balance refresh cadence</span><strong>30 days</strong></div>
+            <div class="row"><span>Support target after controlled intake is live</span><strong>5-10 business days</strong></div>
+            <div class="row"><span>Machine-readable rules</span><strong><a href="member-program.json">member-program.json</a></strong></div>
           </div>
         </div>
         <div class="panel">
           <h2>Safety Boundary</h2>
           <p class="note">This public static page does not store data on a server. The packet stays in your browser until you copy, download, or email it. When a reviewed HTTPS endpoint is connected, it may store only the pre-registration review fields, then Web3 Radar may verify the queued wallet with an ERC-20 balanceOf read. Pre-registration is not financial advice, not a token rebate, not cash, not income, not reimbursement, not trading permission, and not a way to bypass Web3 Radar risk controls.</p>
         </div>
+      </section>
+
+      <section class="section two" aria-label="Credit and member rules">
+        <div class="panel">
+          <h2>100 Credit Rules</h2>
+          <p class="note">The planned holder bonus is a one-time account-level service credit record for verified 10,000 GCA holders. Credits are intended for reports, backtests, risk warnings, ENTRY_READY signal review, position calculators, and education access. They are not transferable and cannot be redeemed for cash, tokens, income, reimbursement, or trading permission.</p>
+        </div>
+        <div class="panel">
+          <h2>Member Rules</h2>
+          <p class="note">The planned GCA Member tier is service access only for verified 1,000,000 GCA holders. Member status can support higher utility limits, member research notes, priority report queue, member training sessions, and priority support. It does not activate live trading, leverage, custody, withdrawals, voting control, lifetime access, or risk-control bypass.</p>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="supportTitle">
+        <h2 id="supportTitle">Support Workflow</h2>
+        <p class="note">After controlled HTTPS intake is live, support can review packets through the statuses <code>received</code>, <code>wallet_pending</code>, <code>eligible</code>, <code>needs_more_information</code>, <code>rejected</code>, and <code>ledger_recorded</code>. The target first response is 5-10 business days after controlled intake is live, and it is not a guarantee. Manual support cannot override wallet-balance verification, risk controls, or the no-custody boundary.</p>
       </section>
 
       <section class="section panel" aria-labelledby="reviewTitle">
@@ -482,6 +502,9 @@
       const MEMBER_ACCESS_PAGE_PATH = "/gca/member-access";
       const HOLDER_THRESHOLD = 10000;
       const MEMBER_THRESHOLD = 1000000;
+      const CREDIT_EXPIRY_DAYS = 180;
+      const MEMBER_REFRESH_DAYS = 30;
+      const SUPPORT_TARGET = "5-10 business days after controlled intake is live; not a guarantee";
 
       const form = document.getElementById("registrationForm");
       const email = document.getElementById("email");
@@ -560,13 +583,22 @@
             holderBonus: {
               minimumHolding: "10000 GCA",
               benefit: "one-time 100 Web3 Radar utility credits",
+              creditExpiry: `${CREDIT_EXPIRY_DAYS} days after ledger activation`,
+              spendScope: "reports, backtests, risk warnings, ENTRY_READY signal review, position calculators, or education access",
               status: "backend-ledger-ready-public-claim-not-connected"
             },
             gcaMember: {
               minimumHolding: "1000000 GCA",
               benefit: "GCA Member status",
+              refreshCadence: `${MEMBER_REFRESH_DAYS} days after activation, or earlier manual recheck`,
+              accessScope: "higher utility credit limits, member research notes, priority report queue, member training sessions, and priority support",
               status: "backend-ledger-ready-public-claim-not-connected"
             }
+          },
+          supportWorkflow: {
+            contactEmail: CONTACT_EMAIL,
+            targetFirstResponse: SUPPORT_TARGET,
+            reviewStatuses: ["received", "wallet_pending", "eligible", "needs_more_information", "rejected", "ledger_recorded"]
           },
           acknowledgements: {
             preRegistrationOnly: terms.checked,

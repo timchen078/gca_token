@@ -32,6 +32,7 @@ FAQ_URL = "https://gcagochina.com/faq.html"
 OLD_WETH_POOL_ADDRESS = "0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff"
 WELL_KNOWN_TOKEN_URL = "https://gcagochina.com/.well-known/gca-token.json"
 SECURITY_CONTACT_URL = "https://gcagochina.com/.well-known/security.txt"
+MEMBER_PROGRAM_URL = "https://gcagochina.com/member-program.json"
 
 
 class LaunchPackageTests(unittest.TestCase):
@@ -183,6 +184,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertTrue((ROOT / "site" / ".nojekyll").exists())
         self.assertIn("User-agent: *", robots)
         self.assertIn("Allow: /", robots)
+        self.assertIn("Allow: /member-program.json", robots)
         self.assertIn("Allow: /.well-known/gca-token.json", robots)
         self.assertIn("Allow: /.well-known/security.txt", robots)
         self.assertIn("Sitemap: https://gcagochina.com/sitemap.xml", robots)
@@ -198,6 +200,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("https://gcagochina.com/security.html", sitemap)
         self.assertIn("https://gcagochina.com/risk.html", sitemap)
         self.assertIn("https://gcagochina.com/faq.html", sitemap)
+        self.assertIn(MEMBER_PROGRAM_URL, sitemap)
         self.assertIn("https://gcagochina.com/whitepaper.html", sitemap)
         self.assertIn(WELL_KNOWN_TOKEN_URL, sitemap)
         self.assertIn(SECURITY_CONTACT_URL, sitemap)
@@ -220,6 +223,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(identity["officialUrls"]["verify"], VERIFY_PAGE_URL)
         self.assertEqual(identity["officialUrls"]["wellKnownTokenIdentity"], WELL_KNOWN_TOKEN_URL)
         self.assertEqual(identity["officialUrls"]["securityContact"], SECURITY_CONTACT_URL)
+        self.assertEqual(identity["officialUrls"]["memberProgramRules"], MEMBER_PROGRAM_URL)
         self.assertEqual(identity["officialUrls"]["telegram"], TELEGRAM_URL)
         self.assertEqual(identity["market"]["officialPair"], "GCA/USDT")
         self.assertEqual(identity["market"]["poolAddress"], OFFICIAL_POOL_ADDRESS)
@@ -338,6 +342,38 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("walletAddressFormatOk", members)
         self.assertIn("eth_requestAccounts", members)
         self.assertIn("GCAgochina@outlook.com", members)
+        self.assertIn("180 days", members)
+        self.assertIn("30 days", members)
+        self.assertIn("5-10 business days", members)
+        self.assertIn("member-program.json", members)
+        self.assertIn("CREDIT_EXPIRY_DAYS = 180", members)
+        self.assertIn("MEMBER_REFRESH_DAYS = 30", members)
+        self.assertIn("reviewStatuses", members)
+        self.assertIn("ledger_recorded", members)
+
+    def test_member_program_json_sets_safe_rules(self):
+        rules = json.loads((ROOT / "site" / "member-program.json").read_text())
+
+        self.assertEqual(rules["schema"], MEMBER_PROGRAM_URL)
+        self.assertEqual(rules["status"], "rules-published-public-claim-not-connected")
+        self.assertEqual(rules["chainId"], 8453)
+        self.assertEqual(rules["token"]["contractAddress"], MAINNET_ADDRESS)
+        self.assertEqual(rules["holderBonus"]["minimumHolding"], "10000 GCA")
+        self.assertEqual(rules["holderBonus"]["creditAmount"], "100 Web3 Radar utility credits")
+        self.assertEqual(rules["holderBonus"]["creditExpiry"], "180 days after ledger activation unless a later published policy extends it")
+        self.assertIn("ENTRY_READY signal review", rules["holderBonus"]["spendScope"])
+        self.assertIn("not transferable", " ".join(rules["holderBonus"]["spendRules"]))
+        self.assertEqual(rules["memberTier"]["minimumHolding"], "1000000 GCA")
+        self.assertEqual(rules["memberTier"]["refreshCadence"], "30 days after activation, or earlier if the user requests a manual recheck")
+        self.assertIn("priority support", rules["memberTier"]["accessScope"])
+        self.assertIn("risk-control bypass", " ".join(rules["memberTier"]["accessRules"]))
+        self.assertFalse(rules["verification"]["directSubmissionEndpointConfigured"])
+        self.assertEqual(rules["supportWorkflow"]["contactEmail"], "GCAgochina@outlook.com")
+        self.assertIn("not a guarantee", rules["supportWorkflow"]["targetFirstResponse"])
+        self.assertIn("ledger_recorded", rules["supportWorkflow"]["reviewStatuses"])
+        self.assertIn("public self-service claiming is not connected", " ".join(rules["publicClaimBoundaries"]["safeClaims"]))
+        self.assertIn("credits or membership are cash", " ".join(rules["publicClaimBoundaries"]["doNotClaim"]))
+        self.assertNotIn(OLD_WETH_POOL_ADDRESS, json.dumps(rules))
 
     def test_utility_page_connects_gca_to_quant_tools_safely(self):
         utility = (ROOT / "site" / "utility.html").read_text()
@@ -662,6 +698,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("project.json", kit)
         self.assertIn("Token List JSON", kit)
         self.assertIn("tokenlist.json", kit)
+        self.assertIn("Member Program JSON", kit)
+        self.assertIn(MEMBER_PROGRAM_URL, kit)
         self.assertIn("Well-Known JSON", kit)
         self.assertIn(WELL_KNOWN_TOKEN_URL, kit)
         self.assertIn(SECURITY_CONTACT_URL, kit)
@@ -711,6 +749,13 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(project["securityPageUrl"], SECURITY_PAGE_URL)
         self.assertEqual(project["riskPageUrl"], RISK_PAGE_URL)
         self.assertEqual(project["faqUrl"], FAQ_URL)
+        self.assertEqual(project["memberProgramRulesUrl"], MEMBER_PROGRAM_URL)
+        self.assertEqual(project["memberProgram"]["status"], "rules-published-public-claim-not-connected")
+        self.assertEqual(project["memberProgram"]["holderBonus"]["creditExpiry"], "180 days after ledger activation unless a later published policy extends it")
+        self.assertIn("ENTRY_READY signal review", project["memberProgram"]["holderBonus"]["spendScope"])
+        self.assertEqual(project["memberProgram"]["gcaMember"]["refreshCadence"], "30 days after activation, or earlier if the user requests a manual recheck")
+        self.assertIn("priority support", project["memberProgram"]["gcaMember"]["accessScope"])
+        self.assertIn("not a guarantee", project["memberProgram"]["supportWorkflow"]["targetFirstResponse"])
         self.assertEqual(project["market"]["officialPair"], "GCA/USDT")
         self.assertEqual(project["market"]["poolAddress"], OFFICIAL_POOL_ADDRESS)
         self.assertEqual(project["market"]["quoteAssetAddress"], BASE_USDT_ADDRESS)
@@ -751,6 +796,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(extensions["securityPage"], SECURITY_PAGE_URL)
         self.assertEqual(extensions["riskPage"], RISK_PAGE_URL)
         self.assertEqual(extensions["faq"], FAQ_URL)
+        self.assertEqual(extensions["memberProgramRules"], MEMBER_PROGRAM_URL)
         self.assertEqual(extensions["officialTelegram"], TELEGRAM_URL)
         self.assertEqual(extensions["geckoTerminal"], OFFICIAL_GECKOTERMINAL_URL)
         self.assertEqual(extensions["dexScreener"], OFFICIAL_DEXSCREENER_URL)
@@ -775,6 +821,7 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "site" / "status.html",
             ROOT / "site" / "listing-kit.html",
             ROOT / "site" / "members.html",
+            ROOT / "site" / "member-program.json",
             ROOT / "site" / "utility.html",
             ROOT / "site" / ".well-known" / "gca-token.json",
             ROOT / "site" / ".well-known" / "security.txt",
@@ -998,6 +1045,11 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Official FAQ page prepared", status)
         self.assertIn("https://gcagochina.com/faq.html", status)
         self.assertIn("wallet import, price display, risk warning", status)
+        self.assertIn("Public member program rules prepared", status)
+        self.assertIn(MEMBER_PROGRAM_URL, status)
+        self.assertIn("180-day credit expiry", status)
+        self.assertIn("30-day member refresh cadence", status)
+        self.assertIn("support status workflow", status)
         self.assertIn("Telegram replacement pinned buy announcement template prepared", status)
         self.assertIn("launch/telegram_pinned_buy_announcement.md", status)
         self.assertIn("Replace the Telegram pinned message", status)
@@ -1098,6 +1150,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["riskPageUrl"], RISK_PAGE_URL)
         self.assertEqual(values["faqUrl"], FAQ_URL)
         self.assertEqual(values["memberPreRegistrationUrl"], "https://gcagochina.com/members.html")
+        self.assertEqual(values["memberProgramRulesUrl"], MEMBER_PROGRAM_URL)
         self.assertEqual(values["utilityThesisUrl"], "https://gcagochina.com/utility.html")
         self.assertEqual(values["logoUrl"], "https://gcagochina.com/assets/gca-logo.svg")
         self.assertEqual(values["utilityPositioning"]["connectedProduct"], "Web3 Radar non-custodial quant risk toolkit")
@@ -1108,11 +1161,16 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["utilityPositioning"]["plannedFirstCampaign"]["registeredUserLimit"], "one bonus per registered user")
         self.assertEqual(values["utilityPositioning"]["plannedFirstCampaign"]["minimumHolding"], "10000 GCA")
         self.assertEqual(values["utilityPositioning"]["plannedFirstCampaign"]["bonus"], "100 Web3 Radar utility credits")
+        self.assertEqual(values["utilityPositioning"]["plannedFirstCampaign"]["creditExpiry"], "180 days after ledger activation unless a later published policy extends it")
         self.assertIn("risk-control bypass", values["utilityPositioning"]["plannedFirstCampaign"]["notCreditUse"])
         self.assertEqual(values["utilityPositioning"]["plannedMemberTier"]["tierName"], "GCA Member")
         self.assertEqual(values["utilityPositioning"]["plannedMemberTier"]["minimumHolding"], "1000000 GCA")
+        self.assertEqual(values["utilityPositioning"]["plannedMemberTier"]["refreshCadence"], "30 days after activation, or earlier if the user requests a manual recheck")
         self.assertIn("higher utility credit limits", values["utilityPositioning"]["plannedMemberTier"]["memberAccess"])
         self.assertIn("guaranteed lifetime access", values["utilityPositioning"]["plannedMemberTier"]["notMemberAccess"])
+        self.assertEqual(values["utilityPositioning"]["supportWorkflow"]["contactEmail"], "GCAgochina@outlook.com")
+        self.assertIn("not a guarantee", values["utilityPositioning"]["supportWorkflow"]["targetFirstResponse"])
+        self.assertIn("ledger_recorded", values["utilityPositioning"]["supportWorkflow"]["reviewStatuses"])
         self.assertIn("platform revenue distribution", values["utilityPositioning"]["notUtility"])
         self.assertEqual(values["liquidity"]["dex"], "Uniswap v4")
         self.assertEqual(values["liquidity"]["pair"], "GCA/USDT")

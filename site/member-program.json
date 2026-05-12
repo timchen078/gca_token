@@ -1,0 +1,104 @@
+{
+  "schema": "https://gcagochina.com/member-program.json",
+  "lastUpdated": "2026-05-12",
+  "status": "rules-published-public-claim-not-connected",
+  "network": "Base Mainnet",
+  "chainId": 8453,
+  "token": {
+    "symbol": "GCA",
+    "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6"
+  },
+  "publicPages": {
+    "members": "https://gcagochina.com/members.html",
+    "utility": "https://gcagochina.com/utility.html",
+    "risk": "https://gcagochina.com/risk.html",
+    "verify": "https://gcagochina.com/verify.html"
+  },
+  "holderBonus": {
+    "status": "backend-ledger-ready-public-claim-not-connected",
+    "minimumHolding": "10000 GCA",
+    "registeredUserLimit": "one bonus per registered user",
+    "walletLimit": "one verified wallet per registered user",
+    "creditAmount": "100 Web3 Radar utility credits",
+    "creditActivation": "after controlled HTTPS account UI is live and wallet balance verification succeeds",
+    "creditExpiry": "180 days after ledger activation unless a later published policy extends it",
+    "spendScope": [
+      "reports",
+      "backtests",
+      "risk warnings",
+      "ENTRY_READY signal review",
+      "position calculators",
+      "education access"
+    ],
+    "spendRules": [
+      "credits are account-level service credits only",
+      "credits are not transferable",
+      "credits cannot be redeemed for cash, tokens, income, reimbursement, or trading permission",
+      "credits cannot bypass Web3 Radar risk controls",
+      "credits are consumed only after a requested service is delivered or queued according to the account UI"
+    ]
+  },
+  "memberTier": {
+    "status": "backend-ledger-ready-public-claim-not-connected",
+    "tierName": "GCA Member",
+    "minimumHolding": "1000000 GCA",
+    "registeredUserLimit": "one membership status per registered user",
+    "walletLimit": "one verified wallet per registered user",
+    "refreshCadence": "30 days after activation, or earlier if the user requests a manual recheck",
+    "accessScope": [
+      "higher utility credit limits",
+      "member research notes",
+      "priority report queue",
+      "member training sessions",
+      "priority support"
+    ],
+    "accessRules": [
+      "member status is service access only",
+      "member status is not cash, tokens, income, reimbursement, voting control, or lifetime access",
+      "member status does not activate live trading, leverage, custody, withdrawals, or risk-control bypass",
+      "member status can be paused or removed if wallet verification fails, abuse is detected, or support cannot verify account ownership"
+    ]
+  },
+  "verification": {
+    "method": "ERC-20 balanceOf read through the Web3 Radar backend after account UI is live",
+    "preparedAccessPage": "/gca/member-access",
+    "preparedIntakeEndpoint": "/gca/pre-registrations",
+    "preparedWalletVerificationEndpoint": "/gca/wallet-verifications",
+    "preparedCreditLedgerEndpoint": "/gca/credit-ledger",
+    "preparedMemberLedgerEndpoint": "/gca/member-ledger",
+    "preparedReviewEndpoint": "/gca/member-review",
+    "currentPublicSubmissionMode": "copy, download, or email local packet",
+    "directSubmissionEndpointConfigured": false
+  },
+  "supportWorkflow": {
+    "contactEmail": "GCAgochina@outlook.com",
+    "targetFirstResponse": "5-10 business days after controlled intake is live; not a guarantee",
+    "reviewStatuses": [
+      "received",
+      "wallet_pending",
+      "eligible",
+      "needs_more_information",
+      "rejected",
+      "ledger_recorded"
+    ],
+    "supportRules": [
+      "support will never ask for private keys, seed phrases, exchange API secrets, withdrawal permission, or custody",
+      "manual support cannot override wallet-balance verification",
+      "manual support cannot promise prices, liquidity, listings, trading results, or audit approval"
+    ]
+  },
+  "publicClaimBoundaries": {
+    "safeClaims": [
+      "GCA has published planned holder bonus and GCA Member rules.",
+      "The public member page can generate a local pre-registration packet.",
+      "The Web3 Radar bridge is prepared but public self-service claiming is not connected."
+    ],
+    "doNotClaim": [
+      "credits are claimable before controlled HTTPS account UI is live",
+      "GCA Member status is live self-service before the account UI is connected",
+      "credits or membership are cash, tokens, income, reimbursement, or trading permission",
+      "token holding bypasses risk controls",
+      "membership guarantees lifetime access, profit, price support, liquidity, or listings"
+    ]
+  }
+}

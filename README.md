@@ -31,6 +31,7 @@ Deployment notes are in `docs/deploy_base_sepolia.md` and `docs/deploy_base_main
 - Data platform form values: `launch/data_platform_form_values.json`
 - GeckoTerminal update runbook: `launch/geckoterminal_update_runbook.md`
 - GeckoTerminal form values: `launch/geckoterminal_form_values.json`
+- Public member program rules: `site/member-program.json`
 - Telegram channel runbook: `launch/telegram_channel_runbook.md`
 - Audit scope: `launch/audit_scope.md`
 - Internal security review: `audit/gca_internal_security_review.md`
