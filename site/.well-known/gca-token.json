@@ -24,6 +24,8 @@
     "verify": "https://gcagochina.com/verify.html",
     "status": "https://gcagochina.com/status.html",
     "listingKit": "https://gcagochina.com/listing-kit.html",
+    "walletWarningEvidencePage": "https://gcagochina.com/wallet-warning.html",
+    "walletWarningEvidence": "https://gcagochina.com/wallet-warning.json",
     "externalReviewStatusPage": "https://gcagochina.com/external-reviews.html",
     "externalReviewStatus": "https://gcagochina.com/external-reviews.json",
     "listingReadinessPage": "https://gcagochina.com/listing-readiness.html",

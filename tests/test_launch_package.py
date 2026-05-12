@@ -33,6 +33,8 @@ OLD_WETH_POOL_ADDRESS = "0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff"
 WELL_KNOWN_TOKEN_URL = "https://gcagochina.com/.well-known/gca-token.json"
 SECURITY_CONTACT_URL = "https://gcagochina.com/.well-known/security.txt"
 MEMBER_PROGRAM_URL = "https://gcagochina.com/member-program.json"
+WALLET_WARNING_PAGE_URL = "https://gcagochina.com/wallet-warning.html"
+WALLET_WARNING_URL = "https://gcagochina.com/wallet-warning.json"
 EXTERNAL_REVIEW_PAGE_URL = "https://gcagochina.com/external-reviews.html"
 EXTERNAL_REVIEW_URL = "https://gcagochina.com/external-reviews.json"
 LISTING_READINESS_PAGE_URL = "https://gcagochina.com/listing-readiness.html"
@@ -58,6 +60,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("/.well-known/security.txt", script)
         self.assertIn("/members.html", script)
         self.assertIn("/member-program.json", script)
+        self.assertIn("/wallet-warning.html", script)
+        self.assertIn("/wallet-warning.json", script)
         self.assertIn("/external-reviews.html", script)
         self.assertIn("/external-reviews.json", script)
         self.assertIn("/listing-readiness.html", script)
@@ -66,6 +70,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("/market-quality.json", script)
         self.assertIn("validate_members", script)
         self.assertIn("validate_member_program_json", script)
+        self.assertIn("validate_wallet_warning_page", script)
+        self.assertIn("validate_wallet_warning_json", script)
         self.assertIn("validate_external_reviews_page", script)
         self.assertIn("validate_external_reviews_json", script)
         self.assertIn("validate_listing_readiness_page", script)
@@ -89,6 +95,8 @@ class LaunchPackageTests(unittest.TestCase):
         module.validate_market_quality_json((ROOT / "site" / "market-quality.json").read_text())
         module.validate_members((ROOT / "site" / "members.html").read_text())
         module.validate_member_program_json((ROOT / "site" / "member-program.json").read_text())
+        module.validate_wallet_warning_page((ROOT / "site" / "wallet-warning.html").read_text())
+        module.validate_wallet_warning_json((ROOT / "site" / "wallet-warning.json").read_text())
         module.validate_external_reviews_page((ROOT / "site" / "external-reviews.html").read_text())
         module.validate_external_reviews_json((ROOT / "site" / "external-reviews.json").read_text())
         module.validate_listing_readiness_page((ROOT / "site" / "listing-readiness.html").read_text())
@@ -226,6 +234,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertTrue((ROOT / "site" / ".nojekyll").exists())
         self.assertIn("User-agent: *", robots)
         self.assertIn("Allow: /", robots)
+        self.assertIn("Allow: /wallet-warning.html", robots)
+        self.assertIn("Allow: /wallet-warning.json", robots)
         self.assertIn("Allow: /external-reviews.html", robots)
         self.assertIn("Allow: /external-reviews.json", robots)
         self.assertIn("Allow: /listing-readiness.html", robots)
@@ -240,6 +250,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(VERIFY_PAGE_URL, sitemap)
         self.assertIn("https://gcagochina.com/status.html", sitemap)
         self.assertIn("https://gcagochina.com/listing-kit.html", sitemap)
+        self.assertIn(WALLET_WARNING_PAGE_URL, sitemap)
+        self.assertIn(WALLET_WARNING_URL, sitemap)
         self.assertIn(EXTERNAL_REVIEW_PAGE_URL, sitemap)
         self.assertIn(EXTERNAL_REVIEW_URL, sitemap)
         self.assertIn(LISTING_READINESS_PAGE_URL, sitemap)
@@ -278,6 +290,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(identity["officialUrls"]["wellKnownTokenIdentity"], WELL_KNOWN_TOKEN_URL)
         self.assertEqual(identity["officialUrls"]["securityContact"], SECURITY_CONTACT_URL)
         self.assertEqual(identity["officialUrls"]["memberProgramRules"], MEMBER_PROGRAM_URL)
+        self.assertEqual(identity["officialUrls"]["walletWarningEvidencePage"], WALLET_WARNING_PAGE_URL)
+        self.assertEqual(identity["officialUrls"]["walletWarningEvidence"], WALLET_WARNING_URL)
         self.assertEqual(identity["officialUrls"]["externalReviewStatusPage"], EXTERNAL_REVIEW_PAGE_URL)
         self.assertEqual(identity["officialUrls"]["externalReviewStatus"], EXTERNAL_REVIEW_URL)
         self.assertEqual(identity["officialUrls"]["listingReadinessPage"], LISTING_READINESS_PAGE_URL)
@@ -323,6 +337,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn('href="faq.html"', site)
         self.assertIn('href="status.html"', site)
         self.assertIn('href="listing-kit.html"', site)
+        self.assertIn('href="wallet-warning.html"', site)
         self.assertIn('href="external-reviews.html"', site)
         self.assertIn("Go China Access", site)
         self.assertIn("Go China AI Quant Access", site)
@@ -468,6 +483,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Canonical Token Identity", verify)
         self.assertIn("Official Market Identity", verify)
         self.assertIn("Current Review Status", verify)
+        self.assertIn("Wallet Warning", verify)
         self.assertIn("External Reviews", verify)
         self.assertIn("Base Mainnet / 8453", verify)
         self.assertIn("Chain ID", verify)
@@ -502,6 +518,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("well-known token identity", verify)
         self.assertIn('href="status.html"', verify)
         self.assertIn('href="listing-kit.html"', verify)
+        self.assertIn('href="wallet-warning.html"', verify)
         self.assertIn('href="external-reviews.html"', verify)
         self.assertIn("copyContract", verify)
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, verify)
@@ -736,11 +753,13 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Submitted, awaiting review", status)
         self.assertIn("BaseScan public token profile publication", status)
         self.assertIn("Wallet warning removal after Blockaid report", status)
+        self.assertIn("Wallet warning evidence page", status)
         self.assertIn("External review status page", status)
         self.assertIn("CoinGecko tracked listing", status)
         self.assertIn("CoinMarketCap tracked listing", status)
         self.assertIn('href="listing-readiness.html"', status)
         self.assertIn('href="market-quality.html"', status)
+        self.assertIn('href="wallet-warning.html"', status)
         self.assertIn('href="external-reviews.html"', status)
         self.assertIn("No third-party audit has been completed", status)
         self.assertIn("600,000,000 GCA", status)
@@ -753,10 +772,12 @@ class LaunchPackageTests(unittest.TestCase):
 
         self.assertIn('href="listing-readiness.html"', index)
         self.assertIn('href="market-quality.html"', index)
+        self.assertIn('href="wallet-warning.html"', index)
         self.assertIn('href="external-reviews.html"', index)
 
+        wallet_warning = (ROOT / "site" / "wallet-warning.html").read_text()
         external = (ROOT / "site" / "external-reviews.html").read_text()
-        for page in (index, buy, markets, supply, security, risk, faq, members, utility, whitepaper, verify, readiness, quality, external):
+        for page in (index, buy, markets, supply, security, risk, faq, members, utility, whitepaper, verify, readiness, quality, wallet_warning, external):
             self.assertIn('href="status.html"', page)
             self.assertIn('href="listing-kit.html"', page)
             self.assertIn('href="markets.html"', page)
@@ -802,6 +823,10 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("listing-readiness.html", kit)
         self.assertIn("Listing Readiness JSON", kit)
         self.assertIn("listing-readiness.json", kit)
+        self.assertIn("Wallet Warning Evidence", kit)
+        self.assertIn("wallet-warning.html", kit)
+        self.assertIn("Wallet Warning JSON", kit)
+        self.assertIn("wallet-warning.json", kit)
         self.assertIn("External Reviews", kit)
         self.assertIn("external-reviews.html", kit)
         self.assertIn("External Reviews JSON", kit)
@@ -853,6 +878,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(project["contractAddress"], MAINNET_ADDRESS)
         self.assertEqual(project["verifyUrl"], VERIFY_PAGE_URL)
         self.assertEqual(project["listingKitUrl"], "https://gcagochina.com/listing-kit.html")
+        self.assertEqual(project["walletWarningEvidencePageUrl"], WALLET_WARNING_PAGE_URL)
+        self.assertEqual(project["walletWarningEvidenceUrl"], WALLET_WARNING_URL)
         self.assertEqual(project["externalReviewStatusPageUrl"], EXTERNAL_REVIEW_PAGE_URL)
         self.assertEqual(project["externalReviewStatusUrl"], EXTERNAL_REVIEW_URL)
         self.assertEqual(project["listingReadinessPageUrl"], LISTING_READINESS_PAGE_URL)
@@ -897,6 +924,11 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(project["externalReviewStatus"]["baseScanTokenProfile"], "submitted-awaiting-review")
         self.assertEqual(project["externalReviewStatus"]["blockaidMetaMask"], "submitted-warning-removal-not-confirmed")
         self.assertEqual(project["externalReviewStatus"]["thirdPartyAudit"], "not-completed-deferred")
+        self.assertEqual(project["walletWarningEvidence"]["status"], "warning-report-submitted-removal-not-confirmed")
+        self.assertEqual(project["walletWarningEvidence"]["pageUrl"], WALLET_WARNING_PAGE_URL)
+        self.assertEqual(project["walletWarningEvidence"]["url"], WALLET_WARNING_URL)
+        self.assertEqual(project["walletWarningEvidence"]["blockaidReportDate"], "2026-05-10")
+        self.assertEqual(project["walletWarningEvidence"]["warningRemoval"], "not-confirmed")
 
     def test_listing_readiness_json_gates_tracked_listing_submissions(self):
         readiness = json.loads((ROOT / "site" / "listing-readiness.json").read_text())
@@ -912,6 +944,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("legitimate liquidity depth", readiness["summary"])
         self.assertEqual(readiness["canonicalLinks"]["verify"], VERIFY_PAGE_URL)
         self.assertEqual(readiness["canonicalLinks"]["listingKit"], "https://gcagochina.com/listing-kit.html")
+        self.assertEqual(readiness["canonicalLinks"]["walletWarningEvidencePage"], WALLET_WARNING_PAGE_URL)
+        self.assertEqual(readiness["canonicalLinks"]["walletWarningEvidence"], WALLET_WARNING_URL)
         self.assertEqual(readiness["canonicalLinks"]["externalReviewStatusPage"], EXTERNAL_REVIEW_PAGE_URL)
         self.assertEqual(readiness["canonicalLinks"]["externalReviewStatus"], EXTERNAL_REVIEW_URL)
         self.assertEqual(readiness["canonicalLinks"]["memberProgramRules"], MEMBER_PROGRAM_URL)
@@ -937,11 +971,59 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Wait for BaseScan token profile review.", readiness["nextActions"])
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, json.dumps(readiness))
 
+    def test_wallet_warning_page_and_json_centralize_warning_evidence(self):
+        page = (ROOT / "site" / "wallet-warning.html").read_text()
+        evidence = json.loads((ROOT / "site" / "wallet-warning.json").read_text())
+
+        self.assertIn("GCA Wallet Warning Evidence", page)
+        self.assertIn("Wallet Warning JSON", page)
+        self.assertIn("Submitted 2026-05-10", page)
+        self.assertIn("Not confirmed", page)
+        self.assertIn("Verified on BaseScan", page)
+        self.assertIn("Contract Facts For Review", page)
+        self.assertIn("Historical Functional Swap Evidence", page)
+        self.assertIn("Blockaid false-positive report", page)
+        self.assertIn("No third-party audit has been completed", page)
+        self.assertIn(SWAP_TEST_BUY_TX, page)
+        self.assertIn(SWAP_TEST_SELL_TX, page)
+        self.assertIn(MAINNET_ADDRESS, page)
+        self.assertIn(OFFICIAL_POOL_ADDRESS, page)
+        self.assertIn(BASE_USDT_ADDRESS, page)
+        self.assertIn(OFFICIAL_GECKOTERMINAL_URL, page)
+        self.assertIn(OFFICIAL_DEXSCREENER_URL, page)
+        self.assertNotIn(OLD_WETH_POOL_ADDRESS, page)
+        self.assertNotIn("GCA/WETH", page)
+
+        self.assertEqual(evidence["schema"], WALLET_WARNING_URL)
+        self.assertEqual(evidence["pageUrl"], WALLET_WARNING_PAGE_URL)
+        self.assertEqual(evidence["status"], "warning-report-submitted-removal-not-confirmed")
+        self.assertEqual(evidence["chainId"], 8453)
+        self.assertEqual(evidence["contractAddress"], MAINNET_ADDRESS)
+        self.assertEqual(evidence["officialLinks"]["walletWarningEvidencePage"], WALLET_WARNING_PAGE_URL)
+        self.assertEqual(evidence["officialLinks"]["externalReviewStatusPage"], EXTERNAL_REVIEW_PAGE_URL)
+        self.assertEqual(evidence["currentOfficialMarket"]["pair"], "GCA/USDT")
+        self.assertEqual(evidence["currentOfficialMarket"]["poolAddress"], OFFICIAL_POOL_ADDRESS)
+        self.assertEqual(evidence["currentOfficialMarket"]["quoteAssetAddress"], BASE_USDT_ADDRESS)
+        self.assertEqual(evidence["blockaidReport"]["status"], "submitted-warning-removal-not-confirmed")
+        self.assertEqual(evidence["blockaidReport"]["submissionDate"], "2026-05-10")
+        self.assertTrue(evidence["contractFacts"]["sourceVerifiedOnBaseScan"])
+        self.assertFalse(evidence["contractFacts"]["postDeploymentMintFunction"])
+        self.assertFalse(evidence["contractFacts"]["ownerOrAdminRole"])
+        self.assertFalse(evidence["contractFacts"]["thirdPartyAuditCompleted"])
+        self.assertEqual(evidence["historicalFunctionalSwapEvidence"]["status"], "observed-historical-functional-evidence-only")
+        self.assertIn(SWAP_TEST_BUY_TX, evidence["historicalFunctionalSwapEvidence"]["buyTestTransactions"])
+        self.assertIn(SWAP_TEST_SELL_TX, evidence["historicalFunctionalSwapEvidence"]["sellTestTransactions"])
+        self.assertIn("Wallet-warning removal is not confirmed.", evidence["publicClaimBoundaries"]["safeClaims"])
+        self.assertIn("Blockaid or MetaMask warning removal before visible confirmation", evidence["publicClaimBoundaries"]["doNotClaim"])
+        self.assertNotIn(OLD_WETH_POOL_ADDRESS, json.dumps(evidence))
+        self.assertNotIn("GCA/WETH", json.dumps(evidence))
+
     def test_external_reviews_page_and_json_centralize_review_status(self):
         page = (ROOT / "site" / "external-reviews.html").read_text()
         reviews = json.loads((ROOT / "site" / "external-reviews.json").read_text())
 
         self.assertIn("GCA External Review Status", page)
+        self.assertIn("Wallet Warning Evidence", page)
         self.assertIn("External Reviews JSON", page)
         self.assertIn("BaseScan source code verification", page)
         self.assertIn("Submitted, awaiting review", page)
@@ -963,6 +1045,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(reviews["chainId"], 8453)
         self.assertEqual(reviews["contractAddress"], MAINNET_ADDRESS)
         self.assertEqual(reviews["officialLinks"]["listingReadinessPage"], LISTING_READINESS_PAGE_URL)
+        self.assertEqual(reviews["officialLinks"]["walletWarningEvidencePage"], WALLET_WARNING_PAGE_URL)
+        self.assertEqual(reviews["officialLinks"]["walletWarningEvidence"], WALLET_WARNING_URL)
         self.assertEqual(reviews["officialLinks"]["marketQualityPage"], MARKET_QUALITY_PAGE_URL)
         self.assertEqual(reviews["market"]["officialPair"], "GCA/USDT")
         self.assertEqual(reviews["market"]["poolAddress"], OFFICIAL_POOL_ADDRESS)
@@ -1044,6 +1128,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(extensions["verify"], VERIFY_PAGE_URL)
         self.assertEqual(extensions["statusPage"], "https://gcagochina.com/status.html")
         self.assertEqual(extensions["listingKit"], "https://gcagochina.com/listing-kit.html")
+        self.assertEqual(extensions["walletWarningEvidencePage"], WALLET_WARNING_PAGE_URL)
+        self.assertEqual(extensions["walletWarningEvidence"], WALLET_WARNING_URL)
         self.assertEqual(extensions["externalReviewStatusPage"], EXTERNAL_REVIEW_PAGE_URL)
         self.assertEqual(extensions["externalReviewStatus"], EXTERNAL_REVIEW_URL)
         self.assertEqual(extensions["listingReadinessPage"], LISTING_READINESS_PAGE_URL)
@@ -1068,6 +1154,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(extensions["geckoTerminalStatus"], "approved-2026-05-11")
         self.assertEqual(extensions["baseScanTokenProfileStatus"], "submitted-awaiting-review")
         self.assertEqual(extensions["blockaidMetaMaskStatus"], "submitted-warning-removal-not-confirmed")
+        self.assertEqual(extensions["walletWarningEvidenceStatus"], "warning-report-submitted-removal-not-confirmed")
         self.assertEqual(extensions["thirdPartyAuditStatus"], "not-completed")
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, json.dumps(tokenlist))
 
@@ -1083,6 +1170,8 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "site" / "faq.html",
             ROOT / "site" / "status.html",
             ROOT / "site" / "listing-kit.html",
+            ROOT / "site" / "wallet-warning.html",
+            ROOT / "site" / "wallet-warning.json",
             ROOT / "site" / "external-reviews.html",
             ROOT / "site" / "external-reviews.json",
             ROOT / "site" / "listing-readiness.html",
@@ -1216,6 +1305,8 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "site" / "faq.html",
             ROOT / "site" / "status.html",
             ROOT / "site" / "listing-kit.html",
+            ROOT / "site" / "wallet-warning.html",
+            ROOT / "site" / "wallet-warning.json",
             ROOT / "site" / "external-reviews.html",
             ROOT / "site" / "external-reviews.json",
             ROOT / "site" / "listing-readiness.html",
@@ -1295,6 +1386,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("GeckoTerminal token information update approved on 2026-05-11", status)
         self.assertIn("Public project status page prepared", status)
         self.assertIn("Public listing kit and machine-readable project JSON prepared", status)
+        self.assertIn("Public wallet warning evidence page and JSON prepared", status)
+        self.assertIn(WALLET_WARNING_PAGE_URL, status)
+        self.assertIn(WALLET_WARNING_URL, status)
         self.assertIn("Public external review status page and JSON prepared", status)
         self.assertIn(EXTERNAL_REVIEW_PAGE_URL, status)
         self.assertIn(EXTERNAL_REVIEW_URL, status)
@@ -1348,6 +1442,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Owner decided on 2026-05-10 to defer third-party audit", status)
         self.assertIn("Archive any audit quote replies", status)
         self.assertIn("Use `launch/external_review_followup_tracker.md`", status)
+        self.assertIn("Use `https://gcagochina.com/wallet-warning.html`", status)
         self.assertIn("Use `https://gcagochina.com/external-reviews.html`", status)
         self.assertIn("quote submission is not an audit", status)
         self.assertNotIn("Pin the first Telegram announcement manually", status)
@@ -1384,6 +1479,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(VERIFY_PAGE_URL, package)
         self.assertIn("https://gcagochina.com/status.html", package)
         self.assertIn("https://gcagochina.com/listing-kit.html", package)
+        self.assertIn(WALLET_WARNING_PAGE_URL, package)
+        self.assertIn(WALLET_WARNING_URL, package)
         self.assertIn(EXTERNAL_REVIEW_PAGE_URL, package)
         self.assertIn(EXTERNAL_REVIEW_URL, package)
         self.assertIn(LISTING_READINESS_PAGE_URL, package)
@@ -1431,6 +1528,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["verifyUrl"], VERIFY_PAGE_URL)
         self.assertEqual(values["statusPageUrl"], "https://gcagochina.com/status.html")
         self.assertEqual(values["listingKitUrl"], "https://gcagochina.com/listing-kit.html")
+        self.assertEqual(values["walletWarningEvidencePageUrl"], WALLET_WARNING_PAGE_URL)
+        self.assertEqual(values["walletWarningEvidenceUrl"], WALLET_WARNING_URL)
         self.assertEqual(values["externalReviewStatusPageUrl"], EXTERNAL_REVIEW_PAGE_URL)
         self.assertEqual(values["externalReviewStatusUrl"], EXTERNAL_REVIEW_URL)
         self.assertEqual(values["listingReadinessPageUrl"], LISTING_READINESS_PAGE_URL)
@@ -1487,6 +1586,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["platformReadiness"]["listingReadiness"]["pageUrl"], LISTING_READINESS_PAGE_URL)
         self.assertEqual(values["platformReadiness"]["listingReadiness"]["url"], LISTING_READINESS_URL)
         self.assertIn("legitimate liquidity depth", values["platformReadiness"]["listingReadiness"]["nextAction"])
+        self.assertEqual(values["platformReadiness"]["walletWarningEvidence"]["status"], "warning-report-submitted-removal-not-confirmed")
+        self.assertEqual(values["platformReadiness"]["walletWarningEvidence"]["pageUrl"], WALLET_WARNING_PAGE_URL)
+        self.assertEqual(values["platformReadiness"]["walletWarningEvidence"]["url"], WALLET_WARNING_URL)
         self.assertEqual(values["platformReadiness"]["externalReviewStatus"]["status"], "external-review-status-active")
         self.assertEqual(values["platformReadiness"]["externalReviewStatus"]["pageUrl"], EXTERNAL_REVIEW_PAGE_URL)
         self.assertEqual(values["platformReadiness"]["externalReviewStatus"]["url"], EXTERNAL_REVIEW_URL)
@@ -1508,6 +1610,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(MAINNET_ADDRESS, tracker)
         self.assertIn(VERIFY_PAGE_URL, tracker)
         self.assertIn(MARKET_PAGE_URL, tracker)
+        self.assertIn(WALLET_WARNING_PAGE_URL, tracker)
+        self.assertIn(WALLET_WARNING_URL, tracker)
         self.assertIn(EXTERNAL_REVIEW_PAGE_URL, tracker)
         self.assertIn(EXTERNAL_REVIEW_URL, tracker)
         self.assertIn(MARKET_QUALITY_PAGE_URL, tracker)
@@ -1539,6 +1643,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["canonicalIdentity"]["contractAddress"], MAINNET_ADDRESS)
         self.assertEqual(values["canonicalIdentity"]["verifyUrl"], VERIFY_PAGE_URL)
         self.assertEqual(values["canonicalIdentity"]["marketPageUrl"], MARKET_PAGE_URL)
+        self.assertEqual(values["canonicalIdentity"]["walletWarningEvidencePageUrl"], WALLET_WARNING_PAGE_URL)
+        self.assertEqual(values["canonicalIdentity"]["walletWarningEvidenceUrl"], WALLET_WARNING_URL)
         self.assertEqual(values["canonicalIdentity"]["externalReviewStatusPageUrl"], EXTERNAL_REVIEW_PAGE_URL)
         self.assertEqual(values["canonicalIdentity"]["externalReviewStatusUrl"], EXTERNAL_REVIEW_URL)
         self.assertEqual(values["canonicalIdentity"]["marketQualityPageUrl"], MARKET_QUALITY_PAGE_URL)
@@ -1566,6 +1672,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["publicExternalReviewStatus"]["status"], "external-review-status-active")
         self.assertEqual(values["publicExternalReviewStatus"]["publicPageUrl"], EXTERNAL_REVIEW_PAGE_URL)
         self.assertEqual(values["publicExternalReviewStatus"]["publicUrl"], EXTERNAL_REVIEW_URL)
+        self.assertEqual(values["publicWalletWarningEvidence"]["status"], "warning-report-submitted-removal-not-confirmed")
+        self.assertEqual(values["publicWalletWarningEvidence"]["publicPageUrl"], WALLET_WARNING_PAGE_URL)
+        self.assertEqual(values["publicWalletWarningEvidence"]["publicUrl"], WALLET_WARNING_URL)
         self.assertEqual(values["marketQualityPlan"]["status"], "early-stage-market-quality-plan")
         self.assertEqual(values["marketQualityPlan"]["publicPageUrl"], MARKET_QUALITY_PAGE_URL)
         self.assertEqual(values["marketQualityPlan"]["publicUrl"], MARKET_QUALITY_URL)

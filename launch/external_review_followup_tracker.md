@@ -10,6 +10,8 @@ Use this file as the single operating checklist for external review, wallet-warn
 - Official website: `https://gcagochina.com/`
 - Official verify page: `https://gcagochina.com/verify.html`
 - Official market page: `https://gcagochina.com/markets.html`
+- Public wallet warning evidence page: `https://gcagochina.com/wallet-warning.html`
+- Public wallet warning evidence JSON: `https://gcagochina.com/wallet-warning.json`
 - Public external review status page: `https://gcagochina.com/external-reviews.html`
 - Public external review status JSON: `https://gcagochina.com/external-reviews.json`
 - Market quality page: `https://gcagochina.com/market-quality.html`
@@ -137,3 +139,10 @@ Public page: `https://gcagochina.com/external-reviews.html`
 Machine-readable JSON: `https://gcagochina.com/external-reviews.json`
 
 Use this page when wallets, data platforms, reviewers, or community moderators need a public status summary. It separates completed BaseScan source and GeckoTerminal verification from pending BaseScan profile publication, Blockaid / MetaMask warning review, deferred CoinGecko / CoinMarketCap tracked-listing submissions, and third-party audit status.
+
+## Public Wallet Warning Evidence
+
+Public page: `https://gcagochina.com/wallet-warning.html`
+Machine-readable JSON: `https://gcagochina.com/wallet-warning.json`
+
+Use this page if Blockaid, MetaMask, Uniswap, or another wallet-security reviewer asks for public evidence. It summarizes the submitted report, source verification, no-mint/no-tax/no-admin contract facts, current GCA/USDT market route, historical functional swap transaction hashes, and the boundary that warning removal is not confirmed.

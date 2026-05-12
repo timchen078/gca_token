@@ -10,6 +10,8 @@ This package prepares GCA information for token data and DEX discovery platforms
 - Contract source: verified on BaseScan
 - BaseScan token profile: submitted and awaiting BaseScan review
 - GeckoTerminal token info update: approved on 2026-05-11
+- Wallet warning evidence page: `https://gcagochina.com/wallet-warning.html`
+- Wallet warning evidence JSON: `https://gcagochina.com/wallet-warning.json`
 - External review status page: `https://gcagochina.com/external-reviews.html`
 - External review status JSON: `https://gcagochina.com/external-reviews.json`
 - Listing readiness page: `https://gcagochina.com/listing-readiness.html`
@@ -44,6 +46,8 @@ This package prepares GCA information for token data and DEX discovery platforms
 - Verify official links: `https://gcagochina.com/verify.html`
 - Project status: `https://gcagochina.com/status.html`
 - Listing kit: `https://gcagochina.com/listing-kit.html`
+- Wallet warning evidence page: `https://gcagochina.com/wallet-warning.html`
+- Wallet warning evidence JSON: `https://gcagochina.com/wallet-warning.json`
 - External review status page: `https://gcagochina.com/external-reviews.html`
 - External review status JSON: `https://gcagochina.com/external-reviews.json`
 - Listing readiness page: `https://gcagochina.com/listing-readiness.html`
@@ -91,6 +95,8 @@ Earlier small Base Mainnet buy/sell functional swap tests were observed on 2026-
 Use `https://gcagochina.com/market-quality.html` and `https://gcagochina.com/market-quality.json` before presenting market-growth updates. The public path is transparent liquidity, useful product delivery, consistent metadata, and legitimate public participation. Do not use artificial activity, self-trading, wash trading, misleading volume, or paid listing promises as a trust strategy.
 
 ## External Review Follow-Up Tracker
+
+Public wallet-warning evidence is available at `https://gcagochina.com/wallet-warning.html` and `https://gcagochina.com/wallet-warning.json`. Use those public URLs if a wallet security vendor, DEX interface, or reviewer asks for contract facts, Blockaid report status, current GCA/USDT market route, or functional swap evidence.
 
 Public review status is available at `https://gcagochina.com/external-reviews.html` and `https://gcagochina.com/external-reviews.json`. Use those public URLs when a reviewer needs the current BaseScan, Blockaid, GeckoTerminal, DEX Screener, CoinGecko, CoinMarketCap, or third-party audit status without exposing internal notes.
 

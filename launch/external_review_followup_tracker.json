@@ -8,6 +8,8 @@
     "website": "https://gcagochina.com/",
     "verifyUrl": "https://gcagochina.com/verify.html",
     "marketPageUrl": "https://gcagochina.com/markets.html",
+    "walletWarningEvidencePageUrl": "https://gcagochina.com/wallet-warning.html",
+    "walletWarningEvidenceUrl": "https://gcagochina.com/wallet-warning.json",
     "externalReviewStatusPageUrl": "https://gcagochina.com/external-reviews.html",
     "externalReviewStatusUrl": "https://gcagochina.com/external-reviews.json",
     "marketQualityPageUrl": "https://gcagochina.com/market-quality.html",
@@ -77,6 +79,12 @@
     "publicPageUrl": "https://gcagochina.com/external-reviews.html",
     "publicUrl": "https://gcagochina.com/external-reviews.json",
     "useCase": "Public reviewer summary for BaseScan, Blockaid / MetaMask, GeckoTerminal, DEX Screener, CoinGecko, CoinMarketCap, and audit status."
+  },
+  "publicWalletWarningEvidence": {
+    "status": "warning-report-submitted-removal-not-confirmed",
+    "publicPageUrl": "https://gcagochina.com/wallet-warning.html",
+    "publicUrl": "https://gcagochina.com/wallet-warning.json",
+    "useCase": "Public evidence packet for Blockaid, MetaMask, Uniswap, and wallet-security follow-up."
   },
   "coinGeckoCoinMarketCapGate": {
     "ready": false,

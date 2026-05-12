@@ -1,5 +1,7 @@
 User-agent: *
 Allow: /
+Allow: /wallet-warning.html
+Allow: /wallet-warning.json
 Allow: /external-reviews.html
 Allow: /external-reviews.json
 Allow: /listing-readiness.html

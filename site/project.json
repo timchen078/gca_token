@@ -17,6 +17,8 @@
   "verifyUrl": "https://gcagochina.com/verify.html",
   "statusPageUrl": "https://gcagochina.com/status.html",
   "listingKitUrl": "https://gcagochina.com/listing-kit.html",
+  "walletWarningEvidencePageUrl": "https://gcagochina.com/wallet-warning.html",
+  "walletWarningEvidenceUrl": "https://gcagochina.com/wallet-warning.json",
   "externalReviewStatusPageUrl": "https://gcagochina.com/external-reviews.html",
   "externalReviewStatusUrl": "https://gcagochina.com/external-reviews.json",
   "listingReadinessPageUrl": "https://gcagochina.com/listing-readiness.html",
@@ -118,6 +120,15 @@
     "coinGeckoTrackedListing": "deferred",
     "coinMarketCapTrackedListing": "deferred",
     "thirdPartyAudit": "not-completed-deferred"
+  },
+  "walletWarningEvidence": {
+    "status": "warning-report-submitted-removal-not-confirmed",
+    "pageUrl": "https://gcagochina.com/wallet-warning.html",
+    "url": "https://gcagochina.com/wallet-warning.json",
+    "blockaidReportDate": "2026-05-10",
+    "baseScanSource": "verified",
+    "warningRemoval": "not-confirmed",
+    "thirdPartyAudit": "not-completed"
   },
   "memberProgram": {
     "status": "rules-published-public-claim-not-connected",

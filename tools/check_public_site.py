@@ -22,6 +22,8 @@ OLD_WETH_POOL_ADDRESS = "0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff"
 OFFICIAL_GECKOTERMINAL_URL = f"https://www.geckoterminal.com/base/pools/{OFFICIAL_POOL_ADDRESS}"
 OFFICIAL_DEXSCREENER_URL = f"https://dexscreener.com/base/{OFFICIAL_POOL_ADDRESS}"
 MEMBER_PROGRAM_URL = "https://gcagochina.com/member-program.json"
+WALLET_WARNING_PAGE_URL = "https://gcagochina.com/wallet-warning.html"
+WALLET_WARNING_URL = "https://gcagochina.com/wallet-warning.json"
 EXTERNAL_REVIEW_PAGE_URL = "https://gcagochina.com/external-reviews.html"
 EXTERNAL_REVIEW_URL = "https://gcagochina.com/external-reviews.json"
 LISTING_READINESS_PAGE_URL = "https://gcagochina.com/listing-readiness.html"
@@ -85,6 +87,7 @@ def validate_root(text: str) -> None:
     label = "/"
     assert_contains(text, "GCA", label)
     assert_contains(text, "Verify GCA", label)
+    assert_contains(text, "Wallet Warning", label)
     assert_contains(text, "External Reviews", label)
     assert_contains(text, "Listing Readiness", label)
     assert_contains(text, MAINNET_ADDRESS, label)
@@ -96,6 +99,7 @@ def validate_verify(text: str) -> None:
     assert_contains(text, "Verify GCA", label)
     assert_contains(text, "Submitted, awaiting review", label)
     assert_contains(text, "well-known token identity", label)
+    assert_contains(text, "Wallet Warning", label)
     assert_contains(text, "External Reviews", label)
     assert_contains(text, OFFICIAL_DEXSCREENER_URL, label)
     assert_current_pool_text(text, label)
@@ -138,6 +142,10 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong chainId")
     if payload.get("memberProgramRulesUrl") != MEMBER_PROGRAM_URL:
         raise SiteCheckError(f"{label}: wrong memberProgramRulesUrl")
+    if payload.get("walletWarningEvidencePageUrl") != WALLET_WARNING_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong walletWarningEvidencePageUrl")
+    if payload.get("walletWarningEvidenceUrl") != WALLET_WARNING_URL:
+        raise SiteCheckError(f"{label}: wrong walletWarningEvidenceUrl")
     if payload.get("externalReviewStatusPageUrl") != EXTERNAL_REVIEW_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong externalReviewStatusPageUrl")
     if payload.get("externalReviewStatusUrl") != EXTERNAL_REVIEW_URL:
@@ -168,6 +176,8 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: unexpected market quality status")
     if payload.get("externalReviewStatus", {}).get("status") != "external-review-status-active":
         raise SiteCheckError(f"{label}: unexpected external review status")
+    if payload.get("walletWarningEvidence", {}).get("status") != "warning-report-submitted-removal-not-confirmed":
+        raise SiteCheckError(f"{label}: unexpected wallet warning status")
     assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
 
 
@@ -192,6 +202,10 @@ def validate_tokenlist_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong officialPool")
     if extensions.get("memberProgramRules") != MEMBER_PROGRAM_URL:
         raise SiteCheckError(f"{label}: wrong memberProgramRules")
+    if extensions.get("walletWarningEvidencePage") != WALLET_WARNING_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong walletWarningEvidencePage")
+    if extensions.get("walletWarningEvidence") != WALLET_WARNING_URL:
+        raise SiteCheckError(f"{label}: wrong walletWarningEvidence")
     if extensions.get("externalReviewStatusPage") != EXTERNAL_REVIEW_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong externalReviewStatusPage")
     if extensions.get("externalReviewStatus") != EXTERNAL_REVIEW_URL:
@@ -222,6 +236,10 @@ def validate_well_known_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong contractAddress")
     if urls.get("memberProgramRules") != MEMBER_PROGRAM_URL:
         raise SiteCheckError(f"{label}: wrong memberProgramRules")
+    if urls.get("walletWarningEvidencePage") != WALLET_WARNING_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong walletWarningEvidencePage")
+    if urls.get("walletWarningEvidence") != WALLET_WARNING_URL:
+        raise SiteCheckError(f"{label}: wrong walletWarningEvidence")
     if urls.get("externalReviewStatusPage") != EXTERNAL_REVIEW_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong externalReviewStatusPage")
     if urls.get("externalReviewStatus") != EXTERNAL_REVIEW_URL:
@@ -311,6 +329,10 @@ def validate_listing_readiness_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong marketQualityPage")
     if payload.get("canonicalLinks", {}).get("marketQuality") != MARKET_QUALITY_URL:
         raise SiteCheckError(f"{label}: wrong marketQuality")
+    if payload.get("canonicalLinks", {}).get("walletWarningEvidencePage") != WALLET_WARNING_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong walletWarningEvidencePage")
+    if payload.get("canonicalLinks", {}).get("walletWarningEvidence") != WALLET_WARNING_URL:
+        raise SiteCheckError(f"{label}: wrong walletWarningEvidence")
     if payload.get("canonicalLinks", {}).get("externalReviewStatusPage") != EXTERNAL_REVIEW_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong externalReviewStatusPage")
     if payload.get("canonicalLinks", {}).get("externalReviewStatus") != EXTERNAL_REVIEW_URL:
@@ -400,6 +422,10 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong contractAddress")
     if links.get("listingReadinessPage") != LISTING_READINESS_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong listingReadinessPage")
+    if links.get("walletWarningEvidencePage") != WALLET_WARNING_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong walletWarningEvidencePage")
+    if links.get("walletWarningEvidence") != WALLET_WARNING_URL:
+        raise SiteCheckError(f"{label}: wrong walletWarningEvidence")
     if links.get("marketQualityPage") != MARKET_QUALITY_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong marketQualityPage")
     if market.get("officialPair") != "GCA/USDT":
@@ -430,6 +456,7 @@ def validate_external_reviews_json(text: str) -> None:
 def validate_external_reviews_page(text: str) -> None:
     label = "/external-reviews.html"
     assert_contains(text, "GCA External Review Status", label)
+    assert_contains(text, "Wallet Warning Evidence", label)
     assert_contains(text, "External Reviews JSON", label)
     assert_contains(text, "Submitted, awaiting review", label)
     assert_contains(text, "Submitted 2026-05-10; removal not confirmed", label)
@@ -437,6 +464,70 @@ def validate_external_reviews_page(text: str) -> None:
     assert_contains(text, "CoinGecko tracked listing submission", label)
     assert_contains(text, "CoinMarketCap tracked listing submission", label)
     assert_contains(text, "No third-party audit has been completed", label)
+    assert_contains(text, OFFICIAL_DEXSCREENER_URL, label)
+    assert_contains(text, OFFICIAL_GECKOTERMINAL_URL, label)
+    assert_current_pool_text(text, label)
+
+
+def validate_wallet_warning_json(text: str) -> None:
+    label = "/wallet-warning.json"
+    payload = load_json(text, label)
+    market = payload.get("currentOfficialMarket", {})
+    facts = payload.get("contractFacts", {})
+    report = payload.get("blockaidReport", {})
+    evidence = payload.get("historicalFunctionalSwapEvidence", {})
+
+    if payload.get("schema") != WALLET_WARNING_URL:
+        raise SiteCheckError(f"{label}: wrong schema")
+    if payload.get("pageUrl") != WALLET_WARNING_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong pageUrl")
+    if payload.get("status") != "warning-report-submitted-removal-not-confirmed":
+        raise SiteCheckError(f"{label}: wrong status")
+    if payload.get("chainId") != 8453:
+        raise SiteCheckError(f"{label}: wrong chainId")
+    if payload.get("contractAddress") != MAINNET_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong contractAddress")
+    if market.get("pair") != "GCA/USDT":
+        raise SiteCheckError(f"{label}: wrong pair")
+    if market.get("poolAddress") != OFFICIAL_POOL_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong poolAddress")
+    if market.get("quoteAssetAddress") != BASE_USDT_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong quoteAssetAddress")
+    if report.get("status") != "submitted-warning-removal-not-confirmed":
+        raise SiteCheckError(f"{label}: wrong Blockaid report status")
+    if facts.get("sourceVerifiedOnBaseScan") is not True:
+        raise SiteCheckError(f"{label}: source verification must be true")
+    if facts.get("postDeploymentMintFunction") is not False:
+        raise SiteCheckError(f"{label}: mint function must be false")
+    if facts.get("ownerOrAdminRole") is not False:
+        raise SiteCheckError(f"{label}: owner/admin role must be false")
+    if facts.get("thirdPartyAuditCompleted") is not False:
+        raise SiteCheckError(f"{label}: third-party audit status must remain false")
+    if evidence.get("status") != "observed-historical-functional-evidence-only":
+        raise SiteCheckError(f"{label}: wrong functional evidence status")
+    if "0xf79e52ea56a299a30c2d297be99c970295864ed262c01fdcb7e3f60ca669b040" not in evidence.get("buyTestTransactions", []):
+        raise SiteCheckError(f"{label}: missing buy test transaction")
+    if "0x0ff618062abc6e28933699d4e3bd723026f8505e4a0155db3068073b6fdc86e7" not in evidence.get("sellTestTransactions", []):
+        raise SiteCheckError(f"{label}: missing sell test transaction")
+    if "No third-party audit has been completed." not in payload.get("publicClaimBoundaries", {}).get("safeClaims", []):
+        raise SiteCheckError(f"{label}: missing audit safe claim")
+    assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
+    assert_not_contains(json.dumps(payload), "GCA/WETH", label)
+
+
+def validate_wallet_warning_page(text: str) -> None:
+    label = "/wallet-warning.html"
+    assert_contains(text, "GCA Wallet Warning Evidence", label)
+    assert_contains(text, "Wallet Warning JSON", label)
+    assert_contains(text, "Submitted 2026-05-10", label)
+    assert_contains(text, "Not confirmed", label)
+    assert_contains(text, "Verified on BaseScan", label)
+    assert_contains(text, "Contract Facts For Review", label)
+    assert_contains(text, "Historical Functional Swap Evidence", label)
+    assert_contains(text, "Blockaid false-positive report", label)
+    assert_contains(text, "No third-party audit has been completed", label)
+    assert_contains(text, "0xf79e52ea56a299a30c2d297be99c970295864ed262c01fdcb7e3f60ca669b040", label)
+    assert_contains(text, "0x0ff618062abc6e28933699d4e3bd723026f8505e4a0155db3068073b6fdc86e7", label)
     assert_contains(text, OFFICIAL_DEXSCREENER_URL, label)
     assert_contains(text, OFFICIAL_GECKOTERMINAL_URL, label)
     assert_current_pool_text(text, label)
@@ -470,6 +561,8 @@ def validate_sitemap(text: str) -> None:
     for expected in (
         "https://gcagochina.com/verify.html",
         "https://gcagochina.com/markets.html",
+        "https://gcagochina.com/wallet-warning.html",
+        "https://gcagochina.com/wallet-warning.json",
         "https://gcagochina.com/market-quality.html",
         "https://gcagochina.com/market-quality.json",
         "https://gcagochina.com/external-reviews.html",
@@ -487,6 +580,8 @@ def validate_sitemap(text: str) -> None:
 
 def validate_robots(text: str) -> None:
     label = "/robots.txt"
+    assert_contains(text, "Allow: /wallet-warning.html", label)
+    assert_contains(text, "Allow: /wallet-warning.json", label)
     assert_contains(text, "Allow: /listing-readiness.html", label)
     assert_contains(text, "Allow: /listing-readiness.json", label)
     assert_contains(text, "Allow: /external-reviews.html", label)
@@ -503,6 +598,8 @@ CHECKS: list[EndpointCheck] = [
     ("/", validate_root),
     ("/verify.html", validate_verify),
     ("/markets.html", validate_markets),
+    ("/wallet-warning.html", validate_wallet_warning_page),
+    ("/wallet-warning.json", validate_wallet_warning_json),
     ("/external-reviews.html", validate_external_reviews_page),
     ("/external-reviews.json", validate_external_reviews_json),
     ("/market-quality.html", validate_market_quality_page),

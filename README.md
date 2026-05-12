@@ -32,6 +32,8 @@ Deployment notes are in `docs/deploy_base_sepolia.md` and `docs/deploy_base_main
 - GeckoTerminal update runbook: `launch/geckoterminal_update_runbook.md`
 - GeckoTerminal form values: `launch/geckoterminal_form_values.json`
 - Public member program rules: `site/member-program.json`
+- Public wallet warning evidence page: `site/wallet-warning.html`
+- Public wallet warning evidence JSON: `site/wallet-warning.json`
 - Public external review status page: `site/external-reviews.html`
 - Public external review status JSON: `site/external-reviews.json`
 - Public listing readiness page: `site/listing-readiness.html`
