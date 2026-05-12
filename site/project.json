@@ -14,6 +14,7 @@
   "blacklist": false,
   "adminControls": false,
   "website": "https://gcagochina.com/",
+  "verifyUrl": "https://gcagochina.com/verify.html",
   "statusPageUrl": "https://gcagochina.com/status.html",
   "listingKitUrl": "https://gcagochina.com/listing-kit.html",
   "tokenListUrl": "https://gcagochina.com/tokenlist.json",

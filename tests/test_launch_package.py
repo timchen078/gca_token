@@ -23,6 +23,7 @@ OFFICIAL_SWAP_URL = (
 )
 OFFICIAL_SWAP_URL_HTML = OFFICIAL_SWAP_URL.replace("&", "&amp;")
 MARKET_PAGE_URL = "https://gcagochina.com/markets.html"
+VERIFY_PAGE_URL = "https://gcagochina.com/verify.html"
 SUPPLY_PAGE_URL = "https://gcagochina.com/supply.html"
 SECURITY_PAGE_URL = "https://gcagochina.com/security.html"
 RISK_PAGE_URL = "https://gcagochina.com/risk.html"
@@ -49,6 +50,7 @@ class LaunchPackageTests(unittest.TestCase):
         faq = (ROOT / "site" / "faq.html").read_text()
         status = (ROOT / "site" / "status.html").read_text()
         listing = (ROOT / "site" / "listing-kit.html").read_text()
+        verify = (ROOT / "site" / "verify.html").read_text()
         project = json.loads((ROOT / "site" / "project.json").read_text())
         utility = (ROOT / "site" / "utility.html").read_text()
         members = (ROOT / "site" / "members.html").read_text()
@@ -63,6 +65,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(MAINNET_ADDRESS, faq)
         self.assertIn(MAINNET_ADDRESS, status)
         self.assertIn(MAINNET_ADDRESS, listing)
+        self.assertIn(MAINNET_ADDRESS, verify)
         self.assertEqual(project["contractAddress"], MAINNET_ADDRESS)
         self.assertIn(MAINNET_ADDRESS, utility)
         self.assertIn(MAINNET_ADDRESS, members)
@@ -79,6 +82,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertNotIn("sepolia.basescan.org", faq)
         self.assertNotIn("sepolia.basescan.org", status)
         self.assertNotIn("sepolia.basescan.org", listing)
+        self.assertNotIn("sepolia.basescan.org", verify)
 
     def test_public_site_sets_custom_domain(self):
         cname = (ROOT / "site" / "CNAME").read_text().strip()
@@ -92,6 +96,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Allow: /", robots)
         self.assertIn("Sitemap: https://gcagochina.com/sitemap.xml", robots)
         self.assertIn("https://gcagochina.com/", sitemap)
+        self.assertIn(VERIFY_PAGE_URL, sitemap)
         self.assertIn("https://gcagochina.com/status.html", sitemap)
         self.assertIn("https://gcagochina.com/listing-kit.html", sitemap)
         self.assertIn("https://gcagochina.com/project.json", sitemap)
@@ -107,6 +112,7 @@ class LaunchPackageTests(unittest.TestCase):
     def test_public_site_discloses_current_operational_status(self):
         site = (ROOT / "site" / "index.html").read_text()
         self.assertIn("BaseScan token profile update has been submitted", site)
+        self.assertIn('href="verify.html"', site)
         self.assertIn('href="buy.html"', site)
         self.assertIn('href="markets.html"', site)
         self.assertIn('href="supply.html"', site)
@@ -218,6 +224,48 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("verified utility backend path", utility)
         self.assertIn("does not represent custody, redemption rights", utility)
         self.assertIn("return guarantees", utility)
+
+    def test_verify_page_centralizes_official_identity_and_status(self):
+        verify = (ROOT / "site" / "verify.html").read_text()
+
+        self.assertIn("Verify GCA", verify)
+        self.assertIn("Official Links", verify)
+        self.assertIn("Canonical Token Identity", verify)
+        self.assertIn("Official Market Identity", verify)
+        self.assertIn("Current Review Status", verify)
+        self.assertIn("Base Mainnet / 8453", verify)
+        self.assertIn("Chain ID", verify)
+        self.assertIn("8453", verify)
+        self.assertIn(MAINNET_ADDRESS, verify)
+        self.assertIn(BASE_USDT_ADDRESS, verify)
+        self.assertIn(OFFICIAL_POOL_ADDRESS, verify)
+        self.assertIn("GCA/USDT", verify)
+        self.assertIn("Uniswap v4", verify)
+        self.assertIn("0.01%", verify)
+        self.assertIn(TELEGRAM_URL, verify)
+        self.assertIn(OFFICIAL_GECKOTERMINAL_URL, verify)
+        self.assertIn(OFFICIAL_DEXSCREENER_URL, verify)
+        self.assertIn(OFFICIAL_SWAP_URL_HTML, verify)
+        self.assertIn("BaseScan source code", verify)
+        self.assertIn("Verified", verify)
+        self.assertIn("BaseScan token profile", verify)
+        self.assertIn("Submitted, awaiting review", verify)
+        self.assertIn("Approved 2026-05-11", verify)
+        self.assertIn("Submitted 2026-05-10; removal not confirmed", verify)
+        self.assertIn("Third-party audit", verify)
+        self.assertIn("Not completed", verify)
+        self.assertIn("Starter-depth only; high slippage possible", verify)
+        self.assertIn("Do not describe GCA as externally audited", verify)
+        self.assertIn("Avoid Unverified Links", verify)
+        self.assertIn("Do not use any claimed official X profile", verify)
+        self.assertIn("Do not use artificial volume", verify)
+        self.assertIn("private keys, seed phrases, exchange API secrets", verify)
+        self.assertIn('href="project.json"', verify)
+        self.assertIn('href="tokenlist.json"', verify)
+        self.assertIn('href="status.html"', verify)
+        self.assertIn('href="listing-kit.html"', verify)
+        self.assertIn("copyContract", verify)
+        self.assertNotIn(OLD_WETH_POOL_ADDRESS, verify)
 
     def test_buy_page_is_official_and_conservative(self):
         buy = (ROOT / "site" / "buy.html").read_text()
@@ -431,6 +479,7 @@ class LaunchPackageTests(unittest.TestCase):
         security = (ROOT / "site" / "security.html").read_text()
         risk = (ROOT / "site" / "risk.html").read_text()
         faq = (ROOT / "site" / "faq.html").read_text()
+        verify = (ROOT / "site" / "verify.html").read_text()
 
         self.assertIn("GCA Project Status", status)
         self.assertIn("Base Mainnet / chainId 8453", status)
@@ -455,7 +504,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Do not claim price support", status)
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, status)
 
-        for page in (index, buy, markets, supply, security, risk, faq, members, utility, whitepaper):
+        for page in (index, buy, markets, supply, security, risk, faq, members, utility, whitepaper, verify):
             self.assertIn('href="status.html"', page)
             self.assertIn('href="listing-kit.html"', page)
             self.assertIn('href="markets.html"', page)
@@ -475,6 +524,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("tokenlist.json", kit)
         self.assertIn("Market page", kit)
         self.assertIn(MARKET_PAGE_URL, kit)
+        self.assertIn("Verify page", kit)
+        self.assertIn(VERIFY_PAGE_URL, kit)
         self.assertIn("Supply page", kit)
         self.assertIn(SUPPLY_PAGE_URL, kit)
         self.assertIn("Security page", kit)
@@ -506,6 +557,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(project["network"], "Base Mainnet")
         self.assertEqual(project["chainId"], 8453)
         self.assertEqual(project["contractAddress"], MAINNET_ADDRESS)
+        self.assertEqual(project["verifyUrl"], VERIFY_PAGE_URL)
         self.assertEqual(project["listingKitUrl"], "https://gcagochina.com/listing-kit.html")
         self.assertEqual(project["tokenListUrl"], "https://gcagochina.com/tokenlist.json")
         self.assertEqual(project["marketPageUrl"], MARKET_PAGE_URL)
@@ -541,6 +593,7 @@ class LaunchPackageTests(unittest.TestCase):
 
         extensions = token["extensions"]
         self.assertEqual(extensions["website"], "https://gcagochina.com/")
+        self.assertEqual(extensions["verify"], VERIFY_PAGE_URL)
         self.assertEqual(extensions["statusPage"], "https://gcagochina.com/status.html")
         self.assertEqual(extensions["listingKit"], "https://gcagochina.com/listing-kit.html")
         self.assertEqual(extensions["projectJson"], "https://gcagochina.com/project.json")
@@ -563,6 +616,7 @@ class LaunchPackageTests(unittest.TestCase):
     def test_public_materials_avoid_investment_promises(self):
         paths = [
             ROOT / "site" / "index.html",
+            ROOT / "site" / "verify.html",
             ROOT / "site" / "buy.html",
             ROOT / "site" / "markets.html",
             ROOT / "site" / "supply.html",
@@ -683,6 +737,7 @@ class LaunchPackageTests(unittest.TestCase):
     def test_public_materials_do_not_overstate_basescan_review(self):
         paths = [
             ROOT / "site" / "index.html",
+            ROOT / "site" / "verify.html",
             ROOT / "site" / "buy.html",
             ROOT / "site" / "markets.html",
             ROOT / "site" / "supply.html",
@@ -821,6 +876,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("CoinGecko", package)
         self.assertIn("CoinMarketCap", package)
         self.assertIn("https://gcagochina.com/", package)
+        self.assertIn(VERIFY_PAGE_URL, package)
         self.assertIn("https://gcagochina.com/status.html", package)
         self.assertIn("https://gcagochina.com/listing-kit.html", package)
         self.assertIn("https://gcagochina.com/project.json", package)
@@ -857,6 +913,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["chainId"], 8453)
         self.assertEqual(values["contractAddress"], MAINNET_ADDRESS)
         self.assertEqual(values["website"], "https://gcagochina.com/")
+        self.assertEqual(values["verifyUrl"], VERIFY_PAGE_URL)
         self.assertEqual(values["statusPageUrl"], "https://gcagochina.com/status.html")
         self.assertEqual(values["listingKitUrl"], "https://gcagochina.com/listing-kit.html")
         self.assertEqual(values["projectJsonUrl"], "https://gcagochina.com/project.json")

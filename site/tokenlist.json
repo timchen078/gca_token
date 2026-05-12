@@ -23,6 +23,7 @@
       "extensions": {
         "projectName": "Go China Access",
         "website": "https://gcagochina.com/",
+        "verify": "https://gcagochina.com/verify.html",
         "statusPage": "https://gcagochina.com/status.html",
         "listingKit": "https://gcagochina.com/listing-kit.html",
         "projectJson": "https://gcagochina.com/project.json",

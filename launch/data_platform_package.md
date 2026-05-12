@@ -35,6 +35,7 @@ This package prepares GCA information for token data and DEX discovery platforms
 ## Public URLs
 
 - Website: `https://gcagochina.com/`
+- Verify official links: `https://gcagochina.com/verify.html`
 - Project status: `https://gcagochina.com/status.html`
 - Listing kit: `https://gcagochina.com/listing-kit.html`
 - Machine-readable project JSON: `https://gcagochina.com/project.json`
