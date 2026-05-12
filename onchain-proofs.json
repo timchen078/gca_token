@@ -1,0 +1,129 @@
+{
+  "schema": "https://gcagochina.com/onchain-proofs.json",
+  "pageUrl": "https://gcagochina.com/onchain-proofs.html",
+  "lastUpdated": "2026-05-12",
+  "projectName": "GCA",
+  "tokenSymbol": "GCA",
+  "network": "Base Mainnet",
+  "chainId": 8453,
+  "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+  "status": "public-onchain-proofs-published",
+  "summary": "This file centralizes the public on-chain proof set for GCA: deployment, source verification, fixed supply, owner reserve transfers, official GCA/USDT market route, and narrow historical buy/sell test evidence.",
+  "officialLinks": {
+    "website": "https://gcagochina.com/",
+    "verify": "https://gcagochina.com/verify.html",
+    "onchainProofsPage": "https://gcagochina.com/onchain-proofs.html",
+    "onchainProofs": "https://gcagochina.com/onchain-proofs.json",
+    "walletWarningEvidencePage": "https://gcagochina.com/wallet-warning.html",
+    "walletWarningEvidence": "https://gcagochina.com/wallet-warning.json",
+    "externalReviewStatusPage": "https://gcagochina.com/external-reviews.html",
+    "externalReviewStatus": "https://gcagochina.com/external-reviews.json",
+    "status": "https://gcagochina.com/status.html",
+    "marketPage": "https://gcagochina.com/markets.html",
+    "supplyPage": "https://gcagochina.com/supply.html",
+    "securityPage": "https://gcagochina.com/security.html",
+    "riskPage": "https://gcagochina.com/risk.html",
+    "listingKit": "https://gcagochina.com/listing-kit.html",
+    "projectJson": "https://gcagochina.com/project.json",
+    "wellKnownTokenIdentity": "https://gcagochina.com/.well-known/gca-token.json",
+    "securityContact": "https://gcagochina.com/.well-known/security.txt"
+  },
+  "deploymentProof": {
+    "status": "deployed",
+    "deployer": "0x18d007bcb6be029f8ccd7cb13e324aa21891092d",
+    "transactionHash": "0xae8ae4d0bd89c03b39946564a5b63bb20cd38879a1aa1fdcb20a6f1c4802e74e",
+    "blockNumber": 45735688,
+    "deployedAt": "2026-05-08T17:18:43Z",
+    "baseScanTransaction": "https://basescan.org/tx/0xae8ae4d0bd89c03b39946564a5b63bb20cd38879a1aa1fdcb20a6f1c4802e74e",
+    "baseScanContract": "https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6"
+  },
+  "sourceVerificationProof": {
+    "status": "verified",
+    "verifiedAt": "2026-05-08T17:27:07Z",
+    "compilerVersion": "v0.8.24+commit.e11b9ed9",
+    "optimizerEnabled": true,
+    "optimizerRuns": 200,
+    "license": "MIT"
+  },
+  "supplyProof": {
+    "totalSupply": "1000000000",
+    "decimals": 18,
+    "fixedSupply": true,
+    "postDeploymentMintFunction": false,
+    "taxes": false,
+    "blacklist": false,
+    "adminControls": false
+  },
+  "ownerReserveProof": {
+    "targetPublicAllocation": "400000000",
+    "targetPublicAllocationPercent": 40,
+    "ownerHeldReserve": "600000000",
+    "ownerHeldReservePercent": 60,
+    "ownerReserveWallet": "0x5e8F84748612B913aAcC937492AC25dc5630E246",
+    "ownerReserveCustodyNote": "Normal owner-controlled wallet; not locked, vested, or multisig-controlled.",
+    "reserveTransfers": [
+      {
+        "amountGca": "300000000",
+        "from": "0x18d007bcb6be029f8ccd7cb13e324aa21891092d",
+        "to": "0x5e8F84748612B913aAcC937492AC25dc5630E246",
+        "transactionHash": "0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67",
+        "blockNumber": 45739653,
+        "timestampUtc": "2026-05-08T19:30:53Z",
+        "baseScanTransaction": "https://basescan.org/tx/0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67"
+      },
+      {
+        "amountGca": "300000000",
+        "from": "0x18d007bcb6be029f8ccd7cb13e324aa21891092d",
+        "to": "0x5e8F84748612B913aAcC937492AC25dc5630E246",
+        "transactionHash": "0xfffb674448abdbd3af45bb0a30c48e5fbb0e675542b971f031381254b5dc5317",
+        "blockNumber": 45779081,
+        "timestampUtc": "2026-05-09T17:25:09Z",
+        "baseScanTransaction": "https://basescan.org/tx/0xfffb674448abdbd3af45bb0a30c48e5fbb0e675542b971f031381254b5dc5317"
+      }
+    ]
+  },
+  "officialMarketProof": {
+    "pair": "GCA/USDT",
+    "dex": "Uniswap v4",
+    "network": "Base Mainnet",
+    "feeTier": "0.01%",
+    "poolAddress": "0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "quoteAsset": "USDT",
+    "quoteAssetAddress": "0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2",
+    "geckoTerminal": "https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "dexScreener": "https://dexscreener.com/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "officialSwap": "https://app.uniswap.org/swap?chain=base&inputCurrency=0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2&outputCurrency=0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+    "liquidityDepthStatus": "starter-depth-only"
+  },
+  "historicalFunctionalSwapProof": {
+    "status": "observed-historical-functional-evidence-only",
+    "observationDate": "2026-05-10",
+    "buyTestTransactions": [
+      "0xf79e52ea56a299a30c2d297be99c970295864ed262c01fdcb7e3f60ca669b040",
+      "0x9e88f36125e0b54eb6d334b3159d6875909553e530dda49af4482d96401a05ac"
+    ],
+    "sellTestTransactions": [
+      "0x0ff618062abc6e28933699d4e3bd723026f8505e4a0155db3068073b6fdc86e7",
+      "0x2698cee454d22a7977231e7e57173038647c07261c09d8a93260bcbf0cc2d71e"
+    ],
+    "scope": "These hashes are narrow functional evidence that small Base Mainnet DEX buys and sells were observed. They do not prove mature liquidity, organic demand, third-party audit completion, listing acceptance, or wallet-warning removal."
+  },
+  "publicClaimBoundaries": {
+    "safeClaims": [
+      "GCA was deployed on Base Mainnet.",
+      "GCA source verification is complete on BaseScan.",
+      "GCA has fixed total supply and no post-deployment mint function.",
+      "The owner reserve wallet and reserve transfer transaction hashes are public.",
+      "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool.",
+      "Historical small buy and sell transactions were observed on Base Mainnet.",
+      "No third-party audit has been completed."
+    ],
+    "doNotClaim": [
+      "reserve lock or multisig custody before on-chain custody changes",
+      "exact circulating supply acceptance before a data platform publishes it",
+      "deep liquidity, price support, return promises, or warning-free status",
+      "third-party audit completion before an independent report is published",
+      "CoinGecko or CoinMarketCap listing before publication"
+    ]
+  }
+}

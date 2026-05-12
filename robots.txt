@@ -1,5 +1,7 @@
 User-agent: *
 Allow: /
+Allow: /onchain-proofs.html
+Allow: /onchain-proofs.json
 Allow: /wallet-warning.html
 Allow: /wallet-warning.json
 Allow: /external-reviews.html
