@@ -13,6 +13,8 @@
     "website": "https://gcagochina.com/",
     "verify": "https://gcagochina.com/verify.html",
     "status": "https://gcagochina.com/status.html",
+    "walletWarningEvidencePage": "https://gcagochina.com/wallet-warning.html",
+    "walletWarningEvidence": "https://gcagochina.com/wallet-warning.json",
     "externalReviewsPage": "https://gcagochina.com/external-reviews.html",
     "externalReviews": "https://gcagochina.com/external-reviews.json",
     "listingKit": "https://gcagochina.com/listing-kit.html",

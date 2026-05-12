@@ -1,0 +1,99 @@
+{
+  "schema": "https://gcagochina.com/wallet-warning.json",
+  "pageUrl": "https://gcagochina.com/wallet-warning.html",
+  "lastUpdated": "2026-05-12",
+  "projectName": "GCA",
+  "tokenSymbol": "GCA",
+  "network": "Base Mainnet",
+  "chainId": 8453,
+  "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+  "status": "warning-report-submitted-removal-not-confirmed",
+  "summary": "GCA wallet-warning evidence is centralized here for wallet security vendors, DEX interfaces, reviewers, and community moderators. It records the Blockaid report, contract facts, current official market route, historical functional swap evidence, and public claim boundaries.",
+  "officialLinks": {
+    "website": "https://gcagochina.com/",
+    "verify": "https://gcagochina.com/verify.html",
+    "walletWarningEvidencePage": "https://gcagochina.com/wallet-warning.html",
+    "walletWarningEvidence": "https://gcagochina.com/wallet-warning.json",
+    "externalReviewStatusPage": "https://gcagochina.com/external-reviews.html",
+    "externalReviewStatus": "https://gcagochina.com/external-reviews.json",
+    "status": "https://gcagochina.com/status.html",
+    "marketPage": "https://gcagochina.com/markets.html",
+    "securityPage": "https://gcagochina.com/security.html",
+    "riskPage": "https://gcagochina.com/risk.html",
+    "listingKit": "https://gcagochina.com/listing-kit.html",
+    "projectJson": "https://gcagochina.com/project.json",
+    "wellKnownTokenIdentity": "https://gcagochina.com/.well-known/gca-token.json",
+    "securityContact": "https://gcagochina.com/.well-known/security.txt",
+    "telegram": "https://t.me/gcagochinaofficial"
+  },
+  "currentOfficialMarket": {
+    "pair": "GCA/USDT",
+    "dex": "Uniswap v4",
+    "network": "Base Mainnet",
+    "poolAddress": "0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "quoteAsset": "USDT",
+    "quoteAssetAddress": "0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2",
+    "geckoTerminal": "https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "dexScreener": "https://dexscreener.com/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "liquidityDepthStatus": "starter-depth-only"
+  },
+  "blockaidReport": {
+    "status": "submitted-warning-removal-not-confirmed",
+    "submissionDate": "2026-05-10",
+    "submittedThrough": "https://report.blockaid.io/mistake",
+    "contactEmail": "GCAgochina@outlook.com",
+    "reportedDomain": "gcagochina.com",
+    "reportedWalletSurface": "MetaMask / Uniswap token warning",
+    "nextAction": "Recheck the wallet and DEX warning UI before claiming any warning change."
+  },
+  "contractFacts": {
+    "sourceVerifiedOnBaseScan": true,
+    "fixedSupply": true,
+    "totalSupply": "1000000000",
+    "postDeploymentMintFunction": false,
+    "ownerOrAdminRole": false,
+    "proxyOrUpgradePath": false,
+    "blacklistFunction": false,
+    "pauseFunction": false,
+    "transferTaxOrHiddenFee": false,
+    "custodyOrWithdrawalPath": false,
+    "thirdPartyAuditCompleted": false
+  },
+  "historicalFunctionalSwapEvidence": {
+    "status": "observed-historical-functional-evidence-only",
+    "observationDate": "2026-05-10",
+    "buyTestTransactions": [
+      "0xf79e52ea56a299a30c2d297be99c970295864ed262c01fdcb7e3f60ca669b040",
+      "0x9e88f36125e0b54eb6d334b3159d6875909553e530dda49af4482d96401a05ac"
+    ],
+    "sellTestTransactions": [
+      "0x0ff618062abc6e28933699d4e3bd723026f8505e4a0155db3068073b6fdc86e7",
+      "0x2698cee454d22a7977231e7e57173038647c07261c09d8a93260bcbf0cc2d71e"
+    ],
+    "scope": "These transactions support only a narrow functional claim that small Base Mainnet DEX buys and sells were observed. They are not current official market links and do not prove mature liquidity, organic demand, audit completion, listing acceptance, or warning removal."
+  },
+  "publicClaimBoundaries": {
+    "safeClaims": [
+      "A Blockaid false-positive report was submitted on 2026-05-10.",
+      "Wallet-warning removal is not confirmed.",
+      "BaseScan source verification is complete.",
+      "GCA has fixed total supply and no post-deployment mint function.",
+      "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool.",
+      "Historical small buy and sell transactions were observed on Base Mainnet.",
+      "No third-party audit has been completed."
+    ],
+    "doNotClaim": [
+      "Blockaid or MetaMask warning removal before visible confirmation",
+      "security-vendor approval before the vendor confirms it",
+      "third-party audit completion before an independent report is published",
+      "deep liquidity, price support, return promises, or warning-free status",
+      "CoinGecko or CoinMarketCap listing before publication"
+    ]
+  },
+  "nextActions": [
+    "Use this page and JSON in any Blockaid or wallet-security follow-up.",
+    "Keep the official GCA/USDT market route live and consistent.",
+    "Do not send repeated duplicate reports unless Blockaid or a wallet provider asks for more information.",
+    "Recheck wallet UI before making any public warning-status update."
+  ]
+}
