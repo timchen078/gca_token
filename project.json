@@ -17,6 +17,7 @@
   "verifyUrl": "https://gcagochina.com/verify.html",
   "statusPageUrl": "https://gcagochina.com/status.html",
   "listingKitUrl": "https://gcagochina.com/listing-kit.html",
+  "listingReadinessUrl": "https://gcagochina.com/listing-readiness.json",
   "tokenListUrl": "https://gcagochina.com/tokenlist.json",
   "wellKnownTokenIdentityUrl": "https://gcagochina.com/.well-known/gca-token.json",
   "securityContactUrl": "https://gcagochina.com/.well-known/security.txt",
@@ -74,6 +75,21 @@
     "coinGeckoTrackedListing": "not-submitted",
     "coinMarketCapTrackedListing": "not-submitted",
     "thirdPartyAudit": "not-completed"
+  },
+  "listingReadiness": {
+    "status": "not-ready",
+    "readyFor": [
+      "DEX metadata correction packages",
+      "wallet identity review",
+      "community due-diligence links",
+      "BaseScan and Blockaid follow-up context"
+    ],
+    "defer": [
+      "CoinGecko tracked listing request",
+      "CoinMarketCap tracked listing request",
+      "centralized exchange listing outreach"
+    ],
+    "reason": "Public identity is prepared, but tracked listing submissions should wait for stronger legitimate liquidity depth, public activity, and exchange volume."
   },
   "memberProgram": {
     "status": "rules-published-public-claim-not-connected",
