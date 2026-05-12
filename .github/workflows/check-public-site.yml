@@ -41,4 +41,16 @@ jobs:
 
       - name: Check live public site
         shell: bash
-        run: python tools/check_public_site.py --timeout 30
+        run: |
+          set -euo pipefail
+
+          for attempt in {1..20}; do
+            if python tools/check_public_site.py --timeout 30; then
+              exit 0
+            fi
+
+            echo "Live site is not ready yet; retrying in 15 seconds (${attempt}/20)."
+            sleep 15
+          done
+
+          python tools/check_public_site.py --timeout 30
