@@ -10,6 +10,8 @@ This package prepares GCA information for token data and DEX discovery platforms
 - Contract source: verified on BaseScan
 - BaseScan token profile: submitted and awaiting BaseScan review
 - GeckoTerminal token info update: approved on 2026-05-11
+- External review status page: `https://gcagochina.com/external-reviews.html`
+- External review status JSON: `https://gcagochina.com/external-reviews.json`
 - Listing readiness page: `https://gcagochina.com/listing-readiness.html`
 - Listing readiness JSON: `https://gcagochina.com/listing-readiness.json`
 - Market quality page: `https://gcagochina.com/market-quality.html`
@@ -42,6 +44,8 @@ This package prepares GCA information for token data and DEX discovery platforms
 - Verify official links: `https://gcagochina.com/verify.html`
 - Project status: `https://gcagochina.com/status.html`
 - Listing kit: `https://gcagochina.com/listing-kit.html`
+- External review status page: `https://gcagochina.com/external-reviews.html`
+- External review status JSON: `https://gcagochina.com/external-reviews.json`
 - Listing readiness page: `https://gcagochina.com/listing-readiness.html`
 - Listing readiness JSON: `https://gcagochina.com/listing-readiness.json`
 - Machine-readable project JSON: `https://gcagochina.com/project.json`
@@ -87,6 +91,8 @@ Earlier small Base Mainnet buy/sell functional swap tests were observed on 2026-
 Use `https://gcagochina.com/market-quality.html` and `https://gcagochina.com/market-quality.json` before presenting market-growth updates. The public path is transparent liquidity, useful product delivery, consistent metadata, and legitimate public participation. Do not use artificial activity, self-trading, wash trading, misleading volume, or paid listing promises as a trust strategy.
 
 ## External Review Follow-Up Tracker
+
+Public review status is available at `https://gcagochina.com/external-reviews.html` and `https://gcagochina.com/external-reviews.json`. Use those public URLs when a reviewer needs the current BaseScan, Blockaid, GeckoTerminal, DEX Screener, CoinGecko, CoinMarketCap, or third-party audit status without exposing internal notes.
 
 Use `launch/external_review_followup_tracker.md` before any BaseScan, Blockaid, GeckoTerminal, DEX Screener, CoinGecko, CoinMarketCap, or audit follow-up. It records which reviews are approved, pending, not submitted, or deferred, plus safe public claims and reply templates. This reduces duplicate requests and keeps the official GCA/USDT pool, verify page, and status disclosures consistent.
 

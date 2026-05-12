@@ -8,6 +8,8 @@
     "website": "https://gcagochina.com/",
     "verifyUrl": "https://gcagochina.com/verify.html",
     "marketPageUrl": "https://gcagochina.com/markets.html",
+    "externalReviewStatusPageUrl": "https://gcagochina.com/external-reviews.html",
+    "externalReviewStatusUrl": "https://gcagochina.com/external-reviews.json",
     "marketQualityPageUrl": "https://gcagochina.com/market-quality.html",
     "marketQualityUrl": "https://gcagochina.com/market-quality.json",
     "listingReadinessPageUrl": "https://gcagochina.com/listing-readiness.html",
@@ -70,6 +72,12 @@
     "external audit completion before an independent report is commissioned and published",
     "deep liquidity or price backing"
   ],
+  "publicExternalReviewStatus": {
+    "status": "external-review-status-active",
+    "publicPageUrl": "https://gcagochina.com/external-reviews.html",
+    "publicUrl": "https://gcagochina.com/external-reviews.json",
+    "useCase": "Public reviewer summary for BaseScan, Blockaid / MetaMask, GeckoTerminal, DEX Screener, CoinGecko, CoinMarketCap, and audit status."
+  },
   "coinGeckoCoinMarketCapGate": {
     "ready": false,
     "publicPageUrl": "https://gcagochina.com/listing-readiness.html",

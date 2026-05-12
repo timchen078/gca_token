@@ -33,6 +33,8 @@ OLD_WETH_POOL_ADDRESS = "0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff"
 WELL_KNOWN_TOKEN_URL = "https://gcagochina.com/.well-known/gca-token.json"
 SECURITY_CONTACT_URL = "https://gcagochina.com/.well-known/security.txt"
 MEMBER_PROGRAM_URL = "https://gcagochina.com/member-program.json"
+EXTERNAL_REVIEW_PAGE_URL = "https://gcagochina.com/external-reviews.html"
+EXTERNAL_REVIEW_URL = "https://gcagochina.com/external-reviews.json"
 LISTING_READINESS_PAGE_URL = "https://gcagochina.com/listing-readiness.html"
 LISTING_READINESS_URL = "https://gcagochina.com/listing-readiness.json"
 MARKET_QUALITY_PAGE_URL = "https://gcagochina.com/market-quality.html"
@@ -56,12 +58,16 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("/.well-known/security.txt", script)
         self.assertIn("/members.html", script)
         self.assertIn("/member-program.json", script)
+        self.assertIn("/external-reviews.html", script)
+        self.assertIn("/external-reviews.json", script)
         self.assertIn("/listing-readiness.html", script)
         self.assertIn("/listing-readiness.json", script)
         self.assertIn("/market-quality.html", script)
         self.assertIn("/market-quality.json", script)
         self.assertIn("validate_members", script)
         self.assertIn("validate_member_program_json", script)
+        self.assertIn("validate_external_reviews_page", script)
+        self.assertIn("validate_external_reviews_json", script)
         self.assertIn("validate_listing_readiness_page", script)
         self.assertIn("validate_listing_readiness_json", script)
         self.assertIn("validate_market_quality_page", script)
@@ -83,6 +89,8 @@ class LaunchPackageTests(unittest.TestCase):
         module.validate_market_quality_json((ROOT / "site" / "market-quality.json").read_text())
         module.validate_members((ROOT / "site" / "members.html").read_text())
         module.validate_member_program_json((ROOT / "site" / "member-program.json").read_text())
+        module.validate_external_reviews_page((ROOT / "site" / "external-reviews.html").read_text())
+        module.validate_external_reviews_json((ROOT / "site" / "external-reviews.json").read_text())
         module.validate_listing_readiness_page((ROOT / "site" / "listing-readiness.html").read_text())
         module.validate_listing_readiness_json((ROOT / "site" / "listing-readiness.json").read_text())
         module.validate_project_json((ROOT / "site" / "project.json").read_text())
@@ -218,6 +226,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertTrue((ROOT / "site" / ".nojekyll").exists())
         self.assertIn("User-agent: *", robots)
         self.assertIn("Allow: /", robots)
+        self.assertIn("Allow: /external-reviews.html", robots)
+        self.assertIn("Allow: /external-reviews.json", robots)
         self.assertIn("Allow: /listing-readiness.html", robots)
         self.assertIn("Allow: /listing-readiness.json", robots)
         self.assertIn("Allow: /market-quality.html", robots)
@@ -230,6 +240,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(VERIFY_PAGE_URL, sitemap)
         self.assertIn("https://gcagochina.com/status.html", sitemap)
         self.assertIn("https://gcagochina.com/listing-kit.html", sitemap)
+        self.assertIn(EXTERNAL_REVIEW_PAGE_URL, sitemap)
+        self.assertIn(EXTERNAL_REVIEW_URL, sitemap)
         self.assertIn(LISTING_READINESS_PAGE_URL, sitemap)
         self.assertIn(LISTING_READINESS_URL, sitemap)
         self.assertIn(MARKET_QUALITY_PAGE_URL, sitemap)
@@ -266,6 +278,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(identity["officialUrls"]["wellKnownTokenIdentity"], WELL_KNOWN_TOKEN_URL)
         self.assertEqual(identity["officialUrls"]["securityContact"], SECURITY_CONTACT_URL)
         self.assertEqual(identity["officialUrls"]["memberProgramRules"], MEMBER_PROGRAM_URL)
+        self.assertEqual(identity["officialUrls"]["externalReviewStatusPage"], EXTERNAL_REVIEW_PAGE_URL)
+        self.assertEqual(identity["officialUrls"]["externalReviewStatus"], EXTERNAL_REVIEW_URL)
         self.assertEqual(identity["officialUrls"]["listingReadinessPage"], LISTING_READINESS_PAGE_URL)
         self.assertEqual(identity["officialUrls"]["listingReadiness"], LISTING_READINESS_URL)
         self.assertEqual(identity["officialUrls"]["marketQualityPage"], MARKET_QUALITY_PAGE_URL)
@@ -309,6 +323,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn('href="faq.html"', site)
         self.assertIn('href="status.html"', site)
         self.assertIn('href="listing-kit.html"', site)
+        self.assertIn('href="external-reviews.html"', site)
         self.assertIn("Go China Access", site)
         self.assertIn("Go China AI Quant Access", site)
         self.assertIn("Go China macro narrative", site)
@@ -453,6 +468,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Canonical Token Identity", verify)
         self.assertIn("Official Market Identity", verify)
         self.assertIn("Current Review Status", verify)
+        self.assertIn("External Reviews", verify)
         self.assertIn("Base Mainnet / 8453", verify)
         self.assertIn("Chain ID", verify)
         self.assertIn("8453", verify)
@@ -486,6 +502,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("well-known token identity", verify)
         self.assertIn('href="status.html"', verify)
         self.assertIn('href="listing-kit.html"', verify)
+        self.assertIn('href="external-reviews.html"', verify)
         self.assertIn("copyContract", verify)
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, verify)
 
@@ -719,10 +736,12 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Submitted, awaiting review", status)
         self.assertIn("BaseScan public token profile publication", status)
         self.assertIn("Wallet warning removal after Blockaid report", status)
+        self.assertIn("External review status page", status)
         self.assertIn("CoinGecko tracked listing", status)
         self.assertIn("CoinMarketCap tracked listing", status)
         self.assertIn('href="listing-readiness.html"', status)
         self.assertIn('href="market-quality.html"', status)
+        self.assertIn('href="external-reviews.html"', status)
         self.assertIn("No third-party audit has been completed", status)
         self.assertIn("600,000,000 GCA", status)
         self.assertIn("normal owner-controlled wallet", status)
@@ -734,8 +753,10 @@ class LaunchPackageTests(unittest.TestCase):
 
         self.assertIn('href="listing-readiness.html"', index)
         self.assertIn('href="market-quality.html"', index)
+        self.assertIn('href="external-reviews.html"', index)
 
-        for page in (index, buy, markets, supply, security, risk, faq, members, utility, whitepaper, verify, readiness, quality):
+        external = (ROOT / "site" / "external-reviews.html").read_text()
+        for page in (index, buy, markets, supply, security, risk, faq, members, utility, whitepaper, verify, readiness, quality, external):
             self.assertIn('href="status.html"', page)
             self.assertIn('href="listing-kit.html"', page)
             self.assertIn('href="markets.html"', page)
@@ -754,6 +775,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("CoinMarketCap tracked listing request", page)
         self.assertIn("Centralized exchange listing outreach", page)
         self.assertIn("Pending external review", page)
+        self.assertIn("External Review Status", page)
         self.assertIn("Approved 2026-05-11", page)
         self.assertIn("No artificial activity policy", page)
         self.assertIn("Do not use artificial activity", page)
@@ -780,6 +802,10 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("listing-readiness.html", kit)
         self.assertIn("Listing Readiness JSON", kit)
         self.assertIn("listing-readiness.json", kit)
+        self.assertIn("External Reviews", kit)
+        self.assertIn("external-reviews.html", kit)
+        self.assertIn("External Reviews JSON", kit)
+        self.assertIn("external-reviews.json", kit)
         self.assertIn("Market Quality", kit)
         self.assertIn("market-quality.html", kit)
         self.assertIn("Token List JSON", kit)
@@ -827,6 +853,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(project["contractAddress"], MAINNET_ADDRESS)
         self.assertEqual(project["verifyUrl"], VERIFY_PAGE_URL)
         self.assertEqual(project["listingKitUrl"], "https://gcagochina.com/listing-kit.html")
+        self.assertEqual(project["externalReviewStatusPageUrl"], EXTERNAL_REVIEW_PAGE_URL)
+        self.assertEqual(project["externalReviewStatusUrl"], EXTERNAL_REVIEW_URL)
         self.assertEqual(project["listingReadinessPageUrl"], LISTING_READINESS_PAGE_URL)
         self.assertEqual(project["listingReadinessUrl"], LISTING_READINESS_URL)
         self.assertEqual(project["marketQualityPageUrl"], MARKET_QUALITY_PAGE_URL)
@@ -863,6 +891,12 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(project["marketQuality"]["status"], "early-stage-market-quality-plan")
         self.assertEqual(project["marketQuality"]["officialMarketRoute"], "GCA/USDT")
         self.assertIn("artificial activity", project["marketQuality"]["doNotUse"])
+        self.assertEqual(project["externalReviewStatus"]["status"], "external-review-status-active")
+        self.assertEqual(project["externalReviewStatus"]["pageUrl"], EXTERNAL_REVIEW_PAGE_URL)
+        self.assertEqual(project["externalReviewStatus"]["url"], EXTERNAL_REVIEW_URL)
+        self.assertEqual(project["externalReviewStatus"]["baseScanTokenProfile"], "submitted-awaiting-review")
+        self.assertEqual(project["externalReviewStatus"]["blockaidMetaMask"], "submitted-warning-removal-not-confirmed")
+        self.assertEqual(project["externalReviewStatus"]["thirdPartyAudit"], "not-completed-deferred")
 
     def test_listing_readiness_json_gates_tracked_listing_submissions(self):
         readiness = json.loads((ROOT / "site" / "listing-readiness.json").read_text())
@@ -878,6 +912,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("legitimate liquidity depth", readiness["summary"])
         self.assertEqual(readiness["canonicalLinks"]["verify"], VERIFY_PAGE_URL)
         self.assertEqual(readiness["canonicalLinks"]["listingKit"], "https://gcagochina.com/listing-kit.html")
+        self.assertEqual(readiness["canonicalLinks"]["externalReviewStatusPage"], EXTERNAL_REVIEW_PAGE_URL)
+        self.assertEqual(readiness["canonicalLinks"]["externalReviewStatus"], EXTERNAL_REVIEW_URL)
         self.assertEqual(readiness["canonicalLinks"]["memberProgramRules"], MEMBER_PROGRAM_URL)
         self.assertEqual(readiness["canonicalLinks"]["marketQualityPage"], MARKET_QUALITY_PAGE_URL)
         self.assertEqual(readiness["canonicalLinks"]["marketQuality"], MARKET_QUALITY_URL)
@@ -900,6 +936,50 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("CoinGecko or CoinMarketCap listing before publication", readiness["publicClaimBoundaries"]["doNotClaim"])
         self.assertIn("Wait for BaseScan token profile review.", readiness["nextActions"])
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, json.dumps(readiness))
+
+    def test_external_reviews_page_and_json_centralize_review_status(self):
+        page = (ROOT / "site" / "external-reviews.html").read_text()
+        reviews = json.loads((ROOT / "site" / "external-reviews.json").read_text())
+
+        self.assertIn("GCA External Review Status", page)
+        self.assertIn("External Reviews JSON", page)
+        self.assertIn("BaseScan source code verification", page)
+        self.assertIn("Submitted, awaiting review", page)
+        self.assertIn("Submitted 2026-05-10; removal not confirmed", page)
+        self.assertIn("Approved 2026-05-11", page)
+        self.assertIn("CoinGecko tracked listing submission", page)
+        self.assertIn("CoinMarketCap tracked listing submission", page)
+        self.assertIn("No third-party audit has been completed", page)
+        self.assertIn(MAINNET_ADDRESS, page)
+        self.assertIn(OFFICIAL_POOL_ADDRESS, page)
+        self.assertIn(BASE_USDT_ADDRESS, page)
+        self.assertIn(OFFICIAL_GECKOTERMINAL_URL, page)
+        self.assertIn(OFFICIAL_DEXSCREENER_URL, page)
+        self.assertNotIn(OLD_WETH_POOL_ADDRESS, page)
+
+        self.assertEqual(reviews["schema"], EXTERNAL_REVIEW_URL)
+        self.assertEqual(reviews["pageUrl"], EXTERNAL_REVIEW_PAGE_URL)
+        self.assertEqual(reviews["status"], "external-review-status-active")
+        self.assertEqual(reviews["chainId"], 8453)
+        self.assertEqual(reviews["contractAddress"], MAINNET_ADDRESS)
+        self.assertEqual(reviews["officialLinks"]["listingReadinessPage"], LISTING_READINESS_PAGE_URL)
+        self.assertEqual(reviews["officialLinks"]["marketQualityPage"], MARKET_QUALITY_PAGE_URL)
+        self.assertEqual(reviews["market"]["officialPair"], "GCA/USDT")
+        self.assertEqual(reviews["market"]["poolAddress"], OFFICIAL_POOL_ADDRESS)
+        self.assertEqual(reviews["market"]["quoteAssetAddress"], BASE_USDT_ADDRESS)
+        self.assertEqual(reviews["reviews"]["baseScanSource"]["status"], "verified")
+        self.assertEqual(reviews["reviews"]["baseScanOwnership"]["status"], "verified")
+        self.assertEqual(reviews["reviews"]["baseScanTokenProfile"]["status"], "submitted-awaiting-review")
+        self.assertEqual(reviews["reviews"]["blockaidMetaMask"]["status"], "submitted-warning-removal-not-confirmed")
+        self.assertEqual(reviews["reviews"]["geckoTerminal"]["status"], "approved")
+        self.assertEqual(reviews["reviews"]["geckoTerminal"]["approvalDate"], "2026-05-11")
+        self.assertEqual(reviews["reviews"]["dexScreener"]["status"], "discoverable-through-gca-usdt-pool")
+        self.assertEqual(reviews["reviews"]["coinGecko"]["status"], "deferred")
+        self.assertEqual(reviews["reviews"]["coinMarketCap"]["status"], "deferred")
+        self.assertEqual(reviews["reviews"]["thirdPartyAudit"]["status"], "not-completed-deferred")
+        self.assertIn("No third-party audit has been completed.", reviews["safePublicClaims"])
+        self.assertIn("Blockaid or MetaMask warning removal before visible confirmation", reviews["doNotClaim"])
+        self.assertNotIn(OLD_WETH_POOL_ADDRESS, json.dumps(reviews))
 
     def test_market_quality_page_and_json_define_legitimate_growth_path(self):
         page = (ROOT / "site" / "market-quality.html").read_text()
@@ -964,6 +1044,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(extensions["verify"], VERIFY_PAGE_URL)
         self.assertEqual(extensions["statusPage"], "https://gcagochina.com/status.html")
         self.assertEqual(extensions["listingKit"], "https://gcagochina.com/listing-kit.html")
+        self.assertEqual(extensions["externalReviewStatusPage"], EXTERNAL_REVIEW_PAGE_URL)
+        self.assertEqual(extensions["externalReviewStatus"], EXTERNAL_REVIEW_URL)
         self.assertEqual(extensions["listingReadinessPage"], LISTING_READINESS_PAGE_URL)
         self.assertEqual(extensions["listingReadiness"], LISTING_READINESS_URL)
         self.assertEqual(extensions["marketQualityPage"], MARKET_QUALITY_PAGE_URL)
@@ -985,6 +1067,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(extensions["officialPool"], OFFICIAL_POOL_ADDRESS)
         self.assertEqual(extensions["geckoTerminalStatus"], "approved-2026-05-11")
         self.assertEqual(extensions["baseScanTokenProfileStatus"], "submitted-awaiting-review")
+        self.assertEqual(extensions["blockaidMetaMaskStatus"], "submitted-warning-removal-not-confirmed")
         self.assertEqual(extensions["thirdPartyAuditStatus"], "not-completed")
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, json.dumps(tokenlist))
 
@@ -1000,6 +1083,8 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "site" / "faq.html",
             ROOT / "site" / "status.html",
             ROOT / "site" / "listing-kit.html",
+            ROOT / "site" / "external-reviews.html",
+            ROOT / "site" / "external-reviews.json",
             ROOT / "site" / "listing-readiness.html",
             ROOT / "site" / "listing-readiness.json",
             ROOT / "site" / "market-quality.html",
@@ -1131,6 +1216,8 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "site" / "faq.html",
             ROOT / "site" / "status.html",
             ROOT / "site" / "listing-kit.html",
+            ROOT / "site" / "external-reviews.html",
+            ROOT / "site" / "external-reviews.json",
             ROOT / "site" / "listing-readiness.html",
             ROOT / "site" / "listing-readiness.json",
             ROOT / "site" / "market-quality.html",
@@ -1208,6 +1295,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("GeckoTerminal token information update approved on 2026-05-11", status)
         self.assertIn("Public project status page prepared", status)
         self.assertIn("Public listing kit and machine-readable project JSON prepared", status)
+        self.assertIn("Public external review status page and JSON prepared", status)
+        self.assertIn(EXTERNAL_REVIEW_PAGE_URL, status)
+        self.assertIn(EXTERNAL_REVIEW_URL, status)
         self.assertIn("Public listing readiness page and JSON prepared", status)
         self.assertIn(LISTING_READINESS_PAGE_URL, status)
         self.assertIn(LISTING_READINESS_URL, status)
@@ -1258,6 +1348,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Owner decided on 2026-05-10 to defer third-party audit", status)
         self.assertIn("Archive any audit quote replies", status)
         self.assertIn("Use `launch/external_review_followup_tracker.md`", status)
+        self.assertIn("Use `https://gcagochina.com/external-reviews.html`", status)
         self.assertIn("quote submission is not an audit", status)
         self.assertNotIn("Pin the first Telegram announcement manually", status)
         self.assertNotIn("wait for GitHub Pages HTTPS to become active", status)
@@ -1293,6 +1384,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(VERIFY_PAGE_URL, package)
         self.assertIn("https://gcagochina.com/status.html", package)
         self.assertIn("https://gcagochina.com/listing-kit.html", package)
+        self.assertIn(EXTERNAL_REVIEW_PAGE_URL, package)
+        self.assertIn(EXTERNAL_REVIEW_URL, package)
         self.assertIn(LISTING_READINESS_PAGE_URL, package)
         self.assertIn("https://gcagochina.com/project.json", package)
         self.assertIn(LISTING_READINESS_URL, package)
@@ -1338,6 +1431,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["verifyUrl"], VERIFY_PAGE_URL)
         self.assertEqual(values["statusPageUrl"], "https://gcagochina.com/status.html")
         self.assertEqual(values["listingKitUrl"], "https://gcagochina.com/listing-kit.html")
+        self.assertEqual(values["externalReviewStatusPageUrl"], EXTERNAL_REVIEW_PAGE_URL)
+        self.assertEqual(values["externalReviewStatusUrl"], EXTERNAL_REVIEW_URL)
         self.assertEqual(values["listingReadinessPageUrl"], LISTING_READINESS_PAGE_URL)
         self.assertEqual(values["listingReadinessUrl"], LISTING_READINESS_URL)
         self.assertEqual(values["projectJsonUrl"], "https://gcagochina.com/project.json")
@@ -1392,6 +1487,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["platformReadiness"]["listingReadiness"]["pageUrl"], LISTING_READINESS_PAGE_URL)
         self.assertEqual(values["platformReadiness"]["listingReadiness"]["url"], LISTING_READINESS_URL)
         self.assertIn("legitimate liquidity depth", values["platformReadiness"]["listingReadiness"]["nextAction"])
+        self.assertEqual(values["platformReadiness"]["externalReviewStatus"]["status"], "external-review-status-active")
+        self.assertEqual(values["platformReadiness"]["externalReviewStatus"]["pageUrl"], EXTERNAL_REVIEW_PAGE_URL)
+        self.assertEqual(values["platformReadiness"]["externalReviewStatus"]["url"], EXTERNAL_REVIEW_URL)
         self.assertEqual(values["platformReadiness"]["geckoTerminal"]["approvalDate"], "2026-05-11")
         self.assertIn("prepared-but-weak-readiness", values["platformReadiness"]["coinGecko"]["status"])
         self.assertIn("prepared-but-weak-readiness", values["platformReadiness"]["coinMarketCap"]["status"])
@@ -1410,6 +1508,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(MAINNET_ADDRESS, tracker)
         self.assertIn(VERIFY_PAGE_URL, tracker)
         self.assertIn(MARKET_PAGE_URL, tracker)
+        self.assertIn(EXTERNAL_REVIEW_PAGE_URL, tracker)
+        self.assertIn(EXTERNAL_REVIEW_URL, tracker)
         self.assertIn(MARKET_QUALITY_PAGE_URL, tracker)
         self.assertIn(MARKET_QUALITY_URL, tracker)
         self.assertIn(LISTING_READINESS_PAGE_URL, tracker)
@@ -1439,6 +1539,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["canonicalIdentity"]["contractAddress"], MAINNET_ADDRESS)
         self.assertEqual(values["canonicalIdentity"]["verifyUrl"], VERIFY_PAGE_URL)
         self.assertEqual(values["canonicalIdentity"]["marketPageUrl"], MARKET_PAGE_URL)
+        self.assertEqual(values["canonicalIdentity"]["externalReviewStatusPageUrl"], EXTERNAL_REVIEW_PAGE_URL)
+        self.assertEqual(values["canonicalIdentity"]["externalReviewStatusUrl"], EXTERNAL_REVIEW_URL)
         self.assertEqual(values["canonicalIdentity"]["marketQualityPageUrl"], MARKET_QUALITY_PAGE_URL)
         self.assertEqual(values["canonicalIdentity"]["marketQualityUrl"], MARKET_QUALITY_URL)
         self.assertEqual(values["canonicalIdentity"]["listingReadinessPageUrl"], LISTING_READINESS_PAGE_URL)
@@ -1461,6 +1563,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["coinGeckoCoinMarketCapGate"]["publicPageUrl"], LISTING_READINESS_PAGE_URL)
         self.assertEqual(values["coinGeckoCoinMarketCapGate"]["publicUrl"], LISTING_READINESS_URL)
         self.assertIn("wash trading", values["coinGeckoCoinMarketCapGate"]["requiredBeforeSubmission"][3])
+        self.assertEqual(values["publicExternalReviewStatus"]["status"], "external-review-status-active")
+        self.assertEqual(values["publicExternalReviewStatus"]["publicPageUrl"], EXTERNAL_REVIEW_PAGE_URL)
+        self.assertEqual(values["publicExternalReviewStatus"]["publicUrl"], EXTERNAL_REVIEW_URL)
         self.assertEqual(values["marketQualityPlan"]["status"], "early-stage-market-quality-plan")
         self.assertEqual(values["marketQualityPlan"]["publicPageUrl"], MARKET_QUALITY_PAGE_URL)
         self.assertEqual(values["marketQualityPlan"]["publicUrl"], MARKET_QUALITY_URL)

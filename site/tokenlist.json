@@ -26,6 +26,8 @@
         "verify": "https://gcagochina.com/verify.html",
         "statusPage": "https://gcagochina.com/status.html",
         "listingKit": "https://gcagochina.com/listing-kit.html",
+        "externalReviewStatusPage": "https://gcagochina.com/external-reviews.html",
+        "externalReviewStatus": "https://gcagochina.com/external-reviews.json",
         "listingReadinessPage": "https://gcagochina.com/listing-readiness.html",
         "listingReadiness": "https://gcagochina.com/listing-readiness.json",
         "projectJson": "https://gcagochina.com/project.json",
@@ -49,6 +51,7 @@
         "officialPool": "0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
         "geckoTerminalStatus": "approved-2026-05-11",
         "baseScanTokenProfileStatus": "submitted-awaiting-review",
+        "blockaidMetaMaskStatus": "submitted-warning-removal-not-confirmed",
         "thirdPartyAuditStatus": "not-completed"
       }
     }

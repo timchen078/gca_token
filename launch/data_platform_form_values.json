@@ -19,6 +19,8 @@
   "verifyUrl": "https://gcagochina.com/verify.html",
   "statusPageUrl": "https://gcagochina.com/status.html",
   "listingKitUrl": "https://gcagochina.com/listing-kit.html",
+  "externalReviewStatusPageUrl": "https://gcagochina.com/external-reviews.html",
+  "externalReviewStatusUrl": "https://gcagochina.com/external-reviews.json",
   "listingReadinessPageUrl": "https://gcagochina.com/listing-readiness.html",
   "listingReadinessUrl": "https://gcagochina.com/listing-readiness.json",
   "projectJsonUrl": "https://gcagochina.com/project.json",
@@ -143,6 +145,12 @@
       "pageUrl": "https://gcagochina.com/listing-readiness.html",
       "url": "https://gcagochina.com/listing-readiness.json",
       "nextAction": "Use this gate before CoinGecko, CoinMarketCap, or centralized exchange outreach; current tracked listing submissions should wait for stronger legitimate liquidity depth, public activity, and exchange volume."
+    },
+    "externalReviewStatus": {
+      "status": "external-review-status-active",
+      "pageUrl": "https://gcagochina.com/external-reviews.html",
+      "url": "https://gcagochina.com/external-reviews.json",
+      "nextAction": "Use this public status page for BaseScan, Blockaid / MetaMask, GeckoTerminal, DEX Screener, CoinGecko, CoinMarketCap, and audit review context."
     },
     "dexScreener": {
       "status": "discoverable",

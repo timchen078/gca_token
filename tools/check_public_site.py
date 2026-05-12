@@ -22,6 +22,8 @@ OLD_WETH_POOL_ADDRESS = "0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff"
 OFFICIAL_GECKOTERMINAL_URL = f"https://www.geckoterminal.com/base/pools/{OFFICIAL_POOL_ADDRESS}"
 OFFICIAL_DEXSCREENER_URL = f"https://dexscreener.com/base/{OFFICIAL_POOL_ADDRESS}"
 MEMBER_PROGRAM_URL = "https://gcagochina.com/member-program.json"
+EXTERNAL_REVIEW_PAGE_URL = "https://gcagochina.com/external-reviews.html"
+EXTERNAL_REVIEW_URL = "https://gcagochina.com/external-reviews.json"
 LISTING_READINESS_PAGE_URL = "https://gcagochina.com/listing-readiness.html"
 LISTING_READINESS_URL = "https://gcagochina.com/listing-readiness.json"
 MARKET_QUALITY_PAGE_URL = "https://gcagochina.com/market-quality.html"
@@ -83,6 +85,7 @@ def validate_root(text: str) -> None:
     label = "/"
     assert_contains(text, "GCA", label)
     assert_contains(text, "Verify GCA", label)
+    assert_contains(text, "External Reviews", label)
     assert_contains(text, "Listing Readiness", label)
     assert_contains(text, MAINNET_ADDRESS, label)
     assert_current_pool_text(text, label)
@@ -93,6 +96,7 @@ def validate_verify(text: str) -> None:
     assert_contains(text, "Verify GCA", label)
     assert_contains(text, "Submitted, awaiting review", label)
     assert_contains(text, "well-known token identity", label)
+    assert_contains(text, "External Reviews", label)
     assert_contains(text, OFFICIAL_DEXSCREENER_URL, label)
     assert_current_pool_text(text, label)
 
@@ -134,6 +138,10 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong chainId")
     if payload.get("memberProgramRulesUrl") != MEMBER_PROGRAM_URL:
         raise SiteCheckError(f"{label}: wrong memberProgramRulesUrl")
+    if payload.get("externalReviewStatusPageUrl") != EXTERNAL_REVIEW_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong externalReviewStatusPageUrl")
+    if payload.get("externalReviewStatusUrl") != EXTERNAL_REVIEW_URL:
+        raise SiteCheckError(f"{label}: wrong externalReviewStatusUrl")
     if payload.get("listingReadinessPageUrl") != LISTING_READINESS_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong listingReadinessPageUrl")
     if payload.get("listingReadinessUrl") != LISTING_READINESS_URL:
@@ -158,6 +166,8 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: unexpected listing readiness status")
     if payload.get("marketQuality", {}).get("status") != "early-stage-market-quality-plan":
         raise SiteCheckError(f"{label}: unexpected market quality status")
+    if payload.get("externalReviewStatus", {}).get("status") != "external-review-status-active":
+        raise SiteCheckError(f"{label}: unexpected external review status")
     assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
 
 
@@ -182,6 +192,10 @@ def validate_tokenlist_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong officialPool")
     if extensions.get("memberProgramRules") != MEMBER_PROGRAM_URL:
         raise SiteCheckError(f"{label}: wrong memberProgramRules")
+    if extensions.get("externalReviewStatusPage") != EXTERNAL_REVIEW_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong externalReviewStatusPage")
+    if extensions.get("externalReviewStatus") != EXTERNAL_REVIEW_URL:
+        raise SiteCheckError(f"{label}: wrong externalReviewStatus")
     if extensions.get("listingReadinessPage") != LISTING_READINESS_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong listingReadinessPage")
     if extensions.get("listingReadiness") != LISTING_READINESS_URL:
@@ -208,6 +222,10 @@ def validate_well_known_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong contractAddress")
     if urls.get("memberProgramRules") != MEMBER_PROGRAM_URL:
         raise SiteCheckError(f"{label}: wrong memberProgramRules")
+    if urls.get("externalReviewStatusPage") != EXTERNAL_REVIEW_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong externalReviewStatusPage")
+    if urls.get("externalReviewStatus") != EXTERNAL_REVIEW_URL:
+        raise SiteCheckError(f"{label}: wrong externalReviewStatus")
     if urls.get("listingReadinessPage") != LISTING_READINESS_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong listingReadinessPage")
     if urls.get("listingReadiness") != LISTING_READINESS_URL:
@@ -293,6 +311,10 @@ def validate_listing_readiness_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong marketQualityPage")
     if payload.get("canonicalLinks", {}).get("marketQuality") != MARKET_QUALITY_URL:
         raise SiteCheckError(f"{label}: wrong marketQuality")
+    if payload.get("canonicalLinks", {}).get("externalReviewStatusPage") != EXTERNAL_REVIEW_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong externalReviewStatusPage")
+    if payload.get("canonicalLinks", {}).get("externalReviewStatus") != EXTERNAL_REVIEW_URL:
+        raise SiteCheckError(f"{label}: wrong externalReviewStatus")
     if platforms.get("geckoTerminal", {}).get("status") != "approved":
         raise SiteCheckError(f"{label}: wrong GeckoTerminal status")
     if platforms.get("coinGecko", {}).get("status") != "defer":
@@ -359,6 +381,67 @@ def validate_market_quality_page(text: str) -> None:
     assert_current_pool_text(text, label)
 
 
+def validate_external_reviews_json(text: str) -> None:
+    label = "/external-reviews.json"
+    payload = load_json(text, label)
+    market = payload.get("market", {})
+    reviews = payload.get("reviews", {})
+    links = payload.get("officialLinks", {})
+
+    if payload.get("schema") != EXTERNAL_REVIEW_URL:
+        raise SiteCheckError(f"{label}: wrong schema")
+    if payload.get("pageUrl") != EXTERNAL_REVIEW_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong pageUrl")
+    if payload.get("status") != "external-review-status-active":
+        raise SiteCheckError(f"{label}: wrong status")
+    if payload.get("chainId") != 8453:
+        raise SiteCheckError(f"{label}: wrong chainId")
+    if payload.get("contractAddress") != MAINNET_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong contractAddress")
+    if links.get("listingReadinessPage") != LISTING_READINESS_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong listingReadinessPage")
+    if links.get("marketQualityPage") != MARKET_QUALITY_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong marketQualityPage")
+    if market.get("officialPair") != "GCA/USDT":
+        raise SiteCheckError(f"{label}: wrong officialPair")
+    if market.get("poolAddress") != OFFICIAL_POOL_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong poolAddress")
+    if market.get("quoteAssetAddress") != BASE_USDT_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong quoteAssetAddress")
+    if reviews.get("baseScanSource", {}).get("status") != "verified":
+        raise SiteCheckError(f"{label}: wrong BaseScan source status")
+    if reviews.get("baseScanTokenProfile", {}).get("status") != "submitted-awaiting-review":
+        raise SiteCheckError(f"{label}: wrong BaseScan profile status")
+    if reviews.get("blockaidMetaMask", {}).get("status") != "submitted-warning-removal-not-confirmed":
+        raise SiteCheckError(f"{label}: wrong Blockaid status")
+    if reviews.get("geckoTerminal", {}).get("status") != "approved":
+        raise SiteCheckError(f"{label}: wrong GeckoTerminal status")
+    if reviews.get("coinGecko", {}).get("status") != "deferred":
+        raise SiteCheckError(f"{label}: wrong CoinGecko status")
+    if reviews.get("coinMarketCap", {}).get("status") != "deferred":
+        raise SiteCheckError(f"{label}: wrong CoinMarketCap status")
+    if reviews.get("thirdPartyAudit", {}).get("status") != "not-completed-deferred":
+        raise SiteCheckError(f"{label}: wrong audit status")
+    if "No third-party audit has been completed." not in payload.get("safePublicClaims", []):
+        raise SiteCheckError(f"{label}: missing audit safe claim")
+    assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
+
+
+def validate_external_reviews_page(text: str) -> None:
+    label = "/external-reviews.html"
+    assert_contains(text, "GCA External Review Status", label)
+    assert_contains(text, "External Reviews JSON", label)
+    assert_contains(text, "Submitted, awaiting review", label)
+    assert_contains(text, "Submitted 2026-05-10; removal not confirmed", label)
+    assert_contains(text, "Approved 2026-05-11", label)
+    assert_contains(text, "CoinGecko tracked listing submission", label)
+    assert_contains(text, "CoinMarketCap tracked listing submission", label)
+    assert_contains(text, "No third-party audit has been completed", label)
+    assert_contains(text, OFFICIAL_DEXSCREENER_URL, label)
+    assert_contains(text, OFFICIAL_GECKOTERMINAL_URL, label)
+    assert_current_pool_text(text, label)
+
+
 def validate_listing_readiness_page(text: str) -> None:
     label = "/listing-readiness.html"
     assert_contains(text, "GCA Listing Readiness", label)
@@ -389,6 +472,8 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/markets.html",
         "https://gcagochina.com/market-quality.html",
         "https://gcagochina.com/market-quality.json",
+        "https://gcagochina.com/external-reviews.html",
+        "https://gcagochina.com/external-reviews.json",
         "https://gcagochina.com/member-program.json",
         "https://gcagochina.com/listing-readiness.html",
         "https://gcagochina.com/listing-readiness.json",
@@ -404,6 +489,8 @@ def validate_robots(text: str) -> None:
     label = "/robots.txt"
     assert_contains(text, "Allow: /listing-readiness.html", label)
     assert_contains(text, "Allow: /listing-readiness.json", label)
+    assert_contains(text, "Allow: /external-reviews.html", label)
+    assert_contains(text, "Allow: /external-reviews.json", label)
     assert_contains(text, "Allow: /market-quality.html", label)
     assert_contains(text, "Allow: /market-quality.json", label)
     assert_contains(text, "Allow: /member-program.json", label)
@@ -416,6 +503,8 @@ CHECKS: list[EndpointCheck] = [
     ("/", validate_root),
     ("/verify.html", validate_verify),
     ("/markets.html", validate_markets),
+    ("/external-reviews.html", validate_external_reviews_page),
+    ("/external-reviews.json", validate_external_reviews_json),
     ("/market-quality.html", validate_market_quality_page),
     ("/market-quality.json", validate_market_quality_json),
     ("/members.html", validate_members),

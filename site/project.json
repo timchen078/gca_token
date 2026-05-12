@@ -17,6 +17,8 @@
   "verifyUrl": "https://gcagochina.com/verify.html",
   "statusPageUrl": "https://gcagochina.com/status.html",
   "listingKitUrl": "https://gcagochina.com/listing-kit.html",
+  "externalReviewStatusPageUrl": "https://gcagochina.com/external-reviews.html",
+  "externalReviewStatusUrl": "https://gcagochina.com/external-reviews.json",
   "listingReadinessPageUrl": "https://gcagochina.com/listing-readiness.html",
   "listingReadinessUrl": "https://gcagochina.com/listing-readiness.json",
   "tokenListUrl": "https://gcagochina.com/tokenlist.json",
@@ -105,6 +107,17 @@
       "wash trading",
       "misleading volume"
     ]
+  },
+  "externalReviewStatus": {
+    "status": "external-review-status-active",
+    "pageUrl": "https://gcagochina.com/external-reviews.html",
+    "url": "https://gcagochina.com/external-reviews.json",
+    "baseScanTokenProfile": "submitted-awaiting-review",
+    "blockaidMetaMask": "submitted-warning-removal-not-confirmed",
+    "geckoTerminal": "approved-2026-05-11",
+    "coinGeckoTrackedListing": "deferred",
+    "coinMarketCapTrackedListing": "deferred",
+    "thirdPartyAudit": "not-completed-deferred"
   },
   "memberProgram": {
     "status": "rules-published-public-claim-not-connected",

@@ -10,6 +10,8 @@ Use this file as the single operating checklist for external review, wallet-warn
 - Official website: `https://gcagochina.com/`
 - Official verify page: `https://gcagochina.com/verify.html`
 - Official market page: `https://gcagochina.com/markets.html`
+- Public external review status page: `https://gcagochina.com/external-reviews.html`
+- Public external review status JSON: `https://gcagochina.com/external-reviews.json`
 - Market quality page: `https://gcagochina.com/market-quality.html`
 - Market quality JSON: `https://gcagochina.com/market-quality.json`
 - Listing readiness page: `https://gcagochina.com/listing-readiness.html`
@@ -128,3 +130,10 @@ Public page: `https://gcagochina.com/market-quality.html`
 Machine-readable JSON: `https://gcagochina.com/market-quality.json`
 
 Use this page for legitimate market-growth communication. The approved public direction is transparent liquidity, useful product delivery, consistent metadata, community support, and conservative external-review updates. Do not use artificial activity, self-trading, wash trading, misleading volume, or paid listing promises as a trust strategy.
+
+## Public External Review Status
+
+Public page: `https://gcagochina.com/external-reviews.html`
+Machine-readable JSON: `https://gcagochina.com/external-reviews.json`
+
+Use this page when wallets, data platforms, reviewers, or community moderators need a public status summary. It separates completed BaseScan source and GeckoTerminal verification from pending BaseScan profile publication, Blockaid / MetaMask warning review, deferred CoinGecko / CoinMarketCap tracked-listing submissions, and third-party audit status.
