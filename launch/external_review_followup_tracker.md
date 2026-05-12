@@ -10,6 +10,7 @@ Use this file as the single operating checklist for external review, wallet-warn
 - Official website: `https://gcagochina.com/`
 - Official verify page: `https://gcagochina.com/verify.html`
 - Official market page: `https://gcagochina.com/markets.html`
+- Listing readiness page: `https://gcagochina.com/listing-readiness.html`
 - Listing readiness gate: `https://gcagochina.com/listing-readiness.json`
 - Official Telegram: `https://t.me/gcagochinaofficial`
 - Official GCA/USDT pool: `https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0`
@@ -107,7 +108,8 @@ Please review whether the suspected-honeypot warning can be corrected.
 
 ## Listing Readiness Gate
 
-Public URL: `https://gcagochina.com/listing-readiness.json`
+Public page: `https://gcagochina.com/listing-readiness.html`
+Machine-readable JSON: `https://gcagochina.com/listing-readiness.json`
 
 Do not submit CoinGecko or CoinMarketCap yet unless these conditions are materially stronger:
 

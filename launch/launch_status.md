@@ -45,7 +45,7 @@
 - Official verify page prepared at `https://gcagochina.com/verify.html` to centralize canonical contract, Base Mainnet chain ID, official GCA/USDT pool, website, Telegram, metadata files, and anti-scam link checks.
 - Public project status page prepared at `https://gcagochina.com/status.html`.
 - Public listing kit and machine-readable project JSON prepared at `https://gcagochina.com/listing-kit.html` and `https://gcagochina.com/project.json`.
-- Public listing readiness gate prepared at `https://gcagochina.com/listing-readiness.json` to keep CoinGecko, CoinMarketCap, centralized exchange, and paid listing outreach deferred until market and public activity are stronger.
+- Public listing readiness page and JSON prepared at `https://gcagochina.com/listing-readiness.html` and `https://gcagochina.com/listing-readiness.json` to keep CoinGecko, CoinMarketCap, centralized exchange, and paid listing outreach deferred until market and public activity are stronger.
 - Official token list JSON prepared at `https://gcagochina.com/tokenlist.json`.
 - Public well-known token identity JSON and security contact files prepared at `https://gcagochina.com/.well-known/gca-token.json` and `https://gcagochina.com/.well-known/security.txt`.
 - Data platform submission package prepared for DEX Screener, GeckoTerminal, CoinGecko, and CoinMarketCap.
@@ -74,7 +74,7 @@
 - Use `launch/external_review_followup_tracker.md` for BaseScan, Blockaid, GeckoTerminal, DEX Screener, CoinGecko, CoinMarketCap, and audit follow-up status before sending any new platform request.
 - If BaseScan asks for supply details during review, use the updated 40/60 allocation and both reserve transfer transactions.
 - Wait for stronger public activity and market volume before submitting CoinGecko or CoinMarketCap listing requests.
-- Use `https://gcagochina.com/listing-readiness.json` before any tracked-listing or exchange outreach; the current status is `not-ready`.
+- Use `https://gcagochina.com/listing-readiness.html` and `https://gcagochina.com/listing-readiness.json` before any tracked-listing or exchange outreach; the current status is `not-ready`.
 - Expose the Web3 Radar access bridge through controlled HTTPS account UI before describing report credits, backtest quotas, ENTRY_READY reviews, or calculators as public self-service token-gated features.
 - Connect controlled HTTPS account UI before describing the 10,000 GCA holder bonus as claimable by users without operator help.
 - Connect controlled HTTPS account UI before describing the 1,000,000 GCA Member tier as self-service claimable by users.

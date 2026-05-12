@@ -17,6 +17,7 @@
   "verifyUrl": "https://gcagochina.com/verify.html",
   "statusPageUrl": "https://gcagochina.com/status.html",
   "listingKitUrl": "https://gcagochina.com/listing-kit.html",
+  "listingReadinessPageUrl": "https://gcagochina.com/listing-readiness.html",
   "listingReadinessUrl": "https://gcagochina.com/listing-readiness.json",
   "tokenListUrl": "https://gcagochina.com/tokenlist.json",
   "wellKnownTokenIdentityUrl": "https://gcagochina.com/.well-known/gca-token.json",

@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GCA Listing Readiness | Go China Access</title>
+    <meta name="description" content="Official GCA listing readiness page explaining current DEX metadata readiness, CoinGecko and CoinMarketCap deferral, market depth limits, and public claim boundaries.">
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #111318;
+        --muted: #5f6773;
+        --line: #dfe3ea;
+        --panel: #ffffff;
+        --soft: #f6f7f9;
+        --red: #d71920;
+        --blue: #0052ff;
+        --green: #087f5b;
+        --gold: #8a650d;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: #fbfbfc;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.5;
+      }
+
+      a {
+        color: var(--blue);
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .shell {
+        width: min(1080px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      header {
+        border-bottom: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.94);
+        position: sticky;
+        top: 0;
+        z-index: 2;
+      }
+
+      nav {
+        min-height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--ink);
+        font-weight: 850;
+      }
+
+      .brand img {
+        width: 32px;
+        height: 32px;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 18px;
+        align-items: center;
+        font-size: 14px;
+      }
+
+      main {
+        padding: 42px 0 56px;
+      }
+
+      h1 {
+        margin: 0;
+        max-width: 840px;
+        font-size: clamp(40px, 6vw, 72px);
+        line-height: 1;
+        letter-spacing: 0;
+      }
+
+      h2 {
+        margin: 0 0 14px;
+        font-size: 24px;
+      }
+
+      h3 {
+        margin: 0 0 8px;
+        font-size: 17px;
+      }
+
+      .lead {
+        max-width: 820px;
+        margin: 18px 0 0;
+        color: var(--muted);
+        font-size: 18px;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 24px;
+      }
+
+      .button {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        color: var(--ink);
+        min-height: 42px;
+        padding: 10px 14px;
+        font: inherit;
+        font-weight: 750;
+      }
+
+      .button.primary {
+        border-color: var(--red);
+        background: var(--red);
+        color: #fff;
+      }
+
+      .section {
+        margin-top: 30px;
+      }
+
+      .panel,
+      .fact {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+      }
+
+      .panel {
+        padding: 24px;
+      }
+
+      .facts,
+      .grid,
+      .two {
+        display: grid;
+        gap: 14px;
+      }
+
+      .facts {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        margin-top: 22px;
+      }
+
+      .grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .two {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .fact {
+        min-height: 104px;
+        padding: 15px;
+      }
+
+      .label {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 750;
+        text-transform: uppercase;
+      }
+
+      .value {
+        display: block;
+        margin-top: 8px;
+        font-size: 16px;
+        font-weight: 850;
+        overflow-wrap: anywhere;
+      }
+
+      .good {
+        color: var(--green);
+      }
+
+      .pending {
+        color: var(--gold);
+      }
+
+      .note,
+      li {
+        color: var(--muted);
+      }
+
+      .note {
+        margin: 0;
+      }
+
+      .list {
+        display: grid;
+        gap: 10px;
+        margin-top: 12px;
+      }
+
+      .row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 12px;
+        align-items: start;
+        border-top: 1px solid var(--line);
+        padding-top: 10px;
+      }
+
+      .row strong {
+        white-space: nowrap;
+        overflow-wrap: anywhere;
+      }
+
+      .warning {
+        border-color: #ecd28c;
+        background: #fff9e8;
+      }
+
+      code {
+        padding: 2px 5px;
+        border-radius: 6px;
+        background: var(--soft);
+        overflow-wrap: anywhere;
+      }
+
+      footer {
+        border-top: 1px solid var(--line);
+        padding: 24px 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      @media (max-width: 860px) {
+        .facts,
+        .grid,
+        .two {
+          grid-template-columns: 1fr;
+        }
+
+        nav {
+          align-items: flex-start;
+          flex-direction: column;
+          padding: 14px 0;
+        }
+
+        .nav-links {
+          flex-wrap: wrap;
+        }
+
+        .row {
+          grid-template-columns: 1fr;
+        }
+
+        .row strong {
+          white-space: normal;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav class="shell" aria-label="Primary">
+        <a class="brand" href="index.html" aria-label="GCA home">
+          <img src="assets/gca-logo.svg" alt="GCA logo">
+          <span>GCA</span>
+        </a>
+        <div class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="verify.html">Verify</a>
+          <a href="buy.html">Buy Guide</a>
+          <a href="markets.html">Markets</a>
+          <a href="supply.html">Supply</a>
+          <a href="security.html">Security</a>
+          <a href="risk.html">Risk</a>
+          <a href="faq.html">FAQ</a>
+          <a href="status.html">Status</a>
+          <a href="listing-kit.html">Listing Kit</a>
+          <a href="members.html">Members</a>
+          <a href="utility.html">Utility Thesis</a>
+          <a href="whitepaper.html">Whitepaper</a>
+          <a href="https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6" target="_blank" rel="noreferrer">BaseScan</a>
+        </div>
+      </nav>
+    </header>
+
+    <main class="shell">
+      <section aria-labelledby="title">
+        <h1 id="title">GCA Listing Readiness</h1>
+        <p class="lead">This page explains which GCA external review steps are ready now and which tracked listing steps should stay deferred. The current tracked-listing status is not ready because public activity, legitimate liquidity depth, and exchange volume are still early.</p>
+        <div class="actions">
+          <a class="button primary" href="verify.html">Verify GCA</a>
+          <a class="button primary" href="markets.html">Official Market</a>
+          <a class="button" href="listing-readiness.json">Readiness JSON</a>
+          <a class="button" href="listing-kit.html">Listing Kit</a>
+          <a class="button" href="status.html">Project Status</a>
+          <a class="button" href="risk.html">Risk Page</a>
+          <a class="button" href="project.json">Project JSON</a>
+        </div>
+      </section>
+
+      <section class="facts" aria-label="Readiness summary">
+        <div class="fact">
+          <span class="label">Current status</span>
+          <span class="value pending">Status: Not Ready</span>
+        </div>
+        <div class="fact">
+          <span class="label">Ready now</span>
+          <span class="value good">DEX metadata and wallet identity review</span>
+        </div>
+        <div class="fact">
+          <span class="label">Defer</span>
+          <span class="value pending">CoinGecko / CoinMarketCap tracked listing</span>
+        </div>
+        <div class="fact">
+          <span class="label">Official pool</span>
+          <span class="value">GCA/USDT on Base</span>
+        </div>
+      </section>
+
+      <section class="section two" aria-label="Ready and deferred">
+        <div class="panel">
+          <h2>Ready For Review</h2>
+          <div class="list">
+            <div class="row"><span>DEX metadata correction packages</span><strong class="good">Ready</strong></div>
+            <div class="row"><span>Wallet identity review</span><strong class="good">Ready</strong></div>
+            <div class="row"><span>Community due-diligence links</span><strong class="good">Ready</strong></div>
+            <div class="row"><span>BaseScan and Blockaid follow-up context</span><strong class="good">Ready</strong></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2>Deferred For Now</h2>
+          <div class="list">
+            <div class="row"><span>CoinGecko tracked listing request</span><strong class="pending">Defer</strong></div>
+            <div class="row"><span>CoinMarketCap tracked listing request</span><strong class="pending">Defer</strong></div>
+            <div class="row"><span>Centralized exchange listing outreach</span><strong class="pending">Defer</strong></div>
+            <div class="row"><span>Public claims of mature liquidity or external audit completion</span><strong class="pending">Do not claim</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="checksTitle">
+        <h2 id="checksTitle">Readiness Checks</h2>
+        <div class="list">
+          <div class="row"><span>Canonical token identity</span><strong class="good">Ready</strong></div>
+          <div class="row"><span>BaseScan contract source and deployer-wallet ownership</span><strong class="good">Ready</strong></div>
+          <div class="row"><span>BaseScan public token profile</span><strong class="pending">Pending external review</strong></div>
+          <div class="row"><span>GeckoTerminal token information</span><strong class="good">Approved 2026-05-11</strong></div>
+          <div class="row"><span>Public social presence</span><strong class="pending">Partial</strong></div>
+          <div class="row"><span>Legitimate market activity</span><strong class="pending">Not ready</strong></div>
+          <div class="row"><span>Utility access and member ledger</span><strong class="pending">Partial</strong></div>
+          <div class="row"><span>Third-party audit</span><strong class="pending">Not completed</strong></div>
+          <div class="row"><span>No artificial activity policy</span><strong class="good">Required</strong></div>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="marketTitle">
+        <h2 id="marketTitle">Official Market Identity</h2>
+        <p class="note">The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool. Current liquidity is starter-depth only, so market data platforms should not treat the pool as mature.</p>
+        <div class="list">
+          <div class="row"><span>Pool address</span><strong>0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0</strong></div>
+          <div class="row"><span>Quote asset</span><strong>USDT on Base</strong></div>
+          <div class="row"><span>USDT contract</span><strong>0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2</strong></div>
+          <div class="row"><span><a href="https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0" target="_blank" rel="noreferrer">GeckoTerminal</a></span><strong>Approved</strong></div>
+          <div class="row"><span><a href="https://dexscreener.com/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0" target="_blank" rel="noreferrer">DEX Screener</a></span><strong>GCA/USDT</strong></div>
+        </div>
+      </section>
+
+      <section class="section grid" aria-label="Platform decisions">
+        <div class="panel">
+          <h3>DEX Screener</h3>
+          <p class="note">Discoverable through the live GCA/USDT pool. Keep website, token list, and GeckoTerminal data consistent.</p>
+        </div>
+        <div class="panel">
+          <h3>GeckoTerminal</h3>
+          <p class="note">Approved on 2026-05-11. Do not submit duplicate updates unless official facts change or GeckoTerminal asks for a correction.</p>
+        </div>
+        <div class="panel">
+          <h3>CoinGecko / CMC</h3>
+          <p class="note">Prepared but deferred. Wait for stronger public activity, legitimate liquidity depth, social presence, material volume, and BaseScan profile publication.</p>
+        </div>
+      </section>
+
+      <section class="section panel warning" aria-labelledby="boundariesTitle">
+        <h2 id="boundariesTitle">Public Claim Boundaries</h2>
+        <ul>
+          <li>Safe to say: GCA is deployed on Base Mainnet with fixed total supply.</li>
+          <li>Safe to say: the official public market route is the Uniswap v4 GCA/USDT pool.</li>
+          <li>Safe to say: CoinGecko and CoinMarketCap tracked listing submissions are prepared but deferred.</li>
+          <li>Do not say GCA is listed on CoinGecko or CoinMarketCap before publication.</li>
+          <li>Do not say the BaseScan token profile is approved before BaseScan publishes it.</li>
+          <li>Do not say Blockaid or MetaMask warnings are removed before visible confirmation.</li>
+          <li>Do not use artificial activity, self-trading, wash trading, or misleading volume as a readiness shortcut.</li>
+          <li>Do not claim mature liquidity, price support, return promises, or completed external audit.</li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <div class="shell">GCA listing readiness. Always verify Base Mainnet chain ID 8453, the contract address, and the official GCA/USDT pool before using this data.</div>
+    </footer>
+  </body>
+</html>

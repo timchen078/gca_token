@@ -10,7 +10,8 @@ This package prepares GCA information for token data and DEX discovery platforms
 - Contract source: verified on BaseScan
 - BaseScan token profile: submitted and awaiting BaseScan review
 - GeckoTerminal token info update: approved on 2026-05-11
-- Listing readiness gate: `https://gcagochina.com/listing-readiness.json`
+- Listing readiness page: `https://gcagochina.com/listing-readiness.html`
+- Listing readiness JSON: `https://gcagochina.com/listing-readiness.json`
 - Liquidity: official starter Uniswap v4 GCA/USDT pool exists on Base Mainnet
 - Social links: official Telegram is live at `https://t.me/gcagochinaofficial`; the frozen X account is not used
 - Third-party audit: not completed; quote requests were submitted on 2026-05-10 and then deferred by owner decision
@@ -39,6 +40,7 @@ This package prepares GCA information for token data and DEX discovery platforms
 - Verify official links: `https://gcagochina.com/verify.html`
 - Project status: `https://gcagochina.com/status.html`
 - Listing kit: `https://gcagochina.com/listing-kit.html`
+- Listing readiness page: `https://gcagochina.com/listing-readiness.html`
 - Listing readiness JSON: `https://gcagochina.com/listing-readiness.json`
 - Machine-readable project JSON: `https://gcagochina.com/project.json`
 - Token list JSON: `https://gcagochina.com/tokenlist.json`
@@ -82,7 +84,7 @@ Earlier small Base Mainnet buy/sell functional swap tests were observed on 2026-
 
 Use `launch/external_review_followup_tracker.md` before any BaseScan, Blockaid, GeckoTerminal, DEX Screener, CoinGecko, CoinMarketCap, or audit follow-up. It records which reviews are approved, pending, not submitted, or deferred, plus safe public claims and reply templates. This reduces duplicate requests and keeps the official GCA/USDT pool, verify page, and status disclosures consistent.
 
-Use `https://gcagochina.com/listing-readiness.json` as the public tracked-listing gate before any CoinGecko, CoinMarketCap, centralized exchange, or paid listing outreach. Current tracked listing submissions should remain deferred until legitimate liquidity depth, public activity, and exchange volume are stronger.
+Use `https://gcagochina.com/listing-readiness.html` and `https://gcagochina.com/listing-readiness.json` as the public tracked-listing gate before any CoinGecko, CoinMarketCap, centralized exchange, or paid listing outreach. Current tracked listing submissions should remain deferred until legitimate liquidity depth, public activity, and exchange volume are stronger.
 
 ## Supply And Reserve
 

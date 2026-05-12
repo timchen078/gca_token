@@ -22,6 +22,7 @@ OLD_WETH_POOL_ADDRESS = "0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff"
 OFFICIAL_GECKOTERMINAL_URL = f"https://www.geckoterminal.com/base/pools/{OFFICIAL_POOL_ADDRESS}"
 OFFICIAL_DEXSCREENER_URL = f"https://dexscreener.com/base/{OFFICIAL_POOL_ADDRESS}"
 MEMBER_PROGRAM_URL = "https://gcagochina.com/member-program.json"
+LISTING_READINESS_PAGE_URL = "https://gcagochina.com/listing-readiness.html"
 LISTING_READINESS_URL = "https://gcagochina.com/listing-readiness.json"
 FORBIDDEN_PUBLIC_CLAIM_PATTERNS = [
     r"\bguaranteed returns?\b",
@@ -80,6 +81,7 @@ def validate_root(text: str) -> None:
     label = "/"
     assert_contains(text, "GCA", label)
     assert_contains(text, "Verify GCA", label)
+    assert_contains(text, "Listing Readiness", label)
     assert_contains(text, MAINNET_ADDRESS, label)
     assert_current_pool_text(text, label)
 
@@ -129,6 +131,8 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong chainId")
     if payload.get("memberProgramRulesUrl") != MEMBER_PROGRAM_URL:
         raise SiteCheckError(f"{label}: wrong memberProgramRulesUrl")
+    if payload.get("listingReadinessPageUrl") != LISTING_READINESS_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong listingReadinessPageUrl")
     if payload.get("listingReadinessUrl") != LISTING_READINESS_URL:
         raise SiteCheckError(f"{label}: wrong listingReadinessUrl")
     if market.get("officialPair") != "GCA/USDT":
@@ -169,6 +173,10 @@ def validate_tokenlist_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong officialPool")
     if extensions.get("memberProgramRules") != MEMBER_PROGRAM_URL:
         raise SiteCheckError(f"{label}: wrong memberProgramRules")
+    if extensions.get("listingReadinessPage") != LISTING_READINESS_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong listingReadinessPage")
+    if extensions.get("listingReadiness") != LISTING_READINESS_URL:
+        raise SiteCheckError(f"{label}: wrong listingReadiness")
     assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
 
 
@@ -187,6 +195,8 @@ def validate_well_known_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong contractAddress")
     if urls.get("memberProgramRules") != MEMBER_PROGRAM_URL:
         raise SiteCheckError(f"{label}: wrong memberProgramRules")
+    if urls.get("listingReadinessPage") != LISTING_READINESS_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong listingReadinessPage")
     if urls.get("listingReadiness") != LISTING_READINESS_URL:
         raise SiteCheckError(f"{label}: wrong listingReadiness")
     if market.get("officialPair") != "GCA/USDT":
@@ -248,6 +258,8 @@ def validate_listing_readiness_json(text: str) -> None:
 
     if payload.get("schema") != LISTING_READINESS_URL:
         raise SiteCheckError(f"{label}: wrong schema")
+    if payload.get("pageUrl") != LISTING_READINESS_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong pageUrl")
     if payload.get("status") != "not-ready":
         raise SiteCheckError(f"{label}: wrong status")
     if payload.get("chainId") != 8453:
@@ -275,6 +287,22 @@ def validate_listing_readiness_json(text: str) -> None:
     assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
 
 
+def validate_listing_readiness_page(text: str) -> None:
+    label = "/listing-readiness.html"
+    assert_contains(text, "GCA Listing Readiness", label)
+    assert_contains(text, "Status: Not Ready", label)
+    assert_contains(text, "DEX metadata and wallet identity review", label)
+    assert_contains(text, "CoinGecko tracked listing request", label)
+    assert_contains(text, "CoinMarketCap tracked listing request", label)
+    assert_contains(text, "Pending external review", label)
+    assert_contains(text, "Approved 2026-05-11", label)
+    assert_contains(text, "No artificial activity policy", label)
+    assert_contains(text, "listing-readiness.json", label)
+    assert_contains(text, OFFICIAL_DEXSCREENER_URL, label)
+    assert_contains(text, OFFICIAL_GECKOTERMINAL_URL, label)
+    assert_current_pool_text(text, label)
+
+
 def validate_security_txt(text: str) -> None:
     label = "/.well-known/security.txt"
     assert_contains(text, "Contact: mailto:GCAgochina@outlook.com", label)
@@ -288,6 +316,7 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/verify.html",
         "https://gcagochina.com/markets.html",
         "https://gcagochina.com/member-program.json",
+        "https://gcagochina.com/listing-readiness.html",
         "https://gcagochina.com/listing-readiness.json",
         "https://gcagochina.com/project.json",
         "https://gcagochina.com/tokenlist.json",
@@ -299,6 +328,7 @@ def validate_sitemap(text: str) -> None:
 
 def validate_robots(text: str) -> None:
     label = "/robots.txt"
+    assert_contains(text, "Allow: /listing-readiness.html", label)
     assert_contains(text, "Allow: /listing-readiness.json", label)
     assert_contains(text, "Allow: /member-program.json", label)
     assert_contains(text, "Allow: /.well-known/gca-token.json", label)
@@ -312,6 +342,7 @@ CHECKS: list[EndpointCheck] = [
     ("/markets.html", validate_markets),
     ("/members.html", validate_members),
     ("/member-program.json", validate_member_program_json),
+    ("/listing-readiness.html", validate_listing_readiness_page),
     ("/listing-readiness.json", validate_listing_readiness_json),
     ("/project.json", validate_project_json),
     ("/tokenlist.json", validate_tokenlist_json),
