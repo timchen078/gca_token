@@ -10,6 +10,9 @@ Official GCA Links
 Website:
 https://gcagochina.com/
 
+Verify official links:
+https://gcagochina.com/verify.html
+
 Buy guide:
 https://gcagochina.com/buy.html
 
@@ -32,7 +35,7 @@ Risk notes:
 GCA is on Base Mainnet only.
 No third-party audit has been completed.
 Current liquidity is starter-depth only, so trades can have high price impact and slippage.
-If MetaMask or Uniswap shows a warning, verify the contract and risks before continuing.
+If MetaMask or Uniswap shows a warning, use the verify page to confirm the contract, pool, official links, and risks before continuing.
 ```
 
 ## Posting Rules

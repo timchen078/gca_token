@@ -20,6 +20,7 @@ Check these daily until there is a response:
 - BaseScan account notifications
 - Contract page: `https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`
 - Public website remains live: `https://gcagochina.com/`
+- Official verify page remains live: `https://gcagochina.com/verify.html`
 - Public status page remains live: `https://gcagochina.com/status.html`
 - Public logo remains live: `https://gcagochina.com/assets/gca-logo.svg`
 - Public whitepaper remains live: `https://gcagochina.com/whitepaper.html`
@@ -71,6 +72,7 @@ Thank you for reviewing the GCA token profile submission.
 Network: Base Mainnet / chainId 8453
 Contract: 0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6
 Official website: https://gcagochina.com/
+Official verify page: https://gcagochina.com/verify.html
 Project status: https://gcagochina.com/status.html
 Official logo: https://gcagochina.com/assets/gca-logo.svg
 Whitepaper: https://gcagochina.com/whitepaper.html

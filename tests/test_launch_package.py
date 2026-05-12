@@ -671,6 +671,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("If BaseScan Requests Changes", followup)
         self.assertIn("Reply Template", followup)
         self.assertIn("Do not describe the BaseScan token profile as complete", followup)
+        self.assertIn(VERIFY_PAGE_URL, followup)
+        self.assertIn("Official verify page", followup)
         self.assertIn("https://gcagochina.com/status.html", followup)
         self.assertIn("Official GCA/USDT pool", followup)
         self.assertIn(OFFICIAL_GECKOTERMINAL_URL, followup)
@@ -1105,6 +1107,8 @@ class LaunchPackageTests(unittest.TestCase):
     def test_telegram_pinned_buy_announcement_is_safe_to_post(self):
         pin = (ROOT / "launch" / "telegram_pinned_buy_announcement.md").read_text()
         self.assertIn("Buy guide", pin)
+        self.assertIn("Verify official links", pin)
+        self.assertIn(VERIFY_PAGE_URL, pin)
         self.assertIn("https://gcagochina.com/buy.html", pin)
         self.assertIn("Uniswap swap", pin)
         self.assertIn(OFFICIAL_SWAP_URL, pin)
@@ -1116,6 +1120,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("No third-party audit has been completed", pin)
         self.assertIn("starter-depth only", pin)
         self.assertIn("If MetaMask or Uniswap shows a warning", pin)
+        self.assertIn("use the verify page to confirm the contract, pool, official links, and risks", pin)
         self.assertIn("Do not add price targets", pin)
         self.assertIn("Do not say the Blockaid / MetaMask warning has been removed", pin)
 
