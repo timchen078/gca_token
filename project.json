@@ -24,6 +24,8 @@
   "securityContactUrl": "https://gcagochina.com/.well-known/security.txt",
   "buyGuideUrl": "https://gcagochina.com/buy.html",
   "marketPageUrl": "https://gcagochina.com/markets.html",
+  "marketQualityPageUrl": "https://gcagochina.com/market-quality.html",
+  "marketQualityUrl": "https://gcagochina.com/market-quality.json",
   "supplyPageUrl": "https://gcagochina.com/supply.html",
   "securityPageUrl": "https://gcagochina.com/security.html",
   "riskPageUrl": "https://gcagochina.com/risk.html",
@@ -91,6 +93,18 @@
       "centralized exchange listing outreach"
     ],
     "reason": "Public identity is prepared, but tracked listing submissions should wait for stronger legitimate liquidity depth, public activity, and exchange volume."
+  },
+  "marketQuality": {
+    "status": "early-stage-market-quality-plan",
+    "officialMarketRoute": "GCA/USDT",
+    "currentDepth": "starter-depth-only",
+    "principle": "Improve market quality through transparent liquidity, useful product delivery, consistent public metadata, and legitimate public participation.",
+    "doNotUse": [
+      "artificial activity",
+      "self-trading",
+      "wash trading",
+      "misleading volume"
+    ]
   },
   "memberProgram": {
     "status": "rules-published-public-claim-not-connected",

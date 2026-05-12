@@ -31,6 +31,8 @@
     "wellKnownTokenIdentity": "https://gcagochina.com/.well-known/gca-token.json",
     "memberProgramRules": "https://gcagochina.com/member-program.json",
     "marketPage": "https://gcagochina.com/markets.html",
+    "marketQualityPage": "https://gcagochina.com/market-quality.html",
+    "marketQuality": "https://gcagochina.com/market-quality.json",
     "supplyPage": "https://gcagochina.com/supply.html",
     "riskPage": "https://gcagochina.com/risk.html",
     "whitepaper": "https://gcagochina.com/whitepaper.html",
@@ -144,6 +146,7 @@
     "Wait for BaseScan token profile review.",
     "Keep the GCA/USDT pool, website, logo, whitepaper, Telegram, and metadata files live.",
     "Grow legitimate public activity and liquidity depth before CoinGecko or CoinMarketCap submission.",
+    "Use the market quality plan before presenting market-growth updates.",
     "Connect the member and credit claim flow through a controlled HTTPS account UI before calling it public self-service.",
     "Revisit third-party audit only when partner, listing, trust, or liquidity requirements justify it."
   ]
