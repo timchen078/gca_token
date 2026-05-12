@@ -95,6 +95,31 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertNotIn("PRIVATE", workflow)
         self.assertNotIn("mnemonic", workflow.lower())
 
+    def test_public_site_health_check_workflow_runs_live_script(self):
+        workflow_path = ROOT / ".github" / "workflows" / "check-public-site.yml"
+        workflow = workflow_path.read_text()
+
+        self.assertIn("name: Check GCA Public Site", workflow)
+        self.assertIn("workflow_dispatch:", workflow)
+        self.assertIn("schedule:", workflow)
+        self.assertIn('cron: "17 3 * * *"', workflow)
+        self.assertIn("branches:", workflow)
+        self.assertIn("- main", workflow)
+        self.assertIn('"tools/check_public_site.py"', workflow)
+        self.assertIn('".github/workflows/check-public-site.yml"', workflow)
+        self.assertIn("contents: read", workflow)
+        self.assertIn("concurrency:", workflow)
+        self.assertIn("timeout-minutes: 10", workflow)
+        self.assertIn("actions/checkout@v4", workflow)
+        self.assertIn("actions/setup-python@v5", workflow)
+        self.assertIn('python-version: "3.12"', workflow)
+        self.assertIn("python -m pip install certifi", workflow)
+        self.assertIn("python tools/check_public_site.py --timeout 30", workflow)
+        self.assertNotIn("contents: write", workflow)
+        self.assertNotIn("secrets.", workflow)
+        self.assertNotIn("PRIVATE", workflow)
+        self.assertNotIn("mnemonic", workflow.lower())
+
     def test_logo_matches_basescan_size_target(self):
         logo = (ROOT / "brand" / "gca-logo.svg").read_text()
         self.assertIn('width="32"', logo)
@@ -934,6 +959,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("https://gcagochina.com/", status)
         self.assertIn("Public site health-check script prepared", status)
         self.assertIn("tools/check_public_site.py", status)
+        self.assertIn("GitHub Actions public site health-check workflow prepared", status)
+        self.assertIn("daily schedule", status)
         self.assertIn("DNS records for `gcagochina.com`", status)
         self.assertIn("GitHub Pages HTTPS certificate issued", status)
         self.assertIn("GitHub Actions publishing workflow prepared", status)
