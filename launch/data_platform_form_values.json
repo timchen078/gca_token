@@ -29,6 +29,8 @@
   "walletWarningEvidenceUrl": "https://gcagochina.com/wallet-warning.json",
   "externalReviewStatusPageUrl": "https://gcagochina.com/external-reviews.html",
   "externalReviewStatusUrl": "https://gcagochina.com/external-reviews.json",
+  "reviewerKitPageUrl": "https://gcagochina.com/reviewer-kit.html",
+  "reviewerKitUrl": "https://gcagochina.com/reviewer-kit.json",
   "listingReadinessPageUrl": "https://gcagochina.com/listing-readiness.html",
   "listingReadinessUrl": "https://gcagochina.com/listing-readiness.json",
   "onchainProofsPageUrl": "https://gcagochina.com/onchain-proofs.html",
@@ -209,6 +211,12 @@
       "pageUrl": "https://gcagochina.com/external-reviews.html",
       "url": "https://gcagochina.com/external-reviews.json",
       "nextAction": "Use this public status page for BaseScan, Blockaid / MetaMask, GeckoTerminal, DEX Screener, CoinGecko, CoinMarketCap, and audit review context."
+    },
+    "reviewerKit": {
+      "status": "public-reviewer-kit-published",
+      "pageUrl": "https://gcagochina.com/reviewer-kit.html",
+      "url": "https://gcagochina.com/reviewer-kit.json",
+      "nextAction": "Use this public reviewer kit when a platform wants one consolidated evidence packet."
     },
     "roadmap": {
       "status": "public-roadmap-published",

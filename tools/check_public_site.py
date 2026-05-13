@@ -38,6 +38,8 @@ WALLET_WARNING_PAGE_URL = "https://gcagochina.com/wallet-warning.html"
 WALLET_WARNING_URL = "https://gcagochina.com/wallet-warning.json"
 EXTERNAL_REVIEW_PAGE_URL = "https://gcagochina.com/external-reviews.html"
 EXTERNAL_REVIEW_URL = "https://gcagochina.com/external-reviews.json"
+REVIEWER_KIT_PAGE_URL = "https://gcagochina.com/reviewer-kit.html"
+REVIEWER_KIT_URL = "https://gcagochina.com/reviewer-kit.json"
 LISTING_READINESS_PAGE_URL = "https://gcagochina.com/listing-readiness.html"
 LISTING_READINESS_URL = "https://gcagochina.com/listing-readiness.json"
 MARKET_QUALITY_PAGE_URL = "https://gcagochina.com/market-quality.html"
@@ -714,6 +716,10 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong externalReviewStatusPageUrl")
     if payload.get("externalReviewStatusUrl") != EXTERNAL_REVIEW_URL:
         raise SiteCheckError(f"{label}: wrong externalReviewStatusUrl")
+    if payload.get("reviewerKitPageUrl") != REVIEWER_KIT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong reviewerKitPageUrl")
+    if payload.get("reviewerKitUrl") != REVIEWER_KIT_URL:
+        raise SiteCheckError(f"{label}: wrong reviewerKitUrl")
     if payload.get("listingReadinessPageUrl") != LISTING_READINESS_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong listingReadinessPageUrl")
     if payload.get("listingReadinessUrl") != LISTING_READINESS_URL:
@@ -764,6 +770,8 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: unexpected market quality status")
     if payload.get("externalReviewStatus", {}).get("status") != "external-review-status-active":
         raise SiteCheckError(f"{label}: unexpected external review status")
+    if payload.get("reviewerKit", {}).get("status") != "public-reviewer-kit-published":
+        raise SiteCheckError(f"{label}: unexpected reviewer kit status")
     if payload.get("walletWarningEvidence", {}).get("status") != "warning-report-submitted-removal-not-confirmed":
         raise SiteCheckError(f"{label}: unexpected wallet warning status")
     if payload.get("onchainProofs", {}).get("status") != "public-onchain-proofs-published":
@@ -828,6 +836,10 @@ def validate_tokenlist_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong externalReviewStatusPage")
     if extensions.get("externalReviewStatus") != EXTERNAL_REVIEW_URL:
         raise SiteCheckError(f"{label}: wrong externalReviewStatus")
+    if extensions.get("reviewerKitPage") != REVIEWER_KIT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong reviewerKitPage")
+    if extensions.get("reviewerKit") != REVIEWER_KIT_URL:
+        raise SiteCheckError(f"{label}: wrong reviewerKit")
     if extensions.get("listingReadinessPage") != LISTING_READINESS_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong listingReadinessPage")
     if extensions.get("listingReadiness") != LISTING_READINESS_URL:
@@ -850,6 +862,8 @@ def validate_tokenlist_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong supplyDisclosureStatus")
     if extensions.get("brandKitStatus") != "public-brand-kit-published":
         raise SiteCheckError(f"{label}: wrong brandKitStatus")
+    if extensions.get("reviewerKitStatus") != "public-reviewer-kit-published":
+        raise SiteCheckError(f"{label}: wrong reviewerKitStatus")
     if extensions.get("memberLedgerStatus") != "public-member-ledger-schema-published":
         raise SiteCheckError(f"{label}: wrong memberLedgerStatus")
     if extensions.get("supportIntakeStatus") != "public-support-intake-published":
@@ -912,6 +926,10 @@ def validate_well_known_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong externalReviewStatusPage")
     if urls.get("externalReviewStatus") != EXTERNAL_REVIEW_URL:
         raise SiteCheckError(f"{label}: wrong externalReviewStatus")
+    if urls.get("reviewerKitPage") != REVIEWER_KIT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong reviewerKitPage")
+    if urls.get("reviewerKit") != REVIEWER_KIT_URL:
+        raise SiteCheckError(f"{label}: wrong reviewerKit")
     if urls.get("listingReadinessPage") != LISTING_READINESS_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong listingReadinessPage")
     if urls.get("listingReadiness") != LISTING_READINESS_URL:
@@ -1305,6 +1323,97 @@ def validate_onchain_proofs_page(text: str) -> None:
     assert_current_pool_text(text, label)
 
 
+def validate_reviewer_kit_json(text: str) -> None:
+    label = "/reviewer-kit.json"
+    payload = load_json(text, label)
+    links = payload.get("officialLinks", {})
+    market = payload.get("officialMarket", {})
+    facts = payload.get("contractFacts", {})
+    reviews = payload.get("externalReviewStatus", {})
+    boundaries = payload.get("publicClaimBoundaries", {})
+    evidence = payload.get("historicalFunctionalSwapEvidence", {})
+
+    if payload.get("schema") != REVIEWER_KIT_URL:
+        raise SiteCheckError(f"{label}: wrong schema")
+    if payload.get("pageUrl") != REVIEWER_KIT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong pageUrl")
+    if payload.get("status") != "public-reviewer-kit-published":
+        raise SiteCheckError(f"{label}: wrong status")
+    if payload.get("chainId") != 8453:
+        raise SiteCheckError(f"{label}: wrong chainId")
+    if payload.get("contractAddress") != MAINNET_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong contractAddress")
+    if links.get("verify") != "https://gcagochina.com/verify.html":
+        raise SiteCheckError(f"{label}: wrong verify link")
+    if links.get("reviewerKitPage") != REVIEWER_KIT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong reviewerKitPage")
+    if links.get("reviewerKit") != REVIEWER_KIT_URL:
+        raise SiteCheckError(f"{label}: wrong reviewerKit")
+    if links.get("walletWarningEvidence") != WALLET_WARNING_URL:
+        raise SiteCheckError(f"{label}: wrong walletWarningEvidence")
+    if links.get("externalReviewStatus") != EXTERNAL_REVIEW_URL:
+        raise SiteCheckError(f"{label}: wrong externalReviewStatus")
+    if links.get("onchainProofs") != ONCHAIN_PROOFS_URL:
+        raise SiteCheckError(f"{label}: wrong onchainProofs")
+    if market.get("pair") != "GCA/USDT":
+        raise SiteCheckError(f"{label}: wrong pair")
+    if market.get("poolAddress") != OFFICIAL_POOL_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong poolAddress")
+    if market.get("quoteAssetAddress") != BASE_USDT_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong quoteAssetAddress")
+    if facts.get("sourceVerifiedOnBaseScan") is not True:
+        raise SiteCheckError(f"{label}: source verification must be true")
+    if facts.get("postDeploymentMintFunction") is not False:
+        raise SiteCheckError(f"{label}: post-deployment mint must be false")
+    if facts.get("ownerOrAdminRole") is not False:
+        raise SiteCheckError(f"{label}: owner/admin role must be false")
+    if facts.get("transferTaxOrHiddenFee") is not False:
+        raise SiteCheckError(f"{label}: transfer tax must be false")
+    if facts.get("thirdPartyAuditCompleted") is not False:
+        raise SiteCheckError(f"{label}: third-party audit must be false")
+    if reviews.get("baseScanTokenProfile") != "resubmitted-awaiting-review":
+        raise SiteCheckError(f"{label}: wrong BaseScan profile status")
+    if reviews.get("blockaidMetaMask") != "submitted-warning-removal-not-confirmed":
+        raise SiteCheckError(f"{label}: wrong Blockaid status")
+    if reviews.get("blockaidFollowUpSubmissionDate") != "2026-05-13":
+        raise SiteCheckError(f"{label}: wrong Blockaid follow-up date")
+    if reviews.get("geckoTerminal") != "approved-2026-05-11":
+        raise SiteCheckError(f"{label}: wrong GeckoTerminal status")
+    if reviews.get("coinGecko") != "deferred":
+        raise SiteCheckError(f"{label}: wrong CoinGecko status")
+    if evidence.get("status") != "observed-historical-functional-evidence-only":
+        raise SiteCheckError(f"{label}: wrong functional evidence status")
+    if SWAP_TEST_BUY_TX not in evidence.get("buyTestTransactions", []):
+        raise SiteCheckError(f"{label}: missing buy test transaction")
+    if SWAP_TEST_SELL_TX not in evidence.get("sellTestTransactions", []):
+        raise SiteCheckError(f"{label}: missing sell test transaction")
+    if "No third-party audit has been completed." not in boundaries.get("safeClaims", []):
+        raise SiteCheckError(f"{label}: missing audit safe claim")
+    if "Blockaid or MetaMask warning removal before visible confirmation" not in boundaries.get("doNotClaim", []):
+        raise SiteCheckError(f"{label}: missing warning boundary")
+    assert_current_pool_text(json.dumps(payload), label)
+
+
+def validate_reviewer_kit_page(text: str) -> None:
+    label = "/reviewer-kit.html"
+    assert_contains(text, "GCA Reviewer Kit", label)
+    assert_contains(text, "Reviewer Kit JSON", label)
+    assert_contains(text, "Base Mainnet / 8453", label)
+    assert_contains(text, MAINNET_ADDRESS, label)
+    assert_contains(text, "GCA/USDT", label)
+    assert_contains(text, "Contract Facts", label)
+    assert_contains(text, "Blockaid / MetaMask", label)
+    assert_contains(text, "Follow-up submitted on 2026-05-13", label)
+    assert_contains(text, "BaseScan Profile", label)
+    assert_contains(text, "On-chain Proofs", label)
+    assert_contains(text, "External Review Status", label)
+    assert_contains(text, "Public Claim Boundaries", label)
+    assert_contains(text, "No third-party audit has been completed", label)
+    assert_contains(text, OFFICIAL_DEXSCREENER_URL, label)
+    assert_contains(text, OFFICIAL_GECKOTERMINAL_URL, label)
+    assert_current_pool_text(text, label)
+
+
 def validate_external_reviews_json(text: str) -> None:
     label = "/external-reviews.json"
     payload = load_json(text, label)
@@ -1487,6 +1596,8 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/markets.html",
         "https://gcagochina.com/wallet-warning.html",
         "https://gcagochina.com/wallet-warning.json",
+        "https://gcagochina.com/reviewer-kit.html",
+        "https://gcagochina.com/reviewer-kit.json",
         "https://gcagochina.com/market-quality.html",
         "https://gcagochina.com/market-quality.json",
         "https://gcagochina.com/brand-kit.html",
@@ -1525,6 +1636,8 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /wallet-warning.html", label)
     assert_contains(text, "Allow: /brand-kit.html", label)
     assert_contains(text, "Allow: /brand-kit.json", label)
+    assert_contains(text, "Allow: /reviewer-kit.html", label)
+    assert_contains(text, "Allow: /reviewer-kit.json", label)
     assert_contains(text, "Allow: /wallet-warning.json", label)
     assert_contains(text, "Allow: /listing-readiness.html", label)
     assert_contains(text, "Allow: /listing-readiness.json", label)
@@ -1560,6 +1673,8 @@ CHECKS: list[EndpointCheck] = [
     ("/markets.html", validate_markets),
     ("/wallet-warning.html", validate_wallet_warning_page),
     ("/wallet-warning.json", validate_wallet_warning_json),
+    ("/reviewer-kit.html", validate_reviewer_kit_page),
+    ("/reviewer-kit.json", validate_reviewer_kit_json),
     ("/external-reviews.html", validate_external_reviews_page),
     ("/external-reviews.json", validate_external_reviews_json),
     ("/market-quality.html", validate_market_quality_page),
