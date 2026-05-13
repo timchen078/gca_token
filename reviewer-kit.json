@@ -1,0 +1,143 @@
+{
+  "schema": "https://gcagochina.com/reviewer-kit.json",
+  "pageUrl": "https://gcagochina.com/reviewer-kit.html",
+  "status": "public-reviewer-kit-published",
+  "lastUpdated": "2026-05-13",
+  "projectName": "GCA",
+  "conceptExpansion": "Go China Access",
+  "network": "Base Mainnet",
+  "chainId": 8453,
+  "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+  "decimals": 18,
+  "totalSupply": "1000000000",
+  "officialLinks": {
+    "website": "https://gcagochina.com/",
+    "verify": "https://gcagochina.com/verify.html",
+    "reviewerKitPage": "https://gcagochina.com/reviewer-kit.html",
+    "reviewerKit": "https://gcagochina.com/reviewer-kit.json",
+    "brandKitPage": "https://gcagochina.com/brand-kit.html",
+    "brandKit": "https://gcagochina.com/brand-kit.json",
+    "onchainProofsPage": "https://gcagochina.com/onchain-proofs.html",
+    "onchainProofs": "https://gcagochina.com/onchain-proofs.json",
+    "walletWarningEvidencePage": "https://gcagochina.com/wallet-warning.html",
+    "walletWarningEvidence": "https://gcagochina.com/wallet-warning.json",
+    "externalReviewStatusPage": "https://gcagochina.com/external-reviews.html",
+    "externalReviewStatus": "https://gcagochina.com/external-reviews.json",
+    "listingReadinessPage": "https://gcagochina.com/listing-readiness.html",
+    "listingReadiness": "https://gcagochina.com/listing-readiness.json",
+    "marketQualityPage": "https://gcagochina.com/market-quality.html",
+    "marketQuality": "https://gcagochina.com/market-quality.json",
+    "supplyPage": "https://gcagochina.com/supply.html",
+    "supplyDisclosure": "https://gcagochina.com/supply.json",
+    "projectJson": "https://gcagochina.com/project.json",
+    "tokenList": "https://gcagochina.com/tokenlist.json",
+    "wellKnownTokenIdentity": "https://gcagochina.com/.well-known/gca-token.json",
+    "securityContact": "https://gcagochina.com/.well-known/security.txt",
+    "whitepaper": "https://gcagochina.com/whitepaper.html",
+    "telegram": "https://t.me/gcagochinaofficial",
+    "baseScanContract": "https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6"
+  },
+  "officialMarket": {
+    "pair": "GCA/USDT",
+    "dex": "Uniswap v4",
+    "network": "Base Mainnet",
+    "feeTier": "0.01%",
+    "poolAddress": "0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "quoteAsset": "USDT",
+    "quoteAssetAddress": "0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2",
+    "geckoTerminal": "https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "dexScreener": "https://dexscreener.com/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "uniswapPool": "https://app.uniswap.org/explore/pools/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "officialSwap": "https://app.uniswap.org/swap?chain=base&inputCurrency=0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2&outputCurrency=0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+    "liquidityDepthStatus": "starter-depth-only"
+  },
+  "contractFacts": {
+    "sourceVerifiedOnBaseScan": true,
+    "fixedSupply": true,
+    "postDeploymentMintFunction": false,
+    "ownerOrAdminRole": false,
+    "proxyOrUpgradePath": false,
+    "blacklistFunction": false,
+    "pauseFunction": false,
+    "transferTaxOrHiddenFee": false,
+    "custodyOrWithdrawalPath": false,
+    "thirdPartyAuditCompleted": false
+  },
+  "externalReviewStatus": {
+    "baseScanSource": "verified",
+    "baseScanOwnership": "verified",
+    "baseScanTokenProfile": "resubmitted-awaiting-review",
+    "baseScanTokenProfileResubmissionDate": "2026-05-13",
+    "blockaidMetaMask": "submitted-warning-removal-not-confirmed",
+    "blockaidInitialSubmissionDate": "2026-05-10",
+    "blockaidFollowUpSubmissionDate": "2026-05-13",
+    "blockaidFollowUpSubmissionResult": "Blockaid support portal returned HTTP 200 OK",
+    "geckoTerminal": "approved-2026-05-11",
+    "dexScreener": "discoverable-through-gca-usdt-pool",
+    "coinGecko": "deferred",
+    "coinMarketCap": "deferred",
+    "thirdPartyAudit": "not-completed-deferred"
+  },
+  "evidenceLinks": {
+    "identity": "https://gcagochina.com/verify.html",
+    "brandAssets": "https://gcagochina.com/brand-kit.html",
+    "sourceAndOnchainProofs": "https://gcagochina.com/onchain-proofs.html",
+    "walletWarningEvidence": "https://gcagochina.com/wallet-warning.html",
+    "externalReviewStatus": "https://gcagochina.com/external-reviews.html",
+    "marketQualityPlan": "https://gcagochina.com/market-quality.html",
+    "supplyDisclosure": "https://gcagochina.com/supply.html",
+    "machineReadableIdentity": "https://gcagochina.com/.well-known/gca-token.json"
+  },
+  "historicalFunctionalSwapEvidence": {
+    "status": "observed-historical-functional-evidence-only",
+    "buyTestTransactions": [
+      "0xf79e52ea56a299a30c2d297be99c970295864ed262c01fdcb7e3f60ca669b040",
+      "0x9e88f36125e0b54eb6d334b3159d6875909553e530dda49af4482d96401a05ac"
+    ],
+    "sellTestTransactions": [
+      "0x0ff618062abc6e28933699d4e3bd723026f8505e4a0155db3068073b6fdc86e7",
+      "0x2698cee454d22a7977231e7e57173038647c07261c09d8a93260bcbf0cc2d71e"
+    ],
+    "scope": "These transactions are narrow historical functional evidence only. They do not prove mature liquidity, organic demand, audit completion, listing acceptance, or warning removal."
+  },
+  "publicClaimBoundaries": {
+    "safeClaims": [
+      "GCA is deployed on Base Mainnet with fixed total supply.",
+      "BaseScan source and deployer-wallet ownership verification are complete.",
+      "GeckoTerminal token information was approved on 2026-05-11.",
+      "A Blockaid false-positive report was submitted on 2026-05-10 and a follow-up was submitted on 2026-05-13, but wallet-warning removal is not confirmed.",
+      "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool.",
+      "No third-party audit has been completed."
+    ],
+    "doNotClaim": [
+      "BaseScan token profile approval before BaseScan publishes it",
+      "Blockaid or MetaMask warning removal before visible confirmation",
+      "CoinGecko or CoinMarketCap listing before publication",
+      "external audit completion before an independent report is published",
+      "locked reserve before on-chain custody changes",
+      "deep liquidity, price support, or return promises"
+    ]
+  },
+  "reviewerUse": {
+    "recommendedFor": [
+      "wallet-security review",
+      "DEX interface token warning review",
+      "data platform metadata review",
+      "community moderator verification",
+      "BaseScan or explorer follow-up context"
+    ],
+    "notFor": [
+      "investment advice",
+      "audit certification",
+      "listing approval claim",
+      "market-depth claim",
+      "price support claim"
+    ],
+    "nextActions": [
+      "Use the reviewer kit page and JSON when a platform asks for centralized public evidence.",
+      "Do not send duplicate Blockaid reports unless Blockaid, MetaMask, or Uniswap asks for more information.",
+      "Wait for BaseScan profile review email before submitting another BaseScan token update.",
+      "Keep the official GCA/USDT pool, logo, website, Telegram, and JSON links consistent."
+    ]
+  }
+}

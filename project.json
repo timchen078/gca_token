@@ -16,6 +16,8 @@
   "website": "https://gcagochina.com/",
   "verifyUrl": "https://gcagochina.com/verify.html",
   "statusPageUrl": "https://gcagochina.com/status.html",
+  "reviewerKitPageUrl": "https://gcagochina.com/reviewer-kit.html",
+  "reviewerKitUrl": "https://gcagochina.com/reviewer-kit.json",
   "roadmapPageUrl": "https://gcagochina.com/roadmap.html",
   "roadmapUrl": "https://gcagochina.com/roadmap.json",
   "communityPageUrl": "https://gcagochina.com/community.html",
@@ -65,6 +67,17 @@
     "logoPngUrl": "https://gcagochina.com/assets/gca-logo.png",
     "logoSvgSize": "32x32",
     "logoPngSize": "512x512"
+  },
+  "reviewerKit": {
+    "status": "public-reviewer-kit-published",
+    "pageUrl": "https://gcagochina.com/reviewer-kit.html",
+    "url": "https://gcagochina.com/reviewer-kit.json",
+    "recommendedFor": [
+      "wallet-security review",
+      "DEX interface token warning review",
+      "data platform metadata review",
+      "community moderator verification"
+    ]
   },
   "baseScanContractUrl": "https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "officialEmail": "GCAgochina@outlook.com",
