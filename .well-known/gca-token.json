@@ -1,6 +1,6 @@
 {
   "schema": "https://gcagochina.com/.well-known/gca-token.json",
-  "lastUpdated": "2026-05-12",
+  "lastUpdated": "2026-05-13",
   "projectName": "GCA",
   "tokenName": "GCA",
   "tokenSymbol": "GCA",
@@ -41,6 +41,7 @@
     "marketQualityPage": "https://gcagochina.com/market-quality.html",
     "marketQuality": "https://gcagochina.com/market-quality.json",
     "supplyPage": "https://gcagochina.com/supply.html",
+    "supplyDisclosure": "https://gcagochina.com/supply.json",
     "securityPage": "https://gcagochina.com/security.html",
     "riskPage": "https://gcagochina.com/risk.html",
     "faq": "https://gcagochina.com/faq.html",
@@ -68,6 +69,9 @@
     "liquidityDepthNote": "Starter-depth only; trades can have high price impact and slippage."
   },
   "supplyDisclosure": {
+    "status": "public-supply-disclosure-published",
+    "pageUrl": "https://gcagochina.com/supply.html",
+    "url": "https://gcagochina.com/supply.json",
     "targetPublicAllocation": "400000000",
     "targetPublicAllocationPercent": 40,
     "ownerHeldReserve": "600000000",

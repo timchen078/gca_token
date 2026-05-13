@@ -21,6 +21,7 @@
     "status": "https://gcagochina.com/status.html",
     "marketPage": "https://gcagochina.com/markets.html",
     "supplyPage": "https://gcagochina.com/supply.html",
+    "supplyDisclosure": "https://gcagochina.com/supply.json",
     "securityPage": "https://gcagochina.com/security.html",
     "riskPage": "https://gcagochina.com/risk.html",
     "listingKit": "https://gcagochina.com/listing-kit.html",

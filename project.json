@@ -33,6 +33,7 @@
   "marketQualityPageUrl": "https://gcagochina.com/market-quality.html",
   "marketQualityUrl": "https://gcagochina.com/market-quality.json",
   "supplyPageUrl": "https://gcagochina.com/supply.html",
+  "supplyDisclosureUrl": "https://gcagochina.com/supply.json",
   "securityPageUrl": "https://gcagochina.com/security.html",
   "riskPageUrl": "https://gcagochina.com/risk.html",
   "faqUrl": "https://gcagochina.com/faq.html",
@@ -65,6 +66,10 @@
     "liquidityDepthNote": "Starter-depth only; trades can have high price impact and slippage."
   },
   "supplyDisclosure": {
+    "status": "public-supply-disclosure-published",
+    "pageUrl": "https://gcagochina.com/supply.html",
+    "url": "https://gcagochina.com/supply.json",
+    "lastUpdated": "2026-05-13",
     "targetPublicAllocation": "400000000",
     "targetPublicAllocationPercent": 40,
     "ownerHeldReserve": "600000000",
@@ -164,5 +169,5 @@
   },
   "shortDescription": "GCA, short for Go China Access, is a fixed-supply ERC-20 token on Base Mainnet. It is a concept-stage community direction focused on the Go China macro narrative, bilingual Web3 education, public market research, and planned access to non-custodial quant risk tools.",
   "longDescription": "GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stands for Go China Access, a concept-stage community direction focused on the Go China macro narrative, bilingual Web3 education, public market research, and planned access to non-custodial quant risk tools. The intended Web3 Radar bridge is to make GCA an access and membership layer for liquidation replay reports, risk-warning credits, realistic backtests, ENTRY_READY signal review, position-size calculators, subscription discounts, and risk-control training. The contract created 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls. The official public pool is the Base Mainnet Uniswap v4 GCA/USDT pool, and the project has a disclosed owner-held reserve wallet. The project is early-stage, has no completed third-party audit, and should not be described as externally audited, price-backed, yield-bearing, or backed by guaranteed liquidity.",
-  "lastUpdated": "2026-05-12"
+  "lastUpdated": "2026-05-13"
 }
