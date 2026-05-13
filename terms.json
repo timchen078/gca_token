@@ -1,7 +1,7 @@
 {
   "schema": "https://gcagochina.com/terms.json",
   "pageUrl": "https://gcagochina.com/terms.html",
-  "lastUpdated": "2026-05-13",
+  "lastUpdated": "2026-05-14",
   "status": "public-participation-terms-published",
   "scope": "GCA public website, member pre-registration, planned 100 credits, planned GCA Member status, future Web3 Radar access bridge",
   "network": "Base Mainnet",
@@ -48,7 +48,7 @@
     "baseScanSource": "verified",
     "baseScanTokenProfile": "resubmitted-awaiting-review",
     "geckoTerminalTokenInfo": "approved-2026-05-11",
-    "blockaidMetaMask": "submitted-warning-removal-not-confirmed",
+    "blockaidMetaMask": "owner-observed-no-warning-visible",
     "thirdPartyAudit": "not-completed",
     "officialPool": "GCA/USDT"
   },
@@ -58,7 +58,7 @@
       "price",
       "liquidity",
       "listings",
-      "wallet-warning removal",
+      "permanent wallet-warning clearance",
       "audit approval",
       "trading results",
       "live trading permission",

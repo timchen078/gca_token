@@ -107,7 +107,7 @@
       "0x0ff618062abc6e28933699d4e3bd723026f8505e4a0155db3068073b6fdc86e7",
       "0x2698cee454d22a7977231e7e57173038647c07261c09d8a93260bcbf0cc2d71e"
     ],
-    "scope": "These hashes are narrow functional evidence that small Base Mainnet DEX buys and sells were observed. They do not prove mature liquidity, organic demand, third-party audit completion, listing acceptance, or wallet-warning removal."
+    "scope": "These hashes are narrow functional evidence that small Base Mainnet DEX buys and sells were observed. They do not prove mature liquidity, organic demand, third-party audit completion, listing acceptance, or security-vendor approval."
   },
   "publicClaimBoundaries": {
     "safeClaims": [

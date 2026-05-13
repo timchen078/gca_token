@@ -79,7 +79,7 @@
     "doNotUseToImply": [
       "BaseScan token profile approval before publication",
       "third-party audit completion",
-      "wallet-warning removal",
+      "permanent wallet-warning clearance",
       "CoinGecko or CoinMarketCap listing",
       "price support, return promises, deep liquidity, or official endorsement by a third party"
     ]

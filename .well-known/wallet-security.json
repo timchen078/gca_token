@@ -1,6 +1,6 @@
 {
   "schema": "https://gcagochina.com/.well-known/wallet-security.json",
-  "lastUpdated": "2026-05-13",
+  "lastUpdated": "2026-05-14",
   "status": "public-wallet-security-profile-published",
   "projectName": "GCA",
   "tokenSymbol": "GCA",
@@ -28,12 +28,16 @@
     "thirdPartyAuditCompleted": false
   },
   "walletReviewStatus": {
-    "blockaidMetaMaskWarning": "submitted-warning-removal-not-confirmed",
+    "blockaidMetaMaskWarning": "owner-observed-no-warning-visible",
     "initialSubmissionDate": "2026-05-10",
     "followUpSubmissionDate": "2026-05-13",
     "followUpSubmissionResult": "Blockaid support portal returned HTTP 200 OK",
-    "warningRemovalConfirmed": false,
-    "nextAction": "Recheck the wallet and DEX warning UI before claiming any warning-status change."
+    "warningRemovalConfirmed": true,
+    "nextAction": "Keep monitoring wallet and DEX warning UI; do not claim security-vendor approval or permanent warning-free status unless a vendor confirms it.",
+    "ownerObservationDate": "2026-05-14",
+    "ownerObservedWarningNotVisible": true,
+    "confirmationScope": "Owner-visible UI observation in the tested wallet/DEX flow only.",
+    "securityVendorApprovalConfirmed": false
   },
   "baseScanStatus": {
     "sourceVerification": "verified",
@@ -90,21 +94,22 @@
       "0x0ff618062abc6e28933699d4e3bd723026f8505e4a0155db3068073b6fdc86e7",
       "0x2698cee454d22a7977231e7e57173038647c07261c09d8a93260bcbf0cc2d71e"
     ],
-    "scope": "Functional swap evidence is narrow historical evidence only. It does not prove mature liquidity, organic demand, audit completion, listing acceptance, or warning removal."
+    "scope": "Functional swap evidence is narrow historical evidence only. It does not prove mature liquidity, organic demand, audit completion, listing acceptance, or security-vendor approval."
   },
   "publicClaimBoundaries": {
     "safeClaims": [
       "GCA source verification is complete on BaseScan.",
       "GCA has fixed total supply and no post-deployment mint function.",
       "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool.",
-      "A Blockaid false-positive report and follow-up were submitted, but wallet-warning removal is not confirmed.",
+      "Owner reported on 2026-05-14 that no wallet risk warning was visible in the tested wallet/DEX flow.",
+      "This is an owner-visible UI observation only, not a permanent security-vendor approval or cross-wallet guarantee.",
       "No third-party audit has been completed."
     ],
     "doNotClaim": [
-      "Blockaid or MetaMask warning removal before visible confirmation",
+      "security-vendor approval, permanent warning-free status, or cross-wallet warning removal before vendor/current wallet UI confirms it",
       "security-vendor approval before the vendor confirms it",
       "third-party audit completion before an independent report is published",
-      "deep liquidity, price support, return promises, or warning-free status"
+      "deep liquidity, price support, or return promises"
     ]
   }
 }

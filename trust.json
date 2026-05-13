@@ -2,7 +2,7 @@
   "schema": "https://gcagochina.com/trust.json",
   "pageUrl": "https://gcagochina.com/trust.html",
   "status": "public-trust-center-published",
-  "lastUpdated": "2026-05-13",
+  "lastUpdated": "2026-05-14",
   "projectName": "GCA",
   "network": "Base Mainnet",
   "chainId": 8453,
@@ -47,12 +47,13 @@
     "baseScanOwnership": "verified",
     "baseScanTokenProfile": "resubmitted-awaiting-review",
     "geckoTerminalTokenInfo": "approved-2026-05-11",
-    "walletWarning": "submitted-warning-removal-not-confirmed",
+    "walletWarning": "owner-observed-no-warning-visible",
     "blockaidReportDate": "2026-05-10",
     "blockaidFollowUpDate": "2026-05-13",
     "thirdPartyAudit": "not-completed",
     "coinGeckoTrackedListing": "deferred",
-    "coinMarketCapTrackedListing": "deferred"
+    "coinMarketCapTrackedListing": "deferred",
+    "walletWarningOwnerObservationDate": "2026-05-14"
   },
   "contractFacts": {
     "sourceVerifiedOnBaseScan": true,
@@ -98,24 +99,26 @@
     "baseScanOwnership": "verified",
     "baseScanTokenProfile": "resubmitted-awaiting-review",
     "geckoTerminal": "approved-2026-05-11",
-    "blockaidMetaMask": "submitted-warning-removal-not-confirmed",
+    "blockaidMetaMask": "owner-observed-no-warning-visible",
     "blockaidReportSubmissionDate": "2026-05-10",
     "blockaidFollowUpSubmissionDate": "2026-05-13",
     "coinGecko": "deferred",
     "coinMarketCap": "deferred",
-    "thirdPartyAudit": "not-completed-deferred"
+    "thirdPartyAudit": "not-completed-deferred",
+    "blockaidOwnerObservationDate": "2026-05-14"
   },
   "safePublicClaims": [
     "GCA is deployed on Base Mainnet with fixed total supply.",
     "BaseScan source and deployer-wallet ownership verification are complete.",
     "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool.",
     "GeckoTerminal token information was approved on 2026-05-11.",
-    "A Blockaid false-positive report and follow-up were submitted, but warning removal is not confirmed.",
+    "Owner reported on 2026-05-14 that no wallet risk warning was visible in the tested wallet/DEX flow.",
+    "This is an owner-visible UI observation only, not a permanent security-vendor approval or cross-wallet guarantee.",
     "No third-party audit has been completed."
   ],
   "doNotClaim": [
     "BaseScan token profile approval before BaseScan publishes it",
-    "Blockaid or MetaMask warning removal before visible confirmation",
+    "security-vendor approval, permanent warning-free status, or cross-wallet warning removal before vendor/current wallet UI confirms it",
     "CoinGecko, CoinMarketCap, centralized exchange, or paid-listing approval before publication",
     "external audit completion before an independent report is published",
     "locked reserve before on-chain custody changes",

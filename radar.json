@@ -44,7 +44,7 @@
   "riskNotes": [
     "GCA is still early-stage and current liquidity is starter-depth only.",
     "BaseScan token profile review is not complete until BaseScan publishes it.",
-    "Blockaid / MetaMask warning removal is not confirmed.",
+    "Owner observed no wallet risk warning visible on 2026-05-14; this is not security-vendor approval or a permanent cross-wallet guarantee.",
     "No third-party audit has been completed.",
     "Credits and member status are service-access concepts, not cash, tokens, income, reimbursement, or trading permission."
   ],
@@ -69,7 +69,7 @@
       "return promise",
       "future exchange listing",
       "public account UI, 100 credits claiming, or GCA Member activation is live before controlled HTTPS account UI and ledger activation are released",
-      "Blockaid or MetaMask warning removal before visible confirmation",
+      "security-vendor approval, permanent warning-free status, or cross-wallet warning removal before vendor/current wallet UI confirms it",
       "BaseScan token profile approval before BaseScan publishes it"
     ]
   },
