@@ -49,6 +49,8 @@
     "faq": "https://gcagochina.com/faq.html",
     "memberPreRegistration": "https://gcagochina.com/members.html",
     "memberProgramRules": "https://gcagochina.com/member-program.json",
+    "memberLedgerPage": "https://gcagochina.com/member-ledger.html",
+    "memberLedgerSchema": "https://gcagochina.com/member-ledger.json",
     "utilityThesis": "https://gcagochina.com/utility.html",
     "whitepaper": "https://gcagochina.com/whitepaper.html",
     "logoSvg": "https://gcagochina.com/assets/gca-logo.svg",
