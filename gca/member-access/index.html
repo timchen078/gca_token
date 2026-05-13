@@ -1,0 +1,623 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GCA Member Access Preview | Go China Access</title>
+    <meta name="description" content="Static GCA member access preview for local packet review and read-only Base Mainnet GCA balance checks.">
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #111318;
+        --muted: #5f6773;
+        --line: #dfe3ea;
+        --panel: #ffffff;
+        --soft: #f6f7f9;
+        --red: #d71920;
+        --blue: #0052ff;
+        --green: #087f5b;
+        --gold: #b88714;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: #fbfbfc;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.5;
+      }
+
+      a {
+        color: var(--blue);
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .shell {
+        width: min(1080px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      header {
+        border-bottom: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.94);
+        position: sticky;
+        top: 0;
+        z-index: 2;
+      }
+
+      nav {
+        min-height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--ink);
+        font-weight: 850;
+      }
+
+      .brand img {
+        width: 32px;
+        height: 32px;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 18px;
+        align-items: center;
+        font-size: 14px;
+      }
+
+      main {
+        padding: 42px 0 56px;
+      }
+
+      h1 {
+        margin: 0;
+        max-width: 880px;
+        font-size: clamp(40px, 6vw, 72px);
+        line-height: 1;
+        letter-spacing: 0;
+      }
+
+      h2 {
+        margin: 0 0 14px;
+        font-size: 24px;
+      }
+
+      h3 {
+        margin: 0 0 8px;
+        font-size: 17px;
+      }
+
+      .lead {
+        max-width: 840px;
+        margin: 18px 0 0;
+        color: var(--muted);
+        font-size: 18px;
+      }
+
+      .section {
+        margin-top: 30px;
+      }
+
+      .grid,
+      .two {
+        display: grid;
+        gap: 14px;
+      }
+
+      .grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .two {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      }
+
+      .panel,
+      .fact {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+      }
+
+      .panel {
+        padding: 24px;
+      }
+
+      .fact {
+        min-height: 124px;
+        padding: 18px;
+      }
+
+      .label {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 750;
+        text-transform: uppercase;
+      }
+
+      .value {
+        display: block;
+        margin-top: 8px;
+        font-size: 17px;
+        font-weight: 850;
+        overflow-wrap: anywhere;
+      }
+
+      .note,
+      li {
+        color: var(--muted);
+      }
+
+      .note {
+        margin: 0;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 14px;
+      }
+
+      .button {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        color: var(--ink);
+        min-height: 42px;
+        padding: 10px 14px;
+        font: inherit;
+        font-weight: 750;
+        cursor: pointer;
+      }
+
+      .button.primary {
+        border-color: var(--red);
+        background: var(--red);
+        color: #fff;
+      }
+
+      .button[disabled] {
+        cursor: not-allowed;
+        opacity: 0.55;
+      }
+
+      input,
+      textarea {
+        width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fff;
+        color: var(--ink);
+        font: inherit;
+        min-height: 42px;
+        padding: 10px 12px;
+      }
+
+      textarea {
+        min-height: 220px;
+        resize: vertical;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+        font-size: 12px;
+      }
+
+      .field {
+        display: grid;
+        gap: 6px;
+        margin-top: 14px;
+      }
+
+      label {
+        font-size: 13px;
+        font-weight: 800;
+      }
+
+      .result {
+        border-left: 3px solid var(--gold);
+        padding: 14px;
+        background: var(--soft);
+      }
+
+      .result.good {
+        border-left-color: var(--green);
+      }
+
+      .result.warn {
+        border-left-color: var(--red);
+      }
+
+      .list {
+        display: grid;
+        gap: 10px;
+        margin-top: 12px;
+      }
+
+      .row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 12px;
+        align-items: start;
+        border-top: 1px solid var(--line);
+        padding-top: 10px;
+      }
+
+      .row strong {
+        white-space: nowrap;
+        overflow-wrap: anywhere;
+      }
+
+      code {
+        padding: 2px 5px;
+        border-radius: 6px;
+        background: var(--soft);
+        overflow-wrap: anywhere;
+      }
+
+      footer {
+        border-top: 1px solid var(--line);
+        padding: 24px 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      @media (max-width: 860px) {
+        .grid,
+        .two {
+          grid-template-columns: 1fr;
+        }
+
+        nav {
+          align-items: flex-start;
+          flex-direction: column;
+          padding: 14px 0;
+        }
+
+        .nav-links {
+          flex-wrap: wrap;
+        }
+
+        .row {
+          grid-template-columns: 1fr;
+        }
+
+        .row strong {
+          white-space: normal;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav class="shell" aria-label="Primary">
+        <a class="brand" href="../../index.html" aria-label="GCA home">
+          <img src="../../assets/gca-logo.svg" alt="GCA logo">
+          <span>GCA</span>
+        </a>
+        <div class="nav-links">
+          <a href="../../verify.html">Verify</a>
+          <a href="../../members.html">Members</a>
+          <a href="../../member-ledger.html">Ledger Schema</a>
+          <a href="../../support.html">Support</a>
+          <a href="../../privacy.html">Privacy</a>
+          <a href="../../terms.html">Terms</a>
+          <a href="../../risk.html">Risk</a>
+        </div>
+      </nav>
+    </header>
+
+    <main class="shell">
+      <section aria-labelledby="title">
+        <h1 id="title">GCA Member Access Preview</h1>
+        <p class="lead">This is a static same-origin preview for the planned GCA x Web3 Radar member account UI. It can review a local pre-registration packet and run a browser-only GCA balance preview. It does not create a live account, submit data, activate credits, activate GCA Member status, or write ledger records.</p>
+        <div class="actions">
+          <a class="button primary" href="../../members.html">Create Packet</a>
+          <a class="button" href="../../member-program.json">Program Rules JSON</a>
+          <a class="button" href="../../member-ledger.json">Ledger Schema JSON</a>
+        </div>
+      </section>
+
+      <section class="section grid" aria-label="Preview status">
+        <div class="fact">
+          <span class="label">Page Status</span>
+          <span class="value">Static preview live</span>
+          <p class="note">No server account session is created here.</p>
+        </div>
+        <div class="fact">
+          <span class="label">Balance Method</span>
+          <span class="value">MetaMask eth_call</span>
+          <p class="note">Read-only ERC-20 balanceOf on Base Mainnet.</p>
+        </div>
+        <div class="fact">
+          <span class="label">Ledger Effect</span>
+          <span class="value">None</span>
+          <p class="note">Final eligibility still needs controlled HTTPS account UI.</p>
+        </div>
+      </section>
+
+      <section class="section two" aria-label="Wallet and packet preview">
+        <div class="panel">
+          <h2>Wallet Balance Preview</h2>
+          <p class="note">Connect MetaMask or paste a Base wallet. The check reads GCA balance only. It does not ask for secrets, custody, or transaction approval.</p>
+          <div class="field">
+            <label for="walletAddress">Base Wallet Address</label>
+            <input id="walletAddress" type="text" autocomplete="off" placeholder="0x...">
+          </div>
+          <div class="actions">
+            <button class="button" type="button" id="connectWallet">Connect Wallet</button>
+            <button class="button primary" type="button" id="checkBalance">Check GCA Balance</button>
+          </div>
+          <div id="balanceResult" class="result section">
+            <strong>Balance check not run</strong>
+            <p class="note">Run a read-only check to preview holder bonus and GCA Member thresholds.</p>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2>Packet Review</h2>
+          <p class="note">Paste the JSON packet generated by <a href="../../members.html">members.html</a>. This parser runs locally in the browser and does not upload data.</p>
+          <div class="field">
+            <label for="packetInput">Local Packet JSON</label>
+            <textarea id="packetInput" placeholder="{ ... }"></textarea>
+          </div>
+          <div class="actions">
+            <button class="button" type="button" id="reviewPacket">Review Packet</button>
+            <button class="button" type="button" id="clearPacket">Clear</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="section two" aria-label="Review output">
+        <div class="panel">
+          <h2>Local Review</h2>
+          <div id="packetResult" class="result">
+            <strong>No packet reviewed</strong>
+            <p class="note">Packet fields will appear here after local review.</p>
+          </div>
+          <div class="list" id="packetFacts"></div>
+        </div>
+
+        <div class="panel">
+          <h2>Access Boundaries</h2>
+          <ul>
+            <li>This preview does not create a Web3 Radar account.</li>
+            <li>This preview does not make 100 utility credits claimable.</li>
+            <li>This preview does not activate GCA Member status.</li>
+            <li>This preview does not replace backend wallet verification or support review.</li>
+            <li>Never send private keys, seed phrases, exchange API secrets, withdrawal permission, or custody requests.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="thresholdTitle">
+        <h2 id="thresholdTitle">Thresholds</h2>
+        <div class="list">
+          <div class="row"><span>Holder Bonus preview</span><strong>10,000 GCA</strong></div>
+          <div class="row"><span>GCA Member preview</span><strong>1,000,000 GCA</strong></div>
+          <div class="row"><span>Credit amount after future ledger activation</span><strong>100 Web3 Radar utility credits</strong></div>
+          <div class="row"><span>Credit window after future ledger activation</span><strong>180 days</strong></div>
+          <div class="row"><span>Member refresh cadence after future activation</span><strong>30 days</strong></div>
+          <div class="row"><span>Official support</span><strong><a href="../../support.html">support.html</a></strong></div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="shell">GCA member access preview. Static page only; final eligibility requires controlled HTTPS account UI and ledger review.</div>
+    </footer>
+
+    <script>
+      const CONTRACT = "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6";
+      const BASE_CHAIN_ID_HEX = "0x2105";
+      const BASE_RPC_URL = "https://mainnet.base.org";
+      const BALANCE_OF_SELECTOR = "0x70a08231";
+      const TOKEN_DECIMALS = 18n;
+      const TOKEN_UNIT = 10n ** TOKEN_DECIMALS;
+      const HOLDER_THRESHOLD_UNITS = 10000n * TOKEN_UNIT;
+      const MEMBER_THRESHOLD_UNITS = 1000000n * TOKEN_UNIT;
+
+      const walletAddress = document.getElementById("walletAddress");
+      const connectWallet = document.getElementById("connectWallet");
+      const checkBalance = document.getElementById("checkBalance");
+      const balanceResult = document.getElementById("balanceResult");
+      const packetInput = document.getElementById("packetInput");
+      const reviewPacket = document.getElementById("reviewPacket");
+      const clearPacket = document.getElementById("clearPacket");
+      const packetResult = document.getElementById("packetResult");
+      const packetFacts = document.getElementById("packetFacts");
+
+      function isWalletAddress(value) {
+        return /^0x[a-fA-F0-9]{40}$/.test(String(value || "").trim());
+      }
+
+      function balanceOfCalldata(address) {
+        const normalized = String(address || "").trim().toLowerCase().replace(/^0x/, "");
+        return `${BALANCE_OF_SELECTOR}${normalized.padStart(64, "0")}`;
+      }
+
+      function formatTokenUnits(rawBalance) {
+        const whole = rawBalance / TOKEN_UNIT;
+        const fraction = rawBalance % TOKEN_UNIT;
+        if (fraction === 0n) return whole.toString();
+        const trimmedFraction = fraction.toString().padStart(Number(TOKEN_DECIMALS), "0").replace(/0+$/, "").slice(0, 6);
+        return `${whole.toString()}.${trimmedFraction}`;
+      }
+
+      function classifyRawBalance(rawBalance) {
+        if (rawBalance >= MEMBER_THRESHOLD_UNITS) {
+          return {
+            tier: "GCA Member preview",
+            className: "good",
+            message: "This wallet meets the 1,000,000 GCA preview threshold. Final eligibility still requires controlled HTTPS account UI and ledger review."
+          };
+        }
+        if (rawBalance >= HOLDER_THRESHOLD_UNITS) {
+          return {
+            tier: "Holder Bonus preview",
+            className: "good",
+            message: "This wallet meets the 10,000 GCA preview threshold. Final eligibility still requires controlled HTTPS account UI and ledger review."
+          };
+        }
+        return {
+          tier: "General waitlist preview",
+          className: "warn",
+          message: "This wallet is below the published holder thresholds. The user can still keep a local packet for future review."
+        };
+      }
+
+      async function ensureBaseNetwork() {
+        const currentChainId = await window.ethereum.request({ method: "eth_chainId" });
+        if (String(currentChainId).toLowerCase() === BASE_CHAIN_ID_HEX) return;
+        try {
+          await window.ethereum.request({
+            method: "wallet_switchEthereumChain",
+            params: [{ chainId: BASE_CHAIN_ID_HEX }]
+          });
+        } catch (error) {
+          if (error && error.code === 4902) {
+            await window.ethereum.request({
+              method: "wallet_addEthereumChain",
+              params: [{
+                chainId: BASE_CHAIN_ID_HEX,
+                chainName: "Base Mainnet",
+                nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
+                rpcUrls: [BASE_RPC_URL],
+                blockExplorerUrls: ["https://basescan.org"]
+              }]
+            });
+            return;
+          }
+          throw error;
+        }
+      }
+
+      async function readGcaBalance(address) {
+        const data = balanceOfCalldata(address);
+        const response = await window.ethereum.request({
+          method: "eth_call",
+          params: [{ to: CONTRACT, data }, "latest"]
+        });
+        return BigInt(response || "0x0");
+      }
+
+      function renderResult(target, className, title, message) {
+        target.className = `result ${className}`;
+        target.textContent = "";
+        const heading = document.createElement("strong");
+        heading.textContent = title;
+        const body = document.createElement("p");
+        body.className = "note";
+        body.textContent = message;
+        target.append(heading, body);
+      }
+
+      function renderPacketFacts(rows) {
+        packetFacts.textContent = "";
+        for (const [label, value] of rows) {
+          const row = document.createElement("div");
+          row.className = "row";
+          const left = document.createElement("span");
+          left.textContent = label;
+          const right = document.createElement("strong");
+          right.textContent = value || "Not provided";
+          row.append(left, right);
+          packetFacts.append(row);
+        }
+      }
+
+      connectWallet.addEventListener("click", async () => {
+        if (!window.ethereum) {
+          renderResult(balanceResult, "warn", "Wallet not detected", "Install or enable a browser wallet, or paste a wallet address manually.");
+          return;
+        }
+        const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+        if (accounts && accounts[0]) {
+          walletAddress.value = accounts[0];
+        }
+      });
+
+      checkBalance.addEventListener("click", async () => {
+        if (!window.ethereum) {
+          renderResult(balanceResult, "warn", "Wallet not detected", "Install or enable a browser wallet, or paste a wallet address for later manual review.");
+          return;
+        }
+        let address = walletAddress.value.trim();
+        if (!isWalletAddress(address)) {
+          const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+          if (accounts && accounts[0]) {
+            address = accounts[0];
+            walletAddress.value = address;
+          }
+        }
+        if (!isWalletAddress(address)) {
+          renderResult(balanceResult, "warn", "Wallet address needed", "Paste a valid Base wallet address before running the read-only preview.");
+          return;
+        }
+        checkBalance.disabled = true;
+        renderResult(balanceResult, "", "Checking Base Mainnet", "MetaMask may ask to switch networks. This only reads GCA balance.");
+        try {
+          await ensureBaseNetwork();
+          const rawBalance = await readGcaBalance(address);
+          const formattedBalance = formatTokenUnits(rawBalance);
+          const tier = classifyRawBalance(rawBalance);
+          renderResult(balanceResult, tier.className, tier.tier, `${formattedBalance} GCA. ${tier.message}`);
+        } catch (error) {
+          const message = error && error.message ? error.message : "Unknown wallet or RPC error";
+          renderResult(balanceResult, "warn", "Read-only check failed", `${message}. The user can still keep a local packet for later backend verification.`);
+        } finally {
+          checkBalance.disabled = false;
+        }
+      });
+
+      reviewPacket.addEventListener("click", () => {
+        try {
+          const packet = JSON.parse(packetInput.value || "{}");
+          const user = packet.user || {};
+          const programs = Array.isArray(packet.eligibleProgramsPreview) ? packet.eligibleProgramsPreview.join(", ") : "";
+          const onchain = packet.onchainBalancePreview || {};
+          if (user.walletAddress && isWalletAddress(user.walletAddress)) {
+            walletAddress.value = user.walletAddress;
+          }
+          renderResult(packetResult, "good", "Packet parsed locally", "No data was uploaded. Use this preview to decide whether the packet is ready for later controlled HTTPS review.");
+          renderPacketFacts([
+            ["Packet version", packet.packetVersion],
+            ["Packet status", packet.status],
+            ["Email", user.email],
+            ["Telegram", user.telegram],
+            ["Wallet", user.walletAddress],
+            ["Declared GCA balance", packet.declaredGcaBalance],
+            ["Tier preview", packet.plannedTierPreview],
+            ["Eligible programs preview", programs],
+            ["On-chain preview status", onchain.status],
+            ["On-chain formatted balance", onchain.formattedGcaBalance]
+          ]);
+        } catch (error) {
+          renderResult(packetResult, "warn", "Invalid JSON", "Paste the full JSON packet from members.html and try again.");
+          renderPacketFacts([]);
+        }
+      });
+
+      clearPacket.addEventListener("click", () => {
+        packetInput.value = "";
+        renderResult(packetResult, "", "No packet reviewed", "Packet fields will appear here after local review.");
+        renderPacketFacts([]);
+      });
+    </script>
+  </body>
+</html>
