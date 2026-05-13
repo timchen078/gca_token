@@ -1,6 +1,6 @@
 {
   "name": "GCA Official Token List",
-  "timestamp": "2026-05-13T00:00:00+07:00",
+  "timestamp": "2026-05-14T00:00:00+07:00",
   "version": {
     "major": 1,
     "minor": 0,
@@ -35,6 +35,8 @@
         "roadmap": "https://gcagochina.com/roadmap.json",
         "communityPage": "https://gcagochina.com/community.html",
         "community": "https://gcagochina.com/community.json",
+        "narrativePage": "https://gcagochina.com/narrative.html",
+        "narrative": "https://gcagochina.com/narrative.json",
         "listingKit": "https://gcagochina.com/listing-kit.html",
         "brandKitPage": "https://gcagochina.com/brand-kit.html",
         "brandKit": "https://gcagochina.com/brand-kit.json",
@@ -81,6 +83,7 @@
         "reviewerKitStatus": "public-reviewer-kit-published",
         "platformRepliesStatus": "public-platform-reply-kit-published",
         "trustCenterStatus": "public-trust-center-published",
+        "narrativeSystemStatus": "public-narrative-system-published",
         "walletSecurityProfileStatus": "public-wallet-security-profile-published",
         "tokenSafetyStatus": "public-token-safety-checklist-published",
         "communityKitStatus": "public-community-kit-published",

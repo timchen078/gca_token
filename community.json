@@ -2,7 +2,7 @@
   "schema": "https://gcagochina.com/community.json",
   "pageUrl": "https://gcagochina.com/community.html",
   "status": "public-community-kit-published",
-  "lastUpdated": "2026-05-13",
+  "lastUpdated": "2026-05-14",
   "projectName": "GCA",
   "conceptExpansion": "Go China Access",
   "currentStage": "early-public-operations",
@@ -20,6 +20,8 @@
   "safeAnnouncement": [
     "GCA is live on Base Mainnet as a fixed-supply ERC-20 token.",
     "Official verification: https://gcagochina.com/verify.html",
+    "Narrative system: https://gcagochina.com/narrative.html",
+    "Positioning: Narrative meets risk control. GCA connects Go China Access, China Narrative Radar, Liquidation Replay, ENTRY_READY Review, GCA Member Club, and Risk First Trading.",
     "Roadmap: https://gcagochina.com/roadmap.html",
     "Official market route: GCA/USDT on Base Mainnet.",
     "Current status: concept-stage utility buildout; public self-service member claiming is not live yet, BaseScan token profile was returned as information-insufficient on 2026-05-13 and resubmitted on 2026-05-13, wallet-warning removal is not confirmed, and no third-party audit has been completed."
@@ -40,6 +42,8 @@
   "publicLinks": {
     "communityPage": "https://gcagochina.com/community.html",
     "communityJson": "https://gcagochina.com/community.json",
+    "narrativePage": "https://gcagochina.com/narrative.html",
+    "narrative": "https://gcagochina.com/narrative.json",
     "telegram": "https://t.me/gcagochinaofficial",
     "verify": "https://gcagochina.com/verify.html",
     "roadmap": "https://gcagochina.com/roadmap.html",
