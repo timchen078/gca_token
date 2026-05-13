@@ -153,6 +153,11 @@ def validate_members(text: str) -> None:
     assert_contains(text, "100 Credit Rules", label)
     assert_contains(text, "Member Rules", label)
     assert_contains(text, "Support Workflow", label)
+    assert_contains(text, "Check On-chain Balance", label)
+    assert_contains(text, "browser-only preview reads GCA balance", label)
+    assert_contains(text, "eth_call", label)
+    assert_contains(text, "wallet_switchEthereumChain", label)
+    assert_contains(text, "doesNotCreateLedgerRecord", label)
     assert_contains(text, "member-program.json", label)
     assert_contains(text, "member-ledger.html", label)
     assert_contains(text, "member-ledger.json", label)
@@ -164,6 +169,8 @@ def validate_members(text: str) -> None:
     assert_contains(text, "5-10 business days", label)
     assert_contains(text, "Direct submission is not connected", label)
     assert_contains(text, "No cash, token rebate, income, reimbursement, trading permission, or risk-control bypass", label)
+    assert_not_contains(text, "eth_sendTransaction", label)
+    assert_not_contains(text, "personal_sign", label)
     assert_not_contains(text, OLD_WETH_POOL_ADDRESS, label)
 
 
@@ -951,6 +958,17 @@ def validate_member_program_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong member refresh cadence")
     if verification.get("directSubmissionEndpointConfigured") is not False:
         raise SiteCheckError(f"{label}: direct submission must remain false")
+    preview = verification.get("browserPreview", {})
+    if preview.get("status") != "browser-read-only-preview-live":
+        raise SiteCheckError(f"{label}: wrong browser preview status")
+    if preview.get("ledgerEffect") != "none":
+        raise SiteCheckError(f"{label}: browser preview must not write ledger")
+    if preview.get("requiresSignature") is not False:
+        raise SiteCheckError(f"{label}: browser preview must not require signature")
+    if preview.get("requiresTransaction") is not False:
+        raise SiteCheckError(f"{label}: browser preview must not require transaction")
+    if preview.get("finalEligibilityStillRequiresControlledAccountUi") is not True:
+        raise SiteCheckError(f"{label}: browser preview must require controlled UI for final eligibility")
     if verification.get("publicLedgerSchemaUrl") != MEMBER_LEDGER_URL:
         raise SiteCheckError(f"{label}: wrong public ledger schema URL")
     if privacy_terms.get("status") != "public-privacy-and-terms-published":
@@ -977,6 +995,8 @@ def validate_member_program_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing ledger_recorded status")
     if not any("public self-service claiming is not connected" in claim for claim in boundaries.get("safeClaims", [])):
         raise SiteCheckError(f"{label}: missing not-connected safe claim")
+    if not any("browser-only read-only GCA balance preview" in claim for claim in boundaries.get("safeClaims", [])):
+        raise SiteCheckError(f"{label}: missing browser preview safe claim")
     if not any("credits or membership are cash" in claim for claim in boundaries.get("doNotClaim", [])):
         raise SiteCheckError(f"{label}: missing cash/token do-not-claim boundary")
     assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
@@ -988,6 +1008,7 @@ def validate_member_ledger_json(text: str) -> None:
     token = payload.get("token", {})
     urls = payload.get("publicUrls", {})
     paths = payload.get("preparedPaths", {})
+    preview = payload.get("browserBalancePreview", {})
     thresholds = payload.get("thresholds", {})
     schemas = payload.get("recordSchemas", {})
     boundaries = payload.get("publicClaimBoundaries", {})
@@ -1016,6 +1037,16 @@ def validate_member_ledger_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong credit ledger path")
     if paths.get("memberLedger") != "/gca/member-ledger":
         raise SiteCheckError(f"{label}: wrong member ledger path")
+    if preview.get("status") != "browser-read-only-preview-live":
+        raise SiteCheckError(f"{label}: wrong browser balance preview status")
+    if preview.get("ledgerEffect") != "none":
+        raise SiteCheckError(f"{label}: browser balance preview must not write ledger")
+    if preview.get("requiresSignature") is not False:
+        raise SiteCheckError(f"{label}: browser balance preview must not require signature")
+    if preview.get("requiresTransaction") is not False:
+        raise SiteCheckError(f"{label}: browser balance preview must not require transaction")
+    if preview.get("finalEligibilityStillRequiresControlledAccountUi") is not True:
+        raise SiteCheckError(f"{label}: browser balance preview must require controlled UI for final eligibility")
     if thresholds.get("holderBonusMinimum") != "10000 GCA":
         raise SiteCheckError(f"{label}: wrong holder threshold")
     if thresholds.get("holderBonusCreditAmount") != "100 Web3 Radar utility credits":
@@ -1038,6 +1069,8 @@ def validate_member_ledger_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing ledger_recorded status")
     if not any("Public self-service claiming is not connected yet" in claim for claim in boundaries.get("safeClaims", [])):
         raise SiteCheckError(f"{label}: missing not-connected safe claim")
+    if not any("browser-only read-only GCA balance preview" in claim for claim in boundaries.get("safeClaims", [])):
+        raise SiteCheckError(f"{label}: missing browser preview safe claim")
     if not any("self-service claimable before controlled HTTPS account UI is live" in claim for claim in boundaries.get("doNotClaim", [])):
         raise SiteCheckError(f"{label}: missing self-service boundary")
     assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)

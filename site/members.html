@@ -432,6 +432,13 @@
             <strong>Waiting for input</strong>
             <p class="note">Enter a declared GCA balance to preview the planned holder tier.</p>
           </div>
+          <div class="actions" style="margin-top: 14px;">
+            <button class="button" type="button" id="checkOnchainBalance">Check On-chain Balance</button>
+          </div>
+          <div id="onchainBalanceResult" class="result" style="margin-top: 14px;">
+            <strong>On-chain check not run</strong>
+            <p class="note">This browser-only preview reads GCA balance with MetaMask <code>eth_call</code>. It does not sign messages, send transactions, submit packets, or create ledger records.</p>
+          </div>
           <div class="field" style="margin-top: 14px;">
             <label for="packetOutput">Local Registration Packet</label>
             <textarea id="packetOutput" readonly></textarea>
@@ -503,6 +510,12 @@
     <script>
       const CONTRACT = "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6";
       const CONTACT_EMAIL = "GCAgochina@outlook.com";
+      const BASE_CHAIN_ID_HEX = "0x2105";
+      const BASE_CHAIN_ID_DECIMAL = 8453;
+      const BASE_RPC_URL = "https://mainnet.base.org";
+      const BALANCE_OF_SELECTOR = "0x70a08231";
+      const TOKEN_DECIMALS = 18n;
+      const TOKEN_UNIT = 10n ** TOKEN_DECIMALS;
       const SUBMISSION_ENDPOINT = "";
       const REVIEWED_WEB3_RADAR_ENDPOINT_PATH = "/gca/pre-registrations";
       const WALLET_VERIFICATION_ENDPOINT_PATH = "/gca/wallet-verifications";
@@ -511,6 +524,8 @@
       const MEMBER_ACCESS_PAGE_PATH = "/gca/member-access";
       const HOLDER_THRESHOLD = 10000;
       const MEMBER_THRESHOLD = 1000000;
+      const HOLDER_THRESHOLD_UNITS = 10000n * TOKEN_UNIT;
+      const MEMBER_THRESHOLD_UNITS = 1000000n * TOKEN_UNIT;
       const CREDIT_EXPIRY_DAYS = 180;
       const MEMBER_REFRESH_DAYS = 30;
       const SUPPORT_TARGET = "5-10 business days after controlled intake is live; not a guarantee";
@@ -528,6 +543,13 @@
       const emailPacket = document.getElementById("emailPacket");
       const submitPacket = document.getElementById("submitPacket");
       const submissionStatus = document.getElementById("submissionStatus");
+      const checkOnchainBalance = document.getElementById("checkOnchainBalance");
+      const onchainBalanceResult = document.getElementById("onchainBalanceResult");
+      let lastOnchainCheck = {
+        status: "not_checked",
+        method: "browser MetaMask eth_call ERC-20 balanceOf preview",
+        doesNotCreateLedgerRecord: true
+      };
 
       function parseBalance(value) {
         const normalized = String(value || "").replace(/,/g, "").trim();
@@ -565,6 +587,93 @@
         };
       }
 
+      function classifyRawBalance(rawBalance) {
+        if (rawBalance >= MEMBER_THRESHOLD_UNITS) {
+          return {
+            tier: "GCA Member candidate",
+            eligiblePrograms: ["Holder Bonus", "GCA Member"],
+            holderBonusEligible: true,
+            gcaMemberEligible: true,
+            className: "good"
+          };
+        }
+        if (rawBalance >= HOLDER_THRESHOLD_UNITS) {
+          return {
+            tier: "Holder Bonus candidate",
+            eligiblePrograms: ["Holder Bonus"],
+            holderBonusEligible: true,
+            gcaMemberEligible: false,
+            className: "good"
+          };
+        }
+        return {
+          tier: "General waitlist",
+          eligiblePrograms: ["General Waitlist"],
+          holderBonusEligible: false,
+          gcaMemberEligible: false,
+          className: "warn"
+        };
+      }
+
+      function formatTokenUnits(rawBalance) {
+        const whole = rawBalance / TOKEN_UNIT;
+        const fraction = rawBalance % TOKEN_UNIT;
+        if (fraction === 0n) return whole.toString();
+        const trimmedFraction = fraction.toString().padStart(Number(TOKEN_DECIMALS), "0").replace(/0+$/, "").slice(0, 6);
+        return `${whole.toString()}.${trimmedFraction}`;
+      }
+
+      function balanceOfCalldata(address) {
+        const normalized = String(address || "").trim().toLowerCase().replace(/^0x/, "");
+        return `${BALANCE_OF_SELECTOR}${normalized.padStart(64, "0")}`;
+      }
+
+      async function ensureBaseNetwork() {
+        const currentChainId = await window.ethereum.request({ method: "eth_chainId" });
+        if (String(currentChainId).toLowerCase() === BASE_CHAIN_ID_HEX) return;
+        try {
+          await window.ethereum.request({
+            method: "wallet_switchEthereumChain",
+            params: [{ chainId: BASE_CHAIN_ID_HEX }]
+          });
+        } catch (error) {
+          if (error && error.code === 4902) {
+            await window.ethereum.request({
+              method: "wallet_addEthereumChain",
+              params: [{
+                chainId: BASE_CHAIN_ID_HEX,
+                chainName: "Base Mainnet",
+                nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
+                rpcUrls: [BASE_RPC_URL],
+                blockExplorerUrls: ["https://basescan.org"]
+              }]
+            });
+            return;
+          }
+          throw error;
+        }
+      }
+
+      async function readGcaBalance(address) {
+        const data = balanceOfCalldata(address);
+        const response = await window.ethereum.request({
+          method: "eth_call",
+          params: [{ to: CONTRACT, data }, "latest"]
+        });
+        return BigInt(response || "0x0");
+      }
+
+      function renderOnchainStatus(status, title, message) {
+        onchainBalanceResult.className = `result ${status}`;
+        onchainBalanceResult.textContent = "";
+        const heading = document.createElement("strong");
+        heading.textContent = title;
+        const body = document.createElement("p");
+        body.className = "note";
+        body.textContent = message;
+        onchainBalanceResult.append(heading, body);
+      }
+
       function buildPacket() {
         const balance = parseBalance(declaredBalance.value);
         const tier = classify(balance);
@@ -585,6 +694,7 @@
             walletAddressFormatOk: isWalletAddress(wallet.value)
           },
           declaredGcaBalance: String(declaredBalance.value || "").trim(),
+          onchainBalancePreview: lastOnchainCheck,
           plannedTierPreview: tier.tier,
           eligibleProgramsPreview: tier.eligiblePrograms,
           programIntent: programIntent.value,
@@ -668,6 +778,75 @@
         const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
         if (accounts && accounts[0]) {
           wallet.value = accounts[0];
+          refreshPacket();
+        }
+      });
+
+      checkOnchainBalance.addEventListener("click", async () => {
+        if (!window.ethereum) {
+          lastOnchainCheck = {
+            status: "wallet_not_detected",
+            method: "browser MetaMask eth_call ERC-20 balanceOf preview",
+            doesNotCreateLedgerRecord: true
+          };
+          renderOnchainStatus("warn", "Wallet not detected", "Install or enable a browser wallet, or paste the wallet address and submit a manual packet for later backend verification.");
+          refreshPacket();
+          return;
+        }
+
+        let address = wallet.value.trim();
+        if (!isWalletAddress(address)) {
+          const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+          if (accounts && accounts[0]) {
+            address = accounts[0];
+            wallet.value = address;
+          }
+        }
+
+        if (!isWalletAddress(address)) {
+          lastOnchainCheck = {
+            status: "invalid_wallet_address",
+            method: "browser MetaMask eth_call ERC-20 balanceOf preview",
+            doesNotCreateLedgerRecord: true
+          };
+          renderOnchainStatus("warn", "Wallet address needed", "Paste a valid Base wallet address or connect MetaMask before running the read-only balance preview.");
+          refreshPacket();
+          return;
+        }
+
+        checkOnchainBalance.disabled = true;
+        renderOnchainStatus("", "Checking Base Mainnet", "MetaMask may ask to switch to Base. This check only reads the GCA balance and does not submit a transaction.");
+        try {
+          await ensureBaseNetwork();
+          const rawBalance = await readGcaBalance(address);
+          const formattedBalance = formatTokenUnits(rawBalance);
+          const tier = classifyRawBalance(rawBalance);
+          declaredBalance.value = formattedBalance;
+          lastOnchainCheck = {
+            status: "read_only_checked",
+            method: "browser MetaMask eth_call ERC-20 balanceOf preview",
+            checkedAt: new Date().toISOString(),
+            chainId: BASE_CHAIN_ID_DECIMAL,
+            contractAddress: CONTRACT,
+            walletAddress: address,
+            rawBalance: rawBalance.toString(),
+            formattedGcaBalance: formattedBalance,
+            holderBonusEligible: tier.holderBonusEligible,
+            gcaMemberEligible: tier.gcaMemberEligible,
+            eligibleProgramsPreview: tier.eligiblePrograms,
+            doesNotCreateLedgerRecord: true
+          };
+          renderOnchainStatus(tier.className, "Read-only balance checked", `${formattedBalance} GCA on Base Mainnet. Preview tier: ${tier.tier}. Final eligibility still requires controlled HTTPS account UI and a ledger record.`);
+        } catch (error) {
+          lastOnchainCheck = {
+            status: "read_failed",
+            method: "browser MetaMask eth_call ERC-20 balanceOf preview",
+            errorMessage: error && error.message ? error.message : "Unknown wallet or RPC error",
+            doesNotCreateLedgerRecord: true
+          };
+          renderOnchainStatus("warn", "Read-only check failed", `${lastOnchainCheck.errorMessage}. You can still generate a packet and wait for later backend verification.`);
+        } finally {
+          checkOnchainBalance.disabled = false;
           refreshPacket();
         }
       });

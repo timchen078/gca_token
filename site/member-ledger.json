@@ -28,6 +28,16 @@
     "memberLedger": "/gca/member-ledger",
     "memberReview": "/gca/member-review"
   },
+  "browserBalancePreview": {
+    "status": "browser-read-only-preview-live",
+    "pageUrl": "https://gcagochina.com/members.html",
+    "method": "MetaMask eth_call ERC-20 balanceOf on Base Mainnet",
+    "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+    "ledgerEffect": "none",
+    "requiresSignature": false,
+    "requiresTransaction": false,
+    "finalEligibilityStillRequiresControlledAccountUi": true
+  },
   "thresholds": {
     "holderBonusMinimum": "10000 GCA",
     "holderBonusCreditAmount": "100 Web3 Radar utility credits",
@@ -141,6 +151,7 @@
     "safeClaims": [
       "GCA has published a public data contract for planned wallet verification, credit ledger, and GCA Member ledger records.",
       "The public member page can generate a local pre-registration packet.",
+      "The public member page can run a browser-only read-only GCA balance preview with MetaMask eth_call.",
       "The future controlled HTTPS integration should verify GCA balance with an ERC-20 balanceOf read before writing ledger records.",
       "Public self-service claiming is not connected yet."
     ],

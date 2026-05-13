@@ -41,6 +41,7 @@
 - Member pre-registration page prepared at `https://gcagochina.com/members.html`; it generates local-only registration packets and does not create a live account.
 - Public member program rules prepared at `https://gcagochina.com/member-program.json`, including 100 credit spend scope, 180-day credit expiry, 30-day member refresh cadence, and support status workflow.
 - Public member ledger schema prepared at `https://gcagochina.com/member-ledger.html` and `https://gcagochina.com/member-ledger.json` for wallet verification, 100 credits ledger, GCA Member ledger, and support review records.
+- Browser-only read-only GCA balance preview added to `https://gcagochina.com/members.html` using MetaMask `eth_call` / ERC-20 `balanceOf`; it does not sign messages, send transactions, submit packets, or create ledger records.
 - Public support intake page and JSON prepared at `https://gcagochina.com/support.html` and `https://gcagochina.com/support.json` for support routing, safe packet handling, wallet-warning evidence, and no-sensitive-data boundaries.
 - Public roadmap page and JSON prepared at `https://gcagochina.com/roadmap.html` and `https://gcagochina.com/roadmap.json` for concept-stage utility buildout, support intake, member verification, Web3 Radar access planning, external dependencies, and public claim boundaries.
 - Public community kit page and JSON prepared at `https://gcagochina.com/community.html` and `https://gcagochina.com/community.json` for official Telegram links, safe announcement copy, moderator replies, and community claim boundaries.
@@ -124,6 +125,7 @@
 - The owner reserve is in a normal owner-controlled wallet. Do not describe it as locked, vested, or multisig-controlled unless custody changes on-chain.
 - The product direction is still concept-stage. Do not describe GCA as a finished platform or as having guaranteed utility.
 - The Web3 Radar bridge has a local verified-access backend, but public self-service claiming is not live until controlled HTTPS account UI, support rules, and risk disclosures are released.
+- The public member page may preview a wallet's GCA balance with a read-only browser `eth_call`, but this is only an eligibility preview and not a ledger activation or claim approval.
 - The support intake page is public. It states that current intake is manual, direct submit is not connected, and users should never send private keys, seed phrases, exchange API secrets, withdrawal permission, one-time codes, recovery phrases, custody requests, or fund-transfer requests.
 - The roadmap page is public. It states that GCA is in concept-stage utility buildout, public self-service member claiming is not live, and external dependencies such as BaseScan profile review, wallet-warning review, audit completion, and tracked listings remain unresolved until confirmed by the relevant third party.
 - The community kit is public. It gives safe announcement copy and moderator replies while forbidding claims about BaseScan profile approval, wallet-warning removal, external audit completion, deep liquidity, price support, listing approval, or trading outcomes.
