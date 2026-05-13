@@ -19,6 +19,8 @@
     "walletWarningEvidence": "https://gcagochina.com/wallet-warning.json",
     "externalReviewsPage": "https://gcagochina.com/external-reviews.html",
     "externalReviews": "https://gcagochina.com/external-reviews.json",
+    "trustCenterPage": "https://gcagochina.com/trust.html",
+    "trustCenter": "https://gcagochina.com/trust.json",
     "listingKit": "https://gcagochina.com/listing-kit.html",
     "listingReadinessPage": "https://gcagochina.com/listing-readiness.html",
     "listingReadiness": "https://gcagochina.com/listing-readiness.json",

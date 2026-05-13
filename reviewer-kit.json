@@ -17,6 +17,8 @@
     "reviewerKit": "https://gcagochina.com/reviewer-kit.json",
     "platformRepliesPage": "https://gcagochina.com/platform-replies.html",
     "platformReplies": "https://gcagochina.com/platform-replies.json",
+    "trustCenterPage": "https://gcagochina.com/trust.html",
+    "trustCenter": "https://gcagochina.com/trust.json",
     "brandKitPage": "https://gcagochina.com/brand-kit.html",
     "brandKit": "https://gcagochina.com/brand-kit.json",
     "onchainProofsPage": "https://gcagochina.com/onchain-proofs.html",

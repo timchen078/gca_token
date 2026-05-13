@@ -13,6 +13,8 @@
     "verify": "https://gcagochina.com/verify.html",
     "platformRepliesPage": "https://gcagochina.com/platform-replies.html",
     "platformReplies": "https://gcagochina.com/platform-replies.json",
+    "trustCenterPage": "https://gcagochina.com/trust.html",
+    "trustCenter": "https://gcagochina.com/trust.json",
     "reviewerKitPage": "https://gcagochina.com/reviewer-kit.html",
     "reviewerKit": "https://gcagochina.com/reviewer-kit.json",
     "walletWarningEvidencePage": "https://gcagochina.com/wallet-warning.html",
