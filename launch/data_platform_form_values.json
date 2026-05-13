@@ -18,6 +18,8 @@
   "website": "https://gcagochina.com/",
   "verifyUrl": "https://gcagochina.com/verify.html",
   "statusPageUrl": "https://gcagochina.com/status.html",
+  "roadmapPageUrl": "https://gcagochina.com/roadmap.html",
+  "roadmapUrl": "https://gcagochina.com/roadmap.json",
   "listingKitUrl": "https://gcagochina.com/listing-kit.html",
   "brandKitPageUrl": "https://gcagochina.com/brand-kit.html",
   "brandKitUrl": "https://gcagochina.com/brand-kit.json",
@@ -126,6 +128,13 @@
       "officialEmail": "GCAgochina@outlook.com",
       "directSubmissionEndpointConfigured": false
     },
+    "roadmap": {
+      "status": "public-roadmap-published",
+      "pageUrl": "https://gcagochina.com/roadmap.html",
+      "url": "https://gcagochina.com/roadmap.json",
+      "currentStage": "concept-stage-utility-buildout",
+      "publicSelfServiceClaimsLive": false
+    },
     "notUtility": [
       "custody",
       "redemption rights",
@@ -192,6 +201,12 @@
       "pageUrl": "https://gcagochina.com/external-reviews.html",
       "url": "https://gcagochina.com/external-reviews.json",
       "nextAction": "Use this public status page for BaseScan, Blockaid / MetaMask, GeckoTerminal, DEX Screener, CoinGecko, CoinMarketCap, and audit review context."
+    },
+    "roadmap": {
+      "status": "public-roadmap-published",
+      "pageUrl": "https://gcagochina.com/roadmap.html",
+      "url": "https://gcagochina.com/roadmap.json",
+      "nextAction": "Use this public roadmap when reviewers ask what is live now, what is next, and what claims remain off-limits."
     },
     "dexScreener": {
       "status": "discoverable",

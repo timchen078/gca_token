@@ -41,6 +41,7 @@
 - Public member program rules prepared at `https://gcagochina.com/member-program.json`, including 100 credit spend scope, 180-day credit expiry, 30-day member refresh cadence, and support status workflow.
 - Public member ledger schema prepared at `https://gcagochina.com/member-ledger.html` and `https://gcagochina.com/member-ledger.json` for wallet verification, 100 credits ledger, GCA Member ledger, and support review records.
 - Public support intake page and JSON prepared at `https://gcagochina.com/support.html` and `https://gcagochina.com/support.json` for support routing, safe packet handling, wallet-warning evidence, and no-sensitive-data boundaries.
+- Public roadmap page and JSON prepared at `https://gcagochina.com/roadmap.html` and `https://gcagochina.com/roadmap.json` for concept-stage utility buildout, support intake, member verification, Web3 Radar access planning, external dependencies, and public claim boundaries.
 - Public privacy notice and participation terms prepared at `https://gcagochina.com/privacy.html`, `https://gcagochina.com/privacy.json`, `https://gcagochina.com/terms.html`, and `https://gcagochina.com/terms.json` for pre-registration data handling, wallet verification boundaries, and planned account-level service access.
 - Member pre-registration page now has a configurable direct submission endpoint placeholder; collection remains copy/download/email until an approved HTTPS endpoint is configured.
 - Web3 Radar local access bridge paths are prepared: `GET /gca/member-access`, `POST /gca/pre-registrations`, `POST /gca/wallet-verifications`, `GET /gca/credit-ledger`, `GET /gca/member-ledger`, and `GET /gca/member-review`; the public static page is not connected to them yet.
@@ -85,6 +86,7 @@
 - Use `https://gcagochina.com/member-ledger.html` and `https://gcagochina.com/member-ledger.json` when Web3 Radar integration, support review, or community moderators need the published wallet verification and ledger data contract.
 - Use `https://gcagochina.com/support.html` for official support routing, member packet handling, wallet-warning evidence intake, and data-platform correction context.
 - Use `https://gcagochina.com/support.json` when reviewers, moderators, or integration code need machine-readable support intake boundaries.
+- Use `https://gcagochina.com/roadmap.html` and `https://gcagochina.com/roadmap.json` when community members, moderators, or data reviewers ask what is live now, what is next, and what claims must remain off-limits.
 - Use `https://gcagochina.com/privacy.html` before collecting member pre-registration packets or answering questions about data handling, custody, and wallet verification.
 - Use `https://gcagochina.com/terms.html` before answering questions about participation boundaries, planned credits, GCA Member status, or the no-custody/no-outcome-promise boundary.
 - If BaseScan asks for supply details during review, use the updated 40/60 allocation and both reserve transfer transactions.
@@ -119,6 +121,7 @@
 - The product direction is still concept-stage. Do not describe GCA as a finished platform or as having guaranteed utility.
 - The Web3 Radar bridge has a local verified-access backend, but public self-service claiming is not live until controlled HTTPS account UI, support rules, and risk disclosures are released.
 - The support intake page is public. It states that current intake is manual, direct submit is not connected, and users should never send private keys, seed phrases, exchange API secrets, withdrawal permission, one-time codes, recovery phrases, custody requests, or fund-transfer requests.
+- The roadmap page is public. It states that GCA is in concept-stage utility buildout, public self-service member claiming is not live, and external dependencies such as BaseScan profile review, wallet-warning review, audit completion, and tracked listings remain unresolved until confirmed by the relevant third party.
 - The privacy notice and participation terms are public. They state that the current static member page is local packet generation only and that no private key, seed phrase, exchange API secret, withdrawal permission, or custody request belongs in the GCA member flow.
 - The 10,000 GCA holder bonus must be described as 100 Web3 Radar utility credits only, not as cash, tokens, income, reimbursement, trading permission, or a way to bypass risk controls.
 - The 1,000,000 GCA Member tier must be described as service access only, not as cash, tokens, income, reimbursement, voting control, guaranteed lifetime access, trading permission, or a way to bypass risk controls.

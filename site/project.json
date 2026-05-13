@@ -16,6 +16,8 @@
   "website": "https://gcagochina.com/",
   "verifyUrl": "https://gcagochina.com/verify.html",
   "statusPageUrl": "https://gcagochina.com/status.html",
+  "roadmapPageUrl": "https://gcagochina.com/roadmap.html",
+  "roadmapUrl": "https://gcagochina.com/roadmap.json",
   "listingKitUrl": "https://gcagochina.com/listing-kit.html",
   "brandKitPageUrl": "https://gcagochina.com/brand-kit.html",
   "brandKitUrl": "https://gcagochina.com/brand-kit.json",
@@ -133,6 +135,20 @@
       "centralized exchange listing outreach"
     ],
     "reason": "Public identity is prepared, but tracked listing submissions should wait for stronger legitimate liquidity depth, public activity, and exchange volume."
+  },
+  "roadmap": {
+    "status": "public-roadmap-published",
+    "pageUrl": "https://gcagochina.com/roadmap.html",
+    "url": "https://gcagochina.com/roadmap.json",
+    "currentStage": "concept-stage-utility-buildout",
+    "nextBuildPriorities": [
+      "controlled HTTPS member account UI",
+      "read-only GCA balance verification",
+      "100 Web3 Radar utility credits ledger activation",
+      "GCA Member ledger activation",
+      "support review queue and audit trail"
+    ],
+    "publicSelfServiceClaimsLive": false
   },
   "marketQuality": {
     "status": "early-stage-market-quality-plan",

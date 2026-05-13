@@ -16,6 +16,8 @@ Use this file as the single operating checklist for external review, wallet-warn
 - Public member ledger schema JSON: `https://gcagochina.com/member-ledger.json`
 - Public support intake page: `https://gcagochina.com/support.html`
 - Public support intake JSON: `https://gcagochina.com/support.json`
+- Public roadmap page: `https://gcagochina.com/roadmap.html`
+- Public roadmap JSON: `https://gcagochina.com/roadmap.json`
 - Public privacy notice page: `https://gcagochina.com/privacy.html`
 - Public privacy notice JSON: `https://gcagochina.com/privacy.json`
 - Public participation terms page: `https://gcagochina.com/terms.html`
@@ -145,6 +147,13 @@ Public page: `https://gcagochina.com/market-quality.html`
 Machine-readable JSON: `https://gcagochina.com/market-quality.json`
 
 Use this page for legitimate market-growth communication. The approved public direction is transparent liquidity, useful product delivery, consistent metadata, community support, and conservative external-review updates. Do not use artificial activity, self-trading, wash trading, misleading volume, or paid listing promises as a trust strategy.
+
+## Public Roadmap
+
+Page: `https://gcagochina.com/roadmap.html`
+JSON: `https://gcagochina.com/roadmap.json`
+
+Use this page when a reviewer or community moderator asks what has been completed, what is next, and which claims are still unavailable. It keeps public self-service member claiming, BaseScan profile publication, wallet-warning removal, third-party audit completion, and tracked listings marked as unresolved until confirmed.
 
 ## Public External Review Status
 

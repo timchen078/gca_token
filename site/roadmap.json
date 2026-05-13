@@ -1,0 +1,114 @@
+{
+  "schema": "https://gcagochina.com/roadmap.json",
+  "pageUrl": "https://gcagochina.com/roadmap.html",
+  "status": "public-roadmap-published",
+  "lastUpdated": "2026-05-13",
+  "projectName": "GCA",
+  "conceptExpansion": "Go China Access",
+  "currentStage": "concept-stage-utility-buildout",
+  "chainId": 8453,
+  "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+  "officialMarket": {
+    "pair": "GCA/USDT",
+    "network": "Base Mainnet",
+    "dex": "Uniswap v4",
+    "poolAddress": "0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "quoteAsset": "USDT",
+    "quoteAssetAddress": "0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2",
+    "liquidityDepth": "starter-depth-only"
+  },
+  "completedMilestones": [
+    {
+      "id": "base-mainnet-token",
+      "label": "Base Mainnet fixed-supply token deployed",
+      "status": "completed"
+    },
+    {
+      "id": "source-verification",
+      "label": "BaseScan source verification completed",
+      "status": "completed"
+    },
+    {
+      "id": "official-market-route",
+      "label": "Official GCA/USDT market route published",
+      "status": "completed"
+    },
+    {
+      "id": "public-identity-kit",
+      "label": "Website, logo, token list, well-known token identity, and listing kit published",
+      "status": "completed"
+    },
+    {
+      "id": "safety-and-support-pages",
+      "label": "Supply, risk, security, market quality, wallet-warning evidence, external review, privacy, terms, member ledger, and support intake pages published",
+      "status": "completed"
+    }
+  ],
+  "nextBuildPriorities": [
+    {
+      "id": "controlled-account-ui",
+      "label": "Controlled HTTPS member account UI",
+      "status": "not-live",
+      "requiredBeforePublicClaim": "public self-service holder bonus or GCA Member claiming"
+    },
+    {
+      "id": "read-only-wallet-verification",
+      "label": "Read-only GCA balance verification",
+      "status": "prepared-not-live",
+      "preparedPath": "/gca/wallet-verifications"
+    },
+    {
+      "id": "utility-credit-ledger",
+      "label": "100 Web3 Radar utility credits ledger",
+      "status": "prepared-not-live",
+      "preparedPath": "/gca/credit-ledger"
+    },
+    {
+      "id": "gca-member-ledger",
+      "label": "GCA Member ledger",
+      "status": "prepared-not-live",
+      "preparedPath": "/gca/member-ledger"
+    },
+    {
+      "id": "support-review-queue",
+      "label": "Support review queue and audit trail",
+      "status": "manual-intake-currently"
+    }
+  ],
+  "externalDependencies": {
+    "baseScanTokenProfile": "submitted-awaiting-review",
+    "blockaidMetaMaskWarning": "submitted-warning-removal-not-confirmed",
+    "geckoTerminalTokenInfo": "approved-2026-05-11",
+    "thirdPartyAudit": "not-completed-deferred",
+    "coinGeckoTrackedListing": "deferred",
+    "coinMarketCapTrackedListing": "deferred"
+  },
+  "publicClaimBoundaries": {
+    "safeClaims": [
+      "GCA is a fixed-supply ERC-20 token on Base Mainnet.",
+      "GCA is concept-stage and is building public identity, safer support intake, and planned non-custodial quant research access.",
+      "The public member page currently creates local packets and does not create a live account.",
+      "The official market route is GCA/USDT on Base Mainnet."
+    ],
+    "doNotClaim": [
+      "public self-service member claiming is live before controlled HTTPS UI is connected",
+      "BaseScan token profile approval before BaseScan publishes it",
+      "Blockaid or MetaMask warning removal before visible confirmation",
+      "third-party audit completion before an independent report is published",
+      "deep liquidity, price support, or trading outcomes"
+    ]
+  },
+  "publicLinks": {
+    "roadmapPage": "https://gcagochina.com/roadmap.html",
+    "roadmapJson": "https://gcagochina.com/roadmap.json",
+    "status": "https://gcagochina.com/status.html",
+    "listingKit": "https://gcagochina.com/listing-kit.html",
+    "memberPreRegistration": "https://gcagochina.com/members.html",
+    "memberLedgerSchema": "https://gcagochina.com/member-ledger.json",
+    "support": "https://gcagochina.com/support.html",
+    "supportJson": "https://gcagochina.com/support.json",
+    "marketQuality": "https://gcagochina.com/market-quality.json",
+    "externalReviewStatus": "https://gcagochina.com/external-reviews.json",
+    "listingReadiness": "https://gcagochina.com/listing-readiness.json"
+  }
+}

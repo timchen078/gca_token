@@ -26,6 +26,8 @@ MEMBER_LEDGER_PAGE_URL = "https://gcagochina.com/member-ledger.html"
 MEMBER_LEDGER_URL = "https://gcagochina.com/member-ledger.json"
 SUPPORT_PAGE_URL = "https://gcagochina.com/support.html"
 SUPPORT_URL = "https://gcagochina.com/support.json"
+ROADMAP_PAGE_URL = "https://gcagochina.com/roadmap.html"
+ROADMAP_URL = "https://gcagochina.com/roadmap.json"
 PRIVACY_NOTICE_PAGE_URL = "https://gcagochina.com/privacy.html"
 PRIVACY_NOTICE_URL = "https://gcagochina.com/privacy.json"
 PARTICIPATION_TERMS_PAGE_URL = "https://gcagochina.com/terms.html"
@@ -113,6 +115,7 @@ def validate_root(text: str) -> None:
     assert_contains(text, "Brand Kit", label)
     assert_contains(text, "Member Ledger", label)
     assert_contains(text, "Support & Intake", label)
+    assert_contains(text, "Roadmap", label)
     assert_contains(text, "Privacy Notice", label)
     assert_contains(text, "Participation Terms", label)
     assert_contains(text, MAINNET_ADDRESS, label)
@@ -227,6 +230,78 @@ def validate_support_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong privacy link")
     if links.get("participationTerms") != PARTICIPATION_TERMS_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong terms link")
+    assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
+    assert_not_contains(json.dumps(payload), "GCA/WETH", label)
+
+
+def validate_roadmap_page(text: str) -> None:
+    label = "/roadmap.html"
+    assert_contains(text, "GCA Roadmap", label)
+    assert_contains(text, "Roadmap JSON", label)
+    assert_contains(text, "Concept-stage utility buildout", label)
+    assert_contains(text, "Controlled HTTPS member account UI", label)
+    assert_contains(text, "Read-only GCA balance verification", label)
+    assert_contains(text, "100 Web3 Radar utility credit records", label)
+    assert_contains(text, "GCA Member records", label)
+    assert_contains(text, "External Dependencies", label)
+    assert_contains(text, "Submitted, awaiting review", label)
+    assert_contains(text, "Removal not confirmed", label)
+    assert_contains(text, "Not completed", label)
+    assert_contains(text, "public self-service member claiming is live", label)
+    assert_contains(text, "Base Mainnet / chainId 8453", label)
+    assert_contains(text, MAINNET_ADDRESS, label)
+    assert_current_pool_text(text, label)
+
+
+def validate_roadmap_json(text: str) -> None:
+    label = "/roadmap.json"
+    payload = load_json(text, label)
+    market = payload.get("officialMarket", {})
+    dependencies = payload.get("externalDependencies", {})
+    links = payload.get("publicLinks", {})
+
+    if payload.get("schema") != ROADMAP_URL:
+        raise SiteCheckError(f"{label}: wrong schema")
+    if payload.get("pageUrl") != ROADMAP_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong pageUrl")
+    if payload.get("status") != "public-roadmap-published":
+        raise SiteCheckError(f"{label}: wrong status")
+    if payload.get("currentStage") != "concept-stage-utility-buildout":
+        raise SiteCheckError(f"{label}: wrong currentStage")
+    if payload.get("chainId") != 8453:
+        raise SiteCheckError(f"{label}: wrong chainId")
+    if payload.get("contractAddress") != MAINNET_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong contractAddress")
+    if market.get("pair") != "GCA/USDT":
+        raise SiteCheckError(f"{label}: wrong pair")
+    if market.get("poolAddress") != OFFICIAL_POOL_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong poolAddress")
+    if market.get("quoteAssetAddress") != BASE_USDT_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong quoteAssetAddress")
+    if market.get("liquidityDepth") != "starter-depth-only":
+        raise SiteCheckError(f"{label}: wrong liquidityDepth")
+    if dependencies.get("baseScanTokenProfile") != "submitted-awaiting-review":
+        raise SiteCheckError(f"{label}: wrong BaseScan status")
+    if dependencies.get("blockaidMetaMaskWarning") != "submitted-warning-removal-not-confirmed":
+        raise SiteCheckError(f"{label}: wrong wallet warning status")
+    if dependencies.get("thirdPartyAudit") != "not-completed-deferred":
+        raise SiteCheckError(f"{label}: wrong audit status")
+    if not any(priority.get("id") == "controlled-account-ui" for priority in payload.get("nextBuildPriorities", [])):
+        raise SiteCheckError(f"{label}: missing controlled account UI priority")
+    if not any(priority.get("id") == "utility-credit-ledger" for priority in payload.get("nextBuildPriorities", [])):
+        raise SiteCheckError(f"{label}: missing utility credit ledger priority")
+    if "GCA is concept-stage and is building public identity, safer support intake, and planned non-custodial quant research access." not in payload.get("publicClaimBoundaries", {}).get("safeClaims", []):
+        raise SiteCheckError(f"{label}: missing concept-stage safe claim")
+    if "public self-service member claiming is live before controlled HTTPS UI is connected" not in payload.get("publicClaimBoundaries", {}).get("doNotClaim", []):
+        raise SiteCheckError(f"{label}: missing self-service do-not-claim")
+    if links.get("roadmapPage") != ROADMAP_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong roadmapPage")
+    if links.get("roadmapJson") != ROADMAP_URL:
+        raise SiteCheckError(f"{label}: wrong roadmapJson")
+    if links.get("support") != SUPPORT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong support")
+    if links.get("listingReadiness") != LISTING_READINESS_URL:
+        raise SiteCheckError(f"{label}: wrong listingReadiness")
     assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
     assert_not_contains(json.dumps(payload), "GCA/WETH", label)
 
@@ -508,6 +583,10 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong supportPageUrl")
     if payload.get("supportJsonUrl") != SUPPORT_URL:
         raise SiteCheckError(f"{label}: wrong supportJsonUrl")
+    if payload.get("roadmapPageUrl") != ROADMAP_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong roadmapPageUrl")
+    if payload.get("roadmapUrl") != ROADMAP_URL:
+        raise SiteCheckError(f"{label}: wrong roadmapUrl")
     if payload.get("privacyNoticePageUrl") != PRIVACY_NOTICE_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong privacyNoticePageUrl")
     if payload.get("privacyNoticeUrl") != PRIVACY_NOTICE_URL:
@@ -560,6 +639,10 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: unexpected member ledger schema status")
     if member_program.get("privacyAndTerms", {}).get("status") != "public-privacy-and-terms-published":
         raise SiteCheckError(f"{label}: unexpected privacy and terms status")
+    if payload.get("roadmap", {}).get("status") != "public-roadmap-published":
+        raise SiteCheckError(f"{label}: unexpected roadmap status")
+    if payload.get("roadmap", {}).get("publicSelfServiceClaimsLive") is not False:
+        raise SiteCheckError(f"{label}: roadmap must keep self-service claims false")
     if payload.get("listingReadiness", {}).get("status") != "not-ready":
         raise SiteCheckError(f"{label}: unexpected listing readiness status")
     if payload.get("marketQuality", {}).get("status") != "early-stage-market-quality-plan":
@@ -606,6 +689,10 @@ def validate_tokenlist_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong supportPage")
     if extensions.get("supportJson") != SUPPORT_URL:
         raise SiteCheckError(f"{label}: wrong supportJson")
+    if extensions.get("roadmapPage") != ROADMAP_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong roadmapPage")
+    if extensions.get("roadmap") != ROADMAP_URL:
+        raise SiteCheckError(f"{label}: wrong roadmap")
     if extensions.get("privacyNoticePage") != PRIVACY_NOTICE_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong privacyNoticePage")
     if extensions.get("privacyNotice") != PRIVACY_NOTICE_URL:
@@ -648,6 +735,8 @@ def validate_tokenlist_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong memberLedgerStatus")
     if extensions.get("supportIntakeStatus") != "public-support-intake-published":
         raise SiteCheckError(f"{label}: wrong supportIntakeStatus")
+    if extensions.get("roadmapStatus") != "public-roadmap-published":
+        raise SiteCheckError(f"{label}: wrong roadmapStatus")
     if extensions.get("privacyNoticeStatus") != "public-privacy-notice-published":
         raise SiteCheckError(f"{label}: wrong privacyNoticeStatus")
     if extensions.get("participationTermsStatus") != "public-participation-terms-published":
@@ -678,6 +767,10 @@ def validate_well_known_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong supportPage")
     if urls.get("supportJson") != SUPPORT_URL:
         raise SiteCheckError(f"{label}: wrong supportJson")
+    if urls.get("roadmapPage") != ROADMAP_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong roadmapPage")
+    if urls.get("roadmap") != ROADMAP_URL:
+        raise SiteCheckError(f"{label}: wrong roadmap")
     if urls.get("privacyNoticePage") != PRIVACY_NOTICE_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong privacyNoticePage")
     if urls.get("privacyNotice") != PRIVACY_NOTICE_URL:
@@ -1234,6 +1327,8 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/onchain-proofs.json",
         "https://gcagochina.com/external-reviews.html",
         "https://gcagochina.com/external-reviews.json",
+        "https://gcagochina.com/roadmap.html",
+        "https://gcagochina.com/roadmap.json",
         "https://gcagochina.com/member-program.json",
         "https://gcagochina.com/member-ledger.html",
         "https://gcagochina.com/member-ledger.json",
@@ -1264,6 +1359,8 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /listing-readiness.json", label)
     assert_contains(text, "Allow: /external-reviews.html", label)
     assert_contains(text, "Allow: /external-reviews.json", label)
+    assert_contains(text, "Allow: /roadmap.html", label)
+    assert_contains(text, "Allow: /roadmap.json", label)
     assert_contains(text, "Allow: /market-quality.html", label)
     assert_contains(text, "Allow: /market-quality.json", label)
     assert_contains(text, "Allow: /supply.json", label)
@@ -1305,6 +1402,8 @@ CHECKS: list[EndpointCheck] = [
     ("/member-ledger.json", validate_member_ledger_json),
     ("/support.html", validate_support_page),
     ("/support.json", validate_support_json),
+    ("/roadmap.html", validate_roadmap_page),
+    ("/roadmap.json", validate_roadmap_json),
     ("/privacy.html", validate_privacy_page),
     ("/privacy.json", validate_privacy_json),
     ("/terms.html", validate_terms_page),
