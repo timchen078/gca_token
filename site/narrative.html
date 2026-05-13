@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GCA Narrative System | Go China Access</title>
+    <meta name="description" content="Official GCA narrative system: Go China Access, China Narrative Radar, Risk First Trading, GCA Member Club, and non-custodial quant research access boundaries.">
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #111318;
+        --muted: #5f6773;
+        --line: #dfe3ea;
+        --panel: #ffffff;
+        --soft: #f6f7f9;
+        --red: #d71920;
+        --blue: #0052ff;
+        --green: #087f5b;
+        --gold: #8a650d;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: #fbfbfc;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.5;
+      }
+
+      a {
+        color: var(--blue);
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .shell {
+        width: min(1080px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      header {
+        border-bottom: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.94);
+        position: sticky;
+        top: 0;
+        z-index: 2;
+      }
+
+      nav {
+        min-height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--ink);
+        font-weight: 850;
+      }
+
+      .brand img {
+        width: 32px;
+        height: 32px;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 18px;
+        align-items: center;
+        font-size: 14px;
+      }
+
+      main {
+        padding: 42px 0 56px;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin: 0 0 18px;
+        color: var(--red);
+        font-size: 13px;
+        font-weight: 850;
+        text-transform: uppercase;
+      }
+
+      .eyebrow::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: var(--red);
+      }
+
+      h1 {
+        margin: 0;
+        max-width: 920px;
+        font-size: clamp(42px, 6vw, 76px);
+        line-height: 1;
+        letter-spacing: 0;
+      }
+
+      h2 {
+        margin: 0 0 14px;
+        font-size: 24px;
+      }
+
+      h3 {
+        margin: 0 0 8px;
+        font-size: 17px;
+      }
+
+      .lead {
+        max-width: 860px;
+        margin: 18px 0 0;
+        color: var(--muted);
+        font-size: 18px;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 24px;
+      }
+
+      .button {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        color: var(--ink);
+        min-height: 42px;
+        padding: 10px 14px;
+        font: inherit;
+        font-weight: 750;
+      }
+
+      .button.primary {
+        border-color: var(--red);
+        background: var(--red);
+        color: #fff;
+      }
+
+      .section {
+        margin-top: 30px;
+      }
+
+      .grid,
+      .two,
+      .four {
+        display: grid;
+        gap: 14px;
+      }
+
+      .grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .two {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .four {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .panel,
+      .fact {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+      }
+
+      .panel {
+        padding: 24px;
+      }
+
+      .fact {
+        min-height: 118px;
+        padding: 18px;
+      }
+
+      .label {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 750;
+        text-transform: uppercase;
+      }
+
+      .value {
+        display: block;
+        margin-top: 8px;
+        font-size: 17px;
+        font-weight: 850;
+      }
+
+      .note,
+      li {
+        color: var(--muted);
+      }
+
+      .note {
+        margin: 0;
+      }
+
+      .list {
+        display: grid;
+        gap: 10px;
+        margin-top: 12px;
+      }
+
+      .row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 12px;
+        align-items: start;
+        border-top: 1px solid var(--line);
+        padding-top: 10px;
+      }
+
+      .row strong {
+        white-space: nowrap;
+      }
+
+      .good {
+        color: var(--green);
+      }
+
+      .pending {
+        color: var(--gold);
+      }
+
+      code {
+        padding: 2px 5px;
+        border-radius: 6px;
+        background: var(--soft);
+        overflow-wrap: anywhere;
+      }
+
+      footer {
+        border-top: 1px solid var(--line);
+        padding: 24px 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      @media (max-width: 860px) {
+        .grid,
+        .two,
+        .four {
+          grid-template-columns: 1fr;
+        }
+
+        nav {
+          align-items: flex-start;
+          flex-direction: column;
+          padding: 14px 0;
+        }
+
+        .nav-links {
+          flex-wrap: wrap;
+        }
+
+        .row {
+          grid-template-columns: 1fr;
+        }
+
+        .row strong {
+          white-space: normal;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav class="shell" aria-label="Primary">
+        <a class="brand" href="index.html" aria-label="GCA home">
+          <img src="assets/gca-logo.svg" alt="GCA logo">
+          <span>GCA</span>
+        </a>
+        <div class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="utility.html">Utility</a>
+          <a href="roadmap.html">Roadmap</a>
+          <a href="community.html">Community</a>
+          <a href="members.html">Members</a>
+          <a href="token-safety.html">Token Safety</a>
+          <a href="risk.html">Risk</a>
+          <a href="trust.html">Trust Center</a>
+        </div>
+      </nav>
+    </header>
+
+    <main class="shell">
+      <section aria-labelledby="title">
+        <p class="eyebrow">Narrative meets risk control</p>
+        <h1 id="title">GCA Narrative System</h1>
+        <p class="lead">GCA keeps the Go China public story, but packages it into a safer and more useful narrative system: China-facing Web3 intelligence, non-custodial quant research access, risk education, and member workflows.</p>
+        <p class="lead">The goal is memorable public positioning without return promises, price targets, market manipulation, custody, or claims that the product is finished before the account UI and verification workflow are live.</p>
+        <div class="actions">
+          <a class="button primary" href="narrative.json">Narrative JSON</a>
+          <a class="button" href="utility.html">Utility Thesis</a>
+          <a class="button" href="members.html">Member Access</a>
+          <a class="button" href="community.html">Community Kit</a>
+          <a class="button" href="roadmap.html">Roadmap</a>
+          <a class="button" href="risk.html">Risk</a>
+          <a class="button" href="https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6" target="_blank" rel="noreferrer">BaseScan Contract</a>
+        </div>
+      </section>
+
+      <section class="section four" aria-label="Narrative stack">
+        <div class="fact">
+          <span class="label">Outer Story</span>
+          <span class="value">Go China Narrative</span>
+          <p class="note">China-facing Web3 culture, market attention, bilingual research, and community energy.</p>
+        </div>
+        <div class="fact">
+          <span class="label">Token Identity</span>
+          <span class="value">Go China Access</span>
+          <p class="note">GCA as the access token for the public story and planned service workflows.</p>
+        </div>
+        <div class="fact">
+          <span class="label">Product Bridge</span>
+          <span class="value">AI Quant Access</span>
+          <p class="note">A planned bridge to non-custodial market research, backtests, and risk tools.</p>
+        </div>
+        <div class="fact">
+          <span class="label">Operating Rule</span>
+          <span class="value">Risk First Trading</span>
+          <p class="note">No custody, no withdrawal permission, no outcome promise, and no bypassing risk gates.</p>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="termsTitle">
+        <h2 id="termsTitle">Public Naming System</h2>
+        <div class="grid">
+          <div class="fact">
+            <span class="label">Market Lens</span>
+            <span class="value">China Narrative Radar</span>
+            <p class="note">A recurring research format for tracking China-facing Web3 themes and public market narratives.</p>
+          </div>
+          <div class="fact">
+            <span class="label">Community Update</span>
+            <span class="value">Weekly Go China Radar</span>
+            <p class="note">A digest-style format for official community updates, links, risk notes, and roadmap progress.</p>
+          </div>
+          <div class="fact">
+            <span class="label">Risk Report</span>
+            <span class="value">Liquidation Replay</span>
+            <p class="note">A structured report type for reviewing liquidation events, oversizing, and risk mistakes.</p>
+          </div>
+          <div class="fact">
+            <span class="label">Signal Workflow</span>
+            <span class="value">ENTRY_READY Review</span>
+            <p class="note">A review label for signal readiness checks, not a promise of live execution or trading outcome.</p>
+          </div>
+          <div class="fact">
+            <span class="label">Member Layer</span>
+            <span class="value">GCA Member Club</span>
+            <p class="note">A service-access identity for verified holders after controlled account UI and ledger activation.</p>
+          </div>
+          <div class="fact">
+            <span class="label">Watchlist</span>
+            <span class="value">Go China Watchlist</span>
+            <p class="note">A curated research list for public themes, not a buy recommendation or price target.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section two" aria-label="Build direction">
+        <div class="panel">
+          <h2>What This Makes GCA</h2>
+          <p class="note">GCA should be positioned as a high-risk access and membership token for a China-facing Web3 research community and planned non-custodial quant tool layer. The strongest public story is not only the token; it is the repeatable system of reports, credits, member access, and risk-first research.</p>
+          <div class="list">
+            <div class="row"><span>10,000 GCA holder workflow</span><strong>100 credits</strong></div>
+            <div class="row"><span>1,000,000 GCA holder workflow</span><strong>GCA Member</strong></div>
+            <div class="row"><span>Main content hook</span><strong>China Narrative Radar</strong></div>
+            <div class="row"><span>Main safety hook</span><strong>Risk First Trading</strong></div>
+          </div>
+        </div>
+        <div class="panel">
+          <h2>What To Build Next</h2>
+          <p class="note">The narrative becomes stronger when users can see real workflows. The next product work should prioritize controlled HTTPS account UI, read-only wallet balance verification, credit ledger activation, member status review, and one public research format that can be updated weekly.</p>
+          <div class="list">
+            <div class="row"><span>Controlled account UI</span><strong class="pending">Required</strong></div>
+            <div class="row"><span>Read-only GCA verification</span><strong class="pending">Required</strong></div>
+            <div class="row"><span>Weekly Go China Radar</span><strong class="pending">Content</strong></div>
+            <div class="row"><span>Liquidation Replay sample</span><strong class="pending">Product proof</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="copyTitle">
+        <h2 id="copyTitle">Safe Public Copy</h2>
+        <div class="two">
+          <div>
+            <h3>English</h3>
+            <p class="note">GCA is the access token for the Go China narrative: a China-facing Web3 intelligence community and planned non-custodial quant research access layer.</p>
+          </div>
+          <div>
+            <h3>Chinese</h3>
+            <p class="note">GCA 是 Go China Access 的访问代币，连接中文 Web3 叙事、市场情报、风险教育和非托管量化研究工具。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="identityTitle">
+        <h2 id="identityTitle">Canonical Market Identity</h2>
+        <div class="list">
+          <div class="row"><span>Network</span><strong>Base Mainnet / chainId 8453</strong></div>
+          <div class="row"><span>Contract</span><strong>0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6</strong></div>
+          <div class="row"><span>Official pool</span><strong>GCA/USDT</strong></div>
+          <div class="row"><span>Pool address</span><strong>0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0</strong></div>
+          <div class="row"><span>Base USDT</span><strong>0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2</strong></div>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="boundariesTitle">
+        <h2 id="boundariesTitle">Narrative Boundaries</h2>
+        <ul>
+          <li>Safe to say: Narrative meets risk control.</li>
+          <li>Safe to say: GCA is building a concept-stage access layer around Go China Access, China Narrative Radar, and planned non-custodial quant research utility.</li>
+          <li>Do not claim price support, return guarantees, deep liquidity, external audit completion, listing approval, wallet-warning removal, or finished platform utility before those facts are visible from the relevant third party or live product.</li>
+          <li>Do not ask users for private keys, seed phrases, exchange API secrets, withdrawal permission, custody, or one-time codes.</li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <div class="shell">GCA narrative system. Always verify Base Mainnet chain ID 8453, the contract address, the official GCA/USDT pool, and the current product release status.</div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,102 @@
+{
+  "schema": "https://gcagochina.com/narrative.json",
+  "pageUrl": "https://gcagochina.com/narrative.html",
+  "status": "public-narrative-system-published",
+  "lastUpdated": "2026-05-14",
+  "chainId": 8453,
+  "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+  "conceptExpansion": "Go China Access",
+  "positioning": {
+    "oneSentence": "GCA is the access token for the Go China narrative: a China-facing Web3 intelligence community and planned non-custodial quant research access layer.",
+    "chineseOneSentence": "GCA 是 Go China Access 的访问代币，连接中文 Web3 叙事、市场情报、风险教育和非托管量化研究工具。",
+    "tagline": "Narrative meets risk control.",
+    "publicThesis": "China-facing Web3 narrative plus risk-first access to reports, backtests, warnings, signal review, position sizing, education, and member workflows."
+  },
+  "narrativeStack": [
+    {
+      "layer": "outerStory",
+      "name": "Go China Narrative",
+      "description": "China-facing Web3 culture, market attention, bilingual research, and community energy."
+    },
+    {
+      "layer": "tokenIdentity",
+      "name": "Go China Access",
+      "description": "GCA as the access token for the public story and planned service workflows."
+    },
+    {
+      "layer": "productBridge",
+      "name": "AI Quant Access",
+      "description": "A planned bridge to non-custodial market research, backtests, and risk tools."
+    },
+    {
+      "layer": "operatingRule",
+      "name": "Risk First Trading",
+      "description": "No custody, no withdrawal permission, no outcome promise, and no bypassing risk gates."
+    }
+  ],
+  "publicNamingSystem": [
+    "China Narrative Radar",
+    "Weekly Go China Radar",
+    "Liquidation Replay",
+    "ENTRY_READY Review",
+    "GCA Member Club",
+    "Go China Watchlist",
+    "Risk First Trading"
+  ],
+  "memberHooks": {
+    "holderBonus": {
+      "minimumHolding": "10000 GCA",
+      "publicLabel": "100 credits",
+      "scope": "reports, backtests, risk warnings, ENTRY_READY signal review, position calculators, or education access"
+    },
+    "gcaMember": {
+      "minimumHolding": "1000000 GCA",
+      "publicLabel": "GCA Member Club",
+      "scope": "higher utility credit limits, member research notes, priority report queue, member training sessions, and priority support"
+    }
+  },
+  "buildNext": [
+    "controlled HTTPS account UI",
+    "read-only GCA wallet balance verification",
+    "100 credits ledger activation",
+    "GCA Member ledger activation",
+    "Weekly Go China Radar public research format",
+    "Liquidation Replay sample report"
+  ],
+  "officialMarket": {
+    "pair": "GCA/USDT",
+    "poolAddress": "0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "quoteAsset": "USDT",
+    "quoteAssetAddress": "0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2",
+    "liquidityDepth": "starter-depth-only"
+  },
+  "publicClaimBoundaries": {
+    "safeClaims": [
+      "Narrative meets risk control.",
+      "GCA is building a concept-stage access layer around Go China Access, China Narrative Radar, and planned non-custodial quant research utility.",
+      "GCA can be described as an access and membership token for reports, credits, education, and research workflows.",
+      "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool.",
+      "No third-party audit has been completed."
+    ],
+    "doNotClaim": [
+      "price support or price targets",
+      "return guarantees",
+      "deep liquidity before visible liquidity exists",
+      "external audit completion before an independent report is published",
+      "BaseScan token profile approval before BaseScan publishes it",
+      "Blockaid or MetaMask warning removal before visible confirmation",
+      "finished platform utility before controlled account UI is live",
+      "cash, tokens, income, reimbursement, trading permission, or risk-control bypass from credits or member status"
+    ]
+  },
+  "officialLinks": {
+    "narrativePage": "https://gcagochina.com/narrative.html",
+    "narrative": "https://gcagochina.com/narrative.json",
+    "utilityThesis": "https://gcagochina.com/utility.html",
+    "roadmap": "https://gcagochina.com/roadmap.html",
+    "community": "https://gcagochina.com/community.html",
+    "memberProgram": "https://gcagochina.com/member-program.json",
+    "risk": "https://gcagochina.com/risk.html",
+    "tokenSafety": "https://gcagochina.com/token-safety.json"
+  }
+}

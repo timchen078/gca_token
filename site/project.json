@@ -26,6 +26,8 @@
   "roadmapUrl": "https://gcagochina.com/roadmap.json",
   "communityPageUrl": "https://gcagochina.com/community.html",
   "communityUrl": "https://gcagochina.com/community.json",
+  "narrativePageUrl": "https://gcagochina.com/narrative.html",
+  "narrativeUrl": "https://gcagochina.com/narrative.json",
   "listingKitUrl": "https://gcagochina.com/listing-kit.html",
   "brandKitPageUrl": "https://gcagochina.com/brand-kit.html",
   "brandKitUrl": "https://gcagochina.com/brand-kit.json",
@@ -157,6 +159,7 @@
     "baseScanOwnership": "verified",
     "baseScanTokenProfile": "resubmitted-awaiting-review",
     "geckoTerminalTokenInfo": "approved-2026-05-11",
+    "narrativeSystem": "public-narrative-system-published",
     "coinGeckoTrackedListing": "not-submitted",
     "coinMarketCapTrackedListing": "not-submitted",
     "thirdPartyAudit": "not-completed"
@@ -198,6 +201,26 @@
     "currentStage": "early-public-operations",
     "safeAnnouncementAvailable": true,
     "moderatorReplyTemplatesAvailable": true
+  },
+  "narrativeSystem": {
+    "status": "public-narrative-system-published",
+    "pageUrl": "https://gcagochina.com/narrative.html",
+    "url": "https://gcagochina.com/narrative.json",
+    "tagline": "Narrative meets risk control.",
+    "publicNamingSystem": [
+      "China Narrative Radar",
+      "Weekly Go China Radar",
+      "Liquidation Replay",
+      "ENTRY_READY Review",
+      "GCA Member Club",
+      "Go China Watchlist",
+      "Risk First Trading"
+    ],
+    "doNotClaim": [
+      "price support or price targets",
+      "return guarantees",
+      "finished platform utility before controlled account UI is live"
+    ]
   },
   "marketQuality": {
     "status": "early-stage-market-quality-plan",
@@ -274,7 +297,7 @@
       "contactEmail": "GCAgochina@outlook.com"
     }
   },
-  "shortDescription": "GCA, short for Go China Access, is a fixed-supply ERC-20 token on Base Mainnet. It is a concept-stage community direction focused on the Go China macro narrative, bilingual Web3 education, public market research, and planned access to non-custodial quant risk tools.",
-  "longDescription": "GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stands for Go China Access, a concept-stage community direction focused on the Go China macro narrative, bilingual Web3 education, public market research, and planned access to non-custodial quant risk tools. The intended Web3 Radar bridge is to make GCA an access and membership layer for liquidation replay reports, risk-warning credits, realistic backtests, ENTRY_READY signal review, position-size calculators, subscription discounts, and risk-control training. The contract created 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls. The official public pool is the Base Mainnet Uniswap v4 GCA/USDT pool, and the project has a disclosed owner-held reserve wallet. The project is early-stage, has no completed third-party audit, and should not be described as externally audited, price-backed, yield-bearing, or backed by guaranteed liquidity.",
-  "lastUpdated": "2026-05-13"
+  "shortDescription": "GCA, short for Go China Access, is a fixed-supply ERC-20 token on Base Mainnet. It is a concept-stage access token for the Go China narrative, China-facing Web3 intelligence, risk education, and planned non-custodial quant research tools.",
+  "longDescription": "GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stands for Go China Access, a concept-stage community and access-token direction focused on the Go China narrative, China Narrative Radar, bilingual Web3 education, public market research, and planned access to non-custodial quant risk tools. The intended Web3 Radar bridge is to make GCA an access and membership layer for Liquidation Replay reports, risk-warning credits, realistic backtests, ENTRY_READY Review, position-size calculators, member research notes, and risk-control training. The contract created 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls. The official public pool is the Base Mainnet Uniswap v4 GCA/USDT pool, and the project has a disclosed owner-held reserve wallet. The project is early-stage, has no completed third-party audit, and should not be described as externally audited, price-backed, yield-bearing, or backed by guaranteed liquidity.",
+  "lastUpdated": "2026-05-14"
 }

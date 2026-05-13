@@ -30,6 +30,8 @@ ROADMAP_PAGE_URL = "https://gcagochina.com/roadmap.html"
 ROADMAP_URL = "https://gcagochina.com/roadmap.json"
 COMMUNITY_PAGE_URL = "https://gcagochina.com/community.html"
 COMMUNITY_URL = "https://gcagochina.com/community.json"
+NARRATIVE_PAGE_URL = "https://gcagochina.com/narrative.html"
+NARRATIVE_URL = "https://gcagochina.com/narrative.json"
 PRIVACY_NOTICE_PAGE_URL = "https://gcagochina.com/privacy.html"
 PRIVACY_NOTICE_URL = "https://gcagochina.com/privacy.json"
 PARTICIPATION_TERMS_PAGE_URL = "https://gcagochina.com/terms.html"
@@ -131,6 +133,7 @@ def validate_root(text: str) -> None:
     assert_contains(text, "Support & Intake", label)
     assert_contains(text, "Roadmap", label)
     assert_contains(text, "Community Kit", label)
+    assert_contains(text, "Narrative System", label)
     assert_contains(text, "Privacy Notice", label)
     assert_contains(text, "Participation Terms", label)
     assert_contains(text, MAINNET_ADDRESS, label)
@@ -482,6 +485,8 @@ def validate_community_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong liquidityDepth")
     if not any("BaseScan token profile was returned as information-insufficient on 2026-05-13 and resubmitted on 2026-05-13" in item for item in payload.get("safeAnnouncement", [])):
         raise SiteCheckError(f"{label}: missing BaseScan pending announcement")
+    if not any("Narrative meets risk control" in item for item in payload.get("safeAnnouncement", [])):
+        raise SiteCheckError(f"{label}: missing narrative announcement")
     if "walletWarning" not in templates:
         raise SiteCheckError(f"{label}: missing wallet warning template")
     if "priceDisplay" not in templates:
@@ -494,12 +499,85 @@ def validate_community_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong communityPage")
     if links.get("communityJson") != COMMUNITY_URL:
         raise SiteCheckError(f"{label}: wrong communityJson")
+    if links.get("narrativePage") != NARRATIVE_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong narrativePage")
+    if links.get("narrative") != NARRATIVE_URL:
+        raise SiteCheckError(f"{label}: wrong narrative")
     if links.get("telegram") != "https://t.me/gcagochinaofficial":
         raise SiteCheckError(f"{label}: wrong telegram")
     if links.get("roadmap") != ROADMAP_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong roadmap")
     if links.get("support") != SUPPORT_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong support")
+    assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
+    assert_not_contains(json.dumps(payload), "GCA/WETH", label)
+
+
+def validate_narrative_page(text: str) -> None:
+    label = "/narrative.html"
+    assert_contains(text, "GCA Narrative System", label)
+    assert_contains(text, "Narrative JSON", label)
+    assert_contains(text, "Narrative meets risk control", label)
+    assert_contains(text, "China Narrative Radar", label)
+    assert_contains(text, "Weekly Go China Radar", label)
+    assert_contains(text, "Liquidation Replay", label)
+    assert_contains(text, "ENTRY_READY Review", label)
+    assert_contains(text, "GCA Member Club", label)
+    assert_contains(text, "Risk First Trading", label)
+    assert_contains(text, "without return promises", label)
+    assert_contains(text, "Do not claim price support", label)
+    assert_contains(text, MAINNET_ADDRESS, label)
+    assert_current_pool_text(text, label)
+
+
+def validate_narrative_json(text: str) -> None:
+    label = "/narrative.json"
+    payload = load_json(text, label)
+    positioning = payload.get("positioning", {})
+    market = payload.get("officialMarket", {})
+    boundaries = payload.get("publicClaimBoundaries", {})
+    links = payload.get("officialLinks", {})
+
+    if payload.get("schema") != NARRATIVE_URL:
+        raise SiteCheckError(f"{label}: wrong schema")
+    if payload.get("pageUrl") != NARRATIVE_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong pageUrl")
+    if payload.get("status") != "public-narrative-system-published":
+        raise SiteCheckError(f"{label}: wrong status")
+    if payload.get("chainId") != 8453:
+        raise SiteCheckError(f"{label}: wrong chainId")
+    if payload.get("contractAddress") != MAINNET_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong contractAddress")
+    if positioning.get("tagline") != "Narrative meets risk control.":
+        raise SiteCheckError(f"{label}: wrong tagline")
+    for item in (
+        "China Narrative Radar",
+        "Weekly Go China Radar",
+        "Liquidation Replay",
+        "ENTRY_READY Review",
+        "GCA Member Club",
+        "Risk First Trading",
+    ):
+        if item not in payload.get("publicNamingSystem", []):
+            raise SiteCheckError(f"{label}: missing naming item {item}")
+    if payload.get("memberHooks", {}).get("holderBonus", {}).get("minimumHolding") != "10000 GCA":
+        raise SiteCheckError(f"{label}: wrong holder bonus threshold")
+    if payload.get("memberHooks", {}).get("gcaMember", {}).get("minimumHolding") != "1000000 GCA":
+        raise SiteCheckError(f"{label}: wrong member threshold")
+    if market.get("pair") != "GCA/USDT":
+        raise SiteCheckError(f"{label}: wrong pair")
+    if market.get("poolAddress") != OFFICIAL_POOL_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong poolAddress")
+    if market.get("quoteAssetAddress") != BASE_USDT_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong quoteAssetAddress")
+    if "Narrative meets risk control." not in boundaries.get("safeClaims", []):
+        raise SiteCheckError(f"{label}: missing tagline safe claim")
+    if "return guarantees" not in boundaries.get("doNotClaim", []):
+        raise SiteCheckError(f"{label}: missing return boundary")
+    if links.get("narrativePage") != NARRATIVE_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong narrativePage")
+    if links.get("narrative") != NARRATIVE_URL:
+        raise SiteCheckError(f"{label}: wrong narrative")
     assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
     assert_not_contains(json.dumps(payload), "GCA/WETH", label)
 
@@ -789,6 +867,10 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong communityPageUrl")
     if payload.get("communityUrl") != COMMUNITY_URL:
         raise SiteCheckError(f"{label}: wrong communityUrl")
+    if payload.get("narrativePageUrl") != NARRATIVE_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong narrativePageUrl")
+    if payload.get("narrativeUrl") != NARRATIVE_URL:
+        raise SiteCheckError(f"{label}: wrong narrativeUrl")
     if payload.get("privacyNoticePageUrl") != PRIVACY_NOTICE_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong privacyNoticePageUrl")
     if payload.get("privacyNoticeUrl") != PRIVACY_NOTICE_URL:
@@ -851,6 +933,8 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: unexpected BaseScan status")
     if status.get("geckoTerminalTokenInfo") != "approved-2026-05-11":
         raise SiteCheckError(f"{label}: unexpected GeckoTerminal status")
+    if status.get("narrativeSystem") != "public-narrative-system-published":
+        raise SiteCheckError(f"{label}: unexpected narrative system status")
     if member_program.get("status") != "rules-published-public-claim-not-connected":
         raise SiteCheckError(f"{label}: unexpected member program status")
     if member_program.get("supportIntake", {}).get("status") != "public-support-intake-published":
@@ -867,6 +951,10 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: unexpected community kit status")
     if payload.get("communityKit", {}).get("officialTelegram") != "https://t.me/gcagochinaofficial":
         raise SiteCheckError(f"{label}: wrong community Telegram")
+    if payload.get("narrativeSystem", {}).get("status") != "public-narrative-system-published":
+        raise SiteCheckError(f"{label}: unexpected narrative system status")
+    if payload.get("narrativeSystem", {}).get("tagline") != "Narrative meets risk control.":
+        raise SiteCheckError(f"{label}: wrong narrative tagline")
     if payload.get("listingReadiness", {}).get("status") != "not-ready":
         raise SiteCheckError(f"{label}: unexpected listing readiness status")
     if payload.get("marketQuality", {}).get("status") != "early-stage-market-quality-plan":
@@ -931,6 +1019,10 @@ def validate_tokenlist_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong communityPage")
     if extensions.get("community") != COMMUNITY_URL:
         raise SiteCheckError(f"{label}: wrong community")
+    if extensions.get("narrativePage") != NARRATIVE_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong narrativePage")
+    if extensions.get("narrative") != NARRATIVE_URL:
+        raise SiteCheckError(f"{label}: wrong narrative")
     if extensions.get("privacyNoticePage") != PRIVACY_NOTICE_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong privacyNoticePage")
     if extensions.get("privacyNotice") != PRIVACY_NOTICE_URL:
@@ -993,6 +1085,8 @@ def validate_tokenlist_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong platformRepliesStatus")
     if extensions.get("trustCenterStatus") != "public-trust-center-published":
         raise SiteCheckError(f"{label}: wrong trustCenterStatus")
+    if extensions.get("narrativeSystemStatus") != "public-narrative-system-published":
+        raise SiteCheckError(f"{label}: wrong narrativeSystemStatus")
     if extensions.get("walletSecurityProfileStatus") != "public-wallet-security-profile-published":
         raise SiteCheckError(f"{label}: wrong walletSecurityProfileStatus")
     if extensions.get("tokenSafetyStatus") != "public-token-safety-checklist-published":
@@ -1043,6 +1137,10 @@ def validate_well_known_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong communityPage")
     if urls.get("community") != COMMUNITY_URL:
         raise SiteCheckError(f"{label}: wrong community")
+    if urls.get("narrativePage") != NARRATIVE_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong narrativePage")
+    if urls.get("narrative") != NARRATIVE_URL:
+        raise SiteCheckError(f"{label}: wrong narrative")
     if urls.get("privacyNoticePage") != PRIVACY_NOTICE_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong privacyNoticePage")
     if urls.get("privacyNotice") != PRIVACY_NOTICE_URL:
@@ -1105,6 +1203,8 @@ def validate_well_known_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong platformReplies status")
     if payload.get("platformStatus", {}).get("trustCenter") != "public-trust-center-published":
         raise SiteCheckError(f"{label}: wrong trustCenter status")
+    if payload.get("platformStatus", {}).get("narrativeSystem") != "public-narrative-system-published":
+        raise SiteCheckError(f"{label}: wrong narrativeSystem status")
     if payload.get("platformStatus", {}).get("walletSecurityProfile") != "public-wallet-security-profile-published":
         raise SiteCheckError(f"{label}: wrong walletSecurityProfile status")
     if payload.get("platformStatus", {}).get("tokenSafety") != "public-token-safety-checklist-published":
@@ -2095,6 +2195,8 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/roadmap.json",
         "https://gcagochina.com/community.html",
         "https://gcagochina.com/community.json",
+        "https://gcagochina.com/narrative.html",
+        "https://gcagochina.com/narrative.json",
         "https://gcagochina.com/gca/member-access/",
         "https://gcagochina.com/member-program.json",
         "https://gcagochina.com/member-ledger.html",
@@ -2137,6 +2239,8 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /roadmap.json", label)
     assert_contains(text, "Allow: /community.html", label)
     assert_contains(text, "Allow: /community.json", label)
+    assert_contains(text, "Allow: /narrative.html", label)
+    assert_contains(text, "Allow: /narrative.json", label)
     assert_contains(text, "Allow: /market-quality.html", label)
     assert_contains(text, "Allow: /market-quality.json", label)
     assert_contains(text, "Allow: /token-safety.html", label)
@@ -2195,6 +2299,8 @@ CHECKS: list[EndpointCheck] = [
     ("/roadmap.json", validate_roadmap_json),
     ("/community.html", validate_community_page),
     ("/community.json", validate_community_json),
+    ("/narrative.html", validate_narrative_page),
+    ("/narrative.json", validate_narrative_json),
     ("/privacy.html", validate_privacy_page),
     ("/privacy.json", validate_privacy_json),
     ("/terms.html", validate_terms_page),

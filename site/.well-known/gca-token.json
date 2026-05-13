@@ -1,6 +1,6 @@
 {
   "schema": "https://gcagochina.com/.well-known/gca-token.json",
-  "lastUpdated": "2026-05-13",
+  "lastUpdated": "2026-05-14",
   "projectName": "GCA",
   "tokenName": "GCA",
   "tokenSymbol": "GCA",
@@ -33,6 +33,8 @@
     "roadmap": "https://gcagochina.com/roadmap.json",
     "communityPage": "https://gcagochina.com/community.html",
     "community": "https://gcagochina.com/community.json",
+    "narrativePage": "https://gcagochina.com/narrative.html",
+    "narrative": "https://gcagochina.com/narrative.json",
     "listingKit": "https://gcagochina.com/listing-kit.html",
     "brandKitPage": "https://gcagochina.com/brand-kit.html",
     "brandKit": "https://gcagochina.com/brand-kit.json",
@@ -114,6 +116,7 @@
     "reviewerKit": "public-reviewer-kit-published",
     "platformReplies": "public-platform-reply-kit-published",
     "trustCenter": "public-trust-center-published",
+    "narrativeSystem": "public-narrative-system-published",
     "walletSecurityProfile": "public-wallet-security-profile-published",
     "tokenSafety": "public-token-safety-checklist-published",
     "blockaidFalsePositiveReport": "submitted-2026-05-10-warning-removal-not-confirmed",
@@ -136,6 +139,7 @@
   "publicClaimBoundaries": {
     "safeClaims": [
       "Base Mainnet token contract is deployed and source-verified.",
+      "Narrative meets risk control.",
       "GCA has fixed total supply and no post-deployment mint function.",
       "GeckoTerminal token information was approved on 2026-05-11.",
       "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool.",

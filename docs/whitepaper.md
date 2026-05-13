@@ -5,6 +5,7 @@ Version: 0.5
 Official buy guide: `https://gcagochina.com/buy.html`
 
 Utility thesis: `https://gcagochina.com/utility.html`
+Narrative system: `https://gcagochina.com/narrative.html`
 
 ## Summary
 
@@ -43,7 +44,17 @@ GCA is deployed on Base Mainnet because Base is an EVM-compatible Layer 2 networ
 
 ## Project Direction
 
-The current public concept is Go China Access. The intended direction is to build a public community around China-facing Web3 activity, bilingual crypto education, creator/community access, curated research about market narratives, and practical trading-risk education.
+The current public concept is Go China Access. The intended direction is to build a public community around China-facing Web3 activity, bilingual crypto education, creator/community access, curated research about market narratives, and practical trading-risk education. The public positioning line is: Narrative meets risk control.
+
+The GCA narrative system uses repeatable names so the project can be memorable without implying price support or trading outcomes:
+
+- China Narrative Radar
+- Weekly Go China Radar
+- Liquidation Replay
+- ENTRY_READY Review
+- GCA Member Club
+- Go China Watchlist
+- Risk First Trading
 
 The planned product bridge is to connect GCA with Web3 Radar-style non-custodial quant tooling. Suitable utility includes:
 

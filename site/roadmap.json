@@ -2,7 +2,7 @@
   "schema": "https://gcagochina.com/roadmap.json",
   "pageUrl": "https://gcagochina.com/roadmap.html",
   "status": "public-roadmap-published",
-  "lastUpdated": "2026-05-13",
+  "lastUpdated": "2026-05-14",
   "projectName": "GCA",
   "conceptExpansion": "Go China Access",
   "currentStage": "concept-stage-utility-buildout",
@@ -39,6 +39,11 @@
       "status": "completed"
     },
     {
+      "id": "narrative-system",
+      "label": "GCA Narrative System published with China Narrative Radar, Liquidation Replay, ENTRY_READY Review, and Risk First Trading language",
+      "status": "completed"
+    },
+    {
       "id": "safety-and-support-pages",
       "label": "Supply, risk, security, market quality, wallet-warning evidence, external review, privacy, terms, member ledger, and support intake pages published",
       "status": "completed"
@@ -70,6 +75,12 @@
       "preparedPath": "/gca/member-ledger"
     },
     {
+      "id": "weekly-go-china-radar",
+      "label": "Weekly Go China Radar content format",
+      "status": "not-live",
+      "requiredBeforePublicClaim": "public claims that the narrative research product is active"
+    },
+    {
       "id": "support-review-queue",
       "label": "Support review queue and audit trail",
       "status": "manual-intake-currently"
@@ -86,6 +97,7 @@
   "publicClaimBoundaries": {
     "safeClaims": [
       "GCA is a fixed-supply ERC-20 token on Base Mainnet.",
+      "Narrative meets risk control.",
       "GCA is concept-stage and is building public identity, safer support intake, and planned non-custodial quant research access.",
       "The public member page currently creates local packets and does not create a live account.",
       "The official market route is GCA/USDT on Base Mainnet."
@@ -101,6 +113,8 @@
   "publicLinks": {
     "roadmapPage": "https://gcagochina.com/roadmap.html",
     "roadmapJson": "https://gcagochina.com/roadmap.json",
+    "narrativePage": "https://gcagochina.com/narrative.html",
+    "narrative": "https://gcagochina.com/narrative.json",
     "status": "https://gcagochina.com/status.html",
     "listingKit": "https://gcagochina.com/listing-kit.html",
     "memberPreRegistration": "https://gcagochina.com/members.html",
