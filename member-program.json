@@ -1,6 +1,6 @@
 {
   "schema": "https://gcagochina.com/member-program.json",
-  "lastUpdated": "2026-05-12",
+  "lastUpdated": "2026-05-13",
   "status": "rules-published-public-claim-not-connected",
   "network": "Base Mainnet",
   "chainId": 8453,
@@ -67,6 +67,14 @@
   },
   "verification": {
     "method": "ERC-20 balanceOf read through the Web3 Radar backend after account UI is live",
+    "browserPreview": {
+      "status": "browser-read-only-preview-live",
+      "method": "MetaMask eth_call ERC-20 balanceOf on Base Mainnet",
+      "ledgerEffect": "none",
+      "requiresSignature": false,
+      "requiresTransaction": false,
+      "finalEligibilityStillRequiresControlledAccountUi": true
+    },
     "preparedAccessPage": "/gca/member-access",
     "preparedIntakeEndpoint": "/gca/pre-registrations",
     "preparedWalletVerificationEndpoint": "/gca/wallet-verifications",
@@ -112,6 +120,7 @@
     "safeClaims": [
       "GCA has published planned holder bonus and GCA Member rules.",
       "The public member page can generate a local pre-registration packet.",
+      "The public member page can run a browser-only read-only GCA balance preview with MetaMask eth_call.",
       "The Web3 Radar bridge is prepared but public self-service claiming is not connected."
     ],
     "doNotClaim": [
