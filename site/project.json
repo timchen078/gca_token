@@ -256,21 +256,23 @@
     "pageUrl": "https://gcagochina.com/external-reviews.html",
     "url": "https://gcagochina.com/external-reviews.json",
     "baseScanTokenProfile": "resubmitted-awaiting-review",
-    "blockaidMetaMask": "submitted-warning-removal-not-confirmed",
+    "blockaidMetaMask": "owner-observed-no-warning-visible",
     "geckoTerminal": "approved-2026-05-11",
     "coinGeckoTrackedListing": "deferred",
     "coinMarketCapTrackedListing": "deferred",
     "thirdPartyAudit": "not-completed-deferred"
   },
   "walletWarningEvidence": {
-    "status": "warning-report-submitted-removal-not-confirmed",
+    "status": "warning-report-submitted-owner-observed-no-warning-visible",
     "pageUrl": "https://gcagochina.com/wallet-warning.html",
     "url": "https://gcagochina.com/wallet-warning.json",
     "walletSecurityProfileUrl": "https://gcagochina.com/.well-known/wallet-security.json",
     "blockaidReportDate": "2026-05-10",
     "baseScanSource": "verified",
-    "warningRemoval": "not-confirmed",
-    "thirdPartyAudit": "not-completed"
+    "warningRemoval": "owner-observed-no-warning-visible",
+    "thirdPartyAudit": "not-completed",
+    "ownerObservationDate": "2026-05-14",
+    "securityVendorApprovalConfirmed": false
   },
   "memberProgram": {
     "status": "rules-published-public-claim-not-connected",

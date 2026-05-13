@@ -43,7 +43,7 @@ Use this file as the single operating checklist for external review, wallet-warn
 | Platform | Current status | Contact / inbox | Next action |
 | --- | --- | --- | --- |
 | BaseScan token profile | Submitted on 2026-05-09, returned by BaseScan as information-insufficient on 2026-05-13, and resubmitted on 2026-05-13 | `cxy070800@gmail.com` / `GCAgochina@outlook.com` | Wait for BaseScan email/review; do not submit duplicates unless BaseScan asks for corrections. |
-| Blockaid / MetaMask warning | False-positive report submitted on 2026-05-10; follow-up submitted on 2026-05-13; warning removal not confirmed | Owner browser / wallet UI / `GCAgochina@outlook.com` | Recheck the wallet and Uniswap warning UI. Do not submit another duplicate unless Blockaid, MetaMask, or Uniswap asks for more information. |
+| Blockaid / MetaMask warning | False-positive report submitted on 2026-05-10; follow-up submitted on 2026-05-13; owner observed no wallet risk warning visible on 2026-05-14 | Owner browser / wallet UI / `GCAgochina@outlook.com` | Keep monitoring wallet and Uniswap warning UI. Do not submit another duplicate unless Blockaid, MetaMask, or Uniswap asks for more information. |
 | GeckoTerminal | Token information update approved on 2026-05-11 | `GCAgochina@outlook.com` | No duplicate update unless official details change or GeckoTerminal asks for a correction. |
 | DEX Screener | Discoverable through the live GCA/USDT pool | Not submitted as a direct paid metadata update | Keep the GCA/USDT pool, website, token list, and GeckoTerminal data consistent. |
 | CoinGecko | Not submitted | Not applicable yet | Wait for stronger liquidity, organic holders, public activity, and BaseScan profile publication. |
@@ -73,7 +73,8 @@ Use this file as the single operating checklist for external review, wallet-warn
 - BaseScan deployer-wallet ownership verification is complete.
 - The public BaseScan token profile update was returned as information-insufficient on 2026-05-13, resubmitted on 2026-05-13, and is awaiting BaseScan email/review.
 - GeckoTerminal token information was approved on 2026-05-11.
-- A Blockaid false-positive report was submitted on 2026-05-10 and a follow-up was submitted on 2026-05-13, but wallet-warning removal is not confirmed.
+- Owner observed no wallet risk warning visible on 2026-05-14 after the 2026-05-10 Blockaid report and 2026-05-13 follow-up.
+- This observation is not permanent security-vendor approval or a cross-wallet guarantee.
 - The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool.
 - Current liquidity is starter-depth only, and trades can have high price impact and slippage.
 - No third-party audit has been completed.
@@ -81,7 +82,7 @@ Use this file as the single operating checklist for external review, wallet-warn
 ## Claims To Avoid
 
 - Do not say the BaseScan token profile is approved until BaseScan publishes it.
-- Do not say the Blockaid / MetaMask warning has been removed until it is visibly gone in wallet UI.
+- Do not say Blockaid, MetaMask, or any security vendor has permanently approved GCA unless that vendor confirms it.
 - Do not say GCA is listed on CoinGecko or CoinMarketCap before the relevant platform publishes a listing.
 - Do not say the owner reserve is locked, vested, or multisig-controlled unless custody changes on-chain.
 - Do not describe the project as externally audited, deeply liquid, price-backed, or warning-free.
@@ -161,7 +162,7 @@ Use this page for legitimate market-growth communication. The approved public di
 Page: `https://gcagochina.com/roadmap.html`
 JSON: `https://gcagochina.com/roadmap.json`
 
-Use this page when a reviewer or community moderator asks what has been completed, what is next, and which claims are still unavailable. It keeps public self-service member claiming, BaseScan profile publication, wallet-warning removal, third-party audit completion, and tracked listings marked as unresolved until confirmed.
+Use this page when a reviewer or community moderator asks what has been completed, what is next, and which claims are still unavailable. It keeps public self-service member claiming, BaseScan profile publication, security-vendor approval, third-party audit completion, and tracked listings marked as unresolved until confirmed.
 
 ## Public Community Kit
 
@@ -182,7 +183,7 @@ Use this page when wallets, data platforms, reviewers, or community moderators n
 Public page: `https://gcagochina.com/wallet-warning.html`
 Machine-readable JSON: `https://gcagochina.com/wallet-warning.json`
 
-Use this page if Blockaid, MetaMask, Uniswap, or another wallet-security reviewer asks for public evidence. It summarizes the submitted report, source verification, no-mint/no-tax/no-admin contract facts, current GCA/USDT market route, historical functional swap transaction hashes, and the boundary that warning removal is not confirmed.
+Use this page if Blockaid, MetaMask, Uniswap, or another wallet-security reviewer asks for public evidence. It summarizes the submitted report, source verification, no-mint/no-tax/no-admin contract facts, current GCA/USDT market route, historical functional swap transaction hashes, and the boundary that owner observed no wallet risk warning visible on 2026-05-14 while no security-vendor approval is claimed.
 
 ## Public On-chain Proofs
 

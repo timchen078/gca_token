@@ -28,7 +28,7 @@
     "Official market route: GCA/USDT on Base Mainnet.",
     "Official X: https://x.com/GCAAIGoChina",
     "First official X post: https://x.com/GCAAIGoChina/status/2054660559124255151",
-    "Current status: concept-stage utility buildout; public self-service member claiming is not live yet, BaseScan token profile was returned as information-insufficient on 2026-05-13 and resubmitted on 2026-05-13, wallet-warning removal is not confirmed, and no third-party audit has been completed."
+    "Current status: concept-stage utility buildout; public self-service member claiming is not live yet, BaseScan token profile was returned as information-insufficient on 2026-05-13 and resubmitted on 2026-05-13, the owner observed no wallet risk warning visible on 2026-05-14, and no third-party audit has been completed."
   ],
   "xLaunchPack": {
     "status": "first-post-published",
@@ -46,7 +46,7 @@
     ],
     "threadFollowUpDrafts": [
       "GCA is building around Go China Access, China Narrative Radar, Liquidation Replay, ENTRY_READY Review, GCA Member Club, and risk-first Web3 education. Roadmap: https://gcagochina.com/roadmap.html Weekly Radar: https://gcagochina.com/radar.html",
-      "Risk notes: GCA is on Base Mainnet only. No third-party audit has been completed. Liquidity is starter-depth only. Wallet-warning removal is not confirmed. Check the verification page before using any link or pool."
+      "Risk notes: GCA is on Base Mainnet only. No third-party audit has been completed. Liquidity is starter-depth only. Owner observed no wallet risk warning visible on 2026-05-14; this is not security-vendor approval. Check the verification page before using any link or pool."
     ],
     "pinnedPostDraft": [
       "Official GCA links",
@@ -65,14 +65,14 @@
     ]
   },
   "moderatorReplyTemplates": {
-    "walletWarning": "A Blockaid / MetaMask false-positive report was submitted on 2026-05-10, but warning removal is not confirmed. Verify the contract, pool, and official links before taking any action.",
+    "walletWarning": "A Blockaid / MetaMask false-positive report was submitted on 2026-05-10. The owner observed no wallet risk warning visible on 2026-05-14, but this is not permanent security-vendor approval. Verify the contract, pool, and official links before taking any action.",
     "priceDisplay": "Wallets and data platforms decide when to index prices. The official market route is GCA/USDT on Base Mainnet, and current liquidity remains starter-depth only.",
     "memberAccess": "The member flow currently creates local packets and support context. Public self-service claiming starts only after controlled HTTPS account UI and read-only wallet verification are live.",
     "auditStatus": "No third-party audit has been completed. Internal review is not the same as an independent audit."
   },
   "doNotPost": [
     "BaseScan token profile approval before BaseScan publishes it",
-    "Blockaid or MetaMask warning removal before visible confirmation",
+    "security-vendor approval, permanent warning-free status, or cross-wallet warning removal before vendor/current wallet UI confirms it",
     "third-party audit completion before an independent report is published",
     "deep liquidity, price support, listing approval, or trading outcomes",
     "requests for private keys, seed phrases, exchange API secrets, withdrawal permission, one-time codes, custody, or fund transfers"

@@ -191,7 +191,7 @@ def validate_token_safety_page(text: str) -> None:
     assert_contains(text, "Pending Or Not Claimed", label)
     assert_contains(text, "No mint function", label)
     assert_contains(text, "No third-party audit", label)
-    assert_contains(text, "warning removal before visible confirmation", label)
+    assert_contains(text, "permanent warning-free status", label)
     assert_contains(text, MAINNET_ADDRESS, label)
     assert_contains(text, BASE_USDT_ADDRESS, label)
     assert_contains(text, OFFICIAL_GECKOTERMINAL_URL, label)
@@ -234,7 +234,7 @@ def validate_token_safety_json(text: str) -> None:
             raise SiteCheckError(f"{label}: {key} must be false")
     if pending.get("baseScanTokenProfile") != "resubmitted-awaiting-review":
         raise SiteCheckError(f"{label}: wrong BaseScan profile status")
-    if pending.get("blockaidMetaMaskWarning") != "submitted-warning-removal-not-confirmed":
+    if pending.get("blockaidMetaMaskWarning") != "owner-observed-no-warning-visible":
         raise SiteCheckError(f"{label}: wrong wallet warning status")
     if pending.get("thirdPartyAudit") != "not-completed":
         raise SiteCheckError(f"{label}: wrong audit status")
@@ -254,7 +254,7 @@ def validate_token_safety_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong walletWarningEvidence")
     if "No third-party audit has been completed." not in payload.get("publicClaimBoundaries", {}).get("safeClaims", []):
         raise SiteCheckError(f"{label}: missing audit safe claim")
-    if "Blockaid or MetaMask warning removal before visible confirmation" not in payload.get("publicClaimBoundaries", {}).get("doNotClaim", []):
+    if "security-vendor approval, permanent warning-free status, or cross-wallet warning removal before vendor/current wallet UI confirms it" not in payload.get("publicClaimBoundaries", {}).get("doNotClaim", []):
         raise SiteCheckError(f"{label}: missing warning-removal boundary")
     assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
     assert_not_contains(json.dumps(payload), "GCA/WETH", label)
@@ -394,7 +394,7 @@ def validate_roadmap_page(text: str) -> None:
     assert_contains(text, "GCA Member records", label)
     assert_contains(text, "External Dependencies", label)
     assert_contains(text, "Resubmitted: awaiting review", label)
-    assert_contains(text, "Removal not confirmed", label)
+    assert_contains(text, "Owner observed no warning visible", label)
     assert_contains(text, "Not completed", label)
     assert_contains(text, "public self-service member claiming is live", label)
     assert_contains(text, "Base Mainnet / chainId 8453", label)
@@ -431,7 +431,7 @@ def validate_roadmap_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong liquidityDepth")
     if dependencies.get("baseScanTokenProfile") != "resubmitted-awaiting-review":
         raise SiteCheckError(f"{label}: wrong BaseScan status")
-    if dependencies.get("blockaidMetaMaskWarning") != "submitted-warning-removal-not-confirmed":
+    if dependencies.get("blockaidMetaMaskWarning") != "owner-observed-no-warning-visible":
         raise SiteCheckError(f"{label}: wrong wallet warning status")
     if dependencies.get("thirdPartyAudit") != "not-completed-deferred":
         raise SiteCheckError(f"{label}: wrong audit status")
@@ -1145,7 +1145,7 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: unexpected trust center status")
     if payload.get("tokenSafety", {}).get("status") != "public-token-safety-checklist-published":
         raise SiteCheckError(f"{label}: unexpected token safety status")
-    if payload.get("walletWarningEvidence", {}).get("status") != "warning-report-submitted-removal-not-confirmed":
+    if payload.get("walletWarningEvidence", {}).get("status") != "warning-report-submitted-owner-observed-no-warning-visible":
         raise SiteCheckError(f"{label}: unexpected wallet warning status")
     if payload.get("walletWarningEvidence", {}).get("walletSecurityProfileUrl") != WALLET_SECURITY_PROFILE_URL:
         raise SiteCheckError(f"{label}: wrong wallet security profile URL")
@@ -1435,10 +1435,10 @@ def validate_wallet_security_json(text: str) -> None:
     ):
         if facts.get(key) is not False:
             raise SiteCheckError(f"{label}: {key} must be false")
-    if review.get("blockaidMetaMaskWarning") != "submitted-warning-removal-not-confirmed":
+    if review.get("blockaidMetaMaskWarning") != "owner-observed-no-warning-visible":
         raise SiteCheckError(f"{label}: wrong wallet warning status")
-    if review.get("warningRemovalConfirmed") is not False:
-        raise SiteCheckError(f"{label}: warning removal must remain false")
+    if review.get("warningRemovalConfirmed") is not True:
+        raise SiteCheckError(f"{label}: owner-visible warning state must be true")
     if basescan.get("sourceVerification") != "verified":
         raise SiteCheckError(f"{label}: wrong BaseScan source status")
     if basescan.get("tokenProfile") != "resubmitted-awaiting-review":
@@ -1461,7 +1461,7 @@ def validate_wallet_security_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong trust center link")
     if "No third-party audit has been completed." not in payload.get("publicClaimBoundaries", {}).get("safeClaims", []):
         raise SiteCheckError(f"{label}: missing audit safe claim")
-    if "Blockaid or MetaMask warning removal before visible confirmation" not in payload.get("publicClaimBoundaries", {}).get("doNotClaim", []):
+    if "security-vendor approval, permanent warning-free status, or cross-wallet warning removal before vendor/current wallet UI confirms it" not in payload.get("publicClaimBoundaries", {}).get("doNotClaim", []):
         raise SiteCheckError(f"{label}: missing warning-removal boundary")
     assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
     assert_not_contains(json.dumps(payload), "GCA/WETH", label)
@@ -1901,7 +1901,7 @@ def validate_reviewer_kit_json(text: str) -> None:
         raise SiteCheckError(f"{label}: third-party audit must be false")
     if reviews.get("baseScanTokenProfile") != "resubmitted-awaiting-review":
         raise SiteCheckError(f"{label}: wrong BaseScan profile status")
-    if reviews.get("blockaidMetaMask") != "submitted-warning-removal-not-confirmed":
+    if reviews.get("blockaidMetaMask") != "owner-observed-no-warning-visible":
         raise SiteCheckError(f"{label}: wrong Blockaid status")
     if reviews.get("blockaidFollowUpSubmissionDate") != "2026-05-13":
         raise SiteCheckError(f"{label}: wrong Blockaid follow-up date")
@@ -1917,7 +1917,7 @@ def validate_reviewer_kit_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing sell test transaction")
     if "No third-party audit has been completed." not in boundaries.get("safeClaims", []):
         raise SiteCheckError(f"{label}: missing audit safe claim")
-    if "Blockaid or MetaMask warning removal before visible confirmation" not in boundaries.get("doNotClaim", []):
+    if "security-vendor approval, permanent warning-free status, or cross-wallet warning removal before vendor/current wallet UI confirms it" not in boundaries.get("doNotClaim", []):
         raise SiteCheckError(f"{label}: missing warning boundary")
     assert_current_pool_text(json.dumps(payload), label)
 
@@ -2011,15 +2011,15 @@ def validate_platform_replies_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing Blockaid report date")
     if "follow-up was submitted on 2026-05-13" not in wallet_body:
         raise SiteCheckError(f"{label}: missing Blockaid follow-up date")
-    if "Warning removal is not confirmed." not in wallet_body:
+    if "The owner observed no wallet risk warning visible on 2026-05-14; no security-vendor approval is claimed." not in wallet_body:
         raise SiteCheckError(f"{label}: missing warning boundary")
     if not any("wallet-security reviewer asks for more evidence" in item for item in rules.get("useWhen", [])):
         raise SiteCheckError(f"{label}: missing wallet-security use rule")
-    if "the reply would claim warning removal before visible confirmation" not in rules.get("doNotUseWhen", []):
+    if "the reply would claim security-vendor approval or permanent warning-free status before confirmation" not in rules.get("doNotUseWhen", []):
         raise SiteCheckError(f"{label}: missing warning do-not-use rule")
     if "No third-party audit has been completed." not in payload.get("safePublicClaims", []):
         raise SiteCheckError(f"{label}: missing audit safe claim")
-    if "Blockaid or MetaMask warning removal before visible confirmation" not in payload.get("doNotClaim", []):
+    if "security-vendor approval, permanent warning-free status, or cross-wallet warning removal before vendor/current wallet UI confirms it" not in payload.get("doNotClaim", []):
         raise SiteCheckError(f"{label}: missing warning do-not-claim")
     assert_current_pool_text(json.dumps(payload), label)
 
@@ -2038,7 +2038,7 @@ def validate_platform_replies_page(text: str) -> None:
     assert_contains(text, "Tracked Listing Not Ready", label)
     assert_contains(text, "Blockaid false-positive report was submitted on 2026-05-10", label)
     assert_contains(text, "follow-up was submitted on 2026-05-13", label)
-    assert_contains(text, "Warning removal is not confirmed", label)
+    assert_contains(text, "Owner observed no wallet risk warning visible on 2026-05-14; no security-vendor approval is claimed", label)
     assert_contains(text, "External audit completion before an independent report is published", label)
     assert_contains(text, "no completed third-party audit", label)
     assert_contains(text, OFFICIAL_GECKOTERMINAL_URL, label)
@@ -2098,7 +2098,7 @@ def validate_trust_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong BaseScan token profile status")
     if snapshot.get("geckoTerminalTokenInfo") != "approved-2026-05-11":
         raise SiteCheckError(f"{label}: wrong GeckoTerminal status")
-    if snapshot.get("walletWarning") != "submitted-warning-removal-not-confirmed":
+    if snapshot.get("walletWarning") != "owner-observed-no-warning-visible":
         raise SiteCheckError(f"{label}: wrong wallet warning status")
     if snapshot.get("blockaidFollowUpDate") != "2026-05-13":
         raise SiteCheckError(f"{label}: wrong Blockaid follow-up date")
@@ -2138,7 +2138,7 @@ def validate_trust_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong third-party audit status")
     if "No third-party audit has been completed." not in payload.get("safePublicClaims", []):
         raise SiteCheckError(f"{label}: missing audit safe claim")
-    if "Blockaid or MetaMask warning removal before visible confirmation" not in payload.get("doNotClaim", []):
+    if "security-vendor approval, permanent warning-free status, or cross-wallet warning removal before vendor/current wallet UI confirms it" not in payload.get("doNotClaim", []):
         raise SiteCheckError(f"{label}: missing warning do-not-claim")
     assert_current_pool_text(json.dumps(payload), label)
 
@@ -2158,7 +2158,7 @@ def validate_trust_page(text: str) -> None:
     assert_contains(text, "BaseScan source code", label)
     assert_contains(text, "Resubmitted: awaiting review", label)
     assert_contains(text, "Approved 2026-05-11", label)
-    assert_contains(text, "Submitted, removal not confirmed", label)
+    assert_contains(text, "Owner observed no warning visible", label)
     assert_contains(text, "No completed third-party audit", label)
     assert_contains(text, "Post-deployment mint function", label)
     assert_contains(text, "Transfer tax or hidden fee", label)
@@ -2166,7 +2166,7 @@ def validate_trust_page(text: str) -> None:
     assert_contains(text, RESERVE_WALLET, label)
     assert_contains(text, OFFICIAL_DEXSCREENER_URL, label)
     assert_contains(text, OFFICIAL_GECKOTERMINAL_URL, label)
-    assert_contains(text, "Do not claim Blockaid or MetaMask warning removal before visible confirmation", label)
+    assert_contains(text, "Do not claim security-vendor approval, permanent warning-free status, or cross-wallet warning removal before vendor/current wallet UI confirms it", label)
     assert_current_pool_text(text, label)
 
 
@@ -2220,7 +2220,7 @@ def validate_external_reviews_json(text: str) -> None:
     if reviews.get("baseScanTokenProfile", {}).get("status") != "resubmitted-awaiting-review":
         raise SiteCheckError(f"{label}: wrong BaseScan profile status")
     blockaid = reviews.get("blockaidMetaMask", {})
-    if blockaid.get("status") != "submitted-warning-removal-not-confirmed":
+    if blockaid.get("status") != "owner-observed-no-warning-visible":
         raise SiteCheckError(f"{label}: wrong Blockaid status")
     if blockaid.get("submissionDate") != "2026-05-10":
         raise SiteCheckError(f"{label}: wrong Blockaid submission date")
@@ -2248,7 +2248,7 @@ def validate_external_reviews_page(text: str) -> None:
     assert_contains(text, "External Reviews JSON", label)
     assert_contains(text, "Trust Center", label)
     assert_contains(text, "Resubmitted: awaiting review", label)
-    assert_contains(text, "Follow-up submitted 2026-05-13; removal not confirmed", label)
+    assert_contains(text, "Owner observed no warning visible 2026-05-14", label)
     assert_contains(text, "Approved 2026-05-11", label)
     assert_contains(text, "CoinGecko tracked listing submission", label)
     assert_contains(text, "CoinMarketCap tracked listing submission", label)
@@ -2271,7 +2271,7 @@ def validate_wallet_warning_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != WALLET_WARNING_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
-    if payload.get("status") != "warning-report-submitted-removal-not-confirmed":
+    if payload.get("status") != "warning-report-submitted-owner-observed-no-warning-visible":
         raise SiteCheckError(f"{label}: wrong status")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
@@ -2287,7 +2287,7 @@ def validate_wallet_warning_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong poolAddress")
     if market.get("quoteAssetAddress") != BASE_USDT_ADDRESS:
         raise SiteCheckError(f"{label}: wrong quoteAssetAddress")
-    if report.get("status") != "submitted-warning-removal-not-confirmed":
+    if report.get("status") != "owner-observed-no-warning-visible":
         raise SiteCheckError(f"{label}: wrong Blockaid report status")
     if report.get("submissionDate") != "2026-05-10":
         raise SiteCheckError(f"{label}: wrong Blockaid submission date")
@@ -2322,7 +2322,7 @@ def validate_wallet_warning_page(text: str) -> None:
     assert_contains(text, "Wallet Security JSON", label)
     assert_contains(text, "Trust Center", label)
     assert_contains(text, "Follow-up submitted 2026-05-13", label)
-    assert_contains(text, "Not confirmed", label)
+    assert_contains(text, "Owner observed no warning visible 2026-05-14", label)
     assert_contains(text, "Verified on BaseScan", label)
     assert_contains(text, "Contract Facts For Review", label)
     assert_contains(text, "Historical Functional Swap Evidence", label)

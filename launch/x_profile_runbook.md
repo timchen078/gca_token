@@ -55,7 +55,7 @@ Risk notes:
 GCA is on Base Mainnet only.
 No third-party audit has been completed.
 Liquidity is starter-depth only.
-Wallet-warning removal is not confirmed.
+Owner observed no wallet risk warning visible on 2026-05-14; this is not security-vendor approval.
 
 Check the verification page before using any link or pool.
 ```
@@ -86,7 +86,7 @@ Base Mainnet only. No third-party audit. Starter-depth liquidity.
 
 - Do not post price targets, return claims, urgency, countdowns, or market predictions.
 - Do not say the BaseScan token profile is approved before BaseScan publishes it.
-- Do not say Blockaid or MetaMask warnings are removed before visible confirmation.
+- Do not say Blockaid, MetaMask, or any security vendor has permanently approved GCA unless that vendor confirms it.
 - Do not describe the owner reserve as locked, vested, or multisig-controlled.
 - Do not describe small buy/sell tests as organic demand or deep liquidity.
 - Do not ask anyone for private keys, seed phrases, exchange API secrets, withdrawal permission, one-time codes, custody, or fund transfers.

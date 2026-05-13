@@ -143,7 +143,7 @@
     "doNotClaim": [
       "CoinGecko or CoinMarketCap listing before publication",
       "BaseScan token profile approval before BaseScan publishes it",
-      "Blockaid or MetaMask warning removal before visible confirmation",
+      "security-vendor approval, permanent warning-free status, or cross-wallet warning removal before vendor/current wallet UI confirms it",
       "locked reserve before on-chain custody changes",
       "external audit completion before an independent report is published",
       "mature liquidity, price support, return promises, or ranking acceptance"

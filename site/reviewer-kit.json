@@ -2,7 +2,7 @@
   "schema": "https://gcagochina.com/reviewer-kit.json",
   "pageUrl": "https://gcagochina.com/reviewer-kit.html",
   "status": "public-reviewer-kit-published",
-  "lastUpdated": "2026-05-13",
+  "lastUpdated": "2026-05-14",
   "projectName": "GCA",
   "conceptExpansion": "Go China Access",
   "network": "Base Mainnet",
@@ -76,7 +76,7 @@
     "baseScanOwnership": "verified",
     "baseScanTokenProfile": "resubmitted-awaiting-review",
     "baseScanTokenProfileResubmissionDate": "2026-05-13",
-    "blockaidMetaMask": "submitted-warning-removal-not-confirmed",
+    "blockaidMetaMask": "owner-observed-no-warning-visible",
     "blockaidInitialSubmissionDate": "2026-05-10",
     "blockaidFollowUpSubmissionDate": "2026-05-13",
     "blockaidFollowUpSubmissionResult": "Blockaid support portal returned HTTP 200 OK",
@@ -84,7 +84,8 @@
     "dexScreener": "discoverable-through-gca-usdt-pool",
     "coinGecko": "deferred",
     "coinMarketCap": "deferred",
-    "thirdPartyAudit": "not-completed-deferred"
+    "thirdPartyAudit": "not-completed-deferred",
+    "blockaidOwnerObservationDate": "2026-05-14"
   },
   "evidenceLinks": {
     "identity": "https://gcagochina.com/verify.html",
@@ -108,20 +109,21 @@
       "0x0ff618062abc6e28933699d4e3bd723026f8505e4a0155db3068073b6fdc86e7",
       "0x2698cee454d22a7977231e7e57173038647c07261c09d8a93260bcbf0cc2d71e"
     ],
-    "scope": "These transactions are narrow historical functional evidence only. They do not prove mature liquidity, organic demand, audit completion, listing acceptance, or warning removal."
+    "scope": "These transactions are narrow historical functional evidence only. They do not prove mature liquidity, organic demand, audit completion, listing acceptance, or security-vendor approval."
   },
   "publicClaimBoundaries": {
     "safeClaims": [
       "GCA is deployed on Base Mainnet with fixed total supply.",
       "BaseScan source and deployer-wallet ownership verification are complete.",
       "GeckoTerminal token information was approved on 2026-05-11.",
-      "A Blockaid false-positive report was submitted on 2026-05-10 and a follow-up was submitted on 2026-05-13, but wallet-warning removal is not confirmed.",
+      "Owner reported on 2026-05-14 that no wallet risk warning was visible in the tested wallet/DEX flow.",
       "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool.",
+      "This is an owner-visible UI observation only, not a permanent security-vendor approval or cross-wallet guarantee.",
       "No third-party audit has been completed."
     ],
     "doNotClaim": [
       "BaseScan token profile approval before BaseScan publishes it",
-      "Blockaid or MetaMask warning removal before visible confirmation",
+      "security-vendor approval, permanent warning-free status, or cross-wallet warning removal before vendor/current wallet UI confirms it",
       "CoinGecko or CoinMarketCap listing before publication",
       "external audit completion before an independent report is published",
       "locked reserve before on-chain custody changes",

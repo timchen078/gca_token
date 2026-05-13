@@ -140,14 +140,14 @@
 - Audit quote requests have been submitted and then deferred by owner decision, but quote submission is not an audit and does not allow any public "audited" claim.
 - Current official Uniswap GCA/USDT liquidity is starter-depth only; trades can have high price impact and slippage.
 - Functional buy/sell swap tests do not remove wallet risk warnings and must not be described as proof of organic volume or deep liquidity.
-- Blockaid report and follow-up submission do not mean the warning has been removed; wait for Blockaid/MetaMask review or verify directly in the wallet UI.
+- Owner observed no wallet risk warning visible on 2026-05-14 after the Blockaid report and follow-up. Treat this as a current UI observation, not security-vendor approval or a permanent cross-wallet guarantee.
 - The owner reserve is in a normal owner-controlled wallet. Do not describe it as locked, vested, or multisig-controlled unless custody changes on-chain.
 - The product direction is still concept-stage. Do not describe GCA as a finished platform or as having guaranteed utility.
 - The Web3 Radar bridge has a local verified-access backend, but public self-service claiming is not live until controlled HTTPS account UI, support rules, and risk disclosures are released.
 - The public member page may preview a wallet's GCA balance with a read-only browser `eth_call`, but this is only an eligibility preview and not a ledger activation or claim approval.
 - The support intake page is public. It states that current intake is manual, direct submit is not connected, and users should never send private keys, seed phrases, exchange API secrets, withdrawal permission, one-time codes, recovery phrases, custody requests, or fund-transfer requests.
 - The roadmap page is public. It states that GCA is in concept-stage utility buildout, public self-service member claiming is not live, and external dependencies such as BaseScan profile review, wallet-warning review, audit completion, and tracked listings remain unresolved until confirmed by the relevant third party.
-- The community kit is public. It gives safe announcement copy and moderator replies while forbidding claims about BaseScan profile approval, wallet-warning removal, external audit completion, deep liquidity, price support, listing approval, or trading outcomes.
+- The community kit is public. It gives safe announcement copy and moderator replies while forbidding claims about BaseScan profile approval, security-vendor approval, external audit completion, deep liquidity, price support, listing approval, or trading outcomes.
 - The privacy notice and participation terms are public. They state that the current static member page is local packet generation only and that no private key, seed phrase, exchange API secret, withdrawal permission, or custody request belongs in the GCA member flow.
 - The 10,000 GCA holder bonus must be described as 100 Web3 Radar utility credits only, not as cash, tokens, income, reimbursement, trading permission, or a way to bypass risk controls.
 - The 1,000,000 GCA Member tier must be described as service access only, not as cash, tokens, income, reimbursement, voting control, guaranteed lifetime access, trading permission, or a way to bypass risk controls.

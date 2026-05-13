@@ -41,6 +41,6 @@ If MetaMask or Uniswap shows a warning, use the verify page to confirm the contr
 ## Posting Rules
 
 - Do not add price targets, return claims, urgency, countdowns, or market predictions.
-- Do not say the Blockaid / MetaMask warning has been removed until it is visibly gone in wallet UI.
+- Do not say Blockaid, MetaMask, or any security vendor has permanently approved GCA unless that vendor confirms it.
 - Do not describe the owner reserve as locked, vested, or multisig-controlled.
 - Do not describe small buy/sell tests as organic demand or deep liquidity.

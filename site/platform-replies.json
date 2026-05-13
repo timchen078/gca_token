@@ -2,7 +2,7 @@
   "schema": "https://gcagochina.com/platform-replies.json",
   "pageUrl": "https://gcagochina.com/platform-replies.html",
   "status": "public-platform-reply-kit-published",
-  "lastUpdated": "2026-05-13",
+  "lastUpdated": "2026-05-14",
   "projectName": "GCA",
   "network": "Base Mainnet",
   "chainId": 8453,
@@ -59,7 +59,7 @@
     ],
     "doNotUseWhen": [
       "a platform has not asked for more information and a duplicate request would be spam",
-      "the reply would claim warning removal before visible confirmation",
+      "the reply would claim security-vendor approval or permanent warning-free status before confirmation",
       "the reply would claim BaseScan profile approval before publication",
       "the reply would claim external audit completion before an independent report is published",
       "the reply would imply mature liquidity, price support, or return promises"
@@ -78,7 +78,7 @@
         "On-chain proofs: https://gcagochina.com/onchain-proofs.html",
         "Current official pool: Uniswap v4 GCA/USDT, 0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
         "The contract is fixed supply, source verified on BaseScan, and has no post-deployment mint function, owner/admin role, proxy, blacklist, pause function, transfer tax, hidden fee, custody path, or withdrawal path.",
-        "A Blockaid false-positive report was submitted on 2026-05-10 and a follow-up was submitted on 2026-05-13. Warning removal is not confirmed.",
+        "A Blockaid false-positive report was submitted on 2026-05-10 and a follow-up was submitted on 2026-05-13. The owner observed no wallet risk warning visible on 2026-05-14; no security-vendor approval is claimed.",
         "Thank you."
       ]
     },
@@ -126,7 +126,7 @@
         "Official pool: https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
         "BaseScan contract: https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
         "Risk page: https://gcagochina.com/risk.html",
-        "GCA is early-stage. Wallet-warning removal, BaseScan token profile publication, tracked listings, deep liquidity, and third-party audit completion are not confirmed unless the relevant public page says so."
+        "GCA is early-stage. Owner observed no wallet risk warning visible on 2026-05-14, but security-vendor approval, BaseScan token profile publication, tracked listings, deep liquidity, and third-party audit completion are not confirmed unless the relevant public page says so."
       ]
     },
     "trackedListingNotReady": {
@@ -137,7 +137,7 @@
         "Listing readiness page: https://gcagochina.com/listing-readiness.html",
         "Market quality page: https://gcagochina.com/market-quality.html",
         "External review status: https://gcagochina.com/external-reviews.html",
-        "Current blockers include starter-depth liquidity, limited public activity, pending BaseScan token profile publication, wallet-warning review not confirmed removed, and no completed third-party audit.",
+        "Current blockers include starter-depth liquidity, limited public activity, pending BaseScan token profile publication, and no completed third-party audit.",
         "We do not want to overstate readiness or submit misleading market claims."
       ]
     }
@@ -147,11 +147,12 @@
     "BaseScan source and deployer-wallet ownership verification are complete.",
     "GeckoTerminal token information was approved on 2026-05-11.",
     "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool.",
-    "A Blockaid false-positive report and follow-up were submitted, but warning removal is not confirmed.",
+    "Owner reported on 2026-05-14 that no wallet risk warning was visible in the tested wallet/DEX flow.",
+    "This is an owner-visible UI observation only, not a permanent security-vendor approval or cross-wallet guarantee.",
     "No third-party audit has been completed."
   ],
   "doNotClaim": [
-    "Blockaid or MetaMask warning removal before visible confirmation",
+    "security-vendor approval, permanent warning-free status, or cross-wallet warning removal before vendor/current wallet UI confirms it",
     "BaseScan token profile approval before BaseScan publishes it",
     "CoinGecko or CoinMarketCap listing before publication",
     "external audit completion before an independent report is published",

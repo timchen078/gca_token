@@ -100,9 +100,11 @@
         "supplyDisclosureStatus": "public-supply-disclosure-published",
         "geckoTerminalStatus": "approved-2026-05-11",
         "baseScanTokenProfileStatus": "resubmitted-awaiting-review",
-        "blockaidMetaMaskStatus": "submitted-warning-removal-not-confirmed",
-        "walletWarningEvidenceStatus": "warning-report-submitted-removal-not-confirmed",
-        "thirdPartyAuditStatus": "not-completed"
+        "blockaidMetaMaskStatus": "owner-observed-no-warning-visible",
+        "walletWarningEvidenceStatus": "warning-report-submitted-owner-observed-no-warning-visible",
+        "thirdPartyAuditStatus": "not-completed",
+        "walletWarningOwnerObservationDate": "2026-05-14",
+        "securityVendorApprovalConfirmed": false
       }
     }
   ]

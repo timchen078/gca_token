@@ -1,6 +1,6 @@
 {
   "documentStatus": "prepared",
-  "lastReviewedDate": "2026-05-12",
+  "lastReviewedDate": "2026-05-14",
   "canonicalIdentity": {
     "network": "Base Mainnet",
     "chainId": 8453,
@@ -50,11 +50,14 @@
       "nextAction": "Wait for BaseScan email/review; do not submit duplicates unless BaseScan asks for corrections."
     },
     "blockaid": {
-      "reportStatus": "submitted-warning-removal-not-confirmed",
+      "reportStatus": "owner-observed-no-warning-visible",
       "submissionDate": "2026-05-10",
       "followUpSubmissionDate": "2026-05-13",
       "followUpSubmissionResult": "Blockaid support portal returned HTTP 200 OK",
-      "nextAction": "Recheck wallet and Uniswap warning UI. Do not submit another duplicate unless Blockaid, MetaMask, or Uniswap asks for more information."
+      "nextAction": "Keep monitoring wallet and Uniswap warning UI. Do not submit another duplicate unless Blockaid, MetaMask, or Uniswap asks for more information.",
+      "ownerObservationDate": "2026-05-14",
+      "ownerObservationResult": "No wallet risk warning was visible in the tested wallet/DEX flow.",
+      "securityVendorApprovalConfirmed": false
     },
     "geckoTerminal": {
       "profileStatus": "approved",
@@ -84,14 +87,15 @@
     "BaseScan deployer-wallet ownership verification is complete.",
     "The public BaseScan token profile update was returned as information-insufficient on 2026-05-13, resubmitted on 2026-05-13, and is awaiting BaseScan email/review.",
     "GeckoTerminal token information was approved on 2026-05-11.",
-    "A Blockaid false-positive report was submitted on 2026-05-10 and a follow-up was submitted on 2026-05-13, but wallet-warning removal is not confirmed.",
+    "Owner reported on 2026-05-14 that no wallet risk warning was visible in the tested wallet/DEX flow.",
     "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool.",
     "Current liquidity is starter-depth only, and trades can have high price impact and slippage.",
+    "This is an owner-visible UI observation only, not a permanent security-vendor approval or cross-wallet guarantee.",
     "No third-party audit has been completed."
   ],
   "doNotClaim": [
     "BaseScan token profile approval before publication",
-    "Blockaid or MetaMask warning removal before visible confirmation",
+    "security-vendor approval, permanent warning-free status, or cross-wallet warning removal before vendor/current wallet UI confirms it",
     "CoinGecko or CoinMarketCap listing before publication",
     "locked reserve before on-chain custody change",
     "external audit completion before an independent report is commissioned and published",
@@ -104,7 +108,7 @@
     "useCase": "Public reviewer summary for BaseScan, Blockaid / MetaMask, GeckoTerminal, DEX Screener, CoinGecko, CoinMarketCap, and audit status."
   },
   "publicWalletWarningEvidence": {
-    "status": "warning-report-submitted-removal-not-confirmed",
+    "status": "warning-report-submitted-owner-observed-no-warning-visible",
     "publicPageUrl": "https://gcagochina.com/wallet-warning.html",
     "publicUrl": "https://gcagochina.com/wallet-warning.json",
     "useCase": "Public evidence packet for Blockaid, MetaMask, Uniswap, and wallet-security follow-up."

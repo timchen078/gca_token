@@ -1,14 +1,14 @@
 {
   "schema": "https://gcagochina.com/wallet-warning.json",
   "pageUrl": "https://gcagochina.com/wallet-warning.html",
-  "lastUpdated": "2026-05-12",
+  "lastUpdated": "2026-05-14",
   "projectName": "GCA",
   "tokenSymbol": "GCA",
   "network": "Base Mainnet",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
-  "status": "warning-report-submitted-removal-not-confirmed",
-  "summary": "GCA wallet-warning evidence is centralized here for wallet security vendors, DEX interfaces, reviewers, and community moderators. It records the Blockaid report, contract facts, current official market route, historical functional swap evidence, and public claim boundaries.",
+  "status": "warning-report-submitted-owner-observed-no-warning-visible",
+  "summary": "GCA wallet-warning evidence is centralized here for wallet security vendors, DEX interfaces, reviewers, and community moderators. It records the Blockaid report, owner-observed wallet UI state, contract facts, current official market route, historical functional swap evidence, and public claim boundaries.",
   "officialLinks": {
     "website": "https://gcagochina.com/",
     "verify": "https://gcagochina.com/verify.html",
@@ -45,7 +45,7 @@
     "liquidityDepthStatus": "starter-depth-only"
   },
   "blockaidReport": {
-    "status": "submitted-warning-removal-not-confirmed",
+    "status": "owner-observed-no-warning-visible",
     "submissionDate": "2026-05-10",
     "followUpSubmissionDate": "2026-05-13",
     "followUpSubmissionResult": "Blockaid support portal returned HTTP 200 OK",
@@ -53,7 +53,10 @@
     "contactEmail": "GCAgochina@outlook.com",
     "reportedDomain": "gcagochina.com",
     "reportedWalletSurface": "MetaMask / Uniswap token warning",
-    "nextAction": "Recheck the wallet and DEX warning UI before claiming any warning change."
+    "nextAction": "Keep monitoring wallet and DEX warning UI; do not claim security-vendor approval or permanent warning-free status unless a vendor confirms it.",
+    "ownerObservationDate": "2026-05-14",
+    "ownerObservationResult": "No wallet risk warning was visible in the tested wallet/DEX flow.",
+    "securityVendorApprovalConfirmed": false
   },
   "contractFacts": {
     "sourceVerifiedOnBaseScan": true,
@@ -79,12 +82,13 @@
       "0x0ff618062abc6e28933699d4e3bd723026f8505e4a0155db3068073b6fdc86e7",
       "0x2698cee454d22a7977231e7e57173038647c07261c09d8a93260bcbf0cc2d71e"
     ],
-    "scope": "These transactions support only a narrow functional claim that small Base Mainnet DEX buys and sells were observed. They are not current official market links and do not prove mature liquidity, organic demand, audit completion, listing acceptance, or warning removal."
+    "scope": "These transactions support only a narrow functional claim that small Base Mainnet DEX buys and sells were observed. They are not current official market links and do not prove mature liquidity, organic demand, audit completion, listing acceptance, or security-vendor approval."
   },
   "publicClaimBoundaries": {
     "safeClaims": [
       "A Blockaid false-positive report was submitted on 2026-05-10 and a follow-up with current GCA/USDT links and buy/sell evidence was submitted on 2026-05-13.",
-      "Wallet-warning removal is not confirmed.",
+      "Owner reported on 2026-05-14 that no wallet risk warning was visible in the tested wallet/DEX flow.",
+      "This is an owner-visible UI observation only, not a permanent security-vendor approval or cross-wallet guarantee.",
       "BaseScan source verification is complete.",
       "GCA has fixed total supply and no post-deployment mint function.",
       "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool.",
@@ -92,17 +96,24 @@
       "No third-party audit has been completed."
     ],
     "doNotClaim": [
-      "Blockaid or MetaMask warning removal before visible confirmation",
+      "security-vendor approval, permanent warning-free status, or cross-wallet warning removal before vendor/current wallet UI confirms it",
       "security-vendor approval before the vendor confirms it",
       "third-party audit completion before an independent report is published",
-      "deep liquidity, price support, return promises, or warning-free status",
-      "CoinGecko or CoinMarketCap listing before publication"
+      "CoinGecko or CoinMarketCap listing before publication",
+      "deep liquidity, price support, or return promises"
     ]
   },
   "nextActions": [
     "Use this page and JSON if Blockaid or a wallet-security reviewer asks for more evidence.",
     "Keep the official GCA/USDT market route live and consistent.",
     "Do not send repeated duplicate reports unless Blockaid or a wallet provider asks for more information.",
-    "Recheck wallet UI before making any public warning-status update."
-  ]
+    "Recheck wallet UI periodically before making any future warning-status update."
+  ],
+  "ownerObservation": {
+    "observationDate": "2026-05-14",
+    "observer": "owner",
+    "observedSurface": "MetaMask / DEX token flow",
+    "result": "no-wallet-risk-warning-visible-in-tested-flow",
+    "scope": "This is an owner-visible UI observation only, not a permanent security-vendor approval or cross-wallet guarantee."
+  }
 }

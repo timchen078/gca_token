@@ -10,7 +10,7 @@ Submission confirmation page: `https://report.blockaid.io/submittionSuccessfully
 
 Observed confirmation text: `Report Sent` and `Thank you for reporting! We'll review it thoroughly`.
 
-This report is for risk-provider review only. It is not a claim that the warning has been removed.
+This report is for risk-provider review only. The owner later observed no wallet risk warning visible on 2026-05-14, but that is not a claim of permanent security-vendor approval.
 
 ## Form Values
 

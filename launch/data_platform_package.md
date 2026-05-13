@@ -158,7 +158,7 @@ Use `launch/external_review_followup_tracker.md` before any BaseScan, Blockaid, 
 
 Use `https://gcagochina.com/listing-readiness.html` and `https://gcagochina.com/listing-readiness.json` as the public tracked-listing gate before any CoinGecko, CoinMarketCap, centralized exchange, or paid listing outreach. Current tracked listing submissions should remain deferred until legitimate liquidity depth, public activity, and exchange volume are stronger.
 
-Use `https://gcagochina.com/roadmap.html` and `https://gcagochina.com/roadmap.json` when reviewers or community moderators ask what is live now, what depends on external services, and what cannot be claimed yet. The roadmap keeps public self-service member claiming, BaseScan token profile publication, wallet-warning removal, third-party audit completion, and tracked listings marked as unresolved until the relevant condition is confirmed.
+Use `https://gcagochina.com/roadmap.html` and `https://gcagochina.com/roadmap.json` when reviewers or community moderators ask what is live now, what depends on external services, and what cannot be claimed yet. The roadmap keeps public self-service member claiming, BaseScan token profile publication, security-vendor approval, third-party audit completion, and tracked listings marked as unresolved until the relevant condition is confirmed.
 
 Use `https://gcagochina.com/community.html` and `https://gcagochina.com/community.json` when preparing Telegram posts, answering community questions, or giving moderators copyable replies. It provides official links, safe announcement copy, wallet-warning and price-display responses, and clear boundaries against unsupported claims.
 

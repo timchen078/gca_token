@@ -209,7 +209,7 @@
       "nextAction": "Use this public proof set for deployment, source verification, reserve transfer, official market, and functional swap evidence."
     },
     "walletWarningEvidence": {
-      "status": "warning-report-submitted-removal-not-confirmed",
+      "status": "warning-report-submitted-owner-observed-no-warning-visible",
       "pageUrl": "https://gcagochina.com/wallet-warning.html",
       "url": "https://gcagochina.com/wallet-warning.json",
       "nextAction": "Use this page if Blockaid, MetaMask, Uniswap, or another wallet-security reviewer asks for public evidence."

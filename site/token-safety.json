@@ -1,7 +1,7 @@
 {
   "schema": "https://gcagochina.com/token-safety.json",
   "pageUrl": "https://gcagochina.com/token-safety.html",
-  "lastUpdated": "2026-05-13",
+  "lastUpdated": "2026-05-14",
   "status": "public-token-safety-checklist-published",
   "projectName": "GCA",
   "tokenSymbol": "GCA",
@@ -23,12 +23,13 @@
   },
   "pendingOrNotClaimed": {
     "baseScanTokenProfile": "resubmitted-awaiting-review",
-    "blockaidMetaMaskWarning": "submitted-warning-removal-not-confirmed",
+    "blockaidMetaMaskWarning": "owner-observed-no-warning-visible",
     "thirdPartyAudit": "not-completed",
     "ownerReserveCustody": "normal-owner-controlled-wallet-not-lock-vesting-or-multisig",
     "liquidityDepth": "starter-depth-only",
     "coinGeckoTrackedListing": "deferred",
-    "coinMarketCapTrackedListing": "deferred"
+    "coinMarketCapTrackedListing": "deferred",
+    "securityVendorApproval": "not-confirmed"
   },
   "officialMarket": {
     "pair": "GCA/USDT",
@@ -66,11 +67,12 @@
       "GCA has fixed total supply and no post-deployment mint function.",
       "The GCA token contract has no token tax, no blacklist, no proxy, no pause, no owner/admin role, and no withdrawal path.",
       "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool.",
-      "No third-party audit has been completed."
+      "No third-party audit has been completed.",
+      "Owner reported on 2026-05-14 that no wallet risk warning was visible in the tested wallet/DEX flow.",
+      "This is an owner-visible UI observation only, not a permanent security-vendor approval or cross-wallet guarantee."
     ],
     "doNotClaim": [
-      "Blockaid or MetaMask warning removal before visible confirmation",
-      "warning-free status before wallet-security vendors confirm it",
+      "security-vendor approval, permanent warning-free status, or cross-wallet warning removal before vendor/current wallet UI confirms it",
       "third-party audit completion before an independent report is published",
       "locked reserve before on-chain custody changes",
       "deep liquidity, price support, return promises, or listing approval"
