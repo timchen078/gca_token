@@ -458,6 +458,10 @@ def validate_community_page(text: str) -> None:
     assert_contains(text, "Community JSON", label)
     assert_contains(text, "Official Telegram", label)
     assert_contains(text, "Safe Announcement Copy", label)
+    assert_contains(text, "X Launch Pack", label)
+    assert_contains(text, "First X Post Draft", label)
+    assert_contains(text, "Pinned X Post Draft", label)
+    assert_contains(text, "Prepared, not posted", label)
     assert_contains(text, "Moderator replies", label)
     assert_contains(text, "Wallet Warning Reply", label)
     assert_contains(text, "Price Display Reply", label)
@@ -466,6 +470,7 @@ def validate_community_page(text: str) -> None:
     assert_contains(text, "private keys, seed phrases, exchange API secrets", label)
     assert_contains(text, "Base Mainnet / chainId 8453", label)
     assert_contains(text, "https://t.me/gcagochinaofficial", label)
+    assert_contains(text, X_URL, label)
     assert_contains(text, MAINNET_ADDRESS, label)
     assert_current_pool_text(text, label)
 
@@ -476,6 +481,7 @@ def validate_community_json(text: str) -> None:
     market = payload.get("officialMarket", {})
     links = payload.get("publicLinks", {})
     templates = payload.get("moderatorReplyTemplates", {})
+    x_launch = payload.get("xLaunchPack", {})
 
     if payload.get("schema") != COMMUNITY_URL:
         raise SiteCheckError(f"{label}: wrong schema")
@@ -507,6 +513,18 @@ def validate_community_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing narrative announcement")
     if not any("Weekly Go China Radar: https://gcagochina.com/radar.html" in item for item in payload.get("safeAnnouncement", [])):
         raise SiteCheckError(f"{label}: missing weekly radar announcement")
+    if x_launch.get("status") != "prepared-not-posted":
+        raise SiteCheckError(f"{label}: wrong xLaunchPack status")
+    if x_launch.get("officialProfile") != X_URL:
+        raise SiteCheckError(f"{label}: wrong xLaunchPack officialProfile")
+    if x_launch.get("profilePhotoAsset") != "https://gcagochina.com/assets/gca-logo.png":
+        raise SiteCheckError(f"{label}: wrong xLaunchPack profilePhotoAsset")
+    if not any("GCA | Go China Access is live on Base Mainnet" in item for item in x_launch.get("firstPostDraft", [])):
+        raise SiteCheckError(f"{label}: missing X first post draft")
+    if not any("Verify: https://gcagochina.com/verify.html" in item for item in x_launch.get("pinnedPostDraft", [])):
+        raise SiteCheckError(f"{label}: missing X pinned post draft")
+    if not any("Do not post market-price claims" in item for item in x_launch.get("postingChecklist", [])):
+        raise SiteCheckError(f"{label}: missing X posting checklist boundary")
     if "walletWarning" not in templates:
         raise SiteCheckError(f"{label}: missing wallet warning template")
     if "priceDisplay" not in templates:

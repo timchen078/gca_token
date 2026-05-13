@@ -67,6 +67,7 @@ Deployment notes are in `docs/deploy_base_sepolia.md` and `docs/deploy_base_main
 - Public token safety checklist page: `site/token-safety.html`
 - Public token safety checklist JSON: `site/token-safety.json`
 - Telegram channel runbook: `launch/telegram_channel_runbook.md`
+- X profile runbook: `launch/x_profile_runbook.md`
 - Audit scope: `launch/audit_scope.md`
 - Internal security review: `audit/gca_internal_security_review.md`
 - Launch status: `launch/launch_status.md`

@@ -45,7 +45,7 @@
 - Browser-only read-only GCA balance preview added to `https://gcagochina.com/members.html` using MetaMask `eth_call` / ERC-20 `balanceOf`; it does not sign messages, send transactions, submit packets, or create ledger records.
 - Public support intake page and JSON prepared at `https://gcagochina.com/support.html` and `https://gcagochina.com/support.json` for support routing, safe packet handling, wallet-warning evidence, and no-sensitive-data boundaries.
 - Public roadmap page and JSON prepared at `https://gcagochina.com/roadmap.html` and `https://gcagochina.com/roadmap.json` for concept-stage utility buildout, support intake, member verification, Web3 Radar access planning, external dependencies, and public claim boundaries.
-- Public community kit page and JSON prepared at `https://gcagochina.com/community.html` and `https://gcagochina.com/community.json` for official Telegram links, safe announcement copy, moderator replies, and community claim boundaries.
+- Public community kit page and JSON prepared at `https://gcagochina.com/community.html` and `https://gcagochina.com/community.json` for official Telegram and X links, safe announcement copy, X launch post drafts, moderator replies, and community claim boundaries.
 - Public narrative system page and JSON prepared at `https://gcagochina.com/narrative.html` and `https://gcagochina.com/narrative.json` for Go China Access, China Narrative Radar, Liquidation Replay, ENTRY_READY Review, GCA Member Club, and Risk First Trading public language.
 - Weekly Go China Radar pilot page and JSON prepared at `https://gcagochina.com/radar.html` and `https://gcagochina.com/radar.json` as the first reusable content format for narrative research and risk education.
 - Public privacy notice and participation terms prepared at `https://gcagochina.com/privacy.html`, `https://gcagochina.com/privacy.json`, `https://gcagochina.com/terms.html`, and `https://gcagochina.com/terms.json` for pre-registration data handling, wallet verification boundaries, and planned account-level service access.
@@ -76,6 +76,8 @@
 - Official Telegram channel photo updated and first public announcement posted on 2026-05-09.
 - First official Telegram announcement pinned on 2026-05-10.
 - Telegram channel runbook prepared.
+- Official X profile configured at `https://x.com/XXYRadar`.
+- X profile runbook and first-post / pinned-post drafts prepared at `launch/x_profile_runbook.md`; no official X post has been published or pinned yet.
 - Small historical Base Mainnet Uniswap v3 GCA/WETH buy/sell functional swap tests observed on 2026-05-10 and documented in `launch/swap_test_evidence.md`; current public market links remain centralized on the GCA/USDT pool.
 - Blockaid false-positive report submitted on 2026-05-10 for the MetaMask/Uniswap suspected-honeypot warning.
 - Blockaid false-positive follow-up submitted on 2026-05-13 with current GCA/USDT links, public wallet-warning evidence, and historical buy/sell test transactions; the Blockaid support portal returned HTTP 200 OK.
@@ -100,7 +102,7 @@
 - Use `https://gcagochina.com/support.html` for official support routing, member packet handling, wallet-warning evidence intake, and data-platform correction context.
 - Use `https://gcagochina.com/support.json` when reviewers, moderators, or integration code need machine-readable support intake boundaries.
 - Use `https://gcagochina.com/roadmap.html` and `https://gcagochina.com/roadmap.json` when community members, moderators, or data reviewers ask what is live now, what is next, and what claims must remain off-limits.
-- Use `https://gcagochina.com/community.html` and `https://gcagochina.com/community.json` before posting Telegram announcements, preparing moderator replies, or giving community members official links.
+- Use `https://gcagochina.com/community.html`, `https://gcagochina.com/community.json`, and `launch/x_profile_runbook.md` before posting Telegram or X announcements, preparing moderator replies, or giving community members official links.
 - Use `https://gcagochina.com/privacy.html` before collecting member pre-registration packets or answering questions about data handling, custody, and wallet verification.
 - Use `https://gcagochina.com/terms.html` before answering questions about participation boundaries, planned credits, GCA Member status, or the no-custody/no-outcome-promise boundary.
 - If BaseScan asks for supply details during review, use the updated 40/60 allocation and both reserve transfer transactions.
@@ -123,6 +125,7 @@
 - Deploy the Web3 Radar GCA intake behind the same official HTTPS origin or a reviewed reverse proxy before enabling the public `Submit Packet` button.
 - Add the official Telegram and X links to any BaseScan or GeckoTerminal follow-up if those reviewers ask for social links.
 - Replace the Telegram pinned message with `launch/telegram_pinned_buy_announcement.md` when ready.
+- Publish the prepared X first post only after confirming the profile photo, website field, and verification link; pin only the official links post after it is live.
 - Move the owner reserve to a Safe multisig or lock/vesting contract if stronger reserve assurances are needed.
 - Archive any audit quote replies from QuillAudits, Hacken, or OpenZeppelin; do not approve payment while audit is deferred.
 - Reopen third-party audit only if user trust, listings, partners, or larger liquidity make an external report necessary.

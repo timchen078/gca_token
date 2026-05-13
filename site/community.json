@@ -29,6 +29,39 @@
     "Official X: https://x.com/XXYRadar",
     "Current status: concept-stage utility buildout; public self-service member claiming is not live yet, BaseScan token profile was returned as information-insufficient on 2026-05-13 and resubmitted on 2026-05-13, wallet-warning removal is not confirmed, and no third-party audit has been completed."
   ],
+  "xLaunchPack": {
+    "status": "prepared-not-posted",
+    "officialProfile": "https://x.com/XXYRadar",
+    "displayName": "GCA | Go China Access",
+    "website": "https://gcagochina.com",
+    "profilePhotoAsset": "https://gcagochina.com/assets/gca-logo.png",
+    "firstPostDraft": [
+      "GCA | Go China Access is live on Base Mainnet.",
+      "Verify official links before interacting: https://gcagochina.com/verify.html",
+      "Contract: 0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+      "Official market route: GCA/USDT",
+      "Concept-stage utility buildout. No financial advice."
+    ],
+    "threadFollowUpDrafts": [
+      "GCA is building around Go China Access, China Narrative Radar, Liquidation Replay, ENTRY_READY Review, GCA Member Club, and risk-first Web3 education. Roadmap: https://gcagochina.com/roadmap.html Weekly Radar: https://gcagochina.com/radar.html",
+      "Risk notes: GCA is on Base Mainnet only. No third-party audit has been completed. Liquidity is starter-depth only. Wallet-warning removal is not confirmed. Check the verification page before using any link or pool."
+    ],
+    "pinnedPostDraft": [
+      "Official GCA links",
+      "Website: https://gcagochina.com/",
+      "Verify: https://gcagochina.com/verify.html",
+      "Buy guide: https://gcagochina.com/buy.html",
+      "Community: https://t.me/gcagochinaofficial",
+      "Base Mainnet only. No third-party audit. Starter-depth liquidity."
+    ],
+    "postingChecklist": [
+      "Confirm the visible handle is @XXYRadar.",
+      "Confirm the website field points to https://gcagochina.com.",
+      "Use the GCA logo asset before posting if the profile photo is still blank.",
+      "Pin only the official links post after it is live.",
+      "Do not post market-price claims, external audit claims, warning-removal claims, or listing-approval claims."
+    ]
+  },
   "moderatorReplyTemplates": {
     "walletWarning": "A Blockaid / MetaMask false-positive report was submitted on 2026-05-10, but warning removal is not confirmed. Verify the contract, pool, and official links before taking any action.",
     "priceDisplay": "Wallets and data platforms decide when to index prices. The official market route is GCA/USDT on Base Mainnet, and current liquidity remains starter-depth only.",
