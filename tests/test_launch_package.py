@@ -982,7 +982,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("BaseScan token profile", verify)
         self.assertIn("Resubmitted: awaiting review", verify)
         self.assertIn("Approved 2026-05-11", verify)
-        self.assertIn("Submitted 2026-05-10; removal not confirmed", verify)
+        self.assertIn("Follow-up submitted 2026-05-13; removal not confirmed", verify)
         self.assertIn("Third-party audit", verify)
         self.assertIn("Not completed", verify)
         self.assertIn("Starter-depth only; high slippage possible", verify)
@@ -1611,7 +1611,7 @@ class LaunchPackageTests(unittest.TestCase):
 
         self.assertIn("GCA Wallet Warning Evidence", page)
         self.assertIn("Wallet Warning JSON", page)
-        self.assertIn("Submitted 2026-05-10", page)
+        self.assertIn("Follow-up submitted 2026-05-13", page)
         self.assertIn("Not confirmed", page)
         self.assertIn("Verified on BaseScan", page)
         self.assertIn("Contract Facts For Review", page)
@@ -1642,6 +1642,11 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(evidence["currentOfficialMarket"]["quoteAssetAddress"], BASE_USDT_ADDRESS)
         self.assertEqual(evidence["blockaidReport"]["status"], "submitted-warning-removal-not-confirmed")
         self.assertEqual(evidence["blockaidReport"]["submissionDate"], "2026-05-10")
+        self.assertEqual(evidence["blockaidReport"]["followUpSubmissionDate"], "2026-05-13")
+        self.assertEqual(
+            evidence["blockaidReport"]["followUpSubmissionResult"],
+            "Blockaid support portal returned HTTP 200 OK",
+        )
         self.assertTrue(evidence["contractFacts"]["sourceVerifiedOnBaseScan"])
         self.assertFalse(evidence["contractFacts"]["postDeploymentMintFunction"])
         self.assertFalse(evidence["contractFacts"]["ownerOrAdminRole"])
@@ -1766,7 +1771,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("External Reviews JSON", page)
         self.assertIn("BaseScan source code verification", page)
         self.assertIn("Resubmitted: awaiting review", page)
-        self.assertIn("Submitted 2026-05-10; removal not confirmed", page)
+        self.assertIn("Follow-up submitted 2026-05-13; removal not confirmed", page)
         self.assertIn("Approved 2026-05-11", page)
         self.assertIn("CoinGecko tracked listing submission", page)
         self.assertIn("CoinMarketCap tracked listing submission", page)
@@ -1796,6 +1801,12 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(reviews["reviews"]["baseScanOwnership"]["status"], "verified")
         self.assertEqual(reviews["reviews"]["baseScanTokenProfile"]["status"], "resubmitted-awaiting-review")
         self.assertEqual(reviews["reviews"]["blockaidMetaMask"]["status"], "submitted-warning-removal-not-confirmed")
+        self.assertEqual(reviews["reviews"]["blockaidMetaMask"]["submissionDate"], "2026-05-10")
+        self.assertEqual(reviews["reviews"]["blockaidMetaMask"]["followUpSubmissionDate"], "2026-05-13")
+        self.assertEqual(
+            reviews["reviews"]["blockaidMetaMask"]["followUpSubmissionResult"],
+            "Blockaid support portal returned HTTP 200 OK",
+        )
         self.assertEqual(reviews["reviews"]["geckoTerminal"]["status"], "approved")
         self.assertEqual(reviews["reviews"]["geckoTerminal"]["approvalDate"], "2026-05-11")
         self.assertEqual(reviews["reviews"]["dexScreener"]["status"], "discoverable-through-gca-usdt-pool")
@@ -2308,8 +2319,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("buy/sell functional swap tests observed on 2026-05-10", status)
         self.assertIn("launch/swap_test_evidence.md", status)
         self.assertIn("Blockaid false-positive report submitted on 2026-05-10", status)
+        self.assertIn("Blockaid false-positive follow-up submitted on 2026-05-13", status)
         self.assertIn("Blockaid follow-up context updated to use the current GCA/USDT pool", status)
-        self.assertIn("does not mean the warning has been removed", status)
+        self.assertIn("do not mean the warning has been removed", status)
         self.assertIn("must not be described as proof of organic volume", status)
         self.assertIn("Third-party audit quote requests submitted to QuillAudits, Hacken, and OpenZeppelin on 2026-05-10", status)
         self.assertIn("Owner decided on 2026-05-10 to defer third-party audit", status)
@@ -2591,6 +2603,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("launch/basescan_resubmission_values.json", tracker)
         self.assertIn("cxy070800@gmail.com", tracker)
         self.assertIn("False-positive report submitted on 2026-05-10", tracker)
+        self.assertIn("follow-up submitted on 2026-05-13", tracker)
         self.assertIn("warning removal not confirmed", tracker)
         self.assertIn("Token information update approved on 2026-05-11", tracker)
         self.assertIn("GCAgochina@outlook.com", tracker)
@@ -2646,6 +2659,12 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["platforms"]["baseScan"]["replyInbox"], "cxy070800@gmail.com")
         self.assertIn("Wait for BaseScan email/review", values["platforms"]["baseScan"]["nextAction"])
         self.assertEqual(values["platforms"]["blockaid"]["reportStatus"], "submitted-warning-removal-not-confirmed")
+        self.assertEqual(values["platforms"]["blockaid"]["submissionDate"], "2026-05-10")
+        self.assertEqual(values["platforms"]["blockaid"]["followUpSubmissionDate"], "2026-05-13")
+        self.assertEqual(
+            values["platforms"]["blockaid"]["followUpSubmissionResult"],
+            "Blockaid support portal returned HTTP 200 OK",
+        )
         self.assertEqual(values["platforms"]["geckoTerminal"]["profileStatus"], "approved")
         self.assertEqual(values["platforms"]["geckoTerminal"]["approvalDate"], "2026-05-11")
         self.assertEqual(values["platforms"]["geckoTerminal"]["submissionEmail"], "GCAgochina@outlook.com")

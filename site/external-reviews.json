@@ -66,7 +66,9 @@
     "blockaidMetaMask": {
       "status": "submitted-warning-removal-not-confirmed",
       "submissionDate": "2026-05-10",
-      "publicClaim": "A Blockaid false-positive report was submitted on 2026-05-10, but wallet-warning removal is not confirmed.",
+      "followUpSubmissionDate": "2026-05-13",
+      "followUpSubmissionResult": "Blockaid support portal returned HTTP 200 OK",
+      "publicClaim": "A Blockaid false-positive report was submitted on 2026-05-10 and a follow-up was submitted on 2026-05-13, but wallet-warning removal is not confirmed.",
       "nextAction": "Recheck wallet and Uniswap warning UI before any public claim that the warning changed."
     },
     "geckoTerminal": {

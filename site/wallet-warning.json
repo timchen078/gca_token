@@ -42,6 +42,8 @@
   "blockaidReport": {
     "status": "submitted-warning-removal-not-confirmed",
     "submissionDate": "2026-05-10",
+    "followUpSubmissionDate": "2026-05-13",
+    "followUpSubmissionResult": "Blockaid support portal returned HTTP 200 OK",
     "submittedThrough": "https://report.blockaid.io/mistake",
     "contactEmail": "GCAgochina@outlook.com",
     "reportedDomain": "gcagochina.com",
@@ -76,7 +78,7 @@
   },
   "publicClaimBoundaries": {
     "safeClaims": [
-      "A Blockaid false-positive report was submitted on 2026-05-10.",
+      "A Blockaid false-positive report was submitted on 2026-05-10 and a follow-up with current GCA/USDT links and buy/sell evidence was submitted on 2026-05-13.",
       "Wallet-warning removal is not confirmed.",
       "BaseScan source verification is complete.",
       "GCA has fixed total supply and no post-deployment mint function.",
@@ -93,7 +95,7 @@
     ]
   },
   "nextActions": [
-    "Use this page and JSON in any Blockaid or wallet-security follow-up.",
+    "Use this page and JSON if Blockaid or a wallet-security reviewer asks for more evidence.",
     "Keep the official GCA/USDT market route live and consistent.",
     "Do not send repeated duplicate reports unless Blockaid or a wallet provider asks for more information.",
     "Recheck wallet UI before making any public warning-status update."

@@ -43,7 +43,7 @@ Use this file as the single operating checklist for external review, wallet-warn
 | Platform | Current status | Contact / inbox | Next action |
 | --- | --- | --- | --- |
 | BaseScan token profile | Submitted on 2026-05-09, returned by BaseScan as information-insufficient on 2026-05-13, and resubmitted on 2026-05-13 | `cxy070800@gmail.com` / `GCAgochina@outlook.com` | Wait for BaseScan email/review; do not submit duplicates unless BaseScan asks for corrections. |
-| Blockaid / MetaMask warning | False-positive report submitted on 2026-05-10; warning removal not confirmed | Owner browser / wallet UI | Recheck the wallet and Uniswap warning UI. If the warning remains after several business days, send one follow-up with buy/sell test evidence and official links. |
+| Blockaid / MetaMask warning | False-positive report submitted on 2026-05-10; follow-up submitted on 2026-05-13; warning removal not confirmed | Owner browser / wallet UI / `GCAgochina@outlook.com` | Recheck the wallet and Uniswap warning UI. Do not submit another duplicate unless Blockaid, MetaMask, or Uniswap asks for more information. |
 | GeckoTerminal | Token information update approved on 2026-05-11 | `GCAgochina@outlook.com` | No duplicate update unless official details change or GeckoTerminal asks for a correction. |
 | DEX Screener | Discoverable through the live GCA/USDT pool | Not submitted as a direct paid metadata update | Keep the GCA/USDT pool, website, token list, and GeckoTerminal data consistent. |
 | CoinGecko | Not submitted | Not applicable yet | Wait for stronger liquidity, organic holders, public activity, and BaseScan profile publication. |
@@ -62,7 +62,7 @@ Use this file as the single operating checklist for external review, wallet-warn
 ## Weekly Check
 
 1. Recheck MetaMask or Uniswap risk warning state for the GCA token.
-2. If the Blockaid warning is still visible, prepare a short follow-up using the template below and attach the existing buy/sell test evidence.
+2. If the Blockaid warning is still visible, do not submit another duplicate report unless Blockaid, MetaMask, or Uniswap asks for more information.
 3. Recheck GeckoTerminal, DEX Screener, and BaseScan links for broken URLs or stale pool references.
 4. Re-evaluate CoinGecko and CoinMarketCap readiness only after there is stronger public activity and market depth.
 5. Use the market quality page before presenting market-growth updates; do not use artificial activity, self-trading, wash trading, or misleading volume.
@@ -73,7 +73,7 @@ Use this file as the single operating checklist for external review, wallet-warn
 - BaseScan deployer-wallet ownership verification is complete.
 - The public BaseScan token profile update was returned as information-insufficient on 2026-05-13, resubmitted on 2026-05-13, and is awaiting BaseScan email/review.
 - GeckoTerminal token information was approved on 2026-05-11.
-- A Blockaid false-positive report was submitted on 2026-05-10, but wallet-warning removal is not confirmed.
+- A Blockaid false-positive report was submitted on 2026-05-10 and a follow-up was submitted on 2026-05-13, but wallet-warning removal is not confirmed.
 - The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool.
 - Current liquidity is starter-depth only, and trades can have high price impact and slippage.
 - No third-party audit has been completed.
@@ -115,7 +115,7 @@ Please let us know if any field correction or additional verification is require
 
 ## Blockaid Follow-Up Template
 
-Use this if the warning remains visible after the initial report has had time to be reviewed.
+This follow-up was submitted on 2026-05-13 through the Blockaid support portal and returned HTTP 200 OK. Keep the template below only for reference or if Blockaid asks for the same content again.
 
 ```text
 Hello Blockaid team,

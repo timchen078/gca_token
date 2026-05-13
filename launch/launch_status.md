@@ -71,6 +71,7 @@
 - Telegram channel runbook prepared.
 - Small historical Base Mainnet Uniswap v3 GCA/WETH buy/sell functional swap tests observed on 2026-05-10 and documented in `launch/swap_test_evidence.md`; current public market links remain centralized on the GCA/USDT pool.
 - Blockaid false-positive report submitted on 2026-05-10 for the MetaMask/Uniswap suspected-honeypot warning.
+- Blockaid false-positive follow-up submitted on 2026-05-13 with current GCA/USDT links, public wallet-warning evidence, and historical buy/sell test transactions; the Blockaid support portal returned HTTP 200 OK.
 - Blockaid follow-up context updated to use the current GCA/USDT pool while keeping the old GCA/WETH transactions as historical functional evidence only.
 - Official buy guide page prepared at `https://gcagochina.com/buy.html`.
 - Official market page prepared at `https://gcagochina.com/markets.html` to centralize the GCA/USDT pool, USDT contract, Uniswap, GeckoTerminal, DEX Screener, and market risk disclosures.
@@ -122,7 +123,7 @@
 - Audit quote requests have been submitted and then deferred by owner decision, but quote submission is not an audit and does not allow any public "audited" claim.
 - Current official Uniswap GCA/USDT liquidity is starter-depth only; trades can have high price impact and slippage.
 - Functional buy/sell swap tests do not remove wallet risk warnings and must not be described as proof of organic volume or deep liquidity.
-- Blockaid report submission does not mean the warning has been removed; wait for Blockaid/MetaMask review or verify directly in the wallet UI.
+- Blockaid report and follow-up submission do not mean the warning has been removed; wait for Blockaid/MetaMask review or verify directly in the wallet UI.
 - The owner reserve is in a normal owner-controlled wallet. Do not describe it as locked, vested, or multisig-controlled unless custody changes on-chain.
 - The product direction is still concept-stage. Do not describe GCA as a finished platform or as having guaranteed utility.
 - The Web3 Radar bridge has a local verified-access backend, but public self-service claiming is not live until controlled HTTPS account UI, support rules, and risk disclosures are released.

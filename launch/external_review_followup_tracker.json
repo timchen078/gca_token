@@ -51,7 +51,9 @@
     "blockaid": {
       "reportStatus": "submitted-warning-removal-not-confirmed",
       "submissionDate": "2026-05-10",
-      "nextAction": "Recheck wallet and Uniswap warning UI. If the warning remains after several business days, send one follow-up with buy/sell test evidence and official links."
+      "followUpSubmissionDate": "2026-05-13",
+      "followUpSubmissionResult": "Blockaid support portal returned HTTP 200 OK",
+      "nextAction": "Recheck wallet and Uniswap warning UI. Do not submit another duplicate unless Blockaid, MetaMask, or Uniswap asks for more information."
     },
     "geckoTerminal": {
       "profileStatus": "approved",
@@ -81,7 +83,7 @@
     "BaseScan deployer-wallet ownership verification is complete.",
     "The public BaseScan token profile update was returned as information-insufficient on 2026-05-13, resubmitted on 2026-05-13, and is awaiting BaseScan email/review.",
     "GeckoTerminal token information was approved on 2026-05-11.",
-    "A Blockaid false-positive report was submitted on 2026-05-10, but wallet-warning removal is not confirmed.",
+    "A Blockaid false-positive report was submitted on 2026-05-10 and a follow-up was submitted on 2026-05-13, but wallet-warning removal is not confirmed.",
     "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool.",
     "Current liquidity is starter-depth only, and trades can have high price impact and slippage.",
     "No third-party audit has been completed."

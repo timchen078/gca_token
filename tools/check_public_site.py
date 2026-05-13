@@ -1344,8 +1344,15 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong BaseScan source status")
     if reviews.get("baseScanTokenProfile", {}).get("status") != "resubmitted-awaiting-review":
         raise SiteCheckError(f"{label}: wrong BaseScan profile status")
-    if reviews.get("blockaidMetaMask", {}).get("status") != "submitted-warning-removal-not-confirmed":
+    blockaid = reviews.get("blockaidMetaMask", {})
+    if blockaid.get("status") != "submitted-warning-removal-not-confirmed":
         raise SiteCheckError(f"{label}: wrong Blockaid status")
+    if blockaid.get("submissionDate") != "2026-05-10":
+        raise SiteCheckError(f"{label}: wrong Blockaid submission date")
+    if blockaid.get("followUpSubmissionDate") != "2026-05-13":
+        raise SiteCheckError(f"{label}: wrong Blockaid follow-up date")
+    if blockaid.get("followUpSubmissionResult") != "Blockaid support portal returned HTTP 200 OK":
+        raise SiteCheckError(f"{label}: wrong Blockaid follow-up result")
     if reviews.get("geckoTerminal", {}).get("status") != "approved":
         raise SiteCheckError(f"{label}: wrong GeckoTerminal status")
     if reviews.get("coinGecko", {}).get("status") != "deferred":
@@ -1365,7 +1372,7 @@ def validate_external_reviews_page(text: str) -> None:
     assert_contains(text, "Wallet Warning Evidence", label)
     assert_contains(text, "External Reviews JSON", label)
     assert_contains(text, "Resubmitted: awaiting review", label)
-    assert_contains(text, "Submitted 2026-05-10; removal not confirmed", label)
+    assert_contains(text, "Follow-up submitted 2026-05-13; removal not confirmed", label)
     assert_contains(text, "Approved 2026-05-11", label)
     assert_contains(text, "CoinGecko tracked listing submission", label)
     assert_contains(text, "CoinMarketCap tracked listing submission", label)
@@ -1406,6 +1413,12 @@ def validate_wallet_warning_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong quoteAssetAddress")
     if report.get("status") != "submitted-warning-removal-not-confirmed":
         raise SiteCheckError(f"{label}: wrong Blockaid report status")
+    if report.get("submissionDate") != "2026-05-10":
+        raise SiteCheckError(f"{label}: wrong Blockaid submission date")
+    if report.get("followUpSubmissionDate") != "2026-05-13":
+        raise SiteCheckError(f"{label}: wrong Blockaid follow-up date")
+    if report.get("followUpSubmissionResult") != "Blockaid support portal returned HTTP 200 OK":
+        raise SiteCheckError(f"{label}: wrong Blockaid follow-up result")
     if facts.get("sourceVerifiedOnBaseScan") is not True:
         raise SiteCheckError(f"{label}: source verification must be true")
     if facts.get("postDeploymentMintFunction") is not False:
@@ -1430,7 +1443,7 @@ def validate_wallet_warning_page(text: str) -> None:
     label = "/wallet-warning.html"
     assert_contains(text, "GCA Wallet Warning Evidence", label)
     assert_contains(text, "Wallet Warning JSON", label)
-    assert_contains(text, "Submitted 2026-05-10", label)
+    assert_contains(text, "Follow-up submitted 2026-05-13", label)
     assert_contains(text, "Not confirmed", label)
     assert_contains(text, "Verified on BaseScan", label)
     assert_contains(text, "Contract Facts For Review", label)

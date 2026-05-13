@@ -4,6 +4,8 @@
 
 Submitted on 2026-05-10 through the Blockaid `Mistake` false-positive form at `https://report.blockaid.io/mistake` from the owner's browser session.
 
+Follow-up submitted on 2026-05-13 through the Blockaid support portal `submitAddressForm` path with the current GCA/USDT pool links, public wallet-warning evidence page, and buy/sell test transaction evidence. The portal returned `HTTP 200 OK`.
+
 Submission confirmation page: `https://report.blockaid.io/submittionSuccessfully`
 
 Observed confirmation text: `Report Sent` and `Thank you for reporting! We'll review it thoroughly`.
@@ -28,7 +30,7 @@ The original 2026-05-10 report used the then-observed GCA/WETH functional swap e
 - DEX Screener: `https://dexscreener.com/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0`
 - Official markets page: `https://gcagochina.com/markets.html`
 
-Any future Blockaid / MetaMask follow-up should include the current GCA/USDT market route plus the historical buy/sell transactions below as narrow functional evidence only.
+Do not send another duplicate Blockaid / MetaMask follow-up unless Blockaid, MetaMask, or Uniswap asks for more information. If a reviewer asks for evidence, include the current GCA/USDT market route plus the historical buy/sell transactions below as narrow functional evidence only.
 
 ## Submitted Report Message
 
@@ -57,7 +59,7 @@ Please review this as a possible false positive.
 
 ## Current Follow-Up Message Template
 
-Use this only if the warning remains visible after the initial report has had time to be reviewed.
+Submitted on 2026-05-13. Keep this for audit trail and future reviewer replies; do not resubmit it unless a reviewer asks.
 
 ```text
 Hello Blockaid team,
