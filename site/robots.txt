@@ -20,6 +20,7 @@ Allow: /supply.json
 Allow: /member-ledger.html
 Allow: /member-ledger.json
 Allow: /member-program.json
+Allow: /gca/member-access/
 Allow: /support.html
 Allow: /support.json
 Allow: /privacy.html

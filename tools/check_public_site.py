@@ -150,6 +150,8 @@ def validate_markets(text: str) -> None:
 def validate_members(text: str) -> None:
     label = "/members.html"
     assert_contains(text, "GCA Member Pre-Registration", label)
+    assert_contains(text, "member access preview", label)
+    assert_contains(text, "gca/member-access/", label)
     assert_contains(text, "100 Credit Rules", label)
     assert_contains(text, "Member Rules", label)
     assert_contains(text, "Support Workflow", label)
@@ -172,6 +174,30 @@ def validate_members(text: str) -> None:
     assert_not_contains(text, "eth_sendTransaction", label)
     assert_not_contains(text, "personal_sign", label)
     assert_not_contains(text, OLD_WETH_POOL_ADDRESS, label)
+
+
+def validate_member_access_page(text: str) -> None:
+    label = "/gca/member-access/"
+    assert_contains(text, "GCA Member Access Preview", label)
+    assert_contains(text, "static same-origin preview", label)
+    assert_contains(text, "Wallet Balance Preview", label)
+    assert_contains(text, "Packet Review", label)
+    assert_contains(text, "Local Review", label)
+    assert_contains(text, "Access Boundaries", label)
+    assert_contains(text, "Check GCA Balance", label)
+    assert_contains(text, "MetaMask eth_call", label)
+    assert_contains(text, "ERC-20 balanceOf", label)
+    assert_contains(text, "wallet_switchEthereumChain", label)
+    assert_contains(text, "wallet_addEthereumChain", label)
+    assert_contains(text, "10,000 GCA", label)
+    assert_contains(text, "1,000,000 GCA", label)
+    assert_contains(text, "100 Web3 Radar utility credits", label)
+    assert_contains(text, "does not create a live account", label)
+    assert_contains(text, "does not activate GCA Member status", label)
+    assert_not_contains(text, "eth_sendTransaction", label)
+    assert_not_contains(text, "personal_sign", label)
+    assert_not_contains(text, OLD_WETH_POOL_ADDRESS, label)
+    assert_not_contains(text, "GCA/WETH", label)
 
 
 def validate_support_page(text: str) -> None:
@@ -936,6 +962,8 @@ def validate_member_program_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong contractAddress")
     if public_pages.get("memberLedger") != MEMBER_LEDGER_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong memberLedger page")
+    if public_pages.get("memberAccessPreview") != "https://gcagochina.com/gca/member-access/":
+        raise SiteCheckError(f"{label}: wrong memberAccessPreview page")
     if public_pages.get("memberLedgerSchema") != MEMBER_LEDGER_URL:
         raise SiteCheckError(f"{label}: wrong memberLedger schema")
     if public_pages.get("support") != SUPPORT_PAGE_URL:
@@ -1025,6 +1053,8 @@ def validate_member_ledger_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong contractAddress")
     if urls.get("memberProgramRules") != MEMBER_PROGRAM_URL:
         raise SiteCheckError(f"{label}: wrong memberProgramRules")
+    if urls.get("memberAccessPreview") != "https://gcagochina.com/gca/member-access/":
+        raise SiteCheckError(f"{label}: wrong memberAccessPreview")
     if urls.get("memberLedgerPage") != MEMBER_LEDGER_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong memberLedgerPage")
     if urls.get("memberLedgerSchema") != MEMBER_LEDGER_URL:
@@ -1456,6 +1486,7 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/roadmap.json",
         "https://gcagochina.com/community.html",
         "https://gcagochina.com/community.json",
+        "https://gcagochina.com/gca/member-access/",
         "https://gcagochina.com/member-program.json",
         "https://gcagochina.com/member-ledger.html",
         "https://gcagochina.com/member-ledger.json",
@@ -1498,6 +1529,7 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /member-ledger.html", label)
     assert_contains(text, "Allow: /member-ledger.json", label)
     assert_contains(text, "Allow: /member-program.json", label)
+    assert_contains(text, "Allow: /gca/member-access/", label)
     assert_contains(text, "Allow: /support.html", label)
     assert_contains(text, "Allow: /support.json", label)
     assert_contains(text, "Allow: /privacy.html", label)
@@ -1526,6 +1558,7 @@ CHECKS: list[EndpointCheck] = [
     ("/supply.html", validate_supply_page),
     ("/supply.json", validate_supply_json),
     ("/members.html", validate_members),
+    ("/gca/member-access/", validate_member_access_page),
     ("/member-program.json", validate_member_program_json),
     ("/member-ledger.html", validate_member_ledger_page),
     ("/member-ledger.json", validate_member_ledger_json),

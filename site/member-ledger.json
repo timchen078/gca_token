@@ -13,6 +13,7 @@
   },
   "publicUrls": {
     "members": "https://gcagochina.com/members.html",
+    "memberAccessPreview": "https://gcagochina.com/gca/member-access/",
     "memberProgramRules": "https://gcagochina.com/member-program.json",
     "memberLedgerPage": "https://gcagochina.com/member-ledger.html",
     "memberLedgerSchema": "https://gcagochina.com/member-ledger.json",

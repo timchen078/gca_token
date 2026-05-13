@@ -10,6 +10,7 @@
   },
   "publicPages": {
     "members": "https://gcagochina.com/members.html",
+    "memberAccessPreview": "https://gcagochina.com/gca/member-access/",
     "memberLedger": "https://gcagochina.com/member-ledger.html",
     "memberLedgerSchema": "https://gcagochina.com/member-ledger.json",
     "support": "https://gcagochina.com/support.html",
@@ -69,6 +70,7 @@
     "method": "ERC-20 balanceOf read through the Web3 Radar backend after account UI is live",
     "browserPreview": {
       "status": "browser-read-only-preview-live",
+      "pageUrl": "https://gcagochina.com/gca/member-access/",
       "method": "MetaMask eth_call ERC-20 balanceOf on Base Mainnet",
       "ledgerEffect": "none",
       "requiresSignature": false,

@@ -33,6 +33,7 @@ OLD_WETH_POOL_ADDRESS = "0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff"
 WELL_KNOWN_TOKEN_URL = "https://gcagochina.com/.well-known/gca-token.json"
 SECURITY_CONTACT_URL = "https://gcagochina.com/.well-known/security.txt"
 MEMBER_PROGRAM_URL = "https://gcagochina.com/member-program.json"
+MEMBER_ACCESS_PAGE_URL = "https://gcagochina.com/gca/member-access/"
 MEMBER_LEDGER_PAGE_URL = "https://gcagochina.com/member-ledger.html"
 MEMBER_LEDGER_URL = "https://gcagochina.com/member-ledger.json"
 SUPPORT_PAGE_URL = "https://gcagochina.com/support.html"
@@ -102,9 +103,11 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("/onchain-proofs.json", script)
         self.assertIn("/supply.html", script)
         self.assertIn("/supply.json", script)
+        self.assertIn("/gca/member-access/", script)
         self.assertIn("/brand-kit.html", script)
         self.assertIn("/brand-kit.json", script)
         self.assertIn("validate_members", script)
+        self.assertIn("validate_member_access_page", script)
         self.assertIn("validate_member_program_json", script)
         self.assertIn("validate_member_ledger_page", script)
         self.assertIn("validate_member_ledger_json", script)
@@ -154,6 +157,7 @@ class LaunchPackageTests(unittest.TestCase):
         module.validate_brand_kit_page((ROOT / "site" / "brand-kit.html").read_text())
         module.validate_brand_kit_json((ROOT / "site" / "brand-kit.json").read_text())
         module.validate_members((ROOT / "site" / "members.html").read_text())
+        module.validate_member_access_page((ROOT / "site" / "gca" / "member-access" / "index.html").read_text())
         module.validate_member_program_json((ROOT / "site" / "member-program.json").read_text())
         module.validate_member_ledger_page((ROOT / "site" / "member-ledger.html").read_text())
         module.validate_member_ledger_json((ROOT / "site" / "member-ledger.json").read_text())
@@ -323,6 +327,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Allow: /onchain-proofs.json", robots)
         self.assertIn("Allow: /supply.json", robots)
         self.assertIn("Allow: /member-program.json", robots)
+        self.assertIn("Allow: /gca/member-access/", robots)
         self.assertIn("Allow: /member-ledger.html", robots)
         self.assertIn("Allow: /member-ledger.json", robots)
         self.assertIn("Allow: /support.html", robots)
@@ -363,6 +368,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("https://gcagochina.com/security.html", sitemap)
         self.assertIn("https://gcagochina.com/risk.html", sitemap)
         self.assertIn("https://gcagochina.com/faq.html", sitemap)
+        self.assertIn(MEMBER_ACCESS_PAGE_URL, sitemap)
         self.assertIn(MEMBER_PROGRAM_URL, sitemap)
         self.assertIn(MEMBER_LEDGER_PAGE_URL, sitemap)
         self.assertIn(MEMBER_LEDGER_URL, sitemap)
@@ -530,6 +536,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("100 Web3 Radar utility credits", members)
         self.assertIn("1,000,000 GCA", members)
         self.assertIn("GCA Member", members)
+        self.assertIn("member access preview", members)
+        self.assertIn("gca/member-access/", members)
         self.assertIn("Connect Wallet", members)
         self.assertIn("Check On-chain Balance", members)
         self.assertIn("Generate Packet", members)
@@ -581,6 +589,32 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("reviewStatuses", members)
         self.assertIn("ledger_recorded", members)
 
+    def test_member_access_preview_page_is_static_and_safe(self):
+        page = (ROOT / "site" / "gca" / "member-access" / "index.html").read_text()
+
+        self.assertIn("GCA Member Access Preview", page)
+        self.assertIn("static same-origin preview", page)
+        self.assertIn("Wallet Balance Preview", page)
+        self.assertIn("Packet Review", page)
+        self.assertIn("Local Review", page)
+        self.assertIn("Access Boundaries", page)
+        self.assertIn("Check GCA Balance", page)
+        self.assertIn("MetaMask eth_call", page)
+        self.assertIn("ERC-20 balanceOf", page)
+        self.assertIn('method: "eth_call"', page)
+        self.assertIn('method: "wallet_switchEthereumChain"', page)
+        self.assertIn('method: "wallet_addEthereumChain"', page)
+        self.assertIn("10,000 GCA", page)
+        self.assertIn("1,000,000 GCA", page)
+        self.assertIn("100 Web3 Radar utility credits", page)
+        self.assertIn("does not create a live account", page)
+        self.assertIn("does not activate GCA Member status", page)
+        self.assertIn("Final eligibility still requires controlled HTTPS account UI", page)
+        self.assertNotIn("eth_sendTransaction", page)
+        self.assertNotIn("personal_sign", page)
+        self.assertNotIn(OLD_WETH_POOL_ADDRESS, page)
+        self.assertNotIn("GCA/WETH", page)
+
     def test_member_program_json_sets_safe_rules(self):
         rules = json.loads((ROOT / "site" / "member-program.json").read_text())
 
@@ -599,11 +633,13 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("risk-control bypass", " ".join(rules["memberTier"]["accessRules"]))
         self.assertFalse(rules["verification"]["directSubmissionEndpointConfigured"])
         self.assertEqual(rules["verification"]["browserPreview"]["status"], "browser-read-only-preview-live")
+        self.assertEqual(rules["verification"]["browserPreview"]["pageUrl"], MEMBER_ACCESS_PAGE_URL)
         self.assertEqual(rules["verification"]["browserPreview"]["method"], "MetaMask eth_call ERC-20 balanceOf on Base Mainnet")
         self.assertEqual(rules["verification"]["browserPreview"]["ledgerEffect"], "none")
         self.assertFalse(rules["verification"]["browserPreview"]["requiresSignature"])
         self.assertFalse(rules["verification"]["browserPreview"]["requiresTransaction"])
         self.assertTrue(rules["verification"]["browserPreview"]["finalEligibilityStillRequiresControlledAccountUi"])
+        self.assertEqual(rules["publicPages"]["memberAccessPreview"], MEMBER_ACCESS_PAGE_URL)
         self.assertEqual(rules["publicPages"]["memberLedger"], MEMBER_LEDGER_PAGE_URL)
         self.assertEqual(rules["publicPages"]["memberLedgerSchema"], MEMBER_LEDGER_URL)
         self.assertEqual(rules["publicPages"]["support"], SUPPORT_PAGE_URL)
@@ -863,6 +899,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(ledger["chainId"], 8453)
         self.assertEqual(ledger["token"]["contractAddress"], MAINNET_ADDRESS)
         self.assertEqual(ledger["publicUrls"]["memberProgramRules"], MEMBER_PROGRAM_URL)
+        self.assertEqual(ledger["publicUrls"]["memberAccessPreview"], MEMBER_ACCESS_PAGE_URL)
         self.assertEqual(ledger["publicUrls"]["memberLedgerPage"], MEMBER_LEDGER_PAGE_URL)
         self.assertEqual(ledger["publicUrls"]["memberLedgerSchema"], MEMBER_LEDGER_URL)
         self.assertEqual(ledger["preparedPaths"]["memberAccessPage"], "/gca/member-access")

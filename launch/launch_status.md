@@ -39,6 +39,7 @@
 - Verified first holder campaign backend documented: each registered user may verify one wallet holding at least 10,000 GCA and receive a one-time 100 Web3 Radar utility credits ledger record.
 - Verified GCA Member backend documented: each registered user may verify one wallet holding at least 1,000,000 GCA and qualify for GCA Member status in the Web3 Radar member ledger.
 - Member pre-registration page prepared at `https://gcagochina.com/members.html`; it generates local-only registration packets and does not create a live account.
+- Static member access preview page prepared at `https://gcagochina.com/gca/member-access/`; it can parse local packets and run read-only GCA balance previews, but it does not create accounts, submit data, or write ledger records.
 - Public member program rules prepared at `https://gcagochina.com/member-program.json`, including 100 credit spend scope, 180-day credit expiry, 30-day member refresh cadence, and support status workflow.
 - Public member ledger schema prepared at `https://gcagochina.com/member-ledger.html` and `https://gcagochina.com/member-ledger.json` for wallet verification, 100 credits ledger, GCA Member ledger, and support review records.
 - Browser-only read-only GCA balance preview added to `https://gcagochina.com/members.html` using MetaMask `eth_call` / ERC-20 `balanceOf`; it does not sign messages, send transactions, submit packets, or create ledger records.
