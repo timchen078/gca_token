@@ -59,6 +59,8 @@
     "verify": "https://gcagochina.com/verify.html",
     "trustCenterPage": "https://gcagochina.com/trust.html",
     "trustCenter": "https://gcagochina.com/trust.json",
+    "tokenSafetyPage": "https://gcagochina.com/token-safety.html",
+    "tokenSafety": "https://gcagochina.com/token-safety.json",
     "walletWarningEvidencePage": "https://gcagochina.com/wallet-warning.html",
     "walletWarningEvidence": "https://gcagochina.com/wallet-warning.json",
     "reviewerKitPage": "https://gcagochina.com/reviewer-kit.html",

@@ -22,6 +22,8 @@ Allow: /listing-readiness.html
 Allow: /listing-readiness.json
 Allow: /market-quality.html
 Allow: /market-quality.json
+Allow: /token-safety.html
+Allow: /token-safety.json
 Allow: /supply.json
 Allow: /member-ledger.html
 Allow: /member-ledger.json
