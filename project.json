@@ -114,6 +114,10 @@
     {
       "platform": "Telegram",
       "url": "https://t.me/gcagochinaofficial"
+    },
+    {
+      "platform": "X",
+      "url": "https://x.com/XXYRadar"
     }
   ],
   "market": {
@@ -201,6 +205,7 @@
     "pageUrl": "https://gcagochina.com/community.html",
     "url": "https://gcagochina.com/community.json",
     "officialTelegram": "https://t.me/gcagochinaofficial",
+    "officialX": "https://x.com/XXYRadar",
     "currentStage": "early-public-operations",
     "safeAnnouncementAvailable": true,
     "moderatorReplyTemplatesAvailable": true

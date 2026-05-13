@@ -216,7 +216,7 @@
 
       .row {
         display: grid;
-        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-columns: minmax(112px, 0.75fr) minmax(0, 1.35fr);
         gap: 12px;
         align-items: start;
         border-top: 1px solid var(--line);
@@ -224,7 +224,10 @@
       }
 
       .row strong {
-        white-space: nowrap;
+        min-width: 0;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+        text-align: right;
       }
 
       .warning {

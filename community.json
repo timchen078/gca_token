@@ -9,6 +9,7 @@
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "officialTelegram": "https://t.me/gcagochinaofficial",
+  "officialX": "https://x.com/XXYRadar",
   "officialMarket": {
     "pair": "GCA/USDT",
     "network": "Base Mainnet",
@@ -25,6 +26,7 @@
     "Positioning: Narrative meets risk control. GCA connects Go China Access, China Narrative Radar, Liquidation Replay, ENTRY_READY Review, GCA Member Club, and Risk First Trading.",
     "Roadmap: https://gcagochina.com/roadmap.html",
     "Official market route: GCA/USDT on Base Mainnet.",
+    "Official X: https://x.com/XXYRadar",
     "Current status: concept-stage utility buildout; public self-service member claiming is not live yet, BaseScan token profile was returned as information-insufficient on 2026-05-13 and resubmitted on 2026-05-13, wallet-warning removal is not confirmed, and no third-party audit has been completed."
   ],
   "moderatorReplyTemplates": {
@@ -48,6 +50,7 @@
     "weeklyRadarPage": "https://gcagochina.com/radar.html",
     "weeklyRadar": "https://gcagochina.com/radar.json",
     "telegram": "https://t.me/gcagochinaofficial",
+    "x": "https://x.com/XXYRadar",
     "verify": "https://gcagochina.com/verify.html",
     "roadmap": "https://gcagochina.com/roadmap.html",
     "status": "https://gcagochina.com/status.html",

@@ -42,6 +42,7 @@
     "securityContact": "https://gcagochina.com/.well-known/security.txt",
     "whitepaper": "https://gcagochina.com/whitepaper.html",
     "telegram": "https://t.me/gcagochinaofficial",
+    "x": "https://x.com/XXYRadar",
     "baseScanContract": "https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6"
   },
   "officialMarket": {
@@ -146,7 +147,7 @@
       "Use the reviewer kit page and JSON when a platform asks for centralized public evidence.",
       "Do not send duplicate Blockaid reports unless Blockaid, MetaMask, or Uniswap asks for more information.",
       "Wait for BaseScan profile review email before submitting another BaseScan token update.",
-      "Keep the official GCA/USDT pool, logo, website, Telegram, and JSON links consistent."
+      "Keep the official GCA/USDT pool, logo, website, Telegram, X, and JSON links consistent."
     ]
   }
 }
