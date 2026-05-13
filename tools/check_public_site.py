@@ -128,7 +128,7 @@ def validate_root(text: str) -> None:
 def validate_verify(text: str) -> None:
     label = "/verify.html"
     assert_contains(text, "Verify GCA", label)
-    assert_contains(text, "Returned: needs more information", label)
+    assert_contains(text, "Resubmitted: awaiting review", label)
     assert_contains(text, "well-known token identity", label)
     assert_contains(text, "Wallet Warning", label)
     assert_contains(text, "External Reviews", label)
@@ -247,7 +247,7 @@ def validate_roadmap_page(text: str) -> None:
     assert_contains(text, "100 Web3 Radar utility credit records", label)
     assert_contains(text, "GCA Member records", label)
     assert_contains(text, "External Dependencies", label)
-    assert_contains(text, "Returned: needs more information", label)
+    assert_contains(text, "Resubmitted: awaiting review", label)
     assert_contains(text, "Removal not confirmed", label)
     assert_contains(text, "Not completed", label)
     assert_contains(text, "public self-service member claiming is live", label)
@@ -283,7 +283,7 @@ def validate_roadmap_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong quoteAssetAddress")
     if market.get("liquidityDepth") != "starter-depth-only":
         raise SiteCheckError(f"{label}: wrong liquidityDepth")
-    if dependencies.get("baseScanTokenProfile") != "returned-information-insufficient":
+    if dependencies.get("baseScanTokenProfile") != "resubmitted-awaiting-review":
         raise SiteCheckError(f"{label}: wrong BaseScan status")
     if dependencies.get("blockaidMetaMaskWarning") != "submitted-warning-removal-not-confirmed":
         raise SiteCheckError(f"{label}: wrong wallet warning status")
@@ -356,7 +356,7 @@ def validate_community_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong quoteAssetAddress")
     if market.get("liquidityDepth") != "starter-depth-only":
         raise SiteCheckError(f"{label}: wrong liquidityDepth")
-    if not any("BaseScan token profile was returned as information-insufficient" in item for item in payload.get("safeAnnouncement", [])):
+    if not any("BaseScan token profile was returned as information-insufficient on 2026-05-13 and resubmitted on 2026-05-13" in item for item in payload.get("safeAnnouncement", [])):
         raise SiteCheckError(f"{label}: missing BaseScan pending announcement")
     if "walletWarning" not in templates:
         raise SiteCheckError(f"{label}: missing wallet warning template")
@@ -449,7 +449,7 @@ def validate_terms_page(text: str) -> None:
     assert_contains(text, "Account-Level Service Access", label)
     assert_contains(text, "No Custody Or Withdrawal Permission", label)
     assert_contains(text, "No Outcome Promise", label)
-    assert_contains(text, "Returned: needs more information", label)
+    assert_contains(text, "Resubmitted: awaiting review", label)
     assert_contains(text, "GCA/USDT on Base Mainnet", label)
     assert_contains(text, "Privacy Notice", label)
     assert_not_contains(text, OLD_WETH_POOL_ADDRESS, label)
@@ -483,7 +483,7 @@ def validate_terms_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong holder threshold")
     if programs.get("gcaMember", {}).get("minimumHolding") != "1000000 GCA":
         raise SiteCheckError(f"{label}: wrong member threshold")
-    if status.get("baseScanTokenProfile") != "returned-information-insufficient":
+    if status.get("baseScanTokenProfile") != "resubmitted-awaiting-review":
         raise SiteCheckError(f"{label}: wrong BaseScan status")
     if status.get("geckoTerminalTokenInfo") != "approved-2026-05-11":
         raise SiteCheckError(f"{label}: wrong GeckoTerminal status")
@@ -705,7 +705,7 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong poolAddress")
     if market.get("quoteAssetAddress") != BASE_USDT_ADDRESS:
         raise SiteCheckError(f"{label}: wrong quoteAssetAddress")
-    if status.get("baseScanTokenProfile") != "returned-information-insufficient":
+    if status.get("baseScanTokenProfile") != "resubmitted-awaiting-review":
         raise SiteCheckError(f"{label}: unexpected BaseScan status")
     if status.get("geckoTerminalTokenInfo") != "approved-2026-05-11":
         raise SiteCheckError(f"{label}: unexpected GeckoTerminal status")
@@ -1279,7 +1279,7 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong quoteAssetAddress")
     if reviews.get("baseScanSource", {}).get("status") != "verified":
         raise SiteCheckError(f"{label}: wrong BaseScan source status")
-    if reviews.get("baseScanTokenProfile", {}).get("status") != "returned-information-insufficient":
+    if reviews.get("baseScanTokenProfile", {}).get("status") != "resubmitted-awaiting-review":
         raise SiteCheckError(f"{label}: wrong BaseScan profile status")
     if reviews.get("blockaidMetaMask", {}).get("status") != "submitted-warning-removal-not-confirmed":
         raise SiteCheckError(f"{label}: wrong Blockaid status")
@@ -1301,7 +1301,7 @@ def validate_external_reviews_page(text: str) -> None:
     assert_contains(text, "GCA External Review Status", label)
     assert_contains(text, "Wallet Warning Evidence", label)
     assert_contains(text, "External Reviews JSON", label)
-    assert_contains(text, "Returned: needs more information", label)
+    assert_contains(text, "Resubmitted: awaiting review", label)
     assert_contains(text, "Submitted 2026-05-10; removal not confirmed", label)
     assert_contains(text, "Approved 2026-05-11", label)
     assert_contains(text, "CoinGecko tracked listing submission", label)

@@ -71,8 +71,8 @@
     {
       "id": "basescan-token-profile",
       "label": "BaseScan token profile",
-      "status": "needs-resubmission",
-      "evidence": "Token information update was submitted on 2026-05-09 and returned by BaseScan as information-insufficient; complete resubmission is required before publication."
+      "status": "resubmitted-awaiting-review",
+      "evidence": "Token information update was submitted on 2026-05-09, returned by BaseScan as information-insufficient on 2026-05-13, and resubmitted on 2026-05-13; it is awaiting BaseScan review before publication."
     },
     {
       "id": "geckoterminal-token-info",
@@ -149,7 +149,7 @@
     ]
   },
   "nextActions": [
-    "Prepare a complete BaseScan resubmission package.",
+    "Wait for BaseScan email/review; do not submit duplicates unless BaseScan asks for corrections.",
     "Keep the GCA/USDT pool, website, logo, whitepaper, Telegram, and metadata files live.",
     "Grow legitimate public activity and liquidity depth before CoinGecko or CoinMarketCap submission.",
     "Use the market quality plan before presenting market-growth updates.",

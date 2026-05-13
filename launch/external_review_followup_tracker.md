@@ -42,7 +42,7 @@ Use this file as the single operating checklist for external review, wallet-warn
 
 | Platform | Current status | Contact / inbox | Next action |
 | --- | --- | --- | --- |
-| BaseScan token profile | Submitted on 2026-05-09 and returned by BaseScan as information-insufficient on 2026-05-13 | `cxy070800@gmail.com` | Prepare the complete BaseScan resubmission package with official website, official email, logo, clear token/project information, social links, and deployer-wallet signature. |
+| BaseScan token profile | Submitted on 2026-05-09, returned by BaseScan as information-insufficient on 2026-05-13, and resubmitted on 2026-05-13 | `cxy070800@gmail.com` / `GCAgochina@outlook.com` | Wait for BaseScan email/review; do not submit duplicates unless BaseScan asks for corrections. |
 | Blockaid / MetaMask warning | False-positive report submitted on 2026-05-10; warning removal not confirmed | Owner browser / wallet UI | Recheck the wallet and Uniswap warning UI. If the warning remains after several business days, send one follow-up with buy/sell test evidence and official links. |
 | GeckoTerminal | Token information update approved on 2026-05-11 | `GCAgochina@outlook.com` | No duplicate update unless official details change or GeckoTerminal asks for a correction. |
 | DEX Screener | Discoverable through the live GCA/USDT pool | Not submitted as a direct paid metadata update | Keep the GCA/USDT pool, website, token list, and GeckoTerminal data consistent. |
@@ -50,13 +50,14 @@ Use this file as the single operating checklist for external review, wallet-warn
 | CoinMarketCap | Not submitted | Not applicable yet | Wait for stronger liquidity, organic holders, public activity, and BaseScan profile publication. |
 | Third-party audit | Deferred by owner decision after quote requests | Audit vendor inboxes if replies arrive | Archive quote replies only. Do not claim an external audit unless an independent report is commissioned and published. |
 
-## BaseScan Resubmission Check
+## BaseScan Review Check
 
 1. Check `cxy070800@gmail.com` inbox and spam.
 2. Check BaseScan account notifications.
 3. Use `launch/basescan_resubmission_package.md` and `launch/basescan_resubmission_values.json`.
 4. Confirm `https://gcagochina.com/verify.html`, `https://gcagochina.com/markets.html`, and the GCA/USDT GeckoTerminal pool still load.
 5. Sign with the deployer wallet again if BaseScan asks for address ownership verification.
+6. Do not submit duplicate token update requests unless BaseScan asks for corrections.
 
 ## Weekly Check
 
@@ -70,7 +71,7 @@ Use this file as the single operating checklist for external review, wallet-warn
 
 - BaseScan source verification is complete.
 - BaseScan deployer-wallet ownership verification is complete.
-- The public BaseScan token profile update was returned as information-insufficient and needs a complete resubmission.
+- The public BaseScan token profile update was returned as information-insufficient on 2026-05-13, resubmitted on 2026-05-13, and is awaiting BaseScan email/review.
 - GeckoTerminal token information was approved on 2026-05-11.
 - A Blockaid false-positive report was submitted on 2026-05-10, but wallet-warning removal is not confirmed.
 - The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool.

@@ -1,6 +1,6 @@
 # BaseScan Token Profile Resubmission Package
 
-Use this package only for the next BaseScan token information update request. The previous request was submitted on 2026-05-09 and returned by BaseScan as information-insufficient on 2026-05-13.
+This package records the values used for the 2026-05-13 BaseScan token information resubmission. The previous request was submitted on 2026-05-09, returned by BaseScan as information-insufficient on 2026-05-13, and resubmitted on 2026-05-13.
 
 ## Required Status
 
@@ -13,7 +13,7 @@ Use this package only for the next BaseScan token information update request. Th
 - Total supply: 1,000,000,000 GCA
 - Contract source: verified on BaseScan
 - Deployer-wallet ownership: previously verified; sign again if BaseScan asks
-- BaseScan profile status: returned-information-insufficient
+- BaseScan profile status: resubmitted-awaiting-review
 
 ## Official Links
 
@@ -63,9 +63,9 @@ GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stand
 
 Do not describe the reserve as locked, vested, or multisig-controlled unless custody changes on-chain.
 
-## Resubmission Checklist
+## Submitted Checklist
 
-Before pressing submit:
+Used for the 2026-05-13 resubmission:
 
 1. Confirm `https://gcagochina.com/` loads over HTTPS.
 2. Confirm `https://gcagochina.com/assets/gca-logo.svg` loads and is the 32x32 SVG logo.
@@ -78,7 +78,6 @@ Before pressing submit:
 
 ## Safe Public Claim
 
-`BaseScan source verification and deployer-wallet ownership verification are complete. The public BaseScan token profile update was returned as information-insufficient and needs a complete resubmission before publication.`
+`BaseScan source verification and deployer-wallet ownership verification are complete. The public BaseScan token profile update was returned as information-insufficient on 2026-05-13, resubmitted on 2026-05-13, and is awaiting BaseScan email/review before publication.`
 
 Do not say the BaseScan token profile is approved, published, live, complete, or accepted until the public BaseScan token page shows the submitted information.
-

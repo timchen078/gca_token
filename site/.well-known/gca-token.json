@@ -100,7 +100,7 @@
   "platformStatus": {
     "baseScanSource": "verified",
     "baseScanOwnership": "verified",
-    "baseScanTokenProfile": "returned-information-insufficient",
+    "baseScanTokenProfile": "resubmitted-awaiting-review",
     "geckoTerminalTokenInfo": "approved-2026-05-11",
     "blockaidFalsePositiveReport": "submitted-2026-05-10-warning-removal-not-confirmed",
     "coinGeckoTrackedListing": "not-submitted",

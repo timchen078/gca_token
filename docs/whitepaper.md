@@ -126,7 +126,7 @@ Third-party audit quote requests were submitted to QuillAudits, Hacken, and Open
 
 ## BaseScan Token Profile Status
 
-BaseScan source verification and deployer-wallet ownership verification are complete. The public BaseScan token profile update was returned by BaseScan as information-insufficient and needs complete resubmission.
+BaseScan source verification and deployer-wallet ownership verification are complete. The public BaseScan token profile update was returned by BaseScan as information-insufficient on 2026-05-13, resubmitted on 2026-05-13, and is awaiting BaseScan email/review.
 
 GeckoTerminal token information was approved on 2026-05-11. The official website links to the current GCA/USDT GeckoTerminal pool.
 

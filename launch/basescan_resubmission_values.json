@@ -1,7 +1,9 @@
 {
-  "packageStatus": "prepared",
+  "packageStatus": "submitted",
   "previousSubmissionDate": "2026-05-09",
   "returnNoticeDate": "2026-05-13",
+  "resubmissionDate": "2026-05-13",
+  "browserSubmissionStatus": "submitted-via-basescan-tokenupdate",
   "returnReason": "information-insufficient",
   "network": "Base Mainnet",
   "chainId": 8453,

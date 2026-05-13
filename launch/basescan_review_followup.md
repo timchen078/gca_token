@@ -6,8 +6,9 @@
 - Chain ID: 8453
 - Contract: `0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`
 - Submission date: 2026-05-09
-- Submission status: returned by BaseScan
-- Review status: returned-information-insufficient
+- Resubmission date: 2026-05-13
+- Submission status: resubmitted through BaseScan token update form
+- Review status: resubmitted-awaiting-review
 - Return notice date: 2026-05-13
 - Reply inbox: `cxy070800@gmail.com`
 
@@ -15,9 +16,9 @@ Do not describe the BaseScan token profile as complete, published, or accepted u
 
 ## Why It Was Returned
 
-BaseScan replied that it could not process the token update request because the submitted information about the token/project was insufficient. The next step is not to argue the review; the next step is a cleaner resubmission with all public references, contact details, logo, social links, contract evidence, and deployer signature ready.
+BaseScan replied that it could not process the first token update request because the submitted information about the token/project was insufficient. A cleaner resubmission was sent on 2026-05-13 with public references, contact details, logo, social links, contract evidence, and deployer-signature context ready.
 
-## Resubmission Checklist
+## Waiting Checklist
 
 - Gmail inbox and spam folder for `cxy070800@gmail.com`
 - BaseScan account notifications
@@ -35,11 +36,12 @@ BaseScan replied that it could not process the token update request because the 
 - HTTPS remains active for the website, logo, and whitepaper URLs.
 - Use official public email: `GCAgochina@outlook.com`
 - If BaseScan asks for ownership verification again, sign with the deployer wallet.
+- Do not submit duplicate token update requests unless BaseScan asks for corrections.
 
 ## If BaseScan Approves
 
 1. Confirm the contract page displays the GCA logo, website, whitepaper, and contact details.
-2. Update `launch/launch_status.md`, `docs/mainnet_public_profile.md`, `docs/whitepaper.md`, `site/index.html`, and `site/whitepaper.html` from "returned-information-insufficient" to "accepted and published".
+2. Update `launch/launch_status.md`, `docs/mainnet_public_profile.md`, `docs/whitepaper.md`, `site/index.html`, and `site/whitepaper.html` from "resubmitted-awaiting-review" to "accepted and published".
 3. Keep the third-party audit disclosure unchanged unless an independent auditor provides a report or public verification page.
 4. Run the full test suite before publishing the updated site.
 
@@ -54,7 +56,7 @@ BaseScan replied that it could not process the token update request because the 
 
 Use this until approval:
 
-`BaseScan source verification and deployer-wallet ownership verification are complete. The public BaseScan token profile update was returned as information-insufficient and needs a complete resubmission before publication.`
+`BaseScan source verification and deployer-wallet ownership verification are complete. The public BaseScan token profile update was returned as information-insufficient on 2026-05-13, resubmitted on 2026-05-13, and is awaiting BaseScan email/review before publication.`
 
 Do not use:
 

@@ -22,7 +22,7 @@ This package prepares GCA information for token data and DEX discovery platforms
 - Participation terms page: `https://gcagochina.com/terms.html`
 - Participation terms JSON: `https://gcagochina.com/terms.json`
 - Contract source: verified on BaseScan
-- BaseScan token profile: returned by BaseScan as information-insufficient; complete resubmission package prepared
+- BaseScan token profile: returned by BaseScan as information-insufficient on 2026-05-13, resubmitted on 2026-05-13, and awaiting BaseScan email/review
 - GeckoTerminal token info update: approved on 2026-05-11
 - On-chain proofs page: `https://gcagochina.com/onchain-proofs.html`
 - On-chain proofs JSON: `https://gcagochina.com/onchain-proofs.json`
