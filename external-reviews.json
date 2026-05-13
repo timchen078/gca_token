@@ -1,7 +1,7 @@
 {
   "schema": "https://gcagochina.com/external-reviews.json",
   "pageUrl": "https://gcagochina.com/external-reviews.html",
-  "lastUpdated": "2026-05-12",
+  "lastUpdated": "2026-05-13",
   "projectName": "GCA",
   "tokenSymbol": "GCA",
   "network": "Base Mainnet",
@@ -55,12 +55,13 @@
       "publicClaim": "BaseScan deployer-wallet ownership verification is complete."
     },
     "baseScanTokenProfile": {
-      "status": "returned-information-insufficient",
+      "status": "resubmitted-awaiting-review",
       "submissionDate": "2026-05-09",
       "returnNoticeDate": "2026-05-13",
+      "resubmissionDate": "2026-05-13",
       "returnReason": "information-insufficient",
-      "publicClaim": "The public BaseScan token profile update was returned as information-insufficient and needs complete resubmission.",
-      "nextAction": "Prepare and submit a complete BaseScan token profile update with official website, official email, 32x32 SVG logo, clear project and token information, verified source, correct contract address, official social links, and deployer-wallet signature."
+      "publicClaim": "The public BaseScan token profile update was returned as information-insufficient on 2026-05-13, resubmitted on 2026-05-13, and is awaiting BaseScan email/review.",
+      "nextAction": "Wait for BaseScan email/review; do not submit duplicates unless BaseScan asks for corrections."
     },
     "blockaidMetaMask": {
       "status": "submitted-warning-removal-not-confirmed",
@@ -98,7 +99,7 @@
   "safePublicClaims": [
     "GCA is deployed on Base Mainnet with fixed total supply.",
     "BaseScan source and deployer-wallet ownership verification are complete.",
-    "The BaseScan token profile update was returned as information-insufficient and needs a complete resubmission.",
+    "The BaseScan token profile update was returned as information-insufficient on 2026-05-13, resubmitted on 2026-05-13, and is awaiting BaseScan email/review.",
     "GeckoTerminal token information was approved on 2026-05-11.",
     "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool.",
     "Current liquidity is starter-depth only.",
@@ -113,7 +114,7 @@
     "deep liquidity, price support, return promises, or ranking acceptance"
   ],
   "nextActions": [
-    "Prepare a complete BaseScan token profile resubmission package.",
+    "Wait for BaseScan email/review; do not submit duplicates unless BaseScan asks for corrections.",
     "Recheck wallet-warning UI before claiming any warning change.",
     "Keep GCA/USDT market links, logo, whitepaper, Telegram, and metadata files live.",
     "Use listing-readiness and market-quality pages before CoinGecko or CoinMarketCap submission.",

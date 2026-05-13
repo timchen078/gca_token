@@ -117,7 +117,7 @@
   "platformStatus": {
     "baseScanSource": "verified",
     "baseScanOwnership": "verified",
-    "baseScanTokenProfile": "returned-information-insufficient",
+    "baseScanTokenProfile": "resubmitted-awaiting-review",
     "geckoTerminalTokenInfo": "approved-2026-05-11",
     "coinGeckoTrackedListing": "not-submitted",
     "coinMarketCapTrackedListing": "not-submitted",
@@ -177,7 +177,7 @@
     "status": "external-review-status-active",
     "pageUrl": "https://gcagochina.com/external-reviews.html",
     "url": "https://gcagochina.com/external-reviews.json",
-    "baseScanTokenProfile": "returned-information-insufficient",
+    "baseScanTokenProfile": "resubmitted-awaiting-review",
     "blockaidMetaMask": "submitted-warning-removal-not-confirmed",
     "geckoTerminal": "approved-2026-05-11",
     "coinGeckoTrackedListing": "deferred",

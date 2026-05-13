@@ -22,7 +22,7 @@
     "Official verification: https://gcagochina.com/verify.html",
     "Roadmap: https://gcagochina.com/roadmap.html",
     "Official market route: GCA/USDT on Base Mainnet.",
-    "Current status: concept-stage utility buildout; public self-service member claiming is not live yet, BaseScan token profile was returned as information-insufficient, wallet-warning removal is not confirmed, and no third-party audit has been completed."
+    "Current status: concept-stage utility buildout; public self-service member claiming is not live yet, BaseScan token profile was returned as information-insufficient on 2026-05-13 and resubmitted on 2026-05-13, wallet-warning removal is not confirmed, and no third-party audit has been completed."
   ],
   "moderatorReplyTemplates": {
     "walletWarning": "A Blockaid / MetaMask false-positive report was submitted on 2026-05-10, but warning removal is not confirmed. Verify the contract, pool, and official links before taking any action.",
