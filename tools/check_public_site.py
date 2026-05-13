@@ -140,6 +140,7 @@ def validate_verify(text: str) -> None:
     assert_contains(text, "well-known token identity", label)
     assert_contains(text, "Wallet Warning", label)
     assert_contains(text, "External Reviews", label)
+    assert_contains(text, "Trust Center", label)
     assert_contains(text, "On-chain Proofs", label)
     assert_contains(text, "Brand Kit", label)
     assert_contains(text, OFFICIAL_DEXSCREENER_URL, label)
@@ -1395,12 +1396,20 @@ def validate_reviewer_kit_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong platformRepliesPage")
     if links.get("platformReplies") != PLATFORM_REPLIES_URL:
         raise SiteCheckError(f"{label}: wrong platformReplies")
+    if links.get("trustCenterPage") != TRUST_CENTER_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong trustCenterPage")
+    if links.get("trustCenter") != TRUST_CENTER_URL:
+        raise SiteCheckError(f"{label}: wrong trustCenter")
     if links.get("walletWarningEvidence") != WALLET_WARNING_URL:
         raise SiteCheckError(f"{label}: wrong walletWarningEvidence")
     if links.get("externalReviewStatus") != EXTERNAL_REVIEW_URL:
         raise SiteCheckError(f"{label}: wrong externalReviewStatus")
     if links.get("onchainProofs") != ONCHAIN_PROOFS_URL:
         raise SiteCheckError(f"{label}: wrong onchainProofs")
+    if links.get("trustCenterPage") != TRUST_CENTER_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong trustCenterPage")
+    if links.get("trustCenter") != TRUST_CENTER_URL:
+        raise SiteCheckError(f"{label}: wrong trustCenter")
     if market.get("pair") != "GCA/USDT":
         raise SiteCheckError(f"{label}: wrong pair")
     if market.get("poolAddress") != OFFICIAL_POOL_ADDRESS:
@@ -1453,6 +1462,7 @@ def validate_reviewer_kit_page(text: str) -> None:
     assert_contains(text, "BaseScan Profile", label)
     assert_contains(text, "On-chain Proofs", label)
     assert_contains(text, "External Review Status", label)
+    assert_contains(text, "Trust Center", label)
     assert_contains(text, "Public Claim Boundaries", label)
     assert_contains(text, "No third-party audit has been completed", label)
     assert_contains(text, OFFICIAL_DEXSCREENER_URL, label)
@@ -1484,6 +1494,10 @@ def validate_platform_replies_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong platformRepliesPage")
     if links.get("platformReplies") != PLATFORM_REPLIES_URL:
         raise SiteCheckError(f"{label}: wrong platformReplies")
+    if links.get("trustCenterPage") != TRUST_CENTER_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong trustCenterPage")
+    if links.get("trustCenter") != TRUST_CENTER_URL:
+        raise SiteCheckError(f"{label}: wrong trustCenter")
     if links.get("reviewerKitPage") != REVIEWER_KIT_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong reviewerKitPage")
     if links.get("reviewerKit") != REVIEWER_KIT_URL:
@@ -1541,6 +1555,7 @@ def validate_platform_replies_page(text: str) -> None:
     label = "/platform-replies.html"
     assert_contains(text, "GCA Platform Replies", label)
     assert_contains(text, "Platform Replies JSON", label)
+    assert_contains(text, "Trust Center", label)
     assert_contains(text, "Base Mainnet / 8453", label)
     assert_contains(text, MAINNET_ADDRESS, label)
     assert_contains(text, "Wallet Warning Reviewer", label)
@@ -1702,6 +1717,10 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong walletWarningEvidencePage")
     if links.get("walletWarningEvidence") != WALLET_WARNING_URL:
         raise SiteCheckError(f"{label}: wrong walletWarningEvidence")
+    if links.get("trustCenterPage") != TRUST_CENTER_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong trustCenterPage")
+    if links.get("trustCenter") != TRUST_CENTER_URL:
+        raise SiteCheckError(f"{label}: wrong trustCenter")
     if links.get("marketQualityPage") != MARKET_QUALITY_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong marketQualityPage")
     if links.get("onchainProofsPage") != ONCHAIN_PROOFS_PAGE_URL:
@@ -1745,6 +1764,7 @@ def validate_external_reviews_page(text: str) -> None:
     assert_contains(text, "GCA External Review Status", label)
     assert_contains(text, "Wallet Warning Evidence", label)
     assert_contains(text, "External Reviews JSON", label)
+    assert_contains(text, "Trust Center", label)
     assert_contains(text, "Resubmitted: awaiting review", label)
     assert_contains(text, "Follow-up submitted 2026-05-13; removal not confirmed", label)
     assert_contains(text, "Approved 2026-05-11", label)
@@ -1817,6 +1837,7 @@ def validate_wallet_warning_page(text: str) -> None:
     label = "/wallet-warning.html"
     assert_contains(text, "GCA Wallet Warning Evidence", label)
     assert_contains(text, "Wallet Warning JSON", label)
+    assert_contains(text, "Trust Center", label)
     assert_contains(text, "Follow-up submitted 2026-05-13", label)
     assert_contains(text, "Not confirmed", label)
     assert_contains(text, "Verified on BaseScan", label)
