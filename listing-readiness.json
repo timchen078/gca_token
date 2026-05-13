@@ -43,7 +43,7 @@
     "riskPage": "https://gcagochina.com/risk.html",
     "whitepaper": "https://gcagochina.com/whitepaper.html",
     "telegram": "https://t.me/gcagochinaofficial",
-    "x": "https://x.com/XXYRadar"
+    "x": "https://x.com/gcagochina"
   },
   "market": {
     "officialPair": "GCA/USDT",
@@ -85,7 +85,7 @@
       "id": "public-social-presence",
       "label": "Public social presence",
       "status": "ready",
-      "evidence": "Official Telegram is live and the official X profile is published at https://x.com/XXYRadar."
+      "evidence": "Official Telegram is live and the official X profile is published at https://x.com/gcagochina."
     },
     {
       "id": "legitimate-market-activity",
