@@ -51,6 +51,7 @@ The full fixed supply was minted to the deployer wallet at deployment. The 40/60
 - Intended themes: China-facing Web3 culture, Go China macro narrative research, community access, bilingual education, risk-control education, and curated public information
 - Public positioning: Narrative meets risk control
 - Narrative language: China Narrative Radar, Weekly Go China Radar, Liquidation Replay, ENTRY_READY Review, GCA Member Club, Go China Watchlist, and Risk First Trading
+- Weekly Radar pilot: `https://gcagochina.com/radar.html`
 - Planned Web3 Radar bridge: liquidation replay reports, risk-warning credits, realistic backtest usage, ENTRY_READY signal review, position-size calculators, subscription discounts, and risk-control training
 - Planned first campaign: each registered user may verify one wallet holding at least 10,000 GCA and receive a one-time 100 Web3 Radar utility credits bonus after the access bridge is live
 - Planned GCA Member tier: each registered user may verify one wallet holding at least 1,000,000 GCA and qualify for GCA Member status after the access bridge is live

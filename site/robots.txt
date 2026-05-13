@@ -20,6 +20,8 @@ Allow: /community.html
 Allow: /community.json
 Allow: /narrative.html
 Allow: /narrative.json
+Allow: /radar.html
+Allow: /radar.json
 Allow: /listing-readiness.html
 Allow: /listing-readiness.json
 Allow: /market-quality.html

@@ -44,6 +44,8 @@ Deployment notes are in `docs/deploy_base_sepolia.md` and `docs/deploy_base_main
 - Public community kit JSON: `site/community.json`
 - Public narrative system page: `site/narrative.html`
 - Public narrative system JSON: `site/narrative.json`
+- Public Weekly Go China Radar page: `site/radar.html`
+- Public Weekly Go China Radar JSON: `site/radar.json`
 - Public privacy notice page: `site/privacy.html`
 - Public privacy notice JSON: `site/privacy.json`
 - Public participation terms page: `site/terms.html`

@@ -45,6 +45,8 @@ COMMUNITY_PAGE_URL = "https://gcagochina.com/community.html"
 COMMUNITY_URL = "https://gcagochina.com/community.json"
 NARRATIVE_PAGE_URL = "https://gcagochina.com/narrative.html"
 NARRATIVE_URL = "https://gcagochina.com/narrative.json"
+RADAR_PAGE_URL = "https://gcagochina.com/radar.html"
+RADAR_URL = "https://gcagochina.com/radar.json"
 PRIVACY_NOTICE_PAGE_URL = "https://gcagochina.com/privacy.html"
 PRIVACY_NOTICE_URL = "https://gcagochina.com/privacy.json"
 PARTICIPATION_TERMS_PAGE_URL = "https://gcagochina.com/terms.html"
@@ -101,6 +103,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("/community.json", script)
         self.assertIn("/narrative.html", script)
         self.assertIn("/narrative.json", script)
+        self.assertIn("/radar.html", script)
+        self.assertIn("/radar.json", script)
         self.assertIn("/privacy.html", script)
         self.assertIn("/privacy.json", script)
         self.assertIn("/terms.html", script)
@@ -141,6 +145,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("validate_community_json", script)
         self.assertIn("validate_narrative_page", script)
         self.assertIn("validate_narrative_json", script)
+        self.assertIn("validate_radar_page", script)
+        self.assertIn("validate_radar_json", script)
         self.assertIn("validate_privacy_page", script)
         self.assertIn("validate_privacy_json", script)
         self.assertIn("validate_terms_page", script)
@@ -204,6 +210,8 @@ class LaunchPackageTests(unittest.TestCase):
         module.validate_community_json((ROOT / "site" / "community.json").read_text())
         module.validate_narrative_page((ROOT / "site" / "narrative.html").read_text())
         module.validate_narrative_json((ROOT / "site" / "narrative.json").read_text())
+        module.validate_radar_page((ROOT / "site" / "radar.html").read_text())
+        module.validate_radar_json((ROOT / "site" / "radar.json").read_text())
         module.validate_privacy_page((ROOT / "site" / "privacy.html").read_text())
         module.validate_privacy_json((ROOT / "site" / "privacy.json").read_text())
         module.validate_terms_page((ROOT / "site" / "terms.html").read_text())
@@ -399,6 +407,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Allow: /community.json", robots)
         self.assertIn("Allow: /narrative.html", robots)
         self.assertIn("Allow: /narrative.json", robots)
+        self.assertIn("Allow: /radar.html", robots)
+        self.assertIn("Allow: /radar.json", robots)
         self.assertIn("Allow: /privacy.html", robots)
         self.assertIn("Allow: /privacy.json", robots)
         self.assertIn("Allow: /terms.html", robots)
@@ -452,6 +462,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(COMMUNITY_URL, sitemap)
         self.assertIn(NARRATIVE_PAGE_URL, sitemap)
         self.assertIn(NARRATIVE_URL, sitemap)
+        self.assertIn(RADAR_PAGE_URL, sitemap)
+        self.assertIn(RADAR_URL, sitemap)
         self.assertIn(PRIVACY_NOTICE_PAGE_URL, sitemap)
         self.assertIn(PRIVACY_NOTICE_URL, sitemap)
         self.assertIn(PARTICIPATION_TERMS_PAGE_URL, sitemap)
@@ -492,6 +504,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(identity["officialUrls"]["community"], COMMUNITY_URL)
         self.assertEqual(identity["officialUrls"]["narrativePage"], NARRATIVE_PAGE_URL)
         self.assertEqual(identity["officialUrls"]["narrative"], NARRATIVE_URL)
+        self.assertEqual(identity["officialUrls"]["weeklyRadarPage"], RADAR_PAGE_URL)
+        self.assertEqual(identity["officialUrls"]["weeklyRadar"], RADAR_URL)
         self.assertEqual(identity["officialUrls"]["privacyNoticePage"], PRIVACY_NOTICE_PAGE_URL)
         self.assertEqual(identity["officialUrls"]["privacyNotice"], PRIVACY_NOTICE_URL)
         self.assertEqual(identity["officialUrls"]["participationTermsPage"], PARTICIPATION_TERMS_PAGE_URL)
@@ -533,6 +547,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(identity["platformStatus"]["platformReplies"], "public-platform-reply-kit-published")
         self.assertEqual(identity["platformStatus"]["trustCenter"], "public-trust-center-published")
         self.assertEqual(identity["platformStatus"]["narrativeSystem"], "public-narrative-system-published")
+        self.assertEqual(identity["platformStatus"]["weeklyGoChinaRadar"], "weekly-go-china-radar-pilot-published")
         self.assertEqual(identity["platformStatus"]["walletSecurityProfile"], "public-wallet-security-profile-published")
         self.assertEqual(identity["platformStatus"]["tokenSafety"], "public-token-safety-checklist-published")
         self.assertEqual(identity["platformStatus"]["thirdPartyAudit"], "not-completed")
@@ -605,6 +620,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn('href="roadmap.html"', site)
         self.assertIn('href="community.html"', site)
         self.assertIn('href="narrative.html"', site)
+        self.assertIn('href="radar.html"', site)
         self.assertIn('href="privacy.html"', site)
         self.assertIn('href="terms.html"', site)
         self.assertIn("Go China Access", site)
@@ -613,6 +629,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Narrative System", site)
         self.assertIn("China Narrative Radar", site)
         self.assertIn("Weekly Go China Radar", site)
+        self.assertIn("Weekly Radar", site)
         self.assertIn("Liquidation Replay", site)
         self.assertIn("ENTRY_READY Review", site)
         self.assertIn("GCA Member Club", site)
@@ -923,6 +940,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("GCA Member records", page)
         self.assertIn("Narrative System", page)
         self.assertIn("Weekly Go China Radar", page)
+        self.assertIn("Pilot published", page)
         self.assertIn("Narrative meets risk control", page)
         self.assertIn("External Dependencies", page)
         self.assertIn("Resubmitted: awaiting review", page)
@@ -951,8 +969,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(roadmap["externalDependencies"]["thirdPartyAudit"], "not-completed-deferred")
         self.assertIn("controlled-account-ui", [entry["id"] for entry in roadmap["nextBuildPriorities"]])
         self.assertIn("utility-credit-ledger", [entry["id"] for entry in roadmap["nextBuildPriorities"]])
-        self.assertIn("weekly-go-china-radar", [entry["id"] for entry in roadmap["nextBuildPriorities"]])
+        self.assertNotIn("weekly-go-china-radar", [entry["id"] for entry in roadmap["nextBuildPriorities"]])
         self.assertIn("narrative-system", [entry["id"] for entry in roadmap["completedMilestones"]])
+        self.assertIn("weekly-go-china-radar-pilot", [entry["id"] for entry in roadmap["completedMilestones"]])
         self.assertIn("Narrative meets risk control.", roadmap["publicClaimBoundaries"]["safeClaims"])
         self.assertIn("GCA is concept-stage and is building public identity, safer support intake, and planned non-custodial quant research access.", roadmap["publicClaimBoundaries"]["safeClaims"])
         self.assertIn("public self-service member claiming is live before controlled HTTPS UI is connected", roadmap["publicClaimBoundaries"]["doNotClaim"])
@@ -960,6 +979,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(roadmap["publicLinks"]["roadmapJson"], ROADMAP_URL)
         self.assertEqual(roadmap["publicLinks"]["narrativePage"], NARRATIVE_PAGE_URL)
         self.assertEqual(roadmap["publicLinks"]["narrative"], NARRATIVE_URL)
+        self.assertEqual(roadmap["publicLinks"]["weeklyRadarPage"], RADAR_PAGE_URL)
+        self.assertEqual(roadmap["publicLinks"]["weeklyRadar"], RADAR_URL)
         self.assertEqual(roadmap["publicLinks"]["support"], SUPPORT_PAGE_URL)
         self.assertEqual(roadmap["publicLinks"]["listingReadiness"], LISTING_READINESS_URL)
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, json.dumps(roadmap))
@@ -974,6 +995,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Narrative System", page)
         self.assertIn("Narrative meets risk control", page)
         self.assertIn("China Narrative Radar", page)
+        self.assertIn("Weekly Go China Radar", page)
         self.assertIn("GCA Member Club", page)
         self.assertIn("Official Telegram", page)
         self.assertIn("Safe Announcement Copy", page)
@@ -1004,6 +1026,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(community["officialMarket"]["liquidityDepth"], "starter-depth-only")
         self.assertTrue(any("BaseScan token profile was returned as information-insufficient on 2026-05-13 and resubmitted on 2026-05-13" in item for item in community["safeAnnouncement"]))
         self.assertTrue(any("Narrative meets risk control" in item for item in community["safeAnnouncement"]))
+        self.assertTrue(any("Weekly Go China Radar: https://gcagochina.com/radar.html" in item for item in community["safeAnnouncement"]))
         self.assertIn("walletWarning", community["moderatorReplyTemplates"])
         self.assertIn("priceDisplay", community["moderatorReplyTemplates"])
         self.assertIn("memberAccess", community["moderatorReplyTemplates"])
@@ -1012,6 +1035,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(community["publicLinks"]["communityJson"], COMMUNITY_URL)
         self.assertEqual(community["publicLinks"]["narrativePage"], NARRATIVE_PAGE_URL)
         self.assertEqual(community["publicLinks"]["narrative"], NARRATIVE_URL)
+        self.assertEqual(community["publicLinks"]["weeklyRadarPage"], RADAR_PAGE_URL)
+        self.assertEqual(community["publicLinks"]["weeklyRadar"], RADAR_URL)
         self.assertEqual(community["publicLinks"]["telegram"], TELEGRAM_URL)
         self.assertEqual(community["publicLinks"]["roadmap"], ROADMAP_PAGE_URL)
         self.assertEqual(community["publicLinks"]["support"], SUPPORT_PAGE_URL)
@@ -1058,7 +1083,12 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(narrative["memberHooks"]["holderBonus"]["publicLabel"], "100 credits")
         self.assertEqual(narrative["memberHooks"]["gcaMember"]["minimumHolding"], "1000000 GCA")
         self.assertEqual(narrative["memberHooks"]["gcaMember"]["publicLabel"], "GCA Member Club")
-        self.assertIn("Weekly Go China Radar public research format", narrative["buildNext"])
+        self.assertIn("Weekly Go China Radar pilot issue published", narrative["buildNext"])
+        self.assertEqual(narrative["weeklyRadar"]["status"], "weekly-go-china-radar-pilot-published")
+        self.assertEqual(narrative["weeklyRadar"]["pageUrl"], RADAR_PAGE_URL)
+        self.assertEqual(narrative["weeklyRadar"]["url"], RADAR_URL)
+        self.assertEqual(narrative["weeklyRadar"]["issue"], "pilot-001")
+        self.assertEqual(narrative["weeklyRadar"]["issueDate"], "2026-05-14")
         self.assertEqual(narrative["officialMarket"]["pair"], "GCA/USDT")
         self.assertEqual(narrative["officialMarket"]["poolAddress"], OFFICIAL_POOL_ADDRESS)
         self.assertEqual(narrative["officialMarket"]["quoteAssetAddress"], BASE_USDT_ADDRESS)
@@ -1067,8 +1097,65 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("price support or price targets", narrative["publicClaimBoundaries"]["doNotClaim"])
         self.assertEqual(narrative["officialLinks"]["narrativePage"], NARRATIVE_PAGE_URL)
         self.assertEqual(narrative["officialLinks"]["narrative"], NARRATIVE_URL)
+        self.assertEqual(narrative["officialLinks"]["weeklyRadarPage"], RADAR_PAGE_URL)
+        self.assertEqual(narrative["officialLinks"]["weeklyRadar"], RADAR_URL)
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, json.dumps(narrative))
         self.assertNotIn("GCA/WETH", json.dumps(narrative))
+
+    def test_weekly_radar_page_and_json_publish_pilot_format(self):
+        page = (ROOT / "site" / "radar.html").read_text()
+        radar = json.loads((ROOT / "site" / "radar.json").read_text())
+
+        self.assertIn("Weekly Go China Radar", page)
+        self.assertIn("Radar JSON", page)
+        self.assertIn("Pilot 001 / 2026-05-14", page)
+        self.assertIn("not live market data", page)
+        self.assertIn("not financial advice", page)
+        self.assertIn("Narrative Radar Board", page)
+        self.assertIn("China-facing Web3 attention", page)
+        self.assertIn("Base ecosystem access", page)
+        self.assertIn("Risk-control education", page)
+        self.assertIn("Liquidation Replay", page)
+        self.assertIn("ENTRY_READY Review", page)
+        self.assertIn("GCA Member Club", page)
+        self.assertIn("No third-party audit has been completed", page)
+        self.assertIn("buy/sell signal", page)
+        self.assertIn(MAINNET_ADDRESS, page)
+        self.assertIn(BASE_USDT_ADDRESS, page)
+        self.assertIn(OFFICIAL_POOL_ADDRESS, page)
+        self.assertIn("GCA/USDT", page)
+        self.assertNotIn(OLD_WETH_POOL_ADDRESS, page)
+        self.assertNotIn("GCA/WETH", page)
+
+        self.assertEqual(radar["schema"], RADAR_URL)
+        self.assertEqual(radar["pageUrl"], RADAR_PAGE_URL)
+        self.assertEqual(radar["status"], "weekly-go-china-radar-pilot-published")
+        self.assertEqual(radar["issue"], "pilot-001")
+        self.assertEqual(radar["issueDate"], "2026-05-14")
+        self.assertEqual(radar["chainId"], 8453)
+        self.assertEqual(radar["contractAddress"], MAINNET_ADDRESS)
+        self.assertIn("not live market data", radar["scope"])
+        self.assertIn("not financial advice", radar["scope"])
+        self.assertIn("not a buy or sell recommendation", radar["scope"])
+        self.assertIn("China-facing Web3 attention", [item["name"] for item in radar["narrativeThemes"]])
+        self.assertIn("Base ecosystem access", [item["name"] for item in radar["narrativeThemes"]])
+        self.assertIn("Risk-control education", [item["name"] for item in radar["narrativeThemes"]])
+        self.assertIn("Liquidation Replay", [item["name"] for item in radar["utilityHooks"]])
+        self.assertIn("ENTRY_READY Review", [item["name"] for item in radar["utilityHooks"]])
+        self.assertIn("GCA Member Club", [item["name"] for item in radar["utilityHooks"]])
+        self.assertIn("No third-party audit has been completed.", radar["riskNotes"])
+        self.assertEqual(radar["officialMarket"]["pair"], "GCA/USDT")
+        self.assertEqual(radar["officialMarket"]["poolAddress"], OFFICIAL_POOL_ADDRESS)
+        self.assertEqual(radar["officialMarket"]["quoteAssetAddress"], BASE_USDT_ADDRESS)
+        self.assertIn("Weekly Go China Radar is the official GCA content format for narrative research and risk education.", radar["publicClaimBoundaries"]["safeClaims"])
+        self.assertIn("buy or sell recommendation", radar["publicClaimBoundaries"]["doNotClaim"])
+        self.assertIn("return promise", radar["publicClaimBoundaries"]["doNotClaim"])
+        self.assertEqual(radar["officialLinks"]["radarPage"], RADAR_PAGE_URL)
+        self.assertEqual(radar["officialLinks"]["radar"], RADAR_URL)
+        self.assertEqual(radar["officialLinks"]["narrativePage"], NARRATIVE_PAGE_URL)
+        self.assertEqual(radar["officialLinks"]["narrative"], NARRATIVE_URL)
+        self.assertNotIn(OLD_WETH_POOL_ADDRESS, json.dumps(radar))
+        self.assertNotIn("GCA/WETH", json.dumps(radar))
 
     def test_member_ledger_page_and_json_define_public_schema(self):
         page = (ROOT / "site" / "member-ledger.html").read_text()
@@ -1716,6 +1803,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(project["communityUrl"], COMMUNITY_URL)
         self.assertEqual(project["narrativePageUrl"], NARRATIVE_PAGE_URL)
         self.assertEqual(project["narrativeUrl"], NARRATIVE_URL)
+        self.assertEqual(project["weeklyRadarPageUrl"], RADAR_PAGE_URL)
+        self.assertEqual(project["weeklyRadarUrl"], RADAR_URL)
         self.assertEqual(project["privacyNoticePageUrl"], PRIVACY_NOTICE_PAGE_URL)
         self.assertEqual(project["privacyNoticeUrl"], PRIVACY_NOTICE_URL)
         self.assertEqual(project["participationTermsPageUrl"], PARTICIPATION_TERMS_PAGE_URL)
@@ -1766,6 +1855,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(project["platformStatus"]["baseScanTokenProfile"], "resubmitted-awaiting-review")
         self.assertEqual(project["platformStatus"]["geckoTerminalTokenInfo"], "approved-2026-05-11")
         self.assertEqual(project["platformStatus"]["narrativeSystem"], "public-narrative-system-published")
+        self.assertEqual(project["platformStatus"]["weeklyGoChinaRadar"], "weekly-go-china-radar-pilot-published")
         self.assertEqual(project["platformStatus"]["thirdPartyAudit"], "not-completed")
         self.assertEqual(project["listingReadiness"]["status"], "not-ready")
         self.assertIn("CoinGecko tracked listing request", project["listingReadiness"]["defer"])
@@ -1792,6 +1882,12 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("China Narrative Radar", project["narrativeSystem"]["publicNamingSystem"])
         self.assertIn("Risk First Trading", project["narrativeSystem"]["publicNamingSystem"])
         self.assertIn("return guarantees", project["narrativeSystem"]["doNotClaim"])
+        self.assertEqual(project["weeklyGoChinaRadar"]["status"], "weekly-go-china-radar-pilot-published")
+        self.assertEqual(project["weeklyGoChinaRadar"]["pageUrl"], RADAR_PAGE_URL)
+        self.assertEqual(project["weeklyGoChinaRadar"]["url"], RADAR_URL)
+        self.assertEqual(project["weeklyGoChinaRadar"]["issue"], "pilot-001")
+        self.assertEqual(project["weeklyGoChinaRadar"]["issueDate"], "2026-05-14")
+        self.assertTrue(project["weeklyGoChinaRadar"]["notFinancialAdvice"])
         self.assertEqual(project["externalReviewStatus"]["status"], "external-review-status-active")
         self.assertEqual(project["externalReviewStatus"]["pageUrl"], EXTERNAL_REVIEW_PAGE_URL)
         self.assertEqual(project["externalReviewStatus"]["url"], EXTERNAL_REVIEW_URL)
@@ -2420,6 +2516,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(extensions["community"], COMMUNITY_URL)
         self.assertEqual(extensions["narrativePage"], NARRATIVE_PAGE_URL)
         self.assertEqual(extensions["narrative"], NARRATIVE_URL)
+        self.assertEqual(extensions["weeklyRadarPage"], RADAR_PAGE_URL)
+        self.assertEqual(extensions["weeklyRadar"], RADAR_URL)
         self.assertEqual(extensions["privacyNoticePage"], PRIVACY_NOTICE_PAGE_URL)
         self.assertEqual(extensions["privacyNotice"], PRIVACY_NOTICE_URL)
         self.assertEqual(extensions["participationTermsPage"], PARTICIPATION_TERMS_PAGE_URL)
@@ -2435,6 +2533,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(extensions["platformRepliesStatus"], "public-platform-reply-kit-published")
         self.assertEqual(extensions["trustCenterStatus"], "public-trust-center-published")
         self.assertEqual(extensions["narrativeSystemStatus"], "public-narrative-system-published")
+        self.assertEqual(extensions["weeklyRadarStatus"], "weekly-go-china-radar-pilot-published")
         self.assertEqual(extensions["walletSecurityProfileStatus"], "public-wallet-security-profile-published")
         self.assertEqual(extensions["tokenSafetyStatus"], "public-token-safety-checklist-published")
         self.assertEqual(extensions["memberLedgerStatus"], "public-member-ledger-schema-published")
@@ -2495,6 +2594,8 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "site" / "community.json",
             ROOT / "site" / "narrative.html",
             ROOT / "site" / "narrative.json",
+            ROOT / "site" / "radar.html",
+            ROOT / "site" / "radar.json",
             ROOT / "site" / "privacy.html",
             ROOT / "site" / "privacy.json",
             ROOT / "site" / "terms.html",
@@ -2518,7 +2619,7 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "launch" / "telegram_channel_runbook.md",
             ROOT / "launch" / "telegram_pinned_buy_announcement.md",
         ]
-        forbidden = re.compile(r"\b(guaranteed returns?|profit sharing|risk[- ]?free|稳赚|保本|拉盘|炒币)\b", re.I)
+        forbidden = re.compile(r"\b(guaranteed returns?|profit sharing|risk[- ]?free|稳赚|保本|拉盘|炒币|刷量|对倒)\b", re.I)
         for path in paths:
             with self.subTest(path=path.name):
                 self.assertIsNone(forbidden.search(path.read_text()))
@@ -2697,6 +2798,8 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "site" / "community.json",
             ROOT / "site" / "narrative.html",
             ROOT / "site" / "narrative.json",
+            ROOT / "site" / "radar.html",
+            ROOT / "site" / "radar.json",
             ROOT / "site" / "privacy.html",
             ROOT / "site" / "privacy.json",
             ROOT / "site" / "terms.html",
