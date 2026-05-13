@@ -48,6 +48,8 @@
   "supplyPageUrl": "https://gcagochina.com/supply.html",
   "supplyDisclosureUrl": "https://gcagochina.com/supply.json",
   "securityPageUrl": "https://gcagochina.com/security.html",
+  "tokenSafetyPageUrl": "https://gcagochina.com/token-safety.html",
+  "tokenSafetyUrl": "https://gcagochina.com/token-safety.json",
   "riskPageUrl": "https://gcagochina.com/risk.html",
   "faqUrl": "https://gcagochina.com/faq.html",
   "memberPreRegistrationUrl": "https://gcagochina.com/members.html",
@@ -95,6 +97,12 @@
     "pageUrl": "https://gcagochina.com/trust.html",
     "url": "https://gcagochina.com/trust.json",
     "useCase": "Consolidated public verification hub for contract facts, external review status, official market route, supply disclosure, and public claim boundaries."
+  },
+  "tokenSafety": {
+    "status": "public-token-safety-checklist-published",
+    "pageUrl": "https://gcagochina.com/token-safety.html",
+    "url": "https://gcagochina.com/token-safety.json",
+    "useCase": "Public token safety checklist for wallet-security reviewers, moderators, and users."
   },
   "baseScanContractUrl": "https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "officialEmail": "GCAgochina@outlook.com",

@@ -37,6 +37,8 @@ PARTICIPATION_TERMS_URL = "https://gcagochina.com/terms.json"
 WALLET_WARNING_PAGE_URL = "https://gcagochina.com/wallet-warning.html"
 WALLET_WARNING_URL = "https://gcagochina.com/wallet-warning.json"
 WALLET_SECURITY_PROFILE_URL = "https://gcagochina.com/.well-known/wallet-security.json"
+TOKEN_SAFETY_PAGE_URL = "https://gcagochina.com/token-safety.html"
+TOKEN_SAFETY_URL = "https://gcagochina.com/token-safety.json"
 EXTERNAL_REVIEW_PAGE_URL = "https://gcagochina.com/external-reviews.html"
 EXTERNAL_REVIEW_URL = "https://gcagochina.com/external-reviews.json"
 REVIEWER_KIT_PAGE_URL = "https://gcagochina.com/reviewer-kit.html"
@@ -121,6 +123,7 @@ def validate_root(text: str) -> None:
     assert_contains(text, "External Reviews", label)
     assert_contains(text, "Platform Replies", label)
     assert_contains(text, "Trust Center", label)
+    assert_contains(text, "Token Safety", label)
     assert_contains(text, "Listing Readiness", label)
     assert_contains(text, "On-chain Proofs", label)
     assert_contains(text, "Brand Kit", label)
@@ -155,6 +158,84 @@ def validate_markets(text: str) -> None:
     assert_contains(text, BASE_USDT_ADDRESS, label)
     assert_contains(text, OFFICIAL_GECKOTERMINAL_URL, label)
     assert_current_pool_text(text, label)
+
+
+def validate_token_safety_page(text: str) -> None:
+    label = "/token-safety.html"
+    assert_contains(text, "GCA Token Safety Checklist", label)
+    assert_contains(text, "Token Safety JSON", label)
+    assert_contains(text, "Wallet Security JSON", label)
+    assert_contains(text, "Verified Positive Controls", label)
+    assert_contains(text, "Pending Or Not Claimed", label)
+    assert_contains(text, "No mint function", label)
+    assert_contains(text, "No third-party audit", label)
+    assert_contains(text, "warning removal before visible confirmation", label)
+    assert_contains(text, MAINNET_ADDRESS, label)
+    assert_contains(text, BASE_USDT_ADDRESS, label)
+    assert_contains(text, OFFICIAL_GECKOTERMINAL_URL, label)
+    assert_contains(text, OFFICIAL_DEXSCREENER_URL, label)
+    assert_current_pool_text(text, label)
+
+
+def validate_token_safety_json(text: str) -> None:
+    label = "/token-safety.json"
+    payload = load_json(text, label)
+    controls = payload.get("verifiedPositiveControls", {})
+    pending = payload.get("pendingOrNotClaimed", {})
+    market = payload.get("officialMarket", {})
+    links = payload.get("reviewLinks", {})
+
+    if payload.get("schema") != TOKEN_SAFETY_URL:
+        raise SiteCheckError(f"{label}: wrong schema")
+    if payload.get("pageUrl") != TOKEN_SAFETY_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong pageUrl")
+    if payload.get("status") != "public-token-safety-checklist-published":
+        raise SiteCheckError(f"{label}: wrong status")
+    if payload.get("chainId") != 8453:
+        raise SiteCheckError(f"{label}: wrong chainId")
+    if payload.get("contractAddress") != MAINNET_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong contractAddress")
+    if controls.get("sourceVerifiedOnBaseScan") is not True:
+        raise SiteCheckError(f"{label}: source verification must be true")
+    if controls.get("fixedSupply") is not True:
+        raise SiteCheckError(f"{label}: fixed supply must be true")
+    for key in (
+        "postDeploymentMintFunction",
+        "ownerOrAdminRole",
+        "proxyOrUpgradePath",
+        "blacklistFunction",
+        "pauseFunction",
+        "transferTaxOrHiddenFee",
+        "custodyOrWithdrawalPath",
+    ):
+        if controls.get(key) is not False:
+            raise SiteCheckError(f"{label}: {key} must be false")
+    if pending.get("baseScanTokenProfile") != "resubmitted-awaiting-review":
+        raise SiteCheckError(f"{label}: wrong BaseScan profile status")
+    if pending.get("blockaidMetaMaskWarning") != "submitted-warning-removal-not-confirmed":
+        raise SiteCheckError(f"{label}: wrong wallet warning status")
+    if pending.get("thirdPartyAudit") != "not-completed":
+        raise SiteCheckError(f"{label}: wrong audit status")
+    if market.get("pair") != "GCA/USDT":
+        raise SiteCheckError(f"{label}: wrong pair")
+    if market.get("poolAddress") != OFFICIAL_POOL_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong poolAddress")
+    if market.get("quoteAssetAddress") != BASE_USDT_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong quoteAssetAddress")
+    if links.get("tokenSafetyPage") != TOKEN_SAFETY_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong tokenSafetyPage")
+    if links.get("tokenSafety") != TOKEN_SAFETY_URL:
+        raise SiteCheckError(f"{label}: wrong tokenSafety")
+    if links.get("walletSecurityProfile") != WALLET_SECURITY_PROFILE_URL:
+        raise SiteCheckError(f"{label}: wrong walletSecurityProfile")
+    if links.get("walletWarningEvidence") != WALLET_WARNING_URL:
+        raise SiteCheckError(f"{label}: wrong walletWarningEvidence")
+    if "No third-party audit has been completed." not in payload.get("publicClaimBoundaries", {}).get("safeClaims", []):
+        raise SiteCheckError(f"{label}: missing audit safe claim")
+    if "Blockaid or MetaMask warning removal before visible confirmation" not in payload.get("publicClaimBoundaries", {}).get("doNotClaim", []):
+        raise SiteCheckError(f"{label}: missing warning-removal boundary")
+    assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
+    assert_not_contains(json.dumps(payload), "GCA/WETH", label)
 
 
 def validate_members(text: str) -> None:
@@ -722,6 +803,10 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong walletWarningEvidenceUrl")
     if payload.get("walletSecurityProfileUrl") != WALLET_SECURITY_PROFILE_URL:
         raise SiteCheckError(f"{label}: wrong walletSecurityProfileUrl")
+    if payload.get("tokenSafetyPageUrl") != TOKEN_SAFETY_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong tokenSafetyPageUrl")
+    if payload.get("tokenSafetyUrl") != TOKEN_SAFETY_URL:
+        raise SiteCheckError(f"{label}: wrong tokenSafetyUrl")
     if payload.get("externalReviewStatusPageUrl") != EXTERNAL_REVIEW_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong externalReviewStatusPageUrl")
     if payload.get("externalReviewStatusUrl") != EXTERNAL_REVIEW_URL:
@@ -794,6 +879,8 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: unexpected platform replies status")
     if payload.get("trustCenter", {}).get("status") != "public-trust-center-published":
         raise SiteCheckError(f"{label}: unexpected trust center status")
+    if payload.get("tokenSafety", {}).get("status") != "public-token-safety-checklist-published":
+        raise SiteCheckError(f"{label}: unexpected token safety status")
     if payload.get("walletWarningEvidence", {}).get("status") != "warning-report-submitted-removal-not-confirmed":
         raise SiteCheckError(f"{label}: unexpected wallet warning status")
     if payload.get("walletWarningEvidence", {}).get("walletSecurityProfileUrl") != WALLET_SECURITY_PROFILE_URL:
@@ -858,6 +945,10 @@ def validate_tokenlist_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong walletWarningEvidence")
     if extensions.get("walletSecurityProfile") != WALLET_SECURITY_PROFILE_URL:
         raise SiteCheckError(f"{label}: wrong walletSecurityProfile")
+    if extensions.get("tokenSafetyPage") != TOKEN_SAFETY_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong tokenSafetyPage")
+    if extensions.get("tokenSafety") != TOKEN_SAFETY_URL:
+        raise SiteCheckError(f"{label}: wrong tokenSafety")
     if extensions.get("externalReviewStatusPage") != EXTERNAL_REVIEW_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong externalReviewStatusPage")
     if extensions.get("externalReviewStatus") != EXTERNAL_REVIEW_URL:
@@ -904,6 +995,8 @@ def validate_tokenlist_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong trustCenterStatus")
     if extensions.get("walletSecurityProfileStatus") != "public-wallet-security-profile-published":
         raise SiteCheckError(f"{label}: wrong walletSecurityProfileStatus")
+    if extensions.get("tokenSafetyStatus") != "public-token-safety-checklist-published":
+        raise SiteCheckError(f"{label}: wrong tokenSafetyStatus")
     if extensions.get("memberLedgerStatus") != "public-member-ledger-schema-published":
         raise SiteCheckError(f"{label}: wrong memberLedgerStatus")
     if extensions.get("supportIntakeStatus") != "public-support-intake-published":
@@ -964,6 +1057,10 @@ def validate_well_known_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong walletWarningEvidence")
     if urls.get("walletSecurityProfile") != WALLET_SECURITY_PROFILE_URL:
         raise SiteCheckError(f"{label}: wrong walletSecurityProfile")
+    if urls.get("tokenSafetyPage") != TOKEN_SAFETY_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong tokenSafetyPage")
+    if urls.get("tokenSafety") != TOKEN_SAFETY_URL:
+        raise SiteCheckError(f"{label}: wrong tokenSafety")
     if urls.get("externalReviewStatusPage") != EXTERNAL_REVIEW_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong externalReviewStatusPage")
     if urls.get("externalReviewStatus") != EXTERNAL_REVIEW_URL:
@@ -1010,6 +1107,8 @@ def validate_well_known_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong trustCenter status")
     if payload.get("platformStatus", {}).get("walletSecurityProfile") != "public-wallet-security-profile-published":
         raise SiteCheckError(f"{label}: wrong walletSecurityProfile status")
+    if payload.get("platformStatus", {}).get("tokenSafety") != "public-token-safety-checklist-published":
+        raise SiteCheckError(f"{label}: wrong tokenSafety status")
     assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
 
 
@@ -1062,6 +1161,10 @@ def validate_wallet_security_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong quote asset")
     if links.get("walletSecurityProfile") != WALLET_SECURITY_PROFILE_URL:
         raise SiteCheckError(f"{label}: wrong walletSecurityProfile link")
+    if links.get("tokenSafetyPage") != TOKEN_SAFETY_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong tokenSafetyPage")
+    if links.get("tokenSafety") != TOKEN_SAFETY_URL:
+        raise SiteCheckError(f"{label}: wrong tokenSafety")
     if links.get("walletWarningEvidence") != WALLET_WARNING_URL:
         raise SiteCheckError(f"{label}: wrong wallet warning evidence link")
     if links.get("trustCenter") != TRUST_CENTER_URL:
@@ -1478,6 +1581,10 @@ def validate_reviewer_kit_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong walletWarningEvidence")
     if links.get("walletSecurityProfile") != WALLET_SECURITY_PROFILE_URL:
         raise SiteCheckError(f"{label}: wrong walletSecurityProfile")
+    if links.get("tokenSafetyPage") != TOKEN_SAFETY_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong tokenSafetyPage")
+    if links.get("tokenSafety") != TOKEN_SAFETY_URL:
+        raise SiteCheckError(f"{label}: wrong tokenSafety")
     if links.get("externalReviewStatus") != EXTERNAL_REVIEW_URL:
         raise SiteCheckError(f"{label}: wrong externalReviewStatus")
     if links.get("onchainProofs") != ONCHAIN_PROOFS_URL:
@@ -1680,6 +1787,8 @@ def validate_trust_json(text: str) -> None:
         "platformReplies": PLATFORM_REPLIES_URL,
         "walletWarningEvidence": WALLET_WARNING_URL,
         "walletSecurityProfile": WALLET_SECURITY_PROFILE_URL,
+        "tokenSafetyPage": TOKEN_SAFETY_PAGE_URL,
+        "tokenSafety": TOKEN_SAFETY_URL,
         "externalReviewStatus": EXTERNAL_REVIEW_URL,
         "onchainProofs": ONCHAIN_PROOFS_URL,
         "brandKit": BRAND_KIT_URL,
@@ -1806,6 +1915,10 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong onchainProofs")
     if links.get("walletSecurityProfile") != WALLET_SECURITY_PROFILE_URL:
         raise SiteCheckError(f"{label}: wrong walletSecurityProfile")
+    if links.get("tokenSafetyPage") != TOKEN_SAFETY_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong tokenSafetyPage")
+    if links.get("tokenSafety") != TOKEN_SAFETY_URL:
+        raise SiteCheckError(f"{label}: wrong tokenSafety")
     if market.get("officialPair") != "GCA/USDT":
         raise SiteCheckError(f"{label}: wrong officialPair")
     if market.get("poolAddress") != OFFICIAL_POOL_ADDRESS:
@@ -1970,6 +2083,8 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/trust.json",
         "https://gcagochina.com/market-quality.html",
         "https://gcagochina.com/market-quality.json",
+        "https://gcagochina.com/token-safety.html",
+        "https://gcagochina.com/token-safety.json",
         "https://gcagochina.com/brand-kit.html",
         "https://gcagochina.com/brand-kit.json",
         "https://gcagochina.com/onchain-proofs.html",
@@ -2024,6 +2139,8 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /community.json", label)
     assert_contains(text, "Allow: /market-quality.html", label)
     assert_contains(text, "Allow: /market-quality.json", label)
+    assert_contains(text, "Allow: /token-safety.html", label)
+    assert_contains(text, "Allow: /token-safety.json", label)
     assert_contains(text, "Allow: /supply.json", label)
     assert_contains(text, "Allow: /onchain-proofs.html", label)
     assert_contains(text, "Allow: /onchain-proofs.json", label)
@@ -2059,6 +2176,8 @@ CHECKS: list[EndpointCheck] = [
     ("/external-reviews.json", validate_external_reviews_json),
     ("/market-quality.html", validate_market_quality_page),
     ("/market-quality.json", validate_market_quality_json),
+    ("/token-safety.html", validate_token_safety_page),
+    ("/token-safety.json", validate_token_safety_json),
     ("/brand-kit.html", validate_brand_kit_page),
     ("/brand-kit.json", validate_brand_kit_json),
     ("/onchain-proofs.html", validate_onchain_proofs_page),

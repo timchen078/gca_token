@@ -18,6 +18,8 @@
     "walletWarningEvidence": "https://gcagochina.com/wallet-warning.json",
     "trustCenterPage": "https://gcagochina.com/trust.html",
     "trustCenter": "https://gcagochina.com/trust.json",
+    "tokenSafetyPage": "https://gcagochina.com/token-safety.html",
+    "tokenSafety": "https://gcagochina.com/token-safety.json",
     "externalReviewStatusPage": "https://gcagochina.com/external-reviews.html",
     "externalReviewStatus": "https://gcagochina.com/external-reviews.json",
     "status": "https://gcagochina.com/status.html",

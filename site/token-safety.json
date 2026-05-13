@@ -1,0 +1,79 @@
+{
+  "schema": "https://gcagochina.com/token-safety.json",
+  "pageUrl": "https://gcagochina.com/token-safety.html",
+  "lastUpdated": "2026-05-13",
+  "status": "public-token-safety-checklist-published",
+  "projectName": "GCA",
+  "tokenSymbol": "GCA",
+  "network": "Base Mainnet",
+  "chainId": 8453,
+  "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+  "decimals": 18,
+  "totalSupply": "1000000000",
+  "verifiedPositiveControls": {
+    "sourceVerifiedOnBaseScan": true,
+    "fixedSupply": true,
+    "postDeploymentMintFunction": false,
+    "ownerOrAdminRole": false,
+    "proxyOrUpgradePath": false,
+    "blacklistFunction": false,
+    "pauseFunction": false,
+    "transferTaxOrHiddenFee": false,
+    "custodyOrWithdrawalPath": false
+  },
+  "pendingOrNotClaimed": {
+    "baseScanTokenProfile": "resubmitted-awaiting-review",
+    "blockaidMetaMaskWarning": "submitted-warning-removal-not-confirmed",
+    "thirdPartyAudit": "not-completed",
+    "ownerReserveCustody": "normal-owner-controlled-wallet-not-lock-vesting-or-multisig",
+    "liquidityDepth": "starter-depth-only",
+    "coinGeckoTrackedListing": "deferred",
+    "coinMarketCapTrackedListing": "deferred"
+  },
+  "officialMarket": {
+    "pair": "GCA/USDT",
+    "dex": "Uniswap v4",
+    "network": "Base Mainnet",
+    "feeTier": "0.01%",
+    "poolAddress": "0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "quoteAsset": "USDT",
+    "quoteAssetAddress": "0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2",
+    "geckoTerminal": "https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "dexScreener": "https://dexscreener.com/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "uniswapPool": "https://app.uniswap.org/explore/pools/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "liquidityDepthStatus": "starter-depth-only"
+  },
+  "reviewLinks": {
+    "tokenSafetyPage": "https://gcagochina.com/token-safety.html",
+    "tokenSafety": "https://gcagochina.com/token-safety.json",
+    "walletSecurityProfile": "https://gcagochina.com/.well-known/wallet-security.json",
+    "walletWarningEvidencePage": "https://gcagochina.com/wallet-warning.html",
+    "walletWarningEvidence": "https://gcagochina.com/wallet-warning.json",
+    "trustCenterPage": "https://gcagochina.com/trust.html",
+    "trustCenter": "https://gcagochina.com/trust.json",
+    "securityPage": "https://gcagochina.com/security.html",
+    "riskPage": "https://gcagochina.com/risk.html",
+    "externalReviewStatusPage": "https://gcagochina.com/external-reviews.html",
+    "externalReviewStatus": "https://gcagochina.com/external-reviews.json",
+    "reviewerKitPage": "https://gcagochina.com/reviewer-kit.html",
+    "reviewerKit": "https://gcagochina.com/reviewer-kit.json",
+    "wellKnownTokenIdentity": "https://gcagochina.com/.well-known/gca-token.json",
+    "baseScanContract": "https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6"
+  },
+  "publicClaimBoundaries": {
+    "safeClaims": [
+      "GCA is source-verified on BaseScan.",
+      "GCA has fixed total supply and no post-deployment mint function.",
+      "The GCA token contract has no token tax, no blacklist, no proxy, no pause, no owner/admin role, and no withdrawal path.",
+      "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool.",
+      "No third-party audit has been completed."
+    ],
+    "doNotClaim": [
+      "Blockaid or MetaMask warning removal before visible confirmation",
+      "warning-free status before wallet-security vendors confirm it",
+      "third-party audit completion before an independent report is published",
+      "locked reserve before on-chain custody changes",
+      "deep liquidity, price support, return promises, or listing approval"
+    ]
+  }
+}
