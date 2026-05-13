@@ -32,6 +32,8 @@ This package prepares GCA information for token data and DEX discovery platforms
 - External review status JSON: `https://gcagochina.com/external-reviews.json`
 - Reviewer kit page: `https://gcagochina.com/reviewer-kit.html`
 - Reviewer kit JSON: `https://gcagochina.com/reviewer-kit.json`
+- Platform replies page: `https://gcagochina.com/platform-replies.html`
+- Platform replies JSON: `https://gcagochina.com/platform-replies.json`
 - Listing readiness page: `https://gcagochina.com/listing-readiness.html`
 - Listing readiness JSON: `https://gcagochina.com/listing-readiness.json`
 - Market quality page: `https://gcagochina.com/market-quality.html`
@@ -87,6 +89,8 @@ This package prepares GCA information for token data and DEX discovery platforms
 - External review status JSON: `https://gcagochina.com/external-reviews.json`
 - Reviewer kit page: `https://gcagochina.com/reviewer-kit.html`
 - Reviewer kit JSON: `https://gcagochina.com/reviewer-kit.json`
+- Platform replies page: `https://gcagochina.com/platform-replies.html`
+- Platform replies JSON: `https://gcagochina.com/platform-replies.json`
 - Listing readiness page: `https://gcagochina.com/listing-readiness.html`
 - Listing readiness JSON: `https://gcagochina.com/listing-readiness.json`
 - Machine-readable project JSON: `https://gcagochina.com/project.json`
@@ -143,6 +147,8 @@ Public wallet-warning evidence is available at `https://gcagochina.com/wallet-wa
 Public review status is available at `https://gcagochina.com/external-reviews.html` and `https://gcagochina.com/external-reviews.json`. Use those public URLs when a reviewer needs the current BaseScan, Blockaid, GeckoTerminal, DEX Screener, CoinGecko, CoinMarketCap, or third-party audit status without exposing internal notes.
 
 Public reviewer kit is available at `https://gcagochina.com/reviewer-kit.html` and `https://gcagochina.com/reviewer-kit.json`. Use these URLs when a wallet-security team, DEX interface, explorer, data platform, or community moderator wants one consolidated evidence packet.
+
+Public platform replies are available at `https://gcagochina.com/platform-replies.html` and `https://gcagochina.com/platform-replies.json`. Use these URLs when a platform or moderator asks for a concise reply template.
 
 Use `launch/external_review_followup_tracker.md` before any BaseScan, Blockaid, GeckoTerminal, DEX Screener, CoinGecko, CoinMarketCap, or audit follow-up. It records which reviews are approved, pending, not submitted, or deferred, plus safe public claims and reply templates. This reduces duplicate requests and keeps the official GCA/USDT pool, verify page, and status disclosures consistent.
 

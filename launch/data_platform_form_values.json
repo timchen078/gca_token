@@ -31,6 +31,8 @@
   "externalReviewStatusUrl": "https://gcagochina.com/external-reviews.json",
   "reviewerKitPageUrl": "https://gcagochina.com/reviewer-kit.html",
   "reviewerKitUrl": "https://gcagochina.com/reviewer-kit.json",
+  "platformRepliesPageUrl": "https://gcagochina.com/platform-replies.html",
+  "platformRepliesUrl": "https://gcagochina.com/platform-replies.json",
   "listingReadinessPageUrl": "https://gcagochina.com/listing-readiness.html",
   "listingReadinessUrl": "https://gcagochina.com/listing-readiness.json",
   "onchainProofsPageUrl": "https://gcagochina.com/onchain-proofs.html",
@@ -217,6 +219,12 @@
       "pageUrl": "https://gcagochina.com/reviewer-kit.html",
       "url": "https://gcagochina.com/reviewer-kit.json",
       "nextAction": "Use this public reviewer kit when a platform wants one consolidated evidence packet."
+    },
+    "platformReplies": {
+      "status": "public-platform-reply-kit-published",
+      "pageUrl": "https://gcagochina.com/platform-replies.html",
+      "url": "https://gcagochina.com/platform-replies.json",
+      "nextAction": "Use this public reply kit when a platform or moderator asks for a concise response template."
     },
     "roadmap": {
       "status": "public-roadmap-published",

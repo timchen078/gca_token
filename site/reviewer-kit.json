@@ -15,6 +15,8 @@
     "verify": "https://gcagochina.com/verify.html",
     "reviewerKitPage": "https://gcagochina.com/reviewer-kit.html",
     "reviewerKit": "https://gcagochina.com/reviewer-kit.json",
+    "platformRepliesPage": "https://gcagochina.com/platform-replies.html",
+    "platformReplies": "https://gcagochina.com/platform-replies.json",
     "brandKitPage": "https://gcagochina.com/brand-kit.html",
     "brandKit": "https://gcagochina.com/brand-kit.json",
     "onchainProofsPage": "https://gcagochina.com/onchain-proofs.html",
