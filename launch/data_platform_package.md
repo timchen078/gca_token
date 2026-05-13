@@ -7,6 +7,8 @@ This package prepares GCA information for token data and DEX discovery platforms
 - Official website: live at `https://gcagochina.com/`
 - Official logo: live at `https://gcagochina.com/assets/gca-logo.svg`
 - Whitepaper: live at `https://gcagochina.com/whitepaper.html`
+- Brand kit page: `https://gcagochina.com/brand-kit.html`
+- Brand kit JSON: `https://gcagochina.com/brand-kit.json`
 - Contract source: verified on BaseScan
 - BaseScan token profile: submitted and awaiting BaseScan review
 - GeckoTerminal token info update: approved on 2026-05-11
@@ -49,6 +51,8 @@ This package prepares GCA information for token data and DEX discovery platforms
 - Verify official links: `https://gcagochina.com/verify.html`
 - Project status: `https://gcagochina.com/status.html`
 - Listing kit: `https://gcagochina.com/listing-kit.html`
+- Brand kit page: `https://gcagochina.com/brand-kit.html`
+- Brand kit JSON: `https://gcagochina.com/brand-kit.json`
 - On-chain proofs page: `https://gcagochina.com/onchain-proofs.html`
 - On-chain proofs JSON: `https://gcagochina.com/onchain-proofs.json`
 - Wallet warning evidence page: `https://gcagochina.com/wallet-warning.html`

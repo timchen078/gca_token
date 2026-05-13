@@ -33,6 +33,8 @@ MARKET_QUALITY_URL = "https://gcagochina.com/market-quality.json"
 ONCHAIN_PROOFS_PAGE_URL = "https://gcagochina.com/onchain-proofs.html"
 ONCHAIN_PROOFS_URL = "https://gcagochina.com/onchain-proofs.json"
 SUPPLY_DISCLOSURE_URL = "https://gcagochina.com/supply.json"
+BRAND_KIT_PAGE_URL = "https://gcagochina.com/brand-kit.html"
+BRAND_KIT_URL = "https://gcagochina.com/brand-kit.json"
 DEPLOYMENT_TX = "0xae8ae4d0bd89c03b39946564a5b63bb20cd38879a1aa1fdcb20a6f1c4802e74e"
 RESERVE_WALLET = "0x5e8F84748612B913aAcC937492AC25dc5630E246"
 RESERVE_TX_1 = "0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67"
@@ -100,6 +102,7 @@ def validate_root(text: str) -> None:
     assert_contains(text, "External Reviews", label)
     assert_contains(text, "Listing Readiness", label)
     assert_contains(text, "On-chain Proofs", label)
+    assert_contains(text, "Brand Kit", label)
     assert_contains(text, MAINNET_ADDRESS, label)
     assert_current_pool_text(text, label)
 
@@ -112,6 +115,7 @@ def validate_verify(text: str) -> None:
     assert_contains(text, "Wallet Warning", label)
     assert_contains(text, "External Reviews", label)
     assert_contains(text, "On-chain Proofs", label)
+    assert_contains(text, "Brand Kit", label)
     assert_contains(text, OFFICIAL_DEXSCREENER_URL, label)
     assert_current_pool_text(text, label)
 
@@ -202,6 +206,75 @@ def validate_supply_json(text: str) -> None:
     assert_not_contains(json.dumps(payload), "GCA/WETH", label)
 
 
+def validate_brand_kit_json(text: str) -> None:
+    label = "/brand-kit.json"
+    payload = load_json(text, label)
+    logo_assets = payload.get("logoAssets", {})
+    visual = payload.get("visualIdentity", {})
+    links = payload.get("officialLinks", {})
+    metadata = payload.get("metadataUse", {})
+    market = payload.get("officialMarket", {})
+
+    if payload.get("schema") != BRAND_KIT_URL:
+        raise SiteCheckError(f"{label}: wrong schema")
+    if payload.get("pageUrl") != BRAND_KIT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong pageUrl")
+    if payload.get("status") != "public-brand-kit-published":
+        raise SiteCheckError(f"{label}: wrong status")
+    if payload.get("chainId") != 8453:
+        raise SiteCheckError(f"{label}: wrong chainId")
+    if payload.get("contractAddress") != MAINNET_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong contractAddress")
+    if market.get("pair") != "GCA/USDT":
+        raise SiteCheckError(f"{label}: wrong market pair")
+    if market.get("poolAddress") != OFFICIAL_POOL_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong poolAddress")
+    if market.get("quoteAssetAddress") != BASE_USDT_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong quoteAssetAddress")
+    if market.get("geckoTerminal") != OFFICIAL_GECKOTERMINAL_URL:
+        raise SiteCheckError(f"{label}: wrong geckoTerminal")
+    if market.get("dexScreener") != OFFICIAL_DEXSCREENER_URL:
+        raise SiteCheckError(f"{label}: wrong dexScreener")
+    if logo_assets.get("svg", {}).get("url") != "https://gcagochina.com/assets/gca-logo.svg":
+        raise SiteCheckError(f"{label}: wrong svg logo")
+    if logo_assets.get("svg", {}).get("width") != 32:
+        raise SiteCheckError(f"{label}: wrong svg width")
+    if logo_assets.get("png", {}).get("url") != "https://gcagochina.com/assets/gca-logo.png":
+        raise SiteCheckError(f"{label}: wrong png logo")
+    if logo_assets.get("png", {}).get("width") != 512:
+        raise SiteCheckError(f"{label}: wrong png width")
+    if visual.get("primaryInk") != "#111111":
+        raise SiteCheckError(f"{label}: wrong primary ink")
+    if links.get("brandKit") != BRAND_KIT_URL:
+        raise SiteCheckError(f"{label}: wrong brandKit link")
+    if links.get("tokenList") != "https://gcagochina.com/tokenlist.json":
+        raise SiteCheckError(f"{label}: wrong tokenList link")
+    if "token logo display" not in metadata.get("safeUse", []):
+        raise SiteCheckError(f"{label}: missing safe logo use")
+    if "third-party audit completion" not in metadata.get("doNotUseToImply", []):
+        raise SiteCheckError(f"{label}: missing audit boundary")
+    assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
+    assert_not_contains(json.dumps(payload), "GCA/WETH", label)
+
+
+def validate_brand_kit_page(text: str) -> None:
+    label = "/brand-kit.html"
+    assert_contains(text, "GCA Brand Kit", label)
+    assert_contains(text, "Brand Kit JSON", label)
+    assert_contains(text, "Logo SVG", label)
+    assert_contains(text, "Logo PNG", label)
+    assert_contains(text, "32 x 32", label)
+    assert_contains(text, "512 x 512", label)
+    assert_contains(text, "#111111", label)
+    assert_contains(text, "#D71920", label)
+    assert_contains(text, "#0052FF", label)
+    assert_contains(text, "Base Mainnet / 8453", label)
+    assert_contains(text, MAINNET_ADDRESS, label)
+    assert_contains(text, "Do not use this logo to imply third-party audit completion", label)
+    assert_contains(text, "Do not submit the frozen X account", label)
+    assert_current_pool_text(text, label)
+
+
 def validate_project_json(text: str) -> None:
     label = "/project.json"
     payload = load_json(text, label)
@@ -227,6 +300,10 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong listingReadinessPageUrl")
     if payload.get("listingReadinessUrl") != LISTING_READINESS_URL:
         raise SiteCheckError(f"{label}: wrong listingReadinessUrl")
+    if payload.get("brandKitPageUrl") != BRAND_KIT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong brandKitPageUrl")
+    if payload.get("brandKitUrl") != BRAND_KIT_URL:
+        raise SiteCheckError(f"{label}: wrong brandKitUrl")
     if payload.get("marketQualityPageUrl") != MARKET_QUALITY_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong marketQualityPageUrl")
     if payload.get("marketQualityUrl") != MARKET_QUALITY_URL:
@@ -261,6 +338,8 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: unexpected onchain proofs status")
     if payload.get("supplyDisclosure", {}).get("status") != "public-supply-disclosure-published":
         raise SiteCheckError(f"{label}: unexpected supply disclosure status")
+    if payload.get("brandKit", {}).get("status") != "public-brand-kit-published":
+        raise SiteCheckError(f"{label}: unexpected brand kit status")
     assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
 
 
@@ -297,6 +376,10 @@ def validate_tokenlist_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong listingReadinessPage")
     if extensions.get("listingReadiness") != LISTING_READINESS_URL:
         raise SiteCheckError(f"{label}: wrong listingReadiness")
+    if extensions.get("brandKitPage") != BRAND_KIT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong brandKitPage")
+    if extensions.get("brandKit") != BRAND_KIT_URL:
+        raise SiteCheckError(f"{label}: wrong brandKit")
     if extensions.get("marketQualityPage") != MARKET_QUALITY_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong marketQualityPage")
     if extensions.get("marketQuality") != MARKET_QUALITY_URL:
@@ -309,6 +392,8 @@ def validate_tokenlist_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong onchainProofs")
     if extensions.get("supplyDisclosureStatus") != "public-supply-disclosure-published":
         raise SiteCheckError(f"{label}: wrong supplyDisclosureStatus")
+    if extensions.get("brandKitStatus") != "public-brand-kit-published":
+        raise SiteCheckError(f"{label}: wrong brandKitStatus")
     assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
 
 
@@ -339,6 +424,10 @@ def validate_well_known_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong listingReadinessPage")
     if urls.get("listingReadiness") != LISTING_READINESS_URL:
         raise SiteCheckError(f"{label}: wrong listingReadiness")
+    if urls.get("brandKitPage") != BRAND_KIT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong brandKitPage")
+    if urls.get("brandKit") != BRAND_KIT_URL:
+        raise SiteCheckError(f"{label}: wrong brandKit")
     if urls.get("marketQualityPage") != MARKET_QUALITY_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong marketQualityPage")
     if urls.get("marketQuality") != MARKET_QUALITY_URL:
@@ -746,6 +835,8 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/wallet-warning.json",
         "https://gcagochina.com/market-quality.html",
         "https://gcagochina.com/market-quality.json",
+        "https://gcagochina.com/brand-kit.html",
+        "https://gcagochina.com/brand-kit.json",
         "https://gcagochina.com/onchain-proofs.html",
         "https://gcagochina.com/onchain-proofs.json",
         "https://gcagochina.com/external-reviews.html",
@@ -765,6 +856,8 @@ def validate_sitemap(text: str) -> None:
 def validate_robots(text: str) -> None:
     label = "/robots.txt"
     assert_contains(text, "Allow: /wallet-warning.html", label)
+    assert_contains(text, "Allow: /brand-kit.html", label)
+    assert_contains(text, "Allow: /brand-kit.json", label)
     assert_contains(text, "Allow: /wallet-warning.json", label)
     assert_contains(text, "Allow: /listing-readiness.html", label)
     assert_contains(text, "Allow: /listing-readiness.json", label)
@@ -791,6 +884,8 @@ CHECKS: list[EndpointCheck] = [
     ("/external-reviews.json", validate_external_reviews_json),
     ("/market-quality.html", validate_market_quality_page),
     ("/market-quality.json", validate_market_quality_json),
+    ("/brand-kit.html", validate_brand_kit_page),
+    ("/brand-kit.json", validate_brand_kit_json),
     ("/onchain-proofs.html", validate_onchain_proofs_page),
     ("/onchain-proofs.json", validate_onchain_proofs_json),
     ("/supply.html", validate_supply_page),

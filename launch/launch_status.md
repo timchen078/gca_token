@@ -45,6 +45,7 @@
 - Official verify page prepared at `https://gcagochina.com/verify.html` to centralize canonical contract, Base Mainnet chain ID, official GCA/USDT pool, website, Telegram, metadata files, and anti-scam link checks.
 - Public project status page prepared at `https://gcagochina.com/status.html`.
 - Public listing kit and machine-readable project JSON prepared at `https://gcagochina.com/listing-kit.html` and `https://gcagochina.com/project.json`.
+- Public brand kit page and JSON prepared at `https://gcagochina.com/brand-kit.html` and `https://gcagochina.com/brand-kit.json` for logo assets, token metadata, colors, official links, and logo usage boundaries.
 - Public on-chain proofs page and JSON prepared at `https://gcagochina.com/onchain-proofs.html` and `https://gcagochina.com/onchain-proofs.json` for deployment, source verification, reserve transfers, official GCA/USDT market route, and functional swap evidence.
 - Public wallet warning evidence page and JSON prepared at `https://gcagochina.com/wallet-warning.html` and `https://gcagochina.com/wallet-warning.json` for Blockaid / MetaMask follow-up evidence, contract facts, and warning-status boundaries.
 - Public external review status page and JSON prepared at `https://gcagochina.com/external-reviews.html` and `https://gcagochina.com/external-reviews.json` for BaseScan, Blockaid / MetaMask, GeckoTerminal, DEX Screener, CoinGecko, CoinMarketCap, and audit status.
@@ -77,6 +78,7 @@
 
 - Wait for BaseScan review or an email reply to `cxy070800@gmail.com`.
 - Use `launch/external_review_followup_tracker.md` for BaseScan, Blockaid, GeckoTerminal, DEX Screener, CoinGecko, CoinMarketCap, and audit follow-up status before sending any new platform request.
+- Use `https://gcagochina.com/brand-kit.html` and `https://gcagochina.com/brand-kit.json` when wallets, data platforms, moderators, or community posts need official GCA logo assets and metadata usage boundaries.
 - If BaseScan asks for supply details during review, use the updated 40/60 allocation and both reserve transfer transactions.
 - Use `https://gcagochina.com/supply.json` when a data platform asks for machine-readable supply, allocation, reserve-wallet, or circulating-supply context.
 - Wait for stronger public activity and market volume before submitting CoinGecko or CoinMarketCap listing requests.

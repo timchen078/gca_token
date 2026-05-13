@@ -19,6 +19,8 @@
   "verifyUrl": "https://gcagochina.com/verify.html",
   "statusPageUrl": "https://gcagochina.com/status.html",
   "listingKitUrl": "https://gcagochina.com/listing-kit.html",
+  "brandKitPageUrl": "https://gcagochina.com/brand-kit.html",
+  "brandKitUrl": "https://gcagochina.com/brand-kit.json",
   "walletWarningEvidencePageUrl": "https://gcagochina.com/wallet-warning.html",
   "walletWarningEvidenceUrl": "https://gcagochina.com/wallet-warning.json",
   "externalReviewStatusPageUrl": "https://gcagochina.com/external-reviews.html",

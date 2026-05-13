@@ -8,6 +8,8 @@
     "website": "https://gcagochina.com/",
     "verifyUrl": "https://gcagochina.com/verify.html",
     "marketPageUrl": "https://gcagochina.com/markets.html",
+    "brandKitPageUrl": "https://gcagochina.com/brand-kit.html",
+    "brandKitUrl": "https://gcagochina.com/brand-kit.json",
     "supplyDisclosureUrl": "https://gcagochina.com/supply.json",
     "walletWarningEvidencePageUrl": "https://gcagochina.com/wallet-warning.html",
     "walletWarningEvidenceUrl": "https://gcagochina.com/wallet-warning.json",

@@ -44,6 +44,8 @@ MARKET_QUALITY_URL = "https://gcagochina.com/market-quality.json"
 ONCHAIN_PROOFS_PAGE_URL = "https://gcagochina.com/onchain-proofs.html"
 ONCHAIN_PROOFS_URL = "https://gcagochina.com/onchain-proofs.json"
 SUPPLY_DISCLOSURE_URL = "https://gcagochina.com/supply.json"
+BRAND_KIT_PAGE_URL = "https://gcagochina.com/brand-kit.html"
+BRAND_KIT_URL = "https://gcagochina.com/brand-kit.json"
 DEPLOYMENT_TX = "0xae8ae4d0bd89c03b39946564a5b63bb20cd38879a1aa1fdcb20a6f1c4802e74e"
 
 
@@ -76,6 +78,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("/onchain-proofs.json", script)
         self.assertIn("/supply.html", script)
         self.assertIn("/supply.json", script)
+        self.assertIn("/brand-kit.html", script)
+        self.assertIn("/brand-kit.json", script)
         self.assertIn("validate_members", script)
         self.assertIn("validate_member_program_json", script)
         self.assertIn("validate_wallet_warning_page", script)
@@ -90,6 +94,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("validate_onchain_proofs_json", script)
         self.assertIn("validate_supply_page", script)
         self.assertIn("validate_supply_json", script)
+        self.assertIn("validate_brand_kit_page", script)
+        self.assertIn("validate_brand_kit_json", script)
         self.assertIn("FORBIDDEN_PUBLIC_CLAIM_PATTERNS", script)
         self.assertIn("assert_no_forbidden_public_claims", script)
         self.assertIn("profit sharing", script)
@@ -109,6 +115,8 @@ class LaunchPackageTests(unittest.TestCase):
         module.validate_onchain_proofs_json((ROOT / "site" / "onchain-proofs.json").read_text())
         module.validate_supply_page((ROOT / "site" / "supply.html").read_text())
         module.validate_supply_json((ROOT / "site" / "supply.json").read_text())
+        module.validate_brand_kit_page((ROOT / "site" / "brand-kit.html").read_text())
+        module.validate_brand_kit_json((ROOT / "site" / "brand-kit.json").read_text())
         module.validate_members((ROOT / "site" / "members.html").read_text())
         module.validate_member_program_json((ROOT / "site" / "member-program.json").read_text())
         module.validate_wallet_warning_page((ROOT / "site" / "wallet-warning.html").read_text())
@@ -255,6 +263,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Allow: /", robots)
         self.assertIn("Allow: /wallet-warning.html", robots)
         self.assertIn("Allow: /wallet-warning.json", robots)
+        self.assertIn("Allow: /brand-kit.html", robots)
+        self.assertIn("Allow: /brand-kit.json", robots)
         self.assertIn("Allow: /external-reviews.html", robots)
         self.assertIn("Allow: /external-reviews.json", robots)
         self.assertIn("Allow: /listing-readiness.html", robots)
@@ -278,6 +288,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(EXTERNAL_REVIEW_URL, sitemap)
         self.assertIn(LISTING_READINESS_PAGE_URL, sitemap)
         self.assertIn(LISTING_READINESS_URL, sitemap)
+        self.assertIn(BRAND_KIT_PAGE_URL, sitemap)
+        self.assertIn(BRAND_KIT_URL, sitemap)
         self.assertIn(MARKET_QUALITY_PAGE_URL, sitemap)
         self.assertIn(MARKET_QUALITY_URL, sitemap)
         self.assertIn(ONCHAIN_PROOFS_PAGE_URL, sitemap)
@@ -321,6 +333,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(identity["officialUrls"]["externalReviewStatus"], EXTERNAL_REVIEW_URL)
         self.assertEqual(identity["officialUrls"]["listingReadinessPage"], LISTING_READINESS_PAGE_URL)
         self.assertEqual(identity["officialUrls"]["listingReadiness"], LISTING_READINESS_URL)
+        self.assertEqual(identity["officialUrls"]["brandKitPage"], BRAND_KIT_PAGE_URL)
+        self.assertEqual(identity["officialUrls"]["brandKit"], BRAND_KIT_URL)
         self.assertEqual(identity["officialUrls"]["marketQualityPage"], MARKET_QUALITY_PAGE_URL)
         self.assertEqual(identity["officialUrls"]["marketQuality"], MARKET_QUALITY_URL)
         self.assertEqual(identity["officialUrls"]["onchainProofsPage"], ONCHAIN_PROOFS_PAGE_URL)
@@ -370,6 +384,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn('href="wallet-warning.html"', site)
         self.assertIn('href="external-reviews.html"', site)
         self.assertIn('href="onchain-proofs.html"', site)
+        self.assertIn('href="brand-kit.html"', site)
         self.assertIn("Go China Access", site)
         self.assertIn("Go China AI Quant Access", site)
         self.assertIn("Go China macro narrative", site)
@@ -517,6 +532,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Wallet Warning", verify)
         self.assertIn("External Reviews", verify)
         self.assertIn("On-chain Proofs", verify)
+        self.assertIn("Brand Kit", verify)
         self.assertIn("Base Mainnet / 8453", verify)
         self.assertIn("Chain ID", verify)
         self.assertIn("8453", verify)
@@ -553,6 +569,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn('href="wallet-warning.html"', verify)
         self.assertIn('href="external-reviews.html"', verify)
         self.assertIn('href="onchain-proofs.html"', verify)
+        self.assertIn('href="brand-kit.html"', verify)
         self.assertIn("copyContract", verify)
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, verify)
 
@@ -825,6 +842,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Wallet warning evidence page", status)
         self.assertIn("External review status page", status)
         self.assertIn("On-chain proofs page", status)
+        self.assertIn("Brand Kit", status)
         self.assertIn("CoinGecko tracked listing", status)
         self.assertIn("CoinMarketCap tracked listing", status)
         self.assertIn('href="listing-readiness.html"', status)
@@ -832,6 +850,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn('href="wallet-warning.html"', status)
         self.assertIn('href="external-reviews.html"', status)
         self.assertIn('href="onchain-proofs.html"', status)
+        self.assertIn('href="brand-kit.html"', status)
         self.assertIn("No third-party audit has been completed", status)
         self.assertIn("600,000,000 GCA", status)
         self.assertIn("normal owner-controlled wallet", status)
@@ -846,10 +865,12 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn('href="wallet-warning.html"', index)
         self.assertIn('href="external-reviews.html"', index)
         self.assertIn('href="onchain-proofs.html"', index)
+        self.assertIn('href="brand-kit.html"', index)
 
         wallet_warning = (ROOT / "site" / "wallet-warning.html").read_text()
         external = (ROOT / "site" / "external-reviews.html").read_text()
-        for page in (index, buy, markets, supply, security, risk, faq, members, utility, whitepaper, verify, readiness, quality, wallet_warning, external, onchain):
+        brand = (ROOT / "site" / "brand-kit.html").read_text()
+        for page in (index, buy, markets, supply, security, risk, faq, members, utility, whitepaper, verify, readiness, quality, wallet_warning, external, onchain, brand):
             self.assertIn('href="status.html"', page)
             self.assertIn('href="listing-kit.html"', page)
             self.assertIn('href="markets.html"', page)
@@ -909,6 +930,10 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("onchain-proofs.html", kit)
         self.assertIn("On-chain Proofs JSON", kit)
         self.assertIn("onchain-proofs.json", kit)
+        self.assertIn("Brand Kit", kit)
+        self.assertIn("brand-kit.html", kit)
+        self.assertIn("Brand Kit JSON", kit)
+        self.assertIn("brand-kit.json", kit)
         self.assertIn("Supply JSON", kit)
         self.assertIn(SUPPLY_DISCLOSURE_URL, kit)
         self.assertIn("Token List JSON", kit)
@@ -956,6 +981,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(project["contractAddress"], MAINNET_ADDRESS)
         self.assertEqual(project["verifyUrl"], VERIFY_PAGE_URL)
         self.assertEqual(project["listingKitUrl"], "https://gcagochina.com/listing-kit.html")
+        self.assertEqual(project["brandKitPageUrl"], BRAND_KIT_PAGE_URL)
+        self.assertEqual(project["brandKitUrl"], BRAND_KIT_URL)
         self.assertEqual(project["walletWarningEvidencePageUrl"], WALLET_WARNING_PAGE_URL)
         self.assertEqual(project["walletWarningEvidenceUrl"], WALLET_WARNING_URL)
         self.assertEqual(project["externalReviewStatusPageUrl"], EXTERNAL_REVIEW_PAGE_URL)
@@ -992,6 +1019,11 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(project["supplyDisclosure"]["status"], "public-supply-disclosure-published")
         self.assertEqual(project["supplyDisclosure"]["url"], SUPPLY_DISCLOSURE_URL)
         self.assertEqual(project["supplyDisclosure"]["ownerReserveWallet"], RESERVE_WALLET)
+        self.assertEqual(project["brandKit"]["status"], "public-brand-kit-published")
+        self.assertEqual(project["brandKit"]["pageUrl"], BRAND_KIT_PAGE_URL)
+        self.assertEqual(project["brandKit"]["url"], BRAND_KIT_URL)
+        self.assertEqual(project["brandKit"]["logoSvgUrl"], "https://gcagochina.com/assets/gca-logo.svg")
+        self.assertEqual(project["brandKit"]["logoPngUrl"], "https://gcagochina.com/assets/gca-logo.png")
         self.assertEqual(project["platformStatus"]["baseScanTokenProfile"], "submitted-awaiting-review")
         self.assertEqual(project["platformStatus"]["geckoTerminalTokenInfo"], "approved-2026-05-11")
         self.assertEqual(project["platformStatus"]["thirdPartyAudit"], "not-completed")
@@ -1164,6 +1196,57 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, json.dumps(proofs))
         self.assertNotIn("GCA/WETH", json.dumps(proofs))
 
+    def test_brand_kit_page_and_json_publish_logo_metadata(self):
+        page = (ROOT / "site" / "brand-kit.html").read_text()
+        kit = json.loads((ROOT / "site" / "brand-kit.json").read_text())
+
+        self.assertIn("GCA Brand Kit", page)
+        self.assertIn("Brand Kit JSON", page)
+        self.assertIn("Logo SVG", page)
+        self.assertIn("Logo PNG", page)
+        self.assertIn("32 x 32", page)
+        self.assertIn("512 x 512", page)
+        self.assertIn("#111111", page)
+        self.assertIn("#D71920", page)
+        self.assertIn("#0052FF", page)
+        self.assertIn("Base Mainnet / 8453", page)
+        self.assertIn(MAINNET_ADDRESS, page)
+        self.assertIn(OFFICIAL_POOL_ADDRESS, page)
+        self.assertIn("GCA/USDT", page)
+        self.assertIn("Do not use this logo to imply third-party audit completion", page)
+        self.assertIn("Do not submit the frozen X account", page)
+        self.assertNotIn(OLD_WETH_POOL_ADDRESS, page)
+        self.assertNotIn("GCA/WETH", page)
+
+        self.assertEqual(kit["schema"], BRAND_KIT_URL)
+        self.assertEqual(kit["pageUrl"], BRAND_KIT_PAGE_URL)
+        self.assertEqual(kit["status"], "public-brand-kit-published")
+        self.assertEqual(kit["chainId"], 8453)
+        self.assertEqual(kit["contractAddress"], MAINNET_ADDRESS)
+        self.assertEqual(kit["officialMarket"]["pair"], "GCA/USDT")
+        self.assertEqual(kit["officialMarket"]["poolAddress"], OFFICIAL_POOL_ADDRESS)
+        self.assertEqual(kit["officialMarket"]["quoteAssetAddress"], BASE_USDT_ADDRESS)
+        self.assertEqual(kit["officialMarket"]["geckoTerminal"], OFFICIAL_GECKOTERMINAL_URL)
+        self.assertEqual(kit["officialMarket"]["dexScreener"], OFFICIAL_DEXSCREENER_URL)
+        self.assertEqual(kit["logoAssets"]["svg"]["url"], "https://gcagochina.com/assets/gca-logo.svg")
+        self.assertEqual(kit["logoAssets"]["svg"]["format"], "image/svg+xml")
+        self.assertEqual(kit["logoAssets"]["svg"]["width"], 32)
+        self.assertEqual(kit["logoAssets"]["svg"]["height"], 32)
+        self.assertEqual(kit["logoAssets"]["png"]["url"], "https://gcagochina.com/assets/gca-logo.png")
+        self.assertEqual(kit["logoAssets"]["png"]["format"], "image/png")
+        self.assertEqual(kit["logoAssets"]["png"]["width"], 512)
+        self.assertEqual(kit["logoAssets"]["png"]["height"], 512)
+        self.assertEqual(kit["visualIdentity"]["primaryInk"], "#111111")
+        self.assertEqual(kit["visualIdentity"]["accentRed"], "#D71920")
+        self.assertEqual(kit["visualIdentity"]["baseBlue"], "#0052FF")
+        self.assertEqual(kit["officialLinks"]["brandKitPage"], BRAND_KIT_PAGE_URL)
+        self.assertEqual(kit["officialLinks"]["brandKit"], BRAND_KIT_URL)
+        self.assertIn("token logo display", kit["metadataUse"]["safeUse"])
+        self.assertIn("third-party audit completion", kit["metadataUse"]["doNotUseToImply"])
+        self.assertEqual(kit["contact"]["dataPlatformEmail"], "GCAgochina@outlook.com")
+        self.assertNotIn(OLD_WETH_POOL_ADDRESS, json.dumps(kit))
+        self.assertNotIn("GCA/WETH", json.dumps(kit))
+
     def test_external_reviews_page_and_json_centralize_review_status(self):
         page = (ROOT / "site" / "external-reviews.html").read_text()
         reviews = json.loads((ROOT / "site" / "external-reviews.json").read_text())
@@ -1276,6 +1359,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(extensions["verify"], VERIFY_PAGE_URL)
         self.assertEqual(extensions["statusPage"], "https://gcagochina.com/status.html")
         self.assertEqual(extensions["listingKit"], "https://gcagochina.com/listing-kit.html")
+        self.assertEqual(extensions["brandKitPage"], BRAND_KIT_PAGE_URL)
+        self.assertEqual(extensions["brandKit"], BRAND_KIT_URL)
         self.assertEqual(extensions["walletWarningEvidencePage"], WALLET_WARNING_PAGE_URL)
         self.assertEqual(extensions["walletWarningEvidence"], WALLET_WARNING_URL)
         self.assertEqual(extensions["externalReviewStatusPage"], EXTERNAL_REVIEW_PAGE_URL)
@@ -1304,6 +1389,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(extensions["officialSwap"], OFFICIAL_SWAP_URL)
         self.assertEqual(extensions["officialPair"], "GCA/USDT")
         self.assertEqual(extensions["officialPool"], OFFICIAL_POOL_ADDRESS)
+        self.assertEqual(extensions["brandKitStatus"], "public-brand-kit-published")
         self.assertEqual(extensions["geckoTerminalStatus"], "approved-2026-05-11")
         self.assertEqual(extensions["baseScanTokenProfileStatus"], "submitted-awaiting-review")
         self.assertEqual(extensions["blockaidMetaMaskStatus"], "submitted-warning-removal-not-confirmed")
@@ -1334,6 +1420,8 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "site" / "market-quality.json",
             ROOT / "site" / "onchain-proofs.html",
             ROOT / "site" / "onchain-proofs.json",
+            ROOT / "site" / "brand-kit.html",
+            ROOT / "site" / "brand-kit.json",
             ROOT / "site" / "members.html",
             ROOT / "site" / "member-program.json",
             ROOT / "site" / "utility.html",
@@ -1472,6 +1560,8 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "site" / "market-quality.json",
             ROOT / "site" / "onchain-proofs.html",
             ROOT / "site" / "onchain-proofs.json",
+            ROOT / "site" / "brand-kit.html",
+            ROOT / "site" / "brand-kit.json",
             ROOT / "site" / "whitepaper.html",
             ROOT / "site" / "utility.html",
             ROOT / "docs" / "whitepaper.md",
@@ -1559,6 +1649,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(ONCHAIN_PROOFS_PAGE_URL, status)
         self.assertIn(ONCHAIN_PROOFS_URL, status)
         self.assertIn("source verification, reserve transfers, official GCA/USDT market route", status)
+        self.assertIn("Public brand kit page and JSON prepared", status)
+        self.assertIn(BRAND_KIT_PAGE_URL, status)
+        self.assertIn(BRAND_KIT_URL, status)
         self.assertIn("Official token list JSON prepared", status)
         self.assertIn("Public well-known token identity JSON and security contact files prepared", status)
         self.assertIn(WELL_KNOWN_TOKEN_URL, status)
@@ -1610,6 +1703,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Use `launch/external_review_followup_tracker.md`", status)
         self.assertIn("Use `https://gcagochina.com/wallet-warning.html`", status)
         self.assertIn("Use `https://gcagochina.com/external-reviews.html`", status)
+        self.assertIn("Use `https://gcagochina.com/brand-kit.html`", status)
         self.assertIn("quote submission is not an audit", status)
         self.assertNotIn("Pin the first Telegram announcement manually", status)
         self.assertNotIn("wait for GitHub Pages HTTPS to become active", status)
@@ -1645,6 +1739,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(VERIFY_PAGE_URL, package)
         self.assertIn("https://gcagochina.com/status.html", package)
         self.assertIn("https://gcagochina.com/listing-kit.html", package)
+        self.assertIn(BRAND_KIT_PAGE_URL, package)
+        self.assertIn(BRAND_KIT_URL, package)
         self.assertIn(WALLET_WARNING_PAGE_URL, package)
         self.assertIn(WALLET_WARNING_URL, package)
         self.assertIn(EXTERNAL_REVIEW_PAGE_URL, package)
@@ -1697,6 +1793,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["verifyUrl"], VERIFY_PAGE_URL)
         self.assertEqual(values["statusPageUrl"], "https://gcagochina.com/status.html")
         self.assertEqual(values["listingKitUrl"], "https://gcagochina.com/listing-kit.html")
+        self.assertEqual(values["brandKitPageUrl"], BRAND_KIT_PAGE_URL)
+        self.assertEqual(values["brandKitUrl"], BRAND_KIT_URL)
         self.assertEqual(values["walletWarningEvidencePageUrl"], WALLET_WARNING_PAGE_URL)
         self.assertEqual(values["walletWarningEvidenceUrl"], WALLET_WARNING_URL)
         self.assertEqual(values["externalReviewStatusPageUrl"], EXTERNAL_REVIEW_PAGE_URL)
@@ -1797,6 +1895,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(LISTING_READINESS_URL, tracker)
         self.assertIn(ONCHAIN_PROOFS_PAGE_URL, tracker)
         self.assertIn(ONCHAIN_PROOFS_URL, tracker)
+        self.assertIn(BRAND_KIT_PAGE_URL, tracker)
+        self.assertIn(BRAND_KIT_URL, tracker)
         self.assertIn(TELEGRAM_URL, tracker)
         self.assertIn(OFFICIAL_GECKOTERMINAL_URL, tracker)
         self.assertIn("Submitted on 2026-05-09 and awaiting BaseScan review", tracker)
@@ -1833,6 +1933,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["canonicalIdentity"]["listingReadinessUrl"], LISTING_READINESS_URL)
         self.assertEqual(values["canonicalIdentity"]["onchainProofsPageUrl"], ONCHAIN_PROOFS_PAGE_URL)
         self.assertEqual(values["canonicalIdentity"]["onchainProofsUrl"], ONCHAIN_PROOFS_URL)
+        self.assertEqual(values["canonicalIdentity"]["brandKitPageUrl"], BRAND_KIT_PAGE_URL)
+        self.assertEqual(values["canonicalIdentity"]["brandKitUrl"], BRAND_KIT_URL)
         self.assertEqual(values["canonicalIdentity"]["telegramUrl"], TELEGRAM_URL)
         self.assertEqual(values["canonicalIdentity"]["officialPoolPair"], "GCA/USDT")
         self.assertEqual(values["canonicalIdentity"]["officialPoolAddress"], OFFICIAL_POOL_ADDRESS)

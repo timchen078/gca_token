@@ -17,6 +17,8 @@
   "verifyUrl": "https://gcagochina.com/verify.html",
   "statusPageUrl": "https://gcagochina.com/status.html",
   "listingKitUrl": "https://gcagochina.com/listing-kit.html",
+  "brandKitPageUrl": "https://gcagochina.com/brand-kit.html",
+  "brandKitUrl": "https://gcagochina.com/brand-kit.json",
   "onchainProofsPageUrl": "https://gcagochina.com/onchain-proofs.html",
   "onchainProofsUrl": "https://gcagochina.com/onchain-proofs.json",
   "walletWarningEvidencePageUrl": "https://gcagochina.com/wallet-warning.html",
@@ -43,6 +45,15 @@
   "whitepaperUrl": "https://gcagochina.com/whitepaper.html",
   "logoSvgUrl": "https://gcagochina.com/assets/gca-logo.svg",
   "logoPngUrl": "https://gcagochina.com/assets/gca-logo.png",
+  "brandKit": {
+    "status": "public-brand-kit-published",
+    "pageUrl": "https://gcagochina.com/brand-kit.html",
+    "url": "https://gcagochina.com/brand-kit.json",
+    "logoSvgUrl": "https://gcagochina.com/assets/gca-logo.svg",
+    "logoPngUrl": "https://gcagochina.com/assets/gca-logo.png",
+    "logoSvgSize": "32x32",
+    "logoPngSize": "512x512"
+  },
   "baseScanContractUrl": "https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "officialEmail": "GCAgochina@outlook.com",
   "officialSocialLinks": [

@@ -1,5 +1,7 @@
 User-agent: *
 Allow: /
+Allow: /brand-kit.html
+Allow: /brand-kit.json
 Allow: /onchain-proofs.html
 Allow: /onchain-proofs.json
 Allow: /wallet-warning.html
