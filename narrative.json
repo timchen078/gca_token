@@ -60,9 +60,16 @@
     "read-only GCA wallet balance verification",
     "100 credits ledger activation",
     "GCA Member ledger activation",
-    "Weekly Go China Radar public research format",
+    "Weekly Go China Radar pilot issue published",
     "Liquidation Replay sample report"
   ],
+  "weeklyRadar": {
+    "status": "weekly-go-china-radar-pilot-published",
+    "pageUrl": "https://gcagochina.com/radar.html",
+    "url": "https://gcagochina.com/radar.json",
+    "issue": "pilot-001",
+    "issueDate": "2026-05-14"
+  },
   "officialMarket": {
     "pair": "GCA/USDT",
     "poolAddress": "0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
@@ -92,6 +99,8 @@
   "officialLinks": {
     "narrativePage": "https://gcagochina.com/narrative.html",
     "narrative": "https://gcagochina.com/narrative.json",
+    "weeklyRadarPage": "https://gcagochina.com/radar.html",
+    "weeklyRadar": "https://gcagochina.com/radar.json",
     "utilityThesis": "https://gcagochina.com/utility.html",
     "roadmap": "https://gcagochina.com/roadmap.html",
     "community": "https://gcagochina.com/community.html",

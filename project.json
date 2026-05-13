@@ -28,6 +28,8 @@
   "communityUrl": "https://gcagochina.com/community.json",
   "narrativePageUrl": "https://gcagochina.com/narrative.html",
   "narrativeUrl": "https://gcagochina.com/narrative.json",
+  "weeklyRadarPageUrl": "https://gcagochina.com/radar.html",
+  "weeklyRadarUrl": "https://gcagochina.com/radar.json",
   "listingKitUrl": "https://gcagochina.com/listing-kit.html",
   "brandKitPageUrl": "https://gcagochina.com/brand-kit.html",
   "brandKitUrl": "https://gcagochina.com/brand-kit.json",
@@ -160,6 +162,7 @@
     "baseScanTokenProfile": "resubmitted-awaiting-review",
     "geckoTerminalTokenInfo": "approved-2026-05-11",
     "narrativeSystem": "public-narrative-system-published",
+    "weeklyGoChinaRadar": "weekly-go-china-radar-pilot-published",
     "coinGeckoTrackedListing": "not-submitted",
     "coinMarketCapTrackedListing": "not-submitted",
     "thirdPartyAudit": "not-completed"
@@ -221,6 +224,15 @@
       "return guarantees",
       "finished platform utility before controlled account UI is live"
     ]
+  },
+  "weeklyGoChinaRadar": {
+    "status": "weekly-go-china-radar-pilot-published",
+    "pageUrl": "https://gcagochina.com/radar.html",
+    "url": "https://gcagochina.com/radar.json",
+    "issue": "pilot-001",
+    "issueDate": "2026-05-14",
+    "scope": "Pilot research format for China-facing Web3 narrative tracking, risk education, and GCA utility hooks.",
+    "notFinancialAdvice": true
   },
   "marketQuality": {
     "status": "early-stage-market-quality-plan",

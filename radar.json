@@ -1,0 +1,86 @@
+{
+  "schema": "https://gcagochina.com/radar.json",
+  "pageUrl": "https://gcagochina.com/radar.html",
+  "status": "weekly-go-china-radar-pilot-published",
+  "issue": "pilot-001",
+  "issueDate": "2026-05-14",
+  "chainId": 8453,
+  "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+  "title": "Weekly Go China Radar",
+  "subtitle": "Narrative meets risk control.",
+  "scope": "Pilot research format for China-facing Web3 narrative tracking, risk education, and GCA utility hooks. This issue is a format sample, not live market data, not financial advice, and not a buy or sell recommendation.",
+  "narrativeThemes": [
+    {
+      "name": "China-facing Web3 attention",
+      "description": "Track public discussion, bilingual community activity, and China-facing market narratives without presenting any token as a guaranteed opportunity."
+    },
+    {
+      "name": "Base ecosystem access",
+      "description": "Track Base Mainnet identity, official GCA/USDT market route, wallet warnings, and data-platform metadata consistency."
+    },
+    {
+      "name": "Risk-control education",
+      "description": "Turn community attention into safer habits: position sizing, liquidation awareness, backtest discipline, and no-custody boundaries."
+    }
+  ],
+  "utilityHooks": [
+    {
+      "name": "China Narrative Radar",
+      "type": "research format"
+    },
+    {
+      "name": "Liquidation Replay",
+      "type": "risk report format"
+    },
+    {
+      "name": "ENTRY_READY Review",
+      "type": "signal-readiness label"
+    },
+    {
+      "name": "GCA Member Club",
+      "type": "access identity"
+    }
+  ],
+  "riskNotes": [
+    "GCA is still early-stage and current liquidity is starter-depth only.",
+    "BaseScan token profile review is not complete until BaseScan publishes it.",
+    "Blockaid / MetaMask warning removal is not confirmed.",
+    "No third-party audit has been completed.",
+    "Credits and member status are service-access concepts, not cash, tokens, income, reimbursement, or trading permission."
+  ],
+  "officialMarket": {
+    "pair": "GCA/USDT",
+    "poolAddress": "0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "quoteAsset": "USDT",
+    "quoteAssetAddress": "0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2",
+    "liquidityDepth": "starter-depth-only"
+  },
+  "publicClaimBoundaries": {
+    "safeClaims": [
+      "Weekly Go China Radar is the official GCA content format for narrative research and risk education.",
+      "This issue is a pilot content format, not live market data.",
+      "Narrative meets risk control.",
+      "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool.",
+      "No third-party audit has been completed."
+    ],
+    "doNotClaim": [
+      "buy or sell recommendation",
+      "price target",
+      "return promise",
+      "future exchange listing",
+      "public account UI, 100 credits claiming, or GCA Member activation is live before controlled HTTPS account UI and ledger activation are released",
+      "Blockaid or MetaMask warning removal before visible confirmation",
+      "BaseScan token profile approval before BaseScan publishes it"
+    ]
+  },
+  "officialLinks": {
+    "radarPage": "https://gcagochina.com/radar.html",
+    "radar": "https://gcagochina.com/radar.json",
+    "narrativePage": "https://gcagochina.com/narrative.html",
+    "narrative": "https://gcagochina.com/narrative.json",
+    "utilityThesis": "https://gcagochina.com/utility.html",
+    "community": "https://gcagochina.com/community.html",
+    "risk": "https://gcagochina.com/risk.html",
+    "tokenSafety": "https://gcagochina.com/token-safety.json"
+  }
+}

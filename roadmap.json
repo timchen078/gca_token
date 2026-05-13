@@ -44,6 +44,11 @@
       "status": "completed"
     },
     {
+      "id": "weekly-go-china-radar-pilot",
+      "label": "Weekly Go China Radar pilot content format published",
+      "status": "completed"
+    },
+    {
       "id": "safety-and-support-pages",
       "label": "Supply, risk, security, market quality, wallet-warning evidence, external review, privacy, terms, member ledger, and support intake pages published",
       "status": "completed"
@@ -73,12 +78,6 @@
       "label": "GCA Member ledger",
       "status": "prepared-not-live",
       "preparedPath": "/gca/member-ledger"
-    },
-    {
-      "id": "weekly-go-china-radar",
-      "label": "Weekly Go China Radar content format",
-      "status": "not-live",
-      "requiredBeforePublicClaim": "public claims that the narrative research product is active"
     },
     {
       "id": "support-review-queue",
@@ -115,6 +114,8 @@
     "roadmapJson": "https://gcagochina.com/roadmap.json",
     "narrativePage": "https://gcagochina.com/narrative.html",
     "narrative": "https://gcagochina.com/narrative.json",
+    "weeklyRadarPage": "https://gcagochina.com/radar.html",
+    "weeklyRadar": "https://gcagochina.com/radar.json",
     "status": "https://gcagochina.com/status.html",
     "listingKit": "https://gcagochina.com/listing-kit.html",
     "memberPreRegistration": "https://gcagochina.com/members.html",
