@@ -18,6 +18,8 @@
   "statusPageUrl": "https://gcagochina.com/status.html",
   "reviewerKitPageUrl": "https://gcagochina.com/reviewer-kit.html",
   "reviewerKitUrl": "https://gcagochina.com/reviewer-kit.json",
+  "platformRepliesPageUrl": "https://gcagochina.com/platform-replies.html",
+  "platformRepliesUrl": "https://gcagochina.com/platform-replies.json",
   "roadmapPageUrl": "https://gcagochina.com/roadmap.html",
   "roadmapUrl": "https://gcagochina.com/roadmap.json",
   "communityPageUrl": "https://gcagochina.com/community.html",
@@ -78,6 +80,12 @@
       "data platform metadata review",
       "community moderator verification"
     ]
+  },
+  "platformReplies": {
+    "status": "public-platform-reply-kit-published",
+    "pageUrl": "https://gcagochina.com/platform-replies.html",
+    "url": "https://gcagochina.com/platform-replies.json",
+    "useCase": "Copyable replies for wallet-warning evidence requests, BaseScan follow-up, metadata correction, community moderation, and tracked-listing readiness questions."
   },
   "baseScanContractUrl": "https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "officialEmail": "GCAgochina@outlook.com",
