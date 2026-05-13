@@ -33,6 +33,8 @@
   "reviewerKitUrl": "https://gcagochina.com/reviewer-kit.json",
   "platformRepliesPageUrl": "https://gcagochina.com/platform-replies.html",
   "platformRepliesUrl": "https://gcagochina.com/platform-replies.json",
+  "trustCenterPageUrl": "https://gcagochina.com/trust.html",
+  "trustCenterUrl": "https://gcagochina.com/trust.json",
   "listingReadinessPageUrl": "https://gcagochina.com/listing-readiness.html",
   "listingReadinessUrl": "https://gcagochina.com/listing-readiness.json",
   "onchainProofsPageUrl": "https://gcagochina.com/onchain-proofs.html",
@@ -225,6 +227,12 @@
       "pageUrl": "https://gcagochina.com/platform-replies.html",
       "url": "https://gcagochina.com/platform-replies.json",
       "nextAction": "Use this public reply kit when a platform or moderator asks for a concise response template."
+    },
+    "trustCenter": {
+      "status": "public-trust-center-published",
+      "pageUrl": "https://gcagochina.com/trust.html",
+      "url": "https://gcagochina.com/trust.json",
+      "nextAction": "Use this public verification hub when a platform, moderator, or wallet-security reviewer asks for the consolidated contract, market, supply, and review-status packet."
     },
     "roadmap": {
       "status": "public-roadmap-published",

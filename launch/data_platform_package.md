@@ -34,6 +34,8 @@ This package prepares GCA information for token data and DEX discovery platforms
 - Reviewer kit JSON: `https://gcagochina.com/reviewer-kit.json`
 - Platform replies page: `https://gcagochina.com/platform-replies.html`
 - Platform replies JSON: `https://gcagochina.com/platform-replies.json`
+- Trust center page: `https://gcagochina.com/trust.html`
+- Trust center JSON: `https://gcagochina.com/trust.json`
 - Listing readiness page: `https://gcagochina.com/listing-readiness.html`
 - Listing readiness JSON: `https://gcagochina.com/listing-readiness.json`
 - Market quality page: `https://gcagochina.com/market-quality.html`
@@ -149,6 +151,8 @@ Public review status is available at `https://gcagochina.com/external-reviews.ht
 Public reviewer kit is available at `https://gcagochina.com/reviewer-kit.html` and `https://gcagochina.com/reviewer-kit.json`. Use these URLs when a wallet-security team, DEX interface, explorer, data platform, or community moderator wants one consolidated evidence packet.
 
 Public platform replies are available at `https://gcagochina.com/platform-replies.html` and `https://gcagochina.com/platform-replies.json`. Use these URLs when a platform or moderator asks for a concise reply template.
+
+Public trust center materials are available at `https://gcagochina.com/trust.html` and `https://gcagochina.com/trust.json`. Use these URLs when a reviewer needs one canonical hub covering source verification, ownership verification, BaseScan token-profile status, GeckoTerminal approval, Blockaid / MetaMask warning follow-up status, official GCA/USDT pool, supply and reserve disclosure, and public claim boundaries.
 
 Use `launch/external_review_followup_tracker.md` before any BaseScan, Blockaid, GeckoTerminal, DEX Screener, CoinGecko, CoinMarketCap, or audit follow-up. It records which reviews are approved, pending, not submitted, or deferred, plus safe public claims and reply templates. This reduces duplicate requests and keeps the official GCA/USDT pool, verify page, and status disclosures consistent.
 

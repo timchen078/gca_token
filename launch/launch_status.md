@@ -59,6 +59,7 @@
 - Public external review status page and JSON prepared at `https://gcagochina.com/external-reviews.html` and `https://gcagochina.com/external-reviews.json` for BaseScan, Blockaid / MetaMask, GeckoTerminal, DEX Screener, CoinGecko, CoinMarketCap, and audit status.
 - Public reviewer kit page and JSON prepared at `https://gcagochina.com/reviewer-kit.html` and `https://gcagochina.com/reviewer-kit.json` for wallet-security, DEX interface, explorer, data-platform, and community moderator review.
 - Public platform replies page and JSON prepared at `https://gcagochina.com/platform-replies.html` and `https://gcagochina.com/platform-replies.json` for copyable BaseScan, wallet-warning, metadata-correction, community, and listing-readiness replies.
+- Public trust center page and JSON prepared at `https://gcagochina.com/trust.html` and `https://gcagochina.com/trust.json` for consolidated contract facts, review status, official market route, supply disclosure, and public claim boundaries.
 - Public listing readiness page and JSON prepared at `https://gcagochina.com/listing-readiness.html` and `https://gcagochina.com/listing-readiness.json` to keep CoinGecko, CoinMarketCap, centralized exchange, and paid listing outreach deferred until market and public activity are stronger.
 - Official token list JSON prepared at `https://gcagochina.com/tokenlist.json`.
 - Public well-known token identity JSON and security contact files prepared at `https://gcagochina.com/.well-known/gca-token.json` and `https://gcagochina.com/.well-known/security.txt`.
@@ -107,6 +108,7 @@
 - Use `https://gcagochina.com/external-reviews.html` and `https://gcagochina.com/external-reviews.json` when a public reviewer asks for current BaseScan, Blockaid / MetaMask, GeckoTerminal, DEX Screener, CoinGecko, CoinMarketCap, or audit status.
 - Use `https://gcagochina.com/reviewer-kit.html` and `https://gcagochina.com/reviewer-kit.json` when a reviewer wants one consolidated packet instead of separate proof, warning, market, brand, and status links.
 - Use `https://gcagochina.com/platform-replies.html` and `https://gcagochina.com/platform-replies.json` when you need copyable replies for platform requests, wallet-warning evidence requests, metadata corrections, moderator responses, or listing-readiness questions.
+- Use `https://gcagochina.com/trust.html` and `https://gcagochina.com/trust.json` when a platform, moderator, or wallet-security reviewer asks for a single public verification hub covering contract facts, official market route, supply disclosure, review status, and claim boundaries.
 - Use `https://gcagochina.com/listing-readiness.html` and `https://gcagochina.com/listing-readiness.json` before any tracked-listing or exchange outreach; the current status is `not-ready`.
 - Expose the Web3 Radar access bridge through controlled HTTPS account UI before describing report credits, backtest quotas, ENTRY_READY reviews, or calculators as public self-service token-gated features.
 - Connect controlled HTTPS account UI before describing the 10,000 GCA holder bonus as claimable by users without operator help.
