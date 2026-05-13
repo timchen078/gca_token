@@ -18,6 +18,8 @@ Use this file as the single operating checklist for external review, wallet-warn
 - Public support intake JSON: `https://gcagochina.com/support.json`
 - Public roadmap page: `https://gcagochina.com/roadmap.html`
 - Public roadmap JSON: `https://gcagochina.com/roadmap.json`
+- Public community kit page: `https://gcagochina.com/community.html`
+- Public community kit JSON: `https://gcagochina.com/community.json`
 - Public privacy notice page: `https://gcagochina.com/privacy.html`
 - Public privacy notice JSON: `https://gcagochina.com/privacy.json`
 - Public participation terms page: `https://gcagochina.com/terms.html`
@@ -154,6 +156,13 @@ Page: `https://gcagochina.com/roadmap.html`
 JSON: `https://gcagochina.com/roadmap.json`
 
 Use this page when a reviewer or community moderator asks what has been completed, what is next, and which claims are still unavailable. It keeps public self-service member claiming, BaseScan profile publication, wallet-warning removal, third-party audit completion, and tracked listings marked as unresolved until confirmed.
+
+## Public Community Kit
+
+Page: `https://gcagochina.com/community.html`
+JSON: `https://gcagochina.com/community.json`
+
+Use this page before Telegram posts, moderator replies, or community link sharing. It provides approved announcement copy, wallet-warning and price-display replies, official links, and boundaries against unsupported price, listing, audit, or warning-removal claims.
 
 ## Public External Review Status
 

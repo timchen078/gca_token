@@ -20,6 +20,8 @@
   "statusPageUrl": "https://gcagochina.com/status.html",
   "roadmapPageUrl": "https://gcagochina.com/roadmap.html",
   "roadmapUrl": "https://gcagochina.com/roadmap.json",
+  "communityPageUrl": "https://gcagochina.com/community.html",
+  "communityUrl": "https://gcagochina.com/community.json",
   "listingKitUrl": "https://gcagochina.com/listing-kit.html",
   "brandKitPageUrl": "https://gcagochina.com/brand-kit.html",
   "brandKitUrl": "https://gcagochina.com/brand-kit.json",
@@ -135,6 +137,12 @@
       "currentStage": "concept-stage-utility-buildout",
       "publicSelfServiceClaimsLive": false
     },
+    "communityKit": {
+      "status": "public-community-kit-published",
+      "pageUrl": "https://gcagochina.com/community.html",
+      "url": "https://gcagochina.com/community.json",
+      "officialTelegram": "https://t.me/gcagochinaofficial"
+    },
     "notUtility": [
       "custody",
       "redemption rights",
@@ -207,6 +215,12 @@
       "pageUrl": "https://gcagochina.com/roadmap.html",
       "url": "https://gcagochina.com/roadmap.json",
       "nextAction": "Use this public roadmap when reviewers ask what is live now, what is next, and what claims remain off-limits."
+    },
+    "communityKit": {
+      "status": "public-community-kit-published",
+      "pageUrl": "https://gcagochina.com/community.html",
+      "url": "https://gcagochina.com/community.json",
+      "nextAction": "Use this public community kit before Telegram announcements or moderator replies."
     },
     "dexScreener": {
       "status": "discoverable",

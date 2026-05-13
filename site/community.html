@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>GCA Roadmap | Go China Access</title>
-    <meta name="description" content="Official GCA roadmap for public identity, support intake, member access planning, Web3 Radar utility bridge, external review dependencies, and claim boundaries.">
+    <title>GCA Community Kit | Go China Access</title>
+    <meta name="description" content="Official GCA community kit with Telegram link, safe announcement copy, moderator replies, official links, and public claim boundaries.">
     <style>
       :root {
         color-scheme: light;
@@ -226,13 +226,25 @@
         padding-top: 0;
       }
 
+      pre,
       code {
         border: 1px solid var(--line);
         border-radius: 6px;
         background: var(--soft);
-        padding: 2px 5px;
         font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      }
+
+      code {
+        padding: 2px 5px;
         font-size: 0.92em;
+      }
+
+      pre {
+        margin: 0;
+        padding: 14px;
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+        color: var(--ink);
       }
 
       footer {
@@ -277,9 +289,8 @@
           <a href="risk.html">Risk</a>
           <a href="faq.html">FAQ</a>
           <a href="status.html">Status</a>
-          <a href="community.html">Community</a>
+          <a href="roadmap.html">Roadmap</a>
           <a href="listing-kit.html">Listing Kit</a>
-          <a href="members.html">Members</a>
           <a href="support.html">Support</a>
         </div>
       </nav>
@@ -287,112 +298,101 @@
 
     <main class="shell">
       <section aria-labelledby="title">
-        <h1 id="title">GCA Roadmap</h1>
-        <p class="lead">This roadmap keeps the Go China Access macro narrative connected to a practical utility path: public token identity, safer support intake, member verification, and planned Web3 Radar-style non-custodial quant research access.</p>
+        <h1 id="title">GCA Community Kit</h1>
+        <p class="lead">Use this page for Telegram posts, moderator replies, and community due-diligence links. It keeps the public GCA story consistent without claiming price outcomes, external audit completion, wallet-warning removal, or listing approval before those facts are visible.</p>
         <div class="actions">
-          <a class="button primary" href="roadmap.json">Roadmap JSON</a>
-          <a class="button" href="status.html">Project Status</a>
-          <a class="button" href="community.html">Community Kit</a>
-          <a class="button" href="members.html">Member Access</a>
-          <a class="button" href="support.html">Support & Intake</a>
-          <a class="button" href="listing-readiness.html">Listing Readiness</a>
+          <a class="button primary" href="https://t.me/gcagochinaofficial" target="_blank" rel="noreferrer">Official Telegram</a>
+          <a class="button" href="community.json">Community JSON</a>
           <a class="button" href="verify.html">Verify GCA</a>
+          <a class="button" href="roadmap.html">Roadmap</a>
+          <a class="button" href="support.html">Support & Intake</a>
+          <a class="button" href="markets.html">Markets</a>
         </div>
       </section>
 
-      <section class="facts" aria-label="Roadmap facts">
+      <section class="facts" aria-label="Community facts">
         <div class="fact">
-          <span class="label">Current Stage</span>
-          <span class="value pending">Concept-stage utility buildout</span>
+          <span class="label">Official Channel</span>
+          <span class="value">t.me/gcagochinaofficial</span>
         </div>
         <div class="fact">
-          <span class="label">Token Identity</span>
-          <span class="value good">Base Mainnet / chainId 8453</span>
+          <span class="label">Current Stage</span>
+          <span class="value pending">Early public operations</span>
         </div>
         <div class="fact">
           <span class="label">Official Market</span>
           <span class="value">GCA/USDT</span>
         </div>
         <div class="fact">
-          <span class="label">Self-Service Claims</span>
-          <span class="value pending">Not live</span>
+          <span class="label">Community Standard</span>
+          <span class="value good">Facts first</span>
         </div>
       </section>
 
-      <section class="section three" aria-label="Roadmap phases">
+      <section class="section panel" aria-labelledby="announceTitle">
+        <h2 id="announceTitle">Safe Announcement Copy</h2>
+        <pre>GCA is live on Base Mainnet as a fixed-supply ERC-20 token.
+
+Official verification: https://gcagochina.com/verify.html
+Roadmap: https://gcagochina.com/roadmap.html
+Official market route: GCA/USDT on Base Mainnet
+Telegram: https://t.me/gcagochinaofficial
+
+Current status: concept-stage utility buildout. Public self-service member claiming is not live yet, BaseScan token profile is still awaiting review, wallet-warning removal is not confirmed, and no third-party audit has been completed.</pre>
+      </section>
+
+      <section class="section three" aria-label="Moderator replies">
         <div class="panel">
-          <h2>Phase 0: Identity</h2>
-          <p class="note">Completed: fixed-supply Base Mainnet contract, source verification, official logo, website, token list, well-known JSON, official GCA/USDT pool, and public verification pages.</p>
+          <h2>Wallet Warning Reply</h2>
+          <p class="note">A Blockaid / MetaMask false-positive report was submitted on 2026-05-10, but warning removal is not confirmed. Users should verify the contract, pool, and official links before taking any action.</p>
         </div>
         <div class="panel">
-          <h2>Phase 1: Safety Pages</h2>
-          <p class="note">Completed: public pages for supply, risk, security, market quality, wallet-warning evidence, external review status, member ledger schema, privacy, terms, and support intake.</p>
+          <h2>Price Display Reply</h2>
+          <p class="note">Wallets and data platforms decide when to index prices. The official market route is GCA/USDT on Base Mainnet, and current liquidity remains starter-depth only.</p>
         </div>
         <div class="panel">
-          <h2>Phase 2: Controlled Intake</h2>
-          <p class="note">Next: connect controlled HTTPS account UI for member packets, read-only wallet-balance verification, 100 Web3 Radar utility credit records, GCA Member records, and support review statuses.</p>
+          <h2>Member Access Reply</h2>
+          <p class="note">The member flow currently creates local packets and support context. Public self-service claiming starts only after controlled HTTPS account UI and read-only wallet verification are live.</p>
         </div>
       </section>
 
-      <section class="section two" aria-label="Near term roadmap">
+      <section class="section two" aria-label="Community boundaries">
         <div class="panel">
-          <h2>Next Build Priorities</h2>
+          <h2>Safe To Share</h2>
           <div class="list">
-            <div class="row"><span>Controlled HTTPS member account UI</span><strong class="pending">Required</strong></div>
-            <div class="row"><span>Read-only GCA balance verification</span><strong class="pending">Required</strong></div>
-            <div class="row"><span>100 utility credits ledger activation</span><strong class="pending">After verification</strong></div>
-            <div class="row"><span>GCA Member ledger activation</span><strong class="pending">After verification</strong></div>
-            <div class="row"><span>Support review queue and audit trail</span><strong class="pending">Before scale</strong></div>
+            <div class="row"><span>Official verify page</span><strong><a href="verify.html">verify.html</a></strong></div>
+            <div class="row"><span>Roadmap and current status</span><strong><a href="roadmap.html">roadmap.html</a></strong></div>
+            <div class="row"><span>Official market page</span><strong><a href="markets.html">markets.html</a></strong></div>
+            <div class="row"><span>Community kit JSON</span><strong><a href="community.json">community.json</a></strong></div>
+            <div class="row"><span>Support intake</span><strong><a href="support.html">support.html</a></strong></div>
           </div>
         </div>
         <div class="panel">
-          <h2>External Dependencies</h2>
-          <div class="list">
-            <div class="row"><span>BaseScan public token profile</span><strong class="pending">Submitted, awaiting review</strong></div>
-            <div class="row"><span>Blockaid / MetaMask warning status</span><strong class="pending">Removal not confirmed</strong></div>
-            <div class="row"><span>Third-party audit</span><strong class="pending">Not completed</strong></div>
-            <div class="row"><span>CoinGecko / CoinMarketCap tracked listing</span><strong class="pending">Deferred</strong></div>
-            <div class="row"><span>Market depth</span><strong class="pending">Starter-depth only</strong></div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section two" aria-label="Claim boundaries">
-        <div class="panel">
-          <h2>Safe To Say</h2>
+          <h2>Do Not Post</h2>
           <ul>
-            <li>GCA is a fixed-supply ERC-20 token on Base Mainnet.</li>
-            <li>GCA is building a concept-stage access layer around Go China Access and planned non-custodial quant research utility.</li>
-            <li>The public member flow currently creates local packets and support context, not a live account.</li>
-            <li>The official market route is GCA/USDT on Base Mainnet.</li>
-          </ul>
-        </div>
-        <div class="panel">
-          <h2>Do Not Claim</h2>
-          <ul>
-            <li>Do not claim public self-service member claiming is live before controlled HTTPS UI is connected.</li>
             <li>Do not claim BaseScan token profile approval before BaseScan publishes it.</li>
-            <li>Do not claim wallet warnings are removed before visible confirmation.</li>
-            <li>Do not claim third-party audit completion, deep liquidity, price support, or trading outcomes.</li>
+            <li>Do not claim Blockaid or MetaMask warning removal before visible confirmation.</li>
+            <li>Do not claim third-party audit completion before an independent report is published.</li>
+            <li>Do not claim deep liquidity, price support, listing approval, or trading outcomes.</li>
+            <li>Do not ask anyone for private keys, seed phrases, exchange API secrets, withdrawal permission, one-time codes, custody, or fund transfers.</li>
           </ul>
         </div>
       </section>
 
       <section class="section panel" aria-labelledby="identityTitle">
-        <h2 id="identityTitle">Canonical Identity</h2>
+        <h2 id="identityTitle">Official Identity For Community Posts</h2>
         <div class="list">
           <div class="row"><span>Network</span><strong>Base Mainnet / chainId 8453</strong></div>
           <div class="row"><span>Contract</span><strong>0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6</strong></div>
           <div class="row"><span>Official pool</span><strong>GCA/USDT</strong></div>
           <div class="row"><span>Pool address</span><strong>0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0</strong></div>
-          <div class="row"><span>Roadmap data</span><strong><a href="roadmap.json">roadmap.json</a></strong></div>
-          <div class="row"><span>Support</span><strong><a href="support.html">support.html</a></strong></div>
+          <div class="row"><span>Official Telegram</span><strong><a href="https://t.me/gcagochinaofficial" target="_blank" rel="noreferrer">t.me/gcagochinaofficial</a></strong></div>
         </div>
       </section>
     </main>
 
     <footer>
-      <div class="shell">GCA roadmap is a planning document, not a promise of market price, liquidity, listing, audit approval, or trading result.</div>
+      <div class="shell">GCA community materials are for factual project communication only, not financial advice.</div>
     </footer>
   </body>
 </html>

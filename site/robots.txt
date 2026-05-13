@@ -10,6 +10,8 @@ Allow: /external-reviews.html
 Allow: /external-reviews.json
 Allow: /roadmap.html
 Allow: /roadmap.json
+Allow: /community.html
+Allow: /community.json
 Allow: /listing-readiness.html
 Allow: /listing-readiness.json
 Allow: /market-quality.html

@@ -1,0 +1,52 @@
+{
+  "schema": "https://gcagochina.com/community.json",
+  "pageUrl": "https://gcagochina.com/community.html",
+  "status": "public-community-kit-published",
+  "lastUpdated": "2026-05-13",
+  "projectName": "GCA",
+  "conceptExpansion": "Go China Access",
+  "currentStage": "early-public-operations",
+  "chainId": 8453,
+  "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+  "officialTelegram": "https://t.me/gcagochinaofficial",
+  "officialMarket": {
+    "pair": "GCA/USDT",
+    "network": "Base Mainnet",
+    "poolAddress": "0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "quoteAsset": "USDT",
+    "quoteAssetAddress": "0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2",
+    "liquidityDepth": "starter-depth-only"
+  },
+  "safeAnnouncement": [
+    "GCA is live on Base Mainnet as a fixed-supply ERC-20 token.",
+    "Official verification: https://gcagochina.com/verify.html",
+    "Roadmap: https://gcagochina.com/roadmap.html",
+    "Official market route: GCA/USDT on Base Mainnet.",
+    "Current status: concept-stage utility buildout; public self-service member claiming is not live yet, BaseScan token profile is still awaiting review, wallet-warning removal is not confirmed, and no third-party audit has been completed."
+  ],
+  "moderatorReplyTemplates": {
+    "walletWarning": "A Blockaid / MetaMask false-positive report was submitted on 2026-05-10, but warning removal is not confirmed. Verify the contract, pool, and official links before taking any action.",
+    "priceDisplay": "Wallets and data platforms decide when to index prices. The official market route is GCA/USDT on Base Mainnet, and current liquidity remains starter-depth only.",
+    "memberAccess": "The member flow currently creates local packets and support context. Public self-service claiming starts only after controlled HTTPS account UI and read-only wallet verification are live.",
+    "auditStatus": "No third-party audit has been completed. Internal review is not the same as an independent audit."
+  },
+  "doNotPost": [
+    "BaseScan token profile approval before BaseScan publishes it",
+    "Blockaid or MetaMask warning removal before visible confirmation",
+    "third-party audit completion before an independent report is published",
+    "deep liquidity, price support, listing approval, or trading outcomes",
+    "requests for private keys, seed phrases, exchange API secrets, withdrawal permission, one-time codes, custody, or fund transfers"
+  ],
+  "publicLinks": {
+    "communityPage": "https://gcagochina.com/community.html",
+    "communityJson": "https://gcagochina.com/community.json",
+    "telegram": "https://t.me/gcagochinaofficial",
+    "verify": "https://gcagochina.com/verify.html",
+    "roadmap": "https://gcagochina.com/roadmap.html",
+    "status": "https://gcagochina.com/status.html",
+    "markets": "https://gcagochina.com/markets.html",
+    "support": "https://gcagochina.com/support.html",
+    "risk": "https://gcagochina.com/risk.html",
+    "faq": "https://gcagochina.com/faq.html"
+  }
+}

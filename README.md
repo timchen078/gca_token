@@ -38,6 +38,8 @@ Deployment notes are in `docs/deploy_base_sepolia.md` and `docs/deploy_base_main
 - Public support intake JSON: `site/support.json`
 - Public roadmap page: `site/roadmap.html`
 - Public roadmap JSON: `site/roadmap.json`
+- Public community kit page: `site/community.html`
+- Public community kit JSON: `site/community.json`
 - Public privacy notice page: `site/privacy.html`
 - Public privacy notice JSON: `site/privacy.json`
 - Public participation terms page: `site/terms.html`

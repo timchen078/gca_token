@@ -28,6 +28,8 @@ SUPPORT_PAGE_URL = "https://gcagochina.com/support.html"
 SUPPORT_URL = "https://gcagochina.com/support.json"
 ROADMAP_PAGE_URL = "https://gcagochina.com/roadmap.html"
 ROADMAP_URL = "https://gcagochina.com/roadmap.json"
+COMMUNITY_PAGE_URL = "https://gcagochina.com/community.html"
+COMMUNITY_URL = "https://gcagochina.com/community.json"
 PRIVACY_NOTICE_PAGE_URL = "https://gcagochina.com/privacy.html"
 PRIVACY_NOTICE_URL = "https://gcagochina.com/privacy.json"
 PARTICIPATION_TERMS_PAGE_URL = "https://gcagochina.com/terms.html"
@@ -116,6 +118,7 @@ def validate_root(text: str) -> None:
     assert_contains(text, "Member Ledger", label)
     assert_contains(text, "Support & Intake", label)
     assert_contains(text, "Roadmap", label)
+    assert_contains(text, "Community Kit", label)
     assert_contains(text, "Privacy Notice", label)
     assert_contains(text, "Participation Terms", label)
     assert_contains(text, MAINNET_ADDRESS, label)
@@ -302,6 +305,77 @@ def validate_roadmap_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong support")
     if links.get("listingReadiness") != LISTING_READINESS_URL:
         raise SiteCheckError(f"{label}: wrong listingReadiness")
+    assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
+    assert_not_contains(json.dumps(payload), "GCA/WETH", label)
+
+
+def validate_community_page(text: str) -> None:
+    label = "/community.html"
+    assert_contains(text, "GCA Community Kit", label)
+    assert_contains(text, "Community JSON", label)
+    assert_contains(text, "Official Telegram", label)
+    assert_contains(text, "Safe Announcement Copy", label)
+    assert_contains(text, "Moderator replies", label)
+    assert_contains(text, "Wallet Warning Reply", label)
+    assert_contains(text, "Price Display Reply", label)
+    assert_contains(text, "Member Access Reply", label)
+    assert_contains(text, "Do Not Post", label)
+    assert_contains(text, "private keys, seed phrases, exchange API secrets", label)
+    assert_contains(text, "Base Mainnet / chainId 8453", label)
+    assert_contains(text, "https://t.me/gcagochinaofficial", label)
+    assert_contains(text, MAINNET_ADDRESS, label)
+    assert_current_pool_text(text, label)
+
+
+def validate_community_json(text: str) -> None:
+    label = "/community.json"
+    payload = load_json(text, label)
+    market = payload.get("officialMarket", {})
+    links = payload.get("publicLinks", {})
+    templates = payload.get("moderatorReplyTemplates", {})
+
+    if payload.get("schema") != COMMUNITY_URL:
+        raise SiteCheckError(f"{label}: wrong schema")
+    if payload.get("pageUrl") != COMMUNITY_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong pageUrl")
+    if payload.get("status") != "public-community-kit-published":
+        raise SiteCheckError(f"{label}: wrong status")
+    if payload.get("currentStage") != "early-public-operations":
+        raise SiteCheckError(f"{label}: wrong currentStage")
+    if payload.get("chainId") != 8453:
+        raise SiteCheckError(f"{label}: wrong chainId")
+    if payload.get("contractAddress") != MAINNET_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong contractAddress")
+    if payload.get("officialTelegram") != "https://t.me/gcagochinaofficial":
+        raise SiteCheckError(f"{label}: wrong officialTelegram")
+    if market.get("pair") != "GCA/USDT":
+        raise SiteCheckError(f"{label}: wrong pair")
+    if market.get("poolAddress") != OFFICIAL_POOL_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong poolAddress")
+    if market.get("quoteAssetAddress") != BASE_USDT_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong quoteAssetAddress")
+    if market.get("liquidityDepth") != "starter-depth-only":
+        raise SiteCheckError(f"{label}: wrong liquidityDepth")
+    if not any("BaseScan token profile is still awaiting review" in item for item in payload.get("safeAnnouncement", [])):
+        raise SiteCheckError(f"{label}: missing BaseScan pending announcement")
+    if "walletWarning" not in templates:
+        raise SiteCheckError(f"{label}: missing wallet warning template")
+    if "priceDisplay" not in templates:
+        raise SiteCheckError(f"{label}: missing price display template")
+    if "memberAccess" not in templates:
+        raise SiteCheckError(f"{label}: missing member access template")
+    if "third-party audit completion before an independent report is published" not in payload.get("doNotPost", []):
+        raise SiteCheckError(f"{label}: missing audit do-not-post")
+    if links.get("communityPage") != COMMUNITY_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong communityPage")
+    if links.get("communityJson") != COMMUNITY_URL:
+        raise SiteCheckError(f"{label}: wrong communityJson")
+    if links.get("telegram") != "https://t.me/gcagochinaofficial":
+        raise SiteCheckError(f"{label}: wrong telegram")
+    if links.get("roadmap") != ROADMAP_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong roadmap")
+    if links.get("support") != SUPPORT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong support")
     assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
     assert_not_contains(json.dumps(payload), "GCA/WETH", label)
 
@@ -587,6 +661,10 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong roadmapPageUrl")
     if payload.get("roadmapUrl") != ROADMAP_URL:
         raise SiteCheckError(f"{label}: wrong roadmapUrl")
+    if payload.get("communityPageUrl") != COMMUNITY_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong communityPageUrl")
+    if payload.get("communityUrl") != COMMUNITY_URL:
+        raise SiteCheckError(f"{label}: wrong communityUrl")
     if payload.get("privacyNoticePageUrl") != PRIVACY_NOTICE_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong privacyNoticePageUrl")
     if payload.get("privacyNoticeUrl") != PRIVACY_NOTICE_URL:
@@ -643,6 +721,10 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: unexpected roadmap status")
     if payload.get("roadmap", {}).get("publicSelfServiceClaimsLive") is not False:
         raise SiteCheckError(f"{label}: roadmap must keep self-service claims false")
+    if payload.get("communityKit", {}).get("status") != "public-community-kit-published":
+        raise SiteCheckError(f"{label}: unexpected community kit status")
+    if payload.get("communityKit", {}).get("officialTelegram") != "https://t.me/gcagochinaofficial":
+        raise SiteCheckError(f"{label}: wrong community Telegram")
     if payload.get("listingReadiness", {}).get("status") != "not-ready":
         raise SiteCheckError(f"{label}: unexpected listing readiness status")
     if payload.get("marketQuality", {}).get("status") != "early-stage-market-quality-plan":
@@ -693,6 +775,10 @@ def validate_tokenlist_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong roadmapPage")
     if extensions.get("roadmap") != ROADMAP_URL:
         raise SiteCheckError(f"{label}: wrong roadmap")
+    if extensions.get("communityPage") != COMMUNITY_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong communityPage")
+    if extensions.get("community") != COMMUNITY_URL:
+        raise SiteCheckError(f"{label}: wrong community")
     if extensions.get("privacyNoticePage") != PRIVACY_NOTICE_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong privacyNoticePage")
     if extensions.get("privacyNotice") != PRIVACY_NOTICE_URL:
@@ -737,6 +823,8 @@ def validate_tokenlist_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong supportIntakeStatus")
     if extensions.get("roadmapStatus") != "public-roadmap-published":
         raise SiteCheckError(f"{label}: wrong roadmapStatus")
+    if extensions.get("communityKitStatus") != "public-community-kit-published":
+        raise SiteCheckError(f"{label}: wrong communityKitStatus")
     if extensions.get("privacyNoticeStatus") != "public-privacy-notice-published":
         raise SiteCheckError(f"{label}: wrong privacyNoticeStatus")
     if extensions.get("participationTermsStatus") != "public-participation-terms-published":
@@ -771,6 +859,10 @@ def validate_well_known_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong roadmapPage")
     if urls.get("roadmap") != ROADMAP_URL:
         raise SiteCheckError(f"{label}: wrong roadmap")
+    if urls.get("communityPage") != COMMUNITY_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong communityPage")
+    if urls.get("community") != COMMUNITY_URL:
+        raise SiteCheckError(f"{label}: wrong community")
     if urls.get("privacyNoticePage") != PRIVACY_NOTICE_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong privacyNoticePage")
     if urls.get("privacyNotice") != PRIVACY_NOTICE_URL:
@@ -1329,6 +1421,8 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/external-reviews.json",
         "https://gcagochina.com/roadmap.html",
         "https://gcagochina.com/roadmap.json",
+        "https://gcagochina.com/community.html",
+        "https://gcagochina.com/community.json",
         "https://gcagochina.com/member-program.json",
         "https://gcagochina.com/member-ledger.html",
         "https://gcagochina.com/member-ledger.json",
@@ -1361,6 +1455,8 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /external-reviews.json", label)
     assert_contains(text, "Allow: /roadmap.html", label)
     assert_contains(text, "Allow: /roadmap.json", label)
+    assert_contains(text, "Allow: /community.html", label)
+    assert_contains(text, "Allow: /community.json", label)
     assert_contains(text, "Allow: /market-quality.html", label)
     assert_contains(text, "Allow: /market-quality.json", label)
     assert_contains(text, "Allow: /supply.json", label)
@@ -1404,6 +1500,8 @@ CHECKS: list[EndpointCheck] = [
     ("/support.json", validate_support_json),
     ("/roadmap.html", validate_roadmap_page),
     ("/roadmap.json", validate_roadmap_json),
+    ("/community.html", validate_community_page),
+    ("/community.json", validate_community_json),
     ("/privacy.html", validate_privacy_page),
     ("/privacy.json", validate_privacy_json),
     ("/terms.html", validate_terms_page),

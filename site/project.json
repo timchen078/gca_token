@@ -18,6 +18,8 @@
   "statusPageUrl": "https://gcagochina.com/status.html",
   "roadmapPageUrl": "https://gcagochina.com/roadmap.html",
   "roadmapUrl": "https://gcagochina.com/roadmap.json",
+  "communityPageUrl": "https://gcagochina.com/community.html",
+  "communityUrl": "https://gcagochina.com/community.json",
   "listingKitUrl": "https://gcagochina.com/listing-kit.html",
   "brandKitPageUrl": "https://gcagochina.com/brand-kit.html",
   "brandKitUrl": "https://gcagochina.com/brand-kit.json",
@@ -149,6 +151,15 @@
       "support review queue and audit trail"
     ],
     "publicSelfServiceClaimsLive": false
+  },
+  "communityKit": {
+    "status": "public-community-kit-published",
+    "pageUrl": "https://gcagochina.com/community.html",
+    "url": "https://gcagochina.com/community.json",
+    "officialTelegram": "https://t.me/gcagochinaofficial",
+    "currentStage": "early-public-operations",
+    "safeAnnouncementAvailable": true,
+    "moderatorReplyTemplatesAvailable": true
   },
   "marketQuality": {
     "status": "early-stage-market-quality-plan",

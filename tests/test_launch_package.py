@@ -39,6 +39,8 @@ SUPPORT_PAGE_URL = "https://gcagochina.com/support.html"
 SUPPORT_URL = "https://gcagochina.com/support.json"
 ROADMAP_PAGE_URL = "https://gcagochina.com/roadmap.html"
 ROADMAP_URL = "https://gcagochina.com/roadmap.json"
+COMMUNITY_PAGE_URL = "https://gcagochina.com/community.html"
+COMMUNITY_URL = "https://gcagochina.com/community.json"
 PRIVACY_NOTICE_PAGE_URL = "https://gcagochina.com/privacy.html"
 PRIVACY_NOTICE_URL = "https://gcagochina.com/privacy.json"
 PARTICIPATION_TERMS_PAGE_URL = "https://gcagochina.com/terms.html"
@@ -82,6 +84,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("/support.json", script)
         self.assertIn("/roadmap.html", script)
         self.assertIn("/roadmap.json", script)
+        self.assertIn("/community.html", script)
+        self.assertIn("/community.json", script)
         self.assertIn("/privacy.html", script)
         self.assertIn("/privacy.json", script)
         self.assertIn("/terms.html", script)
@@ -108,6 +112,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("validate_support_json", script)
         self.assertIn("validate_roadmap_page", script)
         self.assertIn("validate_roadmap_json", script)
+        self.assertIn("validate_community_page", script)
+        self.assertIn("validate_community_json", script)
         self.assertIn("validate_privacy_page", script)
         self.assertIn("validate_privacy_json", script)
         self.assertIn("validate_terms_page", script)
@@ -155,6 +161,8 @@ class LaunchPackageTests(unittest.TestCase):
         module.validate_support_json((ROOT / "site" / "support.json").read_text())
         module.validate_roadmap_page((ROOT / "site" / "roadmap.html").read_text())
         module.validate_roadmap_json((ROOT / "site" / "roadmap.json").read_text())
+        module.validate_community_page((ROOT / "site" / "community.html").read_text())
+        module.validate_community_json((ROOT / "site" / "community.json").read_text())
         module.validate_privacy_page((ROOT / "site" / "privacy.html").read_text())
         module.validate_privacy_json((ROOT / "site" / "privacy.json").read_text())
         module.validate_terms_page((ROOT / "site" / "terms.html").read_text())
@@ -321,6 +329,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Allow: /support.json", robots)
         self.assertIn("Allow: /roadmap.html", robots)
         self.assertIn("Allow: /roadmap.json", robots)
+        self.assertIn("Allow: /community.html", robots)
+        self.assertIn("Allow: /community.json", robots)
         self.assertIn("Allow: /privacy.html", robots)
         self.assertIn("Allow: /privacy.json", robots)
         self.assertIn("Allow: /terms.html", robots)
@@ -360,6 +370,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(SUPPORT_URL, sitemap)
         self.assertIn(ROADMAP_PAGE_URL, sitemap)
         self.assertIn(ROADMAP_URL, sitemap)
+        self.assertIn(COMMUNITY_PAGE_URL, sitemap)
+        self.assertIn(COMMUNITY_URL, sitemap)
         self.assertIn(PRIVACY_NOTICE_PAGE_URL, sitemap)
         self.assertIn(PRIVACY_NOTICE_URL, sitemap)
         self.assertIn(PARTICIPATION_TERMS_PAGE_URL, sitemap)
@@ -393,6 +405,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(identity["officialUrls"]["supportJson"], SUPPORT_URL)
         self.assertEqual(identity["officialUrls"]["roadmapPage"], ROADMAP_PAGE_URL)
         self.assertEqual(identity["officialUrls"]["roadmap"], ROADMAP_URL)
+        self.assertEqual(identity["officialUrls"]["communityPage"], COMMUNITY_PAGE_URL)
+        self.assertEqual(identity["officialUrls"]["community"], COMMUNITY_URL)
         self.assertEqual(identity["officialUrls"]["privacyNoticePage"], PRIVACY_NOTICE_PAGE_URL)
         self.assertEqual(identity["officialUrls"]["privacyNotice"], PRIVACY_NOTICE_URL)
         self.assertEqual(identity["officialUrls"]["participationTermsPage"], PARTICIPATION_TERMS_PAGE_URL)
@@ -458,6 +472,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn('href="member-ledger.html"', site)
         self.assertIn('href="support.html"', site)
         self.assertIn('href="roadmap.html"', site)
+        self.assertIn('href="community.html"', site)
         self.assertIn('href="privacy.html"', site)
         self.assertIn('href="terms.html"', site)
         self.assertIn("Go China Access", site)
@@ -754,6 +769,52 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(roadmap["publicLinks"]["listingReadiness"], LISTING_READINESS_URL)
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, json.dumps(roadmap))
         self.assertNotIn("GCA/WETH", json.dumps(roadmap))
+
+    def test_community_page_and_json_define_safe_public_messaging(self):
+        page = (ROOT / "site" / "community.html").read_text()
+        community = json.loads((ROOT / "site" / "community.json").read_text())
+
+        self.assertIn("GCA Community Kit", page)
+        self.assertIn("Community JSON", page)
+        self.assertIn("Official Telegram", page)
+        self.assertIn("Safe Announcement Copy", page)
+        self.assertIn("Moderator replies", page)
+        self.assertIn("Wallet Warning Reply", page)
+        self.assertIn("Price Display Reply", page)
+        self.assertIn("Member Access Reply", page)
+        self.assertIn("Do Not Post", page)
+        self.assertIn("private keys, seed phrases, exchange API secrets", page)
+        self.assertIn("Base Mainnet / chainId 8453", page)
+        self.assertIn(TELEGRAM_URL, page)
+        self.assertIn(MAINNET_ADDRESS, page)
+        self.assertIn(OFFICIAL_POOL_ADDRESS, page)
+        self.assertIn("GCA/USDT", page)
+        self.assertNotIn(OLD_WETH_POOL_ADDRESS, page)
+        self.assertNotIn("GCA/WETH", page)
+
+        self.assertEqual(community["schema"], COMMUNITY_URL)
+        self.assertEqual(community["pageUrl"], COMMUNITY_PAGE_URL)
+        self.assertEqual(community["status"], "public-community-kit-published")
+        self.assertEqual(community["currentStage"], "early-public-operations")
+        self.assertEqual(community["chainId"], 8453)
+        self.assertEqual(community["contractAddress"], MAINNET_ADDRESS)
+        self.assertEqual(community["officialTelegram"], TELEGRAM_URL)
+        self.assertEqual(community["officialMarket"]["pair"], "GCA/USDT")
+        self.assertEqual(community["officialMarket"]["poolAddress"], OFFICIAL_POOL_ADDRESS)
+        self.assertEqual(community["officialMarket"]["quoteAssetAddress"], BASE_USDT_ADDRESS)
+        self.assertEqual(community["officialMarket"]["liquidityDepth"], "starter-depth-only")
+        self.assertTrue(any("BaseScan token profile is still awaiting review" in item for item in community["safeAnnouncement"]))
+        self.assertIn("walletWarning", community["moderatorReplyTemplates"])
+        self.assertIn("priceDisplay", community["moderatorReplyTemplates"])
+        self.assertIn("memberAccess", community["moderatorReplyTemplates"])
+        self.assertIn("third-party audit completion before an independent report is published", community["doNotPost"])
+        self.assertEqual(community["publicLinks"]["communityPage"], COMMUNITY_PAGE_URL)
+        self.assertEqual(community["publicLinks"]["communityJson"], COMMUNITY_URL)
+        self.assertEqual(community["publicLinks"]["telegram"], TELEGRAM_URL)
+        self.assertEqual(community["publicLinks"]["roadmap"], ROADMAP_PAGE_URL)
+        self.assertEqual(community["publicLinks"]["support"], SUPPORT_PAGE_URL)
+        self.assertNotIn(OLD_WETH_POOL_ADDRESS, json.dumps(community))
+        self.assertNotIn("GCA/WETH", json.dumps(community))
 
     def test_member_ledger_page_and_json_define_public_schema(self):
         page = (ROOT / "site" / "member-ledger.html").read_text()
@@ -1138,6 +1199,7 @@ class LaunchPackageTests(unittest.TestCase):
         member_ledger = (ROOT / "site" / "member-ledger.html").read_text()
         support = (ROOT / "site" / "support.html").read_text()
         roadmap = (ROOT / "site" / "roadmap.html").read_text()
+        community = (ROOT / "site" / "community.html").read_text()
         privacy = (ROOT / "site" / "privacy.html").read_text()
         terms = (ROOT / "site" / "terms.html").read_text()
 
@@ -1168,6 +1230,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn('href="member-ledger.html"', status)
         self.assertIn('href="support.html"', status)
         self.assertIn('href="roadmap.html"', status)
+        self.assertIn('href="community.html"', status)
         self.assertIn('href="privacy.html"', status)
         self.assertIn('href="terms.html"', status)
         self.assertIn("No third-party audit has been completed", status)
@@ -1188,13 +1251,14 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn('href="member-ledger.html"', index)
         self.assertIn('href="support.html"', index)
         self.assertIn('href="roadmap.html"', index)
+        self.assertIn('href="community.html"', index)
         self.assertIn('href="privacy.html"', index)
         self.assertIn('href="terms.html"', index)
 
         wallet_warning = (ROOT / "site" / "wallet-warning.html").read_text()
         external = (ROOT / "site" / "external-reviews.html").read_text()
         brand = (ROOT / "site" / "brand-kit.html").read_text()
-        for page in (index, buy, markets, supply, security, risk, faq, members, utility, whitepaper, verify, readiness, quality, wallet_warning, external, onchain, brand, member_ledger, support, roadmap, privacy, terms):
+        for page in (index, buy, markets, supply, security, risk, faq, members, utility, whitepaper, verify, readiness, quality, wallet_warning, external, onchain, brand, member_ledger, support, roadmap, community, privacy, terms):
             self.assertIn('href="status.html"', page)
             self.assertIn('href="listing-kit.html"', page)
             self.assertIn('href="markets.html"', page)
@@ -1270,6 +1334,10 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("roadmap.html", kit)
         self.assertIn("Roadmap JSON", kit)
         self.assertIn("roadmap.json", kit)
+        self.assertIn("Community Kit", kit)
+        self.assertIn("community.html", kit)
+        self.assertIn("Community JSON", kit)
+        self.assertIn("community.json", kit)
         self.assertIn("Privacy Notice", kit)
         self.assertIn("privacy.html", kit)
         self.assertIn("Privacy JSON", kit)
@@ -1354,6 +1422,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(project["supportJsonUrl"], SUPPORT_URL)
         self.assertEqual(project["roadmapPageUrl"], ROADMAP_PAGE_URL)
         self.assertEqual(project["roadmapUrl"], ROADMAP_URL)
+        self.assertEqual(project["communityPageUrl"], COMMUNITY_PAGE_URL)
+        self.assertEqual(project["communityUrl"], COMMUNITY_URL)
         self.assertEqual(project["privacyNoticePageUrl"], PRIVACY_NOTICE_PAGE_URL)
         self.assertEqual(project["privacyNoticeUrl"], PRIVACY_NOTICE_URL)
         self.assertEqual(project["participationTermsPageUrl"], PARTICIPATION_TERMS_PAGE_URL)
@@ -1404,6 +1474,13 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(project["roadmap"]["url"], ROADMAP_URL)
         self.assertEqual(project["roadmap"]["currentStage"], "concept-stage-utility-buildout")
         self.assertFalse(project["roadmap"]["publicSelfServiceClaimsLive"])
+        self.assertEqual(project["communityKit"]["status"], "public-community-kit-published")
+        self.assertEqual(project["communityKit"]["pageUrl"], COMMUNITY_PAGE_URL)
+        self.assertEqual(project["communityKit"]["url"], COMMUNITY_URL)
+        self.assertEqual(project["communityKit"]["officialTelegram"], TELEGRAM_URL)
+        self.assertEqual(project["communityKit"]["currentStage"], "early-public-operations")
+        self.assertTrue(project["communityKit"]["safeAnnouncementAvailable"])
+        self.assertTrue(project["communityKit"]["moderatorReplyTemplatesAvailable"])
         self.assertEqual(project["externalReviewStatus"]["status"], "external-review-status-active")
         self.assertEqual(project["externalReviewStatus"]["pageUrl"], EXTERNAL_REVIEW_PAGE_URL)
         self.assertEqual(project["externalReviewStatus"]["url"], EXTERNAL_REVIEW_URL)
@@ -1762,6 +1839,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(extensions["supportJson"], SUPPORT_URL)
         self.assertEqual(extensions["roadmapPage"], ROADMAP_PAGE_URL)
         self.assertEqual(extensions["roadmap"], ROADMAP_URL)
+        self.assertEqual(extensions["communityPage"], COMMUNITY_PAGE_URL)
+        self.assertEqual(extensions["community"], COMMUNITY_URL)
         self.assertEqual(extensions["privacyNoticePage"], PRIVACY_NOTICE_PAGE_URL)
         self.assertEqual(extensions["privacyNotice"], PRIVACY_NOTICE_URL)
         self.assertEqual(extensions["participationTermsPage"], PARTICIPATION_TERMS_PAGE_URL)
@@ -1776,6 +1855,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(extensions["memberLedgerStatus"], "public-member-ledger-schema-published")
         self.assertEqual(extensions["supportIntakeStatus"], "public-support-intake-published")
         self.assertEqual(extensions["roadmapStatus"], "public-roadmap-published")
+        self.assertEqual(extensions["communityKitStatus"], "public-community-kit-published")
         self.assertEqual(extensions["privacyNoticeStatus"], "public-privacy-notice-published")
         self.assertEqual(extensions["participationTermsStatus"], "public-participation-terms-published")
         self.assertEqual(extensions["geckoTerminalStatus"], "approved-2026-05-11")
@@ -1818,6 +1898,8 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "site" / "support.json",
             ROOT / "site" / "roadmap.html",
             ROOT / "site" / "roadmap.json",
+            ROOT / "site" / "community.html",
+            ROOT / "site" / "community.json",
             ROOT / "site" / "privacy.html",
             ROOT / "site" / "privacy.json",
             ROOT / "site" / "terms.html",
@@ -1968,6 +2050,8 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "site" / "support.json",
             ROOT / "site" / "roadmap.html",
             ROOT / "site" / "roadmap.json",
+            ROOT / "site" / "community.html",
+            ROOT / "site" / "community.json",
             ROOT / "site" / "privacy.html",
             ROOT / "site" / "privacy.json",
             ROOT / "site" / "terms.html",
@@ -2102,6 +2186,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Public support intake page and JSON prepared", status)
         self.assertIn(SUPPORT_PAGE_URL, status)
         self.assertIn(SUPPORT_URL, status)
+        self.assertIn("Public community kit page and JSON prepared", status)
+        self.assertIn(COMMUNITY_PAGE_URL, status)
+        self.assertIn(COMMUNITY_URL, status)
         self.assertIn("Public privacy notice and participation terms prepared", status)
         self.assertIn(PRIVACY_NOTICE_PAGE_URL, status)
         self.assertIn(PRIVACY_NOTICE_URL, status)
@@ -2128,6 +2215,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Use `https://gcagochina.com/support.json`", status)
         self.assertIn("Use `https://gcagochina.com/roadmap.html`", status)
         self.assertIn("https://gcagochina.com/roadmap.json", status)
+        self.assertIn("Use `https://gcagochina.com/community.html`", status)
+        self.assertIn("https://gcagochina.com/community.json", status)
         self.assertIn("Use `https://gcagochina.com/privacy.html`", status)
         self.assertIn("Use `https://gcagochina.com/terms.html`", status)
         self.assertIn("quote submission is not an audit", status)
@@ -2200,6 +2289,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(SUPPORT_URL, package)
         self.assertIn(ROADMAP_PAGE_URL, package)
         self.assertIn(ROADMAP_URL, package)
+        self.assertIn(COMMUNITY_PAGE_URL, package)
+        self.assertIn(COMMUNITY_URL, package)
         self.assertIn(PRIVACY_NOTICE_PAGE_URL, package)
         self.assertIn(PRIVACY_NOTICE_URL, package)
         self.assertIn(PARTICIPATION_TERMS_PAGE_URL, package)
@@ -2263,6 +2354,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["memberLedgerSchemaUrl"], MEMBER_LEDGER_URL)
         self.assertEqual(values["supportPageUrl"], SUPPORT_PAGE_URL)
         self.assertEqual(values["supportJsonUrl"], SUPPORT_URL)
+        self.assertEqual(values["communityPageUrl"], COMMUNITY_PAGE_URL)
+        self.assertEqual(values["communityUrl"], COMMUNITY_URL)
         self.assertEqual(values["privacyNoticePageUrl"], PRIVACY_NOTICE_PAGE_URL)
         self.assertEqual(values["privacyNoticeUrl"], PRIVACY_NOTICE_URL)
         self.assertEqual(values["participationTermsPageUrl"], PARTICIPATION_TERMS_PAGE_URL)
@@ -2300,6 +2393,10 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["utilityPositioning"]["roadmap"]["pageUrl"], ROADMAP_PAGE_URL)
         self.assertEqual(values["utilityPositioning"]["roadmap"]["url"], ROADMAP_URL)
         self.assertFalse(values["utilityPositioning"]["roadmap"]["publicSelfServiceClaimsLive"])
+        self.assertEqual(values["utilityPositioning"]["communityKit"]["status"], "public-community-kit-published")
+        self.assertEqual(values["utilityPositioning"]["communityKit"]["pageUrl"], COMMUNITY_PAGE_URL)
+        self.assertEqual(values["utilityPositioning"]["communityKit"]["url"], COMMUNITY_URL)
+        self.assertEqual(values["utilityPositioning"]["communityKit"]["officialTelegram"], TELEGRAM_URL)
         self.assertIn("platform revenue distribution", values["utilityPositioning"]["notUtility"])
         self.assertEqual(values["liquidity"]["dex"], "Uniswap v4")
         self.assertEqual(values["liquidity"]["pair"], "GCA/USDT")
@@ -2332,6 +2429,10 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["platformReadiness"]["roadmap"]["pageUrl"], ROADMAP_PAGE_URL)
         self.assertEqual(values["platformReadiness"]["roadmap"]["url"], ROADMAP_URL)
         self.assertIn("claims remain off-limits", values["platformReadiness"]["roadmap"]["nextAction"])
+        self.assertEqual(values["platformReadiness"]["communityKit"]["status"], "public-community-kit-published")
+        self.assertEqual(values["platformReadiness"]["communityKit"]["pageUrl"], COMMUNITY_PAGE_URL)
+        self.assertEqual(values["platformReadiness"]["communityKit"]["url"], COMMUNITY_URL)
+        self.assertIn("community kit", values["platformReadiness"]["communityKit"]["nextAction"])
         self.assertEqual(values["platformReadiness"]["geckoTerminal"]["approvalDate"], "2026-05-11")
         self.assertIn("prepared-but-weak-readiness", values["platformReadiness"]["coinGecko"]["status"])
         self.assertIn("prepared-but-weak-readiness", values["platformReadiness"]["coinMarketCap"]["status"])
@@ -2369,6 +2470,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(SUPPORT_URL, tracker)
         self.assertIn(ROADMAP_PAGE_URL, tracker)
         self.assertIn(ROADMAP_URL, tracker)
+        self.assertIn(COMMUNITY_PAGE_URL, tracker)
+        self.assertIn(COMMUNITY_URL, tracker)
         self.assertIn(PRIVACY_NOTICE_PAGE_URL, tracker)
         self.assertIn(PRIVACY_NOTICE_URL, tracker)
         self.assertIn(PARTICIPATION_TERMS_PAGE_URL, tracker)
@@ -2417,6 +2520,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["canonicalIdentity"]["supportJsonUrl"], SUPPORT_URL)
         self.assertEqual(values["canonicalIdentity"]["roadmapPageUrl"], ROADMAP_PAGE_URL)
         self.assertEqual(values["canonicalIdentity"]["roadmapUrl"], ROADMAP_URL)
+        self.assertEqual(values["canonicalIdentity"]["communityPageUrl"], COMMUNITY_PAGE_URL)
+        self.assertEqual(values["canonicalIdentity"]["communityUrl"], COMMUNITY_URL)
         self.assertEqual(values["canonicalIdentity"]["privacyNoticePageUrl"], PRIVACY_NOTICE_PAGE_URL)
         self.assertEqual(values["canonicalIdentity"]["privacyNoticeUrl"], PRIVACY_NOTICE_URL)
         self.assertEqual(values["canonicalIdentity"]["participationTermsPageUrl"], PARTICIPATION_TERMS_PAGE_URL)

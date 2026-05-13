@@ -15,6 +15,8 @@ This package prepares GCA information for token data and DEX discovery platforms
 - Support intake JSON: `https://gcagochina.com/support.json`
 - Roadmap page: `https://gcagochina.com/roadmap.html`
 - Roadmap JSON: `https://gcagochina.com/roadmap.json`
+- Community kit page: `https://gcagochina.com/community.html`
+- Community kit JSON: `https://gcagochina.com/community.json`
 - Privacy notice page: `https://gcagochina.com/privacy.html`
 - Privacy notice JSON: `https://gcagochina.com/privacy.json`
 - Participation terms page: `https://gcagochina.com/terms.html`
@@ -69,6 +71,8 @@ This package prepares GCA information for token data and DEX discovery platforms
 - Support intake JSON: `https://gcagochina.com/support.json`
 - Roadmap page: `https://gcagochina.com/roadmap.html`
 - Roadmap JSON: `https://gcagochina.com/roadmap.json`
+- Community kit page: `https://gcagochina.com/community.html`
+- Community kit JSON: `https://gcagochina.com/community.json`
 - Privacy notice page: `https://gcagochina.com/privacy.html`
 - Privacy notice JSON: `https://gcagochina.com/privacy.json`
 - Participation terms page: `https://gcagochina.com/terms.html`
@@ -137,6 +141,8 @@ Use `launch/external_review_followup_tracker.md` before any BaseScan, Blockaid, 
 Use `https://gcagochina.com/listing-readiness.html` and `https://gcagochina.com/listing-readiness.json` as the public tracked-listing gate before any CoinGecko, CoinMarketCap, centralized exchange, or paid listing outreach. Current tracked listing submissions should remain deferred until legitimate liquidity depth, public activity, and exchange volume are stronger.
 
 Use `https://gcagochina.com/roadmap.html` and `https://gcagochina.com/roadmap.json` when reviewers or community moderators ask what is live now, what depends on external services, and what cannot be claimed yet. The roadmap keeps public self-service member claiming, BaseScan token profile publication, wallet-warning removal, third-party audit completion, and tracked listings marked as unresolved until the relevant condition is confirmed.
+
+Use `https://gcagochina.com/community.html` and `https://gcagochina.com/community.json` when preparing Telegram posts, answering community questions, or giving moderators copyable replies. It provides official links, safe announcement copy, wallet-warning and price-display responses, and clear boundaries against unsupported claims.
 
 ## Supply And Reserve
 
