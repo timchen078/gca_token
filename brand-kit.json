@@ -1,0 +1,77 @@
+{
+  "schema": "https://gcagochina.com/brand-kit.json",
+  "pageUrl": "https://gcagochina.com/brand-kit.html",
+  "lastUpdated": "2026-05-13",
+  "status": "public-brand-kit-published",
+  "projectName": "GCA",
+  "conceptExpansion": "Go China Access",
+  "tokenSymbol": "GCA",
+  "network": "Base Mainnet",
+  "chainId": 8453,
+  "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+  "officialMarket": {
+    "pair": "GCA/USDT",
+    "poolAddress": "0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "quoteAsset": "USDT",
+    "quoteAssetAddress": "0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2",
+    "geckoTerminal": "https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "dexScreener": "https://dexscreener.com/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0"
+  },
+  "logoAssets": {
+    "svg": {
+      "url": "https://gcagochina.com/assets/gca-logo.svg",
+      "format": "image/svg+xml",
+      "width": 32,
+      "height": 32,
+      "purpose": "BaseScan and compact token profile logo"
+    },
+    "png": {
+      "url": "https://gcagochina.com/assets/gca-logo.png",
+      "format": "image/png",
+      "width": 512,
+      "height": 512,
+      "purpose": "Wallets, token lists, community posts, and data platform previews"
+    }
+  },
+  "visualIdentity": {
+    "primaryInk": "#111111",
+    "background": "#FFFFFF",
+    "accentRed": "#D71920",
+    "baseBlue": "#0052FF",
+    "minimumClearSpace": "Keep padding around the logo when used on profile images, token lists, or exchange pages.",
+    "preferredBackground": "white or very light neutral background"
+  },
+  "officialLinks": {
+    "website": "https://gcagochina.com/",
+    "brandKitPage": "https://gcagochina.com/brand-kit.html",
+    "brandKit": "https://gcagochina.com/brand-kit.json",
+    "verify": "https://gcagochina.com/verify.html",
+    "listingKit": "https://gcagochina.com/listing-kit.html",
+    "projectJson": "https://gcagochina.com/project.json",
+    "tokenList": "https://gcagochina.com/tokenlist.json",
+    "wellKnownTokenIdentity": "https://gcagochina.com/.well-known/gca-token.json",
+    "telegram": "https://t.me/gcagochinaofficial",
+    "baseScanContract": "https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6"
+  },
+  "metadataUse": {
+    "safeUse": [
+      "token logo display",
+      "official website and token profile metadata",
+      "wallet import previews",
+      "DEX and data platform token information",
+      "community education and official announcements"
+    ],
+    "doNotUseToImply": [
+      "BaseScan token profile approval before publication",
+      "third-party audit completion",
+      "wallet-warning removal",
+      "CoinGecko or CoinMarketCap listing",
+      "price support, return promises, deep liquidity, or official endorsement by a third party"
+    ]
+  },
+  "contact": {
+    "dataPlatformEmail": "GCAgochina@outlook.com",
+    "baseScanSubmissionEmail": "cxy070800@gmail.com",
+    "telegram": "https://t.me/gcagochinaofficial"
+  }
+}
