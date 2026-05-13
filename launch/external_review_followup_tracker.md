@@ -12,6 +12,8 @@ Use this file as the single operating checklist for external review, wallet-warn
 - Official market page: `https://gcagochina.com/markets.html`
 - Public brand kit page: `https://gcagochina.com/brand-kit.html`
 - Public brand kit JSON: `https://gcagochina.com/brand-kit.json`
+- Public member ledger schema page: `https://gcagochina.com/member-ledger.html`
+- Public member ledger schema JSON: `https://gcagochina.com/member-ledger.json`
 - Public supply disclosure JSON: `https://gcagochina.com/supply.json`
 - Public wallet warning evidence page: `https://gcagochina.com/wallet-warning.html`
 - Public wallet warning evidence JSON: `https://gcagochina.com/wallet-warning.json`

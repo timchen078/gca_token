@@ -13,6 +13,8 @@ Allow: /listing-readiness.json
 Allow: /market-quality.html
 Allow: /market-quality.json
 Allow: /supply.json
+Allow: /member-ledger.html
+Allow: /member-ledger.json
 Allow: /member-program.json
 Allow: /.well-known/gca-token.json
 Allow: /.well-known/security.txt

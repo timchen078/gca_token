@@ -22,6 +22,8 @@ OLD_WETH_POOL_ADDRESS = "0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff"
 OFFICIAL_GECKOTERMINAL_URL = f"https://www.geckoterminal.com/base/pools/{OFFICIAL_POOL_ADDRESS}"
 OFFICIAL_DEXSCREENER_URL = f"https://dexscreener.com/base/{OFFICIAL_POOL_ADDRESS}"
 MEMBER_PROGRAM_URL = "https://gcagochina.com/member-program.json"
+MEMBER_LEDGER_PAGE_URL = "https://gcagochina.com/member-ledger.html"
+MEMBER_LEDGER_URL = "https://gcagochina.com/member-ledger.json"
 WALLET_WARNING_PAGE_URL = "https://gcagochina.com/wallet-warning.html"
 WALLET_WARNING_URL = "https://gcagochina.com/wallet-warning.json"
 EXTERNAL_REVIEW_PAGE_URL = "https://gcagochina.com/external-reviews.html"
@@ -103,6 +105,7 @@ def validate_root(text: str) -> None:
     assert_contains(text, "Listing Readiness", label)
     assert_contains(text, "On-chain Proofs", label)
     assert_contains(text, "Brand Kit", label)
+    assert_contains(text, "Member Ledger", label)
     assert_contains(text, MAINNET_ADDRESS, label)
     assert_current_pool_text(text, label)
 
@@ -136,6 +139,8 @@ def validate_members(text: str) -> None:
     assert_contains(text, "Member Rules", label)
     assert_contains(text, "Support Workflow", label)
     assert_contains(text, "member-program.json", label)
+    assert_contains(text, "member-ledger.html", label)
+    assert_contains(text, "member-ledger.json", label)
     assert_contains(text, "180 days", label)
     assert_contains(text, "30 days", label)
     assert_contains(text, "5-10 business days", label)
@@ -288,6 +293,10 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong chainId")
     if payload.get("memberProgramRulesUrl") != MEMBER_PROGRAM_URL:
         raise SiteCheckError(f"{label}: wrong memberProgramRulesUrl")
+    if payload.get("memberLedgerPageUrl") != MEMBER_LEDGER_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong memberLedgerPageUrl")
+    if payload.get("memberLedgerSchemaUrl") != MEMBER_LEDGER_URL:
+        raise SiteCheckError(f"{label}: wrong memberLedgerSchemaUrl")
     if payload.get("walletWarningEvidencePageUrl") != WALLET_WARNING_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong walletWarningEvidencePageUrl")
     if payload.get("walletWarningEvidenceUrl") != WALLET_WARNING_URL:
@@ -326,6 +335,8 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: unexpected GeckoTerminal status")
     if member_program.get("status") != "rules-published-public-claim-not-connected":
         raise SiteCheckError(f"{label}: unexpected member program status")
+    if member_program.get("ledgerSchema", {}).get("status") != "public-member-ledger-schema-published":
+        raise SiteCheckError(f"{label}: unexpected member ledger schema status")
     if payload.get("listingReadiness", {}).get("status") != "not-ready":
         raise SiteCheckError(f"{label}: unexpected listing readiness status")
     if payload.get("marketQuality", {}).get("status") != "early-stage-market-quality-plan":
@@ -364,6 +375,10 @@ def validate_tokenlist_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong officialPool")
     if extensions.get("memberProgramRules") != MEMBER_PROGRAM_URL:
         raise SiteCheckError(f"{label}: wrong memberProgramRules")
+    if extensions.get("memberLedgerPage") != MEMBER_LEDGER_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong memberLedgerPage")
+    if extensions.get("memberLedgerSchema") != MEMBER_LEDGER_URL:
+        raise SiteCheckError(f"{label}: wrong memberLedgerSchema")
     if extensions.get("walletWarningEvidencePage") != WALLET_WARNING_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong walletWarningEvidencePage")
     if extensions.get("walletWarningEvidence") != WALLET_WARNING_URL:
@@ -394,6 +409,8 @@ def validate_tokenlist_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong supplyDisclosureStatus")
     if extensions.get("brandKitStatus") != "public-brand-kit-published":
         raise SiteCheckError(f"{label}: wrong brandKitStatus")
+    if extensions.get("memberLedgerStatus") != "public-member-ledger-schema-published":
+        raise SiteCheckError(f"{label}: wrong memberLedgerStatus")
     assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
 
 
@@ -412,6 +429,10 @@ def validate_well_known_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong contractAddress")
     if urls.get("memberProgramRules") != MEMBER_PROGRAM_URL:
         raise SiteCheckError(f"{label}: wrong memberProgramRules")
+    if urls.get("memberLedgerPage") != MEMBER_LEDGER_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong memberLedgerPage")
+    if urls.get("memberLedgerSchema") != MEMBER_LEDGER_URL:
+        raise SiteCheckError(f"{label}: wrong memberLedgerSchema")
     if urls.get("walletWarningEvidencePage") != WALLET_WARNING_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong walletWarningEvidencePage")
     if urls.get("walletWarningEvidence") != WALLET_WARNING_URL:
@@ -450,6 +471,7 @@ def validate_well_known_json(text: str) -> None:
 def validate_member_program_json(text: str) -> None:
     label = "/member-program.json"
     payload = load_json(text, label)
+    public_pages = payload.get("publicPages", {})
     token = payload.get("token", {})
     holder_bonus = payload.get("holderBonus", {})
     member_tier = payload.get("memberTier", {})
@@ -465,6 +487,10 @@ def validate_member_program_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong chainId")
     if token.get("contractAddress") != MAINNET_ADDRESS:
         raise SiteCheckError(f"{label}: wrong contractAddress")
+    if public_pages.get("memberLedger") != MEMBER_LEDGER_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong memberLedger page")
+    if public_pages.get("memberLedgerSchema") != MEMBER_LEDGER_URL:
+        raise SiteCheckError(f"{label}: wrong memberLedger schema")
     if holder_bonus.get("minimumHolding") != "10000 GCA":
         raise SiteCheckError(f"{label}: wrong holder bonus threshold")
     if holder_bonus.get("creditAmount") != "100 Web3 Radar utility credits":
@@ -477,6 +503,8 @@ def validate_member_program_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong member refresh cadence")
     if verification.get("directSubmissionEndpointConfigured") is not False:
         raise SiteCheckError(f"{label}: direct submission must remain false")
+    if verification.get("publicLedgerSchemaUrl") != MEMBER_LEDGER_URL:
+        raise SiteCheckError(f"{label}: wrong public ledger schema URL")
     if support.get("contactEmail") != "GCAgochina@outlook.com":
         raise SiteCheckError(f"{label}: wrong support contact")
     if "ledger_recorded" not in support.get("reviewStatuses", []):
@@ -486,6 +514,90 @@ def validate_member_program_json(text: str) -> None:
     if not any("credits or membership are cash" in claim for claim in boundaries.get("doNotClaim", [])):
         raise SiteCheckError(f"{label}: missing cash/token do-not-claim boundary")
     assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
+
+
+def validate_member_ledger_json(text: str) -> None:
+    label = "/member-ledger.json"
+    payload = load_json(text, label)
+    token = payload.get("token", {})
+    urls = payload.get("publicUrls", {})
+    paths = payload.get("preparedPaths", {})
+    thresholds = payload.get("thresholds", {})
+    schemas = payload.get("recordSchemas", {})
+    boundaries = payload.get("publicClaimBoundaries", {})
+
+    if payload.get("schema") != MEMBER_LEDGER_URL:
+        raise SiteCheckError(f"{label}: wrong schema")
+    if payload.get("pageUrl") != MEMBER_LEDGER_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong pageUrl")
+    if payload.get("status") != "public-member-ledger-schema-published":
+        raise SiteCheckError(f"{label}: wrong status")
+    if payload.get("chainId") != 8453:
+        raise SiteCheckError(f"{label}: wrong chainId")
+    if token.get("contractAddress") != MAINNET_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong contractAddress")
+    if urls.get("memberProgramRules") != MEMBER_PROGRAM_URL:
+        raise SiteCheckError(f"{label}: wrong memberProgramRules")
+    if urls.get("memberLedgerPage") != MEMBER_LEDGER_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong memberLedgerPage")
+    if urls.get("memberLedgerSchema") != MEMBER_LEDGER_URL:
+        raise SiteCheckError(f"{label}: wrong memberLedgerSchema")
+    if paths.get("memberAccessPage") != "/gca/member-access":
+        raise SiteCheckError(f"{label}: wrong member access path")
+    if paths.get("walletVerifications") != "/gca/wallet-verifications":
+        raise SiteCheckError(f"{label}: wrong wallet verification path")
+    if paths.get("creditLedger") != "/gca/credit-ledger":
+        raise SiteCheckError(f"{label}: wrong credit ledger path")
+    if paths.get("memberLedger") != "/gca/member-ledger":
+        raise SiteCheckError(f"{label}: wrong member ledger path")
+    if thresholds.get("holderBonusMinimum") != "10000 GCA":
+        raise SiteCheckError(f"{label}: wrong holder threshold")
+    if thresholds.get("holderBonusCreditAmount") != "100 Web3 Radar utility credits":
+        raise SiteCheckError(f"{label}: wrong credit amount")
+    if thresholds.get("creditExpiryDaysAfterLedgerActivation") != 180:
+        raise SiteCheckError(f"{label}: wrong credit expiry")
+    if thresholds.get("gcaMemberMinimum") != "1000000 GCA":
+        raise SiteCheckError(f"{label}: wrong member threshold")
+    if thresholds.get("memberRefreshDays") != 30:
+        raise SiteCheckError(f"{label}: wrong member refresh")
+    if "walletVerificationRecord" not in schemas:
+        raise SiteCheckError(f"{label}: missing wallet verification schema")
+    if "creditLedgerRecord" not in schemas:
+        raise SiteCheckError(f"{label}: missing credit ledger schema")
+    if "memberLedgerRecord" not in schemas:
+        raise SiteCheckError(f"{label}: missing member ledger schema")
+    if "supportReviewRecord" not in schemas:
+        raise SiteCheckError(f"{label}: missing support review schema")
+    if "ledger_recorded" not in schemas.get("supportReviewRecord", {}).get("allowedStatuses", []):
+        raise SiteCheckError(f"{label}: missing ledger_recorded status")
+    if not any("Public self-service claiming is not connected yet" in claim for claim in boundaries.get("safeClaims", [])):
+        raise SiteCheckError(f"{label}: missing not-connected safe claim")
+    if not any("self-service claimable before controlled HTTPS account UI is live" in claim for claim in boundaries.get("doNotClaim", [])):
+        raise SiteCheckError(f"{label}: missing self-service boundary")
+    assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
+    assert_not_contains(json.dumps(payload), "GCA/WETH", label)
+
+
+def validate_member_ledger_page(text: str) -> None:
+    label = "/member-ledger.html"
+    assert_contains(text, "GCA Member Ledger Schema", label)
+    assert_contains(text, "Member Ledger JSON", label)
+    assert_contains(text, "Wallet Verification Record", label)
+    assert_contains(text, "100 Credit Ledger", label)
+    assert_contains(text, "GCA Member Ledger", label)
+    assert_contains(text, "Support Review Record", label)
+    assert_contains(text, "Base Mainnet / 8453", label)
+    assert_contains(text, MAINNET_ADDRESS, label)
+    assert_contains(text, "/gca/member-access", label)
+    assert_contains(text, "/gca/wallet-verifications", label)
+    assert_contains(text, "/gca/credit-ledger", label)
+    assert_contains(text, "/gca/member-ledger", label)
+    assert_contains(text, "10,000 GCA", label)
+    assert_contains(text, "1,000,000 GCA", label)
+    assert_contains(text, "180 days", label)
+    assert_contains(text, "30 days", label)
+    assert_contains(text, "Do not say 100 Web3 Radar utility credits are self-service claimable", label)
+    assert_not_contains(text, OLD_WETH_POOL_ADDRESS, label)
 
 
 def validate_listing_readiness_json(text: str) -> None:
@@ -842,6 +954,8 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/external-reviews.html",
         "https://gcagochina.com/external-reviews.json",
         "https://gcagochina.com/member-program.json",
+        "https://gcagochina.com/member-ledger.html",
+        "https://gcagochina.com/member-ledger.json",
         "https://gcagochina.com/supply.json",
         "https://gcagochina.com/listing-readiness.html",
         "https://gcagochina.com/listing-readiness.json",
@@ -868,6 +982,8 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /supply.json", label)
     assert_contains(text, "Allow: /onchain-proofs.html", label)
     assert_contains(text, "Allow: /onchain-proofs.json", label)
+    assert_contains(text, "Allow: /member-ledger.html", label)
+    assert_contains(text, "Allow: /member-ledger.json", label)
     assert_contains(text, "Allow: /member-program.json", label)
     assert_contains(text, "Allow: /.well-known/gca-token.json", label)
     assert_contains(text, "Allow: /.well-known/security.txt", label)
@@ -892,6 +1008,8 @@ CHECKS: list[EndpointCheck] = [
     ("/supply.json", validate_supply_json),
     ("/members.html", validate_members),
     ("/member-program.json", validate_member_program_json),
+    ("/member-ledger.html", validate_member_ledger_page),
+    ("/member-ledger.json", validate_member_ledger_json),
     ("/listing-readiness.html", validate_listing_readiness_page),
     ("/listing-readiness.json", validate_listing_readiness_json),
     ("/project.json", validate_project_json),

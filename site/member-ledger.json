@@ -1,0 +1,155 @@
+{
+  "schema": "https://gcagochina.com/member-ledger.json",
+  "pageUrl": "https://gcagochina.com/member-ledger.html",
+  "lastUpdated": "2026-05-13",
+  "status": "public-member-ledger-schema-published",
+  "scope": "Public data contract for future controlled HTTPS GCA member access integration. This file does not make holder credits or GCA Member status self-service claimable.",
+  "network": "Base Mainnet",
+  "chainId": 8453,
+  "token": {
+    "symbol": "GCA",
+    "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+    "decimals": 18
+  },
+  "publicUrls": {
+    "members": "https://gcagochina.com/members.html",
+    "memberProgramRules": "https://gcagochina.com/member-program.json",
+    "memberLedgerPage": "https://gcagochina.com/member-ledger.html",
+    "memberLedgerSchema": "https://gcagochina.com/member-ledger.json",
+    "utilityThesis": "https://gcagochina.com/utility.html",
+    "risk": "https://gcagochina.com/risk.html",
+    "verify": "https://gcagochina.com/verify.html"
+  },
+  "preparedPaths": {
+    "memberAccessPage": "/gca/member-access",
+    "preRegistrations": "/gca/pre-registrations",
+    "walletVerifications": "/gca/wallet-verifications",
+    "creditLedger": "/gca/credit-ledger",
+    "memberLedger": "/gca/member-ledger",
+    "memberReview": "/gca/member-review"
+  },
+  "thresholds": {
+    "holderBonusMinimum": "10000 GCA",
+    "holderBonusCreditAmount": "100 Web3 Radar utility credits",
+    "creditExpiryDaysAfterLedgerActivation": 180,
+    "gcaMemberMinimum": "1000000 GCA",
+    "memberRefreshDays": 30,
+    "walletLimit": "one verified wallet per registered user",
+    "registeredUserLimit": "one holder bonus and one member status review per registered user"
+  },
+  "recordSchemas": {
+    "preRegistrationRecord": {
+      "requiredFields": [
+        "registrationId",
+        "createdAt",
+        "email",
+        "telegram",
+        "walletAddress",
+        "declaredGcaBalance",
+        "programIntent",
+        "termsAccepted",
+        "securityBoundaryAccepted",
+        "source"
+      ],
+      "source": "members.html local packet or controlled HTTPS intake after deployment"
+    },
+    "walletVerificationRecord": {
+      "requiredFields": [
+        "walletAddress",
+        "chainId",
+        "contractAddress",
+        "checkedAt",
+        "gcaBalance",
+        "holderBonusEligible",
+        "gcaMemberEligible",
+        "verificationProvider",
+        "status"
+      ],
+      "method": "ERC-20 balanceOf read from a reviewed backend or RPC provider",
+      "allowedStatuses": [
+        "queued",
+        "verified",
+        "below_threshold",
+        "failed",
+        "expired"
+      ]
+    },
+    "creditLedgerRecord": {
+      "requiredFields": [
+        "creditLedgerId",
+        "registrationId",
+        "walletAddress",
+        "creditAmount",
+        "creditType",
+        "activatedAt",
+        "expiresAt",
+        "remainingCredits",
+        "status"
+      ],
+      "creditType": "Web3 Radar utility credits",
+      "allowedStatuses": [
+        "not_connected",
+        "queued",
+        "ledger_recorded",
+        "partially_used",
+        "used",
+        "expired",
+        "revoked"
+      ]
+    },
+    "memberLedgerRecord": {
+      "requiredFields": [
+        "memberLedgerId",
+        "registrationId",
+        "walletAddress",
+        "tierName",
+        "verifiedBalance",
+        "activatedAt",
+        "nextRefreshDueAt",
+        "status"
+      ],
+      "tierName": "GCA Member",
+      "allowedStatuses": [
+        "not_connected",
+        "queued",
+        "active",
+        "needs_refresh",
+        "below_threshold",
+        "paused",
+        "revoked"
+      ]
+    },
+    "supportReviewRecord": {
+      "requiredFields": [
+        "reviewId",
+        "registrationId",
+        "status",
+        "updatedAt",
+        "supportNote"
+      ],
+      "allowedStatuses": [
+        "received",
+        "wallet_pending",
+        "eligible",
+        "needs_more_information",
+        "rejected",
+        "ledger_recorded"
+      ]
+    }
+  },
+  "publicClaimBoundaries": {
+    "safeClaims": [
+      "GCA has published a public data contract for planned wallet verification, credit ledger, and GCA Member ledger records.",
+      "The public member page can generate a local pre-registration packet.",
+      "The future controlled HTTPS integration should verify GCA balance with an ERC-20 balanceOf read before writing ledger records.",
+      "Public self-service claiming is not connected yet."
+    ],
+    "doNotClaim": [
+      "100 Web3 Radar utility credits are self-service claimable before controlled HTTPS account UI is live",
+      "GCA Member status is live self-service before the controlled account UI is connected",
+      "manual support can override wallet-balance verification",
+      "credits or membership are cash, tokens, income, reimbursement, voting control, live trading permission, leverage, custody, withdrawals, or risk-control bypass",
+      "membership guarantees lifetime access, platform approval, listings, price support, liquidity, or third-party audit completion"
+    ]
+  }
+}

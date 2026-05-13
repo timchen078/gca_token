@@ -10,6 +10,8 @@
     "marketPageUrl": "https://gcagochina.com/markets.html",
     "brandKitPageUrl": "https://gcagochina.com/brand-kit.html",
     "brandKitUrl": "https://gcagochina.com/brand-kit.json",
+    "memberLedgerPageUrl": "https://gcagochina.com/member-ledger.html",
+    "memberLedgerSchemaUrl": "https://gcagochina.com/member-ledger.json",
     "supplyDisclosureUrl": "https://gcagochina.com/supply.json",
     "walletWarningEvidencePageUrl": "https://gcagochina.com/wallet-warning.html",
     "walletWarningEvidenceUrl": "https://gcagochina.com/wallet-warning.json",

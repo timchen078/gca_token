@@ -9,6 +9,8 @@ This package prepares GCA information for token data and DEX discovery platforms
 - Whitepaper: live at `https://gcagochina.com/whitepaper.html`
 - Brand kit page: `https://gcagochina.com/brand-kit.html`
 - Brand kit JSON: `https://gcagochina.com/brand-kit.json`
+- Member ledger schema page: `https://gcagochina.com/member-ledger.html`
+- Member ledger schema JSON: `https://gcagochina.com/member-ledger.json`
 - Contract source: verified on BaseScan
 - BaseScan token profile: submitted and awaiting BaseScan review
 - GeckoTerminal token info update: approved on 2026-05-11
@@ -53,6 +55,8 @@ This package prepares GCA information for token data and DEX discovery platforms
 - Listing kit: `https://gcagochina.com/listing-kit.html`
 - Brand kit page: `https://gcagochina.com/brand-kit.html`
 - Brand kit JSON: `https://gcagochina.com/brand-kit.json`
+- Member ledger schema page: `https://gcagochina.com/member-ledger.html`
+- Member ledger schema JSON: `https://gcagochina.com/member-ledger.json`
 - On-chain proofs page: `https://gcagochina.com/onchain-proofs.html`
 - On-chain proofs JSON: `https://gcagochina.com/onchain-proofs.json`
 - Wallet warning evidence page: `https://gcagochina.com/wallet-warning.html`

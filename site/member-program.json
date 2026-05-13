@@ -10,6 +10,8 @@
   },
   "publicPages": {
     "members": "https://gcagochina.com/members.html",
+    "memberLedger": "https://gcagochina.com/member-ledger.html",
+    "memberLedgerSchema": "https://gcagochina.com/member-ledger.json",
     "utility": "https://gcagochina.com/utility.html",
     "risk": "https://gcagochina.com/risk.html",
     "verify": "https://gcagochina.com/verify.html"
@@ -67,6 +69,7 @@
     "preparedCreditLedgerEndpoint": "/gca/credit-ledger",
     "preparedMemberLedgerEndpoint": "/gca/member-ledger",
     "preparedReviewEndpoint": "/gca/member-review",
+    "publicLedgerSchemaUrl": "https://gcagochina.com/member-ledger.json",
     "currentPublicSubmissionMode": "copy, download, or email local packet",
     "directSubmissionEndpointConfigured": false
   },

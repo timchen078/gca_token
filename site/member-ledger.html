@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GCA Member Ledger | Public Schema</title>
+    <meta name="description" content="Official GCA member ledger schema for future wallet verification, 100 utility credits, and GCA Member status integration.">
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #111318;
+        --muted: #5f6773;
+        --line: #dfe3ea;
+        --panel: #ffffff;
+        --soft: #f6f7f9;
+        --red: #d71920;
+        --blue: #0052ff;
+        --green: #087f5b;
+        --gold: #8a650d;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: #fbfbfc;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.5;
+      }
+
+      a {
+        color: var(--blue);
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .shell {
+        width: min(1080px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      header {
+        border-bottom: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.94);
+        position: sticky;
+        top: 0;
+        z-index: 2;
+      }
+
+      nav {
+        min-height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--ink);
+        font-weight: 850;
+      }
+
+      .brand img {
+        width: 32px;
+        height: 32px;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 18px;
+        align-items: center;
+        font-size: 14px;
+      }
+
+      main {
+        padding: 42px 0 56px;
+      }
+
+      h1 {
+        margin: 0;
+        max-width: 900px;
+        font-size: clamp(40px, 6vw, 72px);
+        line-height: 1;
+        letter-spacing: 0;
+      }
+
+      h2 {
+        margin: 0 0 14px;
+        font-size: 24px;
+      }
+
+      h3 {
+        margin: 0 0 8px;
+        font-size: 17px;
+      }
+
+      .lead {
+        max-width: 840px;
+        margin: 18px 0 0;
+        color: var(--muted);
+        font-size: 18px;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 24px;
+      }
+
+      .button {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        color: var(--ink);
+        min-height: 42px;
+        padding: 10px 14px;
+        font: inherit;
+        font-weight: 750;
+      }
+
+      .button.primary {
+        border-color: var(--red);
+        background: var(--red);
+        color: #fff;
+      }
+
+      .section {
+        margin-top: 30px;
+      }
+
+      .panel,
+      .fact {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+      }
+
+      .panel {
+        padding: 24px;
+      }
+
+      .facts,
+      .grid,
+      .two {
+        display: grid;
+        gap: 14px;
+      }
+
+      .facts {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        margin-top: 22px;
+      }
+
+      .grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .two {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .fact {
+        min-height: 112px;
+        padding: 15px;
+      }
+
+      .label {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 750;
+        text-transform: uppercase;
+      }
+
+      .value {
+        display: block;
+        margin-top: 8px;
+        font-size: 16px;
+        font-weight: 850;
+        overflow-wrap: anywhere;
+      }
+
+      .good {
+        color: var(--green);
+      }
+
+      .pending {
+        color: var(--gold);
+      }
+
+      .note,
+      li {
+        color: var(--muted);
+      }
+
+      .note {
+        margin: 0;
+      }
+
+      .list {
+        display: grid;
+        gap: 10px;
+        margin-top: 12px;
+      }
+
+      .row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 12px;
+        align-items: start;
+        border-top: 1px solid var(--line);
+        padding-top: 10px;
+      }
+
+      .row strong {
+        white-space: nowrap;
+        overflow-wrap: anywhere;
+      }
+
+      code {
+        padding: 2px 5px;
+        border-radius: 6px;
+        background: var(--soft);
+        overflow-wrap: anywhere;
+      }
+
+      .warning {
+        border-color: #ecd28c;
+        background: #fff9e8;
+      }
+
+      footer {
+        border-top: 1px solid var(--line);
+        padding: 24px 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      @media (max-width: 860px) {
+        .facts,
+        .grid,
+        .two {
+          grid-template-columns: 1fr;
+        }
+
+        nav {
+          align-items: flex-start;
+          flex-direction: column;
+          padding: 14px 0;
+        }
+
+        .nav-links {
+          flex-wrap: wrap;
+        }
+
+        .row {
+          grid-template-columns: 1fr;
+        }
+
+        .row strong {
+          white-space: normal;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav class="shell" aria-label="Primary">
+        <a class="brand" href="index.html" aria-label="GCA home">
+          <img src="assets/gca-logo.svg" alt="GCA logo">
+          <span>GCA</span>
+        </a>
+        <div class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="verify.html">Verify</a>
+          <a href="markets.html">Markets</a>
+          <a href="supply.html">Supply</a>
+          <a href="security.html">Security</a>
+          <a href="risk.html">Risk</a>
+          <a href="faq.html">FAQ</a>
+          <a href="status.html">Status</a>
+          <a href="members.html">Members</a>
+          <a href="listing-kit.html">Listing Kit</a>
+          <a href="brand-kit.html">Brand Kit</a>
+          <a href="whitepaper.html">Whitepaper</a>
+        </div>
+      </nav>
+    </header>
+
+    <main class="shell">
+      <section aria-labelledby="title">
+        <h1 id="title">GCA Member Ledger Schema</h1>
+        <p class="lead">Public data contract for the planned GCA x Web3 Radar access bridge: wallet verification, one-time 100 Web3 Radar utility credits, GCA Member status, support review states, and strict no-custody boundaries.</p>
+        <div class="actions">
+          <a class="button primary" href="member-ledger.json">Member Ledger JSON</a>
+          <a class="button" href="members.html">Pre-Registration</a>
+          <a class="button" href="member-program.json">Member Program Rules</a>
+          <a class="button" href="utility.html">Utility Thesis</a>
+          <a class="button" href="risk.html">Risk</a>
+          <a class="button" href="verify.html">Verify GCA</a>
+        </div>
+      </section>
+
+      <section class="facts" aria-label="Ledger facts">
+        <div class="fact">
+          <span class="label">Status</span>
+          <span class="value pending">Schema published</span>
+        </div>
+        <div class="fact">
+          <span class="label">Holder Bonus</span>
+          <span class="value">10,000 GCA</span>
+        </div>
+        <div class="fact">
+          <span class="label">Credit Ledger</span>
+          <span class="value">100 credits / 180 days</span>
+        </div>
+        <div class="fact">
+          <span class="label">GCA Member</span>
+          <span class="value">1,000,000 GCA / 30 days</span>
+        </div>
+      </section>
+
+      <section class="section two" aria-label="Prepared paths">
+        <div class="panel">
+          <h2>Prepared HTTPS Paths</h2>
+          <p class="note">These are the expected same-origin paths for a reviewed account UI and backend. They are a deployment contract, not a claim that public self-service claiming is live.</p>
+          <div class="list">
+            <div class="row"><span>Member access page</span><strong><code>/gca/member-access</code></strong></div>
+            <div class="row"><span>Pre-registration intake</span><strong><code>/gca/pre-registrations</code></strong></div>
+            <div class="row"><span>Wallet verification</span><strong><code>/gca/wallet-verifications</code></strong></div>
+            <div class="row"><span>100 credits ledger</span><strong><code>/gca/credit-ledger</code></strong></div>
+            <div class="row"><span>GCA Member ledger</span><strong><code>/gca/member-ledger</code></strong></div>
+            <div class="row"><span>Support review queue</span><strong><code>/gca/member-review</code></strong></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2>Token Verification</h2>
+          <div class="list">
+            <div class="row"><span>Network</span><strong>Base Mainnet / 8453</strong></div>
+            <div class="row"><span>Contract</span><strong>0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6</strong></div>
+            <div class="row"><span>Method</span><strong>ERC-20 balanceOf read</strong></div>
+            <div class="row"><span>Wallet rule</span><strong>One verified wallet per registered user</strong></div>
+            <div class="row"><span>Support override</span><strong>No manual balance override</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section grid" aria-label="Record schemas">
+        <div class="panel">
+          <h3>Pre-Registration Record</h3>
+          <p class="note">Fields: registrationId, createdAt, email, Telegram, walletAddress, declaredGcaBalance, programIntent, termsAccepted, securityBoundaryAccepted, and source.</p>
+        </div>
+        <div class="panel">
+          <h3>Wallet Verification Record</h3>
+          <p class="note">Fields: walletAddress, chainId, contractAddress, checkedAt, gcaBalance, holderBonusEligible, gcaMemberEligible, verificationProvider, and status.</p>
+        </div>
+        <div class="panel">
+          <h3>Support Review Record</h3>
+          <p class="note">Statuses: received, wallet_pending, eligible, needs_more_information, rejected, and ledger_recorded.</p>
+        </div>
+      </section>
+
+      <section class="section two" aria-label="Credit and member ledgers">
+        <div class="panel">
+          <h2>100 Credit Ledger</h2>
+          <div class="list">
+            <div class="row"><span>Minimum holding</span><strong>10,000 GCA</strong></div>
+            <div class="row"><span>Credit type</span><strong>Web3 Radar utility credits</strong></div>
+            <div class="row"><span>Credit amount</span><strong>100</strong></div>
+            <div class="row"><span>Use window after activation</span><strong>180 days</strong></div>
+            <div class="row"><span>Allowed statuses</span><strong>queued / ledger_recorded / used / expired</strong></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2>GCA Member Ledger</h2>
+          <div class="list">
+            <div class="row"><span>Minimum holding</span><strong>1,000,000 GCA</strong></div>
+            <div class="row"><span>Tier name</span><strong>GCA Member</strong></div>
+            <div class="row"><span>Balance refresh cadence</span><strong>30 days</strong></div>
+            <div class="row"><span>Allowed statuses</span><strong>queued / active / needs_refresh / paused</strong></div>
+            <div class="row"><span>Scope</span><strong>Service access only</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section panel warning" aria-labelledby="boundariesTitle">
+        <h2 id="boundariesTitle">Public Claim Boundaries</h2>
+        <ul>
+          <li>Safe to say: GCA has published a public data contract for planned wallet verification, credit ledger, and member ledger records.</li>
+          <li>Safe to say: the future controlled HTTPS integration should verify GCA balance with an ERC-20 balanceOf read before writing ledger records.</li>
+          <li>Do not say 100 Web3 Radar utility credits are self-service claimable before controlled HTTPS account UI is live.</li>
+          <li>Do not say GCA Member status is live self-service before the controlled account UI is connected.</li>
+          <li>Do not describe credits or membership as cash, tokens, income, reimbursement, voting control, live trading permission, leverage, custody, withdrawals, or risk-control bypass.</li>
+          <li>Do not say membership guarantees lifetime access, listings, price support, liquidity, or third-party audit completion.</li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <div class="shell">GCA member ledger schema. Always verify Base Mainnet chain ID 8453, the token contract, and the official program rules before using this data.</div>
+    </footer>
+  </body>
+</html>

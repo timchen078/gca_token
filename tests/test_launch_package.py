@@ -33,6 +33,8 @@ OLD_WETH_POOL_ADDRESS = "0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff"
 WELL_KNOWN_TOKEN_URL = "https://gcagochina.com/.well-known/gca-token.json"
 SECURITY_CONTACT_URL = "https://gcagochina.com/.well-known/security.txt"
 MEMBER_PROGRAM_URL = "https://gcagochina.com/member-program.json"
+MEMBER_LEDGER_PAGE_URL = "https://gcagochina.com/member-ledger.html"
+MEMBER_LEDGER_URL = "https://gcagochina.com/member-ledger.json"
 WALLET_WARNING_PAGE_URL = "https://gcagochina.com/wallet-warning.html"
 WALLET_WARNING_URL = "https://gcagochina.com/wallet-warning.json"
 EXTERNAL_REVIEW_PAGE_URL = "https://gcagochina.com/external-reviews.html"
@@ -66,6 +68,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("/.well-known/security.txt", script)
         self.assertIn("/members.html", script)
         self.assertIn("/member-program.json", script)
+        self.assertIn("/member-ledger.html", script)
+        self.assertIn("/member-ledger.json", script)
         self.assertIn("/wallet-warning.html", script)
         self.assertIn("/wallet-warning.json", script)
         self.assertIn("/external-reviews.html", script)
@@ -82,6 +86,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("/brand-kit.json", script)
         self.assertIn("validate_members", script)
         self.assertIn("validate_member_program_json", script)
+        self.assertIn("validate_member_ledger_page", script)
+        self.assertIn("validate_member_ledger_json", script)
         self.assertIn("validate_wallet_warning_page", script)
         self.assertIn("validate_wallet_warning_json", script)
         self.assertIn("validate_external_reviews_page", script)
@@ -119,6 +125,8 @@ class LaunchPackageTests(unittest.TestCase):
         module.validate_brand_kit_json((ROOT / "site" / "brand-kit.json").read_text())
         module.validate_members((ROOT / "site" / "members.html").read_text())
         module.validate_member_program_json((ROOT / "site" / "member-program.json").read_text())
+        module.validate_member_ledger_page((ROOT / "site" / "member-ledger.html").read_text())
+        module.validate_member_ledger_json((ROOT / "site" / "member-ledger.json").read_text())
         module.validate_wallet_warning_page((ROOT / "site" / "wallet-warning.html").read_text())
         module.validate_wallet_warning_json((ROOT / "site" / "wallet-warning.json").read_text())
         module.validate_external_reviews_page((ROOT / "site" / "external-reviews.html").read_text())
@@ -275,6 +283,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Allow: /onchain-proofs.json", robots)
         self.assertIn("Allow: /supply.json", robots)
         self.assertIn("Allow: /member-program.json", robots)
+        self.assertIn("Allow: /member-ledger.html", robots)
+        self.assertIn("Allow: /member-ledger.json", robots)
         self.assertIn("Allow: /.well-known/gca-token.json", robots)
         self.assertIn("Allow: /.well-known/security.txt", robots)
         self.assertIn("Sitemap: https://gcagochina.com/sitemap.xml", robots)
@@ -304,6 +314,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("https://gcagochina.com/risk.html", sitemap)
         self.assertIn("https://gcagochina.com/faq.html", sitemap)
         self.assertIn(MEMBER_PROGRAM_URL, sitemap)
+        self.assertIn(MEMBER_LEDGER_PAGE_URL, sitemap)
+        self.assertIn(MEMBER_LEDGER_URL, sitemap)
         self.assertIn("https://gcagochina.com/whitepaper.html", sitemap)
         self.assertIn(WELL_KNOWN_TOKEN_URL, sitemap)
         self.assertIn(SECURITY_CONTACT_URL, sitemap)
@@ -327,6 +339,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(identity["officialUrls"]["wellKnownTokenIdentity"], WELL_KNOWN_TOKEN_URL)
         self.assertEqual(identity["officialUrls"]["securityContact"], SECURITY_CONTACT_URL)
         self.assertEqual(identity["officialUrls"]["memberProgramRules"], MEMBER_PROGRAM_URL)
+        self.assertEqual(identity["officialUrls"]["memberLedgerPage"], MEMBER_LEDGER_PAGE_URL)
+        self.assertEqual(identity["officialUrls"]["memberLedgerSchema"], MEMBER_LEDGER_URL)
         self.assertEqual(identity["officialUrls"]["walletWarningEvidencePage"], WALLET_WARNING_PAGE_URL)
         self.assertEqual(identity["officialUrls"]["walletWarningEvidence"], WALLET_WARNING_URL)
         self.assertEqual(identity["officialUrls"]["externalReviewStatusPage"], EXTERNAL_REVIEW_PAGE_URL)
@@ -385,6 +399,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn('href="external-reviews.html"', site)
         self.assertIn('href="onchain-proofs.html"', site)
         self.assertIn('href="brand-kit.html"', site)
+        self.assertIn('href="member-ledger.html"', site)
         self.assertIn("Go China Access", site)
         self.assertIn("Go China AI Quant Access", site)
         self.assertIn("Go China macro narrative", site)
@@ -468,6 +483,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("30 days", members)
         self.assertIn("5-10 business days", members)
         self.assertIn("member-program.json", members)
+        self.assertIn("member-ledger.html", members)
+        self.assertIn("member-ledger.json", members)
         self.assertIn("CREDIT_EXPIRY_DAYS = 180", members)
         self.assertIn("MEMBER_REFRESH_DAYS = 30", members)
         self.assertIn("reviewStatuses", members)
@@ -490,12 +507,66 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("priority support", rules["memberTier"]["accessScope"])
         self.assertIn("risk-control bypass", " ".join(rules["memberTier"]["accessRules"]))
         self.assertFalse(rules["verification"]["directSubmissionEndpointConfigured"])
+        self.assertEqual(rules["publicPages"]["memberLedger"], MEMBER_LEDGER_PAGE_URL)
+        self.assertEqual(rules["publicPages"]["memberLedgerSchema"], MEMBER_LEDGER_URL)
+        self.assertEqual(rules["verification"]["publicLedgerSchemaUrl"], MEMBER_LEDGER_URL)
         self.assertEqual(rules["supportWorkflow"]["contactEmail"], "GCAgochina@outlook.com")
         self.assertIn("not a guarantee", rules["supportWorkflow"]["targetFirstResponse"])
         self.assertIn("ledger_recorded", rules["supportWorkflow"]["reviewStatuses"])
         self.assertIn("public self-service claiming is not connected", " ".join(rules["publicClaimBoundaries"]["safeClaims"]))
         self.assertIn("credits or membership are cash", " ".join(rules["publicClaimBoundaries"]["doNotClaim"]))
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, json.dumps(rules))
+
+    def test_member_ledger_page_and_json_define_public_schema(self):
+        page = (ROOT / "site" / "member-ledger.html").read_text()
+        ledger = json.loads((ROOT / "site" / "member-ledger.json").read_text())
+
+        self.assertIn("GCA Member Ledger Schema", page)
+        self.assertIn("Member Ledger JSON", page)
+        self.assertIn("Wallet Verification Record", page)
+        self.assertIn("100 Credit Ledger", page)
+        self.assertIn("GCA Member Ledger", page)
+        self.assertIn("Support Review Record", page)
+        self.assertIn("Base Mainnet / 8453", page)
+        self.assertIn(MAINNET_ADDRESS, page)
+        self.assertIn("/gca/member-access", page)
+        self.assertIn("/gca/wallet-verifications", page)
+        self.assertIn("/gca/credit-ledger", page)
+        self.assertIn("/gca/member-ledger", page)
+        self.assertIn("10,000 GCA", page)
+        self.assertIn("1,000,000 GCA", page)
+        self.assertIn("180 days", page)
+        self.assertIn("30 days", page)
+        self.assertIn("Do not say 100 Web3 Radar utility credits are self-service claimable", page)
+        self.assertNotIn(OLD_WETH_POOL_ADDRESS, page)
+        self.assertNotIn("GCA/WETH", page)
+
+        self.assertEqual(ledger["schema"], MEMBER_LEDGER_URL)
+        self.assertEqual(ledger["pageUrl"], MEMBER_LEDGER_PAGE_URL)
+        self.assertEqual(ledger["status"], "public-member-ledger-schema-published")
+        self.assertEqual(ledger["chainId"], 8453)
+        self.assertEqual(ledger["token"]["contractAddress"], MAINNET_ADDRESS)
+        self.assertEqual(ledger["publicUrls"]["memberProgramRules"], MEMBER_PROGRAM_URL)
+        self.assertEqual(ledger["publicUrls"]["memberLedgerPage"], MEMBER_LEDGER_PAGE_URL)
+        self.assertEqual(ledger["publicUrls"]["memberLedgerSchema"], MEMBER_LEDGER_URL)
+        self.assertEqual(ledger["preparedPaths"]["memberAccessPage"], "/gca/member-access")
+        self.assertEqual(ledger["preparedPaths"]["walletVerifications"], "/gca/wallet-verifications")
+        self.assertEqual(ledger["preparedPaths"]["creditLedger"], "/gca/credit-ledger")
+        self.assertEqual(ledger["preparedPaths"]["memberLedger"], "/gca/member-ledger")
+        self.assertEqual(ledger["thresholds"]["holderBonusMinimum"], "10000 GCA")
+        self.assertEqual(ledger["thresholds"]["holderBonusCreditAmount"], "100 Web3 Radar utility credits")
+        self.assertEqual(ledger["thresholds"]["creditExpiryDaysAfterLedgerActivation"], 180)
+        self.assertEqual(ledger["thresholds"]["gcaMemberMinimum"], "1000000 GCA")
+        self.assertEqual(ledger["thresholds"]["memberRefreshDays"], 30)
+        self.assertIn("walletVerificationRecord", ledger["recordSchemas"])
+        self.assertIn("creditLedgerRecord", ledger["recordSchemas"])
+        self.assertIn("memberLedgerRecord", ledger["recordSchemas"])
+        self.assertIn("supportReviewRecord", ledger["recordSchemas"])
+        self.assertIn("ledger_recorded", ledger["recordSchemas"]["supportReviewRecord"]["allowedStatuses"])
+        self.assertIn("Public self-service claiming is not connected yet.", ledger["publicClaimBoundaries"]["safeClaims"])
+        self.assertIn("100 Web3 Radar utility credits are self-service claimable before controlled HTTPS account UI is live", ledger["publicClaimBoundaries"]["doNotClaim"])
+        self.assertNotIn(OLD_WETH_POOL_ADDRESS, json.dumps(ledger))
+        self.assertNotIn("GCA/WETH", json.dumps(ledger))
 
     def test_utility_page_connects_gca_to_quant_tools_safely(self):
         utility = (ROOT / "site" / "utility.html").read_text()
@@ -826,6 +897,7 @@ class LaunchPackageTests(unittest.TestCase):
         readiness = (ROOT / "site" / "listing-readiness.html").read_text()
         quality = (ROOT / "site" / "market-quality.html").read_text()
         onchain = (ROOT / "site" / "onchain-proofs.html").read_text()
+        member_ledger = (ROOT / "site" / "member-ledger.html").read_text()
 
         self.assertIn("GCA Project Status", status)
         self.assertIn("Base Mainnet / chainId 8453", status)
@@ -851,6 +923,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn('href="external-reviews.html"', status)
         self.assertIn('href="onchain-proofs.html"', status)
         self.assertIn('href="brand-kit.html"', status)
+        self.assertIn('href="member-ledger.html"', status)
         self.assertIn("No third-party audit has been completed", status)
         self.assertIn("600,000,000 GCA", status)
         self.assertIn("normal owner-controlled wallet", status)
@@ -866,11 +939,12 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn('href="external-reviews.html"', index)
         self.assertIn('href="onchain-proofs.html"', index)
         self.assertIn('href="brand-kit.html"', index)
+        self.assertIn('href="member-ledger.html"', index)
 
         wallet_warning = (ROOT / "site" / "wallet-warning.html").read_text()
         external = (ROOT / "site" / "external-reviews.html").read_text()
         brand = (ROOT / "site" / "brand-kit.html").read_text()
-        for page in (index, buy, markets, supply, security, risk, faq, members, utility, whitepaper, verify, readiness, quality, wallet_warning, external, onchain, brand):
+        for page in (index, buy, markets, supply, security, risk, faq, members, utility, whitepaper, verify, readiness, quality, wallet_warning, external, onchain, brand, member_ledger):
             self.assertIn('href="status.html"', page)
             self.assertIn('href="listing-kit.html"', page)
             self.assertIn('href="markets.html"', page)
@@ -934,6 +1008,10 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("brand-kit.html", kit)
         self.assertIn("Brand Kit JSON", kit)
         self.assertIn("brand-kit.json", kit)
+        self.assertIn("Member Ledger", kit)
+        self.assertIn("member-ledger.html", kit)
+        self.assertIn("Member Ledger JSON", kit)
+        self.assertIn("member-ledger.json", kit)
         self.assertIn("Supply JSON", kit)
         self.assertIn(SUPPLY_DISCLOSURE_URL, kit)
         self.assertIn("Token List JSON", kit)
@@ -1004,7 +1082,12 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(project["riskPageUrl"], RISK_PAGE_URL)
         self.assertEqual(project["faqUrl"], FAQ_URL)
         self.assertEqual(project["memberProgramRulesUrl"], MEMBER_PROGRAM_URL)
+        self.assertEqual(project["memberLedgerPageUrl"], MEMBER_LEDGER_PAGE_URL)
+        self.assertEqual(project["memberLedgerSchemaUrl"], MEMBER_LEDGER_URL)
         self.assertEqual(project["memberProgram"]["status"], "rules-published-public-claim-not-connected")
+        self.assertEqual(project["memberProgram"]["ledgerSchema"]["status"], "public-member-ledger-schema-published")
+        self.assertEqual(project["memberProgram"]["ledgerSchema"]["pageUrl"], MEMBER_LEDGER_PAGE_URL)
+        self.assertEqual(project["memberProgram"]["ledgerSchema"]["url"], MEMBER_LEDGER_URL)
         self.assertEqual(project["memberProgram"]["holderBonus"]["creditExpiry"], "180 days after ledger activation unless a later published policy extends it")
         self.assertIn("ENTRY_READY signal review", project["memberProgram"]["holderBonus"]["spendScope"])
         self.assertEqual(project["memberProgram"]["gcaMember"]["refreshCadence"], "30 days after activation, or earlier if the user requests a manual recheck")
@@ -1383,6 +1466,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(extensions["riskPage"], RISK_PAGE_URL)
         self.assertEqual(extensions["faq"], FAQ_URL)
         self.assertEqual(extensions["memberProgramRules"], MEMBER_PROGRAM_URL)
+        self.assertEqual(extensions["memberLedgerPage"], MEMBER_LEDGER_PAGE_URL)
+        self.assertEqual(extensions["memberLedgerSchema"], MEMBER_LEDGER_URL)
         self.assertEqual(extensions["officialTelegram"], TELEGRAM_URL)
         self.assertEqual(extensions["geckoTerminal"], OFFICIAL_GECKOTERMINAL_URL)
         self.assertEqual(extensions["dexScreener"], OFFICIAL_DEXSCREENER_URL)
@@ -1390,6 +1475,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(extensions["officialPair"], "GCA/USDT")
         self.assertEqual(extensions["officialPool"], OFFICIAL_POOL_ADDRESS)
         self.assertEqual(extensions["brandKitStatus"], "public-brand-kit-published")
+        self.assertEqual(extensions["memberLedgerStatus"], "public-member-ledger-schema-published")
         self.assertEqual(extensions["geckoTerminalStatus"], "approved-2026-05-11")
         self.assertEqual(extensions["baseScanTokenProfileStatus"], "submitted-awaiting-review")
         self.assertEqual(extensions["blockaidMetaMaskStatus"], "submitted-warning-removal-not-confirmed")
@@ -1424,6 +1510,8 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "site" / "brand-kit.json",
             ROOT / "site" / "members.html",
             ROOT / "site" / "member-program.json",
+            ROOT / "site" / "member-ledger.html",
+            ROOT / "site" / "member-ledger.json",
             ROOT / "site" / "utility.html",
             ROOT / "site" / ".well-known" / "gca-token.json",
             ROOT / "site" / ".well-known" / "security.txt",
@@ -1564,6 +1652,8 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "site" / "brand-kit.json",
             ROOT / "site" / "whitepaper.html",
             ROOT / "site" / "utility.html",
+            ROOT / "site" / "member-ledger.html",
+            ROOT / "site" / "member-ledger.json",
             ROOT / "docs" / "whitepaper.md",
             ROOT / "docs" / "mainnet_public_profile.md",
             ROOT / "launch" / "launch_status.md",
@@ -1688,6 +1778,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("180-day credit expiry", status)
         self.assertIn("30-day member refresh cadence", status)
         self.assertIn("support status workflow", status)
+        self.assertIn("Public member ledger schema prepared", status)
+        self.assertIn(MEMBER_LEDGER_PAGE_URL, status)
+        self.assertIn(MEMBER_LEDGER_URL, status)
         self.assertIn("Telegram replacement pinned buy announcement template prepared", status)
         self.assertIn("launch/telegram_pinned_buy_announcement.md", status)
         self.assertIn("Replace the Telegram pinned message", status)
@@ -1704,6 +1797,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Use `https://gcagochina.com/wallet-warning.html`", status)
         self.assertIn("Use `https://gcagochina.com/external-reviews.html`", status)
         self.assertIn("Use `https://gcagochina.com/brand-kit.html`", status)
+        self.assertIn("Use `https://gcagochina.com/member-ledger.html`", status)
         self.assertIn("quote submission is not an audit", status)
         self.assertNotIn("Pin the first Telegram announcement manually", status)
         self.assertNotIn("wait for GitHub Pages HTTPS to become active", status)
@@ -1765,6 +1859,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("https://gcagochina.com/risk.html", package)
         self.assertIn("https://gcagochina.com/faq.html", package)
         self.assertIn("https://gcagochina.com/members.html", package)
+        self.assertIn(MEMBER_LEDGER_PAGE_URL, package)
+        self.assertIn(MEMBER_LEDGER_URL, package)
         self.assertIn("https://gcagochina.com/utility.html", package)
         self.assertIn("https://gcagochina.com/assets/gca-logo.svg", package)
         self.assertIn("https://gcagochina.com/whitepaper.html", package)
@@ -1818,6 +1914,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["faqUrl"], FAQ_URL)
         self.assertEqual(values["memberPreRegistrationUrl"], "https://gcagochina.com/members.html")
         self.assertEqual(values["memberProgramRulesUrl"], MEMBER_PROGRAM_URL)
+        self.assertEqual(values["memberLedgerPageUrl"], MEMBER_LEDGER_PAGE_URL)
+        self.assertEqual(values["memberLedgerSchemaUrl"], MEMBER_LEDGER_URL)
         self.assertEqual(values["utilityThesisUrl"], "https://gcagochina.com/utility.html")
         self.assertEqual(values["logoUrl"], "https://gcagochina.com/assets/gca-logo.svg")
         self.assertEqual(values["utilityPositioning"]["connectedProduct"], "Web3 Radar non-custodial quant risk toolkit")
@@ -1897,6 +1995,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(ONCHAIN_PROOFS_URL, tracker)
         self.assertIn(BRAND_KIT_PAGE_URL, tracker)
         self.assertIn(BRAND_KIT_URL, tracker)
+        self.assertIn(MEMBER_LEDGER_PAGE_URL, tracker)
+        self.assertIn(MEMBER_LEDGER_URL, tracker)
         self.assertIn(TELEGRAM_URL, tracker)
         self.assertIn(OFFICIAL_GECKOTERMINAL_URL, tracker)
         self.assertIn("Submitted on 2026-05-09 and awaiting BaseScan review", tracker)
@@ -1935,6 +2035,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["canonicalIdentity"]["onchainProofsUrl"], ONCHAIN_PROOFS_URL)
         self.assertEqual(values["canonicalIdentity"]["brandKitPageUrl"], BRAND_KIT_PAGE_URL)
         self.assertEqual(values["canonicalIdentity"]["brandKitUrl"], BRAND_KIT_URL)
+        self.assertEqual(values["canonicalIdentity"]["memberLedgerPageUrl"], MEMBER_LEDGER_PAGE_URL)
+        self.assertEqual(values["canonicalIdentity"]["memberLedgerSchemaUrl"], MEMBER_LEDGER_URL)
         self.assertEqual(values["canonicalIdentity"]["telegramUrl"], TELEGRAM_URL)
         self.assertEqual(values["canonicalIdentity"]["officialPoolPair"], "GCA/USDT")
         self.assertEqual(values["canonicalIdentity"]["officialPoolAddress"], OFFICIAL_POOL_ADDRESS)

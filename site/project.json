@@ -41,6 +41,8 @@
   "faqUrl": "https://gcagochina.com/faq.html",
   "memberPreRegistrationUrl": "https://gcagochina.com/members.html",
   "memberProgramRulesUrl": "https://gcagochina.com/member-program.json",
+  "memberLedgerPageUrl": "https://gcagochina.com/member-ledger.html",
+  "memberLedgerSchemaUrl": "https://gcagochina.com/member-ledger.json",
   "utilityThesisUrl": "https://gcagochina.com/utility.html",
   "whitepaperUrl": "https://gcagochina.com/whitepaper.html",
   "logoSvgUrl": "https://gcagochina.com/assets/gca-logo.svg",
@@ -160,6 +162,14 @@
   },
   "memberProgram": {
     "status": "rules-published-public-claim-not-connected",
+    "ledgerSchema": {
+      "status": "public-member-ledger-schema-published",
+      "pageUrl": "https://gcagochina.com/member-ledger.html",
+      "url": "https://gcagochina.com/member-ledger.json",
+      "holderBonusMinimum": "10000 GCA",
+      "holderBonusCreditAmount": "100 Web3 Radar utility credits",
+      "gcaMemberMinimum": "1000000 GCA"
+    },
     "holderBonus": {
       "minimumHolding": "10000 GCA",
       "creditAmount": "100 Web3 Radar utility credits",
