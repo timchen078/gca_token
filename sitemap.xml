@@ -74,11 +74,11 @@
   </url>
   <url>
     <loc>https://gcagochina.com/wallet-warning.html</loc>
-    <lastmod>2026-05-12</lastmod>
+    <lastmod>2026-05-13</lastmod>
   </url>
   <url>
     <loc>https://gcagochina.com/wallet-warning.json</loc>
-    <lastmod>2026-05-12</lastmod>
+    <lastmod>2026-05-13</lastmod>
   </url>
   <url>
     <loc>https://gcagochina.com/external-reviews.html</loc>
@@ -190,11 +190,15 @@
   </url>
   <url>
     <loc>https://gcagochina.com/tokenlist.json</loc>
-    <lastmod>2026-05-12</lastmod>
+    <lastmod>2026-05-13</lastmod>
   </url>
   <url>
     <loc>https://gcagochina.com/.well-known/gca-token.json</loc>
-    <lastmod>2026-05-12</lastmod>
+    <lastmod>2026-05-13</lastmod>
+  </url>
+  <url>
+    <loc>https://gcagochina.com/.well-known/wallet-security.json</loc>
+    <lastmod>2026-05-13</lastmod>
   </url>
   <url>
     <loc>https://gcagochina.com/.well-known/security.txt</loc>

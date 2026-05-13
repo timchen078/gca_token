@@ -17,6 +17,7 @@
     "onchainProofs": "https://gcagochina.com/onchain-proofs.json",
     "walletWarningEvidencePage": "https://gcagochina.com/wallet-warning.html",
     "walletWarningEvidence": "https://gcagochina.com/wallet-warning.json",
+    "walletSecurityProfile": "https://gcagochina.com/.well-known/wallet-security.json",
     "externalReviewsPage": "https://gcagochina.com/external-reviews.html",
     "externalReviews": "https://gcagochina.com/external-reviews.json",
     "trustCenterPage": "https://gcagochina.com/trust.html",
