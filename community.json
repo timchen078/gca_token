@@ -9,7 +9,7 @@
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "officialTelegram": "https://t.me/gcagochinaofficial",
-  "officialX": "https://x.com/gcagochina",
+  "officialX": "https://x.com/GCAAIGoChina",
   "officialMarket": {
     "pair": "GCA/USDT",
     "network": "Base Mainnet",
@@ -26,21 +26,23 @@
     "Positioning: Narrative meets risk control. GCA connects Go China Access, China Narrative Radar, Liquidation Replay, ENTRY_READY Review, GCA Member Club, and Risk First Trading.",
     "Roadmap: https://gcagochina.com/roadmap.html",
     "Official market route: GCA/USDT on Base Mainnet.",
-    "Official X: https://x.com/gcagochina",
+    "Official X: https://x.com/GCAAIGoChina",
+    "First official X post: https://x.com/GCAAIGoChina/status/2054660559124255151",
     "Current status: concept-stage utility buildout; public self-service member claiming is not live yet, BaseScan token profile was returned as information-insufficient on 2026-05-13 and resubmitted on 2026-05-13, wallet-warning removal is not confirmed, and no third-party audit has been completed."
   ],
   "xLaunchPack": {
-    "status": "prepared-not-posted",
-    "officialProfile": "https://x.com/gcagochina",
+    "status": "first-post-published",
+    "officialProfile": "https://x.com/GCAAIGoChina",
     "displayName": "GCA | Go China Access",
     "website": "https://gcagochina.com",
     "profilePhotoAsset": "https://gcagochina.com/assets/gca-logo.png",
-    "firstPostDraft": [
-      "GCA | Go China Access is live on Base Mainnet.",
-      "Verify official links before interacting: https://gcagochina.com/verify.html",
-      "Contract: 0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
-      "Official market route: GCA/USDT",
-      "Concept-stage utility buildout. No financial advice."
+    "firstPostUrl": "https://x.com/GCAAIGoChina/status/2054660559124255151",
+    "firstPostPublishedDate": "2026-05-14",
+    "firstPostText": [
+      "GCA is building Go China Access.",
+      "A fixed-supply Base token connecting the China macro story with future non-custodial quant risk tools, market education, and member access.",
+      "https://gcagochina.com",
+      "Not custody. No return promises. Not financial advice."
     ],
     "threadFollowUpDrafts": [
       "GCA is building around Go China Access, China Narrative Radar, Liquidation Replay, ENTRY_READY Review, GCA Member Club, and risk-first Web3 education. Roadmap: https://gcagochina.com/roadmap.html Weekly Radar: https://gcagochina.com/radar.html",
@@ -55,7 +57,7 @@
       "Base Mainnet only. No third-party audit. Starter-depth liquidity."
     ],
     "postingChecklist": [
-      "Confirm the visible handle is @gcagochina.",
+      "Confirm the visible handle is @GCAAIGoChina.",
       "Confirm the website field points to https://gcagochina.com.",
       "Use the GCA logo asset before posting if the profile photo is still blank.",
       "Pin only the official links post after it is live.",
@@ -83,7 +85,7 @@
     "weeklyRadarPage": "https://gcagochina.com/radar.html",
     "weeklyRadar": "https://gcagochina.com/radar.json",
     "telegram": "https://t.me/gcagochinaofficial",
-    "x": "https://x.com/gcagochina",
+    "x": "https://x.com/GCAAIGoChina",
     "verify": "https://gcagochina.com/verify.html",
     "roadmap": "https://gcagochina.com/roadmap.html",
     "status": "https://gcagochina.com/status.html",
