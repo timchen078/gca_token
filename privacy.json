@@ -85,6 +85,8 @@
     "retentionCaveat": "Some records may be retained when needed for abuse prevention, security review, operational integrity, or legal compliance."
   },
   "publicLinks": {
+    "support": "https://gcagochina.com/support.html",
+    "supportJson": "https://gcagochina.com/support.json",
     "privacyNotice": "https://gcagochina.com/privacy.html",
     "participationTerms": "https://gcagochina.com/terms.html",
     "memberPreRegistration": "https://gcagochina.com/members.html",

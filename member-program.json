@@ -12,6 +12,8 @@
     "members": "https://gcagochina.com/members.html",
     "memberLedger": "https://gcagochina.com/member-ledger.html",
     "memberLedgerSchema": "https://gcagochina.com/member-ledger.json",
+    "support": "https://gcagochina.com/support.html",
+    "supportJson": "https://gcagochina.com/support.json",
     "privacyNotice": "https://gcagochina.com/privacy.html",
     "participationTerms": "https://gcagochina.com/terms.html",
     "utility": "https://gcagochina.com/utility.html",
@@ -81,6 +83,13 @@
     "participationTermsUrl": "https://gcagochina.com/terms.html",
     "participationTermsJsonUrl": "https://gcagochina.com/terms.json",
     "status": "public-privacy-and-terms-published"
+  },
+  "supportIntake": {
+    "status": "public-support-intake-published",
+    "pageUrl": "https://gcagochina.com/support.html",
+    "url": "https://gcagochina.com/support.json",
+    "directSubmissionEndpointConfigured": false,
+    "manualSubmissionMode": "copy, download, or email local packet"
   },
   "supportWorkflow": {
     "contactEmail": "GCAgochina@outlook.com",

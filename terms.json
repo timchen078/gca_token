@@ -84,6 +84,8 @@
     "do not grant withdrawal permission"
   ],
   "publicLinks": {
+    "support": "https://gcagochina.com/support.html",
+    "supportJson": "https://gcagochina.com/support.json",
     "participationTerms": "https://gcagochina.com/terms.html",
     "privacyNotice": "https://gcagochina.com/privacy.html",
     "verify": "https://gcagochina.com/verify.html",
