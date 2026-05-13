@@ -34,6 +34,8 @@ Deployment notes are in `docs/deploy_base_sepolia.md` and `docs/deploy_base_main
 - Public member program rules: `site/member-program.json`
 - Public member ledger schema page: `site/member-ledger.html`
 - Public member ledger schema JSON: `site/member-ledger.json`
+- Public support intake page: `site/support.html`
+- Public support intake JSON: `site/support.json`
 - Public privacy notice page: `site/privacy.html`
 - Public privacy notice JSON: `site/privacy.json`
 - Public participation terms page: `site/terms.html`

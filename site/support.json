@@ -1,0 +1,96 @@
+{
+  "schema": "https://gcagochina.com/support.json",
+  "pageUrl": "https://gcagochina.com/support.html",
+  "lastUpdated": "2026-05-13",
+  "status": "public-support-intake-published",
+  "network": "Base Mainnet",
+  "chainId": 8453,
+  "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+  "officialEmail": "GCAgochina@outlook.com",
+  "currentSubmissionMode": {
+    "memberPage": "https://gcagochina.com/members.html",
+    "mode": "copy-download-email",
+    "directSubmissionEndpointConfigured": false,
+    "controlledHttpsAccountUiLive": false
+  },
+  "supportedRequestTypes": [
+    "member pre-registration packet review",
+    "wallet verification question",
+    "wallet-warning evidence or screenshot",
+    "data platform correction context",
+    "official link verification",
+    "security boundary question"
+  ],
+  "safeIntakeFields": [
+    "request type",
+    "email",
+    "optional Telegram handle",
+    "Base wallet address",
+    "transaction hash",
+    "pool link",
+    "wallet-warning screenshot",
+    "generated member packet JSON"
+  ],
+  "doNotSend": [
+    "private key",
+    "seed phrase",
+    "exchange API secret",
+    "withdrawal permission",
+    "custody request",
+    "password",
+    "one-time code",
+    "recovery phrase"
+  ],
+  "supportWorkflow": {
+    "publicIntakeStatus": "manual-only",
+    "targetFirstResponse": "5-10 business days after controlled intake is live; not a promise",
+    "reviewStatuses": [
+      "received",
+      "wallet_pending",
+      "eligible",
+      "needs_more_information",
+      "rejected",
+      "ledger_recorded"
+    ],
+    "preparedAccessPage": "/gca/member-access",
+    "preparedIntakeEndpoint": "/gca/pre-registrations",
+    "preparedWalletVerificationEndpoint": "/gca/wallet-verifications",
+    "preparedCreditLedgerEndpoint": "/gca/credit-ledger",
+    "preparedMemberLedgerEndpoint": "/gca/member-ledger",
+    "preparedReviewEndpoint": "/gca/member-review"
+  },
+  "supportCannotDo": [
+    "promise token price",
+    "promise liquidity",
+    "promise listings",
+    "promise wallet-warning removal",
+    "promise audit approval",
+    "promise trading results",
+    "activate live trading permission",
+    "bypass Web3 Radar risk controls",
+    "override wallet-balance verification"
+  ],
+  "officialIdentity": {
+    "website": "https://gcagochina.com/",
+    "verify": "https://gcagochina.com/verify.html",
+    "status": "https://gcagochina.com/status.html",
+    "marketPage": "https://gcagochina.com/markets.html",
+    "officialPair": "GCA/USDT",
+    "officialPool": "0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "telegram": "https://t.me/gcagochinaofficial"
+  },
+  "publicLinks": {
+    "supportPage": "https://gcagochina.com/support.html",
+    "supportJson": "https://gcagochina.com/support.json",
+    "privacyNotice": "https://gcagochina.com/privacy.html",
+    "participationTerms": "https://gcagochina.com/terms.html",
+    "memberPreRegistration": "https://gcagochina.com/members.html",
+    "memberProgramRules": "https://gcagochina.com/member-program.json",
+    "memberLedgerPage": "https://gcagochina.com/member-ledger.html",
+    "memberLedgerSchema": "https://gcagochina.com/member-ledger.json",
+    "listingKit": "https://gcagochina.com/listing-kit.html",
+    "brandKit": "https://gcagochina.com/brand-kit.html",
+    "onchainProofs": "https://gcagochina.com/onchain-proofs.html",
+    "externalReviews": "https://gcagochina.com/external-reviews.html"
+  }
+}

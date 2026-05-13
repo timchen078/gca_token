@@ -51,6 +51,8 @@
     "memberProgramRules": "https://gcagochina.com/member-program.json",
     "memberLedgerPage": "https://gcagochina.com/member-ledger.html",
     "memberLedgerSchema": "https://gcagochina.com/member-ledger.json",
+    "supportPage": "https://gcagochina.com/support.html",
+    "supportJson": "https://gcagochina.com/support.json",
     "privacyNoticePage": "https://gcagochina.com/privacy.html",
     "privacyNotice": "https://gcagochina.com/privacy.json",
     "participationTermsPage": "https://gcagochina.com/terms.html",

@@ -24,6 +24,8 @@ OFFICIAL_DEXSCREENER_URL = f"https://dexscreener.com/base/{OFFICIAL_POOL_ADDRESS
 MEMBER_PROGRAM_URL = "https://gcagochina.com/member-program.json"
 MEMBER_LEDGER_PAGE_URL = "https://gcagochina.com/member-ledger.html"
 MEMBER_LEDGER_URL = "https://gcagochina.com/member-ledger.json"
+SUPPORT_PAGE_URL = "https://gcagochina.com/support.html"
+SUPPORT_URL = "https://gcagochina.com/support.json"
 PRIVACY_NOTICE_PAGE_URL = "https://gcagochina.com/privacy.html"
 PRIVACY_NOTICE_URL = "https://gcagochina.com/privacy.json"
 PARTICIPATION_TERMS_PAGE_URL = "https://gcagochina.com/terms.html"
@@ -110,6 +112,7 @@ def validate_root(text: str) -> None:
     assert_contains(text, "On-chain Proofs", label)
     assert_contains(text, "Brand Kit", label)
     assert_contains(text, "Member Ledger", label)
+    assert_contains(text, "Support & Intake", label)
     assert_contains(text, "Privacy Notice", label)
     assert_contains(text, "Participation Terms", label)
     assert_contains(text, MAINNET_ADDRESS, label)
@@ -147,6 +150,7 @@ def validate_members(text: str) -> None:
     assert_contains(text, "member-program.json", label)
     assert_contains(text, "member-ledger.html", label)
     assert_contains(text, "member-ledger.json", label)
+    assert_contains(text, "support.html", label)
     assert_contains(text, "privacy.html", label)
     assert_contains(text, "terms.html", label)
     assert_contains(text, "180 days", label)
@@ -155,6 +159,76 @@ def validate_members(text: str) -> None:
     assert_contains(text, "Direct submission is not connected", label)
     assert_contains(text, "No cash, token rebate, income, reimbursement, trading permission, or risk-control bypass", label)
     assert_not_contains(text, OLD_WETH_POOL_ADDRESS, label)
+
+
+def validate_support_page(text: str) -> None:
+    label = "/support.html"
+    assert_contains(text, "GCA Support & Intake", label)
+    assert_contains(text, "Support JSON", label)
+    assert_contains(text, "GCAgochina@outlook.com", label)
+    assert_contains(text, "Direct Submit", label)
+    assert_contains(text, "Not connected", label)
+    assert_contains(text, "Private key or seed phrase", label)
+    assert_contains(text, "Exchange API secret or withdrawal permission", label)
+    assert_contains(text, "Support Workflow", label)
+    assert_contains(text, "Support Cannot Do", label)
+    assert_contains(text, "Base Mainnet / chainId 8453", label)
+    assert_contains(text, "GCA/USDT", label)
+    assert_contains(text, MAINNET_ADDRESS, label)
+    assert_not_contains(text, OLD_WETH_POOL_ADDRESS, label)
+    assert_not_contains(text, "GCA/WETH", label)
+
+
+def validate_support_json(text: str) -> None:
+    label = "/support.json"
+    payload = load_json(text, label)
+    submission = payload.get("currentSubmissionMode", {})
+    workflow = payload.get("supportWorkflow", {})
+    identity = payload.get("officialIdentity", {})
+    links = payload.get("publicLinks", {})
+
+    if payload.get("schema") != SUPPORT_URL:
+        raise SiteCheckError(f"{label}: wrong schema")
+    if payload.get("pageUrl") != SUPPORT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong pageUrl")
+    if payload.get("status") != "public-support-intake-published":
+        raise SiteCheckError(f"{label}: wrong status")
+    if payload.get("chainId") != 8453:
+        raise SiteCheckError(f"{label}: wrong chainId")
+    if payload.get("contractAddress") != MAINNET_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong contractAddress")
+    if payload.get("officialEmail") != "GCAgochina@outlook.com":
+        raise SiteCheckError(f"{label}: wrong officialEmail")
+    if submission.get("directSubmissionEndpointConfigured") is not False:
+        raise SiteCheckError(f"{label}: direct submission must remain false")
+    if submission.get("controlledHttpsAccountUiLive") is not False:
+        raise SiteCheckError(f"{label}: account UI must remain false")
+    if "private key" not in payload.get("doNotSend", []):
+        raise SiteCheckError(f"{label}: missing private key boundary")
+    if "seed phrase" not in payload.get("doNotSend", []):
+        raise SiteCheckError(f"{label}: missing seed phrase boundary")
+    if "exchange API secret" not in payload.get("doNotSend", []):
+        raise SiteCheckError(f"{label}: missing API secret boundary")
+    if "withdrawal permission" not in payload.get("doNotSend", []):
+        raise SiteCheckError(f"{label}: missing withdrawal permission boundary")
+    if workflow.get("preparedIntakeEndpoint") != "/gca/pre-registrations":
+        raise SiteCheckError(f"{label}: wrong prepared intake endpoint")
+    if "ledger_recorded" not in workflow.get("reviewStatuses", []):
+        raise SiteCheckError(f"{label}: missing ledger status")
+    if identity.get("officialPair") != "GCA/USDT":
+        raise SiteCheckError(f"{label}: wrong official pair")
+    if identity.get("officialPool") != OFFICIAL_POOL_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong official pool")
+    if links.get("supportPage") != SUPPORT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong support page link")
+    if links.get("supportJson") != SUPPORT_URL:
+        raise SiteCheckError(f"{label}: wrong support json link")
+    if links.get("privacyNotice") != PRIVACY_NOTICE_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong privacy link")
+    if links.get("participationTerms") != PARTICIPATION_TERMS_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong terms link")
+    assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
+    assert_not_contains(json.dumps(payload), "GCA/WETH", label)
 
 
 def validate_privacy_page(text: str) -> None:
@@ -206,6 +280,10 @@ def validate_privacy_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong prepared intake endpoint")
     if "private key" not in boundary.get("neverAskFor", []):
         raise SiteCheckError(f"{label}: missing private key boundary")
+    if links.get("support") != SUPPORT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong support link")
+    if links.get("supportJson") != SUPPORT_URL:
+        raise SiteCheckError(f"{label}: wrong support JSON link")
     if links.get("participationTerms") != PARTICIPATION_TERMS_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong terms link")
     if links.get("memberLedgerSchema") != MEMBER_LEDGER_URL:
@@ -266,6 +344,10 @@ def validate_terms_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing no-advice boundary")
     if "risk-control bypass" not in no_promise.get("doesNotPromise", []):
         raise SiteCheckError(f"{label}: missing risk-control boundary")
+    if links.get("support") != SUPPORT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong support link")
+    if links.get("supportJson") != SUPPORT_URL:
+        raise SiteCheckError(f"{label}: wrong support JSON link")
     if links.get("privacyNotice") != PRIVACY_NOTICE_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong privacy link")
     if links.get("memberLedgerSchema") != MEMBER_LEDGER_URL:
@@ -422,6 +504,10 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong memberLedgerPageUrl")
     if payload.get("memberLedgerSchemaUrl") != MEMBER_LEDGER_URL:
         raise SiteCheckError(f"{label}: wrong memberLedgerSchemaUrl")
+    if payload.get("supportPageUrl") != SUPPORT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong supportPageUrl")
+    if payload.get("supportJsonUrl") != SUPPORT_URL:
+        raise SiteCheckError(f"{label}: wrong supportJsonUrl")
     if payload.get("privacyNoticePageUrl") != PRIVACY_NOTICE_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong privacyNoticePageUrl")
     if payload.get("privacyNoticeUrl") != PRIVACY_NOTICE_URL:
@@ -468,6 +554,8 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: unexpected GeckoTerminal status")
     if member_program.get("status") != "rules-published-public-claim-not-connected":
         raise SiteCheckError(f"{label}: unexpected member program status")
+    if member_program.get("supportIntake", {}).get("status") != "public-support-intake-published":
+        raise SiteCheckError(f"{label}: unexpected support intake status")
     if member_program.get("ledgerSchema", {}).get("status") != "public-member-ledger-schema-published":
         raise SiteCheckError(f"{label}: unexpected member ledger schema status")
     if member_program.get("privacyAndTerms", {}).get("status") != "public-privacy-and-terms-published":
@@ -514,6 +602,10 @@ def validate_tokenlist_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong memberLedgerPage")
     if extensions.get("memberLedgerSchema") != MEMBER_LEDGER_URL:
         raise SiteCheckError(f"{label}: wrong memberLedgerSchema")
+    if extensions.get("supportPage") != SUPPORT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong supportPage")
+    if extensions.get("supportJson") != SUPPORT_URL:
+        raise SiteCheckError(f"{label}: wrong supportJson")
     if extensions.get("privacyNoticePage") != PRIVACY_NOTICE_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong privacyNoticePage")
     if extensions.get("privacyNotice") != PRIVACY_NOTICE_URL:
@@ -554,6 +646,8 @@ def validate_tokenlist_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong brandKitStatus")
     if extensions.get("memberLedgerStatus") != "public-member-ledger-schema-published":
         raise SiteCheckError(f"{label}: wrong memberLedgerStatus")
+    if extensions.get("supportIntakeStatus") != "public-support-intake-published":
+        raise SiteCheckError(f"{label}: wrong supportIntakeStatus")
     if extensions.get("privacyNoticeStatus") != "public-privacy-notice-published":
         raise SiteCheckError(f"{label}: wrong privacyNoticeStatus")
     if extensions.get("participationTermsStatus") != "public-participation-terms-published":
@@ -580,6 +674,10 @@ def validate_well_known_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong memberLedgerPage")
     if urls.get("memberLedgerSchema") != MEMBER_LEDGER_URL:
         raise SiteCheckError(f"{label}: wrong memberLedgerSchema")
+    if urls.get("supportPage") != SUPPORT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong supportPage")
+    if urls.get("supportJson") != SUPPORT_URL:
+        raise SiteCheckError(f"{label}: wrong supportJson")
     if urls.get("privacyNoticePage") != PRIVACY_NOTICE_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong privacyNoticePage")
     if urls.get("privacyNotice") != PRIVACY_NOTICE_URL:
@@ -632,6 +730,7 @@ def validate_member_program_json(text: str) -> None:
     member_tier = payload.get("memberTier", {})
     verification = payload.get("verification", {})
     privacy_terms = payload.get("privacyAndTerms", {})
+    support_intake = payload.get("supportIntake", {})
     support = payload.get("supportWorkflow", {})
     boundaries = payload.get("publicClaimBoundaries", {})
 
@@ -647,6 +746,10 @@ def validate_member_program_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong memberLedger page")
     if public_pages.get("memberLedgerSchema") != MEMBER_LEDGER_URL:
         raise SiteCheckError(f"{label}: wrong memberLedger schema")
+    if public_pages.get("support") != SUPPORT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong support page")
+    if public_pages.get("supportJson") != SUPPORT_URL:
+        raise SiteCheckError(f"{label}: wrong support JSON")
     if public_pages.get("privacyNotice") != PRIVACY_NOTICE_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong privacy notice page")
     if public_pages.get("participationTerms") != PARTICIPATION_TERMS_PAGE_URL:
@@ -675,6 +778,14 @@ def validate_member_program_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong participation terms URL")
     if privacy_terms.get("participationTermsJsonUrl") != PARTICIPATION_TERMS_URL:
         raise SiteCheckError(f"{label}: wrong terms JSON URL")
+    if support_intake.get("status") != "public-support-intake-published":
+        raise SiteCheckError(f"{label}: wrong support intake status")
+    if support_intake.get("pageUrl") != SUPPORT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong support page URL")
+    if support_intake.get("url") != SUPPORT_URL:
+        raise SiteCheckError(f"{label}: wrong support JSON URL")
+    if support_intake.get("directSubmissionEndpointConfigured") is not False:
+        raise SiteCheckError(f"{label}: support direct submission must remain false")
     if support.get("contactEmail") != "GCAgochina@outlook.com":
         raise SiteCheckError(f"{label}: wrong support contact")
     if "ledger_recorded" not in support.get("reviewStatuses", []):
@@ -1126,6 +1237,8 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/member-program.json",
         "https://gcagochina.com/member-ledger.html",
         "https://gcagochina.com/member-ledger.json",
+        "https://gcagochina.com/support.html",
+        "https://gcagochina.com/support.json",
         "https://gcagochina.com/privacy.html",
         "https://gcagochina.com/privacy.json",
         "https://gcagochina.com/terms.html",
@@ -1159,6 +1272,8 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /member-ledger.html", label)
     assert_contains(text, "Allow: /member-ledger.json", label)
     assert_contains(text, "Allow: /member-program.json", label)
+    assert_contains(text, "Allow: /support.html", label)
+    assert_contains(text, "Allow: /support.json", label)
     assert_contains(text, "Allow: /privacy.html", label)
     assert_contains(text, "Allow: /privacy.json", label)
     assert_contains(text, "Allow: /terms.html", label)
@@ -1188,6 +1303,8 @@ CHECKS: list[EndpointCheck] = [
     ("/member-program.json", validate_member_program_json),
     ("/member-ledger.html", validate_member_ledger_page),
     ("/member-ledger.json", validate_member_ledger_json),
+    ("/support.html", validate_support_page),
+    ("/support.json", validate_support_json),
     ("/privacy.html", validate_privacy_page),
     ("/privacy.json", validate_privacy_json),
     ("/terms.html", validate_terms_page),

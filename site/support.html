@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>GCA Privacy Notice</title>
-    <meta name="description" content="GCA privacy notice for public website use, member pre-registration packets, wallet balance verification, and future controlled HTTPS intake.">
+    <title>GCA Support & Intake</title>
+    <meta name="description" content="Official GCA support and intake page for member pre-registration packets, wallet verification questions, data platform corrections, wallet-warning reports, and security boundaries.">
     <style>
       :root {
         color-scheme: light;
@@ -87,7 +87,7 @@
 
       h1 {
         margin: 0;
-        max-width: 860px;
+        max-width: 900px;
         font-size: clamp(40px, 6vw, 72px);
         line-height: 1;
         letter-spacing: 0;
@@ -150,7 +150,8 @@
       }
 
       .facts,
-      .two {
+      .two,
+      .three {
         display: grid;
         gap: 14px;
       }
@@ -162,6 +163,10 @@
 
       .two {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .three {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
       }
 
       .fact {
@@ -249,7 +254,8 @@
         }
 
         .facts,
-        .two {
+        .two,
+        .three {
           grid-template-columns: 1fr;
         }
       }
@@ -274,7 +280,7 @@
           <a href="listing-kit.html">Listing Kit</a>
           <a href="members.html">Members</a>
           <a href="member-ledger.html">Member Ledger</a>
-          <a href="support.html">Support</a>
+          <a href="privacy.html">Privacy</a>
           <a href="terms.html">Terms</a>
         </div>
       </nav>
@@ -282,85 +288,101 @@
 
     <main class="shell">
       <section aria-labelledby="title">
-        <h1 id="title">GCA Privacy Notice</h1>
-        <p class="lead">This notice explains how the public GCA website handles pre-registration packet data, wallet balance verification data, and future controlled HTTPS intake for the planned GCA x Web3 Radar access bridge.</p>
+        <h1 id="title">GCA Support & Intake</h1>
+        <p class="lead">Use this page for official GCA support routing, member pre-registration packet handling, wallet-verification questions, wallet-warning evidence, and data-platform correction context.</p>
         <div class="actions">
-          <a class="button primary" href="privacy.json">Privacy JSON</a>
-          <a class="button" href="terms.html">Participation Terms</a>
-          <a class="button" href="support.html">Support & Intake</a>
+          <a class="button primary" href="mailto:GCAgochina@outlook.com?subject=GCA%20Support%20Request">Email GCA Support</a>
+          <a class="button" href="support.json">Support JSON</a>
           <a class="button" href="members.html">Member Pre-Registration</a>
-          <a class="button" href="member-program.json">Member Program JSON</a>
-          <a class="button" href="member-ledger.html">Member Ledger</a>
+          <a class="button" href="privacy.html">Privacy Notice</a>
+          <a class="button" href="terms.html">Participation Terms</a>
+          <a class="button" href="verify.html">Verify GCA</a>
         </div>
       </section>
 
-      <section class="facts" aria-label="Privacy facts">
+      <section class="facts" aria-label="Support facts">
         <div class="fact">
-          <span class="label">Status</span>
-          <span class="value good">Public privacy notice</span>
-        </div>
-        <div class="fact">
-          <span class="label">Current Site Mode</span>
-          <span class="value">Local pre-registration packet only</span>
-        </div>
-        <div class="fact">
-          <span class="label">Contact</span>
+          <span class="label">Official Email</span>
           <span class="value">GCAgochina@outlook.com</span>
         </div>
         <div class="fact">
-          <span class="label">Last Updated</span>
-          <span class="value">2026-05-13</span>
+          <span class="label">Current Intake</span>
+          <span class="value">Copy, download, or email</span>
+        </div>
+        <div class="fact">
+          <span class="label">Direct Submit</span>
+          <span class="value pending">Not connected</span>
+        </div>
+        <div class="fact">
+          <span class="label">Sensitive Data</span>
+          <span class="value good">Never required</span>
         </div>
       </section>
 
-      <section class="section two" aria-label="Data handling">
+      <section class="section three" aria-label="Request types">
         <div class="panel">
-          <h2>What The Public Page Collects</h2>
-          <p class="note">The current <a href="members.html">member pre-registration page</a> creates a local pre-registration packet in the browser. The packet can include email, Telegram handle, Base wallet address, declared GCA balance, program intent, consent flags, generated registration ID, and timestamp. The public static site does not send this packet to a GCA server by itself.</p>
-          <p class="note" style="margin-top: 10px;"><code>directSubmissionEndpointConfigured</code> is currently <code>false</code> on the public static page.</p>
+          <h2>Member Packet</h2>
+          <p class="note">Use <a href="members.html">members.html</a> to generate a local pre-registration packet. The public page still does not create a live Web3 Radar account or make credits self-service claimable.</p>
         </div>
         <div class="panel">
-          <h2>When Data Leaves The Browser</h2>
-          <p class="note">Data leaves the browser only when a user copies it, downloads it, emails it to <a href="mailto:GCAgochina@outlook.com">GCAgochina@outlook.com</a>, or later submits it through a controlled HTTPS account UI after that flow is published. Email submission is handled through the user's chosen email client and inbox provider.</p>
-        </div>
-      </section>
-
-      <section class="section two" aria-label="Verification and storage">
-        <div class="panel">
-          <h2>Wallet Verification</h2>
-          <p class="note">Wallet verification is planned as a read-only ERC-20 <code>balanceOf</code> check against the GCA contract on Base Mainnet. GCA does not need private keys, seed phrases, exchange API secrets, withdrawal permission, or custody to verify a public wallet balance.</p>
+          <h2>Wallet Questions</h2>
+          <p class="note">Support can review public Base wallet addresses, declared GCA balances, and transaction hashes. Wallet verification remains a read-only ERC-20 <code>balanceOf</code> check after controlled account UI is live.</p>
         </div>
         <div class="panel">
-          <h2>Future Controlled Intake</h2>
-          <p class="note">After controlled HTTPS account UI is live, GCA may store pre-registration fields, wallet verification results, credit ledger records, GCA Member status, review statuses, operational logs, and support notes needed to run the access bridge.</p>
+          <h2>Platform Corrections</h2>
+          <p class="note">Wallets, data platforms, and moderators should use <a href="listing-kit.html">Listing Kit</a>, <a href="brand-kit.html">Brand Kit</a>, <a href="onchain-proofs.html">On-chain Proofs</a>, and <a href="external-reviews.html">External Reviews</a>.</p>
         </div>
       </section>
 
-      <section class="section two" aria-label="Use and boundaries">
+      <section class="section two" aria-label="What to send">
         <div class="panel">
-          <h2>How Data May Be Used</h2>
+          <h2>What To Include</h2>
           <div class="list">
-            <div class="row"><span>Support review and user follow-up</span><strong>Allowed</strong></div>
-            <div class="row"><span>Wallet balance eligibility checks</span><strong>Allowed</strong></div>
-            <div class="row"><span>100 credits and GCA Member ledger records</span><strong>Allowed</strong></div>
-            <div class="row"><span>Fraud, abuse, and duplicate-registration prevention</span><strong>Allowed</strong></div>
-            <div class="row"><span>Private keys, seed phrases, or custody requests</span><strong class="pending">Never</strong></div>
+            <div class="row"><span>Request type</span><strong>Required</strong></div>
+            <div class="row"><span>Email and optional Telegram handle</span><strong>Useful</strong></div>
+            <div class="row"><span>Base wallet address</span><strong>For holder review</strong></div>
+            <div class="row"><span>Transaction hash or pool link</span><strong>For chain evidence</strong></div>
+            <div class="row"><span>Screenshot of a wallet warning or platform issue</span><strong>If relevant</strong></div>
+            <div class="row"><span>Generated member packet JSON</span><strong>For pre-registration</strong></div>
           </div>
         </div>
         <div class="panel">
-          <h2>User Requests</h2>
-          <p class="note">Users can request correction or deletion by emailing <a href="mailto:GCAgochina@outlook.com">GCAgochina@outlook.com</a>. Some records may be retained when needed for abuse prevention, security review, operational integrity, or legal compliance. GCA does not sell pre-registration contact data.</p>
+          <h2>Do Not Send</h2>
+          <div class="list">
+            <div class="row"><span>Private key or seed phrase</span><strong class="pending">Never</strong></div>
+            <div class="row"><span>Exchange API secret or withdrawal permission</span><strong class="pending">Never</strong></div>
+            <div class="row"><span>Custody request or fund transfer request</span><strong class="pending">Never</strong></div>
+            <div class="row"><span>Password, one-time code, or recovery phrase</span><strong class="pending">Never</strong></div>
+            <div class="row"><span>Request to bypass Web3 Radar risk controls</span><strong class="pending">Never</strong></div>
+          </div>
         </div>
       </section>
 
-      <section class="section panel" aria-labelledby="boundariesTitle">
-        <h2 id="boundariesTitle">Public Safety Boundary</h2>
-        <p class="note">No private key, seed phrase, exchange API secret, withdrawal permission, or custody request is part of the GCA member flow. Pre-registration data does not create a live Web3 Radar account, does not make credits claimable from this static page, and does not override wallet balance checks or risk controls.</p>
+      <section class="section two" aria-label="Current review boundaries">
+        <div class="panel">
+          <h2>Support Workflow</h2>
+          <p class="note">Current public intake is manual: users can copy, download, or email a packet. After controlled HTTPS intake is live, support can use statuses such as <code>received</code>, <code>wallet_pending</code>, <code>eligible</code>, <code>needs_more_information</code>, <code>rejected</code>, and <code>ledger_recorded</code>. A 5-10 business day first-response target applies only after controlled intake is live and is not a promise.</p>
+        </div>
+        <div class="panel">
+          <h2>What Support Cannot Do</h2>
+          <p class="note">Support cannot make a token price, liquidity, listing, wallet-warning removal, audit approval, trading result, live trading permission, or risk-control bypass happen. Support also cannot override on-chain wallet-balance verification.</p>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="identityTitle">
+        <h2 id="identityTitle">Official Identity For Requests</h2>
+        <div class="list">
+          <div class="row"><span>Network</span><strong>Base Mainnet / chainId 8453</strong></div>
+          <div class="row"><span>Contract</span><strong>0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6</strong></div>
+          <div class="row"><span>Official pool</span><strong>GCA/USDT</strong></div>
+          <div class="row"><span>Official Telegram</span><strong><a href="https://t.me/gcagochinaofficial" target="_blank" rel="noreferrer">t.me/gcagochinaofficial</a></strong></div>
+          <div class="row"><span>Verify page</span><strong><a href="verify.html">verify.html</a></strong></div>
+        </div>
       </section>
     </main>
 
     <footer>
-      <div class="shell">GCA privacy notice for public pre-registration and future controlled HTTPS account intake.</div>
+      <div class="shell">GCA support intake is manual until controlled HTTPS account UI is live.</div>
     </footer>
   </body>
 </html>

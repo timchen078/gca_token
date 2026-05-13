@@ -35,6 +35,8 @@ SECURITY_CONTACT_URL = "https://gcagochina.com/.well-known/security.txt"
 MEMBER_PROGRAM_URL = "https://gcagochina.com/member-program.json"
 MEMBER_LEDGER_PAGE_URL = "https://gcagochina.com/member-ledger.html"
 MEMBER_LEDGER_URL = "https://gcagochina.com/member-ledger.json"
+SUPPORT_PAGE_URL = "https://gcagochina.com/support.html"
+SUPPORT_URL = "https://gcagochina.com/support.json"
 PRIVACY_NOTICE_PAGE_URL = "https://gcagochina.com/privacy.html"
 PRIVACY_NOTICE_URL = "https://gcagochina.com/privacy.json"
 PARTICIPATION_TERMS_PAGE_URL = "https://gcagochina.com/terms.html"
@@ -74,6 +76,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("/member-program.json", script)
         self.assertIn("/member-ledger.html", script)
         self.assertIn("/member-ledger.json", script)
+        self.assertIn("/support.html", script)
+        self.assertIn("/support.json", script)
         self.assertIn("/privacy.html", script)
         self.assertIn("/privacy.json", script)
         self.assertIn("/terms.html", script)
@@ -96,6 +100,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("validate_member_program_json", script)
         self.assertIn("validate_member_ledger_page", script)
         self.assertIn("validate_member_ledger_json", script)
+        self.assertIn("validate_support_page", script)
+        self.assertIn("validate_support_json", script)
         self.assertIn("validate_privacy_page", script)
         self.assertIn("validate_privacy_json", script)
         self.assertIn("validate_terms_page", script)
@@ -139,6 +145,8 @@ class LaunchPackageTests(unittest.TestCase):
         module.validate_member_program_json((ROOT / "site" / "member-program.json").read_text())
         module.validate_member_ledger_page((ROOT / "site" / "member-ledger.html").read_text())
         module.validate_member_ledger_json((ROOT / "site" / "member-ledger.json").read_text())
+        module.validate_support_page((ROOT / "site" / "support.html").read_text())
+        module.validate_support_json((ROOT / "site" / "support.json").read_text())
         module.validate_privacy_page((ROOT / "site" / "privacy.html").read_text())
         module.validate_privacy_json((ROOT / "site" / "privacy.json").read_text())
         module.validate_terms_page((ROOT / "site" / "terms.html").read_text())
@@ -301,6 +309,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Allow: /member-program.json", robots)
         self.assertIn("Allow: /member-ledger.html", robots)
         self.assertIn("Allow: /member-ledger.json", robots)
+        self.assertIn("Allow: /support.html", robots)
+        self.assertIn("Allow: /support.json", robots)
         self.assertIn("Allow: /privacy.html", robots)
         self.assertIn("Allow: /privacy.json", robots)
         self.assertIn("Allow: /terms.html", robots)
@@ -336,6 +346,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(MEMBER_PROGRAM_URL, sitemap)
         self.assertIn(MEMBER_LEDGER_PAGE_URL, sitemap)
         self.assertIn(MEMBER_LEDGER_URL, sitemap)
+        self.assertIn(SUPPORT_PAGE_URL, sitemap)
+        self.assertIn(SUPPORT_URL, sitemap)
         self.assertIn(PRIVACY_NOTICE_PAGE_URL, sitemap)
         self.assertIn(PRIVACY_NOTICE_URL, sitemap)
         self.assertIn(PARTICIPATION_TERMS_PAGE_URL, sitemap)
@@ -365,6 +377,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(identity["officialUrls"]["memberProgramRules"], MEMBER_PROGRAM_URL)
         self.assertEqual(identity["officialUrls"]["memberLedgerPage"], MEMBER_LEDGER_PAGE_URL)
         self.assertEqual(identity["officialUrls"]["memberLedgerSchema"], MEMBER_LEDGER_URL)
+        self.assertEqual(identity["officialUrls"]["supportPage"], SUPPORT_PAGE_URL)
+        self.assertEqual(identity["officialUrls"]["supportJson"], SUPPORT_URL)
         self.assertEqual(identity["officialUrls"]["privacyNoticePage"], PRIVACY_NOTICE_PAGE_URL)
         self.assertEqual(identity["officialUrls"]["privacyNotice"], PRIVACY_NOTICE_URL)
         self.assertEqual(identity["officialUrls"]["participationTermsPage"], PARTICIPATION_TERMS_PAGE_URL)
@@ -428,6 +442,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn('href="onchain-proofs.html"', site)
         self.assertIn('href="brand-kit.html"', site)
         self.assertIn('href="member-ledger.html"', site)
+        self.assertIn('href="support.html"', site)
         self.assertIn('href="privacy.html"', site)
         self.assertIn('href="terms.html"', site)
         self.assertIn("Go China Access", site)
@@ -515,6 +530,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("member-program.json", members)
         self.assertIn("member-ledger.html", members)
         self.assertIn("member-ledger.json", members)
+        self.assertIn("support.html", members)
+        self.assertIn("Support and intake", members)
         self.assertIn("privacy.html", members)
         self.assertIn("terms.html", members)
         self.assertIn("Privacy Notice", members)
@@ -543,6 +560,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertFalse(rules["verification"]["directSubmissionEndpointConfigured"])
         self.assertEqual(rules["publicPages"]["memberLedger"], MEMBER_LEDGER_PAGE_URL)
         self.assertEqual(rules["publicPages"]["memberLedgerSchema"], MEMBER_LEDGER_URL)
+        self.assertEqual(rules["publicPages"]["support"], SUPPORT_PAGE_URL)
+        self.assertEqual(rules["publicPages"]["supportJson"], SUPPORT_URL)
         self.assertEqual(rules["publicPages"]["privacyNotice"], PRIVACY_NOTICE_PAGE_URL)
         self.assertEqual(rules["publicPages"]["participationTerms"], PARTICIPATION_TERMS_PAGE_URL)
         self.assertEqual(rules["verification"]["publicLedgerSchemaUrl"], MEMBER_LEDGER_URL)
@@ -551,6 +570,10 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(rules["privacyAndTerms"]["privacyNoticeJsonUrl"], PRIVACY_NOTICE_URL)
         self.assertEqual(rules["privacyAndTerms"]["participationTermsUrl"], PARTICIPATION_TERMS_PAGE_URL)
         self.assertEqual(rules["privacyAndTerms"]["participationTermsJsonUrl"], PARTICIPATION_TERMS_URL)
+        self.assertEqual(rules["supportIntake"]["status"], "public-support-intake-published")
+        self.assertEqual(rules["supportIntake"]["pageUrl"], SUPPORT_PAGE_URL)
+        self.assertEqual(rules["supportIntake"]["url"], SUPPORT_URL)
+        self.assertFalse(rules["supportIntake"]["directSubmissionEndpointConfigured"])
         self.assertEqual(rules["supportWorkflow"]["contactEmail"], "GCAgochina@outlook.com")
         self.assertIn("not a guarantee", rules["supportWorkflow"]["targetFirstResponse"])
         self.assertIn("ledger_recorded", rules["supportWorkflow"]["reviewStatuses"])
@@ -587,6 +610,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertFalse(privacy["walletVerification"]["requiresWithdrawalPermission"])
         self.assertEqual(privacy["futureControlledIntake"]["preparedIntakeEndpoint"], "/gca/pre-registrations")
         self.assertIn("private key", privacy["securityBoundary"]["neverAskFor"])
+        self.assertEqual(privacy["publicLinks"]["support"], SUPPORT_PAGE_URL)
+        self.assertEqual(privacy["publicLinks"]["supportJson"], SUPPORT_URL)
         self.assertEqual(privacy["publicLinks"]["participationTerms"], PARTICIPATION_TERMS_PAGE_URL)
         self.assertEqual(privacy["publicLinks"]["memberLedgerSchema"], MEMBER_LEDGER_URL)
 
@@ -616,10 +641,57 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(terms["externalStatus"]["thirdPartyAudit"], "not-completed")
         self.assertTrue(terms["noPromiseBoundary"]["notFinancialAdvice"])
         self.assertIn("risk-control bypass", terms["noPromiseBoundary"]["doesNotPromise"])
+        self.assertEqual(terms["publicLinks"]["support"], SUPPORT_PAGE_URL)
+        self.assertEqual(terms["publicLinks"]["supportJson"], SUPPORT_URL)
         self.assertEqual(terms["publicLinks"]["privacyNotice"], PRIVACY_NOTICE_PAGE_URL)
         self.assertEqual(terms["publicLinks"]["memberLedgerSchema"], MEMBER_LEDGER_URL)
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, json.dumps(privacy))
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, json.dumps(terms))
+
+    def test_support_page_and_json_define_safe_intake(self):
+        page = (ROOT / "site" / "support.html").read_text()
+        support = json.loads((ROOT / "site" / "support.json").read_text())
+
+        self.assertIn("GCA Support & Intake", page)
+        self.assertIn("Support JSON", page)
+        self.assertIn("GCAgochina@outlook.com", page)
+        self.assertIn("Direct Submit", page)
+        self.assertIn("Not connected", page)
+        self.assertIn("Private key or seed phrase", page)
+        self.assertIn("Exchange API secret or withdrawal permission", page)
+        self.assertIn("Support Workflow", page)
+        self.assertIn("What Support Cannot Do", page)
+        self.assertIn("Base Mainnet / chainId 8453", page)
+        self.assertIn("GCA/USDT", page)
+        self.assertIn(MAINNET_ADDRESS, page)
+        self.assertNotIn(OLD_WETH_POOL_ADDRESS, page)
+        self.assertNotIn("GCA/WETH", page)
+
+        self.assertEqual(support["schema"], SUPPORT_URL)
+        self.assertEqual(support["pageUrl"], SUPPORT_PAGE_URL)
+        self.assertEqual(support["status"], "public-support-intake-published")
+        self.assertEqual(support["chainId"], 8453)
+        self.assertEqual(support["contractAddress"], MAINNET_ADDRESS)
+        self.assertEqual(support["officialEmail"], "GCAgochina@outlook.com")
+        self.assertFalse(support["currentSubmissionMode"]["directSubmissionEndpointConfigured"])
+        self.assertFalse(support["currentSubmissionMode"]["controlledHttpsAccountUiLive"])
+        self.assertIn("member pre-registration packet review", support["supportedRequestTypes"])
+        self.assertIn("wallet-warning screenshot", support["safeIntakeFields"])
+        self.assertIn("private key", support["doNotSend"])
+        self.assertIn("seed phrase", support["doNotSend"])
+        self.assertIn("exchange API secret", support["doNotSend"])
+        self.assertIn("withdrawal permission", support["doNotSend"])
+        self.assertEqual(support["supportWorkflow"]["preparedIntakeEndpoint"], "/gca/pre-registrations")
+        self.assertIn("ledger_recorded", support["supportWorkflow"]["reviewStatuses"])
+        self.assertIn("override wallet-balance verification", support["supportCannotDo"])
+        self.assertEqual(support["officialIdentity"]["officialPair"], "GCA/USDT")
+        self.assertEqual(support["officialIdentity"]["officialPool"], OFFICIAL_POOL_ADDRESS)
+        self.assertEqual(support["publicLinks"]["supportPage"], SUPPORT_PAGE_URL)
+        self.assertEqual(support["publicLinks"]["supportJson"], SUPPORT_URL)
+        self.assertEqual(support["publicLinks"]["privacyNotice"], PRIVACY_NOTICE_PAGE_URL)
+        self.assertEqual(support["publicLinks"]["participationTerms"], PARTICIPATION_TERMS_PAGE_URL)
+        self.assertNotIn(OLD_WETH_POOL_ADDRESS, json.dumps(support))
+        self.assertNotIn("GCA/WETH", json.dumps(support))
 
     def test_member_ledger_page_and_json_define_public_schema(self):
         page = (ROOT / "site" / "member-ledger.html").read_text()
@@ -1002,6 +1074,7 @@ class LaunchPackageTests(unittest.TestCase):
         quality = (ROOT / "site" / "market-quality.html").read_text()
         onchain = (ROOT / "site" / "onchain-proofs.html").read_text()
         member_ledger = (ROOT / "site" / "member-ledger.html").read_text()
+        support = (ROOT / "site" / "support.html").read_text()
         privacy = (ROOT / "site" / "privacy.html").read_text()
         terms = (ROOT / "site" / "terms.html").read_text()
 
@@ -1030,6 +1103,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn('href="onchain-proofs.html"', status)
         self.assertIn('href="brand-kit.html"', status)
         self.assertIn('href="member-ledger.html"', status)
+        self.assertIn('href="support.html"', status)
         self.assertIn('href="privacy.html"', status)
         self.assertIn('href="terms.html"', status)
         self.assertIn("No third-party audit has been completed", status)
@@ -1048,13 +1122,14 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn('href="onchain-proofs.html"', index)
         self.assertIn('href="brand-kit.html"', index)
         self.assertIn('href="member-ledger.html"', index)
+        self.assertIn('href="support.html"', index)
         self.assertIn('href="privacy.html"', index)
         self.assertIn('href="terms.html"', index)
 
         wallet_warning = (ROOT / "site" / "wallet-warning.html").read_text()
         external = (ROOT / "site" / "external-reviews.html").read_text()
         brand = (ROOT / "site" / "brand-kit.html").read_text()
-        for page in (index, buy, markets, supply, security, risk, faq, members, utility, whitepaper, verify, readiness, quality, wallet_warning, external, onchain, brand, member_ledger, privacy, terms):
+        for page in (index, buy, markets, supply, security, risk, faq, members, utility, whitepaper, verify, readiness, quality, wallet_warning, external, onchain, brand, member_ledger, support, privacy, terms):
             self.assertIn('href="status.html"', page)
             self.assertIn('href="listing-kit.html"', page)
             self.assertIn('href="markets.html"', page)
@@ -1122,6 +1197,10 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("member-ledger.html", kit)
         self.assertIn("Member Ledger JSON", kit)
         self.assertIn("member-ledger.json", kit)
+        self.assertIn("Support & Intake", kit)
+        self.assertIn("support.html", kit)
+        self.assertIn("Support JSON", kit)
+        self.assertIn("support.json", kit)
         self.assertIn("Privacy Notice", kit)
         self.assertIn("privacy.html", kit)
         self.assertIn("Privacy JSON", kit)
@@ -1202,11 +1281,17 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(project["memberProgramRulesUrl"], MEMBER_PROGRAM_URL)
         self.assertEqual(project["memberLedgerPageUrl"], MEMBER_LEDGER_PAGE_URL)
         self.assertEqual(project["memberLedgerSchemaUrl"], MEMBER_LEDGER_URL)
+        self.assertEqual(project["supportPageUrl"], SUPPORT_PAGE_URL)
+        self.assertEqual(project["supportJsonUrl"], SUPPORT_URL)
         self.assertEqual(project["privacyNoticePageUrl"], PRIVACY_NOTICE_PAGE_URL)
         self.assertEqual(project["privacyNoticeUrl"], PRIVACY_NOTICE_URL)
         self.assertEqual(project["participationTermsPageUrl"], PARTICIPATION_TERMS_PAGE_URL)
         self.assertEqual(project["participationTermsUrl"], PARTICIPATION_TERMS_URL)
         self.assertEqual(project["memberProgram"]["status"], "rules-published-public-claim-not-connected")
+        self.assertEqual(project["memberProgram"]["supportIntake"]["status"], "public-support-intake-published")
+        self.assertEqual(project["memberProgram"]["supportIntake"]["pageUrl"], SUPPORT_PAGE_URL)
+        self.assertEqual(project["memberProgram"]["supportIntake"]["url"], SUPPORT_URL)
+        self.assertFalse(project["memberProgram"]["supportIntake"]["directSubmissionEndpointConfigured"])
         self.assertEqual(project["memberProgram"]["privacyAndTerms"]["status"], "public-privacy-and-terms-published")
         self.assertEqual(project["memberProgram"]["privacyAndTerms"]["privacyNoticePageUrl"], PRIVACY_NOTICE_PAGE_URL)
         self.assertEqual(project["memberProgram"]["privacyAndTerms"]["privacyNoticeUrl"], PRIVACY_NOTICE_URL)
@@ -1595,6 +1680,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(extensions["memberProgramRules"], MEMBER_PROGRAM_URL)
         self.assertEqual(extensions["memberLedgerPage"], MEMBER_LEDGER_PAGE_URL)
         self.assertEqual(extensions["memberLedgerSchema"], MEMBER_LEDGER_URL)
+        self.assertEqual(extensions["supportPage"], SUPPORT_PAGE_URL)
+        self.assertEqual(extensions["supportJson"], SUPPORT_URL)
         self.assertEqual(extensions["privacyNoticePage"], PRIVACY_NOTICE_PAGE_URL)
         self.assertEqual(extensions["privacyNotice"], PRIVACY_NOTICE_URL)
         self.assertEqual(extensions["participationTermsPage"], PARTICIPATION_TERMS_PAGE_URL)
@@ -1607,6 +1694,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(extensions["officialPool"], OFFICIAL_POOL_ADDRESS)
         self.assertEqual(extensions["brandKitStatus"], "public-brand-kit-published")
         self.assertEqual(extensions["memberLedgerStatus"], "public-member-ledger-schema-published")
+        self.assertEqual(extensions["supportIntakeStatus"], "public-support-intake-published")
         self.assertEqual(extensions["privacyNoticeStatus"], "public-privacy-notice-published")
         self.assertEqual(extensions["participationTermsStatus"], "public-participation-terms-published")
         self.assertEqual(extensions["geckoTerminalStatus"], "approved-2026-05-11")
@@ -1645,6 +1733,8 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "site" / "member-program.json",
             ROOT / "site" / "member-ledger.html",
             ROOT / "site" / "member-ledger.json",
+            ROOT / "site" / "support.html",
+            ROOT / "site" / "support.json",
             ROOT / "site" / "privacy.html",
             ROOT / "site" / "privacy.json",
             ROOT / "site" / "terms.html",
@@ -1791,6 +1881,8 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "site" / "utility.html",
             ROOT / "site" / "member-ledger.html",
             ROOT / "site" / "member-ledger.json",
+            ROOT / "site" / "support.html",
+            ROOT / "site" / "support.json",
             ROOT / "site" / "privacy.html",
             ROOT / "site" / "privacy.json",
             ROOT / "site" / "terms.html",
@@ -1922,6 +2014,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Public member ledger schema prepared", status)
         self.assertIn(MEMBER_LEDGER_PAGE_URL, status)
         self.assertIn(MEMBER_LEDGER_URL, status)
+        self.assertIn("Public support intake page and JSON prepared", status)
+        self.assertIn(SUPPORT_PAGE_URL, status)
+        self.assertIn(SUPPORT_URL, status)
         self.assertIn("Public privacy notice and participation terms prepared", status)
         self.assertIn(PRIVACY_NOTICE_PAGE_URL, status)
         self.assertIn(PRIVACY_NOTICE_URL, status)
@@ -1944,6 +2039,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Use `https://gcagochina.com/external-reviews.html`", status)
         self.assertIn("Use `https://gcagochina.com/brand-kit.html`", status)
         self.assertIn("Use `https://gcagochina.com/member-ledger.html`", status)
+        self.assertIn("Use `https://gcagochina.com/support.html`", status)
+        self.assertIn("Use `https://gcagochina.com/support.json`", status)
         self.assertIn("Use `https://gcagochina.com/privacy.html`", status)
         self.assertIn("Use `https://gcagochina.com/terms.html`", status)
         self.assertIn("quote submission is not an audit", status)
@@ -1955,6 +2052,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(RESERVE_TX, status)
         self.assertIn(SECOND_RESERVE_TX, status)
         self.assertIn("no private key, seed phrase, exchange API secret, withdrawal permission, or custody request belongs in the GCA member flow", status)
+        self.assertIn("The support intake page is public", status)
+        self.assertIn("current intake is manual", status)
 
     def test_telegram_channel_runbook_records_official_channel(self):
         runbook = (ROOT / "launch" / "telegram_channel_runbook.md").read_text()
@@ -2010,6 +2109,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("https://gcagochina.com/members.html", package)
         self.assertIn(MEMBER_LEDGER_PAGE_URL, package)
         self.assertIn(MEMBER_LEDGER_URL, package)
+        self.assertIn(SUPPORT_PAGE_URL, package)
+        self.assertIn(SUPPORT_URL, package)
         self.assertIn(PRIVACY_NOTICE_PAGE_URL, package)
         self.assertIn(PRIVACY_NOTICE_URL, package)
         self.assertIn(PARTICIPATION_TERMS_PAGE_URL, package)
@@ -2069,6 +2170,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["memberProgramRulesUrl"], MEMBER_PROGRAM_URL)
         self.assertEqual(values["memberLedgerPageUrl"], MEMBER_LEDGER_PAGE_URL)
         self.assertEqual(values["memberLedgerSchemaUrl"], MEMBER_LEDGER_URL)
+        self.assertEqual(values["supportPageUrl"], SUPPORT_PAGE_URL)
+        self.assertEqual(values["supportJsonUrl"], SUPPORT_URL)
         self.assertEqual(values["privacyNoticePageUrl"], PRIVACY_NOTICE_PAGE_URL)
         self.assertEqual(values["privacyNoticeUrl"], PRIVACY_NOTICE_URL)
         self.assertEqual(values["participationTermsPageUrl"], PARTICIPATION_TERMS_PAGE_URL)
@@ -2098,6 +2201,10 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["utilityPositioning"]["privacyAndTerms"]["privacyNoticeUrl"], PRIVACY_NOTICE_URL)
         self.assertEqual(values["utilityPositioning"]["privacyAndTerms"]["participationTermsPageUrl"], PARTICIPATION_TERMS_PAGE_URL)
         self.assertEqual(values["utilityPositioning"]["privacyAndTerms"]["participationTermsUrl"], PARTICIPATION_TERMS_URL)
+        self.assertEqual(values["utilityPositioning"]["supportIntake"]["status"], "public-support-intake-published")
+        self.assertEqual(values["utilityPositioning"]["supportIntake"]["pageUrl"], SUPPORT_PAGE_URL)
+        self.assertEqual(values["utilityPositioning"]["supportIntake"]["url"], SUPPORT_URL)
+        self.assertFalse(values["utilityPositioning"]["supportIntake"]["directSubmissionEndpointConfigured"])
         self.assertIn("platform revenue distribution", values["utilityPositioning"]["notUtility"])
         self.assertEqual(values["liquidity"]["dex"], "Uniswap v4")
         self.assertEqual(values["liquidity"]["pair"], "GCA/USDT")
@@ -2159,6 +2266,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(BRAND_KIT_URL, tracker)
         self.assertIn(MEMBER_LEDGER_PAGE_URL, tracker)
         self.assertIn(MEMBER_LEDGER_URL, tracker)
+        self.assertIn(SUPPORT_PAGE_URL, tracker)
+        self.assertIn(SUPPORT_URL, tracker)
         self.assertIn(PRIVACY_NOTICE_PAGE_URL, tracker)
         self.assertIn(PRIVACY_NOTICE_URL, tracker)
         self.assertIn(PARTICIPATION_TERMS_PAGE_URL, tracker)
@@ -2203,6 +2312,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["canonicalIdentity"]["brandKitUrl"], BRAND_KIT_URL)
         self.assertEqual(values["canonicalIdentity"]["memberLedgerPageUrl"], MEMBER_LEDGER_PAGE_URL)
         self.assertEqual(values["canonicalIdentity"]["memberLedgerSchemaUrl"], MEMBER_LEDGER_URL)
+        self.assertEqual(values["canonicalIdentity"]["supportPageUrl"], SUPPORT_PAGE_URL)
+        self.assertEqual(values["canonicalIdentity"]["supportJsonUrl"], SUPPORT_URL)
         self.assertEqual(values["canonicalIdentity"]["privacyNoticePageUrl"], PRIVACY_NOTICE_PAGE_URL)
         self.assertEqual(values["canonicalIdentity"]["privacyNoticeUrl"], PRIVACY_NOTICE_URL)
         self.assertEqual(values["canonicalIdentity"]["participationTermsPageUrl"], PARTICIPATION_TERMS_PAGE_URL)

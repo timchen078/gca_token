@@ -14,6 +14,8 @@ Use this file as the single operating checklist for external review, wallet-warn
 - Public brand kit JSON: `https://gcagochina.com/brand-kit.json`
 - Public member ledger schema page: `https://gcagochina.com/member-ledger.html`
 - Public member ledger schema JSON: `https://gcagochina.com/member-ledger.json`
+- Public support intake page: `https://gcagochina.com/support.html`
+- Public support intake JSON: `https://gcagochina.com/support.json`
 - Public privacy notice page: `https://gcagochina.com/privacy.html`
 - Public privacy notice JSON: `https://gcagochina.com/privacy.json`
 - Public participation terms page: `https://gcagochina.com/terms.html`

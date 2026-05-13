@@ -11,6 +11,8 @@ This package prepares GCA information for token data and DEX discovery platforms
 - Brand kit JSON: `https://gcagochina.com/brand-kit.json`
 - Member ledger schema page: `https://gcagochina.com/member-ledger.html`
 - Member ledger schema JSON: `https://gcagochina.com/member-ledger.json`
+- Support intake page: `https://gcagochina.com/support.html`
+- Support intake JSON: `https://gcagochina.com/support.json`
 - Privacy notice page: `https://gcagochina.com/privacy.html`
 - Privacy notice JSON: `https://gcagochina.com/privacy.json`
 - Participation terms page: `https://gcagochina.com/terms.html`
@@ -61,6 +63,8 @@ This package prepares GCA information for token data and DEX discovery platforms
 - Brand kit JSON: `https://gcagochina.com/brand-kit.json`
 - Member ledger schema page: `https://gcagochina.com/member-ledger.html`
 - Member ledger schema JSON: `https://gcagochina.com/member-ledger.json`
+- Support intake page: `https://gcagochina.com/support.html`
+- Support intake JSON: `https://gcagochina.com/support.json`
 - Privacy notice page: `https://gcagochina.com/privacy.html`
 - Privacy notice JSON: `https://gcagochina.com/privacy.json`
 - Participation terms page: `https://gcagochina.com/terms.html`
