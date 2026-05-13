@@ -58,7 +58,7 @@ Do not describe planned holder benefits or GCA Member status as cash, tokens, in
 
 ## BaseScan Token Profile Status
 
-Source verification and deployer-wallet ownership verification are complete. The public BaseScan token profile update was submitted from the owner's browser session on 2026-05-09 and is awaiting BaseScan review.
+Source verification and deployer-wallet ownership verification are complete. The public BaseScan token profile update was submitted from the owner's browser session on 2026-05-09, then returned by BaseScan as information-insufficient on 2026-05-13.
 
 Do not describe the BaseScan token profile as complete or visible until BaseScan accepts and publishes the submitted update.
 

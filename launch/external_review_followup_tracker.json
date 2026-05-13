@@ -40,10 +40,12 @@
   },
   "platforms": {
     "baseScan": {
-      "profileStatus": "submitted-awaiting-review",
+      "profileStatus": "returned-information-insufficient",
       "submissionDate": "2026-05-09",
+      "returnNoticeDate": "2026-05-13",
+      "returnReason": "information-insufficient",
       "replyInbox": "cxy070800@gmail.com",
-      "nextAction": "Check inbox, spam, BaseScan notifications, and the public contract page. Do not submit again unless BaseScan asks for changes."
+      "nextAction": "Prepare a complete BaseScan resubmission package with official website, official email, 32x32 SVG logo, clear token/project information, verified source, correct contract address, official social links, and deployer-wallet signature."
     },
     "blockaid": {
       "reportStatus": "submitted-warning-removal-not-confirmed",
@@ -76,7 +78,7 @@
   "safePublicClaims": [
     "BaseScan source verification is complete.",
     "BaseScan deployer-wallet ownership verification is complete.",
-    "The public BaseScan token profile update has been submitted and is awaiting review.",
+    "The public BaseScan token profile update was returned as information-insufficient and needs a complete resubmission.",
     "GeckoTerminal token information was approved on 2026-05-11.",
     "A Blockaid false-positive report was submitted on 2026-05-10, but wallet-warning removal is not confirmed.",
     "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool.",

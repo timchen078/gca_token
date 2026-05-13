@@ -46,7 +46,7 @@
   },
   "externalStatus": {
     "baseScanSource": "verified",
-    "baseScanTokenProfile": "submitted-awaiting-review",
+    "baseScanTokenProfile": "returned-information-insufficient",
     "geckoTerminalTokenInfo": "approved-2026-05-11",
     "blockaidMetaMask": "submitted-warning-removal-not-confirmed",
     "thirdPartyAudit": "not-completed",

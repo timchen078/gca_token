@@ -78,7 +78,7 @@
         "onchainProofStatus": "public-onchain-proofs-published",
         "supplyDisclosureStatus": "public-supply-disclosure-published",
         "geckoTerminalStatus": "approved-2026-05-11",
-        "baseScanTokenProfileStatus": "submitted-awaiting-review",
+        "baseScanTokenProfileStatus": "returned-information-insufficient",
         "blockaidMetaMaskStatus": "submitted-warning-removal-not-confirmed",
         "walletWarningEvidenceStatus": "warning-report-submitted-removal-not-confirmed",
         "thirdPartyAuditStatus": "not-completed"

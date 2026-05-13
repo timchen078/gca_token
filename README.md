@@ -23,6 +23,8 @@ Deployment notes are in `docs/deploy_base_sepolia.md` and `docs/deploy_base_main
 - BaseScan submission package: `launch/basescan_token_submission.md`
 - BaseScan form values: `launch/basescan_form_values.json`
 - BaseScan review follow-up: `launch/basescan_review_followup.md`
+- BaseScan resubmission package: `launch/basescan_resubmission_package.md`
+- BaseScan resubmission values: `launch/basescan_resubmission_values.json`
 - Token allocation plan: `launch/token_allocation_plan.md`
 - Liquidity plan: `launch/liquidity_plan.json`
 - Liquidity pool runbook: `launch/liquidity_pool_runbook.md`

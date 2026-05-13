@@ -42,7 +42,7 @@ Use this file as the single operating checklist for external review, wallet-warn
 
 | Platform | Current status | Contact / inbox | Next action |
 | --- | --- | --- | --- |
-| BaseScan token profile | Submitted on 2026-05-09 and awaiting BaseScan review | `cxy070800@gmail.com` | Check inbox, spam, BaseScan notifications, and the contract page. Do not submit again unless BaseScan asks for changes. |
+| BaseScan token profile | Submitted on 2026-05-09 and returned by BaseScan as information-insufficient on 2026-05-13 | `cxy070800@gmail.com` | Prepare the complete BaseScan resubmission package with official website, official email, logo, clear token/project information, social links, and deployer-wallet signature. |
 | Blockaid / MetaMask warning | False-positive report submitted on 2026-05-10; warning removal not confirmed | Owner browser / wallet UI | Recheck the wallet and Uniswap warning UI. If the warning remains after several business days, send one follow-up with buy/sell test evidence and official links. |
 | GeckoTerminal | Token information update approved on 2026-05-11 | `GCAgochina@outlook.com` | No duplicate update unless official details change or GeckoTerminal asks for a correction. |
 | DEX Screener | Discoverable through the live GCA/USDT pool | Not submitted as a direct paid metadata update | Keep the GCA/USDT pool, website, token list, and GeckoTerminal data consistent. |
@@ -50,13 +50,13 @@ Use this file as the single operating checklist for external review, wallet-warn
 | CoinMarketCap | Not submitted | Not applicable yet | Wait for stronger liquidity, organic holders, public activity, and BaseScan profile publication. |
 | Third-party audit | Deferred by owner decision after quote requests | Audit vendor inboxes if replies arrive | Archive quote replies only. Do not claim an external audit unless an independent report is commissioned and published. |
 
-## Daily Check While BaseScan Is Pending
+## BaseScan Resubmission Check
 
 1. Check `cxy070800@gmail.com` inbox and spam.
 2. Check BaseScan account notifications.
-3. Open the BaseScan contract page and confirm whether logo, website, whitepaper, and socials are visible.
+3. Use `launch/basescan_resubmission_package.md` and `launch/basescan_resubmission_values.json`.
 4. Confirm `https://gcagochina.com/verify.html`, `https://gcagochina.com/markets.html`, and the GCA/USDT GeckoTerminal pool still load.
-5. If there is no reply, do not create a duplicate BaseScan request. Keep waiting unless BaseScan rejects the submission or asks for corrections.
+5. Sign with the deployer wallet again if BaseScan asks for address ownership verification.
 
 ## Weekly Check
 
@@ -70,7 +70,7 @@ Use this file as the single operating checklist for external review, wallet-warn
 
 - BaseScan source verification is complete.
 - BaseScan deployer-wallet ownership verification is complete.
-- The public BaseScan token profile update has been submitted and is awaiting review.
+- The public BaseScan token profile update was returned as information-insufficient and needs a complete resubmission.
 - GeckoTerminal token information was approved on 2026-05-11.
 - A Blockaid false-positive report was submitted on 2026-05-10, but wallet-warning removal is not confirmed.
 - The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool.
@@ -87,7 +87,7 @@ Use this file as the single operating checklist for external review, wallet-warn
 
 ## BaseScan Follow-Up Template
 
-Use this only if BaseScan replies or asks for more information. Avoid sending repeated unsolicited follow-ups while the original request is still open.
+Use this only for the resubmission or if BaseScan asks for more information.
 
 ```text
 Hello BaseScan team,
@@ -100,9 +100,13 @@ Official website: https://gcagochina.com/
 Official verify page: https://gcagochina.com/verify.html
 Official market page: https://gcagochina.com/markets.html
 Official logo: https://gcagochina.com/assets/gca-logo.svg
+Brand kit: https://gcagochina.com/brand-kit.html
 Whitepaper: https://gcagochina.com/whitepaper.html
+Community kit: https://gcagochina.com/community.html
+External review status: https://gcagochina.com/external-reviews.html
 Official GCA/USDT pool: https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0
 Official Telegram: https://t.me/gcagochinaofficial
+Official email: GCAgochina@outlook.com
 Official contact email: cxy070800@gmail.com
 
 Please let us know if any field correction or additional verification is required.

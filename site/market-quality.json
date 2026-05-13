@@ -26,7 +26,7 @@
   "currentState": {
     "liquidityDepth": "starter-depth-only",
     "geckoTerminalTokenInfo": "approved-2026-05-11",
-    "baseScanTokenProfile": "submitted-awaiting-review",
+    "baseScanTokenProfile": "returned-information-insufficient",
     "blockaidWarningRemoval": "not-confirmed",
     "coinGeckoTrackedListing": "defer",
     "coinMarketCapTrackedListing": "defer",

@@ -76,7 +76,7 @@
     }
   ],
   "externalDependencies": {
-    "baseScanTokenProfile": "submitted-awaiting-review",
+    "baseScanTokenProfile": "returned-information-insufficient",
     "blockaidMetaMaskWarning": "submitted-warning-removal-not-confirmed",
     "geckoTerminalTokenInfo": "approved-2026-05-11",
     "thirdPartyAudit": "not-completed-deferred",
