@@ -1,0 +1,96 @@
+{
+  "schema": "https://gcagochina.com/terms.json",
+  "pageUrl": "https://gcagochina.com/terms.html",
+  "lastUpdated": "2026-05-13",
+  "status": "public-participation-terms-published",
+  "scope": "GCA public website, member pre-registration, planned 100 credits, planned GCA Member status, future Web3 Radar access bridge",
+  "network": "Base Mainnet",
+  "chainId": 8453,
+  "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+  "participationBoundaries": {
+    "preRegistrationOnly": true,
+    "publicSelfServiceClaimConnected": false,
+    "createsLiveWeb3RadarAccount": false,
+    "activatesLiveTradingPermission": false,
+    "requiresCustody": false,
+    "requiresWithdrawalPermission": false,
+    "requiresPrivateKeyOrSeedPhrase": false
+  },
+  "programTerms": {
+    "holderBonus": {
+      "minimumHolding": "10000 GCA",
+      "plannedCredit": "100 Web3 Radar utility credits",
+      "creditUseWindow": "180 days after ledger activation unless a later published policy extends it",
+      "currentPublicClaimStatus": "not-connected",
+      "scope": [
+        "reports",
+        "backtests",
+        "risk warnings",
+        "ENTRY_READY signal review",
+        "position calculators",
+        "education access"
+      ]
+    },
+    "gcaMember": {
+      "minimumHolding": "1000000 GCA",
+      "refreshCadence": "30 days after activation, or earlier if the user requests a manual recheck",
+      "currentPublicClaimStatus": "not-connected",
+      "scope": [
+        "higher utility credit limits",
+        "member research notes",
+        "priority report queue",
+        "member training sessions",
+        "priority support"
+      ]
+    }
+  },
+  "externalStatus": {
+    "baseScanSource": "verified",
+    "baseScanTokenProfile": "submitted-awaiting-review",
+    "geckoTerminalTokenInfo": "approved-2026-05-11",
+    "blockaidMetaMask": "submitted-warning-removal-not-confirmed",
+    "thirdPartyAudit": "not-completed",
+    "officialPool": "GCA/USDT"
+  },
+  "noPromiseBoundary": {
+    "notFinancialAdvice": true,
+    "doesNotPromise": [
+      "price",
+      "liquidity",
+      "listings",
+      "wallet-warning removal",
+      "audit approval",
+      "trading results",
+      "live trading permission",
+      "risk-control bypass"
+    ],
+    "notUtility": [
+      "cash",
+      "tokens",
+      "income",
+      "reimbursement",
+      "voting control",
+      "lifetime access",
+      "custody",
+      "redemption rights"
+    ]
+  },
+  "userResponsibility": [
+    "verify the Base Mainnet contract address",
+    "verify the official GCA/USDT pool",
+    "read risk disclosures",
+    "check current external review status",
+    "do not submit private keys or seed phrases",
+    "do not grant withdrawal permission"
+  ],
+  "publicLinks": {
+    "participationTerms": "https://gcagochina.com/terms.html",
+    "privacyNotice": "https://gcagochina.com/privacy.html",
+    "verify": "https://gcagochina.com/verify.html",
+    "risk": "https://gcagochina.com/risk.html",
+    "members": "https://gcagochina.com/members.html",
+    "memberProgramRules": "https://gcagochina.com/member-program.json",
+    "memberLedgerPage": "https://gcagochina.com/member-ledger.html",
+    "memberLedgerSchema": "https://gcagochina.com/member-ledger.json"
+  }
+}

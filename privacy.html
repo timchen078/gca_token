@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GCA Privacy Notice</title>
+    <meta name="description" content="GCA privacy notice for public website use, member pre-registration packets, wallet balance verification, and future controlled HTTPS intake.">
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #111318;
+        --muted: #5f6773;
+        --line: #dfe3ea;
+        --panel: #ffffff;
+        --soft: #f6f7f9;
+        --red: #d71920;
+        --blue: #0052ff;
+        --green: #087f5b;
+        --gold: #8a650d;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: #fbfbfc;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.5;
+      }
+
+      a {
+        color: var(--blue);
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .shell {
+        width: min(1080px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      header {
+        border-bottom: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.94);
+        position: sticky;
+        top: 0;
+        z-index: 2;
+      }
+
+      nav {
+        min-height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--ink);
+        font-weight: 850;
+      }
+
+      .brand img {
+        width: 32px;
+        height: 32px;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 18px;
+        align-items: center;
+        font-size: 14px;
+      }
+
+      main {
+        padding: 42px 0 56px;
+      }
+
+      h1 {
+        margin: 0;
+        max-width: 860px;
+        font-size: clamp(40px, 6vw, 72px);
+        line-height: 1;
+        letter-spacing: 0;
+      }
+
+      h2 {
+        margin: 0 0 14px;
+        font-size: 24px;
+      }
+
+      h3 {
+        margin: 0 0 8px;
+        font-size: 17px;
+      }
+
+      .lead {
+        max-width: 840px;
+        margin: 18px 0 0;
+        color: var(--muted);
+        font-size: 18px;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 24px;
+      }
+
+      .button {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        color: var(--ink);
+        min-height: 42px;
+        padding: 10px 14px;
+        font: inherit;
+        font-weight: 750;
+      }
+
+      .button.primary {
+        border-color: var(--red);
+        background: var(--red);
+        color: #fff;
+      }
+
+      .section {
+        margin-top: 30px;
+      }
+
+      .panel,
+      .fact {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+      }
+
+      .panel {
+        padding: 24px;
+      }
+
+      .facts,
+      .two {
+        display: grid;
+        gap: 14px;
+      }
+
+      .facts {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        margin-top: 22px;
+      }
+
+      .two {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .fact {
+        min-height: 104px;
+        padding: 15px;
+      }
+
+      .label {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 750;
+        text-transform: uppercase;
+      }
+
+      .value {
+        display: block;
+        margin-top: 8px;
+        font-size: 16px;
+        font-weight: 850;
+        overflow-wrap: anywhere;
+      }
+
+      .good {
+        color: var(--green);
+      }
+
+      .pending {
+        color: var(--gold);
+      }
+
+      .note,
+      li {
+        color: var(--muted);
+      }
+
+      .note {
+        margin: 0;
+      }
+
+      .list {
+        display: grid;
+        gap: 10px;
+        margin-top: 12px;
+      }
+
+      .row {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        border-top: 1px solid var(--line);
+        padding-top: 10px;
+      }
+
+      .row:first-child {
+        border-top: 0;
+        padding-top: 0;
+      }
+
+      code {
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        background: var(--soft);
+        padding: 2px 5px;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 0.92em;
+      }
+
+      footer {
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        padding: 22px 0;
+        font-size: 13px;
+      }
+
+      @media (max-width: 760px) {
+        nav,
+        .row {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        .nav-links {
+          flex-wrap: wrap;
+        }
+
+        .facts,
+        .two {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav class="shell" aria-label="Primary">
+        <a class="brand" href="index.html" aria-label="GCA home">
+          <img src="assets/gca-logo.svg" alt="GCA logo">
+          <span>GCA</span>
+        </a>
+        <div class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="verify.html">Verify</a>
+          <a href="markets.html">Markets</a>
+          <a href="supply.html">Supply</a>
+          <a href="security.html">Security</a>
+          <a href="risk.html">Risk</a>
+          <a href="faq.html">FAQ</a>
+          <a href="status.html">Status</a>
+          <a href="listing-kit.html">Listing Kit</a>
+          <a href="members.html">Members</a>
+          <a href="member-ledger.html">Member Ledger</a>
+          <a href="terms.html">Terms</a>
+        </div>
+      </nav>
+    </header>
+
+    <main class="shell">
+      <section aria-labelledby="title">
+        <h1 id="title">GCA Privacy Notice</h1>
+        <p class="lead">This notice explains how the public GCA website handles pre-registration packet data, wallet balance verification data, and future controlled HTTPS intake for the planned GCA x Web3 Radar access bridge.</p>
+        <div class="actions">
+          <a class="button primary" href="privacy.json">Privacy JSON</a>
+          <a class="button" href="terms.html">Participation Terms</a>
+          <a class="button" href="members.html">Member Pre-Registration</a>
+          <a class="button" href="member-program.json">Member Program JSON</a>
+          <a class="button" href="member-ledger.html">Member Ledger</a>
+        </div>
+      </section>
+
+      <section class="facts" aria-label="Privacy facts">
+        <div class="fact">
+          <span class="label">Status</span>
+          <span class="value good">Public privacy notice</span>
+        </div>
+        <div class="fact">
+          <span class="label">Current Site Mode</span>
+          <span class="value">Local pre-registration packet only</span>
+        </div>
+        <div class="fact">
+          <span class="label">Contact</span>
+          <span class="value">GCAgochina@outlook.com</span>
+        </div>
+        <div class="fact">
+          <span class="label">Last Updated</span>
+          <span class="value">2026-05-13</span>
+        </div>
+      </section>
+
+      <section class="section two" aria-label="Data handling">
+        <div class="panel">
+          <h2>What The Public Page Collects</h2>
+          <p class="note">The current <a href="members.html">member pre-registration page</a> creates a local pre-registration packet in the browser. The packet can include email, Telegram handle, Base wallet address, declared GCA balance, program intent, consent flags, generated registration ID, and timestamp. The public static site does not send this packet to a GCA server by itself.</p>
+          <p class="note" style="margin-top: 10px;"><code>directSubmissionEndpointConfigured</code> is currently <code>false</code> on the public static page.</p>
+        </div>
+        <div class="panel">
+          <h2>When Data Leaves The Browser</h2>
+          <p class="note">Data leaves the browser only when a user copies it, downloads it, emails it to <a href="mailto:GCAgochina@outlook.com">GCAgochina@outlook.com</a>, or later submits it through a controlled HTTPS account UI after that flow is published. Email submission is handled through the user's chosen email client and inbox provider.</p>
+        </div>
+      </section>
+
+      <section class="section two" aria-label="Verification and storage">
+        <div class="panel">
+          <h2>Wallet Verification</h2>
+          <p class="note">Wallet verification is planned as a read-only ERC-20 <code>balanceOf</code> check against the GCA contract on Base Mainnet. GCA does not need private keys, seed phrases, exchange API secrets, withdrawal permission, or custody to verify a public wallet balance.</p>
+        </div>
+        <div class="panel">
+          <h2>Future Controlled Intake</h2>
+          <p class="note">After controlled HTTPS account UI is live, GCA may store pre-registration fields, wallet verification results, credit ledger records, GCA Member status, review statuses, operational logs, and support notes needed to run the access bridge.</p>
+        </div>
+      </section>
+
+      <section class="section two" aria-label="Use and boundaries">
+        <div class="panel">
+          <h2>How Data May Be Used</h2>
+          <div class="list">
+            <div class="row"><span>Support review and user follow-up</span><strong>Allowed</strong></div>
+            <div class="row"><span>Wallet balance eligibility checks</span><strong>Allowed</strong></div>
+            <div class="row"><span>100 credits and GCA Member ledger records</span><strong>Allowed</strong></div>
+            <div class="row"><span>Fraud, abuse, and duplicate-registration prevention</span><strong>Allowed</strong></div>
+            <div class="row"><span>Private keys, seed phrases, or custody requests</span><strong class="pending">Never</strong></div>
+          </div>
+        </div>
+        <div class="panel">
+          <h2>User Requests</h2>
+          <p class="note">Users can request correction or deletion by emailing <a href="mailto:GCAgochina@outlook.com">GCAgochina@outlook.com</a>. Some records may be retained when needed for abuse prevention, security review, operational integrity, or legal compliance. GCA does not sell pre-registration contact data.</p>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="boundariesTitle">
+        <h2 id="boundariesTitle">Public Safety Boundary</h2>
+        <p class="note">No private key, seed phrase, exchange API secret, withdrawal permission, or custody request is part of the GCA member flow. Pre-registration data does not create a live Web3 Radar account, does not make credits claimable from this static page, and does not override wallet balance checks or risk controls.</p>
+      </section>
+    </main>
+
+    <footer>
+      <div class="shell">GCA privacy notice for public pre-registration and future controlled HTTPS account intake.</div>
+    </footer>
+  </body>
+</html>
