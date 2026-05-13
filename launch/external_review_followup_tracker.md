@@ -107,7 +107,7 @@ Community kit: https://gcagochina.com/community.html
 External review status: https://gcagochina.com/external-reviews.html
 Official GCA/USDT pool: https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0
 Official Telegram: https://t.me/gcagochinaofficial
-Official X: https://x.com/XXYRadar
+Official X: https://x.com/gcagochina
 Official email: GCAgochina@outlook.com
 Official contact email: cxy070800@gmail.com
 

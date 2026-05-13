@@ -33,7 +33,7 @@ This package records the values used for the 2026-05-13 BaseScan token informati
 - Logo SVG: `https://gcagochina.com/assets/gca-logo.svg`
 - Logo PNG: `https://gcagochina.com/assets/gca-logo.png`
 - Official Telegram: `https://t.me/gcagochinaofficial`
-- Official X: `https://x.com/XXYRadar`
+- Official X: `https://x.com/gcagochina`
 - Official email: `GCAgochina@outlook.com`
 
 ## Description

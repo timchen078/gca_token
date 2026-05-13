@@ -42,7 +42,7 @@ This package prepares GCA information for token data and DEX discovery platforms
 - Market quality JSON: `https://gcagochina.com/market-quality.json`
 - Supply disclosure JSON: `https://gcagochina.com/supply.json`
 - Liquidity: official starter Uniswap v4 GCA/USDT pool exists on Base Mainnet
-- Social links: official Telegram is live at `https://t.me/gcagochinaofficial`; official X is live at `https://x.com/XXYRadar`
+- Social links: official Telegram is live at `https://t.me/gcagochinaofficial`; official X is live at `https://x.com/gcagochina`
 - Third-party audit: not completed; quote requests were submitted on 2026-05-10 and then deferred by owner decision
 
 ## Canonical Identity
@@ -218,7 +218,7 @@ Recommended action:
 1. Do not submit a duplicate GeckoTerminal update unless project details change or GeckoTerminal asks for a correction.
 2. Keep the website, logo, whitepaper, BaseScan contract, GCA/USDT pool URL, Telegram link, and X link live.
 3. If GeckoTerminal asks for changes later, use the neutral descriptions above.
-4. Include only the official X profile published on the website: `https://x.com/XXYRadar`.
+4. Include only the official X profile published on the website: `https://x.com/gcagochina`.
 
 ### CoinGecko
 

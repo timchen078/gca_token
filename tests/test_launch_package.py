@@ -2,6 +2,7 @@ import importlib.util
 import json
 import re
 import unittest
+from html import escape
 from pathlib import Path
 
 
@@ -11,7 +12,7 @@ RESERVE_WALLET = "0x5e8F84748612B913aAcC937492AC25dc5630E246"
 RESERVE_TX = "0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67"
 SECOND_RESERVE_TX = "0xfffb674448abdbd3af45bb0a30c48e5fbb0e675542b971f031381254b5dc5317"
 TELEGRAM_URL = "https://t.me/gcagochinaofficial"
-X_URL = "https://x.com/XXYRadar"
+X_URL = "https://x.com/gcagochina"
 SWAP_TEST_BUY_TX = "0xf79e52ea56a299a30c2d297be99c970295864ed262c01fdcb7e3f60ca669b040"
 SWAP_TEST_SELL_TX = "0x0ff618062abc6e28933699d4e3bd723026f8505e4a0155db3068073b6fdc86e7"
 OFFICIAL_POOL_ADDRESS = "0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0"
@@ -73,6 +74,8 @@ ONCHAIN_PROOFS_URL = "https://gcagochina.com/onchain-proofs.json"
 SUPPLY_DISCLOSURE_URL = "https://gcagochina.com/supply.json"
 BRAND_KIT_PAGE_URL = "https://gcagochina.com/brand-kit.html"
 BRAND_KIT_URL = "https://gcagochina.com/brand-kit.json"
+SOCIAL_CARD_PNG_URL = "https://gcagochina.com/assets/gca-social-card.png"
+SOCIAL_CARD_SVG_URL = "https://gcagochina.com/assets/gca-social-card.svg"
 DEPLOYMENT_TX = "0xae8ae4d0bd89c03b39946564a5b63bb20cd38879a1aa1fdcb20a6f1c4802e74e"
 
 
@@ -305,11 +308,49 @@ class LaunchPackageTests(unittest.TestCase):
 
     def test_logo_matches_basescan_size_target(self):
         logo = (ROOT / "brand" / "gca-logo.svg").read_text()
+        social_svg = (ROOT / "brand" / "gca-social-card.svg").read_text()
+        social_png = (ROOT / "brand" / "gca-social-card.png").read_bytes()
         self.assertIn('width="32"', logo)
         self.assertIn('height="32"', logo)
         self.assertIn("GCA token logo", logo)
         self.assertTrue((ROOT / "brand" / "gca-logo.png").exists())
         self.assertTrue((ROOT / "site" / "assets" / "gca-logo.png").exists())
+        self.assertIn('width="1200"', social_svg)
+        self.assertIn('height="630"', social_svg)
+        self.assertIn("GCA social preview card", social_svg)
+        self.assertTrue((ROOT / "site" / "assets" / "gca-social-card.svg").exists())
+        self.assertTrue((ROOT / "site" / "assets" / "gca-social-card.png").exists())
+        self.assertEqual(social_png[:8], b"\x89PNG\r\n\x1a\n")
+        self.assertEqual(int.from_bytes(social_png[16:20], "big"), 1200)
+        self.assertEqual(int.from_bytes(social_png[20:24], "big"), 630)
+
+    def test_public_html_pages_publish_social_preview_metadata(self):
+        html_paths = sorted((ROOT / "site").rglob("*.html"))
+        self.assertGreaterEqual(len(html_paths), 30)
+        for path in html_paths:
+            rel = path.relative_to(ROOT / "site").as_posix()
+            if rel == "index.html":
+                canonical = "https://gcagochina.com/"
+            elif rel == "gca/member-access/index.html":
+                canonical = "https://gcagochina.com/gca/member-access/"
+            else:
+                canonical = f"https://gcagochina.com/{rel}"
+            page = path.read_text()
+            title = re.search(r"<title>([^<]+)</title>", page).group(1)
+            escaped_title = escape(title, quote=True)
+            with self.subTest(path=rel):
+                self.assertIn(f'<link rel="canonical" href="{canonical}">', page)
+                self.assertIn('<link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">', page)
+                self.assertIn('<link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">', page)
+                self.assertIn('<meta property="og:type" content="website">', page)
+                self.assertIn('<meta property="og:site_name" content="GCA | Go China Access">', page)
+                self.assertIn(f'<meta property="og:title" content="{escaped_title}">', page)
+                self.assertIn(f'<meta property="og:url" content="{canonical}">', page)
+                self.assertIn(f'<meta property="og:image" content="{SOCIAL_CARD_PNG_URL}">', page)
+                self.assertIn('<meta property="og:image:width" content="1200">', page)
+                self.assertIn('<meta property="og:image:height" content="630">', page)
+                self.assertIn('<meta name="twitter:card" content="summary_large_image">', page)
+                self.assertIn(f'<meta name="twitter:image" content="{SOCIAL_CARD_PNG_URL}">', page)
 
     def test_public_site_uses_mainnet_identity(self):
         site = (ROOT / "site" / "index.html").read_text()
@@ -2096,8 +2137,12 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Brand Kit JSON", page)
         self.assertIn("Logo SVG", page)
         self.assertIn("Logo PNG", page)
+        self.assertIn("Social Card", page)
         self.assertIn("32 x 32", page)
         self.assertIn("512 x 512", page)
+        self.assertIn("1200 x 630", page)
+        self.assertIn(SOCIAL_CARD_PNG_URL, page)
+        self.assertIn(SOCIAL_CARD_SVG_URL, page)
         self.assertIn("#111111", page)
         self.assertIn("#D71920", page)
         self.assertIn("#0052FF", page)
@@ -2129,6 +2174,14 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(kit["logoAssets"]["png"]["format"], "image/png")
         self.assertEqual(kit["logoAssets"]["png"]["width"], 512)
         self.assertEqual(kit["logoAssets"]["png"]["height"], 512)
+        self.assertEqual(kit["logoAssets"]["socialCardPng"]["url"], SOCIAL_CARD_PNG_URL)
+        self.assertEqual(kit["logoAssets"]["socialCardPng"]["format"], "image/png")
+        self.assertEqual(kit["logoAssets"]["socialCardPng"]["width"], 1200)
+        self.assertEqual(kit["logoAssets"]["socialCardPng"]["height"], 630)
+        self.assertEqual(kit["logoAssets"]["socialCardSvg"]["url"], SOCIAL_CARD_SVG_URL)
+        self.assertEqual(kit["logoAssets"]["socialCardSvg"]["format"], "image/svg+xml")
+        self.assertEqual(kit["logoAssets"]["socialCardSvg"]["width"], 1200)
+        self.assertEqual(kit["logoAssets"]["socialCardSvg"]["height"], 630)
         self.assertEqual(kit["visualIdentity"]["primaryInk"], "#111111")
         self.assertEqual(kit["visualIdentity"]["accentRed"], "#D71920")
         self.assertEqual(kit["visualIdentity"]["baseBlue"], "#0052FF")

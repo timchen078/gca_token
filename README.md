@@ -72,6 +72,7 @@ Deployment notes are in `docs/deploy_base_sepolia.md` and `docs/deploy_base_main
 - Internal security review: `audit/gca_internal_security_review.md`
 - Launch status: `launch/launch_status.md`
 - Logo: `brand/gca-logo.svg`
+- Social preview card: `brand/gca-social-card.svg`
 - Static website: `site/index.html`
 - Live public site check, including market identity, member program rules, listing readiness, and high-risk public-claim guardrails: `.venv/bin/python tools/check_public_site.py`
 - GitHub Actions public site check: `.github/workflows/check-public-site.yml`

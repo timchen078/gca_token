@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">GCA social preview card</title>
+  <desc id="desc">Official GCA social sharing card for Go China Access on Base Mainnet.</desc>
+  <rect width="1200" height="630" fill="#ffffff"/>
+  <rect x="0" y="0" width="18" height="630" fill="#D71920"/>
+  <rect x="64" y="70" width="1072" height="490" rx="24" fill="#F7F8FA" stroke="#DFE3EA" stroke-width="2"/>
+  <rect x="64" y="70" width="1072" height="8" fill="#0052FF"/>
+  <circle cx="952" cy="238" r="118" fill="#ffffff" stroke="#DFE3EA" stroke-width="3"/>
+  <g transform="translate(834 120) scale(7.375)">
+    <rect width="32" height="32" fill="#FFFFFF"/>
+    <path d="M17.2 7.1C11.7 7.1 7.4 11.2 7.4 16.1c0 5 4 8.8 9 8.8 2.7 0 5.1-.9 7.2-2.8v-7.2c0-1.1-.8-1.9-1.9-1.9h-4.5" fill="none" stroke="#111111" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M17.2 7.1v9.7c0 1.2 1 2.1 2.2 2.1h1.5" fill="none" stroke="#111111" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <text x="112" y="165" fill="#D71920" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700">Base Mainnet / Fixed Supply</text>
+  <text x="112" y="250" fill="#111318" font-family="Arial, Helvetica, sans-serif" font-size="82" font-weight="800">GCA</text>
+  <text x="112" y="330" fill="#111318" font-family="Arial, Helvetica, sans-serif" font-size="54" font-weight="700">Go China Access</text>
+  <text x="112" y="400" fill="#5F6773" font-family="Arial, Helvetica, sans-serif" font-size="31" font-weight="500">Narrative meets risk control. Official route: GCA/USDT.</text>
+  <text x="112" y="460" fill="#111318" font-family="Arial, Helvetica, sans-serif" font-size="29" font-weight="700">Verify: gcagochina.com/verify.html</text>
+  <text x="112" y="515" fill="#5F6773" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="500">No financial advice. No third-party audit completed. Starter-depth liquidity.</text>
+</svg>

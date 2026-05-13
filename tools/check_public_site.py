@@ -16,7 +16,7 @@ from urllib.request import Request, urlopen
 
 DEFAULT_BASE_URL = "https://gcagochina.com/"
 MAINNET_ADDRESS = "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6"
-X_URL = "https://x.com/XXYRadar"
+X_URL = "https://x.com/gcagochina"
 OFFICIAL_POOL_ADDRESS = "0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0"
 BASE_USDT_ADDRESS = "0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2"
 OLD_WETH_POOL_ADDRESS = "0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff"
@@ -61,6 +61,8 @@ ONCHAIN_PROOFS_URL = "https://gcagochina.com/onchain-proofs.json"
 SUPPLY_DISCLOSURE_URL = "https://gcagochina.com/supply.json"
 BRAND_KIT_PAGE_URL = "https://gcagochina.com/brand-kit.html"
 BRAND_KIT_URL = "https://gcagochina.com/brand-kit.json"
+SOCIAL_CARD_PNG_URL = "https://gcagochina.com/assets/gca-social-card.png"
+SOCIAL_CARD_SVG_URL = "https://gcagochina.com/assets/gca-social-card.svg"
 DEPLOYMENT_TX = "0xae8ae4d0bd89c03b39946564a5b63bb20cd38879a1aa1fdcb20a6f1c4802e74e"
 RESERVE_WALLET = "0x5e8F84748612B913aAcC937492AC25dc5630E246"
 RESERVE_TX_1 = "0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67"
@@ -108,6 +110,18 @@ def assert_current_pool_text(text: str, label: str) -> None:
     assert_contains(text, OFFICIAL_POOL_ADDRESS, label)
     assert_not_contains(text, OLD_WETH_POOL_ADDRESS, label)
     assert_not_contains(text, "GCA/WETH", label)
+
+
+def assert_social_preview_meta(text: str, label: str, canonical_url: str) -> None:
+    assert_contains(text, f'<link rel="canonical" href="{canonical_url}">', label)
+    assert_contains(text, '<meta property="og:type" content="website">', label)
+    assert_contains(text, '<meta property="og:site_name" content="GCA | Go China Access">', label)
+    assert_contains(text, f'<meta property="og:url" content="{canonical_url}">', label)
+    assert_contains(text, f'<meta property="og:image" content="{SOCIAL_CARD_PNG_URL}">', label)
+    assert_contains(text, '<meta property="og:image:width" content="1200">', label)
+    assert_contains(text, '<meta property="og:image:height" content="630">', label)
+    assert_contains(text, '<meta name="twitter:card" content="summary_large_image">', label)
+    assert_contains(text, f'<meta name="twitter:image" content="{SOCIAL_CARD_PNG_URL}">', label)
 
 
 def load_json(text: str, label: str) -> dict:

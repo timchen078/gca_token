@@ -18,6 +18,7 @@
 - GitHub Pages HTTPS certificate issued and Enforce HTTPS enabled.
 - GitHub Actions publishing workflow prepared to run the full validation suite and sync `site/` to the `gh-pages` branch after `main` site changes.
 - Public logo URL is live at `https://gcagochina.com/assets/gca-logo.svg`.
+- Public social preview card is prepared at `https://gcagochina.com/assets/gca-social-card.png` for Open Graph, X Card, Telegram, and platform link previews.
 - Public whitepaper URL is live at `https://gcagochina.com/whitepaper.html`.
 - Current public contact email `GCAgochina@outlook.com` is published on the official website for data platform verification.
 - BaseScan token update was submitted with `cxy070800@gmail.com`, returned by BaseScan as information-insufficient on 2026-05-13, and resubmitted on 2026-05-13.
@@ -55,7 +56,7 @@
 - Official verify page prepared at `https://gcagochina.com/verify.html` to centralize canonical contract, Base Mainnet chain ID, official GCA/USDT pool, website, Telegram, metadata files, and anti-scam link checks.
 - Public project status page prepared at `https://gcagochina.com/status.html`.
 - Public listing kit and machine-readable project JSON prepared at `https://gcagochina.com/listing-kit.html` and `https://gcagochina.com/project.json`.
-- Public brand kit page and JSON prepared at `https://gcagochina.com/brand-kit.html` and `https://gcagochina.com/brand-kit.json` for logo assets, token metadata, colors, official links, and logo usage boundaries.
+- Public brand kit page and JSON prepared at `https://gcagochina.com/brand-kit.html` and `https://gcagochina.com/brand-kit.json` for logo assets, social preview card assets, token metadata, colors, official links, and logo usage boundaries.
 - Public on-chain proofs page and JSON prepared at `https://gcagochina.com/onchain-proofs.html` and `https://gcagochina.com/onchain-proofs.json` for deployment, source verification, reserve transfers, official GCA/USDT market route, and functional swap evidence.
 - Public wallet warning evidence page and JSON prepared at `https://gcagochina.com/wallet-warning.html` and `https://gcagochina.com/wallet-warning.json` for Blockaid / MetaMask follow-up evidence, contract facts, and warning-status boundaries.
 - Public wallet security profile prepared at `https://gcagochina.com/.well-known/wallet-security.json` for wallet-security reviewers that need fixed-supply, no-mint, no-tax, no-blacklist, no-custody, review-status, and official market facts in a stable JSON URL.
@@ -76,7 +77,7 @@
 - Official Telegram channel photo updated and first public announcement posted on 2026-05-09.
 - First official Telegram announcement pinned on 2026-05-10.
 - Telegram channel runbook prepared.
-- Official X profile configured at `https://x.com/XXYRadar`.
+- Official X profile configured at `https://x.com/gcagochina`.
 - X profile runbook and first-post / pinned-post drafts prepared at `launch/x_profile_runbook.md`; no official X post has been published or pinned yet.
 - Small historical Base Mainnet Uniswap v3 GCA/WETH buy/sell functional swap tests observed on 2026-05-10 and documented in `launch/swap_test_evidence.md`; current public market links remain centralized on the GCA/USDT pool.
 - Blockaid false-positive report submitted on 2026-05-10 for the MetaMask/Uniswap suspected-honeypot warning.

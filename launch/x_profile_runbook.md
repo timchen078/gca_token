@@ -4,7 +4,7 @@ This runbook records the current official X profile state for GCA and the safe l
 
 ## Current Status
 
-- Official X profile: `https://x.com/XXYRadar`
+- Official X profile: `https://x.com/gcagochina`
 - Display name: `GCA | Go China Access`
 - Website: `https://gcagochina.com`
 - Location: `Base Mainnet`
@@ -17,7 +17,7 @@ This runbook records the current official X profile state for GCA and the safe l
 
 Before sending the first public post, confirm:
 
-1. The visible handle is `@XXYRadar`.
+1. The visible handle is `@gcagochina`.
 2. The website field points to `https://gcagochina.com`.
 3. The bio does not claim price support, returns, audit approval, or listing approval.
 4. The profile photo is the GCA logo from `site/assets/gca-logo.png`.

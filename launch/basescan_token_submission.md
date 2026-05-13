@@ -40,7 +40,7 @@ GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stand
 - Official swap route: `https://app.uniswap.org/swap?chain=base&inputCurrency=0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2&outputCurrency=0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`
 - Official contact email: `cxy070800@gmail.com`
 - Official Telegram: `https://t.me/gcagochinaofficial`
-- Official X: `https://x.com/XXYRadar`
+- Official X: `https://x.com/gcagochina`
 - Email note: owner-provided Gmail address, publicly listed on the official website for BaseScan verification.
 
 ## Fields That Still Need Owner Input
