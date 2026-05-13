@@ -10,6 +10,7 @@ Use this file as the single operating checklist for external review, wallet-warn
 - Official website: `https://gcagochina.com/`
 - Official verify page: `https://gcagochina.com/verify.html`
 - Official market page: `https://gcagochina.com/markets.html`
+- Public supply disclosure JSON: `https://gcagochina.com/supply.json`
 - Public wallet warning evidence page: `https://gcagochina.com/wallet-warning.html`
 - Public wallet warning evidence JSON: `https://gcagochina.com/wallet-warning.json`
 - Public external review status page: `https://gcagochina.com/external-reviews.html`

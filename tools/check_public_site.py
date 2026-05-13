@@ -32,6 +32,7 @@ MARKET_QUALITY_PAGE_URL = "https://gcagochina.com/market-quality.html"
 MARKET_QUALITY_URL = "https://gcagochina.com/market-quality.json"
 ONCHAIN_PROOFS_PAGE_URL = "https://gcagochina.com/onchain-proofs.html"
 ONCHAIN_PROOFS_URL = "https://gcagochina.com/onchain-proofs.json"
+SUPPLY_DISCLOSURE_URL = "https://gcagochina.com/supply.json"
 DEPLOYMENT_TX = "0xae8ae4d0bd89c03b39946564a5b63bb20cd38879a1aa1fdcb20a6f1c4802e74e"
 RESERVE_WALLET = "0x5e8F84748612B913aAcC937492AC25dc5630E246"
 RESERVE_TX_1 = "0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67"
@@ -139,6 +140,68 @@ def validate_members(text: str) -> None:
     assert_not_contains(text, OLD_WETH_POOL_ADDRESS, label)
 
 
+def validate_supply_page(text: str) -> None:
+    label = "/supply.html"
+    assert_contains(text, "GCA Supply and Reserve", label)
+    assert_contains(text, "Supply JSON", label)
+    assert_contains(text, "1,000,000,000 GCA", label)
+    assert_contains(text, "400,000,000 GCA / 40%", label)
+    assert_contains(text, "600,000,000 GCA / 60%", label)
+    assert_contains(text, RESERVE_WALLET, label)
+    assert_contains(text, RESERVE_TX_1, label)
+    assert_contains(text, RESERVE_TX_2, label)
+    assert_contains(text, "not be described as locked, vested, or multisig-controlled", label)
+    assert_contains(text, "Do not claim the reserve provides price support", label)
+    assert_not_contains(text, OLD_WETH_POOL_ADDRESS, label)
+
+
+def validate_supply_json(text: str) -> None:
+    label = "/supply.json"
+    payload = load_json(text, label)
+    allocation = payload.get("allocationTarget", {})
+    transfers = payload.get("reserveTransferEvidence", [])
+    reporting = payload.get("dataPlatformReporting", {})
+    links = payload.get("officialLinks", {})
+
+    if payload.get("schema") != SUPPLY_DISCLOSURE_URL:
+        raise SiteCheckError(f"{label}: wrong schema")
+    if payload.get("pageUrl") != "https://gcagochina.com/supply.html":
+        raise SiteCheckError(f"{label}: wrong pageUrl")
+    if payload.get("status") != "public-supply-disclosure-published":
+        raise SiteCheckError(f"{label}: wrong status")
+    if payload.get("chainId") != 8453:
+        raise SiteCheckError(f"{label}: wrong chainId")
+    if payload.get("contractAddress") != MAINNET_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong contractAddress")
+    if payload.get("totalSupply") != "1000000000":
+        raise SiteCheckError(f"{label}: wrong totalSupply")
+    if payload.get("fixedSupply") is not True:
+        raise SiteCheckError(f"{label}: fixedSupply must be true")
+    if payload.get("postDeploymentMintFunction") is not False:
+        raise SiteCheckError(f"{label}: postDeploymentMintFunction must be false")
+    if allocation.get("publicAllocationTarget") != "400000000":
+        raise SiteCheckError(f"{label}: wrong public allocation target")
+    if allocation.get("ownerHeldReserve") != "600000000":
+        raise SiteCheckError(f"{label}: wrong owner reserve")
+    if allocation.get("ownerReserveWallet") != RESERVE_WALLET:
+        raise SiteCheckError(f"{label}: wrong reserve wallet")
+    if allocation.get("ownerReserveCustodyType") != "normal-owner-controlled-wallet":
+        raise SiteCheckError(f"{label}: wrong reserve custody type")
+    transfer_hashes = [entry.get("transactionHash") for entry in transfers if isinstance(entry, dict)]
+    if transfer_hashes != [RESERVE_TX_1, RESERVE_TX_2]:
+        raise SiteCheckError(f"{label}: wrong reserve transfer evidence")
+    if reporting.get("preferredTerm") != "target public allocation":
+        raise SiteCheckError(f"{label}: wrong preferred term")
+    if links.get("supplyDisclosure") != SUPPLY_DISCLOSURE_URL:
+        raise SiteCheckError(f"{label}: wrong supplyDisclosure link")
+    if "The current reserve is not locked." not in reporting.get("ifAskedForLockedReserve", ""):
+        raise SiteCheckError(f"{label}: missing reserve-lock caveat")
+    if "GCA total supply is fixed at 1,000,000,000 GCA." not in payload.get("publicClaimBoundaries", {}).get("safeClaims", []):
+        raise SiteCheckError(f"{label}: missing fixed-supply safe claim")
+    assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
+    assert_not_contains(json.dumps(payload), "GCA/WETH", label)
+
+
 def validate_project_json(text: str) -> None:
     label = "/project.json"
     payload = load_json(text, label)
@@ -168,6 +231,8 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong marketQualityPageUrl")
     if payload.get("marketQualityUrl") != MARKET_QUALITY_URL:
         raise SiteCheckError(f"{label}: wrong marketQualityUrl")
+    if payload.get("supplyDisclosureUrl") != SUPPLY_DISCLOSURE_URL:
+        raise SiteCheckError(f"{label}: wrong supplyDisclosureUrl")
     if payload.get("onchainProofsPageUrl") != ONCHAIN_PROOFS_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong onchainProofsPageUrl")
     if payload.get("onchainProofsUrl") != ONCHAIN_PROOFS_URL:
@@ -194,6 +259,8 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: unexpected wallet warning status")
     if payload.get("onchainProofs", {}).get("status") != "public-onchain-proofs-published":
         raise SiteCheckError(f"{label}: unexpected onchain proofs status")
+    if payload.get("supplyDisclosure", {}).get("status") != "public-supply-disclosure-published":
+        raise SiteCheckError(f"{label}: unexpected supply disclosure status")
     assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
 
 
@@ -234,10 +301,14 @@ def validate_tokenlist_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong marketQualityPage")
     if extensions.get("marketQuality") != MARKET_QUALITY_URL:
         raise SiteCheckError(f"{label}: wrong marketQuality")
+    if extensions.get("supplyDisclosure") != SUPPLY_DISCLOSURE_URL:
+        raise SiteCheckError(f"{label}: wrong supplyDisclosure")
     if extensions.get("onchainProofsPage") != ONCHAIN_PROOFS_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong onchainProofsPage")
     if extensions.get("onchainProofs") != ONCHAIN_PROOFS_URL:
         raise SiteCheckError(f"{label}: wrong onchainProofs")
+    if extensions.get("supplyDisclosureStatus") != "public-supply-disclosure-published":
+        raise SiteCheckError(f"{label}: wrong supplyDisclosureStatus")
     assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
 
 
@@ -272,6 +343,8 @@ def validate_well_known_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong marketQualityPage")
     if urls.get("marketQuality") != MARKET_QUALITY_URL:
         raise SiteCheckError(f"{label}: wrong marketQuality")
+    if urls.get("supplyDisclosure") != SUPPLY_DISCLOSURE_URL:
+        raise SiteCheckError(f"{label}: wrong supplyDisclosure")
     if urls.get("onchainProofsPage") != ONCHAIN_PROOFS_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong onchainProofsPage")
     if urls.get("onchainProofs") != ONCHAIN_PROOFS_URL:
@@ -470,6 +543,8 @@ def validate_onchain_proofs_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong official market pool")
     if market.get("quoteAssetAddress") != BASE_USDT_ADDRESS:
         raise SiteCheckError(f"{label}: wrong quote asset")
+    if payload.get("officialLinks", {}).get("supplyDisclosure") != SUPPLY_DISCLOSURE_URL:
+        raise SiteCheckError(f"{label}: wrong supplyDisclosure")
     if SWAP_TEST_BUY_TX not in functional.get("buyTestTransactions", []):
         raise SiteCheckError(f"{label}: missing buy test transaction")
     if SWAP_TEST_SELL_TX not in functional.get("sellTestTransactions", []):
@@ -676,6 +751,7 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/external-reviews.html",
         "https://gcagochina.com/external-reviews.json",
         "https://gcagochina.com/member-program.json",
+        "https://gcagochina.com/supply.json",
         "https://gcagochina.com/listing-readiness.html",
         "https://gcagochina.com/listing-readiness.json",
         "https://gcagochina.com/project.json",
@@ -696,6 +772,7 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /external-reviews.json", label)
     assert_contains(text, "Allow: /market-quality.html", label)
     assert_contains(text, "Allow: /market-quality.json", label)
+    assert_contains(text, "Allow: /supply.json", label)
     assert_contains(text, "Allow: /onchain-proofs.html", label)
     assert_contains(text, "Allow: /onchain-proofs.json", label)
     assert_contains(text, "Allow: /member-program.json", label)
@@ -716,6 +793,8 @@ CHECKS: list[EndpointCheck] = [
     ("/market-quality.json", validate_market_quality_json),
     ("/onchain-proofs.html", validate_onchain_proofs_page),
     ("/onchain-proofs.json", validate_onchain_proofs_json),
+    ("/supply.html", validate_supply_page),
+    ("/supply.json", validate_supply_json),
     ("/members.html", validate_members),
     ("/member-program.json", validate_member_program_json),
     ("/listing-readiness.html", validate_listing_readiness_page),

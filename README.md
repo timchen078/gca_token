@@ -34,6 +34,7 @@ Deployment notes are in `docs/deploy_base_sepolia.md` and `docs/deploy_base_main
 - Public member program rules: `site/member-program.json`
 - Public on-chain proofs page: `site/onchain-proofs.html`
 - Public on-chain proofs JSON: `site/onchain-proofs.json`
+- Public supply disclosure JSON: `site/supply.json`
 - Public wallet warning evidence page: `site/wallet-warning.html`
 - Public wallet warning evidence JSON: `site/wallet-warning.json`
 - Public external review status page: `site/external-reviews.html`

@@ -36,6 +36,7 @@
   "marketQualityPageUrl": "https://gcagochina.com/market-quality.html",
   "marketQualityUrl": "https://gcagochina.com/market-quality.json",
   "supplyPageUrl": "https://gcagochina.com/supply.html",
+  "supplyDisclosureUrl": "https://gcagochina.com/supply.json",
   "securityPageUrl": "https://gcagochina.com/security.html",
   "riskPageUrl": "https://gcagochina.com/risk.html",
   "faqUrl": "https://gcagochina.com/faq.html",

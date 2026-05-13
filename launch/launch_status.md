@@ -67,6 +67,7 @@
 - Official market page prepared at `https://gcagochina.com/markets.html` to centralize the GCA/USDT pool, USDT contract, Uniswap, GeckoTerminal, DEX Screener, and market risk disclosures.
 - Official market quality page and JSON prepared at `https://gcagochina.com/market-quality.html` and `https://gcagochina.com/market-quality.json` to define legitimate market-growth actions and reject artificial activity, self-trading, wash trading, and misleading volume.
 - Official supply and reserve page prepared at `https://gcagochina.com/supply.html` to explain fixed total supply, 40/60 target allocation, reserve wallet evidence, and circulating supply cautions.
+- Public supply disclosure JSON prepared at `https://gcagochina.com/supply.json` for data platforms and reviewers that need machine-readable total supply, target allocation, reserve wallet, and custody boundaries.
 - Official security page prepared at `https://gcagochina.com/security.html` to summarize fixed supply, no mint, no tax, no blacklist, no admin controls, source verification, internal review, residual risks, and third-party audit status.
 - Official risk disclosure page prepared at `https://gcagochina.com/risk.html` to centralize early-stage, starter-liquidity, wallet-warning, audit, reserve-custody, utility-readiness, listing, and public-claim risks.
 - Official FAQ page prepared at `https://gcagochina.com/faq.html` to answer wallet import, price display, risk warning, pool mechanics, supply, reserve, audit, and public-claim questions.
@@ -77,6 +78,7 @@
 - Wait for BaseScan review or an email reply to `cxy070800@gmail.com`.
 - Use `launch/external_review_followup_tracker.md` for BaseScan, Blockaid, GeckoTerminal, DEX Screener, CoinGecko, CoinMarketCap, and audit follow-up status before sending any new platform request.
 - If BaseScan asks for supply details during review, use the updated 40/60 allocation and both reserve transfer transactions.
+- Use `https://gcagochina.com/supply.json` when a data platform asks for machine-readable supply, allocation, reserve-wallet, or circulating-supply context.
 - Wait for stronger public activity and market volume before submitting CoinGecko or CoinMarketCap listing requests.
 - Use `https://gcagochina.com/market-quality.html` before presenting market-growth updates or new liquidity actions.
 - Use `https://gcagochina.com/onchain-proofs.html` and `https://gcagochina.com/onchain-proofs.json` when a reviewer asks for deployment, reserve, official market, or transaction proof.

@@ -20,6 +20,7 @@ This package prepares GCA information for token data and DEX discovery platforms
 - Listing readiness JSON: `https://gcagochina.com/listing-readiness.json`
 - Market quality page: `https://gcagochina.com/market-quality.html`
 - Market quality JSON: `https://gcagochina.com/market-quality.json`
+- Supply disclosure JSON: `https://gcagochina.com/supply.json`
 - Liquidity: official starter Uniswap v4 GCA/USDT pool exists on Base Mainnet
 - Social links: official Telegram is live at `https://t.me/gcagochinaofficial`; the frozen X account is not used
 - Third-party audit: not completed; quote requests were submitted on 2026-05-10 and then deferred by owner decision
@@ -66,6 +67,7 @@ This package prepares GCA information for token data and DEX discovery platforms
 - Market quality page: `https://gcagochina.com/market-quality.html`
 - Market quality JSON: `https://gcagochina.com/market-quality.json`
 - Supply and reserve page: `https://gcagochina.com/supply.html`
+- Supply disclosure JSON: `https://gcagochina.com/supply.json`
 - Security page: `https://gcagochina.com/security.html`
 - Risk page: `https://gcagochina.com/risk.html`
 - FAQ: `https://gcagochina.com/faq.html`
@@ -113,6 +115,7 @@ Use `https://gcagochina.com/listing-readiness.html` and `https://gcagochina.com/
 ## Supply And Reserve
 
 - Official supply page: `https://gcagochina.com/supply.html`
+- Machine-readable supply disclosure: `https://gcagochina.com/supply.json`
 - Supply disclosure updated on 2026-05-10 after the second reserve transfer. Use these values for any BaseScan, GeckoTerminal, CoinGecko, or CoinMarketCap follow-up correction.
 - Target public circulation, ecosystem, and liquidity allocation: 400,000,000 GCA / 40%
 - Owner-held reserve: 600,000,000 GCA / 60%

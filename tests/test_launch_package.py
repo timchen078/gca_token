@@ -43,6 +43,7 @@ MARKET_QUALITY_PAGE_URL = "https://gcagochina.com/market-quality.html"
 MARKET_QUALITY_URL = "https://gcagochina.com/market-quality.json"
 ONCHAIN_PROOFS_PAGE_URL = "https://gcagochina.com/onchain-proofs.html"
 ONCHAIN_PROOFS_URL = "https://gcagochina.com/onchain-proofs.json"
+SUPPLY_DISCLOSURE_URL = "https://gcagochina.com/supply.json"
 DEPLOYMENT_TX = "0xae8ae4d0bd89c03b39946564a5b63bb20cd38879a1aa1fdcb20a6f1c4802e74e"
 
 
@@ -73,6 +74,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("/market-quality.json", script)
         self.assertIn("/onchain-proofs.html", script)
         self.assertIn("/onchain-proofs.json", script)
+        self.assertIn("/supply.html", script)
+        self.assertIn("/supply.json", script)
         self.assertIn("validate_members", script)
         self.assertIn("validate_member_program_json", script)
         self.assertIn("validate_wallet_warning_page", script)
@@ -85,6 +88,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("validate_market_quality_json", script)
         self.assertIn("validate_onchain_proofs_page", script)
         self.assertIn("validate_onchain_proofs_json", script)
+        self.assertIn("validate_supply_page", script)
+        self.assertIn("validate_supply_json", script)
         self.assertIn("FORBIDDEN_PUBLIC_CLAIM_PATTERNS", script)
         self.assertIn("assert_no_forbidden_public_claims", script)
         self.assertIn("profit sharing", script)
@@ -102,6 +107,8 @@ class LaunchPackageTests(unittest.TestCase):
         module.validate_market_quality_json((ROOT / "site" / "market-quality.json").read_text())
         module.validate_onchain_proofs_page((ROOT / "site" / "onchain-proofs.html").read_text())
         module.validate_onchain_proofs_json((ROOT / "site" / "onchain-proofs.json").read_text())
+        module.validate_supply_page((ROOT / "site" / "supply.html").read_text())
+        module.validate_supply_json((ROOT / "site" / "supply.json").read_text())
         module.validate_members((ROOT / "site" / "members.html").read_text())
         module.validate_member_program_json((ROOT / "site" / "member-program.json").read_text())
         module.validate_wallet_warning_page((ROOT / "site" / "wallet-warning.html").read_text())
@@ -256,6 +263,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Allow: /market-quality.json", robots)
         self.assertIn("Allow: /onchain-proofs.html", robots)
         self.assertIn("Allow: /onchain-proofs.json", robots)
+        self.assertIn("Allow: /supply.json", robots)
         self.assertIn("Allow: /member-program.json", robots)
         self.assertIn("Allow: /.well-known/gca-token.json", robots)
         self.assertIn("Allow: /.well-known/security.txt", robots)
@@ -279,6 +287,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("https://gcagochina.com/buy.html", sitemap)
         self.assertIn("https://gcagochina.com/markets.html", sitemap)
         self.assertIn("https://gcagochina.com/supply.html", sitemap)
+        self.assertIn(SUPPLY_DISCLOSURE_URL, sitemap)
         self.assertIn("https://gcagochina.com/security.html", sitemap)
         self.assertIn("https://gcagochina.com/risk.html", sitemap)
         self.assertIn("https://gcagochina.com/faq.html", sitemap)
@@ -292,7 +301,7 @@ class LaunchPackageTests(unittest.TestCase):
         security = (ROOT / "site" / ".well-known" / "security.txt").read_text()
 
         self.assertEqual(identity["schema"], WELL_KNOWN_TOKEN_URL)
-        self.assertEqual(identity["lastUpdated"], "2026-05-12")
+        self.assertEqual(identity["lastUpdated"], "2026-05-13")
         self.assertEqual(identity["network"]["name"], "Base Mainnet")
         self.assertEqual(identity["network"]["chainId"], 8453)
         self.assertEqual(identity["token"]["contractAddress"], MAINNET_ADDRESS)
@@ -316,6 +325,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(identity["officialUrls"]["marketQuality"], MARKET_QUALITY_URL)
         self.assertEqual(identity["officialUrls"]["onchainProofsPage"], ONCHAIN_PROOFS_PAGE_URL)
         self.assertEqual(identity["officialUrls"]["onchainProofs"], ONCHAIN_PROOFS_URL)
+        self.assertEqual(identity["officialUrls"]["supplyDisclosure"], SUPPLY_DISCLOSURE_URL)
         self.assertEqual(identity["officialUrls"]["telegram"], TELEGRAM_URL)
         self.assertEqual(identity["market"]["officialPair"], "GCA/USDT")
         self.assertEqual(identity["market"]["poolAddress"], OFFICIAL_POOL_ADDRESS)
@@ -324,6 +334,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(identity["market"]["dexScreener"], OFFICIAL_DEXSCREENER_URL)
         self.assertEqual(identity["market"]["officialSwap"], OFFICIAL_SWAP_URL)
         self.assertEqual(identity["supplyDisclosure"]["ownerReserveWallet"], RESERVE_WALLET)
+        self.assertEqual(identity["supplyDisclosure"]["status"], "public-supply-disclosure-published")
+        self.assertEqual(identity["supplyDisclosure"]["url"], SUPPLY_DISCLOSURE_URL)
         self.assertEqual(identity["supplyDisclosure"]["ownerReserveTransferTxs"], [RESERVE_TX, SECOND_RESERVE_TX])
         self.assertEqual(identity["platformStatus"]["baseScanTokenProfile"], "submitted-awaiting-review")
         self.assertEqual(identity["platformStatus"]["geckoTerminalTokenInfo"], "approved-2026-05-11")
@@ -605,6 +617,8 @@ class LaunchPackageTests(unittest.TestCase):
         supply = (ROOT / "site" / "supply.html").read_text()
 
         self.assertIn("GCA Supply and Reserve", supply)
+        self.assertIn("Supply JSON", supply)
+        self.assertIn('href="supply.json"', supply)
         self.assertIn("smart contract total supply is fixed at 1,000,000,000 GCA", supply)
         self.assertIn("400,000,000 GCA / 40%", supply)
         self.assertIn("600,000,000 GCA / 60%", supply)
@@ -628,6 +642,39 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn('href="markets.html"', supply)
         self.assertIn('href="status.html"', supply)
         self.assertIn('href="listing-kit.html"', supply)
+
+    def test_supply_json_discloses_allocation_without_overstating_circulation(self):
+        supply = json.loads((ROOT / "site" / "supply.json").read_text())
+
+        self.assertEqual(supply["schema"], SUPPLY_DISCLOSURE_URL)
+        self.assertEqual(supply["pageUrl"], SUPPLY_PAGE_URL)
+        self.assertEqual(supply["status"], "public-supply-disclosure-published")
+        self.assertEqual(supply["chainId"], 8453)
+        self.assertEqual(supply["contractAddress"], MAINNET_ADDRESS)
+        self.assertEqual(supply["totalSupply"], "1000000000")
+        self.assertTrue(supply["fixedSupply"])
+        self.assertFalse(supply["postDeploymentMintFunction"])
+        self.assertEqual(supply["allocationTarget"]["publicAllocationTarget"], "400000000")
+        self.assertEqual(supply["allocationTarget"]["publicAllocationTargetPercent"], 40)
+        self.assertEqual(supply["allocationTarget"]["ownerHeldReserve"], "600000000")
+        self.assertEqual(supply["allocationTarget"]["ownerHeldReservePercent"], 60)
+        self.assertEqual(supply["allocationTarget"]["ownerReserveWallet"], RESERVE_WALLET)
+        self.assertEqual(supply["allocationTarget"]["ownerReserveCustodyType"], "normal-owner-controlled-wallet")
+        self.assertIn("not locked", supply["allocationTarget"]["ownerReserveCustodyNote"])
+        self.assertEqual(
+            [entry["transactionHash"] for entry in supply["reserveTransferEvidence"]],
+            [RESERVE_TX, SECOND_RESERVE_TX],
+        )
+        self.assertEqual(supply["dataPlatformReporting"]["preferredTerm"], "target public allocation")
+        self.assertIn("should not claim an accepted circulating supply", supply["dataPlatformReporting"]["circulatingSupplyAcceptance"])
+        self.assertIn("does not reduce totalSupply", supply["dataPlatformReporting"]["whyExplorersShowOneBillion"])
+        self.assertIn("current reserve is not locked", supply["dataPlatformReporting"]["ifAskedForLockedReserve"])
+        self.assertEqual(supply["officialLinks"]["supplyDisclosure"], SUPPLY_DISCLOSURE_URL)
+        self.assertEqual(supply["officialLinks"]["onchainProofs"], ONCHAIN_PROOFS_URL)
+        self.assertIn("GCA total supply is fixed at 1,000,000,000 GCA.", supply["publicClaimBoundaries"]["safeClaims"])
+        self.assertIn("the 600,000,000 GCA reserve is locked, vested, or multisig-controlled before an on-chain custody change", supply["publicClaimBoundaries"]["doNotClaim"])
+        self.assertNotIn(OLD_WETH_POOL_ADDRESS, json.dumps(supply))
+        self.assertNotIn("GCA/WETH", json.dumps(supply))
 
     def test_security_page_summarizes_contract_controls_and_audit_status(self):
         security = (ROOT / "site" / "security.html").read_text()
@@ -862,6 +909,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("onchain-proofs.html", kit)
         self.assertIn("On-chain Proofs JSON", kit)
         self.assertIn("onchain-proofs.json", kit)
+        self.assertIn("Supply JSON", kit)
+        self.assertIn(SUPPLY_DISCLOSURE_URL, kit)
         self.assertIn("Token List JSON", kit)
         self.assertIn("tokenlist.json", kit)
         self.assertIn("Member Program JSON", kit)
@@ -917,10 +966,11 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(project["marketQualityUrl"], MARKET_QUALITY_URL)
         self.assertEqual(project["onchainProofsPageUrl"], ONCHAIN_PROOFS_PAGE_URL)
         self.assertEqual(project["onchainProofsUrl"], ONCHAIN_PROOFS_URL)
+        self.assertEqual(project["supplyDisclosureUrl"], SUPPLY_DISCLOSURE_URL)
         self.assertEqual(project["tokenListUrl"], "https://gcagochina.com/tokenlist.json")
         self.assertEqual(project["wellKnownTokenIdentityUrl"], WELL_KNOWN_TOKEN_URL)
         self.assertEqual(project["securityContactUrl"], SECURITY_CONTACT_URL)
-        self.assertEqual(project["lastUpdated"], "2026-05-12")
+        self.assertEqual(project["lastUpdated"], "2026-05-13")
         self.assertEqual(project["marketPageUrl"], MARKET_PAGE_URL)
         self.assertEqual(project["supplyPageUrl"], SUPPLY_PAGE_URL)
         self.assertEqual(project["securityPageUrl"], SECURITY_PAGE_URL)
@@ -939,6 +989,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(project["market"]["geckoTerminalUrl"], OFFICIAL_GECKOTERMINAL_URL)
         self.assertEqual(project["market"]["dexScreenerUrl"], OFFICIAL_DEXSCREENER_URL)
         self.assertEqual(project["market"]["officialSwapUrl"], OFFICIAL_SWAP_URL)
+        self.assertEqual(project["supplyDisclosure"]["status"], "public-supply-disclosure-published")
+        self.assertEqual(project["supplyDisclosure"]["url"], SUPPLY_DISCLOSURE_URL)
         self.assertEqual(project["supplyDisclosure"]["ownerReserveWallet"], RESERVE_WALLET)
         self.assertEqual(project["platformStatus"]["baseScanTokenProfile"], "submitted-awaiting-review")
         self.assertEqual(project["platformStatus"]["geckoTerminalTokenInfo"], "approved-2026-05-11")
@@ -1206,7 +1258,7 @@ class LaunchPackageTests(unittest.TestCase):
     def test_token_list_json_is_official_and_conservative(self):
         tokenlist = json.loads((ROOT / "site" / "tokenlist.json").read_text())
         self.assertEqual(tokenlist["name"], "GCA Official Token List")
-        self.assertEqual(tokenlist["timestamp"], "2026-05-12T00:00:00+07:00")
+        self.assertEqual(tokenlist["timestamp"], "2026-05-13T00:00:00+07:00")
         self.assertEqual(tokenlist["version"], {"major": 1, "minor": 0, "patch": 0})
         self.assertIn("base", tokenlist["keywords"])
         self.assertEqual(len(tokenlist["tokens"]), 1)
@@ -1235,6 +1287,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(extensions["onchainProofsPage"], ONCHAIN_PROOFS_PAGE_URL)
         self.assertEqual(extensions["onchainProofs"], ONCHAIN_PROOFS_URL)
         self.assertEqual(extensions["onchainProofStatus"], "public-onchain-proofs-published")
+        self.assertEqual(extensions["supplyDisclosure"], SUPPLY_DISCLOSURE_URL)
+        self.assertEqual(extensions["supplyDisclosureStatus"], "public-supply-disclosure-published")
         self.assertEqual(extensions["projectJson"], "https://gcagochina.com/project.json")
         self.assertEqual(extensions["wellKnownTokenIdentity"], WELL_KNOWN_TOKEN_URL)
         self.assertEqual(extensions["securityContact"], SECURITY_CONTACT_URL)
@@ -1264,6 +1318,7 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "site" / "buy.html",
             ROOT / "site" / "markets.html",
             ROOT / "site" / "supply.html",
+            ROOT / "site" / "supply.json",
             ROOT / "site" / "security.html",
             ROOT / "site" / "risk.html",
             ROOT / "site" / "faq.html",
@@ -1401,6 +1456,7 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "site" / "buy.html",
             ROOT / "site" / "markets.html",
             ROOT / "site" / "supply.html",
+            ROOT / "site" / "supply.json",
             ROOT / "site" / "security.html",
             ROOT / "site" / "risk.html",
             ROOT / "site" / "faq.html",
@@ -1522,6 +1578,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Official supply and reserve page prepared", status)
         self.assertIn("https://gcagochina.com/supply.html", status)
         self.assertIn("40/60 target allocation", status)
+        self.assertIn("Public supply disclosure JSON prepared", status)
+        self.assertIn(SUPPLY_DISCLOSURE_URL, status)
+        self.assertIn("machine-readable total supply, target allocation, reserve wallet", status)
         self.assertIn("Official security page prepared", status)
         self.assertIn("https://gcagochina.com/security.html", status)
         self.assertIn("no mint, no tax, no blacklist, no admin controls", status)
@@ -1605,6 +1664,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("https://gcagochina.com/buy.html", package)
         self.assertIn("https://gcagochina.com/markets.html", package)
         self.assertIn("https://gcagochina.com/supply.html", package)
+        self.assertIn(SUPPLY_DISCLOSURE_URL, package)
         self.assertIn("https://gcagochina.com/security.html", package)
         self.assertIn("https://gcagochina.com/risk.html", package)
         self.assertIn("https://gcagochina.com/faq.html", package)
@@ -1654,6 +1714,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["marketQualityPageUrl"], MARKET_QUALITY_PAGE_URL)
         self.assertEqual(values["marketQualityUrl"], MARKET_QUALITY_URL)
         self.assertEqual(values["supplyPageUrl"], SUPPLY_PAGE_URL)
+        self.assertEqual(values["supplyDisclosureUrl"], SUPPLY_DISCLOSURE_URL)
         self.assertEqual(values["securityPageUrl"], SECURITY_PAGE_URL)
         self.assertEqual(values["riskPageUrl"], RISK_PAGE_URL)
         self.assertEqual(values["faqUrl"], FAQ_URL)
@@ -1725,6 +1786,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(MAINNET_ADDRESS, tracker)
         self.assertIn(VERIFY_PAGE_URL, tracker)
         self.assertIn(MARKET_PAGE_URL, tracker)
+        self.assertIn(SUPPLY_DISCLOSURE_URL, tracker)
         self.assertIn(WALLET_WARNING_PAGE_URL, tracker)
         self.assertIn(WALLET_WARNING_URL, tracker)
         self.assertIn(EXTERNAL_REVIEW_PAGE_URL, tracker)
@@ -1760,6 +1822,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["canonicalIdentity"]["contractAddress"], MAINNET_ADDRESS)
         self.assertEqual(values["canonicalIdentity"]["verifyUrl"], VERIFY_PAGE_URL)
         self.assertEqual(values["canonicalIdentity"]["marketPageUrl"], MARKET_PAGE_URL)
+        self.assertEqual(values["canonicalIdentity"]["supplyDisclosureUrl"], SUPPLY_DISCLOSURE_URL)
         self.assertEqual(values["canonicalIdentity"]["walletWarningEvidencePageUrl"], WALLET_WARNING_PAGE_URL)
         self.assertEqual(values["canonicalIdentity"]["walletWarningEvidenceUrl"], WALLET_WARNING_URL)
         self.assertEqual(values["canonicalIdentity"]["externalReviewStatusPageUrl"], EXTERNAL_REVIEW_PAGE_URL)
