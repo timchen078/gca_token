@@ -1,0 +1,108 @@
+{
+  "schema": "https://gcagochina.com/.well-known/wallet-security.json",
+  "lastUpdated": "2026-05-13",
+  "status": "public-wallet-security-profile-published",
+  "projectName": "GCA",
+  "tokenSymbol": "GCA",
+  "conceptExpansion": "Go China Access",
+  "network": {
+    "name": "Base Mainnet",
+    "chainId": 8453
+  },
+  "token": {
+    "standard": "ERC-20",
+    "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+    "decimals": 18,
+    "totalSupply": "1000000000"
+  },
+  "securityFacts": {
+    "sourceVerifiedOnBaseScan": true,
+    "fixedSupply": true,
+    "postDeploymentMintFunction": false,
+    "ownerOrAdminRole": false,
+    "proxyOrUpgradePath": false,
+    "blacklistFunction": false,
+    "pauseFunction": false,
+    "transferTaxOrHiddenFee": false,
+    "custodyOrWithdrawalPath": false,
+    "thirdPartyAuditCompleted": false
+  },
+  "walletReviewStatus": {
+    "blockaidMetaMaskWarning": "submitted-warning-removal-not-confirmed",
+    "initialSubmissionDate": "2026-05-10",
+    "followUpSubmissionDate": "2026-05-13",
+    "followUpSubmissionResult": "Blockaid support portal returned HTTP 200 OK",
+    "warningRemovalConfirmed": false,
+    "nextAction": "Recheck the wallet and DEX warning UI before claiming any warning-status change."
+  },
+  "baseScanStatus": {
+    "sourceVerification": "verified",
+    "deployerWalletOwnership": "verified",
+    "tokenProfile": "resubmitted-awaiting-review",
+    "tokenProfileResubmissionDate": "2026-05-13"
+  },
+  "officialMarket": {
+    "pair": "GCA/USDT",
+    "dex": "Uniswap v4",
+    "network": "Base Mainnet",
+    "feeTier": "0.01%",
+    "poolAddress": "0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "quoteAsset": "USDT",
+    "quoteAssetAddress": "0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2",
+    "geckoTerminal": "https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "dexScreener": "https://dexscreener.com/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "uniswapPool": "https://app.uniswap.org/explore/pools/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "liquidityDepthStatus": "starter-depth-only"
+  },
+  "officialLinks": {
+    "website": "https://gcagochina.com/",
+    "verify": "https://gcagochina.com/verify.html",
+    "trustCenterPage": "https://gcagochina.com/trust.html",
+    "trustCenter": "https://gcagochina.com/trust.json",
+    "walletWarningEvidencePage": "https://gcagochina.com/wallet-warning.html",
+    "walletWarningEvidence": "https://gcagochina.com/wallet-warning.json",
+    "reviewerKitPage": "https://gcagochina.com/reviewer-kit.html",
+    "reviewerKit": "https://gcagochina.com/reviewer-kit.json",
+    "externalReviewStatusPage": "https://gcagochina.com/external-reviews.html",
+    "externalReviewStatus": "https://gcagochina.com/external-reviews.json",
+    "onchainProofsPage": "https://gcagochina.com/onchain-proofs.html",
+    "onchainProofs": "https://gcagochina.com/onchain-proofs.json",
+    "securityPage": "https://gcagochina.com/security.html",
+    "riskPage": "https://gcagochina.com/risk.html",
+    "marketPage": "https://gcagochina.com/markets.html",
+    "projectJson": "https://gcagochina.com/project.json",
+    "tokenList": "https://gcagochina.com/tokenlist.json",
+    "wellKnownTokenIdentity": "https://gcagochina.com/.well-known/gca-token.json",
+    "walletSecurityProfile": "https://gcagochina.com/.well-known/wallet-security.json",
+    "securityContact": "https://gcagochina.com/.well-known/security.txt",
+    "baseScanContract": "https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+    "telegram": "https://t.me/gcagochinaofficial"
+  },
+  "historicalFunctionalSwapEvidence": {
+    "status": "observed-historical-functional-evidence-only",
+    "buyTestTransactions": [
+      "0xf79e52ea56a299a30c2d297be99c970295864ed262c01fdcb7e3f60ca669b040",
+      "0x9e88f36125e0b54eb6d334b3159d6875909553e530dda49af4482d96401a05ac"
+    ],
+    "sellTestTransactions": [
+      "0x0ff618062abc6e28933699d4e3bd723026f8505e4a0155db3068073b6fdc86e7",
+      "0x2698cee454d22a7977231e7e57173038647c07261c09d8a93260bcbf0cc2d71e"
+    ],
+    "scope": "Functional swap evidence is narrow historical evidence only. It does not prove mature liquidity, organic demand, audit completion, listing acceptance, or warning removal."
+  },
+  "publicClaimBoundaries": {
+    "safeClaims": [
+      "GCA source verification is complete on BaseScan.",
+      "GCA has fixed total supply and no post-deployment mint function.",
+      "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool.",
+      "A Blockaid false-positive report and follow-up were submitted, but wallet-warning removal is not confirmed.",
+      "No third-party audit has been completed."
+    ],
+    "doNotClaim": [
+      "Blockaid or MetaMask warning removal before visible confirmation",
+      "security-vendor approval before the vendor confirms it",
+      "third-party audit completion before an independent report is published",
+      "deep liquidity, price support, return promises, or warning-free status"
+    ]
+  }
+}

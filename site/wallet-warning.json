@@ -27,6 +27,7 @@
     "listingKit": "https://gcagochina.com/listing-kit.html",
     "projectJson": "https://gcagochina.com/project.json",
     "wellKnownTokenIdentity": "https://gcagochina.com/.well-known/gca-token.json",
+    "walletSecurityProfile": "https://gcagochina.com/.well-known/wallet-security.json",
     "securityContact": "https://gcagochina.com/.well-known/security.txt",
     "telegram": "https://t.me/gcagochinaofficial"
   },

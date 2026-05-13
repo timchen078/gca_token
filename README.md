@@ -53,6 +53,7 @@ Deployment notes are in `docs/deploy_base_sepolia.md` and `docs/deploy_base_main
 - Public supply disclosure JSON: `site/supply.json`
 - Public wallet warning evidence page: `site/wallet-warning.html`
 - Public wallet warning evidence JSON: `site/wallet-warning.json`
+- Public wallet security profile: `site/.well-known/wallet-security.json`
 - Public external review status page: `site/external-reviews.html`
 - Public external review status JSON: `site/external-reviews.json`
 - Public listing readiness page: `site/listing-readiness.html`
