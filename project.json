@@ -20,6 +20,8 @@
   "reviewerKitUrl": "https://gcagochina.com/reviewer-kit.json",
   "platformRepliesPageUrl": "https://gcagochina.com/platform-replies.html",
   "platformRepliesUrl": "https://gcagochina.com/platform-replies.json",
+  "trustCenterPageUrl": "https://gcagochina.com/trust.html",
+  "trustCenterUrl": "https://gcagochina.com/trust.json",
   "roadmapPageUrl": "https://gcagochina.com/roadmap.html",
   "roadmapUrl": "https://gcagochina.com/roadmap.json",
   "communityPageUrl": "https://gcagochina.com/community.html",
@@ -86,6 +88,12 @@
     "pageUrl": "https://gcagochina.com/platform-replies.html",
     "url": "https://gcagochina.com/platform-replies.json",
     "useCase": "Copyable replies for wallet-warning evidence requests, BaseScan follow-up, metadata correction, community moderation, and tracked-listing readiness questions."
+  },
+  "trustCenter": {
+    "status": "public-trust-center-published",
+    "pageUrl": "https://gcagochina.com/trust.html",
+    "url": "https://gcagochina.com/trust.json",
+    "useCase": "Consolidated public verification hub for contract facts, external review status, official market route, supply disclosure, and public claim boundaries."
   },
   "baseScanContractUrl": "https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "officialEmail": "GCAgochina@outlook.com",

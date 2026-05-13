@@ -6,6 +6,8 @@ Allow: /reviewer-kit.html
 Allow: /reviewer-kit.json
 Allow: /platform-replies.html
 Allow: /platform-replies.json
+Allow: /trust.html
+Allow: /trust.json
 Allow: /onchain-proofs.html
 Allow: /onchain-proofs.json
 Allow: /wallet-warning.html
