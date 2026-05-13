@@ -77,8 +77,9 @@
 - Official Telegram channel photo updated and first public announcement posted on 2026-05-09.
 - First official Telegram announcement pinned on 2026-05-10.
 - Telegram channel runbook prepared.
-- Official X profile configured at `https://x.com/gcagochina`.
-- X profile runbook and first-post / pinned-post drafts prepared at `launch/x_profile_runbook.md`; no official X post has been published or pinned yet.
+- Official X profile configured at `https://x.com/GCAAIGoChina`.
+- First official X post published at `https://x.com/GCAAIGoChina/status/2054660559124255151`; pin status remains not pinned.
+- X profile runbook updated at `launch/x_profile_runbook.md` with the live profile and first-post URL.
 - Small historical Base Mainnet Uniswap v3 GCA/WETH buy/sell functional swap tests observed on 2026-05-10 and documented in `launch/swap_test_evidence.md`; current public market links remain centralized on the GCA/USDT pool.
 - Blockaid false-positive report submitted on 2026-05-10 for the MetaMask/Uniswap suspected-honeypot warning.
 - Blockaid false-positive follow-up submitted on 2026-05-13 with current GCA/USDT links, public wallet-warning evidence, and historical buy/sell test transactions; the Blockaid support portal returned HTTP 200 OK.
@@ -126,7 +127,7 @@
 - Deploy the Web3 Radar GCA intake behind the same official HTTPS origin or a reviewed reverse proxy before enabling the public `Submit Packet` button.
 - Add the official Telegram and X links to any BaseScan or GeckoTerminal follow-up if those reviewers ask for social links.
 - Replace the Telegram pinned message with `launch/telegram_pinned_buy_announcement.md` when ready.
-- Publish the prepared X first post only after confirming the profile photo, website field, and verification link; pin only the official links post after it is live.
+- Keep the published X first post linked from community materials; pin only the official links post after it is live.
 - Move the owner reserve to a Safe multisig or lock/vesting contract if stronger reserve assurances are needed.
 - Archive any audit quote replies from QuillAudits, Hacken, or OpenZeppelin; do not approve payment while audit is deferred.
 - Reopen third-party audit only if user trust, listings, partners, or larger liquidity make an external report necessary.

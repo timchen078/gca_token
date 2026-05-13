@@ -12,7 +12,8 @@ RESERVE_WALLET = "0x5e8F84748612B913aAcC937492AC25dc5630E246"
 RESERVE_TX = "0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67"
 SECOND_RESERVE_TX = "0xfffb674448abdbd3af45bb0a30c48e5fbb0e675542b971f031381254b5dc5317"
 TELEGRAM_URL = "https://t.me/gcagochinaofficial"
-X_URL = "https://x.com/gcagochina"
+X_URL = "https://x.com/GCAAIGoChina"
+FIRST_X_POST_URL = "https://x.com/GCAAIGoChina/status/2054660559124255151"
 SWAP_TEST_BUY_TX = "0xf79e52ea56a299a30c2d297be99c970295864ed262c01fdcb7e3f60ca669b040"
 SWAP_TEST_SELL_TX = "0x0ff618062abc6e28933699d4e3bd723026f8505e4a0155db3068073b6fdc86e7"
 OFFICIAL_POOL_ADDRESS = "0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0"
@@ -1043,9 +1044,10 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("GCA Member Club", page)
         self.assertIn("Official Telegram", page)
         self.assertIn("X Launch Pack", page)
-        self.assertIn("First X Post Draft", page)
+        self.assertIn("First X Post", page)
         self.assertIn("Pinned X Post Draft", page)
-        self.assertIn("Prepared, not posted", page)
+        self.assertIn("First official X post", page)
+        self.assertIn(FIRST_X_POST_URL, page)
         self.assertIn("Safe Announcement Copy", page)
         self.assertIn("Moderator replies", page)
         self.assertIn("Wallet Warning Reply", page)
@@ -1077,10 +1079,13 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertTrue(any("BaseScan token profile was returned as information-insufficient on 2026-05-13 and resubmitted on 2026-05-13" in item for item in community["safeAnnouncement"]))
         self.assertTrue(any("Narrative meets risk control" in item for item in community["safeAnnouncement"]))
         self.assertTrue(any("Weekly Go China Radar: https://gcagochina.com/radar.html" in item for item in community["safeAnnouncement"]))
-        self.assertEqual(community["xLaunchPack"]["status"], "prepared-not-posted")
+        self.assertTrue(any(FIRST_X_POST_URL in item for item in community["safeAnnouncement"]))
+        self.assertEqual(community["xLaunchPack"]["status"], "first-post-published")
         self.assertEqual(community["xLaunchPack"]["officialProfile"], X_URL)
         self.assertEqual(community["xLaunchPack"]["profilePhotoAsset"], "https://gcagochina.com/assets/gca-logo.png")
-        self.assertTrue(any("GCA | Go China Access is live on Base Mainnet" in item for item in community["xLaunchPack"]["firstPostDraft"]))
+        self.assertEqual(community["xLaunchPack"]["firstPostUrl"], FIRST_X_POST_URL)
+        self.assertEqual(community["xLaunchPack"]["firstPostPublishedDate"], "2026-05-14")
+        self.assertTrue(any("GCA is building Go China Access" in item for item in community["xLaunchPack"]["firstPostText"]))
         self.assertTrue(any("Verify: https://gcagochina.com/verify.html" in item for item in community["xLaunchPack"]["pinnedPostDraft"]))
         self.assertTrue(any("Do not post market-price claims" in item for item in community["xLaunchPack"]["postingChecklist"]))
         self.assertIn("walletWarning", community["moderatorReplyTemplates"])
@@ -3035,8 +3040,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Replace the Telegram pinned message", status)
         self.assertIn("Official X profile configured", status)
         self.assertIn("launch/x_profile_runbook.md", status)
-        self.assertIn("no official X post has been published or pinned yet", status)
-        self.assertIn("Publish the prepared X first post", status)
+        self.assertIn("First official X post published", status)
+        self.assertIn("Keep the published X first post linked", status)
         self.assertIn("buy/sell functional swap tests observed on 2026-05-10", status)
         self.assertIn("launch/swap_test_evidence.md", status)
         self.assertIn("Blockaid false-positive report submitted on 2026-05-10", status)
@@ -3096,13 +3101,11 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(X_URL, runbook)
         self.assertIn("Display name: `GCA | Go China Access`", runbook)
         self.assertIn("site/assets/gca-logo.png", runbook)
-        self.assertIn("First public X post: prepared, not posted", runbook)
+        self.assertIn("First public X post: posted", runbook)
+        self.assertIn(FIRST_X_POST_URL, runbook)
         self.assertIn("Pin status: no official X post is pinned yet", runbook)
-        self.assertIn("GCA | Go China Access is live on Base Mainnet", runbook)
-        self.assertIn(VERIFY_PAGE_URL, runbook)
-        self.assertIn(MAINNET_ADDRESS, runbook)
-        self.assertIn("Official market route", runbook)
-        self.assertIn("GCA/USDT", runbook)
+        self.assertIn("GCA is building Go China Access", runbook)
+        self.assertIn("https://gcagochina.com", runbook)
         self.assertIn("No third-party audit has been completed", runbook)
         self.assertIn("Liquidity is starter-depth only", runbook)
         self.assertIn("Wallet-warning removal is not confirmed", runbook)
@@ -3110,7 +3113,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Do not say the BaseScan token profile is approved", runbook)
         self.assertIn("Do not say Blockaid or MetaMask warnings are removed", runbook)
         self.assertIn("Do not describe the owner reserve as locked", runbook)
-        self.assertIn("Copy the first post URL into `site/community.json`", runbook)
+        self.assertIn("Keep the first post URL in `site/community.json`", runbook)
 
     def test_data_platform_package_is_copyable_and_conservative(self):
         package = (ROOT / "launch" / "data_platform_package.md").read_text()

@@ -150,7 +150,7 @@ Project contact email: `GCAgochina@outlook.com`
 
 Official Telegram: `https://t.me/gcagochinaofficial`
 
-Official X: `https://x.com/gcagochina`
+Official X: `https://x.com/GCAAIGoChina`
 
 ## Risk Notice
 

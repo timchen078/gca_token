@@ -16,7 +16,8 @@ from urllib.request import Request, urlopen
 
 DEFAULT_BASE_URL = "https://gcagochina.com/"
 MAINNET_ADDRESS = "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6"
-X_URL = "https://x.com/gcagochina"
+X_URL = "https://x.com/GCAAIGoChina"
+FIRST_X_POST_URL = "https://x.com/GCAAIGoChina/status/2054660559124255151"
 OFFICIAL_POOL_ADDRESS = "0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0"
 BASE_USDT_ADDRESS = "0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2"
 OLD_WETH_POOL_ADDRESS = "0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff"
@@ -473,9 +474,10 @@ def validate_community_page(text: str) -> None:
     assert_contains(text, "Official Telegram", label)
     assert_contains(text, "Safe Announcement Copy", label)
     assert_contains(text, "X Launch Pack", label)
-    assert_contains(text, "First X Post Draft", label)
+    assert_contains(text, "First X Post", label)
     assert_contains(text, "Pinned X Post Draft", label)
-    assert_contains(text, "Prepared, not posted", label)
+    assert_contains(text, "First official X post", label)
+    assert_contains(text, FIRST_X_POST_URL, label)
     assert_contains(text, "Moderator replies", label)
     assert_contains(text, "Wallet Warning Reply", label)
     assert_contains(text, "Price Display Reply", label)
@@ -527,14 +529,20 @@ def validate_community_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing narrative announcement")
     if not any("Weekly Go China Radar: https://gcagochina.com/radar.html" in item for item in payload.get("safeAnnouncement", [])):
         raise SiteCheckError(f"{label}: missing weekly radar announcement")
-    if x_launch.get("status") != "prepared-not-posted":
+    if not any(FIRST_X_POST_URL in item for item in payload.get("safeAnnouncement", [])):
+        raise SiteCheckError(f"{label}: missing first X post announcement")
+    if x_launch.get("status") != "first-post-published":
         raise SiteCheckError(f"{label}: wrong xLaunchPack status")
     if x_launch.get("officialProfile") != X_URL:
         raise SiteCheckError(f"{label}: wrong xLaunchPack officialProfile")
     if x_launch.get("profilePhotoAsset") != "https://gcagochina.com/assets/gca-logo.png":
         raise SiteCheckError(f"{label}: wrong xLaunchPack profilePhotoAsset")
-    if not any("GCA | Go China Access is live on Base Mainnet" in item for item in x_launch.get("firstPostDraft", [])):
-        raise SiteCheckError(f"{label}: missing X first post draft")
+    if x_launch.get("firstPostUrl") != FIRST_X_POST_URL:
+        raise SiteCheckError(f"{label}: wrong firstPostUrl")
+    if x_launch.get("firstPostPublishedDate") != "2026-05-14":
+        raise SiteCheckError(f"{label}: wrong firstPostPublishedDate")
+    if not any("GCA is building Go China Access" in item for item in x_launch.get("firstPostText", [])):
+        raise SiteCheckError(f"{label}: missing X first post text")
     if not any("Verify: https://gcagochina.com/verify.html" in item for item in x_launch.get("pinnedPostDraft", [])):
         raise SiteCheckError(f"{label}: missing X pinned post draft")
     if not any("Do not post market-price claims" in item for item in x_launch.get("postingChecklist", [])):

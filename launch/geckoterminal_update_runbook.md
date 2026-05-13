@@ -15,7 +15,7 @@ This runbook records the accurate GeckoTerminal token information update request
 - Official website: `https://gcagochina.com/`
 - Official contact email for GeckoTerminal submission: `GCAgochina@outlook.com`
 - Official Telegram: `https://t.me/gcagochinaofficial`
-- Official X: `https://x.com/gcagochina`
+- Official X: `https://x.com/GCAAIGoChina`
 - Owner reserve wallet: `0x5e8F84748612B913aAcC937492AC25dc5630E246`
 - Owner reserve transfer: `0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67`
 - Official swap route: `https://app.uniswap.org/swap?chain=base&inputCurrency=0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2&outputCurrency=0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`
@@ -30,7 +30,7 @@ Do not submit a duplicate request after approval unless GeckoTerminal asks for a
 4. The whitepaper opens publicly at `https://gcagochina.com/whitepaper.html`.
 5. The BaseScan contract page opens at `https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`.
 6. The official Telegram link is available at `https://t.me/gcagochinaofficial`.
-7. The official X profile is available at `https://x.com/gcagochina`.
+7. The official X profile is available at `https://x.com/GCAAIGoChina`.
 8. The official website keeps linking to the current GCA/USDT GeckoTerminal pool.
 
 ## Historical Browser Steps
@@ -63,11 +63,11 @@ GCA, short for Go China Access, is a fixed-supply ERC-20 token on Base Mainnet. 
 - Uniswap pool: `https://app.uniswap.org/explore/pools/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0`
 - Official swap route: `https://app.uniswap.org/swap?chain=base&inputCurrency=0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2&outputCurrency=0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`
 - Official Telegram: `https://t.me/gcagochinaofficial`
-- Official X: `https://x.com/gcagochina`
+- Official X: `https://x.com/GCAAIGoChina`
 
 ## Do Not Submit Or Claim
 
-- Do not submit any X profile other than the official profile published on the website: `https://x.com/gcagochina`.
+- Do not submit any X profile other than the official profile published on the website: `https://x.com/GCAAIGoChina`.
 - Do not describe the token as externally audited or third-party audited.
 - Do not describe the owner reserve as locked, vested, or multisig-controlled.
 - Do not describe liquidity as deep or stable.
@@ -90,7 +90,7 @@ Pool: https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a
 DEX Screener: https://dexscreener.com/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0
 Owner reserve wallet: 0x5e8F84748612B913aAcC937492AC25dc5630E246
 Official Telegram: https://t.me/gcagochinaofficial
-Official X: https://x.com/gcagochina
+Official X: https://x.com/GCAAIGoChina
 
 The official X profile is included because it is now published on the official website. The token is fixed-supply and concept-stage, with starter liquidity and no completed third-party audit.
 

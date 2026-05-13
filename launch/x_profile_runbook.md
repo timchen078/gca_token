@@ -4,41 +4,38 @@ This runbook records the current official X profile state for GCA and the safe l
 
 ## Current Status
 
-- Official X profile: `https://x.com/gcagochina`
+- Official X profile: `https://x.com/GCAAIGoChina`
 - Display name: `GCA | Go China Access`
 - Website: `https://gcagochina.com`
 - Location: `Base Mainnet`
 - Bio: `GCA | Go China Access. Weekly Go China Radar and Web3 risk education on Base Mainnet. Fixed supply. No promises, no financial advice.`
 - Avatar status: not updated in X yet. Use `site/assets/gca-logo.png` when updating.
-- First public X post: prepared, not posted.
+- First public X post: posted at `https://x.com/GCAAIGoChina/status/2054660559124255151`.
 - Pin status: no official X post is pinned yet.
 
 ## Profile Checklist
 
 Before sending the first public post, confirm:
 
-1. The visible handle is `@gcagochina`.
+1. The visible handle is `@GCAAIGoChina`.
 2. The website field points to `https://gcagochina.com`.
 3. The bio does not claim price support, returns, audit approval, or listing approval.
 4. The profile photo is the GCA logo from `site/assets/gca-logo.png`.
-5. The first post links back to `https://gcagochina.com/verify.html`.
+5. The first post links back to `https://gcagochina.com`.
 
-## First Post Draft
+## First Published Post
 
 ```text
-GCA | Go China Access is live on Base Mainnet.
+GCA is building Go China Access.
 
-Verify official links before interacting:
-https://gcagochina.com/verify.html
+A fixed-supply Base token connecting the China macro story with future non-custodial quant risk tools, market education, and member access.
 
-Contract:
-0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6
+https://gcagochina.com
 
-Official market route:
-GCA/USDT
-
-Concept-stage utility buildout. No financial advice.
+Not custody. No return promises. Not financial advice.
 ```
+
+URL: `https://x.com/GCAAIGoChina/status/2054660559124255151`
 
 ## Suggested Thread Follow-Up
 
@@ -96,7 +93,7 @@ Base Mainnet only. No third-party audit. Starter-depth liquidity.
 
 ## After Posting
 
-1. Copy the first post URL into `site/community.json`.
-2. Update this runbook from `prepared, not posted` to `posted`.
+1. Keep the first post URL in `site/community.json`.
+2. Keep this runbook aligned with the live X profile.
 3. Pin the official links post only after the post is live.
 4. Add the visible post URL to future BaseScan, Blockaid, wallet, DEX, or data-platform replies if requested.

@@ -65,7 +65,7 @@
     "tokenList": "https://gcagochina.com/tokenlist.json",
     "wellKnownTokenIdentity": "https://gcagochina.com/.well-known/gca-token.json",
     "telegram": "https://t.me/gcagochinaofficial",
-    "x": "https://x.com/gcagochina",
+    "x": "https://x.com/GCAAIGoChina",
     "baseScanContract": "https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6"
   },
   "metadataUse": {
@@ -88,6 +88,6 @@
     "dataPlatformEmail": "GCAgochina@outlook.com",
     "baseScanSubmissionEmail": "cxy070800@gmail.com",
     "telegram": "https://t.me/gcagochinaofficial",
-    "x": "https://x.com/gcagochina"
+    "x": "https://x.com/GCAAIGoChina"
   }
 }
