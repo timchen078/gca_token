@@ -1,0 +1,95 @@
+{
+  "schema": "https://gcagochina.com/privacy.json",
+  "pageUrl": "https://gcagochina.com/privacy.html",
+  "lastUpdated": "2026-05-13",
+  "status": "public-privacy-notice-published",
+  "scope": "GCA public website, local member pre-registration packets, wallet balance verification, future controlled HTTPS account intake",
+  "contactEmail": "GCAgochina@outlook.com",
+  "currentStaticSiteBehavior": {
+    "mode": "local-only-pre-registration-packet",
+    "automaticServerStorage": false,
+    "directSubmissionEndpointConfigured": false,
+    "packetLeavesBrowserWhen": [
+      "user copies packet",
+      "user downloads packet",
+      "user emails packet",
+      "future controlled HTTPS intake is connected and the user submits through account UI"
+    ]
+  },
+  "dataFields": [
+    "email",
+    "Telegram handle",
+    "Base wallet address",
+    "declared GCA balance",
+    "program intent",
+    "consent flags",
+    "generated registration ID",
+    "timestamp",
+    "future wallet verification result",
+    "future 100 credits ledger record",
+    "future GCA Member ledger status",
+    "future support review status"
+  ],
+  "futureControlledIntake": {
+    "status": "prepared-not-publicly-connected",
+    "preparedAccessPage": "/gca/member-access",
+    "preparedIntakeEndpoint": "/gca/pre-registrations",
+    "preparedWalletVerificationEndpoint": "/gca/wallet-verifications",
+    "preparedCreditLedgerEndpoint": "/gca/credit-ledger",
+    "preparedMemberLedgerEndpoint": "/gca/member-ledger",
+    "preparedReviewEndpoint": "/gca/member-review",
+    "storagePurpose": [
+      "support review",
+      "wallet balance eligibility checks",
+      "100 credits ledger records",
+      "GCA Member ledger records",
+      "fraud and abuse prevention",
+      "operational logs"
+    ]
+  },
+  "walletVerification": {
+    "method": "read-only ERC-20 balanceOf check",
+    "network": "Base Mainnet",
+    "chainId": 8453,
+    "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+    "requiresSignature": false,
+    "requiresPrivateKey": false,
+    "requiresSeedPhrase": false,
+    "requiresExchangeApiSecret": false,
+    "requiresWithdrawalPermission": false,
+    "requiresCustody": false
+  },
+  "securityBoundary": {
+    "neverAskFor": [
+      "private key",
+      "seed phrase",
+      "exchange API secret",
+      "withdrawal permission",
+      "custody of funds"
+    ],
+    "notCreatedByPreRegistration": [
+      "live Web3 Radar account",
+      "self-service credit claim",
+      "automatic GCA Member activation",
+      "trading permission",
+      "risk-control bypass"
+    ]
+  },
+  "userRequests": {
+    "contactEmail": "GCAgochina@outlook.com",
+    "requestTypes": [
+      "correction",
+      "deletion",
+      "status review"
+    ],
+    "retentionCaveat": "Some records may be retained when needed for abuse prevention, security review, operational integrity, or legal compliance."
+  },
+  "publicLinks": {
+    "privacyNotice": "https://gcagochina.com/privacy.html",
+    "participationTerms": "https://gcagochina.com/terms.html",
+    "memberPreRegistration": "https://gcagochina.com/members.html",
+    "memberProgramRules": "https://gcagochina.com/member-program.json",
+    "memberLedgerPage": "https://gcagochina.com/member-ledger.html",
+    "memberLedgerSchema": "https://gcagochina.com/member-ledger.json"
+  }
+}

@@ -40,6 +40,7 @@
 - Member pre-registration page prepared at `https://gcagochina.com/members.html`; it generates local-only registration packets and does not create a live account.
 - Public member program rules prepared at `https://gcagochina.com/member-program.json`, including 100 credit spend scope, 180-day credit expiry, 30-day member refresh cadence, and support status workflow.
 - Public member ledger schema prepared at `https://gcagochina.com/member-ledger.html` and `https://gcagochina.com/member-ledger.json` for wallet verification, 100 credits ledger, GCA Member ledger, and support review records.
+- Public privacy notice and participation terms prepared at `https://gcagochina.com/privacy.html`, `https://gcagochina.com/privacy.json`, `https://gcagochina.com/terms.html`, and `https://gcagochina.com/terms.json` for pre-registration data handling, wallet verification boundaries, and planned account-level service access.
 - Member pre-registration page now has a configurable direct submission endpoint placeholder; collection remains copy/download/email until an approved HTTPS endpoint is configured.
 - Web3 Radar local access bridge paths are prepared: `GET /gca/member-access`, `POST /gca/pre-registrations`, `POST /gca/wallet-verifications`, `GET /gca/credit-ledger`, `GET /gca/member-ledger`, and `GET /gca/member-review`; the public static page is not connected to them yet.
 - Public utility thesis page prepared at `https://gcagochina.com/utility.html`.
@@ -81,6 +82,8 @@
 - Use `launch/external_review_followup_tracker.md` for BaseScan, Blockaid, GeckoTerminal, DEX Screener, CoinGecko, CoinMarketCap, and audit follow-up status before sending any new platform request.
 - Use `https://gcagochina.com/brand-kit.html` and `https://gcagochina.com/brand-kit.json` when wallets, data platforms, moderators, or community posts need official GCA logo assets and metadata usage boundaries.
 - Use `https://gcagochina.com/member-ledger.html` and `https://gcagochina.com/member-ledger.json` when Web3 Radar integration, support review, or community moderators need the published wallet verification and ledger data contract.
+- Use `https://gcagochina.com/privacy.html` before collecting member pre-registration packets or answering questions about data handling, custody, and wallet verification.
+- Use `https://gcagochina.com/terms.html` before answering questions about participation boundaries, planned credits, GCA Member status, or the no-custody/no-outcome-promise boundary.
 - If BaseScan asks for supply details during review, use the updated 40/60 allocation and both reserve transfer transactions.
 - Use `https://gcagochina.com/supply.json` when a data platform asks for machine-readable supply, allocation, reserve-wallet, or circulating-supply context.
 - Wait for stronger public activity and market volume before submitting CoinGecko or CoinMarketCap listing requests.
@@ -112,6 +115,7 @@
 - The owner reserve is in a normal owner-controlled wallet. Do not describe it as locked, vested, or multisig-controlled unless custody changes on-chain.
 - The product direction is still concept-stage. Do not describe GCA as a finished platform or as having guaranteed utility.
 - The Web3 Radar bridge has a local verified-access backend, but public self-service claiming is not live until controlled HTTPS account UI, support rules, and risk disclosures are released.
+- The privacy notice and participation terms are public. They state that the current static member page is local packet generation only and that no private key, seed phrase, exchange API secret, withdrawal permission, or custody request belongs in the GCA member flow.
 - The 10,000 GCA holder bonus must be described as 100 Web3 Radar utility credits only, not as cash, tokens, income, reimbursement, trading permission, or a way to bypass risk controls.
 - The 1,000,000 GCA Member tier must be described as service access only, not as cash, tokens, income, reimbursement, voting control, guaranteed lifetime access, trading permission, or a way to bypass risk controls.
 - Do not claim return promises, price stability, liquidity depth, or external audit completion.

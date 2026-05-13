@@ -16,6 +16,10 @@ Allow: /supply.json
 Allow: /member-ledger.html
 Allow: /member-ledger.json
 Allow: /member-program.json
+Allow: /privacy.html
+Allow: /privacy.json
+Allow: /terms.html
+Allow: /terms.json
 Allow: /.well-known/gca-token.json
 Allow: /.well-known/security.txt
 

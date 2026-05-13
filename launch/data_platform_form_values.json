@@ -46,6 +46,10 @@
   "memberProgramRulesUrl": "https://gcagochina.com/member-program.json",
   "memberLedgerPageUrl": "https://gcagochina.com/member-ledger.html",
   "memberLedgerSchemaUrl": "https://gcagochina.com/member-ledger.json",
+  "privacyNoticePageUrl": "https://gcagochina.com/privacy.html",
+  "privacyNoticeUrl": "https://gcagochina.com/privacy.json",
+  "participationTermsPageUrl": "https://gcagochina.com/terms.html",
+  "participationTermsUrl": "https://gcagochina.com/terms.json",
   "utilityThesisUrl": "https://gcagochina.com/utility.html",
   "logoUrl": "https://gcagochina.com/assets/gca-logo.svg",
   "logoPngUrl": "https://gcagochina.com/assets/gca-logo.png",
@@ -105,6 +109,13 @@
         "rejected",
         "ledger_recorded"
       ]
+    },
+    "privacyAndTerms": {
+      "privacyNoticePageUrl": "https://gcagochina.com/privacy.html",
+      "privacyNoticeUrl": "https://gcagochina.com/privacy.json",
+      "participationTermsPageUrl": "https://gcagochina.com/terms.html",
+      "participationTermsUrl": "https://gcagochina.com/terms.json",
+      "status": "public-privacy-and-terms-published"
     },
     "notUtility": [
       "custody",
