@@ -72,6 +72,10 @@
     {
       "platform": "Telegram",
       "url": "https://t.me/gcagochinaofficial"
+    },
+    {
+      "platform": "X",
+      "url": "https://x.com/XXYRadar"
     }
   ],
   "shortDescription": "GCA, short for Go China Access, is a fixed-supply ERC-20 token on Base Mainnet. It is a concept-stage community direction focused on the Go China macro narrative, bilingual Web3 education, public market research, and planned access to non-custodial quant risk tools.",

@@ -39,8 +39,9 @@ The pinned announcement should remain the first public reference point for visit
 If BaseScan, GeckoTerminal, DEX Screener, CoinGecko, or CoinMarketCap asks for social links, submit only:
 
 - Telegram: `https://t.me/gcagochinaofficial`
+- X: `https://x.com/XXYRadar`
 
-Do not submit the frozen X account as an official social link.
+Do not submit any other X profile as an official social link.
 
 ## Public Posting Rules
 

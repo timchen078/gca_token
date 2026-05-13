@@ -215,7 +215,7 @@
 
       .row {
         display: grid;
-        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-columns: minmax(112px, 0.75fr) minmax(0, 1.35fr);
         gap: 12px;
         align-items: start;
         border-top: 1px solid var(--line);
@@ -223,8 +223,10 @@
       }
 
       .row strong {
-        white-space: nowrap;
+        min-width: 0;
         overflow-wrap: anywhere;
+        word-break: break-word;
+        text-align: right;
       }
 
       .copy {
@@ -434,6 +436,7 @@
             <div class="row"><span><a href="https://gcagochina.com/risk.html" target="_blank" rel="noreferrer">Risk page</a></span><strong>Disclosures</strong></div>
             <div class="row"><span><a href="https://gcagochina.com/faq.html" target="_blank" rel="noreferrer">FAQ</a></span><strong>Public answers</strong></div>
             <div class="row"><span><a href="https://t.me/gcagochinaofficial" target="_blank" rel="noreferrer">Telegram</a></span><strong>Official</strong></div>
+            <div class="row"><span><a href="https://x.com/XXYRadar" target="_blank" rel="noreferrer">X</a></span><strong>Official</strong></div>
           </div>
         </div>
       </section>

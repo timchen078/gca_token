@@ -107,6 +107,7 @@ Community kit: https://gcagochina.com/community.html
 External review status: https://gcagochina.com/external-reviews.html
 Official GCA/USDT pool: https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0
 Official Telegram: https://t.me/gcagochinaofficial
+Official X: https://x.com/XXYRadar
 Official email: GCAgochina@outlook.com
 Official contact email: cxy070800@gmail.com
 
@@ -143,7 +144,7 @@ Machine-readable JSON: `https://gcagochina.com/listing-readiness.json`
 Do not submit CoinGecko or CoinMarketCap yet unless these conditions are materially stronger:
 
 - BaseScan token profile is published.
-- Website, verify page, logo, whitepaper, Telegram, and GCA/USDT pool links are stable.
+- Website, verify page, logo, whitepaper, Telegram, X, and GCA/USDT pool links are stable.
 - Liquidity and public trading activity are stronger than current starter-depth conditions.
 - Public holder activity is not based on self-trading, wash trading, or fake volume.
 - The project can still describe audit, reserve, utility, and liquidity status conservatively.

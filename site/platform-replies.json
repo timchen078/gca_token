@@ -34,7 +34,8 @@
     "wellKnownTokenIdentity": "https://gcagochina.com/.well-known/gca-token.json",
     "securityContact": "https://gcagochina.com/.well-known/security.txt",
     "baseScanContract": "https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
-    "telegram": "https://t.me/gcagochinaofficial"
+    "telegram": "https://t.me/gcagochinaofficial",
+    "x": "https://x.com/XXYRadar"
   },
   "officialMarket": {
     "pair": "GCA/USDT",
@@ -94,6 +95,7 @@
         "Brand kit: https://gcagochina.com/brand-kit.html",
         "Whitepaper: https://gcagochina.com/whitepaper.html",
         "Official Telegram: https://t.me/gcagochinaofficial",
+        "Official X: https://x.com/XXYRadar",
         "Official GCA/USDT market route: https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
         "Please let us know if any field correction or additional verification is required."
       ]

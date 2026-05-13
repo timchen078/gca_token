@@ -29,6 +29,10 @@
     {
       "platform": "Telegram",
       "url": "https://t.me/gcagochinaofficial"
+    },
+    {
+      "platform": "X",
+      "url": "https://x.com/XXYRadar"
     }
   ],
   "description": "GCA, short for Go China Access, is a fixed-supply ERC-20 token on Base Mainnet. It is a concept-stage community direction focused on the Go China macro narrative, bilingual Web3 education, public market research, and planned access to non-custodial quant risk tools. The intended Web3 Radar bridge is an access and membership layer for reports, risk-warning credits, backtests, ENTRY_READY signal review, position-size calculators, subscription discounts, and risk-control training. The contract created 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls. The official public pool is the Base Mainnet Uniswap v4 GCA/USDT pool, and the project has a disclosed owner-held reserve wallet.",
@@ -60,7 +64,7 @@
     "ownerReserveCustodyNote": "Normal owner-controlled wallet; not locked, vested, or multisig-controlled."
   },
   "doNotSubmit": [
-    "https://x.com/GCAgochina while frozen",
+    "unpublished or unofficial X profiles",
     "third-party audit claim",
     "locked reserve claim",
     "deep liquidity claim",

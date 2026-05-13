@@ -37,7 +37,8 @@
     "tokenList": "https://gcagochina.com/tokenlist.json",
     "wellKnownTokenIdentity": "https://gcagochina.com/.well-known/gca-token.json",
     "securityContact": "https://gcagochina.com/.well-known/security.txt",
-    "telegram": "https://t.me/gcagochinaofficial"
+    "telegram": "https://t.me/gcagochinaofficial",
+    "x": "https://x.com/XXYRadar"
   },
   "market": {
     "officialPair": "GCA/USDT",
@@ -123,7 +124,7 @@
   "nextActions": [
     "Wait for BaseScan email/review; do not submit duplicates unless BaseScan asks for corrections.",
     "Recheck wallet-warning UI before claiming any warning change.",
-    "Keep GCA/USDT market links, logo, whitepaper, Telegram, and metadata files live.",
+    "Keep GCA/USDT market links, logo, whitepaper, Telegram, X, and metadata files live.",
     "Use listing-readiness and market-quality pages before CoinGecko or CoinMarketCap submission.",
     "Revisit third-party audit only when partner, listing, trust, or liquidity requirements justify it."
   ]

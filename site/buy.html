@@ -213,7 +213,7 @@
 
       .row {
         display: grid;
-        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-columns: minmax(112px, 0.75fr) minmax(0, 1.35fr);
         gap: 12px;
         align-items: start;
         border-top: 1px solid var(--line);
@@ -221,7 +221,10 @@
       }
 
       .row strong {
-        white-space: nowrap;
+        min-width: 0;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+        text-align: right;
       }
 
       .step {
@@ -381,6 +384,10 @@
             </div>
             <div class="row">
               <span><a href="https://t.me/gcagochinaofficial" target="_blank" rel="noreferrer">Official Telegram</a></span>
+              <strong>Updates</strong>
+            </div>
+            <div class="row">
+              <span><a href="https://x.com/XXYRadar" target="_blank" rel="noreferrer">Official X</a></span>
               <strong>Updates</strong>
             </div>
           </div>

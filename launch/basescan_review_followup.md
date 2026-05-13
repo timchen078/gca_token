@@ -33,6 +33,7 @@ BaseScan replied that it could not process the first token update request becaus
 - External review status remains live: `https://gcagochina.com/external-reviews.html`
 - Official GCA/USDT pool remains live: `https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0`
 - Official Telegram remains live: `https://t.me/gcagochinaofficial`
+- Official X remains live: `https://x.com/XXYRadar`
 - HTTPS remains active for the website, logo, and whitepaper URLs.
 - Use official public email: `GCAgochina@outlook.com`
 - If BaseScan asks for ownership verification again, sign with the deployer wallet.
@@ -91,6 +92,7 @@ External review status: https://gcagochina.com/external-reviews.html
 Community kit: https://gcagochina.com/community.html
 Official GCA/USDT pool: https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0
 Official Telegram: https://t.me/gcagochinaofficial
+Official X: https://x.com/XXYRadar
 Official contact email: GCAgochina@outlook.com
 
 The official website now centralizes the verify page, project status, listing kit, brand kit, community kit, support page, token list, and machine-readable project JSON. Please let us know if any additional field correction or owner-wallet signature is required.

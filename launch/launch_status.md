@@ -121,7 +121,7 @@
 - Connect controlled HTTPS account UI before describing the 1,000,000 GCA Member tier as self-service claimable by users.
 - Configure a controlled HTTPS collection endpoint in `site/members.html` before asking users to rely on direct packet submission.
 - Deploy the Web3 Radar GCA intake behind the same official HTTPS origin or a reviewed reverse proxy before enabling the public `Submit Packet` button.
-- Add the official Telegram link to any BaseScan or GeckoTerminal follow-up if those reviewers ask for social links.
+- Add the official Telegram and X links to any BaseScan or GeckoTerminal follow-up if those reviewers ask for social links.
 - Replace the Telegram pinned message with `launch/telegram_pinned_buy_announcement.md` when ready.
 - Move the owner reserve to a Safe multisig or lock/vesting contract if stronger reserve assurances are needed.
 - Archive any audit quote replies from QuillAudits, Hacken, or OpenZeppelin; do not approve payment while audit is deferred.

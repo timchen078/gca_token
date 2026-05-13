@@ -215,7 +215,7 @@
 
       .row {
         display: grid;
-        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-columns: minmax(112px, 0.75fr) minmax(0, 1.35fr);
         gap: 12px;
         align-items: start;
         border-top: 1px solid var(--line);
@@ -223,8 +223,10 @@
       }
 
       .row strong {
-        white-space: nowrap;
+        min-width: 0;
         overflow-wrap: anywhere;
+        word-break: break-word;
+        text-align: right;
       }
 
       .warning {
@@ -337,6 +339,7 @@
             <div class="row"><span>Total supply</span><strong>1,000,000,000 GCA</strong></div>
             <div class="row"><span>Official website</span><strong><a href="https://gcagochina.com/">gcagochina.com</a></strong></div>
             <div class="row"><span>Official Telegram</span><strong><a href="https://t.me/gcagochinaofficial" target="_blank" rel="noreferrer">gcagochinaofficial</a></strong></div>
+            <div class="row"><span>Official X</span><strong><a href="https://x.com/XXYRadar" target="_blank" rel="noreferrer">XXYRadar</a></strong></div>
           </div>
         </div>
 

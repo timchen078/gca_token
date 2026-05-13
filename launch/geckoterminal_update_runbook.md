@@ -15,6 +15,7 @@ This runbook records the accurate GeckoTerminal token information update request
 - Official website: `https://gcagochina.com/`
 - Official contact email for GeckoTerminal submission: `GCAgochina@outlook.com`
 - Official Telegram: `https://t.me/gcagochinaofficial`
+- Official X: `https://x.com/XXYRadar`
 - Owner reserve wallet: `0x5e8F84748612B913aAcC937492AC25dc5630E246`
 - Owner reserve transfer: `0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67`
 - Official swap route: `https://app.uniswap.org/swap?chain=base&inputCurrency=0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2&outputCurrency=0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`
@@ -29,7 +30,7 @@ Do not submit a duplicate request after approval unless GeckoTerminal asks for a
 4. The whitepaper opens publicly at `https://gcagochina.com/whitepaper.html`.
 5. The BaseScan contract page opens at `https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`.
 6. The official Telegram link is available at `https://t.me/gcagochinaofficial`.
-7. No active official X link is submitted while the `@GCAgochina` account is frozen.
+7. The official X profile is available at `https://x.com/XXYRadar`.
 8. The official website keeps linking to the current GCA/USDT GeckoTerminal pool.
 
 ## Historical Browser Steps
@@ -39,7 +40,7 @@ These steps were completed from the owner's browser session on 2026-05-09:
 1. Opened the earlier GeckoTerminal pool page. That was the original 2026-05-09 submission context; do not use it as the current public pool link.
 2. Opened the `Update Token Info` form.
 3. Filled the form using `launch/geckoterminal_form_values.json`.
-4. Left social link fields blank because the official Telegram channel did not exist yet and the X account was frozen.
+4. Left social link fields blank because the official Telegram channel and current official X profile did not exist yet.
 5. Uploaded `site/assets/gca-logo.png` as the icon image.
 6. Submitted with the regular, no-fee pass.
 7. Confirmed `GCAgochina@outlook.com` by OTP.
@@ -62,10 +63,11 @@ GCA, short for Go China Access, is a fixed-supply ERC-20 token on Base Mainnet. 
 - Uniswap pool: `https://app.uniswap.org/explore/pools/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0`
 - Official swap route: `https://app.uniswap.org/swap?chain=base&inputCurrency=0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2&outputCurrency=0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`
 - Official Telegram: `https://t.me/gcagochinaofficial`
+- Official X: `https://x.com/XXYRadar`
 
 ## Do Not Submit Or Claim
 
-- Do not submit `https://x.com/GCAgochina` while the account is frozen.
+- Do not submit any X profile other than the official profile published on the website: `https://x.com/XXYRadar`.
 - Do not describe the token as externally audited or third-party audited.
 - Do not describe the owner reserve as locked, vested, or multisig-controlled.
 - Do not describe liquidity as deep or stable.
@@ -88,7 +90,8 @@ Pool: https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a
 DEX Screener: https://dexscreener.com/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0
 Owner reserve wallet: 0x5e8F84748612B913aAcC937492AC25dc5630E246
 Official Telegram: https://t.me/gcagochinaofficial
+Official X: https://x.com/XXYRadar
 
-The X account is not included because it is not currently active. The token is fixed-supply and concept-stage, with starter liquidity and no completed third-party audit.
+The official X profile is included because it is now published on the official website. The token is fixed-supply and concept-stage, with starter liquidity and no completed third-party audit.
 
 Thank you.

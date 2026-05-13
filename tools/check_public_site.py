@@ -16,6 +16,7 @@ from urllib.request import Request, urlopen
 
 DEFAULT_BASE_URL = "https://gcagochina.com/"
 MAINNET_ADDRESS = "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6"
+X_URL = "https://x.com/XXYRadar"
 OFFICIAL_POOL_ADDRESS = "0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0"
 BASE_USDT_ADDRESS = "0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2"
 OLD_WETH_POOL_ADDRESS = "0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff"
@@ -490,6 +491,8 @@ def validate_community_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong contractAddress")
     if payload.get("officialTelegram") != "https://t.me/gcagochinaofficial":
         raise SiteCheckError(f"{label}: wrong officialTelegram")
+    if payload.get("officialX") != X_URL:
+        raise SiteCheckError(f"{label}: wrong officialX")
     if market.get("pair") != "GCA/USDT":
         raise SiteCheckError(f"{label}: wrong pair")
     if market.get("poolAddress") != OFFICIAL_POOL_ADDRESS:
@@ -526,6 +529,8 @@ def validate_community_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong weeklyRadar")
     if links.get("telegram") != "https://t.me/gcagochinaofficial":
         raise SiteCheckError(f"{label}: wrong telegram")
+    if links.get("x") != X_URL:
+        raise SiteCheckError(f"{label}: wrong x")
     if links.get("roadmap") != ROADMAP_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong roadmap")
     if links.get("support") != SUPPORT_PAGE_URL:
@@ -940,8 +945,9 @@ def validate_brand_kit_page(text: str) -> None:
     assert_contains(text, "#0052FF", label)
     assert_contains(text, "Base Mainnet / 8453", label)
     assert_contains(text, MAINNET_ADDRESS, label)
+    assert_contains(text, X_URL, label)
     assert_contains(text, "Do not use this logo to imply third-party audit completion", label)
-    assert_contains(text, "Do not submit the frozen X account", label)
+    assert_contains(text, "Submit only the official X profile", label)
     assert_current_pool_text(text, label)
 
 
@@ -1034,6 +1040,9 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong onchainProofsPageUrl")
     if payload.get("onchainProofsUrl") != ONCHAIN_PROOFS_URL:
         raise SiteCheckError(f"{label}: wrong onchainProofsUrl")
+    social_links = payload.get("officialSocialLinks", [])
+    if not any(link.get("platform") == "X" and link.get("url") == X_URL for link in social_links):
+        raise SiteCheckError(f"{label}: missing official X social link")
     if market.get("officialPair") != "GCA/USDT":
         raise SiteCheckError(f"{label}: wrong officialPair")
     if market.get("poolAddress") != OFFICIAL_POOL_ADDRESS:
@@ -1064,6 +1073,8 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: unexpected community kit status")
     if payload.get("communityKit", {}).get("officialTelegram") != "https://t.me/gcagochinaofficial":
         raise SiteCheckError(f"{label}: wrong community Telegram")
+    if payload.get("communityKit", {}).get("officialX") != X_URL:
+        raise SiteCheckError(f"{label}: wrong community X")
     if payload.get("narrativeSystem", {}).get("status") != "public-narrative-system-published":
         raise SiteCheckError(f"{label}: unexpected narrative system status")
     if payload.get("narrativeSystem", {}).get("tagline") != "Narrative meets risk control.":
@@ -1328,6 +1339,8 @@ def validate_well_known_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong onchainProofsPage")
     if urls.get("onchainProofs") != ONCHAIN_PROOFS_URL:
         raise SiteCheckError(f"{label}: wrong onchainProofs")
+    if urls.get("x") != X_URL:
+        raise SiteCheckError(f"{label}: wrong x")
     if market.get("officialPair") != "GCA/USDT":
         raise SiteCheckError(f"{label}: wrong officialPair")
     if market.get("poolAddress") != OFFICIAL_POOL_ADDRESS:

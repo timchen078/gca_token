@@ -33,6 +33,7 @@ This package records the values used for the 2026-05-13 BaseScan token informati
 - Logo SVG: `https://gcagochina.com/assets/gca-logo.svg`
 - Logo PNG: `https://gcagochina.com/assets/gca-logo.png`
 - Official Telegram: `https://t.me/gcagochinaofficial`
+- Official X: `https://x.com/XXYRadar`
 - Official email: `GCAgochina@outlook.com`
 
 ## Description
@@ -70,7 +71,7 @@ Used for the 2026-05-13 resubmission:
 1. Confirm `https://gcagochina.com/` loads over HTTPS.
 2. Confirm `https://gcagochina.com/assets/gca-logo.svg` loads and is the 32x32 SVG logo.
 3. Confirm the official email `GCAgochina@outlook.com` is visible on the website support page.
-4. Include the official Telegram link.
+4. Include the official Telegram and X links.
 5. Include the whitepaper and listing kit URLs.
 6. Include the Base Mainnet chain ID and exact token contract.
 7. Include the official GCA/USDT pool only; do not use the old GCA/WETH pilot pool as the main market.
