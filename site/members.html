@@ -219,6 +219,12 @@
         font-size: 12px;
       }
 
+      .field textarea:not(#packetOutput) {
+        min-height: 84px;
+        font-family: inherit;
+        font-size: inherit;
+      }
+
       .check {
         display: grid;
         grid-template-columns: 18px minmax(0, 1fr);
@@ -426,6 +432,18 @@
                 <option value="general_waitlist">General Waitlist</option>
               </select>
             </div>
+            <div class="field">
+              <label for="memberHoldingStartDate">GCA Member Holding Start Date</label>
+              <input id="memberHoldingStartDate" name="memberHoldingStartDate" type="date">
+            </div>
+            <div class="field">
+              <label for="memberEvidenceTxHash">Public Purchase or Transfer Tx Hash</label>
+              <input id="memberEvidenceTxHash" name="memberEvidenceTxHash" type="text" autocomplete="off" placeholder="0x...">
+            </div>
+            <div class="field">
+              <label for="memberEvidenceNote">Member Evidence Note</label>
+              <textarea id="memberEvidenceNote" name="memberEvidenceNote" placeholder="Optional note for 1,000,000 GCA / 30-day member benefit review"></textarea>
+            </div>
             <label class="check">
               <input id="terms" type="checkbox">
               <span>I understand this page is pre-registration only, and I have reviewed the <a href="privacy.html">Privacy Notice</a> and <a href="terms.html">Participation Terms</a>. No benefit is claimable from this browser page until Web3 Radar releases controlled HTTPS account UI for wallet verification and ledger records.</span>
@@ -473,6 +491,7 @@
             <div class="row"><span>Holder Bonus threshold</span><strong>10,000 GCA</strong></div>
             <div class="row"><span>GCA Member threshold</span><strong>1,000,000 GCA</strong></div>
             <div class="row"><span>GCA Member holding period</span><strong>30 consecutive days</strong></div>
+            <div class="row"><span>GCA Member evidence</span><strong>Public transaction hash + holding start date</strong></div>
             <div class="row"><span>GCA Member benefit</span><strong>10,000 GCA after approval</strong></div>
             <div class="row"><span>Verification method</span><strong>Backend balanceOf check</strong></div>
             <div class="row"><span>100 credits use window after ledger activation</span><strong>180 days</strong></div>
@@ -559,6 +578,9 @@
       const wallet = document.getElementById("wallet");
       const declaredBalance = document.getElementById("declaredBalance");
       const programIntent = document.getElementById("programIntent");
+      const memberHoldingStartDate = document.getElementById("memberHoldingStartDate");
+      const memberEvidenceTxHash = document.getElementById("memberEvidenceTxHash");
+      const memberEvidenceNote = document.getElementById("memberEvidenceNote");
       const terms = document.getElementById("terms");
       const security = document.getElementById("security");
       const packetOutput = document.getElementById("packetOutput");
@@ -583,6 +605,42 @@
 
       function isWalletAddress(value) {
         return /^0x[a-fA-F0-9]{40}$/.test(String(value || "").trim());
+      }
+
+      function isTxHash(value) {
+        const trimmed = String(value || "").trim();
+        if (!trimmed) return false;
+        return /^0x[a-fA-F0-9]{64}$/.test(trimmed);
+      }
+
+      function holdingDaysFromDate(value) {
+        if (!value) return 0;
+        const start = new Date(`${value}T00:00:00Z`);
+        if (Number.isNaN(start.getTime())) return 0;
+        const now = new Date();
+        const diffMs = now.getTime() - start.getTime();
+        if (diffMs <= 0) return 0;
+        return Math.floor(diffMs / 86400000);
+      }
+
+      function buildMemberEvidence() {
+        const holdingStartDate = memberHoldingStartDate.value;
+        const daysVerifiedByUserInput = holdingDaysFromDate(holdingStartDate);
+        const txHash = memberEvidenceTxHash.value.trim();
+        return {
+          status: "user_supplied_pending_review",
+          purpose: "GCA Member 1,000,000 GCA / 30-day holding-period review",
+          minimumHolding: "1000000 GCA",
+          minimumHoldingPeriod: `${MEMBER_HOLD_DAYS} consecutive days`,
+          holdingStartDate,
+          daysSinceHoldingStartPreview: daysVerifiedByUserInput,
+          holdingPeriodPreviewEligible: daysVerifiedByUserInput >= MEMBER_HOLD_DAYS,
+          evidenceTxHash: txHash,
+          evidenceTxHashFormatOk: isTxHash(txHash),
+          evidenceNote: memberEvidenceNote.value.trim(),
+          finalEligibilityStillRequiresSupportAndLedgerReview: true,
+          doesNotCreateLedgerRecord: true
+        };
       }
 
       function classify(balance) {
@@ -700,8 +758,9 @@
       function buildPacket() {
         const balance = parseBalance(declaredBalance.value);
         const tier = classify(balance);
+        const memberEvidence = buildMemberEvidence();
         return {
-          packetVersion: "gca_member_preregistration_v1",
+          packetVersion: "gca_member_preregistration_v2",
           createdAt: new Date().toISOString(),
           status: "local-only-pre-registration-backend-verification-ready-public-claim-not-connected",
           network: "Base Mainnet",
@@ -718,6 +777,7 @@
           },
           declaredGcaBalance: String(declaredBalance.value || "").trim(),
           onchainBalancePreview: lastOnchainCheck,
+          memberBenefitReviewEvidence: memberEvidence,
           plannedTierPreview: tier.tier,
           eligibleProgramsPreview: tier.eligiblePrograms,
           programIntent: programIntent.value,
@@ -735,6 +795,7 @@
               benefit: "GCA Member status plus one-time 10,000 GCA member benefit review after approval",
               memberBenefitAmount: "10000 GCA",
               memberBenefitSource: "project or owner-held reserve transfer only; no new minting",
+              evidenceRequired: "public purchase or transfer transaction hash plus 30 consecutive days of holding evidence",
               refreshCadence: `${MEMBER_REFRESH_DAYS} days after activation, or earlier manual recheck`,
               accessScope: "one-time 10,000 GCA member benefit, higher utility credit limits, member research notes, priority report queue, member training sessions, and priority support",
               status: "backend-ledger-ready-public-claim-not-connected"
@@ -752,7 +813,7 @@
           boundaries: [
             "No private key, seed phrase, exchange API secret, withdrawal permission, or custody request.",
             "No cash, income, reimbursement, trading permission, or risk-control bypass. The planned 10,000 GCA member benefit requires 30-day holding review and is not self-service live.",
-            "Final eligibility requires Web3 Radar account release, wallet balance verification, and ledger record."
+            "Final eligibility requires Web3 Radar account release, wallet balance verification, support review, holding-period review, and ledger record."
           ],
           officialContactEmail: CONTACT_EMAIL
         };
