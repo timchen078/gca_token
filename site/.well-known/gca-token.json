@@ -70,6 +70,8 @@
     "memberLedgerSchema": "https://gcagochina.com/member-ledger.json",
     "memberBenefitPage": "https://gcagochina.com/member-benefit.html",
     "memberBenefitJson": "https://gcagochina.com/member-benefit.json",
+    "memberBenefitTransferPage": "https://gcagochina.com/member-benefit-transfer.html",
+    "memberBenefitTransferJson": "https://gcagochina.com/member-benefit-transfer.json",
     "supportPage": "https://gcagochina.com/support.html",
     "supportJson": "https://gcagochina.com/support.json",
     "privacyNoticePage": "https://gcagochina.com/privacy.html",

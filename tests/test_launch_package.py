@@ -42,6 +42,8 @@ MEMBER_LEDGER_PAGE_URL = "https://gcagochina.com/member-ledger.html"
 MEMBER_LEDGER_URL = "https://gcagochina.com/member-ledger.json"
 MEMBER_BENEFIT_PAGE_URL = "https://gcagochina.com/member-benefit.html"
 MEMBER_BENEFIT_URL = "https://gcagochina.com/member-benefit.json"
+MEMBER_BENEFIT_TRANSFER_PAGE_URL = "https://gcagochina.com/member-benefit-transfer.html"
+MEMBER_BENEFIT_TRANSFER_URL = "https://gcagochina.com/member-benefit-transfer.json"
 SUPPORT_PAGE_URL = "https://gcagochina.com/support.html"
 SUPPORT_URL = "https://gcagochina.com/support.json"
 ROADMAP_PAGE_URL = "https://gcagochina.com/roadmap.html"
@@ -120,6 +122,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("/member-ledger.json", script)
         self.assertIn("/member-benefit.html", script)
         self.assertIn("/member-benefit.json", script)
+        self.assertIn("/member-benefit-transfer.html", script)
+        self.assertIn("/member-benefit-transfer.json", script)
         self.assertIn("/support.html", script)
         self.assertIn("/support.json", script)
         self.assertIn("/roadmap.html", script)
@@ -178,6 +182,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("validate_member_program_json", script)
         self.assertIn("validate_member_ledger_page", script)
         self.assertIn("validate_member_ledger_json", script)
+        self.assertIn("validate_member_benefit_transfer_page", script)
+        self.assertIn("validate_member_benefit_transfer_json", script)
         self.assertIn("validate_support_page", script)
         self.assertIn("validate_support_json", script)
         self.assertIn("validate_roadmap_page", script)
@@ -261,6 +267,8 @@ class LaunchPackageTests(unittest.TestCase):
         module.validate_member_ledger_json((ROOT / "site" / "member-ledger.json").read_text())
         module.validate_member_benefit_page((ROOT / "site" / "member-benefit.html").read_text())
         module.validate_member_benefit_json((ROOT / "site" / "member-benefit.json").read_text())
+        module.validate_member_benefit_transfer_page((ROOT / "site" / "member-benefit-transfer.html").read_text())
+        module.validate_member_benefit_transfer_json((ROOT / "site" / "member-benefit-transfer.json").read_text())
         module.validate_support_page((ROOT / "site" / "support.html").read_text())
         module.validate_support_json((ROOT / "site" / "support.json").read_text())
         module.validate_roadmap_page((ROOT / "site" / "roadmap.html").read_text())
@@ -518,6 +526,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Allow: /member-ledger.json", robots)
         self.assertIn("Allow: /member-benefit.html", robots)
         self.assertIn("Allow: /member-benefit.json", robots)
+        self.assertIn("Allow: /member-benefit-transfer.html", robots)
+        self.assertIn("Allow: /member-benefit-transfer.json", robots)
         self.assertIn("Allow: /support.html", robots)
         self.assertIn("Allow: /support.json", robots)
         self.assertIn("Allow: /roadmap.html", robots)
@@ -591,6 +601,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(MEMBER_LEDGER_URL, sitemap)
         self.assertIn(MEMBER_BENEFIT_PAGE_URL, sitemap)
         self.assertIn(MEMBER_BENEFIT_URL, sitemap)
+        self.assertIn(MEMBER_BENEFIT_TRANSFER_PAGE_URL, sitemap)
+        self.assertIn(MEMBER_BENEFIT_TRANSFER_URL, sitemap)
         self.assertIn(SUPPORT_PAGE_URL, sitemap)
         self.assertIn(SUPPORT_URL, sitemap)
         self.assertIn(ROADMAP_PAGE_URL, sitemap)
@@ -651,6 +663,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(identity["officialUrls"]["memberLedgerSchema"], MEMBER_LEDGER_URL)
         self.assertEqual(identity["officialUrls"]["memberBenefitPage"], MEMBER_BENEFIT_PAGE_URL)
         self.assertEqual(identity["officialUrls"]["memberBenefitJson"], MEMBER_BENEFIT_URL)
+        self.assertEqual(identity["officialUrls"]["memberBenefitTransferPage"], MEMBER_BENEFIT_TRANSFER_PAGE_URL)
+        self.assertEqual(identity["officialUrls"]["memberBenefitTransferJson"], MEMBER_BENEFIT_TRANSFER_URL)
         self.assertEqual(identity["officialUrls"]["supportPage"], SUPPORT_PAGE_URL)
         self.assertEqual(identity["officialUrls"]["supportJson"], SUPPORT_URL)
         self.assertEqual(identity["officialUrls"]["roadmapPage"], ROADMAP_PAGE_URL)
@@ -1124,6 +1138,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("memberBenefitReviewEvidence", page)
         self.assertIn("GCA Member holding start date", page)
         self.assertIn("GCA Member evidence note", page)
+        self.assertIn("Transfer Runbook", page)
         self.assertIn(MAINNET_ADDRESS, page)
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, page)
         self.assertNotIn("GCA/WETH", page)
@@ -1159,6 +1174,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(support["publicLinks"]["participationTerms"], PARTICIPATION_TERMS_PAGE_URL)
         self.assertEqual(support["publicLinks"]["memberBenefitReview"], MEMBER_BENEFIT_PAGE_URL)
         self.assertEqual(support["publicLinks"]["memberBenefitReviewJson"], MEMBER_BENEFIT_URL)
+        self.assertEqual(support["publicLinks"]["memberBenefitTransfer"], MEMBER_BENEFIT_TRANSFER_PAGE_URL)
+        self.assertEqual(support["publicLinks"]["memberBenefitTransferJson"], MEMBER_BENEFIT_TRANSFER_URL)
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, json.dumps(support))
         self.assertNotIn("GCA/WETH", json.dumps(support))
 
@@ -1429,6 +1446,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("evidenceTxHashFormatOk", page)
         self.assertIn("memberBenefitReviewEvidenceStatus", page)
         self.assertIn("memberBenefitTransferTx", page)
+        self.assertIn("member-benefit-transfer.html", page)
         self.assertIn("Base Mainnet / 8453", page)
         self.assertIn(MAINNET_ADDRESS, page)
         self.assertIn("/gca/member-access", page)
@@ -1455,6 +1473,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(ledger["publicUrls"]["memberLedgerSchema"], MEMBER_LEDGER_URL)
         self.assertEqual(ledger["publicUrls"]["memberBenefitPage"], MEMBER_BENEFIT_PAGE_URL)
         self.assertEqual(ledger["publicUrls"]["memberBenefitJson"], MEMBER_BENEFIT_URL)
+        self.assertEqual(ledger["publicUrls"]["memberBenefitTransferPage"], MEMBER_BENEFIT_TRANSFER_PAGE_URL)
+        self.assertEqual(ledger["publicUrls"]["memberBenefitTransferJson"], MEMBER_BENEFIT_TRANSFER_URL)
         self.assertEqual(ledger["preparedPaths"]["memberAccessPage"], "/gca/member-access")
         self.assertEqual(ledger["preparedPaths"]["walletVerifications"], "/gca/wallet-verifications")
         self.assertEqual(ledger["preparedPaths"]["creditLedger"], "/gca/credit-ledger")
@@ -1508,6 +1528,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("10,000 GCA", page)
         self.assertIn("Reserve transfer", page)
         self.assertIn("No minting and no automatic transfer", page)
+        self.assertIn("Transfer Runbook", page)
         self.assertIn("holdingStartDate", page)
         self.assertIn("evidenceTxHash", page)
         self.assertIn("evidenceTxHashFormatOk", page)
@@ -1537,11 +1558,66 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("the 10,000 GCA member benefit is self-service claimable today", benefit["publicClaimBoundaries"]["doNotClaim"])
         self.assertEqual(benefit["publicLinks"]["memberBenefitPage"], MEMBER_BENEFIT_PAGE_URL)
         self.assertEqual(benefit["publicLinks"]["memberBenefitJson"], MEMBER_BENEFIT_URL)
+        self.assertEqual(benefit["publicLinks"]["memberBenefitTransferPage"], MEMBER_BENEFIT_TRANSFER_PAGE_URL)
+        self.assertEqual(benefit["publicLinks"]["memberBenefitTransferJson"], MEMBER_BENEFIT_TRANSFER_URL)
         self.assertEqual(benefit["publicLinks"]["memberProgram"], MEMBER_PROGRAM_URL)
         self.assertEqual(benefit["publicLinks"]["memberLedger"], MEMBER_LEDGER_PAGE_URL)
         self.assertEqual(benefit["publicLinks"]["support"], SUPPORT_PAGE_URL)
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, json.dumps(benefit))
         self.assertNotIn("GCA/WETH", json.dumps(benefit))
+
+    def test_member_benefit_transfer_page_and_json_define_manual_runbook(self):
+        page = (ROOT / "site" / "member-benefit-transfer.html").read_text()
+        transfer = json.loads((ROOT / "site" / "member-benefit-transfer.json").read_text())
+
+        self.assertIn("GCA Member Benefit Transfer Runbook", page)
+        self.assertIn("Transfer Runbook JSON", page)
+        self.assertIn("10,000 GCA", page)
+        self.assertIn("Owner reserve", page)
+        self.assertIn("Manual only", page)
+        self.assertIn("memberBenefitTransferTx", page)
+        self.assertIn("gca_member_preregistration_v2", page)
+        self.assertIn("memberBenefitReviewEvidenceStatus", page)
+        self.assertIn("evidenceTxHashFormatOk", page)
+        self.assertIn("Base Mainnet / chainId 8453", page)
+        self.assertIn(MAINNET_ADDRESS, page)
+        self.assertIn(RESERVE_WALLET, page)
+        self.assertIn("not self-service claimable", page)
+        self.assertIn("Private key or seed phrase", page)
+        self.assertNotIn(OLD_WETH_POOL_ADDRESS, page)
+        self.assertNotIn("GCA/WETH", page)
+
+        self.assertEqual(transfer["schema"], MEMBER_BENEFIT_TRANSFER_URL)
+        self.assertEqual(transfer["pageUrl"], MEMBER_BENEFIT_TRANSFER_PAGE_URL)
+        self.assertEqual(transfer["status"], "public-member-benefit-transfer-runbook-published-transfer-not-automatic")
+        self.assertEqual(transfer["chainId"], 8453)
+        self.assertEqual(transfer["token"]["contractAddress"], MAINNET_ADDRESS)
+        self.assertFalse(transfer["token"]["mintingSupportedAfterDeployment"])
+        self.assertEqual(transfer["transferPolicy"]["memberBenefitAmount"], "10000 GCA")
+        self.assertEqual(transfer["transferPolicy"]["sourceWallet"], RESERVE_WALLET)
+        self.assertFalse(transfer["transferPolicy"]["mintingAllowed"])
+        self.assertFalse(transfer["transferPolicy"]["automaticTransferAllowed"])
+        self.assertFalse(transfer["transferPolicy"]["selfServiceClaimable"])
+        self.assertTrue(transfer["transferPolicy"]["recipientMustEqualVerifiedMemberWallet"])
+        self.assertIn("memberBenefitReviewEvidenceStatus is eligible", transfer["approvalPrerequisites"])
+        self.assertIn("no prior memberBenefitTransferTx exists for the same registered user", transfer["approvalPrerequisites"])
+        step_ids = {step["id"] for step in transfer["manualTransferSteps"]}
+        self.assertIn("send-member-benefit", step_ids)
+        self.assertIn("record-transfer", step_ids)
+        self.assertIn("memberBenefitTransferTx", transfer["requiredLedgerFieldsAfterTransfer"])
+        self.assertIn("sourceWallet", transfer["requiredLedgerFieldsAfterTransfer"])
+        self.assertIn("recipientWallet", transfer["requiredLedgerFieldsAfterTransfer"])
+        self.assertIn("private key", transfer["doNotCollect"])
+        self.assertIn("seed phrase", transfer["doNotCollect"])
+        self.assertEqual(transfer["publicLinks"]["memberBenefitTransferPage"], MEMBER_BENEFIT_TRANSFER_PAGE_URL)
+        self.assertEqual(transfer["publicLinks"]["memberBenefitTransferJson"], MEMBER_BENEFIT_TRANSFER_URL)
+        self.assertEqual(transfer["publicLinks"]["memberBenefitPage"], MEMBER_BENEFIT_PAGE_URL)
+        self.assertEqual(transfer["publicLinks"]["memberLedgerJson"], MEMBER_LEDGER_URL)
+        self.assertEqual(transfer["publicLinks"]["support"], SUPPORT_PAGE_URL)
+        self.assertIn("manual transfer runbook", " ".join(transfer["publicClaimBoundaries"]["safeClaims"]))
+        self.assertIn("self-service claimable today", " ".join(transfer["publicClaimBoundaries"]["doNotClaim"]))
+        self.assertNotIn(OLD_WETH_POOL_ADDRESS, json.dumps(transfer))
+        self.assertNotIn("GCA/WETH", json.dumps(transfer))
 
     def test_utility_page_connects_gca_to_quant_tools_safely(self):
         utility = (ROOT / "site" / "utility.html").read_text()
@@ -2859,6 +2935,10 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(project["memberProgramRulesUrl"], MEMBER_PROGRAM_URL)
         self.assertEqual(project["memberLedgerPageUrl"], MEMBER_LEDGER_PAGE_URL)
         self.assertEqual(project["memberLedgerSchemaUrl"], MEMBER_LEDGER_URL)
+        self.assertEqual(project["memberBenefitPageUrl"], MEMBER_BENEFIT_PAGE_URL)
+        self.assertEqual(project["memberBenefitJsonUrl"], MEMBER_BENEFIT_URL)
+        self.assertEqual(project["memberBenefitTransferPageUrl"], MEMBER_BENEFIT_TRANSFER_PAGE_URL)
+        self.assertEqual(project["memberBenefitTransferJsonUrl"], MEMBER_BENEFIT_TRANSFER_URL)
         self.assertEqual(project["supportPageUrl"], SUPPORT_PAGE_URL)
         self.assertEqual(project["supportJsonUrl"], SUPPORT_URL)
         self.assertEqual(project["roadmapPageUrl"], ROADMAP_PAGE_URL)
@@ -3681,6 +3761,10 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(extensions["memberProgramRules"], MEMBER_PROGRAM_URL)
         self.assertEqual(extensions["memberLedgerPage"], MEMBER_LEDGER_PAGE_URL)
         self.assertEqual(extensions["memberLedgerSchema"], MEMBER_LEDGER_URL)
+        self.assertEqual(extensions["memberBenefitPage"], MEMBER_BENEFIT_PAGE_URL)
+        self.assertEqual(extensions["memberBenefitJson"], MEMBER_BENEFIT_URL)
+        self.assertEqual(extensions["memberBenefitTransferPage"], MEMBER_BENEFIT_TRANSFER_PAGE_URL)
+        self.assertEqual(extensions["memberBenefitTransferJson"], MEMBER_BENEFIT_TRANSFER_URL)
         self.assertEqual(extensions["supportPage"], SUPPORT_PAGE_URL)
         self.assertEqual(extensions["supportJson"], SUPPORT_URL)
         self.assertEqual(extensions["roadmapPage"], ROADMAP_PAGE_URL)
@@ -3784,6 +3868,10 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "site" / "member-program.json",
             ROOT / "site" / "member-ledger.html",
             ROOT / "site" / "member-ledger.json",
+            ROOT / "site" / "member-benefit.html",
+            ROOT / "site" / "member-benefit.json",
+            ROOT / "site" / "member-benefit-transfer.html",
+            ROOT / "site" / "member-benefit-transfer.json",
             ROOT / "site" / "support.html",
             ROOT / "site" / "support.json",
             ROOT / "site" / "roadmap.html",
@@ -4018,6 +4106,10 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "site" / "product.json",
             ROOT / "site" / "member-ledger.html",
             ROOT / "site" / "member-ledger.json",
+            ROOT / "site" / "member-benefit.html",
+            ROOT / "site" / "member-benefit.json",
+            ROOT / "site" / "member-benefit-transfer.html",
+            ROOT / "site" / "member-benefit-transfer.json",
             ROOT / "site" / "support.html",
             ROOT / "site" / "support.json",
             ROOT / "site" / "roadmap.html",
