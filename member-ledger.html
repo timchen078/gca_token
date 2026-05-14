@@ -360,6 +360,7 @@
             <div class="row"><span>GCA Member ledger</span><strong><code>/gca/member-ledger</code></strong></div>
             <div class="row"><span>Support review queue</span><strong><code>/gca/member-review</code></strong></div>
             <div class="row"><span>Public member benefit rules</span><strong><a href="member-benefit.html">member-benefit.html</a></strong></div>
+            <div class="row"><span>Member packet version</span><strong><code>gca_member_preregistration_v2</code></strong></div>
           </div>
         </div>
 
@@ -378,15 +379,19 @@
       <section class="section grid" aria-label="Record schemas">
         <div class="panel">
           <h3>Pre-Registration Record</h3>
-          <p class="note">Fields: registrationId, createdAt, email, Telegram, walletAddress, declaredGcaBalance, programIntent, termsAccepted, securityBoundaryAccepted, and source.</p>
+          <p class="note">Fields: registrationId, createdAt, email, Telegram, walletAddress, declaredGcaBalance, programIntent, memberBenefitReviewEvidence, termsAccepted, securityBoundaryAccepted, and source.</p>
         </div>
         <div class="panel">
           <h3>Wallet Verification Record</h3>
           <p class="note">Fields: walletAddress, chainId, contractAddress, checkedAt, gcaBalance, holderBonusEligible, gcaMemberEligible, holdingPeriodDaysVerified, verificationProvider, and status.</p>
         </div>
         <div class="panel">
+          <h3>Member Benefit Evidence Record</h3>
+          <p class="note">Fields: holdingStartDate, daysSinceHoldingStartPreview, holdingPeriodPreviewEligible, evidenceTxHash, evidenceTxHashFormatOk, evidenceNote, final review flag, and no-ledger-write flag.</p>
+        </div>
+        <div class="panel">
           <h3>Support Review Record</h3>
-          <p class="note">Statuses: received, wallet_pending, eligible, needs_more_information, rejected, and ledger_recorded.</p>
+          <p class="note">Fields: reviewId, registrationId, status, updatedAt, publicEvidenceReference, and supportNote. Statuses: received, wallet_pending, eligible, needs_more_information, rejected, and ledger_recorded.</p>
         </div>
       </section>
 
@@ -408,6 +413,9 @@
             <div class="row"><span>Minimum holding</span><strong>1,000,000 GCA</strong></div>
             <div class="row"><span>Minimum holding period</span><strong>30 consecutive days</strong></div>
             <div class="row"><span>Member benefit</span><strong>10,000 GCA after approval</strong></div>
+            <div class="row"><span>Evidence tx hash</span><strong><code>evidenceTxHash</code> with <code>0x</code> format check</strong></div>
+            <div class="row"><span>Evidence status</span><strong><code>memberBenefitReviewEvidenceStatus</code></strong></div>
+            <div class="row"><span>Benefit transfer</span><strong><code>memberBenefitTransferTx</code> after approval</strong></div>
             <div class="row"><span>Tier name</span><strong>GCA Member</strong></div>
             <div class="row"><span>Balance refresh cadence</span><strong>30 days</strong></div>
             <div class="row"><span>Allowed statuses</span><strong>queued / active / needs_refresh / paused</strong></div>
