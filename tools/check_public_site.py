@@ -42,6 +42,8 @@ PRODUCT_PAGE_URL = "https://gcagochina.com/product.html"
 PRODUCT_URL = "https://gcagochina.com/product.json"
 ACCESS_PAGE_URL = "https://gcagochina.com/access.html"
 ACCESS_URL = "https://gcagochina.com/access.json"
+ACCESS_API_PAGE_URL = "https://gcagochina.com/access-api.html"
+ACCESS_API_URL = "https://gcagochina.com/access-api.json"
 CREDITS_PAGE_URL = "https://gcagochina.com/credits.html"
 CREDITS_URL = "https://gcagochina.com/credits.json"
 RELEASE_GATES_PAGE_URL = "https://gcagochina.com/release-gates.html"
@@ -166,6 +168,7 @@ def validate_root(text: str) -> None:
     assert_contains(text, "Utility JSON", label)
     assert_contains(text, "Product Spec", label)
     assert_contains(text, "Access Portal", label)
+    assert_contains(text, "Access API", label)
     assert_contains(text, "Credits Catalog", label)
     assert_contains(text, "Release Gates", label)
     assert_contains(text, "Privacy Notice", label)
@@ -825,6 +828,10 @@ def validate_utility_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong accessPortalPage")
     if links.get("accessPortal") != ACCESS_URL:
         raise SiteCheckError(f"{label}: wrong accessPortal")
+    if links.get("accessApiPage") != ACCESS_API_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong accessApiPage")
+    if links.get("accessApi") != ACCESS_API_URL:
+        raise SiteCheckError(f"{label}: wrong accessApi")
     if "GCA has published a public utility bridge specification." not in boundaries.get("safeClaims", []):
         raise SiteCheckError(f"{label}: missing utility safe claim")
     if not any("credits or member status are cash" in item for item in boundaries.get("doNotClaim", [])):
@@ -839,6 +846,7 @@ def validate_product_page(text: str) -> None:
     assert_contains(text, "GCA AI Quant Access Product Spec", label)
     assert_contains(text, "Product JSON", label)
     assert_contains(text, "Access Portal", label)
+    assert_contains(text, "Access API", label)
     assert_contains(text, "Release Gates", label)
     assert_contains(text, "Credits Catalog", label)
     assert_contains(text, "public product spec only", label)
@@ -916,6 +924,8 @@ def validate_product_json(text: str) -> None:
             raise SiteCheckError(f"{label}: missing release gate {gate}")
     if "access-portal-blueprint" not in release_gate_ids:
         raise SiteCheckError(f"{label}: missing access portal blueprint gate")
+    if "access-api-contract" not in release_gate_ids:
+        raise SiteCheckError(f"{label}: missing access API contract gate")
     if access.get("holderBonusMinimum") != "10000 GCA":
         raise SiteCheckError(f"{label}: wrong holder bonus minimum")
     if access.get("holderBonusCreditAmount") != "100 Web3 Radar utility credits":
@@ -965,6 +975,10 @@ def validate_product_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong accessPortalPage")
     if links.get("accessPortal") != ACCESS_URL:
         raise SiteCheckError(f"{label}: wrong accessPortal")
+    if links.get("accessApiPage") != ACCESS_API_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong accessApiPage")
+    if links.get("accessApi") != ACCESS_API_URL:
+        raise SiteCheckError(f"{label}: wrong accessApi")
     if links.get("utilityJson") != UTILITY_URL:
         raise SiteCheckError(f"{label}: wrong utilityJson")
     if links.get("memberLedger") != MEMBER_LEDGER_URL:
@@ -982,6 +996,7 @@ def validate_access_page(text: str) -> None:
     label = "/access.html"
     assert_contains(text, "GCA Access Portal Blueprint", label)
     assert_contains(text, "Access Portal JSON", label)
+    assert_contains(text, "Access API", label)
     assert_contains(text, "blueprint only", label)
     assert_contains(text, "controlled HTTPS account UI is not live", label)
     assert_contains(text, "direct submission is not connected", label)
@@ -1132,6 +1147,10 @@ def validate_access_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong accessPortalPage")
     if links.get("accessPortal") != ACCESS_URL:
         raise SiteCheckError(f"{label}: wrong accessPortal")
+    if links.get("accessApiPage") != ACCESS_API_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong accessApiPage")
+    if links.get("accessApi") != ACCESS_API_URL:
+        raise SiteCheckError(f"{label}: wrong accessApi")
     if links.get("creditsCatalog") != CREDITS_URL:
         raise SiteCheckError(f"{label}: wrong creditsCatalog")
     if links.get("releaseGates") != RELEASE_GATES_URL:
@@ -1151,11 +1170,165 @@ def validate_access_json(text: str) -> None:
     assert_not_contains(json.dumps(payload), "GCA/WETH", label)
 
 
+def validate_access_api_page(text: str) -> None:
+    label = "/access-api.html"
+    assert_contains(text, "GCA Access API Contract", label)
+    assert_contains(text, "Access API JSON", label)
+    assert_contains(text, "contract only", label)
+    assert_contains(text, "not live today", label)
+    assert_contains(text, "not a public submission endpoint", label)
+    assert_contains(text, "POST", label)
+    assert_contains(text, "/gca/pre-registrations", label)
+    assert_contains(text, "/gca/wallet-verifications", label)
+    assert_contains(text, "/gca/credit-ledger", label)
+    assert_contains(text, "/gca/member-ledger", label)
+    assert_contains(text, "/gca/support-review", label)
+    assert_contains(text, "/gca/member-review", label)
+    assert_contains(text, "eth_call", label)
+    assert_contains(text, "balanceOf", label)
+    assert_contains(text, "100 Web3 Radar utility credits", label)
+    assert_contains(text, "GCA Member", label)
+    assert_contains(text, "controlled HTTPS origin", label)
+    assert_contains(text, "authenticated account session", label)
+    assert_contains(text, "CSRF protection", label)
+    assert_contains(text, "rate limits", label)
+    assert_contains(text, "structured audit logs", label)
+    assert_contains(text, "Private key or seed phrase", label)
+    assert_contains(text, "Exchange API secret", label)
+    assert_contains(text, "Withdrawal permission", label)
+    assert_contains(text, "Custody request", label)
+    assert_contains(text, MAINNET_ADDRESS, label)
+    assert_contains(text, BASE_USDT_ADDRESS, label)
+    assert_current_pool_text(text, label)
+    assert_no_forbidden_public_claims(text, label)
+
+
+def validate_access_api_json(text: str) -> None:
+    label = "/access-api.json"
+    payload = load_json(text, label)
+    state = payload.get("currentState", {})
+    security = payload.get("securityModel", {})
+    endpoints = payload.get("endpoints", [])
+    endpoint_map = {f"{item.get('method')} {item.get('path')}": item for item in endpoints}
+    thresholds = payload.get("eligibilityThresholds", {})
+    market = payload.get("officialMarket", {})
+    links = payload.get("officialLinks", {})
+    boundaries = payload.get("publicClaimBoundaries", {})
+
+    if payload.get("schema") != ACCESS_API_URL:
+        raise SiteCheckError(f"{label}: wrong schema")
+    if payload.get("pageUrl") != ACCESS_API_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong pageUrl")
+    if payload.get("status") != "public-access-api-contract-published":
+        raise SiteCheckError(f"{label}: wrong status")
+    if payload.get("chainId") != 8453:
+        raise SiteCheckError(f"{label}: wrong chainId")
+    if payload.get("contractAddress") != MAINNET_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong contractAddress")
+    if state.get("currentStage") != "contract-only":
+        raise SiteCheckError(f"{label}: wrong currentStage")
+    if state.get("contractOnly") is not True:
+        raise SiteCheckError(f"{label}: contractOnly must be true")
+    for key in (
+        "backendLive",
+        "publicEndpointLive",
+        "controlledHttpsAccountUiLive",
+        "directSubmissionEndpointConfigured",
+        "creditsSelfServiceClaimable",
+        "gcaMemberSelfServiceClaimable",
+        "liveTradingEnabled",
+    ):
+        if state.get(key) is not False:
+            raise SiteCheckError(f"{label}: {key} must be false")
+    for key in (
+        "controlledHttpsOriginRequired",
+        "authenticatedAccountSessionRequired",
+        "csrfProtectionRequiredForStateChangingRoutes",
+        "rateLimitsRequired",
+        "structuredAuditLogsRequired",
+        "serverSideChainValidationRequired",
+        "serverSideContractValidationRequired",
+        "walletVerificationReadOnly",
+        "usesEthCall",
+        "usesErc20BalanceOf",
+    ):
+        if security.get(key) is not True:
+            raise SiteCheckError(f"{label}: {key} must be true")
+    for key in (
+        "requiresSignatureForBalanceRead",
+        "requiresTransactionForBalanceRead",
+        "custody",
+        "withdrawalPermission",
+        "privateKeyCollection",
+        "seedPhraseCollection",
+        "exchangeApiSecretCollection",
+        "automaticLiveTradingEnabled",
+        "riskControlBypassAllowed",
+    ):
+        if security.get(key) is not False:
+            raise SiteCheckError(f"{label}: {key} must be false")
+    for endpoint_key in (
+        "POST /gca/pre-registrations",
+        "POST /gca/wallet-verifications",
+        "GET /gca/credit-ledger",
+        "GET /gca/member-ledger",
+        "POST /gca/support-review",
+        "GET /gca/member-review",
+    ):
+        endpoint = endpoint_map.get(endpoint_key)
+        if endpoint is None:
+            raise SiteCheckError(f"{label}: missing endpoint {endpoint_key}")
+        if endpoint.get("status") != "planned-not-live":
+            raise SiteCheckError(f"{label}: endpoint {endpoint_key} should be planned-not-live")
+    wallet = endpoint_map["POST /gca/wallet-verifications"]
+    if "chainId must be 8453" not in wallet.get("serverChecks", []):
+        raise SiteCheckError(f"{label}: missing chain check")
+    if not any(MAINNET_ADDRESS in item for item in wallet.get("serverChecks", [])):
+        raise SiteCheckError(f"{label}: missing contract check")
+    if "balance source must be read-only eth_call balanceOf" not in wallet.get("serverChecks", []):
+        raise SiteCheckError(f"{label}: missing balance source check")
+    if thresholds.get("holderBonusMinimum") != "10000 GCA":
+        raise SiteCheckError(f"{label}: wrong holderBonusMinimum")
+    if thresholds.get("holderBonusCreditAmount") != "100 Web3 Radar utility credits":
+        raise SiteCheckError(f"{label}: wrong holderBonusCreditAmount")
+    if thresholds.get("gcaMemberMinimum") != "1000000 GCA":
+        raise SiteCheckError(f"{label}: wrong gcaMemberMinimum")
+    for forbidden in ("private key", "seed phrase", "exchange API secret", "withdrawal permission", "custody request", "one-time code"):
+        if forbidden not in payload.get("doNotCollect", []):
+            raise SiteCheckError(f"{label}: missing doNotCollect {forbidden}")
+    if market.get("pair") != "GCA/USDT":
+        raise SiteCheckError(f"{label}: wrong pair")
+    if market.get("poolAddress") != OFFICIAL_POOL_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong poolAddress")
+    if market.get("quoteAssetAddress") != BASE_USDT_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong quoteAssetAddress")
+    if links.get("accessApiPage") != ACCESS_API_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong accessApiPage")
+    if links.get("accessApi") != ACCESS_API_URL:
+        raise SiteCheckError(f"{label}: wrong accessApi")
+    if links.get("accessPortal") != ACCESS_URL:
+        raise SiteCheckError(f"{label}: wrong accessPortal")
+    if links.get("memberLedger") != MEMBER_LEDGER_URL:
+        raise SiteCheckError(f"{label}: wrong memberLedger")
+    if links.get("supportJson") != SUPPORT_URL:
+        raise SiteCheckError(f"{label}: wrong supportJson")
+    if "GCA has published a public access API contract." not in boundaries.get("safeClaims", []):
+        raise SiteCheckError(f"{label}: missing API safe claim")
+    if not any("live public submission infrastructure" in item for item in boundaries.get("doNotClaim", [])):
+        raise SiteCheckError(f"{label}: missing live API boundary")
+    if not any("private keys, seed phrases" in item for item in boundaries.get("doNotClaim", [])):
+        raise SiteCheckError(f"{label}: missing sensitive data boundary")
+    assert_no_forbidden_public_claims(json.dumps(payload), label)
+    assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
+    assert_not_contains(json.dumps(payload), "GCA/WETH", label)
+
+
 def validate_credits_page(text: str) -> None:
     label = "/credits.html"
     assert_contains(text, "GCA Utility Credits Catalog", label)
     assert_contains(text, "Credits Catalog JSON", label)
     assert_contains(text, "Access Portal", label)
+    assert_contains(text, "Access API", label)
     assert_contains(text, "draft service catalog", label)
     assert_contains(text, "not self-service claimable", label)
     assert_contains(text, "100 Web3 Radar utility credits", label)
@@ -1311,6 +1484,10 @@ def validate_credits_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong accessPortalPage")
     if links.get("accessPortal") != ACCESS_URL:
         raise SiteCheckError(f"{label}: wrong accessPortal")
+    if links.get("accessApiPage") != ACCESS_API_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong accessApiPage")
+    if links.get("accessApi") != ACCESS_API_URL:
+        raise SiteCheckError(f"{label}: wrong accessApi")
     if links.get("utilityJson") != UTILITY_URL:
         raise SiteCheckError(f"{label}: wrong utilityJson")
     if links.get("productJson") != PRODUCT_URL:
@@ -1336,6 +1513,7 @@ def validate_release_gates_page(text: str) -> None:
     assert_contains(text, "Release Gates JSON", label)
     assert_contains(text, "Credits Catalog", label)
     assert_contains(text, "Access Portal", label)
+    assert_contains(text, "Access API", label)
     assert_contains(text, "public product spec only", label)
     assert_contains(text, "Public Account UI is not live", label)
     assert_contains(text, "Credits are not self-service claimable", label)
@@ -1389,6 +1567,7 @@ def validate_release_gates_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong audit state")
     for gate in (
         "access-portal-blueprint",
+        "access-api-contract",
         "controlled-https-account-ui",
         "read-only-wallet-verification",
         "credit-ledger-activation",
@@ -1401,6 +1580,7 @@ def validate_release_gates_json(text: str) -> None:
             raise SiteCheckError(f"{label}: missing gate {gate}")
     for item in (
         "access portal blueprint",
+        "access API contract",
         "controlled HTTPS account UI",
         "read-only GCA balance verification",
         "credit ledger activation",
@@ -1436,6 +1616,10 @@ def validate_release_gates_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong accessPortalPage")
     if links.get("accessPortal") != ACCESS_URL:
         raise SiteCheckError(f"{label}: wrong accessPortal")
+    if links.get("accessApiPage") != ACCESS_API_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong accessApiPage")
+    if links.get("accessApi") != ACCESS_API_URL:
+        raise SiteCheckError(f"{label}: wrong accessApi")
     if links.get("utilityJson") != UTILITY_URL:
         raise SiteCheckError(f"{label}: wrong utilityJson")
     if links.get("memberLedger") != MEMBER_LEDGER_URL:
@@ -1767,6 +1951,10 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong accessPortalPageUrl")
     if payload.get("accessPortalUrl") != ACCESS_URL:
         raise SiteCheckError(f"{label}: wrong accessPortalUrl")
+    if payload.get("accessApiPageUrl") != ACCESS_API_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong accessApiPageUrl")
+    if payload.get("accessApiUrl") != ACCESS_API_URL:
+        raise SiteCheckError(f"{label}: wrong accessApiUrl")
     if payload.get("releaseGatesPageUrl") != RELEASE_GATES_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong releaseGatesPageUrl")
     if payload.get("releaseGatesUrl") != RELEASE_GATES_URL:
@@ -1834,6 +2022,8 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: unexpected weekly radar status")
     if status.get("accessPortal") != "public-access-portal-blueprint-published":
         raise SiteCheckError(f"{label}: unexpected access portal status")
+    if status.get("accessApiContract") != "public-access-api-contract-published":
+        raise SiteCheckError(f"{label}: unexpected access API status")
     if member_program.get("status") != "rules-published-public-claim-not-connected":
         raise SiteCheckError(f"{label}: unexpected member program status")
     if member_program.get("supportIntake", {}).get("status") != "public-support-intake-published":
@@ -2035,6 +2225,12 @@ def validate_tokenlist_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong accessPortal")
     if extensions.get("accessPortalStatus") != "public-access-portal-blueprint-published":
         raise SiteCheckError(f"{label}: wrong accessPortalStatus")
+    if extensions.get("accessApiPage") != ACCESS_API_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong accessApiPage")
+    if extensions.get("accessApi") != ACCESS_API_URL:
+        raise SiteCheckError(f"{label}: wrong accessApi")
+    if extensions.get("accessApiStatus") != "public-access-api-contract-published":
+        raise SiteCheckError(f"{label}: wrong accessApiStatus")
     if extensions.get("walletWarningEvidencePage") != WALLET_WARNING_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong walletWarningEvidencePage")
     if extensions.get("walletWarningEvidence") != WALLET_WARNING_URL:
@@ -2181,6 +2377,10 @@ def validate_well_known_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong accessPortalPage")
     if urls.get("accessPortal") != ACCESS_URL:
         raise SiteCheckError(f"{label}: wrong accessPortal")
+    if urls.get("accessApiPage") != ACCESS_API_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong accessApiPage")
+    if urls.get("accessApi") != ACCESS_API_URL:
+        raise SiteCheckError(f"{label}: wrong accessApi")
     if urls.get("walletWarningEvidencePage") != WALLET_WARNING_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong walletWarningEvidencePage")
     if urls.get("walletWarningEvidence") != WALLET_WARNING_URL:
@@ -2243,6 +2443,8 @@ def validate_well_known_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong weeklyGoChinaRadar status")
     if payload.get("platformStatus", {}).get("accessPortal") != "public-access-portal-blueprint-published":
         raise SiteCheckError(f"{label}: wrong accessPortal status")
+    if payload.get("platformStatus", {}).get("accessApiContract") != "public-access-api-contract-published":
+        raise SiteCheckError(f"{label}: wrong accessApiContract status")
     if payload.get("platformStatus", {}).get("utilityBridge") != "public-utility-bridge-spec-published":
         raise SiteCheckError(f"{label}: wrong utilityBridge status")
     if payload.get("platformStatus", {}).get("productSpec") != "public-product-spec-published":
@@ -3275,6 +3477,8 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/product.json",
         "https://gcagochina.com/access.html",
         "https://gcagochina.com/access.json",
+        "https://gcagochina.com/access-api.html",
+        "https://gcagochina.com/access-api.json",
         "https://gcagochina.com/credits.html",
         "https://gcagochina.com/credits.json",
         "https://gcagochina.com/release-gates.html",
@@ -3338,6 +3542,8 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /product.json", label)
     assert_contains(text, "Allow: /access.html", label)
     assert_contains(text, "Allow: /access.json", label)
+    assert_contains(text, "Allow: /access-api.html", label)
+    assert_contains(text, "Allow: /access-api.json", label)
     assert_contains(text, "Allow: /credits.html", label)
     assert_contains(text, "Allow: /credits.json", label)
     assert_contains(text, "Allow: /release-gates.html", label)
@@ -3393,6 +3599,8 @@ CHECKS: list[EndpointCheck] = [
     ("/product.json", validate_product_json),
     ("/access.html", validate_access_page),
     ("/access.json", validate_access_json),
+    ("/access-api.html", validate_access_api_page),
+    ("/access-api.json", validate_access_api_json),
     ("/credits.html", validate_credits_page),
     ("/credits.json", validate_credits_json),
     ("/release-gates.html", validate_release_gates_page),

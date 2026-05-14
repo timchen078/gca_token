@@ -92,6 +92,8 @@
     "listingKit": "https://gcagochina.com/listing-kit.html",
     "brandKit": "https://gcagochina.com/brand-kit.html",
     "onchainProofs": "https://gcagochina.com/onchain-proofs.html",
-    "externalReviews": "https://gcagochina.com/external-reviews.html"
+    "externalReviews": "https://gcagochina.com/external-reviews.html",
+    "accessApiPage": "https://gcagochina.com/access-api.html",
+    "accessApi": "https://gcagochina.com/access-api.json"
   }
 }

@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GCA Access API Contract | GCA AI Quant Access</title>
+    <meta name="description" content="Public API contract for the planned GCA controlled HTTPS access bridge: pre-registration, read-only wallet verification, credit ledger, member ledger, and support review endpoints.">
+    <link rel="canonical" href="https://gcagochina.com/access-api.html">
+    <link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">
+    <link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="GCA | Go China Access">
+    <meta property="og:title" content="GCA Access API Contract | GCA AI Quant Access">
+    <meta property="og:description" content="Contract-only API specification for the future GCA account, wallet verification, credits, member, and support review bridge.">
+    <meta property="og:url" content="https://gcagochina.com/access-api.html">
+    <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="GCA Access API Contract | GCA AI Quant Access">
+    <meta name="twitter:description" content="Contract-only API specification for the future GCA account, wallet verification, credits, member, and support review bridge.">
+    <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #111318;
+        --muted: #5f6773;
+        --line: #dfe3ea;
+        --panel: #ffffff;
+        --soft: #f6f7f9;
+        --red: #d71920;
+        --blue: #0052ff;
+        --green: #087f5b;
+        --gold: #8a650d;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: #fbfbfc;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.5;
+      }
+
+      a {
+        color: var(--blue);
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .shell {
+        width: min(1100px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      header {
+        border-bottom: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.94);
+        position: sticky;
+        top: 0;
+        z-index: 2;
+      }
+
+      nav {
+        min-height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--ink);
+        font-weight: 850;
+      }
+
+      .brand img {
+        width: 32px;
+        height: 32px;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 18px;
+        align-items: center;
+        font-size: 14px;
+      }
+
+      main {
+        padding: 42px 0 56px;
+      }
+
+      .eyebrow {
+        color: var(--red);
+        font-size: 13px;
+        font-weight: 850;
+        margin: 0 0 12px;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 0;
+        max-width: 940px;
+        font-size: clamp(40px, 6vw, 72px);
+        line-height: 1;
+        letter-spacing: 0;
+      }
+
+      h2 {
+        margin: 0 0 14px;
+        font-size: 24px;
+      }
+
+      h3 {
+        margin: 0 0 8px;
+        font-size: 17px;
+      }
+
+      .lead {
+        max-width: 880px;
+        margin: 18px 0 0;
+        color: var(--muted);
+        font-size: 18px;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 24px;
+      }
+
+      .button {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        color: var(--ink);
+        min-height: 42px;
+        padding: 10px 14px;
+        font: inherit;
+        font-weight: 750;
+      }
+
+      .button.primary {
+        border-color: var(--red);
+        background: var(--red);
+        color: #fff;
+      }
+
+      .section {
+        margin-top: 30px;
+      }
+
+      .panel,
+      .fact {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+      }
+
+      .panel {
+        padding: 24px;
+      }
+
+      .grid,
+      .two,
+      .facts {
+        display: grid;
+        gap: 14px;
+      }
+
+      .grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .two {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .facts {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        margin-top: 22px;
+      }
+
+      .fact {
+        min-height: 126px;
+        padding: 16px;
+      }
+
+      .label {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 750;
+        text-transform: uppercase;
+      }
+
+      .value {
+        display: block;
+        margin-top: 8px;
+        font-size: 16px;
+        font-weight: 850;
+        overflow-wrap: anywhere;
+      }
+
+      .good {
+        color: var(--green);
+      }
+
+      .pending {
+        color: var(--gold);
+      }
+
+      .note,
+      li {
+        color: var(--muted);
+      }
+
+      .note {
+        margin: 0;
+      }
+
+      .list {
+        display: grid;
+        gap: 10px;
+        margin-top: 12px;
+      }
+
+      .row {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        border-top: 1px solid var(--line);
+        padding-top: 10px;
+      }
+
+      .row:first-child {
+        border-top: 0;
+        padding-top: 0;
+      }
+
+      code {
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        background: var(--soft);
+        padding: 2px 5px;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 0.92em;
+      }
+
+      footer {
+        border-top: 1px solid var(--line);
+        padding: 24px 0 34px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      @media (max-width: 840px) {
+        nav {
+          align-items: flex-start;
+          flex-direction: column;
+          padding: 14px 0;
+        }
+
+        .nav-links {
+          flex-wrap: wrap;
+        }
+
+        .grid,
+        .two,
+        .facts {
+          grid-template-columns: 1fr;
+        }
+
+        h1 {
+          font-size: 42px;
+        }
+
+        .row {
+          display: grid;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav class="shell" aria-label="Primary">
+        <a class="brand" href="index.html" aria-label="GCA home">
+          <img src="assets/gca-logo.svg" alt="GCA logo">
+          <span>GCA</span>
+        </a>
+        <div class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="verify.html">Verify</a>
+          <a href="product.html">Product Spec</a>
+          <a href="access.html">Access Portal</a>
+          <a href="access-api.json">Access API JSON</a>
+          <a href="credits.html">Credits</a>
+          <a href="release-gates.html">Release Gates</a>
+          <a href="member-ledger.html">Member Ledger</a>
+          <a href="support.html">Support</a>
+        </div>
+      </nav>
+    </header>
+
+    <main class="shell">
+      <section aria-labelledby="title">
+        <p class="eyebrow">Access API Contract / 2026-05-14</p>
+        <h1 id="title">GCA Access API Contract</h1>
+        <p class="lead">This page defines the planned controlled HTTPS API contract for the GCA access bridge. It covers pre-registration, read-only wallet verification, credit ledger records, GCA Member records, and support review statuses.</p>
+        <p class="lead">The API contract is not live today. It is a public implementation contract for future backend work, not a public submission endpoint, account system, or self-service claim page.</p>
+        <div class="actions">
+          <a class="button primary" href="access-api.json">Access API JSON</a>
+          <a class="button primary" href="access.html">Access Portal Blueprint</a>
+          <a class="button" href="member-ledger.json">Member Ledger JSON</a>
+          <a class="button" href="support.json">Support JSON</a>
+          <a class="button" href="privacy.html">Privacy Notice</a>
+          <a class="button" href="terms.html">Participation Terms</a>
+        </div>
+      </section>
+
+      <section class="facts" aria-label="Current state">
+        <div class="fact">
+          <span class="label">Current Stage</span>
+          <span class="value pending">contract only</span>
+        </div>
+        <div class="fact">
+          <span class="label">Public Endpoint</span>
+          <span class="value pending">Not live</span>
+        </div>
+        <div class="fact">
+          <span class="label">Account UI</span>
+          <span class="value pending">Not live</span>
+        </div>
+        <div class="fact">
+          <span class="label">Balance Read</span>
+          <span class="value">eth_call balanceOf</span>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="endpointsTitle">
+        <h2 id="endpointsTitle">Endpoint Contract</h2>
+        <div class="grid">
+          <div class="fact">
+            <span class="label">POST</span>
+            <span class="value">/gca/pre-registrations</span>
+            <p class="note">Receives account intent and local packet fields after controlled HTTPS account UI is live.</p>
+          </div>
+          <div class="fact">
+            <span class="label">POST</span>
+            <span class="value">/gca/wallet-verifications</span>
+            <p class="note">Runs read-only GCA balance checks using Base Mainnet <code>eth_call</code> and ERC-20 <code>balanceOf</code>.</p>
+          </div>
+          <div class="fact">
+            <span class="label">GET</span>
+            <span class="value">/gca/credit-ledger</span>
+            <p class="note">Returns account-level 100 Web3 Radar utility credits records after ledger activation.</p>
+          </div>
+          <div class="fact">
+            <span class="label">GET</span>
+            <span class="value">/gca/member-ledger</span>
+            <p class="note">Returns GCA Member ledger state, next refresh due date, and status after activation.</p>
+          </div>
+          <div class="fact">
+            <span class="label">POST</span>
+            <span class="value">/gca/support-review</span>
+            <p class="note">Creates or updates support review records for manual review workflows.</p>
+          </div>
+          <div class="fact">
+            <span class="label">GET</span>
+            <span class="value">/gca/member-review</span>
+            <p class="note">Reads review status for the authenticated account after the controlled account UI exists.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section two" aria-label="Payload rules">
+        <div class="panel">
+          <h2>Required Request Fields</h2>
+          <div class="list">
+            <div class="row"><span>Pre-registration</span><strong>email, walletAddress, programIntent, termsAccepted</strong></div>
+            <div class="row"><span>Wallet verification</span><strong>registrationId, walletAddress, chainId, contractAddress</strong></div>
+            <div class="row"><span>Support review</span><strong>registrationId, status, supportNote</strong></div>
+            <div class="row"><span>Ledger reads</span><strong>authenticated account session</strong></div>
+          </div>
+        </div>
+        <div class="panel">
+          <h2>Allowed Statuses</h2>
+          <div class="list">
+            <div class="row"><span>Intake</span><strong>received, wallet_pending, needs_more_information</strong></div>
+            <div class="row"><span>Wallet check</span><strong>verified, below_threshold, failed, expired</strong></div>
+            <div class="row"><span>Credit ledger</span><strong>queued, ledger_recorded, partially_used, used, expired, revoked</strong></div>
+            <div class="row"><span>Member ledger</span><strong>active, needs_refresh, below_threshold, paused, revoked</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section two" aria-label="Security controls">
+        <div class="panel">
+          <h2>Required Controls</h2>
+          <ul>
+            <li>controlled HTTPS origin</li>
+            <li>authenticated account session</li>
+            <li>CSRF protection for state-changing routes</li>
+            <li>rate limits on pre-registration and wallet verification</li>
+            <li>structured audit logs for status changes</li>
+            <li>server-side validation of chain ID 8453 and the GCA contract address</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h2>Do Not Collect</h2>
+          <ul>
+            <li>Private key or seed phrase.</li>
+            <li>Exchange API secret.</li>
+            <li>Withdrawal permission.</li>
+            <li>Custody request or fund-transfer request.</li>
+            <li>One-time code or recovery phrase.</li>
+            <li>Any permission that bypasses risk controls.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="identityTitle">
+        <h2 id="identityTitle">Canonical Identity</h2>
+        <div class="list">
+          <div class="row"><span>Network</span><strong>Base Mainnet / chainId 8453</strong></div>
+          <div class="row"><span>Contract</span><strong>0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6</strong></div>
+          <div class="row"><span>Official pool</span><strong>GCA/USDT</strong></div>
+          <div class="row"><span>Pool address</span><strong>0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0</strong></div>
+          <div class="row"><span>Quote asset</span><strong>Base USDT / 0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2</strong></div>
+          <div class="row"><span>API data</span><strong><a href="access-api.json">access-api.json</a></strong></div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="shell">GCA Access API Contract is a contract-only implementation document. Public self-service access remains off until controlled HTTPS account UI, wallet verification, ledgers, and support review are live.</div>
+    </footer>
+  </body>
+</html>

@@ -56,6 +56,8 @@ PRODUCT_PAGE_URL = "https://gcagochina.com/product.html"
 PRODUCT_URL = "https://gcagochina.com/product.json"
 ACCESS_PAGE_URL = "https://gcagochina.com/access.html"
 ACCESS_URL = "https://gcagochina.com/access.json"
+ACCESS_API_PAGE_URL = "https://gcagochina.com/access-api.html"
+ACCESS_API_URL = "https://gcagochina.com/access-api.json"
 CREDITS_PAGE_URL = "https://gcagochina.com/credits.html"
 CREDITS_URL = "https://gcagochina.com/credits.json"
 RELEASE_GATES_PAGE_URL = "https://gcagochina.com/release-gates.html"
@@ -126,6 +128,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("/product.json", script)
         self.assertIn("/access.html", script)
         self.assertIn("/access.json", script)
+        self.assertIn("/access-api.html", script)
+        self.assertIn("/access-api.json", script)
         self.assertIn("/credits.html", script)
         self.assertIn("/credits.json", script)
         self.assertIn("/release-gates.html", script)
@@ -178,6 +182,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("validate_product_json", script)
         self.assertIn("validate_access_page", script)
         self.assertIn("validate_access_json", script)
+        self.assertIn("validate_access_api_page", script)
+        self.assertIn("validate_access_api_json", script)
         self.assertIn("validate_credits_page", script)
         self.assertIn("validate_credits_json", script)
         self.assertIn("validate_release_gates_page", script)
@@ -253,6 +259,8 @@ class LaunchPackageTests(unittest.TestCase):
         module.validate_product_json((ROOT / "site" / "product.json").read_text())
         module.validate_access_page((ROOT / "site" / "access.html").read_text())
         module.validate_access_json((ROOT / "site" / "access.json").read_text())
+        module.validate_access_api_page((ROOT / "site" / "access-api.html").read_text())
+        module.validate_access_api_json((ROOT / "site" / "access-api.json").read_text())
         module.validate_credits_page((ROOT / "site" / "credits.html").read_text())
         module.validate_credits_json((ROOT / "site" / "credits.json").read_text())
         module.validate_release_gates_page((ROOT / "site" / "release-gates.html").read_text())
@@ -506,6 +514,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Allow: /product.json", robots)
         self.assertIn("Allow: /access.html", robots)
         self.assertIn("Allow: /access.json", robots)
+        self.assertIn("Allow: /access-api.html", robots)
+        self.assertIn("Allow: /access-api.json", robots)
         self.assertIn("Allow: /credits.html", robots)
         self.assertIn("Allow: /credits.json", robots)
         self.assertIn("Allow: /release-gates.html", robots)
@@ -571,6 +581,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(PRODUCT_URL, sitemap)
         self.assertIn(ACCESS_PAGE_URL, sitemap)
         self.assertIn(ACCESS_URL, sitemap)
+        self.assertIn(ACCESS_API_PAGE_URL, sitemap)
+        self.assertIn(ACCESS_API_URL, sitemap)
         self.assertIn(CREDITS_PAGE_URL, sitemap)
         self.assertIn(CREDITS_URL, sitemap)
         self.assertIn(RELEASE_GATES_PAGE_URL, sitemap)
@@ -623,6 +635,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(identity["officialUrls"]["productSpec"], PRODUCT_URL)
         self.assertEqual(identity["officialUrls"]["accessPortalPage"], ACCESS_PAGE_URL)
         self.assertEqual(identity["officialUrls"]["accessPortal"], ACCESS_URL)
+        self.assertEqual(identity["officialUrls"]["accessApiPage"], ACCESS_API_PAGE_URL)
+        self.assertEqual(identity["officialUrls"]["accessApi"], ACCESS_API_URL)
         self.assertEqual(identity["officialUrls"]["releaseGatesPage"], RELEASE_GATES_PAGE_URL)
         self.assertEqual(identity["officialUrls"]["releaseGates"], RELEASE_GATES_URL)
         self.assertEqual(identity["officialUrls"]["walletWarningEvidencePage"], WALLET_WARNING_PAGE_URL)
@@ -667,6 +681,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(identity["platformStatus"]["narrativeSystem"], "public-narrative-system-published")
         self.assertEqual(identity["platformStatus"]["weeklyGoChinaRadar"], "weekly-go-china-radar-issue-002-published")
         self.assertEqual(identity["platformStatus"]["accessPortal"], "public-access-portal-blueprint-published")
+        self.assertEqual(identity["platformStatus"]["accessApiContract"], "public-access-api-contract-published")
         self.assertEqual(identity["platformStatus"]["utilityBridge"], "public-utility-bridge-spec-published")
         self.assertEqual(identity["platformStatus"]["productSpec"], "public-product-spec-published")
         self.assertEqual(identity["platformStatus"]["releaseGates"], "public-release-gates-published")
@@ -1586,6 +1601,100 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, json.dumps(access))
         self.assertNotIn("GCA/WETH", json.dumps(access))
 
+    def test_access_api_page_and_json_define_contract_only_backend_routes(self):
+        page = (ROOT / "site" / "access-api.html").read_text()
+        api = json.loads((ROOT / "site" / "access-api.json").read_text())
+
+        self.assertIn("GCA Access API Contract", page)
+        self.assertIn("Access API JSON", page)
+        self.assertIn("contract only", page)
+        self.assertIn("not live today", page)
+        self.assertIn("not a public submission endpoint", page)
+        self.assertIn("/gca/pre-registrations", page)
+        self.assertIn("/gca/wallet-verifications", page)
+        self.assertIn("/gca/credit-ledger", page)
+        self.assertIn("/gca/member-ledger", page)
+        self.assertIn("/gca/support-review", page)
+        self.assertIn("/gca/member-review", page)
+        self.assertIn("eth_call", page)
+        self.assertIn("balanceOf", page)
+        self.assertIn("100 Web3 Radar utility credits", page)
+        self.assertIn("GCA Member", page)
+        self.assertIn("controlled HTTPS origin", page)
+        self.assertIn("authenticated account session", page)
+        self.assertIn("CSRF protection", page)
+        self.assertIn("rate limits", page)
+        self.assertIn("structured audit logs", page)
+        self.assertIn("Private key or seed phrase", page)
+        self.assertIn("Exchange API secret", page)
+        self.assertIn("Withdrawal permission", page)
+        self.assertIn("Custody request", page)
+        self.assertIn(MAINNET_ADDRESS, page)
+        self.assertIn(BASE_USDT_ADDRESS, page)
+        self.assertIn(OFFICIAL_POOL_ADDRESS, page)
+        self.assertNotIn(OLD_WETH_POOL_ADDRESS, page)
+        self.assertNotIn("GCA/WETH", page)
+
+        self.assertEqual(api["schema"], ACCESS_API_URL)
+        self.assertEqual(api["pageUrl"], ACCESS_API_PAGE_URL)
+        self.assertEqual(api["status"], "public-access-api-contract-published")
+        self.assertEqual(api["chainId"], 8453)
+        self.assertEqual(api["contractAddress"], MAINNET_ADDRESS)
+        self.assertEqual(api["currentState"]["currentStage"], "contract-only")
+        self.assertTrue(api["currentState"]["contractOnly"])
+        self.assertFalse(api["currentState"]["backendLive"])
+        self.assertFalse(api["currentState"]["publicEndpointLive"])
+        self.assertFalse(api["currentState"]["controlledHttpsAccountUiLive"])
+        self.assertFalse(api["currentState"]["directSubmissionEndpointConfigured"])
+        self.assertFalse(api["currentState"]["creditsSelfServiceClaimable"])
+        self.assertFalse(api["currentState"]["gcaMemberSelfServiceClaimable"])
+        self.assertTrue(api["securityModel"]["controlledHttpsOriginRequired"])
+        self.assertTrue(api["securityModel"]["authenticatedAccountSessionRequired"])
+        self.assertTrue(api["securityModel"]["csrfProtectionRequiredForStateChangingRoutes"])
+        self.assertTrue(api["securityModel"]["rateLimitsRequired"])
+        self.assertTrue(api["securityModel"]["structuredAuditLogsRequired"])
+        self.assertTrue(api["securityModel"]["walletVerificationReadOnly"])
+        self.assertTrue(api["securityModel"]["usesEthCall"])
+        self.assertTrue(api["securityModel"]["usesErc20BalanceOf"])
+        self.assertFalse(api["securityModel"]["requiresSignatureForBalanceRead"])
+        self.assertFalse(api["securityModel"]["requiresTransactionForBalanceRead"])
+        self.assertFalse(api["securityModel"]["custody"])
+        self.assertFalse(api["securityModel"]["withdrawalPermission"])
+        self.assertFalse(api["securityModel"]["exchangeApiSecretCollection"])
+        endpoint_keys = {f'{item["method"]} {item["path"]}' for item in api["endpoints"]}
+        for endpoint_key in {
+            "POST /gca/pre-registrations",
+            "POST /gca/wallet-verifications",
+            "GET /gca/credit-ledger",
+            "GET /gca/member-ledger",
+            "POST /gca/support-review",
+            "GET /gca/member-review",
+        }:
+            self.assertIn(endpoint_key, endpoint_keys)
+        for endpoint in api["endpoints"]:
+            self.assertEqual(endpoint["status"], "planned-not-live")
+        wallet = next(item for item in api["endpoints"] if item["id"] == "wallet-verifications")
+        self.assertIn("chainId must be 8453", wallet["serverChecks"])
+        self.assertTrue(any(MAINNET_ADDRESS in item for item in wallet["serverChecks"]))
+        self.assertIn("balance source must be read-only eth_call balanceOf", wallet["serverChecks"])
+        self.assertEqual(api["eligibilityThresholds"]["holderBonusMinimum"], "10000 GCA")
+        self.assertEqual(api["eligibilityThresholds"]["holderBonusCreditAmount"], "100 Web3 Radar utility credits")
+        self.assertEqual(api["eligibilityThresholds"]["gcaMemberMinimum"], "1000000 GCA")
+        self.assertIn("private key", api["doNotCollect"])
+        self.assertIn("seed phrase", api["doNotCollect"])
+        self.assertIn("exchange API secret", api["doNotCollect"])
+        self.assertIn("withdrawal permission", api["doNotCollect"])
+        self.assertEqual(api["officialMarket"]["pair"], "GCA/USDT")
+        self.assertEqual(api["officialMarket"]["poolAddress"], OFFICIAL_POOL_ADDRESS)
+        self.assertEqual(api["officialMarket"]["quoteAssetAddress"], BASE_USDT_ADDRESS)
+        self.assertEqual(api["officialLinks"]["accessApiPage"], ACCESS_API_PAGE_URL)
+        self.assertEqual(api["officialLinks"]["accessApi"], ACCESS_API_URL)
+        self.assertEqual(api["officialLinks"]["accessPortal"], ACCESS_URL)
+        self.assertIn("GCA has published a public access API contract.", api["publicClaimBoundaries"]["safeClaims"])
+        self.assertTrue(any("live public submission infrastructure" in item for item in api["publicClaimBoundaries"]["doNotClaim"]))
+        self.assertNotIn(OLD_WETH_POOL_ADDRESS, json.dumps(api))
+        self.assertNotIn("GCA/WETH", json.dumps(api))
+
     def test_credits_catalog_page_and_json_define_draft_service_units(self):
         page = (ROOT / "site" / "credits.html").read_text()
         credits = json.loads((ROOT / "site" / "credits.json").read_text())
@@ -2254,6 +2363,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Access Portal", kit)
         self.assertIn(ACCESS_PAGE_URL, kit)
         self.assertIn(ACCESS_URL, kit)
+        self.assertIn("Access API Contract", kit)
+        self.assertIn(ACCESS_API_PAGE_URL, kit)
+        self.assertIn(ACCESS_API_URL, kit)
         self.assertIn("Token name", kit)
         self.assertIn("GCA / Go China Access", kit)
         self.assertIn(MAINNET_ADDRESS, kit)
@@ -2334,6 +2446,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(project["productSpecUrl"], PRODUCT_URL)
         self.assertEqual(project["accessPortalPageUrl"], ACCESS_PAGE_URL)
         self.assertEqual(project["accessPortalUrl"], ACCESS_URL)
+        self.assertEqual(project["accessApiPageUrl"], ACCESS_API_PAGE_URL)
+        self.assertEqual(project["accessApiUrl"], ACCESS_API_URL)
         self.assertEqual(project["releaseGatesPageUrl"], RELEASE_GATES_PAGE_URL)
         self.assertEqual(project["releaseGatesUrl"], RELEASE_GATES_URL)
         self.assertTrue(any(link["platform"] == "X" and link["url"] == X_URL for link in project["officialSocialLinks"]))
@@ -2387,6 +2501,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(project["platformStatus"]["utilityBridge"], "public-utility-bridge-spec-published")
         self.assertEqual(project["platformStatus"]["productSpec"], "public-product-spec-published")
         self.assertEqual(project["platformStatus"]["accessPortal"], "public-access-portal-blueprint-published")
+        self.assertEqual(project["platformStatus"]["accessApiContract"], "public-access-api-contract-published")
         self.assertEqual(project["platformStatus"]["releaseGates"], "public-release-gates-published")
         self.assertEqual(project["platformStatus"]["creditsCatalog"], "public-credits-catalog-published")
         self.assertEqual(project["platformStatus"]["thirdPartyAudit"], "not-completed")
@@ -2398,6 +2513,14 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertFalse(project["accessPortal"]["directSubmissionEndpointConfigured"])
         self.assertFalse(project["accessPortal"]["creditsSelfServiceClaimable"])
         self.assertFalse(project["accessPortal"]["gcaMemberSelfServiceClaimable"])
+        self.assertEqual(project["accessApiContract"]["status"], "public-access-api-contract-published")
+        self.assertEqual(project["accessApiContract"]["pageUrl"], ACCESS_API_PAGE_URL)
+        self.assertEqual(project["accessApiContract"]["url"], ACCESS_API_URL)
+        self.assertEqual(project["accessApiContract"]["currentStage"], "contract-only")
+        self.assertFalse(project["accessApiContract"]["backendLive"])
+        self.assertFalse(project["accessApiContract"]["publicEndpointLive"])
+        self.assertFalse(project["accessApiContract"]["controlledHttpsAccountUiLive"])
+        self.assertIn("/gca/wallet-verifications", project["accessApiContract"]["endpoints"])
         self.assertEqual(project["listingReadiness"]["status"], "not-ready")
         self.assertIn("CoinGecko tracked listing request", project["listingReadiness"]["defer"])
         self.assertIn("legitimate liquidity depth", project["listingReadiness"]["reason"])
@@ -3120,6 +3243,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(extensions["accessPortalPage"], ACCESS_PAGE_URL)
         self.assertEqual(extensions["accessPortal"], ACCESS_URL)
         self.assertEqual(extensions["accessPortalStatus"], "public-access-portal-blueprint-published")
+        self.assertEqual(extensions["accessApiPage"], ACCESS_API_PAGE_URL)
+        self.assertEqual(extensions["accessApi"], ACCESS_API_URL)
+        self.assertEqual(extensions["accessApiStatus"], "public-access-api-contract-published")
         self.assertEqual(extensions["creditsCatalogPage"], CREDITS_PAGE_URL)
         self.assertEqual(extensions["creditsCatalog"], CREDITS_URL)
         self.assertEqual(extensions["creditsCatalogStatus"], "public-credits-catalog-published")
@@ -3212,6 +3338,8 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "site" / "product.json",
             ROOT / "site" / "access.html",
             ROOT / "site" / "access.json",
+            ROOT / "site" / "access-api.html",
+            ROOT / "site" / "access-api.json",
             ROOT / "site" / "credits.html",
             ROOT / "site" / "credits.json",
             ROOT / "site" / "release-gates.html",

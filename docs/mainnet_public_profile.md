@@ -58,6 +58,8 @@ The full fixed supply was minted to the deployer wallet at deployment. The 40/60
 - Product spec JSON: `https://gcagochina.com/product.json`
 - Access portal blueprint: `https://gcagochina.com/access.html`
 - Access portal blueprint JSON: `https://gcagochina.com/access.json`
+- Access API contract: `https://gcagochina.com/access-api.html`
+- Access API contract JSON: `https://gcagochina.com/access-api.json`
 - Credits catalog: `https://gcagochina.com/credits.html`
 - Credits catalog JSON: `https://gcagochina.com/credits.json`
 - Release gates: `https://gcagochina.com/release-gates.html`
@@ -66,6 +68,7 @@ The full fixed supply was minted to the deployer wallet at deployment. The 40/60
 - Planned first campaign: each registered user may verify one wallet holding at least 10,000 GCA and receive a one-time 100 Web3 Radar utility credits bonus after the access bridge is live
 - Planned GCA Member tier: each registered user may verify one wallet holding at least 1,000,000 GCA and qualify for GCA Member status after the access bridge is live
 - Public access portal blueprint: controlled HTTPS account UI, read-only `eth_call` / `balanceOf` GCA balance verification, support review record, 100 credits ledger activation, and GCA Member ledger activation; blueprint only, not live self-service access
+- Public access API contract: planned controlled HTTPS routes for pre-registration, wallet verification, credit ledger, member ledger, support review, and member review; contract only, not live public submission infrastructure
 - Draft credits catalog: Liquidation Replay, Risk Warning Review, Backtest Lab, ENTRY_READY Review, Position Size Calculator, Risk-Control Training, Member Research Notes, and Support Review Queue
 - Product release gates: controlled HTTPS account UI, read-only GCA balance verification, credit ledger activation, member ledger activation, support review queue, risk-control review, and simulation or testnet first
 

@@ -14,7 +14,8 @@
     "currentStage": "public-product-spec-only",
     "publicAccountUiLive": false,
     "liveTradingEnabled": false,
-    "accessPortalBlueprint": "https://gcagochina.com/access.html"
+    "accessPortalBlueprint": "https://gcagochina.com/access.html",
+    "accessApiContract": "https://gcagochina.com/access-api.html"
   },
   "productModules": [
     {
@@ -84,6 +85,11 @@
       "id": "access-portal-blueprint",
       "label": "Access Portal Blueprint",
       "status": "published-blueprint-only"
+    },
+    {
+      "id": "access-api-contract",
+      "label": "Access API Contract",
+      "status": "published-contract-only"
     },
     {
       "id": "read-only-wallet-verification",
@@ -175,6 +181,8 @@
     "creditsCatalogPage": "https://gcagochina.com/credits.html",
     "creditsCatalog": "https://gcagochina.com/credits.json",
     "accessPortalPage": "https://gcagochina.com/access.html",
-    "accessPortal": "https://gcagochina.com/access.json"
+    "accessPortal": "https://gcagochina.com/access.json",
+    "accessApiPage": "https://gcagochina.com/access-api.html",
+    "accessApi": "https://gcagochina.com/access-api.json"
   }
 }

@@ -16,7 +16,8 @@
     "baseScanTokenProfile": "resubmitted-awaiting-review",
     "thirdPartyAudit": "not-completed",
     "liquidityDepth": "starter-depth-only",
-    "accessPortalBlueprint": "published-blueprint-only"
+    "accessPortalBlueprint": "published-blueprint-only",
+    "accessApiContract": "published-contract-only"
   },
   "releaseGates": [
     {
@@ -27,6 +28,16 @@
         "self-service account claims",
         "self-service credit claiming",
         "self-service GCA Member claiming"
+      ]
+    },
+    {
+      "id": "access-api-contract",
+      "label": "Access API Contract",
+      "status": "published-contract-only",
+      "blocks": [
+        "public endpoint claims",
+        "self-service packet submission",
+        "self-service wallet verification"
       ]
     },
     {
@@ -101,6 +112,7 @@
   ],
   "noGoLiveWithout": [
     "access portal blueprint",
+    "access API contract",
     "controlled HTTPS account UI",
     "read-only GCA balance verification",
     "credit ledger activation",
@@ -155,6 +167,8 @@
     "creditsCatalogPage": "https://gcagochina.com/credits.html",
     "creditsCatalog": "https://gcagochina.com/credits.json",
     "accessPortalPage": "https://gcagochina.com/access.html",
-    "accessPortal": "https://gcagochina.com/access.json"
+    "accessPortal": "https://gcagochina.com/access.json",
+    "accessApiPage": "https://gcagochina.com/access-api.html",
+    "accessApi": "https://gcagochina.com/access-api.json"
   }
 }

@@ -92,6 +92,8 @@
     "memberPreRegistration": "https://gcagochina.com/members.html",
     "memberProgramRules": "https://gcagochina.com/member-program.json",
     "memberLedgerPage": "https://gcagochina.com/member-ledger.html",
-    "memberLedgerSchema": "https://gcagochina.com/member-ledger.json"
+    "memberLedgerSchema": "https://gcagochina.com/member-ledger.json",
+    "accessApiPage": "https://gcagochina.com/access-api.html",
+    "accessApi": "https://gcagochina.com/access-api.json"
   }
 }
