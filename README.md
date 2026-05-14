@@ -52,6 +52,8 @@ Deployment notes are in `docs/deploy_base_sepolia.md` and `docs/deploy_base_main
 - Public participation terms JSON: `site/terms.json`
 - Public utility bridge page: `site/utility.html`
 - Public utility bridge JSON: `site/utility.json`
+- Public product spec page: `site/product.html`
+- Public product spec JSON: `site/product.json`
 - Public brand kit page: `site/brand-kit.html`
 - Public brand kit JSON: `site/brand-kit.json`
 - Public on-chain proofs page: `site/onchain-proofs.html`

@@ -6,6 +6,8 @@ Official buy guide: `https://gcagochina.com/buy.html`
 
 Utility thesis: `https://gcagochina.com/utility.html`
 Utility bridge spec: `https://gcagochina.com/utility.json`
+Product spec: `https://gcagochina.com/product.html`
+Product spec JSON: `https://gcagochina.com/product.json`
 Narrative system: `https://gcagochina.com/narrative.html`
 Weekly Go China Radar: `https://gcagochina.com/radar.html`
 
@@ -71,6 +73,8 @@ The planned product bridge is to connect GCA with Web3 Radar-style non-custodial
 - Risk-control training
 - Planned first campaign: each registered user may verify one wallet holding at least 10,000 GCA and receive a one-time 100 Web3 Radar utility credits bonus after the access bridge is live
 - Planned GCA Member tier: each registered user may verify one wallet holding at least 1,000,000 GCA and qualify for GCA Member status after the access bridge is live
+
+The public product specification for this direction is GCA AI Quant Access. It is published as a planning document only and describes China Narrative Radar, Weekly Go China Radar, Liquidation Replay, Risk Warning Credits, Backtest Lab, ENTRY_READY Review, Position Size Calculator, and GCA Member Workspace. It is not a live trading terminal, live market data service, financial advice, or a self-service account product.
 
 Near-term work should focus on:
 

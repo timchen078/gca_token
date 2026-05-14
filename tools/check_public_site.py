@@ -38,6 +38,8 @@ RADAR_PAGE_URL = "https://gcagochina.com/radar.html"
 RADAR_URL = "https://gcagochina.com/radar.json"
 UTILITY_PAGE_URL = "https://gcagochina.com/utility.html"
 UTILITY_URL = "https://gcagochina.com/utility.json"
+PRODUCT_PAGE_URL = "https://gcagochina.com/product.html"
+PRODUCT_URL = "https://gcagochina.com/product.json"
 PRIVACY_NOTICE_PAGE_URL = "https://gcagochina.com/privacy.html"
 PRIVACY_NOTICE_URL = "https://gcagochina.com/privacy.json"
 PARTICIPATION_TERMS_PAGE_URL = "https://gcagochina.com/terms.html"
@@ -156,6 +158,7 @@ def validate_root(text: str) -> None:
     assert_contains(text, "Narrative System", label)
     assert_contains(text, "Weekly Radar", label)
     assert_contains(text, "Utility JSON", label)
+    assert_contains(text, "Product Spec", label)
     assert_contains(text, "Privacy Notice", label)
     assert_contains(text, "Participation Terms", label)
     assert_contains(text, MAINNET_ADDRESS, label)
@@ -811,6 +814,133 @@ def validate_utility_json(text: str) -> None:
     assert_not_contains(json.dumps(payload), "GCA/WETH", label)
 
 
+def validate_product_page(text: str) -> None:
+    label = "/product.html"
+    assert_contains(text, "GCA AI Quant Access Product Spec", label)
+    assert_contains(text, "Product JSON", label)
+    assert_contains(text, "public product spec only", label)
+    assert_contains(text, "not a live trading terminal", label)
+    assert_contains(text, "not live market data", label)
+    assert_contains(text, "not financial advice", label)
+    assert_contains(text, "Public Account UI", label)
+    assert_contains(text, "Not live", label)
+    assert_contains(text, "China Narrative Radar", label)
+    assert_contains(text, "Weekly Go China Radar", label)
+    assert_contains(text, "Liquidation Replay", label)
+    assert_contains(text, "Risk Warning Credits", label)
+    assert_contains(text, "Backtest Lab", label)
+    assert_contains(text, "ENTRY_READY Review", label)
+    assert_contains(text, "Position Size Calculator", label)
+    assert_contains(text, "GCA Member Workspace", label)
+    assert_contains(text, "simulation or testnet first", label)
+    assert_contains(text, "No custody", label)
+    assert_contains(text, "no withdrawal permission", label)
+    assert_contains(text, "exchange API secret collection", label)
+    assert_contains(text, "10,000 GCA", label)
+    assert_contains(text, "100 utility credits", label)
+    assert_contains(text, "1,000,000 GCA", label)
+    assert_contains(text, MAINNET_ADDRESS, label)
+    assert_contains(text, BASE_USDT_ADDRESS, label)
+    assert_current_pool_text(text, label)
+    assert_no_forbidden_public_claims(text, label)
+
+
+def validate_product_json(text: str) -> None:
+    label = "/product.json"
+    payload = load_json(text, label)
+    positioning = payload.get("positioning", {})
+    modules = payload.get("productModules", [])
+    module_names = {item.get("name") for item in modules}
+    release_gate_ids = {item.get("id") for item in payload.get("releaseGates", [])}
+    access = payload.get("gcaAccessRules", {})
+    safety = payload.get("safetyArchitecture", {})
+    market = payload.get("officialMarket", {})
+    links = payload.get("officialLinks", {})
+    boundaries = payload.get("publicClaimBoundaries", {})
+
+    if payload.get("schema") != PRODUCT_URL:
+        raise SiteCheckError(f"{label}: wrong schema")
+    if payload.get("pageUrl") != PRODUCT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong pageUrl")
+    if payload.get("status") != "public-product-spec-published":
+        raise SiteCheckError(f"{label}: wrong status")
+    if payload.get("chainId") != 8453:
+        raise SiteCheckError(f"{label}: wrong chainId")
+    if payload.get("contractAddress") != MAINNET_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong contractAddress")
+    if positioning.get("productName") != "GCA AI Quant Access":
+        raise SiteCheckError(f"{label}: wrong productName")
+    if positioning.get("currentStage") != "public-product-spec-only":
+        raise SiteCheckError(f"{label}: wrong currentStage")
+    if positioning.get("publicAccountUiLive") is not False:
+        raise SiteCheckError(f"{label}: publicAccountUiLive must be false")
+    if positioning.get("liveTradingEnabled") is not False:
+        raise SiteCheckError(f"{label}: liveTradingEnabled must be false")
+    for name in (
+        "China Narrative Radar",
+        "Weekly Go China Radar",
+        "Liquidation Replay",
+        "Risk Warning Credits",
+        "Backtest Lab",
+        "ENTRY_READY Review",
+        "Position Size Calculator",
+        "GCA Member Workspace",
+    ):
+        if name not in module_names:
+            raise SiteCheckError(f"{label}: missing module {name}")
+    for gate in ("controlled-https-account-ui", "read-only-wallet-verification", "credit-ledger-activation", "member-ledger-activation", "risk-control-review", "simulation-first"):
+        if gate not in release_gate_ids:
+            raise SiteCheckError(f"{label}: missing release gate {gate}")
+    if access.get("holderBonusMinimum") != "10000 GCA":
+        raise SiteCheckError(f"{label}: wrong holder bonus minimum")
+    if access.get("holderBonusCreditAmount") != "100 Web3 Radar utility credits":
+        raise SiteCheckError(f"{label}: wrong holder bonus credit")
+    if access.get("gcaMemberMinimum") != "1000000 GCA":
+        raise SiteCheckError(f"{label}: wrong member minimum")
+    for key in (
+        "custody",
+        "withdrawalPermission",
+        "privateKeyCollection",
+        "seedPhraseCollection",
+        "exchangeApiSecretCollection",
+        "automaticLiveTradingEnabled",
+        "riskControlBypassAllowed",
+        "productionExchangeConnection",
+    ):
+        if safety.get(key) is not False:
+            raise SiteCheckError(f"{label}: {key} must be false")
+    for key in (
+        "simulationFirstRequired",
+        "uniqueClientOrderIdRequiredBeforeAnyFutureOrderFlow",
+        "riskCheckRequiredBeforeAnyFutureOrderFlow",
+    ):
+        if safety.get(key) is not True:
+            raise SiteCheckError(f"{label}: {key} must be true")
+    if market.get("pair") != "GCA/USDT":
+        raise SiteCheckError(f"{label}: wrong pair")
+    if market.get("poolAddress") != OFFICIAL_POOL_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong poolAddress")
+    if market.get("quoteAssetAddress") != BASE_USDT_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong quoteAssetAddress")
+    if market.get("liquidityDepth") != "starter-depth-only":
+        raise SiteCheckError(f"{label}: wrong liquidityDepth")
+    if links.get("productPage") != PRODUCT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong productPage")
+    if links.get("productJson") != PRODUCT_URL:
+        raise SiteCheckError(f"{label}: wrong productJson")
+    if links.get("utilityJson") != UTILITY_URL:
+        raise SiteCheckError(f"{label}: wrong utilityJson")
+    if links.get("memberLedger") != MEMBER_LEDGER_URL:
+        raise SiteCheckError(f"{label}: wrong memberLedger")
+    if "GCA has published a public product specification for GCA AI Quant Access." not in boundaries.get("safeClaims", []):
+        raise SiteCheckError(f"{label}: missing product safe claim")
+    if not any("full GCA AI Quant Access product is live" in item for item in boundaries.get("doNotClaim", [])):
+        raise SiteCheckError(f"{label}: missing product live boundary")
+    assert_no_forbidden_public_claims(json.dumps(payload), label)
+    assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
+    assert_not_contains(json.dumps(payload), "GCA/WETH", label)
+
+
 def validate_privacy_page(text: str) -> None:
     label = "/privacy.html"
     assert_contains(text, "GCA Privacy Notice", label)
@@ -1117,6 +1247,10 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong utilityThesisUrl")
     if payload.get("utilityThesisJsonUrl") != UTILITY_URL:
         raise SiteCheckError(f"{label}: wrong utilityThesisJsonUrl")
+    if payload.get("productSpecPageUrl") != PRODUCT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong productSpecPageUrl")
+    if payload.get("productSpecUrl") != PRODUCT_URL:
+        raise SiteCheckError(f"{label}: wrong productSpecUrl")
     if payload.get("walletWarningEvidencePageUrl") != WALLET_WARNING_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong walletWarningEvidencePageUrl")
     if payload.get("walletWarningEvidenceUrl") != WALLET_WARNING_URL:
@@ -1198,6 +1332,20 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: utility bridge must keep self-service claims false")
     if payload.get("utilityBridge", {}).get("requiresControlledWalletVerification") is not True:
         raise SiteCheckError(f"{label}: utility bridge must require controlled wallet verification")
+    if status.get("productSpec") != "public-product-spec-published":
+        raise SiteCheckError(f"{label}: unexpected product spec status")
+    if payload.get("productSpec", {}).get("status") != "public-product-spec-published":
+        raise SiteCheckError(f"{label}: unexpected product spec object status")
+    if payload.get("productSpec", {}).get("pageUrl") != PRODUCT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong product spec page")
+    if payload.get("productSpec", {}).get("url") != PRODUCT_URL:
+        raise SiteCheckError(f"{label}: wrong product spec url")
+    if payload.get("productSpec", {}).get("publicAccountUiLive") is not False:
+        raise SiteCheckError(f"{label}: product account UI must be false")
+    if payload.get("productSpec", {}).get("liveTradingEnabled") is not False:
+        raise SiteCheckError(f"{label}: product live trading must be false")
+    if "ENTRY_READY Review" not in payload.get("productSpec", {}).get("moduleNames", []):
+        raise SiteCheckError(f"{label}: missing product module")
     if payload.get("communityKit", {}).get("status") != "public-community-kit-published":
         raise SiteCheckError(f"{label}: unexpected community kit status")
     if payload.get("communityKit", {}).get("officialTelegram") != "https://t.me/gcagochinaofficial":
@@ -1304,6 +1452,12 @@ def validate_tokenlist_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong utilityThesis")
     if extensions.get("utilityThesisJson") != UTILITY_URL:
         raise SiteCheckError(f"{label}: wrong utilityThesisJson")
+    if extensions.get("productSpecPage") != PRODUCT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong productSpecPage")
+    if extensions.get("productSpec") != PRODUCT_URL:
+        raise SiteCheckError(f"{label}: wrong productSpec")
+    if extensions.get("productSpecStatus") != "public-product-spec-published":
+        raise SiteCheckError(f"{label}: wrong productSpecStatus")
     if extensions.get("walletWarningEvidencePage") != WALLET_WARNING_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong walletWarningEvidencePage")
     if extensions.get("walletWarningEvidence") != WALLET_WARNING_URL:
@@ -1434,6 +1588,10 @@ def validate_well_known_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong utilityThesis")
     if urls.get("utilityThesisJson") != UTILITY_URL:
         raise SiteCheckError(f"{label}: wrong utilityThesisJson")
+    if urls.get("productSpecPage") != PRODUCT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong productSpecPage")
+    if urls.get("productSpec") != PRODUCT_URL:
+        raise SiteCheckError(f"{label}: wrong productSpec")
     if urls.get("walletWarningEvidencePage") != WALLET_WARNING_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong walletWarningEvidencePage")
     if urls.get("walletWarningEvidence") != WALLET_WARNING_URL:
@@ -1496,6 +1654,16 @@ def validate_well_known_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong weeklyGoChinaRadar status")
     if payload.get("platformStatus", {}).get("utilityBridge") != "public-utility-bridge-spec-published":
         raise SiteCheckError(f"{label}: wrong utilityBridge status")
+    if payload.get("platformStatus", {}).get("productSpec") != "public-product-spec-published":
+        raise SiteCheckError(f"{label}: wrong productSpec status")
+    if payload.get("productSpec", {}).get("pageUrl") != PRODUCT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong productSpec page")
+    if payload.get("productSpec", {}).get("url") != PRODUCT_URL:
+        raise SiteCheckError(f"{label}: wrong productSpec url")
+    if payload.get("productSpec", {}).get("publicAccountUiLive") is not False:
+        raise SiteCheckError(f"{label}: product account UI must be false")
+    if payload.get("productSpec", {}).get("liveTradingEnabled") is not False:
+        raise SiteCheckError(f"{label}: product live trading must be false")
     if payload.get("platformStatus", {}).get("walletSecurityProfile") != "public-wallet-security-profile-published":
         raise SiteCheckError(f"{label}: wrong walletSecurityProfile status")
     if payload.get("platformStatus", {}).get("tokenSafety") != "public-token-safety-checklist-published":
@@ -2502,6 +2670,8 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/terms.json",
         "https://gcagochina.com/utility.html",
         "https://gcagochina.com/utility.json",
+        "https://gcagochina.com/product.html",
+        "https://gcagochina.com/product.json",
         "https://gcagochina.com/supply.json",
         "https://gcagochina.com/listing-readiness.html",
         "https://gcagochina.com/listing-readiness.json",
@@ -2557,6 +2727,8 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /terms.json", label)
     assert_contains(text, "Allow: /utility.html", label)
     assert_contains(text, "Allow: /utility.json", label)
+    assert_contains(text, "Allow: /product.html", label)
+    assert_contains(text, "Allow: /product.json", label)
     assert_contains(text, "Allow: /.well-known/gca-token.json", label)
     assert_contains(text, "Allow: /.well-known/wallet-security.json", label)
     assert_contains(text, "Allow: /.well-known/security.txt", label)
@@ -2604,6 +2776,8 @@ CHECKS: list[EndpointCheck] = [
     ("/radar.json", validate_radar_json),
     ("/utility.html", validate_utility_page),
     ("/utility.json", validate_utility_json),
+    ("/product.html", validate_product_page),
+    ("/product.json", validate_product_json),
     ("/privacy.html", validate_privacy_page),
     ("/privacy.json", validate_privacy_json),
     ("/terms.html", validate_terms_page),

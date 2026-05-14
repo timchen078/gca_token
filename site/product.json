@@ -1,0 +1,168 @@
+{
+  "schema": "https://gcagochina.com/product.json",
+  "pageUrl": "https://gcagochina.com/product.html",
+  "status": "public-product-spec-published",
+  "lastUpdated": "2026-05-14",
+  "chainId": 8453,
+  "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+  "title": "GCA AI Quant Access Product Spec",
+  "positioning": {
+    "concept": "Go China Access",
+    "productName": "GCA AI Quant Access",
+    "tagline": "Narrative meets risk control.",
+    "summary": "A planned non-custodial product layer for China-facing Web3 narrative research, liquidation review, backtests, risk warnings, ENTRY_READY reviews, position sizing, education, and member workflows.",
+    "currentStage": "public-product-spec-only",
+    "publicAccountUiLive": false,
+    "liveTradingEnabled": false
+  },
+  "productModules": [
+    {
+      "id": "china-narrative-radar",
+      "name": "China Narrative Radar",
+      "status": "public-content-format",
+      "purpose": "Organize China-facing Web3 themes, bilingual notes, market narratives, and weekly research topics.",
+      "notPurpose": "Not live market data, not financial advice, and not a buy or sell recommendation."
+    },
+    {
+      "id": "weekly-go-china-radar",
+      "name": "Weekly Go China Radar",
+      "status": "issue-002-live",
+      "purpose": "Publish repeatable public updates around trust stack, official links, risk notes, and community talking points.",
+      "notPurpose": "Not a price forecast or signal feed."
+    },
+    {
+      "id": "liquidation-replay",
+      "name": "Liquidation Replay",
+      "status": "planned-report-workflow",
+      "purpose": "Review liquidation, over-sizing, leverage, stop placement, and execution mistakes after a trade.",
+      "notPurpose": "Not compensation, reimbursement, insurance, or a promise that future losses can be avoided."
+    },
+    {
+      "id": "risk-warning-credits",
+      "name": "Risk Warning Credits",
+      "status": "planned-service-credit-workflow",
+      "purpose": "Spend account-level utility credits on risk warnings, crowding checks, volatility notes, and exposure review.",
+      "notPurpose": "Not cash, tokens, income, reimbursement, or trading permission."
+    },
+    {
+      "id": "backtest-lab",
+      "name": "Backtest Lab",
+      "status": "planned-research-workflow",
+      "purpose": "Run realistic backtests with fees, slippage, drawdown, sample quality, and risk constraints.",
+      "notPurpose": "Not proof that a strategy will perform in live markets."
+    },
+    {
+      "id": "entry-ready-review",
+      "name": "ENTRY_READY Review",
+      "status": "planned-signal-review-workflow",
+      "purpose": "Review whether a trade idea has sufficient setup, invalidation, risk budget, and execution conditions.",
+      "notPurpose": "Not automatic live order execution or a bypass of risk controls."
+    },
+    {
+      "id": "position-size-calculator",
+      "name": "Position Size Calculator",
+      "status": "planned-risk-tool",
+      "purpose": "Calculate risk budget, stop distance, leverage bounds, exposure limits, and maximum loss scenarios.",
+      "notPurpose": "Not leverage encouragement or a replacement for user judgment."
+    },
+    {
+      "id": "gca-member-workspace",
+      "name": "GCA Member Workspace",
+      "status": "planned-controlled-account-ui",
+      "purpose": "Map verified GCA holder status to utility limits, member notes, report queues, training sessions, and support workflows.",
+      "notPurpose": "Not custody, voting control, lifetime access, exchange listing priority, or special trading permission."
+    }
+  ],
+  "releaseGates": [
+    {
+      "id": "controlled-https-account-ui",
+      "label": "Controlled HTTPS account UI",
+      "status": "required-before-public-claims"
+    },
+    {
+      "id": "read-only-wallet-verification",
+      "label": "Read-only GCA balance verification",
+      "status": "required-before-ledger-records"
+    },
+    {
+      "id": "credit-ledger-activation",
+      "label": "100 utility credits ledger activation",
+      "status": "required-before-credit-use"
+    },
+    {
+      "id": "member-ledger-activation",
+      "label": "GCA Member ledger activation",
+      "status": "required-before-member-access"
+    },
+    {
+      "id": "risk-control-review",
+      "label": "Risk-control review",
+      "status": "required-before-any-trading-tool"
+    },
+    {
+      "id": "simulation-first",
+      "label": "Simulation or testnet first",
+      "status": "required-before-live-execution"
+    }
+  ],
+  "gcaAccessRules": {
+    "holderBonusMinimum": "10000 GCA",
+    "holderBonusCreditAmount": "100 Web3 Radar utility credits",
+    "gcaMemberMinimum": "1000000 GCA",
+    "registeredUserLimit": "one holder bonus and one member status review per registered user",
+    "walletLimit": "one verified wallet per registered user",
+    "creditUse": "reports, backtests, risk warnings, ENTRY_READY signal review, position calculators, or education access",
+    "memberUse": "higher utility credit limits, member research notes, priority report queue, member training sessions, and priority support"
+  },
+  "safetyArchitecture": {
+    "custody": false,
+    "withdrawalPermission": false,
+    "privateKeyCollection": false,
+    "seedPhraseCollection": false,
+    "exchangeApiSecretCollection": false,
+    "automaticLiveTradingEnabled": false,
+    "riskControlBypassAllowed": false,
+    "productionExchangeConnection": false,
+    "simulationFirstRequired": true,
+    "uniqueClientOrderIdRequiredBeforeAnyFutureOrderFlow": true,
+    "riskCheckRequiredBeforeAnyFutureOrderFlow": true
+  },
+  "officialMarket": {
+    "pair": "GCA/USDT",
+    "dex": "Uniswap v4",
+    "network": "Base Mainnet",
+    "poolAddress": "0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "quoteAsset": "USDT",
+    "quoteAssetAddress": "0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2",
+    "liquidityDepth": "starter-depth-only"
+  },
+  "publicClaimBoundaries": {
+    "safeClaims": [
+      "GCA has published a public product specification for GCA AI Quant Access.",
+      "The current product page is a public spec and planning document.",
+      "GCA is planned as an access and membership layer for non-custodial quant risk tools.",
+      "Any future trading-related feature must remain behind risk checks, simulation or testnet validation, and controlled account UI.",
+      "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool."
+    ],
+    "doNotClaim": [
+      "the full GCA AI Quant Access product is live before controlled account UI is released",
+      "public self-service credits or GCA Member status are claimable before controlled wallet verification and ledger activation",
+      "GCA provides custody, withdrawal permission, private key access, exchange API secret collection, platform revenue distribution, trading permission, leverage access, or risk-control bypass",
+      "GCA provides live market data, financial advice, buy or sell recommendations, price forecasts, or strategy performance promises",
+      "any third-party audit, tracked listing, deep liquidity, or BaseScan token profile approval before publication"
+    ]
+  },
+  "officialLinks": {
+    "productPage": "https://gcagochina.com/product.html",
+    "productJson": "https://gcagochina.com/product.json",
+    "utilityPage": "https://gcagochina.com/utility.html",
+    "utilityJson": "https://gcagochina.com/utility.json",
+    "memberLedger": "https://gcagochina.com/member-ledger.json",
+    "memberProgram": "https://gcagochina.com/member-program.json",
+    "roadmap": "https://gcagochina.com/roadmap.html",
+    "weeklyRadar": "https://gcagochina.com/radar.html",
+    "risk": "https://gcagochina.com/risk.html",
+    "verify": "https://gcagochina.com/verify.html",
+    "market": "https://gcagochina.com/markets.html"
+  }
+}

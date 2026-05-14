@@ -171,7 +171,8 @@
     "utilityBridge": "public-utility-bridge-spec-published",
     "coinGeckoTrackedListing": "not-submitted",
     "coinMarketCapTrackedListing": "not-submitted",
-    "thirdPartyAudit": "not-completed"
+    "thirdPartyAudit": "not-completed",
+    "productSpec": "public-product-spec-published"
   },
   "listingReadiness": {
     "status": "not-ready",
@@ -340,6 +341,40 @@
     }
   },
   "shortDescription": "GCA, short for Go China Access, is a fixed-supply ERC-20 token on Base Mainnet. It is a concept-stage access token for the Go China narrative, China-facing Web3 intelligence, risk education, and planned non-custodial quant research tools.",
-  "longDescription": "GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stands for Go China Access, a concept-stage community and access-token direction focused on the Go China narrative, China Narrative Radar, bilingual Web3 education, public market research, and planned access to non-custodial quant risk tools. The intended Web3 Radar bridge is to make GCA an access and membership layer for Liquidation Replay reports, risk-warning credits, realistic backtests, ENTRY_READY Review, position-size calculators, member research notes, and risk-control training. The contract created 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls. The official public pool is the Base Mainnet Uniswap v4 GCA/USDT pool, and the project has a disclosed owner-held reserve wallet. The project is early-stage, has no completed third-party audit, and should not be described as externally audited, price-backed, yield-bearing, or backed by guaranteed liquidity.",
-  "lastUpdated": "2026-05-14"
+  "longDescription": "GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stands for Go China Access, a concept-stage community and access-token direction focused on the Go China narrative, China Narrative Radar, bilingual Web3 education, public market research, and planned access to non-custodial quant risk tools. The published product specification is GCA AI Quant Access. The intended Web3 Radar bridge is to make GCA an access and membership layer for Liquidation Replay reports, risk-warning credits, realistic backtests, ENTRY_READY Review, position-size calculators, member research notes, and risk-control training. The contract created 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls. The official public pool is the Base Mainnet Uniswap v4 GCA/USDT pool, and the project has a disclosed owner-held reserve wallet. The project is early-stage, has no completed third-party audit, and should not be described as externally audited, price-backed, yield-bearing, or backed by guaranteed liquidity.",
+  "lastUpdated": "2026-05-14",
+  "productSpecPageUrl": "https://gcagochina.com/product.html",
+  "productSpecUrl": "https://gcagochina.com/product.json",
+  "productSpec": {
+    "status": "public-product-spec-published",
+    "pageUrl": "https://gcagochina.com/product.html",
+    "url": "https://gcagochina.com/product.json",
+    "productName": "GCA AI Quant Access",
+    "currentStage": "public-product-spec-only",
+    "publicAccountUiLive": false,
+    "liveTradingEnabled": false,
+    "releaseGate": "controlled HTTPS account UI, read-only wallet verification, credit ledger activation, member ledger activation, risk-control review, and simulation or testnet first",
+    "moduleNames": [
+      "China Narrative Radar",
+      "Weekly Go China Radar",
+      "Liquidation Replay",
+      "Risk Warning Credits",
+      "Backtest Lab",
+      "ENTRY_READY Review",
+      "Position Size Calculator",
+      "GCA Member Workspace"
+    ],
+    "notProduct": [
+      "custody",
+      "withdrawal permission",
+      "private key or seed phrase collection",
+      "exchange API secret collection",
+      "automatic live trading permission",
+      "financial advice",
+      "live market data",
+      "buy or sell recommendation",
+      "price forecast",
+      "strategy performance promise"
+    ]
+  }
 }

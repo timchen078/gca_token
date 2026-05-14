@@ -287,5 +287,37 @@
     "coinGeckoMethodology": "https://www.coingecko.com/en/methodology",
     "coinGeckoSelfServeGuide": "https://support.coingecko.com/hc/en-us/articles/33084534107289-Guide-to-the-CoinGecko-Self-Serve-Request-Form",
     "coinMarketCapListingsCriteria": "https://support.coinmarketcap.com/hc/en-us/articles/360043659351-Listings-Criteria/"
+  },
+  "productSpecPageUrl": "https://gcagochina.com/product.html",
+  "productSpecUrl": "https://gcagochina.com/product.json",
+  "productSpecPositioning": {
+    "status": "public-product-spec-published",
+    "productName": "GCA AI Quant Access",
+    "currentStage": "public-product-spec-only",
+    "publicAccountUiLive": false,
+    "liveTradingEnabled": false,
+    "modules": [
+      "China Narrative Radar",
+      "Weekly Go China Radar",
+      "Liquidation Replay",
+      "Risk Warning Credits",
+      "Backtest Lab",
+      "ENTRY_READY Review",
+      "Position Size Calculator",
+      "GCA Member Workspace"
+    ],
+    "releaseGate": "controlled HTTPS account UI, read-only wallet verification, credit ledger activation, member ledger activation, risk-control review, and simulation or testnet first",
+    "notProduct": [
+      "custody",
+      "withdrawal permission",
+      "private key or seed phrase collection",
+      "exchange API secret collection",
+      "automatic live trading permission",
+      "financial advice",
+      "live market data",
+      "buy or sell recommendation",
+      "price forecast",
+      "strategy performance promise"
+    ]
   }
 }

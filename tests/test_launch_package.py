@@ -52,6 +52,8 @@ RADAR_PAGE_URL = "https://gcagochina.com/radar.html"
 RADAR_URL = "https://gcagochina.com/radar.json"
 UTILITY_PAGE_URL = "https://gcagochina.com/utility.html"
 UTILITY_URL = "https://gcagochina.com/utility.json"
+PRODUCT_PAGE_URL = "https://gcagochina.com/product.html"
+PRODUCT_URL = "https://gcagochina.com/product.json"
 PRIVACY_NOTICE_PAGE_URL = "https://gcagochina.com/privacy.html"
 PRIVACY_NOTICE_URL = "https://gcagochina.com/privacy.json"
 PARTICIPATION_TERMS_PAGE_URL = "https://gcagochina.com/terms.html"
@@ -114,6 +116,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("/radar.json", script)
         self.assertIn("/utility.html", script)
         self.assertIn("/utility.json", script)
+        self.assertIn("/product.html", script)
+        self.assertIn("/product.json", script)
         self.assertIn("/privacy.html", script)
         self.assertIn("/privacy.json", script)
         self.assertIn("/terms.html", script)
@@ -158,6 +162,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("validate_radar_json", script)
         self.assertIn("validate_utility_page", script)
         self.assertIn("validate_utility_json", script)
+        self.assertIn("validate_product_page", script)
+        self.assertIn("validate_product_json", script)
         self.assertIn("validate_privacy_page", script)
         self.assertIn("validate_privacy_json", script)
         self.assertIn("validate_terms_page", script)
@@ -225,6 +231,8 @@ class LaunchPackageTests(unittest.TestCase):
         module.validate_radar_json((ROOT / "site" / "radar.json").read_text())
         module.validate_utility_page((ROOT / "site" / "utility.html").read_text())
         module.validate_utility_json((ROOT / "site" / "utility.json").read_text())
+        module.validate_product_page((ROOT / "site" / "product.html").read_text())
+        module.validate_product_json((ROOT / "site" / "product.json").read_text())
         module.validate_privacy_page((ROOT / "site" / "privacy.html").read_text())
         module.validate_privacy_json((ROOT / "site" / "privacy.json").read_text())
         module.validate_terms_page((ROOT / "site" / "terms.html").read_text())
@@ -377,6 +385,7 @@ class LaunchPackageTests(unittest.TestCase):
         trust = (ROOT / "site" / "trust.html").read_text()
         project = json.loads((ROOT / "site" / "project.json").read_text())
         utility = (ROOT / "site" / "utility.html").read_text()
+        product = (ROOT / "site" / "product.html").read_text()
         members = (ROOT / "site" / "members.html").read_text()
         self.assertIn("Base Mainnet", site)
         self.assertIn("chainId 8453", site)
@@ -395,6 +404,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(MAINNET_ADDRESS, trust)
         self.assertEqual(project["contractAddress"], MAINNET_ADDRESS)
         self.assertIn(MAINNET_ADDRESS, utility)
+        self.assertIn(MAINNET_ADDRESS, product)
+        self.assertIn("Base Mainnet", product)
         self.assertIn(MAINNET_ADDRESS, members)
         self.assertIn("Base Mainnet", members)
         self.assertIn("Base Mainnet", buy)
@@ -413,6 +424,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertNotIn("sepolia.basescan.org", reviewer)
         self.assertNotIn("sepolia.basescan.org", platform)
         self.assertNotIn("sepolia.basescan.org", trust)
+        self.assertNotIn("sepolia.basescan.org", product)
 
     def test_public_site_sets_custom_domain(self):
         cname = (ROOT / "site" / "CNAME").read_text().strip()
@@ -466,6 +478,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Allow: /terms.json", robots)
         self.assertIn("Allow: /utility.html", robots)
         self.assertIn("Allow: /utility.json", robots)
+        self.assertIn("Allow: /product.html", robots)
+        self.assertIn("Allow: /product.json", robots)
         self.assertIn("Allow: /.well-known/gca-token.json", robots)
         self.assertIn("Allow: /.well-known/wallet-security.json", robots)
         self.assertIn("Allow: /.well-known/security.txt", robots)
@@ -523,6 +537,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(PARTICIPATION_TERMS_URL, sitemap)
         self.assertIn(UTILITY_PAGE_URL, sitemap)
         self.assertIn(UTILITY_URL, sitemap)
+        self.assertIn(PRODUCT_PAGE_URL, sitemap)
+        self.assertIn(PRODUCT_URL, sitemap)
         self.assertIn("https://gcagochina.com/whitepaper.html", sitemap)
         self.assertIn(WELL_KNOWN_TOKEN_URL, sitemap)
         self.assertIn(WALLET_SECURITY_PROFILE_URL, sitemap)
@@ -567,6 +583,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(identity["officialUrls"]["participationTerms"], PARTICIPATION_TERMS_URL)
         self.assertEqual(identity["officialUrls"]["utilityThesis"], UTILITY_PAGE_URL)
         self.assertEqual(identity["officialUrls"]["utilityThesisJson"], UTILITY_URL)
+        self.assertEqual(identity["officialUrls"]["productSpecPage"], PRODUCT_PAGE_URL)
+        self.assertEqual(identity["officialUrls"]["productSpec"], PRODUCT_URL)
         self.assertEqual(identity["officialUrls"]["walletWarningEvidencePage"], WALLET_WARNING_PAGE_URL)
         self.assertEqual(identity["officialUrls"]["walletWarningEvidence"], WALLET_WARNING_URL)
         self.assertEqual(identity["officialUrls"]["externalReviewStatusPage"], EXTERNAL_REVIEW_PAGE_URL)
@@ -607,6 +625,11 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(identity["platformStatus"]["narrativeSystem"], "public-narrative-system-published")
         self.assertEqual(identity["platformStatus"]["weeklyGoChinaRadar"], "weekly-go-china-radar-issue-002-published")
         self.assertEqual(identity["platformStatus"]["utilityBridge"], "public-utility-bridge-spec-published")
+        self.assertEqual(identity["platformStatus"]["productSpec"], "public-product-spec-published")
+        self.assertEqual(identity["productSpec"]["pageUrl"], PRODUCT_PAGE_URL)
+        self.assertEqual(identity["productSpec"]["url"], PRODUCT_URL)
+        self.assertFalse(identity["productSpec"]["publicAccountUiLive"])
+        self.assertFalse(identity["productSpec"]["liveTradingEnabled"])
         self.assertEqual(identity["platformStatus"]["walletSecurityProfile"], "public-wallet-security-profile-published")
         self.assertEqual(identity["platformStatus"]["tokenSafety"], "public-token-safety-checklist-published")
         self.assertEqual(identity["platformStatus"]["thirdPartyAudit"], "not-completed")
@@ -1346,6 +1369,77 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("GCA has published a public utility bridge specification.", utility_json["publicClaimBoundaries"]["safeClaims"])
         self.assertIn("finished platform utility before the controlled account UI is live", utility_json["publicClaimBoundaries"]["doNotClaim"])
 
+    def test_product_spec_page_and_json_define_product_modules_safely(self):
+        page = (ROOT / "site" / "product.html").read_text()
+        product = json.loads((ROOT / "site" / "product.json").read_text())
+
+        self.assertIn("GCA AI Quant Access Product Spec", page)
+        self.assertIn("Product JSON", page)
+        self.assertIn("public product spec only", page)
+        self.assertIn("not a live trading terminal", page)
+        self.assertIn("not financial advice", page)
+        self.assertIn("Public Account UI", page)
+        self.assertIn("China Narrative Radar", page)
+        self.assertIn("Liquidation Replay", page)
+        self.assertIn("ENTRY_READY Review", page)
+        self.assertIn("Position Size Calculator", page)
+        self.assertIn("GCA Member Workspace", page)
+        self.assertIn("simulation or testnet first", page)
+        self.assertIn("No custody", page)
+        self.assertIn("no withdrawal permission", page)
+        self.assertIn("exchange API secret collection", page)
+        self.assertIn(MAINNET_ADDRESS, page)
+        self.assertIn(BASE_USDT_ADDRESS, page)
+        self.assertIn(OFFICIAL_POOL_ADDRESS, page)
+        self.assertNotIn(OLD_WETH_POOL_ADDRESS, page)
+        self.assertNotIn("GCA/WETH", page)
+
+        self.assertEqual(product["schema"], PRODUCT_URL)
+        self.assertEqual(product["pageUrl"], PRODUCT_PAGE_URL)
+        self.assertEqual(product["status"], "public-product-spec-published")
+        self.assertEqual(product["chainId"], 8453)
+        self.assertEqual(product["contractAddress"], MAINNET_ADDRESS)
+        self.assertEqual(product["positioning"]["productName"], "GCA AI Quant Access")
+        self.assertEqual(product["positioning"]["currentStage"], "public-product-spec-only")
+        self.assertFalse(product["positioning"]["publicAccountUiLive"])
+        self.assertFalse(product["positioning"]["liveTradingEnabled"])
+        module_names = {item["name"] for item in product["productModules"]}
+        for name in {
+            "China Narrative Radar",
+            "Weekly Go China Radar",
+            "Liquidation Replay",
+            "Risk Warning Credits",
+            "Backtest Lab",
+            "ENTRY_READY Review",
+            "Position Size Calculator",
+            "GCA Member Workspace",
+        }:
+            self.assertIn(name, module_names)
+        gate_ids = {item["id"] for item in product["releaseGates"]}
+        self.assertIn("controlled-https-account-ui", gate_ids)
+        self.assertIn("simulation-first", gate_ids)
+        self.assertEqual(product["gcaAccessRules"]["holderBonusMinimum"], "10000 GCA")
+        self.assertEqual(product["gcaAccessRules"]["holderBonusCreditAmount"], "100 Web3 Radar utility credits")
+        self.assertEqual(product["gcaAccessRules"]["gcaMemberMinimum"], "1000000 GCA")
+        self.assertFalse(product["safetyArchitecture"]["custody"])
+        self.assertFalse(product["safetyArchitecture"]["withdrawalPermission"])
+        self.assertFalse(product["safetyArchitecture"]["exchangeApiSecretCollection"])
+        self.assertFalse(product["safetyArchitecture"]["automaticLiveTradingEnabled"])
+        self.assertTrue(product["safetyArchitecture"]["simulationFirstRequired"])
+        self.assertTrue(product["safetyArchitecture"]["riskCheckRequiredBeforeAnyFutureOrderFlow"])
+        self.assertEqual(product["officialMarket"]["pair"], "GCA/USDT")
+        self.assertEqual(product["officialMarket"]["poolAddress"], OFFICIAL_POOL_ADDRESS)
+        self.assertEqual(product["officialMarket"]["quoteAssetAddress"], BASE_USDT_ADDRESS)
+        self.assertEqual(product["officialMarket"]["liquidityDepth"], "starter-depth-only")
+        self.assertEqual(product["officialLinks"]["productPage"], PRODUCT_PAGE_URL)
+        self.assertEqual(product["officialLinks"]["productJson"], PRODUCT_URL)
+        self.assertEqual(product["officialLinks"]["utilityJson"], UTILITY_URL)
+        self.assertEqual(product["officialLinks"]["memberLedger"], MEMBER_LEDGER_URL)
+        self.assertIn("GCA has published a public product specification for GCA AI Quant Access.", product["publicClaimBoundaries"]["safeClaims"])
+        self.assertTrue(any("full GCA AI Quant Access product is live" in item for item in product["publicClaimBoundaries"]["doNotClaim"]))
+        self.assertNotIn(OLD_WETH_POOL_ADDRESS, json.dumps(product))
+        self.assertNotIn("GCA/WETH", json.dumps(product))
+
     def test_verify_page_centralizes_official_identity_and_status(self):
         verify = (ROOT / "site" / "verify.html").read_text()
 
@@ -1647,6 +1741,7 @@ class LaunchPackageTests(unittest.TestCase):
         buy = (ROOT / "site" / "buy.html").read_text()
         members = (ROOT / "site" / "members.html").read_text()
         utility = (ROOT / "site" / "utility.html").read_text()
+        product = (ROOT / "site" / "product.html").read_text()
         whitepaper = (ROOT / "site" / "whitepaper.html").read_text()
         markets = (ROOT / "site" / "markets.html").read_text()
         supply = (ROOT / "site" / "supply.html").read_text()
@@ -1696,6 +1791,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn('href="community.html"', status)
         self.assertIn('href="privacy.html"', status)
         self.assertIn('href="terms.html"', status)
+        self.assertIn('href="product.html"', status)
+        self.assertIn("GCA AI Quant Access product spec", status)
         self.assertIn("No third-party audit has been completed", status)
         self.assertIn("600,000,000 GCA", status)
         self.assertIn("normal owner-controlled wallet", status)
@@ -1717,11 +1814,12 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn('href="community.html"', index)
         self.assertIn('href="privacy.html"', index)
         self.assertIn('href="terms.html"', index)
+        self.assertIn('href="product.html"', index)
 
         wallet_warning = (ROOT / "site" / "wallet-warning.html").read_text()
         external = (ROOT / "site" / "external-reviews.html").read_text()
         brand = (ROOT / "site" / "brand-kit.html").read_text()
-        for page in (index, buy, markets, supply, security, risk, faq, members, utility, whitepaper, verify, readiness, quality, wallet_warning, external, onchain, brand, member_ledger, support, roadmap, community, privacy, terms):
+        for page in (index, buy, markets, supply, security, risk, faq, members, utility, product, whitepaper, verify, readiness, quality, wallet_warning, external, onchain, brand, member_ledger, support, roadmap, community, privacy, terms):
             self.assertIn('href="status.html"', page)
             self.assertIn('href="listing-kit.html"', page)
             self.assertIn('href="markets.html"', page)
@@ -1809,6 +1907,10 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("roadmap.html", kit)
         self.assertIn("Roadmap JSON", kit)
         self.assertIn("roadmap.json", kit)
+        self.assertIn("Product Spec", kit)
+        self.assertIn("product.html", kit)
+        self.assertIn("Product JSON", kit)
+        self.assertIn("product.json", kit)
         self.assertIn("Community Kit", kit)
         self.assertIn("community.html", kit)
         self.assertIn("Community JSON", kit)
@@ -1918,6 +2020,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(project["participationTermsUrl"], PARTICIPATION_TERMS_URL)
         self.assertEqual(project["utilityThesisUrl"], UTILITY_PAGE_URL)
         self.assertEqual(project["utilityThesisJsonUrl"], UTILITY_URL)
+        self.assertEqual(project["productSpecPageUrl"], PRODUCT_PAGE_URL)
+        self.assertEqual(project["productSpecUrl"], PRODUCT_URL)
         self.assertTrue(any(link["platform"] == "X" and link["url"] == X_URL for link in project["officialSocialLinks"]))
         self.assertEqual(project["reviewerKit"]["status"], "public-reviewer-kit-published")
         self.assertEqual(project["reviewerKit"]["pageUrl"], REVIEWER_KIT_PAGE_URL)
@@ -1967,6 +2071,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(project["platformStatus"]["narrativeSystem"], "public-narrative-system-published")
         self.assertEqual(project["platformStatus"]["weeklyGoChinaRadar"], "weekly-go-china-radar-issue-002-published")
         self.assertEqual(project["platformStatus"]["utilityBridge"], "public-utility-bridge-spec-published")
+        self.assertEqual(project["platformStatus"]["productSpec"], "public-product-spec-published")
         self.assertEqual(project["platformStatus"]["thirdPartyAudit"], "not-completed")
         self.assertEqual(project["listingReadiness"]["status"], "not-ready")
         self.assertIn("CoinGecko tracked listing request", project["listingReadiness"]["defer"])
@@ -1986,6 +2091,14 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertFalse(project["utilityBridge"]["publicSelfServiceClaimsLive"])
         self.assertTrue(project["utilityBridge"]["requiresControlledWalletVerification"])
         self.assertIn("withdrawal permission", project["utilityBridge"]["notUtility"])
+        self.assertEqual(project["productSpec"]["status"], "public-product-spec-published")
+        self.assertEqual(project["productSpec"]["pageUrl"], PRODUCT_PAGE_URL)
+        self.assertEqual(project["productSpec"]["url"], PRODUCT_URL)
+        self.assertEqual(project["productSpec"]["currentStage"], "public-product-spec-only")
+        self.assertFalse(project["productSpec"]["publicAccountUiLive"])
+        self.assertFalse(project["productSpec"]["liveTradingEnabled"])
+        self.assertIn("ENTRY_READY Review", project["productSpec"]["moduleNames"])
+        self.assertIn("exchange API secret collection", project["productSpec"]["notProduct"])
         self.assertEqual(project["communityKit"]["status"], "public-community-kit-published")
         self.assertEqual(project["communityKit"]["pageUrl"], COMMUNITY_PAGE_URL)
         self.assertEqual(project["communityKit"]["url"], COMMUNITY_URL)
@@ -2658,6 +2771,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(extensions["participationTerms"], PARTICIPATION_TERMS_URL)
         self.assertEqual(extensions["utilityThesis"], UTILITY_PAGE_URL)
         self.assertEqual(extensions["utilityThesisJson"], UTILITY_URL)
+        self.assertEqual(extensions["productSpecPage"], PRODUCT_PAGE_URL)
+        self.assertEqual(extensions["productSpec"], PRODUCT_URL)
+        self.assertEqual(extensions["productSpecStatus"], "public-product-spec-published")
         self.assertEqual(extensions["officialTelegram"], TELEGRAM_URL)
         self.assertEqual(extensions["officialX"], X_URL)
         self.assertEqual(extensions["geckoTerminal"], OFFICIAL_GECKOTERMINAL_URL)
@@ -2740,6 +2856,8 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "site" / "terms.json",
             ROOT / "site" / "utility.html",
             ROOT / "site" / "utility.json",
+            ROOT / "site" / "product.html",
+            ROOT / "site" / "product.json",
             ROOT / "site" / ".well-known" / "gca-token.json",
             ROOT / "site" / ".well-known" / "wallet-security.json",
             ROOT / "site" / ".well-known" / "security.txt",
@@ -2825,6 +2943,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Go China macro narrative", values["description"])
         self.assertIn("non-custodial quant risk tools", values["description"])
         self.assertIn("ENTRY_READY signal review", values["description"])
+        self.assertEqual(values["productSpecPageUrl"], PRODUCT_PAGE_URL)
+        self.assertEqual(values["productSpecUrl"], PRODUCT_URL)
         self.assertEqual(values["submissionStatus"], "resubmitted")
         self.assertEqual(values["reviewStatus"], "resubmitted-awaiting-review")
         self.assertEqual(values["returnNoticeDate"], "2026-05-13")
@@ -2933,6 +3053,8 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "site" / "whitepaper.html",
             ROOT / "site" / "utility.html",
             ROOT / "site" / "utility.json",
+            ROOT / "site" / "product.html",
+            ROOT / "site" / "product.json",
             ROOT / "site" / "member-ledger.html",
             ROOT / "site" / "member-ledger.json",
             ROOT / "site" / "support.html",
@@ -3090,6 +3212,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Public community kit page and JSON prepared", status)
         self.assertIn(COMMUNITY_PAGE_URL, status)
         self.assertIn(COMMUNITY_URL, status)
+        self.assertIn("Public GCA AI Quant Access product spec prepared", status)
+        self.assertIn(PRODUCT_PAGE_URL, status)
+        self.assertIn(PRODUCT_URL, status)
         self.assertIn("Public privacy notice and participation terms prepared", status)
         self.assertIn(PRIVACY_NOTICE_PAGE_URL, status)
         self.assertIn(PRIVACY_NOTICE_URL, status)
@@ -3127,6 +3252,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("https://gcagochina.com/roadmap.json", status)
         self.assertIn("Use `https://gcagochina.com/community.html`", status)
         self.assertIn("https://gcagochina.com/community.json", status)
+        self.assertIn("Use `https://gcagochina.com/product.html`", status)
+        self.assertIn("https://gcagochina.com/product.json", status)
         self.assertIn("Use `https://gcagochina.com/privacy.html`", status)
         self.assertIn("Use `https://gcagochina.com/terms.html`", status)
         self.assertIn("quote submission is not an audit", status)
@@ -3230,6 +3357,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(PARTICIPATION_TERMS_PAGE_URL, package)
         self.assertIn(PARTICIPATION_TERMS_URL, package)
         self.assertIn("https://gcagochina.com/utility.html", package)
+        self.assertIn(PRODUCT_PAGE_URL, package)
+        self.assertIn(PRODUCT_URL, package)
+        self.assertIn("GCA AI Quant Access", package)
         self.assertIn("https://gcagochina.com/assets/gca-logo.svg", package)
         self.assertIn("https://gcagochina.com/whitepaper.html", package)
         self.assertIn(OFFICIAL_DEXSCREENER_URL, package)
@@ -3304,7 +3434,16 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["participationTermsUrl"], PARTICIPATION_TERMS_URL)
         self.assertEqual(values["utilityThesisUrl"], UTILITY_PAGE_URL)
         self.assertEqual(values["utilityThesisJsonUrl"], UTILITY_URL)
+        self.assertEqual(values["productSpecPageUrl"], PRODUCT_PAGE_URL)
+        self.assertEqual(values["productSpecUrl"], PRODUCT_URL)
         self.assertEqual(values["logoUrl"], "https://gcagochina.com/assets/gca-logo.svg")
+        self.assertEqual(values["productSpecPositioning"]["status"], "public-product-spec-published")
+        self.assertEqual(values["productSpecPositioning"]["currentStage"], "public-product-spec-only")
+        self.assertFalse(values["productSpecPositioning"]["publicAccountUiLive"])
+        self.assertFalse(values["productSpecPositioning"]["liveTradingEnabled"])
+        self.assertIn("Liquidation Replay", values["productSpecPositioning"]["modules"])
+        self.assertIn("ENTRY_READY Review", values["productSpecPositioning"]["modules"])
+        self.assertIn("exchange API secret collection", values["productSpecPositioning"]["notProduct"])
         self.assertEqual(values["utilityPositioning"]["connectedProduct"], "Web3 Radar non-custodial quant risk toolkit")
         self.assertEqual(values["utilityPositioning"]["specUrl"], UTILITY_URL)
         self.assertIn("ENTRY_READY signal review", values["utilityPositioning"]["suitableUtility"])
@@ -3550,6 +3689,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("https://gcagochina.com/assets/gca-logo.svg", runbook)
         self.assertIn("https://gcagochina.com/whitepaper.html", runbook)
         self.assertIn("https://gcagochina.com/utility.html", runbook)
+        self.assertIn(PRODUCT_PAGE_URL, runbook)
+        self.assertIn(PRODUCT_URL, runbook)
         self.assertIn("no completed third-party audit", runbook)
         self.assertIn(TELEGRAM_URL, runbook)
         self.assertIn(X_URL, runbook)
@@ -3566,6 +3707,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["logoUrl"], "https://gcagochina.com/assets/gca-logo.svg")
         self.assertEqual(values["logoPngUrl"], "https://gcagochina.com/assets/gca-logo.png")
         self.assertEqual(values["utilityThesisUrl"], "https://gcagochina.com/utility.html")
+        self.assertEqual(values["productSpecPageUrl"], PRODUCT_PAGE_URL)
+        self.assertEqual(values["productSpecUrl"], PRODUCT_URL)
         self.assertEqual(values["officialEmail"], "GCAgochina@outlook.com")
         self.assertEqual(values["socialLinks"][0]["platform"], "Telegram")
         self.assertEqual(values["socialLinks"][0]["url"], TELEGRAM_URL)
