@@ -54,6 +54,7 @@
 - Web3 Radar local access bridge paths are prepared: `GET /gca/member-access`, `POST /gca/pre-registrations`, `POST /gca/wallet-verifications`, `GET /gca/credit-ledger`, `GET /gca/member-ledger`, and `GET /gca/member-review`; the public static page is not connected to them yet.
 - Public utility thesis page and utility bridge spec prepared at `https://gcagochina.com/utility.html` and `https://gcagochina.com/utility.json`.
 - Public GCA AI Quant Access product spec prepared at `https://gcagochina.com/product.html` and `https://gcagochina.com/product.json`; it defines the planned module map and keeps public account UI, credit claiming, member claiming, and live trading marked as not live.
+- Public GCA AI Quant Access release gates prepared at `https://gcagochina.com/release-gates.html` and `https://gcagochina.com/release-gates.json`; they keep controlled HTTPS account UI, read-only wallet verification, credit ledger activation, member ledger activation, support review queue, risk-control review, and simulation or testnet first as required gates before public self-service claims.
 - Official verify page prepared at `https://gcagochina.com/verify.html` to centralize canonical contract, Base Mainnet chain ID, official GCA/USDT pool, website, Telegram, metadata files, and anti-scam link checks.
 - Public project status page prepared at `https://gcagochina.com/status.html`.
 - Public listing kit and machine-readable project JSON prepared at `https://gcagochina.com/listing-kit.html` and `https://gcagochina.com/project.json`.
@@ -123,6 +124,7 @@
 - Use `https://gcagochina.com/listing-readiness.html` and `https://gcagochina.com/listing-readiness.json` before any tracked-listing or exchange outreach; the current status is `not-ready`.
 - Expose the Web3 Radar access bridge through controlled HTTPS account UI before describing report credits, backtest quotas, ENTRY_READY reviews, or calculators as public self-service token-gated features.
 - Use `https://gcagochina.com/product.html` and `https://gcagochina.com/product.json` when reviewers or community members ask how the Go China narrative connects to real product modules; keep it described as a public product spec only until controlled account UI is released.
+- Use `https://gcagochina.com/release-gates.html` and `https://gcagochina.com/release-gates.json` when reviewers or community members ask what must be live before credits, GCA Member status, account UI, or trading-related features can be described as public self-service features.
 - Connect controlled HTTPS account UI before describing the 10,000 GCA holder bonus as claimable by users without operator help.
 - Connect controlled HTTPS account UI before describing the 1,000,000 GCA Member tier as self-service claimable by users.
 - Configure a controlled HTTPS collection endpoint in `site/members.html` before asking users to rely on direct packet submission.

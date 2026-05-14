@@ -74,5 +74,8 @@
     "finished product utility claim"
   ],
   "productSpecPageUrl": "https://gcagochina.com/product.html",
-  "productSpecUrl": "https://gcagochina.com/product.json"
+  "productSpecUrl": "https://gcagochina.com/product.json",
+  "releaseGatesPageUrl": "https://gcagochina.com/release-gates.html",
+  "releaseGatesUrl": "https://gcagochina.com/release-gates.json",
+  "releaseGatesStatus": "public-release-gates-published"
 }

@@ -67,5 +67,8 @@
   ],
   "socialLinkNote": "Official Telegram was created after the initial BaseScan submission and was included in the 2026-05-13 BaseScan resubmission. Official X was activated and published on the website on 2026-05-14.",
   "productSpecPageUrl": "https://gcagochina.com/product.html",
-  "productSpecUrl": "https://gcagochina.com/product.json"
+  "productSpecUrl": "https://gcagochina.com/product.json",
+  "releaseGatesPageUrl": "https://gcagochina.com/release-gates.html",
+  "releaseGatesUrl": "https://gcagochina.com/release-gates.json",
+  "releaseGatesStatus": "public-release-gates-published"
 }

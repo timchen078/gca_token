@@ -54,6 +54,8 @@ Deployment notes are in `docs/deploy_base_sepolia.md` and `docs/deploy_base_main
 - Public utility bridge JSON: `site/utility.json`
 - Public product spec page: `site/product.html`
 - Public product spec JSON: `site/product.json`
+- Public product release gates page: `site/release-gates.html`
+- Public product release gates JSON: `site/release-gates.json`
 - Public brand kit page: `site/brand-kit.html`
 - Public brand kit JSON: `site/brand-kit.json`
 - Public on-chain proofs page: `site/onchain-proofs.html`
@@ -78,5 +80,5 @@ Deployment notes are in `docs/deploy_base_sepolia.md` and `docs/deploy_base_main
 - Logo: `brand/gca-logo.svg`
 - Social preview card: `brand/gca-social-card.svg`
 - Static website: `site/index.html`
-- Live public site check, including market identity, member program rules, listing readiness, and high-risk public-claim guardrails: `.venv/bin/python tools/check_public_site.py`
+- Live public site check, including market identity, member program rules, product release gates, listing readiness, and high-risk public-claim guardrails: `.venv/bin/python tools/check_public_site.py`
 - GitHub Actions public site check: `.github/workflows/check-public-site.yml`

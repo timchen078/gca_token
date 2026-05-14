@@ -26,6 +26,8 @@ BaseScan replied that it could not process the first token update request becaus
 - Public website remains live: `https://gcagochina.com/`
 - Official verify page remains live: `https://gcagochina.com/verify.html`
 - Public status page remains live: `https://gcagochina.com/status.html`
+- Product spec remains live: `https://gcagochina.com/product.html`
+- Product release gates remain live: `https://gcagochina.com/release-gates.html`
 - Public logo remains live: `https://gcagochina.com/assets/gca-logo.svg`
 - Public whitepaper remains live: `https://gcagochina.com/whitepaper.html`
 - Brand kit remains live: `https://gcagochina.com/brand-kit.html`
@@ -85,6 +87,8 @@ Contract: 0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6
 Official website: https://gcagochina.com/
 Official verify page: https://gcagochina.com/verify.html
 Project status: https://gcagochina.com/status.html
+Product spec: https://gcagochina.com/product.html
+Product release gates: https://gcagochina.com/release-gates.html
 Official logo: https://gcagochina.com/assets/gca-logo.svg
 Brand kit: https://gcagochina.com/brand-kit.html
 Whitepaper: https://gcagochina.com/whitepaper.html
@@ -95,5 +99,5 @@ Official Telegram: https://t.me/gcagochinaofficial
 Official X: https://x.com/GCAAIGoChina
 Official contact email: GCAgochina@outlook.com
 
-The official website now centralizes the verify page, project status, listing kit, brand kit, community kit, support page, token list, and machine-readable project JSON. Please let us know if any additional field correction or owner-wallet signature is required.
+The official website now centralizes the verify page, project status, product spec, release gates, listing kit, brand kit, community kit, support page, token list, and machine-readable project JSON. Please let us know if any additional field correction or owner-wallet signature is required.
 ```

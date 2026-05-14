@@ -23,6 +23,8 @@ This package prepares GCA information for token data and DEX discovery platforms
 - Participation terms JSON: `https://gcagochina.com/terms.json`
 - Product spec page: `https://gcagochina.com/product.html`
 - Product spec JSON: `https://gcagochina.com/product.json`
+- Product release gates page: `https://gcagochina.com/release-gates.html`
+- Product release gates JSON: `https://gcagochina.com/release-gates.json`
 - Contract source: verified on BaseScan
 - BaseScan token profile: returned by BaseScan as information-insufficient on 2026-05-13, resubmitted on 2026-05-13, and awaiting BaseScan email/review
 - GeckoTerminal token info update: approved on 2026-05-11
@@ -118,6 +120,8 @@ This package prepares GCA information for token data and DEX discovery platforms
 - Utility bridge JSON: `https://gcagochina.com/utility.json`
 - Product spec: `https://gcagochina.com/product.html`
 - Product spec JSON: `https://gcagochina.com/product.json`
+- Release gates: `https://gcagochina.com/release-gates.html`
+- Release gates JSON: `https://gcagochina.com/release-gates.json`
 - Logo SVG: `https://gcagochina.com/assets/gca-logo.svg`
 - Logo PNG: `https://gcagochina.com/assets/gca-logo.png`
 - Whitepaper: `https://gcagochina.com/whitepaper.html`
@@ -195,6 +199,8 @@ GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stand
 Suitable GCA utility is access-based: reports, credits, education, backtest usage, signal review, position calculators, and membership discounts. The public utility bridge spec is published at `https://gcagochina.com/utility.json`. It should not be positioned as custody, redemption rights, platform revenue distribution, automatic live trading permission, or a return promise.
 
 The public product spec is published at `https://gcagochina.com/product.html` and `https://gcagochina.com/product.json`. It defines GCA AI Quant Access as a planned product layer with China Narrative Radar, Weekly Go China Radar, Liquidation Replay, Risk Warning Credits, Backtest Lab, ENTRY_READY Review, Position Size Calculator, and GCA Member Workspace. This is public product spec only; public account UI, credit claiming, member claiming, and live trading are not live.
+
+The product release gates are published at `https://gcagochina.com/release-gates.html` and `https://gcagochina.com/release-gates.json`. They require controlled HTTPS account UI, read-only GCA balance verification, credit ledger activation, member ledger activation, support review queue, risk-control review, and simulation or testnet first before public self-service access is claimed.
 
 Verified first campaign backend: each registered user may verify one wallet holding at least 10,000 GCA and receive a one-time 100 Web3 Radar utility credits ledger record. This should be described only as account-level service credits for reports, backtests, risk warnings, ENTRY_READY signal review, calculators, or education access; it is not cash, tokens, income, reimbursement, or trading permission.
 

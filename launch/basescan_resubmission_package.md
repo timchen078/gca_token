@@ -25,6 +25,8 @@ This package records the values used for the 2026-05-13 BaseScan token informati
 - Brand kit JSON: `https://gcagochina.com/brand-kit.json`
 - Community kit: `https://gcagochina.com/community.html`
 - Community JSON: `https://gcagochina.com/community.json`
+- Product spec: `https://gcagochina.com/product.html`
+- Release gates: `https://gcagochina.com/release-gates.html`
 - External review status: `https://gcagochina.com/external-reviews.html`
 - Project JSON: `https://gcagochina.com/project.json`
 - Token list JSON: `https://gcagochina.com/tokenlist.json`
@@ -72,7 +74,7 @@ Used for the 2026-05-13 resubmission:
 2. Confirm `https://gcagochina.com/assets/gca-logo.svg` loads and is the 32x32 SVG logo.
 3. Confirm the official email `GCAgochina@outlook.com` is visible on the website support page.
 4. Include the official Telegram and X links.
-5. Include the whitepaper and listing kit URLs.
+5. Include the whitepaper, listing kit, product spec, and release gates URLs.
 6. Include the Base Mainnet chain ID and exact token contract.
 7. Include the official GCA/USDT pool only; do not use the old GCA/WETH pilot pool as the main market.
 8. Sign the BaseScan ownership message with the deployer wallet if requested.

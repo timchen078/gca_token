@@ -318,6 +318,11 @@
       "buy or sell recommendation",
       "price forecast",
       "strategy performance promise"
-    ]
-  }
+    ],
+    "releaseGatesPageUrl": "https://gcagochina.com/release-gates.html",
+    "releaseGatesUrl": "https://gcagochina.com/release-gates.json"
+  },
+  "releaseGatesPageUrl": "https://gcagochina.com/release-gates.html",
+  "releaseGatesUrl": "https://gcagochina.com/release-gates.json",
+  "releaseGatesStatus": "public-release-gates-published"
 }

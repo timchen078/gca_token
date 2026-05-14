@@ -40,6 +40,8 @@ UTILITY_PAGE_URL = "https://gcagochina.com/utility.html"
 UTILITY_URL = "https://gcagochina.com/utility.json"
 PRODUCT_PAGE_URL = "https://gcagochina.com/product.html"
 PRODUCT_URL = "https://gcagochina.com/product.json"
+RELEASE_GATES_PAGE_URL = "https://gcagochina.com/release-gates.html"
+RELEASE_GATES_URL = "https://gcagochina.com/release-gates.json"
 PRIVACY_NOTICE_PAGE_URL = "https://gcagochina.com/privacy.html"
 PRIVACY_NOTICE_URL = "https://gcagochina.com/privacy.json"
 PARTICIPATION_TERMS_PAGE_URL = "https://gcagochina.com/terms.html"
@@ -159,6 +161,7 @@ def validate_root(text: str) -> None:
     assert_contains(text, "Weekly Radar", label)
     assert_contains(text, "Utility JSON", label)
     assert_contains(text, "Product Spec", label)
+    assert_contains(text, "Release Gates", label)
     assert_contains(text, "Privacy Notice", label)
     assert_contains(text, "Participation Terms", label)
     assert_contains(text, MAINNET_ADDRESS, label)
@@ -818,6 +821,7 @@ def validate_product_page(text: str) -> None:
     label = "/product.html"
     assert_contains(text, "GCA AI Quant Access Product Spec", label)
     assert_contains(text, "Product JSON", label)
+    assert_contains(text, "Release Gates", label)
     assert_contains(text, "public product spec only", label)
     assert_contains(text, "not a live trading terminal", label)
     assert_contains(text, "not live market data", label)
@@ -928,6 +932,10 @@ def validate_product_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong productPage")
     if links.get("productJson") != PRODUCT_URL:
         raise SiteCheckError(f"{label}: wrong productJson")
+    if links.get("releaseGatesPage") != RELEASE_GATES_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong releaseGatesPage")
+    if links.get("releaseGates") != RELEASE_GATES_URL:
+        raise SiteCheckError(f"{label}: wrong releaseGates")
     if links.get("utilityJson") != UTILITY_URL:
         raise SiteCheckError(f"{label}: wrong utilityJson")
     if links.get("memberLedger") != MEMBER_LEDGER_URL:
@@ -936,6 +944,113 @@ def validate_product_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing product safe claim")
     if not any("full GCA AI Quant Access product is live" in item for item in boundaries.get("doNotClaim", [])):
         raise SiteCheckError(f"{label}: missing product live boundary")
+    assert_no_forbidden_public_claims(json.dumps(payload), label)
+    assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
+    assert_not_contains(json.dumps(payload), "GCA/WETH", label)
+
+
+def validate_release_gates_page(text: str) -> None:
+    label = "/release-gates.html"
+    assert_contains(text, "GCA Product Release Gates", label)
+    assert_contains(text, "Release Gates JSON", label)
+    assert_contains(text, "public product spec only", label)
+    assert_contains(text, "Public Account UI is not live", label)
+    assert_contains(text, "Credits are not self-service claimable", label)
+    assert_contains(text, "GCA Member status is not self-service claimable", label)
+    assert_contains(text, "controlled HTTPS account UI", label)
+    assert_contains(text, "read-only GCA balance verification", label)
+    assert_contains(text, "credit ledger activation", label)
+    assert_contains(text, "member ledger activation", label)
+    assert_contains(text, "risk-control review", label)
+    assert_contains(text, "support review queue", label)
+    assert_contains(text, "simulation or testnet first", label)
+    assert_contains(text, "BaseScan token profile awaiting review", label)
+    assert_contains(text, "no third-party audit", label)
+    assert_contains(text, "No custody", label)
+    assert_contains(text, "no withdrawal permission", label)
+    assert_contains(text, "no exchange API secret collection", label)
+    assert_contains(text, MAINNET_ADDRESS, label)
+    assert_contains(text, BASE_USDT_ADDRESS, label)
+    assert_current_pool_text(text, label)
+    assert_no_forbidden_public_claims(text, label)
+
+
+def validate_release_gates_json(text: str) -> None:
+    label = "/release-gates.json"
+    payload = load_json(text, label)
+    state = payload.get("currentState", {})
+    gate_ids = {item.get("id") for item in payload.get("releaseGates", [])}
+    market = payload.get("officialMarket", {})
+    links = payload.get("officialLinks", {})
+
+    if payload.get("schema") != RELEASE_GATES_URL:
+        raise SiteCheckError(f"{label}: wrong schema")
+    if payload.get("pageUrl") != RELEASE_GATES_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong pageUrl")
+    if payload.get("status") != "public-release-gates-published":
+        raise SiteCheckError(f"{label}: wrong status")
+    if payload.get("chainId") != 8453:
+        raise SiteCheckError(f"{label}: wrong chainId")
+    if payload.get("contractAddress") != MAINNET_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong contractAddress")
+    if state.get("currentStage") != "public-product-spec-only":
+        raise SiteCheckError(f"{label}: wrong currentStage")
+    if state.get("publicProductSpecOnly") is not True:
+        raise SiteCheckError(f"{label}: publicProductSpecOnly must be true")
+    for key in ("publicAccountUiLive", "creditsSelfServiceClaimable", "gcaMemberSelfServiceClaimable", "liveTradingEnabled"):
+        if state.get(key) is not False:
+            raise SiteCheckError(f"{label}: {key} must be false")
+    if state.get("baseScanTokenProfile") != "resubmitted-awaiting-review":
+        raise SiteCheckError(f"{label}: wrong BaseScan state")
+    if state.get("thirdPartyAudit") != "not-completed":
+        raise SiteCheckError(f"{label}: wrong audit state")
+    for gate in (
+        "controlled-https-account-ui",
+        "read-only-wallet-verification",
+        "credit-ledger-activation",
+        "member-ledger-activation",
+        "support-review-queue",
+        "risk-control-review",
+        "simulation-first",
+    ):
+        if gate not in gate_ids:
+            raise SiteCheckError(f"{label}: missing gate {gate}")
+    for item in (
+        "controlled HTTPS account UI",
+        "read-only GCA balance verification",
+        "credit ledger activation",
+        "member ledger activation",
+        "support review queue",
+        "risk-control review",
+        "simulation or testnet first",
+        "no custody",
+        "no withdrawal permission",
+        "no exchange API secret collection",
+    ):
+        if item not in payload.get("noGoLiveWithout", []):
+            raise SiteCheckError(f"{label}: missing no-go-live item {item}")
+    if market.get("pair") != "GCA/USDT":
+        raise SiteCheckError(f"{label}: wrong pair")
+    if market.get("poolAddress") != OFFICIAL_POOL_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong poolAddress")
+    if market.get("quoteAssetAddress") != BASE_USDT_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong quoteAssetAddress")
+    if links.get("releaseGatesPage") != RELEASE_GATES_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong releaseGatesPage")
+    if links.get("releaseGates") != RELEASE_GATES_URL:
+        raise SiteCheckError(f"{label}: wrong releaseGates")
+    if links.get("productPage") != PRODUCT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong productPage")
+    if links.get("productJson") != PRODUCT_URL:
+        raise SiteCheckError(f"{label}: wrong productJson")
+    if links.get("utilityJson") != UTILITY_URL:
+        raise SiteCheckError(f"{label}: wrong utilityJson")
+    if links.get("memberLedger") != MEMBER_LEDGER_URL:
+        raise SiteCheckError(f"{label}: wrong memberLedger")
+    if not any("public release gates" in item for item in payload.get("publicClaimBoundaries", {}).get("safeClaims", [])):
+        raise SiteCheckError(f"{label}: missing release-gates safe claim")
+    if not any("credit claiming is live" in item for item in payload.get("publicClaimBoundaries", {}).get("doNotClaim", [])):
+        raise SiteCheckError(f"{label}: missing credit boundary")
     assert_no_forbidden_public_claims(json.dumps(payload), label)
     assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
     assert_not_contains(json.dumps(payload), "GCA/WETH", label)
@@ -1251,6 +1366,10 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong productSpecPageUrl")
     if payload.get("productSpecUrl") != PRODUCT_URL:
         raise SiteCheckError(f"{label}: wrong productSpecUrl")
+    if payload.get("releaseGatesPageUrl") != RELEASE_GATES_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong releaseGatesPageUrl")
+    if payload.get("releaseGatesUrl") != RELEASE_GATES_URL:
+        raise SiteCheckError(f"{label}: wrong releaseGatesUrl")
     if payload.get("walletWarningEvidencePageUrl") != WALLET_WARNING_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong walletWarningEvidencePageUrl")
     if payload.get("walletWarningEvidenceUrl") != WALLET_WARNING_URL:
@@ -1334,6 +1453,8 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: utility bridge must require controlled wallet verification")
     if status.get("productSpec") != "public-product-spec-published":
         raise SiteCheckError(f"{label}: unexpected product spec status")
+    if status.get("releaseGates") != "public-release-gates-published":
+        raise SiteCheckError(f"{label}: unexpected release gates status")
     if payload.get("productSpec", {}).get("status") != "public-product-spec-published":
         raise SiteCheckError(f"{label}: unexpected product spec object status")
     if payload.get("productSpec", {}).get("pageUrl") != PRODUCT_PAGE_URL:
@@ -1346,6 +1467,20 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: product live trading must be false")
     if "ENTRY_READY Review" not in payload.get("productSpec", {}).get("moduleNames", []):
         raise SiteCheckError(f"{label}: missing product module")
+    if payload.get("releaseGates", {}).get("status") != "public-release-gates-published":
+        raise SiteCheckError(f"{label}: unexpected release gates object status")
+    if payload.get("releaseGates", {}).get("pageUrl") != RELEASE_GATES_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong release gates page")
+    if payload.get("releaseGates", {}).get("url") != RELEASE_GATES_URL:
+        raise SiteCheckError(f"{label}: wrong release gates url")
+    if payload.get("releaseGates", {}).get("publicAccountUiLive") is not False:
+        raise SiteCheckError(f"{label}: release gates account UI must be false")
+    if payload.get("releaseGates", {}).get("creditsSelfServiceClaimable") is not False:
+        raise SiteCheckError(f"{label}: release gates credits must be false")
+    if payload.get("releaseGates", {}).get("gcaMemberSelfServiceClaimable") is not False:
+        raise SiteCheckError(f"{label}: release gates member status must be false")
+    if "risk-control review" not in payload.get("releaseGates", {}).get("requiredBeforePublicClaims", []):
+        raise SiteCheckError(f"{label}: missing release gates risk-control gate")
     if payload.get("communityKit", {}).get("status") != "public-community-kit-published":
         raise SiteCheckError(f"{label}: unexpected community kit status")
     if payload.get("communityKit", {}).get("officialTelegram") != "https://t.me/gcagochinaofficial":
@@ -1458,6 +1593,12 @@ def validate_tokenlist_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong productSpec")
     if extensions.get("productSpecStatus") != "public-product-spec-published":
         raise SiteCheckError(f"{label}: wrong productSpecStatus")
+    if extensions.get("releaseGatesPage") != RELEASE_GATES_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong releaseGatesPage")
+    if extensions.get("releaseGates") != RELEASE_GATES_URL:
+        raise SiteCheckError(f"{label}: wrong releaseGates")
+    if extensions.get("releaseGatesStatus") != "public-release-gates-published":
+        raise SiteCheckError(f"{label}: wrong releaseGatesStatus")
     if extensions.get("walletWarningEvidencePage") != WALLET_WARNING_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong walletWarningEvidencePage")
     if extensions.get("walletWarningEvidence") != WALLET_WARNING_URL:
@@ -1592,6 +1733,10 @@ def validate_well_known_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong productSpecPage")
     if urls.get("productSpec") != PRODUCT_URL:
         raise SiteCheckError(f"{label}: wrong productSpec")
+    if urls.get("releaseGatesPage") != RELEASE_GATES_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong releaseGatesPage")
+    if urls.get("releaseGates") != RELEASE_GATES_URL:
+        raise SiteCheckError(f"{label}: wrong releaseGates")
     if urls.get("walletWarningEvidencePage") != WALLET_WARNING_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong walletWarningEvidencePage")
     if urls.get("walletWarningEvidence") != WALLET_WARNING_URL:
@@ -1656,6 +1801,8 @@ def validate_well_known_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong utilityBridge status")
     if payload.get("platformStatus", {}).get("productSpec") != "public-product-spec-published":
         raise SiteCheckError(f"{label}: wrong productSpec status")
+    if payload.get("platformStatus", {}).get("releaseGates") != "public-release-gates-published":
+        raise SiteCheckError(f"{label}: wrong releaseGates status")
     if payload.get("productSpec", {}).get("pageUrl") != PRODUCT_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong productSpec page")
     if payload.get("productSpec", {}).get("url") != PRODUCT_URL:
@@ -1664,6 +1811,14 @@ def validate_well_known_json(text: str) -> None:
         raise SiteCheckError(f"{label}: product account UI must be false")
     if payload.get("productSpec", {}).get("liveTradingEnabled") is not False:
         raise SiteCheckError(f"{label}: product live trading must be false")
+    if payload.get("releaseGates", {}).get("pageUrl") != RELEASE_GATES_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong releaseGates page")
+    if payload.get("releaseGates", {}).get("url") != RELEASE_GATES_URL:
+        raise SiteCheckError(f"{label}: wrong releaseGates url")
+    if payload.get("releaseGates", {}).get("creditsSelfServiceClaimable") is not False:
+        raise SiteCheckError(f"{label}: release gates credits must be false")
+    if payload.get("releaseGates", {}).get("gcaMemberSelfServiceClaimable") is not False:
+        raise SiteCheckError(f"{label}: release gates member must be false")
     if payload.get("platformStatus", {}).get("walletSecurityProfile") != "public-wallet-security-profile-published":
         raise SiteCheckError(f"{label}: wrong walletSecurityProfile status")
     if payload.get("platformStatus", {}).get("tokenSafety") != "public-token-safety-checklist-published":
@@ -2672,6 +2827,8 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/utility.json",
         "https://gcagochina.com/product.html",
         "https://gcagochina.com/product.json",
+        "https://gcagochina.com/release-gates.html",
+        "https://gcagochina.com/release-gates.json",
         "https://gcagochina.com/supply.json",
         "https://gcagochina.com/listing-readiness.html",
         "https://gcagochina.com/listing-readiness.json",
@@ -2729,6 +2886,8 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /utility.json", label)
     assert_contains(text, "Allow: /product.html", label)
     assert_contains(text, "Allow: /product.json", label)
+    assert_contains(text, "Allow: /release-gates.html", label)
+    assert_contains(text, "Allow: /release-gates.json", label)
     assert_contains(text, "Allow: /.well-known/gca-token.json", label)
     assert_contains(text, "Allow: /.well-known/wallet-security.json", label)
     assert_contains(text, "Allow: /.well-known/security.txt", label)
@@ -2778,6 +2937,8 @@ CHECKS: list[EndpointCheck] = [
     ("/utility.json", validate_utility_json),
     ("/product.html", validate_product_page),
     ("/product.json", validate_product_json),
+    ("/release-gates.html", validate_release_gates_page),
+    ("/release-gates.json", validate_release_gates_json),
     ("/privacy.html", validate_privacy_page),
     ("/privacy.json", validate_privacy_json),
     ("/terms.html", validate_terms_page),

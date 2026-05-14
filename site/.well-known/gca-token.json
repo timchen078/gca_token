@@ -83,7 +83,9 @@
     "telegram": "https://t.me/gcagochinaofficial",
     "x": "https://x.com/GCAAIGoChina",
     "productSpecPage": "https://gcagochina.com/product.html",
-    "productSpec": "https://gcagochina.com/product.json"
+    "productSpec": "https://gcagochina.com/product.json",
+    "releaseGatesPage": "https://gcagochina.com/release-gates.html",
+    "releaseGates": "https://gcagochina.com/release-gates.json"
   },
   "market": {
     "officialPair": "GCA/USDT",
@@ -131,7 +133,8 @@
     "coinGeckoTrackedListing": "not-submitted",
     "coinMarketCapTrackedListing": "not-submitted",
     "thirdPartyAudit": "not-completed",
-    "productSpec": "public-product-spec-published"
+    "productSpec": "public-product-spec-published",
+    "releaseGates": "public-release-gates-published"
   },
   "securityFacts": {
     "sourceVerifiedOnBaseScan": true,
@@ -199,6 +202,25 @@
       "buy or sell recommendation",
       "price forecast",
       "strategy performance promise"
+    ]
+  },
+  "releaseGates": {
+    "status": "public-release-gates-published",
+    "pageUrl": "https://gcagochina.com/release-gates.html",
+    "url": "https://gcagochina.com/release-gates.json",
+    "currentStage": "public-product-spec-only",
+    "publicAccountUiLive": false,
+    "creditsSelfServiceClaimable": false,
+    "gcaMemberSelfServiceClaimable": false,
+    "liveTradingEnabled": false,
+    "requiredBeforePublicClaims": [
+      "controlled HTTPS account UI",
+      "read-only GCA balance verification",
+      "credit ledger activation",
+      "member ledger activation",
+      "support review queue",
+      "risk-control review",
+      "simulation or testnet first"
     ]
   }
 }
