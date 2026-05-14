@@ -195,7 +195,7 @@
     "currentStage": "public-product-spec-only",
     "publicAccountUiLive": false,
     "liveTradingEnabled": false,
-    "releaseGate": "controlled HTTPS account UI, read-only wallet verification, credit ledger activation, member ledger activation, risk-control review, and simulation or testnet first",
+    "releaseGate": "controlled HTTPS account UI, read-only wallet verification, 30-day GCA Member holding-period review, credit ledger activation, member ledger activation, risk-control review, and simulation or testnet first",
     "moduleNames": [
       "China Narrative Radar",
       "Weekly Go China Radar",
@@ -233,6 +233,7 @@
     "requiredBeforePublicClaims": [
       "controlled HTTPS account UI",
       "read-only GCA balance verification",
+      "30-day GCA Member holding-period review",
       "credit ledger activation",
       "member ledger activation",
       "support review queue",

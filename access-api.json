@@ -94,6 +94,8 @@
         "gcaBalance",
         "holderBonusEligible",
         "gcaMemberEligible",
+        "gcaMemberHoldingPeriodEligible",
+        "holdingPeriodDaysVerified",
         "status"
       ],
       "allowedStatuses": [
@@ -149,7 +151,12 @@
         "walletAddress",
         "tierName",
         "verifiedBalance",
+        "holdingPeriodStartedAt",
+        "holdingPeriodDaysVerified",
+        "memberBenefitAmount",
+        "memberBenefitClaimStatus",
         "activatedAt",
+        "memberBenefitClaimedAt",
         "nextRefreshDueAt",
         "status"
       ],
@@ -221,8 +228,11 @@
     "holderBonusMinimum": "10000 GCA",
     "holderBonusCreditAmount": "100 Web3 Radar utility credits",
     "gcaMemberMinimum": "1000000 GCA",
+    "gcaMemberMinimumHoldingDays": 30,
+    "gcaMemberBenefitAmount": "10000 GCA",
+    "gcaMemberBenefitSource": "project or owner-held reserve transfer only; no new minting",
     "walletLimit": "one verified wallet per registered user",
-    "registeredUserLimit": "one holder bonus and one member status review per registered user"
+    "registeredUserLimit": "one holder bonus, one member status review, and one member benefit review per registered user"
   },
   "doNotCollect": [
     "private key",
@@ -271,6 +281,7 @@
       "GCA has published a public access API contract.",
       "The access API contract is contract-only until controlled HTTPS backend and account UI are live.",
       "Planned wallet verification uses read-only eth_call and ERC-20 balanceOf.",
+      "The GCA Member route requires 1,000,000 GCA held for 30 consecutive days before a one-time 10,000 GCA member benefit review.",
       "The API contract forbids private keys, seed phrases, exchange API secrets, withdrawal permission, custody, and risk-control bypass.",
       "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool.",
       "GCA has published a public review queue contract for manual-review lanes before public self-service claiming is live."
@@ -279,6 +290,7 @@
       "the access API is live public submission infrastructure before controlled HTTPS deployment",
       "100 Web3 Radar utility credits are live self-service claimable before credit ledger activation",
       "GCA Member status is live self-service claimable before member ledger activation",
+      "the 10,000 GCA member benefit is self-service claimable before holding-period verification and member ledger activation",
       "the API collects private keys, seed phrases, exchange API secrets, withdrawal permission, custody, or one-time codes",
       "API access provides trading permission, live order execution, or risk-control bypass"
     ]

@@ -17,7 +17,7 @@
     "Users keep funds in their own wallets or exchange accounts.",
     "The GCA utility bridge must not request private keys, seed phrases, exchange API secrets, withdrawal permission, or custody.",
     "Wallet verification should use read-only ERC-20 balance checks before any credit or member ledger record is written.",
-    "Utility credits and GCA Member status are account-level service records only.",
+    "Utility credits, GCA Member status, and the planned 10,000 GCA member benefit are account-level records only.",
     "Token ownership must not bypass strategy risk checks, testnet requirements, manual review, or trading safety controls."
   ],
   "accessFlow": [
@@ -39,7 +39,7 @@
     {
       "step": "member_ledger",
       "status": "schema-published-public-claim-not-connected",
-      "description": "Eligible registered users can receive GCA Member status after controlled verification is live."
+      "description": "Eligible registered users can receive GCA Member status and enter one-time 10,000 GCA member benefit review after controlled verification and 30 consecutive days of holding are live."
     },
     {
       "step": "product_access",
@@ -57,7 +57,8 @@
     "member research notes",
     "priority report queue",
     "member training sessions",
-    "priority support"
+    "priority support",
+    "one-time 10,000 GCA member benefit after eligibility review"
   ],
   "holderBonus": {
     "status": "planned-controlled-verification-required",
@@ -67,16 +68,20 @@
     "creditAmount": "100 Web3 Radar utility credits",
     "creditExpiry": "180 days after ledger activation unless a later published policy extends it",
     "creditUse": "reports, backtests, risk warnings, ENTRY_READY signal review, position calculators, or education access",
-    "notCreditUse": "cash, tokens, income, reimbursement, trading permission, leverage, custody, withdrawal access, or risk-control bypass"
+    "notCreditUse": "cash, token claims, income, reimbursement, trading permission, leverage, custody, withdrawal access, or risk-control bypass"
   },
   "gcaMember": {
     "status": "planned-controlled-verification-required",
     "registeredUserLimit": "one membership status per registered user",
     "walletLimit": "one verified wallet per registered user",
     "minimumHolding": "1000000 GCA",
+    "minimumHoldingPeriod": "30 consecutive days",
+    "memberBenefitAmount": "10000 GCA",
+    "memberBenefit": "one-time 10,000 GCA member benefit after holding-period verification and member ledger activation",
+    "memberBenefitSource": "project or owner-held reserve transfer only; no new minting",
     "refreshCadence": "30 days after activation, or earlier if the user requests a manual recheck",
-    "memberAccess": "higher utility credit limits, member research notes, priority report queue, member training sessions, and priority support",
-    "notMemberAccess": "cash, tokens, income, reimbursement, voting control, lifetime access guarantee, trading permission, leverage, custody, withdrawal access, or risk-control bypass"
+    "memberAccess": "one-time 10,000 GCA member benefit, higher utility credit limits, member research notes, priority report queue, member training sessions, and priority support",
+    "notMemberAccess": "cash, income, reimbursement, voting control, lifetime access guarantee, trading permission, leverage, custody, withdrawal access, or risk-control bypass"
   },
   "ledgerContracts": {
     "memberProgramRules": "https://gcagochina.com/member-program.json",
@@ -118,14 +123,16 @@
     "safeClaims": [
       "GCA has published a public utility bridge specification.",
       "GCA utility is planned as account-level service access for non-custodial quant risk tools.",
-      "The 100 Web3 Radar utility credits and GCA Member status require controlled wallet verification before ledger activation.",
+      "The 100 Web3 Radar utility credits, GCA Member status, and 10,000 GCA member benefit require controlled wallet verification before ledger activation.",
+      "The planned GCA Member benefit requires 1,000,000 GCA held for 30 consecutive days before one-time 10,000 GCA review.",
       "The public member page can prepare a local pre-registration packet, but public self-service claiming is not live.",
       "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool."
     ],
     "doNotClaim": [
       "100 Web3 Radar utility credits are live self-service claimable before controlled HTTPS account UI is released",
       "GCA Member status is live self-service before controlled HTTPS account UI is released",
-      "credits or member status are cash, tokens, income, reimbursement, trading permission, leverage, custody, withdrawal access, or risk-control bypass",
+      "the 10,000 GCA member benefit is self-service claimable before holding-period verification and member ledger activation",
+      "credits or member status are cash, income, reimbursement, trading permission, leverage, custody, withdrawal access, or risk-control bypass",
       "GCA utility includes custody, withdrawal permission, private key access, exchange API secret collection, platform revenue distribution, return promises, or price targets",
       "finished platform utility before the controlled account UI is live"
     ]

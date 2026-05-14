@@ -390,7 +390,7 @@
         <div class="fact">
           <span class="label">GCA Member</span>
           <span class="value">1,000,000 GCA</span>
-          <p class="note">Backend-supported member status with higher utility limits, member research notes, training, priority support, and a planned 30-day balance refresh cadence.</p>
+          <p class="note">Backend-supported member status for users who buy and continuously hold 1,000,000 GCA for 30 days, with a planned one-time 10,000 GCA member benefit after review.</p>
         </div>
       </section>
 
@@ -421,7 +421,7 @@
               <label for="programIntent">Primary Interest</label>
               <select id="programIntent" name="programIntent">
                 <option value="holder_bonus">Holder Bonus - 10,000 GCA</option>
-                <option value="gca_member">GCA Member - 1,000,000 GCA</option>
+                <option value="gca_member">GCA Member - 1,000,000 GCA / 30 days</option>
                 <option value="general_waitlist">General Waitlist</option>
               </select>
             </div>
@@ -471,6 +471,8 @@
             <div class="row"><span>One pre-registration packet per user email and verified wallet</span><strong>Planned</strong></div>
             <div class="row"><span>Holder Bonus threshold</span><strong>10,000 GCA</strong></div>
             <div class="row"><span>GCA Member threshold</span><strong>1,000,000 GCA</strong></div>
+            <div class="row"><span>GCA Member holding period</span><strong>30 consecutive days</strong></div>
+            <div class="row"><span>GCA Member benefit</span><strong>10,000 GCA after approval</strong></div>
             <div class="row"><span>Verification method</span><strong>Backend balanceOf check</strong></div>
             <div class="row"><span>100 credits use window after ledger activation</span><strong>180 days</strong></div>
             <div class="row"><span>GCA Member balance refresh cadence</span><strong>30 days</strong></div>
@@ -484,18 +486,18 @@
         </div>
         <div class="panel">
           <h2>Safety Boundary</h2>
-          <p class="note">This public static page does not store data on a server. The packet stays in your browser until you copy, download, or email it. The public <a href="privacy.html">Privacy Notice</a> and <a href="terms.html">Participation Terms</a> define the current data and participation boundary. When a reviewed HTTPS endpoint is connected, it may store only the pre-registration review fields, then Web3 Radar may verify the queued wallet with an ERC-20 balanceOf read. Pre-registration is not financial advice, not a token rebate, not cash, not income, not reimbursement, not trading permission, and not a way to bypass Web3 Radar risk controls.</p>
+          <p class="note">This public static page does not store data on a server. The packet stays in your browser until you copy, download, or email it. The public <a href="privacy.html">Privacy Notice</a> and <a href="terms.html">Participation Terms</a> define the current data and participation boundary. When a reviewed HTTPS endpoint is connected, it may store only the pre-registration review fields, then Web3 Radar may verify the queued wallet with an ERC-20 balanceOf read and holding-period evidence. Pre-registration is not financial advice, not cash, not income, not reimbursement, not trading permission, and not a way to bypass Web3 Radar risk controls.</p>
         </div>
       </section>
 
       <section class="section two" aria-label="Credit and member rules">
         <div class="panel">
           <h2>100 Credit Rules</h2>
-          <p class="note">The planned holder bonus is a one-time account-level service credit record for verified 10,000 GCA holders. Credits are intended for reports, backtests, risk warnings, ENTRY_READY signal review, position calculators, and education access. They are not transferable and cannot be redeemed for cash, tokens, income, reimbursement, or trading permission.</p>
+          <p class="note">The planned holder bonus is a one-time account-level service credit record for verified 10,000 GCA holders. Credits are intended for reports, backtests, risk warnings, ENTRY_READY signal review, position calculators, and education access. They are not transferable and cannot be redeemed for cash, token claims, income, reimbursement, or trading permission.</p>
         </div>
         <div class="panel">
           <h2>Member Rules</h2>
-          <p class="note">The planned GCA Member tier is service access only for verified 1,000,000 GCA holders. Member status can support higher utility limits, member research notes, priority report queue, member training sessions, and priority support. It does not activate live trading, leverage, custody, withdrawals, voting control, lifetime access, or risk-control bypass.</p>
+          <p class="note">The planned GCA Member tier requires verified purchase and continuous holding of at least 1,000,000 GCA for 30 consecutive days. After member ledger activation and support review, an eligible member can enter one-time 10,000 GCA member benefit review from project or owner-held reserve. It does not activate live trading, leverage, custody, withdrawals, voting control, lifetime access, income, reimbursement, or risk-control bypass.</p>
         </div>
       </section>
 
@@ -546,6 +548,7 @@
       const MEMBER_THRESHOLD_UNITS = 1000000n * TOKEN_UNIT;
       const CREDIT_EXPIRY_DAYS = 180;
       const MEMBER_REFRESH_DAYS = 30;
+      const MEMBER_HOLD_DAYS = 30;
       const SUPPORT_TARGET = "5-10 business days after controlled intake is live; not a guarantee";
 
       const form = document.getElementById("registrationForm");
@@ -585,7 +588,7 @@
           return {
             tier: "GCA Member candidate",
             eligiblePrograms: ["Holder Bonus", "GCA Member"],
-            message: "Declared balance meets the planned 1,000,000 GCA Member threshold and the 10,000 GCA holder bonus threshold.",
+            message: "Declared balance meets the planned 1,000,000 GCA Member balance threshold and the 10,000 GCA holder bonus threshold. Member benefit eligibility still requires 30 consecutive days of holding evidence.",
             className: "good"
           };
         }
@@ -726,9 +729,12 @@
             },
             gcaMember: {
               minimumHolding: "1000000 GCA",
-              benefit: "GCA Member status",
+              minimumHoldingPeriod: `${MEMBER_HOLD_DAYS} consecutive days`,
+              benefit: "GCA Member status plus one-time 10,000 GCA member benefit review after approval",
+              memberBenefitAmount: "10000 GCA",
+              memberBenefitSource: "project or owner-held reserve transfer only; no new minting",
               refreshCadence: `${MEMBER_REFRESH_DAYS} days after activation, or earlier manual recheck`,
-              accessScope: "higher utility credit limits, member research notes, priority report queue, member training sessions, and priority support",
+              accessScope: "one-time 10,000 GCA member benefit, higher utility credit limits, member research notes, priority report queue, member training sessions, and priority support",
               status: "backend-ledger-ready-public-claim-not-connected"
             }
           },
@@ -743,7 +749,7 @@
           },
           boundaries: [
             "No private key, seed phrase, exchange API secret, withdrawal permission, or custody request.",
-            "No cash, token rebate, income, reimbursement, trading permission, or risk-control bypass.",
+            "No cash, income, reimbursement, trading permission, or risk-control bypass. The planned 10,000 GCA member benefit requires 30-day holding review and is not self-service live.",
             "Final eligibility requires Web3 Radar account release, wallet balance verification, and ledger record."
           ],
           officialContactEmail: CONTACT_EMAIL

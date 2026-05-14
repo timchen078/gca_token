@@ -26,8 +26,10 @@
     "generated registration ID",
     "timestamp",
     "future wallet verification result",
+    "future GCA Member 30-day holding-period evidence",
     "future 100 credits ledger record",
     "future GCA Member ledger status",
+    "future 10,000 GCA member benefit status",
     "future support review status"
   ],
   "futureControlledIntake": {
@@ -41,8 +43,10 @@
     "storagePurpose": [
       "support review",
       "wallet balance eligibility checks",
+      "30-day GCA Member holding-period review",
       "100 credits ledger records",
       "GCA Member ledger records",
+      "10,000 GCA member benefit review records",
       "fraud and abuse prevention",
       "operational logs"
     ]

@@ -203,8 +203,10 @@
     "nextBuildPriorities": [
       "controlled HTTPS member account UI",
       "read-only GCA balance verification",
+      "30-day GCA Member holding-period review",
       "100 Web3 Radar utility credits ledger activation",
       "GCA Member ledger activation",
+      "10,000 GCA member benefit status",
       "support review queue and audit trail"
     ],
     "publicSelfServiceClaimsLive": false
@@ -330,20 +332,27 @@
       "url": "https://gcagochina.com/member-ledger.json",
       "holderBonusMinimum": "10000 GCA",
       "holderBonusCreditAmount": "100 Web3 Radar utility credits",
-      "gcaMemberMinimum": "1000000 GCA"
+      "gcaMemberMinimum": "1000000 GCA",
+      "gcaMemberMinimumHoldingDays": 30,
+      "gcaMemberBenefitAmount": "10000 GCA",
+      "gcaMemberBenefitSource": "project or owner-held reserve transfer only; no new minting"
     },
     "holderBonus": {
       "minimumHolding": "10000 GCA",
       "creditAmount": "100 Web3 Radar utility credits",
       "creditExpiry": "180 days after ledger activation unless a later published policy extends it",
       "spendScope": "reports, backtests, risk warnings, ENTRY_READY signal review, position calculators, or education access",
-      "notCreditUse": "cash, tokens, income, reimbursement, trading permission, or risk-control bypass"
+      "notCreditUse": "cash, token claims, income, reimbursement, trading permission, or risk-control bypass"
     },
     "gcaMember": {
       "minimumHolding": "1000000 GCA",
+      "minimumHoldingPeriod": "30 consecutive days",
+      "memberBenefitAmount": "10000 GCA",
+      "memberBenefit": "one-time 10,000 GCA member benefit after holding-period verification and member ledger activation",
+      "memberBenefitSource": "project or owner-held reserve transfer only; no new minting",
       "refreshCadence": "30 days after activation, or earlier if the user requests a manual recheck",
-      "accessScope": "higher utility credit limits, member research notes, priority report queue, member training sessions, and priority support",
-      "notMemberAccess": "cash, tokens, income, reimbursement, voting control, lifetime access, trading permission, or risk-control bypass"
+      "accessScope": "one-time 10,000 GCA member benefit, higher utility credit limits, member research notes, priority report queue, member training sessions, and priority support",
+      "notMemberAccess": "cash, income, reimbursement, voting control, lifetime access, trading permission, or risk-control bypass"
     },
     "supportWorkflow": {
       "targetFirstResponse": "5-10 business days after controlled intake is live; not a guarantee",
@@ -357,7 +366,7 @@
     "operationsRunbook": "https://gcagochina.com/operations.json"
   },
   "shortDescription": "GCA, short for Go China Access, is a fixed-supply ERC-20 token on Base Mainnet. It is a concept-stage access token for the Go China narrative, China-facing Web3 intelligence, risk education, and planned non-custodial quant research tools.",
-  "longDescription": "GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stands for Go China Access, a concept-stage community and access-token direction focused on the Go China narrative, China Narrative Radar, bilingual Web3 education, public market research, and planned access to non-custodial quant risk tools. The published product specification is GCA AI Quant Access. The intended Web3 Radar bridge is to make GCA an access and membership layer for Liquidation Replay reports, risk-warning credits, realistic backtests, ENTRY_READY Review, position-size calculators, member research notes, and risk-control training. The contract created 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls. The official public pool is the Base Mainnet Uniswap v4 GCA/USDT pool, and the project has a disclosed owner-held reserve wallet. The project is early-stage, has no completed third-party audit, and should not be described as externally audited, price-backed, yield-bearing, or backed by guaranteed liquidity.",
+  "longDescription": "GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stands for Go China Access, a concept-stage community and access-token direction focused on the Go China narrative, China Narrative Radar, bilingual Web3 education, public market research, and planned access to non-custodial quant risk tools. The published product specification is GCA AI Quant Access. The intended Web3 Radar bridge is to make GCA an access and membership layer for Liquidation Replay reports, risk-warning credits, realistic backtests, ENTRY_READY Review, position-size calculators, member research notes, risk-control training, and a reserve-funded 10,000 GCA member benefit review for verified users who bought and continuously held at least 1,000,000 GCA for 30 days. The contract created 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls. The official public pool is the Base Mainnet Uniswap v4 GCA/USDT pool, and the project has a disclosed owner-held reserve wallet. The project is early-stage, has no completed third-party audit, and should not be described as externally audited, price-backed, yield-bearing, or backed by guaranteed liquidity.",
   "lastUpdated": "2026-05-14",
   "productSpecPageUrl": "https://gcagochina.com/product.html",
   "productSpecUrl": "https://gcagochina.com/product.json",
@@ -415,6 +424,7 @@
     "requiredBeforePublicClaims": [
       "controlled HTTPS account UI",
       "read-only GCA balance verification",
+      "30-day GCA Member holding-period review",
       "credit ledger activation",
       "member ledger activation",
       "support review queue",
@@ -440,6 +450,8 @@
     "holderBonusMinimum": "10000 GCA",
     "holderBonusCreditAmount": "100 Web3 Radar utility credits",
     "gcaMemberMinimum": "1000000 GCA",
+    "gcaMemberMinimumHoldingDays": 30,
+    "gcaMemberBenefitAmount": "10000 GCA",
     "publicAccountUiLive": false,
     "creditsSelfServiceClaimable": false,
     "gcaMemberSelfServiceClaimable": false,
@@ -453,7 +465,7 @@
       "Member Research Notes",
       "Support Review Queue"
     ],
-    "notCreditUse": "cash, tokens, income, reimbursement, trading permission, transferable value, or risk-control bypass",
+    "notCreditUse": "cash, token claims, income, reimbursement, trading permission, transferable value, or risk-control bypass",
     "accessPortalPage": "https://gcagochina.com/access.html",
     "accessPortal": "https://gcagochina.com/access.json",
     "accessApiPage": "https://gcagochina.com/access-api.html",
