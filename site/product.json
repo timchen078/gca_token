@@ -13,7 +13,8 @@
     "summary": "A planned non-custodial product layer for China-facing Web3 narrative research, liquidation review, backtests, risk warnings, ENTRY_READY reviews, position sizing, education, and member workflows.",
     "currentStage": "public-product-spec-only",
     "publicAccountUiLive": false,
-    "liveTradingEnabled": false
+    "liveTradingEnabled": false,
+    "accessPortalBlueprint": "https://gcagochina.com/access.html"
   },
   "productModules": [
     {
@@ -78,6 +79,11 @@
       "id": "controlled-https-account-ui",
       "label": "Controlled HTTPS account UI",
       "status": "required-before-public-claims"
+    },
+    {
+      "id": "access-portal-blueprint",
+      "label": "Access Portal Blueprint",
+      "status": "published-blueprint-only"
     },
     {
       "id": "read-only-wallet-verification",
@@ -167,6 +173,8 @@
     "verify": "https://gcagochina.com/verify.html",
     "market": "https://gcagochina.com/markets.html",
     "creditsCatalogPage": "https://gcagochina.com/credits.html",
-    "creditsCatalog": "https://gcagochina.com/credits.json"
+    "creditsCatalog": "https://gcagochina.com/credits.json",
+    "accessPortalPage": "https://gcagochina.com/access.html",
+    "accessPortal": "https://gcagochina.com/access.json"
   }
 }

@@ -23,6 +23,8 @@ This package prepares GCA information for token data and DEX discovery platforms
 - Participation terms JSON: `https://gcagochina.com/terms.json`
 - Product spec page: `https://gcagochina.com/product.html`
 - Product spec JSON: `https://gcagochina.com/product.json`
+- Access portal blueprint page: `https://gcagochina.com/access.html`
+- Access portal blueprint JSON: `https://gcagochina.com/access.json`
 - Product release gates page: `https://gcagochina.com/release-gates.html`
 - Product release gates JSON: `https://gcagochina.com/release-gates.json`
 - Contract source: verified on BaseScan
@@ -120,6 +122,8 @@ This package prepares GCA information for token data and DEX discovery platforms
 - Utility bridge JSON: `https://gcagochina.com/utility.json`
 - Product spec: `https://gcagochina.com/product.html`
 - Product spec JSON: `https://gcagochina.com/product.json`
+- Access portal blueprint: `https://gcagochina.com/access.html`
+- Access portal blueprint JSON: `https://gcagochina.com/access.json`
 - Credits catalog: `https://gcagochina.com/credits.html`
 - Credits catalog JSON: `https://gcagochina.com/credits.json`
 - Release gates: `https://gcagochina.com/release-gates.html`

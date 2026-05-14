@@ -174,7 +174,8 @@
     "thirdPartyAudit": "not-completed",
     "productSpec": "public-product-spec-published",
     "releaseGates": "public-release-gates-published",
-    "creditsCatalog": "public-credits-catalog-published"
+    "creditsCatalog": "public-credits-catalog-published",
+    "accessPortal": "public-access-portal-blueprint-published"
   },
   "listingReadiness": {
     "status": "not-ready",
@@ -383,7 +384,9 @@
       "strategy performance promise"
     ],
     "creditsCatalogPage": "https://gcagochina.com/credits.html",
-    "creditsCatalog": "https://gcagochina.com/credits.json"
+    "creditsCatalog": "https://gcagochina.com/credits.json",
+    "accessPortalPage": "https://gcagochina.com/access.html",
+    "accessPortal": "https://gcagochina.com/access.json"
   },
   "releaseGates": {
     "status": "public-release-gates-published",
@@ -404,7 +407,9 @@
       "simulation or testnet first"
     ],
     "creditsCatalogPage": "https://gcagochina.com/credits.html",
-    "creditsCatalog": "https://gcagochina.com/credits.json"
+    "creditsCatalog": "https://gcagochina.com/credits.json",
+    "accessPortalPage": "https://gcagochina.com/access.html",
+    "accessPortal": "https://gcagochina.com/access.json"
   },
   "creditsCatalogPageUrl": "https://gcagochina.com/credits.html",
   "creditsCatalogUrl": "https://gcagochina.com/credits.json",
@@ -429,6 +434,25 @@
       "Member Research Notes",
       "Support Review Queue"
     ],
-    "notCreditUse": "cash, tokens, income, reimbursement, trading permission, transferable value, or risk-control bypass"
+    "notCreditUse": "cash, tokens, income, reimbursement, trading permission, transferable value, or risk-control bypass",
+    "accessPortalPage": "https://gcagochina.com/access.html",
+    "accessPortal": "https://gcagochina.com/access.json"
+  },
+  "accessPortalPageUrl": "https://gcagochina.com/access.html",
+  "accessPortalUrl": "https://gcagochina.com/access.json",
+  "accessPortal": {
+    "status": "public-access-portal-blueprint-published",
+    "pageUrl": "https://gcagochina.com/access.html",
+    "url": "https://gcagochina.com/access.json",
+    "currentStage": "blueprint-only",
+    "controlledHttpsAccountUiLive": false,
+    "directSubmissionEndpointConfigured": false,
+    "creditsSelfServiceClaimable": false,
+    "gcaMemberSelfServiceClaimable": false,
+    "liveTradingEnabled": false,
+    "memberAccessPreview": "https://gcagochina.com/gca/member-access/",
+    "memberPreRegistrationPage": "https://gcagochina.com/members.html",
+    "creditsCatalogPage": "https://gcagochina.com/credits.html",
+    "creditsCatalog": "https://gcagochina.com/credits.json"
   }
 }

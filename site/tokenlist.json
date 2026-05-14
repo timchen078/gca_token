@@ -118,7 +118,10 @@
         "releaseGatesStatus": "public-release-gates-published",
         "creditsCatalogPage": "https://gcagochina.com/credits.html",
         "creditsCatalog": "https://gcagochina.com/credits.json",
-        "creditsCatalogStatus": "public-credits-catalog-published"
+        "creditsCatalogStatus": "public-credits-catalog-published",
+        "accessPortalPage": "https://gcagochina.com/access.html",
+        "accessPortal": "https://gcagochina.com/access.json",
+        "accessPortalStatus": "public-access-portal-blueprint-published"
       }
     }
   ]

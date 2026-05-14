@@ -12,7 +12,8 @@
     "publicAccountUiLive": false,
     "creditsSelfServiceClaimable": false,
     "gcaMemberSelfServiceClaimable": false,
-    "liveTradingEnabled": false
+    "liveTradingEnabled": false,
+    "controlledHttpsAccountUiLive": false
   },
   "holderBonus": {
     "minimumHolding": "10000 GCA",
@@ -140,7 +141,9 @@
       "read-only GCA balance verification",
       "member ledger activation",
       "support review queue"
-    ]
+    ],
+    "accessPortalPage": "https://gcagochina.com/access.html",
+    "accessPortal": "https://gcagochina.com/access.json"
   },
   "officialMarket": {
     "pair": "GCA/USDT",
@@ -164,7 +167,9 @@
     "memberLedger": "https://gcagochina.com/member-ledger.json",
     "memberProgram": "https://gcagochina.com/member-program.json",
     "support": "https://gcagochina.com/support.html",
-    "market": "https://gcagochina.com/markets.html"
+    "market": "https://gcagochina.com/markets.html",
+    "accessPortalPage": "https://gcagochina.com/access.html",
+    "accessPortal": "https://gcagochina.com/access.json"
   },
   "publicClaimBoundaries": {
     "safeClaims": [

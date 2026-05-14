@@ -1,0 +1,176 @@
+{
+  "schema": "https://gcagochina.com/access.json",
+  "pageUrl": "https://gcagochina.com/access.html",
+  "status": "public-access-portal-blueprint-published",
+  "lastUpdated": "2026-05-14",
+  "chainId": 8453,
+  "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+  "title": "GCA Access Portal Blueprint",
+  "currentState": {
+    "currentStage": "blueprint-only",
+    "blueprintOnly": true,
+    "controlledHttpsAccountUiLive": false,
+    "directSubmissionEndpointConfigured": false,
+    "creditsSelfServiceClaimable": false,
+    "gcaMemberSelfServiceClaimable": false,
+    "liveTradingEnabled": false
+  },
+  "preparedRoutes": {
+    "futureAccountPortal": "/gca/account",
+    "preRegistrations": "/gca/pre-registrations",
+    "walletVerifications": "/gca/wallet-verifications",
+    "creditLedger": "/gca/credit-ledger",
+    "memberLedger": "/gca/member-ledger",
+    "supportReview": "/gca/support-review"
+  },
+  "publicPreview": {
+    "memberAccessPreview": "https://gcagochina.com/gca/member-access/",
+    "memberPreRegistrationPage": "https://gcagochina.com/members.html",
+    "creditsCatalogPage": "https://gcagochina.com/credits.html",
+    "creditsCatalog": "https://gcagochina.com/credits.json",
+    "memberLedgerPage": "https://gcagochina.com/member-ledger.html",
+    "memberLedger": "https://gcagochina.com/member-ledger.json",
+    "supportPage": "https://gcagochina.com/support.html",
+    "supportJson": "https://gcagochina.com/support.json",
+    "privacyNoticePage": "https://gcagochina.com/privacy.html",
+    "participationTermsPage": "https://gcagochina.com/terms.html",
+    "releaseGatesPage": "https://gcagochina.com/release-gates.html"
+  },
+  "userJourney": [
+    {
+      "id": "controlled-account",
+      "label": "Create controlled HTTPS account",
+      "status": "not-live",
+      "description": "A controlled HTTPS account UI must exist before users rely on account-level access."
+    },
+    {
+      "id": "read-only-wallet-verification",
+      "label": "Verify GCA balance",
+      "status": "planned",
+      "description": "Read Base Mainnet GCA balance with eth_call and ERC-20 balanceOf. No transaction or signature is required for the balance read."
+    },
+    {
+      "id": "support-review-record",
+      "label": "Create support review record",
+      "status": "planned",
+      "description": "Support reviews the account, verified wallet, threshold, and public participation terms before ledger activation."
+    },
+    {
+      "id": "credit-ledger-activation",
+      "label": "Activate 100 utility credits",
+      "status": "planned-after-gates",
+      "description": "Eligible registered users holding at least 10,000 GCA can receive one account-level 100 Web3 Radar utility credits ledger record after gates are live."
+    },
+    {
+      "id": "member-ledger-activation",
+      "label": "Activate GCA Member status",
+      "status": "planned-after-gates",
+      "description": "Eligible registered users holding at least 1,000,000 GCA can enter a GCA Member review after gates are live."
+    },
+    {
+      "id": "service-access",
+      "label": "Use approved service access",
+      "status": "planned-after-ledger",
+      "description": "Credits and member status can map to reports, backtests, risk warnings, ENTRY_READY reviews, calculators, education, member notes, and support workflows."
+    }
+  ],
+  "eligibilityThresholds": {
+    "holderBonus": {
+      "minimumHolding": "10000 GCA",
+      "creditAmount": "100 Web3 Radar utility credits",
+      "oneTimePerRegisteredUser": true,
+      "oneVerifiedWalletPerRegisteredUser": true,
+      "requiresCreditLedgerActivation": true,
+      "notLive": true
+    },
+    "gcaMember": {
+      "minimumHolding": "1000000 GCA",
+      "tierName": "GCA Member",
+      "oneMemberReviewPerRegisteredUser": true,
+      "oneVerifiedWalletPerRegisteredUser": true,
+      "requiresMemberLedgerActivation": true,
+      "requiresSupportReviewQueue": true,
+      "notLive": true
+    }
+  },
+  "requiredControls": [
+    "controlled HTTPS account UI",
+    "read-only GCA balance verification",
+    "credit ledger activation",
+    "member ledger activation",
+    "support review queue",
+    "privacy notice and participation terms",
+    "risk-control review",
+    "simulation or testnet first for any future trading workflow"
+  ],
+  "securityBoundaries": {
+    "readOnlyWalletVerification": true,
+    "usesEthCall": true,
+    "usesErc20BalanceOf": true,
+    "requiresSignatureForBalanceRead": false,
+    "requiresTransactionForBalanceRead": false,
+    "custody": false,
+    "withdrawalPermission": false,
+    "privateKeyCollection": false,
+    "seedPhraseCollection": false,
+    "exchangeApiSecretCollection": false,
+    "automaticLiveTradingEnabled": false,
+    "riskControlBypassAllowed": false
+  },
+  "serviceModules": [
+    "Liquidation Replay",
+    "Risk Warning Review",
+    "Backtest Lab",
+    "ENTRY_READY Review",
+    "Position Size Calculator",
+    "Risk-Control Training",
+    "Member Research Notes",
+    "Support Review Queue"
+  ],
+  "officialMarket": {
+    "pair": "GCA/USDT",
+    "dex": "Uniswap v4",
+    "network": "Base Mainnet",
+    "poolAddress": "0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "quoteAsset": "USDT",
+    "quoteAssetAddress": "0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2",
+    "liquidityDepth": "starter-depth-only"
+  },
+  "officialLinks": {
+    "accessPortalPage": "https://gcagochina.com/access.html",
+    "accessPortal": "https://gcagochina.com/access.json",
+    "memberAccessPreview": "https://gcagochina.com/gca/member-access/",
+    "memberPreRegistrationPage": "https://gcagochina.com/members.html",
+    "creditsCatalogPage": "https://gcagochina.com/credits.html",
+    "creditsCatalog": "https://gcagochina.com/credits.json",
+    "releaseGatesPage": "https://gcagochina.com/release-gates.html",
+    "releaseGates": "https://gcagochina.com/release-gates.json",
+    "productPage": "https://gcagochina.com/product.html",
+    "productJson": "https://gcagochina.com/product.json",
+    "utilityPage": "https://gcagochina.com/utility.html",
+    "utilityJson": "https://gcagochina.com/utility.json",
+    "memberLedgerPage": "https://gcagochina.com/member-ledger.html",
+    "memberLedger": "https://gcagochina.com/member-ledger.json",
+    "supportPage": "https://gcagochina.com/support.html",
+    "supportJson": "https://gcagochina.com/support.json",
+    "privacyNoticePage": "https://gcagochina.com/privacy.html",
+    "participationTermsPage": "https://gcagochina.com/terms.html",
+    "market": "https://gcagochina.com/markets.html"
+  },
+  "publicClaimBoundaries": {
+    "safeClaims": [
+      "GCA has published a public access portal blueprint.",
+      "The access portal is blueprint only until controlled HTTPS account UI is live.",
+      "Planned wallet verification should use read-only eth_call and ERC-20 balanceOf.",
+      "100 Web3 Radar utility credits and GCA Member status require ledger activation and support review before use.",
+      "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool."
+    ],
+    "doNotClaim": [
+      "the access portal is live self-service account UI before controlled HTTPS deployment",
+      "100 Web3 Radar utility credits are live self-service claimable before credit ledger activation",
+      "GCA Member status is live self-service claimable before member ledger activation",
+      "credits or member status are cash, tokens, income, reimbursement, trading permission, or transferable value",
+      "wallet verification requires private keys, seed phrases, exchange API secrets, custody, withdrawal permission, or risk-control bypass"
+    ]
+  }
+}

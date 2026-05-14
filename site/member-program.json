@@ -21,7 +21,9 @@
     "risk": "https://gcagochina.com/risk.html",
     "verify": "https://gcagochina.com/verify.html",
     "creditsCatalog": "https://gcagochina.com/credits.html",
-    "creditsCatalogJson": "https://gcagochina.com/credits.json"
+    "creditsCatalogJson": "https://gcagochina.com/credits.json",
+    "accessPortalPage": "https://gcagochina.com/access.html",
+    "accessPortal": "https://gcagochina.com/access.json"
   },
   "holderBonus": {
     "status": "backend-ledger-ready-public-claim-not-connected",
@@ -87,7 +89,8 @@
     "preparedReviewEndpoint": "/gca/member-review",
     "publicLedgerSchemaUrl": "https://gcagochina.com/member-ledger.json",
     "currentPublicSubmissionMode": "copy, download, or email local packet",
-    "directSubmissionEndpointConfigured": false
+    "directSubmissionEndpointConfigured": false,
+    "accessPortalBlueprint": "https://gcagochina.com/access.html"
   },
   "privacyAndTerms": {
     "privacyNoticeUrl": "https://gcagochina.com/privacy.html",

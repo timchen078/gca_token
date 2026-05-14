@@ -85,7 +85,9 @@
     "supportPage": "https://gcagochina.com/support.html",
     "supportJson": "https://gcagochina.com/support.json",
     "privacyNotice": "https://gcagochina.com/privacy.json",
-    "participationTerms": "https://gcagochina.com/terms.json"
+    "participationTerms": "https://gcagochina.com/terms.json",
+    "accessPortalPage": "https://gcagochina.com/access.html",
+    "accessPortal": "https://gcagochina.com/access.json"
   },
   "officialMarket": {
     "pair": "GCA/USDT",
@@ -139,6 +141,8 @@
     "market": "https://gcagochina.com/markets.html",
     "verify": "https://gcagochina.com/verify.html",
     "creditsCatalogPage": "https://gcagochina.com/credits.html",
-    "creditsCatalog": "https://gcagochina.com/credits.json"
+    "creditsCatalog": "https://gcagochina.com/credits.json",
+    "accessPortalPage": "https://gcagochina.com/access.html",
+    "accessPortal": "https://gcagochina.com/access.json"
   }
 }

@@ -21,7 +21,9 @@
     "risk": "https://gcagochina.com/risk.html",
     "verify": "https://gcagochina.com/verify.html",
     "creditsCatalogPage": "https://gcagochina.com/credits.html",
-    "creditsCatalog": "https://gcagochina.com/credits.json"
+    "creditsCatalog": "https://gcagochina.com/credits.json",
+    "accessPortalPage": "https://gcagochina.com/access.html",
+    "accessPortal": "https://gcagochina.com/access.json"
   },
   "preparedPaths": {
     "memberAccessPage": "/gca/member-access",
@@ -29,7 +31,8 @@
     "walletVerifications": "/gca/wallet-verifications",
     "creditLedger": "/gca/credit-ledger",
     "memberLedger": "/gca/member-ledger",
-    "memberReview": "/gca/member-review"
+    "memberReview": "/gca/member-review",
+    "accountPortal": "/gca/account"
   },
   "browserBalancePreview": {
     "status": "browser-read-only-preview-live",
