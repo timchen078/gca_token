@@ -14,7 +14,8 @@
     "creditsSelfServiceClaimable": false,
     "gcaMemberSelfServiceClaimable": false,
     "ledgerWritesLive": false,
-    "liveTradingEnabled": false
+    "liveTradingEnabled": false,
+    "operationsRunbook": "public-access-operations-runbook-published"
   },
   "identity": {
     "network": "Base Mainnet",
@@ -157,7 +158,9 @@
     "supportJson": "https://gcagochina.com/support.json",
     "releaseGatesPage": "https://gcagochina.com/release-gates.html",
     "releaseGates": "https://gcagochina.com/release-gates.json",
-    "market": "https://gcagochina.com/markets.html"
+    "market": "https://gcagochina.com/markets.html",
+    "operationsRunbookPage": "https://gcagochina.com/operations.html",
+    "operationsRunbook": "https://gcagochina.com/operations.json"
   },
   "publicClaimBoundaries": {
     "safeClaims": [

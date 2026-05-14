@@ -29,6 +29,8 @@ This package prepares GCA information for token data and DEX discovery platforms
 - Access API contract JSON: `https://gcagochina.com/access-api.json`
 - Review queue contract page: `https://gcagochina.com/review-queue.html`
 - Review queue contract JSON: `https://gcagochina.com/review-queue.json`
+- Access operations runbook page: `https://gcagochina.com/operations.html`
+- Access operations runbook JSON: `https://gcagochina.com/operations.json`
 - Product release gates page: `https://gcagochina.com/release-gates.html`
 - Product release gates JSON: `https://gcagochina.com/release-gates.json`
 - Contract source: verified on BaseScan
@@ -132,6 +134,8 @@ This package prepares GCA information for token data and DEX discovery platforms
 - Access API contract JSON: `https://gcagochina.com/access-api.json`
 - Review queue contract: `https://gcagochina.com/review-queue.html`
 - Review queue contract JSON: `https://gcagochina.com/review-queue.json`
+- Access operations runbook: `https://gcagochina.com/operations.html`
+- Access operations runbook JSON: `https://gcagochina.com/operations.json`
 - Credits catalog: `https://gcagochina.com/credits.html`
 - Credits catalog JSON: `https://gcagochina.com/credits.json`
 - Release gates: `https://gcagochina.com/release-gates.html`
@@ -215,6 +219,8 @@ Suitable GCA utility is access-based: reports, credits, education, backtest usag
 The public product spec is published at `https://gcagochina.com/product.html` and `https://gcagochina.com/product.json`. It defines GCA AI Quant Access as a planned product layer with China Narrative Radar, Weekly Go China Radar, Liquidation Replay, Risk Warning Credits, Backtest Lab, ENTRY_READY Review, Position Size Calculator, and GCA Member Workspace. This is public product spec only; public account UI, credit claiming, member claiming, and live trading are not live.
 
 The public review queue contract is published at `https://gcagochina.com/review-queue.html` and `https://gcagochina.com/review-queue.json`. It defines planned manual-review lanes for pre-registration intake, wallet balance review, holder credit review, GCA Member review, support case review, and platform profile follow-up. It is not a live public submission queue and cannot override on-chain wallet-balance verification.
+
+The public access operations runbook is published at `https://gcagochina.com/operations.html` and `https://gcagochina.com/operations.json`. It defines operator SOP for non-sensitive intake, Base Mainnet identity checks, read-only `eth_call` / `balanceOf` wallet-balance review, eligibility decisions, support replies, ledger handoff, platform follow-up, and closure. It is public documentation only, not a live backend, public submission queue, account system, or self-service claim page.
 
 The public credits catalog is published at `https://gcagochina.com/credits.html` and `https://gcagochina.com/credits.json`. It is a draft service catalog for planned 100 Web3 Radar utility credits and GCA Member workflows, including Liquidation Replay, Risk Warning Review, Backtest Lab, ENTRY_READY Review, Position Size Calculator, Risk-Control Training, Member Research Notes, and Support Review Queue. It is not self-service claimable before controlled account UI and ledger activation.
 

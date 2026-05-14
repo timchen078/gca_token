@@ -93,7 +93,9 @@
     "accessApiPage": "https://gcagochina.com/access-api.html",
     "accessApi": "https://gcagochina.com/access-api.json",
     "reviewQueuePage": "https://gcagochina.com/review-queue.html",
-    "reviewQueue": "https://gcagochina.com/review-queue.json"
+    "reviewQueue": "https://gcagochina.com/review-queue.json",
+    "operationsRunbookPage": "https://gcagochina.com/operations.html",
+    "operationsRunbook": "https://gcagochina.com/operations.json"
   },
   "market": {
     "officialPair": "GCA/USDT",
@@ -146,7 +148,8 @@
     "creditsCatalog": "public-credits-catalog-published",
     "accessPortal": "public-access-portal-blueprint-published",
     "accessApiContract": "public-access-api-contract-published",
-    "reviewQueueContract": "public-review-queue-contract-published"
+    "reviewQueueContract": "public-review-queue-contract-published",
+    "accessOperationsRunbook": "public-access-operations-runbook-published"
   },
   "securityFacts": {
     "sourceVerifiedOnBaseScan": true,
@@ -214,7 +217,9 @@
       "buy or sell recommendation",
       "price forecast",
       "strategy performance promise"
-    ]
+    ],
+    "operationsRunbookPage": "https://gcagochina.com/operations.html",
+    "operationsRunbook": "https://gcagochina.com/operations.json"
   },
   "releaseGates": {
     "status": "public-release-gates-published",
@@ -233,13 +238,31 @@
       "support review queue",
       "risk-control review",
       "simulation or testnet first"
-    ]
+    ],
+    "operationsRunbookPage": "https://gcagochina.com/operations.html",
+    "operationsRunbook": "https://gcagochina.com/operations.json"
   },
   "reviewQueueContract": {
     "pageUrl": "https://gcagochina.com/review-queue.html",
     "url": "https://gcagochina.com/review-queue.json",
     "publicQueueLive": false,
     "creditsSelfServiceClaimable": false,
-    "gcaMemberSelfServiceClaimable": false
+    "gcaMemberSelfServiceClaimable": false,
+    "operationsRunbookPage": "https://gcagochina.com/operations.html",
+    "operationsRunbook": "https://gcagochina.com/operations.json"
+  },
+  "accessOperationsRunbook": {
+    "status": "public-access-operations-runbook-published",
+    "pageUrl": "https://gcagochina.com/operations.html",
+    "url": "https://gcagochina.com/operations.json",
+    "currentStage": "public-operations-runbook-only",
+    "publicRunbookOnly": true,
+    "backendLive": false,
+    "publicSubmissionQueueLive": false,
+    "controlledHttpsAccountUiLive": false,
+    "creditsSelfServiceClaimable": false,
+    "gcaMemberSelfServiceClaimable": false,
+    "ledgerWritesLive": false,
+    "liveTradingEnabled": false
   }
 }

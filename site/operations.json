@@ -1,0 +1,209 @@
+{
+  "schema": "https://gcagochina.com/operations.json",
+  "pageUrl": "https://gcagochina.com/operations.html",
+  "status": "public-access-operations-runbook-published",
+  "lastUpdated": "2026-05-14",
+  "title": "GCA Access Operations Runbook",
+  "scope": "Public SOP for manually handling GCA access intake, read-only wallet verification, review queue statuses, support responses, and ledger handoff boundaries before public self-service account UI and ledger writes are live.",
+  "chainId": 8453,
+  "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+  "currentState": {
+    "currentStage": "public-operations-runbook-only",
+    "publicRunbookOnly": true,
+    "backendLive": false,
+    "publicSubmissionQueueLive": false,
+    "controlledHttpsAccountUiLive": false,
+    "creditsSelfServiceClaimable": false,
+    "gcaMemberSelfServiceClaimable": false,
+    "ledgerWritesLive": false,
+    "liveTradingEnabled": false
+  },
+  "identity": {
+    "network": "Base Mainnet",
+    "chainId": 8453,
+    "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+    "symbol": "GCA",
+    "decimals": 18
+  },
+  "operatorWorkflow": [
+    {
+      "id": "intake-triage",
+      "label": "Intake Triage",
+      "operatorAction": "Accept only non-sensitive account intent, public wallet address, declared GCA balance, program intent, and public transaction references.",
+      "outputStatus": "received"
+    },
+    {
+      "id": "identity-check",
+      "label": "Identity Check",
+      "operatorAction": "Confirm Base Mainnet chain ID 8453 and the official GCA contract address before any review note is made.",
+      "outputStatus": "wallet_pending"
+    },
+    {
+      "id": "wallet-balance-check",
+      "label": "Wallet Balance Check",
+      "operatorAction": "Use read-only eth_call and ERC-20 balanceOf. Do not request signatures or transactions for balance reads.",
+      "outputStatus": "eligible or below_threshold"
+    },
+    {
+      "id": "eligibility-decision",
+      "label": "Eligibility Decision",
+      "operatorAction": "Mark 10,000 GCA holder credit eligibility and 1,000,000 GCA Member eligibility without writing live ledger records yet.",
+      "outputStatus": "eligible, below_threshold, or needs_more_information"
+    },
+    {
+      "id": "support-reply",
+      "label": "Support Reply",
+      "operatorAction": "Reply with status, next step, and public links. Do not promise approval timing, listing approval, price support, audit approval, or trading results.",
+      "outputStatus": "received or closed"
+    },
+    {
+      "id": "ledger-handoff",
+      "label": "Ledger Handoff",
+      "operatorAction": "Only after controlled account UI and ledgers are live, create credit or member records through the reviewed backend path.",
+      "outputStatus": "ledger_recorded after release gates"
+    },
+    {
+      "id": "platform-follow-up",
+      "label": "Platform Follow-Up",
+      "operatorAction": "When a reviewer asks for more information, send public URLs only and keep pool, contract, status, and claim boundaries consistent.",
+      "outputStatus": "platform_follow_up"
+    },
+    {
+      "id": "closure",
+      "label": "Closure",
+      "operatorAction": "Close the record only after status, evidence reference, reviewer note, and next public link are recorded without secrets.",
+      "outputStatus": "closed"
+    }
+  ],
+  "requiredReviewRecord": [
+    "reviewId",
+    "registrationId",
+    "lane",
+    "status",
+    "walletAddress",
+    "checkedAt",
+    "reviewerNote",
+    "publicEvidenceReference"
+  ],
+  "allowedEvidence": [
+    "official account record",
+    "public Base wallet address",
+    "read-only GCA balance from eth_call balanceOf",
+    "public transaction hash",
+    "non-sensitive support note",
+    "public review reference"
+  ],
+  "operatorControls": {
+    "chainIdMustEqual": 8453,
+    "contractAddressMustEqual": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+    "walletVerificationReadOnly": true,
+    "usesEthCall": true,
+    "usesErc20BalanceOf": true,
+    "requiresSignatureForBalanceRead": false,
+    "requiresTransactionForBalanceRead": false,
+    "manualSupportCanOverrideBalanceVerification": false,
+    "manualSupportCanBypassReleaseGates": false,
+    "structuredAuditTrailRequired": true,
+    "requiredAuditFields": [
+      "reviewId",
+      "registrationId",
+      "lane",
+      "status",
+      "walletAddress",
+      "checkedAt",
+      "reviewerNote",
+      "publicEvidenceReference"
+    ]
+  },
+  "decisionRules": {
+    "holderBonusMinimum": "10000 GCA",
+    "holderBonusCreditAmount": "100 Web3 Radar utility credits",
+    "gcaMemberMinimum": "1000000 GCA",
+    "walletLimit": "one verified wallet per registered user",
+    "registeredUserLimit": "one holder bonus and one member status review per registered user",
+    "manualSupportCannotOverrideBalanceVerification": true,
+    "belowThresholdStatus": "below_threshold",
+    "missingEvidenceStatus": "needs_more_information"
+  },
+  "eligibilityThresholds": {
+    "holderBonusMinimum": "10000 GCA",
+    "holderBonusCreditAmount": "100 Web3 Radar utility credits",
+    "gcaMemberMinimum": "1000000 GCA",
+    "walletLimit": "one verified wallet per registered user",
+    "registeredUserLimit": "one holder bonus and one member status review per registered user"
+  },
+  "responseRules": {
+    "received": "Confirm queue receipt only.",
+    "needs_more_information": "Ask only for non-sensitive correction.",
+    "eligible": "Say pending ledger activation.",
+    "below_threshold": "State read-only balance result.",
+    "platform_follow_up": "Send public URLs and consistent status only.",
+    "closed": "State final review status."
+  },
+  "doNotCollect": [
+    "private key",
+    "seed phrase",
+    "exchange API secret",
+    "withdrawal permission",
+    "one-time code",
+    "recovery phrase",
+    "custody request",
+    "fund-transfer request",
+    "live trading instruction"
+  ],
+  "doNotClaim": [
+    "approval timing",
+    "listing approval",
+    "price support",
+    "completed third-party audit",
+    "permanent wallet-warning removal",
+    "deep liquidity",
+    "trading outcome",
+    "live order execution",
+    "self-service credits claiming",
+    "self-service GCA Member claiming"
+  ],
+  "safeReplyTemplate": "Your request has been received for manual review. GCA access claiming is not self-service yet. We can review your public Base wallet address with a read-only GCA balance check, but we will never ask for private keys, seed phrases, exchange API secrets, withdrawal permission, custody, or fund transfers.",
+  "officialMarket": {
+    "pair": "GCA/USDT",
+    "dex": "Uniswap v4",
+    "network": "Base Mainnet",
+    "poolAddress": "0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "quoteAsset": "USDT",
+    "quoteAssetAddress": "0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2",
+    "liquidityDepth": "starter-depth-only"
+  },
+  "officialLinks": {
+    "operationsRunbookPage": "https://gcagochina.com/operations.html",
+    "operationsRunbook": "https://gcagochina.com/operations.json",
+    "reviewQueuePage": "https://gcagochina.com/review-queue.html",
+    "reviewQueue": "https://gcagochina.com/review-queue.json",
+    "accessApiPage": "https://gcagochina.com/access-api.html",
+    "accessApi": "https://gcagochina.com/access-api.json",
+    "accessPortalPage": "https://gcagochina.com/access.html",
+    "accessPortal": "https://gcagochina.com/access.json",
+    "memberLedgerPage": "https://gcagochina.com/member-ledger.html",
+    "memberLedger": "https://gcagochina.com/member-ledger.json",
+    "supportPage": "https://gcagochina.com/support.html",
+    "supportJson": "https://gcagochina.com/support.json",
+    "releaseGatesPage": "https://gcagochina.com/release-gates.html",
+    "releaseGates": "https://gcagochina.com/release-gates.json",
+    "market": "https://gcagochina.com/markets.html"
+  },
+  "publicClaimBoundaries": {
+    "safeClaims": [
+      "GCA has published a public access operations runbook.",
+      "The operations runbook defines manual SOP before public self-service claiming is live.",
+      "Wallet review must use read-only eth_call and ERC-20 balanceOf.",
+      "Manual support cannot override on-chain wallet-balance verification or release gates.",
+      "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool."
+    ],
+    "doNotClaim": [
+      "the operations runbook is a live backend, ticket system, public submission queue, or account system",
+      "100 Web3 Radar utility credits are self-service claimable before credit ledger activation",
+      "GCA Member status is live self-service claimable before member ledger activation",
+      "support can override wallet-balance verification, release gates, or ledger activation",
+      "review status provides trading permission, live order execution, custody, withdrawals, price support, listing approval, or completed third-party audit"
+    ]
+  }
+}

@@ -1,6 +1,6 @@
 # GCA Whitepaper
 
-Version: 0.5
+Version: 0.6
 
 Official buy guide: `https://gcagochina.com/buy.html`
 
@@ -14,6 +14,8 @@ Access API contract: `https://gcagochina.com/access-api.html`
 Access API contract JSON: `https://gcagochina.com/access-api.json`
 Review queue contract: `https://gcagochina.com/review-queue.html`
 Review queue contract JSON: `https://gcagochina.com/review-queue.json`
+Access operations runbook: `https://gcagochina.com/operations.html`
+Access operations runbook JSON: `https://gcagochina.com/operations.json`
 Credits catalog: `https://gcagochina.com/credits.html`
 Credits catalog JSON: `https://gcagochina.com/credits.json`
 Release gates: `https://gcagochina.com/release-gates.html`
@@ -91,6 +93,8 @@ The public access portal blueprint defines the future controlled account path: c
 The public access API contract defines the future controlled HTTPS backend routes: `POST /gca/pre-registrations`, `POST /gca/wallet-verifications`, `GET /gca/credit-ledger`, `GET /gca/member-ledger`, `POST /gca/support-review`, and `GET /gca/member-review`. It is contract only and is not a live public submission endpoint.
 
 The public review queue contract defines the manual review lanes that sit between intake and ledger activation: pre-registration intake, wallet balance review, holder credit review, GCA Member review, support case review, and platform profile follow-up. It is not a live public submission queue and cannot override on-chain wallet-balance verification.
+
+The public access operations runbook defines how operators should handle those manual reviews before public self-service claiming is live. It requires non-sensitive intake only, Base Mainnet identity checks, read-only `eth_call` / `balanceOf` wallet-balance review, decision records for 10,000 GCA credits eligibility and 1,000,000 GCA Member eligibility, support replies, ledger handoff, platform follow-up, and closure notes. It is public documentation only, not a live backend, public submission queue, account system, or self-service claim page.
 
 The public credits catalog is a draft service catalog for planned Web3 Radar utility credits. It maps the 100 Web3 Radar utility credits campaign to service units such as Liquidation Replay, Risk Warning Review, Backtest Lab, ENTRY_READY Review, Position Size Calculator, Risk-Control Training, Member Research Notes, and Support Review Queue. It is not self-service claimable until controlled account UI, read-only wallet verification, credit ledger activation, member ledger activation, and support review are live.
 

@@ -60,6 +60,8 @@ Deployment notes are in `docs/deploy_base_sepolia.md` and `docs/deploy_base_main
 - Public access API contract JSON: `site/access-api.json`
 - Public review queue contract page: `site/review-queue.html`
 - Public review queue contract JSON: `site/review-queue.json`
+- Public access operations runbook page: `site/operations.html`
+- Public access operations runbook JSON: `site/operations.json`
 - Public utility credits catalog page: `site/credits.html`
 - Public utility credits catalog JSON: `site/credits.json`
 - Public product release gates page: `site/release-gates.html`
@@ -88,5 +90,5 @@ Deployment notes are in `docs/deploy_base_sepolia.md` and `docs/deploy_base_main
 - Logo: `brand/gca-logo.svg`
 - Social preview card: `brand/gca-social-card.svg`
 - Static website: `site/index.html`
-- Live public site check, including market identity, member program rules, product release gates, listing readiness, and high-risk public-claim guardrails: `.venv/bin/python tools/check_public_site.py`
+- Live public site check, including market identity, member program rules, access operations runbook, product release gates, listing readiness, and high-risk public-claim guardrails: `.venv/bin/python tools/check_public_site.py`
 - GitHub Actions public site check: `.github/workflows/check-public-site.yml`

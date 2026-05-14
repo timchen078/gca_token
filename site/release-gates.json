@@ -18,7 +18,8 @@
     "liquidityDepth": "starter-depth-only",
     "accessPortalBlueprint": "published-blueprint-only",
     "accessApiContract": "published-contract-only",
-    "reviewQueueContract": "public-review-queue-contract-published"
+    "reviewQueueContract": "public-review-queue-contract-published",
+    "operationsRunbook": "public-access-operations-runbook-published"
   },
   "releaseGates": [
     {
@@ -39,6 +40,16 @@
         "public endpoint claims",
         "self-service packet submission",
         "self-service wallet verification"
+      ]
+    },
+    {
+      "id": "operations-runbook",
+      "label": "Access Operations Runbook",
+      "status": "published-runbook-only",
+      "blocks": [
+        "manual support ambiguity",
+        "public self-service queue claims",
+        "ledger handoff without audit trail"
       ]
     },
     {
@@ -131,7 +142,8 @@
     "no custody",
     "no withdrawal permission",
     "no exchange API secret collection",
-    "review queue contract"
+    "review queue contract",
+    "public access operations runbook"
   ],
   "officialMarket": {
     "pair": "GCA/USDT",
@@ -147,14 +159,16 @@
       "GCA has published public release gates for GCA AI Quant Access.",
       "The current product state is public product spec only.",
       "Credits and GCA Member status are not self-service claimable until controlled account UI, read-only wallet verification, ledger activation, and support review are live.",
-      "Any future trading-related feature must pass risk-control review and simulation or testnet first."
+      "Any future trading-related feature must pass risk-control review and simulation or testnet first.",
+      "GCA has published a public access operations runbook for manual review handling."
     ],
     "doNotClaim": [
       "credit claiming is live before controlled account UI and credit ledger activation",
       "GCA Member status is live before controlled account UI and member ledger activation",
       "live trading execution is enabled before risk-control review and simulation or testnet validation",
       "custody, withdrawal permission, private key access, exchange API secret collection, platform revenue distribution, trading permission, or risk-control bypass",
-      "BaseScan token profile approval, external audit completion, deep liquidity, or tracked listing approval before publication"
+      "BaseScan token profile approval, external audit completion, deep liquidity, or tracked listing approval before publication",
+      "public submission queue is live before controlled account UI and reviewed backend are released"
     ]
   },
   "officialLinks": {
@@ -179,6 +193,8 @@
     "accessApiPage": "https://gcagochina.com/access-api.html",
     "accessApi": "https://gcagochina.com/access-api.json",
     "reviewQueuePage": "https://gcagochina.com/review-queue.html",
-    "reviewQueue": "https://gcagochina.com/review-queue.json"
+    "reviewQueue": "https://gcagochina.com/review-queue.json",
+    "operationsRunbookPage": "https://gcagochina.com/operations.html",
+    "operationsRunbook": "https://gcagochina.com/operations.json"
   }
 }

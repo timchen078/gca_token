@@ -27,7 +27,9 @@
     "accessApiPage": "https://gcagochina.com/access-api.html",
     "accessApi": "https://gcagochina.com/access-api.json",
     "reviewQueuePage": "https://gcagochina.com/review-queue.html",
-    "reviewQueue": "https://gcagochina.com/review-queue.json"
+    "reviewQueue": "https://gcagochina.com/review-queue.json",
+    "operationsRunbookPage": "https://gcagochina.com/operations.html",
+    "operationsRunbook": "https://gcagochina.com/operations.json"
   },
   "preparedPaths": {
     "memberAccessPage": "/gca/member-access",
