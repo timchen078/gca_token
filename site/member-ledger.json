@@ -1,7 +1,7 @@
 {
   "schema": "https://gcagochina.com/member-ledger.json",
   "pageUrl": "https://gcagochina.com/member-ledger.html",
-  "lastUpdated": "2026-05-13",
+  "lastUpdated": "2026-05-14",
   "status": "public-member-ledger-schema-published",
   "scope": "Public data contract for future controlled HTTPS GCA member access integration. This file does not make holder credits or GCA Member status self-service claimable.",
   "network": "Base Mainnet",
@@ -17,6 +17,8 @@
     "memberProgramRules": "https://gcagochina.com/member-program.json",
     "memberLedgerPage": "https://gcagochina.com/member-ledger.html",
     "memberLedgerSchema": "https://gcagochina.com/member-ledger.json",
+    "memberBenefitPage": "https://gcagochina.com/member-benefit.html",
+    "memberBenefitJson": "https://gcagochina.com/member-benefit.json",
     "utilityThesis": "https://gcagochina.com/utility.html",
     "risk": "https://gcagochina.com/risk.html",
     "verify": "https://gcagochina.com/verify.html",
@@ -72,6 +74,7 @@
         "walletAddress",
         "declaredGcaBalance",
         "programIntent",
+        "memberBenefitReviewEvidence",
         "termsAccepted",
         "securityBoundaryAccepted",
         "source"
@@ -132,9 +135,15 @@
         "tierName",
         "verifiedBalance",
         "holdingPeriodStartedAt",
+        "holdingStartDate",
         "holdingPeriodDaysVerified",
+        "holdingPeriodPreviewEligible",
+        "evidenceTxHash",
+        "evidenceTxHashFormatOk",
+        "memberBenefitReviewEvidenceStatus",
         "memberBenefitAmount",
         "memberBenefitClaimStatus",
+        "memberBenefitTransferTx",
         "activatedAt",
         "memberBenefitClaimedAt",
         "nextRefreshDueAt",
@@ -151,12 +160,37 @@
         "revoked"
       ]
     },
+    "memberBenefitReviewEvidenceRecord": {
+      "packetVersion": "gca_member_preregistration_v2",
+      "requiredFields": [
+        "registrationId",
+        "walletAddress",
+        "holdingStartDate",
+        "daysSinceHoldingStartPreview",
+        "holdingPeriodPreviewEligible",
+        "evidenceTxHash",
+        "evidenceTxHashFormatOk",
+        "evidenceNote",
+        "finalEligibilityStillRequiresSupportAndLedgerReview",
+        "doesNotCreateLedgerRecord"
+      ],
+      "source": "members.html memberBenefitReviewEvidence packet fields or controlled HTTPS intake after deployment",
+      "allowedStatuses": [
+        "user_supplied_pending_review",
+        "needs_more_information",
+        "eligible",
+        "rejected",
+        "transferred",
+        "closed"
+      ]
+    },
     "supportReviewRecord": {
       "requiredFields": [
         "reviewId",
         "registrationId",
         "status",
         "updatedAt",
+        "publicEvidenceReference",
         "supportNote"
       ],
       "allowedStatuses": [
@@ -173,6 +207,7 @@
     "safeClaims": [
       "GCA has published a public data contract for planned wallet verification, credit ledger, and GCA Member ledger records.",
       "The planned GCA Member data contract requires 1,000,000 GCA held for 30 consecutive days before a one-time 10,000 GCA member benefit review.",
+      "The member ledger schema now includes the gca_member_preregistration_v2 memberBenefitReviewEvidence fields for later support and ledger review.",
       "The public member page can generate a local pre-registration packet.",
       "The public member page can run a browser-only read-only GCA balance preview with MetaMask eth_call.",
       "The future controlled HTTPS integration should verify GCA balance with an ERC-20 balanceOf read before writing ledger records.",

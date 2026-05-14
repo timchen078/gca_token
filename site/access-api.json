@@ -17,7 +17,8 @@
     "gcaMemberSelfServiceClaimable": false,
     "liveTradingEnabled": false,
     "reviewQueueContract": "published-manual-review-contract",
-    "operationsRunbook": "public-access-operations-runbook-published"
+    "operationsRunbook": "public-access-operations-runbook-published",
+    "memberPacketVersion": "gca_member_preregistration_v2"
   },
   "securityModel": {
     "controlledHttpsOriginRequired": true,
@@ -40,6 +41,15 @@
     "automaticLiveTradingEnabled": false,
     "riskControlBypassAllowed": false
   },
+  "memberPacketVersion": "gca_member_preregistration_v2",
+  "memberEvidenceFields": [
+    "memberBenefitReviewEvidence.holdingStartDate",
+    "memberBenefitReviewEvidence.daysSinceHoldingStartPreview",
+    "memberBenefitReviewEvidence.holdingPeriodPreviewEligible",
+    "memberBenefitReviewEvidence.evidenceTxHash",
+    "memberBenefitReviewEvidence.evidenceTxHashFormatOk",
+    "memberBenefitReviewEvidence.evidenceNote"
+  ],
   "endpoints": [
     {
       "id": "pre-registrations",
@@ -54,6 +64,13 @@
         "termsAccepted",
         "securityBoundaryAccepted",
         "source"
+      ],
+      "optionalRequestFields": [
+        "memberBenefitReviewEvidence",
+        "memberBenefitReviewEvidence.holdingStartDate",
+        "memberBenefitReviewEvidence.evidenceTxHash",
+        "memberBenefitReviewEvidence.evidenceTxHashFormatOk",
+        "memberBenefitReviewEvidence.evidenceNote"
       ],
       "responseFields": [
         "registrationId",
@@ -152,9 +169,15 @@
         "tierName",
         "verifiedBalance",
         "holdingPeriodStartedAt",
+        "holdingStartDate",
         "holdingPeriodDaysVerified",
+        "holdingPeriodPreviewEligible",
+        "evidenceTxHash",
+        "evidenceTxHashFormatOk",
+        "memberBenefitReviewEvidenceStatus",
         "memberBenefitAmount",
         "memberBenefitClaimStatus",
+        "memberBenefitTransferTx",
         "activatedAt",
         "memberBenefitClaimedAt",
         "nextRefreshDueAt",
@@ -180,13 +203,16 @@
         "registrationId",
         "status",
         "updatedAt",
+        "publicEvidenceReference",
+        "memberBenefitReviewEvidence",
         "supportNote"
       ],
       "responseFields": [
         "reviewId",
         "registrationId",
         "status",
-        "updatedAt"
+        "updatedAt",
+        "memberBenefitReviewEvidenceStatus"
       ],
       "allowedStatuses": [
         "received",
@@ -211,6 +237,12 @@
         "walletAddress",
         "holderBonusEligible",
         "gcaMemberEligible",
+        "holdingStartDate",
+        "holdingPeriodDaysVerified",
+        "evidenceTxHash",
+        "evidenceTxHashFormatOk",
+        "memberBenefitReviewEvidenceStatus",
+        "memberBenefitClaimStatus",
         "reviewStatus",
         "nextStep"
       ],

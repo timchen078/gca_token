@@ -36,6 +36,20 @@
     "support review decision",
     "member ledger record id after activation"
   ],
+  "memberPacketEvidence": {
+    "packetVersion": "gca_member_preregistration_v2",
+    "packetObject": "memberBenefitReviewEvidence",
+    "requiredFields": [
+      "holdingStartDate",
+      "daysSinceHoldingStartPreview",
+      "holdingPeriodPreviewEligible",
+      "evidenceTxHash",
+      "evidenceTxHashFormatOk",
+      "evidenceNote"
+    ],
+    "finalEligibilityStillRequiresSupportAndLedgerReview": true,
+    "doesNotCreateLedgerRecord": true
+  },
   "reviewFlow": [
     {
       "id": "pre-registration",

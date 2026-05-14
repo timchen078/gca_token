@@ -1513,6 +1513,11 @@ def validate_access_api_page(text: str) -> None:
     assert_contains(text, "balanceOf", label)
     assert_contains(text, "100 Web3 Radar utility credits", label)
     assert_contains(text, "GCA Member", label)
+    assert_contains(text, "gca_member_preregistration_v2", label)
+    assert_contains(text, "memberBenefitReviewEvidence", label)
+    assert_contains(text, "holdingStartDate", label)
+    assert_contains(text, "evidenceTxHash", label)
+    assert_contains(text, "evidenceTxHashFormatOk", label)
     assert_contains(text, "controlled HTTPS origin", label)
     assert_contains(text, "authenticated account session", label)
     assert_contains(text, "CSRF protection", label)
@@ -1558,6 +1563,8 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: contractOnly must be true")
     if state.get("reviewQueueContract") != "published-manual-review-contract":
         raise SiteCheckError(f"{label}: wrong reviewQueueContract")
+    if state.get("memberPacketVersion") != "gca_member_preregistration_v2":
+        raise SiteCheckError(f"{label}: wrong member packet version")
     for key in (
         "backendLive",
         "publicEndpointLive",
@@ -1616,6 +1623,45 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing contract check")
     if "balance source must be read-only eth_call balanceOf" not in wallet.get("serverChecks", []):
         raise SiteCheckError(f"{label}: missing balance source check")
+    if payload.get("memberPacketVersion") != "gca_member_preregistration_v2":
+        raise SiteCheckError(f"{label}: wrong top-level member packet version")
+    for field in (
+        "memberBenefitReviewEvidence.holdingStartDate",
+        "memberBenefitReviewEvidence.daysSinceHoldingStartPreview",
+        "memberBenefitReviewEvidence.holdingPeriodPreviewEligible",
+        "memberBenefitReviewEvidence.evidenceTxHash",
+        "memberBenefitReviewEvidence.evidenceTxHashFormatOk",
+        "memberBenefitReviewEvidence.evidenceNote",
+    ):
+        if field not in payload.get("memberEvidenceFields", []):
+            raise SiteCheckError(f"{label}: missing member evidence field {field}")
+    prereg = endpoint_map["POST /gca/pre-registrations"]
+    for field in (
+        "memberBenefitReviewEvidence",
+        "memberBenefitReviewEvidence.holdingStartDate",
+        "memberBenefitReviewEvidence.evidenceTxHash",
+        "memberBenefitReviewEvidence.evidenceTxHashFormatOk",
+    ):
+        if field not in prereg.get("optionalRequestFields", []):
+            raise SiteCheckError(f"{label}: missing pre-registration optional field {field}")
+    member_ledger = endpoint_map["GET /gca/member-ledger"]
+    for field in (
+        "holdingStartDate",
+        "evidenceTxHash",
+        "evidenceTxHashFormatOk",
+        "memberBenefitReviewEvidenceStatus",
+        "memberBenefitTransferTx",
+    ):
+        if field not in member_ledger.get("responseFields", []):
+            raise SiteCheckError(f"{label}: missing member ledger response field {field}")
+    member_review = endpoint_map["GET /gca/member-review"]
+    for field in ("holdingStartDate", "evidenceTxHashFormatOk", "memberBenefitClaimStatus"):
+        if field not in member_review.get("responseFields", []):
+            raise SiteCheckError(f"{label}: missing member review response field {field}")
+    support_review = endpoint_map["POST /gca/support-review"]
+    for field in ("publicEvidenceReference", "memberBenefitReviewEvidence"):
+        if field not in support_review.get("requiredRequestFields", []):
+            raise SiteCheckError(f"{label}: missing support review request field {field}")
     if thresholds.get("holderBonusMinimum") != "10000 GCA":
         raise SiteCheckError(f"{label}: wrong holderBonusMinimum")
     if thresholds.get("holderBonusCreditAmount") != "100 Web3 Radar utility credits":
@@ -2940,6 +2986,10 @@ def validate_well_known_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong memberLedgerPage")
     if urls.get("memberLedgerSchema") != MEMBER_LEDGER_URL:
         raise SiteCheckError(f"{label}: wrong memberLedgerSchema")
+    if urls.get("memberBenefitPage") != MEMBER_BENEFIT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong memberBenefitPage")
+    if urls.get("memberBenefitJson") != MEMBER_BENEFIT_URL:
+        raise SiteCheckError(f"{label}: wrong memberBenefitJson")
     if urls.get("supportPage") != SUPPORT_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong supportPage")
     if urls.get("supportJson") != SUPPORT_URL:
@@ -3305,6 +3355,18 @@ def validate_member_benefit_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing reserve transfer step")
     if "transferred" not in payload.get("allowedStatuses", []):
         raise SiteCheckError(f"{label}: missing transferred status")
+    packet = payload.get("memberPacketEvidence", {})
+    if packet.get("packetVersion") != "gca_member_preregistration_v2":
+        raise SiteCheckError(f"{label}: wrong packet evidence version")
+    if packet.get("packetObject") != "memberBenefitReviewEvidence":
+        raise SiteCheckError(f"{label}: wrong packet evidence object")
+    for field in ("holdingStartDate", "evidenceTxHash", "evidenceTxHashFormatOk"):
+        if field not in packet.get("requiredFields", []):
+            raise SiteCheckError(f"{label}: missing packet evidence field {field}")
+    if packet.get("finalEligibilityStillRequiresSupportAndLedgerReview") is not True:
+        raise SiteCheckError(f"{label}: packet evidence must require final review")
+    if packet.get("doesNotCreateLedgerRecord") is not True:
+        raise SiteCheckError(f"{label}: packet evidence must not create ledger")
     if not any("10,000 GCA member benefit is self-service claimable today" in item for item in boundaries.get("doNotClaim", [])):
         raise SiteCheckError(f"{label}: missing self-service boundary")
     if links.get("memberBenefitPage") != MEMBER_BENEFIT_PAGE_URL:
@@ -3331,6 +3393,9 @@ def validate_member_benefit_page(text: str) -> None:
     assert_contains(text, "10,000 GCA", label)
     assert_contains(text, "Reserve transfer", label)
     assert_contains(text, "No minting and no automatic transfer", label)
+    assert_contains(text, "holdingStartDate", label)
+    assert_contains(text, "evidenceTxHash", label)
+    assert_contains(text, "evidenceTxHashFormatOk", label)
     assert_contains(text, "Public Claim Boundaries", label)
     assert_contains(text, "self-service claimable today", label)
     assert_contains(text, MAINNET_ADDRESS, label)
@@ -3406,8 +3471,40 @@ def validate_member_ledger_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing credit ledger schema")
     if "memberLedgerRecord" not in schemas:
         raise SiteCheckError(f"{label}: missing member ledger schema")
+    if "memberBenefitReviewEvidenceRecord" not in schemas:
+        raise SiteCheckError(f"{label}: missing member benefit evidence schema")
     if "supportReviewRecord" not in schemas:
         raise SiteCheckError(f"{label}: missing support review schema")
+    prereg_fields = schemas.get("preRegistrationRecord", {}).get("requiredFields", [])
+    if "memberBenefitReviewEvidence" not in prereg_fields:
+        raise SiteCheckError(f"{label}: missing pre-registration evidence field")
+    member_fields = schemas.get("memberLedgerRecord", {}).get("requiredFields", [])
+    for field in (
+        "holdingStartDate",
+        "holdingPeriodPreviewEligible",
+        "evidenceTxHash",
+        "evidenceTxHashFormatOk",
+        "memberBenefitReviewEvidenceStatus",
+        "memberBenefitTransferTx",
+    ):
+        if field not in member_fields:
+            raise SiteCheckError(f"{label}: missing member ledger field {field}")
+    evidence = schemas.get("memberBenefitReviewEvidenceRecord", {})
+    if evidence.get("packetVersion") != "gca_member_preregistration_v2":
+        raise SiteCheckError(f"{label}: wrong evidence packet version")
+    for field in (
+        "holdingStartDate",
+        "daysSinceHoldingStartPreview",
+        "holdingPeriodPreviewEligible",
+        "evidenceTxHash",
+        "evidenceTxHashFormatOk",
+        "evidenceNote",
+        "doesNotCreateLedgerRecord",
+    ):
+        if field not in evidence.get("requiredFields", []):
+            raise SiteCheckError(f"{label}: missing evidence field {field}")
+    if "publicEvidenceReference" not in schemas.get("supportReviewRecord", {}).get("requiredFields", []):
+        raise SiteCheckError(f"{label}: missing support evidence reference")
     if "ledger_recorded" not in schemas.get("supportReviewRecord", {}).get("allowedStatuses", []):
         raise SiteCheckError(f"{label}: missing ledger_recorded status")
     if not any("Public self-service claiming is not connected yet" in claim for claim in boundaries.get("safeClaims", [])):
@@ -3429,6 +3526,14 @@ def validate_member_ledger_page(text: str) -> None:
     assert_contains(text, "100 Credit Ledger", label)
     assert_contains(text, "GCA Member Ledger", label)
     assert_contains(text, "Support Review Record", label)
+    assert_contains(text, "Member Benefit Evidence Record", label)
+    assert_contains(text, "gca_member_preregistration_v2", label)
+    assert_contains(text, "memberBenefitReviewEvidence", label)
+    assert_contains(text, "holdingStartDate", label)
+    assert_contains(text, "evidenceTxHash", label)
+    assert_contains(text, "evidenceTxHashFormatOk", label)
+    assert_contains(text, "memberBenefitReviewEvidenceStatus", label)
+    assert_contains(text, "memberBenefitTransferTx", label)
     assert_contains(text, "Base Mainnet / 8453", label)
     assert_contains(text, MAINNET_ADDRESS, label)
     assert_contains(text, "/gca/member-access", label)
