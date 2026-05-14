@@ -177,7 +177,8 @@
     "creditsCatalog": "public-credits-catalog-published",
     "accessPortal": "public-access-portal-blueprint-published",
     "accessApiContract": "public-access-api-contract-published",
-    "reviewQueueContract": "public-review-queue-contract-published"
+    "reviewQueueContract": "public-review-queue-contract-published",
+    "accessOperationsRunbook": "public-access-operations-runbook-published"
   },
   "listingReadiness": {
     "status": "not-ready",
@@ -228,7 +229,9 @@
       "risk-control bypass"
     ],
     "creditsCatalogPage": "https://gcagochina.com/credits.html",
-    "creditsCatalog": "https://gcagochina.com/credits.json"
+    "creditsCatalog": "https://gcagochina.com/credits.json",
+    "operationsRunbookPage": "https://gcagochina.com/operations.html",
+    "operationsRunbook": "https://gcagochina.com/operations.json"
   },
   "communityKit": {
     "status": "public-community-kit-published",
@@ -346,8 +349,12 @@
       "targetFirstResponse": "5-10 business days after controlled intake is live; not a guarantee",
       "contactEmail": "GCAgochina@outlook.com",
       "reviewQueuePage": "https://gcagochina.com/review-queue.html",
-      "reviewQueue": "https://gcagochina.com/review-queue.json"
-    }
+      "reviewQueue": "https://gcagochina.com/review-queue.json",
+      "operationsRunbookPage": "https://gcagochina.com/operations.html",
+      "operationsRunbook": "https://gcagochina.com/operations.json"
+    },
+    "operationsRunbookPage": "https://gcagochina.com/operations.html",
+    "operationsRunbook": "https://gcagochina.com/operations.json"
   },
   "shortDescription": "GCA, short for Go China Access, is a fixed-supply ERC-20 token on Base Mainnet. It is a concept-stage access token for the Go China narrative, China-facing Web3 intelligence, risk education, and planned non-custodial quant research tools.",
   "longDescription": "GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stands for Go China Access, a concept-stage community and access-token direction focused on the Go China narrative, China Narrative Radar, bilingual Web3 education, public market research, and planned access to non-custodial quant risk tools. The published product specification is GCA AI Quant Access. The intended Web3 Radar bridge is to make GCA an access and membership layer for Liquidation Replay reports, risk-warning credits, realistic backtests, ENTRY_READY Review, position-size calculators, member research notes, and risk-control training. The contract created 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls. The official public pool is the Base Mainnet Uniswap v4 GCA/USDT pool, and the project has a disclosed owner-held reserve wallet. The project is early-stage, has no completed third-party audit, and should not be described as externally audited, price-backed, yield-bearing, or backed by guaranteed liquidity.",
@@ -392,7 +399,9 @@
     "accessPortalPage": "https://gcagochina.com/access.html",
     "accessPortal": "https://gcagochina.com/access.json",
     "accessApiPage": "https://gcagochina.com/access-api.html",
-    "accessApi": "https://gcagochina.com/access-api.json"
+    "accessApi": "https://gcagochina.com/access-api.json",
+    "operationsRunbookPage": "https://gcagochina.com/operations.html",
+    "operationsRunbook": "https://gcagochina.com/operations.json"
   },
   "releaseGates": {
     "status": "public-release-gates-published",
@@ -417,7 +426,9 @@
     "accessPortalPage": "https://gcagochina.com/access.html",
     "accessPortal": "https://gcagochina.com/access.json",
     "accessApiPage": "https://gcagochina.com/access-api.html",
-    "accessApi": "https://gcagochina.com/access-api.json"
+    "accessApi": "https://gcagochina.com/access-api.json",
+    "operationsRunbookPage": "https://gcagochina.com/operations.html",
+    "operationsRunbook": "https://gcagochina.com/operations.json"
   },
   "creditsCatalogPageUrl": "https://gcagochina.com/credits.html",
   "creditsCatalogUrl": "https://gcagochina.com/credits.json",
@@ -446,7 +457,9 @@
     "accessPortalPage": "https://gcagochina.com/access.html",
     "accessPortal": "https://gcagochina.com/access.json",
     "accessApiPage": "https://gcagochina.com/access-api.html",
-    "accessApi": "https://gcagochina.com/access-api.json"
+    "accessApi": "https://gcagochina.com/access-api.json",
+    "operationsRunbookPage": "https://gcagochina.com/operations.html",
+    "operationsRunbook": "https://gcagochina.com/operations.json"
   },
   "accessPortalPageUrl": "https://gcagochina.com/access.html",
   "accessPortalUrl": "https://gcagochina.com/access.json",
@@ -467,7 +480,9 @@
     "accessApiPage": "https://gcagochina.com/access-api.html",
     "accessApi": "https://gcagochina.com/access-api.json",
     "reviewQueuePage": "https://gcagochina.com/review-queue.html",
-    "reviewQueue": "https://gcagochina.com/review-queue.json"
+    "reviewQueue": "https://gcagochina.com/review-queue.json",
+    "operationsRunbookPage": "https://gcagochina.com/operations.html",
+    "operationsRunbook": "https://gcagochina.com/operations.json"
   },
   "accessApiPageUrl": "https://gcagochina.com/access-api.html",
   "accessApiUrl": "https://gcagochina.com/access-api.json",
@@ -492,7 +507,9 @@
       "/gca/member-review"
     ],
     "reviewQueuePage": "https://gcagochina.com/review-queue.html",
-    "reviewQueue": "https://gcagochina.com/review-queue.json"
+    "reviewQueue": "https://gcagochina.com/review-queue.json",
+    "operationsRunbookPage": "https://gcagochina.com/operations.html",
+    "operationsRunbook": "https://gcagochina.com/operations.json"
   },
   "reviewQueuePageUrl": "https://gcagochina.com/review-queue.html",
   "reviewQueueUrl": "https://gcagochina.com/review-queue.json",
@@ -514,6 +531,24 @@
       "gca-member-review",
       "support-case-review",
       "platform-profile-follow-up"
-    ]
+    ],
+    "operationsRunbookPage": "https://gcagochina.com/operations.html",
+    "operationsRunbook": "https://gcagochina.com/operations.json"
+  },
+  "operationsRunbookPageUrl": "https://gcagochina.com/operations.html",
+  "operationsRunbookUrl": "https://gcagochina.com/operations.json",
+  "accessOperationsRunbook": {
+    "status": "public-access-operations-runbook-published",
+    "pageUrl": "https://gcagochina.com/operations.html",
+    "url": "https://gcagochina.com/operations.json",
+    "currentStage": "public-operations-runbook-only",
+    "publicRunbookOnly": true,
+    "backendLive": false,
+    "publicSubmissionQueueLive": false,
+    "controlledHttpsAccountUiLive": false,
+    "creditsSelfServiceClaimable": false,
+    "gcaMemberSelfServiceClaimable": false,
+    "ledgerWritesLive": false,
+    "liveTradingEnabled": false
   }
 }

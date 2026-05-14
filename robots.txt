@@ -45,6 +45,8 @@ Allow: /product.html
 Allow: /product.json
 Allow: /access.html
 Allow: /access.json
+Allow: /operations.html
+Allow: /operations.json
 Allow: /access-api.html
 Allow: /access-api.json
 Allow: /review-queue.html

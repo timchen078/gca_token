@@ -15,7 +15,8 @@
     "gcaMemberSelfServiceClaimable": false,
     "liveTradingEnabled": false,
     "accessApiContract": "published-contract-only",
-    "reviewQueueContract": "published-manual-review-contract"
+    "reviewQueueContract": "published-manual-review-contract",
+    "operationsRunbook": "public-access-operations-runbook-published"
   },
   "preparedRoutes": {
     "futureAccountPortal": "/gca/account",
@@ -166,7 +167,9 @@
     "accessApiPage": "https://gcagochina.com/access-api.html",
     "accessApi": "https://gcagochina.com/access-api.json",
     "reviewQueuePage": "https://gcagochina.com/review-queue.html",
-    "reviewQueue": "https://gcagochina.com/review-queue.json"
+    "reviewQueue": "https://gcagochina.com/review-queue.json",
+    "operationsRunbookPage": "https://gcagochina.com/operations.html",
+    "operationsRunbook": "https://gcagochina.com/operations.json"
   },
   "publicClaimBoundaries": {
     "safeClaims": [
