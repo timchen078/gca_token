@@ -81,7 +81,9 @@
     "logoPng": "https://gcagochina.com/assets/gca-logo.png",
     "baseScanContract": "https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
     "telegram": "https://t.me/gcagochinaofficial",
-    "x": "https://x.com/GCAAIGoChina"
+    "x": "https://x.com/GCAAIGoChina",
+    "productSpecPage": "https://gcagochina.com/product.html",
+    "productSpec": "https://gcagochina.com/product.json"
   },
   "market": {
     "officialPair": "GCA/USDT",
@@ -128,7 +130,8 @@
     "blockaidFalsePositiveReport": "submitted-2026-05-10-warning-removal-not-confirmed",
     "coinGeckoTrackedListing": "not-submitted",
     "coinMarketCapTrackedListing": "not-submitted",
-    "thirdPartyAudit": "not-completed"
+    "thirdPartyAudit": "not-completed",
+    "productSpec": "public-product-spec-published"
   },
   "securityFacts": {
     "sourceVerifiedOnBaseScan": true,
@@ -165,5 +168,37 @@
     "dataPlatformEmail": "GCAgochina@outlook.com",
     "baseScanSubmissionEmail": "cxy070800@gmail.com",
     "telegram": "https://t.me/gcagochinaofficial"
+  },
+  "productSpec": {
+    "status": "public-product-spec-published",
+    "pageUrl": "https://gcagochina.com/product.html",
+    "url": "https://gcagochina.com/product.json",
+    "productName": "GCA AI Quant Access",
+    "currentStage": "public-product-spec-only",
+    "publicAccountUiLive": false,
+    "liveTradingEnabled": false,
+    "releaseGate": "controlled HTTPS account UI, read-only wallet verification, credit ledger activation, member ledger activation, risk-control review, and simulation or testnet first",
+    "moduleNames": [
+      "China Narrative Radar",
+      "Weekly Go China Radar",
+      "Liquidation Replay",
+      "Risk Warning Credits",
+      "Backtest Lab",
+      "ENTRY_READY Review",
+      "Position Size Calculator",
+      "GCA Member Workspace"
+    ],
+    "notProduct": [
+      "custody",
+      "withdrawal permission",
+      "private key or seed phrase collection",
+      "exchange API secret collection",
+      "automatic live trading permission",
+      "financial advice",
+      "live market data",
+      "buy or sell recommendation",
+      "price forecast",
+      "strategy performance promise"
+    ]
   }
 }

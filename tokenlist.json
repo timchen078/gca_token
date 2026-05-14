@@ -109,7 +109,10 @@
         "walletWarningOwnerObservationDate": "2026-05-14",
         "securityVendorApprovalConfirmed": false,
         "weeklyRadarIssue": "issue-002",
-        "weeklyRadarIssueTitle": "Trust Stack Before Growth"
+        "weeklyRadarIssueTitle": "Trust Stack Before Growth",
+        "productSpecPage": "https://gcagochina.com/product.html",
+        "productSpec": "https://gcagochina.com/product.json",
+        "productSpecStatus": "public-product-spec-published"
       }
     }
   ]
