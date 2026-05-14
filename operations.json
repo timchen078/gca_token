@@ -25,11 +25,20 @@
     "symbol": "GCA",
     "decimals": 18
   },
+  "memberPacketVersion": "gca_member_preregistration_v2",
+  "memberEvidenceFields": [
+    "memberBenefitReviewEvidence.holdingStartDate",
+    "memberBenefitReviewEvidence.daysSinceHoldingStartPreview",
+    "memberBenefitReviewEvidence.holdingPeriodPreviewEligible",
+    "memberBenefitReviewEvidence.evidenceTxHash",
+    "memberBenefitReviewEvidence.evidenceTxHashFormatOk",
+    "memberBenefitReviewEvidence.evidenceNote"
+  ],
   "operatorWorkflow": [
     {
       "id": "intake-triage",
       "label": "Intake Triage",
-      "operatorAction": "Accept only non-sensitive account intent, public wallet address, declared GCA balance, program intent, and public transaction references.",
+      "operatorAction": "Accept only non-sensitive account intent, public wallet address, declared GCA balance, program intent, public transaction references, GCA Member holding start date, and member evidence note from the gca_member_preregistration_v2 packet.",
       "outputStatus": "received"
     },
     {
@@ -47,7 +56,7 @@
     {
       "id": "holding-period-review",
       "label": "Holding Period Review",
-      "operatorAction": "For GCA Member benefit review, verify public purchase or transfer evidence showing at least 1,000,000 GCA held continuously for 30 days.",
+      "operatorAction": "For GCA Member benefit review, verify the gca_member_preregistration_v2 holdingStartDate, evidenceTxHash, evidenceTxHashFormatOk, and public purchase or transfer evidence showing at least 1,000,000 GCA held continuously for 30 days.",
       "outputStatus": "eligible, below_threshold, or needs_more_information"
     },
     {
@@ -88,7 +97,12 @@
     "status",
     "walletAddress",
     "checkedAt",
+    "holdingStartDate",
     "holdingPeriodDaysVerified",
+    "holdingPeriodPreviewEligible",
+    "evidenceTxHash",
+    "evidenceTxHashFormatOk",
+    "memberBenefitReviewEvidenceStatus",
     "reviewerNote",
     "publicEvidenceReference"
   ],
@@ -98,6 +112,9 @@
     "read-only GCA balance from eth_call balanceOf",
     "public transaction hash",
     "public purchase or transfer transaction hash used for holding-period review",
+    "member holding start date from gca_member_preregistration_v2 packet",
+    "0x-format evidence transaction hash check",
+    "member evidence note",
     "non-sensitive support note",
     "public review reference"
   ],
@@ -111,6 +128,7 @@
     "requiresTransactionForBalanceRead": false,
     "manualSupportCanOverrideBalanceVerification": false,
     "manualSupportCanBypassReleaseGates": false,
+    "memberPacketVersionMustEqual": "gca_member_preregistration_v2",
     "structuredAuditTrailRequired": true,
     "requiredAuditFields": [
       "reviewId",
@@ -119,7 +137,12 @@
       "status",
       "walletAddress",
       "checkedAt",
+      "holdingStartDate",
       "holdingPeriodDaysVerified",
+      "holdingPeriodPreviewEligible",
+      "evidenceTxHash",
+      "evidenceTxHashFormatOk",
+      "memberBenefitReviewEvidenceStatus",
       "reviewerNote",
       "publicEvidenceReference"
     ]
@@ -179,7 +202,7 @@
     "self-service GCA Member claiming",
     "self-service 10,000 GCA member benefit claiming"
   ],
-  "safeReplyTemplate": "Your request has been received for manual review. GCA access claiming is not self-service yet. We can review your public Base wallet address with a read-only GCA balance check, but we will never ask for private keys, seed phrases, exchange API secrets, withdrawal permission, custody, or fund transfers.",
+  "safeReplyTemplate": "Your request has been received for manual review. GCA access claiming is not self-service yet. We can review your public Base wallet address with a read-only GCA balance check and, for member benefit review, the gca_member_preregistration_v2 holding start date plus public purchase or transfer transaction hash. We will never ask for private keys, seed phrases, exchange API secrets, withdrawal permission, custody, or fund transfers.",
   "officialMarket": {
     "pair": "GCA/USDT",
     "dex": "Uniswap v4",
