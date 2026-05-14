@@ -1,0 +1,142 @@
+{
+  "schema": "https://gcagochina.com/utility.json",
+  "pageUrl": "https://gcagochina.com/utility.html",
+  "status": "public-utility-bridge-spec-published",
+  "lastUpdated": "2026-05-14",
+  "chainId": 8453,
+  "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+  "title": "GCA Utility Bridge",
+  "positioning": {
+    "tagline": "Narrative meets risk control.",
+    "concept": "Go China Access",
+    "connectedProduct": "Web3 Radar non-custodial quant risk toolkit",
+    "publicStatus": "concept-stage-utility-bridge-spec-published",
+    "summary": "GCA is planned as an access and membership layer for reports, backtests, risk warnings, ENTRY_READY reviews, position sizing, education, member research, and support workflows."
+  },
+  "bridgePrinciples": [
+    "Users keep funds in their own wallets or exchange accounts.",
+    "The GCA utility bridge must not request private keys, seed phrases, exchange API secrets, withdrawal permission, or custody.",
+    "Wallet verification should use read-only ERC-20 balance checks before any credit or member ledger record is written.",
+    "Utility credits and GCA Member status are account-level service records only.",
+    "Token ownership must not bypass strategy risk checks, testnet requirements, manual review, or trading safety controls."
+  ],
+  "accessFlow": [
+    {
+      "step": "pre_registration",
+      "status": "static-local-packet-ready",
+      "description": "Users can prepare a local pre-registration packet from the public members page. Public self-service claiming is not live."
+    },
+    {
+      "step": "wallet_balance_verification",
+      "status": "planned-controlled-https-backend",
+      "description": "The controlled backend should verify one Base wallet per registered user with a read-only GCA balanceOf check."
+    },
+    {
+      "step": "credit_ledger",
+      "status": "schema-published-public-claim-not-connected",
+      "description": "Eligible registered users can receive one 100 Web3 Radar utility credits service ledger record after controlled verification is live."
+    },
+    {
+      "step": "member_ledger",
+      "status": "schema-published-public-claim-not-connected",
+      "description": "Eligible registered users can receive GCA Member status after controlled verification is live."
+    },
+    {
+      "step": "product_access",
+      "status": "planned",
+      "description": "Credits and member status can map to reports, backtests, risk warnings, ENTRY_READY reviews, calculators, education, member notes, and support workflows."
+    }
+  ],
+  "eligibleUtility": [
+    "Liquidation Replay reports",
+    "risk-warning credits",
+    "realistic backtest runs",
+    "ENTRY_READY signal review",
+    "position-size calculators",
+    "risk-control education",
+    "member research notes",
+    "priority report queue",
+    "member training sessions",
+    "priority support"
+  ],
+  "holderBonus": {
+    "status": "planned-controlled-verification-required",
+    "registeredUserLimit": "one bonus per registered user",
+    "walletLimit": "one verified wallet per registered user",
+    "minimumHolding": "10000 GCA",
+    "creditAmount": "100 Web3 Radar utility credits",
+    "creditExpiry": "180 days after ledger activation unless a later published policy extends it",
+    "creditUse": "reports, backtests, risk warnings, ENTRY_READY signal review, position calculators, or education access",
+    "notCreditUse": "cash, tokens, income, reimbursement, trading permission, leverage, custody, withdrawal access, or risk-control bypass"
+  },
+  "gcaMember": {
+    "status": "planned-controlled-verification-required",
+    "registeredUserLimit": "one membership status per registered user",
+    "walletLimit": "one verified wallet per registered user",
+    "minimumHolding": "1000000 GCA",
+    "refreshCadence": "30 days after activation, or earlier if the user requests a manual recheck",
+    "memberAccess": "higher utility credit limits, member research notes, priority report queue, member training sessions, and priority support",
+    "notMemberAccess": "cash, tokens, income, reimbursement, voting control, lifetime access guarantee, trading permission, leverage, custody, withdrawal access, or risk-control bypass"
+  },
+  "ledgerContracts": {
+    "memberProgramRules": "https://gcagochina.com/member-program.json",
+    "memberLedgerPage": "https://gcagochina.com/member-ledger.html",
+    "memberLedgerSchema": "https://gcagochina.com/member-ledger.json",
+    "supportPage": "https://gcagochina.com/support.html",
+    "supportJson": "https://gcagochina.com/support.json",
+    "privacyNotice": "https://gcagochina.com/privacy.json",
+    "participationTerms": "https://gcagochina.com/terms.json"
+  },
+  "officialMarket": {
+    "pair": "GCA/USDT",
+    "dex": "Uniswap v4",
+    "network": "Base Mainnet",
+    "poolAddress": "0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "quoteAsset": "USDT",
+    "quoteAssetAddress": "0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2",
+    "liquidityDepth": "starter-depth-only"
+  },
+  "notUtility": [
+    "custody",
+    "withdrawal permission",
+    "private key or seed phrase collection",
+    "exchange API secret collection",
+    "platform revenue distribution",
+    "cash, token, income, or reimbursement claim",
+    "automatic live trading permission",
+    "return promise",
+    "price target",
+    "risk-control bypass"
+  ],
+  "publicClaimBoundaries": {
+    "safeClaims": [
+      "GCA has published a public utility bridge specification.",
+      "GCA utility is planned as account-level service access for non-custodial quant risk tools.",
+      "The 100 Web3 Radar utility credits and GCA Member status require controlled wallet verification before ledger activation.",
+      "The public member page can prepare a local pre-registration packet, but public self-service claiming is not live.",
+      "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool."
+    ],
+    "doNotClaim": [
+      "100 Web3 Radar utility credits are live self-service claimable before controlled HTTPS account UI is released",
+      "GCA Member status is live self-service before controlled HTTPS account UI is released",
+      "credits or member status are cash, tokens, income, reimbursement, trading permission, leverage, custody, withdrawal access, or risk-control bypass",
+      "GCA utility includes custody, withdrawal permission, private key access, exchange API secret collection, platform revenue distribution, return promises, or price targets",
+      "finished platform utility before the controlled account UI is live"
+    ]
+  },
+  "officialLinks": {
+    "utilityPage": "https://gcagochina.com/utility.html",
+    "utilityJson": "https://gcagochina.com/utility.json",
+    "members": "https://gcagochina.com/members.html",
+    "memberProgramRules": "https://gcagochina.com/member-program.json",
+    "memberLedgerPage": "https://gcagochina.com/member-ledger.html",
+    "memberLedgerSchema": "https://gcagochina.com/member-ledger.json",
+    "support": "https://gcagochina.com/support.html",
+    "privacyNotice": "https://gcagochina.com/privacy.html",
+    "participationTerms": "https://gcagochina.com/terms.html",
+    "roadmap": "https://gcagochina.com/roadmap.html",
+    "weeklyRadar": "https://gcagochina.com/radar.html",
+    "market": "https://gcagochina.com/markets.html",
+    "verify": "https://gcagochina.com/verify.html"
+  }
+}
