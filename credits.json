@@ -1,0 +1,185 @@
+{
+  "schema": "https://gcagochina.com/credits.json",
+  "pageUrl": "https://gcagochina.com/credits.html",
+  "status": "public-credits-catalog-published",
+  "lastUpdated": "2026-05-14",
+  "chainId": 8453,
+  "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+  "title": "GCA Utility Credits Catalog",
+  "currentState": {
+    "currentStage": "draft-service-catalog-only",
+    "draftServiceCatalogOnly": true,
+    "publicAccountUiLive": false,
+    "creditsSelfServiceClaimable": false,
+    "gcaMemberSelfServiceClaimable": false,
+    "liveTradingEnabled": false
+  },
+  "holderBonus": {
+    "minimumHolding": "10000 GCA",
+    "creditAmount": "100 Web3 Radar utility credits",
+    "registeredUserLimit": "one holder bonus per registered user",
+    "walletLimit": "one verified Base wallet per registered user",
+    "activationRequirement": "controlled HTTPS account UI, read-only GCA balance verification, and credit ledger activation",
+    "notLive": true
+  },
+  "gcaMember": {
+    "minimumHolding": "1000000 GCA",
+    "registeredUserLimit": "one member status review per registered user",
+    "walletLimit": "one verified Base wallet per registered user",
+    "activationRequirement": "controlled HTTPS account UI, read-only GCA balance verification, member ledger activation, and support review queue",
+    "notLive": true,
+    "plannedAccessScope": "higher utility credit limits, member research notes, priority report queue, member training sessions, and priority support"
+  },
+  "serviceCatalog": [
+    {
+      "id": "liquidation-replay-report",
+      "name": "Liquidation Replay",
+      "status": "planned-controlled-account-ui-required",
+      "creditUnit": 30,
+      "unitType": "draft service credit unit",
+      "description": "Structured post-trade review of liquidation, over-sizing, leverage, stop placement, and execution mistakes.",
+      "notPurpose": "Not compensation, reimbursement, insurance, or a promise that future losses can be avoided."
+    },
+    {
+      "id": "risk-warning-review",
+      "name": "Risk Warning Review",
+      "status": "planned-controlled-account-ui-required",
+      "creditUnit": 10,
+      "unitType": "draft service credit unit",
+      "description": "Risk warning review for volatility, crowding, exposure, stop placement, and trade-process discipline.",
+      "notPurpose": "Not financial advice, live market data, or a buy or sell recommendation."
+    },
+    {
+      "id": "backtest-lab-run",
+      "name": "Backtest Lab",
+      "status": "planned-controlled-account-ui-required",
+      "creditUnit": 20,
+      "unitType": "draft service credit unit",
+      "description": "Backtest review with fees, slippage, drawdown, sample quality, and risk-constraint notes.",
+      "notPurpose": "Not proof that a strategy will perform in live markets."
+    },
+    {
+      "id": "entry-ready-review",
+      "name": "ENTRY_READY Review",
+      "status": "planned-controlled-account-ui-required",
+      "creditUnit": 15,
+      "unitType": "draft service credit unit",
+      "description": "Setup, invalidation, risk budget, execution-condition, and readiness review for a trade idea.",
+      "notPurpose": "Not automatic live order execution or a bypass of risk controls."
+    },
+    {
+      "id": "position-size-calculator",
+      "name": "Position Size Calculator",
+      "status": "planned-controlled-account-ui-required",
+      "creditUnit": 5,
+      "unitType": "draft service credit unit",
+      "description": "Risk budget, stop-distance, leverage-bound, exposure-limit, and maximum-loss calculation workflow.",
+      "notPurpose": "Not leverage encouragement or a replacement for user judgment."
+    },
+    {
+      "id": "risk-control-training",
+      "name": "Risk-Control Training",
+      "status": "planned-controlled-account-ui-required",
+      "creditUnit": 10,
+      "unitType": "draft service credit unit",
+      "description": "Training content for liquidation prevention, trade journaling, execution discipline, and risk-first workflow.",
+      "notPurpose": "Not a certification, license, or promise of trading results."
+    },
+    {
+      "id": "member-research-notes",
+      "name": "Member Research Notes",
+      "status": "planned-member-ledger-required",
+      "creditUnit": 20,
+      "unitType": "draft member credit unit",
+      "description": "Member-only China Narrative Radar notes, weekly research extensions, and risk-context summaries.",
+      "notPurpose": "Not private investment advice, price forecasts, or listing information."
+    },
+    {
+      "id": "support-review-queue",
+      "name": "Support Review Queue",
+      "status": "planned-member-ledger-required",
+      "creditUnit": 0,
+      "unitType": "member workflow priority",
+      "description": "Priority support routing for account, verification, report, and member-workflow review after account UI is live.",
+      "notPurpose": "Not an emergency trading desk, exchange support channel, or transaction recovery service."
+    }
+  ],
+  "redemptionBoundaries": {
+    "accountLevelOnly": true,
+    "transferable": false,
+    "cashEquivalent": false,
+    "tokenRebate": false,
+    "incomeOrReimbursement": false,
+    "tradingPermission": false,
+    "riskControlBypass": false,
+    "requiresControlledAccountUi": true,
+    "requiresLedgerActivation": true,
+    "requiresSupportReview": true
+  },
+  "safetyArchitecture": {
+    "custody": false,
+    "withdrawalPermission": false,
+    "privateKeyCollection": false,
+    "seedPhraseCollection": false,
+    "exchangeApiSecretCollection": false,
+    "automaticLiveTradingEnabled": false,
+    "riskControlBypassAllowed": false,
+    "simulationFirstRequiredBeforeFutureExecution": true
+  },
+  "releaseGates": {
+    "releaseGatesPage": "https://gcagochina.com/release-gates.html",
+    "releaseGates": "https://gcagochina.com/release-gates.json",
+    "requiredBeforeCreditUse": [
+      "controlled HTTPS account UI",
+      "read-only GCA balance verification",
+      "credit ledger activation",
+      "support review queue"
+    ],
+    "requiredBeforeMemberUse": [
+      "controlled HTTPS account UI",
+      "read-only GCA balance verification",
+      "member ledger activation",
+      "support review queue"
+    ]
+  },
+  "officialMarket": {
+    "pair": "GCA/USDT",
+    "dex": "Uniswap v4",
+    "network": "Base Mainnet",
+    "poolAddress": "0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "quoteAsset": "USDT",
+    "quoteAssetAddress": "0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2",
+    "liquidityDepth": "starter-depth-only"
+  },
+  "officialLinks": {
+    "creditsCatalogPage": "https://gcagochina.com/credits.html",
+    "creditsCatalog": "https://gcagochina.com/credits.json",
+    "utilityPage": "https://gcagochina.com/utility.html",
+    "utilityJson": "https://gcagochina.com/utility.json",
+    "productPage": "https://gcagochina.com/product.html",
+    "productJson": "https://gcagochina.com/product.json",
+    "releaseGatesPage": "https://gcagochina.com/release-gates.html",
+    "releaseGates": "https://gcagochina.com/release-gates.json",
+    "memberLedgerPage": "https://gcagochina.com/member-ledger.html",
+    "memberLedger": "https://gcagochina.com/member-ledger.json",
+    "memberProgram": "https://gcagochina.com/member-program.json",
+    "support": "https://gcagochina.com/support.html",
+    "market": "https://gcagochina.com/markets.html"
+  },
+  "publicClaimBoundaries": {
+    "safeClaims": [
+      "GCA has published a draft service catalog for planned Web3 Radar utility credits.",
+      "The 10,000 GCA holder bonus is planned as one account-level 100 Web3 Radar utility credits record after controlled verification is live.",
+      "The 1,000,000 GCA Member threshold is planned as an account-level member review after controlled verification is live.",
+      "Credits and member status are not self-service claimable until controlled HTTPS account UI and ledger activation are live.",
+      "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool."
+    ],
+    "doNotClaim": [
+      "100 Web3 Radar utility credits are live self-service claimable before controlled HTTPS account UI is released",
+      "GCA Member status is live self-service claimable before controlled wallet verification and ledger activation",
+      "credits or member status are cash, tokens, income, reimbursement, trading permission, or transferable value",
+      "token ownership bypasses risk controls, support review, or simulation-first requirements",
+      "service units are final commercial pricing before public terms are published"
+    ]
+  }
+}

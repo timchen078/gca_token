@@ -3,22 +3,22 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>GCA Product Release Gates | GCA AI Quant Access</title>
-    <meta name="description" content="GCA public release gates for GCA AI Quant Access: account UI, read-only wallet verification, credits ledger, member ledger, support review queue, risk controls, and simulation-first boundaries.">
-    <link rel="canonical" href="https://gcagochina.com/release-gates.html">
+    <title>GCA Utility Credits Catalog | GCA AI Quant Access</title>
+    <meta name="description" content="Draft public catalog for planned GCA Web3 Radar utility credits, GCA Member workflows, release gates, and no-custody boundaries.">
+    <link rel="canonical" href="https://gcagochina.com/credits.html">
     <link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">
     <link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="GCA | Go China Access">
-    <meta property="og:title" content="GCA Product Release Gates | GCA AI Quant Access">
-    <meta property="og:description" content="Public release gates for GCA AI Quant Access before account UI, credit use, member status, or trading-related product claims can go live.">
-    <meta property="og:url" content="https://gcagochina.com/release-gates.html">
+    <meta property="og:title" content="GCA Utility Credits Catalog | GCA AI Quant Access">
+    <meta property="og:description" content="Draft public service catalog for planned GCA utility credits and GCA Member workflows.">
+    <meta property="og:url" content="https://gcagochina.com/credits.html">
     <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="GCA Product Release Gates | GCA AI Quant Access">
-    <meta name="twitter:description" content="Public release gates for GCA AI Quant Access before account UI, credit use, member status, or trading-related product claims can go live.">
+    <meta name="twitter:title" content="GCA Utility Credits Catalog | GCA AI Quant Access">
+    <meta name="twitter:description" content="Draft public service catalog for planned GCA utility credits and GCA Member workflows.">
     <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
     <style>
       :root {
@@ -180,7 +180,7 @@
       }
 
       .grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-columns: repeat(4, minmax(0, 1fr));
       }
 
       .two {
@@ -193,7 +193,7 @@
       }
 
       .fact {
-        min-height: 116px;
+        min-height: 130px;
         padding: 16px;
       }
 
@@ -237,10 +237,9 @@
       }
 
       .row {
-        display: grid;
-        grid-template-columns: minmax(112px, 0.75fr) minmax(0, 1.35fr);
-        gap: 12px;
-        align-items: start;
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
         border-top: 1px solid var(--line);
         padding-top: 10px;
       }
@@ -248,13 +247,6 @@
       .row:first-child {
         border-top: 0;
         padding-top: 0;
-      }
-
-      .row strong {
-        min-width: 0;
-        overflow-wrap: anywhere;
-        word-break: break-word;
-        text-align: right;
       }
 
       code {
@@ -268,16 +260,16 @@
 
       footer {
         border-top: 1px solid var(--line);
+        padding: 24px 0 34px;
         color: var(--muted);
-        padding: 22px 0;
-        font-size: 13px;
+        font-size: 14px;
       }
 
-      @media (max-width: 860px) {
-        nav,
-        .row {
+      @media (max-width: 840px) {
+        nav {
           align-items: flex-start;
           flex-direction: column;
+          padding: 14px 0;
         }
 
         .nav-links {
@@ -290,12 +282,12 @@
           grid-template-columns: 1fr;
         }
 
-        .row {
-          display: flex;
+        h1 {
+          font-size: 42px;
         }
 
-        .row strong {
-          text-align: left;
+        .row {
+          display: grid;
         }
       }
     </style>
@@ -313,134 +305,150 @@
           <a href="buy.html">Buy Guide</a>
           <a href="markets.html">Markets</a>
           <a href="product.html">Product Spec</a>
-          <a href="credits.html">Credits Catalog</a>
-          <a href="release-gates.json">Release Gates JSON</a>
+          <a href="credits.json">Credits Catalog JSON</a>
+          <a href="release-gates.html">Release Gates</a>
           <a href="utility.html">Utility</a>
           <a href="member-ledger.html">Member Ledger</a>
           <a href="roadmap.html">Roadmap</a>
           <a href="status.html">Status</a>
+          <a href="listing-kit.html">Listing Kit</a>
         </div>
       </nav>
     </header>
 
     <main class="shell">
       <section aria-labelledby="title">
-        <p class="eyebrow">Release Gates / 2026-05-14</p>
-        <h1 id="title">GCA Product Release Gates</h1>
-        <p class="lead">This page defines what must be true before GCA AI Quant Access is described as a public self-service product. The current state is public product spec only, not a live trading terminal, not live market data, and not financial advice.</p>
-        <p class="lead">Public Account UI is not live. Credits are not self-service claimable. GCA Member status is not self-service claimable. Any product claim must stay inside the gates below until implementation, support review, and disclosures are live.</p>
+        <p class="eyebrow">Draft Service Catalog / 2026-05-14</p>
+        <h1 id="title">GCA Utility Credits Catalog</h1>
+        <p class="lead">This draft service catalog explains how planned GCA utility credits and GCA Member status may map to Web3 Radar non-custodial risk tools after controlled account UI, read-only wallet verification, and ledger activation are live.</p>
+        <p class="lead">The catalog is not self-service claimable today. It is a public planning artifact for 100 Web3 Radar utility credits, GCA Member workflows, and safety boundaries.</p>
         <div class="actions">
-          <a class="button primary" href="release-gates.json">Release Gates JSON</a>
+          <a class="button primary" href="credits.json">Credits Catalog JSON</a>
           <a class="button" href="product.html">Product Spec</a>
-          <a class="button" href="product.json">Product JSON</a>
-          <a class="button" href="credits.html">Credits Catalog</a>
-          <a class="button" href="credits.json">Credits JSON</a>
           <a class="button" href="utility.html">Utility Bridge</a>
+          <a class="button" href="release-gates.html">Release Gates</a>
           <a class="button" href="member-ledger.html">Member Ledger</a>
-          <a class="button" href="support.html">Support</a>
-          <a class="button" href="roadmap.html">Roadmap</a>
+          <a class="button" href="members.html">Member Pre-Registration</a>
         </div>
       </section>
 
       <section class="facts" aria-label="Current state">
         <div class="fact">
           <span class="label">Current Stage</span>
-          <span class="value pending">public product spec only</span>
+          <span class="value pending">draft service catalog only</span>
         </div>
         <div class="fact">
-          <span class="label">Public Account UI</span>
-          <span class="value pending">Not live</span>
-        </div>
-        <div class="fact">
-          <span class="label">Credits</span>
-          <span class="value pending">Not self-service claimable</span>
+          <span class="label">100 Credits</span>
+          <span class="value pending">not self-service claimable</span>
         </div>
         <div class="fact">
           <span class="label">GCA Member</span>
-          <span class="value pending">Not self-service claimable</span>
+          <span class="value pending">not self-service claimable</span>
+        </div>
+        <div class="fact">
+          <span class="label">Account UI</span>
+          <span class="value pending">controlled HTTPS account UI required</span>
+        </div>
+      </section>
+
+      <section class="section two" aria-label="Access thresholds">
+        <div class="panel">
+          <h2>100 Credit Rules</h2>
+          <div class="list">
+            <div class="row"><span>Minimum verified holding</span><strong>10,000 GCA</strong></div>
+            <div class="row"><span>Planned ledger record</span><strong>100 Web3 Radar utility credits</strong></div>
+            <div class="row"><span>Registered user limit</span><strong>one holder bonus</strong></div>
+            <div class="row"><span>Required before use</span><strong>controlled HTTPS account UI</strong></div>
+          </div>
+        </div>
+        <div class="panel">
+          <h2>GCA Member Rules</h2>
+          <div class="list">
+            <div class="row"><span>Minimum verified holding</span><strong>1,000,000 GCA</strong></div>
+            <div class="row"><span>Planned status</span><strong>GCA Member</strong></div>
+            <div class="row"><span>Member scope</span><strong>notes, queues, training, support</strong></div>
+            <div class="row"><span>Required before use</span><strong>member ledger activation</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="catalogTitle">
+        <h2 id="catalogTitle">Draft Service Units</h2>
+        <p class="note">These units are planning units for a future controlled account UI. They are not final commercial pricing and are not currently redeemable from the public static site.</p>
+        <div class="grid" style="margin-top: 16px;">
+          <div class="fact">
+            <span class="label">30 units</span>
+            <span class="value">Liquidation Replay</span>
+            <p class="note">Post-trade review of liquidation, over-sizing, leverage, stops, and execution mistakes.</p>
+          </div>
+          <div class="fact">
+            <span class="label">10 units</span>
+            <span class="value">Risk Warning Review</span>
+            <p class="note">Volatility, crowding, exposure, and process discipline review.</p>
+          </div>
+          <div class="fact">
+            <span class="label">20 units</span>
+            <span class="value">Backtest Lab</span>
+            <p class="note">Backtest review with fees, slippage, drawdown, and sample-quality notes.</p>
+          </div>
+          <div class="fact">
+            <span class="label">15 units</span>
+            <span class="value">ENTRY_READY Review</span>
+            <p class="note">Setup, invalidation, risk budget, and execution-condition review.</p>
+          </div>
+          <div class="fact">
+            <span class="label">5 units</span>
+            <span class="value">Position Size Calculator</span>
+            <p class="note">Risk budget, stop distance, leverage bounds, and exposure limits.</p>
+          </div>
+          <div class="fact">
+            <span class="label">10 units</span>
+            <span class="value">Risk-Control Training</span>
+            <p class="note">Training for liquidation prevention, trade journaling, and disciplined execution.</p>
+          </div>
+          <div class="fact">
+            <span class="label">20 member units</span>
+            <span class="value">Member Research Notes</span>
+            <p class="note">Member-only China Narrative Radar notes and risk-context summaries.</p>
+          </div>
+          <div class="fact">
+            <span class="label">Member workflow</span>
+            <span class="value">Support Review Queue</span>
+            <p class="note">Priority routing for account, verification, report, and member-workflow review.</p>
+          </div>
         </div>
       </section>
 
       <section class="section panel" aria-labelledby="gatesTitle">
-        <h2 id="gatesTitle">Go-Live Gates</h2>
-        <div class="grid">
-          <div class="fact">
-            <span class="label">Account UI</span>
-            <span class="value">controlled HTTPS account UI</span>
-            <p class="note">Required before users rely on account-level access, packet submission, credit use, or member status.</p>
-          </div>
-          <div class="fact">
-            <span class="label">Wallet Check</span>
-            <span class="value">read-only GCA balance verification</span>
-            <p class="note">Required before any 10,000 GCA credit record or 1,000,000 GCA member review is accepted.</p>
-          </div>
-          <div class="fact">
-            <span class="label">Credits</span>
-            <span class="value">credit ledger activation</span>
-            <p class="note">Required before the 100 utility credits ledger can be described as usable by a public account.</p>
-          </div>
-          <div class="fact">
-            <span class="label">Members</span>
-            <span class="value">member ledger activation</span>
-            <p class="note">Required before GCA Member status becomes an account-level support or research workflow.</p>
-          </div>
-          <div class="fact">
-            <span class="label">Controls</span>
-            <span class="value">risk-control review</span>
-            <p class="note">Required before any trading-related tool is promoted beyond education, review, or simulation.</p>
-          </div>
-          <div class="fact">
-            <span class="label">Execution</span>
-            <span class="value">simulation or testnet first</span>
-            <p class="note">Required before any future live execution workflow can be considered for release.</p>
-          </div>
+        <h2 id="gatesTitle">Release Gates Before Use</h2>
+        <div class="list">
+          <div class="row"><span>Account access</span><strong>controlled HTTPS account UI</strong></div>
+          <div class="row"><span>Wallet verification</span><strong>read-only GCA balance verification</strong></div>
+          <div class="row"><span>100 credits</span><strong>credit ledger activation</strong></div>
+          <div class="row"><span>GCA Member</span><strong>member ledger activation</strong></div>
+          <div class="row"><span>Support</span><strong>support review queue</strong></div>
+          <div class="row"><span>Any future trading workflow</span><strong>risk-control review and simulation or testnet first</strong></div>
         </div>
       </section>
 
-      <section class="section two" aria-label="Operational boundaries">
+      <section class="section two" aria-label="Safety boundaries">
         <div class="panel">
-          <h2>Not Live Yet</h2>
-          <div class="list">
-            <div class="row"><span>Public account UI</span><strong class="pending">Not live</strong></div>
-            <div class="row"><span>100 utility credits self-service claim</span><strong class="pending">Not live</strong></div>
-            <div class="row"><span>Credits catalog</span><strong class="pending">Draft service catalog only</strong></div>
-            <div class="row"><span>GCA Member self-service claim</span><strong class="pending">Not live</strong></div>
-            <div class="row"><span>Live trading execution</span><strong class="pending">Not enabled</strong></div>
-            <div class="row"><span>BaseScan token profile awaiting review</span><strong class="pending">Awaiting BaseScan</strong></div>
-            <div class="row"><span>Third-party audit</span><strong class="pending">no third-party audit</strong></div>
-          </div>
-        </div>
-
-        <div class="panel">
-          <h2>Required Controls</h2>
-          <div class="list">
-            <div class="row"><span>Custody model</span><strong>No custody</strong></div>
-            <div class="row"><span>Wallet permissions</span><strong>no withdrawal permission</strong></div>
-            <div class="row"><span>Secrets</span><strong>no exchange API secret collection</strong></div>
-            <div class="row"><span>Support</span><strong>support review queue required</strong></div>
-            <div class="row"><span>Risk</span><strong>risk-control review required</strong></div>
-            <div class="row"><span>Validation</span><strong>simulation or testnet first</strong></div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section two" aria-label="Public claim boundaries">
-        <div class="panel">
-          <h2>Safe To Say</h2>
+          <h2>Safety Boundaries</h2>
           <ul>
-            <li>GCA has published product release gates for GCA AI Quant Access.</li>
-            <li>The current public page is a product spec and release-gate disclosure.</li>
-            <li>Public self-service credits and GCA Member status require controlled account UI, read-only wallet verification, ledger activation, and support review.</li>
-            <li>Any future trading-related feature must pass risk-control review and simulation or testnet first.</li>
+            <li>No custody.</li>
+            <li>No withdrawal permission.</li>
+            <li>No exchange API secret collection.</li>
+            <li>No private key or seed phrase collection.</li>
+            <li>No risk-control bypass.</li>
           </ul>
         </div>
         <div class="panel">
           <h2>Do Not Claim</h2>
           <ul>
-            <li>Do not claim credit claiming is live before controlled account UI and credit ledger activation.</li>
-            <li>Do not claim GCA Member status is live before controlled account UI and member ledger activation.</li>
-            <li>Do not claim the product gives custody, withdrawal permission, exchange API secret collection, platform revenue distribution, trading permission, or risk-control bypass.</li>
-            <li>Do not claim BaseScan token profile approval, external audit completion, deep liquidity, or tracked listing approval before publication.</li>
+            <li>Do not claim credits or GCA Member status are live self-service benefits before controlled account UI and ledger activation.</li>
+            <li>Do not describe credits as cash, tokens, income, reimbursement, trading permission, or transferable value.</li>
+            <li>Do not describe service units as final pricing before public terms are published.</li>
+            <li>Do not claim trading outcomes, price forecasts, live market data, or buy or sell recommendations.</li>
           </ul>
         </div>
       </section>
@@ -453,13 +461,13 @@
           <div class="row"><span>Official pool</span><strong>GCA/USDT</strong></div>
           <div class="row"><span>Pool address</span><strong>0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0</strong></div>
           <div class="row"><span>Quote asset</span><strong>Base USDT / 0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2</strong></div>
-          <div class="row"><span>Release gates data</span><strong><a href="release-gates.json">release-gates.json</a></strong></div>
+          <div class="row"><span>Credits data</span><strong><a href="credits.json">credits.json</a></strong></div>
         </div>
       </section>
     </main>
 
     <footer>
-      <div class="shell">GCA release gates are public product-readiness boundaries, not promises of timing, price, liquidity, listing, audit approval, product availability, or trading result.</div>
+      <div class="shell">GCA credits catalog is a draft service catalog and planning disclosure, not a live claim page, account system, trading terminal, or promise of timing.</div>
     </footer>
   </body>
 </html>

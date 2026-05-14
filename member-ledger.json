@@ -19,7 +19,9 @@
     "memberLedgerSchema": "https://gcagochina.com/member-ledger.json",
     "utilityThesis": "https://gcagochina.com/utility.html",
     "risk": "https://gcagochina.com/risk.html",
-    "verify": "https://gcagochina.com/verify.html"
+    "verify": "https://gcagochina.com/verify.html",
+    "creditsCatalogPage": "https://gcagochina.com/credits.html",
+    "creditsCatalog": "https://gcagochina.com/credits.json"
   },
   "preparedPaths": {
     "memberAccessPage": "/gca/member-access",

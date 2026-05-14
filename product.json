@@ -165,6 +165,8 @@
     "weeklyRadar": "https://gcagochina.com/radar.html",
     "risk": "https://gcagochina.com/risk.html",
     "verify": "https://gcagochina.com/verify.html",
-    "market": "https://gcagochina.com/markets.html"
+    "market": "https://gcagochina.com/markets.html",
+    "creditsCatalogPage": "https://gcagochina.com/credits.html",
+    "creditsCatalog": "https://gcagochina.com/credits.json"
   }
 }

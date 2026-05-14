@@ -43,6 +43,8 @@ Allow: /utility.html
 Allow: /utility.json
 Allow: /product.html
 Allow: /product.json
+Allow: /credits.html
+Allow: /credits.json
 Allow: /release-gates.html
 Allow: /release-gates.json
 Allow: /.well-known/gca-token.json
