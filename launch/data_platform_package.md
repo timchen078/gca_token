@@ -120,6 +120,8 @@ This package prepares GCA information for token data and DEX discovery platforms
 - Utility bridge JSON: `https://gcagochina.com/utility.json`
 - Product spec: `https://gcagochina.com/product.html`
 - Product spec JSON: `https://gcagochina.com/product.json`
+- Credits catalog: `https://gcagochina.com/credits.html`
+- Credits catalog JSON: `https://gcagochina.com/credits.json`
 - Release gates: `https://gcagochina.com/release-gates.html`
 - Release gates JSON: `https://gcagochina.com/release-gates.json`
 - Logo SVG: `https://gcagochina.com/assets/gca-logo.svg`
@@ -199,6 +201,8 @@ GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stand
 Suitable GCA utility is access-based: reports, credits, education, backtest usage, signal review, position calculators, and membership discounts. The public utility bridge spec is published at `https://gcagochina.com/utility.json`. It should not be positioned as custody, redemption rights, platform revenue distribution, automatic live trading permission, or a return promise.
 
 The public product spec is published at `https://gcagochina.com/product.html` and `https://gcagochina.com/product.json`. It defines GCA AI Quant Access as a planned product layer with China Narrative Radar, Weekly Go China Radar, Liquidation Replay, Risk Warning Credits, Backtest Lab, ENTRY_READY Review, Position Size Calculator, and GCA Member Workspace. This is public product spec only; public account UI, credit claiming, member claiming, and live trading are not live.
+
+The public credits catalog is published at `https://gcagochina.com/credits.html` and `https://gcagochina.com/credits.json`. It is a draft service catalog for planned 100 Web3 Radar utility credits and GCA Member workflows, including Liquidation Replay, Risk Warning Review, Backtest Lab, ENTRY_READY Review, Position Size Calculator, Risk-Control Training, Member Research Notes, and Support Review Queue. It is not self-service claimable before controlled account UI and ledger activation.
 
 The product release gates are published at `https://gcagochina.com/release-gates.html` and `https://gcagochina.com/release-gates.json`. They require controlled HTTPS account UI, read-only GCA balance verification, credit ledger activation, member ledger activation, support review queue, risk-control review, and simulation or testnet first before public self-service access is claimed.
 

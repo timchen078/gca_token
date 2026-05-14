@@ -26,6 +26,7 @@ BaseScan token updates must be submitted through the official BaseScan token upd
 - Whitepaper source file: `docs/whitepaper.md`
 - Utility thesis page: `https://gcagochina.com/utility.html`
 - Product spec page: `https://gcagochina.com/product.html`
+- Credits catalog page: `https://gcagochina.com/credits.html`
 - Release gates page: `https://gcagochina.com/release-gates.html`
 
 ## Neutral Project Description

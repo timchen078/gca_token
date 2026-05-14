@@ -26,6 +26,7 @@ This package records the values used for the 2026-05-13 BaseScan token informati
 - Community kit: `https://gcagochina.com/community.html`
 - Community JSON: `https://gcagochina.com/community.json`
 - Product spec: `https://gcagochina.com/product.html`
+- Credits catalog: `https://gcagochina.com/credits.html`
 - Release gates: `https://gcagochina.com/release-gates.html`
 - External review status: `https://gcagochina.com/external-reviews.html`
 - Project JSON: `https://gcagochina.com/project.json`

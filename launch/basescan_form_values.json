@@ -70,5 +70,7 @@
   "productSpecUrl": "https://gcagochina.com/product.json",
   "releaseGatesPageUrl": "https://gcagochina.com/release-gates.html",
   "releaseGatesUrl": "https://gcagochina.com/release-gates.json",
-  "releaseGatesStatus": "public-release-gates-published"
+  "releaseGatesStatus": "public-release-gates-published",
+  "creditsCatalogPageUrl": "https://gcagochina.com/credits.html",
+  "creditsCatalogUrl": "https://gcagochina.com/credits.json"
 }

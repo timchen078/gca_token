@@ -54,6 +54,8 @@ UTILITY_PAGE_URL = "https://gcagochina.com/utility.html"
 UTILITY_URL = "https://gcagochina.com/utility.json"
 PRODUCT_PAGE_URL = "https://gcagochina.com/product.html"
 PRODUCT_URL = "https://gcagochina.com/product.json"
+CREDITS_PAGE_URL = "https://gcagochina.com/credits.html"
+CREDITS_URL = "https://gcagochina.com/credits.json"
 RELEASE_GATES_PAGE_URL = "https://gcagochina.com/release-gates.html"
 RELEASE_GATES_URL = "https://gcagochina.com/release-gates.json"
 PRIVACY_NOTICE_PAGE_URL = "https://gcagochina.com/privacy.html"
@@ -120,6 +122,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("/utility.json", script)
         self.assertIn("/product.html", script)
         self.assertIn("/product.json", script)
+        self.assertIn("/credits.html", script)
+        self.assertIn("/credits.json", script)
         self.assertIn("/release-gates.html", script)
         self.assertIn("/release-gates.json", script)
         self.assertIn("/privacy.html", script)
@@ -168,6 +172,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("validate_utility_json", script)
         self.assertIn("validate_product_page", script)
         self.assertIn("validate_product_json", script)
+        self.assertIn("validate_credits_page", script)
+        self.assertIn("validate_credits_json", script)
         self.assertIn("validate_release_gates_page", script)
         self.assertIn("validate_release_gates_json", script)
         self.assertIn("validate_privacy_page", script)
@@ -239,6 +245,8 @@ class LaunchPackageTests(unittest.TestCase):
         module.validate_utility_json((ROOT / "site" / "utility.json").read_text())
         module.validate_product_page((ROOT / "site" / "product.html").read_text())
         module.validate_product_json((ROOT / "site" / "product.json").read_text())
+        module.validate_credits_page((ROOT / "site" / "credits.html").read_text())
+        module.validate_credits_json((ROOT / "site" / "credits.json").read_text())
         module.validate_release_gates_page((ROOT / "site" / "release-gates.html").read_text())
         module.validate_release_gates_json((ROOT / "site" / "release-gates.json").read_text())
         module.validate_privacy_page((ROOT / "site" / "privacy.html").read_text())
@@ -488,6 +496,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Allow: /utility.json", robots)
         self.assertIn("Allow: /product.html", robots)
         self.assertIn("Allow: /product.json", robots)
+        self.assertIn("Allow: /credits.html", robots)
+        self.assertIn("Allow: /credits.json", robots)
         self.assertIn("Allow: /release-gates.html", robots)
         self.assertIn("Allow: /release-gates.json", robots)
         self.assertIn("Allow: /.well-known/gca-token.json", robots)
@@ -549,6 +559,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(UTILITY_URL, sitemap)
         self.assertIn(PRODUCT_PAGE_URL, sitemap)
         self.assertIn(PRODUCT_URL, sitemap)
+        self.assertIn(CREDITS_PAGE_URL, sitemap)
+        self.assertIn(CREDITS_URL, sitemap)
         self.assertIn(RELEASE_GATES_PAGE_URL, sitemap)
         self.assertIn(RELEASE_GATES_URL, sitemap)
         self.assertIn("https://gcagochina.com/whitepaper.html", sitemap)
@@ -622,6 +634,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(identity["officialUrls"]["supplyDisclosure"], SUPPLY_DISCLOSURE_URL)
         self.assertEqual(identity["officialUrls"]["telegram"], TELEGRAM_URL)
         self.assertEqual(identity["officialUrls"]["x"], X_URL)
+        self.assertEqual(identity["officialUrls"]["creditsCatalogPage"], CREDITS_PAGE_URL)
+        self.assertEqual(identity["officialUrls"]["creditsCatalog"], CREDITS_URL)
         self.assertEqual(identity["market"]["officialPair"], "GCA/USDT")
         self.assertEqual(identity["market"]["poolAddress"], OFFICIAL_POOL_ADDRESS)
         self.assertEqual(identity["market"]["quoteAssetAddress"], BASE_USDT_ADDRESS)
@@ -641,6 +655,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(identity["platformStatus"]["utilityBridge"], "public-utility-bridge-spec-published")
         self.assertEqual(identity["platformStatus"]["productSpec"], "public-product-spec-published")
         self.assertEqual(identity["platformStatus"]["releaseGates"], "public-release-gates-published")
+        self.assertEqual(identity["platformStatus"]["creditsCatalog"], "public-credits-catalog-published")
         self.assertEqual(identity["productSpec"]["pageUrl"], PRODUCT_PAGE_URL)
         self.assertEqual(identity["productSpec"]["url"], PRODUCT_URL)
         self.assertFalse(identity["productSpec"]["publicAccountUiLive"])
@@ -1470,6 +1485,90 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, json.dumps(product))
         self.assertNotIn("GCA/WETH", json.dumps(product))
 
+    def test_credits_catalog_page_and_json_define_draft_service_units(self):
+        page = (ROOT / "site" / "credits.html").read_text()
+        credits = json.loads((ROOT / "site" / "credits.json").read_text())
+
+        self.assertIn("GCA Utility Credits Catalog", page)
+        self.assertIn("Credits Catalog JSON", page)
+        self.assertIn("draft service catalog", page)
+        self.assertIn("not self-service claimable", page)
+        self.assertIn("100 Web3 Radar utility credits", page)
+        self.assertIn("10,000 GCA", page)
+        self.assertIn("1,000,000 GCA", page)
+        self.assertIn("Liquidation Replay", page)
+        self.assertIn("Risk Warning Review", page)
+        self.assertIn("Backtest Lab", page)
+        self.assertIn("ENTRY_READY Review", page)
+        self.assertIn("Position Size Calculator", page)
+        self.assertIn("Risk-Control Training", page)
+        self.assertIn("Member Research Notes", page)
+        self.assertIn("Support Review Queue", page)
+        self.assertIn("controlled HTTPS account UI", page)
+        self.assertIn("credit ledger activation", page)
+        self.assertIn("member ledger activation", page)
+        self.assertIn("No custody", page)
+        self.assertIn("No withdrawal permission", page)
+        self.assertIn("No exchange API secret collection", page)
+        self.assertIn(MAINNET_ADDRESS, page)
+        self.assertIn(BASE_USDT_ADDRESS, page)
+        self.assertIn(OFFICIAL_POOL_ADDRESS, page)
+        self.assertNotIn(OLD_WETH_POOL_ADDRESS, page)
+        self.assertNotIn("GCA/WETH", page)
+
+        self.assertEqual(credits["schema"], CREDITS_URL)
+        self.assertEqual(credits["pageUrl"], CREDITS_PAGE_URL)
+        self.assertEqual(credits["status"], "public-credits-catalog-published")
+        self.assertEqual(credits["chainId"], 8453)
+        self.assertEqual(credits["contractAddress"], MAINNET_ADDRESS)
+        self.assertEqual(credits["currentState"]["currentStage"], "draft-service-catalog-only")
+        self.assertTrue(credits["currentState"]["draftServiceCatalogOnly"])
+        self.assertFalse(credits["currentState"]["publicAccountUiLive"])
+        self.assertFalse(credits["currentState"]["creditsSelfServiceClaimable"])
+        self.assertFalse(credits["currentState"]["gcaMemberSelfServiceClaimable"])
+        self.assertFalse(credits["currentState"]["liveTradingEnabled"])
+        self.assertEqual(credits["holderBonus"]["minimumHolding"], "10000 GCA")
+        self.assertEqual(credits["holderBonus"]["creditAmount"], "100 Web3 Radar utility credits")
+        self.assertTrue(credits["holderBonus"]["notLive"])
+        self.assertEqual(credits["gcaMember"]["minimumHolding"], "1000000 GCA")
+        self.assertTrue(credits["gcaMember"]["notLive"])
+        service_ids = {item["id"] for item in credits["serviceCatalog"]}
+        for service_id in {
+            "liquidation-replay-report",
+            "risk-warning-review",
+            "backtest-lab-run",
+            "entry-ready-review",
+            "position-size-calculator",
+            "risk-control-training",
+            "member-research-notes",
+            "support-review-queue",
+        }:
+            self.assertIn(service_id, service_ids)
+        for item in credits["serviceCatalog"]:
+            self.assertIn(item["status"], {"planned-controlled-account-ui-required", "planned-member-ledger-required"})
+            self.assertIn(item["unitType"], {"draft service credit unit", "draft member credit unit", "member workflow priority"})
+        self.assertTrue(credits["redemptionBoundaries"]["accountLevelOnly"])
+        self.assertFalse(credits["redemptionBoundaries"]["transferable"])
+        self.assertFalse(credits["redemptionBoundaries"]["cashEquivalent"])
+        self.assertFalse(credits["redemptionBoundaries"]["tokenRebate"])
+        self.assertFalse(credits["redemptionBoundaries"]["incomeOrReimbursement"])
+        self.assertFalse(credits["redemptionBoundaries"]["tradingPermission"])
+        self.assertFalse(credits["redemptionBoundaries"]["riskControlBypass"])
+        self.assertFalse(credits["safetyArchitecture"]["custody"])
+        self.assertFalse(credits["safetyArchitecture"]["withdrawalPermission"])
+        self.assertFalse(credits["safetyArchitecture"]["exchangeApiSecretCollection"])
+        self.assertEqual(credits["releaseGates"]["releaseGatesPage"], RELEASE_GATES_PAGE_URL)
+        self.assertEqual(credits["releaseGates"]["releaseGates"], RELEASE_GATES_URL)
+        self.assertEqual(credits["officialMarket"]["pair"], "GCA/USDT")
+        self.assertEqual(credits["officialMarket"]["poolAddress"], OFFICIAL_POOL_ADDRESS)
+        self.assertEqual(credits["officialMarket"]["quoteAssetAddress"], BASE_USDT_ADDRESS)
+        self.assertEqual(credits["officialLinks"]["creditsCatalogPage"], CREDITS_PAGE_URL)
+        self.assertEqual(credits["officialLinks"]["creditsCatalog"], CREDITS_URL)
+        self.assertIn("GCA has published a draft service catalog for planned Web3 Radar utility credits.", credits["publicClaimBoundaries"]["safeClaims"])
+        self.assertTrue(any("live self-service claimable" in item for item in credits["publicClaimBoundaries"]["doNotClaim"]))
+        self.assertNotIn(OLD_WETH_POOL_ADDRESS, json.dumps(credits))
+        self.assertNotIn("GCA/WETH", json.dumps(credits))
+
     def test_release_gates_page_and_json_define_go_live_boundaries(self):
         page = (ROOT / "site" / "release-gates.html").read_text()
         gates = json.loads((ROOT / "site" / "release-gates.json").read_text())
@@ -2182,6 +2281,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(project["platformStatus"]["utilityBridge"], "public-utility-bridge-spec-published")
         self.assertEqual(project["platformStatus"]["productSpec"], "public-product-spec-published")
         self.assertEqual(project["platformStatus"]["releaseGates"], "public-release-gates-published")
+        self.assertEqual(project["platformStatus"]["creditsCatalog"], "public-credits-catalog-published")
         self.assertEqual(project["platformStatus"]["thirdPartyAudit"], "not-completed")
         self.assertEqual(project["listingReadiness"]["status"], "not-ready")
         self.assertIn("CoinGecko tracked listing request", project["listingReadiness"]["defer"])
@@ -2209,6 +2309,15 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertFalse(project["productSpec"]["liveTradingEnabled"])
         self.assertIn("ENTRY_READY Review", project["productSpec"]["moduleNames"])
         self.assertIn("exchange API secret collection", project["productSpec"]["notProduct"])
+        self.assertEqual(project["creditsCatalog"]["status"], "public-credits-catalog-published")
+        self.assertEqual(project["creditsCatalog"]["pageUrl"], CREDITS_PAGE_URL)
+        self.assertEqual(project["creditsCatalog"]["url"], CREDITS_URL)
+        self.assertEqual(project["creditsCatalog"]["currentStage"], "draft-service-catalog-only")
+        self.assertEqual(project["creditsCatalog"]["holderBonusCreditAmount"], "100 Web3 Radar utility credits")
+        self.assertFalse(project["creditsCatalog"]["publicAccountUiLive"])
+        self.assertFalse(project["creditsCatalog"]["creditsSelfServiceClaimable"])
+        self.assertFalse(project["creditsCatalog"]["gcaMemberSelfServiceClaimable"])
+        self.assertIn("Support Review Queue", project["creditsCatalog"]["serviceNames"])
         self.assertEqual(project["releaseGates"]["status"], "public-release-gates-published")
         self.assertEqual(project["releaseGates"]["pageUrl"], RELEASE_GATES_PAGE_URL)
         self.assertEqual(project["releaseGates"]["url"], RELEASE_GATES_URL)
@@ -2893,6 +3002,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(extensions["productSpecPage"], PRODUCT_PAGE_URL)
         self.assertEqual(extensions["productSpec"], PRODUCT_URL)
         self.assertEqual(extensions["productSpecStatus"], "public-product-spec-published")
+        self.assertEqual(extensions["creditsCatalogPage"], CREDITS_PAGE_URL)
+        self.assertEqual(extensions["creditsCatalog"], CREDITS_URL)
+        self.assertEqual(extensions["creditsCatalogStatus"], "public-credits-catalog-published")
         self.assertEqual(extensions["releaseGatesPage"], RELEASE_GATES_PAGE_URL)
         self.assertEqual(extensions["releaseGates"], RELEASE_GATES_URL)
         self.assertEqual(extensions["releaseGatesStatus"], "public-release-gates-published")
@@ -2980,6 +3092,8 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "site" / "utility.json",
             ROOT / "site" / "product.html",
             ROOT / "site" / "product.json",
+            ROOT / "site" / "credits.html",
+            ROOT / "site" / "credits.json",
             ROOT / "site" / "release-gates.html",
             ROOT / "site" / "release-gates.json",
             ROOT / "site" / ".well-known" / "gca-token.json",

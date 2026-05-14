@@ -40,6 +40,8 @@ UTILITY_PAGE_URL = "https://gcagochina.com/utility.html"
 UTILITY_URL = "https://gcagochina.com/utility.json"
 PRODUCT_PAGE_URL = "https://gcagochina.com/product.html"
 PRODUCT_URL = "https://gcagochina.com/product.json"
+CREDITS_PAGE_URL = "https://gcagochina.com/credits.html"
+CREDITS_URL = "https://gcagochina.com/credits.json"
 RELEASE_GATES_PAGE_URL = "https://gcagochina.com/release-gates.html"
 RELEASE_GATES_URL = "https://gcagochina.com/release-gates.json"
 PRIVACY_NOTICE_PAGE_URL = "https://gcagochina.com/privacy.html"
@@ -161,6 +163,7 @@ def validate_root(text: str) -> None:
     assert_contains(text, "Weekly Radar", label)
     assert_contains(text, "Utility JSON", label)
     assert_contains(text, "Product Spec", label)
+    assert_contains(text, "Credits Catalog", label)
     assert_contains(text, "Release Gates", label)
     assert_contains(text, "Privacy Notice", label)
     assert_contains(text, "Participation Terms", label)
@@ -757,6 +760,9 @@ def validate_utility_page(text: str) -> None:
     assert_contains(text, "controlled HTTPS account UI", label)
     assert_contains(text, "100 Web3 Radar utility credits", label)
     assert_contains(text, "GCA Member status", label)
+    assert_contains(text, "Credits Catalog", label)
+    assert_contains(text, "credits.html", label)
+    assert_contains(text, "credits.json", label)
     assert_contains(text, MAINNET_ADDRESS, label)
     assert_no_forbidden_public_claims(text, label)
 
@@ -808,6 +814,10 @@ def validate_utility_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong utilityPage")
     if links.get("utilityJson") != UTILITY_URL:
         raise SiteCheckError(f"{label}: wrong utilityJson")
+    if links.get("creditsCatalogPage") != CREDITS_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong creditsCatalogPage")
+    if links.get("creditsCatalog") != CREDITS_URL:
+        raise SiteCheckError(f"{label}: wrong creditsCatalog")
     if "GCA has published a public utility bridge specification." not in boundaries.get("safeClaims", []):
         raise SiteCheckError(f"{label}: missing utility safe claim")
     if not any("credits or member status are cash" in item for item in boundaries.get("doNotClaim", [])):
@@ -822,6 +832,7 @@ def validate_product_page(text: str) -> None:
     assert_contains(text, "GCA AI Quant Access Product Spec", label)
     assert_contains(text, "Product JSON", label)
     assert_contains(text, "Release Gates", label)
+    assert_contains(text, "Credits Catalog", label)
     assert_contains(text, "public product spec only", label)
     assert_contains(text, "not a live trading terminal", label)
     assert_contains(text, "not live market data", label)
@@ -936,6 +947,10 @@ def validate_product_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong releaseGatesPage")
     if links.get("releaseGates") != RELEASE_GATES_URL:
         raise SiteCheckError(f"{label}: wrong releaseGates")
+    if links.get("creditsCatalogPage") != CREDITS_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong creditsCatalogPage")
+    if links.get("creditsCatalog") != CREDITS_URL:
+        raise SiteCheckError(f"{label}: wrong creditsCatalog")
     if links.get("utilityJson") != UTILITY_URL:
         raise SiteCheckError(f"{label}: wrong utilityJson")
     if links.get("memberLedger") != MEMBER_LEDGER_URL:
@@ -949,10 +964,185 @@ def validate_product_json(text: str) -> None:
     assert_not_contains(json.dumps(payload), "GCA/WETH", label)
 
 
+def validate_credits_page(text: str) -> None:
+    label = "/credits.html"
+    assert_contains(text, "GCA Utility Credits Catalog", label)
+    assert_contains(text, "Credits Catalog JSON", label)
+    assert_contains(text, "draft service catalog", label)
+    assert_contains(text, "not self-service claimable", label)
+    assert_contains(text, "100 Web3 Radar utility credits", label)
+    assert_contains(text, "10,000 GCA", label)
+    assert_contains(text, "1,000,000 GCA", label)
+    assert_contains(text, "Liquidation Replay", label)
+    assert_contains(text, "Risk Warning Review", label)
+    assert_contains(text, "Backtest Lab", label)
+    assert_contains(text, "ENTRY_READY Review", label)
+    assert_contains(text, "Position Size Calculator", label)
+    assert_contains(text, "Risk-Control Training", label)
+    assert_contains(text, "Member Research Notes", label)
+    assert_contains(text, "Support Review Queue", label)
+    assert_contains(text, "controlled HTTPS account UI", label)
+    assert_contains(text, "read-only GCA balance verification", label)
+    assert_contains(text, "credit ledger activation", label)
+    assert_contains(text, "member ledger activation", label)
+    assert_contains(text, "support review queue", label)
+    assert_contains(text, "No custody", label)
+    assert_contains(text, "No withdrawal permission", label)
+    assert_contains(text, "No exchange API secret collection", label)
+    assert_contains(text, MAINNET_ADDRESS, label)
+    assert_contains(text, BASE_USDT_ADDRESS, label)
+    assert_current_pool_text(text, label)
+    assert_no_forbidden_public_claims(text, label)
+
+
+def validate_credits_json(text: str) -> None:
+    label = "/credits.json"
+    payload = load_json(text, label)
+    state = payload.get("currentState", {})
+    holder_bonus = payload.get("holderBonus", {})
+    member = payload.get("gcaMember", {})
+    service_ids = {item.get("id") for item in payload.get("serviceCatalog", [])}
+    service_names = {item.get("name") for item in payload.get("serviceCatalog", [])}
+    redemption = payload.get("redemptionBoundaries", {})
+    safety = payload.get("safetyArchitecture", {})
+    release_gates = payload.get("releaseGates", {})
+    market = payload.get("officialMarket", {})
+    links = payload.get("officialLinks", {})
+    boundaries = payload.get("publicClaimBoundaries", {})
+
+    if payload.get("schema") != CREDITS_URL:
+        raise SiteCheckError(f"{label}: wrong schema")
+    if payload.get("pageUrl") != CREDITS_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong pageUrl")
+    if payload.get("status") != "public-credits-catalog-published":
+        raise SiteCheckError(f"{label}: wrong status")
+    if payload.get("chainId") != 8453:
+        raise SiteCheckError(f"{label}: wrong chainId")
+    if payload.get("contractAddress") != MAINNET_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong contractAddress")
+    if state.get("currentStage") != "draft-service-catalog-only":
+        raise SiteCheckError(f"{label}: wrong currentStage")
+    if state.get("draftServiceCatalogOnly") is not True:
+        raise SiteCheckError(f"{label}: draftServiceCatalogOnly must be true")
+    for key in ("publicAccountUiLive", "creditsSelfServiceClaimable", "gcaMemberSelfServiceClaimable", "liveTradingEnabled"):
+        if state.get(key) is not False:
+            raise SiteCheckError(f"{label}: {key} must be false")
+    if holder_bonus.get("minimumHolding") != "10000 GCA":
+        raise SiteCheckError(f"{label}: wrong holder bonus minimum")
+    if holder_bonus.get("creditAmount") != "100 Web3 Radar utility credits":
+        raise SiteCheckError(f"{label}: wrong holder bonus credit")
+    if holder_bonus.get("notLive") is not True:
+        raise SiteCheckError(f"{label}: holder bonus must be not live")
+    if member.get("minimumHolding") != "1000000 GCA":
+        raise SiteCheckError(f"{label}: wrong member minimum")
+    if member.get("notLive") is not True:
+        raise SiteCheckError(f"{label}: member must be not live")
+    for service_id in (
+        "liquidation-replay-report",
+        "risk-warning-review",
+        "backtest-lab-run",
+        "entry-ready-review",
+        "position-size-calculator",
+        "risk-control-training",
+        "member-research-notes",
+        "support-review-queue",
+    ):
+        if service_id not in service_ids:
+            raise SiteCheckError(f"{label}: missing service {service_id}")
+    for service_name in (
+        "Liquidation Replay",
+        "Risk Warning Review",
+        "Backtest Lab",
+        "ENTRY_READY Review",
+        "Position Size Calculator",
+        "Risk-Control Training",
+        "Member Research Notes",
+        "Support Review Queue",
+    ):
+        if service_name not in service_names:
+            raise SiteCheckError(f"{label}: missing service name {service_name}")
+    for item in payload.get("serviceCatalog", []):
+        if item.get("status") not in {"planned-controlled-account-ui-required", "planned-member-ledger-required"}:
+            raise SiteCheckError(f"{label}: wrong service status for {item.get('id')}")
+        if item.get("unitType") not in {"draft service credit unit", "draft member credit unit", "member workflow priority"}:
+            raise SiteCheckError(f"{label}: wrong unitType for {item.get('id')}")
+    for key in (
+        "accountLevelOnly",
+        "requiresControlledAccountUi",
+        "requiresLedgerActivation",
+        "requiresSupportReview",
+    ):
+        if redemption.get(key) is not True:
+            raise SiteCheckError(f"{label}: {key} must be true")
+    for key in (
+        "transferable",
+        "cashEquivalent",
+        "tokenRebate",
+        "incomeOrReimbursement",
+        "tradingPermission",
+        "riskControlBypass",
+    ):
+        if redemption.get(key) is not False:
+            raise SiteCheckError(f"{label}: {key} must be false")
+    for key in (
+        "custody",
+        "withdrawalPermission",
+        "privateKeyCollection",
+        "seedPhraseCollection",
+        "exchangeApiSecretCollection",
+        "automaticLiveTradingEnabled",
+        "riskControlBypassAllowed",
+    ):
+        if safety.get(key) is not False:
+            raise SiteCheckError(f"{label}: {key} must be false")
+    if safety.get("simulationFirstRequiredBeforeFutureExecution") is not True:
+        raise SiteCheckError(f"{label}: simulation-first requirement must be true")
+    if release_gates.get("releaseGatesPage") != RELEASE_GATES_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong releaseGatesPage")
+    if release_gates.get("releaseGates") != RELEASE_GATES_URL:
+        raise SiteCheckError(f"{label}: wrong releaseGates")
+    for item in ("controlled HTTPS account UI", "read-only GCA balance verification", "credit ledger activation", "support review queue"):
+        if item not in release_gates.get("requiredBeforeCreditUse", []):
+            raise SiteCheckError(f"{label}: missing credit gate {item}")
+    for item in ("controlled HTTPS account UI", "read-only GCA balance verification", "member ledger activation", "support review queue"):
+        if item not in release_gates.get("requiredBeforeMemberUse", []):
+            raise SiteCheckError(f"{label}: missing member gate {item}")
+    if market.get("pair") != "GCA/USDT":
+        raise SiteCheckError(f"{label}: wrong pair")
+    if market.get("poolAddress") != OFFICIAL_POOL_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong poolAddress")
+    if market.get("quoteAssetAddress") != BASE_USDT_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong quoteAssetAddress")
+    if market.get("liquidityDepth") != "starter-depth-only":
+        raise SiteCheckError(f"{label}: wrong liquidityDepth")
+    if links.get("creditsCatalogPage") != CREDITS_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong creditsCatalogPage")
+    if links.get("creditsCatalog") != CREDITS_URL:
+        raise SiteCheckError(f"{label}: wrong creditsCatalog")
+    if links.get("utilityJson") != UTILITY_URL:
+        raise SiteCheckError(f"{label}: wrong utilityJson")
+    if links.get("productJson") != PRODUCT_URL:
+        raise SiteCheckError(f"{label}: wrong productJson")
+    if links.get("releaseGates") != RELEASE_GATES_URL:
+        raise SiteCheckError(f"{label}: wrong releaseGates")
+    if links.get("memberLedger") != MEMBER_LEDGER_URL:
+        raise SiteCheckError(f"{label}: wrong memberLedger")
+    if "GCA has published a draft service catalog for planned Web3 Radar utility credits." not in boundaries.get("safeClaims", []):
+        raise SiteCheckError(f"{label}: missing credits safe claim")
+    if not any("live self-service claimable" in item for item in boundaries.get("doNotClaim", [])):
+        raise SiteCheckError(f"{label}: missing self-service boundary")
+    if not any("cash, tokens, income" in item for item in boundaries.get("doNotClaim", [])):
+        raise SiteCheckError(f"{label}: missing credit value boundary")
+    assert_no_forbidden_public_claims(json.dumps(payload), label)
+    assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
+    assert_not_contains(json.dumps(payload), "GCA/WETH", label)
+
+
 def validate_release_gates_page(text: str) -> None:
     label = "/release-gates.html"
     assert_contains(text, "GCA Product Release Gates", label)
     assert_contains(text, "Release Gates JSON", label)
+    assert_contains(text, "Credits Catalog", label)
     assert_contains(text, "public product spec only", label)
     assert_contains(text, "Public Account UI is not live", label)
     assert_contains(text, "Credits are not self-service claimable", label)
@@ -1043,6 +1233,10 @@ def validate_release_gates_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong productPage")
     if links.get("productJson") != PRODUCT_URL:
         raise SiteCheckError(f"{label}: wrong productJson")
+    if links.get("creditsCatalogPage") != CREDITS_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong creditsCatalogPage")
+    if links.get("creditsCatalog") != CREDITS_URL:
+        raise SiteCheckError(f"{label}: wrong creditsCatalog")
     if links.get("utilityJson") != UTILITY_URL:
         raise SiteCheckError(f"{label}: wrong utilityJson")
     if links.get("memberLedger") != MEMBER_LEDGER_URL:
@@ -1366,6 +1560,10 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong productSpecPageUrl")
     if payload.get("productSpecUrl") != PRODUCT_URL:
         raise SiteCheckError(f"{label}: wrong productSpecUrl")
+    if payload.get("creditsCatalogPageUrl") != CREDITS_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong creditsCatalogPageUrl")
+    if payload.get("creditsCatalogUrl") != CREDITS_URL:
+        raise SiteCheckError(f"{label}: wrong creditsCatalogUrl")
     if payload.get("releaseGatesPageUrl") != RELEASE_GATES_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong releaseGatesPageUrl")
     if payload.get("releaseGatesUrl") != RELEASE_GATES_URL:
@@ -1455,6 +1653,8 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: unexpected product spec status")
     if status.get("releaseGates") != "public-release-gates-published":
         raise SiteCheckError(f"{label}: unexpected release gates status")
+    if status.get("creditsCatalog") != "public-credits-catalog-published":
+        raise SiteCheckError(f"{label}: unexpected credits catalog status")
     if payload.get("productSpec", {}).get("status") != "public-product-spec-published":
         raise SiteCheckError(f"{label}: unexpected product spec object status")
     if payload.get("productSpec", {}).get("pageUrl") != PRODUCT_PAGE_URL:
@@ -1467,6 +1667,25 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: product live trading must be false")
     if "ENTRY_READY Review" not in payload.get("productSpec", {}).get("moduleNames", []):
         raise SiteCheckError(f"{label}: missing product module")
+    credits = payload.get("creditsCatalog", {})
+    if credits.get("status") != "public-credits-catalog-published":
+        raise SiteCheckError(f"{label}: unexpected credits catalog object status")
+    if credits.get("pageUrl") != CREDITS_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong credits catalog page")
+    if credits.get("url") != CREDITS_URL:
+        raise SiteCheckError(f"{label}: wrong credits catalog url")
+    if credits.get("currentStage") != "draft-service-catalog-only":
+        raise SiteCheckError(f"{label}: wrong credits catalog stage")
+    if credits.get("publicAccountUiLive") is not False:
+        raise SiteCheckError(f"{label}: credits account UI must be false")
+    if credits.get("creditsSelfServiceClaimable") is not False:
+        raise SiteCheckError(f"{label}: credits self-service must be false")
+    if credits.get("gcaMemberSelfServiceClaimable") is not False:
+        raise SiteCheckError(f"{label}: member self-service must be false")
+    if credits.get("holderBonusCreditAmount") != "100 Web3 Radar utility credits":
+        raise SiteCheckError(f"{label}: wrong credits holder bonus")
+    if "Support Review Queue" not in credits.get("serviceNames", []):
+        raise SiteCheckError(f"{label}: missing credits service")
     if payload.get("releaseGates", {}).get("status") != "public-release-gates-published":
         raise SiteCheckError(f"{label}: unexpected release gates object status")
     if payload.get("releaseGates", {}).get("pageUrl") != RELEASE_GATES_PAGE_URL:
@@ -1599,6 +1818,12 @@ def validate_tokenlist_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong releaseGates")
     if extensions.get("releaseGatesStatus") != "public-release-gates-published":
         raise SiteCheckError(f"{label}: wrong releaseGatesStatus")
+    if extensions.get("creditsCatalogPage") != CREDITS_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong creditsCatalogPage")
+    if extensions.get("creditsCatalog") != CREDITS_URL:
+        raise SiteCheckError(f"{label}: wrong creditsCatalog")
+    if extensions.get("creditsCatalogStatus") != "public-credits-catalog-published":
+        raise SiteCheckError(f"{label}: wrong creditsCatalogStatus")
     if extensions.get("walletWarningEvidencePage") != WALLET_WARNING_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong walletWarningEvidencePage")
     if extensions.get("walletWarningEvidence") != WALLET_WARNING_URL:
@@ -1737,6 +1962,10 @@ def validate_well_known_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong releaseGatesPage")
     if urls.get("releaseGates") != RELEASE_GATES_URL:
         raise SiteCheckError(f"{label}: wrong releaseGates")
+    if urls.get("creditsCatalogPage") != CREDITS_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong creditsCatalogPage")
+    if urls.get("creditsCatalog") != CREDITS_URL:
+        raise SiteCheckError(f"{label}: wrong creditsCatalog")
     if urls.get("walletWarningEvidencePage") != WALLET_WARNING_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong walletWarningEvidencePage")
     if urls.get("walletWarningEvidence") != WALLET_WARNING_URL:
@@ -2827,6 +3056,8 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/utility.json",
         "https://gcagochina.com/product.html",
         "https://gcagochina.com/product.json",
+        "https://gcagochina.com/credits.html",
+        "https://gcagochina.com/credits.json",
         "https://gcagochina.com/release-gates.html",
         "https://gcagochina.com/release-gates.json",
         "https://gcagochina.com/supply.json",
@@ -2886,6 +3117,8 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /utility.json", label)
     assert_contains(text, "Allow: /product.html", label)
     assert_contains(text, "Allow: /product.json", label)
+    assert_contains(text, "Allow: /credits.html", label)
+    assert_contains(text, "Allow: /credits.json", label)
     assert_contains(text, "Allow: /release-gates.html", label)
     assert_contains(text, "Allow: /release-gates.json", label)
     assert_contains(text, "Allow: /.well-known/gca-token.json", label)
@@ -2937,6 +3170,8 @@ CHECKS: list[EndpointCheck] = [
     ("/utility.json", validate_utility_json),
     ("/product.html", validate_product_page),
     ("/product.json", validate_product_json),
+    ("/credits.html", validate_credits_page),
+    ("/credits.json", validate_credits_json),
     ("/release-gates.html", validate_release_gates_page),
     ("/release-gates.json", validate_release_gates_json),
     ("/privacy.html", validate_privacy_page),

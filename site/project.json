@@ -173,7 +173,8 @@
     "coinMarketCapTrackedListing": "not-submitted",
     "thirdPartyAudit": "not-completed",
     "productSpec": "public-product-spec-published",
-    "releaseGates": "public-release-gates-published"
+    "releaseGates": "public-release-gates-published",
+    "creditsCatalog": "public-credits-catalog-published"
   },
   "listingReadiness": {
     "status": "not-ready",
@@ -222,7 +223,9 @@
       "return promise",
       "price target",
       "risk-control bypass"
-    ]
+    ],
+    "creditsCatalogPage": "https://gcagochina.com/credits.html",
+    "creditsCatalog": "https://gcagochina.com/credits.json"
   },
   "communityKit": {
     "status": "public-community-kit-published",
@@ -378,7 +381,9 @@
       "buy or sell recommendation",
       "price forecast",
       "strategy performance promise"
-    ]
+    ],
+    "creditsCatalogPage": "https://gcagochina.com/credits.html",
+    "creditsCatalog": "https://gcagochina.com/credits.json"
   },
   "releaseGates": {
     "status": "public-release-gates-published",
@@ -397,6 +402,33 @@
       "support review queue",
       "risk-control review",
       "simulation or testnet first"
-    ]
+    ],
+    "creditsCatalogPage": "https://gcagochina.com/credits.html",
+    "creditsCatalog": "https://gcagochina.com/credits.json"
+  },
+  "creditsCatalogPageUrl": "https://gcagochina.com/credits.html",
+  "creditsCatalogUrl": "https://gcagochina.com/credits.json",
+  "creditsCatalog": {
+    "status": "public-credits-catalog-published",
+    "pageUrl": "https://gcagochina.com/credits.html",
+    "url": "https://gcagochina.com/credits.json",
+    "currentStage": "draft-service-catalog-only",
+    "holderBonusMinimum": "10000 GCA",
+    "holderBonusCreditAmount": "100 Web3 Radar utility credits",
+    "gcaMemberMinimum": "1000000 GCA",
+    "publicAccountUiLive": false,
+    "creditsSelfServiceClaimable": false,
+    "gcaMemberSelfServiceClaimable": false,
+    "serviceNames": [
+      "Liquidation Replay",
+      "Risk Warning Review",
+      "Backtest Lab",
+      "ENTRY_READY Review",
+      "Position Size Calculator",
+      "Risk-Control Training",
+      "Member Research Notes",
+      "Support Review Queue"
+    ],
+    "notCreditUse": "cash, tokens, income, reimbursement, trading permission, transferable value, or risk-control bypass"
   }
 }

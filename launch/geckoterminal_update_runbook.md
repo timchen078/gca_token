@@ -60,6 +60,8 @@ GCA, short for Go China Access, is a fixed-supply ERC-20 token on Base Mainnet. 
 - Utility bridge JSON: `https://gcagochina.com/utility.json`
 - Product spec: `https://gcagochina.com/product.html`
 - Product spec JSON: `https://gcagochina.com/product.json`
+- Credits catalog: `https://gcagochina.com/credits.html`
+- Credits catalog JSON: `https://gcagochina.com/credits.json`
 - Release gates: `https://gcagochina.com/release-gates.html`
 - Release gates JSON: `https://gcagochina.com/release-gates.json`
 - Explorer: `https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`

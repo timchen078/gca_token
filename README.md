@@ -54,6 +54,8 @@ Deployment notes are in `docs/deploy_base_sepolia.md` and `docs/deploy_base_main
 - Public utility bridge JSON: `site/utility.json`
 - Public product spec page: `site/product.html`
 - Public product spec JSON: `site/product.json`
+- Public utility credits catalog page: `site/credits.html`
+- Public utility credits catalog JSON: `site/credits.json`
 - Public product release gates page: `site/release-gates.html`
 - Public product release gates JSON: `site/release-gates.json`
 - Public brand kit page: `site/brand-kit.html`

@@ -8,6 +8,8 @@ Utility thesis: `https://gcagochina.com/utility.html`
 Utility bridge spec: `https://gcagochina.com/utility.json`
 Product spec: `https://gcagochina.com/product.html`
 Product spec JSON: `https://gcagochina.com/product.json`
+Credits catalog: `https://gcagochina.com/credits.html`
+Credits catalog JSON: `https://gcagochina.com/credits.json`
 Release gates: `https://gcagochina.com/release-gates.html`
 Release gates JSON: `https://gcagochina.com/release-gates.json`
 Narrative system: `https://gcagochina.com/narrative.html`
@@ -77,6 +79,8 @@ The planned product bridge is to connect GCA with Web3 Radar-style non-custodial
 - Planned GCA Member tier: each registered user may verify one wallet holding at least 1,000,000 GCA and qualify for GCA Member status after the access bridge is live
 
 The public product specification for this direction is GCA AI Quant Access. It is published as a planning document only and describes China Narrative Radar, Weekly Go China Radar, Liquidation Replay, Risk Warning Credits, Backtest Lab, ENTRY_READY Review, Position Size Calculator, and GCA Member Workspace. It is not a live trading terminal, live market data service, financial advice, or a self-service account product.
+
+The public credits catalog is a draft service catalog for planned Web3 Radar utility credits. It maps the 100 Web3 Radar utility credits campaign to service units such as Liquidation Replay, Risk Warning Review, Backtest Lab, ENTRY_READY Review, Position Size Calculator, Risk-Control Training, Member Research Notes, and Support Review Queue. It is not self-service claimable until controlled account UI, read-only wallet verification, credit ledger activation, member ledger activation, and support review are live.
 
 The public release-gates page defines the conditions that must be met before the product can be described as public self-service access: controlled HTTPS account UI, read-only GCA balance verification, credit ledger activation, member ledger activation, support review queue, risk-control review, and simulation or testnet first. Until those gates are live, 100 utility credits and GCA Member status are not self-service claimable.
 

@@ -19,7 +19,9 @@
     "participationTerms": "https://gcagochina.com/terms.html",
     "utility": "https://gcagochina.com/utility.html",
     "risk": "https://gcagochina.com/risk.html",
-    "verify": "https://gcagochina.com/verify.html"
+    "verify": "https://gcagochina.com/verify.html",
+    "creditsCatalog": "https://gcagochina.com/credits.html",
+    "creditsCatalogJson": "https://gcagochina.com/credits.json"
   },
   "holderBonus": {
     "status": "backend-ledger-ready-public-claim-not-connected",

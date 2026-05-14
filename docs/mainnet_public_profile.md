@@ -56,11 +56,14 @@ The full fixed supply was minted to the deployer wallet at deployment. The 40/60
 - Utility bridge spec: `https://gcagochina.com/utility.json`
 - Product spec: `https://gcagochina.com/product.html`
 - Product spec JSON: `https://gcagochina.com/product.json`
+- Credits catalog: `https://gcagochina.com/credits.html`
+- Credits catalog JSON: `https://gcagochina.com/credits.json`
 - Release gates: `https://gcagochina.com/release-gates.html`
 - Release gates JSON: `https://gcagochina.com/release-gates.json`
 - Planned Web3 Radar bridge: liquidation replay reports, risk-warning credits, realistic backtest usage, ENTRY_READY signal review, position-size calculators, subscription discounts, and risk-control training
 - Planned first campaign: each registered user may verify one wallet holding at least 10,000 GCA and receive a one-time 100 Web3 Radar utility credits bonus after the access bridge is live
 - Planned GCA Member tier: each registered user may verify one wallet holding at least 1,000,000 GCA and qualify for GCA Member status after the access bridge is live
+- Draft credits catalog: Liquidation Replay, Risk Warning Review, Backtest Lab, ENTRY_READY Review, Position Size Calculator, Risk-Control Training, Member Research Notes, and Support Review Queue
 - Product release gates: controlled HTTPS account UI, read-only GCA balance verification, credit ledger activation, member ledger activation, support review queue, risk-control review, and simulation or testnet first
 
 Do not describe the current project as having a finished product, guaranteed utility, guaranteed market demand, return promise, or revenue distribution model.

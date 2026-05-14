@@ -137,6 +137,8 @@
     "roadmap": "https://gcagochina.com/roadmap.html",
     "weeklyRadar": "https://gcagochina.com/radar.html",
     "market": "https://gcagochina.com/markets.html",
-    "verify": "https://gcagochina.com/verify.html"
+    "verify": "https://gcagochina.com/verify.html",
+    "creditsCatalogPage": "https://gcagochina.com/credits.html",
+    "creditsCatalog": "https://gcagochina.com/credits.json"
   }
 }

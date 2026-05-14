@@ -27,6 +27,7 @@ BaseScan replied that it could not process the first token update request becaus
 - Official verify page remains live: `https://gcagochina.com/verify.html`
 - Public status page remains live: `https://gcagochina.com/status.html`
 - Product spec remains live: `https://gcagochina.com/product.html`
+- Credits catalog remains live: `https://gcagochina.com/credits.html`
 - Product release gates remain live: `https://gcagochina.com/release-gates.html`
 - Public logo remains live: `https://gcagochina.com/assets/gca-logo.svg`
 - Public whitepaper remains live: `https://gcagochina.com/whitepaper.html`
