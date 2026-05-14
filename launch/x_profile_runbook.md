@@ -40,6 +40,16 @@ URL: `https://x.com/GCAAIGoChina/status/2054660559124255151`
 ## Suggested Thread Follow-Up
 
 ```text
+Weekly Go China Radar 002 is live: Trust Stack Before Growth.
+
+Verify first: Base Mainnet contract, official GCA/USDT route, wallet evidence, risk notes, and member-prep boundaries.
+
+https://gcagochina.com/radar.html
+
+Not financial advice.
+```
+
+```text
 GCA is building around Go China Access, China Narrative Radar, Liquidation Replay, ENTRY_READY Review, GCA Member Club, and risk-first Web3 education.
 
 Roadmap:

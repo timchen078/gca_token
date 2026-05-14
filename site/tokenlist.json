@@ -87,7 +87,7 @@
         "platformRepliesStatus": "public-platform-reply-kit-published",
         "trustCenterStatus": "public-trust-center-published",
         "narrativeSystemStatus": "public-narrative-system-published",
-        "weeklyRadarStatus": "weekly-go-china-radar-pilot-published",
+        "weeklyRadarStatus": "weekly-go-china-radar-issue-002-published",
         "walletSecurityProfileStatus": "public-wallet-security-profile-published",
         "tokenSafetyStatus": "public-token-safety-checklist-published",
         "communityKitStatus": "public-community-kit-published",
@@ -104,7 +104,9 @@
         "walletWarningEvidenceStatus": "warning-report-submitted-owner-observed-no-warning-visible",
         "thirdPartyAuditStatus": "not-completed",
         "walletWarningOwnerObservationDate": "2026-05-14",
-        "securityVendorApprovalConfirmed": false
+        "securityVendorApprovalConfirmed": false,
+        "weeklyRadarIssue": "issue-002",
+        "weeklyRadarIssueTitle": "Trust Stack Before Growth"
       }
     }
   ]

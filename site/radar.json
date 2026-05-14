@@ -1,32 +1,36 @@
 {
   "schema": "https://gcagochina.com/radar.json",
   "pageUrl": "https://gcagochina.com/radar.html",
-  "status": "weekly-go-china-radar-pilot-published",
-  "issue": "pilot-001",
+  "status": "weekly-go-china-radar-issue-002-published",
+  "issue": "issue-002",
   "issueDate": "2026-05-14",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "title": "Weekly Go China Radar",
   "subtitle": "Narrative meets risk control.",
-  "scope": "Pilot research format for China-facing Web3 narrative tracking, risk education, and GCA utility hooks. This issue is a format sample, not live market data, not financial advice, and not a buy or sell recommendation.",
+  "scope": "Issue 002 of the GCA Weekly Go China Radar. This issue records current public trust signals, official market identity, wallet-warning observation, and risk-first community actions. It is not live market data, not financial advice, not a buy or sell recommendation, and not a price forecast.",
   "narrativeThemes": [
     {
-      "name": "China-facing Web3 attention",
-      "description": "Track public discussion, bilingual community activity, and China-facing market narratives without presenting any token as a guaranteed opportunity."
+      "name": "Go China trust stack",
+      "description": "Turn the Go China Access story into verifiable public links: Base Mainnet contract, GCA/USDT pool, token list, trust center, wallet evidence, and community channels."
     },
     {
       "name": "Base ecosystem access",
-      "description": "Track Base Mainnet identity, official GCA/USDT market route, wallet warnings, and data-platform metadata consistency."
+      "description": "Keep Base Mainnet identity, official GCA/USDT market route, wallet UI status, and data-platform metadata consistent before expanding listing outreach."
     },
     {
-      "name": "Risk-control education",
-      "description": "Turn community attention into safer habits: position sizing, liquidation awareness, backtest discipline, and no-custody boundaries."
+      "name": "Risk-first growth",
+      "description": "Grow public activity through education, member registration, and transparent updates instead of artificial volume, price promises, or paid listing shortcuts."
     }
   ],
   "utilityHooks": [
     {
       "name": "China Narrative Radar",
       "type": "research format"
+    },
+    {
+      "name": "Trust Stack Check",
+      "type": "verification checklist"
     },
     {
       "name": "Liquidation Replay",
@@ -58,7 +62,7 @@
   "publicClaimBoundaries": {
     "safeClaims": [
       "Weekly Go China Radar is the official GCA content format for narrative research and risk education.",
-      "This issue is a pilot content format, not live market data.",
+      "Issue 002 focuses on trust stack, official route, and risk-first public activity.",
       "Narrative meets risk control.",
       "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool.",
       "No third-party audit has been completed."
@@ -82,5 +86,19 @@
     "community": "https://gcagochina.com/community.html",
     "risk": "https://gcagochina.com/risk.html",
     "tokenSafety": "https://gcagochina.com/token-safety.json"
-  }
+  },
+  "issueTitle": "Trust Stack Before Growth",
+  "trustSignals": [
+    "BaseScan source and deployer-wallet ownership verification are complete.",
+    "GeckoTerminal token information was approved on 2026-05-11.",
+    "Owner observed no wallet risk warning visible on 2026-05-14; this is not security-vendor approval or a permanent cross-wallet guarantee.",
+    "The official public market route remains the Base Mainnet Uniswap v4 GCA/USDT pool.",
+    "Public trust, token safety, external review, and wallet-warning evidence pages are live."
+  ],
+  "publicActivityPlan": [
+    "Share the verify, trust, markets, and risk pages before sharing any swap link.",
+    "Use Telegram and X posts to explain the Go China Access thesis, not price targets.",
+    "Invite holders to use the member pre-registration and read-only balance preview as preparation only.",
+    "Publish future liquidity or listing changes with exact public links and transaction references."
+  ]
 }

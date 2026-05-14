@@ -57,7 +57,7 @@ The GCA narrative system uses repeatable names so the project can be memorable w
 - Go China Watchlist
 - Risk First Trading
 
-The first public content format is Weekly Go China Radar. The pilot issue is a reusable template for China-facing Web3 narrative themes, risk notes, utility hooks, and community talking points. It is not live market data, financial advice, a buy/sell recommendation, or a price forecast.
+The current public content format is Weekly Go China Radar. Issue 002, Trust Stack Before Growth, is a reusable update for verification links, public trust signals, risk notes, utility hooks, and community talking points. It is not live market data, financial advice, a buy/sell recommendation, or a price forecast.
 
 The planned product bridge is to connect GCA with Web3 Radar-style non-custodial quant tooling. Suitable utility includes:
 
