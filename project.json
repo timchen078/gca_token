@@ -176,7 +176,8 @@
     "releaseGates": "public-release-gates-published",
     "creditsCatalog": "public-credits-catalog-published",
     "accessPortal": "public-access-portal-blueprint-published",
-    "accessApiContract": "public-access-api-contract-published"
+    "accessApiContract": "public-access-api-contract-published",
+    "reviewQueueContract": "public-review-queue-contract-published"
   },
   "listingReadiness": {
     "status": "not-ready",
@@ -343,7 +344,9 @@
     },
     "supportWorkflow": {
       "targetFirstResponse": "5-10 business days after controlled intake is live; not a guarantee",
-      "contactEmail": "GCAgochina@outlook.com"
+      "contactEmail": "GCAgochina@outlook.com",
+      "reviewQueuePage": "https://gcagochina.com/review-queue.html",
+      "reviewQueue": "https://gcagochina.com/review-queue.json"
     }
   },
   "shortDescription": "GCA, short for Go China Access, is a fixed-supply ERC-20 token on Base Mainnet. It is a concept-stage access token for the Go China narrative, China-facing Web3 intelligence, risk education, and planned non-custodial quant research tools.",
@@ -462,7 +465,9 @@
     "creditsCatalogPage": "https://gcagochina.com/credits.html",
     "creditsCatalog": "https://gcagochina.com/credits.json",
     "accessApiPage": "https://gcagochina.com/access-api.html",
-    "accessApi": "https://gcagochina.com/access-api.json"
+    "accessApi": "https://gcagochina.com/access-api.json",
+    "reviewQueuePage": "https://gcagochina.com/review-queue.html",
+    "reviewQueue": "https://gcagochina.com/review-queue.json"
   },
   "accessApiPageUrl": "https://gcagochina.com/access-api.html",
   "accessApiUrl": "https://gcagochina.com/access-api.json",
@@ -485,6 +490,30 @@
       "/gca/member-ledger",
       "/gca/support-review",
       "/gca/member-review"
+    ],
+    "reviewQueuePage": "https://gcagochina.com/review-queue.html",
+    "reviewQueue": "https://gcagochina.com/review-queue.json"
+  },
+  "reviewQueuePageUrl": "https://gcagochina.com/review-queue.html",
+  "reviewQueueUrl": "https://gcagochina.com/review-queue.json",
+  "reviewQueueContract": {
+    "status": "public-review-queue-contract-published",
+    "pageUrl": "https://gcagochina.com/review-queue.html",
+    "url": "https://gcagochina.com/review-queue.json",
+    "currentStage": "manual-review-contract",
+    "publicQueueLive": false,
+    "publicSubmissionQueueLive": false,
+    "controlledHttpsAccountUiLive": false,
+    "creditsSelfServiceClaimable": false,
+    "gcaMemberSelfServiceClaimable": false,
+    "ledgerWritesLive": false,
+    "lanes": [
+      "pre-registration-intake",
+      "wallet-balance-review",
+      "holder-credit-review",
+      "gca-member-review",
+      "support-case-review",
+      "platform-profile-follow-up"
     ]
   }
 }

@@ -17,7 +17,8 @@
     "thirdPartyAudit": "not-completed",
     "liquidityDepth": "starter-depth-only",
     "accessPortalBlueprint": "published-blueprint-only",
-    "accessApiContract": "published-contract-only"
+    "accessApiContract": "published-contract-only",
+    "reviewQueueContract": "public-review-queue-contract-published"
   },
   "releaseGates": [
     {
@@ -108,6 +109,12 @@
         "live order execution",
         "automated trading workflow"
       ]
+    },
+    {
+      "id": "review-queue-contract",
+      "status": "published-contract-only",
+      "requiredBefore": "public credit or member status approval",
+      "publicReference": "https://gcagochina.com/review-queue.html"
     }
   ],
   "noGoLiveWithout": [
@@ -123,7 +130,8 @@
     "privacy notice and participation terms",
     "no custody",
     "no withdrawal permission",
-    "no exchange API secret collection"
+    "no exchange API secret collection",
+    "review queue contract"
   ],
   "officialMarket": {
     "pair": "GCA/USDT",
@@ -169,6 +177,8 @@
     "accessPortalPage": "https://gcagochina.com/access.html",
     "accessPortal": "https://gcagochina.com/access.json",
     "accessApiPage": "https://gcagochina.com/access-api.html",
-    "accessApi": "https://gcagochina.com/access-api.json"
+    "accessApi": "https://gcagochina.com/access-api.json",
+    "reviewQueuePage": "https://gcagochina.com/review-queue.html",
+    "reviewQueue": "https://gcagochina.com/review-queue.json"
   }
 }

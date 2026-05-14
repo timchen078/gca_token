@@ -94,6 +94,8 @@
     "onchainProofs": "https://gcagochina.com/onchain-proofs.html",
     "externalReviews": "https://gcagochina.com/external-reviews.html",
     "accessApiPage": "https://gcagochina.com/access-api.html",
-    "accessApi": "https://gcagochina.com/access-api.json"
+    "accessApi": "https://gcagochina.com/access-api.json",
+    "reviewQueuePage": "https://gcagochina.com/review-queue.html",
+    "reviewQueue": "https://gcagochina.com/review-queue.json"
   }
 }

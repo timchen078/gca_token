@@ -14,7 +14,8 @@
     "creditsSelfServiceClaimable": false,
     "gcaMemberSelfServiceClaimable": false,
     "liveTradingEnabled": false,
-    "accessApiContract": "published-contract-only"
+    "accessApiContract": "published-contract-only",
+    "reviewQueueContract": "published-manual-review-contract"
   },
   "preparedRoutes": {
     "futureAccountPortal": "/gca/account",
@@ -37,7 +38,9 @@
     "participationTermsPage": "https://gcagochina.com/terms.html",
     "releaseGatesPage": "https://gcagochina.com/release-gates.html",
     "accessApiPage": "https://gcagochina.com/access-api.html",
-    "accessApi": "https://gcagochina.com/access-api.json"
+    "accessApi": "https://gcagochina.com/access-api.json",
+    "reviewQueuePage": "https://gcagochina.com/review-queue.html",
+    "reviewQueue": "https://gcagochina.com/review-queue.json"
   },
   "userJourney": [
     {
@@ -102,6 +105,7 @@
     "credit ledger activation",
     "member ledger activation",
     "support review queue",
+    "review queue contract",
     "privacy notice and participation terms",
     "risk-control review",
     "simulation or testnet first for any future trading workflow"
@@ -160,7 +164,9 @@
     "participationTermsPage": "https://gcagochina.com/terms.html",
     "market": "https://gcagochina.com/markets.html",
     "accessApiPage": "https://gcagochina.com/access-api.html",
-    "accessApi": "https://gcagochina.com/access-api.json"
+    "accessApi": "https://gcagochina.com/access-api.json",
+    "reviewQueuePage": "https://gcagochina.com/review-queue.html",
+    "reviewQueue": "https://gcagochina.com/review-queue.json"
   },
   "publicClaimBoundaries": {
     "safeClaims": [

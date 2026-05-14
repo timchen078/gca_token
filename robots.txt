@@ -47,6 +47,8 @@ Allow: /access.html
 Allow: /access.json
 Allow: /access-api.html
 Allow: /access-api.json
+Allow: /review-queue.html
+Allow: /review-queue.json
 Allow: /credits.html
 Allow: /credits.json
 Allow: /release-gates.html
