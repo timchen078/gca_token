@@ -155,6 +155,8 @@
   "officialLinks": {
     "productPage": "https://gcagochina.com/product.html",
     "productJson": "https://gcagochina.com/product.json",
+    "releaseGatesPage": "https://gcagochina.com/release-gates.html",
+    "releaseGates": "https://gcagochina.com/release-gates.json",
     "utilityPage": "https://gcagochina.com/utility.html",
     "utilityJson": "https://gcagochina.com/utility.json",
     "memberLedger": "https://gcagochina.com/member-ledger.json",

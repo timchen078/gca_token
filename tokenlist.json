@@ -112,7 +112,10 @@
         "weeklyRadarIssueTitle": "Trust Stack Before Growth",
         "productSpecPage": "https://gcagochina.com/product.html",
         "productSpec": "https://gcagochina.com/product.json",
-        "productSpecStatus": "public-product-spec-published"
+        "productSpecStatus": "public-product-spec-published",
+        "releaseGatesPage": "https://gcagochina.com/release-gates.html",
+        "releaseGates": "https://gcagochina.com/release-gates.json",
+        "releaseGatesStatus": "public-release-gates-published"
       }
     }
   ]
