@@ -105,6 +105,8 @@
     "memberProgramRules": "https://gcagochina.com/member-program.json",
     "memberBenefitReview": "https://gcagochina.com/member-benefit.html",
     "memberBenefitReviewJson": "https://gcagochina.com/member-benefit.json",
+    "memberBenefitTransfer": "https://gcagochina.com/member-benefit-transfer.html",
+    "memberBenefitTransferJson": "https://gcagochina.com/member-benefit-transfer.json",
     "memberLedgerPage": "https://gcagochina.com/member-ledger.html",
     "memberLedgerSchema": "https://gcagochina.com/member-ledger.json",
     "listingKit": "https://gcagochina.com/listing-kit.html",

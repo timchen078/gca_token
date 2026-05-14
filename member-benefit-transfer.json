@@ -1,0 +1,122 @@
+{
+  "schema": "https://gcagochina.com/member-benefit-transfer.json",
+  "pageUrl": "https://gcagochina.com/member-benefit-transfer.html",
+  "lastUpdated": "2026-05-14",
+  "status": "public-member-benefit-transfer-runbook-published-transfer-not-automatic",
+  "scope": "Manual operator runbook for the planned one-time 10,000 GCA member benefit transfer after support review and member ledger approval. This file does not make the benefit self-service claimable.",
+  "network": "Base Mainnet",
+  "chainId": 8453,
+  "token": {
+    "symbol": "GCA",
+    "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+    "decimals": 18,
+    "mintingSupportedAfterDeployment": false
+  },
+  "transferPolicy": {
+    "memberBenefitAmount": "10000 GCA",
+    "sourceWallet": "0x5e8F84748612B913aAcC937492AC25dc5630E246",
+    "sourceWalletRole": "project or owner-held reserve",
+    "transferType": "manual reserve-wallet transfer only",
+    "mintingAllowed": false,
+    "automaticTransferAllowed": false,
+    "selfServiceClaimable": false,
+    "recipientMustEqualVerifiedMemberWallet": true,
+    "registeredUserLimit": "one member benefit transfer per approved registered user",
+    "walletLimit": "one verified Base wallet per registered user"
+  },
+  "approvalPrerequisites": [
+    "controlled account record or manually reviewed registration packet exists",
+    "memberBenefitReviewEvidence packet version is gca_member_preregistration_v2",
+    "evidenceTxHashFormatOk is true",
+    "read-only ERC-20 balanceOf verifies at least 1,000,000 GCA at review time",
+    "holdingPeriodDaysVerified is at least 30",
+    "memberBenefitReviewEvidenceStatus is eligible",
+    "member ledger record is approved",
+    "recipient wallet is the same verified Base wallet from the approved review",
+    "no prior memberBenefitTransferTx exists for the same registered user"
+  ],
+  "manualTransferSteps": [
+    {
+      "id": "confirm-review-record",
+      "label": "Confirm review record",
+      "operatorAction": "Open the approved member review record and confirm registrationId, verified wallet, holdingStartDate, evidenceTxHash, evidenceTxHashFormatOk, holdingPeriodDaysVerified, and eligible status."
+    },
+    {
+      "id": "verify-current-balance",
+      "label": "Verify current balance",
+      "operatorAction": "Run a fresh read-only Base Mainnet ERC-20 balanceOf check for the verified wallet before preparing any transfer."
+    },
+    {
+      "id": "prepare-wallet",
+      "label": "Prepare reserve wallet",
+      "operatorAction": "Use the project or owner-held reserve wallet on Base Mainnet. Do not ask the user for private keys, seed phrases, custody, or fund transfers."
+    },
+    {
+      "id": "send-member-benefit",
+      "label": "Send member benefit",
+      "operatorAction": "Send exactly 10,000 GCA to the approved verified Base wallet. Confirm token contract and recipient before signing in the wallet."
+    },
+    {
+      "id": "record-transfer",
+      "label": "Record transfer",
+      "operatorAction": "After confirmation, record memberBenefitTransferTx, transferredAt, transferredAmount, sourceWallet, recipientWallet, and reviewerNote."
+    },
+    {
+      "id": "close-review",
+      "label": "Close review",
+      "operatorAction": "Set memberBenefitClaimStatus to transferred or closed only after the public transaction hash is recorded."
+    }
+  ],
+  "requiredLedgerFieldsAfterTransfer": [
+    "memberLedgerId",
+    "registrationId",
+    "walletAddress",
+    "memberBenefitAmount",
+    "memberBenefitSource",
+    "memberBenefitClaimStatus",
+    "memberBenefitTransferTx",
+    "transferredAt",
+    "sourceWallet",
+    "recipientWallet",
+    "reviewerNote"
+  ],
+  "doNotCollect": [
+    "private key",
+    "seed phrase",
+    "exchange API secret",
+    "withdrawal permission",
+    "one-time code",
+    "recovery phrase",
+    "custody request",
+    "fund-transfer request"
+  ],
+  "publicClaimBoundaries": {
+    "safeClaims": [
+      "GCA has published a manual transfer runbook for the planned one-time 10,000 GCA member benefit.",
+      "The planned transfer requires support review, member ledger approval, 30-day holding-period verification, and a fresh read-only balance check.",
+      "If approved, the member benefit must come from project or owner-held reserve transfer only, not new minting.",
+      "The public runbook defines manual operator controls and does not make the benefit self-service claimable."
+    ],
+    "doNotClaim": [
+      "the 10,000 GCA member benefit is self-service claimable today",
+      "holding 1,000,000 GCA automatically triggers a transfer",
+      "the member benefit is newly minted",
+      "the member benefit is cash, income, reimbursement, trading permission, voting control, lifetime access, price support, or a way to bypass risk controls",
+      "approval timing or transfer timing is promised before support and ledger review"
+    ]
+  },
+  "publicLinks": {
+    "memberBenefitTransferPage": "https://gcagochina.com/member-benefit-transfer.html",
+    "memberBenefitTransferJson": "https://gcagochina.com/member-benefit-transfer.json",
+    "memberBenefitPage": "https://gcagochina.com/member-benefit.html",
+    "memberBenefitJson": "https://gcagochina.com/member-benefit.json",
+    "memberLedgerPage": "https://gcagochina.com/member-ledger.html",
+    "memberLedgerJson": "https://gcagochina.com/member-ledger.json",
+    "members": "https://gcagochina.com/members.html",
+    "support": "https://gcagochina.com/support.html",
+    "reviewQueue": "https://gcagochina.com/review-queue.html",
+    "operations": "https://gcagochina.com/operations.html",
+    "releaseGates": "https://gcagochina.com/release-gates.html",
+    "reserveDisclosure": "https://gcagochina.com/supply.html"
+  }
+}

@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GCA Member Benefit Transfer Runbook</title>
+    <meta name="description" content="Manual GCA operator runbook for the planned one-time 10,000 GCA member benefit transfer after support review and member ledger approval.">
+    <link rel="canonical" href="https://gcagochina.com/member-benefit-transfer.html">
+    <link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">
+    <link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="GCA | Go China Access">
+    <meta property="og:title" content="GCA Member Benefit Transfer Runbook">
+    <meta property="og:description" content="Manual GCA operator runbook for the planned one-time 10,000 GCA member benefit transfer after support review and member ledger approval.">
+    <meta property="og:url" content="https://gcagochina.com/member-benefit-transfer.html">
+    <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="GCA Member Benefit Transfer Runbook">
+    <meta name="twitter:description" content="Manual GCA operator runbook for the planned one-time 10,000 GCA member benefit transfer after support review and member ledger approval.">
+    <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #111318;
+        --muted: #5f6773;
+        --line: #dfe3ea;
+        --panel: #ffffff;
+        --soft: #f6f7f9;
+        --red: #d71920;
+        --blue: #0052ff;
+        --green: #087f5b;
+        --gold: #8a650d;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: #fbfbfc;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.5;
+      }
+
+      a {
+        color: var(--blue);
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .shell {
+        width: min(1100px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      header {
+        border-bottom: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.94);
+        position: sticky;
+        top: 0;
+        z-index: 2;
+      }
+
+      nav {
+        min-height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--ink);
+        font-weight: 850;
+      }
+
+      .brand img {
+        width: 32px;
+        height: 32px;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 18px;
+        align-items: center;
+        font-size: 14px;
+      }
+
+      main {
+        padding: 42px 0 56px;
+      }
+
+      .eyebrow {
+        color: var(--red);
+        font-size: 13px;
+        font-weight: 850;
+        margin: 0 0 12px;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 0;
+        max-width: 980px;
+        font-size: clamp(40px, 6vw, 72px);
+        line-height: 1;
+        letter-spacing: 0;
+      }
+
+      h2 {
+        margin: 0 0 14px;
+        font-size: 24px;
+      }
+
+      h3 {
+        margin: 0 0 8px;
+        font-size: 17px;
+      }
+
+      .lead {
+        max-width: 900px;
+        margin: 18px 0 0;
+        color: var(--muted);
+        font-size: 18px;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 24px;
+      }
+
+      .button {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        color: var(--ink);
+        min-height: 42px;
+        padding: 10px 14px;
+        font: inherit;
+        font-weight: 750;
+      }
+
+      .button.primary {
+        border-color: var(--red);
+        background: var(--red);
+        color: #fff;
+      }
+
+      .section {
+        margin-top: 30px;
+      }
+
+      .panel,
+      .fact {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+      }
+
+      .panel {
+        padding: 24px;
+      }
+
+      .grid,
+      .two,
+      .facts {
+        display: grid;
+        gap: 14px;
+      }
+
+      .grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .two {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .facts {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        margin-top: 22px;
+      }
+
+      .fact {
+        min-height: 118px;
+        padding: 16px;
+      }
+
+      .label {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 750;
+        text-transform: uppercase;
+      }
+
+      .value {
+        display: block;
+        margin-top: 8px;
+        font-size: 16px;
+        font-weight: 850;
+        overflow-wrap: anywhere;
+      }
+
+      .good {
+        color: var(--green);
+      }
+
+      .pending {
+        color: var(--gold);
+      }
+
+      .note,
+      li {
+        color: var(--muted);
+      }
+
+      .note {
+        margin: 0;
+      }
+
+      .list {
+        display: grid;
+        gap: 10px;
+        margin-top: 12px;
+      }
+
+      .row {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        border-top: 1px solid var(--line);
+        padding-top: 10px;
+      }
+
+      .row:first-child {
+        border-top: 0;
+        padding-top: 0;
+      }
+
+      code {
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        background: var(--soft);
+        padding: 2px 5px;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 0.92em;
+      }
+
+      footer {
+        border-top: 1px solid var(--line);
+        padding: 24px 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      @media (max-width: 860px) {
+        nav {
+          align-items: flex-start;
+          flex-direction: column;
+          padding: 14px 0;
+        }
+
+        .nav-links {
+          flex-wrap: wrap;
+        }
+
+        .grid,
+        .two,
+        .facts {
+          grid-template-columns: 1fr;
+        }
+
+        h1 {
+          font-size: 40px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav class="shell" aria-label="Primary">
+        <a class="brand" href="index.html">
+          <img src="assets/gca-logo.svg" alt="GCA logo">
+          <span>GCA</span>
+        </a>
+        <div class="nav-links">
+          <a href="members.html">Members</a>
+          <a href="member-benefit.html">Benefit Rules</a>
+          <a href="member-ledger.html">Member Ledger</a>
+          <a href="support.html">Support</a>
+        </div>
+      </nav>
+    </header>
+
+    <main class="shell">
+      <section aria-labelledby="title">
+        <p class="eyebrow">Member Benefit Transfer Runbook / 2026-05-14</p>
+        <h1 id="title">GCA Member Benefit Transfer Runbook</h1>
+        <p class="lead">This page defines the manual operator controls for the planned one-time 10,000 GCA member benefit transfer after support review, 30-day holding-period verification, and member ledger approval.</p>
+        <p class="lead">The transfer is not automatic and is not self-service claimable. If approved, it must come from project or owner-held reserve on Base Mainnet; the GCA token contract has no mint function.</p>
+        <div class="actions">
+          <a class="button primary" href="member-benefit-transfer.json">Transfer Runbook JSON</a>
+          <a class="button" href="member-benefit.html">Member Benefit Rules</a>
+          <a class="button" href="member-ledger.html">Member Ledger Schema</a>
+          <a class="button" href="operations.html">Operations Runbook</a>
+          <a class="button" href="supply.html">Reserve Disclosure</a>
+        </div>
+        <div class="facts" aria-label="Transfer facts">
+          <div class="fact">
+            <span class="label">Amount</span>
+            <span class="value">10,000 GCA</span>
+          </div>
+          <div class="fact">
+            <span class="label">Source</span>
+            <span class="value">Owner reserve</span>
+          </div>
+          <div class="fact">
+            <span class="label">Transfer mode</span>
+            <span class="value pending">Manual only</span>
+          </div>
+          <div class="fact">
+            <span class="label">Ledger field</span>
+            <span class="value"><code>memberBenefitTransferTx</code></span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section two" aria-label="Transfer policy">
+        <div class="panel">
+          <h2>Transfer Policy</h2>
+          <div class="list">
+            <div class="row"><span>Network</span><strong>Base Mainnet / chainId 8453</strong></div>
+            <div class="row"><span>Token</span><strong><code>0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6</code></strong></div>
+            <div class="row"><span>Source wallet</span><strong><code>0x5e8F84748612B913aAcC937492AC25dc5630E246</code></strong></div>
+            <div class="row"><span>Recipient</span><strong>Approved verified member wallet only</strong></div>
+            <div class="row"><span>Repeat rule</span><strong>One transfer per approved registered user</strong></div>
+          </div>
+        </div>
+        <div class="panel">
+          <h2>Before Transfer</h2>
+          <div class="list">
+            <div class="row"><span>Packet version</span><strong><code>gca_member_preregistration_v2</code></strong></div>
+            <div class="row"><span>Evidence status</span><strong><code>memberBenefitReviewEvidenceStatus</code> = eligible</strong></div>
+            <div class="row"><span>Tx hash check</span><strong><code>evidenceTxHashFormatOk</code> = true</strong></div>
+            <div class="row"><span>Holding period</span><strong>At least 30 days verified</strong></div>
+            <div class="row"><span>Fresh balance check</span><strong>Read-only <code>balanceOf</code></strong></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="stepsTitle">
+        <h2 id="stepsTitle">Manual Transfer Steps</h2>
+        <div class="grid">
+          <div>
+            <h3>1. Confirm Review Record</h3>
+            <p class="note">Confirm registrationId, walletAddress, holdingStartDate, evidenceTxHash, evidenceTxHashFormatOk, holdingPeriodDaysVerified, and eligible status.</p>
+          </div>
+          <div>
+            <h3>2. Verify Current Balance</h3>
+            <p class="note">Run a fresh read-only Base Mainnet ERC-20 <code>balanceOf</code> check for the verified wallet before preparing a transfer.</p>
+          </div>
+          <div>
+            <h3>3. Prepare Reserve Wallet</h3>
+            <p class="note">Use the project or owner-held reserve wallet on Base Mainnet. Do not request user secrets, custody, or fund transfers.</p>
+          </div>
+          <div>
+            <h3>4. Send 10,000 GCA</h3>
+            <p class="note">Send exactly 10,000 GCA to the approved verified Base wallet. Confirm token contract and recipient before signing.</p>
+          </div>
+          <div>
+            <h3>5. Record Transfer Hash</h3>
+            <p class="note">After confirmation, record <code>memberBenefitTransferTx</code>, transferredAt, transferredAmount, sourceWallet, recipientWallet, and reviewerNote.</p>
+          </div>
+          <div>
+            <h3>6. Close Review</h3>
+            <p class="note">Set memberBenefitClaimStatus to transferred or closed only after the public transaction hash is recorded.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section two" aria-label="Records and boundaries">
+        <div class="panel">
+          <h2>Required Ledger Fields</h2>
+          <div class="list">
+            <div class="row"><span>memberLedgerId</span><strong>Approved member record</strong></div>
+            <div class="row"><span>registrationId</span><strong>Reviewed user record</strong></div>
+            <div class="row"><span>walletAddress</span><strong>Verified recipient</strong></div>
+            <div class="row"><span>memberBenefitAmount</span><strong>10,000 GCA</strong></div>
+            <div class="row"><span>memberBenefitTransferTx</span><strong>Public Base transaction hash</strong></div>
+            <div class="row"><span>reviewerNote</span><strong>No secrets</strong></div>
+          </div>
+        </div>
+        <div class="panel">
+          <h2>Do Not Collect</h2>
+          <ul>
+            <li>Private key or seed phrase.</li>
+            <li>Exchange API secret or withdrawal permission.</li>
+            <li>One-time code or recovery phrase.</li>
+            <li>Custody request or fund-transfer request.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="claimTitle">
+        <h2 id="claimTitle">Public Claim Boundaries</h2>
+        <ul>
+          <li>Safe to say: GCA has published a manual transfer runbook for the planned one-time 10,000 GCA member benefit.</li>
+          <li>Safe to say: approval requires support review, member ledger approval, 30-day holding-period verification, and a fresh read-only balance check.</li>
+          <li>Do not say the 10,000 GCA member benefit is self-service claimable today.</li>
+          <li>Do not say holding 1,000,000 GCA automatically triggers a transfer.</li>
+          <li>Do not describe the member benefit as newly minted, cash, income, reimbursement, trading permission, voting control, lifetime access, price support, or risk-control bypass.</li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <div class="shell">GCA Member Benefit Transfer Runbook is a public manual-operations document only. It does not make account UI, self-service claiming, custody, withdrawals, or live trading available.</div>
+    </footer>
+  </body>
+</html>
