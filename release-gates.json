@@ -15,9 +15,20 @@
     "liveTradingEnabled": false,
     "baseScanTokenProfile": "resubmitted-awaiting-review",
     "thirdPartyAudit": "not-completed",
-    "liquidityDepth": "starter-depth-only"
+    "liquidityDepth": "starter-depth-only",
+    "accessPortalBlueprint": "published-blueprint-only"
   },
   "releaseGates": [
+    {
+      "id": "access-portal-blueprint",
+      "label": "Access Portal Blueprint",
+      "status": "published-blueprint-only",
+      "blocks": [
+        "self-service account claims",
+        "self-service credit claiming",
+        "self-service GCA Member claiming"
+      ]
+    },
     {
       "id": "controlled-https-account-ui",
       "label": "Controlled HTTPS account UI",
@@ -89,6 +100,7 @@
     }
   ],
   "noGoLiveWithout": [
+    "access portal blueprint",
     "controlled HTTPS account UI",
     "read-only GCA balance verification",
     "credit ledger activation",
@@ -141,6 +153,8 @@
     "verify": "https://gcagochina.com/verify.html",
     "market": "https://gcagochina.com/markets.html",
     "creditsCatalogPage": "https://gcagochina.com/credits.html",
-    "creditsCatalog": "https://gcagochina.com/credits.json"
+    "creditsCatalog": "https://gcagochina.com/credits.json",
+    "accessPortalPage": "https://gcagochina.com/access.html",
+    "accessPortal": "https://gcagochina.com/access.json"
   }
 }

@@ -87,7 +87,9 @@
     "releaseGatesPage": "https://gcagochina.com/release-gates.html",
     "releaseGates": "https://gcagochina.com/release-gates.json",
     "creditsCatalogPage": "https://gcagochina.com/credits.html",
-    "creditsCatalog": "https://gcagochina.com/credits.json"
+    "creditsCatalog": "https://gcagochina.com/credits.json",
+    "accessPortalPage": "https://gcagochina.com/access.html",
+    "accessPortal": "https://gcagochina.com/access.json"
   },
   "market": {
     "officialPair": "GCA/USDT",
@@ -137,7 +139,8 @@
     "thirdPartyAudit": "not-completed",
     "productSpec": "public-product-spec-published",
     "releaseGates": "public-release-gates-published",
-    "creditsCatalog": "public-credits-catalog-published"
+    "creditsCatalog": "public-credits-catalog-published",
+    "accessPortal": "public-access-portal-blueprint-published"
   },
   "securityFacts": {
     "sourceVerifiedOnBaseScan": true,
