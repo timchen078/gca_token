@@ -12,6 +12,8 @@ Access portal blueprint: `https://gcagochina.com/access.html`
 Access portal blueprint JSON: `https://gcagochina.com/access.json`
 Access API contract: `https://gcagochina.com/access-api.html`
 Access API contract JSON: `https://gcagochina.com/access-api.json`
+Review queue contract: `https://gcagochina.com/review-queue.html`
+Review queue contract JSON: `https://gcagochina.com/review-queue.json`
 Credits catalog: `https://gcagochina.com/credits.html`
 Credits catalog JSON: `https://gcagochina.com/credits.json`
 Release gates: `https://gcagochina.com/release-gates.html`
@@ -87,6 +89,8 @@ The public product specification for this direction is GCA AI Quant Access. It i
 The public access portal blueprint defines the future controlled account path: create a controlled HTTPS account, verify GCA balance with read-only `eth_call` and ERC-20 `balanceOf`, create a support review record, activate a 100 credits ledger record for eligible 10,000 GCA holders, and activate GCA Member status for eligible 1,000,000 GCA holders. It is blueprint only until controlled HTTPS account UI, direct submission, credit ledger activation, member ledger activation, and support review are live.
 
 The public access API contract defines the future controlled HTTPS backend routes: `POST /gca/pre-registrations`, `POST /gca/wallet-verifications`, `GET /gca/credit-ledger`, `GET /gca/member-ledger`, `POST /gca/support-review`, and `GET /gca/member-review`. It is contract only and is not a live public submission endpoint.
+
+The public review queue contract defines the manual review lanes that sit between intake and ledger activation: pre-registration intake, wallet balance review, holder credit review, GCA Member review, support case review, and platform profile follow-up. It is not a live public submission queue and cannot override on-chain wallet-balance verification.
 
 The public credits catalog is a draft service catalog for planned Web3 Radar utility credits. It maps the 100 Web3 Radar utility credits campaign to service units such as Liquidation Replay, Risk Warning Review, Backtest Lab, ENTRY_READY Review, Position Size Calculator, Risk-Control Training, Member Research Notes, and Support Review Queue. It is not self-service claimable until controlled account UI, read-only wallet verification, credit ledger activation, member ledger activation, and support review are live.
 

@@ -58,6 +58,8 @@ ACCESS_PAGE_URL = "https://gcagochina.com/access.html"
 ACCESS_URL = "https://gcagochina.com/access.json"
 ACCESS_API_PAGE_URL = "https://gcagochina.com/access-api.html"
 ACCESS_API_URL = "https://gcagochina.com/access-api.json"
+REVIEW_QUEUE_PAGE_URL = "https://gcagochina.com/review-queue.html"
+REVIEW_QUEUE_URL = "https://gcagochina.com/review-queue.json"
 CREDITS_PAGE_URL = "https://gcagochina.com/credits.html"
 CREDITS_URL = "https://gcagochina.com/credits.json"
 RELEASE_GATES_PAGE_URL = "https://gcagochina.com/release-gates.html"
@@ -130,6 +132,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("/access.json", script)
         self.assertIn("/access-api.html", script)
         self.assertIn("/access-api.json", script)
+        self.assertIn("/review-queue.html", script)
+        self.assertIn("/review-queue.json", script)
         self.assertIn("/credits.html", script)
         self.assertIn("/credits.json", script)
         self.assertIn("/release-gates.html", script)
@@ -184,6 +188,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("validate_access_json", script)
         self.assertIn("validate_access_api_page", script)
         self.assertIn("validate_access_api_json", script)
+        self.assertIn("validate_review_queue_page", script)
+        self.assertIn("validate_review_queue_json", script)
         self.assertIn("validate_credits_page", script)
         self.assertIn("validate_credits_json", script)
         self.assertIn("validate_release_gates_page", script)
@@ -261,6 +267,8 @@ class LaunchPackageTests(unittest.TestCase):
         module.validate_access_json((ROOT / "site" / "access.json").read_text())
         module.validate_access_api_page((ROOT / "site" / "access-api.html").read_text())
         module.validate_access_api_json((ROOT / "site" / "access-api.json").read_text())
+        module.validate_review_queue_page((ROOT / "site" / "review-queue.html").read_text())
+        module.validate_review_queue_json((ROOT / "site" / "review-queue.json").read_text())
         module.validate_credits_page((ROOT / "site" / "credits.html").read_text())
         module.validate_credits_json((ROOT / "site" / "credits.json").read_text())
         module.validate_release_gates_page((ROOT / "site" / "release-gates.html").read_text())
@@ -516,6 +524,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Allow: /access.json", robots)
         self.assertIn("Allow: /access-api.html", robots)
         self.assertIn("Allow: /access-api.json", robots)
+        self.assertIn("Allow: /review-queue.html", robots)
+        self.assertIn("Allow: /review-queue.json", robots)
         self.assertIn("Allow: /credits.html", robots)
         self.assertIn("Allow: /credits.json", robots)
         self.assertIn("Allow: /release-gates.html", robots)
@@ -583,6 +593,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(ACCESS_URL, sitemap)
         self.assertIn(ACCESS_API_PAGE_URL, sitemap)
         self.assertIn(ACCESS_API_URL, sitemap)
+        self.assertIn(REVIEW_QUEUE_PAGE_URL, sitemap)
+        self.assertIn(REVIEW_QUEUE_URL, sitemap)
         self.assertIn(CREDITS_PAGE_URL, sitemap)
         self.assertIn(CREDITS_URL, sitemap)
         self.assertIn(RELEASE_GATES_PAGE_URL, sitemap)
@@ -637,6 +649,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(identity["officialUrls"]["accessPortal"], ACCESS_URL)
         self.assertEqual(identity["officialUrls"]["accessApiPage"], ACCESS_API_PAGE_URL)
         self.assertEqual(identity["officialUrls"]["accessApi"], ACCESS_API_URL)
+        self.assertEqual(identity["officialUrls"]["reviewQueuePage"], REVIEW_QUEUE_PAGE_URL)
+        self.assertEqual(identity["officialUrls"]["reviewQueue"], REVIEW_QUEUE_URL)
         self.assertEqual(identity["officialUrls"]["releaseGatesPage"], RELEASE_GATES_PAGE_URL)
         self.assertEqual(identity["officialUrls"]["releaseGates"], RELEASE_GATES_URL)
         self.assertEqual(identity["officialUrls"]["walletWarningEvidencePage"], WALLET_WARNING_PAGE_URL)
@@ -682,6 +696,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(identity["platformStatus"]["weeklyGoChinaRadar"], "weekly-go-china-radar-issue-002-published")
         self.assertEqual(identity["platformStatus"]["accessPortal"], "public-access-portal-blueprint-published")
         self.assertEqual(identity["platformStatus"]["accessApiContract"], "public-access-api-contract-published")
+        self.assertEqual(identity["platformStatus"]["reviewQueueContract"], "public-review-queue-contract-published")
         self.assertEqual(identity["platformStatus"]["utilityBridge"], "public-utility-bridge-spec-published")
         self.assertEqual(identity["platformStatus"]["productSpec"], "public-product-spec-published")
         self.assertEqual(identity["platformStatus"]["releaseGates"], "public-release-gates-published")
@@ -695,6 +710,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertFalse(identity["releaseGates"]["publicAccountUiLive"])
         self.assertFalse(identity["releaseGates"]["creditsSelfServiceClaimable"])
         self.assertFalse(identity["releaseGates"]["gcaMemberSelfServiceClaimable"])
+        self.assertEqual(identity["reviewQueueContract"]["pageUrl"], REVIEW_QUEUE_PAGE_URL)
+        self.assertEqual(identity["reviewQueueContract"]["url"], REVIEW_QUEUE_URL)
+        self.assertFalse(identity["reviewQueueContract"]["publicQueueLive"])
         self.assertEqual(identity["platformStatus"]["walletSecurityProfile"], "public-wallet-security-profile-published")
         self.assertEqual(identity["platformStatus"]["tokenSafety"], "public-token-safety-checklist-published")
         self.assertEqual(identity["platformStatus"]["thirdPartyAudit"], "not-completed")
@@ -2270,6 +2288,86 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Do not claim mature liquidity, price support, return promises, or completed external audit", page)
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, page)
 
+    def test_review_queue_page_and_json_define_manual_review_contract(self):
+        page = (ROOT / "site" / "review-queue.html").read_text()
+        queue = json.loads((ROOT / "site" / "review-queue.json").read_text())
+
+        self.assertIn("GCA Review Queue Contract", page)
+        self.assertIn("Review Queue JSON", page)
+        self.assertIn("manual review contract", page)
+        self.assertIn("not live today", page)
+        self.assertIn("not a public submission queue", page)
+        self.assertIn("Pre-Registration Intake", page)
+        self.assertIn("Wallet Balance Review", page)
+        self.assertIn("Holder Credit Review", page)
+        self.assertIn("GCA Member Review", page)
+        self.assertIn("Support Case Review", page)
+        self.assertIn("Platform Profile Follow-Up", page)
+        self.assertIn("eth_call", page)
+        self.assertIn("balanceOf", page)
+        self.assertIn("100 Web3 Radar utility credits", page)
+        self.assertIn("GCA Member", page)
+        self.assertIn("Manual support cannot override on-chain wallet-balance verification", page)
+        self.assertIn("Private key or seed phrase", page)
+        self.assertIn("Exchange API secret", page)
+        self.assertIn("withdrawal permission", page)
+        self.assertIn("Custody request", page)
+        self.assertIn(MAINNET_ADDRESS, page)
+        self.assertIn(BASE_USDT_ADDRESS, page)
+        self.assertIn(OFFICIAL_POOL_ADDRESS, page)
+        self.assertNotIn(OLD_WETH_POOL_ADDRESS, page)
+        self.assertNotIn("GCA/WETH", page)
+
+        self.assertEqual(queue["schema"], REVIEW_QUEUE_URL)
+        self.assertEqual(queue["pageUrl"], REVIEW_QUEUE_PAGE_URL)
+        self.assertEqual(queue["status"], "public-review-queue-contract-published")
+        self.assertEqual(queue["currentState"]["currentStage"], "manual-review-contract")
+        self.assertTrue(queue["currentState"]["contractOnly"])
+        self.assertFalse(queue["currentState"]["publicQueueLive"])
+        self.assertFalse(queue["currentState"]["publicSubmissionQueueLive"])
+        self.assertFalse(queue["currentState"]["controlledHttpsAccountUiLive"])
+        self.assertFalse(queue["currentState"]["creditsSelfServiceClaimable"])
+        self.assertFalse(queue["currentState"]["gcaMemberSelfServiceClaimable"])
+        self.assertFalse(queue["currentState"]["ledgerWritesLive"])
+        self.assertFalse(queue["currentState"]["liveTradingEnabled"])
+        self.assertEqual(queue["identity"]["chainId"], 8453)
+        self.assertEqual(queue["identity"]["contractAddress"], MAINNET_ADDRESS)
+        lane_ids = {lane["id"] for lane in queue["reviewLanes"]}
+        for lane_id in {
+            "pre-registration-intake",
+            "wallet-balance-review",
+            "holder-credit-review",
+            "gca-member-review",
+            "support-case-review",
+            "platform-profile-follow-up",
+        }:
+            self.assertIn(lane_id, lane_ids)
+        self.assertTrue(queue["operatorControls"]["walletVerificationReadOnly"])
+        self.assertTrue(queue["operatorControls"]["usesEthCall"])
+        self.assertTrue(queue["operatorControls"]["usesErc20BalanceOf"])
+        self.assertFalse(queue["operatorControls"]["requiresSignatureForBalanceRead"])
+        self.assertFalse(queue["operatorControls"]["requiresTransactionForBalanceRead"])
+        self.assertFalse(queue["operatorControls"]["manualSupportCanOverrideBalanceVerification"])
+        self.assertIn("publicEvidenceReference", queue["operatorControls"]["requiredAuditFields"])
+        self.assertEqual(queue["eligibilityThresholds"]["holderBonusMinimum"], "10000 GCA")
+        self.assertEqual(queue["eligibilityThresholds"]["holderBonusCreditAmount"], "100 Web3 Radar utility credits")
+        self.assertEqual(queue["eligibilityThresholds"]["gcaMemberMinimum"], "1000000 GCA")
+        self.assertIn("private key", queue["doNotCollect"])
+        self.assertIn("seed phrase", queue["doNotCollect"])
+        self.assertIn("exchange API secret", queue["doNotCollect"])
+        self.assertIn("withdrawal permission", queue["doNotCollect"])
+        self.assertEqual(queue["officialMarket"]["pair"], "GCA/USDT")
+        self.assertEqual(queue["officialMarket"]["poolAddress"], OFFICIAL_POOL_ADDRESS)
+        self.assertEqual(queue["officialMarket"]["quoteAssetAddress"], BASE_USDT_ADDRESS)
+        self.assertEqual(queue["officialLinks"]["reviewQueuePage"], REVIEW_QUEUE_PAGE_URL)
+        self.assertEqual(queue["officialLinks"]["reviewQueue"], REVIEW_QUEUE_URL)
+        self.assertEqual(queue["officialLinks"]["accessApi"], ACCESS_API_URL)
+        self.assertEqual(queue["officialLinks"]["memberLedger"], MEMBER_LEDGER_URL)
+        self.assertIn("GCA has published a public review queue contract.", queue["publicClaimBoundaries"]["safeClaims"])
+        self.assertTrue(any("support can override wallet-balance verification" in item for item in queue["publicClaimBoundaries"]["doNotClaim"]))
+        self.assertNotIn(OLD_WETH_POOL_ADDRESS, json.dumps(queue))
+        self.assertNotIn("GCA/WETH", json.dumps(queue))
+
     def test_listing_kit_and_project_json_are_copyable(self):
         kit = (ROOT / "site" / "listing-kit.html").read_text()
         project = json.loads((ROOT / "site" / "project.json").read_text())
@@ -2366,6 +2464,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Access API Contract", kit)
         self.assertIn(ACCESS_API_PAGE_URL, kit)
         self.assertIn(ACCESS_API_URL, kit)
+        self.assertIn("Review Queue", kit)
+        self.assertIn(REVIEW_QUEUE_PAGE_URL, kit)
+        self.assertIn(REVIEW_QUEUE_URL, kit)
         self.assertIn("Token name", kit)
         self.assertIn("GCA / Go China Access", kit)
         self.assertIn(MAINNET_ADDRESS, kit)
@@ -2448,6 +2549,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(project["accessPortalUrl"], ACCESS_URL)
         self.assertEqual(project["accessApiPageUrl"], ACCESS_API_PAGE_URL)
         self.assertEqual(project["accessApiUrl"], ACCESS_API_URL)
+        self.assertEqual(project["reviewQueuePageUrl"], REVIEW_QUEUE_PAGE_URL)
+        self.assertEqual(project["reviewQueueUrl"], REVIEW_QUEUE_URL)
         self.assertEqual(project["releaseGatesPageUrl"], RELEASE_GATES_PAGE_URL)
         self.assertEqual(project["releaseGatesUrl"], RELEASE_GATES_URL)
         self.assertTrue(any(link["platform"] == "X" and link["url"] == X_URL for link in project["officialSocialLinks"]))
@@ -2502,6 +2605,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(project["platformStatus"]["productSpec"], "public-product-spec-published")
         self.assertEqual(project["platformStatus"]["accessPortal"], "public-access-portal-blueprint-published")
         self.assertEqual(project["platformStatus"]["accessApiContract"], "public-access-api-contract-published")
+        self.assertEqual(project["platformStatus"]["reviewQueueContract"], "public-review-queue-contract-published")
         self.assertEqual(project["platformStatus"]["releaseGates"], "public-release-gates-published")
         self.assertEqual(project["platformStatus"]["creditsCatalog"], "public-credits-catalog-published")
         self.assertEqual(project["platformStatus"]["thirdPartyAudit"], "not-completed")
@@ -2521,6 +2625,16 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertFalse(project["accessApiContract"]["publicEndpointLive"])
         self.assertFalse(project["accessApiContract"]["controlledHttpsAccountUiLive"])
         self.assertIn("/gca/wallet-verifications", project["accessApiContract"]["endpoints"])
+        self.assertEqual(project["accessApiContract"]["reviewQueuePage"], REVIEW_QUEUE_PAGE_URL)
+        self.assertEqual(project["accessApiContract"]["reviewQueue"], REVIEW_QUEUE_URL)
+        self.assertEqual(project["reviewQueueContract"]["status"], "public-review-queue-contract-published")
+        self.assertEqual(project["reviewQueueContract"]["pageUrl"], REVIEW_QUEUE_PAGE_URL)
+        self.assertEqual(project["reviewQueueContract"]["url"], REVIEW_QUEUE_URL)
+        self.assertEqual(project["reviewQueueContract"]["currentStage"], "manual-review-contract")
+        self.assertFalse(project["reviewQueueContract"]["publicQueueLive"])
+        self.assertFalse(project["reviewQueueContract"]["publicSubmissionQueueLive"])
+        self.assertFalse(project["reviewQueueContract"]["creditsSelfServiceClaimable"])
+        self.assertIn("wallet-balance-review", project["reviewQueueContract"]["lanes"])
         self.assertEqual(project["listingReadiness"]["status"], "not-ready")
         self.assertIn("CoinGecko tracked listing request", project["listingReadiness"]["defer"])
         self.assertIn("legitimate liquidity depth", project["listingReadiness"]["reason"])
@@ -3246,6 +3360,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(extensions["accessApiPage"], ACCESS_API_PAGE_URL)
         self.assertEqual(extensions["accessApi"], ACCESS_API_URL)
         self.assertEqual(extensions["accessApiStatus"], "public-access-api-contract-published")
+        self.assertEqual(extensions["reviewQueuePage"], REVIEW_QUEUE_PAGE_URL)
+        self.assertEqual(extensions["reviewQueue"], REVIEW_QUEUE_URL)
+        self.assertEqual(extensions["reviewQueueStatus"], "public-review-queue-contract-published")
         self.assertEqual(extensions["creditsCatalogPage"], CREDITS_PAGE_URL)
         self.assertEqual(extensions["creditsCatalog"], CREDITS_URL)
         self.assertEqual(extensions["creditsCatalogStatus"], "public-credits-catalog-published")
@@ -3340,6 +3457,8 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "site" / "access.json",
             ROOT / "site" / "access-api.html",
             ROOT / "site" / "access-api.json",
+            ROOT / "site" / "review-queue.html",
+            ROOT / "site" / "review-queue.json",
             ROOT / "site" / "credits.html",
             ROOT / "site" / "credits.json",
             ROOT / "site" / "release-gates.html",

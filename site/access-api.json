@@ -15,7 +15,8 @@
     "directSubmissionEndpointConfigured": false,
     "creditsSelfServiceClaimable": false,
     "gcaMemberSelfServiceClaimable": false,
-    "liveTradingEnabled": false
+    "liveTradingEnabled": false,
+    "reviewQueueContract": "published-manual-review-contract"
   },
   "securityModel": {
     "controlledHttpsOriginRequired": true,
@@ -258,7 +259,9 @@
     "releaseGates": "https://gcagochina.com/release-gates.json",
     "privacyNoticePage": "https://gcagochina.com/privacy.html",
     "participationTermsPage": "https://gcagochina.com/terms.html",
-    "market": "https://gcagochina.com/markets.html"
+    "market": "https://gcagochina.com/markets.html",
+    "reviewQueuePage": "https://gcagochina.com/review-queue.html",
+    "reviewQueue": "https://gcagochina.com/review-queue.json"
   },
   "publicClaimBoundaries": {
     "safeClaims": [
@@ -266,7 +269,8 @@
       "The access API contract is contract-only until controlled HTTPS backend and account UI are live.",
       "Planned wallet verification uses read-only eth_call and ERC-20 balanceOf.",
       "The API contract forbids private keys, seed phrases, exchange API secrets, withdrawal permission, custody, and risk-control bypass.",
-      "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool."
+      "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool.",
+      "GCA has published a public review queue contract for manual-review lanes before public self-service claiming is live."
     ],
     "doNotClaim": [
       "the access API is live public submission infrastructure before controlled HTTPS deployment",

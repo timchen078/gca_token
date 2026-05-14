@@ -60,6 +60,8 @@ The full fixed supply was minted to the deployer wallet at deployment. The 40/60
 - Access portal blueprint JSON: `https://gcagochina.com/access.json`
 - Access API contract: `https://gcagochina.com/access-api.html`
 - Access API contract JSON: `https://gcagochina.com/access-api.json`
+- Review queue contract: `https://gcagochina.com/review-queue.html`
+- Review queue contract JSON: `https://gcagochina.com/review-queue.json`
 - Credits catalog: `https://gcagochina.com/credits.html`
 - Credits catalog JSON: `https://gcagochina.com/credits.json`
 - Release gates: `https://gcagochina.com/release-gates.html`
@@ -69,6 +71,7 @@ The full fixed supply was minted to the deployer wallet at deployment. The 40/60
 - Planned GCA Member tier: each registered user may verify one wallet holding at least 1,000,000 GCA and qualify for GCA Member status after the access bridge is live
 - Public access portal blueprint: controlled HTTPS account UI, read-only `eth_call` / `balanceOf` GCA balance verification, support review record, 100 credits ledger activation, and GCA Member ledger activation; blueprint only, not live self-service access
 - Public access API contract: planned controlled HTTPS routes for pre-registration, wallet verification, credit ledger, member ledger, support review, and member review; contract only, not live public submission infrastructure
+- Public review queue contract: planned manual-review lanes for pre-registration intake, wallet balance review, holder credit review, GCA Member review, support case review, and platform profile follow-up; contract only, not a live public submission queue
 - Draft credits catalog: Liquidation Replay, Risk Warning Review, Backtest Lab, ENTRY_READY Review, Position Size Calculator, Risk-Control Training, Member Research Notes, and Support Review Queue
 - Product release gates: controlled HTTPS account UI, read-only GCA balance verification, credit ledger activation, member ledger activation, support review queue, risk-control review, and simulation or testnet first
 

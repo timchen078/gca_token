@@ -58,6 +58,8 @@ Deployment notes are in `docs/deploy_base_sepolia.md` and `docs/deploy_base_main
 - Public access portal blueprint JSON: `site/access.json`
 - Public access API contract page: `site/access-api.html`
 - Public access API contract JSON: `site/access-api.json`
+- Public review queue contract page: `site/review-queue.html`
+- Public review queue contract JSON: `site/review-queue.json`
 - Public utility credits catalog page: `site/credits.html`
 - Public utility credits catalog JSON: `site/credits.json`
 - Public product release gates page: `site/release-gates.html`

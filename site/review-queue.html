@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GCA Review Queue Contract | GCA AI Quant Access</title>
+    <meta name="description" content="Public manual review queue contract for GCA pre-registration, read-only wallet balance checks, 100 utility credits, GCA Member status, and support review boundaries.">
+    <link rel="canonical" href="https://gcagochina.com/review-queue.html">
+    <link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">
+    <link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="GCA | Go China Access">
+    <meta property="og:title" content="GCA Review Queue Contract | GCA AI Quant Access">
+    <meta property="og:description" content="Manual-review contract for planned GCA access workflows: intake, wallet verification, credits, member review, and support status handling.">
+    <meta property="og:url" content="https://gcagochina.com/review-queue.html">
+    <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="GCA Review Queue Contract | GCA AI Quant Access">
+    <meta name="twitter:description" content="Manual-review contract for planned GCA access workflows: intake, wallet verification, credits, member review, and support status handling.">
+    <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #111318;
+        --muted: #5f6773;
+        --line: #dfe3ea;
+        --panel: #ffffff;
+        --soft: #f6f7f9;
+        --red: #d71920;
+        --blue: #0052ff;
+        --green: #087f5b;
+        --gold: #8a650d;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: #fbfbfc;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.5;
+      }
+
+      a {
+        color: var(--blue);
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .shell {
+        width: min(1100px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      header {
+        border-bottom: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.94);
+        position: sticky;
+        top: 0;
+        z-index: 2;
+      }
+
+      nav {
+        min-height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--ink);
+        font-weight: 850;
+      }
+
+      .brand img {
+        width: 32px;
+        height: 32px;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 18px;
+        align-items: center;
+        font-size: 14px;
+      }
+
+      main {
+        padding: 42px 0 56px;
+      }
+
+      .eyebrow {
+        color: var(--red);
+        font-size: 13px;
+        font-weight: 850;
+        margin: 0 0 12px;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 0;
+        max-width: 940px;
+        font-size: clamp(40px, 6vw, 72px);
+        line-height: 1;
+        letter-spacing: 0;
+      }
+
+      h2 {
+        margin: 0 0 14px;
+        font-size: 24px;
+      }
+
+      h3 {
+        margin: 0 0 8px;
+        font-size: 17px;
+      }
+
+      .lead {
+        max-width: 880px;
+        margin: 18px 0 0;
+        color: var(--muted);
+        font-size: 18px;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 24px;
+      }
+
+      .button {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        color: var(--ink);
+        min-height: 42px;
+        padding: 10px 14px;
+        font: inherit;
+        font-weight: 750;
+      }
+
+      .button.primary {
+        border-color: var(--red);
+        background: var(--red);
+        color: #fff;
+      }
+
+      .section {
+        margin-top: 30px;
+      }
+
+      .panel,
+      .fact {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+      }
+
+      .panel {
+        padding: 24px;
+      }
+
+      .grid,
+      .two,
+      .facts {
+        display: grid;
+        gap: 14px;
+      }
+
+      .grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .two {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .facts {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        margin-top: 22px;
+      }
+
+      .fact {
+        min-height: 118px;
+        padding: 16px;
+      }
+
+      .label {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 750;
+        text-transform: uppercase;
+      }
+
+      .value {
+        display: block;
+        margin-top: 8px;
+        font-size: 16px;
+        font-weight: 850;
+        overflow-wrap: anywhere;
+      }
+
+      .good {
+        color: var(--green);
+      }
+
+      .pending {
+        color: var(--gold);
+      }
+
+      .note,
+      li {
+        color: var(--muted);
+      }
+
+      .note {
+        margin: 0;
+      }
+
+      .list {
+        display: grid;
+        gap: 10px;
+        margin-top: 12px;
+      }
+
+      .row {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        border-top: 1px solid var(--line);
+        padding-top: 10px;
+      }
+
+      .row:first-child {
+        border-top: 0;
+        padding-top: 0;
+      }
+
+      code {
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        background: var(--soft);
+        padding: 2px 5px;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 0.92em;
+      }
+
+      footer {
+        border-top: 1px solid var(--line);
+        padding: 24px 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      @media (max-width: 860px) {
+        nav {
+          align-items: flex-start;
+          flex-direction: column;
+          padding: 14px 0;
+        }
+
+        .nav-links {
+          flex-wrap: wrap;
+        }
+
+        .grid,
+        .two,
+        .facts {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav class="shell" aria-label="Primary">
+        <a class="brand" href="index.html" aria-label="GCA home">
+          <img src="assets/gca-logo.svg" alt="GCA logo">
+          <span>GCA</span>
+        </a>
+        <div class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="access.html">Access Portal</a>
+          <a href="access-api.html">Access API</a>
+          <a href="review-queue.json">Review Queue JSON</a>
+          <a href="member-ledger.html">Member Ledger</a>
+          <a href="support.html">Support</a>
+        </div>
+      </nav>
+    </header>
+
+    <main class="shell">
+      <section aria-labelledby="title">
+        <p class="eyebrow">Review Queue Contract / 2026-05-14</p>
+        <h1 id="title">GCA Review Queue Contract</h1>
+        <p class="lead">This page defines the planned manual review workflow for GCA pre-registration, read-only wallet balance checks, 100 Web3 Radar utility credits, GCA Member status, and support review while public self-service claiming is not live.</p>
+        <p class="lead">The queue contract is not live today. It is not a public submission queue. It is a public operating contract for future controlled HTTPS account UI and internal operator review, not a place to submit private data or request custody.</p>
+        <div class="actions">
+          <a class="button primary" href="review-queue.json">Review Queue JSON</a>
+          <a class="button primary" href="access-api.html">Access API Contract</a>
+          <a class="button" href="access.html">Access Portal Blueprint</a>
+          <a class="button" href="member-ledger.json">Member Ledger JSON</a>
+          <a class="button" href="support.html">Support & Intake</a>
+        </div>
+        <div class="facts" aria-label="Queue facts">
+          <div class="fact">
+            <span class="label">Current stage</span>
+            <span class="value pending">manual review contract</span>
+          </div>
+          <div class="fact">
+            <span class="label">Public queue</span>
+            <span class="value pending">Not live</span>
+          </div>
+          <div class="fact">
+            <span class="label">Self-service claims</span>
+            <span class="value pending">Not live</span>
+          </div>
+          <div class="fact">
+            <span class="label">Balance check</span>
+            <span class="value">eth_call balanceOf</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="lanesTitle">
+        <h2 id="lanesTitle">Queue Lanes</h2>
+        <div class="grid">
+          <div>
+            <h3>Pre-Registration Intake</h3>
+            <p class="note">Records an account intent from the official member flow after approved HTTPS intake is connected.</p>
+          </div>
+          <div>
+            <h3>Wallet Balance Review</h3>
+            <p class="note">Checks Base Mainnet chain ID 8453, the official GCA contract, and ERC-20 <code>balanceOf</code>.</p>
+          </div>
+          <div>
+            <h3>Holder Credit Review</h3>
+            <p class="note">Marks 10,000 GCA eligibility for a planned one-time 100 Web3 Radar utility credits record.</p>
+          </div>
+          <div>
+            <h3>GCA Member Review</h3>
+            <p class="note">Marks 1,000,000 GCA eligibility for planned GCA Member status after member ledger activation.</p>
+          </div>
+          <div>
+            <h3>Support Case Review</h3>
+            <p class="note">Tracks support notes without overriding wallet verification or product release gates.</p>
+          </div>
+          <div>
+            <h3>Platform Profile Follow-Up</h3>
+            <p class="note">Keeps BaseScan, GeckoTerminal, wallet-warning, and reviewer follow-up separate from user eligibility.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section two" aria-label="Statuses and evidence">
+        <div class="panel">
+          <h2>Allowed Statuses</h2>
+          <div class="list">
+            <div class="row"><span>Received</span><strong>Queued for review</strong></div>
+            <div class="row"><span>Wallet pending</span><strong>Needs read-only balance check</strong></div>
+            <div class="row"><span>Eligible</span><strong>Meets published threshold</strong></div>
+            <div class="row"><span>Below threshold</span><strong>Does not meet threshold</strong></div>
+            <div class="row"><span>Needs more information</span><strong>Non-sensitive correction needed</strong></div>
+            <div class="row"><span>Ledger recorded</span><strong>Written after backend activation</strong></div>
+            <div class="row"><span>Closed</span><strong>Review finished</strong></div>
+          </div>
+        </div>
+        <div class="panel">
+          <h2>Allowed Evidence</h2>
+          <div class="list">
+            <div class="row"><span>Official account record</span><strong>No private keys</strong></div>
+            <div class="row"><span>Base wallet address</span><strong>Public EVM address only</strong></div>
+            <div class="row"><span>Read-only GCA balance</span><strong>eth_call balanceOf</strong></div>
+            <div class="row"><span>Transaction hash</span><strong>Public chain reference</strong></div>
+            <div class="row"><span>Support note</span><strong>No secrets or custody requests</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="controlsTitle">
+        <h2 id="controlsTitle">Operator Controls</h2>
+        <div class="grid">
+          <div>
+            <h3>Identity Checks</h3>
+            <p class="note">Use only Base Mainnet chain ID 8453 and contract <code>0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6</code>.</p>
+          </div>
+          <div>
+            <h3>Read-Only Verification</h3>
+            <p class="note">Wallet review must use read-only <code>eth_call</code> and ERC-20 <code>balanceOf</code>; it must not request signatures or transactions for balance reading.</p>
+          </div>
+          <div>
+            <h3>Audit Trail</h3>
+            <p class="note">Each queue action should record reviewId, registrationId, lane, status, updatedAt, reviewer note, and public evidence reference when the backend is live.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section two" aria-label="Safety boundaries">
+        <div class="panel">
+          <h2>Do Not Collect</h2>
+          <ul>
+            <li>Private key or seed phrase.</li>
+            <li>Exchange API secret or withdrawal permission.</li>
+            <li>One-time code or recovery phrase.</li>
+            <li>Custody request, fund-transfer request, or live trading instruction.</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h2>Do Not Claim</h2>
+          <ul>
+            <li>Do not claim 100 utility credits are self-service claimable before controlled account UI and ledgers are live.</li>
+            <li>Do not claim GCA Member status is active before member ledger activation.</li>
+            <li>Manual support cannot override on-chain wallet-balance verification.</li>
+            <li>Do not claim exchange listing approval, completed third-party audit, mature liquidity, price support, or trading outcomes.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="marketTitle">
+        <h2 id="marketTitle">Official Market Reference</h2>
+        <div class="list">
+          <div class="row"><span>Pair</span><strong>GCA/USDT</strong></div>
+          <div class="row"><span>Network</span><strong>Base Mainnet</strong></div>
+          <div class="row"><span>Pool</span><strong><code>0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0</code></strong></div>
+          <div class="row"><span>USDT</span><strong><code>0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2</code></strong></div>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="linksTitle">
+        <h2 id="linksTitle">Public References</h2>
+        <div class="list">
+          <div class="row"><span><a href="review-queue.json">Review Queue JSON</a></span><strong>manual review contract</strong></div>
+          <div class="row"><span><a href="access-api.html">Access API Contract</a></span><strong>planned backend routes</strong></div>
+          <div class="row"><span><a href="member-ledger.html">Member Ledger Schema</a></span><strong>future ledger records</strong></div>
+          <div class="row"><span><a href="support.html">Support & Intake</a></span><strong>manual support route</strong></div>
+          <div class="row"><span><a href="release-gates.html">Release Gates</a></span><strong>go-live boundaries</strong></div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="shell">GCA Review Queue Contract is a public operating contract only. It does not make public account UI, credit claiming, member claiming, custody, withdrawals, or live trading available.</div>
+    </footer>
+  </body>
+</html>
