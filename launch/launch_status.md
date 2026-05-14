@@ -52,7 +52,7 @@
 - Public privacy notice and participation terms prepared at `https://gcagochina.com/privacy.html`, `https://gcagochina.com/privacy.json`, `https://gcagochina.com/terms.html`, and `https://gcagochina.com/terms.json` for pre-registration data handling, wallet verification boundaries, and planned account-level service access.
 - Member pre-registration page now has a configurable direct submission endpoint placeholder; collection remains copy/download/email until an approved HTTPS endpoint is configured.
 - Web3 Radar local access bridge paths are prepared: `GET /gca/member-access`, `POST /gca/pre-registrations`, `POST /gca/wallet-verifications`, `GET /gca/credit-ledger`, `GET /gca/member-ledger`, and `GET /gca/member-review`; the public static page is not connected to them yet.
-- Public utility thesis page prepared at `https://gcagochina.com/utility.html`.
+- Public utility thesis page and utility bridge spec prepared at `https://gcagochina.com/utility.html` and `https://gcagochina.com/utility.json`.
 - Official verify page prepared at `https://gcagochina.com/verify.html` to centralize canonical contract, Base Mainnet chain ID, official GCA/USDT pool, website, Telegram, metadata files, and anti-scam link checks.
 - Public project status page prepared at `https://gcagochina.com/status.html`.
 - Public listing kit and machine-readable project JSON prepared at `https://gcagochina.com/listing-kit.html` and `https://gcagochina.com/project.json`.

@@ -4,21 +4,21 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>GCA Utility Thesis | Go China Access</title>
-    <meta name="description" content="GCA planned utility thesis: Go China macro narrative plus access to non-custodial quant risk tools, reports, backtests, alerts, and education.">
+    <meta name="description" content="GCA planned utility bridge: Go China macro narrative plus access to non-custodial quant risk tools, reports, backtests, alerts, education, and member ledgers.">
     <link rel="canonical" href="https://gcagochina.com/utility.html">
     <link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">
     <link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="GCA | Go China Access">
     <meta property="og:title" content="GCA Utility Thesis | Go China Access">
-    <meta property="og:description" content="GCA planned utility thesis: Go China macro narrative plus access to non-custodial quant risk tools, reports, backtests, alerts, and education.">
+    <meta property="og:description" content="GCA planned utility bridge: Go China macro narrative plus access to non-custodial quant risk tools, reports, backtests, alerts, education, and member ledgers.">
     <meta property="og:url" content="https://gcagochina.com/utility.html">
     <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="GCA Utility Thesis | Go China Access">
-    <meta name="twitter:description" content="GCA planned utility thesis: Go China macro narrative plus access to non-custodial quant risk tools, reports, backtests, alerts, and education.">
+    <meta name="twitter:description" content="GCA planned utility bridge: Go China macro narrative plus access to non-custodial quant risk tools, reports, backtests, alerts, education, and member ledgers.">
     <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
     <style>
       :root {
@@ -127,6 +127,30 @@
 
       .section {
         margin-top: 30px;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 24px;
+      }
+
+      .button {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        color: var(--ink);
+        min-height: 42px;
+        padding: 10px 14px;
+        font: inherit;
+        font-weight: 750;
+      }
+
+      .button.primary {
+        border-color: var(--red);
+        background: var(--red);
+        color: #fff;
       }
 
       .panel,
@@ -275,6 +299,7 @@
           <a href="faq.html">FAQ</a>
           <a href="status.html">Status</a>
           <a href="narrative.html">Narrative</a>
+          <a href="utility.json">Utility JSON</a>
           <a href="listing-kit.html">Listing Kit</a>
           <a href="members.html">Members</a>
           <a href="whitepaper.html">Whitepaper</a>
@@ -289,6 +314,12 @@
         <p class="lead">The Go China narrative remains the public macro story. The product direction is to connect that narrative to a real user problem: crypto traders lose money through liquidation, over-sizing, revenge trading, weak backtesting, and missing risk controls.</p>
         <p class="lead">GCA can become the access layer for Web3 Radar-style non-custodial quant tools. The token should unlock useful workflow access, not promise returns or distribute platform revenue.</p>
         <p class="lead">The optimized public framing is simple: Narrative meets risk control. Go China Access creates the attention hook; China Narrative Radar, Liquidation Replay, ENTRY_READY Review, GCA Member Club, and Risk First Trading give it product language.</p>
+        <div class="actions">
+          <a class="button primary" href="utility.json">Utility JSON</a>
+          <a class="button" href="member-ledger.html">Member Ledger</a>
+          <a class="button" href="members.html">Member Pre-Registration</a>
+          <a class="button" href="roadmap.html">Roadmap</a>
+        </div>
       </section>
 
       <section class="section two" aria-label="Positioning">
@@ -407,6 +438,18 @@
             <h3>Phase 3: Public Account UI</h3>
             <p class="note">Expose the verified backend only after controlled HTTPS deployment, privacy rules, account UI, and support workflows are ready.</p>
           </div>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="bridgeSpecTitle">
+        <h2 id="bridgeSpecTitle">Utility Bridge Specification</h2>
+        <p class="note">The public bridge spec is machine-readable at <a href="utility.json">utility.json</a>. It records the same rules as this page: read-only wallet verification, no custody, no withdrawal permission, no exchange API secret collection, no platform revenue distribution, and no self-service credits or member status before controlled HTTPS account UI is live.</p>
+        <div class="list">
+          <div class="row"><span>Pre-registration</span><strong>static local packet ready</strong></div>
+          <div class="row"><span>Wallet balance verification</span><strong>planned controlled HTTPS backend</strong></div>
+          <div class="row"><span>Credit ledger</span><strong>schema published; public claim not connected</strong></div>
+          <div class="row"><span>GCA Member ledger</span><strong>schema published; public claim not connected</strong></div>
+          <div class="row"><span>Product access</span><strong>planned service access only</strong></div>
         </div>
       </section>
 

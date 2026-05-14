@@ -67,6 +67,7 @@
   "participationTermsPageUrl": "https://gcagochina.com/terms.html",
   "participationTermsUrl": "https://gcagochina.com/terms.json",
   "utilityThesisUrl": "https://gcagochina.com/utility.html",
+  "utilityThesisJsonUrl": "https://gcagochina.com/utility.json",
   "whitepaperUrl": "https://gcagochina.com/whitepaper.html",
   "logoSvgUrl": "https://gcagochina.com/assets/gca-logo.svg",
   "logoPngUrl": "https://gcagochina.com/assets/gca-logo.png",
@@ -167,6 +168,7 @@
     "geckoTerminalTokenInfo": "approved-2026-05-11",
     "narrativeSystem": "public-narrative-system-published",
     "weeklyGoChinaRadar": "weekly-go-china-radar-issue-002-published",
+    "utilityBridge": "public-utility-bridge-spec-published",
     "coinGeckoTrackedListing": "not-submitted",
     "coinMarketCapTrackedListing": "not-submitted",
     "thirdPartyAudit": "not-completed"
@@ -199,6 +201,26 @@
       "support review queue and audit trail"
     ],
     "publicSelfServiceClaimsLive": false
+  },
+  "utilityBridge": {
+    "status": "public-utility-bridge-spec-published",
+    "pageUrl": "https://gcagochina.com/utility.html",
+    "url": "https://gcagochina.com/utility.json",
+    "connectedProduct": "Web3 Radar non-custodial quant risk toolkit",
+    "publicSelfServiceClaimsLive": false,
+    "requiresControlledWalletVerification": true,
+    "notUtility": [
+      "custody",
+      "withdrawal permission",
+      "private key or seed phrase collection",
+      "exchange API secret collection",
+      "platform revenue distribution",
+      "cash, token, income, or reimbursement claim",
+      "automatic live trading permission",
+      "return promise",
+      "price target",
+      "risk-control bypass"
+    ]
   },
   "communityKit": {
     "status": "public-community-kit-published",

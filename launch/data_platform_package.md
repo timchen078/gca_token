@@ -113,6 +113,7 @@ This package prepares GCA information for token data and DEX discovery platforms
 - FAQ: `https://gcagochina.com/faq.html`
 - Member pre-registration: `https://gcagochina.com/members.html`
 - Utility thesis: `https://gcagochina.com/utility.html`
+- Utility bridge JSON: `https://gcagochina.com/utility.json`
 - Logo SVG: `https://gcagochina.com/assets/gca-logo.svg`
 - Logo PNG: `https://gcagochina.com/assets/gca-logo.png`
 - Whitepaper: `https://gcagochina.com/whitepaper.html`
@@ -187,7 +188,7 @@ GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stand
 
 ## Utility Positioning
 
-Suitable GCA utility is access-based: reports, credits, education, backtest usage, signal review, position calculators, and membership discounts. It should not be positioned as custody, redemption rights, platform revenue distribution, automatic live trading permission, or a return promise.
+Suitable GCA utility is access-based: reports, credits, education, backtest usage, signal review, position calculators, and membership discounts. The public utility bridge spec is published at `https://gcagochina.com/utility.json`. It should not be positioned as custody, redemption rights, platform revenue distribution, automatic live trading permission, or a return promise.
 
 Verified first campaign backend: each registered user may verify one wallet holding at least 10,000 GCA and receive a one-time 100 Web3 Radar utility credits ledger record. This should be described only as account-level service credits for reports, backtests, risk warnings, ENTRY_READY signal review, calculators, or education access; it is not cash, tokens, income, reimbursement, or trading permission.
 

@@ -39,6 +39,8 @@ Allow: /privacy.html
 Allow: /privacy.json
 Allow: /terms.html
 Allow: /terms.json
+Allow: /utility.html
+Allow: /utility.json
 Allow: /.well-known/gca-token.json
 Allow: /.well-known/wallet-security.json
 Allow: /.well-known/security.txt

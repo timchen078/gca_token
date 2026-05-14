@@ -22,6 +22,7 @@
   "logoUploadFile": "site/assets/gca-logo.png",
   "whitepaperUrl": "https://gcagochina.com/whitepaper.html",
   "utilityThesisUrl": "https://gcagochina.com/utility.html",
+  "utilityThesisJsonUrl": "https://gcagochina.com/utility.json",
   "explorerUrl": "https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "officialEmail": "GCAgochina@outlook.com",
   "officialEmailUse": "Submitted after the owner confirmed use of this email and completed OTP verification in the browser.",

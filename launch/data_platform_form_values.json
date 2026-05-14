@@ -63,6 +63,7 @@
   "participationTermsPageUrl": "https://gcagochina.com/terms.html",
   "participationTermsUrl": "https://gcagochina.com/terms.json",
   "utilityThesisUrl": "https://gcagochina.com/utility.html",
+  "utilityThesisJsonUrl": "https://gcagochina.com/utility.json",
   "logoUrl": "https://gcagochina.com/assets/gca-logo.svg",
   "logoPngUrl": "https://gcagochina.com/assets/gca-logo.png",
   "whitepaperUrl": "https://gcagochina.com/whitepaper.html",
@@ -81,7 +82,8 @@
   "shortDescription": "GCA, short for Go China Access, is a fixed-supply ERC-20 token on Base Mainnet. It is a concept-stage community direction focused on the Go China macro narrative, bilingual Web3 education, public market research, and planned access to non-custodial quant risk tools.",
   "longDescription": "GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stands for Go China Access, a concept-stage community direction focused on the Go China macro narrative, bilingual Web3 education, public market research, and planned access to non-custodial quant risk tools. The intended Web3 Radar bridge is to make GCA an access and membership layer for liquidation replay reports, risk-warning credits, realistic backtests, ENTRY_READY signal review, position-size calculators, subscription discounts, and risk-control training. The contract created 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls. The official public pool is the Base Mainnet Uniswap v4 GCA/USDT pool, and the project has a disclosed owner-held reserve wallet. Third-party audit quote requests were submitted and then deferred by owner decision. The project is early-stage and should not be described as externally audited, price-backed, yield-bearing, or backed by guaranteed liquidity.",
   "utilityPositioning": {
-    "status": "local-verified-access-backend-ready-public-claim-not-connected",
+    "status": "public-utility-bridge-spec-published",
+    "specUrl": "https://gcagochina.com/utility.json",
     "connectedProduct": "Web3 Radar non-custodial quant risk toolkit",
     "suitableUtility": [
       "liquidation replay reports",

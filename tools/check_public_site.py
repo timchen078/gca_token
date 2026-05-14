@@ -36,6 +36,8 @@ NARRATIVE_PAGE_URL = "https://gcagochina.com/narrative.html"
 NARRATIVE_URL = "https://gcagochina.com/narrative.json"
 RADAR_PAGE_URL = "https://gcagochina.com/radar.html"
 RADAR_URL = "https://gcagochina.com/radar.json"
+UTILITY_PAGE_URL = "https://gcagochina.com/utility.html"
+UTILITY_URL = "https://gcagochina.com/utility.json"
 PRIVACY_NOTICE_PAGE_URL = "https://gcagochina.com/privacy.html"
 PRIVACY_NOTICE_URL = "https://gcagochina.com/privacy.json"
 PARTICIPATION_TERMS_PAGE_URL = "https://gcagochina.com/terms.html"
@@ -153,6 +155,7 @@ def validate_root(text: str) -> None:
     assert_contains(text, "Community Kit", label)
     assert_contains(text, "Narrative System", label)
     assert_contains(text, "Weekly Radar", label)
+    assert_contains(text, "Utility JSON", label)
     assert_contains(text, "Privacy Notice", label)
     assert_contains(text, "Participation Terms", label)
     assert_contains(text, MAINNET_ADDRESS, label)
@@ -734,6 +737,80 @@ def validate_radar_json(text: str) -> None:
     assert_not_contains(json.dumps(payload), "GCA/WETH", label)
 
 
+def validate_utility_page(text: str) -> None:
+    label = "/utility.html"
+    assert_contains(text, "GCA Utility Thesis", label)
+    assert_contains(text, "Utility JSON", label)
+    assert_contains(text, "Utility Bridge Specification", label)
+    assert_contains(text, "Web3 Radar-style non-custodial quant tools", label)
+    assert_contains(text, "read-only wallet verification", label)
+    assert_contains(text, "no custody", label)
+    assert_contains(text, "no withdrawal permission", label)
+    assert_contains(text, "no exchange API secret collection", label)
+    assert_contains(text, "no platform revenue distribution", label)
+    assert_contains(text, "controlled HTTPS account UI", label)
+    assert_contains(text, "100 Web3 Radar utility credits", label)
+    assert_contains(text, "GCA Member status", label)
+    assert_contains(text, MAINNET_ADDRESS, label)
+    assert_no_forbidden_public_claims(text, label)
+
+
+def validate_utility_json(text: str) -> None:
+    label = "/utility.json"
+    payload = load_json(text, label)
+    positioning = payload.get("positioning", {})
+    holder_bonus = payload.get("holderBonus", {})
+    member = payload.get("gcaMember", {})
+    market = payload.get("officialMarket", {})
+    links = payload.get("officialLinks", {})
+    boundaries = payload.get("publicClaimBoundaries", {})
+
+    if payload.get("schema") != UTILITY_URL:
+        raise SiteCheckError(f"{label}: wrong schema")
+    if payload.get("pageUrl") != UTILITY_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong pageUrl")
+    if payload.get("status") != "public-utility-bridge-spec-published":
+        raise SiteCheckError(f"{label}: wrong status")
+    if payload.get("chainId") != 8453:
+        raise SiteCheckError(f"{label}: wrong chainId")
+    if payload.get("contractAddress") != MAINNET_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong contractAddress")
+    if positioning.get("connectedProduct") != "Web3 Radar non-custodial quant risk toolkit":
+        raise SiteCheckError(f"{label}: wrong connectedProduct")
+    if "read-only ERC-20 balance checks" not in " ".join(payload.get("bridgePrinciples", [])):
+        raise SiteCheckError(f"{label}: missing read-only verification principle")
+    if holder_bonus.get("minimumHolding") != "10000 GCA":
+        raise SiteCheckError(f"{label}: wrong holder bonus minimum")
+    if holder_bonus.get("creditAmount") != "100 Web3 Radar utility credits":
+        raise SiteCheckError(f"{label}: wrong holder bonus credit amount")
+    if "risk-control bypass" not in holder_bonus.get("notCreditUse", ""):
+        raise SiteCheckError(f"{label}: missing holder bonus risk boundary")
+    if member.get("minimumHolding") != "1000000 GCA":
+        raise SiteCheckError(f"{label}: wrong member minimum")
+    if "higher utility credit limits" not in member.get("memberAccess", ""):
+        raise SiteCheckError(f"{label}: missing member access scope")
+    for item in ("custody", "withdrawal permission", "exchange API secret collection", "platform revenue distribution", "return promise", "risk-control bypass"):
+        if item not in payload.get("notUtility", []):
+            raise SiteCheckError(f"{label}: missing notUtility item {item}")
+    if market.get("pair") != "GCA/USDT":
+        raise SiteCheckError(f"{label}: wrong pair")
+    if market.get("poolAddress") != OFFICIAL_POOL_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong poolAddress")
+    if market.get("quoteAssetAddress") != BASE_USDT_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong quoteAssetAddress")
+    if links.get("utilityPage") != UTILITY_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong utilityPage")
+    if links.get("utilityJson") != UTILITY_URL:
+        raise SiteCheckError(f"{label}: wrong utilityJson")
+    if "GCA has published a public utility bridge specification." not in boundaries.get("safeClaims", []):
+        raise SiteCheckError(f"{label}: missing utility safe claim")
+    if not any("credits or member status are cash" in item for item in boundaries.get("doNotClaim", [])):
+        raise SiteCheckError(f"{label}: missing credit/member boundary")
+    assert_no_forbidden_public_claims(json.dumps(payload), label)
+    assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
+    assert_not_contains(json.dumps(payload), "GCA/WETH", label)
+
+
 def validate_privacy_page(text: str) -> None:
     label = "/privacy.html"
     assert_contains(text, "GCA Privacy Notice", label)
@@ -1036,6 +1113,10 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong participationTermsPageUrl")
     if payload.get("participationTermsUrl") != PARTICIPATION_TERMS_URL:
         raise SiteCheckError(f"{label}: wrong participationTermsUrl")
+    if payload.get("utilityThesisUrl") != UTILITY_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong utilityThesisUrl")
+    if payload.get("utilityThesisJsonUrl") != UTILITY_URL:
+        raise SiteCheckError(f"{label}: wrong utilityThesisJsonUrl")
     if payload.get("walletWarningEvidencePageUrl") != WALLET_WARNING_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong walletWarningEvidencePageUrl")
     if payload.get("walletWarningEvidenceUrl") != WALLET_WARNING_URL:
@@ -1109,6 +1190,14 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: unexpected roadmap status")
     if payload.get("roadmap", {}).get("publicSelfServiceClaimsLive") is not False:
         raise SiteCheckError(f"{label}: roadmap must keep self-service claims false")
+    if payload.get("utilityBridge", {}).get("status") != "public-utility-bridge-spec-published":
+        raise SiteCheckError(f"{label}: unexpected utility bridge status")
+    if payload.get("utilityBridge", {}).get("url") != UTILITY_URL:
+        raise SiteCheckError(f"{label}: wrong utility bridge url")
+    if payload.get("utilityBridge", {}).get("publicSelfServiceClaimsLive") is not False:
+        raise SiteCheckError(f"{label}: utility bridge must keep self-service claims false")
+    if payload.get("utilityBridge", {}).get("requiresControlledWalletVerification") is not True:
+        raise SiteCheckError(f"{label}: utility bridge must require controlled wallet verification")
     if payload.get("communityKit", {}).get("status") != "public-community-kit-published":
         raise SiteCheckError(f"{label}: unexpected community kit status")
     if payload.get("communityKit", {}).get("officialTelegram") != "https://t.me/gcagochinaofficial":
@@ -1211,6 +1300,10 @@ def validate_tokenlist_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong participationTermsPage")
     if extensions.get("participationTerms") != PARTICIPATION_TERMS_URL:
         raise SiteCheckError(f"{label}: wrong participationTerms")
+    if extensions.get("utilityThesis") != UTILITY_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong utilityThesis")
+    if extensions.get("utilityThesisJson") != UTILITY_URL:
+        raise SiteCheckError(f"{label}: wrong utilityThesisJson")
     if extensions.get("walletWarningEvidencePage") != WALLET_WARNING_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong walletWarningEvidencePage")
     if extensions.get("walletWarningEvidence") != WALLET_WARNING_URL:
@@ -1269,6 +1362,8 @@ def validate_tokenlist_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong narrativeSystemStatus")
     if extensions.get("weeklyRadarStatus") != "weekly-go-china-radar-issue-002-published":
         raise SiteCheckError(f"{label}: wrong weeklyRadarStatus")
+    if extensions.get("utilityBridgeStatus") != "public-utility-bridge-spec-published":
+        raise SiteCheckError(f"{label}: wrong utilityBridgeStatus")
     if extensions.get("walletSecurityProfileStatus") != "public-wallet-security-profile-published":
         raise SiteCheckError(f"{label}: wrong walletSecurityProfileStatus")
     if extensions.get("tokenSafetyStatus") != "public-token-safety-checklist-published":
@@ -1335,6 +1430,10 @@ def validate_well_known_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong participationTermsPage")
     if urls.get("participationTerms") != PARTICIPATION_TERMS_URL:
         raise SiteCheckError(f"{label}: wrong participationTerms")
+    if urls.get("utilityThesis") != UTILITY_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong utilityThesis")
+    if urls.get("utilityThesisJson") != UTILITY_URL:
+        raise SiteCheckError(f"{label}: wrong utilityThesisJson")
     if urls.get("walletWarningEvidencePage") != WALLET_WARNING_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong walletWarningEvidencePage")
     if urls.get("walletWarningEvidence") != WALLET_WARNING_URL:
@@ -1395,6 +1494,8 @@ def validate_well_known_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong narrativeSystem status")
     if payload.get("platformStatus", {}).get("weeklyGoChinaRadar") != "weekly-go-china-radar-issue-002-published":
         raise SiteCheckError(f"{label}: wrong weeklyGoChinaRadar status")
+    if payload.get("platformStatus", {}).get("utilityBridge") != "public-utility-bridge-spec-published":
+        raise SiteCheckError(f"{label}: wrong utilityBridge status")
     if payload.get("platformStatus", {}).get("walletSecurityProfile") != "public-wallet-security-profile-published":
         raise SiteCheckError(f"{label}: wrong walletSecurityProfile status")
     if payload.get("platformStatus", {}).get("tokenSafety") != "public-token-safety-checklist-published":
@@ -2399,6 +2500,8 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/privacy.json",
         "https://gcagochina.com/terms.html",
         "https://gcagochina.com/terms.json",
+        "https://gcagochina.com/utility.html",
+        "https://gcagochina.com/utility.json",
         "https://gcagochina.com/supply.json",
         "https://gcagochina.com/listing-readiness.html",
         "https://gcagochina.com/listing-readiness.json",
@@ -2452,6 +2555,8 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /privacy.json", label)
     assert_contains(text, "Allow: /terms.html", label)
     assert_contains(text, "Allow: /terms.json", label)
+    assert_contains(text, "Allow: /utility.html", label)
+    assert_contains(text, "Allow: /utility.json", label)
     assert_contains(text, "Allow: /.well-known/gca-token.json", label)
     assert_contains(text, "Allow: /.well-known/wallet-security.json", label)
     assert_contains(text, "Allow: /.well-known/security.txt", label)
@@ -2497,6 +2602,8 @@ CHECKS: list[EndpointCheck] = [
     ("/narrative.json", validate_narrative_json),
     ("/radar.html", validate_radar_page),
     ("/radar.json", validate_radar_json),
+    ("/utility.html", validate_utility_page),
+    ("/utility.json", validate_utility_json),
     ("/privacy.html", validate_privacy_page),
     ("/privacy.json", validate_privacy_json),
     ("/terms.html", validate_terms_page),

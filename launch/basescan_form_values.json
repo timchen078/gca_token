@@ -21,6 +21,7 @@
   "tokenStandard": "ERC-20",
   "website": "https://gcagochina.com/",
   "utilityThesisUrl": "https://gcagochina.com/utility.html",
+  "utilityThesisJsonUrl": "https://gcagochina.com/utility.json",
   "officialMarketPool": {
     "pair": "GCA/USDT",
     "dex": "Uniswap v4",

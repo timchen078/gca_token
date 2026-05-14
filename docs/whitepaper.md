@@ -5,6 +5,7 @@ Version: 0.5
 Official buy guide: `https://gcagochina.com/buy.html`
 
 Utility thesis: `https://gcagochina.com/utility.html`
+Utility bridge spec: `https://gcagochina.com/utility.json`
 Narrative system: `https://gcagochina.com/narrative.html`
 Weekly Go China Radar: `https://gcagochina.com/radar.html`
 
