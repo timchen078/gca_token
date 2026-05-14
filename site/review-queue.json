@@ -15,7 +15,8 @@
     "gcaMemberSelfServiceClaimable": false,
     "ledgerWritesLive": false,
     "liveTradingEnabled": false,
-    "operationsRunbook": "public-access-operations-runbook-published"
+    "operationsRunbook": "public-access-operations-runbook-published",
+    "memberPacketVersion": "gca_member_preregistration_v2"
   },
   "identity": {
     "network": "Base Mainnet",
@@ -96,6 +97,9 @@
     "read-only GCA balance from eth_call balanceOf",
     "public transaction hash",
     "public purchase or transfer transaction hash used for 30-day holding-period review",
+    "member holding start date from gca_member_preregistration_v2 packet",
+    "0x-format evidence transaction hash check",
+    "member evidence note",
     "non-sensitive support note",
     "public platform review reference"
   ],
@@ -108,6 +112,7 @@
     "requiresSignatureForBalanceRead": false,
     "requiresTransactionForBalanceRead": false,
     "manualSupportCanOverrideBalanceVerification": false,
+    "memberPacketVersionMustEqual": "gca_member_preregistration_v2",
     "structuredAuditTrailRequired": true,
     "requiredAuditFields": [
       "reviewId",
@@ -115,6 +120,11 @@
       "lane",
       "status",
       "updatedAt",
+      "holdingStartDate",
+      "holdingPeriodDaysVerified",
+      "evidenceTxHash",
+      "evidenceTxHashFormatOk",
+      "memberBenefitReviewEvidenceStatus",
       "reviewerNote",
       "publicEvidenceReference"
     ]
@@ -128,6 +138,26 @@
     "gcaMemberBenefitSource": "project or owner-held reserve transfer only; no new minting",
     "walletLimit": "one verified wallet per registered user",
     "registeredUserLimit": "one holder bonus, one member status review, and one member benefit review per registered user"
+  },
+  "memberBenefitReviewEvidence": {
+    "packetVersion": "gca_member_preregistration_v2",
+    "sourcePage": "https://gcagochina.com/members.html",
+    "status": "user_supplied_pending_review",
+    "purpose": "GCA Member 1,000,000 GCA / 30-day holding-period review",
+    "minimumHolding": "1000000 GCA",
+    "minimumHoldingPeriod": "30 consecutive days",
+    "requiredFields": [
+      "holdingStartDate",
+      "daysSinceHoldingStartPreview",
+      "holdingPeriodPreviewEligible",
+      "evidenceTxHash",
+      "evidenceTxHashFormatOk",
+      "evidenceNote"
+    ],
+    "holdingStartDateSource": "user-entered date in the member pre-registration packet",
+    "evidenceTxHashFormat": "0x-prefixed 64-byte hexadecimal transaction hash",
+    "finalEligibilityStillRequiresSupportAndLedgerReview": true,
+    "doesNotCreateLedgerRecord": true
   },
   "doNotCollect": [
     "private key",

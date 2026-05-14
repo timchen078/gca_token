@@ -30,6 +30,9 @@
     "Base wallet address",
     "transaction hash",
     "public purchase or transfer transaction hash for holding-period evidence",
+    "GCA Member holding start date",
+    "GCA Member evidence note",
+    "gca_member_preregistration_v2 memberBenefitReviewEvidence packet fields",
     "pool link",
     "wallet-warning screenshot",
     "generated member packet JSON"
@@ -46,6 +49,15 @@
   ],
   "supportWorkflow": {
     "publicIntakeStatus": "manual-only",
+    "memberPacketVersion": "gca_member_preregistration_v2",
+    "memberBenefitReviewEvidenceFields": [
+      "holdingStartDate",
+      "daysSinceHoldingStartPreview",
+      "holdingPeriodPreviewEligible",
+      "evidenceTxHash",
+      "evidenceTxHashFormatOk",
+      "evidenceNote"
+    ],
     "targetFirstResponse": "5-10 business days after controlled intake is live; not a promise",
     "reviewStatuses": [
       "received",
@@ -91,6 +103,8 @@
     "participationTerms": "https://gcagochina.com/terms.html",
     "memberPreRegistration": "https://gcagochina.com/members.html",
     "memberProgramRules": "https://gcagochina.com/member-program.json",
+    "memberBenefitReview": "https://gcagochina.com/member-benefit.html",
+    "memberBenefitReviewJson": "https://gcagochina.com/member-benefit.json",
     "memberLedgerPage": "https://gcagochina.com/member-ledger.html",
     "memberLedgerSchema": "https://gcagochina.com/member-ledger.json",
     "listingKit": "https://gcagochina.com/listing-kit.html",

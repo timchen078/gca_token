@@ -341,7 +341,7 @@
         <div class="grid">
           <div>
             <h3>1. Intake Triage</h3>
-            <p class="note">Accept only non-sensitive account intent, public wallet address, declared GCA balance, program intent, and public transaction references.</p>
+            <p class="note">Accept only non-sensitive account intent, public wallet address, declared GCA balance, program intent, public transaction references, GCA Member holding start date, and member evidence note from the <code>gca_member_preregistration_v2</code> packet.</p>
           </div>
           <div>
             <h3>2. Identity Check</h3>
@@ -353,7 +353,7 @@
           </div>
           <div>
             <h3>4. Holding Period Review</h3>
-            <p class="note">For GCA Member benefit review, verify public purchase or transfer evidence showing at least 1,000,000 GCA held continuously for 30 days.</p>
+            <p class="note">For GCA Member benefit review, verify <code>holdingStartDate</code>, <code>evidenceTxHash</code>, <code>evidenceTxHashFormatOk</code>, and public purchase or transfer evidence showing at least 1,000,000 GCA held continuously for 30 days.</p>
           </div>
           <div>
             <h3>5. Eligibility Decision</h3>
@@ -388,7 +388,12 @@
             <div class="row"><span>status</span><strong>Allowed queue status</strong></div>
             <div class="row"><span>walletAddress</span><strong>Public EVM address</strong></div>
             <div class="row"><span>checkedAt</span><strong>Balance check time</strong></div>
+            <div class="row"><span>holdingStartDate</span><strong>User-supplied member evidence date</strong></div>
             <div class="row"><span>holdingPeriodDaysVerified</span><strong>Member holding evidence</strong></div>
+            <div class="row"><span>holdingPeriodPreviewEligible</span><strong>Packet preview flag</strong></div>
+            <div class="row"><span>evidenceTxHash</span><strong>Public purchase or transfer tx</strong></div>
+            <div class="row"><span>evidenceTxHashFormatOk</span><strong><code>0x</code> format check</strong></div>
+            <div class="row"><span>memberBenefitReviewEvidenceStatus</span><strong>Pending support and ledger review</strong></div>
             <div class="row"><span>reviewerNote</span><strong>No secrets</strong></div>
             <div class="row"><span>publicEvidenceReference</span><strong>Public support, reviewer, or chain reference</strong></div>
           </div>
@@ -401,6 +406,9 @@
             <div class="row"><span>GCA balance</span><strong>Read-only <code>eth_call</code> <code>balanceOf</code></strong></div>
             <div class="row"><span>Transaction hash</span><strong>Public chain reference</strong></div>
             <div class="row"><span>Holding-period proof</span><strong>Public purchase or transfer transaction hash</strong></div>
+            <div class="row"><span>Holding start date</span><strong><code>gca_member_preregistration_v2</code> packet date</strong></div>
+            <div class="row"><span>Evidence tx hash format</span><strong><code>0x</code> + 64 hex characters</strong></div>
+            <div class="row"><span>Member evidence note</span><strong>Non-sensitive context only</strong></div>
             <div class="row"><span>Support note</span><strong>Non-sensitive note only</strong></div>
             <div class="row"><span>Review reference</span><strong>Public reviewer or platform reference</strong></div>
           </div>
@@ -453,7 +461,7 @@
       <section class="section two" aria-label="Safe response language">
         <div class="panel">
           <h2>Safe Reply Template</h2>
-          <p class="note">Your request has been received for manual review. GCA access claiming is not self-service yet. We can review your public Base wallet address with a read-only GCA balance check and, for member benefit review, public evidence of 1,000,000 GCA held for 30 consecutive days. We will never ask for private keys, seed phrases, exchange API secrets, withdrawal permission, custody, or fund transfers.</p>
+          <p class="note">Your request has been received for manual review. GCA access claiming is not self-service yet. We can review your public Base wallet address with a read-only GCA balance check and, for member benefit review, the <code>gca_member_preregistration_v2</code> holding start date plus public purchase or transfer transaction hash. We will never ask for private keys, seed phrases, exchange API secrets, withdrawal permission, custody, or fund transfers.</p>
         </div>
         <div class="panel">
           <h2>Unsafe Reply Boundary</h2>

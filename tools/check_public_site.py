@@ -362,6 +362,10 @@ def validate_support_page(text: str) -> None:
     assert_contains(text, "Support Cannot Do", label)
     assert_contains(text, "Base Mainnet / chainId 8453", label)
     assert_contains(text, "GCA/USDT", label)
+    assert_contains(text, "gca_member_preregistration_v2", label)
+    assert_contains(text, "memberBenefitReviewEvidence", label)
+    assert_contains(text, "GCA Member holding start date", label)
+    assert_contains(text, "GCA Member evidence note", label)
     assert_contains(text, MAINNET_ADDRESS, label)
     assert_not_contains(text, OLD_WETH_POOL_ADDRESS, label)
     assert_not_contains(text, "GCA/WETH", label)
@@ -403,6 +407,25 @@ def validate_support_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong prepared intake endpoint")
     if "ledger_recorded" not in workflow.get("reviewStatuses", []):
         raise SiteCheckError(f"{label}: missing ledger status")
+    if workflow.get("memberPacketVersion") != "gca_member_preregistration_v2":
+        raise SiteCheckError(f"{label}: wrong member packet version")
+    for field in (
+        "holdingStartDate",
+        "daysSinceHoldingStartPreview",
+        "holdingPeriodPreviewEligible",
+        "evidenceTxHash",
+        "evidenceTxHashFormatOk",
+        "evidenceNote",
+    ):
+        if field not in workflow.get("memberBenefitReviewEvidenceFields", []):
+            raise SiteCheckError(f"{label}: missing member evidence field {field}")
+    for field in (
+        "GCA Member holding start date",
+        "GCA Member evidence note",
+        "gca_member_preregistration_v2 memberBenefitReviewEvidence packet fields",
+    ):
+        if field not in payload.get("safeIntakeFields", []):
+            raise SiteCheckError(f"{label}: missing safe intake field {field}")
     if identity.get("officialPair") != "GCA/USDT":
         raise SiteCheckError(f"{label}: wrong official pair")
     if identity.get("officialPool") != OFFICIAL_POOL_ADDRESS:
@@ -423,6 +446,10 @@ def validate_support_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong privacy link")
     if links.get("participationTerms") != PARTICIPATION_TERMS_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong terms link")
+    if links.get("memberBenefitReview") != MEMBER_BENEFIT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong member benefit page")
+    if links.get("memberBenefitReviewJson") != MEMBER_BENEFIT_URL:
+        raise SiteCheckError(f"{label}: wrong member benefit json")
     assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
     assert_not_contains(json.dumps(payload), "GCA/WETH", label)
 
@@ -1250,6 +1277,7 @@ def validate_operations_page(text: str) -> None:
         "Intake Triage",
         "Identity Check",
         "Wallet Balance Check",
+        "Holding Period Review",
         "Eligibility Decision",
         "Support Reply",
         "Ledger Handoff",
@@ -1263,6 +1291,11 @@ def validate_operations_page(text: str) -> None:
     assert_contains(text, "balanceOf", label)
     assert_contains(text, "100 Web3 Radar utility credits", label)
     assert_contains(text, "GCA Member", label)
+    assert_contains(text, "gca_member_preregistration_v2", label)
+    assert_contains(text, "holdingStartDate", label)
+    assert_contains(text, "evidenceTxHash", label)
+    assert_contains(text, "evidenceTxHashFormatOk", label)
+    assert_contains(text, "Member evidence note", label)
     assert_contains(text, "Manual support cannot override on-chain wallet-balance verification", label)
     assert_contains(text, "Private key or seed phrase", label)
     assert_contains(text, "Exchange API secret or withdrawal permission", label)
@@ -1321,6 +1354,7 @@ def validate_operations_json(text: str) -> None:
         "intake-triage",
         "identity-check",
         "wallet-balance-check",
+        "holding-period-review",
         "eligibility-decision",
         "support-reply",
         "ledger-handoff",
@@ -1336,6 +1370,12 @@ def validate_operations_json(text: str) -> None:
         "status",
         "walletAddress",
         "checkedAt",
+        "holdingStartDate",
+        "holdingPeriodDaysVerified",
+        "holdingPeriodPreviewEligible",
+        "evidenceTxHash",
+        "evidenceTxHashFormatOk",
+        "memberBenefitReviewEvidenceStatus",
         "reviewerNote",
         "publicEvidenceReference",
     ):
@@ -1348,6 +1388,10 @@ def validate_operations_json(text: str) -> None:
         "public Base wallet address",
         "read-only GCA balance from eth_call balanceOf",
         "public transaction hash",
+        "public purchase or transfer transaction hash used for holding-period review",
+        "member holding start date from gca_member_preregistration_v2 packet",
+        "0x-format evidence transaction hash check",
+        "member evidence note",
         "non-sensitive support note",
         "public review reference",
     ):
@@ -1368,6 +1412,20 @@ def validate_operations_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong chain control")
     if controls.get("contractAddressMustEqual") != MAINNET_ADDRESS:
         raise SiteCheckError(f"{label}: wrong contract control")
+    if payload.get("memberPacketVersion") != "gca_member_preregistration_v2":
+        raise SiteCheckError(f"{label}: wrong member packet version")
+    for field in (
+        "memberBenefitReviewEvidence.holdingStartDate",
+        "memberBenefitReviewEvidence.daysSinceHoldingStartPreview",
+        "memberBenefitReviewEvidence.holdingPeriodPreviewEligible",
+        "memberBenefitReviewEvidence.evidenceTxHash",
+        "memberBenefitReviewEvidence.evidenceTxHashFormatOk",
+        "memberBenefitReviewEvidence.evidenceNote",
+    ):
+        if field not in payload.get("memberEvidenceFields", []):
+            raise SiteCheckError(f"{label}: missing member evidence field {field}")
+    if controls.get("memberPacketVersionMustEqual") != "gca_member_preregistration_v2":
+        raise SiteCheckError(f"{label}: wrong packet version control")
     if rules.get("holderBonusMinimum") != "10000 GCA":
         raise SiteCheckError(f"{label}: wrong holder bonus minimum")
     if rules.get("holderBonusCreditAmount") != "100 Web3 Radar utility credits":
@@ -1637,6 +1695,11 @@ def validate_review_queue_page(text: str) -> None:
     assert_contains(text, "balanceOf", label)
     assert_contains(text, "100 Web3 Radar utility credits", label)
     assert_contains(text, "GCA Member", label)
+    assert_contains(text, "gca_member_preregistration_v2", label)
+    assert_contains(text, "holdingStartDate", label)
+    assert_contains(text, "evidenceTxHash", label)
+    assert_contains(text, "evidenceTxHashFormatOk", label)
+    assert_contains(text, "Member evidence note", label)
     assert_contains(text, "Manual support cannot override on-chain wallet-balance verification", label)
     assert_contains(text, "Private key or seed phrase", label)
     assert_contains(text, "Exchange API secret", label)
@@ -1670,6 +1733,8 @@ def validate_review_queue_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong status")
     if state.get("currentStage") != "manual-review-contract":
         raise SiteCheckError(f"{label}: wrong currentStage")
+    if state.get("memberPacketVersion") != "gca_member_preregistration_v2":
+        raise SiteCheckError(f"{label}: wrong member packet version")
     if state.get("contractOnly") is not True:
         raise SiteCheckError(f"{label}: contractOnly must be true")
     for key in (
@@ -1711,9 +1776,32 @@ def validate_review_queue_json(text: str) -> None:
     ):
         if controls.get(key) is not False:
             raise SiteCheckError(f"{label}: {key} must be false")
-    for field in ("reviewId", "registrationId", "lane", "status", "updatedAt", "reviewerNote", "publicEvidenceReference"):
+    for field in (
+        "reviewId",
+        "registrationId",
+        "lane",
+        "status",
+        "updatedAt",
+        "holdingStartDate",
+        "holdingPeriodDaysVerified",
+        "evidenceTxHash",
+        "evidenceTxHashFormatOk",
+        "memberBenefitReviewEvidenceStatus",
+        "reviewerNote",
+        "publicEvidenceReference",
+    ):
         if field not in controls.get("requiredAuditFields", []):
             raise SiteCheckError(f"{label}: missing audit field {field}")
+    if controls.get("memberPacketVersionMustEqual") != "gca_member_preregistration_v2":
+        raise SiteCheckError(f"{label}: wrong packet version control")
+    for evidence in (
+        "public purchase or transfer transaction hash used for 30-day holding-period review",
+        "member holding start date from gca_member_preregistration_v2 packet",
+        "0x-format evidence transaction hash check",
+        "member evidence note",
+    ):
+        if evidence not in payload.get("allowedEvidence", []):
+            raise SiteCheckError(f"{label}: missing allowed evidence {evidence}")
     if thresholds.get("holderBonusMinimum") != "10000 GCA":
         raise SiteCheckError(f"{label}: wrong holder threshold")
     if thresholds.get("holderBonusCreditAmount") != "100 Web3 Radar utility credits":
@@ -1724,6 +1812,25 @@ def validate_review_queue_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong member holding days")
     if thresholds.get("gcaMemberBenefitAmount") != "10000 GCA":
         raise SiteCheckError(f"{label}: wrong member benefit")
+    member_evidence = payload.get("memberBenefitReviewEvidence", {})
+    if member_evidence.get("packetVersion") != "gca_member_preregistration_v2":
+        raise SiteCheckError(f"{label}: wrong member evidence packet version")
+    if member_evidence.get("status") != "user_supplied_pending_review":
+        raise SiteCheckError(f"{label}: wrong member evidence status")
+    for field in (
+        "holdingStartDate",
+        "daysSinceHoldingStartPreview",
+        "holdingPeriodPreviewEligible",
+        "evidenceTxHash",
+        "evidenceTxHashFormatOk",
+        "evidenceNote",
+    ):
+        if field not in member_evidence.get("requiredFields", []):
+            raise SiteCheckError(f"{label}: missing required member evidence field {field}")
+    if member_evidence.get("finalEligibilityStillRequiresSupportAndLedgerReview") is not True:
+        raise SiteCheckError(f"{label}: member evidence must require final review")
+    if member_evidence.get("doesNotCreateLedgerRecord") is not True:
+        raise SiteCheckError(f"{label}: member evidence must not create ledger")
     for item in ("private key", "seed phrase", "exchange API secret", "withdrawal permission", "custody request"):
         if item not in payload.get("doNotCollect", []):
             raise SiteCheckError(f"{label}: missing doNotCollect {item}")

@@ -389,6 +389,9 @@
             <div class="row"><span>Read-only GCA balance</span><strong>eth_call balanceOf</strong></div>
             <div class="row"><span>Transaction hash</span><strong>Public chain reference</strong></div>
             <div class="row"><span>Holding-period proof</span><strong>Public purchase or transfer hash</strong></div>
+            <div class="row"><span>Holding start date</span><strong><code>gca_member_preregistration_v2</code> packet field</strong></div>
+            <div class="row"><span>Evidence tx hash format</span><strong><code>0x</code> + 64 hex characters</strong></div>
+            <div class="row"><span>Member evidence note</span><strong>Non-sensitive review context only</strong></div>
             <div class="row"><span>Support note</span><strong>No secrets or custody requests</strong></div>
           </div>
         </div>
@@ -407,7 +410,7 @@
           </div>
           <div>
             <h3>Audit Trail</h3>
-            <p class="note">Each queue action should record reviewId, registrationId, lane, status, updatedAt, reviewer note, and public evidence reference when the backend is live.</p>
+            <p class="note">Each queue action should record reviewId, registrationId, lane, status, updatedAt, holdingStartDate, evidenceTxHash, evidenceTxHashFormatOk, memberBenefitReviewEvidenceStatus, reviewer note, and public evidence reference when the backend is live.</p>
           </div>
         </div>
       </section>
