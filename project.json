@@ -166,7 +166,7 @@
     "baseScanTokenProfile": "resubmitted-awaiting-review",
     "geckoTerminalTokenInfo": "approved-2026-05-11",
     "narrativeSystem": "public-narrative-system-published",
-    "weeklyGoChinaRadar": "weekly-go-china-radar-pilot-published",
+    "weeklyGoChinaRadar": "weekly-go-china-radar-issue-002-published",
     "coinGeckoTrackedListing": "not-submitted",
     "coinMarketCapTrackedListing": "not-submitted",
     "thirdPartyAudit": "not-completed"
@@ -231,13 +231,14 @@
     ]
   },
   "weeklyGoChinaRadar": {
-    "status": "weekly-go-china-radar-pilot-published",
+    "status": "weekly-go-china-radar-issue-002-published",
     "pageUrl": "https://gcagochina.com/radar.html",
     "url": "https://gcagochina.com/radar.json",
-    "issue": "pilot-001",
+    "issue": "issue-002",
     "issueDate": "2026-05-14",
-    "scope": "Pilot research format for China-facing Web3 narrative tracking, risk education, and GCA utility hooks.",
-    "notFinancialAdvice": true
+    "scope": "Issue 002 research format for Go China trust-stack tracking, official route verification, risk education, and GCA utility hooks.",
+    "notFinancialAdvice": true,
+    "issueTitle": "Trust Stack Before Growth"
   },
   "marketQuality": {
     "status": "early-stage-market-quality-plan",
