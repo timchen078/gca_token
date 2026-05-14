@@ -44,7 +44,7 @@
       "name": "Risk Warning Credits",
       "status": "planned-service-credit-workflow",
       "purpose": "Spend account-level utility credits on risk warnings, crowding checks, volatility notes, and exposure review.",
-      "notPurpose": "Not cash, tokens, income, reimbursement, or trading permission."
+      "notPurpose": "Not cash, token claims, income, reimbursement, or trading permission."
     },
     {
       "id": "backtest-lab",
@@ -128,10 +128,13 @@
     "holderBonusMinimum": "10000 GCA",
     "holderBonusCreditAmount": "100 Web3 Radar utility credits",
     "gcaMemberMinimum": "1000000 GCA",
-    "registeredUserLimit": "one holder bonus and one member status review per registered user",
+    "gcaMemberMinimumHoldingDays": 30,
+    "gcaMemberBenefitAmount": "10000 GCA",
+    "gcaMemberBenefitSource": "project or owner-held reserve transfer only; no new minting",
+    "registeredUserLimit": "one holder bonus, one member status review, and one member benefit review per registered user",
     "walletLimit": "one verified wallet per registered user",
     "creditUse": "reports, backtests, risk warnings, ENTRY_READY signal review, position calculators, or education access",
-    "memberUse": "higher utility credit limits, member research notes, priority report queue, member training sessions, and priority support"
+    "memberUse": "one-time 10,000 GCA member benefit, higher utility credit limits, member research notes, priority report queue, member training sessions, and priority support"
   },
   "safetyArchitecture": {
     "custody": false,
@@ -165,7 +168,7 @@
     ],
     "doNotClaim": [
       "the full GCA AI Quant Access product is live before controlled account UI is released",
-      "public self-service credits or GCA Member status are claimable before controlled wallet verification and ledger activation",
+      "public self-service credits, GCA Member status, or the 10,000 GCA member benefit are claimable before controlled wallet verification, 30-day holding review, and ledger activation",
       "GCA provides custody, withdrawal permission, private key access, exchange API secret collection, platform revenue distribution, trading permission, leverage access, or risk-control bypass",
       "GCA provides live market data, financial advice, buy or sell recommendations, price forecasts, or strategy performance promises",
       "any third-party audit, tracked listing, deep liquidity, or BaseScan token profile approval before publication"

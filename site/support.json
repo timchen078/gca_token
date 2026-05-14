@@ -1,7 +1,7 @@
 {
   "schema": "https://gcagochina.com/support.json",
   "pageUrl": "https://gcagochina.com/support.html",
-  "lastUpdated": "2026-05-13",
+  "lastUpdated": "2026-05-14",
   "status": "public-support-intake-published",
   "network": "Base Mainnet",
   "chainId": 8453,
@@ -16,6 +16,8 @@
   "supportedRequestTypes": [
     "member pre-registration packet review",
     "wallet verification question",
+    "GCA Member 30-day holding-period review",
+    "10,000 GCA member benefit question",
     "wallet-warning evidence or screenshot",
     "data platform correction context",
     "official link verification",
@@ -27,6 +29,7 @@
     "optional Telegram handle",
     "Base wallet address",
     "transaction hash",
+    "public purchase or transfer transaction hash for holding-period evidence",
     "pool link",
     "wallet-warning screenshot",
     "generated member packet JSON"
@@ -68,7 +71,8 @@
     "promise trading results",
     "activate live trading permission",
     "bypass Web3 Radar risk controls",
-    "override wallet-balance verification"
+    "override wallet-balance verification",
+    "override 30-day holding-period verification"
   ],
   "officialIdentity": {
     "website": "https://gcagochina.com/",

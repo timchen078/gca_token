@@ -80,7 +80,7 @@
     }
   ],
   "shortDescription": "GCA, short for Go China Access, is a fixed-supply ERC-20 token on Base Mainnet. It is a concept-stage community direction focused on the Go China macro narrative, bilingual Web3 education, public market research, and planned access to non-custodial quant risk tools.",
-  "longDescription": "GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stands for Go China Access, a concept-stage community direction focused on the Go China macro narrative, bilingual Web3 education, public market research, and planned access to non-custodial quant risk tools. The intended Web3 Radar bridge is to make GCA an access and membership layer for liquidation replay reports, risk-warning credits, realistic backtests, ENTRY_READY signal review, position-size calculators, subscription discounts, and risk-control training. The contract created 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls. The official public pool is the Base Mainnet Uniswap v4 GCA/USDT pool, and the project has a disclosed owner-held reserve wallet. Third-party audit quote requests were submitted and then deferred by owner decision. The project is early-stage and should not be described as externally audited, price-backed, yield-bearing, or backed by guaranteed liquidity.",
+  "longDescription": "GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stands for Go China Access, a concept-stage community direction focused on the Go China macro narrative, bilingual Web3 education, public market research, and planned access to non-custodial quant risk tools. The intended Web3 Radar bridge is to make GCA an access and membership layer for liquidation replay reports, risk-warning credits, realistic backtests, ENTRY_READY signal review, position-size calculators, subscription discounts, risk-control training, and a reserve-funded 10000 GCA member benefit review for verified users who bought and continuously held at least 1000000 GCA for 30 days. The contract created 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls. The official public pool is the Base Mainnet Uniswap v4 GCA/USDT pool, and the project has a disclosed owner-held reserve wallet. Third-party audit quote requests were submitted and then deferred by owner decision. The project is early-stage and should not be described as externally audited, price-backed, yield-bearing, or backed by guaranteed liquidity.",
   "utilityPositioning": {
     "status": "public-utility-bridge-spec-published",
     "specUrl": "https://gcagochina.com/utility.json",
@@ -94,7 +94,7 @@
       "subscription discounts",
       "risk-control training",
       "one-time 100 Web3 Radar utility credits ledger record for each registered user who verifies one wallet holding at least 10000 GCA",
-      "GCA Member status in the Web3 Radar member ledger for each registered user who verifies one wallet holding at least 1000000 GCA"
+      "GCA Member status plus one-time 10000 GCA member benefit review in the Web3 Radar member ledger for each registered user who verifies one wallet buying and continuously holding at least 1000000 GCA for 30 days"
     ],
     "plannedFirstCampaign": {
       "status": "backend-ledger-ready-public-claim-not-connected",
@@ -104,7 +104,7 @@
       "bonus": "100 Web3 Radar utility credits",
       "creditExpiry": "180 days after ledger activation unless a later published policy extends it",
       "creditUse": "reports, backtests, risk warnings, ENTRY_READY signal review, position calculators, or education access",
-      "notCreditUse": "cash, tokens, income, reimbursement, trading permission, or risk-control bypass"
+      "notCreditUse": "cash, token claims, income, reimbursement, trading permission, or risk-control bypass"
     },
     "plannedMemberTier": {
       "status": "backend-ledger-ready-public-claim-not-connected",
@@ -112,9 +112,13 @@
       "registeredUserLimit": "one membership status per registered user",
       "walletLimit": "one verified wallet per registered user",
       "minimumHolding": "1000000 GCA",
+      "minimumHoldingPeriod": "30 consecutive days",
+      "memberBenefitAmount": "10000 GCA",
+      "memberBenefit": "one-time 10000 GCA member benefit after holding-period verification and member ledger activation",
+      "memberBenefitSource": "project or owner-held reserve transfer only; no new minting",
       "refreshCadence": "30 days after activation, or earlier if the user requests a manual recheck",
-      "memberAccess": "higher utility credit limits, member research notes, priority report queue, member training sessions, and priority support",
-      "notMemberAccess": "cash, tokens, income, reimbursement, voting control, guaranteed lifetime access, trading permission, or risk-control bypass"
+      "memberAccess": "one-time 10000 GCA member benefit, higher utility credit limits, member research notes, priority report queue, member training sessions, and priority support",
+      "notMemberAccess": "cash, income, reimbursement, voting control, guaranteed lifetime access, trading permission, or risk-control bypass"
     },
     "supportWorkflow": {
       "contactEmail": "GCAgochina@outlook.com",

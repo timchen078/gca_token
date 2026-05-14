@@ -59,13 +59,19 @@
       "id": "controlled-account-ui",
       "label": "Controlled HTTPS member account UI",
       "status": "not-live",
-      "requiredBeforePublicClaim": "public self-service holder bonus or GCA Member claiming"
+      "requiredBeforePublicClaim": "public self-service holder bonus, GCA Member, or 10,000 GCA member benefit claiming"
     },
     {
       "id": "read-only-wallet-verification",
       "label": "Read-only GCA balance verification",
       "status": "prepared-not-live",
       "preparedPath": "/gca/wallet-verifications"
+    },
+    {
+      "id": "gca-member-holding-review",
+      "label": "30-day GCA Member holding-period review",
+      "status": "prepared-not-live",
+      "preparedPath": "/gca/member-review"
     },
     {
       "id": "utility-credit-ledger",
@@ -75,7 +81,7 @@
     },
     {
       "id": "gca-member-ledger",
-      "label": "GCA Member ledger",
+      "label": "GCA Member ledger and 10,000 GCA member benefit status",
       "status": "prepared-not-live",
       "preparedPath": "/gca/member-ledger"
     },
@@ -99,11 +105,12 @@
       "Narrative meets risk control.",
       "GCA is concept-stage and is building public identity, safer support intake, and planned non-custodial quant research access.",
       "The public member page currently creates local packets and does not create a live account.",
+      "The planned GCA Member benefit requires 1,000,000 GCA held for 30 consecutive days before one-time 10,000 GCA review.",
       "The official market route is GCA/USDT on Base Mainnet.",
       "Owner reported on 2026-05-14 that no wallet risk warning was visible in the tested wallet/DEX flow."
     ],
     "doNotClaim": [
-      "public self-service member claiming is live before controlled HTTPS UI is connected",
+      "public self-service member or 10,000 GCA member benefit claiming is live before controlled HTTPS UI and holding-period review are connected",
       "BaseScan token profile approval before BaseScan publishes it",
       "security-vendor approval, permanent warning-free status, or cross-wallet warning removal before vendor/current wallet UI confirms it",
       "third-party audit completion before an independent report is published",

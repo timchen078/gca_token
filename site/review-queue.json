@@ -58,7 +58,7 @@
     },
     {
       "id": "gca-member-review",
-      "purpose": "Review 1,000,000 GCA eligibility for planned GCA Member status after member ledger activation.",
+      "purpose": "Review 1,000,000 GCA plus 30 consecutive days of holding evidence for planned GCA Member status and one-time 10,000 GCA member benefit after member ledger activation.",
       "allowedStatuses": [
         "queued",
         "eligible",
@@ -95,6 +95,7 @@
     "Base wallet address",
     "read-only GCA balance from eth_call balanceOf",
     "public transaction hash",
+    "public purchase or transfer transaction hash used for 30-day holding-period review",
     "non-sensitive support note",
     "public platform review reference"
   ],
@@ -122,8 +123,11 @@
     "holderBonusMinimum": "10000 GCA",
     "holderBonusCreditAmount": "100 Web3 Radar utility credits",
     "gcaMemberMinimum": "1000000 GCA",
+    "gcaMemberMinimumHoldingDays": 30,
+    "gcaMemberBenefitAmount": "10000 GCA",
+    "gcaMemberBenefitSource": "project or owner-held reserve transfer only; no new minting",
     "walletLimit": "one verified wallet per registered user",
-    "registeredUserLimit": "one holder bonus and one member status review per registered user"
+    "registeredUserLimit": "one holder bonus, one member status review, and one member benefit review per registered user"
   },
   "doNotCollect": [
     "private key",
@@ -167,6 +171,7 @@
       "GCA has published a public review queue contract.",
       "The review queue contract defines planned manual-review lanes before public self-service claiming is live.",
       "Wallet review must use read-only eth_call and ERC-20 balanceOf.",
+      "GCA Member review requires 1,000,000 GCA held for 30 consecutive days before the one-time 10,000 GCA member benefit can be approved.",
       "Manual support cannot override on-chain wallet-balance verification.",
       "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool."
     ],
@@ -174,6 +179,7 @@
       "the review queue is a live public submission queue before controlled HTTPS deployment",
       "100 Web3 Radar utility credits are self-service claimable before credit ledger activation",
       "GCA Member status is live self-service claimable before member ledger activation",
+      "the 10,000 GCA member benefit is self-service claimable before holding-period verification and member ledger activation",
       "support can override wallet-balance verification, release gates, or public safety boundaries",
       "review status provides trading permission, live order execution, custody, withdrawals, price support, listing approval, or completed third-party audit"
     ]

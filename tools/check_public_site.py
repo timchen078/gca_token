@@ -308,7 +308,8 @@ def validate_members(text: str) -> None:
     assert_contains(text, "30 days", label)
     assert_contains(text, "5-10 business days", label)
     assert_contains(text, "Direct submission is not connected", label)
-    assert_contains(text, "No cash, token rebate, income, reimbursement, trading permission, or risk-control bypass", label)
+    assert_contains(text, "No cash, income, reimbursement, trading permission, or risk-control bypass", label)
+    assert_contains(text, "10,000 GCA member benefit", label)
     assert_not_contains(text, "eth_sendTransaction", label)
     assert_not_contains(text, "personal_sign", label)
     assert_not_contains(text, OLD_WETH_POOL_ADDRESS, label)
@@ -476,7 +477,7 @@ def validate_roadmap_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing utility credit ledger priority")
     if "GCA is concept-stage and is building public identity, safer support intake, and planned non-custodial quant research access." not in payload.get("publicClaimBoundaries", {}).get("safeClaims", []):
         raise SiteCheckError(f"{label}: missing concept-stage safe claim")
-    if "public self-service member claiming is live before controlled HTTPS UI is connected" not in payload.get("publicClaimBoundaries", {}).get("doNotClaim", []):
+    if "public self-service member or 10,000 GCA member benefit claiming is live before controlled HTTPS UI and holding-period review are connected" not in payload.get("publicClaimBoundaries", {}).get("doNotClaim", []):
         raise SiteCheckError(f"{label}: missing self-service do-not-claim")
     if links.get("roadmapPage") != ROADMAP_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong roadmapPage")
@@ -665,6 +666,10 @@ def validate_narrative_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong holder bonus threshold")
     if payload.get("memberHooks", {}).get("gcaMember", {}).get("minimumHolding") != "1000000 GCA":
         raise SiteCheckError(f"{label}: wrong member threshold")
+    if payload.get("memberHooks", {}).get("gcaMember", {}).get("minimumHoldingPeriod") != "30 consecutive days":
+        raise SiteCheckError(f"{label}: wrong member holding period")
+    if payload.get("memberHooks", {}).get("gcaMember", {}).get("memberBenefitAmount") != "10000 GCA":
+        raise SiteCheckError(f"{label}: wrong member benefit amount")
     if payload.get("weeklyRadar", {}).get("status") != "weekly-go-china-radar-issue-002-published":
         raise SiteCheckError(f"{label}: wrong weekly radar status")
     if payload.get("weeklyRadar", {}).get("pageUrl") != RADAR_PAGE_URL:
@@ -783,6 +788,7 @@ def validate_utility_page(text: str) -> None:
     assert_contains(text, "controlled HTTPS account UI", label)
     assert_contains(text, "100 Web3 Radar utility credits", label)
     assert_contains(text, "GCA Member status", label)
+    assert_contains(text, "10,000 GCA member benefit", label)
     assert_contains(text, "Credits Catalog", label)
     assert_contains(text, "credits.html", label)
     assert_contains(text, "credits.json", label)
@@ -822,6 +828,10 @@ def validate_utility_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing holder bonus risk boundary")
     if member.get("minimumHolding") != "1000000 GCA":
         raise SiteCheckError(f"{label}: wrong member minimum")
+    if member.get("minimumHoldingPeriod") != "30 consecutive days":
+        raise SiteCheckError(f"{label}: wrong member holding period")
+    if member.get("memberBenefitAmount") != "10000 GCA":
+        raise SiteCheckError(f"{label}: wrong member benefit")
     if "higher utility credit limits" not in member.get("memberAccess", ""):
         raise SiteCheckError(f"{label}: missing member access scope")
     for item in ("custody", "withdrawal permission", "exchange API secret collection", "platform revenue distribution", "return promise", "risk-control bypass"):
@@ -853,6 +863,8 @@ def validate_utility_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing utility safe claim")
     if not any("credits or member status are cash" in item for item in boundaries.get("doNotClaim", [])):
         raise SiteCheckError(f"{label}: missing credit/member boundary")
+    if not any("10,000 GCA member benefit is self-service claimable" in item for item in boundaries.get("doNotClaim", [])):
+        raise SiteCheckError(f"{label}: missing member benefit boundary")
     assert_no_forbidden_public_claims(json.dumps(payload), label)
     assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
     assert_not_contains(json.dumps(payload), "GCA/WETH", label)
@@ -951,6 +963,10 @@ def validate_product_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong holder bonus credit")
     if access.get("gcaMemberMinimum") != "1000000 GCA":
         raise SiteCheckError(f"{label}: wrong member minimum")
+    if access.get("gcaMemberMinimumHoldingDays") != 30:
+        raise SiteCheckError(f"{label}: wrong member holding days")
+    if access.get("gcaMemberBenefitAmount") != "10000 GCA":
+        raise SiteCheckError(f"{label}: wrong member benefit")
     for key in (
         "custody",
         "withdrawalPermission",
@@ -1026,12 +1042,14 @@ def validate_access_page(text: str) -> None:
     assert_contains(text, "direct submission is not connected", label)
     assert_contains(text, "credits are not self-service claimable", label)
     assert_contains(text, "GCA Member status is not self-service claimable", label)
+    assert_contains(text, "10,000 GCA member benefit is not self-service claimable", label)
     assert_contains(text, "read-only wallet verification", label)
     assert_contains(text, "eth_call", label)
     assert_contains(text, "balanceOf", label)
     assert_contains(text, "10,000 GCA", label)
     assert_contains(text, "100 Web3 Radar utility credits", label)
     assert_contains(text, "1,000,000 GCA", label)
+    assert_contains(text, "30 consecutive days", label)
     assert_contains(text, "GCA Member", label)
     assert_contains(text, "credit ledger activation", label)
     assert_contains(text, "member ledger activation", label)
@@ -1124,6 +1142,10 @@ def validate_access_json(text: str) -> None:
         raise SiteCheckError(f"{label}: holder path must be not live")
     if thresholds.get("gcaMember", {}).get("minimumHolding") != "1000000 GCA":
         raise SiteCheckError(f"{label}: wrong member minimum")
+    if thresholds.get("gcaMember", {}).get("minimumHoldingPeriod") != "30 consecutive days":
+        raise SiteCheckError(f"{label}: wrong member holding period")
+    if thresholds.get("gcaMember", {}).get("memberBenefitAmount") != "10000 GCA":
+        raise SiteCheckError(f"{label}: wrong member benefit")
     if thresholds.get("gcaMember", {}).get("notLive") is not True:
         raise SiteCheckError(f"{label}: member path must be not live")
     for item in (
@@ -1201,7 +1223,7 @@ def validate_access_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing access safe claim")
     if not any("live self-service account UI" in item for item in boundaries.get("doNotClaim", [])):
         raise SiteCheckError(f"{label}: missing account UI boundary")
-    if not any("cash, tokens, income" in item for item in boundaries.get("doNotClaim", [])):
+    if not any("cash, income" in item for item in boundaries.get("doNotClaim", [])):
         raise SiteCheckError(f"{label}: missing credit value boundary")
     assert_no_forbidden_public_claims(json.dumps(payload), label)
     assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
@@ -1344,6 +1366,10 @@ def validate_operations_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong holder bonus amount")
     if rules.get("gcaMemberMinimum") != "1000000 GCA":
         raise SiteCheckError(f"{label}: wrong member minimum")
+    if rules.get("gcaMemberMinimumHoldingDays") != 30:
+        raise SiteCheckError(f"{label}: wrong member holding days")
+    if rules.get("gcaMemberBenefitAmount") != "10000 GCA":
+        raise SiteCheckError(f"{label}: wrong member benefit")
     if rules.get("manualSupportCannotOverrideBalanceVerification") is not True:
         raise SiteCheckError(f"{label}: support override rule must be true")
     if thresholds.get("holderBonusMinimum") != "10000 GCA":
@@ -1352,6 +1378,10 @@ def validate_operations_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong thresholds credit amount")
     if thresholds.get("gcaMemberMinimum") != "1000000 GCA":
         raise SiteCheckError(f"{label}: wrong thresholds member minimum")
+    if thresholds.get("gcaMemberMinimumHoldingDays") != 30:
+        raise SiteCheckError(f"{label}: wrong thresholds member holding days")
+    if thresholds.get("gcaMemberBenefitAmount") != "10000 GCA":
+        raise SiteCheckError(f"{label}: wrong thresholds member benefit")
     for item in (
         "private key",
         "seed phrase",
@@ -1526,6 +1556,10 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong holderBonusCreditAmount")
     if thresholds.get("gcaMemberMinimum") != "1000000 GCA":
         raise SiteCheckError(f"{label}: wrong gcaMemberMinimum")
+    if thresholds.get("gcaMemberMinimumHoldingDays") != 30:
+        raise SiteCheckError(f"{label}: wrong gcaMemberMinimumHoldingDays")
+    if thresholds.get("gcaMemberBenefitAmount") != "10000 GCA":
+        raise SiteCheckError(f"{label}: wrong gcaMemberBenefitAmount")
     for forbidden in ("private key", "seed phrase", "exchange API secret", "withdrawal permission", "custody request", "one-time code"):
         if forbidden not in payload.get("doNotCollect", []):
             raise SiteCheckError(f"{label}: missing doNotCollect {forbidden}")
@@ -1678,6 +1712,10 @@ def validate_review_queue_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong credit amount")
     if thresholds.get("gcaMemberMinimum") != "1000000 GCA":
         raise SiteCheckError(f"{label}: wrong member threshold")
+    if thresholds.get("gcaMemberMinimumHoldingDays") != 30:
+        raise SiteCheckError(f"{label}: wrong member holding days")
+    if thresholds.get("gcaMemberBenefitAmount") != "10000 GCA":
+        raise SiteCheckError(f"{label}: wrong member benefit")
     for item in ("private key", "seed phrase", "exchange API secret", "withdrawal permission", "custody request"):
         if item not in payload.get("doNotCollect", []):
             raise SiteCheckError(f"{label}: missing doNotCollect {item}")
@@ -1781,6 +1819,10 @@ def validate_credits_json(text: str) -> None:
         raise SiteCheckError(f"{label}: holder bonus must be not live")
     if member.get("minimumHolding") != "1000000 GCA":
         raise SiteCheckError(f"{label}: wrong member minimum")
+    if member.get("minimumHoldingPeriod") != "30 consecutive days":
+        raise SiteCheckError(f"{label}: wrong member holding period")
+    if member.get("memberBenefitAmount") != "10000 GCA":
+        raise SiteCheckError(f"{label}: wrong member benefit")
     if member.get("notLive") is not True:
         raise SiteCheckError(f"{label}: member must be not live")
     for service_id in (
@@ -1889,7 +1931,7 @@ def validate_credits_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing credits safe claim")
     if not any("live self-service claimable" in item for item in boundaries.get("doNotClaim", [])):
         raise SiteCheckError(f"{label}: missing self-service boundary")
-    if not any("cash, tokens, income" in item for item in boundaries.get("doNotClaim", [])):
+    if not any("cash, income" in item for item in boundaries.get("doNotClaim", [])):
         raise SiteCheckError(f"{label}: missing credit value boundary")
     assert_no_forbidden_public_claims(json.dumps(payload), label)
     assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
@@ -2138,6 +2180,10 @@ def validate_terms_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong holder threshold")
     if programs.get("gcaMember", {}).get("minimumHolding") != "1000000 GCA":
         raise SiteCheckError(f"{label}: wrong member threshold")
+    if programs.get("gcaMember", {}).get("minimumHoldingPeriod") != "30 consecutive days":
+        raise SiteCheckError(f"{label}: wrong member holding period")
+    if programs.get("gcaMember", {}).get("memberBenefitAmount") != "10000 GCA":
+        raise SiteCheckError(f"{label}: wrong member benefit")
     if status.get("baseScanTokenProfile") != "resubmitted-awaiting-review":
         raise SiteCheckError(f"{label}: wrong BaseScan status")
     if status.get("geckoTerminalTokenInfo") != "approved-2026-05-11":
@@ -3056,6 +3102,10 @@ def validate_member_program_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong credit expiry")
     if member_tier.get("minimumHolding") != "1000000 GCA":
         raise SiteCheckError(f"{label}: wrong member threshold")
+    if member_tier.get("minimumHoldingPeriod") != "30 consecutive days":
+        raise SiteCheckError(f"{label}: wrong member holding period")
+    if member_tier.get("memberBenefitAmount") != "10000 GCA":
+        raise SiteCheckError(f"{label}: wrong member benefit")
     if member_tier.get("refreshCadence") != "30 days after activation, or earlier if the user requests a manual recheck":
         raise SiteCheckError(f"{label}: wrong member refresh cadence")
     if verification.get("directSubmissionEndpointConfigured") is not False:
@@ -3159,6 +3209,10 @@ def validate_member_ledger_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong credit expiry")
     if thresholds.get("gcaMemberMinimum") != "1000000 GCA":
         raise SiteCheckError(f"{label}: wrong member threshold")
+    if thresholds.get("gcaMemberMinimumHoldingDays") != 30:
+        raise SiteCheckError(f"{label}: wrong member holding days")
+    if thresholds.get("gcaMemberBenefitAmount") != "10000 GCA":
+        raise SiteCheckError(f"{label}: wrong member benefit")
     if thresholds.get("memberRefreshDays") != 30:
         raise SiteCheckError(f"{label}: wrong member refresh")
     if "walletVerificationRecord" not in schemas:
@@ -3197,6 +3251,7 @@ def validate_member_ledger_page(text: str) -> None:
     assert_contains(text, "/gca/member-ledger", label)
     assert_contains(text, "10,000 GCA", label)
     assert_contains(text, "1,000,000 GCA", label)
+    assert_contains(text, "10,000 GCA after approval", label)
     assert_contains(text, "180 days", label)
     assert_contains(text, "30 days", label)
     assert_contains(text, "Do not say 100 Web3 Radar utility credits are self-service claimable", label)

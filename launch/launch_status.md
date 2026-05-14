@@ -38,7 +38,7 @@
 - Website updated with the Go China Access concept-stage project direction.
 - Website updated with the GCA x Web3 Radar utility thesis: Go China macro narrative plus planned access to non-custodial quant risk reports, backtests, ENTRY_READY review, position sizing, and risk-control education.
 - Verified first holder campaign backend documented: each registered user may verify one wallet holding at least 10,000 GCA and receive a one-time 100 Web3 Radar utility credits ledger record.
-- Verified GCA Member backend documented: each registered user may verify one wallet holding at least 1,000,000 GCA and qualify for GCA Member status in the Web3 Radar member ledger.
+- Verified GCA Member backend documented: each registered user may verify one wallet buying and continuously holding at least 1,000,000 GCA for 30 days and qualify for GCA Member status plus one-time 10,000 GCA member benefit review in the Web3 Radar member ledger.
 - Member pre-registration page prepared at `https://gcagochina.com/members.html`; it generates local-only registration packets and does not create a live account.
 - Static member access preview page prepared at `https://gcagochina.com/gca/member-access/`; it can parse local packets and run read-only GCA balance previews, but it does not create accounts, submit data, or write ledger records.
 - Public member program rules prepared at `https://gcagochina.com/member-program.json`, including 100 credit spend scope, 180-day credit expiry, 30-day member refresh cadence, and support status workflow.
@@ -136,7 +136,7 @@
 - Use `https://gcagochina.com/credits.html` and `https://gcagochina.com/credits.json` when reviewers or community members ask what the planned 100 Web3 Radar utility credits and GCA Member workflows can be used for; keep it described as a draft service catalog only until controlled account UI and ledgers are live.
 - Use `https://gcagochina.com/release-gates.html` and `https://gcagochina.com/release-gates.json` when reviewers or community members ask what must be live before credits, GCA Member status, account UI, or trading-related features can be described as public self-service features.
 - Connect controlled HTTPS account UI before describing the 10,000 GCA holder bonus as claimable by users without operator help.
-- Connect controlled HTTPS account UI before describing the 1,000,000 GCA Member tier as self-service claimable by users.
+- Connect controlled HTTPS account UI and holding-period review before describing the 1,000,000 GCA Member tier or the 10,000 GCA member benefit as self-service claimable by users.
 - Configure a controlled HTTPS collection endpoint in `site/members.html` before asking users to rely on direct packet submission.
 - Deploy the Web3 Radar GCA intake behind the same official HTTPS origin or a reviewed reverse proxy before enabling the public `Submit Packet` button.
 - Add the official Telegram and X links to any BaseScan or GeckoTerminal follow-up if those reviewers ask for social links.
@@ -165,8 +165,8 @@
 - The roadmap page is public. It states that GCA is in concept-stage utility buildout, public self-service member claiming is not live, and external dependencies such as BaseScan profile review, wallet-warning review, audit completion, and tracked listings remain unresolved until confirmed by the relevant third party.
 - The community kit is public. It gives safe announcement copy and moderator replies while forbidding claims about BaseScan profile approval, security-vendor approval, external audit completion, deep liquidity, price support, listing approval, or trading outcomes.
 - The privacy notice and participation terms are public. They state that the current static member page is local packet generation only and that no private key, seed phrase, exchange API secret, withdrawal permission, or custody request belongs in the GCA member flow.
-- The 10,000 GCA holder bonus must be described as 100 Web3 Radar utility credits only, not as cash, tokens, income, reimbursement, trading permission, or a way to bypass risk controls.
-- The 1,000,000 GCA Member tier must be described as service access only, not as cash, tokens, income, reimbursement, voting control, guaranteed lifetime access, trading permission, or a way to bypass risk controls.
+- The 10,000 GCA holder bonus must be described as 100 Web3 Radar utility credits only, not as cash, token claims, income, reimbursement, trading permission, or a way to bypass risk controls.
+- The 1,000,000 GCA Member tier must require 30 consecutive days of holding before member benefit review. The planned 10,000 GCA member benefit must be described as a reserve-funded member benefit after approval, not as cash, income, reimbursement, voting control, guaranteed lifetime access, trading permission, or a way to bypass risk controls.
 - Do not claim return promises, price stability, liquidity depth, or external audit completion.
 
 ## Owner Reserve

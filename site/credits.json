@@ -26,11 +26,15 @@
   },
   "gcaMember": {
     "minimumHolding": "1000000 GCA",
-    "registeredUserLimit": "one member status review per registered user",
+    "minimumHoldingPeriod": "30 consecutive days",
+    "memberBenefitAmount": "10000 GCA",
+    "memberBenefit": "one-time 10,000 GCA member benefit after holding-period verification and member ledger activation",
+    "memberBenefitSource": "project or owner-held reserve transfer only; no new minting",
+    "registeredUserLimit": "one member status and one member benefit review per registered user",
     "walletLimit": "one verified Base wallet per registered user",
-    "activationRequirement": "controlled HTTPS account UI, read-only GCA balance verification, member ledger activation, and support review queue",
+    "activationRequirement": "controlled HTTPS account UI, read-only GCA balance verification, 30-day holding-period review, member ledger activation, and support review queue",
     "notLive": true,
-    "plannedAccessScope": "higher utility credit limits, member research notes, priority report queue, member training sessions, and priority support"
+    "plannedAccessScope": "one-time 10,000 GCA member benefit, higher utility credit limits, member research notes, priority report queue, member training sessions, and priority support"
   },
   "serviceCatalog": [
     {
@@ -111,6 +115,7 @@
     "transferable": false,
     "cashEquivalent": false,
     "tokenRebate": false,
+    "memberBenefitTokenClaim": "planned 10,000 GCA member benefit only after holding-period verification; not self-service live",
     "incomeOrReimbursement": false,
     "tradingPermission": false,
     "riskControlBypass": false,
@@ -140,6 +145,7 @@
     "requiredBeforeMemberUse": [
       "controlled HTTPS account UI",
       "read-only GCA balance verification",
+      "30-day GCA Member holding-period review",
       "member ledger activation",
       "support review queue"
     ],
@@ -186,14 +192,15 @@
     "safeClaims": [
       "GCA has published a draft service catalog for planned Web3 Radar utility credits.",
       "The 10,000 GCA holder bonus is planned as one account-level 100 Web3 Radar utility credits record after controlled verification is live.",
-      "The 1,000,000 GCA Member threshold is planned as an account-level member review after controlled verification is live.",
-      "Credits and member status are not self-service claimable until controlled HTTPS account UI and ledger activation are live.",
+      "The 1,000,000 GCA Member threshold requires 30 consecutive days of holding before a one-time 10,000 GCA member benefit review.",
+      "Credits, member status, and the 10,000 GCA member benefit are not self-service claimable until controlled HTTPS account UI and ledger activation are live.",
       "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool."
     ],
     "doNotClaim": [
       "100 Web3 Radar utility credits are live self-service claimable before controlled HTTPS account UI is released",
       "GCA Member status is live self-service claimable before controlled wallet verification and ledger activation",
-      "credits or member status are cash, tokens, income, reimbursement, trading permission, or transferable value",
+      "the 10,000 GCA member benefit is self-service claimable before holding-period verification and member ledger activation",
+      "credits or member status are cash, income, reimbursement, trading permission, or transferable value",
       "token ownership bypasses risk controls, support review, or simulation-first requirements",
       "service units are final commercial pricing before public terms are published"
     ]

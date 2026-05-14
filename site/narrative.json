@@ -51,8 +51,10 @@
     },
     "gcaMember": {
       "minimumHolding": "1000000 GCA",
+      "minimumHoldingPeriod": "30 consecutive days",
+      "memberBenefitAmount": "10000 GCA",
       "publicLabel": "GCA Member Club",
-      "scope": "higher utility credit limits, member research notes, priority report queue, member training sessions, and priority support"
+      "scope": "one-time 10,000 GCA member benefit review, higher utility credit limits, member research notes, priority report queue, member training sessions, and priority support"
     }
   },
   "buildNext": [
@@ -94,7 +96,7 @@
       "BaseScan token profile approval before BaseScan publishes it",
       "security-vendor approval, permanent warning-free status, or cross-wallet warning removal before vendor/current wallet UI confirms it",
       "finished platform utility before controlled account UI is live",
-      "cash, tokens, income, reimbursement, trading permission, or risk-control bypass from credits or member status"
+      "cash, income, reimbursement, trading permission, or risk-control bypass from credits, member status, or the planned 10,000 GCA member benefit"
     ]
   },
   "officialLinks": {

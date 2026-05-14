@@ -70,8 +70,8 @@ The full fixed supply was minted to the deployer wallet at deployment. The 40/60
 - Release gates JSON: `https://gcagochina.com/release-gates.json`
 - Planned Web3 Radar bridge: liquidation replay reports, risk-warning credits, realistic backtest usage, ENTRY_READY signal review, position-size calculators, subscription discounts, and risk-control training
 - Planned first campaign: each registered user may verify one wallet holding at least 10,000 GCA and receive a one-time 100 Web3 Radar utility credits bonus after the access bridge is live
-- Planned GCA Member tier: each registered user may verify one wallet holding at least 1,000,000 GCA and qualify for GCA Member status after the access bridge is live
-- Public access portal blueprint: controlled HTTPS account UI, read-only `eth_call` / `balanceOf` GCA balance verification, support review record, 100 credits ledger activation, and GCA Member ledger activation; blueprint only, not live self-service access
+- Planned GCA Member tier: each registered user may verify one wallet buying and continuously holding at least 1,000,000 GCA for 30 days, then qualify for GCA Member status and one-time 10,000 GCA member benefit review after the access bridge is live
+- Public access portal blueprint: controlled HTTPS account UI, read-only `eth_call` / `balanceOf` GCA balance verification, 30-day holding-period review, support review record, 100 credits ledger activation, GCA Member ledger activation, and 10,000 GCA member benefit status; blueprint only, not live self-service access
 - Public access API contract: planned controlled HTTPS routes for pre-registration, wallet verification, credit ledger, member ledger, support review, and member review; contract only, not live public submission infrastructure
 - Public review queue contract: planned manual-review lanes for pre-registration intake, wallet balance review, holder credit review, GCA Member review, support case review, and platform profile follow-up; contract only, not a live public submission queue
 - Public access operations runbook: operator SOP for non-sensitive intake, Base Mainnet identity checks, read-only `eth_call` / `balanceOf` wallet-balance review, support replies, ledger handoff, platform follow-up, and closure; public documentation only, not a live backend or self-service claim page
@@ -79,7 +79,7 @@ The full fixed supply was minted to the deployer wallet at deployment. The 40/60
 - Product release gates: controlled HTTPS account UI, read-only GCA balance verification, credit ledger activation, member ledger activation, support review queue, risk-control review, and simulation or testnet first
 
 Do not describe the current project as having a finished product, guaranteed utility, guaranteed market demand, return promise, or revenue distribution model.
-Do not describe planned holder benefits or GCA Member status as cash, tokens, income, reimbursement, voting control, guaranteed lifetime access, trading permission, or a way to bypass Web3 Radar risk controls.
+Do not describe planned holder credits, GCA Member status, or the 10,000 GCA member benefit as cash, income, reimbursement, voting control, guaranteed lifetime access, trading permission, or a way to bypass Web3 Radar risk controls.
 
 ## BaseScan Token Profile Status
 

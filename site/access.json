@@ -72,7 +72,7 @@
       "id": "member-ledger-activation",
       "label": "Activate GCA Member status",
       "status": "planned-after-gates",
-      "description": "Eligible registered users holding at least 1,000,000 GCA can enter a GCA Member review after gates are live."
+      "description": "Eligible registered users who buy and continuously hold at least 1,000,000 GCA for 30 days can enter GCA Member review and later claim a one-time 10,000 GCA member benefit after gates are live."
     },
     {
       "id": "service-access",
@@ -92,9 +92,15 @@
     },
     "gcaMember": {
       "minimumHolding": "1000000 GCA",
+      "minimumHoldingPeriod": "30 consecutive days",
       "tierName": "GCA Member",
+      "memberBenefitAmount": "10000 GCA",
+      "memberBenefit": "one-time 10,000 GCA member benefit after holding-period verification and member ledger activation",
+      "memberBenefitSource": "project or owner-held reserve transfer only; no new minting",
       "oneMemberReviewPerRegisteredUser": true,
+      "oneMemberBenefitReviewPerRegisteredUser": true,
       "oneVerifiedWalletPerRegisteredUser": true,
+      "requiresHoldingPeriodReview": true,
       "requiresMemberLedgerActivation": true,
       "requiresSupportReviewQueue": true,
       "notLive": true
@@ -176,14 +182,16 @@
       "GCA has published a public access portal blueprint.",
       "The access portal is blueprint only until controlled HTTPS account UI is live.",
       "Planned wallet verification should use read-only eth_call and ERC-20 balanceOf.",
-      "100 Web3 Radar utility credits and GCA Member status require ledger activation and support review before use.",
+      "100 Web3 Radar utility credits, GCA Member status, and the 10,000 GCA member benefit require ledger activation and support review before use.",
+      "The planned GCA Member path requires 1,000,000 GCA held for 30 consecutive days before a one-time 10,000 GCA member benefit review.",
       "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool."
     ],
     "doNotClaim": [
       "the access portal is live self-service account UI before controlled HTTPS deployment",
       "100 Web3 Radar utility credits are live self-service claimable before credit ledger activation",
       "GCA Member status is live self-service claimable before member ledger activation",
-      "credits or member status are cash, tokens, income, reimbursement, trading permission, or transferable value",
+      "the 10,000 GCA member benefit is self-service claimable before holding-period verification and member ledger activation",
+      "credits or member status are cash, income, reimbursement, trading permission, or transferable value",
       "wallet verification requires private keys, seed phrases, exchange API secrets, custody, withdrawal permission, or risk-control bypass"
     ]
   }

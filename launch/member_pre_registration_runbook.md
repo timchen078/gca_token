@@ -21,7 +21,7 @@ The page can generate a local registration packet for:
 
 - General waitlist
 - Holder Bonus candidate: declared balance at or above 10,000 GCA
-- GCA Member candidate: declared balance at or above 1,000,000 GCA
+- GCA Member candidate: declared balance at or above 1,000,000 GCA, plus later public evidence that the wallet bought and continuously held the threshold for 30 days
 
 ## Direct Submission Setup
 
@@ -60,15 +60,16 @@ Web3 Radar now has a local access bridge prepared:
 - `GET /gca/member-review`
 - `GET /radar/gca/member-review`
 
-Pre-registration stores a pending review record only. Wallet verification reads the queued wallet's GCA balance with an ERC-20 `balanceOf` call, then records one-time 100 utility credits for verified 10,000 GCA holders and GCA Member status for verified 1,000,000 GCA holders. None of these endpoints activate trading permission, order-size changes, leverage changes, live execution, or any risk-control bypass.
+Pre-registration stores a pending review record only. Wallet verification reads the queued wallet's GCA balance with an ERC-20 `balanceOf` call, then records one-time 100 utility credits for verified 10,000 GCA holders and GCA Member status plus one-time 10,000 GCA member benefit review for verified 1,000,000 GCA holders who also pass the 30-day holding-period review. None of these endpoints activate trading permission, order-size changes, leverage changes, live execution, or any risk-control bypass.
 
 ## Credit And Member Rules
 
 - 100 Web3 Radar utility credits are planned as account-level service credits only.
 - Credit use scope: reports, backtests, risk warnings, ENTRY_READY signal review, position calculators, or education access.
 - Credit expiry: 180 days after ledger activation unless a later published policy extends it.
-- Credits are not transferable and cannot be redeemed for cash, tokens, income, reimbursement, or trading permission.
+- Credits are not transferable and cannot be redeemed for cash, token claims, income, reimbursement, or trading permission.
 - GCA Member status is planned as account-level service access only.
+- The planned 10,000 GCA member benefit requires 1,000,000 GCA held for 30 consecutive days and must come from project or owner-held reserve, not new minting.
 - Member balance refresh cadence: 30 days after activation, or earlier if the user requests a manual recheck.
 - Member access scope: higher utility credit limits, member research notes, priority report queue, member training sessions, and priority support.
 - Member status does not activate live trading, leverage, custody, withdrawals, voting control, lifetime access, or risk-control bypass.
@@ -88,4 +89,4 @@ Pre-registration stores a pending review record only. Wallet verification reads 
 
 ## Public Boundary
 
-Pre-registration, 100 utility credits, and GCA Member status are not token rebates, cash benefits, income, reimbursement, trading permission, or risk-control bypass. They are service-access records only.
+Pre-registration, 100 utility credits, GCA Member status, and the planned 10,000 GCA member benefit are not cash benefits, income, reimbursement, trading permission, or risk-control bypass. They are account-level records only, and the member benefit is not self-service live.

@@ -317,7 +317,7 @@
     <main class="shell">
       <section aria-labelledby="title">
         <h1 id="title">GCA Member Ledger Schema</h1>
-        <p class="lead">Public data contract for the planned GCA x Web3 Radar access bridge: wallet verification, one-time 100 Web3 Radar utility credits, GCA Member status, support review states, and strict no-custody boundaries.</p>
+        <p class="lead">Public data contract for the planned GCA x Web3 Radar access bridge: wallet verification, one-time 100 Web3 Radar utility credits, GCA Member status, 30-day holding-period review, one-time 10,000 GCA member benefit status, support review states, and strict no-custody boundaries.</p>
         <div class="actions">
           <a class="button primary" href="member-ledger.json">Member Ledger JSON</a>
           <a class="button" href="members.html">Pre-Registration</a>
@@ -343,7 +343,7 @@
         </div>
         <div class="fact">
           <span class="label">GCA Member</span>
-          <span class="value">1,000,000 GCA / 30 days</span>
+          <span class="value">1,000,000 GCA / 30-day hold</span>
         </div>
       </section>
 
@@ -380,7 +380,7 @@
         </div>
         <div class="panel">
           <h3>Wallet Verification Record</h3>
-          <p class="note">Fields: walletAddress, chainId, contractAddress, checkedAt, gcaBalance, holderBonusEligible, gcaMemberEligible, verificationProvider, and status.</p>
+          <p class="note">Fields: walletAddress, chainId, contractAddress, checkedAt, gcaBalance, holderBonusEligible, gcaMemberEligible, holdingPeriodDaysVerified, verificationProvider, and status.</p>
         </div>
         <div class="panel">
           <h3>Support Review Record</h3>
@@ -404,6 +404,8 @@
           <h2>GCA Member Ledger</h2>
           <div class="list">
             <div class="row"><span>Minimum holding</span><strong>1,000,000 GCA</strong></div>
+            <div class="row"><span>Minimum holding period</span><strong>30 consecutive days</strong></div>
+            <div class="row"><span>Member benefit</span><strong>10,000 GCA after approval</strong></div>
             <div class="row"><span>Tier name</span><strong>GCA Member</strong></div>
             <div class="row"><span>Balance refresh cadence</span><strong>30 days</strong></div>
             <div class="row"><span>Allowed statuses</span><strong>queued / active / needs_refresh / paused</strong></div>
@@ -419,7 +421,8 @@
           <li>Safe to say: the future controlled HTTPS integration should verify GCA balance with an ERC-20 balanceOf read before writing ledger records.</li>
           <li>Do not say 100 Web3 Radar utility credits are self-service claimable before controlled HTTPS account UI is live.</li>
           <li>Do not say GCA Member status is live self-service before the controlled account UI is connected.</li>
-          <li>Do not describe credits or membership as cash, tokens, income, reimbursement, voting control, live trading permission, leverage, custody, withdrawals, or risk-control bypass.</li>
+          <li>Do not describe credits or membership as cash, income, reimbursement, voting control, live trading permission, leverage, custody, withdrawals, or risk-control bypass.</li>
+          <li>Do not say the 10,000 GCA member benefit is self-service claimable before holding-period verification and member ledger activation.</li>
           <li>Do not say membership guarantees lifetime access, listings, price support, liquidity, or third-party audit completion.</li>
         </ul>
       </section>
