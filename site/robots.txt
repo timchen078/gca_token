@@ -31,6 +31,8 @@ Allow: /token-safety.json
 Allow: /supply.json
 Allow: /member-ledger.html
 Allow: /member-ledger.json
+Allow: /member-benefit.html
+Allow: /member-benefit.json
 Allow: /member-program.json
 Allow: /gca/member-access/
 Allow: /support.html

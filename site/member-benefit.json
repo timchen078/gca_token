@@ -1,0 +1,117 @@
+{
+  "schema": "https://gcagochina.com/member-benefit.json",
+  "pageUrl": "https://gcagochina.com/member-benefit.html",
+  "lastUpdated": "2026-05-14",
+  "status": "public-review-rules-published-benefit-not-self-service",
+  "network": "Base Mainnet",
+  "chainId": 8453,
+  "token": {
+    "symbol": "GCA",
+    "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6"
+  },
+  "program": {
+    "tierName": "GCA Member",
+    "minimumHolding": "1000000 GCA",
+    "minimumHoldingPeriod": "30 consecutive days",
+    "minimumHoldingPeriodDays": 30,
+    "memberBenefitAmount": "10000 GCA",
+    "memberBenefitSource": "project or owner-held reserve transfer only; no new minting",
+    "registeredUserLimit": "one member benefit review per registered user",
+    "walletLimit": "one verified Base wallet per registered user",
+    "currentPublicSubmissionMode": "manual review packet only"
+  },
+  "eligibilityRules": [
+    "The user must register through the official GCA member pre-registration flow after controlled intake is available.",
+    "The user must verify one Base Mainnet wallet holding at least 1,000,000 GCA.",
+    "The minimum member benefit review threshold is at least 1,000,000 GCA for 30 consecutive days.",
+    "The user must provide public transaction evidence showing the wallet bought or received at least 1,000,000 GCA and kept the required balance for 30 consecutive days.",
+    "The wallet must still hold at least 1,000,000 GCA at the review time.",
+    "Support and ledger review must mark the record eligible before any 10,000 GCA member benefit transfer."
+  ],
+  "requiredEvidence": [
+    "registered email or account identifier",
+    "Base Mainnet wallet address",
+    "public purchase or transfer transaction hash used as the holding-period start evidence",
+    "read-only ERC-20 balanceOf result at review time",
+    "support review decision",
+    "member ledger record id after activation"
+  ],
+  "reviewFlow": [
+    {
+      "id": "pre-registration",
+      "label": "Create member packet",
+      "operatorAction": "Confirm the user supplied official contact fields and one Base wallet address without private keys or secrets."
+    },
+    {
+      "id": "threshold-check",
+      "label": "Check 1,000,000 GCA threshold",
+      "operatorAction": "Use read-only ERC-20 balanceOf on Base Mainnet to verify the current GCA balance."
+    },
+    {
+      "id": "holding-period-review",
+      "label": "Review 30-day holding evidence",
+      "operatorAction": "Use public transaction and balance evidence to confirm the wallet held at least 1,000,000 GCA for 30 consecutive days."
+    },
+    {
+      "id": "member-ledger-decision",
+      "label": "Write member ledger decision",
+      "operatorAction": "Record eligible, needs_more_information, rejected, transferred, or closed after support review."
+    },
+    {
+      "id": "reserve-transfer",
+      "label": "Reserve-funded member benefit",
+      "operatorAction": "If approved, transfer the one-time 10,000 GCA member benefit from project or owner-held reserve; do not mint new tokens."
+    }
+  ],
+  "ledgerFields": [
+    "reviewId",
+    "registeredUserId",
+    "walletAddress",
+    "gcaBalanceAtReview",
+    "holdingPeriodStartedAt",
+    "holdingPeriodDaysVerified",
+    "memberBenefitAmount",
+    "memberBenefitSource",
+    "memberBenefitClaimStatus",
+    "memberBenefitTransferTx",
+    "reviewStatus",
+    "reviewedAt"
+  ],
+  "allowedStatuses": [
+    "not_started",
+    "wallet_pending",
+    "holding_period_pending",
+    "needs_more_information",
+    "eligible",
+    "transferred",
+    "rejected",
+    "closed"
+  ],
+  "publicClaimBoundaries": {
+    "safeClaims": [
+      "GCA has published the planned GCA Member benefit review rules.",
+      "The planned rule requires buying and continuously holding at least 1,000,000 GCA for 30 consecutive days before benefit review.",
+      "The planned one-time member benefit amount is 10,000 GCA after support and ledger approval.",
+      "The planned member benefit must come from project or owner-held reserve transfer only, not new minting."
+    ],
+    "doNotClaim": [
+      "the 10,000 GCA member benefit is self-service claimable today",
+      "holding 1,000,000 GCA automatically triggers a transfer without review",
+      "the member benefit is newly minted",
+      "the member benefit is cash, income, reimbursement, trading permission, voting control, lifetime access, or a way to bypass risk controls",
+      "approval is guaranteed before support and ledger review"
+    ]
+  },
+  "publicLinks": {
+    "memberBenefitPage": "https://gcagochina.com/member-benefit.html",
+    "memberBenefitJson": "https://gcagochina.com/member-benefit.json",
+    "memberProgram": "https://gcagochina.com/member-program.json",
+    "memberLedger": "https://gcagochina.com/member-ledger.html",
+    "memberLedgerJson": "https://gcagochina.com/member-ledger.json",
+    "members": "https://gcagochina.com/members.html",
+    "support": "https://gcagochina.com/support.html",
+    "reviewQueue": "https://gcagochina.com/review-queue.html",
+    "operations": "https://gcagochina.com/operations.html",
+    "releaseGates": "https://gcagochina.com/release-gates.html"
+  }
+}

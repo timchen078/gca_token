@@ -40,6 +40,8 @@ MEMBER_PROGRAM_URL = "https://gcagochina.com/member-program.json"
 MEMBER_ACCESS_PAGE_URL = "https://gcagochina.com/gca/member-access/"
 MEMBER_LEDGER_PAGE_URL = "https://gcagochina.com/member-ledger.html"
 MEMBER_LEDGER_URL = "https://gcagochina.com/member-ledger.json"
+MEMBER_BENEFIT_PAGE_URL = "https://gcagochina.com/member-benefit.html"
+MEMBER_BENEFIT_URL = "https://gcagochina.com/member-benefit.json"
 SUPPORT_PAGE_URL = "https://gcagochina.com/support.html"
 SUPPORT_URL = "https://gcagochina.com/support.json"
 ROADMAP_PAGE_URL = "https://gcagochina.com/roadmap.html"
@@ -116,6 +118,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("/member-program.json", script)
         self.assertIn("/member-ledger.html", script)
         self.assertIn("/member-ledger.json", script)
+        self.assertIn("/member-benefit.html", script)
+        self.assertIn("/member-benefit.json", script)
         self.assertIn("/support.html", script)
         self.assertIn("/support.json", script)
         self.assertIn("/roadmap.html", script)
@@ -255,6 +259,8 @@ class LaunchPackageTests(unittest.TestCase):
         module.validate_member_program_json((ROOT / "site" / "member-program.json").read_text())
         module.validate_member_ledger_page((ROOT / "site" / "member-ledger.html").read_text())
         module.validate_member_ledger_json((ROOT / "site" / "member-ledger.json").read_text())
+        module.validate_member_benefit_page((ROOT / "site" / "member-benefit.html").read_text())
+        module.validate_member_benefit_json((ROOT / "site" / "member-benefit.json").read_text())
         module.validate_support_page((ROOT / "site" / "support.html").read_text())
         module.validate_support_json((ROOT / "site" / "support.json").read_text())
         module.validate_roadmap_page((ROOT / "site" / "roadmap.html").read_text())
@@ -510,6 +516,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Allow: /gca/member-access/", robots)
         self.assertIn("Allow: /member-ledger.html", robots)
         self.assertIn("Allow: /member-ledger.json", robots)
+        self.assertIn("Allow: /member-benefit.html", robots)
+        self.assertIn("Allow: /member-benefit.json", robots)
         self.assertIn("Allow: /support.html", robots)
         self.assertIn("Allow: /support.json", robots)
         self.assertIn("Allow: /roadmap.html", robots)
@@ -581,6 +589,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(MEMBER_PROGRAM_URL, sitemap)
         self.assertIn(MEMBER_LEDGER_PAGE_URL, sitemap)
         self.assertIn(MEMBER_LEDGER_URL, sitemap)
+        self.assertIn(MEMBER_BENEFIT_PAGE_URL, sitemap)
+        self.assertIn(MEMBER_BENEFIT_URL, sitemap)
         self.assertIn(SUPPORT_PAGE_URL, sitemap)
         self.assertIn(SUPPORT_URL, sitemap)
         self.assertIn(ROADMAP_PAGE_URL, sitemap)
@@ -1440,6 +1450,43 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("100 Web3 Radar utility credits are self-service claimable before controlled HTTPS account UI is live", ledger["publicClaimBoundaries"]["doNotClaim"])
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, json.dumps(ledger))
         self.assertNotIn("GCA/WETH", json.dumps(ledger))
+
+    def test_member_benefit_page_and_json_define_review_rules(self):
+        page = (ROOT / "site" / "member-benefit.html").read_text()
+        benefit = json.loads((ROOT / "site" / "member-benefit.json").read_text())
+
+        self.assertIn("GCA Member Benefit Review", page)
+        self.assertIn("Member Benefit JSON", page)
+        self.assertIn("1,000,000 GCA", page)
+        self.assertIn("30 consecutive days", page)
+        self.assertIn("10,000 GCA", page)
+        self.assertIn("Reserve transfer", page)
+        self.assertIn("No minting and no automatic transfer", page)
+        self.assertIn("self-service claimable today", page)
+        self.assertIn(MAINNET_ADDRESS, page)
+        self.assertNotIn(OLD_WETH_POOL_ADDRESS, page)
+        self.assertNotIn("GCA/WETH", page)
+
+        self.assertEqual(benefit["schema"], MEMBER_BENEFIT_URL)
+        self.assertEqual(benefit["pageUrl"], MEMBER_BENEFIT_PAGE_URL)
+        self.assertEqual(benefit["status"], "public-review-rules-published-benefit-not-self-service")
+        self.assertEqual(benefit["chainId"], 8453)
+        self.assertEqual(benefit["token"]["contractAddress"], MAINNET_ADDRESS)
+        self.assertEqual(benefit["program"]["minimumHolding"], "1000000 GCA")
+        self.assertEqual(benefit["program"]["minimumHoldingPeriodDays"], 30)
+        self.assertEqual(benefit["program"]["memberBenefitAmount"], "10000 GCA")
+        self.assertIn("no new minting", benefit["program"]["memberBenefitSource"])
+        self.assertIn("1,000,000 GCA for 30 consecutive days", " ".join(benefit["eligibilityRules"]))
+        self.assertIn("reserve-transfer", [step["id"] for step in benefit["reviewFlow"]])
+        self.assertIn("transferred", benefit["allowedStatuses"])
+        self.assertIn("the 10,000 GCA member benefit is self-service claimable today", benefit["publicClaimBoundaries"]["doNotClaim"])
+        self.assertEqual(benefit["publicLinks"]["memberBenefitPage"], MEMBER_BENEFIT_PAGE_URL)
+        self.assertEqual(benefit["publicLinks"]["memberBenefitJson"], MEMBER_BENEFIT_URL)
+        self.assertEqual(benefit["publicLinks"]["memberProgram"], MEMBER_PROGRAM_URL)
+        self.assertEqual(benefit["publicLinks"]["memberLedger"], MEMBER_LEDGER_PAGE_URL)
+        self.assertEqual(benefit["publicLinks"]["support"], SUPPORT_PAGE_URL)
+        self.assertNotIn(OLD_WETH_POOL_ADDRESS, json.dumps(benefit))
+        self.assertNotIn("GCA/WETH", json.dumps(benefit))
 
     def test_utility_page_connects_gca_to_quant_tools_safely(self):
         utility = (ROOT / "site" / "utility.html").read_text()

@@ -13,6 +13,8 @@
     "memberAccessPreview": "https://gcagochina.com/gca/member-access/",
     "memberLedger": "https://gcagochina.com/member-ledger.html",
     "memberLedgerSchema": "https://gcagochina.com/member-ledger.json",
+    "memberBenefit": "https://gcagochina.com/member-benefit.html",
+    "memberBenefitJson": "https://gcagochina.com/member-benefit.json",
     "support": "https://gcagochina.com/support.html",
     "supportJson": "https://gcagochina.com/support.json",
     "privacyNotice": "https://gcagochina.com/privacy.html",

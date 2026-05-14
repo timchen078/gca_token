@@ -26,6 +26,8 @@ OFFICIAL_DEXSCREENER_URL = f"https://dexscreener.com/base/{OFFICIAL_POOL_ADDRESS
 MEMBER_PROGRAM_URL = "https://gcagochina.com/member-program.json"
 MEMBER_LEDGER_PAGE_URL = "https://gcagochina.com/member-ledger.html"
 MEMBER_LEDGER_URL = "https://gcagochina.com/member-ledger.json"
+MEMBER_BENEFIT_PAGE_URL = "https://gcagochina.com/member-benefit.html"
+MEMBER_BENEFIT_URL = "https://gcagochina.com/member-benefit.json"
 SUPPORT_PAGE_URL = "https://gcagochina.com/support.html"
 SUPPORT_URL = "https://gcagochina.com/support.json"
 ROADMAP_PAGE_URL = "https://gcagochina.com/roadmap.html"
@@ -3086,6 +3088,10 @@ def validate_member_program_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong memberAccessPreview page")
     if public_pages.get("memberLedgerSchema") != MEMBER_LEDGER_URL:
         raise SiteCheckError(f"{label}: wrong memberLedger schema")
+    if public_pages.get("memberBenefit") != MEMBER_BENEFIT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong member benefit page")
+    if public_pages.get("memberBenefitJson") != MEMBER_BENEFIT_URL:
+        raise SiteCheckError(f"{label}: wrong member benefit JSON")
     if public_pages.get("support") != SUPPORT_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong support page")
     if public_pages.get("supportJson") != SUPPORT_URL:
@@ -3152,6 +3158,72 @@ def validate_member_program_json(text: str) -> None:
     if not any("credits or membership are cash" in claim for claim in boundaries.get("doNotClaim", [])):
         raise SiteCheckError(f"{label}: missing cash/token do-not-claim boundary")
     assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
+
+
+def validate_member_benefit_json(text: str) -> None:
+    label = "/member-benefit.json"
+    payload = load_json(text, label)
+    token = payload.get("token", {})
+    program = payload.get("program", {})
+    boundaries = payload.get("publicClaimBoundaries", {})
+    links = payload.get("publicLinks", {})
+
+    if payload.get("schema") != MEMBER_BENEFIT_URL:
+        raise SiteCheckError(f"{label}: wrong schema")
+    if payload.get("pageUrl") != MEMBER_BENEFIT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong pageUrl")
+    if payload.get("status") != "public-review-rules-published-benefit-not-self-service":
+        raise SiteCheckError(f"{label}: wrong status")
+    if payload.get("chainId") != 8453:
+        raise SiteCheckError(f"{label}: wrong chainId")
+    if token.get("contractAddress") != MAINNET_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong contractAddress")
+    if program.get("minimumHolding") != "1000000 GCA":
+        raise SiteCheckError(f"{label}: wrong minimum holding")
+    if program.get("minimumHoldingPeriodDays") != 30:
+        raise SiteCheckError(f"{label}: wrong holding period")
+    if program.get("memberBenefitAmount") != "10000 GCA":
+        raise SiteCheckError(f"{label}: wrong member benefit amount")
+    if "no new minting" not in program.get("memberBenefitSource", ""):
+        raise SiteCheckError(f"{label}: missing no-minting source boundary")
+    if not any("1,000,000 GCA for 30 consecutive days" in item for item in payload.get("eligibilityRules", [])):
+        raise SiteCheckError(f"{label}: missing 30-day eligibility rule")
+    if "reserve-transfer" not in [step.get("id") for step in payload.get("reviewFlow", [])]:
+        raise SiteCheckError(f"{label}: missing reserve transfer step")
+    if "transferred" not in payload.get("allowedStatuses", []):
+        raise SiteCheckError(f"{label}: missing transferred status")
+    if not any("10,000 GCA member benefit is self-service claimable today" in item for item in boundaries.get("doNotClaim", [])):
+        raise SiteCheckError(f"{label}: missing self-service boundary")
+    if links.get("memberBenefitPage") != MEMBER_BENEFIT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong memberBenefitPage")
+    if links.get("memberBenefitJson") != MEMBER_BENEFIT_URL:
+        raise SiteCheckError(f"{label}: wrong memberBenefitJson")
+    if links.get("memberProgram") != MEMBER_PROGRAM_URL:
+        raise SiteCheckError(f"{label}: wrong memberProgram")
+    if links.get("memberLedger") != MEMBER_LEDGER_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong memberLedger")
+    if links.get("support") != SUPPORT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong support")
+    assert_no_forbidden_public_claims(json.dumps(payload), label)
+    assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
+    assert_not_contains(json.dumps(payload), "GCA/WETH", label)
+
+
+def validate_member_benefit_page(text: str) -> None:
+    label = "/member-benefit.html"
+    assert_contains(text, "GCA Member Benefit Review", label)
+    assert_contains(text, "Member Benefit JSON", label)
+    assert_contains(text, "1,000,000 GCA", label)
+    assert_contains(text, "30 consecutive days", label)
+    assert_contains(text, "10,000 GCA", label)
+    assert_contains(text, "Reserve transfer", label)
+    assert_contains(text, "No minting and no automatic transfer", label)
+    assert_contains(text, "Public Claim Boundaries", label)
+    assert_contains(text, "self-service claimable today", label)
+    assert_contains(text, MAINNET_ADDRESS, label)
+    assert_no_forbidden_public_claims(text, label)
+    assert_not_contains(text, OLD_WETH_POOL_ADDRESS, label)
+    assert_not_contains(text, "GCA/WETH", label)
 
 
 def validate_member_ledger_json(text: str) -> None:
@@ -3239,6 +3311,7 @@ def validate_member_ledger_page(text: str) -> None:
     label = "/member-ledger.html"
     assert_contains(text, "GCA Member Ledger Schema", label)
     assert_contains(text, "Member Ledger JSON", label)
+    assert_contains(text, "member-benefit.html", label)
     assert_contains(text, "Wallet Verification Record", label)
     assert_contains(text, "100 Credit Ledger", label)
     assert_contains(text, "GCA Member Ledger", label)
@@ -3994,6 +4067,8 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/member-program.json",
         "https://gcagochina.com/member-ledger.html",
         "https://gcagochina.com/member-ledger.json",
+        "https://gcagochina.com/member-benefit.html",
+        "https://gcagochina.com/member-benefit.json",
         "https://gcagochina.com/support.html",
         "https://gcagochina.com/support.json",
         "https://gcagochina.com/privacy.html",
@@ -4061,6 +4136,8 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /onchain-proofs.json", label)
     assert_contains(text, "Allow: /member-ledger.html", label)
     assert_contains(text, "Allow: /member-ledger.json", label)
+    assert_contains(text, "Allow: /member-benefit.html", label)
+    assert_contains(text, "Allow: /member-benefit.json", label)
     assert_contains(text, "Allow: /member-program.json", label)
     assert_contains(text, "Allow: /gca/member-access/", label)
     assert_contains(text, "Allow: /support.html", label)
@@ -4120,6 +4197,8 @@ CHECKS: list[EndpointCheck] = [
     ("/member-program.json", validate_member_program_json),
     ("/member-ledger.html", validate_member_ledger_page),
     ("/member-ledger.json", validate_member_ledger_json),
+    ("/member-benefit.html", validate_member_benefit_page),
+    ("/member-benefit.json", validate_member_benefit_json),
     ("/support.html", validate_support_page),
     ("/support.json", validate_support_json),
     ("/roadmap.html", validate_roadmap_page),
