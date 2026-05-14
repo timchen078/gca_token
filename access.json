@@ -13,7 +13,8 @@
     "directSubmissionEndpointConfigured": false,
     "creditsSelfServiceClaimable": false,
     "gcaMemberSelfServiceClaimable": false,
-    "liveTradingEnabled": false
+    "liveTradingEnabled": false,
+    "accessApiContract": "published-contract-only"
   },
   "preparedRoutes": {
     "futureAccountPortal": "/gca/account",
@@ -34,7 +35,9 @@
     "supportJson": "https://gcagochina.com/support.json",
     "privacyNoticePage": "https://gcagochina.com/privacy.html",
     "participationTermsPage": "https://gcagochina.com/terms.html",
-    "releaseGatesPage": "https://gcagochina.com/release-gates.html"
+    "releaseGatesPage": "https://gcagochina.com/release-gates.html",
+    "accessApiPage": "https://gcagochina.com/access-api.html",
+    "accessApi": "https://gcagochina.com/access-api.json"
   },
   "userJourney": [
     {
@@ -155,7 +158,9 @@
     "supportJson": "https://gcagochina.com/support.json",
     "privacyNoticePage": "https://gcagochina.com/privacy.html",
     "participationTermsPage": "https://gcagochina.com/terms.html",
-    "market": "https://gcagochina.com/markets.html"
+    "market": "https://gcagochina.com/markets.html",
+    "accessApiPage": "https://gcagochina.com/access-api.html",
+    "accessApi": "https://gcagochina.com/access-api.json"
   },
   "publicClaimBoundaries": {
     "safeClaims": [

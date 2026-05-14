@@ -121,7 +121,10 @@
         "creditsCatalogStatus": "public-credits-catalog-published",
         "accessPortalPage": "https://gcagochina.com/access.html",
         "accessPortal": "https://gcagochina.com/access.json",
-        "accessPortalStatus": "public-access-portal-blueprint-published"
+        "accessPortalStatus": "public-access-portal-blueprint-published",
+        "accessApiPage": "https://gcagochina.com/access-api.html",
+        "accessApi": "https://gcagochina.com/access-api.json",
+        "accessApiStatus": "public-access-api-contract-published"
       }
     }
   ]

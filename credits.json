@@ -143,7 +143,9 @@
       "support review queue"
     ],
     "accessPortalPage": "https://gcagochina.com/access.html",
-    "accessPortal": "https://gcagochina.com/access.json"
+    "accessPortal": "https://gcagochina.com/access.json",
+    "accessApiPage": "https://gcagochina.com/access-api.html",
+    "accessApi": "https://gcagochina.com/access-api.json"
   },
   "officialMarket": {
     "pair": "GCA/USDT",
@@ -169,7 +171,9 @@
     "support": "https://gcagochina.com/support.html",
     "market": "https://gcagochina.com/markets.html",
     "accessPortalPage": "https://gcagochina.com/access.html",
-    "accessPortal": "https://gcagochina.com/access.json"
+    "accessPortal": "https://gcagochina.com/access.json",
+    "accessApiPage": "https://gcagochina.com/access-api.html",
+    "accessApi": "https://gcagochina.com/access-api.json"
   },
   "publicClaimBoundaries": {
     "safeClaims": [

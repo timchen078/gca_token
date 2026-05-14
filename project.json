@@ -175,7 +175,8 @@
     "productSpec": "public-product-spec-published",
     "releaseGates": "public-release-gates-published",
     "creditsCatalog": "public-credits-catalog-published",
-    "accessPortal": "public-access-portal-blueprint-published"
+    "accessPortal": "public-access-portal-blueprint-published",
+    "accessApiContract": "public-access-api-contract-published"
   },
   "listingReadiness": {
     "status": "not-ready",
@@ -386,7 +387,9 @@
     "creditsCatalogPage": "https://gcagochina.com/credits.html",
     "creditsCatalog": "https://gcagochina.com/credits.json",
     "accessPortalPage": "https://gcagochina.com/access.html",
-    "accessPortal": "https://gcagochina.com/access.json"
+    "accessPortal": "https://gcagochina.com/access.json",
+    "accessApiPage": "https://gcagochina.com/access-api.html",
+    "accessApi": "https://gcagochina.com/access-api.json"
   },
   "releaseGates": {
     "status": "public-release-gates-published",
@@ -409,7 +412,9 @@
     "creditsCatalogPage": "https://gcagochina.com/credits.html",
     "creditsCatalog": "https://gcagochina.com/credits.json",
     "accessPortalPage": "https://gcagochina.com/access.html",
-    "accessPortal": "https://gcagochina.com/access.json"
+    "accessPortal": "https://gcagochina.com/access.json",
+    "accessApiPage": "https://gcagochina.com/access-api.html",
+    "accessApi": "https://gcagochina.com/access-api.json"
   },
   "creditsCatalogPageUrl": "https://gcagochina.com/credits.html",
   "creditsCatalogUrl": "https://gcagochina.com/credits.json",
@@ -436,7 +441,9 @@
     ],
     "notCreditUse": "cash, tokens, income, reimbursement, trading permission, transferable value, or risk-control bypass",
     "accessPortalPage": "https://gcagochina.com/access.html",
-    "accessPortal": "https://gcagochina.com/access.json"
+    "accessPortal": "https://gcagochina.com/access.json",
+    "accessApiPage": "https://gcagochina.com/access-api.html",
+    "accessApi": "https://gcagochina.com/access-api.json"
   },
   "accessPortalPageUrl": "https://gcagochina.com/access.html",
   "accessPortalUrl": "https://gcagochina.com/access.json",
@@ -453,6 +460,31 @@
     "memberAccessPreview": "https://gcagochina.com/gca/member-access/",
     "memberPreRegistrationPage": "https://gcagochina.com/members.html",
     "creditsCatalogPage": "https://gcagochina.com/credits.html",
-    "creditsCatalog": "https://gcagochina.com/credits.json"
+    "creditsCatalog": "https://gcagochina.com/credits.json",
+    "accessApiPage": "https://gcagochina.com/access-api.html",
+    "accessApi": "https://gcagochina.com/access-api.json"
+  },
+  "accessApiPageUrl": "https://gcagochina.com/access-api.html",
+  "accessApiUrl": "https://gcagochina.com/access-api.json",
+  "accessApiContract": {
+    "status": "public-access-api-contract-published",
+    "pageUrl": "https://gcagochina.com/access-api.html",
+    "url": "https://gcagochina.com/access-api.json",
+    "currentStage": "contract-only",
+    "backendLive": false,
+    "publicEndpointLive": false,
+    "controlledHttpsAccountUiLive": false,
+    "directSubmissionEndpointConfigured": false,
+    "creditsSelfServiceClaimable": false,
+    "gcaMemberSelfServiceClaimable": false,
+    "liveTradingEnabled": false,
+    "endpoints": [
+      "/gca/pre-registrations",
+      "/gca/wallet-verifications",
+      "/gca/credit-ledger",
+      "/gca/member-ledger",
+      "/gca/support-review",
+      "/gca/member-review"
+    ]
   }
 }

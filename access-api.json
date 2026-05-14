@@ -1,0 +1,279 @@
+{
+  "schema": "https://gcagochina.com/access-api.json",
+  "pageUrl": "https://gcagochina.com/access-api.html",
+  "status": "public-access-api-contract-published",
+  "lastUpdated": "2026-05-14",
+  "chainId": 8453,
+  "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+  "title": "GCA Access API Contract",
+  "currentState": {
+    "currentStage": "contract-only",
+    "contractOnly": true,
+    "backendLive": false,
+    "publicEndpointLive": false,
+    "controlledHttpsAccountUiLive": false,
+    "directSubmissionEndpointConfigured": false,
+    "creditsSelfServiceClaimable": false,
+    "gcaMemberSelfServiceClaimable": false,
+    "liveTradingEnabled": false
+  },
+  "securityModel": {
+    "controlledHttpsOriginRequired": true,
+    "authenticatedAccountSessionRequired": true,
+    "csrfProtectionRequiredForStateChangingRoutes": true,
+    "rateLimitsRequired": true,
+    "structuredAuditLogsRequired": true,
+    "serverSideChainValidationRequired": true,
+    "serverSideContractValidationRequired": true,
+    "walletVerificationReadOnly": true,
+    "usesEthCall": true,
+    "usesErc20BalanceOf": true,
+    "requiresSignatureForBalanceRead": false,
+    "requiresTransactionForBalanceRead": false,
+    "custody": false,
+    "withdrawalPermission": false,
+    "privateKeyCollection": false,
+    "seedPhraseCollection": false,
+    "exchangeApiSecretCollection": false,
+    "automaticLiveTradingEnabled": false,
+    "riskControlBypassAllowed": false
+  },
+  "endpoints": [
+    {
+      "id": "pre-registrations",
+      "method": "POST",
+      "path": "/gca/pre-registrations",
+      "status": "planned-not-live",
+      "purpose": "Receive a controlled account pre-registration intent after HTTPS account UI is live.",
+      "requiredRequestFields": [
+        "email",
+        "walletAddress",
+        "programIntent",
+        "termsAccepted",
+        "securityBoundaryAccepted",
+        "source"
+      ],
+      "responseFields": [
+        "registrationId",
+        "status",
+        "createdAt",
+        "nextStep"
+      ],
+      "allowedStatuses": [
+        "received",
+        "wallet_pending",
+        "needs_more_information",
+        "rejected"
+      ]
+    },
+    {
+      "id": "wallet-verifications",
+      "method": "POST",
+      "path": "/gca/wallet-verifications",
+      "status": "planned-not-live",
+      "purpose": "Verify GCA balance with a read-only Base Mainnet ERC-20 balanceOf call.",
+      "requiredRequestFields": [
+        "registrationId",
+        "walletAddress",
+        "chainId",
+        "contractAddress"
+      ],
+      "serverChecks": [
+        "chainId must be 8453",
+        "contractAddress must be 0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+        "walletAddress must be a valid EVM address",
+        "balance source must be read-only eth_call balanceOf"
+      ],
+      "responseFields": [
+        "walletAddress",
+        "chainId",
+        "contractAddress",
+        "checkedAt",
+        "gcaBalance",
+        "holderBonusEligible",
+        "gcaMemberEligible",
+        "status"
+      ],
+      "allowedStatuses": [
+        "queued",
+        "verified",
+        "below_threshold",
+        "failed",
+        "expired"
+      ]
+    },
+    {
+      "id": "credit-ledger",
+      "method": "GET",
+      "path": "/gca/credit-ledger",
+      "status": "planned-not-live",
+      "purpose": "Return account-level Web3 Radar utility credit records after credit ledger activation.",
+      "requiredRequestFields": [
+        "authenticatedAccountSession"
+      ],
+      "responseFields": [
+        "creditLedgerId",
+        "registrationId",
+        "walletAddress",
+        "creditAmount",
+        "creditType",
+        "activatedAt",
+        "expiresAt",
+        "remainingCredits",
+        "status"
+      ],
+      "allowedStatuses": [
+        "not_connected",
+        "queued",
+        "ledger_recorded",
+        "partially_used",
+        "used",
+        "expired",
+        "revoked"
+      ]
+    },
+    {
+      "id": "member-ledger",
+      "method": "GET",
+      "path": "/gca/member-ledger",
+      "status": "planned-not-live",
+      "purpose": "Return GCA Member account-level status after member ledger activation.",
+      "requiredRequestFields": [
+        "authenticatedAccountSession"
+      ],
+      "responseFields": [
+        "memberLedgerId",
+        "registrationId",
+        "walletAddress",
+        "tierName",
+        "verifiedBalance",
+        "activatedAt",
+        "nextRefreshDueAt",
+        "status"
+      ],
+      "allowedStatuses": [
+        "not_connected",
+        "queued",
+        "active",
+        "needs_refresh",
+        "below_threshold",
+        "paused",
+        "revoked"
+      ]
+    },
+    {
+      "id": "support-review",
+      "method": "POST",
+      "path": "/gca/support-review",
+      "status": "planned-not-live",
+      "purpose": "Create or update operator-reviewed support status for account, wallet, credit, or member workflows.",
+      "requiredRequestFields": [
+        "registrationId",
+        "status",
+        "updatedAt",
+        "supportNote"
+      ],
+      "responseFields": [
+        "reviewId",
+        "registrationId",
+        "status",
+        "updatedAt"
+      ],
+      "allowedStatuses": [
+        "received",
+        "wallet_pending",
+        "eligible",
+        "needs_more_information",
+        "rejected",
+        "ledger_recorded"
+      ]
+    },
+    {
+      "id": "member-review",
+      "method": "GET",
+      "path": "/gca/member-review",
+      "status": "planned-not-live",
+      "purpose": "Read account review status after controlled account UI and support review workflow are live.",
+      "requiredRequestFields": [
+        "authenticatedAccountSession"
+      ],
+      "responseFields": [
+        "registrationId",
+        "walletAddress",
+        "holderBonusEligible",
+        "gcaMemberEligible",
+        "reviewStatus",
+        "nextStep"
+      ],
+      "allowedStatuses": [
+        "received",
+        "wallet_pending",
+        "eligible",
+        "needs_more_information",
+        "rejected",
+        "ledger_recorded"
+      ]
+    }
+  ],
+  "eligibilityThresholds": {
+    "holderBonusMinimum": "10000 GCA",
+    "holderBonusCreditAmount": "100 Web3 Radar utility credits",
+    "gcaMemberMinimum": "1000000 GCA",
+    "walletLimit": "one verified wallet per registered user",
+    "registeredUserLimit": "one holder bonus and one member status review per registered user"
+  },
+  "doNotCollect": [
+    "private key",
+    "seed phrase",
+    "exchange API secret",
+    "withdrawal permission",
+    "custody request",
+    "fund-transfer request",
+    "one-time code",
+    "recovery phrase"
+  ],
+  "officialMarket": {
+    "pair": "GCA/USDT",
+    "dex": "Uniswap v4",
+    "network": "Base Mainnet",
+    "poolAddress": "0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "quoteAsset": "USDT",
+    "quoteAssetAddress": "0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2",
+    "liquidityDepth": "starter-depth-only"
+  },
+  "officialLinks": {
+    "accessApiPage": "https://gcagochina.com/access-api.html",
+    "accessApi": "https://gcagochina.com/access-api.json",
+    "accessPortalPage": "https://gcagochina.com/access.html",
+    "accessPortal": "https://gcagochina.com/access.json",
+    "memberAccessPreview": "https://gcagochina.com/gca/member-access/",
+    "memberPreRegistrationPage": "https://gcagochina.com/members.html",
+    "memberLedgerPage": "https://gcagochina.com/member-ledger.html",
+    "memberLedger": "https://gcagochina.com/member-ledger.json",
+    "supportPage": "https://gcagochina.com/support.html",
+    "supportJson": "https://gcagochina.com/support.json",
+    "creditsCatalogPage": "https://gcagochina.com/credits.html",
+    "creditsCatalog": "https://gcagochina.com/credits.json",
+    "releaseGatesPage": "https://gcagochina.com/release-gates.html",
+    "releaseGates": "https://gcagochina.com/release-gates.json",
+    "privacyNoticePage": "https://gcagochina.com/privacy.html",
+    "participationTermsPage": "https://gcagochina.com/terms.html",
+    "market": "https://gcagochina.com/markets.html"
+  },
+  "publicClaimBoundaries": {
+    "safeClaims": [
+      "GCA has published a public access API contract.",
+      "The access API contract is contract-only until controlled HTTPS backend and account UI are live.",
+      "Planned wallet verification uses read-only eth_call and ERC-20 balanceOf.",
+      "The API contract forbids private keys, seed phrases, exchange API secrets, withdrawal permission, custody, and risk-control bypass.",
+      "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool."
+    ],
+    "doNotClaim": [
+      "the access API is live public submission infrastructure before controlled HTTPS deployment",
+      "100 Web3 Radar utility credits are live self-service claimable before credit ledger activation",
+      "GCA Member status is live self-service claimable before member ledger activation",
+      "the API collects private keys, seed phrases, exchange API secrets, withdrawal permission, custody, or one-time codes",
+      "API access provides trading permission, live order execution, or risk-control bypass"
+    ]
+  }
+}
