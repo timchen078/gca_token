@@ -18,6 +18,8 @@ Access operations runbook: `https://gcagochina.com/operations.html`
 Access operations runbook JSON: `https://gcagochina.com/operations.json`
 Credits catalog: `https://gcagochina.com/credits.html`
 Credits catalog JSON: `https://gcagochina.com/credits.json`
+Member benefit transfer runbook: `https://gcagochina.com/member-benefit-transfer.html`
+Member benefit transfer runbook JSON: `https://gcagochina.com/member-benefit-transfer.json`
 Release gates: `https://gcagochina.com/release-gates.html`
 Release gates JSON: `https://gcagochina.com/release-gates.json`
 Narrative system: `https://gcagochina.com/narrative.html`
@@ -90,6 +92,8 @@ The public product specification for this direction is GCA AI Quant Access. It i
 
 The public access portal blueprint defines the future controlled account path: create a controlled HTTPS account, verify GCA balance with read-only `eth_call` and ERC-20 `balanceOf`, create a support review record, activate a 100 credits ledger record for eligible 10,000 GCA holders, and activate GCA Member status plus one-time 10,000 GCA member benefit review for eligible users who bought and continuously held at least 1,000,000 GCA for 30 days. It is blueprint only until controlled HTTPS account UI, direct submission, credit ledger activation, member ledger activation, and support review are live.
 
+The public member benefit transfer runbook defines the manual controls for any approved 10,000 GCA member benefit. The benefit must come from project or owner-held reserve after support review, member ledger approval, 30-day holding-period verification, and a fresh read-only balance check. It is not automatic, not self-service claimable, and not newly minted.
+
 The public access API contract defines the future controlled HTTPS backend routes: `POST /gca/pre-registrations`, `POST /gca/wallet-verifications`, `GET /gca/credit-ledger`, `GET /gca/member-ledger`, `POST /gca/support-review`, and `GET /gca/member-review`. It is contract only and is not a live public submission endpoint.
 
 The public review queue contract defines the manual review lanes that sit between intake and ledger activation: pre-registration intake, wallet balance review, holder credit review, GCA Member review, support case review, and platform profile follow-up. It is not a live public submission queue and cannot override on-chain wallet-balance verification.
@@ -116,7 +120,7 @@ GCA should be positioned as an access and membership layer, not as a yield produ
 
 The planned 10,000 GCA holder bonus is an account-level service credit campaign. The 100 Web3 Radar utility credits should only be usable for reports, backtests, risk warnings, ENTRY_READY signal review, position calculators, or education access. They should not be cash, token claims, income, reimbursement, trading permission, or a reason to bypass risk controls.
 
-The planned 1,000,000 GCA Member tier is an account-level service-access tier, not a financial status. It requires verified purchase and continuous holding for 30 days before member benefit review. Possible GCA Member benefits include a one-time 10,000 GCA member benefit from project or owner-held reserve, higher utility credit limits, member research notes, priority report queue, member training sessions, and priority support. GCA Member status and the member benefit should not provide cash, income, reimbursement, voting control, guaranteed lifetime access, trading permission, or a way to bypass risk controls.
+The planned 1,000,000 GCA Member tier is an account-level service-access tier, not a financial status. It requires verified purchase and continuous holding for 30 days before member benefit review. Possible GCA Member benefits include a one-time 10,000 GCA member benefit from project or owner-held reserve, higher utility credit limits, member research notes, priority report queue, member training sessions, and priority support. The 10,000 GCA member benefit is documented as a manual reserve transfer after approval, not automatic claiming or new minting. GCA Member status and the member benefit should not provide cash, income, reimbursement, voting control, guaranteed lifetime access, trading permission, or a way to bypass risk controls.
 
 ## Distribution Status
 

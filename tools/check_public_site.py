@@ -168,6 +168,9 @@ def validate_root(text: str) -> None:
     assert_contains(text, "On-chain Proofs", label)
     assert_contains(text, "Brand Kit", label)
     assert_contains(text, "Member Ledger", label)
+    assert_contains(text, "Benefit Transfer Runbook", label)
+    assert_contains(text, "member-benefit-transfer.html", label)
+    assert_contains(text, "member-benefit-transfer.json", label)
     assert_contains(text, "Support & Intake", label)
     assert_contains(text, "Roadmap", label)
     assert_contains(text, "Community Kit", label)
@@ -3281,6 +3284,10 @@ def validate_member_program_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong member benefit page")
     if public_pages.get("memberBenefitJson") != MEMBER_BENEFIT_URL:
         raise SiteCheckError(f"{label}: wrong member benefit JSON")
+    if public_pages.get("memberBenefitTransfer") != MEMBER_BENEFIT_TRANSFER_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong member benefit transfer page")
+    if public_pages.get("memberBenefitTransferJson") != MEMBER_BENEFIT_TRANSFER_URL:
+        raise SiteCheckError(f"{label}: wrong member benefit transfer JSON")
     if public_pages.get("support") != SUPPORT_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong support page")
     if public_pages.get("supportJson") != SUPPORT_URL:
@@ -3344,6 +3351,8 @@ def validate_member_program_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing not-connected safe claim")
     if not any("browser-only read-only GCA balance preview" in claim for claim in boundaries.get("safeClaims", [])):
         raise SiteCheckError(f"{label}: missing browser preview safe claim")
+    if not any("manual transfer runbook" in claim for claim in boundaries.get("safeClaims", [])):
+        raise SiteCheckError(f"{label}: missing transfer runbook safe claim")
     if not any("credits or membership are cash" in claim for claim in boundaries.get("doNotClaim", [])):
         raise SiteCheckError(f"{label}: missing cash/token do-not-claim boundary")
     assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)

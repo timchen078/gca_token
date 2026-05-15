@@ -43,6 +43,7 @@
 - Static member access preview page prepared at `https://gcagochina.com/gca/member-access/`; it can parse local packets and run read-only GCA balance previews, but it does not create accounts, submit data, or write ledger records.
 - Public member program rules prepared at `https://gcagochina.com/member-program.json`, including 100 credit spend scope, 180-day credit expiry, 30-day member refresh cadence, and support status workflow.
 - Public member ledger schema prepared at `https://gcagochina.com/member-ledger.html` and `https://gcagochina.com/member-ledger.json` for wallet verification, 100 credits ledger, GCA Member ledger, and support review records.
+- Public member benefit transfer runbook prepared at `https://gcagochina.com/member-benefit-transfer.html` and `https://gcagochina.com/member-benefit-transfer.json` for manual reserve-wallet transfer controls after review and approval.
 - Browser-only read-only GCA balance preview added to `https://gcagochina.com/members.html` using MetaMask `eth_call` / ERC-20 `balanceOf`; it does not sign messages, send transactions, submit packets, or create ledger records.
 - Public support intake page and JSON prepared at `https://gcagochina.com/support.html` and `https://gcagochina.com/support.json` for support routing, safe packet handling, wallet-warning evidence, and no-sensitive-data boundaries.
 - Public roadmap page and JSON prepared at `https://gcagochina.com/roadmap.html` and `https://gcagochina.com/roadmap.json` for concept-stage utility buildout, support intake, member verification, Web3 Radar access planning, external dependencies, and public claim boundaries.
@@ -108,6 +109,7 @@
 - Use `launch/external_review_followup_tracker.md` for BaseScan, Blockaid, GeckoTerminal, DEX Screener, CoinGecko, CoinMarketCap, and audit follow-up status before sending any new platform request.
 - Use `https://gcagochina.com/brand-kit.html` and `https://gcagochina.com/brand-kit.json` when wallets, data platforms, moderators, or community posts need official GCA logo assets and metadata usage boundaries.
 - Use `https://gcagochina.com/member-ledger.html` and `https://gcagochina.com/member-ledger.json` when Web3 Radar integration, support review, or community moderators need the published wallet verification and ledger data contract.
+- Use `https://gcagochina.com/member-benefit-transfer.html` and `https://gcagochina.com/member-benefit-transfer.json` when operators, reviewers, or moderators ask how an approved 10,000 GCA member benefit transfer should be handled; keep it described as manual, reserve-funded, not automatic, not self-service claimable, and not newly minted.
 - Use `https://gcagochina.com/support.html` for official support routing, member packet handling, wallet-warning evidence intake, and data-platform correction context.
 - Use `https://gcagochina.com/support.json` when reviewers, moderators, or integration code need machine-readable support intake boundaries.
 - Use `https://gcagochina.com/roadmap.html` and `https://gcagochina.com/roadmap.json` when community members, moderators, or data reviewers ask what is live now, what is next, and what claims must remain off-limits.

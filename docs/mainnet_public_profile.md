@@ -68,6 +68,8 @@ The full fixed supply was minted to the deployer wallet at deployment. The 40/60
 - Credits catalog JSON: `https://gcagochina.com/credits.json`
 - Release gates: `https://gcagochina.com/release-gates.html`
 - Release gates JSON: `https://gcagochina.com/release-gates.json`
+- Member benefit transfer runbook: `https://gcagochina.com/member-benefit-transfer.html`
+- Member benefit transfer runbook JSON: `https://gcagochina.com/member-benefit-transfer.json`
 - Planned Web3 Radar bridge: liquidation replay reports, risk-warning credits, realistic backtest usage, ENTRY_READY signal review, position-size calculators, subscription discounts, and risk-control training
 - Planned first campaign: each registered user may verify one wallet holding at least 10,000 GCA and receive a one-time 100 Web3 Radar utility credits bonus after the access bridge is live
 - Planned GCA Member tier: each registered user may verify one wallet buying and continuously holding at least 1,000,000 GCA for 30 days, then qualify for GCA Member status and one-time 10,000 GCA member benefit review after the access bridge is live
@@ -75,6 +77,7 @@ The full fixed supply was minted to the deployer wallet at deployment. The 40/60
 - Public access API contract: planned controlled HTTPS routes for pre-registration, wallet verification, credit ledger, member ledger, support review, and member review; contract only, not live public submission infrastructure
 - Public review queue contract: planned manual-review lanes for pre-registration intake, wallet balance review, holder credit review, GCA Member review, support case review, and platform profile follow-up; contract only, not a live public submission queue
 - Public access operations runbook: operator SOP for non-sensitive intake, Base Mainnet identity checks, read-only `eth_call` / `balanceOf` wallet-balance review, support replies, ledger handoff, platform follow-up, and closure; public documentation only, not a live backend or self-service claim page
+- Public member benefit transfer runbook: manual operator controls for any approved 10,000 GCA member benefit transfer from project or owner-held reserve; not automatic, not self-service claimable, and not newly minted
 - Draft credits catalog: Liquidation Replay, Risk Warning Review, Backtest Lab, ENTRY_READY Review, Position Size Calculator, Risk-Control Training, Member Research Notes, and Support Review Queue
 - Product release gates: controlled HTTPS account UI, read-only GCA balance verification, credit ledger activation, member ledger activation, support review queue, risk-control review, and simulation or testnet first
 
