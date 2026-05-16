@@ -323,6 +323,7 @@
           <a class="button" href="onchain-proofs.html">On-chain Proofs</a>
           <a class="button" href="blockaid-followup.html">Blockaid Follow-up</a>
           <a class="button" href="technical-report.html">Technical Report</a>
+          <a class="button" href="access-api.html">Review Package Process</a>
           <a class="button" href="reserve-statement.html">Reserve Statement</a>
           <a class="button" href="wallet-warning.html">Wallet Warning Evidence</a>
           <a class="button" href="external-reviews.html">External Review Status</a>
@@ -400,6 +401,10 @@
         <div class="panel">
           <h3>Technical Report</h3>
           <p class="note"><a href="technical-report.html">technical-report.html</a> and <a href="technical-report.json">technical-report.json</a> summarize fixed-supply ERC-20 controls, verified source, absent admin controls, and residual risks.</p>
+        </div>
+        <div class="panel">
+          <h3>Local Review Package</h3>
+          <p class="note"><code>tools/export_gca_review_package.py</code> exports full-local or <code>redacted-public</code> evidence packages from <code>.gca_access_data/</code> without running the server. Each package includes <code>packageDigestSha256</code> and can be verified with <code>tools/verify_gca_review_package.py</code>. The exporter does not ask for private keys, signatures, or transactions.</p>
         </div>
         <div class="panel">
           <h3>Reserve Statement</h3>

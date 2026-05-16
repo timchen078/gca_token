@@ -4394,6 +4394,7 @@ def validate_reviewer_kit_json(text: str) -> None:
     reviews = payload.get("externalReviewStatus", {})
     boundaries = payload.get("publicClaimBoundaries", {})
     evidence = payload.get("historicalFunctionalSwapEvidence", {})
+    local_package = payload.get("localReviewPackage", {})
 
     if payload.get("schema") != REVIEWER_KIT_URL:
         raise SiteCheckError(f"{label}: wrong schema")
@@ -4435,6 +4436,10 @@ def validate_reviewer_kit_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong externalReviewStatus")
     if links.get("onchainProofs") != ONCHAIN_PROOFS_URL:
         raise SiteCheckError(f"{label}: wrong onchainProofs")
+    if links.get("accessApiPage") != ACCESS_API_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong accessApiPage")
+    if links.get("accessApi") != ACCESS_API_URL:
+        raise SiteCheckError(f"{label}: wrong accessApi")
     if links.get("trustCenterPage") != TRUST_CENTER_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong trustCenterPage")
     if links.get("trustCenter") != TRUST_CENTER_URL:
@@ -4467,6 +4472,19 @@ def validate_reviewer_kit_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong CoinGecko status")
     if evidence.get("status") != "observed-historical-functional-evidence-only":
         raise SiteCheckError(f"{label}: wrong functional evidence status")
+    if local_package.get("status") != "local-export-tool-ready":
+        raise SiteCheckError(f"{label}: wrong local review package status")
+    if local_package.get("offlineExportTool") != "tools/export_gca_review_package.py":
+        raise SiteCheckError(f"{label}: wrong local package export tool")
+    if local_package.get("verificationTool") != "tools/verify_gca_review_package.py":
+        raise SiteCheckError(f"{label}: wrong local package verification tool")
+    if local_package.get("recommendedExternalMode") != "redacted-public":
+        raise SiteCheckError(f"{label}: wrong local package external mode")
+    if "redacted-public" not in local_package.get("redactionModes", []):
+        raise SiteCheckError(f"{label}: missing local package redaction mode")
+    for key in ("requiresPrivateKey", "requiresSeedPhrase", "requiresWalletSignature", "sendsTransaction", "automaticTokenTransfer"):
+        if local_package.get("boundaries", {}).get(key) is not False:
+            raise SiteCheckError(f"{label}: local package boundary {key} must be false")
     if SWAP_TEST_BUY_TX not in evidence.get("buyTestTransactions", []):
         raise SiteCheckError(f"{label}: missing buy test transaction")
     if SWAP_TEST_SELL_TX not in evidence.get("sellTestTransactions", []):
@@ -4491,6 +4509,11 @@ def validate_reviewer_kit_page(text: str) -> None:
     assert_contains(text, "Follow-up submitted on 2026-05-13", label)
     assert_contains(text, "BaseScan Profile", label)
     assert_contains(text, "On-chain Proofs", label)
+    assert_contains(text, "Local Review Package", label)
+    assert_contains(text, "tools/export_gca_review_package.py", label)
+    assert_contains(text, "redacted-public", label)
+    assert_contains(text, "packageDigestSha256", label)
+    assert_contains(text, "tools/verify_gca_review_package.py", label)
     assert_contains(text, "External Review Status", label)
     assert_contains(text, "Trust Center", label)
     assert_contains(text, "Public Claim Boundaries", label)
