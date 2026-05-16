@@ -55,6 +55,8 @@
   "liquidityUrl": "https://gcagochina.com/liquidity.json",
   "holderDistributionPageUrl": "https://gcagochina.com/holder-distribution.html",
   "holderDistributionUrl": "https://gcagochina.com/holder-distribution.json",
+  "riskRemediationPageUrl": "https://gcagochina.com/risk-remediation.html",
+  "riskRemediationUrl": "https://gcagochina.com/risk-remediation.json",
   "supplyPageUrl": "https://gcagochina.com/supply.html",
   "supplyDisclosureUrl": "https://gcagochina.com/supply.json",
   "securityPageUrl": "https://gcagochina.com/security.html",
@@ -153,6 +155,12 @@
     "url": "https://gcagochina.com/holder-distribution.json",
     "useCase": "Public holder distribution disclosure for supply concentration, reserve wallet custody, and circulating-supply wording review."
   },
+  "riskRemediation": {
+    "status": "public-risk-remediation-plan-published",
+    "pageUrl": "https://gcagochina.com/risk-remediation.html",
+    "url": "https://gcagochina.com/risk-remediation.json",
+    "useCase": "Public risk-remediation tracker for price volatility, LP custody, supply concentration, and audit-status review."
+  },
   "baseScanContractUrl": "https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "officialEmail": "GCAgochina@outlook.com",
   "officialSocialLinks": [
@@ -227,7 +235,8 @@
     "technicalReport": "public-internal-technical-report-published",
     "reserveStatement": "public-reserve-address-statement-published",
     "liquidityStatement": "public-liquidity-custody-statement-published",
-    "holderDistribution": "public-holder-distribution-disclosure-published"
+    "holderDistribution": "public-holder-distribution-disclosure-published",
+    "riskRemediation": "public-risk-remediation-plan-published"
   },
   "listingReadiness": {
     "status": "not-ready",

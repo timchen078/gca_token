@@ -19,6 +19,8 @@
     "walletWarningEvidence": "https://gcagochina.com/wallet-warning.json",
     "blockaidFollowupPage": "https://gcagochina.com/blockaid-followup.html",
     "blockaidFollowup": "https://gcagochina.com/blockaid-followup.json",
+    "riskRemediationPage": "https://gcagochina.com/risk-remediation.html",
+    "riskRemediation": "https://gcagochina.com/risk-remediation.json",
     "walletSecurityProfile": "https://gcagochina.com/.well-known/wallet-security.json",
     "tokenSafetyPage": "https://gcagochina.com/token-safety.html",
     "tokenSafety": "https://gcagochina.com/token-safety.json",
@@ -77,6 +79,8 @@
       "followUpSubmissionDate": "2026-05-13",
       "riskFactorFollowupPage": "https://gcagochina.com/blockaid-followup.html",
       "riskFactorFollowup": "https://gcagochina.com/blockaid-followup.json",
+      "riskRemediationPage": "https://gcagochina.com/risk-remediation.html",
+      "riskRemediation": "https://gcagochina.com/risk-remediation.json",
       "followUpSubmissionResult": "Blockaid support portal returned HTTP 200 OK",
       "publicClaim": "Owner reported on 2026-05-14 that no wallet risk warning was visible in the tested wallet/DEX flow. This is an owner-visible UI observation only, not a permanent security-vendor approval or cross-wallet guarantee.",
       "nextAction": "Keep monitoring wallet and Uniswap warning UI; do not submit duplicate reports unless Blockaid, MetaMask, or Uniswap asks for more information.",
@@ -134,6 +138,7 @@
     "Wait for BaseScan email/review; do not submit duplicates unless BaseScan asks for corrections.",
     "Keep monitoring wallet-warning UI before claiming any broader warning-free or security-vendor approval status.",
     "Keep GCA/USDT market links, logo, whitepaper, Telegram, X, and metadata files live.",
+    "Use the risk-remediation plan when a reviewer asks how volatility, LP custody, supply concentration, or audit status will be reduced.",
     "Use listing-readiness and market-quality pages before CoinGecko or CoinMarketCap submission.",
     "Revisit third-party audit only when partner, listing, trust, or liquidity requirements justify it."
   ]

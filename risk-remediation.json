@@ -1,0 +1,178 @@
+{
+  "schema": "https://gcagochina.com/risk-remediation.json",
+  "pageUrl": "https://gcagochina.com/risk-remediation.html",
+  "status": "public-risk-remediation-plan-published",
+  "lastUpdated": "2026-05-16",
+  "projectName": "GCA",
+  "tokenSymbol": "GCA",
+  "network": "Base Mainnet",
+  "chainId": 8453,
+  "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+  "purpose": "Public risk-remediation plan for reviewers and community moderators. It maps the current Blockaid-style risk factors to published evidence, current status, and the real actions required before stronger public claims can be made.",
+  "scopeBoundary": "This plan is a remediation tracker and evidence map. It is not a security-vendor approval, not a third-party audit, not an LP lock claim, not a reserve lock claim, and not a claim of deep liquidity.",
+  "reviewerContext": {
+    "blockaidInitialReportDate": "2026-05-10",
+    "blockaidFollowUpSubmissionDate": "2026-05-13",
+    "blockaidRiskFactorsNoted": [
+      "token USD price volatility",
+      "unlocked or insufficiently documented LP custody",
+      "supply concentration",
+      "missing independent audit report"
+    ],
+    "currentReviewerRequest": "Blockaid requested an independent third-party audit report before reassessing the remaining risk indicators."
+  },
+  "riskItems": [
+    {
+      "id": "price-volatility",
+      "label": "Price Volatility",
+      "currentStatus": "acknowledged-starter-depth-market",
+      "currentEvidence": "https://gcagochina.com/market-quality.html",
+      "mitigationAlreadyPublished": [
+        "Official market route is consistently documented as the Base Mainnet Uniswap v4 GCA/USDT pool.",
+        "Public pages disclose starter-depth liquidity, high price impact, and slippage risk.",
+        "Public materials prohibit price support, price stability, return, or deep-liquidity claims."
+      ],
+      "nextRiskReducingActions": [
+        "Increase legitimate pool depth only when the owner intentionally funds both sides of the pool.",
+        "Publish exact transaction hashes and pool-position details for any future liquidity change.",
+        "Wait for organic public activity before tracked listing submissions."
+      ],
+      "strongerClaimRequires": [
+        "materially deeper liquidity",
+        "consistent public market data",
+        "continued clear slippage disclosure"
+      ]
+    },
+    {
+      "id": "lp-custody",
+      "label": "LP Custody",
+      "currentStatus": "not-locked-not-claimed",
+      "currentEvidence": "https://gcagochina.com/liquidity.html",
+      "mitigationAlreadyPublished": [
+        "Official liquidity statement records the GCA/USDT pool and starter-depth status.",
+        "No LP lock is claimed.",
+        "Future LP lock evidence requirements are documented before any lock claim can be made."
+      ],
+      "nextRiskReducingActions": [
+        "If the owner later chooses to lock LP, publish lock platform, lock address, position identifier, transaction hash, unlock date, and custody details.",
+        "Do not describe LP as locked until verifiable on-chain evidence exists."
+      ],
+      "strongerClaimRequires": [
+        "verifiable LP lock or equivalent custody evidence",
+        "public lock metadata",
+        "reviewed lock transaction hash"
+      ]
+    },
+    {
+      "id": "supply-concentration",
+      "label": "Supply Concentration",
+      "currentStatus": "acknowledged-owner-reserve-disclosed",
+      "currentEvidence": "https://gcagochina.com/holder-distribution.html",
+      "reserveWallet": "0x5e8F84748612B913aAcC937492AC25dc5630E246",
+      "reserveAmount": "600000000",
+      "reserveTransferTxs": [
+        "0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67",
+        "0xfffb674448abdbd3af45bb0a30c48e5fbb0e675542b971f031381254b5dc5317"
+      ],
+      "mitigationAlreadyPublished": [
+        "Owner reserve wallet is public.",
+        "Reserve transfer proofs are public.",
+        "Holder distribution page states that concentration risk remains."
+      ],
+      "nextRiskReducingActions": [
+        "Move reserve to Safe multisig, a lock contract, or a vesting contract if the owner wants stronger trust evidence.",
+        "Publish Safe, lock, or vesting addresses and transaction hashes if custody changes.",
+        "Keep circulating-supply wording conservative because data platforms may still show total supply as circulating."
+      ],
+      "strongerClaimRequires": [
+        "on-chain reserve custody change",
+        "public multisig or lock metadata",
+        "updated holder-distribution disclosure"
+      ]
+    },
+    {
+      "id": "third-party-audit",
+      "label": "Third-party Audit",
+      "currentStatus": "not-completed-deferred",
+      "currentEvidence": "https://gcagochina.com/technical-report.html",
+      "mitigationAlreadyPublished": [
+        "Internal technical report is public for reviewer triage.",
+        "Contract-control summary is machine-readable.",
+        "Public pages state that no third-party audit has been completed."
+      ],
+      "nextRiskReducingActions": [
+        "Commission an independent audit only when budget, partner requirements, listing requirements, or liquidity scale justify it.",
+        "Publish the final report URL and exact auditor name only after the audit is complete.",
+        "Do not describe internal review as Certik, Hacken, Trail of Bits, or any other independent audit."
+      ],
+      "strongerClaimRequires": [
+        "completed independent audit report",
+        "public report URL",
+        "auditor identity and scope"
+      ]
+    }
+  ],
+  "currentPositiveControls": {
+    "sourceVerifiedOnBaseScan": true,
+    "fixedSupply": true,
+    "postDeploymentMintFunction": false,
+    "ownerOrAdminRole": false,
+    "proxyOrUpgradePath": false,
+    "blacklistFunction": false,
+    "pauseFunction": false,
+    "transferTaxOrHiddenFee": false,
+    "custodyOrWithdrawalPath": false,
+    "customTransferRestrictions": false,
+    "adminTradingControls": false
+  },
+  "officialMarket": {
+    "pair": "GCA/USDT",
+    "dex": "Uniswap v4",
+    "network": "Base Mainnet",
+    "poolAddress": "0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "quoteAsset": "USDT",
+    "quoteAssetAddress": "0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2",
+    "geckoTerminal": "https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "dexScreener": "https://dexscreener.com/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "liquidityDepthStatus": "starter-depth-only",
+    "lpLockClaimed": false
+  },
+  "officialLinks": {
+    "riskRemediationPage": "https://gcagochina.com/risk-remediation.html",
+    "riskRemediation": "https://gcagochina.com/risk-remediation.json",
+    "blockaidFollowupPage": "https://gcagochina.com/blockaid-followup.html",
+    "blockaidFollowup": "https://gcagochina.com/blockaid-followup.json",
+    "technicalReportPage": "https://gcagochina.com/technical-report.html",
+    "technicalReport": "https://gcagochina.com/technical-report.json",
+    "liquidityPage": "https://gcagochina.com/liquidity.html",
+    "liquidity": "https://gcagochina.com/liquidity.json",
+    "holderDistributionPage": "https://gcagochina.com/holder-distribution.html",
+    "holderDistribution": "https://gcagochina.com/holder-distribution.json",
+    "reserveStatementPage": "https://gcagochina.com/reserve-statement.html",
+    "reserveStatement": "https://gcagochina.com/reserve-statement.json",
+    "marketQualityPage": "https://gcagochina.com/market-quality.html",
+    "marketQuality": "https://gcagochina.com/market-quality.json",
+    "trustCenterPage": "https://gcagochina.com/trust.html",
+    "trustCenter": "https://gcagochina.com/trust.json",
+    "reviewerKitPage": "https://gcagochina.com/reviewer-kit.html",
+    "reviewerKit": "https://gcagochina.com/reviewer-kit.json",
+    "walletSecurityProfile": "https://gcagochina.com/.well-known/wallet-security.json",
+    "baseScanContract": "https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6"
+  },
+  "publicClaimBoundaries": {
+    "safeClaims": [
+      "GCA has published a public risk-remediation plan.",
+      "The plan acknowledges price volatility, starter-depth liquidity, unlocked LP status, owner-controlled reserve concentration, and missing third-party audit as current risks.",
+      "The plan maps current public evidence to future risk-reducing actions.",
+      "No LP lock, reserve lock, deep liquidity, third-party audit, or security-vendor approval is claimed."
+    ],
+    "doNotClaim": [
+      "risk factors are fully solved",
+      "LP is locked before verifiable lock evidence exists",
+      "reserve is locked before on-chain custody changes",
+      "deep liquidity or price stability before market data supports it",
+      "third-party audit completion before an independent report is published",
+      "security-vendor approval before a vendor confirms it"
+    ]
+  }
+}

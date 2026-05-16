@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GCA Risk Remediation Plan</title>
+    <meta name="description" content="Official GCA risk-remediation plan mapping price volatility, LP custody, supply concentration, and audit status to public evidence and next risk-reducing actions.">
+    <link rel="canonical" href="https://gcagochina.com/risk-remediation.html">
+    <link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">
+    <link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="GCA | Go China Access">
+    <meta property="og:title" content="GCA Risk Remediation Plan">
+    <meta property="og:description" content="Official GCA risk-remediation plan mapping price volatility, LP custody, supply concentration, and audit status to public evidence and next risk-reducing actions.">
+    <meta property="og:url" content="https://gcagochina.com/risk-remediation.html">
+    <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="GCA Risk Remediation Plan">
+    <meta name="twitter:description" content="Official GCA risk-remediation plan mapping price volatility, LP custody, supply concentration, and audit status to public evidence and next risk-reducing actions.">
+    <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #121212;
+        --muted: #5f6773;
+        --line: #d9dde3;
+        --panel: #ffffff;
+        --soft: #f5f7fa;
+        --blue: #0052ff;
+        --red: #d71920;
+        --green: #16833a;
+        --amber: #9a5b00;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: #f8fafc;
+        color: var(--ink);
+      }
+
+      a { color: var(--blue); text-decoration: none; }
+      a:hover { text-decoration: underline; }
+
+      header {
+        background: rgba(255, 255, 255, 0.94);
+        border-bottom: 1px solid var(--line);
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        backdrop-filter: blur(14px);
+      }
+
+      .shell {
+        width: min(1120px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      nav {
+        min-height: 72px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 800;
+        color: var(--ink);
+      }
+
+      .brand img { width: 34px; height: 34px; }
+
+      .nav-links {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 10px 14px;
+        font-size: 14px;
+        font-weight: 700;
+      }
+
+      main { padding: 48px 0 64px; }
+
+      h1 {
+        max-width: 840px;
+        margin: 0;
+        font-size: clamp(38px, 7vw, 74px);
+        line-height: 0.95;
+        letter-spacing: 0;
+      }
+
+      .lead {
+        max-width: 860px;
+        margin: 18px 0 0;
+        color: var(--muted);
+        font-size: 19px;
+        line-height: 1.7;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 24px;
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        min-height: 42px;
+        padding: 0 16px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fff;
+        color: var(--ink);
+        font-weight: 800;
+      }
+
+      .button.primary {
+        background: var(--blue);
+        border-color: var(--blue);
+        color: #fff;
+      }
+
+      .facts {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 32px;
+      }
+
+      .fact,
+      .panel {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+      }
+
+      .fact { padding: 16px; }
+
+      .label {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 800;
+        text-transform: uppercase;
+      }
+
+      .value {
+        display: block;
+        margin-top: 8px;
+        font-size: 17px;
+        font-weight: 850;
+        overflow-wrap: anywhere;
+      }
+
+      .good { color: var(--green); }
+      .pending { color: var(--amber); }
+      .risk { color: var(--red); }
+
+      .section { margin-top: 34px; }
+      .panel { padding: 24px; }
+
+      h2 {
+        margin: 0 0 14px;
+        font-size: 24px;
+        letter-spacing: 0;
+      }
+
+      h3 {
+        margin: 0 0 8px;
+        font-size: 18px;
+      }
+
+      .note {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.65;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .list {
+        display: grid;
+        gap: 10px;
+        margin-top: 12px;
+      }
+
+      .row {
+        display: grid;
+        grid-template-columns: minmax(130px, 0.9fr) minmax(0, 1.25fr);
+        gap: 12px;
+        align-items: start;
+        border-top: 1px solid var(--line);
+        padding-top: 10px;
+      }
+
+      .row strong {
+        min-width: 0;
+        overflow-wrap: anywhere;
+        text-align: right;
+      }
+
+      ul {
+        margin: 12px 0 0;
+        padding-left: 20px;
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      code {
+        padding: 2px 5px;
+        border-radius: 6px;
+        background: var(--soft);
+        overflow-wrap: anywhere;
+      }
+
+      footer {
+        border-top: 1px solid var(--line);
+        padding: 24px 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      @media (max-width: 900px) {
+        nav { align-items: flex-start; flex-direction: column; padding: 14px 0; }
+        .nav-links { justify-content: flex-start; }
+        .facts,
+        .grid,
+        .cards {
+          grid-template-columns: 1fr;
+        }
+        .row { grid-template-columns: 1fr; }
+        .row strong { text-align: left; }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav class="shell" aria-label="Primary">
+        <a class="brand" href="index.html" aria-label="GCA home">
+          <img src="assets/gca-logo.svg" alt="GCA logo">
+          <span>GCA</span>
+        </a>
+        <div class="nav-links">
+          <a href="verify.html">Verify</a>
+          <a href="trust.html">Trust</a>
+          <a href="blockaid-followup.html">Blockaid</a>
+          <a href="liquidity.html">Liquidity</a>
+          <a href="holder-distribution.html">Holders</a>
+          <a href="technical-report.html">Technical</a>
+          <a href="risk.html">Risk</a>
+        </div>
+      </nav>
+    </header>
+
+    <main class="shell">
+      <section aria-labelledby="title">
+        <h1 id="title">GCA Risk Remediation Plan</h1>
+        <p class="lead">This page maps the current reviewer risk factors for GCA to public evidence and concrete future actions. It does not claim the risks are already solved; it shows what is disclosed now and what would be required for stronger public claims later.</p>
+        <div class="actions">
+          <a class="button primary" href="risk-remediation.json">Risk Remediation JSON</a>
+          <a class="button" href="blockaid-followup.html">Blockaid Follow-up</a>
+          <a class="button" href="liquidity.html">Liquidity Statement</a>
+          <a class="button" href="holder-distribution.html">Holder Distribution</a>
+          <a class="button" href="technical-report.html">Technical Report</a>
+          <a class="button" href="market-quality.html">Market Quality</a>
+        </div>
+      </section>
+
+      <section class="facts" aria-label="Risk remediation snapshot">
+        <div class="fact">
+          <span class="label">Network</span>
+          <span class="value">Base Mainnet / 8453</span>
+        </div>
+        <div class="fact">
+          <span class="label">Contract</span>
+          <span class="value">0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6</span>
+        </div>
+        <div class="fact">
+          <span class="label">Official Market</span>
+          <span class="value">GCA/USDT</span>
+        </div>
+        <div class="fact">
+          <span class="label">Official Pool</span>
+          <span class="value">0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0</span>
+        </div>
+        <div class="fact">
+          <span class="label">Base USDT</span>
+          <span class="value">0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2</span>
+        </div>
+        <div class="fact">
+          <span class="label">Plan Status</span>
+          <span class="value pending">Public tracker published</span>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="scopeTitle">
+        <h2 id="scopeTitle">Scope Boundary</h2>
+        <p class="note">This is a remediation tracker and evidence map. It is not a security-vendor approval, not a third-party audit, not an LP lock claim, not a reserve lock claim, and not a claim of deep liquidity.</p>
+      </section>
+
+      <section class="section cards" aria-label="Risk factor statuses">
+        <div class="panel">
+          <h3>Price Volatility</h3>
+          <p class="note">Status: <strong class="pending">acknowledged starter-depth market</strong>.</p>
+          <ul>
+            <li>Evidence: <a href="market-quality.html">Market Quality</a>.</li>
+            <li>Next: legitimate pool depth and transparent liquidity records.</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h3>LP Custody</h3>
+          <p class="note">Status: <strong class="risk">not locked, not claimed</strong>.</p>
+          <ul>
+            <li>Evidence: <a href="liquidity.html">Liquidity Statement</a>.</li>
+            <li>Next: publish lock metadata only if a real lock is executed.</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h3>Supply Concentration</h3>
+          <p class="note">Status: <strong class="pending">owner reserve disclosed</strong>.</p>
+          <ul>
+            <li>Reserve wallet: <code>0x5e8F84748612B913aAcC937492AC25dc5630E246</code>.</li>
+            <li>Next: Safe multisig, lock, or vesting contract if stronger custody evidence is needed.</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h3>Third-party Audit</h3>
+          <p class="note">Status: <strong class="risk">not completed</strong>.</p>
+          <ul>
+            <li>Evidence: <a href="technical-report.html">Internal Technical Report</a>.</li>
+            <li>Next: independent audit report only after budget or listing requirements justify it.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section grid" aria-label="Evidence and next actions">
+        <div class="panel">
+          <h2>Already Published</h2>
+          <div class="list">
+            <div class="row"><span><a href="blockaid-followup.html">Blockaid Follow-up</a></span><strong>Risk-factor response package</strong></div>
+            <div class="row"><span><a href="liquidity.html">Liquidity Statement</a></span><strong>Starter-depth and unlocked LP boundary</strong></div>
+            <div class="row"><span><a href="holder-distribution.html">Holder Distribution</a></span><strong>Reserve wallet and concentration disclosure</strong></div>
+            <div class="row"><span><a href="technical-report.html">Technical Report</a></span><strong>Internal contract-control report</strong></div>
+            <div class="row"><span><a href="trust.html">Trust Center</a></span><strong>Public evidence hub</strong></div>
+          </div>
+        </div>
+        <div class="panel">
+          <h2>Actions That Would Reduce Review Risk</h2>
+          <div class="list">
+            <div class="row"><span>Market depth</span><strong>Owner-funded, transparent GCA/USDT liquidity additions</strong></div>
+            <div class="row"><span>LP custody</span><strong>Verifiable LP lock or equivalent custody evidence</strong></div>
+            <div class="row"><span>Reserve custody</span><strong>Safe multisig, lock contract, or vesting contract</strong></div>
+            <div class="row"><span>Audit status</span><strong>Completed independent audit with public report URL</strong></div>
+            <div class="row"><span>Public activity</span><strong>Useful product updates and community education, not artificial activity</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="doNotTitle">
+        <h2 id="doNotTitle">Do Not Overstate</h2>
+        <ul>
+          <li>Do not say risk factors are fully solved.</li>
+          <li>Do not say LP is locked before verifiable lock evidence exists.</li>
+          <li>Do not say the reserve is locked before on-chain custody changes.</li>
+          <li>Do not say deep liquidity, price stability, security-vendor approval, or third-party audit completion before the evidence exists.</li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <div class="shell">GCA risk-remediation plan. Last updated 2026-05-16. Verify Base Mainnet chain ID 8453 and the official GCA/USDT pool before using this data.</div>
+    </footer>
+  </body>
+</html>
