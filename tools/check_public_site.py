@@ -1795,6 +1795,7 @@ def validate_access_api_page(text: str) -> None:
     assert_contains(text, "/gca/member-review", label)
     assert_contains(text, "/gca/member-benefit-transfers", label)
     assert_contains(text, "eth_call", label)
+    assert_contains(text, "read-only Base receipt data", label)
     assert_contains(text, "balanceOf", label)
     assert_contains(text, "100 Web3 Radar utility credits", label)
     assert_contains(text, "GCA Member", label)
@@ -1895,6 +1896,7 @@ def validate_access_api_json(text: str) -> None:
         "serverSideContractValidationRequired",
         "walletVerificationReadOnly",
         "usesEthCall",
+        "usesEthGetTransactionReceipt",
         "usesErc20BalanceOf",
     ):
         if security.get(key) is not True:
@@ -1941,8 +1943,20 @@ def validate_access_api_json(text: str) -> None:
     transfer_create = endpoint_map["POST /gca/member-benefit-transfers"]
     if "memberBenefitTransferTx" not in transfer_create.get("requiredRequestFields", []):
         raise SiteCheckError(f"{label}: missing transfer tx field")
+    for expected_check in (
+        "eth_getTransactionReceipt is read-only",
+        "receipt must contain a successful GCA Transfer log to recipientWallet",
+        "matched transfer amount must be at least 10000 GCA",
+    ):
+        if expected_check not in transfer_create.get("serverChecks", []):
+            raise SiteCheckError(f"{label}: missing transfer receipt check {expected_check}")
     if "alreadyRecorded" not in transfer_create.get("responseFields", []):
         raise SiteCheckError(f"{label}: missing transfer idempotency field")
+    transfer_read = endpoint_map["GET /gca/member-benefit-transfers"]
+    if "transferVerificationStatus" not in transfer_read.get("responseFields", []):
+        raise SiteCheckError(f"{label}: missing transfer verification status field")
+    if "transferVerification" not in transfer_read.get("responseFields", []):
+        raise SiteCheckError(f"{label}: missing transfer verification evidence field")
     wallet = endpoint_map["POST /gca/wallet-verifications"]
     if "chainId must be 8453" not in wallet.get("serverChecks", []):
         raise SiteCheckError(f"{label}: missing chain check")
@@ -3736,6 +3750,8 @@ def validate_member_program_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing local credit ledger")
     if "member_benefit_transfers" not in local_backend.get("writesJsonlLedgers", []):
         raise SiteCheckError(f"{label}: missing local transfer ledger")
+    if local_backend.get("transferReceiptVerificationMethod") != "Base Mainnet public RPC eth_getTransactionReceipt ERC-20 Transfer log":
+        raise SiteCheckError(f"{label}: wrong transfer receipt verification method")
     if preview.get("status") != "browser-read-only-preview-live":
         raise SiteCheckError(f"{label}: wrong browser preview status")
     if preview.get("ledgerEffect") != "none":

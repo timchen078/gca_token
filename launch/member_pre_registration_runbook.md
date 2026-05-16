@@ -41,7 +41,7 @@ Local backend behavior:
 
 - Serves the static `site/` pages.
 - Exposes a local operator summary at `GET /gca/operator-summary` for pre-registration, wallet verification, credit ledger, member ledger, member benefit transfer, and support review counts.
-- Records manually completed 10,000 GCA member benefit transfers at `POST /gca/member-benefit-transfers` after an operator signs the transfer outside this app; it records the public transaction hash only and does not send tokens.
+- Records manually completed 10,000 GCA member benefit transfers at `POST /gca/member-benefit-transfers` after an operator signs the transfer outside this app; it verifies the public transaction hash with read-only Base Mainnet `eth_getTransactionReceipt`, records the matching GCA `Transfer` evidence, and does not send tokens.
 - Enables same-origin `POST /gca/pre-registrations` only when the page is opened from `localhost` or `127.0.0.1`.
 - Verifies the submitted wallet with read-only Base Mainnet `eth_call` / ERC-20 `balanceOf`.
 - Writes append-only local JSONL files under `.gca_access_data/`.

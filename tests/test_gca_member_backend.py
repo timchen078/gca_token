@@ -9,9 +9,12 @@ from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
 from tools.gca_member_backend import (
+    BaseRpcBalanceReader,
     CONTRACT_ADDRESS,
     HOLDER_THRESHOLD_UNITS,
+    MEMBER_BENEFIT_UNITS,
     MEMBER_THRESHOLD_UNITS,
+    TRANSFER_TOPIC,
     GcaMemberBackend,
     JsonlLedgerStore,
     BackendError,
@@ -29,13 +32,54 @@ SOURCE_WALLET = "0x5e8F84748612B913aAcC937492AC25dc5630E246"
 
 
 class FixedBalanceReader:
-    def __init__(self, balance_units):
+    def __init__(self, balance_units, transfer_evidence=None):
         self.balance_units = balance_units
         self.wallets = []
+        self.transfer_evidence = transfer_evidence
+        self.transfer_requests = []
 
     def get_balance_units(self, wallet):
         self.wallets.append(wallet)
         return self.balance_units
+
+    def get_transfer_evidence(self, tx_hash, recipient_wallet, source_wallet=""):
+        self.transfer_requests.append({
+            "txHash": tx_hash,
+            "recipientWallet": recipient_wallet,
+            "sourceWallet": source_wallet,
+        })
+        if self.transfer_evidence is not None:
+            return dict(self.transfer_evidence)
+        return {
+            "status": "verified",
+            "chainId": 8453,
+            "contractAddress": CONTRACT_ADDRESS,
+            "transactionHash": tx_hash,
+            "recipientWallet": recipient_wallet.lower(),
+            "sourceWallet": source_wallet.lower(),
+            "expectedMinimumAmount": "10000 GCA",
+            "expectedMinimumAmountUnits": str(MEMBER_BENEFIT_UNITS),
+            "matchedTransfer": True,
+            "matchedTransferAmount": "10000",
+            "matchedTransferAmountUnits": str(MEMBER_BENEFIT_UNITS),
+            "matchedFrom": source_wallet.lower(),
+            "matchedTo": recipient_wallet.lower(),
+            "receiptStatus": "success",
+            "readOnlyRpcMethod": "eth_getTransactionReceipt",
+            "requiresSignature": False,
+            "requiresTransaction": False,
+            "automaticTransfer": False,
+        }
+
+
+class FixedReceiptReader(BaseRpcBalanceReader):
+    def __init__(self, receipt):
+        self.receipt = receipt
+        self.calls = []
+
+    def rpc(self, method, params):
+        self.calls.append({"method": method, "params": params})
+        return self.receipt
 
 
 def sample_packet(wallet=WALLET):
@@ -62,11 +106,11 @@ def sample_packet(wallet=WALLET):
 
 
 class GcaMemberBackendTests(unittest.TestCase):
-    def make_backend(self, balance_units):
+    def make_backend(self, balance_units, transfer_evidence=None):
         temp = tempfile.TemporaryDirectory()
         self.addCleanup(temp.cleanup)
         store = JsonlLedgerStore(Path(temp.name))
-        backend = GcaMemberBackend(store=store, balance_reader=FixedBalanceReader(balance_units))
+        backend = GcaMemberBackend(store=store, balance_reader=FixedBalanceReader(balance_units, transfer_evidence))
         return backend, store
 
     def test_balance_helpers_match_erc20_balanceof_contract(self):
@@ -80,6 +124,33 @@ class GcaMemberBackendTests(unittest.TestCase):
             holding_days_from_date((datetime.now(UTC).date() - timedelta(days=31)).isoformat()),
             30,
         )
+
+    def test_transfer_receipt_verifier_matches_gca_transfer_log(self):
+        receipt = {
+            "status": "0x1",
+            "logs": [
+                {
+                    "address": CONTRACT_ADDRESS,
+                    "topics": [
+                        TRANSFER_TOPIC,
+                        "0x" + SOURCE_WALLET.removeprefix("0x").lower().rjust(64, "0"),
+                        "0x" + WALLET.removeprefix("0x").lower().rjust(64, "0"),
+                    ],
+                    "data": hex(MEMBER_BENEFIT_UNITS),
+                }
+            ],
+        }
+        reader = FixedReceiptReader(receipt)
+        evidence = reader.get_transfer_evidence(TRANSFER_TX, WALLET, SOURCE_WALLET)
+
+        self.assertEqual(evidence["status"], "verified")
+        self.assertTrue(evidence["matchedTransfer"])
+        self.assertEqual(evidence["matchedTransferAmount"], "10000")
+        self.assertEqual(evidence["matchedTransferAmountUnits"], str(MEMBER_BENEFIT_UNITS))
+        self.assertEqual(evidence["readOnlyRpcMethod"], "eth_getTransactionReceipt")
+        self.assertFalse(evidence["requiresSignature"])
+        self.assertFalse(evidence["automaticTransfer"])
+        self.assertEqual(reader.calls[0]["method"], "eth_getTransactionReceipt")
 
     def test_submit_pre_registration_creates_wallet_credit_and_member_records(self):
         backend, store = self.make_backend(MEMBER_THRESHOLD_UNITS)
@@ -131,9 +202,14 @@ class GcaMemberBackendTests(unittest.TestCase):
         self.assertEqual(transfer["transferRecord"]["status"], "transferred")
         self.assertEqual(transfer["transferRecord"]["memberBenefitAmount"], "10000 GCA")
         self.assertEqual(transfer["transferRecord"]["memberBenefitTransferTx"], TRANSFER_TX)
+        self.assertEqual(transfer["transferRecord"]["transferVerificationStatus"], "verified")
+        self.assertTrue(transfer["transferRecord"]["transferVerification"]["matchedTransfer"])
+        self.assertIn(TRANSFER_TX, transfer["transferRecord"]["memberBenefitTransferUrl"])
         self.assertFalse(transfer["transferRecord"]["automaticTransfer"])
         self.assertEqual(transfer["memberLedger"]["memberBenefitClaimStatus"], "transferred")
+        self.assertEqual(transfer["memberLedger"]["transferVerificationStatus"], "verified")
         self.assertEqual(transfer["supportReview"]["memberBenefitTransferTx"], TRANSFER_TX)
+        self.assertEqual(transfer["supportReview"]["transferVerificationStatus"], "verified")
         self.assertEqual(len(store.read_all("member_benefit_transfers")), 1)
         self.assertEqual(len(store.read_all("member_ledger")), 2)
         self.assertEqual(len(store.read_all("support_reviews")), 2)
@@ -154,6 +230,26 @@ class GcaMemberBackendTests(unittest.TestCase):
         self.assertEqual(duplicate["memberLedger"]["memberBenefitClaimStatus"], "transferred")
         self.assertEqual(len(store.read_all("member_benefit_transfers")), 1)
         self.assertEqual(len(store.read_all("member_ledger")), 2)
+
+    def test_member_benefit_transfer_requires_matching_read_only_receipt(self):
+        backend, _store = self.make_backend(
+            MEMBER_THRESHOLD_UNITS,
+            transfer_evidence={
+                "status": "contract_or_amount_mismatch",
+                "matchedTransfer": False,
+                "readOnlyRpcMethod": "eth_getTransactionReceipt",
+                "requiresSignature": False,
+                "automaticTransfer": False,
+            },
+        )
+        response = backend.submit_pre_registration(sample_packet())
+        with self.assertRaises(BackendError):
+            backend.record_member_benefit_transfer({
+                "memberLedgerId": response["memberLedger"]["memberLedgerId"],
+                "memberBenefitTransferTx": TRANSFER_TX,
+                "sourceWallet": SOURCE_WALLET,
+                "recipientWallet": WALLET,
+            })
 
     def test_member_benefit_transfer_requires_active_pending_member(self):
         backend, _store = self.make_backend(MEMBER_THRESHOLD_UNITS)

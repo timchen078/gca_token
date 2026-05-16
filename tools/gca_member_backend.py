@@ -34,11 +34,14 @@ from urllib.request import Request, urlopen
 CHAIN_ID = 8453
 CONTRACT_ADDRESS = "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6"
 BASE_RPC_URL = "https://mainnet.base.org"
+BASESCAN_TX_URL = "https://basescan.org/tx/"
 BALANCE_OF_SELECTOR = "0x70a08231"
+TRANSFER_TOPIC = "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef"
 TOKEN_DECIMALS = 18
 TOKEN_UNIT = 10**TOKEN_DECIMALS
 HOLDER_THRESHOLD_UNITS = 10_000 * TOKEN_UNIT
 MEMBER_THRESHOLD_UNITS = 1_000_000 * TOKEN_UNIT
+MEMBER_BENEFIT_UNITS = 10_000 * TOKEN_UNIT
 MEMBER_HOLD_DAYS = 30
 CREDIT_AMOUNT = 100
 CREDIT_EXPIRY_DAYS = 180
@@ -230,12 +233,12 @@ class BaseRpcBalanceReader:
     rpc_url: str = BASE_RPC_URL
     timeout: float = 20.0
 
-    def get_balance_units(self, wallet: str) -> int:
+    def rpc(self, method: str, params: list[Any]) -> Any:
         request_payload = {
             "jsonrpc": "2.0",
             "id": int(time.time() * 1000),
-            "method": "eth_call",
-            "params": [{"to": CONTRACT_ADDRESS, "data": balance_of_calldata(wallet)}, "latest"],
+            "method": method,
+            "params": params,
         }
         request = Request(
             self.rpc_url,
@@ -247,11 +250,85 @@ class BaseRpcBalanceReader:
             with urlopen(request, timeout=self.timeout) as response:
                 payload = json.loads(response.read().decode())
         except (OSError, URLError, json.JSONDecodeError) as exc:
-            raise BackendError(f"Base RPC balance read failed: {exc}", HTTPStatus.BAD_GATEWAY) from exc
+            raise BackendError(f"Base RPC read failed: {exc}", HTTPStatus.BAD_GATEWAY) from exc
         if "error" in payload:
             raise BackendError(f"Base RPC error: {payload['error']}", HTTPStatus.BAD_GATEWAY)
-        result = str(payload.get("result") or "0x0")
+        return payload.get("result")
+
+    def get_balance_units(self, wallet: str) -> int:
+        result = self.rpc("eth_call", [{"to": CONTRACT_ADDRESS, "data": balance_of_calldata(wallet)}, "latest"])
+        result = str(result or "0x0")
         return int(result, 16)
+
+    def get_transfer_evidence(self, tx_hash: str, recipient_wallet: str, source_wallet: str = "") -> dict[str, Any]:
+        normalized_tx = str(tx_hash or "").strip().lower()
+        recipient = normalize_wallet(recipient_wallet)
+        source = normalize_wallet(source_wallet) if source_wallet else ""
+        receipt = self.rpc("eth_getTransactionReceipt", [normalized_tx])
+        evidence = {
+            "status": "not_found",
+            "chainId": CHAIN_ID,
+            "contractAddress": CONTRACT_ADDRESS,
+            "transactionHash": normalized_tx,
+            "recipientWallet": recipient,
+            "sourceWallet": source,
+            "expectedMinimumAmount": MEMBER_BENEFIT_AMOUNT,
+            "expectedMinimumAmountUnits": str(MEMBER_BENEFIT_UNITS),
+            "matchedTransfer": False,
+            "matchedTransferAmount": "",
+            "matchedTransferAmountUnits": "0",
+            "matchedFrom": "",
+            "matchedTo": "",
+            "receiptStatus": "",
+            "readOnlyRpcMethod": "eth_getTransactionReceipt",
+            "requiresSignature": False,
+            "requiresTransaction": False,
+            "automaticTransfer": False,
+        }
+        if not isinstance(receipt, dict):
+            return evidence
+
+        receipt_status = str(receipt.get("status") or "").lower()
+        evidence["receiptStatus"] = "success" if receipt_status == "0x1" else "failed"
+        if receipt_status != "0x1":
+            evidence["status"] = "tx_failed"
+            return evidence
+
+        recipient_suffix = recipient.removeprefix("0x").lower()
+        source_suffix = source.removeprefix("0x").lower() if source else ""
+        best_units = 0
+        for log in receipt.get("logs") or []:
+            if not isinstance(log, dict):
+                continue
+            log_address = str(log.get("address") or "").lower()
+            topics = [str(topic or "").lower() for topic in (log.get("topics") or [])]
+            if log_address != CONTRACT_ADDRESS.lower() or len(topics) < 3 or topics[0] != TRANSFER_TOPIC:
+                continue
+            from_wallet = "0x" + topics[1][-40:]
+            to_wallet = "0x" + topics[2][-40:]
+            if to_wallet.lower() != recipient.lower():
+                continue
+            if source_suffix and from_wallet.lower().removeprefix("0x") != source_suffix:
+                continue
+            try:
+                amount_units = int(str(log.get("data") or "0x0"), 16)
+            except ValueError:
+                continue
+            if amount_units > best_units:
+                best_units = amount_units
+                evidence.update({
+                    "matchedTransferAmount": units_to_gca(amount_units),
+                    "matchedTransferAmountUnits": str(amount_units),
+                    "matchedFrom": from_wallet.lower(),
+                    "matchedTo": to_wallet.lower(),
+                })
+
+        if best_units >= MEMBER_BENEFIT_UNITS:
+            evidence["status"] = "verified"
+            evidence["matchedTransfer"] = True
+        else:
+            evidence["status"] = "contract_or_amount_mismatch"
+        return evidence
 
 
 class JsonlLedgerStore:
@@ -525,6 +602,7 @@ class GcaMemberBackend:
             raise BackendError("memberLedgerId is required")
         if not is_tx_hash(transfer_tx):
             raise BackendError("memberBenefitTransferTx must be a valid transaction hash")
+        transfer_tx = transfer_tx.lower()
         if source_wallet:
             source_wallet = normalize_wallet(source_wallet)
         if recipient_wallet:
@@ -552,8 +630,19 @@ class GcaMemberBackend:
         if recipient_wallet and recipient_wallet != member.get("walletAddress"):
             raise BackendError("recipientWallet must match the verified member wallet")
         recipient_wallet = recipient_wallet or str(member.get("walletAddress") or "")
+        transfer_evidence = self.balance_reader.get_transfer_evidence(
+            transfer_tx,
+            recipient_wallet=recipient_wallet,
+            source_wallet=source_wallet,
+        )
+        if not isinstance(transfer_evidence, dict) or transfer_evidence.get("matchedTransfer") is not True:
+            raise BackendError(
+                "memberBenefitTransferTx was not verified as a matching GCA transfer to the member wallet",
+                HTTPStatus.CONFLICT,
+            )
 
         transferred_at = iso_now()
+        basescan_url = f"{BASESCAN_TX_URL}{transfer_tx}"
         transfer_record = {
             "transferRecordId": transfer_id,
             "memberLedgerId": member_id,
@@ -564,6 +653,9 @@ class GcaMemberBackend:
             "walletAddress": recipient_wallet,
             "memberBenefitAmount": MEMBER_BENEFIT_AMOUNT,
             "memberBenefitTransferTx": transfer_tx,
+            "memberBenefitTransferUrl": basescan_url,
+            "transferVerificationStatus": transfer_evidence.get("status", ""),
+            "transferVerification": transfer_evidence,
             "transferredAt": transferred_at,
             "reviewerNote": reviewer_note,
             "source": "local-operator-manual-reserve-transfer-record",
@@ -577,7 +669,9 @@ class GcaMemberBackend:
         updated_member.update({
             "memberBenefitClaimStatus": "transferred",
             "memberBenefitTransferTx": transfer_tx,
+            "memberBenefitTransferUrl": basescan_url,
             "memberBenefitClaimedAt": transferred_at,
+            "transferVerificationStatus": transfer_evidence.get("status", ""),
             "sourceWallet": source_wallet,
             "recipientWallet": recipient_wallet,
             "transferRecordId": transfer_id,
@@ -605,6 +699,8 @@ class GcaMemberBackend:
             "memberLedgerId": member_id,
             "memberBenefitClaimStatus": "transferred",
             "memberBenefitTransferTx": transfer_tx,
+            "memberBenefitTransferUrl": basescan_url,
+            "transferVerificationStatus": transfer_evidence.get("status", ""),
             "transferRecordId": transfer_id,
             "nextStep": "Manual reserve-wallet transfer was recorded locally. Verify the transaction on BaseScan before public support follow-up.",
             "publicEvidenceReference": transfer_tx,

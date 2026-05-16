@@ -1137,6 +1137,10 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertFalse(rules["verification"]["localOperatorBackend"]["publicProductionEndpointLive"])
         self.assertIn("credit_ledger", rules["verification"]["localOperatorBackend"]["writesJsonlLedgers"])
         self.assertIn("member_benefit_transfers", rules["verification"]["localOperatorBackend"]["writesJsonlLedgers"])
+        self.assertEqual(
+            rules["verification"]["localOperatorBackend"]["transferReceiptVerificationMethod"],
+            "Base Mainnet public RPC eth_getTransactionReceipt ERC-20 Transfer log",
+        )
         self.assertEqual(rules["verification"]["preparedMemberBenefitTransferEndpoint"], "/gca/member-benefit-transfers")
         self.assertEqual(rules["publicPages"]["memberAccessPreview"], MEMBER_ACCESS_PAGE_URL)
         self.assertEqual(rules["publicPages"]["memberLedger"], MEMBER_LEDGER_PAGE_URL)
@@ -2043,6 +2047,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertTrue(api["securityModel"]["structuredAuditLogsRequired"])
         self.assertTrue(api["securityModel"]["walletVerificationReadOnly"])
         self.assertTrue(api["securityModel"]["usesEthCall"])
+        self.assertTrue(api["securityModel"]["usesEthGetTransactionReceipt"])
         self.assertTrue(api["securityModel"]["usesErc20BalanceOf"])
         self.assertFalse(api["securityModel"]["requiresSignatureForBalanceRead"])
         self.assertFalse(api["securityModel"]["requiresTransactionForBalanceRead"])
@@ -2088,7 +2093,13 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("automaticTokenTransfer", operator_summary_endpoint["responseFields"])
         transfer_endpoint = next(item for item in api["endpoints"] if item["id"] == "member-benefit-transfers-create")
         self.assertIn("memberBenefitTransferTx", transfer_endpoint["requiredRequestFields"])
+        self.assertIn("eth_getTransactionReceipt is read-only", transfer_endpoint["serverChecks"])
+        self.assertIn("receipt must contain a successful GCA Transfer log to recipientWallet", transfer_endpoint["serverChecks"])
+        self.assertIn("matched transfer amount must be at least 10000 GCA", transfer_endpoint["serverChecks"])
         self.assertIn("alreadyRecorded", transfer_endpoint["responseFields"])
+        transfer_read_endpoint = next(item for item in api["endpoints"] if item["id"] == "member-benefit-transfers-read")
+        self.assertIn("transferVerificationStatus", transfer_read_endpoint["responseFields"])
+        self.assertIn("transferVerification", transfer_read_endpoint["responseFields"])
         support_review_endpoint = next(item for item in api["endpoints"] if item["id"] == "support-review")
         self.assertIn("publicEvidenceReference", support_review_endpoint["requiredRequestFields"])
         self.assertIn("memberBenefitReviewEvidence", support_review_endpoint["requiredRequestFields"])

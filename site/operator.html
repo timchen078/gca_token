@@ -397,14 +397,14 @@
         </div>
         <div class="panel">
           <h2>Local API</h2>
-          <p class="note"><code>GET /gca/operator-summary</code> powers this console. Individual records remain available through <code>GET /gca/pre-registrations</code>, <code>GET /gca/wallet-verifications</code>, <code>GET /gca/credit-ledger</code>, <code>GET /gca/member-ledger</code>, <code>GET /gca/member-benefit-transfers</code>, and <code>GET /gca/member-review</code>. <code>POST /gca/member-benefit-transfers</code> records a completed manual reserve-wallet transfer after the operator signs it outside this app.</p>
+          <p class="note"><code>GET /gca/operator-summary</code> powers this console. Individual records remain available through <code>GET /gca/pre-registrations</code>, <code>GET /gca/wallet-verifications</code>, <code>GET /gca/credit-ledger</code>, <code>GET /gca/member-ledger</code>, <code>GET /gca/member-benefit-transfers</code>, and <code>GET /gca/member-review</code>. <code>POST /gca/member-benefit-transfers</code> records a completed manual reserve-wallet transfer after the operator signs it outside this app and the backend verifies the receipt with read-only Base Mainnet data.</p>
           <pre id="summaryJson">Waiting for local backend...</pre>
         </div>
       </section>
 
       <section class="section panel" aria-labelledby="transferTitle">
         <h2 id="transferTitle">Record Manual Member Benefit Transfer</h2>
-        <p class="note">Use this after the 10,000 GCA member benefit has already been sent manually from the reserve wallet. This form only records the public Base transaction hash in local JSONL ledgers. It does not connect to a wallet, request a signature, or send tokens.</p>
+        <p class="note">Use this after the 10,000 GCA member benefit has already been sent manually from the reserve wallet. This form records the public Base transaction hash, verifies the public Base transaction receipt, records matching GCA Transfer evidence in local JSONL ledgers, and does not connect to a wallet, request a signature, or send tokens.</p>
         <form class="form section" id="transferForm">
           <div class="field">
             <label for="memberLedgerId">Member Ledger ID</label>
