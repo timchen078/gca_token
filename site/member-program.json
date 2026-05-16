@@ -100,6 +100,7 @@
     "preparedWalletVerificationEndpoint": "/gca/wallet-verifications",
     "preparedCreditLedgerEndpoint": "/gca/credit-ledger",
     "preparedMemberLedgerEndpoint": "/gca/member-ledger",
+    "preparedMemberBenefitTransferEndpoint": "/gca/member-benefit-transfers",
     "preparedReviewEndpoint": "/gca/member-review",
     "publicLedgerSchemaUrl": "https://gcagochina.com/member-ledger.json",
     "currentPublicSubmissionMode": "copy, download, or email local packet",
@@ -117,6 +118,7 @@
         "wallet_verifications",
         "credit_ledger",
         "member_ledger",
+        "member_benefit_transfers",
         "support_reviews"
       ],
       "publicProductionEndpointLive": false

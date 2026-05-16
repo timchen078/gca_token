@@ -1042,6 +1042,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("http://127.0.0.1:8787/operator.html", page)
         self.assertIn('const LOCAL_BACKEND_HOSTS = new Set(["127.0.0.1", "localhost"]);', page)
         self.assertIn('const OPERATOR_SUMMARY_ENDPOINT_PATH = "/gca/operator-summary";', page)
+        self.assertIn('const MEMBER_BENEFIT_TRANSFER_ENDPOINT_PATH = "/gca/member-benefit-transfers";', page)
         self.assertIn("fetch(OPERATOR_SUMMARY_ENDPOINT_PATH", page)
         self.assertIn("Public website view: local backend not connected", page)
         self.assertIn("Local operator backend connected", page)
@@ -1051,14 +1052,21 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("100 credits records", page)
         self.assertIn("Active GCA Members", page)
         self.assertIn("Pending reserve transfers", page)
+        self.assertIn("Recorded transfers", page)
+        self.assertIn("Record Manual Member Benefit Transfer", page)
+        self.assertIn("Member Ledger ID", page)
+        self.assertIn("Manual Transfer Tx Hash", page)
+        self.assertIn("Record Transfer", page)
         self.assertIn("Latest Support Review Records", page)
         self.assertIn("/gca/operator-summary", page)
         self.assertIn("/gca/pre-registrations", page)
         self.assertIn("/gca/wallet-verifications", page)
         self.assertIn("/gca/credit-ledger", page)
         self.assertIn("/gca/member-ledger", page)
+        self.assertIn("/gca/member-benefit-transfers", page)
         self.assertIn("/gca/member-review", page)
         self.assertIn("manual reserve-wallet transfer review", page)
+        self.assertIn("records the public Base transaction hash", page)
         self.assertIn("never sends tokens", page)
         self.assertIn("not a public production account system", page)
         self.assertNotIn("eth_sendTransaction", page)
@@ -1128,6 +1136,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(rules["verification"]["localOperatorBackend"]["localOperatorSummaryEndpoint"], "/gca/operator-summary")
         self.assertFalse(rules["verification"]["localOperatorBackend"]["publicProductionEndpointLive"])
         self.assertIn("credit_ledger", rules["verification"]["localOperatorBackend"]["writesJsonlLedgers"])
+        self.assertIn("member_benefit_transfers", rules["verification"]["localOperatorBackend"]["writesJsonlLedgers"])
+        self.assertEqual(rules["verification"]["preparedMemberBenefitTransferEndpoint"], "/gca/member-benefit-transfers")
         self.assertEqual(rules["publicPages"]["memberAccessPreview"], MEMBER_ACCESS_PAGE_URL)
         self.assertEqual(rules["publicPages"]["memberLedger"], MEMBER_LEDGER_PAGE_URL)
         self.assertEqual(rules["publicPages"]["memberLedgerSchema"], MEMBER_LEDGER_URL)
@@ -1974,6 +1984,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("/gca/support-review", page)
         self.assertIn("/gca/member-review", page)
         self.assertIn("/gca/operator-summary", page)
+        self.assertIn("/gca/member-benefit-transfers", page)
         self.assertIn("eth_call", page)
         self.assertIn("balanceOf", page)
         self.assertIn("100 Web3 Radar utility credits", page)
@@ -2023,6 +2034,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(api["localDevelopmentBackend"]["localOperatorSummaryEndpoint"], "/gca/operator-summary")
         self.assertFalse(api["localDevelopmentBackend"]["publicProductionEndpointLive"])
         self.assertIn("member_ledger", api["localDevelopmentBackend"]["writesJsonlLedgers"])
+        self.assertIn("member_benefit_transfers", api["localDevelopmentBackend"]["writesJsonlLedgers"])
         self.assertFalse(api["localDevelopmentBackend"]["automaticTokenTransfer"])
         self.assertTrue(api["securityModel"]["controlledHttpsOriginRequired"])
         self.assertTrue(api["securityModel"]["authenticatedAccountSessionRequired"])
@@ -2046,10 +2058,12 @@ class LaunchPackageTests(unittest.TestCase):
             "POST /gca/support-review",
             "GET /gca/member-review",
             "GET /gca/operator-summary",
+            "GET /gca/member-benefit-transfers",
+            "POST /gca/member-benefit-transfers",
         }:
             self.assertIn(endpoint_key, endpoint_keys)
         for endpoint in api["endpoints"]:
-            if endpoint["id"] == "operator-summary":
+            if endpoint["id"] in {"operator-summary", "member-benefit-transfers-read", "member-benefit-transfers-create"}:
                 self.assertEqual(endpoint["status"], "local-only-not-public-production")
             else:
                 self.assertEqual(endpoint["status"], "planned-not-live")
@@ -2072,6 +2086,9 @@ class LaunchPackageTests(unittest.TestCase):
         operator_summary_endpoint = next(item for item in api["endpoints"] if item["id"] == "operator-summary")
         self.assertIn("publicSelfServiceClaim", operator_summary_endpoint["responseFields"])
         self.assertIn("automaticTokenTransfer", operator_summary_endpoint["responseFields"])
+        transfer_endpoint = next(item for item in api["endpoints"] if item["id"] == "member-benefit-transfers-create")
+        self.assertIn("memberBenefitTransferTx", transfer_endpoint["requiredRequestFields"])
+        self.assertIn("alreadyRecorded", transfer_endpoint["responseFields"])
         support_review_endpoint = next(item for item in api["endpoints"] if item["id"] == "support-review")
         self.assertIn("publicEvidenceReference", support_review_endpoint["requiredRequestFields"])
         self.assertIn("memberBenefitReviewEvidence", support_review_endpoint["requiredRequestFields"])

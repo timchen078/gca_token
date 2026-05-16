@@ -10,7 +10,7 @@ This runbook keeps the current static member pre-registration flow operationally
 - Local operator backend: `tools/gca_member_backend.py`
 - Local operator URL: `http://127.0.0.1:8787/members.html`
 - Local operator console: `http://127.0.0.1:8787/operator.html`
-- Local same-origin API: `POST /gca/pre-registrations`, `POST /gca/wallet-verifications`, `GET /gca/operator-summary`, `GET /gca/credit-ledger`, `GET /gca/member-ledger`, and `GET /gca/member-review`
+- Local same-origin API: `POST /gca/pre-registrations`, `POST /gca/wallet-verifications`, `GET /gca/operator-summary`, `GET /gca/credit-ledger`, `GET /gca/member-ledger`, `POST /gca/member-benefit-transfers`, `GET /gca/member-benefit-transfers`, and `GET /gca/member-review`
 - Fallback collection methods: copy packet, download JSON, or email packet to `GCAgochina@outlook.com`
 - Public claim status: not connected
 - Prepared Web3 Radar user access page: `/gca/member-access`
@@ -40,7 +40,8 @@ Then open `http://127.0.0.1:8787/members.html` for intake or `http://127.0.0.1:8
 Local backend behavior:
 
 - Serves the static `site/` pages.
-- Exposes a local operator summary at `GET /gca/operator-summary` for pre-registration, wallet verification, credit ledger, member ledger, and support review counts.
+- Exposes a local operator summary at `GET /gca/operator-summary` for pre-registration, wallet verification, credit ledger, member ledger, member benefit transfer, and support review counts.
+- Records manually completed 10,000 GCA member benefit transfers at `POST /gca/member-benefit-transfers` after an operator signs the transfer outside this app; it records the public transaction hash only and does not send tokens.
 - Enables same-origin `POST /gca/pre-registrations` only when the page is opened from `localhost` or `127.0.0.1`.
 - Verifies the submitted wallet with read-only Base Mainnet `eth_call` / ERC-20 `balanceOf`.
 - Writes append-only local JSONL files under `.gca_access_data/`.

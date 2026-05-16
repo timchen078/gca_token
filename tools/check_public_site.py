@@ -594,6 +594,7 @@ def validate_operator_page(text: str) -> None:
     assert_contains(text, "http://127.0.0.1:8787/operator.html", label)
     assert_contains(text, "LOCAL_BACKEND_HOSTS", label)
     assert_contains(text, 'const OPERATOR_SUMMARY_ENDPOINT_PATH = "/gca/operator-summary";', label)
+    assert_contains(text, 'const MEMBER_BENEFIT_TRANSFER_ENDPOINT_PATH = "/gca/member-benefit-transfers";', label)
     assert_contains(text, "Local operator backend connected", label)
     assert_contains(text, "Public website view: local backend not connected", label)
     assert_contains(text, "local JSONL ledger records", label)
@@ -602,13 +603,20 @@ def validate_operator_page(text: str) -> None:
     assert_contains(text, "100 credits records", label)
     assert_contains(text, "Active GCA Members", label)
     assert_contains(text, "Pending reserve transfers", label)
+    assert_contains(text, "Recorded transfers", label)
+    assert_contains(text, "Record Manual Member Benefit Transfer", label)
+    assert_contains(text, "Member Ledger ID", label)
+    assert_contains(text, "Manual Transfer Tx Hash", label)
+    assert_contains(text, "Record Transfer", label)
     assert_contains(text, "Latest Support Review Records", label)
     assert_contains(text, "/gca/pre-registrations", label)
     assert_contains(text, "/gca/wallet-verifications", label)
     assert_contains(text, "/gca/credit-ledger", label)
     assert_contains(text, "/gca/member-ledger", label)
+    assert_contains(text, "/gca/member-benefit-transfers", label)
     assert_contains(text, "/gca/member-review", label)
     assert_contains(text, "manual reserve-wallet transfer review", label)
+    assert_contains(text, "records the public Base transaction hash", label)
     assert_contains(text, "never sends tokens", label)
     assert_not_contains(text, "eth_sendTransaction", label)
     assert_not_contains(text, "personal_sign", label)
@@ -1785,6 +1793,7 @@ def validate_access_api_page(text: str) -> None:
     assert_contains(text, "/gca/member-ledger", label)
     assert_contains(text, "/gca/support-review", label)
     assert_contains(text, "/gca/member-review", label)
+    assert_contains(text, "/gca/member-benefit-transfers", label)
     assert_contains(text, "eth_call", label)
     assert_contains(text, "balanceOf", label)
     assert_contains(text, "100 Web3 Radar utility credits", label)
@@ -1873,7 +1882,7 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: local backend must not mark production live")
     if local_backend.get("automaticTokenTransfer") is not False:
         raise SiteCheckError(f"{label}: local backend must not automatically transfer tokens")
-    for ledger in ("pre_registrations", "wallet_verifications", "credit_ledger", "member_ledger", "support_reviews"):
+    for ledger in ("pre_registrations", "wallet_verifications", "credit_ledger", "member_ledger", "member_benefit_transfers", "support_reviews"):
         if ledger not in local_backend.get("writesJsonlLedgers", []):
             raise SiteCheckError(f"{label}: missing local ledger {ledger}")
     for key in (
@@ -1923,6 +1932,17 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong operator summary endpoint status")
     if "publicSelfServiceClaim" not in operator_summary.get("responseFields", []):
         raise SiteCheckError(f"{label}: missing operator summary claim boundary")
+    for endpoint_key in ("GET /gca/member-benefit-transfers", "POST /gca/member-benefit-transfers"):
+        endpoint = endpoint_map.get(endpoint_key)
+        if endpoint is None:
+            raise SiteCheckError(f"{label}: missing endpoint {endpoint_key}")
+        if endpoint.get("status") != "local-only-not-public-production":
+            raise SiteCheckError(f"{label}: endpoint {endpoint_key} should be local-only")
+    transfer_create = endpoint_map["POST /gca/member-benefit-transfers"]
+    if "memberBenefitTransferTx" not in transfer_create.get("requiredRequestFields", []):
+        raise SiteCheckError(f"{label}: missing transfer tx field")
+    if "alreadyRecorded" not in transfer_create.get("responseFields", []):
+        raise SiteCheckError(f"{label}: missing transfer idempotency field")
     wallet = endpoint_map["POST /gca/wallet-verifications"]
     if "chainId must be 8453" not in wallet.get("serverChecks", []):
         raise SiteCheckError(f"{label}: missing chain check")
@@ -3714,6 +3734,8 @@ def validate_member_program_json(text: str) -> None:
         raise SiteCheckError(f"{label}: local backend must not mark production live")
     if "credit_ledger" not in local_backend.get("writesJsonlLedgers", []):
         raise SiteCheckError(f"{label}: missing local credit ledger")
+    if "member_benefit_transfers" not in local_backend.get("writesJsonlLedgers", []):
+        raise SiteCheckError(f"{label}: missing local transfer ledger")
     if preview.get("status") != "browser-read-only-preview-live":
         raise SiteCheckError(f"{label}: wrong browser preview status")
     if preview.get("ledgerEffect") != "none":
@@ -3726,6 +3748,8 @@ def validate_member_program_json(text: str) -> None:
         raise SiteCheckError(f"{label}: browser preview must require controlled UI for final eligibility")
     if verification.get("publicLedgerSchemaUrl") != MEMBER_LEDGER_URL:
         raise SiteCheckError(f"{label}: wrong public ledger schema URL")
+    if verification.get("preparedMemberBenefitTransferEndpoint") != "/gca/member-benefit-transfers":
+        raise SiteCheckError(f"{label}: wrong member benefit transfer endpoint")
     if privacy_terms.get("status") != "public-privacy-and-terms-published":
         raise SiteCheckError(f"{label}: wrong privacy and terms status")
     if privacy_terms.get("privacyNoticeUrl") != PRIVACY_NOTICE_PAGE_URL:

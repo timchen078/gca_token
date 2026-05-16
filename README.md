@@ -24,7 +24,7 @@ Run the local-only member backend for operator testing:
 .venv/bin/python tools/gca_member_backend.py --host 127.0.0.1 --port 8787
 ```
 
-Then open `http://127.0.0.1:8787/members.html` for intake or `http://127.0.0.1:8787/operator.html` for the local operator console. The backend serves `site/`, accepts `POST /gca/pre-registrations`, verifies GCA with read-only Base Mainnet `eth_call`, exposes `GET /gca/operator-summary`, and writes append-only JSONL records under `.gca_access_data/`. It does not ask for private keys, seed phrases, signatures, withdrawal permission, custody, or exchange API secrets.
+Then open `http://127.0.0.1:8787/members.html` for intake or `http://127.0.0.1:8787/operator.html` for the local operator console. The backend serves `site/`, accepts `POST /gca/pre-registrations`, verifies GCA with read-only Base Mainnet `eth_call`, exposes `GET /gca/operator-summary`, and writes append-only JSONL records under `.gca_access_data/`. Operators can record a manually completed 10,000 GCA member benefit transfer with `POST /gca/member-benefit-transfers`; the backend records only the public transaction hash and does not send tokens. It does not ask for private keys, seed phrases, signatures, withdrawal permission, custody, or exchange API secrets.
 
 ## Mainnet Launch Package
 

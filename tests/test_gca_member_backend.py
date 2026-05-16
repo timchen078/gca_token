@@ -24,6 +24,8 @@ from tools.gca_member_backend import (
 
 
 WALLET = "0x18d0007bc6be029f8ccd7cb13e324aa21891092d"
+TRANSFER_TX = "0x" + "b" * 64
+SOURCE_WALLET = "0x5e8F84748612B913aAcC937492AC25dc5630E246"
 
 
 class FixedBalanceReader:
@@ -102,6 +104,7 @@ class GcaMemberBackendTests(unittest.TestCase):
         self.assertEqual(len(store.read_all("wallet_verifications")), 1)
         self.assertEqual(len(store.read_all("credit_ledger")), 1)
         self.assertEqual(len(store.read_all("member_ledger")), 1)
+        self.assertEqual(len(store.read_all("member_benefit_transfers")), 0)
         self.assertEqual(len(store.read_all("support_reviews")), 1)
 
         summary = backend.operator_summary()
@@ -113,8 +116,60 @@ class GcaMemberBackendTests(unittest.TestCase):
         self.assertEqual(summary["totals"]["creditLedgerRecords"], 1)
         self.assertEqual(summary["totals"]["activeMembers"], 1)
         self.assertEqual(summary["totals"]["pendingManualReserveTransfers"], 1)
+        self.assertEqual(summary["totals"]["memberBenefitTransfers"], 0)
         self.assertEqual(summary["dataLedgers"]["support_reviews"]["count"], 1)
         self.assertTrue(summary["operatorBoundaries"]["readOnlyWalletVerification"])
+
+        transfer = backend.record_member_benefit_transfer({
+            "memberLedgerId": response["memberLedger"]["memberLedgerId"],
+            "memberBenefitTransferTx": TRANSFER_TX,
+            "sourceWallet": SOURCE_WALLET,
+            "recipientWallet": WALLET,
+            "reviewerNote": "Manual reserve-wallet transfer completed and recorded locally.",
+        })
+        self.assertFalse(transfer["alreadyRecorded"])
+        self.assertEqual(transfer["transferRecord"]["status"], "transferred")
+        self.assertEqual(transfer["transferRecord"]["memberBenefitAmount"], "10000 GCA")
+        self.assertEqual(transfer["transferRecord"]["memberBenefitTransferTx"], TRANSFER_TX)
+        self.assertFalse(transfer["transferRecord"]["automaticTransfer"])
+        self.assertEqual(transfer["memberLedger"]["memberBenefitClaimStatus"], "transferred")
+        self.assertEqual(transfer["supportReview"]["memberBenefitTransferTx"], TRANSFER_TX)
+        self.assertEqual(len(store.read_all("member_benefit_transfers")), 1)
+        self.assertEqual(len(store.read_all("member_ledger")), 2)
+        self.assertEqual(len(store.read_all("support_reviews")), 2)
+
+        summary = backend.operator_summary()
+        self.assertEqual(summary["totals"]["memberLedgerRecords"], 1)
+        self.assertEqual(summary["totals"]["pendingManualReserveTransfers"], 0)
+        self.assertEqual(summary["totals"]["memberBenefitTransfers"], 1)
+        self.assertEqual(summary["totals"]["transferredMemberBenefits"], 1)
+
+        duplicate = backend.record_member_benefit_transfer({
+            "memberLedgerId": response["memberLedger"]["memberLedgerId"],
+            "memberBenefitTransferTx": TRANSFER_TX,
+            "recipientWallet": WALLET,
+        })
+        self.assertTrue(duplicate["alreadyRecorded"])
+        self.assertEqual(duplicate["transferRecord"]["transferRecordId"], transfer["transferRecord"]["transferRecordId"])
+        self.assertEqual(duplicate["memberLedger"]["memberBenefitClaimStatus"], "transferred")
+        self.assertEqual(len(store.read_all("member_benefit_transfers")), 1)
+        self.assertEqual(len(store.read_all("member_ledger")), 2)
+
+    def test_member_benefit_transfer_requires_active_pending_member(self):
+        backend, _store = self.make_backend(MEMBER_THRESHOLD_UNITS)
+        packet = sample_packet()
+        packet["memberBenefitReviewEvidence"] = {
+            "holdingStartDate": "",
+            "evidenceTxHash": "",
+            "evidenceNote": "Needs later public holding-period evidence.",
+        }
+        response = backend.submit_pre_registration(packet)
+        with self.assertRaises(BackendError):
+            backend.record_member_benefit_transfer({
+                "memberLedgerId": response["memberLedger"]["memberLedgerId"],
+                "memberBenefitTransferTx": TRANSFER_TX,
+                "recipientWallet": WALLET,
+            })
 
     def test_below_threshold_registration_does_not_create_credit_or_member_records(self):
         backend, store = self.make_backend(9999)
@@ -191,6 +246,29 @@ class GcaMemberBackendTests(unittest.TestCase):
             self.assertEqual(summary["dataLedgers"]["pre_registrations"]["count"], 1)
             self.assertFalse(summary["publicSelfServiceClaim"])
             self.assertFalse(summary["automaticTokenTransfer"])
+
+            transfer_request = Request(
+                f"{base_url}/gca/member-benefit-transfers",
+                data=json.dumps({
+                    "memberLedgerId": payload["memberLedger"]["memberLedgerId"],
+                    "memberBenefitTransferTx": TRANSFER_TX,
+                    "sourceWallet": SOURCE_WALLET,
+                    "recipientWallet": WALLET,
+                    "reviewerNote": "Manual transfer recorded through local HTTP API.",
+                }).encode(),
+                headers={"Content-Type": "application/json"},
+                method="POST",
+            )
+            with urlopen(transfer_request, timeout=10) as response:
+                transfer = json.loads(response.read().decode())
+            self.assertTrue(transfer["ok"])
+            self.assertEqual(transfer["transferRecord"]["status"], "transferred")
+            self.assertEqual(transfer["memberLedger"]["memberBenefitClaimStatus"], "transferred")
+
+            with urlopen(f"{base_url}/gca/member-benefit-transfers?memberLedgerId={payload['memberLedger']['memberLedgerId']}", timeout=10) as response:
+                transfer_ledger = json.loads(response.read().decode())
+            self.assertTrue(transfer_ledger["ok"])
+            self.assertEqual(transfer_ledger["count"], 1)
 
             bad_request = Request(
                 f"{base_url}/gca/pre-registrations",

@@ -63,6 +63,7 @@ LEDGER_NAMES = (
     "wallet_verifications",
     "credit_ledger",
     "member_ledger",
+    "member_benefit_transfers",
     "support_reviews",
 )
 LOCAL_CLIENTS = {"127.0.0.1", "::1", "localhost"}
@@ -213,6 +214,15 @@ def extract_member_evidence(packet: dict[str, Any]) -> dict[str, Any]:
         "finalEligibilityStillRequiresSupportAndLedgerReview": True,
         "doesNotCreateLedgerRecord": False,
     }
+
+
+def latest_records_by(records: list[dict[str, Any]], key: str) -> list[dict[str, Any]]:
+    latest: dict[str, dict[str, Any]] = {}
+    for record in records:
+        record_id = str(record.get(key) or "")
+        if record_id:
+            latest[record_id] = record
+    return list(latest.values())
 
 
 @dataclass
@@ -504,9 +514,122 @@ class GcaMemberBackend:
         }
         return self.store.append("support_reviews", record)
 
+    def record_member_benefit_transfer(self, payload: dict[str, Any]) -> dict[str, Any]:
+        member_id = str(payload.get("memberLedgerId") or "").strip()
+        transfer_tx = str(payload.get("memberBenefitTransferTx") or "").strip()
+        source_wallet = str(payload.get("sourceWallet") or "").strip()
+        recipient_wallet = str(payload.get("recipientWallet") or "").strip()
+        reviewer_note = str(payload.get("reviewerNote") or "").strip()
+
+        if not member_id:
+            raise BackendError("memberLedgerId is required")
+        if not is_tx_hash(transfer_tx):
+            raise BackendError("memberBenefitTransferTx must be a valid transaction hash")
+        if source_wallet:
+            source_wallet = normalize_wallet(source_wallet)
+        if recipient_wallet:
+            recipient_wallet = normalize_wallet(recipient_wallet)
+
+        member_versions = self.store.find("member_ledger", memberLedgerId=member_id)
+        if not member_versions:
+            raise BackendError("memberLedgerId was not found", HTTPStatus.NOT_FOUND)
+        member = member_versions[-1]
+
+        transfer_id = stable_id("gca_transfer", member_id, transfer_tx)
+        if self.store.exists("member_benefit_transfers", "transferRecordId", transfer_id):
+            existing = self.store.find("member_benefit_transfers", transferRecordId=transfer_id)
+            return {
+                "transferRecord": existing[-1],
+                "memberLedger": member,
+                "supportReview": None,
+                "alreadyRecorded": True,
+            }
+
+        if member.get("status") != "active":
+            raise BackendError("member ledger record must be active before transfer can be recorded")
+        if member.get("memberBenefitClaimStatus") != "pending_manual_reserve_transfer":
+            raise BackendError("member benefit is not pending manual reserve transfer", HTTPStatus.CONFLICT)
+        if recipient_wallet and recipient_wallet != member.get("walletAddress"):
+            raise BackendError("recipientWallet must match the verified member wallet")
+        recipient_wallet = recipient_wallet or str(member.get("walletAddress") or "")
+
+        transferred_at = iso_now()
+        transfer_record = {
+            "transferRecordId": transfer_id,
+            "memberLedgerId": member_id,
+            "registrationId": member.get("registrationId", ""),
+            "email": member.get("email", ""),
+            "sourceWallet": source_wallet,
+            "recipientWallet": recipient_wallet,
+            "walletAddress": recipient_wallet,
+            "memberBenefitAmount": MEMBER_BENEFIT_AMOUNT,
+            "memberBenefitTransferTx": transfer_tx,
+            "transferredAt": transferred_at,
+            "reviewerNote": reviewer_note,
+            "source": "local-operator-manual-reserve-transfer-record",
+            "automaticTransfer": False,
+            "selfServicePublicClaim": False,
+            "status": "transferred",
+        }
+        self.store.append("member_benefit_transfers", transfer_record)
+
+        updated_member = dict(member)
+        updated_member.update({
+            "memberBenefitClaimStatus": "transferred",
+            "memberBenefitTransferTx": transfer_tx,
+            "memberBenefitClaimedAt": transferred_at,
+            "sourceWallet": source_wallet,
+            "recipientWallet": recipient_wallet,
+            "transferRecordId": transfer_id,
+            "updatedAt": transferred_at,
+            "automaticTransfer": False,
+            "selfServicePublicClaim": False,
+        })
+        self.store.append("member_ledger", updated_member)
+
+        review = {
+            "reviewId": stable_id("gca_review", member_id, transfer_tx),
+            "registrationId": member.get("registrationId", ""),
+            "lane": "gca-member-benefit-transfer",
+            "status": "ledger_recorded",
+            "updatedAt": transferred_at,
+            "walletAddress": recipient_wallet,
+            "holderBonusEligible": True,
+            "gcaMemberEligible": True,
+            "holdingStartDate": member.get("holdingStartDate", ""),
+            "holdingPeriodDaysVerified": member.get("holdingPeriodDaysVerified", 0),
+            "evidenceTxHash": member.get("evidenceTxHash", ""),
+            "evidenceTxHashFormatOk": member.get("evidenceTxHashFormatOk", False),
+            "memberBenefitReviewEvidenceStatus": member.get("memberBenefitReviewEvidenceStatus", ""),
+            "creditLedgerId": "",
+            "memberLedgerId": member_id,
+            "memberBenefitClaimStatus": "transferred",
+            "memberBenefitTransferTx": transfer_tx,
+            "transferRecordId": transfer_id,
+            "nextStep": "Manual reserve-wallet transfer was recorded locally. Verify the transaction on BaseScan before public support follow-up.",
+            "publicEvidenceReference": transfer_tx,
+            "supportNote": reviewer_note or "Manual GCA Member benefit transfer recorded by local operator backend.",
+        }
+        self.store.append("support_reviews", review)
+
+        return {
+            "transferRecord": transfer_record,
+            "memberLedger": updated_member,
+            "supportReview": review,
+            "alreadyRecorded": False,
+        }
+
     def query(self, ledger: str, query: dict[str, list[str]]) -> list[dict[str, Any]]:
         filters: dict[str, str] = {}
-        for key in ("walletAddress", "email", "registrationId", "creditLedgerId", "memberLedgerId"):
+        for key in (
+            "walletAddress",
+            "email",
+            "registrationId",
+            "creditLedgerId",
+            "memberLedgerId",
+            "transferRecordId",
+            "memberBenefitTransferTx",
+        ):
             value = query.get(key, [""])[0]
             if value:
                 filters[key] = value.lower() if key in {"walletAddress", "email"} else value
@@ -514,8 +637,9 @@ class GcaMemberBackend:
 
     def operator_summary(self, limit: int = 25) -> dict[str, Any]:
         ledgers = {name: self.store.read_all(name) for name in LEDGER_NAMES}
-        credit_records = ledgers["credit_ledger"]
-        member_records = ledgers["member_ledger"]
+        credit_records = latest_records_by(ledgers["credit_ledger"], "creditLedgerId")
+        member_records = latest_records_by(ledgers["member_ledger"], "memberLedgerId")
+        transfer_records = latest_records_by(ledgers["member_benefit_transfers"], "transferRecordId")
         review_records = ledgers["support_reviews"]
         summary = {
             "ok": True,
@@ -540,6 +664,8 @@ class GcaMemberBackend:
                 "memberLedgerRecords": len(member_records),
                 "activeMembers": sum(1 for record in member_records if record.get("status") == "active"),
                 "queuedMembers": sum(1 for record in member_records if record.get("status") == "queued"),
+                "memberBenefitTransfers": len(transfer_records),
+                "transferredMemberBenefits": sum(1 for record in member_records if record.get("memberBenefitClaimStatus") == "transferred"),
                 "supportReviews": len(review_records),
                 "pendingManualReserveTransfers": sum(
                     1
@@ -556,6 +682,7 @@ class GcaMemberBackend:
                 "noCustody": True,
                 "readOnlyWalletVerification": True,
                 "manualReserveTransferOnly": True,
+                "recordsManualTransfersOnly": True,
             },
         }
         return summary
@@ -613,6 +740,7 @@ def build_handler(site_dir: Path, backend: GcaMemberBackend) -> type[SimpleHTTPR
                     "/gca/wallet-verifications": "wallet_verifications",
                     "/gca/credit-ledger": "credit_ledger",
                     "/gca/member-ledger": "member_ledger",
+                    "/gca/member-benefit-transfers": "member_benefit_transfers",
                     "/gca/member-review": "support_reviews",
                 }
                 if parsed.path in ledger_map:
@@ -635,6 +763,10 @@ def build_handler(site_dir: Path, backend: GcaMemberBackend) -> type[SimpleHTTPR
                     return
                 if parsed.path == "/gca/wallet-verifications":
                     self.send_json({"ok": True, "walletVerification": backend.wallet_verification_from_request(payload)}, HTTPStatus.CREATED)
+                    return
+                if parsed.path == "/gca/member-benefit-transfers":
+                    result = backend.record_member_benefit_transfer(payload)
+                    self.send_json({"ok": True, **result}, HTTPStatus.CREATED)
                     return
                 self.send_json({"ok": False, "error": "Unsupported API path"}, HTTPStatus.NOT_FOUND)
             except BackendError as exc:
