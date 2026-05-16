@@ -37,6 +37,8 @@
   "onchainProofsUrl": "https://gcagochina.com/onchain-proofs.json",
   "walletWarningEvidencePageUrl": "https://gcagochina.com/wallet-warning.html",
   "walletWarningEvidenceUrl": "https://gcagochina.com/wallet-warning.json",
+  "blockaidFollowupPageUrl": "https://gcagochina.com/blockaid-followup.html",
+  "blockaidFollowupUrl": "https://gcagochina.com/blockaid-followup.json",
   "externalReviewStatusPageUrl": "https://gcagochina.com/external-reviews.html",
   "externalReviewStatusUrl": "https://gcagochina.com/external-reviews.json",
   "listingReadinessPageUrl": "https://gcagochina.com/listing-readiness.html",
@@ -116,6 +118,12 @@
     "pageUrl": "https://gcagochina.com/token-safety.html",
     "url": "https://gcagochina.com/token-safety.json",
     "useCase": "Public token safety checklist for wallet-security reviewers, moderators, and users."
+  },
+  "blockaidFollowup": {
+    "status": "public-blockaid-followup-package-published",
+    "pageUrl": "https://gcagochina.com/blockaid-followup.html",
+    "url": "https://gcagochina.com/blockaid-followup.json",
+    "useCase": "Public wallet-security follow-up package that addresses price volatility, LP lock status, supply concentration, and audit status without claiming external approval."
   },
   "technicalReport": {
     "status": "public-internal-technical-report-published",
@@ -199,6 +207,7 @@
     "accessApiContract": "public-access-api-contract-published",
     "reviewQueueContract": "public-review-queue-contract-published",
     "accessOperationsRunbook": "public-access-operations-runbook-published",
+    "blockaidFollowup": "public-blockaid-followup-package-published",
     "technicalReport": "public-internal-technical-report-published",
     "reserveStatement": "public-reserve-address-statement-published"
   },
@@ -324,6 +333,8 @@
     "status": "warning-report-submitted-owner-observed-no-warning-visible",
     "pageUrl": "https://gcagochina.com/wallet-warning.html",
     "url": "https://gcagochina.com/wallet-warning.json",
+    "blockaidFollowupPageUrl": "https://gcagochina.com/blockaid-followup.html",
+    "blockaidFollowupUrl": "https://gcagochina.com/blockaid-followup.json",
     "walletSecurityProfileUrl": "https://gcagochina.com/.well-known/wallet-security.json",
     "blockaidReportDate": "2026-05-10",
     "baseScanSource": "verified",

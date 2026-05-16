@@ -1,0 +1,123 @@
+{
+  "schema": "https://gcagochina.com/blockaid-followup.json",
+  "pageUrl": "https://gcagochina.com/blockaid-followup.html",
+  "lastUpdated": "2026-05-16",
+  "status": "public-blockaid-followup-package-published",
+  "projectName": "GCA",
+  "tokenName": "GCA",
+  "tokenSymbol": "GCA",
+  "network": "Base Mainnet",
+  "chainId": 8453,
+  "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+  "contactEmail": "GCAgochina@outlook.com",
+  "purpose": "Public follow-up package for Blockaid, wallet-security reviewers, and DEX interfaces after Blockaid requested more documentation about price volatility, LP lock status, supply concentration, and audit status.",
+  "blockaidContext": {
+    "initialReportDate": "2026-05-10",
+    "followUpSubmissionDate": "2026-05-13",
+    "latestReviewerRequest": "Blockaid requested a complete third-party audit report and noted price volatility, unlocked liquidity, and supply concentration as risk factors.",
+    "currentPosition": "GCA is not claiming third-party audit completion, LP lock, locked reserve, deep liquidity, price support, or security-vendor approval. This package asks reviewers to separate contract-level honeypot controls from disclosed market-structure risks."
+  },
+  "contractControlSummary": {
+    "sourceVerifiedOnBaseScan": true,
+    "fixedSupply": true,
+    "postDeploymentMintFunction": false,
+    "ownerOrAdminRole": false,
+    "proxyOrUpgradePath": false,
+    "blacklistFunction": false,
+    "pauseFunction": false,
+    "transferTaxOrHiddenFee": false,
+    "custodyOrWithdrawalPath": false,
+    "customTransferRestrictions": false,
+    "adminTradingControls": false,
+    "baseScanContract": "https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6"
+  },
+  "riskFactorResponses": {
+    "priceVolatility": {
+      "status": "acknowledged",
+      "response": "GCA has starter-depth liquidity, so swaps can have high price impact and volatile execution prices. Public materials disclose this and do not claim price stability or price support.",
+      "publicReference": "https://gcagochina.com/market-quality.html"
+    },
+    "lpLock": {
+      "status": "not-locked-not-claimed",
+      "response": "No LP lock is currently claimed. If a future LP lock is executed, the project will publish the lock platform, lock address, transaction hash, position identifier, unlock date, and custody details.",
+      "publicReference": "https://gcagochina.com/reserve-statement.html"
+    },
+    "supplyConcentration": {
+      "status": "disclosed-owner-reserve",
+      "response": "The 600,000,000 GCA owner-held reserve is publicly disclosed in a separate reserve wallet with two on-chain transfer proofs. The reserve is owner-controlled and not currently locked, vested, or multisig-controlled.",
+      "reserveWallet": "0x5e8F84748612B913aAcC937492AC25dc5630E246",
+      "reserveTransferTxs": [
+        "0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67",
+        "0xfffb674448abdbd3af45bb0a30c48e5fbb0e675542b971f031381254b5dc5317"
+      ],
+      "publicReference": "https://gcagochina.com/reserve-statement.html"
+    },
+    "thirdPartyAudit": {
+      "status": "not-completed",
+      "response": "No third-party audit has been completed. GCA has published an internal technical report for reviewer triage, but it is not an independent audit from Certik, Hacken, Trail of Bits, or another audit provider.",
+      "publicReference": "https://gcagochina.com/technical-report.html"
+    }
+  },
+  "officialMarket": {
+    "pair": "GCA/USDT",
+    "dex": "Uniswap v4",
+    "network": "Base Mainnet",
+    "poolAddress": "0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "quoteAsset": "USDT",
+    "quoteAssetAddress": "0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2",
+    "geckoTerminal": "https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "dexScreener": "https://dexscreener.com/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "liquidityDepthStatus": "starter-depth-only"
+  },
+  "reviewRequest": {
+    "requestedOutcome": "Please review whether any suspected-honeypot or transfer-blocking label can be separated from disclosed market-structure risks.",
+    "acceptedResidualRiskLabels": [
+      "starter-depth liquidity",
+      "high price impact",
+      "unlocked LP",
+      "owner-controlled reserve",
+      "supply concentration",
+      "no completed third-party audit"
+    ],
+    "notRequested": [
+      "security-vendor approval claim",
+      "audit approval claim",
+      "LP lock claim",
+      "reserve lock claim",
+      "price stability claim"
+    ]
+  },
+  "officialLinks": {
+    "blockaidFollowupPage": "https://gcagochina.com/blockaid-followup.html",
+    "blockaidFollowup": "https://gcagochina.com/blockaid-followup.json",
+    "technicalReportPage": "https://gcagochina.com/technical-report.html",
+    "technicalReport": "https://gcagochina.com/technical-report.json",
+    "reserveStatementPage": "https://gcagochina.com/reserve-statement.html",
+    "reserveStatement": "https://gcagochina.com/reserve-statement.json",
+    "walletWarningEvidencePage": "https://gcagochina.com/wallet-warning.html",
+    "walletWarningEvidence": "https://gcagochina.com/wallet-warning.json",
+    "trustCenterPage": "https://gcagochina.com/trust.html",
+    "trustCenter": "https://gcagochina.com/trust.json",
+    "tokenSafetyPage": "https://gcagochina.com/token-safety.html",
+    "tokenSafety": "https://gcagochina.com/token-safety.json",
+    "marketQualityPage": "https://gcagochina.com/market-quality.html",
+    "marketQuality": "https://gcagochina.com/market-quality.json",
+    "baseScanContract": "https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6"
+  },
+  "publicClaimBoundaries": {
+    "safeClaims": [
+      "GCA source is verified on BaseScan.",
+      "GCA is a fixed-supply ERC-20 on Base Mainnet.",
+      "The contract has no post-deployment mint function, owner/admin role, proxy, blacklist, pause function, transfer tax, hidden fee, custody path, or withdrawal path.",
+      "GCA has published an internal technical report and reserve address statement for reviewer triage.",
+      "Price volatility, starter-depth liquidity, supply concentration, unlocked LP status, owner-controlled reserve status, and missing third-party audit are disclosed risks."
+    ],
+    "doNotClaim": [
+      "Blockaid, MetaMask, Uniswap, or wallet-security approval before vendor confirmation",
+      "third-party audit completion before an independent report is published",
+      "LP lock before a verifiable lock exists",
+      "locked reserve before on-chain custody changes",
+      "deep liquidity, price support, price stability, or return promises"
+    ]
+  }
+}

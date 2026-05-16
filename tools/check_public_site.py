@@ -65,6 +65,8 @@ WALLET_WARNING_URL = "https://gcagochina.com/wallet-warning.json"
 WALLET_SECURITY_PROFILE_URL = "https://gcagochina.com/.well-known/wallet-security.json"
 TOKEN_SAFETY_PAGE_URL = "https://gcagochina.com/token-safety.html"
 TOKEN_SAFETY_URL = "https://gcagochina.com/token-safety.json"
+BLOCKAID_FOLLOWUP_PAGE_URL = "https://gcagochina.com/blockaid-followup.html"
+BLOCKAID_FOLLOWUP_URL = "https://gcagochina.com/blockaid-followup.json"
 TECHNICAL_REPORT_PAGE_URL = "https://gcagochina.com/technical-report.html"
 TECHNICAL_REPORT_URL = "https://gcagochina.com/technical-report.json"
 RESERVE_STATEMENT_PAGE_URL = "https://gcagochina.com/reserve-statement.html"
@@ -168,6 +170,7 @@ def validate_root(text: str) -> None:
     assert_contains(text, "Platform Replies", label)
     assert_contains(text, "Trust Center", label)
     assert_contains(text, "Token Safety", label)
+    assert_contains(text, "Blockaid Follow-up", label)
     assert_contains(text, "Technical Report", label)
     assert_contains(text, "Reserve Statement", label)
     assert_contains(text, "Listing Readiness", label)
@@ -286,6 +289,8 @@ def validate_token_safety_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong tokenSafetyPage")
     if links.get("tokenSafety") != TOKEN_SAFETY_URL:
         raise SiteCheckError(f"{label}: wrong tokenSafety")
+    if links.get("blockaidFollowup") != BLOCKAID_FOLLOWUP_URL:
+        raise SiteCheckError(f"{label}: wrong blockaidFollowup")
     if links.get("technicalReport") != TECHNICAL_REPORT_URL:
         raise SiteCheckError(f"{label}: wrong technicalReport")
     if links.get("reserveStatement") != RESERVE_STATEMENT_URL:
@@ -300,6 +305,88 @@ def validate_token_safety_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing warning-removal boundary")
     assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
     assert_not_contains(json.dumps(payload), "GCA/WETH", label)
+
+
+def validate_blockaid_followup_page(text: str) -> None:
+    label = "/blockaid-followup.html"
+    assert_contains(text, "GCA Blockaid Follow-up", label)
+    assert_contains(text, "Blockaid Follow-up JSON", label)
+    assert_contains(text, "Risk Factor Response", label)
+    assert_contains(text, "Price Volatility", label)
+    assert_contains(text, "LP Lock", label)
+    assert_contains(text, "Supply Concentration", label)
+    assert_contains(text, "Third-party Audit", label)
+    assert_contains(text, "No LP lock is currently claimed", label)
+    assert_contains(text, "No third-party audit has been completed", label)
+    assert_contains(text, "Technical Report", label)
+    assert_contains(text, "Reserve Statement", label)
+    assert_contains(text, MAINNET_ADDRESS, label)
+    assert_contains(text, OFFICIAL_POOL_ADDRESS, label)
+    assert_contains(text, BASE_USDT_ADDRESS, label)
+    assert_contains(text, RESERVE_WALLET, label)
+    assert_current_pool_text(text, label)
+    assert_no_forbidden_public_claims(text, label)
+
+
+def validate_blockaid_followup_json(text: str) -> None:
+    label = "/blockaid-followup.json"
+    payload = load_json(text, label)
+    controls = payload.get("contractControlSummary", {})
+    responses = payload.get("riskFactorResponses", {})
+    market = payload.get("officialMarket", {})
+    links = payload.get("officialLinks", {})
+
+    if payload.get("schema") != BLOCKAID_FOLLOWUP_URL:
+        raise SiteCheckError(f"{label}: wrong schema")
+    if payload.get("pageUrl") != BLOCKAID_FOLLOWUP_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong pageUrl")
+    if payload.get("status") != "public-blockaid-followup-package-published":
+        raise SiteCheckError(f"{label}: wrong status")
+    if payload.get("chainId") != 8453:
+        raise SiteCheckError(f"{label}: wrong chainId")
+    if payload.get("contractAddress") != MAINNET_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong contractAddress")
+    if controls.get("sourceVerifiedOnBaseScan") is not True:
+        raise SiteCheckError(f"{label}: source verification must be true")
+    if controls.get("fixedSupply") is not True:
+        raise SiteCheckError(f"{label}: fixed supply must be true")
+    for key in (
+        "postDeploymentMintFunction",
+        "ownerOrAdminRole",
+        "proxyOrUpgradePath",
+        "blacklistFunction",
+        "pauseFunction",
+        "transferTaxOrHiddenFee",
+        "custodyOrWithdrawalPath",
+        "customTransferRestrictions",
+        "adminTradingControls",
+    ):
+        if controls.get(key) is not False:
+            raise SiteCheckError(f"{label}: {key} must be false")
+    if responses.get("priceVolatility", {}).get("status") != "acknowledged":
+        raise SiteCheckError(f"{label}: wrong price volatility response")
+    if responses.get("lpLock", {}).get("status") != "not-locked-not-claimed":
+        raise SiteCheckError(f"{label}: wrong LP lock response")
+    if responses.get("supplyConcentration", {}).get("reserveWallet") != RESERVE_WALLET:
+        raise SiteCheckError(f"{label}: wrong reserve wallet")
+    if responses.get("thirdPartyAudit", {}).get("status") != "not-completed":
+        raise SiteCheckError(f"{label}: wrong audit response")
+    if market.get("poolAddress") != OFFICIAL_POOL_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong pool")
+    if market.get("quoteAssetAddress") != BASE_USDT_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong quote asset")
+    if links.get("blockaidFollowup") != BLOCKAID_FOLLOWUP_URL:
+        raise SiteCheckError(f"{label}: wrong blockaidFollowup")
+    if links.get("technicalReport") != TECHNICAL_REPORT_URL:
+        raise SiteCheckError(f"{label}: wrong technicalReport")
+    if links.get("reserveStatement") != RESERVE_STATEMENT_URL:
+        raise SiteCheckError(f"{label}: wrong reserveStatement")
+    if "GCA has published an internal technical report and reserve address statement for reviewer triage." not in payload.get("publicClaimBoundaries", {}).get("safeClaims", []):
+        raise SiteCheckError(f"{label}: missing triage safe claim")
+    if "LP lock before a verifiable lock exists" not in payload.get("publicClaimBoundaries", {}).get("doNotClaim", []):
+        raise SiteCheckError(f"{label}: missing LP lock boundary")
+    assert_current_pool_text(json.dumps(payload), label)
+    assert_no_forbidden_public_claims(json.dumps(payload), label)
 
 
 def validate_technical_report_page(text: str) -> None:
@@ -2748,6 +2835,10 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong technicalReportPageUrl")
     if payload.get("technicalReportUrl") != TECHNICAL_REPORT_URL:
         raise SiteCheckError(f"{label}: wrong technicalReportUrl")
+    if payload.get("blockaidFollowupPageUrl") != BLOCKAID_FOLLOWUP_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong blockaidFollowupPageUrl")
+    if payload.get("blockaidFollowupUrl") != BLOCKAID_FOLLOWUP_URL:
+        raise SiteCheckError(f"{label}: wrong blockaidFollowupUrl")
     if payload.get("reserveStatementPageUrl") != RESERVE_STATEMENT_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong reserveStatementPageUrl")
     if payload.get("reserveStatementUrl") != RESERVE_STATEMENT_URL:
@@ -2811,6 +2902,8 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: unexpected review queue status")
     if status.get("accessOperationsRunbook") != "public-access-operations-runbook-published":
         raise SiteCheckError(f"{label}: unexpected operations runbook status")
+    if status.get("blockaidFollowup") != "public-blockaid-followup-package-published":
+        raise SiteCheckError(f"{label}: unexpected Blockaid follow-up status")
     if status.get("technicalReport") != "public-internal-technical-report-published":
         raise SiteCheckError(f"{label}: unexpected technical report status")
     if status.get("reserveStatement") != "public-reserve-address-statement-published":
@@ -2946,6 +3039,12 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: unexpected trust center status")
     if payload.get("tokenSafety", {}).get("status") != "public-token-safety-checklist-published":
         raise SiteCheckError(f"{label}: unexpected token safety status")
+    if payload.get("blockaidFollowup", {}).get("status") != "public-blockaid-followup-package-published":
+        raise SiteCheckError(f"{label}: unexpected Blockaid follow-up object status")
+    if payload.get("blockaidFollowup", {}).get("pageUrl") != BLOCKAID_FOLLOWUP_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong Blockaid follow-up page")
+    if payload.get("blockaidFollowup", {}).get("url") != BLOCKAID_FOLLOWUP_URL:
+        raise SiteCheckError(f"{label}: wrong Blockaid follow-up url")
     if payload.get("technicalReport", {}).get("status") != "public-internal-technical-report-published":
         raise SiteCheckError(f"{label}: unexpected technical report object status")
     if payload.get("technicalReport", {}).get("pageUrl") != TECHNICAL_REPORT_PAGE_URL:
@@ -3088,6 +3187,10 @@ def validate_tokenlist_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong tokenSafetyPage")
     if extensions.get("tokenSafety") != TOKEN_SAFETY_URL:
         raise SiteCheckError(f"{label}: wrong tokenSafety")
+    if extensions.get("blockaidFollowupPage") != BLOCKAID_FOLLOWUP_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong blockaidFollowupPage")
+    if extensions.get("blockaidFollowup") != BLOCKAID_FOLLOWUP_URL:
+        raise SiteCheckError(f"{label}: wrong blockaidFollowup")
     if extensions.get("technicalReportPage") != TECHNICAL_REPORT_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong technicalReportPage")
     if extensions.get("technicalReport") != TECHNICAL_REPORT_URL:
@@ -3150,6 +3253,8 @@ def validate_tokenlist_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong walletSecurityProfileStatus")
     if extensions.get("tokenSafetyStatus") != "public-token-safety-checklist-published":
         raise SiteCheckError(f"{label}: wrong tokenSafetyStatus")
+    if extensions.get("blockaidFollowupStatus") != "public-blockaid-followup-package-published":
+        raise SiteCheckError(f"{label}: wrong blockaidFollowupStatus")
     if extensions.get("technicalReportStatus") != "public-internal-technical-report-published":
         raise SiteCheckError(f"{label}: wrong technicalReportStatus")
     if extensions.get("reserveStatementStatus") != "public-reserve-address-statement-published":
@@ -3266,6 +3371,10 @@ def validate_well_known_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong tokenSafetyPage")
     if urls.get("tokenSafety") != TOKEN_SAFETY_URL:
         raise SiteCheckError(f"{label}: wrong tokenSafety")
+    if urls.get("blockaidFollowupPage") != BLOCKAID_FOLLOWUP_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong blockaidFollowupPage")
+    if urls.get("blockaidFollowup") != BLOCKAID_FOLLOWUP_URL:
+        raise SiteCheckError(f"{label}: wrong blockaidFollowup")
     if urls.get("technicalReportPage") != TECHNICAL_REPORT_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong technicalReportPage")
     if urls.get("technicalReport") != TECHNICAL_REPORT_URL:
@@ -3370,6 +3479,8 @@ def validate_well_known_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong walletSecurityProfile status")
     if payload.get("platformStatus", {}).get("tokenSafety") != "public-token-safety-checklist-published":
         raise SiteCheckError(f"{label}: wrong tokenSafety status")
+    if payload.get("platformStatus", {}).get("blockaidFollowup") != "public-blockaid-followup-package-published":
+        raise SiteCheckError(f"{label}: wrong blockaidFollowup status")
     if payload.get("platformStatus", {}).get("technicalReport") != "public-internal-technical-report-published":
         raise SiteCheckError(f"{label}: wrong technicalReport status")
     if payload.get("platformStatus", {}).get("reserveStatement") != "public-reserve-address-statement-published":
@@ -3430,6 +3541,10 @@ def validate_wallet_security_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong tokenSafetyPage")
     if links.get("tokenSafety") != TOKEN_SAFETY_URL:
         raise SiteCheckError(f"{label}: wrong tokenSafety")
+    if links.get("blockaidFollowupPage") != BLOCKAID_FOLLOWUP_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong blockaidFollowupPage")
+    if links.get("blockaidFollowup") != BLOCKAID_FOLLOWUP_URL:
+        raise SiteCheckError(f"{label}: wrong blockaidFollowup")
     if links.get("technicalReportPage") != TECHNICAL_REPORT_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong technicalReportPage")
     if links.get("technicalReport") != TECHNICAL_REPORT_URL:
@@ -4117,6 +4232,10 @@ def validate_reviewer_kit_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong tokenSafetyPage")
     if links.get("tokenSafety") != TOKEN_SAFETY_URL:
         raise SiteCheckError(f"{label}: wrong tokenSafety")
+    if links.get("blockaidFollowupPage") != BLOCKAID_FOLLOWUP_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong blockaidFollowupPage")
+    if links.get("blockaidFollowup") != BLOCKAID_FOLLOWUP_URL:
+        raise SiteCheckError(f"{label}: wrong blockaidFollowup")
     if links.get("externalReviewStatus") != EXTERNAL_REVIEW_URL:
         raise SiteCheckError(f"{label}: wrong externalReviewStatus")
     if links.get("onchainProofs") != ONCHAIN_PROOFS_URL:
@@ -4173,6 +4292,7 @@ def validate_reviewer_kit_page(text: str) -> None:
     assert_contains(text, "GCA/USDT", label)
     assert_contains(text, "Contract Facts", label)
     assert_contains(text, "Blockaid / MetaMask", label)
+    assert_contains(text, "Blockaid Follow-up", label)
     assert_contains(text, "Follow-up submitted on 2026-05-13", label)
     assert_contains(text, "BaseScan Profile", label)
     assert_contains(text, "On-chain Proofs", label)
@@ -4318,6 +4438,7 @@ def validate_trust_json(text: str) -> None:
         "reviewerKit": REVIEWER_KIT_URL,
         "platformReplies": PLATFORM_REPLIES_URL,
         "walletWarningEvidence": WALLET_WARNING_URL,
+        "blockaidFollowup": BLOCKAID_FOLLOWUP_URL,
         "walletSecurityProfile": WALLET_SECURITY_PROFILE_URL,
         "tokenSafetyPage": TOKEN_SAFETY_PAGE_URL,
         "tokenSafety": TOKEN_SAFETY_URL,
@@ -4376,6 +4497,10 @@ def validate_trust_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong ownerReserveWallet")
     if supply.get("ownerReserveTransferTxs") != [RESERVE_TX_1, RESERVE_TX_2]:
         raise SiteCheckError(f"{label}: wrong reserve transfer txs")
+    if payload.get("blockaidFollowup", {}).get("status") != "public-blockaid-followup-package-published":
+        raise SiteCheckError(f"{label}: wrong Blockaid follow-up status")
+    if payload.get("blockaidFollowup", {}).get("url") != BLOCKAID_FOLLOWUP_URL:
+        raise SiteCheckError(f"{label}: wrong Blockaid follow-up URL")
     if reviews.get("thirdPartyAudit") != "not-completed-deferred":
         raise SiteCheckError(f"{label}: wrong third-party audit status")
     if "No third-party audit has been completed." not in payload.get("safePublicClaims", []):
@@ -4394,6 +4519,7 @@ def validate_trust_page(text: str) -> None:
     assert_contains(text, "Market And Liquidity", label)
     assert_contains(text, "Supply And Reserve", label)
     assert_contains(text, "Evidence Links", label)
+    assert_contains(text, "Blockaid Follow-up", label)
     assert_contains(text, "Public Claim Boundaries", label)
     assert_contains(text, "Base Mainnet / 8453", label)
     assert_contains(text, MAINNET_ADDRESS, label)
@@ -4435,6 +4561,10 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong walletWarningEvidencePage")
     if links.get("walletWarningEvidence") != WALLET_WARNING_URL:
         raise SiteCheckError(f"{label}: wrong walletWarningEvidence")
+    if links.get("blockaidFollowupPage") != BLOCKAID_FOLLOWUP_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong blockaidFollowupPage")
+    if links.get("blockaidFollowup") != BLOCKAID_FOLLOWUP_URL:
+        raise SiteCheckError(f"{label}: wrong blockaidFollowup")
     if links.get("trustCenterPage") != TRUST_CENTER_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong trustCenterPage")
     if links.get("trustCenter") != TRUST_CENTER_URL:
@@ -4468,6 +4598,8 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong Blockaid submission date")
     if blockaid.get("followUpSubmissionDate") != "2026-05-13":
         raise SiteCheckError(f"{label}: wrong Blockaid follow-up date")
+    if blockaid.get("riskFactorFollowup") != BLOCKAID_FOLLOWUP_URL:
+        raise SiteCheckError(f"{label}: wrong Blockaid risk-factor follow-up URL")
     if blockaid.get("followUpSubmissionResult") != "Blockaid support portal returned HTTP 200 OK":
         raise SiteCheckError(f"{label}: wrong Blockaid follow-up result")
     if reviews.get("geckoTerminal", {}).get("status") != "approved":
@@ -4487,6 +4619,7 @@ def validate_external_reviews_page(text: str) -> None:
     label = "/external-reviews.html"
     assert_contains(text, "GCA External Review Status", label)
     assert_contains(text, "Wallet Warning Evidence", label)
+    assert_contains(text, "Blockaid Follow-up", label)
     assert_contains(text, "External Reviews JSON", label)
     assert_contains(text, "Trust Center", label)
     assert_contains(text, "Resubmitted: awaiting review", label)
@@ -4523,6 +4656,8 @@ def validate_wallet_warning_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong onchainProofsPage")
     if links.get("onchainProofs") != ONCHAIN_PROOFS_URL:
         raise SiteCheckError(f"{label}: wrong onchainProofs")
+    if links.get("blockaidFollowup") != BLOCKAID_FOLLOWUP_URL:
+        raise SiteCheckError(f"{label}: wrong blockaidFollowup")
     if market.get("pair") != "GCA/USDT":
         raise SiteCheckError(f"{label}: wrong pair")
     if market.get("poolAddress") != OFFICIAL_POOL_ADDRESS:
@@ -4562,6 +4697,7 @@ def validate_wallet_warning_page(text: str) -> None:
     assert_contains(text, "GCA Wallet Warning Evidence", label)
     assert_contains(text, "Wallet Warning JSON", label)
     assert_contains(text, "Wallet Security JSON", label)
+    assert_contains(text, "Blockaid Follow-up", label)
     assert_contains(text, "Trust Center", label)
     assert_contains(text, "Follow-up submitted 2026-05-13", label)
     assert_contains(text, "Owner observed no warning visible 2026-05-14", label)
@@ -4617,6 +4753,8 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/market-quality.json",
         "https://gcagochina.com/token-safety.html",
         "https://gcagochina.com/token-safety.json",
+        "https://gcagochina.com/blockaid-followup.html",
+        "https://gcagochina.com/blockaid-followup.json",
         "https://gcagochina.com/technical-report.html",
         "https://gcagochina.com/technical-report.json",
         "https://gcagochina.com/reserve-statement.html",
@@ -4705,6 +4843,8 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /market-quality.json", label)
     assert_contains(text, "Allow: /token-safety.html", label)
     assert_contains(text, "Allow: /token-safety.json", label)
+    assert_contains(text, "Allow: /blockaid-followup.html", label)
+    assert_contains(text, "Allow: /blockaid-followup.json", label)
     assert_contains(text, "Allow: /technical-report.html", label)
     assert_contains(text, "Allow: /technical-report.json", label)
     assert_contains(text, "Allow: /reserve-statement.html", label)
@@ -4766,6 +4906,8 @@ CHECKS: list[EndpointCheck] = [
     ("/market-quality.json", validate_market_quality_json),
     ("/token-safety.html", validate_token_safety_page),
     ("/token-safety.json", validate_token_safety_json),
+    ("/blockaid-followup.html", validate_blockaid_followup_page),
+    ("/blockaid-followup.json", validate_blockaid_followup_json),
     ("/technical-report.html", validate_technical_report_page),
     ("/technical-report.json", validate_technical_report_json),
     ("/reserve-statement.html", validate_reserve_statement_page),
