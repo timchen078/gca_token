@@ -32,6 +32,14 @@ Verify an exported review package digest locally:
 .venv/bin/python tools/verify_gca_review_package.py path/to/gca-review-package.json
 ```
 
+Export the same review package directly from local JSONL data without starting the backend server:
+
+```bash
+.venv/bin/python tools/export_gca_review_package.py --output gca-full-local-review-package.json
+.venv/bin/python tools/export_gca_review_package.py --redact public --output gca-public-redacted-review-package.json
+.venv/bin/python tools/verify_gca_review_package.py gca-public-redacted-review-package.json
+```
+
 ## Mainnet Launch Package
 
 - Canonical public facts: `docs/mainnet_public_profile.md`
@@ -108,5 +116,6 @@ Verify an exported review package digest locally:
 - Logo: `brand/gca-logo.svg`
 - Social preview card: `brand/gca-social-card.svg`
 - Static website: `site/index.html`
+- Local review package exporter: `tools/export_gca_review_package.py`
 - Live public site check, including market identity, member program rules, access operations runbook, product release gates, listing readiness, and high-risk public-claim guardrails: `.venv/bin/python tools/check_public_site.py`
 - GitHub Actions public site check: `.github/workflows/check-public-site.yml`

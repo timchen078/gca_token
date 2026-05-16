@@ -285,6 +285,58 @@ class GcaMemberBackendTests(unittest.TestCase):
         self.assertEqual(cli_result["computedDigest"], redacted_package["packageDigestSha256"])
 
         with tempfile.TemporaryDirectory() as temp:
+            export_path = Path(temp) / "gca-public-review-package.json"
+            completed = subprocess.run(
+                [
+                    sys.executable,
+                    "tools/export_gca_review_package.py",
+                    "--data-dir",
+                    str(store.data_dir),
+                    "--redact",
+                    "public",
+                    "--output",
+                    str(export_path),
+                ],
+                cwd=ROOT,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+            self.assertEqual(completed.returncode, 0, completed.stderr)
+            export_result = json.loads(completed.stdout)
+            self.assertTrue(export_result["ok"])
+            self.assertTrue(export_result["redactedForExternalSharing"])
+            self.assertTrue(export_path.exists())
+            exported_package = json.loads(export_path.read_text(encoding="utf-8"))
+        exported_text = json.dumps(exported_package)
+        self.assertTrue(exported_package["redactedForExternalSharing"])
+        self.assertEqual(exported_package["redactionPolicy"]["mode"], "redacted-public")
+        self.assertTrue(verify_package_digest(exported_package)["ok"])
+        self.assertNotIn("member@example.com", exported_text)
+        self.assertNotIn("@member", exported_text)
+        self.assertIn(WALLET.lower(), exported_text)
+
+        completed = subprocess.run(
+            [
+                sys.executable,
+                "tools/export_gca_review_package.py",
+                "--data-dir",
+                str(store.data_dir),
+                "--limit",
+                "5",
+            ],
+            cwd=ROOT,
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(completed.returncode, 0, completed.stderr)
+        stdout_package = json.loads(completed.stdout)
+        self.assertFalse(stdout_package["redactedForExternalSharing"])
+        self.assertTrue(verify_package_digest(stdout_package)["ok"])
+        self.assertEqual(stdout_package["recordManifest"]["limit"], 5)
+
+        with tempfile.TemporaryDirectory() as temp:
             tampered_path = Path(temp) / "gca-review-package-tampered.json"
             tampered_path.write_text(json.dumps(tampered_package), encoding="utf-8")
             completed = subprocess.run(

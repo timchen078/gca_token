@@ -591,6 +591,7 @@ def validate_operator_page(text: str) -> None:
     assert_contains(text, "GCA Local Operator Console", label)
     assert_contains(text, "Local-only GCA operator console", label)
     assert_contains(text, "tools/gca_member_backend.py", label)
+    assert_contains(text, "tools/export_gca_review_package.py", label)
     assert_contains(text, "http://127.0.0.1:8787/operator.html", label)
     assert_contains(text, "LOCAL_BACKEND_HOSTS", label)
     assert_contains(text, 'const OPERATOR_SUMMARY_ENDPOINT_PATH = "/gca/operator-summary";', label)
@@ -1793,6 +1794,7 @@ def validate_access_api_page(text: str) -> None:
     assert_contains(text, "not live today", label)
     assert_contains(text, "not a public submission endpoint", label)
     assert_contains(text, "tools/gca_member_backend.py", label)
+    assert_contains(text, "tools/export_gca_review_package.py", label)
     assert_contains(text, "operator.html", label)
     assert_contains(text, "/gca/operator-summary", label)
     assert_contains(text, "local JSONL ledger records", label)
@@ -1810,6 +1812,7 @@ def validate_access_api_page(text: str) -> None:
     assert_contains(text, "packageDigestSha256", label)
     assert_contains(text, "recordManifest", label)
     assert_contains(text, "tools/verify_gca_review_package.py", label)
+    assert_contains(text, "tools/export_gca_review_package.py", label)
     assert_contains(text, "reviewer evidence", label)
     assert_contains(text, "read-only Base receipt data", label)
     assert_contains(text, "balanceOf", label)
@@ -1897,6 +1900,8 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong local operator summary endpoint")
     if local_backend.get("localReviewPackageEndpoint") != "/gca/review-package":
         raise SiteCheckError(f"{label}: wrong local review package endpoint")
+    if local_backend.get("localReviewPackageExporter") != "tools/export_gca_review_package.py":
+        raise SiteCheckError(f"{label}: wrong local review package exporter")
     if local_backend.get("localReviewPackageVerifier") != "tools/verify_gca_review_package.py":
         raise SiteCheckError(f"{label}: wrong local review package verifier")
     if "redacted-public" not in local_backend.get("localReviewPackageRedactionModes", []):
@@ -1963,6 +1968,8 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong review package endpoint status")
     if review_package.get("verificationTool") != "tools/verify_gca_review_package.py":
         raise SiteCheckError(f"{label}: wrong review package verification tool")
+    if review_package.get("exportTool") != "tools/export_gca_review_package.py":
+        raise SiteCheckError(f"{label}: wrong review package export tool")
     for expected_field in (
         "packageDigestAlgorithm",
         "packageDigestSha256",
@@ -3797,6 +3804,8 @@ def validate_member_program_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong local operator summary endpoint")
     if local_backend.get("localReviewPackageEndpoint") != "/gca/review-package":
         raise SiteCheckError(f"{label}: wrong local review package endpoint")
+    if local_backend.get("localReviewPackageExporter") != "tools/export_gca_review_package.py":
+        raise SiteCheckError(f"{label}: wrong local review package exporter")
     if local_backend.get("localReviewPackageVerifier") != "tools/verify_gca_review_package.py":
         raise SiteCheckError(f"{label}: wrong local review package verifier")
     if "redacted-public" not in local_backend.get("localReviewPackageRedactionModes", []):

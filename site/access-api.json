@@ -31,6 +31,7 @@
     "sameOriginSubmissionOnLocalhost": true,
     "localOperatorSummaryEndpoint": "/gca/operator-summary",
     "localReviewPackageEndpoint": "/gca/review-package",
+    "localReviewPackageExporter": "tools/export_gca_review_package.py",
     "localReviewPackageVerifier": "tools/verify_gca_review_package.py",
     "localReviewPackageRedactionModes": [
       "full-local",
@@ -377,6 +378,7 @@
       "path": "/gca/review-package",
       "status": "local-only-not-public-production",
       "purpose": "Export a localhost-only JSON reviewer evidence package containing local ledger totals, latest records, public reference links, and safety boundaries for support or platform follow-up. Use redact=public before external sharing.",
+      "exportTool": "tools/export_gca_review_package.py",
       "verificationTool": "tools/verify_gca_review_package.py",
       "requiredRequestFields": [
         "localhostClient"
