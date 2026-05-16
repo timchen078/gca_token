@@ -113,6 +113,7 @@
       "sameOriginSubmissionOnLocalhost": true,
       "localOperatorSummaryEndpoint": "/gca/operator-summary",
       "walletVerificationMethod": "Base Mainnet public RPC eth_call ERC-20 balanceOf",
+      "transferReceiptVerificationMethod": "Base Mainnet public RPC eth_getTransactionReceipt ERC-20 Transfer log",
       "writesJsonlLedgers": [
         "pre_registrations",
         "wallet_verifications",

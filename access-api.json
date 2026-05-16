@@ -40,6 +40,7 @@
       "support_reviews"
     ],
     "walletVerificationMethod": "Base Mainnet public RPC eth_call ERC-20 balanceOf",
+    "transferReceiptVerificationMethod": "Base Mainnet public RPC eth_getTransactionReceipt ERC-20 Transfer log",
     "requiresSignature": false,
     "requiresTransaction": false,
     "automaticTokenTransfer": false
@@ -54,6 +55,7 @@
     "serverSideContractValidationRequired": true,
     "walletVerificationReadOnly": true,
     "usesEthCall": true,
+    "usesEthGetTransactionReceipt": true,
     "usesErc20BalanceOf": true,
     "requiresSignatureForBalanceRead": false,
     "requiresTransactionForBalanceRead": false,
@@ -294,6 +296,9 @@
         "recipientWallet",
         "memberBenefitAmount",
         "memberBenefitTransferTx",
+        "memberBenefitTransferUrl",
+        "transferVerificationStatus",
+        "transferVerification",
         "transferredAt",
         "status"
       ],
@@ -306,7 +311,7 @@
       "method": "POST",
       "path": "/gca/member-benefit-transfers",
       "status": "local-only-not-public-production",
-      "purpose": "Record a manually completed 10,000 GCA reserve-wallet transfer after the operator signs it outside this app.",
+      "purpose": "Record a manually completed 10,000 GCA reserve-wallet transfer after the operator signs it outside this app and the local backend verifies the transaction receipt with read-only Base Mainnet data.",
       "requiredRequestFields": [
         "memberLedgerId",
         "memberBenefitTransferTx",
@@ -321,6 +326,17 @@
         "memberLedger",
         "supportReview",
         "alreadyRecorded"
+      ],
+      "serverChecks": [
+        "localhost client only",
+        "memberLedgerId must reference an active GCA Member ledger entry",
+        "memberBenefitClaimStatus must be pending_manual_reserve_transfer",
+        "memberBenefitTransferTx must be a valid transaction hash",
+        "eth_getTransactionReceipt is read-only",
+        "receipt must contain a successful GCA Transfer log to recipientWallet",
+        "matched transfer amount must be at least 10000 GCA",
+        "sourceWallet must match the Transfer sender when provided",
+        "no wallet connection, signature, private key, or token transfer is requested"
       ],
       "allowedStatuses": [
         "transferred"

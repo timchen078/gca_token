@@ -399,7 +399,7 @@
           <div class="fact">
             <span class="label">POST / GET</span>
             <span class="value">/gca/member-benefit-transfers</span>
-            <p class="note">Local-only record path for manually completed reserve-wallet transfers. It records a public transaction hash and never sends tokens.</p>
+            <p class="note">Local-only record path for manually completed reserve-wallet transfers. It verifies the public transaction hash with read-only Base receipt data, records matching GCA Transfer evidence, and never sends tokens.</p>
           </div>
           <div class="fact">
             <span class="label">GET</span>
