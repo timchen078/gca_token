@@ -1,5 +1,12 @@
 User-agent: *
 Allow: /
+Allow: /status.html
+Allow: /listing-kit.html
+Allow: /whitepaper.html
+Allow: /buy.html
+Allow: /security.html
+Allow: /risk.html
+Allow: /faq.html
 Allow: /brand-kit.html
 Allow: /brand-kit.json
 Allow: /reviewer-kit.html

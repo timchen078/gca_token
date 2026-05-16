@@ -11,7 +11,7 @@
 - BaseScan token information submission package prepared.
 - 32x32 SVG logo created.
 - Static website created.
-- Public site health-check script prepared at `tools/check_public_site.py`; it checks official market identity, metadata files, member pre-registration, member program rules, and high-risk public-claim guardrails.
+- Public site health-check script prepared at `tools/check_public_site.py`; it checks official market identity, metadata files, buy guide, status page, listing kit, whitepaper, security/risk/FAQ pages, member pre-registration, member program rules, and high-risk public-claim guardrails.
 - GitHub Actions public site health-check workflow prepared to run `tools/check_public_site.py` manually, on a daily schedule, and after health-check workflow/script changes.
 - GitHub Pages custom domain configured for `https://gcagochina.com/`.
 - DNS records for `gcagochina.com` configured in Cloudflare.

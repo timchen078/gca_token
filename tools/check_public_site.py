@@ -23,6 +23,13 @@ BASE_USDT_ADDRESS = "0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2"
 OLD_WETH_POOL_ADDRESS = "0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff"
 OFFICIAL_GECKOTERMINAL_URL = f"https://www.geckoterminal.com/base/pools/{OFFICIAL_POOL_ADDRESS}"
 OFFICIAL_DEXSCREENER_URL = f"https://dexscreener.com/base/{OFFICIAL_POOL_ADDRESS}"
+BUY_PAGE_URL = "https://gcagochina.com/buy.html"
+STATUS_PAGE_URL = "https://gcagochina.com/status.html"
+LISTING_KIT_PAGE_URL = "https://gcagochina.com/listing-kit.html"
+SECURITY_PAGE_URL = "https://gcagochina.com/security.html"
+RISK_PAGE_URL = "https://gcagochina.com/risk.html"
+FAQ_PAGE_URL = "https://gcagochina.com/faq.html"
+WHITEPAPER_PAGE_URL = "https://gcagochina.com/whitepaper.html"
 MEMBER_PROGRAM_URL = "https://gcagochina.com/member-program.json"
 MEMBER_LEDGER_PAGE_URL = "https://gcagochina.com/member-ledger.html"
 MEMBER_LEDGER_URL = "https://gcagochina.com/member-ledger.json"
@@ -223,6 +230,127 @@ def validate_markets(text: str) -> None:
     assert_contains(text, "Market Quality", label)
     assert_contains(text, BASE_USDT_ADDRESS, label)
     assert_contains(text, OFFICIAL_GECKOTERMINAL_URL, label)
+    assert_current_pool_text(text, label)
+
+
+def validate_buy_page(text: str) -> None:
+    label = "/buy.html"
+    assert_social_preview_meta(text, label, BUY_PAGE_URL)
+    assert_contains(text, "Buy GCA", label)
+    assert_contains(text, "Open Uniswap Swap", label)
+    assert_contains(text, "This is not investment advice", label)
+    assert_contains(text, "starter-depth only", label)
+    assert_contains(text, "no third-party audit has been completed", label)
+    assert_contains(text, "permanent warning-free status", label)
+    assert_contains(text, MAINNET_ADDRESS, label)
+    assert_contains(text, BASE_USDT_ADDRESS, label)
+    assert_contains(text, OFFICIAL_GECKOTERMINAL_URL, label)
+    assert_current_pool_text(text, label)
+
+
+def validate_status_page(text: str) -> None:
+    label = "/status.html"
+    assert_social_preview_meta(text, label, STATUS_PAGE_URL)
+    assert_contains(text, "GCA Project Status", label)
+    assert_contains(text, "Contract source verified on BaseScan", label)
+    assert_contains(text, "Deployer-wallet ownership verified on BaseScan", label)
+    assert_contains(text, "BaseScan public token profile publication", label)
+    assert_contains(text, "Awaiting review", label)
+    assert_contains(text, "GeckoTerminal token information update", label)
+    assert_contains(text, "Approved", label)
+    assert_contains(text, "No third-party audit has been completed", label)
+    assert_contains(text, "Do not say the BaseScan token profile is approved", label)
+    assert_contains(text, MAINNET_ADDRESS, label)
+    assert_contains(text, BASE_USDT_ADDRESS, label)
+    assert_contains(text, OFFICIAL_GECKOTERMINAL_URL, label)
+    assert_contains(text, OFFICIAL_DEXSCREENER_URL, label)
+    assert_current_pool_text(text, label)
+
+
+def validate_listing_kit_page(text: str) -> None:
+    label = "/listing-kit.html"
+    assert_social_preview_meta(text, label, LISTING_KIT_PAGE_URL)
+    assert_contains(text, "GCA Listing Kit", label)
+    assert_contains(text, "Public URLs", label)
+    assert_contains(text, "Descriptions", label)
+    assert_contains(text, "Official GCA/USDT route", label)
+    assert_contains(text, "BaseScan", label)
+    assert_contains(text, "awaiting BaseScan email/review", label)
+    assert_contains(text, "GeckoTerminal", label)
+    assert_contains(text, "Approved", label)
+    assert_contains(text, "no completed third-party audit", label)
+    assert_contains(text, "Do not claim BaseScan profile approval", label)
+    assert_contains(text, "GCAgochina@outlook.com", label)
+    assert_contains(text, X_URL, label)
+    assert_contains(text, MAINNET_ADDRESS, label)
+    assert_contains(text, BASE_USDT_ADDRESS, label)
+    assert_contains(text, OFFICIAL_GECKOTERMINAL_URL, label)
+    assert_contains(text, OFFICIAL_DEXSCREENER_URL, label)
+    assert_current_pool_text(text, label)
+
+
+def validate_security_page(text: str) -> None:
+    label = "/security.html"
+    assert_social_preview_meta(text, label, SECURITY_PAGE_URL)
+    assert_contains(text, "GCA Security", label)
+    assert_contains(text, "Verified on BaseScan", label)
+    assert_contains(text, "fixed-supply ERC-20 contract on Base Mainnet", label)
+    assert_contains(text, "No independent third-party audit has been completed", label)
+    assert_contains(text, "GCA/USDT pool has starter-depth liquidity", label)
+    assert_contains(text, "not permanent security-vendor approval", label)
+    assert_contains(text, "Do not say: third-party audited", label)
+    assert_contains(text, MAINNET_ADDRESS, label)
+    assert_contains(text, "GCA/USDT", label)
+    assert_not_contains(text, OLD_WETH_POOL_ADDRESS, label)
+    assert_not_contains(text, "GCA/WETH", label)
+
+
+def validate_risk_page(text: str) -> None:
+    label = "/risk.html"
+    assert_social_preview_meta(text, label, RISK_PAGE_URL)
+    assert_contains(text, "GCA Risk Disclosures", label)
+    assert_contains(text, "No third-party audit", label)
+    assert_contains(text, "official GCA/USDT pool on Base Mainnet", label)
+    assert_contains(text, "report submission does not mean warnings have been removed", label)
+    assert_contains(text, "not be described as externally audited", label)
+    assert_contains(text, "not submitted because current liquidity and public activity are still weak", label)
+    assert_contains(text, "starter-depth liquidity", label)
+    assert_contains(text, MAINNET_ADDRESS, label)
+    assert_not_contains(text, OLD_WETH_POOL_ADDRESS, label)
+    assert_not_contains(text, "GCA/WETH", label)
+
+
+def validate_faq_page(text: str) -> None:
+    label = "/faq.html"
+    assert_social_preview_meta(text, label, FAQ_PAGE_URL)
+    assert_contains(text, "GCA FAQ", label)
+    assert_contains(text, "Why do I see a high-risk warning?", label)
+    assert_contains(text, "Is GCA externally audited?", label)
+    assert_contains(text, "Why does BaseScan show 1B supply?", label)
+    assert_contains(text, "No third-party audit", label)
+    assert_contains(text, "not permanent security-vendor approval", label)
+    assert_contains(text, "Earlier pilot liquidity is historical", label)
+    assert_contains(text, "Do not claim BaseScan token profile approval", label)
+    assert_contains(text, MAINNET_ADDRESS, label)
+    assert_current_pool_text(text, label)
+
+
+def validate_whitepaper_page(text: str) -> None:
+    label = "/whitepaper.html"
+    assert_social_preview_meta(text, label, WHITEPAPER_PAGE_URL)
+    assert_contains(text, "GCA Whitepaper", label)
+    assert_contains(text, "Narrative meets risk control", label)
+    assert_contains(text, "not live market data, financial advice, a buy/sell recommendation, or a price forecast", label)
+    assert_contains(text, "Until those gates are live, 100 utility credits, GCA Member status, and the 10,000 GCA member benefit are not self-service claimable", label)
+    assert_contains(text, "not as a yield product", label)
+    assert_contains(text, "not automatic claiming or new minting", label)
+    assert_contains(text, "This is not a substitute for a third-party audit", label)
+    assert_contains(text, "no third-party audit has been completed", label)
+    assert_contains(text, "awaiting BaseScan email/review", label)
+    assert_contains(text, MAINNET_ADDRESS, label)
+    assert_contains(text, BASE_USDT_ADDRESS, label)
+    assert_contains(text, OFFICIAL_GECKOTERMINAL_URL, label)
+    assert_contains(text, OFFICIAL_DEXSCREENER_URL, label)
     assert_current_pool_text(text, label)
 
 
@@ -5081,7 +5209,14 @@ def validate_sitemap(text: str) -> None:
     label = "/sitemap.xml"
     for expected in (
         "https://gcagochina.com/verify.html",
+        "https://gcagochina.com/status.html",
+        "https://gcagochina.com/listing-kit.html",
+        "https://gcagochina.com/whitepaper.html",
+        "https://gcagochina.com/buy.html",
         "https://gcagochina.com/markets.html",
+        "https://gcagochina.com/security.html",
+        "https://gcagochina.com/risk.html",
+        "https://gcagochina.com/faq.html",
         "https://gcagochina.com/wallet-warning.html",
         "https://gcagochina.com/wallet-warning.json",
         "https://gcagochina.com/reviewer-kit.html",
@@ -5159,6 +5294,13 @@ def validate_sitemap(text: str) -> None:
 
 def validate_robots(text: str) -> None:
     label = "/robots.txt"
+    assert_contains(text, "Allow: /status.html", label)
+    assert_contains(text, "Allow: /listing-kit.html", label)
+    assert_contains(text, "Allow: /whitepaper.html", label)
+    assert_contains(text, "Allow: /buy.html", label)
+    assert_contains(text, "Allow: /security.html", label)
+    assert_contains(text, "Allow: /risk.html", label)
+    assert_contains(text, "Allow: /faq.html", label)
     assert_contains(text, "Allow: /wallet-warning.html", label)
     assert_contains(text, "Allow: /brand-kit.html", label)
     assert_contains(text, "Allow: /brand-kit.json", label)
@@ -5234,7 +5376,14 @@ def validate_robots(text: str) -> None:
 CHECKS: list[EndpointCheck] = [
     ("/", validate_root),
     ("/verify.html", validate_verify),
+    ("/status.html", validate_status_page),
+    ("/listing-kit.html", validate_listing_kit_page),
+    ("/whitepaper.html", validate_whitepaper_page),
+    ("/buy.html", validate_buy_page),
     ("/markets.html", validate_markets),
+    ("/security.html", validate_security_page),
+    ("/risk.html", validate_risk_page),
+    ("/faq.html", validate_faq_page),
     ("/wallet-warning.html", validate_wallet_warning_page),
     ("/wallet-warning.json", validate_wallet_warning_json),
     ("/reviewer-kit.html", validate_reviewer_kit_page),
