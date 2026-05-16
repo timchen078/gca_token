@@ -875,6 +875,20 @@ class GcaMemberBackend:
                 "redactedFields": sorted(REDACTED_EXTERNAL_KEYS),
                 "keepsPublicChainEvidence": True,
             },
+            "handoffInstructions": {
+                "externalSharingMode": "redacted-public",
+                "fullLocalMode": "internal-only",
+                "offlineRedactedExportCommand": ".venv/bin/python tools/export_gca_review_package.py --redact public --output gca-public-redacted-review-package.json",
+                "verifyCommand": ".venv/bin/python tools/verify_gca_review_package.py gca-public-redacted-review-package.json",
+                "replyTemplatePage": "https://gcagochina.com/platform-replies.html",
+                "replyTemplateJson": "https://gcagochina.com/platform-replies.json",
+                "beforeExternalSharing": [
+                    "export redacted-public package only",
+                    "verify packageDigestSha256 before sending",
+                    "confirm no user email, Telegram handle, reviewer note, support note, evidence note, private key, seed phrase, exchange API secret, withdrawal permission, or one-time code is present",
+                ],
+                "publicClaimBoundary": "support evidence only; not a third-party audit, security-vendor approval, listing approval, or liquidity-depth claim",
+            },
             "localEndpoint": "/gca/review-package",
             "operatorSummary": summary,
             "exportBoundaries": {

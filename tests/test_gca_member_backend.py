@@ -240,6 +240,13 @@ class GcaMemberBackendTests(unittest.TestCase):
         self.assertRegex(review_package["packageDigestSha256"], r"^[a-f0-9]{64}$")
         self.assertEqual(review_package["recordManifest"]["ledgerCounts"]["member_benefit_transfers"], 1)
         self.assertEqual(review_package["recordManifest"]["latestRecordCounts"]["support_reviews"], 2)
+        self.assertEqual(review_package["handoffInstructions"]["externalSharingMode"], "redacted-public")
+        self.assertEqual(review_package["handoffInstructions"]["fullLocalMode"], "internal-only")
+        self.assertIn("tools/export_gca_review_package.py", review_package["handoffInstructions"]["offlineRedactedExportCommand"])
+        self.assertIn("tools/verify_gca_review_package.py", review_package["handoffInstructions"]["verifyCommand"])
+        self.assertEqual(review_package["handoffInstructions"]["replyTemplatePage"], "https://gcagochina.com/platform-replies.html")
+        self.assertIn("verify packageDigestSha256 before sending", review_package["handoffInstructions"]["beforeExternalSharing"])
+        self.assertIn("support evidence only", review_package["handoffInstructions"]["publicClaimBoundary"])
         verification = verify_package_digest(review_package)
         self.assertTrue(verification["ok"])
         self.assertEqual(verification["status"], "verified")
@@ -485,6 +492,8 @@ class GcaMemberBackendTests(unittest.TestCase):
             self.assertTrue(review_package["exportBoundaries"]["localhostOnly"])
             self.assertRegex(review_package["packageDigestSha256"], r"^[a-f0-9]{64}$")
             self.assertEqual(review_package["recordManifest"]["ledgerCounts"]["pre_registrations"], 1)
+            self.assertEqual(review_package["handoffInstructions"]["externalSharingMode"], "redacted-public")
+            self.assertIn("tools/verify_gca_review_package.py", review_package["handoffInstructions"]["verifyCommand"])
 
             with urlopen(f"{base_url}/gca/review-package?limit=5&redact=public", timeout=10) as response:
                 redacted_package = json.loads(response.read().decode())

@@ -152,6 +152,12 @@
         gap: 14px;
       }
 
+      .handoff-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 12px;
+      }
+
       .fact {
         min-height: 110px;
         padding: 18px;
@@ -311,6 +317,12 @@
         overflow-wrap: anywhere;
       }
 
+      .copy {
+        min-height: 120px;
+        width: 100%;
+        white-space: pre-wrap;
+      }
+
       footer {
         border-top: 1px solid var(--line);
         padding: 24px 0;
@@ -320,7 +332,8 @@
 
       @media (max-width: 860px) {
         .grid,
-        .two {
+        .two,
+        .handoff-grid {
           grid-template-columns: 1fr;
         }
 
@@ -357,6 +370,7 @@
           <button class="button primary" id="refreshButton" type="button">Refresh Local Ledgers</button>
           <button class="button" id="exportButton" type="button">Export Full Review Package</button>
           <button class="button" id="exportPublicButton" type="button">Export Public Redacted Package</button>
+          <button class="button" id="copyHandoffButton" type="button" disabled>Copy Handoff Reply</button>
           <a class="button" href="members.html">Open Pre-Registration</a>
           <a class="button" href="member-ledger.html">Ledger Schema</a>
           <a class="button" href="member-benefit-transfer.html">Transfer Runbook</a>
@@ -401,6 +415,34 @@
           <h2>Local API</h2>
           <p class="note"><code>GET /gca/operator-summary</code> powers this console. <code>GET /gca/review-package</code> exports a local reviewer evidence package with <code>recordManifest</code> and <code>packageDigestSha256</code> for support and platform follow-up. Use <code>?redact=public</code> before external sharing to redact user email, Telegram, reviewer notes, support notes, and evidence notes while keeping public wallet and transaction evidence. Export the same package without running the server with <code>tools/export_gca_review_package.py</code>, then verify it with <code>tools/verify_gca_review_package.py</code>. Individual records remain available through <code>GET /gca/pre-registrations</code>, <code>GET /gca/wallet-verifications</code>, <code>GET /gca/credit-ledger</code>, <code>GET /gca/member-ledger</code>, <code>GET /gca/member-benefit-transfers</code>, and <code>GET /gca/member-review</code>. <code>POST /gca/member-benefit-transfers</code> records a completed manual reserve-wallet transfer after the operator signs it outside this app and the backend verifies the receipt with read-only Base Mainnet data.</p>
           <pre id="summaryJson">Waiting for local backend...</pre>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="handoffTitle">
+        <h2 id="handoffTitle">Review Package Handoff</h2>
+        <p class="note">After export, this panel shows the package mode, <code>packageDigestSha256</code>, the local verify command, and a copyable reviewer reply. External sharing is allowed only for <code>redacted-public</code> packages. Full local packages are internal operator evidence only.</p>
+        <div class="handoff-grid section">
+          <div>
+            <div class="field">
+              <label for="lastPackageMode">Last package mode</label>
+              <input id="lastPackageMode" readonly value="No package exported yet">
+            </div>
+            <div class="field">
+              <label for="lastPackageDigest">packageDigestSha256</label>
+              <input id="lastPackageDigest" readonly value="No digest yet">
+            </div>
+            <div class="field">
+              <label for="verifyCommandText">Local verify command</label>
+              <textarea id="verifyCommandText" class="copy" readonly>.venv/bin/python tools/verify_gca_review_package.py gca-public-redacted-review-package.json</textarea>
+            </div>
+          </div>
+          <div>
+            <div class="field">
+              <label for="handoffReplyText">Reviewer handoff reply</label>
+              <textarea id="handoffReplyText" class="copy" readonly>Export a public redacted package first. Do not send full-local packages externally.</textarea>
+            </div>
+            <p class="status warn" id="handoffStatus">No export yet</p>
+          </div>
         </div>
       </section>
 
@@ -471,11 +513,17 @@
       const refreshButton = document.getElementById("refreshButton");
       const exportButton = document.getElementById("exportButton");
       const exportPublicButton = document.getElementById("exportPublicButton");
+      const copyHandoffButton = document.getElementById("copyHandoffButton");
       const transferForm = document.getElementById("transferForm");
       const recordTransferButton = document.getElementById("recordTransferButton");
       const transferStatus = document.getElementById("transferStatus");
       const summaryJson = document.getElementById("summaryJson");
       const reviewRows = document.getElementById("reviewRows");
+      const lastPackageMode = document.getElementById("lastPackageMode");
+      const lastPackageDigest = document.getElementById("lastPackageDigest");
+      const verifyCommandText = document.getElementById("verifyCommandText");
+      const handoffReplyText = document.getElementById("handoffReplyText");
+      const handoffStatus = document.getElementById("handoffStatus");
       const statNodes = {
         preRegistrationCount: document.getElementById("preRegistrationCount"),
         creditLedgerCount: document.getElementById("creditLedgerCount"),
@@ -492,6 +540,11 @@
       function setTransferStatus(text, kind = "") {
         transferStatus.textContent = text;
         transferStatus.className = `status ${kind}`.trim();
+      }
+
+      function setHandoffStatus(text, kind = "") {
+        handoffStatus.textContent = text;
+        handoffStatus.className = `status ${kind}`.trim();
       }
 
       function escapeHtml(value) {
@@ -526,6 +579,7 @@
           refreshButton.disabled = true;
           exportButton.disabled = true;
           exportPublicButton.disabled = true;
+          copyHandoffButton.disabled = true;
           recordTransferButton.disabled = true;
           setTransferStatus("Public website view only", "warn");
           summaryJson.textContent = "Open http://127.0.0.1:8787/operator.html after running tools/gca_member_backend.py to view local ledgers.";
@@ -575,6 +629,48 @@
         URL.revokeObjectURL(url);
       }
 
+      function buildHandoffReply(payload, fileName) {
+        const digest = payload.packageDigestSha256 || "missing";
+        const redactionMode = payload.redactionPolicy?.mode || "unknown";
+        const verifyCommand = `.venv/bin/python tools/verify_gca_review_package.py ${fileName}`;
+        const boundary = payload.handoffInstructions?.publicClaimBoundary || "support evidence only; not a third-party audit or approval claim";
+        return [
+          "Subject: GCA redacted local review package handoff",
+          "",
+          "Attached is a public-redacted GCA local review package for reviewer evidence handoff.",
+          "",
+          "Network: Base Mainnet / chainId 8453",
+          "Contract: 0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+          `Export mode: ${redactionMode}`,
+          `Package file: ${fileName}`,
+          `packageDigestSha256: ${digest}`,
+          `Local verify command: ${verifyCommand}`,
+          "Access API / review package process: https://gcagochina.com/access-api.html",
+          "Reply template: https://gcagochina.com/platform-replies.html",
+          "",
+          "The redacted package removes user email, Telegram, reviewer notes, support notes, and evidence notes while retaining public chain evidence such as wallet addresses and transaction hashes.",
+          "",
+          `Boundary: ${boundary}.`,
+        ].join("\n");
+      }
+
+      function renderReviewPackageHandoff(payload, fileName, redacted) {
+        const redactionMode = payload.redactionPolicy?.mode || (redacted ? "redacted-public" : "full-local");
+        const digest = payload.packageDigestSha256 || "missing";
+        const verifyCommand = `.venv/bin/python tools/verify_gca_review_package.py ${fileName}`;
+        lastPackageMode.value = redactionMode;
+        lastPackageDigest.value = digest;
+        verifyCommandText.value = verifyCommand;
+        handoffReplyText.value = redacted
+          ? buildHandoffReply(payload, fileName)
+          : "Full-local package exported for internal operator review only. Do not send full-local packages externally. Export Public Redacted Package before platform or reviewer handoff.";
+        copyHandoffButton.disabled = !redacted;
+        setHandoffStatus(
+          redacted ? "Ready for redacted-public handoff after local digest verification" : "Internal-only full-local package; do not share externally",
+          redacted ? "good" : "warn",
+        );
+      }
+
       async function exportReviewPackage(redacted = false) {
         if (!LOCAL_BACKEND_HOSTS.has(window.location.hostname)) {
           setStatus("Open the local backend URL before exporting", "warn");
@@ -593,7 +689,9 @@
           }
           const stamp = new Date().toISOString().replaceAll(":", "-").replace(/\..+$/, "Z");
           const prefix = redacted ? "gca-public-redacted-review-package" : "gca-full-local-review-package";
-          downloadJson(payload, `${prefix}-${stamp}.json`);
+          const fileName = `${prefix}-${stamp}.json`;
+          downloadJson(payload, fileName);
+          renderReviewPackageHandoff(payload, fileName, redacted);
           summaryJson.textContent = JSON.stringify(payload, null, 2);
           setStatus(redacted ? "Public redacted review package exported" : "Full local review package exported", "good");
         } catch (error) {
@@ -601,6 +699,15 @@
         } finally {
           exportButton.disabled = false;
           exportPublicButton.disabled = false;
+        }
+      }
+
+      async function copyHandoffReply() {
+        try {
+          await navigator.clipboard.writeText(handoffReplyText.value);
+          setHandoffStatus("Handoff reply copied; verify digest before sending", "good");
+        } catch (error) {
+          setHandoffStatus("Copy failed; select the handoff text manually", "warn");
         }
       }
 
@@ -645,6 +752,7 @@
       refreshButton.addEventListener("click", refreshOperatorSummary);
       exportButton.addEventListener("click", () => exportReviewPackage(false));
       exportPublicButton.addEventListener("click", () => exportReviewPackage(true));
+      copyHandoffButton.addEventListener("click", copyHandoffReply);
       transferForm.addEventListener("submit", recordMemberBenefitTransfer);
       refreshOperatorSummary();
     </script>
