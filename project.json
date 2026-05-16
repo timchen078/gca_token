@@ -59,6 +59,8 @@
   "riskRemediationUrl": "https://gcagochina.com/risk-remediation.json",
   "custodyRoadmapPageUrl": "https://gcagochina.com/custody-roadmap.html",
   "custodyRoadmapUrl": "https://gcagochina.com/custody-roadmap.json",
+  "auditReadinessPageUrl": "https://gcagochina.com/audit-readiness.html",
+  "auditReadinessUrl": "https://gcagochina.com/audit-readiness.json",
   "supplyPageUrl": "https://gcagochina.com/supply.html",
   "supplyDisclosureUrl": "https://gcagochina.com/supply.json",
   "securityPageUrl": "https://gcagochina.com/security.html",
@@ -169,6 +171,12 @@
     "url": "https://gcagochina.com/custody-roadmap.json",
     "useCase": "Public custody roadmap and evidence checklist for future reserve multisig, reserve lock, vesting, LP lock, and audit claims."
   },
+  "auditReadiness": {
+    "status": "public-audit-readiness-package-published",
+    "pageUrl": "https://gcagochina.com/audit-readiness.html",
+    "url": "https://gcagochina.com/audit-readiness.json",
+    "useCase": "Public future-audit handoff scope and checklist. This is not a completed third-party audit."
+  },
   "baseScanContractUrl": "https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "officialEmail": "GCAgochina@outlook.com",
   "officialSocialLinks": [
@@ -245,7 +253,8 @@
     "liquidityStatement": "public-liquidity-custody-statement-published",
     "holderDistribution": "public-holder-distribution-disclosure-published",
     "riskRemediation": "public-risk-remediation-plan-published",
-    "custodyRoadmap": "public-custody-roadmap-published"
+    "custodyRoadmap": "public-custody-roadmap-published",
+    "auditReadiness": "public-audit-readiness-package-published"
   },
   "listingReadiness": {
     "status": "not-ready",

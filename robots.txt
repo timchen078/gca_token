@@ -41,6 +41,8 @@ Allow: /risk-remediation.html
 Allow: /risk-remediation.json
 Allow: /custody-roadmap.html
 Allow: /custody-roadmap.json
+Allow: /audit-readiness.html
+Allow: /audit-readiness.json
 Allow: /token-safety.html
 Allow: /token-safety.json
 Allow: /blockaid-followup.html

@@ -34,6 +34,8 @@
     "riskRemediation": "https://gcagochina.com/risk-remediation.json",
     "custodyRoadmapPage": "https://gcagochina.com/custody-roadmap.html",
     "custodyRoadmap": "https://gcagochina.com/custody-roadmap.json",
+    "auditReadinessPage": "https://gcagochina.com/audit-readiness.html",
+    "auditReadiness": "https://gcagochina.com/audit-readiness.json",
     "liquidityPage": "https://gcagochina.com/liquidity.html",
     "liquidity": "https://gcagochina.com/liquidity.json",
     "externalReviewStatusPage": "https://gcagochina.com/external-reviews.html",
@@ -89,6 +91,13 @@
     "pageUrl": "https://gcagochina.com/technical-report.html",
     "url": "https://gcagochina.com/technical-report.json",
     "reportType": "internal-technical-report-not-third-party-audit",
+    "thirdPartyAuditCompleted": false
+  },
+  "auditReadiness": {
+    "status": "public-audit-readiness-package-published",
+    "pageUrl": "https://gcagochina.com/audit-readiness.html",
+    "url": "https://gcagochina.com/audit-readiness.json",
+    "scope": "Future independent-audit handoff checklist. This is not a completed third-party audit.",
     "thirdPartyAuditCompleted": false
   },
   "blockaidFollowup": {
