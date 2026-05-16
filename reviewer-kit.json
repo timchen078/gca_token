@@ -2,7 +2,7 @@
   "schema": "https://gcagochina.com/reviewer-kit.json",
   "pageUrl": "https://gcagochina.com/reviewer-kit.html",
   "status": "public-reviewer-kit-published",
-  "lastUpdated": "2026-05-14",
+  "lastUpdated": "2026-05-16",
   "projectName": "GCA",
   "conceptExpansion": "Go China Access",
   "network": "Base Mainnet",
@@ -35,6 +35,8 @@
     "listingReadiness": "https://gcagochina.com/listing-readiness.json",
     "marketQualityPage": "https://gcagochina.com/market-quality.html",
     "marketQuality": "https://gcagochina.com/market-quality.json",
+    "accessApiPage": "https://gcagochina.com/access-api.html",
+    "accessApi": "https://gcagochina.com/access-api.json",
     "supplyPage": "https://gcagochina.com/supply.html",
     "supplyDisclosure": "https://gcagochina.com/supply.json",
     "projectJson": "https://gcagochina.com/project.json",
@@ -105,8 +107,47 @@
     "tokenSafety": "https://gcagochina.com/token-safety.html",
     "externalReviewStatus": "https://gcagochina.com/external-reviews.html",
     "marketQualityPlan": "https://gcagochina.com/market-quality.html",
+    "localReviewPackageProcess": "https://gcagochina.com/access-api.html",
     "supplyDisclosure": "https://gcagochina.com/supply.html",
     "machineReadableIdentity": "https://gcagochina.com/.well-known/gca-token.json"
+  },
+  "localReviewPackage": {
+    "status": "local-export-tool-ready",
+    "purpose": "Operator-controlled export for support review, platform follow-up, and reviewer evidence handoff when local GCA member ledger records exist.",
+    "dataDirectory": ".gca_access_data/",
+    "serverTool": "tools/gca_member_backend.py",
+    "localEndpoint": "/gca/review-package",
+    "offlineExportTool": "tools/export_gca_review_package.py",
+    "verificationTool": "tools/verify_gca_review_package.py",
+    "digestAlgorithm": "sha256-json-sort-keys-excluding-packageDigestSha256",
+    "redactionModes": [
+      "full-local",
+      "redacted-public"
+    ],
+    "recommendedExternalMode": "redacted-public",
+    "redactedFields": [
+      "email",
+      "telegram",
+      "reviewerNote",
+      "supportNote",
+      "evidenceNote"
+    ],
+    "keepsPublicChainEvidence": true,
+    "commands": {
+      "fullLocalExport": ".venv/bin/python tools/export_gca_review_package.py --output gca-full-local-review-package.json",
+      "publicRedactedExport": ".venv/bin/python tools/export_gca_review_package.py --redact public --output gca-public-redacted-review-package.json",
+      "verifyDigest": ".venv/bin/python tools/verify_gca_review_package.py gca-public-redacted-review-package.json"
+    },
+    "boundaries": {
+      "localhostOnlyWhenUsingEndpoint": true,
+      "offlineExporterRequiresServer": false,
+      "requiresPrivateKey": false,
+      "requiresSeedPhrase": false,
+      "requiresWalletSignature": false,
+      "sendsTransaction": false,
+      "automaticTokenTransfer": false,
+      "publicSelfServiceClaim": false
+    }
   },
   "historicalFunctionalSwapEvidence": {
     "status": "observed-historical-functional-evidence-only",
@@ -156,6 +197,7 @@
     ],
     "nextActions": [
       "Use the reviewer kit page and JSON when a platform asks for centralized public evidence.",
+      "If a reviewer asks for local member-ledger evidence, export a public redacted review package and verify its digest before sharing.",
       "Do not send duplicate Blockaid reports unless Blockaid, MetaMask, or Uniswap asks for more information.",
       "Wait for BaseScan profile review email before submitting another BaseScan token update.",
       "Keep the official GCA/USDT pool, logo, website, Telegram, X, and JSON links consistent."
