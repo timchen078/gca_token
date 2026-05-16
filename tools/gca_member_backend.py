@@ -875,6 +875,15 @@ class GcaMemberBackend:
                 "redactedFields": sorted(REDACTED_EXTERNAL_KEYS),
                 "keepsPublicChainEvidence": True,
             },
+            "fullLocalExportWarning": {
+                "mode": "full-local",
+                "internalOnly": True,
+                "externalSharingAllowed": False,
+                "operatorConfirmationRequired": True,
+                "mayContainLocalFields": sorted(REDACTED_EXTERNAL_KEYS),
+                "externalSharingAlternative": "GET /gca/review-package?redact=public",
+                "warning": "Full-local review packages may include local user email, Telegram handle, reviewer notes, support notes, and evidence notes. Use redacted-public mode for platform or reviewer handoff.",
+            },
             "handoffInstructions": {
                 "externalSharingMode": "redacted-public",
                 "fullLocalMode": "internal-only",
