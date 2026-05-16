@@ -321,6 +321,7 @@
         <h1 id="title">GCA Access API Contract</h1>
         <p class="lead">This page defines the planned controlled HTTPS API contract for the GCA access bridge. It covers pre-registration, read-only wallet verification, credit ledger records, GCA Member records, and support review statuses.</p>
         <p class="lead">The API contract is not live today. It is a public implementation contract for future backend work, not a public submission endpoint, account system, or self-service claim page.</p>
+        <p class="lead">A local operator backend is available at <code>tools/gca_member_backend.py</code> for localhost testing. It serves this static site, enables same-origin local submission, verifies GCA with read-only Base Mainnet <code>eth_call</code>, and writes local JSONL ledger records without making public self-service claiming live.</p>
         <div class="actions">
           <a class="button primary" href="access-api.json">Access API JSON</a>
           <a class="button primary" href="operations.html">Operations Runbook</a>
@@ -343,6 +344,10 @@
         <div class="fact">
           <span class="label">Public Endpoint</span>
           <span class="value pending">Not live</span>
+        </div>
+        <div class="fact">
+          <span class="label">Local Backend</span>
+          <span class="value">tools/gca_member_backend.py</span>
         </div>
         <div class="fact">
           <span class="label">Account UI</span>

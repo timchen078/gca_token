@@ -541,6 +541,9 @@ def validate_members(text: str) -> None:
     assert_contains(text, "member-program.json", label)
     assert_contains(text, "member-ledger.html", label)
     assert_contains(text, "member-ledger.json", label)
+    assert_contains(text, "tools/gca_member_backend.py", label)
+    assert_contains(text, "LOCAL_BACKEND_HOSTS", label)
+    assert_contains(text, "local JSONL ledger records", label)
     assert_contains(text, "support.html", label)
     assert_contains(text, "privacy.html", label)
     assert_contains(text, "terms.html", label)
@@ -1739,6 +1742,8 @@ def validate_access_api_page(text: str) -> None:
     assert_contains(text, "contract only", label)
     assert_contains(text, "not live today", label)
     assert_contains(text, "not a public submission endpoint", label)
+    assert_contains(text, "tools/gca_member_backend.py", label)
+    assert_contains(text, "local JSONL ledger records", label)
     assert_contains(text, "POST", label)
     assert_contains(text, "/gca/pre-registrations", label)
     assert_contains(text, "/gca/wallet-verifications", label)
@@ -1776,6 +1781,7 @@ def validate_access_api_json(text: str) -> None:
     label = "/access-api.json"
     payload = load_json(text, label)
     state = payload.get("currentState", {})
+    local_backend = payload.get("localDevelopmentBackend", {})
     security = payload.get("securityModel", {})
     endpoints = payload.get("endpoints", [])
     endpoint_map = {f"{item.get('method')} {item.get('path')}": item for item in endpoints}
@@ -1802,6 +1808,8 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong reviewQueueContract")
     if state.get("memberPacketVersion") != "gca_member_preregistration_v2":
         raise SiteCheckError(f"{label}: wrong member packet version")
+    if state.get("localDevelopmentBackendAvailable") is not True:
+        raise SiteCheckError(f"{label}: local development backend should be available")
     for key in (
         "backendLive",
         "publicEndpointLive",
@@ -1813,6 +1821,23 @@ def validate_access_api_json(text: str) -> None:
     ):
         if state.get(key) is not False:
             raise SiteCheckError(f"{label}: {key} must be false")
+    if local_backend.get("status") != "local-only-backend-available":
+        raise SiteCheckError(f"{label}: wrong local backend status")
+    if local_backend.get("script") != "tools/gca_member_backend.py":
+        raise SiteCheckError(f"{label}: wrong local backend script")
+    if local_backend.get("localUrl") != "http://127.0.0.1:8787/members.html":
+        raise SiteCheckError(f"{label}: wrong local backend URL")
+    if local_backend.get("dataDirectory") != ".gca_access_data/":
+        raise SiteCheckError(f"{label}: wrong local backend data directory")
+    if local_backend.get("sameOriginSubmissionOnLocalhost") is not True:
+        raise SiteCheckError(f"{label}: local backend should use same-origin localhost submissions")
+    if local_backend.get("publicProductionEndpointLive") is not False:
+        raise SiteCheckError(f"{label}: local backend must not mark production live")
+    if local_backend.get("automaticTokenTransfer") is not False:
+        raise SiteCheckError(f"{label}: local backend must not automatically transfer tokens")
+    for ledger in ("pre_registrations", "wallet_verifications", "credit_ledger", "member_ledger", "support_reviews"):
+        if ledger not in local_backend.get("writesJsonlLedgers", []):
+            raise SiteCheckError(f"{label}: missing local ledger {ledger}")
     for key in (
         "controlledHttpsOriginRequired",
         "authenticatedAccountSessionRequired",
@@ -3625,6 +3650,21 @@ def validate_member_program_json(text: str) -> None:
     if verification.get("directSubmissionEndpointConfigured") is not False:
         raise SiteCheckError(f"{label}: direct submission must remain false")
     preview = verification.get("browserPreview", {})
+    local_backend = verification.get("localOperatorBackend", {})
+    if local_backend.get("status") != "local-only-backend-available":
+        raise SiteCheckError(f"{label}: wrong local backend status")
+    if local_backend.get("script") != "tools/gca_member_backend.py":
+        raise SiteCheckError(f"{label}: wrong local backend script")
+    if local_backend.get("localUrl") != "http://127.0.0.1:8787/members.html":
+        raise SiteCheckError(f"{label}: wrong local backend URL")
+    if local_backend.get("dataDirectory") != ".gca_access_data/":
+        raise SiteCheckError(f"{label}: wrong local backend data directory")
+    if local_backend.get("sameOriginSubmissionOnLocalhost") is not True:
+        raise SiteCheckError(f"{label}: local backend should use same-origin localhost submissions")
+    if local_backend.get("publicProductionEndpointLive") is not False:
+        raise SiteCheckError(f"{label}: local backend must not mark production live")
+    if "credit_ledger" not in local_backend.get("writesJsonlLedgers", []):
+        raise SiteCheckError(f"{label}: missing local credit ledger")
     if preview.get("status") != "browser-read-only-preview-live":
         raise SiteCheckError(f"{label}: wrong browser preview status")
     if preview.get("ledgerEffect") != "none":

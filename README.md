@@ -16,6 +16,16 @@ python3 -m venv .venv
 
 Deployment notes are in `docs/deploy_base_sepolia.md` and `docs/deploy_base_mainnet.md`.
 
+## Local Member Backend
+
+Run the local-only member backend for operator testing:
+
+```bash
+.venv/bin/python tools/gca_member_backend.py --host 127.0.0.1 --port 8787
+```
+
+Then open `http://127.0.0.1:8787/members.html`. The backend serves `site/`, accepts `POST /gca/pre-registrations`, verifies GCA with read-only Base Mainnet `eth_call`, and writes append-only JSONL records under `.gca_access_data/`. It does not ask for private keys, seed phrases, signatures, withdrawal permission, custody, or exchange API secrets.
+
 ## Mainnet Launch Package
 
 - Canonical public facts: `docs/mainnet_public_profile.md`
@@ -36,6 +46,7 @@ Deployment notes are in `docs/deploy_base_sepolia.md` and `docs/deploy_base_main
 - Public member program rules: `site/member-program.json`
 - Public member ledger schema page: `site/member-ledger.html`
 - Public member ledger schema JSON: `site/member-ledger.json`
+- Local member backend: `tools/gca_member_backend.py`
 - Public support intake page: `site/support.html`
 - Public support intake JSON: `site/support.json`
 - Public roadmap page: `site/roadmap.html`

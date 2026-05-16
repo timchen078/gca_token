@@ -7,6 +7,9 @@ This runbook keeps the current static member pre-registration flow operationally
 - Public page: `https://gcagochina.com/members.html`
 - Page mode: static browser-only pre-registration
 - Direct submission endpoint: not connected on the public static page
+- Local operator backend: `tools/gca_member_backend.py`
+- Local operator URL: `http://127.0.0.1:8787/members.html`
+- Local same-origin API: `POST /gca/pre-registrations`, `POST /gca/wallet-verifications`, `GET /gca/credit-ledger`, `GET /gca/member-ledger`, and `GET /gca/member-review`
 - Fallback collection methods: copy packet, download JSON, or email packet to `GCAgochina@outlook.com`
 - Public claim status: not connected
 - Prepared Web3 Radar user access page: `/gca/member-access`
@@ -22,6 +25,29 @@ The page can generate a local registration packet for:
 - General waitlist
 - Holder Bonus candidate: declared balance at or above 10,000 GCA
 - GCA Member candidate: declared balance at or above 1,000,000 GCA, plus later public evidence that the wallet bought and continuously held the threshold for 30 days
+
+## Local Operator Backend
+
+Run:
+
+```bash
+.venv/bin/python tools/gca_member_backend.py --host 127.0.0.1 --port 8787
+```
+
+Then open `http://127.0.0.1:8787/members.html`.
+
+Local backend behavior:
+
+- Serves the static `site/` pages.
+- Enables same-origin `POST /gca/pre-registrations` only when the page is opened from `localhost` or `127.0.0.1`.
+- Verifies the submitted wallet with read-only Base Mainnet `eth_call` / ERC-20 `balanceOf`.
+- Writes append-only local JSONL files under `.gca_access_data/`.
+- Creates a 100 Web3 Radar utility credits ledger record when the wallet holds at least 10,000 GCA.
+- Creates a GCA Member ledger record when the wallet holds at least 1,000,000 GCA; it activates the member record only when the 30-day holding evidence is present and the public transaction hash format is valid.
+- Keeps the 10,000 GCA member benefit as `pending_manual_reserve_transfer`; it never sends tokens automatically.
+- Rejects sensitive field names such as private key, seed phrase, mnemonic, exchange API secret, withdrawal permission, recovery phrase, or one-time code.
+
+This is a local operator backend, not a public production account system.
 
 ## Direct Submission Setup
 
