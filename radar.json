@@ -1,56 +1,57 @@
 {
   "schema": "https://gcagochina.com/radar.json",
   "pageUrl": "https://gcagochina.com/radar.html",
-  "status": "weekly-go-china-radar-issue-002-published",
-  "issue": "issue-002",
-  "issueDate": "2026-05-14",
+  "status": "weekly-go-china-radar-issue-003-published",
+  "issue": "issue-003",
+  "issueDate": "2026-05-16",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "title": "Weekly Go China Radar",
   "subtitle": "Narrative meets risk control.",
-  "scope": "Issue 002 of the GCA Weekly Go China Radar. This issue records current public trust signals, official market identity, wallet-warning observation, and risk-first community actions. It is not live market data, not financial advice, not a buy or sell recommendation, and not a price forecast.",
+  "scope": "Issue 003 of the GCA Weekly Go China Radar. This issue records public activity cadence, official market identity, no-artificial-volume boundaries, member utility readiness, and reviewer links. It is not live market data, not financial advice, not a buy or sell recommendation, and not a price forecast.",
   "narrativeThemes": [
     {
-      "name": "Go China trust stack",
-      "description": "Turn the Go China Access story into verifiable public links: Base Mainnet contract, GCA/USDT pool, token list, trust center, wallet evidence, and community channels."
+      "name": "Public activity without artificial volume",
+      "description": "Grow the Go China Access story through visible updates, community education, reviewer links, and market-quality disclosures instead of self-trading, fake volume, or price promises."
     },
     {
-      "name": "Base ecosystem access",
-      "description": "Keep Base Mainnet identity, official GCA/USDT market route, wallet UI status, and data-platform metadata consistent before expanding listing outreach."
+      "name": "Reviewer-ready trust links",
+      "description": "Keep Base Mainnet identity, official GCA/USDT market route, token safety, reserve disclosure, Blockaid follow-up, and external-review status easy to verify from one public path."
     },
     {
-      "name": "Risk-first growth",
-      "description": "Grow public activity through education, member registration, and transparent updates instead of artificial volume, price promises, or paid listing shortcuts."
+      "name": "Member utility readiness",
+      "description": "Move the access story toward controlled account UI, read-only wallet checks, 100 utility credits, 30-day GCA Member review, and manual member benefit controls without claiming self-service access is live."
     }
   ],
   "utilityHooks": [
     {
-      "name": "China Narrative Radar",
-      "type": "research format"
+      "name": "Market Quality Check",
+      "type": "public activity rule"
     },
     {
-      "name": "Trust Stack Check",
-      "type": "verification checklist"
+      "name": "Reviewer Kit Handoff",
+      "type": "verification workflow"
     },
     {
-      "name": "Liquidation Replay",
-      "type": "risk report format"
+      "name": "GCA Member Readiness",
+      "type": "access workflow"
     },
     {
-      "name": "ENTRY_READY Review",
-      "type": "signal-readiness label"
+      "name": "Risk-Control Education",
+      "type": "education module"
     },
     {
-      "name": "GCA Member Club",
-      "type": "access identity"
+      "name": "Weekly Trust Update",
+      "type": "public content cadence"
     }
   ],
   "riskNotes": [
-    "GCA is still early-stage and current liquidity is starter-depth only.",
-    "BaseScan token profile review is not complete until BaseScan publishes it.",
-    "Owner observed no wallet risk warning visible on 2026-05-14; this is not security-vendor approval or a permanent cross-wallet guarantee.",
-    "No third-party audit has been completed.",
-    "Credits, member status, and the planned 10,000 GCA member benefit are account-level concepts, not cash, income, reimbursement, or trading permission."
+      "GCA is still early-stage and current liquidity is starter-depth only.",
+      "BaseScan token profile review is not complete until BaseScan publishes it.",
+      "Owner observed no wallet risk warning visible on 2026-05-14; this is not security-vendor approval or a permanent cross-wallet guarantee.",
+      "No third-party audit has been completed.",
+      "Public activity must not use artificial volume, self-trading, wash trading, price promises, or paid listing shortcuts.",
+      "Credits, member status, and the planned 10,000 GCA member benefit are account-level concepts, not cash, income, reimbursement, or trading permission."
   ],
   "officialMarket": {
     "pair": "GCA/USDT",
@@ -62,7 +63,7 @@
   "publicClaimBoundaries": {
     "safeClaims": [
       "Weekly Go China Radar is the official GCA content format for narrative research and risk education.",
-      "Issue 002 focuses on trust stack, official route, and risk-first public activity.",
+      "Issue 003 focuses on public activity cadence, no-artificial-volume boundaries, and member utility readiness.",
       "Narrative meets risk control.",
       "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool.",
       "No third-party audit has been completed."
@@ -72,6 +73,7 @@
       "price target",
       "return promise",
       "future exchange listing",
+      "artificial volume, self-trading, wash trading, or misleading market activity",
       "public account UI, 100 credits claiming, or GCA Member activation is live before controlled HTTPS account UI and ledger activation are released",
       "security-vendor approval, permanent warning-free status, or cross-wallet warning removal before vendor/current wallet UI confirms it",
       "BaseScan token profile approval before BaseScan publishes it"
@@ -87,17 +89,19 @@
     "risk": "https://gcagochina.com/risk.html",
     "tokenSafety": "https://gcagochina.com/token-safety.json"
   },
-  "issueTitle": "Trust Stack Before Growth",
+  "issueTitle": "Public Activity Without Artificial Volume",
   "trustSignals": [
     "BaseScan source and deployer-wallet ownership verification are complete.",
     "GeckoTerminal token information was approved on 2026-05-11.",
     "Owner observed no wallet risk warning visible on 2026-05-14; this is not security-vendor approval or a permanent cross-wallet guarantee.",
     "The official public market route remains the Base Mainnet Uniswap v4 GCA/USDT pool.",
+    "The public site now health-checks buy guide, status, listing kit, whitepaper, security, risk, FAQ, and reviewer pages.",
     "Public trust, token safety, external review, and wallet-warning evidence pages are live."
   ],
   "publicActivityPlan": [
+    "Publish public activity through weekly updates, education, and verifiable links rather than artificial activity.",
     "Share the verify, trust, markets, and risk pages before sharing any swap link.",
-    "Use Telegram and X posts to explain the Go China Access thesis, not price targets.",
+    "Use Telegram and X posts to explain the Go China Access thesis, not price targets or volume claims.",
     "Invite holders to use the member pre-registration and read-only balance preview as preparation only.",
     "Publish future liquidity or listing changes with exact public links and transaction references."
   ]

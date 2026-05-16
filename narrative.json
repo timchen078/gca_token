@@ -62,16 +62,16 @@
     "read-only GCA wallet balance verification",
     "100 credits ledger activation",
     "GCA Member ledger activation",
-    "Weekly Go China Radar issue 002 published",
+    "Weekly Go China Radar issue 003 published",
     "Liquidation Replay sample report"
   ],
   "weeklyRadar": {
-    "status": "weekly-go-china-radar-issue-002-published",
+    "status": "weekly-go-china-radar-issue-003-published",
     "pageUrl": "https://gcagochina.com/radar.html",
     "url": "https://gcagochina.com/radar.json",
-    "issue": "issue-002",
-    "issueDate": "2026-05-14",
-    "issueTitle": "Trust Stack Before Growth"
+    "issue": "issue-003",
+    "issueDate": "2026-05-16",
+    "issueTitle": "Public Activity Without Artificial Volume"
   },
   "officialMarket": {
     "pair": "GCA/USDT",

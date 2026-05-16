@@ -195,7 +195,7 @@
     "baseScanTokenProfile": "resubmitted-awaiting-review",
     "geckoTerminalTokenInfo": "approved-2026-05-11",
     "narrativeSystem": "public-narrative-system-published",
-    "weeklyGoChinaRadar": "weekly-go-china-radar-issue-002-published",
+    "weeklyGoChinaRadar": "weekly-go-china-radar-issue-003-published",
     "utilityBridge": "public-utility-bridge-spec-published",
     "coinGeckoTrackedListing": "not-submitted",
     "coinMarketCapTrackedListing": "not-submitted",
@@ -297,14 +297,14 @@
     ]
   },
   "weeklyGoChinaRadar": {
-    "status": "weekly-go-china-radar-issue-002-published",
+    "status": "weekly-go-china-radar-issue-003-published",
     "pageUrl": "https://gcagochina.com/radar.html",
     "url": "https://gcagochina.com/radar.json",
-    "issue": "issue-002",
-    "issueDate": "2026-05-14",
-    "scope": "Issue 002 research format for Go China trust-stack tracking, official route verification, risk education, and GCA utility hooks.",
+    "issue": "issue-003",
+    "issueDate": "2026-05-16",
+    "scope": "Issue 003 research format for public activity cadence, no-artificial-volume boundaries, official route verification, member utility readiness, and reviewer links.",
     "notFinancialAdvice": true,
-    "issueTitle": "Trust Stack Before Growth"
+    "issueTitle": "Public Activity Without Artificial Volume"
   },
   "marketQuality": {
     "status": "early-stage-market-quality-plan",
