@@ -13,12 +13,33 @@
     "publicEndpointLive": false,
     "controlledHttpsAccountUiLive": false,
     "directSubmissionEndpointConfigured": false,
+    "localDevelopmentBackendAvailable": true,
     "creditsSelfServiceClaimable": false,
     "gcaMemberSelfServiceClaimable": false,
     "liveTradingEnabled": false,
     "reviewQueueContract": "published-manual-review-contract",
     "operationsRunbook": "public-access-operations-runbook-published",
     "memberPacketVersion": "gca_member_preregistration_v2"
+  },
+  "localDevelopmentBackend": {
+    "status": "local-only-backend-available",
+    "script": "tools/gca_member_backend.py",
+    "localUrl": "http://127.0.0.1:8787/members.html",
+    "dataDirectory": ".gca_access_data/",
+    "servesStaticSite": true,
+    "sameOriginSubmissionOnLocalhost": true,
+    "publicProductionEndpointLive": false,
+    "writesJsonlLedgers": [
+      "pre_registrations",
+      "wallet_verifications",
+      "credit_ledger",
+      "member_ledger",
+      "support_reviews"
+    ],
+    "walletVerificationMethod": "Base Mainnet public RPC eth_call ERC-20 balanceOf",
+    "requiresSignature": false,
+    "requiresTransaction": false,
+    "automaticTokenTransfer": false
   },
   "securityModel": {
     "controlledHttpsOriginRequired": true,

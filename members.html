@@ -381,6 +381,7 @@
       <section aria-labelledby="title">
         <h1 id="title">GCA Member Pre-Registration</h1>
         <p class="lead">This page creates a local pre-registration packet for the GCA x Web3 Radar access bridge. GCA now publishes a public <a href="member-ledger.html">member ledger schema</a>, <a href="member-benefit.html">member benefit review rules</a>, wallet balance verification, a 100 credits ledger, a GCA Member ledger, and a static same-origin <a href="gca/member-access/">member access preview</a>. This public static page still does not create a live Web3 Radar account or make any holder benefit claimable from this domain by itself.</p>
+        <p class="lead">For local operator testing, run <code>tools/gca_member_backend.py</code> and open this page from <code>localhost</code>. In that mode the Submit Packet button posts to the same-origin local endpoint <code>/gca/pre-registrations</code>, verifies GCA with read-only Base Mainnet <code>eth_call</code>, and writes local JSONL ledger records.</p>
       </section>
 
       <section class="section grid" aria-label="Planned holder programs">
@@ -506,7 +507,7 @@
         </div>
         <div class="panel">
           <h2>Safety Boundary</h2>
-          <p class="note">This public static page does not store data on a server. The packet stays in your browser until you copy, download, or email it. The public <a href="privacy.html">Privacy Notice</a> and <a href="terms.html">Participation Terms</a> define the current data and participation boundary. When a reviewed HTTPS endpoint is connected, it may store only the pre-registration review fields, then Web3 Radar may verify the queued wallet with an ERC-20 balanceOf read and holding-period evidence. Pre-registration is not financial advice, not cash, not income, not reimbursement, not trading permission, and not a way to bypass Web3 Radar risk controls.</p>
+          <p class="note">This public static page does not store data on a server. The packet stays in your browser until you copy, download, or email it. The local operator backend stores data only when this page is opened from <code>localhost</code> through <code>tools/gca_member_backend.py</code>. The public <a href="privacy.html">Privacy Notice</a> and <a href="terms.html">Participation Terms</a> define the current data and participation boundary. When a reviewed HTTPS endpoint is connected, it may store only the pre-registration review fields, then Web3 Radar may verify the queued wallet with an ERC-20 balanceOf read and holding-period evidence. Pre-registration is not financial advice, not cash, not income, not reimbursement, not trading permission, and not a way to bypass Web3 Radar risk controls.</p>
         </div>
       </section>
 
@@ -536,6 +537,7 @@
           <div class="row"><span>Prepared credit ledger path</span><strong><code>/gca/credit-ledger</code></strong></div>
           <div class="row"><span>Prepared member ledger path</span><strong><code>/gca/member-ledger</code></strong></div>
           <div class="row"><span>Prepared review queue path</span><strong><code>/gca/member-review</code></strong></div>
+          <div class="row"><span>Local operator backend</span><strong><code>tools/gca_member_backend.py</code></strong></div>
           <div class="row"><span>Public ledger schema</span><strong><a href="member-ledger.html">member-ledger.html</a></strong></div>
           <div class="row"><span>Member benefit review rules</span><strong><a href="member-benefit.html">member-benefit.html</a></strong></div>
           <div class="row"><span>Current public submission mode</span><strong>Manual packet collection</strong></div>
@@ -557,12 +559,13 @@
       const BALANCE_OF_SELECTOR = "0x70a08231";
       const TOKEN_DECIMALS = 18n;
       const TOKEN_UNIT = 10n ** TOKEN_DECIMALS;
-      const SUBMISSION_ENDPOINT = "";
       const REVIEWED_WEB3_RADAR_ENDPOINT_PATH = "/gca/pre-registrations";
       const WALLET_VERIFICATION_ENDPOINT_PATH = "/gca/wallet-verifications";
       const CREDIT_LEDGER_ENDPOINT_PATH = "/gca/credit-ledger";
       const MEMBER_LEDGER_ENDPOINT_PATH = "/gca/member-ledger";
       const MEMBER_ACCESS_PAGE_PATH = "/gca/member-access";
+      const LOCAL_BACKEND_HOSTS = new Set(["127.0.0.1", "localhost"]);
+      const SUBMISSION_ENDPOINT = LOCAL_BACKEND_HOSTS.has(window.location.hostname) ? REVIEWED_WEB3_RADAR_ENDPOINT_PATH : "";
       const HOLDER_THRESHOLD = 10000;
       const MEMBER_THRESHOLD = 1000000;
       const HOLDER_THRESHOLD_UNITS = 10000n * TOKEN_UNIT;
@@ -845,7 +848,7 @@
         emailPacket.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
         submitPacket.disabled = !endpointConfigured();
         submissionStatus.textContent = endpointConfigured()
-          ? "Direct submission endpoint is configured. You can submit the packet from this page."
+          ? `Local operator backend is connected at ${SUBMISSION_ENDPOINT}. Submitting creates local JSONL records after read-only wallet verification.`
           : `Direct submission is not connected yet. Prepared Web3 Radar user page: ${MEMBER_ACCESS_PAGE_PATH}. Prepared backend paths: ${REVIEWED_WEB3_RADAR_ENDPOINT_PATH}, ${WALLET_VERIFICATION_ENDPOINT_PATH}, ${CREDIT_LEDGER_ENDPOINT_PATH}, ${MEMBER_LEDGER_ENDPOINT_PATH}. Use copy, download, or email for now.`;
         return packet;
       }
@@ -966,7 +969,10 @@
           if (!response.ok) {
             throw new Error(`Submission failed with HTTP ${response.status}`);
           }
-          submissionStatus.textContent = "Packet submitted. Save a local copy for your records.";
+          const submitted = await response.json();
+          submissionStatus.textContent = submitted && submitted.nextStep
+            ? `Packet submitted to local backend. ${submitted.nextStep}`
+            : "Packet submitted to local backend. Save a local copy for your records.";
         } catch (error) {
           submissionStatus.textContent = `${error.message}. Use copy, download, or email as fallback.`;
         } finally {
