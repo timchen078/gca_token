@@ -31,6 +31,10 @@
     "sameOriginSubmissionOnLocalhost": true,
     "localOperatorSummaryEndpoint": "/gca/operator-summary",
     "localReviewPackageEndpoint": "/gca/review-package",
+    "localReviewPackageRedactionModes": [
+      "full-local",
+      "redacted-public"
+    ],
     "publicProductionEndpointLive": false,
     "writesJsonlLedgers": [
       "pre_registrations",
@@ -371,12 +375,13 @@
       "method": "GET",
       "path": "/gca/review-package",
       "status": "local-only-not-public-production",
-      "purpose": "Export a localhost-only JSON reviewer evidence package containing local ledger totals, latest records, public reference links, and safety boundaries for support or platform follow-up.",
+      "purpose": "Export a localhost-only JSON reviewer evidence package containing local ledger totals, latest records, public reference links, and safety boundaries for support or platform follow-up. Use redact=public before external sharing.",
       "requiredRequestFields": [
         "localhostClient"
       ],
       "optionalRequestFields": [
-        "limit"
+        "limit",
+        "redact=public"
       ],
       "responseFields": [
         "packageType",
@@ -385,9 +390,22 @@
         "exportBoundaries",
         "publicReferences",
         "reviewChecklist",
+        "redactedForExternalSharing",
+        "redactionPolicy",
         "publicSelfServiceClaim",
         "automaticTokenTransfer"
       ],
+      "redactionPolicy": {
+        "publicMode": "redact=public",
+        "redactedFields": [
+          "email",
+          "telegram",
+          "reviewerNote",
+          "supportNote",
+          "evidenceNote"
+        ],
+        "keepsPublicChainEvidence": true
+      },
       "allowedStatuses": [
         "local-only"
       ]
