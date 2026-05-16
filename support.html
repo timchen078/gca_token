@@ -312,6 +312,8 @@
           <a class="button primary" href="mailto:GCAgochina@outlook.com?subject=GCA%20Support%20Request">Email GCA Support</a>
           <a class="button" href="support.json">Support JSON</a>
           <a class="button" href="operations.html">Operations Runbook</a>
+          <a class="button" href="reviewer-kit.html">Reviewer Kit</a>
+          <a class="button" href="platform-replies.html">Platform Replies</a>
           <a class="button" href="review-queue.html">Review Queue Contract</a>
           <a class="button" href="review-queue.json">Review Queue JSON</a>
           <a class="button" href="member-benefit.html">Member Benefit Review</a>
@@ -355,7 +357,7 @@
         </div>
         <div class="panel">
           <h2>Platform Corrections</h2>
-          <p class="note">Wallets, data platforms, and moderators should use <a href="listing-kit.html">Listing Kit</a>, <a href="brand-kit.html">Brand Kit</a>, <a href="onchain-proofs.html">On-chain Proofs</a>, and <a href="external-reviews.html">External Reviews</a>.</p>
+          <p class="note">Wallets, data platforms, and moderators should use <a href="listing-kit.html">Listing Kit</a>, <a href="brand-kit.html">Brand Kit</a>, <a href="onchain-proofs.html">On-chain Proofs</a>, <a href="external-reviews.html">External Reviews</a>, <a href="reviewer-kit.html">Reviewer Kit</a>, and <a href="platform-replies.html">Platform Replies</a>.</p>
         </div>
       </section>
 
@@ -394,6 +396,18 @@
         <div class="panel">
           <h2>What Support Cannot Do</h2>
           <p class="note">Support cannot make a token price, liquidity, listing, permanent wallet-warning clearance, audit approval, trading result, live trading permission, or risk-control bypass happen. Support also cannot override on-chain wallet-balance verification or the 30-day member holding-period rule.</p>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="reviewPackageTitle">
+        <h2 id="reviewPackageTitle">Redacted Review Package Handoff</h2>
+        <p class="note">If a platform asks for local member-ledger evidence, operators should export only the public-redacted package from local <code>.gca_access_data/</code> records, verify the package digest, and answer with the template in <a href="platform-replies.html">Platform Replies</a>. The full-local package is internal only and must not be sent externally.</p>
+        <div class="list">
+          <div class="row"><span>External sharing mode</span><strong><code>redacted-public</code></strong></div>
+          <div class="row"><span>Export command</span><strong><code>.venv/bin/python tools/export_gca_review_package.py --redact public --output gca-public-redacted-review-package.json</code></strong></div>
+          <div class="row"><span>Verify digest</span><strong><code>.venv/bin/python tools/verify_gca_review_package.py gca-public-redacted-review-package.json</code></strong></div>
+          <div class="row"><span>Reply template</span><strong><a href="platform-replies.html">platform-replies.html</a></strong></div>
+          <div class="row"><span>Full-local package</span><strong class="pending">Internal only</strong></div>
         </div>
       </section>
 

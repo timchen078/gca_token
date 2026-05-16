@@ -304,7 +304,7 @@
 
     <main class="shell">
       <section aria-labelledby="title">
-        <p class="eyebrow">Access Operations Runbook / 2026-05-14</p>
+        <p class="eyebrow">Access Operations Runbook / 2026-05-16</p>
         <h1 id="title">GCA Access Operations Runbook</h1>
         <p class="lead">This runbook defines how GCA operators should handle manual access requests before public self-service account UI, public submission queue, credit ledger writes, and GCA Member ledger writes are live.</p>
         <p class="lead">The runbook is public documentation only and is not live today. It is not a live backend, not a public submission queue, not a public support ticket system, not an account system, and not a way to request custody, withdrawals, live trading, or balance-verification overrides.</p>
@@ -314,6 +314,8 @@
           <a class="button" href="review-queue.json">Review Queue JSON</a>
           <a class="button" href="access-api.html">Access API Contract</a>
           <a class="button" href="support.html">Support & Intake</a>
+          <a class="button" href="reviewer-kit.html">Reviewer Kit</a>
+          <a class="button" href="platform-replies.html">Platform Replies</a>
           <a class="button" href="release-gates.html">Release Gates</a>
         </div>
         <div class="facts" aria-label="Operational state">
@@ -372,7 +374,11 @@
             <p class="note">When a reviewer asks for more information, send public URLs only and keep pool, contract, status, and claim boundaries consistent.</p>
           </div>
           <div>
-            <h3>9. Closure</h3>
+            <h3>9. Review Package Handoff</h3>
+            <p class="note">When a reviewer asks for local member-ledger evidence, export only the <code>redacted-public</code> package, verify <code>packageDigestSha256</code>, and use the <a href="platform-replies.html">Platform Replies</a> local review package template. Never send a full-local package externally.</p>
+          </div>
+          <div>
+            <h3>10. Closure</h3>
             <p class="note">Close the record only after status, evidence reference, reviewer note, and next public link are recorded without secrets.</p>
           </div>
         </div>
@@ -396,6 +402,8 @@
             <div class="row"><span>memberBenefitReviewEvidenceStatus</span><strong>Pending support and ledger review</strong></div>
             <div class="row"><span>reviewerNote</span><strong>No secrets</strong></div>
             <div class="row"><span>publicEvidenceReference</span><strong>Public support, reviewer, or chain reference</strong></div>
+            <div class="row"><span>reviewPackageRedactionMode</span><strong><code>redacted-public</code> for external handoff</strong></div>
+            <div class="row"><span>reviewPackageDigestSha256</span><strong>Digest verified before sharing</strong></div>
           </div>
         </div>
         <div class="panel">
@@ -411,7 +419,20 @@
             <div class="row"><span>Member evidence note</span><strong>Non-sensitive context only</strong></div>
             <div class="row"><span>Support note</span><strong>Non-sensitive note only</strong></div>
             <div class="row"><span>Review reference</span><strong>Public reviewer or platform reference</strong></div>
+            <div class="row"><span>Redacted package digest</span><strong><code>packageDigestSha256</code> only after verification</strong></div>
           </div>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="reviewPackageTitle">
+        <h2 id="reviewPackageTitle">Local Review Package Handoff</h2>
+        <p class="note">Use this only when a platform or reviewer asks for local member-ledger evidence. The external package must be <code>redacted-public</code>, verified locally, and sent with the <a href="platform-replies.html">Platform Replies</a> handoff text. The package is support evidence only, not a third-party audit or approval claim.</p>
+        <div class="list">
+          <div class="row"><span>External mode</span><strong><code>redacted-public</code></strong></div>
+          <div class="row"><span>Export</span><strong><code>.venv/bin/python tools/export_gca_review_package.py --redact public --output gca-public-redacted-review-package.json</code></strong></div>
+          <div class="row"><span>Verify</span><strong><code>.venv/bin/python tools/verify_gca_review_package.py gca-public-redacted-review-package.json</code></strong></div>
+          <div class="row"><span>Reply</span><strong><a href="platform-replies.html">Local Review Package Handoff template</a></strong></div>
+          <div class="row"><span>Full-local export</span><strong class="pending">Internal-only evidence review</strong></div>
         </div>
       </section>
 
@@ -455,6 +476,10 @@
             <h3>Public Boundary</h3>
             <p class="note">Every response should keep GCA described as concept-stage access planning until controlled HTTPS account UI and ledgers are live.</p>
           </div>
+          <div>
+            <h3>Redacted Package Only</h3>
+            <p class="note">External reviewer handoff must use the redacted package and verified digest. Full-local records remain internal operator evidence.</p>
+          </div>
         </div>
       </section>
 
@@ -487,6 +512,8 @@
           <div class="row"><span><a href="access-api.html">Access API Contract</a></span><strong>planned backend routes</strong></div>
           <div class="row"><span><a href="member-ledger.html">Member Ledger Schema</a></span><strong>future ledger records</strong></div>
           <div class="row"><span><a href="support.html">Support & Intake</a></span><strong>manual support route</strong></div>
+          <div class="row"><span><a href="reviewer-kit.html">Reviewer Kit</a></span><strong>review package context</strong></div>
+          <div class="row"><span><a href="platform-replies.html">Platform Replies</a></span><strong>copyable reviewer replies</strong></div>
           <div class="row"><span><a href="release-gates.html">Release Gates</a></span><strong>go-live boundaries</strong></div>
         </div>
       </section>
