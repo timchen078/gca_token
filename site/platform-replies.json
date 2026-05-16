@@ -2,7 +2,7 @@
   "schema": "https://gcagochina.com/platform-replies.json",
   "pageUrl": "https://gcagochina.com/platform-replies.html",
   "status": "public-platform-reply-kit-published",
-  "lastUpdated": "2026-05-14",
+  "lastUpdated": "2026-05-16",
   "projectName": "GCA",
   "network": "Base Mainnet",
   "chainId": 8453,
@@ -17,6 +17,8 @@
     "trustCenter": "https://gcagochina.com/trust.json",
     "reviewerKitPage": "https://gcagochina.com/reviewer-kit.html",
     "reviewerKit": "https://gcagochina.com/reviewer-kit.json",
+    "accessApiPage": "https://gcagochina.com/access-api.html",
+    "accessApi": "https://gcagochina.com/access-api.json",
     "walletWarningEvidencePage": "https://gcagochina.com/wallet-warning.html",
     "walletWarningEvidence": "https://gcagochina.com/wallet-warning.json",
     "externalReviewStatusPage": "https://gcagochina.com/external-reviews.html",
@@ -53,6 +55,7 @@
     "useWhen": [
       "BaseScan asks for more token profile context",
       "Blockaid, MetaMask, Uniswap, or a wallet-security reviewer asks for more evidence",
+      "a reviewer asks for a redacted local member-ledger review package or digest verification context",
       "a data platform asks which links are official",
       "a community moderator asks how to explain current review status",
       "a listing platform asks whether the project is ready for tracked listing"
@@ -114,6 +117,24 @@
         "Official pool: Uniswap v4 GCA/USDT on Base Mainnet, 0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
         "Reviewer kit: https://gcagochina.com/reviewer-kit.html",
         "External review status: https://gcagochina.com/external-reviews.html"
+      ]
+    },
+    "localReviewPackageHandoff": {
+      "subject": "GCA redacted local review package handoff",
+      "body": [
+        "Hello,",
+        "Attached is a public-redacted GCA local review package for reviewer evidence handoff.",
+        "Network: Base Mainnet / chainId 8453",
+        "Contract: 0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+        "Reviewer kit: https://gcagochina.com/reviewer-kit.html",
+        "Access API / review package process: https://gcagochina.com/access-api.html",
+        "Export mode: redacted-public",
+        "Export tool: tools/export_gca_review_package.py",
+        "Digest field: packageDigestSha256",
+        "Digest verification tool: tools/verify_gca_review_package.py",
+        "The redacted package removes user email, Telegram, reviewer notes, support notes, and evidence notes while retaining public chain evidence such as wallet addresses and transaction hashes.",
+        "The exporter reads local JSONL records only. It does not ask for private keys, seed phrases, wallet signatures, custody, withdrawal permission, or transactions.",
+        "This package is support evidence only. It is not a third-party audit, security-vendor approval, listing approval, or liquidity-depth claim."
       ]
     },
     "communityModerator": {

@@ -4412,6 +4412,10 @@ def validate_reviewer_kit_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong reviewerKitPage")
     if links.get("reviewerKit") != REVIEWER_KIT_URL:
         raise SiteCheckError(f"{label}: wrong reviewerKit")
+    if links.get("accessApiPage") != ACCESS_API_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong accessApiPage")
+    if links.get("accessApi") != ACCESS_API_URL:
+        raise SiteCheckError(f"{label}: wrong accessApi")
     if links.get("platformRepliesPage") != PLATFORM_REPLIES_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong platformRepliesPage")
     if links.get("platformReplies") != PLATFORM_REPLIES_URL:
@@ -4555,6 +4559,10 @@ def validate_platform_replies_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong reviewerKitPage")
     if links.get("reviewerKit") != REVIEWER_KIT_URL:
         raise SiteCheckError(f"{label}: wrong reviewerKit")
+    if links.get("accessApiPage") != ACCESS_API_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong accessApiPage")
+    if links.get("accessApi") != ACCESS_API_URL:
+        raise SiteCheckError(f"{label}: wrong accessApi")
     if links.get("walletWarningEvidence") != WALLET_WARNING_URL:
         raise SiteCheckError(f"{label}: wrong walletWarningEvidence")
     if links.get("externalReviewStatus") != EXTERNAL_REVIEW_URL:
@@ -4581,6 +4589,7 @@ def validate_platform_replies_json(text: str) -> None:
         "walletWarningReviewer",
         "baseScanProfile",
         "metadataCorrection",
+        "localReviewPackageHandoff",
         "communityModerator",
         "trackedListingNotReady",
     ):
@@ -4593,8 +4602,20 @@ def validate_platform_replies_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing Blockaid follow-up date")
     if "The owner observed no wallet risk warning visible on 2026-05-14; no security-vendor approval is claimed." not in wallet_body:
         raise SiteCheckError(f"{label}: missing warning boundary")
+    local_package_body = "\n".join(templates.get("localReviewPackageHandoff", {}).get("body", []))
+    for expected in (
+        "redacted-public",
+        "tools/export_gca_review_package.py",
+        "packageDigestSha256",
+        "tools/verify_gca_review_package.py",
+        "support evidence only",
+    ):
+        if expected not in local_package_body:
+            raise SiteCheckError(f"{label}: local review package template missing {expected}")
     if not any("wallet-security reviewer asks for more evidence" in item for item in rules.get("useWhen", [])):
         raise SiteCheckError(f"{label}: missing wallet-security use rule")
+    if not any("redacted local member-ledger review package" in item for item in rules.get("useWhen", [])):
+        raise SiteCheckError(f"{label}: missing local package use rule")
     if "the reply would claim security-vendor approval or permanent warning-free status before confirmation" not in rules.get("doNotUseWhen", []):
         raise SiteCheckError(f"{label}: missing warning do-not-use rule")
     if "No third-party audit has been completed." not in payload.get("safePublicClaims", []):
@@ -4614,11 +4635,17 @@ def validate_platform_replies_page(text: str) -> None:
     assert_contains(text, "Wallet Warning Reviewer", label)
     assert_contains(text, "BaseScan Token Profile", label)
     assert_contains(text, "Metadata Correction", label)
+    assert_contains(text, "Local Review Package Handoff", label)
     assert_contains(text, "Community Moderator", label)
     assert_contains(text, "Tracked Listing Not Ready", label)
     assert_contains(text, "Blockaid false-positive report was submitted on 2026-05-10", label)
     assert_contains(text, "follow-up was submitted on 2026-05-13", label)
     assert_contains(text, "Owner observed no wallet risk warning visible on 2026-05-14; no security-vendor approval is claimed", label)
+    assert_contains(text, "redacted-public", label)
+    assert_contains(text, "tools/export_gca_review_package.py", label)
+    assert_contains(text, "packageDigestSha256", label)
+    assert_contains(text, "tools/verify_gca_review_package.py", label)
+    assert_contains(text, "support evidence only", label)
     assert_contains(text, "External audit completion before an independent report is published", label)
     assert_contains(text, "no completed third-party audit", label)
     assert_contains(text, OFFICIAL_GECKOTERMINAL_URL, label)
