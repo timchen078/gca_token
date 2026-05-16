@@ -54,6 +54,10 @@
   "securityPageUrl": "https://gcagochina.com/security.html",
   "tokenSafetyPageUrl": "https://gcagochina.com/token-safety.html",
   "tokenSafetyUrl": "https://gcagochina.com/token-safety.json",
+  "technicalReportPageUrl": "https://gcagochina.com/technical-report.html",
+  "technicalReportUrl": "https://gcagochina.com/technical-report.json",
+  "reserveStatementPageUrl": "https://gcagochina.com/reserve-statement.html",
+  "reserveStatementUrl": "https://gcagochina.com/reserve-statement.json",
   "riskPageUrl": "https://gcagochina.com/risk.html",
   "faqUrl": "https://gcagochina.com/faq.html",
   "memberPreRegistrationUrl": "https://gcagochina.com/members.html",
@@ -112,6 +116,18 @@
     "pageUrl": "https://gcagochina.com/token-safety.html",
     "url": "https://gcagochina.com/token-safety.json",
     "useCase": "Public token safety checklist for wallet-security reviewers, moderators, and users."
+  },
+  "technicalReport": {
+    "status": "public-internal-technical-report-published",
+    "pageUrl": "https://gcagochina.com/technical-report.html",
+    "url": "https://gcagochina.com/technical-report.json",
+    "useCase": "Internal technical summary for contract-control review. This is not a third-party audit."
+  },
+  "reserveStatement": {
+    "status": "public-reserve-address-statement-published",
+    "pageUrl": "https://gcagochina.com/reserve-statement.html",
+    "url": "https://gcagochina.com/reserve-statement.json",
+    "useCase": "Public reserve wallet disclosure for concentration and custody review."
   },
   "baseScanContractUrl": "https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "officialEmail": "GCAgochina@outlook.com",
@@ -182,7 +198,9 @@
     "accessPortal": "public-access-portal-blueprint-published",
     "accessApiContract": "public-access-api-contract-published",
     "reviewQueueContract": "public-review-queue-contract-published",
-    "accessOperationsRunbook": "public-access-operations-runbook-published"
+    "accessOperationsRunbook": "public-access-operations-runbook-published",
+    "technicalReport": "public-internal-technical-report-published",
+    "reserveStatement": "public-reserve-address-statement-published"
   },
   "listingReadiness": {
     "status": "not-ready",

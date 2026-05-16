@@ -20,6 +20,10 @@
     "trustCenter": "https://gcagochina.com/trust.json",
     "tokenSafetyPage": "https://gcagochina.com/token-safety.html",
     "tokenSafety": "https://gcagochina.com/token-safety.json",
+    "technicalReportPage": "https://gcagochina.com/technical-report.html",
+    "technicalReport": "https://gcagochina.com/technical-report.json",
+    "reserveStatementPage": "https://gcagochina.com/reserve-statement.html",
+    "reserveStatement": "https://gcagochina.com/reserve-statement.json",
     "externalReviewStatusPage": "https://gcagochina.com/external-reviews.html",
     "externalReviewStatus": "https://gcagochina.com/external-reviews.json",
     "status": "https://gcagochina.com/status.html",
@@ -70,6 +74,13 @@
     "transferTaxOrHiddenFee": false,
     "custodyOrWithdrawalPath": false,
     "thirdPartyAuditCompleted": false
+  },
+  "reviewerEvidenceAdditions": {
+    "technicalReportStatus": "public-internal-technical-report-published",
+    "reserveStatementStatus": "public-reserve-address-statement-published",
+    "lpLockClaimed": false,
+    "reserveLocked": false,
+    "note": "These materials answer contract-control and reserve-disclosure questions. They are not a third-party audit or LP lock proof."
   },
   "historicalFunctionalSwapEvidence": {
     "status": "observed-historical-functional-evidence-only",

@@ -3,22 +3,22 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>GCA Token Safety Checklist | Go China Access</title>
-    <meta name="description" content="Official GCA token safety checklist for wallet reviewers, moderators, and users, covering verified contract controls, review status, market route, residual risks, and public claim boundaries.">
-    <link rel="canonical" href="https://gcagochina.com/token-safety.html">
+    <title>GCA Technical Report | Go China Access</title>
+    <meta name="description" content="Internal GCA technical report for reviewers, summarizing Base Mainnet deployment, verified ERC-20 controls, source verification, market disclosure, reserve disclosure, and residual risks.">
+    <link rel="canonical" href="https://gcagochina.com/technical-report.html">
     <link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">
     <link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="GCA | Go China Access">
-    <meta property="og:title" content="GCA Token Safety Checklist | Go China Access">
-    <meta property="og:description" content="Official GCA token safety checklist for wallet reviewers, moderators, and users, covering verified contract controls, review status, market route, residual risks, and public claim boundaries.">
-    <meta property="og:url" content="https://gcagochina.com/token-safety.html">
+    <meta property="og:title" content="GCA Technical Report | Go China Access">
+    <meta property="og:description" content="Internal GCA technical report for reviewers, summarizing Base Mainnet deployment, verified ERC-20 controls, source verification, market disclosure, reserve disclosure, and residual risks.">
+    <meta property="og:url" content="https://gcagochina.com/technical-report.html">
     <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="GCA Token Safety Checklist | Go China Access">
-    <meta name="twitter:description" content="Official GCA token safety checklist for wallet reviewers, moderators, and users, covering verified contract controls, review status, market route, residual risks, and public claim boundaries.">
+    <meta name="twitter:title" content="GCA Technical Report | Go China Access">
+    <meta name="twitter:description" content="Internal GCA technical report for reviewers, summarizing Base Mainnet deployment, verified ERC-20 controls, source verification, market disclosure, reserve disclosure, and residual risks.">
     <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
     <style>
       :root {
@@ -276,16 +276,12 @@
           padding: 14px 0;
         }
 
-        .nav-links {
-          flex-wrap: wrap;
-        }
-
         .row {
           grid-template-columns: 1fr;
         }
 
         .row strong {
-          white-space: normal;
+          text-align: left;
         }
       }
     </style>
@@ -300,58 +296,62 @@
         <div class="nav-links">
           <a href="index.html">Home</a>
           <a href="verify.html">Verify</a>
-          <a href="security.html">Security</a>
-          <a href="technical-report.html">Technical Report</a>
-          <a href="reserve-statement.html">Reserve</a>
-          <a href="wallet-warning.html">Wallet Warning</a>
           <a href="trust.html">Trust Center</a>
-          <a href="risk.html">Risk</a>
+          <a href="reserve-statement.html">Reserve</a>
+          <a href="token-safety.html">Token Safety</a>
+          <a href="onchain-proofs.html">Proofs</a>
+          <a href="wallet-warning.html">Wallet Warning</a>
         </div>
       </nav>
     </header>
 
     <main class="shell">
       <section aria-labelledby="title">
-        <h1 id="title">GCA Token Safety Checklist</h1>
-        <p class="lead">A concise safety checklist for wallet-security reviewers, moderators, and users. It separates verified contract controls from pending external reviews and residual operational risks.</p>
+        <h1 id="title">GCA Technical Report</h1>
+        <p class="lead">This is an internal technical report for reviewers. It summarizes verified contract controls, deployment facts, market disclosure, reserve disclosure, and residual risks. It is not a third-party audit report.</p>
         <div class="actions">
-          <a class="button primary" href="token-safety.json">Token Safety JSON</a>
-          <a class="button primary" href=".well-known/wallet-security.json">Wallet Security JSON</a>
-          <a class="button" href="security.html">Security</a>
-          <a class="button" href="technical-report.html">Technical Report</a>
+          <a class="button primary" href="technical-report.json">Technical Report JSON</a>
           <a class="button" href="reserve-statement.html">Reserve Statement</a>
-          <a class="button" href="wallet-warning.html">Wallet Warning Evidence</a>
-          <a class="button" href="trust.html">Trust Center</a>
-          <a class="button" href="https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6#code" target="_blank" rel="noreferrer">BaseScan Source</a>
+          <a class="button" href="token-safety.html">Token Safety</a>
+          <a class="button" href="onchain-proofs.html">On-chain Proofs</a>
+          <a class="button" href="https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6" target="_blank" rel="noreferrer">BaseScan Contract</a>
         </div>
       </section>
 
-      <section class="facts" aria-label="Safety summary">
+      <section class="facts" aria-label="Technical summary">
         <div class="fact">
-          <span class="label">Source</span>
-          <span class="value good">Verified</span>
+          <span class="label">Network</span>
+          <span class="value">Base Mainnet / 8453</span>
         </div>
         <div class="fact">
-          <span class="label">Mint</span>
-          <span class="value good">No mint function</span>
+          <span class="label">Contract</span>
+          <span class="value">0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6</span>
         </div>
         <div class="fact">
-          <span class="label">Tax / Blacklist</span>
-          <span class="value good">None</span>
+          <span class="label">Supply</span>
+          <span class="value">1,000,000,000 GCA</span>
         </div>
         <div class="fact">
-          <span class="label">External Audit</span>
-          <span class="value pending">No third-party audit</span>
+          <span class="label">Report Type</span>
+          <span class="value pending">Internal, not third-party audit</span>
         </div>
       </section>
 
-      <section class="section two" aria-label="Checklist details">
+      <section class="section two" aria-label="Contract controls">
         <div class="panel">
           <h2>Verified Positive Controls</h2>
           <div class="list">
-            <div class="row"><span>Base Mainnet contract</span><strong>0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6</strong></div>
-            <div class="row"><span>BaseScan source code verification</span><strong class="good">Verified</strong></div>
-            <div class="row"><span>Fixed total supply</span><strong class="good">1,000,000,000 GCA</strong></div>
+            <div class="row"><span>BaseScan source verification</span><strong class="good">Verified</strong></div>
+            <div class="row"><span>Fixed supply</span><strong class="good">Yes</strong></div>
+            <div class="row"><span>Standard ERC-20 transfers</span><strong class="good">Yes</strong></div>
+            <div class="row"><span>Standard ERC-20 approvals</span><strong class="good">Yes</strong></div>
+            <div class="row"><span>Contract custody of user assets</span><strong>No</strong></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2>Absent Controls</h2>
+          <div class="list">
             <div class="row"><span>Post-deployment mint function</span><strong>No</strong></div>
             <div class="row"><span>Owner/admin role</span><strong>No</strong></div>
             <div class="row"><span>Proxy or upgrade path</span><strong>No</strong></div>
@@ -360,59 +360,47 @@
             <div class="row"><span>Custody or withdrawal path</span><strong>No</strong></div>
           </div>
         </div>
+      </section>
+
+      <section class="section two" aria-label="Deployment and market">
+        <div class="panel">
+          <h2>Deployment Facts</h2>
+          <div class="list">
+            <div class="row"><span>Deployment tx</span><strong><a href="https://basescan.org/tx/0xae8ae4d0bd89c03b39946564a5b63bb20cd38879a1aa1fdcb20a6f1c4802e74e" target="_blank" rel="noreferrer">0xae8ae4d0bd89c03b39946564a5b63bb20cd38879a1aa1fdcb20a6f1c4802e74e</a></strong></div>
+            <div class="row"><span>Deployment block</span><strong>45,735,688</strong></div>
+            <div class="row"><span>Compiler</span><strong>v0.8.24+commit.e11b9ed9</strong></div>
+            <div class="row"><span>Optimizer</span><strong>Enabled, 200 runs</strong></div>
+            <div class="row"><span>License</span><strong>MIT</strong></div>
+          </div>
+        </div>
 
         <div class="panel">
-          <h2>Pending Or Not Claimed</h2>
+          <h2>Market And Reserve Disclosure</h2>
+          <p class="note">The official public route is the Base Mainnet Uniswap v4 GCA/USDT pool. Liquidity is starter-depth only and LP locking is not currently claimed.</p>
           <div class="list">
-            <div class="row"><span>BaseScan token profile</span><strong class="pending">Resubmitted: awaiting review</strong></div>
-            <div class="row"><span>Blockaid / MetaMask warning</span><strong class="pending">Owner observed no warning visible</strong></div>
-            <div class="row"><span>Third-party audit report</span><strong class="pending">Not completed</strong></div>
-            <div class="row"><span>Owner reserve custody</span><strong class="pending">Normal owner wallet</strong></div>
-            <div class="row"><span>Liquidity depth</span><strong class="pending">Starter-depth only</strong></div>
-            <div class="row"><span>CoinGecko / CoinMarketCap</span><strong class="pending">Deferred</strong></div>
+            <div class="row"><span>Official pair</span><strong>GCA/USDT</strong></div>
+            <div class="row"><span>Pool</span><strong>0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0</strong></div>
+            <div class="row"><span>Reserve wallet</span><strong>0x5e8F84748612B913aAcC937492AC25dc5630E246</strong></div>
+            <div class="row"><span>LP lock claimed</span><strong>No</strong></div>
+            <div class="row"><span>Reserve locked</span><strong>No</strong></div>
           </div>
         </div>
       </section>
 
-      <section class="section panel" aria-labelledby="marketTitle">
-        <h2 id="marketTitle">Official Market Route</h2>
-        <p class="note">The current official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool. This checklist does not claim mature liquidity or price support.</p>
-        <div class="list">
-          <div class="row"><span>Pair</span><strong>GCA/USDT</strong></div>
-          <div class="row"><span>Pool address</span><strong>0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0</strong></div>
-          <div class="row"><span>Base USDT</span><strong>0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2</strong></div>
-          <div class="row"><span><a href="https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0" target="_blank" rel="noreferrer">GeckoTerminal</a></span><strong>Approved token info</strong></div>
-          <div class="row"><span><a href="https://dexscreener.com/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0" target="_blank" rel="noreferrer">DEX Screener</a></span><strong>GCA/USDT</strong></div>
-        </div>
-      </section>
-
-      <section class="section grid" aria-label="Reviewer links">
-        <div class="panel">
-          <h3>Machine-Readable Files</h3>
-          <p class="note"><a href="token-safety.json">token-safety.json</a>, <a href=".well-known/wallet-security.json">wallet-security.json</a>, and <a href=".well-known/gca-token.json">gca-token.json</a> publish contract, market, review, and safety facts.</p>
-        </div>
-        <div class="panel">
-          <h3>Review Evidence</h3>
-          <p class="note"><a href="wallet-warning.html">Wallet Warning Evidence</a>, <a href="technical-report.html">Technical Report</a>, <a href="reserve-statement.html">Reserve Statement</a>, <a href="external-reviews.html">External Reviews</a>, and <a href="reviewer-kit.html">Reviewer Kit</a> provide platform-facing context.</p>
-        </div>
-        <div class="panel">
-          <h3>Boundaries</h3>
-          <p class="note"><a href="risk.html">Risk</a>, <a href="market-quality.html">Market Quality</a>, and <a href="listing-readiness.html">Listing Readiness</a> define what should not be claimed yet.</p>
-        </div>
-      </section>
-
-      <section class="section panel warning" aria-labelledby="claimsTitle">
-        <h2 id="claimsTitle">Public Claim Boundaries</h2>
+      <section class="section panel warning" aria-labelledby="riskTitle">
+        <h2 id="riskTitle">Residual Risks And Boundaries</h2>
         <ul>
-          <li>Safe to say: GCA is source-verified, fixed-supply, and has no mint, no token tax, no blacklist, no proxy, no pause, no owner/admin role, and no withdrawal path in the token contract.</li>
-          <li>Safe to say: the owner observed no wallet risk warning visible on 2026-05-14. Do not claim permanent warning-free status, security-vendor approval, external audit approval, locked reserve, deep liquidity, price support, or listing approval before those facts are visible from the relevant third party.</li>
-          <li>Do not ask users for private keys, seed phrases, exchange API secrets, withdrawal permission, one-time codes, custody, or fund transfers.</li>
+          <li>Starter-depth liquidity can create high price impact and volatile execution prices.</li>
+          <li>The LP position is not currently locked.</li>
+          <li>The owner-held reserve remains owner-controlled.</li>
+          <li>Supply concentration remains visible and should be disclosed.</li>
+          <li>No third-party audit has been completed; this page should not be described as a Certik, Hacken, Trail of Bits, or other independent audit report.</li>
         </ul>
       </section>
     </main>
 
     <footer>
-      <div class="shell">GCA token safety checklist. Verify Base Mainnet chain ID 8453, the contract address, and official GCA/USDT pool before using this information.</div>
+      <div class="shell">GCA technical report. This internal report supports reviewer triage and does not replace an independent third-party audit.</div>
     </footer>
   </body>
 </html>
