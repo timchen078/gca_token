@@ -47,6 +47,10 @@
   "reviewLinks": {
     "tokenSafetyPage": "https://gcagochina.com/token-safety.html",
     "tokenSafety": "https://gcagochina.com/token-safety.json",
+    "technicalReportPage": "https://gcagochina.com/technical-report.html",
+    "technicalReport": "https://gcagochina.com/technical-report.json",
+    "reserveStatementPage": "https://gcagochina.com/reserve-statement.html",
+    "reserveStatement": "https://gcagochina.com/reserve-statement.json",
     "walletSecurityProfile": "https://gcagochina.com/.well-known/wallet-security.json",
     "walletWarningEvidencePage": "https://gcagochina.com/wallet-warning.html",
     "walletWarningEvidence": "https://gcagochina.com/wallet-warning.json",
@@ -69,7 +73,9 @@
       "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool.",
       "No third-party audit has been completed.",
       "Owner reported on 2026-05-14 that no wallet risk warning was visible in the tested wallet/DEX flow.",
-      "This is an owner-visible UI observation only, not a permanent security-vendor approval or cross-wallet guarantee."
+      "This is an owner-visible UI observation only, not a permanent security-vendor approval or cross-wallet guarantee.",
+      "GCA has published an internal technical report and reserve address statement for reviewers.",
+      "The reserve and LP are not currently claimed as locked."
     ],
     "doNotClaim": [
       "security-vendor approval, permanent warning-free status, or cross-wallet warning removal before vendor/current wallet UI confirms it",

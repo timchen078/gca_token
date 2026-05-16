@@ -90,6 +90,10 @@ MARKET_QUALITY_PAGE_URL = "https://gcagochina.com/market-quality.html"
 MARKET_QUALITY_URL = "https://gcagochina.com/market-quality.json"
 TOKEN_SAFETY_PAGE_URL = "https://gcagochina.com/token-safety.html"
 TOKEN_SAFETY_URL = "https://gcagochina.com/token-safety.json"
+TECHNICAL_REPORT_PAGE_URL = "https://gcagochina.com/technical-report.html"
+TECHNICAL_REPORT_URL = "https://gcagochina.com/technical-report.json"
+RESERVE_STATEMENT_PAGE_URL = "https://gcagochina.com/reserve-statement.html"
+RESERVE_STATEMENT_URL = "https://gcagochina.com/reserve-statement.json"
 ONCHAIN_PROOFS_PAGE_URL = "https://gcagochina.com/onchain-proofs.html"
 ONCHAIN_PROOFS_URL = "https://gcagochina.com/onchain-proofs.json"
 SUPPLY_DISCLOSURE_URL = "https://gcagochina.com/supply.json"
@@ -170,6 +174,10 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("/market-quality.json", script)
         self.assertIn("/token-safety.html", script)
         self.assertIn("/token-safety.json", script)
+        self.assertIn("/technical-report.html", script)
+        self.assertIn("/technical-report.json", script)
+        self.assertIn("/reserve-statement.html", script)
+        self.assertIn("/reserve-statement.json", script)
         self.assertIn("/onchain-proofs.html", script)
         self.assertIn("/onchain-proofs.json", script)
         self.assertIn("/supply.html", script)
@@ -231,6 +239,10 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("validate_market_quality_json", script)
         self.assertIn("validate_token_safety_page", script)
         self.assertIn("validate_token_safety_json", script)
+        self.assertIn("validate_technical_report_page", script)
+        self.assertIn("validate_technical_report_json", script)
+        self.assertIn("validate_reserve_statement_page", script)
+        self.assertIn("validate_reserve_statement_json", script)
         self.assertIn("validate_onchain_proofs_page", script)
         self.assertIn("validate_onchain_proofs_json", script)
         self.assertIn("validate_supply_page", script)
@@ -254,6 +266,10 @@ class LaunchPackageTests(unittest.TestCase):
         module.validate_market_quality_json((ROOT / "site" / "market-quality.json").read_text())
         module.validate_token_safety_page((ROOT / "site" / "token-safety.html").read_text())
         module.validate_token_safety_json((ROOT / "site" / "token-safety.json").read_text())
+        module.validate_technical_report_page((ROOT / "site" / "technical-report.html").read_text())
+        module.validate_technical_report_json((ROOT / "site" / "technical-report.json").read_text())
+        module.validate_reserve_statement_page((ROOT / "site" / "reserve-statement.html").read_text())
+        module.validate_reserve_statement_json((ROOT / "site" / "reserve-statement.json").read_text())
         module.validate_onchain_proofs_page((ROOT / "site" / "onchain-proofs.html").read_text())
         module.validate_onchain_proofs_json((ROOT / "site" / "onchain-proofs.json").read_text())
         module.validate_supply_page((ROOT / "site" / "supply.html").read_text())
@@ -509,6 +525,10 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Allow: /platform-replies.json", robots)
         self.assertIn("Allow: /trust.html", robots)
         self.assertIn("Allow: /trust.json", robots)
+        self.assertIn("Allow: /technical-report.html", robots)
+        self.assertIn("Allow: /technical-report.json", robots)
+        self.assertIn("Allow: /reserve-statement.html", robots)
+        self.assertIn("Allow: /reserve-statement.json", robots)
         self.assertIn("Allow: /external-reviews.html", robots)
         self.assertIn("Allow: /external-reviews.json", robots)
         self.assertIn("Allow: /listing-readiness.html", robots)
@@ -711,6 +731,10 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(identity["officialUrls"]["marketQuality"], MARKET_QUALITY_URL)
         self.assertEqual(identity["officialUrls"]["tokenSafetyPage"], TOKEN_SAFETY_PAGE_URL)
         self.assertEqual(identity["officialUrls"]["tokenSafety"], TOKEN_SAFETY_URL)
+        self.assertEqual(identity["officialUrls"]["technicalReportPage"], TECHNICAL_REPORT_PAGE_URL)
+        self.assertEqual(identity["officialUrls"]["technicalReport"], TECHNICAL_REPORT_URL)
+        self.assertEqual(identity["officialUrls"]["reserveStatementPage"], RESERVE_STATEMENT_PAGE_URL)
+        self.assertEqual(identity["officialUrls"]["reserveStatement"], RESERVE_STATEMENT_URL)
         self.assertEqual(identity["officialUrls"]["onchainProofsPage"], ONCHAIN_PROOFS_PAGE_URL)
         self.assertEqual(identity["officialUrls"]["onchainProofs"], ONCHAIN_PROOFS_URL)
         self.assertEqual(identity["officialUrls"]["supplyDisclosure"], SUPPLY_DISCLOSURE_URL)
@@ -760,6 +784,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertFalse(identity["accessOperationsRunbook"]["ledgerWritesLive"])
         self.assertEqual(identity["platformStatus"]["walletSecurityProfile"], "public-wallet-security-profile-published")
         self.assertEqual(identity["platformStatus"]["tokenSafety"], "public-token-safety-checklist-published")
+        self.assertEqual(identity["platformStatus"]["technicalReport"], "public-internal-technical-report-published")
+        self.assertEqual(identity["platformStatus"]["reserveStatement"], "public-reserve-address-statement-published")
         self.assertEqual(identity["platformStatus"]["thirdPartyAudit"], "not-completed")
         self.assertTrue(identity["securityFacts"]["sourceVerifiedOnBaseScan"])
         self.assertTrue(identity["securityFacts"]["fixedSupply"])
@@ -795,6 +821,10 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(wallet_security["officialLinks"]["walletSecurityProfile"], WALLET_SECURITY_PROFILE_URL)
         self.assertEqual(wallet_security["officialLinks"]["tokenSafetyPage"], TOKEN_SAFETY_PAGE_URL)
         self.assertEqual(wallet_security["officialLinks"]["tokenSafety"], TOKEN_SAFETY_URL)
+        self.assertEqual(wallet_security["officialLinks"]["technicalReportPage"], TECHNICAL_REPORT_PAGE_URL)
+        self.assertEqual(wallet_security["officialLinks"]["technicalReport"], TECHNICAL_REPORT_URL)
+        self.assertEqual(wallet_security["officialLinks"]["reserveStatementPage"], RESERVE_STATEMENT_PAGE_URL)
+        self.assertEqual(wallet_security["officialLinks"]["reserveStatement"], RESERVE_STATEMENT_URL)
         self.assertEqual(wallet_security["officialLinks"]["walletWarningEvidence"], WALLET_WARNING_URL)
         self.assertEqual(wallet_security["officialLinks"]["trustCenter"], TRUST_CENTER_URL)
         self.assertIn("No third-party audit has been completed.", wallet_security["publicClaimBoundaries"]["safeClaims"])
@@ -2936,6 +2966,10 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(project["marketQualityUrl"], MARKET_QUALITY_URL)
         self.assertEqual(project["tokenSafetyPageUrl"], TOKEN_SAFETY_PAGE_URL)
         self.assertEqual(project["tokenSafetyUrl"], TOKEN_SAFETY_URL)
+        self.assertEqual(project["technicalReportPageUrl"], TECHNICAL_REPORT_PAGE_URL)
+        self.assertEqual(project["technicalReportUrl"], TECHNICAL_REPORT_URL)
+        self.assertEqual(project["reserveStatementPageUrl"], RESERVE_STATEMENT_PAGE_URL)
+        self.assertEqual(project["reserveStatementUrl"], RESERVE_STATEMENT_URL)
         self.assertEqual(project["onchainProofsPageUrl"], ONCHAIN_PROOFS_PAGE_URL)
         self.assertEqual(project["onchainProofsUrl"], ONCHAIN_PROOFS_URL)
         self.assertEqual(project["supplyDisclosureUrl"], SUPPLY_DISCLOSURE_URL)
@@ -3043,6 +3077,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(project["platformStatus"]["accessOperationsRunbook"], "public-access-operations-runbook-published")
         self.assertEqual(project["platformStatus"]["releaseGates"], "public-release-gates-published")
         self.assertEqual(project["platformStatus"]["creditsCatalog"], "public-credits-catalog-published")
+        self.assertEqual(project["platformStatus"]["technicalReport"], "public-internal-technical-report-published")
+        self.assertEqual(project["platformStatus"]["reserveStatement"], "public-reserve-address-statement-published")
         self.assertEqual(project["platformStatus"]["thirdPartyAudit"], "not-completed")
         self.assertEqual(project["accessPortal"]["status"], "public-access-portal-blueprint-published")
         self.assertEqual(project["accessPortal"]["pageUrl"], ACCESS_PAGE_URL)
@@ -3152,6 +3188,14 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(project["tokenSafety"]["status"], "public-token-safety-checklist-published")
         self.assertEqual(project["tokenSafety"]["pageUrl"], TOKEN_SAFETY_PAGE_URL)
         self.assertEqual(project["tokenSafety"]["url"], TOKEN_SAFETY_URL)
+        self.assertEqual(project["technicalReport"]["status"], "public-internal-technical-report-published")
+        self.assertEqual(project["technicalReport"]["pageUrl"], TECHNICAL_REPORT_PAGE_URL)
+        self.assertEqual(project["technicalReport"]["url"], TECHNICAL_REPORT_URL)
+        self.assertIn("not a third-party audit", project["technicalReport"]["useCase"])
+        self.assertEqual(project["reserveStatement"]["status"], "public-reserve-address-statement-published")
+        self.assertEqual(project["reserveStatement"]["pageUrl"], RESERVE_STATEMENT_PAGE_URL)
+        self.assertEqual(project["reserveStatement"]["url"], RESERVE_STATEMENT_URL)
+        self.assertIn("reserve wallet disclosure", project["reserveStatement"]["useCase"])
         self.assertEqual(project["walletWarningEvidence"]["status"], "warning-report-submitted-owner-observed-no-warning-visible")
         self.assertEqual(project["walletWarningEvidence"]["pageUrl"], WALLET_WARNING_PAGE_URL)
         self.assertEqual(project["walletWarningEvidence"]["url"], WALLET_WARNING_URL)
@@ -3284,6 +3328,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Fixed Supply And Reserve Proof", page)
         self.assertIn("Official Market Proof", page)
         self.assertIn("Historical Functional Buy/Sell Evidence", page)
+        self.assertIn("Technical Report", page)
+        self.assertIn("Reserve statement", page)
         self.assertIn("Public Claim Boundaries", page)
         self.assertIn(DEPLOYMENT_TX, page)
         self.assertIn(RESERVE_WALLET, page)
@@ -3308,11 +3354,18 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(proofs["contractAddress"], MAINNET_ADDRESS)
         self.assertEqual(proofs["officialLinks"]["onchainProofsPage"], ONCHAIN_PROOFS_PAGE_URL)
         self.assertEqual(proofs["officialLinks"]["onchainProofs"], ONCHAIN_PROOFS_URL)
+        self.assertEqual(proofs["officialLinks"]["technicalReportPage"], TECHNICAL_REPORT_PAGE_URL)
+        self.assertEqual(proofs["officialLinks"]["technicalReport"], TECHNICAL_REPORT_URL)
+        self.assertEqual(proofs["officialLinks"]["reserveStatementPage"], RESERVE_STATEMENT_PAGE_URL)
+        self.assertEqual(proofs["officialLinks"]["reserveStatement"], RESERVE_STATEMENT_URL)
         self.assertEqual(proofs["deploymentProof"]["transactionHash"], DEPLOYMENT_TX)
         self.assertEqual(proofs["sourceVerificationProof"]["status"], "verified")
         self.assertTrue(proofs["supplyProof"]["fixedSupply"])
         self.assertFalse(proofs["supplyProof"]["postDeploymentMintFunction"])
         self.assertEqual(proofs["ownerReserveProof"]["ownerReserveWallet"], RESERVE_WALLET)
+        self.assertEqual(proofs["ownerReserveProof"]["reserveStatementPage"], RESERVE_STATEMENT_PAGE_URL)
+        self.assertEqual(proofs["ownerReserveProof"]["reserveStatement"], RESERVE_STATEMENT_URL)
+        self.assertFalse(proofs["ownerReserveProof"]["lpLockClaimed"])
         reserve_hashes = [entry["transactionHash"] for entry in proofs["ownerReserveProof"]["reserveTransfers"]]
         self.assertEqual(reserve_hashes, [RESERVE_TX, SECOND_RESERVE_TX])
         self.assertEqual(proofs["officialMarketProof"]["pair"], "GCA/USDT")
@@ -3320,6 +3373,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(proofs["officialMarketProof"]["quoteAssetAddress"], BASE_USDT_ADDRESS)
         self.assertIn(SWAP_TEST_BUY_TX, proofs["historicalFunctionalSwapProof"]["buyTestTransactions"])
         self.assertIn(SWAP_TEST_SELL_TX, proofs["historicalFunctionalSwapProof"]["sellTestTransactions"])
+        self.assertIn("The reserve address statement and internal technical report are public.", proofs["publicClaimBoundaries"]["safeClaims"])
         self.assertIn("No third-party audit has been completed.", proofs["publicClaimBoundaries"]["safeClaims"])
         self.assertIn("deep liquidity, price support, return promises, or warning-free status", proofs["publicClaimBoundaries"]["doNotClaim"])
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, json.dumps(proofs))
@@ -3467,6 +3521,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Blockaid / MetaMask", page)
         self.assertIn("Follow-up submitted on 2026-05-13", page)
         self.assertIn("BaseScan Profile", page)
+        self.assertIn("Technical Report", page)
+        self.assertIn("Reserve Statement", page)
         self.assertIn("Public Claim Boundaries", page)
         self.assertIn("No third-party audit has been completed", page)
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, page)
@@ -3486,8 +3542,14 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(kit["officialLinks"]["walletSecurityProfile"], WALLET_SECURITY_PROFILE_URL)
         self.assertEqual(kit["officialLinks"]["tokenSafetyPage"], TOKEN_SAFETY_PAGE_URL)
         self.assertEqual(kit["officialLinks"]["tokenSafety"], TOKEN_SAFETY_URL)
+        self.assertEqual(kit["officialLinks"]["technicalReportPage"], TECHNICAL_REPORT_PAGE_URL)
+        self.assertEqual(kit["officialLinks"]["technicalReport"], TECHNICAL_REPORT_URL)
+        self.assertEqual(kit["officialLinks"]["reserveStatementPage"], RESERVE_STATEMENT_PAGE_URL)
+        self.assertEqual(kit["officialLinks"]["reserveStatement"], RESERVE_STATEMENT_URL)
         self.assertEqual(kit["evidenceLinks"]["walletSecurityProfile"], WALLET_SECURITY_PROFILE_URL)
         self.assertEqual(kit["evidenceLinks"]["tokenSafety"], TOKEN_SAFETY_PAGE_URL)
+        self.assertEqual(kit["evidenceLinks"]["technicalReport"], TECHNICAL_REPORT_PAGE_URL)
+        self.assertEqual(kit["evidenceLinks"]["reserveStatement"], RESERVE_STATEMENT_PAGE_URL)
         self.assertEqual(kit["officialLinks"]["externalReviewStatus"], EXTERNAL_REVIEW_URL)
         self.assertEqual(kit["officialLinks"]["onchainProofs"], ONCHAIN_PROOFS_URL)
         self.assertEqual(kit["officialMarket"]["pair"], "GCA/USDT")
@@ -3578,6 +3640,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Market And Liquidity", page)
         self.assertIn("Supply And Reserve", page)
         self.assertIn("Evidence Links", page)
+        self.assertIn("Technical Report", page)
+        self.assertIn("Reserve Statement", page)
         self.assertIn("Public Claim Boundaries", page)
         self.assertIn("Base Mainnet / 8453", page)
         self.assertIn(MAINNET_ADDRESS, page)
@@ -3605,8 +3669,17 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(trust["officialLinks"]["walletSecurityProfile"], WALLET_SECURITY_PROFILE_URL)
         self.assertEqual(trust["officialLinks"]["tokenSafetyPage"], TOKEN_SAFETY_PAGE_URL)
         self.assertEqual(trust["officialLinks"]["tokenSafety"], TOKEN_SAFETY_URL)
+        self.assertEqual(trust["officialLinks"]["technicalReportPage"], TECHNICAL_REPORT_PAGE_URL)
+        self.assertEqual(trust["officialLinks"]["technicalReport"], TECHNICAL_REPORT_URL)
+        self.assertEqual(trust["officialLinks"]["reserveStatementPage"], RESERVE_STATEMENT_PAGE_URL)
+        self.assertEqual(trust["officialLinks"]["reserveStatement"], RESERVE_STATEMENT_URL)
         self.assertEqual(trust["officialLinks"]["externalReviewStatus"], EXTERNAL_REVIEW_URL)
         self.assertEqual(trust["officialLinks"]["onchainProofs"], ONCHAIN_PROOFS_URL)
+        self.assertEqual(trust["technicalReport"]["status"], "public-internal-technical-report-published")
+        self.assertEqual(trust["technicalReport"]["pageUrl"], TECHNICAL_REPORT_PAGE_URL)
+        self.assertEqual(trust["technicalReport"]["url"], TECHNICAL_REPORT_URL)
+        self.assertEqual(trust["technicalReport"]["reportType"], "internal-technical-report-not-third-party-audit")
+        self.assertFalse(trust["technicalReport"]["thirdPartyAuditCompleted"])
         self.assertEqual(trust["verificationSnapshot"]["baseScanSource"], "verified")
         self.assertEqual(trust["verificationSnapshot"]["baseScanOwnership"], "verified")
         self.assertEqual(trust["verificationSnapshot"]["baseScanTokenProfile"], "resubmitted-awaiting-review")
@@ -3623,6 +3696,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(trust["officialMarket"]["geckoTerminal"], OFFICIAL_GECKOTERMINAL_URL)
         self.assertEqual(trust["officialMarket"]["dexScreener"], OFFICIAL_DEXSCREENER_URL)
         self.assertEqual(trust["supplyDisclosure"]["ownerReserveWallet"], RESERVE_WALLET)
+        self.assertEqual(trust["supplyDisclosure"]["reserveStatementPage"], RESERVE_STATEMENT_PAGE_URL)
+        self.assertEqual(trust["supplyDisclosure"]["reserveStatement"], RESERVE_STATEMENT_URL)
+        self.assertFalse(trust["supplyDisclosure"]["lpLockClaimed"])
         self.assertEqual(trust["supplyDisclosure"]["ownerReserveTransferTxs"], [RESERVE_TX, SECOND_RESERVE_TX])
         self.assertEqual(trust["externalReviewStatus"]["thirdPartyAudit"], "not-completed-deferred")
         self.assertIn("No third-party audit has been completed.", trust["safePublicClaims"])
@@ -3682,6 +3758,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Pending Or Not Claimed", page)
         self.assertIn("No mint function", page)
         self.assertIn("No third-party audit", page)
+        self.assertIn("Technical Report", page)
+        self.assertIn("Reserve Statement", page)
         self.assertIn("permanent warning-free status", page)
         self.assertIn(MAINNET_ADDRESS, page)
         self.assertIn(OFFICIAL_POOL_ADDRESS, page)
@@ -3713,12 +3791,83 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(safety["officialMarket"]["quoteAssetAddress"], BASE_USDT_ADDRESS)
         self.assertEqual(safety["reviewLinks"]["tokenSafetyPage"], TOKEN_SAFETY_PAGE_URL)
         self.assertEqual(safety["reviewLinks"]["tokenSafety"], TOKEN_SAFETY_URL)
+        self.assertEqual(safety["reviewLinks"]["technicalReportPage"], TECHNICAL_REPORT_PAGE_URL)
+        self.assertEqual(safety["reviewLinks"]["technicalReport"], TECHNICAL_REPORT_URL)
+        self.assertEqual(safety["reviewLinks"]["reserveStatementPage"], RESERVE_STATEMENT_PAGE_URL)
+        self.assertEqual(safety["reviewLinks"]["reserveStatement"], RESERVE_STATEMENT_URL)
         self.assertEqual(safety["reviewLinks"]["walletSecurityProfile"], WALLET_SECURITY_PROFILE_URL)
         self.assertEqual(safety["reviewLinks"]["walletWarningEvidence"], WALLET_WARNING_URL)
         self.assertIn("No third-party audit has been completed.", safety["publicClaimBoundaries"]["safeClaims"])
+        self.assertIn("GCA has published an internal technical report and reserve address statement for reviewers.", safety["publicClaimBoundaries"]["safeClaims"])
+        self.assertIn("The reserve and LP are not currently claimed as locked.", safety["publicClaimBoundaries"]["safeClaims"])
         self.assertIn("security-vendor approval, permanent warning-free status, or cross-wallet warning removal before vendor/current wallet UI confirms it", safety["publicClaimBoundaries"]["doNotClaim"])
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, json.dumps(safety))
         self.assertNotIn("GCA/WETH", json.dumps(safety))
+
+    def test_reserve_statement_and_technical_report_are_public_and_conservative(self):
+        technical_page = (ROOT / "site" / "technical-report.html").read_text()
+        technical = json.loads((ROOT / "site" / "technical-report.json").read_text())
+        reserve_page = (ROOT / "site" / "reserve-statement.html").read_text()
+        reserve = json.loads((ROOT / "site" / "reserve-statement.json").read_text())
+        technical_launch = (ROOT / "launch" / "gca_technical_report.md").read_text()
+        reserve_launch = (ROOT / "launch" / "blockaid_reserve_statement.md").read_text()
+
+        self.assertIn("GCA Technical Report", technical_page)
+        self.assertIn("internal technical report", technical_page)
+        self.assertIn("not a third-party audit", technical_page)
+        self.assertIn("LP locking is not currently claimed", technical_page)
+        self.assertIn(MAINNET_ADDRESS, technical_page)
+        self.assertIn(RESERVE_WALLET, technical_page)
+        self.assertEqual(technical["schema"], TECHNICAL_REPORT_URL)
+        self.assertEqual(technical["pageUrl"], TECHNICAL_REPORT_PAGE_URL)
+        self.assertEqual(technical["status"], "public-internal-technical-report-published")
+        self.assertEqual(technical["reportType"], "internal-technical-report-not-third-party-audit")
+        self.assertEqual(technical["contractAddress"], MAINNET_ADDRESS)
+        self.assertTrue(technical["sourceVerification"]["sourceVerifiedOnBaseScan"])
+        self.assertTrue(technical["contractControlReview"]["fixedSupply"])
+        self.assertFalse(technical["contractControlReview"]["postDeploymentMintFunction"])
+        self.assertFalse(technical["contractControlReview"]["ownerOrAdminRole"])
+        self.assertFalse(technical["contractControlReview"]["blacklistFunction"])
+        self.assertFalse(technical["contractControlReview"]["pauseFunction"])
+        self.assertFalse(technical["contractControlReview"]["transferTaxOrHiddenFee"])
+        self.assertFalse(technical["contractControlReview"]["custodyOrWithdrawalPath"])
+        self.assertFalse(technical["marketAndLiquidityDisclosure"]["lpLockClaimed"])
+        self.assertEqual(technical["marketAndLiquidityDisclosure"]["lpLockStatus"], "not-locked-not-claimed")
+        self.assertEqual(technical["marketAndLiquidityDisclosure"]["poolAddress"], OFFICIAL_POOL_ADDRESS)
+        self.assertEqual(technical["reserveDisclosure"]["ownerReserveWallet"], RESERVE_WALLET)
+        self.assertFalse(technical["reserveDisclosure"]["reserveLocked"])
+        self.assertFalse(technical["reserveDisclosure"]["vestingContract"])
+        self.assertFalse(technical["reserveDisclosure"]["multisig"])
+        self.assertEqual(technical["reserveDisclosure"]["reserveStatement"], RESERVE_STATEMENT_URL)
+        self.assertIn("no third-party audit has been completed", technical["riskReviewerNotes"]["residualRisks"])
+
+        self.assertIn("GCA Reserve Address Statement", reserve_page)
+        self.assertIn("Owner-controlled, not locked", reserve_page)
+        self.assertIn("No LP lock is currently claimed", reserve_page)
+        self.assertIn(RESERVE_TX, reserve_page)
+        self.assertIn(SECOND_RESERVE_TX, reserve_page)
+        self.assertEqual(reserve["schema"], RESERVE_STATEMENT_URL)
+        self.assertEqual(reserve["pageUrl"], RESERVE_STATEMENT_PAGE_URL)
+        self.assertEqual(reserve["status"], "public-reserve-address-statement-published")
+        self.assertEqual(reserve["contractAddress"], MAINNET_ADDRESS)
+        self.assertEqual(reserve["allocationStatement"]["ownerReserveWallet"], RESERVE_WALLET)
+        self.assertEqual(reserve["allocationStatement"]["ownerHeldReserve"], "600000000")
+        self.assertEqual(reserve["allocationStatement"]["ownerHeldReservePercent"], 60)
+        self.assertFalse(reserve["allocationStatement"]["reserveLocked"])
+        self.assertFalse(reserve["allocationStatement"]["vestingContract"])
+        self.assertFalse(reserve["allocationStatement"]["multisig"])
+        self.assertEqual(reserve["reserveUseBoundaries"]["lpLockStatus"], "not-locked-not-claimed")
+        self.assertIn("No LP lock is currently claimed.", reserve["publicClaimBoundaries"]["safeClaims"])
+        self.assertIn("LP lock before a verifiable LP lock is executed", reserve["publicClaimBoundaries"]["doNotClaim"])
+        reserve_hashes = [entry["transactionHash"] for entry in reserve["reserveTransferProofs"]]
+        self.assertEqual(reserve_hashes, [RESERVE_TX, SECOND_RESERVE_TX])
+
+        self.assertIn(TECHNICAL_REPORT_PAGE_URL, technical_launch)
+        self.assertIn(TECHNICAL_REPORT_URL, technical_launch)
+        self.assertIn(RESERVE_STATEMENT_PAGE_URL, reserve_launch)
+        self.assertIn(RESERVE_STATEMENT_URL, reserve_launch)
+        self.assertIn("LP lock claimed: no", technical_launch)
+        self.assertIn("No LP lock is currently claimed.", reserve_launch)
 
     def test_token_list_json_is_official_and_conservative(self):
         tokenlist = json.loads((ROOT / "site" / "tokenlist.json").read_text())
@@ -3761,6 +3910,10 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(extensions["marketQuality"], MARKET_QUALITY_URL)
         self.assertEqual(extensions["tokenSafetyPage"], TOKEN_SAFETY_PAGE_URL)
         self.assertEqual(extensions["tokenSafety"], TOKEN_SAFETY_URL)
+        self.assertEqual(extensions["technicalReportPage"], TECHNICAL_REPORT_PAGE_URL)
+        self.assertEqual(extensions["technicalReport"], TECHNICAL_REPORT_URL)
+        self.assertEqual(extensions["reserveStatementPage"], RESERVE_STATEMENT_PAGE_URL)
+        self.assertEqual(extensions["reserveStatement"], RESERVE_STATEMENT_URL)
         self.assertEqual(extensions["onchainProofsPage"], ONCHAIN_PROOFS_PAGE_URL)
         self.assertEqual(extensions["onchainProofs"], ONCHAIN_PROOFS_URL)
         self.assertEqual(extensions["onchainProofStatus"], "public-onchain-proofs-published")
@@ -3835,6 +3988,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(extensions["utilityBridgeStatus"], "public-utility-bridge-spec-published")
         self.assertEqual(extensions["walletSecurityProfileStatus"], "public-wallet-security-profile-published")
         self.assertEqual(extensions["tokenSafetyStatus"], "public-token-safety-checklist-published")
+        self.assertEqual(extensions["technicalReportStatus"], "public-internal-technical-report-published")
+        self.assertEqual(extensions["reserveStatementStatus"], "public-reserve-address-statement-published")
         self.assertEqual(extensions["memberLedgerStatus"], "public-member-ledger-schema-published")
         self.assertEqual(extensions["supportIntakeStatus"], "public-support-intake-published")
         self.assertEqual(extensions["roadmapStatus"], "public-roadmap-published")
@@ -3877,6 +4032,10 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "site" / "market-quality.json",
             ROOT / "site" / "token-safety.html",
             ROOT / "site" / "token-safety.json",
+            ROOT / "site" / "technical-report.html",
+            ROOT / "site" / "technical-report.json",
+            ROOT / "site" / "reserve-statement.html",
+            ROOT / "site" / "reserve-statement.json",
             ROOT / "site" / "onchain-proofs.html",
             ROOT / "site" / "onchain-proofs.json",
             ROOT / "site" / "brand-kit.html",
@@ -3933,6 +4092,8 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "launch" / "data_platform_package.md",
             ROOT / "launch" / "external_review_followup_tracker.md",
             ROOT / "launch" / "geckoterminal_update_runbook.md",
+            ROOT / "launch" / "gca_technical_report.md",
+            ROOT / "launch" / "blockaid_reserve_statement.md",
             ROOT / "launch" / "member_pre_registration_runbook.md",
             ROOT / "launch" / "telegram_channel_runbook.md",
             ROOT / "launch" / "telegram_pinned_buy_announcement.md",
@@ -4112,6 +4273,10 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "site" / "market-quality.json",
             ROOT / "site" / "token-safety.html",
             ROOT / "site" / "token-safety.json",
+            ROOT / "site" / "technical-report.html",
+            ROOT / "site" / "technical-report.json",
+            ROOT / "site" / "reserve-statement.html",
+            ROOT / "site" / "reserve-statement.json",
             ROOT / "site" / "onchain-proofs.html",
             ROOT / "site" / "onchain-proofs.json",
             ROOT / "site" / "brand-kit.html",
@@ -4146,6 +4311,8 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "docs" / "mainnet_public_profile.md",
             ROOT / "launch" / "launch_status.md",
             ROOT / "launch" / "basescan_resubmission_package.md",
+            ROOT / "launch" / "gca_technical_report.md",
+            ROOT / "launch" / "blockaid_reserve_statement.md",
         ]
         forbidden = [
             "BaseScan profile complete",
@@ -4234,6 +4401,14 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(ONCHAIN_PROOFS_PAGE_URL, status)
         self.assertIn(ONCHAIN_PROOFS_URL, status)
         self.assertIn("source verification, reserve transfers, official GCA/USDT market route", status)
+        self.assertIn("Public internal technical report prepared", status)
+        self.assertIn(TECHNICAL_REPORT_PAGE_URL, status)
+        self.assertIn(TECHNICAL_REPORT_URL, status)
+        self.assertIn("It is not a third-party audit", status)
+        self.assertIn("Public reserve address statement prepared", status)
+        self.assertIn(RESERVE_STATEMENT_PAGE_URL, status)
+        self.assertIn(RESERVE_STATEMENT_URL, status)
+        self.assertIn("the reserve is owner-controlled and not currently locked", status)
         self.assertIn("Public brand kit page and JSON prepared", status)
         self.assertIn(BRAND_KIT_PAGE_URL, status)
         self.assertIn(BRAND_KIT_URL, status)
@@ -4313,6 +4488,10 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Archive any audit quote replies", status)
         self.assertIn("Use `launch/external_review_followup_tracker.md`", status)
         self.assertIn("Use `https://gcagochina.com/wallet-warning.html`", status)
+        self.assertIn("Use `https://gcagochina.com/technical-report.html`", status)
+        self.assertIn("internal and not a third-party audit", status)
+        self.assertIn("Use `https://gcagochina.com/reserve-statement.html`", status)
+        self.assertIn("do not claim reserve lock, vesting, multisig custody, or LP lock", status)
         self.assertIn("Use `https://gcagochina.com/external-reviews.html`", status)
         self.assertIn("Use `https://gcagochina.com/reviewer-kit.html`", status)
         self.assertIn("Use `https://gcagochina.com/platform-replies.html`", status)

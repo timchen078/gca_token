@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GCA Reserve Address Statement | Go China Access</title>
+    <meta name="description" content="Official GCA reserve address statement for reviewers, including owner reserve wallet, on-chain transfer proofs, custody disclosure, and LP lock boundary.">
+    <link rel="canonical" href="https://gcagochina.com/reserve-statement.html">
+    <link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">
+    <link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="GCA | Go China Access">
+    <meta property="og:title" content="GCA Reserve Address Statement | Go China Access">
+    <meta property="og:description" content="Official GCA reserve address statement for reviewers, including owner reserve wallet, on-chain transfer proofs, custody disclosure, and LP lock boundary.">
+    <meta property="og:url" content="https://gcagochina.com/reserve-statement.html">
+    <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="GCA Reserve Address Statement | Go China Access">
+    <meta name="twitter:description" content="Official GCA reserve address statement for reviewers, including owner reserve wallet, on-chain transfer proofs, custody disclosure, and LP lock boundary.">
+    <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #111318;
+        --muted: #5f6773;
+        --line: #dfe3ea;
+        --panel: #ffffff;
+        --soft: #f6f7f9;
+        --red: #d71920;
+        --blue: #0052ff;
+        --green: #087f5b;
+        --gold: #8a650d;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: #fbfbfc;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.5;
+      }
+
+      a {
+        color: var(--blue);
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .shell {
+        width: min(1080px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      header {
+        border-bottom: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.94);
+        position: sticky;
+        top: 0;
+        z-index: 2;
+      }
+
+      nav {
+        min-height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--ink);
+        font-weight: 850;
+      }
+
+      .brand img {
+        width: 32px;
+        height: 32px;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 18px;
+        align-items: center;
+        font-size: 14px;
+      }
+
+      main {
+        padding: 42px 0 56px;
+      }
+
+      h1 {
+        margin: 0;
+        max-width: 940px;
+        font-size: clamp(40px, 6vw, 72px);
+        line-height: 1;
+        letter-spacing: 0;
+      }
+
+      h2 {
+        margin: 0 0 14px;
+        font-size: 24px;
+      }
+
+      h3 {
+        margin: 0 0 8px;
+        font-size: 17px;
+      }
+
+      .lead {
+        max-width: 860px;
+        margin: 18px 0 0;
+        color: var(--muted);
+        font-size: 18px;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 24px;
+      }
+
+      .button {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        color: var(--ink);
+        min-height: 42px;
+        padding: 10px 14px;
+        font: inherit;
+        font-weight: 750;
+      }
+
+      .button.primary {
+        border-color: var(--red);
+        background: var(--red);
+        color: #fff;
+      }
+
+      .section {
+        margin-top: 30px;
+      }
+
+      .panel,
+      .fact {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+      }
+
+      .panel {
+        padding: 24px;
+      }
+
+      .facts,
+      .grid,
+      .two {
+        display: grid;
+        gap: 14px;
+      }
+
+      .facts {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        margin-top: 22px;
+      }
+
+      .grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .two {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .fact {
+        min-height: 104px;
+        padding: 15px;
+      }
+
+      .label {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 750;
+        text-transform: uppercase;
+      }
+
+      .value {
+        display: block;
+        margin-top: 8px;
+        font-size: 16px;
+        font-weight: 850;
+        overflow-wrap: anywhere;
+      }
+
+      .good {
+        color: var(--green);
+      }
+
+      .pending {
+        color: var(--gold);
+      }
+
+      .note,
+      li {
+        color: var(--muted);
+      }
+
+      .note {
+        margin: 0;
+      }
+
+      .list {
+        display: grid;
+        gap: 10px;
+        margin-top: 12px;
+      }
+
+      .row {
+        display: grid;
+        grid-template-columns: minmax(112px, 0.75fr) minmax(0, 1.35fr);
+        gap: 12px;
+        align-items: start;
+        border-top: 1px solid var(--line);
+        padding-top: 10px;
+      }
+
+      .row strong {
+        min-width: 0;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+        text-align: right;
+      }
+
+      .warning {
+        border-color: #ecd28c;
+        background: #fff9e8;
+      }
+
+      code {
+        padding: 2px 5px;
+        border-radius: 6px;
+        background: var(--soft);
+        overflow-wrap: anywhere;
+      }
+
+      footer {
+        border-top: 1px solid var(--line);
+        padding: 24px 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      @media (max-width: 860px) {
+        .facts,
+        .grid,
+        .two {
+          grid-template-columns: 1fr;
+        }
+
+        nav {
+          align-items: flex-start;
+          flex-direction: column;
+          padding: 14px 0;
+        }
+
+        .row {
+          grid-template-columns: 1fr;
+        }
+
+        .row strong {
+          text-align: left;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav class="shell" aria-label="Primary">
+        <a class="brand" href="index.html" aria-label="GCA home">
+          <img src="assets/gca-logo.svg" alt="GCA logo">
+          <span>GCA</span>
+        </a>
+        <div class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="verify.html">Verify</a>
+          <a href="trust.html">Trust Center</a>
+          <a href="token-safety.html">Token Safety</a>
+          <a href="technical-report.html">Technical Report</a>
+          <a href="onchain-proofs.html">Proofs</a>
+          <a href="risk.html">Risk</a>
+        </div>
+      </nav>
+    </header>
+
+    <main class="shell">
+      <section aria-labelledby="title">
+        <h1 id="title">GCA Reserve Address Statement</h1>
+        <p class="lead">This public statement explains the disclosed GCA owner-held reserve wallet, the on-chain transfer proofs, and the exact custody boundary for reviewers. It does not claim LP locking or reserve locking.</p>
+        <div class="actions">
+          <a class="button primary" href="reserve-statement.json">Reserve Statement JSON</a>
+          <a class="button" href="technical-report.html">Technical Report</a>
+          <a class="button" href="supply.html">Supply Disclosure</a>
+          <a class="button" href="onchain-proofs.html">On-chain Proofs</a>
+          <a class="button" href="https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6" target="_blank" rel="noreferrer">BaseScan Contract</a>
+        </div>
+      </section>
+
+      <section class="facts" aria-label="Reserve summary">
+        <div class="fact">
+          <span class="label">Reserve Wallet</span>
+          <span class="value">0x5e8F84748612B913aAcC937492AC25dc5630E246</span>
+        </div>
+        <div class="fact">
+          <span class="label">Reserve Amount</span>
+          <span class="value">600,000,000 GCA</span>
+        </div>
+        <div class="fact">
+          <span class="label">Reserve Percent</span>
+          <span class="value">60%</span>
+        </div>
+        <div class="fact">
+          <span class="label">Custody Status</span>
+          <span class="value pending">Owner-controlled, not locked</span>
+        </div>
+      </section>
+
+      <section class="section two" aria-label="Allocation and transfers">
+        <div class="panel">
+          <h2>Allocation Disclosure</h2>
+          <p class="note">GCA has a disclosed 40/60 target allocation. The owner-held reserve is separated from the deployer wallet for public tracking, but it remains a normal owner-controlled wallet.</p>
+          <div class="list">
+            <div class="row"><span>Total supply</span><strong>1,000,000,000 GCA</strong></div>
+            <div class="row"><span>Target public / ecosystem / liquidity allocation</span><strong>400,000,000 GCA / 40%</strong></div>
+            <div class="row"><span>Owner-held reserve</span><strong>600,000,000 GCA / 60%</strong></div>
+            <div class="row"><span>Reserve wallet</span><strong>0x5e8F84748612B913aAcC937492AC25dc5630E246</strong></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2>Custody Boundary</h2>
+          <p class="note">The reserve is public and traceable, but not locked, not vested, and not controlled by a published multisig. This disclosure reduces ambiguity; it does not remove concentration risk by itself.</p>
+          <div class="list">
+            <div class="row"><span>Reserve locked</span><strong>No</strong></div>
+            <div class="row"><span>Vesting contract</span><strong>No</strong></div>
+            <div class="row"><span>Multisig</span><strong>No</strong></div>
+            <div class="row"><span>LP lock claimed</span><strong>No</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="proofTitle">
+        <h2 id="proofTitle">On-chain Reserve Transfer Proofs</h2>
+        <div class="list">
+          <div class="row"><span>First 300,000,000 GCA transfer</span><strong><a href="https://basescan.org/tx/0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67" target="_blank" rel="noreferrer">0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67</a></strong></div>
+          <div class="row"><span>First transfer block</span><strong>45,739,653</strong></div>
+          <div class="row"><span>Second 300,000,000 GCA transfer</span><strong><a href="https://basescan.org/tx/0xfffb674448abdbd3af45bb0a30c48e5fbb0e675542b971f031381254b5dc5317" target="_blank" rel="noreferrer">0xfffb674448abdbd3af45bb0a30c48e5fbb0e675542b971f031381254b5dc5317</a></strong></div>
+          <div class="row"><span>Second transfer block</span><strong>45,779,081</strong></div>
+        </div>
+      </section>
+
+      <section class="section panel warning" aria-labelledby="reviewerTitle">
+        <h2 id="reviewerTitle">Reviewer Notes</h2>
+        <ul>
+          <li>This page is intended to answer holder-concentration and reserve-disclosure questions.</li>
+          <li>The reserve is disclosed as a normal owner-controlled wallet, not hidden circulation.</li>
+          <li>No LP lock is currently claimed. If a future LP lock is executed, it should be documented with exact platform, lock address, transaction hash, unlock date, and custody details.</li>
+          <li>Do not describe the reserve as locked, vested, multisig-controlled, burned, or externally audited unless that later becomes verifiable on-chain or through an independent report.</li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <div class="shell">GCA reserve address statement. Verify Base Mainnet chain ID 8453, the contract, and all transaction hashes before relying on this disclosure.</div>
+    </footer>
+  </body>
+</html>

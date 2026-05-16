@@ -65,6 +65,10 @@ WALLET_WARNING_URL = "https://gcagochina.com/wallet-warning.json"
 WALLET_SECURITY_PROFILE_URL = "https://gcagochina.com/.well-known/wallet-security.json"
 TOKEN_SAFETY_PAGE_URL = "https://gcagochina.com/token-safety.html"
 TOKEN_SAFETY_URL = "https://gcagochina.com/token-safety.json"
+TECHNICAL_REPORT_PAGE_URL = "https://gcagochina.com/technical-report.html"
+TECHNICAL_REPORT_URL = "https://gcagochina.com/technical-report.json"
+RESERVE_STATEMENT_PAGE_URL = "https://gcagochina.com/reserve-statement.html"
+RESERVE_STATEMENT_URL = "https://gcagochina.com/reserve-statement.json"
 EXTERNAL_REVIEW_PAGE_URL = "https://gcagochina.com/external-reviews.html"
 EXTERNAL_REVIEW_URL = "https://gcagochina.com/external-reviews.json"
 REVIEWER_KIT_PAGE_URL = "https://gcagochina.com/reviewer-kit.html"
@@ -164,6 +168,8 @@ def validate_root(text: str) -> None:
     assert_contains(text, "Platform Replies", label)
     assert_contains(text, "Trust Center", label)
     assert_contains(text, "Token Safety", label)
+    assert_contains(text, "Technical Report", label)
+    assert_contains(text, "Reserve Statement", label)
     assert_contains(text, "Listing Readiness", label)
     assert_contains(text, "On-chain Proofs", label)
     assert_contains(text, "Brand Kit", label)
@@ -280,6 +286,10 @@ def validate_token_safety_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong tokenSafetyPage")
     if links.get("tokenSafety") != TOKEN_SAFETY_URL:
         raise SiteCheckError(f"{label}: wrong tokenSafety")
+    if links.get("technicalReport") != TECHNICAL_REPORT_URL:
+        raise SiteCheckError(f"{label}: wrong technicalReport")
+    if links.get("reserveStatement") != RESERVE_STATEMENT_URL:
+        raise SiteCheckError(f"{label}: wrong reserveStatement")
     if links.get("walletSecurityProfile") != WALLET_SECURITY_PROFILE_URL:
         raise SiteCheckError(f"{label}: wrong walletSecurityProfile")
     if links.get("walletWarningEvidence") != WALLET_WARNING_URL:
@@ -290,6 +300,137 @@ def validate_token_safety_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing warning-removal boundary")
     assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
     assert_not_contains(json.dumps(payload), "GCA/WETH", label)
+
+
+def validate_technical_report_page(text: str) -> None:
+    label = "/technical-report.html"
+    assert_contains(text, "GCA Technical Report", label)
+    assert_contains(text, "Technical Report JSON", label)
+    assert_contains(text, "internal technical report", label)
+    assert_contains(text, "not a third-party audit", label)
+    assert_contains(text, "Verified Positive Controls", label)
+    assert_contains(text, "Absent Controls", label)
+    assert_contains(text, "Post-deployment mint function", label)
+    assert_contains(text, "Owner/admin role", label)
+    assert_contains(text, "Transfer tax or hidden fee", label)
+    assert_contains(text, "LP lock claimed", label)
+    assert_contains(text, "Reserve Statement", label)
+    assert_contains(text, MAINNET_ADDRESS, label)
+    assert_contains(text, RESERVE_WALLET, label)
+    assert_contains(text, DEPLOYMENT_TX, label)
+    assert_current_pool_text(text, label)
+    assert_no_forbidden_public_claims(text, label)
+
+
+def validate_technical_report_json(text: str) -> None:
+    label = "/technical-report.json"
+    payload = load_json(text, label)
+    controls = payload.get("contractControlReview", {})
+    market = payload.get("marketAndLiquidityDisclosure", {})
+    reserve = payload.get("reserveDisclosure", {})
+
+    if payload.get("schema") != TECHNICAL_REPORT_URL:
+        raise SiteCheckError(f"{label}: wrong schema")
+    if payload.get("pageUrl") != TECHNICAL_REPORT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong pageUrl")
+    if payload.get("status") != "public-internal-technical-report-published":
+        raise SiteCheckError(f"{label}: wrong status")
+    if payload.get("reportType") != "internal-technical-report-not-third-party-audit":
+        raise SiteCheckError(f"{label}: wrong report type")
+    if payload.get("chainId") != 8453:
+        raise SiteCheckError(f"{label}: wrong chainId")
+    if payload.get("contractAddress") != MAINNET_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong contractAddress")
+    if payload.get("sourceVerification", {}).get("sourceVerifiedOnBaseScan") is not True:
+        raise SiteCheckError(f"{label}: source verification must be true")
+    if controls.get("fixedSupply") is not True:
+        raise SiteCheckError(f"{label}: fixedSupply must be true")
+    for key in (
+        "postDeploymentMintFunction",
+        "burnFunction",
+        "ownerOrAdminRole",
+        "proxyOrUpgradePath",
+        "blacklistFunction",
+        "pauseFunction",
+        "transferTaxOrHiddenFee",
+        "customTransferRestrictions",
+        "custodyOrWithdrawalPath",
+        "externalCallDuringTransfer",
+        "adminTradingControls",
+    ):
+        if controls.get(key) is not False:
+            raise SiteCheckError(f"{label}: {key} must be false")
+    if market.get("poolAddress") != OFFICIAL_POOL_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong pool")
+    if market.get("quoteAssetAddress") != BASE_USDT_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong quote asset")
+    if market.get("lpLockClaimed") is not False:
+        raise SiteCheckError(f"{label}: LP lock must not be claimed")
+    if reserve.get("ownerReserveWallet") != RESERVE_WALLET:
+        raise SiteCheckError(f"{label}: wrong reserve wallet")
+    if reserve.get("reserveLocked") is not False:
+        raise SiteCheckError(f"{label}: reserve lock must not be claimed")
+    if reserve.get("reserveStatement") != RESERVE_STATEMENT_URL:
+        raise SiteCheckError(f"{label}: wrong reserve statement URL")
+    if "This report is an internal technical report, not an independent third-party audit." not in payload.get("publicClaimBoundaries", {}).get("safeClaims", []):
+        raise SiteCheckError(f"{label}: missing internal report boundary")
+    assert_current_pool_text(json.dumps(payload), label)
+    assert_no_forbidden_public_claims(json.dumps(payload), label)
+
+
+def validate_reserve_statement_page(text: str) -> None:
+    label = "/reserve-statement.html"
+    assert_contains(text, "GCA Reserve Address Statement", label)
+    assert_contains(text, "Reserve Statement JSON", label)
+    assert_contains(text, "Owner-controlled, not locked", label)
+    assert_contains(text, "Custody Boundary", label)
+    assert_contains(text, "On-chain Reserve Transfer Proofs", label)
+    assert_contains(text, "LP lock claimed", label)
+    assert_contains(text, "No LP lock is currently claimed", label)
+    assert_contains(text, MAINNET_ADDRESS, label)
+    assert_contains(text, RESERVE_WALLET, label)
+    assert_contains(text, RESERVE_TX_1, label)
+    assert_contains(text, RESERVE_TX_2, label)
+    assert_no_forbidden_public_claims(text, label)
+
+
+def validate_reserve_statement_json(text: str) -> None:
+    label = "/reserve-statement.json"
+    payload = load_json(text, label)
+    allocation = payload.get("allocationStatement", {})
+    boundaries = payload.get("reserveUseBoundaries", {})
+    links = payload.get("officialLinks", {})
+
+    if payload.get("schema") != RESERVE_STATEMENT_URL:
+        raise SiteCheckError(f"{label}: wrong schema")
+    if payload.get("pageUrl") != RESERVE_STATEMENT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong pageUrl")
+    if payload.get("status") != "public-reserve-address-statement-published":
+        raise SiteCheckError(f"{label}: wrong status")
+    if payload.get("chainId") != 8453:
+        raise SiteCheckError(f"{label}: wrong chainId")
+    if payload.get("contractAddress") != MAINNET_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong contractAddress")
+    if allocation.get("ownerReserveWallet") != RESERVE_WALLET:
+        raise SiteCheckError(f"{label}: wrong reserve wallet")
+    if allocation.get("ownerHeldReserve") != "600000000":
+        raise SiteCheckError(f"{label}: wrong reserve amount")
+    if allocation.get("reserveLocked") is not False:
+        raise SiteCheckError(f"{label}: reserveLocked must be false")
+    if allocation.get("vestingContract") is not False:
+        raise SiteCheckError(f"{label}: vestingContract must be false")
+    if allocation.get("multisig") is not False:
+        raise SiteCheckError(f"{label}: multisig must be false")
+    transfer_text = json.dumps(payload.get("reserveTransferProofs", []))
+    if RESERVE_TX_1 not in transfer_text or RESERVE_TX_2 not in transfer_text:
+        raise SiteCheckError(f"{label}: missing reserve transfer tx")
+    if boundaries.get("lpLockStatus") != "not-locked-not-claimed":
+        raise SiteCheckError(f"{label}: wrong LP lock status")
+    if links.get("technicalReport") != TECHNICAL_REPORT_URL:
+        raise SiteCheckError(f"{label}: wrong technical report link")
+    if "No LP lock is currently claimed." not in payload.get("publicClaimBoundaries", {}).get("safeClaims", []):
+        raise SiteCheckError(f"{label}: missing LP lock safe claim")
+    assert_no_forbidden_public_claims(json.dumps(payload), label)
 
 
 def validate_members(text: str) -> None:
@@ -2603,6 +2744,14 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong tokenSafetyPageUrl")
     if payload.get("tokenSafetyUrl") != TOKEN_SAFETY_URL:
         raise SiteCheckError(f"{label}: wrong tokenSafetyUrl")
+    if payload.get("technicalReportPageUrl") != TECHNICAL_REPORT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong technicalReportPageUrl")
+    if payload.get("technicalReportUrl") != TECHNICAL_REPORT_URL:
+        raise SiteCheckError(f"{label}: wrong technicalReportUrl")
+    if payload.get("reserveStatementPageUrl") != RESERVE_STATEMENT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong reserveStatementPageUrl")
+    if payload.get("reserveStatementUrl") != RESERVE_STATEMENT_URL:
+        raise SiteCheckError(f"{label}: wrong reserveStatementUrl")
     if payload.get("externalReviewStatusPageUrl") != EXTERNAL_REVIEW_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong externalReviewStatusPageUrl")
     if payload.get("externalReviewStatusUrl") != EXTERNAL_REVIEW_URL:
@@ -2662,6 +2811,10 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: unexpected review queue status")
     if status.get("accessOperationsRunbook") != "public-access-operations-runbook-published":
         raise SiteCheckError(f"{label}: unexpected operations runbook status")
+    if status.get("technicalReport") != "public-internal-technical-report-published":
+        raise SiteCheckError(f"{label}: unexpected technical report status")
+    if status.get("reserveStatement") != "public-reserve-address-statement-published":
+        raise SiteCheckError(f"{label}: unexpected reserve statement status")
     if member_program.get("status") != "rules-published-public-claim-not-connected":
         raise SiteCheckError(f"{label}: unexpected member program status")
     if member_program.get("supportIntake", {}).get("status") != "public-support-intake-published":
@@ -2793,6 +2946,18 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: unexpected trust center status")
     if payload.get("tokenSafety", {}).get("status") != "public-token-safety-checklist-published":
         raise SiteCheckError(f"{label}: unexpected token safety status")
+    if payload.get("technicalReport", {}).get("status") != "public-internal-technical-report-published":
+        raise SiteCheckError(f"{label}: unexpected technical report object status")
+    if payload.get("technicalReport", {}).get("pageUrl") != TECHNICAL_REPORT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong technical report page")
+    if payload.get("technicalReport", {}).get("url") != TECHNICAL_REPORT_URL:
+        raise SiteCheckError(f"{label}: wrong technical report url")
+    if payload.get("reserveStatement", {}).get("status") != "public-reserve-address-statement-published":
+        raise SiteCheckError(f"{label}: unexpected reserve statement object status")
+    if payload.get("reserveStatement", {}).get("pageUrl") != RESERVE_STATEMENT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong reserve statement page")
+    if payload.get("reserveStatement", {}).get("url") != RESERVE_STATEMENT_URL:
+        raise SiteCheckError(f"{label}: wrong reserve statement url")
     if payload.get("walletWarningEvidence", {}).get("status") != "warning-report-submitted-owner-observed-no-warning-visible":
         raise SiteCheckError(f"{label}: unexpected wallet warning status")
     if payload.get("walletWarningEvidence", {}).get("walletSecurityProfileUrl") != WALLET_SECURITY_PROFILE_URL:
@@ -2923,6 +3088,14 @@ def validate_tokenlist_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong tokenSafetyPage")
     if extensions.get("tokenSafety") != TOKEN_SAFETY_URL:
         raise SiteCheckError(f"{label}: wrong tokenSafety")
+    if extensions.get("technicalReportPage") != TECHNICAL_REPORT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong technicalReportPage")
+    if extensions.get("technicalReport") != TECHNICAL_REPORT_URL:
+        raise SiteCheckError(f"{label}: wrong technicalReport")
+    if extensions.get("reserveStatementPage") != RESERVE_STATEMENT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong reserveStatementPage")
+    if extensions.get("reserveStatement") != RESERVE_STATEMENT_URL:
+        raise SiteCheckError(f"{label}: wrong reserveStatement")
     if extensions.get("externalReviewStatusPage") != EXTERNAL_REVIEW_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong externalReviewStatusPage")
     if extensions.get("externalReviewStatus") != EXTERNAL_REVIEW_URL:
@@ -2977,6 +3150,10 @@ def validate_tokenlist_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong walletSecurityProfileStatus")
     if extensions.get("tokenSafetyStatus") != "public-token-safety-checklist-published":
         raise SiteCheckError(f"{label}: wrong tokenSafetyStatus")
+    if extensions.get("technicalReportStatus") != "public-internal-technical-report-published":
+        raise SiteCheckError(f"{label}: wrong technicalReportStatus")
+    if extensions.get("reserveStatementStatus") != "public-reserve-address-statement-published":
+        raise SiteCheckError(f"{label}: wrong reserveStatementStatus")
     if extensions.get("memberLedgerStatus") != "public-member-ledger-schema-published":
         raise SiteCheckError(f"{label}: wrong memberLedgerStatus")
     if extensions.get("supportIntakeStatus") != "public-support-intake-published":
@@ -3089,6 +3266,14 @@ def validate_well_known_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong tokenSafetyPage")
     if urls.get("tokenSafety") != TOKEN_SAFETY_URL:
         raise SiteCheckError(f"{label}: wrong tokenSafety")
+    if urls.get("technicalReportPage") != TECHNICAL_REPORT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong technicalReportPage")
+    if urls.get("technicalReport") != TECHNICAL_REPORT_URL:
+        raise SiteCheckError(f"{label}: wrong technicalReport")
+    if urls.get("reserveStatementPage") != RESERVE_STATEMENT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong reserveStatementPage")
+    if urls.get("reserveStatement") != RESERVE_STATEMENT_URL:
+        raise SiteCheckError(f"{label}: wrong reserveStatement")
     if urls.get("externalReviewStatusPage") != EXTERNAL_REVIEW_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong externalReviewStatusPage")
     if urls.get("externalReviewStatus") != EXTERNAL_REVIEW_URL:
@@ -3185,6 +3370,10 @@ def validate_well_known_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong walletSecurityProfile status")
     if payload.get("platformStatus", {}).get("tokenSafety") != "public-token-safety-checklist-published":
         raise SiteCheckError(f"{label}: wrong tokenSafety status")
+    if payload.get("platformStatus", {}).get("technicalReport") != "public-internal-technical-report-published":
+        raise SiteCheckError(f"{label}: wrong technicalReport status")
+    if payload.get("platformStatus", {}).get("reserveStatement") != "public-reserve-address-statement-published":
+        raise SiteCheckError(f"{label}: wrong reserveStatement status")
     assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
 
 
@@ -3241,6 +3430,14 @@ def validate_wallet_security_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong tokenSafetyPage")
     if links.get("tokenSafety") != TOKEN_SAFETY_URL:
         raise SiteCheckError(f"{label}: wrong tokenSafety")
+    if links.get("technicalReportPage") != TECHNICAL_REPORT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong technicalReportPage")
+    if links.get("technicalReport") != TECHNICAL_REPORT_URL:
+        raise SiteCheckError(f"{label}: wrong technicalReport")
+    if links.get("reserveStatementPage") != RESERVE_STATEMENT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong reserveStatementPage")
+    if links.get("reserveStatement") != RESERVE_STATEMENT_URL:
+        raise SiteCheckError(f"{label}: wrong reserveStatement")
     if links.get("walletWarningEvidence") != WALLET_WARNING_URL:
         raise SiteCheckError(f"{label}: wrong wallet warning evidence link")
     if links.get("trustCenter") != TRUST_CENTER_URL:
@@ -3827,6 +4024,10 @@ def validate_onchain_proofs_json(text: str) -> None:
         raise SiteCheckError(f"{label}: postDeploymentMintFunction must be false")
     if reserve.get("ownerReserveWallet") != RESERVE_WALLET:
         raise SiteCheckError(f"{label}: wrong owner reserve wallet")
+    if reserve.get("reserveStatement") != RESERVE_STATEMENT_URL:
+        raise SiteCheckError(f"{label}: wrong reserveStatement")
+    if reserve.get("lpLockClaimed") is not False:
+        raise SiteCheckError(f"{label}: LP lock must not be claimed")
     reserve_text = json.dumps(reserve)
     if RESERVE_TX_1 not in reserve_text or RESERVE_TX_2 not in reserve_text:
         raise SiteCheckError(f"{label}: missing reserve transfer transaction")
@@ -3838,6 +4039,10 @@ def validate_onchain_proofs_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong quote asset")
     if payload.get("officialLinks", {}).get("supplyDisclosure") != SUPPLY_DISCLOSURE_URL:
         raise SiteCheckError(f"{label}: wrong supplyDisclosure")
+    if payload.get("officialLinks", {}).get("technicalReport") != TECHNICAL_REPORT_URL:
+        raise SiteCheckError(f"{label}: wrong technicalReport")
+    if payload.get("officialLinks", {}).get("reserveStatement") != RESERVE_STATEMENT_URL:
+        raise SiteCheckError(f"{label}: wrong reserveStatement link")
     if SWAP_TEST_BUY_TX not in functional.get("buyTestTransactions", []):
         raise SiteCheckError(f"{label}: missing buy test transaction")
     if SWAP_TEST_SELL_TX not in functional.get("sellTestTransactions", []):
@@ -3854,6 +4059,8 @@ def validate_onchain_proofs_page(text: str) -> None:
     assert_contains(text, "Deployment Proof", label)
     assert_contains(text, "Source Verification", label)
     assert_contains(text, "Fixed Supply And Reserve Proof", label)
+    assert_contains(text, "Reserve statement", label)
+    assert_contains(text, "Technical Report", label)
     assert_contains(text, "Official Market Proof", label)
     assert_contains(text, "Historical Functional Buy/Sell Evidence", label)
     assert_contains(text, "Public Claim Boundaries", label)
@@ -4410,6 +4617,10 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/market-quality.json",
         "https://gcagochina.com/token-safety.html",
         "https://gcagochina.com/token-safety.json",
+        "https://gcagochina.com/technical-report.html",
+        "https://gcagochina.com/technical-report.json",
+        "https://gcagochina.com/reserve-statement.html",
+        "https://gcagochina.com/reserve-statement.json",
         "https://gcagochina.com/brand-kit.html",
         "https://gcagochina.com/brand-kit.json",
         "https://gcagochina.com/onchain-proofs.html",
@@ -4494,6 +4705,10 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /market-quality.json", label)
     assert_contains(text, "Allow: /token-safety.html", label)
     assert_contains(text, "Allow: /token-safety.json", label)
+    assert_contains(text, "Allow: /technical-report.html", label)
+    assert_contains(text, "Allow: /technical-report.json", label)
+    assert_contains(text, "Allow: /reserve-statement.html", label)
+    assert_contains(text, "Allow: /reserve-statement.json", label)
     assert_contains(text, "Allow: /supply.json", label)
     assert_contains(text, "Allow: /onchain-proofs.html", label)
     assert_contains(text, "Allow: /onchain-proofs.json", label)
@@ -4551,6 +4766,10 @@ CHECKS: list[EndpointCheck] = [
     ("/market-quality.json", validate_market_quality_json),
     ("/token-safety.html", validate_token_safety_page),
     ("/token-safety.json", validate_token_safety_json),
+    ("/technical-report.html", validate_technical_report_page),
+    ("/technical-report.json", validate_technical_report_json),
+    ("/reserve-statement.html", validate_reserve_statement_page),
+    ("/reserve-statement.json", validate_reserve_statement_json),
     ("/brand-kit.html", validate_brand_kit_page),
     ("/brand-kit.json", validate_brand_kit_json),
     ("/onchain-proofs.html", validate_onchain_proofs_page),

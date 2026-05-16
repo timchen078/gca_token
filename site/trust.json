@@ -22,6 +22,10 @@
     "walletSecurityProfile": "https://gcagochina.com/.well-known/wallet-security.json",
     "tokenSafetyPage": "https://gcagochina.com/token-safety.html",
     "tokenSafety": "https://gcagochina.com/token-safety.json",
+    "technicalReportPage": "https://gcagochina.com/technical-report.html",
+    "technicalReport": "https://gcagochina.com/technical-report.json",
+    "reserveStatementPage": "https://gcagochina.com/reserve-statement.html",
+    "reserveStatement": "https://gcagochina.com/reserve-statement.json",
     "externalReviewStatusPage": "https://gcagochina.com/external-reviews.html",
     "externalReviewStatus": "https://gcagochina.com/external-reviews.json",
     "onchainProofsPage": "https://gcagochina.com/onchain-proofs.html",
@@ -70,6 +74,13 @@
     "custodyOrWithdrawalPath": false,
     "thirdPartyAuditCompleted": false
   },
+  "technicalReport": {
+    "status": "public-internal-technical-report-published",
+    "pageUrl": "https://gcagochina.com/technical-report.html",
+    "url": "https://gcagochina.com/technical-report.json",
+    "reportType": "internal-technical-report-not-third-party-audit",
+    "thirdPartyAuditCompleted": false
+  },
   "officialMarket": {
     "pair": "GCA/USDT",
     "dex": "Uniswap v4",
@@ -89,6 +100,9 @@
     "ownerHeldReservePercent": 60,
     "ownerReserveWallet": "0x5e8F84748612B913aAcC937492AC25dc5630E246",
     "ownerReserveCustodyNote": "Normal owner-controlled wallet; not locked, vested, or multisig-controlled.",
+    "reserveStatementPage": "https://gcagochina.com/reserve-statement.html",
+    "reserveStatement": "https://gcagochina.com/reserve-statement.json",
+    "lpLockClaimed": false,
     "ownerReserveTransferTxs": [
       "0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67",
       "0xfffb674448abdbd3af45bb0a30c48e5fbb0e675542b971f031381254b5dc5317"

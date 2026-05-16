@@ -28,6 +28,10 @@ Allow: /market-quality.html
 Allow: /market-quality.json
 Allow: /token-safety.html
 Allow: /token-safety.json
+Allow: /technical-report.html
+Allow: /technical-report.json
+Allow: /reserve-statement.html
+Allow: /reserve-statement.json
 Allow: /supply.json
 Allow: /member-ledger.html
 Allow: /member-ledger.json

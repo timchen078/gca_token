@@ -16,6 +16,10 @@
     "onchainProofs": "https://gcagochina.com/onchain-proofs.json",
     "walletWarningEvidencePage": "https://gcagochina.com/wallet-warning.html",
     "walletWarningEvidence": "https://gcagochina.com/wallet-warning.json",
+    "technicalReportPage": "https://gcagochina.com/technical-report.html",
+    "technicalReport": "https://gcagochina.com/technical-report.json",
+    "reserveStatementPage": "https://gcagochina.com/reserve-statement.html",
+    "reserveStatement": "https://gcagochina.com/reserve-statement.json",
     "externalReviewStatusPage": "https://gcagochina.com/external-reviews.html",
     "externalReviewStatus": "https://gcagochina.com/external-reviews.json",
     "status": "https://gcagochina.com/status.html",
@@ -61,6 +65,9 @@
     "ownerHeldReserve": "600000000",
     "ownerHeldReservePercent": 60,
     "ownerReserveWallet": "0x5e8F84748612B913aAcC937492AC25dc5630E246",
+    "reserveStatementPage": "https://gcagochina.com/reserve-statement.html",
+    "reserveStatement": "https://gcagochina.com/reserve-statement.json",
+    "lpLockClaimed": false,
     "ownerReserveCustodyNote": "Normal owner-controlled wallet; not locked, vested, or multisig-controlled.",
     "reserveTransfers": [
       {
@@ -115,6 +122,7 @@
       "GCA source verification is complete on BaseScan.",
       "GCA has fixed total supply and no post-deployment mint function.",
       "The owner reserve wallet and reserve transfer transaction hashes are public.",
+      "The reserve address statement and internal technical report are public.",
       "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool.",
       "Historical small buy and sell transactions were observed on Base Mainnet.",
       "No third-party audit has been completed."
