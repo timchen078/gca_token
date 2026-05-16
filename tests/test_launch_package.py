@@ -97,6 +97,8 @@ RISK_REMEDIATION_PAGE_URL = "https://gcagochina.com/risk-remediation.html"
 RISK_REMEDIATION_URL = "https://gcagochina.com/risk-remediation.json"
 CUSTODY_ROADMAP_PAGE_URL = "https://gcagochina.com/custody-roadmap.html"
 CUSTODY_ROADMAP_URL = "https://gcagochina.com/custody-roadmap.json"
+AUDIT_READINESS_PAGE_URL = "https://gcagochina.com/audit-readiness.html"
+AUDIT_READINESS_URL = "https://gcagochina.com/audit-readiness.json"
 TOKEN_SAFETY_PAGE_URL = "https://gcagochina.com/token-safety.html"
 TOKEN_SAFETY_URL = "https://gcagochina.com/token-safety.json"
 BLOCKAID_FOLLOWUP_PAGE_URL = "https://gcagochina.com/blockaid-followup.html"
@@ -199,6 +201,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("/risk-remediation.json", script)
         self.assertIn("/custody-roadmap.html", script)
         self.assertIn("/custody-roadmap.json", script)
+        self.assertIn("/audit-readiness.html", script)
+        self.assertIn("/audit-readiness.json", script)
         self.assertIn("/token-safety.html", script)
         self.assertIn("/token-safety.json", script)
         self.assertIn("/blockaid-followup.html", script)
@@ -275,6 +279,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("validate_risk_remediation_json", script)
         self.assertIn("validate_custody_roadmap_page", script)
         self.assertIn("validate_custody_roadmap_json", script)
+        self.assertIn("validate_audit_readiness_page", script)
+        self.assertIn("validate_audit_readiness_json", script)
         self.assertIn("validate_token_safety_page", script)
         self.assertIn("validate_token_safety_json", script)
         self.assertIn("validate_blockaid_followup_page", script)
@@ -326,6 +332,8 @@ class LaunchPackageTests(unittest.TestCase):
         module.validate_risk_remediation_json((ROOT / "site" / "risk-remediation.json").read_text())
         module.validate_custody_roadmap_page((ROOT / "site" / "custody-roadmap.html").read_text())
         module.validate_custody_roadmap_json((ROOT / "site" / "custody-roadmap.json").read_text())
+        module.validate_audit_readiness_page((ROOT / "site" / "audit-readiness.html").read_text())
+        module.validate_audit_readiness_json((ROOT / "site" / "audit-readiness.json").read_text())
         module.validate_token_safety_page((ROOT / "site" / "token-safety.html").read_text())
         module.validate_token_safety_json((ROOT / "site" / "token-safety.json").read_text())
         module.validate_blockaid_followup_page((ROOT / "site" / "blockaid-followup.html").read_text())
@@ -611,6 +619,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Allow: /risk-remediation.json", robots)
         self.assertIn("Allow: /custody-roadmap.html", robots)
         self.assertIn("Allow: /custody-roadmap.json", robots)
+        self.assertIn("Allow: /audit-readiness.html", robots)
+        self.assertIn("Allow: /audit-readiness.json", robots)
         self.assertIn("Allow: /token-safety.html", robots)
         self.assertIn("Allow: /token-safety.json", robots)
         self.assertIn("Allow: /blockaid-followup.html", robots)
@@ -689,6 +699,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(RISK_REMEDIATION_URL, sitemap)
         self.assertIn(CUSTODY_ROADMAP_PAGE_URL, sitemap)
         self.assertIn(CUSTODY_ROADMAP_URL, sitemap)
+        self.assertIn(AUDIT_READINESS_PAGE_URL, sitemap)
+        self.assertIn(AUDIT_READINESS_URL, sitemap)
         self.assertIn(TOKEN_SAFETY_PAGE_URL, sitemap)
         self.assertIn(TOKEN_SAFETY_URL, sitemap)
         self.assertIn(BLOCKAID_FOLLOWUP_PAGE_URL, sitemap)
@@ -835,6 +847,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(identity["officialUrls"]["riskRemediation"], RISK_REMEDIATION_URL)
         self.assertEqual(identity["officialUrls"]["custodyRoadmapPage"], CUSTODY_ROADMAP_PAGE_URL)
         self.assertEqual(identity["officialUrls"]["custodyRoadmap"], CUSTODY_ROADMAP_URL)
+        self.assertEqual(identity["officialUrls"]["auditReadinessPage"], AUDIT_READINESS_PAGE_URL)
+        self.assertEqual(identity["officialUrls"]["auditReadiness"], AUDIT_READINESS_URL)
         self.assertEqual(identity["officialUrls"]["onchainProofsPage"], ONCHAIN_PROOFS_PAGE_URL)
         self.assertEqual(identity["officialUrls"]["onchainProofs"], ONCHAIN_PROOFS_URL)
         self.assertEqual(identity["officialUrls"]["supplyDisclosure"], SUPPLY_DISCLOSURE_URL)
@@ -894,6 +908,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(identity["platformStatus"]["holderDistribution"], "public-holder-distribution-disclosure-published")
         self.assertEqual(identity["platformStatus"]["riskRemediation"], "public-risk-remediation-plan-published")
         self.assertEqual(identity["platformStatus"]["custodyRoadmap"], "public-custody-roadmap-published")
+        self.assertEqual(identity["platformStatus"]["auditReadiness"], "public-audit-readiness-package-published")
         self.assertEqual(identity["platformStatus"]["thirdPartyAudit"], "not-completed")
         self.assertTrue(identity["securityFacts"]["sourceVerifiedOnBaseScan"])
         self.assertTrue(identity["securityFacts"]["fixedSupply"])
@@ -944,6 +959,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(wallet_security["officialLinks"]["riskRemediation"], RISK_REMEDIATION_URL)
         self.assertEqual(wallet_security["officialLinks"]["custodyRoadmapPage"], CUSTODY_ROADMAP_PAGE_URL)
         self.assertEqual(wallet_security["officialLinks"]["custodyRoadmap"], CUSTODY_ROADMAP_URL)
+        self.assertEqual(wallet_security["officialLinks"]["auditReadinessPage"], AUDIT_READINESS_PAGE_URL)
+        self.assertEqual(wallet_security["officialLinks"]["auditReadiness"], AUDIT_READINESS_URL)
         self.assertEqual(wallet_security["officialLinks"]["liquidityPage"], LIQUIDITY_PAGE_URL)
         self.assertEqual(wallet_security["officialLinks"]["liquidity"], LIQUIDITY_URL)
         self.assertEqual(wallet_security["officialLinks"]["walletWarningEvidence"], WALLET_WARNING_URL)
@@ -965,6 +982,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn('href="buy.html"', site)
         self.assertIn('href="markets.html"', site)
         self.assertIn('href="liquidity.html"', site)
+        self.assertIn('href="audit-readiness.html"', site)
         self.assertIn('href="supply.html"', site)
         self.assertIn('href="security.html"', site)
         self.assertIn('href="token-safety.html"', site)
@@ -3327,6 +3345,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(project["riskRemediationUrl"], RISK_REMEDIATION_URL)
         self.assertEqual(project["custodyRoadmapPageUrl"], CUSTODY_ROADMAP_PAGE_URL)
         self.assertEqual(project["custodyRoadmapUrl"], CUSTODY_ROADMAP_URL)
+        self.assertEqual(project["auditReadinessPageUrl"], AUDIT_READINESS_PAGE_URL)
+        self.assertEqual(project["auditReadinessUrl"], AUDIT_READINESS_URL)
         self.assertEqual(project["onchainProofsPageUrl"], ONCHAIN_PROOFS_PAGE_URL)
         self.assertEqual(project["onchainProofsUrl"], ONCHAIN_PROOFS_URL)
         self.assertEqual(project["supplyDisclosureUrl"], SUPPLY_DISCLOSURE_URL)
@@ -3440,6 +3460,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(project["platformStatus"]["holderDistribution"], "public-holder-distribution-disclosure-published")
         self.assertEqual(project["platformStatus"]["riskRemediation"], "public-risk-remediation-plan-published")
         self.assertEqual(project["platformStatus"]["custodyRoadmap"], "public-custody-roadmap-published")
+        self.assertEqual(project["platformStatus"]["auditReadiness"], "public-audit-readiness-package-published")
         self.assertEqual(project["platformStatus"]["blockaidFollowup"], "public-blockaid-followup-package-published")
         self.assertEqual(project["platformStatus"]["thirdPartyAudit"], "not-completed")
         self.assertEqual(project["accessPortal"]["status"], "public-access-portal-blueprint-published")
@@ -3577,6 +3598,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(project["custodyRoadmap"]["status"], "public-custody-roadmap-published")
         self.assertEqual(project["custodyRoadmap"]["pageUrl"], CUSTODY_ROADMAP_PAGE_URL)
         self.assertEqual(project["custodyRoadmap"]["url"], CUSTODY_ROADMAP_URL)
+        self.assertEqual(project["auditReadiness"]["status"], "public-audit-readiness-package-published")
+        self.assertEqual(project["auditReadiness"]["pageUrl"], AUDIT_READINESS_PAGE_URL)
+        self.assertEqual(project["auditReadiness"]["url"], AUDIT_READINESS_URL)
         self.assertIn("LP lock", project["custodyRoadmap"]["useCase"])
         self.assertEqual(project["walletWarningEvidence"]["status"], "warning-report-submitted-owner-observed-no-warning-visible")
         self.assertEqual(project["walletWarningEvidence"]["pageUrl"], WALLET_WARNING_PAGE_URL)
@@ -3930,6 +3954,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Holder Distribution", page)
         self.assertIn("Risk Remediation", page)
         self.assertIn("Custody Roadmap", page)
+        self.assertIn("Audit Readiness", page)
         self.assertIn("BaseScan Profile", page)
         self.assertIn("Technical Report", page)
         self.assertIn("Local Review Package", page)
@@ -3971,6 +3996,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(kit["officialLinks"]["riskRemediation"], RISK_REMEDIATION_URL)
         self.assertEqual(kit["officialLinks"]["custodyRoadmapPage"], CUSTODY_ROADMAP_PAGE_URL)
         self.assertEqual(kit["officialLinks"]["custodyRoadmap"], CUSTODY_ROADMAP_URL)
+        self.assertEqual(kit["officialLinks"]["auditReadinessPage"], AUDIT_READINESS_PAGE_URL)
+        self.assertEqual(kit["officialLinks"]["auditReadiness"], AUDIT_READINESS_URL)
         self.assertEqual(kit["officialLinks"]["accessApiPage"], ACCESS_API_PAGE_URL)
         self.assertEqual(kit["officialLinks"]["accessApi"], ACCESS_API_URL)
         self.assertEqual(kit["evidenceLinks"]["walletSecurityProfile"], WALLET_SECURITY_PROFILE_URL)
@@ -3982,6 +4009,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(kit["evidenceLinks"]["holderDistribution"], HOLDER_DISTRIBUTION_PAGE_URL)
         self.assertEqual(kit["evidenceLinks"]["riskRemediation"], RISK_REMEDIATION_PAGE_URL)
         self.assertEqual(kit["evidenceLinks"]["custodyRoadmap"], CUSTODY_ROADMAP_PAGE_URL)
+        self.assertEqual(kit["evidenceLinks"]["auditReadiness"], AUDIT_READINESS_PAGE_URL)
         self.assertEqual(kit["officialLinks"]["externalReviewStatus"], EXTERNAL_REVIEW_URL)
         self.assertEqual(kit["officialLinks"]["onchainProofs"], ONCHAIN_PROOFS_URL)
         self.assertEqual(kit["officialMarket"]["pair"], "GCA/USDT")
@@ -4103,6 +4131,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Technical Report", page)
         self.assertIn("Reserve Statement", page)
         self.assertIn("Custody Roadmap", page)
+        self.assertIn("Audit Readiness", page)
         self.assertIn("Public Claim Boundaries", page)
         self.assertIn("Base Mainnet / 8453", page)
         self.assertIn(MAINNET_ADDRESS, page)
@@ -4144,6 +4173,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(trust["officialLinks"]["riskRemediation"], RISK_REMEDIATION_URL)
         self.assertEqual(trust["officialLinks"]["custodyRoadmapPage"], CUSTODY_ROADMAP_PAGE_URL)
         self.assertEqual(trust["officialLinks"]["custodyRoadmap"], CUSTODY_ROADMAP_URL)
+        self.assertEqual(trust["officialLinks"]["auditReadinessPage"], AUDIT_READINESS_PAGE_URL)
+        self.assertEqual(trust["officialLinks"]["auditReadiness"], AUDIT_READINESS_URL)
         self.assertEqual(trust["officialLinks"]["externalReviewStatus"], EXTERNAL_REVIEW_URL)
         self.assertEqual(trust["officialLinks"]["onchainProofs"], ONCHAIN_PROOFS_URL)
         self.assertEqual(trust["technicalReport"]["status"], "public-internal-technical-report-published")
@@ -4151,6 +4182,10 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(trust["technicalReport"]["url"], TECHNICAL_REPORT_URL)
         self.assertEqual(trust["technicalReport"]["reportType"], "internal-technical-report-not-third-party-audit")
         self.assertFalse(trust["technicalReport"]["thirdPartyAuditCompleted"])
+        self.assertEqual(trust["auditReadiness"]["status"], "public-audit-readiness-package-published")
+        self.assertEqual(trust["auditReadiness"]["pageUrl"], AUDIT_READINESS_PAGE_URL)
+        self.assertEqual(trust["auditReadiness"]["url"], AUDIT_READINESS_URL)
+        self.assertFalse(trust["auditReadiness"]["thirdPartyAuditCompleted"])
         self.assertEqual(trust["blockaidFollowup"]["status"], "public-blockaid-followup-package-published")
         self.assertEqual(trust["blockaidFollowup"]["pageUrl"], BLOCKAID_FOLLOWUP_PAGE_URL)
         self.assertEqual(trust["blockaidFollowup"]["url"], BLOCKAID_FOLLOWUP_URL)
@@ -4451,6 +4486,51 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, json.dumps(roadmap))
         self.assertNotIn("GCA/WETH", json.dumps(roadmap))
 
+    def test_audit_readiness_page_and_json_prepare_future_auditor_handoff(self):
+        page = (ROOT / "site" / "audit-readiness.html").read_text()
+        readiness = json.loads((ROOT / "site" / "audit-readiness.json").read_text())
+        runbook = (ROOT / "launch" / "audit_readiness_runbook.md").read_text()
+
+        self.assertIn("GCA Audit Readiness", page)
+        self.assertIn("Audit Readiness JSON", page)
+        self.assertIn("No completed third-party audit", page)
+        self.assertIn("not a completed third-party audit", page)
+        self.assertIn("Contract Scope", page)
+        self.assertIn("token/contracts/GCAToken.sol", page)
+        self.assertIn("verification/GCAToken.standard-json-input.json", page)
+        self.assertIn("Expected Deliverables", page)
+        self.assertIn("Do not say third-party audit completion before an independent final report is public", page)
+        self.assertIn(MAINNET_ADDRESS, page)
+        self.assertNotIn(OLD_WETH_POOL_ADDRESS, page)
+        self.assertNotIn("GCA/WETH", page)
+
+        self.assertEqual(readiness["schema"], AUDIT_READINESS_URL)
+        self.assertEqual(readiness["pageUrl"], AUDIT_READINESS_PAGE_URL)
+        self.assertEqual(readiness["status"], "public-audit-readiness-package-published")
+        self.assertEqual(readiness["chainId"], 8453)
+        self.assertEqual(readiness["contractAddress"], MAINNET_ADDRESS)
+        self.assertIn("not a completed third-party audit", readiness["scopeBoundary"])
+        self.assertFalse(readiness["currentAuditStatus"]["thirdPartyAuditCompleted"])
+        self.assertEqual(readiness["currentAuditStatus"]["thirdPartyAuditStatus"], "not-completed-deferred")
+        self.assertEqual(readiness["currentAuditStatus"]["internalTechnicalReportPage"], TECHNICAL_REPORT_PAGE_URL)
+        self.assertEqual(readiness["contractScope"]["sourceFile"], "token/contracts/GCAToken.sol")
+        self.assertEqual(readiness["contractScope"]["standardJsonInput"], "verification/GCAToken.standard-json-input.json")
+        self.assertIn("Verified source matches deployed bytecode.", readiness["reviewChecklist"])
+        self.assertIn("final report URL or signed PDF", readiness["expectedAuditorDeliverables"])
+        self.assertEqual(readiness["officialLinks"]["auditReadinessPage"], AUDIT_READINESS_PAGE_URL)
+        self.assertEqual(readiness["officialLinks"]["auditReadiness"], AUDIT_READINESS_URL)
+        self.assertEqual(readiness["officialLinks"]["technicalReport"], TECHNICAL_REPORT_URL)
+        self.assertEqual(readiness["officialLinks"]["blockaidFollowup"], BLOCKAID_FOLLOWUP_URL)
+        self.assertIn("No third-party audit has been completed.", readiness["publicClaimBoundaries"]["safeClaims"])
+        self.assertIn("third-party audit completion before an independent final report is public", readiness["publicClaimBoundaries"]["doNotClaim"])
+        self.assertNotIn(OLD_WETH_POOL_ADDRESS, json.dumps(readiness))
+        self.assertNotIn("GCA/WETH", json.dumps(readiness))
+
+        self.assertIn(AUDIT_READINESS_PAGE_URL, runbook)
+        self.assertIn(AUDIT_READINESS_URL, runbook)
+        self.assertIn("No third-party audit has been completed.", runbook)
+        self.assertIn("Do not describe GCA as audited", runbook)
+
     def test_token_safety_page_and_json_publish_reviewer_checklist(self):
         page = (ROOT / "site" / "token-safety.html").read_text()
         safety = json.loads((ROOT / "site" / "token-safety.json").read_text())
@@ -4502,6 +4582,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(safety["reviewLinks"]["riskRemediation"], RISK_REMEDIATION_URL)
         self.assertEqual(safety["reviewLinks"]["custodyRoadmapPage"], CUSTODY_ROADMAP_PAGE_URL)
         self.assertEqual(safety["reviewLinks"]["custodyRoadmap"], CUSTODY_ROADMAP_URL)
+        self.assertEqual(safety["reviewLinks"]["auditReadinessPage"], AUDIT_READINESS_PAGE_URL)
+        self.assertEqual(safety["reviewLinks"]["auditReadiness"], AUDIT_READINESS_URL)
         self.assertEqual(safety["reviewLinks"]["technicalReportPage"], TECHNICAL_REPORT_PAGE_URL)
         self.assertEqual(safety["reviewLinks"]["technicalReport"], TECHNICAL_REPORT_URL)
         self.assertEqual(safety["reviewLinks"]["reserveStatementPage"], RESERVE_STATEMENT_PAGE_URL)
@@ -4528,6 +4610,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("LP Lock", page)
         self.assertIn("Supply Concentration", page)
         self.assertIn("Third-party Audit", page)
+        self.assertIn("Audit Readiness", page)
         self.assertIn("No LP lock is currently claimed", page)
         self.assertIn("Liquidity Statement", page)
         self.assertIn("No third-party audit has been completed", page)
@@ -4568,6 +4651,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(responses["supplyConcentration"]["reserveTransferTxs"], [RESERVE_TX, SECOND_RESERVE_TX])
         self.assertEqual(responses["supplyConcentration"]["publicReference"], HOLDER_DISTRIBUTION_PAGE_URL)
         self.assertEqual(responses["thirdPartyAudit"]["status"], "not-completed")
+        self.assertEqual(responses["thirdPartyAudit"]["auditReadiness"], AUDIT_READINESS_PAGE_URL)
         self.assertEqual(followup["officialMarket"]["pair"], "GCA/USDT")
         self.assertEqual(followup["officialMarket"]["poolAddress"], OFFICIAL_POOL_ADDRESS)
         self.assertEqual(followup["officialMarket"]["quoteAssetAddress"], BASE_USDT_ADDRESS)
@@ -4575,6 +4659,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(followup["officialLinks"]["blockaidFollowupPage"], BLOCKAID_FOLLOWUP_PAGE_URL)
         self.assertEqual(followup["officialLinks"]["blockaidFollowup"], BLOCKAID_FOLLOWUP_URL)
         self.assertEqual(followup["officialLinks"]["technicalReport"], TECHNICAL_REPORT_URL)
+        self.assertEqual(followup["officialLinks"]["auditReadinessPage"], AUDIT_READINESS_PAGE_URL)
+        self.assertEqual(followup["officialLinks"]["auditReadiness"], AUDIT_READINESS_URL)
         self.assertEqual(followup["officialLinks"]["reserveStatement"], RESERVE_STATEMENT_URL)
         self.assertEqual(followup["officialLinks"]["holderDistributionPage"], HOLDER_DISTRIBUTION_PAGE_URL)
         self.assertEqual(followup["officialLinks"]["holderDistribution"], HOLDER_DISTRIBUTION_URL)
@@ -4595,6 +4681,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(HOLDER_DISTRIBUTION_PAGE_URL, reply)
         self.assertIn(RISK_REMEDIATION_PAGE_URL, reply)
         self.assertIn(CUSTODY_ROADMAP_PAGE_URL, reply)
+        self.assertIn(AUDIT_READINESS_PAGE_URL, reply)
         self.assertIn("No LP lock is currently claimed", reply)
         self.assertIn("No third-party audit has been completed", reply)
         self.assertIn("suspected-honeypot or transfer-blocking label", reply)
@@ -4716,6 +4803,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(extensions["riskRemediation"], RISK_REMEDIATION_URL)
         self.assertEqual(extensions["custodyRoadmapPage"], CUSTODY_ROADMAP_PAGE_URL)
         self.assertEqual(extensions["custodyRoadmap"], CUSTODY_ROADMAP_URL)
+        self.assertEqual(extensions["auditReadinessPage"], AUDIT_READINESS_PAGE_URL)
+        self.assertEqual(extensions["auditReadiness"], AUDIT_READINESS_URL)
         self.assertEqual(extensions["tokenSafetyPage"], TOKEN_SAFETY_PAGE_URL)
         self.assertEqual(extensions["tokenSafety"], TOKEN_SAFETY_URL)
         self.assertEqual(extensions["blockaidFollowupPage"], BLOCKAID_FOLLOWUP_PAGE_URL)
@@ -4807,6 +4896,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(extensions["holderDistributionStatus"], "public-holder-distribution-disclosure-published")
         self.assertEqual(extensions["riskRemediationStatus"], "public-risk-remediation-plan-published")
         self.assertEqual(extensions["custodyRoadmapStatus"], "public-custody-roadmap-published")
+        self.assertEqual(extensions["auditReadinessStatus"], "public-audit-readiness-package-published")
         self.assertEqual(extensions["memberLedgerStatus"], "public-member-ledger-schema-published")
         self.assertEqual(extensions["supportIntakeStatus"], "public-support-intake-published")
         self.assertEqual(extensions["roadmapStatus"], "public-roadmap-published")
@@ -4855,6 +4945,8 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "site" / "risk-remediation.json",
             ROOT / "site" / "custody-roadmap.html",
             ROOT / "site" / "custody-roadmap.json",
+            ROOT / "site" / "audit-readiness.html",
+            ROOT / "site" / "audit-readiness.json",
             ROOT / "site" / "token-safety.html",
             ROOT / "site" / "token-safety.json",
             ROOT / "site" / "blockaid-followup.html",
@@ -4924,6 +5016,7 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "launch" / "blockaid_reserve_statement.md",
             ROOT / "launch" / "blockaid_followup_reply.md",
             ROOT / "launch" / "custody_roadmap_runbook.md",
+            ROOT / "launch" / "audit_readiness_runbook.md",
             ROOT / "launch" / "member_pre_registration_runbook.md",
             ROOT / "launch" / "telegram_channel_runbook.md",
             ROOT / "launch" / "telegram_pinned_buy_announcement.md",
@@ -5109,6 +5202,8 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "site" / "risk-remediation.json",
             ROOT / "site" / "custody-roadmap.html",
             ROOT / "site" / "custody-roadmap.json",
+            ROOT / "site" / "audit-readiness.html",
+            ROOT / "site" / "audit-readiness.json",
             ROOT / "site" / "token-safety.html",
             ROOT / "site" / "token-safety.json",
             ROOT / "site" / "blockaid-followup.html",
@@ -5156,6 +5251,7 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "launch" / "blockaid_reserve_statement.md",
             ROOT / "launch" / "blockaid_followup_reply.md",
             ROOT / "launch" / "custody_roadmap_runbook.md",
+            ROOT / "launch" / "audit_readiness_runbook.md",
         ]
         forbidden = [
             "BaseScan profile complete",

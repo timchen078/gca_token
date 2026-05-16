@@ -99,6 +99,8 @@ RISK_REMEDIATION_PAGE_URL = "https://gcagochina.com/risk-remediation.html"
 RISK_REMEDIATION_URL = "https://gcagochina.com/risk-remediation.json"
 CUSTODY_ROADMAP_PAGE_URL = "https://gcagochina.com/custody-roadmap.html"
 CUSTODY_ROADMAP_URL = "https://gcagochina.com/custody-roadmap.json"
+AUDIT_READINESS_PAGE_URL = "https://gcagochina.com/audit-readiness.html"
+AUDIT_READINESS_URL = "https://gcagochina.com/audit-readiness.json"
 ONCHAIN_PROOFS_PAGE_URL = "https://gcagochina.com/onchain-proofs.html"
 ONCHAIN_PROOFS_URL = "https://gcagochina.com/onchain-proofs.json"
 SUPPLY_DISCLOSURE_URL = "https://gcagochina.com/supply.json"
@@ -207,6 +209,7 @@ def validate_root(text: str) -> None:
     assert_contains(text, "Holder Distribution", label)
     assert_contains(text, "Risk Remediation", label)
     assert_contains(text, "Custody Roadmap", label)
+    assert_contains(text, "Audit Readiness", label)
     assert_contains(text, "Utility JSON", label)
     assert_contains(text, "Product Spec", label)
     assert_contains(text, "Access Portal", label)
@@ -442,12 +445,20 @@ def validate_token_safety_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong custodyRoadmapPage")
     if links.get("custodyRoadmap") != CUSTODY_ROADMAP_URL:
         raise SiteCheckError(f"{label}: wrong custodyRoadmap")
+    if links.get("auditReadinessPage") != AUDIT_READINESS_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong auditReadinessPage")
+    if links.get("auditReadiness") != AUDIT_READINESS_URL:
+        raise SiteCheckError(f"{label}: wrong auditReadiness")
     if links.get("liquidityPage") != LIQUIDITY_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong liquidityPage")
     if links.get("liquidity") != LIQUIDITY_URL:
         raise SiteCheckError(f"{label}: wrong liquidity")
     if links.get("technicalReport") != TECHNICAL_REPORT_URL:
         raise SiteCheckError(f"{label}: wrong technicalReport")
+    if links.get("auditReadinessPage") != AUDIT_READINESS_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong auditReadinessPage")
+    if links.get("auditReadiness") != AUDIT_READINESS_URL:
+        raise SiteCheckError(f"{label}: wrong auditReadiness")
     if links.get("reserveStatement") != RESERVE_STATEMENT_URL:
         raise SiteCheckError(f"{label}: wrong reserveStatement")
     if links.get("walletSecurityProfile") != WALLET_SECURITY_PROFILE_URL:
@@ -474,6 +485,7 @@ def validate_blockaid_followup_page(text: str) -> None:
     assert_contains(text, "No LP lock is currently claimed", label)
     assert_contains(text, "No third-party audit has been completed", label)
     assert_contains(text, "Technical Report", label)
+    assert_contains(text, "Audit Readiness", label)
     assert_contains(text, "Reserve Statement", label)
     assert_contains(text, "Risk Remediation", label)
     assert_contains(text, MAINNET_ADDRESS, label)
@@ -531,6 +543,8 @@ def validate_blockaid_followup_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong supply concentration publicReference")
     if responses.get("thirdPartyAudit", {}).get("status") != "not-completed":
         raise SiteCheckError(f"{label}: wrong audit response")
+    if responses.get("thirdPartyAudit", {}).get("auditReadiness") != AUDIT_READINESS_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong audit readiness reference")
     if market.get("poolAddress") != OFFICIAL_POOL_ADDRESS:
         raise SiteCheckError(f"{label}: wrong pool")
     if market.get("quoteAssetAddress") != BASE_USDT_ADDRESS:
@@ -545,6 +559,10 @@ def validate_blockaid_followup_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong blockaidFollowup")
     if links.get("technicalReport") != TECHNICAL_REPORT_URL:
         raise SiteCheckError(f"{label}: wrong technicalReport")
+    if links.get("auditReadinessPage") != AUDIT_READINESS_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong auditReadinessPage")
+    if links.get("auditReadiness") != AUDIT_READINESS_URL:
+        raise SiteCheckError(f"{label}: wrong auditReadiness")
     if links.get("reserveStatement") != RESERVE_STATEMENT_URL:
         raise SiteCheckError(f"{label}: wrong reserveStatement")
     if links.get("holderDistribution") != HOLDER_DISTRIBUTION_URL:
@@ -3336,6 +3354,10 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong custodyRoadmapPageUrl")
     if payload.get("custodyRoadmapUrl") != CUSTODY_ROADMAP_URL:
         raise SiteCheckError(f"{label}: wrong custodyRoadmapUrl")
+    if payload.get("auditReadinessPageUrl") != AUDIT_READINESS_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong auditReadinessPageUrl")
+    if payload.get("auditReadinessUrl") != AUDIT_READINESS_URL:
+        raise SiteCheckError(f"{label}: wrong auditReadinessUrl")
     if payload.get("supplyDisclosureUrl") != SUPPLY_DISCLOSURE_URL:
         raise SiteCheckError(f"{label}: wrong supplyDisclosureUrl")
     if payload.get("onchainProofsPageUrl") != ONCHAIN_PROOFS_PAGE_URL:
@@ -3381,6 +3403,8 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: unexpected risk remediation status")
     if status.get("custodyRoadmap") != "public-custody-roadmap-published":
         raise SiteCheckError(f"{label}: unexpected custody roadmap status")
+    if status.get("auditReadiness") != "public-audit-readiness-package-published":
+        raise SiteCheckError(f"{label}: unexpected audit readiness status")
     if payload.get("liquidityStatement", {}).get("status") != "public-liquidity-custody-statement-published":
         raise SiteCheckError(f"{label}: unexpected liquidity statement object status")
     if payload.get("liquidityStatement", {}).get("pageUrl") != LIQUIDITY_PAGE_URL:
@@ -3405,6 +3429,12 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong custody roadmap page")
     if payload.get("custodyRoadmap", {}).get("url") != CUSTODY_ROADMAP_URL:
         raise SiteCheckError(f"{label}: wrong custody roadmap url")
+    if payload.get("auditReadiness", {}).get("status") != "public-audit-readiness-package-published":
+        raise SiteCheckError(f"{label}: unexpected audit readiness object status")
+    if payload.get("auditReadiness", {}).get("pageUrl") != AUDIT_READINESS_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong audit readiness page")
+    if payload.get("auditReadiness", {}).get("url") != AUDIT_READINESS_URL:
+        raise SiteCheckError(f"{label}: wrong audit readiness url")
     if member_program.get("status") != "rules-published-public-claim-not-connected":
         raise SiteCheckError(f"{label}: unexpected member program status")
     if member_program.get("supportIntake", {}).get("status") != "public-support-intake-published":
@@ -3716,6 +3746,10 @@ def validate_tokenlist_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong custodyRoadmapPage")
     if extensions.get("custodyRoadmap") != CUSTODY_ROADMAP_URL:
         raise SiteCheckError(f"{label}: wrong custodyRoadmap")
+    if extensions.get("auditReadinessPage") != AUDIT_READINESS_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong auditReadinessPage")
+    if extensions.get("auditReadiness") != AUDIT_READINESS_URL:
+        raise SiteCheckError(f"{label}: wrong auditReadiness")
     if extensions.get("externalReviewStatusPage") != EXTERNAL_REVIEW_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong externalReviewStatusPage")
     if extensions.get("externalReviewStatus") != EXTERNAL_REVIEW_URL:
@@ -3784,6 +3818,8 @@ def validate_tokenlist_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong riskRemediationStatus")
     if extensions.get("custodyRoadmapStatus") != "public-custody-roadmap-published":
         raise SiteCheckError(f"{label}: wrong custodyRoadmapStatus")
+    if extensions.get("auditReadinessStatus") != "public-audit-readiness-package-published":
+        raise SiteCheckError(f"{label}: wrong auditReadinessStatus")
     if extensions.get("memberLedgerStatus") != "public-member-ledger-schema-published":
         raise SiteCheckError(f"{label}: wrong memberLedgerStatus")
     if extensions.get("supportIntakeStatus") != "public-support-intake-published":
@@ -3952,6 +3988,10 @@ def validate_well_known_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong custodyRoadmapPage")
     if urls.get("custodyRoadmap") != CUSTODY_ROADMAP_URL:
         raise SiteCheckError(f"{label}: wrong custodyRoadmap")
+    if urls.get("auditReadinessPage") != AUDIT_READINESS_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong auditReadinessPage")
+    if urls.get("auditReadiness") != AUDIT_READINESS_URL:
+        raise SiteCheckError(f"{label}: wrong auditReadiness")
     if urls.get("supplyDisclosure") != SUPPLY_DISCLOSURE_URL:
         raise SiteCheckError(f"{label}: wrong supplyDisclosure")
     if urls.get("onchainProofsPage") != ONCHAIN_PROOFS_PAGE_URL:
@@ -3998,6 +4038,8 @@ def validate_well_known_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong riskRemediation status")
     if payload.get("platformStatus", {}).get("custodyRoadmap") != "public-custody-roadmap-published":
         raise SiteCheckError(f"{label}: wrong custodyRoadmap status")
+    if payload.get("platformStatus", {}).get("auditReadiness") != "public-audit-readiness-package-published":
+        raise SiteCheckError(f"{label}: wrong auditReadiness status")
     if payload.get("platformStatus", {}).get("productSpec") != "public-product-spec-published":
         raise SiteCheckError(f"{label}: wrong productSpec status")
     if payload.get("platformStatus", {}).get("releaseGates") != "public-release-gates-published":
@@ -5045,6 +5087,72 @@ def validate_custody_roadmap_page(text: str) -> None:
     assert_no_forbidden_public_claims(text, label)
 
 
+def validate_audit_readiness_json(text: str) -> None:
+    label = "/audit-readiness.json"
+    payload = load_json(text, label)
+    status = payload.get("currentAuditStatus", {})
+    scope = payload.get("contractScope", {})
+    links = payload.get("officialLinks", {})
+    boundaries = payload.get("publicClaimBoundaries", {})
+
+    if payload.get("schema") != AUDIT_READINESS_URL:
+        raise SiteCheckError(f"{label}: wrong schema")
+    if payload.get("pageUrl") != AUDIT_READINESS_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong pageUrl")
+    if payload.get("status") != "public-audit-readiness-package-published":
+        raise SiteCheckError(f"{label}: wrong status")
+    if payload.get("chainId") != 8453:
+        raise SiteCheckError(f"{label}: wrong chainId")
+    if payload.get("contractAddress") != MAINNET_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong contractAddress")
+    if "not a completed third-party audit" not in payload.get("scopeBoundary", ""):
+        raise SiteCheckError(f"{label}: missing audit scope boundary")
+    if status.get("thirdPartyAuditCompleted") is not False:
+        raise SiteCheckError(f"{label}: thirdPartyAuditCompleted must be false")
+    if status.get("thirdPartyAuditStatus") != "not-completed-deferred":
+        raise SiteCheckError(f"{label}: wrong thirdPartyAuditStatus")
+    if status.get("internalTechnicalReportPage") != TECHNICAL_REPORT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong internal technical report page")
+    if scope.get("sourceFile") != "token/contracts/GCAToken.sol":
+        raise SiteCheckError(f"{label}: wrong source file")
+    if scope.get("standardJsonInput") != "verification/GCAToken.standard-json-input.json":
+        raise SiteCheckError(f"{label}: wrong standard JSON input")
+    if "Verified source matches deployed bytecode." not in payload.get("reviewChecklist", []):
+        raise SiteCheckError(f"{label}: missing review checklist item")
+    if "final report URL or signed PDF" not in payload.get("expectedAuditorDeliverables", []):
+        raise SiteCheckError(f"{label}: missing auditor deliverable")
+    if links.get("auditReadiness") != AUDIT_READINESS_URL:
+        raise SiteCheckError(f"{label}: wrong auditReadiness link")
+    if links.get("technicalReport") != TECHNICAL_REPORT_URL:
+        raise SiteCheckError(f"{label}: wrong technicalReport link")
+    if links.get("blockaidFollowup") != BLOCKAID_FOLLOWUP_URL:
+        raise SiteCheckError(f"{label}: wrong blockaidFollowup link")
+    if "No third-party audit has been completed." not in boundaries.get("safeClaims", []):
+        raise SiteCheckError(f"{label}: missing audit safe claim")
+    if "third-party audit completion before an independent final report is public" not in boundaries.get("doNotClaim", []):
+        raise SiteCheckError(f"{label}: missing audit boundary")
+    assert_contains(json.dumps(payload), MAINNET_ADDRESS, label)
+    assert_no_forbidden_public_claims(json.dumps(payload), label)
+
+
+def validate_audit_readiness_page(text: str) -> None:
+    label = "/audit-readiness.html"
+    assert_social_preview_meta(text, label, AUDIT_READINESS_PAGE_URL)
+    assert_contains(text, "GCA Audit Readiness", label)
+    assert_contains(text, "Audit Readiness JSON", label)
+    assert_contains(text, "No completed third-party audit", label)
+    assert_contains(text, "not a completed third-party audit", label)
+    assert_contains(text, "Contract Scope", label)
+    assert_contains(text, "token/contracts/GCAToken.sol", label)
+    assert_contains(text, "verification/GCAToken.standard-json-input.json", label)
+    assert_contains(text, "Review Checklist", label)
+    assert_contains(text, "Expected Deliverables", label)
+    assert_contains(text, "Do not say third-party audit completion before an independent final report is public", label)
+    assert_contains(text, MAINNET_ADDRESS, label)
+    assert_contains(text, "Base Mainnet / 8453", label)
+    assert_no_forbidden_public_claims(text, label)
+
+
 def validate_onchain_proofs_json(text: str) -> None:
     label = "/onchain-proofs.json"
     payload = load_json(text, label)
@@ -5452,6 +5560,8 @@ def validate_trust_json(text: str) -> None:
         "riskRemediationPage": RISK_REMEDIATION_PAGE_URL,
         "custodyRoadmap": CUSTODY_ROADMAP_URL,
         "custodyRoadmapPage": CUSTODY_ROADMAP_PAGE_URL,
+        "auditReadiness": AUDIT_READINESS_URL,
+        "auditReadinessPage": AUDIT_READINESS_PAGE_URL,
         "externalReviewStatus": EXTERNAL_REVIEW_URL,
         "onchainProofs": ONCHAIN_PROOFS_URL,
         "brandKit": BRAND_KIT_URL,
@@ -5804,6 +5914,8 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/risk-remediation.json",
         "https://gcagochina.com/custody-roadmap.html",
         "https://gcagochina.com/custody-roadmap.json",
+        "https://gcagochina.com/audit-readiness.html",
+        "https://gcagochina.com/audit-readiness.json",
         "https://gcagochina.com/token-safety.html",
         "https://gcagochina.com/token-safety.json",
         "https://gcagochina.com/blockaid-followup.html",
@@ -5910,6 +6022,8 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /risk-remediation.json", label)
     assert_contains(text, "Allow: /custody-roadmap.html", label)
     assert_contains(text, "Allow: /custody-roadmap.json", label)
+    assert_contains(text, "Allow: /audit-readiness.html", label)
+    assert_contains(text, "Allow: /audit-readiness.json", label)
     assert_contains(text, "Allow: /token-safety.html", label)
     assert_contains(text, "Allow: /token-safety.json", label)
     assert_contains(text, "Allow: /blockaid-followup.html", label)
@@ -5989,6 +6103,8 @@ CHECKS: list[EndpointCheck] = [
     ("/risk-remediation.json", validate_risk_remediation_json),
     ("/custody-roadmap.html", validate_custody_roadmap_page),
     ("/custody-roadmap.json", validate_custody_roadmap_json),
+    ("/audit-readiness.html", validate_audit_readiness_page),
+    ("/audit-readiness.json", validate_audit_readiness_json),
     ("/token-safety.html", validate_token_safety_page),
     ("/token-safety.json", validate_token_safety_json),
     ("/blockaid-followup.html", validate_blockaid_followup_page),

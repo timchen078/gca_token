@@ -55,7 +55,8 @@
     "thirdPartyAudit": {
       "status": "not-completed",
       "response": "No third-party audit has been completed. GCA has published an internal technical report for reviewer triage, but it is not an independent audit from Certik, Hacken, Trail of Bits, or another audit provider.",
-      "publicReference": "https://gcagochina.com/technical-report.html"
+      "publicReference": "https://gcagochina.com/technical-report.html",
+      "auditReadiness": "https://gcagochina.com/audit-readiness.html"
     }
   },
   "officialMarket": {
@@ -95,6 +96,8 @@
     "blockaidFollowup": "https://gcagochina.com/blockaid-followup.json",
     "technicalReportPage": "https://gcagochina.com/technical-report.html",
     "technicalReport": "https://gcagochina.com/technical-report.json",
+    "auditReadinessPage": "https://gcagochina.com/audit-readiness.html",
+    "auditReadiness": "https://gcagochina.com/audit-readiness.json",
     "reserveStatementPage": "https://gcagochina.com/reserve-statement.html",
     "reserveStatement": "https://gcagochina.com/reserve-statement.json",
     "holderDistributionPage": "https://gcagochina.com/holder-distribution.html",

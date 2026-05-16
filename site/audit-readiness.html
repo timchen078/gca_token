@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GCA Audit Readiness</title>
+    <meta name="description" content="Public GCA audit-readiness package with contract scope, checklist, handoff template, expected auditor deliverables, and audit-status boundaries.">
+    <link rel="canonical" href="https://gcagochina.com/audit-readiness.html">
+    <link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">
+    <link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="GCA | Go China Access">
+    <meta property="og:title" content="GCA Audit Readiness">
+    <meta property="og:description" content="Contract audit scope and readiness checklist. No third-party audit completion is claimed.">
+    <meta property="og:url" content="https://gcagochina.com/audit-readiness.html">
+    <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="GCA Audit Readiness">
+    <meta name="twitter:description" content="Contract audit scope and readiness checklist. No third-party audit completion is claimed.">
+    <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #17201b;
+        --muted: #5c6b63;
+        --line: #dbe4dd;
+        --soft: #f5f8f5;
+        --panel: #ffffff;
+        --green: #176f4d;
+        --amber: #9a6200;
+        --red: #9f2e2e;
+        --blue: #245f9e;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        color: var(--ink);
+        background: #f8faf8;
+        line-height: 1.55;
+      }
+
+      a { color: inherit; }
+
+      header {
+        border-bottom: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.94);
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        backdrop-filter: blur(12px);
+      }
+
+      .shell {
+        width: min(1120px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      nav {
+        min-height: 68px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--ink);
+        font-weight: 800;
+        text-decoration: none;
+        letter-spacing: 0;
+      }
+
+      .brand img { width: 34px; height: 34px; }
+
+      .nav-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: flex-end;
+        font-size: 14px;
+      }
+
+      .nav-links a {
+        text-decoration: none;
+        color: var(--muted);
+      }
+
+      main { padding: 48px 0; }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(36px, 7vw, 76px);
+        line-height: 0.98;
+        max-width: 880px;
+        letter-spacing: 0;
+      }
+
+      .lead {
+        margin: 18px 0 0;
+        max-width: 850px;
+        color: var(--muted);
+        font-size: 20px;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 24px;
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 42px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 10px 14px;
+        background: var(--panel);
+        color: var(--ink);
+        font-weight: 700;
+        text-decoration: none;
+      }
+
+      .button.primary {
+        background: var(--green);
+        color: #fff;
+        border-color: var(--green);
+      }
+
+      .facts {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 34px;
+      }
+
+      .fact, .panel {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        padding: 18px;
+      }
+
+      .label {
+        display: block;
+        color: var(--muted);
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0;
+      }
+
+      .value {
+        display: block;
+        margin-top: 6px;
+        font-weight: 800;
+        overflow-wrap: anywhere;
+      }
+
+      .good { color: var(--green); }
+      .pending { color: var(--amber); }
+      .risk { color: var(--red); }
+      .info { color: var(--blue); }
+
+      .section { margin-top: 18px; }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      h2 {
+        margin: 0 0 12px;
+        font-size: 24px;
+        letter-spacing: 0;
+      }
+
+      h3 {
+        margin: 0 0 8px;
+        font-size: 17px;
+      }
+
+      .note {
+        margin: 0;
+        color: var(--muted);
+      }
+
+      .list {
+        display: grid;
+        gap: 10px;
+        margin-top: 12px;
+      }
+
+      .row {
+        display: grid;
+        grid-template-columns: minmax(126px, 0.8fr) minmax(0, 1.2fr);
+        gap: 12px;
+        align-items: start;
+        border-top: 1px solid var(--line);
+        padding-top: 10px;
+      }
+
+      .row strong {
+        min-width: 0;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+        text-align: right;
+      }
+
+      code {
+        padding: 2px 5px;
+        border-radius: 6px;
+        background: var(--soft);
+        overflow-wrap: anywhere;
+      }
+
+      ul { padding-left: 20px; margin: 10px 0 0; }
+
+      footer {
+        border-top: 1px solid var(--line);
+        padding: 24px 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      @media (max-width: 860px) {
+        .facts,
+        .grid,
+        .cards {
+          grid-template-columns: 1fr;
+        }
+
+        nav {
+          align-items: flex-start;
+          flex-direction: column;
+          padding: 14px 0;
+        }
+
+        .nav-links { justify-content: flex-start; }
+        .row { grid-template-columns: 1fr; }
+        .row strong { text-align: left; }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav class="shell" aria-label="Primary">
+        <a class="brand" href="index.html" aria-label="GCA home">
+          <img src="assets/gca-logo.svg" alt="GCA logo">
+          <span>GCA</span>
+        </a>
+        <div class="nav-links">
+          <a href="verify.html">Verify</a>
+          <a href="trust.html">Trust</a>
+          <a href="reviewer-kit.html">Reviewer Kit</a>
+          <a href="blockaid-followup.html">Blockaid</a>
+          <a href="technical-report.html">Technical Report</a>
+          <a href="custody-roadmap.html">Custody</a>
+          <a href="risk.html">Risk</a>
+        </div>
+      </nav>
+    </header>
+
+    <main class="shell">
+      <section aria-labelledby="title">
+        <h1 id="title">GCA Audit Readiness</h1>
+        <p class="lead">This page prepares the exact scope and evidence package for a future independent audit. No third-party audit has been completed, and this page must not be used as an auditor opinion.</p>
+        <div class="actions">
+          <a class="button primary" href="audit-readiness.json">Audit Readiness JSON</a>
+          <a class="button" href="technical-report.html">Technical Report</a>
+          <a class="button" href="token-safety.html">Token Safety</a>
+          <a class="button" href="blockaid-followup.html">Blockaid Follow-up</a>
+          <a class="button" href="risk-remediation.html">Risk Remediation</a>
+          <a class="button" href="custody-roadmap.html">Custody Roadmap</a>
+        </div>
+      </section>
+
+      <section class="facts" aria-label="Audit readiness snapshot">
+        <div class="fact">
+          <span class="label">Network</span>
+          <span class="value">Base Mainnet / 8453</span>
+        </div>
+        <div class="fact">
+          <span class="label">Contract</span>
+          <span class="value">0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6</span>
+        </div>
+        <div class="fact">
+          <span class="label">Audit Status</span>
+          <span class="value risk">No completed third-party audit</span>
+        </div>
+        <div class="fact">
+          <span class="label">Source</span>
+          <span class="value good">BaseScan verified</span>
+        </div>
+        <div class="fact">
+          <span class="label">Compiler</span>
+          <span class="value">v0.8.24 / optimizer 200</span>
+        </div>
+        <div class="fact">
+          <span class="label">Scope File</span>
+          <span class="value">token/contracts/GCAToken.sol</span>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="scopeTitle">
+        <h2 id="scopeTitle">Scope Boundary</h2>
+        <p class="note">This package is audit preparation only. It is not a completed third-party audit, not an auditor opinion, not a security-vendor approval, not a listing approval, and not a claim that market-structure risks are solved.</p>
+      </section>
+
+      <section class="section grid" aria-label="Audit scope and checklist">
+        <div class="panel">
+          <h2>Contract Scope</h2>
+          <div class="list">
+            <div class="row"><span>Source file</span><strong>token/contracts/GCAToken.sol</strong></div>
+            <div class="row"><span>Standard JSON input</span><strong>verification/GCAToken.standard-json-input.json</strong></div>
+            <div class="row"><span>Network</span><strong>Base Mainnet / chainId 8453</strong></div>
+            <div class="row"><span>Contract</span><strong>0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6</strong></div>
+          </div>
+        </div>
+        <div class="panel">
+          <h2>Review Checklist</h2>
+          <ul>
+            <li>Verified source matches deployed bytecode.</li>
+            <li>Fixed supply cannot change after deployment.</li>
+            <li>No owner, admin, proxy, upgrade, mint, blacklist, pause, transfer-tax, hidden-fee, custody, or withdrawal path exists.</li>
+            <li>Transfers, allowances, and ERC-20 events behave as expected.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section cards" aria-label="Audit readiness evidence">
+        <div class="panel">
+          <h3>Internal Technical Report</h3>
+          <p class="note"><a href="technical-report.html">technical-report.html</a> summarizes current contract controls for triage. It is not an independent audit.</p>
+        </div>
+        <div class="panel">
+          <h3>Token Safety</h3>
+          <p class="note"><a href="token-safety.html">token-safety.html</a> lists positive controls and pending external-review items.</p>
+        </div>
+        <div class="panel">
+          <h3>Blockaid Follow-up</h3>
+          <p class="note"><a href="blockaid-followup.html">blockaid-followup.html</a> documents the current response to volatility, LP lock, concentration, and audit-status questions.</p>
+        </div>
+      </section>
+
+      <section class="section grid" aria-label="Auditor handoff">
+        <div class="panel">
+          <h2>Auditor Handoff Template</h2>
+          <p class="note">Please review the GCA fixed-supply ERC-20 contract and deployed bytecode on Base Mainnet. The goal is to confirm that the verified source matches deployed bytecode, the total supply is fixed, and no hidden privileged control, minting, withdrawal, blacklist, tax, or upgrade behavior exists.</p>
+        </div>
+        <div class="panel">
+          <h2>Expected Deliverables</h2>
+          <ul>
+            <li>Auditor name and report date.</li>
+            <li>Final report URL or signed PDF.</li>
+            <li>Reviewed source bundle or commit hash.</li>
+            <li>Unresolved findings, if any.</li>
+            <li>Clear statement that the review is independent.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="doNotTitle">
+        <h2 id="doNotTitle">Do Not Overstate</h2>
+        <ul>
+          <li>Do not say third-party audit completion before an independent final report is public.</li>
+          <li>Do not say auditor approval before the auditor publishes or signs a final report.</li>
+          <li>Do not say this package removes the need for an independent audit if a reviewer requires one.</li>
+          <li>Do not use this package to claim LP lock, reserve lock, deep liquidity, price support, price stability, or return promises.</li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <div class="shell">GCA audit-readiness package. Last updated 2026-05-17. This page is preparation only; no third-party audit completion is claimed.</div>
+    </footer>
+  </body>
+</html>

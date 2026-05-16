@@ -1,0 +1,96 @@
+{
+  "schema": "https://gcagochina.com/audit-readiness.json",
+  "pageUrl": "https://gcagochina.com/audit-readiness.html",
+  "status": "public-audit-readiness-package-published",
+  "lastUpdated": "2026-05-17",
+  "projectName": "GCA",
+  "network": "Base Mainnet",
+  "chainId": 8453,
+  "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+  "purpose": "Public audit-readiness package for reviewers, moderators, and future independent auditors. It defines current audit status, contract scope, files to review, expected deliverables, and claim boundaries.",
+  "scopeBoundary": "This package is audit preparation only. It is not a completed third-party audit, not an auditor opinion, not a security-vendor approval, not a listing approval, and not a claim that market-structure risks are solved.",
+  "currentAuditStatus": {
+    "thirdPartyAuditCompleted": false,
+    "thirdPartyAuditStatus": "not-completed-deferred",
+    "internalTechnicalReportPublished": true,
+    "internalTechnicalReportPage": "https://gcagochina.com/technical-report.html",
+    "internalTechnicalReport": "https://gcagochina.com/technical-report.json",
+    "baseScanSourceVerified": true,
+    "baseScanContract": "https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+    "baseScanOwnershipVerified": true
+  },
+  "contractScope": {
+    "sourceFile": "token/contracts/GCAToken.sol",
+    "compiler": "v0.8.24+commit.e11b9ed9",
+    "optimizer": "enabled",
+    "optimizerRuns": 200,
+    "standardJsonInput": "verification/GCAToken.standard-json-input.json",
+    "deployedNetwork": "Base Mainnet",
+    "chainId": 8453,
+    "deployedContract": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6"
+  },
+  "reviewChecklist": [
+    "Verified source matches deployed bytecode.",
+    "Fixed supply cannot change after deployment.",
+    "No post-deployment mint function exists.",
+    "No owner, admin, proxy, upgrade, blacklist, pause, transfer-tax, hidden-fee, custody, or withdrawal path exists.",
+    "Transfers revert on insufficient balance and zero recipient.",
+    "Allowances decrease on transferFrom.",
+    "Transfer and Approval events are emitted for state changes.",
+    "Constructor assigns total supply to the deployer and emits the initial Transfer event."
+  ],
+  "expectedAuditorDeliverables": [
+    "auditor name",
+    "final report URL or signed PDF",
+    "report date",
+    "scope",
+    "commit hash or exact reviewed source bundle",
+    "deployed contract address",
+    "unresolved findings if any",
+    "clear statement that the review is independent"
+  ],
+  "outOfScope": [
+    "price behavior",
+    "liquidity depth",
+    "LP locking",
+    "reserve locking",
+    "exchange listings",
+    "wallet warning policy decisions",
+    "future product implementation"
+  ],
+  "handoffTemplate": "Please review the GCA fixed-supply ERC-20 contract and deployed bytecode on Base Mainnet. The goal is to confirm that the verified source matches deployed bytecode, the total supply is fixed, and no hidden privileged control, minting, withdrawal, blacklist, tax, or upgrade behavior exists.",
+  "officialLinks": {
+    "auditReadinessPage": "https://gcagochina.com/audit-readiness.html",
+    "auditReadiness": "https://gcagochina.com/audit-readiness.json",
+    "technicalReportPage": "https://gcagochina.com/technical-report.html",
+    "technicalReport": "https://gcagochina.com/technical-report.json",
+    "tokenSafetyPage": "https://gcagochina.com/token-safety.html",
+    "tokenSafety": "https://gcagochina.com/token-safety.json",
+    "blockaidFollowupPage": "https://gcagochina.com/blockaid-followup.html",
+    "blockaidFollowup": "https://gcagochina.com/blockaid-followup.json",
+    "riskRemediationPage": "https://gcagochina.com/risk-remediation.html",
+    "riskRemediation": "https://gcagochina.com/risk-remediation.json",
+    "custodyRoadmapPage": "https://gcagochina.com/custody-roadmap.html",
+    "custodyRoadmap": "https://gcagochina.com/custody-roadmap.json",
+    "trustCenterPage": "https://gcagochina.com/trust.html",
+    "trustCenter": "https://gcagochina.com/trust.json",
+    "reviewerKitPage": "https://gcagochina.com/reviewer-kit.html",
+    "reviewerKit": "https://gcagochina.com/reviewer-kit.json",
+    "baseScanContract": "https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6"
+  },
+  "publicClaimBoundaries": {
+    "safeClaims": [
+      "GCA has published an audit-readiness package.",
+      "No third-party audit has been completed.",
+      "The package lists the source file, compiler settings, review checklist, and expected independent auditor deliverables.",
+      "The internal technical report can be used for reviewer triage, but it is not an independent audit."
+    ],
+    "doNotClaim": [
+      "third-party audit completion before an independent final report is public",
+      "auditor approval before the auditor publishes or signs a final report",
+      "security-vendor approval before vendor confirmation",
+      "LP lock, reserve lock, deep liquidity, price support, price stability, or return promises",
+      "this audit-readiness package removes the need for an independent audit if a reviewer requires one"
+    ]
+  }
+}

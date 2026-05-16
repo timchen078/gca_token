@@ -56,6 +56,8 @@
     "riskRemediation": "https://gcagochina.com/risk-remediation.json",
     "custodyRoadmapPage": "https://gcagochina.com/custody-roadmap.html",
     "custodyRoadmap": "https://gcagochina.com/custody-roadmap.json",
+    "auditReadinessPage": "https://gcagochina.com/audit-readiness.html",
+    "auditReadiness": "https://gcagochina.com/audit-readiness.json",
     "liquidityPage": "https://gcagochina.com/liquidity.html",
     "liquidity": "https://gcagochina.com/liquidity.json",
     "technicalReportPage": "https://gcagochina.com/technical-report.html",

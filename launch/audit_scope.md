@@ -6,6 +6,11 @@ Repository tests, BaseScan source verification, and internal security review are
 
 Public materials may say "internal engineering review complete" and "source verified on BaseScan". Public materials must not say "audited", "third-party audited", or "externally audited" until an independent auditor provides a report or public verification page.
 
+Public audit-readiness package:
+
+- `https://gcagochina.com/audit-readiness.html`
+- `https://gcagochina.com/audit-readiness.json`
+
 ## Contract Scope
 
 - `token/contracts/GCAToken.sol`
