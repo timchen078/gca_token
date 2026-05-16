@@ -68,6 +68,8 @@
   "officialLinks": {
     "reserveStatementPage": "https://gcagochina.com/reserve-statement.html",
     "reserveStatement": "https://gcagochina.com/reserve-statement.json",
+    "holderDistributionPage": "https://gcagochina.com/holder-distribution.html",
+    "holderDistribution": "https://gcagochina.com/holder-distribution.json",
     "technicalReportPage": "https://gcagochina.com/technical-report.html",
     "technicalReport": "https://gcagochina.com/technical-report.json",
     "trustCenterPage": "https://gcagochina.com/trust.html",

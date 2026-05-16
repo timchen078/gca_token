@@ -93,6 +93,8 @@ MARKET_QUALITY_PAGE_URL = "https://gcagochina.com/market-quality.html"
 MARKET_QUALITY_URL = "https://gcagochina.com/market-quality.json"
 LIQUIDITY_PAGE_URL = "https://gcagochina.com/liquidity.html"
 LIQUIDITY_URL = "https://gcagochina.com/liquidity.json"
+HOLDER_DISTRIBUTION_PAGE_URL = "https://gcagochina.com/holder-distribution.html"
+HOLDER_DISTRIBUTION_URL = "https://gcagochina.com/holder-distribution.json"
 ONCHAIN_PROOFS_PAGE_URL = "https://gcagochina.com/onchain-proofs.html"
 ONCHAIN_PROOFS_URL = "https://gcagochina.com/onchain-proofs.json"
 SUPPLY_DISCLOSURE_URL = "https://gcagochina.com/supply.json"
@@ -198,6 +200,7 @@ def validate_root(text: str) -> None:
     assert_contains(text, "Narrative System", label)
     assert_contains(text, "Weekly Radar", label)
     assert_contains(text, "Liquidity", label)
+    assert_contains(text, "Holder Distribution", label)
     assert_contains(text, "Utility JSON", label)
     assert_contains(text, "Product Spec", label)
     assert_contains(text, "Access Portal", label)
@@ -509,6 +512,8 @@ def validate_blockaid_followup_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong LP lock publicReference")
     if responses.get("supplyConcentration", {}).get("reserveWallet") != RESERVE_WALLET:
         raise SiteCheckError(f"{label}: wrong reserve wallet")
+    if responses.get("supplyConcentration", {}).get("publicReference") != HOLDER_DISTRIBUTION_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong supply concentration publicReference")
     if responses.get("thirdPartyAudit", {}).get("status") != "not-completed":
         raise SiteCheckError(f"{label}: wrong audit response")
     if market.get("poolAddress") != OFFICIAL_POOL_ADDRESS:
@@ -527,6 +532,8 @@ def validate_blockaid_followup_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong technicalReport")
     if links.get("reserveStatement") != RESERVE_STATEMENT_URL:
         raise SiteCheckError(f"{label}: wrong reserveStatement")
+    if links.get("holderDistribution") != HOLDER_DISTRIBUTION_URL:
+        raise SiteCheckError(f"{label}: wrong holderDistribution")
     if links.get("liquidityPage") != LIQUIDITY_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong liquidityPage")
     if links.get("liquidity") != LIQUIDITY_URL:
@@ -669,6 +676,8 @@ def validate_reserve_statement_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong LP lock status")
     if links.get("technicalReport") != TECHNICAL_REPORT_URL:
         raise SiteCheckError(f"{label}: wrong technical report link")
+    if links.get("holderDistribution") != HOLDER_DISTRIBUTION_URL:
+        raise SiteCheckError(f"{label}: wrong holderDistribution link")
     if "No LP lock is currently claimed." not in payload.get("publicClaimBoundaries", {}).get("safeClaims", []):
         raise SiteCheckError(f"{label}: missing LP lock safe claim")
     assert_no_forbidden_public_claims(json.dumps(payload), label)
@@ -3076,6 +3085,8 @@ def validate_supply_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong preferred term")
     if links.get("supplyDisclosure") != SUPPLY_DISCLOSURE_URL:
         raise SiteCheckError(f"{label}: wrong supplyDisclosure link")
+    if links.get("holderDistribution") != HOLDER_DISTRIBUTION_URL:
+        raise SiteCheckError(f"{label}: wrong holderDistribution link")
     if "The current reserve is not locked." not in reporting.get("ifAskedForLockedReserve", ""):
         raise SiteCheckError(f"{label}: missing reserve-lock caveat")
     if "GCA total supply is fixed at 1,000,000,000 GCA." not in payload.get("publicClaimBoundaries", {}).get("safeClaims", []):
@@ -3293,6 +3304,10 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong liquidityPageUrl")
     if payload.get("liquidityUrl") != LIQUIDITY_URL:
         raise SiteCheckError(f"{label}: wrong liquidityUrl")
+    if payload.get("holderDistributionPageUrl") != HOLDER_DISTRIBUTION_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong holderDistributionPageUrl")
+    if payload.get("holderDistributionUrl") != HOLDER_DISTRIBUTION_URL:
+        raise SiteCheckError(f"{label}: wrong holderDistributionUrl")
     if payload.get("supplyDisclosureUrl") != SUPPLY_DISCLOSURE_URL:
         raise SiteCheckError(f"{label}: wrong supplyDisclosureUrl")
     if payload.get("onchainProofsPageUrl") != ONCHAIN_PROOFS_PAGE_URL:
@@ -3332,12 +3347,20 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: unexpected reserve statement status")
     if status.get("liquidityStatement") != "public-liquidity-custody-statement-published":
         raise SiteCheckError(f"{label}: unexpected liquidity statement status")
+    if status.get("holderDistribution") != "public-holder-distribution-disclosure-published":
+        raise SiteCheckError(f"{label}: unexpected holder distribution status")
     if payload.get("liquidityStatement", {}).get("status") != "public-liquidity-custody-statement-published":
         raise SiteCheckError(f"{label}: unexpected liquidity statement object status")
     if payload.get("liquidityStatement", {}).get("pageUrl") != LIQUIDITY_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong liquidity statement page")
     if payload.get("liquidityStatement", {}).get("url") != LIQUIDITY_URL:
         raise SiteCheckError(f"{label}: wrong liquidity statement url")
+    if payload.get("holderDistribution", {}).get("status") != "public-holder-distribution-disclosure-published":
+        raise SiteCheckError(f"{label}: unexpected holder distribution object status")
+    if payload.get("holderDistribution", {}).get("pageUrl") != HOLDER_DISTRIBUTION_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong holder distribution page")
+    if payload.get("holderDistribution", {}).get("url") != HOLDER_DISTRIBUTION_URL:
+        raise SiteCheckError(f"{label}: wrong holder distribution url")
     if member_program.get("status") != "rules-published-public-claim-not-connected":
         raise SiteCheckError(f"{label}: unexpected member program status")
     if member_program.get("supportIntake", {}).get("status") != "public-support-intake-published":
@@ -3637,6 +3660,10 @@ def validate_tokenlist_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong liquidityPage")
     if extensions.get("liquidity") != LIQUIDITY_URL:
         raise SiteCheckError(f"{label}: wrong liquidity")
+    if extensions.get("holderDistributionPage") != HOLDER_DISTRIBUTION_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong holderDistributionPage")
+    if extensions.get("holderDistribution") != HOLDER_DISTRIBUTION_URL:
+        raise SiteCheckError(f"{label}: wrong holderDistribution")
     if extensions.get("externalReviewStatusPage") != EXTERNAL_REVIEW_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong externalReviewStatusPage")
     if extensions.get("externalReviewStatus") != EXTERNAL_REVIEW_URL:
@@ -3699,6 +3726,8 @@ def validate_tokenlist_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong reserveStatementStatus")
     if extensions.get("liquidityStatementStatus") != "public-liquidity-custody-statement-published":
         raise SiteCheckError(f"{label}: wrong liquidityStatementStatus")
+    if extensions.get("holderDistributionStatus") != "public-holder-distribution-disclosure-published":
+        raise SiteCheckError(f"{label}: wrong holderDistributionStatus")
     if extensions.get("memberLedgerStatus") != "public-member-ledger-schema-published":
         raise SiteCheckError(f"{label}: wrong memberLedgerStatus")
     if extensions.get("supportIntakeStatus") != "public-support-intake-published":
@@ -3855,6 +3884,10 @@ def validate_well_known_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong liquidityPage")
     if urls.get("liquidity") != LIQUIDITY_URL:
         raise SiteCheckError(f"{label}: wrong liquidity")
+    if urls.get("holderDistributionPage") != HOLDER_DISTRIBUTION_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong holderDistributionPage")
+    if urls.get("holderDistribution") != HOLDER_DISTRIBUTION_URL:
+        raise SiteCheckError(f"{label}: wrong holderDistribution")
     if urls.get("supplyDisclosure") != SUPPLY_DISCLOSURE_URL:
         raise SiteCheckError(f"{label}: wrong supplyDisclosure")
     if urls.get("onchainProofsPage") != ONCHAIN_PROOFS_PAGE_URL:
@@ -3895,6 +3928,8 @@ def validate_well_known_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong utilityBridge status")
     if payload.get("platformStatus", {}).get("liquidityStatement") != "public-liquidity-custody-statement-published":
         raise SiteCheckError(f"{label}: wrong liquidityStatement status")
+    if payload.get("platformStatus", {}).get("holderDistribution") != "public-holder-distribution-disclosure-published":
+        raise SiteCheckError(f"{label}: wrong holderDistribution status")
     if payload.get("platformStatus", {}).get("productSpec") != "public-product-spec-published":
         raise SiteCheckError(f"{label}: wrong productSpec status")
     if payload.get("platformStatus", {}).get("releaseGates") != "public-release-gates-published":
@@ -4005,6 +4040,8 @@ def validate_wallet_security_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong reserveStatementPage")
     if links.get("reserveStatement") != RESERVE_STATEMENT_URL:
         raise SiteCheckError(f"{label}: wrong reserveStatement")
+    if links.get("holderDistribution") != HOLDER_DISTRIBUTION_URL:
+        raise SiteCheckError(f"{label}: wrong holderDistribution")
     if links.get("walletWarningEvidence") != WALLET_WARNING_URL:
         raise SiteCheckError(f"{label}: wrong wallet warning evidence link")
     if links.get("trustCenter") != TRUST_CENTER_URL:
@@ -4669,6 +4706,92 @@ def validate_liquidity_page(text: str) -> None:
     assert_current_pool_text(text, label)
 
 
+def validate_holder_distribution_json(text: str) -> None:
+    label = "/holder-distribution.json"
+    payload = load_json(text, label)
+    allocation = payload.get("allocationDisclosure", {})
+    responses = payload.get("riskFactorResponses", {})
+    links = payload.get("officialLinks", {})
+    boundaries = payload.get("publicClaimBoundaries", {})
+    transfer_hashes = [
+        entry.get("transactionHash")
+        for entry in payload.get("reserveTransferEvidence", [])
+        if isinstance(entry, dict)
+    ]
+
+    if payload.get("schema") != HOLDER_DISTRIBUTION_URL:
+        raise SiteCheckError(f"{label}: wrong schema")
+    if payload.get("pageUrl") != HOLDER_DISTRIBUTION_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong pageUrl")
+    if payload.get("status") != "public-holder-distribution-disclosure-published":
+        raise SiteCheckError(f"{label}: wrong status")
+    if payload.get("chainId") != 8453:
+        raise SiteCheckError(f"{label}: wrong chainId")
+    if payload.get("contractAddress") != MAINNET_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong contractAddress")
+    if payload.get("totalSupply") != "1000000000":
+        raise SiteCheckError(f"{label}: wrong totalSupply")
+    if payload.get("fixedSupply") is not True:
+        raise SiteCheckError(f"{label}: fixedSupply must be true")
+    if "not a live holder-ranking feed" not in payload.get("snapshotBasis", ""):
+        raise SiteCheckError(f"{label}: missing live-ranking boundary")
+    if allocation.get("targetPublicAllocation") != "400000000":
+        raise SiteCheckError(f"{label}: wrong target public allocation")
+    if allocation.get("ownerHeldReserve") != "600000000":
+        raise SiteCheckError(f"{label}: wrong owner reserve")
+    if allocation.get("ownerReserveWallet") != RESERVE_WALLET:
+        raise SiteCheckError(f"{label}: wrong reserve wallet")
+    if allocation.get("reserveLocked") is not False:
+        raise SiteCheckError(f"{label}: reserveLocked must be false")
+    if allocation.get("vestingContract") is not False:
+        raise SiteCheckError(f"{label}: vestingContract must be false")
+    if allocation.get("multisig") is not False:
+        raise SiteCheckError(f"{label}: multisig must be false")
+    if transfer_hashes != [RESERVE_TX_1, RESERVE_TX_2]:
+        raise SiteCheckError(f"{label}: wrong reserve transfer evidence")
+    if responses.get("supplyConcentration", {}).get("status") != "acknowledged-and-disclosed":
+        raise SiteCheckError(f"{label}: wrong supply concentration response")
+    if responses.get("reserveCustody", {}).get("status") != "owner-controlled-not-locked":
+        raise SiteCheckError(f"{label}: wrong reserve custody response")
+    if responses.get("liquidityCustody", {}).get("publicReference") != LIQUIDITY_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong liquidity custody reference")
+    if links.get("holderDistribution") != HOLDER_DISTRIBUTION_URL:
+        raise SiteCheckError(f"{label}: wrong holderDistribution link")
+    if links.get("reserveStatement") != RESERVE_STATEMENT_URL:
+        raise SiteCheckError(f"{label}: wrong reserveStatement link")
+    if links.get("blockaidFollowup") != BLOCKAID_FOLLOWUP_URL:
+        raise SiteCheckError(f"{label}: wrong blockaidFollowup link")
+    if "Supply concentration remains a disclosed risk." not in boundaries.get("safeClaims", []):
+        raise SiteCheckError(f"{label}: missing concentration safe claim")
+    if "the reserve removes holder concentration risk" not in boundaries.get("doNotClaim", []):
+        raise SiteCheckError(f"{label}: missing concentration boundary")
+    assert_no_forbidden_public_claims(json.dumps(payload), label)
+    assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
+    assert_not_contains(json.dumps(payload), "GCA/WETH", label)
+
+
+def validate_holder_distribution_page(text: str) -> None:
+    label = "/holder-distribution.html"
+    assert_contains(text, "GCA Holder Distribution", label)
+    assert_contains(text, "Holder Distribution JSON", label)
+    assert_contains(text, "Base Mainnet / 8453", label)
+    assert_contains(text, "1,000,000,000 GCA", label)
+    assert_contains(text, "400,000,000 GCA / 40%", label)
+    assert_contains(text, "600,000,000 GCA / 60%", label)
+    assert_contains(text, "Not A Live Holder Ranking", label)
+    assert_contains(text, "Supply concentration remains a disclosed risk", label)
+    assert_contains(text, "Owner-controlled, not locked", label)
+    assert_contains(text, "Reserve Transfer Proofs", label)
+    assert_contains(text, "Do not say the reserve removes holder concentration risk", label)
+    assert_contains(text, MAINNET_ADDRESS, label)
+    assert_contains(text, RESERVE_WALLET, label)
+    assert_contains(text, RESERVE_TX_1, label)
+    assert_contains(text, RESERVE_TX_2, label)
+    assert_no_forbidden_public_claims(text, label)
+    assert_not_contains(text, OLD_WETH_POOL_ADDRESS, label)
+    assert_not_contains(text, "GCA/WETH", label)
+
+
 def validate_onchain_proofs_json(text: str) -> None:
     label = "/onchain-proofs.json"
     payload = load_json(text, label)
@@ -4801,6 +4924,8 @@ def validate_reviewer_kit_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong blockaidFollowupPage")
     if links.get("blockaidFollowup") != BLOCKAID_FOLLOWUP_URL:
         raise SiteCheckError(f"{label}: wrong blockaidFollowup")
+    if links.get("holderDistribution") != HOLDER_DISTRIBUTION_URL:
+        raise SiteCheckError(f"{label}: wrong holderDistribution")
     if links.get("externalReviewStatus") != EXTERNAL_REVIEW_URL:
         raise SiteCheckError(f"{label}: wrong externalReviewStatus")
     if links.get("onchainProofs") != ONCHAIN_PROOFS_URL:
@@ -4879,6 +5004,7 @@ def validate_reviewer_kit_page(text: str) -> None:
     assert_contains(text, "Blockaid Follow-up", label)
     assert_contains(text, "Follow-up submitted on 2026-05-13", label)
     assert_contains(text, "Liquidity Statement", label)
+    assert_contains(text, "Holder Distribution", label)
     assert_contains(text, "BaseScan Profile", label)
     assert_contains(text, "On-chain Proofs", label)
     assert_contains(text, "Local Review Package", label)
@@ -5057,6 +5183,8 @@ def validate_trust_json(text: str) -> None:
         "tokenSafety": TOKEN_SAFETY_URL,
         "liquidity": LIQUIDITY_URL,
         "liquidityPage": LIQUIDITY_PAGE_URL,
+        "holderDistribution": HOLDER_DISTRIBUTION_URL,
+        "holderDistributionPage": HOLDER_DISTRIBUTION_PAGE_URL,
         "externalReviewStatus": EXTERNAL_REVIEW_URL,
         "onchainProofs": ONCHAIN_PROOFS_URL,
         "brandKit": BRAND_KIT_URL,
@@ -5116,6 +5244,8 @@ def validate_trust_json(text: str) -> None:
         raise SiteCheckError(f"{label}: LP lock must not be claimed")
     if supply.get("ownerReserveWallet") != RESERVE_WALLET:
         raise SiteCheckError(f"{label}: wrong ownerReserveWallet")
+    if supply.get("holderDistribution") != HOLDER_DISTRIBUTION_URL:
+        raise SiteCheckError(f"{label}: wrong holderDistribution")
     if supply.get("ownerReserveTransferTxs") != [RESERVE_TX_1, RESERVE_TX_2]:
         raise SiteCheckError(f"{label}: wrong reserve transfer txs")
     if payload.get("blockaidFollowup", {}).get("status") != "public-blockaid-followup-package-published":
@@ -5142,6 +5272,7 @@ def validate_trust_page(text: str) -> None:
     assert_contains(text, "Evidence Links", label)
     assert_contains(text, "Blockaid Follow-up", label)
     assert_contains(text, "Liquidity Statement", label)
+    assert_contains(text, "Holder Distribution", label)
     assert_contains(text, "Public Claim Boundaries", label)
     assert_contains(text, "Base Mainnet / 8453", label)
     assert_contains(text, MAINNET_ADDRESS, label)
@@ -5382,6 +5513,8 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/market-quality.json",
         "https://gcagochina.com/liquidity.html",
         "https://gcagochina.com/liquidity.json",
+        "https://gcagochina.com/holder-distribution.html",
+        "https://gcagochina.com/holder-distribution.json",
         "https://gcagochina.com/token-safety.html",
         "https://gcagochina.com/token-safety.json",
         "https://gcagochina.com/blockaid-followup.html",
@@ -5482,6 +5615,8 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /market-quality.json", label)
     assert_contains(text, "Allow: /liquidity.html", label)
     assert_contains(text, "Allow: /liquidity.json", label)
+    assert_contains(text, "Allow: /holder-distribution.html", label)
+    assert_contains(text, "Allow: /holder-distribution.json", label)
     assert_contains(text, "Allow: /token-safety.html", label)
     assert_contains(text, "Allow: /token-safety.json", label)
     assert_contains(text, "Allow: /blockaid-followup.html", label)
@@ -5555,6 +5690,8 @@ CHECKS: list[EndpointCheck] = [
     ("/market-quality.json", validate_market_quality_json),
     ("/liquidity.html", validate_liquidity_page),
     ("/liquidity.json", validate_liquidity_json),
+    ("/holder-distribution.html", validate_holder_distribution_page),
+    ("/holder-distribution.json", validate_holder_distribution_json),
     ("/token-safety.html", validate_token_safety_page),
     ("/token-safety.json", validate_token_safety_json),
     ("/blockaid-followup.html", validate_blockaid_followup_page),

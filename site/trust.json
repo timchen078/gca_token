@@ -28,6 +28,8 @@
     "technicalReport": "https://gcagochina.com/technical-report.json",
     "reserveStatementPage": "https://gcagochina.com/reserve-statement.html",
     "reserveStatement": "https://gcagochina.com/reserve-statement.json",
+    "holderDistributionPage": "https://gcagochina.com/holder-distribution.html",
+    "holderDistribution": "https://gcagochina.com/holder-distribution.json",
     "liquidityPage": "https://gcagochina.com/liquidity.html",
     "liquidity": "https://gcagochina.com/liquidity.json",
     "externalReviewStatusPage": "https://gcagochina.com/external-reviews.html",
@@ -115,6 +117,8 @@
     "ownerReserveCustodyNote": "Normal owner-controlled wallet; not locked, vested, or multisig-controlled.",
     "reserveStatementPage": "https://gcagochina.com/reserve-statement.html",
     "reserveStatement": "https://gcagochina.com/reserve-statement.json",
+    "holderDistributionPage": "https://gcagochina.com/holder-distribution.html",
+    "holderDistribution": "https://gcagochina.com/holder-distribution.json",
     "lpLockClaimed": false,
     "ownerReserveTransferTxs": [
       "0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67",
