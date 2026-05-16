@@ -40,9 +40,9 @@ URL: `https://x.com/GCAAIGoChina/status/2054660559124255151`
 ## Suggested Thread Follow-Up
 
 ```text
-Weekly Go China Radar 002 is live: Trust Stack Before Growth.
+Weekly Go China Radar 003 is live: Public Activity Without Artificial Volume.
 
-Verify first: Base Mainnet contract, official GCA/USDT route, wallet evidence, risk notes, and member-prep boundaries.
+Verify first: Base Mainnet contract, official GCA/USDT route, wallet evidence, market-quality boundaries, risk notes, and member utility readiness.
 
 https://gcagochina.com/radar.html
 

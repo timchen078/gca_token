@@ -2,7 +2,7 @@
   "schema": "https://gcagochina.com/roadmap.json",
   "pageUrl": "https://gcagochina.com/roadmap.html",
   "status": "public-roadmap-published",
-  "lastUpdated": "2026-05-14",
+  "lastUpdated": "2026-05-16",
   "projectName": "GCA",
   "conceptExpansion": "Go China Access",
   "currentStage": "concept-stage-utility-buildout",
@@ -44,8 +44,8 @@
       "status": "completed"
     },
     {
-      "id": "weekly-go-china-radar-issue-002",
-      "label": "Weekly Go China Radar issue 002 published",
+      "id": "weekly-go-china-radar-issue-003",
+      "label": "Weekly Go China Radar issue 003 published",
       "status": "completed"
     },
     {
