@@ -107,8 +107,10 @@
       "status": "local-only-backend-available",
       "script": "tools/gca_member_backend.py",
       "localUrl": "http://127.0.0.1:8787/members.html",
+      "operatorConsoleUrl": "http://127.0.0.1:8787/operator.html",
       "dataDirectory": ".gca_access_data/",
       "sameOriginSubmissionOnLocalhost": true,
+      "localOperatorSummaryEndpoint": "/gca/operator-summary",
       "walletVerificationMethod": "Base Mainnet public RPC eth_call ERC-20 balanceOf",
       "writesJsonlLedgers": [
         "pre_registrations",

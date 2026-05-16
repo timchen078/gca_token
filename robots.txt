@@ -41,6 +41,7 @@ Allow: /member-benefit.html
 Allow: /member-benefit.json
 Allow: /member-benefit-transfer.html
 Allow: /member-benefit-transfer.json
+Allow: /operator.html
 Allow: /member-program.json
 Allow: /gca/member-access/
 Allow: /support.html
