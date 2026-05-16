@@ -56,6 +56,8 @@
     "website": "https://gcagochina.com/",
     "supplyPage": "https://gcagochina.com/supply.html",
     "supplyDisclosure": "https://gcagochina.com/supply.json",
+    "holderDistributionPage": "https://gcagochina.com/holder-distribution.html",
+    "holderDistribution": "https://gcagochina.com/holder-distribution.json",
     "onchainProofsPage": "https://gcagochina.com/onchain-proofs.html",
     "onchainProofs": "https://gcagochina.com/onchain-proofs.json",
     "verify": "https://gcagochina.com/verify.html",

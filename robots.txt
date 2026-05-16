@@ -35,6 +35,8 @@ Allow: /market-quality.html
 Allow: /market-quality.json
 Allow: /liquidity.html
 Allow: /liquidity.json
+Allow: /holder-distribution.html
+Allow: /holder-distribution.json
 Allow: /token-safety.html
 Allow: /token-safety.json
 Allow: /blockaid-followup.html

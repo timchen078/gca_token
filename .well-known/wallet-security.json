@@ -74,6 +74,8 @@
     "technicalReport": "https://gcagochina.com/technical-report.json",
     "reserveStatementPage": "https://gcagochina.com/reserve-statement.html",
     "reserveStatement": "https://gcagochina.com/reserve-statement.json",
+    "holderDistributionPage": "https://gcagochina.com/holder-distribution.html",
+    "holderDistribution": "https://gcagochina.com/holder-distribution.json",
     "liquidityPage": "https://gcagochina.com/liquidity.html",
     "liquidity": "https://gcagochina.com/liquidity.json",
     "walletWarningEvidencePage": "https://gcagochina.com/wallet-warning.html",

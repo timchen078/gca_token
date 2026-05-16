@@ -50,7 +50,7 @@
         "0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67",
         "0xfffb674448abdbd3af45bb0a30c48e5fbb0e675542b971f031381254b5dc5317"
       ],
-      "publicReference": "https://gcagochina.com/reserve-statement.html"
+      "publicReference": "https://gcagochina.com/holder-distribution.html"
     },
     "thirdPartyAudit": {
       "status": "not-completed",
@@ -97,6 +97,8 @@
     "technicalReport": "https://gcagochina.com/technical-report.json",
     "reserveStatementPage": "https://gcagochina.com/reserve-statement.html",
     "reserveStatement": "https://gcagochina.com/reserve-statement.json",
+    "holderDistributionPage": "https://gcagochina.com/holder-distribution.html",
+    "holderDistribution": "https://gcagochina.com/holder-distribution.json",
     "liquidityPage": "https://gcagochina.com/liquidity.html",
     "liquidity": "https://gcagochina.com/liquidity.json",
     "walletWarningEvidencePage": "https://gcagochina.com/wallet-warning.html",
