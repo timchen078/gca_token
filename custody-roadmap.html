@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GCA Custody Roadmap</title>
+    <meta name="description" content="Public GCA custody roadmap for reserve wallet, LP custody, future multisig, lock, vesting, and audit evidence boundaries.">
+    <link rel="canonical" href="https://gcagochina.com/custody-roadmap.html">
+    <link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">
+    <link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="GCA | Go China Access">
+    <meta property="og:title" content="GCA Custody Roadmap">
+    <meta property="og:description" content="Current custody status and future evidence requirements for GCA reserve and LP custody claims.">
+    <meta property="og:url" content="https://gcagochina.com/custody-roadmap.html">
+    <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="GCA Custody Roadmap">
+    <meta name="twitter:description" content="Current custody status and future evidence requirements for GCA reserve and LP custody claims.">
+    <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #17201b;
+        --muted: #5c6b63;
+        --line: #dbe4dd;
+        --soft: #f5f8f5;
+        --panel: #ffffff;
+        --green: #176f4d;
+        --amber: #9a6200;
+        --red: #9f2e2e;
+        --blue: #245f9e;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        color: var(--ink);
+        background: #f8faf8;
+        line-height: 1.55;
+      }
+
+      a { color: inherit; }
+
+      header {
+        border-bottom: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.94);
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        backdrop-filter: blur(12px);
+      }
+
+      .shell {
+        width: min(1120px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      nav {
+        min-height: 68px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--ink);
+        font-weight: 800;
+        text-decoration: none;
+        letter-spacing: 0;
+      }
+
+      .brand img { width: 34px; height: 34px; }
+
+      .nav-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: flex-end;
+        font-size: 14px;
+      }
+
+      .nav-links a {
+        text-decoration: none;
+        color: var(--muted);
+      }
+
+      main { padding: 48px 0; }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(36px, 7vw, 76px);
+        line-height: 0.98;
+        max-width: 880px;
+        letter-spacing: 0;
+      }
+
+      .lead {
+        margin: 18px 0 0;
+        max-width: 830px;
+        color: var(--muted);
+        font-size: 20px;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 24px;
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 42px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 10px 14px;
+        background: var(--panel);
+        color: var(--ink);
+        font-weight: 700;
+        text-decoration: none;
+      }
+
+      .button.primary {
+        background: var(--green);
+        color: #fff;
+        border-color: var(--green);
+      }
+
+      .facts {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 34px;
+      }
+
+      .fact, .panel {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        padding: 18px;
+      }
+
+      .label {
+        display: block;
+        color: var(--muted);
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0;
+      }
+
+      .value {
+        display: block;
+        margin-top: 6px;
+        font-weight: 800;
+        overflow-wrap: anywhere;
+      }
+
+      .good { color: var(--green); }
+      .pending { color: var(--amber); }
+      .risk { color: var(--red); }
+      .info { color: var(--blue); }
+
+      .section { margin-top: 18px; }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      h2 {
+        margin: 0 0 12px;
+        font-size: 24px;
+        letter-spacing: 0;
+      }
+
+      h3 {
+        margin: 0 0 8px;
+        font-size: 17px;
+      }
+
+      .note {
+        margin: 0;
+        color: var(--muted);
+      }
+
+      .list {
+        display: grid;
+        gap: 10px;
+        margin-top: 12px;
+      }
+
+      .row {
+        display: grid;
+        grid-template-columns: minmax(126px, 0.8fr) minmax(0, 1.2fr);
+        gap: 12px;
+        align-items: start;
+        border-top: 1px solid var(--line);
+        padding-top: 10px;
+      }
+
+      .row strong {
+        min-width: 0;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+        text-align: right;
+      }
+
+      code {
+        padding: 2px 5px;
+        border-radius: 6px;
+        background: var(--soft);
+        overflow-wrap: anywhere;
+      }
+
+      ul { padding-left: 20px; margin: 10px 0 0; }
+
+      footer {
+        border-top: 1px solid var(--line);
+        padding: 24px 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      @media (max-width: 860px) {
+        .facts,
+        .grid,
+        .cards {
+          grid-template-columns: 1fr;
+        }
+
+        nav {
+          align-items: flex-start;
+          flex-direction: column;
+          padding: 14px 0;
+        }
+
+        .nav-links { justify-content: flex-start; }
+        .row { grid-template-columns: 1fr; }
+        .row strong { text-align: left; }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav class="shell" aria-label="Primary">
+        <a class="brand" href="index.html" aria-label="GCA home">
+          <img src="assets/gca-logo.svg" alt="GCA logo">
+          <span>GCA</span>
+        </a>
+        <div class="nav-links">
+          <a href="verify.html">Verify</a>
+          <a href="trust.html">Trust</a>
+          <a href="risk-remediation.html">Risk Remediation</a>
+          <a href="liquidity.html">Liquidity</a>
+          <a href="holder-distribution.html">Holders</a>
+          <a href="reserve-statement.html">Reserve</a>
+          <a href="risk.html">Risk</a>
+        </div>
+      </nav>
+    </header>
+
+    <main class="shell">
+      <section aria-labelledby="title">
+        <h1 id="title">GCA Custody Roadmap</h1>
+        <p class="lead">This page documents the current reserve and LP custody state, then lists the exact evidence required before GCA can make stronger custody claims later. It is a roadmap, not proof that any lock, vesting contract, multisig, or audit has already been completed.</p>
+        <div class="actions">
+          <a class="button primary" href="custody-roadmap.json">Custody Roadmap JSON</a>
+          <a class="button" href="risk-remediation.html">Risk Remediation</a>
+          <a class="button" href="liquidity.html">Liquidity Statement</a>
+          <a class="button" href="reserve-statement.html">Reserve Statement</a>
+          <a class="button" href="holder-distribution.html">Holder Distribution</a>
+        </div>
+      </section>
+
+      <section class="facts" aria-label="Current custody snapshot">
+        <div class="fact">
+          <span class="label">Network</span>
+          <span class="value">Base Mainnet / 8453</span>
+        </div>
+        <div class="fact">
+          <span class="label">Contract</span>
+          <span class="value">0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6</span>
+        </div>
+        <div class="fact">
+          <span class="label">Reserve Wallet</span>
+          <span class="value">0x5e8F84748612B913aAcC937492AC25dc5630E246</span>
+        </div>
+        <div class="fact">
+          <span class="label">Reserve Custody</span>
+          <span class="value risk">Owner-controlled, not locked</span>
+        </div>
+        <div class="fact">
+          <span class="label">LP Custody</span>
+          <span class="value risk">No LP lock claimed</span>
+        </div>
+        <div class="fact">
+          <span class="label">Official Pool</span>
+          <span class="value">0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0</span>
+        </div>
+        <div class="fact">
+          <span class="label">Quote Asset</span>
+          <span class="value">Base USDT / 0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2</span>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="scopeTitle">
+        <h2 id="scopeTitle">Scope Boundary</h2>
+        <p class="note">This roadmap is a planning and evidence checklist only. It is not a reserve lock claim, not an LP lock claim, not a multisig claim, not a third-party audit, not a security-vendor approval, and not a claim of deep liquidity.</p>
+      </section>
+
+      <section class="section cards" aria-label="Custody status cards">
+        <div class="panel">
+          <h3>Reserve Wallet</h3>
+          <p class="note">Current status: <strong class="risk">normal owner-controlled wallet</strong>.</p>
+          <ul>
+            <li>Reserve: <code>600,000,000 GCA</code>.</li>
+            <li>Not currently locked, vested, or multisig-controlled.</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h3>LP Custody</h3>
+          <p class="note">Current status: <strong class="risk">not locked, not burned</strong>.</p>
+          <ul>
+            <li>Official route: Base Mainnet GCA/USDT.</li>
+            <li>Starter-depth only; liquidity can change.</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h3>Audit Status</h3>
+          <p class="note">Current status: <strong class="risk">not completed</strong>.</p>
+          <ul>
+            <li>Internal technical report is public.</li>
+            <li>Independent audit remains deferred.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section grid" aria-label="Roadmap phases">
+        <div class="panel">
+          <h2>Current Baseline</h2>
+          <div class="list">
+            <div class="row"><span>Reserve disclosure</span><strong class="good">Published</strong></div>
+            <div class="row"><span>Holder distribution</span><strong class="good">Published</strong></div>
+            <div class="row"><span>Liquidity boundary</span><strong class="good">Published</strong></div>
+            <div class="row"><span>Risk remediation</span><strong class="good">Published</strong></div>
+          </div>
+        </div>
+        <div class="panel">
+          <h2>Future Evidence Required</h2>
+          <div class="list">
+            <div class="row"><span>Safe multisig</span><strong>Safe address, threshold, owners, transfer hash</strong></div>
+            <div class="row"><span>Reserve lock or vesting</span><strong>Contract address, amount, beneficiary, schedule, transaction hash</strong></div>
+            <div class="row"><span>LP lock</span><strong>Lock provider, LP identifier, transaction hash, unlock date</strong></div>
+            <div class="row"><span>Independent audit</span><strong>Auditor name, report URL, scope, date</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="doNotTitle">
+        <h2 id="doNotTitle">Do Not Overstate</h2>
+        <ul>
+          <li>Do not say the reserve is locked before an on-chain custody change.</li>
+          <li>Do not say the reserve is multisig-controlled before a published multisig transfer.</li>
+          <li>Do not say LP is locked before verifiable lock evidence exists.</li>
+          <li>Do not describe this roadmap as an audit, vendor approval, deep-liquidity proof, or market-quality guarantee.</li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <div class="shell">GCA custody roadmap. Last updated 2026-05-17. Verify Base Mainnet chain ID 8453 and the official GCA/USDT pool before using this data.</div>
+    </footer>
+  </body>
+</html>

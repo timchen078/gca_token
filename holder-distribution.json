@@ -74,6 +74,8 @@
     "reserveStatement": "https://gcagochina.com/reserve-statement.json",
     "liquidityPage": "https://gcagochina.com/liquidity.html",
     "liquidity": "https://gcagochina.com/liquidity.json",
+    "custodyRoadmapPage": "https://gcagochina.com/custody-roadmap.html",
+    "custodyRoadmap": "https://gcagochina.com/custody-roadmap.json",
     "blockaidFollowupPage": "https://gcagochina.com/blockaid-followup.html",
     "blockaidFollowup": "https://gcagochina.com/blockaid-followup.json",
     "trustCenterPage": "https://gcagochina.com/trust.html",
