@@ -37,6 +37,8 @@ Allow: /liquidity.html
 Allow: /liquidity.json
 Allow: /holder-distribution.html
 Allow: /holder-distribution.json
+Allow: /risk-remediation.html
+Allow: /risk-remediation.json
 Allow: /token-safety.html
 Allow: /token-safety.json
 Allow: /blockaid-followup.html

@@ -30,6 +30,8 @@
     "reserveStatement": "https://gcagochina.com/reserve-statement.json",
     "holderDistributionPage": "https://gcagochina.com/holder-distribution.html",
     "holderDistribution": "https://gcagochina.com/holder-distribution.json",
+    "riskRemediationPage": "https://gcagochina.com/risk-remediation.html",
+    "riskRemediation": "https://gcagochina.com/risk-remediation.json",
     "liquidityPage": "https://gcagochina.com/liquidity.html",
     "liquidity": "https://gcagochina.com/liquidity.json",
     "externalReviewStatusPage": "https://gcagochina.com/external-reviews.html",
@@ -119,6 +121,8 @@
     "reserveStatement": "https://gcagochina.com/reserve-statement.json",
     "holderDistributionPage": "https://gcagochina.com/holder-distribution.html",
     "holderDistribution": "https://gcagochina.com/holder-distribution.json",
+    "riskRemediationPage": "https://gcagochina.com/risk-remediation.html",
+    "riskRemediation": "https://gcagochina.com/risk-remediation.json",
     "lpLockClaimed": false,
     "ownerReserveTransferTxs": [
       "0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67",

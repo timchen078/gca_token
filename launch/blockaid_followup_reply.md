@@ -9,6 +9,7 @@ Public follow-up package:
 - Technical report: `https://gcagochina.com/technical-report.html`
 - Reserve statement: `https://gcagochina.com/reserve-statement.html`
 - Holder distribution: `https://gcagochina.com/holder-distribution.html`
+- Risk remediation plan: `https://gcagochina.com/risk-remediation.html`
 - Wallet warning evidence: `https://gcagochina.com/wallet-warning.html`
 
 ## Copyable Reply
@@ -26,6 +27,7 @@ Machine-readable follow-up JSON: https://gcagochina.com/blockaid-followup.json
 Internal technical report: https://gcagochina.com/technical-report.html
 Reserve address statement: https://gcagochina.com/reserve-statement.html
 Holder distribution disclosure: https://gcagochina.com/holder-distribution.html
+Risk remediation plan: https://gcagochina.com/risk-remediation.html
 Wallet warning evidence: https://gcagochina.com/wallet-warning.html
 Official market route: Base Mainnet Uniswap v4 GCA/USDT
 Official pool: 0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0

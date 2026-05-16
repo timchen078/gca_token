@@ -95,6 +95,8 @@ LIQUIDITY_PAGE_URL = "https://gcagochina.com/liquidity.html"
 LIQUIDITY_URL = "https://gcagochina.com/liquidity.json"
 HOLDER_DISTRIBUTION_PAGE_URL = "https://gcagochina.com/holder-distribution.html"
 HOLDER_DISTRIBUTION_URL = "https://gcagochina.com/holder-distribution.json"
+RISK_REMEDIATION_PAGE_URL = "https://gcagochina.com/risk-remediation.html"
+RISK_REMEDIATION_URL = "https://gcagochina.com/risk-remediation.json"
 ONCHAIN_PROOFS_PAGE_URL = "https://gcagochina.com/onchain-proofs.html"
 ONCHAIN_PROOFS_URL = "https://gcagochina.com/onchain-proofs.json"
 SUPPLY_DISCLOSURE_URL = "https://gcagochina.com/supply.json"
@@ -201,6 +203,7 @@ def validate_root(text: str) -> None:
     assert_contains(text, "Weekly Radar", label)
     assert_contains(text, "Liquidity", label)
     assert_contains(text, "Holder Distribution", label)
+    assert_contains(text, "Risk Remediation", label)
     assert_contains(text, "Utility JSON", label)
     assert_contains(text, "Product Spec", label)
     assert_contains(text, "Access Portal", label)
@@ -428,6 +431,10 @@ def validate_token_safety_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong tokenSafety")
     if links.get("blockaidFollowup") != BLOCKAID_FOLLOWUP_URL:
         raise SiteCheckError(f"{label}: wrong blockaidFollowup")
+    if links.get("riskRemediationPage") != RISK_REMEDIATION_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong riskRemediationPage")
+    if links.get("riskRemediation") != RISK_REMEDIATION_URL:
+        raise SiteCheckError(f"{label}: wrong riskRemediation")
     if links.get("liquidityPage") != LIQUIDITY_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong liquidityPage")
     if links.get("liquidity") != LIQUIDITY_URL:
@@ -461,6 +468,7 @@ def validate_blockaid_followup_page(text: str) -> None:
     assert_contains(text, "No third-party audit has been completed", label)
     assert_contains(text, "Technical Report", label)
     assert_contains(text, "Reserve Statement", label)
+    assert_contains(text, "Risk Remediation", label)
     assert_contains(text, MAINNET_ADDRESS, label)
     assert_contains(text, OFFICIAL_POOL_ADDRESS, label)
     assert_contains(text, BASE_USDT_ADDRESS, label)
@@ -534,6 +542,8 @@ def validate_blockaid_followup_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong reserveStatement")
     if links.get("holderDistribution") != HOLDER_DISTRIBUTION_URL:
         raise SiteCheckError(f"{label}: wrong holderDistribution")
+    if links.get("riskRemediation") != RISK_REMEDIATION_URL:
+        raise SiteCheckError(f"{label}: wrong riskRemediation")
     if links.get("liquidityPage") != LIQUIDITY_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong liquidityPage")
     if links.get("liquidity") != LIQUIDITY_URL:
@@ -3308,6 +3318,10 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong holderDistributionPageUrl")
     if payload.get("holderDistributionUrl") != HOLDER_DISTRIBUTION_URL:
         raise SiteCheckError(f"{label}: wrong holderDistributionUrl")
+    if payload.get("riskRemediationPageUrl") != RISK_REMEDIATION_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong riskRemediationPageUrl")
+    if payload.get("riskRemediationUrl") != RISK_REMEDIATION_URL:
+        raise SiteCheckError(f"{label}: wrong riskRemediationUrl")
     if payload.get("supplyDisclosureUrl") != SUPPLY_DISCLOSURE_URL:
         raise SiteCheckError(f"{label}: wrong supplyDisclosureUrl")
     if payload.get("onchainProofsPageUrl") != ONCHAIN_PROOFS_PAGE_URL:
@@ -3349,6 +3363,8 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: unexpected liquidity statement status")
     if status.get("holderDistribution") != "public-holder-distribution-disclosure-published":
         raise SiteCheckError(f"{label}: unexpected holder distribution status")
+    if status.get("riskRemediation") != "public-risk-remediation-plan-published":
+        raise SiteCheckError(f"{label}: unexpected risk remediation status")
     if payload.get("liquidityStatement", {}).get("status") != "public-liquidity-custody-statement-published":
         raise SiteCheckError(f"{label}: unexpected liquidity statement object status")
     if payload.get("liquidityStatement", {}).get("pageUrl") != LIQUIDITY_PAGE_URL:
@@ -3361,6 +3377,12 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong holder distribution page")
     if payload.get("holderDistribution", {}).get("url") != HOLDER_DISTRIBUTION_URL:
         raise SiteCheckError(f"{label}: wrong holder distribution url")
+    if payload.get("riskRemediation", {}).get("status") != "public-risk-remediation-plan-published":
+        raise SiteCheckError(f"{label}: unexpected risk remediation object status")
+    if payload.get("riskRemediation", {}).get("pageUrl") != RISK_REMEDIATION_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong risk remediation page")
+    if payload.get("riskRemediation", {}).get("url") != RISK_REMEDIATION_URL:
+        raise SiteCheckError(f"{label}: wrong risk remediation url")
     if member_program.get("status") != "rules-published-public-claim-not-connected":
         raise SiteCheckError(f"{label}: unexpected member program status")
     if member_program.get("supportIntake", {}).get("status") != "public-support-intake-published":
@@ -3664,6 +3686,10 @@ def validate_tokenlist_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong holderDistributionPage")
     if extensions.get("holderDistribution") != HOLDER_DISTRIBUTION_URL:
         raise SiteCheckError(f"{label}: wrong holderDistribution")
+    if extensions.get("riskRemediationPage") != RISK_REMEDIATION_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong riskRemediationPage")
+    if extensions.get("riskRemediation") != RISK_REMEDIATION_URL:
+        raise SiteCheckError(f"{label}: wrong riskRemediation")
     if extensions.get("externalReviewStatusPage") != EXTERNAL_REVIEW_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong externalReviewStatusPage")
     if extensions.get("externalReviewStatus") != EXTERNAL_REVIEW_URL:
@@ -3728,6 +3754,8 @@ def validate_tokenlist_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong liquidityStatementStatus")
     if extensions.get("holderDistributionStatus") != "public-holder-distribution-disclosure-published":
         raise SiteCheckError(f"{label}: wrong holderDistributionStatus")
+    if extensions.get("riskRemediationStatus") != "public-risk-remediation-plan-published":
+        raise SiteCheckError(f"{label}: wrong riskRemediationStatus")
     if extensions.get("memberLedgerStatus") != "public-member-ledger-schema-published":
         raise SiteCheckError(f"{label}: wrong memberLedgerStatus")
     if extensions.get("supportIntakeStatus") != "public-support-intake-published":
@@ -3888,6 +3916,10 @@ def validate_well_known_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong holderDistributionPage")
     if urls.get("holderDistribution") != HOLDER_DISTRIBUTION_URL:
         raise SiteCheckError(f"{label}: wrong holderDistribution")
+    if urls.get("riskRemediationPage") != RISK_REMEDIATION_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong riskRemediationPage")
+    if urls.get("riskRemediation") != RISK_REMEDIATION_URL:
+        raise SiteCheckError(f"{label}: wrong riskRemediation")
     if urls.get("supplyDisclosure") != SUPPLY_DISCLOSURE_URL:
         raise SiteCheckError(f"{label}: wrong supplyDisclosure")
     if urls.get("onchainProofsPage") != ONCHAIN_PROOFS_PAGE_URL:
@@ -3930,6 +3962,8 @@ def validate_well_known_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong liquidityStatement status")
     if payload.get("platformStatus", {}).get("holderDistribution") != "public-holder-distribution-disclosure-published":
         raise SiteCheckError(f"{label}: wrong holderDistribution status")
+    if payload.get("platformStatus", {}).get("riskRemediation") != "public-risk-remediation-plan-published":
+        raise SiteCheckError(f"{label}: wrong riskRemediation status")
     if payload.get("platformStatus", {}).get("productSpec") != "public-product-spec-published":
         raise SiteCheckError(f"{label}: wrong productSpec status")
     if payload.get("platformStatus", {}).get("releaseGates") != "public-release-gates-published":
@@ -4042,6 +4076,8 @@ def validate_wallet_security_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong reserveStatement")
     if links.get("holderDistribution") != HOLDER_DISTRIBUTION_URL:
         raise SiteCheckError(f"{label}: wrong holderDistribution")
+    if links.get("riskRemediation") != RISK_REMEDIATION_URL:
+        raise SiteCheckError(f"{label}: wrong riskRemediation")
     if links.get("walletWarningEvidence") != WALLET_WARNING_URL:
         raise SiteCheckError(f"{label}: wrong wallet warning evidence link")
     if links.get("trustCenter") != TRUST_CENTER_URL:
@@ -4792,6 +4828,104 @@ def validate_holder_distribution_page(text: str) -> None:
     assert_not_contains(text, "GCA/WETH", label)
 
 
+def validate_risk_remediation_json(text: str) -> None:
+    label = "/risk-remediation.json"
+    payload = load_json(text, label)
+    controls = payload.get("currentPositiveControls", {})
+    market = payload.get("officialMarket", {})
+    links = payload.get("officialLinks", {})
+    boundaries = payload.get("publicClaimBoundaries", {})
+    risk_items = {item.get("id"): item for item in payload.get("riskItems", []) if isinstance(item, dict)}
+
+    if payload.get("schema") != RISK_REMEDIATION_URL:
+        raise SiteCheckError(f"{label}: wrong schema")
+    if payload.get("pageUrl") != RISK_REMEDIATION_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong pageUrl")
+    if payload.get("status") != "public-risk-remediation-plan-published":
+        raise SiteCheckError(f"{label}: wrong status")
+    if payload.get("chainId") != 8453:
+        raise SiteCheckError(f"{label}: wrong chainId")
+    if payload.get("contractAddress") != MAINNET_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong contractAddress")
+    if "not a third-party audit" not in payload.get("scopeBoundary", ""):
+        raise SiteCheckError(f"{label}: missing scope boundary")
+    for item_id in ("price-volatility", "lp-custody", "supply-concentration", "third-party-audit"):
+        if item_id not in risk_items:
+            raise SiteCheckError(f"{label}: missing risk item {item_id}")
+    if risk_items["price-volatility"].get("currentEvidence") != MARKET_QUALITY_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong price-volatility evidence")
+    if risk_items["lp-custody"].get("currentStatus") != "not-locked-not-claimed":
+        raise SiteCheckError(f"{label}: wrong LP custody status")
+    if risk_items["lp-custody"].get("currentEvidence") != LIQUIDITY_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong LP custody evidence")
+    if risk_items["supply-concentration"].get("reserveWallet") != RESERVE_WALLET:
+        raise SiteCheckError(f"{label}: wrong reserve wallet")
+    if risk_items["supply-concentration"].get("reserveTransferTxs") != [RESERVE_TX_1, RESERVE_TX_2]:
+        raise SiteCheckError(f"{label}: wrong reserve tx list")
+    if risk_items["supply-concentration"].get("currentEvidence") != HOLDER_DISTRIBUTION_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong supply concentration evidence")
+    if risk_items["third-party-audit"].get("currentStatus") != "not-completed-deferred":
+        raise SiteCheckError(f"{label}: wrong audit status")
+    if risk_items["third-party-audit"].get("currentEvidence") != TECHNICAL_REPORT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong audit evidence")
+    if controls.get("sourceVerifiedOnBaseScan") is not True:
+        raise SiteCheckError(f"{label}: source verification must be true")
+    if controls.get("fixedSupply") is not True:
+        raise SiteCheckError(f"{label}: fixedSupply must be true")
+    for key in (
+        "postDeploymentMintFunction",
+        "ownerOrAdminRole",
+        "proxyOrUpgradePath",
+        "blacklistFunction",
+        "pauseFunction",
+        "transferTaxOrHiddenFee",
+        "custodyOrWithdrawalPath",
+        "customTransferRestrictions",
+        "adminTradingControls",
+    ):
+        if controls.get(key) is not False:
+            raise SiteCheckError(f"{label}: {key} must be false")
+    if market.get("poolAddress") != OFFICIAL_POOL_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong poolAddress")
+    if market.get("quoteAssetAddress") != BASE_USDT_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong quoteAssetAddress")
+    if market.get("lpLockClaimed") is not False:
+        raise SiteCheckError(f"{label}: LP lock must not be claimed")
+    if links.get("riskRemediation") != RISK_REMEDIATION_URL:
+        raise SiteCheckError(f"{label}: wrong riskRemediation link")
+    if links.get("blockaidFollowup") != BLOCKAID_FOLLOWUP_URL:
+        raise SiteCheckError(f"{label}: wrong blockaidFollowup link")
+    if links.get("liquidity") != LIQUIDITY_URL:
+        raise SiteCheckError(f"{label}: wrong liquidity link")
+    if links.get("holderDistribution") != HOLDER_DISTRIBUTION_URL:
+        raise SiteCheckError(f"{label}: wrong holderDistribution link")
+    if "GCA has published a public risk-remediation plan." not in boundaries.get("safeClaims", []):
+        raise SiteCheckError(f"{label}: missing remediation safe claim")
+    if "risk factors are fully solved" not in boundaries.get("doNotClaim", []):
+        raise SiteCheckError(f"{label}: missing solved-risk boundary")
+    assert_current_pool_text(json.dumps(payload), label)
+    assert_no_forbidden_public_claims(json.dumps(payload), label)
+
+
+def validate_risk_remediation_page(text: str) -> None:
+    label = "/risk-remediation.html"
+    assert_social_preview_meta(text, label, RISK_REMEDIATION_PAGE_URL)
+    assert_contains(text, "GCA Risk Remediation Plan", label)
+    assert_contains(text, "Risk Remediation JSON", label)
+    assert_contains(text, "Price Volatility", label)
+    assert_contains(text, "LP Custody", label)
+    assert_contains(text, "Supply Concentration", label)
+    assert_contains(text, "Third-party Audit", label)
+    assert_contains(text, "not a third-party audit", label)
+    assert_contains(text, "not an LP lock claim", label)
+    assert_contains(text, "Actions That Would Reduce Review Risk", label)
+    assert_contains(text, "Do not say risk factors are fully solved", label)
+    assert_contains(text, MAINNET_ADDRESS, label)
+    assert_contains(text, RESERVE_WALLET, label)
+    assert_current_pool_text(text, label)
+    assert_no_forbidden_public_claims(text, label)
+
+
 def validate_onchain_proofs_json(text: str) -> None:
     label = "/onchain-proofs.json"
     payload = load_json(text, label)
@@ -4926,6 +5060,8 @@ def validate_reviewer_kit_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong blockaidFollowup")
     if links.get("holderDistribution") != HOLDER_DISTRIBUTION_URL:
         raise SiteCheckError(f"{label}: wrong holderDistribution")
+    if links.get("riskRemediation") != RISK_REMEDIATION_URL:
+        raise SiteCheckError(f"{label}: wrong riskRemediation")
     if links.get("externalReviewStatus") != EXTERNAL_REVIEW_URL:
         raise SiteCheckError(f"{label}: wrong externalReviewStatus")
     if links.get("onchainProofs") != ONCHAIN_PROOFS_URL:
@@ -5005,6 +5141,7 @@ def validate_reviewer_kit_page(text: str) -> None:
     assert_contains(text, "Follow-up submitted on 2026-05-13", label)
     assert_contains(text, "Liquidity Statement", label)
     assert_contains(text, "Holder Distribution", label)
+    assert_contains(text, "Risk Remediation", label)
     assert_contains(text, "BaseScan Profile", label)
     assert_contains(text, "On-chain Proofs", label)
     assert_contains(text, "Local Review Package", label)
@@ -5185,6 +5322,8 @@ def validate_trust_json(text: str) -> None:
         "liquidityPage": LIQUIDITY_PAGE_URL,
         "holderDistribution": HOLDER_DISTRIBUTION_URL,
         "holderDistributionPage": HOLDER_DISTRIBUTION_PAGE_URL,
+        "riskRemediation": RISK_REMEDIATION_URL,
+        "riskRemediationPage": RISK_REMEDIATION_PAGE_URL,
         "externalReviewStatus": EXTERNAL_REVIEW_URL,
         "onchainProofs": ONCHAIN_PROOFS_URL,
         "brandKit": BRAND_KIT_URL,
@@ -5273,6 +5412,7 @@ def validate_trust_page(text: str) -> None:
     assert_contains(text, "Blockaid Follow-up", label)
     assert_contains(text, "Liquidity Statement", label)
     assert_contains(text, "Holder Distribution", label)
+    assert_contains(text, "Risk Remediation", label)
     assert_contains(text, "Public Claim Boundaries", label)
     assert_contains(text, "Base Mainnet / 8453", label)
     assert_contains(text, MAINNET_ADDRESS, label)
@@ -5353,6 +5493,8 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong Blockaid follow-up date")
     if blockaid.get("riskFactorFollowup") != BLOCKAID_FOLLOWUP_URL:
         raise SiteCheckError(f"{label}: wrong Blockaid risk-factor follow-up URL")
+    if blockaid.get("riskRemediation") != RISK_REMEDIATION_URL:
+        raise SiteCheckError(f"{label}: wrong Blockaid risk remediation URL")
     if blockaid.get("followUpSubmissionResult") != "Blockaid support portal returned HTTP 200 OK":
         raise SiteCheckError(f"{label}: wrong Blockaid follow-up result")
     if reviews.get("geckoTerminal", {}).get("status") != "approved":
@@ -5373,6 +5515,7 @@ def validate_external_reviews_page(text: str) -> None:
     assert_contains(text, "GCA External Review Status", label)
     assert_contains(text, "Wallet Warning Evidence", label)
     assert_contains(text, "Blockaid Follow-up", label)
+    assert_contains(text, "Risk Remediation", label)
     assert_contains(text, "External Reviews JSON", label)
     assert_contains(text, "Trust Center", label)
     assert_contains(text, "Resubmitted: awaiting review", label)
@@ -5515,6 +5658,8 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/liquidity.json",
         "https://gcagochina.com/holder-distribution.html",
         "https://gcagochina.com/holder-distribution.json",
+        "https://gcagochina.com/risk-remediation.html",
+        "https://gcagochina.com/risk-remediation.json",
         "https://gcagochina.com/token-safety.html",
         "https://gcagochina.com/token-safety.json",
         "https://gcagochina.com/blockaid-followup.html",
@@ -5617,6 +5762,8 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /liquidity.json", label)
     assert_contains(text, "Allow: /holder-distribution.html", label)
     assert_contains(text, "Allow: /holder-distribution.json", label)
+    assert_contains(text, "Allow: /risk-remediation.html", label)
+    assert_contains(text, "Allow: /risk-remediation.json", label)
     assert_contains(text, "Allow: /token-safety.html", label)
     assert_contains(text, "Allow: /token-safety.json", label)
     assert_contains(text, "Allow: /blockaid-followup.html", label)
@@ -5692,6 +5839,8 @@ CHECKS: list[EndpointCheck] = [
     ("/liquidity.json", validate_liquidity_json),
     ("/holder-distribution.html", validate_holder_distribution_page),
     ("/holder-distribution.json", validate_holder_distribution_json),
+    ("/risk-remediation.html", validate_risk_remediation_page),
+    ("/risk-remediation.json", validate_risk_remediation_json),
     ("/token-safety.html", validate_token_safety_page),
     ("/token-safety.json", validate_token_safety_json),
     ("/blockaid-followup.html", validate_blockaid_followup_page),

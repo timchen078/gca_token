@@ -99,6 +99,8 @@
     "reserveStatement": "https://gcagochina.com/reserve-statement.json",
     "holderDistributionPage": "https://gcagochina.com/holder-distribution.html",
     "holderDistribution": "https://gcagochina.com/holder-distribution.json",
+    "riskRemediationPage": "https://gcagochina.com/risk-remediation.html",
+    "riskRemediation": "https://gcagochina.com/risk-remediation.json",
     "liquidityPage": "https://gcagochina.com/liquidity.html",
     "liquidity": "https://gcagochina.com/liquidity.json",
     "walletWarningEvidencePage": "https://gcagochina.com/wallet-warning.html",
