@@ -59,6 +59,8 @@
     "marketPage": "https://gcagochina.com/markets.html",
     "marketQualityPage": "https://gcagochina.com/market-quality.html",
     "marketQuality": "https://gcagochina.com/market-quality.json",
+    "liquidityPage": "https://gcagochina.com/liquidity.html",
+    "liquidity": "https://gcagochina.com/liquidity.json",
     "supplyPage": "https://gcagochina.com/supply.html",
     "supplyDisclosure": "https://gcagochina.com/supply.json",
     "securityPage": "https://gcagochina.com/security.html",
@@ -119,7 +121,10 @@
     "dexScreener": "https://dexscreener.com/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
     "uniswapPool": "https://app.uniswap.org/explore/pools/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
     "officialSwap": "https://app.uniswap.org/swap?chain=base&inputCurrency=0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2&outputCurrency=0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
-    "liquidityDepthNote": "Starter-depth only; trades can have high price impact and slippage."
+    "liquidityDepthNote": "Starter-depth only; trades can have high price impact and slippage.",
+    "liquidityStatementPage": "https://gcagochina.com/liquidity.html",
+    "liquidityStatement": "https://gcagochina.com/liquidity.json",
+    "lpLockClaimed": false
   },
   "supplyDisclosure": {
     "status": "public-supply-disclosure-published",
@@ -152,6 +157,7 @@
     "blockaidFollowup": "public-blockaid-followup-package-published",
     "technicalReport": "public-internal-technical-report-published",
     "reserveStatement": "public-reserve-address-statement-published",
+    "liquidityStatement": "public-liquidity-custody-statement-published",
     "blockaidFalsePositiveReport": "submitted-2026-05-10-warning-removal-not-confirmed",
     "coinGeckoTrackedListing": "not-submitted",
     "coinMarketCapTrackedListing": "not-submitted",

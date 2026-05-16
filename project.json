@@ -51,6 +51,8 @@
   "marketPageUrl": "https://gcagochina.com/markets.html",
   "marketQualityPageUrl": "https://gcagochina.com/market-quality.html",
   "marketQualityUrl": "https://gcagochina.com/market-quality.json",
+  "liquidityPageUrl": "https://gcagochina.com/liquidity.html",
+  "liquidityUrl": "https://gcagochina.com/liquidity.json",
   "supplyPageUrl": "https://gcagochina.com/supply.html",
   "supplyDisclosureUrl": "https://gcagochina.com/supply.json",
   "securityPageUrl": "https://gcagochina.com/security.html",
@@ -137,6 +139,12 @@
     "url": "https://gcagochina.com/reserve-statement.json",
     "useCase": "Public reserve wallet disclosure for concentration and custody review."
   },
+  "liquidityStatement": {
+    "status": "public-liquidity-custody-statement-published",
+    "pageUrl": "https://gcagochina.com/liquidity.html",
+    "url": "https://gcagochina.com/liquidity.json",
+    "useCase": "Public LP custody and starter-depth liquidity statement for wallet-security, DEX, and data-platform review."
+  },
   "baseScanContractUrl": "https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "officialEmail": "GCAgochina@outlook.com",
   "officialSocialLinks": [
@@ -209,7 +217,8 @@
     "accessOperationsRunbook": "public-access-operations-runbook-published",
     "blockaidFollowup": "public-blockaid-followup-package-published",
     "technicalReport": "public-internal-technical-report-published",
-    "reserveStatement": "public-reserve-address-statement-published"
+    "reserveStatement": "public-reserve-address-statement-published",
+    "liquidityStatement": "public-liquidity-custody-statement-published"
   },
   "listingReadiness": {
     "status": "not-ready",

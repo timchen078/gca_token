@@ -15,6 +15,9 @@
     "poolAddress": "0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
     "quoteAsset": "USDT",
     "quoteAssetAddress": "0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2",
+    "liquidityStatementPage": "https://gcagochina.com/liquidity.html",
+    "liquidityStatement": "https://gcagochina.com/liquidity.json",
+    "lpLockClaimed": false,
     "liquidityDepth": "starter-depth-only"
   },
   "completedMilestones": [

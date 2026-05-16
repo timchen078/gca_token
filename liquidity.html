@@ -3,22 +3,22 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>GCA Risk | Public Risk Disclosures</title>
-    <meta name="description" content="Official GCA risk page covering early-stage status, starter liquidity, wallet warnings, audit limits, owner reserve custody, DEX execution risk, and public claim boundaries.">
-    <link rel="canonical" href="https://gcagochina.com/risk.html">
+    <title>GCA Liquidity | LP Custody Statement</title>
+    <meta name="description" content="Official GCA liquidity and LP custody statement covering the Base Mainnet GCA/USDT pool, starter-depth liquidity, unlocked LP status, custody boundaries, and future lock evidence requirements.">
+    <link rel="canonical" href="https://gcagochina.com/liquidity.html">
     <link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">
     <link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="GCA | Go China Access">
-    <meta property="og:title" content="GCA Risk | Public Risk Disclosures">
-    <meta property="og:description" content="Official GCA risk page covering early-stage status, starter liquidity, wallet warnings, audit limits, owner reserve custody, DEX execution risk, and public claim boundaries.">
-    <meta property="og:url" content="https://gcagochina.com/risk.html">
+    <meta property="og:title" content="GCA Liquidity | LP Custody Statement">
+    <meta property="og:description" content="Official GCA liquidity and LP custody statement covering the Base Mainnet GCA/USDT pool, starter-depth liquidity, unlocked LP status, custody boundaries, and future lock evidence requirements.">
+    <meta property="og:url" content="https://gcagochina.com/liquidity.html">
     <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="GCA Risk | Public Risk Disclosures">
-    <meta name="twitter:description" content="Official GCA risk page covering early-stage status, starter liquidity, wallet warnings, audit limits, owner reserve custody, DEX execution risk, and public claim boundaries.">
+    <meta name="twitter:title" content="GCA Liquidity | LP Custody Statement">
+    <meta name="twitter:description" content="Official GCA liquidity and LP custody statement covering the Base Mainnet GCA/USDT pool, starter-depth liquidity, unlocked LP status, custody boundaries, and future lock evidence requirements.">
     <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
     <style>
       :root {
@@ -206,6 +206,10 @@
         overflow-wrap: anywhere;
       }
 
+      .good {
+        color: var(--green);
+      }
+
       .pending {
         color: var(--gold);
       }
@@ -260,29 +264,17 @@
         font-size: 14px;
       }
 
-      @media (max-width: 860px) {
+      @media (max-width: 820px) {
+        nav,
+        .nav-links {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
         .facts,
         .grid,
         .two {
           grid-template-columns: 1fr;
-        }
-
-        nav {
-          align-items: flex-start;
-          flex-direction: column;
-          padding: 14px 0;
-        }
-
-        .nav-links {
-          flex-wrap: wrap;
-        }
-
-        .row {
-          grid-template-columns: 1fr;
-        }
-
-        .row strong {
-          white-space: normal;
         }
       }
     </style>
@@ -295,7 +287,6 @@
           <span>GCA</span>
         </a>
         <div class="nav-links">
-          <a href="index.html">Home</a>
           <a href="verify.html">Verify</a>
           <a href="buy.html">Buy Guide</a>
           <a href="markets.html">Markets</a>
@@ -303,109 +294,106 @@
           <a href="supply.html">Supply</a>
           <a href="security.html">Security</a>
           <a href="risk.html">Risk</a>
-          <a href="faq.html">FAQ</a>
-          <a href="status.html">Status</a>
-          <a href="listing-kit.html">Listing Kit</a>
+          <a href="trust.html">Trust Center</a>
+          <a href="reviewer-kit.html">Reviewer Kit</a>
         </div>
       </nav>
     </header>
 
     <main class="shell">
       <section aria-labelledby="title">
-        <h1 id="title">GCA Risk Disclosures</h1>
-        <p class="lead">This page is the public risk reference for GCA. It does not tell anyone to buy or sell. It explains the known limitations around liquidity, wallet warnings, supply reporting, owner reserve custody, audits, utility readiness, and public communications.</p>
+        <h1 id="title">GCA Liquidity And LP Custody</h1>
+        <p class="lead">This page is the public liquidity and LP custody statement for GCA. It records the official Base Mainnet GCA/USDT market route, current starter-depth liquidity status, unlocked LP boundary, and what evidence would be required before any future LP lock claim can be made.</p>
         <div class="actions">
-          <a class="button" href="verify.html">Verify GCA</a>
-          <a class="button primary" href="status.html">Project Status</a>
-          <a class="button" href="security.html">Security</a>
-          <a class="button" href="supply.html">Supply</a>
+          <a class="button primary" href="liquidity.json">Liquidity JSON</a>
+          <a class="button primary" href="https://app.uniswap.org/swap?chain=base&amp;inputCurrency=0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2&amp;outputCurrency=0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6" target="_blank" rel="noreferrer">Open Swap</a>
+          <a class="button" href="https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0" target="_blank" rel="noreferrer">GeckoTerminal</a>
+          <a class="button" href="https://dexscreener.com/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0" target="_blank" rel="noreferrer">DEX Screener</a>
           <a class="button" href="markets.html">Markets</a>
-          <a class="button" href="liquidity.html">Liquidity Statement</a>
-          <a class="button" href="faq.html">FAQ</a>
           <a class="button" href="market-quality.html">Market Quality</a>
-          <a class="button" href="listing-kit.html">Listing Kit</a>
+          <a class="button" href="blockaid-followup.html">Blockaid Follow-up</a>
+          <a class="button" href="risk.html">Risk</a>
         </div>
       </section>
 
-      <section class="facts" aria-label="Top risks">
+      <section class="facts" aria-label="Liquidity snapshot">
         <div class="fact">
-          <span class="label">Stage</span>
-          <span class="value pending">Early-stage</span>
+          <span class="label">Network</span>
+          <span class="value">Base Mainnet / 8453</span>
         </div>
         <div class="fact">
-          <span class="label">Liquidity</span>
-          <span class="value pending">Starter depth</span>
+          <span class="label">Official Pair</span>
+          <span class="value">GCA/USDT</span>
         </div>
         <div class="fact">
-          <span class="label">Audit</span>
-          <span class="value pending">No third-party audit</span>
+          <span class="label">Liquidity Depth</span>
+          <span class="value pending">Starter-depth only</span>
         </div>
         <div class="fact">
-          <span class="label">Reserve</span>
-          <span class="value pending">Owner-controlled</span>
-        </div>
-        <div class="fact">
-          <span class="label">Contract</span>
-          <span class="value">0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6</span>
+          <span class="label">LP Lock Claim</span>
+          <span class="value pending">Not claimed</span>
         </div>
       </section>
 
-      <section class="section two" aria-label="Trading risks">
+      <section class="section two" aria-label="Official market and LP status">
         <div class="panel">
-          <h2>Market and Liquidity</h2>
-          <p class="note">The official GCA/USDT pool on Base Mainnet has starter-depth liquidity only. Small trades can move price sharply, execution can vary, slippage can be high, and data platforms may show delayed or incomplete price data. The <a href="liquidity.html">Liquidity Statement</a> also records that no LP lock is currently claimed.</p>
+          <h2>Official Market Route</h2>
+          <p class="note">The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool. This page does not certify current balances, market depth, or execution quality.</p>
+          <div class="list">
+            <div class="row"><span>GCA contract</span><strong>0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6</strong></div>
+            <div class="row"><span>Pool address</span><strong>0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0</strong></div>
+            <div class="row"><span>DEX</span><strong>Uniswap v4 / 0.01%</strong></div>
+            <div class="row"><span>Quote asset</span><strong>USDT on Base</strong></div>
+            <div class="row"><span>USDT contract</span><strong>0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2</strong></div>
+          </div>
         </div>
+
         <div class="panel">
-          <h2>Wallet and DEX Warnings</h2>
-          <p class="note">Wallets and DEX interfaces can show high-risk warnings for new, low-liquidity, or lightly indexed tokens. A Blockaid false-positive report was submitted on 2026-05-10, but report submission does not mean warnings have been removed.</p>
+          <h2>LP Custody Boundary</h2>
+          <p class="note">No LP lock, LP burn, or LP multisig custody is currently claimed. Public materials should describe liquidity as starter-depth and should not imply that liquidity cannot be removed.</p>
+          <div class="list">
+            <div class="row"><span>LP lock claimed</span><strong class="pending">No</strong></div>
+            <div class="row"><span>LP burn claimed</span><strong class="pending">No</strong></div>
+            <div class="row"><span>Multisig LP custody claimed</span><strong class="pending">No</strong></div>
+            <div class="row"><span>Current wording</span><strong>unlocked LP / starter-depth liquidity</strong></div>
+          </div>
         </div>
       </section>
 
-      <section class="section grid" aria-label="Project risks">
+      <section class="section grid" aria-label="Liquidity risks">
         <div class="panel">
-          <h3>Audit Status</h3>
-          <p class="note">Internal engineering review is complete, but no independent third-party audit report exists. GCA should not be described as externally audited or audit-approved.</p>
+          <h3>Price Impact</h3>
+          <p class="note">Small trades can move price sharply. Users should check expected output, price impact, slippage, and token addresses before signing any transaction.</p>
         </div>
         <div class="panel">
-          <h3>Reserve Custody</h3>
-          <p class="note">The 600,000,000 GCA owner reserve is held in a disclosed owner-controlled wallet. It is not locked, vested, or multisig-controlled unless custody changes on-chain later.</p>
+          <h3>Removal Risk</h3>
+          <p class="note">Because no LP lock is claimed, liquidity can change. This is a disclosed market-structure risk and should not be described as a contract-level transfer restriction.</p>
         </div>
         <div class="panel">
-          <h3>Utility Readiness</h3>
-          <p class="note">The Web3 Radar access bridge is still not public self-service from this website. Holder credits, GCA Member status, and the planned 10,000 GCA member benefit are account-level records, not cash, income, reimbursement, or trading permission.</p>
-        </div>
-      </section>
-
-      <section class="section two" aria-label="Supply and platform risks">
-        <div class="panel">
-          <h2>Supply Reporting</h2>
-          <p class="note">The contract total supply is fixed at 1,000,000,000 GCA. The 40/60 allocation is a public reporting target. Data platforms can apply their own circulating-supply methods and may not immediately accept the reserve treatment.</p>
-        </div>
-        <div class="panel">
-          <h2>Listing and Metadata</h2>
-          <p class="note">GeckoTerminal token information was approved on 2026-05-11, while the BaseScan token profile was returned as information-insufficient on 2026-05-13 and resubmitted on 2026-05-13. CoinGecko and CoinMarketCap tracked listing requests are not submitted because current liquidity and public activity are still weak.</p>
+          <h3>Reviewer Use</h3>
+          <p class="note">Reviewers can use this page with <a href="blockaid-followup.html">Blockaid Follow-up</a>, <a href="market-quality.html">Market Quality</a>, and <a href="risk.html">Risk</a> to distinguish token-transfer controls from liquidity and market-depth risks.</p>
         </div>
       </section>
 
-      <section class="section panel warning" aria-labelledby="prohibitedTitle">
-        <h2 id="prohibitedTitle">Do Not Use These Claims</h2>
+      <section class="section panel" aria-labelledby="futureLockTitle">
+        <h2 id="futureLockTitle">Future LP Lock Evidence Requirements</h2>
+        <p class="note">If GCA later locks LP, the project should publish the lock provider or contract, locked pool or position identifier, lock transaction hash, lock owner or beneficiary, unlock date, and a direct explorer link. Until those items exist on-chain and are published, GCA should not be described as LP locked.</p>
+      </section>
+
+      <section class="section panel warning" aria-labelledby="claimTitle">
+        <h2 id="claimTitle">Public Claim Boundaries</h2>
         <ul>
-          <li>Do not claim price support, yield, redemption rights, guaranteed liquidity, deep liquidity, or investment outcomes.</li>
-          <li>Do not claim third-party audit completion, external audit approval, locked reserve, or multisig reserve control.</li>
-          <li>Do not claim permanent warning-free status or security-vendor approval unless it is confirmed by the current wallet UI or the vendor confirms it.</li>
-          <li>Do not use artificial volume, self-trading, wash trading, or fake activity as a listing or trust strategy.</li>
-          <li>Do not ask users for private keys, seed phrases, exchange API secrets, withdrawal permission, or custody of funds.</li>
+          <li>Safe to say: the official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool.</li>
+          <li>Safe to say: current liquidity is starter-depth only and can have high price impact.</li>
+          <li>Safe to say: no LP lock is currently claimed.</li>
+          <li>Do not claim deep liquidity, price support, price stability, guaranteed execution, LP lock, LP burn, or locked reserve before verifiable on-chain evidence exists.</li>
+          <li>Do not use artificial activity, self-trading, or misleading market activity as a listing or trust strategy.</li>
         </ul>
-      </section>
-
-      <section class="section panel" aria-labelledby="saferTitle">
-        <h2 id="saferTitle">Safer Public Framing</h2>
-        <p class="note">Use verifiable facts: Base Mainnet chain ID 8453, the official token contract, source verification, fixed supply, no mint function, no token tax, official GCA/USDT pool, disclosed owner reserve wallet, GeckoTerminal approval, pending BaseScan profile, no third-party audit, and starter-depth liquidity.</p>
       </section>
     </main>
 
     <footer>
-      <div class="shell">GCA risk page. Verify the official contract, pool, security page, and status page before interacting or sharing project information.</div>
+      <div class="shell">GCA liquidity statement. Verify Base Mainnet chain ID 8453, the token contract, USDT contract, and official pool before interacting.</div>
     </footer>
   </body>
 </html>

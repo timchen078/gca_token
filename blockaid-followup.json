@@ -39,8 +39,8 @@
     },
     "lpLock": {
       "status": "not-locked-not-claimed",
-      "response": "No LP lock is currently claimed. If a future LP lock is executed, the project will publish the lock platform, lock address, transaction hash, position identifier, unlock date, and custody details.",
-      "publicReference": "https://gcagochina.com/reserve-statement.html"
+      "response": "No LP lock is currently claimed. GCA publishes a dedicated liquidity statement that records the unlocked LP boundary and the evidence required before any future LP lock claim can be made.",
+      "publicReference": "https://gcagochina.com/liquidity.html"
     },
     "supplyConcentration": {
       "status": "disclosed-owner-reserve",
@@ -67,7 +67,10 @@
     "quoteAssetAddress": "0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2",
     "geckoTerminal": "https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
     "dexScreener": "https://dexscreener.com/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
-    "liquidityDepthStatus": "starter-depth-only"
+    "liquidityDepthStatus": "starter-depth-only",
+    "liquidityStatementPage": "https://gcagochina.com/liquidity.html",
+    "liquidityStatement": "https://gcagochina.com/liquidity.json",
+    "lpLockClaimed": false
   },
   "reviewRequest": {
     "requestedOutcome": "Please review whether any suspected-honeypot or transfer-blocking label can be separated from disclosed market-structure risks.",
@@ -94,6 +97,8 @@
     "technicalReport": "https://gcagochina.com/technical-report.json",
     "reserveStatementPage": "https://gcagochina.com/reserve-statement.html",
     "reserveStatement": "https://gcagochina.com/reserve-statement.json",
+    "liquidityPage": "https://gcagochina.com/liquidity.html",
+    "liquidity": "https://gcagochina.com/liquidity.json",
     "walletWarningEvidencePage": "https://gcagochina.com/wallet-warning.html",
     "walletWarningEvidence": "https://gcagochina.com/wallet-warning.json",
     "trustCenterPage": "https://gcagochina.com/trust.html",
