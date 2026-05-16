@@ -220,6 +220,17 @@ class GcaMemberBackendTests(unittest.TestCase):
         self.assertEqual(summary["totals"]["memberBenefitTransfers"], 1)
         self.assertEqual(summary["totals"]["transferredMemberBenefits"], 1)
 
+        review_package = backend.review_package()
+        self.assertTrue(review_package["ok"])
+        self.assertEqual(review_package["packageType"], "gca-local-review-package")
+        self.assertEqual(review_package["localEndpoint"], "/gca/review-package")
+        self.assertFalse(review_package["publicSelfServiceClaim"])
+        self.assertFalse(review_package["automaticTokenTransfer"])
+        self.assertTrue(review_package["exportBoundaries"]["localhostOnly"])
+        self.assertTrue(review_package["exportBoundaries"]["readOnlyTransferReceiptVerification"])
+        self.assertEqual(review_package["operatorSummary"]["totals"]["memberBenefitTransfers"], 1)
+        self.assertIn("memberBenefitTransfer", review_package["publicReferences"])
+
         duplicate = backend.record_member_benefit_transfer({
             "memberLedgerId": response["memberLedger"]["memberLedgerId"],
             "memberBenefitTransferTx": TRANSFER_TX,
@@ -342,6 +353,16 @@ class GcaMemberBackendTests(unittest.TestCase):
             self.assertEqual(summary["dataLedgers"]["pre_registrations"]["count"], 1)
             self.assertFalse(summary["publicSelfServiceClaim"])
             self.assertFalse(summary["automaticTokenTransfer"])
+
+            with urlopen(f"{base_url}/gca/review-package?limit=5", timeout=10) as response:
+                review_package = json.loads(response.read().decode())
+            self.assertTrue(review_package["ok"])
+            self.assertEqual(review_package["packageType"], "gca-local-review-package")
+            self.assertEqual(review_package["localEndpoint"], "/gca/review-package")
+            self.assertEqual(review_package["operatorSummary"]["dataLedgers"]["pre_registrations"]["count"], 1)
+            self.assertFalse(review_package["publicSelfServiceClaim"])
+            self.assertFalse(review_package["automaticTokenTransfer"])
+            self.assertTrue(review_package["exportBoundaries"]["localhostOnly"])
 
             transfer_request = Request(
                 f"{base_url}/gca/member-benefit-transfers",

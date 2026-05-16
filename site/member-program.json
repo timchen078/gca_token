@@ -112,6 +112,7 @@
       "dataDirectory": ".gca_access_data/",
       "sameOriginSubmissionOnLocalhost": true,
       "localOperatorSummaryEndpoint": "/gca/operator-summary",
+      "localReviewPackageEndpoint": "/gca/review-package",
       "walletVerificationMethod": "Base Mainnet public RPC eth_call ERC-20 balanceOf",
       "transferReceiptVerificationMethod": "Base Mainnet public RPC eth_getTransactionReceipt ERC-20 Transfer log",
       "writesJsonlLedgers": [

@@ -783,6 +783,51 @@ class GcaMemberBackend:
         }
         return summary
 
+    def review_package(self, limit: int = 100) -> dict[str, Any]:
+        summary = self.operator_summary(limit=limit)
+        return {
+            "ok": True,
+            "packageType": "gca-local-review-package",
+            "generatedAt": summary["generatedAt"],
+            "intendedUse": "Operator export for GCA support review, platform follow-up, and reviewer evidence handoff.",
+            "chainId": CHAIN_ID,
+            "contractAddress": CONTRACT_ADDRESS,
+            "memberPacketVersion": PACKET_VERSION,
+            "contactEmail": CONTACT_EMAIL,
+            "publicSelfServiceClaim": False,
+            "automaticTokenTransfer": False,
+            "localJsonlDataOnly": True,
+            "localEndpoint": "/gca/review-package",
+            "operatorSummary": summary,
+            "exportBoundaries": {
+                "localhostOnly": True,
+                "noPrivateKeys": True,
+                "noSeedPhrases": True,
+                "noExchangeApiSecrets": True,
+                "noWithdrawalPermission": True,
+                "noCustody": True,
+                "readOnlyWalletVerification": True,
+                "readOnlyTransferReceiptVerification": True,
+                "manualReserveTransferOnly": True,
+            },
+            "publicReferences": {
+                "memberProgram": "https://gcagochina.com/member-program.json",
+                "memberLedger": "https://gcagochina.com/member-ledger.json",
+                "memberBenefitTransfer": "https://gcagochina.com/member-benefit-transfer.json",
+                "accessApi": "https://gcagochina.com/access-api.json",
+                "support": "https://gcagochina.com/support.json",
+                "technicalReport": "https://gcagochina.com/technical-report.json",
+                "reserveStatement": "https://gcagochina.com/reserve-statement.json",
+            },
+            "reviewChecklist": [
+                "Confirm each wallet verification uses Base Mainnet chainId 8453 and the official GCA contract.",
+                "Confirm holder credits remain utility credits only and are not cash, income, or trading permission.",
+                "Confirm GCA Member records require at least 1,000,000 GCA and 30 consecutive holding days before benefit review.",
+                "Confirm any 10,000 GCA member benefit transfer has a successful Base Mainnet GCA Transfer log to the verified member wallet.",
+                "Confirm no user secret, private key, seed phrase, exchange API secret, withdrawal permission, or custody request appears in notes.",
+            ],
+        }
+
 
 def build_handler(site_dir: Path, backend: GcaMemberBackend) -> type[SimpleHTTPRequestHandler]:
     class GcaMemberRequestHandler(SimpleHTTPRequestHandler):
@@ -830,6 +875,15 @@ def build_handler(site_dir: Path, backend: GcaMemberBackend) -> type[SimpleHTTPR
                 if parsed.path == "/gca/operator-summary":
                     self.assert_local_api_client()
                     self.send_json(backend.operator_summary())
+                    return
+                if parsed.path == "/gca/review-package":
+                    self.assert_local_api_client()
+                    limit_text = query.get("limit", ["100"])[0]
+                    try:
+                        limit = min(max(int(limit_text), 1), 200)
+                    except ValueError as exc:
+                        raise BackendError("limit must be an integer") from exc
+                    self.send_json(backend.review_package(limit=limit))
                     return
                 ledger_map = {
                     "/gca/pre-registrations": "pre_registrations",
