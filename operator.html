@@ -368,7 +368,7 @@
         <p class="lead">This page reads local JSONL ledger records from <code>tools/gca_member_backend.py</code> when opened through <code>http://127.0.0.1:8787/operator.html</code>. The same review package can also be exported offline with <code>tools/export_gca_review_package.py</code>. The public website version is informational only and does not expose a public submission queue, self-service claim page, token transfer, or production account system.</p>
         <div class="actions section">
           <button class="button primary" id="refreshButton" type="button">Refresh Local Ledgers</button>
-          <button class="button" id="exportButton" type="button" disabled>Export Full Review Package</button>
+          <button class="button" id="exportButton" type="button" disabled>Export Full Review Package (Internal Only)</button>
           <button class="button" id="exportPublicButton" type="button" disabled>Export Public Redacted Package</button>
           <button class="button" id="copyHandoffButton" type="button" disabled>Copy Handoff Reply</button>
           <a class="button" href="members.html">Open Pre-Registration</a>
@@ -680,6 +680,15 @@
         );
       }
 
+      function confirmFullLocalExport() {
+        return window.confirm([
+          "Full-local review packages may include local user email, Telegram handle, reviewer notes, support notes, and evidence notes.",
+          "Do not send full-local packages to platforms, reviewers, moderators, data platforms, or wallet-security vendors.",
+          "Use Export Public Redacted Package for external handoff.",
+          "Continue full-local export for internal operator review only?",
+        ].join("\n"));
+      }
+
       async function exportReviewPackage(redacted = false) {
         if (!LOCAL_BACKEND_HOSTS.has(window.location.hostname)) {
           setStatus("Open the local backend URL before exporting", "warn");
@@ -688,6 +697,11 @@
         if (!backendConnected) {
           setStatus("Local backend unavailable; refresh before exporting", "warn");
           setHandoffStatus("Export disabled until local backend is connected", "warn");
+          return;
+        }
+        if (!redacted && !confirmFullLocalExport()) {
+          setStatus("Full local review package export cancelled", "warn");
+          setHandoffStatus("Use public redacted export for external handoff", "warn");
           return;
         }
 
