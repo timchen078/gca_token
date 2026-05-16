@@ -386,6 +386,9 @@
       "responseFields": [
         "packageType",
         "generatedAt",
+        "packageDigestAlgorithm",
+        "packageDigestSha256",
+        "recordManifest",
         "operatorSummary",
         "exportBoundaries",
         "publicReferences",
