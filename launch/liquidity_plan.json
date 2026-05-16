@@ -37,6 +37,20 @@
     "actualEthDeposited": "0.000999901772375952",
     "deploymentRecord": "deployments/base-mainnet-gca-liquidity.json"
   },
+  "currentOfficialMarket": {
+    "status": "official-public-route",
+    "protocolVersion": "v4",
+    "pair": "GCA/USDT",
+    "feeTier": "0.01%",
+    "poolAddress": "0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "quoteAsset": "USDT",
+    "quoteAssetAddress": "0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2",
+    "geckoTerminal": "https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "dexScreener": "https://dexscreener.com/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "liquidityDepthStatus": "starter-depth-only",
+    "lpLockClaimed": false,
+    "publicStatement": "https://gcagochina.com/liquidity.html"
+  },
   "scaleOptions": [
     {
       "name": "scaled_launch",

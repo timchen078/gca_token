@@ -91,6 +91,8 @@ LISTING_READINESS_PAGE_URL = "https://gcagochina.com/listing-readiness.html"
 LISTING_READINESS_URL = "https://gcagochina.com/listing-readiness.json"
 MARKET_QUALITY_PAGE_URL = "https://gcagochina.com/market-quality.html"
 MARKET_QUALITY_URL = "https://gcagochina.com/market-quality.json"
+LIQUIDITY_PAGE_URL = "https://gcagochina.com/liquidity.html"
+LIQUIDITY_URL = "https://gcagochina.com/liquidity.json"
 ONCHAIN_PROOFS_PAGE_URL = "https://gcagochina.com/onchain-proofs.html"
 ONCHAIN_PROOFS_URL = "https://gcagochina.com/onchain-proofs.json"
 SUPPLY_DISCLOSURE_URL = "https://gcagochina.com/supply.json"
@@ -195,6 +197,7 @@ def validate_root(text: str) -> None:
     assert_contains(text, "Community Kit", label)
     assert_contains(text, "Narrative System", label)
     assert_contains(text, "Weekly Radar", label)
+    assert_contains(text, "Liquidity", label)
     assert_contains(text, "Utility JSON", label)
     assert_contains(text, "Product Spec", label)
     assert_contains(text, "Access Portal", label)
@@ -422,6 +425,10 @@ def validate_token_safety_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong tokenSafety")
     if links.get("blockaidFollowup") != BLOCKAID_FOLLOWUP_URL:
         raise SiteCheckError(f"{label}: wrong blockaidFollowup")
+    if links.get("liquidityPage") != LIQUIDITY_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong liquidityPage")
+    if links.get("liquidity") != LIQUIDITY_URL:
+        raise SiteCheckError(f"{label}: wrong liquidity")
     if links.get("technicalReport") != TECHNICAL_REPORT_URL:
         raise SiteCheckError(f"{label}: wrong technicalReport")
     if links.get("reserveStatement") != RESERVE_STATEMENT_URL:
@@ -498,6 +505,8 @@ def validate_blockaid_followup_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong price volatility response")
     if responses.get("lpLock", {}).get("status") != "not-locked-not-claimed":
         raise SiteCheckError(f"{label}: wrong LP lock response")
+    if responses.get("lpLock", {}).get("publicReference") != LIQUIDITY_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong LP lock publicReference")
     if responses.get("supplyConcentration", {}).get("reserveWallet") != RESERVE_WALLET:
         raise SiteCheckError(f"{label}: wrong reserve wallet")
     if responses.get("thirdPartyAudit", {}).get("status") != "not-completed":
@@ -506,12 +515,26 @@ def validate_blockaid_followup_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong pool")
     if market.get("quoteAssetAddress") != BASE_USDT_ADDRESS:
         raise SiteCheckError(f"{label}: wrong quote asset")
+    if market.get("liquidityStatementPage") != LIQUIDITY_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong liquidityStatementPage")
+    if market.get("liquidityStatement") != LIQUIDITY_URL:
+        raise SiteCheckError(f"{label}: wrong liquidityStatement")
+    if market.get("lpLockClaimed") is not False:
+        raise SiteCheckError(f"{label}: LP lock must not be claimed")
     if links.get("blockaidFollowup") != BLOCKAID_FOLLOWUP_URL:
         raise SiteCheckError(f"{label}: wrong blockaidFollowup")
     if links.get("technicalReport") != TECHNICAL_REPORT_URL:
         raise SiteCheckError(f"{label}: wrong technicalReport")
     if links.get("reserveStatement") != RESERVE_STATEMENT_URL:
         raise SiteCheckError(f"{label}: wrong reserveStatement")
+    if links.get("liquidityPage") != LIQUIDITY_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong liquidityPage")
+    if links.get("liquidity") != LIQUIDITY_URL:
+        raise SiteCheckError(f"{label}: wrong liquidity")
+    if links.get("liquidityPage") != LIQUIDITY_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong liquidityPage")
+    if links.get("liquidity") != LIQUIDITY_URL:
+        raise SiteCheckError(f"{label}: wrong liquidity")
     if "GCA has published an internal technical report and reserve address statement for reviewer triage." not in payload.get("publicClaimBoundaries", {}).get("safeClaims", []):
         raise SiteCheckError(f"{label}: missing triage safe claim")
     if "LP lock before a verifiable lock exists" not in payload.get("publicClaimBoundaries", {}).get("doNotClaim", []):
@@ -976,6 +999,12 @@ def validate_roadmap_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong poolAddress")
     if market.get("quoteAssetAddress") != BASE_USDT_ADDRESS:
         raise SiteCheckError(f"{label}: wrong quoteAssetAddress")
+    if market.get("liquidityStatementPage") != LIQUIDITY_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong liquidityStatementPage")
+    if market.get("liquidityStatement") != LIQUIDITY_URL:
+        raise SiteCheckError(f"{label}: wrong liquidityStatement")
+    if market.get("lpLockClaimed") is not False:
+        raise SiteCheckError(f"{label}: LP lock must not be claimed")
     if market.get("liquidityDepth") != "starter-depth-only":
         raise SiteCheckError(f"{label}: wrong liquidityDepth")
     if dependencies.get("baseScanTokenProfile") != "resubmitted-awaiting-review":
@@ -3260,6 +3289,10 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong marketQualityPageUrl")
     if payload.get("marketQualityUrl") != MARKET_QUALITY_URL:
         raise SiteCheckError(f"{label}: wrong marketQualityUrl")
+    if payload.get("liquidityPageUrl") != LIQUIDITY_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong liquidityPageUrl")
+    if payload.get("liquidityUrl") != LIQUIDITY_URL:
+        raise SiteCheckError(f"{label}: wrong liquidityUrl")
     if payload.get("supplyDisclosureUrl") != SUPPLY_DISCLOSURE_URL:
         raise SiteCheckError(f"{label}: wrong supplyDisclosureUrl")
     if payload.get("onchainProofsPageUrl") != ONCHAIN_PROOFS_PAGE_URL:
@@ -3297,6 +3330,14 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: unexpected technical report status")
     if status.get("reserveStatement") != "public-reserve-address-statement-published":
         raise SiteCheckError(f"{label}: unexpected reserve statement status")
+    if status.get("liquidityStatement") != "public-liquidity-custody-statement-published":
+        raise SiteCheckError(f"{label}: unexpected liquidity statement status")
+    if payload.get("liquidityStatement", {}).get("status") != "public-liquidity-custody-statement-published":
+        raise SiteCheckError(f"{label}: unexpected liquidity statement object status")
+    if payload.get("liquidityStatement", {}).get("pageUrl") != LIQUIDITY_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong liquidity statement page")
+    if payload.get("liquidityStatement", {}).get("url") != LIQUIDITY_URL:
+        raise SiteCheckError(f"{label}: wrong liquidity statement url")
     if member_program.get("status") != "rules-published-public-claim-not-connected":
         raise SiteCheckError(f"{label}: unexpected member program status")
     if member_program.get("supportIntake", {}).get("status") != "public-support-intake-published":
@@ -3588,6 +3629,14 @@ def validate_tokenlist_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong reserveStatementPage")
     if extensions.get("reserveStatement") != RESERVE_STATEMENT_URL:
         raise SiteCheckError(f"{label}: wrong reserveStatement")
+    if extensions.get("liquidityStatementPage") != LIQUIDITY_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong liquidityStatementPage")
+    if extensions.get("liquidityStatement") != LIQUIDITY_URL:
+        raise SiteCheckError(f"{label}: wrong liquidityStatement")
+    if extensions.get("liquidityPage") != LIQUIDITY_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong liquidityPage")
+    if extensions.get("liquidity") != LIQUIDITY_URL:
+        raise SiteCheckError(f"{label}: wrong liquidity")
     if extensions.get("externalReviewStatusPage") != EXTERNAL_REVIEW_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong externalReviewStatusPage")
     if extensions.get("externalReviewStatus") != EXTERNAL_REVIEW_URL:
@@ -3648,6 +3697,8 @@ def validate_tokenlist_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong technicalReportStatus")
     if extensions.get("reserveStatementStatus") != "public-reserve-address-statement-published":
         raise SiteCheckError(f"{label}: wrong reserveStatementStatus")
+    if extensions.get("liquidityStatementStatus") != "public-liquidity-custody-statement-published":
+        raise SiteCheckError(f"{label}: wrong liquidityStatementStatus")
     if extensions.get("memberLedgerStatus") != "public-member-ledger-schema-published":
         raise SiteCheckError(f"{label}: wrong memberLedgerStatus")
     if extensions.get("supportIntakeStatus") != "public-support-intake-published":
@@ -3800,6 +3851,10 @@ def validate_well_known_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong marketQualityPage")
     if urls.get("marketQuality") != MARKET_QUALITY_URL:
         raise SiteCheckError(f"{label}: wrong marketQuality")
+    if urls.get("liquidityPage") != LIQUIDITY_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong liquidityPage")
+    if urls.get("liquidity") != LIQUIDITY_URL:
+        raise SiteCheckError(f"{label}: wrong liquidity")
     if urls.get("supplyDisclosure") != SUPPLY_DISCLOSURE_URL:
         raise SiteCheckError(f"{label}: wrong supplyDisclosure")
     if urls.get("onchainProofsPage") != ONCHAIN_PROOFS_PAGE_URL:
@@ -3812,6 +3867,12 @@ def validate_well_known_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong officialPair")
     if market.get("poolAddress") != OFFICIAL_POOL_ADDRESS:
         raise SiteCheckError(f"{label}: wrong poolAddress")
+    if market.get("liquidityStatementPage") != LIQUIDITY_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong liquidityStatementPage")
+    if market.get("liquidityStatement") != LIQUIDITY_URL:
+        raise SiteCheckError(f"{label}: wrong liquidityStatement")
+    if market.get("lpLockClaimed") is not False:
+        raise SiteCheckError(f"{label}: LP lock must not be claimed")
     if security.get("thirdPartyAuditCompleted") is not False:
         raise SiteCheckError(f"{label}: third-party audit status must remain false")
     if payload.get("platformStatus", {}).get("platformReplies") != "public-platform-reply-kit-published":
@@ -3832,6 +3893,8 @@ def validate_well_known_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong operations runbook status")
     if payload.get("platformStatus", {}).get("utilityBridge") != "public-utility-bridge-spec-published":
         raise SiteCheckError(f"{label}: wrong utilityBridge status")
+    if payload.get("platformStatus", {}).get("liquidityStatement") != "public-liquidity-custody-statement-published":
+        raise SiteCheckError(f"{label}: wrong liquidityStatement status")
     if payload.get("platformStatus", {}).get("productSpec") != "public-product-spec-published":
         raise SiteCheckError(f"{label}: wrong productSpec status")
     if payload.get("platformStatus", {}).get("releaseGates") != "public-release-gates-published":
@@ -4531,6 +4594,81 @@ def validate_market_quality_page(text: str) -> None:
     assert_current_pool_text(text, label)
 
 
+def validate_liquidity_json(text: str) -> None:
+    label = "/liquidity.json"
+    payload = load_json(text, label)
+    market = payload.get("officialMarket", {})
+    custody = payload.get("lpCustody", {})
+    boundaries = payload.get("publicClaimBoundaries", {})
+
+    if payload.get("schema") != LIQUIDITY_URL:
+        raise SiteCheckError(f"{label}: wrong schema")
+    if payload.get("pageUrl") != LIQUIDITY_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong pageUrl")
+    if payload.get("status") != "public-liquidity-custody-statement-published":
+        raise SiteCheckError(f"{label}: wrong status")
+    if payload.get("chainId") != 8453:
+        raise SiteCheckError(f"{label}: wrong chainId")
+    if payload.get("contractAddress") != MAINNET_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong contractAddress")
+    if market.get("pair") != "GCA/USDT":
+        raise SiteCheckError(f"{label}: wrong pair")
+    if market.get("dex") != "Uniswap v4":
+        raise SiteCheckError(f"{label}: wrong DEX")
+    if market.get("feeTier") != "0.01%":
+        raise SiteCheckError(f"{label}: wrong feeTier")
+    if market.get("poolAddress") != OFFICIAL_POOL_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong poolAddress")
+    if market.get("quoteAssetAddress") != BASE_USDT_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong quoteAssetAddress")
+    if market.get("geckoTerminal") != OFFICIAL_GECKOTERMINAL_URL:
+        raise SiteCheckError(f"{label}: wrong geckoTerminal")
+    if market.get("dexScreener") != OFFICIAL_DEXSCREENER_URL:
+        raise SiteCheckError(f"{label}: wrong dexScreener")
+    if market.get("liquidityDepthStatus") != "starter-depth-only":
+        raise SiteCheckError(f"{label}: wrong liquidityDepthStatus")
+    if custody.get("lpLockClaimed") is not False:
+        raise SiteCheckError(f"{label}: LP lock must not be claimed")
+    if custody.get("lpBurnClaimed") is not False:
+        raise SiteCheckError(f"{label}: LP burn must not be claimed")
+    if custody.get("multisigLpCustodyClaimed") is not False:
+        raise SiteCheckError(f"{label}: LP multisig must not be claimed")
+    if custody.get("canLiquidityChange") is not True:
+        raise SiteCheckError(f"{label}: must disclose that liquidity can change")
+    if custody.get("doNotDescribeAsLocked") is not True:
+        raise SiteCheckError(f"{label}: missing locked wording boundary")
+    if "lock transaction hash" not in custody.get("futureLockEvidenceRequired", []):
+        raise SiteCheckError(f"{label}: missing future lock evidence requirement")
+    if payload.get("officialLinks", {}).get("liquidityPage") != LIQUIDITY_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong liquidityPage link")
+    if payload.get("officialLinks", {}).get("liquidity") != LIQUIDITY_URL:
+        raise SiteCheckError(f"{label}: wrong liquidity link")
+    if "No LP lock is currently claimed." not in boundaries.get("safeClaims", []):
+        raise SiteCheckError(f"{label}: missing no-LP-lock safe claim")
+    if "LP lock before verifiable on-chain evidence exists" not in boundaries.get("doNotClaim", []):
+        raise SiteCheckError(f"{label}: missing LP lock claim boundary")
+    assert_current_pool_text(json.dumps(payload), label)
+    assert_not_contains(json.dumps(payload), "GCA/WETH", label)
+
+
+def validate_liquidity_page(text: str) -> None:
+    label = "/liquidity.html"
+    assert_contains(text, "GCA Liquidity And LP Custody", label)
+    assert_contains(text, "Liquidity JSON", label)
+    assert_contains(text, "Base Mainnet / 8453", label)
+    assert_contains(text, "GCA/USDT", label)
+    assert_contains(text, "Starter-depth only", label)
+    assert_contains(text, "LP Lock Claim", label)
+    assert_contains(text, "Not claimed", label)
+    assert_contains(text, "LP Custody Boundary", label)
+    assert_contains(text, "No LP lock, LP burn, or LP multisig custody is currently claimed", label)
+    assert_contains(text, "Future LP Lock Evidence Requirements", label)
+    assert_contains(text, "Do not claim deep liquidity", label)
+    assert_contains(text, OFFICIAL_GECKOTERMINAL_URL, label)
+    assert_contains(text, OFFICIAL_DEXSCREENER_URL, label)
+    assert_current_pool_text(text, label)
+
+
 def validate_onchain_proofs_json(text: str) -> None:
     label = "/onchain-proofs.json"
     payload = load_json(text, label)
@@ -4722,6 +4860,8 @@ def validate_reviewer_kit_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing sell test transaction")
     if "No third-party audit has been completed." not in boundaries.get("safeClaims", []):
         raise SiteCheckError(f"{label}: missing audit safe claim")
+    if payload.get("evidenceLinks", {}).get("liquidityStatement") != LIQUIDITY_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong liquidity evidence link")
     if "security-vendor approval, permanent warning-free status, or cross-wallet warning removal before vendor/current wallet UI confirms it" not in boundaries.get("doNotClaim", []):
         raise SiteCheckError(f"{label}: missing warning boundary")
     assert_current_pool_text(json.dumps(payload), label)
@@ -4738,6 +4878,7 @@ def validate_reviewer_kit_page(text: str) -> None:
     assert_contains(text, "Blockaid / MetaMask", label)
     assert_contains(text, "Blockaid Follow-up", label)
     assert_contains(text, "Follow-up submitted on 2026-05-13", label)
+    assert_contains(text, "Liquidity Statement", label)
     assert_contains(text, "BaseScan Profile", label)
     assert_contains(text, "On-chain Proofs", label)
     assert_contains(text, "Local Review Package", label)
@@ -4914,6 +5055,8 @@ def validate_trust_json(text: str) -> None:
         "walletSecurityProfile": WALLET_SECURITY_PROFILE_URL,
         "tokenSafetyPage": TOKEN_SAFETY_PAGE_URL,
         "tokenSafety": TOKEN_SAFETY_URL,
+        "liquidity": LIQUIDITY_URL,
+        "liquidityPage": LIQUIDITY_PAGE_URL,
         "externalReviewStatus": EXTERNAL_REVIEW_URL,
         "onchainProofs": ONCHAIN_PROOFS_URL,
         "brandKit": BRAND_KIT_URL,
@@ -4965,6 +5108,12 @@ def validate_trust_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong geckoTerminal")
     if market.get("dexScreener") != OFFICIAL_DEXSCREENER_URL:
         raise SiteCheckError(f"{label}: wrong dexScreener")
+    if market.get("liquidityStatementPage") != LIQUIDITY_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong liquidityStatementPage")
+    if market.get("liquidityStatement") != LIQUIDITY_URL:
+        raise SiteCheckError(f"{label}: wrong liquidityStatement")
+    if market.get("lpLockClaimed") is not False:
+        raise SiteCheckError(f"{label}: LP lock must not be claimed")
     if supply.get("ownerReserveWallet") != RESERVE_WALLET:
         raise SiteCheckError(f"{label}: wrong ownerReserveWallet")
     if supply.get("ownerReserveTransferTxs") != [RESERVE_TX_1, RESERVE_TX_2]:
@@ -4992,6 +5141,7 @@ def validate_trust_page(text: str) -> None:
     assert_contains(text, "Supply And Reserve", label)
     assert_contains(text, "Evidence Links", label)
     assert_contains(text, "Blockaid Follow-up", label)
+    assert_contains(text, "Liquidity Statement", label)
     assert_contains(text, "Public Claim Boundaries", label)
     assert_contains(text, "Base Mainnet / 8453", label)
     assert_contains(text, MAINNET_ADDRESS, label)
@@ -5230,6 +5380,8 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/trust.json",
         "https://gcagochina.com/market-quality.html",
         "https://gcagochina.com/market-quality.json",
+        "https://gcagochina.com/liquidity.html",
+        "https://gcagochina.com/liquidity.json",
         "https://gcagochina.com/token-safety.html",
         "https://gcagochina.com/token-safety.json",
         "https://gcagochina.com/blockaid-followup.html",
@@ -5328,6 +5480,8 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /radar.json", label)
     assert_contains(text, "Allow: /market-quality.html", label)
     assert_contains(text, "Allow: /market-quality.json", label)
+    assert_contains(text, "Allow: /liquidity.html", label)
+    assert_contains(text, "Allow: /liquidity.json", label)
     assert_contains(text, "Allow: /token-safety.html", label)
     assert_contains(text, "Allow: /token-safety.json", label)
     assert_contains(text, "Allow: /blockaid-followup.html", label)
@@ -5399,6 +5553,8 @@ CHECKS: list[EndpointCheck] = [
     ("/external-reviews.json", validate_external_reviews_json),
     ("/market-quality.html", validate_market_quality_page),
     ("/market-quality.json", validate_market_quality_json),
+    ("/liquidity.html", validate_liquidity_page),
+    ("/liquidity.json", validate_liquidity_json),
     ("/token-safety.html", validate_token_safety_page),
     ("/token-safety.json", validate_token_safety_json),
     ("/blockaid-followup.html", validate_blockaid_followup_page),

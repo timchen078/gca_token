@@ -1,12 +1,28 @@
 # GCA Liquidity Pool Runbook
 
-This runbook records the selected liquidity plan and the completed Base Mainnet execution. Creating liquidity spends real assets and sets the initial market price.
+This runbook records the initial completed Base Mainnet liquidity execution and the later official public market route. Creating liquidity spends real assets and sets market prices.
+
+## Current Public Route
+
+The current official public route is the Base Mainnet Uniswap v4 GCA/USDT pool. Public materials should point users to the GCA/USDT route, not the earlier pilot liquidity position.
+
+- Pair: GCA/USDT
+- Venue: Uniswap v4 on Base
+- Fee tier: 0.01%
+- Pool address: `0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0`
+- USDT on Base: `0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2`
+- GeckoTerminal: `https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0`
+- DEX Screener: `https://dexscreener.com/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0`
+- Public liquidity statement: `https://gcagochina.com/liquidity.html`
+- Current public description: starter-depth liquidity; no LP lock is claimed.
+
+The historical v3 position below remains part of the audit trail only.
 
 ## Recommended Venue
 
 - Venue: Uniswap on Base
 - Network: Base Mainnet
-- Pair candidates: GCA / ETH or GCA / USDC
+- Historical pilot pair: GCA / ETH
 - GCA contract: `0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`
 
 ## Required Decisions

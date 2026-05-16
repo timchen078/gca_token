@@ -1,0 +1,79 @@
+{
+  "schema": "https://gcagochina.com/liquidity.json",
+  "pageUrl": "https://gcagochina.com/liquidity.html",
+  "status": "public-liquidity-custody-statement-published",
+  "lastUpdated": "2026-05-16",
+  "projectName": "GCA",
+  "network": "Base Mainnet",
+  "chainId": 8453,
+  "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+  "purpose": "Public liquidity and LP custody statement for reviewers, wallets, DEX interfaces, data platforms, and community moderators.",
+  "officialMarket": {
+    "pair": "GCA/USDT",
+    "dex": "Uniswap v4",
+    "feeTier": "0.01%",
+    "network": "Base Mainnet",
+    "poolAddress": "0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "quoteAsset": "USDT",
+    "quoteAssetAddress": "0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2",
+    "geckoTerminal": "https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "dexScreener": "https://dexscreener.com/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "uniswapPool": "https://app.uniswap.org/explore/pools/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "officialSwap": "https://app.uniswap.org/swap?chain=base&inputCurrency=0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2&outputCurrency=0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+    "liquidityDepthStatus": "starter-depth-only"
+  },
+  "lpCustody": {
+    "lpLockClaimed": false,
+    "lpBurnClaimed": false,
+    "multisigLpCustodyClaimed": false,
+    "currentPublicDescription": "unlocked LP / starter-depth liquidity",
+    "canLiquidityChange": true,
+    "doNotDescribeAsLocked": true,
+    "futureLockEvidenceRequired": [
+      "lock provider or lock contract",
+      "locked pool or LP position identifier",
+      "lock transaction hash",
+      "lock owner or beneficiary",
+      "unlock date",
+      "direct explorer link"
+    ]
+  },
+  "riskDisclosures": {
+    "priceImpact": "Small trades can move price sharply because liquidity is starter-depth only.",
+    "slippage": "Execution can vary. Users should review expected output, price impact, slippage, and token addresses before signing.",
+    "removalRisk": "Because no LP lock is claimed, liquidity can change.",
+    "reviewerContext": "Liquidity risk is a market-structure risk and should be separated from contract-level transfer restrictions."
+  },
+  "officialLinks": {
+    "liquidityPage": "https://gcagochina.com/liquidity.html",
+    "liquidity": "https://gcagochina.com/liquidity.json",
+    "markets": "https://gcagochina.com/markets.html",
+    "marketQualityPage": "https://gcagochina.com/market-quality.html",
+    "marketQuality": "https://gcagochina.com/market-quality.json",
+    "risk": "https://gcagochina.com/risk.html",
+    "blockaidFollowupPage": "https://gcagochina.com/blockaid-followup.html",
+    "blockaidFollowup": "https://gcagochina.com/blockaid-followup.json",
+    "trustCenterPage": "https://gcagochina.com/trust.html",
+    "trustCenter": "https://gcagochina.com/trust.json",
+    "reviewerKitPage": "https://gcagochina.com/reviewer-kit.html",
+    "reviewerKit": "https://gcagochina.com/reviewer-kit.json"
+  },
+  "publicClaimBoundaries": {
+    "safeClaims": [
+      "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool.",
+      "Current liquidity is starter-depth only and can have high price impact.",
+      "No LP lock is currently claimed.",
+      "No LP burn is currently claimed.",
+      "No multisig LP custody is currently claimed."
+    ],
+    "doNotClaim": [
+      "deep liquidity",
+      "price support",
+      "price stability",
+      "guaranteed execution",
+      "LP lock before verifiable on-chain evidence exists",
+      "LP burn before verifiable on-chain evidence exists",
+      "locked reserve before on-chain custody changes"
+    ]
+  }
+}

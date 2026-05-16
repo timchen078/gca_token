@@ -56,7 +56,10 @@
     "geckoTerminal": "https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
     "dexScreener": "https://dexscreener.com/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
     "uniswapPool": "https://app.uniswap.org/explore/pools/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
-    "liquidityDepthStatus": "starter-depth-only"
+    "liquidityDepthStatus": "starter-depth-only",
+    "liquidityStatementPage": "https://gcagochina.com/liquidity.html",
+    "liquidityStatement": "https://gcagochina.com/liquidity.json",
+    "lpLockClaimed": false
   },
   "officialLinks": {
     "website": "https://gcagochina.com/",
@@ -71,6 +74,8 @@
     "technicalReport": "https://gcagochina.com/technical-report.json",
     "reserveStatementPage": "https://gcagochina.com/reserve-statement.html",
     "reserveStatement": "https://gcagochina.com/reserve-statement.json",
+    "liquidityPage": "https://gcagochina.com/liquidity.html",
+    "liquidity": "https://gcagochina.com/liquidity.json",
     "walletWarningEvidencePage": "https://gcagochina.com/wallet-warning.html",
     "walletWarningEvidence": "https://gcagochina.com/wallet-warning.json",
     "reviewerKitPage": "https://gcagochina.com/reviewer-kit.html",
