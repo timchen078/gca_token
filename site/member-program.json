@@ -113,6 +113,7 @@
       "sameOriginSubmissionOnLocalhost": true,
       "localOperatorSummaryEndpoint": "/gca/operator-summary",
       "localReviewPackageEndpoint": "/gca/review-package",
+      "localReviewPackageVerifier": "tools/verify_gca_review_package.py",
       "localReviewPackageRedactionModes": [
         "full-local",
         "redacted-public"

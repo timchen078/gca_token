@@ -72,6 +72,7 @@ LEDGER_NAMES = (
 LOCAL_CLIENTS = {"127.0.0.1", "::1", "localhost"}
 REDACTED_EXTERNAL_VALUE = "[redacted-for-external-sharing]"
 REDACTED_EXTERNAL_KEYS = {"email", "telegram", "reviewerNote", "supportNote", "evidenceNote"}
+PACKAGE_DIGEST_ALGORITHM = "sha256-json-sort-keys-excluding-packageDigestSha256"
 
 
 class BackendError(ValueError):
@@ -245,12 +246,42 @@ def redact_for_external_sharing(value: Any) -> Any:
 
 
 def add_package_digest(package: dict[str, Any]) -> dict[str, Any]:
-    package["packageDigestAlgorithm"] = "sha256-json-sort-keys-excluding-packageDigestSha256"
+    package["packageDigestAlgorithm"] = PACKAGE_DIGEST_ALGORITHM
+    package["packageDigestSha256"] = compute_package_digest(package)
+    return package
+
+
+def compute_package_digest(package: dict[str, Any]) -> str:
     digest_source = dict(package)
     digest_source.pop("packageDigestSha256", None)
     canonical = json.dumps(digest_source, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-    package["packageDigestSha256"] = hashlib.sha256(canonical.encode("utf-8")).hexdigest()
-    return package
+    return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+
+
+def verify_package_digest(package: dict[str, Any]) -> dict[str, Any]:
+    expected = str(package.get("packageDigestSha256") or "").strip().lower()
+    algorithm = str(package.get("packageDigestAlgorithm") or "").strip()
+    computed = compute_package_digest(package)
+    digest_format_ok = bool(re.fullmatch(r"[a-f0-9]{64}", expected))
+    algorithm_ok = algorithm == PACKAGE_DIGEST_ALGORITHM
+    digest_matches = digest_format_ok and computed == expected
+    ok = algorithm_ok and digest_matches
+    status = "verified" if ok else "digest_mismatch"
+    if not algorithm_ok:
+        status = "unsupported_digest_algorithm"
+    elif not digest_format_ok:
+        status = "invalid_digest_format"
+    return {
+        "ok": ok,
+        "status": status,
+        "packageType": package.get("packageType", ""),
+        "generatedAt": package.get("generatedAt", ""),
+        "redactedForExternalSharing": bool(package.get("redactedForExternalSharing")),
+        "packageDigestAlgorithm": algorithm,
+        "expectedDigest": expected,
+        "computedDigest": computed,
+        "recordManifest": package.get("recordManifest", {}),
+    }
 
 
 @dataclass

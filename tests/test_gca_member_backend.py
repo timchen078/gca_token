@@ -1,4 +1,6 @@
 import json
+import subprocess
+import sys
 import tempfile
 import threading
 import unittest
@@ -24,9 +26,11 @@ from tools.gca_member_backend import (
     holding_days_from_date,
     read_json_request,
     units_to_gca,
+    verify_package_digest,
 )
 
 
+ROOT = Path(__file__).resolve().parents[1]
 WALLET = "0x18d0007bc6be029f8ccd7cb13e324aa21891092d"
 TRANSFER_TX = "0x" + "b" * 64
 SOURCE_WALLET = "0x5e8F84748612B913aAcC937492AC25dc5630E246"
@@ -236,6 +240,10 @@ class GcaMemberBackendTests(unittest.TestCase):
         self.assertRegex(review_package["packageDigestSha256"], r"^[a-f0-9]{64}$")
         self.assertEqual(review_package["recordManifest"]["ledgerCounts"]["member_benefit_transfers"], 1)
         self.assertEqual(review_package["recordManifest"]["latestRecordCounts"]["support_reviews"], 2)
+        verification = verify_package_digest(review_package)
+        self.assertTrue(verification["ok"])
+        self.assertEqual(verification["status"], "verified")
+        self.assertEqual(verification["expectedDigest"], review_package["packageDigestSha256"])
 
         redacted_package = backend.review_package(redacted=True)
         redacted_text = json.dumps(redacted_package)
@@ -253,6 +261,43 @@ class GcaMemberBackendTests(unittest.TestCase):
         self.assertNotIn("Manual reserve-wallet transfer completed and recorded locally.", redacted_text)
         self.assertIn(WALLET.lower(), redacted_text)
         self.assertIn(TRANSFER_TX, redacted_text)
+        self.assertTrue(verify_package_digest(redacted_package)["ok"])
+
+        tampered_package = json.loads(json.dumps(redacted_package))
+        tampered_package["contactEmail"] = "changed@example.com"
+        tampered_verification = verify_package_digest(tampered_package)
+        self.assertFalse(tampered_verification["ok"])
+        self.assertEqual(tampered_verification["status"], "digest_mismatch")
+
+        with tempfile.TemporaryDirectory() as temp:
+            package_path = Path(temp) / "gca-review-package.json"
+            package_path.write_text(json.dumps(redacted_package), encoding="utf-8")
+            completed = subprocess.run(
+                [sys.executable, "tools/verify_gca_review_package.py", str(package_path)],
+                cwd=ROOT,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+        self.assertEqual(completed.returncode, 0, completed.stderr)
+        cli_result = json.loads(completed.stdout)
+        self.assertTrue(cli_result["ok"])
+        self.assertEqual(cli_result["computedDigest"], redacted_package["packageDigestSha256"])
+
+        with tempfile.TemporaryDirectory() as temp:
+            tampered_path = Path(temp) / "gca-review-package-tampered.json"
+            tampered_path.write_text(json.dumps(tampered_package), encoding="utf-8")
+            completed = subprocess.run(
+                [sys.executable, "tools/verify_gca_review_package.py", str(tampered_path)],
+                cwd=ROOT,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+        self.assertEqual(completed.returncode, 1)
+        cli_result = json.loads(completed.stdout)
+        self.assertFalse(cli_result["ok"])
+        self.assertEqual(cli_result["status"], "digest_mismatch")
 
         duplicate = backend.record_member_benefit_transfer({
             "memberLedgerId": response["memberLedger"]["memberLedgerId"],

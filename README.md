@@ -26,6 +26,12 @@ Run the local-only member backend for operator testing:
 
 Then open `http://127.0.0.1:8787/members.html` for intake or `http://127.0.0.1:8787/operator.html` for the local operator console. The backend serves `site/`, accepts `POST /gca/pre-registrations`, verifies GCA with read-only Base Mainnet `eth_call`, exposes `GET /gca/operator-summary`, exports a localhost-only reviewer evidence package at `GET /gca/review-package` with `recordManifest` and `packageDigestSha256`, supports `GET /gca/review-package?redact=public` for external-sharing redaction, and writes append-only JSONL records under `.gca_access_data/`. Operators can record a manually completed 10,000 GCA member benefit transfer with `POST /gca/member-benefit-transfers`; before recording it, the backend verifies the public transaction hash with read-only Base Mainnet `eth_getTransactionReceipt` and confirms a matching GCA `Transfer` log to the member wallet. It does not send tokens or ask for private keys, seed phrases, signatures, withdrawal permission, custody, or exchange API secrets.
 
+Verify an exported review package digest locally:
+
+```bash
+.venv/bin/python tools/verify_gca_review_package.py path/to/gca-review-package.json
+```
+
 ## Mainnet Launch Package
 
 - Canonical public facts: `docs/mainnet_public_profile.md`
