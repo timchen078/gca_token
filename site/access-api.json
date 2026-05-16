@@ -25,9 +25,11 @@
     "status": "local-only-backend-available",
     "script": "tools/gca_member_backend.py",
     "localUrl": "http://127.0.0.1:8787/members.html",
+    "operatorConsoleUrl": "http://127.0.0.1:8787/operator.html",
     "dataDirectory": ".gca_access_data/",
     "servesStaticSite": true,
     "sameOriginSubmissionOnLocalhost": true,
+    "localOperatorSummaryEndpoint": "/gca/operator-summary",
     "publicProductionEndpointLive": false,
     "writesJsonlLedgers": [
       "pre_registrations",
@@ -274,6 +276,27 @@
         "needs_more_information",
         "rejected",
         "ledger_recorded"
+      ]
+    },
+    {
+      "id": "operator-summary",
+      "method": "GET",
+      "path": "/gca/operator-summary",
+      "status": "local-only-not-public-production",
+      "purpose": "Return local operator console counts and latest JSONL records for pre-registrations, wallet verifications, credit ledger, member ledger, and support reviews.",
+      "requiredRequestFields": [
+        "localhostClient"
+      ],
+      "responseFields": [
+        "generatedAt",
+        "dataLedgers",
+        "totals",
+        "operatorBoundaries",
+        "publicSelfServiceClaim",
+        "automaticTokenTransfer"
+      ],
+      "allowedStatuses": [
+        "local-only"
       ]
     }
   ],

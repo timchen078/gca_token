@@ -104,6 +104,18 @@ class GcaMemberBackendTests(unittest.TestCase):
         self.assertEqual(len(store.read_all("member_ledger")), 1)
         self.assertEqual(len(store.read_all("support_reviews")), 1)
 
+        summary = backend.operator_summary()
+        self.assertTrue(summary["ok"])
+        self.assertFalse(summary["publicSelfServiceClaim"])
+        self.assertFalse(summary["automaticTokenTransfer"])
+        self.assertTrue(summary["localJsonlDataOnly"])
+        self.assertEqual(summary["totals"]["preRegistrations"], 1)
+        self.assertEqual(summary["totals"]["creditLedgerRecords"], 1)
+        self.assertEqual(summary["totals"]["activeMembers"], 1)
+        self.assertEqual(summary["totals"]["pendingManualReserveTransfers"], 1)
+        self.assertEqual(summary["dataLedgers"]["support_reviews"]["count"], 1)
+        self.assertTrue(summary["operatorBoundaries"]["readOnlyWalletVerification"])
+
     def test_below_threshold_registration_does_not_create_credit_or_member_records(self):
         backend, store = self.make_backend(9999)
         packet = sample_packet()
@@ -171,6 +183,14 @@ class GcaMemberBackendTests(unittest.TestCase):
             self.assertTrue(ledger["ok"])
             self.assertEqual(ledger["count"], 1)
             self.assertEqual(ledger["records"][0]["walletAddress"], WALLET.lower())
+
+            with urlopen(f"{base_url}/gca/operator-summary", timeout=10) as response:
+                summary = json.loads(response.read().decode())
+            self.assertTrue(summary["ok"])
+            self.assertEqual(summary["totals"]["memberLedgerRecords"], 1)
+            self.assertEqual(summary["dataLedgers"]["pre_registrations"]["count"], 1)
+            self.assertFalse(summary["publicSelfServiceClaim"])
+            self.assertFalse(summary["automaticTokenTransfer"])
 
             bad_request = Request(
                 f"{base_url}/gca/pre-registrations",

@@ -30,6 +30,7 @@ MEMBER_BENEFIT_PAGE_URL = "https://gcagochina.com/member-benefit.html"
 MEMBER_BENEFIT_URL = "https://gcagochina.com/member-benefit.json"
 MEMBER_BENEFIT_TRANSFER_PAGE_URL = "https://gcagochina.com/member-benefit-transfer.html"
 MEMBER_BENEFIT_TRANSFER_URL = "https://gcagochina.com/member-benefit-transfer.json"
+OPERATOR_PAGE_URL = "https://gcagochina.com/operator.html"
 SUPPORT_PAGE_URL = "https://gcagochina.com/support.html"
 SUPPORT_URL = "https://gcagochina.com/support.json"
 ROADMAP_PAGE_URL = "https://gcagochina.com/roadmap.html"
@@ -180,6 +181,8 @@ def validate_root(text: str) -> None:
     assert_contains(text, "Benefit Transfer Runbook", label)
     assert_contains(text, "member-benefit-transfer.html", label)
     assert_contains(text, "member-benefit-transfer.json", label)
+    assert_contains(text, "Operator Console", label)
+    assert_contains(text, "operator.html", label)
     assert_contains(text, "Support & Intake", label)
     assert_contains(text, "Roadmap", label)
     assert_contains(text, "Community Kit", label)
@@ -581,6 +584,35 @@ def validate_member_access_page(text: str) -> None:
     assert_not_contains(text, "personal_sign", label)
     assert_not_contains(text, OLD_WETH_POOL_ADDRESS, label)
     assert_not_contains(text, "GCA/WETH", label)
+
+
+def validate_operator_page(text: str) -> None:
+    label = "/operator.html"
+    assert_contains(text, "GCA Local Operator Console", label)
+    assert_contains(text, "Local-only GCA operator console", label)
+    assert_contains(text, "tools/gca_member_backend.py", label)
+    assert_contains(text, "http://127.0.0.1:8787/operator.html", label)
+    assert_contains(text, "LOCAL_BACKEND_HOSTS", label)
+    assert_contains(text, 'const OPERATOR_SUMMARY_ENDPOINT_PATH = "/gca/operator-summary";', label)
+    assert_contains(text, "Local operator backend connected", label)
+    assert_contains(text, "Public website view: local backend not connected", label)
+    assert_contains(text, "local JSONL ledger records", label)
+    assert_contains(text, ".gca_access_data/", label)
+    assert_contains(text, "Pre-registrations", label)
+    assert_contains(text, "100 credits records", label)
+    assert_contains(text, "Active GCA Members", label)
+    assert_contains(text, "Pending reserve transfers", label)
+    assert_contains(text, "Latest Support Review Records", label)
+    assert_contains(text, "/gca/pre-registrations", label)
+    assert_contains(text, "/gca/wallet-verifications", label)
+    assert_contains(text, "/gca/credit-ledger", label)
+    assert_contains(text, "/gca/member-ledger", label)
+    assert_contains(text, "/gca/member-review", label)
+    assert_contains(text, "manual reserve-wallet transfer review", label)
+    assert_contains(text, "never sends tokens", label)
+    assert_not_contains(text, "eth_sendTransaction", label)
+    assert_not_contains(text, "personal_sign", label)
+    assert_no_forbidden_public_claims(text, label)
 
 
 def validate_support_page(text: str) -> None:
@@ -1743,6 +1775,8 @@ def validate_access_api_page(text: str) -> None:
     assert_contains(text, "not live today", label)
     assert_contains(text, "not a public submission endpoint", label)
     assert_contains(text, "tools/gca_member_backend.py", label)
+    assert_contains(text, "operator.html", label)
+    assert_contains(text, "/gca/operator-summary", label)
     assert_contains(text, "local JSONL ledger records", label)
     assert_contains(text, "POST", label)
     assert_contains(text, "/gca/pre-registrations", label)
@@ -1827,10 +1861,14 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong local backend script")
     if local_backend.get("localUrl") != "http://127.0.0.1:8787/members.html":
         raise SiteCheckError(f"{label}: wrong local backend URL")
+    if local_backend.get("operatorConsoleUrl") != "http://127.0.0.1:8787/operator.html":
+        raise SiteCheckError(f"{label}: wrong local operator console URL")
     if local_backend.get("dataDirectory") != ".gca_access_data/":
         raise SiteCheckError(f"{label}: wrong local backend data directory")
     if local_backend.get("sameOriginSubmissionOnLocalhost") is not True:
         raise SiteCheckError(f"{label}: local backend should use same-origin localhost submissions")
+    if local_backend.get("localOperatorSummaryEndpoint") != "/gca/operator-summary":
+        raise SiteCheckError(f"{label}: wrong local operator summary endpoint")
     if local_backend.get("publicProductionEndpointLive") is not False:
         raise SiteCheckError(f"{label}: local backend must not mark production live")
     if local_backend.get("automaticTokenTransfer") is not False:
@@ -1878,6 +1916,13 @@ def validate_access_api_json(text: str) -> None:
             raise SiteCheckError(f"{label}: missing endpoint {endpoint_key}")
         if endpoint.get("status") != "planned-not-live":
             raise SiteCheckError(f"{label}: endpoint {endpoint_key} should be planned-not-live")
+    operator_summary = endpoint_map.get("GET /gca/operator-summary")
+    if operator_summary is None:
+        raise SiteCheckError(f"{label}: missing operator summary endpoint")
+    if operator_summary.get("status") != "local-only-not-public-production":
+        raise SiteCheckError(f"{label}: wrong operator summary endpoint status")
+    if "publicSelfServiceClaim" not in operator_summary.get("responseFields", []):
+        raise SiteCheckError(f"{label}: missing operator summary claim boundary")
     wallet = endpoint_map["POST /gca/wallet-verifications"]
     if "chainId must be 8453" not in wallet.get("serverChecks", []):
         raise SiteCheckError(f"{label}: missing chain check")
@@ -3657,10 +3702,14 @@ def validate_member_program_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong local backend script")
     if local_backend.get("localUrl") != "http://127.0.0.1:8787/members.html":
         raise SiteCheckError(f"{label}: wrong local backend URL")
+    if local_backend.get("operatorConsoleUrl") != "http://127.0.0.1:8787/operator.html":
+        raise SiteCheckError(f"{label}: wrong local operator console URL")
     if local_backend.get("dataDirectory") != ".gca_access_data/":
         raise SiteCheckError(f"{label}: wrong local backend data directory")
     if local_backend.get("sameOriginSubmissionOnLocalhost") is not True:
         raise SiteCheckError(f"{label}: local backend should use same-origin localhost submissions")
+    if local_backend.get("localOperatorSummaryEndpoint") != "/gca/operator-summary":
+        raise SiteCheckError(f"{label}: wrong local operator summary endpoint")
     if local_backend.get("publicProductionEndpointLive") is not False:
         raise SiteCheckError(f"{label}: local backend must not mark production live")
     if "credit_ledger" not in local_backend.get("writesJsonlLedgers", []):
@@ -4821,6 +4870,7 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/member-benefit.json",
         "https://gcagochina.com/member-benefit-transfer.html",
         "https://gcagochina.com/member-benefit-transfer.json",
+        "https://gcagochina.com/operator.html",
         "https://gcagochina.com/support.html",
         "https://gcagochina.com/support.json",
         "https://gcagochina.com/privacy.html",
@@ -4898,6 +4948,7 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /member-benefit.json", label)
     assert_contains(text, "Allow: /member-benefit-transfer.html", label)
     assert_contains(text, "Allow: /member-benefit-transfer.json", label)
+    assert_contains(text, "Allow: /operator.html", label)
     assert_contains(text, "Allow: /member-program.json", label)
     assert_contains(text, "Allow: /gca/member-access/", label)
     assert_contains(text, "Allow: /support.html", label)
@@ -4967,6 +5018,7 @@ CHECKS: list[EndpointCheck] = [
     ("/member-benefit.json", validate_member_benefit_json),
     ("/member-benefit-transfer.html", validate_member_benefit_transfer_page),
     ("/member-benefit-transfer.json", validate_member_benefit_transfer_json),
+    ("/operator.html", validate_operator_page),
     ("/support.html", validate_support_page),
     ("/support.json", validate_support_json),
     ("/roadmap.html", validate_roadmap_page),

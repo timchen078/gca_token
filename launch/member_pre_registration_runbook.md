@@ -9,7 +9,8 @@ This runbook keeps the current static member pre-registration flow operationally
 - Direct submission endpoint: not connected on the public static page
 - Local operator backend: `tools/gca_member_backend.py`
 - Local operator URL: `http://127.0.0.1:8787/members.html`
-- Local same-origin API: `POST /gca/pre-registrations`, `POST /gca/wallet-verifications`, `GET /gca/credit-ledger`, `GET /gca/member-ledger`, and `GET /gca/member-review`
+- Local operator console: `http://127.0.0.1:8787/operator.html`
+- Local same-origin API: `POST /gca/pre-registrations`, `POST /gca/wallet-verifications`, `GET /gca/operator-summary`, `GET /gca/credit-ledger`, `GET /gca/member-ledger`, and `GET /gca/member-review`
 - Fallback collection methods: copy packet, download JSON, or email packet to `GCAgochina@outlook.com`
 - Public claim status: not connected
 - Prepared Web3 Radar user access page: `/gca/member-access`
@@ -34,11 +35,12 @@ Run:
 .venv/bin/python tools/gca_member_backend.py --host 127.0.0.1 --port 8787
 ```
 
-Then open `http://127.0.0.1:8787/members.html`.
+Then open `http://127.0.0.1:8787/members.html` for intake or `http://127.0.0.1:8787/operator.html` for the local operator console.
 
 Local backend behavior:
 
 - Serves the static `site/` pages.
+- Exposes a local operator summary at `GET /gca/operator-summary` for pre-registration, wallet verification, credit ledger, member ledger, and support review counts.
 - Enables same-origin `POST /gca/pre-registrations` only when the page is opened from `localhost` or `127.0.0.1`.
 - Verifies the submitted wallet with read-only Base Mainnet `eth_call` / ERC-20 `balanceOf`.
 - Writes append-only local JSONL files under `.gca_access_data/`.

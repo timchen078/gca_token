@@ -44,6 +44,7 @@ MEMBER_BENEFIT_PAGE_URL = "https://gcagochina.com/member-benefit.html"
 MEMBER_BENEFIT_URL = "https://gcagochina.com/member-benefit.json"
 MEMBER_BENEFIT_TRANSFER_PAGE_URL = "https://gcagochina.com/member-benefit-transfer.html"
 MEMBER_BENEFIT_TRANSFER_URL = "https://gcagochina.com/member-benefit-transfer.json"
+OPERATOR_PAGE_URL = "https://gcagochina.com/operator.html"
 SUPPORT_PAGE_URL = "https://gcagochina.com/support.html"
 SUPPORT_URL = "https://gcagochina.com/support.json"
 ROADMAP_PAGE_URL = "https://gcagochina.com/roadmap.html"
@@ -130,6 +131,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("/member-benefit.json", script)
         self.assertIn("/member-benefit-transfer.html", script)
         self.assertIn("/member-benefit-transfer.json", script)
+        self.assertIn("/operator.html", script)
         self.assertIn("/support.html", script)
         self.assertIn("/support.json", script)
         self.assertIn("/roadmap.html", script)
@@ -196,6 +198,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("validate_member_ledger_json", script)
         self.assertIn("validate_member_benefit_transfer_page", script)
         self.assertIn("validate_member_benefit_transfer_json", script)
+        self.assertIn("validate_operator_page", script)
         self.assertIn("validate_support_page", script)
         self.assertIn("validate_support_json", script)
         self.assertIn("validate_roadmap_page", script)
@@ -293,6 +296,7 @@ class LaunchPackageTests(unittest.TestCase):
         module.validate_member_benefit_json((ROOT / "site" / "member-benefit.json").read_text())
         module.validate_member_benefit_transfer_page((ROOT / "site" / "member-benefit-transfer.html").read_text())
         module.validate_member_benefit_transfer_json((ROOT / "site" / "member-benefit-transfer.json").read_text())
+        module.validate_operator_page((ROOT / "site" / "operator.html").read_text())
         module.validate_support_page((ROOT / "site" / "support.html").read_text())
         module.validate_support_json((ROOT / "site" / "support.json").read_text())
         module.validate_roadmap_page((ROOT / "site" / "roadmap.html").read_text())
@@ -558,6 +562,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Allow: /member-benefit.json", robots)
         self.assertIn("Allow: /member-benefit-transfer.html", robots)
         self.assertIn("Allow: /member-benefit-transfer.json", robots)
+        self.assertIn("Allow: /operator.html", robots)
         self.assertIn("Allow: /support.html", robots)
         self.assertIn("Allow: /support.json", robots)
         self.assertIn("Allow: /roadmap.html", robots)
@@ -635,6 +640,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(MEMBER_BENEFIT_URL, sitemap)
         self.assertIn(MEMBER_BENEFIT_TRANSFER_PAGE_URL, sitemap)
         self.assertIn(MEMBER_BENEFIT_TRANSFER_URL, sitemap)
+        self.assertIn(OPERATOR_PAGE_URL, sitemap)
         self.assertIn(SUPPORT_PAGE_URL, sitemap)
         self.assertIn(SUPPORT_URL, sitemap)
         self.assertIn(ROADMAP_PAGE_URL, sitemap)
@@ -876,6 +882,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn('href="brand-kit.html"', site)
         self.assertIn('href="member-ledger.html"', site)
         self.assertIn('href="support.html"', site)
+        self.assertIn('href="operator.html"', site)
         self.assertIn('href="roadmap.html"', site)
         self.assertIn('href="community.html"', site)
         self.assertIn('href="narrative.html"', site)
@@ -915,6 +922,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Benefit Transfer Runbook", site)
         self.assertIn("member-benefit-transfer.html", site)
         self.assertIn("member-benefit-transfer.json", site)
+        self.assertIn("Operator Console", site)
         self.assertIn("GCA Member status", site)
         self.assertIn("not cash, income, reimbursement, or trading permission", site)
         self.assertIn("400,000,000 GCA / 40%", site)
@@ -1025,6 +1033,37 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("reviewStatuses", members)
         self.assertIn("ledger_recorded", members)
 
+    def test_operator_console_reads_local_ledgers_without_public_claims(self):
+        page = (ROOT / "site" / "operator.html").read_text()
+
+        self.assertIn("GCA Local Operator Console", page)
+        self.assertIn("Local-only GCA operator console", page)
+        self.assertIn("tools/gca_member_backend.py", page)
+        self.assertIn("http://127.0.0.1:8787/operator.html", page)
+        self.assertIn('const LOCAL_BACKEND_HOSTS = new Set(["127.0.0.1", "localhost"]);', page)
+        self.assertIn('const OPERATOR_SUMMARY_ENDPOINT_PATH = "/gca/operator-summary";', page)
+        self.assertIn("fetch(OPERATOR_SUMMARY_ENDPOINT_PATH", page)
+        self.assertIn("Public website view: local backend not connected", page)
+        self.assertIn("Local operator backend connected", page)
+        self.assertIn("local JSONL ledger records", page)
+        self.assertIn(".gca_access_data/", page)
+        self.assertIn("Pre-registrations", page)
+        self.assertIn("100 credits records", page)
+        self.assertIn("Active GCA Members", page)
+        self.assertIn("Pending reserve transfers", page)
+        self.assertIn("Latest Support Review Records", page)
+        self.assertIn("/gca/operator-summary", page)
+        self.assertIn("/gca/pre-registrations", page)
+        self.assertIn("/gca/wallet-verifications", page)
+        self.assertIn("/gca/credit-ledger", page)
+        self.assertIn("/gca/member-ledger", page)
+        self.assertIn("/gca/member-review", page)
+        self.assertIn("manual reserve-wallet transfer review", page)
+        self.assertIn("never sends tokens", page)
+        self.assertIn("not a public production account system", page)
+        self.assertNotIn("eth_sendTransaction", page)
+        self.assertNotIn("personal_sign", page)
+
     def test_member_access_preview_page_is_static_and_safe(self):
         page = (ROOT / "site" / "gca" / "member-access" / "index.html").read_text()
 
@@ -1083,8 +1122,10 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(rules["verification"]["localOperatorBackend"]["status"], "local-only-backend-available")
         self.assertEqual(rules["verification"]["localOperatorBackend"]["script"], "tools/gca_member_backend.py")
         self.assertEqual(rules["verification"]["localOperatorBackend"]["localUrl"], "http://127.0.0.1:8787/members.html")
+        self.assertEqual(rules["verification"]["localOperatorBackend"]["operatorConsoleUrl"], "http://127.0.0.1:8787/operator.html")
         self.assertEqual(rules["verification"]["localOperatorBackend"]["dataDirectory"], ".gca_access_data/")
         self.assertTrue(rules["verification"]["localOperatorBackend"]["sameOriginSubmissionOnLocalhost"])
+        self.assertEqual(rules["verification"]["localOperatorBackend"]["localOperatorSummaryEndpoint"], "/gca/operator-summary")
         self.assertFalse(rules["verification"]["localOperatorBackend"]["publicProductionEndpointLive"])
         self.assertIn("credit_ledger", rules["verification"]["localOperatorBackend"]["writesJsonlLedgers"])
         self.assertEqual(rules["publicPages"]["memberAccessPreview"], MEMBER_ACCESS_PAGE_URL)
@@ -1924,6 +1965,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("not live today", page)
         self.assertIn("not a public submission endpoint", page)
         self.assertIn("tools/gca_member_backend.py", page)
+        self.assertIn("operator.html", page)
         self.assertIn("local JSONL ledger records", page)
         self.assertIn("/gca/pre-registrations", page)
         self.assertIn("/gca/wallet-verifications", page)
@@ -1931,6 +1973,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("/gca/member-ledger", page)
         self.assertIn("/gca/support-review", page)
         self.assertIn("/gca/member-review", page)
+        self.assertIn("/gca/operator-summary", page)
         self.assertIn("eth_call", page)
         self.assertIn("balanceOf", page)
         self.assertIn("100 Web3 Radar utility credits", page)
@@ -1974,8 +2017,10 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(api["localDevelopmentBackend"]["status"], "local-only-backend-available")
         self.assertEqual(api["localDevelopmentBackend"]["script"], "tools/gca_member_backend.py")
         self.assertEqual(api["localDevelopmentBackend"]["localUrl"], "http://127.0.0.1:8787/members.html")
+        self.assertEqual(api["localDevelopmentBackend"]["operatorConsoleUrl"], "http://127.0.0.1:8787/operator.html")
         self.assertEqual(api["localDevelopmentBackend"]["dataDirectory"], ".gca_access_data/")
         self.assertTrue(api["localDevelopmentBackend"]["sameOriginSubmissionOnLocalhost"])
+        self.assertEqual(api["localDevelopmentBackend"]["localOperatorSummaryEndpoint"], "/gca/operator-summary")
         self.assertFalse(api["localDevelopmentBackend"]["publicProductionEndpointLive"])
         self.assertIn("member_ledger", api["localDevelopmentBackend"]["writesJsonlLedgers"])
         self.assertFalse(api["localDevelopmentBackend"]["automaticTokenTransfer"])
@@ -2000,10 +2045,14 @@ class LaunchPackageTests(unittest.TestCase):
             "GET /gca/member-ledger",
             "POST /gca/support-review",
             "GET /gca/member-review",
+            "GET /gca/operator-summary",
         }:
             self.assertIn(endpoint_key, endpoint_keys)
         for endpoint in api["endpoints"]:
-            self.assertEqual(endpoint["status"], "planned-not-live")
+            if endpoint["id"] == "operator-summary":
+                self.assertEqual(endpoint["status"], "local-only-not-public-production")
+            else:
+                self.assertEqual(endpoint["status"], "planned-not-live")
         self.assertEqual(api["memberPacketVersion"], "gca_member_preregistration_v2")
         self.assertIn("memberBenefitReviewEvidence.holdingStartDate", api["memberEvidenceFields"])
         self.assertIn("memberBenefitReviewEvidence.evidenceTxHashFormatOk", api["memberEvidenceFields"])
@@ -2020,6 +2069,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("memberBenefitTransferTx", member_ledger_endpoint["responseFields"])
         member_review_endpoint = next(item for item in api["endpoints"] if item["id"] == "member-review")
         self.assertIn("memberBenefitClaimStatus", member_review_endpoint["responseFields"])
+        operator_summary_endpoint = next(item for item in api["endpoints"] if item["id"] == "operator-summary")
+        self.assertIn("publicSelfServiceClaim", operator_summary_endpoint["responseFields"])
+        self.assertIn("automaticTokenTransfer", operator_summary_endpoint["responseFields"])
         support_review_endpoint = next(item for item in api["endpoints"] if item["id"] == "support-review")
         self.assertIn("publicEvidenceReference", support_review_endpoint["requiredRequestFields"])
         self.assertIn("memberBenefitReviewEvidence", support_review_endpoint["requiredRequestFields"])
@@ -4201,6 +4253,7 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "site" / "member-benefit.json",
             ROOT / "site" / "member-benefit-transfer.html",
             ROOT / "site" / "member-benefit-transfer.json",
+            ROOT / "site" / "operator.html",
             ROOT / "site" / "support.html",
             ROOT / "site" / "support.json",
             ROOT / "site" / "roadmap.html",
@@ -4448,6 +4501,7 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "site" / "member-benefit.json",
             ROOT / "site" / "member-benefit-transfer.html",
             ROOT / "site" / "member-benefit-transfer.json",
+            ROOT / "site" / "operator.html",
             ROOT / "site" / "support.html",
             ROOT / "site" / "support.json",
             ROOT / "site" / "roadmap.html",
@@ -4614,6 +4668,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(MEMBER_LEDGER_URL, status)
         self.assertIn("Local-only member backend prepared", status)
         self.assertIn("tools/gca_member_backend.py", status)
+        self.assertIn("http://127.0.0.1:8787/operator.html", status)
         self.assertIn(".gca_access_data/", status)
         self.assertIn("Public member benefit transfer runbook prepared", status)
         self.assertIn(MEMBER_BENEFIT_TRANSFER_PAGE_URL, status)

@@ -58,6 +58,14 @@ FORBIDDEN_KEY_PATTERNS = (
     "recoveryphrase",
     "onetimecode",
 )
+LEDGER_NAMES = (
+    "pre_registrations",
+    "wallet_verifications",
+    "credit_ledger",
+    "member_ledger",
+    "support_reviews",
+)
+LOCAL_CLIENTS = {"127.0.0.1", "::1", "localhost"}
 
 
 class BackendError(ValueError):
@@ -501,8 +509,56 @@ class GcaMemberBackend:
         for key in ("walletAddress", "email", "registrationId", "creditLedgerId", "memberLedgerId"):
             value = query.get(key, [""])[0]
             if value:
-                filters[key] = value.lower() if key == "walletAddress" else value
+                filters[key] = value.lower() if key in {"walletAddress", "email"} else value
         return self.store.find(ledger, **filters)
+
+    def operator_summary(self, limit: int = 25) -> dict[str, Any]:
+        ledgers = {name: self.store.read_all(name) for name in LEDGER_NAMES}
+        credit_records = ledgers["credit_ledger"]
+        member_records = ledgers["member_ledger"]
+        review_records = ledgers["support_reviews"]
+        summary = {
+            "ok": True,
+            "service": "gca-member-backend",
+            "generatedAt": iso_now(),
+            "chainId": CHAIN_ID,
+            "contractAddress": CONTRACT_ADDRESS,
+            "publicSelfServiceClaim": False,
+            "automaticTokenTransfer": False,
+            "localJsonlDataOnly": True,
+            "dataLedgers": {
+                name: {
+                    "count": len(records),
+                    "latest": records[-limit:][::-1],
+                }
+                for name, records in ledgers.items()
+            },
+            "totals": {
+                "preRegistrations": len(ledgers["pre_registrations"]),
+                "walletVerifications": len(ledgers["wallet_verifications"]),
+                "creditLedgerRecords": len(credit_records),
+                "memberLedgerRecords": len(member_records),
+                "activeMembers": sum(1 for record in member_records if record.get("status") == "active"),
+                "queuedMembers": sum(1 for record in member_records if record.get("status") == "queued"),
+                "supportReviews": len(review_records),
+                "pendingManualReserveTransfers": sum(
+                    1
+                    for record in member_records
+                    if record.get("memberBenefitClaimStatus") == "pending_manual_reserve_transfer"
+                ),
+                "remainingCredits": sum(int(record.get("remainingCredits") or 0) for record in credit_records),
+            },
+            "operatorBoundaries": {
+                "noPrivateKeys": True,
+                "noSeedPhrases": True,
+                "noExchangeApiSecrets": True,
+                "noWithdrawalPermission": True,
+                "noCustody": True,
+                "readOnlyWalletVerification": True,
+                "manualReserveTransferOnly": True,
+            },
+        }
+        return summary
 
 
 def build_handler(site_dir: Path, backend: GcaMemberBackend) -> type[SimpleHTTPRequestHandler]:
@@ -530,6 +586,11 @@ def build_handler(site_dir: Path, backend: GcaMemberBackend) -> type[SimpleHTTPR
                 raise BackendError("Request body is too large", HTTPStatus.REQUEST_ENTITY_TOO_LARGE)
             return read_json_request(self.rfile.read(length))
 
+        def assert_local_api_client(self) -> None:
+            client_host = self.client_address[0]
+            if client_host not in LOCAL_CLIENTS:
+                raise BackendError("GCA local operator API only accepts localhost clients", HTTPStatus.FORBIDDEN)
+
         def do_GET(self) -> None:
             parsed = urlparse(self.path)
             query = parse_qs(parsed.query)
@@ -543,6 +604,10 @@ def build_handler(site_dir: Path, backend: GcaMemberBackend) -> type[SimpleHTTPR
                         "publicSelfServiceClaim": False,
                     })
                     return
+                if parsed.path == "/gca/operator-summary":
+                    self.assert_local_api_client()
+                    self.send_json(backend.operator_summary())
+                    return
                 ledger_map = {
                     "/gca/pre-registrations": "pre_registrations",
                     "/gca/wallet-verifications": "wallet_verifications",
@@ -551,6 +616,7 @@ def build_handler(site_dir: Path, backend: GcaMemberBackend) -> type[SimpleHTTPR
                     "/gca/member-review": "support_reviews",
                 }
                 if parsed.path in ledger_map:
+                    self.assert_local_api_client()
                     records = backend.query(ledger_map[parsed.path], query)
                     self.send_json({"ok": True, "count": len(records), "records": records})
                     return
@@ -561,6 +627,8 @@ def build_handler(site_dir: Path, backend: GcaMemberBackend) -> type[SimpleHTTPR
         def do_POST(self) -> None:
             parsed = urlparse(self.path)
             try:
+                if parsed.path.startswith("/gca/"):
+                    self.assert_local_api_client()
                 payload = self.read_body()
                 if parsed.path == "/gca/pre-registrations":
                     self.send_json(backend.submit_pre_registration(payload), HTTPStatus.CREATED)
