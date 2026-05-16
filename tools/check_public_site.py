@@ -638,6 +638,8 @@ def validate_support_page(text: str) -> None:
     label = "/support.html"
     assert_contains(text, "GCA Support & Intake", label)
     assert_contains(text, "Support JSON", label)
+    assert_contains(text, "Reviewer Kit", label)
+    assert_contains(text, "Platform Replies", label)
     assert_contains(text, "Review Queue", label)
     assert_contains(text, "Operations Runbook", label)
     assert_contains(text, "GCAgochina@outlook.com", label)
@@ -653,6 +655,10 @@ def validate_support_page(text: str) -> None:
     assert_contains(text, "memberBenefitReviewEvidence", label)
     assert_contains(text, "GCA Member holding start date", label)
     assert_contains(text, "GCA Member evidence note", label)
+    assert_contains(text, "Redacted Review Package Handoff", label)
+    assert_contains(text, "redacted-public", label)
+    assert_contains(text, "tools/export_gca_review_package.py", label)
+    assert_contains(text, "tools/verify_gca_review_package.py", label)
     assert_contains(text, MAINNET_ADDRESS, label)
     assert_not_contains(text, OLD_WETH_POOL_ADDRESS, label)
     assert_not_contains(text, "GCA/WETH", label)
@@ -663,6 +669,7 @@ def validate_support_json(text: str) -> None:
     payload = load_json(text, label)
     submission = payload.get("currentSubmissionMode", {})
     workflow = payload.get("supportWorkflow", {})
+    handoff = workflow.get("platformReviewPackageHandoff", {})
     identity = payload.get("officialIdentity", {})
     links = payload.get("publicLinks", {})
 
@@ -696,6 +703,8 @@ def validate_support_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing ledger status")
     if workflow.get("memberPacketVersion") != "gca_member_preregistration_v2":
         raise SiteCheckError(f"{label}: wrong member packet version")
+    if "redacted local review package request" not in payload.get("supportedRequestTypes", []):
+        raise SiteCheckError(f"{label}: missing review package request type")
     for field in (
         "holdingStartDate",
         "daysSinceHoldingStartPreview",
@@ -710,9 +719,26 @@ def validate_support_json(text: str) -> None:
         "GCA Member holding start date",
         "GCA Member evidence note",
         "gca_member_preregistration_v2 memberBenefitReviewEvidence packet fields",
+        "public redacted local review package digest",
     ):
         if field not in payload.get("safeIntakeFields", []):
             raise SiteCheckError(f"{label}: missing safe intake field {field}")
+    if handoff.get("externalSharingMode") != "redacted-public":
+        raise SiteCheckError(f"{label}: wrong handoff external mode")
+    if handoff.get("internalOnlyMode") != "full-local":
+        raise SiteCheckError(f"{label}: wrong handoff internal mode")
+    if handoff.get("localDataDirectory") != ".gca_access_data/":
+        raise SiteCheckError(f"{label}: wrong handoff data directory")
+    if "tools/export_gca_review_package.py" not in handoff.get("exportCommand", ""):
+        raise SiteCheckError(f"{label}: missing handoff export command")
+    if "tools/verify_gca_review_package.py" not in handoff.get("verifyCommand", ""):
+        raise SiteCheckError(f"{label}: missing handoff verify command")
+    if handoff.get("replyTemplatePage") != PLATFORM_REPLIES_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong handoff reply template page")
+    if "userEmail" not in handoff.get("redactedFields", []):
+        raise SiteCheckError(f"{label}: missing handoff redacted field")
+    if "full-local package" not in handoff.get("neverShareExternally", []):
+        raise SiteCheckError(f"{label}: missing full-local sharing boundary")
     if identity.get("officialPair") != "GCA/USDT":
         raise SiteCheckError(f"{label}: wrong official pair")
     if identity.get("officialPool") != OFFICIAL_POOL_ADDRESS:
@@ -741,6 +767,14 @@ def validate_support_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong member benefit transfer page")
     if links.get("memberBenefitTransferJson") != MEMBER_BENEFIT_TRANSFER_URL:
         raise SiteCheckError(f"{label}: wrong member benefit transfer json")
+    if links.get("reviewerKitPage") != REVIEWER_KIT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong reviewerKitPage")
+    if links.get("reviewerKit") != REVIEWER_KIT_URL:
+        raise SiteCheckError(f"{label}: wrong reviewerKit")
+    if links.get("platformRepliesPage") != PLATFORM_REPLIES_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong platformRepliesPage")
+    if links.get("platformReplies") != PLATFORM_REPLIES_URL:
+        raise SiteCheckError(f"{label}: wrong platformReplies")
     assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
     assert_not_contains(json.dumps(payload), "GCA/WETH", label)
 
@@ -1573,6 +1607,7 @@ def validate_operations_page(text: str) -> None:
         "Support Reply",
         "Ledger Handoff",
         "Platform Follow-Up",
+        "Review Package Handoff",
         "Closure",
     ):
         assert_contains(text, step, label)
@@ -1587,6 +1622,11 @@ def validate_operations_page(text: str) -> None:
     assert_contains(text, "evidenceTxHash", label)
     assert_contains(text, "evidenceTxHashFormatOk", label)
     assert_contains(text, "Member evidence note", label)
+    assert_contains(text, "Local Review Package Handoff", label)
+    assert_contains(text, "redacted-public", label)
+    assert_contains(text, "packageDigestSha256", label)
+    assert_contains(text, "tools/export_gca_review_package.py", label)
+    assert_contains(text, "tools/verify_gca_review_package.py", label)
     assert_contains(text, "Manual support cannot override on-chain wallet-balance verification", label)
     assert_contains(text, "Private key or seed phrase", label)
     assert_contains(text, "Exchange API secret or withdrawal permission", label)
@@ -1606,6 +1646,7 @@ def validate_operations_json(text: str) -> None:
     workflow = payload.get("operatorWorkflow", [])
     workflow_ids = {item.get("id") for item in workflow}
     controls = payload.get("operatorControls", {})
+    handoff = payload.get("reviewPackageHandoff", {})
     rules = payload.get("decisionRules", {})
     thresholds = payload.get("eligibilityThresholds", {})
     market = payload.get("officialMarket", {})
@@ -1650,6 +1691,7 @@ def validate_operations_json(text: str) -> None:
         "support-reply",
         "ledger-handoff",
         "platform-follow-up",
+        "review-package-handoff",
         "closure",
     ):
         if workflow_id not in workflow_ids:
@@ -1669,6 +1711,8 @@ def validate_operations_json(text: str) -> None:
         "memberBenefitReviewEvidenceStatus",
         "reviewerNote",
         "publicEvidenceReference",
+        "reviewPackageRedactionMode",
+        "reviewPackageDigestSha256",
     ):
         if field not in payload.get("requiredReviewRecord", []):
             raise SiteCheckError(f"{label}: missing review record {field}")
@@ -1685,10 +1729,14 @@ def validate_operations_json(text: str) -> None:
         "member evidence note",
         "non-sensitive support note",
         "public review reference",
+        "public-redacted local review package digest",
     ):
         if evidence not in payload.get("allowedEvidence", []):
             raise SiteCheckError(f"{label}: missing allowed evidence {evidence}")
     for key in ("walletVerificationReadOnly", "usesEthCall", "usesErc20BalanceOf", "structuredAuditTrailRequired"):
+        if controls.get(key) is not True:
+            raise SiteCheckError(f"{label}: {key} must be true")
+    for key in ("externalReviewPackageMustBeRedacted", "reviewPackageDigestRequiredBeforeSharing"):
         if controls.get(key) is not True:
             raise SiteCheckError(f"{label}: {key} must be true")
     for key in (
@@ -1696,6 +1744,7 @@ def validate_operations_json(text: str) -> None:
         "requiresTransactionForBalanceRead",
         "manualSupportCanOverrideBalanceVerification",
         "manualSupportCanBypassReleaseGates",
+        "fullLocalPackageExternalSharingAllowed",
     ):
         if controls.get(key) is not False:
             raise SiteCheckError(f"{label}: {key} must be false")
@@ -1705,6 +1754,20 @@ def validate_operations_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong contract control")
     if payload.get("memberPacketVersion") != "gca_member_preregistration_v2":
         raise SiteCheckError(f"{label}: wrong member packet version")
+    if handoff.get("externalSharingMode") != "redacted-public":
+        raise SiteCheckError(f"{label}: wrong handoff external mode")
+    if handoff.get("internalOnlyMode") != "full-local":
+        raise SiteCheckError(f"{label}: wrong handoff internal mode")
+    if handoff.get("localDataDirectory") != ".gca_access_data/":
+        raise SiteCheckError(f"{label}: wrong handoff local data directory")
+    if "tools/export_gca_review_package.py" not in handoff.get("exportCommand", ""):
+        raise SiteCheckError(f"{label}: missing handoff export command")
+    if "tools/verify_gca_review_package.py" not in handoff.get("verifyCommand", ""):
+        raise SiteCheckError(f"{label}: missing handoff verify command")
+    if handoff.get("replyTemplatePage") != PLATFORM_REPLIES_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong handoff template page")
+    if "confirm package redactionMode is redacted-public" not in handoff.get("requiredBeforeSharing", []):
+        raise SiteCheckError(f"{label}: missing handoff pre-share check")
     for field in (
         "memberBenefitReviewEvidence.holdingStartDate",
         "memberBenefitReviewEvidence.daysSinceHoldingStartPreview",
@@ -1771,15 +1834,23 @@ def validate_operations_json(text: str) -> None:
         ("memberLedger", MEMBER_LEDGER_URL),
         ("supportJson", SUPPORT_URL),
         ("releaseGates", RELEASE_GATES_URL),
+        ("reviewerKitPage", REVIEWER_KIT_PAGE_URL),
+        ("reviewerKit", REVIEWER_KIT_URL),
+        ("platformRepliesPage", PLATFORM_REPLIES_PAGE_URL),
+        ("platformReplies", PLATFORM_REPLIES_URL),
     ):
         if links.get(key) != expected:
             raise SiteCheckError(f"{label}: wrong {key}")
     if "GCA has published a public access operations runbook." not in boundaries.get("safeClaims", []):
         raise SiteCheckError(f"{label}: missing operations safe claim")
+    if "GCA operators can export a redacted-public local review package for reviewer evidence handoff when local ledger records exist." not in boundaries.get("safeClaims", []):
+        raise SiteCheckError(f"{label}: missing review package safe claim")
     if not any("live backend" in item for item in boundaries.get("doNotClaim", [])):
         raise SiteCheckError(f"{label}: missing live backend boundary")
     if not any("support can override wallet-balance verification" in item for item in boundaries.get("doNotClaim", [])):
         raise SiteCheckError(f"{label}: missing support override boundary")
+    if not any("redacted local review package" in item for item in boundaries.get("doNotClaim", [])):
+        raise SiteCheckError(f"{label}: missing review package boundary")
     assert_current_pool_text(json.dumps(payload), label)
     assert_no_forbidden_public_claims(json.dumps(payload), label)
 

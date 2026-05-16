@@ -1,7 +1,7 @@
 {
   "schema": "https://gcagochina.com/support.json",
   "pageUrl": "https://gcagochina.com/support.html",
-  "lastUpdated": "2026-05-14",
+  "lastUpdated": "2026-05-16",
   "status": "public-support-intake-published",
   "network": "Base Mainnet",
   "chainId": 8453,
@@ -21,6 +21,7 @@
     "wallet-warning evidence or screenshot",
     "data platform correction context",
     "official link verification",
+    "redacted local review package request",
     "security boundary question"
   ],
   "safeIntakeFields": [
@@ -35,7 +36,8 @@
     "gca_member_preregistration_v2 memberBenefitReviewEvidence packet fields",
     "pool link",
     "wallet-warning screenshot",
-    "generated member packet JSON"
+    "generated member packet JSON",
+    "public redacted local review package digest"
   ],
   "doNotSend": [
     "private key",
@@ -72,7 +74,33 @@
     "preparedWalletVerificationEndpoint": "/gca/wallet-verifications",
     "preparedCreditLedgerEndpoint": "/gca/credit-ledger",
     "preparedMemberLedgerEndpoint": "/gca/member-ledger",
-    "preparedReviewEndpoint": "/gca/member-review"
+    "preparedReviewEndpoint": "/gca/member-review",
+    "platformReviewPackageHandoff": {
+      "trigger": "platform or reviewer asks for local member-ledger evidence",
+      "externalSharingMode": "redacted-public",
+      "internalOnlyMode": "full-local",
+      "localDataDirectory": ".gca_access_data/",
+      "exportCommand": ".venv/bin/python tools/export_gca_review_package.py --redact public --output gca-public-redacted-review-package.json",
+      "verifyCommand": ".venv/bin/python tools/verify_gca_review_package.py gca-public-redacted-review-package.json",
+      "replyTemplatePage": "https://gcagochina.com/platform-replies.html",
+      "replyTemplateJson": "https://gcagochina.com/platform-replies.json",
+      "redactedFields": [
+        "userEmail",
+        "telegramHandle",
+        "reviewerNote",
+        "supportNote",
+        "evidenceNote"
+      ],
+      "neverShareExternally": [
+        "full-local package",
+        "private key",
+        "seed phrase",
+        "exchange API secret",
+        "withdrawal permission",
+        "one-time code"
+      ],
+      "publicClaimBoundary": "support evidence only; not a third-party audit, security-vendor approval, listing approval, or liquidity-depth claim"
+    }
   },
   "supportCannotDo": [
     "promise token price",
@@ -118,6 +146,10 @@
     "reviewQueuePage": "https://gcagochina.com/review-queue.html",
     "reviewQueue": "https://gcagochina.com/review-queue.json",
     "operationsRunbookPage": "https://gcagochina.com/operations.html",
-    "operationsRunbook": "https://gcagochina.com/operations.json"
+    "operationsRunbook": "https://gcagochina.com/operations.json",
+    "reviewerKitPage": "https://gcagochina.com/reviewer-kit.html",
+    "reviewerKit": "https://gcagochina.com/reviewer-kit.json",
+    "platformRepliesPage": "https://gcagochina.com/platform-replies.html",
+    "platformReplies": "https://gcagochina.com/platform-replies.json"
   }
 }
