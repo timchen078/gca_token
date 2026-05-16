@@ -601,6 +601,8 @@ def validate_operator_page(text: str) -> None:
     assert_contains(text, "Export Public Redacted Package", label)
     assert_contains(text, "Full local review package exported", label)
     assert_contains(text, "Public redacted review package exported", label)
+    assert_contains(text, "packageDigestSha256", label)
+    assert_contains(text, "recordManifest", label)
     assert_contains(text, "?redact=public", label)
     assert_contains(text, "Public website view: local backend not connected", label)
     assert_contains(text, "local JSONL ledger records", label)
@@ -1804,6 +1806,8 @@ def validate_access_api_page(text: str) -> None:
     assert_contains(text, "eth_call", label)
     assert_contains(text, "/gca/review-package", label)
     assert_contains(text, "?redact=public", label)
+    assert_contains(text, "packageDigestSha256", label)
+    assert_contains(text, "recordManifest", label)
     assert_contains(text, "reviewer evidence", label)
     assert_contains(text, "read-only Base receipt data", label)
     assert_contains(text, "balanceOf", label)
@@ -1953,7 +1957,15 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing review package endpoint")
     if review_package.get("status") != "local-only-not-public-production":
         raise SiteCheckError(f"{label}: wrong review package endpoint status")
-    for expected_field in ("operatorSummary", "exportBoundaries", "publicReferences", "reviewChecklist"):
+    for expected_field in (
+        "packageDigestAlgorithm",
+        "packageDigestSha256",
+        "recordManifest",
+        "operatorSummary",
+        "exportBoundaries",
+        "publicReferences",
+        "reviewChecklist",
+    ):
         if expected_field not in review_package.get("responseFields", []):
             raise SiteCheckError(f"{label}: missing review package field {expected_field}")
     for expected_field in ("redactedForExternalSharing", "redactionPolicy"):

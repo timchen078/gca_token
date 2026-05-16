@@ -232,11 +232,18 @@ class GcaMemberBackendTests(unittest.TestCase):
         self.assertEqual(review_package["operatorSummary"]["totals"]["memberBenefitTransfers"], 1)
         self.assertIn("memberBenefitTransfer", review_package["publicReferences"])
         self.assertFalse(review_package["redactedForExternalSharing"])
+        self.assertEqual(review_package["packageDigestAlgorithm"], "sha256-json-sort-keys-excluding-packageDigestSha256")
+        self.assertRegex(review_package["packageDigestSha256"], r"^[a-f0-9]{64}$")
+        self.assertEqual(review_package["recordManifest"]["ledgerCounts"]["member_benefit_transfers"], 1)
+        self.assertEqual(review_package["recordManifest"]["latestRecordCounts"]["support_reviews"], 2)
 
         redacted_package = backend.review_package(redacted=True)
         redacted_text = json.dumps(redacted_package)
         self.assertTrue(redacted_package["redactedForExternalSharing"])
         self.assertEqual(redacted_package["redactionPolicy"]["mode"], "redacted-public")
+        self.assertRegex(redacted_package["packageDigestSha256"], r"^[a-f0-9]{64}$")
+        self.assertNotEqual(redacted_package["packageDigestSha256"], review_package["packageDigestSha256"])
+        self.assertEqual(redacted_package["recordManifest"]["ledgerCounts"], review_package["recordManifest"]["ledgerCounts"])
         self.assertEqual(
             redacted_package["operatorSummary"]["dataLedgers"]["pre_registrations"]["latest"][0]["email"],
             REDACTED_EXTERNAL_VALUE,
@@ -379,12 +386,15 @@ class GcaMemberBackendTests(unittest.TestCase):
             self.assertFalse(review_package["publicSelfServiceClaim"])
             self.assertFalse(review_package["automaticTokenTransfer"])
             self.assertTrue(review_package["exportBoundaries"]["localhostOnly"])
+            self.assertRegex(review_package["packageDigestSha256"], r"^[a-f0-9]{64}$")
+            self.assertEqual(review_package["recordManifest"]["ledgerCounts"]["pre_registrations"], 1)
 
             with urlopen(f"{base_url}/gca/review-package?limit=5&redact=public", timeout=10) as response:
                 redacted_package = json.loads(response.read().decode())
             redacted_text = json.dumps(redacted_package)
             self.assertTrue(redacted_package["redactedForExternalSharing"])
             self.assertEqual(redacted_package["redactionPolicy"]["mode"], "redacted-public")
+            self.assertRegex(redacted_package["packageDigestSha256"], r"^[a-f0-9]{64}$")
             self.assertNotIn("member@example.com", redacted_text)
             self.assertNotIn("@member", redacted_text)
             self.assertIn(WALLET.lower(), redacted_text)

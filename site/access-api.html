@@ -321,7 +321,7 @@
         <h1 id="title">GCA Access API Contract</h1>
         <p class="lead">This page defines the planned controlled HTTPS API contract for the GCA access bridge. It covers pre-registration, read-only wallet verification, credit ledger records, GCA Member records, and support review statuses.</p>
         <p class="lead">The API contract is not live today. It is a public implementation contract for future backend work, not a public submission endpoint, account system, or self-service claim page.</p>
-        <p class="lead">A local operator backend is available at <code>tools/gca_member_backend.py</code> for localhost testing. It serves this static site, enables same-origin local submission, exposes the <a href="operator.html">Operator Console</a> at <code>http://127.0.0.1:8787/operator.html</code>, verifies GCA with read-only Base Mainnet <code>eth_call</code>, exports a localhost-only <code>/gca/review-package</code> evidence package with an external-sharing <code>?redact=public</code> mode, and writes local JSONL ledger records without making public self-service claiming live.</p>
+        <p class="lead">A local operator backend is available at <code>tools/gca_member_backend.py</code> for localhost testing. It serves this static site, enables same-origin local submission, exposes the <a href="operator.html">Operator Console</a> at <code>http://127.0.0.1:8787/operator.html</code>, verifies GCA with read-only Base Mainnet <code>eth_call</code>, exports a localhost-only <code>/gca/review-package</code> evidence package with <code>recordManifest</code>, <code>packageDigestSha256</code>, and external-sharing <code>?redact=public</code> mode, and writes local JSONL ledger records without making public self-service claiming live.</p>
         <div class="actions">
           <a class="button primary" href="access-api.json">Access API JSON</a>
           <a class="button primary" href="operations.html">Operations Runbook</a>
@@ -409,7 +409,7 @@
           <div class="fact">
             <span class="label">GET</span>
             <span class="value">/gca/review-package</span>
-            <p class="note">Local-only reviewer evidence export for support and platform follow-up. It includes local ledger totals, latest records, public reference links, and safety boundaries. Use <code>?redact=public</code> before external sharing.</p>
+            <p class="note">Local-only reviewer evidence export for support and platform follow-up. It includes local ledger totals, latest records, <code>recordManifest</code>, <code>packageDigestSha256</code>, public reference links, and safety boundaries. Use <code>?redact=public</code> before external sharing.</p>
           </div>
         </div>
       </section>

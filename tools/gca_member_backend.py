@@ -244,6 +244,15 @@ def redact_for_external_sharing(value: Any) -> Any:
     return value
 
 
+def add_package_digest(package: dict[str, Any]) -> dict[str, Any]:
+    package["packageDigestAlgorithm"] = "sha256-json-sort-keys-excluding-packageDigestSha256"
+    digest_source = dict(package)
+    digest_source.pop("packageDigestSha256", None)
+    canonical = json.dumps(digest_source, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    package["packageDigestSha256"] = hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+    return package
+
+
 @dataclass
 class BaseRpcBalanceReader:
     rpc_url: str = BASE_RPC_URL
@@ -801,6 +810,7 @@ class GcaMemberBackend:
 
     def review_package(self, limit: int = 100, redacted: bool = False) -> dict[str, Any]:
         summary = self.operator_summary(limit=limit)
+        ledgers = summary.get("dataLedgers", {})
         package = {
             "ok": True,
             "packageType": "gca-local-review-package",
@@ -814,6 +824,20 @@ class GcaMemberBackend:
             "automaticTokenTransfer": False,
             "localJsonlDataOnly": True,
             "redactedForExternalSharing": False,
+            "packageDigestAlgorithm": "",
+            "packageDigestSha256": "",
+            "recordManifest": {
+                "limit": limit,
+                "ledgerNames": list(LEDGER_NAMES),
+                "ledgerCounts": {
+                    name: int(ledgers.get(name, {}).get("count") or 0)
+                    for name in LEDGER_NAMES
+                },
+                "latestRecordCounts": {
+                    name: len(ledgers.get(name, {}).get("latest") or [])
+                    for name in LEDGER_NAMES
+                },
+            },
             "redactionPolicy": {
                 "mode": "full-local",
                 "availableMode": "redact=public",
@@ -855,7 +879,7 @@ class GcaMemberBackend:
             package["redactedForExternalSharing"] = True
             package["redactionPolicy"]["mode"] = "redacted-public"
             package["redactionPolicy"]["availableMode"] = "redact=public"
-        return package
+        return add_package_digest(package)
 
 
 def build_handler(site_dir: Path, backend: GcaMemberBackend) -> type[SimpleHTTPRequestHandler]:
