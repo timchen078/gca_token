@@ -368,8 +368,8 @@
         <p class="lead">This page reads local JSONL ledger records from <code>tools/gca_member_backend.py</code> when opened through <code>http://127.0.0.1:8787/operator.html</code>. The same review package can also be exported offline with <code>tools/export_gca_review_package.py</code>. The public website version is informational only and does not expose a public submission queue, self-service claim page, token transfer, or production account system.</p>
         <div class="actions section">
           <button class="button primary" id="refreshButton" type="button">Refresh Local Ledgers</button>
-          <button class="button" id="exportButton" type="button">Export Full Review Package</button>
-          <button class="button" id="exportPublicButton" type="button">Export Public Redacted Package</button>
+          <button class="button" id="exportButton" type="button" disabled>Export Full Review Package</button>
+          <button class="button" id="exportPublicButton" type="button" disabled>Export Public Redacted Package</button>
           <button class="button" id="copyHandoffButton" type="button" disabled>Copy Handoff Reply</button>
           <a class="button" href="members.html">Open Pre-Registration</a>
           <a class="button" href="member-ledger.html">Ledger Schema</a>
@@ -471,7 +471,7 @@
             <textarea id="reviewerNote" name="reviewerNote" placeholder="Record the manual review note. Do not paste private keys, seed phrases, exchange API secrets, one-time codes, or withdrawal permissions."></textarea>
           </div>
           <div class="actions">
-            <button class="button primary" id="recordTransferButton" type="submit">Record Transfer</button>
+            <button class="button primary" id="recordTransferButton" type="submit" disabled>Record Transfer</button>
             <span class="status" id="transferStatus">Local backend required</span>
           </div>
         </form>
@@ -531,6 +531,7 @@
         pendingTransferCount: document.getElementById("pendingTransferCount"),
         recordedTransferCount: document.getElementById("recordedTransferCount"),
       };
+      let backendConnected = false;
 
       function setStatus(text, kind = "") {
         connectionStatus.textContent = text;
@@ -545,6 +546,16 @@
       function setHandoffStatus(text, kind = "") {
         handoffStatus.textContent = text;
         handoffStatus.className = `status ${kind}`.trim();
+      }
+
+      function setBackendControlsEnabled(enabled) {
+        backendConnected = Boolean(enabled);
+        exportButton.disabled = !backendConnected;
+        exportPublicButton.disabled = !backendConnected;
+        recordTransferButton.disabled = !backendConnected;
+        if (!backendConnected) {
+          copyHandoffButton.disabled = true;
+        }
       }
 
       function escapeHtml(value) {
@@ -577,11 +588,9 @@
         if (!LOCAL_BACKEND_HOSTS.has(window.location.hostname)) {
           setStatus("Public website view: local backend not connected", "warn");
           refreshButton.disabled = true;
-          exportButton.disabled = true;
-          exportPublicButton.disabled = true;
-          copyHandoffButton.disabled = true;
-          recordTransferButton.disabled = true;
+          setBackendControlsEnabled(false);
           setTransferStatus("Public website view only", "warn");
+          setHandoffStatus("Public website view only; export disabled", "warn");
           summaryJson.textContent = "Open http://127.0.0.1:8787/operator.html after running tools/gca_member_backend.py to view local ledgers.";
           return;
         }
@@ -602,18 +611,18 @@
           statNodes.recordedTransferCount.textContent = totals.memberBenefitTransfers ?? 0;
           summaryJson.textContent = JSON.stringify(payload, null, 2);
           renderReviews(payload.dataLedgers?.support_reviews?.latest || []);
+          setBackendControlsEnabled(true);
           setStatus("Local operator backend connected", "good");
           setTransferStatus("Ready to record manual transfer", "good");
         } catch (error) {
-          setStatus("Local backend unavailable", "warn");
+          setBackendControlsEnabled(false);
+          setStatus("Local backend unavailable; export and record controls disabled", "warn");
           summaryJson.textContent = `${error.message}\n\nRun: .venv/bin/python tools/gca_member_backend.py --host 127.0.0.1 --port 8787`;
           renderReviews([]);
           setTransferStatus("Local backend unavailable", "warn");
+          setHandoffStatus("Local backend unavailable; export disabled", "warn");
         } finally {
           refreshButton.disabled = false;
-          exportButton.disabled = false;
-          exportPublicButton.disabled = false;
-          recordTransferButton.disabled = false;
         }
       }
 
@@ -676,6 +685,11 @@
           setStatus("Open the local backend URL before exporting", "warn");
           return;
         }
+        if (!backendConnected) {
+          setStatus("Local backend unavailable; refresh before exporting", "warn");
+          setHandoffStatus("Export disabled until local backend is connected", "warn");
+          return;
+        }
 
         setStatus(redacted ? "Exporting public redacted review package" : "Exporting full local review package");
         exportButton.disabled = true;
@@ -697,8 +711,8 @@
         } catch (error) {
           setStatus(error.message, "warn");
         } finally {
-          exportButton.disabled = false;
-          exportPublicButton.disabled = false;
+          exportButton.disabled = !backendConnected;
+          exportPublicButton.disabled = !backendConnected;
         }
       }
 
@@ -715,6 +729,10 @@
         event.preventDefault();
         if (!LOCAL_BACKEND_HOSTS.has(window.location.hostname)) {
           setTransferStatus("Open the local backend URL before recording", "warn");
+          return;
+        }
+        if (!backendConnected) {
+          setTransferStatus("Local backend unavailable; refresh before recording", "warn");
           return;
         }
 
@@ -745,7 +763,7 @@
         } catch (error) {
           setTransferStatus(error.message, "warn");
         } finally {
-          recordTransferButton.disabled = false;
+          recordTransferButton.disabled = !backendConnected;
         }
       }
 
