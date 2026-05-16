@@ -140,6 +140,8 @@
   "officialLinks": {
     "riskRemediationPage": "https://gcagochina.com/risk-remediation.html",
     "riskRemediation": "https://gcagochina.com/risk-remediation.json",
+    "custodyRoadmapPage": "https://gcagochina.com/custody-roadmap.html",
+    "custodyRoadmap": "https://gcagochina.com/custody-roadmap.json",
     "blockaidFollowupPage": "https://gcagochina.com/blockaid-followup.html",
     "blockaidFollowup": "https://gcagochina.com/blockaid-followup.json",
     "technicalReportPage": "https://gcagochina.com/technical-report.html",

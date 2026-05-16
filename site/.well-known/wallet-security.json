@@ -78,6 +78,8 @@
     "holderDistribution": "https://gcagochina.com/holder-distribution.json",
     "riskRemediationPage": "https://gcagochina.com/risk-remediation.html",
     "riskRemediation": "https://gcagochina.com/risk-remediation.json",
+    "custodyRoadmapPage": "https://gcagochina.com/custody-roadmap.html",
+    "custodyRoadmap": "https://gcagochina.com/custody-roadmap.json",
     "liquidityPage": "https://gcagochina.com/liquidity.html",
     "liquidity": "https://gcagochina.com/liquidity.json",
     "walletWarningEvidencePage": "https://gcagochina.com/wallet-warning.html",

@@ -21,6 +21,8 @@
     "blockaidFollowup": "https://gcagochina.com/blockaid-followup.json",
     "riskRemediationPage": "https://gcagochina.com/risk-remediation.html",
     "riskRemediation": "https://gcagochina.com/risk-remediation.json",
+    "custodyRoadmapPage": "https://gcagochina.com/custody-roadmap.html",
+    "custodyRoadmap": "https://gcagochina.com/custody-roadmap.json",
     "walletSecurityProfile": "https://gcagochina.com/.well-known/wallet-security.json",
     "tokenSafetyPage": "https://gcagochina.com/token-safety.html",
     "tokenSafety": "https://gcagochina.com/token-safety.json",
@@ -81,6 +83,8 @@
       "riskFactorFollowup": "https://gcagochina.com/blockaid-followup.json",
       "riskRemediationPage": "https://gcagochina.com/risk-remediation.html",
       "riskRemediation": "https://gcagochina.com/risk-remediation.json",
+      "custodyRoadmapPage": "https://gcagochina.com/custody-roadmap.html",
+      "custodyRoadmap": "https://gcagochina.com/custody-roadmap.json",
       "followUpSubmissionResult": "Blockaid support portal returned HTTP 200 OK",
       "publicClaim": "Owner reported on 2026-05-14 that no wallet risk warning was visible in the tested wallet/DEX flow. This is an owner-visible UI observation only, not a permanent security-vendor approval or cross-wallet guarantee.",
       "nextAction": "Keep monitoring wallet and Uniswap warning UI; do not submit duplicate reports unless Blockaid, MetaMask, or Uniswap asks for more information.",
@@ -139,6 +143,7 @@
     "Keep monitoring wallet-warning UI before claiming any broader warning-free or security-vendor approval status.",
     "Keep GCA/USDT market links, logo, whitepaper, Telegram, X, and metadata files live.",
     "Use the risk-remediation plan when a reviewer asks how volatility, LP custody, supply concentration, or audit status will be reduced.",
+    "Use the custody roadmap when a reviewer asks what evidence would be required before reserve multisig, reserve lock, vesting, or LP-lock claims.",
     "Use listing-readiness and market-quality pages before CoinGecko or CoinMarketCap submission.",
     "Revisit third-party audit only when partner, listing, trust, or liquidity requirements justify it."
   ]

@@ -97,6 +97,8 @@ HOLDER_DISTRIBUTION_PAGE_URL = "https://gcagochina.com/holder-distribution.html"
 HOLDER_DISTRIBUTION_URL = "https://gcagochina.com/holder-distribution.json"
 RISK_REMEDIATION_PAGE_URL = "https://gcagochina.com/risk-remediation.html"
 RISK_REMEDIATION_URL = "https://gcagochina.com/risk-remediation.json"
+CUSTODY_ROADMAP_PAGE_URL = "https://gcagochina.com/custody-roadmap.html"
+CUSTODY_ROADMAP_URL = "https://gcagochina.com/custody-roadmap.json"
 ONCHAIN_PROOFS_PAGE_URL = "https://gcagochina.com/onchain-proofs.html"
 ONCHAIN_PROOFS_URL = "https://gcagochina.com/onchain-proofs.json"
 SUPPLY_DISCLOSURE_URL = "https://gcagochina.com/supply.json"
@@ -204,6 +206,7 @@ def validate_root(text: str) -> None:
     assert_contains(text, "Liquidity", label)
     assert_contains(text, "Holder Distribution", label)
     assert_contains(text, "Risk Remediation", label)
+    assert_contains(text, "Custody Roadmap", label)
     assert_contains(text, "Utility JSON", label)
     assert_contains(text, "Product Spec", label)
     assert_contains(text, "Access Portal", label)
@@ -435,6 +438,10 @@ def validate_token_safety_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong riskRemediationPage")
     if links.get("riskRemediation") != RISK_REMEDIATION_URL:
         raise SiteCheckError(f"{label}: wrong riskRemediation")
+    if links.get("custodyRoadmapPage") != CUSTODY_ROADMAP_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong custodyRoadmapPage")
+    if links.get("custodyRoadmap") != CUSTODY_ROADMAP_URL:
+        raise SiteCheckError(f"{label}: wrong custodyRoadmap")
     if links.get("liquidityPage") != LIQUIDITY_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong liquidityPage")
     if links.get("liquidity") != LIQUIDITY_URL:
@@ -645,6 +652,7 @@ def validate_reserve_statement_page(text: str) -> None:
     assert_contains(text, "On-chain Reserve Transfer Proofs", label)
     assert_contains(text, "LP lock claimed", label)
     assert_contains(text, "No LP lock is currently claimed", label)
+    assert_contains(text, "Custody Roadmap", label)
     assert_contains(text, MAINNET_ADDRESS, label)
     assert_contains(text, RESERVE_WALLET, label)
     assert_contains(text, RESERVE_TX_1, label)
@@ -686,6 +694,8 @@ def validate_reserve_statement_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong LP lock status")
     if links.get("technicalReport") != TECHNICAL_REPORT_URL:
         raise SiteCheckError(f"{label}: wrong technical report link")
+    if links.get("custodyRoadmap") != CUSTODY_ROADMAP_URL:
+        raise SiteCheckError(f"{label}: wrong custodyRoadmap link")
     if links.get("holderDistribution") != HOLDER_DISTRIBUTION_URL:
         raise SiteCheckError(f"{label}: wrong holderDistribution link")
     if "No LP lock is currently claimed." not in payload.get("publicClaimBoundaries", {}).get("safeClaims", []):
@@ -3322,6 +3332,10 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong riskRemediationPageUrl")
     if payload.get("riskRemediationUrl") != RISK_REMEDIATION_URL:
         raise SiteCheckError(f"{label}: wrong riskRemediationUrl")
+    if payload.get("custodyRoadmapPageUrl") != CUSTODY_ROADMAP_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong custodyRoadmapPageUrl")
+    if payload.get("custodyRoadmapUrl") != CUSTODY_ROADMAP_URL:
+        raise SiteCheckError(f"{label}: wrong custodyRoadmapUrl")
     if payload.get("supplyDisclosureUrl") != SUPPLY_DISCLOSURE_URL:
         raise SiteCheckError(f"{label}: wrong supplyDisclosureUrl")
     if payload.get("onchainProofsPageUrl") != ONCHAIN_PROOFS_PAGE_URL:
@@ -3365,6 +3379,8 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: unexpected holder distribution status")
     if status.get("riskRemediation") != "public-risk-remediation-plan-published":
         raise SiteCheckError(f"{label}: unexpected risk remediation status")
+    if status.get("custodyRoadmap") != "public-custody-roadmap-published":
+        raise SiteCheckError(f"{label}: unexpected custody roadmap status")
     if payload.get("liquidityStatement", {}).get("status") != "public-liquidity-custody-statement-published":
         raise SiteCheckError(f"{label}: unexpected liquidity statement object status")
     if payload.get("liquidityStatement", {}).get("pageUrl") != LIQUIDITY_PAGE_URL:
@@ -3383,6 +3399,12 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong risk remediation page")
     if payload.get("riskRemediation", {}).get("url") != RISK_REMEDIATION_URL:
         raise SiteCheckError(f"{label}: wrong risk remediation url")
+    if payload.get("custodyRoadmap", {}).get("status") != "public-custody-roadmap-published":
+        raise SiteCheckError(f"{label}: unexpected custody roadmap object status")
+    if payload.get("custodyRoadmap", {}).get("pageUrl") != CUSTODY_ROADMAP_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong custody roadmap page")
+    if payload.get("custodyRoadmap", {}).get("url") != CUSTODY_ROADMAP_URL:
+        raise SiteCheckError(f"{label}: wrong custody roadmap url")
     if member_program.get("status") != "rules-published-public-claim-not-connected":
         raise SiteCheckError(f"{label}: unexpected member program status")
     if member_program.get("supportIntake", {}).get("status") != "public-support-intake-published":
@@ -3690,6 +3712,10 @@ def validate_tokenlist_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong riskRemediationPage")
     if extensions.get("riskRemediation") != RISK_REMEDIATION_URL:
         raise SiteCheckError(f"{label}: wrong riskRemediation")
+    if extensions.get("custodyRoadmapPage") != CUSTODY_ROADMAP_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong custodyRoadmapPage")
+    if extensions.get("custodyRoadmap") != CUSTODY_ROADMAP_URL:
+        raise SiteCheckError(f"{label}: wrong custodyRoadmap")
     if extensions.get("externalReviewStatusPage") != EXTERNAL_REVIEW_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong externalReviewStatusPage")
     if extensions.get("externalReviewStatus") != EXTERNAL_REVIEW_URL:
@@ -3756,6 +3782,8 @@ def validate_tokenlist_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong holderDistributionStatus")
     if extensions.get("riskRemediationStatus") != "public-risk-remediation-plan-published":
         raise SiteCheckError(f"{label}: wrong riskRemediationStatus")
+    if extensions.get("custodyRoadmapStatus") != "public-custody-roadmap-published":
+        raise SiteCheckError(f"{label}: wrong custodyRoadmapStatus")
     if extensions.get("memberLedgerStatus") != "public-member-ledger-schema-published":
         raise SiteCheckError(f"{label}: wrong memberLedgerStatus")
     if extensions.get("supportIntakeStatus") != "public-support-intake-published":
@@ -3920,6 +3948,10 @@ def validate_well_known_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong riskRemediationPage")
     if urls.get("riskRemediation") != RISK_REMEDIATION_URL:
         raise SiteCheckError(f"{label}: wrong riskRemediation")
+    if urls.get("custodyRoadmapPage") != CUSTODY_ROADMAP_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong custodyRoadmapPage")
+    if urls.get("custodyRoadmap") != CUSTODY_ROADMAP_URL:
+        raise SiteCheckError(f"{label}: wrong custodyRoadmap")
     if urls.get("supplyDisclosure") != SUPPLY_DISCLOSURE_URL:
         raise SiteCheckError(f"{label}: wrong supplyDisclosure")
     if urls.get("onchainProofsPage") != ONCHAIN_PROOFS_PAGE_URL:
@@ -3964,6 +3996,8 @@ def validate_well_known_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong holderDistribution status")
     if payload.get("platformStatus", {}).get("riskRemediation") != "public-risk-remediation-plan-published":
         raise SiteCheckError(f"{label}: wrong riskRemediation status")
+    if payload.get("platformStatus", {}).get("custodyRoadmap") != "public-custody-roadmap-published":
+        raise SiteCheckError(f"{label}: wrong custodyRoadmap status")
     if payload.get("platformStatus", {}).get("productSpec") != "public-product-spec-published":
         raise SiteCheckError(f"{label}: wrong productSpec status")
     if payload.get("platformStatus", {}).get("releaseGates") != "public-release-gates-published":
@@ -4716,6 +4750,8 @@ def validate_liquidity_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong liquidityPage link")
     if payload.get("officialLinks", {}).get("liquidity") != LIQUIDITY_URL:
         raise SiteCheckError(f"{label}: wrong liquidity link")
+    if payload.get("officialLinks", {}).get("custodyRoadmap") != CUSTODY_ROADMAP_URL:
+        raise SiteCheckError(f"{label}: wrong custodyRoadmap link")
     if "No LP lock is currently claimed." not in boundaries.get("safeClaims", []):
         raise SiteCheckError(f"{label}: missing no-LP-lock safe claim")
     if "LP lock before verifiable on-chain evidence exists" not in boundaries.get("doNotClaim", []):
@@ -4736,6 +4772,7 @@ def validate_liquidity_page(text: str) -> None:
     assert_contains(text, "LP Custody Boundary", label)
     assert_contains(text, "No LP lock, LP burn, or LP multisig custody is currently claimed", label)
     assert_contains(text, "Future LP Lock Evidence Requirements", label)
+    assert_contains(text, "Custody Roadmap", label)
     assert_contains(text, "Do not claim deep liquidity", label)
     assert_contains(text, OFFICIAL_GECKOTERMINAL_URL, label)
     assert_contains(text, OFFICIAL_DEXSCREENER_URL, label)
@@ -4795,6 +4832,8 @@ def validate_holder_distribution_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong holderDistribution link")
     if links.get("reserveStatement") != RESERVE_STATEMENT_URL:
         raise SiteCheckError(f"{label}: wrong reserveStatement link")
+    if links.get("custodyRoadmap") != CUSTODY_ROADMAP_URL:
+        raise SiteCheckError(f"{label}: wrong custodyRoadmap link")
     if links.get("blockaidFollowup") != BLOCKAID_FOLLOWUP_URL:
         raise SiteCheckError(f"{label}: wrong blockaidFollowup link")
     if "Supply concentration remains a disclosed risk." not in boundaries.get("safeClaims", []):
@@ -4816,6 +4855,7 @@ def validate_holder_distribution_page(text: str) -> None:
     assert_contains(text, "600,000,000 GCA / 60%", label)
     assert_contains(text, "Not A Live Holder Ranking", label)
     assert_contains(text, "Supply concentration remains a disclosed risk", label)
+    assert_contains(text, "Custody Roadmap", label)
     assert_contains(text, "Owner-controlled, not locked", label)
     assert_contains(text, "Reserve Transfer Proofs", label)
     assert_contains(text, "Do not say the reserve removes holder concentration risk", label)
@@ -4893,6 +4933,8 @@ def validate_risk_remediation_json(text: str) -> None:
         raise SiteCheckError(f"{label}: LP lock must not be claimed")
     if links.get("riskRemediation") != RISK_REMEDIATION_URL:
         raise SiteCheckError(f"{label}: wrong riskRemediation link")
+    if links.get("custodyRoadmap") != CUSTODY_ROADMAP_URL:
+        raise SiteCheckError(f"{label}: wrong custodyRoadmap link")
     if links.get("blockaidFollowup") != BLOCKAID_FOLLOWUP_URL:
         raise SiteCheckError(f"{label}: wrong blockaidFollowup link")
     if links.get("liquidity") != LIQUIDITY_URL:
@@ -4912,6 +4954,7 @@ def validate_risk_remediation_page(text: str) -> None:
     assert_social_preview_meta(text, label, RISK_REMEDIATION_PAGE_URL)
     assert_contains(text, "GCA Risk Remediation Plan", label)
     assert_contains(text, "Risk Remediation JSON", label)
+    assert_contains(text, "Custody Roadmap", label)
     assert_contains(text, "Price Volatility", label)
     assert_contains(text, "LP Custody", label)
     assert_contains(text, "Supply Concentration", label)
@@ -4920,6 +4963,82 @@ def validate_risk_remediation_page(text: str) -> None:
     assert_contains(text, "not an LP lock claim", label)
     assert_contains(text, "Actions That Would Reduce Review Risk", label)
     assert_contains(text, "Do not say risk factors are fully solved", label)
+    assert_contains(text, MAINNET_ADDRESS, label)
+    assert_contains(text, RESERVE_WALLET, label)
+    assert_current_pool_text(text, label)
+    assert_no_forbidden_public_claims(text, label)
+
+
+def validate_custody_roadmap_json(text: str) -> None:
+    label = "/custody-roadmap.json"
+    payload = load_json(text, label)
+    current = payload.get("currentCustodyStatus", {})
+    links = payload.get("officialLinks", {})
+    phases = {item.get("id"): item for item in payload.get("roadmapPhases", []) if isinstance(item, dict)}
+    boundaries = payload.get("publicClaimBoundaries", {})
+
+    if payload.get("schema") != CUSTODY_ROADMAP_URL:
+        raise SiteCheckError(f"{label}: wrong schema")
+    if payload.get("pageUrl") != CUSTODY_ROADMAP_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong pageUrl")
+    if payload.get("status") != "public-custody-roadmap-published":
+        raise SiteCheckError(f"{label}: wrong status")
+    if payload.get("chainId") != 8453:
+        raise SiteCheckError(f"{label}: wrong chainId")
+    if payload.get("contractAddress") != MAINNET_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong contractAddress")
+    if "not a reserve lock claim" not in payload.get("scopeBoundary", ""):
+        raise SiteCheckError(f"{label}: missing reserve-lock scope boundary")
+    if current.get("ownerReserveWallet") != RESERVE_WALLET:
+        raise SiteCheckError(f"{label}: wrong reserve wallet")
+    if current.get("ownerHeldReserve") != "600000000":
+        raise SiteCheckError(f"{label}: wrong ownerHeldReserve")
+    if current.get("reserveCustodyType") != "normal-owner-controlled-wallet":
+        raise SiteCheckError(f"{label}: wrong reserve custody type")
+    for key in ("reserveLocked", "reserveVestingContract", "reserveMultisig", "lpLockClaimed", "lpBurnClaimed", "multisigLpCustodyClaimed"):
+        if current.get(key) is not False:
+            raise SiteCheckError(f"{label}: {key} must be false")
+    if current.get("officialPool") != OFFICIAL_POOL_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong officialPool")
+    if current.get("quoteAssetAddress") != BASE_USDT_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong quoteAssetAddress")
+    for phase_id in ("disclosure-baseline", "safe-multisig-evaluation", "reserve-lock-or-vesting", "lp-lock-evaluation", "independent-audit-handoff"):
+        if phase_id not in phases:
+            raise SiteCheckError(f"{label}: missing phase {phase_id}")
+    if phases["disclosure-baseline"].get("status") != "published":
+        raise SiteCheckError(f"{label}: wrong baseline status")
+    if phases["safe-multisig-evaluation"].get("status") != "not-started":
+        raise SiteCheckError(f"{label}: multisig should be not-started")
+    if phases["lp-lock-evaluation"].get("status") != "not-started":
+        raise SiteCheckError(f"{label}: LP lock should be not-started")
+    if links.get("custodyRoadmap") != CUSTODY_ROADMAP_URL:
+        raise SiteCheckError(f"{label}: wrong custodyRoadmap link")
+    if links.get("riskRemediation") != RISK_REMEDIATION_URL:
+        raise SiteCheckError(f"{label}: wrong riskRemediation link")
+    if links.get("liquidity") != LIQUIDITY_URL:
+        raise SiteCheckError(f"{label}: wrong liquidity link")
+    if links.get("reserveStatement") != RESERVE_STATEMENT_URL:
+        raise SiteCheckError(f"{label}: wrong reserveStatement link")
+    if "GCA has published a custody roadmap and evidence checklist." not in boundaries.get("safeClaims", []):
+        raise SiteCheckError(f"{label}: missing custody roadmap safe claim")
+    if "reserve is locked before on-chain custody changes" not in boundaries.get("doNotClaim", []):
+        raise SiteCheckError(f"{label}: missing reserve-lock boundary")
+    assert_current_pool_text(json.dumps(payload), label)
+    assert_no_forbidden_public_claims(json.dumps(payload), label)
+
+
+def validate_custody_roadmap_page(text: str) -> None:
+    label = "/custody-roadmap.html"
+    assert_social_preview_meta(text, label, CUSTODY_ROADMAP_PAGE_URL)
+    assert_contains(text, "GCA Custody Roadmap", label)
+    assert_contains(text, "Custody Roadmap JSON", label)
+    assert_contains(text, "Reserve Wallet", label)
+    assert_contains(text, "Owner-controlled, not locked", label)
+    assert_contains(text, "No LP lock claimed", label)
+    assert_contains(text, "not a reserve lock claim", label)
+    assert_contains(text, "Future Evidence Required", label)
+    assert_contains(text, "Safe multisig", label)
+    assert_contains(text, "Do not say LP is locked before verifiable lock evidence exists", label)
     assert_contains(text, MAINNET_ADDRESS, label)
     assert_contains(text, RESERVE_WALLET, label)
     assert_current_pool_text(text, label)
@@ -5062,6 +5181,10 @@ def validate_reviewer_kit_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong holderDistribution")
     if links.get("riskRemediation") != RISK_REMEDIATION_URL:
         raise SiteCheckError(f"{label}: wrong riskRemediation")
+    if links.get("custodyRoadmapPage") != CUSTODY_ROADMAP_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong custodyRoadmapPage")
+    if links.get("custodyRoadmap") != CUSTODY_ROADMAP_URL:
+        raise SiteCheckError(f"{label}: wrong custodyRoadmap")
     if links.get("externalReviewStatus") != EXTERNAL_REVIEW_URL:
         raise SiteCheckError(f"{label}: wrong externalReviewStatus")
     if links.get("onchainProofs") != ONCHAIN_PROOFS_URL:
@@ -5123,6 +5246,8 @@ def validate_reviewer_kit_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing audit safe claim")
     if payload.get("evidenceLinks", {}).get("liquidityStatement") != LIQUIDITY_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong liquidity evidence link")
+    if payload.get("evidenceLinks", {}).get("custodyRoadmap") != CUSTODY_ROADMAP_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong custody roadmap evidence link")
     if "security-vendor approval, permanent warning-free status, or cross-wallet warning removal before vendor/current wallet UI confirms it" not in boundaries.get("doNotClaim", []):
         raise SiteCheckError(f"{label}: missing warning boundary")
     assert_current_pool_text(json.dumps(payload), label)
@@ -5142,6 +5267,7 @@ def validate_reviewer_kit_page(text: str) -> None:
     assert_contains(text, "Liquidity Statement", label)
     assert_contains(text, "Holder Distribution", label)
     assert_contains(text, "Risk Remediation", label)
+    assert_contains(text, "Custody Roadmap", label)
     assert_contains(text, "BaseScan Profile", label)
     assert_contains(text, "On-chain Proofs", label)
     assert_contains(text, "Local Review Package", label)
@@ -5324,6 +5450,8 @@ def validate_trust_json(text: str) -> None:
         "holderDistributionPage": HOLDER_DISTRIBUTION_PAGE_URL,
         "riskRemediation": RISK_REMEDIATION_URL,
         "riskRemediationPage": RISK_REMEDIATION_PAGE_URL,
+        "custodyRoadmap": CUSTODY_ROADMAP_URL,
+        "custodyRoadmapPage": CUSTODY_ROADMAP_PAGE_URL,
         "externalReviewStatus": EXTERNAL_REVIEW_URL,
         "onchainProofs": ONCHAIN_PROOFS_URL,
         "brandKit": BRAND_KIT_URL,
@@ -5385,6 +5513,10 @@ def validate_trust_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong ownerReserveWallet")
     if supply.get("holderDistribution") != HOLDER_DISTRIBUTION_URL:
         raise SiteCheckError(f"{label}: wrong holderDistribution")
+    if supply.get("custodyRoadmapPage") != CUSTODY_ROADMAP_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong custodyRoadmapPage")
+    if supply.get("custodyRoadmap") != CUSTODY_ROADMAP_URL:
+        raise SiteCheckError(f"{label}: wrong custodyRoadmap")
     if supply.get("ownerReserveTransferTxs") != [RESERVE_TX_1, RESERVE_TX_2]:
         raise SiteCheckError(f"{label}: wrong reserve transfer txs")
     if payload.get("blockaidFollowup", {}).get("status") != "public-blockaid-followup-package-published":
@@ -5413,6 +5545,7 @@ def validate_trust_page(text: str) -> None:
     assert_contains(text, "Liquidity Statement", label)
     assert_contains(text, "Holder Distribution", label)
     assert_contains(text, "Risk Remediation", label)
+    assert_contains(text, "Custody Roadmap", label)
     assert_contains(text, "Public Claim Boundaries", label)
     assert_contains(text, "Base Mainnet / 8453", label)
     assert_contains(text, MAINNET_ADDRESS, label)
@@ -5474,6 +5607,12 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong tokenSafetyPage")
     if links.get("tokenSafety") != TOKEN_SAFETY_URL:
         raise SiteCheckError(f"{label}: wrong tokenSafety")
+    if links.get("riskRemediation") != RISK_REMEDIATION_URL:
+        raise SiteCheckError(f"{label}: wrong riskRemediation")
+    if links.get("custodyRoadmapPage") != CUSTODY_ROADMAP_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong custodyRoadmapPage")
+    if links.get("custodyRoadmap") != CUSTODY_ROADMAP_URL:
+        raise SiteCheckError(f"{label}: wrong custodyRoadmap")
     if market.get("officialPair") != "GCA/USDT":
         raise SiteCheckError(f"{label}: wrong officialPair")
     if market.get("poolAddress") != OFFICIAL_POOL_ADDRESS:
@@ -5495,6 +5634,8 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong Blockaid risk-factor follow-up URL")
     if blockaid.get("riskRemediation") != RISK_REMEDIATION_URL:
         raise SiteCheckError(f"{label}: wrong Blockaid risk remediation URL")
+    if blockaid.get("custodyRoadmap") != CUSTODY_ROADMAP_URL:
+        raise SiteCheckError(f"{label}: wrong Blockaid custody roadmap URL")
     if blockaid.get("followUpSubmissionResult") != "Blockaid support portal returned HTTP 200 OK":
         raise SiteCheckError(f"{label}: wrong Blockaid follow-up result")
     if reviews.get("geckoTerminal", {}).get("status") != "approved":
@@ -5516,6 +5657,7 @@ def validate_external_reviews_page(text: str) -> None:
     assert_contains(text, "Wallet Warning Evidence", label)
     assert_contains(text, "Blockaid Follow-up", label)
     assert_contains(text, "Risk Remediation", label)
+    assert_contains(text, "Custody Roadmap", label)
     assert_contains(text, "External Reviews JSON", label)
     assert_contains(text, "Trust Center", label)
     assert_contains(text, "Resubmitted: awaiting review", label)
@@ -5660,6 +5802,8 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/holder-distribution.json",
         "https://gcagochina.com/risk-remediation.html",
         "https://gcagochina.com/risk-remediation.json",
+        "https://gcagochina.com/custody-roadmap.html",
+        "https://gcagochina.com/custody-roadmap.json",
         "https://gcagochina.com/token-safety.html",
         "https://gcagochina.com/token-safety.json",
         "https://gcagochina.com/blockaid-followup.html",
@@ -5764,6 +5908,8 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /holder-distribution.json", label)
     assert_contains(text, "Allow: /risk-remediation.html", label)
     assert_contains(text, "Allow: /risk-remediation.json", label)
+    assert_contains(text, "Allow: /custody-roadmap.html", label)
+    assert_contains(text, "Allow: /custody-roadmap.json", label)
     assert_contains(text, "Allow: /token-safety.html", label)
     assert_contains(text, "Allow: /token-safety.json", label)
     assert_contains(text, "Allow: /blockaid-followup.html", label)
@@ -5841,6 +5987,8 @@ CHECKS: list[EndpointCheck] = [
     ("/holder-distribution.json", validate_holder_distribution_json),
     ("/risk-remediation.html", validate_risk_remediation_page),
     ("/risk-remediation.json", validate_risk_remediation_json),
+    ("/custody-roadmap.html", validate_custody_roadmap_page),
+    ("/custody-roadmap.json", validate_custody_roadmap_json),
     ("/token-safety.html", validate_token_safety_page),
     ("/token-safety.json", validate_token_safety_json),
     ("/blockaid-followup.html", validate_blockaid_followup_page),

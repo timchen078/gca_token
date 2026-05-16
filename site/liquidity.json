@@ -50,6 +50,8 @@
     "markets": "https://gcagochina.com/markets.html",
     "marketQualityPage": "https://gcagochina.com/market-quality.html",
     "marketQuality": "https://gcagochina.com/market-quality.json",
+    "custodyRoadmapPage": "https://gcagochina.com/custody-roadmap.html",
+    "custodyRoadmap": "https://gcagochina.com/custody-roadmap.json",
     "risk": "https://gcagochina.com/risk.html",
     "blockaidFollowupPage": "https://gcagochina.com/blockaid-followup.html",
     "blockaidFollowup": "https://gcagochina.com/blockaid-followup.json",

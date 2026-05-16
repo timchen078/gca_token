@@ -1,0 +1,146 @@
+{
+  "schema": "https://gcagochina.com/custody-roadmap.json",
+  "pageUrl": "https://gcagochina.com/custody-roadmap.html",
+  "status": "public-custody-roadmap-published",
+  "lastUpdated": "2026-05-17",
+  "projectName": "GCA",
+  "network": "Base Mainnet",
+  "chainId": 8453,
+  "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+  "purpose": "Public custody roadmap for reviewers and community moderators. It explains the current reserve and LP custody state, the evidence required before stronger custody claims can be made, and the order of future custody upgrades if the owner chooses to execute them.",
+  "scopeBoundary": "This roadmap is a planning and evidence checklist only. It is not a reserve lock claim, not an LP lock claim, not a multisig claim, not a third-party audit, not a security-vendor approval, and not a claim of deep liquidity.",
+  "currentCustodyStatus": {
+    "ownerReserveWallet": "0x5e8F84748612B913aAcC937492AC25dc5630E246",
+    "ownerHeldReserve": "600000000",
+    "ownerHeldReservePercent": 60,
+    "reserveCustodyType": "normal-owner-controlled-wallet",
+    "reserveLocked": false,
+    "reserveVestingContract": false,
+    "reserveMultisig": false,
+    "lpLockClaimed": false,
+    "lpBurnClaimed": false,
+    "multisigLpCustodyClaimed": false,
+    "officialPair": "GCA/USDT",
+    "officialPool": "0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "quoteAssetAddress": "0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2",
+    "liquidityDepthStatus": "starter-depth-only"
+  },
+  "reserveTransferEvidence": [
+    {
+      "transactionHash": "0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67",
+      "purpose": "First reserve separation transfer"
+    },
+    {
+      "transactionHash": "0xfffb674448abdbd3af45bb0a30c48e5fbb0e675542b971f031381254b5dc5317",
+      "purpose": "Second reserve separation transfer"
+    }
+  ],
+  "roadmapPhases": [
+    {
+      "id": "disclosure-baseline",
+      "label": "Disclosure Baseline",
+      "status": "published",
+      "description": "Publicly disclose reserve wallet, target allocation, LP custody boundary, starter-depth liquidity, and claim limits.",
+      "requiredEvidence": [
+        "reserve statement",
+        "holder distribution disclosure",
+        "liquidity statement",
+        "risk remediation plan"
+      ]
+    },
+    {
+      "id": "safe-multisig-evaluation",
+      "label": "Safe Multisig Evaluation",
+      "status": "not-started",
+      "description": "Evaluate whether the owner reserve should move from a single owner wallet to a published Safe multisig before larger public activity.",
+      "requiredEvidenceBeforeClaim": [
+        "Safe address",
+        "owner and threshold policy",
+        "reserve transfer transaction hash",
+        "public signer and policy statement"
+      ]
+    },
+    {
+      "id": "reserve-lock-or-vesting",
+      "label": "Reserve Lock Or Vesting",
+      "status": "not-started",
+      "description": "If stronger reserve assurance is needed, evaluate a lock or vesting contract with public schedule details.",
+      "requiredEvidenceBeforeClaim": [
+        "lock or vesting contract address",
+        "token amount",
+        "beneficiary",
+        "unlock or vesting schedule",
+        "transaction hash"
+      ]
+    },
+    {
+      "id": "lp-lock-evaluation",
+      "label": "LP Lock Evaluation",
+      "status": "not-started",
+      "description": "If liquidity scale increases, evaluate whether LP custody should be locked or moved to equivalent public custody.",
+      "requiredEvidenceBeforeClaim": [
+        "lock provider or lock contract",
+        "pool or LP position identifier",
+        "lock transaction hash",
+        "owner or beneficiary",
+        "unlock date",
+        "remaining unlocked LP disclosure"
+      ]
+    },
+    {
+      "id": "independent-audit-handoff",
+      "label": "Independent Audit Handoff",
+      "status": "deferred",
+      "description": "Commission an independent audit only when budget, exchange requirements, partner requirements, or liquidity scale justify it.",
+      "requiredEvidenceBeforeClaim": [
+        "auditor name",
+        "final report URL",
+        "scope",
+        "date",
+        "unresolved findings if any"
+      ]
+    }
+  ],
+  "decisionGates": [
+    "Do not claim multisig reserve custody until the reserve is actually moved to a published multisig.",
+    "Do not claim reserve lock or vesting until an on-chain lock or vesting contract exists.",
+    "Do not claim LP lock until the official LP position or equivalent liquidity custody is verifiably locked.",
+    "Do not claim third-party audit completion until an independent final report is public.",
+    "Keep all liquidity and reserve custody changes traceable with transaction hashes."
+  ],
+  "officialLinks": {
+    "custodyRoadmapPage": "https://gcagochina.com/custody-roadmap.html",
+    "custodyRoadmap": "https://gcagochina.com/custody-roadmap.json",
+    "riskRemediationPage": "https://gcagochina.com/risk-remediation.html",
+    "riskRemediation": "https://gcagochina.com/risk-remediation.json",
+    "liquidityPage": "https://gcagochina.com/liquidity.html",
+    "liquidity": "https://gcagochina.com/liquidity.json",
+    "reserveStatementPage": "https://gcagochina.com/reserve-statement.html",
+    "reserveStatement": "https://gcagochina.com/reserve-statement.json",
+    "holderDistributionPage": "https://gcagochina.com/holder-distribution.html",
+    "holderDistribution": "https://gcagochina.com/holder-distribution.json",
+    "trustCenterPage": "https://gcagochina.com/trust.html",
+    "trustCenter": "https://gcagochina.com/trust.json",
+    "blockaidFollowupPage": "https://gcagochina.com/blockaid-followup.html",
+    "blockaidFollowup": "https://gcagochina.com/blockaid-followup.json"
+  },
+  "publicClaimBoundaries": {
+    "safeClaims": [
+      "GCA has published a custody roadmap and evidence checklist.",
+      "The owner reserve wallet is public and separated from the deployer wallet.",
+      "The current reserve remains a normal owner-controlled wallet.",
+      "No LP lock is currently claimed.",
+      "Future custody upgrades require public transaction hashes and custody metadata before stronger claims can be made."
+    ],
+    "doNotClaim": [
+      "reserve is locked before on-chain custody changes",
+      "reserve is multisig-controlled before a published multisig custody transfer",
+      "reserve is vested before a published vesting contract exists",
+      "LP is locked before verifiable lock evidence exists",
+      "LP is burned before verifiable burn evidence exists",
+      "third-party audit completion before an independent report is published",
+      "security-vendor approval before vendor confirmation",
+      "deep liquidity, price support, price stability, or return promises"
+    ]
+  }
+}
