@@ -142,7 +142,7 @@
 
       .grid {
         display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
+        grid-template-columns: repeat(5, minmax(0, 1fr));
         gap: 14px;
       }
 
@@ -180,6 +180,38 @@
 
       .note {
         margin: 0;
+      }
+
+      .form {
+        display: grid;
+        gap: 14px;
+      }
+
+      .field {
+        display: grid;
+        gap: 6px;
+      }
+
+      label {
+        font-size: 13px;
+        font-weight: 800;
+      }
+
+      input,
+      textarea {
+        width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fff;
+        color: var(--ink);
+        font: inherit;
+        min-height: 42px;
+        padding: 10px 12px;
+      }
+
+      textarea {
+        min-height: 84px;
+        resize: vertical;
       }
 
       .button {
@@ -346,6 +378,10 @@
           <span class="label">Pending reserve transfers</span>
           <span class="value" id="pendingTransferCount">0</span>
         </div>
+        <div class="fact">
+          <span class="label">Recorded transfers</span>
+          <span class="value" id="recordedTransferCount">0</span>
+        </div>
       </section>
 
       <section class="section two">
@@ -361,9 +397,40 @@
         </div>
         <div class="panel">
           <h2>Local API</h2>
-          <p class="note"><code>GET /gca/operator-summary</code> powers this console. Individual records remain available through <code>GET /gca/pre-registrations</code>, <code>GET /gca/wallet-verifications</code>, <code>GET /gca/credit-ledger</code>, <code>GET /gca/member-ledger</code>, and <code>GET /gca/member-review</code>.</p>
+          <p class="note"><code>GET /gca/operator-summary</code> powers this console. Individual records remain available through <code>GET /gca/pre-registrations</code>, <code>GET /gca/wallet-verifications</code>, <code>GET /gca/credit-ledger</code>, <code>GET /gca/member-ledger</code>, <code>GET /gca/member-benefit-transfers</code>, and <code>GET /gca/member-review</code>. <code>POST /gca/member-benefit-transfers</code> records a completed manual reserve-wallet transfer after the operator signs it outside this app.</p>
           <pre id="summaryJson">Waiting for local backend...</pre>
         </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="transferTitle">
+        <h2 id="transferTitle">Record Manual Member Benefit Transfer</h2>
+        <p class="note">Use this after the 10,000 GCA member benefit has already been sent manually from the reserve wallet. This form only records the public Base transaction hash in local JSONL ledgers. It does not connect to a wallet, request a signature, or send tokens.</p>
+        <form class="form section" id="transferForm">
+          <div class="field">
+            <label for="memberLedgerId">Member Ledger ID</label>
+            <input id="memberLedgerId" name="memberLedgerId" autocomplete="off" placeholder="gca_member_...">
+          </div>
+          <div class="field">
+            <label for="memberBenefitTransferTx">Manual Transfer Tx Hash</label>
+            <input id="memberBenefitTransferTx" name="memberBenefitTransferTx" autocomplete="off" placeholder="0x...">
+          </div>
+          <div class="field">
+            <label for="sourceWallet">Source Reserve Wallet</label>
+            <input id="sourceWallet" name="sourceWallet" autocomplete="off" placeholder="0x...">
+          </div>
+          <div class="field">
+            <label for="recipientWallet">Recipient Verified Wallet</label>
+            <input id="recipientWallet" name="recipientWallet" autocomplete="off" placeholder="0x...">
+          </div>
+          <div class="field">
+            <label for="reviewerNote">Reviewer Note</label>
+            <textarea id="reviewerNote" name="reviewerNote" placeholder="Record the manual review note. Do not paste private keys, seed phrases, exchange API secrets, one-time codes, or withdrawal permissions."></textarea>
+          </div>
+          <div class="actions">
+            <button class="button primary" id="recordTransferButton" type="submit">Record Transfer</button>
+            <span class="status" id="transferStatus">Local backend required</span>
+          </div>
+        </form>
       </section>
 
       <section class="section">
@@ -376,12 +443,13 @@
                 <th>Wallet</th>
                 <th>Credit Ledger</th>
                 <th>Member Ledger</th>
+                <th>Transfer Tx</th>
                 <th>Next Step</th>
                 <th>Updated</th>
               </tr>
             </thead>
             <tbody id="reviewRows">
-              <tr><td colspan="6">No local records loaded.</td></tr>
+              <tr><td colspan="7">No local records loaded.</td></tr>
             </tbody>
           </table>
         </div>
@@ -395,8 +463,12 @@
     <script>
       const LOCAL_BACKEND_HOSTS = new Set(["127.0.0.1", "localhost"]);
       const OPERATOR_SUMMARY_ENDPOINT_PATH = "/gca/operator-summary";
+      const MEMBER_BENEFIT_TRANSFER_ENDPOINT_PATH = "/gca/member-benefit-transfers";
       const connectionStatus = document.getElementById("connectionStatus");
       const refreshButton = document.getElementById("refreshButton");
+      const transferForm = document.getElementById("transferForm");
+      const recordTransferButton = document.getElementById("recordTransferButton");
+      const transferStatus = document.getElementById("transferStatus");
       const summaryJson = document.getElementById("summaryJson");
       const reviewRows = document.getElementById("reviewRows");
       const statNodes = {
@@ -404,11 +476,17 @@
         creditLedgerCount: document.getElementById("creditLedgerCount"),
         activeMemberCount: document.getElementById("activeMemberCount"),
         pendingTransferCount: document.getElementById("pendingTransferCount"),
+        recordedTransferCount: document.getElementById("recordedTransferCount"),
       };
 
       function setStatus(text, kind = "") {
         connectionStatus.textContent = text;
         connectionStatus.className = `status ${kind}`.trim();
+      }
+
+      function setTransferStatus(text, kind = "") {
+        transferStatus.textContent = text;
+        transferStatus.className = `status ${kind}`.trim();
       }
 
       function escapeHtml(value) {
@@ -421,7 +499,7 @@
 
       function renderReviews(records) {
         if (!records.length) {
-          reviewRows.innerHTML = '<tr><td colspan="6">No local support review records yet.</td></tr>';
+          reviewRows.innerHTML = '<tr><td colspan="7">No local support review records yet.</td></tr>';
           return;
         }
         reviewRows.innerHTML = records.map((record) => `
@@ -430,6 +508,7 @@
             <td>${escapeHtml(record.walletAddress)}</td>
             <td>${escapeHtml(record.creditLedgerId || "none")}</td>
             <td>${escapeHtml(record.memberLedgerId || "none")}</td>
+            <td>${escapeHtml(record.memberBenefitTransferTx || "none")}</td>
             <td>${escapeHtml(record.nextStep)}</td>
             <td>${escapeHtml(record.updatedAt)}</td>
           </tr>
@@ -440,6 +519,8 @@
         if (!LOCAL_BACKEND_HOSTS.has(window.location.hostname)) {
           setStatus("Public website view: local backend not connected", "warn");
           refreshButton.disabled = true;
+          recordTransferButton.disabled = true;
+          setTransferStatus("Public website view only", "warn");
           summaryJson.textContent = "Open http://127.0.0.1:8787/operator.html after running tools/gca_member_backend.py to view local ledgers.";
           return;
         }
@@ -457,19 +538,62 @@
           statNodes.creditLedgerCount.textContent = totals.creditLedgerRecords ?? 0;
           statNodes.activeMemberCount.textContent = totals.activeMembers ?? 0;
           statNodes.pendingTransferCount.textContent = totals.pendingManualReserveTransfers ?? 0;
+          statNodes.recordedTransferCount.textContent = totals.memberBenefitTransfers ?? 0;
           summaryJson.textContent = JSON.stringify(payload, null, 2);
           renderReviews(payload.dataLedgers?.support_reviews?.latest || []);
           setStatus("Local operator backend connected", "good");
+          setTransferStatus("Ready to record manual transfer", "good");
         } catch (error) {
           setStatus("Local backend unavailable", "warn");
           summaryJson.textContent = `${error.message}\n\nRun: .venv/bin/python tools/gca_member_backend.py --host 127.0.0.1 --port 8787`;
           renderReviews([]);
+          setTransferStatus("Local backend unavailable", "warn");
         } finally {
           refreshButton.disabled = false;
+          recordTransferButton.disabled = false;
+        }
+      }
+
+      async function recordMemberBenefitTransfer(event) {
+        event.preventDefault();
+        if (!LOCAL_BACKEND_HOSTS.has(window.location.hostname)) {
+          setTransferStatus("Open the local backend URL before recording", "warn");
+          return;
+        }
+
+        const form = new FormData(transferForm);
+        const payload = {
+          memberLedgerId: String(form.get("memberLedgerId") || "").trim(),
+          memberBenefitTransferTx: String(form.get("memberBenefitTransferTx") || "").trim(),
+          sourceWallet: String(form.get("sourceWallet") || "").trim(),
+          recipientWallet: String(form.get("recipientWallet") || "").trim(),
+          reviewerNote: String(form.get("reviewerNote") || "").trim(),
+        };
+
+        setTransferStatus("Recording manual transfer");
+        recordTransferButton.disabled = true;
+        try {
+          const response = await fetch(MEMBER_BENEFIT_TRANSFER_ENDPOINT_PATH, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+          const result = await response.json();
+          if (!response.ok || !result.ok) {
+            throw new Error(result.error || `HTTP ${response.status}`);
+          }
+          setTransferStatus(result.alreadyRecorded ? "Transfer already recorded" : "Manual transfer recorded", "good");
+          transferForm.reset();
+          await refreshOperatorSummary();
+        } catch (error) {
+          setTransferStatus(error.message, "warn");
+        } finally {
+          recordTransferButton.disabled = false;
         }
       }
 
       refreshButton.addEventListener("click", refreshOperatorSummary);
+      transferForm.addEventListener("submit", recordMemberBenefitTransfer);
       refreshOperatorSummary();
     </script>
   </body>

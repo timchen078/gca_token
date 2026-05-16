@@ -397,9 +397,14 @@
             <p class="note">Reads review status for the authenticated account after the controlled account UI exists.</p>
           </div>
           <div class="fact">
+            <span class="label">POST / GET</span>
+            <span class="value">/gca/member-benefit-transfers</span>
+            <p class="note">Local-only record path for manually completed reserve-wallet transfers. It records a public transaction hash and never sends tokens.</p>
+          </div>
+          <div class="fact">
             <span class="label">GET</span>
             <span class="value">/gca/operator-summary</span>
-            <p class="note">Local-only console summary for JSONL pre-registration, wallet verification, credit ledger, member ledger, and support review counts.</p>
+            <p class="note">Local-only console summary for JSONL pre-registration, wallet verification, credit ledger, member ledger, member benefit transfer, and support review counts.</p>
           </div>
         </div>
       </section>

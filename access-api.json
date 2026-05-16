@@ -36,6 +36,7 @@
       "wallet_verifications",
       "credit_ledger",
       "member_ledger",
+      "member_benefit_transfers",
       "support_reviews"
     ],
     "walletVerificationMethod": "Base Mainnet public RPC eth_call ERC-20 balanceOf",
@@ -279,11 +280,58 @@
       ]
     },
     {
+      "id": "member-benefit-transfers-read",
+      "method": "GET",
+      "path": "/gca/member-benefit-transfers",
+      "status": "local-only-not-public-production",
+      "purpose": "Read local JSONL records for manually completed reserve-wallet GCA Member benefit transfers.",
+      "requiredRequestFields": [
+        "localhostClient"
+      ],
+      "responseFields": [
+        "transferRecordId",
+        "memberLedgerId",
+        "recipientWallet",
+        "memberBenefitAmount",
+        "memberBenefitTransferTx",
+        "transferredAt",
+        "status"
+      ],
+      "allowedStatuses": [
+        "transferred"
+      ]
+    },
+    {
+      "id": "member-benefit-transfers-create",
+      "method": "POST",
+      "path": "/gca/member-benefit-transfers",
+      "status": "local-only-not-public-production",
+      "purpose": "Record a manually completed 10,000 GCA reserve-wallet transfer after the operator signs it outside this app.",
+      "requiredRequestFields": [
+        "memberLedgerId",
+        "memberBenefitTransferTx",
+        "recipientWallet",
+        "reviewerNote"
+      ],
+      "optionalRequestFields": [
+        "sourceWallet"
+      ],
+      "responseFields": [
+        "transferRecord",
+        "memberLedger",
+        "supportReview",
+        "alreadyRecorded"
+      ],
+      "allowedStatuses": [
+        "transferred"
+      ]
+    },
+    {
       "id": "operator-summary",
       "method": "GET",
       "path": "/gca/operator-summary",
       "status": "local-only-not-public-production",
-      "purpose": "Return local operator console counts and latest JSONL records for pre-registrations, wallet verifications, credit ledger, member ledger, and support reviews.",
+      "purpose": "Return local operator console counts and latest JSONL records for pre-registrations, wallet verifications, credit ledger, member ledger, member benefit transfers, and support reviews.",
       "requiredRequestFields": [
         "localhostClient"
       ],
@@ -292,6 +340,8 @@
         "dataLedgers",
         "totals",
         "operatorBoundaries",
+        "memberBenefitTransfers",
+        "transferredMemberBenefits",
         "publicSelfServiceClaim",
         "automaticTokenTransfer"
       ],
