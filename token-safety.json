@@ -47,6 +47,8 @@
   "reviewLinks": {
     "tokenSafetyPage": "https://gcagochina.com/token-safety.html",
     "tokenSafety": "https://gcagochina.com/token-safety.json",
+    "blockaidFollowupPage": "https://gcagochina.com/blockaid-followup.html",
+    "blockaidFollowup": "https://gcagochina.com/blockaid-followup.json",
     "technicalReportPage": "https://gcagochina.com/technical-report.html",
     "technicalReport": "https://gcagochina.com/technical-report.json",
     "reserveStatementPage": "https://gcagochina.com/reserve-statement.html",

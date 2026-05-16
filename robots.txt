@@ -28,6 +28,8 @@ Allow: /market-quality.html
 Allow: /market-quality.json
 Allow: /token-safety.html
 Allow: /token-safety.json
+Allow: /blockaid-followup.html
+Allow: /blockaid-followup.json
 Allow: /technical-report.html
 Allow: /technical-report.json
 Allow: /reserve-statement.html
