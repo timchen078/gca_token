@@ -289,6 +289,7 @@
           <a class="button primary" href="platform-replies.json">Platform Replies JSON</a>
           <a class="button primary" href="reviewer-kit.html">Reviewer Kit</a>
           <a class="button primary" href="trust.html">Trust Center</a>
+          <a class="button" href="access-api.html">Review Package Process</a>
           <a class="button" href="wallet-warning.html">Wallet Warning Evidence</a>
           <a class="button" href="onchain-proofs.html">On-chain Proofs</a>
           <a class="button" href="external-reviews.html">External Review Status</a>
@@ -380,6 +381,31 @@ Logo PNG: https://gcagochina.com/assets/gca-logo.png
 Official pool: Uniswap v4 GCA/USDT on Base Mainnet, 0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0
 Reviewer kit: https://gcagochina.com/reviewer-kit.html
 External review status: https://gcagochina.com/external-reviews.html</pre>
+        </article>
+
+        <article class="panel">
+          <h2>Local Review Package Handoff</h2>
+          <p class="note">Use only if a reviewer asks for a redacted local member-ledger review package or digest verification context.</p>
+          <pre class="copy">Subject: GCA redacted local review package handoff
+
+Hello,
+
+Attached is a public-redacted GCA local review package for reviewer evidence handoff.
+
+Network: Base Mainnet / chainId 8453
+Contract: 0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6
+Reviewer kit: https://gcagochina.com/reviewer-kit.html
+Access API / review package process: https://gcagochina.com/access-api.html
+Export mode: redacted-public
+Export tool: tools/export_gca_review_package.py
+Digest field: packageDigestSha256
+Digest verification tool: tools/verify_gca_review_package.py
+
+The redacted package removes user email, Telegram, reviewer notes, support notes, and evidence notes while retaining public chain evidence such as wallet addresses and transaction hashes.
+
+The exporter reads local JSONL records only. It does not ask for private keys, seed phrases, wallet signatures, custody, withdrawal permission, or transactions.
+
+This package is support evidence only. It is not a third-party audit, security-vendor approval, listing approval, or liquidity-depth claim.</pre>
         </article>
 
         <article class="panel">
