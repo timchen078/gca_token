@@ -355,7 +355,8 @@
         <p class="lead">This page reads local JSONL ledger records from <code>tools/gca_member_backend.py</code> when opened through <code>http://127.0.0.1:8787/operator.html</code>. The public website version is informational only and does not expose a public submission queue, self-service claim page, token transfer, or production account system.</p>
         <div class="actions section">
           <button class="button primary" id="refreshButton" type="button">Refresh Local Ledgers</button>
-          <button class="button" id="exportButton" type="button">Export Review Package</button>
+          <button class="button" id="exportButton" type="button">Export Full Review Package</button>
+          <button class="button" id="exportPublicButton" type="button">Export Public Redacted Package</button>
           <a class="button" href="members.html">Open Pre-Registration</a>
           <a class="button" href="member-ledger.html">Ledger Schema</a>
           <a class="button" href="member-benefit-transfer.html">Transfer Runbook</a>
@@ -398,7 +399,7 @@
         </div>
         <div class="panel">
           <h2>Local API</h2>
-          <p class="note"><code>GET /gca/operator-summary</code> powers this console. <code>GET /gca/review-package</code> exports a local reviewer evidence package for support and platform follow-up. Individual records remain available through <code>GET /gca/pre-registrations</code>, <code>GET /gca/wallet-verifications</code>, <code>GET /gca/credit-ledger</code>, <code>GET /gca/member-ledger</code>, <code>GET /gca/member-benefit-transfers</code>, and <code>GET /gca/member-review</code>. <code>POST /gca/member-benefit-transfers</code> records a completed manual reserve-wallet transfer after the operator signs it outside this app and the backend verifies the receipt with read-only Base Mainnet data.</p>
+          <p class="note"><code>GET /gca/operator-summary</code> powers this console. <code>GET /gca/review-package</code> exports a local reviewer evidence package for support and platform follow-up. Use <code>?redact=public</code> before external sharing to redact user email, Telegram, reviewer notes, support notes, and evidence notes while keeping public wallet and transaction evidence. Individual records remain available through <code>GET /gca/pre-registrations</code>, <code>GET /gca/wallet-verifications</code>, <code>GET /gca/credit-ledger</code>, <code>GET /gca/member-ledger</code>, <code>GET /gca/member-benefit-transfers</code>, and <code>GET /gca/member-review</code>. <code>POST /gca/member-benefit-transfers</code> records a completed manual reserve-wallet transfer after the operator signs it outside this app and the backend verifies the receipt with read-only Base Mainnet data.</p>
           <pre id="summaryJson">Waiting for local backend...</pre>
         </div>
       </section>
@@ -469,6 +470,7 @@
       const connectionStatus = document.getElementById("connectionStatus");
       const refreshButton = document.getElementById("refreshButton");
       const exportButton = document.getElementById("exportButton");
+      const exportPublicButton = document.getElementById("exportPublicButton");
       const transferForm = document.getElementById("transferForm");
       const recordTransferButton = document.getElementById("recordTransferButton");
       const transferStatus = document.getElementById("transferStatus");
@@ -523,6 +525,7 @@
           setStatus("Public website view: local backend not connected", "warn");
           refreshButton.disabled = true;
           exportButton.disabled = true;
+          exportPublicButton.disabled = true;
           recordTransferButton.disabled = true;
           setTransferStatus("Public website view only", "warn");
           summaryJson.textContent = "Open http://127.0.0.1:8787/operator.html after running tools/gca_member_backend.py to view local ledgers.";
@@ -555,6 +558,7 @@
         } finally {
           refreshButton.disabled = false;
           exportButton.disabled = false;
+          exportPublicButton.disabled = false;
           recordTransferButton.disabled = false;
         }
       }
@@ -571,28 +575,32 @@
         URL.revokeObjectURL(url);
       }
 
-      async function exportReviewPackage() {
+      async function exportReviewPackage(redacted = false) {
         if (!LOCAL_BACKEND_HOSTS.has(window.location.hostname)) {
           setStatus("Open the local backend URL before exporting", "warn");
           return;
         }
 
-        setStatus("Exporting local review package");
+        setStatus(redacted ? "Exporting public redacted review package" : "Exporting full local review package");
         exportButton.disabled = true;
+        exportPublicButton.disabled = true;
         try {
-          const response = await fetch(REVIEW_PACKAGE_ENDPOINT_PATH, { cache: "no-store" });
+          const endpoint = redacted ? `${REVIEW_PACKAGE_ENDPOINT_PATH}?redact=public` : REVIEW_PACKAGE_ENDPOINT_PATH;
+          const response = await fetch(endpoint, { cache: "no-store" });
           const payload = await response.json();
           if (!response.ok || !payload.ok) {
             throw new Error(payload.error || `HTTP ${response.status}`);
           }
           const stamp = new Date().toISOString().replaceAll(":", "-").replace(/\..+$/, "Z");
-          downloadJson(payload, `gca-review-package-${stamp}.json`);
+          const prefix = redacted ? "gca-public-redacted-review-package" : "gca-full-local-review-package";
+          downloadJson(payload, `${prefix}-${stamp}.json`);
           summaryJson.textContent = JSON.stringify(payload, null, 2);
-          setStatus("Local review package exported", "good");
+          setStatus(redacted ? "Public redacted review package exported" : "Full local review package exported", "good");
         } catch (error) {
           setStatus(error.message, "warn");
         } finally {
           exportButton.disabled = false;
+          exportPublicButton.disabled = false;
         }
       }
 
@@ -635,7 +643,8 @@
       }
 
       refreshButton.addEventListener("click", refreshOperatorSummary);
-      exportButton.addEventListener("click", exportReviewPackage);
+      exportButton.addEventListener("click", () => exportReviewPackage(false));
+      exportPublicButton.addEventListener("click", () => exportReviewPackage(true));
       transferForm.addEventListener("submit", recordMemberBenefitTransfer);
       refreshOperatorSummary();
     </script>

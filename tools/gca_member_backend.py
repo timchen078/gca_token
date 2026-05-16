@@ -70,6 +70,8 @@ LEDGER_NAMES = (
     "support_reviews",
 )
 LOCAL_CLIENTS = {"127.0.0.1", "::1", "localhost"}
+REDACTED_EXTERNAL_VALUE = "[redacted-for-external-sharing]"
+REDACTED_EXTERNAL_KEYS = {"email", "telegram", "reviewerNote", "supportNote", "evidenceNote"}
 
 
 class BackendError(ValueError):
@@ -226,6 +228,20 @@ def latest_records_by(records: list[dict[str, Any]], key: str) -> list[dict[str,
         if record_id:
             latest[record_id] = record
     return list(latest.values())
+
+
+def redact_for_external_sharing(value: Any) -> Any:
+    if isinstance(value, dict):
+        redacted: dict[str, Any] = {}
+        for key, item in value.items():
+            if key in REDACTED_EXTERNAL_KEYS and item not in ("", None):
+                redacted[key] = REDACTED_EXTERNAL_VALUE
+            else:
+                redacted[key] = redact_for_external_sharing(item)
+        return redacted
+    if isinstance(value, list):
+        return [redact_for_external_sharing(item) for item in value]
+    return value
 
 
 @dataclass
@@ -783,9 +799,9 @@ class GcaMemberBackend:
         }
         return summary
 
-    def review_package(self, limit: int = 100) -> dict[str, Any]:
+    def review_package(self, limit: int = 100, redacted: bool = False) -> dict[str, Any]:
         summary = self.operator_summary(limit=limit)
-        return {
+        package = {
             "ok": True,
             "packageType": "gca-local-review-package",
             "generatedAt": summary["generatedAt"],
@@ -797,6 +813,13 @@ class GcaMemberBackend:
             "publicSelfServiceClaim": False,
             "automaticTokenTransfer": False,
             "localJsonlDataOnly": True,
+            "redactedForExternalSharing": False,
+            "redactionPolicy": {
+                "mode": "full-local",
+                "availableMode": "redact=public",
+                "redactedFields": sorted(REDACTED_EXTERNAL_KEYS),
+                "keepsPublicChainEvidence": True,
+            },
             "localEndpoint": "/gca/review-package",
             "operatorSummary": summary,
             "exportBoundaries": {
@@ -827,6 +850,12 @@ class GcaMemberBackend:
                 "Confirm no user secret, private key, seed phrase, exchange API secret, withdrawal permission, or custody request appears in notes.",
             ],
         }
+        if redacted:
+            package = redact_for_external_sharing(package)
+            package["redactedForExternalSharing"] = True
+            package["redactionPolicy"]["mode"] = "redacted-public"
+            package["redactionPolicy"]["availableMode"] = "redact=public"
+        return package
 
 
 def build_handler(site_dir: Path, backend: GcaMemberBackend) -> type[SimpleHTTPRequestHandler]:
@@ -883,7 +912,9 @@ def build_handler(site_dir: Path, backend: GcaMemberBackend) -> type[SimpleHTTPR
                         limit = min(max(int(limit_text), 1), 200)
                     except ValueError as exc:
                         raise BackendError("limit must be an integer") from exc
-                    self.send_json(backend.review_package(limit=limit))
+                    redact_text = str(query.get("redact", query.get("redacted", [""]))[0]).strip().lower()
+                    redacted = redact_text in {"1", "true", "yes", "public", "external"}
+                    self.send_json(backend.review_package(limit=limit, redacted=redacted))
                     return
                 ledger_map = {
                     "/gca/pre-registrations": "pre_registrations",

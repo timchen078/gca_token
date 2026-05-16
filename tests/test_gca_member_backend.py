@@ -14,6 +14,7 @@ from tools.gca_member_backend import (
     HOLDER_THRESHOLD_UNITS,
     MEMBER_BENEFIT_UNITS,
     MEMBER_THRESHOLD_UNITS,
+    REDACTED_EXTERNAL_VALUE,
     TRANSFER_TOPIC,
     GcaMemberBackend,
     JsonlLedgerStore,
@@ -230,6 +231,21 @@ class GcaMemberBackendTests(unittest.TestCase):
         self.assertTrue(review_package["exportBoundaries"]["readOnlyTransferReceiptVerification"])
         self.assertEqual(review_package["operatorSummary"]["totals"]["memberBenefitTransfers"], 1)
         self.assertIn("memberBenefitTransfer", review_package["publicReferences"])
+        self.assertFalse(review_package["redactedForExternalSharing"])
+
+        redacted_package = backend.review_package(redacted=True)
+        redacted_text = json.dumps(redacted_package)
+        self.assertTrue(redacted_package["redactedForExternalSharing"])
+        self.assertEqual(redacted_package["redactionPolicy"]["mode"], "redacted-public")
+        self.assertEqual(
+            redacted_package["operatorSummary"]["dataLedgers"]["pre_registrations"]["latest"][0]["email"],
+            REDACTED_EXTERNAL_VALUE,
+        )
+        self.assertNotIn("member@example.com", redacted_text)
+        self.assertNotIn("@member", redacted_text)
+        self.assertNotIn("Manual reserve-wallet transfer completed and recorded locally.", redacted_text)
+        self.assertIn(WALLET.lower(), redacted_text)
+        self.assertIn(TRANSFER_TX, redacted_text)
 
         duplicate = backend.record_member_benefit_transfer({
             "memberLedgerId": response["memberLedger"]["memberLedgerId"],
@@ -363,6 +379,15 @@ class GcaMemberBackendTests(unittest.TestCase):
             self.assertFalse(review_package["publicSelfServiceClaim"])
             self.assertFalse(review_package["automaticTokenTransfer"])
             self.assertTrue(review_package["exportBoundaries"]["localhostOnly"])
+
+            with urlopen(f"{base_url}/gca/review-package?limit=5&redact=public", timeout=10) as response:
+                redacted_package = json.loads(response.read().decode())
+            redacted_text = json.dumps(redacted_package)
+            self.assertTrue(redacted_package["redactedForExternalSharing"])
+            self.assertEqual(redacted_package["redactionPolicy"]["mode"], "redacted-public")
+            self.assertNotIn("member@example.com", redacted_text)
+            self.assertNotIn("@member", redacted_text)
+            self.assertIn(WALLET.lower(), redacted_text)
 
             transfer_request = Request(
                 f"{base_url}/gca/member-benefit-transfers",

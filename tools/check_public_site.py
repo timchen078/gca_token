@@ -597,8 +597,11 @@ def validate_operator_page(text: str) -> None:
     assert_contains(text, 'const REVIEW_PACKAGE_ENDPOINT_PATH = "/gca/review-package";', label)
     assert_contains(text, 'const MEMBER_BENEFIT_TRANSFER_ENDPOINT_PATH = "/gca/member-benefit-transfers";', label)
     assert_contains(text, "Local operator backend connected", label)
-    assert_contains(text, "Export Review Package", label)
-    assert_contains(text, "Local review package exported", label)
+    assert_contains(text, "Export Full Review Package", label)
+    assert_contains(text, "Export Public Redacted Package", label)
+    assert_contains(text, "Full local review package exported", label)
+    assert_contains(text, "Public redacted review package exported", label)
+    assert_contains(text, "?redact=public", label)
     assert_contains(text, "Public website view: local backend not connected", label)
     assert_contains(text, "local JSONL ledger records", label)
     assert_contains(text, ".gca_access_data/", label)
@@ -1800,6 +1803,7 @@ def validate_access_api_page(text: str) -> None:
     assert_contains(text, "/gca/member-benefit-transfers", label)
     assert_contains(text, "eth_call", label)
     assert_contains(text, "/gca/review-package", label)
+    assert_contains(text, "?redact=public", label)
     assert_contains(text, "reviewer evidence", label)
     assert_contains(text, "read-only Base receipt data", label)
     assert_contains(text, "balanceOf", label)
@@ -1887,6 +1891,8 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong local operator summary endpoint")
     if local_backend.get("localReviewPackageEndpoint") != "/gca/review-package":
         raise SiteCheckError(f"{label}: wrong local review package endpoint")
+    if "redacted-public" not in local_backend.get("localReviewPackageRedactionModes", []):
+        raise SiteCheckError(f"{label}: missing local review package redaction mode")
     if local_backend.get("publicProductionEndpointLive") is not False:
         raise SiteCheckError(f"{label}: local backend must not mark production live")
     if local_backend.get("automaticTokenTransfer") is not False:
@@ -1950,6 +1956,17 @@ def validate_access_api_json(text: str) -> None:
     for expected_field in ("operatorSummary", "exportBoundaries", "publicReferences", "reviewChecklist"):
         if expected_field not in review_package.get("responseFields", []):
             raise SiteCheckError(f"{label}: missing review package field {expected_field}")
+    for expected_field in ("redactedForExternalSharing", "redactionPolicy"):
+        if expected_field not in review_package.get("responseFields", []):
+            raise SiteCheckError(f"{label}: missing review package redaction field {expected_field}")
+    if "redact=public" not in review_package.get("optionalRequestFields", []):
+        raise SiteCheckError(f"{label}: missing review package redaction option")
+    redaction_policy = review_package.get("redactionPolicy", {})
+    if redaction_policy.get("publicMode") != "redact=public":
+        raise SiteCheckError(f"{label}: wrong review package redaction public mode")
+    for expected_field in ("email", "telegram", "reviewerNote", "supportNote", "evidenceNote"):
+        if expected_field not in redaction_policy.get("redactedFields", []):
+            raise SiteCheckError(f"{label}: missing redacted field {expected_field}")
     for endpoint_key in ("GET /gca/member-benefit-transfers", "POST /gca/member-benefit-transfers"):
         endpoint = endpoint_map.get(endpoint_key)
         if endpoint is None:
@@ -3762,6 +3779,8 @@ def validate_member_program_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong local operator summary endpoint")
     if local_backend.get("localReviewPackageEndpoint") != "/gca/review-package":
         raise SiteCheckError(f"{label}: wrong local review package endpoint")
+    if "redacted-public" not in local_backend.get("localReviewPackageRedactionModes", []):
+        raise SiteCheckError(f"{label}: missing local review package redaction mode")
     if local_backend.get("publicProductionEndpointLive") is not False:
         raise SiteCheckError(f"{label}: local backend must not mark production live")
     if "credit_ledger" not in local_backend.get("writesJsonlLedgers", []):
