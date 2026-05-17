@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Weekly Go China Radar Issue 004 | GCA</title>
+    <meta name="description" content="Ready-for-review Weekly Go China Radar issue 004 for GCA: Go China Access narrative, risk-first quant utility, verification-first links, and conservative public boundaries.">
+    <link rel="canonical" href="https://gcagochina.com/radar-issue-004.html">
+    <link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">
+    <link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="GCA | Go China Access">
+    <meta property="og:title" content="Weekly Go China Radar Issue 004 | GCA">
+    <meta property="og:description" content="Ready-for-review Weekly Go China Radar issue 004 for GCA: Go China Access narrative, risk-first quant utility, verification-first links, and conservative public boundaries.">
+    <meta property="og:url" content="https://gcagochina.com/radar-issue-004.html">
+    <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Weekly Go China Radar Issue 004 | GCA">
+    <meta name="twitter:description" content="Ready-for-review Weekly Go China Radar issue 004 for GCA: Go China Access narrative, risk-first quant utility, verification-first links, and conservative public boundaries.">
+    <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #111318;
+        --muted: #5f6773;
+        --line: #dfe3ea;
+        --panel: #ffffff;
+        --soft: #f6f7f9;
+        --red: #d71920;
+        --blue: #0052ff;
+        --green: #087f5b;
+        --gold: #8a650d;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: #fbfbfc;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.5;
+      }
+
+      a {
+        color: var(--blue);
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .shell {
+        width: min(1080px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      header {
+        border-bottom: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.94);
+        position: sticky;
+        top: 0;
+        z-index: 2;
+      }
+
+      nav {
+        min-height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--ink);
+        font-weight: 850;
+      }
+
+      .brand img {
+        width: 32px;
+        height: 32px;
+      }
+
+      .nav-links,
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .nav-links {
+        gap: 18px;
+        font-size: 14px;
+      }
+
+      main {
+        padding: 42px 0 56px;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin: 0 0 18px;
+        color: var(--red);
+        font-size: 13px;
+        font-weight: 850;
+        text-transform: uppercase;
+      }
+
+      .eyebrow::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: var(--red);
+      }
+
+      h1 {
+        margin: 0;
+        max-width: 920px;
+        font-size: clamp(40px, 6vw, 72px);
+        line-height: 1;
+        letter-spacing: 0;
+      }
+
+      h2 {
+        margin: 0 0 14px;
+        font-size: 24px;
+      }
+
+      h3 {
+        margin: 0 0 8px;
+        font-size: 17px;
+      }
+
+      .lead {
+        max-width: 860px;
+        margin: 18px 0 0;
+        color: var(--muted);
+        font-size: 18px;
+      }
+
+      .actions {
+        margin-top: 24px;
+      }
+
+      .button {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        color: var(--ink);
+        min-height: 42px;
+        padding: 10px 14px;
+        font: inherit;
+        font-weight: 750;
+      }
+
+      .button.primary {
+        border-color: var(--red);
+        background: var(--red);
+        color: #fff;
+      }
+
+      .section {
+        margin-top: 30px;
+      }
+
+      .grid,
+      .two,
+      .facts {
+        display: grid;
+        gap: 14px;
+      }
+
+      .grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .two {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .facts {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .panel,
+      .fact {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+      }
+
+      .panel {
+        padding: 24px;
+      }
+
+      .fact {
+        min-height: 118px;
+        padding: 18px;
+      }
+
+      .label {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 750;
+        text-transform: uppercase;
+      }
+
+      .value {
+        display: block;
+        margin-top: 8px;
+        font-size: 17px;
+        font-weight: 850;
+      }
+
+      .good {
+        color: var(--green);
+      }
+
+      .pending {
+        color: var(--gold);
+      }
+
+      .note,
+      li {
+        color: var(--muted);
+      }
+
+      .note {
+        margin: 0;
+      }
+
+      .list {
+        display: grid;
+        gap: 10px;
+        margin-top: 12px;
+      }
+
+      .row {
+        display: grid;
+        grid-template-columns: minmax(112px, 0.75fr) minmax(0, 1.35fr);
+        gap: 12px;
+        align-items: start;
+        border-top: 1px solid var(--line);
+        padding-top: 10px;
+      }
+
+      .row strong {
+        min-width: 0;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+        text-align: right;
+      }
+
+      pre {
+        margin: 0;
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+        color: var(--ink);
+        background: var(--soft);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 16px;
+        font: 14px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      }
+
+      code {
+        padding: 2px 5px;
+        border-radius: 6px;
+        background: var(--soft);
+        overflow-wrap: anywhere;
+      }
+
+      footer {
+        border-top: 1px solid var(--line);
+        padding: 24px 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      @media (max-width: 860px) {
+        .grid,
+        .two,
+        .facts {
+          grid-template-columns: 1fr;
+        }
+
+        nav {
+          align-items: flex-start;
+          flex-direction: column;
+          padding: 14px 0;
+        }
+
+        .row {
+          grid-template-columns: 1fr;
+        }
+
+        .row strong {
+          text-align: left;
+          white-space: normal;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav class="shell" aria-label="Primary">
+        <a class="brand" href="index.html" aria-label="GCA home">
+          <img src="assets/gca-logo.svg" alt="GCA logo">
+          <span>GCA</span>
+        </a>
+        <div class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="radar.html">Issue 003</a>
+          <a href="publishing-desk.html">Publishing Desk</a>
+          <a href="content-library.html">Content Library</a>
+          <a href="verify.html">Verify</a>
+          <a href="risk.html">Risk</a>
+        </div>
+      </nav>
+    </header>
+
+    <main class="shell">
+      <section aria-labelledby="title">
+        <p class="eyebrow">Issue 004 / 2026-05-20 / Ready for review</p>
+        <h1 id="title">Weekly Go China Radar Issue 004</h1>
+        <p class="lead">This ready brief turns the Go China Access narrative into a clear public message: China-facing Web3 research, risk-first quant utility, and verification before interaction.</p>
+        <p class="lead">This issue is not live market data, not financial advice, not a buy or sell recommendation, and not a price forecast.</p>
+        <div class="actions">
+          <a class="button primary" href="radar-issue-004.json">Issue 004 JSON</a>
+          <a class="button" href="publishing-desk.html">Publishing Desk</a>
+          <a class="button" href="content-library.html">Content Library</a>
+          <a class="button" href="utility.html">Utility Thesis</a>
+          <a class="button" href="verify.html">Verify GCA</a>
+        </div>
+      </section>
+
+      <section class="section facts" aria-label="Radar facts">
+        <div class="fact">
+          <span class="label">Format</span>
+          <span class="value">Weekly Radar</span>
+        </div>
+        <div class="fact">
+          <span class="label">Status</span>
+          <span class="value pending">Ready for operator review</span>
+        </div>
+        <div class="fact">
+          <span class="label">Target Date</span>
+          <span class="value">2026-05-20</span>
+        </div>
+        <div class="fact">
+          <span class="label">Rule</span>
+          <span class="value good">Verify first</span>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="themesTitle">
+        <h2 id="themesTitle">Radar Themes</h2>
+        <div class="grid">
+          <div class="fact">
+            <span class="label">Theme</span>
+            <span class="value">Go China Access as a research corridor</span>
+            <p class="note">Frame GCA as a China-facing Web3 research and access narrative connected to education, verification, and planned non-custodial quant tooling.</p>
+          </div>
+          <div class="fact">
+            <span class="label">Theme</span>
+            <span class="value">Risk-first quant utility</span>
+            <p class="note">Explain liquidation replay, backtesting, risk alerts, ENTRY_READY review, and position sizing as planned utility directions rather than live trading promises.</p>
+          </div>
+          <div class="fact">
+            <span class="label">Theme</span>
+            <span class="value">Verification before interaction</span>
+            <p class="note">Keep the official Base Mainnet contract, GCA/USDT route, website, X, Telegram, and public risk pages easy to verify before any wallet interaction.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section two" aria-label="Utility and risk">
+        <div class="panel">
+          <h2>Planned Utility Hooks</h2>
+          <div class="list">
+            <div class="row"><span>Liquidation Replay</span><strong>Planned research module</strong></div>
+            <div class="row"><span>Backtesting</span><strong>Planned research module</strong></div>
+            <div class="row"><span>Risk Alerts</span><strong>Planned account utility</strong></div>
+            <div class="row"><span>ENTRY_READY Review</span><strong>Planned signal review workflow</strong></div>
+            <div class="row"><span>Position Sizing</span><strong>Planned risk-control calculator</strong></div>
+          </div>
+        </div>
+        <div class="panel">
+          <h2>Risk Notes</h2>
+          <ul>
+            <li>GCA is still early-stage and current liquidity is starter-depth only.</li>
+            <li>BaseScan token profile review is not complete until BaseScan publishes it.</li>
+            <li>Owner observed no wallet risk warning visible on 2026-05-14; this is not security-vendor approval.</li>
+            <li>No third-party audit has been completed.</li>
+            <li>Public account UI, 100 credits claiming, and GCA Member benefit review are not public self-service flows yet.</li>
+            <li>This issue must not be used as live market data, investment advice, or a trading signal.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="copyTitle">
+        <h2 id="copyTitle">Copy-Ready Post</h2>
+        <pre>GCA Weekly Go China Radar Issue 004 is ready for review.
+
+Focus: Go China Access as a China-facing Web3 research corridor, connected to risk-first quant utility and verification before interaction.
+
+https://gcagochina.com/radar-issue-004.html
+
+No return promises. Not financial advice.
+
+#GCA #GoChina #Base #Web3</pre>
+      </section>
+
+      <section class="section panel" aria-labelledby="identityTitle">
+        <h2 id="identityTitle">Canonical Identity</h2>
+        <div class="list">
+          <div class="row"><span>Network</span><strong>Base Mainnet / chainId 8453</strong></div>
+          <div class="row"><span>Contract</span><strong>0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6</strong></div>
+          <div class="row"><span>Official pool</span><strong>GCA/USDT</strong></div>
+          <div class="row"><span>Pool address</span><strong>0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0</strong></div>
+          <div class="row"><span>Base USDT</span><strong>0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2</strong></div>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="boundariesTitle">
+        <h2 id="boundariesTitle">Public Claim Boundaries</h2>
+        <ul>
+          <li>Do not use Issue 004 as a buy/sell signal, price target, promise of returns, or future exchange-listing claim.</li>
+          <li>Do not claim public account UI, 100 credits claiming, or GCA Member activation is live before controlled HTTPS account UI and ledger activation are released.</li>
+          <li>Do not claim security-vendor approval or BaseScan token profile approval before the platform confirms it.</li>
+          <li>Do not ask users for private keys, seed phrases, exchange API secrets, withdrawal permission, custody, or one-time codes.</li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <div class="shell">Weekly Go China Radar Issue 004 is a GCA content brief for operator review, not financial advice. Verify Base Mainnet chain ID 8453, the contract address, and the official GCA/USDT pool before using this information.</div>
+    </footer>
+  </body>
+</html>

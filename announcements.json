@@ -77,8 +77,8 @@
     {
       "targetDate": "2026-05-20",
       "topic": "Weekly Go China Radar",
-      "angle": "Explain the Go China narrative and link readers to the public radar page.",
-      "recommendedLink": "https://gcagochina.com/radar.html"
+      "angle": "Explain the Go China narrative and link readers to the Issue 004 ready brief.",
+      "recommendedLink": "https://gcagochina.com/radar-issue-004.html"
     },
     {
       "targetDate": "2026-05-23",
@@ -122,6 +122,8 @@
     "latestXPost": "https://x.com/GCAAIGoChina/status/2055944057134927984",
     "officialTelegram": "https://t.me/gcagochinaofficial",
     "verify": "https://gcagochina.com/verify.html",
+    "radarIssue004Page": "https://gcagochina.com/radar-issue-004.html",
+    "radarIssue004": "https://gcagochina.com/radar-issue-004.json",
     "radar": "https://gcagochina.com/radar.html",
     "roadmap": "https://gcagochina.com/roadmap.html",
     "risk": "https://gcagochina.com/risk.html"

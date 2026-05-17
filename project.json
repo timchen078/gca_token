@@ -38,6 +38,8 @@
   "narrativeUrl": "https://gcagochina.com/narrative.json",
   "weeklyRadarPageUrl": "https://gcagochina.com/radar.html",
   "weeklyRadarUrl": "https://gcagochina.com/radar.json",
+  "radarIssue004PageUrl": "https://gcagochina.com/radar-issue-004.html",
+  "radarIssue004Url": "https://gcagochina.com/radar-issue-004.json",
   "listingKitUrl": "https://gcagochina.com/listing-kit.html",
   "brandKitPageUrl": "https://gcagochina.com/brand-kit.html",
   "brandKitUrl": "https://gcagochina.com/brand-kit.json",
@@ -351,6 +353,7 @@
     "contentCadence": "every-3-days",
     "draftCount": 10,
     "nextDraftTargetDate": "2026-05-20",
+    "nextDraftLink": "https://gcagochina.com/radar-issue-004.html",
     "operatorReviewRequired": true,
     "safeMessagingRulesAvailable": true
   },
@@ -403,6 +406,15 @@
     "scope": "Issue 003 research format for public activity cadence, no-artificial-volume boundaries, official route verification, member utility readiness, and reviewer links.",
     "notFinancialAdvice": true,
     "issueTitle": "Public Activity Without Artificial Volume"
+  },
+  "weeklyGoChinaRadarIssue004": {
+    "status": "weekly-go-china-radar-issue-004-ready-for-review",
+    "pageUrl": "https://gcagochina.com/radar-issue-004.html",
+    "url": "https://gcagochina.com/radar-issue-004.json",
+    "issue": "issue-004",
+    "issueDate": "2026-05-20",
+    "operatorReviewRequired": true,
+    "notFinancialAdvice": true
   },
   "marketQuality": {
     "status": "early-stage-market-quality-plan",
