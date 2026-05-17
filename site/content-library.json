@@ -35,20 +35,20 @@
       "id": "gca-draft-2026-05-20-radar",
       "targetDate": "2026-05-20",
       "topic": "Weekly Go China Radar",
-      "recommendedLink": "https://gcagochina.com/radar.html",
+      "recommendedLink": "https://gcagochina.com/radar-issue-004.html",
       "hashtags": ["#GCA", "#GoChina", "#Base", "#Web3"],
       "visualTheme": "Red GCA mark over a Base network grid with a small radar line.",
       "xEnglish": [
         "GCA Weekly Go China Radar is our public rhythm for the Go China narrative: market education, risk-first research, and transparent build updates around future China-facing Web3 tools.",
         "Built on Base. Fixed supply. Verify first.",
-        "https://gcagochina.com/radar.html",
+        "https://gcagochina.com/radar-issue-004.html",
         "No return promises. Not financial advice.",
         "#GCA #GoChina #Base #Web3"
       ],
       "xChinese": [
         "GCA Weekly Go China Radar 是我们的公开内容节奏：围绕 Go China 叙事、市场教育、风险优先研究，以及未来面向中国场景的 Web3 工具建设持续更新。",
         "Base 链上部署。固定供应。先验证，再行动。",
-        "https://gcagochina.com/radar.html",
+        "https://gcagochina.com/radar-issue-004.html",
         "不承诺价格结果。非投资建议。",
         "#GCA #GoChina #Base #Web3"
       ],
@@ -307,6 +307,8 @@
     "publishingDesk": "https://gcagochina.com/publishing-desk.json",
     "campaignPage": "https://gcagochina.com/campaign.html",
     "campaign": "https://gcagochina.com/campaign.json",
+    "radarIssue004Page": "https://gcagochina.com/radar-issue-004.html",
+    "radarIssue004": "https://gcagochina.com/radar-issue-004.json",
     "announcementsPage": "https://gcagochina.com/announcements.html",
     "announcements": "https://gcagochina.com/announcements.json",
     "communityPage": "https://gcagochina.com/community.html",

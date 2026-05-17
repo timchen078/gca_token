@@ -1,0 +1,121 @@
+{
+  "schema": "https://gcagochina.com/radar-issue-004.json",
+  "pageUrl": "https://gcagochina.com/radar-issue-004.html",
+  "status": "weekly-go-china-radar-issue-004-ready-for-review",
+  "issue": "issue-004",
+  "issueDate": "2026-05-20",
+  "publicationStatus": "operator-review-required-before-social-posting",
+  "chainId": 8453,
+  "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+  "title": "Weekly Go China Radar Issue 004",
+  "subtitle": "China-facing Web3 access, risk-first quant research, and verification-first market education.",
+  "scope": "Issue 004 is a ready-for-review GCA content brief prepared for the 2026-05-20 public content slot. It explains the Go China Access narrative, planned non-custodial quant access modules, official Base Mainnet identity, and conservative risk boundaries. It is not live market data, not financial advice, not a buy or sell recommendation, and not a price forecast.",
+  "narrativeThemes": [
+    {
+      "name": "Go China Access as a research corridor",
+      "description": "Frame GCA as a China-facing Web3 research and access narrative connected to education, verification, and planned non-custodial quant tooling."
+    },
+    {
+      "name": "Risk-first quant utility",
+      "description": "Explain liquidation replay, backtesting, risk alerts, ENTRY_READY review, and position sizing as planned utility directions rather than live trading promises."
+    },
+    {
+      "name": "Verification before interaction",
+      "description": "Keep the official Base Mainnet contract, GCA/USDT route, website, X, Telegram, and public risk pages easy to verify before any wallet interaction."
+    }
+  ],
+  "utilityHooks": [
+    {
+      "name": "Liquidation Replay",
+      "type": "planned research module"
+    },
+    {
+      "name": "Backtesting",
+      "type": "planned research module"
+    },
+    {
+      "name": "Risk Alerts",
+      "type": "planned account utility"
+    },
+    {
+      "name": "ENTRY_READY Review",
+      "type": "planned signal review workflow"
+    },
+    {
+      "name": "Position Sizing",
+      "type": "planned risk-control calculator"
+    }
+  ],
+  "riskNotes": [
+    "GCA is still early-stage and current liquidity is starter-depth only.",
+    "BaseScan token profile review is not complete until BaseScan publishes it.",
+    "Owner observed no wallet risk warning visible on 2026-05-14; this is not security-vendor approval or a permanent cross-wallet guarantee.",
+    "No third-party audit has been completed.",
+    "Public account UI, 100 credits claiming, and GCA Member benefit review are not public self-service flows yet.",
+    "This issue must not be used as live market data, investment advice, or a trading signal."
+  ],
+  "officialMarket": {
+    "pair": "GCA/USDT",
+    "poolAddress": "0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "quoteAsset": "USDT",
+    "quoteAssetAddress": "0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2",
+    "liquidityDepth": "starter-depth-only"
+  },
+  "copyReadyPost": {
+    "targetDate": "2026-05-20",
+    "channels": ["X", "Telegram"],
+    "requiresOperatorReview": true,
+    "xEnglish": [
+      "GCA Weekly Go China Radar Issue 004 is ready for review.",
+      "Focus: Go China Access as a China-facing Web3 research corridor, connected to risk-first quant utility and verification before interaction.",
+      "https://gcagochina.com/radar-issue-004.html",
+      "No return promises. Not financial advice.",
+      "#GCA #GoChina #Base #Web3"
+    ],
+    "xChinese": [
+      "GCA Weekly Go China Radar Issue 004 已准备好审核。",
+      "重点：把 Go China Access 叙事连接到面向中国场景的 Web3 研究入口、风险优先量化工具方向，以及先验证再交互的公开路径。",
+      "https://gcagochina.com/radar-issue-004.html",
+      "不承诺价格结果。非投资建议。",
+      "#GCA #GoChina #Base #Web3"
+    ],
+    "telegram": [
+      "GCA Weekly Go China Radar Issue 004 is ready for operator review.",
+      "Read the brief: https://gcagochina.com/radar-issue-004.html",
+      "Verify official links before using any wallet or market interface: https://gcagochina.com/verify.html"
+    ]
+  },
+  "publicClaimBoundaries": {
+    "safeClaims": [
+      "Issue 004 is a ready-for-review public content brief for the 2026-05-20 content slot.",
+      "GCA uses the Go China Access narrative to connect market education, verification, and planned non-custodial quant research tools.",
+      "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool.",
+      "No third-party audit has been completed."
+    ],
+    "doNotClaim": [
+      "buy or sell recommendation",
+      "price target",
+      "return promise",
+      "future exchange listing",
+      "public account UI, 100 credits claiming, or GCA Member activation is live before controlled HTTPS account UI and ledger activation are released",
+      "security-vendor approval, permanent warning-free status, or cross-wallet warning removal before vendor/current wallet UI confirms it",
+      "BaseScan token profile approval before BaseScan publishes it"
+    ]
+  },
+  "officialLinks": {
+    "radarIssue004Page": "https://gcagochina.com/radar-issue-004.html",
+    "radarIssue004": "https://gcagochina.com/radar-issue-004.json",
+    "currentRadarPage": "https://gcagochina.com/radar.html",
+    "currentRadar": "https://gcagochina.com/radar.json",
+    "publishingDeskPage": "https://gcagochina.com/publishing-desk.html",
+    "publishingDesk": "https://gcagochina.com/publishing-desk.json",
+    "contentLibraryPage": "https://gcagochina.com/content-library.html",
+    "contentLibrary": "https://gcagochina.com/content-library.json",
+    "campaignPage": "https://gcagochina.com/campaign.html",
+    "campaign": "https://gcagochina.com/campaign.json",
+    "verify": "https://gcagochina.com/verify.html",
+    "markets": "https://gcagochina.com/markets.html",
+    "risk": "https://gcagochina.com/risk.html",
+    "utilityThesis": "https://gcagochina.com/utility.html"
+  }
+}

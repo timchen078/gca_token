@@ -39,11 +39,11 @@
     "id": "x-radar-003-followup",
     "targetDate": "2026-05-20",
     "topic": "Weekly Go China Radar",
-    "recommendedLink": "https://gcagochina.com/radar.html",
+    "recommendedLink": "https://gcagochina.com/radar-issue-004.html",
     "text": [
       "GCA Weekly Go China Radar is our public rhythm for the Go China narrative: market education, risk-first research, and transparent build updates around future China-facing Web3 tools.",
       "Built on Base. Fixed supply. Verify first.",
-      "https://gcagochina.com/radar.html",
+      "https://gcagochina.com/radar-issue-004.html",
       "No return promises. Not financial advice.",
       "#GCA #GoChina #Base #Web3"
     ],
@@ -54,7 +54,7 @@
       "targetDate": "2026-05-20",
       "topic": "Weekly Go China Radar",
       "angle": "Position the radar as the repeating research format for narrative education and risk-first market observation.",
-      "recommendedLink": "https://gcagochina.com/radar.html"
+      "recommendedLink": "https://gcagochina.com/radar-issue-004.html"
     },
     {
       "targetDate": "2026-05-23",
@@ -130,6 +130,8 @@
     "contentLibrary": "https://gcagochina.com/content-library.json",
     "publishingDeskPage": "https://gcagochina.com/publishing-desk.html",
     "publishingDesk": "https://gcagochina.com/publishing-desk.json",
+    "radarIssue004Page": "https://gcagochina.com/radar-issue-004.html",
+    "radarIssue004": "https://gcagochina.com/radar-issue-004.json",
     "announcementsPage": "https://gcagochina.com/announcements.html",
     "announcements": "https://gcagochina.com/announcements.json",
     "communityPage": "https://gcagochina.com/community.html",
