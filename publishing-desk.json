@@ -1,0 +1,102 @@
+{
+  "schema": "https://gcagochina.com/publishing-desk.json",
+  "pageUrl": "https://gcagochina.com/publishing-desk.html",
+  "status": "public-publishing-desk-published",
+  "lastUpdated": "2026-05-17",
+  "projectName": "GCA",
+  "conceptExpansion": "Go China Access",
+  "currentStage": "early-public-operations",
+  "chainId": 8453,
+  "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+  "officialX": "https://x.com/GCAAIGoChina",
+  "officialTelegram": "https://t.me/gcagochinaofficial",
+  "officialWebsite": "https://gcagochina.com/",
+  "officialMarketRoute": "GCA/USDT",
+  "nextPublishAction": {
+    "status": "ready-for-operator-review",
+    "targetDate": "2026-05-20",
+    "sourceDraftId": "gca-draft-2026-05-20-radar",
+    "topic": "Weekly Go China Radar",
+    "channels": ["X", "Telegram"],
+    "recommendedLink": "https://gcagochina.com/radar.html",
+    "contentLibrary": "https://gcagochina.com/content-library.html",
+    "campaignCalendar": "https://gcagochina.com/campaign.html",
+    "requiresManualPosting": true,
+    "requiresOperatorReview": true,
+    "xEnglish": [
+      "GCA Weekly Go China Radar is our public rhythm for the Go China narrative: market education, risk-first research, and transparent build updates around future China-facing Web3 tools.",
+      "Built on Base. Fixed supply. Verify first.",
+      "https://gcagochina.com/radar.html",
+      "No return promises. Not financial advice.",
+      "#GCA #GoChina #Base #Web3"
+    ],
+    "xChinese": [
+      "GCA Weekly Go China Radar 是我们的公开内容节奏：围绕 Go China 叙事、市场教育、风险优先研究，以及未来面向中国场景的 Web3 工具建设持续更新。",
+      "Base 链上部署。固定供应。先验证，再行动。",
+      "https://gcagochina.com/radar.html",
+      "不承诺价格结果。非投资建议。",
+      "#GCA #GoChina #Base #Web3"
+    ],
+    "telegram": [
+      "GCA Weekly Go China Radar is the recurring public format for Go China narrative notes, risk-first research, and transparent build updates.",
+      "Verify official links before using any wallet or market interface: https://gcagochina.com/verify.html"
+    ],
+    "hashtags": ["#GCA", "#GoChina", "#Base", "#Web3"],
+    "visualTheme": "Red GCA mark over a Base network grid with a small radar line.",
+    "claimBoundary": "Research cadence only; no price, return, listing, audit, or approval claim."
+  },
+  "operatorChecklist": [
+    "Open the official X profile only: https://x.com/GCAAIGoChina",
+    "Confirm the post link points to the official website and not a copied or shortened link.",
+    "Confirm the network wording stays Base Mainnet / chainId 8453.",
+    "Confirm the official market route remains GCA/USDT.",
+    "Confirm the text does not claim third-party audit completion.",
+    "Confirm the text does not claim BaseScan token profile approval.",
+    "Confirm the text does not make price, return, listing, or market-prediction claims.",
+    "After publishing, record the new post URL in announcements.json and community.json before the next site update."
+  ],
+  "postPublishLedgerUpdate": [
+    {
+      "target": "site/announcements.json",
+      "action": "Add the published X post URL, date, channel, and message to publishedPosts."
+    },
+    {
+      "target": "site/community.json",
+      "action": "Update latestPostUrl and safeAnnouncement if the post should become a community reference."
+    },
+    {
+      "target": "site/project.json",
+      "action": "Keep announcementHub.latestPostUrl aligned when the latest public X post changes."
+    },
+    {
+      "target": "site/tokenlist.json",
+      "action": "No token-list change is required unless official links, route, or public status changes."
+    }
+  ],
+  "doNotPublish": [
+    "return promises, price targets, market predictions, or investment advice",
+    "third-party audit completion before an independent report is public",
+    "BaseScan token profile approval before BaseScan publishes it",
+    "security-vendor approval before the vendor confirms it",
+    "LP lock, reserve lock, buyback, or price-support claim before evidence exists",
+    "any request for private keys, seed phrases, exchange API secrets, or wallet approvals"
+  ],
+  "publicLinks": {
+    "publishingDeskPage": "https://gcagochina.com/publishing-desk.html",
+    "publishingDesk": "https://gcagochina.com/publishing-desk.json",
+    "contentLibraryPage": "https://gcagochina.com/content-library.html",
+    "contentLibrary": "https://gcagochina.com/content-library.json",
+    "campaignPage": "https://gcagochina.com/campaign.html",
+    "campaign": "https://gcagochina.com/campaign.json",
+    "announcementsPage": "https://gcagochina.com/announcements.html",
+    "announcements": "https://gcagochina.com/announcements.json",
+    "communityPage": "https://gcagochina.com/community.html",
+    "community": "https://gcagochina.com/community.json",
+    "officialX": "https://x.com/GCAAIGoChina",
+    "officialTelegram": "https://t.me/gcagochinaofficial",
+    "verify": "https://gcagochina.com/verify.html",
+    "radar": "https://gcagochina.com/radar.html",
+    "markets": "https://gcagochina.com/markets.html",
+    "risk": "https://gcagochina.com/risk.html"
+  }
+}

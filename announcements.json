@@ -34,6 +34,13 @@
     "draftCount": 10,
     "languages": ["en", "zh"]
   },
+  "publishingDesk": {
+    "status": "public-publishing-desk-published",
+    "pageUrl": "https://gcagochina.com/publishing-desk.html",
+    "url": "https://gcagochina.com/publishing-desk.json",
+    "nextPublishTargetDate": "2026-05-20",
+    "manualPublishOnly": true
+  },
   "publishedPosts": [
     {
       "id": "x-launch-001",
@@ -107,6 +114,8 @@
     "campaign": "https://gcagochina.com/campaign.json",
     "contentLibraryPage": "https://gcagochina.com/content-library.html",
     "contentLibrary": "https://gcagochina.com/content-library.json",
+    "publishingDeskPage": "https://gcagochina.com/publishing-desk.html",
+    "publishingDesk": "https://gcagochina.com/publishing-desk.json",
     "communityPage": "https://gcagochina.com/community.html",
     "community": "https://gcagochina.com/community.json",
     "officialX": "https://x.com/GCAAIGoChina",

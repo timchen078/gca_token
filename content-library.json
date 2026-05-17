@@ -303,6 +303,8 @@
   "publicLinks": {
     "contentLibraryPage": "https://gcagochina.com/content-library.html",
     "contentLibrary": "https://gcagochina.com/content-library.json",
+    "publishingDeskPage": "https://gcagochina.com/publishing-desk.html",
+    "publishingDesk": "https://gcagochina.com/publishing-desk.json",
     "campaignPage": "https://gcagochina.com/campaign.html",
     "campaign": "https://gcagochina.com/campaign.json",
     "announcementsPage": "https://gcagochina.com/announcements.html",
