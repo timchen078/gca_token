@@ -1,0 +1,614 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GCA Content Library | Go China Access</title>
+    <meta name="description" content="Official GCA bilingual content library with copy-ready X drafts, Telegram drafts, hashtags, visual themes, and safe publication boundaries.">
+    <link rel="canonical" href="https://gcagochina.com/content-library.html">
+    <link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">
+    <link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="GCA | Go China Access">
+    <meta property="og:title" content="GCA Content Library | Go China Access">
+    <meta property="og:description" content="Official GCA bilingual content library with copy-ready X drafts, Telegram drafts, hashtags, visual themes, and safe publication boundaries.">
+    <meta property="og:url" content="https://gcagochina.com/content-library.html">
+    <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="GCA Content Library | Go China Access">
+    <meta name="twitter:description" content="Official GCA bilingual content library with copy-ready X drafts, Telegram drafts, hashtags, visual themes, and safe publication boundaries.">
+    <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #111318;
+        --muted: #5f6773;
+        --line: #dfe3ea;
+        --panel: #ffffff;
+        --soft: #f6f7f9;
+        --red: #d71920;
+        --blue: #0052ff;
+        --green: #087f5b;
+        --gold: #8a650d;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: #fbfbfc;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.5;
+      }
+
+      a {
+        color: var(--blue);
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .shell {
+        width: min(1120px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      header {
+        border-bottom: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.94);
+        position: sticky;
+        top: 0;
+        z-index: 2;
+      }
+
+      nav {
+        min-height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--ink);
+        font-weight: 850;
+      }
+
+      .brand img {
+        width: 32px;
+        height: 32px;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 18px;
+        align-items: center;
+        font-size: 14px;
+      }
+
+      main {
+        padding: 42px 0 56px;
+      }
+
+      h1 {
+        margin: 0;
+        max-width: 920px;
+        font-size: clamp(40px, 6vw, 72px);
+        line-height: 1;
+        letter-spacing: 0;
+      }
+
+      h2 {
+        margin: 0 0 14px;
+        font-size: 24px;
+      }
+
+      h3 {
+        margin: 0 0 8px;
+        font-size: 17px;
+      }
+
+      .lead {
+        max-width: 860px;
+        margin: 18px 0 0;
+        color: var(--muted);
+        font-size: 18px;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 24px;
+      }
+
+      .button {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        color: var(--ink);
+        min-height: 42px;
+        padding: 10px 14px;
+        font: inherit;
+        font-weight: 750;
+      }
+
+      .button.primary {
+        border-color: var(--red);
+        background: var(--red);
+        color: #fff;
+      }
+
+      .section {
+        margin-top: 30px;
+      }
+
+      .panel,
+      .fact,
+      .draft {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+      }
+
+      .panel {
+        padding: 24px;
+      }
+
+      .facts,
+      .two,
+      .drafts {
+        display: grid;
+        gap: 14px;
+      }
+
+      .facts {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        margin-top: 22px;
+      }
+
+      .two {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .drafts {
+        grid-template-columns: 1fr;
+      }
+
+      .fact {
+        min-height: 104px;
+        padding: 15px;
+      }
+
+      .draft {
+        padding: 20px;
+      }
+
+      .draft-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .label {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 750;
+        text-transform: uppercase;
+      }
+
+      .value {
+        display: block;
+        margin-top: 8px;
+        font-size: 16px;
+        font-weight: 850;
+        overflow-wrap: anywhere;
+      }
+
+      .good {
+        color: var(--green);
+      }
+
+      .pending {
+        color: var(--gold);
+      }
+
+      .note,
+      li {
+        color: var(--muted);
+      }
+
+      .note {
+        margin: 0;
+      }
+
+      .row {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        border-top: 1px solid var(--line);
+        padding-top: 10px;
+      }
+
+      .row:first-child {
+        border-top: 0;
+        padding-top: 0;
+      }
+
+      pre,
+      code {
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        background: var(--soft);
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      }
+
+      code {
+        padding: 2px 5px;
+        font-size: 0.92em;
+      }
+
+      pre {
+        margin: 0;
+        padding: 14px;
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+        color: var(--ink);
+      }
+
+      footer {
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        padding: 22px 0;
+        font-size: 13px;
+      }
+
+      @media (max-width: 760px) {
+        nav,
+        .row {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        .nav-links {
+          flex-wrap: wrap;
+        }
+
+        .facts,
+        .two,
+        .draft-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav class="shell" aria-label="Primary">
+        <a class="brand" href="index.html" aria-label="GCA home">
+          <img src="assets/gca-logo.svg" alt="GCA logo">
+          <span>GCA</span>
+        </a>
+        <div class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="campaign.html">Campaign</a>
+          <a href="announcements.html">Announcements</a>
+          <a href="community.html">Community</a>
+          <a href="radar.html">Radar</a>
+          <a href="roadmap.html">Roadmap</a>
+          <a href="risk.html">Risk</a>
+        </div>
+      </nav>
+    </header>
+
+    <main class="shell">
+      <section aria-labelledby="title">
+        <h1 id="title">GCA Content Library</h1>
+        <p class="lead">Copy-ready bilingual drafts for the GCA 30-day campaign. Each draft has English X copy, Chinese X copy, Telegram copy, hashtags, visual theme, and a claim boundary. Review the exact platform status before publishing.</p>
+        <div class="actions">
+          <a class="button primary" href="content-library.json">Content Library JSON</a>
+          <a class="button primary" href="https://x.com/GCAAIGoChina" target="_blank" rel="noreferrer">Official X</a>
+          <a class="button" href="campaign.html">Campaign Calendar</a>
+          <a class="button" href="announcements.html">Announcements</a>
+          <a class="button" href="community.html">Community Kit</a>
+          <a class="button" href="verify.html">Verify GCA</a>
+        </div>
+      </section>
+
+      <section class="facts" aria-label="Content library facts">
+        <div class="fact">
+          <span class="label">Drafts</span>
+          <span class="value good">10 bilingual drafts</span>
+        </div>
+        <div class="fact">
+          <span class="label">Platforms</span>
+          <span class="value">X and Telegram</span>
+        </div>
+        <div class="fact">
+          <span class="label">Window</span>
+          <span class="value">2026-05-20 to 2026-06-16</span>
+        </div>
+        <div class="fact">
+          <span class="label">Review Rule</span>
+          <span class="value pending">Manual review before publish</span>
+        </div>
+      </section>
+
+      <section class="section two" aria-label="Publication guardrails">
+        <div class="panel">
+          <h2>Before Posting</h2>
+          <ul>
+            <li>Confirm the current official links still match the website.</li>
+            <li>Keep Base Mainnet / chainId 8453 and the verified contract address visible when linking to verification content.</li>
+            <li>Use the official GCA/USDT route when discussing markets.</li>
+            <li>Keep the wording factual and project-build focused.</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h2>Do Not Add</h2>
+          <ul>
+            <li>No return promises, price targets, market predictions, or investment advice.</li>
+            <li>No third-party audit claim until an independent report is public.</li>
+            <li>No BaseScan or security-vendor approval claim unless the platform confirms it.</li>
+            <li>No LP lock, reserve lock, buyback, or price-support claim before evidence exists.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section drafts" aria-labelledby="draftsTitle">
+        <h2 id="draftsTitle">Bilingual Drafts</h2>
+
+        <article class="draft">
+          <h3>2026-05-20 · Weekly Go China Radar</h3>
+          <p class="note">Visual theme: red GCA mark over a Base network grid with a small radar line.</p>
+          <div class="draft-grid">
+            <pre>GCA Weekly Go China Radar is our public rhythm for the Go China narrative: market education, risk-first research, and transparent build updates around future China-facing Web3 tools.
+
+Built on Base. Fixed supply. Verify first.
+
+https://gcagochina.com/radar.html
+
+No return promises. Not financial advice.
+
+#GCA #GoChina #Base #Web3</pre>
+            <pre>GCA Weekly Go China Radar 是我们的公开内容节奏：围绕 Go China 叙事、市场教育、风险优先研究，以及未来面向中国场景的 Web3 工具建设持续更新。
+
+Base 链上部署。固定供应。先验证，再行动。
+
+https://gcagochina.com/radar.html
+
+不承诺价格结果。非投资建议。
+
+#GCA #GoChina #Base #Web3</pre>
+          </div>
+        </article>
+
+        <article class="draft">
+          <h3>2026-05-23 · Member Access Buildout</h3>
+          <p class="note">Visual theme: member access pass, wallet verification check, and credits ledger.</p>
+          <div class="draft-grid">
+            <pre>GCA Member Access is being designed around read-only wallet checks, utility credits, and manual review before any benefit record is activated.
+
+The goal is simple: access first, risk control first, no custody.
+
+https://gcagochina.com/members.html
+
+No public self-service claim is live yet.</pre>
+            <pre>GCA Member Access 正在围绕只读钱包验证、utility credits 和人工审核流程搭建。
+
+目标很明确：先做访问层，先做风控边界，不托管用户资产。
+
+https://gcagochina.com/members.html
+
+目前公开自助领取还没有上线。</pre>
+          </div>
+        </article>
+
+        <article class="draft">
+          <h3>2026-05-26 · Verification First</h3>
+          <p class="note">Visual theme: contract address card, Base badge, GCA/USDT route, and verify checklist.</p>
+          <div class="draft-grid">
+            <pre>Before interacting with GCA, verify first:
+
+Network: Base Mainnet / chainId 8453
+Contract: 0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6
+Official route: GCA/USDT
+
+https://gcagochina.com/verify.html
+
+Use official links only. Not financial advice.</pre>
+            <pre>使用 GCA 前先验证：
+
+网络：Base Mainnet / chainId 8453
+合约：0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6
+官方路线：GCA/USDT
+
+https://gcagochina.com/verify.html
+
+只使用官方链接。非投资建议。</pre>
+          </div>
+        </article>
+
+        <article class="draft">
+          <h3>2026-05-29 · Risk-First Trading Tools</h3>
+          <p class="note">Visual theme: dashboard modules for liquidation replay, backtest, risk alert, and position sizing.</p>
+          <div class="draft-grid">
+            <pre>GCA's product direction is not custody and not a trading promise.
+
+The build path is a risk-first access layer for liquidation replay, backtesting, risk alerts, ENTRY_READY review, and position sizing.
+
+https://gcagochina.com/utility.html
+
+Tools first. Verification first.</pre>
+            <pre>GCA 的产品方向不是托管，也不是交易结果承诺。
+
+建设路径是风险优先的访问层：爆仓复盘、回测、风险提醒、ENTRY_READY 复核、仓位计算。
+
+https://gcagochina.com/utility.html
+
+先做工具，先做验证。</pre>
+          </div>
+        </article>
+
+        <article class="draft">
+          <h3>2026-06-01 · Official Market Route</h3>
+          <p class="note">Visual theme: GCA/USDT route card with a visible early-liquidity note.</p>
+          <div class="draft-grid">
+            <pre>The current official GCA market route is GCA/USDT on Base Mainnet.
+
+Liquidity is still early-stage, so trades can face high price impact and slippage. Verify the route before using any interface.
+
+https://gcagochina.com/markets.html
+
+No market prediction. Not financial advice.</pre>
+            <pre>当前 GCA 官方市场路线是 Base Mainnet 上的 GCA/USDT。
+
+流动性仍处于早期阶段，交易可能出现较高价格影响和滑点。使用任何界面前先核对官方路线。
+
+https://gcagochina.com/markets.html
+
+不做市场预测。非投资建议。</pre>
+          </div>
+        </article>
+
+        <article class="draft">
+          <h3>2026-06-04 · Supply And Reserve Facts</h3>
+          <p class="note">Visual theme: fixed supply meter, reserve wallet disclosure, and no-mint label.</p>
+          <div class="draft-grid">
+            <pre>GCA supply facts:
+
+Total supply: 1,000,000,000 GCA
+No post-deployment minting
+No transfer tax
+No blacklist
+Owner reserve disclosed publicly
+
+https://gcagochina.com/supply.html
+
+Verify the facts. Do not rely on screenshots.</pre>
+            <pre>GCA 供应信息：
+
+总量：1,000,000,000 GCA
+部署后不可增发
+无转账税
+无黑名单
+储备地址已公开说明
+
+https://gcagochina.com/supply.html
+
+以公开验证信息为准，不要只看截图。</pre>
+          </div>
+        </article>
+
+        <article class="draft">
+          <h3>2026-06-07 · Security Boundary</h3>
+          <p class="note">Visual theme: contract controls checklist with an external-audit pending marker.</p>
+          <div class="draft-grid">
+            <pre>GCA contract facts are public: fixed supply, verified source, no blacklist, no pause, no transfer tax, and no hidden mint path.
+
+Current boundary: no completed third-party audit yet.
+
+https://gcagochina.com/security.html
+
+Transparent status matters.</pre>
+            <pre>GCA 合约信息是公开的：固定供应、源码已验证、无黑名单、无暂停、无转账税、无隐藏增发路径。
+
+当前边界：还没有完成第三方审计。
+
+https://gcagochina.com/security.html
+
+透明状态很重要。</pre>
+          </div>
+        </article>
+
+        <article class="draft">
+          <h3>2026-06-10 · Product Spec</h3>
+          <p class="note">Visual theme: product blueprint for GCA AI Quant Access and release gates.</p>
+          <div class="draft-grid">
+            <pre>GCA AI Quant Access is the planned product direction:
+
+read-only wallet checks, member access, utility credits, review queue, and risk-tool modules.
+
+Public self-service flows still depend on release gates.
+
+https://gcagochina.com/product.html</pre>
+            <pre>GCA AI Quant Access 是当前规划的产品方向：
+
+只读钱包验证、会员访问、utility credits、审核队列和风险工具模块。
+
+公开自助流程仍需要完成 release gates 后再上线。
+
+https://gcagochina.com/product.html</pre>
+          </div>
+        </article>
+
+        <article class="draft">
+          <h3>2026-06-13 · Community Verification</h3>
+          <p class="note">Visual theme: official links board for X, Telegram, website, and contract.</p>
+          <div class="draft-grid">
+            <pre>Official GCA links:
+
+Website: https://gcagochina.com/
+X: https://x.com/GCAAIGoChina
+Telegram: https://t.me/gcagochinaofficial
+Verify: https://gcagochina.com/verify.html
+
+If a link does not match the official site, treat it as unverified.</pre>
+            <pre>GCA 官方链接：
+
+官网：https://gcagochina.com/
+X：https://x.com/GCAAIGoChina
+Telegram：https://t.me/gcagochinaofficial
+验证页：https://gcagochina.com/verify.html
+
+如果链接和官网不一致，就先视为未验证。</pre>
+          </div>
+        </article>
+
+        <article class="draft">
+          <h3>2026-06-16 · Build Update Recap</h3>
+          <p class="note">Visual theme: monthly build ledger with docs, campaign, member, and risk modules.</p>
+          <div class="draft-grid">
+            <pre>GCA build recap:
+
+Official docs, token verification, GCA/USDT route, campaign calendar, member-access rules, risk boundaries, and public review materials are live.
+
+Next: keep shipping product evidence, not promises.
+
+https://gcagochina.com/announcements.html</pre>
+            <pre>GCA 阶段性建设回顾：
+
+官方资料、代币验证、GCA/USDT 路线、内容日历、会员规则、风险边界和公开审核材料已经上线。
+
+下一步：继续交付产品证据，而不是口号。
+
+https://gcagochina.com/announcements.html</pre>
+          </div>
+        </article>
+      </section>
+
+      <section class="section panel" aria-labelledby="identityTitle">
+        <h2 id="identityTitle">Official Identity</h2>
+        <div class="row"><span>Network</span><strong>Base Mainnet / chainId 8453</strong></div>
+        <div class="row"><span>Contract</span><strong>0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6</strong></div>
+        <div class="row"><span>Official market route</span><strong>GCA/USDT</strong></div>
+        <div class="row"><span>Latest X post</span><strong><a href="https://x.com/GCAAIGoChina/status/2055944057134927984" target="_blank" rel="noreferrer">2055944057134927984</a></strong></div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="shell">GCA content drafts are factual project communications only, not financial advice.</div>
+    </footer>
+  </body>
+</html>

@@ -17,7 +17,16 @@
     "intervalDays": 3,
     "draftCount": 10,
     "operatorReviewRequired": true,
+    "contentLibrary": "https://gcagochina.com/content-library.html",
     "purpose": "Prepare factual GCA market-preheat content around the Go China narrative, fixed-supply Base identity, planned member access, and risk-first product buildout without investment promises."
+  },
+  "contentLibrary": {
+    "status": "public-bilingual-content-library-published",
+    "pageUrl": "https://gcagochina.com/content-library.html",
+    "url": "https://gcagochina.com/content-library.json",
+    "draftCount": 10,
+    "languages": ["en", "zh"],
+    "platforms": ["X", "Telegram"]
   },
   "nextCopyReadyDraft": {
     "id": "x-radar-003-followup",
@@ -110,6 +119,8 @@
   "publicLinks": {
     "campaignPage": "https://gcagochina.com/campaign.html",
     "campaign": "https://gcagochina.com/campaign.json",
+    "contentLibraryPage": "https://gcagochina.com/content-library.html",
+    "contentLibrary": "https://gcagochina.com/content-library.json",
     "announcementsPage": "https://gcagochina.com/announcements.html",
     "announcements": "https://gcagochina.com/announcements.json",
     "communityPage": "https://gcagochina.com/community.html",

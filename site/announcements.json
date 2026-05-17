@@ -27,6 +27,13 @@
     "draftCount": 10,
     "nextDraftTargetDate": "2026-05-20"
   },
+  "contentLibrary": {
+    "status": "public-bilingual-content-library-published",
+    "pageUrl": "https://gcagochina.com/content-library.html",
+    "url": "https://gcagochina.com/content-library.json",
+    "draftCount": 10,
+    "languages": ["en", "zh"]
+  },
   "publishedPosts": [
     {
       "id": "x-launch-001",
@@ -98,6 +105,8 @@
     "announcements": "https://gcagochina.com/announcements.json",
     "campaignPage": "https://gcagochina.com/campaign.html",
     "campaign": "https://gcagochina.com/campaign.json",
+    "contentLibraryPage": "https://gcagochina.com/content-library.html",
+    "contentLibrary": "https://gcagochina.com/content-library.json",
     "communityPage": "https://gcagochina.com/community.html",
     "community": "https://gcagochina.com/community.json",
     "officialX": "https://x.com/GCAAIGoChina",
