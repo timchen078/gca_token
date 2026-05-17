@@ -119,6 +119,8 @@
   "publicLinks": {
     "memberBenefitPage": "https://gcagochina.com/member-benefit.html",
     "memberBenefitJson": "https://gcagochina.com/member-benefit.json",
+    "memberAccessBrief001Page": "https://gcagochina.com/member-access-brief-001.html",
+    "memberAccessBrief001": "https://gcagochina.com/member-access-brief-001.json",
     "memberBenefitTransferPage": "https://gcagochina.com/member-benefit-transfer.html",
     "memberBenefitTransferJson": "https://gcagochina.com/member-benefit-transfer.json",
     "memberProgram": "https://gcagochina.com/member-program.json",

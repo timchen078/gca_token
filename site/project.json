@@ -40,6 +40,8 @@
   "weeklyRadarUrl": "https://gcagochina.com/radar.json",
   "radarIssue004PageUrl": "https://gcagochina.com/radar-issue-004.html",
   "radarIssue004Url": "https://gcagochina.com/radar-issue-004.json",
+  "memberAccessBrief001PageUrl": "https://gcagochina.com/member-access-brief-001.html",
+  "memberAccessBrief001Url": "https://gcagochina.com/member-access-brief-001.json",
   "listingKitUrl": "https://gcagochina.com/listing-kit.html",
   "brandKitPageUrl": "https://gcagochina.com/brand-kit.html",
   "brandKitUrl": "https://gcagochina.com/brand-kit.json",
@@ -413,6 +415,17 @@
     "url": "https://gcagochina.com/radar-issue-004.json",
     "issue": "issue-004",
     "issueDate": "2026-05-20",
+    "operatorReviewRequired": true,
+    "notFinancialAdvice": true
+  },
+  "memberAccessBrief001": {
+    "status": "member-access-brief-001-ready-for-review",
+    "pageUrl": "https://gcagochina.com/member-access-brief-001.html",
+    "url": "https://gcagochina.com/member-access-brief-001.json",
+    "targetDate": "2026-05-23",
+    "minimumHolding": "1,000,000 GCA",
+    "minimumHoldingPeriod": "30 consecutive days",
+    "memberBenefitAmount": "10,000 GCA",
     "operatorReviewRequired": true,
     "notFinancialAdvice": true
   },

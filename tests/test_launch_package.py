@@ -66,6 +66,8 @@ RADAR_PAGE_URL = "https://gcagochina.com/radar.html"
 RADAR_URL = "https://gcagochina.com/radar.json"
 RADAR_ISSUE_004_PAGE_URL = "https://gcagochina.com/radar-issue-004.html"
 RADAR_ISSUE_004_URL = "https://gcagochina.com/radar-issue-004.json"
+MEMBER_ACCESS_BRIEF_001_PAGE_URL = "https://gcagochina.com/member-access-brief-001.html"
+MEMBER_ACCESS_BRIEF_001_URL = "https://gcagochina.com/member-access-brief-001.json"
 UTILITY_PAGE_URL = "https://gcagochina.com/utility.html"
 UTILITY_URL = "https://gcagochina.com/utility.json"
 PRODUCT_PAGE_URL = "https://gcagochina.com/product.html"
@@ -180,6 +182,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("/radar.json", script)
         self.assertIn("/radar-issue-004.html", script)
         self.assertIn("/radar-issue-004.json", script)
+        self.assertIn("/member-access-brief-001.html", script)
+        self.assertIn("/member-access-brief-001.json", script)
         self.assertIn("/utility.html", script)
         self.assertIn("/utility.json", script)
         self.assertIn("/product.html", script)
@@ -267,6 +271,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("validate_radar_json", script)
         self.assertIn("validate_radar_issue_004_page", script)
         self.assertIn("validate_radar_issue_004_json", script)
+        self.assertIn("validate_member_access_brief_001_page", script)
+        self.assertIn("validate_member_access_brief_001_json", script)
         self.assertIn("validate_utility_page", script)
         self.assertIn("validate_utility_json", script)
         self.assertIn("validate_product_page", script)
@@ -409,6 +415,8 @@ class LaunchPackageTests(unittest.TestCase):
         module.validate_radar_json((ROOT / "site" / "radar.json").read_text())
         module.validate_radar_issue_004_page((ROOT / "site" / "radar-issue-004.html").read_text())
         module.validate_radar_issue_004_json((ROOT / "site" / "radar-issue-004.json").read_text())
+        module.validate_member_access_brief_001_page((ROOT / "site" / "member-access-brief-001.html").read_text())
+        module.validate_member_access_brief_001_json((ROOT / "site" / "member-access-brief-001.json").read_text())
         module.validate_utility_page((ROOT / "site" / "utility.html").read_text())
         module.validate_utility_json((ROOT / "site" / "utility.json").read_text())
         module.validate_product_page((ROOT / "site" / "product.html").read_text())
@@ -698,6 +706,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Allow: /radar.json", robots)
         self.assertIn("Allow: /radar-issue-004.html", robots)
         self.assertIn("Allow: /radar-issue-004.json", robots)
+        self.assertIn("Allow: /member-access-brief-001.html", robots)
+        self.assertIn("Allow: /member-access-brief-001.json", robots)
         self.assertIn("Allow: /privacy.html", robots)
         self.assertIn("Allow: /privacy.json", robots)
         self.assertIn("Allow: /terms.html", robots)
@@ -796,6 +806,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(RADAR_URL, sitemap)
         self.assertIn(RADAR_ISSUE_004_PAGE_URL, sitemap)
         self.assertIn(RADAR_ISSUE_004_URL, sitemap)
+        self.assertIn(MEMBER_ACCESS_BRIEF_001_PAGE_URL, sitemap)
+        self.assertIn(MEMBER_ACCESS_BRIEF_001_URL, sitemap)
         self.assertIn(PRIVACY_NOTICE_PAGE_URL, sitemap)
         self.assertIn(PRIVACY_NOTICE_URL, sitemap)
         self.assertIn(PARTICIPATION_TERMS_PAGE_URL, sitemap)
@@ -1073,6 +1085,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn('href="narrative.html"', site)
         self.assertIn('href="radar.html"', site)
         self.assertIn('href="radar-issue-004.html"', site)
+        self.assertIn('href="member-access-brief-001.html"', site)
         self.assertIn('href="release-gates.html"', site)
         self.assertIn('href="privacy.html"', site)
         self.assertIn('href="terms.html"', site)
@@ -1083,6 +1096,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("China Narrative Radar", site)
         self.assertIn("Weekly Go China Radar", site)
         self.assertIn("Issue 004 Ready Brief", site)
+        self.assertIn("Member Access Brief", site)
         self.assertIn("Weekly Radar", site)
         self.assertIn("Liquidation Replay", site)
         self.assertIn("ENTRY_READY Review", site)
@@ -1644,6 +1658,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(CONTENT_LIBRARY_PAGE_URL, page)
         self.assertIn(PUBLISHING_DESK_PAGE_URL, page)
         self.assertIn(RADAR_ISSUE_004_PAGE_URL, page)
+        self.assertIn(MEMBER_ACCESS_BRIEF_001_PAGE_URL, page)
         self.assertIn("Safe Announcement Copy", page)
         self.assertIn("Moderator replies", page)
         self.assertIn("Wallet Warning Reply", page)
@@ -1681,6 +1696,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertTrue(any(CONTENT_LIBRARY_PAGE_URL in item for item in community["safeAnnouncement"]))
         self.assertTrue(any(PUBLISHING_DESK_PAGE_URL in item for item in community["safeAnnouncement"]))
         self.assertTrue(any(RADAR_ISSUE_004_PAGE_URL in item for item in community["safeAnnouncement"]))
+        self.assertTrue(any(MEMBER_ACCESS_BRIEF_001_PAGE_URL in item for item in community["safeAnnouncement"]))
         self.assertEqual(community["announcementHub"]["status"], "public-announcement-hub-published")
         self.assertEqual(community["announcementHub"]["pageUrl"], ANNOUNCEMENTS_PAGE_URL)
         self.assertEqual(community["announcementHub"]["url"], ANNOUNCEMENTS_URL)
@@ -1731,6 +1747,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(community["publicLinks"]["weeklyRadar"], RADAR_URL)
         self.assertEqual(community["publicLinks"]["radarIssue004Page"], RADAR_ISSUE_004_PAGE_URL)
         self.assertEqual(community["publicLinks"]["radarIssue004"], RADAR_ISSUE_004_URL)
+        self.assertEqual(community["publicLinks"]["memberAccessBrief001Page"], MEMBER_ACCESS_BRIEF_001_PAGE_URL)
+        self.assertEqual(community["publicLinks"]["memberAccessBrief001"], MEMBER_ACCESS_BRIEF_001_URL)
         self.assertEqual(community["publicLinks"]["telegram"], TELEGRAM_URL)
         self.assertEqual(community["publicLinks"]["x"], X_URL)
         self.assertEqual(community["publicLinks"]["roadmap"], ROADMAP_PAGE_URL)
@@ -1758,6 +1776,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(FIRST_X_POST_URL, page)
         self.assertIn(LATEST_X_POST_URL, page)
         self.assertIn(RADAR_ISSUE_004_PAGE_URL, page)
+        self.assertIn(MEMBER_ACCESS_BRIEF_001_PAGE_URL, page)
         self.assertIn("No return promises", page)
         self.assertIn("not financial advice", page)
         self.assertIn(X_URL, page)
@@ -1790,8 +1809,11 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(announcements["publicLinks"]["publishingDesk"], PUBLISHING_DESK_URL)
         self.assertEqual(announcements["publicLinks"]["radarIssue004Page"], RADAR_ISSUE_004_PAGE_URL)
         self.assertEqual(announcements["publicLinks"]["radarIssue004"], RADAR_ISSUE_004_URL)
+        self.assertEqual(announcements["publicLinks"]["memberAccessBrief001Page"], MEMBER_ACCESS_BRIEF_001_PAGE_URL)
+        self.assertEqual(announcements["publicLinks"]["memberAccessBrief001"], MEMBER_ACCESS_BRIEF_001_URL)
         self.assertEqual(announcements["publicLinks"]["latestXPost"], LATEST_X_POST_URL)
         self.assertTrue(any(item["recommendedLink"] == RADAR_ISSUE_004_PAGE_URL for item in announcements["nextContentQueue"]))
+        self.assertTrue(any(item["recommendedLink"] == MEMBER_ACCESS_BRIEF_001_PAGE_URL for item in announcements["nextContentQueue"]))
         self.assertEqual(announcements["campaignCalendar"]["status"], "public-campaign-calendar-published")
         self.assertEqual(announcements["campaignCalendar"]["pageUrl"], CAMPAIGN_PAGE_URL)
         self.assertEqual(announcements["campaignCalendar"]["url"], CAMPAIGN_URL)
@@ -1836,6 +1858,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(CONTENT_LIBRARY_PAGE_URL, page)
         self.assertIn(PUBLISHING_DESK_PAGE_URL, page)
         self.assertIn(RADAR_ISSUE_004_PAGE_URL, page)
+        self.assertIn(MEMBER_ACCESS_BRIEF_001_PAGE_URL, page)
         self.assertIn(LATEST_X_POST_URL, page)
         self.assertIn(MAINNET_ADDRESS, page)
         self.assertIn("GCA/USDT", page)
@@ -1858,6 +1881,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(len(campaign["contentQueue"]), 10)
         self.assertTrue(any(item["topic"] == "Verification First" for item in campaign["contentQueue"]))
         self.assertTrue(any(item["recommendedLink"] == RADAR_ISSUE_004_PAGE_URL for item in campaign["contentQueue"]))
+        self.assertTrue(any(item["recommendedLink"] == MEMBER_ACCESS_BRIEF_001_PAGE_URL for item in campaign["contentQueue"]))
         self.assertEqual(campaign["publicLinks"]["campaignPage"], CAMPAIGN_PAGE_URL)
         self.assertEqual(campaign["publicLinks"]["campaign"], CAMPAIGN_URL)
         self.assertEqual(campaign["publicLinks"]["contentLibraryPage"], CONTENT_LIBRARY_PAGE_URL)
@@ -1866,6 +1890,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(campaign["publicLinks"]["publishingDesk"], PUBLISHING_DESK_URL)
         self.assertEqual(campaign["publicLinks"]["radarIssue004Page"], RADAR_ISSUE_004_PAGE_URL)
         self.assertEqual(campaign["publicLinks"]["radarIssue004"], RADAR_ISSUE_004_URL)
+        self.assertEqual(campaign["publicLinks"]["memberAccessBrief001Page"], MEMBER_ACCESS_BRIEF_001_PAGE_URL)
+        self.assertEqual(campaign["publicLinks"]["memberAccessBrief001"], MEMBER_ACCESS_BRIEF_001_URL)
         self.assertEqual(campaign["publicLinks"]["announcementsPage"], ANNOUNCEMENTS_PAGE_URL)
         self.assertEqual(campaign["publicLinks"]["latestXPost"], LATEST_X_POST_URL)
         self.assertEqual(campaign["contentLibrary"]["status"], "public-bilingual-content-library-published")
@@ -1909,6 +1935,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(TELEGRAM_URL, page)
         self.assertIn(LATEST_X_POST_URL, page)
         self.assertIn(RADAR_ISSUE_004_PAGE_URL, page)
+        self.assertIn(MEMBER_ACCESS_BRIEF_001_PAGE_URL, page)
         self.assertIn(MAINNET_ADDRESS, page)
         self.assertIn("GCA/USDT", page)
 
@@ -1926,6 +1953,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(len(library["drafts"]), 10)
         self.assertTrue(any(draft["topic"] == "Weekly Go China Radar" for draft in library["drafts"]))
         self.assertTrue(any(draft["recommendedLink"] == RADAR_ISSUE_004_PAGE_URL for draft in library["drafts"]))
+        self.assertTrue(any(draft["recommendedLink"] == MEMBER_ACCESS_BRIEF_001_PAGE_URL for draft in library["drafts"]))
         self.assertTrue(any(draft["topic"] == "Security Boundary" for draft in library["drafts"]))
         for draft in library["drafts"]:
             self.assertTrue(draft["xEnglish"])
@@ -1940,6 +1968,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(library["publicLinks"]["publishingDesk"], PUBLISHING_DESK_URL)
         self.assertEqual(library["publicLinks"]["radarIssue004Page"], RADAR_ISSUE_004_PAGE_URL)
         self.assertEqual(library["publicLinks"]["radarIssue004"], RADAR_ISSUE_004_URL)
+        self.assertEqual(library["publicLinks"]["memberAccessBrief001Page"], MEMBER_ACCESS_BRIEF_001_PAGE_URL)
+        self.assertEqual(library["publicLinks"]["memberAccessBrief001"], MEMBER_ACCESS_BRIEF_001_URL)
         self.assertEqual(library["publicLinks"]["latestXPost"], LATEST_X_POST_URL)
         self.assertIn("third-party audit claim until an independent report is public", library["doNotAdd"])
         self.assertTrue(any("official GCA/USDT route" in rule for rule in library["publicationGuardrails"]))
@@ -2200,6 +2230,66 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(radar["officialLinks"]["campaignPage"], CAMPAIGN_PAGE_URL)
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, json.dumps(radar))
         self.assertNotIn("GCA/WETH", json.dumps(radar))
+
+    def test_member_access_brief_001_is_copyable_and_release_gated(self):
+        page = (ROOT / "site" / "member-access-brief-001.html").read_text()
+        brief = json.loads((ROOT / "site" / "member-access-brief-001.json").read_text())
+
+        self.assertIn("GCA Member Access Brief 001", page)
+        self.assertIn("Brief JSON", page)
+        self.assertIn("Brief 001 / 2026-05-23 / Ready for review", page)
+        self.assertIn("Ready for operator review", page)
+        self.assertIn("1,000,000 GCA", page)
+        self.assertIn("30 consecutive days", page)
+        self.assertIn("10,000 GCA reserve transfer", page)
+        self.assertIn("Purchase and hold at least 1,000,000 GCA", page)
+        self.assertIn("Support and ledger approval required", page)
+        self.assertIn("Project or owner-held reserve only; no new minting", page)
+        self.assertIn("Public self-service claiming is not live yet", page)
+        self.assertIn("Copy-Ready Post", page)
+        self.assertIn(MEMBER_ACCESS_BRIEF_001_PAGE_URL, page)
+        self.assertIn(MAINNET_ADDRESS, page)
+        self.assertIn("Base Mainnet / chainId 8453", page)
+        self.assertIn("not financial advice", page)
+        self.assertNotIn(OLD_WETH_POOL_ADDRESS, page)
+        self.assertNotIn("GCA/WETH", page)
+
+        self.assertEqual(brief["schema"], MEMBER_ACCESS_BRIEF_001_URL)
+        self.assertEqual(brief["pageUrl"], MEMBER_ACCESS_BRIEF_001_PAGE_URL)
+        self.assertEqual(brief["status"], "member-access-brief-001-ready-for-review")
+        self.assertEqual(brief["briefId"], "member-access-brief-001")
+        self.assertEqual(brief["targetDate"], "2026-05-23")
+        self.assertEqual(brief["publicationStatus"], "operator-review-required-before-social-posting")
+        self.assertEqual(brief["chainId"], 8453)
+        self.assertEqual(brief["contractAddress"], MAINNET_ADDRESS)
+        self.assertIn("not live self-service claiming", brief["scope"])
+        self.assertIn("not a promise of approval", brief["scope"])
+        self.assertEqual(brief["memberRule"]["tierName"], "GCA Member")
+        self.assertEqual(brief["memberRule"]["minimumHolding"], "1,000,000 GCA")
+        self.assertEqual(brief["memberRule"]["minimumHoldingPeriodDays"], 30)
+        self.assertEqual(brief["memberRule"]["memberBenefitAmount"], "10,000 GCA")
+        self.assertIn("no new minting", brief["memberRule"]["memberBenefitSource"])
+        self.assertTrue(any("Public self-service claiming is not live" in item for item in brief["releaseBoundaries"]))
+        self.assertTrue(any("does not automatically trigger a transfer" in item for item in brief["releaseBoundaries"]))
+        self.assertEqual(brief["copyReadyPost"]["targetDate"], "2026-05-23")
+        self.assertEqual(brief["copyReadyPost"]["channels"], ["X", "Telegram"])
+        self.assertTrue(brief["copyReadyPost"]["requiresOperatorReview"])
+        self.assertTrue(brief["copyReadyPost"]["xEnglish"])
+        self.assertTrue(brief["copyReadyPost"]["xChinese"])
+        self.assertTrue(brief["copyReadyPost"]["telegram"])
+        self.assertIn("Public self-service claiming is not live yet.", brief["publicClaimBoundaries"]["safeClaims"])
+        self.assertIn("holding 1,000,000 GCA automatically triggers a transfer", brief["publicClaimBoundaries"]["doNotClaim"])
+        self.assertEqual(brief["officialLinks"]["memberAccessBrief001Page"], MEMBER_ACCESS_BRIEF_001_PAGE_URL)
+        self.assertEqual(brief["officialLinks"]["memberAccessBrief001"], MEMBER_ACCESS_BRIEF_001_URL)
+        self.assertEqual(brief["officialLinks"]["memberProgram"], MEMBER_PROGRAM_URL)
+        self.assertEqual(brief["officialLinks"]["memberBenefitPage"], MEMBER_BENEFIT_PAGE_URL)
+        self.assertEqual(brief["officialLinks"]["memberBenefit"], MEMBER_BENEFIT_URL)
+        self.assertEqual(brief["officialLinks"]["memberBenefitTransferPage"], MEMBER_BENEFIT_TRANSFER_PAGE_URL)
+        self.assertEqual(brief["officialLinks"]["campaignPage"], CAMPAIGN_PAGE_URL)
+        self.assertEqual(brief["officialLinks"]["contentLibraryPage"], CONTENT_LIBRARY_PAGE_URL)
+        self.assertEqual(brief["officialLinks"]["publishingDeskPage"], PUBLISHING_DESK_PAGE_URL)
+        self.assertNotIn(OLD_WETH_POOL_ADDRESS, json.dumps(brief))
+        self.assertNotIn("GCA/WETH", json.dumps(brief))
 
     def test_member_ledger_page_and_json_define_public_schema(self):
         page = (ROOT / "site" / "member-ledger.html").read_text()
@@ -3856,6 +3946,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(project["weeklyRadarUrl"], RADAR_URL)
         self.assertEqual(project["radarIssue004PageUrl"], RADAR_ISSUE_004_PAGE_URL)
         self.assertEqual(project["radarIssue004Url"], RADAR_ISSUE_004_URL)
+        self.assertEqual(project["memberAccessBrief001PageUrl"], MEMBER_ACCESS_BRIEF_001_PAGE_URL)
+        self.assertEqual(project["memberAccessBrief001Url"], MEMBER_ACCESS_BRIEF_001_URL)
         self.assertEqual(project["privacyNoticePageUrl"], PRIVACY_NOTICE_PAGE_URL)
         self.assertEqual(project["privacyNoticeUrl"], PRIVACY_NOTICE_URL)
         self.assertEqual(project["participationTermsPageUrl"], PARTICIPATION_TERMS_PAGE_URL)
@@ -4052,6 +4144,15 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(project["weeklyGoChinaRadarIssue004"]["issueDate"], "2026-05-20")
         self.assertTrue(project["weeklyGoChinaRadarIssue004"]["operatorReviewRequired"])
         self.assertTrue(project["weeklyGoChinaRadarIssue004"]["notFinancialAdvice"])
+        self.assertEqual(project["memberAccessBrief001"]["status"], "member-access-brief-001-ready-for-review")
+        self.assertEqual(project["memberAccessBrief001"]["pageUrl"], MEMBER_ACCESS_BRIEF_001_PAGE_URL)
+        self.assertEqual(project["memberAccessBrief001"]["url"], MEMBER_ACCESS_BRIEF_001_URL)
+        self.assertEqual(project["memberAccessBrief001"]["targetDate"], "2026-05-23")
+        self.assertEqual(project["memberAccessBrief001"]["minimumHolding"], "1,000,000 GCA")
+        self.assertEqual(project["memberAccessBrief001"]["minimumHoldingPeriod"], "30 consecutive days")
+        self.assertEqual(project["memberAccessBrief001"]["memberBenefitAmount"], "10,000 GCA")
+        self.assertTrue(project["memberAccessBrief001"]["operatorReviewRequired"])
+        self.assertTrue(project["memberAccessBrief001"]["notFinancialAdvice"])
         self.assertEqual(project["externalReviewStatus"]["status"], "external-review-status-active")
         self.assertEqual(project["externalReviewStatus"]["pageUrl"], EXTERNAL_REVIEW_PAGE_URL)
         self.assertEqual(project["externalReviewStatus"]["url"], EXTERNAL_REVIEW_URL)
@@ -5369,6 +5470,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(extensions["weeklyRadar"], RADAR_URL)
         self.assertEqual(extensions["radarIssue004Page"], RADAR_ISSUE_004_PAGE_URL)
         self.assertEqual(extensions["radarIssue004"], RADAR_ISSUE_004_URL)
+        self.assertEqual(extensions["memberAccessBrief001Page"], MEMBER_ACCESS_BRIEF_001_PAGE_URL)
+        self.assertEqual(extensions["memberAccessBrief001"], MEMBER_ACCESS_BRIEF_001_URL)
         self.assertEqual(extensions["privacyNoticePage"], PRIVACY_NOTICE_PAGE_URL)
         self.assertEqual(extensions["privacyNotice"], PRIVACY_NOTICE_URL)
         self.assertEqual(extensions["participationTermsPage"], PARTICIPATION_TERMS_PAGE_URL)
@@ -5410,6 +5513,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(extensions["narrativeSystemStatus"], "public-narrative-system-published")
         self.assertEqual(extensions["weeklyRadarStatus"], "weekly-go-china-radar-issue-003-published")
         self.assertEqual(extensions["radarIssue004Status"], "weekly-go-china-radar-issue-004-ready-for-review")
+        self.assertEqual(extensions["memberAccessBrief001Status"], "member-access-brief-001-ready-for-review")
         self.assertEqual(extensions["utilityBridgeStatus"], "public-utility-bridge-spec-published")
         self.assertEqual(extensions["walletSecurityProfileStatus"], "public-wallet-security-profile-published")
         self.assertEqual(extensions["tokenSafetyStatus"], "public-token-safety-checklist-published")
@@ -5516,6 +5620,8 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "site" / "radar.json",
             ROOT / "site" / "radar-issue-004.html",
             ROOT / "site" / "radar-issue-004.json",
+            ROOT / "site" / "member-access-brief-001.html",
+            ROOT / "site" / "member-access-brief-001.json",
             ROOT / "site" / "privacy.html",
             ROOT / "site" / "privacy.json",
             ROOT / "site" / "terms.html",
@@ -5786,6 +5892,8 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "site" / "radar.json",
             ROOT / "site" / "radar-issue-004.html",
             ROOT / "site" / "radar-issue-004.json",
+            ROOT / "site" / "member-access-brief-001.html",
+            ROOT / "site" / "member-access-brief-001.json",
             ROOT / "site" / "privacy.html",
             ROOT / "site" / "privacy.json",
             ROOT / "site" / "terms.html",

@@ -59,8 +59,8 @@
     {
       "targetDate": "2026-05-23",
       "topic": "Member Access Buildout",
-      "angle": "Explain the planned holder verification, credits ledger, and GCA Member review path without saying public claiming is live.",
-      "recommendedLink": "https://gcagochina.com/members.html"
+      "angle": "Explain the planned 1,000,000 GCA 30-day holding rule, credits ledger, and GCA Member review path without saying public claiming is live.",
+      "recommendedLink": "https://gcagochina.com/member-access-brief-001.html"
     },
     {
       "targetDate": "2026-05-26",
@@ -132,6 +132,8 @@
     "publishingDesk": "https://gcagochina.com/publishing-desk.json",
     "radarIssue004Page": "https://gcagochina.com/radar-issue-004.html",
     "radarIssue004": "https://gcagochina.com/radar-issue-004.json",
+    "memberAccessBrief001Page": "https://gcagochina.com/member-access-brief-001.html",
+    "memberAccessBrief001": "https://gcagochina.com/member-access-brief-001.json",
     "announcementsPage": "https://gcagochina.com/announcements.html",
     "announcements": "https://gcagochina.com/announcements.json",
     "communityPage": "https://gcagochina.com/community.html",

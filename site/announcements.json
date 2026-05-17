@@ -83,8 +83,8 @@
     {
       "targetDate": "2026-05-23",
       "topic": "Member Access",
-      "angle": "Explain that member access and credits are planned utility workflows, with public self-service claiming still gated by release readiness.",
-      "recommendedLink": "https://gcagochina.com/members.html"
+      "angle": "Explain the planned 1,000,000 GCA 30-day member rule and the 10,000 GCA reserve-funded review boundary.",
+      "recommendedLink": "https://gcagochina.com/member-access-brief-001.html"
     },
     {
       "targetDate": "2026-05-26",
@@ -124,6 +124,8 @@
     "verify": "https://gcagochina.com/verify.html",
     "radarIssue004Page": "https://gcagochina.com/radar-issue-004.html",
     "radarIssue004": "https://gcagochina.com/radar-issue-004.json",
+    "memberAccessBrief001Page": "https://gcagochina.com/member-access-brief-001.html",
+    "memberAccessBrief001": "https://gcagochina.com/member-access-brief-001.json",
     "radar": "https://gcagochina.com/radar.html",
     "roadmap": "https://gcagochina.com/roadmap.html",
     "risk": "https://gcagochina.com/risk.html"

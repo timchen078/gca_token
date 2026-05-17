@@ -34,6 +34,7 @@
     "Campaign calendar: https://gcagochina.com/campaign.html",
     "Bilingual content library: https://gcagochina.com/content-library.html",
     "Issue 004 ready brief: https://gcagochina.com/radar-issue-004.html",
+    "Member Access Brief 001: https://gcagochina.com/member-access-brief-001.html",
     "Publishing desk: https://gcagochina.com/publishing-desk.html",
     "Current status: concept-stage utility buildout; public self-service member claiming is not live yet, BaseScan token profile was returned as information-insufficient on 2026-05-13 and resubmitted on 2026-05-13, the owner observed no wallet risk warning visible on 2026-05-14, and no third-party audit has been completed."
   ],
@@ -147,6 +148,8 @@
     "weeklyRadar": "https://gcagochina.com/radar.json",
     "radarIssue004Page": "https://gcagochina.com/radar-issue-004.html",
     "radarIssue004": "https://gcagochina.com/radar-issue-004.json",
+    "memberAccessBrief001Page": "https://gcagochina.com/member-access-brief-001.html",
+    "memberAccessBrief001": "https://gcagochina.com/member-access-brief-001.json",
     "telegram": "https://t.me/gcagochinaofficial",
     "x": "https://x.com/GCAAIGoChina",
     "verify": "https://gcagochina.com/verify.html",

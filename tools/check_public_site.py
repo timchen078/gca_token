@@ -60,6 +60,8 @@ RADAR_PAGE_URL = "https://gcagochina.com/radar.html"
 RADAR_URL = "https://gcagochina.com/radar.json"
 RADAR_ISSUE_004_PAGE_URL = "https://gcagochina.com/radar-issue-004.html"
 RADAR_ISSUE_004_URL = "https://gcagochina.com/radar-issue-004.json"
+MEMBER_ACCESS_BRIEF_001_PAGE_URL = "https://gcagochina.com/member-access-brief-001.html"
+MEMBER_ACCESS_BRIEF_001_URL = "https://gcagochina.com/member-access-brief-001.json"
 UTILITY_PAGE_URL = "https://gcagochina.com/utility.html"
 UTILITY_URL = "https://gcagochina.com/utility.json"
 PRODUCT_PAGE_URL = "https://gcagochina.com/product.html"
@@ -222,6 +224,7 @@ def validate_root(text: str) -> None:
     assert_contains(text, "Narrative System", label)
     assert_contains(text, "Weekly Radar", label)
     assert_contains(text, "Issue 004 Ready Brief", label)
+    assert_contains(text, "Member Access Brief", label)
     assert_contains(text, "Liquidity", label)
     assert_contains(text, "Holder Distribution", label)
     assert_contains(text, "Risk Remediation", label)
@@ -1135,6 +1138,7 @@ def validate_community_page(text: str) -> None:
     assert_contains(text, CONTENT_LIBRARY_PAGE_URL, label)
     assert_contains(text, PUBLISHING_DESK_PAGE_URL, label)
     assert_contains(text, "Moderator replies", label)
+    assert_contains(text, MEMBER_ACCESS_BRIEF_001_PAGE_URL, label)
     assert_contains(text, "Wallet Warning Reply", label)
     assert_contains(text, "Price Display Reply", label)
     assert_contains(text, "Member Access Reply", label)
@@ -1197,6 +1201,8 @@ def validate_community_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing publishing desk announcement")
     if not any(RADAR_ISSUE_004_PAGE_URL in item for item in payload.get("safeAnnouncement", [])):
         raise SiteCheckError(f"{label}: missing issue 004 announcement")
+    if not any(MEMBER_ACCESS_BRIEF_001_PAGE_URL in item for item in payload.get("safeAnnouncement", [])):
+        raise SiteCheckError(f"{label}: missing member access brief announcement")
     announcement_hub = payload.get("announcementHub", {})
     if announcement_hub.get("status") != "public-announcement-hub-published":
         raise SiteCheckError(f"{label}: wrong announcementHub status")
@@ -1299,6 +1305,10 @@ def validate_community_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong radarIssue004Page")
     if links.get("radarIssue004") != RADAR_ISSUE_004_URL:
         raise SiteCheckError(f"{label}: wrong radarIssue004")
+    if links.get("memberAccessBrief001Page") != MEMBER_ACCESS_BRIEF_001_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong memberAccessBrief001Page")
+    if links.get("memberAccessBrief001") != MEMBER_ACCESS_BRIEF_001_URL:
+        raise SiteCheckError(f"{label}: wrong memberAccessBrief001")
     if links.get("telegram") != "https://t.me/gcagochinaofficial":
         raise SiteCheckError(f"{label}: wrong telegram")
     if links.get("x") != X_URL:
@@ -1330,6 +1340,7 @@ def validate_announcements_page(text: str) -> None:
     assert_contains(text, FIRST_X_POST_URL, label)
     assert_contains(text, LATEST_X_POST_URL, label)
     assert_contains(text, RADAR_ISSUE_004_PAGE_URL, label)
+    assert_contains(text, MEMBER_ACCESS_BRIEF_001_PAGE_URL, label)
     assert_contains(text, "No return promises", label)
     assert_contains(text, "not financial advice", label)
     assert_contains(text, X_URL, label)
@@ -1389,10 +1400,16 @@ def validate_announcements_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong radarIssue004Page")
     if links.get("radarIssue004") != RADAR_ISSUE_004_URL:
         raise SiteCheckError(f"{label}: wrong radarIssue004")
+    if links.get("memberAccessBrief001Page") != MEMBER_ACCESS_BRIEF_001_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong memberAccessBrief001Page")
+    if links.get("memberAccessBrief001") != MEMBER_ACCESS_BRIEF_001_URL:
+        raise SiteCheckError(f"{label}: wrong memberAccessBrief001")
     if links.get("latestXPost") != LATEST_X_POST_URL:
         raise SiteCheckError(f"{label}: wrong latestXPost")
     if not any(item.get("recommendedLink") == RADAR_ISSUE_004_PAGE_URL for item in payload.get("nextContentQueue", []) if isinstance(item, dict)):
         raise SiteCheckError(f"{label}: missing issue 004 queue link")
+    if not any(item.get("recommendedLink") == MEMBER_ACCESS_BRIEF_001_PAGE_URL for item in payload.get("nextContentQueue", []) if isinstance(item, dict)):
+        raise SiteCheckError(f"{label}: missing member access brief queue link")
     if payload.get("campaignCalendar", {}).get("status") != "public-campaign-calendar-published":
         raise SiteCheckError(f"{label}: wrong campaign calendar status")
     content_library = payload.get("contentLibrary", {})
@@ -1446,6 +1463,7 @@ def validate_campaign_page(text: str) -> None:
     assert_contains(text, CONTENT_LIBRARY_PAGE_URL, label)
     assert_contains(text, PUBLISHING_DESK_PAGE_URL, label)
     assert_contains(text, RADAR_ISSUE_004_PAGE_URL, label)
+    assert_contains(text, MEMBER_ACCESS_BRIEF_001_PAGE_URL, label)
     assert_contains(text, LATEST_X_POST_URL, label)
     assert_contains(text, MAINNET_ADDRESS, label)
     assert_contains(text, "GCA/USDT", label)
@@ -1494,6 +1512,8 @@ def validate_campaign_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing market route post")
     if not any(item.get("recommendedLink") == RADAR_ISSUE_004_PAGE_URL for item in queue if isinstance(item, dict)):
         raise SiteCheckError(f"{label}: missing issue 004 post")
+    if not any(item.get("recommendedLink") == MEMBER_ACCESS_BRIEF_001_PAGE_URL for item in queue if isinstance(item, dict)):
+        raise SiteCheckError(f"{label}: missing member access brief post")
     content_library = payload.get("contentLibrary", {})
     if content_library.get("status") != "public-bilingual-content-library-published":
         raise SiteCheckError(f"{label}: wrong contentLibrary status")
@@ -1534,6 +1554,10 @@ def validate_campaign_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong radarIssue004Page")
     if links.get("radarIssue004") != RADAR_ISSUE_004_URL:
         raise SiteCheckError(f"{label}: wrong radarIssue004")
+    if links.get("memberAccessBrief001Page") != MEMBER_ACCESS_BRIEF_001_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong memberAccessBrief001Page")
+    if links.get("memberAccessBrief001") != MEMBER_ACCESS_BRIEF_001_URL:
+        raise SiteCheckError(f"{label}: wrong memberAccessBrief001")
     if links.get("announcementsPage") != ANNOUNCEMENTS_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong announcementsPage")
     if links.get("latestXPost") != LATEST_X_POST_URL:
@@ -1570,6 +1594,7 @@ def validate_content_library_page(text: str) -> None:
         "Base Mainnet / chainId 8453",
         "GCA/USDT",
         RADAR_ISSUE_004_PAGE_URL,
+        MEMBER_ACCESS_BRIEF_001_PAGE_URL,
         X_URL,
         "https://t.me/gcagochinaofficial",
         LATEST_X_POST_URL,
@@ -1614,6 +1639,8 @@ def validate_content_library_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing weekly radar draft")
     if not any(item.get("recommendedLink") == RADAR_ISSUE_004_PAGE_URL for item in drafts if isinstance(item, dict)):
         raise SiteCheckError(f"{label}: missing issue 004 recommended link")
+    if not any(item.get("recommendedLink") == MEMBER_ACCESS_BRIEF_001_PAGE_URL for item in drafts if isinstance(item, dict)):
+        raise SiteCheckError(f"{label}: missing member access brief recommended link")
     if not any(item.get("topic") == "Security Boundary" for item in drafts if isinstance(item, dict)):
         raise SiteCheckError(f"{label}: missing security boundary draft")
     for item in drafts:
@@ -1634,6 +1661,10 @@ def validate_content_library_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong radarIssue004Page")
     if links.get("radarIssue004") != RADAR_ISSUE_004_URL:
         raise SiteCheckError(f"{label}: wrong radarIssue004")
+    if links.get("memberAccessBrief001Page") != MEMBER_ACCESS_BRIEF_001_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong memberAccessBrief001Page")
+    if links.get("memberAccessBrief001") != MEMBER_ACCESS_BRIEF_001_URL:
+        raise SiteCheckError(f"{label}: wrong memberAccessBrief001")
     if links.get("campaignPage") != CAMPAIGN_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong campaignPage")
     if links.get("latestXPost") != LATEST_X_POST_URL:
@@ -2002,6 +2033,116 @@ def validate_radar_issue_004_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong contentLibraryPage")
     if links.get("campaignPage") != CAMPAIGN_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong campaignPage")
+    if links.get("verify") != VERIFY_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong verify")
+    assert_no_forbidden_public_claims(json.dumps(payload), label)
+    assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
+    assert_not_contains(json.dumps(payload), "GCA/WETH", label)
+
+
+def validate_member_access_brief_001_page(text: str) -> None:
+    label = "/member-access-brief-001.html"
+    assert_social_preview_meta(text, label, MEMBER_ACCESS_BRIEF_001_PAGE_URL)
+    for expected in (
+        "GCA Member Access Brief 001",
+        "Brief JSON",
+        "Brief 001 / 2026-05-23 / Ready for review",
+        "Ready for operator review",
+        "1,000,000 GCA",
+        "30 consecutive days",
+        "10,000 GCA reserve transfer",
+        "Purchase and hold at least 1,000,000 GCA",
+        "Support and ledger approval required",
+        "Project or owner-held reserve only; no new minting",
+        "Public self-service claiming is not live yet",
+        "Copy-Ready Post",
+        MEMBER_ACCESS_BRIEF_001_PAGE_URL,
+        "member-program.json",
+        "member-benefit.html",
+        "member-benefit-transfer.html",
+        MAINNET_ADDRESS,
+        "Base Mainnet / chainId 8453",
+        "not financial advice",
+    ):
+        assert_contains(text, expected, label)
+    assert_no_forbidden_public_claims(text, label)
+    assert_not_contains(text, OLD_WETH_POOL_ADDRESS, label)
+    assert_not_contains(text, "GCA/WETH", label)
+
+
+def validate_member_access_brief_001_json(text: str) -> None:
+    label = "/member-access-brief-001.json"
+    payload = load_json(text, label)
+    rule = payload.get("memberRule", {})
+    copy_ready = payload.get("copyReadyPost", {})
+    boundaries = payload.get("publicClaimBoundaries", {})
+    links = payload.get("officialLinks", {})
+
+    if payload.get("schema") != MEMBER_ACCESS_BRIEF_001_URL:
+        raise SiteCheckError(f"{label}: wrong schema")
+    if payload.get("pageUrl") != MEMBER_ACCESS_BRIEF_001_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong pageUrl")
+    if payload.get("status") != "member-access-brief-001-ready-for-review":
+        raise SiteCheckError(f"{label}: wrong status")
+    if payload.get("briefId") != "member-access-brief-001":
+        raise SiteCheckError(f"{label}: wrong briefId")
+    if payload.get("targetDate") != "2026-05-23":
+        raise SiteCheckError(f"{label}: wrong targetDate")
+    if payload.get("publicationStatus") != "operator-review-required-before-social-posting":
+        raise SiteCheckError(f"{label}: wrong publicationStatus")
+    if payload.get("chainId") != 8453:
+        raise SiteCheckError(f"{label}: wrong chainId")
+    if payload.get("contractAddress") != MAINNET_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong contractAddress")
+    if "not live self-service claiming" not in payload.get("scope", ""):
+        raise SiteCheckError(f"{label}: missing live-claim boundary")
+    if "not a promise of approval" not in payload.get("scope", ""):
+        raise SiteCheckError(f"{label}: missing approval boundary")
+    if rule.get("tierName") != "GCA Member":
+        raise SiteCheckError(f"{label}: wrong tierName")
+    if rule.get("minimumHolding") != "1,000,000 GCA":
+        raise SiteCheckError(f"{label}: wrong minimumHolding")
+    if rule.get("minimumHoldingPeriodDays") != 30:
+        raise SiteCheckError(f"{label}: wrong minimumHoldingPeriodDays")
+    if rule.get("memberBenefitAmount") != "10,000 GCA":
+        raise SiteCheckError(f"{label}: wrong memberBenefitAmount")
+    if "no new minting" not in rule.get("memberBenefitSource", ""):
+        raise SiteCheckError(f"{label}: missing no-mint source")
+    if not any("Public self-service claiming is not live" in item for item in payload.get("releaseBoundaries", [])):
+        raise SiteCheckError(f"{label}: missing self-service boundary")
+    if not any("does not automatically trigger a transfer" in item for item in payload.get("releaseBoundaries", [])):
+        raise SiteCheckError(f"{label}: missing automatic-transfer boundary")
+    if copy_ready.get("targetDate") != "2026-05-23":
+        raise SiteCheckError(f"{label}: wrong copy target date")
+    if copy_ready.get("channels") != ["X", "Telegram"]:
+        raise SiteCheckError(f"{label}: wrong copy channels")
+    if copy_ready.get("requiresOperatorReview") is not True:
+        raise SiteCheckError(f"{label}: copy must require operator review")
+    for key in ("xEnglish", "xChinese", "telegram"):
+        if not copy_ready.get(key):
+            raise SiteCheckError(f"{label}: missing copy field {key}")
+    if "Public self-service claiming is not live yet." not in boundaries.get("safeClaims", []):
+        raise SiteCheckError(f"{label}: missing self-service safe claim")
+    if "holding 1,000,000 GCA automatically triggers a transfer" not in boundaries.get("doNotClaim", []):
+        raise SiteCheckError(f"{label}: missing automatic-transfer boundary")
+    if links.get("memberAccessBrief001Page") != MEMBER_ACCESS_BRIEF_001_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong memberAccessBrief001Page")
+    if links.get("memberAccessBrief001") != MEMBER_ACCESS_BRIEF_001_URL:
+        raise SiteCheckError(f"{label}: wrong memberAccessBrief001")
+    if links.get("memberProgram") != MEMBER_PROGRAM_URL:
+        raise SiteCheckError(f"{label}: wrong memberProgram")
+    if links.get("memberBenefitPage") != MEMBER_BENEFIT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong memberBenefitPage")
+    if links.get("memberBenefit") != MEMBER_BENEFIT_URL:
+        raise SiteCheckError(f"{label}: wrong memberBenefit")
+    if links.get("memberBenefitTransferPage") != MEMBER_BENEFIT_TRANSFER_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong memberBenefitTransferPage")
+    if links.get("campaignPage") != CAMPAIGN_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong campaignPage")
+    if links.get("contentLibraryPage") != CONTENT_LIBRARY_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong contentLibraryPage")
+    if links.get("publishingDeskPage") != PUBLISHING_DESK_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong publishingDeskPage")
     if links.get("verify") != VERIFY_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong verify")
     assert_no_forbidden_public_claims(json.dumps(payload), label)
@@ -3911,6 +4052,10 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong radarIssue004PageUrl")
     if payload.get("radarIssue004Url") != RADAR_ISSUE_004_URL:
         raise SiteCheckError(f"{label}: wrong radarIssue004Url")
+    if payload.get("memberAccessBrief001PageUrl") != MEMBER_ACCESS_BRIEF_001_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong memberAccessBrief001PageUrl")
+    if payload.get("memberAccessBrief001Url") != MEMBER_ACCESS_BRIEF_001_URL:
+        raise SiteCheckError(f"{label}: wrong memberAccessBrief001Url")
     if payload.get("privacyNoticePageUrl") != PRIVACY_NOTICE_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong privacyNoticePageUrl")
     if payload.get("privacyNoticeUrl") != PRIVACY_NOTICE_URL:
@@ -4153,6 +4298,23 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong issue 004 url")
     if issue_004.get("operatorReviewRequired") is not True:
         raise SiteCheckError(f"{label}: issue 004 must require review")
+    member_access_brief = payload.get("memberAccessBrief001", {})
+    if member_access_brief.get("status") != "member-access-brief-001-ready-for-review":
+        raise SiteCheckError(f"{label}: wrong member access brief status")
+    if member_access_brief.get("pageUrl") != MEMBER_ACCESS_BRIEF_001_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong member access brief page")
+    if member_access_brief.get("url") != MEMBER_ACCESS_BRIEF_001_URL:
+        raise SiteCheckError(f"{label}: wrong member access brief url")
+    if member_access_brief.get("targetDate") != "2026-05-23":
+        raise SiteCheckError(f"{label}: wrong member access brief target date")
+    if member_access_brief.get("minimumHolding") != "1,000,000 GCA":
+        raise SiteCheckError(f"{label}: wrong member access brief threshold")
+    if member_access_brief.get("minimumHoldingPeriod") != "30 consecutive days":
+        raise SiteCheckError(f"{label}: wrong member access brief holding period")
+    if member_access_brief.get("memberBenefitAmount") != "10,000 GCA":
+        raise SiteCheckError(f"{label}: wrong member access brief amount")
+    if member_access_brief.get("operatorReviewRequired") is not True:
+        raise SiteCheckError(f"{label}: member access brief must require review")
     if member_program.get("status") != "rules-published-public-claim-not-connected":
         raise SiteCheckError(f"{label}: unexpected member program status")
     if member_program.get("supportIntake", {}).get("status") != "public-support-intake-published":
@@ -4388,6 +4550,10 @@ def validate_tokenlist_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong radarIssue004Page")
     if extensions.get("radarIssue004") != RADAR_ISSUE_004_URL:
         raise SiteCheckError(f"{label}: wrong radarIssue004")
+    if extensions.get("memberAccessBrief001Page") != MEMBER_ACCESS_BRIEF_001_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong memberAccessBrief001Page")
+    if extensions.get("memberAccessBrief001") != MEMBER_ACCESS_BRIEF_001_URL:
+        raise SiteCheckError(f"{label}: wrong memberAccessBrief001")
     if extensions.get("privacyNoticePage") != PRIVACY_NOTICE_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong privacyNoticePage")
     if extensions.get("privacyNotice") != PRIVACY_NOTICE_URL:
@@ -4538,6 +4704,8 @@ def validate_tokenlist_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong weeklyRadarStatus")
     if extensions.get("radarIssue004Status") != "weekly-go-china-radar-issue-004-ready-for-review":
         raise SiteCheckError(f"{label}: wrong radarIssue004Status")
+    if extensions.get("memberAccessBrief001Status") != "member-access-brief-001-ready-for-review":
+        raise SiteCheckError(f"{label}: wrong memberAccessBrief001Status")
     if extensions.get("utilityBridgeStatus") != "public-utility-bridge-spec-published":
         raise SiteCheckError(f"{label}: wrong utilityBridgeStatus")
     if extensions.get("walletSecurityProfileStatus") != "public-wallet-security-profile-published":
@@ -6696,6 +6864,8 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/radar.json",
         "https://gcagochina.com/radar-issue-004.html",
         "https://gcagochina.com/radar-issue-004.json",
+        "https://gcagochina.com/member-access-brief-001.html",
+        "https://gcagochina.com/member-access-brief-001.json",
         "https://gcagochina.com/gca/member-access/",
         "https://gcagochina.com/member-program.json",
         "https://gcagochina.com/member-ledger.html",
@@ -6780,6 +6950,8 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /radar.json", label)
     assert_contains(text, "Allow: /radar-issue-004.html", label)
     assert_contains(text, "Allow: /radar-issue-004.json", label)
+    assert_contains(text, "Allow: /member-access-brief-001.html", label)
+    assert_contains(text, "Allow: /member-access-brief-001.json", label)
     assert_contains(text, "Allow: /market-quality.html", label)
     assert_contains(text, "Allow: /market-quality.json", label)
     assert_contains(text, "Allow: /liquidity.html", label)
@@ -6917,6 +7089,8 @@ CHECKS: list[EndpointCheck] = [
     ("/radar.json", validate_radar_json),
     ("/radar-issue-004.html", validate_radar_issue_004_page),
     ("/radar-issue-004.json", validate_radar_issue_004_json),
+    ("/member-access-brief-001.html", validate_member_access_brief_001_page),
+    ("/member-access-brief-001.json", validate_member_access_brief_001_json),
     ("/utility.html", validate_utility_page),
     ("/utility.json", validate_utility_json),
     ("/product.html", validate_product_page),
