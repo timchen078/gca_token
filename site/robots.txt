@@ -25,6 +25,8 @@ Allow: /roadmap.html
 Allow: /roadmap.json
 Allow: /community.html
 Allow: /community.json
+Allow: /announcements.html
+Allow: /announcements.json
 Allow: /narrative.html
 Allow: /narrative.json
 Allow: /radar.html

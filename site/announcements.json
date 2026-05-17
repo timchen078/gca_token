@@ -1,0 +1,100 @@
+{
+  "schema": "https://gcagochina.com/announcements.json",
+  "pageUrl": "https://gcagochina.com/announcements.html",
+  "status": "public-announcement-hub-published",
+  "lastUpdated": "2026-05-17",
+  "projectName": "GCA",
+  "conceptExpansion": "Go China Access",
+  "currentStage": "early-public-operations",
+  "chainId": 8453,
+  "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+  "officialX": "https://x.com/GCAAIGoChina",
+  "officialTelegram": "https://t.me/gcagochinaofficial",
+  "officialWebsite": "https://gcagochina.com/",
+  "contentCadence": {
+    "status": "active",
+    "intervalDays": 3,
+    "startedDate": "2026-05-17",
+    "purpose": "Publish factual GCA project updates, Go China narrative notes, product-readiness updates, and community verification reminders without investment promises.",
+    "operatorReviewRequired": true
+  },
+  "publishedPosts": [
+    {
+      "id": "x-launch-001",
+      "platform": "X",
+      "status": "published",
+      "publishedDate": "2026-05-14",
+      "url": "https://x.com/GCAAIGoChina/status/2054660559124255151",
+      "title": "GCA is building Go China Access",
+      "message": [
+        "GCA is building Go China Access.",
+        "A fixed-supply Base token connecting the China macro story with future non-custodial quant risk tools, market education, and member access.",
+        "https://gcagochina.com",
+        "Not custody. No return promises. Not financial advice."
+      ],
+      "claimBoundary": "Launch positioning only; no listing, audit, price, or security-vendor approval claim."
+    },
+    {
+      "id": "x-build-002",
+      "platform": "X",
+      "status": "published",
+      "publishedDate": "2026-05-17",
+      "url": "https://x.com/GCAAIGoChina/status/2055944057134927984",
+      "title": "Building transparently on Base",
+      "message": [
+        "GCA / Go China Access is building on Base: fixed-supply GCA, public docs, wallet verification, member access, and credits for future China-facing Web3 tools.",
+        "No return promises. Just building transparently.",
+        "https://gcagochina.com",
+        "#GCA #GoChina #Base"
+      ],
+      "claimBoundary": "Project update only; no market forecast, no return promise, no external audit claim."
+    }
+  ],
+  "nextContentQueue": [
+    {
+      "targetDate": "2026-05-20",
+      "topic": "Weekly Go China Radar",
+      "angle": "Explain the Go China narrative and link readers to the public radar page.",
+      "recommendedLink": "https://gcagochina.com/radar.html"
+    },
+    {
+      "targetDate": "2026-05-23",
+      "topic": "Member Access",
+      "angle": "Explain that member access and credits are planned utility workflows, with public self-service claiming still gated by release readiness.",
+      "recommendedLink": "https://gcagochina.com/members.html"
+    },
+    {
+      "targetDate": "2026-05-26",
+      "topic": "Verification First",
+      "angle": "Remind users to verify Base Mainnet, the contract address, the official GCA/USDT route, and current risk boundaries.",
+      "recommendedLink": "https://gcagochina.com/verify.html"
+    }
+  ],
+  "safeMessagingRules": [
+    "Use the official website, X, Telegram, contract address, and GCA/USDT route only.",
+    "Frame GCA as a fixed-supply Base token and concept-stage access layer for future China-facing Web3 tools.",
+    "State that public self-service member claiming is not live until release gates are completed.",
+    "State that no third-party audit has been completed unless an independent report is publicly available.",
+    "State that starter-depth liquidity can create high slippage and price impact."
+  ],
+  "doNotClaim": [
+    "price targets, returns, market predictions, or investment advice",
+    "BaseScan token profile approval before BaseScan publishes it",
+    "security-vendor approval or permanent wallet-warning clearance without vendor confirmation",
+    "third-party audit completion before an independent report is published",
+    "deep liquidity, LP lock, reserve lock, vesting, buyback, or price support before verifiable evidence exists"
+  ],
+  "publicLinks": {
+    "announcementsPage": "https://gcagochina.com/announcements.html",
+    "announcements": "https://gcagochina.com/announcements.json",
+    "communityPage": "https://gcagochina.com/community.html",
+    "community": "https://gcagochina.com/community.json",
+    "officialX": "https://x.com/GCAAIGoChina",
+    "latestXPost": "https://x.com/GCAAIGoChina/status/2055944057134927984",
+    "officialTelegram": "https://t.me/gcagochinaofficial",
+    "verify": "https://gcagochina.com/verify.html",
+    "radar": "https://gcagochina.com/radar.html",
+    "roadmap": "https://gcagochina.com/roadmap.html",
+    "risk": "https://gcagochina.com/risk.html"
+  }
+}

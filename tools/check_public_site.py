@@ -18,6 +18,7 @@ DEFAULT_BASE_URL = "https://gcagochina.com/"
 MAINNET_ADDRESS = "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6"
 X_URL = "https://x.com/GCAAIGoChina"
 FIRST_X_POST_URL = "https://x.com/GCAAIGoChina/status/2054660559124255151"
+LATEST_X_POST_URL = "https://x.com/GCAAIGoChina/status/2055944057134927984"
 OFFICIAL_POOL_ADDRESS = "0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0"
 BASE_USDT_ADDRESS = "0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2"
 OLD_WETH_POOL_ADDRESS = "0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff"
@@ -44,6 +45,8 @@ ROADMAP_PAGE_URL = "https://gcagochina.com/roadmap.html"
 ROADMAP_URL = "https://gcagochina.com/roadmap.json"
 COMMUNITY_PAGE_URL = "https://gcagochina.com/community.html"
 COMMUNITY_URL = "https://gcagochina.com/community.json"
+ANNOUNCEMENTS_PAGE_URL = "https://gcagochina.com/announcements.html"
+ANNOUNCEMENTS_URL = "https://gcagochina.com/announcements.json"
 NARRATIVE_PAGE_URL = "https://gcagochina.com/narrative.html"
 NARRATIVE_URL = "https://gcagochina.com/narrative.json"
 RADAR_PAGE_URL = "https://gcagochina.com/radar.html"
@@ -203,6 +206,7 @@ def validate_root(text: str) -> None:
     assert_contains(text, "Support & Intake", label)
     assert_contains(text, "Roadmap", label)
     assert_contains(text, "Community Kit", label)
+    assert_contains(text, "Announcements", label)
     assert_contains(text, "Narrative System", label)
     assert_contains(text, "Weekly Radar", label)
     assert_contains(text, "Liquidity", label)
@@ -1096,6 +1100,8 @@ def validate_community_page(text: str) -> None:
     label = "/community.html"
     assert_contains(text, "GCA Community Kit", label)
     assert_contains(text, "Community JSON", label)
+    assert_contains(text, "Announcements", label)
+    assert_contains(text, "Announcements JSON", label)
     assert_contains(text, "Official Telegram", label)
     assert_contains(text, "Safe Announcement Copy", label)
     assert_contains(text, "X Launch Pack", label)
@@ -1103,6 +1109,9 @@ def validate_community_page(text: str) -> None:
     assert_contains(text, "Pinned X Post Draft", label)
     assert_contains(text, "First official X post", label)
     assert_contains(text, FIRST_X_POST_URL, label)
+    assert_contains(text, "Latest official X post", label)
+    assert_contains(text, LATEST_X_POST_URL, label)
+    assert_contains(text, ANNOUNCEMENTS_PAGE_URL, label)
     assert_contains(text, "Moderator replies", label)
     assert_contains(text, "Wallet Warning Reply", label)
     assert_contains(text, "Price Display Reply", label)
@@ -1156,6 +1165,17 @@ def validate_community_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing weekly radar announcement")
     if not any(FIRST_X_POST_URL in item for item in payload.get("safeAnnouncement", [])):
         raise SiteCheckError(f"{label}: missing first X post announcement")
+    if not any(LATEST_X_POST_URL in item for item in payload.get("safeAnnouncement", [])):
+        raise SiteCheckError(f"{label}: missing latest X post announcement")
+    announcement_hub = payload.get("announcementHub", {})
+    if announcement_hub.get("status") != "public-announcement-hub-published":
+        raise SiteCheckError(f"{label}: wrong announcementHub status")
+    if announcement_hub.get("pageUrl") != ANNOUNCEMENTS_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong announcementHub pageUrl")
+    if announcement_hub.get("url") != ANNOUNCEMENTS_URL:
+        raise SiteCheckError(f"{label}: wrong announcementHub url")
+    if announcement_hub.get("latestPostUrl") != LATEST_X_POST_URL:
+        raise SiteCheckError(f"{label}: wrong announcementHub latestPostUrl")
     if x_launch.get("status") != "first-post-published":
         raise SiteCheckError(f"{label}: wrong xLaunchPack status")
     if x_launch.get("officialProfile") != X_URL:
@@ -1166,6 +1186,10 @@ def validate_community_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong firstPostUrl")
     if x_launch.get("firstPostPublishedDate") != "2026-05-14":
         raise SiteCheckError(f"{label}: wrong firstPostPublishedDate")
+    if x_launch.get("latestPostUrl") != LATEST_X_POST_URL:
+        raise SiteCheckError(f"{label}: wrong latestPostUrl")
+    if x_launch.get("latestPostPublishedDate") != "2026-05-17":
+        raise SiteCheckError(f"{label}: wrong latestPostPublishedDate")
     if not any("GCA is building Go China Access" in item for item in x_launch.get("firstPostText", [])):
         raise SiteCheckError(f"{label}: missing X first post text")
     if not any("Verify: https://gcagochina.com/verify.html" in item for item in x_launch.get("pinnedPostDraft", [])):
@@ -1184,6 +1208,10 @@ def validate_community_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong communityPage")
     if links.get("communityJson") != COMMUNITY_URL:
         raise SiteCheckError(f"{label}: wrong communityJson")
+    if links.get("announcementsPage") != ANNOUNCEMENTS_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong announcementsPage")
+    if links.get("announcements") != ANNOUNCEMENTS_URL:
+        raise SiteCheckError(f"{label}: wrong announcements")
     if links.get("narrativePage") != NARRATIVE_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong narrativePage")
     if links.get("narrative") != NARRATIVE_URL:
@@ -1202,6 +1230,73 @@ def validate_community_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong support")
     assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
     assert_not_contains(json.dumps(payload), "GCA/WETH", label)
+
+
+def validate_announcements_page(text: str) -> None:
+    label = "/announcements.html"
+    assert_social_preview_meta(text, label, ANNOUNCEMENTS_PAGE_URL)
+    assert_contains(text, "GCA Announcements", label)
+    assert_contains(text, "Announcements JSON", label)
+    assert_contains(text, "Official X", label)
+    assert_contains(text, "Official Telegram", label)
+    assert_contains(text, "Every 3 days", label)
+    assert_contains(text, "Published X Posts", label)
+    assert_contains(text, "Latest Post Text", label)
+    assert_contains(text, "Next 3-Day Content Queue", label)
+    assert_contains(text, "Safe Messaging Rules", label)
+    assert_contains(text, "Do Not Claim", label)
+    assert_contains(text, FIRST_X_POST_URL, label)
+    assert_contains(text, LATEST_X_POST_URL, label)
+    assert_contains(text, "No return promises", label)
+    assert_contains(text, "not financial advice", label)
+    assert_contains(text, X_URL, label)
+    assert_contains(text, "https://t.me/gcagochinaofficial", label)
+    assert_contains(text, MAINNET_ADDRESS, label)
+    assert_no_forbidden_public_claims(text, label)
+
+
+def validate_announcements_json(text: str) -> None:
+    label = "/announcements.json"
+    payload = load_json(text, label)
+    cadence = payload.get("contentCadence", {})
+    posts = payload.get("publishedPosts", [])
+    links = payload.get("publicLinks", {})
+
+    if payload.get("schema") != ANNOUNCEMENTS_URL:
+        raise SiteCheckError(f"{label}: wrong schema")
+    if payload.get("pageUrl") != ANNOUNCEMENTS_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong pageUrl")
+    if payload.get("status") != "public-announcement-hub-published":
+        raise SiteCheckError(f"{label}: wrong status")
+    if payload.get("chainId") != 8453:
+        raise SiteCheckError(f"{label}: wrong chainId")
+    if payload.get("contractAddress") != MAINNET_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong contractAddress")
+    if payload.get("officialX") != X_URL:
+        raise SiteCheckError(f"{label}: wrong officialX")
+    if payload.get("officialTelegram") != "https://t.me/gcagochinaofficial":
+        raise SiteCheckError(f"{label}: wrong officialTelegram")
+    if cadence.get("intervalDays") != 3:
+        raise SiteCheckError(f"{label}: wrong content cadence")
+    if cadence.get("operatorReviewRequired") is not True:
+        raise SiteCheckError(f"{label}: operator review must be required")
+    if not isinstance(posts, list) or len(posts) < 2:
+        raise SiteCheckError(f"{label}: expected published posts")
+    if not any(post.get("url") == FIRST_X_POST_URL for post in posts if isinstance(post, dict)):
+        raise SiteCheckError(f"{label}: missing first X post")
+    if not any(post.get("url") == LATEST_X_POST_URL for post in posts if isinstance(post, dict)):
+        raise SiteCheckError(f"{label}: missing latest X post")
+    if links.get("announcementsPage") != ANNOUNCEMENTS_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong announcementsPage")
+    if links.get("announcements") != ANNOUNCEMENTS_URL:
+        raise SiteCheckError(f"{label}: wrong announcements")
+    if links.get("latestXPost") != LATEST_X_POST_URL:
+        raise SiteCheckError(f"{label}: wrong latestXPost")
+    if "third-party audit completion before an independent report is published" not in payload.get("doNotClaim", []):
+        raise SiteCheckError(f"{label}: missing audit boundary")
+    if not any("starter-depth liquidity" in item for item in payload.get("safeMessagingRules", [])):
+        raise SiteCheckError(f"{label}: missing liquidity safe messaging")
+    assert_no_forbidden_public_claims(json.dumps(payload), label)
 
 
 def validate_narrative_page(text: str) -> None:
@@ -3240,6 +3335,10 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong communityPageUrl")
     if payload.get("communityUrl") != COMMUNITY_URL:
         raise SiteCheckError(f"{label}: wrong communityUrl")
+    if payload.get("announcementsPageUrl") != ANNOUNCEMENTS_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong announcementsPageUrl")
+    if payload.get("announcementsUrl") != ANNOUNCEMENTS_URL:
+        raise SiteCheckError(f"{label}: wrong announcementsUrl")
     if payload.get("narrativePageUrl") != NARRATIVE_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong narrativePageUrl")
     if payload.get("narrativeUrl") != NARRATIVE_URL:
@@ -3405,6 +3504,8 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: unexpected custody roadmap status")
     if status.get("auditReadiness") != "public-audit-readiness-package-published":
         raise SiteCheckError(f"{label}: unexpected audit readiness status")
+    if status.get("announcementHub") != "public-announcement-hub-published":
+        raise SiteCheckError(f"{label}: unexpected announcement hub status")
     if payload.get("liquidityStatement", {}).get("status") != "public-liquidity-custody-statement-published":
         raise SiteCheckError(f"{label}: unexpected liquidity statement object status")
     if payload.get("liquidityStatement", {}).get("pageUrl") != LIQUIDITY_PAGE_URL:
@@ -3435,6 +3536,14 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong audit readiness page")
     if payload.get("auditReadiness", {}).get("url") != AUDIT_READINESS_URL:
         raise SiteCheckError(f"{label}: wrong audit readiness url")
+    if payload.get("announcementHub", {}).get("status") != "public-announcement-hub-published":
+        raise SiteCheckError(f"{label}: unexpected announcement hub object status")
+    if payload.get("announcementHub", {}).get("pageUrl") != ANNOUNCEMENTS_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong announcement hub page")
+    if payload.get("announcementHub", {}).get("url") != ANNOUNCEMENTS_URL:
+        raise SiteCheckError(f"{label}: wrong announcement hub url")
+    if payload.get("announcementHub", {}).get("latestPostUrl") != LATEST_X_POST_URL:
+        raise SiteCheckError(f"{label}: wrong announcement hub latest post")
     if member_program.get("status") != "rules-published-public-claim-not-connected":
         raise SiteCheckError(f"{label}: unexpected member program status")
     if member_program.get("supportIntake", {}).get("status") != "public-support-intake-published":
@@ -3642,6 +3751,10 @@ def validate_tokenlist_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong communityPage")
     if extensions.get("community") != COMMUNITY_URL:
         raise SiteCheckError(f"{label}: wrong community")
+    if extensions.get("announcementsPage") != ANNOUNCEMENTS_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong announcementsPage")
+    if extensions.get("announcements") != ANNOUNCEMENTS_URL:
+        raise SiteCheckError(f"{label}: wrong announcements")
     if extensions.get("narrativePage") != NARRATIVE_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong narrativePage")
     if extensions.get("narrative") != NARRATIVE_URL:
@@ -3828,6 +3941,8 @@ def validate_tokenlist_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong roadmapStatus")
     if extensions.get("communityKitStatus") != "public-community-kit-published":
         raise SiteCheckError(f"{label}: wrong communityKitStatus")
+    if extensions.get("announcementHubStatus") != "public-announcement-hub-published":
+        raise SiteCheckError(f"{label}: wrong announcementHubStatus")
     if extensions.get("privacyNoticeStatus") != "public-privacy-notice-published":
         raise SiteCheckError(f"{label}: wrong privacyNoticeStatus")
     if extensions.get("participationTermsStatus") != "public-participation-terms-published":
@@ -5934,6 +6049,8 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/roadmap.json",
         "https://gcagochina.com/community.html",
         "https://gcagochina.com/community.json",
+        "https://gcagochina.com/announcements.html",
+        "https://gcagochina.com/announcements.json",
         "https://gcagochina.com/narrative.html",
         "https://gcagochina.com/narrative.json",
         "https://gcagochina.com/radar.html",
@@ -6008,6 +6125,8 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /roadmap.json", label)
     assert_contains(text, "Allow: /community.html", label)
     assert_contains(text, "Allow: /community.json", label)
+    assert_contains(text, "Allow: /announcements.html", label)
+    assert_contains(text, "Allow: /announcements.json", label)
     assert_contains(text, "Allow: /narrative.html", label)
     assert_contains(text, "Allow: /narrative.json", label)
     assert_contains(text, "Allow: /radar.html", label)
@@ -6135,6 +6254,8 @@ CHECKS: list[EndpointCheck] = [
     ("/roadmap.json", validate_roadmap_json),
     ("/community.html", validate_community_page),
     ("/community.json", validate_community_json),
+    ("/announcements.html", validate_announcements_page),
+    ("/announcements.json", validate_announcements_json),
     ("/narrative.html", validate_narrative_page),
     ("/narrative.json", validate_narrative_json),
     ("/radar.html", validate_radar_page),

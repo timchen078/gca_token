@@ -11,6 +11,7 @@ This runbook records the current official X profile state for GCA and the safe l
 - Bio: `GCA | Go China Access. Weekly Go China Radar and Web3 risk education on Base Mainnet. Fixed supply. No promises, no financial advice.`
 - Avatar status: not updated in X yet. Use `site/assets/gca-logo.png` when updating.
 - First public X post: posted at `https://x.com/GCAAIGoChina/status/2054660559124255151`.
+- Latest public X post: posted at `https://x.com/GCAAIGoChina/status/2055944057134927984`.
 - Pin status: no official X post is pinned yet.
 
 ## Profile Checklist
@@ -36,6 +37,20 @@ Not custody. No return promises. Not financial advice.
 ```
 
 URL: `https://x.com/GCAAIGoChina/status/2054660559124255151`
+
+## Second Published Post
+
+```text
+GCA / Go China Access is building on Base: fixed-supply GCA, public docs, wallet verification, member access, and credits for future China-facing Web3 tools.
+
+No return promises. Just building transparently.
+
+https://gcagochina.com
+
+#GCA #GoChina #Base
+```
+
+URL: `https://x.com/GCAAIGoChina/status/2055944057134927984`
 
 ## Suggested Thread Follow-Up
 
@@ -104,6 +119,7 @@ Base Mainnet only. No third-party audit. Starter-depth liquidity.
 ## After Posting
 
 1. Keep the first post URL in `site/community.json`.
-2. Keep this runbook aligned with the live X profile.
-3. Pin the official links post only after the post is live.
-4. Add the visible post URL to future BaseScan, Blockaid, wallet, DEX, or data-platform replies if requested.
+2. Keep the latest post URL in `site/announcements.json`.
+3. Keep this runbook aligned with the live X profile.
+4. Pin the official links post only after the post is live.
+5. Add the visible post URL to future BaseScan, Blockaid, wallet, DEX, or data-platform replies if requested.
