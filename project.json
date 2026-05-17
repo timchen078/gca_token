@@ -30,6 +30,8 @@
   "announcementsUrl": "https://gcagochina.com/announcements.json",
   "campaignPageUrl": "https://gcagochina.com/campaign.html",
   "campaignUrl": "https://gcagochina.com/campaign.json",
+  "contentLibraryPageUrl": "https://gcagochina.com/content-library.html",
+  "contentLibraryUrl": "https://gcagochina.com/content-library.json",
   "narrativePageUrl": "https://gcagochina.com/narrative.html",
   "narrativeUrl": "https://gcagochina.com/narrative.json",
   "weeklyRadarPageUrl": "https://gcagochina.com/radar.html",
@@ -260,7 +262,8 @@
     "custodyRoadmap": "public-custody-roadmap-published",
     "auditReadiness": "public-audit-readiness-package-published",
     "announcementHub": "public-announcement-hub-published",
-    "contentCampaign": "public-campaign-calendar-published"
+    "contentCampaign": "public-campaign-calendar-published",
+    "contentLibrary": "public-bilingual-content-library-published"
   },
   "listingReadiness": {
     "status": "not-ready",
@@ -345,6 +348,16 @@
     "contentCadence": "every-3-days",
     "draftCount": 10,
     "nextDraftTargetDate": "2026-05-20",
+    "operatorReviewRequired": true,
+    "safeMessagingRulesAvailable": true
+  },
+  "contentLibrary": {
+    "status": "public-bilingual-content-library-published",
+    "pageUrl": "https://gcagochina.com/content-library.html",
+    "url": "https://gcagochina.com/content-library.json",
+    "draftCount": 10,
+    "languages": ["en", "zh"],
+    "platforms": ["X", "Telegram"],
     "operatorReviewRequired": true,
     "safeMessagingRulesAvailable": true
   },

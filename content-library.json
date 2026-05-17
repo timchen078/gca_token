@@ -1,0 +1,318 @@
+{
+  "schema": "https://gcagochina.com/content-library.json",
+  "pageUrl": "https://gcagochina.com/content-library.html",
+  "status": "public-bilingual-content-library-published",
+  "lastUpdated": "2026-05-17",
+  "projectName": "GCA",
+  "conceptExpansion": "Go China Access",
+  "currentStage": "early-public-operations",
+  "chainId": 8453,
+  "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+  "officialX": "https://x.com/GCAAIGoChina",
+  "officialTelegram": "https://t.me/gcagochinaofficial",
+  "officialWebsite": "https://gcagochina.com/",
+  "campaignWindow": {
+    "startDate": "2026-05-20",
+    "endDate": "2026-06-16",
+    "intervalDays": 3,
+    "draftCount": 10,
+    "operatorReviewRequired": true
+  },
+  "publicationGuardrails": [
+    "Confirm the current official links still match the website before publishing.",
+    "Use Base Mainnet / chainId 8453 and the verified contract address when linking to verification content.",
+    "Use the official GCA/USDT route when discussing markets.",
+    "Keep the wording factual and project-build focused."
+  ],
+  "doNotAdd": [
+    "return promises, price targets, market predictions, or investment advice",
+    "third-party audit claim until an independent report is public",
+    "BaseScan or security-vendor approval claim unless the platform confirms it",
+    "LP lock, reserve lock, buyback, or price-support claim before evidence exists"
+  ],
+  "drafts": [
+    {
+      "id": "gca-draft-2026-05-20-radar",
+      "targetDate": "2026-05-20",
+      "topic": "Weekly Go China Radar",
+      "recommendedLink": "https://gcagochina.com/radar.html",
+      "hashtags": ["#GCA", "#GoChina", "#Base", "#Web3"],
+      "visualTheme": "Red GCA mark over a Base network grid with a small radar line.",
+      "xEnglish": [
+        "GCA Weekly Go China Radar is our public rhythm for the Go China narrative: market education, risk-first research, and transparent build updates around future China-facing Web3 tools.",
+        "Built on Base. Fixed supply. Verify first.",
+        "https://gcagochina.com/radar.html",
+        "No return promises. Not financial advice.",
+        "#GCA #GoChina #Base #Web3"
+      ],
+      "xChinese": [
+        "GCA Weekly Go China Radar 是我们的公开内容节奏：围绕 Go China 叙事、市场教育、风险优先研究，以及未来面向中国场景的 Web3 工具建设持续更新。",
+        "Base 链上部署。固定供应。先验证，再行动。",
+        "https://gcagochina.com/radar.html",
+        "不承诺价格结果。非投资建议。",
+        "#GCA #GoChina #Base #Web3"
+      ],
+      "telegram": [
+        "GCA Weekly Go China Radar is the recurring public format for Go China narrative notes, risk-first research, and transparent build updates.",
+        "Verify official links before using any wallet or market interface: https://gcagochina.com/verify.html"
+      ],
+      "claimBoundary": "Research cadence only; no price, return, listing, audit, or approval claim."
+    },
+    {
+      "id": "gca-draft-2026-05-23-member-access",
+      "targetDate": "2026-05-23",
+      "topic": "Member Access Buildout",
+      "recommendedLink": "https://gcagochina.com/members.html",
+      "hashtags": ["#GCA", "#GoChina", "#Web3", "#Base"],
+      "visualTheme": "Member access pass, wallet verification check, and credits ledger.",
+      "xEnglish": [
+        "GCA Member Access is being designed around read-only wallet checks, utility credits, and manual review before any benefit record is activated.",
+        "The goal is simple: access first, risk control first, no custody.",
+        "https://gcagochina.com/members.html",
+        "No public self-service claim is live yet."
+      ],
+      "xChinese": [
+        "GCA Member Access 正在围绕只读钱包验证、utility credits 和人工审核流程搭建。",
+        "目标很明确：先做访问层，先做风控边界，不托管用户资产。",
+        "https://gcagochina.com/members.html",
+        "目前公开自助领取还没有上线。"
+      ],
+      "telegram": [
+        "GCA Member Access is planned as a verified access workflow, not a custody workflow.",
+        "Public self-service claiming is not live until controlled account UI and release gates are complete."
+      ],
+      "claimBoundary": "Planned utility workflow only; do not claim live self-service claiming."
+    },
+    {
+      "id": "gca-draft-2026-05-26-verification-first",
+      "targetDate": "2026-05-26",
+      "topic": "Verification First",
+      "recommendedLink": "https://gcagochina.com/verify.html",
+      "hashtags": ["#GCA", "#Base", "#GoChina"],
+      "visualTheme": "Contract address card, Base badge, GCA/USDT route, and verify checklist.",
+      "xEnglish": [
+        "Before interacting with GCA, verify first:",
+        "Network: Base Mainnet / chainId 8453",
+        "Contract: 0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+        "Official route: GCA/USDT",
+        "https://gcagochina.com/verify.html",
+        "Use official links only. Not financial advice."
+      ],
+      "xChinese": [
+        "使用 GCA 前先验证：",
+        "网络：Base Mainnet / chainId 8453",
+        "合约：0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+        "官方路线：GCA/USDT",
+        "https://gcagochina.com/verify.html",
+        "只使用官方链接。非投资建议。"
+      ],
+      "telegram": [
+        "Verification checklist: Base Mainnet / chainId 8453, GCA contract, official website, official X, official Telegram, and current GCA/USDT route.",
+        "Use the verify page before taking any action: https://gcagochina.com/verify.html"
+      ],
+      "claimBoundary": "Verification reminder only; no approval or safety guarantee claim."
+    },
+    {
+      "id": "gca-draft-2026-05-29-risk-tools",
+      "targetDate": "2026-05-29",
+      "topic": "Risk-First Trading Tools",
+      "recommendedLink": "https://gcagochina.com/utility.html",
+      "hashtags": ["#GCA", "#GoChina", "#RiskFirst", "#Web3"],
+      "visualTheme": "Dashboard modules for liquidation replay, backtest, risk alert, and position sizing.",
+      "xEnglish": [
+        "GCA's product direction is not custody and not a trading promise.",
+        "The build path is a risk-first access layer for liquidation replay, backtesting, risk alerts, ENTRY_READY review, and position sizing.",
+        "https://gcagochina.com/utility.html",
+        "Tools first. Verification first."
+      ],
+      "xChinese": [
+        "GCA 的产品方向不是托管，也不是交易结果承诺。",
+        "建设路径是风险优先的访问层：爆仓复盘、回测、风险提醒、ENTRY_READY 复核、仓位计算。",
+        "https://gcagochina.com/utility.html",
+        "先做工具，先做验证。"
+      ],
+      "telegram": [
+        "GCA's utility thesis is a non-custodial, risk-first access layer for research and review tools.",
+        "It should not be described as trading permission or a trading result promise."
+      ],
+      "claimBoundary": "Product direction only; no trading result or custody claim."
+    },
+    {
+      "id": "gca-draft-2026-06-01-market-route",
+      "targetDate": "2026-06-01",
+      "topic": "Official Market Route",
+      "recommendedLink": "https://gcagochina.com/markets.html",
+      "hashtags": ["#GCA", "#Base", "#GoChina"],
+      "visualTheme": "GCA/USDT route card with a visible early-liquidity note.",
+      "xEnglish": [
+        "The current official GCA market route is GCA/USDT on Base Mainnet.",
+        "Liquidity is still early-stage, so trades can face high price impact and slippage. Verify the route before using any interface.",
+        "https://gcagochina.com/markets.html",
+        "No market prediction. Not financial advice."
+      ],
+      "xChinese": [
+        "当前 GCA 官方市场路线是 Base Mainnet 上的 GCA/USDT。",
+        "流动性仍处于早期阶段，交易可能出现较高价格影响和滑点。使用任何界面前先核对官方路线。",
+        "https://gcagochina.com/markets.html",
+        "不做市场预测。非投资建议。"
+      ],
+      "telegram": [
+        "Official route: GCA/USDT on Base Mainnet.",
+        "The market remains early-stage. Users should expect possible price impact and slippage, and should verify the route first."
+      ],
+      "claimBoundary": "Market route information only; no liquidity-depth, price, or listing claim."
+    },
+    {
+      "id": "gca-draft-2026-06-04-supply",
+      "targetDate": "2026-06-04",
+      "topic": "Supply And Reserve Facts",
+      "recommendedLink": "https://gcagochina.com/supply.html",
+      "hashtags": ["#GCA", "#Base", "#ERC20"],
+      "visualTheme": "Fixed supply meter, reserve wallet disclosure, and no-mint label.",
+      "xEnglish": [
+        "GCA supply facts:",
+        "Total supply: 1,000,000,000 GCA",
+        "No post-deployment minting",
+        "No transfer tax",
+        "No blacklist",
+        "Owner reserve disclosed publicly",
+        "https://gcagochina.com/supply.html",
+        "Verify the facts. Do not rely on screenshots."
+      ],
+      "xChinese": [
+        "GCA 供应信息：",
+        "总量：1,000,000,000 GCA",
+        "部署后不可增发",
+        "无转账税",
+        "无黑名单",
+        "储备地址已公开说明",
+        "https://gcagochina.com/supply.html",
+        "以公开验证信息为准，不要只看截图。"
+      ],
+      "telegram": [
+        "GCA has a fixed total supply and no post-deployment mint path. The public supply page records the current allocation language and owner reserve disclosure.",
+        "Supply page: https://gcagochina.com/supply.html"
+      ],
+      "claimBoundary": "Supply disclosure only; do not overstate circulating supply or reserve lock status."
+    },
+    {
+      "id": "gca-draft-2026-06-07-security",
+      "targetDate": "2026-06-07",
+      "topic": "Security Boundary",
+      "recommendedLink": "https://gcagochina.com/security.html",
+      "hashtags": ["#GCA", "#Base", "#Web3Security"],
+      "visualTheme": "Contract controls checklist with an external-audit pending marker.",
+      "xEnglish": [
+        "GCA contract facts are public: fixed supply, verified source, no blacklist, no pause, no transfer tax, and no hidden mint path.",
+        "Current boundary: no completed third-party audit yet.",
+        "https://gcagochina.com/security.html",
+        "Transparent status matters."
+      ],
+      "xChinese": [
+        "GCA 合约信息是公开的：固定供应、源码已验证、无黑名单、无暂停、无转账税、无隐藏增发路径。",
+        "当前边界：还没有完成第三方审计。",
+        "https://gcagochina.com/security.html",
+        "透明状态很重要。"
+      ],
+      "telegram": [
+        "GCA publishes contract-control facts publicly, including no blacklist, no pause, no transfer tax, and no hidden mint path.",
+        "No completed third-party audit should be claimed until an independent report exists."
+      ],
+      "claimBoundary": "Contract-control summary only; no third-party audit or security-vendor approval claim."
+    },
+    {
+      "id": "gca-draft-2026-06-10-product",
+      "targetDate": "2026-06-10",
+      "topic": "Product Spec",
+      "recommendedLink": "https://gcagochina.com/product.html",
+      "hashtags": ["#GCA", "#GoChina", "#Web3Tools"],
+      "visualTheme": "Product blueprint for GCA AI Quant Access and release gates.",
+      "xEnglish": [
+        "GCA AI Quant Access is the planned product direction:",
+        "read-only wallet checks, member access, utility credits, review queue, and risk-tool modules.",
+        "Public self-service flows still depend on release gates.",
+        "https://gcagochina.com/product.html"
+      ],
+      "xChinese": [
+        "GCA AI Quant Access 是当前规划的产品方向：",
+        "只读钱包验证、会员访问、utility credits、审核队列和风险工具模块。",
+        "公开自助流程仍需要完成 release gates 后再上线。",
+        "https://gcagochina.com/product.html"
+      ],
+      "telegram": [
+        "Product direction: GCA AI Quant Access. The buildout is still release-gated, with public self-service flows pending controlled account UI and operational checks.",
+        "Product page: https://gcagochina.com/product.html"
+      ],
+      "claimBoundary": "Product roadmap only; do not claim a live self-service product before release gates are complete."
+    },
+    {
+      "id": "gca-draft-2026-06-13-community",
+      "targetDate": "2026-06-13",
+      "topic": "Community Verification",
+      "recommendedLink": "https://gcagochina.com/community.html",
+      "hashtags": ["#GCA", "#GoChina", "#Base"],
+      "visualTheme": "Official links board for X, Telegram, website, and contract.",
+      "xEnglish": [
+        "Official GCA links:",
+        "Website: https://gcagochina.com/",
+        "X: https://x.com/GCAAIGoChina",
+        "Telegram: https://t.me/gcagochinaofficial",
+        "Verify: https://gcagochina.com/verify.html",
+        "If a link does not match the official site, treat it as unverified."
+      ],
+      "xChinese": [
+        "GCA 官方链接：",
+        "官网：https://gcagochina.com/",
+        "X：https://x.com/GCAAIGoChina",
+        "Telegram：https://t.me/gcagochinaofficial",
+        "验证页：https://gcagochina.com/verify.html",
+        "如果链接和官网不一致，就先视为未验证。"
+      ],
+      "telegram": [
+        "Use only the official GCA links shown on the website. Community moderators should point users to verify.html, community.html, and the official X / Telegram links.",
+        "Community kit: https://gcagochina.com/community.html"
+      ],
+      "claimBoundary": "Official-link reminder only; no platform approval or listing claim."
+    },
+    {
+      "id": "gca-draft-2026-06-16-recap",
+      "targetDate": "2026-06-16",
+      "topic": "Build Update Recap",
+      "recommendedLink": "https://gcagochina.com/announcements.html",
+      "hashtags": ["#GCA", "#GoChina", "#BuildInPublic"],
+      "visualTheme": "Monthly build ledger with docs, campaign, member, and risk modules.",
+      "xEnglish": [
+        "GCA build recap:",
+        "Official docs, token verification, GCA/USDT route, campaign calendar, member-access rules, risk boundaries, and public review materials are live.",
+        "Next: keep shipping product evidence, not promises.",
+        "https://gcagochina.com/announcements.html"
+      ],
+      "xChinese": [
+        "GCA 阶段性建设回顾：",
+        "官方资料、代币验证、GCA/USDT 路线、内容日历、会员规则、风险边界和公开审核材料已经上线。",
+        "下一步：继续交付产品证据，而不是口号。",
+        "https://gcagochina.com/announcements.html"
+      ],
+      "telegram": [
+        "GCA monthly build recap: public docs, verification, official route, content calendar, member rules, risk pages, and review materials are live.",
+        "Announcement hub: https://gcagochina.com/announcements.html"
+      ],
+      "claimBoundary": "Build recap only; do not add external approval, listing, audit, or price claims."
+    }
+  ],
+  "publicLinks": {
+    "contentLibraryPage": "https://gcagochina.com/content-library.html",
+    "contentLibrary": "https://gcagochina.com/content-library.json",
+    "campaignPage": "https://gcagochina.com/campaign.html",
+    "campaign": "https://gcagochina.com/campaign.json",
+    "announcementsPage": "https://gcagochina.com/announcements.html",
+    "announcements": "https://gcagochina.com/announcements.json",
+    "communityPage": "https://gcagochina.com/community.html",
+    "community": "https://gcagochina.com/community.json",
+    "officialX": "https://x.com/GCAAIGoChina",
+    "latestXPost": "https://x.com/GCAAIGoChina/status/2055944057134927984",
+    "officialTelegram": "https://t.me/gcagochinaofficial",
+    "verify": "https://gcagochina.com/verify.html",
+    "risk": "https://gcagochina.com/risk.html"
+  }
+}
