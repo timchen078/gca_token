@@ -3,22 +3,22 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>GCA Announcements | Go China Access</title>
-    <meta name="description" content="Official GCA announcements, X post ledger, content cadence, safe messaging rules, and public verification links.">
-    <link rel="canonical" href="https://gcagochina.com/announcements.html">
+    <title>GCA Campaign Calendar | Go China Access</title>
+    <meta name="description" content="Official GCA 30-day campaign calendar with every-3-days X draft topics, safe messaging boundaries, and operator review rules.">
+    <link rel="canonical" href="https://gcagochina.com/campaign.html">
     <link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">
     <link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="GCA | Go China Access">
-    <meta property="og:title" content="GCA Announcements | Go China Access">
-    <meta property="og:description" content="Official GCA announcements, X post ledger, content cadence, safe messaging rules, and public verification links.">
-    <meta property="og:url" content="https://gcagochina.com/announcements.html">
+    <meta property="og:title" content="GCA Campaign Calendar | Go China Access">
+    <meta property="og:description" content="Official GCA 30-day campaign calendar with every-3-days X draft topics, safe messaging boundaries, and operator review rules.">
+    <meta property="og:url" content="https://gcagochina.com/campaign.html">
     <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="GCA Announcements | Go China Access">
-    <meta name="twitter:description" content="Official GCA announcements, X post ledger, content cadence, safe messaging rules, and public verification links.">
+    <meta name="twitter:title" content="GCA Campaign Calendar | Go China Access">
+    <meta name="twitter:description" content="Official GCA 30-day campaign calendar with every-3-days X draft topics, safe messaging boundaries, and operator review rules.">
     <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
     <style>
       :root {
@@ -154,7 +154,8 @@
       }
 
       .panel,
-      .fact {
+      .fact,
+      .slot {
         border: 1px solid var(--line);
         border-radius: 8px;
         background: var(--panel);
@@ -166,7 +167,7 @@
 
       .facts,
       .two,
-      .three {
+      .calendar {
         display: grid;
         gap: 14px;
       }
@@ -180,13 +181,19 @@
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
-      .three {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+      .calendar {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
       .fact {
         min-height: 104px;
         padding: 15px;
+      }
+
+      .slot {
+        display: grid;
+        gap: 10px;
+        padding: 18px;
       }
 
       .label {
@@ -282,7 +289,7 @@
 
         .facts,
         .two,
-        .three {
+        .calendar {
           grid-template-columns: 1fr;
         }
       }
@@ -297,7 +304,7 @@
         </a>
         <div class="nav-links">
           <a href="index.html">Home</a>
-          <a href="verify.html">Verify</a>
+          <a href="announcements.html">Announcements</a>
           <a href="community.html">Community</a>
           <a href="radar.html">Radar</a>
           <a href="roadmap.html">Roadmap</a>
@@ -309,114 +316,143 @@
 
     <main class="shell">
       <section aria-labelledby="title">
-        <h1 id="title">GCA Announcements</h1>
-        <p class="lead">Official GCA announcement ledger for X, Telegram, and public content cadence. This page records what has been posted, what can be shared safely, and what must not be claimed before evidence exists.</p>
+        <h1 id="title">GCA Campaign Calendar</h1>
+        <p class="lead">A 30-day public content plan for GCA / Go China Access. The cadence is every 3 days, the operator must review before posting, and every draft stays inside current evidence: fixed supply, Base Mainnet, official GCA/USDT route, member-access buildout, and risk-first messaging.</p>
         <div class="actions">
           <a class="button primary" href="https://x.com/GCAAIGoChina" target="_blank" rel="noreferrer">Official X</a>
-          <a class="button primary" href="https://t.me/gcagochinaofficial" target="_blank" rel="noreferrer">Official Telegram</a>
-          <a class="button" href="announcements.json">Announcements JSON</a>
-          <a class="button" href="campaign.html">Campaign Calendar</a>
-          <a class="button" href="campaign.json">Campaign JSON</a>
+          <a class="button primary" href="campaign.json">Campaign JSON</a>
+          <a class="button" href="announcements.html">Announcements</a>
           <a class="button" href="community.html">Community Kit</a>
-          <a class="button" href="verify.html">Verify GCA</a>
           <a class="button" href="radar.html">Weekly Radar</a>
-          <a class="button" href="roadmap.html">Roadmap</a>
+          <a class="button" href="verify.html">Verify GCA</a>
         </div>
       </section>
 
-      <section class="facts" aria-label="Announcement facts">
+      <section class="facts" aria-label="Campaign facts">
         <div class="fact">
           <span class="label">Cadence</span>
           <span class="value good">Every 3 days</span>
         </div>
         <div class="fact">
-          <span class="label">Latest Post</span>
-          <span class="value"><a href="https://x.com/GCAAIGoChina/status/2055944057134927984" target="_blank" rel="noreferrer">2055944057134927984</a></span>
+          <span class="label">Planning Window</span>
+          <span class="value">2026-05-20 to 2026-06-16</span>
         </div>
         <div class="fact">
-          <span class="label">Current Stage</span>
-          <span class="value pending">Early public operations</span>
+          <span class="label">Draft Count</span>
+          <span class="value">10 posts</span>
         </div>
         <div class="fact">
-          <span class="label">Boundary</span>
-          <span class="value">No return promises</span>
+          <span class="label">Review Rule</span>
+          <span class="value pending">Manual review before publish</span>
         </div>
       </section>
 
-      <section class="section two" aria-labelledby="postsTitle">
-        <div class="panel">
-          <h2 id="postsTitle">Published X Posts</h2>
-          <div class="list">
-            <div class="row"><span>2026-05-14 launch post</span><strong><a href="https://x.com/GCAAIGoChina/status/2054660559124255151" target="_blank" rel="noreferrer">GCA is building Go China Access</a></strong></div>
-            <div class="row"><span>2026-05-17 build update</span><strong><a href="https://x.com/GCAAIGoChina/status/2055944057134927984" target="_blank" rel="noreferrer">Building transparently on Base</a></strong></div>
-          </div>
-        </div>
-        <div class="panel">
-          <h2>Latest Post Text</h2>
-          <pre>GCA / Go China Access is building on Base: fixed-supply GCA, public docs, wallet verification, member access, and credits for future China-facing Web3 tools.
+      <section class="section panel" aria-labelledby="nextDraftTitle">
+        <h2 id="nextDraftTitle">Next Copy-Ready X Draft</h2>
+        <p class="note">Target date: 2026-05-20. Review links and wording before publishing.</p>
+        <pre>GCA Weekly Go China Radar is our public rhythm for the Go China narrative: market education, risk-first research, and transparent build updates around future China-facing Web3 tools.
 
-No return promises. Just building transparently.
+Built on Base. Fixed supply. Verify first.
 
-https://gcagochina.com
+https://gcagochina.com/radar.html
 
-#GCA #GoChina #Base</pre>
+No return promises. Not financial advice.
+
+#GCA #GoChina #Base #Web3</pre>
+      </section>
+
+      <section class="section" aria-labelledby="calendarTitle">
+        <h2 id="calendarTitle">30-Day Content Queue</h2>
+        <div class="calendar">
+          <article class="slot">
+            <h3>2026-05-20 · Weekly Go China Radar</h3>
+            <p class="note">Position the radar as the repeating research format for narrative education and risk-first market observation.</p>
+            <strong><a href="radar.html">Recommended link: radar.html</a></strong>
+          </article>
+          <article class="slot">
+            <h3>2026-05-23 · Member Access Buildout</h3>
+            <p class="note">Explain the planned holder verification, credits ledger, and GCA Member review path without saying public claiming is live.</p>
+            <strong><a href="members.html">Recommended link: members.html</a></strong>
+          </article>
+          <article class="slot">
+            <h3>2026-05-26 · Verification First</h3>
+            <p class="note">Remind users to verify Base Mainnet, the contract address, official links, and the GCA/USDT route.</p>
+            <strong><a href="verify.html">Recommended link: verify.html</a></strong>
+          </article>
+          <article class="slot">
+            <h3>2026-05-29 · Risk-First Trading Tools</h3>
+            <p class="note">Connect the GCA concept to non-custodial quant risk tools such as liquidation replay, backtesting, and position sizing.</p>
+            <strong><a href="utility.html">Recommended link: utility.html</a></strong>
+          </article>
+          <article class="slot">
+            <h3>2026-06-01 · Official Market Route</h3>
+            <p class="note">Point users to the current official GCA/USDT route and disclose starter-depth liquidity and possible slippage.</p>
+            <strong><a href="markets.html">Recommended link: markets.html</a></strong>
+          </article>
+          <article class="slot">
+            <h3>2026-06-04 · Supply And Reserve Facts</h3>
+            <p class="note">Reinforce fixed supply, no minting, and the owner reserve disclosure without overstating circulating supply.</p>
+            <strong><a href="supply.html">Recommended link: supply.html</a></strong>
+          </article>
+          <article class="slot">
+            <h3>2026-06-07 · Security Boundary</h3>
+            <p class="note">State the contract-control facts and make clear no third-party audit has been completed yet.</p>
+            <strong><a href="security.html">Recommended link: security.html</a></strong>
+          </article>
+          <article class="slot">
+            <h3>2026-06-10 · Product Spec</h3>
+            <p class="note">Describe GCA AI Quant Access as the planned product direction and link to the public release gates.</p>
+            <strong><a href="product.html">Recommended link: product.html</a></strong>
+          </article>
+          <article class="slot">
+            <h3>2026-06-13 · Community Verification</h3>
+            <p class="note">Tell users where to find official X, Telegram, docs, and safe moderator replies.</p>
+            <strong><a href="community.html">Recommended link: community.html</a></strong>
+          </article>
+          <article class="slot">
+            <h3>2026-06-16 · Build Update Recap</h3>
+            <p class="note">Summarize the month of public build work and link back to the announcement ledger.</p>
+            <strong><a href="announcements.html">Recommended link: announcements.html</a></strong>
+          </article>
         </div>
       </section>
 
-      <section class="section panel" aria-labelledby="queueTitle">
-        <h2 id="queueTitle">Next 3-Day Content Queue</h2>
-        <div class="three">
-          <div>
-            <h3>2026-05-20</h3>
-            <p class="note">Weekly Go China Radar. Explain the Go China narrative and link readers to <a href="radar.html">radar.html</a>. The copy-ready draft is tracked in <a href="campaign.html">campaign.html</a>.</p>
-          </div>
-          <div>
-            <h3>2026-05-23</h3>
-            <p class="note">Member Access. Explain planned member and credits workflows while making clear public self-service claiming is not live yet.</p>
-          </div>
-          <div>
-            <h3>2026-05-26</h3>
-            <p class="note">Verification First. Remind users to verify Base Mainnet, the contract address, the official GCA/USDT route, and risk boundaries.</p>
-          </div>
-        </div>
-      </section>
-
-      <section class="section two" aria-label="Safe messaging boundaries">
+      <section class="section two" aria-label="Campaign boundaries">
         <div class="panel">
-          <h2>Safe Messaging Rules</h2>
+          <h2>Allowed Angles</h2>
           <ul>
-            <li>Use only the official website, X, Telegram, contract address, and GCA/USDT route.</li>
-            <li>Describe GCA as a fixed-supply Base token and concept-stage access layer for future China-facing Web3 tools.</li>
-            <li>State that no third-party audit has been completed unless an independent report is publicly available.</li>
-            <li>State that starter-depth liquidity can create high slippage and price impact.</li>
+            <li>Go China Access narrative and China-facing Web3 research direction.</li>
+            <li>Fixed-supply Base Mainnet token facts and official GCA/USDT route.</li>
+            <li>Member access, credits, and review workflows as planned utility buildout.</li>
+            <li>Risk-first education, public documentation, and transparent operations.</li>
           </ul>
         </div>
         <div class="panel">
-          <h2>Do Not Claim</h2>
+          <h2>Do Not Publish</h2>
           <ul>
-            <li>Do not post price targets, market predictions, investment advice, or return promises.</li>
-            <li>Do not claim BaseScan token profile approval before BaseScan publishes it.</li>
-            <li>Do not claim security-vendor approval or permanent wallet-warning clearance without vendor confirmation.</li>
-            <li>Do not claim LP lock, reserve lock, vesting, buyback, or price support before verifiable evidence exists.</li>
+            <li>No return promises, price targets, market predictions, or investment advice.</li>
+            <li>No third-party audit claim until an independent report is public.</li>
+            <li>No BaseScan or security-vendor approval claim unless the platform confirms it.</li>
+            <li>No artificial activity language, no LP lock claim, and no reserve lock claim before evidence exists.</li>
           </ul>
         </div>
       </section>
 
       <section class="section panel" aria-labelledby="identityTitle">
-        <h2 id="identityTitle">Official Identity</h2>
+        <h2 id="identityTitle">Official Identity For Every Post</h2>
         <div class="list">
           <div class="row"><span>Network</span><strong>Base Mainnet / chainId 8453</strong></div>
           <div class="row"><span>Contract</span><strong>0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6</strong></div>
+          <div class="row"><span>Market route</span><strong>GCA/USDT</strong></div>
           <div class="row"><span>Official X</span><strong><a href="https://x.com/GCAAIGoChina" target="_blank" rel="noreferrer">x.com/GCAAIGoChina</a></strong></div>
           <div class="row"><span>Official Telegram</span><strong><a href="https://t.me/gcagochinaofficial" target="_blank" rel="noreferrer">t.me/gcagochinaofficial</a></strong></div>
-          <div class="row"><span>30-day campaign calendar</span><strong><a href="campaign.html">campaign.html</a></strong></div>
-          <div class="row"><span>Official community kit</span><strong><a href="community.html">community.html</a></strong></div>
+          <div class="row"><span>Latest X post</span><strong><a href="https://x.com/GCAAIGoChina/status/2055944057134927984" target="_blank" rel="noreferrer">2055944057134927984</a></strong></div>
         </div>
       </section>
     </main>
 
     <footer>
-      <div class="shell">GCA announcements are factual project communications only, not financial advice.</div>
+      <div class="shell">GCA campaign drafts are factual project communications only, not financial advice.</div>
     </footer>
   </body>
 </html>

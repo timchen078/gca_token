@@ -16,7 +16,16 @@
     "intervalDays": 3,
     "startedDate": "2026-05-17",
     "purpose": "Publish factual GCA project updates, Go China narrative notes, product-readiness updates, and community verification reminders without investment promises.",
-    "operatorReviewRequired": true
+    "operatorReviewRequired": true,
+    "campaignCalendar": "https://gcagochina.com/campaign.html"
+  },
+  "campaignCalendar": {
+    "status": "public-campaign-calendar-published",
+    "pageUrl": "https://gcagochina.com/campaign.html",
+    "url": "https://gcagochina.com/campaign.json",
+    "window": "2026-05-20 to 2026-06-16",
+    "draftCount": 10,
+    "nextDraftTargetDate": "2026-05-20"
   },
   "publishedPosts": [
     {
@@ -87,6 +96,8 @@
   "publicLinks": {
     "announcementsPage": "https://gcagochina.com/announcements.html",
     "announcements": "https://gcagochina.com/announcements.json",
+    "campaignPage": "https://gcagochina.com/campaign.html",
+    "campaign": "https://gcagochina.com/campaign.json",
     "communityPage": "https://gcagochina.com/community.html",
     "community": "https://gcagochina.com/community.json",
     "officialX": "https://x.com/GCAAIGoChina",

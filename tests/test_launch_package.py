@@ -54,6 +54,8 @@ COMMUNITY_PAGE_URL = "https://gcagochina.com/community.html"
 COMMUNITY_URL = "https://gcagochina.com/community.json"
 ANNOUNCEMENTS_PAGE_URL = "https://gcagochina.com/announcements.html"
 ANNOUNCEMENTS_URL = "https://gcagochina.com/announcements.json"
+CAMPAIGN_PAGE_URL = "https://gcagochina.com/campaign.html"
+CAMPAIGN_URL = "https://gcagochina.com/campaign.json"
 NARRATIVE_PAGE_URL = "https://gcagochina.com/narrative.html"
 NARRATIVE_URL = "https://gcagochina.com/narrative.json"
 RADAR_PAGE_URL = "https://gcagochina.com/radar.html"
@@ -160,6 +162,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("/community.json", script)
         self.assertIn("/announcements.html", script)
         self.assertIn("/announcements.json", script)
+        self.assertIn("/campaign.html", script)
+        self.assertIn("/campaign.json", script)
         self.assertIn("/narrative.html", script)
         self.assertIn("/narrative.json", script)
         self.assertIn("/radar.html", script)
@@ -239,6 +243,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("validate_community_json", script)
         self.assertIn("validate_announcements_page", script)
         self.assertIn("validate_announcements_json", script)
+        self.assertIn("validate_campaign_page", script)
+        self.assertIn("validate_campaign_json", script)
         self.assertIn("validate_narrative_page", script)
         self.assertIn("validate_narrative_json", script)
         self.assertIn("validate_radar_page", script)
@@ -373,6 +379,8 @@ class LaunchPackageTests(unittest.TestCase):
         module.validate_community_json((ROOT / "site" / "community.json").read_text())
         module.validate_announcements_page((ROOT / "site" / "announcements.html").read_text())
         module.validate_announcements_json((ROOT / "site" / "announcements.json").read_text())
+        module.validate_campaign_page((ROOT / "site" / "campaign.html").read_text())
+        module.validate_campaign_json((ROOT / "site" / "campaign.json").read_text())
         module.validate_narrative_page((ROOT / "site" / "narrative.html").read_text())
         module.validate_narrative_json((ROOT / "site" / "narrative.json").read_text())
         module.validate_radar_page((ROOT / "site" / "radar.html").read_text())
@@ -654,6 +662,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Allow: /community.json", robots)
         self.assertIn("Allow: /announcements.html", robots)
         self.assertIn("Allow: /announcements.json", robots)
+        self.assertIn("Allow: /campaign.html", robots)
+        self.assertIn("Allow: /campaign.json", robots)
         self.assertIn("Allow: /narrative.html", robots)
         self.assertIn("Allow: /narrative.json", robots)
         self.assertIn("Allow: /radar.html", robots)
@@ -744,6 +754,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(COMMUNITY_URL, sitemap)
         self.assertIn(ANNOUNCEMENTS_PAGE_URL, sitemap)
         self.assertIn(ANNOUNCEMENTS_URL, sitemap)
+        self.assertIn(CAMPAIGN_PAGE_URL, sitemap)
+        self.assertIn(CAMPAIGN_URL, sitemap)
         self.assertIn(NARRATIVE_PAGE_URL, sitemap)
         self.assertIn(NARRATIVE_URL, sitemap)
         self.assertIn(RADAR_PAGE_URL, sitemap)
@@ -1016,6 +1028,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn('href="roadmap.html"', site)
         self.assertIn('href="community.html"', site)
         self.assertIn('href="announcements.html"', site)
+        self.assertIn('href="campaign.html"', site)
+        self.assertIn('href="campaign.json"', site)
         self.assertIn('href="narrative.html"', site)
         self.assertIn('href="radar.html"', site)
         self.assertIn('href="release-gates.html"', site)
@@ -1571,6 +1585,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("X Launch Pack", page)
         self.assertIn("Announcements", page)
         self.assertIn("Announcements JSON", page)
+        self.assertIn("Campaign Calendar", page)
+        self.assertIn("Campaign JSON", page)
         self.assertIn("First X Post", page)
         self.assertIn("Pinned X Post Draft", page)
         self.assertIn("First official X post", page)
@@ -1578,6 +1594,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Latest official X post", page)
         self.assertIn(LATEST_X_POST_URL, page)
         self.assertIn(ANNOUNCEMENTS_PAGE_URL, page)
+        self.assertIn(CAMPAIGN_PAGE_URL, page)
         self.assertIn("Safe Announcement Copy", page)
         self.assertIn("Moderator replies", page)
         self.assertIn("Wallet Warning Reply", page)
@@ -1611,10 +1628,15 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertTrue(any("Weekly Go China Radar: https://gcagochina.com/radar.html" in item for item in community["safeAnnouncement"]))
         self.assertTrue(any(FIRST_X_POST_URL in item for item in community["safeAnnouncement"]))
         self.assertTrue(any(LATEST_X_POST_URL in item for item in community["safeAnnouncement"]))
+        self.assertTrue(any(CAMPAIGN_PAGE_URL in item for item in community["safeAnnouncement"]))
         self.assertEqual(community["announcementHub"]["status"], "public-announcement-hub-published")
         self.assertEqual(community["announcementHub"]["pageUrl"], ANNOUNCEMENTS_PAGE_URL)
         self.assertEqual(community["announcementHub"]["url"], ANNOUNCEMENTS_URL)
         self.assertEqual(community["announcementHub"]["latestPostUrl"], LATEST_X_POST_URL)
+        self.assertEqual(community["campaignCalendar"]["status"], "public-campaign-calendar-published")
+        self.assertEqual(community["campaignCalendar"]["pageUrl"], CAMPAIGN_PAGE_URL)
+        self.assertEqual(community["campaignCalendar"]["url"], CAMPAIGN_URL)
+        self.assertTrue(community["campaignCalendar"]["operatorReviewRequired"])
         self.assertEqual(community["xLaunchPack"]["status"], "first-post-published")
         self.assertEqual(community["xLaunchPack"]["officialProfile"], X_URL)
         self.assertEqual(community["xLaunchPack"]["profilePhotoAsset"], "https://gcagochina.com/assets/gca-logo.png")
@@ -1634,6 +1656,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(community["publicLinks"]["communityJson"], COMMUNITY_URL)
         self.assertEqual(community["publicLinks"]["announcementsPage"], ANNOUNCEMENTS_PAGE_URL)
         self.assertEqual(community["publicLinks"]["announcements"], ANNOUNCEMENTS_URL)
+        self.assertEqual(community["publicLinks"]["campaignPage"], CAMPAIGN_PAGE_URL)
+        self.assertEqual(community["publicLinks"]["campaign"], CAMPAIGN_URL)
         self.assertEqual(community["publicLinks"]["narrativePage"], NARRATIVE_PAGE_URL)
         self.assertEqual(community["publicLinks"]["narrative"], NARRATIVE_URL)
         self.assertEqual(community["publicLinks"]["weeklyRadarPage"], RADAR_PAGE_URL)
@@ -1651,6 +1675,8 @@ class LaunchPackageTests(unittest.TestCase):
 
         self.assertIn("GCA Announcements", page)
         self.assertIn("Announcements JSON", page)
+        self.assertIn("Campaign Calendar", page)
+        self.assertIn("Campaign JSON", page)
         self.assertIn("Official X", page)
         self.assertIn("Official Telegram", page)
         self.assertIn("Every 3 days", page)
@@ -1685,10 +1711,64 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertTrue(any("No return promises" in " ".join(post["message"]) for post in announcements["publishedPosts"]))
         self.assertEqual(announcements["publicLinks"]["announcementsPage"], ANNOUNCEMENTS_PAGE_URL)
         self.assertEqual(announcements["publicLinks"]["announcements"], ANNOUNCEMENTS_URL)
+        self.assertEqual(announcements["publicLinks"]["campaignPage"], CAMPAIGN_PAGE_URL)
+        self.assertEqual(announcements["publicLinks"]["campaign"], CAMPAIGN_URL)
         self.assertEqual(announcements["publicLinks"]["latestXPost"], LATEST_X_POST_URL)
+        self.assertEqual(announcements["campaignCalendar"]["status"], "public-campaign-calendar-published")
+        self.assertEqual(announcements["campaignCalendar"]["pageUrl"], CAMPAIGN_PAGE_URL)
+        self.assertEqual(announcements["campaignCalendar"]["url"], CAMPAIGN_URL)
+        self.assertEqual(announcements["campaignCalendar"]["draftCount"], 10)
         self.assertIn("third-party audit completion before an independent report is published", announcements["doNotClaim"])
         self.assertNotIn("GCA/WETH", json.dumps(announcements))
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, json.dumps(announcements))
+
+    def test_campaign_page_and_json_publish_30_day_content_calendar(self):
+        page = (ROOT / "site" / "campaign.html").read_text()
+        campaign = json.loads((ROOT / "site" / "campaign.json").read_text())
+
+        self.assertIn("GCA Campaign Calendar", page)
+        self.assertIn("Campaign JSON", page)
+        self.assertIn("Every 3 days", page)
+        self.assertIn("2026-05-20 to 2026-06-16", page)
+        self.assertIn("10 posts", page)
+        self.assertIn("Manual review before publish", page)
+        self.assertIn("Next Copy-Ready X Draft", page)
+        self.assertIn("30-Day Content Queue", page)
+        self.assertIn("Weekly Go China Radar", page)
+        self.assertIn("Member Access Buildout", page)
+        self.assertIn("Verification First", page)
+        self.assertIn("Do Not Publish", page)
+        self.assertIn("No return promises", page)
+        self.assertIn("Not financial advice", page)
+        self.assertIn(X_URL, page)
+        self.assertIn(TELEGRAM_URL, page)
+        self.assertIn(LATEST_X_POST_URL, page)
+        self.assertIn(MAINNET_ADDRESS, page)
+        self.assertIn("GCA/USDT", page)
+        self.assertNotIn("GCA/WETH", page)
+        self.assertNotIn(OLD_WETH_POOL_ADDRESS, page)
+
+        self.assertEqual(campaign["schema"], CAMPAIGN_URL)
+        self.assertEqual(campaign["pageUrl"], CAMPAIGN_PAGE_URL)
+        self.assertEqual(campaign["status"], "public-campaign-calendar-published")
+        self.assertEqual(campaign["lastUpdated"], "2026-05-17")
+        self.assertEqual(campaign["chainId"], 8453)
+        self.assertEqual(campaign["contractAddress"], MAINNET_ADDRESS)
+        self.assertEqual(campaign["officialX"], X_URL)
+        self.assertEqual(campaign["campaignWindow"]["intervalDays"], 3)
+        self.assertEqual(campaign["campaignWindow"]["draftCount"], 10)
+        self.assertTrue(campaign["campaignWindow"]["operatorReviewRequired"])
+        self.assertEqual(campaign["nextCopyReadyDraft"]["targetDate"], "2026-05-20")
+        self.assertEqual(campaign["nextCopyReadyDraft"]["recommendedLink"], RADAR_PAGE_URL)
+        self.assertEqual(len(campaign["contentQueue"]), 10)
+        self.assertTrue(any(item["topic"] == "Verification First" for item in campaign["contentQueue"]))
+        self.assertEqual(campaign["publicLinks"]["campaignPage"], CAMPAIGN_PAGE_URL)
+        self.assertEqual(campaign["publicLinks"]["campaign"], CAMPAIGN_URL)
+        self.assertEqual(campaign["publicLinks"]["announcementsPage"], ANNOUNCEMENTS_PAGE_URL)
+        self.assertEqual(campaign["publicLinks"]["latestXPost"], LATEST_X_POST_URL)
+        self.assertIn("third-party audit claim until an independent report is public", campaign["doNotPublish"])
+        self.assertNotIn("GCA/WETH", json.dumps(campaign))
+        self.assertNotIn(OLD_WETH_POOL_ADDRESS, json.dumps(campaign))
 
     def test_narrative_page_and_json_define_public_narrative_system(self):
         page = (ROOT / "site" / "narrative.html").read_text()
@@ -3107,6 +3187,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn('href="roadmap.html"', index)
         self.assertIn('href="community.html"', index)
         self.assertIn('href="announcements.html"', index)
+        self.assertIn('href="campaign.html"', index)
         self.assertIn('href="privacy.html"', index)
         self.assertIn('href="terms.html"', index)
         self.assertIn('href="product.html"', index)
@@ -3450,6 +3531,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(project["communityUrl"], COMMUNITY_URL)
         self.assertEqual(project["announcementsPageUrl"], ANNOUNCEMENTS_PAGE_URL)
         self.assertEqual(project["announcementsUrl"], ANNOUNCEMENTS_URL)
+        self.assertEqual(project["campaignPageUrl"], CAMPAIGN_PAGE_URL)
+        self.assertEqual(project["campaignUrl"], CAMPAIGN_URL)
         self.assertEqual(project["narrativePageUrl"], NARRATIVE_PAGE_URL)
         self.assertEqual(project["narrativeUrl"], NARRATIVE_URL)
         self.assertEqual(project["weeklyRadarPageUrl"], RADAR_PAGE_URL)
@@ -3539,6 +3622,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(project["platformStatus"]["custodyRoadmap"], "public-custody-roadmap-published")
         self.assertEqual(project["platformStatus"]["auditReadiness"], "public-audit-readiness-package-published")
         self.assertEqual(project["platformStatus"]["announcementHub"], "public-announcement-hub-published")
+        self.assertEqual(project["platformStatus"]["contentCampaign"], "public-campaign-calendar-published")
         self.assertEqual(project["platformStatus"]["blockaidFollowup"], "public-blockaid-followup-package-published")
         self.assertEqual(project["platformStatus"]["thirdPartyAudit"], "not-completed")
         self.assertEqual(project["accessPortal"]["status"], "public-access-portal-blueprint-published")
@@ -3683,6 +3767,10 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(project["announcementHub"]["pageUrl"], ANNOUNCEMENTS_PAGE_URL)
         self.assertEqual(project["announcementHub"]["url"], ANNOUNCEMENTS_URL)
         self.assertEqual(project["announcementHub"]["latestPostUrl"], LATEST_X_POST_URL)
+        self.assertEqual(project["contentCampaign"]["status"], "public-campaign-calendar-published")
+        self.assertEqual(project["contentCampaign"]["pageUrl"], CAMPAIGN_PAGE_URL)
+        self.assertEqual(project["contentCampaign"]["url"], CAMPAIGN_URL)
+        self.assertEqual(project["contentCampaign"]["draftCount"], 10)
         self.assertIn("LP lock", project["custodyRoadmap"]["useCase"])
         self.assertEqual(project["walletWarningEvidence"]["status"], "warning-report-submitted-owner-observed-no-warning-visible")
         self.assertEqual(project["walletWarningEvidence"]["pageUrl"], WALLET_WARNING_PAGE_URL)
@@ -4926,6 +5014,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(extensions["community"], COMMUNITY_URL)
         self.assertEqual(extensions["announcementsPage"], ANNOUNCEMENTS_PAGE_URL)
         self.assertEqual(extensions["announcements"], ANNOUNCEMENTS_URL)
+        self.assertEqual(extensions["campaignPage"], CAMPAIGN_PAGE_URL)
+        self.assertEqual(extensions["campaign"], CAMPAIGN_URL)
         self.assertEqual(extensions["narrativePage"], NARRATIVE_PAGE_URL)
         self.assertEqual(extensions["narrative"], NARRATIVE_URL)
         self.assertEqual(extensions["weeklyRadarPage"], RADAR_PAGE_URL)
@@ -4986,6 +5076,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(extensions["roadmapStatus"], "public-roadmap-published")
         self.assertEqual(extensions["communityKitStatus"], "public-community-kit-published")
         self.assertEqual(extensions["announcementHubStatus"], "public-announcement-hub-published")
+        self.assertEqual(extensions["contentCampaignStatus"], "public-campaign-calendar-published")
         self.assertEqual(extensions["privacyNoticeStatus"], "public-privacy-notice-published")
         self.assertEqual(extensions["participationTermsStatus"], "public-participation-terms-published")
         self.assertEqual(extensions["geckoTerminalStatus"], "approved-2026-05-11")
@@ -5061,6 +5152,8 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "site" / "community.json",
             ROOT / "site" / "announcements.html",
             ROOT / "site" / "announcements.json",
+            ROOT / "site" / "campaign.html",
+            ROOT / "site" / "campaign.json",
             ROOT / "site" / "narrative.html",
             ROOT / "site" / "narrative.json",
             ROOT / "site" / "radar.html",
@@ -5323,6 +5416,8 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "site" / "community.json",
             ROOT / "site" / "announcements.html",
             ROOT / "site" / "announcements.json",
+            ROOT / "site" / "campaign.html",
+            ROOT / "site" / "campaign.json",
             ROOT / "site" / "narrative.html",
             ROOT / "site" / "narrative.json",
             ROOT / "site" / "radar.html",

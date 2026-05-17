@@ -27,6 +27,8 @@ Allow: /community.html
 Allow: /community.json
 Allow: /announcements.html
 Allow: /announcements.json
+Allow: /campaign.html
+Allow: /campaign.json
 Allow: /narrative.html
 Allow: /narrative.json
 Allow: /radar.html

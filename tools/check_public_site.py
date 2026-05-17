@@ -47,6 +47,8 @@ COMMUNITY_PAGE_URL = "https://gcagochina.com/community.html"
 COMMUNITY_URL = "https://gcagochina.com/community.json"
 ANNOUNCEMENTS_PAGE_URL = "https://gcagochina.com/announcements.html"
 ANNOUNCEMENTS_URL = "https://gcagochina.com/announcements.json"
+CAMPAIGN_PAGE_URL = "https://gcagochina.com/campaign.html"
+CAMPAIGN_URL = "https://gcagochina.com/campaign.json"
 NARRATIVE_PAGE_URL = "https://gcagochina.com/narrative.html"
 NARRATIVE_URL = "https://gcagochina.com/narrative.json"
 RADAR_PAGE_URL = "https://gcagochina.com/radar.html"
@@ -207,6 +209,7 @@ def validate_root(text: str) -> None:
     assert_contains(text, "Roadmap", label)
     assert_contains(text, "Community Kit", label)
     assert_contains(text, "Announcements", label)
+    assert_contains(text, "Campaign Calendar", label)
     assert_contains(text, "Narrative System", label)
     assert_contains(text, "Weekly Radar", label)
     assert_contains(text, "Liquidity", label)
@@ -1102,6 +1105,8 @@ def validate_community_page(text: str) -> None:
     assert_contains(text, "Community JSON", label)
     assert_contains(text, "Announcements", label)
     assert_contains(text, "Announcements JSON", label)
+    assert_contains(text, "Campaign Calendar", label)
+    assert_contains(text, "Campaign JSON", label)
     assert_contains(text, "Official Telegram", label)
     assert_contains(text, "Safe Announcement Copy", label)
     assert_contains(text, "X Launch Pack", label)
@@ -1112,6 +1117,7 @@ def validate_community_page(text: str) -> None:
     assert_contains(text, "Latest official X post", label)
     assert_contains(text, LATEST_X_POST_URL, label)
     assert_contains(text, ANNOUNCEMENTS_PAGE_URL, label)
+    assert_contains(text, CAMPAIGN_PAGE_URL, label)
     assert_contains(text, "Moderator replies", label)
     assert_contains(text, "Wallet Warning Reply", label)
     assert_contains(text, "Price Display Reply", label)
@@ -1167,6 +1173,8 @@ def validate_community_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing first X post announcement")
     if not any(LATEST_X_POST_URL in item for item in payload.get("safeAnnouncement", [])):
         raise SiteCheckError(f"{label}: missing latest X post announcement")
+    if not any(CAMPAIGN_PAGE_URL in item for item in payload.get("safeAnnouncement", [])):
+        raise SiteCheckError(f"{label}: missing campaign announcement")
     announcement_hub = payload.get("announcementHub", {})
     if announcement_hub.get("status") != "public-announcement-hub-published":
         raise SiteCheckError(f"{label}: wrong announcementHub status")
@@ -1176,6 +1184,15 @@ def validate_community_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong announcementHub url")
     if announcement_hub.get("latestPostUrl") != LATEST_X_POST_URL:
         raise SiteCheckError(f"{label}: wrong announcementHub latestPostUrl")
+    campaign = payload.get("campaignCalendar", {})
+    if campaign.get("status") != "public-campaign-calendar-published":
+        raise SiteCheckError(f"{label}: wrong campaignCalendar status")
+    if campaign.get("pageUrl") != CAMPAIGN_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong campaignCalendar pageUrl")
+    if campaign.get("url") != CAMPAIGN_URL:
+        raise SiteCheckError(f"{label}: wrong campaignCalendar url")
+    if campaign.get("operatorReviewRequired") is not True:
+        raise SiteCheckError(f"{label}: campaign operator review must be required")
     if x_launch.get("status") != "first-post-published":
         raise SiteCheckError(f"{label}: wrong xLaunchPack status")
     if x_launch.get("officialProfile") != X_URL:
@@ -1212,6 +1229,10 @@ def validate_community_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong announcementsPage")
     if links.get("announcements") != ANNOUNCEMENTS_URL:
         raise SiteCheckError(f"{label}: wrong announcements")
+    if links.get("campaignPage") != CAMPAIGN_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong campaignPage")
+    if links.get("campaign") != CAMPAIGN_URL:
+        raise SiteCheckError(f"{label}: wrong campaign")
     if links.get("narrativePage") != NARRATIVE_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong narrativePage")
     if links.get("narrative") != NARRATIVE_URL:
@@ -1237,6 +1258,8 @@ def validate_announcements_page(text: str) -> None:
     assert_social_preview_meta(text, label, ANNOUNCEMENTS_PAGE_URL)
     assert_contains(text, "GCA Announcements", label)
     assert_contains(text, "Announcements JSON", label)
+    assert_contains(text, "Campaign Calendar", label)
+    assert_contains(text, "Campaign JSON", label)
     assert_contains(text, "Official X", label)
     assert_contains(text, "Official Telegram", label)
     assert_contains(text, "Every 3 days", label)
@@ -1290,12 +1313,96 @@ def validate_announcements_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong announcementsPage")
     if links.get("announcements") != ANNOUNCEMENTS_URL:
         raise SiteCheckError(f"{label}: wrong announcements")
+    if links.get("campaignPage") != CAMPAIGN_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong campaignPage")
+    if links.get("campaign") != CAMPAIGN_URL:
+        raise SiteCheckError(f"{label}: wrong campaign")
     if links.get("latestXPost") != LATEST_X_POST_URL:
         raise SiteCheckError(f"{label}: wrong latestXPost")
+    if payload.get("campaignCalendar", {}).get("status") != "public-campaign-calendar-published":
+        raise SiteCheckError(f"{label}: wrong campaign calendar status")
     if "third-party audit completion before an independent report is published" not in payload.get("doNotClaim", []):
         raise SiteCheckError(f"{label}: missing audit boundary")
     if not any("starter-depth liquidity" in item for item in payload.get("safeMessagingRules", [])):
         raise SiteCheckError(f"{label}: missing liquidity safe messaging")
+    assert_no_forbidden_public_claims(json.dumps(payload), label)
+
+
+def validate_campaign_page(text: str) -> None:
+    label = "/campaign.html"
+    assert_social_preview_meta(text, label, CAMPAIGN_PAGE_URL)
+    assert_contains(text, "GCA Campaign Calendar", label)
+    assert_contains(text, "Campaign JSON", label)
+    assert_contains(text, "Every 3 days", label)
+    assert_contains(text, "2026-05-20 to 2026-06-16", label)
+    assert_contains(text, "10 posts", label)
+    assert_contains(text, "Manual review before publish", label)
+    assert_contains(text, "Next Copy-Ready X Draft", label)
+    assert_contains(text, "30-Day Content Queue", label)
+    assert_contains(text, "Weekly Go China Radar", label)
+    assert_contains(text, "Member Access Buildout", label)
+    assert_contains(text, "Verification First", label)
+    assert_contains(text, "Do Not Publish", label)
+    assert_contains(text, "No return promises", label)
+    assert_contains(text, "Not financial advice", label)
+    assert_contains(text, X_URL, label)
+    assert_contains(text, "https://t.me/gcagochinaofficial", label)
+    assert_contains(text, LATEST_X_POST_URL, label)
+    assert_contains(text, MAINNET_ADDRESS, label)
+    assert_contains(text, "GCA/USDT", label)
+    assert_no_forbidden_public_claims(text, label)
+
+
+def validate_campaign_json(text: str) -> None:
+    label = "/campaign.json"
+    payload = load_json(text, label)
+    window = payload.get("campaignWindow", {})
+    draft = payload.get("nextCopyReadyDraft", {})
+    queue = payload.get("contentQueue", [])
+    links = payload.get("publicLinks", {})
+
+    if payload.get("schema") != CAMPAIGN_URL:
+        raise SiteCheckError(f"{label}: wrong schema")
+    if payload.get("pageUrl") != CAMPAIGN_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong pageUrl")
+    if payload.get("status") != "public-campaign-calendar-published":
+        raise SiteCheckError(f"{label}: wrong status")
+    if payload.get("lastUpdated") != "2026-05-17":
+        raise SiteCheckError(f"{label}: wrong lastUpdated")
+    if payload.get("chainId") != 8453:
+        raise SiteCheckError(f"{label}: wrong chainId")
+    if payload.get("contractAddress") != MAINNET_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong contractAddress")
+    if payload.get("officialX") != X_URL:
+        raise SiteCheckError(f"{label}: wrong officialX")
+    if window.get("intervalDays") != 3:
+        raise SiteCheckError(f"{label}: wrong intervalDays")
+    if window.get("draftCount") != 10:
+        raise SiteCheckError(f"{label}: wrong draft count")
+    if window.get("operatorReviewRequired") is not True:
+        raise SiteCheckError(f"{label}: operator review must be required")
+    if draft.get("targetDate") != "2026-05-20":
+        raise SiteCheckError(f"{label}: wrong next draft date")
+    if draft.get("recommendedLink") != RADAR_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong next draft link")
+    if not isinstance(queue, list) or len(queue) != 10:
+        raise SiteCheckError(f"{label}: expected 10 queued posts")
+    if not any(item.get("topic") == "Verification First" for item in queue if isinstance(item, dict)):
+        raise SiteCheckError(f"{label}: missing verification post")
+    if not any(item.get("recommendedLink") == "https://gcagochina.com/markets.html" for item in queue if isinstance(item, dict)):
+        raise SiteCheckError(f"{label}: missing market route post")
+    if links.get("campaignPage") != CAMPAIGN_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong campaignPage")
+    if links.get("campaign") != CAMPAIGN_URL:
+        raise SiteCheckError(f"{label}: wrong campaign")
+    if links.get("announcementsPage") != ANNOUNCEMENTS_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong announcementsPage")
+    if links.get("latestXPost") != LATEST_X_POST_URL:
+        raise SiteCheckError(f"{label}: wrong latestXPost")
+    if "third-party audit claim until an independent report is public" not in payload.get("doNotPublish", []):
+        raise SiteCheckError(f"{label}: missing audit boundary")
+    if not any("Fixed-supply Base Mainnet" in item for item in payload.get("allowedAngles", [])):
+        raise SiteCheckError(f"{label}: missing fixed supply angle")
     assert_no_forbidden_public_claims(json.dumps(payload), label)
 
 
@@ -3339,6 +3446,10 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong announcementsPageUrl")
     if payload.get("announcementsUrl") != ANNOUNCEMENTS_URL:
         raise SiteCheckError(f"{label}: wrong announcementsUrl")
+    if payload.get("campaignPageUrl") != CAMPAIGN_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong campaignPageUrl")
+    if payload.get("campaignUrl") != CAMPAIGN_URL:
+        raise SiteCheckError(f"{label}: wrong campaignUrl")
     if payload.get("narrativePageUrl") != NARRATIVE_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong narrativePageUrl")
     if payload.get("narrativeUrl") != NARRATIVE_URL:
@@ -3506,6 +3617,8 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: unexpected audit readiness status")
     if status.get("announcementHub") != "public-announcement-hub-published":
         raise SiteCheckError(f"{label}: unexpected announcement hub status")
+    if status.get("contentCampaign") != "public-campaign-calendar-published":
+        raise SiteCheckError(f"{label}: unexpected content campaign status")
     if payload.get("liquidityStatement", {}).get("status") != "public-liquidity-custody-statement-published":
         raise SiteCheckError(f"{label}: unexpected liquidity statement object status")
     if payload.get("liquidityStatement", {}).get("pageUrl") != LIQUIDITY_PAGE_URL:
@@ -3544,6 +3657,14 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong announcement hub url")
     if payload.get("announcementHub", {}).get("latestPostUrl") != LATEST_X_POST_URL:
         raise SiteCheckError(f"{label}: wrong announcement hub latest post")
+    if payload.get("contentCampaign", {}).get("status") != "public-campaign-calendar-published":
+        raise SiteCheckError(f"{label}: unexpected content campaign object status")
+    if payload.get("contentCampaign", {}).get("pageUrl") != CAMPAIGN_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong content campaign page")
+    if payload.get("contentCampaign", {}).get("url") != CAMPAIGN_URL:
+        raise SiteCheckError(f"{label}: wrong content campaign url")
+    if payload.get("contentCampaign", {}).get("draftCount") != 10:
+        raise SiteCheckError(f"{label}: wrong content campaign draft count")
     if member_program.get("status") != "rules-published-public-claim-not-connected":
         raise SiteCheckError(f"{label}: unexpected member program status")
     if member_program.get("supportIntake", {}).get("status") != "public-support-intake-published":
@@ -3755,6 +3876,10 @@ def validate_tokenlist_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong announcementsPage")
     if extensions.get("announcements") != ANNOUNCEMENTS_URL:
         raise SiteCheckError(f"{label}: wrong announcements")
+    if extensions.get("campaignPage") != CAMPAIGN_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong campaignPage")
+    if extensions.get("campaign") != CAMPAIGN_URL:
+        raise SiteCheckError(f"{label}: wrong campaign")
     if extensions.get("narrativePage") != NARRATIVE_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong narrativePage")
     if extensions.get("narrative") != NARRATIVE_URL:
@@ -3943,6 +4068,8 @@ def validate_tokenlist_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong communityKitStatus")
     if extensions.get("announcementHubStatus") != "public-announcement-hub-published":
         raise SiteCheckError(f"{label}: wrong announcementHubStatus")
+    if extensions.get("contentCampaignStatus") != "public-campaign-calendar-published":
+        raise SiteCheckError(f"{label}: wrong contentCampaignStatus")
     if extensions.get("privacyNoticeStatus") != "public-privacy-notice-published":
         raise SiteCheckError(f"{label}: wrong privacyNoticeStatus")
     if extensions.get("participationTermsStatus") != "public-participation-terms-published":
@@ -6051,6 +6178,8 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/community.json",
         "https://gcagochina.com/announcements.html",
         "https://gcagochina.com/announcements.json",
+        "https://gcagochina.com/campaign.html",
+        "https://gcagochina.com/campaign.json",
         "https://gcagochina.com/narrative.html",
         "https://gcagochina.com/narrative.json",
         "https://gcagochina.com/radar.html",
@@ -6127,6 +6256,8 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /community.json", label)
     assert_contains(text, "Allow: /announcements.html", label)
     assert_contains(text, "Allow: /announcements.json", label)
+    assert_contains(text, "Allow: /campaign.html", label)
+    assert_contains(text, "Allow: /campaign.json", label)
     assert_contains(text, "Allow: /narrative.html", label)
     assert_contains(text, "Allow: /narrative.json", label)
     assert_contains(text, "Allow: /radar.html", label)
@@ -6256,6 +6387,8 @@ CHECKS: list[EndpointCheck] = [
     ("/community.json", validate_community_json),
     ("/announcements.html", validate_announcements_page),
     ("/announcements.json", validate_announcements_json),
+    ("/campaign.html", validate_campaign_page),
+    ("/campaign.json", validate_campaign_json),
     ("/narrative.html", validate_narrative_page),
     ("/narrative.json", validate_narrative_json),
     ("/radar.html", validate_radar_page),
