@@ -1,0 +1,124 @@
+{
+  "schema": "https://gcagochina.com/campaign.json",
+  "pageUrl": "https://gcagochina.com/campaign.html",
+  "status": "public-campaign-calendar-published",
+  "lastUpdated": "2026-05-17",
+  "projectName": "GCA",
+  "conceptExpansion": "Go China Access",
+  "currentStage": "early-public-operations",
+  "chainId": 8453,
+  "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+  "officialX": "https://x.com/GCAAIGoChina",
+  "officialTelegram": "https://t.me/gcagochinaofficial",
+  "officialWebsite": "https://gcagochina.com/",
+  "campaignWindow": {
+    "startDate": "2026-05-20",
+    "endDate": "2026-06-16",
+    "intervalDays": 3,
+    "draftCount": 10,
+    "operatorReviewRequired": true,
+    "purpose": "Prepare factual GCA market-preheat content around the Go China narrative, fixed-supply Base identity, planned member access, and risk-first product buildout without investment promises."
+  },
+  "nextCopyReadyDraft": {
+    "id": "x-radar-003-followup",
+    "targetDate": "2026-05-20",
+    "topic": "Weekly Go China Radar",
+    "recommendedLink": "https://gcagochina.com/radar.html",
+    "text": [
+      "GCA Weekly Go China Radar is our public rhythm for the Go China narrative: market education, risk-first research, and transparent build updates around future China-facing Web3 tools.",
+      "Built on Base. Fixed supply. Verify first.",
+      "https://gcagochina.com/radar.html",
+      "No return promises. Not financial advice.",
+      "#GCA #GoChina #Base #Web3"
+    ],
+    "claimBoundary": "Public content draft only; review before posting and do not add price, return, listing, audit, or approval claims."
+  },
+  "contentQueue": [
+    {
+      "targetDate": "2026-05-20",
+      "topic": "Weekly Go China Radar",
+      "angle": "Position the radar as the repeating research format for narrative education and risk-first market observation.",
+      "recommendedLink": "https://gcagochina.com/radar.html"
+    },
+    {
+      "targetDate": "2026-05-23",
+      "topic": "Member Access Buildout",
+      "angle": "Explain the planned holder verification, credits ledger, and GCA Member review path without saying public claiming is live.",
+      "recommendedLink": "https://gcagochina.com/members.html"
+    },
+    {
+      "targetDate": "2026-05-26",
+      "topic": "Verification First",
+      "angle": "Remind users to verify Base Mainnet, the contract address, official links, and the GCA/USDT route.",
+      "recommendedLink": "https://gcagochina.com/verify.html"
+    },
+    {
+      "targetDate": "2026-05-29",
+      "topic": "Risk-First Trading Tools",
+      "angle": "Connect the GCA concept to non-custodial quant risk tools such as liquidation replay, backtesting, and position sizing.",
+      "recommendedLink": "https://gcagochina.com/utility.html"
+    },
+    {
+      "targetDate": "2026-06-01",
+      "topic": "Official Market Route",
+      "angle": "Point users to the current official GCA/USDT route and disclose starter-depth liquidity and possible slippage.",
+      "recommendedLink": "https://gcagochina.com/markets.html"
+    },
+    {
+      "targetDate": "2026-06-04",
+      "topic": "Supply And Reserve Facts",
+      "angle": "Reinforce fixed supply, no minting, and the owner reserve disclosure without overstating circulating supply.",
+      "recommendedLink": "https://gcagochina.com/supply.html"
+    },
+    {
+      "targetDate": "2026-06-07",
+      "topic": "Security Boundary",
+      "angle": "State the contract-control facts and make clear no third-party audit has been completed yet.",
+      "recommendedLink": "https://gcagochina.com/security.html"
+    },
+    {
+      "targetDate": "2026-06-10",
+      "topic": "Product Spec",
+      "angle": "Describe GCA AI Quant Access as the planned product direction and link to the public release gates.",
+      "recommendedLink": "https://gcagochina.com/product.html"
+    },
+    {
+      "targetDate": "2026-06-13",
+      "topic": "Community Verification",
+      "angle": "Tell users where to find official X, Telegram, docs, and safe moderator replies.",
+      "recommendedLink": "https://gcagochina.com/community.html"
+    },
+    {
+      "targetDate": "2026-06-16",
+      "topic": "Build Update Recap",
+      "angle": "Summarize the month of public build work and link back to the announcement ledger.",
+      "recommendedLink": "https://gcagochina.com/announcements.html"
+    }
+  ],
+  "allowedAngles": [
+    "Go China Access narrative and China-facing Web3 research direction.",
+    "Fixed-supply Base Mainnet token facts and official GCA/USDT route.",
+    "Member access, credits, and review workflows as planned utility buildout.",
+    "Risk-first education, public documentation, and transparent operations."
+  ],
+  "doNotPublish": [
+    "return promises, price targets, market predictions, or investment advice",
+    "third-party audit claim until an independent report is public",
+    "BaseScan or security-vendor approval claim unless the platform confirms it",
+    "artificial activity language, LP lock claim, or reserve lock claim before evidence exists"
+  ],
+  "publicLinks": {
+    "campaignPage": "https://gcagochina.com/campaign.html",
+    "campaign": "https://gcagochina.com/campaign.json",
+    "announcementsPage": "https://gcagochina.com/announcements.html",
+    "announcements": "https://gcagochina.com/announcements.json",
+    "communityPage": "https://gcagochina.com/community.html",
+    "community": "https://gcagochina.com/community.json",
+    "officialX": "https://x.com/GCAAIGoChina",
+    "latestXPost": "https://x.com/GCAAIGoChina/status/2055944057134927984",
+    "officialTelegram": "https://t.me/gcagochinaofficial",
+    "verify": "https://gcagochina.com/verify.html",
+    "radar": "https://gcagochina.com/radar.html",
+    "risk": "https://gcagochina.com/risk.html"
+  }
+}

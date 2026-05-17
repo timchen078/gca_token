@@ -31,6 +31,7 @@
     "First official X post: https://x.com/GCAAIGoChina/status/2054660559124255151",
     "Latest official X post: https://x.com/GCAAIGoChina/status/2055944057134927984",
     "Announcement hub: https://gcagochina.com/announcements.html",
+    "Campaign calendar: https://gcagochina.com/campaign.html",
     "Current status: concept-stage utility buildout; public self-service member claiming is not live yet, BaseScan token profile was returned as information-insufficient on 2026-05-13 and resubmitted on 2026-05-13, the owner observed no wallet risk warning visible on 2026-05-14, and no third-party audit has been completed."
   ],
   "announcementHub": {
@@ -40,6 +41,14 @@
     "contentCadence": "every-3-days",
     "latestPostUrl": "https://x.com/GCAAIGoChina/status/2055944057134927984",
     "latestPostPublishedDate": "2026-05-17"
+  },
+  "campaignCalendar": {
+    "status": "public-campaign-calendar-published",
+    "pageUrl": "https://gcagochina.com/campaign.html",
+    "url": "https://gcagochina.com/campaign.json",
+    "campaignWindow": "2026-05-20 to 2026-06-16",
+    "contentCadence": "every-3-days",
+    "operatorReviewRequired": true
   },
   "xLaunchPack": {
     "status": "first-post-published",
@@ -108,6 +117,8 @@
     "communityJson": "https://gcagochina.com/community.json",
     "announcementsPage": "https://gcagochina.com/announcements.html",
     "announcements": "https://gcagochina.com/announcements.json",
+    "campaignPage": "https://gcagochina.com/campaign.html",
+    "campaign": "https://gcagochina.com/campaign.json",
     "narrativePage": "https://gcagochina.com/narrative.html",
     "narrative": "https://gcagochina.com/narrative.json",
     "weeklyRadarPage": "https://gcagochina.com/radar.html",
