@@ -10,6 +10,7 @@
 - Submission status: resubmitted through BaseScan token update form
 - Review status: resubmitted-awaiting-review
 - Return notice date: 2026-05-13
+- Last checked: 2026-05-18; no approval email received and no public token profile publication confirmed by owner
 - Reply inbox: `cxy070800@gmail.com`
 
 Do not describe the BaseScan token profile as complete, published, or accepted until BaseScan confirms the update and the public contract page shows the submitted token information.
@@ -60,7 +61,7 @@ BaseScan replied that it could not process the first token update request becaus
 
 Use this until approval:
 
-`BaseScan source verification and deployer-wallet ownership verification are complete. The public BaseScan token profile update was returned as information-insufficient on 2026-05-13, resubmitted on 2026-05-13, and is awaiting BaseScan email/review before publication.`
+`BaseScan source verification and deployer-wallet ownership verification are complete. The public BaseScan token profile update was returned as information-insufficient on 2026-05-13, resubmitted on 2026-05-13, and is awaiting BaseScan email/review before publication. Last checked on 2026-05-18 with no approval email received or public profile publication confirmed.`
 
 Do not use:
 

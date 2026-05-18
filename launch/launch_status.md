@@ -22,7 +22,7 @@
 - Public whitepaper URL is live at `https://gcagochina.com/whitepaper.html`.
 - Current public contact email `GCAgochina@outlook.com` is published on the official website for data platform verification.
 - BaseScan token update was submitted with `cxy070800@gmail.com`, returned by BaseScan as information-insufficient on 2026-05-13, and resubmitted on 2026-05-13.
-- BaseScan token update resubmission submitted from the owner's browser session on 2026-05-13; the profile is awaiting BaseScan email/review.
+- BaseScan token update resubmission submitted from the owner's browser session on 2026-05-13; the profile is awaiting BaseScan email/review. Last checked on 2026-05-18 with no approval email received or public profile publication confirmed.
 - BaseScan review follow-up runbook prepared.
 - BaseScan resubmission values recorded at `launch/basescan_resubmission_package.md` and `launch/basescan_resubmission_values.json`.
 - Token allocation plan updated: 400,000,000 GCA target public allocation and 600,000,000 GCA owner-held reserve.
@@ -109,7 +109,7 @@
 
 ## Needs Owner Input Or External Service
 
-- Wait for BaseScan email/review; do not submit duplicates unless BaseScan asks for corrections.
+- Wait for BaseScan email/review; no approval email or public profile publication was confirmed as of 2026-05-18, so do not submit duplicates unless BaseScan asks for corrections.
 - Use `launch/basescan_resubmission_package.md` and `launch/basescan_resubmission_values.json` as the record of the 2026-05-13 BaseScan token update resubmission.
 - Use `launch/external_review_followup_tracker.md` for BaseScan, Blockaid, GeckoTerminal, DEX Screener, CoinGecko, CoinMarketCap, and audit follow-up status before sending any new platform request.
 - Use `https://gcagochina.com/brand-kit.html` and `https://gcagochina.com/brand-kit.json` when wallets, data platforms, moderators, or community posts need official GCA logo assets and metadata usage boundaries.
@@ -159,7 +159,7 @@
 
 ## Public Communication Rules
 
-- BaseScan source and ownership verification are complete. The public BaseScan token profile update was returned as information-insufficient on 2026-05-13, resubmitted on 2026-05-13, and is not complete until BaseScan accepts and publishes it.
+- BaseScan source and ownership verification are complete. The public BaseScan token profile update was returned as information-insufficient on 2026-05-13, resubmitted on 2026-05-13, and is not complete until BaseScan accepts and publishes it. Last checked on 2026-05-18 with no approval email received or public profile publication confirmed.
 - GeckoTerminal token information update was approved on 2026-05-11. Keep linking users to the official GCA/USDT pool and do not submit duplicate updates unless project details change.
 - Internal engineering review is complete, but no third-party audit has been completed.
 - Audit quote requests have been submitted and then deferred by owner decision, but quote submission is not an audit and does not allow any public "audited" claim.

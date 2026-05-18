@@ -43,6 +43,8 @@
   "returnNoticeDate": "2026-05-13",
   "resubmissionDate": "2026-05-13",
   "reviewStatus": "resubmitted-awaiting-review",
+  "lastCheckedDate": "2026-05-18",
+  "lastCheckedResult": "No approval email received and no public token profile publication confirmed by owner as of 2026-05-18.",
   "returnReason": "BaseScan could not process the update because the submitted token/project information was insufficient.",
   "resubmissionRequired": false,
   "resubmissionChecklist": [

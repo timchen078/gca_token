@@ -147,6 +147,19 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(set(), public_json - linked_json)
         self.assertEqual(set(), linked_json - public_json)
 
+    def test_public_html_pages_route_raw_json_through_data_room(self):
+        offenders = []
+        for path in (ROOT / "site").rglob("*.html"):
+            rel = str(path.relative_to(ROOT / "site"))
+            if rel == "data.html":
+                continue
+            page = path.read_text()
+            raw_hrefs = re.findall(r'href="([^"]+\.json)"', page)
+            if raw_hrefs:
+                offenders.append(f"{rel}: {', '.join(raw_hrefs)}")
+
+        self.assertEqual([], offenders)
+
     def test_public_site_health_check_script_matches_canonical_identity(self):
         script_path = ROOT / "tools" / "check_public_site.py"
         script = script_path.read_text()
@@ -1115,6 +1128,7 @@ class LaunchPackageTests(unittest.TestCase):
     def test_public_site_discloses_current_operational_status(self):
         site = (ROOT / "site" / "index.html").read_text()
         self.assertIn("BaseScan token profile update was returned by BaseScan as information-insufficient on 2026-05-13, resubmitted on 2026-05-13", site)
+        self.assertIn("Last checked on 2026-05-18 with no approval email received or public profile publication confirmed", site)
         self.assertIn('href="verify.html"', site)
         self.assertIn('href="buy.html"', site)
         self.assertIn('href="markets.html"', site)
@@ -3823,6 +3837,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(OFFICIAL_SWAP_URL_HTML, status)
         self.assertIn("Approved 2026-05-11", status)
         self.assertIn("Resubmitted: awaiting review", status)
+        self.assertIn("no approval email received as of 2026-05-18", status)
         self.assertIn("BaseScan public token profile publication", status)
         self.assertIn("Wallet warning state after Blockaid report", status)
         self.assertIn("Wallet warning evidence page", status)
@@ -3898,6 +3913,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("CoinMarketCap tracked listing request", page)
         self.assertIn("Centralized exchange listing outreach", page)
         self.assertIn("Pending external review", page)
+        self.assertIn("no approval email received as of 2026-05-18", page)
         self.assertIn("External Review Status", page)
         self.assertIn("Approved 2026-05-11", page)
         self.assertIn("No artificial activity policy", page)
@@ -4115,6 +4131,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Long Description", kit)
         self.assertIn("BaseScan", kit)
         self.assertIn("returned by BaseScan as information-insufficient on 2026-05-13, resubmitted on 2026-05-13", kit)
+        self.assertIn("Last checked on 2026-05-18", kit)
         self.assertIn("GeckoTerminal", kit)
         self.assertIn("approved on 2026-05-11", kit)
         self.assertIn("CoinGecko / CMC", kit)
@@ -4170,7 +4187,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(project["wellKnownTokenIdentityUrl"], WELL_KNOWN_TOKEN_URL)
         self.assertEqual(project["walletSecurityProfileUrl"], WALLET_SECURITY_PROFILE_URL)
         self.assertEqual(project["securityContactUrl"], SECURITY_CONTACT_URL)
-        self.assertEqual(project["lastUpdated"], "2026-05-17")
+        self.assertEqual(project["lastUpdated"], "2026-05-18")
         self.assertEqual(project["marketPageUrl"], MARKET_PAGE_URL)
         self.assertEqual(project["supplyPageUrl"], SUPPLY_PAGE_URL)
         self.assertEqual(project["securityPageUrl"], SECURITY_PAGE_URL)
@@ -4271,6 +4288,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(project["brandKit"]["logoSvgUrl"], "https://gcagochina.com/assets/gca-logo.svg")
         self.assertEqual(project["brandKit"]["logoPngUrl"], "https://gcagochina.com/assets/gca-logo.png")
         self.assertEqual(project["platformStatus"]["baseScanTokenProfile"], "resubmitted-awaiting-review")
+        self.assertEqual(project["platformStatus"]["baseScanTokenProfileLastCheckedDate"], "2026-05-18")
+        self.assertIn("No approval email received", project["platformStatus"]["baseScanTokenProfileLastCheckedResult"])
         self.assertEqual(project["platformStatus"]["geckoTerminalTokenInfo"], "approved-2026-05-11")
         self.assertEqual(project["platformStatus"]["narrativeSystem"], "public-narrative-system-published")
         self.assertEqual(project["platformStatus"]["weeklyGoChinaRadar"], "weekly-go-china-radar-issue-003-published")
@@ -4414,6 +4433,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(project["externalReviewStatus"]["pageUrl"], EXTERNAL_REVIEW_PAGE_URL)
         self.assertEqual(project["externalReviewStatus"]["url"], EXTERNAL_REVIEW_URL)
         self.assertEqual(project["externalReviewStatus"]["baseScanTokenProfile"], "resubmitted-awaiting-review")
+        self.assertEqual(project["externalReviewStatus"]["baseScanTokenProfileLastCheckedDate"], "2026-05-18")
         self.assertEqual(project["externalReviewStatus"]["blockaidMetaMask"], "owner-observed-no-warning-visible")
         self.assertEqual(project["externalReviewStatus"]["thirdPartyAudit"], "not-completed-deferred")
         self.assertEqual(project["tokenSafety"]["status"], "public-token-safety-checklist-published")
@@ -4525,13 +4545,15 @@ class LaunchPackageTests(unittest.TestCase):
         checks = {check["id"]: check for check in readiness["readinessChecks"]}
         self.assertEqual(checks["canonical-identity"]["status"], "ready")
         self.assertEqual(checks["basescan-token-profile"]["status"], "resubmitted-awaiting-review")
+        self.assertEqual(checks["basescan-token-profile"]["lastCheckedDate"], "2026-05-18")
         self.assertIn("returned by BaseScan as information-insufficient on 2026-05-13, and resubmitted on 2026-05-13", checks["basescan-token-profile"]["evidence"])
+        self.assertIn("No approval email or public profile publication was confirmed as of 2026-05-18", checks["basescan-token-profile"]["evidence"])
         self.assertEqual(checks["legitimate-market-activity"]["status"], "not-ready")
         self.assertEqual(checks["third-party-audit"]["status"], "not-completed")
         self.assertIn("artificial activity", checks["no-artificial-activity-policy"]["evidence"])
         self.assertIn("No third-party audit has been completed.", readiness["publicClaimBoundaries"]["safeClaims"])
         self.assertIn("CoinGecko or CoinMarketCap listing before publication", readiness["publicClaimBoundaries"]["doNotClaim"])
-        self.assertIn("Wait for BaseScan email/review; do not submit duplicates unless BaseScan asks for corrections.", readiness["nextActions"])
+        self.assertIn("Wait for BaseScan email/review; no approval email or public profile publication was confirmed as of 2026-05-18, so do not submit duplicates unless BaseScan asks for corrections.", readiness["nextActions"])
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, json.dumps(readiness))
 
     def test_wallet_warning_page_and_json_centralize_warning_evidence(self):
@@ -4761,6 +4783,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Data Room", page)
         self.assertIn("BaseScan source code verification", page)
         self.assertIn("Resubmitted: awaiting review", page)
+        self.assertIn("no approval email received as of 2026-05-18", page)
+        self.assertIn("Last checked on 2026-05-18", page)
         self.assertIn("Owner observed no warning visible 2026-05-14", page)
         self.assertIn("Approved 2026-05-11", page)
         self.assertIn("Trust Center", page)
@@ -4788,6 +4812,7 @@ class LaunchPackageTests(unittest.TestCase):
 
         self.assertEqual(reviews["schema"], EXTERNAL_REVIEW_URL)
         self.assertEqual(reviews["pageUrl"], EXTERNAL_REVIEW_PAGE_URL)
+        self.assertEqual(reviews["lastUpdated"], "2026-05-18")
         self.assertEqual(reviews["status"], "external-review-status-active")
         self.assertEqual(reviews["chainId"], 8453)
         self.assertEqual(reviews["contractAddress"], MAINNET_ADDRESS)
@@ -4814,6 +4839,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(reviews["reviews"]["baseScanSource"]["status"], "verified")
         self.assertEqual(reviews["reviews"]["baseScanOwnership"]["status"], "verified")
         self.assertEqual(reviews["reviews"]["baseScanTokenProfile"]["status"], "resubmitted-awaiting-review")
+        self.assertEqual(reviews["reviews"]["baseScanTokenProfile"]["lastCheckedDate"], "2026-05-18")
+        self.assertIn("No approval email received", reviews["reviews"]["baseScanTokenProfile"]["lastCheckedResult"])
         self.assertEqual(reviews["reviews"]["blockaidMetaMask"]["status"], "owner-observed-no-warning-visible")
         self.assertEqual(reviews["reviews"]["blockaidMetaMask"]["submissionDate"], "2026-05-10")
         self.assertEqual(reviews["reviews"]["blockaidMetaMask"]["followUpSubmissionDate"], "2026-05-13")
@@ -6150,6 +6177,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["reviewStatus"], "resubmitted-awaiting-review")
         self.assertEqual(values["returnNoticeDate"], "2026-05-13")
         self.assertEqual(values["resubmissionDate"], "2026-05-13")
+        self.assertEqual(values["lastCheckedDate"], "2026-05-18")
+        self.assertIn("No approval email received", values["lastCheckedResult"])
         self.assertFalse(values["resubmissionRequired"])
         self.assertIn("Official website is reachable over HTTPS", values["resubmissionChecklist"])
         self.assertIn("Deployer wallet signs the address ownership message if BaseScan asks", values["resubmissionChecklist"])
@@ -6170,6 +6199,7 @@ class LaunchPackageTests(unittest.TestCase):
 
         self.assertIn("BaseScan Token Profile Resubmission Package", package)
         self.assertIn("returned by BaseScan as information-insufficient on 2026-05-13, and resubmitted on 2026-05-13", package)
+        self.assertIn("Last checked on 2026-05-18", package)
         self.assertIn("Official email: `GCAgochina@outlook.com`", package)
         self.assertIn(BRAND_KIT_PAGE_URL, package)
         self.assertIn(COMMUNITY_PAGE_URL, package)
@@ -6182,6 +6212,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["packageStatus"], "submitted")
         self.assertEqual(values["returnNoticeDate"], "2026-05-13")
         self.assertEqual(values["resubmissionDate"], "2026-05-13")
+        self.assertEqual(values["lastCheckedDate"], "2026-05-18")
+        self.assertIn("No approval email received", values["lastCheckedResult"])
         self.assertEqual(values["browserSubmissionStatus"], "submitted-via-basescan-tokenupdate")
         self.assertEqual(values["returnReason"], "information-insufficient")
         self.assertEqual(values["chainId"], 8453)
@@ -6872,6 +6904,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(TELEGRAM_URL, tracker)
         self.assertIn(OFFICIAL_GECKOTERMINAL_URL, tracker)
         self.assertIn("Submitted on 2026-05-09, returned by BaseScan as information-insufficient on 2026-05-13, and resubmitted on 2026-05-13", tracker)
+        self.assertIn("last checked on 2026-05-18", tracker)
+        self.assertIn("no approval email or public profile publication confirmed", tracker)
         self.assertIn("launch/basescan_resubmission_package.md", tracker)
         self.assertIn("launch/basescan_resubmission_values.json", tracker)
         self.assertIn("cxy070800@gmail.com", tracker)
@@ -7133,6 +7167,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(OFFICIAL_DEXSCREENER_URL, whitepaper)
         self.assertIn(OFFICIAL_GECKOTERMINAL_URL, whitepaper)
         self.assertIn("GeckoTerminal token information was approved on 2026-05-11", whitepaper)
+        self.assertIn("Last checked on 2026-05-18 with no approval email received or public profile publication confirmed", whitepaper)
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, whitepaper)
         self.assertIn(MAINNET_ADDRESS, whitepaper)
 

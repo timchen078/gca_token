@@ -86,7 +86,7 @@ Do not describe planned holder credits, GCA Member status, or the 10,000 GCA mem
 
 ## BaseScan Token Profile Status
 
-Source verification and deployer-wallet ownership verification are complete. The public BaseScan token profile update was submitted from the owner's browser session on 2026-05-09, then returned by BaseScan as information-insufficient on 2026-05-13 and resubmitted on 2026-05-13.
+Source verification and deployer-wallet ownership verification are complete. The public BaseScan token profile update was submitted from the owner's browser session on 2026-05-09, then returned by BaseScan as information-insufficient on 2026-05-13 and resubmitted on 2026-05-13. Last checked on 2026-05-18 with no approval email received or public profile publication confirmed.
 
 Do not describe the BaseScan token profile as complete or visible until BaseScan accepts and publishes the submitted update.
 

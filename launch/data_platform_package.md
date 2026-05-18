@@ -34,7 +34,7 @@ This package prepares GCA information for token data and DEX discovery platforms
 - Product release gates page: `https://gcagochina.com/release-gates.html`
 - Product release gates JSON: `https://gcagochina.com/release-gates.json`
 - Contract source: verified on BaseScan
-- BaseScan token profile: returned by BaseScan as information-insufficient on 2026-05-13, resubmitted on 2026-05-13, and awaiting BaseScan email/review
+- BaseScan token profile: returned by BaseScan as information-insufficient on 2026-05-13, resubmitted on 2026-05-13, and awaiting BaseScan email/review; last checked on 2026-05-18 with no approval email received or public profile publication confirmed
 - GeckoTerminal token info update: approved on 2026-05-11
 - On-chain proofs page: `https://gcagochina.com/onchain-proofs.html`
 - On-chain proofs JSON: `https://gcagochina.com/onchain-proofs.json`

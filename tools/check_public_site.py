@@ -250,6 +250,7 @@ def validate_root(text: str) -> None:
     assert_contains(text, "Release Gates", label)
     assert_contains(text, "Privacy Notice", label)
     assert_contains(text, "Participation Terms", label)
+    assert_contains(text, "Last checked on 2026-05-18", label)
     assert_contains(text, MAINNET_ADDRESS, label)
     assert_current_pool_text(text, label)
 
@@ -303,6 +304,7 @@ def validate_status_page(text: str) -> None:
     assert_contains(text, "Deployer-wallet ownership verified on BaseScan", label)
     assert_contains(text, "BaseScan public token profile publication", label)
     assert_contains(text, "Awaiting review", label)
+    assert_contains(text, "no approval email received as of 2026-05-18", label)
     assert_contains(text, "GeckoTerminal token information update", label)
     assert_contains(text, "Approved", label)
     assert_contains(text, "No third-party audit has been completed", label)
@@ -473,6 +475,7 @@ def validate_listing_kit_page(text: str) -> None:
     assert_contains(text, "Official GCA/USDT route", label)
     assert_contains(text, "BaseScan", label)
     assert_contains(text, "awaiting BaseScan email/review", label)
+    assert_contains(text, "Last checked on 2026-05-18", label)
     assert_contains(text, "GeckoTerminal", label)
     assert_contains(text, "Approved", label)
     assert_contains(text, "no completed third-party audit", label)
@@ -549,6 +552,7 @@ def validate_whitepaper_page(text: str) -> None:
     assert_contains(text, "This is not a substitute for a third-party audit", label)
     assert_contains(text, "no third-party audit has been completed", label)
     assert_contains(text, "awaiting BaseScan email/review", label)
+    assert_contains(text, "Last checked on 2026-05-18", label)
     assert_contains(text, MAINNET_ADDRESS, label)
     assert_contains(text, BASE_USDT_ADDRESS, label)
     assert_contains(text, OFFICIAL_GECKOTERMINAL_URL, label)
@@ -4367,11 +4371,14 @@ def validate_project_json(text: str) -> None:
     market = payload.get("market", {})
     status = payload.get("platformStatus", {})
     member_program = payload.get("memberProgram", {})
+    external_reviews = payload.get("externalReviewStatus", {})
 
     if payload.get("contractAddress") != MAINNET_ADDRESS:
         raise SiteCheckError(f"{label}: wrong contractAddress")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
+    if payload.get("lastUpdated") != "2026-05-18":
+        raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("memberProgramRulesUrl") != MEMBER_PROGRAM_URL:
         raise SiteCheckError(f"{label}: wrong memberProgramRulesUrl")
     if payload.get("memberLedgerPageUrl") != MEMBER_LEDGER_PAGE_URL:
@@ -4557,8 +4564,14 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong quoteAssetAddress")
     if status.get("baseScanTokenProfile") != "resubmitted-awaiting-review":
         raise SiteCheckError(f"{label}: unexpected BaseScan status")
+    if status.get("baseScanTokenProfileLastCheckedDate") != "2026-05-18":
+        raise SiteCheckError(f"{label}: wrong BaseScan profile last checked date")
+    if "No approval email received" not in status.get("baseScanTokenProfileLastCheckedResult", ""):
+        raise SiteCheckError(f"{label}: missing BaseScan profile last checked result")
     if status.get("geckoTerminalTokenInfo") != "approved-2026-05-11":
         raise SiteCheckError(f"{label}: unexpected GeckoTerminal status")
+    if external_reviews.get("baseScanTokenProfileLastCheckedDate") != "2026-05-18":
+        raise SiteCheckError(f"{label}: wrong external review BaseScan last checked date")
     if status.get("narrativeSystem") != "public-narrative-system-published":
         raise SiteCheckError(f"{label}: unexpected narrative system status")
     if status.get("weeklyGoChinaRadar") != "weekly-go-china-radar-issue-003-published":
@@ -6006,6 +6019,11 @@ def validate_listing_readiness_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong CoinMarketCap status")
     if not any(check.get("id") == "no-artificial-activity-policy" for check in checks):
         raise SiteCheckError(f"{label}: missing artificial activity policy")
+    base_scan_profile = next((check for check in checks if check.get("id") == "basescan-token-profile"), {})
+    if base_scan_profile.get("lastCheckedDate") != "2026-05-18":
+        raise SiteCheckError(f"{label}: wrong BaseScan profile last checked date")
+    if "No approval email or public profile publication was confirmed as of 2026-05-18" not in base_scan_profile.get("evidence", ""):
+        raise SiteCheckError(f"{label}: missing BaseScan profile last checked evidence")
     if "CoinGecko tracked listing request" not in payload.get("notReadyFor", []):
         raise SiteCheckError(f"{label}: missing CoinGecko defer boundary")
     if "CoinMarketCap tracked listing request" not in payload.get("notReadyFor", []):
@@ -7078,6 +7096,8 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != EXTERNAL_REVIEW_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
+    if payload.get("lastUpdated") != "2026-05-18":
+        raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("status") != "external-review-status-active":
         raise SiteCheckError(f"{label}: wrong status")
     if payload.get("chainId") != 8453:
@@ -7126,6 +7146,10 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong BaseScan source status")
     if reviews.get("baseScanTokenProfile", {}).get("status") != "resubmitted-awaiting-review":
         raise SiteCheckError(f"{label}: wrong BaseScan profile status")
+    if reviews.get("baseScanTokenProfile", {}).get("lastCheckedDate") != "2026-05-18":
+        raise SiteCheckError(f"{label}: wrong BaseScan profile last checked date")
+    if "No approval email received" not in reviews.get("baseScanTokenProfile", {}).get("lastCheckedResult", ""):
+        raise SiteCheckError(f"{label}: missing BaseScan profile last checked result")
     blockaid = reviews.get("blockaidMetaMask", {})
     if blockaid.get("status") != "owner-observed-no-warning-visible":
         raise SiteCheckError(f"{label}: wrong Blockaid status")
@@ -7165,6 +7189,8 @@ def validate_external_reviews_page(text: str) -> None:
     assert_contains(text, "Data Room", label)
     assert_contains(text, "Trust Center", label)
     assert_contains(text, "Resubmitted: awaiting review", label)
+    assert_contains(text, "no approval email received as of 2026-05-18", label)
+    assert_contains(text, "Last checked on 2026-05-18", label)
     assert_contains(text, "Owner observed no warning visible 2026-05-14", label)
     assert_contains(text, "Approved 2026-05-11", label)
     assert_contains(text, "CoinGecko tracked listing submission", label)
@@ -7287,6 +7313,7 @@ def validate_listing_readiness_page(text: str) -> None:
     assert_contains(text, "CoinGecko tracked listing request", label)
     assert_contains(text, "CoinMarketCap tracked listing request", label)
     assert_contains(text, "Pending external review", label)
+    assert_contains(text, "no approval email received as of 2026-05-18", label)
     assert_contains(text, "Approved 2026-05-11", label)
     assert_contains(text, "No artificial activity policy", label)
     assert_contains(text, OFFICIAL_DEXSCREENER_URL, label)
