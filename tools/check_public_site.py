@@ -1160,7 +1160,11 @@ def validate_support_json(text: str) -> None:
 def validate_roadmap_page(text: str) -> None:
     label = "/roadmap.html"
     assert_contains(text, "GCA Roadmap", label)
-    assert_contains(text, "Roadmap JSON", label)
+    assert_platform_only_data_room(
+        text,
+        label,
+        ("roadmap.json", "narrative.json", "radar.json", "community.json", "support.json", "listing-readiness.json"),
+    )
     assert_contains(text, "Concept-stage utility buildout", label)
     assert_contains(text, "Controlled HTTPS member account UI", label)
     assert_contains(text, "Read-only GCA balance verification", label)
@@ -1250,15 +1254,15 @@ def validate_roadmap_json(text: str) -> None:
 def validate_community_page(text: str) -> None:
     label = "/community.html"
     assert_contains(text, "GCA Community Kit", label)
-    assert_contains(text, "Community JSON", label)
+    assert_platform_only_data_room(
+        text,
+        label,
+        ("community.json", "announcements.json", "campaign.json", "content-library.json", "publishing-desk.json", "narrative.json"),
+    )
     assert_contains(text, "Announcements", label)
-    assert_contains(text, "Announcements JSON", label)
     assert_contains(text, "Campaign Calendar", label)
-    assert_contains(text, "Campaign JSON", label)
     assert_contains(text, "Content Library", label)
-    assert_contains(text, "Content Library JSON", label)
     assert_contains(text, "Publishing Desk", label)
-    assert_contains(text, "Publishing Desk JSON", label)
     assert_contains(text, "Official Telegram", label)
     assert_contains(text, "Safe Announcement Copy", label)
     assert_contains(text, "X Launch Pack", label)
@@ -1460,9 +1464,12 @@ def validate_announcements_page(text: str) -> None:
     label = "/announcements.html"
     assert_social_preview_meta(text, label, ANNOUNCEMENTS_PAGE_URL)
     assert_contains(text, "GCA Announcements", label)
-    assert_contains(text, "Announcements JSON", label)
+    assert_platform_only_data_room(
+        text,
+        label,
+        ("announcements.json", "campaign.json", "content-library.json", "publishing-desk.json", "community.json"),
+    )
     assert_contains(text, "Campaign Calendar", label)
-    assert_contains(text, "Campaign JSON", label)
     assert_contains(text, "Content Library", label)
     assert_contains(text, "Official X", label)
     assert_contains(text, "Official Telegram", label)
@@ -1576,11 +1583,13 @@ def validate_campaign_page(text: str) -> None:
     label = "/campaign.html"
     assert_social_preview_meta(text, label, CAMPAIGN_PAGE_URL)
     assert_contains(text, "GCA Campaign Calendar", label)
-    assert_contains(text, "Campaign JSON", label)
+    assert_platform_only_data_room(
+        text,
+        label,
+        ("campaign.json", "content-library.json", "publishing-desk.json", "announcements.json", "community.json"),
+    )
     assert_contains(text, "Content Library", label)
-    assert_contains(text, "Content Library JSON", label)
     assert_contains(text, "Publishing Desk", label)
-    assert_contains(text, "Publishing Desk JSON", label)
     assert_contains(text, "Every 3 days", label)
     assert_contains(text, "2026-05-20 to 2026-06-16", label)
     assert_contains(text, "10 posts", label)
@@ -1707,11 +1716,14 @@ def validate_campaign_json(text: str) -> None:
 def validate_content_library_page(text: str) -> None:
     label = "/content-library.html"
     assert_social_preview_meta(text, label, CONTENT_LIBRARY_PAGE_URL)
+    assert_platform_only_data_room(
+        text,
+        label,
+        ("content-library.json", "publishing-desk.json", "campaign.json", "announcements.json", "community.json"),
+    )
     for expected in (
         "GCA Content Library",
-        "Content Library JSON",
         "Publishing Desk",
-        "Publishing Desk JSON",
         "10 bilingual drafts",
         "X and Telegram",
         "2026-05-20 to 2026-06-16",
@@ -1814,9 +1826,13 @@ def validate_content_library_json(text: str) -> None:
 def validate_publishing_desk_page(text: str) -> None:
     label = "/publishing-desk.html"
     assert_social_preview_meta(text, label, PUBLISHING_DESK_PAGE_URL)
+    assert_platform_only_data_room(
+        text,
+        label,
+        ("publishing-desk.json", "content-library.json", "campaign.json", "announcements.json", "community.json"),
+    )
     for expected in (
         "GCA Publishing Desk",
-        "Publishing Desk JSON",
         "Manual publishing hub",
         "2026-05-20",
         "X and Telegram",
@@ -1840,6 +1856,7 @@ def validate_publishing_desk_page(text: str) -> None:
         MAINNET_ADDRESS,
     ):
         assert_contains(text, expected, label)
+    assert_not_contains(text, "https://gcagochina.com/publishing-desk.json", label)
     assert_no_forbidden_public_claims(text, label)
 
 
@@ -1914,7 +1931,11 @@ def validate_publishing_desk_json(text: str) -> None:
 def validate_narrative_page(text: str) -> None:
     label = "/narrative.html"
     assert_contains(text, "GCA Narrative System", label)
-    assert_contains(text, "Narrative JSON", label)
+    assert_platform_only_data_room(
+        text,
+        label,
+        ("narrative.json", "radar.json", "utility.json", "roadmap.json", "community.json"),
+    )
     assert_contains(text, "Narrative meets risk control", label)
     assert_contains(text, "China Narrative Radar", label)
     assert_contains(text, "Weekly Go China Radar", label)
@@ -1997,7 +2018,11 @@ def validate_narrative_json(text: str) -> None:
 def validate_radar_page(text: str) -> None:
     label = "/radar.html"
     assert_contains(text, "Weekly Go China Radar", label)
-    assert_contains(text, "Radar JSON", label)
+    assert_platform_only_data_room(
+        text,
+        label,
+        ("radar.json", "narrative.json", "community.json", "campaign.json", "radar-issue-004.json"),
+    )
     assert_contains(text, "Issue 003 / 2026-05-16", label)
     assert_contains(text, "not live market data", label)
     assert_contains(text, "not financial advice", label)
@@ -2076,9 +2101,13 @@ def validate_radar_json(text: str) -> None:
 def validate_radar_issue_004_page(text: str) -> None:
     label = "/radar-issue-004.html"
     assert_social_preview_meta(text, label, RADAR_ISSUE_004_PAGE_URL)
+    assert_platform_only_data_room(
+        text,
+        label,
+        ("radar-issue-004.json", "publishing-desk.json", "content-library.json", "campaign.json", "radar.json"),
+    )
     for expected in (
         "Weekly Go China Radar Issue 004",
-        "Issue 004 JSON",
         "Issue 004 / 2026-05-20 / Ready for review",
         "Ready for operator review",
         "Go China Access as a research corridor",

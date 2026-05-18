@@ -132,6 +132,13 @@ DEPLOYMENT_TX = "0xae8ae4d0bd89c03b39946564a5b63bb20cd38879a1aa1fdcb20a6f1c4802e
 
 
 class LaunchPackageTests(unittest.TestCase):
+    def assertPlatformOnlyDataRoom(self, page: str, *forbidden_hrefs: str) -> None:
+        self.assertIn("Platform-Only Evidence Path", page)
+        self.assertIn("Data Room", page)
+        self.assertIn("JSON", page)
+        for href in forbidden_hrefs:
+            self.assertNotIn(f'href="{href}"', page)
+
     def test_public_site_health_check_script_matches_canonical_identity(self):
         script_path = ROOT / "tools" / "check_public_site.py"
         script = script_path.read_text()
@@ -1592,7 +1599,15 @@ class LaunchPackageTests(unittest.TestCase):
         roadmap = json.loads((ROOT / "site" / "roadmap.json").read_text())
 
         self.assertIn("GCA Roadmap", page)
-        self.assertIn("Roadmap JSON", page)
+        self.assertPlatformOnlyDataRoom(
+            page,
+            "roadmap.json",
+            "narrative.json",
+            "radar.json",
+            "community.json",
+            "support.json",
+            "listing-readiness.json",
+        )
         self.assertIn("Concept-stage utility buildout", page)
         self.assertIn("Controlled HTTPS member account UI", page)
         self.assertIn("Read-only GCA balance verification", page)
@@ -1651,7 +1666,15 @@ class LaunchPackageTests(unittest.TestCase):
         community = json.loads((ROOT / "site" / "community.json").read_text())
 
         self.assertIn("GCA Community Kit", page)
-        self.assertIn("Community JSON", page)
+        self.assertPlatformOnlyDataRoom(
+            page,
+            "community.json",
+            "announcements.json",
+            "campaign.json",
+            "content-library.json",
+            "publishing-desk.json",
+            "narrative.json",
+        )
         self.assertIn("Narrative System", page)
         self.assertIn("Narrative meets risk control", page)
         self.assertIn("China Narrative Radar", page)
@@ -1660,13 +1683,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Official Telegram", page)
         self.assertIn("X Launch Pack", page)
         self.assertIn("Announcements", page)
-        self.assertIn("Announcements JSON", page)
         self.assertIn("Campaign Calendar", page)
-        self.assertIn("Campaign JSON", page)
         self.assertIn("Content Library", page)
-        self.assertIn("Content Library JSON", page)
         self.assertIn("Publishing Desk", page)
-        self.assertIn("Publishing Desk JSON", page)
         self.assertIn("First X Post", page)
         self.assertIn("Pinned X Post Draft", page)
         self.assertIn("First official X post", page)
@@ -1781,9 +1800,15 @@ class LaunchPackageTests(unittest.TestCase):
         announcements = json.loads((ROOT / "site" / "announcements.json").read_text())
 
         self.assertIn("GCA Announcements", page)
-        self.assertIn("Announcements JSON", page)
+        self.assertPlatformOnlyDataRoom(
+            page,
+            "announcements.json",
+            "campaign.json",
+            "content-library.json",
+            "publishing-desk.json",
+            "community.json",
+        )
         self.assertIn("Campaign Calendar", page)
-        self.assertIn("Campaign JSON", page)
         self.assertIn("Publishing Desk", page)
         self.assertIn("Official X", page)
         self.assertIn("Official Telegram", page)
@@ -1856,11 +1881,16 @@ class LaunchPackageTests(unittest.TestCase):
         campaign = json.loads((ROOT / "site" / "campaign.json").read_text())
 
         self.assertIn("GCA Campaign Calendar", page)
-        self.assertIn("Campaign JSON", page)
+        self.assertPlatformOnlyDataRoom(
+            page,
+            "campaign.json",
+            "content-library.json",
+            "publishing-desk.json",
+            "announcements.json",
+            "community.json",
+        )
         self.assertIn("Content Library", page)
-        self.assertIn("Content Library JSON", page)
         self.assertIn("Publishing Desk", page)
-        self.assertIn("Publishing Desk JSON", page)
         self.assertIn("Every 3 days", page)
         self.assertIn("2026-05-20 to 2026-06-16", page)
         self.assertIn("10 posts", page)
@@ -1934,9 +1964,15 @@ class LaunchPackageTests(unittest.TestCase):
         library = json.loads((ROOT / "site" / "content-library.json").read_text())
 
         self.assertIn("GCA Content Library", page)
-        self.assertIn("Content Library JSON", page)
+        self.assertPlatformOnlyDataRoom(
+            page,
+            "content-library.json",
+            "publishing-desk.json",
+            "campaign.json",
+            "announcements.json",
+            "community.json",
+        )
         self.assertIn("Publishing Desk", page)
-        self.assertIn("Publishing Desk JSON", page)
         self.assertIn("10 bilingual drafts", page)
         self.assertIn("X and Telegram", page)
         self.assertIn("2026-05-20 to 2026-06-16", page)
@@ -2001,7 +2037,14 @@ class LaunchPackageTests(unittest.TestCase):
         desk = json.loads((ROOT / "site" / "publishing-desk.json").read_text())
 
         self.assertIn("GCA Publishing Desk", page)
-        self.assertIn("Publishing Desk JSON", page)
+        self.assertPlatformOnlyDataRoom(
+            page,
+            "publishing-desk.json",
+            "content-library.json",
+            "campaign.json",
+            "announcements.json",
+            "community.json",
+        )
         self.assertIn("Manual publishing hub", page)
         self.assertIn("2026-05-20", page)
         self.assertIn("X and Telegram", page)
@@ -2025,6 +2068,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(RADAR_ISSUE_004_PAGE_URL, page)
         self.assertIn(LATEST_X_POST_URL, page)
         self.assertIn(MAINNET_ADDRESS, page)
+        self.assertNotIn("https://gcagochina.com/publishing-desk.json", page)
         self.assertNotIn("GCA/WETH", page)
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, page)
 
@@ -2074,7 +2118,14 @@ class LaunchPackageTests(unittest.TestCase):
         narrative = json.loads((ROOT / "site" / "narrative.json").read_text())
 
         self.assertIn("GCA Narrative System", page)
-        self.assertIn("Narrative JSON", page)
+        self.assertPlatformOnlyDataRoom(
+            page,
+            "narrative.json",
+            "radar.json",
+            "utility.json",
+            "roadmap.json",
+            "community.json",
+        )
         self.assertIn("Narrative meets risk control", page)
         self.assertIn("China Narrative Radar", page)
         self.assertIn("Weekly Go China Radar", page)
@@ -2135,7 +2186,14 @@ class LaunchPackageTests(unittest.TestCase):
         radar = json.loads((ROOT / "site" / "radar.json").read_text())
 
         self.assertIn("Weekly Go China Radar", page)
-        self.assertIn("Radar JSON", page)
+        self.assertPlatformOnlyDataRoom(
+            page,
+            "radar.json",
+            "narrative.json",
+            "community.json",
+            "campaign.json",
+            "radar-issue-004.json",
+        )
         self.assertIn("Issue 003 / 2026-05-16", page)
         self.assertIn("not live market data", page)
         self.assertIn("not financial advice", page)
@@ -2192,7 +2250,14 @@ class LaunchPackageTests(unittest.TestCase):
         radar = json.loads((ROOT / "site" / "radar-issue-004.json").read_text())
 
         self.assertIn("Weekly Go China Radar Issue 004", page)
-        self.assertIn("Issue 004 JSON", page)
+        self.assertPlatformOnlyDataRoom(
+            page,
+            "radar-issue-004.json",
+            "publishing-desk.json",
+            "content-library.json",
+            "campaign.json",
+            "radar.json",
+        )
         self.assertIn("Issue 004 / 2026-05-20 / Ready for review", page)
         self.assertIn("Ready for operator review", page)
         self.assertIn("Go China Access as a research corridor", page)
