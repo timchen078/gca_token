@@ -34,6 +34,7 @@ SITE_MAP_PAGE_URL = "https://gcagochina.com/site-map.html"
 ABOUT_PAGE_URL = "https://gcagochina.com/about.html"
 ACTION_PLAN_PAGE_URL = "https://gcagochina.com/action-plan.html"
 ZH_CN_PAGE_URL = "https://gcagochina.com/zh-cn.html"
+ZH_APPLY_PAGE_URL = "https://gcagochina.com/zh-apply.html"
 ZH_FAQ_PAGE_URL = "https://gcagochina.com/zh-faq.html"
 ZH_MEMBERS_PAGE_URL = "https://gcagochina.com/zh-members.html"
 SUPPLY_PAGE_URL = "https://gcagochina.com/supply.html"
@@ -187,6 +188,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("/site-map.html", script)
         self.assertIn("/action-plan.html", script)
         self.assertIn("/zh-cn.html", script)
+        self.assertIn("/zh-apply.html", script)
         self.assertIn("/zh-faq.html", script)
         self.assertIn("/zh-members.html", script)
         self.assertIn("/listing-kit.html", script)
@@ -379,6 +381,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("validate_site_map_page", script)
         self.assertIn("validate_action_plan_page", script)
         self.assertIn("validate_zh_cn_page", script)
+        self.assertIn("validate_zh_apply_page", script)
         self.assertIn("validate_zh_faq_page", script)
         self.assertIn("validate_zh_members_page", script)
         self.assertIn("validate_404_page", script)
@@ -405,6 +408,7 @@ class LaunchPackageTests(unittest.TestCase):
         module.validate_site_map_page((ROOT / "site" / "site-map.html").read_text())
         module.validate_action_plan_page((ROOT / "site" / "action-plan.html").read_text())
         module.validate_zh_cn_page((ROOT / "site" / "zh-cn.html").read_text())
+        module.validate_zh_apply_page((ROOT / "site" / "zh-apply.html").read_text())
         module.validate_zh_faq_page((ROOT / "site" / "zh-faq.html").read_text())
         module.validate_zh_members_page((ROOT / "site" / "zh-members.html").read_text())
         module.validate_verify((ROOT / "site" / "verify.html").read_text())
@@ -700,6 +704,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Allow: /about.html", robots)
         self.assertIn("Allow: /action-plan.html", robots)
         self.assertIn("Allow: /zh-cn.html", robots)
+        self.assertIn("Allow: /zh-apply.html", robots)
         self.assertIn("Allow: /zh-faq.html", robots)
         self.assertIn("Allow: /zh-members.html", robots)
         self.assertIn("Allow: /site-map.html", robots)
@@ -806,6 +811,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(ABOUT_PAGE_URL, sitemap)
         self.assertIn(ACTION_PLAN_PAGE_URL, sitemap)
         self.assertIn(ZH_CN_PAGE_URL, sitemap)
+        self.assertIn(ZH_APPLY_PAGE_URL, sitemap)
         self.assertIn(ZH_FAQ_PAGE_URL, sitemap)
         self.assertIn(ZH_MEMBERS_PAGE_URL, sitemap)
         self.assertIn(DATA_PAGE_URL, sitemap)

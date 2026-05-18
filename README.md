@@ -66,6 +66,7 @@ Export the same review package directly from local JSONL data without starting t
 - Public support intake JSON: `site/support.json`
 - Public company and project profile: `site/about.html`
 - Public Chinese user entry page: `site/zh-cn.html`
+- Public Chinese participation guide: `site/zh-apply.html`
 - Public Chinese FAQ page: `site/zh-faq.html`
 - Public Chinese member rules page: `site/zh-members.html`
 - Public roadmap page: `site/roadmap.html`
