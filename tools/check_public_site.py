@@ -676,7 +676,8 @@ def validate_blockaid_followup_json(text: str) -> None:
 def validate_technical_report_page(text: str) -> None:
     label = "/technical-report.html"
     assert_contains(text, "GCA Technical Report", label)
-    assert_contains(text, "Technical Report JSON", label)
+    assert_contains(text, "Platform-Only Evidence Path", label)
+    assert_contains(text, "Data Room", label)
     assert_contains(text, "internal technical report", label)
     assert_contains(text, "not a third-party audit", label)
     assert_contains(text, "Verified Positive Controls", label)
@@ -691,6 +692,14 @@ def validate_technical_report_page(text: str) -> None:
     assert_contains(text, DEPLOYMENT_TX, label)
     assert_current_pool_text(text, label)
     assert_no_forbidden_public_claims(text, label)
+    for forbidden in (
+        'href="technical-report.json"',
+        'href="token-safety.json"',
+        'href="reserve-statement.json"',
+        'href="onchain-proofs.json"',
+        'href=".well-known/wallet-security.json"',
+    ):
+        assert_not_contains(text, forbidden, label)
 
 
 def validate_technical_report_json(text: str) -> None:
@@ -752,7 +761,8 @@ def validate_technical_report_json(text: str) -> None:
 def validate_reserve_statement_page(text: str) -> None:
     label = "/reserve-statement.html"
     assert_contains(text, "GCA Reserve Address Statement", label)
-    assert_contains(text, "Reserve Statement JSON", label)
+    assert_contains(text, "Platform-Only Evidence Path", label)
+    assert_contains(text, "Data Room", label)
     assert_contains(text, "Owner-controlled, not locked", label)
     assert_contains(text, "Custody Boundary", label)
     assert_contains(text, "On-chain Reserve Transfer Proofs", label)
@@ -764,6 +774,14 @@ def validate_reserve_statement_page(text: str) -> None:
     assert_contains(text, RESERVE_TX_1, label)
     assert_contains(text, RESERVE_TX_2, label)
     assert_no_forbidden_public_claims(text, label)
+    for forbidden in (
+        'href="reserve-statement.json"',
+        'href="holder-distribution.json"',
+        'href="custody-roadmap.json"',
+        'href="supply.json"',
+        'href="onchain-proofs.json"',
+    ):
+        assert_not_contains(text, forbidden, label)
 
 
 def validate_reserve_statement_json(text: str) -> None:
@@ -3924,7 +3942,9 @@ def validate_terms_json(text: str) -> None:
 def validate_supply_page(text: str) -> None:
     label = "/supply.html"
     assert_contains(text, "GCA Supply and Reserve", label)
-    assert_contains(text, "Supply JSON", label)
+    assert_contains(text, "Platform-Only Evidence Path", label)
+    assert_contains(text, "Data Room", label)
+    assert_contains(text, "Raw JSON for platforms only", label)
     assert_contains(text, "1,000,000,000 GCA", label)
     assert_contains(text, "400,000,000 GCA / 40%", label)
     assert_contains(text, "600,000,000 GCA / 60%", label)
@@ -3934,6 +3954,14 @@ def validate_supply_page(text: str) -> None:
     assert_contains(text, "not be described as locked, vested, or multisig-controlled", label)
     assert_contains(text, "Do not claim the reserve provides price support", label)
     assert_not_contains(text, OLD_WETH_POOL_ADDRESS, label)
+    for forbidden in (
+        'href="supply.json"',
+        'href="holder-distribution.json"',
+        'href="reserve-statement.json"',
+        'href="custody-roadmap.json"',
+        'href="tokenlist.json"',
+    ):
+        assert_not_contains(text, forbidden, label)
 
 
 def validate_supply_json(text: str) -> None:
@@ -5874,7 +5902,9 @@ def validate_holder_distribution_json(text: str) -> None:
 def validate_holder_distribution_page(text: str) -> None:
     label = "/holder-distribution.html"
     assert_contains(text, "GCA Holder Distribution", label)
-    assert_contains(text, "Holder Distribution JSON", label)
+    assert_contains(text, "Platform-Only Evidence Path", label)
+    assert_contains(text, "Data Room", label)
+    assert_contains(text, "Raw JSON for platforms only", label)
     assert_contains(text, "Base Mainnet / 8453", label)
     assert_contains(text, "1,000,000,000 GCA", label)
     assert_contains(text, "400,000,000 GCA / 40%", label)
@@ -5892,6 +5922,14 @@ def validate_holder_distribution_page(text: str) -> None:
     assert_no_forbidden_public_claims(text, label)
     assert_not_contains(text, OLD_WETH_POOL_ADDRESS, label)
     assert_not_contains(text, "GCA/WETH", label)
+    for forbidden in (
+        'href="holder-distribution.json"',
+        'href="supply.json"',
+        'href="reserve-statement.json"',
+        'href="custody-roadmap.json"',
+        'href="liquidity.json"',
+    ):
+        assert_not_contains(text, forbidden, label)
 
 
 def validate_risk_remediation_json(text: str) -> None:
@@ -5979,7 +6017,8 @@ def validate_risk_remediation_page(text: str) -> None:
     label = "/risk-remediation.html"
     assert_social_preview_meta(text, label, RISK_REMEDIATION_PAGE_URL)
     assert_contains(text, "GCA Risk Remediation Plan", label)
-    assert_contains(text, "Risk Remediation JSON", label)
+    assert_contains(text, "Platform-Only Evidence Path", label)
+    assert_contains(text, "Data Room", label)
     assert_contains(text, "Custody Roadmap", label)
     assert_contains(text, "Price Volatility", label)
     assert_contains(text, "LP Custody", label)
@@ -5993,6 +6032,16 @@ def validate_risk_remediation_page(text: str) -> None:
     assert_contains(text, RESERVE_WALLET, label)
     assert_current_pool_text(text, label)
     assert_no_forbidden_public_claims(text, label)
+    for forbidden in (
+        'href="risk-remediation.json"',
+        'href="blockaid-followup.json"',
+        'href="liquidity.json"',
+        'href="holder-distribution.json"',
+        'href="custody-roadmap.json"',
+        'href="technical-report.json"',
+        'href="market-quality.json"',
+    ):
+        assert_not_contains(text, forbidden, label)
 
 
 def validate_custody_roadmap_json(text: str) -> None:
@@ -6057,7 +6106,8 @@ def validate_custody_roadmap_page(text: str) -> None:
     label = "/custody-roadmap.html"
     assert_social_preview_meta(text, label, CUSTODY_ROADMAP_PAGE_URL)
     assert_contains(text, "GCA Custody Roadmap", label)
-    assert_contains(text, "Custody Roadmap JSON", label)
+    assert_contains(text, "Platform-Only Evidence Path", label)
+    assert_contains(text, "Data Room", label)
     assert_contains(text, "Reserve Wallet", label)
     assert_contains(text, "Owner-controlled, not locked", label)
     assert_contains(text, "No LP lock claimed", label)
@@ -6069,6 +6119,14 @@ def validate_custody_roadmap_page(text: str) -> None:
     assert_contains(text, RESERVE_WALLET, label)
     assert_current_pool_text(text, label)
     assert_no_forbidden_public_claims(text, label)
+    for forbidden in (
+        'href="custody-roadmap.json"',
+        'href="reserve-statement.json"',
+        'href="holder-distribution.json"',
+        'href="liquidity.json"',
+        'href="risk-remediation.json"',
+    ):
+        assert_not_contains(text, forbidden, label)
 
 
 def validate_audit_readiness_json(text: str) -> None:
@@ -6123,7 +6181,8 @@ def validate_audit_readiness_page(text: str) -> None:
     label = "/audit-readiness.html"
     assert_social_preview_meta(text, label, AUDIT_READINESS_PAGE_URL)
     assert_contains(text, "GCA Audit Readiness", label)
-    assert_contains(text, "Audit Readiness JSON", label)
+    assert_contains(text, "Platform-Only Evidence Path", label)
+    assert_contains(text, "Data Room", label)
     assert_contains(text, "No completed third-party audit", label)
     assert_contains(text, "not a completed third-party audit", label)
     assert_contains(text, "Contract Scope", label)
@@ -6135,6 +6194,15 @@ def validate_audit_readiness_page(text: str) -> None:
     assert_contains(text, MAINNET_ADDRESS, label)
     assert_contains(text, "Base Mainnet / 8453", label)
     assert_no_forbidden_public_claims(text, label)
+    for forbidden in (
+        'href="audit-readiness.json"',
+        'href="technical-report.json"',
+        'href="token-safety.json"',
+        'href="blockaid-followup.json"',
+        'href="risk-remediation.json"',
+        'href="custody-roadmap.json"',
+    ):
+        assert_not_contains(text, forbidden, label)
 
 
 def validate_onchain_proofs_json(text: str) -> None:
@@ -6774,7 +6842,8 @@ def validate_external_reviews_page(text: str) -> None:
     assert_contains(text, "Blockaid Follow-up", label)
     assert_contains(text, "Risk Remediation", label)
     assert_contains(text, "Custody Roadmap", label)
-    assert_contains(text, "External Reviews JSON", label)
+    assert_contains(text, "Platform-Only Evidence Path", label)
+    assert_contains(text, "Data Room", label)
     assert_contains(text, "Trust Center", label)
     assert_contains(text, "Resubmitted: awaiting review", label)
     assert_contains(text, "Owner observed no warning visible 2026-05-14", label)
@@ -6785,6 +6854,15 @@ def validate_external_reviews_page(text: str) -> None:
     assert_contains(text, OFFICIAL_DEXSCREENER_URL, label)
     assert_contains(text, OFFICIAL_GECKOTERMINAL_URL, label)
     assert_current_pool_text(text, label)
+    for forbidden in (
+        'href="external-reviews.json"',
+        'href="project.json"',
+        'href="reviewer-kit.json"',
+        'href="listing-readiness.json"',
+        'href="market-quality.json"',
+        'href="wallet-warning.json"',
+    ):
+        assert_not_contains(text, forbidden, label)
 
 
 def validate_wallet_warning_json(text: str) -> None:

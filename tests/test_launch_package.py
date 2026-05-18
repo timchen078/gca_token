@@ -3334,8 +3334,9 @@ class LaunchPackageTests(unittest.TestCase):
         supply = (ROOT / "site" / "supply.html").read_text()
 
         self.assertIn("GCA Supply and Reserve", supply)
-        self.assertIn("Supply JSON", supply)
-        self.assertIn('href="supply.json"', supply)
+        self.assertIn("Platform-Only Evidence Path", supply)
+        self.assertIn("Data Room", supply)
+        self.assertIn("Raw JSON for platforms only", supply)
         self.assertIn("smart contract total supply is fixed at 1,000,000,000 GCA", supply)
         self.assertIn("400,000,000 GCA / 40%", supply)
         self.assertIn("600,000,000 GCA / 60%", supply)
@@ -3359,6 +3360,14 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn('href="markets.html"', supply)
         self.assertIn('href="status.html"', supply)
         self.assertIn('href="listing-kit.html"', supply)
+        for forbidden in (
+            'href="supply.json"',
+            'href="holder-distribution.json"',
+            'href="reserve-statement.json"',
+            'href="custody-roadmap.json"',
+            'href="tokenlist.json"',
+        ):
+            self.assertNotIn(forbidden, supply)
 
     def test_supply_json_discloses_allocation_without_overstating_circulation(self):
         supply = json.loads((ROOT / "site" / "supply.json").read_text())
@@ -4495,7 +4504,8 @@ class LaunchPackageTests(unittest.TestCase):
 
         self.assertIn("GCA External Review Status", page)
         self.assertIn("Wallet Warning Evidence", page)
-        self.assertIn("External Reviews JSON", page)
+        self.assertIn("Platform-Only Evidence Path", page)
+        self.assertIn("Data Room", page)
         self.assertIn("BaseScan source code verification", page)
         self.assertIn("Resubmitted: awaiting review", page)
         self.assertIn("Owner observed no warning visible 2026-05-14", page)
@@ -4513,6 +4523,15 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(OFFICIAL_GECKOTERMINAL_URL, page)
         self.assertIn(OFFICIAL_DEXSCREENER_URL, page)
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, page)
+        for forbidden in (
+            'href="external-reviews.json"',
+            'href="project.json"',
+            'href="reviewer-kit.json"',
+            'href="listing-readiness.json"',
+            'href="market-quality.json"',
+            'href="wallet-warning.json"',
+        ):
+            self.assertNotIn(forbidden, page)
 
         self.assertEqual(reviews["schema"], EXTERNAL_REVIEW_URL)
         self.assertEqual(reviews["pageUrl"], EXTERNAL_REVIEW_PAGE_URL)
@@ -4975,7 +4994,9 @@ class LaunchPackageTests(unittest.TestCase):
         holders = json.loads((ROOT / "site" / "holder-distribution.json").read_text())
 
         self.assertIn("GCA Holder Distribution", page)
-        self.assertIn("Holder Distribution JSON", page)
+        self.assertIn("Platform-Only Evidence Path", page)
+        self.assertIn("Data Room", page)
+        self.assertIn("Raw JSON for platforms only", page)
         self.assertIn("Base Mainnet / 8453", page)
         self.assertIn("1,000,000,000 GCA", page)
         self.assertIn("400,000,000 GCA / 40%", page)
@@ -4992,6 +5013,14 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(SECOND_RESERVE_TX, page)
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, page)
         self.assertNotIn("GCA/WETH", page)
+        for forbidden in (
+            'href="holder-distribution.json"',
+            'href="supply.json"',
+            'href="reserve-statement.json"',
+            'href="custody-roadmap.json"',
+            'href="liquidity.json"',
+        ):
+            self.assertNotIn(forbidden, page)
 
         self.assertEqual(holders["schema"], HOLDER_DISTRIBUTION_URL)
         self.assertEqual(holders["pageUrl"], HOLDER_DISTRIBUTION_PAGE_URL)
@@ -5030,7 +5059,8 @@ class LaunchPackageTests(unittest.TestCase):
         plan = json.loads((ROOT / "site" / "risk-remediation.json").read_text())
 
         self.assertIn("GCA Risk Remediation Plan", page)
-        self.assertIn("Risk Remediation JSON", page)
+        self.assertIn("Platform-Only Evidence Path", page)
+        self.assertIn("Data Room", page)
         self.assertIn("Price Volatility", page)
         self.assertIn("LP Custody", page)
         self.assertIn("Supply Concentration", page)
@@ -5046,6 +5076,16 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(BASE_USDT_ADDRESS, page)
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, page)
         self.assertNotIn("GCA/WETH", page)
+        for forbidden in (
+            'href="risk-remediation.json"',
+            'href="blockaid-followup.json"',
+            'href="liquidity.json"',
+            'href="holder-distribution.json"',
+            'href="custody-roadmap.json"',
+            'href="technical-report.json"',
+            'href="market-quality.json"',
+        ):
+            self.assertNotIn(forbidden, page)
 
         self.assertEqual(plan["schema"], RISK_REMEDIATION_URL)
         self.assertEqual(plan["pageUrl"], RISK_REMEDIATION_PAGE_URL)
@@ -5086,7 +5126,8 @@ class LaunchPackageTests(unittest.TestCase):
         roadmap = json.loads((ROOT / "site" / "custody-roadmap.json").read_text())
 
         self.assertIn("GCA Custody Roadmap", page)
-        self.assertIn("Custody Roadmap JSON", page)
+        self.assertIn("Platform-Only Evidence Path", page)
+        self.assertIn("Data Room", page)
         self.assertIn("Owner-controlled, not locked", page)
         self.assertIn("No LP lock claimed", page)
         self.assertIn("not a reserve lock claim", page)
@@ -5099,6 +5140,14 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(BASE_USDT_ADDRESS, page)
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, page)
         self.assertNotIn("GCA/WETH", page)
+        for forbidden in (
+            'href="custody-roadmap.json"',
+            'href="reserve-statement.json"',
+            'href="holder-distribution.json"',
+            'href="liquidity.json"',
+            'href="risk-remediation.json"',
+        ):
+            self.assertNotIn(forbidden, page)
 
         self.assertEqual(roadmap["schema"], CUSTODY_ROADMAP_URL)
         self.assertEqual(roadmap["pageUrl"], CUSTODY_ROADMAP_PAGE_URL)
@@ -5145,7 +5194,8 @@ class LaunchPackageTests(unittest.TestCase):
         runbook = (ROOT / "launch" / "audit_readiness_runbook.md").read_text()
 
         self.assertIn("GCA Audit Readiness", page)
-        self.assertIn("Audit Readiness JSON", page)
+        self.assertIn("Platform-Only Evidence Path", page)
+        self.assertIn("Data Room", page)
         self.assertIn("No completed third-party audit", page)
         self.assertIn("not a completed third-party audit", page)
         self.assertIn("Contract Scope", page)
@@ -5156,6 +5206,15 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(MAINNET_ADDRESS, page)
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, page)
         self.assertNotIn("GCA/WETH", page)
+        for forbidden in (
+            'href="audit-readiness.json"',
+            'href="technical-report.json"',
+            'href="token-safety.json"',
+            'href="blockaid-followup.json"',
+            'href="risk-remediation.json"',
+            'href="custody-roadmap.json"',
+        ):
+            self.assertNotIn(forbidden, page)
 
         self.assertEqual(readiness["schema"], AUDIT_READINESS_URL)
         self.assertEqual(readiness["pageUrl"], AUDIT_READINESS_PAGE_URL)
@@ -5372,11 +5431,21 @@ class LaunchPackageTests(unittest.TestCase):
         reserve_launch = (ROOT / "launch" / "blockaid_reserve_statement.md").read_text()
 
         self.assertIn("GCA Technical Report", technical_page)
+        self.assertIn("Platform-Only Evidence Path", technical_page)
+        self.assertIn("Data Room", technical_page)
         self.assertIn("internal technical report", technical_page)
         self.assertIn("not a third-party audit", technical_page)
         self.assertIn("LP locking is not currently claimed", technical_page)
         self.assertIn(MAINNET_ADDRESS, technical_page)
         self.assertIn(RESERVE_WALLET, technical_page)
+        for forbidden in (
+            'href="technical-report.json"',
+            'href="token-safety.json"',
+            'href="reserve-statement.json"',
+            'href="onchain-proofs.json"',
+            'href=".well-known/wallet-security.json"',
+        ):
+            self.assertNotIn(forbidden, technical_page)
         self.assertEqual(technical["schema"], TECHNICAL_REPORT_URL)
         self.assertEqual(technical["pageUrl"], TECHNICAL_REPORT_PAGE_URL)
         self.assertEqual(technical["status"], "public-internal-technical-report-published")
@@ -5401,11 +5470,21 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("no third-party audit has been completed", technical["riskReviewerNotes"]["residualRisks"])
 
         self.assertIn("GCA Reserve Address Statement", reserve_page)
+        self.assertIn("Platform-Only Evidence Path", reserve_page)
+        self.assertIn("Data Room", reserve_page)
         self.assertIn("Owner-controlled, not locked", reserve_page)
         self.assertIn("No LP lock is currently claimed", reserve_page)
         self.assertIn("Custody Roadmap", reserve_page)
         self.assertIn(RESERVE_TX, reserve_page)
         self.assertIn(SECOND_RESERVE_TX, reserve_page)
+        for forbidden in (
+            'href="reserve-statement.json"',
+            'href="holder-distribution.json"',
+            'href="custody-roadmap.json"',
+            'href="supply.json"',
+            'href="onchain-proofs.json"',
+        ):
+            self.assertNotIn(forbidden, reserve_page)
         self.assertEqual(reserve["schema"], RESERVE_STATEMENT_URL)
         self.assertEqual(reserve["pageUrl"], RESERVE_STATEMENT_PAGE_URL)
         self.assertEqual(reserve["status"], "public-reserve-address-statement-published")
