@@ -93,6 +93,8 @@
         display: flex;
         gap: 18px;
         align-items: center;
+        flex-wrap: wrap;
+        justify-content: flex-end;
         font-size: 14px;
       }
 
@@ -256,6 +258,92 @@
         overflow-wrap: anywhere;
       }
 
+      .hero {
+        display: grid;
+        grid-template-columns: minmax(0, 1.08fr) minmax(320px, 0.92fr);
+        gap: 28px;
+        align-items: center;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin: 0 0 16px;
+        color: var(--red);
+        font-size: 13px;
+        font-weight: 850;
+        text-transform: uppercase;
+      }
+
+      .eyebrow::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: var(--red);
+      }
+
+      .hero-card {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        padding: 18px;
+      }
+
+      .hero-art {
+        width: 100%;
+        aspect-ratio: 1200 / 630;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--soft);
+        object-fit: cover;
+      }
+
+      .hero-meta,
+      .mini-grid {
+        display: grid;
+        gap: 10px;
+      }
+
+      .hero-meta {
+        margin-top: 14px;
+      }
+
+      .mini-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        margin-top: 14px;
+      }
+
+      .mini {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--soft);
+        padding: 12px;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        min-height: 28px;
+        border-radius: 999px;
+        background: var(--soft);
+        color: var(--muted);
+        padding: 4px 10px;
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .button.secondary {
+        border-color: #cad7ec;
+        background: #eef4ff;
+        color: #123e90;
+      }
+
+      .callout {
+        border-left: 4px solid var(--red);
+      }
+
       footer {
         border-top: 1px solid var(--line);
         padding: 24px 0;
@@ -264,9 +352,11 @@
       }
 
       @media (max-width: 860px) {
+        .hero,
         .facts,
         .grid,
-        .two {
+        .two,
+        .mini-grid {
           grid-template-columns: 1fr;
         }
 
@@ -317,17 +407,42 @@
     </header>
 
     <main class="shell">
-      <section aria-labelledby="title">
-        <h1 id="title">GCA Market Quality Plan</h1>
-        <p class="lead">GCA market quality should improve through transparent liquidity, useful product delivery, consistent public metadata, and legitimate public participation. This page is not a trading recommendation and does not target price.</p>
-        <div class="actions">
-          <a class="button primary" href="markets.html">Official Market</a>
-          <a class="button primary" href="listing-readiness.html">Listing Readiness</a>
-          <a class="button" href="market-quality.json">Market Quality JSON</a>
-          <a class="button" href="verify.html">Verify GCA</a>
-          <a class="button" href="risk.html">Risk Page</a>
-          <a class="button" href="status.html">Project Status</a>
+      <section class="hero" aria-labelledby="title">
+        <div>
+          <p class="eyebrow">Market Quality</p>
+          <h1 id="title">GCA Market Quality Plan</h1>
+          <p class="lead">GCA market quality should improve through transparent liquidity, useful product delivery, consistent public metadata, and legitimate public participation. This page is not a trading recommendation and does not target price.</p>
+          <p class="lead">The practical goal is to make the official route, risks, metadata, and utility status easy to verify before any wallet interaction or external review.</p>
+          <div class="actions">
+            <a class="button primary" href="markets.html">Official Market</a>
+            <a class="button secondary" href="listing-readiness.html">Listing Readiness</a>
+            <a class="button" href="verify.html">Verify GCA</a>
+            <a class="button" href="liquidity.html">Liquidity</a>
+            <a class="button" href="risk.html">Risk Page</a>
+            <a class="button" href="#technicalEvidence">Technical Evidence</a>
+          </div>
         </div>
+
+        <aside class="hero-card" aria-label="Market quality summary">
+          <img class="hero-art" src="assets/gca-social-card.png" alt="GCA social preview card">
+          <div class="hero-meta">
+            <span class="pill">Base Mainnet / GCA/USDT</span>
+            <div class="mini-grid" aria-label="Quality facts">
+              <div class="mini">
+                <span class="label">Depth</span>
+                <span class="value pending">Starter-depth only</span>
+              </div>
+              <div class="mini">
+                <span class="label">GeckoTerminal</span>
+                <span class="value good">Approved</span>
+              </div>
+              <div class="mini">
+                <span class="label">Listings</span>
+                <span class="value pending">Deferred</span>
+              </div>
+            </div>
+          </div>
+        </aside>
       </section>
 
       <section class="facts" aria-label="Market quality summary">
@@ -357,6 +472,23 @@
           <li>Disclose starter-depth liquidity, owner reserve custody, external review status, and third-party audit status plainly.</li>
           <li>Do not use artificial activity, self-trading, wash trading, misleading volume, or paid listing promises as a trust strategy.</li>
         </ul>
+      </section>
+
+      <section class="section two" aria-label="Market quality position">
+        <div class="panel callout">
+          <h2>Quality Position</h2>
+          <p class="note">The current priority is not a tracked-listing push. It is keeping the public identity consistent, moving users to the official GCA/USDT route, disclosing starter-depth liquidity plainly, and connecting utility pages to account workflows as the product matures.</p>
+        </div>
+
+        <div class="panel">
+          <h2>Current Gate</h2>
+          <div class="list">
+            <div class="row"><span>Official market route</span><strong>GCA/USDT on Base</strong></div>
+            <div class="row"><span>Tracked listing push</span><strong class="pending">Deferred</strong></div>
+            <div class="row"><span>Liquidity claim</span><strong class="pending">Starter-depth only</strong></div>
+            <div class="row"><span>Utility release</span><strong class="pending">Controlled account UI in progress</strong></div>
+          </div>
+        </div>
       </section>
 
       <section class="section two" aria-label="Action plan">
@@ -408,6 +540,17 @@
         <div class="panel">
           <h3>External Reviews</h3>
           <p class="note">Track BaseScan, Blockaid, wallet-warning, GeckoTerminal, DEX Screener, CoinGecko, CoinMarketCap, and audit status with conservative wording.</p>
+        </div>
+      </section>
+
+      <section class="section panel" id="technicalEvidence" aria-labelledby="technicalEvidenceTitle">
+        <h2 id="technicalEvidenceTitle">Technical Evidence</h2>
+        <p class="note">Use the human-readable pages first when sharing with users. The Market Quality JSON file remains available for reviewers, wallets, scanners, and data platforms that need machine-readable market-quality metadata.</p>
+        <div class="actions">
+          <a class="button" href="market-quality.json">Market Quality JSON</a>
+          <a class="button" href="liquidity.html">Liquidity Statement</a>
+          <a class="button" href="listing-readiness.html">Listing Readiness</a>
+          <a class="button" href="reviewer-kit.html">Reviewer Kit</a>
         </div>
       </section>
 
