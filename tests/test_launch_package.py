@@ -3613,9 +3613,15 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Source SHA-256", security)
         self.assertIn("6ba294fe0f6e20485f90297eede83ce620291ab525c92abb3bcf6547d1cf4cce", security)
         self.assertIn("No independent third-party audit has been completed", security)
+        self.assertPlatformOnlyDataRoom(
+            security,
+            "token-safety.json",
+            "technical-report.json",
+            "audit-readiness.json",
+            "risk-remediation.json",
+        )
         self.assertIn("Token Safety Checklist", security)
         self.assertIn('href="token-safety.html"', security)
-        self.assertIn('href="token-safety.json"', security)
         self.assertIn("Quote requests were submitted to QuillAudits, Hacken, and OpenZeppelin on 2026-05-10", security)
         self.assertIn("then deferred by owner decision", security)
         self.assertIn("Residual risks", security)
@@ -3829,7 +3835,13 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("No artificial activity policy", page)
         self.assertIn("Do not use artificial activity", page)
         self.assertIn("self-trading, wash trading, or misleading volume", page)
-        self.assertIn("listing-readiness.json", page)
+        self.assertPlatformOnlyDataRoom(
+            page,
+            "listing-readiness.json",
+            "project.json",
+            "market-quality.json",
+            "external-reviews.json",
+        )
         self.assertIn(MAINNET_ADDRESS, page)
         self.assertIn(OFFICIAL_POOL_ADDRESS, page)
         self.assertIn(BASE_USDT_ADDRESS, page)
@@ -4578,7 +4590,14 @@ class LaunchPackageTests(unittest.TestCase):
         proofs = json.loads((ROOT / "site" / "onchain-proofs.json").read_text())
 
         self.assertIn("GCA On-chain Proofs", page)
-        self.assertIn("On-chain Proofs JSON", page)
+        self.assertPlatformOnlyDataRoom(
+            page,
+            "onchain-proofs.json",
+            "technical-report.json",
+            "reserve-statement.json",
+            "supply.json",
+            "tokenlist.json",
+        )
         self.assertIn("Deployment Proof", page)
         self.assertIn("Source Verification", page)
         self.assertIn("Fixed Supply And Reserve Proof", page)
@@ -4640,7 +4659,13 @@ class LaunchPackageTests(unittest.TestCase):
         kit = json.loads((ROOT / "site" / "brand-kit.json").read_text())
 
         self.assertIn("GCA Brand Kit", page)
-        self.assertIn("Brand Kit JSON", page)
+        self.assertPlatformOnlyDataRoom(
+            page,
+            "brand-kit.json",
+            "tokenlist.json",
+            ".well-known/gca-token.json",
+            "project.json",
+        )
         self.assertIn("Logo SVG", page)
         self.assertIn("Logo PNG", page)
         self.assertIn("Social Card", page)
@@ -4919,7 +4944,15 @@ class LaunchPackageTests(unittest.TestCase):
         replies = json.loads((ROOT / "site" / "platform-replies.json").read_text())
 
         self.assertIn("GCA Platform Replies", page)
-        self.assertIn("Platform Replies JSON", page)
+        self.assertPlatformOnlyDataRoom(
+            page,
+            "platform-replies.json",
+            "reviewer-kit.json",
+            "wallet-warning.json",
+            "external-reviews.json",
+            "listing-readiness.json",
+            "project.json",
+        )
         self.assertIn("Trust Center", page)
         self.assertIn("Wallet Warning Reviewer", page)
         self.assertIn("BaseScan Token Profile", page)
@@ -4990,15 +5023,21 @@ class LaunchPackageTests(unittest.TestCase):
         trust = json.loads((ROOT / "site" / "trust.json").read_text())
 
         self.assertIn("GCA Trust Center", page)
-        self.assertIn("Trust Center JSON", page)
+        self.assertPlatformOnlyDataRoom(
+            page,
+            "trust.json",
+            ".well-known/wallet-security.json",
+            "tokenlist.json",
+            "project.json",
+            ".well-known/gca-token.json",
+        )
         self.assertIn("Verification Snapshot", page)
         self.assertIn("Contract Facts", page)
         self.assertIn("Market And Liquidity", page)
         self.assertIn("Supply And Reserve", page)
         self.assertIn("Evidence Links", page)
-        self.assertIn("Platform-Only Technical Evidence", page)
         self.assertIn("Normal visitor path", page)
-        self.assertIn("Raw JSON for platforms only", page)
+        self.assertIn("Raw JSON is available", page)
         self.assertIn("Blockaid Follow-up", page)
         self.assertIn("Liquidity Statement", page)
         self.assertIn("Technical Report", page)
@@ -5015,7 +5054,6 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(RESERVE_WALLET, page)
         self.assertIn("No completed third-party audit", page)
         self.assertIn("Owner observed no warning visible", page)
-        self.assertIn("Wallet Security JSON", page)
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, page)
 
         self.assertEqual(trust["schema"], TRUST_CENTER_URL)
@@ -5101,10 +5139,10 @@ class LaunchPackageTests(unittest.TestCase):
         quality = json.loads((ROOT / "site" / "market-quality.json").read_text())
 
         self.assertIn("GCA Market Quality Plan", page)
+        self.assertPlatformOnlyDataRoom(page, "market-quality.json")
         self.assertIn("transparent liquidity", page)
         self.assertIn("legitimate public participation", page)
         self.assertIn("Starter-depth only", page)
-        self.assertIn("Market Quality JSON", page)
         self.assertIn("Do not use artificial activity", page)
         self.assertIn("Self-trading or wash trading", page)
         self.assertIn("Misleading volume", page)
@@ -5143,7 +5181,7 @@ class LaunchPackageTests(unittest.TestCase):
         liquidity = json.loads((ROOT / "site" / "liquidity.json").read_text())
 
         self.assertIn("GCA Liquidity And LP Custody", page)
-        self.assertIn("Liquidity JSON", page)
+        self.assertPlatformOnlyDataRoom(page, "liquidity.json")
         self.assertIn("Base Mainnet / 8453", page)
         self.assertIn("GCA/USDT", page)
         self.assertIn("Starter-depth only", page)

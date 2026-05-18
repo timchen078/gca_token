@@ -395,6 +395,11 @@ def validate_security_page(text: str) -> None:
     label = "/security.html"
     assert_social_preview_meta(text, label, SECURITY_PAGE_URL)
     assert_contains(text, "GCA Security", label)
+    assert_platform_only_data_room(
+        text,
+        label,
+        ("token-safety.json", "technical-report.json", "audit-readiness.json", "risk-remediation.json"),
+    )
     assert_contains(text, "Verified on BaseScan", label)
     assert_contains(text, "fixed-supply ERC-20 contract on Base Mainnet", label)
     assert_contains(text, "No independent third-party audit has been completed", label)
@@ -4233,7 +4238,11 @@ def validate_brand_kit_json(text: str) -> None:
 def validate_brand_kit_page(text: str) -> None:
     label = "/brand-kit.html"
     assert_contains(text, "GCA Brand Kit", label)
-    assert_contains(text, "Brand Kit JSON", label)
+    assert_platform_only_data_room(
+        text,
+        label,
+        ("brand-kit.json", "tokenlist.json", ".well-known/gca-token.json", "project.json"),
+    )
     assert_contains(text, "Logo SVG", label)
     assert_contains(text, "Logo PNG", label)
     assert_contains(text, "32 x 32", label)
@@ -5939,10 +5948,10 @@ def validate_market_quality_json(text: str) -> None:
 def validate_market_quality_page(text: str) -> None:
     label = "/market-quality.html"
     assert_contains(text, "GCA Market Quality Plan", label)
+    assert_platform_only_data_room(text, label, ("market-quality.json",))
     assert_contains(text, "transparent liquidity", label)
     assert_contains(text, "legitimate public participation", label)
     assert_contains(text, "Starter-depth only", label)
-    assert_contains(text, "Market Quality JSON", label)
     assert_contains(text, "Do not use artificial activity", label)
     assert_contains(text, "Self-trading or wash trading", label)
     assert_contains(text, "Misleading volume", label)
@@ -6014,7 +6023,7 @@ def validate_liquidity_json(text: str) -> None:
 def validate_liquidity_page(text: str) -> None:
     label = "/liquidity.html"
     assert_contains(text, "GCA Liquidity And LP Custody", label)
-    assert_contains(text, "Liquidity JSON", label)
+    assert_platform_only_data_room(text, label, ("liquidity.json",))
     assert_contains(text, "Base Mainnet / 8453", label)
     assert_contains(text, "GCA/USDT", label)
     assert_contains(text, "Starter-depth only", label)
@@ -6463,7 +6472,11 @@ def validate_onchain_proofs_json(text: str) -> None:
 def validate_onchain_proofs_page(text: str) -> None:
     label = "/onchain-proofs.html"
     assert_contains(text, "GCA On-chain Proofs", label)
-    assert_contains(text, "On-chain Proofs JSON", label)
+    assert_platform_only_data_room(
+        text,
+        label,
+        ("onchain-proofs.json", "technical-report.json", "reserve-statement.json", "supply.json", "tokenlist.json"),
+    )
     assert_contains(text, "Deployment Proof", label)
     assert_contains(text, "Source Verification", label)
     assert_contains(text, "Fixed Supply And Reserve Proof", label)
@@ -6760,7 +6773,11 @@ def validate_platform_replies_json(text: str) -> None:
 def validate_platform_replies_page(text: str) -> None:
     label = "/platform-replies.html"
     assert_contains(text, "GCA Platform Replies", label)
-    assert_contains(text, "Platform Replies JSON", label)
+    assert_platform_only_data_room(
+        text,
+        label,
+        ("platform-replies.json", "reviewer-kit.json", "wallet-warning.json", "external-reviews.json", "listing-readiness.json", "project.json"),
+    )
     assert_contains(text, "Trust Center", label)
     assert_contains(text, "Base Mainnet / 8453", label)
     assert_contains(text, MAINNET_ADDRESS, label)
@@ -6912,16 +6929,18 @@ def validate_trust_json(text: str) -> None:
 def validate_trust_page(text: str) -> None:
     label = "/trust.html"
     assert_contains(text, "GCA Trust Center", label)
-    assert_contains(text, "Trust Center JSON", label)
+    assert_platform_only_data_room(
+        text,
+        label,
+        ("trust.json", ".well-known/wallet-security.json", "tokenlist.json", "project.json", ".well-known/gca-token.json"),
+    )
     assert_contains(text, "Verification Snapshot", label)
     assert_contains(text, "Contract Facts", label)
     assert_contains(text, "Market And Liquidity", label)
     assert_contains(text, "Supply And Reserve", label)
     assert_contains(text, "Evidence Links", label)
-    assert_contains(text, "Platform-Only Technical Evidence", label)
     assert_contains(text, "Normal visitor path", label)
-    assert_contains(text, "Raw JSON for platforms only", label)
-    assert_contains(text, "raw JSON can look like code in a browser", label)
+    assert_contains(text, "Raw JSON is available", label)
     assert_contains(text, "Blockaid Follow-up", label)
     assert_contains(text, "Liquidity Statement", label)
     assert_contains(text, "Holder Distribution", label)
@@ -7155,6 +7174,11 @@ def validate_wallet_warning_page(text: str) -> None:
 def validate_listing_readiness_page(text: str) -> None:
     label = "/listing-readiness.html"
     assert_contains(text, "GCA Listing Readiness", label)
+    assert_platform_only_data_room(
+        text,
+        label,
+        ("listing-readiness.json", "project.json", "market-quality.json", "external-reviews.json"),
+    )
     assert_contains(text, "Status: Not Ready", label)
     assert_contains(text, "DEX metadata and wallet identity review", label)
     assert_contains(text, "CoinGecko tracked listing request", label)
@@ -7162,7 +7186,6 @@ def validate_listing_readiness_page(text: str) -> None:
     assert_contains(text, "Pending external review", label)
     assert_contains(text, "Approved 2026-05-11", label)
     assert_contains(text, "No artificial activity policy", label)
-    assert_contains(text, "listing-readiness.json", label)
     assert_contains(text, OFFICIAL_DEXSCREENER_URL, label)
     assert_contains(text, OFFICIAL_GECKOTERMINAL_URL, label)
     assert_current_pool_text(text, label)
