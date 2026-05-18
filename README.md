@@ -64,6 +64,7 @@ Export the same review package directly from local JSONL data without starting t
 - Local operator console: `site/operator.html`
 - Public support intake page: `site/support.html`
 - Public support intake JSON: `site/support.json`
+- Public company and project profile: `site/about.html`
 - Public roadmap page: `site/roadmap.html`
 - Public roadmap JSON: `site/roadmap.json`
 - Public next-step action plan: `site/action-plan.html`
