@@ -30,6 +30,7 @@ STATUS_PAGE_URL = "https://gcagochina.com/status.html"
 ABOUT_PAGE_URL = "https://gcagochina.com/about.html"
 ACTION_PLAN_PAGE_URL = "https://gcagochina.com/action-plan.html"
 ZH_CN_PAGE_URL = "https://gcagochina.com/zh-cn.html"
+ZH_FAQ_PAGE_URL = "https://gcagochina.com/zh-faq.html"
 DATA_PAGE_URL = "https://gcagochina.com/data.html"
 SITE_MAP_PAGE_URL = "https://gcagochina.com/site-map.html"
 ERROR_PAGE_URL = "https://gcagochina.com/404.html"
@@ -232,6 +233,8 @@ def validate_root(text: str) -> None:
     assert_contains(text, "action-plan.html", label)
     assert_contains(text, "中文入口", label)
     assert_contains(text, "zh-cn.html", label)
+    assert_contains(text, "中文 FAQ", label)
+    assert_contains(text, "zh-faq.html", label)
     assert_contains(text, "data.html", label)
     assert_contains(text, "Member Ledger", label)
     assert_contains(text, "Benefit Transfer Runbook", label)
@@ -467,6 +470,8 @@ def validate_zh_cn_page(text: str) -> None:
     for expected in (
         "GCA 中文入口",
         "中文入口",
+        "中文 FAQ",
+        "zh-faq.html",
         "Base Mainnet",
         "chainId 8453",
         MAINNET_ADDRESS,
@@ -493,6 +498,67 @@ def validate_zh_cn_page(text: str) -> None:
         "https://t.me/gcagochinaofficial",
         "verify.html",
         "buy.html",
+        "members.html",
+        "member-ledger.html",
+        "member-benefit.html",
+        "release-gates.html",
+        "data.html",
+    ):
+        assert_contains(text, expected, label)
+    assert_platform_only_data_room(
+        text,
+        label,
+        (
+            "project.json",
+            "tokenlist.json",
+            "reviewer-kit.json",
+            "platform-replies.json",
+            "member-ledger.json",
+        ),
+    )
+    assert_current_pool_text(text, label)
+    assert_no_forbidden_public_claims(text, label)
+
+
+def validate_zh_faq_page(text: str) -> None:
+    label = "/zh-faq.html"
+    assert_social_preview_meta(text, label, ZH_FAQ_PAGE_URL)
+    for expected in (
+        "GCA 中文 FAQ",
+        "GCA 中文常见问题",
+        "中文用户常见问题",
+        "Base Mainnet",
+        "chainId 8453",
+        MAINNET_ADDRESS,
+        "GCA/USDT",
+        OFFICIAL_POOL_ADDRESS,
+        "官方公开路线是 Base Mainnet 上的 GCA/USDT 池",
+        "为什么钱包里看不到 GCA",
+        "为什么有些平台显示流通量是 10 亿",
+        "别人买了 GCA，我的钱包会收到钱吗",
+        "别人买币，我钱包里的 GCA 会变少吗",
+        "如果不走池子，怎么结算",
+        "现在有没有第三方审计",
+        "第三方审计尚未完成",
+        "风险提示消失是不是永久安全",
+        "会员规则是什么",
+        "10,000 GCA",
+        "100 Web3 Radar utility credits",
+        "1,000,000 GCA",
+        "连续持有 1,000,000 GCA 满 30 天",
+        "当前公开自助领取还没有上线",
+        "不是投资建议",
+        "不要把小额测试交易说成真实市场需求",
+        "不要通过人工制造交易量、自我成交或误导性宣传来改善市场数据",
+        "Platform-Only Evidence Path",
+        "Reviewer Data Room",
+        "GCAgochina@outlook.com",
+        X_URL,
+        "https://t.me/gcagochinaofficial",
+        "zh-cn.html",
+        "verify.html",
+        "buy.html",
+        "markets.html",
         "members.html",
         "member-ledger.html",
         "member-benefit.html",
@@ -604,6 +670,8 @@ def validate_site_map_page(text: str) -> None:
         "About GCA",
         "中文入口",
         "zh-cn.html",
+        "中文 FAQ",
+        "zh-faq.html",
         "Member Access",
         "Trust Center",
         "Core User Path",
@@ -7630,6 +7698,7 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/about.html",
         "https://gcagochina.com/action-plan.html",
         "https://gcagochina.com/zh-cn.html",
+        "https://gcagochina.com/zh-faq.html",
         "https://gcagochina.com/data.html",
         "https://gcagochina.com/site-map.html",
         "https://gcagochina.com/verify.html",
@@ -7743,6 +7812,7 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /about.html", label)
     assert_contains(text, "Allow: /action-plan.html", label)
     assert_contains(text, "Allow: /zh-cn.html", label)
+    assert_contains(text, "Allow: /zh-faq.html", label)
     assert_contains(text, "Allow: /site-map.html", label)
     assert_contains(text, "Allow: /verify.html", label)
     assert_contains(text, "Allow: /data.html", label)
@@ -7857,6 +7927,7 @@ CHECKS: list[EndpointCheck] = [
     ("/about.html", validate_about_page),
     ("/action-plan.html", validate_action_plan_page),
     ("/zh-cn.html", validate_zh_cn_page),
+    ("/zh-faq.html", validate_zh_faq_page),
     ("/data.html", validate_data_page),
     ("/site-map.html", validate_site_map_page),
     ("/verify.html", validate_verify),
