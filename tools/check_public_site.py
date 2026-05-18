@@ -28,6 +28,7 @@ VERIFY_PAGE_URL = "https://gcagochina.com/verify.html"
 BUY_PAGE_URL = "https://gcagochina.com/buy.html"
 STATUS_PAGE_URL = "https://gcagochina.com/status.html"
 DATA_PAGE_URL = "https://gcagochina.com/data.html"
+SITE_MAP_PAGE_URL = "https://gcagochina.com/site-map.html"
 LISTING_KIT_PAGE_URL = "https://gcagochina.com/listing-kit.html"
 SECURITY_PAGE_URL = "https://gcagochina.com/security.html"
 RISK_PAGE_URL = "https://gcagochina.com/risk.html"
@@ -218,6 +219,8 @@ def validate_root(text: str) -> None:
     assert_contains(text, "On-chain Proofs", label)
     assert_contains(text, "Brand Kit", label)
     assert_contains(text, "Reviewer Data Room", label)
+    assert_contains(text, "Site Map", label)
+    assert_contains(text, "site-map.html", label)
     assert_contains(text, "data.html", label)
     assert_contains(text, "Member Ledger", label)
     assert_contains(text, "Benefit Transfer Runbook", label)
@@ -336,6 +339,8 @@ def validate_data_page(text: str) -> None:
         "JSON files are not broken pages",
         "machine-readable data files",
         "Regular visitors should use the HTML pages",
+        "Human Site Map",
+        "site-map.html",
         "Human Listing Kit",
         "Choose the Right Link",
         "Open Page",
@@ -399,6 +404,63 @@ def validate_data_page(text: str) -> None:
         "publishing-desk.json",
     ):
         assert_contains(text, expected, label)
+    assert_no_forbidden_public_claims(text, label)
+
+
+def validate_site_map_page(text: str) -> None:
+    label = "/site-map.html"
+    assert_social_preview_meta(text, label, SITE_MAP_PAGE_URL)
+    for expected in (
+        "GCA Site Map",
+        "Human-Readable Index",
+        "Normal visitors should open HTML pages first",
+        "Reviewer Data Room",
+        "Verify GCA",
+        "Buy Guide",
+        "Member Access",
+        "Trust Center",
+        "Core User Path",
+        "Verify and Buy",
+        "Status and Help",
+        "Official Docs",
+        "Product and Members",
+        "Product Blueprint",
+        "Member Program",
+        "Operations",
+        "Trust and Review",
+        "Security Materials",
+        "External Review",
+        "Supply and Custody",
+        "Content and Community",
+        "Community Channels",
+        "Campaign Desk",
+        "Radar Issues",
+        "Platform-Only Evidence Path",
+        "Machine-readable JSON files",
+        MAINNET_ADDRESS,
+        "Base Mainnet",
+        "8453",
+        "GCA/USDT",
+        OFFICIAL_POOL_ADDRESS,
+        "data.html",
+        "reviewer-kit.html",
+        "platform-replies.html",
+        "brand-kit.html",
+        "onchain-proofs.html",
+    ):
+        assert_contains(text, expected, label)
+    assert_platform_only_data_room(
+        text,
+        label,
+        (
+            "project.json",
+            "tokenlist.json",
+            "reviewer-kit.json",
+            "platform-replies.json",
+            "member-ledger.json",
+        ),
+    )
+    assert_current_pool_text(text, label)
     assert_no_forbidden_public_claims(text, label)
 
 
@@ -7332,6 +7394,7 @@ def validate_sitemap(text: str) -> None:
     label = "/sitemap.xml"
     for expected in (
         "https://gcagochina.com/data.html",
+        "https://gcagochina.com/site-map.html",
         "https://gcagochina.com/verify.html",
         "https://gcagochina.com/status.html",
         "https://gcagochina.com/listing-kit.html",
@@ -7440,6 +7503,7 @@ def validate_sitemap(text: str) -> None:
 
 def validate_robots(text: str) -> None:
     label = "/robots.txt"
+    assert_contains(text, "Allow: /site-map.html", label)
     assert_contains(text, "Allow: /verify.html", label)
     assert_contains(text, "Allow: /data.html", label)
     assert_contains(text, "Allow: /status.html", label)
@@ -7551,6 +7615,7 @@ def validate_robots(text: str) -> None:
 CHECKS: list[EndpointCheck] = [
     ("/", validate_root),
     ("/data.html", validate_data_page),
+    ("/site-map.html", validate_site_map_page),
     ("/verify.html", validate_verify),
     ("/status.html", validate_status_page),
     ("/listing-kit.html", validate_listing_kit_page),
