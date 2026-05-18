@@ -93,6 +93,8 @@
         display: flex;
         gap: 18px;
         align-items: center;
+        flex-wrap: wrap;
+        justify-content: flex-end;
         font-size: 14px;
       }
 
@@ -257,6 +259,92 @@
         overflow-wrap: anywhere;
       }
 
+      .hero {
+        display: grid;
+        grid-template-columns: minmax(0, 1.08fr) minmax(320px, 0.92fr);
+        gap: 28px;
+        align-items: center;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin: 0 0 16px;
+        color: var(--red);
+        font-size: 13px;
+        font-weight: 850;
+        text-transform: uppercase;
+      }
+
+      .eyebrow::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: var(--red);
+      }
+
+      .hero-card {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        padding: 18px;
+      }
+
+      .hero-art {
+        width: 100%;
+        aspect-ratio: 1200 / 630;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--soft);
+        object-fit: cover;
+      }
+
+      .hero-meta,
+      .mini-grid {
+        display: grid;
+        gap: 10px;
+      }
+
+      .hero-meta {
+        margin-top: 14px;
+      }
+
+      .mini-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        margin-top: 14px;
+      }
+
+      .mini {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--soft);
+        padding: 12px;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        min-height: 28px;
+        border-radius: 999px;
+        background: var(--soft);
+        color: var(--muted);
+        padding: 4px 10px;
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .button.secondary {
+        border-color: #cad7ec;
+        background: #eef4ff;
+        color: #123e90;
+      }
+
+      .callout {
+        border-left: 4px solid var(--red);
+      }
+
       footer {
         border-top: 1px solid var(--line);
         padding: 24px 0;
@@ -271,9 +359,11 @@
           flex-direction: column;
         }
 
+        .hero,
         .facts,
         .grid,
-        .two {
+        .two,
+        .mini-grid {
           grid-template-columns: 1fr;
         }
       }
@@ -287,6 +377,7 @@
           <span>GCA</span>
         </a>
         <div class="nav-links">
+          <a href="index.html">Home</a>
           <a href="verify.html">Verify</a>
           <a href="buy.html">Buy Guide</a>
           <a href="markets.html">Markets</a>
@@ -296,26 +387,50 @@
           <a href="security.html">Security</a>
           <a href="risk.html">Risk</a>
           <a href="trust.html">Trust Center</a>
+          <a href="status.html">Status</a>
+          <a href="listing-kit.html">Listing Kit</a>
           <a href="reviewer-kit.html">Reviewer Kit</a>
         </div>
       </nav>
     </header>
 
     <main class="shell">
-      <section aria-labelledby="title">
-        <h1 id="title">GCA Liquidity And LP Custody</h1>
-        <p class="lead">This page is the public liquidity and LP custody statement for GCA. It records the official Base Mainnet GCA/USDT market route, current starter-depth liquidity status, unlocked LP boundary, and what evidence would be required before any future LP lock claim can be made.</p>
-        <div class="actions">
-          <a class="button primary" href="liquidity.json">Liquidity JSON</a>
-          <a class="button primary" href="https://app.uniswap.org/swap?chain=base&amp;inputCurrency=0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2&amp;outputCurrency=0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6" target="_blank" rel="noreferrer">Open Swap</a>
-          <a class="button" href="https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0" target="_blank" rel="noreferrer">GeckoTerminal</a>
-          <a class="button" href="https://dexscreener.com/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0" target="_blank" rel="noreferrer">DEX Screener</a>
-          <a class="button" href="markets.html">Markets</a>
-          <a class="button" href="market-quality.html">Market Quality</a>
-          <a class="button" href="custody-roadmap.html">Custody Roadmap</a>
-          <a class="button" href="blockaid-followup.html">Blockaid Follow-up</a>
-          <a class="button" href="risk.html">Risk</a>
+      <section class="hero" aria-labelledby="title">
+        <div>
+          <p class="eyebrow">Liquidity Statement</p>
+          <h1 id="title">GCA Liquidity And LP Custody</h1>
+          <p class="lead">This page is the public liquidity and LP custody statement for GCA. It records the official Base Mainnet GCA/USDT market route, current starter-depth liquidity status, unlocked LP boundary, and what evidence would be required before any future LP lock claim can be made.</p>
+          <p class="lead">Use it to explain the difference between token-contract safety and market-structure risks such as price impact, slippage, and removable liquidity.</p>
+          <div class="actions">
+            <a class="button primary" href="https://app.uniswap.org/swap?chain=base&amp;inputCurrency=0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2&amp;outputCurrency=0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6" target="_blank" rel="noreferrer">Open Swap</a>
+            <a class="button secondary" href="markets.html">Markets</a>
+            <a class="button" href="market-quality.html">Market Quality</a>
+            <a class="button" href="custody-roadmap.html">Custody Roadmap</a>
+            <a class="button" href="risk.html">Risk</a>
+            <a class="button" href="#technicalEvidence">Technical Evidence</a>
+          </div>
         </div>
+
+        <aside class="hero-card" aria-label="Liquidity summary">
+          <img class="hero-art" src="assets/gca-social-card.png" alt="GCA social preview card">
+          <div class="hero-meta">
+            <span class="pill">Base Mainnet / 8453</span>
+            <div class="mini-grid" aria-label="Liquidity facts">
+              <div class="mini">
+                <span class="label">Pair</span>
+                <span class="value">GCA/USDT</span>
+              </div>
+              <div class="mini">
+                <span class="label">Depth</span>
+                <span class="value pending">Starter-depth only</span>
+              </div>
+              <div class="mini">
+                <span class="label">LP Lock Claim</span>
+                <span class="value pending">Not claimed</span>
+              </div>
+            </div>
+          </div>
+        </aside>
       </section>
 
       <section class="facts" aria-label="Liquidity snapshot">
@@ -334,6 +449,23 @@
         <div class="fact">
           <span class="label">LP Lock Claim</span>
           <span class="value pending">Not claimed</span>
+        </div>
+      </section>
+
+      <section class="section two" aria-label="Plain language liquidity summary">
+        <div class="panel callout">
+          <h2>What This Means</h2>
+          <p class="note">GCA transfers are controlled by a fixed-supply ERC-20 contract, but market liquidity is separate. A shallow pool can still have high price impact, wider slippage, and changing available liquidity even when the token contract has no mint, tax, blacklist, pause, or owner controls.</p>
+        </div>
+
+        <div class="panel">
+          <h2>What To Share Publicly</h2>
+          <div class="list">
+            <div class="row"><span>Market route</span><strong>Official Base Mainnet GCA/USDT pool</strong></div>
+            <div class="row"><span>Liquidity status</span><strong>starter-depth liquidity only</strong></div>
+            <div class="row"><span>LP custody status</span><strong>No LP lock is currently claimed</strong></div>
+            <div class="row"><span>User action</span><strong>Verify addresses and slippage before signing</strong></div>
+          </div>
         </div>
       </section>
 
@@ -380,6 +512,19 @@
       <section class="section panel" aria-labelledby="futureLockTitle">
         <h2 id="futureLockTitle">Future LP Lock Evidence Requirements</h2>
         <p class="note">If GCA later locks LP, the project should publish the lock provider or contract, locked pool or position identifier, lock transaction hash, lock owner or beneficiary, unlock date, and a direct explorer link. The <a href="custody-roadmap.html">Custody Roadmap</a> records the broader reserve and LP custody checklist. Until those items exist on-chain and are published, GCA should not be described as LP locked.</p>
+      </section>
+
+      <section class="section panel" id="technicalEvidence" aria-labelledby="technicalEvidenceTitle">
+        <h2 id="technicalEvidenceTitle">Technical Evidence</h2>
+        <p class="note">Use the human-readable pages first when sharing with users. The Liquidity JSON file remains available for reviewers, wallets, scanners, and data platforms that need machine-readable liquidity and LP custody metadata.</p>
+        <div class="actions">
+          <a class="button" href="https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0" target="_blank" rel="noreferrer">GeckoTerminal</a>
+          <a class="button" href="https://dexscreener.com/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0" target="_blank" rel="noreferrer">DEX Screener</a>
+          <a class="button" href="liquidity.json">Liquidity JSON</a>
+          <a class="button" href="blockaid-followup.html">Blockaid Follow-up</a>
+          <a class="button" href="technical-report.html">Technical Report</a>
+          <a class="button" href="reviewer-kit.html">Reviewer Kit</a>
+        </div>
       </section>
 
       <section class="section panel warning" aria-labelledby="claimTitle">
