@@ -229,9 +229,10 @@
       }
 
       .row {
-        display: flex;
-        justify-content: space-between;
-        gap: 16px;
+        display: grid;
+        grid-template-columns: minmax(112px, 0.75fr) minmax(0, 1.35fr);
+        gap: 12px;
+        align-items: start;
         border-top: 1px solid var(--line);
         padding-top: 10px;
       }
@@ -239,6 +240,13 @@
       .row:first-child {
         border-top: 0;
         padding-top: 0;
+      }
+
+      .row strong {
+        min-width: 0;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+        text-align: right;
       }
 
       pre,
@@ -252,6 +260,9 @@
       code {
         padding: 2px 5px;
         font-size: 0.92em;
+        max-width: 100%;
+        overflow-wrap: anywhere;
+        word-break: break-word;
       }
 
       pre {
@@ -270,8 +281,7 @@
       }
 
       @media (max-width: 760px) {
-        nav,
-        .row {
+        nav {
           align-items: flex-start;
           flex-direction: column;
         }
@@ -284,6 +294,14 @@
         .two,
         .three {
           grid-template-columns: 1fr;
+        }
+
+        .row {
+          grid-template-columns: 1fr;
+        }
+
+        .row strong {
+          text-align: left;
         }
       }
     </style>
@@ -321,15 +339,10 @@
         <div class="actions">
           <a class="button primary" href="https://t.me/gcagochinaofficial" target="_blank" rel="noreferrer">Official Telegram</a>
           <a class="button" href="https://x.com/GCAAIGoChina" target="_blank" rel="noreferrer">Official X</a>
-          <a class="button" href="community.json">Community JSON</a>
           <a class="button" href="announcements.html">Announcements</a>
-          <a class="button" href="announcements.json">Announcements JSON</a>
           <a class="button" href="campaign.html">Campaign Calendar</a>
-          <a class="button" href="campaign.json">Campaign JSON</a>
           <a class="button" href="content-library.html">Content Library</a>
-          <a class="button" href="content-library.json">Content Library JSON</a>
           <a class="button" href="publishing-desk.html">Publishing Desk</a>
-          <a class="button" href="publishing-desk.json">Publishing Desk JSON</a>
           <a class="button" href="#xLaunchTitle">X Launch Pack</a>
           <a class="button" href="narrative.html">Narrative System</a>
           <a class="button" href="radar.html">Weekly Radar</a>
@@ -337,6 +350,7 @@
           <a class="button" href="roadmap.html">Roadmap</a>
           <a class="button" href="support.html">Support & Intake</a>
           <a class="button" href="markets.html">Markets</a>
+          <a class="button" href="#technicalEvidence">Technical Evidence</a>
         </div>
       </section>
 
@@ -473,6 +487,19 @@ Base Mainnet only. No third-party audit. Starter-depth liquidity.</pre>
             <li>Do not claim deep liquidity, price support, listing approval, or trading outcomes.</li>
             <li>Do not ask anyone for private keys, seed phrases, exchange API secrets, withdrawal permission, one-time codes, custody, or fund transfers.</li>
           </ul>
+        </div>
+      </section>
+
+      <section class="section panel" id="technicalEvidence" aria-labelledby="technicalEvidenceTitle">
+        <h2 id="technicalEvidenceTitle">Technical Evidence</h2>
+        <p class="note">These structured files support community moderation, campaign planning, announcement tracking, and content review. They are for operators and platforms that request machine-readable context, not the primary community entry point.</p>
+        <div class="actions">
+          <a class="button" href="community.json">Community JSON</a>
+          <a class="button" href="announcements.json">Announcements JSON</a>
+          <a class="button" href="campaign.json">Campaign JSON</a>
+          <a class="button" href="content-library.json">Content Library JSON</a>
+          <a class="button" href="publishing-desk.json">Publishing Desk JSON</a>
+          <a class="button" href="narrative.json">Narrative JSON</a>
         </div>
       </section>
 
