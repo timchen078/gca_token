@@ -1,6 +1,7 @@
 User-agent: *
 Allow: /
 Allow: /zh-cn.html
+Allow: /zh-apply.html
 Allow: /zh-faq.html
 Allow: /zh-members.html
 Allow: /about.html
