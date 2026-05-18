@@ -312,6 +312,28 @@
         background: #f8fafc;
       }
 
+      .raw-only {
+        border-color: #ead7a2;
+      }
+
+      .raw-boundary {
+        margin: 14px 0 0;
+        padding: 14px;
+        border: 1px solid #ead7a2;
+        border-radius: 8px;
+        background: #fffdf5;
+      }
+
+      .raw-boundary strong {
+        display: block;
+        margin-bottom: 4px;
+      }
+
+      .raw-boundary p {
+        margin: 0;
+        color: var(--muted);
+      }
+
       footer {
         border-top: 1px solid var(--line);
         padding: 24px 0;
@@ -376,7 +398,7 @@
           <p class="eyebrow">Trust Center</p>
           <h1 id="title">GCA Trust Center</h1>
           <p class="lead">A single public reference for GCA contract facts, official links, review status, wallet-warning evidence, market route, supply disclosure, and public claim boundaries.</p>
-          <p class="lead">Start with human-readable verification, reviewer evidence, and public risk boundaries; machine-readable JSON remains below in Technical Evidence.</p>
+          <p class="lead">Start with human-readable verification, reviewer evidence, and public risk boundaries; machine-readable JSON remains below as platform-only technical evidence.</p>
           <div class="actions">
             <a class="button primary" href="verify.html">Verify GCA</a>
             <a class="button primary" href="reviewer-kit.html">Reviewer Kit</a>
@@ -491,7 +513,7 @@
             <div class="row"><span>Owner-held reserve</span><strong>600,000,000 GCA / 60%</strong></div>
             <div class="row"><span>Reserve wallet</span><strong>0x5e8F84748612B913aAcC937492AC25dc5630E246</strong></div>
             <div class="row"><span><a href="supply.html">Supply page</a></span><strong>Published</strong></div>
-            <div class="row"><span><a href="supply.json">Supply JSON</a></span><strong>Machine readable</strong></div>
+            <div class="row"><span><a href="data.html">Supply data room</a></span><strong>Raw file in Data Room</strong></div>
             <div class="row"><span><a href="holder-distribution.html">Holder Distribution</a></span><strong>Concentration risk disclosed</strong></div>
           </div>
         </div>
@@ -510,47 +532,47 @@
         </div>
         <div class="panel">
           <h3>Blockaid Follow-up</h3>
-          <p class="note"><a href="blockaid-followup.html">Blockaid Follow-up</a> and <a href="blockaid-followup.json">Blockaid Follow-up JSON</a> answer price volatility, LP lock, concentration, and audit-status questions without claiming external approval.</p>
+          <p class="note"><a href="blockaid-followup.html">Blockaid Follow-up</a> answers price volatility, LP lock, concentration, and audit-status questions without claiming external approval. Raw JSON is platform-only evidence.</p>
         </div>
         <div class="panel">
           <h3>Liquidity Statement</h3>
-          <p class="note"><a href="liquidity.html">Liquidity Statement</a> and <a href="liquidity.json">Liquidity JSON</a> publish the official GCA/USDT pool, starter-depth liquidity status, unlocked LP boundary, and future lock evidence requirements.</p>
+          <p class="note"><a href="liquidity.html">Liquidity Statement</a> publishes the official GCA/USDT pool, starter-depth liquidity status, unlocked LP boundary, and future lock evidence requirements. Raw JSON is platform-only evidence.</p>
         </div>
         <div class="panel">
           <h3>Holder Distribution</h3>
-          <p class="note"><a href="holder-distribution.html">Holder Distribution</a> and <a href="holder-distribution.json">Holder Distribution JSON</a> disclose the 40/60 allocation target, reserve wallet, reserve transfer proofs, and remaining concentration risk.</p>
+          <p class="note"><a href="holder-distribution.html">Holder Distribution</a> discloses the 40/60 allocation target, reserve wallet, reserve transfer proofs, and remaining concentration risk. Raw JSON is platform-only evidence.</p>
         </div>
         <div class="panel">
           <h3>Risk Remediation</h3>
-          <p class="note"><a href="risk-remediation.html">Risk Remediation Plan</a> and <a href="risk-remediation.json">Risk Remediation JSON</a> map remaining review risks to current evidence and future actions without claiming they are already solved.</p>
+          <p class="note"><a href="risk-remediation.html">Risk Remediation Plan</a> maps remaining review risks to current evidence and future actions without claiming they are already solved. Raw JSON is platform-only evidence.</p>
         </div>
         <div class="panel">
           <h3>Custody Roadmap</h3>
-          <p class="note"><a href="custody-roadmap.html">Custody Roadmap</a> and <a href="custody-roadmap.json">Custody Roadmap JSON</a> document current reserve and LP custody status plus the evidence required before any future multisig, lock, vesting, or LP-lock claim.</p>
+          <p class="note"><a href="custody-roadmap.html">Custody Roadmap</a> documents current reserve and LP custody status plus the evidence required before any future multisig, lock, vesting, or LP-lock claim. Raw JSON is platform-only evidence.</p>
         </div>
         <div class="panel">
           <h3>Audit Readiness</h3>
-          <p class="note"><a href="audit-readiness.html">Audit Readiness</a> and <a href="audit-readiness.json">Audit Readiness JSON</a> publish the contract scope, checklist, handoff template, and expected independent auditor deliverables without claiming third-party audit completion.</p>
+          <p class="note"><a href="audit-readiness.html">Audit Readiness</a> publishes the contract scope, checklist, handoff template, and expected independent auditor deliverables without claiming third-party audit completion. Raw JSON is platform-only evidence.</p>
         </div>
         <div class="panel">
           <h3>Wallet Warning Evidence</h3>
-          <p class="note"><a href="wallet-warning.html">Wallet Warning Evidence</a> and <a href=".well-known/wallet-security.json">Wallet Security JSON</a> record the Blockaid report, follow-up, contract facts, and owner-observed no-warning-visible boundary.</p>
+          <p class="note"><a href="wallet-warning.html">Wallet Warning Evidence</a> records the Blockaid report, follow-up, contract facts, and owner-observed no-warning-visible boundary. Raw JSON is platform-only evidence.</p>
         </div>
         <div class="panel">
           <h3>Token Safety</h3>
-          <p class="note"><a href="token-safety.html">Token Safety Checklist</a> and <a href="token-safety.json">Token Safety JSON</a> summarize verified positive controls, pending external reviews, and public claim boundaries.</p>
+          <p class="note"><a href="token-safety.html">Token Safety Checklist</a> summarizes verified positive controls, pending external reviews, and public claim boundaries. Raw JSON is platform-only evidence.</p>
         </div>
         <div class="panel">
           <h3>Technical Report</h3>
-          <p class="note"><a href="technical-report.html">Technical Report</a> and <a href="technical-report.json">Technical Report JSON</a> summarize verified contract controls for reviewers. It is an internal report, not a third-party audit.</p>
+          <p class="note"><a href="technical-report.html">Technical Report</a> summarizes verified contract controls for reviewers. It is an internal report, not a third-party audit. Raw JSON is platform-only evidence.</p>
         </div>
         <div class="panel">
           <h3>Reserve Statement</h3>
-          <p class="note"><a href="reserve-statement.html">Reserve Statement</a> and <a href="reserve-statement.json">Reserve Statement JSON</a> disclose the owner reserve wallet, reserve transfers, and the current non-locked custody boundary.</p>
+          <p class="note"><a href="reserve-statement.html">Reserve Statement</a> discloses the owner reserve wallet, reserve transfers, and the current non-locked custody boundary. Raw JSON is platform-only evidence.</p>
         </div>
         <div class="panel">
           <h3>Metadata</h3>
-          <p class="note"><a href="brand-kit.html">Brand Kit</a>, <a href="tokenlist.json">Token List JSON</a>, <a href="project.json">Project JSON</a>, and <a href=".well-known/gca-token.json">well-known identity</a> publish official metadata.</p>
+          <p class="note"><a href="brand-kit.html">Brand Kit</a> and <a href="verify.html">Verify GCA</a> publish official metadata for normal review. Token-list and well-known JSON files are platform-only metadata.</p>
         </div>
         <div class="panel">
           <h3>Market Quality</h3>
@@ -563,15 +585,19 @@
         </div>
       </section>
 
-      <section class="section panel technical" id="technicalEvidence" aria-labelledby="technicalTitle">
-        <h2 id="technicalTitle">Technical Evidence</h2>
+      <section class="section panel technical raw-only" id="technicalEvidence" aria-labelledby="technicalTitle">
+        <h2 id="technicalTitle">Platform-Only Technical Evidence</h2>
         <p class="note">These files are kept for reviewers, wallets, token-list tools, and automated checks. Human-readable pages should be used first for normal review because raw JSON can look like code in a browser.</p>
+        <div class="raw-boundary">
+          <strong>Normal visitor path</strong>
+          <p>Use Verify GCA, Trust Center sections, and the linked HTML evidence pages first. Open raw JSON only when a platform form, wallet vendor, or reviewer explicitly asks for machine-readable metadata.</p>
+        </div>
         <div class="actions">
-          <a class="button" href="trust.json">Trust Center JSON</a>
-          <a class="button" href=".well-known/wallet-security.json">Wallet Security JSON</a>
-          <a class="button" href="tokenlist.json">Token List JSON</a>
-          <a class="button" href="project.json">Project JSON</a>
-          <a class="button" href=".well-known/gca-token.json">Well-known Identity JSON</a>
+          <a class="button" href="trust.json" title="Raw JSON for platforms only">Trust Center JSON</a>
+          <a class="button" href=".well-known/wallet-security.json" title="Raw JSON for platforms only">Wallet Security JSON</a>
+          <a class="button" href="tokenlist.json" title="Raw JSON for platforms only">Token List JSON</a>
+          <a class="button" href="project.json" title="Raw JSON for platforms only">Project JSON</a>
+          <a class="button" href=".well-known/gca-token.json" title="Raw JSON for platforms only">Well-known Identity JSON</a>
         </div>
       </section>
 
