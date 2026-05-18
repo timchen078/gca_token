@@ -237,9 +237,10 @@
       }
 
       .row {
-        display: flex;
-        justify-content: space-between;
-        gap: 16px;
+        display: grid;
+        grid-template-columns: minmax(112px, 0.75fr) minmax(0, 1.35fr);
+        gap: 12px;
+        align-items: start;
         border-top: 1px solid var(--line);
         padding-top: 10px;
       }
@@ -249,6 +250,13 @@
         padding-top: 0;
       }
 
+      .row strong {
+        min-width: 0;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+        text-align: right;
+      }
+
       code {
         border: 1px solid var(--line);
         border-radius: 6px;
@@ -256,6 +264,9 @@
         padding: 2px 5px;
         font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
         font-size: 0.92em;
+        max-width: 100%;
+        overflow-wrap: anywhere;
+        word-break: break-word;
       }
 
       footer {
@@ -281,6 +292,14 @@
         .facts {
           grid-template-columns: 1fr;
         }
+
+        .row {
+          grid-template-columns: 1fr;
+        }
+
+        .row strong {
+          text-align: left;
+        }
       }
     </style>
   </head>
@@ -294,7 +313,6 @@
         <div class="nav-links">
           <a href="index.html">Home</a>
           <a href="review-queue.html">Review Queue</a>
-          <a href="operations.json">Operations JSON</a>
           <a href="access-api.html">Access API</a>
           <a href="support.html">Support</a>
           <a href="release-gates.html">Release Gates</a>
@@ -309,14 +327,13 @@
         <p class="lead">This runbook defines how GCA operators should handle manual access requests before public self-service account UI, public submission queue, credit ledger writes, and GCA Member ledger writes are live.</p>
         <p class="lead">The runbook is public documentation only and is not live today. It is not a live backend, not a public submission queue, not a public support ticket system, not an account system, and not a way to request custody, withdrawals, live trading, or balance-verification overrides.</p>
         <div class="actions">
-          <a class="button primary" href="operations.json">Operations JSON</a>
           <a class="button primary" href="review-queue.html">Review Queue Contract</a>
-          <a class="button" href="review-queue.json">Review Queue JSON</a>
           <a class="button" href="access-api.html">Access API Contract</a>
           <a class="button" href="support.html">Support & Intake</a>
           <a class="button" href="reviewer-kit.html">Reviewer Kit</a>
           <a class="button" href="platform-replies.html">Platform Replies</a>
           <a class="button" href="release-gates.html">Release Gates</a>
+          <a class="button" href="#technicalEvidence">Technical Evidence</a>
         </div>
         <div class="facts" aria-label="Operational state">
           <div class="fact">
@@ -501,6 +518,19 @@
           <div class="row"><span>Network</span><strong>Base Mainnet</strong></div>
           <div class="row"><span>Pool</span><strong><code>0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0</code></strong></div>
           <div class="row"><span>USDT</span><strong><code>0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2</code></strong></div>
+        </div>
+      </section>
+
+      <section class="section panel" id="technicalEvidence" aria-labelledby="technicalEvidenceTitle">
+        <h2 id="technicalEvidenceTitle">Technical Evidence</h2>
+        <p class="note">These structured files support operator implementation and reviewer handoff. They are not live submission endpoints and do not create public claiming, custody, withdrawals, or live trading access.</p>
+        <div class="actions">
+          <a class="button" href="operations.json">Operations JSON</a>
+          <a class="button" href="review-queue.json">Review Queue JSON</a>
+          <a class="button" href="access-api.json">Access API JSON</a>
+          <a class="button" href="member-ledger.json">Member Ledger JSON</a>
+          <a class="button" href="support.json">Support JSON</a>
+          <a class="button" href="release-gates.json">Release Gates JSON</a>
         </div>
       </section>
 

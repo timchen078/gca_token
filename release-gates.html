@@ -264,6 +264,9 @@
         padding: 2px 5px;
         font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
         font-size: 0.92em;
+        max-width: 100%;
+        overflow-wrap: anywhere;
+        word-break: break-word;
       }
 
       footer {
@@ -274,8 +277,7 @@
       }
 
       @media (max-width: 860px) {
-        nav,
-        .row {
+        nav {
           align-items: flex-start;
           flex-direction: column;
         }
@@ -291,7 +293,7 @@
         }
 
         .row {
-          display: flex;
+          grid-template-columns: 1fr;
         }
 
         .row strong {
@@ -317,7 +319,6 @@
           <a href="operations.html">Operations</a>
           <a href="access-api.html">Access API</a>
           <a href="credits.html">Credits Catalog</a>
-          <a href="release-gates.json">Release Gates JSON</a>
           <a href="utility.html">Utility</a>
           <a href="member-ledger.html">Member Ledger</a>
           <a href="roadmap.html">Roadmap</a>
@@ -333,21 +334,16 @@
         <p class="lead">This page defines what must be true before GCA AI Quant Access is described as a public self-service product. The current state is public product spec only, not a live trading terminal, not live market data, and not financial advice.</p>
         <p class="lead">Public Account UI is not live. Credits are not self-service claimable. GCA Member status is not self-service claimable. The 10,000 GCA member benefit is not self-service claimable. Any product claim must stay inside the gates below until implementation, support review, and disclosures are live.</p>
         <div class="actions">
-          <a class="button primary" href="release-gates.json">Release Gates JSON</a>
           <a class="button primary" href="access.html">Access Portal</a>
           <a class="button primary" href="operations.html">Operations Runbook</a>
-          <a class="button" href="access.json">Access JSON</a>
-          <a class="button" href="operations.json">Operations JSON</a>
           <a class="button" href="access-api.html">Access API Contract</a>
-          <a class="button" href="access-api.json">Access API JSON</a>
           <a class="button" href="product.html">Product Spec</a>
-          <a class="button" href="product.json">Product JSON</a>
           <a class="button" href="credits.html">Credits Catalog</a>
-          <a class="button" href="credits.json">Credits JSON</a>
           <a class="button" href="utility.html">Utility Bridge</a>
           <a class="button" href="member-ledger.html">Member Ledger</a>
           <a class="button" href="support.html">Support</a>
           <a class="button" href="roadmap.html">Roadmap</a>
+          <a class="button" href="#technicalEvidence">Technical Evidence</a>
         </div>
       </section>
 
@@ -430,6 +426,19 @@
             <div class="row"><span>Risk</span><strong>risk-control review required</strong></div>
             <div class="row"><span>Validation</span><strong>simulation or testnet first</strong></div>
           </div>
+        </div>
+      </section>
+
+      <section class="section panel" id="technicalEvidence" aria-labelledby="technicalEvidenceTitle">
+        <h2 id="technicalEvidenceTitle">Technical Evidence</h2>
+        <p class="note">These structured files document the product gates, access blueprint, operations runbook, API contract, product spec, and credits catalog. They do not make any gated feature live.</p>
+        <div class="actions">
+          <a class="button" href="release-gates.json">Release Gates JSON</a>
+          <a class="button" href="access.json">Access JSON</a>
+          <a class="button" href="operations.json">Operations JSON</a>
+          <a class="button" href="access-api.json">Access API JSON</a>
+          <a class="button" href="product.json">Product JSON</a>
+          <a class="button" href="credits.json">Credits JSON</a>
         </div>
       </section>
 

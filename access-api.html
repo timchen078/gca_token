@@ -237,9 +237,10 @@
       }
 
       .row {
-        display: flex;
-        justify-content: space-between;
-        gap: 16px;
+        display: grid;
+        grid-template-columns: minmax(112px, 0.75fr) minmax(0, 1.35fr);
+        gap: 12px;
+        align-items: start;
         border-top: 1px solid var(--line);
         padding-top: 10px;
       }
@@ -249,6 +250,13 @@
         padding-top: 0;
       }
 
+      .row strong {
+        min-width: 0;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+        text-align: right;
+      }
+
       code {
         border: 1px solid var(--line);
         border-radius: 6px;
@@ -256,6 +264,9 @@
         padding: 2px 5px;
         font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
         font-size: 0.92em;
+        max-width: 100%;
+        overflow-wrap: anywhere;
+        word-break: break-word;
       }
 
       footer {
@@ -287,7 +298,11 @@
         }
 
         .row {
-          display: grid;
+          grid-template-columns: 1fr;
+        }
+
+        .row strong {
+          text-align: left;
         }
       }
     </style>
@@ -305,7 +320,6 @@
           <a href="product.html">Product Spec</a>
           <a href="access.html">Access Portal</a>
           <a href="operations.html">Operations</a>
-          <a href="access-api.json">Access API JSON</a>
           <a href="review-queue.html">Review Queue</a>
           <a href="credits.html">Credits</a>
           <a href="release-gates.html">Release Gates</a>
@@ -321,18 +335,14 @@
         <h1 id="title">GCA Access API Contract</h1>
         <p class="lead">This page defines the planned controlled HTTPS API contract for the GCA access bridge. It covers pre-registration, read-only wallet verification, credit ledger records, GCA Member records, and support review statuses.</p>
         <p class="lead">The API contract is not live today. It is a public implementation contract for future backend work, not a public submission endpoint, account system, or self-service claim page.</p>
-        <p class="lead">A local operator backend is available at <code>tools/gca_member_backend.py</code> for localhost testing. It serves this static site, enables same-origin local submission, exposes the <a href="operator.html">Operator Console</a> at <code>http://127.0.0.1:8787/operator.html</code>, verifies GCA with read-only Base Mainnet <code>eth_call</code>, exports a localhost-only <code>/gca/review-package</code> evidence package with <code>recordManifest</code>, <code>packageDigestSha256</code>, external-sharing <code>?redact=public</code> mode, supports offline export through <code>tools/export_gca_review_package.py</code>, verifies package digests through <code>tools/verify_gca_review_package.py</code>, and writes local JSONL ledger records without making public self-service claiming live.</p>
+        <p class="lead">A local operator backend is available for localhost testing, evidence export, read-only GCA balance checks, and operator review workflows without making public self-service claiming live. Implementation details are listed below in the endpoint contract and technical evidence sections.</p>
         <div class="actions">
-          <a class="button primary" href="access-api.json">Access API JSON</a>
           <a class="button primary" href="operations.html">Operations Runbook</a>
           <a class="button primary" href="access.html">Access Portal Blueprint</a>
           <a class="button primary" href="review-queue.html">Review Queue Contract</a>
-          <a class="button" href="review-queue.json">Review Queue JSON</a>
-          <a class="button" href="member-ledger.json">Member Ledger JSON</a>
-          <a class="button" href="operations.json">Operations JSON</a>
-          <a class="button" href="support.json">Support JSON</a>
           <a class="button" href="privacy.html">Privacy Notice</a>
           <a class="button" href="terms.html">Participation Terms</a>
+          <a class="button" href="#technicalEvidence">Technical Evidence</a>
         </div>
       </section>
 
@@ -404,7 +414,7 @@
           <div class="fact">
             <span class="label">GET</span>
             <span class="value">/gca/operator-summary</span>
-            <p class="note">Local-only console summary for JSONL pre-registration, wallet verification, credit ledger, member ledger, member benefit transfer, and support review counts.</p>
+            <p class="note">Local-only console summary for pre-registration, wallet verification, credit ledger, member ledger, member benefit transfer, and support review counts. The localhost backend writes local JSONL ledger records for testing only.</p>
           </div>
           <div class="fact">
             <span class="label">GET</span>
@@ -460,6 +470,19 @@
             <li>One-time code or recovery phrase.</li>
             <li>Any permission that bypasses risk controls.</li>
           </ul>
+        </div>
+      </section>
+
+      <section class="section panel" id="technicalEvidence" aria-labelledby="technicalEvidenceTitle">
+        <h2 id="technicalEvidenceTitle">Technical Evidence</h2>
+        <p class="note">These structured files define the planned API contract, review queue, operations handoff, and local-only ledger schemas for implementation review. They are not public production endpoints.</p>
+        <div class="actions">
+          <a class="button" href="access-api.json">Access API JSON</a>
+          <a class="button" href="review-queue.json">Review Queue JSON</a>
+          <a class="button" href="member-ledger.json">Member Ledger JSON</a>
+          <a class="button" href="operations.json">Operations JSON</a>
+          <a class="button" href="support.json">Support JSON</a>
+          <a class="button" href="access.json">Access JSON</a>
         </div>
       </section>
 
