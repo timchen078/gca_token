@@ -256,6 +256,9 @@ def validate_verify(text: str) -> None:
     assert_contains(text, "Trust Center", label)
     assert_contains(text, "On-chain Proofs", label)
     assert_contains(text, "Brand Kit", label)
+    assert_contains(text, "Platform Metadata", label)
+    assert_contains(text, "Data Room", label)
+    assert_contains(text, "platform-only raw metadata", label)
     assert_contains(text, OFFICIAL_DEXSCREENER_URL, label)
     assert_current_pool_text(text, label)
 
