@@ -102,6 +102,22 @@
         padding: 42px 0 56px;
       }
 
+      .hero {
+        display: grid;
+        grid-template-columns: minmax(0, 1.18fr) minmax(280px, 0.82fr);
+        gap: 26px;
+        align-items: center;
+      }
+
+      .eyebrow {
+        margin: 0 0 12px;
+        color: var(--red);
+        font-size: 13px;
+        font-weight: 850;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
       h1 {
         margin: 0;
         max-width: 860px;
@@ -147,6 +163,50 @@
         border-color: var(--red);
         background: var(--red);
         color: #fff;
+      }
+
+      .hero-card {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        overflow: hidden;
+      }
+
+      .hero-art {
+        display: block;
+        width: 100%;
+        aspect-ratio: 1200 / 630;
+        object-fit: cover;
+        background: var(--soft);
+      }
+
+      .hero-meta {
+        display: grid;
+        gap: 12px;
+        padding: 16px;
+      }
+
+      .hero-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 14px;
+        border-top: 1px solid var(--line);
+        padding-top: 12px;
+      }
+
+      .hero-row:first-child {
+        border-top: 0;
+        padding-top: 0;
+      }
+
+      .hero-row span {
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .hero-row strong {
+        text-align: right;
+        overflow-wrap: anywhere;
       }
 
       .section {
@@ -248,6 +308,10 @@
         background: #fff9e8;
       }
 
+      .technical {
+        background: #f8fafc;
+      }
+
       footer {
         border-top: 1px solid var(--line);
         padding: 24px 0;
@@ -256,6 +320,7 @@
       }
 
       @media (max-width: 860px) {
+        .hero,
         .facts,
         .grid,
         .two {
@@ -306,28 +371,41 @@
     </header>
 
     <main class="shell">
-      <section aria-labelledby="title">
-        <h1 id="title">GCA Trust Center</h1>
-        <p class="lead">A single public reference for GCA contract facts, official links, review status, wallet-warning evidence, market route, supply disclosure, and public claim boundaries.</p>
-        <div class="actions">
-          <a class="button primary" href="trust.json">Trust Center JSON</a>
-          <a class="button primary" href="verify.html">Verify GCA</a>
-          <a class="button" href="onchain-proofs.html">On-chain Proofs</a>
-          <a class="button" href="wallet-warning.html">Wallet Warning Evidence</a>
-          <a class="button" href="blockaid-followup.html">Blockaid Follow-up</a>
-          <a class="button" href="liquidity.html">Liquidity Statement</a>
-          <a class="button" href="holder-distribution.html">Holder Distribution</a>
-          <a class="button" href="risk-remediation.html">Risk Remediation</a>
-          <a class="button" href="custody-roadmap.html">Custody Roadmap</a>
-          <a class="button" href="audit-readiness.html">Audit Readiness</a>
-          <a class="button" href="token-safety.html">Token Safety</a>
-          <a class="button" href="technical-report.html">Technical Report</a>
-          <a class="button" href="reserve-statement.html">Reserve Statement</a>
-          <a class="button" href="external-reviews.html">External Reviews</a>
-          <a class="button" href="reviewer-kit.html">Reviewer Kit</a>
-          <a class="button" href="platform-replies.html">Platform Replies</a>
-          <a class="button" href="risk.html">Risk</a>
+      <section class="hero" aria-labelledby="title">
+        <div>
+          <p class="eyebrow">Trust Center</p>
+          <h1 id="title">GCA Trust Center</h1>
+          <p class="lead">A single public reference for GCA contract facts, official links, review status, wallet-warning evidence, market route, supply disclosure, and public claim boundaries.</p>
+          <p class="lead">Start with human-readable verification, reviewer evidence, and public risk boundaries; machine-readable JSON remains below in Technical Evidence.</p>
+          <div class="actions">
+            <a class="button primary" href="verify.html">Verify GCA</a>
+            <a class="button primary" href="reviewer-kit.html">Reviewer Kit</a>
+            <a class="button" href="onchain-proofs.html">On-chain Proofs</a>
+            <a class="button" href="wallet-warning.html">Wallet Warning Evidence</a>
+            <a class="button" href="liquidity.html">Liquidity Statement</a>
+            <a class="button" href="holder-distribution.html">Holder Distribution</a>
+            <a class="button" href="risk-remediation.html">Risk Remediation</a>
+            <a class="button" href="custody-roadmap.html">Custody Roadmap</a>
+            <a class="button" href="audit-readiness.html">Audit Readiness</a>
+            <a class="button" href="token-safety.html">Token Safety</a>
+            <a class="button" href="technical-report.html">Technical Report</a>
+            <a class="button" href="reserve-statement.html">Reserve Statement</a>
+            <a class="button" href="external-reviews.html">External Reviews</a>
+            <a class="button" href="platform-replies.html">Platform Replies</a>
+            <a class="button" href="risk.html">Risk</a>
+            <a class="button" href="#technicalEvidence">Technical Evidence</a>
+          </div>
         </div>
+
+        <aside class="hero-card" aria-label="GCA trust summary">
+          <img class="hero-art" src="assets/gca-social-card.png" alt="GCA Go China Access official social card">
+          <div class="hero-meta">
+            <div class="hero-row"><span>Network</span><strong>Base Mainnet / 8453</strong></div>
+            <div class="hero-row"><span>Market</span><strong>GCA/USDT</strong></div>
+            <div class="hero-row"><span>Profile</span><strong>GeckoTerminal approved</strong></div>
+            <div class="hero-row"><span>Audit</span><strong class="pending">No completed third-party audit</strong></div>
+          </div>
+        </aside>
       </section>
 
       <section class="facts" aria-label="Trust snapshot">
@@ -346,6 +424,21 @@
         <div class="fact">
           <span class="label">Audit Status</span>
           <span class="value pending">No completed third-party audit</span>
+        </div>
+      </section>
+
+      <section class="section grid" aria-label="Trust center map">
+        <div class="panel">
+          <h3>For Holders</h3>
+          <p class="note">Use <a href="verify.html">Verify GCA</a>, <a href="buy.html">Buy GCA</a>, <a href="risk.html">Risk</a>, and <a href="wallet-warning.html">Wallet Warning Evidence</a> before relying on token data from any wallet or market screen.</p>
+        </div>
+        <div class="panel">
+          <h3>For Reviewers</h3>
+          <p class="note"><a href="reviewer-kit.html">Reviewer Kit</a>, <a href="technical-report.html">Technical Report</a>, and <a href="onchain-proofs.html">On-chain Proofs</a> provide the current evidence package without claiming approvals that are still pending.</p>
+        </div>
+        <div class="panel">
+          <h3>For Platforms</h3>
+          <p class="note"><a href="platform-replies.html">Platform Replies</a>, <a href="blockaid-followup.html">Blockaid Follow-up</a>, <a href="liquidity.html">Liquidity Statement</a>, and <a href="reserve-statement.html">Reserve Statement</a> keep official responses consistent.</p>
         </div>
       </section>
 
@@ -467,6 +560,18 @@
           <h3>Support</h3>
           <p class="note"><a href="support.html">Support & Intake</a>, <a href="privacy.html">Privacy Notice</a>, and <a href="terms.html">Participation Terms</a> define official contact and safe data boundaries.</p>
         </div>
+        </div>
+      </section>
+
+      <section class="section panel technical" id="technicalEvidence" aria-labelledby="technicalTitle">
+        <h2 id="technicalTitle">Technical Evidence</h2>
+        <p class="note">These files are kept for reviewers, wallets, token-list tools, and automated checks. Human-readable pages should be used first for normal review because raw JSON can look like code in a browser.</p>
+        <div class="actions">
+          <a class="button" href="trust.json">Trust Center JSON</a>
+          <a class="button" href=".well-known/wallet-security.json">Wallet Security JSON</a>
+          <a class="button" href="tokenlist.json">Token List JSON</a>
+          <a class="button" href="project.json">Project JSON</a>
+          <a class="button" href=".well-known/gca-token.json">Well-known Identity JSON</a>
         </div>
       </section>
 
