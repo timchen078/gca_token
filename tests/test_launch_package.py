@@ -139,6 +139,14 @@ class LaunchPackageTests(unittest.TestCase):
         for href in forbidden_hrefs:
             self.assertNotIn(f'href="{href}"', page)
 
+    def test_data_room_links_every_machine_readable_file(self):
+        data_room = (ROOT / "site" / "data.html").read_text()
+        linked_json = set(re.findall(r'href="([^"]+\.json)"', data_room))
+        public_json = {str(path.relative_to(ROOT / "site")) for path in (ROOT / "site").rglob("*.json")}
+
+        self.assertEqual(set(), public_json - linked_json)
+        self.assertEqual(set(), linked_json - public_json)
+
     def test_public_site_health_check_script_matches_canonical_identity(self):
         script_path = ROOT / "tools" / "check_public_site.py"
         script = script_path.read_text()
