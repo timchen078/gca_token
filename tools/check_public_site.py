@@ -370,10 +370,68 @@ def validate_listing_kit_page(text: str) -> None:
     assert_contains(text, "Reviewer Data Room", label)
     assert_contains(text, "data.html", label)
     assert_contains(text, "Public URLs", label)
-    assert_contains(text, "Platform-Only Raw JSON URLs", label)
+    assert_platform_only_data_room(
+        text,
+        label,
+        (
+            "https://gcagochina.com/project.json",
+            PRODUCT_URL,
+            ACCESS_URL,
+            OPERATIONS_URL,
+            ACCESS_API_URL,
+            REVIEW_QUEUE_URL,
+            CREDITS_URL,
+            RELEASE_GATES_URL,
+            ROADMAP_URL,
+            COMMUNITY_URL,
+            BRAND_KIT_URL,
+            MEMBER_LEDGER_URL,
+            MEMBER_BENEFIT_TRANSFER_URL,
+            SUPPORT_URL,
+            PRIVACY_NOTICE_URL,
+            PARTICIPATION_TERMS_URL,
+            LISTING_READINESS_URL,
+            ONCHAIN_PROOFS_URL,
+            WALLET_WARNING_URL,
+            EXTERNAL_REVIEW_URL,
+            REVIEWER_KIT_URL,
+            PLATFORM_REPLIES_URL,
+            TRUST_CENTER_URL,
+            "https://gcagochina.com/tokenlist.json",
+            SUPPLY_DISCLOSURE_URL,
+            MEMBER_PROGRAM_URL,
+            "https://gcagochina.com/.well-known/gca-token.json",
+            "project.json",
+            "product.json",
+            "access.json",
+            "operations.json",
+            "access-api.json",
+            "review-queue.json",
+            "credits.json",
+            "release-gates.json",
+            "roadmap.json",
+            "community.json",
+            "brand-kit.json",
+            "member-ledger.json",
+            "member-benefit-transfer.json",
+            "support.json",
+            "privacy.json",
+            "terms.json",
+            "listing-readiness.json",
+            "onchain-proofs.json",
+            "wallet-warning.json",
+            "external-reviews.json",
+            "reviewer-kit.json",
+            "platform-replies.json",
+            "trust.json",
+            "tokenlist.json",
+            "supply.json",
+            "member-program.json",
+            ".well-known/gca-token.json",
+        ),
+    )
     assert_contains(text, "Normal visitor path", label)
-    assert_contains(text, "Raw JSON for platforms only", label)
-    assert_contains(text, "They can look like code in a browser", label)
+    assert_contains(text, "Raw JSON is available", label)
     assert_contains(text, "Descriptions", label)
     assert_contains(text, "Official GCA/USDT route", label)
     assert_contains(text, "BaseScan", label)
@@ -3984,7 +4042,11 @@ def validate_release_gates_json(text: str) -> None:
 def validate_privacy_page(text: str) -> None:
     label = "/privacy.html"
     assert_contains(text, "GCA Privacy Notice", label)
-    assert_contains(text, "Privacy JSON", label)
+    assert_platform_only_data_room(
+        text,
+        label,
+        ("privacy.json", "terms.json", "member-program.json", "member-ledger.json", "support.json"),
+    )
     assert_contains(text, "local pre-registration packet", label)
     assert_contains(text, "directSubmissionEndpointConfigured", label)
     assert_contains(text, "No private key, seed phrase, exchange API secret, withdrawal permission, or custody request", label)
@@ -4045,7 +4107,11 @@ def validate_privacy_json(text: str) -> None:
 def validate_terms_page(text: str) -> None:
     label = "/terms.html"
     assert_contains(text, "GCA Participation Terms", label)
-    assert_contains(text, "Terms JSON", label)
+    assert_platform_only_data_room(
+        text,
+        label,
+        ("terms.json", "privacy.json", "member-program.json", "member-ledger.json", "support.json"),
+    )
     assert_contains(text, "Pre-Registration Only", label)
     assert_contains(text, "Account-Level Service Access", label)
     assert_contains(text, "No Custody Or Withdrawal Permission", label)
