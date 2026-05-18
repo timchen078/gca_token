@@ -323,7 +323,6 @@
         <h1 id="title">GCA Wallet Warning Evidence</h1>
         <p class="lead">This page gives wallet security vendors, DEX interfaces, reviewers, and community moderators a single public evidence packet for GCA wallet-warning review. It records what was submitted, what is verified, and the current owner-observed wallet UI state.</p>
         <div class="actions">
-          <a class="button primary" href="wallet-warning.json">Wallet Warning JSON</a>
           <a class="button primary" href="verify.html">Verify GCA</a>
           <a class="button" href="onchain-proofs.html">On-chain Proofs</a>
           <a class="button" href="external-reviews.html">External Reviews</a>
@@ -337,8 +336,7 @@
           <a class="button" href="risk.html">Risk Page</a>
           <a class="button" href="status.html">Project Status</a>
           <a class="button" href="listing-kit.html">Listing Kit</a>
-          <a class="button" href="project.json">Project JSON</a>
-          <a class="button" href=".well-known/wallet-security.json">Wallet Security JSON</a>
+          <a class="button" href="#technicalEvidence">Technical Evidence</a>
         </div>
       </section>
 
@@ -425,6 +423,18 @@
         <div class="panel">
           <h3>Next Action</h3>
           <p class="note">Use this page, <a href="wallet-warning.json">wallet-warning.json</a>, and <a href=".well-known/wallet-security.json">wallet-security.json</a> only if a wallet provider or security reviewer asks for more current evidence.</p>
+        </div>
+      </section>
+
+      <section class="section panel" id="technicalEvidence" aria-labelledby="technicalEvidenceTitle">
+        <h2 id="technicalEvidenceTitle">Technical Evidence</h2>
+        <p class="note">These structured files are for wallet-security vendors, DEX interfaces, and automated reviewers. Human-readable evidence above should be used first because raw JSON can look like code to normal visitors.</p>
+        <div class="actions">
+          <a class="button" href="wallet-warning.json">Wallet Warning JSON</a>
+          <a class="button" href=".well-known/wallet-security.json">Wallet Security JSON</a>
+          <a class="button" href="project.json">Project JSON</a>
+          <a class="button" href="token-safety.json">Token Safety JSON</a>
+          <a class="button" href="reviewer-kit.json">Reviewer Kit JSON</a>
         </div>
       </section>
 
