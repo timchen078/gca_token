@@ -439,8 +439,10 @@ def validate_whitepaper_page(text: str) -> None:
 def validate_token_safety_page(text: str) -> None:
     label = "/token-safety.html"
     assert_contains(text, "GCA Token Safety Checklist", label)
-    assert_contains(text, "Token Safety JSON", label)
-    assert_contains(text, "Wallet Security JSON", label)
+    assert_contains(text, "Platform Metadata", label)
+    assert_contains(text, "Platform-Only Evidence Path", label)
+    assert_contains(text, "Data Room", label)
+    assert_contains(text, "Raw JSON for platforms only", label)
     assert_contains(text, "Verified Positive Controls", label)
     assert_contains(text, "Pending Or Not Claimed", label)
     assert_contains(text, "No mint function", label)
@@ -451,6 +453,14 @@ def validate_token_safety_page(text: str) -> None:
     assert_contains(text, OFFICIAL_GECKOTERMINAL_URL, label)
     assert_contains(text, OFFICIAL_DEXSCREENER_URL, label)
     assert_current_pool_text(text, label)
+    for forbidden in (
+        'href="token-safety.json"',
+        'href=".well-known/wallet-security.json"',
+        'href=".well-known/gca-token.json"',
+        'href="project.json"',
+        'href="reviewer-kit.json"',
+    ):
+        assert_not_contains(text, forbidden, label)
 
 
 def validate_token_safety_json(text: str) -> None:
@@ -543,7 +553,8 @@ def validate_token_safety_json(text: str) -> None:
 def validate_blockaid_followup_page(text: str) -> None:
     label = "/blockaid-followup.html"
     assert_contains(text, "GCA Blockaid Follow-up", label)
-    assert_contains(text, "Blockaid Follow-up JSON", label)
+    assert_contains(text, "Platform-Only Evidence Path", label)
+    assert_contains(text, "Data Room", label)
     assert_contains(text, "Risk Factor Response", label)
     assert_contains(text, "Price Volatility", label)
     assert_contains(text, "LP Lock", label)
@@ -561,6 +572,16 @@ def validate_blockaid_followup_page(text: str) -> None:
     assert_contains(text, RESERVE_WALLET, label)
     assert_current_pool_text(text, label)
     assert_no_forbidden_public_claims(text, label)
+    for forbidden in (
+        'href="blockaid-followup.json"',
+        'href="technical-report.json"',
+        'href="reserve-statement.json"',
+        'href="liquidity.json"',
+        'href="holder-distribution.json"',
+        'href="risk-remediation.json"',
+        'href="wallet-warning.json"',
+    ):
+        assert_not_contains(text, forbidden, label)
 
 
 def validate_blockaid_followup_json(text: str) -> None:
@@ -6327,7 +6348,9 @@ def validate_reviewer_kit_json(text: str) -> None:
 def validate_reviewer_kit_page(text: str) -> None:
     label = "/reviewer-kit.html"
     assert_contains(text, "GCA Reviewer Kit", label)
-    assert_contains(text, "Reviewer Kit JSON", label)
+    assert_contains(text, "Platform-Only Evidence Path", label)
+    assert_contains(text, "Data Room", label)
+    assert_contains(text, "Raw JSON for platforms only", label)
     assert_contains(text, "Base Mainnet / 8453", label)
     assert_contains(text, MAINNET_ADDRESS, label)
     assert_contains(text, "GCA/USDT", label)
@@ -6353,6 +6376,22 @@ def validate_reviewer_kit_page(text: str) -> None:
     assert_contains(text, OFFICIAL_DEXSCREENER_URL, label)
     assert_contains(text, OFFICIAL_GECKOTERMINAL_URL, label)
     assert_current_pool_text(text, label)
+    for forbidden in (
+        'href="reviewer-kit.json"',
+        'href="project.json"',
+        'href="tokenlist.json"',
+        'href=".well-known/gca-token.json"',
+        'href=".well-known/wallet-security.json"',
+        'href="blockaid-followup.json"',
+        'href="liquidity.json"',
+        'href="holder-distribution.json"',
+        'href="risk-remediation.json"',
+        'href="custody-roadmap.json"',
+        'href="audit-readiness.json"',
+        'href="technical-report.json"',
+        'href="reserve-statement.json"',
+    ):
+        assert_not_contains(text, forbidden, label)
 
 
 def validate_platform_replies_json(text: str) -> None:
@@ -6810,8 +6849,10 @@ def validate_wallet_warning_json(text: str) -> None:
 def validate_wallet_warning_page(text: str) -> None:
     label = "/wallet-warning.html"
     assert_contains(text, "GCA Wallet Warning Evidence", label)
-    assert_contains(text, "Wallet Warning JSON", label)
-    assert_contains(text, "Wallet Security JSON", label)
+    assert_contains(text, "Token Safety Checklist", label)
+    assert_contains(text, "Platform-Only Evidence Path", label)
+    assert_contains(text, "Data Room", label)
+    assert_contains(text, "raw JSON", label)
     assert_contains(text, "Blockaid Follow-up", label)
     assert_contains(text, "Trust Center", label)
     assert_contains(text, "Follow-up submitted 2026-05-13", label)
@@ -6826,6 +6867,14 @@ def validate_wallet_warning_page(text: str) -> None:
     assert_contains(text, OFFICIAL_DEXSCREENER_URL, label)
     assert_contains(text, OFFICIAL_GECKOTERMINAL_URL, label)
     assert_current_pool_text(text, label)
+    for forbidden in (
+        'href="wallet-warning.json"',
+        'href=".well-known/wallet-security.json"',
+        'href="project.json"',
+        'href="token-safety.json"',
+        'href="reviewer-kit.json"',
+    ):
+        assert_not_contains(text, forbidden, label)
 
 
 def validate_listing_readiness_page(text: str) -> None:

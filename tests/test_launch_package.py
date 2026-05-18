@@ -4290,8 +4290,10 @@ class LaunchPackageTests(unittest.TestCase):
         evidence = json.loads((ROOT / "site" / "wallet-warning.json").read_text())
 
         self.assertIn("GCA Wallet Warning Evidence", page)
-        self.assertIn("Wallet Warning JSON", page)
-        self.assertIn("Wallet Security JSON", page)
+        self.assertIn("Token Safety Checklist", page)
+        self.assertIn("Platform-Only Evidence Path", page)
+        self.assertIn("Data Room", page)
+        self.assertIn("raw JSON", page)
         self.assertIn("Trust Center", page)
         self.assertIn("Blockaid Follow-up", page)
         self.assertIn("Follow-up submitted 2026-05-13", page)
@@ -4310,6 +4312,14 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(OFFICIAL_DEXSCREENER_URL, page)
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, page)
         self.assertNotIn("GCA/WETH", page)
+        for forbidden in (
+            'href="wallet-warning.json"',
+            'href=".well-known/wallet-security.json"',
+            'href="project.json"',
+            'href="token-safety.json"',
+            'href="reviewer-kit.json"',
+        ):
+            self.assertNotIn(forbidden, page)
 
         self.assertEqual(evidence["schema"], WALLET_WARNING_URL)
         self.assertEqual(evidence["pageUrl"], WALLET_WARNING_PAGE_URL)
@@ -4560,7 +4570,9 @@ class LaunchPackageTests(unittest.TestCase):
         kit = json.loads((ROOT / "site" / "reviewer-kit.json").read_text())
 
         self.assertIn("GCA Reviewer Kit", page)
-        self.assertIn("Reviewer Kit JSON", page)
+        self.assertIn("Platform-Only Evidence Path", page)
+        self.assertIn("Data Room", page)
+        self.assertIn("Raw JSON for platforms only", page)
         self.assertIn("Trust Center", page)
         self.assertIn("Base Mainnet / 8453", page)
         self.assertIn(MAINNET_ADDRESS, page)
@@ -4588,6 +4600,22 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Public Claim Boundaries", page)
         self.assertIn("No third-party audit has been completed", page)
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, page)
+        for forbidden in (
+            'href="reviewer-kit.json"',
+            'href="project.json"',
+            'href="tokenlist.json"',
+            'href=".well-known/gca-token.json"',
+            'href=".well-known/wallet-security.json"',
+            'href="blockaid-followup.json"',
+            'href="liquidity.json"',
+            'href="holder-distribution.json"',
+            'href="risk-remediation.json"',
+            'href="custody-roadmap.json"',
+            'href="audit-readiness.json"',
+            'href="technical-report.json"',
+            'href="reserve-statement.json"',
+        ):
+            self.assertNotIn(forbidden, page)
 
         self.assertEqual(kit["schema"], REVIEWER_KIT_URL)
         self.assertEqual(kit["pageUrl"], REVIEWER_KIT_PAGE_URL)
@@ -5161,8 +5189,10 @@ class LaunchPackageTests(unittest.TestCase):
         safety = json.loads((ROOT / "site" / "token-safety.json").read_text())
 
         self.assertIn("GCA Token Safety Checklist", page)
-        self.assertIn("Token Safety JSON", page)
-        self.assertIn("Wallet Security JSON", page)
+        self.assertIn("Platform Metadata", page)
+        self.assertIn("Platform-Only Evidence Path", page)
+        self.assertIn("Data Room", page)
+        self.assertIn("Raw JSON for platforms only", page)
         self.assertIn("Verified Positive Controls", page)
         self.assertIn("Pending Or Not Claimed", page)
         self.assertIn("No mint function", page)
@@ -5178,6 +5208,14 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(OFFICIAL_DEXSCREENER_URL, page)
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, page)
         self.assertNotIn("GCA/WETH", page)
+        for forbidden in (
+            'href="token-safety.json"',
+            'href=".well-known/wallet-security.json"',
+            'href=".well-known/gca-token.json"',
+            'href="project.json"',
+            'href="reviewer-kit.json"',
+        ):
+            self.assertNotIn(forbidden, page)
 
         self.assertEqual(safety["schema"], TOKEN_SAFETY_URL)
         self.assertEqual(safety["pageUrl"], TOKEN_SAFETY_PAGE_URL)
@@ -5229,6 +5267,8 @@ class LaunchPackageTests(unittest.TestCase):
 
         self.assertIn("GCA Blockaid Follow-up", page)
         self.assertIn("Reviewer Request", page)
+        self.assertIn("Platform-Only Evidence Path", page)
+        self.assertIn("Data Room", page)
         self.assertIn("Contract Control Summary", page)
         self.assertIn("Risk Factor Response", page)
         self.assertIn("Price Volatility", page)
@@ -5246,6 +5286,16 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(RESERVE_WALLET, page)
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, page)
         self.assertNotIn("GCA/WETH", page)
+        for forbidden in (
+            'href="blockaid-followup.json"',
+            'href="technical-report.json"',
+            'href="reserve-statement.json"',
+            'href="liquidity.json"',
+            'href="holder-distribution.json"',
+            'href="risk-remediation.json"',
+            'href="wallet-warning.json"',
+        ):
+            self.assertNotIn(forbidden, page)
 
         self.assertEqual(followup["schema"], BLOCKAID_FOLLOWUP_URL)
         self.assertEqual(followup["pageUrl"], BLOCKAID_FOLLOWUP_PAGE_URL)
