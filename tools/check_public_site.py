@@ -29,6 +29,7 @@ BUY_PAGE_URL = "https://gcagochina.com/buy.html"
 STATUS_PAGE_URL = "https://gcagochina.com/status.html"
 DATA_PAGE_URL = "https://gcagochina.com/data.html"
 SITE_MAP_PAGE_URL = "https://gcagochina.com/site-map.html"
+ERROR_PAGE_URL = "https://gcagochina.com/404.html"
 LISTING_KIT_PAGE_URL = "https://gcagochina.com/listing-kit.html"
 SECURITY_PAGE_URL = "https://gcagochina.com/security.html"
 RISK_PAGE_URL = "https://gcagochina.com/risk.html"
@@ -447,6 +448,52 @@ def validate_site_map_page(text: str) -> None:
         "platform-replies.html",
         "brand-kit.html",
         "onchain-proofs.html",
+    ):
+        assert_contains(text, expected, label)
+    assert_platform_only_data_room(
+        text,
+        label,
+        (
+            "project.json",
+            "tokenlist.json",
+            "reviewer-kit.json",
+            "platform-replies.json",
+            "member-ledger.json",
+        ),
+    )
+    assert_current_pool_text(text, label)
+    assert_no_forbidden_public_claims(text, label)
+
+
+def validate_404_page(text: str) -> None:
+    label = "/404.html"
+    assert_social_preview_meta(text, label, ERROR_PAGE_URL)
+    for expected in (
+        "Page Not Found",
+        "This GCA page was not found.",
+        "official human-readable pages",
+        "Open Site Map",
+        "Verify GCA",
+        "Buy Guide",
+        "Support",
+        "Reviewer Data Room",
+        "For Users",
+        "For Members",
+        "For Reviewers",
+        "Current Boundaries",
+        "BaseScan source verification is complete",
+        "GeckoTerminal token information was approved",
+        "no third-party audit has been completed",
+        MAINNET_ADDRESS,
+        "Base Mainnet",
+        "8453",
+        "GCA/USDT",
+        OFFICIAL_POOL_ADDRESS,
+        "site-map.html",
+        "verify.html",
+        "buy.html",
+        "support.html",
+        "data.html",
     ):
         assert_contains(text, expected, label)
     assert_platform_only_data_room(
@@ -7393,6 +7440,7 @@ def validate_security_txt(text: str) -> None:
 def validate_sitemap(text: str) -> None:
     label = "/sitemap.xml"
     for expected in (
+        "https://gcagochina.com/404.html",
         "https://gcagochina.com/data.html",
         "https://gcagochina.com/site-map.html",
         "https://gcagochina.com/verify.html",
@@ -7503,6 +7551,7 @@ def validate_sitemap(text: str) -> None:
 
 def validate_robots(text: str) -> None:
     label = "/robots.txt"
+    assert_contains(text, "Allow: /404.html", label)
     assert_contains(text, "Allow: /site-map.html", label)
     assert_contains(text, "Allow: /verify.html", label)
     assert_contains(text, "Allow: /data.html", label)
@@ -7614,6 +7663,7 @@ def validate_robots(text: str) -> None:
 
 CHECKS: list[EndpointCheck] = [
     ("/", validate_root),
+    ("/404.html", validate_404_page),
     ("/data.html", validate_data_page),
     ("/site-map.html", validate_site_map_page),
     ("/verify.html", validate_verify),
