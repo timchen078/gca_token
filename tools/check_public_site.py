@@ -27,6 +27,7 @@ OFFICIAL_DEXSCREENER_URL = f"https://dexscreener.com/base/{OFFICIAL_POOL_ADDRESS
 VERIFY_PAGE_URL = "https://gcagochina.com/verify.html"
 BUY_PAGE_URL = "https://gcagochina.com/buy.html"
 STATUS_PAGE_URL = "https://gcagochina.com/status.html"
+DATA_PAGE_URL = "https://gcagochina.com/data.html"
 LISTING_KIT_PAGE_URL = "https://gcagochina.com/listing-kit.html"
 SECURITY_PAGE_URL = "https://gcagochina.com/security.html"
 RISK_PAGE_URL = "https://gcagochina.com/risk.html"
@@ -208,10 +209,11 @@ def validate_root(text: str) -> None:
     assert_contains(text, "Listing Readiness", label)
     assert_contains(text, "On-chain Proofs", label)
     assert_contains(text, "Brand Kit", label)
+    assert_contains(text, "Reviewer Data Room", label)
+    assert_contains(text, "data.html", label)
     assert_contains(text, "Member Ledger", label)
     assert_contains(text, "Benefit Transfer Runbook", label)
     assert_contains(text, "member-benefit-transfer.html", label)
-    assert_contains(text, "member-benefit-transfer.json", label)
     assert_contains(text, "Operator Console", label)
     assert_contains(text, "operator.html", label)
     assert_contains(text, "Support & Intake", label)
@@ -230,7 +232,6 @@ def validate_root(text: str) -> None:
     assert_contains(text, "Risk Remediation", label)
     assert_contains(text, "Custody Roadmap", label)
     assert_contains(text, "Audit Readiness", label)
-    assert_contains(text, "Utility JSON", label)
     assert_contains(text, "Product Spec", label)
     assert_contains(text, "Access Portal", label)
     assert_contains(text, "Operations", label)
@@ -302,10 +303,45 @@ def validate_status_page(text: str) -> None:
     assert_current_pool_text(text, label)
 
 
+def validate_data_page(text: str) -> None:
+    label = "/data.html"
+    assert_social_preview_meta(text, label, DATA_PAGE_URL)
+    for expected in (
+        "GCA Data Room",
+        "JSON files are not broken pages",
+        "machine-readable data files",
+        "Regular visitors should use the HTML pages",
+        "Human Listing Kit",
+        "Core Metadata",
+        "Review Evidence",
+        "Market and Supply",
+        "Product and Member Program",
+        "Project data",
+        "Token list",
+        "Reviewer kit data",
+        "Wallet security profile",
+        "Liquidity statement data",
+        "Member access brief data",
+        "Announcements data",
+        "Content library data",
+        MAINNET_ADDRESS,
+        "Base Mainnet / chainId 8453",
+        "project.json",
+        "tokenlist.json",
+        "reviewer-kit.json",
+        "liquidity.json",
+        "member-access-brief-001.json",
+    ):
+        assert_contains(text, expected, label)
+    assert_no_forbidden_public_claims(text, label)
+
+
 def validate_listing_kit_page(text: str) -> None:
     label = "/listing-kit.html"
     assert_social_preview_meta(text, label, LISTING_KIT_PAGE_URL)
     assert_contains(text, "GCA Listing Kit", label)
+    assert_contains(text, "Reviewer Data Room", label)
+    assert_contains(text, "data.html", label)
     assert_contains(text, "Public URLs", label)
     assert_contains(text, "Descriptions", label)
     assert_contains(text, "Official GCA/USDT route", label)
@@ -2045,7 +2081,8 @@ def validate_member_access_brief_001_page(text: str) -> None:
     assert_social_preview_meta(text, label, MEMBER_ACCESS_BRIEF_001_PAGE_URL)
     for expected in (
         "GCA Member Access Brief 001",
-        "Brief JSON",
+        "Reviewer Data Room",
+        "data.html",
         "Brief 001 / 2026-05-23 / Ready for review",
         "Ready for operator review",
         "1,000,000 GCA",
@@ -2057,7 +2094,6 @@ def validate_member_access_brief_001_page(text: str) -> None:
         "Public self-service claiming is not live yet",
         "Copy-Ready Post",
         MEMBER_ACCESS_BRIEF_001_PAGE_URL,
-        "member-program.json",
         "member-benefit.html",
         "member-benefit-transfer.html",
         MAINNET_ADDRESS,
@@ -6803,6 +6839,7 @@ def validate_security_txt(text: str) -> None:
 def validate_sitemap(text: str) -> None:
     label = "/sitemap.xml"
     for expected in (
+        "https://gcagochina.com/data.html",
         "https://gcagochina.com/verify.html",
         "https://gcagochina.com/status.html",
         "https://gcagochina.com/listing-kit.html",
@@ -6911,6 +6948,7 @@ def validate_sitemap(text: str) -> None:
 
 def validate_robots(text: str) -> None:
     label = "/robots.txt"
+    assert_contains(text, "Allow: /data.html", label)
     assert_contains(text, "Allow: /status.html", label)
     assert_contains(text, "Allow: /listing-kit.html", label)
     assert_contains(text, "Allow: /whitepaper.html", label)
@@ -7014,6 +7052,7 @@ def validate_robots(text: str) -> None:
 
 CHECKS: list[EndpointCheck] = [
     ("/", validate_root),
+    ("/data.html", validate_data_page),
     ("/verify.html", validate_verify),
     ("/status.html", validate_status_page),
     ("/listing-kit.html", validate_listing_kit_page),

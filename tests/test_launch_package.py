@@ -29,6 +29,7 @@ OFFICIAL_SWAP_URL = (
 OFFICIAL_SWAP_URL_HTML = OFFICIAL_SWAP_URL.replace("&", "&amp;")
 MARKET_PAGE_URL = "https://gcagochina.com/markets.html"
 VERIFY_PAGE_URL = "https://gcagochina.com/verify.html"
+DATA_PAGE_URL = "https://gcagochina.com/data.html"
 SUPPLY_PAGE_URL = "https://gcagochina.com/supply.html"
 SECURITY_PAGE_URL = "https://gcagochina.com/security.html"
 RISK_PAGE_URL = "https://gcagochina.com/risk.html"
@@ -147,6 +148,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("/.well-known/wallet-security.json", script)
         self.assertIn("/.well-known/security.txt", script)
         self.assertIn("/status.html", script)
+        self.assertIn("/data.html", script)
         self.assertIn("/listing-kit.html", script)
         self.assertIn("/whitepaper.html", script)
         self.assertIn("/buy.html", script)
@@ -350,6 +352,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("[fail]", script)
 
         module.validate_root((ROOT / "site" / "index.html").read_text())
+        module.validate_data_page((ROOT / "site" / "data.html").read_text())
         module.validate_verify((ROOT / "site" / "verify.html").read_text())
         module.validate_status_page((ROOT / "site" / "status.html").read_text())
         module.validate_listing_kit_page((ROOT / "site" / "listing-kit.html").read_text())
@@ -731,8 +734,10 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Allow: /.well-known/gca-token.json", robots)
         self.assertIn("Allow: /.well-known/wallet-security.json", robots)
         self.assertIn("Allow: /.well-known/security.txt", robots)
+        self.assertIn("Allow: /data.html", robots)
         self.assertIn("Sitemap: https://gcagochina.com/sitemap.xml", robots)
         self.assertIn("https://gcagochina.com/", sitemap)
+        self.assertIn(DATA_PAGE_URL, sitemap)
         self.assertIn(VERIFY_PAGE_URL, sitemap)
         self.assertIn("https://gcagochina.com/status.html", sitemap)
         self.assertIn("https://gcagochina.com/listing-kit.html", sitemap)
@@ -1067,9 +1072,10 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn('href="wallet-warning.html"', site)
         self.assertIn('href="external-reviews.html"', site)
         self.assertIn('href="blockaid-followup.html"', site)
-        self.assertIn('href="blockaid-followup.json"', site)
         self.assertIn('href="onchain-proofs.html"', site)
         self.assertIn('href="brand-kit.html"', site)
+        self.assertIn('href="data.html"', site)
+        self.assertIn("Reviewer Data Room", site)
         self.assertIn('href="member-ledger.html"', site)
         self.assertIn('href="support.html"', site)
         self.assertIn('href="operator.html"', site)
@@ -1077,11 +1083,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn('href="community.html"', site)
         self.assertIn('href="announcements.html"', site)
         self.assertIn('href="campaign.html"', site)
-        self.assertIn('href="campaign.json"', site)
         self.assertIn('href="content-library.html"', site)
-        self.assertIn('href="content-library.json"', site)
         self.assertIn('href="publishing-desk.html"', site)
-        self.assertIn('href="publishing-desk.json"', site)
         self.assertIn('href="narrative.html"', site)
         self.assertIn('href="radar.html"', site)
         self.assertIn('href="radar-issue-004.html"', site)
@@ -1109,7 +1112,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Verified Utility: Web3 Radar Access Layer", site)
         self.assertIn("Product Release Gates", site)
         self.assertIn("release-gates.html", site)
-        self.assertIn("release-gates.json", site)
+        self.assertIn("Machine-readable JSON files remain available from the", site)
         self.assertIn("public account UI is not live", site)
         self.assertIn("100 utility credits are not self-service claimable", site)
         self.assertIn("GCA Member status is not self-service claimable", site)
@@ -1122,7 +1125,6 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("one-time 10,000 GCA member benefit review", site)
         self.assertIn("Benefit Transfer Runbook", site)
         self.assertIn("member-benefit-transfer.html", site)
-        self.assertIn("member-benefit-transfer.json", site)
         self.assertIn("Operator Console", site)
         self.assertIn("GCA Member status", site)
         self.assertIn("not cash, income, reimbursement, or trading permission", site)
@@ -2236,7 +2238,8 @@ class LaunchPackageTests(unittest.TestCase):
         brief = json.loads((ROOT / "site" / "member-access-brief-001.json").read_text())
 
         self.assertIn("GCA Member Access Brief 001", page)
-        self.assertIn("Brief JSON", page)
+        self.assertIn("Reviewer Data Room", page)
+        self.assertIn("data.html", page)
         self.assertIn("Brief 001 / 2026-05-23 / Ready for review", page)
         self.assertIn("Ready for operator review", page)
         self.assertIn("1,000,000 GCA", page)
@@ -3744,7 +3747,8 @@ class LaunchPackageTests(unittest.TestCase):
         project = json.loads((ROOT / "site" / "project.json").read_text())
 
         self.assertIn("GCA Listing Kit", kit)
-        self.assertIn("Machine-Readable JSON", kit)
+        self.assertIn("Reviewer Data Room", kit)
+        self.assertIn("data.html", kit)
         self.assertIn("project.json", kit)
         self.assertIn("Listing Readiness", kit)
         self.assertIn("listing-readiness.html", kit)
@@ -3819,7 +3823,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("tokenlist.json", kit)
         self.assertIn("Member Program JSON", kit)
         self.assertIn(MEMBER_PROGRAM_URL, kit)
-        self.assertIn("Well-Known JSON", kit)
+        self.assertIn("Well-known token identity", kit)
         self.assertIn(WELL_KNOWN_TOKEN_URL, kit)
         self.assertIn(SECURITY_CONTACT_URL, kit)
         self.assertIn("Market page", kit)
@@ -5545,6 +5549,7 @@ class LaunchPackageTests(unittest.TestCase):
     def test_public_materials_avoid_investment_promises(self):
         paths = [
             ROOT / "site" / "index.html",
+            ROOT / "site" / "data.html",
             ROOT / "site" / "verify.html",
             ROOT / "site" / "buy.html",
             ROOT / "site" / "markets.html",
@@ -5820,6 +5825,7 @@ class LaunchPackageTests(unittest.TestCase):
     def test_public_materials_do_not_overstate_basescan_review(self):
         paths = [
             ROOT / "site" / "index.html",
+            ROOT / "site" / "data.html",
             ROOT / "site" / "verify.html",
             ROOT / "site" / "buy.html",
             ROOT / "site" / "markets.html",
