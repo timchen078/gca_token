@@ -1,5 +1,6 @@
 User-agent: *
 Allow: /
+Allow: /data.html
 Allow: /status.html
 Allow: /listing-kit.html
 Allow: /whitepaper.html
