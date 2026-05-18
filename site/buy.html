@@ -93,6 +93,8 @@
         display: flex;
         gap: 18px;
         align-items: center;
+        flex-wrap: wrap;
+        justify-content: flex-end;
         font-size: 14px;
       }
 
@@ -259,6 +261,130 @@
         overflow-wrap: anywhere;
       }
 
+      .hero {
+        display: grid;
+        grid-template-columns: minmax(0, 1.08fr) minmax(320px, 0.92fr);
+        gap: 28px;
+        align-items: center;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin: 0 0 16px;
+        color: var(--red);
+        font-size: 13px;
+        font-weight: 850;
+        text-transform: uppercase;
+      }
+
+      .eyebrow::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: var(--red);
+      }
+
+      .hero-card {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        padding: 18px;
+      }
+
+      .hero-art {
+        width: 100%;
+        aspect-ratio: 1200 / 630;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--soft);
+        object-fit: cover;
+      }
+
+      .hero-meta,
+      .mini-grid {
+        display: grid;
+        gap: 10px;
+      }
+
+      .hero-meta {
+        margin-top: 14px;
+      }
+
+      .mini-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        margin-top: 14px;
+      }
+
+      .mini {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--soft);
+        padding: 12px;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        min-height: 28px;
+        border-radius: 999px;
+        background: var(--soft);
+        color: var(--muted);
+        padding: 4px 10px;
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .button.secondary {
+        border-color: #cad7ec;
+        background: #eef4ff;
+        color: #123e90;
+      }
+
+      .checklist {
+        display: grid;
+        gap: 12px;
+        margin-top: 14px;
+      }
+
+      .check {
+        display: grid;
+        grid-template-columns: 36px minmax(0, 1fr);
+        gap: 12px;
+        align-items: start;
+      }
+
+      .check-num {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        background: var(--red);
+        color: #fff;
+        font-size: 13px;
+        font-weight: 850;
+      }
+
+      .route-card {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #f9fbff;
+        padding: 16px;
+      }
+
+      .route-card + .route-card {
+        margin-top: 12px;
+      }
+
+      .route-card strong {
+        display: block;
+        margin-bottom: 6px;
+      }
+
       footer {
         border-top: 1px solid var(--line);
         padding: 24px 0;
@@ -267,9 +393,11 @@
       }
 
       @media (max-width: 860px) {
+        .hero,
         .grid,
         .two,
-        .facts {
+        .facts,
+        .mini-grid {
           grid-template-columns: 1fr;
         }
 
@@ -306,32 +434,52 @@
           <a href="markets.html">Markets</a>
           <a href="supply.html">Supply</a>
           <a href="security.html">Security</a>
+          <a href="members.html">Members</a>
           <a href="risk.html">Risk</a>
           <a href="faq.html">FAQ</a>
           <a href="status.html">Status</a>
           <a href="listing-kit.html">Listing Kit</a>
-          <a href="members.html">Members</a>
-          <a href="utility.html">Utility Thesis</a>
-          <a href="whitepaper.html">Whitepaper</a>
           <a href="https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6" target="_blank" rel="noreferrer">BaseScan</a>
         </div>
       </nav>
     </header>
 
     <main class="shell">
-      <section aria-labelledby="title">
-        <h1 id="title">Buy GCA</h1>
-        <p class="lead">Use this page to verify the official Base Mainnet contract, official pool, and risk disclosures before interacting with GCA. This is not investment advice and does not guarantee price, liquidity, execution, or safety.</p>
-        <div class="actions">
-          <a class="button" href="verify.html">Verify GCA</a>
-          <a class="button primary" href="https://app.uniswap.org/swap?chain=base&amp;inputCurrency=0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2&amp;outputCurrency=0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6" target="_blank" rel="noreferrer">Open Uniswap Swap</a>
-          <a class="button" href="markets.html">Official Market Page</a>
-          <a class="button" href="faq.html">FAQ</a>
-          <a class="button" href="risk.html">Risk</a>
-          <button class="button" type="button" id="copyContract">Copy Contract</button>
-          <button class="button" type="button" id="addToken">Add to MetaMask</button>
-          <a class="button" href="https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0" target="_blank" rel="noreferrer">View Pool</a>
+      <section class="hero" aria-labelledby="title">
+        <div>
+          <p class="eyebrow">Official Buy Guide</p>
+          <h1 id="title">Buy GCA</h1>
+          <p class="lead">Verify first, trade small, and use the official Base Mainnet GCA/USDT route. This page centralizes the contract, pool, wallet-import details, and risk disclosures before any interaction.</p>
+          <p class="lead">This is not investment advice and does not guarantee price, liquidity, execution, or safety.</p>
+          <div class="actions">
+            <a class="button primary" href="https://app.uniswap.org/swap?chain=base&amp;inputCurrency=0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2&amp;outputCurrency=0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6" target="_blank" rel="noreferrer">Open Uniswap Swap</a>
+            <a class="button secondary" href="verify.html">Verify GCA</a>
+            <a class="button" href="markets.html">Official Market Page</a>
+            <button class="button" type="button" id="copyContract">Copy Contract</button>
+            <button class="button" type="button" id="addToken">Add to MetaMask</button>
+          </div>
         </div>
+
+        <aside class="hero-card" aria-label="Official route summary">
+          <img class="hero-art" src="assets/gca-social-card.png" alt="GCA social preview card">
+          <div class="hero-meta">
+            <span class="pill">Base Mainnet / chainId 8453</span>
+            <div class="mini-grid" aria-label="Route facts">
+              <div class="mini">
+                <span class="label">Pair</span>
+                <span class="value">GCA/USDT</span>
+              </div>
+              <div class="mini">
+                <span class="label">Pool</span>
+                <span class="value">Uniswap v4</span>
+              </div>
+              <div class="mini">
+                <span class="label">Liquidity</span>
+                <span class="value">starter-depth only</span>
+              </div>
+            </div>
+          </div>
+        </aside>
       </section>
 
       <section class="facts" aria-label="Official token facts">
@@ -348,6 +496,14 @@
           <span class="value">0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6</span>
         </div>
         <div class="fact">
+          <span class="label">Quote Asset</span>
+          <span class="value">Base USDT / 0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2</span>
+        </div>
+        <div class="fact">
+          <span class="label">Pool Address</span>
+          <span class="value">0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0</span>
+        </div>
+        <div class="fact">
           <span class="label">Source</span>
           <span class="value good">Verified</span>
         </div>
@@ -358,24 +514,66 @@
         <p class="note">Only use Base Mainnet and verify the exact contract address. Current liquidity is starter-depth only, trades can have high price impact and slippage, and no third-party audit has been completed. A Blockaid / MetaMask false-positive report was submitted on 2026-05-10, and the owner observed no wallet risk warning visible on 2026-05-14; this does not mean security-vendor approval or permanent warning-free status.</p>
       </section>
 
-      <section class="section grid" aria-label="Buy steps">
-        <div class="panel step">
-          <h3>1. Switch to Base</h3>
-          <p class="note">Use MetaMask or another self-custody wallet on Base Mainnet. ETH on Base is needed for gas and swaps.</p>
+      <section class="section two" aria-label="Buying flow">
+        <div class="panel">
+          <h2>Buying Flow</h2>
+          <div class="checklist">
+            <div class="check">
+              <span class="check-num">1</span>
+              <div>
+                <h3>Verify Base Mainnet</h3>
+                <p class="note">Use MetaMask or another self-custody wallet on Base Mainnet. ETH on Base is needed for gas and swaps.</p>
+              </div>
+            </div>
+            <div class="check">
+              <span class="check-num">2</span>
+              <div>
+                <h3>Use the official route</h3>
+                <p class="note">Open the official GCA/USDT route from this page, or paste the GCA contract into Uniswap yourself and verify the output token contract before signing.</p>
+              </div>
+            </div>
+            <div class="check">
+              <span class="check-num">3</span>
+              <div>
+                <h3>Start small</h3>
+                <p class="note">Because the pool is shallow, small trades can move price. Check expected output, price impact, and slippage before signing.</p>
+              </div>
+            </div>
+            <div class="check">
+              <span class="check-num">4</span>
+              <div>
+                <h3>Import if needed</h3>
+                <p class="note">If the token does not show in your wallet after buying, import GCA on Base Mainnet with the contract, symbol, and decimals below.</p>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="panel step">
-          <h3>2. Open Official Swap</h3>
-          <p class="note">Use the official Uniswap link on this page for the GCA/USDT route, or paste the GCA contract into Uniswap yourself. Verify the output token contract before confirming.</p>
-        </div>
-        <div class="panel step">
-          <h3>3. Start Small</h3>
-          <p class="note">Because the pool is shallow, small trades can move price. Check expected output, price impact, and slippage before signing.</p>
+
+        <div class="panel">
+          <h2>Official GCA/USDT Route</h2>
+          <p class="note">Use these links to cross-check the same Base Mainnet pool across market pages before interacting.</p>
+          <div class="route-card">
+            <strong>Uniswap swap</strong>
+            <a href="https://app.uniswap.org/swap?chain=base&amp;inputCurrency=0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2&amp;outputCurrency=0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6" target="_blank" rel="noreferrer">Open Uniswap Swap</a>
+          </div>
+          <div class="route-card">
+            <strong>Uniswap pool</strong>
+            <a href="https://app.uniswap.org/explore/pools/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0" target="_blank" rel="noreferrer">View official GCA/USDT pool</a>
+          </div>
+          <div class="route-card">
+            <strong>GeckoTerminal pool</strong>
+            <a href="https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0" target="_blank" rel="noreferrer">GCA/USDT approved</a>
+          </div>
+          <div class="route-card">
+            <strong>DEX Screener pair</strong>
+            <a href="https://dexscreener.com/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0" target="_blank" rel="noreferrer">View official pair</a>
+          </div>
         </div>
       </section>
 
       <section class="section two" aria-label="Verification links">
         <div class="panel">
-          <h2>Official Links</h2>
+          <h2>Identity Checks</h2>
           <div class="list">
             <div class="row">
               <span><a href="markets.html">Official market page</a></span>
