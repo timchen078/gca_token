@@ -1,6 +1,5 @@
 User-agent: *
 Allow: /
-Allow: /404.html
 Allow: /site-map.html
 Allow: /verify.html
 Allow: /data.html
