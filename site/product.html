@@ -237,9 +237,10 @@
       }
 
       .row {
-        display: flex;
-        justify-content: space-between;
-        gap: 16px;
+        display: grid;
+        grid-template-columns: minmax(112px, 0.75fr) minmax(0, 1.35fr);
+        gap: 12px;
+        align-items: start;
         border-top: 1px solid var(--line);
         padding-top: 10px;
       }
@@ -249,6 +250,13 @@
         padding-top: 0;
       }
 
+      .row strong {
+        min-width: 0;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+        text-align: right;
+      }
+
       code {
         border: 1px solid var(--line);
         border-radius: 6px;
@@ -256,6 +264,9 @@
         padding: 2px 5px;
         font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
         font-size: 0.92em;
+        max-width: 100%;
+        overflow-wrap: anywhere;
+        word-break: break-word;
       }
 
       footer {
@@ -266,8 +277,7 @@
       }
 
       @media (max-width: 860px) {
-        nav,
-        .row {
+        nav {
           align-items: flex-start;
           flex-direction: column;
         }
@@ -280,6 +290,14 @@
         .two,
         .facts {
           grid-template-columns: 1fr;
+        }
+
+        .row {
+          grid-template-columns: 1fr;
+        }
+
+        .row strong {
+          text-align: left;
         }
       }
     </style>
@@ -300,7 +318,6 @@
           <a href="security.html">Security</a>
           <a href="risk.html">Risk</a>
           <a href="faq.html">FAQ</a>
-          <a href="product.json">Product JSON</a>
           <a href="access.html">Access Portal</a>
           <a href="access-api.html">Access API</a>
           <a href="release-gates.html">Release Gates</a>
@@ -321,20 +338,15 @@
         <p class="lead">This is the public product map for connecting the Go China Access narrative to practical non-custodial quant risk tools. It turns GCA from a token-only story into a planned access layer for research, risk review, backtests, service credits, and member workflows.</p>
         <p class="lead">This page is a public product spec only and a planning document. It is not a live trading terminal, not live market data, not financial advice, not a buy or sell recommendation, and not a performance forecast.</p>
         <div class="actions">
-          <a class="button primary" href="product.json">Product JSON</a>
           <a class="button primary" href="access.html">Access Portal</a>
-          <a class="button" href="access.json">Access JSON</a>
           <a class="button" href="access-api.html">Access API Contract</a>
-          <a class="button" href="access-api.json">Access API JSON</a>
           <a class="button primary" href="release-gates.html">Release Gates</a>
           <a class="button primary" href="credits.html">Credits Catalog</a>
-          <a class="button" href="release-gates.json">Release Gates JSON</a>
-          <a class="button" href="credits.json">Credits JSON</a>
           <a class="button" href="utility.html">Utility Bridge</a>
-          <a class="button" href="utility.json">Utility JSON</a>
           <a class="button" href="member-ledger.html">Member Ledger</a>
           <a class="button" href="roadmap.html">Roadmap</a>
           <a class="button" href="radar.html">Weekly Radar</a>
+          <a class="button" href="#technicalEvidence">Technical Evidence</a>
         </div>
       </section>
 
@@ -473,6 +485,20 @@
             <li>Do not claim custody, withdrawal permission, private key access, exchange API secret collection, platform revenue distribution, trading permission, leverage access, or risk-control bypass.</li>
             <li>Do not claim live market data, financial advice, buy or sell recommendations, price forecasts, or strategy performance promises.</li>
           </ul>
+        </div>
+      </section>
+
+      <section class="section panel" id="technicalEvidence" aria-labelledby="technicalEvidenceTitle">
+        <h2 id="technicalEvidenceTitle">Technical Evidence</h2>
+        <p class="note">These structured files are for implementation planning, listing reviews, and automated checks. Use the human-readable pages above for normal product review, then open JSON only when a platform asks for machine-readable data.</p>
+        <div class="actions">
+          <a class="button" href="product.json">Product JSON</a>
+          <a class="button" href="access.json">Access JSON</a>
+          <a class="button" href="access-api.json">Access API JSON</a>
+          <a class="button" href="review-queue.json">Review Queue JSON</a>
+          <a class="button" href="release-gates.json">Release Gates JSON</a>
+          <a class="button" href="credits.json">Credits JSON</a>
+          <a class="button" href="utility.json">Utility JSON</a>
         </div>
       </section>
 

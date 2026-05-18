@@ -237,9 +237,10 @@
       }
 
       .row {
-        display: flex;
-        justify-content: space-between;
-        gap: 16px;
+        display: grid;
+        grid-template-columns: minmax(112px, 0.75fr) minmax(0, 1.35fr);
+        gap: 12px;
+        align-items: start;
         border-top: 1px solid var(--line);
         padding-top: 10px;
       }
@@ -249,6 +250,13 @@
         padding-top: 0;
       }
 
+      .row strong {
+        min-width: 0;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+        text-align: right;
+      }
+
       code {
         border: 1px solid var(--line);
         border-radius: 6px;
@@ -256,6 +264,9 @@
         padding: 2px 5px;
         font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
         font-size: 0.92em;
+        max-width: 100%;
+        overflow-wrap: anywhere;
+        word-break: break-word;
       }
 
       footer {
@@ -287,7 +298,11 @@
         }
 
         .row {
-          display: grid;
+          grid-template-columns: 1fr;
+        }
+
+        .row strong {
+          text-align: left;
         }
       }
     </style>
@@ -305,7 +320,6 @@
           <a href="buy.html">Buy Guide</a>
           <a href="markets.html">Markets</a>
           <a href="product.html">Product Spec</a>
-          <a href="access.json">Access Portal JSON</a>
           <a href="operations.html">Operations</a>
           <a href="access-api.html">Access API</a>
           <a href="review-queue.html">Review Queue</a>
@@ -326,13 +340,9 @@
         <p class="lead">This page defines the planned controlled account path for GCA AI Quant Access: read-only wallet verification, 100 Web3 Radar utility credits, GCA Member ledger activation, 30-day holding-period review, 10,000 GCA member benefit review, and support review workflow.</p>
         <p class="lead">The current state is blueprint only. The controlled HTTPS account UI is not live, direct submission is not connected, credits are not self-service claimable, GCA Member status is not self-service claimable, and the 10,000 GCA member benefit is not self-service claimable.</p>
         <div class="actions">
-          <a class="button primary" href="access.json">Access Portal JSON</a>
           <a class="button primary" href="operations.html">Operations Runbook</a>
           <a class="button primary" href="access-api.html">Access API Contract</a>
           <a class="button primary" href="review-queue.html">Review Queue Contract</a>
-          <a class="button" href="operations.json">Operations JSON</a>
-          <a class="button" href="access-api.json">Access API JSON</a>
-          <a class="button" href="review-queue.json">Review Queue JSON</a>
           <a class="button primary" href="gca/member-access/">Member Access Preview</a>
           <a class="button" href="members.html">Member Pre-Registration</a>
           <a class="button" href="credits.html">Credits Catalog</a>
@@ -341,6 +351,7 @@
           <a class="button" href="support.html">Support & Intake</a>
           <a class="button" href="privacy.html">Privacy Notice</a>
           <a class="button" href="terms.html">Participation Terms</a>
+          <a class="button" href="#technicalEvidence">Technical Evidence</a>
         </div>
       </section>
 
@@ -499,6 +510,20 @@
           <div class="row"><span><a href="release-gates.html">Release Gates</a></span><strong>go-live boundaries</strong></div>
           <div class="row"><span><a href="privacy.html">Privacy Notice</a></span><strong>data boundary</strong></div>
           <div class="row"><span><a href="terms.html">Participation Terms</a></span><strong>use boundary</strong></div>
+        </div>
+      </section>
+
+      <section class="section panel" id="technicalEvidence" aria-labelledby="technicalEvidenceTitle">
+        <h2 id="technicalEvidenceTitle">Technical Evidence</h2>
+        <p class="note">These structured files describe the planned account path, operations runbook, API contract, and review queue for platform and implementation review. They do not make self-service claiming live.</p>
+        <div class="actions">
+          <a class="button" href="access.json">Access Portal JSON</a>
+          <a class="button" href="operations.json">Operations JSON</a>
+          <a class="button" href="access-api.json">Access API JSON</a>
+          <a class="button" href="review-queue.json">Review Queue JSON</a>
+          <a class="button" href="credits.json">Credits JSON</a>
+          <a class="button" href="release-gates.json">Release Gates JSON</a>
+          <a class="button" href="member-ledger.json">Member Ledger JSON</a>
         </div>
       </section>
 

@@ -237,9 +237,10 @@
       }
 
       .row {
-        display: flex;
-        justify-content: space-between;
-        gap: 16px;
+        display: grid;
+        grid-template-columns: minmax(112px, 0.75fr) minmax(0, 1.35fr);
+        gap: 12px;
+        align-items: start;
         border-top: 1px solid var(--line);
         padding-top: 10px;
       }
@@ -249,6 +250,13 @@
         padding-top: 0;
       }
 
+      .row strong {
+        min-width: 0;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+        text-align: right;
+      }
+
       code {
         border: 1px solid var(--line);
         border-radius: 6px;
@@ -256,6 +264,9 @@
         padding: 2px 5px;
         font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
         font-size: 0.92em;
+        max-width: 100%;
+        overflow-wrap: anywhere;
+        word-break: break-word;
       }
 
       footer {
@@ -287,7 +298,11 @@
         }
 
         .row {
-          display: grid;
+          grid-template-columns: 1fr;
+        }
+
+        .row strong {
+          text-align: left;
         }
       }
     </style>
@@ -307,7 +322,6 @@
           <a href="product.html">Product Spec</a>
           <a href="access.html">Access Portal</a>
           <a href="access-api.html">Access API</a>
-          <a href="credits.json">Credits Catalog JSON</a>
           <a href="release-gates.html">Release Gates</a>
           <a href="utility.html">Utility</a>
           <a href="member-ledger.html">Member Ledger</a>
@@ -325,17 +339,15 @@
         <p class="lead">This draft service catalog explains how planned GCA utility credits and GCA Member status may map to Web3 Radar non-custodial risk tools after controlled account UI, read-only wallet verification, and ledger activation are live.</p>
         <p class="lead">The catalog is not self-service claimable today. It is a public planning artifact for 100 Web3 Radar utility credits, GCA Member workflows, and safety boundaries.</p>
         <div class="actions">
-          <a class="button primary" href="credits.json">Credits Catalog JSON</a>
           <a class="button primary" href="access.html">Access Portal</a>
-          <a class="button" href="access.json">Access JSON</a>
           <a class="button" href="access-api.html">Access API Contract</a>
-          <a class="button" href="access-api.json">Access API JSON</a>
           <a class="button" href="product.html">Product Spec</a>
           <a class="button" href="utility.html">Utility Bridge</a>
           <a class="button" href="release-gates.html">Release Gates</a>
           <a class="button" href="member-ledger.html">Member Ledger</a>
           <a class="button" href="member-benefit.html">Member Benefit Review</a>
           <a class="button" href="members.html">Member Pre-Registration</a>
+          <a class="button" href="#technicalEvidence">Technical Evidence</a>
         </div>
       </section>
 
@@ -437,6 +449,19 @@
           <div class="row"><span>GCA Member</span><strong>member ledger activation</strong></div>
           <div class="row"><span>Support</span><strong>support review queue</strong></div>
           <div class="row"><span>Any future trading workflow</span><strong>risk-control review and simulation or testnet first</strong></div>
+        </div>
+      </section>
+
+      <section class="section panel" id="technicalEvidence" aria-labelledby="technicalEvidenceTitle">
+        <h2 id="technicalEvidenceTitle">Technical Evidence</h2>
+        <p class="note">These structured files define the draft service catalog, access blueprint, API contract, release gates, and member ledgers for implementation review. They are not live claim pages.</p>
+        <div class="actions">
+          <a class="button" href="credits.json">Credits Catalog JSON</a>
+          <a class="button" href="access.json">Access JSON</a>
+          <a class="button" href="access-api.json">Access API JSON</a>
+          <a class="button" href="release-gates.json">Release Gates JSON</a>
+          <a class="button" href="member-ledger.json">Member Ledger JSON</a>
+          <a class="button" href="member-benefit.json">Member Benefit JSON</a>
         </div>
       </section>
 
