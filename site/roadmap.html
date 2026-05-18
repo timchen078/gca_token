@@ -229,9 +229,10 @@
       }
 
       .row {
-        display: flex;
-        justify-content: space-between;
-        gap: 16px;
+        display: grid;
+        grid-template-columns: minmax(112px, 0.75fr) minmax(0, 1.35fr);
+        gap: 12px;
+        align-items: start;
         border-top: 1px solid var(--line);
         padding-top: 10px;
       }
@@ -241,6 +242,13 @@
         padding-top: 0;
       }
 
+      .row strong {
+        min-width: 0;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+        text-align: right;
+      }
+
       code {
         border: 1px solid var(--line);
         border-radius: 6px;
@@ -248,6 +256,9 @@
         padding: 2px 5px;
         font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
         font-size: 0.92em;
+        max-width: 100%;
+        overflow-wrap: anywhere;
+        word-break: break-word;
       }
 
       footer {
@@ -258,8 +269,7 @@
       }
 
       @media (max-width: 760px) {
-        nav,
-        .row {
+        nav {
           align-items: flex-start;
           flex-direction: column;
         }
@@ -272,6 +282,14 @@
         .two,
         .three {
           grid-template-columns: 1fr;
+        }
+
+        .row {
+          grid-template-columns: 1fr;
+        }
+
+        .row strong {
+          text-align: left;
         }
       }
     </style>
@@ -307,7 +325,6 @@
         <h1 id="title">GCA Roadmap</h1>
         <p class="lead">This roadmap keeps the Go China Access macro narrative connected to a practical utility path: public token identity, a safer narrative system, support intake, member verification, and planned Web3 Radar-style non-custodial quant research access.</p>
         <div class="actions">
-          <a class="button primary" href="roadmap.json">Roadmap JSON</a>
           <a class="button" href="narrative.html">Narrative System</a>
           <a class="button" href="radar.html">Weekly Radar</a>
           <a class="button" href="status.html">Project Status</a>
@@ -316,6 +333,7 @@
           <a class="button" href="support.html">Support & Intake</a>
           <a class="button" href="listing-readiness.html">Listing Readiness</a>
           <a class="button" href="verify.html">Verify GCA</a>
+          <a class="button" href="#technicalEvidence">Technical Evidence</a>
         </div>
       </section>
 
@@ -396,6 +414,19 @@
             <li>Do not claim permanent warning-free status or security-vendor approval before vendor/current wallet UI confirms it.</li>
             <li>Do not claim third-party audit completion, deep liquidity, price support, or trading outcomes.</li>
           </ul>
+        </div>
+      </section>
+
+      <section class="section panel" id="technicalEvidence" aria-labelledby="technicalEvidenceTitle">
+        <h2 id="technicalEvidenceTitle">Technical Evidence</h2>
+        <p class="note">These structured files support the public roadmap, narrative, community, and access-planning pages. They are planning data and do not promise listings, audit approval, liquidity depth, or trading outcomes.</p>
+        <div class="actions">
+          <a class="button" href="roadmap.json">Roadmap JSON</a>
+          <a class="button" href="narrative.json">Narrative JSON</a>
+          <a class="button" href="radar.json">Radar JSON</a>
+          <a class="button" href="community.json">Community JSON</a>
+          <a class="button" href="support.json">Support JSON</a>
+          <a class="button" href="listing-readiness.json">Listing Readiness JSON</a>
         </div>
       </section>
 
