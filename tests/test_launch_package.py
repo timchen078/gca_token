@@ -31,6 +31,7 @@ MARKET_PAGE_URL = "https://gcagochina.com/markets.html"
 VERIFY_PAGE_URL = "https://gcagochina.com/verify.html"
 DATA_PAGE_URL = "https://gcagochina.com/data.html"
 SITE_MAP_PAGE_URL = "https://gcagochina.com/site-map.html"
+ACTION_PLAN_PAGE_URL = "https://gcagochina.com/action-plan.html"
 SUPPLY_PAGE_URL = "https://gcagochina.com/supply.html"
 SECURITY_PAGE_URL = "https://gcagochina.com/security.html"
 RISK_PAGE_URL = "https://gcagochina.com/risk.html"
@@ -179,6 +180,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("/status.html", script)
         self.assertIn("/data.html", script)
         self.assertIn("/site-map.html", script)
+        self.assertIn("/action-plan.html", script)
         self.assertIn("/listing-kit.html", script)
         self.assertIn("/whitepaper.html", script)
         self.assertIn("/buy.html", script)
@@ -366,6 +368,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("validate_brand_kit_json", script)
         self.assertIn("validate_status_page", script)
         self.assertIn("validate_site_map_page", script)
+        self.assertIn("validate_action_plan_page", script)
         self.assertIn("validate_404_page", script)
         self.assertIn("validate_listing_kit_page", script)
         self.assertIn("validate_whitepaper_page", script)
@@ -387,6 +390,7 @@ class LaunchPackageTests(unittest.TestCase):
         module.validate_404_page((ROOT / "site" / "404.html").read_text())
         module.validate_data_page((ROOT / "site" / "data.html").read_text())
         module.validate_site_map_page((ROOT / "site" / "site-map.html").read_text())
+        module.validate_action_plan_page((ROOT / "site" / "action-plan.html").read_text())
         module.validate_verify((ROOT / "site" / "verify.html").read_text())
         module.validate_status_page((ROOT / "site" / "status.html").read_text())
         module.validate_listing_kit_page((ROOT / "site" / "listing-kit.html").read_text())
@@ -677,6 +681,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertTrue((ROOT / "site" / ".nojekyll").exists())
         self.assertIn("User-agent: *", robots)
         self.assertIn("Allow: /", robots)
+        self.assertIn("Allow: /action-plan.html", robots)
         self.assertIn("Allow: /site-map.html", robots)
         self.assertIn("Allow: /verify.html", robots)
         self.assertIn("Allow: /markets.html", robots)
@@ -778,6 +783,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Allow: /data.html", robots)
         self.assertIn("Sitemap: https://gcagochina.com/sitemap.xml", robots)
         self.assertIn("https://gcagochina.com/", sitemap)
+        self.assertIn(ACTION_PLAN_PAGE_URL, sitemap)
         self.assertIn(DATA_PAGE_URL, sitemap)
         self.assertIn(SITE_MAP_PAGE_URL, sitemap)
         self.assertIn(VERIFY_PAGE_URL, sitemap)

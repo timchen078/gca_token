@@ -27,6 +27,7 @@ OFFICIAL_DEXSCREENER_URL = f"https://dexscreener.com/base/{OFFICIAL_POOL_ADDRESS
 VERIFY_PAGE_URL = "https://gcagochina.com/verify.html"
 BUY_PAGE_URL = "https://gcagochina.com/buy.html"
 STATUS_PAGE_URL = "https://gcagochina.com/status.html"
+ACTION_PLAN_PAGE_URL = "https://gcagochina.com/action-plan.html"
 DATA_PAGE_URL = "https://gcagochina.com/data.html"
 SITE_MAP_PAGE_URL = "https://gcagochina.com/site-map.html"
 ERROR_PAGE_URL = "https://gcagochina.com/404.html"
@@ -222,6 +223,8 @@ def validate_root(text: str) -> None:
     assert_contains(text, "Reviewer Data Room", label)
     assert_contains(text, "Site Map", label)
     assert_contains(text, "site-map.html", label)
+    assert_contains(text, "Action Plan", label)
+    assert_contains(text, "action-plan.html", label)
     assert_contains(text, "data.html", label)
     assert_contains(text, "Member Ledger", label)
     assert_contains(text, "Benefit Transfer Runbook", label)
@@ -304,6 +307,8 @@ def validate_status_page(text: str) -> None:
     label = "/status.html"
     assert_social_preview_meta(text, label, STATUS_PAGE_URL)
     assert_contains(text, "GCA Project Status", label)
+    assert_contains(text, "Action Plan", label)
+    assert_contains(text, "action-plan.html", label)
     assert_contains(text, "Contract source verified on BaseScan", label)
     assert_contains(text, "Deployer-wallet ownership verified on BaseScan", label)
     assert_contains(text, "BaseScan public token profile publication", label)
@@ -330,6 +335,61 @@ def validate_status_page(text: str) -> None:
             "release-gates.json",
         ),
     )
+
+
+def validate_action_plan_page(text: str) -> None:
+    label = "/action-plan.html"
+    assert_social_preview_meta(text, label, ACTION_PLAN_PAGE_URL)
+    for expected in (
+        "GCA Action Plan",
+        "Next-Step Operating Plan",
+        "What To Do Next",
+        "Keep Reviewer Evidence Clean",
+        "Improve Market Quality Legitimately",
+        "Make Member Access Real",
+        "Publish Consistent Content",
+        "Choose Trust Upgrades When Needed",
+        "Keep Boundaries Public",
+        "Do Now",
+        "Do Later",
+        "What Not To Say",
+        "Do not create fake trading activity",
+        "Platform-Only Evidence Path",
+        "Reviewer Data Room",
+        "BaseScan resubmitted: awaiting review",
+        "controlled HTTPS account UI",
+        "not live yet",
+        MAINNET_ADDRESS,
+        BASE_USDT_ADDRESS,
+        "Base Mainnet",
+        "8453",
+        "GCA/USDT",
+        OFFICIAL_POOL_ADDRESS,
+        "external-reviews.html",
+        "reviewer-kit.html",
+        "platform-replies.html",
+        "market-quality.html",
+        "access.html",
+        "release-gates.html",
+        "publishing-desk.html",
+        "audit-readiness.html",
+        "custody-roadmap.html",
+        "data.html",
+    ):
+        assert_contains(text, expected, label)
+    assert_platform_only_data_room(
+        text,
+        label,
+        (
+            "project.json",
+            "tokenlist.json",
+            "reviewer-kit.json",
+            "platform-replies.json",
+            "member-ledger.json",
+        ),
+    )
+    assert_current_pool_text(text, label)
+    assert_no_forbidden_public_claims(text, label)
 
 
 def validate_data_page(text: str) -> None:
@@ -7440,6 +7500,7 @@ def validate_security_txt(text: str) -> None:
 def validate_sitemap(text: str) -> None:
     label = "/sitemap.xml"
     for expected in (
+        "https://gcagochina.com/action-plan.html",
         "https://gcagochina.com/data.html",
         "https://gcagochina.com/site-map.html",
         "https://gcagochina.com/verify.html",
@@ -7550,6 +7611,7 @@ def validate_sitemap(text: str) -> None:
 
 def validate_robots(text: str) -> None:
     label = "/robots.txt"
+    assert_contains(text, "Allow: /action-plan.html", label)
     assert_contains(text, "Allow: /site-map.html", label)
     assert_contains(text, "Allow: /verify.html", label)
     assert_contains(text, "Allow: /data.html", label)
@@ -7661,6 +7723,7 @@ def validate_robots(text: str) -> None:
 
 CHECKS: list[EndpointCheck] = [
     ("/", validate_root),
+    ("/action-plan.html", validate_action_plan_page),
     ("/data.html", validate_data_page),
     ("/site-map.html", validate_site_map_page),
     ("/verify.html", validate_verify),
