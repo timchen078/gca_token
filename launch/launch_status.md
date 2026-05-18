@@ -16,6 +16,7 @@
 - Public about page prepared at `https://gcagochina.com/about.html` with the company/project profile, CEO / Project Lead Tim Chen, official contact channels, Base Mainnet identity, product scope, and disclosure boundaries.
 - Public Chinese user entry page prepared at `https://gcagochina.com/zh-cn.html` for plain-language verification, buying, membership, current status, and risk-boundary guidance.
 - Public Chinese participation guide prepared at `https://gcagochina.com/zh-apply.html` for verification order, official GCA/USDT route, member evidence preparation, support intake, and non-live claim boundaries.
+- Public Chinese review status page prepared at `https://gcagochina.com/zh-status.html` for BaseScan, GeckoTerminal, wallet-warning, third-party audit, LP-lock, reserve, and listing-status boundaries.
 - Public Chinese FAQ page prepared at `https://gcagochina.com/zh-faq.html` for wallet display, GCA/USDT pool mechanics, supply display, owner reserve, member rules, and safe user answers.
 - Public Chinese member rules page prepared at `https://gcagochina.com/zh-members.html` for 10,000 GCA holder rules, 100 Web3 Radar utility credits, 1,000,000 GCA / 30-day GCA Member review, and non-live claim boundaries.
 - GitHub Actions public site health-check workflow prepared to run `tools/check_public_site.py` manually, on a daily schedule, and after health-check workflow/script changes.
@@ -148,6 +149,7 @@
 - Use `https://gcagochina.com/about.html` when a reviewer, data platform, user, or community member asks who operates the project, who the public lead is, or which official contact channels are valid.
 - Use `https://gcagochina.com/zh-cn.html` when Chinese users need a plain-language entry for verification, buying, membership, current status, and risk boundaries.
 - Use `https://gcagochina.com/zh-apply.html` when Chinese users ask what order to follow before buying, how to prepare holder or member-review evidence, or what information GCA support will never request.
+- Use `https://gcagochina.com/zh-status.html` when Chinese users ask whether BaseScan, GeckoTerminal, Blockaid/MetaMask, third-party audit, LP lock, reserve custody, CoinGecko, or CoinMarketCap are completed.
 - Use `https://gcagochina.com/zh-faq.html` when Chinese users ask why wallets do not show GCA, why data platforms show 1B supply, how pool settlement works, whether the owner's GCA decreases when others buy, or how member rules should be described.
 - Use `https://gcagochina.com/zh-members.html` when Chinese users ask what 10,000 GCA holders, 100 Web3 Radar utility credits, 1,000,000 GCA / 30-day GCA Member review, or the 10,000 GCA member benefit mean before public self-service claiming is live.
 - Expose the Web3 Radar access bridge through controlled HTTPS account UI before describing report credits, backtest quotas, ENTRY_READY reviews, or calculators as public self-service token-gated features.

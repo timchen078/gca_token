@@ -31,6 +31,7 @@ ABOUT_PAGE_URL = "https://gcagochina.com/about.html"
 ACTION_PLAN_PAGE_URL = "https://gcagochina.com/action-plan.html"
 ZH_CN_PAGE_URL = "https://gcagochina.com/zh-cn.html"
 ZH_APPLY_PAGE_URL = "https://gcagochina.com/zh-apply.html"
+ZH_STATUS_PAGE_URL = "https://gcagochina.com/zh-status.html"
 ZH_FAQ_PAGE_URL = "https://gcagochina.com/zh-faq.html"
 ZH_MEMBERS_PAGE_URL = "https://gcagochina.com/zh-members.html"
 DATA_PAGE_URL = "https://gcagochina.com/data.html"
@@ -237,6 +238,8 @@ def validate_root(text: str) -> None:
     assert_contains(text, "zh-cn.html", label)
     assert_contains(text, "中文参与指引", label)
     assert_contains(text, "zh-apply.html", label)
+    assert_contains(text, "中文审核状态", label)
+    assert_contains(text, "zh-status.html", label)
     assert_contains(text, "中文 FAQ", label)
     assert_contains(text, "zh-faq.html", label)
     assert_contains(text, "中文会员规则", label)
@@ -478,6 +481,8 @@ def validate_zh_cn_page(text: str) -> None:
         "中文入口",
         "中文参与指引",
         "zh-apply.html",
+        "中文审核状态",
+        "zh-status.html",
         "中文 FAQ",
         "zh-faq.html",
         "中文会员规则",
@@ -510,6 +515,7 @@ def validate_zh_cn_page(text: str) -> None:
         "buy.html",
         "members.html",
         "zh-apply.html",
+        "zh-status.html",
         "zh-members.html",
         "member-ledger.html",
         "member-benefit.html",
@@ -541,6 +547,8 @@ def validate_zh_apply_page(text: str) -> None:
         "先验证 GCA",
         "查看购买说明",
         "中文会员规则",
+        "中文审核状态",
+        "zh-status.html",
         "Base Mainnet",
         "chainId 8453",
         MAINNET_ADDRESS,
@@ -577,6 +585,7 @@ def validate_zh_apply_page(text: str) -> None:
         X_URL,
         "https://t.me/gcagochinaofficial",
         "zh-cn.html",
+        "zh-status.html",
         "zh-faq.html",
         "zh-members.html",
         "verify.html",
@@ -603,6 +612,77 @@ def validate_zh_apply_page(text: str) -> None:
     assert_no_forbidden_public_claims(text, label)
 
 
+def validate_zh_status_page(text: str) -> None:
+    label = "/zh-status.html"
+    assert_social_preview_meta(text, label, ZH_STATUS_PAGE_URL)
+    for expected in (
+        "GCA 中文审核状态",
+        "中文审核状态",
+        "BaseScan 源码验证已完成",
+        "GeckoTerminal 信息更新已通过",
+        "BaseScan Token Profile",
+        "仍按等待审核处理",
+        "第三方审计",
+        "LP 锁",
+        "储备多签或锁仓",
+        "尚未完成",
+        "Base Mainnet",
+        "chainId 8453",
+        MAINNET_ADDRESS,
+        "GCA/USDT",
+        OFFICIAL_POOL_ADDRESS,
+        "BaseScan 源码",
+        "已验证",
+        "已重新提交 / 等待审核",
+        "已通过 2026-05-11",
+        "合约没有后续增发函数",
+        "BaseScan 部署钱包所有权验证已完成",
+        "owner-held reserve",
+        "600,000,000 GCA",
+        "钱包风险提示不再可见",
+        "不是 Blockaid、MetaMask 或任何安全厂商的永久批准",
+        "没有独立审计报告",
+        "LP 锁尚未完成",
+        "不能宣传为深度流动性或锁定流动性",
+        "部分数据平台可能仍按 1,000,000,000 读取总供应或流通口径",
+        "不要说 BaseScan Token Profile 已通过",
+        "不要说 GCA 已通过第三方审计",
+        "不要说 Blockaid、MetaMask 或安全厂商永久批准 GCA",
+        "不要说 LP 已锁、储备已锁仓、储备已多签",
+        "不要承诺价格、收益、交易量、上币、永久无风险提示或深度流动性",
+        "不要通过人工制造交易活动、自我成交或误导性宣传来改善市场数据",
+        "Platform-Only Evidence Path",
+        "Reviewer Data Room",
+        "zh-cn.html",
+        "zh-apply.html",
+        "zh-faq.html",
+        "zh-members.html",
+        "verify.html",
+        "external-reviews.html",
+        "wallet-warning.html",
+        "blockaid-followup.html",
+        "technical-report.html",
+        "risk-remediation.html",
+        "custody-roadmap.html",
+        "audit-readiness.html",
+        "data.html",
+    ):
+        assert_contains(text, expected, label)
+    assert_platform_only_data_room(
+        text,
+        label,
+        (
+            "project.json",
+            "tokenlist.json",
+            "reviewer-kit.json",
+            "platform-replies.json",
+            "external-reviews.json",
+        ),
+    )
+    assert_current_pool_text(text, label)
+    assert_no_forbidden_public_claims(text, label)
+
+
 def validate_zh_faq_page(text: str) -> None:
     label = "/zh-faq.html"
     assert_social_preview_meta(text, label, ZH_FAQ_PAGE_URL)
@@ -612,6 +692,8 @@ def validate_zh_faq_page(text: str) -> None:
         "中文用户常见问题",
         "中文参与指引",
         "zh-apply.html",
+        "中文审核状态",
+        "zh-status.html",
         "中文会员规则",
         "zh-members.html",
         "Base Mainnet",
@@ -644,6 +726,7 @@ def validate_zh_faq_page(text: str) -> None:
         "https://t.me/gcagochinaofficial",
         "zh-cn.html",
         "zh-apply.html",
+        "zh-status.html",
         "verify.html",
         "buy.html",
         "markets.html",
@@ -678,6 +761,8 @@ def validate_zh_members_page(text: str) -> None:
         "中文会员规则",
         "中文参与指引",
         "zh-apply.html",
+        "中文审核状态",
+        "zh-status.html",
         "Base Mainnet",
         "chainId 8453",
         MAINNET_ADDRESS,
@@ -703,6 +788,7 @@ def validate_zh_members_page(text: str) -> None:
         "verify.html",
         "buy.html",
         "zh-apply.html",
+        "zh-status.html",
         "members.html",
         "member-ledger.html",
         "member-benefit.html",
@@ -7849,6 +7935,7 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/action-plan.html",
         "https://gcagochina.com/zh-cn.html",
         "https://gcagochina.com/zh-apply.html",
+        "https://gcagochina.com/zh-status.html",
         "https://gcagochina.com/zh-faq.html",
         "https://gcagochina.com/zh-members.html",
         "https://gcagochina.com/data.html",
@@ -7965,6 +8052,7 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /action-plan.html", label)
     assert_contains(text, "Allow: /zh-cn.html", label)
     assert_contains(text, "Allow: /zh-apply.html", label)
+    assert_contains(text, "Allow: /zh-status.html", label)
     assert_contains(text, "Allow: /zh-faq.html", label)
     assert_contains(text, "Allow: /zh-members.html", label)
     assert_contains(text, "Allow: /site-map.html", label)
@@ -8082,6 +8170,7 @@ CHECKS: list[EndpointCheck] = [
     ("/action-plan.html", validate_action_plan_page),
     ("/zh-cn.html", validate_zh_cn_page),
     ("/zh-apply.html", validate_zh_apply_page),
+    ("/zh-status.html", validate_zh_status_page),
     ("/zh-faq.html", validate_zh_faq_page),
     ("/zh-members.html", validate_zh_members_page),
     ("/data.html", validate_data_page),
