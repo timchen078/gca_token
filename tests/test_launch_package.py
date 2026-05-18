@@ -1222,9 +1222,17 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("180 days", members)
         self.assertIn("30 days", members)
         self.assertIn("5-10 business days", members)
-        self.assertIn("member-program.json", members)
+        self.assertIn("Platform-Only Evidence Path", members)
+        self.assertIn("Data Room", members)
+        self.assertIn("JSON", members)
         self.assertIn("member-ledger.html", members)
-        self.assertIn("member-ledger.json", members)
+        for forbidden in (
+            'href="member-program.json"',
+            'href="member-ledger.json"',
+            'href="member-benefit.json"',
+            'href="support.json"',
+        ):
+            self.assertNotIn(forbidden, members)
         self.assertIn("support.html", members)
         self.assertIn("Support and intake", members)
         self.assertIn("privacy.html", members)
@@ -1492,7 +1500,17 @@ class LaunchPackageTests(unittest.TestCase):
         support = json.loads((ROOT / "site" / "support.json").read_text())
 
         self.assertIn("GCA Support & Intake", page)
-        self.assertIn("Support JSON", page)
+        self.assertIn("Platform-Only Evidence Path", page)
+        self.assertIn("Data Room", page)
+        self.assertIn("JSON", page)
+        for forbidden in (
+            'href="support.json"',
+            'href="review-queue.json"',
+            'href="member-benefit.json"',
+            'href="operations.json"',
+            'href="platform-replies.json"',
+        ):
+            self.assertNotIn(forbidden, page)
         self.assertIn("Reviewer Kit", page)
         self.assertIn("Platform Replies", page)
         self.assertIn("GCAgochina@outlook.com", page)
@@ -2299,7 +2317,18 @@ class LaunchPackageTests(unittest.TestCase):
         ledger = json.loads((ROOT / "site" / "member-ledger.json").read_text())
 
         self.assertIn("GCA Member Ledger Schema", page)
-        self.assertIn("Member Ledger JSON", page)
+        self.assertIn("Platform-Only Evidence Path", page)
+        self.assertIn("Data Room", page)
+        self.assertIn("JSON", page)
+        for forbidden in (
+            'href="member-ledger.json"',
+            'href="member-program.json"',
+            'href="member-benefit.json"',
+            'href="member-benefit-transfer.json"',
+            'href="access-api.json"',
+            'href="review-queue.json"',
+        ):
+            self.assertNotIn(forbidden, page)
         self.assertIn("Wallet Verification Record", page)
         self.assertIn("100 Credit Ledger", page)
         self.assertIn("GCA Member Ledger", page)
@@ -2388,7 +2417,17 @@ class LaunchPackageTests(unittest.TestCase):
         benefit = json.loads((ROOT / "site" / "member-benefit.json").read_text())
 
         self.assertIn("GCA Member Benefit Review", page)
-        self.assertIn("Member Benefit JSON", page)
+        self.assertIn("Platform-Only Evidence Path", page)
+        self.assertIn("Data Room", page)
+        self.assertIn("JSON", page)
+        for forbidden in (
+            'href="member-benefit.json"',
+            'href="member-benefit-transfer.json"',
+            'href="member-ledger.json"',
+            'href="member-program.json"',
+            'href="support.json"',
+        ):
+            self.assertNotIn(forbidden, page)
         self.assertIn("1,000,000 GCA", page)
         self.assertIn("30 consecutive days", page)
         self.assertIn("10,000 GCA", page)
@@ -2437,7 +2476,17 @@ class LaunchPackageTests(unittest.TestCase):
         transfer = json.loads((ROOT / "site" / "member-benefit-transfer.json").read_text())
 
         self.assertIn("GCA Member Benefit Transfer Runbook", page)
-        self.assertIn("Transfer Runbook JSON", page)
+        self.assertIn("Platform-Only Evidence Path", page)
+        self.assertIn("Data Room", page)
+        self.assertIn("JSON", page)
+        for forbidden in (
+            'href="member-benefit-transfer.json"',
+            'href="member-benefit.json"',
+            'href="member-ledger.json"',
+            'href="operations.json"',
+            'href="supply.json"',
+        ):
+            self.assertNotIn(forbidden, page)
         self.assertIn("10,000 GCA", page)
         self.assertIn("Owner reserve", page)
         self.assertIn("Manual only", page)
@@ -2489,7 +2538,18 @@ class LaunchPackageTests(unittest.TestCase):
         utility = (ROOT / "site" / "utility.html").read_text()
         utility_json = json.loads((ROOT / "site" / "utility.json").read_text())
         self.assertIn("GCA Utility Thesis", utility)
-        self.assertIn("Utility JSON", utility)
+        self.assertIn("Platform-Only Evidence Path", utility)
+        self.assertIn("Data Room", utility)
+        self.assertIn("JSON", utility)
+        for forbidden in (
+            'href="utility.json"',
+            'href="product.json"',
+            'href="credits.json"',
+            'href="member-ledger.json"',
+            'href="access.json"',
+            'href="release-gates.json"',
+        ):
+            self.assertNotIn(forbidden, utility)
         self.assertIn("Utility Bridge Specification", utility)
         self.assertIn("Go China macro-narrative token", utility)
         self.assertIn("Web3 Radar-style non-custodial quant tools", utility)
@@ -2546,7 +2606,19 @@ class LaunchPackageTests(unittest.TestCase):
         product = json.loads((ROOT / "site" / "product.json").read_text())
 
         self.assertIn("GCA AI Quant Access Product Spec", page)
-        self.assertIn("Product JSON", page)
+        self.assertIn("Platform-Only Evidence Path", page)
+        self.assertIn("Data Room", page)
+        self.assertIn("JSON", page)
+        for forbidden in (
+            'href="product.json"',
+            'href="access.json"',
+            'href="access-api.json"',
+            'href="review-queue.json"',
+            'href="release-gates.json"',
+            'href="credits.json"',
+            'href="utility.json"',
+        ):
+            self.assertNotIn(forbidden, page)
         self.assertIn("Release Gates", page)
         self.assertIn("public product spec only", page)
         self.assertIn("not a live trading terminal", page)
@@ -2622,9 +2694,20 @@ class LaunchPackageTests(unittest.TestCase):
         access = json.loads((ROOT / "site" / "access.json").read_text())
 
         self.assertIn("GCA Access Portal Blueprint", page)
-        self.assertIn("Access Portal JSON", page)
+        self.assertIn("Platform-Only Evidence Path", page)
+        self.assertIn("Data Room", page)
+        self.assertIn("JSON", page)
         self.assertIn("Operations Runbook", page)
-        self.assertIn("Operations JSON", page)
+        for forbidden in (
+            'href="access.json"',
+            'href="operations.json"',
+            'href="access-api.json"',
+            'href="review-queue.json"',
+            'href="credits.json"',
+            'href="release-gates.json"',
+            'href="member-ledger.json"',
+        ):
+            self.assertNotIn(forbidden, page)
         self.assertIn("blueprint only", page)
         self.assertIn("controlled HTTPS account UI is not live", page)
         self.assertIn("direct submission is not connected", page)
@@ -2715,9 +2798,20 @@ class LaunchPackageTests(unittest.TestCase):
         api = json.loads((ROOT / "site" / "access-api.json").read_text())
 
         self.assertIn("GCA Access API Contract", page)
-        self.assertIn("Access API JSON", page)
+        self.assertIn("Platform-Only Evidence Path", page)
+        self.assertIn("Data Room", page)
+        self.assertIn("JSON", page)
         self.assertIn("Operations Runbook", page)
-        self.assertIn("operations.json", page)
+        self.assertIn("operations.html", page)
+        for forbidden in (
+            'href="access-api.json"',
+            'href="review-queue.json"',
+            'href="member-ledger.json"',
+            'href="operations.json"',
+            'href="support.json"',
+            'href="access.json"',
+        ):
+            self.assertNotIn(forbidden, page)
         self.assertIn("contract only", page)
         self.assertIn("not live today", page)
         self.assertIn("not a public submission endpoint", page)
@@ -2902,7 +2996,18 @@ class LaunchPackageTests(unittest.TestCase):
         ops = json.loads((ROOT / "site" / "operations.json").read_text())
 
         self.assertIn("GCA Access Operations Runbook", page)
-        self.assertIn("Operations JSON", page)
+        self.assertIn("Platform-Only Evidence Path", page)
+        self.assertIn("Data Room", page)
+        self.assertIn("JSON", page)
+        for forbidden in (
+            'href="operations.json"',
+            'href="review-queue.json"',
+            'href="access-api.json"',
+            'href="member-ledger.json"',
+            'href="support.json"',
+            'href="release-gates.json"',
+        ):
+            self.assertNotIn(forbidden, page)
         self.assertIn("operations runbook only", page)
         self.assertIn("not live today", page)
         self.assertIn("not a public submission queue", page)
@@ -3042,7 +3147,18 @@ class LaunchPackageTests(unittest.TestCase):
         credits = json.loads((ROOT / "site" / "credits.json").read_text())
 
         self.assertIn("GCA Utility Credits Catalog", page)
-        self.assertIn("Credits Catalog JSON", page)
+        self.assertIn("Platform-Only Evidence Path", page)
+        self.assertIn("Data Room", page)
+        self.assertIn("JSON", page)
+        for forbidden in (
+            'href="credits.json"',
+            'href="access.json"',
+            'href="access-api.json"',
+            'href="release-gates.json"',
+            'href="member-ledger.json"',
+            'href="member-benefit.json"',
+        ):
+            self.assertNotIn(forbidden, page)
         self.assertIn("draft service catalog", page)
         self.assertIn("not self-service claimable", page)
         self.assertIn("100 Web3 Radar utility credits", page)
@@ -3132,9 +3248,19 @@ class LaunchPackageTests(unittest.TestCase):
         gates = json.loads((ROOT / "site" / "release-gates.json").read_text())
 
         self.assertIn("GCA Product Release Gates", page)
-        self.assertIn("Release Gates JSON", page)
+        self.assertIn("Platform-Only Evidence Path", page)
+        self.assertIn("Data Room", page)
+        self.assertIn("JSON", page)
         self.assertIn("Operations Runbook", page)
-        self.assertIn("Operations JSON", page)
+        for forbidden in (
+            'href="release-gates.json"',
+            'href="access.json"',
+            'href="operations.json"',
+            'href="access-api.json"',
+            'href="product.json"',
+            'href="credits.json"',
+        ):
+            self.assertNotIn(forbidden, page)
         self.assertIn("public product spec only", page)
         self.assertIn("Public Account UI is not live", page)
         self.assertIn("Credits are not self-service claimable", page)
@@ -3654,9 +3780,19 @@ class LaunchPackageTests(unittest.TestCase):
         queue = json.loads((ROOT / "site" / "review-queue.json").read_text())
 
         self.assertIn("GCA Review Queue Contract", page)
-        self.assertIn("Review Queue JSON", page)
+        self.assertIn("Platform-Only Evidence Path", page)
+        self.assertIn("Data Room", page)
+        self.assertIn("JSON", page)
         self.assertIn("Operations Runbook", page)
-        self.assertIn("operations.json", page)
+        self.assertIn("operations.html", page)
+        for forbidden in (
+            'href="review-queue.json"',
+            'href="member-ledger.json"',
+            'href="operations.json"',
+            'href="access-api.json"',
+            'href="support.json"',
+        ):
+            self.assertNotIn(forbidden, page)
         self.assertIn("manual review contract", page)
         self.assertIn("not live today", page)
         self.assertIn("not a public submission queue", page)

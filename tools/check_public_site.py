@@ -172,6 +172,14 @@ def assert_current_pool_text(text: str, label: str) -> None:
     assert_not_contains(text, "GCA/WETH", label)
 
 
+def assert_platform_only_data_room(text: str, label: str, forbidden_hrefs: tuple[str, ...] = ()) -> None:
+    assert_contains(text, "Platform-Only Evidence Path", label)
+    assert_contains(text, "Data Room", label)
+    assert_contains(text, "JSON", label)
+    for href in forbidden_hrefs:
+        assert_not_contains(text, f'href="{href}"', label)
+
+
 def assert_social_preview_meta(text: str, label: str, canonical_url: str) -> None:
     assert_contains(text, f'<link rel="canonical" href="{canonical_url}">', label)
     assert_contains(text, '<meta property="og:type" content="website">', label)
@@ -304,6 +312,18 @@ def validate_status_page(text: str) -> None:
     assert_contains(text, OFFICIAL_GECKOTERMINAL_URL, label)
     assert_contains(text, OFFICIAL_DEXSCREENER_URL, label)
     assert_current_pool_text(text, label)
+    assert_platform_only_data_room(
+        text,
+        label,
+        (
+            "credits.json",
+            "access.json",
+            "operations.json",
+            "access-api.json",
+            "review-queue.json",
+            "release-gates.json",
+        ),
+    )
 
 
 def validate_data_page(text: str) -> None:
@@ -845,9 +865,17 @@ def validate_members(text: str) -> None:
     assert_contains(text, "eth_call", label)
     assert_contains(text, "wallet_switchEthereumChain", label)
     assert_contains(text, "doesNotCreateLedgerRecord", label)
-    assert_contains(text, "member-program.json", label)
+    assert_platform_only_data_room(
+        text,
+        label,
+        (
+            "member-program.json",
+            "member-ledger.json",
+            "member-benefit.json",
+            "support.json",
+        ),
+    )
     assert_contains(text, "member-ledger.html", label)
-    assert_contains(text, "member-ledger.json", label)
     assert_contains(text, "tools/gca_member_backend.py", label)
     assert_contains(text, "LOCAL_BACKEND_HOSTS", label)
     assert_contains(text, "local JSONL ledger records", label)
@@ -884,6 +912,17 @@ def validate_member_access_page(text: str) -> None:
     assert_contains(text, "100 Web3 Radar utility credits", label)
     assert_contains(text, "does not create a live account", label)
     assert_contains(text, "does not activate GCA Member status", label)
+    assert_platform_only_data_room(
+        text,
+        label,
+        (
+            "../../member-program.json",
+            "../../member-ledger.json",
+            "../../member-benefit.json",
+            "../../privacy.json",
+            "../../terms.json",
+        ),
+    )
     assert_not_contains(text, "eth_sendTransaction", label)
     assert_not_contains(text, "personal_sign", label)
     assert_not_contains(text, OLD_WETH_POOL_ADDRESS, label)
@@ -966,7 +1005,17 @@ def validate_operator_page(text: str) -> None:
 def validate_support_page(text: str) -> None:
     label = "/support.html"
     assert_contains(text, "GCA Support & Intake", label)
-    assert_contains(text, "Support JSON", label)
+    assert_platform_only_data_room(
+        text,
+        label,
+        (
+            "support.json",
+            "review-queue.json",
+            "member-benefit.json",
+            "operations.json",
+            "platform-replies.json",
+        ),
+    )
     assert_contains(text, "Reviewer Kit", label)
     assert_contains(text, "Platform Replies", label)
     assert_contains(text, "Review Queue", label)
@@ -2239,7 +2288,18 @@ def validate_member_access_brief_001_json(text: str) -> None:
 def validate_utility_page(text: str) -> None:
     label = "/utility.html"
     assert_contains(text, "GCA Utility Thesis", label)
-    assert_contains(text, "Utility JSON", label)
+    assert_platform_only_data_room(
+        text,
+        label,
+        (
+            "utility.json",
+            "product.json",
+            "credits.json",
+            "member-ledger.json",
+            "access.json",
+            "release-gates.json",
+        ),
+    )
     assert_contains(text, "Utility Bridge Specification", label)
     assert_contains(text, "Web3 Radar-style non-custodial quant tools", label)
     assert_contains(text, "read-only wallet verification", label)
@@ -2253,7 +2313,6 @@ def validate_utility_page(text: str) -> None:
     assert_contains(text, "10,000 GCA member benefit", label)
     assert_contains(text, "Credits Catalog", label)
     assert_contains(text, "credits.html", label)
-    assert_contains(text, "credits.json", label)
     assert_contains(text, MAINNET_ADDRESS, label)
     assert_no_forbidden_public_claims(text, label)
 
@@ -2335,7 +2394,19 @@ def validate_utility_json(text: str) -> None:
 def validate_product_page(text: str) -> None:
     label = "/product.html"
     assert_contains(text, "GCA AI Quant Access Product Spec", label)
-    assert_contains(text, "Product JSON", label)
+    assert_platform_only_data_room(
+        text,
+        label,
+        (
+            "product.json",
+            "access.json",
+            "access-api.json",
+            "review-queue.json",
+            "release-gates.json",
+            "credits.json",
+            "utility.json",
+        ),
+    )
     assert_contains(text, "Access Portal", label)
     assert_contains(text, "Access API", label)
     assert_contains(text, "Release Gates", label)
@@ -2496,7 +2567,19 @@ def validate_product_json(text: str) -> None:
 def validate_access_page(text: str) -> None:
     label = "/access.html"
     assert_contains(text, "GCA Access Portal Blueprint", label)
-    assert_contains(text, "Access Portal JSON", label)
+    assert_platform_only_data_room(
+        text,
+        label,
+        (
+            "access.json",
+            "operations.json",
+            "access-api.json",
+            "review-queue.json",
+            "credits.json",
+            "release-gates.json",
+            "member-ledger.json",
+        ),
+    )
     assert_contains(text, "Access API", label)
     assert_contains(text, "Review Queue", label)
     assert_contains(text, "blueprint only", label)
@@ -2517,7 +2600,7 @@ def validate_access_page(text: str) -> None:
     assert_contains(text, "member ledger activation", label)
     assert_contains(text, "support review queue", label)
     assert_contains(text, "Review Queue Contract", label)
-    assert_contains(text, "Operations JSON", label)
+    assert_contains(text, "Operations Runbook", label)
     assert_contains(text, "Liquidation Replay", label)
     assert_contains(text, "Risk Warning Review", label)
     assert_contains(text, "Backtest Lab", label)
@@ -2531,7 +2614,7 @@ def validate_access_page(text: str) -> None:
     assert_contains(text, "No exchange API secret collection", label)
     assert_contains(text, "No private key or seed phrase collection", label)
     assert_contains(text, "gca/member-access/", label)
-    assert_contains(text, "review-queue.json", label)
+    assert_contains(text, "review-queue.html", label)
     assert_contains(text, "members.html", label)
     assert_contains(text, MAINNET_ADDRESS, label)
     assert_contains(text, BASE_USDT_ADDRESS, label)
@@ -2696,7 +2779,18 @@ def validate_operations_page(text: str) -> None:
     label = "/operations.html"
     assert_social_preview_meta(text, label, OPERATIONS_PAGE_URL)
     assert_contains(text, "GCA Access Operations Runbook", label)
-    assert_contains(text, "Operations JSON", label)
+    assert_platform_only_data_room(
+        text,
+        label,
+        (
+            "operations.json",
+            "review-queue.json",
+            "access-api.json",
+            "member-ledger.json",
+            "support.json",
+            "release-gates.json",
+        ),
+    )
     assert_contains(text, "operations runbook only", label)
     assert_contains(text, "not live today", label)
     assert_contains(text, "not a public submission queue", label)
@@ -2960,7 +3054,18 @@ def validate_operations_json(text: str) -> None:
 def validate_access_api_page(text: str) -> None:
     label = "/access-api.html"
     assert_contains(text, "GCA Access API Contract", label)
-    assert_contains(text, "Access API JSON", label)
+    assert_platform_only_data_room(
+        text,
+        label,
+        (
+            "access-api.json",
+            "review-queue.json",
+            "member-ledger.json",
+            "operations.json",
+            "support.json",
+            "access.json",
+        ),
+    )
     assert_contains(text, "Review Queue", label)
     assert_contains(text, "Operations Runbook", label)
     assert_contains(text, "contract only", label)
@@ -3005,8 +3110,8 @@ def validate_access_api_page(text: str) -> None:
     assert_contains(text, "Exchange API secret", label)
     assert_contains(text, "Withdrawal permission", label)
     assert_contains(text, "Custody request", label)
-    assert_contains(text, "review-queue.json", label)
-    assert_contains(text, "operations.json", label)
+    assert_contains(text, "review-queue.html", label)
+    assert_contains(text, "operations.html", label)
     assert_contains(text, MAINNET_ADDRESS, label)
     assert_contains(text, BASE_USDT_ADDRESS, label)
     assert_current_pool_text(text, label)
@@ -3285,7 +3390,17 @@ def validate_access_api_json(text: str) -> None:
 def validate_review_queue_page(text: str) -> None:
     label = "/review-queue.html"
     assert_contains(text, "GCA Review Queue Contract", label)
-    assert_contains(text, "Review Queue JSON", label)
+    assert_platform_only_data_room(
+        text,
+        label,
+        (
+            "review-queue.json",
+            "member-ledger.json",
+            "operations.json",
+            "access-api.json",
+            "support.json",
+        ),
+    )
     assert_contains(text, "Operations Runbook", label)
     assert_contains(text, "manual review contract", label)
     assert_contains(text, "not live today", label)
@@ -3323,7 +3438,7 @@ def validate_review_queue_page(text: str) -> None:
     assert_contains(text, "Exchange API secret", label)
     assert_contains(text, "withdrawal permission", label)
     assert_contains(text, "Custody request", label)
-    assert_contains(text, "operations.json", label)
+    assert_contains(text, "operations.html", label)
     assert_contains(text, MAINNET_ADDRESS, label)
     assert_contains(text, BASE_USDT_ADDRESS, label)
     assert_current_pool_text(text, label)
@@ -3482,7 +3597,18 @@ def validate_review_queue_json(text: str) -> None:
 def validate_credits_page(text: str) -> None:
     label = "/credits.html"
     assert_contains(text, "GCA Utility Credits Catalog", label)
-    assert_contains(text, "Credits Catalog JSON", label)
+    assert_platform_only_data_room(
+        text,
+        label,
+        (
+            "credits.json",
+            "access.json",
+            "access-api.json",
+            "release-gates.json",
+            "member-ledger.json",
+            "member-benefit.json",
+        ),
+    )
     assert_contains(text, "Access Portal", label)
     assert_contains(text, "Access API", label)
     assert_contains(text, "draft service catalog", label)
@@ -3674,7 +3800,18 @@ def validate_credits_json(text: str) -> None:
 def validate_release_gates_page(text: str) -> None:
     label = "/release-gates.html"
     assert_contains(text, "GCA Product Release Gates", label)
-    assert_contains(text, "Release Gates JSON", label)
+    assert_platform_only_data_room(
+        text,
+        label,
+        (
+            "release-gates.json",
+            "access.json",
+            "operations.json",
+            "access-api.json",
+            "product.json",
+            "credits.json",
+        ),
+    )
     assert_contains(text, "Credits Catalog", label)
     assert_contains(text, "Access Portal", label)
     assert_contains(text, "Operations Runbook", label)
@@ -5384,7 +5521,17 @@ def validate_member_benefit_json(text: str) -> None:
 def validate_member_benefit_page(text: str) -> None:
     label = "/member-benefit.html"
     assert_contains(text, "GCA Member Benefit Review", label)
-    assert_contains(text, "Member Benefit JSON", label)
+    assert_platform_only_data_room(
+        text,
+        label,
+        (
+            "member-benefit.json",
+            "member-benefit-transfer.json",
+            "member-ledger.json",
+            "member-program.json",
+            "support.json",
+        ),
+    )
     assert_contains(text, "Transfer Runbook", label)
     assert_contains(text, "1,000,000 GCA", label)
     assert_contains(text, "30 consecutive days", label)
@@ -5486,7 +5633,17 @@ def validate_member_benefit_transfer_json(text: str) -> None:
 def validate_member_benefit_transfer_page(text: str) -> None:
     label = "/member-benefit-transfer.html"
     assert_contains(text, "GCA Member Benefit Transfer Runbook", label)
-    assert_contains(text, "Transfer Runbook JSON", label)
+    assert_platform_only_data_room(
+        text,
+        label,
+        (
+            "member-benefit-transfer.json",
+            "member-benefit.json",
+            "member-ledger.json",
+            "operations.json",
+            "supply.json",
+        ),
+    )
     assert_contains(text, "10,000 GCA", label)
     assert_contains(text, "Owner reserve", label)
     assert_contains(text, "Manual only", label)
@@ -5621,7 +5778,18 @@ def validate_member_ledger_json(text: str) -> None:
 def validate_member_ledger_page(text: str) -> None:
     label = "/member-ledger.html"
     assert_contains(text, "GCA Member Ledger Schema", label)
-    assert_contains(text, "Member Ledger JSON", label)
+    assert_platform_only_data_room(
+        text,
+        label,
+        (
+            "member-ledger.json",
+            "member-program.json",
+            "member-benefit.json",
+            "member-benefit-transfer.json",
+            "access-api.json",
+            "review-queue.json",
+        ),
+    )
     assert_contains(text, "member-benefit.html", label)
     assert_contains(text, "Wallet Verification Record", label)
     assert_contains(text, "100 Credit Ledger", label)
