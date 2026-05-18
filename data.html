@@ -3,15 +3,15 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>GCA Data Room | Machine-Readable Files</title>
+    <title>GCA Data Room | Human Pages and Machine-Readable Files</title>
     <link rel="canonical" href="https://gcagochina.com/data.html">
     <link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">
     <link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">
     <meta name="description" content="Human-readable guide to GCA machine-readable JSON files for wallets, explorers, reviewers, and data platforms.">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="GCA | Go China Access">
-    <meta property="og:title" content="GCA Data Room | Machine-Readable Files">
-    <meta property="og:description" content="Machine-readable GCA JSON files are for wallets, explorers, reviewers, and data platforms. Regular visitors should use the HTML pages.">
+    <meta property="og:title" content="GCA Data Room | Human Pages and Machine-Readable Files">
+    <meta property="og:description" content="Start with GCA human-readable pages. Machine-readable JSON files remain available for wallets, explorers, reviewers, and data platforms.">
     <meta property="og:url" content="https://gcagochina.com/data.html">
     <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
     <meta property="og:image:width" content="1200">
@@ -194,6 +194,38 @@
         margin-top: 22px;
       }
 
+      .section-block {
+        margin-top: 24px;
+      }
+
+      .quick-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 16px;
+      }
+
+      .quick-link {
+        min-height: 58px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fff;
+        color: var(--ink);
+        padding: 12px 14px;
+        text-decoration: none;
+        font-weight: 800;
+      }
+
+      .quick-link span {
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 700;
+      }
+
       .data-list {
         display: grid;
         gap: 10px;
@@ -204,7 +236,7 @@
         display: grid;
         grid-template-columns: minmax(0, 1fr) auto;
         gap: 16px;
-        align-items: center;
+        align-items: start;
         padding: 12px 0;
         border-bottom: 1px solid var(--line);
       }
@@ -213,7 +245,47 @@
         border-bottom: 0;
       }
 
-      .row a {
+      .row-main strong {
+        display: block;
+        margin-bottom: 3px;
+      }
+
+      .row-main span {
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .row-actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 8px;
+      }
+
+      .pill-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 32px;
+        border: 1px solid var(--accent);
+        border-radius: 8px;
+        padding: 6px 10px;
+        background: var(--accent);
+        color: #fff;
+        font-size: 13px;
+        font-weight: 800;
+        text-decoration: none;
+        white-space: nowrap;
+      }
+
+      .pill-link.raw {
+        border-color: var(--line);
+        background: var(--soft);
+        color: var(--accent-dark);
+      }
+
+      .row a,
+      .quick-link {
         font-weight: 800;
         overflow-wrap: anywhere;
       }
@@ -237,7 +309,8 @@
 
       @media (max-width: 860px) {
         .hero,
-        .grid {
+        .grid,
+        .quick-grid {
           grid-template-columns: 1fr;
         }
 
@@ -254,6 +327,10 @@
 
         .row strong {
           text-align: left;
+        }
+
+        .row-actions {
+          justify-content: flex-start;
         }
       }
     </style>
@@ -282,7 +359,7 @@
         <div>
           <p class="eyebrow">Reviewer Data Room</p>
           <h1 id="title">GCA Data Room</h1>
-          <p class="lead">JSON files are not broken pages. They are machine-readable data files for wallets, explorers, DEX data platforms, listing reviewers, and security vendors. Regular visitors should use the HTML pages; reviewers can use the data files below when a platform asks for structured metadata.</p>
+          <p class="lead">Start with the human-readable HTML pages. JSON files are not broken pages; they are machine-readable data files for wallets, explorers, DEX data platforms, listing reviewers, and security vendors when a platform asks for structured metadata. Regular visitors should use the HTML pages.</p>
           <div class="actions">
             <a class="button primary" href="index.html">Back to GCA Home</a>
             <a class="button" href="listing-kit.html">Human Listing Kit</a>
@@ -293,37 +370,51 @@
 
         <aside class="panel">
           <h2>How to Use</h2>
-          <p class="note">If you are a normal website visitor, open the HTML links. If BaseScan, GeckoTerminal, a wallet, or a reviewer asks for a JSON file, use the matching data file link.</p>
+          <p class="note">If you are a normal website visitor, open the HTML links first. If BaseScan, GeckoTerminal, a wallet, or a reviewer asks for a JSON file, use the matching raw data link in the same row.</p>
           <div class="callout">
             <p class="note" style="margin-bottom: 0;">Canonical contract: <code>0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6</code><br>Network: Base Mainnet / chainId 8453</p>
           </div>
         </aside>
       </section>
 
-      <section class="grid" aria-label="Data groups">
+      <section class="panel section-block" aria-labelledby="humanFirstTitle">
+        <p class="eyebrow">Human Pages First</p>
+        <h2 id="humanFirstTitle">Open These Before Raw JSON</h2>
+        <p class="note">These pages are the safer entry points for users, community members, and support reviewers. Raw JSON remains below only as technical evidence.</p>
+        <div class="quick-grid">
+          <a class="quick-link" href="verify.html">Verify GCA <span>identity</span></a>
+          <a class="quick-link" href="buy.html">Buy Guide <span>official route</span></a>
+          <a class="quick-link" href="markets.html">Markets <span>pool links</span></a>
+          <a class="quick-link" href="members.html">Members <span>pre-registration</span></a>
+          <a class="quick-link" href="member-benefit.html">Member Benefit <span>rules</span></a>
+          <a class="quick-link" href="trust.html">Trust Center <span>review evidence</span></a>
+        </div>
+      </section>
+
+      <section class="grid" aria-label="Technical evidence data groups">
         <div class="panel">
           <h2>Core Metadata</h2>
-          <p class="note">Official machine-readable identity, wallet metadata, brand metadata, and listing packet data.</p>
+          <p class="note">Human pages first; raw files are for platforms that require machine-readable metadata.</p>
           <div class="data-list">
-            <div class="row"><a href="project.json">Project data</a><strong>JSON</strong></div>
-            <div class="row"><a href="tokenlist.json">Token list</a><strong>JSON</strong></div>
-            <div class="row"><a href=".well-known/gca-token.json">Well-known token identity</a><strong>JSON</strong></div>
-            <div class="row"><a href="brand-kit.json">Brand kit data</a><strong>JSON</strong></div>
-            <div class="row"><a href="listing-readiness.json">Listing readiness data</a><strong>JSON</strong></div>
+            <div class="row"><div class="row-main"><strong>Project data</strong><span>Canonical contract, market, and official links.</span></div><div class="row-actions"><a class="pill-link" href="verify.html">HTML</a><a class="pill-link raw" href="project.json">JSON</a></div></div>
+            <div class="row"><div class="row-main"><strong>Token list</strong><span>Wallet/import metadata for GCA on Base Mainnet.</span></div><div class="row-actions"><a class="pill-link" href="verify.html">HTML</a><a class="pill-link raw" href="tokenlist.json">JSON</a></div></div>
+            <div class="row"><div class="row-main"><strong>Well-known token identity</strong><span>Public identity file for automated checks.</span></div><div class="row-actions"><a class="pill-link" href="trust.html">HTML</a><a class="pill-link raw" href=".well-known/gca-token.json">JSON</a></div></div>
+            <div class="row"><div class="row-main"><strong>Brand kit data</strong><span>Logo, social card, and listing artwork.</span></div><div class="row-actions"><a class="pill-link" href="brand-kit.html">HTML</a><a class="pill-link raw" href="brand-kit.json">JSON</a></div></div>
+            <div class="row"><div class="row-main"><strong>Listing readiness data</strong><span>Current listing gaps and external review status.</span></div><div class="row-actions"><a class="pill-link" href="listing-readiness.html">HTML</a><a class="pill-link raw" href="listing-readiness.json">JSON</a></div></div>
           </div>
         </div>
 
         <div class="panel">
           <h2>Review Evidence</h2>
-          <p class="note">Structured files used when wallets, explorers, security vendors, or data platforms ask for evidence.</p>
+          <p class="note">Use these when wallets, explorers, security vendors, or data platforms ask for evidence.</p>
           <div class="data-list">
-            <div class="row"><a href="reviewer-kit.json">Reviewer kit data</a><strong>JSON</strong></div>
-            <div class="row"><a href="trust.json">Trust center data</a><strong>JSON</strong></div>
-            <div class="row"><a href="wallet-warning.json">Wallet warning evidence</a><strong>JSON</strong></div>
-            <div class="row"><a href=".well-known/wallet-security.json">Wallet security profile</a><strong>JSON</strong></div>
-            <div class="row"><a href="blockaid-followup.json">Blockaid follow-up data</a><strong>JSON</strong></div>
-            <div class="row"><a href="technical-report.json">Technical report data</a><strong>JSON</strong></div>
-            <div class="row"><a href="reserve-statement.json">Reserve statement data</a><strong>JSON</strong></div>
+            <div class="row"><div class="row-main"><strong>Reviewer kit data</strong><span>Conservative packet for platforms and reviewers.</span></div><div class="row-actions"><a class="pill-link" href="reviewer-kit.html">HTML</a><a class="pill-link raw" href="reviewer-kit.json">JSON</a></div></div>
+            <div class="row"><div class="row-main"><strong>Trust center data</strong><span>Verified contract, market, risk, and project boundaries.</span></div><div class="row-actions"><a class="pill-link" href="trust.html">HTML</a><a class="pill-link raw" href="trust.json">JSON</a></div></div>
+            <div class="row"><div class="row-main"><strong>Wallet warning evidence</strong><span>Buy/sell evidence and risk-warning context.</span></div><div class="row-actions"><a class="pill-link" href="wallet-warning.html">HTML</a><a class="pill-link raw" href="wallet-warning.json">JSON</a></div></div>
+            <div class="row"><div class="row-main"><strong>Wallet security profile</strong><span>Machine-readable safety summary for wallet vendors.</span></div><div class="row-actions"><a class="pill-link" href="token-safety.html">HTML</a><a class="pill-link raw" href=".well-known/wallet-security.json">JSON</a></div></div>
+            <div class="row"><div class="row-main"><strong>Blockaid follow-up data</strong><span>Risk-factor response and evidence package.</span></div><div class="row-actions"><a class="pill-link" href="blockaid-followup.html">HTML</a><a class="pill-link raw" href="blockaid-followup.json">JSON</a></div></div>
+            <div class="row"><div class="row-main"><strong>Technical report data</strong><span>Fixed-supply ERC-20 source and security review summary.</span></div><div class="row-actions"><a class="pill-link" href="technical-report.html">HTML</a><a class="pill-link raw" href="technical-report.json">JSON</a></div></div>
+            <div class="row"><div class="row-main"><strong>Reserve statement data</strong><span>Reserve address explanation and circulation caveat.</span></div><div class="row-actions"><a class="pill-link" href="reserve-statement.html">HTML</a><a class="pill-link raw" href="reserve-statement.json">JSON</a></div></div>
           </div>
         </div>
 
@@ -331,12 +422,12 @@
           <h2>Market and Supply</h2>
           <p class="note">Official pool, supply, holder distribution, risk remediation, and custody boundary data.</p>
           <div class="data-list">
-            <div class="row"><a href="liquidity.json">Liquidity statement data</a><strong>JSON</strong></div>
-            <div class="row"><a href="supply.json">Supply disclosure data</a><strong>JSON</strong></div>
-            <div class="row"><a href="holder-distribution.json">Holder distribution data</a><strong>JSON</strong></div>
-            <div class="row"><a href="risk-remediation.json">Risk remediation data</a><strong>JSON</strong></div>
-            <div class="row"><a href="custody-roadmap.json">Custody roadmap data</a><strong>JSON</strong></div>
-            <div class="row"><a href="audit-readiness.json">Audit readiness data</a><strong>JSON</strong></div>
+            <div class="row"><div class="row-main"><strong>Liquidity statement data</strong><span>Official GCA/USDT pool and liquidity custody boundaries.</span></div><div class="row-actions"><a class="pill-link" href="liquidity.html">HTML</a><a class="pill-link raw" href="liquidity.json">JSON</a></div></div>
+            <div class="row"><div class="row-main"><strong>Supply disclosure data</strong><span>Total supply, reserve, and circulation caveats.</span></div><div class="row-actions"><a class="pill-link" href="supply.html">HTML</a><a class="pill-link raw" href="supply.json">JSON</a></div></div>
+            <div class="row"><div class="row-main"><strong>Holder distribution data</strong><span>Holder concentration and transparency notes.</span></div><div class="row-actions"><a class="pill-link" href="holder-distribution.html">HTML</a><a class="pill-link raw" href="holder-distribution.json">JSON</a></div></div>
+            <div class="row"><div class="row-main"><strong>Risk remediation data</strong><span>Market-quality and reviewer risk reduction plan.</span></div><div class="row-actions"><a class="pill-link" href="risk-remediation.html">HTML</a><a class="pill-link raw" href="risk-remediation.json">JSON</a></div></div>
+            <div class="row"><div class="row-main"><strong>Custody roadmap data</strong><span>Future custody, lock, and reserve evidence gates.</span></div><div class="row-actions"><a class="pill-link" href="custody-roadmap.html">HTML</a><a class="pill-link raw" href="custody-roadmap.json">JSON</a></div></div>
+            <div class="row"><div class="row-main"><strong>Audit readiness data</strong><span>Third-party audit package scope and current status.</span></div><div class="row-actions"><a class="pill-link" href="audit-readiness.html">HTML</a><a class="pill-link raw" href="audit-readiness.json">JSON</a></div></div>
           </div>
         </div>
 
@@ -344,18 +435,18 @@
           <h2>Product and Member Program</h2>
           <p class="note">Structured files for GCA access, credits, member review, support, content, and roadmap materials.</p>
           <div class="data-list">
-            <div class="row"><a href="utility.json">Utility thesis data</a><strong>JSON</strong></div>
-            <div class="row"><a href="product.json">Product spec data</a><strong>JSON</strong></div>
-            <div class="row"><a href="access.json">Access portal data</a><strong>JSON</strong></div>
-            <div class="row"><a href="credits.json">Credits catalog data</a><strong>JSON</strong></div>
-            <div class="row"><a href="member-program.json">Member program data</a><strong>JSON</strong></div>
-            <div class="row"><a href="member-benefit.json">Member benefit data</a><strong>JSON</strong></div>
-            <div class="row"><a href="member-access-brief-001.json">Member access brief data</a><strong>JSON</strong></div>
-            <div class="row"><a href="support.json">Support data</a><strong>JSON</strong></div>
-            <div class="row"><a href="community.json">Community data</a><strong>JSON</strong></div>
-            <div class="row"><a href="announcements.json">Announcements data</a><strong>JSON</strong></div>
-            <div class="row"><a href="campaign.json">Campaign data</a><strong>JSON</strong></div>
-            <div class="row"><a href="content-library.json">Content library data</a><strong>JSON</strong></div>
+            <div class="row"><div class="row-main"><strong>Utility thesis data</strong><span>GCA x quant access narrative and product boundary.</span></div><div class="row-actions"><a class="pill-link" href="utility.html">HTML</a><a class="pill-link raw" href="utility.json">JSON</a></div></div>
+            <div class="row"><div class="row-main"><strong>Product spec data</strong><span>Future access modules and release assumptions.</span></div><div class="row-actions"><a class="pill-link" href="product.html">HTML</a><a class="pill-link raw" href="product.json">JSON</a></div></div>
+            <div class="row"><div class="row-main"><strong>Access portal data</strong><span>Account access blueprint and no-custody boundary.</span></div><div class="row-actions"><a class="pill-link" href="access.html">HTML</a><a class="pill-link raw" href="access.json">JSON</a></div></div>
+            <div class="row"><div class="row-main"><strong>Credits catalog data</strong><span>Planned utility credit units and review limits.</span></div><div class="row-actions"><a class="pill-link" href="credits.html">HTML</a><a class="pill-link raw" href="credits.json">JSON</a></div></div>
+            <div class="row"><div class="row-main"><strong>Member program data</strong><span>10,000 GCA holder bonus and 1,000,000 GCA member rules.</span></div><div class="row-actions"><a class="pill-link" href="members.html">HTML</a><a class="pill-link raw" href="member-program.json">JSON</a></div></div>
+            <div class="row"><div class="row-main"><strong>Member benefit data</strong><span>30-day member evidence and one-time benefit review rules.</span></div><div class="row-actions"><a class="pill-link" href="member-benefit.html">HTML</a><a class="pill-link raw" href="member-benefit.json">JSON</a></div></div>
+            <div class="row"><div class="row-main"><strong>Member access brief data</strong><span>Current access-bridge communication brief.</span></div><div class="row-actions"><a class="pill-link" href="member-access-brief-001.html">HTML</a><a class="pill-link raw" href="member-access-brief-001.json">JSON</a></div></div>
+            <div class="row"><div class="row-main"><strong>Support data</strong><span>Safe intake route and support boundaries.</span></div><div class="row-actions"><a class="pill-link" href="support.html">HTML</a><a class="pill-link raw" href="support.json">JSON</a></div></div>
+            <div class="row"><div class="row-main"><strong>Community data</strong><span>Public messaging rules and community kit.</span></div><div class="row-actions"><a class="pill-link" href="community.html">HTML</a><a class="pill-link raw" href="community.json">JSON</a></div></div>
+            <div class="row"><div class="row-main"><strong>Announcements data</strong><span>Official update log and publishing cadence.</span></div><div class="row-actions"><a class="pill-link" href="announcements.html">HTML</a><a class="pill-link raw" href="announcements.json">JSON</a></div></div>
+            <div class="row"><div class="row-main"><strong>Campaign data</strong><span>Public market education calendar.</span></div><div class="row-actions"><a class="pill-link" href="campaign.html">HTML</a><a class="pill-link raw" href="campaign.json">JSON</a></div></div>
+            <div class="row"><div class="row-main"><strong>Content library data</strong><span>Prepared posts and bilingual content drafts.</span></div><div class="row-actions"><a class="pill-link" href="content-library.html">HTML</a><a class="pill-link raw" href="content-library.json">JSON</a></div></div>
           </div>
         </div>
       </section>
