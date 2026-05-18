@@ -658,6 +658,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertTrue((ROOT / "site" / ".nojekyll").exists())
         self.assertIn("User-agent: *", robots)
         self.assertIn("Allow: /", robots)
+        self.assertIn("Allow: /verify.html", robots)
+        self.assertIn("Allow: /markets.html", robots)
         self.assertIn("Allow: /wallet-warning.html", robots)
         self.assertIn("Allow: /wallet-warning.json", robots)
         self.assertIn("Allow: /brand-kit.html", robots)
@@ -694,7 +696,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Allow: /blockaid-followup.json", robots)
         self.assertIn("Allow: /onchain-proofs.html", robots)
         self.assertIn("Allow: /onchain-proofs.json", robots)
+        self.assertIn("Allow: /supply.html", robots)
         self.assertIn("Allow: /supply.json", robots)
+        self.assertIn("Allow: /members.html", robots)
         self.assertIn("Allow: /member-program.json", robots)
         self.assertIn("Allow: /gca/member-access/", robots)
         self.assertIn("Allow: /member-ledger.html", robots)
@@ -746,6 +750,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Allow: /credits.json", robots)
         self.assertIn("Allow: /release-gates.html", robots)
         self.assertIn("Allow: /release-gates.json", robots)
+        self.assertIn("Allow: /project.json", robots)
+        self.assertIn("Allow: /tokenlist.json", robots)
         self.assertIn("Allow: /.well-known/gca-token.json", robots)
         self.assertIn("Allow: /.well-known/wallet-security.json", robots)
         self.assertIn("Allow: /.well-known/security.txt", robots)
@@ -852,6 +858,44 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(WELL_KNOWN_TOKEN_URL, sitemap)
         self.assertIn(WALLET_SECURITY_PROFILE_URL, sitemap)
         self.assertIn(SECURITY_CONTACT_URL, sitemap)
+
+        def sitemap_url(path: Path) -> str:
+            rel = str(path.relative_to(ROOT / "site"))
+            if rel == "index.html":
+                return "https://gcagochina.com/"
+            if rel.endswith("/index.html"):
+                return "https://gcagochina.com/" + rel.removesuffix("index.html")
+            return "https://gcagochina.com/" + rel
+
+        def robots_allow(path: Path) -> str:
+            rel = str(path.relative_to(ROOT / "site"))
+            if rel == "index.html":
+                return "Allow: /"
+            if rel.endswith("/index.html"):
+                return "Allow: /" + rel.removesuffix("index.html")
+            return "Allow: /" + rel
+
+        public_files = [
+            path
+            for path in (ROOT / "site").rglob("*")
+            if path.is_file() and path.suffix in {".html", ".json"}
+        ]
+        self.assertEqual(
+            [],
+            [
+                str(path.relative_to(ROOT / "site"))
+                for path in public_files
+                if sitemap_url(path) not in sitemap
+            ],
+        )
+        self.assertEqual(
+            [],
+            [
+                str(path.relative_to(ROOT / "site"))
+                for path in public_files
+                if robots_allow(path) not in robots
+            ],
+        )
 
     def test_well_known_identity_files_are_public_and_conservative(self):
         identity = json.loads((ROOT / "site" / ".well-known" / "gca-token.json").read_text())

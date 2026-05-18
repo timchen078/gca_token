@@ -7413,11 +7413,13 @@ def validate_sitemap(text: str) -> None:
 
 def validate_robots(text: str) -> None:
     label = "/robots.txt"
+    assert_contains(text, "Allow: /verify.html", label)
     assert_contains(text, "Allow: /data.html", label)
     assert_contains(text, "Allow: /status.html", label)
     assert_contains(text, "Allow: /listing-kit.html", label)
     assert_contains(text, "Allow: /whitepaper.html", label)
     assert_contains(text, "Allow: /buy.html", label)
+    assert_contains(text, "Allow: /markets.html", label)
     assert_contains(text, "Allow: /security.html", label)
     assert_contains(text, "Allow: /risk.html", label)
     assert_contains(text, "Allow: /faq.html", label)
@@ -7475,6 +7477,7 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /technical-report.json", label)
     assert_contains(text, "Allow: /reserve-statement.html", label)
     assert_contains(text, "Allow: /reserve-statement.json", label)
+    assert_contains(text, "Allow: /supply.html", label)
     assert_contains(text, "Allow: /supply.json", label)
     assert_contains(text, "Allow: /onchain-proofs.html", label)
     assert_contains(text, "Allow: /onchain-proofs.json", label)
@@ -7485,6 +7488,7 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /member-benefit-transfer.html", label)
     assert_contains(text, "Allow: /member-benefit-transfer.json", label)
     assert_contains(text, "Allow: /operator.html", label)
+    assert_contains(text, "Allow: /members.html", label)
     assert_contains(text, "Allow: /member-program.json", label)
     assert_contains(text, "Allow: /gca/member-access/", label)
     assert_contains(text, "Allow: /support.html", label)
@@ -7509,6 +7513,8 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /credits.json", label)
     assert_contains(text, "Allow: /release-gates.html", label)
     assert_contains(text, "Allow: /release-gates.json", label)
+    assert_contains(text, "Allow: /project.json", label)
+    assert_contains(text, "Allow: /tokenlist.json", label)
     assert_contains(text, "Allow: /.well-known/gca-token.json", label)
     assert_contains(text, "Allow: /.well-known/wallet-security.json", label)
     assert_contains(text, "Allow: /.well-known/security.txt", label)

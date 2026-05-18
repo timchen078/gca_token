@@ -1,10 +1,12 @@
 User-agent: *
 Allow: /
+Allow: /verify.html
 Allow: /data.html
 Allow: /status.html
 Allow: /listing-kit.html
 Allow: /whitepaper.html
 Allow: /buy.html
+Allow: /markets.html
 Allow: /security.html
 Allow: /risk.html
 Allow: /faq.html
@@ -64,6 +66,7 @@ Allow: /technical-report.html
 Allow: /technical-report.json
 Allow: /reserve-statement.html
 Allow: /reserve-statement.json
+Allow: /supply.html
 Allow: /supply.json
 Allow: /member-ledger.html
 Allow: /member-ledger.json
@@ -72,6 +75,7 @@ Allow: /member-benefit.json
 Allow: /member-benefit-transfer.html
 Allow: /member-benefit-transfer.json
 Allow: /operator.html
+Allow: /members.html
 Allow: /member-program.json
 Allow: /gca/member-access/
 Allow: /support.html
@@ -96,6 +100,8 @@ Allow: /credits.html
 Allow: /credits.json
 Allow: /release-gates.html
 Allow: /release-gates.json
+Allow: /project.json
+Allow: /tokenlist.json
 Allow: /.well-known/gca-token.json
 Allow: /.well-known/wallet-security.json
 Allow: /.well-known/security.txt
