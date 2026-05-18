@@ -1,5 +1,6 @@
 User-agent: *
 Allow: /
+Allow: /zh-cn.html
 Allow: /about.html
 Allow: /action-plan.html
 Allow: /site-map.html

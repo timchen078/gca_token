@@ -14,6 +14,7 @@
 - Public site health-check script prepared at `tools/check_public_site.py`; it checks official market identity, metadata files, buy guide, status page, listing kit, whitepaper, security/risk/FAQ pages, member pre-registration, member program rules, and high-risk public-claim guardrails.
 - Public action plan page prepared at `https://gcagochina.com/action-plan.html` to show the current next-step order for BaseScan follow-up, legitimate market quality, member-access buildout, content cadence, optional trust upgrades, and public claim boundaries.
 - Public about page prepared at `https://gcagochina.com/about.html` with the company/project profile, CEO / Project Lead Tim Chen, official contact channels, Base Mainnet identity, product scope, and disclosure boundaries.
+- Public Chinese user entry page prepared at `https://gcagochina.com/zh-cn.html` for plain-language verification, buying, membership, current status, and risk-boundary guidance.
 - GitHub Actions public site health-check workflow prepared to run `tools/check_public_site.py` manually, on a daily schedule, and after health-check workflow/script changes.
 - GitHub Pages custom domain configured for `https://gcagochina.com/`.
 - DNS records for `gcagochina.com` configured in Cloudflare.
@@ -142,6 +143,7 @@
 - Use `https://gcagochina.com/listing-readiness.html` and `https://gcagochina.com/listing-readiness.json` before any tracked-listing or exchange outreach; the current status is `not-ready`.
 - Use `https://gcagochina.com/action-plan.html` when deciding the next GCA work slice or explaining the current order of work to users, reviewers, or moderators.
 - Use `https://gcagochina.com/about.html` when a reviewer, data platform, user, or community member asks who operates the project, who the public lead is, or which official contact channels are valid.
+- Use `https://gcagochina.com/zh-cn.html` when Chinese users need a plain-language entry for verification, buying, membership, current status, and risk boundaries.
 - Expose the Web3 Radar access bridge through controlled HTTPS account UI before describing report credits, backtest quotas, ENTRY_READY reviews, or calculators as public self-service token-gated features.
 - Use `https://gcagochina.com/product.html` and `https://gcagochina.com/product.json` when reviewers or community members ask how the Go China narrative connects to real product modules; keep it described as a public product spec only until controlled account UI is released.
 - Use `https://gcagochina.com/access.html` and `https://gcagochina.com/access.json` when reviewers or community members ask how wallet balance verification, 100 credits, GCA Member status, and support review will connect; keep it described as blueprint only until controlled HTTPS account UI and ledger activation are live.

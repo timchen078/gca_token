@@ -29,6 +29,7 @@ BUY_PAGE_URL = "https://gcagochina.com/buy.html"
 STATUS_PAGE_URL = "https://gcagochina.com/status.html"
 ABOUT_PAGE_URL = "https://gcagochina.com/about.html"
 ACTION_PLAN_PAGE_URL = "https://gcagochina.com/action-plan.html"
+ZH_CN_PAGE_URL = "https://gcagochina.com/zh-cn.html"
 DATA_PAGE_URL = "https://gcagochina.com/data.html"
 SITE_MAP_PAGE_URL = "https://gcagochina.com/site-map.html"
 ERROR_PAGE_URL = "https://gcagochina.com/404.html"
@@ -229,6 +230,8 @@ def validate_root(text: str) -> None:
     assert_contains(text, "site-map.html", label)
     assert_contains(text, "Action Plan", label)
     assert_contains(text, "action-plan.html", label)
+    assert_contains(text, "中文入口", label)
+    assert_contains(text, "zh-cn.html", label)
     assert_contains(text, "data.html", label)
     assert_contains(text, "Member Ledger", label)
     assert_contains(text, "Benefit Transfer Runbook", label)
@@ -315,6 +318,8 @@ def validate_status_page(text: str) -> None:
     assert_contains(text, "about.html", label)
     assert_contains(text, "Action Plan", label)
     assert_contains(text, "action-plan.html", label)
+    assert_contains(text, "中文入口", label)
+    assert_contains(text, "zh-cn.html", label)
     assert_contains(text, "Contract source verified on BaseScan", label)
     assert_contains(text, "Deployer-wallet ownership verified on BaseScan", label)
     assert_contains(text, "BaseScan public token profile publication", label)
@@ -349,6 +354,8 @@ def validate_about_page(text: str) -> None:
     for expected in (
         "About GCA",
         "Company and Project Profile",
+        "中文入口",
+        "zh-cn.html",
         "CEO / Project Lead",
         "Tim Chen",
         "GCA | Go China Access",
@@ -403,6 +410,8 @@ def validate_action_plan_page(text: str) -> None:
     for expected in (
         "GCA Action Plan",
         "Next-Step Operating Plan",
+        "中文入口",
+        "zh-cn.html",
         "What To Do Next",
         "Keep Reviewer Evidence Clean",
         "Improve Market Quality Legitimately",
@@ -434,6 +443,60 @@ def validate_action_plan_page(text: str) -> None:
         "publishing-desk.html",
         "audit-readiness.html",
         "custody-roadmap.html",
+        "data.html",
+    ):
+        assert_contains(text, expected, label)
+    assert_platform_only_data_room(
+        text,
+        label,
+        (
+            "project.json",
+            "tokenlist.json",
+            "reviewer-kit.json",
+            "platform-replies.json",
+            "member-ledger.json",
+        ),
+    )
+    assert_current_pool_text(text, label)
+    assert_no_forbidden_public_claims(text, label)
+
+
+def validate_zh_cn_page(text: str) -> None:
+    label = "/zh-cn.html"
+    assert_social_preview_meta(text, label, ZH_CN_PAGE_URL)
+    for expected in (
+        "GCA 中文入口",
+        "中文入口",
+        "Base Mainnet",
+        "chainId 8453",
+        MAINNET_ADDRESS,
+        "GCA/USDT",
+        OFFICIAL_POOL_ADDRESS,
+        "Tim Chen",
+        "BaseScan 已验证",
+        "GeckoTerminal 信息",
+        "仍在等待审核",
+        "第三方审计",
+        "尚未完成",
+        "公开自助会员领取",
+        "还没有上线",
+        "10,000 GCA",
+        "100 Web3 Radar utility credits",
+        "1,000,000 GCA",
+        "连续持有 30 天",
+        "不是投资建议",
+        "不要把小额测试交易说成真实市场需求",
+        "Platform-Only Evidence Path",
+        "Reviewer Data Room",
+        "GCAgochina@outlook.com",
+        X_URL,
+        "https://t.me/gcagochinaofficial",
+        "verify.html",
+        "buy.html",
+        "members.html",
+        "member-ledger.html",
+        "member-benefit.html",
+        "release-gates.html",
         "data.html",
     ):
         assert_contains(text, expected, label)
@@ -539,6 +602,8 @@ def validate_site_map_page(text: str) -> None:
         "Verify GCA",
         "Buy Guide",
         "About GCA",
+        "中文入口",
+        "zh-cn.html",
         "Member Access",
         "Trust Center",
         "Core User Path",
@@ -7564,6 +7629,7 @@ def validate_sitemap(text: str) -> None:
     for expected in (
         "https://gcagochina.com/about.html",
         "https://gcagochina.com/action-plan.html",
+        "https://gcagochina.com/zh-cn.html",
         "https://gcagochina.com/data.html",
         "https://gcagochina.com/site-map.html",
         "https://gcagochina.com/verify.html",
@@ -7676,6 +7742,7 @@ def validate_robots(text: str) -> None:
     label = "/robots.txt"
     assert_contains(text, "Allow: /about.html", label)
     assert_contains(text, "Allow: /action-plan.html", label)
+    assert_contains(text, "Allow: /zh-cn.html", label)
     assert_contains(text, "Allow: /site-map.html", label)
     assert_contains(text, "Allow: /verify.html", label)
     assert_contains(text, "Allow: /data.html", label)
@@ -7789,6 +7856,7 @@ CHECKS: list[EndpointCheck] = [
     ("/", validate_root),
     ("/about.html", validate_about_page),
     ("/action-plan.html", validate_action_plan_page),
+    ("/zh-cn.html", validate_zh_cn_page),
     ("/data.html", validate_data_page),
     ("/site-map.html", validate_site_map_page),
     ("/verify.html", validate_verify),

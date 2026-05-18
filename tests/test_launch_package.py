@@ -33,6 +33,7 @@ DATA_PAGE_URL = "https://gcagochina.com/data.html"
 SITE_MAP_PAGE_URL = "https://gcagochina.com/site-map.html"
 ABOUT_PAGE_URL = "https://gcagochina.com/about.html"
 ACTION_PLAN_PAGE_URL = "https://gcagochina.com/action-plan.html"
+ZH_CN_PAGE_URL = "https://gcagochina.com/zh-cn.html"
 SUPPLY_PAGE_URL = "https://gcagochina.com/supply.html"
 SECURITY_PAGE_URL = "https://gcagochina.com/security.html"
 RISK_PAGE_URL = "https://gcagochina.com/risk.html"
@@ -183,6 +184,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("/data.html", script)
         self.assertIn("/site-map.html", script)
         self.assertIn("/action-plan.html", script)
+        self.assertIn("/zh-cn.html", script)
         self.assertIn("/listing-kit.html", script)
         self.assertIn("/whitepaper.html", script)
         self.assertIn("/buy.html", script)
@@ -372,6 +374,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("validate_about_page", script)
         self.assertIn("validate_site_map_page", script)
         self.assertIn("validate_action_plan_page", script)
+        self.assertIn("validate_zh_cn_page", script)
         self.assertIn("validate_404_page", script)
         self.assertIn("validate_listing_kit_page", script)
         self.assertIn("validate_whitepaper_page", script)
@@ -395,6 +398,7 @@ class LaunchPackageTests(unittest.TestCase):
         module.validate_data_page((ROOT / "site" / "data.html").read_text())
         module.validate_site_map_page((ROOT / "site" / "site-map.html").read_text())
         module.validate_action_plan_page((ROOT / "site" / "action-plan.html").read_text())
+        module.validate_zh_cn_page((ROOT / "site" / "zh-cn.html").read_text())
         module.validate_verify((ROOT / "site" / "verify.html").read_text())
         module.validate_status_page((ROOT / "site" / "status.html").read_text())
         module.validate_listing_kit_page((ROOT / "site" / "listing-kit.html").read_text())
@@ -687,6 +691,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Allow: /", robots)
         self.assertIn("Allow: /about.html", robots)
         self.assertIn("Allow: /action-plan.html", robots)
+        self.assertIn("Allow: /zh-cn.html", robots)
         self.assertIn("Allow: /site-map.html", robots)
         self.assertIn("Allow: /verify.html", robots)
         self.assertIn("Allow: /markets.html", robots)
@@ -790,6 +795,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("https://gcagochina.com/", sitemap)
         self.assertIn(ABOUT_PAGE_URL, sitemap)
         self.assertIn(ACTION_PLAN_PAGE_URL, sitemap)
+        self.assertIn(ZH_CN_PAGE_URL, sitemap)
         self.assertIn(DATA_PAGE_URL, sitemap)
         self.assertIn(SITE_MAP_PAGE_URL, sitemap)
         self.assertIn(VERIFY_PAGE_URL, sitemap)
