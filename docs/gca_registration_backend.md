@@ -34,6 +34,7 @@ It does not collect wallet private keys, seed phrases, wallet passwords, exchang
 - Privacy hash salt: configured in Cloudflare as `PRIVACY_HASH_SALT`
 - Local admin export tool: `tools/export_cloudflare_email_registrations.py`
 - Local ledger sync tool: `tools/sync_cloudflare_email_registrations.py`
+- Local contact CSV export tool: `tools/export_gca_email_contacts.py`
 
 The future custom domain `api.gcagochina.com` still requires Wrangler to be logged into a Cloudflare account that can see the `gcagochina.com` zone. DNS currently uses Cloudflare nameservers, but the currently authorized account does not contain that zone, so Cloudflare rejects the custom-domain deployment with `The zone "gcagochina.com" does not exist on your account`.
 
@@ -115,6 +116,23 @@ To sync from a previously exported full, non-redacted file:
 .venv/bin/python tools/sync_cloudflare_email_registrations.py \
   --input .gca_access_data/cloudflare_email_registrations_export.json \
   --data-dir .gca_access_data
+```
+
+To export a local contact CSV after syncing the ledger:
+
+```bash
+.venv/bin/python tools/export_gca_email_contacts.py \
+  --data-dir .gca_access_data \
+  --output .gca_access_data/gca_email_contacts.csv
+```
+
+Only records with `contactConsentAccepted: true` are exported, and duplicate emails are collapsed to the latest registration record. For external reporting, export a redacted CSV:
+
+```bash
+.venv/bin/python tools/export_gca_email_contacts.py \
+  --data-dir .gca_access_data \
+  --redact public \
+  --output .gca_access_data/gca_email_contacts_public_redacted.csv
 ```
 
 ## Custom Domain Activation
