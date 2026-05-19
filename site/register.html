@@ -418,7 +418,7 @@
             </label>
             <button class="button primary" type="submit">提交邮箱注册</button>
             <a class="button secondary" id="mailFallback" href="mailto:GCAgochina@outlook.com?subject=GCA%20Email%20Registration" hidden>发送注册邮件</a>
-            <div class="status" id="status" role="status">填写邮箱后提交。官网会优先提交到 GCA HTTPS 注册 API；如果 API 暂不可用，会显示官方邮箱兜底。正式 API 地址为 https://api.gcagochina.com/gca/email-registrations。</div>
+            <div class="status" id="status" role="status">填写邮箱后提交。官网会优先提交到 GCA HTTPS 注册 API；如果 API 暂不可用，会显示官方邮箱兜底。正式 API 地址为 https://gca-registration-api.gcagochina.workers.dev/gca/email-registrations。</div>
           </form>
         </div>
 
@@ -459,7 +459,7 @@
       const statusBox = document.getElementById("status");
       const mailFallback = document.getElementById("mailFallback");
       const officialEmail = "GCAgochina@outlook.com";
-      const productionApiBase = window.GCA_EMAIL_API_BASE || "https://api.gcagochina.com";
+      const productionApiBase = window.GCA_EMAIL_API_BASE || "https://gca-registration-api.gcagochina.workers.dev";
 
       function setStatus(message, mode = "") {
         statusBox.textContent = message;

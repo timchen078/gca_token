@@ -333,7 +333,7 @@ def validate_register_page(text: str) -> None:
         "gca_email_registration_v1",
         "/gca/email-registrations",
         "GCA HTTPS 注册 API",
-        "https://api.gcagochina.com/gca/email-registrations",
+        "https://gca-registration-api.gcagochina.workers.dev/gca/email-registrations",
         "自动提交未完成",
         "GCAgochina@outlook.com",
         "Base Mainnet / chainId 8453",
@@ -4331,9 +4331,9 @@ def validate_access_api_page(text: str) -> None:
     )
     assert_contains(text, "Review Queue", label)
     assert_contains(text, "Operations Runbook", label)
-    assert_contains(text, "contract only", label)
-    assert_contains(text, "not live today", label)
-    assert_contains(text, "not a public submission endpoint", label)
+    assert_contains(text, "email API live", label)
+    assert_contains(text, "Email registration live", label)
+    assert_contains(text, "not a public self-service claim page", label)
     assert_contains(text, "tools/gca_member_backend.py", label)
     assert_contains(text, "tools/export_gca_review_package.py", label)
     assert_contains(text, "operator.html", label)
@@ -4342,7 +4342,7 @@ def validate_access_api_page(text: str) -> None:
     assert_contains(text, "Email Registration", label)
     assert_contains(text, "Cloudflare Workers + D1", label)
     assert_contains(text, "cloudflare/gca-registration-worker/", label)
-    assert_contains(text, "https://api.gcagochina.com", label)
+    assert_contains(text, "https://gca-registration-api.gcagochina.workers.dev", label)
     assert_contains(text, "API Health", label)
     assert_contains(text, "POST", label)
     assert_contains(text, "/gca/email-registrations", label)
@@ -4405,16 +4405,16 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != ACCESS_API_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
-    if payload.get("status") != "public-access-api-contract-published":
+    if payload.get("status") != "public-access-api-contract-email-registration-live":
         raise SiteCheckError(f"{label}: wrong status")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
     if payload.get("contractAddress") != MAINNET_ADDRESS:
         raise SiteCheckError(f"{label}: wrong contractAddress")
-    if state.get("currentStage") != "contract-only":
+    if state.get("currentStage") != "email-registration-api-live":
         raise SiteCheckError(f"{label}: wrong currentStage")
-    if state.get("contractOnly") is not True:
-        raise SiteCheckError(f"{label}: contractOnly must be true")
+    if state.get("contractOnly") is not False:
+        raise SiteCheckError(f"{label}: contractOnly must be false")
     if state.get("reviewQueueContract") != "published-manual-review-contract":
         raise SiteCheckError(f"{label}: wrong reviewQueueContract")
     if state.get("memberPacketVersion") != "gca_member_preregistration_v2":
@@ -4424,17 +4424,21 @@ def validate_access_api_json(text: str) -> None:
     if state.get("localDevelopmentBackendAvailable") is not True:
         raise SiteCheckError(f"{label}: local development backend should be available")
     for key in (
-        "backendLive",
-        "publicEndpointLive",
         "controlledHttpsAccountUiLive",
-        "directSubmissionEndpointConfigured",
-        "productionEmailRegistrationApiLive",
         "creditsSelfServiceClaimable",
         "gcaMemberSelfServiceClaimable",
         "liveTradingEnabled",
     ):
         if state.get(key) is not False:
             raise SiteCheckError(f"{label}: {key} must be false")
+    for key in (
+        "backendLive",
+        "publicEndpointLive",
+        "directSubmissionEndpointConfigured",
+        "productionEmailRegistrationApiLive",
+    ):
+        if state.get(key) is not True:
+            raise SiteCheckError(f"{label}: {key} must be true")
     if local_backend.get("status") != "local-only-backend-available":
         raise SiteCheckError(f"{label}: wrong local backend status")
     if local_backend.get("script") != "tools/gca_member_backend.py":
@@ -4469,10 +4473,10 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong production email backend provider")
     if production_email_backend.get("sourceDirectory") != "cloudflare/gca-registration-worker/":
         raise SiteCheckError(f"{label}: wrong production email backend source directory")
-    if production_email_backend.get("submissionEndpoint") != "https://api.gcagochina.com/gca/email-registrations":
+    if production_email_backend.get("submissionEndpoint") != "https://gca-registration-api.gcagochina.workers.dev/gca/email-registrations":
         raise SiteCheckError(f"{label}: wrong production email submission endpoint")
-    if production_email_backend.get("requiresCloudflareAccountDeployment") is not True:
-        raise SiteCheckError(f"{label}: missing Cloudflare deployment requirement")
+    if production_email_backend.get("requiresCloudflareAccountDeployment") is not False:
+        raise SiteCheckError(f"{label}: Cloudflare deployment should be complete")
     if production_email_backend.get("publicWebsiteFallback") != "official-email-fallback":
         raise SiteCheckError(f"{label}: wrong public website fallback")
     for ledger in ("email_registrations", "pre_registrations", "wallet_verifications", "credit_ledger", "member_ledger", "member_benefit_transfers", "support_reviews"):
@@ -5756,7 +5760,7 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: unexpected weekly radar status")
     if status.get("accessPortal") != "public-access-portal-blueprint-published":
         raise SiteCheckError(f"{label}: unexpected access portal status")
-    if status.get("accessApiContract") != "public-access-api-contract-published":
+    if status.get("accessApiContract") != "public-access-api-contract-email-registration-live":
         raise SiteCheckError(f"{label}: unexpected access API status")
     if status.get("reviewQueueContract") != "public-review-queue-contract-published":
         raise SiteCheckError(f"{label}: unexpected review queue status")
@@ -6159,7 +6163,7 @@ def validate_tokenlist_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong accessApiPage")
     if extensions.get("accessApi") != ACCESS_API_URL:
         raise SiteCheckError(f"{label}: wrong accessApi")
-    if extensions.get("accessApiStatus") != "public-access-api-contract-published":
+    if extensions.get("accessApiStatus") != "public-access-api-contract-email-registration-live":
         raise SiteCheckError(f"{label}: wrong accessApiStatus")
     if extensions.get("reviewQueuePage") != REVIEW_QUEUE_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong reviewQueuePage")
@@ -6503,7 +6507,7 @@ def validate_well_known_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong weeklyGoChinaRadar status")
     if payload.get("platformStatus", {}).get("accessPortal") != "public-access-portal-blueprint-published":
         raise SiteCheckError(f"{label}: wrong accessPortal status")
-    if payload.get("platformStatus", {}).get("accessApiContract") != "public-access-api-contract-published":
+    if payload.get("platformStatus", {}).get("accessApiContract") != "public-access-api-contract-email-registration-live":
         raise SiteCheckError(f"{label}: wrong accessApiContract status")
     if payload.get("platformStatus", {}).get("reviewQueueContract") != "public-review-queue-contract-published":
         raise SiteCheckError(f"{label}: wrong reviewQueueContract status")
