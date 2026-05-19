@@ -9,6 +9,7 @@ Allow: /zh-supply.html
 Allow: /zh-security.html
 Allow: /zh-roadmap.html
 Allow: /zh-faq.html
+Allow: /zh-support.html
 Allow: /zh-members.html
 Allow: /about.html
 Allow: /action-plan.html
