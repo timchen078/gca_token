@@ -403,6 +403,22 @@
           <span class="value">tools/suppress_gca_contact.py</span>
         </div>
         <div class="fact">
+          <span class="label">Contact Suppression API</span>
+          <span class="value">/gca/contact-suppressions</span>
+        </div>
+        <div class="fact">
+          <span class="label">Suppression Packet</span>
+          <span class="value">gca_contact_suppression_v1</span>
+        </div>
+        <div class="fact">
+          <span class="label">Suppression Sync</span>
+          <span class="value">tools/sync_cloudflare_contact_suppressions.py</span>
+        </div>
+        <div class="fact">
+          <span class="label">Suppression Migration</span>
+          <span class="value">cloudflare/gca-registration-worker/migrations/0002_contact_suppressions.sql</span>
+        </div>
+        <div class="fact">
           <span class="label">Future API Domain</span>
           <span class="value pending">api.gcagochina.com pending zone access</span>
         </div>
@@ -424,6 +440,16 @@
             <span class="label">GET</span>
             <span class="value">/gca/email-registrations</span>
             <p class="note">Token-protected admin read for operator review. Public visitors cannot read the registration ledger.</p>
+          </div>
+          <div class="fact">
+            <span class="label">POST</span>
+            <span class="value">/gca/contact-suppressions</span>
+            <p class="note">Live public email do-not-contact request using <code>gca_contact_suppression_v1</code>. It records only an email, reason, source, and safety acknowledgements; no wallet, signature, transaction, private key, seed phrase, payment, or exchange API secret is requested.</p>
+          </div>
+          <div class="fact">
+            <span class="label">GET</span>
+            <span class="value">/gca/contact-suppressions</span>
+            <p class="note">Token-protected admin read for local suppression sync. Operators use <code>tools/sync_cloudflare_contact_suppressions.py</code> and the local ops pipeline before contact CSV export.</p>
           </div>
           <div class="fact">
             <span class="label">POST</span>
@@ -479,6 +505,7 @@
           <div class="list">
             <div class="row"><span>Pre-registration</span><strong>email, walletAddress, programIntent, termsAccepted</strong></div>
             <div class="row"><span>Email registration</span><strong>email, contact consent, no-secrets acknowledgement</strong></div>
+            <div class="row"><span>Contact suppression</span><strong>email, contactSuppressionRequested, no-secrets acknowledgement</strong></div>
             <div class="row"><span>Member evidence</span><strong><code>memberBenefitReviewEvidence</code>, <code>holdingStartDate</code>, <code>evidenceTxHash</code>, <code>evidenceTxHashFormatOk</code></strong></div>
             <div class="row"><span>Wallet verification</span><strong>registrationId, walletAddress, chainId, contractAddress</strong></div>
             <div class="row"><span>Support review</span><strong>registrationId, status, supportNote</strong></div>
@@ -490,6 +517,7 @@
           <div class="list">
             <div class="row"><span>Intake</span><strong>received, wallet_pending, needs_more_information</strong></div>
             <div class="row"><span>Email registration</span><strong>received</strong></div>
+            <div class="row"><span>Contact suppression</span><strong>suppressed</strong></div>
             <div class="row"><span>Wallet check</span><strong>verified, below_threshold, failed, expired</strong></div>
             <div class="row"><span>Credit ledger</span><strong>queued, ledger_recorded, partially_used, used, expired, revoked</strong></div>
             <div class="row"><span>Member ledger</span><strong>active, needs_refresh, below_threshold, paused, revoked</strong></div>

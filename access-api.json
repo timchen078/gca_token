@@ -22,7 +22,8 @@
     "reviewQueueContract": "published-manual-review-contract",
     "operationsRunbook": "public-access-operations-runbook-published",
     "memberPacketVersion": "gca_member_preregistration_v2",
-    "emailRegistrationPacketVersion": "gca_email_registration_v1"
+    "emailRegistrationPacketVersion": "gca_email_registration_v1",
+    "contactSuppressionPacketVersion": "gca_contact_suppression_v1"
   },
   "localDevelopmentBackend": {
     "status": "local-only-backend-available",
@@ -63,16 +64,20 @@
     "sourceDirectory": "cloudflare/gca-registration-worker/",
     "workerMain": "cloudflare/gca-registration-worker/src/worker.mjs",
     "databaseMigration": "cloudflare/gca-registration-worker/migrations/0001_email_registrations.sql",
+    "contactSuppressionMigration": "cloudflare/gca-registration-worker/migrations/0002_contact_suppressions.sql",
     "documentation": "docs/gca_registration_backend.md",
     "apiBaseUrl": "https://gca-registration-api.gcagochina.workers.dev",
     "submissionEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/email-registrations",
+    "contactSuppressionEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/contact-suppressions",
     "healthEndpoint": "https://gca-registration-api.gcagochina.workers.dev/health",
     "adminReadEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/email-registrations",
+    "adminContactSuppressionReadEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/contact-suppressions",
     "adminExportTool": "tools/export_cloudflare_email_registrations.py",
     "adminSyncTool": "tools/sync_cloudflare_email_registrations.py",
     "contactCsvExportTool": "tools/export_gca_email_contacts.py",
     "registrationOpsTool": "tools/run_gca_registration_ops.py",
     "contactSuppressionTool": "tools/suppress_gca_contact.py",
+    "contactSuppressionSyncTool": "tools/sync_cloudflare_contact_suppressions.py",
     "defaultAdminExportOutput": ".gca_access_data/cloudflare_email_registrations_export.json",
     "publicRedactedAdminExportOutput": ".gca_access_data/cloudflare_email_registrations_public_redacted.json",
     "localSyncedLedger": ".gca_access_data/email_registrations.jsonl",
@@ -114,6 +119,7 @@
   },
   "memberPacketVersion": "gca_member_preregistration_v2",
   "emailRegistrationPacketVersion": "gca_email_registration_v1",
+  "contactSuppressionPacketVersion": "gca_contact_suppression_v1",
   "memberEvidenceFields": [
     "memberBenefitReviewEvidence.holdingStartDate",
     "memberBenefitReviewEvidence.daysSinceHoldingStartPreview",
@@ -186,6 +192,72 @@
       ],
       "allowedStatuses": [
         "local-only"
+      ]
+    },
+    {
+      "id": "contact-suppressions-create",
+      "method": "POST",
+      "path": "/gca/contact-suppressions",
+      "status": "production-workers-dev-live",
+      "purpose": "Receive a public email contact suppression request so future GCA contact CSV exports exclude that email.",
+      "requiredRequestFields": [
+        "email",
+        "acknowledgements.contactSuppressionRequested",
+        "acknowledgements.noSecretsNoCustody"
+      ],
+      "optionalRequestFields": [
+        "reason",
+        "source"
+      ],
+      "serverChecks": [
+        "email must be valid and normalized",
+        "suppression is idempotent by suppressionId",
+        "no wallet address is required",
+        "no wallet signature, transaction, private key, seed phrase, exchange API secret, or withdrawal permission is requested",
+        "no credits, GCA Member status, or token transfer is changed"
+      ],
+      "responseFields": [
+        "suppressionId",
+        "packetVersion",
+        "email",
+        "emailSha256",
+        "status",
+        "createdAt",
+        "alreadySuppressed",
+        "contactSuppressed",
+        "requiresSignature",
+        "requiresTransaction",
+        "automaticTokenTransfer",
+        "nextStep"
+      ],
+      "allowedStatuses": [
+        "suppressed"
+      ]
+    },
+    {
+      "id": "contact-suppressions-read",
+      "method": "GET",
+      "path": "/gca/contact-suppressions",
+      "status": "token-protected-admin-live",
+      "purpose": "Read Cloudflare contact-suppression records for local operator sync. This is protected by ADMIN_READ_TOKEN.",
+      "requiredRequestFields": [
+        "authorization bearer token"
+      ],
+      "optionalRequestFields": [
+        "email",
+        "limit"
+      ],
+      "responseFields": [
+        "records",
+        "count",
+        "suppressionId",
+        "email",
+        "emailSha256",
+        "status",
+        "contactSuppressed"
+      ],
+      "allowedStatuses": [
+        "suppressed"
       ]
     },
     {
