@@ -4,6 +4,7 @@
 This server is intentionally small and conservative:
 - serves the static site from ``site/``
 - accepts local member pre-registration packets on localhost
+- accepts local email-only GCA user registrations on localhost
 - verifies GCA balances with read-only Base Mainnet ``eth_call``
 - writes append-only JSONL records under a local data directory
 
@@ -48,8 +49,10 @@ CREDIT_EXPIRY_DAYS = 180
 MEMBER_REFRESH_DAYS = 30
 MEMBER_BENEFIT_AMOUNT = "10000 GCA"
 PACKET_VERSION = "gca_member_preregistration_v2"
+EMAIL_REGISTRATION_VERSION = "gca_email_registration_v1"
 CONTACT_EMAIL = "GCAgochina@outlook.com"
 ALLOWED_PROGRAM_INTENTS = {"holder_bonus", "gca_member", "general_waitlist"}
+EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 ADDRESS_RE = re.compile(r"^0x[a-fA-F0-9]{40}$")
 TX_HASH_RE = re.compile(r"^0x[a-fA-F0-9]{64}$")
 FORBIDDEN_KEY_PATTERNS = (
@@ -62,6 +65,7 @@ FORBIDDEN_KEY_PATTERNS = (
     "onetimecode",
 )
 LEDGER_NAMES = (
+    "email_registrations",
     "pre_registrations",
     "wallet_verifications",
     "credit_ledger",
@@ -99,6 +103,13 @@ def stable_id(prefix: str, *parts: Any) -> str:
 
 def is_wallet_address(value: str) -> bool:
     return bool(ADDRESS_RE.match(str(value or "").strip()))
+
+
+def normalize_email(value: str) -> str:
+    email = str(value or "").strip().lower()
+    if len(email) > 254 or not EMAIL_RE.match(email):
+        raise BackendError("email must be a valid email address")
+    return email
 
 
 def normalize_wallet(value: str) -> str:
@@ -178,12 +189,42 @@ def read_json_request(body: bytes) -> dict[str, Any]:
 
 def extract_user(packet: dict[str, Any]) -> dict[str, str]:
     user = packet.get("user") if isinstance(packet.get("user"), dict) else {}
-    email = str(packet.get("email") or user.get("email") or "").strip().lower()
+    email = normalize_email(str(packet.get("email") or user.get("email") or ""))
     telegram = str(packet.get("telegram") or user.get("telegram") or "").strip()
     wallet = normalize_wallet(str(packet.get("walletAddress") or user.get("walletAddress") or ""))
-    if not email or "@" not in email:
-        raise BackendError("email is required")
     return {"email": email, "telegram": telegram, "walletAddress": wallet}
+
+
+def extract_email_registration(packet: dict[str, Any]) -> dict[str, Any]:
+    if packet.get("packetVersion") not in (None, EMAIL_REGISTRATION_VERSION):
+        raise BackendError(f"packetVersion must be {EMAIL_REGISTRATION_VERSION}")
+    user = packet.get("user") if isinstance(packet.get("user"), dict) else {}
+    email = normalize_email(str(packet.get("email") or user.get("email") or ""))
+    display_name = str(packet.get("displayName") or user.get("displayName") or "").strip()[:120]
+    source = str(packet.get("source") or "register.html").strip()[:120]
+    language = str(packet.get("language") or user.get("language") or "zh-CN").strip()[:32]
+    interests = packet.get("interests")
+    if not isinstance(interests, list):
+        interests = ["gca_updates"]
+    clean_interests = [str(item).strip()[:64] for item in interests if str(item).strip()]
+    acknowledgements = packet.get("acknowledgements")
+    if not isinstance(acknowledgements, dict):
+        acknowledgements = {}
+    contact_consent = bool(packet.get("contactConsentAccepted") or acknowledgements.get("emailContactConsent"))
+    security_boundary = bool(packet.get("securityBoundaryAccepted") or acknowledgements.get("noSecretsNoCustody"))
+    if not contact_consent:
+        raise BackendError("email contact consent is required")
+    if not security_boundary:
+        raise BackendError("security boundary acknowledgement is required")
+    return {
+        "email": email,
+        "displayName": display_name,
+        "source": source,
+        "language": language,
+        "interests": clean_interests,
+        "contactConsentAccepted": contact_consent,
+        "securityBoundaryAccepted": security_boundary,
+    }
 
 
 def extract_acknowledgements(packet: dict[str, Any]) -> dict[str, bool]:
@@ -428,6 +469,52 @@ class GcaMemberBackend:
     def __init__(self, store: JsonlLedgerStore, balance_reader: Any):
         self.store = store
         self.balance_reader = balance_reader
+
+    def submit_email_registration(self, packet: dict[str, Any]) -> dict[str, Any]:
+        registration_input = extract_email_registration(packet)
+        email = registration_input["email"]
+        registration_id = stable_id("gca_email", email)
+        existing = self.store.find("email_registrations", emailRegistrationId=registration_id)
+        if existing:
+            latest = existing[-1]
+            return {
+                "ok": True,
+                "emailRegistration": latest,
+                "alreadyRegistered": True,
+                "nextStep": "Email is already on the GCA user list. No wallet action, signature, or payment is required for email registration.",
+            }
+
+        created_at = iso_now()
+        record = {
+            "emailRegistrationId": registration_id,
+            "packetVersion": EMAIL_REGISTRATION_VERSION,
+            "createdAt": created_at,
+            "source": registration_input["source"],
+            "status": "received",
+            "email": email,
+            "displayName": registration_input["displayName"],
+            "language": registration_input["language"],
+            "interests": registration_input["interests"],
+            "contactConsentAccepted": registration_input["contactConsentAccepted"],
+            "securityBoundaryAccepted": registration_input["securityBoundaryAccepted"],
+            "walletRequired": False,
+            "requiresSignature": False,
+            "requiresTransaction": False,
+            "requiresPrivateKey": False,
+            "requiresSeedPhrase": False,
+            "requiresExchangeApiSecret": False,
+            "requiresWithdrawalPermission": False,
+            "publicSelfServiceClaim": False,
+            "automaticTokenTransfer": False,
+            "nextStep": "GCA support can contact this email when customer registration, member access, or product updates are ready.",
+        }
+        self.store.append("email_registrations", record)
+        return {
+            "ok": True,
+            "emailRegistration": record,
+            "alreadyRegistered": False,
+            "nextStep": record["nextStep"],
+        }
 
     def submit_pre_registration(self, packet: dict[str, Any]) -> dict[str, Any]:
         if packet.get("packetVersion") not in (None, PACKET_VERSION):
@@ -774,6 +861,7 @@ class GcaMemberBackend:
     def query(self, ledger: str, query: dict[str, list[str]]) -> list[dict[str, Any]]:
         filters: dict[str, str] = {}
         for key in (
+            "emailRegistrationId",
             "walletAddress",
             "email",
             "registrationId",
@@ -810,6 +898,7 @@ class GcaMemberBackend:
                 for name, records in ledgers.items()
             },
             "totals": {
+                "emailRegistrations": len(ledgers["email_registrations"]),
                 "preRegistrations": len(ledgers["pre_registrations"]),
                 "walletVerifications": len(ledgers["wallet_verifications"]),
                 "creditLedgerRecords": len(credit_records),
@@ -995,6 +1084,7 @@ def build_handler(site_dir: Path, backend: GcaMemberBackend) -> type[SimpleHTTPR
                     self.send_json(backend.review_package(limit=limit, redacted=redacted))
                     return
                 ledger_map = {
+                    "/gca/email-registrations": "email_registrations",
                     "/gca/pre-registrations": "pre_registrations",
                     "/gca/wallet-verifications": "wallet_verifications",
                     "/gca/credit-ledger": "credit_ledger",
@@ -1017,6 +1107,9 @@ def build_handler(site_dir: Path, backend: GcaMemberBackend) -> type[SimpleHTTPR
                 if parsed.path.startswith("/gca/"):
                     self.assert_local_api_client()
                 payload = self.read_body()
+                if parsed.path == "/gca/email-registrations":
+                    self.send_json(backend.submit_email_registration(payload), HTTPStatus.CREATED)
+                    return
                 if parsed.path == "/gca/pre-registrations":
                     self.send_json(backend.submit_pre_registration(payload), HTTPStatus.CREATED)
                     return

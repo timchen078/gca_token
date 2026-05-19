@@ -24,6 +24,7 @@
 - Public Chinese roadmap and product boundary guide prepared at `https://gcagochina.com/zh-roadmap.html` for Go China AI Quant Access positioning, member/credits planning, non-live product boundaries, and safe public claim guidance.
 - Public Chinese FAQ page prepared at `https://gcagochina.com/zh-faq.html` for wallet display, GCA/USDT pool mechanics, supply display, owner reserve, member rules, and safe user answers.
 - Public Chinese support and intake guide prepared at `https://gcagochina.com/zh-support.html` for official support channels, member-review packet format, wallet-warning feedback, platform correction context, and sensitive-information boundaries.
+- Public email-only user registration page prepared at `https://gcagochina.com/register.html` for collecting a GCA user contact email through local backend intake or official-email fallback without wallet connection, signatures, private keys, custody, or payment.
 - Public Chinese member rules page prepared at `https://gcagochina.com/zh-members.html` for 10,000 GCA holder rules, 100 Web3 Radar utility credits, 1,000,000 GCA / 30-day GCA Member review, and non-live claim boundaries.
 - GitHub Actions public site health-check workflow prepared to run `tools/check_public_site.py` manually, on a daily schedule, and after health-check workflow/script changes.
 - GitHub Pages custom domain configured for `https://gcagochina.com/`.
@@ -163,6 +164,7 @@
 - Use `https://gcagochina.com/zh-roadmap.html` when Chinese users ask what the project is building beyond token identity, how the Go China narrative connects to AI Quant Access, or which member/credits features are still not live.
 - Use `https://gcagochina.com/zh-faq.html` when Chinese users ask why wallets do not show GCA, why data platforms show 1B supply, how pool settlement works, whether the owner's GCA decreases when others buy, or how member rules should be described.
 - Use `https://gcagochina.com/zh-support.html` when Chinese users ask how to contact GCA, what to send for member review, how to report wallet warnings or platform data issues, or what information GCA support will never request.
+- Use `https://gcagochina.com/register.html` when a user only wants to join the GCA customer/user list by email before wallet verification, member review, or product access is live.
 - Use `https://gcagochina.com/zh-members.html` when Chinese users ask what 10,000 GCA holders, 100 Web3 Radar utility credits, 1,000,000 GCA / 30-day GCA Member review, or the 10,000 GCA member benefit mean before public self-service claiming is live.
 - Expose the Web3 Radar access bridge through controlled HTTPS account UI before describing report credits, backtest quotas, ENTRY_READY reviews, or calculators as public self-service token-gated features.
 - Use `https://gcagochina.com/product.html` and `https://gcagochina.com/product.json` when reviewers or community members ask how the Go China narrative connects to real product modules; keep it described as a public product spec only until controlled account UI is released.

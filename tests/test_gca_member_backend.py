@@ -13,6 +13,7 @@ from urllib.request import Request, urlopen
 from tools.gca_member_backend import (
     BaseRpcBalanceReader,
     CONTRACT_ADDRESS,
+    EMAIL_REGISTRATION_VERSION,
     HOLDER_THRESHOLD_UNITS,
     MEMBER_BENEFIT_UNITS,
     MEMBER_THRESHOLD_UNITS,
@@ -181,6 +182,7 @@ class GcaMemberBackendTests(unittest.TestCase):
         self.assertEqual(len(store.read_all("credit_ledger")), 1)
         self.assertEqual(len(store.read_all("member_ledger")), 1)
         self.assertEqual(len(store.read_all("member_benefit_transfers")), 0)
+
         self.assertEqual(len(store.read_all("support_reviews")), 1)
 
         summary = backend.operator_summary()
@@ -375,6 +377,69 @@ class GcaMemberBackendTests(unittest.TestCase):
         self.assertEqual(len(store.read_all("member_benefit_transfers")), 1)
         self.assertEqual(len(store.read_all("member_ledger")), 2)
 
+    def test_submit_email_registration_records_email_only_user(self):
+        backend, store = self.make_backend(0)
+        response = backend.submit_email_registration({
+            "packetVersion": EMAIL_REGISTRATION_VERSION,
+            "email": "Customer@Example.com",
+            "source": "register.html",
+            "language": "zh-CN",
+            "interests": ["gca_updates", "member_access"],
+            "acknowledgements": {
+                "emailContactConsent": True,
+                "noSecretsNoCustody": True,
+            },
+        })
+
+        self.assertTrue(response["ok"])
+        self.assertFalse(response["alreadyRegistered"])
+        self.assertEqual(response["emailRegistration"]["email"], "customer@example.com")
+        self.assertEqual(response["emailRegistration"]["packetVersion"], EMAIL_REGISTRATION_VERSION)
+        self.assertEqual(response["emailRegistration"]["status"], "received")
+        self.assertFalse(response["emailRegistration"]["walletRequired"])
+        self.assertFalse(response["emailRegistration"]["requiresSignature"])
+        self.assertFalse(response["emailRegistration"]["requiresTransaction"])
+        self.assertFalse(response["emailRegistration"]["requiresPrivateKey"])
+        self.assertFalse(response["emailRegistration"]["requiresSeedPhrase"])
+        self.assertFalse(response["emailRegistration"]["automaticTokenTransfer"])
+        self.assertEqual(len(store.read_all("email_registrations")), 1)
+        self.assertEqual(store.read_all("pre_registrations"), [])
+
+        duplicate = backend.submit_email_registration({
+            "email": "customer@example.com",
+            "acknowledgements": {
+                "emailContactConsent": True,
+                "noSecretsNoCustody": True,
+            },
+        })
+        self.assertTrue(duplicate["alreadyRegistered"])
+        self.assertEqual(len(store.read_all("email_registrations")), 1)
+
+    def test_email_registration_requires_valid_email_and_acknowledgements(self):
+        backend, _store = self.make_backend(0)
+        with self.assertRaises(BackendError):
+            backend.submit_email_registration({
+                "email": "not-an-email",
+                "acknowledgements": {
+                    "emailContactConsent": True,
+                    "noSecretsNoCustody": True,
+                },
+            })
+        with self.assertRaises(BackendError):
+            backend.submit_email_registration({
+                "email": "customer@example.com",
+                "acknowledgements": {
+                    "noSecretsNoCustody": True,
+                },
+            })
+        with self.assertRaises(BackendError):
+            backend.submit_email_registration({
+                "email": "customer@example.com",
+                "acknowledgements": {
+                    "emailContactConsent": True,
+                },
+            })
+
     def test_member_benefit_transfer_requires_matching_read_only_receipt(self):
         backend, _store = self.make_backend(
             MEMBER_THRESHOLD_UNITS,
@@ -462,6 +527,31 @@ class GcaMemberBackendTests(unittest.TestCase):
             self.addCleanup(server.shutdown)
             base_url = f"http://127.0.0.1:{server.server_address[1]}"
 
+            email_request = Request(
+                f"{base_url}/gca/email-registrations",
+                data=json.dumps({
+                    "email": "waitlist@example.com",
+                    "source": "register.html",
+                    "acknowledgements": {
+                        "emailContactConsent": True,
+                        "noSecretsNoCustody": True,
+                    },
+                }).encode(),
+                headers={"Content-Type": "application/json"},
+                method="POST",
+            )
+            with urlopen(email_request, timeout=10) as response:
+                email_payload = json.loads(response.read().decode())
+            self.assertTrue(email_payload["ok"])
+            self.assertEqual(email_payload["emailRegistration"]["email"], "waitlist@example.com")
+            self.assertFalse(email_payload["emailRegistration"]["walletRequired"])
+
+            with urlopen(f"{base_url}/gca/email-registrations?email=waitlist@example.com", timeout=10) as response:
+                email_ledger = json.loads(response.read().decode())
+            self.assertTrue(email_ledger["ok"])
+            self.assertEqual(email_ledger["count"], 1)
+            self.assertEqual(email_ledger["records"][0]["email"], "waitlist@example.com")
+
             request = Request(
                 f"{base_url}/gca/pre-registrations",
                 data=json.dumps(sample_packet()).encode(),
@@ -483,7 +573,9 @@ class GcaMemberBackendTests(unittest.TestCase):
                 summary = json.loads(response.read().decode())
             self.assertTrue(summary["ok"])
             self.assertEqual(summary["totals"]["memberLedgerRecords"], 1)
+            self.assertEqual(summary["totals"]["emailRegistrations"], 1)
             self.assertEqual(summary["dataLedgers"]["pre_registrations"]["count"], 1)
+            self.assertEqual(summary["dataLedgers"]["email_registrations"]["count"], 1)
             self.assertFalse(summary["publicSelfServiceClaim"])
             self.assertFalse(summary["automaticTokenTransfer"])
 
@@ -493,11 +585,13 @@ class GcaMemberBackendTests(unittest.TestCase):
             self.assertEqual(review_package["packageType"], "gca-local-review-package")
             self.assertEqual(review_package["localEndpoint"], "/gca/review-package")
             self.assertEqual(review_package["operatorSummary"]["dataLedgers"]["pre_registrations"]["count"], 1)
+            self.assertEqual(review_package["operatorSummary"]["dataLedgers"]["email_registrations"]["count"], 1)
             self.assertFalse(review_package["publicSelfServiceClaim"])
             self.assertFalse(review_package["automaticTokenTransfer"])
             self.assertTrue(review_package["exportBoundaries"]["localhostOnly"])
             self.assertRegex(review_package["packageDigestSha256"], r"^[a-f0-9]{64}$")
             self.assertEqual(review_package["recordManifest"]["ledgerCounts"]["pre_registrations"], 1)
+            self.assertEqual(review_package["recordManifest"]["ledgerCounts"]["email_registrations"], 1)
             self.assertTrue(review_package["fullLocalExportWarning"]["operatorConfirmationRequired"])
             self.assertEqual(review_package["handoffInstructions"]["externalSharingMode"], "redacted-public")
             self.assertIn("tools/verify_gca_review_package.py", review_package["handoffInstructions"]["verifyCommand"])
@@ -509,6 +603,7 @@ class GcaMemberBackendTests(unittest.TestCase):
             self.assertEqual(redacted_package["redactionPolicy"]["mode"], "redacted-public")
             self.assertRegex(redacted_package["packageDigestSha256"], r"^[a-f0-9]{64}$")
             self.assertNotIn("member@example.com", redacted_text)
+            self.assertNotIn("waitlist@example.com", redacted_text)
             self.assertNotIn("@member", redacted_text)
             self.assertIn(WALLET.lower(), redacted_text)
 

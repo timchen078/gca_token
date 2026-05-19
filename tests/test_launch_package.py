@@ -29,6 +29,7 @@ OFFICIAL_SWAP_URL = (
 OFFICIAL_SWAP_URL_HTML = OFFICIAL_SWAP_URL.replace("&", "&amp;")
 MARKET_PAGE_URL = "https://gcagochina.com/markets.html"
 VERIFY_PAGE_URL = "https://gcagochina.com/verify.html"
+REGISTER_PAGE_URL = "https://gcagochina.com/register.html"
 DATA_PAGE_URL = "https://gcagochina.com/data.html"
 SITE_MAP_PAGE_URL = "https://gcagochina.com/site-map.html"
 ABOUT_PAGE_URL = "https://gcagochina.com/about.html"
@@ -190,6 +191,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("/.well-known/wallet-security.json", script)
         self.assertIn("/.well-known/security.txt", script)
         self.assertIn("/status.html", script)
+        self.assertIn("/register.html", script)
         self.assertIn("/about.html", script)
         self.assertIn("/data.html", script)
         self.assertIn("/site-map.html", script)
@@ -391,6 +393,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("validate_brand_kit_page", script)
         self.assertIn("validate_brand_kit_json", script)
         self.assertIn("validate_status_page", script)
+        self.assertIn("validate_register_page", script)
         self.assertIn("validate_about_page", script)
         self.assertIn("validate_site_map_page", script)
         self.assertIn("validate_action_plan_page", script)
@@ -424,6 +427,7 @@ class LaunchPackageTests(unittest.TestCase):
 
         module.validate_root((ROOT / "site" / "index.html").read_text())
         module.validate_404_page((ROOT / "site" / "404.html").read_text())
+        module.validate_register_page((ROOT / "site" / "register.html").read_text())
         module.validate_about_page((ROOT / "site" / "about.html").read_text())
         module.validate_data_page((ROOT / "site" / "data.html").read_text())
         module.validate_site_map_page((ROOT / "site" / "site-map.html").read_text())
@@ -729,6 +733,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertTrue((ROOT / "site" / ".nojekyll").exists())
         self.assertIn("User-agent: *", robots)
         self.assertIn("Allow: /", robots)
+        self.assertIn("Allow: /register.html", robots)
         self.assertIn("Allow: /about.html", robots)
         self.assertIn("Allow: /action-plan.html", robots)
         self.assertIn("Allow: /zh-cn.html", robots)
@@ -843,6 +848,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Allow: /data.html", robots)
         self.assertIn("Sitemap: https://gcagochina.com/sitemap.xml", robots)
         self.assertIn("https://gcagochina.com/", sitemap)
+        self.assertIn(REGISTER_PAGE_URL, sitemap)
         self.assertIn(ABOUT_PAGE_URL, sitemap)
         self.assertIn(ACTION_PLAN_PAGE_URL, sitemap)
         self.assertIn(ZH_CN_PAGE_URL, sitemap)
@@ -3100,6 +3106,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(api["contractAddress"], MAINNET_ADDRESS)
         self.assertEqual(api["currentState"]["currentStage"], "contract-only")
         self.assertEqual(api["currentState"]["memberPacketVersion"], "gca_member_preregistration_v2")
+        self.assertEqual(api["currentState"]["emailRegistrationPacketVersion"], "gca_email_registration_v1")
         self.assertTrue(api["currentState"]["contractOnly"])
         self.assertFalse(api["currentState"]["backendLive"])
         self.assertFalse(api["currentState"]["publicEndpointLive"])
@@ -3114,12 +3121,14 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(api["localDevelopmentBackend"]["operatorConsoleUrl"], "http://127.0.0.1:8787/operator.html")
         self.assertEqual(api["localDevelopmentBackend"]["dataDirectory"], ".gca_access_data/")
         self.assertTrue(api["localDevelopmentBackend"]["sameOriginSubmissionOnLocalhost"])
+        self.assertEqual(api["localDevelopmentBackend"]["localEmailRegistrationUrl"], "http://127.0.0.1:8787/register.html")
         self.assertEqual(api["localDevelopmentBackend"]["localOperatorSummaryEndpoint"], "/gca/operator-summary")
         self.assertEqual(api["localDevelopmentBackend"]["localReviewPackageEndpoint"], "/gca/review-package")
         self.assertEqual(api["localDevelopmentBackend"]["localReviewPackageExporter"], "tools/export_gca_review_package.py")
         self.assertEqual(api["localDevelopmentBackend"]["localReviewPackageVerifier"], "tools/verify_gca_review_package.py")
         self.assertIn("redacted-public", api["localDevelopmentBackend"]["localReviewPackageRedactionModes"])
         self.assertFalse(api["localDevelopmentBackend"]["publicProductionEndpointLive"])
+        self.assertIn("email_registrations", api["localDevelopmentBackend"]["writesJsonlLedgers"])
         self.assertIn("member_ledger", api["localDevelopmentBackend"]["writesJsonlLedgers"])
         self.assertIn("member_benefit_transfers", api["localDevelopmentBackend"]["writesJsonlLedgers"])
         self.assertFalse(api["localDevelopmentBackend"]["automaticTokenTransfer"])
@@ -3139,6 +3148,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertFalse(api["securityModel"]["exchangeApiSecretCollection"])
         endpoint_keys = {f'{item["method"]} {item["path"]}' for item in api["endpoints"]}
         for endpoint_key in {
+            "POST /gca/email-registrations",
+            "GET /gca/email-registrations",
             "POST /gca/pre-registrations",
             "POST /gca/wallet-verifications",
             "GET /gca/credit-ledger",
@@ -3152,13 +3163,23 @@ class LaunchPackageTests(unittest.TestCase):
         }:
             self.assertIn(endpoint_key, endpoint_keys)
         for endpoint in api["endpoints"]:
-            if endpoint["id"] in {"operator-summary", "review-package", "member-benefit-transfers-read", "member-benefit-transfers-create"}:
+            if endpoint["id"] in {"email-registrations-create", "email-registrations-read", "operator-summary", "review-package", "member-benefit-transfers-read", "member-benefit-transfers-create"}:
                 self.assertEqual(endpoint["status"], "local-only-not-public-production")
             else:
                 self.assertEqual(endpoint["status"], "planned-not-live")
         self.assertEqual(api["memberPacketVersion"], "gca_member_preregistration_v2")
+        self.assertEqual(api["emailRegistrationPacketVersion"], "gca_email_registration_v1")
         self.assertIn("memberBenefitReviewEvidence.holdingStartDate", api["memberEvidenceFields"])
         self.assertIn("memberBenefitReviewEvidence.evidenceTxHashFormatOk", api["memberEvidenceFields"])
+        email_endpoint = next(item for item in api["endpoints"] if item["id"] == "email-registrations-create")
+        self.assertIn("acknowledgements.emailContactConsent", email_endpoint["requiredRequestFields"])
+        self.assertIn("acknowledgements.noSecretsNoCustody", email_endpoint["requiredRequestFields"])
+        self.assertIn("no wallet address is required", email_endpoint["serverChecks"])
+        self.assertIn("automaticTokenTransfer", email_endpoint["responseFields"])
+        self.assertIn("received", email_endpoint["allowedStatuses"])
+        email_read_endpoint = next(item for item in api["endpoints"] if item["id"] == "email-registrations-read")
+        self.assertIn("emailRegistrationId", email_read_endpoint["optionalRequestFields"])
+        self.assertIn("records", email_read_endpoint["responseFields"])
         prereg = next(item for item in api["endpoints"] if item["id"] == "pre-registrations")
         self.assertIn("memberBenefitReviewEvidence", prereg["optionalRequestFields"])
         self.assertIn("memberBenefitReviewEvidence.evidenceTxHashFormatOk", prereg["optionalRequestFields"])

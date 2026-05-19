@@ -25,6 +25,7 @@ OLD_WETH_POOL_ADDRESS = "0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff"
 OFFICIAL_GECKOTERMINAL_URL = f"https://www.geckoterminal.com/base/pools/{OFFICIAL_POOL_ADDRESS}"
 OFFICIAL_DEXSCREENER_URL = f"https://dexscreener.com/base/{OFFICIAL_POOL_ADDRESS}"
 VERIFY_PAGE_URL = "https://gcagochina.com/verify.html"
+REGISTER_PAGE_URL = "https://gcagochina.com/register.html"
 BUY_PAGE_URL = "https://gcagochina.com/buy.html"
 STATUS_PAGE_URL = "https://gcagochina.com/status.html"
 ABOUT_PAGE_URL = "https://gcagochina.com/about.html"
@@ -262,6 +263,8 @@ def validate_root(text: str) -> None:
     assert_contains(text, "zh-members.html", label)
     assert_contains(text, "中文支持和资料提交", label)
     assert_contains(text, "zh-support.html", label)
+    assert_contains(text, "邮箱注册", label)
+    assert_contains(text, "register.html", label)
     assert_contains(text, "data.html", label)
     assert_contains(text, "Member Ledger", label)
     assert_contains(text, "Benefit Transfer Runbook", label)
@@ -314,6 +317,48 @@ def validate_verify(text: str) -> None:
     assert_contains(text, "platform-only raw metadata", label)
     assert_contains(text, OFFICIAL_DEXSCREENER_URL, label)
     assert_current_pool_text(text, label)
+
+
+def validate_register_page(text: str) -> None:
+    label = "/register.html"
+    assert_social_preview_meta(text, label, REGISTER_PAGE_URL)
+    for expected in (
+        "GCA 用户邮箱注册",
+        "只需要邮箱即可加入 GCA 用户名单",
+        "项目更新、会员入口上线通知、产品测试邀请和官方支持回访",
+        "邮箱注册不需要钱包、不需要私钥、不需要助记词、不需要签名，也不需要付款",
+        "开始邮箱注册",
+        "提交邮箱注册",
+        "发送注册邮件",
+        "gca_email_registration_v1",
+        "/gca/email-registrations",
+        "公网静态站点不会直接写入数据库",
+        "本地 GCA 后端运行时会写入本地邮箱注册名单",
+        "GCAgochina@outlook.com",
+        "Base Mainnet / chainId 8453",
+        MAINNET_ADDRESS,
+        "私钥",
+        "助记词",
+        "交易所 API Secret",
+        "提现权限",
+        "验证码",
+        "钱包密码",
+        "远程控制权限",
+        "不自动激活 100 credits、GCA Member 或 10,000 GCA 会员权益",
+        "zh-members.html",
+        "zh-support.html",
+        "privacy.html",
+        "terms.html",
+    ):
+        assert_contains(text, expected, label)
+    for forbidden in (
+        'href="project.json"',
+        'href="member-program.json"',
+        'href="member-ledger.json"',
+        'href="support.json"',
+    ):
+        assert_not_contains(text, forbidden, label)
+    assert_no_forbidden_public_claims(text, label)
 
 
 def validate_markets(text: str) -> None:
@@ -520,6 +565,8 @@ def validate_zh_cn_page(text: str) -> None:
         "zh-members.html",
         "中文支持和资料提交",
         "zh-support.html",
+        "邮箱注册",
+        "register.html",
         "Base Mainnet",
         "chainId 8453",
         MAINNET_ADDRESS,
@@ -557,6 +604,7 @@ def validate_zh_cn_page(text: str) -> None:
         "zh-roadmap.html",
         "zh-members.html",
         "zh-support.html",
+        "register.html",
         "member-ledger.html",
         "member-benefit.html",
         "release-gates.html",
@@ -1137,6 +1185,8 @@ def validate_zh_support_page(text: str) -> None:
     assert_social_preview_meta(text, label, ZH_SUPPORT_PAGE_URL)
     for expected in (
         "GCA 中文支持和资料提交",
+        "邮箱注册",
+        "register.html",
         "官方邮箱",
         "GCAgochina@outlook.com",
         "https://t.me/gcagochinaofficial",
@@ -1184,6 +1234,7 @@ def validate_zh_support_page(text: str) -> None:
         "zh-roadmap.html",
         "zh-faq.html",
         "zh-members.html",
+        "register.html",
         "support.html",
         "data.html",
         "reviewer-kit.html",
@@ -1382,6 +1433,8 @@ def validate_site_map_page(text: str) -> None:
         "zh-members.html",
         "中文支持和资料提交",
         "zh-support.html",
+        "邮箱注册",
+        "register.html",
         "Member Access",
         "Trust Center",
         "Core User Path",
@@ -2183,6 +2236,8 @@ def validate_operator_page(text: str) -> None:
 def validate_support_page(text: str) -> None:
     label = "/support.html"
     assert_contains(text, "GCA Support & Intake", label)
+    assert_contains(text, "Email Registration", label)
+    assert_contains(text, "register.html", label)
     assert_platform_only_data_room(
         text,
         label,
@@ -4283,7 +4338,9 @@ def validate_access_api_page(text: str) -> None:
     assert_contains(text, "operator.html", label)
     assert_contains(text, "/gca/operator-summary", label)
     assert_contains(text, "local JSONL ledger records", label)
+    assert_contains(text, "Email Registration", label)
     assert_contains(text, "POST", label)
+    assert_contains(text, "/gca/email-registrations", label)
     assert_contains(text, "/gca/pre-registrations", label)
     assert_contains(text, "/gca/wallet-verifications", label)
     assert_contains(text, "/gca/credit-ledger", label)
@@ -4356,6 +4413,8 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong reviewQueueContract")
     if state.get("memberPacketVersion") != "gca_member_preregistration_v2":
         raise SiteCheckError(f"{label}: wrong member packet version")
+    if state.get("emailRegistrationPacketVersion") != "gca_email_registration_v1":
+        raise SiteCheckError(f"{label}: wrong email registration packet version")
     if state.get("localDevelopmentBackendAvailable") is not True:
         raise SiteCheckError(f"{label}: local development backend should be available")
     for key in (
@@ -4381,6 +4440,8 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong local backend data directory")
     if local_backend.get("sameOriginSubmissionOnLocalhost") is not True:
         raise SiteCheckError(f"{label}: local backend should use same-origin localhost submissions")
+    if local_backend.get("localEmailRegistrationUrl") != "http://127.0.0.1:8787/register.html":
+        raise SiteCheckError(f"{label}: wrong local email registration URL")
     if local_backend.get("localOperatorSummaryEndpoint") != "/gca/operator-summary":
         raise SiteCheckError(f"{label}: wrong local operator summary endpoint")
     if local_backend.get("localReviewPackageEndpoint") != "/gca/review-package":
@@ -4395,7 +4456,7 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: local backend must not mark production live")
     if local_backend.get("automaticTokenTransfer") is not False:
         raise SiteCheckError(f"{label}: local backend must not automatically transfer tokens")
-    for ledger in ("pre_registrations", "wallet_verifications", "credit_ledger", "member_ledger", "member_benefit_transfers", "support_reviews"):
+    for ledger in ("email_registrations", "pre_registrations", "wallet_verifications", "credit_ledger", "member_ledger", "member_benefit_transfers", "support_reviews"):
         if ledger not in local_backend.get("writesJsonlLedgers", []):
             raise SiteCheckError(f"{label}: missing local ledger {ledger}")
     for key in (
@@ -4439,6 +4500,28 @@ def validate_access_api_json(text: str) -> None:
             raise SiteCheckError(f"{label}: missing endpoint {endpoint_key}")
         if endpoint.get("status") != "planned-not-live":
             raise SiteCheckError(f"{label}: endpoint {endpoint_key} should be planned-not-live")
+    for endpoint_key in ("POST /gca/email-registrations", "GET /gca/email-registrations"):
+        endpoint = endpoint_map.get(endpoint_key)
+        if endpoint is None:
+            raise SiteCheckError(f"{label}: missing endpoint {endpoint_key}")
+        if endpoint.get("status") != "local-only-not-public-production":
+            raise SiteCheckError(f"{label}: endpoint {endpoint_key} should be local-only")
+    email_registration = endpoint_map["POST /gca/email-registrations"]
+    for field in ("email", "acknowledgements.emailContactConsent", "acknowledgements.noSecretsNoCustody"):
+        if field not in email_registration.get("requiredRequestFields", []):
+            raise SiteCheckError(f"{label}: missing email registration request field {field}")
+    for expected_check in (
+        "email must be valid and normalized",
+        "no wallet address is required",
+        "no credits, GCA Member status, or token transfer is automatically activated",
+    ):
+        if expected_check not in email_registration.get("serverChecks", []):
+            raise SiteCheckError(f"{label}: missing email registration check {expected_check}")
+    if "automaticTokenTransfer" not in email_registration.get("responseFields", []):
+        raise SiteCheckError(f"{label}: missing email registration token transfer boundary")
+    email_registration_read = endpoint_map["GET /gca/email-registrations"]
+    if "emailRegistrationId" not in email_registration_read.get("optionalRequestFields", []):
+        raise SiteCheckError(f"{label}: missing email registration read filter")
     operator_summary = endpoint_map.get("GET /gca/operator-summary")
     if operator_summary is None:
         raise SiteCheckError(f"{label}: missing operator summary endpoint")
@@ -4509,6 +4592,8 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing balance source check")
     if payload.get("memberPacketVersion") != "gca_member_preregistration_v2":
         raise SiteCheckError(f"{label}: wrong top-level member packet version")
+    if payload.get("emailRegistrationPacketVersion") != "gca_email_registration_v1":
+        raise SiteCheckError(f"{label}: wrong top-level email registration packet version")
     for field in (
         "memberBenefitReviewEvidence.holdingStartDate",
         "memberBenefitReviewEvidence.daysSinceHoldingStartPreview",
@@ -8407,6 +8492,7 @@ def validate_sitemap(text: str) -> None:
     for expected in (
         "https://gcagochina.com/about.html",
         "https://gcagochina.com/action-plan.html",
+        "https://gcagochina.com/register.html",
         "https://gcagochina.com/zh-cn.html",
         "https://gcagochina.com/zh-buy.html",
         "https://gcagochina.com/zh-apply.html",
@@ -8530,6 +8616,7 @@ def validate_robots(text: str) -> None:
     label = "/robots.txt"
     assert_contains(text, "Allow: /about.html", label)
     assert_contains(text, "Allow: /action-plan.html", label)
+    assert_contains(text, "Allow: /register.html", label)
     assert_contains(text, "Allow: /zh-cn.html", label)
     assert_contains(text, "Allow: /zh-buy.html", label)
     assert_contains(text, "Allow: /zh-apply.html", label)
@@ -8652,6 +8739,7 @@ def validate_robots(text: str) -> None:
 
 CHECKS: list[EndpointCheck] = [
     ("/", validate_root),
+    ("/register.html", validate_register_page),
     ("/about.html", validate_about_page),
     ("/action-plan.html", validate_action_plan_page),
     ("/zh-cn.html", validate_zh_cn_page),
