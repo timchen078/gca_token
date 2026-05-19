@@ -37,6 +37,7 @@ ZH_CN_PAGE_URL = "https://gcagochina.com/zh-cn.html"
 ZH_APPLY_PAGE_URL = "https://gcagochina.com/zh-apply.html"
 ZH_STATUS_PAGE_URL = "https://gcagochina.com/zh-status.html"
 ZH_LIQUIDITY_PAGE_URL = "https://gcagochina.com/zh-liquidity.html"
+ZH_SUPPLY_PAGE_URL = "https://gcagochina.com/zh-supply.html"
 ZH_FAQ_PAGE_URL = "https://gcagochina.com/zh-faq.html"
 ZH_MEMBERS_PAGE_URL = "https://gcagochina.com/zh-members.html"
 SUPPLY_PAGE_URL = "https://gcagochina.com/supply.html"
@@ -193,6 +194,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("/zh-apply.html", script)
         self.assertIn("/zh-status.html", script)
         self.assertIn("/zh-liquidity.html", script)
+        self.assertIn("/zh-supply.html", script)
         self.assertIn("/zh-faq.html", script)
         self.assertIn("/zh-members.html", script)
         self.assertIn("/listing-kit.html", script)
@@ -388,6 +390,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("validate_zh_apply_page", script)
         self.assertIn("validate_zh_status_page", script)
         self.assertIn("validate_zh_liquidity_page", script)
+        self.assertIn("validate_zh_supply_page", script)
         self.assertIn("validate_zh_faq_page", script)
         self.assertIn("validate_zh_members_page", script)
         self.assertIn("validate_404_page", script)
@@ -417,6 +420,7 @@ class LaunchPackageTests(unittest.TestCase):
         module.validate_zh_apply_page((ROOT / "site" / "zh-apply.html").read_text())
         module.validate_zh_status_page((ROOT / "site" / "zh-status.html").read_text())
         module.validate_zh_liquidity_page((ROOT / "site" / "zh-liquidity.html").read_text())
+        module.validate_zh_supply_page((ROOT / "site" / "zh-supply.html").read_text())
         module.validate_zh_faq_page((ROOT / "site" / "zh-faq.html").read_text())
         module.validate_zh_members_page((ROOT / "site" / "zh-members.html").read_text())
         module.validate_verify((ROOT / "site" / "verify.html").read_text())
@@ -715,6 +719,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Allow: /zh-apply.html", robots)
         self.assertIn("Allow: /zh-status.html", robots)
         self.assertIn("Allow: /zh-liquidity.html", robots)
+        self.assertIn("Allow: /zh-supply.html", robots)
         self.assertIn("Allow: /zh-faq.html", robots)
         self.assertIn("Allow: /zh-members.html", robots)
         self.assertIn("Allow: /site-map.html", robots)
@@ -824,6 +829,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(ZH_APPLY_PAGE_URL, sitemap)
         self.assertIn(ZH_STATUS_PAGE_URL, sitemap)
         self.assertIn(ZH_LIQUIDITY_PAGE_URL, sitemap)
+        self.assertIn(ZH_SUPPLY_PAGE_URL, sitemap)
         self.assertIn(ZH_FAQ_PAGE_URL, sitemap)
         self.assertIn(ZH_MEMBERS_PAGE_URL, sitemap)
         self.assertIn(DATA_PAGE_URL, sitemap)

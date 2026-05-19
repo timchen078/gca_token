@@ -69,6 +69,7 @@ Export the same review package directly from local JSONL data without starting t
 - Public Chinese participation guide: `site/zh-apply.html`
 - Public Chinese review status page: `site/zh-status.html`
 - Public Chinese liquidity and pool guide: `site/zh-liquidity.html`
+- Public Chinese supply and reserve guide: `site/zh-supply.html`
 - Public Chinese FAQ page: `site/zh-faq.html`
 - Public Chinese member rules page: `site/zh-members.html`
 - Public roadmap page: `site/roadmap.html`
