@@ -6,7 +6,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from tools.export_gca_email_contacts import build_contact_rows, email_sha256
+from tools.export_gca_email_contacts import build_contact_rows, email_sha256, load_suppressed_emails
 from tools.gca_member_backend import JsonlLedgerStore
 
 
@@ -54,6 +54,31 @@ class GcaEmailContactsExportTests(unittest.TestCase):
         self.assertNotIn("displayName", rows[0])
         self.assertEqual(rows[0]["emailSha256"], email_sha256("user@example.com"))
 
+    def test_suppressed_emails_are_excluded_from_exports(self):
+        rows, skipped = build_contact_rows(
+            [email_record("user@example.com"), email_record("keep@example.com")],
+            redacted=False,
+            suppressed_emails={"user@example.com"},
+        )
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]["email"], "keep@example.com")
+        self.assertEqual(skipped[0]["reason"], "contact_suppressed")
+
+    def test_load_suppressed_emails_reads_jsonl(self):
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / "suppressions.jsonl"
+            path.write_text(
+                "\n".join([
+                    json.dumps({"email": "USER@EXAMPLE.COM", "contactSuppressed": True}),
+                    json.dumps({"email": "inactive@example.com", "contactSuppressed": False}),
+                    "not-json",
+                ]),
+                encoding="utf-8",
+            )
+            suppressed, skipped = load_suppressed_emails(path)
+            self.assertEqual(suppressed, {"user@example.com"})
+            self.assertEqual(len(skipped), 1)
+
     def test_cli_writes_csv_from_local_ledger(self):
         with tempfile.TemporaryDirectory() as temp:
             data_dir = Path(temp) / "data"
@@ -68,6 +93,8 @@ class GcaEmailContactsExportTests(unittest.TestCase):
                     str(data_dir),
                     "--output",
                     str(output),
+                    "--suppression-file",
+                    str(Path(temp) / "missing-suppressions.jsonl"),
                 ],
                 cwd=ROOT,
                 check=False,

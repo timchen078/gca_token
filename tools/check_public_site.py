@@ -2185,8 +2185,10 @@ def validate_operator_page(text: str) -> None:
     assert_contains(text, "tools/sync_cloudflare_email_registrations.py", label)
     assert_contains(text, "tools/export_gca_email_contacts.py", label)
     assert_contains(text, "tools/run_gca_registration_ops.py", label)
+    assert_contains(text, "tools/suppress_gca_contact.py", label)
     assert_contains(text, "gca_email_contacts_public_redacted.csv", label)
     assert_contains(text, "gca_registration_ops_summary.json", label)
+    assert_contains(text, "gca_contact_suppressions.jsonl", label)
     assert_contains(text, "contactConsentAccepted", label)
     assert_contains(text, 'id="emailRows"', label)
     assert_contains(text, "renderEmailRegistrations", label)
@@ -4362,6 +4364,7 @@ def validate_access_api_page(text: str) -> None:
     assert_contains(text, "tools/sync_cloudflare_email_registrations.py", label)
     assert_contains(text, "tools/export_gca_email_contacts.py", label)
     assert_contains(text, "tools/run_gca_registration_ops.py", label)
+    assert_contains(text, "tools/suppress_gca_contact.py", label)
     assert_contains(text, "api.gcagochina.com pending zone access", label)
     assert_contains(text, "API Health", label)
     assert_contains(text, "POST", label)
@@ -4505,6 +4508,8 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong contact CSV export tool")
     if production_email_backend.get("registrationOpsTool") != "tools/run_gca_registration_ops.py":
         raise SiteCheckError(f"{label}: wrong registration ops tool")
+    if production_email_backend.get("contactSuppressionTool") != "tools/suppress_gca_contact.py":
+        raise SiteCheckError(f"{label}: wrong contact suppression tool")
     if production_email_backend.get("defaultAdminExportOutput") != ".gca_access_data/cloudflare_email_registrations_export.json":
         raise SiteCheckError(f"{label}: wrong default admin export output")
     if production_email_backend.get("publicRedactedAdminExportOutput") != ".gca_access_data/cloudflare_email_registrations_public_redacted.json":
@@ -4517,6 +4522,8 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong public redacted contact CSV output")
     if production_email_backend.get("registrationOpsSummaryOutput") != ".gca_access_data/gca_registration_ops_summary.json":
         raise SiteCheckError(f"{label}: wrong registration ops summary output")
+    if production_email_backend.get("contactSuppressionFile") != ".gca_access_data/gca_contact_suppressions.jsonl":
+        raise SiteCheckError(f"{label}: wrong contact suppression file")
     if production_email_backend.get("adminReadTokenConfigured") is not True:
         raise SiteCheckError(f"{label}: admin read token should be configured")
     if production_email_backend.get("privacyHashSaltConfigured") is not True:

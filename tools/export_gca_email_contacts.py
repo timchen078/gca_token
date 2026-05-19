@@ -27,6 +27,7 @@ from tools.gca_member_backend import JsonlLedgerStore, normalize_email  # noqa: 
 DEFAULT_DATA_DIR = ROOT / ".gca_access_data"
 DEFAULT_OUTPUT = ROOT / ".gca_access_data" / "gca_email_contacts.csv"
 DEFAULT_REDACTED_OUTPUT = ROOT / ".gca_access_data" / "gca_email_contacts_public_redacted.csv"
+DEFAULT_SUPPRESSION_FILE = ROOT / ".gca_access_data" / "gca_contact_suppressions.jsonl"
 
 
 FULL_FIELDNAMES = [
@@ -58,7 +59,31 @@ def email_sha256(email: str) -> str:
     return hashlib.sha256(email.strip().lower().encode("utf-8")).hexdigest()
 
 
-def latest_contact_records(records: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+def load_suppressed_emails(path: Path) -> tuple[set[str], list[dict[str, Any]]]:
+    if not path.exists():
+        return set(), []
+    suppressed: set[str] = set()
+    skipped: list[dict[str, Any]] = []
+    for index, raw_line in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1):
+        if not raw_line.strip():
+            continue
+        try:
+            record = json.loads(raw_line)
+            email = normalize_email(str(record.get("email") or ""))
+        except Exception as exc:  # noqa: BLE001 - produce operator-facing skip records
+            skipped.append({"line": index, "reason": f"invalid_suppression_record: {exc}"})
+            continue
+        if record.get("contactSuppressed") is False:
+            continue
+        suppressed.add(email)
+    return suppressed, skipped
+
+
+def latest_contact_records(
+    records: list[dict[str, Any]],
+    suppressed_emails: set[str] | None = None,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    suppressed_emails = suppressed_emails or set()
     latest_by_email: dict[str, dict[str, Any]] = {}
     skipped: list[dict[str, Any]] = []
     for record in records:
@@ -68,6 +93,13 @@ def latest_contact_records(records: list[dict[str, Any]]) -> tuple[list[dict[str
             skipped.append({
                 "emailRegistrationId": record.get("emailRegistrationId", ""),
                 "reason": f"invalid_email: {exc}",
+            })
+            continue
+        if email in suppressed_emails:
+            skipped.append({
+                "emailRegistrationId": record.get("emailRegistrationId", ""),
+                "email": email,
+                "reason": "contact_suppressed",
             })
             continue
         if record.get("contactConsentAccepted") is not True:
@@ -110,8 +142,12 @@ def record_to_row(record: dict[str, Any], redacted: bool) -> dict[str, str]:
     }
 
 
-def build_contact_rows(records: list[dict[str, Any]], redacted: bool) -> tuple[list[dict[str, str]], list[dict[str, Any]]]:
-    contact_records, skipped = latest_contact_records(records)
+def build_contact_rows(
+    records: list[dict[str, Any]],
+    redacted: bool,
+    suppressed_emails: set[str] | None = None,
+) -> tuple[list[dict[str, str]], list[dict[str, Any]]]:
+    contact_records, skipped = latest_contact_records(records, suppressed_emails=suppressed_emails)
     return [record_to_row(record, redacted) for record in contact_records], skipped
 
 
@@ -131,6 +167,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--data-dir", type=Path, default=DEFAULT_DATA_DIR, help="Local JSONL ledger directory.")
     parser.add_argument("--output", type=Path, help="Output CSV path. Defaults to ignored .gca_access_data output.")
     parser.add_argument("--redact", choices=("none", "public"), default="none", help="Use public before external sharing.")
+    parser.add_argument("--suppression-file", type=Path, default=DEFAULT_SUPPRESSION_FILE, help="Local contact suppression JSONL file.")
     return parser.parse_args(argv)
 
 
@@ -140,16 +177,20 @@ def main(argv: list[str] | None = None) -> int:
     output = args.output or (DEFAULT_REDACTED_OUTPUT if redacted else DEFAULT_OUTPUT)
     store = JsonlLedgerStore(args.data_dir)
     records = store.read_all("email_registrations")
-    rows, skipped = build_contact_rows(records, redacted)
+    suppressed_emails, skipped_suppressions = load_suppressed_emails(args.suppression_file)
+    rows, skipped = build_contact_rows(records, redacted, suppressed_emails=suppressed_emails)
     write_csv(output, rows, redacted)
     print(json.dumps({
         "ok": True,
         "output": str(output),
         "redactedForExternalSharing": redacted,
+        "suppressionFile": str(args.suppression_file),
+        "suppressedEmails": len(suppressed_emails),
         "sourceRecords": len(records),
         "contactsExported": len(rows),
         "recordsSkipped": len(skipped),
         "skippedRecords": skipped,
+        "suppressionRecordsSkipped": skipped_suppressions,
     }, ensure_ascii=False, indent=2, sort_keys=True))
     return 0
 

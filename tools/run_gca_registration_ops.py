@@ -30,7 +30,9 @@ from tools.export_cloudflare_email_registrations import (  # noqa: E402
 from tools.export_gca_email_contacts import (  # noqa: E402
     DEFAULT_OUTPUT as DEFAULT_CONTACT_OUTPUT,
     DEFAULT_REDACTED_OUTPUT as DEFAULT_REDACTED_CONTACT_OUTPUT,
+    DEFAULT_SUPPRESSION_FILE,
     build_contact_rows,
+    load_suppressed_emails,
     write_csv,
 )
 from tools.gca_member_backend import BackendError, JsonlLedgerStore, iso_now  # noqa: E402
@@ -46,18 +48,23 @@ def export_contact_csvs(
     *,
     contact_output: Path,
     redacted_contact_output: Path,
+    suppression_file: Path,
 ) -> dict[str, Any]:
     records = store.read_all("email_registrations")
-    contact_rows, skipped = build_contact_rows(records, redacted=False)
-    redacted_rows, redacted_skipped = build_contact_rows(records, redacted=True)
+    suppressed_emails, skipped_suppressions = load_suppressed_emails(suppression_file)
+    contact_rows, skipped = build_contact_rows(records, redacted=False, suppressed_emails=suppressed_emails)
+    redacted_rows, redacted_skipped = build_contact_rows(records, redacted=True, suppressed_emails=suppressed_emails)
     write_csv(contact_output, contact_rows, redacted=False)
     write_csv(redacted_contact_output, redacted_rows, redacted=True)
     return {
         "sourceLedger": "email_registrations",
         "sourceRecords": len(records),
         "contactsExported": len(contact_rows),
+        "suppressionFile": str(suppression_file),
+        "suppressedEmails": len(suppressed_emails),
         "recordsSkipped": len(skipped),
         "skippedRecords": skipped,
+        "suppressionRecordsSkipped": skipped_suppressions,
         "publicRedactedRecordsSkipped": len(redacted_skipped),
         "contactCsv": str(contact_output),
         "publicRedactedContactCsv": str(redacted_contact_output),
@@ -75,6 +82,7 @@ def run_registration_ops(
     data_dir: Path,
     contact_output: Path,
     redacted_contact_output: Path,
+    suppression_file: Path,
     summary_output: Path,
     source: str,
     imported_at: str,
@@ -89,6 +97,7 @@ def run_registration_ops(
         store,
         contact_output=contact_output,
         redacted_contact_output=redacted_contact_output,
+        suppression_file=suppression_file,
     )
     summary = {
         "ok": bool(sync_result.get("ok")),
@@ -107,6 +116,7 @@ def run_registration_ops(
             "requiresTransaction": False,
             "automaticTokenTransfer": False,
             "publicRedactedCsvRequiredBeforeExternalSharing": True,
+            "contactSuppressionApplied": True,
         },
     }
     write_summary(summary_output, summary)
@@ -133,6 +143,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         help="Public-redacted contact CSV output for external reporting.",
     )
     parser.add_argument("--summary-output", type=Path, default=DEFAULT_SUMMARY_OUTPUT, help="Pipeline summary JSON output.")
+    parser.add_argument("--suppression-file", type=Path, default=DEFAULT_SUPPRESSION_FILE, help="Local contact suppression JSONL file.")
     return parser.parse_args(argv)
 
 
@@ -159,6 +170,7 @@ def main(argv: list[str] | None = None) -> int:
             data_dir=args.data_dir,
             contact_output=args.contact_output,
             redacted_contact_output=args.public_redacted_contact_output,
+            suppression_file=args.suppression_file,
             summary_output=args.summary_output,
             source=source,
             imported_at=iso_now(),

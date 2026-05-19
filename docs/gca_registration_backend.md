@@ -36,6 +36,7 @@ It does not collect wallet private keys, seed phrases, wallet passwords, exchang
 - Local ledger sync tool: `tools/sync_cloudflare_email_registrations.py`
 - Local contact CSV export tool: `tools/export_gca_email_contacts.py`
 - Local one-command ops pipeline: `tools/run_gca_registration_ops.py`
+- Local contact suppression tool: `tools/suppress_gca_contact.py`
 
 The future custom domain `api.gcagochina.com` still requires Wrangler to be logged into a Cloudflare account that can see the `gcagochina.com` zone. DNS currently uses Cloudflare nameservers, but the currently authorized account does not contain that zone, so Cloudflare rejects the custom-domain deployment with `The zone "gcagochina.com" does not exist on your account`.
 
@@ -118,6 +119,17 @@ For routine operations, run the combined pipeline instead. It syncs Cloudflare r
   --limit 100 \
   --data-dir .gca_access_data
 ```
+
+If a user should no longer be contacted, add the email to the local suppression list before the next export:
+
+```bash
+.venv/bin/python tools/suppress_gca_contact.py \
+  --email user@example.com \
+  --reason unsubscribe_request \
+  --source support
+```
+
+The suppression list is stored at `.gca_access_data/gca_contact_suppressions.jsonl`. The contact export and combined ops pipeline read it automatically and exclude suppressed emails from both the internal CSV and the public redacted CSV.
 
 To sync from a previously exported full, non-redacted file:
 

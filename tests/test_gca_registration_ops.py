@@ -42,11 +42,13 @@ class GcaRegistrationOpsTests(unittest.TestCase):
             contact_output = root / "contacts.csv"
             redacted_output = root / "contacts-public.csv"
             summary_output = root / "summary.json"
+            suppression_file = root / "suppressions.jsonl"
             summary = run_registration_ops(
                 payload={"ok": True, "records": [cloudflare_record("USER@EXAMPLE.COM")]},
                 data_dir=data_dir,
                 contact_output=contact_output,
                 redacted_contact_output=redacted_output,
+                suppression_file=suppression_file,
                 summary_output=summary_output,
                 source="unit-test",
                 imported_at="2026-05-19T14:00:00Z",
@@ -57,6 +59,7 @@ class GcaRegistrationOpsTests(unittest.TestCase):
             self.assertEqual(summary["contactExports"]["contactsExported"], 1)
             self.assertFalse(summary["boundaries"]["adminTokenPrinted"])
             self.assertFalse(summary["boundaries"]["walletCalls"])
+            self.assertTrue(summary["boundaries"]["contactSuppressionApplied"])
             records = JsonlLedgerStore(data_dir).read_all("email_registrations")
             self.assertEqual(records[0]["email"], "user@example.com")
             with contact_output.open(newline="", encoding="utf-8") as handle:
@@ -67,6 +70,28 @@ class GcaRegistrationOpsTests(unittest.TestCase):
             self.assertNotIn("user@example.com", redacted_text)
             self.assertTrue(summary_output.exists())
 
+    def test_run_registration_ops_excludes_suppressed_contacts(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            suppression_file = root / "suppressions.jsonl"
+            suppression_file.write_text(
+                json.dumps({"email": "user@example.com", "contactSuppressed": True}) + "\n",
+                encoding="utf-8",
+            )
+            summary = run_registration_ops(
+                payload={"ok": True, "records": [cloudflare_record("user@example.com")]},
+                data_dir=root / "data",
+                contact_output=root / "contacts.csv",
+                redacted_contact_output=root / "contacts-public.csv",
+                suppression_file=suppression_file,
+                summary_output=root / "summary.json",
+                source="unit-test",
+                imported_at="2026-05-19T14:00:00Z",
+            )
+            self.assertEqual(summary["contactExports"]["contactsExported"], 0)
+            self.assertEqual(summary["contactExports"]["suppressedEmails"], 1)
+            self.assertEqual(summary["contactExports"]["skippedRecords"][0]["reason"], "contact_suppressed")
+
     def test_cli_runs_from_full_export_file_without_network(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
@@ -75,6 +100,7 @@ class GcaRegistrationOpsTests(unittest.TestCase):
             contact_output = root / "contacts.csv"
             redacted_output = root / "contacts-public.csv"
             summary_output = root / "summary.json"
+            suppression_file = root / "suppressions.jsonl"
             export_path.write_text(
                 json.dumps({
                     "ok": True,
@@ -97,6 +123,8 @@ class GcaRegistrationOpsTests(unittest.TestCase):
                     str(redacted_output),
                     "--summary-output",
                     str(summary_output),
+                    "--suppression-file",
+                    str(suppression_file),
                 ],
                 cwd=ROOT,
                 check=False,
