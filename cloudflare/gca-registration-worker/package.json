@@ -1,0 +1,16 @@
+{
+  "name": "gca-registration-worker",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "node --check src/worker.mjs",
+    "deploy": "wrangler deploy",
+    "d1:create": "wrangler d1 create gca_registration",
+    "d1:migrate:local": "wrangler d1 migrations apply gca_registration --local",
+    "d1:migrate:remote": "wrangler d1 migrations apply gca_registration --remote"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0"
+  }
+}

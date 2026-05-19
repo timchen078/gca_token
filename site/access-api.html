@@ -335,7 +335,8 @@
         <h1 id="title">GCA Access API Contract</h1>
         <p class="lead">This page defines the planned controlled HTTPS API contract for the GCA access bridge. It covers email-only user registration, pre-registration, read-only wallet verification, credit ledger records, GCA Member records, and support review statuses.</p>
         <p class="lead">The API contract is not live today. It is a public implementation contract for future backend work, not a public submission endpoint, account system, or self-service claim page.</p>
-        <p class="lead">A local operator backend is available for localhost testing, evidence export, read-only GCA balance checks, and operator review workflows without making public self-service claiming live. Implementation details are listed below in the endpoint contract and technical evidence sections.</p>
+        <p class="lead">A production email-registration backend package is prepared for Cloudflare Workers + D1 at <code>cloudflare/gca-registration-worker/</code>. After Cloudflare deployment and the <code>api.gcagochina.com</code> route are active, the public registration page can write directly to the D1 database.</p>
+        <p class="lead">A local operator backend is also available for localhost testing, evidence export, read-only GCA balance checks, and operator review workflows without making public self-service claiming live. Implementation details are listed below in the endpoint contract and technical evidence sections.</p>
         <div class="actions">
           <a class="button primary" href="operations.html">Operations Runbook</a>
           <a class="button primary" href="register.html">Email Registration</a>
@@ -343,6 +344,7 @@
           <a class="button primary" href="review-queue.html">Review Queue Contract</a>
           <a class="button" href="privacy.html">Privacy Notice</a>
           <a class="button" href="terms.html">Participation Terms</a>
+          <a class="button" href="https://api.gcagochina.com/health">API Health</a>
           <a class="button" href="#technicalEvidence">Technical Evidence</a>
         </div>
       </section>
@@ -367,6 +369,14 @@
         <div class="fact">
           <span class="label">Account UI</span>
           <span class="value pending">Not live</span>
+        </div>
+        <div class="fact">
+          <span class="label">Production Email API</span>
+          <span class="value pending">Prepared, deployment required</span>
+        </div>
+        <div class="fact">
+          <span class="label">API Base</span>
+          <span class="value">https://api.gcagochina.com</span>
         </div>
         <div class="fact">
           <span class="label">Balance Read</span>

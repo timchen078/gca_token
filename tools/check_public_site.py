@@ -332,8 +332,9 @@ def validate_register_page(text: str) -> None:
         "发送注册邮件",
         "gca_email_registration_v1",
         "/gca/email-registrations",
-        "公网静态站点不会直接写入数据库",
-        "本地 GCA 后端运行时会写入本地邮箱注册名单",
+        "GCA HTTPS 注册 API",
+        "https://api.gcagochina.com/gca/email-registrations",
+        "自动提交未完成",
         "GCAgochina@outlook.com",
         "Base Mainnet / chainId 8453",
         MAINNET_ADDRESS,
@@ -4339,6 +4340,10 @@ def validate_access_api_page(text: str) -> None:
     assert_contains(text, "/gca/operator-summary", label)
     assert_contains(text, "local JSONL ledger records", label)
     assert_contains(text, "Email Registration", label)
+    assert_contains(text, "Cloudflare Workers + D1", label)
+    assert_contains(text, "cloudflare/gca-registration-worker/", label)
+    assert_contains(text, "https://api.gcagochina.com", label)
+    assert_contains(text, "API Health", label)
     assert_contains(text, "POST", label)
     assert_contains(text, "/gca/email-registrations", label)
     assert_contains(text, "/gca/pre-registrations", label)
@@ -4387,6 +4392,7 @@ def validate_access_api_json(text: str) -> None:
     payload = load_json(text, label)
     state = payload.get("currentState", {})
     local_backend = payload.get("localDevelopmentBackend", {})
+    production_email_backend = payload.get("productionEmailRegistrationBackend", {})
     security = payload.get("securityModel", {})
     endpoints = payload.get("endpoints", [])
     endpoint_map = {f"{item.get('method')} {item.get('path')}": item for item in endpoints}
@@ -4422,6 +4428,7 @@ def validate_access_api_json(text: str) -> None:
         "publicEndpointLive",
         "controlledHttpsAccountUiLive",
         "directSubmissionEndpointConfigured",
+        "productionEmailRegistrationApiLive",
         "creditsSelfServiceClaimable",
         "gcaMemberSelfServiceClaimable",
         "liveTradingEnabled",
@@ -4456,6 +4463,18 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: local backend must not mark production live")
     if local_backend.get("automaticTokenTransfer") is not False:
         raise SiteCheckError(f"{label}: local backend must not automatically transfer tokens")
+    if state.get("productionEmailRegistrationApiPrepared") is not True:
+        raise SiteCheckError(f"{label}: production email API should be prepared")
+    if production_email_backend.get("provider") != "Cloudflare Workers + D1":
+        raise SiteCheckError(f"{label}: wrong production email backend provider")
+    if production_email_backend.get("sourceDirectory") != "cloudflare/gca-registration-worker/":
+        raise SiteCheckError(f"{label}: wrong production email backend source directory")
+    if production_email_backend.get("submissionEndpoint") != "https://api.gcagochina.com/gca/email-registrations":
+        raise SiteCheckError(f"{label}: wrong production email submission endpoint")
+    if production_email_backend.get("requiresCloudflareAccountDeployment") is not True:
+        raise SiteCheckError(f"{label}: missing Cloudflare deployment requirement")
+    if production_email_backend.get("publicWebsiteFallback") != "official-email-fallback":
+        raise SiteCheckError(f"{label}: wrong public website fallback")
     for ledger in ("email_registrations", "pre_registrations", "wallet_verifications", "credit_ledger", "member_ledger", "member_benefit_transfers", "support_reviews"):
         if ledger not in local_backend.get("writesJsonlLedgers", []):
             raise SiteCheckError(f"{label}: missing local ledger {ledger}")
