@@ -15,6 +15,7 @@
 - Public action plan page prepared at `https://gcagochina.com/action-plan.html` to show the current next-step order for BaseScan follow-up, legitimate market quality, member-access buildout, content cadence, optional trust upgrades, and public claim boundaries.
 - Public about page prepared at `https://gcagochina.com/about.html` with the company/project profile, CEO / Project Lead Tim Chen, official contact channels, Base Mainnet identity, product scope, and disclosure boundaries.
 - Public Chinese user entry page prepared at `https://gcagochina.com/zh-cn.html` for plain-language verification, buying, membership, current status, and risk-boundary guidance.
+- Public Chinese buy guide prepared at `https://gcagochina.com/zh-buy.html` for official Base Mainnet GCA/USDT route, wallet import, slippage, price impact, and pre-trade risk checks.
 - Public Chinese participation guide prepared at `https://gcagochina.com/zh-apply.html` for verification order, official GCA/USDT route, member evidence preparation, support intake, and non-live claim boundaries.
 - Public Chinese review status page prepared at `https://gcagochina.com/zh-status.html` for BaseScan, GeckoTerminal, wallet-warning, third-party audit, LP-lock, reserve, and listing-status boundaries.
 - Public Chinese liquidity and pool guide prepared at `https://gcagochina.com/zh-liquidity.html` for GCA/USDT pool identity, DEX settlement flow, owner-wallet balance questions, LP positions, USDT quote-asset boundaries, slippage, and unlocked LP disclosure.
@@ -152,6 +153,7 @@
 - Use `https://gcagochina.com/action-plan.html` when deciding the next GCA work slice or explaining the current order of work to users, reviewers, or moderators.
 - Use `https://gcagochina.com/about.html` when a reviewer, data platform, user, or community member asks who operates the project, who the public lead is, or which official contact channels are valid.
 - Use `https://gcagochina.com/zh-cn.html` when Chinese users need a plain-language entry for verification, buying, membership, current status, and risk boundaries.
+- Use `https://gcagochina.com/zh-buy.html` when Chinese users ask where to buy GCA, how to open the official GCA/USDT route, how to import GCA into MetaMask, or why they must check slippage and price impact before signing.
 - Use `https://gcagochina.com/zh-apply.html` when Chinese users ask what order to follow before buying, how to prepare holder or member-review evidence, or what information GCA support will never request.
 - Use `https://gcagochina.com/zh-status.html` when Chinese users ask whether BaseScan, GeckoTerminal, Blockaid/MetaMask, third-party audit, LP lock, reserve custody, CoinGecko, or CoinMarketCap are completed.
 - Use `https://gcagochina.com/zh-liquidity.html` when Chinese users ask where buyer funds go, whether the owner wallet receives money, whether the owner wallet GCA decreases when others buy, why pool depth needs both GCA and USDT, or why unlocked LP must be disclosed.
