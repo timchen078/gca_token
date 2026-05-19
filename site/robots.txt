@@ -5,6 +5,7 @@ Allow: /zh-apply.html
 Allow: /zh-status.html
 Allow: /zh-liquidity.html
 Allow: /zh-supply.html
+Allow: /zh-security.html
 Allow: /zh-faq.html
 Allow: /zh-members.html
 Allow: /about.html
