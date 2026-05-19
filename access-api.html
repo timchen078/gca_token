@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>GCA Access API Contract | GCA AI Quant Access</title>
-    <meta name="description" content="Public API contract for the planned GCA controlled HTTPS access bridge: pre-registration, read-only wallet verification, credit ledger, member ledger, and support review endpoints.">
+    <meta name="description" content="Public API contract for the planned GCA controlled HTTPS access bridge: email-only registration, pre-registration, read-only wallet verification, credit ledger, member ledger, and support review endpoints.">
     <link rel="canonical" href="https://gcagochina.com/access-api.html">
     <link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">
     <link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">
@@ -331,13 +331,14 @@
 
     <main class="shell">
       <section aria-labelledby="title">
-        <p class="eyebrow">Access API Contract / 2026-05-14</p>
+        <p class="eyebrow">Access API Contract / 2026-05-19</p>
         <h1 id="title">GCA Access API Contract</h1>
-        <p class="lead">This page defines the planned controlled HTTPS API contract for the GCA access bridge. It covers pre-registration, read-only wallet verification, credit ledger records, GCA Member records, and support review statuses.</p>
+        <p class="lead">This page defines the planned controlled HTTPS API contract for the GCA access bridge. It covers email-only user registration, pre-registration, read-only wallet verification, credit ledger records, GCA Member records, and support review statuses.</p>
         <p class="lead">The API contract is not live today. It is a public implementation contract for future backend work, not a public submission endpoint, account system, or self-service claim page.</p>
         <p class="lead">A local operator backend is available for localhost testing, evidence export, read-only GCA balance checks, and operator review workflows without making public self-service claiming live. Implementation details are listed below in the endpoint contract and technical evidence sections.</p>
         <div class="actions">
           <a class="button primary" href="operations.html">Operations Runbook</a>
+          <a class="button primary" href="register.html">Email Registration</a>
           <a class="button primary" href="access.html">Access Portal Blueprint</a>
           <a class="button primary" href="review-queue.html">Review Queue Contract</a>
           <a class="button" href="privacy.html">Privacy Notice</a>
@@ -378,6 +379,16 @@
         <div class="grid">
           <div class="fact">
             <span class="label">POST</span>
+            <span class="value">/gca/email-registrations</span>
+            <p class="note">Local-only email registration intake for the GCA user list. It requires an email and safety acknowledgements only; it does not request a wallet, signature, private key, seed phrase, payment, or exchange API secret.</p>
+          </div>
+          <div class="fact">
+            <span class="label">GET</span>
+            <span class="value">/gca/email-registrations</span>
+            <p class="note">Local-only email-registration ledger read for operator review. The public static registration page uses official-email fallback until a controlled HTTPS backend is live.</p>
+          </div>
+          <div class="fact">
+            <span class="label">POST</span>
             <span class="value">/gca/pre-registrations</span>
             <p class="note">Receives account intent and <code>gca_member_preregistration_v2</code> packet fields after controlled HTTPS account UI is live.</p>
           </div>
@@ -414,7 +425,7 @@
           <div class="fact">
             <span class="label">GET</span>
             <span class="value">/gca/operator-summary</span>
-            <p class="note">Local-only console summary for pre-registration, wallet verification, credit ledger, member ledger, member benefit transfer, and support review counts. The localhost backend writes local JSONL ledger records for testing only.</p>
+            <p class="note">Local-only console summary for email registration, pre-registration, wallet verification, credit ledger, member ledger, member benefit transfer, and support review counts. The localhost backend writes local JSONL ledger records for testing only.</p>
           </div>
           <div class="fact">
             <span class="label">GET</span>
@@ -429,6 +440,7 @@
           <h2>Required Request Fields</h2>
           <div class="list">
             <div class="row"><span>Pre-registration</span><strong>email, walletAddress, programIntent, termsAccepted</strong></div>
+            <div class="row"><span>Email registration</span><strong>email, contact consent, no-secrets acknowledgement</strong></div>
             <div class="row"><span>Member evidence</span><strong><code>memberBenefitReviewEvidence</code>, <code>holdingStartDate</code>, <code>evidenceTxHash</code>, <code>evidenceTxHashFormatOk</code></strong></div>
             <div class="row"><span>Wallet verification</span><strong>registrationId, walletAddress, chainId, contractAddress</strong></div>
             <div class="row"><span>Support review</span><strong>registrationId, status, supportNote</strong></div>
@@ -439,6 +451,7 @@
           <h2>Allowed Statuses</h2>
           <div class="list">
             <div class="row"><span>Intake</span><strong>received, wallet_pending, needs_more_information</strong></div>
+            <div class="row"><span>Email registration</span><strong>received</strong></div>
             <div class="row"><span>Wallet check</span><strong>verified, below_threshold, failed, expired</strong></div>
             <div class="row"><span>Credit ledger</span><strong>queued, ledger_recorded, partially_used, used, expired, revoked</strong></div>
             <div class="row"><span>Member ledger</span><strong>active, needs_refresh, below_threshold, paused, revoked</strong></div>

@@ -2,7 +2,7 @@
   "schema": "https://gcagochina.com/access-api.json",
   "pageUrl": "https://gcagochina.com/access-api.html",
   "status": "public-access-api-contract-published",
-  "lastUpdated": "2026-05-14",
+  "lastUpdated": "2026-05-19",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "title": "GCA Access API Contract",
@@ -19,7 +19,8 @@
     "liveTradingEnabled": false,
     "reviewQueueContract": "published-manual-review-contract",
     "operationsRunbook": "public-access-operations-runbook-published",
-    "memberPacketVersion": "gca_member_preregistration_v2"
+    "memberPacketVersion": "gca_member_preregistration_v2",
+    "emailRegistrationPacketVersion": "gca_email_registration_v1"
   },
   "localDevelopmentBackend": {
     "status": "local-only-backend-available",
@@ -29,6 +30,7 @@
     "dataDirectory": ".gca_access_data/",
     "servesStaticSite": true,
     "sameOriginSubmissionOnLocalhost": true,
+    "localEmailRegistrationUrl": "http://127.0.0.1:8787/register.html",
     "localOperatorSummaryEndpoint": "/gca/operator-summary",
     "localReviewPackageEndpoint": "/gca/review-package",
     "localReviewPackageExporter": "tools/export_gca_review_package.py",
@@ -39,6 +41,7 @@
     ],
     "publicProductionEndpointLive": false,
     "writesJsonlLedgers": [
+      "email_registrations",
       "pre_registrations",
       "wallet_verifications",
       "credit_ledger",
@@ -75,6 +78,7 @@
     "riskControlBypassAllowed": false
   },
   "memberPacketVersion": "gca_member_preregistration_v2",
+  "emailRegistrationPacketVersion": "gca_email_registration_v1",
   "memberEvidenceFields": [
     "memberBenefitReviewEvidence.holdingStartDate",
     "memberBenefitReviewEvidence.daysSinceHoldingStartPreview",
@@ -84,6 +88,71 @@
     "memberBenefitReviewEvidence.evidenceNote"
   ],
   "endpoints": [
+    {
+      "id": "email-registrations-create",
+      "method": "POST",
+      "path": "/gca/email-registrations",
+      "status": "local-only-not-public-production",
+      "purpose": "Receive an email-only GCA user registration on the localhost backend. Public static pages use the official email fallback until a controlled HTTPS account system is live.",
+      "requiredRequestFields": [
+        "email",
+        "acknowledgements.emailContactConsent",
+        "acknowledgements.noSecretsNoCustody"
+      ],
+      "optionalRequestFields": [
+        "displayName",
+        "source",
+        "language",
+        "interests"
+      ],
+      "serverChecks": [
+        "email must be valid and normalized",
+        "registration is idempotent by emailRegistrationId",
+        "no wallet address is required",
+        "no wallet signature, transaction, private key, seed phrase, exchange API secret, or withdrawal permission is requested",
+        "no credits, GCA Member status, or token transfer is automatically activated"
+      ],
+      "responseFields": [
+        "emailRegistrationId",
+        "packetVersion",
+        "email",
+        "status",
+        "createdAt",
+        "alreadyRegistered",
+        "walletRequired",
+        "requiresSignature",
+        "requiresTransaction",
+        "automaticTokenTransfer",
+        "nextStep"
+      ],
+      "allowedStatuses": [
+        "received"
+      ]
+    },
+    {
+      "id": "email-registrations-read",
+      "method": "GET",
+      "path": "/gca/email-registrations",
+      "status": "local-only-not-public-production",
+      "purpose": "Read localhost email-registration ledger records for operator review. This is not a public production endpoint.",
+      "requiredRequestFields": [
+        "localhostClient"
+      ],
+      "optionalRequestFields": [
+        "email",
+        "emailRegistrationId"
+      ],
+      "responseFields": [
+        "records",
+        "count",
+        "emailRegistrationId",
+        "email",
+        "status"
+      ],
+      "allowedStatuses": [
+        "local-only"
+      ]
+    },
     {
       "id": "pre-registrations",
       "method": "POST",
@@ -354,7 +423,7 @@
       "method": "GET",
       "path": "/gca/operator-summary",
       "status": "local-only-not-public-production",
-      "purpose": "Return local operator console counts and latest JSONL records for pre-registrations, wallet verifications, credit ledger, member ledger, member benefit transfers, and support reviews.",
+      "purpose": "Return local operator console counts and latest JSONL records for email registrations, pre-registrations, wallet verifications, credit ledger, member ledger, member benefit transfers, and support reviews.",
       "requiredRequestFields": [
         "localhostClient"
       ],
