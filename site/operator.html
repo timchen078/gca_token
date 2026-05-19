@@ -142,7 +142,7 @@
 
       .grid {
         display: grid;
-        grid-template-columns: repeat(5, minmax(0, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
         gap: 14px;
       }
 
@@ -371,6 +371,7 @@
           <button class="button" id="exportButton" type="button" disabled>Export Full Review Package (Internal Only)</button>
           <button class="button" id="exportPublicButton" type="button" disabled>Export Public Redacted Package</button>
           <button class="button" id="copyHandoffButton" type="button" disabled>Copy Handoff Reply</button>
+          <button class="button" id="copyContactExportCommandsButton" type="button">Copy Contact Export Commands</button>
           <a class="button" href="members.html">Open Pre-Registration</a>
           <a class="button" href="member-ledger.html">Ledger Schema</a>
           <a class="button" href="member-benefit-transfer.html">Transfer Runbook</a>
@@ -378,6 +379,10 @@
       </section>
 
       <section class="section grid" aria-label="GCA local ledger totals">
+        <div class="fact">
+          <span class="label">Email registrations</span>
+          <span class="value" id="emailRegistrationCount">0</span>
+        </div>
         <div class="fact">
           <span class="label">Pre-registrations</span>
           <span class="value" id="preRegistrationCount">0</span>
@@ -397,6 +402,46 @@
         <div class="fact">
           <span class="label">Recorded transfers</span>
           <span class="value" id="recordedTransferCount">0</span>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="emailIntakeTitle">
+        <h2 id="emailIntakeTitle">Email Registration Intake</h2>
+        <p class="note">Cloudflare email registrations are live on the public site. Use the local commands below to sync the token-protected Worker records into <code>.gca_access_data/email_registrations.jsonl</code>, then export a consent-only contact CSV for internal outreach. Share only the public redacted CSV outside the operator workspace.</p>
+        <div class="handoff-grid section">
+          <div>
+            <div class="field">
+              <label for="contactExportCommandText">Sync and contact export commands</label>
+              <textarea id="contactExportCommandText" class="copy" readonly>.venv/bin/python tools/sync_cloudflare_email_registrations.py --limit 100 --data-dir .gca_access_data
+.venv/bin/python tools/export_gca_email_contacts.py --data-dir .gca_access_data --output .gca_access_data/gca_email_contacts.csv
+.venv/bin/python tools/export_gca_email_contacts.py --data-dir .gca_access_data --redact public --output .gca_access_data/gca_email_contacts_public_redacted.csv</textarea>
+            </div>
+            <p class="status" id="contactExportStatus">Ready to copy local contact export commands</p>
+          </div>
+          <div>
+            <p class="note">The sync tool reads the ignored local admin token file at <code>cloudflare/gca-registration-worker/.env.admin.local</code>. It does not print the token, does not call wallets, and does not require signatures. The contact CSV export keeps only records where contact consent is accepted, then collapses duplicate emails to the latest registration record.</p>
+          </div>
+        </div>
+        <div class="section">
+          <h2>Latest Email Registration Records</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Email</th>
+                  <th>Consent</th>
+                  <th>Language</th>
+                  <th>Interests</th>
+                  <th>Source</th>
+                  <th>Status</th>
+                  <th>Updated</th>
+                </tr>
+              </thead>
+              <tbody id="emailRows">
+                <tr><td colspan="7">No local email registration records loaded.</td></tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </section>
 
@@ -514,17 +559,22 @@
       const exportButton = document.getElementById("exportButton");
       const exportPublicButton = document.getElementById("exportPublicButton");
       const copyHandoffButton = document.getElementById("copyHandoffButton");
+      const copyContactExportCommandsButton = document.getElementById("copyContactExportCommandsButton");
       const transferForm = document.getElementById("transferForm");
       const recordTransferButton = document.getElementById("recordTransferButton");
       const transferStatus = document.getElementById("transferStatus");
       const summaryJson = document.getElementById("summaryJson");
       const reviewRows = document.getElementById("reviewRows");
+      const emailRows = document.getElementById("emailRows");
       const lastPackageMode = document.getElementById("lastPackageMode");
       const lastPackageDigest = document.getElementById("lastPackageDigest");
       const verifyCommandText = document.getElementById("verifyCommandText");
       const handoffReplyText = document.getElementById("handoffReplyText");
       const handoffStatus = document.getElementById("handoffStatus");
+      const contactExportCommandText = document.getElementById("contactExportCommandText");
+      const contactExportStatus = document.getElementById("contactExportStatus");
       const statNodes = {
+        emailRegistrationCount: document.getElementById("emailRegistrationCount"),
         preRegistrationCount: document.getElementById("preRegistrationCount"),
         creditLedgerCount: document.getElementById("creditLedgerCount"),
         activeMemberCount: document.getElementById("activeMemberCount"),
@@ -546,6 +596,11 @@
       function setHandoffStatus(text, kind = "") {
         handoffStatus.textContent = text;
         handoffStatus.className = `status ${kind}`.trim();
+      }
+
+      function setContactExportStatus(text, kind = "") {
+        contactExportStatus.textContent = text;
+        contactExportStatus.className = `status ${kind}`.trim();
       }
 
       function setBackendControlsEnabled(enabled) {
@@ -584,6 +639,29 @@
         `).join("");
       }
 
+      function renderEmailRegistrations(records) {
+        if (!records.length) {
+          emailRows.innerHTML = '<tr><td colspan="7">No local email registration records yet. Run the Cloudflare sync command first.</td></tr>';
+          return;
+        }
+        emailRows.innerHTML = records.map((record) => {
+          const interests = Array.isArray(record.interests) ? record.interests.join(", ") : "";
+          const consent = record.contactConsentAccepted === true ? "accepted" : "missing";
+          const updated = record.updatedAt || record.createdAt || "";
+          return `
+            <tr>
+              <td>${escapeHtml(record.email)}</td>
+              <td>${escapeHtml(consent)}</td>
+              <td>${escapeHtml(record.language)}</td>
+              <td>${escapeHtml(interests)}</td>
+              <td>${escapeHtml(record.source)}</td>
+              <td>${escapeHtml(record.status)}</td>
+              <td>${escapeHtml(updated)}</td>
+            </tr>
+          `;
+        }).join("");
+      }
+
       async function refreshOperatorSummary() {
         if (!LOCAL_BACKEND_HOSTS.has(window.location.hostname)) {
           setStatus("Public website view: local backend not connected", "warn");
@@ -592,6 +670,7 @@
           setTransferStatus("Public website view only", "warn");
           setHandoffStatus("Public website view only; export disabled", "warn");
           summaryJson.textContent = "Open http://127.0.0.1:8787/operator.html after running tools/gca_member_backend.py to view local ledgers.";
+          renderEmailRegistrations([]);
           return;
         }
 
@@ -604,12 +683,14 @@
             throw new Error(payload.error || `HTTP ${response.status}`);
           }
           const totals = payload.totals || {};
+          statNodes.emailRegistrationCount.textContent = totals.emailRegistrations ?? 0;
           statNodes.preRegistrationCount.textContent = totals.preRegistrations ?? 0;
           statNodes.creditLedgerCount.textContent = totals.creditLedgerRecords ?? 0;
           statNodes.activeMemberCount.textContent = totals.activeMembers ?? 0;
           statNodes.pendingTransferCount.textContent = totals.pendingManualReserveTransfers ?? 0;
           statNodes.recordedTransferCount.textContent = totals.memberBenefitTransfers ?? 0;
           summaryJson.textContent = JSON.stringify(payload, null, 2);
+          renderEmailRegistrations(payload.dataLedgers?.email_registrations?.latest || []);
           renderReviews(payload.dataLedgers?.support_reviews?.latest || []);
           setBackendControlsEnabled(true);
           setStatus("Local operator backend connected", "good");
@@ -618,6 +699,7 @@
           setBackendControlsEnabled(false);
           setStatus("Local backend unavailable; export and record controls disabled", "warn");
           summaryJson.textContent = `${error.message}\n\nRun: .venv/bin/python tools/gca_member_backend.py --host 127.0.0.1 --port 8787`;
+          renderEmailRegistrations([]);
           renderReviews([]);
           setTransferStatus("Local backend unavailable", "warn");
           setHandoffStatus("Local backend unavailable; export disabled", "warn");
@@ -739,6 +821,15 @@
         }
       }
 
+      async function copyContactExportCommands() {
+        try {
+          await navigator.clipboard.writeText(contactExportCommandText.value);
+          setContactExportStatus("Contact export commands copied", "good");
+        } catch (error) {
+          setContactExportStatus("Copy failed; select the commands manually", "warn");
+        }
+      }
+
       async function recordMemberBenefitTransfer(event) {
         event.preventDefault();
         if (!LOCAL_BACKEND_HOSTS.has(window.location.hostname)) {
@@ -785,6 +876,7 @@
       exportButton.addEventListener("click", () => exportReviewPackage(false));
       exportPublicButton.addEventListener("click", () => exportReviewPackage(true));
       copyHandoffButton.addEventListener("click", copyHandoffReply);
+      copyContactExportCommandsButton.addEventListener("click", copyContactExportCommands);
       transferForm.addEventListener("submit", recordMemberBenefitTransfer);
       refreshOperatorSummary();
     </script>
