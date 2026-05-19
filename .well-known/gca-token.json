@@ -178,7 +178,7 @@
     "releaseGates": "public-release-gates-published",
     "creditsCatalog": "public-credits-catalog-published",
     "accessPortal": "public-access-portal-blueprint-published",
-    "accessApiContract": "public-access-api-contract-published",
+    "accessApiContract": "public-access-api-contract-email-registration-live",
     "reviewQueueContract": "public-review-queue-contract-published",
     "accessOperationsRunbook": "public-access-operations-runbook-published"
   },
