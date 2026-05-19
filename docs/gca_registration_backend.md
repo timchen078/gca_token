@@ -32,6 +32,7 @@ It does not collect wallet private keys, seed phrases, wallet passwords, exchang
 - Admin read endpoint: `GET /gca/email-registrations`
 - Admin read secret: configured in Cloudflare as `ADMIN_READ_TOKEN`
 - Privacy hash salt: configured in Cloudflare as `PRIVACY_HASH_SALT`
+- Local admin export tool: `tools/export_cloudflare_email_registrations.py`
 
 The future custom domain `api.gcagochina.com` still requires Wrangler to be logged into a Cloudflare account that can see the `gcagochina.com` zone. DNS currently uses Cloudflare nameservers, but the currently authorized account does not contain that zone, so Cloudflare rejects the custom-domain deployment with `The zone "gcagochina.com" does not exist on your account`.
 
@@ -79,6 +80,22 @@ set +a
 
 curl -fsS 'https://gca-registration-api.gcagochina.workers.dev/gca/email-registrations?limit=20' \
   -H "authorization: Bearer $ADMIN_READ_TOKEN"
+```
+
+To export recent registrations into the ignored local data directory:
+
+```bash
+.venv/bin/python tools/export_cloudflare_email_registrations.py \
+  --limit 100 \
+  --output .gca_access_data/cloudflare_email_registrations_export.json
+```
+
+Use a redacted export before sharing outside the operator workspace:
+
+```bash
+.venv/bin/python tools/export_cloudflare_email_registrations.py \
+  --redact public \
+  --output .gca_access_data/cloudflare_email_registrations_public_redacted.json
 ```
 
 ## Custom Domain Activation

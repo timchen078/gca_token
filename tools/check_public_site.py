@@ -4344,6 +4344,7 @@ def validate_access_api_page(text: str) -> None:
     assert_contains(text, "cloudflare/gca-registration-worker/", label)
     assert_contains(text, "https://gca-registration-api.gcagochina.workers.dev", label)
     assert_contains(text, "Token protected", label)
+    assert_contains(text, "tools/export_cloudflare_email_registrations.py", label)
     assert_contains(text, "api.gcagochina.com pending zone access", label)
     assert_contains(text, "API Health", label)
     assert_contains(text, "POST", label)
@@ -4479,6 +4480,12 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong production email submission endpoint")
     if production_email_backend.get("adminReadEndpoint") != "https://gca-registration-api.gcagochina.workers.dev/gca/email-registrations":
         raise SiteCheckError(f"{label}: wrong production email admin read endpoint")
+    if production_email_backend.get("adminExportTool") != "tools/export_cloudflare_email_registrations.py":
+        raise SiteCheckError(f"{label}: wrong admin export tool")
+    if production_email_backend.get("defaultAdminExportOutput") != ".gca_access_data/cloudflare_email_registrations_export.json":
+        raise SiteCheckError(f"{label}: wrong default admin export output")
+    if production_email_backend.get("publicRedactedAdminExportOutput") != ".gca_access_data/cloudflare_email_registrations_public_redacted.json":
+        raise SiteCheckError(f"{label}: wrong public redacted admin export output")
     if production_email_backend.get("adminReadTokenConfigured") is not True:
         raise SiteCheckError(f"{label}: admin read token should be configured")
     if production_email_backend.get("privacyHashSaltConfigured") is not True:
