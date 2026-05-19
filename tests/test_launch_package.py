@@ -43,6 +43,7 @@ ZH_SECURITY_PAGE_URL = "https://gcagochina.com/zh-security.html"
 ZH_ROADMAP_PAGE_URL = "https://gcagochina.com/zh-roadmap.html"
 ZH_FAQ_PAGE_URL = "https://gcagochina.com/zh-faq.html"
 ZH_MEMBERS_PAGE_URL = "https://gcagochina.com/zh-members.html"
+ZH_SUPPORT_PAGE_URL = "https://gcagochina.com/zh-support.html"
 SUPPLY_PAGE_URL = "https://gcagochina.com/supply.html"
 SECURITY_PAGE_URL = "https://gcagochina.com/security.html"
 RISK_PAGE_URL = "https://gcagochina.com/risk.html"
@@ -203,6 +204,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("/zh-roadmap.html", script)
         self.assertIn("/zh-faq.html", script)
         self.assertIn("/zh-members.html", script)
+        self.assertIn("/zh-support.html", script)
         self.assertIn("/listing-kit.html", script)
         self.assertIn("/whitepaper.html", script)
         self.assertIn("/buy.html", script)
@@ -399,8 +401,10 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("validate_zh_liquidity_page", script)
         self.assertIn("validate_zh_supply_page", script)
         self.assertIn("validate_zh_security_page", script)
+        self.assertIn("validate_zh_roadmap_page", script)
         self.assertIn("validate_zh_faq_page", script)
         self.assertIn("validate_zh_members_page", script)
+        self.assertIn("validate_zh_support_page", script)
         self.assertIn("validate_404_page", script)
         self.assertIn("validate_listing_kit_page", script)
         self.assertIn("validate_whitepaper_page", script)
@@ -434,6 +438,7 @@ class LaunchPackageTests(unittest.TestCase):
         module.validate_zh_roadmap_page((ROOT / "site" / "zh-roadmap.html").read_text())
         module.validate_zh_faq_page((ROOT / "site" / "zh-faq.html").read_text())
         module.validate_zh_members_page((ROOT / "site" / "zh-members.html").read_text())
+        module.validate_zh_support_page((ROOT / "site" / "zh-support.html").read_text())
         module.validate_verify((ROOT / "site" / "verify.html").read_text())
         module.validate_status_page((ROOT / "site" / "status.html").read_text())
         module.validate_listing_kit_page((ROOT / "site" / "listing-kit.html").read_text())
@@ -736,6 +741,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Allow: /zh-roadmap.html", robots)
         self.assertIn("Allow: /zh-faq.html", robots)
         self.assertIn("Allow: /zh-members.html", robots)
+        self.assertIn("Allow: /zh-support.html", robots)
         self.assertIn("Allow: /site-map.html", robots)
         self.assertIn("Allow: /verify.html", robots)
         self.assertIn("Allow: /markets.html", robots)
@@ -849,6 +855,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(ZH_ROADMAP_PAGE_URL, sitemap)
         self.assertIn(ZH_FAQ_PAGE_URL, sitemap)
         self.assertIn(ZH_MEMBERS_PAGE_URL, sitemap)
+        self.assertIn(ZH_SUPPORT_PAGE_URL, sitemap)
         self.assertIn(DATA_PAGE_URL, sitemap)
         self.assertIn(SITE_MAP_PAGE_URL, sitemap)
         self.assertIn(VERIFY_PAGE_URL, sitemap)

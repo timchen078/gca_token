@@ -74,6 +74,7 @@ Export the same review package directly from local JSONL data without starting t
 - Public Chinese security and audit guide: `site/zh-security.html`
 - Public Chinese roadmap and product boundary guide: `site/zh-roadmap.html`
 - Public Chinese FAQ page: `site/zh-faq.html`
+- Public Chinese support and intake guide: `site/zh-support.html`
 - Public Chinese member rules page: `site/zh-members.html`
 - Public roadmap page: `site/roadmap.html`
 - Public roadmap JSON: `site/roadmap.json`
