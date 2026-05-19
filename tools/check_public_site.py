@@ -332,7 +332,8 @@ def validate_buy_page(text: str) -> None:
     assert_contains(text, "中文购买说明", label)
     assert_contains(text, "zh-buy.html", label)
     assert_contains(text, "Open Uniswap Swap", label)
-    assert_contains(text, "This is not investment advice", label)
+    assert_contains(text, "Before trading, confirm the Base Mainnet network", label)
+    assert_contains(text, "price impact, slippage, and wallet prompts", label)
     assert_contains(text, "starter-depth only", label)
     assert_contains(text, "no third-party audit has been completed", label)
     assert_contains(text, "permanent warning-free status", label)
@@ -536,7 +537,7 @@ def validate_zh_cn_page(text: str) -> None:
         "100 Web3 Radar utility credits",
         "1,000,000 GCA",
         "连续持有 30 天",
-        "不是投资建议",
+        "自己确认买入或卖出参数",
         "不要把小额测试交易说成真实市场需求",
         "Platform-Only Evidence Path",
         "Reviewer Data Room",
@@ -608,7 +609,7 @@ def validate_zh_buy_page(text: str) -> None:
         "交易所 API Secret",
         "提现权限",
         "验证码",
-        "不是投资建议",
+        "交易前请核对链、合约、池子、价格影响、滑点和钱包确认内容",
         "早期池子是 starter-depth only",
         "第三方审计尚未完成",
         "LP 锁尚未完成",

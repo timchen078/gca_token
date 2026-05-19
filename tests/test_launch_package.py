@@ -3653,8 +3653,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("A Blockaid / MetaMask false-positive report was submitted on 2026-05-10", buy)
         self.assertIn("does not mean security-vendor approval or permanent warning-free status", buy)
         self.assertIn("no third-party audit has been completed", buy)
-        self.assertIn("This is not investment advice", buy)
-        self.assertIn("does not guarantee price, liquidity, execution, or safety", buy)
+        self.assertIn("Before trading, confirm the Base Mainnet network", buy)
+        self.assertIn("price impact, slippage, and wallet prompts", buy)
         self.assertIn("If a wallet or DEX warning appears, stop and verify", buy)
 
     def test_markets_page_is_canonical_and_conservative(self):
