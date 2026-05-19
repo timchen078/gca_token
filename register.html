@@ -418,7 +418,7 @@
             </label>
             <button class="button primary" type="submit">提交邮箱注册</button>
             <a class="button secondary" id="mailFallback" href="mailto:GCAgochina@outlook.com?subject=GCA%20Email%20Registration" hidden>发送注册邮件</a>
-            <div class="status" id="status" role="status">填写邮箱后提交。公网静态站点会通过官方邮箱完成注册提交；本地 GCA 后端运行时会写入本地邮箱注册名单。</div>
+            <div class="status" id="status" role="status">填写邮箱后提交。官网会优先提交到 GCA HTTPS 注册 API；如果 API 暂不可用，会显示官方邮箱兜底。正式 API 地址为 https://api.gcagochina.com/gca/email-registrations。</div>
           </form>
         </div>
 
@@ -459,6 +459,7 @@
       const statusBox = document.getElementById("status");
       const mailFallback = document.getElementById("mailFallback");
       const officialEmail = "GCAgochina@outlook.com";
+      const productionApiBase = window.GCA_EMAIL_API_BASE || "https://api.gcagochina.com";
 
       function setStatus(message, mode = "") {
         statusBox.textContent = message;
@@ -495,22 +496,35 @@
         return `mailto:${officialEmail}?subject=${encodeURIComponent("GCA 用户邮箱注册")}&body=${encodeURIComponent(body)}`;
       }
 
+      function registrationEndpoint() {
+        const host = window.location.hostname;
+        const isLocalBackend = ["localhost", "127.0.0.1", "::1"].includes(host);
+        if (isLocalBackend) {
+          return "/gca/email-registrations";
+        }
+        if (host === "gcagochina.com" || host === "www.gcagochina.com") {
+          return `${productionApiBase.replace(/\/$/, "")}/gca/email-registrations`;
+        }
+        return "";
+      }
+
       form.addEventListener("submit", async (event) => {
         event.preventDefault();
         const packet = buildPacket();
         const mailto = buildMailto(packet);
         mailFallback.href = mailto;
-        mailFallback.hidden = false;
+        mailFallback.hidden = true;
 
-        const isLocalBackend = ["localhost", "127.0.0.1", "::1"].includes(window.location.hostname);
-        if (!isLocalBackend) {
-          setStatus("公网静态站点不会直接写入数据库。请点击“发送注册邮件”完成邮箱注册提交。", "warn");
+        const endpoint = registrationEndpoint();
+        if (!endpoint) {
+          mailFallback.hidden = false;
+          setStatus("当前访问来源没有配置 GCA 注册 API。请点击“发送注册邮件”完成邮箱注册提交。", "warn");
           return;
         }
 
-        setStatus("正在提交到本地 GCA 邮箱注册名单...");
+        setStatus("正在提交到 GCA 用户注册数据库...");
         try {
-          const response = await fetch("/gca/email-registrations", {
+          const response = await fetch(endpoint, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(packet)
@@ -522,8 +536,10 @@
           const record = payload.emailRegistration || {};
           const prefix = payload.alreadyRegistered ? "这个邮箱已经在 GCA 用户名单中" : "邮箱注册已记录";
           setStatus(`${prefix}。Registration ID: ${record.emailRegistrationId || ""}`, "ok");
+          mailFallback.hidden = true;
         } catch (error) {
-          setStatus(`本地提交未完成：${error.message}。你仍可点击“发送注册邮件”提交。`, "warn");
+          mailFallback.hidden = false;
+          setStatus(`自动提交未完成：${error.message}。你仍可点击“发送注册邮件”提交。`, "warn");
         }
       });
     </script>

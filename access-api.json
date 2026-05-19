@@ -13,6 +13,8 @@
     "publicEndpointLive": false,
     "controlledHttpsAccountUiLive": false,
     "directSubmissionEndpointConfigured": false,
+    "productionEmailRegistrationApiPrepared": true,
+    "productionEmailRegistrationApiLive": false,
     "localDevelopmentBackendAvailable": true,
     "creditsSelfServiceClaimable": false,
     "gcaMemberSelfServiceClaimable": false,
@@ -54,6 +56,21 @@
     "requiresSignature": false,
     "requiresTransaction": false,
     "automaticTokenTransfer": false
+  },
+  "productionEmailRegistrationBackend": {
+    "status": "prepared-not-deployed",
+    "provider": "Cloudflare Workers + D1",
+    "sourceDirectory": "cloudflare/gca-registration-worker/",
+    "workerMain": "cloudflare/gca-registration-worker/src/worker.mjs",
+    "databaseMigration": "cloudflare/gca-registration-worker/migrations/0001_email_registrations.sql",
+    "documentation": "docs/gca_registration_backend.md",
+    "apiBaseUrl": "https://api.gcagochina.com",
+    "submissionEndpoint": "https://api.gcagochina.com/gca/email-registrations",
+    "healthEndpoint": "https://api.gcagochina.com/health",
+    "requiresCloudflareAccountDeployment": true,
+    "requiresD1DatabaseId": true,
+    "requiresAdminReadTokenSecret": true,
+    "publicWebsiteFallback": "official-email-fallback"
   },
   "securityModel": {
     "controlledHttpsOriginRequired": true,
