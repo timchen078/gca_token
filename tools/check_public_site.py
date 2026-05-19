@@ -35,6 +35,7 @@ ZH_STATUS_PAGE_URL = "https://gcagochina.com/zh-status.html"
 ZH_LIQUIDITY_PAGE_URL = "https://gcagochina.com/zh-liquidity.html"
 ZH_SUPPLY_PAGE_URL = "https://gcagochina.com/zh-supply.html"
 ZH_SECURITY_PAGE_URL = "https://gcagochina.com/zh-security.html"
+ZH_ROADMAP_PAGE_URL = "https://gcagochina.com/zh-roadmap.html"
 ZH_FAQ_PAGE_URL = "https://gcagochina.com/zh-faq.html"
 ZH_MEMBERS_PAGE_URL = "https://gcagochina.com/zh-members.html"
 DATA_PAGE_URL = "https://gcagochina.com/data.html"
@@ -249,6 +250,8 @@ def validate_root(text: str) -> None:
     assert_contains(text, "zh-supply.html", label)
     assert_contains(text, "中文安全和审计说明", label)
     assert_contains(text, "zh-security.html", label)
+    assert_contains(text, "中文路线图", label)
+    assert_contains(text, "zh-roadmap.html", label)
     assert_contains(text, "中文 FAQ", label)
     assert_contains(text, "zh-faq.html", label)
     assert_contains(text, "中文会员规则", label)
@@ -498,6 +501,8 @@ def validate_zh_cn_page(text: str) -> None:
         "zh-supply.html",
         "中文安全和审计说明",
         "zh-security.html",
+        "中文路线图",
+        "zh-roadmap.html",
         "中文 FAQ",
         "zh-faq.html",
         "中文会员规则",
@@ -534,6 +539,7 @@ def validate_zh_cn_page(text: str) -> None:
         "zh-liquidity.html",
         "zh-supply.html",
         "zh-security.html",
+        "zh-roadmap.html",
         "zh-members.html",
         "member-ledger.html",
         "member-benefit.html",
@@ -885,6 +891,73 @@ def validate_zh_security_page(text: str) -> None:
             "wallet-warning.json",
             "audit-readiness.json",
             "risk-remediation.json",
+        ),
+    )
+    assert_current_pool_text(text, label)
+    assert_no_forbidden_public_claims(text, label)
+
+
+def validate_zh_roadmap_page(text: str) -> None:
+    label = "/zh-roadmap.html"
+    assert_social_preview_meta(text, label, ZH_ROADMAP_PAGE_URL)
+    for expected in (
+        "GCA 中文路线图",
+        "Go China AI Quant Access",
+        "非托管量化研究",
+        "Base Mainnet / chainId 8453",
+        MAINNET_ADDRESS,
+        "GCA/USDT",
+        OFFICIAL_POOL_ADDRESS,
+        "概念阶段产品建设",
+        "阶段 0：身份可信",
+        "阶段 1：叙事和资料",
+        "阶段 2：产品接入",
+        "受控 HTTPS 账户 UI",
+        "只读钱包余额验证",
+        "100 credits 账本",
+        "GCA Member 账本",
+        "30 天持有期审核",
+        "Go China Narrative Radar",
+        "Liquidation Replay",
+        "Backtesting and Risk Alerts",
+        "ENTRY_READY Review",
+        "Web3 Radar-style utility access",
+        "10,000 GCA 持有者",
+        "100 Web3 Radar utility credits",
+        "1,000,000 GCA 持有者",
+        "连续持有 30 天",
+        "一次性 10,000 GCA 会员权益审核路径",
+        "公开自助领取",
+        "还没有上线",
+        "不能说第三方审计已经完成",
+        "不能说 BaseScan Token Profile 已经通过",
+        "不能承诺价格、成交量、流动性、上所、审核通过或交易结果",
+        "Platform-Only Evidence Path",
+        "Reviewer Data Room",
+        "zh-cn.html",
+        "zh-apply.html",
+        "zh-status.html",
+        "zh-liquidity.html",
+        "zh-supply.html",
+        "zh-security.html",
+        "zh-members.html",
+        "roadmap.html",
+        "product.html",
+        "utility.html",
+        "release-gates.html",
+        "support.html",
+        "data.html",
+    ):
+        assert_contains(text, expected, label)
+    assert_platform_only_data_room(
+        text,
+        label,
+        (
+            "roadmap.json",
+            "product.json",
+            "utility.json",
+            "release-gates.json",
+            "member-ledger.json",
         ),
     )
     assert_current_pool_text(text, label)
@@ -8173,6 +8246,7 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/zh-liquidity.html",
         "https://gcagochina.com/zh-supply.html",
         "https://gcagochina.com/zh-security.html",
+        "https://gcagochina.com/zh-roadmap.html",
         "https://gcagochina.com/zh-faq.html",
         "https://gcagochina.com/zh-members.html",
         "https://gcagochina.com/data.html",
@@ -8293,6 +8367,7 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /zh-liquidity.html", label)
     assert_contains(text, "Allow: /zh-supply.html", label)
     assert_contains(text, "Allow: /zh-security.html", label)
+    assert_contains(text, "Allow: /zh-roadmap.html", label)
     assert_contains(text, "Allow: /zh-faq.html", label)
     assert_contains(text, "Allow: /zh-members.html", label)
     assert_contains(text, "Allow: /site-map.html", label)
@@ -8414,6 +8489,7 @@ CHECKS: list[EndpointCheck] = [
     ("/zh-liquidity.html", validate_zh_liquidity_page),
     ("/zh-supply.html", validate_zh_supply_page),
     ("/zh-security.html", validate_zh_security_page),
+    ("/zh-roadmap.html", validate_zh_roadmap_page),
     ("/zh-faq.html", validate_zh_faq_page),
     ("/zh-members.html", validate_zh_members_page),
     ("/data.html", validate_data_page),
