@@ -1,0 +1,21 @@
+name = "gca-registration-api"
+main = "src/worker.mjs"
+compatibility_date = "2026-05-19"
+workers_dev = true
+preview_urls = false
+
+[[routes]]
+pattern = "api.gcagochina.com"
+zone_name = "gcagochina.com"
+custom_domain = true
+
+[vars]
+ALLOWED_ORIGINS = "https://gcagochina.com,https://www.gcagochina.com,http://127.0.0.1:8787,http://localhost:8787,http://127.0.0.1:8799,http://localhost:8799"
+CONTACT_EMAIL = "GCAgochina@outlook.com"
+
+[[d1_databases]]
+binding = "REGISTRATION_DB"
+database_name = "gca_registration"
+database_id = "b4cb13f7-c52e-4dbc-b8d6-50346a814819"
+preview_database_id = "b4cb13f7-c52e-4dbc-b8d6-50346a814819"
+migrations_dir = "migrations"

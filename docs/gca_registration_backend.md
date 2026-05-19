@@ -29,8 +29,11 @@ It does not collect wallet private keys, seed phrases, wallet passwords, exchang
 - D1 database: `gca_registration`
 - D1 database id: `b4cb13f7-c52e-4dbc-b8d6-50346a814819`
 - Public site integration: `site/register.html`
+- Admin read endpoint: `GET /gca/email-registrations`
+- Admin read secret: configured in Cloudflare as `ADMIN_READ_TOKEN`
+- Privacy hash salt: configured in Cloudflare as `PRIVACY_HASH_SALT`
 
-The future custom domain `api.gcagochina.com` still requires `gcagochina.com` to be moved into Cloudflare DNS or added to the same Cloudflare account as a proxied zone.
+The future custom domain `api.gcagochina.com` still requires Wrangler to be logged into a Cloudflare account that can see the `gcagochina.com` zone. DNS currently uses Cloudflare nameservers, but the currently authorized account does not contain that zone, so Cloudflare rejects the custom-domain deployment with `The zone "gcagochina.com" does not exist on your account`.
 
 ## Deployment Commands
 
@@ -53,6 +56,61 @@ npx wrangler deploy
 ```
 
 The current configuration publishes through `workers.dev`. Switch to a Cloudflare custom domain only after the official domain is managed by Cloudflare.
+
+## Admin Read
+
+The admin read endpoint is enabled by the deployed Worker but protected by `ADMIN_READ_TOKEN`.
+
+The local operator copy of the token is stored only in:
+
+```text
+cloudflare/gca-registration-worker/.env.admin.local
+```
+
+That file is ignored by git and must not be committed or shared publicly.
+
+To read recent email registrations:
+
+```bash
+cd cloudflare/gca-registration-worker
+set -a
+. ./.env.admin.local
+set +a
+
+curl -fsS 'https://gca-registration-api.gcagochina.workers.dev/gca/email-registrations?limit=20' \
+  -H "authorization: Bearer $ADMIN_READ_TOKEN"
+```
+
+## Custom Domain Activation
+
+Use this only after logging into the Cloudflare account that owns the `gcagochina.com` zone, or after adding the current Cloudflare account as a member with zone and Worker permissions.
+
+1. Confirm the account can see the zone:
+
+```bash
+dig +short NS gcagochina.com
+```
+
+2. Copy the custom-domain example over the active Wrangler config:
+
+```bash
+cp wrangler.custom-domain.example.toml wrangler.toml
+```
+
+3. Deploy:
+
+```bash
+npx wrangler deploy
+```
+
+4. Verify:
+
+```bash
+dig +short api.gcagochina.com
+curl -fsS https://api.gcagochina.com/health
+```
+
+5. After `api.gcagochina.com` is live, update `site/register.html`, `site/access-api.json`, and this document to use `https://api.gcagochina.com` as the production API base, then run the public-site checks and push.
 
 ## Smoke Test
 

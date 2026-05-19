@@ -4343,6 +4343,8 @@ def validate_access_api_page(text: str) -> None:
     assert_contains(text, "Cloudflare Workers + D1", label)
     assert_contains(text, "cloudflare/gca-registration-worker/", label)
     assert_contains(text, "https://gca-registration-api.gcagochina.workers.dev", label)
+    assert_contains(text, "Token protected", label)
+    assert_contains(text, "api.gcagochina.com pending zone access", label)
     assert_contains(text, "API Health", label)
     assert_contains(text, "POST", label)
     assert_contains(text, "/gca/email-registrations", label)
@@ -4475,8 +4477,20 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong production email backend source directory")
     if production_email_backend.get("submissionEndpoint") != "https://gca-registration-api.gcagochina.workers.dev/gca/email-registrations":
         raise SiteCheckError(f"{label}: wrong production email submission endpoint")
+    if production_email_backend.get("adminReadEndpoint") != "https://gca-registration-api.gcagochina.workers.dev/gca/email-registrations":
+        raise SiteCheckError(f"{label}: wrong production email admin read endpoint")
+    if production_email_backend.get("adminReadTokenConfigured") is not True:
+        raise SiteCheckError(f"{label}: admin read token should be configured")
+    if production_email_backend.get("privacyHashSaltConfigured") is not True:
+        raise SiteCheckError(f"{label}: privacy hash salt should be configured")
     if production_email_backend.get("requiresCloudflareAccountDeployment") is not False:
         raise SiteCheckError(f"{label}: Cloudflare deployment should be complete")
+    if production_email_backend.get("requiresAdminReadTokenSecret") is not False:
+        raise SiteCheckError(f"{label}: admin read token secret should already be configured")
+    if production_email_backend.get("futureCustomDomain") != "https://api.gcagochina.com":
+        raise SiteCheckError(f"{label}: wrong future custom domain")
+    if production_email_backend.get("customDomainExampleConfig") != "cloudflare/gca-registration-worker/wrangler.custom-domain.example.toml":
+        raise SiteCheckError(f"{label}: wrong custom domain example config")
     if production_email_backend.get("publicWebsiteFallback") != "official-email-fallback":
         raise SiteCheckError(f"{label}: wrong public website fallback")
     for ledger in ("email_registrations", "pre_registrations", "wallet_verifications", "credit_ledger", "member_ledger", "member_benefit_transfers", "support_reviews"):

@@ -67,9 +67,15 @@
     "apiBaseUrl": "https://gca-registration-api.gcagochina.workers.dev",
     "submissionEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/email-registrations",
     "healthEndpoint": "https://gca-registration-api.gcagochina.workers.dev/health",
+    "adminReadEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/email-registrations",
+    "adminReadTokenConfigured": true,
+    "privacyHashSaltConfigured": true,
     "requiresCloudflareAccountDeployment": false,
     "requiresD1DatabaseId": false,
-    "requiresAdminReadTokenSecret": true,
+    "requiresAdminReadTokenSecret": false,
+    "futureCustomDomain": "https://api.gcagochina.com",
+    "futureCustomDomainBlockedBy": "current Cloudflare OAuth account cannot see the gcagochina.com zone",
+    "customDomainExampleConfig": "cloudflare/gca-registration-worker/wrangler.custom-domain.example.toml",
     "publicWebsiteFallback": "official-email-fallback"
   },
   "securityModel": {
