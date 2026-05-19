@@ -407,19 +407,17 @@
 
       <section class="section panel" aria-labelledby="emailIntakeTitle">
         <h2 id="emailIntakeTitle">Email Registration Intake</h2>
-        <p class="note">Cloudflare email registrations are live on the public site. Use the local commands below to sync the token-protected Worker records into <code>.gca_access_data/email_registrations.jsonl</code>, then export a consent-only contact CSV for internal outreach. Share only the public redacted CSV outside the operator workspace.</p>
+        <p class="note">Cloudflare email registrations are live on the public site. Use the local ops command below to sync the token-protected Worker records into <code>.gca_access_data/email_registrations.jsonl</code>, then export a consent-only contact CSV and a public redacted CSV. Share only the public redacted CSV outside the operator workspace.</p>
         <div class="handoff-grid section">
           <div>
             <div class="field">
-              <label for="contactExportCommandText">Sync and contact export commands</label>
-              <textarea id="contactExportCommandText" class="copy" readonly>.venv/bin/python tools/sync_cloudflare_email_registrations.py --limit 100 --data-dir .gca_access_data
-.venv/bin/python tools/export_gca_email_contacts.py --data-dir .gca_access_data --output .gca_access_data/gca_email_contacts.csv
-.venv/bin/python tools/export_gca_email_contacts.py --data-dir .gca_access_data --redact public --output .gca_access_data/gca_email_contacts_public_redacted.csv</textarea>
+              <label for="contactExportCommandText">Registration ops command</label>
+              <textarea id="contactExportCommandText" class="copy" readonly>.venv/bin/python tools/run_gca_registration_ops.py --limit 100 --data-dir .gca_access_data</textarea>
             </div>
             <p class="status" id="contactExportStatus">Ready to copy local contact export commands</p>
           </div>
           <div>
-            <p class="note">The sync tool reads the ignored local admin token file at <code>cloudflare/gca-registration-worker/.env.admin.local</code>. It does not print the token, does not call wallets, and does not require signatures. The contact CSV export keeps only records where contact consent is accepted, then collapses duplicate emails to the latest registration record.</p>
+            <p class="note">The ops tool reads the ignored local admin token file at <code>cloudflare/gca-registration-worker/.env.admin.local</code>. It does not print the token, does not call wallets, and does not require signatures. It wraps <code>tools/sync_cloudflare_email_registrations.py</code> and <code>tools/export_gca_email_contacts.py</code>, then writes <code>.gca_access_data/gca_email_contacts.csv</code>, <code>.gca_access_data/gca_email_contacts_public_redacted.csv</code>, and <code>.gca_access_data/gca_registration_ops_summary.json</code>. The contact CSV keeps only records where contact consent is accepted, then collapses duplicate emails to the latest registration record.</p>
           </div>
         </div>
         <div class="section">

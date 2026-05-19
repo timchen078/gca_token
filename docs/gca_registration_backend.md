@@ -35,6 +35,7 @@ It does not collect wallet private keys, seed phrases, wallet passwords, exchang
 - Local admin export tool: `tools/export_cloudflare_email_registrations.py`
 - Local ledger sync tool: `tools/sync_cloudflare_email_registrations.py`
 - Local contact CSV export tool: `tools/export_gca_email_contacts.py`
+- Local one-command ops pipeline: `tools/run_gca_registration_ops.py`
 
 The future custom domain `api.gcagochina.com` still requires Wrangler to be logged into a Cloudflare account that can see the `gcagochina.com` zone. DNS currently uses Cloudflare nameservers, but the currently authorized account does not contain that zone, so Cloudflare rejects the custom-domain deployment with `The zone "gcagochina.com" does not exist on your account`.
 
@@ -109,6 +110,14 @@ To sync full Cloudflare registrations into the local operator JSONL ledger:
 ```
 
 The sync is idempotent by `emailRegistrationId`, so running it again skips records already present in `.gca_access_data/email_registrations.jsonl`.
+
+For routine operations, run the combined pipeline instead. It syncs Cloudflare records into the local ledger, exports the internal contact CSV, exports the public redacted contact CSV, and writes an ignored summary JSON:
+
+```bash
+.venv/bin/python tools/run_gca_registration_ops.py \
+  --limit 100 \
+  --data-dir .gca_access_data
+```
 
 To sync from a previously exported full, non-redacted file:
 
