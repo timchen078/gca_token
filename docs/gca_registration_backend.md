@@ -33,6 +33,7 @@ It does not collect wallet private keys, seed phrases, wallet passwords, exchang
 - Admin read secret: configured in Cloudflare as `ADMIN_READ_TOKEN`
 - Privacy hash salt: configured in Cloudflare as `PRIVACY_HASH_SALT`
 - Local admin export tool: `tools/export_cloudflare_email_registrations.py`
+- Local ledger sync tool: `tools/sync_cloudflare_email_registrations.py`
 
 The future custom domain `api.gcagochina.com` still requires Wrangler to be logged into a Cloudflare account that can see the `gcagochina.com` zone. DNS currently uses Cloudflare nameservers, but the currently authorized account does not contain that zone, so Cloudflare rejects the custom-domain deployment with `The zone "gcagochina.com" does not exist on your account`.
 
@@ -96,6 +97,24 @@ Use a redacted export before sharing outside the operator workspace:
 .venv/bin/python tools/export_cloudflare_email_registrations.py \
   --redact public \
   --output .gca_access_data/cloudflare_email_registrations_public_redacted.json
+```
+
+To sync full Cloudflare registrations into the local operator JSONL ledger:
+
+```bash
+.venv/bin/python tools/sync_cloudflare_email_registrations.py \
+  --limit 100 \
+  --data-dir .gca_access_data
+```
+
+The sync is idempotent by `emailRegistrationId`, so running it again skips records already present in `.gca_access_data/email_registrations.jsonl`.
+
+To sync from a previously exported full, non-redacted file:
+
+```bash
+.venv/bin/python tools/sync_cloudflare_email_registrations.py \
+  --input .gca_access_data/cloudflare_email_registrations_export.json \
+  --data-dir .gca_access_data
 ```
 
 ## Custom Domain Activation
