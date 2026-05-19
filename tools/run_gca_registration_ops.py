@@ -36,6 +36,12 @@ from tools.export_gca_email_contacts import (  # noqa: E402
     write_csv,
 )
 from tools.gca_member_backend import BackendError, JsonlLedgerStore, iso_now  # noqa: E402
+from tools.sync_cloudflare_contact_suppressions import (  # noqa: E402
+    SuppressionSyncError,
+    fetch_admin_suppressions,
+    load_suppression_export_file,
+    sync_suppressions,
+)
 from tools.sync_cloudflare_email_registrations import SyncError, load_export_file, sync_records  # noqa: E402
 
 
@@ -86,6 +92,7 @@ def run_registration_ops(
     summary_output: Path,
     source: str,
     imported_at: str,
+    suppression_payload: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     records = payload.get("records", [])
     if not isinstance(records, list):
@@ -93,6 +100,12 @@ def run_registration_ops(
 
     store = JsonlLedgerStore(data_dir)
     sync_result = sync_records(store, records, imported_at=imported_at)
+    suppression_sync_result = None
+    if suppression_payload is not None:
+        suppression_records = suppression_payload.get("records", [])
+        if not isinstance(suppression_records, list):
+            raise SuppressionSyncError("contact suppression source payload is missing records[]")
+        suppression_sync_result = sync_suppressions(suppression_file, suppression_records, imported_at=imported_at)
     contact_result = export_contact_csvs(
         store,
         contact_output=contact_output,
@@ -100,12 +113,15 @@ def run_registration_ops(
         suppression_file=suppression_file,
     )
     summary = {
-        "ok": bool(sync_result.get("ok")),
+        "ok": bool(sync_result.get("ok")) and (
+            suppression_sync_result is None or bool(suppression_sync_result.get("ok"))
+        ),
         "generatedAt": iso_now(),
         "importedAt": imported_at,
         "source": source,
         "sourceRecords": len(records),
         "sync": sync_result,
+        "contactSuppressionSync": suppression_sync_result,
         "contactExports": contact_result,
         "summaryOutput": str(summary_output),
         "boundaries": {
@@ -128,6 +144,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         description="Sync GCA Cloudflare registrations and export internal plus public-redacted contact CSVs.",
     )
     parser.add_argument("--input", type=Path, help="Optional full, non-redacted Cloudflare export JSON file.")
+    parser.add_argument("--suppression-input", type=Path, help="Optional Cloudflare contact-suppression export JSON file.")
     parser.add_argument("--data-dir", type=Path, default=DEFAULT_DATA_DIR, help="Local JSONL ledger directory.")
     parser.add_argument("--base-url", default=DEFAULT_API_BASE, help=f"Worker API base URL. Default: {DEFAULT_API_BASE}")
     parser.add_argument("--token-file", type=Path, default=DEFAULT_TOKEN_FILE, help="Path to ignored local admin env file.")
@@ -150,12 +167,23 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
     try:
+        suppression_payload = None
         if args.input:
             source_payload = load_export_file(args.input)
             source = f"input-file:{args.input}"
+            if args.suppression_input:
+                suppression_payload = load_suppression_export_file(args.suppression_input)
         else:
             token = load_admin_token(args.token_file)
             source_payload = fetch_admin_records(
+                base_url=args.base_url,
+                token=token,
+                limit=args.limit,
+                email=args.email,
+                timeout=args.timeout,
+                cafile=args.cafile,
+            )
+            suppression_payload = fetch_admin_suppressions(
                 base_url=args.base_url,
                 token=token,
                 limit=args.limit,
@@ -174,8 +202,9 @@ def main(argv: list[str] | None = None) -> int:
             summary_output=args.summary_output,
             source=source,
             imported_at=iso_now(),
+            suppression_payload=suppression_payload,
         )
-    except (ExportError, SyncError, BackendError) as exc:
+    except (ExportError, SyncError, SuppressionSyncError, BackendError) as exc:
         print(json.dumps({"ok": False, "error": str(exc)}, ensure_ascii=False, sort_keys=True), file=sys.stderr)
         return 1
 

@@ -6,6 +6,7 @@ The public website remains hosted on GitHub Pages. The write API is deployed on 
 
 ```text
 https://gca-registration-api.gcagochina.workers.dev/gca/email-registrations
+https://gca-registration-api.gcagochina.workers.dev/gca/contact-suppressions
 ```
 
 ## What It Stores
@@ -20,6 +21,16 @@ https://gca-registration-api.gcagochina.workers.dev/gca/email-registrations
 - timestamps
 - optional salted IP hash if `PRIVACY_HASH_SALT` is configured
 
+Contact-suppression requests store:
+
+- email
+- generated `suppressionId`
+- email hash
+- reason and source
+- status `suppressed`
+- timestamps
+- optional salted IP hash if `PRIVACY_HASH_SALT` is configured
+
 It does not collect wallet private keys, seed phrases, wallet passwords, exchange API secrets, withdrawal permissions, one-time codes, or remote-control access. It does not transfer GCA, activate credits, or activate GCA Member status.
 
 ## Deployed Cloudflare Resources
@@ -29,7 +40,10 @@ It does not collect wallet private keys, seed phrases, wallet passwords, exchang
 - D1 database: `gca_registration`
 - D1 database id: `b4cb13f7-c52e-4dbc-b8d6-50346a814819`
 - Public site integration: `site/register.html`
+- Public contact suppression integration: `site/unsubscribe.html`
 - Admin read endpoint: `GET /gca/email-registrations`
+- Public contact suppression endpoint: `POST /gca/contact-suppressions`
+- Admin contact suppression endpoint: `GET /gca/contact-suppressions`
 - Admin read secret: configured in Cloudflare as `ADMIN_READ_TOKEN`
 - Privacy hash salt: configured in Cloudflare as `PRIVACY_HASH_SALT`
 - Local admin export tool: `tools/export_cloudflare_email_registrations.py`
@@ -37,6 +51,8 @@ It does not collect wallet private keys, seed phrases, wallet passwords, exchang
 - Local contact CSV export tool: `tools/export_gca_email_contacts.py`
 - Local one-command ops pipeline: `tools/run_gca_registration_ops.py`
 - Local contact suppression tool: `tools/suppress_gca_contact.py`
+- Local Cloudflare contact suppression sync tool: `tools/sync_cloudflare_contact_suppressions.py`
+- Contact suppression D1 migration: `cloudflare/gca-registration-worker/migrations/0002_contact_suppressions.sql`
 
 The future custom domain `api.gcagochina.com` still requires Wrangler to be logged into a Cloudflare account that can see the `gcagochina.com` zone. DNS currently uses Cloudflare nameservers, but the currently authorized account does not contain that zone, so Cloudflare rejects the custom-domain deployment with `The zone "gcagochina.com" does not exist on your account`.
 
@@ -86,6 +102,13 @@ curl -fsS 'https://gca-registration-api.gcagochina.workers.dev/gca/email-registr
   -H "authorization: Bearer $ADMIN_READ_TOKEN"
 ```
 
+To read recent contact-suppression requests:
+
+```bash
+curl -fsS 'https://gca-registration-api.gcagochina.workers.dev/gca/contact-suppressions?limit=20' \
+  -H "authorization: Bearer $ADMIN_READ_TOKEN"
+```
+
 To export recent registrations into the ignored local data directory:
 
 ```bash
@@ -112,6 +135,16 @@ To sync full Cloudflare registrations into the local operator JSONL ledger:
 
 The sync is idempotent by `emailRegistrationId`, so running it again skips records already present in `.gca_access_data/email_registrations.jsonl`.
 
+To sync Cloudflare contact suppressions into the local do-not-contact JSONL file:
+
+```bash
+.venv/bin/python tools/sync_cloudflare_contact_suppressions.py \
+  --limit 100 \
+  --suppression-file .gca_access_data/gca_contact_suppressions.jsonl
+```
+
+The suppression sync is idempotent by `suppressionId` and normalized email. Running it again skips records already present in `.gca_access_data/gca_contact_suppressions.jsonl`.
+
 For routine operations, run the combined pipeline instead. It syncs Cloudflare records into the local ledger, exports the internal contact CSV, exports the public redacted contact CSV, and writes an ignored summary JSON:
 
 ```bash
@@ -119,6 +152,8 @@ For routine operations, run the combined pipeline instead. It syncs Cloudflare r
   --limit 100 \
   --data-dir .gca_access_data
 ```
+
+When `--input` is omitted, the combined pipeline also reads Cloudflare `/gca/contact-suppressions`, syncs it into `.gca_access_data/gca_contact_suppressions.jsonl`, and excludes suppressed emails before writing contact CSV files.
 
 If a user should no longer be contacted, add the email to the local suppression list before the next export:
 
@@ -136,6 +171,15 @@ To sync from a previously exported full, non-redacted file:
 ```bash
 .venv/bin/python tools/sync_cloudflare_email_registrations.py \
   --input .gca_access_data/cloudflare_email_registrations_export.json \
+  --data-dir .gca_access_data
+```
+
+To run the combined pipeline from local registration and suppression export files without live network access:
+
+```bash
+.venv/bin/python tools/run_gca_registration_ops.py \
+  --input .gca_access_data/cloudflare_email_registrations_export.json \
+  --suppression-input .gca_access_data/cloudflare_contact_suppressions_export.json \
   --data-dir .gca_access_data
 ```
 
@@ -207,10 +251,29 @@ curl -fsS https://gca-registration-api.gcagochina.workers.dev/gca/email-registra
     }
   }'
 
+curl -fsS https://gca-registration-api.gcagochina.workers.dev/gca/contact-suppressions \
+  -H 'content-type: application/json' \
+  -X POST \
+  --data '{
+    "packetVersion": "gca_contact_suppression_v1",
+    "email": "user@example.com",
+    "reason": "unsubscribe_request",
+    "source": "unsubscribe.html",
+    "acknowledgements": {
+      "contactSuppressionRequested": true,
+      "noSecretsNoCustody": true
+    }
+  }'
+
 curl -fsS 'https://gca-registration-api.gcagochina.workers.dev/gca/email-registrations?limit=20' \
+  -H "authorization: Bearer $ADMIN_READ_TOKEN"
+
+curl -fsS 'https://gca-registration-api.gcagochina.workers.dev/gca/contact-suppressions?limit=20' \
   -H "authorization: Bearer $ADMIN_READ_TOKEN"
 ```
 
 ## Current Public Site Behavior
 
 `site/register.html` now tries the production Workers API first when loaded from `gcagochina.com`. If the API temporarily fails, the page exposes the official email fallback to avoid losing user registrations.
+
+`site/unsubscribe.html` posts contact-suppression requests to the same Workers API when loaded from `gcagochina.com`. If the API temporarily fails, it exposes the official email fallback so a user can still request removal from future contact exports.

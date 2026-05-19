@@ -1,4 +1,5 @@
 const EMAIL_REGISTRATION_VERSION = "gca_email_registration_v1";
+const CONTACT_SUPPRESSION_VERSION = "gca_contact_suppression_v1";
 const DEFAULT_ALLOWED_ORIGINS = [
   "https://gcagochina.com",
   "https://www.gcagochina.com",
@@ -134,6 +135,33 @@ function extractEmailRegistration(packet) {
   };
 }
 
+function extractContactSuppression(packet) {
+  if (packet.packetVersion && packet.packetVersion !== CONTACT_SUPPRESSION_VERSION) {
+    throw new ApiError(`packetVersion must be ${CONTACT_SUPPRESSION_VERSION}`);
+  }
+  const acknowledgements = packet.acknowledgements && typeof packet.acknowledgements === "object"
+    ? packet.acknowledgements
+    : {};
+  const email = normalizeEmail(packet.email || "");
+  const reason = String(packet.reason || "unsubscribe_request").trim().slice(0, 160) || "unsubscribe_request";
+  const source = String(packet.source || "unsubscribe.html").trim().slice(0, 120) || "unsubscribe.html";
+  const contactSuppressionRequested = Boolean(packet.contactSuppressionRequested || acknowledgements.contactSuppressionRequested);
+  const securityBoundaryAccepted = Boolean(packet.securityBoundaryAccepted || acknowledgements.noSecretsNoCustody);
+  if (!contactSuppressionRequested) {
+    throw new ApiError("contact suppression acknowledgement is required");
+  }
+  if (!securityBoundaryAccepted) {
+    throw new ApiError("security boundary acknowledgement is required");
+  }
+  return {
+    email,
+    reason,
+    source,
+    contactSuppressionRequested,
+    securityBoundaryAccepted
+  };
+}
+
 async function sha256Hex(value) {
   const data = new TextEncoder().encode(value);
   const digest = await crypto.subtle.digest("SHA-256", data);
@@ -182,6 +210,27 @@ function rowToEmailRegistration(row, includeEmail = true) {
     requiresSignature: Boolean(row.requires_signature),
     requiresTransaction: Boolean(row.requires_transaction),
     automaticTokenTransfer: Boolean(row.automatic_token_transfer)
+  };
+}
+
+function rowToContactSuppression(row, includeEmail = true) {
+  if (!row) {
+    return null;
+  }
+  return {
+    suppressionId: row.suppression_id,
+    packetVersion: CONTACT_SUPPRESSION_VERSION,
+    status: row.status,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+    email: includeEmail ? row.email : undefined,
+    emailSha256: row.email_hash,
+    reason: row.reason,
+    source: row.source,
+    contactSuppressed: Boolean(row.contact_suppressed),
+    requiresSignature: false,
+    requiresTransaction: false,
+    automaticTokenTransfer: false
   };
 }
 
@@ -271,6 +320,94 @@ async function submitEmailRegistration(request, env, origin) {
   }, 201, origin, env);
 }
 
+async function submitContactSuppression(request, env, origin) {
+  const db = requireDatabase(env);
+  const packet = await readJsonRequest(request);
+  const suppression = extractContactSuppression(packet);
+  const suppressionId = await stableId("gca_suppression", suppression.email);
+  const now = new Date().toISOString().replace(/\.\d{3}Z$/, "Z");
+  const emailHash = await sha256Hex(suppression.email);
+  const ipHash = await optionalIpHash(request, env);
+  const userAgent = String(request.headers.get("user-agent") || "").slice(0, 300);
+  const existing = await db
+    .prepare("SELECT * FROM gca_contact_suppressions WHERE suppression_id = ?1 OR email = ?2 LIMIT 1")
+    .bind(suppressionId, suppression.email)
+    .first();
+
+  if (existing) {
+    await db
+      .prepare(
+        `UPDATE gca_contact_suppressions
+         SET reason = ?1, source = ?2, status = 'suppressed', updated_at = ?3, user_agent = ?4, ip_hash = ?5, contact_suppressed = 1
+         WHERE suppression_id = ?6`
+      )
+      .bind(suppression.reason, suppression.source, now, userAgent, ipHash, existing.suppression_id)
+      .run();
+    return jsonResponse({
+      ok: true,
+      alreadySuppressed: true,
+      contactSuppression: rowToContactSuppression({
+        ...existing,
+        reason: suppression.reason,
+        source: suppression.source,
+        status: "suppressed",
+        updated_at: now,
+        contact_suppressed: 1
+      }),
+      nextStep: "This email is on the GCA do-not-contact list. No wallet action, signature, transaction, or payment is required."
+    }, 200, origin, env);
+  }
+
+  await db
+    .prepare(
+      `INSERT INTO gca_contact_suppressions (
+        suppression_id,
+        email,
+        email_hash,
+        reason,
+        source,
+        status,
+        contact_suppressed,
+        created_at,
+        updated_at,
+        user_agent,
+        ip_hash
+      ) VALUES (?1, ?2, ?3, ?4, ?5, 'suppressed', 1, ?6, ?6, ?7, ?8)`
+    )
+    .bind(
+      suppressionId,
+      suppression.email,
+      emailHash,
+      suppression.reason,
+      suppression.source,
+      now,
+      userAgent,
+      ipHash
+    )
+    .run();
+
+  return jsonResponse({
+    ok: true,
+    alreadySuppressed: false,
+    contactSuppression: {
+      suppressionId,
+      packetVersion: CONTACT_SUPPRESSION_VERSION,
+      status: "suppressed",
+      createdAt: now,
+      updatedAt: now,
+      email: suppression.email,
+      emailSha256: emailHash,
+      reason: suppression.reason,
+      source: suppression.source,
+      contactSuppressed: true,
+      requiresSignature: false,
+      requiresTransaction: false,
+      automaticTokenTransfer: false
+    },
+    nextStep: "GCA recorded this email on the do-not-contact list. No wallet action, signature, transaction, or payment is required."
+  }, 201, origin, env);
+}
+
 function requireAdmin(request, env) {
   const token = String(env.ADMIN_READ_TOKEN || "").trim();
   const header = request.headers.get("authorization") || "";
@@ -300,11 +437,33 @@ async function listEmailRegistrations(request, env, origin) {
   }, 200, origin, env);
 }
 
+async function listContactSuppressions(request, env, origin) {
+  requireAdmin(request, env);
+  const db = requireDatabase(env);
+  const url = new URL(request.url);
+  const limit = Math.max(1, Math.min(100, Number(url.searchParams.get("limit") || "50")));
+  const email = url.searchParams.get("email");
+  const query = email
+    ? db
+        .prepare("SELECT * FROM gca_contact_suppressions WHERE email = ?1 LIMIT ?2")
+        .bind(normalizeEmail(email), limit)
+    : db
+        .prepare("SELECT * FROM gca_contact_suppressions ORDER BY created_at DESC LIMIT ?1")
+        .bind(limit);
+  const { results } = await query.all();
+  return jsonResponse({
+    ok: true,
+    count: results.length,
+    records: results.map((row) => rowToContactSuppression(row))
+  }, 200, origin, env);
+}
+
 function health(origin, env) {
   return jsonResponse({
     ok: true,
     service: "gca-registration-api",
     packetVersion: EMAIL_REGISTRATION_VERSION,
+    contactSuppressionVersion: CONTACT_SUPPRESSION_VERSION,
     storage: "cloudflare-d1"
   }, 200, origin, env);
 }
@@ -327,6 +486,14 @@ export default {
         }
         if (request.method === "GET") {
           return listEmailRegistrations(request, env, origin);
+        }
+      }
+      if (url.pathname === "/gca/contact-suppressions") {
+        if (request.method === "POST") {
+          return submitContactSuppression(request, env, origin);
+        }
+        if (request.method === "GET") {
+          return listContactSuppressions(request, env, origin);
         }
       }
       return jsonResponse({ ok: false, error: "not found" }, 404, origin, env);

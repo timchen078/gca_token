@@ -26,6 +26,7 @@ OFFICIAL_GECKOTERMINAL_URL = f"https://www.geckoterminal.com/base/pools/{OFFICIA
 OFFICIAL_DEXSCREENER_URL = f"https://dexscreener.com/base/{OFFICIAL_POOL_ADDRESS}"
 VERIFY_PAGE_URL = "https://gcagochina.com/verify.html"
 REGISTER_PAGE_URL = "https://gcagochina.com/register.html"
+UNSUBSCRIBE_PAGE_URL = "https://gcagochina.com/unsubscribe.html"
 BUY_PAGE_URL = "https://gcagochina.com/buy.html"
 STATUS_PAGE_URL = "https://gcagochina.com/status.html"
 ABOUT_PAGE_URL = "https://gcagochina.com/about.html"
@@ -348,6 +349,49 @@ def validate_register_page(text: str) -> None:
         "不自动激活 100 credits、GCA Member 或 10,000 GCA 会员权益",
         "zh-members.html",
         "zh-support.html",
+        "privacy.html",
+        "terms.html",
+        "unsubscribe.html",
+        "邮箱退订",
+    ):
+        assert_contains(text, expected, label)
+    for forbidden in (
+        'href="project.json"',
+        'href="member-program.json"',
+        'href="member-ledger.json"',
+        'href="support.json"',
+    ):
+        assert_not_contains(text, forbidden, label)
+    assert_no_forbidden_public_claims(text, label)
+
+
+def validate_unsubscribe_page(text: str) -> None:
+    label = "/unsubscribe.html"
+    assert_social_preview_meta(text, label, UNSUBSCRIBE_PAGE_URL)
+    for expected in (
+        "GCA 邮箱退订",
+        "提交邮箱即可请求加入 GCA 不再联系名单",
+        "退订不需要钱包、不需要私钥、不需要助记词、不需要签名，也不需要付款",
+        "开始退订",
+        "提交退订请求",
+        "发送退订邮件",
+        "gca_contact_suppression_v1",
+        "/gca/contact-suppressions",
+        "https://gca-registration-api.gcagochina.workers.dev",
+        "contactSuppressionRequested",
+        "noSecretsNoCustody",
+        "GCAgochina@outlook.com",
+        "自动提交未完成",
+        "私钥",
+        "助记词",
+        "交易所 API Secret",
+        "提现权限",
+        "验证码",
+        "钱包密码",
+        "远程控制权限",
+        "不需要钱包地址，不读取钱包余额，不产生链上交易，不创建签名请求",
+        "不改变 GCA 持仓、流动性池、会员审核状态或链上资产",
+        "register.html",
         "privacy.html",
         "terms.html",
     ):
@@ -1436,6 +1480,8 @@ def validate_site_map_page(text: str) -> None:
         "zh-support.html",
         "邮箱注册",
         "register.html",
+        "邮箱退订",
+        "unsubscribe.html",
         "Member Access",
         "Trust Center",
         "Core User Path",
@@ -4365,6 +4411,11 @@ def validate_access_api_page(text: str) -> None:
     assert_contains(text, "tools/export_gca_email_contacts.py", label)
     assert_contains(text, "tools/run_gca_registration_ops.py", label)
     assert_contains(text, "tools/suppress_gca_contact.py", label)
+    assert_contains(text, "Contact Suppression API", label)
+    assert_contains(text, "gca_contact_suppression_v1", label)
+    assert_contains(text, "/gca/contact-suppressions", label)
+    assert_contains(text, "tools/sync_cloudflare_contact_suppressions.py", label)
+    assert_contains(text, "cloudflare/gca-registration-worker/migrations/0002_contact_suppressions.sql", label)
     assert_contains(text, "api.gcagochina.com pending zone access", label)
     assert_contains(text, "API Health", label)
     assert_contains(text, "POST", label)
@@ -4444,6 +4495,8 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong member packet version")
     if state.get("emailRegistrationPacketVersion") != "gca_email_registration_v1":
         raise SiteCheckError(f"{label}: wrong email registration packet version")
+    if state.get("contactSuppressionPacketVersion") != "gca_contact_suppression_v1":
+        raise SiteCheckError(f"{label}: wrong contact suppression packet version")
     if state.get("localDevelopmentBackendAvailable") is not True:
         raise SiteCheckError(f"{label}: local development backend should be available")
     for key in (
@@ -4510,6 +4563,14 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong registration ops tool")
     if production_email_backend.get("contactSuppressionTool") != "tools/suppress_gca_contact.py":
         raise SiteCheckError(f"{label}: wrong contact suppression tool")
+    if production_email_backend.get("contactSuppressionMigration") != "cloudflare/gca-registration-worker/migrations/0002_contact_suppressions.sql":
+        raise SiteCheckError(f"{label}: wrong contact suppression migration")
+    if production_email_backend.get("contactSuppressionEndpoint") != "https://gca-registration-api.gcagochina.workers.dev/gca/contact-suppressions":
+        raise SiteCheckError(f"{label}: wrong contact suppression endpoint")
+    if production_email_backend.get("adminContactSuppressionReadEndpoint") != "https://gca-registration-api.gcagochina.workers.dev/gca/contact-suppressions":
+        raise SiteCheckError(f"{label}: wrong admin contact suppression read endpoint")
+    if production_email_backend.get("contactSuppressionSyncTool") != "tools/sync_cloudflare_contact_suppressions.py":
+        raise SiteCheckError(f"{label}: wrong contact suppression sync tool")
     if production_email_backend.get("defaultAdminExportOutput") != ".gca_access_data/cloudflare_email_registrations_export.json":
         raise SiteCheckError(f"{label}: wrong default admin export output")
     if production_email_backend.get("publicRedactedAdminExportOutput") != ".gca_access_data/cloudflare_email_registrations_public_redacted.json":
@@ -4588,6 +4649,16 @@ def validate_access_api_json(text: str) -> None:
             raise SiteCheckError(f"{label}: missing endpoint {endpoint_key}")
         if endpoint.get("status") != "local-only-not-public-production":
             raise SiteCheckError(f"{label}: endpoint {endpoint_key} should be local-only")
+    expected_contact_statuses = {
+        "POST /gca/contact-suppressions": "production-workers-dev-live",
+        "GET /gca/contact-suppressions": "token-protected-admin-live",
+    }
+    for endpoint_key, expected_status in expected_contact_statuses.items():
+        endpoint = endpoint_map.get(endpoint_key)
+        if endpoint is None:
+            raise SiteCheckError(f"{label}: missing endpoint {endpoint_key}")
+        if endpoint.get("status") != expected_status:
+            raise SiteCheckError(f"{label}: endpoint {endpoint_key} should be {expected_status}")
     email_registration = endpoint_map["POST /gca/email-registrations"]
     for field in ("email", "acknowledgements.emailContactConsent", "acknowledgements.noSecretsNoCustody"):
         if field not in email_registration.get("requiredRequestFields", []):
@@ -4604,6 +4675,30 @@ def validate_access_api_json(text: str) -> None:
     email_registration_read = endpoint_map["GET /gca/email-registrations"]
     if "emailRegistrationId" not in email_registration_read.get("optionalRequestFields", []):
         raise SiteCheckError(f"{label}: missing email registration read filter")
+    contact_suppression = endpoint_map["POST /gca/contact-suppressions"]
+    for field in ("email", "acknowledgements.contactSuppressionRequested", "acknowledgements.noSecretsNoCustody"):
+        if field not in contact_suppression.get("requiredRequestFields", []):
+            raise SiteCheckError(f"{label}: missing contact suppression request field {field}")
+    for expected_check in (
+        "email must be valid and normalized",
+        "suppression is idempotent by suppressionId",
+        "no wallet address is required",
+        "no credits, GCA Member status, or token transfer is changed",
+    ):
+        if expected_check not in contact_suppression.get("serverChecks", []):
+            raise SiteCheckError(f"{label}: missing contact suppression check {expected_check}")
+    for expected_field in ("suppressionId", "emailSha256", "contactSuppressed", "automaticTokenTransfer"):
+        if expected_field not in contact_suppression.get("responseFields", []):
+            raise SiteCheckError(f"{label}: missing contact suppression response field {expected_field}")
+    if "suppressed" not in contact_suppression.get("allowedStatuses", []):
+        raise SiteCheckError(f"{label}: missing contact suppression status")
+    contact_suppression_read = endpoint_map["GET /gca/contact-suppressions"]
+    if "authorization bearer token" not in contact_suppression_read.get("requiredRequestFields", []):
+        raise SiteCheckError(f"{label}: missing contact suppression read auth field")
+    if "limit" not in contact_suppression_read.get("optionalRequestFields", []):
+        raise SiteCheckError(f"{label}: missing contact suppression read limit")
+    if "records" not in contact_suppression_read.get("responseFields", []):
+        raise SiteCheckError(f"{label}: missing contact suppression read records field")
     operator_summary = endpoint_map.get("GET /gca/operator-summary")
     if operator_summary is None:
         raise SiteCheckError(f"{label}: missing operator summary endpoint")
@@ -4676,6 +4771,8 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong top-level member packet version")
     if payload.get("emailRegistrationPacketVersion") != "gca_email_registration_v1":
         raise SiteCheckError(f"{label}: wrong top-level email registration packet version")
+    if payload.get("contactSuppressionPacketVersion") != "gca_contact_suppression_v1":
+        raise SiteCheckError(f"{label}: wrong top-level contact suppression packet version")
     for field in (
         "memberBenefitReviewEvidence.holdingStartDate",
         "memberBenefitReviewEvidence.daysSinceHoldingStartPreview",
@@ -8575,6 +8672,7 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/about.html",
         "https://gcagochina.com/action-plan.html",
         "https://gcagochina.com/register.html",
+        "https://gcagochina.com/unsubscribe.html",
         "https://gcagochina.com/zh-cn.html",
         "https://gcagochina.com/zh-buy.html",
         "https://gcagochina.com/zh-apply.html",
@@ -8699,6 +8797,7 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /about.html", label)
     assert_contains(text, "Allow: /action-plan.html", label)
     assert_contains(text, "Allow: /register.html", label)
+    assert_contains(text, "Allow: /unsubscribe.html", label)
     assert_contains(text, "Allow: /zh-cn.html", label)
     assert_contains(text, "Allow: /zh-buy.html", label)
     assert_contains(text, "Allow: /zh-apply.html", label)
@@ -8822,6 +8921,7 @@ def validate_robots(text: str) -> None:
 CHECKS: list[EndpointCheck] = [
     ("/", validate_root),
     ("/register.html", validate_register_page),
+    ("/unsubscribe.html", validate_unsubscribe_page),
     ("/about.html", validate_about_page),
     ("/action-plan.html", validate_action_plan_page),
     ("/zh-cn.html", validate_zh_cn_page),

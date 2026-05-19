@@ -30,6 +30,7 @@ OFFICIAL_SWAP_URL_HTML = OFFICIAL_SWAP_URL.replace("&", "&amp;")
 MARKET_PAGE_URL = "https://gcagochina.com/markets.html"
 VERIFY_PAGE_URL = "https://gcagochina.com/verify.html"
 REGISTER_PAGE_URL = "https://gcagochina.com/register.html"
+UNSUBSCRIBE_PAGE_URL = "https://gcagochina.com/unsubscribe.html"
 DATA_PAGE_URL = "https://gcagochina.com/data.html"
 SITE_MAP_PAGE_URL = "https://gcagochina.com/site-map.html"
 ABOUT_PAGE_URL = "https://gcagochina.com/about.html"
@@ -394,6 +395,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("validate_brand_kit_json", script)
         self.assertIn("validate_status_page", script)
         self.assertIn("validate_register_page", script)
+        self.assertIn("validate_unsubscribe_page", script)
         self.assertIn("validate_about_page", script)
         self.assertIn("validate_site_map_page", script)
         self.assertIn("validate_action_plan_page", script)
@@ -428,6 +430,7 @@ class LaunchPackageTests(unittest.TestCase):
         module.validate_root((ROOT / "site" / "index.html").read_text())
         module.validate_404_page((ROOT / "site" / "404.html").read_text())
         module.validate_register_page((ROOT / "site" / "register.html").read_text())
+        module.validate_unsubscribe_page((ROOT / "site" / "unsubscribe.html").read_text())
         module.validate_about_page((ROOT / "site" / "about.html").read_text())
         module.validate_data_page((ROOT / "site" / "data.html").read_text())
         module.validate_site_map_page((ROOT / "site" / "site-map.html").read_text())
@@ -734,6 +737,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("User-agent: *", robots)
         self.assertIn("Allow: /", robots)
         self.assertIn("Allow: /register.html", robots)
+        self.assertIn("Allow: /unsubscribe.html", robots)
         self.assertIn("Allow: /about.html", robots)
         self.assertIn("Allow: /action-plan.html", robots)
         self.assertIn("Allow: /zh-cn.html", robots)
@@ -849,6 +853,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Sitemap: https://gcagochina.com/sitemap.xml", robots)
         self.assertIn("https://gcagochina.com/", sitemap)
         self.assertIn(REGISTER_PAGE_URL, sitemap)
+        self.assertIn(UNSUBSCRIBE_PAGE_URL, sitemap)
         self.assertIn(ABOUT_PAGE_URL, sitemap)
         self.assertIn(ACTION_PLAN_PAGE_URL, sitemap)
         self.assertIn(ZH_CN_PAGE_URL, sitemap)
@@ -3075,6 +3080,11 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("tools/export_gca_review_package.py", page)
         self.assertIn("operator.html", page)
         self.assertIn("local JSONL ledger records", page)
+        self.assertIn("Contact Suppression API", page)
+        self.assertIn("gca_contact_suppression_v1", page)
+        self.assertIn("/gca/contact-suppressions", page)
+        self.assertIn("tools/sync_cloudflare_contact_suppressions.py", page)
+        self.assertIn("cloudflare/gca-registration-worker/migrations/0002_contact_suppressions.sql", page)
         self.assertIn("/gca/pre-registrations", page)
         self.assertIn("/gca/wallet-verifications", page)
         self.assertIn("/gca/credit-ledger", page)
@@ -3123,6 +3133,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(api["currentState"]["currentStage"], "email-registration-api-live")
         self.assertEqual(api["currentState"]["memberPacketVersion"], "gca_member_preregistration_v2")
         self.assertEqual(api["currentState"]["emailRegistrationPacketVersion"], "gca_email_registration_v1")
+        self.assertEqual(api["currentState"]["contactSuppressionPacketVersion"], "gca_contact_suppression_v1")
         self.assertFalse(api["currentState"]["contractOnly"])
         self.assertTrue(api["currentState"]["backendLive"])
         self.assertTrue(api["currentState"]["publicEndpointLive"])
@@ -3160,6 +3171,10 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(api["productionEmailRegistrationBackend"]["contactCsvExportTool"], "tools/export_gca_email_contacts.py")
         self.assertEqual(api["productionEmailRegistrationBackend"]["registrationOpsTool"], "tools/run_gca_registration_ops.py")
         self.assertEqual(api["productionEmailRegistrationBackend"]["contactSuppressionTool"], "tools/suppress_gca_contact.py")
+        self.assertEqual(api["productionEmailRegistrationBackend"]["contactSuppressionMigration"], "cloudflare/gca-registration-worker/migrations/0002_contact_suppressions.sql")
+        self.assertEqual(api["productionEmailRegistrationBackend"]["contactSuppressionEndpoint"], "https://gca-registration-api.gcagochina.workers.dev/gca/contact-suppressions")
+        self.assertEqual(api["productionEmailRegistrationBackend"]["adminContactSuppressionReadEndpoint"], "https://gca-registration-api.gcagochina.workers.dev/gca/contact-suppressions")
+        self.assertEqual(api["productionEmailRegistrationBackend"]["contactSuppressionSyncTool"], "tools/sync_cloudflare_contact_suppressions.py")
         self.assertEqual(api["productionEmailRegistrationBackend"]["defaultAdminExportOutput"], ".gca_access_data/cloudflare_email_registrations_export.json")
         self.assertEqual(api["productionEmailRegistrationBackend"]["publicRedactedAdminExportOutput"], ".gca_access_data/cloudflare_email_registrations_public_redacted.json")
         self.assertEqual(api["productionEmailRegistrationBackend"]["localSyncedLedger"], ".gca_access_data/email_registrations.jsonl")
@@ -3193,6 +3208,8 @@ class LaunchPackageTests(unittest.TestCase):
         for endpoint_key in {
             "POST /gca/email-registrations",
             "GET /gca/email-registrations",
+            "POST /gca/contact-suppressions",
+            "GET /gca/contact-suppressions",
             "POST /gca/pre-registrations",
             "POST /gca/wallet-verifications",
             "GET /gca/credit-ledger",
@@ -3208,10 +3225,15 @@ class LaunchPackageTests(unittest.TestCase):
         for endpoint in api["endpoints"]:
             if endpoint["id"] in {"email-registrations-create", "email-registrations-read", "operator-summary", "review-package", "member-benefit-transfers-read", "member-benefit-transfers-create"}:
                 self.assertEqual(endpoint["status"], "local-only-not-public-production")
+            elif endpoint["id"] == "contact-suppressions-create":
+                self.assertEqual(endpoint["status"], "production-workers-dev-live")
+            elif endpoint["id"] == "contact-suppressions-read":
+                self.assertEqual(endpoint["status"], "token-protected-admin-live")
             else:
                 self.assertEqual(endpoint["status"], "planned-not-live")
         self.assertEqual(api["memberPacketVersion"], "gca_member_preregistration_v2")
         self.assertEqual(api["emailRegistrationPacketVersion"], "gca_email_registration_v1")
+        self.assertEqual(api["contactSuppressionPacketVersion"], "gca_contact_suppression_v1")
         self.assertIn("memberBenefitReviewEvidence.holdingStartDate", api["memberEvidenceFields"])
         self.assertIn("memberBenefitReviewEvidence.evidenceTxHashFormatOk", api["memberEvidenceFields"])
         email_endpoint = next(item for item in api["endpoints"] if item["id"] == "email-registrations-create")
@@ -3223,6 +3245,16 @@ class LaunchPackageTests(unittest.TestCase):
         email_read_endpoint = next(item for item in api["endpoints"] if item["id"] == "email-registrations-read")
         self.assertIn("emailRegistrationId", email_read_endpoint["optionalRequestFields"])
         self.assertIn("records", email_read_endpoint["responseFields"])
+        contact_endpoint = next(item for item in api["endpoints"] if item["id"] == "contact-suppressions-create")
+        self.assertIn("acknowledgements.contactSuppressionRequested", contact_endpoint["requiredRequestFields"])
+        self.assertIn("acknowledgements.noSecretsNoCustody", contact_endpoint["requiredRequestFields"])
+        self.assertIn("suppression is idempotent by suppressionId", contact_endpoint["serverChecks"])
+        self.assertIn("contactSuppressed", contact_endpoint["responseFields"])
+        self.assertIn("suppressed", contact_endpoint["allowedStatuses"])
+        contact_read_endpoint = next(item for item in api["endpoints"] if item["id"] == "contact-suppressions-read")
+        self.assertIn("authorization bearer token", contact_read_endpoint["requiredRequestFields"])
+        self.assertIn("limit", contact_read_endpoint["optionalRequestFields"])
+        self.assertIn("records", contact_read_endpoint["responseFields"])
         prereg = next(item for item in api["endpoints"] if item["id"] == "pre-registrations")
         self.assertIn("memberBenefitReviewEvidence", prereg["optionalRequestFields"])
         self.assertIn("memberBenefitReviewEvidence.evidenceTxHashFormatOk", prereg["optionalRequestFields"])
@@ -3295,9 +3327,11 @@ class LaunchPackageTests(unittest.TestCase):
         wrangler = (worker_dir / "wrangler.toml").read_text()
         custom_domain_example = (worker_dir / "wrangler.custom-domain.example.toml").read_text()
         migration = (worker_dir / "migrations" / "0001_email_registrations.sql").read_text()
+        suppression_migration = (worker_dir / "migrations" / "0002_contact_suppressions.sql").read_text()
         worker = (worker_dir / "src" / "worker.mjs").read_text()
         docs = (ROOT / "docs" / "gca_registration_backend.md").read_text()
         register_page = (ROOT / "site" / "register.html").read_text()
+        unsubscribe_page = (ROOT / "site" / "unsubscribe.html").read_text()
         api_text = (ROOT / "site" / "access-api.json").read_text()
 
         self.assertEqual(package_json["scripts"]["check"], "node --check src/worker.mjs")
@@ -3315,27 +3349,40 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("email_registration_id TEXT PRIMARY KEY", migration)
         self.assertIn("email TEXT NOT NULL UNIQUE", migration)
         self.assertIn("automatic_token_transfer INTEGER NOT NULL DEFAULT 0", migration)
+        self.assertIn("CREATE TABLE IF NOT EXISTS gca_contact_suppressions", suppression_migration)
+        self.assertIn("suppression_id TEXT PRIMARY KEY", suppression_migration)
+        self.assertIn("email TEXT NOT NULL UNIQUE", suppression_migration)
+        self.assertIn("contact_suppressed INTEGER NOT NULL DEFAULT 1", suppression_migration)
 
         self.assertIn('const EMAIL_REGISTRATION_VERSION = "gca_email_registration_v1";', worker)
+        self.assertIn('const CONTACT_SUPPRESSION_VERSION = "gca_contact_suppression_v1";', worker)
         self.assertIn("/gca/email-registrations", worker)
+        self.assertIn("/gca/contact-suppressions", worker)
+        self.assertIn("submitContactSuppression", worker)
+        self.assertIn("listContactSuppressions", worker)
         self.assertIn("https://gcagochina.com", worker)
         self.assertIn("access-control-allow-origin", worker)
         self.assertIn("REGISTRATION_DB", worker)
         self.assertIn("ADMIN_READ_TOKEN", worker)
         self.assertIn("PRIVACY_HASH_SALT", worker)
         self.assertIn("no wallet address is required", api_text)
+        self.assertIn("gca_contact_suppression_v1", api_text)
+        self.assertIn("tools/sync_cloudflare_contact_suppressions.py", api_text)
         self.assertIn("requiresSignature: false", worker)
         self.assertIn("requiresTransaction: false", worker)
         self.assertIn("automaticTokenTransfer: false", worker)
         self.assertNotIn("privateKey", worker)
         self.assertNotIn("seedPhrase", worker)
         self.assertIn("https://gca-registration-api.gcagochina.workers.dev/gca/email-registrations", docs)
+        self.assertIn("https://gca-registration-api.gcagochina.workers.dev/gca/contact-suppressions", docs)
         self.assertIn("ADMIN_READ_TOKEN", docs)
         self.assertIn("tools/export_cloudflare_email_registrations.py", docs)
         self.assertIn("tools/sync_cloudflare_email_registrations.py", docs)
         self.assertIn("tools/export_gca_email_contacts.py", docs)
         self.assertIn("tools/run_gca_registration_ops.py", docs)
         self.assertIn("tools/suppress_gca_contact.py", docs)
+        self.assertIn("tools/sync_cloudflare_contact_suppressions.py", docs)
+        self.assertIn("cloudflare/gca-registration-worker/migrations/0002_contact_suppressions.sql", docs)
         self.assertIn("wrangler.custom-domain.example.toml", docs)
         self.assertIn("The zone \"gcagochina.com\" does not exist on your account", docs)
         self.assertIn("npx wrangler d1 migrations apply gca_registration --remote", docs)
@@ -3343,6 +3390,11 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("registrationEndpoint()", register_page)
         self.assertIn("fetch(endpoint", register_page)
         self.assertIn("发送注册邮件", register_page)
+        self.assertIn("https://gca-registration-api.gcagochina.workers.dev", unsubscribe_page)
+        self.assertIn("suppressionEndpoint()", unsubscribe_page)
+        self.assertIn("gca_contact_suppression_v1", unsubscribe_page)
+        self.assertIn("fetch(endpoint", unsubscribe_page)
+        self.assertIn("发送退订邮件", unsubscribe_page)
 
     def test_access_operations_page_and_json_define_manual_operations_runbook(self):
         page = (ROOT / "site" / "operations.html").read_text()

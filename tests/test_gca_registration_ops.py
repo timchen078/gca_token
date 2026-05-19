@@ -34,6 +34,26 @@ def cloudflare_record(email="user@example.com", **overrides):
     return record
 
 
+def suppression_record(email="user@example.com", **overrides):
+    record = {
+        "suppressionId": "gca_suppression_test123",
+        "packetVersion": "gca_contact_suppression_v1",
+        "status": "suppressed",
+        "createdAt": "2026-05-19T14:33:41Z",
+        "updatedAt": "2026-05-19T14:33:41Z",
+        "email": email,
+        "emailSha256": "0" * 64,
+        "reason": "unsubscribe_request",
+        "source": "unsubscribe.html",
+        "contactSuppressed": True,
+        "requiresSignature": False,
+        "requiresTransaction": False,
+        "automaticTokenTransfer": False,
+    }
+    record.update(overrides)
+    return record
+
+
 class GcaRegistrationOpsTests(unittest.TestCase):
     def test_run_registration_ops_syncs_ledger_and_exports_csvs(self):
         with tempfile.TemporaryDirectory() as temp:
@@ -92,10 +112,34 @@ class GcaRegistrationOpsTests(unittest.TestCase):
             self.assertEqual(summary["contactExports"]["suppressedEmails"], 1)
             self.assertEqual(summary["contactExports"]["skippedRecords"][0]["reason"], "contact_suppressed")
 
+    def test_run_registration_ops_syncs_cloudflare_contact_suppressions_before_export(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            suppression_file = root / "suppressions.jsonl"
+            summary = run_registration_ops(
+                payload={"ok": True, "records": [cloudflare_record("user@example.com")]},
+                suppression_payload={"ok": True, "records": [suppression_record("USER@EXAMPLE.COM")]},
+                data_dir=root / "data",
+                contact_output=root / "contacts.csv",
+                redacted_contact_output=root / "contacts-public.csv",
+                suppression_file=suppression_file,
+                summary_output=root / "summary.json",
+                source="unit-test",
+                imported_at="2026-05-19T14:00:00Z",
+            )
+            self.assertTrue(summary["ok"])
+            self.assertEqual(summary["contactSuppressionSync"]["created"], 1)
+            self.assertEqual(summary["contactExports"]["contactsExported"], 0)
+            self.assertEqual(summary["contactExports"]["suppressedEmails"], 1)
+            record = json.loads(suppression_file.read_text(encoding="utf-8"))
+            self.assertEqual(record["email"], "user@example.com")
+            self.assertTrue(record["contactSuppressed"])
+
     def test_cli_runs_from_full_export_file_without_network(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
             export_path = root / "cloudflare-export.json"
+            suppression_export_path = root / "contact-suppressions.json"
             data_dir = root / "data"
             contact_output = root / "contacts.csv"
             redacted_output = root / "contacts-public.csv"
@@ -109,12 +153,21 @@ class GcaRegistrationOpsTests(unittest.TestCase):
                 }),
                 encoding="utf-8",
             )
+            suppression_export_path.write_text(
+                json.dumps({
+                    "ok": True,
+                    "records": [suppression_record("other@example.com")],
+                }),
+                encoding="utf-8",
+            )
             completed = subprocess.run(
                 [
                     sys.executable,
                     "tools/run_gca_registration_ops.py",
                     "--input",
                     str(export_path),
+                    "--suppression-input",
+                    str(suppression_export_path),
                     "--data-dir",
                     str(data_dir),
                     "--contact-output",
@@ -135,6 +188,7 @@ class GcaRegistrationOpsTests(unittest.TestCase):
             result = json.loads(completed.stdout)
             self.assertTrue(result["ok"])
             self.assertEqual(result["sync"]["created"], 1)
+            self.assertEqual(result["contactSuppressionSync"]["created"], 1)
             self.assertEqual(result["contactExports"]["contactsExported"], 1)
             self.assertTrue(contact_output.exists())
             self.assertTrue(redacted_output.exists())
