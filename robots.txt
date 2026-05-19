@@ -1,6 +1,7 @@
 User-agent: *
 Allow: /
 Allow: /zh-cn.html
+Allow: /zh-buy.html
 Allow: /zh-apply.html
 Allow: /zh-status.html
 Allow: /zh-liquidity.html
