@@ -135,6 +135,9 @@ def check_health(*, base_url: str, timeout: float, cafile: str, opener: Callable
     require(payload.get("storage") == "cloudflare-d1", "health endpoint returned wrong storage")
     require(payload.get("packetVersion") == "gca_email_registration_v1", "health endpoint returned wrong email packet version")
     require(payload.get("contactSuppressionVersion") == "gca_contact_suppression_v1", "health endpoint returned wrong suppression packet version")
+    require(payload.get("memberAccessVersion") == "gca_member_access_v1", "health endpoint returned wrong member access packet version")
+    require(payload.get("chainId") == 8453, "health endpoint returned wrong chainId")
+    require(payload.get("contractAddress") == "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6", "health endpoint returned wrong GCA contract")
     return {
         "id": "health",
         "ok": True,
@@ -143,6 +146,9 @@ def check_health(*, base_url: str, timeout: float, cafile: str, opener: Callable
         "storage": payload.get("storage"),
         "packetVersion": payload.get("packetVersion"),
         "contactSuppressionVersion": payload.get("contactSuppressionVersion"),
+        "memberAccessVersion": payload.get("memberAccessVersion"),
+        "chainId": payload.get("chainId"),
+        "contractAddress": payload.get("contractAddress"),
     }
 
 
@@ -209,6 +215,26 @@ def check_unauthorized_admin_read(
     }
 
 
+def check_access_config(*, base_url: str, timeout: float, cafile: str, opener: Callable[..., Any]) -> dict[str, Any]:
+    url = build_url(base_url, "/gca/access-config")
+    status, _, payload = http_json_request(url=url, timeout=timeout, cafile=cafile, opener=opener)
+    require(status == 200, "access config endpoint must return HTTP 200")
+    require(payload.get("ok") is True, "access config endpoint must return ok=true")
+    require(payload.get("memberAccessVersion") == "gca_member_access_v1", "access config returned wrong version")
+    require(payload.get("boundaries", {}).get("readOnlyWalletVerification") is True, "access config must keep read-only wallet verification")
+    require(payload.get("boundaries", {}).get("automaticTokenTransfer") is False, "access config must not auto-transfer tokens")
+    require(payload.get("thresholds", {}).get("holderBonusMinimumGca") == "10000", "access config holder threshold mismatch")
+    require(payload.get("thresholds", {}).get("gcaMemberMinimumGca") == "1000000", "access config member threshold mismatch")
+    return {
+        "id": "access-config",
+        "ok": True,
+        "status": status,
+        "memberAccessVersion": payload.get("memberAccessVersion"),
+        "readOnlyWalletVerification": True,
+        "automaticTokenTransfer": False,
+    }
+
+
 def check_authorized_admin_read(
     *,
     base_url: str,
@@ -264,6 +290,7 @@ def run_checks(
         raise ApiCheckError("ADMIN_READ_TOKEN is required unless --public-only is used")
     checks = [
         check_health(base_url=base_url, timeout=timeout, cafile=cafile, opener=opener),
+        check_access_config(base_url=base_url, timeout=timeout, cafile=cafile, opener=opener),
         check_cors_preflight(
             base_url=base_url,
             path="/gca/email-registrations",
@@ -282,6 +309,24 @@ def run_checks(
             cafile=cafile,
             opener=opener,
         ),
+        check_cors_preflight(
+            base_url=base_url,
+            path="/gca/wallet-verifications",
+            check_id="cors-wallet-verifications",
+            origin=origin,
+            timeout=timeout,
+            cafile=cafile,
+            opener=opener,
+        ),
+        check_cors_preflight(
+            base_url=base_url,
+            path="/gca/member-access",
+            check_id="cors-member-access",
+            origin=origin,
+            timeout=timeout,
+            cafile=cafile,
+            opener=opener,
+        ),
         check_unauthorized_admin_read(
             base_url=base_url,
             path="/gca/email-registrations",
@@ -294,6 +339,38 @@ def run_checks(
             base_url=base_url,
             path="/gca/contact-suppressions",
             check_id="unauth-contact-suppressions-read",
+            timeout=timeout,
+            cafile=cafile,
+            opener=opener,
+        ),
+        check_unauthorized_admin_read(
+            base_url=base_url,
+            path="/gca/wallet-verifications",
+            check_id="unauth-wallet-verifications-read",
+            timeout=timeout,
+            cafile=cafile,
+            opener=opener,
+        ),
+        check_unauthorized_admin_read(
+            base_url=base_url,
+            path="/gca/member-access",
+            check_id="unauth-member-access-read",
+            timeout=timeout,
+            cafile=cafile,
+            opener=opener,
+        ),
+        check_unauthorized_admin_read(
+            base_url=base_url,
+            path="/gca/credit-ledger",
+            check_id="unauth-credit-ledger-read",
+            timeout=timeout,
+            cafile=cafile,
+            opener=opener,
+        ),
+        check_unauthorized_admin_read(
+            base_url=base_url,
+            path="/gca/member-ledger",
+            check_id="unauth-member-ledger-read",
             timeout=timeout,
             cafile=cafile,
             opener=opener,
@@ -321,6 +398,46 @@ def run_checks(
                 cafile=cafile,
                 opener=opener,
             ),
+            check_authorized_admin_read(
+                base_url=base_url,
+                path="/gca/wallet-verifications",
+                check_id="admin-wallet-verifications-read",
+                token=clean_token,
+                limit=limit,
+                timeout=timeout,
+                cafile=cafile,
+                opener=opener,
+            ),
+            check_authorized_admin_read(
+                base_url=base_url,
+                path="/gca/member-access",
+                check_id="admin-member-access-read",
+                token=clean_token,
+                limit=limit,
+                timeout=timeout,
+                cafile=cafile,
+                opener=opener,
+            ),
+            check_authorized_admin_read(
+                base_url=base_url,
+                path="/gca/credit-ledger",
+                check_id="admin-credit-ledger-read",
+                token=clean_token,
+                limit=limit,
+                timeout=timeout,
+                cafile=cafile,
+                opener=opener,
+            ),
+            check_authorized_admin_read(
+                base_url=base_url,
+                path="/gca/member-ledger",
+                check_id="admin-member-ledger-read",
+                token=clean_token,
+                limit=limit,
+                timeout=timeout,
+                cafile=cafile,
+                opener=opener,
+            ),
         ])
     return {
         "ok": all(item["ok"] for item in checks),
@@ -333,11 +450,14 @@ def run_checks(
             "writesProductionData": False,
             "submitsRegistration": False,
             "submitsContactSuppression": False,
+            "submitsWalletVerification": False,
+            "submitsMemberAccess": False,
             "adminTokenPrinted": False,
             "userEmailsPrinted": False,
             "walletConnectionRequired": False,
             "signatureRequired": False,
             "transactionRequired": False,
+            "automaticTokenTransfer": False,
             "publicOnly": public_only,
             "adminReadTokenRequired": not public_only,
             "tokenProtectedAdminReadChecked": not public_only,

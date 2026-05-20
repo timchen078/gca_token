@@ -5,6 +5,32 @@ from urllib.parse import urlparse
 from tools.check_gca_registration_api import ApiCheckError, run_checks
 
 
+HEALTH_PAYLOAD = {
+    "ok": True,
+    "service": "gca-registration-api",
+    "packetVersion": "gca_email_registration_v1",
+    "contactSuppressionVersion": "gca_contact_suppression_v1",
+    "memberAccessVersion": "gca_member_access_v1",
+    "chainId": 8453,
+    "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+    "storage": "cloudflare-d1",
+}
+
+ACCESS_CONFIG_PAYLOAD = {
+    "ok": True,
+    "service": "gca-registration-api",
+    "memberAccessVersion": "gca_member_access_v1",
+    "thresholds": {
+        "holderBonusMinimumGca": "10000",
+        "gcaMemberMinimumGca": "1000000",
+    },
+    "boundaries": {
+        "readOnlyWalletVerification": True,
+        "automaticTokenTransfer": False,
+    },
+}
+
+
 class FakeResponse:
     def __init__(self, payload=None, *, status=200, headers=None):
         self.payload = payload
@@ -40,13 +66,9 @@ class GcaRegistrationApiCheckTests(unittest.TestCase):
             })
 
             if parsed.path == "/health":
-                return FakeResponse({
-                    "ok": True,
-                    "service": "gca-registration-api",
-                    "packetVersion": "gca_email_registration_v1",
-                    "contactSuppressionVersion": "gca_contact_suppression_v1",
-                    "storage": "cloudflare-d1",
-                })
+                return FakeResponse(HEALTH_PAYLOAD)
+            if parsed.path == "/gca/access-config":
+                return FakeResponse(ACCESS_CONFIG_PAYLOAD)
             if method == "OPTIONS":
                 return FakeResponse(
                     None,
@@ -56,7 +78,14 @@ class GcaRegistrationApiCheckTests(unittest.TestCase):
                         "access-control-allow-methods": "GET,POST,OPTIONS",
                     },
                 )
-            if parsed.path in {"/gca/email-registrations", "/gca/contact-suppressions"}:
+            if parsed.path in {
+                "/gca/email-registrations",
+                "/gca/contact-suppressions",
+                "/gca/wallet-verifications",
+                "/gca/member-access",
+                "/gca/credit-ledger",
+                "/gca/member-ledger",
+            }:
                 if not request.headers.get("Authorization"):
                     return FakeResponse({"ok": False, "error": "admin authorization is required"}, status=401)
                 if parsed.path == "/gca/email-registrations":
@@ -65,10 +94,16 @@ class GcaRegistrationApiCheckTests(unittest.TestCase):
                         "count": 1,
                         "records": [{"email": "private-user@example.com", "status": "received"}],
                     })
+                if parsed.path == "/gca/contact-suppressions":
+                    return FakeResponse({
+                        "ok": True,
+                        "count": 1,
+                        "records": [{"email": "suppressed-user@example.com", "status": "suppressed"}],
+                    })
                 return FakeResponse({
                     "ok": True,
                     "count": 1,
-                    "records": [{"email": "suppressed-user@example.com", "status": "suppressed"}],
+                    "records": [{"walletAddress": "0x18d0007bc6be029f8ccd7cb13e324aa21891092d", "status": "verified"}],
                 })
             return FakeResponse({"ok": False}, status=404)
 
@@ -84,14 +119,18 @@ class GcaRegistrationApiCheckTests(unittest.TestCase):
         self.assertFalse(result["boundaries"]["writesProductionData"])
         self.assertFalse(result["boundaries"]["submitsRegistration"])
         self.assertFalse(result["boundaries"]["submitsContactSuppression"])
+        self.assertFalse(result["boundaries"]["submitsWalletVerification"])
+        self.assertFalse(result["boundaries"]["submitsMemberAccess"])
+        self.assertFalse(result["boundaries"]["automaticTokenTransfer"])
         self.assertFalse(result["boundaries"]["adminTokenPrinted"])
         self.assertFalse(result["boundaries"]["userEmailsPrinted"])
         self.assertFalse(result["boundaries"]["publicOnly"])
         self.assertTrue(result["boundaries"]["adminReadTokenRequired"])
         self.assertTrue(result["boundaries"]["tokenProtectedAdminReadChecked"])
         self.assertEqual({item["method"] for item in seen}, {"GET", "OPTIONS"})
-        self.assertEqual(len(result["checks"]), 7)
+        self.assertEqual(len(result["checks"]), 18)
         self.assertTrue(any(item["id"] == "admin-email-registrations-read" for item in result["checks"]))
+        self.assertTrue(any(item["id"] == "admin-member-ledger-read" for item in result["checks"]))
         serialized = json.dumps(result)
         self.assertNotIn("secret-token", serialized)
         self.assertNotIn("private-user@example.com", serialized)
@@ -111,13 +150,9 @@ class GcaRegistrationApiCheckTests(unittest.TestCase):
                 "authorization": request.headers.get("Authorization", ""),
             })
             if parsed.path == "/health":
-                return FakeResponse({
-                    "ok": True,
-                    "service": "gca-registration-api",
-                    "packetVersion": "gca_email_registration_v1",
-                    "contactSuppressionVersion": "gca_contact_suppression_v1",
-                    "storage": "cloudflare-d1",
-                })
+                return FakeResponse(HEALTH_PAYLOAD)
+            if parsed.path == "/gca/access-config":
+                return FakeResponse(ACCESS_CONFIG_PAYLOAD)
             if method == "OPTIONS":
                 return FakeResponse(
                     None,
@@ -134,7 +169,7 @@ class GcaRegistrationApiCheckTests(unittest.TestCase):
         self.assertTrue(result["boundaries"]["publicOnly"])
         self.assertFalse(result["boundaries"]["adminReadTokenRequired"])
         self.assertFalse(result["boundaries"]["tokenProtectedAdminReadChecked"])
-        self.assertEqual(len(result["checks"]), 5)
+        self.assertEqual(len(result["checks"]), 12)
         self.assertNotIn("admin-email-registrations-read", {item["id"] for item in result["checks"]})
         self.assertTrue(all(item["authorization"] == "" for item in seen))
 

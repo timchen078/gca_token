@@ -2,7 +2,7 @@
   "schema": "https://gcagochina.com/utility.json",
   "pageUrl": "https://gcagochina.com/utility.html",
   "status": "public-utility-bridge-spec-published",
-  "lastUpdated": "2026-05-14",
+  "lastUpdated": "2026-05-20",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "title": "GCA Utility Bridge",
@@ -10,40 +10,40 @@
     "tagline": "Narrative meets risk control.",
     "concept": "Go China Access",
     "connectedProduct": "Web3 Radar non-custodial quant risk toolkit",
-    "publicStatus": "concept-stage-utility-bridge-spec-published",
-    "summary": "GCA is planned as an access and membership layer for reports, backtests, risk warnings, ENTRY_READY reviews, position sizing, education, member research, and support workflows."
+    "publicStatus": "account-ledger-path-live-utility-bridge-spec-published",
+    "summary": "GCA has live account intake, read-only wallet verification, and eligible ledger records for staged access and membership workflows; reports, backtests, risk warnings, ENTRY_READY reviews, position sizing, education, member research, and support services remain controlled service modules."
   },
   "bridgePrinciples": [
     "Users keep funds in their own wallets or exchange accounts.",
     "The GCA utility bridge must not request private keys, seed phrases, exchange API secrets, withdrawal permission, or custody.",
     "Wallet verification should use read-only ERC-20 balance checks before any credit or member ledger record is written.",
-    "Utility credits, GCA Member status, and the planned 10,000 GCA member benefit are account-level records only.",
+    "Utility credits and GCA Member status are account-level records only, and the 10,000 GCA member benefit requires manual review and reserve-wallet processing.",
     "Token ownership must not bypass strategy risk checks, testnet requirements, manual review, or trading safety controls."
   ],
   "accessFlow": [
     {
-      "step": "pre_registration",
-      "status": "static-local-packet-ready",
-      "description": "Users can prepare a local pre-registration packet from the public members page. Public self-service claiming is not live."
+      "step": "account_intake",
+      "status": "workers-d1-live",
+      "description": "Users can submit account intake, read-only wallet verification, and eligible credit/member ledger records through the public member access page."
     },
     {
       "step": "wallet_balance_verification",
-      "status": "planned-controlled-https-backend",
-      "description": "The controlled backend should verify one Base wallet per registered user with a read-only GCA balanceOf check."
+      "status": "read-only-backend-live",
+      "description": "The controlled backend verifies one Base wallet per registered user with a read-only GCA balanceOf check."
     },
     {
       "step": "credit_ledger",
-      "status": "schema-published-public-claim-not-connected",
-      "description": "Eligible registered users can receive one 100 Web3 Radar utility credits service ledger record after controlled verification is live."
+      "status": "eligible-ledger-record-live",
+      "description": "Eligible registered users can receive one 100 Web3 Radar utility credits service ledger record after controlled verification."
     },
     {
       "step": "member_ledger",
-      "status": "schema-published-public-claim-not-connected",
-      "description": "Eligible registered users can receive GCA Member status and enter one-time 10,000 GCA member benefit review after controlled verification and 30 consecutive days of holding are live."
+      "status": "eligible-member-ledger-record-live",
+      "description": "Eligible registered users can receive GCA Member status and enter one-time 10,000 GCA member benefit review after controlled verification and 30 consecutive days of holding."
     },
     {
       "step": "product_access",
-      "status": "planned",
+      "status": "staged-service-access",
       "description": "Credits and member status can map to reports, backtests, risk warnings, ENTRY_READY reviews, calculators, education, member notes, and support workflows."
     }
   ],
@@ -61,7 +61,7 @@
     "one-time 10,000 GCA member benefit after eligibility review"
   ],
   "holderBonus": {
-    "status": "planned-controlled-verification-required",
+    "status": "eligible-ledger-record-live",
     "registeredUserLimit": "one bonus per registered user",
     "walletLimit": "one verified wallet per registered user",
     "minimumHolding": "10000 GCA",
@@ -71,13 +71,13 @@
     "notCreditUse": "cash, token claims, income, reimbursement, trading permission, leverage, custody, withdrawal access, or risk-control bypass"
   },
   "gcaMember": {
-    "status": "planned-controlled-verification-required",
+    "status": "eligible-member-ledger-record-live",
     "registeredUserLimit": "one membership status per registered user",
     "walletLimit": "one verified wallet per registered user",
     "minimumHolding": "1000000 GCA",
     "minimumHoldingPeriod": "30 consecutive days",
     "memberBenefitAmount": "10000 GCA",
-    "memberBenefit": "one-time 10,000 GCA member benefit after holding-period verification and member ledger activation",
+    "memberBenefit": "one-time 10,000 GCA member benefit review after holding-period verification, member ledger activation, support approval, and manual reserve-wallet processing",
     "memberBenefitSource": "project or owner-held reserve transfer only; no new minting",
     "refreshCadence": "30 days after activation, or earlier if the user requests a manual recheck",
     "memberAccess": "one-time 10,000 GCA member benefit, higher utility credit limits, member research notes, priority report queue, member training sessions, and priority support",
@@ -122,19 +122,19 @@
   "publicClaimBoundaries": {
     "safeClaims": [
       "GCA has published a public utility bridge specification.",
-      "GCA utility is planned as account-level service access for non-custodial quant risk tools.",
-      "The 100 Web3 Radar utility credits, GCA Member status, and 10,000 GCA member benefit require controlled wallet verification before ledger activation.",
-      "The planned GCA Member benefit requires 1,000,000 GCA held for 30 consecutive days before one-time 10,000 GCA review.",
-      "The public member page can prepare a local pre-registration packet, but public self-service claiming is not live.",
+      "GCA utility has live account-level intake and eligible ledger records for non-custodial quant risk tools.",
+      "The 100 Web3 Radar utility credits and GCA Member status require controlled wallet verification before ledger activation.",
+      "The GCA Member benefit requires 1,000,000 GCA held for 30 consecutive days before one-time 10,000 GCA review.",
+      "The public member account page can submit account intake, read-only wallet verification, and eligible credit/member ledger records.",
       "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool."
     ],
     "doNotClaim": [
-      "100 Web3 Radar utility credits are live self-service claimable before controlled HTTPS account UI is released",
-      "GCA Member status is live self-service before controlled HTTPS account UI is released",
-      "the 10,000 GCA member benefit is self-service claimable before holding-period verification and member ledger activation",
+      "100 Web3 Radar utility credits are cash, income, reimbursement, trading permission, or transferable value",
+      "GCA Member status bypasses wallet verification, holding-period evidence, or support review",
+      "the 10,000 GCA member benefit is automatic or self-service transferred before holding-period verification, support approval, and manual reserve-wallet processing",
       "credits or member status are cash, income, reimbursement, trading permission, leverage, custody, withdrawal access, or risk-control bypass",
       "GCA utility includes custody, withdrawal permission, private key access, exchange API secret collection, platform revenue distribution, return promises, or price targets",
-      "finished platform utility before the controlled account UI is live"
+      "finished trading or research platform utility before service modules are released"
     ]
   },
   "officialLinks": {

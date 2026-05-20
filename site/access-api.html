@@ -4,21 +4,21 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>GCA Access API Contract | GCA AI Quant Access</title>
-    <meta name="description" content="Public API contract for the planned GCA controlled HTTPS access bridge: email-only registration, pre-registration, read-only wallet verification, credit ledger, member ledger, and support review endpoints.">
+    <meta name="description" content="Public API contract for the live GCA controlled HTTPS access bridge: email-only registration, member access, read-only wallet verification, credit ledger, member ledger, and support review endpoints.">
     <link rel="canonical" href="https://gcagochina.com/access-api.html">
     <link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">
     <link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="GCA | Go China Access">
     <meta property="og:title" content="GCA Access API Contract | GCA AI Quant Access">
-    <meta property="og:description" content="Contract-only API specification for the future GCA account, wallet verification, credits, member, and support review bridge.">
+    <meta property="og:description" content="API specification for the live GCA account, wallet verification, credits, member, and support review bridge.">
     <meta property="og:url" content="https://gcagochina.com/access-api.html">
     <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="GCA Access API Contract | GCA AI Quant Access">
-    <meta name="twitter:description" content="Contract-only API specification for the future GCA account, wallet verification, credits, member, and support review bridge.">
+    <meta name="twitter:description" content="API specification for the live GCA account, wallet verification, credits, member, and support review bridge.">
     <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
     <style>
       :root {
@@ -334,15 +334,15 @@
       <section aria-labelledby="title">
         <p class="eyebrow">Access API Contract / 2026-05-20</p>
         <h1 id="title">GCA Access API Contract</h1>
-        <p class="lead">This page defines the planned controlled HTTPS API contract for the GCA access bridge. It covers email-only user registration, pre-registration, read-only wallet verification, credit ledger records, GCA Member records, and support review statuses.</p>
-        <p class="lead">The broad access API contract is a public implementation contract for future backend work, not a public self-service claim page.</p>
-        <p class="lead">The email-registration backend is deployed on Cloudflare Workers + D1 at <code>https://gca-registration-api.gcagochina.workers.dev</code>, so the public registration page can write directly to the D1 database. Source remains in <code>cloudflare/gca-registration-worker/</code>. A future <code>api.gcagochina.com</code> custom domain still requires Cloudflare access to the account that owns the <code>gcagochina.com</code> zone.</p>
-        <p class="lead">A local operator backend is also available for localhost testing, evidence export, read-only GCA balance checks, and operator review workflows without making public self-service claiming live. Implementation details are listed below in the endpoint contract and technical evidence sections.</p>
+        <p class="lead">This page defines the controlled HTTPS API contract for the GCA access bridge. It covers email-only user registration, member account intake, read-only wallet verification, credit ledger records, GCA Member records, and support review statuses.</p>
+        <p class="lead">The Workers + D1 backend now exposes live public routes for member access and wallet verification. The 10,000 GCA member benefit is still manual review only, and no route sends tokens, requests wallet signatures, or creates live trading permission.</p>
+        <p class="lead">The backend is deployed on Cloudflare Workers + D1 at <code>https://gca-registration-api.gcagochina.workers.dev</code>, so the public registration and member access pages can write directly to D1. Source remains in <code>cloudflare/gca-registration-worker/</code>. A future <code>api.gcagochina.com</code> custom domain still requires Cloudflare access to the account that owns the <code>gcagochina.com</code> zone.</p>
+        <p class="lead">A local operator backend is also available for localhost testing, evidence export, read-only GCA balance checks, and operator review workflows. Implementation details are listed below in the endpoint contract and technical evidence sections.</p>
         <div class="actions">
           <a class="button primary" href="operations.html">Operations Runbook</a>
           <a class="button primary" href="register.html">Email Registration</a>
           <a class="button primary" href="api-status.html">API Status</a>
-          <a class="button primary" href="access.html">Access Portal Blueprint</a>
+          <a class="button primary" href="access.html">Access Portal</a>
           <a class="button primary" href="review-queue.html">Review Queue Contract</a>
           <a class="button" href="privacy.html">Privacy Notice</a>
           <a class="button" href="terms.html">Participation Terms</a>
@@ -354,11 +354,11 @@
       <section class="facts" aria-label="Current state">
         <div class="fact">
           <span class="label">Current Stage</span>
-          <span class="value">email API live</span>
+          <span class="value">member access API live</span>
         </div>
         <div class="fact">
           <span class="label">Public Endpoint</span>
-          <span class="value">Email registration live</span>
+          <span class="value">Email + member access live</span>
         </div>
         <div class="fact">
           <span class="label">Local Backend</span>
@@ -370,7 +370,7 @@
         </div>
         <div class="fact">
           <span class="label">Account UI</span>
-          <span class="value pending">Not live</span>
+          <span class="value good">/gca/member-access/ live</span>
         </div>
         <div class="fact">
           <span class="label">Production Email API</span>
@@ -440,6 +440,10 @@
           <span class="label">Balance Read</span>
           <span class="value">eth_call balanceOf</span>
         </div>
+        <div class="fact">
+          <span class="label">Member Access Version</span>
+          <span class="value">gca_member_access_v1</span>
+        </div>
       </section>
 
       <section class="section panel" aria-labelledby="endpointsTitle">
@@ -466,24 +470,29 @@
             <p class="note">Token-protected admin read for local suppression sync. Operators use <code>tools/sync_cloudflare_contact_suppressions.py</code> and the local ops pipeline before contact CSV export.</p>
           </div>
           <div class="fact">
+            <span class="label">GET</span>
+            <span class="value">/gca/access-config</span>
+            <p class="note">Live public access configuration for GCA thresholds, chain ID, contract address, ledger boundaries, and safety rules.</p>
+          </div>
+          <div class="fact">
             <span class="label">POST</span>
-            <span class="value">/gca/pre-registrations</span>
-            <p class="note">Receives account intent and <code>gca_member_preregistration_v2</code> packet fields after controlled HTTPS account UI is live.</p>
+            <span class="value">/gca/member-access</span>
+            <p class="note">Live account intake for <code>gca_member_access_v1</code>. It stores email/account fields, verifies the Base wallet, and writes eligible credit/member ledger records.</p>
           </div>
           <div class="fact">
             <span class="label">POST</span>
             <span class="value">/gca/wallet-verifications</span>
-            <p class="note">Runs read-only GCA balance checks using Base Mainnet <code>eth_call</code> and ERC-20 <code>balanceOf</code>.</p>
+            <p class="note">Live read-only GCA balance checks using Base Mainnet <code>eth_call</code> and ERC-20 <code>balanceOf</code>.</p>
           </div>
           <div class="fact">
             <span class="label">GET</span>
             <span class="value">/gca/credit-ledger</span>
-            <p class="note">Returns account-level 100 Web3 Radar utility credits records after ledger activation.</p>
+            <p class="note">Token-protected admin read for account-level 100 Web3 Radar utility credits records.</p>
           </div>
           <div class="fact">
             <span class="label">GET</span>
             <span class="value">/gca/member-ledger</span>
-            <p class="note">Returns GCA Member ledger state, holding-period review, 10,000 GCA member benefit status, next refresh due date, and status after activation.</p>
+            <p class="note">Token-protected admin read for GCA Member ledger state, holding-period review, 10,000 GCA member benefit status, next refresh due date, and status.</p>
           </div>
           <div class="fact">
             <span class="label">POST</span>
@@ -517,13 +526,13 @@
         <div class="panel">
           <h2>Required Request Fields</h2>
           <div class="list">
-            <div class="row"><span>Pre-registration</span><strong>email, walletAddress, programIntent, termsAccepted</strong></div>
+            <div class="row"><span>Member access</span><strong>email, walletAddress, termsAccepted, no-secrets acknowledgement</strong></div>
             <div class="row"><span>Email registration</span><strong>email, contact consent, no-secrets acknowledgement</strong></div>
             <div class="row"><span>Contact suppression</span><strong>email, contactSuppressionRequested, no-secrets acknowledgement</strong></div>
             <div class="row"><span>Member evidence</span><strong><code>memberBenefitReviewEvidence</code>, <code>holdingStartDate</code>, <code>evidenceTxHash</code>, <code>evidenceTxHashFormatOk</code></strong></div>
             <div class="row"><span>Wallet verification</span><strong>registrationId, walletAddress, chainId, contractAddress</strong></div>
             <div class="row"><span>Support review</span><strong>registrationId, status, supportNote</strong></div>
-            <div class="row"><span>Ledger reads</span><strong>authenticated account session</strong></div>
+            <div class="row"><span>Ledger reads</span><strong>ADMIN_READ_TOKEN protected operator read</strong></div>
           </div>
         </div>
         <div class="panel">
@@ -548,7 +557,7 @@
             <li>controlled HTTPS origin</li>
             <li>public email registration and unsubscribe routes require only form acknowledgements</li>
             <li>token-protected admin reads for Cloudflare registration and suppression records</li>
-            <li>authenticated account session for future account-level routes</li>
+            <li>token-protected admin reads for account-level ledger routes</li>
             <li>CSRF protection for state-changing routes</li>
             <li>rate limits on pre-registration and wallet verification</li>
             <li>structured audit logs for status changes</li>
@@ -570,7 +579,7 @@
 
       <section class="section panel" id="technicalEvidence" aria-labelledby="technicalEvidenceTitle">
         <h2 id="technicalEvidenceTitle">Platform-Only Evidence Path</h2>
-        <p class="note">Use the readable API, review queue, operations, and ledger pages first. Raw JSON is in the Data Room for implementation review only; these files are not public production endpoints.</p>
+        <p class="note">Use the readable API, review queue, operations, and ledger pages first. Raw JSON is in the Data Room for implementation review only; the user-facing production path is <a href="gca/member-access/">/gca/member-access/</a>.</p>
         <div class="actions">
           <a class="button" href="data.html">Data Room</a>
           <a class="button" href="review-queue.html">Review Queue Contract</a>
@@ -596,7 +605,7 @@
     </main>
 
     <footer>
-      <div class="shell">GCA email registration and unsubscribe are live on Cloudflare Workers + D1. Public self-service credits, GCA Member activation, wallet verification, and account-level access remain off until controlled HTTPS account UI, ledgers, and support review are live.</div>
+      <div class="shell">GCA email registration, unsubscribe, wallet verification, and member access are live on Cloudflare Workers + D1. The 10,000 GCA member benefit remains manual review only.</div>
     </footer>
   </body>
 </html>

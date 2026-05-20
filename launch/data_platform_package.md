@@ -23,8 +23,8 @@ This package prepares GCA information for token data and DEX discovery platforms
 - Participation terms JSON: `https://gcagochina.com/terms.json`
 - Product spec page: `https://gcagochina.com/product.html`
 - Product spec JSON: `https://gcagochina.com/product.json`
-- Access portal blueprint page: `https://gcagochina.com/access.html`
-- Access portal blueprint JSON: `https://gcagochina.com/access.json`
+- Access portal page: `https://gcagochina.com/access.html`
+- Access portal JSON: `https://gcagochina.com/access.json`
 - Access API contract page: `https://gcagochina.com/access-api.html`
 - Access API contract JSON: `https://gcagochina.com/access-api.json`
 - Review queue contract page: `https://gcagochina.com/review-queue.html`
@@ -128,8 +128,8 @@ This package prepares GCA information for token data and DEX discovery platforms
 - Utility bridge JSON: `https://gcagochina.com/utility.json`
 - Product spec: `https://gcagochina.com/product.html`
 - Product spec JSON: `https://gcagochina.com/product.json`
-- Access portal blueprint: `https://gcagochina.com/access.html`
-- Access portal blueprint JSON: `https://gcagochina.com/access.json`
+- Access portal: `https://gcagochina.com/access.html`
+- Access portal JSON: `https://gcagochina.com/access.json`
 - Access API contract: `https://gcagochina.com/access-api.html`
 - Access API contract JSON: `https://gcagochina.com/access-api.json`
 - Review queue contract: `https://gcagochina.com/review-queue.html`
@@ -185,7 +185,7 @@ Use `launch/external_review_followup_tracker.md` before any BaseScan, Blockaid, 
 
 Use `https://gcagochina.com/listing-readiness.html` and `https://gcagochina.com/listing-readiness.json` as the public tracked-listing gate before any CoinGecko, CoinMarketCap, centralized exchange, or paid listing outreach. Current tracked listing submissions should remain deferred until legitimate liquidity depth, public activity, and exchange volume are stronger.
 
-Use `https://gcagochina.com/roadmap.html` and `https://gcagochina.com/roadmap.json` when reviewers or community moderators ask what is live now, what depends on external services, and what cannot be claimed yet. The roadmap keeps public self-service member claiming, BaseScan token profile publication, security-vendor approval, third-party audit completion, and tracked listings marked as unresolved until the relevant condition is confirmed.
+Use `https://gcagochina.com/roadmap.html` and `https://gcagochina.com/roadmap.json` when reviewers or community moderators ask what is live now, what depends on external services, and what cannot be claimed yet. The roadmap now marks account intake, read-only wallet verification, and eligible ledger records as live while keeping BaseScan token profile publication, security-vendor approval, third-party audit completion, token-benefit transfer handling, and tracked listings bounded by their actual status.
 
 Use `https://gcagochina.com/community.html` and `https://gcagochina.com/community.json` when preparing Telegram posts, answering community questions, or giving moderators copyable replies. It provides official links, safe announcement copy, wallet-warning and price-display responses, and clear boundaries against unsupported claims.
 
@@ -206,25 +206,25 @@ For CoinGecko-style circulating supply review, state clearly that the reserve wa
 
 ## Copyable Short Description
 
-GCA, short for Go China Access, is a fixed-supply ERC-20 token on Base Mainnet. It is a concept-stage community direction focused on the Go China macro narrative, bilingual Web3 education, public market research, and planned access to non-custodial quant risk tools.
+GCA, short for Go China Access, is a fixed-supply ERC-20 token on Base Mainnet. It is a concept-stage community direction focused on the Go China macro narrative, bilingual Web3 education, public market research, live account intake, read-only wallet verification, eligible member/credit ledger records, and staged access to non-custodial quant risk tools.
 
 ## Copyable Long Description
 
-GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stands for Go China Access, a concept-stage community direction focused on the Go China macro narrative, bilingual Web3 education, public market research, and planned access to non-custodial quant risk tools. The intended Web3 Radar bridge is to make GCA an access and membership layer for liquidation replay reports, risk-warning credits, realistic backtests, ENTRY_READY signal review, position-size calculators, subscription discounts, risk-control training, and a reserve-funded 10,000 GCA member benefit review for verified users who bought and continuously held at least 1,000,000 GCA for 30 days. The contract created 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls. The official public pool is the Base Mainnet Uniswap v4 GCA/USDT pool, and the project has a disclosed owner-held reserve wallet. The project is early-stage. Third-party audit quote requests were submitted and then deferred by owner decision; the project should not be described as externally audited, price-backed, yield-bearing, or backed by guaranteed liquidity.
+GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stands for Go China Access, a concept-stage community direction focused on the Go China macro narrative, bilingual Web3 education, public market research, live account intake, read-only wallet verification, eligible member/credit ledger records, and staged access to non-custodial quant risk tools. The Web3 Radar bridge makes GCA an account and membership layer for liquidation replay reports, risk-warning credits, realistic backtests, ENTRY_READY signal review, position-size calculators, subscription discounts, risk-control training, and a reserve-funded 10,000 GCA member benefit review for verified users who bought and continuously held at least 1,000,000 GCA for 30 days. The contract created 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls. The official public pool is the Base Mainnet Uniswap v4 GCA/USDT pool, and the project has a disclosed owner-held reserve wallet. The project is early-stage. Third-party audit quote requests were submitted and then deferred by owner decision; the project should not be described as externally audited, price-backed, yield-bearing, or backed by guaranteed liquidity.
 
 ## Utility Positioning
 
 Suitable GCA utility is access-based: reports, credits, education, backtest usage, signal review, position calculators, and membership discounts. The public utility bridge spec is published at `https://gcagochina.com/utility.json`. It should not be positioned as custody, redemption rights, platform revenue distribution, automatic live trading permission, or a return promise.
 
-The public product spec is published at `https://gcagochina.com/product.html` and `https://gcagochina.com/product.json`. It defines GCA AI Quant Access as a planned product layer with China Narrative Radar, Weekly Go China Radar, Liquidation Replay, Risk Warning Credits, Backtest Lab, ENTRY_READY Review, Position Size Calculator, and GCA Member Workspace. This is public product spec only; public account UI, credit claiming, member claiming, and live trading are not live.
+The public product spec is published at `https://gcagochina.com/product.html` and `https://gcagochina.com/product.json`. It defines GCA AI Quant Access as a staged product layer with China Narrative Radar, Weekly Go China Radar, Liquidation Replay, Risk Warning Credits, Backtest Lab, ENTRY_READY Review, Position Size Calculator, and GCA Member Workspace. Public account intake, read-only wallet verification, and eligible ledger records are live; trading and research tools remain gated behind product release controls.
 
-The public review queue contract is published at `https://gcagochina.com/review-queue.html` and `https://gcagochina.com/review-queue.json`. It defines planned manual-review lanes for pre-registration intake, wallet balance review, holder credit review, GCA Member review, support case review, and platform profile follow-up. It is not a live public submission queue and cannot override on-chain wallet-balance verification.
+The public review queue contract is published at `https://gcagochina.com/review-queue.html` and `https://gcagochina.com/review-queue.json`. It defines manual-review lanes for account intake, wallet balance review, holder credit review, GCA Member review, support case review, and platform profile follow-up. It is not a public ledger browser and cannot override on-chain wallet-balance verification.
 
-The public access operations runbook is published at `https://gcagochina.com/operations.html` and `https://gcagochina.com/operations.json`. It defines operator SOP for non-sensitive intake, Base Mainnet identity checks, read-only `eth_call` / `balanceOf` wallet-balance review, eligibility decisions, support replies, ledger handoff, platform follow-up, and closure. It is public documentation only, not a live backend, public submission queue, account system, or self-service claim page.
+The public access operations runbook is published at `https://gcagochina.com/operations.html` and `https://gcagochina.com/operations.json`. It defines operator SOP for non-sensitive intake, Base Mainnet identity checks, read-only `eth_call` / `balanceOf` wallet-balance review, eligibility decisions, support replies, ledger handoff, platform follow-up, and closure. The backend account and ledger path is live; the runbook still does not create custody, public ledger browsing, or automatic token-transfer claims.
 
-The public credits catalog is published at `https://gcagochina.com/credits.html` and `https://gcagochina.com/credits.json`. It is a draft service catalog for planned 100 Web3 Radar utility credits and GCA Member workflows, including Liquidation Replay, Risk Warning Review, Backtest Lab, ENTRY_READY Review, Position Size Calculator, Risk-Control Training, Member Research Notes, and Support Review Queue. It is not self-service claimable before controlled account UI and ledger activation.
+The public credits catalog is published at `https://gcagochina.com/credits.html` and `https://gcagochina.com/credits.json`. It is a service catalog for 100 Web3 Radar utility credits and GCA Member workflows, including Liquidation Replay, Risk Warning Review, Backtest Lab, ENTRY_READY Review, Position Size Calculator, Risk-Control Training, Member Research Notes, and Support Review Queue. Eligible account submissions can write credit/member ledger records; service delivery and token-benefit transfers remain controlled by support review.
 
-The product release gates are published at `https://gcagochina.com/release-gates.html` and `https://gcagochina.com/release-gates.json`. They require controlled HTTPS account UI, read-only GCA balance verification, credit ledger activation, member ledger activation, support review queue, risk-control review, and simulation or testnet first before public self-service access is claimed.
+The product release gates are published at `https://gcagochina.com/release-gates.html` and `https://gcagochina.com/release-gates.json`. They show the controlled HTTPS account UI, read-only GCA balance verification, credit ledger records, and member ledger records as live, while support review, member-benefit manual processing, risk-control review, and simulation or testnet first remain required before broader product or trading workflows.
 
 Verified first campaign backend: each registered user may verify one wallet holding at least 10,000 GCA and receive a one-time 100 Web3 Radar utility credits ledger record. This should be described only as account-level service credits for reports, backtests, risk warnings, ENTRY_READY signal review, calculators, or education access; it is not cash, token claims, income, reimbursement, or trading permission.
 

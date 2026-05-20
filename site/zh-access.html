@@ -3,22 +3,22 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>GCA 中文用户中心预览 | Go China Access</title>
-    <meta name="description" content="GCA 中文用户中心预览：邮箱注册、API 状态、未来钱包余额验证、100 credits、GCA Member、10,000 GCA 会员权益和上线边界。">
+    <title>GCA 中文用户中心 | Go China Access</title>
+    <meta name="description" content="GCA 中文用户中心：邮箱注册、API 状态、只读钱包余额验证、100 credits、GCA Member、10,000 GCA 会员权益和人工审核边界。">
     <link rel="canonical" href="https://gcagochina.com/zh-access.html">
     <link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">
     <link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="GCA | Go China Access">
-    <meta property="og:title" content="GCA 中文用户中心预览 | Go China Access">
-    <meta property="og:description" content="中文说明 GCA 用户中心计划路径、邮箱注册 API、会员门槛、账本激活和当前未上线边界。">
+    <meta property="og:title" content="GCA 中文用户中心 | Go China Access">
+    <meta property="og:description" content="中文说明 GCA 用户中心路径、邮箱注册 API、只读钱包验证、会员门槛、账本记录和人工审核边界。">
     <meta property="og:url" content="https://gcagochina.com/zh-access.html">
     <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="GCA 中文用户中心预览 | Go China Access">
-    <meta name="twitter:description" content="中文说明 GCA 用户中心计划路径、邮箱注册 API、会员门槛、账本激活和当前未上线边界。">
+    <meta name="twitter:title" content="GCA 中文用户中心 | Go China Access">
+    <meta name="twitter:description" content="中文说明 GCA 用户中心路径、邮箱注册 API、只读钱包验证、会员门槛、账本记录和人工审核边界。">
     <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
     <style>
       :root {
@@ -302,10 +302,10 @@
 
     <main class="shell">
       <section aria-labelledby="title">
-        <p class="eyebrow">中文用户中心预览 / 2026-05-20</p>
-        <h1 id="title">GCA 中文用户中心预览</h1>
-        <p class="lead">这一页把 GCA 用户入口讲清楚：邮箱注册 API 已上线，后续用户中心会把只读钱包余额验证、100 credits、GCA Member、30 天持有审核和 10,000 GCA 会员权益流程连接起来。</p>
-        <p class="lead">当前它仍是公开预览和规则说明。公开自助领取、受控 HTTPS 账户 UI、100 credits 账本激活、GCA Member 账本激活和 10,000 GCA 会员权益自助领取还没有上线。</p>
+        <p class="eyebrow">中文用户中心 / 2026-05-20</p>
+        <h1 id="title">GCA 中文用户中心</h1>
+        <p class="lead">这一页把 GCA 用户入口讲清楚：邮箱注册 API、受控 HTTPS 账户 UI、只读钱包余额验证、100 credits 账本记录、GCA Member 账本记录和 30 天持有审核流程已经接到 Cloudflare Workers + D1。</p>
+        <p class="lead">用户现在可以通过英文会员入口提交邮箱和 Base 钱包，后端用只读 ERC-20 balanceOf 验证 GCA 余额并写入符合条件的账本记录。10,000 GCA 会员权益仍是人工审核后的储备钱包转账流程，不是自动发放。</p>
         <div class="actions">
           <a class="button primary" href="register.html">邮箱注册</a>
           <a class="button primary" href="zh-api-status.html">中文 API 状态</a>
@@ -315,7 +315,7 @@
           <a class="button secondary" href="zh-member-checklist.html">中文会员审核资料清单</a>
           <a class="button secondary" href="zh-support.html">中文支持和资料提交</a>
           <a class="button secondary" href="zh-cn.html">中文入口</a>
-          <a class="button" href="gca/member-access/">英文会员入口预览</a>
+          <a class="button" href="gca/member-access/">会员账户入口</a>
           <a class="button" href="access.html">English Access Portal</a>
         </div>
       </section>
@@ -327,7 +327,7 @@
         </div>
         <div class="fact">
           <span class="label">账户 UI</span>
-          <span class="value pending">受控 HTTPS 账户 UI 未上线</span>
+          <span class="value good">受控 HTTPS 账户 UI 已上线</span>
         </div>
         <div class="fact">
           <span class="label">GCA 合约</span>
@@ -352,8 +352,8 @@
             <p class="note">公开接口状态、只读检查命令和管理员读取边界集中放在 <a href="zh-api-status.html">中文 API 状态</a> 页面。</p>
           </article>
           <article class="card">
-            <h3>3. 未来账户 UI</h3>
-            <p class="note">受控 HTTPS 账户 UI 上线后，才会进行正式钱包绑定、只读余额验证和账本激活。</p>
+            <h3>3. 账户 UI</h3>
+            <p class="note">通过 <a href="gca/member-access/">会员账户入口</a> 提交邮箱、Base 钱包、持有开始日期和公开交易哈希。</p>
           </article>
           <article class="card">
             <h3>4. 100 credits 审核</h3>
@@ -370,7 +370,7 @@
         </div>
       </section>
 
-      <section class="section two" aria-label="规则和未上线事项">
+      <section class="section two" aria-label="规则和人工处理事项">
         <div class="panel">
           <h2>当前已经有的东西</h2>
           <div class="list">
@@ -381,18 +381,18 @@
             <div class="row"><span>中文会员规则</span><strong><a href="zh-members.html">zh-members.html</a></strong></div>
             <div class="row"><span>中文会员审核资料清单</span><strong><a href="zh-member-checklist.html">zh-member-checklist.html</a></strong></div>
             <div class="row"><span>中文支持入口</span><strong><a href="zh-support.html">zh-support.html</a></strong></div>
-            <div class="row"><span>英文会员入口预览</span><strong><a href="gca/member-access/">/gca/member-access/</a></strong></div>
+            <div class="row"><span>会员账户入口</span><strong><a href="gca/member-access/">/gca/member-access/</a></strong></div>
           </div>
         </div>
 
         <div class="panel">
-          <h2>还没有上线的东西</h2>
+          <h2>仍需人工处理的东西</h2>
           <div class="list">
-            <div class="row"><span>公开自助会员领取</span><strong class="pending">还没有上线</strong></div>
-            <div class="row"><span>受控 HTTPS 账户 UI</span><strong class="pending">还没有上线</strong></div>
-            <div class="row"><span>100 credits 公开账本激活</span><strong class="pending">还没有上线</strong></div>
-            <div class="row"><span>GCA Member 公开账本激活</span><strong class="pending">还没有上线</strong></div>
-            <div class="row"><span>10,000 GCA 会员权益自助领取</span><strong class="pending">还没有上线</strong></div>
+            <div class="row"><span>公开账户提交</span><strong class="good">已上线</strong></div>
+            <div class="row"><span>受控 HTTPS 账户 UI</span><strong class="good">已上线</strong></div>
+            <div class="row"><span>100 credits 公开账本记录</span><strong class="good">符合 10,000 GCA 即可记录</strong></div>
+            <div class="row"><span>GCA Member 公开账本记录</span><strong class="good">符合 1,000,000 GCA / 30 天即可记录</strong></div>
+            <div class="row"><span>10,000 GCA 会员权益转账</span><strong class="pending">人工审核和储备钱包处理</strong></div>
             <div class="row"><span>第三方审计</span><strong class="pending">尚未完成</strong></div>
           </div>
         </div>
@@ -472,7 +472,7 @@
     </main>
 
     <footer>
-      <div class="shell">GCA 中文用户中心预览。请始终确认 Base Mainnet chainId 8453、GCA 合约、官方 GCA/USDT 池和官方联系渠道。</div>
+      <div class="shell">GCA 中文用户中心。请始终确认 Base Mainnet chainId 8453、GCA 合约、官方 GCA/USDT 池和官方联系渠道。</div>
     </footer>
   </body>
 </html>

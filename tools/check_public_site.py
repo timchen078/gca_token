@@ -61,6 +61,7 @@ WHITEPAPER_PAGE_URL = "https://gcagochina.com/whitepaper.html"
 MEMBER_PROGRAM_URL = "https://gcagochina.com/member-program.json"
 MEMBER_LEDGER_PAGE_URL = "https://gcagochina.com/member-ledger.html"
 MEMBER_LEDGER_URL = "https://gcagochina.com/member-ledger.json"
+MEMBER_ACCESS_PAGE_URL = "https://gcagochina.com/gca/member-access/"
 MEMBER_BENEFIT_PAGE_URL = "https://gcagochina.com/member-benefit.html"
 MEMBER_BENEFIT_URL = "https://gcagochina.com/member-benefit.json"
 MEMBER_BENEFIT_TRANSFER_PAGE_URL = "https://gcagochina.com/member-benefit-transfer.html"
@@ -272,7 +273,7 @@ def validate_root(text: str) -> None:
     assert_contains(text, "zh-faq.html", label)
     assert_contains(text, "中文会员规则", label)
     assert_contains(text, "zh-members.html", label)
-    assert_contains(text, "中文用户中心预览", label)
+    assert_contains(text, "中文用户中心", label)
     assert_contains(text, "zh-access.html", label)
     assert_contains(text, "中文上线门槛", label)
     assert_contains(text, "zh-release-gates.html", label)
@@ -517,7 +518,7 @@ def validate_about_page(text: str) -> None:
         "Go China Access",
         "GCA AI Quant Access",
         "concept-stage product buildout",
-        "public self-service access is not live yet",
+        "public account intake and eligible ledger records are live",
         "No third-party audit has been completed",
         "BaseScan public token profile publication is resubmitted and awaiting review",
         "Platform-Only Evidence Path",
@@ -581,8 +582,8 @@ def validate_action_plan_page(text: str) -> None:
         "Platform-Only Evidence Path",
         "Reviewer Data Room",
         "BaseScan resubmitted: awaiting review",
-        "controlled HTTPS account UI",
-        "not live yet",
+        "Public account intake, read-only wallet checks, and eligible ledger records are live",
+        "eligible ledger records are live",
         MAINNET_ADDRESS,
         BASE_USDT_ADDRESS,
         "Base Mainnet",
@@ -673,8 +674,8 @@ def validate_zh_cn_page(text: str) -> None:
         "尚未完成",
         "邮箱注册 API",
         "Cloudflare Workers + D1 已上线",
-        "公开自助会员领取",
-        "还没有上线",
+        "公开账户入口",
+        "已上线；10,000 GCA 会员权益仍需人工审核",
         "10,000 GCA",
         "100 Web3 Radar utility credits",
         "1,000,000 GCA",
@@ -824,12 +825,12 @@ def validate_zh_apply_page(text: str) -> None:
         MAINNET_ADDRESS,
         "GCA/USDT",
         OFFICIAL_POOL_ADDRESS,
-        "可验证、可预登记 / 自助权益未上线",
-        "公开自助会员领取",
+        "可验证、可提交账户入口 / 会员权益人工审核",
+        "公开账户入口",
         "受控 HTTPS 账户 UI",
         "100 credits 账本",
         "GCA Member 账本",
-        "还没有上线",
+        "当前 GCA 仍处于早期建设阶段",
         "按这个顺序做",
         "钱包必须切到 Base Mainnet / chainId 8453",
         "官网公开路线是 Base 上的 GCA/USDT 池",
@@ -1166,7 +1167,7 @@ def validate_zh_roadmap_page(text: str) -> None:
         "只读钱包余额验证",
         "100 credits 账本",
         "GCA Member 账本",
-        "30 天持有期审核",
+        "30 天持有期复核",
         "Go China Narrative Radar",
         "Liquidation Replay",
         "Backtesting and Risk Alerts",
@@ -1177,8 +1178,8 @@ def validate_zh_roadmap_page(text: str) -> None:
         "1,000,000 GCA 持有者",
         "连续持有 30 天",
         "一次性 10,000 GCA 会员权益审核路径",
-        "公开自助领取",
-        "还没有上线",
+        "账户提交入口",
+        "已上线：符合条件写入账户级记录",
         "不能说第三方审计已经完成",
         "不能说 BaseScan Token Profile 已经通过",
         "不能承诺价格、成交量、流动性、上所、审核通过或交易结果",
@@ -1253,7 +1254,7 @@ def validate_zh_faq_page(text: str) -> None:
         "100 Web3 Radar utility credits",
         "1,000,000 GCA",
         "连续持有 1,000,000 GCA 满 30 天",
-        "当前公开自助领取还没有上线",
+        "credits 和 GCA Member 账本记录可以写入",
         "不是投资建议",
         "不要把小额测试交易说成真实市场需求",
         "不要通过人工制造交易量、自我成交或误导性宣传来改善市场数据",
@@ -1352,7 +1353,7 @@ def validate_zh_support_page(text: str) -> None:
         "官方公告以官网、X 和 Telegram 官方频道为准",
         "不要相信私信里的替代合约、替代池子、空投领取或手动签名链接",
         "推荐邮件格式",
-        "公开自助领取还没有上线",
+        "账户提交、只读钱包验证、符合条件的 credits / GCA Member 账本记录已经上线",
         "BaseScan Token Profile",
         "LP 锁尚未完成",
         "支持不会提供买入、卖出、价格或收益建议",
@@ -1425,15 +1426,20 @@ def validate_zh_api_status_page(text: str) -> None:
         "gca_email_registration_v1",
         "POST /gca/contact-suppressions",
         "gca_contact_suppression_v1",
+        "GET /gca/access-config",
+        "POST /gca/wallet-verifications",
+        "POST /gca/member-access",
         "GET /gca/email-registrations",
         "没有 token 的公网访问应返回授权错误",
         "GET /gca/contact-suppressions",
+        "GET /gca/credit-ledger",
+        "GET /gca/member-ledger",
         "api.gcagochina.com",
         "python3 tools/check_gca_registration_api.py --public-only --timeout 30",
         "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5",
         "邮箱注册不需要钱包地址，不读取钱包余额",
         "邮箱注册不需要私钥、助记词、钱包签名、验证码、付款或交易所 API Secret",
-        "邮箱注册只是加入 GCA 用户名单",
+        "会员账户入口可以写入符合条件的 100 credits / GCA Member 账本记录",
         "邮箱退订只影响后续联系导出",
         "tools/export_cloudflare_email_registrations.py",
         "tools/sync_cloudflare_email_registrations.py",
@@ -1476,17 +1482,16 @@ def validate_zh_operations_page(text: str) -> None:
     for expected in (
         "GCA 中文运营流程",
         "中文运营流程 / 2026-05-20",
-        "用户在官网提交邮箱以后",
+        "用户在官网提交邮箱和会员账户资料以后",
         "同步 Cloudflare D1 记录",
         "导出联系名单",
         "处理退订",
         "保留本地账本",
-        "邮箱注册和邮箱退订 API 已上线",
-        "公开自助 100 credits、GCA Member、10,000 GCA 会员权益",
+        "当前邮箱注册、邮箱退订、账户入口、只读钱包验证、符合条件的 100 credits / GCA Member 账本记录已经上线",
         "Cloudflare Workers + D1 已上线",
         "gca-registration-api.gcagochina.workers.dev",
         "需要本地 ADMIN_READ_TOKEN",
-        "还没有公开自助上线",
+        "符合条件写入 D1 账本记录",
         "用户提交邮箱后的六步流程",
         "公开 API 检查",
         "管理员导出",
@@ -1554,20 +1559,21 @@ def validate_zh_access_page(text: str) -> None:
         ),
     )
     for expected in (
-        "GCA 中文用户中心预览",
-        "中文用户中心预览 / 2026-05-20",
-        "邮箱注册 API 已上线",
+        "GCA 中文用户中心",
+        "中文用户中心 / 2026-05-20",
+        "邮箱注册 API、受控 HTTPS 账户 UI、只读钱包余额验证",
         "Cloudflare Workers + D1 已上线",
-        "受控 HTTPS 账户 UI 未上线",
-        "公开自助领取",
-        "100 credits 账本激活",
-        "GCA Member 账本激活",
-        "10,000 GCA 会员权益自助领取",
-        "还没有上线",
+        "受控 HTTPS 账户 UI 已上线",
+        "公开账户提交",
+        "100 credits 公开账本记录",
+        "GCA Member 公开账本记录",
+        "10,000 GCA 会员权益转账",
+        "人工审核和储备钱包处理",
         "Base Mainnet chainId 8453",
         MAINNET_ADDRESS,
         "GCA/USDT",
         OFFICIAL_POOL_ADDRESS,
+        "会员账户入口",
         "邮箱注册",
         "register.html",
         "邮箱退订",
@@ -1648,7 +1654,7 @@ def validate_zh_release_gates_page(text: str) -> None:
         "100 credits",
         "GCA Member",
         "10,000 GCA 会员权益",
-        "还没有上线",
+        "符合条件写入账本，会员权益仍需人工审核",
         "支持审核队列",
         "风控",
         "模拟盘或测试环境",
@@ -1712,7 +1718,7 @@ def validate_zh_wallet_verify_page(text: str) -> None:
     for expected in (
         "GCA 中文只读钱包验证",
         "只读钱包验证 / 2026-05-20",
-        "公开自助验证 UI 还没有上线",
+        "公开账户入口、只读钱包验证和符合条件的 100 credits / GCA Member 账本写入已经上线",
         "Base Mainnet / chainId 8453",
         MAINNET_ADDRESS,
         "GCA/USDT",
@@ -1786,7 +1792,7 @@ def validate_zh_member_checklist_page(text: str) -> None:
         "GCA 中文会员审核资料清单",
         "会员审核资料清单 / 2026-05-20",
         "不是领取页面",
-        "公开自助领取还没有上线",
+        "公开账户入口、只读钱包验证、100 credits 账本和 GCA Member 账本已经上线",
         "Base Mainnet / chainId 8453",
         MAINNET_ADDRESS,
         "GCA/USDT",
@@ -2098,19 +2104,21 @@ def validate_zh_members_page(text: str) -> None:
         MAINNET_ADDRESS,
         "GCA/USDT",
         OFFICIAL_POOL_ADDRESS,
-        "规则已发布 / 自助领取未上线",
+        "账户提交和账本记录已上线",
         "10,000 GCA 持有者",
         "100 Web3 Radar utility credits",
         "1,000,000 GCA 连续持有 30 天",
         "GCA Member",
         "10,000 GCA 会员权益审核",
-        "当前公开网站不能自动创建 Web3 Radar 账户",
-        "不能自动写入 100 credits 账本",
-        "不能自动激活 GCA Member",
+        "会员账户入口",
+        "只读验证余额",
+        "写入符合条件的 100 credits / GCA Member 账本记录",
         "不能自动发放 10,000 GCA 会员权益",
-        "公开自助领取",
-        "还没有上线",
+        "账户提交",
+        "账本记录",
         "受控 HTTPS 账户 UI",
+        "已上线",
+        "人工审核和储备钱包处理",
         "尚未完成",
         "已重新提交，仍在等待审核",
         "Platform-Only Evidence Path",
@@ -2292,7 +2300,7 @@ def validate_site_map_page(text: str) -> None:
         "Status and Help",
         "Official Docs",
         "Product and Members",
-        "Product Blueprint",
+        "Product Map",
         "Member Program",
         "Operations",
         "API Status",
@@ -2530,9 +2538,9 @@ def validate_whitepaper_page(text: str) -> None:
     assert_contains(text, "GCA Whitepaper", label)
     assert_contains(text, "Narrative meets risk control", label)
     assert_contains(text, "not live market data, financial advice, a buy/sell recommendation, or a price forecast", label)
-    assert_contains(text, "Until those gates are live, 100 utility credits, GCA Member status, and the 10,000 GCA member benefit are not self-service claimable", label)
+    assert_contains(text, "The account UI, read-only GCA balance verification, credit ledger activation, and member ledger activation are live through Workers + D1", label)
     assert_contains(text, "not as a yield product", label)
-    assert_contains(text, "not automatic claiming or new minting", label)
+    assert_contains(text, "not automatic and not newly minted", label)
     assert_contains(text, "This is not a substitute for a third-party audit", label)
     assert_contains(text, "no third-party audit has been completed", label)
     assert_contains(text, "awaiting BaseScan email/review", label)
@@ -2937,8 +2945,9 @@ def validate_reserve_statement_json(text: str) -> None:
 
 def validate_members(text: str) -> None:
     label = "/members.html"
-    assert_contains(text, "GCA Member Pre-Registration", label)
-    assert_contains(text, "member access preview", label)
+    assert_contains(text, "GCA Member Access", label)
+    assert_contains(text, "Open Live Member Access", label)
+    assert_contains(text, "live account path", label)
     assert_contains(text, "gca/member-access/", label)
     assert_contains(text, "100 Credit Rules", label)
     assert_contains(text, "Member Rules", label)
@@ -2966,14 +2975,14 @@ def validate_members(text: str) -> None:
     assert_contains(text, "member-ledger.html", label)
     assert_contains(text, "tools/gca_member_backend.py", label)
     assert_contains(text, "LOCAL_BACKEND_HOSTS", label)
-    assert_contains(text, "local JSONL ledger records", label)
+    assert_contains(text, "local JSONL records", label)
     assert_contains(text, "support.html", label)
     assert_contains(text, "privacy.html", label)
     assert_contains(text, "terms.html", label)
     assert_contains(text, "180 days", label)
     assert_contains(text, "30 days", label)
     assert_contains(text, "5-10 business days", label)
-    assert_contains(text, "Direct submission is not connected", label)
+    assert_contains(text, "Use the live public member access page", label)
     assert_contains(text, "No cash, income, reimbursement, trading permission, or risk-control bypass", label)
     assert_contains(text, "10,000 GCA member benefit", label)
     assert_contains(text, "Public transaction hash + holding start date", label)
@@ -2984,22 +2993,27 @@ def validate_members(text: str) -> None:
 
 def validate_member_access_page(text: str) -> None:
     label = "/gca/member-access/"
-    assert_contains(text, "GCA Member Access Preview", label)
-    assert_contains(text, "static same-origin preview", label)
-    assert_contains(text, "Wallet Balance Preview", label)
-    assert_contains(text, "Packet Review", label)
-    assert_contains(text, "Local Review", label)
+    assert_contains(text, "GCA Member Access", label)
+    assert_contains(text, "controlled HTTPS account UI", label)
+    assert_contains(text, "Create or Update Access Record", label)
+    assert_contains(text, "Live Result", label)
     assert_contains(text, "Access Boundaries", label)
-    assert_contains(text, "Check GCA Balance", label)
-    assert_contains(text, "MetaMask eth_call", label)
+    assert_contains(text, "Verify Wallet Only", label)
+    assert_contains(text, "Submit Account + Write Ledgers", label)
+    assert_contains(text, "Backend eth_call", label)
     assert_contains(text, "ERC-20 balanceOf", label)
-    assert_contains(text, "wallet_switchEthereumChain", label)
-    assert_contains(text, "wallet_addEthereumChain", label)
+    assert_contains(text, "Cloudflare Workers + D1", label)
+    assert_contains(text, "https://gca-registration-api.gcagochina.workers.dev", label)
+    assert_contains(text, "POST /gca/member-access", label)
+    assert_contains(text, "POST /gca/wallet-verifications", label)
+    assert_contains(text, "gca_member_access_v1", label)
     assert_contains(text, "10,000 GCA", label)
     assert_contains(text, "1,000,000 GCA", label)
     assert_contains(text, "100 Web3 Radar utility credits", label)
-    assert_contains(text, "does not create a live account", label)
-    assert_contains(text, "does not activate GCA Member status", label)
+    assert_contains(text, "credits ledger", label)
+    assert_contains(text, "GCA Member ledger", label)
+    assert_contains(text, "not automatic", label)
+    assert_contains(text, "manual reserve-wallet transfer review", label)
     assert_platform_only_data_room(
         text,
         label,
@@ -3011,6 +3025,8 @@ def validate_member_access_page(text: str) -> None:
             "../../terms.json",
         ),
     )
+    assert_not_contains(text, "wallet_switchEthereumChain", label)
+    assert_not_contains(text, "wallet_addEthereumChain", label)
     assert_not_contains(text, "eth_sendTransaction", label)
     assert_not_contains(text, "personal_sign", label)
     assert_not_contains(text, OLD_WETH_POOL_ADDRESS, label)
@@ -3079,7 +3095,7 @@ def validate_operator_page(text: str) -> None:
     assert_contains(text, "recordManifest", label)
     assert_contains(text, "tools/verify_gca_review_package.py", label)
     assert_contains(text, "?redact=public", label)
-    assert_contains(text, "Public website view: local backend not connected", label)
+    assert_contains(text, "Public website view: use /gca/member-access/ for Workers + D1 intake", label)
     assert_contains(text, "local JSONL ledger records", label)
     assert_contains(text, ".gca_access_data/", label)
     assert_contains(text, "Email registrations", label)
@@ -3283,7 +3299,7 @@ def validate_roadmap_page(text: str) -> None:
     assert_contains(text, "Resubmitted: awaiting review", label)
     assert_contains(text, "Owner observed no warning visible", label)
     assert_contains(text, "Not completed", label)
-    assert_contains(text, "public self-service member claiming is live", label)
+    assert_contains(text, "Account and Ledger", label)
     assert_contains(text, "Base Mainnet / chainId 8453", label)
     assert_contains(text, MAINNET_ADDRESS, label)
     assert_current_pool_text(text, label)
@@ -3332,9 +3348,9 @@ def validate_roadmap_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing controlled account UI priority")
     if not any(priority.get("id") == "utility-credit-ledger" for priority in payload.get("nextBuildPriorities", [])):
         raise SiteCheckError(f"{label}: missing utility credit ledger priority")
-    if "GCA is concept-stage and is building public identity, safer support intake, and planned non-custodial quant research access." not in payload.get("publicClaimBoundaries", {}).get("safeClaims", []):
+    if "GCA is concept-stage and has live account intake, read-only wallet verification, eligible ledger records, and staged non-custodial quant research access." not in payload.get("publicClaimBoundaries", {}).get("safeClaims", []):
         raise SiteCheckError(f"{label}: missing concept-stage safe claim")
-    if "public self-service member or 10,000 GCA member benefit claiming is live before controlled HTTPS UI and holding-period review are connected" not in payload.get("publicClaimBoundaries", {}).get("doNotClaim", []):
+    if "the 10,000 GCA member benefit is automatic or self-service transferred before holding-period verification, support approval, and manual reserve-wallet processing" not in payload.get("publicClaimBoundaries", {}).get("doNotClaim", []):
         raise SiteCheckError(f"{label}: missing self-service do-not-claim")
     if links.get("roadmapPage") != ROADMAP_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong roadmapPage")
@@ -4328,7 +4344,7 @@ def validate_member_access_brief_001_page(text: str) -> None:
         "Purchase and hold at least 1,000,000 GCA",
         "Support and ledger approval required",
         "Project or owner-held reserve only; no new minting",
-        "Public self-service claiming is not live yet",
+        "Account intake and eligible ledger records are live",
         "Copy-Ready Post",
         MEMBER_ACCESS_BRIEF_001_PAGE_URL,
         "member-benefit.html",
@@ -4367,8 +4383,8 @@ def validate_member_access_brief_001_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong chainId")
     if payload.get("contractAddress") != MAINNET_ADDRESS:
         raise SiteCheckError(f"{label}: wrong contractAddress")
-    if "not live self-service claiming" not in payload.get("scope", ""):
-        raise SiteCheckError(f"{label}: missing live-claim boundary")
+    if "member benefit is not automatic self-service transfer" not in payload.get("scope", ""):
+        raise SiteCheckError(f"{label}: missing member-benefit boundary")
     if "not a promise of approval" not in payload.get("scope", ""):
         raise SiteCheckError(f"{label}: missing approval boundary")
     if rule.get("tierName") != "GCA Member":
@@ -4381,7 +4397,7 @@ def validate_member_access_brief_001_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong memberBenefitAmount")
     if "no new minting" not in rule.get("memberBenefitSource", ""):
         raise SiteCheckError(f"{label}: missing no-mint source")
-    if not any("Public self-service claiming is not live" in item for item in payload.get("releaseBoundaries", [])):
+    if not any("member benefit is not automatic or self-service transferred" in item for item in payload.get("releaseBoundaries", [])):
         raise SiteCheckError(f"{label}: missing self-service boundary")
     if not any("does not automatically trigger a transfer" in item for item in payload.get("releaseBoundaries", [])):
         raise SiteCheckError(f"{label}: missing automatic-transfer boundary")
@@ -4394,8 +4410,8 @@ def validate_member_access_brief_001_json(text: str) -> None:
     for key in ("xEnglish", "xChinese", "telegram"):
         if not copy_ready.get(key):
             raise SiteCheckError(f"{label}: missing copy field {key}")
-    if "Public self-service claiming is not live yet." not in boundaries.get("safeClaims", []):
-        raise SiteCheckError(f"{label}: missing self-service safe claim")
+    if "Account intake, read-only wallet verification, and eligible ledger records are live; member benefit transfers remain manual review only." not in boundaries.get("safeClaims", []):
+        raise SiteCheckError(f"{label}: missing account-intake safe claim")
     if "holding 1,000,000 GCA automatically triggers a transfer" not in boundaries.get("doNotClaim", []):
         raise SiteCheckError(f"{label}: missing automatic-transfer boundary")
     if links.get("memberAccessBrief001Page") != MEMBER_ACCESS_BRIEF_001_PAGE_URL:
@@ -4522,7 +4538,7 @@ def validate_utility_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing utility safe claim")
     if not any("credits or member status are cash" in item for item in boundaries.get("doNotClaim", [])):
         raise SiteCheckError(f"{label}: missing credit/member boundary")
-    if not any("10,000 GCA member benefit is self-service claimable" in item for item in boundaries.get("doNotClaim", [])):
+    if not any("10,000 GCA member benefit is automatic or self-service transferred" in item for item in boundaries.get("doNotClaim", [])):
         raise SiteCheckError(f"{label}: missing member benefit boundary")
     assert_no_forbidden_public_claims(json.dumps(payload), label)
     assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
@@ -4554,7 +4570,7 @@ def validate_product_page(text: str) -> None:
     assert_contains(text, "not live market data", label)
     assert_contains(text, "not financial advice", label)
     assert_contains(text, "Public Account UI", label)
-    assert_contains(text, "Not live", label)
+    assert_contains(text, "Live at /gca/member-access/", label)
     assert_contains(text, "China Narrative Radar", label)
     assert_contains(text, "Weekly Go China Radar", label)
     assert_contains(text, "Liquidation Replay", label)
@@ -4601,10 +4617,10 @@ def validate_product_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong contractAddress")
     if positioning.get("productName") != "GCA AI Quant Access":
         raise SiteCheckError(f"{label}: wrong productName")
-    if positioning.get("currentStage") != "public-product-spec-only":
+    if positioning.get("currentStage") != "account-ledger-path-live-product-tools-planned":
         raise SiteCheckError(f"{label}: wrong currentStage")
-    if positioning.get("publicAccountUiLive") is not False:
-        raise SiteCheckError(f"{label}: publicAccountUiLive must be false")
+    if positioning.get("publicAccountUiLive") is not True:
+        raise SiteCheckError(f"{label}: publicAccountUiLive must be true")
     if positioning.get("liveTradingEnabled") is not False:
         raise SiteCheckError(f"{label}: liveTradingEnabled must be false")
     for name in (
@@ -4622,8 +4638,8 @@ def validate_product_json(text: str) -> None:
     for gate in ("controlled-https-account-ui", "read-only-wallet-verification", "credit-ledger-activation", "member-ledger-activation", "risk-control-review", "simulation-first"):
         if gate not in release_gate_ids:
             raise SiteCheckError(f"{label}: missing release gate {gate}")
-    if "access-portal-blueprint" not in release_gate_ids:
-        raise SiteCheckError(f"{label}: missing access portal blueprint gate")
+    if "access-portal" not in release_gate_ids:
+        raise SiteCheckError(f"{label}: missing access portal gate")
     if "access-api-contract" not in release_gate_ids:
         raise SiteCheckError(f"{label}: missing access API contract gate")
     if "review-queue-contract" not in release_gate_ids:
@@ -4695,7 +4711,7 @@ def validate_product_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong memberLedger")
     if "GCA has published a public product specification for GCA AI Quant Access." not in boundaries.get("safeClaims", []):
         raise SiteCheckError(f"{label}: missing product safe claim")
-    if not any("full GCA AI Quant Access product is live" in item for item in boundaries.get("doNotClaim", [])):
+    if not any("full GCA AI Quant Access trading or research product is live" in item for item in boundaries.get("doNotClaim", [])):
         raise SiteCheckError(f"{label}: missing product live boundary")
     assert_no_forbidden_public_claims(json.dumps(payload), label)
     assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
@@ -4704,7 +4720,7 @@ def validate_product_json(text: str) -> None:
 
 def validate_access_page(text: str) -> None:
     label = "/access.html"
-    assert_contains(text, "GCA Access Portal Blueprint", label)
+    assert_contains(text, "GCA Access Portal", label)
     assert_platform_only_data_room(
         text,
         label,
@@ -4720,12 +4736,11 @@ def validate_access_page(text: str) -> None:
     )
     assert_contains(text, "Access API", label)
     assert_contains(text, "Review Queue", label)
-    assert_contains(text, "blueprint only", label)
-    assert_contains(text, "controlled HTTPS account UI is not live", label)
-    assert_contains(text, "direct submission is not connected", label)
-    assert_contains(text, "credits are not self-service claimable", label)
-    assert_contains(text, "GCA Member status is not self-service claimable", label)
-    assert_contains(text, "10,000 GCA member benefit is not self-service claimable", label)
+    assert_contains(text, "controlled account UI live", label)
+    assert_contains(text, "Live at /gca/member-access/", label)
+    assert_contains(text, "Connected to Workers + D1", label)
+    assert_contains(text, "eligible credit/member ledger records", label)
+    assert_contains(text, "10,000 GCA member benefit remains manual review only", label)
     assert_contains(text, "read-only wallet verification", label)
     assert_contains(text, "eth_call", label)
     assert_contains(text, "balanceOf", label)
@@ -4735,6 +4750,7 @@ def validate_access_page(text: str) -> None:
     assert_contains(text, "30 consecutive days", label)
     assert_contains(text, "GCA Member", label)
     assert_contains(text, "credit ledger activation", label)
+    assert_contains(text, "Live for eligible records", label)
     assert_contains(text, "member ledger activation", label)
     assert_contains(text, "support review queue", label)
     assert_contains(text, "Review Queue Contract", label)
@@ -4751,6 +4767,7 @@ def validate_access_page(text: str) -> None:
     assert_contains(text, "No withdrawal permission", label)
     assert_contains(text, "No exchange API secret collection", label)
     assert_contains(text, "No private key or seed phrase collection", label)
+    assert_contains(text, "live account UI", label)
     assert_contains(text, "gca/member-access/", label)
     assert_contains(text, "review-queue.html", label)
     assert_contains(text, "members.html", label)
@@ -4779,16 +4796,16 @@ def validate_access_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != ACCESS_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
-    if payload.get("status") != "public-access-portal-blueprint-published":
+    if payload.get("status") != "public-access-portal-live":
         raise SiteCheckError(f"{label}: wrong status")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
     if payload.get("contractAddress") != MAINNET_ADDRESS:
         raise SiteCheckError(f"{label}: wrong contractAddress")
-    if state.get("currentStage") != "blueprint-only":
+    if state.get("currentStage") != "controlled-account-ui-live":
         raise SiteCheckError(f"{label}: wrong currentStage")
-    if state.get("blueprintOnly") is not True:
-        raise SiteCheckError(f"{label}: blueprintOnly must be true")
+    if state.get("blueprintOnly") is not False:
+        raise SiteCheckError(f"{label}: blueprintOnly must be false")
     if state.get("reviewQueueContract") != "published-manual-review-contract":
         raise SiteCheckError(f"{label}: wrong reviewQueueContract")
     for key in (
@@ -4796,11 +4813,19 @@ def validate_access_json(text: str) -> None:
         "directSubmissionEndpointConfigured",
         "creditsSelfServiceClaimable",
         "gcaMemberSelfServiceClaimable",
-        "liveTradingEnabled",
+        "walletVerificationLive",
+        "creditLedgerWritesLive",
+        "memberLedgerWritesLive",
     ):
-        if state.get(key) is not False:
-            raise SiteCheckError(f"{label}: {key} must be false")
-    for key in ("futureAccountPortal", "preRegistrations", "walletVerifications", "creditLedger", "memberLedger", "supportReview"):
+        if state.get(key) is not True:
+            raise SiteCheckError(f"{label}: {key} must be true")
+    if state.get("liveTradingEnabled") is not False:
+        raise SiteCheckError(f"{label}: liveTradingEnabled must be false")
+    if state.get("memberBenefitAutomaticTransfer") is not False:
+        raise SiteCheckError(f"{label}: memberBenefitAutomaticTransfer must be false")
+    if state.get("memberBenefitManualReviewOnly") is not True:
+        raise SiteCheckError(f"{label}: memberBenefitManualReviewOnly must be true")
+    for key in ("memberAccess", "accessConfig", "walletVerifications", "creditLedger", "memberLedger", "supportReview"):
         if key not in routes:
             raise SiteCheckError(f"{label}: missing route {key}")
     if preview.get("memberAccessPreview") != "https://gcagochina.com/gca/member-access/":
@@ -4821,18 +4846,17 @@ def validate_access_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong holder minimum")
     if thresholds.get("holderBonus", {}).get("creditAmount") != "100 Web3 Radar utility credits":
         raise SiteCheckError(f"{label}: wrong credit amount")
-    if thresholds.get("holderBonus", {}).get("notLive") is not True:
-        raise SiteCheckError(f"{label}: holder path must be not live")
+    if thresholds.get("holderBonus", {}).get("notLive") is not False:
+        raise SiteCheckError(f"{label}: holder path must be live")
     if thresholds.get("gcaMember", {}).get("minimumHolding") != "1000000 GCA":
         raise SiteCheckError(f"{label}: wrong member minimum")
     if thresholds.get("gcaMember", {}).get("minimumHoldingPeriod") != "30 consecutive days":
         raise SiteCheckError(f"{label}: wrong member holding period")
     if thresholds.get("gcaMember", {}).get("memberBenefitAmount") != "10000 GCA":
         raise SiteCheckError(f"{label}: wrong member benefit")
-    if thresholds.get("gcaMember", {}).get("notLive") is not True:
-        raise SiteCheckError(f"{label}: member path must be not live")
+    if thresholds.get("gcaMember", {}).get("notLive") is not False:
+        raise SiteCheckError(f"{label}: member path must be live")
     for item in (
-        "controlled HTTPS account UI",
         "read-only GCA balance verification",
         "credit ledger activation",
         "member ledger activation",
@@ -4902,10 +4926,10 @@ def validate_access_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong memberLedger")
     if links.get("supportJson") != SUPPORT_URL:
         raise SiteCheckError(f"{label}: wrong supportJson")
-    if "GCA has published a public access portal blueprint." not in boundaries.get("safeClaims", []):
+    if "GCA has a live public access portal at https://gcagochina.com/gca/member-access/." not in boundaries.get("safeClaims", []):
         raise SiteCheckError(f"{label}: missing access safe claim")
-    if not any("live self-service account UI" in item for item in boundaries.get("doNotClaim", [])):
-        raise SiteCheckError(f"{label}: missing account UI boundary")
+    if not any("automatic or self-service transferred" in item for item in boundaries.get("doNotClaim", [])):
+        raise SiteCheckError(f"{label}: missing member benefit boundary")
     if not any("cash, income" in item for item in boundaries.get("doNotClaim", [])):
         raise SiteCheckError(f"{label}: missing credit value boundary")
     assert_no_forbidden_public_claims(json.dumps(payload), label)
@@ -4929,9 +4953,9 @@ def validate_operations_page(text: str) -> None:
             "release-gates.json",
         ),
     )
-    assert_contains(text, "operations runbook only", label)
-    assert_contains(text, "not live today", label)
-    assert_contains(text, "not a public submission queue", label)
+    assert_contains(text, "account intake live / operations runbook only", label)
+    assert_contains(text, "account intake live", label)
+    assert_contains(text, "not a public ledger browser", label)
     assert_contains(text, "Email Registration Ops Pipeline", label)
     assert_contains(text, "Email API", label)
     assert_contains(text, "Live on Workers + D1", label)
@@ -5007,27 +5031,33 @@ def validate_operations_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong chainId")
     if payload.get("contractAddress") != MAINNET_ADDRESS:
         raise SiteCheckError(f"{label}: wrong contractAddress")
-    if state.get("currentStage") != "public-operations-runbook-only":
+    if state.get("currentStage") != "account-ledger-operations-live":
         raise SiteCheckError(f"{label}: wrong currentStage")
-    if state.get("publicRunbookOnly") is not True:
-        raise SiteCheckError(f"{label}: publicRunbookOnly must be true")
+    if state.get("publicRunbookOnly") is not False:
+        raise SiteCheckError(f"{label}: publicRunbookOnly must be false")
+    if state.get("runbookOnlyForManualReviewHandling") is not True:
+        raise SiteCheckError(f"{label}: runbookOnlyForManualReviewHandling must be true")
     if state.get("emailRegistrationBackendLive") is not True:
         raise SiteCheckError(f"{label}: emailRegistrationBackendLive must be true")
     if state.get("contactSuppressionBackendLive") is not True:
         raise SiteCheckError(f"{label}: contactSuppressionBackendLive must be true")
-    if state.get("accountAndMemberBackendLive") is not False:
-        raise SiteCheckError(f"{label}: accountAndMemberBackendLive must be false")
     for key in (
         "backendLive",
-        "publicSubmissionQueueLive",
+        "accountAndMemberBackendLive",
         "controlledHttpsAccountUiLive",
         "creditsSelfServiceClaimable",
         "gcaMemberSelfServiceClaimable",
         "ledgerWritesLive",
+    ):
+        if state.get(key) is not True:
+            raise SiteCheckError(f"{label}: {key} must be true")
+    for key in (
         "liveTradingEnabled",
     ):
         if state.get(key) is not False:
             raise SiteCheckError(f"{label}: {key} must be false")
+    if state.get("publicSubmissionQueueLive") is not True:
+        raise SiteCheckError(f"{label}: publicSubmissionQueueLive must be true")
     if identity.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong identity chainId")
     if identity.get("contractAddress") != MAINNET_ADDRESS:
@@ -5234,8 +5264,8 @@ def validate_operations_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing email API safe claim")
     if "GCA operators can sync email registration records into an ignored local JSONL ledger and export public-redacted contact CSVs." not in boundaries.get("safeClaims", []):
         raise SiteCheckError(f"{label}: missing email ops safe claim")
-    if not any("live backend" in item for item in boundaries.get("doNotClaim", [])):
-        raise SiteCheckError(f"{label}: missing live backend boundary")
+    if not any("private-data dropbox" in item for item in boundaries.get("doNotClaim", [])):
+        raise SiteCheckError(f"{label}: missing private-data boundary")
     if not any("support can override wallet-balance verification" in item for item in boundaries.get("doNotClaim", [])):
         raise SiteCheckError(f"{label}: missing support override boundary")
     if not any("redacted local review package" in item for item in boundaries.get("doNotClaim", [])):
@@ -5261,9 +5291,9 @@ def validate_access_api_page(text: str) -> None:
     )
     assert_contains(text, "Review Queue", label)
     assert_contains(text, "Operations Runbook", label)
-    assert_contains(text, "email API live", label)
-    assert_contains(text, "Email registration live", label)
-    assert_contains(text, "not a public self-service claim page", label)
+    assert_contains(text, "member access API live", label)
+    assert_contains(text, "Email + member access live", label)
+    assert_contains(text, "member access and wallet verification", label)
     assert_contains(text, "tools/gca_member_backend.py", label)
     assert_contains(text, "tools/export_gca_review_package.py", label)
     assert_contains(text, "operator.html", label)
@@ -5292,7 +5322,8 @@ def validate_access_api_page(text: str) -> None:
     assert_contains(text, "API Health", label)
     assert_contains(text, "POST", label)
     assert_contains(text, "/gca/email-registrations", label)
-    assert_contains(text, "/gca/pre-registrations", label)
+    assert_contains(text, "/gca/access-config", label)
+    assert_contains(text, "/gca/member-access", label)
     assert_contains(text, "/gca/wallet-verifications", label)
     assert_contains(text, "/gca/credit-ledger", label)
     assert_contains(text, "/gca/member-ledger", label)
@@ -5311,7 +5342,7 @@ def validate_access_api_page(text: str) -> None:
     assert_contains(text, "balanceOf", label)
     assert_contains(text, "100 Web3 Radar utility credits", label)
     assert_contains(text, "GCA Member", label)
-    assert_contains(text, "gca_member_preregistration_v2", label)
+    assert_contains(text, "gca_member_access_v1", label)
     assert_contains(text, "memberBenefitReviewEvidence", label)
     assert_contains(text, "holdingStartDate", label)
     assert_contains(text, "evidenceTxHash", label)
@@ -5319,8 +5350,8 @@ def validate_access_api_page(text: str) -> None:
     assert_contains(text, "controlled HTTPS origin", label)
     assert_contains(text, "public email registration and unsubscribe routes require only form acknowledgements", label)
     assert_contains(text, "token-protected admin reads for Cloudflare registration and suppression records", label)
-    assert_contains(text, "authenticated account session for future account-level routes", label)
-    assert_contains(text, "authenticated account session", label)
+    assert_contains(text, "token-protected admin reads for account-level ledger routes", label)
+    assert_contains(text, "ADMIN_READ_TOKEN protected operator read", label)
     assert_contains(text, "CSRF protection", label)
     assert_contains(text, "rate limits", label)
     assert_contains(text, "structured audit logs", label)
@@ -5354,13 +5385,13 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != ACCESS_API_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
-    if payload.get("status") != "public-access-api-contract-email-registration-live":
+    if payload.get("status") != "public-access-api-member-access-live":
         raise SiteCheckError(f"{label}: wrong status")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
     if payload.get("contractAddress") != MAINNET_ADDRESS:
         raise SiteCheckError(f"{label}: wrong contractAddress")
-    if state.get("currentStage") != "email-registration-api-live":
+    if state.get("currentStage") != "member-access-api-live":
         raise SiteCheckError(f"{label}: wrong currentStage")
     if state.get("contractOnly") is not False:
         raise SiteCheckError(f"{label}: contractOnly must be false")
@@ -5378,10 +5409,14 @@ def validate_access_api_json(text: str) -> None:
         "controlledHttpsAccountUiLive",
         "creditsSelfServiceClaimable",
         "gcaMemberSelfServiceClaimable",
-        "liveTradingEnabled",
+        "walletVerificationLive",
+        "creditLedgerWritesLive",
+        "memberLedgerWritesLive",
     ):
-        if state.get(key) is not False:
-            raise SiteCheckError(f"{label}: {key} must be false")
+        if state.get(key) is not True:
+            raise SiteCheckError(f"{label}: {key} must be true")
+    if state.get("liveTradingEnabled") is not False:
+        raise SiteCheckError(f"{label}: liveTradingEnabled must be false")
     for key in (
         "backendLive",
         "publicEndpointLive",
@@ -5415,7 +5450,7 @@ def validate_access_api_json(text: str) -> None:
     if "redacted-public" not in local_backend.get("localReviewPackageRedactionModes", []):
         raise SiteCheckError(f"{label}: missing local review package redaction mode")
     if local_backend.get("publicProductionEndpointLive") is not False:
-        raise SiteCheckError(f"{label}: local backend must not mark production live")
+        raise SiteCheckError(f"{label}: local backend must not mark itself as production")
     if local_backend.get("automaticTokenTransfer") is not False:
         raise SiteCheckError(f"{label}: local backend must not automatically transfer tokens")
     if state.get("productionEmailRegistrationApiPrepared") is not True:
@@ -5511,14 +5546,20 @@ def validate_access_api_json(text: str) -> None:
     ):
         if security.get(key) is not False:
             raise SiteCheckError(f"{label}: {key} must be false")
-    for endpoint_key in (
-        "POST /gca/pre-registrations",
-        "POST /gca/wallet-verifications",
-        "GET /gca/credit-ledger",
-        "GET /gca/member-ledger",
-        "POST /gca/support-review",
-        "GET /gca/member-review",
-    ):
+    expected_live_member_statuses = {
+        "GET /gca/access-config": "production-workers-dev-live",
+        "POST /gca/member-access": "production-workers-dev-live",
+        "POST /gca/wallet-verifications": "production-workers-dev-live",
+        "GET /gca/credit-ledger": "token-protected-admin-live",
+        "GET /gca/member-ledger": "token-protected-admin-live",
+    }
+    for endpoint_key, expected_status in expected_live_member_statuses.items():
+        endpoint = endpoint_map.get(endpoint_key)
+        if endpoint is None:
+            raise SiteCheckError(f"{label}: missing endpoint {endpoint_key}")
+        if endpoint.get("status") != expected_status:
+            raise SiteCheckError(f"{label}: endpoint {endpoint_key} should be {expected_status}")
+    for endpoint_key in ("POST /gca/support-review", "GET /gca/member-review"):
         endpoint = endpoint_map.get(endpoint_key)
         if endpoint is None:
             raise SiteCheckError(f"{label}: missing endpoint {endpoint_key}")
@@ -5672,15 +5713,24 @@ def validate_access_api_json(text: str) -> None:
     ):
         if field not in payload.get("memberEvidenceFields", []):
             raise SiteCheckError(f"{label}: missing member evidence field {field}")
-    prereg = endpoint_map["POST /gca/pre-registrations"]
+    member_access = endpoint_map["POST /gca/member-access"]
     for field in (
+        "displayName",
+        "holdingStartDate",
+        "evidenceTxHash",
         "memberBenefitReviewEvidence",
-        "memberBenefitReviewEvidence.holdingStartDate",
-        "memberBenefitReviewEvidence.evidenceTxHash",
-        "memberBenefitReviewEvidence.evidenceTxHashFormatOk",
     ):
-        if field not in prereg.get("optionalRequestFields", []):
-            raise SiteCheckError(f"{label}: missing pre-registration optional field {field}")
+        if field not in member_access.get("optionalRequestFields", []):
+            raise SiteCheckError(f"{label}: missing member access optional field {field}")
+    for field in (
+        "email",
+        "walletAddress",
+        "acknowledgements.emailContactConsent",
+        "acknowledgements.noSecretsNoCustody",
+        "acknowledgements.termsAccepted",
+    ):
+        if field not in member_access.get("requiredRequestFields", []):
+            raise SiteCheckError(f"{label}: missing member access request field {field}")
     member_ledger = endpoint_map["GET /gca/member-ledger"]
     for field in (
         "holdingStartDate",
@@ -5736,10 +5786,10 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong operationsRunbookPage")
     if links.get("operationsRunbook") != OPERATIONS_URL:
         raise SiteCheckError(f"{label}: wrong operationsRunbook")
-    if "GCA has published a public access API contract." not in boundaries.get("safeClaims", []):
+    if "GCA has a live public access API for email registration, contact suppression, access config, member access, and read-only wallet verification." not in boundaries.get("safeClaims", []):
         raise SiteCheckError(f"{label}: missing API safe claim")
-    if not any("live public submission infrastructure" in item for item in boundaries.get("doNotClaim", [])):
-        raise SiteCheckError(f"{label}: missing live API boundary")
+    if not any("automatic or self-service transferred" in item for item in boundaries.get("doNotClaim", [])):
+        raise SiteCheckError(f"{label}: missing member benefit boundary")
     if not any("private keys, seed phrases" in item for item in boundaries.get("doNotClaim", [])):
         raise SiteCheckError(f"{label}: missing sensitive data boundary")
     assert_no_forbidden_public_claims(json.dumps(payload), label)
@@ -5778,6 +5828,11 @@ def validate_api_status_page(text: str) -> None:
         "gca_email_registration_v1",
         "/gca/contact-suppressions",
         "gca_contact_suppression_v1",
+        "/gca/access-config",
+        "/gca/wallet-verifications",
+        "/gca/member-access",
+        "/gca/credit-ledger",
+        "/gca/member-ledger",
         "Public visitors should receive an authorization error",
         "Public visitors cannot read the suppression ledger",
         "python3 tools/check_gca_registration_api.py --public-only --timeout 30",
@@ -5790,7 +5845,8 @@ def validate_api_status_page(text: str) -> None:
         "Email registration does not require a wallet, wallet signature, payment, private key, seed phrase, exchange API secret, or withdrawal permission",
         "Contact suppression does not change GCA balances, pool state, credits, member status, or on-chain assets",
         "Public visitors cannot read the registration ledger or suppression ledger",
-        "100 credits, GCA Member status, and the 10,000 GCA member benefit are not public self-service features yet",
+        "100 credits and GCA Member ledger records are live for eligible wallet submissions",
+        "10,000 GCA member benefit remains manual review",
         "Data Room",
         "Access API Contract",
         "Operations Runbook",
@@ -5814,7 +5870,7 @@ def validate_api_status_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != API_STATUS_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
-    if payload.get("status") != "public-registration-api-status-published":
+    if payload.get("status") != "public-member-access-api-status-published":
         raise SiteCheckError(f"{label}: wrong status")
     if payload.get("apiBaseUrl") != "https://gca-registration-api.gcagochina.workers.dev":
         raise SiteCheckError(f"{label}: wrong API base URL")
@@ -5839,6 +5895,8 @@ def validate_api_status_json(text: str) -> None:
     expected_public = {
         "email-registration-create": ("POST", "/gca/email-registrations", "gca_email_registration_v1"),
         "contact-suppression-create": ("POST", "/gca/contact-suppressions", "gca_contact_suppression_v1"),
+        "wallet-verification-create": ("POST", "/gca/wallet-verifications", "gca_wallet_verification_v1"),
+        "member-access-create": ("POST", "/gca/member-access", "gca_member_access_v1"),
     }
     for endpoint_id, (method, path, packet_version) in expected_public.items():
         endpoint = public_endpoints.get(endpoint_id)
@@ -5851,12 +5909,27 @@ def validate_api_status_json(text: str) -> None:
         if endpoint.get("packetVersion") != packet_version:
             raise SiteCheckError(f"{label}: wrong packet version for {endpoint_id}")
         for key in ("requiresWallet", "requiresSignature", "requiresTransaction", "automaticTokenTransfer"):
+            if key == "requiresWallet" and endpoint_id in {"wallet-verification-create", "member-access-create"}:
+                if endpoint.get(key) is not True:
+                    raise SiteCheckError(f"{label}: {endpoint_id} {key} must be true")
+                continue
             if endpoint.get(key) is not False:
                 raise SiteCheckError(f"{label}: {endpoint_id} {key} must be false")
+    access_config = public_endpoints.get("access-config-read")
+    if access_config is None:
+        raise SiteCheckError(f"{label}: missing public access config endpoint")
+    if access_config.get("method") != "GET" or access_config.get("path") != "/gca/access-config":
+        raise SiteCheckError(f"{label}: wrong access config route")
+    if access_config.get("status") != "live":
+        raise SiteCheckError(f"{label}: access config should be live")
 
     expected_admin = {
         "email-registration-read": "/gca/email-registrations",
         "contact-suppression-read": "/gca/contact-suppressions",
+        "wallet-verification-read": "/gca/wallet-verifications",
+        "member-access-read": "/gca/member-access",
+        "credit-ledger-read": "/gca/credit-ledger",
+        "member-ledger-read": "/gca/member-ledger",
     }
     for endpoint_id, path in expected_admin.items():
         endpoint = admin_endpoints.get(endpoint_id)
@@ -5894,11 +5967,17 @@ def validate_api_status_json(text: str) -> None:
         "noWalletSignatureForEmailRegistration",
         "noPaymentForEmailRegistration",
         "noPublicLedgerRead",
-        "noSelfServiceCreditsActivation",
-        "noSelfServiceMemberActivation",
+        "noWalletSignatureForWalletVerification",
+        "noTransactionForWalletVerification",
+        "memberAccessWritesEligibleLedgers",
+        "noAutomaticTokenTransfer",
+        "memberBenefitManualReviewOnly",
     ):
         if boundaries.get(key) is not True:
             raise SiteCheckError(f"{label}: missing boundary {key}")
+    for key in ("noSelfServiceCreditsActivation", "noSelfServiceMemberActivation"):
+        if boundaries.get(key) is not False:
+            raise SiteCheckError(f"{label}: {key} should be false after ledger path launch")
     if links.get("registrationPage") != REGISTER_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong registration page")
     if links.get("unsubscribePage") != UNSUBSCRIBE_PAGE_URL:
@@ -5909,6 +5988,8 @@ def validate_api_status_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong data room")
     if links.get("githubWorkflow") != "https://github.com/timchen078/gca_token/actions/workflows/check-gca-registration-api.yml":
         raise SiteCheckError(f"{label}: wrong GitHub workflow URL")
+    if links.get("memberAccessPage") != MEMBER_ACCESS_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong member access page")
     assert_no_forbidden_public_claims(json.dumps(payload), label)
 
 
@@ -5928,8 +6009,8 @@ def validate_review_queue_page(text: str) -> None:
     )
     assert_contains(text, "Operations Runbook", label)
     assert_contains(text, "manual review contract", label)
-    assert_contains(text, "not live today", label)
-    assert_contains(text, "not a public submission queue", label)
+    assert_contains(text, "account intake live", label)
+    assert_contains(text, "not a public ledger browser", label)
     for lane in (
         "Pre-Registration Intake",
         "Wallet Balance Review",
@@ -5996,12 +6077,16 @@ def validate_review_queue_json(text: str) -> None:
     if state.get("contractOnly") is not True:
         raise SiteCheckError(f"{label}: contractOnly must be true")
     for key in (
-        "publicQueueLive",
-        "publicSubmissionQueueLive",
         "controlledHttpsAccountUiLive",
         "creditsSelfServiceClaimable",
         "gcaMemberSelfServiceClaimable",
         "ledgerWritesLive",
+    ):
+        if state.get(key) is not True:
+            raise SiteCheckError(f"{label}: {key} must be true")
+    for key in (
+        "publicQueueLive",
+        "publicSubmissionQueueLive",
         "liveTradingEnabled",
     ):
         if state.get(key) is not False:
@@ -6136,8 +6221,8 @@ def validate_credits_page(text: str) -> None:
     )
     assert_contains(text, "Access Portal", label)
     assert_contains(text, "Access API", label)
-    assert_contains(text, "draft service catalog", label)
-    assert_contains(text, "not self-service claimable", label)
+    assert_contains(text, "account ledger path live", label)
+    assert_contains(text, "eligible ledger record live", label)
     assert_contains(text, "100 Web3 Radar utility credits", label)
     assert_contains(text, "10,000 GCA", label)
     assert_contains(text, "1,000,000 GCA", label)
@@ -6151,8 +6236,8 @@ def validate_credits_page(text: str) -> None:
     assert_contains(text, "Support Review Queue", label)
     assert_contains(text, "controlled HTTPS account UI", label)
     assert_contains(text, "read-only GCA balance verification", label)
-    assert_contains(text, "credit ledger activation", label)
-    assert_contains(text, "member ledger activation", label)
+    assert_contains(text, "credit ledger record live for eligible holders", label)
+    assert_contains(text, "member ledger record live for eligible holders", label)
     assert_contains(text, "support review queue", label)
     assert_contains(text, "No custody", label)
     assert_contains(text, "No withdrawal permission", label)
@@ -6182,33 +6267,35 @@ def validate_credits_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != CREDITS_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
-    if payload.get("status") != "public-credits-catalog-published":
+    if payload.get("status") != "public-credits-catalog-ledger-path-live":
         raise SiteCheckError(f"{label}: wrong status")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
     if payload.get("contractAddress") != MAINNET_ADDRESS:
         raise SiteCheckError(f"{label}: wrong contractAddress")
-    if state.get("currentStage") != "draft-service-catalog-only":
+    if state.get("currentStage") != "account-ledger-path-live":
         raise SiteCheckError(f"{label}: wrong currentStage")
-    if state.get("draftServiceCatalogOnly") is not True:
-        raise SiteCheckError(f"{label}: draftServiceCatalogOnly must be true")
-    for key in ("publicAccountUiLive", "creditsSelfServiceClaimable", "gcaMemberSelfServiceClaimable", "liveTradingEnabled"):
-        if state.get(key) is not False:
-            raise SiteCheckError(f"{label}: {key} must be false")
+    if state.get("draftServiceCatalogOnly") is not False:
+        raise SiteCheckError(f"{label}: draftServiceCatalogOnly must be false")
+    for key in ("publicAccountUiLive", "creditsSelfServiceClaimable", "gcaMemberSelfServiceClaimable", "controlledHttpsAccountUiLive", "walletVerificationLive", "creditLedgerWritesLive", "memberLedgerWritesLive"):
+        if state.get(key) is not True:
+            raise SiteCheckError(f"{label}: {key} must be true")
+    if state.get("liveTradingEnabled") is not False:
+        raise SiteCheckError(f"{label}: liveTradingEnabled must be false")
     if holder_bonus.get("minimumHolding") != "10000 GCA":
         raise SiteCheckError(f"{label}: wrong holder bonus minimum")
     if holder_bonus.get("creditAmount") != "100 Web3 Radar utility credits":
         raise SiteCheckError(f"{label}: wrong holder bonus credit")
-    if holder_bonus.get("notLive") is not True:
-        raise SiteCheckError(f"{label}: holder bonus must be not live")
+    if holder_bonus.get("notLive") is not False:
+        raise SiteCheckError(f"{label}: holder bonus must be live")
     if member.get("minimumHolding") != "1000000 GCA":
         raise SiteCheckError(f"{label}: wrong member minimum")
     if member.get("minimumHoldingPeriod") != "30 consecutive days":
         raise SiteCheckError(f"{label}: wrong member holding period")
     if member.get("memberBenefitAmount") != "10000 GCA":
         raise SiteCheckError(f"{label}: wrong member benefit")
-    if member.get("notLive") is not True:
-        raise SiteCheckError(f"{label}: member must be not live")
+    if member.get("notLive") is not False:
+        raise SiteCheckError(f"{label}: member must be live")
     for service_id in (
         "liquidation-replay-report",
         "risk-warning-review",
@@ -6234,18 +6321,20 @@ def validate_credits_json(text: str) -> None:
         if service_name not in service_names:
             raise SiteCheckError(f"{label}: missing service name {service_name}")
     for item in payload.get("serviceCatalog", []):
-        if item.get("status") not in {"planned-controlled-account-ui-required", "planned-member-ledger-required"}:
+        if item.get("status") not in {"ledger-eligible-service-unit-staged", "member-ledger-eligible-service-unit-staged", "member-ledger-eligible-service-workflow-staged"}:
             raise SiteCheckError(f"{label}: wrong service status for {item.get('id')}")
         if item.get("unitType") not in {"draft service credit unit", "draft member credit unit", "member workflow priority"}:
             raise SiteCheckError(f"{label}: wrong unitType for {item.get('id')}")
     for key in (
         "accountLevelOnly",
-        "requiresControlledAccountUi",
-        "requiresLedgerActivation",
         "requiresSupportReview",
     ):
         if redemption.get(key) is not True:
             raise SiteCheckError(f"{label}: {key} must be true")
+    if redemption.get("requiresControlledAccountUi") is not False:
+        raise SiteCheckError(f"{label}: requiresControlledAccountUi should be false after account UI launch")
+    if redemption.get("requiresLedgerActivation") is not False:
+        raise SiteCheckError(f"{label}: requiresLedgerActivation should be false after ledger path launch")
     for key in (
         "transferable",
         "cashEquivalent",
@@ -6273,10 +6362,10 @@ def validate_credits_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong releaseGatesPage")
     if release_gates.get("releaseGates") != RELEASE_GATES_URL:
         raise SiteCheckError(f"{label}: wrong releaseGates")
-    for item in ("controlled HTTPS account UI", "read-only GCA balance verification", "credit ledger activation", "support review queue"):
+    for item in ("eligible account record", "read-only GCA balance verification", "credit ledger record", "support/product review before service delivery"):
         if item not in release_gates.get("requiredBeforeCreditUse", []):
             raise SiteCheckError(f"{label}: missing credit gate {item}")
-    for item in ("controlled HTTPS account UI", "read-only GCA balance verification", "member ledger activation", "support review queue"):
+    for item in ("eligible account record", "read-only GCA balance verification", "member ledger record", "support review queue"):
         if item not in release_gates.get("requiredBeforeMemberUse", []):
             raise SiteCheckError(f"{label}: missing member gate {item}")
     if market.get("pair") != "GCA/USDT":
@@ -6311,10 +6400,10 @@ def validate_credits_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong reviewQueue")
     if links.get("memberLedger") != MEMBER_LEDGER_URL:
         raise SiteCheckError(f"{label}: wrong memberLedger")
-    if "GCA has published a draft service catalog for planned Web3 Radar utility credits." not in boundaries.get("safeClaims", []):
+    if "GCA has published a service catalog for Web3 Radar utility credits." not in boundaries.get("safeClaims", []):
         raise SiteCheckError(f"{label}: missing credits safe claim")
-    if not any("live self-service claimable" in item for item in boundaries.get("doNotClaim", [])):
-        raise SiteCheckError(f"{label}: missing self-service boundary")
+    if not any("automatic or self-service transferred" in item for item in boundaries.get("doNotClaim", [])):
+        raise SiteCheckError(f"{label}: missing member benefit boundary")
     if not any("cash, income" in item for item in boundaries.get("doNotClaim", [])):
         raise SiteCheckError(f"{label}: missing credit value boundary")
     assert_no_forbidden_public_claims(json.dumps(payload), label)
@@ -6341,10 +6430,10 @@ def validate_release_gates_page(text: str) -> None:
     assert_contains(text, "Access Portal", label)
     assert_contains(text, "Operations Runbook", label)
     assert_contains(text, "Access API", label)
-    assert_contains(text, "public product spec only", label)
-    assert_contains(text, "Public Account UI is not live", label)
-    assert_contains(text, "Credits are not self-service claimable", label)
-    assert_contains(text, "GCA Member status is not self-service claimable", label)
+    assert_contains(text, "account ledger path live", label)
+    assert_contains(text, "Public account UI, wallet verification, and eligible 100 credits / GCA Member ledger records are live", label)
+    assert_contains(text, "Live at /gca/member-access/", label)
+    assert_contains(text, "Eligible ledger records live", label)
     assert_contains(text, "controlled HTTPS account UI", label)
     assert_contains(text, "read-only GCA balance verification", label)
     assert_contains(text, "credit ledger activation", label)
@@ -6375,25 +6464,27 @@ def validate_release_gates_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != RELEASE_GATES_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
-    if payload.get("status") != "public-release-gates-published":
+    if payload.get("status") != "public-release-gates-account-ledger-path-live":
         raise SiteCheckError(f"{label}: wrong status")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
     if payload.get("contractAddress") != MAINNET_ADDRESS:
         raise SiteCheckError(f"{label}: wrong contractAddress")
-    if state.get("currentStage") != "public-product-spec-only":
+    if state.get("currentStage") != "account-ledger-path-live":
         raise SiteCheckError(f"{label}: wrong currentStage")
-    if state.get("publicProductSpecOnly") is not True:
-        raise SiteCheckError(f"{label}: publicProductSpecOnly must be true")
-    for key in ("publicAccountUiLive", "creditsSelfServiceClaimable", "gcaMemberSelfServiceClaimable", "liveTradingEnabled"):
-        if state.get(key) is not False:
-            raise SiteCheckError(f"{label}: {key} must be false")
+    if state.get("publicProductSpecOnly") is not False:
+        raise SiteCheckError(f"{label}: publicProductSpecOnly must be false")
+    for key in ("publicAccountUiLive", "creditsSelfServiceClaimable", "gcaMemberSelfServiceClaimable", "walletVerificationLive", "creditLedgerWritesLive", "memberLedgerWritesLive", "memberBenefitManualReviewOnly"):
+        if state.get(key) is not True:
+            raise SiteCheckError(f"{label}: {key} must be true")
+    if state.get("liveTradingEnabled") is not False:
+        raise SiteCheckError(f"{label}: liveTradingEnabled must be false")
     if state.get("baseScanTokenProfile") != "resubmitted-awaiting-review":
         raise SiteCheckError(f"{label}: wrong BaseScan state")
     if state.get("thirdPartyAudit") != "not-completed":
         raise SiteCheckError(f"{label}: wrong audit state")
     for gate in (
-        "access-portal-blueprint",
+        "access-portal",
         "access-api-contract",
         "operations-runbook",
         "review-queue-contract",
@@ -6408,17 +6499,12 @@ def validate_release_gates_json(text: str) -> None:
         if gate not in gate_ids:
             raise SiteCheckError(f"{label}: missing gate {gate}")
     for item in (
-        "access portal blueprint",
-        "access API contract",
-        "public access operations runbook",
-        "review queue contract",
-        "controlled HTTPS account UI",
         "read-only GCA balance verification",
-        "credit ledger activation",
-        "member ledger activation",
-        "support review queue",
+        "credit ledger record",
+        "member ledger record",
+        "support review queue for member-benefit approval",
         "risk-control review",
-        "simulation or testnet first",
+        "simulation or testnet first for any future trading workflow",
         "no custody",
         "no withdrawal permission",
         "no exchange API secret collection",
@@ -6463,10 +6549,10 @@ def validate_release_gates_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong utilityJson")
     if links.get("memberLedger") != MEMBER_LEDGER_URL:
         raise SiteCheckError(f"{label}: wrong memberLedger")
-    if not any("public release gates" in item for item in payload.get("publicClaimBoundaries", {}).get("safeClaims", [])):
+    if not any("live controlled account UI" in item for item in payload.get("publicClaimBoundaries", {}).get("safeClaims", [])):
         raise SiteCheckError(f"{label}: missing release-gates safe claim")
-    if not any("credit claiming is live" in item for item in payload.get("publicClaimBoundaries", {}).get("doNotClaim", [])):
-        raise SiteCheckError(f"{label}: missing credit boundary")
+    if not any("automatic or self-service transferred" in item for item in payload.get("publicClaimBoundaries", {}).get("doNotClaim", [])):
+        raise SiteCheckError(f"{label}: missing member benefit boundary")
     assert_no_forbidden_public_claims(json.dumps(payload), label)
     assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
     assert_not_contains(json.dumps(payload), "GCA/WETH", label)
@@ -6822,7 +6908,7 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong contractAddress")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
-    if payload.get("lastUpdated") != "2026-05-18":
+    if payload.get("lastUpdated") != "2026-05-20":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("memberProgramRulesUrl") != MEMBER_PROGRAM_URL:
         raise SiteCheckError(f"{label}: wrong memberProgramRulesUrl")
@@ -7021,9 +7107,9 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: unexpected narrative system status")
     if status.get("weeklyGoChinaRadar") != "weekly-go-china-radar-issue-003-published":
         raise SiteCheckError(f"{label}: unexpected weekly radar status")
-    if status.get("accessPortal") != "public-access-portal-blueprint-published":
+    if status.get("accessPortal") != "public-access-portal-live":
         raise SiteCheckError(f"{label}: unexpected access portal status")
-    if status.get("accessApiContract") != "public-access-api-contract-email-registration-live":
+    if status.get("accessApiContract") != "public-access-api-member-access-live":
         raise SiteCheckError(f"{label}: unexpected access API status")
     if status.get("reviewQueueContract") != "public-review-queue-contract-published":
         raise SiteCheckError(f"{label}: unexpected review queue status")
@@ -7147,24 +7233,24 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong member access brief amount")
     if member_access_brief.get("operatorReviewRequired") is not True:
         raise SiteCheckError(f"{label}: member access brief must require review")
-    if member_program.get("status") != "rules-published-public-claim-not-connected":
+    if member_program.get("status") != "account-ledger-path-live-manual-benefit-review":
         raise SiteCheckError(f"{label}: unexpected member program status")
     if member_program.get("supportIntake", {}).get("status") != "public-support-intake-published":
         raise SiteCheckError(f"{label}: unexpected support intake status")
-    if member_program.get("ledgerSchema", {}).get("status") != "public-member-ledger-schema-published":
+    if member_program.get("ledgerSchema", {}).get("status") != "public-member-ledger-workers-d1-live":
         raise SiteCheckError(f"{label}: unexpected member ledger schema status")
     if member_program.get("privacyAndTerms", {}).get("status") != "public-privacy-and-terms-published":
         raise SiteCheckError(f"{label}: unexpected privacy and terms status")
     if payload.get("roadmap", {}).get("status") != "public-roadmap-published":
         raise SiteCheckError(f"{label}: unexpected roadmap status")
-    if payload.get("roadmap", {}).get("publicSelfServiceClaimsLive") is not False:
-        raise SiteCheckError(f"{label}: roadmap must keep self-service claims false")
+    if payload.get("roadmap", {}).get("publicSelfServiceClaimsLive") is not True:
+        raise SiteCheckError(f"{label}: roadmap must mark account/ledger path live")
     if payload.get("utilityBridge", {}).get("status") != "public-utility-bridge-spec-published":
         raise SiteCheckError(f"{label}: unexpected utility bridge status")
     if payload.get("utilityBridge", {}).get("url") != UTILITY_URL:
         raise SiteCheckError(f"{label}: wrong utility bridge url")
-    if payload.get("utilityBridge", {}).get("publicSelfServiceClaimsLive") is not False:
-        raise SiteCheckError(f"{label}: utility bridge must keep self-service claims false")
+    if payload.get("utilityBridge", {}).get("publicSelfServiceClaimsLive") is not True:
+        raise SiteCheckError(f"{label}: utility bridge must mark account/ledger path live")
     if payload.get("utilityBridge", {}).get("requiresControlledWalletVerification") is not True:
         raise SiteCheckError(f"{label}: utility bridge must require controlled wallet verification")
     if status.get("productSpec") != "public-product-spec-published":
@@ -7179,8 +7265,8 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong product spec page")
     if payload.get("productSpec", {}).get("url") != PRODUCT_URL:
         raise SiteCheckError(f"{label}: wrong product spec url")
-    if payload.get("productSpec", {}).get("publicAccountUiLive") is not False:
-        raise SiteCheckError(f"{label}: product account UI must be false")
+    if payload.get("productSpec", {}).get("publicAccountUiLive") is not True:
+        raise SiteCheckError(f"{label}: product account UI must be true")
     if payload.get("productSpec", {}).get("liveTradingEnabled") is not False:
         raise SiteCheckError(f"{label}: product live trading must be false")
     if "ENTRY_READY Review" not in payload.get("productSpec", {}).get("moduleNames", []):
@@ -7192,14 +7278,14 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong credits catalog page")
     if credits.get("url") != CREDITS_URL:
         raise SiteCheckError(f"{label}: wrong credits catalog url")
-    if credits.get("currentStage") != "draft-service-catalog-only":
+    if credits.get("currentStage") != "account-ledger-path-live":
         raise SiteCheckError(f"{label}: wrong credits catalog stage")
-    if credits.get("publicAccountUiLive") is not False:
-        raise SiteCheckError(f"{label}: credits account UI must be false")
-    if credits.get("creditsSelfServiceClaimable") is not False:
-        raise SiteCheckError(f"{label}: credits self-service must be false")
-    if credits.get("gcaMemberSelfServiceClaimable") is not False:
-        raise SiteCheckError(f"{label}: member self-service must be false")
+    if credits.get("publicAccountUiLive") is not True:
+        raise SiteCheckError(f"{label}: credits account UI must be true")
+    if credits.get("creditsSelfServiceClaimable") is not True:
+        raise SiteCheckError(f"{label}: credits self-service must be true")
+    if credits.get("gcaMemberSelfServiceClaimable") is not True:
+        raise SiteCheckError(f"{label}: member self-service must be true")
     if credits.get("holderBonusCreditAmount") != "100 Web3 Radar utility credits":
         raise SiteCheckError(f"{label}: wrong credits holder bonus")
     if "Support Review Queue" not in credits.get("serviceNames", []):
@@ -7213,8 +7299,8 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong review queue url")
     if review_queue.get("publicQueueLive") is not False:
         raise SiteCheckError(f"{label}: review queue publicQueueLive must be false")
-    if review_queue.get("creditsSelfServiceClaimable") is not False:
-        raise SiteCheckError(f"{label}: review queue credits must be false")
+    if review_queue.get("creditsSelfServiceClaimable") is not True:
+        raise SiteCheckError(f"{label}: review queue credits must be true")
     if "wallet-balance-review" not in review_queue.get("lanes", []):
         raise SiteCheckError(f"{label}: missing review queue lane")
     operations = payload.get("accessOperationsRunbook", {})
@@ -7224,22 +7310,24 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong operations page")
     if operations.get("url") != OPERATIONS_URL:
         raise SiteCheckError(f"{label}: wrong operations url")
-    if operations.get("publicRunbookOnly") is not True:
-        raise SiteCheckError(f"{label}: operations must remain runbook only")
-    if operations.get("ledgerWritesLive") is not False:
-        raise SiteCheckError(f"{label}: operations ledger writes must be false")
+    if operations.get("publicRunbookOnly") is not False:
+        raise SiteCheckError(f"{label}: operations must mark live account/ledger flow")
+    if operations.get("runbookOnlyForManualReviewHandling") is not True:
+        raise SiteCheckError(f"{label}: operations must keep manual-review runbook boundary")
+    if operations.get("ledgerWritesLive") is not True:
+        raise SiteCheckError(f"{label}: operations ledger writes must be true")
     if payload.get("releaseGates", {}).get("status") != "public-release-gates-published":
         raise SiteCheckError(f"{label}: unexpected release gates object status")
     if payload.get("releaseGates", {}).get("pageUrl") != RELEASE_GATES_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong release gates page")
     if payload.get("releaseGates", {}).get("url") != RELEASE_GATES_URL:
         raise SiteCheckError(f"{label}: wrong release gates url")
-    if payload.get("releaseGates", {}).get("publicAccountUiLive") is not False:
-        raise SiteCheckError(f"{label}: release gates account UI must be false")
-    if payload.get("releaseGates", {}).get("creditsSelfServiceClaimable") is not False:
-        raise SiteCheckError(f"{label}: release gates credits must be false")
-    if payload.get("releaseGates", {}).get("gcaMemberSelfServiceClaimable") is not False:
-        raise SiteCheckError(f"{label}: release gates member status must be false")
+    if payload.get("releaseGates", {}).get("publicAccountUiLive") is not True:
+        raise SiteCheckError(f"{label}: release gates account UI must be true")
+    if payload.get("releaseGates", {}).get("creditsSelfServiceClaimable") is not True:
+        raise SiteCheckError(f"{label}: release gates credits must be true")
+    if payload.get("releaseGates", {}).get("gcaMemberSelfServiceClaimable") is not True:
+        raise SiteCheckError(f"{label}: release gates member status must be true")
     if "risk-control review" not in payload.get("releaseGates", {}).get("requiredBeforePublicClaims", []):
         raise SiteCheckError(f"{label}: missing release gates risk-control gate")
     if payload.get("communityKit", {}).get("status") != "public-community-kit-published":
@@ -7420,13 +7508,13 @@ def validate_tokenlist_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong accessPortalPage")
     if extensions.get("accessPortal") != ACCESS_URL:
         raise SiteCheckError(f"{label}: wrong accessPortal")
-    if extensions.get("accessPortalStatus") != "public-access-portal-blueprint-published":
+    if extensions.get("accessPortalStatus") != "public-access-portal-live":
         raise SiteCheckError(f"{label}: wrong accessPortalStatus")
     if extensions.get("accessApiPage") != ACCESS_API_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong accessApiPage")
     if extensions.get("accessApi") != ACCESS_API_URL:
         raise SiteCheckError(f"{label}: wrong accessApi")
-    if extensions.get("accessApiStatus") != "public-access-api-contract-email-registration-live":
+    if extensions.get("accessApiStatus") != "public-access-api-member-access-live":
         raise SiteCheckError(f"{label}: wrong accessApiStatus")
     if extensions.get("reviewQueuePage") != REVIEW_QUEUE_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong reviewQueuePage")
@@ -7560,7 +7648,7 @@ def validate_tokenlist_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong custodyRoadmapStatus")
     if extensions.get("auditReadinessStatus") != "public-audit-readiness-package-published":
         raise SiteCheckError(f"{label}: wrong auditReadinessStatus")
-    if extensions.get("memberLedgerStatus") != "public-member-ledger-schema-published":
+    if extensions.get("memberLedgerStatus") != "public-member-ledger-workers-d1-live":
         raise SiteCheckError(f"{label}: wrong memberLedgerStatus")
     if extensions.get("supportIntakeStatus") != "public-support-intake-published":
         raise SiteCheckError(f"{label}: wrong supportIntakeStatus")
@@ -7768,9 +7856,9 @@ def validate_well_known_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong narrativeSystem status")
     if payload.get("platformStatus", {}).get("weeklyGoChinaRadar") != "weekly-go-china-radar-issue-003-published":
         raise SiteCheckError(f"{label}: wrong weeklyGoChinaRadar status")
-    if payload.get("platformStatus", {}).get("accessPortal") != "public-access-portal-blueprint-published":
+    if payload.get("platformStatus", {}).get("accessPortal") != "public-access-portal-live":
         raise SiteCheckError(f"{label}: wrong accessPortal status")
-    if payload.get("platformStatus", {}).get("accessApiContract") != "public-access-api-contract-email-registration-live":
+    if payload.get("platformStatus", {}).get("accessApiContract") != "public-access-api-member-access-live":
         raise SiteCheckError(f"{label}: wrong accessApiContract status")
     if payload.get("platformStatus", {}).get("reviewQueueContract") != "public-review-queue-contract-published":
         raise SiteCheckError(f"{label}: wrong reviewQueueContract status")
@@ -7796,18 +7884,18 @@ def validate_well_known_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong productSpec page")
     if payload.get("productSpec", {}).get("url") != PRODUCT_URL:
         raise SiteCheckError(f"{label}: wrong productSpec url")
-    if payload.get("productSpec", {}).get("publicAccountUiLive") is not False:
-        raise SiteCheckError(f"{label}: product account UI must be false")
+    if payload.get("productSpec", {}).get("publicAccountUiLive") is not True:
+        raise SiteCheckError(f"{label}: product account UI must be true")
     if payload.get("productSpec", {}).get("liveTradingEnabled") is not False:
         raise SiteCheckError(f"{label}: product live trading must be false")
     if payload.get("releaseGates", {}).get("pageUrl") != RELEASE_GATES_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong releaseGates page")
     if payload.get("releaseGates", {}).get("url") != RELEASE_GATES_URL:
         raise SiteCheckError(f"{label}: wrong releaseGates url")
-    if payload.get("releaseGates", {}).get("creditsSelfServiceClaimable") is not False:
-        raise SiteCheckError(f"{label}: release gates credits must be false")
-    if payload.get("releaseGates", {}).get("gcaMemberSelfServiceClaimable") is not False:
-        raise SiteCheckError(f"{label}: release gates member must be false")
+    if payload.get("releaseGates", {}).get("creditsSelfServiceClaimable") is not True:
+        raise SiteCheckError(f"{label}: release gates credits must be true")
+    if payload.get("releaseGates", {}).get("gcaMemberSelfServiceClaimable") is not True:
+        raise SiteCheckError(f"{label}: release gates member must be true")
     if payload.get("reviewQueueContract", {}).get("pageUrl") != REVIEW_QUEUE_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong reviewQueueContract page")
     if payload.get("reviewQueueContract", {}).get("url") != REVIEW_QUEUE_URL:
@@ -7818,8 +7906,10 @@ def validate_well_known_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong operations page")
     if payload.get("accessOperationsRunbook", {}).get("url") != OPERATIONS_URL:
         raise SiteCheckError(f"{label}: wrong operations url")
-    if payload.get("accessOperationsRunbook", {}).get("publicRunbookOnly") is not True:
-        raise SiteCheckError(f"{label}: operations must remain runbook only")
+    if payload.get("accessOperationsRunbook", {}).get("publicRunbookOnly") is not False:
+        raise SiteCheckError(f"{label}: operations must mark live account/ledger flow")
+    if payload.get("accessOperationsRunbook", {}).get("runbookOnlyForManualReviewHandling") is not True:
+        raise SiteCheckError(f"{label}: operations must keep manual-review runbook boundary")
     if payload.get("platformStatus", {}).get("walletSecurityProfile") != "public-wallet-security-profile-published":
         raise SiteCheckError(f"{label}: wrong walletSecurityProfile status")
     if payload.get("platformStatus", {}).get("tokenSafety") != "public-token-safety-checklist-published":
@@ -8005,16 +8095,16 @@ def validate_member_program_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing local transfer ledger")
     if local_backend.get("transferReceiptVerificationMethod") != "Base Mainnet public RPC eth_getTransactionReceipt ERC-20 Transfer log":
         raise SiteCheckError(f"{label}: wrong transfer receipt verification method")
-    if preview.get("status") != "browser-read-only-preview-live":
+    if preview.get("status") != "live-member-access-wallet-read":
         raise SiteCheckError(f"{label}: wrong browser preview status")
-    if preview.get("ledgerEffect") != "none":
-        raise SiteCheckError(f"{label}: browser preview must not write ledger")
+    if "eligible credit and member ledger records" not in preview.get("ledgerEffect", ""):
+        raise SiteCheckError(f"{label}: browser preview/member access ledger effect must be live")
     if preview.get("requiresSignature") is not False:
         raise SiteCheckError(f"{label}: browser preview must not require signature")
     if preview.get("requiresTransaction") is not False:
         raise SiteCheckError(f"{label}: browser preview must not require transaction")
-    if preview.get("finalEligibilityStillRequiresControlledAccountUi") is not True:
-        raise SiteCheckError(f"{label}: browser preview must require controlled UI for final eligibility")
+    if preview.get("finalEligibilityStillRequiresControlledAccountUi") is not False:
+        raise SiteCheckError(f"{label}: member access page must not require another controlled UI")
     if verification.get("publicLedgerSchemaUrl") != MEMBER_LEDGER_URL:
         raise SiteCheckError(f"{label}: wrong public ledger schema URL")
     if verification.get("preparedMemberBenefitTransferEndpoint") != "/gca/member-benefit-transfers":
@@ -8041,8 +8131,8 @@ def validate_member_program_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong support contact")
     if "ledger_recorded" not in support.get("reviewStatuses", []):
         raise SiteCheckError(f"{label}: missing ledger_recorded status")
-    if not any("public self-service claiming is not connected" in claim for claim in boundaries.get("safeClaims", [])):
-        raise SiteCheckError(f"{label}: missing not-connected safe claim")
+    if not any("live account and eligible ledger intake" in claim for claim in boundaries.get("safeClaims", [])):
+        raise SiteCheckError(f"{label}: missing live account safe claim")
     if not any("browser-only read-only GCA balance preview" in claim for claim in boundaries.get("safeClaims", [])):
         raise SiteCheckError(f"{label}: missing browser preview safe claim")
     if not any("manual transfer runbook" in claim for claim in boundaries.get("safeClaims", [])):
@@ -8254,7 +8344,7 @@ def validate_member_benefit_transfer_page(text: str) -> None:
     assert_contains(text, MAINNET_ADDRESS, label)
     assert_contains(text, RESERVE_WALLET, label)
     assert_contains(text, "Private key or seed phrase", label)
-    assert_contains(text, "not self-service claimable", label)
+    assert_contains(text, "The transfer is not automatic", label)
     assert_contains(text, "Do not say holding 1,000,000 GCA automatically triggers a transfer", label)
     assert_no_forbidden_public_claims(text, label)
     assert_not_contains(text, OLD_WETH_POOL_ADDRESS, label)
@@ -8276,7 +8366,7 @@ def validate_member_ledger_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != MEMBER_LEDGER_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
-    if payload.get("status") != "public-member-ledger-schema-published":
+    if payload.get("status") != "public-member-ledger-workers-d1-live":
         raise SiteCheckError(f"{label}: wrong status")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
@@ -8284,8 +8374,8 @@ def validate_member_ledger_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong contractAddress")
     if urls.get("memberProgramRules") != MEMBER_PROGRAM_URL:
         raise SiteCheckError(f"{label}: wrong memberProgramRules")
-    if urls.get("memberAccessPreview") != "https://gcagochina.com/gca/member-access/":
-        raise SiteCheckError(f"{label}: wrong memberAccessPreview")
+    if urls.get("memberAccess") != "https://gcagochina.com/gca/member-access/":
+        raise SiteCheckError(f"{label}: wrong memberAccess")
     if urls.get("memberLedgerPage") != MEMBER_LEDGER_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong memberLedgerPage")
     if urls.get("memberLedgerSchema") != MEMBER_LEDGER_URL:
@@ -8306,8 +8396,8 @@ def validate_member_ledger_json(text: str) -> None:
         raise SiteCheckError(f"{label}: browser balance preview must not require signature")
     if preview.get("requiresTransaction") is not False:
         raise SiteCheckError(f"{label}: browser balance preview must not require transaction")
-    if preview.get("finalEligibilityStillRequiresControlledAccountUi") is not True:
-        raise SiteCheckError(f"{label}: browser balance preview must require controlled UI for final eligibility")
+    if preview.get("finalEligibilityStillRequiresControlledAccountUi") is not False:
+        raise SiteCheckError(f"{label}: browser balance preview should reflect live controlled UI")
     if thresholds.get("holderBonusMinimum") != "10000 GCA":
         raise SiteCheckError(f"{label}: wrong holder threshold")
     if thresholds.get("holderBonusCreditAmount") != "100 Web3 Radar utility credits":
@@ -8364,11 +8454,11 @@ def validate_member_ledger_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing support evidence reference")
     if "ledger_recorded" not in schemas.get("supportReviewRecord", {}).get("allowedStatuses", []):
         raise SiteCheckError(f"{label}: missing ledger_recorded status")
-    if not any("Public self-service claiming is not connected yet" in claim for claim in boundaries.get("safeClaims", [])):
-        raise SiteCheckError(f"{label}: missing not-connected safe claim")
+    if not any("public member access page can submit account intake" in claim for claim in boundaries.get("safeClaims", [])):
+        raise SiteCheckError(f"{label}: missing live member access safe claim")
     if not any("browser-only read-only GCA balance preview" in claim for claim in boundaries.get("safeClaims", [])):
         raise SiteCheckError(f"{label}: missing browser preview safe claim")
-    if not any("self-service claimable before controlled HTTPS account UI is live" in claim for claim in boundaries.get("doNotClaim", [])):
+    if not any("credits or membership are cash" in claim for claim in boundaries.get("doNotClaim", [])):
         raise SiteCheckError(f"{label}: missing self-service boundary")
     assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
     assert_not_contains(json.dumps(payload), "GCA/WETH", label)
@@ -8413,7 +8503,7 @@ def validate_member_ledger_page(text: str) -> None:
     assert_contains(text, "10,000 GCA after approval", label)
     assert_contains(text, "180 days", label)
     assert_contains(text, "30 days", label)
-    assert_contains(text, "Do not say 100 Web3 Radar utility credits are self-service claimable", label)
+    assert_contains(text, "eligible 10,000 GCA holders can create one account-level 100 Web3 Radar utility credits ledger record", label)
     assert_not_contains(text, OLD_WETH_POOL_ADDRESS, label)
 
 

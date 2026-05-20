@@ -408,6 +408,21 @@
           </div>
           <div class="fact">
             <span class="label">GET</span>
+            <span class="value">/gca/access-config</span>
+            <p class="note">Live public access configuration for chain ID 8453, the GCA contract, thresholds, ledger boundaries, and safety rules.</p>
+          </div>
+          <div class="fact">
+            <span class="label">POST</span>
+            <span class="value">/gca/wallet-verifications</span>
+            <p class="note">Live public read-only wallet verification. The Worker reads GCA balance with Base Mainnet <code>eth_call</code>; it does not request signatures or transactions.</p>
+          </div>
+          <div class="fact">
+            <span class="label">POST</span>
+            <span class="value">/gca/member-access</span>
+            <p class="note">Live public account intake for email, Base wallet, holder-credit review, GCA Member review, and D1 ledger writes for eligible records.</p>
+          </div>
+          <div class="fact">
+            <span class="label">GET</span>
             <span class="value">/gca/email-registrations</span>
             <p class="note">Live token-protected admin read. Public visitors should receive an authorization error, not registration records.</p>
           </div>
@@ -415,6 +430,16 @@
             <span class="label">GET</span>
             <span class="value">/gca/contact-suppressions</span>
             <p class="note">Live token-protected admin read for suppression sync. Public visitors cannot read the suppression ledger.</p>
+          </div>
+          <div class="fact">
+            <span class="label">GET</span>
+            <span class="value">/gca/credit-ledger</span>
+            <p class="note">Live token-protected admin read for 100 credits ledger records.</p>
+          </div>
+          <div class="fact">
+            <span class="label">GET</span>
+            <span class="value">/gca/member-ledger</span>
+            <p class="note">Live token-protected admin read for GCA Member ledger records and member-benefit review status.</p>
           </div>
           <div class="fact">
             <span class="label">Future Domain</span>
@@ -454,7 +479,7 @@
             <li>Email registration does not require a wallet, wallet signature, payment, private key, seed phrase, exchange API secret, or withdrawal permission.</li>
             <li>Contact suppression does not change GCA balances, pool state, credits, member status, or on-chain assets.</li>
             <li>Public visitors cannot read the registration ledger or suppression ledger.</li>
-            <li>100 credits, GCA Member status, and the 10,000 GCA member benefit are not public self-service features yet.</li>
+            <li>100 credits and GCA Member ledger records are live for eligible wallet submissions; the 10,000 GCA member benefit remains manual review and reserve-wallet processing only.</li>
           </ul>
         </div>
       </section>
@@ -473,7 +498,7 @@
     </main>
 
     <footer>
-      <div class="shell">GCA registration API status. Public email registration and unsubscribe are live on Workers + D1; admin reads remain token protected.</div>
+      <div class="shell">GCA API status. Public email registration, unsubscribe, member access, and read-only wallet verification are live on Workers + D1; admin reads remain token protected.</div>
     </footer>
   </body>
 </html>

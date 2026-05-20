@@ -79,8 +79,8 @@
       "url": "https://x.com/GCAAIGoChina"
     }
   ],
-  "shortDescription": "GCA, short for Go China Access, is a fixed-supply ERC-20 token on Base Mainnet. It is a concept-stage community direction focused on the Go China macro narrative, bilingual Web3 education, public market research, and planned access to non-custodial quant risk tools.",
-  "longDescription": "GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stands for Go China Access, a concept-stage community direction focused on the Go China macro narrative, bilingual Web3 education, public market research, and planned access to non-custodial quant risk tools. The intended Web3 Radar bridge is to make GCA an access and membership layer for liquidation replay reports, risk-warning credits, realistic backtests, ENTRY_READY signal review, position-size calculators, subscription discounts, risk-control training, and a reserve-funded 10000 GCA member benefit review for verified users who bought and continuously held at least 1000000 GCA for 30 days. The contract created 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls. The official public pool is the Base Mainnet Uniswap v4 GCA/USDT pool, and the project has a disclosed owner-held reserve wallet. Third-party audit quote requests were submitted and then deferred by owner decision. The project is early-stage and should not be described as externally audited, price-backed, yield-bearing, or backed by guaranteed liquidity.",
+  "shortDescription": "GCA, short for Go China Access, is a fixed-supply ERC-20 token on Base Mainnet with live account intake, read-only wallet verification, eligible member/credit ledger records, and staged non-custodial quant risk tools.",
+  "longDescription": "GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stands for Go China Access, a concept-stage community direction focused on the Go China macro narrative, bilingual Web3 education, public market research, live account intake, read-only wallet verification, eligible member/credit ledger records, and staged non-custodial quant risk tools. The Web3 Radar bridge makes GCA an access and membership layer for liquidation replay reports, risk-warning credits, realistic backtests, ENTRY_READY signal review, position-size calculators, subscription discounts, risk-control training, and a reserve-funded 10000 GCA member benefit review for verified users who bought and continuously held at least 1000000 GCA for 30 days. The contract created 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls. The official public pool is the Base Mainnet Uniswap v4 GCA/USDT pool, and the project has a disclosed owner-held reserve wallet. Third-party audit quote requests were submitted and then deferred by owner decision. The project is early-stage and should not be described as externally audited, price-backed, yield-bearing, or backed by guaranteed liquidity.",
   "utilityPositioning": {
     "status": "public-utility-bridge-spec-published",
     "specUrl": "https://gcagochina.com/utility.json",
@@ -97,7 +97,7 @@
       "GCA Member status plus one-time 10000 GCA member benefit review in the Web3 Radar member ledger for each registered user who verifies one wallet buying and continuously holding at least 1000000 GCA for 30 days"
     ],
     "plannedFirstCampaign": {
-      "status": "backend-ledger-ready-public-claim-not-connected",
+      "status": "account-ledger-path-live",
       "registeredUserLimit": "one bonus per registered user",
       "walletLimit": "one verified wallet per registered user",
       "minimumHolding": "10000 GCA",
@@ -107,7 +107,7 @@
       "notCreditUse": "cash, token claims, income, reimbursement, trading permission, or risk-control bypass"
     },
     "plannedMemberTier": {
-      "status": "backend-ledger-ready-public-claim-not-connected",
+      "status": "account-ledger-path-live-manual-benefit-review",
       "tierName": "GCA Member",
       "registeredUserLimit": "one membership status per registered user",
       "walletLimit": "one verified wallet per registered user",
@@ -122,7 +122,7 @@
     },
     "supportWorkflow": {
       "contactEmail": "GCAgochina@outlook.com",
-      "targetFirstResponse": "5-10 business days after controlled intake is live; not a guarantee",
+      "targetFirstResponse": "5-10 business days after account intake is received; not a guarantee",
       "reviewStatuses": [
         "received",
         "wallet_pending",
@@ -151,7 +151,7 @@
       "pageUrl": "https://gcagochina.com/roadmap.html",
       "url": "https://gcagochina.com/roadmap.json",
       "currentStage": "concept-stage-utility-buildout",
-      "publicSelfServiceClaimsLive": false
+      "publicSelfServiceClaimsLive": true
     },
     "communityKit": {
       "status": "public-community-kit-published",
@@ -297,8 +297,8 @@
   "productSpecPositioning": {
     "status": "public-product-spec-published",
     "productName": "GCA AI Quant Access",
-    "currentStage": "public-product-spec-only",
-    "publicAccountUiLive": false,
+    "currentStage": "account-ledger-path-live-product-tools-planned",
+    "publicAccountUiLive": true,
     "liveTradingEnabled": false,
     "modules": [
       "China Narrative Radar",

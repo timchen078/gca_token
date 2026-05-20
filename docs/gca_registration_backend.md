@@ -1,12 +1,15 @@
-# GCA Email Registration Backend
+# GCA Registration and Member Access Backend
 
-This is the deployed backend package for the public GCA email registration form.
+This is the deployed backend package for the public GCA email registration form, contact suppression, live member access UI, read-only wallet verification, 100-credit ledger records, and GCA Member ledger records.
 
 The public website remains hosted on GitHub Pages. The write API is deployed on Cloudflare Workers + D1 and currently exposed as:
 
 ```text
 https://gca-registration-api.gcagochina.workers.dev/gca/email-registrations
 https://gca-registration-api.gcagochina.workers.dev/gca/contact-suppressions
+https://gca-registration-api.gcagochina.workers.dev/gca/member-access
+https://gca-registration-api.gcagochina.workers.dev/gca/wallet-verifications
+https://gca-registration-api.gcagochina.workers.dev/gca/access-config
 ```
 
 ## What It Stores
@@ -31,7 +34,20 @@ Contact-suppression requests store:
 - timestamps
 - optional salted IP hash if `PRIVACY_HASH_SALT` is configured
 
-It does not collect wallet private keys, seed phrases, wallet passwords, exchange API secrets, withdrawal permissions, one-time codes, or remote-control access. It does not transfer GCA, activate credits, or activate GCA Member status.
+Member-access requests store:
+
+- email and optional display name
+- Base wallet address
+- generated `accountId`
+- read-only wallet verification result from Base Mainnet ERC-20 `balanceOf`
+- 100 Web3 Radar utility credit ledger record when the verified wallet holds at least 10,000 GCA
+- GCA Member ledger record when the verified wallet holds at least 1,000,000 GCA
+- holding start date and public evidence transaction hash for 30-day member review
+- member benefit status
+- timestamps
+- optional salted IP hash if `PRIVACY_HASH_SALT` is configured
+
+It does not collect wallet private keys, seed phrases, wallet passwords, exchange API secrets, withdrawal permissions, one-time codes, or remote-control access. It does not request wallet signatures or transactions for wallet verification. It does not automatically transfer GCA. The 10,000 GCA member benefit remains a manual reserve-wallet transfer review after eligibility is recorded.
 
 ## Deployed Cloudflare Resources
 
@@ -41,9 +57,17 @@ It does not collect wallet private keys, seed phrases, wallet passwords, exchang
 - D1 database id: `b4cb13f7-c52e-4dbc-b8d6-50346a814819`
 - Public site integration: `site/register.html`
 - Public contact suppression integration: `site/unsubscribe.html`
+- Public member access integration: `site/gca/member-access/index.html`
 - Admin read endpoint: `GET /gca/email-registrations`
 - Public contact suppression endpoint: `POST /gca/contact-suppressions`
 - Admin contact suppression endpoint: `GET /gca/contact-suppressions`
+- Public member access endpoint: `POST /gca/member-access`
+- Public wallet verification endpoint: `POST /gca/wallet-verifications`
+- Public access config endpoint: `GET /gca/access-config`
+- Admin wallet verification endpoint: `GET /gca/wallet-verifications`
+- Admin credit ledger endpoint: `GET /gca/credit-ledger`
+- Admin member ledger endpoint: `GET /gca/member-ledger`
+- Member D1 migration: `cloudflare/gca-registration-worker/migrations/0003_member_access_ledgers.sql`
 - Admin read secret: configured in Cloudflare as `ADMIN_READ_TOKEN`
 - Privacy hash salt: configured in Cloudflare as `PRIVACY_HASH_SALT`
 - Read-only live API check tool: `tools/check_gca_registration_api.py`
@@ -97,7 +121,7 @@ To run a read-only live API smoke check without writing production D1 data:
 .venv/bin/python tools/check_gca_registration_api.py --limit 5
 ```
 
-This checks `/health`, CORS preflight, unauthenticated admin-read rejection, and token-protected admin-read response shape. It prints only counts and check statuses; it does not print the admin token or user email records.
+This checks `/health`, `/gca/access-config`, CORS preflight, unauthenticated admin-read rejection, and token-protected admin-read response shape. It prints only counts and check statuses; it does not print the admin token or user email records.
 
 For public CI or environments without `ADMIN_READ_TOKEN`, run only the public surface checks:
 
@@ -123,6 +147,18 @@ To read recent contact-suppression requests:
 
 ```bash
 curl -fsS 'https://gca-registration-api.gcagochina.workers.dev/gca/contact-suppressions?limit=20' \
+  -H "authorization: Bearer $ADMIN_READ_TOKEN"
+
+curl -fsS 'https://gca-registration-api.gcagochina.workers.dev/gca/member-access?limit=20' \
+  -H "authorization: Bearer $ADMIN_READ_TOKEN"
+
+curl -fsS 'https://gca-registration-api.gcagochina.workers.dev/gca/wallet-verifications?limit=20' \
+  -H "authorization: Bearer $ADMIN_READ_TOKEN"
+
+curl -fsS 'https://gca-registration-api.gcagochina.workers.dev/gca/credit-ledger?limit=20' \
+  -H "authorization: Bearer $ADMIN_READ_TOKEN"
+
+curl -fsS 'https://gca-registration-api.gcagochina.workers.dev/gca/member-ledger?limit=20' \
   -H "authorization: Bearer $ADMIN_READ_TOKEN"
 ```
 
@@ -282,6 +318,36 @@ curl -fsS https://gca-registration-api.gcagochina.workers.dev/gca/contact-suppre
     }
   }'
 
+curl -fsS https://gca-registration-api.gcagochina.workers.dev/gca/access-config
+
+curl -fsS https://gca-registration-api.gcagochina.workers.dev/gca/wallet-verifications \
+  -H 'content-type: application/json' \
+  -X POST \
+  --data '{
+    "walletAddress": "0x0000000000000000000000000000000000000000"
+  }'
+
+curl -fsS https://gca-registration-api.gcagochina.workers.dev/gca/member-access \
+  -H 'content-type: application/json' \
+  -X POST \
+  --data '{
+    "packetVersion": "gca_member_access_v1",
+    "user": {
+      "email": "user@example.com",
+      "displayName": "GCA User",
+      "walletAddress": "0x0000000000000000000000000000000000000000"
+    },
+    "memberBenefitReviewEvidence": {
+      "holdingStartDate": "2026-05-01",
+      "evidenceTxHash": ""
+    },
+    "acknowledgements": {
+      "emailContactConsent": true,
+      "noSecretsNoCustody": true,
+      "memberAccessTerms": true
+    }
+  }'
+
 curl -fsS 'https://gca-registration-api.gcagochina.workers.dev/gca/email-registrations?limit=20' \
   -H "authorization: Bearer $ADMIN_READ_TOKEN"
 
@@ -294,3 +360,5 @@ curl -fsS 'https://gca-registration-api.gcagochina.workers.dev/gca/contact-suppr
 `site/register.html` now tries the production Workers API first when loaded from `gcagochina.com`. If the API temporarily fails, the page exposes the official email fallback to avoid losing user registrations.
 
 `site/unsubscribe.html` posts contact-suppression requests to the same Workers API when loaded from `gcagochina.com`. If the API temporarily fails, it exposes the official email fallback so a user can still request removal from future contact exports.
+
+`site/gca/member-access/index.html` posts account intake and wallet-verification requests to the same Workers API. The wallet check is a read-only Base Mainnet `eth_call`; it writes eligible D1 ledger records but does not request wallet signatures, transactions, custody, or automatic token transfers.

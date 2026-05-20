@@ -8,8 +8,8 @@ Utility thesis: `https://gcagochina.com/utility.html`
 Utility bridge spec: `https://gcagochina.com/utility.json`
 Product spec: `https://gcagochina.com/product.html`
 Product spec JSON: `https://gcagochina.com/product.json`
-Access portal blueprint: `https://gcagochina.com/access.html`
-Access portal blueprint JSON: `https://gcagochina.com/access.json`
+Access portal: `https://gcagochina.com/access.html`
+Access portal JSON: `https://gcagochina.com/access.json`
 Access API contract: `https://gcagochina.com/access-api.html`
 Access API contract JSON: `https://gcagochina.com/access-api.json`
 Review queue contract: `https://gcagochina.com/review-queue.html`
@@ -27,7 +27,7 @@ Weekly Go China Radar: `https://gcagochina.com/radar.html`
 
 ## Summary
 
-GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stands for Go China Access, a concept-stage community direction focused on China-facing Web3 culture, bilingual education, public market narrative research, and planned access to non-custodial quant risk tools.
+GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stands for Go China Access, a concept-stage community direction focused on China-facing Web3 culture, bilingual education, public market narrative research, live account intake, read-only wallet verification, eligible member/credit ledger records, and staged access to non-custodial quant risk tools.
 
 The contract creates the entire supply at deployment and does not include post-deployment minting, burning, taxes, blacklist logic, or privileged admin controls. The product roadmap is still being developed publicly, so GCA should not be described as a finished platform or as having guaranteed utility.
 
@@ -76,7 +76,7 @@ The GCA narrative system uses repeatable names so the project can be memorable w
 
 The current public content format is Weekly Go China Radar. Issue 002, Trust Stack Before Growth, is a reusable update for verification links, public trust signals, risk notes, utility hooks, and community talking points. It is not live market data, financial advice, a buy/sell recommendation, or a price forecast.
 
-The planned product bridge is to connect GCA with Web3 Radar-style non-custodial quant tooling. Suitable utility includes:
+The product bridge connects GCA with Web3 Radar-style non-custodial quant tooling through live account intake and eligible ledger records. Suitable utility includes:
 
 - Liquidation replay reports
 - Risk-warning credits
@@ -88,21 +88,21 @@ The planned product bridge is to connect GCA with Web3 Radar-style non-custodial
 - Planned first campaign: each registered user may verify one wallet holding at least 10,000 GCA and receive a one-time 100 Web3 Radar utility credits bonus after the access bridge is live
 - Planned GCA Member tier: each registered user may verify one wallet buying and continuously holding at least 1,000,000 GCA for 30 days, then qualify for GCA Member status and one-time 10,000 GCA member benefit review after the access bridge is live
 
-The public product specification for this direction is GCA AI Quant Access. It is published as a planning document only and describes China Narrative Radar, Weekly Go China Radar, Liquidation Replay, Risk Warning Credits, Backtest Lab, ENTRY_READY Review, Position Size Calculator, and GCA Member Workspace. It is not a live trading terminal, live market data service, financial advice, or a self-service account product.
+The public product specification for this direction is GCA AI Quant Access. It records live account/ledger intake and describes China Narrative Radar, Weekly Go China Radar, Liquidation Replay, Risk Warning Credits, Backtest Lab, ENTRY_READY Review, Position Size Calculator, and GCA Member Workspace. It is not a live trading terminal, live market data service, financial advice, or a finished trading product.
 
-The public access portal blueprint defines the future controlled account path: create a controlled HTTPS account, verify GCA balance with read-only `eth_call` and ERC-20 `balanceOf`, create a support review record, activate a 100 credits ledger record for eligible 10,000 GCA holders, and activate GCA Member status plus one-time 10,000 GCA member benefit review for eligible users who bought and continuously held at least 1,000,000 GCA for 30 days. It is blueprint only until controlled HTTPS account UI, direct submission, credit ledger activation, member ledger activation, and support review are live.
+The public access portal defines the live controlled account path: create an account-intake record through the HTTPS member page, verify GCA balance with read-only `eth_call` and ERC-20 `balanceOf`, create a support review record, activate a 100 credits ledger record for eligible 10,000 GCA holders, and activate GCA Member review status for eligible users who bought and continuously held at least 1,000,000 GCA for 30 days. The one-time 10,000 GCA member benefit remains manual review and reserve-wallet processing only.
 
-The public member benefit transfer runbook defines the manual controls for any approved 10,000 GCA member benefit. The benefit must come from project or owner-held reserve after support review, member ledger approval, 30-day holding-period verification, and a fresh read-only balance check. It is not automatic, not self-service claimable, and not newly minted.
+The public member benefit transfer runbook defines the manual controls for any approved 10,000 GCA member benefit. The benefit must come from project or owner-held reserve after support review, member ledger approval, 30-day holding-period verification, and a fresh read-only balance check. It is not automatic and not newly minted.
 
-The public access API contract defines the future controlled HTTPS backend routes: `POST /gca/pre-registrations`, `POST /gca/wallet-verifications`, `GET /gca/credit-ledger`, `GET /gca/member-ledger`, `POST /gca/support-review`, and `GET /gca/member-review`. It is contract only and is not a live public submission endpoint.
+The public access API contract now includes live Workers + D1 routes for account intake and wallet verification: `GET /gca/access-config`, `POST /gca/wallet-verifications`, `POST /gca/member-access`, plus token-protected admin reads for wallet verification, member access, credit ledger, and member ledger records.
 
 The public review queue contract defines the manual review lanes that sit between intake and ledger activation: pre-registration intake, wallet balance review, holder credit review, GCA Member review, support case review, and platform profile follow-up. It is not a live public submission queue and cannot override on-chain wallet-balance verification.
 
-The public access operations runbook defines how operators should handle those manual reviews before public self-service claiming is live. It requires non-sensitive intake only, Base Mainnet identity checks, read-only `eth_call` / `balanceOf` wallet-balance review, 30-day holding-period review for GCA Member benefit eligibility, decision records for 10,000 GCA credits eligibility and 1,000,000 GCA Member eligibility, support replies, ledger handoff, platform follow-up, and closure notes. It is public documentation only, not a live backend, public submission queue, account system, or self-service claim page.
+The public access operations runbook defines how operators should handle manual reviews after account intake and eligible ledger records are live. It requires non-sensitive intake only, Base Mainnet identity checks, read-only `eth_call` / `balanceOf` wallet-balance review, 30-day holding-period review for GCA Member benefit eligibility, decision records for 10,000 GCA credits eligibility and 1,000,000 GCA Member eligibility, support replies, ledger handoff, platform follow-up, and closure notes. It does not make the project a custody system, public ledger browser, or self-service token-transfer claim page.
 
-The public credits catalog is a draft service catalog for planned Web3 Radar utility credits. It maps the 100 Web3 Radar utility credits campaign to service units such as Liquidation Replay, Risk Warning Review, Backtest Lab, ENTRY_READY Review, Position Size Calculator, Risk-Control Training, Member Research Notes, and Support Review Queue. It is not self-service claimable until controlled account UI, read-only wallet verification, credit ledger activation, member ledger activation, and support review are live.
+The public credits catalog is a service catalog for Web3 Radar utility credits. It maps the 100 Web3 Radar utility credits campaign to service units such as Liquidation Replay, Risk Warning Review, Backtest Lab, ENTRY_READY Review, Position Size Calculator, Risk-Control Training, Member Research Notes, and Support Review Queue. Eligible account and wallet submissions can now write credit/member ledger records; actual service delivery and the 10,000 GCA member benefit remain subject to support review and published release boundaries.
 
-The public release-gates page defines the conditions that must be met before the product can be described as public self-service access: controlled HTTPS account UI, read-only GCA balance verification, 30-day GCA Member holding-period review, credit ledger activation, member ledger activation, support review queue, risk-control review, and simulation or testnet first. Until those gates are live, 100 utility credits, GCA Member status, and the 10,000 GCA member benefit are not self-service claimable.
+The public release-gates page now distinguishes live access gates from remaining product gates: controlled HTTPS account UI, read-only GCA balance verification, eligible credit ledger writes, and eligible member ledger writes are live; support review, member-benefit manual processing, risk-control review, and simulation or testnet first remain required before broader product or trading workflows.
 
 Near-term work should focus on:
 
@@ -118,9 +118,9 @@ This concept does not imply a price target, return promise, revenue share, or co
 
 GCA should be positioned as an access and membership layer, not as a yield product. Token utility should unlock reports, credits, education, and research workflows. It should not distribute platform revenue, promise outcomes, provide custody, request withdrawal permission, or bypass trading risk checks.
 
-The planned 10,000 GCA holder bonus is an account-level service credit campaign. The 100 Web3 Radar utility credits should only be usable for reports, backtests, risk warnings, ENTRY_READY signal review, position calculators, or education access. They should not be cash, token claims, income, reimbursement, trading permission, or a reason to bypass risk controls.
+The 10,000 GCA holder bonus is an account-level service credit campaign. The 100 Web3 Radar utility credits should only be usable for reports, backtests, risk warnings, ENTRY_READY signal review, position calculators, or education access. They should not be cash, token claims, income, reimbursement, trading permission, or a reason to bypass risk controls.
 
-The planned 1,000,000 GCA Member tier is an account-level service-access tier, not a financial status. It requires verified purchase and continuous holding for 30 days before member benefit review. Possible GCA Member benefits include a one-time 10,000 GCA member benefit from project or owner-held reserve, higher utility credit limits, member research notes, priority report queue, member training sessions, and priority support. The 10,000 GCA member benefit is documented as a manual reserve transfer after approval, not automatic claiming or new minting. GCA Member status and the member benefit should not provide cash, income, reimbursement, voting control, guaranteed lifetime access, trading permission, or a way to bypass risk controls.
+The 1,000,000 GCA Member tier is an account-level service-access tier, not a financial status. It requires verified purchase and continuous holding for 30 days before member benefit review. Possible GCA Member benefits include a one-time 10,000 GCA member benefit from project or owner-held reserve, higher utility credit limits, member research notes, priority report queue, member training sessions, and priority support. The 10,000 GCA member benefit is documented as a manual reserve transfer after approval, not automatic claiming or new minting. GCA Member status and the member benefit should not provide cash, income, reimbursement, voting control, guaranteed lifetime access, trading permission, or a way to bypass risk controls.
 
 ## Distribution Status
 

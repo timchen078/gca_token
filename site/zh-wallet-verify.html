@@ -11,14 +11,14 @@
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="GCA | Go China Access">
     <meta property="og:title" content="GCA 中文只读钱包验证 | Go China Access">
-    <meta property="og:description" content="说明 GCA 只读余额验证计划、当前未上线边界、会员审核资料和不会索要的敏感信息。">
+    <meta property="og:description" content="说明 GCA 只读余额验证、已上线账户入口、会员审核资料和不会索要的敏感信息。">
     <meta property="og:url" content="https://gcagochina.com/zh-wallet-verify.html">
     <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="GCA 中文只读钱包验证 | Go China Access">
-    <meta name="twitter:description" content="说明 GCA 只读余额验证计划、当前未上线边界、会员审核资料和不会索要的敏感信息。">
+    <meta name="twitter:description" content="说明 GCA 只读余额验证、已上线账户入口、会员审核资料和不会索要的敏感信息。">
     <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
     <style>
       :root {
@@ -305,8 +305,8 @@
       <section aria-labelledby="title">
         <p class="eyebrow">只读钱包验证 / 2026-05-20</p>
         <h1 id="title">GCA 中文只读钱包验证</h1>
-        <p class="lead">这一页说明 GCA 未来会员和 credits 审核里的钱包验证方式。核心原则是只读：读取公开链上余额，不要求签名，不发起交易，不授权转移资产。</p>
-        <p class="lead">当前公开自助验证 UI 还没有上线。现阶段用户可以准备公开钱包地址、购买交易哈希、持有开始日期和截图资料；正式写入 100 credits 或 GCA Member 账本仍需要后续受控账户系统和人工审核。</p>
+        <p class="lead">这一页说明 GCA 会员和 credits 审核里的钱包验证方式。核心原则是只读：读取公开链上余额，不要求签名，不发起交易，不授权转移资产。</p>
+        <p class="lead">公开账户入口、只读钱包验证和符合条件的 100 credits / GCA Member 账本写入已经上线。用户可以用 MetaMask 等钱包提交公开钱包地址、购买交易哈希、持有开始日期和基础资料；10,000 GCA 会员权益仍需要后续人工审核和储备钱包处理。</p>
         <div class="actions">
           <a class="button primary" href="zh-access.html">中文用户中心预览</a>
           <a class="button primary" href="register.html">邮箱注册</a>
@@ -314,7 +314,7 @@
           <a class="button secondary" href="zh-member-checklist.html">中文会员审核资料清单</a>
           <a class="button secondary" href="zh-release-gates.html">中文上线门槛</a>
           <a class="button secondary" href="zh-support.html">中文支持和资料提交</a>
-          <a class="button" href="gca/member-access/">浏览器只读预览</a>
+          <a class="button" href="gca/member-access/">打开账户入口</a>
         </div>
       </section>
 
@@ -348,7 +348,7 @@
         </article>
         <article class="card">
           <h2>不会自动完成什么</h2>
-          <p class="note">读取余额不会自动激活 100 credits、GCA Member 或 10,000 GCA 会员权益；这些仍需要规则审核和账本记录。</p>
+          <p class="note">读取余额本身不会转移任何资产。符合条件的钱包提交可以写入 100 credits 或 GCA Member 账本记录；10,000 GCA 会员权益仍需要人工审核和储备钱包处理。</p>
         </article>
       </section>
 
@@ -359,7 +359,7 @@
             <div class="row"><span>10,000 GCA</span><strong>进入 100 Web3 Radar utility credits 审核路径</strong></div>
             <div class="row"><span>1,000,000 GCA</span><strong>连续持有 30 天后进入 GCA Member 审核路径</strong></div>
             <div class="row"><span>GCA Member</span><strong>通过后才可能进入一次性 10,000 GCA 会员权益审核</strong></div>
-            <div class="row"><span>当前状态</span><strong class="pending">公开自助领取还没有上线</strong></div>
+            <div class="row"><span>当前状态</span><strong class="good">账户提交、只读验证和符合条件账本记录已上线</strong></div>
           </div>
         </div>
 
@@ -369,7 +369,7 @@
             <div class="row"><span>钱包地址</span><strong>只提交公开地址，不提交任何密钥或密码</strong></div>
             <div class="row"><span>购买交易哈希</span><strong>Base Mainnet 上可公开查询的交易哈希</strong></div>
             <div class="row"><span>持有开始日期</span><strong>用于 30 天持有期人工复核</strong></div>
-            <div class="row"><span>余额结果</span><strong>未来由受控系统用只读 <code>eth_call</code> / <code>balanceOf</code> 复核</strong></div>
+            <div class="row"><span>余额结果</span><strong>由 Workers 后端用只读 <code>eth_call</code> / <code>balanceOf</code> 复核</strong></div>
           </div>
         </div>
       </section>
@@ -381,7 +381,7 @@
           <li>要求你发送私钥、助记词、钱包密码、验证码、keystore 文件或交易所 API Secret。</li>
           <li>要求你开通交易所提现权限，或把资产转到所谓客服、审核、保证、解锁地址。</li>
           <li>要求你为“余额验证”签一笔陌生交易、approve 授权或授权转移资产。</li>
-          <li>声称验证后会自动发放 credits、自动成为 GCA Member 或自动领取 10,000 GCA 会员权益。</li>
+          <li>声称验证后会自动转账、自动领取 10,000 GCA 会员权益，或绕过人工复核。</li>
         </ul>
       </section>
 
@@ -390,10 +390,10 @@
         <h2 id="statusTitle">当前上线状态</h2>
         <div class="list">
           <div class="row"><span>邮箱注册 API</span><strong class="good">Cloudflare Workers + D1 已上线</strong></div>
-          <div class="row"><span>浏览器只读预览</span><strong>可打开 <a href="gca/member-access/">gca/member-access/</a> 查看 MetaMask <code>eth_call</code> 预览</strong></div>
-          <div class="row"><span>正式账户 UI</span><strong class="pending">还没有上线</strong></div>
-          <div class="row"><span>100 credits 账本</span><strong class="pending">还没有公开自助激活</strong></div>
-          <div class="row"><span>GCA Member 账本</span><strong class="pending">还没有公开自助激活</strong></div>
+          <div class="row"><span>账户入口</span><strong class="good">可打开 <a href="gca/member-access/">gca/member-access/</a> 提交账户资料和钱包验证</strong></div>
+          <div class="row"><span>正式账户 UI</span><strong class="good">已上线，使用 Workers + D1 写入资料和账本记录</strong></div>
+          <div class="row"><span>100 credits 账本</span><strong class="good">符合 10,000 GCA 钱包条件时写入账户级记录</strong></div>
+          <div class="row"><span>GCA Member 账本</span><strong class="good">符合 1,000,000 GCA / 30 天条件时写入审核记录</strong></div>
         </div>
       </section>
 
@@ -430,7 +430,7 @@
       <section class="section panel" aria-labelledby="dataTitle">
         <p class="eyebrow">Platform-Only Evidence Path</p>
         <h2 id="dataTitle">平台审核资料</h2>
-        <p class="note">普通用户优先阅读 HTML 页面。Raw JSON 文件只给钱包、浏览器、DEX 数据工具、上币审核或安全厂商在需要结构化资料时使用；这些文件不是领取页面，也不会让自助验证变成已上线。</p>
+        <p class="note">普通用户优先阅读 HTML 页面。Raw JSON 文件只给钱包、浏览器、DEX 数据工具、上币审核或安全厂商在需要结构化资料时使用；这些文件不是会员权益转账领取页面。</p>
         <div class="actions">
           <a class="button" href="data.html">Reviewer Data Room</a>
           <a class="button" href="access.html">Access Portal</a>

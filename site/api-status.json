@@ -1,9 +1,9 @@
 {
   "schema": "https://gcagochina.com/api-status.json",
   "pageUrl": "https://gcagochina.com/api-status.html",
-  "status": "public-registration-api-status-published",
+  "status": "public-member-access-api-status-published",
   "lastUpdated": "2026-05-20",
-  "title": "GCA Registration API Status",
+  "title": "GCA Registration and Member Access API Status",
   "apiBaseUrl": "https://gca-registration-api.gcagochina.workers.dev",
   "futureCustomDomain": "https://api.gcagochina.com",
   "futureCustomDomainStatus": "pending-cloudflare-zone-access",
@@ -43,6 +43,48 @@
       "requiresSignature": false,
       "requiresTransaction": false,
       "automaticTokenTransfer": false
+    },
+    {
+      "id": "access-config-read",
+      "method": "GET",
+      "path": "/gca/access-config",
+      "url": "https://gca-registration-api.gcagochina.workers.dev/gca/access-config",
+      "status": "live",
+      "public": true,
+      "requiresWallet": false,
+      "requiresSignature": false,
+      "requiresTransaction": false,
+      "automaticTokenTransfer": false
+    },
+    {
+      "id": "wallet-verification-create",
+      "method": "POST",
+      "path": "/gca/wallet-verifications",
+      "url": "https://gca-registration-api.gcagochina.workers.dev/gca/wallet-verifications",
+      "status": "live",
+      "packetVersion": "gca_wallet_verification_v1",
+      "public": true,
+      "requiresWallet": true,
+      "requiresSignature": false,
+      "requiresTransaction": false,
+      "readOnlyEthCall": true,
+      "automaticTokenTransfer": false
+    },
+    {
+      "id": "member-access-create",
+      "method": "POST",
+      "path": "/gca/member-access",
+      "url": "https://gca-registration-api.gcagochina.workers.dev/gca/member-access",
+      "status": "live",
+      "packetVersion": "gca_member_access_v1",
+      "public": true,
+      "requiresWallet": true,
+      "requiresSignature": false,
+      "requiresTransaction": false,
+      "readOnlyEthCall": true,
+      "writesEligibleCreditLedger": true,
+      "writesEligibleMemberLedger": true,
+      "automaticTokenTransfer": false
     }
   ],
   "adminEndpoints": [
@@ -60,6 +102,42 @@
       "method": "GET",
       "path": "/gca/contact-suppressions",
       "url": "https://gca-registration-api.gcagochina.workers.dev/gca/contact-suppressions",
+      "status": "live-token-protected",
+      "requiresAdminReadToken": true,
+      "publicLedgerReadable": false
+    },
+    {
+      "id": "wallet-verification-read",
+      "method": "GET",
+      "path": "/gca/wallet-verifications",
+      "url": "https://gca-registration-api.gcagochina.workers.dev/gca/wallet-verifications",
+      "status": "live-token-protected",
+      "requiresAdminReadToken": true,
+      "publicLedgerReadable": false
+    },
+    {
+      "id": "member-access-read",
+      "method": "GET",
+      "path": "/gca/member-access",
+      "url": "https://gca-registration-api.gcagochina.workers.dev/gca/member-access",
+      "status": "live-token-protected",
+      "requiresAdminReadToken": true,
+      "publicLedgerReadable": false
+    },
+    {
+      "id": "credit-ledger-read",
+      "method": "GET",
+      "path": "/gca/credit-ledger",
+      "url": "https://gca-registration-api.gcagochina.workers.dev/gca/credit-ledger",
+      "status": "live-token-protected",
+      "requiresAdminReadToken": true,
+      "publicLedgerReadable": false
+    },
+    {
+      "id": "member-ledger-read",
+      "method": "GET",
+      "path": "/gca/member-ledger",
+      "url": "https://gca-registration-api.gcagochina.workers.dev/gca/member-ledger",
       "status": "live-token-protected",
       "requiresAdminReadToken": true,
       "publicLedgerReadable": false
@@ -90,14 +168,20 @@
     "noWalletSignatureForEmailRegistration": true,
     "noPaymentForEmailRegistration": true,
     "noPublicLedgerRead": true,
-    "noSelfServiceCreditsActivation": true,
-    "noSelfServiceMemberActivation": true
+    "noSelfServiceCreditsActivation": false,
+    "noSelfServiceMemberActivation": false,
+    "noWalletSignatureForWalletVerification": true,
+    "noTransactionForWalletVerification": true,
+    "memberAccessWritesEligibleLedgers": true,
+    "noAutomaticTokenTransfer": true,
+    "memberBenefitManualReviewOnly": true
   },
   "officialLinks": {
     "registrationPage": "https://gcagochina.com/register.html",
     "unsubscribePage": "https://gcagochina.com/unsubscribe.html",
     "accessApiPage": "https://gcagochina.com/access-api.html",
     "dataRoom": "https://gcagochina.com/data.html",
-    "githubWorkflow": "https://github.com/timchen078/gca_token/actions/workflows/check-gca-registration-api.yml"
+    "githubWorkflow": "https://github.com/timchen078/gca_token/actions/workflows/check-gca-registration-api.yml",
+    "memberAccessPage": "https://gcagochina.com/gca/member-access/"
   }
 }

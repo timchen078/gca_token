@@ -12,7 +12,7 @@
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "title": "GCA Member Access Brief 001",
   "subtitle": "Purchase-and-hold eligibility, 30-day review, and reserve-funded member benefit boundaries.",
-  "scope": "Member Access Brief 001 is a ready-for-review content brief for the 2026-05-23 public content slot. It explains the planned GCA Member eligibility rule, the 30-day holding-period evidence requirement, the one-time 10,000 GCA member benefit review, and the current release boundary. It is not live self-service claiming, not financial advice, not a buy or sell recommendation, and not a promise of approval.",
+  "scope": "Member Access Brief 001 is a ready-for-review content brief for the 2026-05-23 public content slot. It explains the GCA Member eligibility rule, the 30-day holding-period evidence requirement, the one-time 10,000 GCA member benefit review, and the current release boundary. Account intake, read-only wallet verification, and eligible ledger records are live; the member benefit is not automatic self-service transfer, not financial advice, not a buy or sell recommendation, and not a promise of approval.",
   "memberRule": {
     "tierName": "GCA Member",
     "minimumHolding": "1,000,000 GCA",
@@ -23,16 +23,16 @@
     "memberBenefitSource": "project or owner-held reserve transfer only; no new minting",
     "registeredUserLimit": "one member benefit review per registered user",
     "walletLimit": "one verified Base wallet per registered user",
-    "currentPublicStatus": "rules published; public self-service claiming is not live"
+    "currentPublicStatus": "account intake, read-only wallet verification, and eligible ledger records are live; member benefit remains manual review only"
   },
   "reviewFlow": [
     {
-      "step": "Register through the official GCA member intake when controlled intake is available.",
-      "status": "release-gated"
+      "step": "Register through the official GCA member intake at https://gcagochina.com/gca/member-access/.",
+      "status": "live-account-intake"
     },
     {
       "step": "Verify one Base Mainnet wallet with read-only ERC-20 balance checks.",
-      "status": "planned-utility-flow"
+      "status": "live-read-only-wallet-check"
     },
     {
       "step": "Provide public transaction evidence for the holding-period start.",
@@ -48,8 +48,8 @@
     }
   ],
   "releaseBoundaries": [
-    "The public website currently publishes the rules, preview pages, and manual review schema.",
-    "Public self-service claiming is not live until controlled HTTPS account UI and release gates are complete.",
+    "The public website now publishes the rules, account intake page, read-only wallet verification, and eligible ledger paths.",
+    "The 10,000 GCA member benefit is not automatic or self-service transferred; it still requires support review and reserve-wallet processing.",
     "Holding 1,000,000 GCA does not automatically trigger a transfer.",
     "The 10,000 GCA member benefit is planned as a reserve-funded transfer after review, not new minting.",
     "Member status does not activate live trading, custody, withdrawals, leverage, or risk-control bypass."
@@ -61,30 +61,30 @@
     "xEnglish": [
       "GCA Member Access Brief 001 is ready for review.",
       "Planned GCA Member rule: purchase and continuously hold 1,000,000 GCA for 30 days before review eligibility.",
-      "The planned one-time member benefit is 10,000 GCA after support and ledger approval, funded from reserve only. No new minting. Not self-service yet.",
+      "The one-time member benefit review is 10,000 GCA after support and ledger approval, funded from reserve only. No new minting. Account intake is live; token transfer is manual only.",
       "https://gcagochina.com/member-access-brief-001.html",
       "Not financial advice."
     ],
     "xChinese": [
       "GCA Member Access Brief 001 已准备好审核。",
       "计划中的 GCA Member 规则：购买并连续持有 1,000,000 GCA 满 30 天，才进入审核资格。",
-      "计划中的一次性会员权益为 10,000 GCA，必须经过客服和账本审核后由储备转账，不增发，目前不是自助领取。",
+      "一次性会员权益审核为 10,000 GCA，必须经过客服和账本审核后由储备转账，不增发；账户入口已上线，转账仍是人工处理。",
       "https://gcagochina.com/member-access-brief-001.html",
       "非投资建议。"
     ],
     "telegram": [
       "GCA Member Access Brief 001 is ready for operator review.",
       "The planned member rule requires 1,000,000 GCA held for 30 consecutive days before review eligibility. The planned 10,000 GCA member benefit requires support and ledger approval and must come from reserve only.",
-      "Public self-service claiming is not live yet. Verify official links first: https://gcagochina.com/member-access-brief-001.html"
+      "Account intake and eligible ledger records are live; member benefit transfers remain manual review only. Verify official links first: https://gcagochina.com/member-access-brief-001.html"
     ]
   },
   "publicClaimBoundaries": {
     "safeClaims": [
-      "GCA has published a planned GCA Member access rule.",
+      "GCA has published a GCA Member access rule and a live account intake path.",
       "The planned rule requires 1,000,000 GCA held for 30 consecutive days before member benefit review eligibility.",
       "The planned one-time member benefit amount is 10,000 GCA after support and ledger approval.",
       "The planned member benefit must come from project or owner-held reserve transfer only, not new minting.",
-      "Public self-service claiming is not live yet."
+      "Account intake, read-only wallet verification, and eligible ledger records are live; member benefit transfers remain manual review only."
     ],
     "doNotClaim": [
       "the 10,000 GCA member benefit is self-service claimable today",
@@ -92,7 +92,7 @@
       "approval is promised before support and ledger review",
       "the member benefit is newly minted",
       "the member benefit is cash, income, reimbursement, trading permission, voting control, or a way to bypass risk controls",
-      "member status creates live trading access before release gates are complete"
+      "member status creates live trading access before risk-control review and simulation/testnet validation"
     ]
   },
   "officialLinks": {

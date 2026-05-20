@@ -69,17 +69,17 @@
         "GCA Member Access is being designed around read-only wallet checks, utility credits, and manual review before any benefit record is activated.",
         "Planned GCA Member rule: purchase and continuously hold 1,000,000 GCA for 30 days before review eligibility.",
         "https://gcagochina.com/member-access-brief-001.html",
-        "No public self-service claim is live yet."
+        "Public account intake and eligible ledger records are live; the 10,000 GCA member benefit remains manual review only."
       ],
       "xChinese": [
         "GCA Member Access 正在围绕只读钱包验证、utility credits 和人工审核流程搭建。",
         "计划中的 GCA Member 规则：购买并连续持有 1,000,000 GCA 满 30 天，才进入审核资格。",
         "https://gcagochina.com/member-access-brief-001.html",
-        "目前公开自助领取还没有上线。"
+        "公开账户提交和符合条件账本记录已经上线；10,000 GCA 会员权益仍需人工审核。"
       ],
       "telegram": [
         "GCA Member Access is planned as a verified access workflow, not a custody workflow.",
-        "Public self-service claiming is not live until controlled account UI and release gates are complete."
+        "Public account intake and eligible ledger records are live; token benefit handling still requires manual review."
       ],
       "claimBoundary": "Planned utility workflow only; do not claim live self-service claiming."
     },
@@ -226,7 +226,7 @@
       "topic": "Product Spec",
       "recommendedLink": "https://gcagochina.com/product.html",
       "hashtags": ["#GCA", "#GoChina", "#Web3Tools"],
-      "visualTheme": "Product blueprint for GCA AI Quant Access and release gates.",
+      "visualTheme": "Product map for GCA AI Quant Access and release gates.",
       "xEnglish": [
         "GCA AI Quant Access is the planned product direction:",
         "read-only wallet checks, member access, utility credits, review queue, and risk-tool modules.",
@@ -240,7 +240,7 @@
         "https://gcagochina.com/product.html"
       ],
       "telegram": [
-        "Product direction: GCA AI Quant Access. The buildout is still release-gated, with public self-service flows pending controlled account UI and operational checks.",
+        "Product direction: GCA AI Quant Access. Account intake and eligible ledger records are live, while trading and token-benefit transfer remain release-gated.",
         "Product page: https://gcagochina.com/product.html"
       ],
       "claimBoundary": "Product roadmap only; do not claim a live self-service product before release gates are complete."

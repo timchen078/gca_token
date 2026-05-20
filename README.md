@@ -106,8 +106,8 @@ Export the same review package directly from local JSONL data without starting t
 - Public utility bridge JSON: `site/utility.json`
 - Public product spec page: `site/product.html`
 - Public product spec JSON: `site/product.json`
-- Public access portal blueprint page: `site/access.html`
-- Public access portal blueprint JSON: `site/access.json`
+- Public access portal page: `site/access.html`
+- Public access portal JSON: `site/access.json`
 - Public access API contract page: `site/access-api.html`
 - Public access API contract JSON: `site/access-api.json`
 - Public registration API status page: `site/api-status.html`
