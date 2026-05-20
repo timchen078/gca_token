@@ -86,6 +86,7 @@ Export the same review package directly from local JSONL data without starting t
 - Public email-only user registration page: `site/register.html`
 - Production-ready email registration backend package: `cloudflare/gca-registration-worker/`
 - Email registration backend deployment guide: `docs/gca_registration_backend.md`
+- Live member access operator export: `tools/export_cloudflare_member_access.py`
 - Read-only live registration API check: `tools/check_gca_registration_api.py`
 - GitHub Actions public registration API check: `.github/workflows/check-gca-registration-api.yml`
 - Public Chinese member rules page: `site/zh-members.html`

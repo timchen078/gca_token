@@ -72,6 +72,7 @@ It does not collect wallet private keys, seed phrases, wallet passwords, exchang
 - Privacy hash salt: configured in Cloudflare as `PRIVACY_HASH_SALT`
 - Read-only live API check tool: `tools/check_gca_registration_api.py`
 - Local admin export tool: `tools/export_cloudflare_email_registrations.py`
+- Local member access / wallet / credit / member ledger export tool: `tools/export_cloudflare_member_access.py`
 - Local ledger sync tool: `tools/sync_cloudflare_email_registrations.py`
 - Local contact CSV export tool: `tools/export_gca_email_contacts.py`
 - Local one-command ops pipeline: `tools/run_gca_registration_ops.py`
@@ -176,6 +177,33 @@ Use a redacted export before sharing outside the operator workspace:
 .venv/bin/python tools/export_cloudflare_email_registrations.py \
   --redact public \
   --output .gca_access_data/cloudflare_email_registrations_public_redacted.json
+```
+
+To export live member access, wallet verification, credit ledger, and member ledger records into the ignored local data directory:
+
+```bash
+.venv/bin/python tools/export_cloudflare_member_access.py \
+  --dataset all \
+  --limit 100 \
+  --output .gca_access_data/cloudflare_member_access_export.json
+```
+
+To inspect one wallet across the member ledgers:
+
+```bash
+.venv/bin/python tools/export_cloudflare_member_access.py \
+  --dataset all \
+  --wallet-address 0x0000000000000000000000000000000000000000 \
+  --output .gca_access_data/cloudflare_member_access_wallet_export.json
+```
+
+Use a redacted export before sharing outside the operator workspace. It removes raw email and display-name fields, keeps email hashes, and retains wallet addresses only for on-chain review:
+
+```bash
+.venv/bin/python tools/export_cloudflare_member_access.py \
+  --dataset all \
+  --redact public \
+  --output .gca_access_data/cloudflare_member_access_public_redacted.json
 ```
 
 To sync full Cloudflare registrations into the local operator JSONL ledger:
