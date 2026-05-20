@@ -204,7 +204,8 @@
       }
 
       input,
-      textarea {
+      textarea,
+      select {
         width: 100%;
         border: 1px solid var(--line);
         border-radius: 8px;
@@ -558,7 +559,7 @@
         </div>
         <div class="panel">
           <h2>Local API</h2>
-          <p class="note"><code>GET /gca/operator-summary</code> powers local ledger counts, <code>GET /gca/operator-digest</code> loads the latest redacted daily digest, and <code>GET /gca/operator-action-plan</code> ranks manual next actions. <code>GET /gca/review-package</code> exports a local reviewer evidence package with <code>recordManifest</code> and <code>packageDigestSha256</code> for support and platform follow-up. Use <code>?redact=public</code> before external sharing to redact user email, Telegram, reviewer notes, support notes, and evidence notes while keeping public wallet and transaction evidence. Export the same package without running the server with <code>tools/export_gca_review_package.py</code>, then verify it with <code>tools/verify_gca_review_package.py</code>. Individual records remain available through <code>GET /gca/pre-registrations</code>, <code>GET /gca/wallet-verifications</code>, <code>GET /gca/credit-ledger</code>, <code>GET /gca/member-ledger</code>, <code>GET /gca/member-benefit-transfers</code>, and <code>GET /gca/member-review</code>. <code>POST /gca/member-benefit-transfers</code> records a completed manual reserve-wallet transfer after the operator signs it outside this app and the backend verifies the receipt with read-only Base Mainnet data.</p>
+          <p class="note"><code>GET /gca/operator-summary</code> powers local ledger counts, <code>GET /gca/operator-digest</code> loads the latest redacted daily digest, and <code>GET /gca/operator-action-plan</code> ranks manual next actions. <code>GET /gca/review-package</code> exports a local reviewer evidence package with <code>recordManifest</code> and <code>packageDigestSha256</code> for support and platform follow-up. Use <code>?redact=public</code> before external sharing to redact user email, Telegram, reviewer notes, support notes, and evidence notes while keeping public wallet and transaction evidence. Export the same package without running the server with <code>tools/export_gca_review_package.py</code>, then verify it with <code>tools/verify_gca_review_package.py</code>. Individual records remain available through <code>GET /gca/pre-registrations</code>, <code>GET /gca/wallet-verifications</code>, <code>GET /gca/credit-ledger</code>, <code>GET /gca/member-ledger</code>, <code>GET /gca/member-benefit-transfers</code>, and <code>GET /gca/member-review</code>. <code>POST /gca/member-review</code> appends a local support status update, and <code>POST /gca/member-benefit-transfers</code> records a completed manual reserve-wallet transfer after the operator signs it outside this app and the backend verifies the receipt with read-only Base Mainnet data.</p>
           <pre id="summaryJson">Waiting for local backend...</pre>
         </div>
       </section>
@@ -622,12 +623,60 @@
         </form>
       </section>
 
+      <section class="section panel" aria-labelledby="reviewUpdateTitle">
+        <h2 id="reviewUpdateTitle">Record Support Review Update</h2>
+        <p class="note">Append a local operator status update after manual review or user follow-up. This writes only to the local <code>support_reviews</code> JSONL ledger; it does not send an email, write production data, connect to a wallet, request a signature, or transfer GCA.</p>
+        <form class="form section" id="reviewUpdateForm">
+          <div class="field">
+            <label for="reviewId">Parent Review ID</label>
+            <input id="reviewId" name="reviewId" autocomplete="off" placeholder="gca_review_...">
+          </div>
+          <div class="field">
+            <label for="reviewMemberLedgerId">Member Ledger ID</label>
+            <input id="reviewMemberLedgerId" name="memberLedgerId" autocomplete="off" placeholder="gca_member_...">
+          </div>
+          <div class="field">
+            <label for="reviewCreditLedgerId">Credit Ledger ID</label>
+            <input id="reviewCreditLedgerId" name="creditLedgerId" autocomplete="off" placeholder="gca_credit_...">
+          </div>
+          <div class="field">
+            <label for="reviewWalletAddress">Wallet Address</label>
+            <input id="reviewWalletAddress" name="walletAddress" autocomplete="off" placeholder="0x...">
+          </div>
+          <div class="field">
+            <label for="reviewStatus">Review Status</label>
+            <select id="reviewStatus" name="status">
+              <option value="contacted">contacted</option>
+              <option value="waiting_for_user_evidence">waiting_for_user_evidence</option>
+              <option value="waiting_for_operator_review">waiting_for_operator_review</option>
+              <option value="needs_more_information">needs_more_information</option>
+              <option value="pending_manual_reserve_transfer">pending_manual_reserve_transfer</option>
+              <option value="closed_resolved">closed_resolved</option>
+              <option value="closed_no_action">closed_no_action</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="reviewNextStep">Next Step</label>
+            <textarea id="reviewNextStep" name="nextStep" placeholder="Example: Ask the member for a public Base transaction hash."></textarea>
+          </div>
+          <div class="field">
+            <label for="supportNote">Support Note</label>
+            <textarea id="supportNote" name="supportNote" placeholder="Local operator note only. Do not paste private keys, seed phrases, exchange API secrets, one-time codes, or withdrawal permissions."></textarea>
+          </div>
+          <div class="actions">
+            <button class="button primary" id="recordReviewUpdateButton" type="submit" disabled>Record Review Update</button>
+            <span class="status" id="reviewUpdateStatus">Local backend required</span>
+          </div>
+        </form>
+      </section>
+
       <section class="section">
         <h2>Latest Support Review Records</h2>
         <div class="table-wrap">
           <table>
             <thead>
               <tr>
+                <th>Review ID</th>
                 <th>Status</th>
                 <th>Wallet</th>
                 <th>Credit Ledger</th>
@@ -638,7 +687,7 @@
               </tr>
             </thead>
             <tbody id="reviewRows">
-              <tr><td colspan="7">No local records loaded.</td></tr>
+              <tr><td colspan="8">No local records loaded.</td></tr>
             </tbody>
           </table>
         </div>
@@ -655,6 +704,7 @@
       const OPERATOR_DIGEST_ENDPOINT_PATH = "/gca/operator-digest";
       const OPERATOR_ACTION_PLAN_ENDPOINT_PATH = "/gca/operator-action-plan";
       const REVIEW_PACKAGE_ENDPOINT_PATH = "/gca/review-package";
+      const MEMBER_REVIEW_ENDPOINT_PATH = "/gca/member-review";
       const MEMBER_BENEFIT_TRANSFER_ENDPOINT_PATH = "/gca/member-benefit-transfers";
       const connectionStatus = document.getElementById("connectionStatus");
       const refreshButton = document.getElementById("refreshButton");
@@ -668,6 +718,9 @@
       const transferForm = document.getElementById("transferForm");
       const recordTransferButton = document.getElementById("recordTransferButton");
       const transferStatus = document.getElementById("transferStatus");
+      const reviewUpdateForm = document.getElementById("reviewUpdateForm");
+      const recordReviewUpdateButton = document.getElementById("recordReviewUpdateButton");
+      const reviewUpdateStatus = document.getElementById("reviewUpdateStatus");
       const summaryJson = document.getElementById("summaryJson");
       const reviewRows = document.getElementById("reviewRows");
       const emailRows = document.getElementById("emailRows");
@@ -712,6 +765,11 @@
         transferStatus.className = `status ${kind}`.trim();
       }
 
+      function setReviewUpdateStatus(text, kind = "") {
+        reviewUpdateStatus.textContent = text;
+        reviewUpdateStatus.className = `status ${kind}`.trim();
+      }
+
       function setHandoffStatus(text, kind = "") {
         handoffStatus.textContent = text;
         handoffStatus.className = `status ${kind}`.trim();
@@ -734,6 +792,7 @@
         exportButton.disabled = !backendConnected;
         exportPublicButton.disabled = !backendConnected;
         recordTransferButton.disabled = !backendConnected;
+        recordReviewUpdateButton.disabled = !backendConnected;
         if (!backendConnected) {
           copyHandoffButton.disabled = true;
         }
@@ -834,11 +893,12 @@
 
       function renderReviews(records) {
         if (!records.length) {
-          reviewRows.innerHTML = '<tr><td colspan="7">No local support review records yet.</td></tr>';
+          reviewRows.innerHTML = '<tr><td colspan="8">No local support review records yet.</td></tr>';
           return;
         }
         reviewRows.innerHTML = records.map((record) => `
           <tr>
+            <td>${escapeHtml(record.reviewId || "none")}</td>
             <td>${escapeHtml(record.status)}</td>
             <td>${escapeHtml(record.walletAddress)}</td>
             <td>${escapeHtml(record.creditLedgerId || "none")}</td>
@@ -879,6 +939,7 @@
           refreshButton.disabled = true;
           setBackendControlsEnabled(false);
           setTransferStatus("Public website view only", "warn");
+          setReviewUpdateStatus("Public website view only", "warn");
           setHandoffStatus("Public website view only; export disabled", "warn");
           summaryJson.textContent = "Open http://127.0.0.1:8787/operator.html after running tools/gca_member_backend.py to view local ledgers.";
           renderEmailRegistrations([]);
@@ -908,6 +969,7 @@
           setBackendControlsEnabled(true);
           setStatus("Local operator backend connected", "good");
           setTransferStatus("Ready to record manual transfer", "good");
+          setReviewUpdateStatus("Ready to record support review update", "good");
           await loadOperatorDigest({ silent: true });
           await loadActionPlan({ silent: true });
         } catch (error) {
@@ -919,6 +981,7 @@
           renderActionPlanUnavailable("Local backend unavailable. Run the backend and refresh before loading the action plan.");
           renderDigestUnavailable("Local backend unavailable. Run the backend and refresh before loading the operator digest.");
           setTransferStatus("Local backend unavailable", "warn");
+          setReviewUpdateStatus("Local backend unavailable", "warn");
           setHandoffStatus("Local backend unavailable; export disabled", "warn");
         } finally {
           refreshButton.disabled = false;
@@ -1158,6 +1221,50 @@
         }
       }
 
+      async function recordSupportReviewUpdate(event) {
+        event.preventDefault();
+        if (!LOCAL_BACKEND_HOSTS.has(window.location.hostname)) {
+          setReviewUpdateStatus("Open the local backend URL before recording", "warn");
+          return;
+        }
+        if (!backendConnected) {
+          setReviewUpdateStatus("Local backend unavailable; refresh before recording", "warn");
+          return;
+        }
+
+        const form = new FormData(reviewUpdateForm);
+        const payload = {
+          reviewId: String(form.get("reviewId") || "").trim(),
+          memberLedgerId: String(form.get("memberLedgerId") || "").trim(),
+          creditLedgerId: String(form.get("creditLedgerId") || "").trim(),
+          walletAddress: String(form.get("walletAddress") || "").trim(),
+          status: String(form.get("status") || "").trim(),
+          nextStep: String(form.get("nextStep") || "").trim(),
+          supportNote: String(form.get("supportNote") || "").trim(),
+        };
+
+        setReviewUpdateStatus("Recording support review update");
+        recordReviewUpdateButton.disabled = true;
+        try {
+          const response = await fetch(MEMBER_REVIEW_ENDPOINT_PATH, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+          const result = await response.json();
+          if (!response.ok || !result.ok) {
+            throw new Error(result.error || `HTTP ${response.status}`);
+          }
+          setReviewUpdateStatus("Support review update recorded", "good");
+          reviewUpdateForm.reset();
+          await refreshOperatorSummary();
+        } catch (error) {
+          setReviewUpdateStatus(error.message, "warn");
+        } finally {
+          recordReviewUpdateButton.disabled = !backendConnected;
+        }
+      }
+
       refreshButton.addEventListener("click", refreshOperatorSummary);
       loadActionPlanButton.addEventListener("click", () => loadActionPlan());
       loadDigestButton.addEventListener("click", () => loadOperatorDigest());
@@ -1167,6 +1274,7 @@
       copyContactExportCommandsButton.addEventListener("click", copyContactExportCommands);
       copyDigestCommandButton.addEventListener("click", copyDigestCommand);
       transferForm.addEventListener("submit", recordMemberBenefitTransfer);
+      reviewUpdateForm.addEventListener("submit", recordSupportReviewUpdate);
       refreshOperatorSummary();
     </script>
   </body>

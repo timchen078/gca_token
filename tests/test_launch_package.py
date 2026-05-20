@@ -1549,6 +1549,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn('const OPERATOR_DIGEST_ENDPOINT_PATH = "/gca/operator-digest";', page)
         self.assertIn('const OPERATOR_ACTION_PLAN_ENDPOINT_PATH = "/gca/operator-action-plan";', page)
         self.assertIn('const REVIEW_PACKAGE_ENDPOINT_PATH = "/gca/review-package";', page)
+        self.assertIn('const MEMBER_REVIEW_ENDPOINT_PATH = "/gca/member-review";', page)
         self.assertIn('const MEMBER_BENEFIT_TRANSFER_ENDPOINT_PATH = "/gca/member-benefit-transfers";', page)
         self.assertIn("fetch(OPERATOR_SUMMARY_ENDPOINT_PATH", page)
         self.assertIn("fetch(OPERATOR_DIGEST_ENDPOINT_PATH", page)
@@ -1629,6 +1630,14 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Manual Transfer Tx Hash", page)
         self.assertIn("Record Transfer", page)
         self.assertIn('id="recordTransferButton" type="submit" disabled', page)
+        self.assertIn("Record Support Review Update", page)
+        self.assertIn("Parent Review ID", page)
+        self.assertIn("Review Status", page)
+        self.assertIn("waiting_for_user_evidence", page)
+        self.assertIn("Record Review Update", page)
+        self.assertIn('id="recordReviewUpdateButton" type="submit" disabled', page)
+        self.assertIn("recordSupportReviewUpdate", page)
+        self.assertIn("Support review update recorded", page)
         self.assertIn("Latest Support Review Records", page)
         self.assertIn("/gca/operator-summary", page)
         self.assertIn("/gca/operator-digest", page)
@@ -1714,6 +1723,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(rules["verification"]["localOperatorBackend"]["localOperatorDigestEndpoint"], "/gca/operator-digest")
         self.assertEqual(rules["verification"]["localOperatorBackend"]["localOperatorActionPlanEndpoint"], "/gca/operator-action-plan")
         self.assertEqual(rules["verification"]["localOperatorBackend"]["localReviewPackageEndpoint"], "/gca/review-package")
+        self.assertEqual(rules["verification"]["localOperatorBackend"]["localSupportReviewUpdateEndpoint"], "/gca/member-review")
         self.assertEqual(rules["verification"]["localOperatorBackend"]["localReviewPackageExporter"], "tools/export_gca_review_package.py")
         self.assertEqual(rules["verification"]["localOperatorBackend"]["localReviewPackageVerifier"], "tools/verify_gca_review_package.py")
         self.assertIn("redacted-public", rules["verification"]["localOperatorBackend"]["localReviewPackageRedactionModes"])
@@ -3345,6 +3355,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(api["localDevelopmentBackend"]["localOperatorDigestEndpoint"], "/gca/operator-digest")
         self.assertEqual(api["localDevelopmentBackend"]["localOperatorActionPlanEndpoint"], "/gca/operator-action-plan")
         self.assertEqual(api["localDevelopmentBackend"]["localReviewPackageEndpoint"], "/gca/review-package")
+        self.assertEqual(api["localDevelopmentBackend"]["localSupportReviewUpdateEndpoint"], "/gca/member-review")
         self.assertEqual(api["localDevelopmentBackend"]["localReviewPackageExporter"], "tools/export_gca_review_package.py")
         self.assertEqual(api["localDevelopmentBackend"]["localReviewPackageVerifier"], "tools/verify_gca_review_package.py")
         self.assertIn("redacted-public", api["localDevelopmentBackend"]["localReviewPackageRedactionModes"])
@@ -3416,6 +3427,7 @@ class LaunchPackageTests(unittest.TestCase):
             "GET /gca/member-ledger",
             "POST /gca/support-review",
             "GET /gca/member-review",
+            "POST /gca/member-review",
             "GET /gca/operator-summary",
             "GET /gca/operator-digest",
             "GET /gca/operator-action-plan",
@@ -3425,7 +3437,7 @@ class LaunchPackageTests(unittest.TestCase):
         }:
             self.assertIn(endpoint_key, endpoint_keys)
         for endpoint in api["endpoints"]:
-            if endpoint["id"] in {"operator-summary", "operator-digest", "operator-action-plan", "review-package", "member-benefit-transfers-read", "member-benefit-transfers-create"}:
+            if endpoint["id"] in {"operator-summary", "operator-digest", "operator-action-plan", "review-package", "member-review-update", "member-benefit-transfers-read", "member-benefit-transfers-create"}:
                 self.assertEqual(endpoint["status"], "local-only-not-public-production")
             elif endpoint["id"] in {"email-registrations-create", "contact-suppressions-create", "access-config-read", "member-access-create", "wallet-verifications"}:
                 self.assertEqual(endpoint["status"], "production-workers-dev-live")
@@ -3473,6 +3485,11 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("memberBenefitTransferTx", member_ledger_endpoint["responseFields"])
         member_review_endpoint = next(item for item in api["endpoints"] if item["id"] == "member-review")
         self.assertIn("memberBenefitClaimStatus", member_review_endpoint["responseFields"])
+        member_review_update_endpoint = next(item for item in api["endpoints"] if item["id"] == "member-review-update")
+        self.assertIn("nextStep", member_review_update_endpoint["requiredRequestFields"])
+        self.assertIn("automaticUserReply", member_review_update_endpoint["responseFields"])
+        self.assertIn("automaticTokenTransfer", member_review_update_endpoint["responseFields"])
+        self.assertIn("waiting_for_user_evidence", member_review_update_endpoint["allowedStatuses"])
         operator_summary_endpoint = next(item for item in api["endpoints"] if item["id"] == "operator-summary")
         self.assertIn("publicSelfServiceClaim", operator_summary_endpoint["responseFields"])
         self.assertIn("automaticTokenTransfer", operator_summary_endpoint["responseFields"])

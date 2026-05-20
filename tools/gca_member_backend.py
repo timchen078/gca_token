@@ -81,6 +81,21 @@ PACKAGE_DIGEST_ALGORITHM = "sha256-json-sort-keys-excluding-packageDigestSha256"
 OPERATOR_DIGEST_VERSION = "gca_operator_digest_v1"
 OPERATOR_DIGEST_FILE = "gca_operator_digest.json"
 OPERATOR_ACTION_PLAN_VERSION = "gca_operator_action_plan_v1"
+SUPPORT_REVIEW_UPDATE_STATUSES = {
+    "received",
+    "wallet_pending",
+    "eligible",
+    "needs_more_information",
+    "rejected",
+    "ledger_recorded",
+    "below_threshold",
+    "contacted",
+    "waiting_for_user_evidence",
+    "waiting_for_operator_review",
+    "pending_manual_reserve_transfer",
+    "closed_resolved",
+    "closed_no_action",
+}
 
 
 class BackendError(ValueError):
@@ -901,10 +916,137 @@ class GcaMemberBackend:
             "alreadyRecorded": False,
         }
 
+    def record_support_review_update(self, payload: dict[str, Any]) -> dict[str, Any]:
+        status = str(payload.get("status") or "").strip()
+        if status not in SUPPORT_REVIEW_UPDATE_STATUSES:
+            raise BackendError("status is not supported for a support review update")
+
+        parent_review_id = str(payload.get("parentReviewId") or payload.get("reviewId") or "").strip()
+        member_id = str(payload.get("memberLedgerId") or "").strip()
+        credit_id = str(payload.get("creditLedgerId") or "").strip()
+        registration_id = str(payload.get("registrationId") or "").strip()
+        wallet = str(payload.get("walletAddress") or "").strip()
+        next_step = safe_operator_text(payload.get("nextStep"), 500)
+        support_note = safe_operator_text(payload.get("supportNote"), 1000)
+        reviewer_note = safe_operator_text(payload.get("reviewerNote"), 1000)
+        public_reference = safe_operator_text(payload.get("publicEvidenceReference"), 160)
+        lane = safe_operator_text(payload.get("lane") or "gca-member-operator-follow-up", 120)
+
+        if not any((parent_review_id, member_id, credit_id, registration_id, wallet)):
+            raise BackendError("reviewId, memberLedgerId, creditLedgerId, registrationId, or walletAddress is required")
+        if not next_step:
+            raise BackendError("nextStep is required")
+
+        parent_review: dict[str, Any] = {}
+        if parent_review_id:
+            parent_versions = self.store.find("support_reviews", reviewId=parent_review_id)
+            if parent_versions:
+                parent_review = parent_versions[-1]
+
+        member: dict[str, Any] = {}
+        if member_id:
+            member_versions = self.store.find("member_ledger", memberLedgerId=member_id)
+            if not member_versions:
+                raise BackendError("memberLedgerId was not found", HTTPStatus.NOT_FOUND)
+            member = member_versions[-1]
+
+        credit: dict[str, Any] = {}
+        if credit_id:
+            credit_versions = self.store.find("credit_ledger", creditLedgerId=credit_id)
+            if not credit_versions:
+                raise BackendError("creditLedgerId was not found", HTTPStatus.NOT_FOUND)
+            credit = credit_versions[-1]
+
+        registration_id = registration_id or str(parent_review.get("registrationId") or member.get("registrationId") or credit.get("registrationId") or "")
+        wallet = wallet or str(parent_review.get("walletAddress") or member.get("walletAddress") or credit.get("walletAddress") or "")
+        if wallet:
+            wallet = normalize_wallet(wallet)
+        member_id = member_id or str(parent_review.get("memberLedgerId") or "")
+        credit_id = credit_id or str(parent_review.get("creditLedgerId") or "")
+        updated_at = iso_now()
+
+        review = {
+            "reviewId": stable_id("gca_review_update", parent_review_id, registration_id, wallet, status, updated_at),
+            "parentReviewId": parent_review_id,
+            "registrationId": registration_id,
+            "lane": lane,
+            "status": status,
+            "updatedAt": updated_at,
+            "walletAddress": wallet,
+            "holderBonusEligible": bool(parent_review.get("holderBonusEligible") or credit or member),
+            "gcaMemberEligible": bool(parent_review.get("gcaMemberEligible") or member),
+            "holdingStartDate": safe_operator_text(
+                payload.get("holdingStartDate") or parent_review.get("holdingStartDate") or member.get("holdingStartDate"),
+                80,
+            ),
+            "holdingPeriodDaysVerified": safe_operator_int(
+                payload.get("holdingPeriodDaysVerified")
+                or parent_review.get("holdingPeriodDaysVerified")
+                or member.get("holdingPeriodDaysVerified")
+            ),
+            "evidenceTxHash": safe_operator_text(
+                payload.get("evidenceTxHash") or parent_review.get("evidenceTxHash") or member.get("evidenceTxHash"),
+                120,
+            ),
+            "evidenceTxHashFormatOk": bool(parent_review.get("evidenceTxHashFormatOk") or member.get("evidenceTxHashFormatOk")),
+            "memberBenefitReviewEvidenceStatus": safe_operator_text(
+                payload.get("memberBenefitReviewEvidenceStatus")
+                or parent_review.get("memberBenefitReviewEvidenceStatus")
+                or member.get("memberBenefitReviewEvidenceStatus")
+                or "not_applicable",
+                120,
+            ),
+            "creditLedgerId": credit_id,
+            "memberLedgerId": member_id,
+            "memberBenefitClaimStatus": safe_operator_text(
+                payload.get("memberBenefitClaimStatus")
+                or parent_review.get("memberBenefitClaimStatus")
+                or member.get("memberBenefitClaimStatus"),
+                120,
+            ),
+            "memberBenefitTransferTx": safe_operator_text(
+                payload.get("memberBenefitTransferTx")
+                or parent_review.get("memberBenefitTransferTx")
+                or member.get("memberBenefitTransferTx"),
+                120,
+            ),
+            "nextStep": next_step,
+            "publicEvidenceReference": public_reference or safe_operator_text(parent_review.get("publicEvidenceReference"), 160) or "local-operator-update",
+            "supportNote": support_note,
+            "reviewerNote": reviewer_note,
+            "source": "local-operator-support-review-update",
+            "localOnly": True,
+            "selfServicePublicClaim": False,
+            "automaticUserReply": False,
+            "automaticTokenTransfer": False,
+            "requiresSignature": False,
+            "requiresTransaction": False,
+            "writesProductionData": False,
+        }
+        self.store.append("support_reviews", review)
+        return {
+            "ok": True,
+            "supportReview": review,
+            "alreadyRecorded": False,
+            "boundaries": {
+                "localhostOnly": True,
+                "localJsonlLedgerOnly": True,
+                "writesProductionData": False,
+                "walletCalls": False,
+                "requiresSignature": False,
+                "requiresTransaction": False,
+                "automaticUserReply": False,
+                "automaticTokenTransfer": False,
+                "memberBenefitTransferAutomatic": False,
+            },
+        }
+
     def query(self, ledger: str, query: dict[str, list[str]]) -> list[dict[str, Any]]:
         filters: dict[str, str] = {}
         for key in (
             "emailRegistrationId",
+            "reviewId",
+            "parentReviewId",
             "walletAddress",
             "email",
             "registrationId",
@@ -1550,6 +1692,9 @@ def build_handler(site_dir: Path, backend: GcaMemberBackend) -> type[SimpleHTTPR
                 if parsed.path == "/gca/member-benefit-transfers":
                     result = backend.record_member_benefit_transfer(payload)
                     self.send_json({"ok": True, **result}, HTTPStatus.CREATED)
+                    return
+                if parsed.path == "/gca/member-review":
+                    self.send_json(backend.record_support_review_update(payload), HTTPStatus.CREATED)
                     return
                 self.send_json({"ok": False, "error": "Unsupported API path"}, HTTPStatus.NOT_FOUND)
             except BackendError as exc:

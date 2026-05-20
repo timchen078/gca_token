@@ -42,6 +42,7 @@
     "localOperatorDigestEndpoint": "/gca/operator-digest",
     "localOperatorActionPlanEndpoint": "/gca/operator-action-plan",
     "localReviewPackageEndpoint": "/gca/review-package",
+    "localSupportReviewUpdateEndpoint": "/gca/member-review",
     "localReviewPackageExporter": "tools/export_gca_review_package.py",
     "localReviewPackageVerifier": "tools/verify_gca_review_package.py",
     "localReviewPackageRedactionModes": [
@@ -489,6 +490,48 @@
         "needs_more_information",
         "rejected",
         "ledger_recorded"
+      ]
+    },
+    {
+      "id": "member-review-update",
+      "method": "POST",
+      "path": "/gca/member-review",
+      "status": "local-only-not-public-production",
+      "purpose": "Append a local operator support review status update for account, wallet, credit, or member workflows. This is an append-only JSONL operator note path and does not send user replies, write production data, call wallets, request signatures, or transfer GCA.",
+      "requiredRequestFields": [
+        "localhostClient",
+        "status",
+        "nextStep",
+        "reviewId or memberLedgerId or creditLedgerId or registrationId or walletAddress"
+      ],
+      "optionalRequestFields": [
+        "supportNote",
+        "reviewerNote",
+        "publicEvidenceReference",
+        "lane"
+      ],
+      "responseFields": [
+        "supportReview",
+        "reviewId",
+        "parentReviewId",
+        "registrationId",
+        "walletAddress",
+        "creditLedgerId",
+        "memberLedgerId",
+        "status",
+        "nextStep",
+        "boundaries",
+        "automaticUserReply",
+        "automaticTokenTransfer"
+      ],
+      "allowedStatuses": [
+        "contacted",
+        "waiting_for_user_evidence",
+        "waiting_for_operator_review",
+        "needs_more_information",
+        "pending_manual_reserve_transfer",
+        "closed_resolved",
+        "closed_no_action"
       ]
     },
     {

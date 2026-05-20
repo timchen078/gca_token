@@ -504,6 +504,43 @@ class GcaMemberBackendTests(unittest.TestCase):
         self.assertFalse(plan["boundaries"]["writesProductionData"])
         self.assertFalse(plan["boundaries"]["automaticUserReply"])
 
+    def test_record_support_review_update_appends_local_operator_status(self):
+        backend, store = self.make_backend(MEMBER_THRESHOLD_UNITS)
+        response = backend.submit_pre_registration(sample_packet())
+        parent_review = response["memberReview"]
+
+        update = backend.record_support_review_update({
+            "reviewId": parent_review["reviewId"],
+            "memberLedgerId": response["memberLedger"]["memberLedgerId"],
+            "status": "waiting_for_user_evidence",
+            "nextStep": "Ask the member to provide a public Base transaction hash for the 30-day holding review.",
+            "supportNote": "Operator prepared a follow-up note. No wallet signature or token transfer was requested.",
+        })
+
+        self.assertTrue(update["ok"])
+        review = update["supportReview"]
+        self.assertNotEqual(review["reviewId"], parent_review["reviewId"])
+        self.assertEqual(review["parentReviewId"], parent_review["reviewId"])
+        self.assertEqual(review["status"], "waiting_for_user_evidence")
+        self.assertEqual(review["memberLedgerId"], response["memberLedger"]["memberLedgerId"])
+        self.assertEqual(review["walletAddress"], WALLET.lower())
+        self.assertFalse(review["automaticUserReply"])
+        self.assertFalse(review["automaticTokenTransfer"])
+        self.assertFalse(review["requiresSignature"])
+        self.assertFalse(review["writesProductionData"])
+        self.assertEqual(len(store.read_all("support_reviews")), 2)
+        self.assertEqual(backend.query("support_reviews", {"parentReviewId": [parent_review["reviewId"]]})[0]["status"], "waiting_for_user_evidence")
+
+        summary = backend.operator_summary()
+        self.assertEqual(summary["dataLedgers"]["support_reviews"]["latest"][0]["status"], "waiting_for_user_evidence")
+
+        with self.assertRaises(BackendError):
+            backend.record_support_review_update({
+                "reviewId": parent_review["reviewId"],
+                "status": "unknown_status",
+                "nextStep": "Unsupported status should fail.",
+            })
+
     def test_submit_email_registration_records_email_only_user(self):
         backend, store = self.make_backend(0)
         response = backend.submit_email_registration({
@@ -743,6 +780,31 @@ class GcaMemberBackendTests(unittest.TestCase):
             self.assertTrue(action_plan["sourceStatus"]["operatorDigestAvailable"])
             self.assertTrue(any(item["id"] == "review-support-replies" for item in action_plan["items"]))
             self.assertFalse(action_plan["boundaries"]["automaticTokenTransfer"])
+
+            review_request = Request(
+                f"{base_url}/gca/member-review",
+                data=json.dumps({
+                    "reviewId": payload["memberReview"]["reviewId"],
+                    "memberLedgerId": payload["memberLedger"]["memberLedgerId"],
+                    "status": "contacted",
+                    "nextStep": "Support contacted the member and is waiting for public evidence confirmation.",
+                    "supportNote": "Local HTTP API status update.",
+                }).encode(),
+                headers={"Content-Type": "application/json"},
+                method="POST",
+            )
+            with urlopen(review_request, timeout=10) as response:
+                review_update = json.loads(response.read().decode())
+            self.assertTrue(review_update["ok"])
+            self.assertEqual(review_update["supportReview"]["status"], "contacted")
+            self.assertFalse(review_update["supportReview"]["automaticUserReply"])
+            self.assertFalse(review_update["boundaries"]["automaticTokenTransfer"])
+
+            with urlopen(f"{base_url}/gca/member-review?parentReviewId={payload['memberReview']['reviewId']}", timeout=10) as response:
+                review_ledger = json.loads(response.read().decode())
+            self.assertTrue(review_ledger["ok"])
+            self.assertEqual(review_ledger["count"], 1)
+            self.assertEqual(review_ledger["records"][0]["status"], "contacted")
 
             with urlopen(f"{base_url}/gca/review-package?limit=5", timeout=10) as response:
                 review_package = json.loads(response.read().decode())
