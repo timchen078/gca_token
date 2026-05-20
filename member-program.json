@@ -117,6 +117,7 @@
       "localOperatorDigestEndpoint": "/gca/operator-digest",
       "localOperatorActionPlanEndpoint": "/gca/operator-action-plan",
       "localReviewPackageEndpoint": "/gca/review-package",
+      "localSupportReviewUpdateEndpoint": "/gca/member-review",
       "localReviewPackageExporter": "tools/export_gca_review_package.py",
       "localReviewPackageVerifier": "tools/verify_gca_review_package.py",
       "localReviewPackageRedactionModes": [
