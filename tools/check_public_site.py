@@ -4836,6 +4836,16 @@ def validate_operations_page(text: str) -> None:
     assert_contains(text, "operations runbook only", label)
     assert_contains(text, "not live today", label)
     assert_contains(text, "not a public submission queue", label)
+    assert_contains(text, "Email Registration Ops Pipeline", label)
+    assert_contains(text, "Email API", label)
+    assert_contains(text, "Live on Workers + D1", label)
+    assert_contains(text, "ADMIN_READ_TOKEN", label)
+    assert_contains(text, "tools/check_gca_registration_api.py", label)
+    assert_contains(text, "tools/export_cloudflare_email_registrations.py", label)
+    assert_contains(text, "tools/run_gca_registration_ops.py", label)
+    assert_contains(text, ".gca_access_data/email_registrations.jsonl", label)
+    assert_contains(text, ".gca_access_data/gca_email_contacts_public_redacted.csv", label)
+    assert_contains(text, ".gca_access_data/gca_registration_ops_summary.json", label)
     for step in (
         "Intake Triage",
         "Identity Check",
@@ -4905,6 +4915,12 @@ def validate_operations_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong currentStage")
     if state.get("publicRunbookOnly") is not True:
         raise SiteCheckError(f"{label}: publicRunbookOnly must be true")
+    if state.get("emailRegistrationBackendLive") is not True:
+        raise SiteCheckError(f"{label}: emailRegistrationBackendLive must be true")
+    if state.get("contactSuppressionBackendLive") is not True:
+        raise SiteCheckError(f"{label}: contactSuppressionBackendLive must be true")
+    if state.get("accountAndMemberBackendLive") is not False:
+        raise SiteCheckError(f"{label}: accountAndMemberBackendLive must be false")
     for key in (
         "backendLive",
         "publicSubmissionQueueLive",
@@ -4920,6 +4936,37 @@ def validate_operations_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong identity chainId")
     if identity.get("contractAddress") != MAINNET_ADDRESS:
         raise SiteCheckError(f"{label}: wrong identity contractAddress")
+    email_ops = payload.get("emailRegistrationOpsPipeline", {})
+    if email_ops.get("status") != "production-email-registration-api-live-operator-sync-ready":
+        raise SiteCheckError(f"{label}: wrong email ops status")
+    if email_ops.get("provider") != "Cloudflare Workers + D1":
+        raise SiteCheckError(f"{label}: wrong email ops provider")
+    if email_ops.get("workerBaseUrl") != "https://gca-registration-api.gcagochina.workers.dev":
+        raise SiteCheckError(f"{label}: wrong worker base url")
+    if email_ops.get("publicOnlyCheckCommand") != "python3 tools/check_gca_registration_api.py --public-only --timeout 30":
+        raise SiteCheckError(f"{label}: wrong public-only check command")
+    if email_ops.get("publicOnlyCheckRequiresSecrets") is not False:
+        raise SiteCheckError(f"{label}: public-only check must not require secrets")
+    if email_ops.get("adminTokenPrinted") is not False:
+        raise SiteCheckError(f"{label}: admin token must not print")
+    if "tools/export_cloudflare_email_registrations.py" not in email_ops.get("adminExportCommand", ""):
+        raise SiteCheckError(f"{label}: missing admin export command")
+    if "tools/sync_cloudflare_email_registrations.py" not in email_ops.get("registrationSyncCommand", ""):
+        raise SiteCheckError(f"{label}: missing registration sync command")
+    if "tools/sync_cloudflare_contact_suppressions.py" not in email_ops.get("contactSuppressionSyncCommand", ""):
+        raise SiteCheckError(f"{label}: missing contact suppression sync command")
+    if "tools/run_gca_registration_ops.py" not in email_ops.get("combinedOpsCommand", ""):
+        raise SiteCheckError(f"{label}: missing combined ops command")
+    if email_ops.get("localSyncedLedger") != ".gca_access_data/email_registrations.jsonl":
+        raise SiteCheckError(f"{label}: wrong local synced ledger")
+    if email_ops.get("internalContactCsv") != ".gca_access_data/gca_email_contacts.csv":
+        raise SiteCheckError(f"{label}: wrong internal contact csv")
+    if email_ops.get("publicRedactedContactCsv") != ".gca_access_data/gca_email_contacts_public_redacted.csv":
+        raise SiteCheckError(f"{label}: wrong public redacted contact csv")
+    if email_ops.get("summaryOutput") != ".gca_access_data/gca_registration_ops_summary.json":
+        raise SiteCheckError(f"{label}: wrong ops summary")
+    if email_ops.get("boundaries", {}).get("publicRedactedCsvRequiredBeforeExternalSharing") is not True:
+        raise SiteCheckError(f"{label}: missing redacted CSV boundary")
     for workflow_id in (
         "intake-triage",
         "identity-check",
@@ -4974,6 +5021,10 @@ def validate_operations_json(text: str) -> None:
     for key in ("walletVerificationReadOnly", "usesEthCall", "usesErc20BalanceOf", "structuredAuditTrailRequired"):
         if controls.get(key) is not True:
             raise SiteCheckError(f"{label}: {key} must be true")
+    if controls.get("emailRegistrationOpsAdminTokenPrinted") is not False:
+        raise SiteCheckError(f"{label}: email ops token must not print")
+    if controls.get("emailRegistrationOpsPublicCheckRequiresSecrets") is not False:
+        raise SiteCheckError(f"{label}: public email ops check must not require secrets")
     for key in ("externalReviewPackageMustBeRedacted", "reviewPackageDigestRequiredBeforeSharing"):
         if controls.get(key) is not True:
             raise SiteCheckError(f"{label}: {key} must be true")
@@ -5083,6 +5134,10 @@ def validate_operations_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing operations safe claim")
     if "GCA operators can export a redacted-public local review package for reviewer evidence handoff when local ledger records exist." not in boundaries.get("safeClaims", []):
         raise SiteCheckError(f"{label}: missing review package safe claim")
+    if "GCA email registration and unsubscribe APIs are live on Cloudflare Workers + D1." not in boundaries.get("safeClaims", []):
+        raise SiteCheckError(f"{label}: missing email API safe claim")
+    if "GCA operators can sync email registration records into an ignored local JSONL ledger and export public-redacted contact CSVs." not in boundaries.get("safeClaims", []):
+        raise SiteCheckError(f"{label}: missing email ops safe claim")
     if not any("live backend" in item for item in boundaries.get("doNotClaim", [])):
         raise SiteCheckError(f"{label}: missing live backend boundary")
     if not any("support can override wallet-balance verification" in item for item in boundaries.get("doNotClaim", [])):
