@@ -13,6 +13,7 @@ Allow: /zh-roadmap.html
 Allow: /zh-faq.html
 Allow: /zh-support.html
 Allow: /zh-members.html
+Allow: /zh-api-status.html
 Allow: /about.html
 Allow: /action-plan.html
 Allow: /site-map.html

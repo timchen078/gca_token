@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GCA 中文 API 状态 | 邮箱注册接口</title>
+    <meta name="description" content="GCA 中文 API 状态：邮箱注册、邮箱退订、Cloudflare Workers + D1、公开只读检查、管理员读取保护和自助会员功能边界。">
+    <link rel="canonical" href="https://gcagochina.com/zh-api-status.html">
+    <link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">
+    <link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="GCA | Go China Access">
+    <meta property="og:title" content="GCA 中文 API 状态 | 邮箱注册接口">
+    <meta property="og:description" content="中文说明 GCA 邮箱注册 API、退订 API、公开检查命令、管理员读取保护和自助会员功能边界。">
+    <meta property="og:url" content="https://gcagochina.com/zh-api-status.html">
+    <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="GCA 中文 API 状态 | 邮箱注册接口">
+    <meta name="twitter:description" content="中文说明 GCA 邮箱注册 API、退订 API、公开检查命令、管理员读取保护和自助会员功能边界。">
+    <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f7f8f5;
+        --ink: #151817;
+        --muted: #5e6763;
+        --line: #dfe4dd;
+        --panel: #ffffff;
+        --soft: #eef3ef;
+        --red: #d71920;
+        --blue: #1557d7;
+        --green: #087f5b;
+        --gold: #a87810;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: var(--bg);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+        line-height: 1.58;
+      }
+
+      a { color: var(--blue); text-decoration: none; }
+      a:hover { text-decoration: underline; }
+
+      .shell {
+        width: min(1080px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 3;
+        border-bottom: 1px solid var(--line);
+        background: rgba(247, 248, 245, 0.94);
+        backdrop-filter: blur(16px);
+      }
+
+      nav {
+        min-height: 68px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+      }
+
+      .brand,
+      .nav-links,
+      .actions,
+      .link-row {
+        display: inline-flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .brand {
+        color: var(--ink);
+        font-weight: 850;
+      }
+
+      .brand img {
+        width: 34px;
+        height: 34px;
+      }
+
+      .nav-links {
+        gap: 16px;
+        font-size: 14px;
+      }
+
+      main { padding: 42px 0 64px; }
+      h1, h2, h3, p { margin-top: 0; }
+
+      h1 {
+        max-width: 900px;
+        margin-bottom: 18px;
+        font-size: clamp(42px, 6vw, 76px);
+        line-height: 1.02;
+        letter-spacing: 0;
+      }
+
+      h2 {
+        margin-bottom: 12px;
+        font-size: 25px;
+        letter-spacing: 0;
+      }
+
+      h3 {
+        margin-bottom: 8px;
+        font-size: 18px;
+        letter-spacing: 0;
+      }
+
+      .eyebrow {
+        margin: 0 0 14px;
+        color: var(--red);
+        font-size: 13px;
+        font-weight: 850;
+        letter-spacing: 0;
+        text-transform: uppercase;
+      }
+
+      .lead {
+        max-width: 860px;
+        margin-bottom: 14px;
+        color: var(--muted);
+        font-size: 18px;
+      }
+
+      .note, li { color: var(--muted); }
+      .actions { margin-top: 24px; }
+
+      .button,
+      .text-link {
+        min-height: 40px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        color: var(--ink);
+        padding: 9px 12px;
+        font-size: 14px;
+        font-weight: 760;
+      }
+
+      .button.primary {
+        border-color: var(--red);
+        background: var(--red);
+        color: #fff;
+      }
+
+      .button.secondary {
+        border-color: #cdd8cf;
+        background: var(--soft);
+      }
+
+      .section { margin-top: 30px; }
+
+      .panel,
+      .fact,
+      .card {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+      }
+
+      .panel { padding: 24px; }
+      .fact, .card { padding: 18px; }
+
+      .facts,
+      .grid,
+      .two {
+        display: grid;
+        gap: 14px;
+      }
+
+      .facts {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        margin-top: 24px;
+      }
+
+      .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+      .label {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 760;
+        text-transform: uppercase;
+      }
+
+      .value {
+        display: block;
+        margin-top: 8px;
+        font-size: 16px;
+        font-weight: 850;
+        overflow-wrap: anywhere;
+      }
+
+      .good { color: var(--green); }
+      .pending { color: var(--gold); }
+
+      .list {
+        display: grid;
+        gap: 10px;
+      }
+
+      .row {
+        display: grid;
+        grid-template-columns: minmax(130px, 0.8fr) minmax(0, 1.4fr);
+        gap: 12px;
+        align-items: start;
+        border-top: 1px solid var(--line);
+        padding-top: 10px;
+      }
+
+      .row:first-child {
+        border-top: 0;
+        padding-top: 0;
+      }
+
+      .row strong {
+        min-width: 0;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+        text-align: right;
+      }
+
+      code,
+      pre {
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        background: var(--soft);
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 0.92em;
+      }
+
+      code {
+        padding: 2px 5px;
+        overflow-wrap: anywhere;
+      }
+
+      pre {
+        margin: 12px 0 0;
+        overflow-x: auto;
+        padding: 14px;
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+
+      .notice {
+        border-color: #ecd28c;
+        background: #fff8e6;
+      }
+
+      footer {
+        border-top: 1px solid var(--line);
+        padding: 24px 0 34px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      @media (max-width: 880px) {
+        nav {
+          align-items: flex-start;
+          flex-direction: column;
+          padding: 14px 0;
+        }
+
+        .facts,
+        .grid,
+        .two {
+          grid-template-columns: 1fr;
+        }
+
+        h1 { font-size: 42px; }
+        .row { grid-template-columns: 1fr; }
+        .row strong { text-align: left; }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav class="shell" aria-label="Primary">
+        <a class="brand" href="index.html" aria-label="GCA home">
+          <img src="assets/gca-logo.svg" alt="GCA logo">
+          <span>GCA</span>
+        </a>
+        <div class="nav-links">
+          <a href="zh-cn.html">中文入口</a>
+          <a href="register.html">邮箱注册</a>
+          <a href="unsubscribe.html">邮箱退订</a>
+          <a href="zh-support.html">中文支持</a>
+          <a href="api-status.html">API Status</a>
+          <a href="site-map.html">Site Map</a>
+        </div>
+      </nav>
+    </header>
+
+    <main class="shell">
+      <section aria-labelledby="title">
+        <p class="eyebrow">中文 API 状态 / 2026-05-20</p>
+        <h1 id="title">GCA 中文 API 状态</h1>
+        <p class="lead">这一页用中文说明 GCA 邮箱注册和邮箱退订接口的当前状态。公网邮箱注册已经接到 Cloudflare Workers + D1，普通用户可以通过官网表单提交邮箱；管理员读取接口仍需要本地管理 token。</p>
+        <p class="lead">这个 API 只处理邮箱注册和不再联系请求，不需要钱包、不需要签名、不需要付款，也不会激活 100 credits、GCA Member 或 10,000 GCA 会员权益。</p>
+        <div class="actions">
+          <a class="button primary" href="register.html">打开邮箱注册</a>
+          <a class="button primary" href="unsubscribe.html">打开邮箱退订</a>
+          <a class="button secondary" href="api-status.html">English API Status</a>
+          <a class="button" href="access-api.html">Access API Contract</a>
+          <a class="button" href="operations.html">Operations Runbook</a>
+          <a class="button" href="zh-support.html">中文支持</a>
+          <a class="button" href="data.html">Reviewer Data Room</a>
+        </div>
+      </section>
+
+      <section class="facts" aria-label="GCA API 中文状态摘要">
+        <div class="fact">
+          <span class="label">API 基础地址</span>
+          <span class="value">gca-registration-api.gcagochina.workers.dev</span>
+        </div>
+        <div class="fact">
+          <span class="label">服务商</span>
+          <span class="value">Cloudflare Workers + D1</span>
+        </div>
+        <div class="fact">
+          <span class="label">公开检查</span>
+          <span class="value good">只读 / 不需要 secrets</span>
+        </div>
+        <div class="fact">
+          <span class="label">管理员读取</span>
+          <span class="value">token 保护</span>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="liveTitle">
+        <h2 id="liveTitle">当前已上线接口</h2>
+        <div class="grid">
+          <article class="card">
+            <h3>健康检查</h3>
+            <p class="note"><code>GET /health</code> 是公开健康检查，返回服务名 <code>gca-registration-api</code> 和当前包版本。</p>
+          </article>
+          <article class="card">
+            <h3>邮箱注册</h3>
+            <p class="note"><code>POST /gca/email-registrations</code> 接收 <code>gca_email_registration_v1</code>。它只登记邮箱、展示名、来源、语言和兴趣标签。</p>
+          </article>
+          <article class="card">
+            <h3>邮箱退订</h3>
+            <p class="note"><code>POST /gca/contact-suppressions</code> 接收 <code>gca_contact_suppression_v1</code>，用于把邮箱加入 GCA 不再联系名单。</p>
+          </article>
+          <article class="card">
+            <h3>注册记录读取</h3>
+            <p class="note"><code>GET /gca/email-registrations</code> 是管理员读取接口。没有 token 的公网访问应返回授权错误，而不是用户记录。</p>
+          </article>
+          <article class="card">
+            <h3>退订记录读取</h3>
+            <p class="note"><code>GET /gca/contact-suppressions</code> 也是管理员读取接口，只给本地运营同步使用。</p>
+          </article>
+          <article class="card">
+            <h3>未来域名</h3>
+            <p class="note"><code>api.gcagochina.com</code> 仍等待 Cloudflare DNS 区域权限；当前正式入口先使用 workers.dev 地址。</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section two" aria-label="检查命令">
+        <div class="panel">
+          <h2>公开只读检查</h2>
+          <p class="note">这个命令检查公网 API 健康状态、CORS 和未授权读取是否被拦截。它不写入注册记录，不需要管理员 token。</p>
+          <pre>python3 tools/check_gca_registration_api.py --public-only --timeout 30</pre>
+        </div>
+        <div class="panel">
+          <h2>本地管理员检查</h2>
+          <p class="note">这个命令只适合运营者在本地执行，用本地 token 读取少量样本，确认管理员读取接口可用。不要把 token 文件公开。</p>
+          <pre>python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5</pre>
+        </div>
+      </section>
+
+      <section class="section two" aria-label="用户和运营边界">
+        <div class="panel notice">
+          <h2>普通用户应该知道</h2>
+          <ul>
+            <li>邮箱注册不需要钱包地址，不读取钱包余额。</li>
+            <li>邮箱注册不需要私钥、助记词、钱包签名、验证码、付款或交易所 API Secret。</li>
+            <li>邮箱注册只是加入 GCA 用户名单，不等于自动获得 100 credits、GCA Member 或 10,000 GCA 会员权益。</li>
+            <li>邮箱退订只影响后续联系导出，不改变 GCA 持仓、池子、链上资产或会员审核状态。</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h2>运营者使用路径</h2>
+          <div class="list">
+            <div class="row"><span>导出注册记录</span><strong>tools/export_cloudflare_email_registrations.py</strong></div>
+            <div class="row"><span>同步本地账本</span><strong>tools/sync_cloudflare_email_registrations.py</strong></div>
+            <div class="row"><span>导出联系 CSV</span><strong>tools/export_gca_email_contacts.py</strong></div>
+            <div class="row"><span>同步退订记录</span><strong>tools/sync_cloudflare_contact_suppressions.py</strong></div>
+            <div class="row"><span>运营汇总</span><strong>tools/run_gca_registration_ops.py</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="technicalEvidenceTitle">
+        <h2 id="technicalEvidenceTitle">Platform-Only Evidence Path</h2>
+        <p class="note">普通用户看当前中文页面即可。Raw JSON 是给钱包、浏览器、DEX 数据工具、上币审核或安全厂商在需要结构化资料时使用；它看起来像代码是正常的。</p>
+        <div class="actions">
+          <a class="button" href="data.html">Reviewer Data Room</a>
+          <a class="button" href="api-status.html">English API Status</a>
+          <a class="button" href="access-api.html">Access API Contract</a>
+          <a class="button" href="privacy.html">Privacy Notice</a>
+          <a class="button" href="terms.html">Participation Terms</a>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="shell">GCA 中文 API 状态。邮箱注册和邮箱退订已接入 Cloudflare Workers + D1；公开自助 credits、GCA Member 和 10,000 GCA 会员权益仍未上线。</div>
+    </footer>
+  </body>
+</html>
