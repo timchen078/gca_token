@@ -368,6 +368,7 @@
         <p class="lead">This page reads local JSONL ledger records from <code>tools/gca_member_backend.py</code> when opened through <code>http://127.0.0.1:8787/operator.html</code>. The same review package can also be exported offline with <code>tools/export_gca_review_package.py</code>. The public website version is informational only and does not expose a public submission queue, self-service claim page, token transfer, or production account system.</p>
         <div class="actions section">
           <button class="button primary" id="refreshButton" type="button">Refresh Local Ledgers</button>
+          <button class="button" id="loadActionPlanButton" type="button" disabled>Load Action Plan</button>
           <button class="button" id="loadDigestButton" type="button" disabled>Load Operator Digest</button>
           <button class="button" id="exportButton" type="button" disabled>Export Full Review Package (Internal Only)</button>
           <button class="button" id="exportPublicButton" type="button" disabled>Export Public Redacted Package</button>
@@ -403,6 +404,50 @@
         <div class="fact">
           <span class="label">Recorded transfers</span>
           <span class="value" id="recordedTransferCount">0</span>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="actionPlanTitle">
+        <h2 id="actionPlanTitle">Today Action Plan</h2>
+        <p class="note">This local-only plan ranks the next operator actions from ledger counts and the latest redacted digest. It is a checklist for manual review only; it does not send replies, write production data, call wallets, request signatures, or transfer GCA.</p>
+        <div class="grid section" aria-label="GCA action plan totals">
+          <div class="fact">
+            <span class="label">Plan status</span>
+            <span class="value" id="actionPlanStatus">Not loaded</span>
+          </div>
+          <div class="fact">
+            <span class="label">Action items</span>
+            <span class="value" id="actionPlanCount">0</span>
+          </div>
+          <div class="fact">
+            <span class="label">Digest source</span>
+            <span class="value" id="actionPlanDigestStatus">-</span>
+          </div>
+        </div>
+        <div class="handoff-grid section">
+          <div>
+            <h2>Priority Queue</h2>
+            <div id="actionPlanItems">
+              <p class="note">Start the local backend and refresh local ledgers to load the action plan.</p>
+            </div>
+          </div>
+          <div>
+            <h2>Support Preview</h2>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Status</th>
+                    <th>Wallet</th>
+                    <th>Next Step</th>
+                  </tr>
+                </thead>
+                <tbody id="actionPlanSupportRows">
+                  <tr><td colspan="3">No support preview loaded.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -513,7 +558,7 @@
         </div>
         <div class="panel">
           <h2>Local API</h2>
-          <p class="note"><code>GET /gca/operator-summary</code> powers this console. <code>GET /gca/review-package</code> exports a local reviewer evidence package with <code>recordManifest</code> and <code>packageDigestSha256</code> for support and platform follow-up. Use <code>?redact=public</code> before external sharing to redact user email, Telegram, reviewer notes, support notes, and evidence notes while keeping public wallet and transaction evidence. Export the same package without running the server with <code>tools/export_gca_review_package.py</code>, then verify it with <code>tools/verify_gca_review_package.py</code>. Individual records remain available through <code>GET /gca/pre-registrations</code>, <code>GET /gca/wallet-verifications</code>, <code>GET /gca/credit-ledger</code>, <code>GET /gca/member-ledger</code>, <code>GET /gca/member-benefit-transfers</code>, and <code>GET /gca/member-review</code>. <code>POST /gca/member-benefit-transfers</code> records a completed manual reserve-wallet transfer after the operator signs it outside this app and the backend verifies the receipt with read-only Base Mainnet data.</p>
+          <p class="note"><code>GET /gca/operator-summary</code> powers local ledger counts, <code>GET /gca/operator-digest</code> loads the latest redacted daily digest, and <code>GET /gca/operator-action-plan</code> ranks manual next actions. <code>GET /gca/review-package</code> exports a local reviewer evidence package with <code>recordManifest</code> and <code>packageDigestSha256</code> for support and platform follow-up. Use <code>?redact=public</code> before external sharing to redact user email, Telegram, reviewer notes, support notes, and evidence notes while keeping public wallet and transaction evidence. Export the same package without running the server with <code>tools/export_gca_review_package.py</code>, then verify it with <code>tools/verify_gca_review_package.py</code>. Individual records remain available through <code>GET /gca/pre-registrations</code>, <code>GET /gca/wallet-verifications</code>, <code>GET /gca/credit-ledger</code>, <code>GET /gca/member-ledger</code>, <code>GET /gca/member-benefit-transfers</code>, and <code>GET /gca/member-review</code>. <code>POST /gca/member-benefit-transfers</code> records a completed manual reserve-wallet transfer after the operator signs it outside this app and the backend verifies the receipt with read-only Base Mainnet data.</p>
           <pre id="summaryJson">Waiting for local backend...</pre>
         </div>
       </section>
@@ -608,10 +653,12 @@
       const LOCAL_BACKEND_HOSTS = new Set(["127.0.0.1", "localhost"]);
       const OPERATOR_SUMMARY_ENDPOINT_PATH = "/gca/operator-summary";
       const OPERATOR_DIGEST_ENDPOINT_PATH = "/gca/operator-digest";
+      const OPERATOR_ACTION_PLAN_ENDPOINT_PATH = "/gca/operator-action-plan";
       const REVIEW_PACKAGE_ENDPOINT_PATH = "/gca/review-package";
       const MEMBER_BENEFIT_TRANSFER_ENDPOINT_PATH = "/gca/member-benefit-transfers";
       const connectionStatus = document.getElementById("connectionStatus");
       const refreshButton = document.getElementById("refreshButton");
+      const loadActionPlanButton = document.getElementById("loadActionPlanButton");
       const loadDigestButton = document.getElementById("loadDigestButton");
       const exportButton = document.getElementById("exportButton");
       const exportPublicButton = document.getElementById("exportPublicButton");
@@ -640,6 +687,11 @@
       const digestNextActions = document.getElementById("digestNextActions");
       const digestCommandText = document.getElementById("digestCommandText");
       const digestCommandStatus = document.getElementById("digestCommandStatus");
+      const actionPlanStatus = document.getElementById("actionPlanStatus");
+      const actionPlanCount = document.getElementById("actionPlanCount");
+      const actionPlanDigestStatus = document.getElementById("actionPlanDigestStatus");
+      const actionPlanItems = document.getElementById("actionPlanItems");
+      const actionPlanSupportRows = document.getElementById("actionPlanSupportRows");
       const statNodes = {
         emailRegistrationCount: document.getElementById("emailRegistrationCount"),
         preRegistrationCount: document.getElementById("preRegistrationCount"),
@@ -677,6 +729,7 @@
 
       function setBackendControlsEnabled(enabled) {
         backendConnected = Boolean(enabled);
+        loadActionPlanButton.disabled = !backendConnected;
         loadDigestButton.disabled = !backendConnected;
         exportButton.disabled = !backendConnected;
         exportPublicButton.disabled = !backendConnected;
@@ -732,6 +785,53 @@
         renderDigestNextActions([message]);
       }
 
+      function renderActionPlanUnavailable(message) {
+        actionPlanStatus.textContent = "Unavailable";
+        actionPlanCount.textContent = "0";
+        actionPlanDigestStatus.textContent = "-";
+        actionPlanItems.innerHTML = `<p class="note">${escapeHtml(message)}</p>`;
+        actionPlanSupportRows.innerHTML = '<tr><td colspan="3">No support preview loaded.</td></tr>';
+      }
+
+      function renderPriorityBadge(priority) {
+        const normalized = String(priority || "low").toLowerCase();
+        if (normalized === "high") return "High";
+        if (normalized === "medium") return "Medium";
+        return "Low";
+      }
+
+      function renderActionPlan(payload) {
+        const items = Array.isArray(payload.items) ? payload.items : [];
+        const supportRows = Array.isArray(payload.supportReviewPreview) ? payload.supportReviewPreview : [];
+        const source = payload.sourceStatus || {};
+        actionPlanStatus.textContent = payload.ok ? "Loaded" : "Attention";
+        actionPlanCount.textContent = payload.itemCount ?? items.length;
+        actionPlanDigestStatus.textContent = source.operatorDigestAvailable ? (source.operatorDigestOk ? "ok" : "attention") : "missing";
+        if (!items.length) {
+          actionPlanItems.innerHTML = '<p class="note">No immediate operator action from the available summaries.</p>';
+        } else {
+          actionPlanItems.innerHTML = items.map((item) => `
+            <div class="fact" style="min-height: 0; margin-bottom: 10px;">
+              <span class="label">${escapeHtml(renderPriorityBadge(item.priority))} priority</span>
+              <span class="value" style="font-size: 18px;">${escapeHtml(item.title)}</span>
+              <p class="note">${escapeHtml(item.detail)}</p>
+              ${item.command ? `<p class="note"><code>${escapeHtml(item.command)}</code></p>` : ""}
+            </div>
+          `).join("");
+        }
+        if (!supportRows.length) {
+          actionPlanSupportRows.innerHTML = '<tr><td colspan="3">No local support review preview available.</td></tr>';
+        } else {
+          actionPlanSupportRows.innerHTML = supportRows.map((record) => `
+            <tr>
+              <td>${escapeHtml(record.status)}</td>
+              <td>${escapeHtml(record.walletAddress)}</td>
+              <td>${escapeHtml(record.nextStep)}</td>
+            </tr>
+          `).join("");
+        }
+      }
+
       function renderReviews(records) {
         if (!records.length) {
           reviewRows.innerHTML = '<tr><td colspan="7">No local support review records yet.</td></tr>';
@@ -782,6 +882,7 @@
           setHandoffStatus("Public website view only; export disabled", "warn");
           summaryJson.textContent = "Open http://127.0.0.1:8787/operator.html after running tools/gca_member_backend.py to view local ledgers.";
           renderEmailRegistrations([]);
+          renderActionPlanUnavailable("Public website view only. Open http://127.0.0.1:8787/operator.html to load the local action plan.");
           renderDigestUnavailable("Public website view only. Open http://127.0.0.1:8787/operator.html to load the local operator digest.");
           return;
         }
@@ -808,12 +909,14 @@
           setStatus("Local operator backend connected", "good");
           setTransferStatus("Ready to record manual transfer", "good");
           await loadOperatorDigest({ silent: true });
+          await loadActionPlan({ silent: true });
         } catch (error) {
           setBackendControlsEnabled(false);
           setStatus("Local backend unavailable; export and record controls disabled", "warn");
           summaryJson.textContent = `${error.message}\n\nRun: .venv/bin/python tools/gca_member_backend.py --host 127.0.0.1 --port 8787`;
           renderEmailRegistrations([]);
           renderReviews([]);
+          renderActionPlanUnavailable("Local backend unavailable. Run the backend and refresh before loading the action plan.");
           renderDigestUnavailable("Local backend unavailable. Run the backend and refresh before loading the operator digest.");
           setTransferStatus("Local backend unavailable", "warn");
           setHandoffStatus("Local backend unavailable; export disabled", "warn");
@@ -849,6 +952,36 @@
           }
         } finally {
           loadDigestButton.disabled = !backendConnected;
+        }
+      }
+
+      async function loadActionPlan(options = {}) {
+        if (!LOCAL_BACKEND_HOSTS.has(window.location.hostname)) {
+          renderActionPlanUnavailable("Public website view only. Open the local backend URL before loading the action plan.");
+          return;
+        }
+        if (!backendConnected && !options.silent) {
+          renderActionPlanUnavailable("Local backend unavailable. Refresh local ledgers first.");
+          return;
+        }
+        loadActionPlanButton.disabled = true;
+        try {
+          const response = await fetch(`${OPERATOR_ACTION_PLAN_ENDPOINT_PATH}?limit=10`, { cache: "no-store" });
+          const payload = await response.json();
+          if (!response.ok || !payload.ok) {
+            throw new Error(payload.error || `HTTP ${response.status}`);
+          }
+          renderActionPlan(payload);
+          if (!options.silent) {
+            setStatus("Operator action plan loaded", "good");
+          }
+        } catch (error) {
+          renderActionPlanUnavailable(error.message);
+          if (!options.silent) {
+            setStatus("Operator action plan unavailable", "warn");
+          }
+        } finally {
+          loadActionPlanButton.disabled = !backendConnected;
         }
       }
 
@@ -1026,6 +1159,7 @@
       }
 
       refreshButton.addEventListener("click", refreshOperatorSummary);
+      loadActionPlanButton.addEventListener("click", () => loadActionPlan());
       loadDigestButton.addEventListener("click", () => loadOperatorDigest());
       exportButton.addEventListener("click", () => exportReviewPackage(false));
       exportPublicButton.addEventListener("click", () => exportReviewPackage(true));

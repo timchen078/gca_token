@@ -521,6 +521,11 @@
           </div>
           <div class="fact">
             <span class="label">GET</span>
+            <span class="value">/gca/operator-action-plan</span>
+            <p class="note">Local-only manual checklist derived from local ledger counts and the redacted operator digest. It ranks next actions and shows a redacted support preview; it never sends replies, writes production data, connects wallets, or transfers GCA.</p>
+          </div>
+          <div class="fact">
+            <span class="label">GET</span>
             <span class="value">/gca/review-package</span>
             <p class="note">Local-only reviewer evidence export for support and platform follow-up. It includes local ledger totals, latest records, <code>recordManifest</code>, <code>packageDigestSha256</code>, public reference links, and safety boundaries. Use <code>?redact=public</code> before external sharing, <code>tools/export_gca_review_package.py</code> to export from local JSONL data without running the server, and <code>tools/verify_gca_review_package.py</code> to verify the digest.</p>
           </div>
