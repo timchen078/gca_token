@@ -39,6 +39,7 @@
     "sameOriginSubmissionOnLocalhost": true,
     "localEmailRegistrationUrl": "http://127.0.0.1:8787/register.html",
     "localOperatorSummaryEndpoint": "/gca/operator-summary",
+    "localOperatorDigestEndpoint": "/gca/operator-digest",
     "localReviewPackageEndpoint": "/gca/review-package",
     "localReviewPackageExporter": "tools/export_gca_review_package.py",
     "localReviewPackageVerifier": "tools/verify_gca_review_package.py",
@@ -571,6 +572,32 @@
       ],
       "allowedStatuses": [
         "local-only"
+      ]
+    },
+    {
+      "id": "operator-digest",
+      "method": "GET",
+      "path": "/gca/operator-digest",
+      "status": "local-only-not-public-production",
+      "purpose": "Return the latest local redacted operator digest created by tools/run_gca_daily_ops.py --build-digest, including public health, member ops counts, support queue counts, holding evidence counts, and next actions without user records or secrets.",
+      "requiredRequestFields": [
+        "localhostClient"
+      ],
+      "responseFields": [
+        "available",
+        "digestOk",
+        "digestGeneratedAt",
+        "dailyOps",
+        "memberOps",
+        "supportQueue",
+        "holdingPeriod",
+        "nextActions",
+        "boundaries",
+        "automaticTokenTransfer"
+      ],
+      "allowedStatuses": [
+        "local-only",
+        "missing"
       ]
     },
     {

@@ -1546,9 +1546,16 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("http://127.0.0.1:8787/operator.html", page)
         self.assertIn('const LOCAL_BACKEND_HOSTS = new Set(["127.0.0.1", "localhost"]);', page)
         self.assertIn('const OPERATOR_SUMMARY_ENDPOINT_PATH = "/gca/operator-summary";', page)
+        self.assertIn('const OPERATOR_DIGEST_ENDPOINT_PATH = "/gca/operator-digest";', page)
         self.assertIn('const REVIEW_PACKAGE_ENDPOINT_PATH = "/gca/review-package";', page)
         self.assertIn('const MEMBER_BENEFIT_TRANSFER_ENDPOINT_PATH = "/gca/member-benefit-transfers";', page)
         self.assertIn("fetch(OPERATOR_SUMMARY_ENDPOINT_PATH", page)
+        self.assertIn("fetch(OPERATOR_DIGEST_ENDPOINT_PATH", page)
+        self.assertIn("Operator Digest", page)
+        self.assertIn("Load Operator Digest", page)
+        self.assertIn("tools/run_gca_daily_ops.py --build-digest", page)
+        self.assertIn("Copy Digest Command", page)
+        self.assertIn("Digest command copied", page)
         self.assertIn("Export Full Review Package", page)
         self.assertIn("Export Full Review Package (Internal Only)", page)
         self.assertIn('id="exportButton" type="button" disabled', page)
@@ -1618,6 +1625,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn('id="recordTransferButton" type="submit" disabled', page)
         self.assertIn("Latest Support Review Records", page)
         self.assertIn("/gca/operator-summary", page)
+        self.assertIn("/gca/operator-digest", page)
         self.assertIn("/gca/pre-registrations", page)
         self.assertIn("/gca/wallet-verifications", page)
         self.assertIn("/gca/credit-ledger", page)
@@ -1696,6 +1704,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(rules["verification"]["localOperatorBackend"]["dataDirectory"], ".gca_access_data/")
         self.assertTrue(rules["verification"]["localOperatorBackend"]["sameOriginSubmissionOnLocalhost"])
         self.assertEqual(rules["verification"]["localOperatorBackend"]["localOperatorSummaryEndpoint"], "/gca/operator-summary")
+        self.assertEqual(rules["verification"]["localOperatorBackend"]["localOperatorDigestEndpoint"], "/gca/operator-digest")
         self.assertEqual(rules["verification"]["localOperatorBackend"]["localReviewPackageEndpoint"], "/gca/review-package")
         self.assertEqual(rules["verification"]["localOperatorBackend"]["localReviewPackageExporter"], "tools/export_gca_review_package.py")
         self.assertEqual(rules["verification"]["localOperatorBackend"]["localReviewPackageVerifier"], "tools/verify_gca_review_package.py")
@@ -3257,6 +3266,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("/gca/support-review", page)
         self.assertIn("/gca/member-review", page)
         self.assertIn("/gca/operator-summary", page)
+        self.assertIn("/gca/operator-digest", page)
         self.assertIn("/gca/review-package", page)
         self.assertIn("?redact=public", page)
         self.assertIn("packageDigestSha256", page)
@@ -3323,6 +3333,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertTrue(api["localDevelopmentBackend"]["sameOriginSubmissionOnLocalhost"])
         self.assertEqual(api["localDevelopmentBackend"]["localEmailRegistrationUrl"], "http://127.0.0.1:8787/register.html")
         self.assertEqual(api["localDevelopmentBackend"]["localOperatorSummaryEndpoint"], "/gca/operator-summary")
+        self.assertEqual(api["localDevelopmentBackend"]["localOperatorDigestEndpoint"], "/gca/operator-digest")
         self.assertEqual(api["localDevelopmentBackend"]["localReviewPackageEndpoint"], "/gca/review-package")
         self.assertEqual(api["localDevelopmentBackend"]["localReviewPackageExporter"], "tools/export_gca_review_package.py")
         self.assertEqual(api["localDevelopmentBackend"]["localReviewPackageVerifier"], "tools/verify_gca_review_package.py")
@@ -3396,13 +3407,14 @@ class LaunchPackageTests(unittest.TestCase):
             "POST /gca/support-review",
             "GET /gca/member-review",
             "GET /gca/operator-summary",
+            "GET /gca/operator-digest",
             "GET /gca/review-package",
             "GET /gca/member-benefit-transfers",
             "POST /gca/member-benefit-transfers",
         }:
             self.assertIn(endpoint_key, endpoint_keys)
         for endpoint in api["endpoints"]:
-            if endpoint["id"] in {"operator-summary", "review-package", "member-benefit-transfers-read", "member-benefit-transfers-create"}:
+            if endpoint["id"] in {"operator-summary", "operator-digest", "review-package", "member-benefit-transfers-read", "member-benefit-transfers-create"}:
                 self.assertEqual(endpoint["status"], "local-only-not-public-production")
             elif endpoint["id"] in {"email-registrations-create", "contact-suppressions-create", "access-config-read", "member-access-create", "wallet-verifications"}:
                 self.assertEqual(endpoint["status"], "production-workers-dev-live")
@@ -3453,6 +3465,11 @@ class LaunchPackageTests(unittest.TestCase):
         operator_summary_endpoint = next(item for item in api["endpoints"] if item["id"] == "operator-summary")
         self.assertIn("publicSelfServiceClaim", operator_summary_endpoint["responseFields"])
         self.assertIn("automaticTokenTransfer", operator_summary_endpoint["responseFields"])
+        operator_digest_endpoint = next(item for item in api["endpoints"] if item["id"] == "operator-digest")
+        self.assertIn("dailyOps", operator_digest_endpoint["responseFields"])
+        self.assertIn("memberOps", operator_digest_endpoint["responseFields"])
+        self.assertIn("supportQueue", operator_digest_endpoint["responseFields"])
+        self.assertIn("automaticTokenTransfer", operator_digest_endpoint["responseFields"])
         review_package_endpoint = next(item for item in api["endpoints"] if item["id"] == "review-package")
         self.assertEqual(review_package_endpoint["exportTool"], "tools/export_gca_review_package.py")
         self.assertEqual(review_package_endpoint["verificationTool"], "tools/verify_gca_review_package.py")

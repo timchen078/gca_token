@@ -368,6 +368,7 @@
         <p class="lead">This page reads local JSONL ledger records from <code>tools/gca_member_backend.py</code> when opened through <code>http://127.0.0.1:8787/operator.html</code>. The same review package can also be exported offline with <code>tools/export_gca_review_package.py</code>. The public website version is informational only and does not expose a public submission queue, self-service claim page, token transfer, or production account system.</p>
         <div class="actions section">
           <button class="button primary" id="refreshButton" type="button">Refresh Local Ledgers</button>
+          <button class="button" id="loadDigestButton" type="button" disabled>Load Operator Digest</button>
           <button class="button" id="exportButton" type="button" disabled>Export Full Review Package (Internal Only)</button>
           <button class="button" id="exportPublicButton" type="button" disabled>Export Public Redacted Package</button>
           <button class="button" id="copyHandoffButton" type="button" disabled>Copy Handoff Reply</button>
@@ -402,6 +403,55 @@
         <div class="fact">
           <span class="label">Recorded transfers</span>
           <span class="value" id="recordedTransferCount">0</span>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="operatorDigestTitle">
+        <h2 id="operatorDigestTitle">Operator Digest</h2>
+        <p class="note">Load the latest redacted local digest created by <code>tools/run_gca_daily_ops.py --build-digest</code>. It summarizes public health, member ops counts, support queue counts, holding evidence, and next actions without exposing user records, emails, admin tokens, wallet signatures, transactions, or automatic transfers.</p>
+        <div class="grid section" aria-label="GCA operator digest status">
+          <div class="fact">
+            <span class="label">Digest status</span>
+            <span class="value" id="digestStatus">Not loaded</span>
+          </div>
+          <div class="fact">
+            <span class="label">Generated</span>
+            <span class="value" id="digestGeneratedAt">-</span>
+          </div>
+          <div class="fact">
+            <span class="label">Public health</span>
+            <span class="value" id="digestPublicStatus">-</span>
+          </div>
+          <div class="fact">
+            <span class="label">Member ops</span>
+            <span class="value" id="digestMemberStatus">-</span>
+          </div>
+          <div class="fact">
+            <span class="label">Reply-ready support</span>
+            <span class="value" id="digestSupportRows">0</span>
+          </div>
+          <div class="fact">
+            <span class="label">30-day ready wallets</span>
+            <span class="value" id="digestHoldingReady">0</span>
+          </div>
+        </div>
+        <div class="handoff-grid section">
+          <div>
+            <h2>Next Actions</h2>
+            <ul id="digestNextActions">
+              <li>Start the local backend and run the digest command to load operator actions.</li>
+            </ul>
+          </div>
+          <div>
+            <div class="field">
+              <label for="digestCommandText">Daily ops + digest command</label>
+              <textarea id="digestCommandText" class="copy" readonly>.venv/bin/python tools/run_gca_daily_ops.py --build-digest --summary-output .gca_access_data/gca_daily_ops_summary.json --digest-output .gca_access_data/gca_operator_digest.md --digest-json-output .gca_access_data/gca_operator_digest.json</textarea>
+            </div>
+            <div class="actions">
+              <button class="button" id="copyDigestCommandButton" type="button">Copy Digest Command</button>
+              <span class="status" id="digestCommandStatus">Ready to copy command</span>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -557,14 +607,17 @@
     <script>
       const LOCAL_BACKEND_HOSTS = new Set(["127.0.0.1", "localhost"]);
       const OPERATOR_SUMMARY_ENDPOINT_PATH = "/gca/operator-summary";
+      const OPERATOR_DIGEST_ENDPOINT_PATH = "/gca/operator-digest";
       const REVIEW_PACKAGE_ENDPOINT_PATH = "/gca/review-package";
       const MEMBER_BENEFIT_TRANSFER_ENDPOINT_PATH = "/gca/member-benefit-transfers";
       const connectionStatus = document.getElementById("connectionStatus");
       const refreshButton = document.getElementById("refreshButton");
+      const loadDigestButton = document.getElementById("loadDigestButton");
       const exportButton = document.getElementById("exportButton");
       const exportPublicButton = document.getElementById("exportPublicButton");
       const copyHandoffButton = document.getElementById("copyHandoffButton");
       const copyContactExportCommandsButton = document.getElementById("copyContactExportCommandsButton");
+      const copyDigestCommandButton = document.getElementById("copyDigestCommandButton");
       const transferForm = document.getElementById("transferForm");
       const recordTransferButton = document.getElementById("recordTransferButton");
       const transferStatus = document.getElementById("transferStatus");
@@ -578,6 +631,15 @@
       const handoffStatus = document.getElementById("handoffStatus");
       const contactExportCommandText = document.getElementById("contactExportCommandText");
       const contactExportStatus = document.getElementById("contactExportStatus");
+      const digestStatus = document.getElementById("digestStatus");
+      const digestGeneratedAt = document.getElementById("digestGeneratedAt");
+      const digestPublicStatus = document.getElementById("digestPublicStatus");
+      const digestMemberStatus = document.getElementById("digestMemberStatus");
+      const digestSupportRows = document.getElementById("digestSupportRows");
+      const digestHoldingReady = document.getElementById("digestHoldingReady");
+      const digestNextActions = document.getElementById("digestNextActions");
+      const digestCommandText = document.getElementById("digestCommandText");
+      const digestCommandStatus = document.getElementById("digestCommandStatus");
       const statNodes = {
         emailRegistrationCount: document.getElementById("emailRegistrationCount"),
         preRegistrationCount: document.getElementById("preRegistrationCount"),
@@ -608,8 +670,14 @@
         contactExportStatus.className = `status ${kind}`.trim();
       }
 
+      function setDigestCommandStatus(text, kind = "") {
+        digestCommandStatus.textContent = text;
+        digestCommandStatus.className = `status ${kind}`.trim();
+      }
+
       function setBackendControlsEnabled(enabled) {
         backendConnected = Boolean(enabled);
+        loadDigestButton.disabled = !backendConnected;
         exportButton.disabled = !backendConnected;
         exportPublicButton.disabled = !backendConnected;
         recordTransferButton.disabled = !backendConnected;
@@ -624,6 +692,44 @@
           .replaceAll("<", "&lt;")
           .replaceAll(">", "&gt;")
           .replaceAll('"', "&quot;");
+      }
+
+      function digestStatusLabel(available, ok) {
+        if (!available) return "missing";
+        return ok ? "ok" : "attention";
+      }
+
+      function renderDigestNextActions(actions) {
+        const safeActions = Array.isArray(actions) && actions.length
+          ? actions
+          : ["No operator digest actions available yet."];
+        digestNextActions.innerHTML = safeActions.map((action) => `<li>${escapeHtml(action)}</li>`).join("");
+      }
+
+      function renderOperatorDigest(payload) {
+        const daily = payload.dailyOps || {};
+        const member = payload.memberOps || {};
+        const support = payload.supportQueue || {};
+        const holding = payload.holdingPeriod || {};
+        const memberSupport = member.supportQueue || {};
+        const memberHolding = member.holdingPeriod || {};
+        digestStatus.textContent = payload.available ? (payload.digestOk ? "Loaded" : "Attention") : "Missing";
+        digestGeneratedAt.textContent = payload.digestGeneratedAt || payload.generatedAt || "-";
+        digestPublicStatus.textContent = digestStatusLabel(daily.available, daily.ok);
+        digestMemberStatus.textContent = digestStatusLabel(member.available, member.ok);
+        digestSupportRows.textContent = support.replyReadyRows ?? memberSupport.replyReadyRows ?? 0;
+        digestHoldingReady.textContent = holding.counts?.observedEligibleFor30Days ?? memberHolding.observedEligibleFor30Days ?? 0;
+        renderDigestNextActions(payload.nextActions);
+      }
+
+      function renderDigestUnavailable(message) {
+        digestStatus.textContent = "Unavailable";
+        digestGeneratedAt.textContent = "-";
+        digestPublicStatus.textContent = "-";
+        digestMemberStatus.textContent = "-";
+        digestSupportRows.textContent = "0";
+        digestHoldingReady.textContent = "0";
+        renderDigestNextActions([message]);
       }
 
       function renderReviews(records) {
@@ -676,6 +782,7 @@
           setHandoffStatus("Public website view only; export disabled", "warn");
           summaryJson.textContent = "Open http://127.0.0.1:8787/operator.html after running tools/gca_member_backend.py to view local ledgers.";
           renderEmailRegistrations([]);
+          renderDigestUnavailable("Public website view only. Open http://127.0.0.1:8787/operator.html to load the local operator digest.");
           return;
         }
 
@@ -700,16 +807,48 @@
           setBackendControlsEnabled(true);
           setStatus("Local operator backend connected", "good");
           setTransferStatus("Ready to record manual transfer", "good");
+          await loadOperatorDigest({ silent: true });
         } catch (error) {
           setBackendControlsEnabled(false);
           setStatus("Local backend unavailable; export and record controls disabled", "warn");
           summaryJson.textContent = `${error.message}\n\nRun: .venv/bin/python tools/gca_member_backend.py --host 127.0.0.1 --port 8787`;
           renderEmailRegistrations([]);
           renderReviews([]);
+          renderDigestUnavailable("Local backend unavailable. Run the backend and refresh before loading the operator digest.");
           setTransferStatus("Local backend unavailable", "warn");
           setHandoffStatus("Local backend unavailable; export disabled", "warn");
         } finally {
           refreshButton.disabled = false;
+        }
+      }
+
+      async function loadOperatorDigest(options = {}) {
+        if (!LOCAL_BACKEND_HOSTS.has(window.location.hostname)) {
+          renderDigestUnavailable("Public website view only. Open the local backend URL before loading the operator digest.");
+          return;
+        }
+        if (!backendConnected && !options.silent) {
+          renderDigestUnavailable("Local backend unavailable. Refresh local ledgers first.");
+          return;
+        }
+        loadDigestButton.disabled = true;
+        try {
+          const response = await fetch(OPERATOR_DIGEST_ENDPOINT_PATH, { cache: "no-store" });
+          const payload = await response.json();
+          if (!response.ok || !payload.ok) {
+            throw new Error(payload.error || `HTTP ${response.status}`);
+          }
+          renderOperatorDigest(payload);
+          if (!options.silent) {
+            setStatus(payload.available ? "Operator digest loaded" : "Operator digest missing; run digest command", payload.available ? "good" : "warn");
+          }
+        } catch (error) {
+          renderDigestUnavailable(error.message);
+          if (!options.silent) {
+            setStatus("Operator digest unavailable", "warn");
+          }
+        } finally {
+          loadDigestButton.disabled = !backendConnected;
         }
       }
 
@@ -835,6 +974,15 @@
         }
       }
 
+      async function copyDigestCommand() {
+        try {
+          await navigator.clipboard.writeText(digestCommandText.value);
+          setDigestCommandStatus("Digest command copied", "good");
+        } catch (error) {
+          setDigestCommandStatus("Copy failed; select the command manually", "warn");
+        }
+      }
+
       async function recordMemberBenefitTransfer(event) {
         event.preventDefault();
         if (!LOCAL_BACKEND_HOSTS.has(window.location.hostname)) {
@@ -878,10 +1026,12 @@
       }
 
       refreshButton.addEventListener("click", refreshOperatorSummary);
+      loadDigestButton.addEventListener("click", () => loadOperatorDigest());
       exportButton.addEventListener("click", () => exportReviewPackage(false));
       exportPublicButton.addEventListener("click", () => exportReviewPackage(true));
       copyHandoffButton.addEventListener("click", copyHandoffReply);
       copyContactExportCommandsButton.addEventListener("click", copyContactExportCommands);
+      copyDigestCommandButton.addEventListener("click", copyDigestCommand);
       transferForm.addEventListener("submit", recordMemberBenefitTransfer);
       refreshOperatorSummary();
     </script>

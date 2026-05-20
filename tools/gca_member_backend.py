@@ -55,6 +55,7 @@ ALLOWED_PROGRAM_INTENTS = {"holder_bonus", "gca_member", "general_waitlist"}
 EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 ADDRESS_RE = re.compile(r"^0x[a-fA-F0-9]{40}$")
 TX_HASH_RE = re.compile(r"^0x[a-fA-F0-9]{64}$")
+EMAIL_TEXT_RE = re.compile(r"(?i)\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b")
 FORBIDDEN_KEY_PATTERNS = (
     "privatekey",
     "seedphrase",
@@ -77,6 +78,8 @@ LOCAL_CLIENTS = {"127.0.0.1", "::1", "localhost"}
 REDACTED_EXTERNAL_VALUE = "[redacted-for-external-sharing]"
 REDACTED_EXTERNAL_KEYS = {"email", "telegram", "reviewerNote", "supportNote", "evidenceNote"}
 PACKAGE_DIGEST_ALGORITHM = "sha256-json-sort-keys-excluding-packageDigestSha256"
+OPERATOR_DIGEST_VERSION = "gca_operator_digest_v1"
+OPERATOR_DIGEST_FILE = "gca_operator_digest.json"
 
 
 class BackendError(ValueError):
@@ -144,6 +147,45 @@ def units_to_gca(units: int) -> str:
     if len(fraction_text) > 6:
         fraction_text = fraction_text[:6].rstrip("0")
     return f"{whole}.{fraction_text}" if fraction_text else str(whole)
+
+
+def safe_operator_text(value: Any, limit: int = 500) -> str:
+    text = str(value or "").strip()
+    text = EMAIL_TEXT_RE.sub("[redacted-email]", text)
+    return text[:limit]
+
+
+def safe_operator_bool(value: Any) -> bool:
+    return value is True
+
+
+def safe_operator_int(value: Any) -> int:
+    try:
+        return int(value or 0)
+    except (TypeError, ValueError):
+        return 0
+
+
+def safe_operator_mapping(payload: Any, allowed_keys: tuple[str, ...]) -> dict[str, Any]:
+    if not isinstance(payload, dict):
+        return {}
+    safe: dict[str, Any] = {}
+    for key in allowed_keys:
+        if key not in payload:
+            continue
+        value = payload.get(key)
+        if isinstance(value, bool):
+            safe[key] = value
+        elif isinstance(value, int):
+            safe[key] = value
+        elif isinstance(value, dict):
+            safe[key] = {
+                safe_operator_text(item_key, 80): safe_operator_int(item_value)
+                for item_key, item_value in value.items()
+            }
+        else:
+            safe[key] = safe_operator_text(value)
+    return safe
 
 
 def balance_of_calldata(wallet: str) -> str:
@@ -928,6 +970,200 @@ class GcaMemberBackend:
         }
         return summary
 
+    def operator_digest(self) -> dict[str, Any]:
+        digest_path = self.store.data_dir / OPERATOR_DIGEST_FILE
+        base_payload: dict[str, Any] = {
+            "ok": True,
+            "service": "gca-member-backend",
+            "generatedAt": iso_now(),
+            "available": False,
+            "status": "missing",
+            "packetVersion": OPERATOR_DIGEST_VERSION,
+            "digestOk": False,
+            "digestFile": OPERATOR_DIGEST_FILE,
+            "writesProductionData": False,
+            "walletCalls": False,
+            "requiresSignature": False,
+            "requiresTransaction": False,
+            "automaticTokenTransfer": False,
+            "sourceFileStatus": {},
+            "dailyOps": {
+                "available": False,
+                "ok": False,
+                "generatedAt": "",
+                "includeMemberOps": False,
+                "includeHoldingReport": False,
+                "steps": [],
+            },
+            "memberOps": {
+                "available": False,
+                "ok": False,
+                "recordCount": 0,
+                "supportQueue": {},
+                "report": {},
+                "holdingPeriod": {},
+            },
+            "supportQueue": {
+                "available": False,
+                "ok": False,
+                "rows": 0,
+                "replyReadyRows": 0,
+                "statusCounts": {},
+            },
+            "holdingPeriod": {
+                "available": False,
+                "ok": False,
+                "counts": {},
+                "laneCounts": {},
+            },
+            "nextActions": [
+                "Run `.venv/bin/python tools/run_gca_daily_ops.py --build-digest --summary-output .gca_access_data/gca_daily_ops_summary.json --digest-output .gca_access_data/gca_operator_digest.md --digest-json-output .gca_access_data/gca_operator_digest.json` to create the local operator digest."
+            ],
+            "outputs": {
+                "markdownFile": "gca_operator_digest.md",
+                "jsonFile": OPERATOR_DIGEST_FILE,
+            },
+            "boundaries": {
+                "localhostOnly": True,
+                "localOperatorDigestOnly": True,
+                "writesProductionData": False,
+                "adminTokenPrinted": False,
+                "userEmailsPrinted": False,
+                "userRecordsPrinted": False,
+                "walletCalls": False,
+                "requiresSignature": False,
+                "requiresTransaction": False,
+                "automaticTokenTransfer": False,
+                "memberBenefitTransferAutomatic": False,
+            },
+        }
+        if not digest_path.exists():
+            return base_payload
+        try:
+            raw_payload = json.loads(digest_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            base_payload.update({
+                "available": False,
+                "status": "invalid_json",
+                "error": safe_operator_text(exc, 240),
+            })
+            return base_payload
+        if not isinstance(raw_payload, dict):
+            base_payload.update({
+                "available": False,
+                "status": "invalid_shape",
+                "error": "operator digest file must contain a JSON object",
+            })
+            return base_payload
+
+        daily = raw_payload.get("dailyOps") if isinstance(raw_payload.get("dailyOps"), dict) else {}
+        member = raw_payload.get("memberOps") if isinstance(raw_payload.get("memberOps"), dict) else {}
+        support = raw_payload.get("supportQueue") if isinstance(raw_payload.get("supportQueue"), dict) else {}
+        holding = raw_payload.get("holdingPeriod") if isinstance(raw_payload.get("holdingPeriod"), dict) else {}
+        source_files = raw_payload.get("sourceFiles") if isinstance(raw_payload.get("sourceFiles"), dict) else {}
+        outputs = raw_payload.get("outputs") if isinstance(raw_payload.get("outputs"), dict) else {}
+        support_status_counts = support.get("statusCounts") if isinstance(support.get("statusCounts"), dict) else {}
+        holding_counts = holding.get("counts") if isinstance(holding.get("counts"), dict) else {}
+        holding_lane_counts = holding.get("laneCounts") if isinstance(holding.get("laneCounts"), dict) else {}
+
+        source_file_status = {}
+        for key, value in source_files.items():
+            if not isinstance(value, dict):
+                continue
+            source_file_status[safe_operator_text(key, 80)] = {
+                "fileName": Path(str(value.get("path") or "")).name,
+                "exists": safe_operator_bool(value.get("exists")),
+                "ok": safe_operator_bool(value.get("ok")),
+                "generatedAt": safe_operator_text(value.get("generatedAt"), 80),
+                "packetVersion": safe_operator_text(value.get("packetVersion"), 80),
+            }
+
+        steps = []
+        for step in daily.get("steps") or []:
+            if isinstance(step, dict):
+                steps.append({
+                    "id": safe_operator_text(step.get("id"), 80),
+                    "ok": safe_operator_bool(step.get("ok")),
+                    "returnCode": step.get("returnCode", ""),
+                })
+
+        safe_payload = dict(base_payload)
+        safe_payload.update({
+            "available": True,
+            "status": "loaded",
+            "packetVersion": safe_operator_text(raw_payload.get("packetVersion") or OPERATOR_DIGEST_VERSION, 80),
+            "digestOk": safe_operator_bool(raw_payload.get("ok")),
+            "digestGeneratedAt": safe_operator_text(raw_payload.get("generatedAt"), 80),
+            "sourceFileStatus": source_file_status,
+            "dailyOps": {
+                "available": safe_operator_bool(daily.get("available")),
+                "ok": safe_operator_bool(daily.get("ok")),
+                "generatedAt": safe_operator_text(daily.get("generatedAt"), 80),
+                "includeMemberOps": safe_operator_bool(daily.get("includeMemberOps")),
+                "includeHoldingReport": safe_operator_bool(daily.get("includeHoldingReport")),
+                "steps": steps,
+            },
+            "memberOps": {
+                "available": safe_operator_bool(member.get("available")),
+                "ok": safe_operator_bool(member.get("ok")),
+                "generatedAt": safe_operator_text(member.get("generatedAt"), 80),
+                "recordCount": safe_operator_int(member.get("recordCount")),
+                "datasetCount": safe_operator_int(member.get("datasetCount")),
+                "supportQueue": safe_operator_mapping(member.get("supportQueue"), ("rows", "replyReadyRows", "statusCounts")),
+                "report": safe_operator_mapping(
+                    member.get("report"),
+                    (
+                        "accounts",
+                        "walletVerifications",
+                        "holderBonusEligibleWallets",
+                        "gcaMemberEligibleWallets",
+                        "creditLedgerRecords",
+                        "activeGcaMembers",
+                        "queuedGcaMembers",
+                        "pendingManualReserveTransfers",
+                        "holdingPeriodReviewsNeeded",
+                    ),
+                ),
+                "holdingPeriod": safe_operator_mapping(
+                    member.get("holdingPeriod"),
+                    (
+                        "candidateWallets",
+                        "snapshotRecordsAvailable",
+                        "observedEligibleFor30Days",
+                        "walletsChecked",
+                        "snapshotsAdded",
+                    ),
+                ),
+            },
+            "supportQueue": {
+                "available": safe_operator_bool(support.get("available")),
+                "ok": safe_operator_bool(support.get("ok")),
+                "generatedAt": safe_operator_text(support.get("generatedAt"), 80),
+                "rows": safe_operator_int(support.get("rows")),
+                "replyReadyRows": safe_operator_int(support.get("replyReadyRows")),
+                "statusCounts": safe_operator_mapping(support_status_counts, tuple(str(key) for key in support_status_counts.keys())),
+            },
+            "holdingPeriod": {
+                "available": safe_operator_bool(holding.get("available")),
+                "ok": safe_operator_bool(holding.get("ok")),
+                "generatedAt": safe_operator_text(holding.get("generatedAt"), 80),
+                "counts": safe_operator_mapping(holding_counts, tuple(str(key) for key in holding_counts.keys())),
+                "laneCounts": safe_operator_mapping(holding_lane_counts, tuple(str(key) for key in holding_lane_counts.keys())),
+            },
+            "nextActions": [
+                safe_operator_text(action, 500)
+                for action in raw_payload.get("nextActions", [])
+                if str(action or "").strip()
+            ][:12],
+            "outputs": {
+                "markdownFile": Path(str(outputs.get("markdown") or "gca_operator_digest.md")).name,
+                "jsonFile": Path(str(outputs.get("json") or OPERATOR_DIGEST_FILE)).name,
+            },
+        })
+        if not safe_payload["nextActions"]:
+            safe_payload["nextActions"] = ["No immediate operator action from the available summaries."]
+        return safe_payload
+
     def review_package(self, limit: int = 100, redacted: bool = False) -> dict[str, Any]:
         summary = self.operator_summary(limit=limit)
         ledgers = summary.get("dataLedgers", {})
@@ -1071,6 +1307,10 @@ def build_handler(site_dir: Path, backend: GcaMemberBackend) -> type[SimpleHTTPR
                 if parsed.path == "/gca/operator-summary":
                     self.assert_local_api_client()
                     self.send_json(backend.operator_summary())
+                    return
+                if parsed.path == "/gca/operator-digest":
+                    self.assert_local_api_client()
+                    self.send_json(backend.operator_digest())
                     return
                 if parsed.path == "/gca/review-package":
                     self.assert_local_api_client()

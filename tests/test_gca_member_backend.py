@@ -238,6 +238,7 @@ class GcaMemberBackendTests(unittest.TestCase):
         self.assertEqual(review_package["operatorSummary"]["totals"]["memberBenefitTransfers"], 1)
         self.assertIn("memberBenefitTransfer", review_package["publicReferences"])
         self.assertFalse(review_package["redactedForExternalSharing"])
+
         self.assertEqual(review_package["packageDigestAlgorithm"], "sha256-json-sort-keys-excluding-packageDigestSha256")
         self.assertRegex(review_package["packageDigestSha256"], r"^[a-f0-9]{64}$")
         self.assertEqual(review_package["recordManifest"]["ledgerCounts"]["member_benefit_transfers"], 1)
@@ -376,6 +377,84 @@ class GcaMemberBackendTests(unittest.TestCase):
         self.assertEqual(duplicate["memberLedger"]["memberBenefitClaimStatus"], "transferred")
         self.assertEqual(len(store.read_all("member_benefit_transfers")), 1)
         self.assertEqual(len(store.read_all("member_ledger")), 2)
+
+    def test_operator_digest_reads_redacted_local_digest_without_user_records(self):
+        backend, store = self.make_backend(MEMBER_THRESHOLD_UNITS)
+        digest_path = store.data_dir / "gca_operator_digest.json"
+        digest_path.write_text(json.dumps({
+            "ok": True,
+            "packetVersion": "gca_operator_digest_v1",
+            "generatedAt": "2026-05-20T16:38:07Z",
+            "sourceFiles": {
+                "dailyOps": {
+                    "path": "/private/path/.gca_access_data/gca_daily_ops_summary.json",
+                    "exists": True,
+                    "ok": True,
+                    "generatedAt": "2026-05-20T16:38:07Z",
+                    "packetVersion": "gca_daily_ops_summary_v1",
+                }
+            },
+            "dailyOps": {
+                "available": True,
+                "ok": True,
+                "generatedAt": "2026-05-20T16:38:07Z",
+                "includeMemberOps": False,
+                "includeHoldingReport": False,
+                "steps": [{"id": "public-site", "ok": True, "returnCode": 0, "stdoutTail": "private-user@example.com"}],
+            },
+            "memberOps": {
+                "available": True,
+                "ok": True,
+                "recordCount": 12,
+                "supportQueue": {"rows": 3, "replyReadyRows": 1, "statusCounts": {"reply_ready": 1}},
+                "report": {"pendingManualReserveTransfers": 2, "privateRecord": "private-user@example.com"},
+                "holdingPeriod": {"observedEligibleFor30Days": 1, "walletsChecked": 4},
+            },
+            "supportQueue": {"available": True, "ok": True, "rows": 3, "replyReadyRows": 1},
+            "holdingPeriod": {
+                "available": True,
+                "ok": True,
+                "counts": {"observedEligibleFor30Days": 1},
+                "laneCounts": {"continue_daily_snapshots": 2},
+            },
+            "nextActions": ["Review support queue for private-user@example.com"],
+            "outputs": {
+                "markdown": "/private/path/.gca_access_data/gca_operator_digest.md",
+                "json": "/private/path/.gca_access_data/gca_operator_digest.json",
+            },
+        }), encoding="utf-8")
+
+        digest = backend.operator_digest()
+        self.assertTrue(digest["ok"])
+        self.assertTrue(digest["available"])
+        self.assertEqual(digest["status"], "loaded")
+        self.assertEqual(digest["packetVersion"], "gca_operator_digest_v1")
+        self.assertEqual(digest["sourceFileStatus"]["dailyOps"]["fileName"], "gca_daily_ops_summary.json")
+        self.assertEqual(digest["outputs"]["markdownFile"], "gca_operator_digest.md")
+        self.assertEqual(digest["dailyOps"]["steps"][0]["id"], "public-site")
+        self.assertEqual(digest["memberOps"]["recordCount"], 12)
+        self.assertEqual(digest["supportQueue"]["replyReadyRows"], 1)
+        self.assertEqual(digest["holdingPeriod"]["counts"]["observedEligibleFor30Days"], 1)
+        self.assertFalse(digest["boundaries"]["writesProductionData"])
+        self.assertFalse(digest["boundaries"]["walletCalls"])
+        self.assertFalse(digest["boundaries"]["requiresSignature"])
+        self.assertFalse(digest["boundaries"]["automaticTokenTransfer"])
+        serialized = json.dumps(digest)
+        self.assertNotIn("private-user@example.com", serialized)
+        self.assertNotIn("stdoutTail", serialized)
+        self.assertNotIn("/private/path", serialized)
+
+    def test_operator_digest_reports_missing_file_as_non_writing_local_status(self):
+        backend, _store = self.make_backend(MEMBER_THRESHOLD_UNITS)
+        digest = backend.operator_digest()
+
+        self.assertTrue(digest["ok"])
+        self.assertFalse(digest["available"])
+        self.assertEqual(digest["status"], "missing")
+        self.assertEqual(digest["digestFile"], "gca_operator_digest.json")
+        self.assertTrue(any("run_gca_daily_ops.py --build-digest" in action for action in digest["nextActions"]))
+        self.assertFalse(digest["boundaries"]["writesProductionData"])
+        self.assertFalse(digest["boundaries"]["automaticTokenTransfer"])
 
     def test_submit_email_registration_records_email_only_user(self):
         backend, store = self.make_backend(0)
@@ -578,6 +657,36 @@ class GcaMemberBackendTests(unittest.TestCase):
             self.assertEqual(summary["dataLedgers"]["email_registrations"]["count"], 1)
             self.assertFalse(summary["publicSelfServiceClaim"])
             self.assertFalse(summary["automaticTokenTransfer"])
+
+            (store.data_dir / "gca_operator_digest.json").write_text(json.dumps({
+                "ok": True,
+                "packetVersion": "gca_operator_digest_v1",
+                "generatedAt": "2026-05-20T16:38:07Z",
+                "dailyOps": {
+                    "available": True,
+                    "ok": True,
+                    "generatedAt": "2026-05-20T16:38:07Z",
+                    "steps": [{"id": "public-site", "ok": True, "returnCode": 0}],
+                },
+                "memberOps": {
+                    "available": True,
+                    "ok": True,
+                    "recordCount": 2,
+                    "supportQueue": {"rows": 1, "replyReadyRows": 1},
+                },
+                "supportQueue": {"available": True, "ok": True, "rows": 1, "replyReadyRows": 1},
+                "holdingPeriod": {"available": False, "ok": False, "counts": {}},
+                "nextActions": ["Review one support queue row."],
+                "outputs": {"markdown": "gca_operator_digest.md", "json": "gca_operator_digest.json"},
+            }), encoding="utf-8")
+            with urlopen(f"{base_url}/gca/operator-digest", timeout=10) as response:
+                digest = json.loads(response.read().decode())
+            self.assertTrue(digest["ok"])
+            self.assertTrue(digest["available"])
+            self.assertEqual(digest["status"], "loaded")
+            self.assertEqual(digest["dailyOps"]["steps"][0]["id"], "public-site")
+            self.assertEqual(digest["supportQueue"]["replyReadyRows"], 1)
+            self.assertFalse(digest["boundaries"]["automaticTokenTransfer"])
 
             with urlopen(f"{base_url}/gca/review-package?limit=5", timeout=10) as response:
                 review_package = json.loads(response.read().decode())

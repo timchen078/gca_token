@@ -516,6 +516,11 @@
           </div>
           <div class="fact">
             <span class="label">GET</span>
+            <span class="value">/gca/operator-digest</span>
+            <p class="note">Local-only redacted daily digest view created by <code>tools/run_gca_daily_ops.py --build-digest</code>. It returns public health, member ops counts, support queue counts, holding evidence counts, and next actions without user records, emails, admin tokens, signatures, or automatic transfers.</p>
+          </div>
+          <div class="fact">
+            <span class="label">GET</span>
             <span class="value">/gca/review-package</span>
             <p class="note">Local-only reviewer evidence export for support and platform follow-up. It includes local ledger totals, latest records, <code>recordManifest</code>, <code>packageDigestSha256</code>, public reference links, and safety boundaries. Use <code>?redact=public</code> before external sharing, <code>tools/export_gca_review_package.py</code> to export from local JSONL data without running the server, and <code>tools/verify_gca_review_package.py</code> to verify the digest.</p>
           </div>
