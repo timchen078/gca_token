@@ -74,6 +74,7 @@
     "adminContactSuppressionReadEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/contact-suppressions",
     "adminExportTool": "tools/export_cloudflare_email_registrations.py",
     "adminSyncTool": "tools/sync_cloudflare_email_registrations.py",
+    "readOnlyApiCheckTool": "tools/check_gca_registration_api.py",
     "contactCsvExportTool": "tools/export_gca_email_contacts.py",
     "registrationOpsTool": "tools/run_gca_registration_ops.py",
     "contactSuppressionTool": "tools/suppress_gca_contact.py",
