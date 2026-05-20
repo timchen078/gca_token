@@ -306,8 +306,8 @@
       <section aria-labelledby="title">
         <p class="eyebrow">中文上线门槛 / 2026-05-20</p>
         <h1 id="title">GCA 中文上线门槛</h1>
-        <p class="lead">这一页定义 GCA 用户中心和 GCA AI Quant Access 相关功能什么时候才能对外说“已上线”。当前状态是公开说明和产品边界，不是完整自助账户系统。</p>
-        <p class="lead">邮箱注册 API 已上线；但受控 HTTPS 账户 UI、只读钱包余额验证、100 credits 账本激活、GCA Member 账本激活、10,000 GCA 会员权益自助领取和交易相关产品仍未正式上线。</p>
+        <p class="lead">这一页定义 GCA 用户中心和 GCA AI Quant Access 相关功能哪些已经上线、哪些仍需要人工审核或后续产品门槛。</p>
+        <p class="lead">邮箱注册 API、受控 HTTPS 账户入口、只读钱包余额验证、100 credits 账本记录和 GCA Member 账本记录已经上线；10,000 GCA 会员权益转账仍需人工审核，交易相关产品仍未正式上线。</p>
         <div class="actions">
           <a class="button primary" href="zh-access.html">中文用户中心预览</a>
           <a class="button primary" href="register.html">邮箱注册</a>
@@ -337,11 +337,11 @@
         </div>
         <div class="fact">
           <span class="label">账户 UI</span>
-          <span class="value pending">还没有上线</span>
+          <span class="value good">已上线：gca/member-access/</span>
         </div>
         <div class="fact">
           <span class="label">GCA Member</span>
-          <span class="value pending">不能自助领取</span>
+          <span class="value good">符合条件写入账本，会员权益仍需人工审核</span>
         </div>
         <div class="fact">
           <span class="label">交易相关产品</span>
@@ -351,11 +351,11 @@
 
       <section class="section panel" aria-labelledby="gatesTitle">
         <p class="eyebrow">Go-Live Gates</p>
-        <h2 id="gatesTitle">正式上线前必须完成</h2>
+        <h2 id="gatesTitle">当前上线状态和剩余门槛</h2>
         <div class="grid">
           <article class="card">
             <h3>受控 HTTPS 账户 UI</h3>
-            <p class="note">用户登录、资料提交、状态查看和支持审核必须在正式 HTTPS 账户环境里完成，不能只依赖静态网页说明。</p>
+            <p class="note">账户资料提交已经接入 Workers + D1。后续仍要补充更完整的登录态、用户状态页和支持处理后台。</p>
           </article>
           <article class="card">
             <h3>只读 GCA 余额验证</h3>
@@ -384,8 +384,8 @@
         <div class="panel">
           <h2>当前还不能这样说</h2>
           <div class="list">
-            <div class="row"><span>账户系统</span><strong class="pending">不能说公开自助账户 UI 已上线</strong></div>
-            <div class="row"><span>100 credits</span><strong class="pending">不能说可以自助领取或立即使用</strong></div>
+            <div class="row"><span>账户系统</span><strong class="good">可以说账户入口、只读验证和符合条件账本记录已上线</strong></div>
+            <div class="row"><span>100 credits</span><strong class="pending">可以说符合条件写入账本；不能说立即交付所有服务</strong></div>
             <div class="row"><span>GCA Member</span><strong class="pending">不能说持有后自动成为会员</strong></div>
             <div class="row"><span>10,000 GCA 会员权益</span><strong class="pending">不能说自动发放或自助领取</strong></div>
             <div class="row"><span>第三方审计</span><strong class="pending">不能说已完成独立审计</strong></div>
@@ -400,7 +400,7 @@
             <div class="row"><span>邮箱注册</span><strong>邮箱注册 API 已上线</strong></div>
             <div class="row"><span>用户中心</span><strong>中文用户中心预览已发布</strong></div>
             <div class="row"><span>会员规则</span><strong>10,000 GCA / 100 credits 和 1,000,000 GCA / 30 天规则已公开</strong></div>
-            <div class="row"><span>会员权益</span><strong>10,000 GCA 会员权益仍需审核和账本激活</strong></div>
+            <div class="row"><span>会员权益</span><strong>10,000 GCA 会员权益仍需人工审核和储备钱包处理</strong></div>
             <div class="row"><span>市场入口</span><strong>官方交易路线是 Base Mainnet GCA/USDT 池 0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0</strong></div>
             <div class="row"><span>安全边界</span><strong>不托管资金，不索要私钥或提现权限</strong></div>
           </div>
@@ -415,7 +415,7 @@
           <li>不托管用户资金，不让用户把资产转入所谓客服、审计、保证或解锁地址。</li>
           <li>不允许绕过风控直接进行真实交易执行。</li>
           <li>不把 credits、会员身份或会员权益描述成现金、收入、报销、交易权限或风控豁免。</li>
-          <li>不把产品计划、预览页、JSON 文件或本地测试说成正式公开自助功能。</li>
+          <li>不把产品计划、JSON 文件或本地测试说成正式公开产品功能；账户入口和账本记录可以按当前事实说明为已上线。</li>
         </ul>
       </section>
 
@@ -425,7 +425,7 @@
         <div class="list">
           <div class="row"><span>1. 邮箱注册</span><strong>继续使用 <a href="register.html">register.html</a> 和 Cloudflare Workers + D1 收集用户邮箱。</strong></div>
           <div class="row"><span>2. 运营同步</span><strong>按 <a href="zh-operations.html">中文运营流程</a> 同步 D1 注册记录、应用退订名单并导出 public-redacted 联系 CSV。</strong></div>
-          <div class="row"><span>3. 账户 UI</span><strong>搭建受控 HTTPS 用户中心，用于查看注册状态、提交公开链上资料和查看审核结果。</strong></div>
+          <div class="row"><span>3. 账户 UI</span><strong>继续完善受控 HTTPS 用户中心，用于查看注册状态、提交公开链上资料和查看审核结果。</strong></div>
           <div class="row"><span>4. 钱包验证</span><strong>接入只读 GCA 余额验证，不发起交易、不要求签名授权转移资产。</strong></div>
           <div class="row"><span>5. 账本激活</span><strong>上线 100 credits 账本和 GCA Member 账本，并保留可审计记录。</strong></div>
           <div class="row"><span>6. 支持审核</span><strong>上线支持审核队列，处理 30 天持有证明、资料补充和会员权益审核。</strong></div>
@@ -469,7 +469,7 @@
       <section class="section panel" id="technicalEvidence" aria-labelledby="dataTitle">
         <p class="eyebrow">Platform-Only Evidence Path</p>
         <h2 id="dataTitle">平台审核资料</h2>
-        <p class="note">普通用户优先阅读 HTML 页面。Raw JSON 文件只给钱包、浏览器、DEX 数据工具、上币审核或安全厂商在需要结构化资料时使用；这些文件不是领取页面，也不会让 gated 功能变成已上线。</p>
+        <p class="note">普通用户优先阅读 HTML 页面。Raw JSON 文件只给钱包、浏览器、DEX 数据工具、上币审核或安全厂商在需要结构化资料时使用；这些文件不是会员权益转账领取页面。</p>
         <div class="actions">
           <a class="button" href="data.html">Reviewer Data Room</a>
           <a class="button" href="release-gates.html">Release Gates</a>

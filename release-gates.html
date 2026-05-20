@@ -329,10 +329,10 @@
 
     <main class="shell">
       <section aria-labelledby="title">
-        <p class="eyebrow">Release Gates / 2026-05-14</p>
+        <p class="eyebrow">Release Gates / 2026-05-20</p>
         <h1 id="title">GCA Product Release Gates</h1>
-        <p class="lead">This page defines what must be true before GCA AI Quant Access is described as a public self-service product. The current state is public product spec only, not a live trading terminal, not live market data, and not financial advice.</p>
-        <p class="lead">Public Account UI is not live. Credits are not self-service claimable. GCA Member status is not self-service claimable. The 10,000 GCA member benefit is not self-service claimable. Any product claim must stay inside the gates below until implementation, support review, and disclosures are live.</p>
+        <p class="lead">This page defines what is live and what remains gated before GCA AI Quant Access is described as a broader public product. The current state includes live account intake, read-only wallet verification, and ledger records, but not a live trading terminal, not live market data, and not financial advice.</p>
+        <p class="lead">Public account UI, wallet verification, and eligible 100 credits / GCA Member ledger records are live. The 10,000 GCA member benefit is still manual reserve-wallet review only, and any trading-related product claim must stay inside the gates below until implementation, support review, and disclosures are live.</p>
         <div class="actions">
           <a class="button primary" href="access.html">Access Portal</a>
           <a class="button primary" href="operations.html">Operations Runbook</a>
@@ -350,19 +350,19 @@
       <section class="facts" aria-label="Current state">
         <div class="fact">
           <span class="label">Current Stage</span>
-          <span class="value pending">public product spec only</span>
+          <span class="value good">account ledger path live</span>
         </div>
         <div class="fact">
           <span class="label">Public Account UI</span>
-          <span class="value pending">Not live</span>
+          <span class="value good">Live</span>
         </div>
         <div class="fact">
           <span class="label">Credits</span>
-          <span class="value pending">Not self-service claimable</span>
+          <span class="value good">Eligible ledger records live</span>
         </div>
         <div class="fact">
           <span class="label">GCA Member</span>
-          <span class="value pending">Not self-service claimable</span>
+          <span class="value good">Eligible review records live</span>
         </div>
       </section>
 
@@ -404,12 +404,13 @@
 
       <section class="section two" aria-label="Operational boundaries">
         <div class="panel">
-          <h2>Not Live Yet</h2>
-          <div class="list">
-            <div class="row"><span>Public account UI</span><strong class="pending">Not live</strong></div>
-            <div class="row"><span>100 utility credits self-service claim</span><strong class="pending">Not live</strong></div>
-            <div class="row"><span>Credits catalog</span><strong class="pending">Draft service catalog only</strong></div>
-            <div class="row"><span>GCA Member self-service claim</span><strong class="pending">Not live</strong></div>
+        <h2>Live Now / Still Gated</h2>
+        <div class="list">
+            <div class="row"><span>Public account UI</span><strong class="good">Live at /gca/member-access/</strong></div>
+            <div class="row"><span>100 utility credits ledger record</span><strong class="good">Live for eligible holders</strong></div>
+            <div class="row"><span>Credits catalog</span><strong class="good">Published service catalog</strong></div>
+            <div class="row"><span>GCA Member ledger record</span><strong class="good">Live for eligible holders</strong></div>
+            <div class="row"><span>10,000 GCA member benefit transfer</span><strong class="pending">Manual review only</strong></div>
             <div class="row"><span>Live trading execution</span><strong class="pending">Not enabled</strong></div>
             <div class="row"><span>BaseScan token profile awaiting review</span><strong class="pending">Awaiting BaseScan</strong></div>
             <div class="row"><span>Third-party audit</span><strong class="pending">no third-party audit</strong></div>
@@ -447,17 +448,17 @@
           <h2>Safe To Say</h2>
           <ul>
             <li>GCA has published product release gates for GCA AI Quant Access.</li>
-            <li>The current public page is a product spec and release-gate disclosure.</li>
-            <li>Public self-service credits, GCA Member status, and the 10,000 GCA member benefit require controlled account UI, read-only wallet verification, 30-day holding-period review, ledger activation, and support review.</li>
+            <li>GCA has a live controlled account UI, read-only wallet verification, and eligible D1 ledger records for 100 credits / GCA Member review.</li>
+            <li>The 10,000 GCA member benefit requires 1,000,000 GCA, 30-day holding evidence, member ledger review, and manual reserve-wallet processing.</li>
             <li>Any future trading-related feature must pass risk-control review and simulation or testnet first.</li>
           </ul>
         </div>
         <div class="panel">
           <h2>Do Not Claim</h2>
           <ul>
-            <li>Do not claim credit claiming is live before controlled account UI and credit ledger activation.</li>
-            <li>Do not claim GCA Member status is live before controlled account UI and member ledger activation.</li>
-            <li>Do not claim the 10,000 GCA member benefit is live before 30-day holding verification and member ledger activation.</li>
+            <li>Do not claim credits are cash, transferable token claims, income, or trading permission.</li>
+            <li>Do not claim GCA Member approval is automatic without 1,000,000 GCA balance and 30-day evidence review.</li>
+            <li>Do not claim the 10,000 GCA member benefit is automatic or self-service before manual reserve-wallet review.</li>
             <li>Do not claim the product gives custody, withdrawal permission, exchange API secret collection, platform revenue distribution, trading permission, or risk-control bypass.</li>
             <li>Do not claim BaseScan token profile approval, external audit completion, deep liquidity, or tracked listing approval before publication.</li>
           </ul>

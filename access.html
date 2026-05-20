@@ -3,22 +3,22 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>GCA Access Portal Blueprint | GCA AI Quant Access</title>
-    <meta name="description" content="Public blueprint for the future GCA controlled account path: read-only wallet balance verification, 100 utility credits, GCA Member ledger activation, 10,000 GCA member benefit review, and support review boundaries.">
+    <title>GCA Access Portal | GCA AI Quant Access</title>
+    <meta name="description" content="Live GCA controlled account path: read-only wallet balance verification, 100 utility credits ledger records, GCA Member ledger activation, 10,000 GCA member benefit review, and support boundaries.">
     <link rel="canonical" href="https://gcagochina.com/access.html">
     <link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">
     <link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="GCA | Go China Access">
-    <meta property="og:title" content="GCA Access Portal Blueprint | GCA AI Quant Access">
-    <meta property="og:description" content="Blueprint-only account path for planned GCA wallet verification, credits ledger, member ledger, member benefit review, and support review workflows.">
+    <meta property="og:title" content="GCA Access Portal | GCA AI Quant Access">
+    <meta property="og:description" content="Live account path for GCA wallet verification, credits ledger, member ledger, member benefit review, and support review workflows.">
     <meta property="og:url" content="https://gcagochina.com/access.html">
     <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="GCA Access Portal Blueprint | GCA AI Quant Access">
-    <meta name="twitter:description" content="Blueprint-only account path for planned GCA wallet verification, credits ledger, member ledger, member benefit review, and support review workflows.">
+    <meta name="twitter:title" content="GCA Access Portal | GCA AI Quant Access">
+    <meta name="twitter:description" content="Live account path for GCA wallet verification, credits ledger, member ledger, member benefit review, and support review workflows.">
     <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
     <style>
       :root {
@@ -335,15 +335,15 @@
 
     <main class="shell">
       <section aria-labelledby="title">
-        <p class="eyebrow">Access Portal Blueprint / 2026-05-14</p>
-        <h1 id="title">GCA Access Portal Blueprint</h1>
-        <p class="lead">This page defines the planned controlled account path for GCA AI Quant Access: read-only wallet verification, 100 Web3 Radar utility credits, GCA Member ledger activation, 30-day holding-period review, 10,000 GCA member benefit review, and support review workflow.</p>
-        <p class="lead">The current state is blueprint only. The controlled HTTPS account UI is not live, direct submission is not connected, credits are not self-service claimable, GCA Member status is not self-service claimable, and the 10,000 GCA member benefit is not self-service claimable.</p>
+        <p class="eyebrow">Access Portal / 2026-05-20</p>
+        <h1 id="title">GCA Access Portal</h1>
+        <p class="lead">This page defines the controlled account path for GCA AI Quant Access: email account intake, read-only wallet verification, 100 Web3 Radar utility credits ledger records, GCA Member ledger records, 30-day holding-period review, 10,000 GCA member benefit review, and support workflow.</p>
+        <p class="lead">The live member access page now submits to the Cloudflare Workers + D1 backend. It verifies a Base wallet with a read-only ERC-20 balanceOf call and writes eligible credit/member ledger records. The 10,000 GCA member benefit remains manual review only and is not an automatic transfer.</p>
         <div class="actions">
           <a class="button primary" href="operations.html">Operations Runbook</a>
           <a class="button primary" href="access-api.html">Access API Contract</a>
           <a class="button primary" href="review-queue.html">Review Queue Contract</a>
-          <a class="button primary" href="gca/member-access/">Member Access Preview</a>
+          <a class="button primary" href="gca/member-access/">Member Access</a>
           <a class="button" href="members.html">Member Pre-Registration</a>
           <a class="button" href="credits.html">Credits Catalog</a>
           <a class="button" href="release-gates.html">Release Gates</a>
@@ -358,11 +358,11 @@
       <section class="facts" aria-label="Current state">
         <div class="fact">
           <span class="label">Current Stage</span>
-          <span class="value pending">blueprint only</span>
+          <span class="value good">controlled account UI live</span>
         </div>
         <div class="fact">
           <span class="label">Controlled Account UI</span>
-          <span class="value pending">Not live</span>
+          <span class="value good">Live at /gca/member-access/</span>
         </div>
         <div class="fact">
           <span class="label">Wallet Verification</span>
@@ -370,17 +370,17 @@
         </div>
         <div class="fact">
           <span class="label">Direct Submission</span>
-          <span class="value pending">Not connected</span>
+          <span class="value good">Connected to Workers + D1</span>
         </div>
       </section>
 
       <section class="section panel" aria-labelledby="journeyTitle">
-        <h2 id="journeyTitle">Planned User Journey</h2>
+        <h2 id="journeyTitle">Live User Journey</h2>
         <div class="grid">
           <div class="fact">
             <span class="label">Step 1</span>
             <span class="value">Create account</span>
-            <p class="note">Use a controlled HTTPS account UI after it is released. The static site does not create a live account today.</p>
+            <p class="note">Use the public <a href="gca/member-access/">GCA Member Access</a> page to submit an email, display name, Base wallet, and review acknowledgements.</p>
           </div>
           <div class="fact">
             <span class="label">Step 2</span>
@@ -390,12 +390,12 @@
           <div class="fact">
             <span class="label">Step 3</span>
             <span class="value">Review record</span>
-            <p class="note">Create a support review record before any credit ledger activation or member ledger activation.</p>
+            <p class="note">The backend writes wallet verification records and eligible credit/member ledger records. Support review still controls final member-benefit handling.</p>
           </div>
           <div class="fact">
             <span class="label">Step 4</span>
             <span class="value">Activate access</span>
-            <p class="note">Eligible records can activate 100 credits, GCA Member status, or the one-time 10,000 GCA member benefit only after the required release gates are live.</p>
+            <p class="note">Eligible users can create 100 credits and GCA Member review records. The one-time 10,000 GCA member benefit requires 30-day evidence review and manual reserve-wallet processing.</p>
           </div>
         </div>
       </section>
@@ -406,7 +406,7 @@
           <div class="list">
             <div class="row"><span>Minimum verified holding</span><strong>10,000 GCA</strong></div>
             <div class="row"><span>Planned ledger record</span><strong>100 Web3 Radar utility credits</strong></div>
-            <div class="row"><span>Credit ledger activation</span><strong class="pending">Required before use</strong></div>
+            <div class="row"><span>Credit ledger activation</span><strong class="good">Live for eligible records</strong></div>
             <div class="row"><span>Registered user limit</span><strong>one holder bonus</strong></div>
           </div>
         </div>
@@ -417,8 +417,8 @@
             <div class="row"><span>Minimum holding period</span><strong>30 consecutive days</strong></div>
             <div class="row"><span>Member benefit</span><strong>10,000 GCA after approval</strong></div>
             <div class="row"><span>Planned status</span><strong>GCA Member</strong></div>
-            <div class="row"><span>Member ledger activation</span><strong class="pending">Required before access</strong></div>
-            <div class="row"><span>Support review queue</span><strong class="pending">Required before approval</strong></div>
+            <div class="row"><span>Member ledger activation</span><strong class="good">Live for eligible records</strong></div>
+            <div class="row"><span>Support review queue</span><strong class="pending">Required before member-benefit approval</strong></div>
           </div>
         </div>
       </section>
@@ -465,7 +465,7 @@
           <div class="fact">
             <span class="label">Support</span>
             <span class="value">Support Review Queue</span>
-            <p class="note">Account, verification, report, and member-workflow review after account UI is live.</p>
+            <p class="note">Account, verification, report, and member-workflow review after a ledger record is created.</p>
           </div>
         </div>
       </section>
@@ -474,11 +474,11 @@
         <div class="panel">
           <h2>Required Controls</h2>
           <ul>
-            <li>controlled HTTPS account UI</li>
-            <li>read-only GCA balance verification</li>
-            <li>credit ledger activation</li>
-            <li>member ledger activation</li>
-            <li>support review queue</li>
+            <li>controlled HTTPS account UI is live on <code>/gca/member-access/</code></li>
+            <li>read-only GCA balance verification runs through the Workers API</li>
+            <li>credit ledger activation is live for eligible 10,000 GCA records</li>
+            <li>member ledger activation is live for eligible 1,000,000 GCA / 30-day records</li>
+            <li>support review queue is still required before member-benefit approval</li>
             <li>privacy notice and participation terms</li>
             <li>risk-control review and simulation or testnet first for any future trading workflow</li>
           </ul>
@@ -497,11 +497,11 @@
       </section>
 
       <section class="section panel" aria-labelledby="previewTitle">
-        <h2 id="previewTitle">Public Preview Links</h2>
+        <h2 id="previewTitle">Public Access Links</h2>
         <div class="list">
-          <div class="row"><span><a href="gca/member-access/">Member Access Preview</a></span><strong>browser-only preview</strong></div>
-          <div class="row"><span><a href="operations.html">Operations Runbook</a></span><strong>manual SOP only</strong></div>
-          <div class="row"><span><a href="access-api.html">Access API Contract</a></span><strong>contract only</strong></div>
+          <div class="row"><span><a href="gca/member-access/">Member Access</a></span><strong>live account UI</strong></div>
+          <div class="row"><span><a href="operations.html">Operations Runbook</a></span><strong>live SOP</strong></div>
+          <div class="row"><span><a href="access-api.html">Access API Contract</a></span><strong>Workers + D1 contract</strong></div>
           <div class="row"><span><a href="review-queue.html">Review Queue Contract</a></span><strong>manual review contract</strong></div>
           <div class="row"><span><a href="members.html">Member Pre-Registration</a></span><strong>local packet generator</strong></div>
           <div class="row"><span><a href="credits.html">Credits Catalog</a></span><strong>draft service catalog</strong></div>
@@ -515,7 +515,7 @@
 
       <section class="section panel" id="technicalEvidence" aria-labelledby="technicalEvidenceTitle">
         <h2 id="technicalEvidenceTitle">Platform-Only Evidence Path</h2>
-        <p class="note">Use the readable pages below for normal access-portal review. Raw JSON is kept in the Data Room only for platforms, reviewers, and implementation checks that explicitly ask for machine-readable files. These files do not make self-service claiming live.</p>
+        <p class="note">Use the readable pages below for normal access-portal review. Raw JSON is kept in the Data Room only for platforms, reviewers, and implementation checks that explicitly ask for machine-readable files. The live account UI is the user path; raw JSON files are not submission forms.</p>
         <div class="actions">
           <a class="button" href="data.html">Data Room</a>
           <a class="button" href="operations.html">Operations Runbook</a>
@@ -542,7 +542,7 @@
     </main>
 
     <footer>
-      <div class="shell">GCA Access Portal is a blueprint-only disclosure until controlled HTTPS account UI, read-only wallet verification, ledger activation, and support review are live.</div>
+      <div class="shell">GCA Access Portal now supports public account intake, read-only wallet verification, and eligible ledger records; member-benefit transfers remain manual review only.</div>
     </footer>
   </body>
 </html>

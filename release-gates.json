@@ -1,31 +1,35 @@
 {
   "schema": "https://gcagochina.com/release-gates.json",
   "pageUrl": "https://gcagochina.com/release-gates.html",
-  "status": "public-release-gates-published",
-  "lastUpdated": "2026-05-14",
+  "status": "public-release-gates-account-ledger-path-live",
+  "lastUpdated": "2026-05-20",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "title": "GCA Product Release Gates",
   "currentState": {
-    "currentStage": "public-product-spec-only",
-    "publicProductSpecOnly": true,
-    "publicAccountUiLive": false,
-    "creditsSelfServiceClaimable": false,
-    "gcaMemberSelfServiceClaimable": false,
+    "currentStage": "account-ledger-path-live",
+    "publicProductSpecOnly": false,
+    "publicAccountUiLive": true,
+    "creditsSelfServiceClaimable": true,
+    "gcaMemberSelfServiceClaimable": true,
     "liveTradingEnabled": false,
     "baseScanTokenProfile": "resubmitted-awaiting-review",
     "thirdPartyAudit": "not-completed",
     "liquidityDepth": "starter-depth-only",
-    "accessPortalBlueprint": "published-blueprint-only",
-    "accessApiContract": "published-contract-only",
+    "accessPortal": "live-account-portal",
+    "accessApiContract": "workers-d1-contract-live",
     "reviewQueueContract": "public-review-queue-contract-published",
-    "operationsRunbook": "public-access-operations-runbook-published"
+    "operationsRunbook": "public-access-operations-runbook-published",
+    "walletVerificationLive": true,
+    "creditLedgerWritesLive": true,
+    "memberLedgerWritesLive": true,
+    "memberBenefitManualReviewOnly": true
   },
   "releaseGates": [
     {
-      "id": "access-portal-blueprint",
-      "label": "Access Portal Blueprint",
-      "status": "published-blueprint-only",
+      "id": "access-portal",
+      "label": "Access Portal",
+      "status": "live-account-ui",
       "blocks": [
         "self-service account claims",
         "self-service credit claiming",
@@ -34,8 +38,8 @@
     },
     {
       "id": "access-api-contract",
-      "label": "Access API Contract",
-      "status": "published-contract-only",
+      "label": "Access API",
+      "status": "workers-d1-live",
       "blocks": [
         "public endpoint claims",
         "self-service packet submission",
@@ -55,7 +59,7 @@
     {
       "id": "controlled-https-account-ui",
       "label": "Controlled HTTPS account UI",
-      "status": "required-before-public-account-claims",
+      "status": "live",
       "blocks": [
         "self-service credit claiming",
         "self-service GCA Member claiming",
@@ -66,7 +70,7 @@
     {
       "id": "read-only-wallet-verification",
       "label": "Read-only GCA balance verification",
-      "status": "required-before-ledger-records",
+      "status": "live",
       "blocks": [
         "10,000 GCA holder bonus eligibility",
         "1,000,000 GCA member eligibility",
@@ -76,7 +80,7 @@
     {
       "id": "credit-ledger-activation",
       "label": "100 utility credits ledger activation",
-      "status": "required-before-credit-use",
+      "status": "live-for-eligible-records",
       "blocks": [
         "100 utility credits use",
         "credit balance display",
@@ -86,7 +90,7 @@
     {
       "id": "member-ledger-activation",
       "label": "GCA Member ledger activation",
-      "status": "required-before-member-access",
+      "status": "live-for-eligible-records",
       "blocks": [
         "GCA Member status display",
         "10,000 GCA member benefit status",
@@ -132,21 +136,16 @@
     }
   ],
   "noGoLiveWithout": [
-    "access portal blueprint",
-    "access API contract",
-    "controlled HTTPS account UI",
     "read-only GCA balance verification",
-    "credit ledger activation",
-    "member ledger activation",
-    "support review queue",
+    "credit ledger record",
+    "member ledger record",
+    "support review queue for member-benefit approval",
     "risk-control review",
-    "simulation or testnet first",
+    "simulation or testnet first for any future trading workflow",
     "privacy notice and participation terms",
     "no custody",
     "no withdrawal permission",
-    "no exchange API secret collection",
-    "review queue contract",
-    "public access operations runbook"
+    "no exchange API secret collection"
   ],
   "officialMarket": {
     "pair": "GCA/USDT",
@@ -159,20 +158,18 @@
   },
   "publicClaimBoundaries": {
     "safeClaims": [
-      "GCA has published public release gates for GCA AI Quant Access.",
-      "The current product state is public product spec only.",
-      "Credits, GCA Member status, and the 10,000 GCA member benefit are not self-service claimable until controlled account UI, read-only wallet verification, holding-period review, ledger activation, and support review are live.",
+      "GCA has a live controlled account UI, read-only wallet verification, and eligible D1 ledger records for 100 credits / GCA Member review.",
+      "The 10,000 GCA member benefit requires 1,000,000 GCA, 30-day holding evidence, member ledger review, and manual reserve-wallet processing.",
       "Any future trading-related feature must pass risk-control review and simulation or testnet first.",
       "GCA has published a public access operations runbook for manual review handling."
     ],
     "doNotClaim": [
-      "credit claiming is live before controlled account UI and credit ledger activation",
-      "GCA Member status is live before controlled account UI and member ledger activation",
-      "the 10,000 GCA member benefit is live before 30-day holding verification and member ledger activation",
+      "credits are cash, income, reimbursement, trading permission, or transferable value",
+      "GCA Member approval is automatic without 1,000,000 GCA balance and 30-day evidence review",
+      "the 10,000 GCA member benefit is automatic or self-service transferred",
       "live trading execution is enabled before risk-control review and simulation or testnet validation",
       "custody, withdrawal permission, private key access, exchange API secret collection, platform revenue distribution, trading permission, or risk-control bypass",
-      "BaseScan token profile approval, external audit completion, deep liquidity, or tracked listing approval before publication",
-      "public submission queue is live before controlled account UI and reviewed backend are released"
+      "BaseScan token profile approval, external audit completion, deep liquidity, or tracked listing approval before publication"
     ]
   },
   "officialLinks": {
@@ -199,6 +196,7 @@
     "reviewQueuePage": "https://gcagochina.com/review-queue.html",
     "reviewQueue": "https://gcagochina.com/review-queue.json",
     "operationsRunbookPage": "https://gcagochina.com/operations.html",
-    "operationsRunbook": "https://gcagochina.com/operations.json"
+    "operationsRunbook": "https://gcagochina.com/operations.json",
+    "memberAccessPage": "https://gcagochina.com/gca/member-access/"
   }
 }

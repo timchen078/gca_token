@@ -1,46 +1,49 @@
 {
   "schema": "https://gcagochina.com/credits.json",
   "pageUrl": "https://gcagochina.com/credits.html",
-  "status": "public-credits-catalog-published",
-  "lastUpdated": "2026-05-14",
+  "status": "public-credits-catalog-ledger-path-live",
+  "lastUpdated": "2026-05-20",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "title": "GCA Utility Credits Catalog",
   "currentState": {
-    "currentStage": "draft-service-catalog-only",
-    "draftServiceCatalogOnly": true,
-    "publicAccountUiLive": false,
-    "creditsSelfServiceClaimable": false,
-    "gcaMemberSelfServiceClaimable": false,
+    "currentStage": "account-ledger-path-live",
+    "draftServiceCatalogOnly": false,
+    "publicAccountUiLive": true,
+    "creditsSelfServiceClaimable": true,
+    "gcaMemberSelfServiceClaimable": true,
     "liveTradingEnabled": false,
-    "controlledHttpsAccountUiLive": false,
-    "reviewQueueContract": "public-review-queue-contract-published"
+    "controlledHttpsAccountUiLive": true,
+    "reviewQueueContract": "public-review-queue-contract-published",
+    "walletVerificationLive": true,
+    "creditLedgerWritesLive": true,
+    "memberLedgerWritesLive": true
   },
   "holderBonus": {
     "minimumHolding": "10000 GCA",
     "creditAmount": "100 Web3 Radar utility credits",
     "registeredUserLimit": "one holder bonus per registered user",
     "walletLimit": "one verified Base wallet per registered user",
-    "activationRequirement": "controlled HTTPS account UI, read-only GCA balance verification, and credit ledger activation",
-    "notLive": true
+    "activationRequirement": "controlled HTTPS account UI, read-only GCA balance verification, and eligible credit ledger record",
+    "notLive": false
   },
   "gcaMember": {
     "minimumHolding": "1000000 GCA",
     "minimumHoldingPeriod": "30 consecutive days",
     "memberBenefitAmount": "10000 GCA",
-    "memberBenefit": "one-time 10,000 GCA member benefit after holding-period verification and member ledger activation",
+    "memberBenefit": "one-time 10,000 GCA member benefit after holding-period verification, member ledger review, support approval, and manual reserve-wallet processing",
     "memberBenefitSource": "project or owner-held reserve transfer only; no new minting",
     "registeredUserLimit": "one member status and one member benefit review per registered user",
     "walletLimit": "one verified Base wallet per registered user",
-    "activationRequirement": "controlled HTTPS account UI, read-only GCA balance verification, 30-day holding-period review, member ledger activation, and support review queue",
-    "notLive": true,
-    "plannedAccessScope": "one-time 10,000 GCA member benefit, higher utility credit limits, member research notes, priority report queue, member training sessions, and priority support"
+    "activationRequirement": "controlled HTTPS account UI, read-only GCA balance verification, 30-day holding-period review, eligible member ledger record, and support review queue",
+    "notLive": false,
+    "accessScope": "one-time 10,000 GCA member benefit review, higher utility credit limits, member research notes, priority report queue, member training sessions, and priority support"
   },
   "serviceCatalog": [
     {
       "id": "liquidation-replay-report",
       "name": "Liquidation Replay",
-      "status": "planned-controlled-account-ui-required",
+      "status": "ledger-eligible-service-unit-staged",
       "creditUnit": 30,
       "unitType": "draft service credit unit",
       "description": "Structured post-trade review of liquidation, over-sizing, leverage, stop placement, and execution mistakes.",
@@ -49,7 +52,7 @@
     {
       "id": "risk-warning-review",
       "name": "Risk Warning Review",
-      "status": "planned-controlled-account-ui-required",
+      "status": "ledger-eligible-service-unit-staged",
       "creditUnit": 10,
       "unitType": "draft service credit unit",
       "description": "Risk warning review for volatility, crowding, exposure, stop placement, and trade-process discipline.",
@@ -58,7 +61,7 @@
     {
       "id": "backtest-lab-run",
       "name": "Backtest Lab",
-      "status": "planned-controlled-account-ui-required",
+      "status": "ledger-eligible-service-unit-staged",
       "creditUnit": 20,
       "unitType": "draft service credit unit",
       "description": "Backtest review with fees, slippage, drawdown, sample quality, and risk-constraint notes.",
@@ -67,7 +70,7 @@
     {
       "id": "entry-ready-review",
       "name": "ENTRY_READY Review",
-      "status": "planned-controlled-account-ui-required",
+      "status": "ledger-eligible-service-unit-staged",
       "creditUnit": 15,
       "unitType": "draft service credit unit",
       "description": "Setup, invalidation, risk budget, execution-condition, and readiness review for a trade idea.",
@@ -76,7 +79,7 @@
     {
       "id": "position-size-calculator",
       "name": "Position Size Calculator",
-      "status": "planned-controlled-account-ui-required",
+      "status": "ledger-eligible-service-unit-staged",
       "creditUnit": 5,
       "unitType": "draft service credit unit",
       "description": "Risk budget, stop-distance, leverage-bound, exposure-limit, and maximum-loss calculation workflow.",
@@ -85,7 +88,7 @@
     {
       "id": "risk-control-training",
       "name": "Risk-Control Training",
-      "status": "planned-controlled-account-ui-required",
+      "status": "ledger-eligible-service-unit-staged",
       "creditUnit": 10,
       "unitType": "draft service credit unit",
       "description": "Training content for liquidation prevention, trade journaling, execution discipline, and risk-first workflow.",
@@ -94,7 +97,7 @@
     {
       "id": "member-research-notes",
       "name": "Member Research Notes",
-      "status": "planned-member-ledger-required",
+      "status": "member-ledger-eligible-service-unit-staged",
       "creditUnit": 20,
       "unitType": "draft member credit unit",
       "description": "Member-only China Narrative Radar notes, weekly research extensions, and risk-context summaries.",
@@ -103,7 +106,7 @@
     {
       "id": "support-review-queue",
       "name": "Support Review Queue",
-      "status": "planned-member-ledger-required",
+      "status": "member-ledger-eligible-service-workflow-staged",
       "creditUnit": 0,
       "unitType": "member workflow priority",
       "description": "Priority support routing for account, verification, report, and member-workflow review after account UI is live.",
@@ -115,12 +118,12 @@
     "transferable": false,
     "cashEquivalent": false,
     "tokenRebate": false,
-    "memberBenefitTokenClaim": "planned 10,000 GCA member benefit only after holding-period verification; not self-service live",
+    "memberBenefitTokenClaim": "10,000 GCA member benefit only after holding-period verification, support approval, and manual reserve-wallet review; not automatic",
     "incomeOrReimbursement": false,
     "tradingPermission": false,
     "riskControlBypass": false,
-    "requiresControlledAccountUi": true,
-    "requiresLedgerActivation": true,
+    "requiresControlledAccountUi": false,
+    "requiresLedgerActivation": false,
     "requiresSupportReview": true
   },
   "safetyArchitecture": {
@@ -137,16 +140,16 @@
     "releaseGatesPage": "https://gcagochina.com/release-gates.html",
     "releaseGates": "https://gcagochina.com/release-gates.json",
     "requiredBeforeCreditUse": [
-      "controlled HTTPS account UI",
+      "eligible account record",
       "read-only GCA balance verification",
-      "credit ledger activation",
-      "support review queue"
+      "credit ledger record",
+      "support/product review before service delivery"
     ],
     "requiredBeforeMemberUse": [
-      "controlled HTTPS account UI",
+      "eligible account record",
       "read-only GCA balance verification",
       "30-day GCA Member holding-period review",
-      "member ledger activation",
+      "member ledger record",
       "support review queue"
     ],
     "accessPortalPage": "https://gcagochina.com/access.html",
@@ -186,21 +189,20 @@
     "reviewQueuePage": "https://gcagochina.com/review-queue.html",
     "reviewQueue": "https://gcagochina.com/review-queue.json",
     "operationsRunbookPage": "https://gcagochina.com/operations.html",
-    "operationsRunbook": "https://gcagochina.com/operations.json"
+    "operationsRunbook": "https://gcagochina.com/operations.json",
+    "memberAccessPage": "https://gcagochina.com/gca/member-access/"
   },
   "publicClaimBoundaries": {
     "safeClaims": [
-      "GCA has published a draft service catalog for planned Web3 Radar utility credits.",
-      "The 10,000 GCA holder bonus is planned as one account-level 100 Web3 Radar utility credits record after controlled verification is live.",
+      "GCA has published a service catalog for Web3 Radar utility credits.",
+      "The 10,000 GCA holder bonus can create one account-level 100 Web3 Radar utility credits ledger record after controlled verification.",
       "The 1,000,000 GCA Member threshold requires 30 consecutive days of holding before a one-time 10,000 GCA member benefit review.",
-      "Credits, member status, and the 10,000 GCA member benefit are not self-service claimable until controlled HTTPS account UI and ledger activation are live.",
+      "Credits and member status are account-level service records; the 10,000 GCA member benefit is manual review only.",
       "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool."
     ],
     "doNotClaim": [
-      "100 Web3 Radar utility credits are live self-service claimable before controlled HTTPS account UI is released",
-      "GCA Member status is live self-service claimable before controlled wallet verification and ledger activation",
-      "the 10,000 GCA member benefit is self-service claimable before holding-period verification and member ledger activation",
       "credits or member status are cash, income, reimbursement, trading permission, or transferable value",
+      "the 10,000 GCA member benefit is automatic or self-service transferred",
       "token ownership bypasses risk controls, support review, or simulation-first requirements",
       "service units are final commercial pricing before public terms are published"
     ]

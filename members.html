@@ -429,9 +429,14 @@
 
     <main class="shell">
       <section aria-labelledby="title">
-        <h1 id="title">GCA Member Pre-Registration</h1>
-        <p class="lead">This page creates a local pre-registration packet for the GCA x Web3 Radar access bridge. GCA now publishes a public <a href="member-ledger.html">member ledger schema</a>, <a href="member-benefit.html">member benefit review rules</a>, wallet balance verification, a 100 credits ledger, a GCA Member ledger, and a static same-origin <a href="gca/member-access/">member access preview</a>. This public static page still does not create a live Web3 Radar account or make any holder benefit claimable from this domain by itself.</p>
-        <p class="lead">For local operator testing, run <code>tools/gca_member_backend.py</code> and open this page from <code>localhost</code>. In that mode the Submit Packet button posts to the same-origin local endpoint <code>/gca/pre-registrations</code>, verifies GCA with read-only Base Mainnet <code>eth_call</code>, and writes local JSONL ledger records. Operators can review the local records at <a href="operator.html">operator.html</a>.</p>
+        <h1 id="title">GCA Member Access</h1>
+        <p class="lead">Use the live <a href="gca/member-access/">GCA Member Access</a> page for production account intake. It submits to the Workers + D1 backend, verifies a Base wallet with read-only GCA <code>balanceOf</code>, and writes eligible 100 credits / GCA Member ledger records.</p>
+        <p class="lead">This legacy page remains as a local packet generator and operator test surface. For localhost testing, run <code>tools/gca_member_backend.py</code>; in that mode the Submit Packet button posts to <code>/gca/pre-registrations</code> and writes local JSONL records for operator review at <a href="operator.html">operator.html</a>.</p>
+        <div class="actions">
+          <a class="button primary" href="gca/member-access/">Open Live Member Access</a>
+          <a class="button" href="member-ledger.html">Member Ledger</a>
+          <a class="button" href="credits.html">Credits Catalog</a>
+        </div>
       </section>
 
       <section class="section grid" aria-label="Planned holder programs">
@@ -458,7 +463,7 @@
             <span class="label">Before You Submit</span>
             <h2 id="submitPathTitle">Choose Your Submission Mode</h2>
           </div>
-          <p class="note">The public website is intentionally manual until the controlled HTTPS account UI is released. Use the mode below that matches what you are doing so users do not confuse a local packet with an active claim.</p>
+          <p class="note">The live account path is <a href="gca/member-access/">/gca/member-access/</a>. Use the modes below only when you need a local packet or operator test record.</p>
         </div>
         <div class="grid">
           <div class="fact path-card">
@@ -483,11 +488,11 @@
           </div>
           <div class="fact path-card">
             <div>
-              <h3>Future HTTPS Account UI</h3>
-              <p class="note">The controlled account UI will be the only path for production wallet verification, 100 credits review, GCA Member review, and member benefit ledger activation.</p>
+              <h3>Live HTTPS Account UI</h3>
+              <p class="note">The controlled account UI is now the production path for wallet verification, 100 credits ledger records, GCA Member review records, and member-benefit review intake.</p>
             </div>
             <div class="link-row">
-              <a class="text-link" href="gca/member-access/">Access Preview</a>
+              <a class="text-link" href="gca/member-access/">Member Access</a>
               <a class="text-link" href="member-benefit.html">Benefit Rules</a>
             </div>
           </div>
@@ -539,7 +544,7 @@
             </div>
             <label class="check">
               <input id="terms" type="checkbox">
-              <span>I understand this page is pre-registration only, and I have reviewed the <a href="privacy.html">Privacy Notice</a> and <a href="terms.html">Participation Terms</a>. No benefit is claimable from this browser page until Web3 Radar releases controlled HTTPS account UI for wallet verification and ledger records.</span>
+              <span>I understand this legacy page is for packet generation and localhost operator testing only, and I have reviewed the <a href="privacy.html">Privacy Notice</a> and <a href="terms.html">Participation Terms</a>. Live public account intake, wallet verification, and eligible ledger records are handled at <a href="gca/member-access/">/gca/member-access/</a>.</span>
             </label>
             <label class="check">
               <input id="security" type="checkbox">
@@ -552,7 +557,7 @@
               <button class="button" type="button" id="downloadPacket">Download JSON</button>
               <a class="button" id="emailPacket" href="mailto:GCAgochina@outlook.com">Email Packet</a>
             </div>
-            <div class="status-line" id="submissionStatus">Direct submission is not connected on this public static page yet. Use copy, download, or email for now.</div>
+            <div class="status-line" id="submissionStatus">Live public submission is available at /gca/member-access/. This legacy page remains a packet generator and localhost operator test surface.</div>
           </form>
         </div>
 
@@ -619,9 +624,9 @@
 
       <section class="section panel" aria-labelledby="reviewTitle">
         <h2 id="reviewTitle">Review Pipeline</h2>
-        <p class="note">Web3 Radar now has local intake, wallet verification, 100 credits, GCA Member ledgers, and a same-origin user access preview page. The public page remains copy/download/email until the API and account UI are placed behind a controlled HTTPS origin.</p>
+        <p class="note">GCA now has public HTTPS account intake, backend wallet verification, 100 credits records, and GCA Member ledger records. This legacy page remains useful for packet generation and localhost operator testing.</p>
         <div class="list">
-          <div class="row"><span>Static member access preview</span><strong><a href="gca/member-access/"><code>/gca/member-access</code></a></strong></div>
+          <div class="row"><span>Live member access page</span><strong><a href="gca/member-access/"><code>/gca/member-access</code></a></strong></div>
           <div class="row"><span>Prepared Web3 Radar intake path</span><strong><code>/gca/pre-registrations</code></strong></div>
           <div class="row"><span>Prepared wallet verification path</span><strong><code>/gca/wallet-verifications</code></strong></div>
           <div class="row"><span>Prepared credit ledger path</span><strong><code>/gca/credit-ledger</code></strong></div>
@@ -630,8 +635,8 @@
           <div class="row"><span>Local operator backend</span><strong><code>tools/gca_member_backend.py</code></strong></div>
           <div class="row"><span>Public ledger schema</span><strong><a href="member-ledger.html">member-ledger.html</a></strong></div>
           <div class="row"><span>Member benefit review rules</span><strong><a href="member-benefit.html">member-benefit.html</a></strong></div>
-          <div class="row"><span>Current public submission mode</span><strong>Manual packet collection</strong></div>
-          <div class="row"><span>Public claim status</span><strong>Not connected</strong></div>
+          <div class="row"><span>Current public submission mode</span><strong>Workers + D1 account intake</strong></div>
+          <div class="row"><span>Public ledger status</span><strong>Connected for eligible records</strong></div>
         </div>
       </section>
 
@@ -648,7 +653,7 @@
     </main>
 
     <footer>
-      <div class="shell">GCA member pre-registration is a local-only preview until the Web3 Radar access bridge and /gca/member-access page are exposed through controlled HTTPS account UI.</div>
+      <div class="shell">GCA member access is live at /gca/member-access. This page remains a local packet generator and operator test surface.</div>
     </footer>
 
     <script>
@@ -866,7 +871,7 @@
         return {
           packetVersion: "gca_member_preregistration_v2",
           createdAt: new Date().toISOString(),
-          status: "local-only-pre-registration-backend-verification-ready-public-claim-not-connected",
+          status: "legacy-local-packet-live-member-access-available",
           network: "Base Mainnet",
           chainId: 8453,
           token: {
@@ -891,7 +896,7 @@
               benefit: "one-time 100 Web3 Radar utility credits",
               creditExpiry: `${CREDIT_EXPIRY_DAYS} days after ledger activation`,
               spendScope: "reports, backtests, risk warnings, ENTRY_READY signal review, position calculators, or education access",
-              status: "backend-ledger-ready-public-claim-not-connected"
+              status: "workers-d1-ledger-path-live"
             },
             gcaMember: {
               minimumHolding: "1000000 GCA",
@@ -902,7 +907,7 @@
               evidenceRequired: "public purchase or transfer transaction hash plus 30 consecutive days of holding evidence",
               refreshCadence: `${MEMBER_REFRESH_DAYS} days after activation, or earlier manual recheck`,
               accessScope: "one-time 10,000 GCA member benefit, higher utility credit limits, member research notes, priority report queue, member training sessions, and priority support",
-              status: "backend-ledger-ready-public-claim-not-connected"
+              status: "workers-d1-member-ledger-path-live-manual-benefit-review"
             }
           },
           supportWorkflow: {
@@ -950,7 +955,7 @@
         submitPacket.disabled = !endpointConfigured();
         submissionStatus.textContent = endpointConfigured()
           ? `Local operator backend is connected at ${SUBMISSION_ENDPOINT}. Submitting creates local JSONL records after read-only wallet verification.`
-          : `Direct submission is not connected yet. Prepared Web3 Radar user page: ${MEMBER_ACCESS_PAGE_PATH}. Prepared backend paths: ${REVIEWED_WEB3_RADAR_ENDPOINT_PATH}, ${WALLET_VERIFICATION_ENDPOINT_PATH}, ${CREDIT_LEDGER_ENDPOINT_PATH}, ${MEMBER_LEDGER_ENDPOINT_PATH}. Use copy, download, or email for now.`;
+          : `Use the live public member access page at ${MEMBER_ACCESS_PAGE_PATH}. This legacy page keeps copy, download, and email packet tools for operator review and fallback.`;
         return packet;
       }
 
@@ -1050,7 +1055,7 @@
       submitPacket.addEventListener("click", async () => {
         const packet = refreshPacket();
         if (!endpointConfigured()) {
-          submissionStatus.textContent = `Direct submission is not connected yet. Prepared Web3 Radar user page: ${MEMBER_ACCESS_PAGE_PATH}. Prepared backend paths: ${REVIEWED_WEB3_RADAR_ENDPOINT_PATH}, ${WALLET_VERIFICATION_ENDPOINT_PATH}, ${CREDIT_LEDGER_ENDPOINT_PATH}, ${MEMBER_LEDGER_ENDPOINT_PATH}. Use copy, download, or email for now.`;
+          submissionStatus.textContent = `Use the live public member access page at ${MEMBER_ACCESS_PAGE_PATH}. This legacy page keeps copy, download, and email packet tools for operator review and fallback.`;
           return;
         }
         if (!terms.checked || !security.checked) {

@@ -96,7 +96,7 @@
   "safeMessagingRules": [
     "Use the official website, X, Telegram, contract address, and GCA/USDT route only.",
     "Frame GCA as a fixed-supply Base token and concept-stage access layer for future China-facing Web3 tools.",
-    "State that public self-service member claiming is not live until release gates are completed.",
+    "State that account intake, read-only wallet verification, and eligible credit/member ledger records are live, while the 10,000 GCA member benefit remains manual review only.",
     "State that no third-party audit has been completed unless an independent report is publicly available.",
     "State that starter-depth liquidity can create high slippage and price impact."
   ],

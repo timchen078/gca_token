@@ -11,14 +11,14 @@
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="GCA | Go China Access">
     <meta property="og:title" content="GCA Access Operations Runbook | GCA AI Quant Access">
-    <meta property="og:description" content="Manual operations SOP for live email registration and planned GCA access reviews before public self-service account UI and ledger writes are live.">
+    <meta property="og:description" content="Manual operations SOP for live email registration, account intake, read-only wallet verification, and eligible GCA ledger records.">
     <meta property="og:url" content="https://gcagochina.com/operations.html">
     <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="GCA Access Operations Runbook | GCA AI Quant Access">
-    <meta name="twitter:description" content="Manual operations SOP for live email registration and planned GCA access reviews before public self-service account UI and ledger writes are live.">
+    <meta name="twitter:description" content="Manual operations SOP for live email registration, account intake, read-only wallet verification, and eligible GCA ledger records.">
     <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
     <style>
       :root {
@@ -325,8 +325,8 @@
       <section aria-labelledby="title">
         <p class="eyebrow">Access Operations Runbook / 2026-05-20</p>
         <h1 id="title">GCA Access Operations Runbook</h1>
-        <p class="lead">This runbook defines how GCA operators should handle live email-registration records, manual access requests, read-only wallet review, support responses, and ledger handoff before public self-service account UI, public submission queue, credit ledger writes, and GCA Member ledger writes are live.</p>
-        <p class="lead">The email registration and unsubscribe APIs are live on Cloudflare Workers + D1. The access/member operations runbook is public documentation only and is not live today as a self-service account backend, not a public submission queue, not a public support ticket system, not an account system, and not a way to request custody, withdrawals, live trading, or balance-verification overrides.</p>
+        <p class="lead">This runbook defines how GCA operators should handle live email-registration records, account intake live records, read-only wallet review, support responses, eligible ledger handoff, and manual member-benefit boundaries.</p>
+        <p class="lead">The email registration, unsubscribe, account intake, wallet verification, and eligible ledger paths are live on Cloudflare Workers + D1. The operations runbook only describes review handling; it is not a public ledger browser, not a public support ticket system, and not a way to request custody, withdrawals, live trading, or balance-verification overrides.</p>
         <div class="actions">
           <a class="button primary" href="review-queue.html">Review Queue Contract</a>
           <a class="button" href="access-api.html">Access API Contract</a>
@@ -340,7 +340,7 @@
         <div class="facts" aria-label="Operational state">
           <div class="fact">
             <span class="label">Current stage</span>
-            <span class="value pending">email registration live / operations runbook only</span>
+            <span class="value good">account intake live / operations runbook only</span>
           </div>
           <div class="fact">
             <span class="label">Email API</span>
@@ -348,7 +348,7 @@
           </div>
           <div class="fact">
             <span class="label">Member ledger writes</span>
-            <span class="value pending">Not live</span>
+            <span class="value good">Live for eligible records</span>
           </div>
           <div class="fact">
             <span class="label">Wallet check</span>
@@ -417,7 +417,7 @@
           </div>
           <div>
             <h3>7. Ledger Handoff</h3>
-            <p class="note">Only after controlled account UI and ledgers are live, create credit or member records through the reviewed backend path.</p>
+            <p class="note">Use the reviewed backend path to inspect and reconcile credit or member records, then keep manual-review notes for any 10,000 GCA member benefit handling.</p>
           </div>
           <div>
             <h3>8. Platform Follow-Up</h3>
@@ -524,7 +524,7 @@
           </div>
           <div>
             <h3>Public Boundary</h3>
-            <p class="note">Every response should keep GCA described as concept-stage access planning until controlled HTTPS account UI and ledgers are live.</p>
+            <p class="note">Every response should keep GCA described as concept-stage product buildout with live account intake and eligible ledger records, while live trading and automatic token-benefit transfer remain off.</p>
           </div>
           <div>
             <h3>Redacted Package Only</h3>
@@ -536,11 +536,11 @@
       <section class="section two" aria-label="Safe response language">
         <div class="panel">
           <h2>Safe Reply Template</h2>
-          <p class="note">Your request has been received for manual review. GCA access claiming is not self-service yet. We can review your public Base wallet address with a read-only GCA balance check and, for member benefit review, the <code>gca_member_preregistration_v2</code> holding start date plus public purchase or transfer transaction hash. We will never ask for private keys, seed phrases, exchange API secrets, withdrawal permission, custody, or fund transfers.</p>
+          <p class="note">Your account request has been received. GCA can review your public Base wallet address with a read-only GCA balance check and, for member benefit review, the <code>gca_member_preregistration_v2</code> holding start date plus public purchase or transfer transaction hash. We will never ask for private keys, seed phrases, exchange API secrets, withdrawal permission, custody, or fund transfers.</p>
         </div>
         <div class="panel">
           <h2>Unsafe Reply Boundary</h2>
-          <p class="note">Do not state that credits are live, GCA Member status is active, the 10,000 GCA member benefit is self-service claimable, listings are approved, liquidity is deep, a third-party audit is complete, wallet warnings are permanently removed, or any trading outcome is expected.</p>
+          <p class="note">Do not state that the 10,000 GCA member benefit is automatic, listings are approved, liquidity is deep, a third-party audit is complete, wallet warnings are permanently removed, or any trading outcome is expected.</p>
         </div>
       </section>
 
@@ -556,7 +556,7 @@
 
       <section class="section panel" id="technicalEvidence" aria-labelledby="technicalEvidenceTitle">
         <h2 id="technicalEvidenceTitle">Platform-Only Evidence Path</h2>
-        <p class="note">Use the readable operations, review queue, API, and support pages first. Raw JSON is available from the Data Room for operator implementation and reviewer handoff only. It is not a live submission endpoint and does not create public claiming, custody, withdrawals, or live trading access.</p>
+        <p class="note">Use the readable operations, review queue, API, and support pages first. Raw JSON is available from the Data Room for operator implementation and reviewer handoff only. It is not a private-data dropbox and does not create custody, withdrawals, automatic token-benefit transfer, or live trading access.</p>
         <div class="actions">
           <a class="button" href="data.html">Data Room</a>
           <a class="button" href="review-queue.html">Review Queue Contract</a>
@@ -572,8 +572,8 @@
         <div class="list">
           <div class="row"><span><a href="data.html">Data Room</a></span><strong>platform-only raw data</strong></div>
           <div class="row"><span><a href="review-queue.html">Review Queue Contract</a></span><strong>manual review lanes</strong></div>
-          <div class="row"><span><a href="access-api.html">Access API Contract</a></span><strong>planned backend routes</strong></div>
-          <div class="row"><span><a href="member-ledger.html">Member Ledger Schema</a></span><strong>future ledger records</strong></div>
+          <div class="row"><span><a href="access-api.html">Access API Contract</a></span><strong>Workers + D1 routes</strong></div>
+          <div class="row"><span><a href="member-ledger.html">Member Ledger Schema</a></span><strong>eligible ledger records</strong></div>
           <div class="row"><span><a href="support.html">Support & Intake</a></span><strong>manual support route</strong></div>
           <div class="row"><span><a href="reviewer-kit.html">Reviewer Kit</a></span><strong>review package context</strong></div>
           <div class="row"><span><a href="platform-replies.html">Platform Replies</a></span><strong>copyable reviewer replies</strong></div>

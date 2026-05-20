@@ -2,7 +2,7 @@
   "schema": "https://gcagochina.com/product.json",
   "pageUrl": "https://gcagochina.com/product.html",
   "status": "public-product-spec-published",
-  "lastUpdated": "2026-05-14",
+  "lastUpdated": "2026-05-20",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "title": "GCA AI Quant Access Product Spec",
@@ -10,11 +10,11 @@
     "concept": "Go China Access",
     "productName": "GCA AI Quant Access",
     "tagline": "Narrative meets risk control.",
-    "summary": "A planned non-custodial product layer for China-facing Web3 narrative research, liquidation review, backtests, risk warnings, ENTRY_READY reviews, position sizing, education, and member workflows.",
-    "currentStage": "public-product-spec-only",
-    "publicAccountUiLive": false,
+    "summary": "A non-custodial product direction for China-facing Web3 narrative research, liquidation review, backtests, risk warnings, ENTRY_READY reviews, position sizing, education, and member workflows. Account intake and eligible ledger records are live; trading/research tools remain staged behind product release gates.",
+    "currentStage": "account-ledger-path-live-product-tools-planned",
+    "publicAccountUiLive": true,
     "liveTradingEnabled": false,
-    "accessPortalBlueprint": "https://gcagochina.com/access.html",
+    "accessPortal": "https://gcagochina.com/access.html",
     "accessApiContract": "https://gcagochina.com/access-api.html"
   },
   "productModules": [
@@ -70,7 +70,7 @@
     {
       "id": "gca-member-workspace",
       "name": "GCA Member Workspace",
-      "status": "planned-controlled-account-ui",
+      "status": "account-ledger-intake-live-service-workspace-planned",
       "purpose": "Map verified GCA holder status to utility limits, member notes, report queues, training sessions, and support workflows.",
       "notPurpose": "Not custody, voting control, lifetime access, exchange listing priority, or special trading permission."
     }
@@ -79,32 +79,32 @@
     {
       "id": "controlled-https-account-ui",
       "label": "Controlled HTTPS account UI",
-      "status": "required-before-public-claims"
+      "status": "live"
     },
     {
-      "id": "access-portal-blueprint",
-      "label": "Access Portal Blueprint",
-      "status": "published-blueprint-only"
+      "id": "access-portal",
+      "label": "Access Portal",
+      "status": "live-account-ui"
     },
     {
       "id": "access-api-contract",
       "label": "Access API Contract",
-      "status": "published-contract-only"
+      "status": "workers-d1-live"
     },
     {
       "id": "read-only-wallet-verification",
       "label": "Read-only GCA balance verification",
-      "status": "required-before-ledger-records"
+      "status": "live"
     },
     {
       "id": "credit-ledger-activation",
       "label": "100 utility credits ledger activation",
-      "status": "required-before-credit-use"
+      "status": "live-for-eligible-records"
     },
     {
       "id": "member-ledger-activation",
       "label": "GCA Member ledger activation",
-      "status": "required-before-member-access"
+      "status": "live-for-eligible-records"
     },
     {
       "id": "risk-control-review",
@@ -161,14 +161,14 @@
   "publicClaimBoundaries": {
     "safeClaims": [
       "GCA has published a public product specification for GCA AI Quant Access.",
-      "The current product page is a public spec and planning document.",
-      "GCA is planned as an access and membership layer for non-custodial quant risk tools.",
+      "The current product page is a public spec and account-ledger release map.",
+      "GCA has a live account and membership intake path for non-custodial quant risk tools.",
       "Any future trading-related feature must remain behind risk checks, simulation or testnet validation, and controlled account UI.",
       "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool."
     ],
     "doNotClaim": [
-      "the full GCA AI Quant Access product is live before controlled account UI is released",
-      "public self-service credits, GCA Member status, or the 10,000 GCA member benefit are claimable before controlled wallet verification, 30-day holding review, and ledger activation",
+      "the full GCA AI Quant Access trading or research product is live before service modules are released",
+      "the 10,000 GCA member benefit is automatic or self-service transferred",
       "GCA provides custody, withdrawal permission, private key access, exchange API secret collection, platform revenue distribution, trading permission, leverage access, or risk-control bypass",
       "GCA provides live market data, financial advice, buy or sell recommendations, price forecasts, or strategy performance promises",
       "any third-party audit, tracked listing, deep liquidity, or BaseScan token profile approval before publication"

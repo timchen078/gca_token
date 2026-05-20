@@ -454,7 +454,7 @@
         <div class="panel">
           <h2>Operator Boundaries</h2>
           <ul>
-            <li>Local operator backend only; public self-service claiming remains off.</li>
+            <li>Local operator backend only; public Workers + D1 account intake is handled at <code>/gca/member-access/</code>.</li>
             <li>Read-only Base Mainnet <code>eth_call</code> / ERC-20 <code>balanceOf</code> wallet verification.</li>
             <li>No private key, seed phrase, exchange API secret, withdrawal permission, custody request, signature, or transaction is required.</li>
             <li>100 credits and GCA Member records are local JSONL ledger records under <code>.gca_access_data/</code>.</li>
@@ -669,7 +669,7 @@
 
       async function refreshOperatorSummary() {
         if (!LOCAL_BACKEND_HOSTS.has(window.location.hostname)) {
-          setStatus("Public website view: local backend not connected", "warn");
+          setStatus("Public website view: use /gca/member-access/ for Workers + D1 intake; local backend actions are disabled here", "warn");
           refreshButton.disabled = true;
           setBackendControlsEnabled(false);
           setTransferStatus("Public website view only", "warn");

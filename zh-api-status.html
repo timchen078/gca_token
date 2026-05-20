@@ -361,12 +361,28 @@
             <p class="note"><code>POST /gca/contact-suppressions</code> 接收 <code>gca_contact_suppression_v1</code>，用于把邮箱加入 GCA 不再联系名单。</p>
           </article>
           <article class="card">
+            <h3>访问配置</h3>
+            <p class="note"><code>GET /gca/access-config</code> 公开返回 Base chainId 8453、GCA 合约、10,000 / 1,000,000 GCA 门槛和安全边界。</p>
+          </article>
+          <article class="card">
+            <h3>钱包余额验证</h3>
+            <p class="note"><code>POST /gca/wallet-verifications</code> 使用后端只读 <code>eth_call</code> 验证 GCA 余额，不需要签名、授权或交易。</p>
+          </article>
+          <article class="card">
+            <h3>会员账户提交</h3>
+            <p class="note"><code>POST /gca/member-access</code> 接收邮箱和 Base 钱包，写入钱包验证记录、100 credits 记录和 GCA Member 审核记录。</p>
+          </article>
+          <article class="card">
             <h3>注册记录读取</h3>
             <p class="note"><code>GET /gca/email-registrations</code> 是管理员读取接口。没有 token 的公网访问应返回授权错误，而不是用户记录。</p>
           </article>
           <article class="card">
             <h3>退订记录读取</h3>
             <p class="note"><code>GET /gca/contact-suppressions</code> 也是管理员读取接口，只给本地运营同步使用。</p>
+          </article>
+          <article class="card">
+            <h3>账本读取</h3>
+            <p class="note"><code>GET /gca/credit-ledger</code> 和 <code>GET /gca/member-ledger</code> 都是管理员 token 保护接口，公网不能直接读用户账本。</p>
           </article>
           <article class="card">
             <h3>未来域名</h3>
@@ -394,7 +410,7 @@
           <ul>
             <li>邮箱注册不需要钱包地址，不读取钱包余额。</li>
             <li>邮箱注册不需要私钥、助记词、钱包签名、验证码、付款或交易所 API Secret。</li>
-            <li>邮箱注册只是加入 GCA 用户名单，不等于自动获得 100 credits、GCA Member 或 10,000 GCA 会员权益。</li>
+            <li>会员账户入口可以写入符合条件的 100 credits / GCA Member 账本记录，但 10,000 GCA 会员权益仍需人工审核。</li>
             <li>邮箱退订只影响后续联系导出，不改变 GCA 持仓、池子、链上资产或会员审核状态。</li>
           </ul>
         </div>
@@ -426,7 +442,7 @@
     </main>
 
     <footer>
-      <div class="shell">GCA 中文 API 状态。邮箱注册和邮箱退订已接入 Cloudflare Workers + D1；公开自助 credits、GCA Member 和 10,000 GCA 会员权益仍未上线。</div>
+      <div class="shell">GCA 中文 API 状态。邮箱注册、邮箱退订、会员账户提交和只读钱包验证已接入 Cloudflare Workers + D1；10,000 GCA 会员权益仍需人工审核。</div>
     </footer>
   </body>
 </html>

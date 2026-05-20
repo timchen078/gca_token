@@ -3,7 +3,7 @@
   "pageUrl": "https://gcagochina.com/privacy.html",
   "lastUpdated": "2026-05-20",
   "status": "public-privacy-notice-published",
-  "scope": "GCA public website, live email registration, live contact suppression, local member pre-registration packets, wallet balance verification, future controlled HTTPS account intake",
+  "scope": "GCA public website, live email registration, live contact suppression, local member pre-registration packets, wallet balance verification, controlled HTTPS account intake",
   "contactEmail": "GCAgochina@outlook.com",
   "currentStaticSiteBehavior": {
     "mode": "live-email-registration-and-contact-suppression-api-with-local-member-pre-registration",
@@ -21,7 +21,7 @@
       "user copies member pre-registration packet",
       "user downloads member pre-registration packet",
       "user emails member pre-registration packet",
-      "future controlled HTTPS intake is connected and the user submits through account UI"
+      "the user submits through the controlled HTTPS account UI"
     ]
   },
   "dataFields": [
