@@ -137,6 +137,8 @@ For public CI or environments without `ADMIN_READ_TOKEN`, run only the public su
 
 The GitHub Actions workflow at `.github/workflows/check-gca-registration-api.yml` uses `--public-only`, so it does not require secrets and does not read token-protected user records.
 
+The consolidated public daily ops workflow at `.github/workflows/check-gca-daily-ops.yml` runs `tools/run_gca_daily_ops.py` in default public-only mode. It checks the public website and public registration API together, and it does not pass `--include-member-ops` or `--include-holding-report`.
+
 To read recent email registrations:
 
 ```bash
