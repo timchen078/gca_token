@@ -58,6 +58,8 @@ class GcaMemberAccessOpsTests(unittest.TestCase):
                 export_output=root / "export.json",
                 report_dir=root / "report",
                 report_summary_output=root / "report-summary.json",
+                support_queue_output=root / "support.csv",
+                support_queue_summary_output=root / "support-summary.json",
                 pipeline_summary_output=root / "ops-summary.json",
                 opener=opener,
             )
@@ -67,7 +69,11 @@ class GcaMemberAccessOpsTests(unittest.TestCase):
             self.assertEqual(summary["export"]["recordCount"], 4)
             self.assertTrue((root / "export.json").exists())
             self.assertTrue((root / "report" / "gca_member_accounts.csv").exists())
+            self.assertTrue((root / "support.csv").exists())
+            self.assertTrue((root / "support-summary.json").exists())
             self.assertTrue((root / "ops-summary.json").exists())
+            self.assertIn("supportQueue", summary)
+            self.assertEqual(summary["supportQueue"]["rows"], 1)
             self.assertEqual(
                 {item["path"] for item in seen},
                 {"/gca/member-access", "/gca/wallet-verifications", "/gca/credit-ledger", "/gca/member-ledger"},
@@ -98,6 +104,10 @@ class GcaMemberAccessOpsTests(unittest.TestCase):
                     str(root / "report"),
                     "--report-summary-output",
                     str(root / "report-summary.json"),
+                    "--support-queue-output",
+                    str(root / "support.csv"),
+                    "--support-queue-summary-output",
+                    str(root / "support-summary.json"),
                     "--summary-output",
                     str(root / "ops-summary.json"),
                 ],
@@ -112,8 +122,11 @@ class GcaMemberAccessOpsTests(unittest.TestCase):
             self.assertTrue(result["ok"])
             self.assertEqual(result["source"], f"input-file:{input_path}")
             self.assertEqual(result["report"]["memberBenefitReviewQueueRows"], 2)
+            self.assertEqual(result["supportQueue"]["rows"], 1)
             self.assertTrue((root / "export-copy.json").exists())
             self.assertTrue((root / "report" / "gca_member_benefit_review_queue.csv").exists())
+            self.assertTrue((root / "support.csv").exists())
+            self.assertTrue((root / "support-summary.json").exists())
             self.assertTrue((root / "ops-summary.json").exists())
 
 

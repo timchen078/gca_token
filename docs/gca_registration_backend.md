@@ -74,6 +74,7 @@ It does not collect wallet private keys, seed phrases, wallet passwords, exchang
 - Local admin export tool: `tools/export_cloudflare_email_registrations.py`
 - Local member access / wallet / credit / member ledger export tool: `tools/export_cloudflare_member_access.py`
 - Local member access report builder: `tools/build_gca_member_access_report.py`
+- Local member support reply queue builder: `tools/build_gca_member_support_queue.py`
 - Local one-command member access ops pipeline: `tools/run_gca_member_access_ops.py`
 - Local ledger sync tool: `tools/sync_cloudflare_email_registrations.py`
 - Local contact CSV export tool: `tools/export_gca_email_contacts.py`
@@ -219,13 +220,26 @@ To turn a member-access export into local operator CSV reports:
 
 The report writes account, wallet-verification, credit-ledger, member-ledger, and member-benefit review queue CSV files. It is offline and does not call Cloudflare, wallets, or Base RPC.
 
+To build an operator-reviewed support reply queue from the same export:
+
+```bash
+.venv/bin/python tools/build_gca_member_support_queue.py \
+  --input .gca_access_data/cloudflare_member_access_export.json \
+  --output .gca_access_data/member_access_report/gca_member_support_queue.csv \
+  --summary-output .gca_access_data/member_access_report/gca_member_support_queue_summary.json
+```
+
+The support queue includes reply status, subject, body, and next step. It is not an auto-send system; every row requires operator review before a user reply is sent.
+
 For routine member operations, run the combined member-access pipeline instead. It fetches live member access datasets, saves the local export, builds CSV reports, and writes an ignored summary JSON:
+It also builds the operator-reviewed support reply queue.
 
 ```bash
 .venv/bin/python tools/run_gca_member_access_ops.py \
   --limit 100 \
   --export-output .gca_access_data/cloudflare_member_access_export.json \
   --report-dir .gca_access_data/member_access_report \
+  --support-queue-output .gca_access_data/member_access_report/gca_member_support_queue.csv \
   --summary-output .gca_access_data/gca_member_access_ops_summary.json
 ```
 

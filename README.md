@@ -88,6 +88,7 @@ Export the same review package directly from local JSONL data without starting t
 - Email registration backend deployment guide: `docs/gca_registration_backend.md`
 - Live member access operator export: `tools/export_cloudflare_member_access.py`
 - Local member access report builder: `tools/build_gca_member_access_report.py`
+- Local member support reply queue builder: `tools/build_gca_member_support_queue.py`
 - One-command member access ops pipeline: `tools/run_gca_member_access_ops.py`
 - Read-only live registration API check: `tools/check_gca_registration_api.py`
 - GitHub Actions public registration API check: `.github/workflows/check-gca-registration-api.yml`

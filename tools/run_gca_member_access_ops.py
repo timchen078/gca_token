@@ -33,6 +33,11 @@ from tools.build_gca_member_access_report import (  # noqa: E402
     build_report,
     load_export,
 )
+from tools.build_gca_member_support_queue import (  # noqa: E402
+    DEFAULT_OUTPUT as DEFAULT_SUPPORT_QUEUE_OUTPUT,
+    DEFAULT_SUMMARY_OUTPUT as DEFAULT_SUPPORT_QUEUE_SUMMARY_OUTPUT,
+    build_support_queue,
+)
 from tools.export_cloudflare_email_registrations import (  # noqa: E402
     DEFAULT_API_BASE,
     DEFAULT_TOKEN_FILE,
@@ -64,6 +69,8 @@ def run_member_access_ops(
     export_output: Path = DEFAULT_EXPORT_OUTPUT,
     report_dir: Path = DEFAULT_REPORT_DIR,
     report_summary_output: Path = DEFAULT_REPORT_SUMMARY_OUTPUT,
+    support_queue_output: Path = DEFAULT_SUPPORT_QUEUE_OUTPUT,
+    support_queue_summary_output: Path = DEFAULT_SUPPORT_QUEUE_SUMMARY_OUTPUT,
     pipeline_summary_output: Path = DEFAULT_PIPELINE_SUMMARY_OUTPUT,
     source: str = "",
     opener: Callable[..., Any] = urlopen,
@@ -87,13 +94,16 @@ def run_member_access_ops(
 
     write_json(export_output, export_payload)
     report_summary = build_report(export_payload, report_dir, report_summary_output)
+    support_queue_summary = build_support_queue(export_payload, support_queue_output, support_queue_summary_output)
     summary = {
-        "ok": bool(export_payload.get("ok")) and bool(report_summary.get("ok")),
+        "ok": bool(export_payload.get("ok")) and bool(report_summary.get("ok")) and bool(support_queue_summary.get("ok")),
         "packetVersion": "gca_member_access_ops_summary_v1",
         "generatedAt": iso_now(),
         "source": source,
         "exportOutput": str(export_output),
         "reportSummaryOutput": str(report_summary_output),
+        "supportQueueOutput": str(support_queue_output),
+        "supportQueueSummaryOutput": str(support_queue_summary_output),
         "pipelineSummaryOutput": str(pipeline_summary_output),
         "redactedForExternalSharing": bool(export_payload.get("redactedForExternalSharing")),
         "export": {
@@ -102,9 +112,15 @@ def run_member_access_ops(
             "baseUrl": export_payload.get("baseUrl", base_url.rstrip("/")),
         },
         "report": report_summary.get("counts", {}),
+        "supportQueue": {
+            "rows": support_queue_summary.get("rows", 0),
+            "replyReadyRows": support_queue_summary.get("replyReadyRows", 0),
+            "statusCounts": support_queue_summary.get("statusCounts", {}),
+        },
         "outputs": report_summary.get("outputs", {}),
         "boundaries": {
             "localOperatorPipelineOnly": True,
+            "operatorReviewRequiredBeforeSendingSupportReplies": True,
             "writesProductionData": False,
             "adminTokenPrinted": False,
             "walletCalls": False,
@@ -135,6 +151,13 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--export-output", type=Path, default=DEFAULT_EXPORT_OUTPUT, help="Local export JSON output.")
     parser.add_argument("--report-dir", type=Path, default=DEFAULT_REPORT_DIR, help="Local CSV report directory.")
     parser.add_argument("--report-summary-output", type=Path, default=DEFAULT_REPORT_SUMMARY_OUTPUT, help="Report summary JSON output.")
+    parser.add_argument("--support-queue-output", type=Path, default=DEFAULT_SUPPORT_QUEUE_OUTPUT, help="Support reply queue CSV output.")
+    parser.add_argument(
+        "--support-queue-summary-output",
+        type=Path,
+        default=DEFAULT_SUPPORT_QUEUE_SUMMARY_OUTPUT,
+        help="Support reply queue summary JSON output.",
+    )
     parser.add_argument("--summary-output", type=Path, default=DEFAULT_PIPELINE_SUMMARY_OUTPUT, help="Pipeline summary JSON output.")
     return parser.parse_args(argv)
 
@@ -157,6 +180,8 @@ def main(argv: list[str] | None = None) -> int:
             export_output=args.export_output,
             report_dir=args.report_dir,
             report_summary_output=args.report_summary_output,
+            support_queue_output=args.support_queue_output,
+            support_queue_summary_output=args.support_queue_summary_output,
             pipeline_summary_output=args.summary_output,
             source=f"input-file:{args.input}" if args.input else "",
         )
