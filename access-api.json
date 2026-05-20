@@ -2,7 +2,7 @@
   "schema": "https://gcagochina.com/access-api.json",
   "pageUrl": "https://gcagochina.com/access-api.html",
   "status": "public-access-api-contract-email-registration-live",
-  "lastUpdated": "2026-05-19",
+  "lastUpdated": "2026-05-20",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "title": "GCA Access API Contract",
@@ -133,8 +133,8 @@
       "id": "email-registrations-create",
       "method": "POST",
       "path": "/gca/email-registrations",
-      "status": "local-only-not-public-production",
-      "purpose": "Receive an email-only GCA user registration on the localhost backend. Public static pages use the official email fallback until a controlled HTTPS account system is live.",
+      "status": "production-workers-dev-live",
+      "purpose": "Receive a public email-only GCA user registration through the Cloudflare Workers + D1 backend. This creates a GCA email-intake record only; it does not create an account, activate credits, activate GCA Member status, or transfer tokens.",
       "requiredRequestFields": [
         "email",
         "acknowledgements.emailContactConsent",
@@ -174,14 +174,14 @@
       "id": "email-registrations-read",
       "method": "GET",
       "path": "/gca/email-registrations",
-      "status": "local-only-not-public-production",
-      "purpose": "Read localhost email-registration ledger records for operator review. This is not a public production endpoint.",
+      "status": "token-protected-admin-live",
+      "purpose": "Read Cloudflare email-registration records for local operator sync and contact-export review. This endpoint is live but protected by ADMIN_READ_TOKEN; public visitors cannot read the registration ledger.",
       "requiredRequestFields": [
-        "localhostClient"
+        "authorization bearer token"
       ],
       "optionalRequestFields": [
         "email",
-        "emailRegistrationId"
+        "limit"
       ],
       "responseFields": [
         "records",
@@ -191,7 +191,7 @@
         "status"
       ],
       "allowedStatuses": [
-        "local-only"
+        "received"
       ]
     },
     {
@@ -658,7 +658,7 @@
       "GCA has published a public review queue contract for manual-review lanes before public self-service claiming is live."
     ],
     "doNotClaim": [
-      "the access API is live public submission infrastructure before controlled HTTPS deployment",
+      "wallet verification, credit ledger, GCA Member review, or account self-service routes are live public submission infrastructure before controlled HTTPS account deployment",
       "100 Web3 Radar utility credits are live self-service claimable before credit ledger activation",
       "GCA Member status is live self-service claimable before member ledger activation",
       "the 10,000 GCA member benefit is self-service claimable before holding-period verification and member ledger activation",

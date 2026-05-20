@@ -331,7 +331,7 @@
 
     <main class="shell">
       <section aria-labelledby="title">
-        <p class="eyebrow">Access API Contract / 2026-05-19</p>
+        <p class="eyebrow">Access API Contract / 2026-05-20</p>
         <h1 id="title">GCA Access API Contract</h1>
         <p class="lead">This page defines the planned controlled HTTPS API contract for the GCA access bridge. It covers email-only user registration, pre-registration, read-only wallet verification, credit ledger records, GCA Member records, and support review statuses.</p>
         <p class="lead">The broad access API contract is a public implementation contract for future backend work, not a public self-service claim page.</p>
@@ -532,7 +532,9 @@
           <h2>Required Controls</h2>
           <ul>
             <li>controlled HTTPS origin</li>
-            <li>authenticated account session</li>
+            <li>public email registration and unsubscribe routes require only form acknowledgements</li>
+            <li>token-protected admin reads for Cloudflare registration and suppression records</li>
+            <li>authenticated account session for future account-level routes</li>
             <li>CSRF protection for state-changing routes</li>
             <li>rate limits on pre-registration and wallet verification</li>
             <li>structured audit logs for status changes</li>
@@ -579,7 +581,7 @@
     </main>
 
     <footer>
-      <div class="shell">GCA Access API Contract is a contract-only implementation document. Public self-service access remains off until controlled HTTPS account UI, wallet verification, ledgers, and support review are live.</div>
+      <div class="shell">GCA email registration and unsubscribe are live on Cloudflare Workers + D1. Public self-service credits, GCA Member activation, wallet verification, and account-level access remain off until controlled HTTPS account UI, ledgers, and support review are live.</div>
     </footer>
   </body>
 </html>
