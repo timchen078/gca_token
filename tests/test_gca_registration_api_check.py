@@ -86,6 +86,9 @@ class GcaRegistrationApiCheckTests(unittest.TestCase):
         self.assertFalse(result["boundaries"]["submitsContactSuppression"])
         self.assertFalse(result["boundaries"]["adminTokenPrinted"])
         self.assertFalse(result["boundaries"]["userEmailsPrinted"])
+        self.assertFalse(result["boundaries"]["publicOnly"])
+        self.assertTrue(result["boundaries"]["adminReadTokenRequired"])
+        self.assertTrue(result["boundaries"]["tokenProtectedAdminReadChecked"])
         self.assertEqual({item["method"] for item in seen}, {"GET", "OPTIONS"})
         self.assertEqual(len(result["checks"]), 7)
         self.assertTrue(any(item["id"] == "admin-email-registrations-read" for item in result["checks"]))
@@ -95,6 +98,49 @@ class GcaRegistrationApiCheckTests(unittest.TestCase):
         self.assertNotIn("suppressed-user@example.com", serialized)
         self.assertTrue(all(item["timeout"] == 7 for item in seen))
         self.assertTrue(all(item["user_agent"] == "GCA-Operator-Registration-API-Check/1.0" for item in seen))
+
+    def test_public_only_mode_skips_token_protected_reads(self):
+        seen = []
+
+        def opener(request, **kwargs):
+            parsed = urlparse(request.full_url)
+            method = request.get_method()
+            seen.append({
+                "method": method,
+                "path": parsed.path,
+                "authorization": request.headers.get("Authorization", ""),
+            })
+            if parsed.path == "/health":
+                return FakeResponse({
+                    "ok": True,
+                    "service": "gca-registration-api",
+                    "packetVersion": "gca_email_registration_v1",
+                    "contactSuppressionVersion": "gca_contact_suppression_v1",
+                    "storage": "cloudflare-d1",
+                })
+            if method == "OPTIONS":
+                return FakeResponse(
+                    None,
+                    status=204,
+                    headers={
+                        "access-control-allow-origin": "https://gcagochina.com",
+                        "access-control-allow-methods": "GET,POST,OPTIONS",
+                    },
+                )
+            return FakeResponse({"ok": False, "error": "admin authorization is required"}, status=401)
+
+        result = run_checks(base_url="https://worker.example", public_only=True, opener=opener)
+        self.assertTrue(result["ok"])
+        self.assertTrue(result["boundaries"]["publicOnly"])
+        self.assertFalse(result["boundaries"]["adminReadTokenRequired"])
+        self.assertFalse(result["boundaries"]["tokenProtectedAdminReadChecked"])
+        self.assertEqual(len(result["checks"]), 5)
+        self.assertNotIn("admin-email-registrations-read", {item["id"] for item in result["checks"]})
+        self.assertTrue(all(item["authorization"] == "" for item in seen))
+
+    def test_admin_mode_requires_token(self):
+        with self.assertRaises(ApiCheckError):
+            run_checks(base_url="https://worker.example", token="", opener=lambda request, **kwargs: None)
 
     def test_run_checks_rejects_bad_health_payload(self):
         def opener(request, **kwargs):

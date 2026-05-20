@@ -2,9 +2,9 @@
 """Read-only smoke checks for the live GCA registration API.
 
 This checks the Cloudflare Worker health endpoint, CORS preflight behavior,
-unauthorized admin-read rejection, and token-protected admin-read response
-shape. It does not submit registrations, does not write production data, and
-does not print the admin token or user email records.
+unauthorized admin-read rejection, and optionally token-protected admin-read
+response shape. It does not submit registrations, does not write production
+data, and does not print the admin token or user email records.
 """
 
 from __future__ import annotations
@@ -249,7 +249,8 @@ def check_authorized_admin_read(
 def run_checks(
     *,
     base_url: str,
-    token: str,
+    token: str = "",
+    public_only: bool = False,
     origin: str = DEFAULT_ORIGIN,
     limit: int = 5,
     timeout: float = 20,
@@ -258,6 +259,9 @@ def run_checks(
 ) -> dict[str, Any]:
     if limit < 1 or limit > 100:
         raise ApiCheckError("limit must be between 1 and 100")
+    clean_token = token.strip()
+    if not public_only and not clean_token:
+        raise ApiCheckError("ADMIN_READ_TOKEN is required unless --public-only is used")
     checks = [
         check_health(base_url=base_url, timeout=timeout, cafile=cafile, opener=opener),
         check_cors_preflight(
@@ -294,27 +298,30 @@ def run_checks(
             cafile=cafile,
             opener=opener,
         ),
-        check_authorized_admin_read(
-            base_url=base_url,
-            path="/gca/email-registrations",
-            check_id="admin-email-registrations-read",
-            token=token,
-            limit=limit,
-            timeout=timeout,
-            cafile=cafile,
-            opener=opener,
-        ),
-        check_authorized_admin_read(
-            base_url=base_url,
-            path="/gca/contact-suppressions",
-            check_id="admin-contact-suppressions-read",
-            token=token,
-            limit=limit,
-            timeout=timeout,
-            cafile=cafile,
-            opener=opener,
-        ),
     ]
+    if not public_only:
+        checks.extend([
+            check_authorized_admin_read(
+                base_url=base_url,
+                path="/gca/email-registrations",
+                check_id="admin-email-registrations-read",
+                token=clean_token,
+                limit=limit,
+                timeout=timeout,
+                cafile=cafile,
+                opener=opener,
+            ),
+            check_authorized_admin_read(
+                base_url=base_url,
+                path="/gca/contact-suppressions",
+                check_id="admin-contact-suppressions-read",
+                token=clean_token,
+                limit=limit,
+                timeout=timeout,
+                cafile=cafile,
+                opener=opener,
+            ),
+        ])
     return {
         "ok": all(item["ok"] for item in checks),
         "checkedAt": utc_now(),
@@ -331,6 +338,9 @@ def run_checks(
             "walletConnectionRequired": False,
             "signatureRequired": False,
             "transactionRequired": False,
+            "publicOnly": public_only,
+            "adminReadTokenRequired": not public_only,
+            "tokenProtectedAdminReadChecked": not public_only,
         },
     }
 
@@ -339,6 +349,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Run read-only smoke checks against the live GCA registration API.")
     parser.add_argument("--base-url", default=DEFAULT_API_BASE, help=f"Worker API base URL. Default: {DEFAULT_API_BASE}")
     parser.add_argument("--token-file", type=Path, default=DEFAULT_TOKEN_FILE, help="Path to ignored local admin env file.")
+    parser.add_argument("--public-only", action="store_true", help="Skip token-protected admin reads. Suitable for public CI without secrets.")
     parser.add_argument("--origin", default=DEFAULT_ORIGIN, help=f"CORS origin to verify. Default: {DEFAULT_ORIGIN}")
     parser.add_argument("--limit", type=int, default=5, help="Maximum admin records to count, 1-100. Default: 5.")
     parser.add_argument("--timeout", type=float, default=20, help="HTTP timeout in seconds. Default: 20.")
@@ -349,10 +360,11 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
     try:
-        token = load_admin_token(args.token_file)
+        token = "" if args.public_only else load_admin_token(args.token_file)
         result = run_checks(
             base_url=args.base_url,
             token=token,
+            public_only=args.public_only,
             origin=args.origin,
             limit=args.limit,
             timeout=args.timeout,

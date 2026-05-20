@@ -99,6 +99,14 @@ To run a read-only live API smoke check without writing production D1 data:
 
 This checks `/health`, CORS preflight, unauthenticated admin-read rejection, and token-protected admin-read response shape. It prints only counts and check statuses; it does not print the admin token or user email records.
 
+For public CI or environments without `ADMIN_READ_TOKEN`, run only the public surface checks:
+
+```bash
+.venv/bin/python tools/check_gca_registration_api.py --public-only --timeout 30
+```
+
+The GitHub Actions workflow at `.github/workflows/check-gca-registration-api.yml` uses `--public-only`, so it does not require secrets and does not read token-protected user records.
+
 To read recent email registrations:
 
 ```bash

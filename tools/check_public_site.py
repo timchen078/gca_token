@@ -4413,6 +4413,7 @@ def validate_access_api_page(text: str) -> None:
     assert_contains(text, "Token protected", label)
     assert_contains(text, "tools/export_cloudflare_email_registrations.py", label)
     assert_contains(text, "tools/check_gca_registration_api.py", label)
+    assert_contains(text, ".github/workflows/check-gca-registration-api.yml", label)
     assert_contains(text, "tools/sync_cloudflare_email_registrations.py", label)
     assert_contains(text, "tools/export_gca_email_contacts.py", label)
     assert_contains(text, "tools/run_gca_registration_ops.py", label)
@@ -4568,6 +4569,10 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong admin sync tool")
     if production_email_backend.get("readOnlyApiCheckTool") != "tools/check_gca_registration_api.py":
         raise SiteCheckError(f"{label}: wrong read-only API check tool")
+    if production_email_backend.get("publicOnlyApiCheckWorkflow") != ".github/workflows/check-gca-registration-api.yml":
+        raise SiteCheckError(f"{label}: wrong public API check workflow")
+    if production_email_backend.get("publicOnlyApiCheckRequiresSecrets") is not False:
+        raise SiteCheckError(f"{label}: public API check workflow must not require secrets")
     if production_email_backend.get("contactCsvExportTool") != "tools/export_gca_email_contacts.py":
         raise SiteCheckError(f"{label}: wrong contact CSV export tool")
     if production_email_backend.get("registrationOpsTool") != "tools/run_gca_registration_ops.py":
