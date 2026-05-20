@@ -33,6 +33,13 @@ from tools.build_gca_member_access_report import (  # noqa: E402
     build_report,
     load_export,
 )
+from tools.build_gca_holding_period_report import (  # noqa: E402
+    DEFAULT_REPORT_OUTPUT as DEFAULT_HOLDING_REPORT_OUTPUT,
+    DEFAULT_SNAPSHOT_OUTPUT as DEFAULT_HOLDING_SNAPSHOT_OUTPUT,
+    DEFAULT_SUMMARY_OUTPUT as DEFAULT_HOLDING_SUMMARY_OUTPUT,
+    HoldingReportError,
+    build_holding_period_report,
+)
 from tools.build_gca_member_support_queue import (  # noqa: E402
     DEFAULT_OUTPUT as DEFAULT_SUPPORT_QUEUE_OUTPUT,
     DEFAULT_SUMMARY_OUTPUT as DEFAULT_SUPPORT_QUEUE_SUMMARY_OUTPUT,
@@ -71,6 +78,13 @@ def run_member_access_ops(
     report_summary_output: Path = DEFAULT_REPORT_SUMMARY_OUTPUT,
     support_queue_output: Path = DEFAULT_SUPPORT_QUEUE_OUTPUT,
     support_queue_summary_output: Path = DEFAULT_SUPPORT_QUEUE_SUMMARY_OUTPUT,
+    include_holding_report: bool = False,
+    holding_live_read: bool = True,
+    holding_force_same_day: bool = False,
+    holding_snapshot_output: Path = DEFAULT_HOLDING_SNAPSHOT_OUTPUT,
+    holding_report_output: Path = DEFAULT_HOLDING_REPORT_OUTPUT,
+    holding_summary_output: Path = DEFAULT_HOLDING_SUMMARY_OUTPUT,
+    holding_balance_reader: Any | None = None,
     pipeline_summary_output: Path = DEFAULT_PIPELINE_SUMMARY_OUTPUT,
     source: str = "",
     opener: Callable[..., Any] = urlopen,
@@ -95,8 +109,24 @@ def run_member_access_ops(
     write_json(export_output, export_payload)
     report_summary = build_report(export_payload, report_dir, report_summary_output)
     support_queue_summary = build_support_queue(export_payload, support_queue_output, support_queue_summary_output)
+    holding_summary = None
+    if include_holding_report:
+        holding_summary = build_holding_period_report(
+            export_payload=export_payload,
+            snapshot_output=holding_snapshot_output,
+            report_output=holding_report_output,
+            summary_output=holding_summary_output,
+            balance_reader=holding_balance_reader,
+            live_read=holding_live_read,
+            force_same_day=holding_force_same_day,
+        )
     summary = {
-        "ok": bool(export_payload.get("ok")) and bool(report_summary.get("ok")) and bool(support_queue_summary.get("ok")),
+        "ok": (
+            bool(export_payload.get("ok"))
+            and bool(report_summary.get("ok"))
+            and bool(support_queue_summary.get("ok"))
+            and (holding_summary is None or bool(holding_summary.get("ok")))
+        ),
         "packetVersion": "gca_member_access_ops_summary_v1",
         "generatedAt": iso_now(),
         "source": source,
@@ -104,6 +134,8 @@ def run_member_access_ops(
         "reportSummaryOutput": str(report_summary_output),
         "supportQueueOutput": str(support_queue_output),
         "supportQueueSummaryOutput": str(support_queue_summary_output),
+        "holdingReportIncluded": include_holding_report,
+        "holdingSummaryOutput": str(holding_summary_output) if include_holding_report else "",
         "pipelineSummaryOutput": str(pipeline_summary_output),
         "redactedForExternalSharing": bool(export_payload.get("redactedForExternalSharing")),
         "export": {
@@ -117,13 +149,16 @@ def run_member_access_ops(
             "replyReadyRows": support_queue_summary.get("replyReadyRows", 0),
             "statusCounts": support_queue_summary.get("statusCounts", {}),
         },
+        "holdingPeriod": holding_summary.get("counts", {}) if holding_summary else {},
+        "holdingPeriodLaneCounts": holding_summary.get("laneCounts", {}) if holding_summary else {},
         "outputs": report_summary.get("outputs", {}),
         "boundaries": {
             "localOperatorPipelineOnly": True,
             "operatorReviewRequiredBeforeSendingSupportReplies": True,
             "writesProductionData": False,
             "adminTokenPrinted": False,
-            "walletCalls": False,
+            "walletCalls": bool(include_holding_report and holding_live_read),
+            "readOnlyPublicChainBalanceCheck": bool(include_holding_report and holding_live_read),
             "requiresSignature": False,
             "requiresTransaction": False,
             "automaticTokenTransfer": False,
@@ -158,6 +193,12 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         default=DEFAULT_SUPPORT_QUEUE_SUMMARY_OUTPUT,
         help="Support reply queue summary JSON output.",
     )
+    parser.add_argument("--include-holding-report", action="store_true", help="Also build the local 30-day GCA holding-period report.")
+    parser.add_argument("--holding-no-live-read", action="store_true", help="Build holding report from existing snapshots without RPC reads.")
+    parser.add_argument("--holding-force-same-day", action="store_true", help="Append a fresh holding snapshot even if today already exists.")
+    parser.add_argument("--holding-snapshot-output", type=Path, default=DEFAULT_HOLDING_SNAPSHOT_OUTPUT, help="Holding snapshot JSONL output.")
+    parser.add_argument("--holding-report-output", type=Path, default=DEFAULT_HOLDING_REPORT_OUTPUT, help="Holding report CSV output.")
+    parser.add_argument("--holding-summary-output", type=Path, default=DEFAULT_HOLDING_SUMMARY_OUTPUT, help="Holding report summary JSON output.")
     parser.add_argument("--summary-output", type=Path, default=DEFAULT_PIPELINE_SUMMARY_OUTPUT, help="Pipeline summary JSON output.")
     return parser.parse_args(argv)
 
@@ -182,10 +223,16 @@ def main(argv: list[str] | None = None) -> int:
             report_summary_output=args.report_summary_output,
             support_queue_output=args.support_queue_output,
             support_queue_summary_output=args.support_queue_summary_output,
+            include_holding_report=args.include_holding_report,
+            holding_live_read=not args.holding_no_live_read,
+            holding_force_same_day=args.holding_force_same_day,
+            holding_snapshot_output=args.holding_snapshot_output,
+            holding_report_output=args.holding_report_output,
+            holding_summary_output=args.holding_summary_output,
             pipeline_summary_output=args.summary_output,
             source=f"input-file:{args.input}" if args.input else "",
         )
-    except (ExportError, ReportError) as exc:
+    except (ExportError, ReportError, HoldingReportError) as exc:
         print(json.dumps({"ok": False, "error": str(exc)}, ensure_ascii=False, sort_keys=True), file=sys.stderr)
         return 1
 

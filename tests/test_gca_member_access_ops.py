@@ -85,6 +85,8 @@ class GcaMemberAccessOpsTests(unittest.TestCase):
             self.assertNotIn("private-user@example.com", serialized)
             self.assertFalse(summary["boundaries"]["writesProductionData"])
             self.assertFalse(summary["boundaries"]["automaticTokenTransfer"])
+            self.assertFalse(summary["holdingReportIncluded"])
+            self.assertFalse(summary["boundaries"]["walletCalls"])
 
     def test_pipeline_can_use_existing_export_file_without_network(self):
         with tempfile.TemporaryDirectory() as temp:
@@ -128,6 +130,35 @@ class GcaMemberAccessOpsTests(unittest.TestCase):
             self.assertTrue((root / "support.csv").exists())
             self.assertTrue((root / "support-summary.json").exists())
             self.assertTrue((root / "ops-summary.json").exists())
+
+    def test_pipeline_can_include_holding_report_without_live_reads(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            summary = run_member_access_ops(
+                export_payload=member_access_export_payload(),
+                export_output=root / "export-copy.json",
+                report_dir=root / "report",
+                report_summary_output=root / "report-summary.json",
+                support_queue_output=root / "support.csv",
+                support_queue_summary_output=root / "support-summary.json",
+                include_holding_report=True,
+                holding_live_read=False,
+                holding_snapshot_output=root / "holding-snapshots.jsonl",
+                holding_report_output=root / "holding.csv",
+                holding_summary_output=root / "holding-summary.json",
+                pipeline_summary_output=root / "ops-summary.json",
+            )
+
+            self.assertTrue(summary["ok"])
+            self.assertTrue(summary["holdingReportIncluded"])
+            self.assertEqual(summary["holdingPeriod"]["candidateWallets"], 2)
+            self.assertEqual(summary["holdingPeriod"]["walletsSkippedNoLiveRead"], 2)
+            self.assertEqual(summary["holdingPeriodLaneCounts"]["needs_first_snapshot"], 2)
+            self.assertFalse(summary["boundaries"]["walletCalls"])
+            self.assertFalse(summary["boundaries"]["requiresSignature"])
+            self.assertFalse(summary["boundaries"]["automaticTokenTransfer"])
+            self.assertTrue((root / "holding.csv").exists())
+            self.assertTrue((root / "holding-summary.json").exists())
 
 
 if __name__ == "__main__":

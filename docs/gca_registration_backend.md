@@ -75,6 +75,7 @@ It does not collect wallet private keys, seed phrases, wallet passwords, exchang
 - Local member access / wallet / credit / member ledger export tool: `tools/export_cloudflare_member_access.py`
 - Local member access report builder: `tools/build_gca_member_access_report.py`
 - Local member support reply queue builder: `tools/build_gca_member_support_queue.py`
+- Local GCA Member 30-day holding evidence report: `tools/build_gca_holding_period_report.py`
 - Local one-command member access ops pipeline: `tools/run_gca_member_access_ops.py`
 - Local daily public health and optional member ops check: `tools/run_gca_daily_ops.py`
 - Local ledger sync tool: `tools/sync_cloudflare_email_registrations.py`
@@ -251,6 +252,26 @@ To rebuild reports from an existing export without reading Cloudflare:
   --input .gca_access_data/cloudflare_member_access_export.json \
   --report-dir .gca_access_data/member_access_report
 ```
+
+To build the GCA Member 30-day holding evidence report from the same export and record one read-only Base Mainnet balance snapshot per candidate wallet:
+
+```bash
+.venv/bin/python tools/build_gca_holding_period_report.py \
+  --input .gca_access_data/cloudflare_member_access_export.json \
+  --snapshot-output .gca_access_data/gca_holding_snapshots.jsonl \
+  --report-output .gca_access_data/member_access_report/gca_holding_period_report.csv \
+  --summary-output .gca_access_data/member_access_report/gca_holding_period_summary.json
+```
+
+To include the same report in the one-command member ops pipeline:
+
+```bash
+.venv/bin/python tools/run_gca_member_access_ops.py \
+  --input .gca_access_data/cloudflare_member_access_export.json \
+  --include-holding-report
+```
+
+Use `--holding-no-live-read` when you only want to rebuild the holding report from existing local snapshots. The holding report is local operator evidence only; it does not approve the 10,000 GCA member benefit by itself.
 
 To run the daily public health check for the website and API without reading user records:
 
