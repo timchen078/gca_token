@@ -456,6 +456,54 @@ class GcaMemberBackendTests(unittest.TestCase):
         self.assertFalse(digest["boundaries"]["writesProductionData"])
         self.assertFalse(digest["boundaries"]["automaticTokenTransfer"])
 
+    def test_operator_action_plan_prioritizes_manual_work_without_user_records(self):
+        backend, store = self.make_backend(MEMBER_THRESHOLD_UNITS)
+        response = backend.submit_pre_registration(sample_packet())
+        digest_path = store.data_dir / "gca_operator_digest.json"
+        digest_path.write_text(json.dumps({
+            "ok": True,
+            "packetVersion": "gca_operator_digest_v1",
+            "generatedAt": "2026-05-20T16:38:07Z",
+            "dailyOps": {"available": True, "ok": True, "steps": []},
+            "memberOps": {
+                "available": True,
+                "ok": True,
+                "supportQueue": {"rows": 2, "replyReadyRows": 1},
+            },
+            "supportQueue": {"available": True, "ok": True, "rows": 2, "replyReadyRows": 1},
+            "holdingPeriod": {"available": True, "ok": True, "counts": {"observedEligibleFor30Days": 1}},
+            "nextActions": ["Review private-user@example.com support queue."],
+        }), encoding="utf-8")
+
+        plan = backend.operator_action_plan(limit=5)
+        self.assertTrue(plan["ok"])
+        self.assertEqual(plan["packetVersion"], "gca_operator_action_plan_v1")
+        self.assertTrue(plan["sourceStatus"]["operatorDigestAvailable"])
+        self.assertTrue(plan["sourceStatus"]["operatorDigestOk"])
+        item_ids = {item["id"] for item in plan["items"]}
+        self.assertIn("review-support-replies", item_ids)
+        self.assertIn("review-pending-reserve-transfers", item_ids)
+        self.assertIn("review-holding-ready-wallets", item_ids)
+        self.assertTrue(plan["supportReviewPreview"])
+        self.assertEqual(plan["supportReviewPreview"][0]["memberLedgerId"], response["memberLedger"]["memberLedgerId"])
+        self.assertFalse(plan["boundaries"]["writesProductionData"])
+        self.assertFalse(plan["boundaries"]["walletCalls"])
+        self.assertFalse(plan["boundaries"]["requiresSignature"])
+        self.assertFalse(plan["boundaries"]["automaticTokenTransfer"])
+        serialized = json.dumps(plan)
+        self.assertNotIn("member@example.com", serialized)
+        self.assertNotIn("private-user@example.com", serialized)
+
+    def test_operator_action_plan_handles_missing_digest(self):
+        backend, _store = self.make_backend(MEMBER_THRESHOLD_UNITS)
+        plan = backend.operator_action_plan()
+
+        self.assertTrue(plan["ok"])
+        self.assertFalse(plan["sourceStatus"]["operatorDigestAvailable"])
+        self.assertTrue(any(item["id"] == "build-operator-digest" for item in plan["items"]))
+        self.assertFalse(plan["boundaries"]["writesProductionData"])
+        self.assertFalse(plan["boundaries"]["automaticUserReply"])
+
     def test_submit_email_registration_records_email_only_user(self):
         backend, store = self.make_backend(0)
         response = backend.submit_email_registration({
@@ -687,6 +735,14 @@ class GcaMemberBackendTests(unittest.TestCase):
             self.assertEqual(digest["dailyOps"]["steps"][0]["id"], "public-site")
             self.assertEqual(digest["supportQueue"]["replyReadyRows"], 1)
             self.assertFalse(digest["boundaries"]["automaticTokenTransfer"])
+
+            with urlopen(f"{base_url}/gca/operator-action-plan?limit=5", timeout=10) as response:
+                action_plan = json.loads(response.read().decode())
+            self.assertTrue(action_plan["ok"])
+            self.assertEqual(action_plan["packetVersion"], "gca_operator_action_plan_v1")
+            self.assertTrue(action_plan["sourceStatus"]["operatorDigestAvailable"])
+            self.assertTrue(any(item["id"] == "review-support-replies" for item in action_plan["items"]))
+            self.assertFalse(action_plan["boundaries"]["automaticTokenTransfer"])
 
             with urlopen(f"{base_url}/gca/review-package?limit=5", timeout=10) as response:
                 review_package = json.loads(response.read().decode())

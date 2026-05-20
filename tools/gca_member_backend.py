@@ -80,6 +80,7 @@ REDACTED_EXTERNAL_KEYS = {"email", "telegram", "reviewerNote", "supportNote", "e
 PACKAGE_DIGEST_ALGORITHM = "sha256-json-sort-keys-excluding-packageDigestSha256"
 OPERATOR_DIGEST_VERSION = "gca_operator_digest_v1"
 OPERATOR_DIGEST_FILE = "gca_operator_digest.json"
+OPERATOR_ACTION_PLAN_VERSION = "gca_operator_action_plan_v1"
 
 
 class BackendError(ValueError):
@@ -1164,6 +1165,187 @@ class GcaMemberBackend:
             safe_payload["nextActions"] = ["No immediate operator action from the available summaries."]
         return safe_payload
 
+    def operator_action_plan(self, limit: int = 10) -> dict[str, Any]:
+        summary = self.operator_summary(limit=limit)
+        digest = self.operator_digest()
+        totals = summary.get("totals", {})
+        items: list[dict[str, Any]] = []
+
+        def add_item(item_id: str, priority: str, title: str, detail: str, source: str, command: str = "") -> None:
+            items.append({
+                "id": item_id,
+                "priority": priority,
+                "title": safe_operator_text(title, 160),
+                "detail": safe_operator_text(detail, 500),
+                "source": safe_operator_text(source, 120),
+                "command": safe_operator_text(command, 500),
+                "manualReviewRequired": True,
+                "automaticExecution": False,
+            })
+
+        if not digest.get("available"):
+            add_item(
+                "build-operator-digest",
+                "high",
+                "Build the daily operator digest",
+                "No local operator digest is available yet. Run the daily public health check with --build-digest, then reload this console.",
+                "operator-digest",
+                ".venv/bin/python tools/run_gca_daily_ops.py --build-digest --summary-output .gca_access_data/gca_daily_ops_summary.json --digest-output .gca_access_data/gca_operator_digest.md --digest-json-output .gca_access_data/gca_operator_digest.json",
+            )
+        elif not digest.get("digestOk"):
+            add_item(
+                "review-operator-digest",
+                "high",
+                "Review operator digest attention state",
+                "The latest digest is present but not marked ok. Check daily public health and member ops summaries before platform or support follow-up.",
+                "operator-digest",
+            )
+
+        daily = digest.get("dailyOps") if isinstance(digest.get("dailyOps"), dict) else {}
+        if daily.get("available") and not daily.get("ok"):
+            failed_steps = [
+                str(step.get("id") or "")
+                for step in daily.get("steps", [])
+                if isinstance(step, dict) and step.get("ok") is not True
+            ]
+            add_item(
+                "fix-public-health",
+                "high",
+                "Fix public health check failure",
+                f"Daily public health has failing step(s): {', '.join(failed_steps) or 'unknown'}. Fix this before sending users or reviewers to public links.",
+                "daily-ops",
+            )
+
+        reply_ready = safe_operator_int(
+            (digest.get("supportQueue") or {}).get("replyReadyRows")
+            or (digest.get("memberOps") or {}).get("supportQueue", {}).get("replyReadyRows")
+        )
+        if reply_ready:
+            add_item(
+                "review-support-replies",
+                "high",
+                "Review reply-ready support queue",
+                f"{reply_ready} support queue row(s) are reply-ready. Review the prepared reply manually before sending anything to a user.",
+                "support-queue",
+            )
+
+        pending_transfers = safe_operator_int(totals.get("pendingManualReserveTransfers"))
+        if pending_transfers:
+            add_item(
+                "review-pending-reserve-transfers",
+                "high",
+                "Review pending member benefit transfers",
+                f"{pending_transfers} active GCA Member record(s) are waiting for manual reserve-transfer review. Verify 30-day evidence and transfer readiness before any wallet action.",
+                "member-ledger",
+            )
+
+        queued_members = safe_operator_int(totals.get("queuedMembers"))
+        if queued_members:
+            add_item(
+                "review-queued-members",
+                "medium",
+                "Review queued GCA Member evidence",
+                f"{queued_members} GCA Member record(s) are queued, usually because 30-day holding evidence is missing or incomplete.",
+                "member-ledger",
+            )
+
+        local_support_reviews = safe_operator_int(totals.get("supportReviews"))
+        if local_support_reviews:
+            add_item(
+                "inspect-local-support-reviews",
+                "medium",
+                "Inspect local support review records",
+                f"{local_support_reviews} local support review record(s) exist. Use the latest review table to confirm next steps and avoid duplicate replies.",
+                "local-ledgers",
+            )
+
+        if not safe_operator_int(totals.get("emailRegistrations")):
+            add_item(
+                "sync-email-registrations",
+                "medium",
+                "Sync Cloudflare email registrations",
+                "No local email registration records are loaded. Sync token-protected Worker records before exporting contact CSVs or campaign lists.",
+                "email-registrations",
+                ".venv/bin/python tools/run_gca_registration_ops.py --limit 100 --data-dir .gca_access_data",
+            )
+
+        holding = digest.get("holdingPeriod") if isinstance(digest.get("holdingPeriod"), dict) else {}
+        holding_counts = holding.get("counts") if isinstance(holding.get("counts"), dict) else {}
+        ready_wallets = safe_operator_int(holding_counts.get("observedEligibleFor30Days"))
+        if ready_wallets:
+            add_item(
+                "review-holding-ready-wallets",
+                "medium",
+                "Review 30-day holding-ready wallets",
+                f"{ready_wallets} wallet(s) have observed 30-day member-threshold evidence. Confirm support approval before any benefit decision.",
+                "holding-period",
+            )
+
+        if not items:
+            add_item(
+                "no-immediate-action",
+                "low",
+                "No immediate operator action",
+                "Available summaries do not show urgent public health, support, holding, or transfer work.",
+                "operator-summary",
+            )
+
+        priority_order = {"high": 0, "medium": 1, "low": 2}
+        items = sorted(items, key=lambda item: (priority_order.get(str(item.get("priority")), 9), str(item.get("id"))))
+
+        support_preview = []
+        support_latest = summary.get("dataLedgers", {}).get("support_reviews", {}).get("latest", [])
+        for record in support_latest[:limit]:
+            if not isinstance(record, dict):
+                continue
+            support_preview.append({
+                "lane": safe_operator_text(record.get("lane"), 120),
+                "status": safe_operator_text(record.get("status"), 120),
+                "walletAddress": safe_operator_text(record.get("walletAddress"), 80),
+                "creditLedgerId": safe_operator_text(record.get("creditLedgerId"), 120),
+                "memberLedgerId": safe_operator_text(record.get("memberLedgerId"), 120),
+                "memberBenefitTransferTx": safe_operator_text(record.get("memberBenefitTransferTx"), 120),
+                "nextStep": safe_operator_text(record.get("nextStep"), 500),
+                "updatedAt": safe_operator_text(record.get("updatedAt"), 120),
+            })
+
+        return {
+            "ok": True,
+            "service": "gca-member-backend",
+            "packetVersion": OPERATOR_ACTION_PLAN_VERSION,
+            "generatedAt": iso_now(),
+            "itemCount": len(items),
+            "items": items,
+            "supportReviewPreview": support_preview,
+            "sourceStatus": {
+                "operatorSummaryAvailable": True,
+                "operatorDigestAvailable": bool(digest.get("available")),
+                "operatorDigestOk": bool(digest.get("digestOk")),
+                "digestGeneratedAt": safe_operator_text(digest.get("digestGeneratedAt"), 80),
+            },
+            "totals": {
+                "emailRegistrations": safe_operator_int(totals.get("emailRegistrations")),
+                "supportReviews": safe_operator_int(totals.get("supportReviews")),
+                "queuedMembers": queued_members,
+                "pendingManualReserveTransfers": pending_transfers,
+                "memberBenefitTransfers": safe_operator_int(totals.get("memberBenefitTransfers")),
+            },
+            "boundaries": {
+                "localhostOnly": True,
+                "readOnlyOperatorPlan": True,
+                "writesProductionData": False,
+                "adminTokenPrinted": False,
+                "userEmailsPrinted": False,
+                "userRecordsPrinted": False,
+                "walletCalls": False,
+                "requiresSignature": False,
+                "requiresTransaction": False,
+                "automaticTokenTransfer": False,
+                "automaticUserReply": False,
+                "memberBenefitTransferAutomatic": False,
+            },
+        }
+
     def review_package(self, limit: int = 100, redacted: bool = False) -> dict[str, Any]:
         summary = self.operator_summary(limit=limit)
         ledgers = summary.get("dataLedgers", {})
@@ -1311,6 +1493,15 @@ def build_handler(site_dir: Path, backend: GcaMemberBackend) -> type[SimpleHTTPR
                 if parsed.path == "/gca/operator-digest":
                     self.assert_local_api_client()
                     self.send_json(backend.operator_digest())
+                    return
+                if parsed.path == "/gca/operator-action-plan":
+                    self.assert_local_api_client()
+                    limit_text = query.get("limit", ["10"])[0]
+                    try:
+                        limit = min(max(int(limit_text), 1), 50)
+                    except ValueError as exc:
+                        raise BackendError("limit must be an integer") from exc
+                    self.send_json(backend.operator_action_plan(limit=limit))
                     return
                 if parsed.path == "/gca/review-package":
                     self.assert_local_api_client()

@@ -40,6 +40,7 @@
     "localEmailRegistrationUrl": "http://127.0.0.1:8787/register.html",
     "localOperatorSummaryEndpoint": "/gca/operator-summary",
     "localOperatorDigestEndpoint": "/gca/operator-digest",
+    "localOperatorActionPlanEndpoint": "/gca/operator-action-plan",
     "localReviewPackageEndpoint": "/gca/review-package",
     "localReviewPackageExporter": "tools/export_gca_review_package.py",
     "localReviewPackageVerifier": "tools/verify_gca_review_package.py",
@@ -598,6 +599,32 @@
       "allowedStatuses": [
         "local-only",
         "missing"
+      ]
+    },
+    {
+      "id": "operator-action-plan",
+      "method": "GET",
+      "path": "/gca/operator-action-plan",
+      "status": "local-only-not-public-production",
+      "purpose": "Return a local manual operator checklist derived from local ledger counts and the redacted operator digest, including prioritized actions and a redacted support review preview.",
+      "requiredRequestFields": [
+        "localhostClient"
+      ],
+      "optionalRequestFields": [
+        "limit"
+      ],
+      "responseFields": [
+        "packetVersion",
+        "itemCount",
+        "items",
+        "supportReviewPreview",
+        "sourceStatus",
+        "totals",
+        "boundaries",
+        "automaticTokenTransfer"
+      ],
+      "allowedStatuses": [
+        "local-only"
       ]
     },
     {
