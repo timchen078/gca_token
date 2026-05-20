@@ -110,6 +110,8 @@ Allow: /operations.html
 Allow: /operations.json
 Allow: /access-api.html
 Allow: /access-api.json
+Allow: /api-status.html
+Allow: /api-status.json
 Allow: /review-queue.html
 Allow: /review-queue.json
 Allow: /credits.html
