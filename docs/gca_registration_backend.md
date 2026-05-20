@@ -78,6 +78,7 @@ It does not collect wallet private keys, seed phrases, wallet passwords, exchang
 - Local GCA Member 30-day holding evidence report: `tools/build_gca_holding_period_report.py`
 - Local one-command member access ops pipeline: `tools/run_gca_member_access_ops.py`
 - Local daily public health and optional member ops check: `tools/run_gca_daily_ops.py`
+- Local redacted operator digest builder: `tools/build_gca_operator_digest.py`
 - Local ledger sync tool: `tools/sync_cloudflare_email_registrations.py`
 - Local contact CSV export tool: `tools/export_gca_email_contacts.py`
 - Local one-command ops pipeline: `tools/run_gca_registration_ops.py`
@@ -300,6 +301,16 @@ To also record the daily 30-day GCA Member holding snapshot during that member-o
 ```
 
 Use `--holding-no-live-read` with the daily command when you only want to rebuild the holding report from existing local snapshots. The holding report option is deliberately gated behind `--include-member-ops` because it depends on token-protected member exports.
+
+To build a redacted local operator digest from the latest summary files:
+
+```bash
+.venv/bin/python tools/build_gca_operator_digest.py \
+  --output .gca_access_data/gca_operator_digest.md \
+  --json-output .gca_access_data/gca_operator_digest.json
+```
+
+The digest includes public health status, member-ops counts, support queue counts, holding-period counts, and next actions. It does not include user records, emails, admin tokens, signatures, transactions, or automatic transfer actions.
 
 To sync full Cloudflare registrations into the local operator JSONL ledger:
 
