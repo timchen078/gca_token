@@ -50,6 +50,7 @@ ZH_ACCESS_PAGE_URL = "https://gcagochina.com/zh-access.html"
 ZH_RELEASE_GATES_PAGE_URL = "https://gcagochina.com/zh-release-gates.html"
 ZH_WALLET_VERIFY_PAGE_URL = "https://gcagochina.com/zh-wallet-verify.html"
 ZH_MEMBER_CHECKLIST_PAGE_URL = "https://gcagochina.com/zh-member-checklist.html"
+ZH_SITE_MAP_PAGE_URL = "https://gcagochina.com/zh-site-map.html"
 ZH_DATA_PAGE_URL = "https://gcagochina.com/zh-data.html"
 ZH_API_STATUS_PAGE_URL = "https://gcagochina.com/zh-api-status.html"
 SUPPLY_PAGE_URL = "https://gcagochina.com/supply.html"
@@ -220,6 +221,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("/zh-release-gates.html", script)
         self.assertIn("/zh-wallet-verify.html", script)
         self.assertIn("/zh-member-checklist.html", script)
+        self.assertIn("/zh-site-map.html", script)
         self.assertIn("/zh-data.html", script)
         self.assertIn("/zh-api-status.html", script)
         self.assertIn("/listing-kit.html", script)
@@ -473,6 +475,7 @@ class LaunchPackageTests(unittest.TestCase):
         module.validate_zh_release_gates_page((ROOT / "site" / "zh-release-gates.html").read_text())
         module.validate_zh_wallet_verify_page((ROOT / "site" / "zh-wallet-verify.html").read_text())
         module.validate_zh_member_checklist_page((ROOT / "site" / "zh-member-checklist.html").read_text())
+        module.validate_zh_site_map_page((ROOT / "site" / "zh-site-map.html").read_text())
         module.validate_zh_data_page((ROOT / "site" / "zh-data.html").read_text())
         module.validate_zh_api_status_page((ROOT / "site" / "zh-api-status.html").read_text())
         module.validate_verify((ROOT / "site" / "verify.html").read_text())
@@ -816,6 +819,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Allow: /zh-release-gates.html", robots)
         self.assertIn("Allow: /zh-wallet-verify.html", robots)
         self.assertIn("Allow: /zh-member-checklist.html", robots)
+        self.assertIn("Allow: /zh-site-map.html", robots)
         self.assertIn("Allow: /zh-data.html", robots)
         self.assertIn("Allow: /zh-api-status.html", robots)
         self.assertIn("Allow: /site-map.html", robots)
@@ -940,6 +944,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(ZH_RELEASE_GATES_PAGE_URL, sitemap)
         self.assertIn(ZH_WALLET_VERIFY_PAGE_URL, sitemap)
         self.assertIn(ZH_MEMBER_CHECKLIST_PAGE_URL, sitemap)
+        self.assertIn(ZH_SITE_MAP_PAGE_URL, sitemap)
         self.assertIn(ZH_DATA_PAGE_URL, sitemap)
         self.assertIn(ZH_API_STATUS_PAGE_URL, sitemap)
         self.assertIn(DATA_PAGE_URL, sitemap)
@@ -6462,6 +6467,7 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "site" / "zh-release-gates.html",
             ROOT / "site" / "zh-wallet-verify.html",
             ROOT / "site" / "zh-member-checklist.html",
+            ROOT / "site" / "zh-site-map.html",
             ROOT / "site" / "zh-data.html",
             ROOT / "site" / "zh-api-status.html",
             ROOT / "site" / "review-queue.html",
