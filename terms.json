@@ -1,20 +1,56 @@
 {
   "schema": "https://gcagochina.com/terms.json",
   "pageUrl": "https://gcagochina.com/terms.html",
-  "lastUpdated": "2026-05-14",
+  "lastUpdated": "2026-05-20",
   "status": "public-participation-terms-published",
   "scope": "GCA public website, member pre-registration, planned 100 credits, planned GCA Member status, future Web3 Radar access bridge",
   "network": "Base Mainnet",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "participationBoundaries": {
+    "emailRegistrationLive": true,
+    "emailContactSuppressionLive": true,
     "preRegistrationOnly": true,
     "publicSelfServiceClaimConnected": false,
     "createsLiveWeb3RadarAccount": false,
     "activatesLiveTradingPermission": false,
+    "emailRegistrationTransfersTokens": false,
+    "emailContactSuppressionChangesChainState": false,
     "requiresCustody": false,
     "requiresWithdrawalPermission": false,
     "requiresPrivateKeyOrSeedPhrase": false
+  },
+  "emailRegistrationTerms": {
+    "status": "live-cloudflare-workers-d1",
+    "page": "https://gcagochina.com/register.html",
+    "endpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/email-registrations",
+    "purpose": [
+      "project updates",
+      "member-entry notifications",
+      "product testing invitations",
+      "official support follow-up"
+    ],
+    "doesNotCreate": [
+      "live Web3 Radar account",
+      "self-service credit claim",
+      "automatic GCA Member activation",
+      "token transfer"
+    ]
+  },
+  "emailContactSuppressionTerms": {
+    "status": "live-cloudflare-workers-d1",
+    "page": "https://gcagochina.com/unsubscribe.html",
+    "endpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/contact-suppressions",
+    "purpose": [
+      "future GCA contact-export exclusion",
+      "do-not-contact request tracking"
+    ],
+    "doesNotChange": [
+      "wallet balance",
+      "token holding",
+      "GCA Member status",
+      "chain state"
+    ]
   },
   "programTerms": {
     "holderBonus": {
@@ -90,6 +126,8 @@
   "publicLinks": {
     "support": "https://gcagochina.com/support.html",
     "supportJson": "https://gcagochina.com/support.json",
+    "emailRegistration": "https://gcagochina.com/register.html",
+    "emailUnsubscribe": "https://gcagochina.com/unsubscribe.html",
     "participationTerms": "https://gcagochina.com/terms.html",
     "privacyNotice": "https://gcagochina.com/privacy.html",
     "verify": "https://gcagochina.com/verify.html",

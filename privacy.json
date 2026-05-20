@@ -1,23 +1,36 @@
 {
   "schema": "https://gcagochina.com/privacy.json",
   "pageUrl": "https://gcagochina.com/privacy.html",
-  "lastUpdated": "2026-05-13",
+  "lastUpdated": "2026-05-20",
   "status": "public-privacy-notice-published",
-  "scope": "GCA public website, local member pre-registration packets, wallet balance verification, future controlled HTTPS account intake",
+  "scope": "GCA public website, live email registration, live contact suppression, local member pre-registration packets, wallet balance verification, future controlled HTTPS account intake",
   "contactEmail": "GCAgochina@outlook.com",
   "currentStaticSiteBehavior": {
-    "mode": "local-only-pre-registration-packet",
-    "automaticServerStorage": false,
-    "directSubmissionEndpointConfigured": false,
+    "mode": "live-email-registration-and-contact-suppression-api-with-local-member-pre-registration",
+    "automaticServerStorage": true,
+    "directSubmissionEndpointConfigured": true,
+    "emailRegistrationDirectSubmissionEndpointConfigured": true,
+    "contactSuppressionDirectSubmissionEndpointConfigured": true,
+    "memberPreRegistrationDirectSubmissionEndpointConfigured": false,
+    "productionApiBase": "https://gca-registration-api.gcagochina.workers.dev",
+    "emailRegistrationEndpoint": "/gca/email-registrations",
+    "contactSuppressionEndpoint": "/gca/contact-suppressions",
     "packetLeavesBrowserWhen": [
-      "user copies packet",
-      "user downloads packet",
-      "user emails packet",
+      "user submits email registration through register.html",
+      "user submits email unsubscribe through unsubscribe.html",
+      "user copies member pre-registration packet",
+      "user downloads member pre-registration packet",
+      "user emails member pre-registration packet",
       "future controlled HTTPS intake is connected and the user submits through account UI"
     ]
   },
   "dataFields": [
     "email",
+    "optional display name for email registration",
+    "email registration source, language, and interest tags",
+    "email contact consent acknowledgement",
+    "contact suppression reason and source",
+    "contact suppression acknowledgement",
     "Telegram handle",
     "Base wallet address",
     "declared GCA balance",
@@ -81,9 +94,12 @@
   },
   "userRequests": {
     "contactEmail": "GCAgochina@outlook.com",
+    "unsubscribePage": "https://gcagochina.com/unsubscribe.html",
+    "contactSuppressionEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/contact-suppressions",
     "requestTypes": [
       "correction",
       "deletion",
+      "contact suppression",
       "status review"
     ],
     "retentionCaveat": "Some records may be retained when needed for abuse prevention, security review, operational integrity, or legal compliance."
@@ -93,6 +109,8 @@
     "supportJson": "https://gcagochina.com/support.json",
     "privacyNotice": "https://gcagochina.com/privacy.html",
     "participationTerms": "https://gcagochina.com/terms.html",
+    "emailRegistration": "https://gcagochina.com/register.html",
+    "emailUnsubscribe": "https://gcagochina.com/unsubscribe.html",
     "memberPreRegistration": "https://gcagochina.com/members.html",
     "memberProgramRules": "https://gcagochina.com/member-program.json",
     "memberLedgerPage": "https://gcagochina.com/member-ledger.html",
