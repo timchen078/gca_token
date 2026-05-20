@@ -42,6 +42,7 @@ ZH_ROADMAP_PAGE_URL = "https://gcagochina.com/zh-roadmap.html"
 ZH_FAQ_PAGE_URL = "https://gcagochina.com/zh-faq.html"
 ZH_MEMBERS_PAGE_URL = "https://gcagochina.com/zh-members.html"
 ZH_SUPPORT_PAGE_URL = "https://gcagochina.com/zh-support.html"
+ZH_ACCESS_PAGE_URL = "https://gcagochina.com/zh-access.html"
 ZH_API_STATUS_PAGE_URL = "https://gcagochina.com/zh-api-status.html"
 DATA_PAGE_URL = "https://gcagochina.com/data.html"
 SITE_MAP_PAGE_URL = "https://gcagochina.com/site-map.html"
@@ -265,6 +266,8 @@ def validate_root(text: str) -> None:
     assert_contains(text, "zh-faq.html", label)
     assert_contains(text, "中文会员规则", label)
     assert_contains(text, "zh-members.html", label)
+    assert_contains(text, "中文用户中心预览", label)
+    assert_contains(text, "zh-access.html", label)
     assert_contains(text, "中文 API 状态", label)
     assert_contains(text, "zh-api-status.html", label)
     assert_contains(text, "中文支持和资料提交", label)
@@ -619,6 +622,8 @@ def validate_zh_cn_page(text: str) -> None:
         "zh-faq.html",
         "中文会员规则",
         "zh-members.html",
+        "中文用户中心预览",
+        "zh-access.html",
         "中文 API 状态",
         "zh-api-status.html",
         "中文支持和资料提交",
@@ -663,6 +668,7 @@ def validate_zh_cn_page(text: str) -> None:
         "zh-security.html",
         "zh-roadmap.html",
         "zh-members.html",
+        "zh-access.html",
         "zh-support.html",
         "zh-api-status.html",
         "register.html",
@@ -893,6 +899,7 @@ def validate_zh_status_page(text: str) -> None:
         "zh-security.html",
         "zh-faq.html",
         "zh-members.html",
+        "zh-access.html",
         "zh-api-status.html",
         "verify.html",
         "external-reviews.html",
@@ -1253,6 +1260,8 @@ def validate_zh_support_page(text: str) -> None:
         "register.html",
         "邮箱退订",
         "unsubscribe.html",
+        "中文用户中心预览",
+        "zh-access.html",
         "中文 API 状态",
         "zh-api-status.html",
         "官方邮箱",
@@ -1302,6 +1311,7 @@ def validate_zh_support_page(text: str) -> None:
         "zh-roadmap.html",
         "zh-faq.html",
         "zh-members.html",
+        "zh-access.html",
         "zh-api-status.html",
         "register.html",
         "unsubscribe.html",
@@ -1385,6 +1395,79 @@ def validate_zh_api_status_page(text: str) -> None:
         "data.html",
     ):
         assert_contains(text, expected, label)
+    assert_no_forbidden_public_claims(text, label)
+
+
+def validate_zh_access_page(text: str) -> None:
+    label = "/zh-access.html"
+    assert_social_preview_meta(text, label, ZH_ACCESS_PAGE_URL)
+    assert_platform_only_data_room(
+        text,
+        label,
+        (
+            "access.json",
+            "access-api.json",
+            "operations.json",
+            "review-queue.json",
+            "credits.json",
+            "member-ledger.json",
+        ),
+    )
+    for expected in (
+        "GCA 中文用户中心预览",
+        "中文用户中心预览 / 2026-05-20",
+        "邮箱注册 API 已上线",
+        "Cloudflare Workers + D1 已上线",
+        "受控 HTTPS 账户 UI 未上线",
+        "公开自助领取",
+        "100 credits 账本激活",
+        "GCA Member 账本激活",
+        "10,000 GCA 会员权益自助领取",
+        "还没有上线",
+        "Base Mainnet chainId 8453",
+        MAINNET_ADDRESS,
+        "GCA/USDT",
+        OFFICIAL_POOL_ADDRESS,
+        "邮箱注册",
+        "register.html",
+        "邮箱退订",
+        "unsubscribe.html",
+        "中文 API 状态",
+        "zh-api-status.html",
+        "中文会员规则",
+        "zh-members.html",
+        "中文支持和资料提交",
+        "zh-support.html",
+        "只读余额验证",
+        "10,000 GCA",
+        "100 Web3 Radar utility credits",
+        "1,000,000 GCA",
+        "30 天持有审核",
+        "10,000 GCA 会员权益审核",
+        "owner-held reserve",
+        "不是新铸币",
+        "私钥",
+        "助记词",
+        "钱包密码",
+        "验证码",
+        "交易所 API Secret",
+        "提现权限",
+        "不会自动激活 100 credits、GCA Member 或 10,000 GCA 会员权益",
+        "未来交易相关功能必须先经过风控、模拟盘或测试环境",
+        "Platform-Only Evidence Path",
+        "Raw JSON",
+        "Reviewer Data Room",
+        "access.html",
+        "access-api.html",
+        "operations.html",
+        "review-queue.html",
+        "credits.html",
+        "member-ledger.html",
+        "release-gates.html",
+        "gca/member-access/",
+    ):
+        assert_contains(text, expected, label)
+    assert_current_pool_text(text, label)
     assert_no_forbidden_public_claims(text, label)
 
 
@@ -1566,6 +1649,8 @@ def validate_site_map_page(text: str) -> None:
         "zh-faq.html",
         "中文会员规则",
         "zh-members.html",
+        "中文用户中心预览",
+        "zh-access.html",
         "中文 API 状态",
         "zh-api-status.html",
         "中文支持和资料提交",
@@ -9020,6 +9105,7 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/zh-faq.html",
         "https://gcagochina.com/zh-members.html",
         "https://gcagochina.com/zh-support.html",
+        "https://gcagochina.com/zh-access.html",
         "https://gcagochina.com/zh-api-status.html",
         "https://gcagochina.com/data.html",
         "https://gcagochina.com/site-map.html",
@@ -9148,6 +9234,7 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /zh-faq.html", label)
     assert_contains(text, "Allow: /zh-members.html", label)
     assert_contains(text, "Allow: /zh-support.html", label)
+    assert_contains(text, "Allow: /zh-access.html", label)
     assert_contains(text, "Allow: /zh-api-status.html", label)
     assert_contains(text, "Allow: /site-map.html", label)
     assert_contains(text, "Allow: /verify.html", label)
@@ -9277,6 +9364,7 @@ CHECKS: list[EndpointCheck] = [
     ("/zh-faq.html", validate_zh_faq_page),
     ("/zh-members.html", validate_zh_members_page),
     ("/zh-support.html", validate_zh_support_page),
+    ("/zh-access.html", validate_zh_access_page),
     ("/zh-api-status.html", validate_zh_api_status_page),
     ("/data.html", validate_data_page),
     ("/site-map.html", validate_site_map_page),
