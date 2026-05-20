@@ -371,6 +371,7 @@
         <p class="lead">邮箱注册不需要钱包、不需要私钥、不需要助记词、不需要签名，也不需要付款。后续如果你要申请持仓会员权益，再进入会员审核流程单独提交链上资料。</p>
         <div class="actions">
           <a class="button primary" href="#registerForm">开始邮箱注册</a>
+          <a class="button secondary" href="zh-api-status.html">中文 API 状态</a>
           <a class="button secondary" href="zh-members.html">中文会员规则</a>
           <a class="button secondary" href="zh-support.html">中文支持和资料提交</a>
           <a class="button secondary" href="unsubscribe.html">邮箱退订</a>
@@ -384,8 +385,8 @@
           <span class="value">邮箱</span>
         </div>
         <div class="fact">
-          <span class="label">官方邮箱</span>
-          <span class="value">GCAgochina@outlook.com</span>
+          <span class="label">注册 API</span>
+          <span class="value good">Cloudflare Workers + D1 已上线</span>
         </div>
         <div class="fact">
           <span class="label">链</span>
@@ -394,6 +395,10 @@
         <div class="fact">
           <span class="label">GCA 合约</span>
           <span class="value">0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6</span>
+        </div>
+        <div class="fact">
+          <span class="label">官方邮箱</span>
+          <span class="value">GCAgochina@outlook.com</span>
         </div>
       </section>
 
@@ -420,7 +425,7 @@
             </label>
             <button class="button primary" type="submit">提交邮箱注册</button>
             <a class="button secondary" id="mailFallback" href="mailto:GCAgochina@outlook.com?subject=GCA%20Email%20Registration" hidden>发送注册邮件</a>
-            <div class="status" id="status" role="status">填写邮箱后提交。官网会优先提交到 GCA HTTPS 注册 API；如果 API 暂不可用，会显示官方邮箱兜底。正式 API 地址为 https://gca-registration-api.gcagochina.workers.dev/gca/email-registrations。</div>
+            <div class="status" id="status" role="status">填写邮箱后提交。官网会优先提交到 GCA HTTPS 注册 API；如果 API 暂不可用，会显示官方邮箱兜底。正式 API 地址为 https://gca-registration-api.gcagochina.workers.dev/gca/email-registrations。接口状态见 <a href="zh-api-status.html">中文 API 状态</a>。</div>
           </form>
         </div>
 
@@ -432,6 +437,7 @@
             <li>不需要钱包地址，不读取钱包余额，不产生链上交易，不创建签名请求。</li>
             <li>不自动激活 100 credits、GCA Member 或 10,000 GCA 会员权益。</li>
             <li>后续会员权益仍需要按公开规则进行持仓、30 天持有和人工审核。</li>
+            <li>公开 API 状态和只读检查方式在 <a href="zh-api-status.html">中文 API 状态</a> 页面集中说明。</li>
           </ul>
         </div>
       </section>
