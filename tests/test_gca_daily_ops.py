@@ -32,6 +32,9 @@ class GcaDailyOpsTests(unittest.TestCase):
         self.assertFalse(summary["boundaries"]["writesProductionData"])
         self.assertFalse(summary["boundaries"]["automaticTokenTransfer"])
         self.assertFalse(summary["includeHoldingReport"])
+        self.assertFalse(summary["buildDigest"])
+        self.assertFalse(summary["operatorDigest"]["requested"])
+        self.assertFalse(summary["operatorDigest"]["built"])
         self.assertFalse(summary["boundaries"]["walletCalls"])
         commands = [" ".join(item["command"]) for item in seen]
         self.assertTrue(any("tools/check_public_site.py" in command for command in commands))
@@ -123,6 +126,45 @@ class GcaDailyOpsTests(unittest.TestCase):
             self.assertTrue(summary_output.exists())
             serialized = json.dumps(summary)
             self.assertNotIn("ADMIN_READ_TOKEN", serialized)
+            self.assertNotIn("secret-token", serialized)
+
+    def test_daily_ops_can_build_redacted_operator_digest(self):
+        def runner(command, cwd, timeout):
+            return subprocess.CompletedProcess(command, 0, stdout='{"ok": true, "email": "private-user@example.com"}', stderr="")
+
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            summary_output = root / "summary.json"
+            digest_output = root / "digest.md"
+            digest_json_output = root / "digest.json"
+            summary = run_daily_ops(
+                summary_output=summary_output,
+                build_digest=True,
+                digest_output=digest_output,
+                digest_json_output=digest_json_output,
+                runner=runner,
+            )
+
+            self.assertTrue(summary["ok"])
+            self.assertTrue(summary["buildDigest"])
+            self.assertTrue(summary["operatorDigest"]["requested"])
+            self.assertTrue(summary["operatorDigest"]["built"])
+            self.assertTrue(summary["operatorDigest"]["ok"])
+            self.assertEqual(summary["operatorDigest"]["packetVersion"], "gca_operator_digest_v1")
+            self.assertTrue(summary_output.exists())
+            self.assertTrue(digest_output.exists())
+            self.assertTrue(digest_json_output.exists())
+
+            digest_payload = json.loads(digest_json_output.read_text(encoding="utf-8"))
+            self.assertEqual(digest_payload["packetVersion"], "gca_operator_digest_v1")
+            self.assertTrue(digest_payload["dailyOps"]["available"])
+            self.assertFalse(digest_payload["boundaries"]["writesProductionData"])
+            self.assertFalse(digest_payload["boundaries"]["walletCalls"])
+            self.assertFalse(digest_payload["boundaries"]["requiresSignature"])
+            self.assertFalse(digest_payload["boundaries"]["automaticTokenTransfer"])
+            serialized = digest_output.read_text(encoding="utf-8") + digest_json_output.read_text(encoding="utf-8")
+            self.assertNotIn("private-user@example.com", serialized)
+            self.assertNotIn("stdoutTail", serialized)
             self.assertNotIn("secret-token", serialized)
 
 

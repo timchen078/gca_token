@@ -302,6 +302,18 @@ To also record the daily 30-day GCA Member holding snapshot during that member-o
 
 Use `--holding-no-live-read` with the daily command when you only want to rebuild the holding report from existing local snapshots. The holding report option is deliberately gated behind `--include-member-ops` because it depends on token-protected member exports.
 
+To build the redacted local operator digest as part of the same daily run:
+
+```bash
+.venv/bin/python tools/run_gca_daily_ops.py \
+  --build-digest \
+  --summary-output .gca_access_data/gca_daily_ops_summary.json \
+  --digest-output .gca_access_data/gca_operator_digest.md \
+  --digest-json-output .gca_access_data/gca_operator_digest.json
+```
+
+`--build-digest` reads existing summary files only. It does not include user records, emails, admin tokens, signatures, transactions, wallet actions, or automatic benefit transfers.
+
 To build a redacted local operator digest from the latest summary files:
 
 ```bash

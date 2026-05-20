@@ -91,7 +91,7 @@ Export the same review package directly from local JSONL data without starting t
 - Local member support reply queue builder: `tools/build_gca_member_support_queue.py`
 - Local GCA Member 30-day holding evidence report: `tools/build_gca_holding_period_report.py`
 - One-command member access ops pipeline: `tools/run_gca_member_access_ops.py`
-- Daily public health and optional member ops check: `tools/run_gca_daily_ops.py`
+- Daily public health, optional member ops check, and optional digest build: `tools/run_gca_daily_ops.py`
 - Local redacted operator digest builder: `tools/build_gca_operator_digest.py`
 - GitHub Actions public daily ops check: `.github/workflows/check-gca-daily-ops.yml`
 - Read-only live registration API check: `tools/check_gca_registration_api.py`

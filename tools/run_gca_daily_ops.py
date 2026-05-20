@@ -18,6 +18,21 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Callable, Sequence
 
+try:
+    from tools.build_gca_operator_digest import (
+        DEFAULT_DIGEST_OUTPUT,
+        DEFAULT_JSON_OUTPUT as DEFAULT_DIGEST_JSON_OUTPUT,
+        DigestError,
+        build_operator_digest,
+    )
+except ImportError:
+    from build_gca_operator_digest import (
+        DEFAULT_DIGEST_OUTPUT,
+        DEFAULT_JSON_OUTPUT as DEFAULT_DIGEST_JSON_OUTPUT,
+        DigestError,
+        build_operator_digest,
+    )
+
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_SUMMARY_OUTPUT = ROOT / ".gca_access_data" / "gca_daily_ops_summary.json"
@@ -157,6 +172,9 @@ def run_daily_ops(
     holding_no_live_read: bool = False,
     holding_force_same_day: bool = False,
     summary_output: Path = DEFAULT_SUMMARY_OUTPUT,
+    build_digest: bool = False,
+    digest_output: Path = DEFAULT_DIGEST_OUTPUT,
+    digest_json_output: Path = DEFAULT_DIGEST_JSON_OUTPUT,
     runner: CommandRunner = default_runner,
 ) -> dict[str, Any]:
     steps = [
@@ -182,8 +200,16 @@ def run_daily_ops(
         "includeHoldingReport": include_holding_report,
         "holdingNoLiveRead": holding_no_live_read,
         "holdingForceSameDay": holding_force_same_day,
+        "buildDigest": build_digest,
         "steps": steps,
         "summaryOutput": str(summary_output),
+        "operatorDigest": {
+            "requested": build_digest,
+            "built": False,
+            "ok": None,
+            "markdownOutput": str(digest_output),
+            "jsonOutput": str(digest_json_output),
+        },
         "boundaries": {
             "publicOnlyByDefault": True,
             "readsTokenProtectedUserRecordsOnlyWhenIncludeMemberOpsIsTrue": True,
@@ -200,6 +226,27 @@ def run_daily_ops(
     }
     summary_output.parent.mkdir(parents=True, exist_ok=True)
     summary_output.write_text(json.dumps(summary, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    if build_digest:
+        try:
+            digest = build_operator_digest(
+                daily_summary=summary_output,
+                digest_output=digest_output,
+                json_output=digest_json_output,
+            )
+            summary["operatorDigest"].update({
+                "built": True,
+                "ok": bool(digest.get("ok")),
+                "packetVersion": digest.get("packetVersion", ""),
+                "generatedAt": digest.get("generatedAt", ""),
+            })
+        except DigestError as exc:
+            summary["ok"] = False
+            summary["operatorDigest"].update({
+                "built": False,
+                "ok": False,
+                "error": str(exc),
+            })
+        summary_output.write_text(json.dumps(summary, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     return summary
 
 
@@ -214,6 +261,9 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--holding-no-live-read", action="store_true", help="Build holding report from existing snapshots without RPC reads.")
     parser.add_argument("--holding-force-same-day", action="store_true", help="Append a fresh holding snapshot even if today already exists.")
     parser.add_argument("--summary-output", type=Path, default=DEFAULT_SUMMARY_OUTPUT, help="Daily summary JSON output.")
+    parser.add_argument("--build-digest", action="store_true", help="Also build the redacted local operator digest from summary files.")
+    parser.add_argument("--digest-output", type=Path, default=DEFAULT_DIGEST_OUTPUT, help="Markdown operator digest output path.")
+    parser.add_argument("--digest-json-output", type=Path, default=DEFAULT_DIGEST_JSON_OUTPUT, help="JSON operator digest output path.")
     args = parser.parse_args(argv)
     if args.include_holding_report and not args.include_member_ops:
         parser.error("--include-holding-report requires --include-member-ops")
@@ -232,6 +282,9 @@ def main(argv: list[str] | None = None) -> int:
         holding_no_live_read=args.holding_no_live_read,
         holding_force_same_day=args.holding_force_same_day,
         summary_output=args.summary_output,
+        build_digest=args.build_digest,
+        digest_output=args.digest_output,
+        digest_json_output=args.digest_json_output,
     )
     print(json.dumps(summary, ensure_ascii=False, indent=2, sort_keys=True))
     return 0 if summary["ok"] else 1
