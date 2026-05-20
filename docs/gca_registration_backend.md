@@ -76,6 +76,7 @@ It does not collect wallet private keys, seed phrases, wallet passwords, exchang
 - Local member access report builder: `tools/build_gca_member_access_report.py`
 - Local member support reply queue builder: `tools/build_gca_member_support_queue.py`
 - Local one-command member access ops pipeline: `tools/run_gca_member_access_ops.py`
+- Local daily public health and optional member ops check: `tools/run_gca_daily_ops.py`
 - Local ledger sync tool: `tools/sync_cloudflare_email_registrations.py`
 - Local contact CSV export tool: `tools/export_gca_email_contacts.py`
 - Local one-command ops pipeline: `tools/run_gca_registration_ops.py`
@@ -249,6 +250,21 @@ To rebuild reports from an existing export without reading Cloudflare:
 .venv/bin/python tools/run_gca_member_access_ops.py \
   --input .gca_access_data/cloudflare_member_access_export.json \
   --report-dir .gca_access_data/member_access_report
+```
+
+To run the daily public health check for the website and API without reading user records:
+
+```bash
+.venv/bin/python tools/run_gca_daily_ops.py \
+  --summary-output .gca_access_data/gca_daily_ops_summary.json
+```
+
+To include token-protected member report refresh in the same daily run, add `--include-member-ops`. Use this only from an operator machine with `ADMIN_READ_TOKEN` available:
+
+```bash
+.venv/bin/python tools/run_gca_daily_ops.py \
+  --include-member-ops \
+  --summary-output .gca_access_data/gca_daily_ops_summary.json
 ```
 
 To sync full Cloudflare registrations into the local operator JSONL ledger:

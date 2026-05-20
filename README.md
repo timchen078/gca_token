@@ -90,6 +90,7 @@ Export the same review package directly from local JSONL data without starting t
 - Local member access report builder: `tools/build_gca_member_access_report.py`
 - Local member support reply queue builder: `tools/build_gca_member_support_queue.py`
 - One-command member access ops pipeline: `tools/run_gca_member_access_ops.py`
+- Daily public health and optional member ops check: `tools/run_gca_daily_ops.py`
 - Read-only live registration API check: `tools/check_gca_registration_api.py`
 - GitHub Actions public registration API check: `.github/workflows/check-gca-registration-api.yml`
 - Public Chinese member rules page: `site/zh-members.html`
