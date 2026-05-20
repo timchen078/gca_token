@@ -80,6 +80,7 @@ Export the same review package directly from local JSONL data without starting t
 - Public Chinese release gates page: `site/zh-release-gates.html`
 - Public Chinese read-only wallet verification guide: `site/zh-wallet-verify.html`
 - Public Chinese member review checklist: `site/zh-member-checklist.html`
+- Public Chinese Data Room guide: `site/zh-data.html`
 - Public email-only user registration page: `site/register.html`
 - Production-ready email registration backend package: `cloudflare/gca-registration-worker/`
 - Email registration backend deployment guide: `docs/gca_registration_backend.md`
