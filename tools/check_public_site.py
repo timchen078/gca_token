@@ -49,6 +49,7 @@ ZH_MEMBER_CHECKLIST_PAGE_URL = "https://gcagochina.com/zh-member-checklist.html"
 ZH_SITE_MAP_PAGE_URL = "https://gcagochina.com/zh-site-map.html"
 ZH_DATA_PAGE_URL = "https://gcagochina.com/zh-data.html"
 ZH_API_STATUS_PAGE_URL = "https://gcagochina.com/zh-api-status.html"
+ZH_OPERATIONS_PAGE_URL = "https://gcagochina.com/zh-operations.html"
 DATA_PAGE_URL = "https://gcagochina.com/data.html"
 SITE_MAP_PAGE_URL = "https://gcagochina.com/site-map.html"
 ERROR_PAGE_URL = "https://gcagochina.com/404.html"
@@ -285,6 +286,8 @@ def validate_root(text: str) -> None:
     assert_contains(text, "zh-data.html", label)
     assert_contains(text, "中文 API 状态", label)
     assert_contains(text, "zh-api-status.html", label)
+    assert_contains(text, "中文运营流程", label)
+    assert_contains(text, "zh-operations.html", label)
     assert_contains(text, "中文支持和资料提交", label)
     assert_contains(text, "zh-support.html", label)
     assert_contains(text, "邮箱注册", label)
@@ -651,6 +654,8 @@ def validate_zh_cn_page(text: str) -> None:
         "zh-data.html",
         "中文 API 状态",
         "zh-api-status.html",
+        "中文运营流程",
+        "zh-operations.html",
         "中文支持和资料提交",
         "zh-support.html",
         "邮箱注册",
@@ -1435,6 +1440,8 @@ def validate_zh_api_status_page(text: str) -> None:
         "tools/export_gca_email_contacts.py",
         "tools/sync_cloudflare_contact_suppressions.py",
         "tools/run_gca_registration_ops.py",
+        "中文运营流程",
+        "zh-operations.html",
         "Platform-Only Evidence Path",
         "Raw JSON",
         "Reviewer Data Room",
@@ -1447,6 +1454,85 @@ def validate_zh_api_status_page(text: str) -> None:
         "unsubscribe.html",
         "zh-support.html",
         "data.html",
+    ):
+        assert_contains(text, expected, label)
+    assert_no_forbidden_public_claims(text, label)
+
+
+def validate_zh_operations_page(text: str) -> None:
+    label = "/zh-operations.html"
+    assert_social_preview_meta(text, label, ZH_OPERATIONS_PAGE_URL)
+    assert_platform_only_data_room(
+        text,
+        label,
+        (
+            "operations.json",
+            "api-status.json",
+            "access-api.json",
+            "privacy.json",
+            "terms.json",
+        ),
+    )
+    for expected in (
+        "GCA 中文运营流程",
+        "中文运营流程 / 2026-05-20",
+        "用户在官网提交邮箱以后",
+        "同步 Cloudflare D1 记录",
+        "导出联系名单",
+        "处理退订",
+        "保留本地账本",
+        "邮箱注册和邮箱退订 API 已上线",
+        "公开自助 100 credits、GCA Member、10,000 GCA 会员权益",
+        "Cloudflare Workers + D1 已上线",
+        "gca-registration-api.gcagochina.workers.dev",
+        "需要本地 ADMIN_READ_TOKEN",
+        "还没有公开自助上线",
+        "用户提交邮箱后的六步流程",
+        "公开 API 检查",
+        "管理员导出",
+        "同步本地账本",
+        "同步退订记录",
+        "导出联系名单",
+        "记录运营汇总",
+        "python3 tools/check_gca_registration_api.py --public-only --timeout 30",
+        "python3 tools/run_gca_registration_ops.py --limit 100 --data-dir .gca_access_data",
+        ".gca_access_data/cloudflare_email_registrations_export.json",
+        ".gca_access_data/email_registrations.jsonl",
+        ".gca_access_data/gca_contact_suppressions.jsonl",
+        ".gca_access_data/gca_email_contacts.csv",
+        ".gca_access_data/gca_email_contacts_public_redacted.csv",
+        ".gca_access_data/gca_registration_ops_summary.json",
+        "只联系同意接收 GCA 更新的邮箱",
+        "退订邮箱必须从后续联系导出中排除",
+        "只能分享 public-redacted CSV 或统计摘要",
+        "不进网页、不进 Git、不发给第三方",
+        "不能自动激活 credits 或 GCA Member",
+        "安全边界",
+        "私钥",
+        "助记词",
+        "交易所 API Secret",
+        "提现权限",
+        "远程控制",
+        "不能把完整用户邮箱、管理员 token、完整 D1 导出文件或本地账本发给外部平台",
+        "不能用运营导出绕过钱包余额验证",
+        "不能把本地运营汇总、public-redacted CSV 或人工审核记录说成第三方审计或平台批准",
+        "和会员审核怎么连接",
+        "只读 GCA 余额验证",
+        "30 天持有资料",
+        "支持审核队列",
+        "Platform-Only Evidence Path",
+        "Raw JSON",
+        "Reviewer Data Room",
+        "zh-api-status.html",
+        "zh-access.html",
+        "zh-release-gates.html",
+        "zh-support.html",
+        "operations.html",
+        "operator.html",
+        "review-queue.html",
+        "data.html",
+        "privacy.html",
+        "terms.html",
     ):
         assert_contains(text, expected, label)
     assert_no_forbidden_public_claims(text, label)
@@ -1488,6 +1574,8 @@ def validate_zh_access_page(text: str) -> None:
         "unsubscribe.html",
         "中文 API 状态",
         "zh-api-status.html",
+        "中文运营流程",
+        "zh-operations.html",
         "中文会员规则",
         "zh-members.html",
         "中文上线门槛",
@@ -1575,6 +1663,8 @@ def validate_zh_release_gates_page(text: str) -> None:
         "Reviewer Data Room",
         "register.html",
         "zh-api-status.html",
+        "中文运营流程",
+        "zh-operations.html",
         "zh-access.html",
         "zh-members.html",
         "zh-support.html",
@@ -1825,6 +1915,7 @@ def validate_zh_data_page(text: str) -> None:
         "zh-access.html",
         "zh-release-gates.html",
         "zh-api-status.html",
+        "zh-operations.html",
         "zh-support.html",
         "register.html",
         "zh-site-map.html",
@@ -1928,6 +2019,7 @@ def validate_zh_site_map_page(text: str) -> None:
         "zh-access.html",
         "zh-release-gates.html",
         "zh-api-status.html",
+        "zh-operations.html",
         "zh-support.html",
         "register.html",
         "unsubscribe.html",
@@ -2096,6 +2188,7 @@ def validate_data_page(text: str) -> None:
         "Member benefit transfer data",
         "Member access brief data",
         "Operations runbook data",
+        "Chinese operations guide",
         "Access API contract data",
         "API status data",
         "Review queue data",
@@ -2124,6 +2217,7 @@ def validate_data_page(text: str) -> None:
         "member-benefit-transfer.json",
         "member-access-brief-001.json",
         "operations.json",
+        "zh-operations.html",
         "access-api.json",
         "api-status.json",
         "review-queue.json",
@@ -2183,6 +2277,8 @@ def validate_site_map_page(text: str) -> None:
         "zh-data.html",
         "中文 API 状态",
         "zh-api-status.html",
+        "中文运营流程",
+        "zh-operations.html",
         "中文支持和资料提交",
         "zh-support.html",
         "邮箱注册",
@@ -9702,6 +9798,7 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/zh-site-map.html",
         "https://gcagochina.com/zh-data.html",
         "https://gcagochina.com/zh-api-status.html",
+        "https://gcagochina.com/zh-operations.html",
         "https://gcagochina.com/data.html",
         "https://gcagochina.com/site-map.html",
         "https://gcagochina.com/verify.html",
@@ -9836,6 +9933,7 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /zh-site-map.html", label)
     assert_contains(text, "Allow: /zh-data.html", label)
     assert_contains(text, "Allow: /zh-api-status.html", label)
+    assert_contains(text, "Allow: /zh-operations.html", label)
     assert_contains(text, "Allow: /site-map.html", label)
     assert_contains(text, "Allow: /verify.html", label)
     assert_contains(text, "Allow: /data.html", label)
@@ -9971,6 +10069,7 @@ CHECKS: list[EndpointCheck] = [
     ("/zh-site-map.html", validate_zh_site_map_page),
     ("/zh-data.html", validate_zh_data_page),
     ("/zh-api-status.html", validate_zh_api_status_page),
+    ("/zh-operations.html", validate_zh_operations_page),
     ("/data.html", validate_data_page),
     ("/site-map.html", validate_site_map_page),
     ("/verify.html", validate_verify),

@@ -53,6 +53,7 @@ ZH_MEMBER_CHECKLIST_PAGE_URL = "https://gcagochina.com/zh-member-checklist.html"
 ZH_SITE_MAP_PAGE_URL = "https://gcagochina.com/zh-site-map.html"
 ZH_DATA_PAGE_URL = "https://gcagochina.com/zh-data.html"
 ZH_API_STATUS_PAGE_URL = "https://gcagochina.com/zh-api-status.html"
+ZH_OPERATIONS_PAGE_URL = "https://gcagochina.com/zh-operations.html"
 SUPPLY_PAGE_URL = "https://gcagochina.com/supply.html"
 SECURITY_PAGE_URL = "https://gcagochina.com/security.html"
 RISK_PAGE_URL = "https://gcagochina.com/risk.html"
@@ -224,6 +225,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("/zh-site-map.html", script)
         self.assertIn("/zh-data.html", script)
         self.assertIn("/zh-api-status.html", script)
+        self.assertIn("/zh-operations.html", script)
         self.assertIn("/listing-kit.html", script)
         self.assertIn("/whitepaper.html", script)
         self.assertIn("/buy.html", script)
@@ -478,6 +480,7 @@ class LaunchPackageTests(unittest.TestCase):
         module.validate_zh_site_map_page((ROOT / "site" / "zh-site-map.html").read_text())
         module.validate_zh_data_page((ROOT / "site" / "zh-data.html").read_text())
         module.validate_zh_api_status_page((ROOT / "site" / "zh-api-status.html").read_text())
+        module.validate_zh_operations_page((ROOT / "site" / "zh-operations.html").read_text())
         module.validate_verify((ROOT / "site" / "verify.html").read_text())
         module.validate_status_page((ROOT / "site" / "status.html").read_text())
         module.validate_listing_kit_page((ROOT / "site" / "listing-kit.html").read_text())
@@ -822,6 +825,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Allow: /zh-site-map.html", robots)
         self.assertIn("Allow: /zh-data.html", robots)
         self.assertIn("Allow: /zh-api-status.html", robots)
+        self.assertIn("Allow: /zh-operations.html", robots)
         self.assertIn("Allow: /site-map.html", robots)
         self.assertIn("Allow: /verify.html", robots)
         self.assertIn("Allow: /markets.html", robots)
@@ -947,6 +951,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(ZH_SITE_MAP_PAGE_URL, sitemap)
         self.assertIn(ZH_DATA_PAGE_URL, sitemap)
         self.assertIn(ZH_API_STATUS_PAGE_URL, sitemap)
+        self.assertIn(ZH_OPERATIONS_PAGE_URL, sitemap)
         self.assertIn(DATA_PAGE_URL, sitemap)
         self.assertIn(API_STATUS_PAGE_URL, sitemap)
         self.assertIn(API_STATUS_URL, sitemap)
@@ -6503,6 +6508,7 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "site" / "zh-site-map.html",
             ROOT / "site" / "zh-data.html",
             ROOT / "site" / "zh-api-status.html",
+            ROOT / "site" / "zh-operations.html",
             ROOT / "site" / "review-queue.html",
             ROOT / "site" / "review-queue.json",
             ROOT / "site" / "credits.html",
