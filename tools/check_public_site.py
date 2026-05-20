@@ -90,6 +90,8 @@ OPERATIONS_PAGE_URL = "https://gcagochina.com/operations.html"
 OPERATIONS_URL = "https://gcagochina.com/operations.json"
 ACCESS_API_PAGE_URL = "https://gcagochina.com/access-api.html"
 ACCESS_API_URL = "https://gcagochina.com/access-api.json"
+API_STATUS_PAGE_URL = "https://gcagochina.com/api-status.html"
+API_STATUS_URL = "https://gcagochina.com/api-status.json"
 REVIEW_QUEUE_PAGE_URL = "https://gcagochina.com/review-queue.html"
 REVIEW_QUEUE_URL = "https://gcagochina.com/review-queue.json"
 CREDITS_PAGE_URL = "https://gcagochina.com/credits.html"
@@ -1406,6 +1408,7 @@ def validate_data_page(text: str) -> None:
         "Member access brief data",
         "Operations runbook data",
         "Access API contract data",
+        "API status data",
         "Review queue data",
         "Release gates data",
         "Privacy notice data",
@@ -1433,6 +1436,7 @@ def validate_data_page(text: str) -> None:
         "member-access-brief-001.json",
         "operations.json",
         "access-api.json",
+        "api-status.json",
         "review-queue.json",
         "release-gates.json",
         "privacy.json",
@@ -1494,6 +1498,8 @@ def validate_site_map_page(text: str) -> None:
         "Product Blueprint",
         "Member Program",
         "Operations",
+        "API Status",
+        "api-status.html",
         "Trust and Review",
         "Security Materials",
         "External Review",
@@ -4414,6 +4420,8 @@ def validate_access_api_page(text: str) -> None:
     assert_contains(text, "tools/export_cloudflare_email_registrations.py", label)
     assert_contains(text, "tools/check_gca_registration_api.py", label)
     assert_contains(text, ".github/workflows/check-gca-registration-api.yml", label)
+    assert_contains(text, "API Status", label)
+    assert_contains(text, "api-status.html", label)
     assert_contains(text, "tools/sync_cloudflare_email_registrations.py", label)
     assert_contains(text, "tools/export_gca_email_contacts.py", label)
     assert_contains(text, "tools/run_gca_registration_ops.py", label)
@@ -4880,6 +4888,171 @@ def validate_access_api_json(text: str) -> None:
     assert_no_forbidden_public_claims(json.dumps(payload), label)
     assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
     assert_not_contains(json.dumps(payload), "GCA/WETH", label)
+
+
+def validate_api_status_page(text: str) -> None:
+    label = "/api-status.html"
+    assert_social_preview_meta(text, label, API_STATUS_PAGE_URL)
+    assert_platform_only_data_room(
+        text,
+        label,
+        (
+            "api-status.json",
+            "access-api.json",
+            "operations.json",
+        ),
+    )
+    for expected in (
+        "GCA Registration API Status",
+        "Registration API Status / 2026-05-20",
+        "Cloudflare Workers + D1",
+        "https://gca-registration-api.gcagochina.workers.dev",
+        "Public Check",
+        "Live / no secrets",
+        "Admin Read",
+        "Token protected",
+        "api.gcagochina.com pending zone access",
+        "tools/check_gca_registration_api.py",
+        "check-gca-registration-api.yml",
+        "GET",
+        "/health",
+        "POST",
+        "/gca/email-registrations",
+        "gca_email_registration_v1",
+        "/gca/contact-suppressions",
+        "gca_contact_suppression_v1",
+        "Public visitors should receive an authorization error",
+        "Public visitors cannot read the suppression ledger",
+        "python3 tools/check_gca_registration_api.py --public-only --timeout 30",
+        "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5",
+        "tools/export_cloudflare_email_registrations.py",
+        "tools/sync_cloudflare_email_registrations.py",
+        "tools/export_gca_email_contacts.py",
+        "tools/sync_cloudflare_contact_suppressions.py",
+        "tools/run_gca_registration_ops.py",
+        "Email registration does not require a wallet, wallet signature, payment, private key, seed phrase, exchange API secret, or withdrawal permission",
+        "Contact suppression does not change GCA balances, pool state, credits, member status, or on-chain assets",
+        "Public visitors cannot read the registration ledger or suppression ledger",
+        "100 credits, GCA Member status, and the 10,000 GCA member benefit are not public self-service features yet",
+        "Data Room",
+        "Access API Contract",
+        "Operations Runbook",
+        "Operator Console",
+        "Privacy Notice",
+    ):
+        assert_contains(text, expected, label)
+    assert_no_forbidden_public_claims(text, label)
+
+
+def validate_api_status_json(text: str) -> None:
+    label = "/api-status.json"
+    payload = load_json(text, label)
+    public_endpoints = {item.get("id"): item for item in payload.get("publicEndpoints", [])}
+    admin_endpoints = {item.get("id"): item for item in payload.get("adminEndpoints", [])}
+    checks = payload.get("checks", {})
+    boundaries = payload.get("publicBoundaries", {})
+    links = payload.get("officialLinks", {})
+
+    if payload.get("schema") != API_STATUS_URL:
+        raise SiteCheckError(f"{label}: wrong schema")
+    if payload.get("pageUrl") != API_STATUS_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong pageUrl")
+    if payload.get("status") != "public-registration-api-status-published":
+        raise SiteCheckError(f"{label}: wrong status")
+    if payload.get("apiBaseUrl") != "https://gca-registration-api.gcagochina.workers.dev":
+        raise SiteCheckError(f"{label}: wrong API base URL")
+    if payload.get("futureCustomDomain") != "https://api.gcagochina.com":
+        raise SiteCheckError(f"{label}: wrong future custom domain")
+    if payload.get("futureCustomDomainStatus") != "pending-cloudflare-zone-access":
+        raise SiteCheckError(f"{label}: wrong future custom domain status")
+    if payload.get("provider") != "Cloudflare Workers + D1":
+        raise SiteCheckError(f"{label}: wrong provider")
+    if payload.get("sourceDirectory") != "cloudflare/gca-registration-worker/":
+        raise SiteCheckError(f"{label}: wrong source directory")
+    if payload.get("workerMain") != "cloudflare/gca-registration-worker/src/worker.mjs":
+        raise SiteCheckError(f"{label}: wrong worker main")
+    health = payload.get("healthEndpoint", {})
+    if health.get("url") != "https://gca-registration-api.gcagochina.workers.dev/health":
+        raise SiteCheckError(f"{label}: wrong health endpoint")
+    if health.get("expectedService") != "gca-registration-api":
+        raise SiteCheckError(f"{label}: wrong expected service")
+    if health.get("public") is not True or health.get("requiresSecret") is not False:
+        raise SiteCheckError(f"{label}: wrong health endpoint public boundary")
+
+    expected_public = {
+        "email-registration-create": ("POST", "/gca/email-registrations", "gca_email_registration_v1"),
+        "contact-suppression-create": ("POST", "/gca/contact-suppressions", "gca_contact_suppression_v1"),
+    }
+    for endpoint_id, (method, path, packet_version) in expected_public.items():
+        endpoint = public_endpoints.get(endpoint_id)
+        if endpoint is None:
+            raise SiteCheckError(f"{label}: missing public endpoint {endpoint_id}")
+        if endpoint.get("method") != method or endpoint.get("path") != path:
+            raise SiteCheckError(f"{label}: wrong public endpoint route {endpoint_id}")
+        if endpoint.get("status") != "live":
+            raise SiteCheckError(f"{label}: public endpoint {endpoint_id} should be live")
+        if endpoint.get("packetVersion") != packet_version:
+            raise SiteCheckError(f"{label}: wrong packet version for {endpoint_id}")
+        for key in ("requiresWallet", "requiresSignature", "requiresTransaction", "automaticTokenTransfer"):
+            if endpoint.get(key) is not False:
+                raise SiteCheckError(f"{label}: {endpoint_id} {key} must be false")
+
+    expected_admin = {
+        "email-registration-read": "/gca/email-registrations",
+        "contact-suppression-read": "/gca/contact-suppressions",
+    }
+    for endpoint_id, path in expected_admin.items():
+        endpoint = admin_endpoints.get(endpoint_id)
+        if endpoint is None:
+            raise SiteCheckError(f"{label}: missing admin endpoint {endpoint_id}")
+        if endpoint.get("method") != "GET" or endpoint.get("path") != path:
+            raise SiteCheckError(f"{label}: wrong admin endpoint route {endpoint_id}")
+        if endpoint.get("status") != "live-token-protected":
+            raise SiteCheckError(f"{label}: wrong admin endpoint status {endpoint_id}")
+        if endpoint.get("requiresAdminReadToken") is not True:
+            raise SiteCheckError(f"{label}: admin endpoint should require token {endpoint_id}")
+        if endpoint.get("publicLedgerReadable") is not False:
+            raise SiteCheckError(f"{label}: admin endpoint ledger must not be public {endpoint_id}")
+
+    if checks.get("tool") != "tools/check_gca_registration_api.py":
+        raise SiteCheckError(f"{label}: wrong check tool")
+    if checks.get("publicOnlyCommand") != "python3 tools/check_gca_registration_api.py --public-only --timeout 30":
+        raise SiteCheckError(f"{label}: wrong public check command")
+    if checks.get("adminCommand") != "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5":
+        raise SiteCheckError(f"{label}: wrong admin check command")
+    if checks.get("publicOnlyWorkflow") != ".github/workflows/check-gca-registration-api.yml":
+        raise SiteCheckError(f"{label}: wrong public workflow")
+    if checks.get("publicOnlyWorkflowRequiresSecrets") is not False:
+        raise SiteCheckError(f"{label}: public workflow should not require secrets")
+    if checks.get("adminCheckRequiresLocalTokenFile") is not True:
+        raise SiteCheckError(f"{label}: admin check should require local token file")
+    if checks.get("writesTestRecords") is not False or checks.get("readOnly") is not True:
+        raise SiteCheckError(f"{label}: checks should be read-only")
+
+    for key in (
+        "noPrivateKeyCollection",
+        "noSeedPhraseCollection",
+        "noExchangeApiSecretCollection",
+        "noWithdrawalPermission",
+        "noWalletSignatureForEmailRegistration",
+        "noPaymentForEmailRegistration",
+        "noPublicLedgerRead",
+        "noSelfServiceCreditsActivation",
+        "noSelfServiceMemberActivation",
+    ):
+        if boundaries.get(key) is not True:
+            raise SiteCheckError(f"{label}: missing boundary {key}")
+    if links.get("registrationPage") != REGISTER_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong registration page")
+    if links.get("unsubscribePage") != UNSUBSCRIBE_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong unsubscribe page")
+    if links.get("accessApiPage") != ACCESS_API_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong access API page")
+    if links.get("dataRoom") != DATA_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong data room")
+    if links.get("githubWorkflow") != "https://github.com/timchen078/gca_token/actions/workflows/check-gca-registration-api.yml":
+        raise SiteCheckError(f"{label}: wrong GitHub workflow URL")
+    assert_no_forbidden_public_claims(json.dumps(payload), label)
 
 
 def validate_review_queue_page(text: str) -> None:
@@ -8851,6 +9024,8 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/operations.json",
         "https://gcagochina.com/access-api.html",
         "https://gcagochina.com/access-api.json",
+        "https://gcagochina.com/api-status.html",
+        "https://gcagochina.com/api-status.json",
         "https://gcagochina.com/review-queue.html",
         "https://gcagochina.com/review-queue.json",
         "https://gcagochina.com/credits.html",
@@ -8981,6 +9156,8 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /operations.json", label)
     assert_contains(text, "Allow: /access-api.html", label)
     assert_contains(text, "Allow: /access-api.json", label)
+    assert_contains(text, "Allow: /api-status.html", label)
+    assert_contains(text, "Allow: /api-status.json", label)
     assert_contains(text, "Allow: /review-queue.html", label)
     assert_contains(text, "Allow: /review-queue.json", label)
     assert_contains(text, "Allow: /credits.html", label)
@@ -9101,6 +9278,8 @@ CHECKS: list[EndpointCheck] = [
     ("/operations.json", validate_operations_json),
     ("/access-api.html", validate_access_api_page),
     ("/access-api.json", validate_access_api_json),
+    ("/api-status.html", validate_api_status_page),
+    ("/api-status.json", validate_api_status_json),
     ("/review-queue.html", validate_review_queue_page),
     ("/review-queue.json", validate_review_queue_json),
     ("/credits.html", validate_credits_page),

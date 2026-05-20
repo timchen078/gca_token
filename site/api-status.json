@@ -1,0 +1,103 @@
+{
+  "schema": "https://gcagochina.com/api-status.json",
+  "pageUrl": "https://gcagochina.com/api-status.html",
+  "status": "public-registration-api-status-published",
+  "lastUpdated": "2026-05-20",
+  "title": "GCA Registration API Status",
+  "apiBaseUrl": "https://gca-registration-api.gcagochina.workers.dev",
+  "futureCustomDomain": "https://api.gcagochina.com",
+  "futureCustomDomainStatus": "pending-cloudflare-zone-access",
+  "provider": "Cloudflare Workers + D1",
+  "sourceDirectory": "cloudflare/gca-registration-worker/",
+  "workerMain": "cloudflare/gca-registration-worker/src/worker.mjs",
+  "healthEndpoint": {
+    "method": "GET",
+    "url": "https://gca-registration-api.gcagochina.workers.dev/health",
+    "expectedService": "gca-registration-api",
+    "public": true,
+    "requiresSecret": false
+  },
+  "publicEndpoints": [
+    {
+      "id": "email-registration-create",
+      "method": "POST",
+      "path": "/gca/email-registrations",
+      "url": "https://gca-registration-api.gcagochina.workers.dev/gca/email-registrations",
+      "status": "live",
+      "packetVersion": "gca_email_registration_v1",
+      "public": true,
+      "requiresWallet": false,
+      "requiresSignature": false,
+      "requiresTransaction": false,
+      "automaticTokenTransfer": false
+    },
+    {
+      "id": "contact-suppression-create",
+      "method": "POST",
+      "path": "/gca/contact-suppressions",
+      "url": "https://gca-registration-api.gcagochina.workers.dev/gca/contact-suppressions",
+      "status": "live",
+      "packetVersion": "gca_contact_suppression_v1",
+      "public": true,
+      "requiresWallet": false,
+      "requiresSignature": false,
+      "requiresTransaction": false,
+      "automaticTokenTransfer": false
+    }
+  ],
+  "adminEndpoints": [
+    {
+      "id": "email-registration-read",
+      "method": "GET",
+      "path": "/gca/email-registrations",
+      "url": "https://gca-registration-api.gcagochina.workers.dev/gca/email-registrations",
+      "status": "live-token-protected",
+      "requiresAdminReadToken": true,
+      "publicLedgerReadable": false
+    },
+    {
+      "id": "contact-suppression-read",
+      "method": "GET",
+      "path": "/gca/contact-suppressions",
+      "url": "https://gca-registration-api.gcagochina.workers.dev/gca/contact-suppressions",
+      "status": "live-token-protected",
+      "requiresAdminReadToken": true,
+      "publicLedgerReadable": false
+    }
+  ],
+  "checks": {
+    "tool": "tools/check_gca_registration_api.py",
+    "publicOnlyCommand": "python3 tools/check_gca_registration_api.py --public-only --timeout 30",
+    "adminCommand": "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5",
+    "publicOnlyWorkflow": ".github/workflows/check-gca-registration-api.yml",
+    "publicOnlyWorkflowRequiresSecrets": false,
+    "adminCheckRequiresLocalTokenFile": true,
+    "writesTestRecords": false,
+    "readOnly": true
+  },
+  "operatorTools": {
+    "adminExport": "tools/export_cloudflare_email_registrations.py",
+    "adminSync": "tools/sync_cloudflare_email_registrations.py",
+    "contactCsvExport": "tools/export_gca_email_contacts.py",
+    "registrationOps": "tools/run_gca_registration_ops.py",
+    "contactSuppressionSync": "tools/sync_cloudflare_contact_suppressions.py"
+  },
+  "publicBoundaries": {
+    "noPrivateKeyCollection": true,
+    "noSeedPhraseCollection": true,
+    "noExchangeApiSecretCollection": true,
+    "noWithdrawalPermission": true,
+    "noWalletSignatureForEmailRegistration": true,
+    "noPaymentForEmailRegistration": true,
+    "noPublicLedgerRead": true,
+    "noSelfServiceCreditsActivation": true,
+    "noSelfServiceMemberActivation": true
+  },
+  "officialLinks": {
+    "registrationPage": "https://gcagochina.com/register.html",
+    "unsubscribePage": "https://gcagochina.com/unsubscribe.html",
+    "accessApiPage": "https://gcagochina.com/access-api.html",
+    "dataRoom": "https://gcagochina.com/data.html",
+    "githubWorkflow": "https://github.com/timchen078/gca_token/actions/workflows/check-gca-registration-api.yml"
+  }
+}

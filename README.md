@@ -102,6 +102,8 @@ Export the same review package directly from local JSONL data without starting t
 - Public access portal blueprint JSON: `site/access.json`
 - Public access API contract page: `site/access-api.html`
 - Public access API contract JSON: `site/access-api.json`
+- Public registration API status page: `site/api-status.html`
+- Public registration API status JSON: `site/api-status.json`
 - Public review queue contract page: `site/review-queue.html`
 - Public review queue contract JSON: `site/review-queue.json`
 - Public access operations runbook page: `site/operations.html`

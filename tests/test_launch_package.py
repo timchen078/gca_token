@@ -95,6 +95,8 @@ OPERATIONS_PAGE_URL = "https://gcagochina.com/operations.html"
 OPERATIONS_URL = "https://gcagochina.com/operations.json"
 ACCESS_API_PAGE_URL = "https://gcagochina.com/access-api.html"
 ACCESS_API_URL = "https://gcagochina.com/access-api.json"
+API_STATUS_PAGE_URL = "https://gcagochina.com/api-status.html"
+API_STATUS_URL = "https://gcagochina.com/api-status.json"
 REVIEW_QUEUE_PAGE_URL = "https://gcagochina.com/review-queue.html"
 REVIEW_QUEUE_URL = "https://gcagochina.com/review-queue.json"
 CREDITS_PAGE_URL = "https://gcagochina.com/credits.html"
@@ -255,6 +257,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("/operations.json", script)
         self.assertIn("/access-api.html", script)
         self.assertIn("/access-api.json", script)
+        self.assertIn("/api-status.html", script)
+        self.assertIn("/api-status.json", script)
         self.assertIn("/review-queue.html", script)
         self.assertIn("/review-queue.json", script)
         self.assertIn("/credits.html", script)
@@ -344,6 +348,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("validate_operations_json", script)
         self.assertIn("validate_access_api_page", script)
         self.assertIn("validate_access_api_json", script)
+        self.assertIn("validate_api_status_page", script)
+        self.assertIn("validate_api_status_json", script)
         self.assertIn("validate_review_queue_page", script)
         self.assertIn("validate_review_queue_json", script)
         self.assertIn("validate_credits_page", script)
@@ -523,6 +529,8 @@ class LaunchPackageTests(unittest.TestCase):
         module.validate_operations_json((ROOT / "site" / "operations.json").read_text())
         module.validate_access_api_page((ROOT / "site" / "access-api.html").read_text())
         module.validate_access_api_json((ROOT / "site" / "access-api.json").read_text())
+        module.validate_api_status_page((ROOT / "site" / "api-status.html").read_text())
+        module.validate_api_status_json((ROOT / "site" / "api-status.json").read_text())
         module.validate_review_queue_page((ROOT / "site" / "review-queue.html").read_text())
         module.validate_review_queue_json((ROOT / "site" / "review-queue.json").read_text())
         module.validate_credits_page((ROOT / "site" / "credits.html").read_text())
@@ -868,6 +876,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Allow: /operations.json", robots)
         self.assertIn("Allow: /access-api.html", robots)
         self.assertIn("Allow: /access-api.json", robots)
+        self.assertIn("Allow: /api-status.html", robots)
+        self.assertIn("Allow: /api-status.json", robots)
         self.assertIn("Allow: /review-queue.html", robots)
         self.assertIn("Allow: /review-queue.json", robots)
         self.assertIn("Allow: /credits.html", robots)
@@ -898,6 +908,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(ZH_MEMBERS_PAGE_URL, sitemap)
         self.assertIn(ZH_SUPPORT_PAGE_URL, sitemap)
         self.assertIn(DATA_PAGE_URL, sitemap)
+        self.assertIn(API_STATUS_PAGE_URL, sitemap)
+        self.assertIn(API_STATUS_URL, sitemap)
         self.assertIn(SITE_MAP_PAGE_URL, sitemap)
         self.assertIn(VERIFY_PAGE_URL, sitemap)
         self.assertIn("https://gcagochina.com/status.html", sitemap)
@@ -6409,6 +6421,8 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "site" / "operations.json",
             ROOT / "site" / "access-api.html",
             ROOT / "site" / "access-api.json",
+            ROOT / "site" / "api-status.html",
+            ROOT / "site" / "api-status.json",
             ROOT / "site" / "review-queue.html",
             ROOT / "site" / "review-queue.json",
             ROOT / "site" / "credits.html",
