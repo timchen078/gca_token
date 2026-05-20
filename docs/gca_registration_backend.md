@@ -46,6 +46,7 @@ It does not collect wallet private keys, seed phrases, wallet passwords, exchang
 - Admin contact suppression endpoint: `GET /gca/contact-suppressions`
 - Admin read secret: configured in Cloudflare as `ADMIN_READ_TOKEN`
 - Privacy hash salt: configured in Cloudflare as `PRIVACY_HASH_SALT`
+- Read-only live API check tool: `tools/check_gca_registration_api.py`
 - Local admin export tool: `tools/export_cloudflare_email_registrations.py`
 - Local ledger sync tool: `tools/sync_cloudflare_email_registrations.py`
 - Local contact CSV export tool: `tools/export_gca_email_contacts.py`
@@ -89,6 +90,14 @@ cloudflare/gca-registration-worker/.env.admin.local
 ```
 
 That file is ignored by git and must not be committed or shared publicly.
+
+To run a read-only live API smoke check without writing production D1 data:
+
+```bash
+.venv/bin/python tools/check_gca_registration_api.py --limit 5
+```
+
+This checks `/health`, CORS preflight, unauthenticated admin-read rejection, and token-protected admin-read response shape. It prints only counts and check statuses; it does not print the admin token or user email records.
 
 To read recent email registrations:
 

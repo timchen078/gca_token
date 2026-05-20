@@ -411,6 +411,11 @@
         <div class="handoff-grid section">
           <div>
             <div class="field">
+              <label for="apiCheckCommandText">Read-only API check command</label>
+              <textarea id="apiCheckCommandText" class="copy" readonly>.venv/bin/python tools/check_gca_registration_api.py --limit 5</textarea>
+            </div>
+            <p class="status">Checks health, CORS, unauthorized admin rejection, and token-protected admin read shape without writing production data.</p>
+            <div class="field">
               <label for="contactExportCommandText">Registration ops command</label>
               <textarea id="contactExportCommandText" class="copy" readonly># Optional opt-out suppression before export:
 # .venv/bin/python tools/suppress_gca_contact.py --email user@example.com --reason unsubscribe_request --source support

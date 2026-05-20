@@ -408,16 +408,16 @@ async function submitContactSuppression(request, env, origin) {
   }, 201, origin, env);
 }
 
-function requireAdmin(request, env) {
+function isAdminAuthorized(request, env) {
   const token = String(env.ADMIN_READ_TOKEN || "").trim();
   const header = request.headers.get("authorization") || "";
-  if (!token || header !== `Bearer ${token}`) {
-    throw new ApiError("admin authorization is required", 401);
-  }
+  return Boolean(token && header === `Bearer ${token}`);
 }
 
 async function listEmailRegistrations(request, env, origin) {
-  requireAdmin(request, env);
+  if (!isAdminAuthorized(request, env)) {
+    return jsonResponse({ ok: false, error: "admin authorization is required" }, 401, origin, env);
+  }
   const db = requireDatabase(env);
   const url = new URL(request.url);
   const limit = Math.max(1, Math.min(100, Number(url.searchParams.get("limit") || "50")));
@@ -438,7 +438,9 @@ async function listEmailRegistrations(request, env, origin) {
 }
 
 async function listContactSuppressions(request, env, origin) {
-  requireAdmin(request, env);
+  if (!isAdminAuthorized(request, env)) {
+    return jsonResponse({ ok: false, error: "admin authorization is required" }, 401, origin, env);
+  }
   const db = requireDatabase(env);
   const url = new URL(request.url);
   const limit = Math.max(1, Math.min(100, Number(url.searchParams.get("limit") || "50")));

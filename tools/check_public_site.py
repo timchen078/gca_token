@@ -2230,6 +2230,9 @@ def validate_operator_page(text: str) -> None:
     assert_contains(text, "Copy Contact Export Commands", label)
     assert_contains(text, "Email Registration Intake", label)
     assert_contains(text, "Latest Email Registration Records", label)
+    assert_contains(text, "Read-only API check command", label)
+    assert_contains(text, "tools/check_gca_registration_api.py", label)
+    assert_contains(text, "without writing production data", label)
     assert_contains(text, "tools/sync_cloudflare_email_registrations.py", label)
     assert_contains(text, "tools/export_gca_email_contacts.py", label)
     assert_contains(text, "tools/run_gca_registration_ops.py", label)
@@ -4409,6 +4412,7 @@ def validate_access_api_page(text: str) -> None:
     assert_contains(text, "https://gca-registration-api.gcagochina.workers.dev", label)
     assert_contains(text, "Token protected", label)
     assert_contains(text, "tools/export_cloudflare_email_registrations.py", label)
+    assert_contains(text, "tools/check_gca_registration_api.py", label)
     assert_contains(text, "tools/sync_cloudflare_email_registrations.py", label)
     assert_contains(text, "tools/export_gca_email_contacts.py", label)
     assert_contains(text, "tools/run_gca_registration_ops.py", label)
@@ -4562,6 +4566,8 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong admin export tool")
     if production_email_backend.get("adminSyncTool") != "tools/sync_cloudflare_email_registrations.py":
         raise SiteCheckError(f"{label}: wrong admin sync tool")
+    if production_email_backend.get("readOnlyApiCheckTool") != "tools/check_gca_registration_api.py":
+        raise SiteCheckError(f"{label}: wrong read-only API check tool")
     if production_email_backend.get("contactCsvExportTool") != "tools/export_gca_email_contacts.py":
         raise SiteCheckError(f"{label}: wrong contact CSV export tool")
     if production_email_backend.get("registrationOpsTool") != "tools/run_gca_registration_ops.py":
