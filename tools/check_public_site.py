@@ -43,6 +43,7 @@ ZH_FAQ_PAGE_URL = "https://gcagochina.com/zh-faq.html"
 ZH_MEMBERS_PAGE_URL = "https://gcagochina.com/zh-members.html"
 ZH_SUPPORT_PAGE_URL = "https://gcagochina.com/zh-support.html"
 ZH_ACCESS_PAGE_URL = "https://gcagochina.com/zh-access.html"
+ZH_RELEASE_GATES_PAGE_URL = "https://gcagochina.com/zh-release-gates.html"
 ZH_API_STATUS_PAGE_URL = "https://gcagochina.com/zh-api-status.html"
 DATA_PAGE_URL = "https://gcagochina.com/data.html"
 SITE_MAP_PAGE_URL = "https://gcagochina.com/site-map.html"
@@ -268,6 +269,8 @@ def validate_root(text: str) -> None:
     assert_contains(text, "zh-members.html", label)
     assert_contains(text, "中文用户中心预览", label)
     assert_contains(text, "zh-access.html", label)
+    assert_contains(text, "中文上线门槛", label)
+    assert_contains(text, "zh-release-gates.html", label)
     assert_contains(text, "中文 API 状态", label)
     assert_contains(text, "zh-api-status.html", label)
     assert_contains(text, "中文支持和资料提交", label)
@@ -624,6 +627,8 @@ def validate_zh_cn_page(text: str) -> None:
         "zh-members.html",
         "中文用户中心预览",
         "zh-access.html",
+        "中文上线门槛",
+        "zh-release-gates.html",
         "中文 API 状态",
         "zh-api-status.html",
         "中文支持和资料提交",
@@ -669,6 +674,7 @@ def validate_zh_cn_page(text: str) -> None:
         "zh-roadmap.html",
         "zh-members.html",
         "zh-access.html",
+        "zh-release-gates.html",
         "zh-support.html",
         "zh-api-status.html",
         "register.html",
@@ -829,6 +835,7 @@ def validate_zh_apply_page(text: str) -> None:
         "zh-buy.html",
         "members.html",
         "member-ledger.html",
+        "zh-release-gates.html",
         "release-gates.html",
         "support.html",
         "data.html",
@@ -1149,6 +1156,7 @@ def validate_zh_roadmap_page(text: str) -> None:
         "zh-supply.html",
         "zh-security.html",
         "zh-members.html",
+        "zh-release-gates.html",
         "roadmap.html",
         "product.html",
         "utility.html",
@@ -1232,6 +1240,7 @@ def validate_zh_faq_page(text: str) -> None:
         "zh-members.html",
         "member-ledger.html",
         "member-benefit.html",
+        "zh-release-gates.html",
         "release-gates.html",
         "data.html",
     ):
@@ -1262,6 +1271,8 @@ def validate_zh_support_page(text: str) -> None:
         "unsubscribe.html",
         "中文用户中心预览",
         "zh-access.html",
+        "中文上线门槛",
+        "zh-release-gates.html",
         "中文 API 状态",
         "zh-api-status.html",
         "官方邮箱",
@@ -1436,6 +1447,8 @@ def validate_zh_access_page(text: str) -> None:
         "zh-api-status.html",
         "中文会员规则",
         "zh-members.html",
+        "中文上线门槛",
+        "zh-release-gates.html",
         "中文支持和资料提交",
         "zh-support.html",
         "只读余额验证",
@@ -1463,8 +1476,77 @@ def validate_zh_access_page(text: str) -> None:
         "review-queue.html",
         "credits.html",
         "member-ledger.html",
+        "zh-release-gates.html",
         "release-gates.html",
         "gca/member-access/",
+    ):
+        assert_contains(text, expected, label)
+    assert_current_pool_text(text, label)
+    assert_no_forbidden_public_claims(text, label)
+
+
+def validate_zh_release_gates_page(text: str) -> None:
+    label = "/zh-release-gates.html"
+    assert_social_preview_meta(text, label, ZH_RELEASE_GATES_PAGE_URL)
+    assert_platform_only_data_room(
+        text,
+        label,
+        (
+            "release-gates.json",
+            "access.json",
+            "access-api.json",
+            "operations.json",
+            "review-queue.json",
+            "credits.json",
+            "member-ledger.json",
+        ),
+    )
+    for expected in (
+        "GCA 中文上线门槛",
+        "中文上线门槛 / 2026-05-20",
+        "邮箱注册 API 已上线",
+        "Cloudflare Workers + D1 已上线",
+        "受控 HTTPS 账户 UI",
+        "只读钱包余额验证",
+        "eth_call",
+        "balanceOf",
+        "100 credits",
+        "GCA Member",
+        "10,000 GCA 会员权益",
+        "还没有上线",
+        "支持审核队列",
+        "风控",
+        "模拟盘或测试环境",
+        "私钥",
+        "助记词",
+        "钱包密码",
+        "验证码",
+        "交易所 API Secret",
+        "提现权限",
+        "Platform-Only Evidence Path",
+        "Raw JSON",
+        "Reviewer Data Room",
+        "register.html",
+        "zh-api-status.html",
+        "zh-access.html",
+        "zh-members.html",
+        "zh-support.html",
+        "zh-roadmap.html",
+        "zh-status.html",
+        "privacy.html",
+        "terms.html",
+        "release-gates.html",
+        "access.html",
+        "access-api.html",
+        "operations.html",
+        "review-queue.html",
+        "credits.html",
+        "member-ledger.html",
+        "data.html",
+        "Base Mainnet / chainId 8453",
+        MAINNET_ADDRESS,
+        "GCA/USDT",
+        OFFICIAL_POOL_ADDRESS,
     ):
         assert_contains(text, expected, label)
     assert_current_pool_text(text, label)
@@ -1520,6 +1602,7 @@ def validate_zh_members_page(text: str) -> None:
         "member-ledger.html",
         "member-benefit.html",
         "credits.html",
+        "zh-release-gates.html",
         "release-gates.html",
         "support.html",
         "data.html",
@@ -9106,6 +9189,7 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/zh-members.html",
         "https://gcagochina.com/zh-support.html",
         "https://gcagochina.com/zh-access.html",
+        "https://gcagochina.com/zh-release-gates.html",
         "https://gcagochina.com/zh-api-status.html",
         "https://gcagochina.com/data.html",
         "https://gcagochina.com/site-map.html",
@@ -9235,6 +9319,7 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /zh-members.html", label)
     assert_contains(text, "Allow: /zh-support.html", label)
     assert_contains(text, "Allow: /zh-access.html", label)
+    assert_contains(text, "Allow: /zh-release-gates.html", label)
     assert_contains(text, "Allow: /zh-api-status.html", label)
     assert_contains(text, "Allow: /site-map.html", label)
     assert_contains(text, "Allow: /verify.html", label)
@@ -9365,6 +9450,7 @@ CHECKS: list[EndpointCheck] = [
     ("/zh-members.html", validate_zh_members_page),
     ("/zh-support.html", validate_zh_support_page),
     ("/zh-access.html", validate_zh_access_page),
+    ("/zh-release-gates.html", validate_zh_release_gates_page),
     ("/zh-api-status.html", validate_zh_api_status_page),
     ("/data.html", validate_data_page),
     ("/site-map.html", validate_site_map_page),

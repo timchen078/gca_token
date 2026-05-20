@@ -47,6 +47,7 @@ ZH_FAQ_PAGE_URL = "https://gcagochina.com/zh-faq.html"
 ZH_MEMBERS_PAGE_URL = "https://gcagochina.com/zh-members.html"
 ZH_SUPPORT_PAGE_URL = "https://gcagochina.com/zh-support.html"
 ZH_ACCESS_PAGE_URL = "https://gcagochina.com/zh-access.html"
+ZH_RELEASE_GATES_PAGE_URL = "https://gcagochina.com/zh-release-gates.html"
 ZH_API_STATUS_PAGE_URL = "https://gcagochina.com/zh-api-status.html"
 SUPPLY_PAGE_URL = "https://gcagochina.com/supply.html"
 SECURITY_PAGE_URL = "https://gcagochina.com/security.html"
@@ -213,6 +214,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("/zh-members.html", script)
         self.assertIn("/zh-support.html", script)
         self.assertIn("/zh-access.html", script)
+        self.assertIn("/zh-release-gates.html", script)
         self.assertIn("/zh-api-status.html", script)
         self.assertIn("/listing-kit.html", script)
         self.assertIn("/whitepaper.html", script)
@@ -459,6 +461,7 @@ class LaunchPackageTests(unittest.TestCase):
         module.validate_zh_members_page((ROOT / "site" / "zh-members.html").read_text())
         module.validate_zh_support_page((ROOT / "site" / "zh-support.html").read_text())
         module.validate_zh_access_page((ROOT / "site" / "zh-access.html").read_text())
+        module.validate_zh_release_gates_page((ROOT / "site" / "zh-release-gates.html").read_text())
         module.validate_zh_api_status_page((ROOT / "site" / "zh-api-status.html").read_text())
         module.validate_verify((ROOT / "site" / "verify.html").read_text())
         module.validate_status_page((ROOT / "site" / "status.html").read_text())
@@ -798,6 +801,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Allow: /zh-members.html", robots)
         self.assertIn("Allow: /zh-support.html", robots)
         self.assertIn("Allow: /zh-access.html", robots)
+        self.assertIn("Allow: /zh-release-gates.html", robots)
         self.assertIn("Allow: /zh-api-status.html", robots)
         self.assertIn("Allow: /site-map.html", robots)
         self.assertIn("Allow: /verify.html", robots)
@@ -918,6 +922,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(ZH_MEMBERS_PAGE_URL, sitemap)
         self.assertIn(ZH_SUPPORT_PAGE_URL, sitemap)
         self.assertIn(ZH_ACCESS_PAGE_URL, sitemap)
+        self.assertIn(ZH_RELEASE_GATES_PAGE_URL, sitemap)
         self.assertIn(ZH_API_STATUS_PAGE_URL, sitemap)
         self.assertIn(DATA_PAGE_URL, sitemap)
         self.assertIn(API_STATUS_PAGE_URL, sitemap)
@@ -6436,6 +6441,7 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "site" / "api-status.html",
             ROOT / "site" / "api-status.json",
             ROOT / "site" / "zh-access.html",
+            ROOT / "site" / "zh-release-gates.html",
             ROOT / "site" / "zh-api-status.html",
             ROOT / "site" / "review-queue.html",
             ROOT / "site" / "review-queue.json",

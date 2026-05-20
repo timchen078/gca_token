@@ -77,6 +77,7 @@ Export the same review package directly from local JSONL data without starting t
 - Public Chinese support and intake guide: `site/zh-support.html`
 - Public Chinese registration API status page: `site/zh-api-status.html`
 - Public Chinese user access preview: `site/zh-access.html`
+- Public Chinese release gates page: `site/zh-release-gates.html`
 - Public email-only user registration page: `site/register.html`
 - Production-ready email registration backend package: `cloudflare/gca-registration-worker/`
 - Email registration backend deployment guide: `docs/gca_registration_backend.md`
