@@ -16,6 +16,7 @@ Allow: /zh-members.html
 Allow: /zh-access.html
 Allow: /zh-release-gates.html
 Allow: /zh-wallet-verify.html
+Allow: /zh-member-checklist.html
 Allow: /zh-api-status.html
 Allow: /about.html
 Allow: /action-plan.html
