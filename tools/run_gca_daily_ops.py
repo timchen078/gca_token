@@ -85,7 +85,12 @@ def build_steps(
     timeout: float,
     include_member_ops: bool,
     member_ops_redact: str,
+    include_holding_report: bool,
+    holding_no_live_read: bool,
+    holding_force_same_day: bool,
 ) -> list[tuple[str, list[str], float]]:
+    if include_holding_report and not include_member_ops:
+        raise ValueError("--include-holding-report requires --include-member-ops")
     python = sys.executable
     steps: list[tuple[str, list[str], float]] = [
         (
@@ -115,19 +120,26 @@ def build_steps(
         ),
     ]
     if include_member_ops:
+        member_command = [
+            python,
+            "tools/run_gca_member_access_ops.py",
+            "--base-url",
+            api_base_url,
+            "--redact",
+            member_ops_redact,
+            "--timeout",
+            str(timeout),
+        ]
+        if include_holding_report:
+            member_command.append("--include-holding-report")
+            if holding_no_live_read:
+                member_command.append("--holding-no-live-read")
+            if holding_force_same_day:
+                member_command.append("--holding-force-same-day")
         steps.append(
             (
                 "member-access-ops",
-                [
-                    python,
-                    "tools/run_gca_member_access_ops.py",
-                    "--base-url",
-                    api_base_url,
-                    "--redact",
-                    member_ops_redact,
-                    "--timeout",
-                    str(timeout),
-                ],
+                member_command,
                 max(timeout * 4, 90),
             )
         )
@@ -141,6 +153,9 @@ def run_daily_ops(
     timeout: float = 20,
     include_member_ops: bool = False,
     member_ops_redact: str = "none",
+    include_holding_report: bool = False,
+    holding_no_live_read: bool = False,
+    holding_force_same_day: bool = False,
     summary_output: Path = DEFAULT_SUMMARY_OUTPUT,
     runner: CommandRunner = default_runner,
 ) -> dict[str, Any]:
@@ -152,6 +167,9 @@ def run_daily_ops(
             timeout=timeout,
             include_member_ops=include_member_ops,
             member_ops_redact=member_ops_redact,
+            include_holding_report=include_holding_report,
+            holding_no_live_read=holding_no_live_read,
+            holding_force_same_day=holding_force_same_day,
         )
     ]
     summary = {
@@ -161,14 +179,19 @@ def run_daily_ops(
         "siteBaseUrl": site_base_url,
         "apiBaseUrl": api_base_url.rstrip("/"),
         "includeMemberOps": include_member_ops,
+        "includeHoldingReport": include_holding_report,
+        "holdingNoLiveRead": holding_no_live_read,
+        "holdingForceSameDay": holding_force_same_day,
         "steps": steps,
         "summaryOutput": str(summary_output),
         "boundaries": {
             "publicOnlyByDefault": True,
             "readsTokenProtectedUserRecordsOnlyWhenIncludeMemberOpsIsTrue": True,
+            "holdingReportRequiresMemberOps": True,
             "writesProductionData": False,
             "adminTokenPrinted": False,
-            "walletCalls": False,
+            "walletCalls": bool(include_member_ops and include_holding_report and not holding_no_live_read),
+            "readOnlyPublicChainBalanceCheck": bool(include_member_ops and include_holding_report and not holding_no_live_read),
             "requiresSignature": False,
             "requiresTransaction": False,
             "automaticTokenTransfer": False,
@@ -187,8 +210,14 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--timeout", type=float, default=20, help="Per-request timeout forwarded to check tools. Default: 20.")
     parser.add_argument("--include-member-ops", action="store_true", help="Also refresh token-protected local member reports.")
     parser.add_argument("--member-ops-redact", choices=("none", "public"), default="none", help="Redaction mode for member ops export.")
+    parser.add_argument("--include-holding-report", action="store_true", help="Also refresh the local GCA Member 30-day holding report.")
+    parser.add_argument("--holding-no-live-read", action="store_true", help="Build holding report from existing snapshots without RPC reads.")
+    parser.add_argument("--holding-force-same-day", action="store_true", help="Append a fresh holding snapshot even if today already exists.")
     parser.add_argument("--summary-output", type=Path, default=DEFAULT_SUMMARY_OUTPUT, help="Daily summary JSON output.")
-    return parser.parse_args(argv)
+    args = parser.parse_args(argv)
+    if args.include_holding_report and not args.include_member_ops:
+        parser.error("--include-holding-report requires --include-member-ops")
+    return args
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -199,6 +228,9 @@ def main(argv: list[str] | None = None) -> int:
         timeout=args.timeout,
         include_member_ops=args.include_member_ops,
         member_ops_redact=args.member_ops_redact,
+        include_holding_report=args.include_holding_report,
+        holding_no_live_read=args.holding_no_live_read,
+        holding_force_same_day=args.holding_force_same_day,
         summary_output=args.summary_output,
     )
     print(json.dumps(summary, ensure_ascii=False, indent=2, sort_keys=True))

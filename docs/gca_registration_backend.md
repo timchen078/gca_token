@@ -288,6 +288,17 @@ To include token-protected member report refresh in the same daily run, add `--i
   --summary-output .gca_access_data/gca_daily_ops_summary.json
 ```
 
+To also record the daily 30-day GCA Member holding snapshot during that member-ops run, add `--include-holding-report`:
+
+```bash
+.venv/bin/python tools/run_gca_daily_ops.py \
+  --include-member-ops \
+  --include-holding-report \
+  --summary-output .gca_access_data/gca_daily_ops_summary.json
+```
+
+Use `--holding-no-live-read` with the daily command when you only want to rebuild the holding report from existing local snapshots. The holding report option is deliberately gated behind `--include-member-ops` because it depends on token-protected member exports.
+
 To sync full Cloudflare registrations into the local operator JSONL ledger:
 
 ```bash

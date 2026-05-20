@@ -31,6 +31,8 @@ class GcaDailyOpsTests(unittest.TestCase):
         self.assertTrue(summary["boundaries"]["publicOnlyByDefault"])
         self.assertFalse(summary["boundaries"]["writesProductionData"])
         self.assertFalse(summary["boundaries"]["automaticTokenTransfer"])
+        self.assertFalse(summary["includeHoldingReport"])
+        self.assertFalse(summary["boundaries"]["walletCalls"])
         commands = [" ".join(item["command"]) for item in seen]
         self.assertTrue(any("tools/check_public_site.py" in command for command in commands))
         self.assertTrue(any("tools/check_gca_registration_api.py" in command and "--public-only" in command for command in commands))
@@ -52,6 +54,58 @@ class GcaDailyOpsTests(unittest.TestCase):
         self.assertEqual(summary["steps"][-1]["id"], "member-access-ops")
         self.assertIn("tools/run_gca_member_access_ops.py", summary["steps"][-1]["command"])
         self.assertIn("--redact public", summary["steps"][-1]["command"])
+        self.assertFalse(summary["includeHoldingReport"])
+        self.assertFalse(summary["boundaries"]["walletCalls"])
+
+    def test_daily_ops_can_include_holding_report_explicitly(self):
+        def runner(command, cwd, timeout):
+            return subprocess.CompletedProcess(command, 0, stdout="ok", stderr="")
+
+        with tempfile.TemporaryDirectory() as temp:
+            summary = run_daily_ops(
+                include_member_ops=True,
+                include_holding_report=True,
+                holding_force_same_day=True,
+                summary_output=Path(temp) / "summary.json",
+                runner=runner,
+            )
+
+        self.assertTrue(summary["ok"])
+        self.assertTrue(summary["includeMemberOps"])
+        self.assertTrue(summary["includeHoldingReport"])
+        self.assertTrue(summary["holdingForceSameDay"])
+        self.assertTrue(summary["boundaries"]["walletCalls"])
+        self.assertIn("--include-holding-report", summary["steps"][-1]["command"])
+        self.assertIn("--holding-force-same-day", summary["steps"][-1]["command"])
+
+    def test_daily_ops_holding_report_requires_member_ops(self):
+        with tempfile.TemporaryDirectory() as temp:
+            with self.assertRaises(ValueError):
+                run_daily_ops(
+                    include_holding_report=True,
+                    summary_output=Path(temp) / "summary.json",
+                    runner=lambda command, cwd, timeout: subprocess.CompletedProcess(command, 0, stdout="", stderr=""),
+                )
+
+    def test_daily_ops_holding_report_can_rebuild_without_live_wallet_reads(self):
+        def runner(command, cwd, timeout):
+            return subprocess.CompletedProcess(command, 0, stdout="ok", stderr="")
+
+        with tempfile.TemporaryDirectory() as temp:
+            summary = run_daily_ops(
+                include_member_ops=True,
+                include_holding_report=True,
+                holding_no_live_read=True,
+                summary_output=Path(temp) / "summary.json",
+                runner=runner,
+            )
+
+        self.assertTrue(summary["ok"])
+        self.assertTrue(summary["includeHoldingReport"])
+        self.assertTrue(summary["holdingNoLiveRead"])
+        self.assertFalse(summary["boundaries"]["walletCalls"])
+        self.assertIn("--include-holding-report", summary["steps"][-1]["command"])
+        self.assertIn("--holding-no-live-read", summary["steps"][-1]["command"])
 
     def test_daily_ops_marks_failure_without_printing_tokens(self):
         def runner(command, cwd, timeout):
