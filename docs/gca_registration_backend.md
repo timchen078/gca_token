@@ -73,6 +73,7 @@ It does not collect wallet private keys, seed phrases, wallet passwords, exchang
 - Read-only live API check tool: `tools/check_gca_registration_api.py`
 - Local admin export tool: `tools/export_cloudflare_email_registrations.py`
 - Local member access / wallet / credit / member ledger export tool: `tools/export_cloudflare_member_access.py`
+- Local member access report builder: `tools/build_gca_member_access_report.py`
 - Local ledger sync tool: `tools/sync_cloudflare_email_registrations.py`
 - Local contact CSV export tool: `tools/export_gca_email_contacts.py`
 - Local one-command ops pipeline: `tools/run_gca_registration_ops.py`
@@ -205,6 +206,17 @@ Use a redacted export before sharing outside the operator workspace. It removes 
   --redact public \
   --output .gca_access_data/cloudflare_member_access_public_redacted.json
 ```
+
+To turn a member-access export into local operator CSV reports:
+
+```bash
+.venv/bin/python tools/build_gca_member_access_report.py \
+  --input .gca_access_data/cloudflare_member_access_export.json \
+  --output-dir .gca_access_data/member_access_report \
+  --summary-output .gca_access_data/member_access_report/gca_member_access_report_summary.json
+```
+
+The report writes account, wallet-verification, credit-ledger, member-ledger, and member-benefit review queue CSV files. It is offline and does not call Cloudflare, wallets, or Base RPC.
 
 To sync full Cloudflare registrations into the local operator JSONL ledger:
 
