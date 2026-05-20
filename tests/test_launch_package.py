@@ -3142,6 +3142,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("evidenceTxHash", page)
         self.assertIn("evidenceTxHashFormatOk", page)
         self.assertIn("controlled HTTPS origin", page)
+        self.assertIn("public email registration and unsubscribe routes require only form acknowledgements", page)
+        self.assertIn("token-protected admin reads for Cloudflare registration and suppression records", page)
+        self.assertIn("authenticated account session for future account-level routes", page)
         self.assertIn("authenticated account session", page)
         self.assertIn("CSRF protection", page)
         self.assertIn("rate limits", page)
@@ -3254,11 +3257,11 @@ class LaunchPackageTests(unittest.TestCase):
         }:
             self.assertIn(endpoint_key, endpoint_keys)
         for endpoint in api["endpoints"]:
-            if endpoint["id"] in {"email-registrations-create", "email-registrations-read", "operator-summary", "review-package", "member-benefit-transfers-read", "member-benefit-transfers-create"}:
+            if endpoint["id"] in {"operator-summary", "review-package", "member-benefit-transfers-read", "member-benefit-transfers-create"}:
                 self.assertEqual(endpoint["status"], "local-only-not-public-production")
-            elif endpoint["id"] == "contact-suppressions-create":
+            elif endpoint["id"] in {"email-registrations-create", "contact-suppressions-create"}:
                 self.assertEqual(endpoint["status"], "production-workers-dev-live")
-            elif endpoint["id"] == "contact-suppressions-read":
+            elif endpoint["id"] in {"email-registrations-read", "contact-suppressions-read"}:
                 self.assertEqual(endpoint["status"], "token-protected-admin-live")
             else:
                 self.assertEqual(endpoint["status"], "planned-not-live")
@@ -3274,8 +3277,10 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("automaticTokenTransfer", email_endpoint["responseFields"])
         self.assertIn("received", email_endpoint["allowedStatuses"])
         email_read_endpoint = next(item for item in api["endpoints"] if item["id"] == "email-registrations-read")
-        self.assertIn("emailRegistrationId", email_read_endpoint["optionalRequestFields"])
+        self.assertIn("authorization bearer token", email_read_endpoint["requiredRequestFields"])
+        self.assertIn("limit", email_read_endpoint["optionalRequestFields"])
         self.assertIn("records", email_read_endpoint["responseFields"])
+        self.assertIn("received", email_read_endpoint["allowedStatuses"])
         contact_endpoint = next(item for item in api["endpoints"] if item["id"] == "contact-suppressions-create")
         self.assertIn("acknowledgements.contactSuppressionRequested", contact_endpoint["requiredRequestFields"])
         self.assertIn("acknowledgements.noSecretsNoCustody", contact_endpoint["requiredRequestFields"])

@@ -4447,6 +4447,9 @@ def validate_access_api_page(text: str) -> None:
     assert_contains(text, "evidenceTxHash", label)
     assert_contains(text, "evidenceTxHashFormatOk", label)
     assert_contains(text, "controlled HTTPS origin", label)
+    assert_contains(text, "public email registration and unsubscribe routes require only form acknowledgements", label)
+    assert_contains(text, "token-protected admin reads for Cloudflare registration and suppression records", label)
+    assert_contains(text, "authenticated account session for future account-level routes", label)
     assert_contains(text, "authenticated account session", label)
     assert_contains(text, "CSRF protection", label)
     assert_contains(text, "rate limits", label)
@@ -4645,12 +4648,16 @@ def validate_access_api_json(text: str) -> None:
             raise SiteCheckError(f"{label}: missing endpoint {endpoint_key}")
         if endpoint.get("status") != "planned-not-live":
             raise SiteCheckError(f"{label}: endpoint {endpoint_key} should be planned-not-live")
-    for endpoint_key in ("POST /gca/email-registrations", "GET /gca/email-registrations"):
+    expected_email_statuses = {
+        "POST /gca/email-registrations": "production-workers-dev-live",
+        "GET /gca/email-registrations": "token-protected-admin-live",
+    }
+    for endpoint_key, expected_status in expected_email_statuses.items():
         endpoint = endpoint_map.get(endpoint_key)
         if endpoint is None:
             raise SiteCheckError(f"{label}: missing endpoint {endpoint_key}")
-        if endpoint.get("status") != "local-only-not-public-production":
-            raise SiteCheckError(f"{label}: endpoint {endpoint_key} should be local-only")
+        if endpoint.get("status") != expected_status:
+            raise SiteCheckError(f"{label}: endpoint {endpoint_key} should be {expected_status}")
     expected_contact_statuses = {
         "POST /gca/contact-suppressions": "production-workers-dev-live",
         "GET /gca/contact-suppressions": "token-protected-admin-live",
@@ -4675,8 +4682,12 @@ def validate_access_api_json(text: str) -> None:
     if "automaticTokenTransfer" not in email_registration.get("responseFields", []):
         raise SiteCheckError(f"{label}: missing email registration token transfer boundary")
     email_registration_read = endpoint_map["GET /gca/email-registrations"]
-    if "emailRegistrationId" not in email_registration_read.get("optionalRequestFields", []):
-        raise SiteCheckError(f"{label}: missing email registration read filter")
+    if "authorization bearer token" not in email_registration_read.get("requiredRequestFields", []):
+        raise SiteCheckError(f"{label}: missing email registration read auth field")
+    if "limit" not in email_registration_read.get("optionalRequestFields", []):
+        raise SiteCheckError(f"{label}: missing email registration read limit")
+    if "received" not in email_registration_read.get("allowedStatuses", []):
+        raise SiteCheckError(f"{label}: missing email registration read status")
     contact_suppression = endpoint_map["POST /gca/contact-suppressions"]
     for field in ("email", "acknowledgements.contactSuppressionRequested", "acknowledgements.noSecretsNoCustody"):
         if field not in contact_suppression.get("requiredRequestFields", []):
