@@ -266,6 +266,8 @@ def validate_root(text: str) -> None:
     assert_contains(text, "zh-support.html", label)
     assert_contains(text, "邮箱注册", label)
     assert_contains(text, "register.html", label)
+    assert_contains(text, "邮箱退订", label)
+    assert_contains(text, "unsubscribe.html", label)
     assert_contains(text, "data.html", label)
     assert_contains(text, "Member Ledger", label)
     assert_contains(text, "Benefit Transfer Runbook", label)
@@ -5426,8 +5428,16 @@ def validate_privacy_page(text: str) -> None:
         label,
         ("privacy.json", "terms.json", "member-program.json", "member-ledger.json", "support.json"),
     )
+    assert_contains(text, "live email registration", label)
+    assert_contains(text, "contact suppression", label)
+    assert_contains(text, "Email API live / member packet local", label)
+    assert_contains(text, "Email Registration", label)
+    assert_contains(text, "Email Unsubscribe", label)
+    assert_contains(text, "register.html", label)
+    assert_contains(text, "unsubscribe.html", label)
+    assert_contains(text, "Cloudflare Workers + D1", label)
+    assert_contains(text, "https://gca-registration-api.gcagochina.workers.dev", label)
     assert_contains(text, "local pre-registration packet", label)
-    assert_contains(text, "directSubmissionEndpointConfigured", label)
     assert_contains(text, "No private key, seed phrase, exchange API secret, withdrawal permission, or custody request", label)
     assert_contains(text, "read-only ERC-20", label)
     assert_contains(text, "GCAgochina@outlook.com", label)
@@ -5453,10 +5463,20 @@ def validate_privacy_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong status")
     if payload.get("contactEmail") != "GCAgochina@outlook.com":
         raise SiteCheckError(f"{label}: wrong contact email")
-    if static.get("automaticServerStorage") is not False:
-        raise SiteCheckError(f"{label}: static site must not claim server storage")
-    if static.get("directSubmissionEndpointConfigured") is not False:
-        raise SiteCheckError(f"{label}: direct submission must remain false")
+    if static.get("automaticServerStorage") is not True:
+        raise SiteCheckError(f"{label}: email registration server storage should be disclosed")
+    if static.get("directSubmissionEndpointConfigured") is not True:
+        raise SiteCheckError(f"{label}: email direct submission should be disclosed")
+    if static.get("emailRegistrationDirectSubmissionEndpointConfigured") is not True:
+        raise SiteCheckError(f"{label}: email registration endpoint should be live")
+    if static.get("contactSuppressionDirectSubmissionEndpointConfigured") is not True:
+        raise SiteCheckError(f"{label}: contact suppression endpoint should be live")
+    if static.get("memberPreRegistrationDirectSubmissionEndpointConfigured") is not False:
+        raise SiteCheckError(f"{label}: member pre-registration direct submission must remain false")
+    if static.get("emailRegistrationEndpoint") != "/gca/email-registrations":
+        raise SiteCheckError(f"{label}: wrong email registration endpoint")
+    if static.get("contactSuppressionEndpoint") != "/gca/contact-suppressions":
+        raise SiteCheckError(f"{label}: wrong contact suppression endpoint")
     if verification.get("contractAddress") != MAINNET_ADDRESS:
         raise SiteCheckError(f"{label}: wrong contractAddress")
     if verification.get("chainId") != 8453:
@@ -5477,8 +5497,17 @@ def validate_privacy_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong support JSON link")
     if links.get("participationTerms") != PARTICIPATION_TERMS_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong terms link")
+    if links.get("emailRegistration") != REGISTER_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong email registration link")
+    if links.get("emailUnsubscribe") != UNSUBSCRIBE_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong email unsubscribe link")
     if links.get("memberLedgerSchema") != MEMBER_LEDGER_URL:
         raise SiteCheckError(f"{label}: wrong ledger schema link")
+    requests = payload.get("userRequests", {})
+    if requests.get("unsubscribePage") != UNSUBSCRIBE_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong unsubscribe page")
+    if requests.get("contactSuppressionEndpoint") != "https://gca-registration-api.gcagochina.workers.dev/gca/contact-suppressions":
+        raise SiteCheckError(f"{label}: wrong contact suppression endpoint")
     assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
     assert_not_contains(json.dumps(payload), "GCA/WETH", label)
 
@@ -5492,6 +5521,10 @@ def validate_terms_page(text: str) -> None:
         ("terms.json", "privacy.json", "member-program.json", "member-ledger.json", "support.json"),
     )
     assert_contains(text, "Pre-Registration Only", label)
+    assert_contains(text, "Email Registration", label)
+    assert_contains(text, "Email Unsubscribe", label)
+    assert_contains(text, "register.html", label)
+    assert_contains(text, "unsubscribe.html", label)
     assert_contains(text, "Account-Level Service Access", label)
     assert_contains(text, "No Custody Or Withdrawal Permission", label)
     assert_contains(text, "No Outcome Promise", label)
@@ -5521,8 +5554,16 @@ def validate_terms_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong chainId")
     if payload.get("contractAddress") != MAINNET_ADDRESS:
         raise SiteCheckError(f"{label}: wrong contractAddress")
+    if boundaries.get("emailRegistrationLive") is not True:
+        raise SiteCheckError(f"{label}: email registration should be live")
+    if boundaries.get("emailContactSuppressionLive") is not True:
+        raise SiteCheckError(f"{label}: email contact suppression should be live")
     if boundaries.get("publicSelfServiceClaimConnected") is not False:
         raise SiteCheckError(f"{label}: self-service claim must remain false")
+    if boundaries.get("emailRegistrationTransfersTokens") is not False:
+        raise SiteCheckError(f"{label}: email registration must not transfer tokens")
+    if boundaries.get("emailContactSuppressionChangesChainState") is not False:
+        raise SiteCheckError(f"{label}: email unsubscribe must not change chain state")
     if boundaries.get("requiresCustody") is not False:
         raise SiteCheckError(f"{label}: custody must remain false")
     if programs.get("holderBonus", {}).get("minimumHolding") != "10000 GCA":
@@ -5533,6 +5574,16 @@ def validate_terms_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong member holding period")
     if programs.get("gcaMember", {}).get("memberBenefitAmount") != "10000 GCA":
         raise SiteCheckError(f"{label}: wrong member benefit")
+    email_registration = payload.get("emailRegistrationTerms", {})
+    if email_registration.get("endpoint") != "https://gca-registration-api.gcagochina.workers.dev/gca/email-registrations":
+        raise SiteCheckError(f"{label}: wrong email registration endpoint")
+    if "token transfer" not in email_registration.get("doesNotCreate", []):
+        raise SiteCheckError(f"{label}: missing email registration token boundary")
+    contact_suppression = payload.get("emailContactSuppressionTerms", {})
+    if contact_suppression.get("endpoint") != "https://gca-registration-api.gcagochina.workers.dev/gca/contact-suppressions":
+        raise SiteCheckError(f"{label}: wrong contact suppression endpoint")
+    if "chain state" not in contact_suppression.get("doesNotChange", []):
+        raise SiteCheckError(f"{label}: missing contact suppression chain boundary")
     if status.get("baseScanTokenProfile") != "resubmitted-awaiting-review":
         raise SiteCheckError(f"{label}: wrong BaseScan status")
     if status.get("geckoTerminalTokenInfo") != "approved-2026-05-11":
@@ -5549,6 +5600,10 @@ def validate_terms_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong support JSON link")
     if links.get("privacyNotice") != PRIVACY_NOTICE_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong privacy link")
+    if links.get("emailRegistration") != REGISTER_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong email registration link")
+    if links.get("emailUnsubscribe") != UNSUBSCRIBE_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong email unsubscribe link")
     if links.get("memberLedgerSchema") != MEMBER_LEDGER_URL:
         raise SiteCheckError(f"{label}: wrong ledger schema link")
     assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)

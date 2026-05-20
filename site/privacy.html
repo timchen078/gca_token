@@ -298,8 +298,10 @@
     <main class="shell">
       <section aria-labelledby="title">
         <h1 id="title">GCA Privacy Notice</h1>
-        <p class="lead">This notice explains how the public GCA website handles pre-registration packet data, wallet balance verification data, and future controlled HTTPS intake for the planned GCA x Web3 Radar access bridge.</p>
+        <p class="lead">This notice explains how the public GCA website handles live email registration, contact suppression, local member pre-registration packets, wallet balance verification data, and future controlled HTTPS intake for the planned GCA x Web3 Radar access bridge.</p>
         <div class="actions">
+          <a class="button" href="register.html">Email Registration</a>
+          <a class="button" href="unsubscribe.html">Email Unsubscribe</a>
           <a class="button" href="terms.html">Participation Terms</a>
           <a class="button" href="support.html">Support & Intake</a>
           <a class="button" href="members.html">Member Pre-Registration</a>
@@ -315,7 +317,7 @@
         </div>
         <div class="fact">
           <span class="label">Current Site Mode</span>
-          <span class="value">Local pre-registration packet only</span>
+          <span class="value">Email API live / member packet local</span>
         </div>
         <div class="fact">
           <span class="label">Contact</span>
@@ -323,19 +325,21 @@
         </div>
         <div class="fact">
           <span class="label">Last Updated</span>
-          <span class="value">2026-05-13</span>
+          <span class="value">2026-05-20</span>
         </div>
       </section>
 
       <section class="section two" aria-label="Data handling">
         <div class="panel">
-          <h2>What The Public Page Collects</h2>
-          <p class="note">The current <a href="members.html">member pre-registration page</a> creates a local pre-registration packet in the browser. The packet can include email, Telegram handle, Base wallet address, declared GCA balance, program intent, consent flags, generated registration ID, and timestamp. The public static site does not send this packet to a GCA server by itself.</p>
-          <p class="note" style="margin-top: 10px;"><code>directSubmissionEndpointConfigured</code> is currently <code>false</code> on the public static page.</p>
+          <h2>What The Public Site Collects</h2>
+          <p class="note"><a href="register.html">Email registration</a> submits email, optional display name, source, language, interest tags, contact-consent acknowledgement, and no-secrets acknowledgement to the GCA Cloudflare Workers + D1 email API.</p>
+          <p class="note" style="margin-top: 10px;"><a href="unsubscribe.html">Email unsubscribe</a> submits email, reason, source, contact-suppression acknowledgement, and no-secrets acknowledgement to the GCA Cloudflare Workers + D1 contact-suppression API.</p>
+          <p class="note" style="margin-top: 10px;">The <a href="members.html">member pre-registration page</a> still creates a local pre-registration packet in the browser. That packet can include email, Telegram handle, Base wallet address, declared GCA balance, program intent, consent flags, generated registration ID, and timestamp.</p>
         </div>
         <div class="panel">
           <h2>When Data Leaves The Browser</h2>
-          <p class="note">Data leaves the browser only when a user copies it, downloads it, emails it to <a href="mailto:GCAgochina@outlook.com">GCAgochina@outlook.com</a>, or later submits it through a controlled HTTPS account UI after that flow is published. Email submission is handled through the user's chosen email client and inbox provider.</p>
+          <p class="note">Email registration and email unsubscribe requests leave the browser when the user submits those forms on <code>gcagochina.com</code>; the production API base is <code>https://gca-registration-api.gcagochina.workers.dev</code>.</p>
+          <p class="note" style="margin-top: 10px;">Member pre-registration data leaves the browser only when a user copies it, downloads it, emails it to <a href="mailto:GCAgochina@outlook.com">GCAgochina@outlook.com</a>, or later submits it through a controlled HTTPS account UI after that flow is published.</p>
         </div>
       </section>
 
@@ -363,7 +367,7 @@
         </div>
         <div class="panel">
           <h2>User Requests</h2>
-          <p class="note">Users can request correction or deletion by emailing <a href="mailto:GCAgochina@outlook.com">GCAgochina@outlook.com</a>. Some records may be retained when needed for abuse prevention, security review, operational integrity, or legal compliance. GCA does not sell pre-registration contact data.</p>
+          <p class="note">Users can request correction or deletion by emailing <a href="mailto:GCAgochina@outlook.com">GCAgochina@outlook.com</a>. Users can also use <a href="unsubscribe.html">unsubscribe.html</a> to request that an email be excluded from future GCA contact exports. Some records may be retained when needed for abuse prevention, security review, operational integrity, or legal compliance. GCA does not sell registration or contact data.</p>
         </div>
       </section>
 
@@ -372,6 +376,8 @@
         <p class="note">Use the readable privacy, terms, member, ledger, and support pages first. Raw JSON is available from the Data Room for reviewers and operators.</p>
         <div class="list">
           <div class="row"><span>Platform-only raw data</span><strong><a href="data.html">Data Room</a></strong></div>
+          <div class="row"><span>Email registration</span><strong><a href="register.html">register.html</a></strong></div>
+          <div class="row"><span>Email unsubscribe</span><strong><a href="unsubscribe.html">unsubscribe.html</a></strong></div>
           <div class="row"><span>Participation Terms</span><strong><a href="terms.html">terms.html</a></strong></div>
           <div class="row"><span>Member program</span><strong><a href="members.html">members.html</a></strong></div>
           <div class="row"><span>Member ledger</span><strong><a href="member-ledger.html">member-ledger.html</a></strong></div>
@@ -386,7 +392,7 @@
     </main>
 
     <footer>
-      <div class="shell">GCA privacy notice for public pre-registration and future controlled HTTPS account intake.</div>
+      <div class="shell">GCA privacy notice for live email registration, email unsubscribe, public pre-registration, and future controlled HTTPS account intake.</div>
     </footer>
   </body>
 </html>
