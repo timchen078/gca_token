@@ -14,36 +14,39 @@
   "officialMarketRoute": "GCA/USDT",
   "nextPublishAction": {
     "status": "ready-for-operator-review",
-    "targetDate": "2026-05-20",
-    "sourceDraftId": "gca-draft-2026-05-20-radar",
-    "topic": "Weekly Go China Radar",
+    "targetDate": "2026-05-23",
+    "sourceDraftId": "gca-draft-2026-05-23-member-access",
+    "topic": "GCA Member Access Brief 001",
     "channels": ["X", "Telegram"],
-    "recommendedLink": "https://gcagochina.com/radar-issue-004.html",
+    "recommendedLink": "https://gcagochina.com/member-access-brief-001.html",
     "contentLibrary": "https://gcagochina.com/content-library.html",
     "campaignCalendar": "https://gcagochina.com/campaign.html",
     "requiresManualPosting": true,
     "requiresOperatorReview": true,
     "xEnglish": [
-      "GCA Weekly Go China Radar is our public rhythm for the Go China narrative: market education, risk-first research, and transparent build updates around future China-facing Web3 tools.",
-      "Built on Base. Fixed supply. Verify first.",
-      "https://gcagochina.com/radar-issue-004.html",
-      "No return promises. Not financial advice.",
+      "GCA Member Access Brief 001 is ready for review.",
+      "Planned GCA Member rule: purchase and continuously hold 1,000,000 GCA for 30 days before review eligibility.",
+      "The one-time member benefit review is 10,000 GCA after support and ledger approval, funded from reserve only. No new minting. Account intake is live; token transfer is manual only.",
+      "https://gcagochina.com/member-access-brief-001.html",
+      "Not financial advice.",
       "#GCA #GoChina #Base #Web3"
     ],
     "xChinese": [
-      "GCA Weekly Go China Radar 是我们的公开内容节奏：围绕 Go China 叙事、市场教育、风险优先研究，以及未来面向中国场景的 Web3 工具建设持续更新。",
-      "Base 链上部署。固定供应。先验证，再行动。",
-      "https://gcagochina.com/radar-issue-004.html",
-      "不承诺价格结果。非投资建议。",
+      "GCA Member Access Brief 001 已准备好审核。",
+      "计划中的 GCA Member 规则：购买并连续持有 1,000,000 GCA 满 30 天，才进入审核资格。",
+      "一次性会员权益审核为 10,000 GCA，必须经过客服和账本审核后由储备转账，不增发；账户入口已上线，转账仍是人工处理。",
+      "https://gcagochina.com/member-access-brief-001.html",
+      "非投资建议。",
       "#GCA #GoChina #Base #Web3"
     ],
     "telegram": [
-      "GCA Weekly Go China Radar is the recurring public format for Go China narrative notes, risk-first research, and transparent build updates.",
-      "Verify official links before using any wallet or market interface: https://gcagochina.com/verify.html"
+      "GCA Member Access Brief 001 is ready for operator review.",
+      "The planned member rule requires 1,000,000 GCA held for 30 consecutive days before review eligibility. The planned 10,000 GCA member benefit requires support and ledger approval and must come from reserve only.",
+      "Account intake and eligible ledger records are live; member benefit transfers remain manual review only. Verify official links first: https://gcagochina.com/member-access-brief-001.html"
     ],
     "hashtags": ["#GCA", "#GoChina", "#Base", "#Web3"],
-    "visualTheme": "Red GCA mark over a Base network grid with a small radar line.",
-    "claimBoundary": "Research cadence only; no price, return, listing, audit, or approval claim."
+    "visualTheme": "Red GCA mark beside a simple member access checklist: 1,000,000 GCA, 30 days, review.",
+    "claimBoundary": "Member access education only; no automatic benefit, no approval promise, no price, return, listing, audit, or approval claim."
   },
   "operatorChecklist": [
     "Open the official X profile only: https://x.com/GCAAIGoChina",
@@ -96,6 +99,7 @@
     "officialTelegram": "https://t.me/gcagochinaofficial",
     "verify": "https://gcagochina.com/verify.html",
     "radarIssue004": "https://gcagochina.com/radar-issue-004.html",
+    "memberAccessBrief001": "https://gcagochina.com/member-access-brief-001.html",
     "radar": "https://gcagochina.com/radar.html",
     "markets": "https://gcagochina.com/markets.html",
     "risk": "https://gcagochina.com/risk.html"
