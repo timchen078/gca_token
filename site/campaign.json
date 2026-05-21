@@ -32,22 +32,23 @@
     "status": "public-publishing-desk-published",
     "pageUrl": "https://gcagochina.com/publishing-desk.html",
     "url": "https://gcagochina.com/publishing-desk.json",
-    "nextPublishTargetDate": "2026-05-20",
+    "nextPublishTargetDate": "2026-05-23",
     "manualPublishOnly": true
   },
   "nextCopyReadyDraft": {
-    "id": "x-radar-003-followup",
-    "targetDate": "2026-05-20",
-    "topic": "Weekly Go China Radar",
-    "recommendedLink": "https://gcagochina.com/radar-issue-004.html",
+    "id": "x-member-access-001",
+    "targetDate": "2026-05-23",
+    "topic": "GCA Member Access Brief 001",
+    "recommendedLink": "https://gcagochina.com/member-access-brief-001.html",
     "text": [
-      "GCA Weekly Go China Radar is our public rhythm for the Go China narrative: market education, risk-first research, and transparent build updates around future China-facing Web3 tools.",
-      "Built on Base. Fixed supply. Verify first.",
-      "https://gcagochina.com/radar-issue-004.html",
-      "No return promises. Not financial advice.",
+      "GCA Member Access Brief 001 is ready for review.",
+      "Planned GCA Member rule: purchase and continuously hold 1,000,000 GCA for 30 days before review eligibility.",
+      "The one-time member benefit review is 10,000 GCA after support and ledger approval, funded from reserve only. No new minting. Account intake is live; token transfer is manual only.",
+      "https://gcagochina.com/member-access-brief-001.html",
+      "Not financial advice.",
       "#GCA #GoChina #Base #Web3"
     ],
-    "claimBoundary": "Public content draft only; review before posting and do not add price, return, listing, audit, or approval claims."
+    "claimBoundary": "Public member-access education draft only; review before posting and do not add automatic benefit, approval, price, return, listing, audit, or approval claims."
   },
   "contentQueue": [
     {

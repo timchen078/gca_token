@@ -25,7 +25,7 @@
     "url": "https://gcagochina.com/campaign.json",
     "window": "2026-05-20 to 2026-06-16",
     "draftCount": 10,
-    "nextDraftTargetDate": "2026-05-20"
+    "nextDraftTargetDate": "2026-05-23"
   },
   "contentLibrary": {
     "status": "public-bilingual-content-library-published",
@@ -38,7 +38,7 @@
     "status": "public-publishing-desk-published",
     "pageUrl": "https://gcagochina.com/publishing-desk.html",
     "url": "https://gcagochina.com/publishing-desk.json",
-    "nextPublishTargetDate": "2026-05-20",
+    "nextPublishTargetDate": "2026-05-23",
     "manualPublishOnly": true
   },
   "publishedPosts": [
@@ -75,12 +75,6 @@
   ],
   "nextContentQueue": [
     {
-      "targetDate": "2026-05-20",
-      "topic": "Weekly Go China Radar",
-      "angle": "Explain the Go China narrative and link readers to the Issue 004 ready brief.",
-      "recommendedLink": "https://gcagochina.com/radar-issue-004.html"
-    },
-    {
       "targetDate": "2026-05-23",
       "topic": "Member Access",
       "angle": "Explain the planned 1,000,000 GCA 30-day member rule and the 10,000 GCA reserve-funded review boundary.",
@@ -91,6 +85,12 @@
       "topic": "Verification First",
       "angle": "Remind users to verify Base Mainnet, the contract address, the official GCA/USDT route, and current risk boundaries.",
       "recommendedLink": "https://gcagochina.com/verify.html"
+    },
+    {
+      "targetDate": "2026-05-29",
+      "topic": "Risk-First Trading Tools",
+      "angle": "Connect GCA to future non-custodial quant risk tools such as liquidation replay, backtesting, and position sizing.",
+      "recommendedLink": "https://gcagochina.com/utility.html"
     }
   ],
   "safeMessagingRules": [
