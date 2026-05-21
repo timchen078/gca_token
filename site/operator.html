@@ -684,10 +684,11 @@
                 <th>Transfer Tx</th>
                 <th>Next Step</th>
                 <th>Updated</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody id="reviewRows">
-              <tr><td colspan="8">No local records loaded.</td></tr>
+              <tr><td colspan="9">No local records loaded.</td></tr>
             </tbody>
           </table>
         </div>
@@ -754,6 +755,7 @@
         recordedTransferCount: document.getElementById("recordedTransferCount"),
       };
       let backendConnected = false;
+      let latestSupportReviews = [];
 
       function setStatus(text, kind = "") {
         connectionStatus.textContent = text;
@@ -892,11 +894,12 @@
       }
 
       function renderReviews(records) {
+        latestSupportReviews = Array.isArray(records) ? records : [];
         if (!records.length) {
-          reviewRows.innerHTML = '<tr><td colspan="8">No local support review records yet.</td></tr>';
+          reviewRows.innerHTML = '<tr><td colspan="9">No local support review records yet.</td></tr>';
           return;
         }
-        reviewRows.innerHTML = records.map((record) => `
+        reviewRows.innerHTML = records.map((record, index) => `
           <tr>
             <td>${escapeHtml(record.reviewId || "none")}</td>
             <td>${escapeHtml(record.status)}</td>
@@ -906,8 +909,34 @@
             <td>${escapeHtml(record.memberBenefitTransferTx || "none")}</td>
             <td>${escapeHtml(record.nextStep)}</td>
             <td>${escapeHtml(record.updatedAt)}</td>
+            <td><button class="button" type="button" data-review-index="${index}">Use for Update</button></td>
           </tr>
         `).join("");
+      }
+
+      function setFormValue(form, name, value) {
+        const field = form.elements[name];
+        if (field) {
+          field.value = value || "";
+        }
+      }
+
+      function prefillReviewUpdate(record) {
+        if (!record) {
+          return;
+        }
+        setFormValue(reviewUpdateForm, "reviewId", record.reviewId || record.parentReviewId || "");
+        setFormValue(reviewUpdateForm, "memberLedgerId", record.memberLedgerId || "");
+        setFormValue(reviewUpdateForm, "creditLedgerId", record.creditLedgerId || "");
+        setFormValue(reviewUpdateForm, "walletAddress", record.walletAddress || "");
+        setFormValue(reviewUpdateForm, "status", "waiting_for_operator_review");
+        setFormValue(
+          reviewUpdateForm,
+          "nextStep",
+          record.nextStep ? `Follow up from previous step: ${record.nextStep}` : "Review the latest member evidence and choose the next support action.",
+        );
+        setReviewUpdateStatus("Support review fields prefilled; choose status and record when ready", "good");
+        document.getElementById("reviewUpdateTitle").scrollIntoView({ behavior: "smooth", block: "start" });
       }
 
       function renderEmailRegistrations(records) {
@@ -1275,6 +1304,14 @@
       copyDigestCommandButton.addEventListener("click", copyDigestCommand);
       transferForm.addEventListener("submit", recordMemberBenefitTransfer);
       reviewUpdateForm.addEventListener("submit", recordSupportReviewUpdate);
+      reviewRows.addEventListener("click", (event) => {
+        const button = event.target.closest("[data-review-index]");
+        if (!button) {
+          return;
+        }
+        const index = Number(button.getAttribute("data-review-index"));
+        prefillReviewUpdate(latestSupportReviews[index]);
+      });
       refreshOperatorSummary();
     </script>
   </body>

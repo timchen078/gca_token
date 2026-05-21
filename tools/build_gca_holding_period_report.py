@@ -77,6 +77,20 @@ def iso_now(now: datetime | None = None) -> str:
     return value.astimezone(UTC).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
 
+def parse_utc_datetime(value: str) -> datetime:
+    text = str(value or "").strip()
+    if not text:
+        return utc_now()
+    normalized = text.replace("Z", "+00:00")
+    try:
+        parsed = datetime.fromisoformat(normalized)
+    except ValueError as exc:
+        raise HoldingReportError("--now must be an ISO-8601 datetime") from exc
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=UTC)
+    return parsed.astimezone(UTC)
+
+
 def parse_date(value: Any) -> date | None:
     try:
         return date.fromisoformat(str(value or "")[:10])
@@ -421,6 +435,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--force-same-day", action="store_true", help="Append a new same-day snapshot instead of reusing one.")
     parser.add_argument("--rpc-url", default="", help="Optional Base RPC URL for read-only balance snapshots.")
     parser.add_argument("--timeout", type=float, default=20, help="Read-only RPC timeout in seconds. Default: 20.")
+    parser.add_argument("--now", default="", help="Optional ISO-8601 UTC time for deterministic local/offline reports.")
     return parser.parse_args(argv)
 
 
@@ -435,6 +450,7 @@ def main(argv: list[str] | None = None) -> int:
             report_output=args.report_output,
             summary_output=args.summary_output,
             balance_reader=reader,
+            now=parse_utc_datetime(args.now) if args.now else None,
             live_read=not args.no_live_read,
             force_same_day=args.force_same_day,
         )

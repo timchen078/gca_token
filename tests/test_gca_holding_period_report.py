@@ -141,6 +141,8 @@ class GcaHoldingPeriodReportTests(unittest.TestCase):
                     "--summary-output",
                     str(summary_output),
                     "--no-live-read",
+                    "--now",
+                    now.isoformat().replace("+00:00", "Z"),
                 ],
                 cwd=ROOT,
                 check=False,
