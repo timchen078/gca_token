@@ -1,5 +1,6 @@
 User-agent: *
 Allow: /
+Allow: /start.html
 Allow: /register.html
 Allow: /unsubscribe.html
 Allow: /zh-cn.html
