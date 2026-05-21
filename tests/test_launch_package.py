@@ -29,6 +29,7 @@ OFFICIAL_SWAP_URL = (
 OFFICIAL_SWAP_URL_HTML = OFFICIAL_SWAP_URL.replace("&", "&amp;")
 MARKET_PAGE_URL = "https://gcagochina.com/markets.html"
 VERIFY_PAGE_URL = "https://gcagochina.com/verify.html"
+START_PAGE_URL = "https://gcagochina.com/start.html"
 REGISTER_PAGE_URL = "https://gcagochina.com/register.html"
 UNSUBSCRIBE_PAGE_URL = "https://gcagochina.com/unsubscribe.html"
 DATA_PAGE_URL = "https://gcagochina.com/data.html"
@@ -416,6 +417,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("validate_brand_kit_page", script)
         self.assertIn("validate_brand_kit_json", script)
         self.assertIn("validate_status_page", script)
+        self.assertIn("validate_start_page", script)
         self.assertIn("validate_register_page", script)
         self.assertIn("validate_unsubscribe_page", script)
         self.assertIn("validate_about_page", script)
@@ -455,6 +457,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("[fail]", script)
 
         module.validate_root((ROOT / "site" / "index.html").read_text())
+        module.validate_start_page((ROOT / "site" / "start.html").read_text())
         module.validate_404_page((ROOT / "site" / "404.html").read_text())
         module.validate_register_page((ROOT / "site" / "register.html").read_text())
         module.validate_unsubscribe_page((ROOT / "site" / "unsubscribe.html").read_text())
@@ -837,6 +840,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertTrue((ROOT / "site" / ".nojekyll").exists())
         self.assertIn("User-agent: *", robots)
         self.assertIn("Allow: /", robots)
+        self.assertIn("Allow: /start.html", robots)
         self.assertIn("Allow: /register.html", robots)
         self.assertIn("Allow: /unsubscribe.html", robots)
         self.assertIn("Allow: /about.html", robots)
@@ -963,6 +967,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Allow: /data.html", robots)
         self.assertIn("Sitemap: https://gcagochina.com/sitemap.xml", robots)
         self.assertIn("https://gcagochina.com/", sitemap)
+        self.assertIn(START_PAGE_URL, sitemap)
         self.assertIn(REGISTER_PAGE_URL, sitemap)
         self.assertIn(UNSUBSCRIBE_PAGE_URL, sitemap)
         self.assertIn(ABOUT_PAGE_URL, sitemap)
@@ -1128,6 +1133,39 @@ class LaunchPackageTests(unittest.TestCase):
                 if robots_allow(path) not in robots
             ],
         )
+
+    def test_start_page_guides_normal_users_away_from_raw_json(self):
+        page = (ROOT / "site" / "start.html").read_text()
+
+        self.assertIn("Start Here", page)
+        self.assertIn("Readable User Entry", page)
+        self.assertIn("普通用户优先打开这些页面", page)
+        self.assertIn("When To Use Raw JSON", page)
+        self.assertIn("Reviewer Data Room", page)
+        self.assertIn("Base Mainnet / chainId 8453", page)
+        self.assertIn(MAINNET_ADDRESS, page)
+        self.assertIn("GCA/USDT", page)
+        self.assertIn(OFFICIAL_POOL_ADDRESS, page)
+        self.assertIn("Email Register", page)
+        self.assertIn("Member Access", page)
+        self.assertIn("中文入口", page)
+        self.assertIn("中文购买说明", page)
+        self.assertIn("中文会员规则", page)
+        self.assertIn("No third-party audit has been completed", page)
+        self.assertIn("10,000 GCA member benefit remains manual reserve-wallet review only", page)
+        self.assertIn("Data Room files are machine-readable evidence", page)
+        self.assertIn("verify.html", page)
+        self.assertIn("buy.html", page)
+        self.assertIn("zh-buy.html", page)
+        self.assertIn("register.html", page)
+        self.assertIn("gca/member-access/", page)
+        self.assertIn("site-map.html", page)
+        self.assertIn("data.html", page)
+        self.assertNotIn('href="project.json"', page)
+        self.assertNotIn('href="tokenlist.json"', page)
+        self.assertNotIn('href="member-ledger.json"', page)
+        self.assertNotIn("GCA/WETH", page)
+        self.assertNotIn(OLD_WETH_POOL_ADDRESS, page)
 
     def test_well_known_identity_files_are_public_and_conservative(self):
         identity = json.loads((ROOT / "site" / ".well-known" / "gca-token.json").read_text())

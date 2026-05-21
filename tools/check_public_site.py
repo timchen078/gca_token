@@ -25,6 +25,7 @@ OLD_WETH_POOL_ADDRESS = "0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff"
 OFFICIAL_GECKOTERMINAL_URL = f"https://www.geckoterminal.com/base/pools/{OFFICIAL_POOL_ADDRESS}"
 OFFICIAL_DEXSCREENER_URL = f"https://dexscreener.com/base/{OFFICIAL_POOL_ADDRESS}"
 VERIFY_PAGE_URL = "https://gcagochina.com/verify.html"
+START_PAGE_URL = "https://gcagochina.com/start.html"
 REGISTER_PAGE_URL = "https://gcagochina.com/register.html"
 UNSUBSCRIBE_PAGE_URL = "https://gcagochina.com/unsubscribe.html"
 BUY_PAGE_URL = "https://gcagochina.com/buy.html"
@@ -233,6 +234,8 @@ def load_json(text: str, label: str) -> dict:
 def validate_root(text: str) -> None:
     label = "/"
     assert_contains(text, "GCA", label)
+    assert_contains(text, "Start Here", label)
+    assert_contains(text, "start.html", label)
     assert_contains(text, "Verify GCA", label)
     assert_contains(text, "About GCA", label)
     assert_contains(text, "about.html", label)
@@ -330,6 +333,66 @@ def validate_root(text: str) -> None:
     assert_contains(text, "Last checked on 2026-05-18", label)
     assert_contains(text, MAINNET_ADDRESS, label)
     assert_current_pool_text(text, label)
+
+
+def validate_start_page(text: str) -> None:
+    label = "/start.html"
+    assert_social_preview_meta(text, label, START_PAGE_URL)
+    for expected in (
+        "Start Here",
+        "Readable User Entry",
+        "normal user entry for GCA / Go China Access",
+        "raw JSON",
+        "Raw JSON 主要给 BaseScan",
+        "Four-Step User Path",
+        "What To Open First",
+        "Verify Identity",
+        "Use Official Market Route",
+        "Register or Check Access",
+        "Ask Support Safely",
+        "普通用户优先打开这些页面",
+        "When To Use Raw JSON",
+        "Reviewer Data Room",
+        "Current Project Boundaries",
+        "Base Mainnet / chainId 8453",
+        MAINNET_ADDRESS,
+        "GCA/USDT",
+        OFFICIAL_POOL_ADDRESS,
+        "Email Register",
+        "Member Access",
+        "中文入口",
+        "中文购买说明",
+        "中文会员规则",
+        "中文会员审核资料清单",
+        "中文 API 状态",
+        "private keys",
+        "seed phrases",
+        "exchange API secrets",
+        "withdrawal permission",
+        "remote-control access",
+        "No third-party audit has been completed",
+        "10,000 GCA member benefit remains manual reserve-wallet review only",
+        "Data Room files are machine-readable evidence",
+        "verify.html",
+        "buy.html",
+        "zh-buy.html",
+        "register.html",
+        "gca/member-access/",
+        "site-map.html",
+        "data.html",
+        "reviewer-kit.html",
+    ):
+        assert_contains(text, expected, label)
+    for forbidden in (
+        'href="project.json"',
+        'href="tokenlist.json"',
+        'href="member-program.json"',
+        'href="member-ledger.json"',
+        'href="support.json"',
+    ):
+        assert_not_contains(text, forbidden, label)
+    assert_current_pool_text(text, label)
+    assert_no_forbidden_public_claims(text, label)
 
 
 def validate_verify(text: str) -> None:
@@ -1968,6 +2031,8 @@ def validate_zh_site_map_page(text: str) -> None:
     for expected in (
         "GCA 中文站点地图",
         "中文站点地图 / 2026-05-20",
+        "Start Here / 用户入口",
+        "start.html",
         "中文用户优先 HTML / 平台审核才用 JSON",
         "如果你看到 JSON 像代码，不代表官网坏了",
         "中文数据室说明",
@@ -2248,6 +2313,8 @@ def validate_site_map_page(text: str) -> None:
     for expected in (
         "GCA Site Map",
         "Human-Readable Index",
+        "Start Here",
+        "start.html",
         "Normal visitors should open HTML pages first",
         "Reviewer Data Room",
         "Verify GCA",
@@ -9885,6 +9952,7 @@ def validate_security_txt(text: str) -> None:
 def validate_sitemap(text: str) -> None:
     label = "/sitemap.xml"
     for expected in (
+        "https://gcagochina.com/start.html",
         "https://gcagochina.com/about.html",
         "https://gcagochina.com/action-plan.html",
         "https://gcagochina.com/register.html",
@@ -10020,6 +10088,7 @@ def validate_sitemap(text: str) -> None:
 
 def validate_robots(text: str) -> None:
     label = "/robots.txt"
+    assert_contains(text, "Allow: /start.html", label)
     assert_contains(text, "Allow: /about.html", label)
     assert_contains(text, "Allow: /action-plan.html", label)
     assert_contains(text, "Allow: /register.html", label)
@@ -10156,6 +10225,7 @@ def validate_robots(text: str) -> None:
 
 CHECKS: list[EndpointCheck] = [
     ("/", validate_root),
+    ("/start.html", validate_start_page),
     ("/register.html", validate_register_page),
     ("/unsubscribe.html", validate_unsubscribe_page),
     ("/about.html", validate_about_page),
