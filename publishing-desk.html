@@ -132,6 +132,14 @@
         margin-top: 24px;
       }
 
+      .copy-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin: 12px 0;
+        align-items: center;
+      }
+
       .button {
         border: 1px solid var(--line);
         border-radius: 8px;
@@ -216,6 +224,12 @@
 
       .pending {
         color: var(--gold);
+      }
+
+      .copy-status {
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 700;
       }
 
       .note,
@@ -342,7 +356,11 @@
         <div class="panel">
           <h2>Next X Draft</h2>
           <p class="note">Topic: GCA Member Access Brief 001. Source: <a href="member-access-brief-001.html">member-access-brief-001.html</a>. Target: 2026-05-23.</p>
-          <pre>GCA Member Access Brief 001 is ready for review.
+          <div class="copy-actions">
+            <button class="button" type="button" data-copy-target="xDraftCopy">Copy English X</button>
+            <span class="copy-status" id="xDraftCopyStatus" aria-live="polite">Ready to copy</span>
+          </div>
+          <pre id="xDraftCopy">GCA Member Access Brief 001 is ready for review.
 
 Planned GCA Member rule: purchase and continuously hold 1,000,000 GCA for 30 days before review eligibility.
 
@@ -357,7 +375,11 @@ Not financial advice.
         <div class="panel">
           <h2>中文版本</h2>
           <p class="note">Use this if the post should be bilingual or if Telegram needs Chinese copy.</p>
-          <pre>GCA Member Access Brief 001 已准备好审核。
+          <div class="copy-actions">
+            <button class="button" type="button" data-copy-target="xChineseCopy">Copy Chinese X</button>
+            <span class="copy-status" id="xChineseCopyStatus" aria-live="polite">Ready to copy</span>
+          </div>
+          <pre id="xChineseCopy">GCA Member Access Brief 001 已准备好审核。
 
 计划中的 GCA Member 规则：购买并连续持有 1,000,000 GCA 满 30 天，才进入审核资格。
 
@@ -373,7 +395,11 @@ https://gcagochina.com/member-access-brief-001.html
 
       <section class="section panel" aria-labelledby="telegramTitle">
         <h2 id="telegramTitle">Telegram Copy</h2>
-        <pre>GCA Member Access Brief 001 is ready for operator review.
+        <div class="copy-actions">
+          <button class="button" type="button" data-copy-target="telegramCopy">Copy Telegram</button>
+          <span class="copy-status" id="telegramCopyStatus" aria-live="polite">Ready to copy</span>
+        </div>
+        <pre id="telegramCopy">GCA Member Access Brief 001 is ready for operator review.
 
 The planned member rule requires 1,000,000 GCA held for 30 consecutive days before review eligibility. The planned 10,000 GCA member benefit requires support and ledger approval and must come from reserve only.
 
@@ -466,5 +492,39 @@ https://gcagochina.com/member-access-brief-001.html</pre>
     <footer>
       <div class="shell">GCA publishing materials are factual project communications only, not financial advice.</div>
     </footer>
+    <script>
+      async function copyText(text) {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(text);
+          return;
+        }
+        const fallback = document.createElement("textarea");
+        fallback.value = text;
+        fallback.setAttribute("readonly", "");
+        fallback.style.position = "fixed";
+        fallback.style.top = "-1000px";
+        document.body.appendChild(fallback);
+        fallback.select();
+        document.execCommand("copy");
+        fallback.remove();
+      }
+
+      document.querySelectorAll("[data-copy-target]").forEach((button) => {
+        button.addEventListener("click", async () => {
+          const targetId = button.getAttribute("data-copy-target");
+          const target = document.getElementById(targetId);
+          const status = document.getElementById(`${targetId}Status`);
+          if (!target || !status) {
+            return;
+          }
+          try {
+            await copyText(target.textContent.trim());
+            status.textContent = "Copied";
+          } catch (error) {
+            status.textContent = "Copy failed; select the text manually";
+          }
+        });
+      });
+    </script>
   </body>
 </html>
