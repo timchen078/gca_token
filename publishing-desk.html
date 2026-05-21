@@ -140,6 +140,12 @@
         align-items: center;
       }
 
+      .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+
       .button {
         border: 1px solid var(--line);
         border-radius: 8px;
@@ -232,6 +238,31 @@
         font-weight: 700;
       }
 
+      label {
+        display: block;
+        margin-bottom: 6px;
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 750;
+      }
+
+      input,
+      select,
+      textarea {
+        width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        background: var(--panel);
+        color: var(--ink);
+        font: inherit;
+        padding: 10px 12px;
+      }
+
+      textarea {
+        min-height: 220px;
+        resize: vertical;
+      }
+
       .note,
       li {
         color: var(--muted);
@@ -295,7 +326,8 @@
 
         .facts,
         .grid,
-        .cards {
+        .cards,
+        .form-grid {
           grid-template-columns: 1fr;
         }
       }
@@ -434,6 +466,38 @@ https://gcagochina.com/member-access-brief-001.html</pre>
         </article>
       </section>
 
+      <section class="section panel" aria-labelledby="recorderTitle">
+        <h2 id="recorderTitle">Post-Publish URL Recorder</h2>
+        <p class="note">After manual posting, paste the public URL here to generate a local ledger-update snippet. This does not post, edit GitHub, write production data, or contact X / Telegram.</p>
+        <div class="form-grid section">
+          <div>
+            <label for="postPlatform">Platform</label>
+            <select id="postPlatform">
+              <option value="X">X</option>
+              <option value="Telegram">Telegram</option>
+            </select>
+          </div>
+          <div>
+            <label for="postPublishedDate">Published date</label>
+            <input id="postPublishedDate" type="date" value="2026-05-23">
+          </div>
+          <div>
+            <label for="postUrl">Published URL</label>
+            <input id="postUrl" type="url" placeholder="https://x.com/GCAAIGoChina/status/...">
+          </div>
+          <div>
+            <label for="postTitle">Ledger title</label>
+            <input id="postTitle" type="text" value="GCA Member Access Brief 001">
+          </div>
+        </div>
+        <div class="copy-actions">
+          <button class="button primary" id="generateLedgerSnippet" type="button">Generate Ledger Snippet</button>
+          <button class="button" type="button" data-copy-target="postLedgerSnippet">Copy Ledger Snippet</button>
+          <span class="copy-status" id="postLedgerSnippetStatus" aria-live="polite">Paste a published URL first</span>
+        </div>
+        <textarea id="postLedgerSnippet" readonly>Paste the published X or Telegram URL, then generate a ledger snippet for site/announcements.json, site/community.json, and site/project.json.</textarea>
+      </section>
+
       <section class="section grid" aria-label="Publishing checks and boundaries">
         <div class="panel">
           <h2>Pre-Publish Checks</h2>
@@ -518,13 +582,73 @@ https://gcagochina.com/member-access-brief-001.html</pre>
             return;
           }
           try {
-            await copyText(target.textContent.trim());
+            const text = "value" in target ? target.value : target.textContent;
+            await copyText(text.trim());
             status.textContent = "Copied";
           } catch (error) {
             status.textContent = "Copy failed; select the text manually";
           }
         });
       });
+
+      function paragraphListFrom(targetId) {
+        const target = document.getElementById(targetId);
+        if (!target) {
+          return [];
+        }
+        return target.textContent
+          .trim()
+          .split(/\n\s*\n/)
+          .map((item) => item.trim())
+          .filter(Boolean);
+      }
+
+      function generateLedgerSnippet() {
+        const platform = document.getElementById("postPlatform").value;
+        const url = document.getElementById("postUrl").value.trim();
+        const publishedDate = document.getElementById("postPublishedDate").value || "2026-05-23";
+        const title = document.getElementById("postTitle").value.trim() || "GCA Member Access Brief 001";
+        const output = document.getElementById("postLedgerSnippet");
+        const status = document.getElementById("postLedgerSnippetStatus");
+        if (!url) {
+          status.textContent = "Paste a published URL first";
+          output.value = "Paste the published X or Telegram URL, then generate a ledger snippet.";
+          return;
+        }
+
+        const message = platform === "Telegram" ? paragraphListFrom("telegramCopy") : paragraphListFrom("xDraftCopy");
+        const postId = `${platform.toLowerCase()}-member-access-001-${publishedDate.replaceAll("-", "")}`;
+        const snippet = {
+          publishedPost: {
+            id: postId,
+            platform,
+            status: "published",
+            publishedDate,
+            url,
+            title,
+            message,
+            claimBoundary: "Member access education only; no automatic benefit, approval promise, price, return, listing, audit, or security-vendor approval claim.",
+          },
+          announcementLedgerUpdate: {
+            target: "site/announcements.json",
+            action: "Append publishedPost to publishedPosts and remove the matching item from nextContentQueue after operator review.",
+          },
+          communityUpdate: {
+            target: "site/community.json",
+            latestPostUrl: url,
+            latestPostPublishedDate: publishedDate,
+          },
+          projectUpdate: {
+            target: "site/project.json",
+            announcementHubLatestPostUrl: url,
+            announcementHubLatestPostPublishedDate: publishedDate,
+          },
+        };
+        output.value = JSON.stringify(snippet, null, 2);
+        status.textContent = "Ledger snippet ready";
+      }
+
+      document.getElementById("generateLedgerSnippet").addEventListener("click", generateLedgerSnippet);
     </script>
   </body>
 </html>
