@@ -158,6 +158,13 @@
         gap: 12px;
       }
 
+      .filter-grid {
+        display: grid;
+        grid-template-columns: minmax(160px, 0.35fr) minmax(220px, 1fr) auto auto;
+        gap: 12px;
+        align-items: end;
+      }
+
       .fact {
         min-height: 110px;
         padding: 18px;
@@ -334,7 +341,8 @@
       @media (max-width: 860px) {
         .grid,
         .two,
-        .handoff-grid {
+        .handoff-grid,
+        .filter-grid {
           grid-template-columns: 1fr;
         }
 
@@ -672,6 +680,24 @@
 
       <section class="section">
         <h2>Latest Support Review Records</h2>
+        <div class="filter-grid section" aria-label="Support review filters">
+          <div class="field">
+            <label for="reviewStatusFilter">Status Filter</label>
+            <select id="reviewStatusFilter">
+              <option value="">All statuses</option>
+              <option value="open">Open / needs work</option>
+              <option value="waiting">Waiting for user evidence</option>
+              <option value="transfer">Pending reserve transfer</option>
+              <option value="closed">Closed / transferred</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="reviewSearchInput">Search Records</label>
+            <input id="reviewSearchInput" autocomplete="off" placeholder="Search review ID, wallet, ledger ID, tx, status, or next step">
+          </div>
+          <button class="button" id="clearReviewFiltersButton" type="button">Clear Filters</button>
+          <span class="status" id="reviewFilterStatus">No local records loaded</span>
+        </div>
         <div class="table-wrap">
           <table>
             <thead>
@@ -724,6 +750,10 @@
       const reviewUpdateStatus = document.getElementById("reviewUpdateStatus");
       const summaryJson = document.getElementById("summaryJson");
       const reviewRows = document.getElementById("reviewRows");
+      const reviewStatusFilter = document.getElementById("reviewStatusFilter");
+      const reviewSearchInput = document.getElementById("reviewSearchInput");
+      const clearReviewFiltersButton = document.getElementById("clearReviewFiltersButton");
+      const reviewFilterStatus = document.getElementById("reviewFilterStatus");
       const emailRows = document.getElementById("emailRows");
       const lastPackageMode = document.getElementById("lastPackageMode");
       const lastPackageDigest = document.getElementById("lastPackageDigest");
@@ -770,6 +800,11 @@
       function setReviewUpdateStatus(text, kind = "") {
         reviewUpdateStatus.textContent = text;
         reviewUpdateStatus.className = `status ${kind}`.trim();
+      }
+
+      function setReviewFilterStatus(text, kind = "") {
+        reviewFilterStatus.textContent = text;
+        reviewFilterStatus.className = `status ${kind}`.trim();
       }
 
       function setHandoffStatus(text, kind = "") {
@@ -893,8 +928,49 @@
         }
       }
 
-      function renderReviews(records) {
-        latestSupportReviews = Array.isArray(records) ? records : [];
+      function reviewStatusGroup(status) {
+        const normalized = String(status || "").toLowerCase();
+        if (["closed_resolved", "closed_no_action", "transferred"].includes(normalized)) {
+          return "closed";
+        }
+        if (normalized === "pending_manual_reserve_transfer") {
+          return "transfer";
+        }
+        if (["waiting_for_user_evidence", "needs_more_information", "wallet_pending"].includes(normalized)) {
+          return "waiting";
+        }
+        return "open";
+      }
+
+      function reviewSearchHaystack(record) {
+        return [
+          record.reviewId,
+          record.parentReviewId,
+          record.status,
+          record.walletAddress,
+          record.creditLedgerId,
+          record.memberLedgerId,
+          record.memberBenefitTransferTx,
+          record.nextStep,
+          record.updatedAt,
+        ].map((value) => String(value || "").toLowerCase()).join(" ");
+      }
+
+      function filteredSupportReviews() {
+        const statusFilter = String(reviewStatusFilter.value || "");
+        const query = String(reviewSearchInput.value || "").trim().toLowerCase();
+        return latestSupportReviews.filter((record) => {
+          if (statusFilter && reviewStatusGroup(record.status) !== statusFilter) {
+            return false;
+          }
+          if (query && !reviewSearchHaystack(record).includes(query)) {
+            return false;
+          }
+          return true;
+        });
+      }
+
+      function renderReviewTable(records) {
         if (!records.length) {
           reviewRows.innerHTML = '<tr><td colspan="9">No local support review records yet.</td></tr>';
           return;
@@ -912,6 +988,18 @@
             <td><button class="button" type="button" data-review-index="${index}">Use for Update</button></td>
           </tr>
         `).join("");
+      }
+
+      function applyReviewFilters() {
+        const filtered = filteredSupportReviews();
+        renderReviewTable(filtered);
+        const hasFilter = Boolean(reviewStatusFilter.value || reviewSearchInput.value.trim());
+        setReviewFilterStatus(`${filtered.length}/${latestSupportReviews.length} records visible`, hasFilter ? "good" : "");
+      }
+
+      function renderReviews(records) {
+        latestSupportReviews = Array.isArray(records) ? records : [];
+        applyReviewFilters();
       }
 
       function setFormValue(form, name, value) {
@@ -1304,6 +1392,13 @@
       copyDigestCommandButton.addEventListener("click", copyDigestCommand);
       transferForm.addEventListener("submit", recordMemberBenefitTransfer);
       reviewUpdateForm.addEventListener("submit", recordSupportReviewUpdate);
+      reviewStatusFilter.addEventListener("change", applyReviewFilters);
+      reviewSearchInput.addEventListener("input", applyReviewFilters);
+      clearReviewFiltersButton.addEventListener("click", () => {
+        reviewStatusFilter.value = "";
+        reviewSearchInput.value = "";
+        applyReviewFilters();
+      });
       reviewRows.addEventListener("click", (event) => {
         const button = event.target.closest("[data-review-index]");
         if (!button) {
