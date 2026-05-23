@@ -32,6 +32,10 @@ BUY_PAGE_URL = "https://gcagochina.com/buy.html"
 STATUS_PAGE_URL = "https://gcagochina.com/status.html"
 ABOUT_PAGE_URL = "https://gcagochina.com/about.html"
 ACTION_PLAN_PAGE_URL = "https://gcagochina.com/action-plan.html"
+TEAM_PAGE_URL = "https://gcagochina.com/team.html"
+BASESCAN_REMEDIATION_PAGE_URL = "https://gcagochina.com/basescan-remediation.html"
+BASESCAN_REMEDIATION_URL = "https://gcagochina.com/basescan-remediation.json"
+GITHUB_REPO_URL = "https://github.com/timchen078/gca_token"
 ZH_CN_PAGE_URL = "https://gcagochina.com/zh-cn.html"
 ZH_BUY_PAGE_URL = "https://gcagochina.com/zh-buy.html"
 ZH_APPLY_PAGE_URL = "https://gcagochina.com/zh-apply.html"
@@ -330,7 +334,9 @@ def validate_root(text: str) -> None:
     assert_contains(text, "Release Gates", label)
     assert_contains(text, "Privacy Notice", label)
     assert_contains(text, "Participation Terms", label)
-    assert_contains(text, "Last checked on 2026-05-18", label)
+    assert_contains(text, "returned again as information-insufficient on 2026-05-23", label)
+    assert_contains(text, "team.html", label)
+    assert_contains(text, "basescan-remediation.html", label)
     assert_contains(text, MAINNET_ADDRESS, label)
     assert_current_pool_text(text, label)
 
@@ -373,6 +379,8 @@ def validate_start_page(text: str) -> None:
         "No third-party audit has been completed",
         "10,000 GCA member benefit remains manual reserve-wallet review only",
         "Data Room files are machine-readable evidence",
+        "Team Profile",
+        "BaseScan Remediation",
         "verify.html",
         "buy.html",
         "zh-buy.html",
@@ -398,7 +406,7 @@ def validate_start_page(text: str) -> None:
 def validate_verify(text: str) -> None:
     label = "/verify.html"
     assert_contains(text, "Verify GCA", label)
-    assert_contains(text, "Resubmitted: awaiting review", label)
+    assert_contains(text, "Returned 2026-05-23; remediation required", label)
     assert_contains(text, "well-known token identity", label)
     assert_contains(text, "Wallet Warning", label)
     assert_contains(text, "External Reviews", label)
@@ -542,8 +550,10 @@ def validate_status_page(text: str) -> None:
     assert_contains(text, "Contract source verified on BaseScan", label)
     assert_contains(text, "Deployer-wallet ownership verified on BaseScan", label)
     assert_contains(text, "BaseScan public token profile publication", label)
-    assert_contains(text, "Awaiting review", label)
-    assert_contains(text, "no approval email received as of 2026-05-18", label)
+    assert_contains(text, "Returned 2026-05-23; remediation required", label)
+    assert_contains(text, "fix domain email and public professional profile evidence before resubmission", label)
+    assert_contains(text, "team.html", label)
+    assert_contains(text, "basescan-remediation.html", label)
     assert_contains(text, "GeckoTerminal token information update", label)
     assert_contains(text, "Approved", label)
     assert_contains(text, "No third-party audit has been completed", label)
@@ -583,7 +593,11 @@ def validate_about_page(text: str) -> None:
         "concept-stage product buildout",
         "public account intake and eligible ledger records are live",
         "No third-party audit has been completed",
-        "BaseScan public token profile publication is resubmitted and awaiting review",
+        "BaseScan returned the token profile update again as information-insufficient on 2026-05-23",
+        "Team Profile",
+        "BaseScan Remediation",
+        "team.html#tim-chen",
+        GITHUB_REPO_URL,
         "Platform-Only Evidence Path",
         "Reviewer Data Room",
         "GCAgochina@outlook.com",
@@ -618,6 +632,87 @@ def validate_about_page(text: str) -> None:
         ),
     )
     assert_current_pool_text(text, label)
+
+
+def validate_team_page(text: str) -> None:
+    label = "/team.html"
+    assert_social_preview_meta(text, label, TEAM_PAGE_URL)
+    for expected in (
+        "GCA Team",
+        "Founder and Public Profile",
+        "Tim Chen",
+        "Founder, CEO, and Project Lead for GCA",
+        "team.html#tim-chen",
+        GITHUB_REPO_URL,
+        X_URL,
+        "https://t.me/gcagochinaofficial",
+        "BaseScan Remediation",
+        "No Hidden Claims",
+        "GCA does not claim BaseScan token profile approval",
+        "GCA does not ask users for private keys",
+    ):
+        assert_contains(text, expected, label)
+    assert_no_forbidden_public_claims(text, label)
+
+
+def validate_basescan_remediation_page(text: str) -> None:
+    label = "/basescan-remediation.html"
+    assert_social_preview_meta(text, label, BASESCAN_REMEDIATION_PAGE_URL)
+    for expected in (
+        "GCA BaseScan Token Profile Remediation",
+        "BaseScan Remediation / 2026-05-23",
+        "Remediation required",
+        "Domain Email",
+        "Owner action required",
+        "support@gcagochina.com",
+        "Professional profile",
+        "Tim Chen",
+        "team.html",
+        GITHUB_REPO_URL,
+        "Ready to resubmit today?",
+        "No. Fix domain email",
+        "Do not claim the BaseScan token profile is approved",
+    ):
+        assert_contains(text, expected, label)
+    assert_no_forbidden_public_claims(text, label)
+
+
+def validate_basescan_remediation_json(text: str) -> None:
+    label = "/basescan-remediation.json"
+    payload = load_json(text, label)
+    identity = payload.get("officialIdentity", {})
+    email_state = payload.get("currentEmailState", {})
+    team = payload.get("teamTransparency", {})
+    gate = payload.get("nextSubmissionGate", {})
+
+    if payload.get("schema") != BASESCAN_REMEDIATION_URL:
+        raise SiteCheckError(f"{label}: wrong schema")
+    if payload.get("pageUrl") != BASESCAN_REMEDIATION_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong pageUrl")
+    if payload.get("lastUpdated") != "2026-05-23":
+        raise SiteCheckError(f"{label}: wrong lastUpdated")
+    if payload.get("status") != "basescan-remediation-required-before-next-submission":
+        raise SiteCheckError(f"{label}: wrong status")
+    if payload.get("chainId") != 8453:
+        raise SiteCheckError(f"{label}: wrong chainId")
+    if payload.get("contractAddress") != MAINNET_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong contractAddress")
+    if identity.get("team") != TEAM_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong team page")
+    if identity.get("github") != GITHUB_REPO_URL:
+        raise SiteCheckError(f"{label}: wrong GitHub URL")
+    if email_state.get("domainEmailRecommendedBeforeNextSubmission") is not True:
+        raise SiteCheckError(f"{label}: missing domain email recommendation")
+    if "support@gcagochina.com" not in email_state.get("recommendedDomainEmailExamples", []):
+        raise SiteCheckError(f"{label}: missing recommended support domain email")
+    if team.get("publicFounder") != "Tim Chen":
+        raise SiteCheckError(f"{label}: wrong public founder")
+    if team.get("officialTeamPage") != f"{TEAM_PAGE_URL}#tim-chen":
+        raise SiteCheckError(f"{label}: wrong founder profile permalink")
+    if team.get("externalProfessionalProfileStillRecommended") is not True:
+        raise SiteCheckError(f"{label}: missing external professional profile recommendation")
+    if gate.get("ready") is not False:
+        raise SiteCheckError(f"{label}: submission gate should not be ready")
     assert_no_forbidden_public_claims(text, label)
 
 
@@ -644,7 +739,7 @@ def validate_action_plan_page(text: str) -> None:
         "Do not create fake trading activity",
         "Platform-Only Evidence Path",
         "Reviewer Data Room",
-        "BaseScan resubmitted: awaiting review",
+        "BaseScan returned 2026-05-23; remediation required",
         "Public account intake, read-only wallet checks, and eligible ledger records are live",
         "eligible ledger records are live",
         MAINNET_ADDRESS,
@@ -2533,8 +2628,7 @@ def validate_listing_kit_page(text: str) -> None:
     assert_contains(text, "Descriptions", label)
     assert_contains(text, "Official GCA/USDT route", label)
     assert_contains(text, "BaseScan", label)
-    assert_contains(text, "awaiting BaseScan email/review", label)
-    assert_contains(text, "Last checked on 2026-05-18", label)
+    assert_contains(text, "returned again as information-insufficient on 2026-05-23", label)
     assert_contains(text, "GeckoTerminal", label)
     assert_contains(text, "Approved", label)
     assert_contains(text, "no completed third-party audit", label)
@@ -2610,8 +2704,7 @@ def validate_whitepaper_page(text: str) -> None:
     assert_contains(text, "not automatic and not newly minted", label)
     assert_contains(text, "This is not a substitute for a third-party audit", label)
     assert_contains(text, "no third-party audit has been completed", label)
-    assert_contains(text, "awaiting BaseScan email/review", label)
-    assert_contains(text, "Last checked on 2026-05-18", label)
+    assert_contains(text, "returned again as information-insufficient on 2026-05-23", label)
     assert_contains(text, MAINNET_ADDRESS, label)
     assert_contains(text, BASE_USDT_ADDRESS, label)
     assert_contains(text, OFFICIAL_GECKOTERMINAL_URL, label)
@@ -2679,7 +2772,7 @@ def validate_token_safety_json(text: str) -> None:
     ):
         if controls.get(key) is not False:
             raise SiteCheckError(f"{label}: {key} must be false")
-    if pending.get("baseScanTokenProfile") != "resubmitted-awaiting-review":
+    if pending.get("baseScanTokenProfile") != "remediation-required-before-next-submission":
         raise SiteCheckError(f"{label}: wrong BaseScan profile status")
     if pending.get("blockaidMetaMaskWarning") != "owner-observed-no-warning-visible":
         raise SiteCheckError(f"{label}: wrong wallet warning status")
@@ -3210,11 +3303,13 @@ def validate_support_page(text: str) -> None:
     )
     assert_contains(text, "Reviewer Kit", label)
     assert_contains(text, "Platform Replies", label)
+    assert_contains(text, "Team Profile", label)
+    assert_contains(text, "BaseScan Remediation", label)
     assert_contains(text, "Review Queue", label)
     assert_contains(text, "Operations Runbook", label)
     assert_contains(text, "GCAgochina@outlook.com", label)
-    assert_contains(text, "Direct Submit", label)
-    assert_contains(text, "Not connected", label)
+    assert_contains(text, "Domain Email", label)
+    assert_contains(text, "Owner action required before BaseScan resubmission", label)
     assert_contains(text, "Private key or seed phrase", label)
     assert_contains(text, "Exchange API secret or withdrawal permission", label)
     assert_contains(text, "Support Workflow", label)
@@ -3363,7 +3458,7 @@ def validate_roadmap_page(text: str) -> None:
     assert_contains(text, "100 Web3 Radar utility credit records", label)
     assert_contains(text, "GCA Member records", label)
     assert_contains(text, "External Dependencies", label)
-    assert_contains(text, "Resubmitted: awaiting review", label)
+    assert_contains(text, "Returned 2026-05-23; remediation required", label)
     assert_contains(text, "Owner observed no warning visible", label)
     assert_contains(text, "Not completed", label)
     assert_contains(text, "Account and Ledger", label)
@@ -3405,7 +3500,7 @@ def validate_roadmap_json(text: str) -> None:
         raise SiteCheckError(f"{label}: LP lock must not be claimed")
     if market.get("liquidityDepth") != "starter-depth-only":
         raise SiteCheckError(f"{label}: wrong liquidityDepth")
-    if dependencies.get("baseScanTokenProfile") != "resubmitted-awaiting-review":
+    if dependencies.get("baseScanTokenProfile") != "remediation-required-before-next-submission":
         raise SiteCheckError(f"{label}: wrong BaseScan status")
     if dependencies.get("blockaidMetaMaskWarning") != "owner-observed-no-warning-visible":
         raise SiteCheckError(f"{label}: wrong wallet warning status")
@@ -3514,7 +3609,7 @@ def validate_community_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong quoteAssetAddress")
     if market.get("liquidityDepth") != "starter-depth-only":
         raise SiteCheckError(f"{label}: wrong liquidityDepth")
-    if not any("BaseScan token profile was returned as information-insufficient on 2026-05-13 and resubmitted on 2026-05-13" in item for item in payload.get("safeAnnouncement", [])):
+    if not any("BaseScan token profile was returned again as information-insufficient on 2026-05-23" in item for item in payload.get("safeAnnouncement", [])):
         raise SiteCheckError(f"{label}: missing BaseScan pending announcement")
     if not any("Narrative meets risk control" in item for item in payload.get("safeAnnouncement", [])):
         raise SiteCheckError(f"{label}: missing narrative announcement")
@@ -6527,7 +6622,8 @@ def validate_release_gates_page(text: str) -> None:
     assert_contains(text, "risk-control review", label)
     assert_contains(text, "support review queue", label)
     assert_contains(text, "simulation or testnet first", label)
-    assert_contains(text, "BaseScan token profile awaiting review", label)
+    assert_contains(text, "BaseScan token profile remediation", label)
+    assert_contains(text, "Returned 2026-05-23; owner evidence required", label)
     assert_contains(text, "no third-party audit", label)
     assert_contains(text, "No custody", label)
     assert_contains(text, "no withdrawal permission", label)
@@ -6565,7 +6661,7 @@ def validate_release_gates_json(text: str) -> None:
             raise SiteCheckError(f"{label}: {key} must be true")
     if state.get("liveTradingEnabled") is not False:
         raise SiteCheckError(f"{label}: liveTradingEnabled must be false")
-    if state.get("baseScanTokenProfile") != "resubmitted-awaiting-review":
+    if state.get("baseScanTokenProfile") != "remediation-required-before-next-submission":
         raise SiteCheckError(f"{label}: wrong BaseScan state")
     if state.get("thirdPartyAudit") != "not-completed":
         raise SiteCheckError(f"{label}: wrong audit state")
@@ -6752,7 +6848,7 @@ def validate_terms_page(text: str) -> None:
     assert_contains(text, "Account-Level Service Access", label)
     assert_contains(text, "No Custody Or Withdrawal Permission", label)
     assert_contains(text, "No Outcome Promise", label)
-    assert_contains(text, "Resubmitted: awaiting review", label)
+    assert_contains(text, "Returned 2026-05-23; remediation required", label)
     assert_contains(text, "GCA/USDT on Base Mainnet", label)
     assert_contains(text, "Privacy Notice", label)
     assert_not_contains(text, OLD_WETH_POOL_ADDRESS, label)
@@ -6808,7 +6904,7 @@ def validate_terms_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong contact suppression endpoint")
     if "chain state" not in contact_suppression.get("doesNotChange", []):
         raise SiteCheckError(f"{label}: missing contact suppression chain boundary")
-    if status.get("baseScanTokenProfile") != "resubmitted-awaiting-review":
+    if status.get("baseScanTokenProfile") != "remediation-required-before-next-submission":
         raise SiteCheckError(f"{label}: wrong BaseScan status")
     if status.get("geckoTerminalTokenInfo") != "approved-2026-05-11":
         raise SiteCheckError(f"{label}: wrong GeckoTerminal status")
@@ -7179,15 +7275,15 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong poolAddress")
     if market.get("quoteAssetAddress") != BASE_USDT_ADDRESS:
         raise SiteCheckError(f"{label}: wrong quoteAssetAddress")
-    if status.get("baseScanTokenProfile") != "resubmitted-awaiting-review":
+    if status.get("baseScanTokenProfile") != "remediation-required-before-next-submission":
         raise SiteCheckError(f"{label}: unexpected BaseScan status")
-    if status.get("baseScanTokenProfileLastCheckedDate") != "2026-05-18":
+    if status.get("baseScanTokenProfileLastCheckedDate") != "2026-05-23":
         raise SiteCheckError(f"{label}: wrong BaseScan profile last checked date")
-    if "No approval email received" not in status.get("baseScanTokenProfileLastCheckedResult", ""):
+    if "returned the token profile update again" not in status.get("baseScanTokenProfileLastCheckedResult", ""):
         raise SiteCheckError(f"{label}: missing BaseScan profile last checked result")
     if status.get("geckoTerminalTokenInfo") != "approved-2026-05-11":
         raise SiteCheckError(f"{label}: unexpected GeckoTerminal status")
-    if external_reviews.get("baseScanTokenProfileLastCheckedDate") != "2026-05-18":
+    if external_reviews.get("baseScanTokenProfileLastCheckedDate") != "2026-05-23":
         raise SiteCheckError(f"{label}: wrong external review BaseScan last checked date")
     if status.get("narrativeSystem") != "public-narrative-system-published":
         raise SiteCheckError(f"{label}: unexpected narrative system status")
@@ -8048,7 +8144,7 @@ def validate_wallet_security_json(text: str) -> None:
         raise SiteCheckError(f"{label}: owner-visible warning state must be true")
     if basescan.get("sourceVerification") != "verified":
         raise SiteCheckError(f"{label}: wrong BaseScan source status")
-    if basescan.get("tokenProfile") != "resubmitted-awaiting-review":
+    if basescan.get("tokenProfile") != "remediation-required-before-next-submission":
         raise SiteCheckError(f"{label}: wrong BaseScan token profile status")
     if market.get("pair") != "GCA/USDT":
         raise SiteCheckError(f"{label}: wrong official market pair")
@@ -8641,9 +8737,9 @@ def validate_listing_readiness_json(text: str) -> None:
     if not any(check.get("id") == "no-artificial-activity-policy" for check in checks):
         raise SiteCheckError(f"{label}: missing artificial activity policy")
     base_scan_profile = next((check for check in checks if check.get("id") == "basescan-token-profile"), {})
-    if base_scan_profile.get("lastCheckedDate") != "2026-05-18":
+    if base_scan_profile.get("lastCheckedDate") != "2026-05-23":
         raise SiteCheckError(f"{label}: wrong BaseScan profile last checked date")
-    if "No approval email or public profile publication was confirmed as of 2026-05-18" not in base_scan_profile.get("evidence", ""):
+    if "returned again by BaseScan as information-insufficient on 2026-05-23" not in base_scan_profile.get("evidence", ""):
         raise SiteCheckError(f"{label}: missing BaseScan profile last checked evidence")
     if "CoinGecko tracked listing request" not in payload.get("notReadyFor", []):
         raise SiteCheckError(f"{label}: missing CoinGecko defer boundary")
@@ -9325,7 +9421,7 @@ def validate_reviewer_kit_json(text: str) -> None:
         raise SiteCheckError(f"{label}: transfer tax must be false")
     if facts.get("thirdPartyAuditCompleted") is not False:
         raise SiteCheckError(f"{label}: third-party audit must be false")
-    if reviews.get("baseScanTokenProfile") != "resubmitted-awaiting-review":
+    if reviews.get("baseScanTokenProfile") != "remediation-required-before-next-submission":
         raise SiteCheckError(f"{label}: wrong BaseScan profile status")
     if reviews.get("blockaidMetaMask") != "owner-observed-no-warning-visible":
         raise SiteCheckError(f"{label}: wrong Blockaid status")
@@ -9603,7 +9699,7 @@ def validate_trust_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong BaseScan source status")
     if snapshot.get("baseScanOwnership") != "verified":
         raise SiteCheckError(f"{label}: wrong BaseScan ownership status")
-    if snapshot.get("baseScanTokenProfile") != "resubmitted-awaiting-review":
+    if snapshot.get("baseScanTokenProfile") != "remediation-required-before-next-submission":
         raise SiteCheckError(f"{label}: wrong BaseScan token profile status")
     if snapshot.get("geckoTerminalTokenInfo") != "approved-2026-05-11":
         raise SiteCheckError(f"{label}: wrong GeckoTerminal status")
@@ -9692,7 +9788,7 @@ def validate_trust_page(text: str) -> None:
     assert_contains(text, "Base Mainnet / 8453", label)
     assert_contains(text, MAINNET_ADDRESS, label)
     assert_contains(text, "BaseScan source code", label)
-    assert_contains(text, "Resubmitted: awaiting review", label)
+    assert_contains(text, "Returned 2026-05-23; remediation required", label)
     assert_contains(text, "Approved 2026-05-11", label)
     assert_contains(text, "Owner observed no warning visible", label)
     assert_contains(text, "No completed third-party audit", label)
@@ -9717,7 +9813,7 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != EXTERNAL_REVIEW_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
-    if payload.get("lastUpdated") != "2026-05-18":
+    if payload.get("lastUpdated") != "2026-05-23":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("status") != "external-review-status-active":
         raise SiteCheckError(f"{label}: wrong status")
@@ -9741,6 +9837,12 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong trustCenter")
     if links.get("marketQualityPage") != MARKET_QUALITY_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong marketQualityPage")
+    if links.get("teamPage") != TEAM_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong teamPage")
+    if links.get("baseScanRemediationPage") != BASESCAN_REMEDIATION_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong baseScanRemediationPage")
+    if links.get("baseScanRemediation") != BASESCAN_REMEDIATION_URL:
+        raise SiteCheckError(f"{label}: wrong baseScanRemediation")
     if links.get("onchainProofsPage") != ONCHAIN_PROOFS_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong onchainProofsPage")
     if links.get("onchainProofs") != ONCHAIN_PROOFS_URL:
@@ -9765,11 +9867,11 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong quoteAssetAddress")
     if reviews.get("baseScanSource", {}).get("status") != "verified":
         raise SiteCheckError(f"{label}: wrong BaseScan source status")
-    if reviews.get("baseScanTokenProfile", {}).get("status") != "resubmitted-awaiting-review":
+    if reviews.get("baseScanTokenProfile", {}).get("status") != "remediation-required-before-next-submission":
         raise SiteCheckError(f"{label}: wrong BaseScan profile status")
-    if reviews.get("baseScanTokenProfile", {}).get("lastCheckedDate") != "2026-05-18":
+    if reviews.get("baseScanTokenProfile", {}).get("lastCheckedDate") != "2026-05-23":
         raise SiteCheckError(f"{label}: wrong BaseScan profile last checked date")
-    if "No approval email received" not in reviews.get("baseScanTokenProfile", {}).get("lastCheckedResult", ""):
+    if "returned the token profile update again" not in reviews.get("baseScanTokenProfile", {}).get("lastCheckedResult", ""):
         raise SiteCheckError(f"{label}: missing BaseScan profile last checked result")
     blockaid = reviews.get("blockaidMetaMask", {})
     if blockaid.get("status") != "owner-observed-no-warning-visible":
@@ -9809,9 +9911,8 @@ def validate_external_reviews_page(text: str) -> None:
     assert_contains(text, "Platform-Only Evidence Path", label)
     assert_contains(text, "Data Room", label)
     assert_contains(text, "Trust Center", label)
-    assert_contains(text, "Resubmitted: awaiting review", label)
-    assert_contains(text, "no approval email received as of 2026-05-18", label)
-    assert_contains(text, "Last checked on 2026-05-18", label)
+    assert_contains(text, "Returned 2026-05-23; remediation required", label)
+    assert_contains(text, "fix domain email and public professional profile evidence before resubmission", label)
     assert_contains(text, "Owner observed no warning visible 2026-05-14", label)
     assert_contains(text, "Approved 2026-05-11", label)
     assert_contains(text, "CoinGecko tracked listing submission", label)
@@ -9933,8 +10034,8 @@ def validate_listing_readiness_page(text: str) -> None:
     assert_contains(text, "DEX metadata and wallet identity review", label)
     assert_contains(text, "CoinGecko tracked listing request", label)
     assert_contains(text, "CoinMarketCap tracked listing request", label)
-    assert_contains(text, "Pending external review", label)
-    assert_contains(text, "no approval email received as of 2026-05-18", label)
+    assert_contains(text, "Returned again 2026-05-23; remediation required before next submission", label)
+    assert_contains(text, "Domain email and public professional profile evidence still required", label)
     assert_contains(text, "Approved 2026-05-11", label)
     assert_contains(text, "No artificial activity policy", label)
     assert_contains(text, OFFICIAL_DEXSCREENER_URL, label)
@@ -9954,6 +10055,9 @@ def validate_sitemap(text: str) -> None:
     for expected in (
         "https://gcagochina.com/start.html",
         "https://gcagochina.com/about.html",
+        "https://gcagochina.com/team.html",
+        "https://gcagochina.com/basescan-remediation.html",
+        "https://gcagochina.com/basescan-remediation.json",
         "https://gcagochina.com/action-plan.html",
         "https://gcagochina.com/register.html",
         "https://gcagochina.com/unsubscribe.html",
@@ -10090,6 +10194,9 @@ def validate_robots(text: str) -> None:
     label = "/robots.txt"
     assert_contains(text, "Allow: /start.html", label)
     assert_contains(text, "Allow: /about.html", label)
+    assert_contains(text, "Allow: /team.html", label)
+    assert_contains(text, "Allow: /basescan-remediation.html", label)
+    assert_contains(text, "Allow: /basescan-remediation.json", label)
     assert_contains(text, "Allow: /action-plan.html", label)
     assert_contains(text, "Allow: /register.html", label)
     assert_contains(text, "Allow: /unsubscribe.html", label)
@@ -10229,6 +10336,9 @@ CHECKS: list[EndpointCheck] = [
     ("/register.html", validate_register_page),
     ("/unsubscribe.html", validate_unsubscribe_page),
     ("/about.html", validate_about_page),
+    ("/team.html", validate_team_page),
+    ("/basescan-remediation.html", validate_basescan_remediation_page),
+    ("/basescan-remediation.json", validate_basescan_remediation_json),
     ("/action-plan.html", validate_action_plan_page),
     ("/zh-cn.html", validate_zh_cn_page),
     ("/zh-buy.html", validate_zh_buy_page),

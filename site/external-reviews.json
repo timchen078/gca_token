@@ -1,7 +1,7 @@
 {
   "schema": "https://gcagochina.com/external-reviews.json",
   "pageUrl": "https://gcagochina.com/external-reviews.html",
-  "lastUpdated": "2026-05-18",
+  "lastUpdated": "2026-05-23",
   "projectName": "GCA",
   "tokenSymbol": "GCA",
   "network": "Base Mainnet",
@@ -13,6 +13,9 @@
     "website": "https://gcagochina.com/",
     "verify": "https://gcagochina.com/verify.html",
     "status": "https://gcagochina.com/status.html",
+    "teamPage": "https://gcagochina.com/team.html",
+    "baseScanRemediationPage": "https://gcagochina.com/basescan-remediation.html",
+    "baseScanRemediation": "https://gcagochina.com/basescan-remediation.json",
     "onchainProofsPage": "https://gcagochina.com/onchain-proofs.html",
     "onchainProofs": "https://gcagochina.com/onchain-proofs.json",
     "walletWarningEvidencePage": "https://gcagochina.com/wallet-warning.html",
@@ -67,15 +70,19 @@
       "publicClaim": "BaseScan deployer-wallet ownership verification is complete."
     },
     "baseScanTokenProfile": {
-      "status": "resubmitted-awaiting-review",
+      "status": "remediation-required-before-next-submission",
       "submissionDate": "2026-05-09",
       "returnNoticeDate": "2026-05-13",
       "resubmissionDate": "2026-05-13",
-      "lastCheckedDate": "2026-05-18",
-      "lastCheckedResult": "No approval email received and no public token profile publication confirmed by owner as of 2026-05-18.",
+      "latestReturnNoticeDate": "2026-05-23",
+      "lastCheckedDate": "2026-05-23",
+      "lastCheckedResult": "BaseScan returned the token profile update again as information-insufficient; owner-controlled remediation is required before the next submission.",
       "returnReason": "information-insufficient",
-      "publicClaim": "The public BaseScan token profile update was returned as information-insufficient on 2026-05-13, resubmitted on 2026-05-13, and is awaiting BaseScan email/review. Last checked on 2026-05-18 with no approval email received or public profile publication confirmed.",
-      "nextAction": "Wait for BaseScan email/review; no approval email or public profile publication was confirmed as of 2026-05-18, so do not submit duplicates unless BaseScan asks for corrections."
+      "remediationPage": "https://gcagochina.com/basescan-remediation.html",
+      "teamPage": "https://gcagochina.com/team.html",
+      "github": "https://github.com/timchen078/gca_token",
+      "publicClaim": "The public BaseScan token profile update was returned again as information-insufficient on 2026-05-23. BaseScan profile publication is not approved or complete.",
+      "nextAction": "Create and publish a working gcagochina.com domain email, publish a Tim Chen LinkedIn or equivalent external professional profile, rerun public-site checks, then resubmit through the official BaseScan form."
     },
     "blockaidMetaMask": {
       "status": "owner-observed-no-warning-visible",
@@ -124,7 +131,7 @@
   "safePublicClaims": [
     "GCA is deployed on Base Mainnet with fixed total supply.",
     "BaseScan source and deployer-wallet ownership verification are complete.",
-    "The BaseScan token profile update was returned as information-insufficient on 2026-05-13, resubmitted on 2026-05-13, and is awaiting BaseScan email/review; no approval email or public profile publication was confirmed as of 2026-05-18.",
+    "The BaseScan token profile update was returned again as information-insufficient on 2026-05-23; remediation is required before the next submission.",
     "GeckoTerminal token information was approved on 2026-05-11.",
     "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool.",
     "Owner reported on 2026-05-14 that no wallet risk warning was visible in the tested wallet/DEX flow.",
@@ -141,7 +148,8 @@
     "deep liquidity, price support, return promises, or ranking acceptance"
   ],
   "nextActions": [
-    "Wait for BaseScan email/review; no approval email or public profile publication was confirmed as of 2026-05-18, so do not submit duplicates unless BaseScan asks for corrections.",
+    "Create and publish a working gcagochina.com domain email before the next BaseScan submission.",
+    "Publish a Tim Chen LinkedIn or equivalent external professional profile, or prepare a clear explanation of official-domain team page and GitHub evidence.",
     "Keep monitoring wallet-warning UI before claiming any broader warning-free or security-vendor approval status.",
     "Keep GCA/USDT market links, logo, whitepaper, Telegram, X, and metadata files live.",
     "Use the risk-remediation plan when a reviewer asks how volatility, LP custody, supply concentration, or audit status will be reduced.",

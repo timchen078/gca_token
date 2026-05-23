@@ -7,20 +7,26 @@
 - Contract: `0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`
 - Submission date: 2026-05-09
 - Resubmission date: 2026-05-13
-- Submission status: resubmitted through BaseScan token update form
-- Review status: resubmitted-awaiting-review
+- Submission status: returned again; remediation required before next submission
+- Review status: remediation-required-before-next-submission
 - Return notice date: 2026-05-13
-- Last checked: 2026-05-18; no approval email received and no public token profile publication confirmed by owner
+- Latest return notice date: 2026-05-23
+- Last checked: 2026-05-23; BaseScan returned the token profile update again as information-insufficient
 - Reply inbox: `cxy070800@gmail.com`
 
 Do not describe the BaseScan token profile as complete, published, or accepted until BaseScan confirms the update and the public contract page shows the submitted token information.
 
 ## Why It Was Returned
 
-BaseScan replied that it could not process the first token update request because the submitted information about the token/project was insufficient. A cleaner resubmission was sent on 2026-05-13 with public references, contact details, logo, social links, contract evidence, and deployer-signature context ready.
+BaseScan replied that it could not process the token update request because the submitted information about the token/project was insufficient. A cleaner resubmission was sent on 2026-05-13, but BaseScan returned the update again on 2026-05-23. The current blockers are a project-domain email, public professional profile evidence for Tim Chen, and stable reviewer links.
 
 ## Waiting Checklist
 
+- Create and test a working `gcagochina.com` domain email such as `support@gcagochina.com`
+- Publish a Tim Chen LinkedIn or equivalent external professional profile showing the GCA role
+- Public team profile remains live: `https://gcagochina.com/team.html`
+- BaseScan remediation page remains live: `https://gcagochina.com/basescan-remediation.html`
+- Public GitHub repository remains live: `https://github.com/timchen078/gca_token`
 - Gmail inbox and spam folder for `cxy070800@gmail.com`
 - BaseScan account notifications
 - Contract page: `https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`
@@ -46,7 +52,7 @@ BaseScan replied that it could not process the first token update request becaus
 ## If BaseScan Approves
 
 1. Confirm the contract page displays the GCA logo, website, whitepaper, and contact details.
-2. Update `launch/launch_status.md`, `docs/mainnet_public_profile.md`, `docs/whitepaper.md`, `site/index.html`, and `site/whitepaper.html` from "resubmitted-awaiting-review" to "accepted and published".
+2. Update `launch/launch_status.md`, `docs/mainnet_public_profile.md`, `docs/whitepaper.md`, `site/index.html`, and `site/whitepaper.html` from "remediation-required-before-next-submission" to "accepted and published".
 3. Keep the third-party audit disclosure unchanged unless an independent auditor provides a report or public verification page.
 4. Run the full test suite before publishing the updated site.
 
@@ -61,7 +67,7 @@ BaseScan replied that it could not process the first token update request becaus
 
 Use this until approval:
 
-`BaseScan source verification and deployer-wallet ownership verification are complete. The public BaseScan token profile update was returned as information-insufficient on 2026-05-13, resubmitted on 2026-05-13, and is awaiting BaseScan email/review before publication. Last checked on 2026-05-18 with no approval email received or public profile publication confirmed.`
+`BaseScan source verification and deployer-wallet ownership verification are complete. The public BaseScan token profile update was returned again as information-insufficient on 2026-05-23. The profile is not approved or published. The next submission should wait until a project-domain email and public professional profile evidence are ready.`
 
 Do not use:
 

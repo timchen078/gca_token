@@ -1,6 +1,6 @@
-# BaseScan Token Profile Resubmission Package
+# BaseScan Token Profile Remediation Package
 
-This package records the values used for the 2026-05-13 BaseScan token information resubmission. The previous request was submitted on 2026-05-09, returned by BaseScan as information-insufficient on 2026-05-13, and resubmitted on 2026-05-13.
+This package records the current BaseScan token information remediation state. The previous request was submitted on 2026-05-09, returned by BaseScan as information-insufficient on 2026-05-13, resubmitted on 2026-05-13, and returned again as information-insufficient on 2026-05-23.
 
 ## Required Status
 
@@ -13,13 +13,19 @@ This package records the values used for the 2026-05-13 BaseScan token informati
 - Total supply: 1,000,000,000 GCA
 - Contract source: verified on BaseScan
 - Deployer-wallet ownership: previously verified; sign again if BaseScan asks
-- BaseScan profile status: resubmitted-awaiting-review
+- BaseScan profile status: remediation-required-before-next-submission
+- Latest return notice: 2026-05-23
+- Next submission ready: no; fix domain email and public professional profile evidence first
 
 ## Official Links
 
 - Website: `https://gcagochina.com/`
 - Verify page: `https://gcagochina.com/verify.html`
 - Project status: `https://gcagochina.com/status.html`
+- Team profile: `https://gcagochina.com/team.html`
+- BaseScan remediation: `https://gcagochina.com/basescan-remediation.html`
+- BaseScan remediation JSON: `https://gcagochina.com/basescan-remediation.json`
+- Public GitHub repository: `https://github.com/timchen078/gca_token`
 - Listing kit: `https://gcagochina.com/listing-kit.html`
 - Brand kit: `https://gcagochina.com/brand-kit.html`
 - Brand kit JSON: `https://gcagochina.com/brand-kit.json`
@@ -38,6 +44,14 @@ This package records the values used for the 2026-05-13 BaseScan token informati
 - Official Telegram: `https://t.me/gcagochinaofficial`
 - Official X: `https://x.com/GCAAIGoChina`
 - Official email: `GCAgochina@outlook.com`
+
+## Owner-Required Fixes Before The Next Submission
+
+1. Create and test a working `gcagochina.com` domain email such as `support@gcagochina.com`, `hello@gcagochina.com`, or `team@gcagochina.com`.
+2. Publish that domain email on the support, about, and team pages.
+3. Submit to BaseScan from the domain email when possible, or clearly explain the official primary email in the form.
+4. Publish a Tim Chen LinkedIn or equivalent external public professional profile showing the GCA role, then include the full URL in the next submission.
+5. Re-run the public site checker after the email/profile change and before submitting.
 
 ## Description
 
@@ -67,7 +81,7 @@ GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stand
 
 Do not describe the reserve as locked, vested, or multisig-controlled unless custody changes on-chain.
 
-## Submitted Checklist
+## 2026-05-13 Submitted Checklist
 
 Used for the 2026-05-13 resubmission:
 
@@ -82,6 +96,6 @@ Used for the 2026-05-13 resubmission:
 
 ## Safe Public Claim
 
-`BaseScan source verification and deployer-wallet ownership verification are complete. The public BaseScan token profile update was returned as information-insufficient on 2026-05-13, resubmitted on 2026-05-13, and is awaiting BaseScan email/review before publication. Last checked on 2026-05-18 with no approval email received or public profile publication confirmed.`
+`BaseScan source verification and deployer-wallet ownership verification are complete. The public BaseScan token profile update was returned again as information-insufficient on 2026-05-23. The profile is not approved or published. The next submission should wait until a project-domain email and public professional profile evidence are ready.`
 
 Do not say the BaseScan token profile is approved, published, live, complete, or accepted until the public BaseScan token page shows the submitted information.

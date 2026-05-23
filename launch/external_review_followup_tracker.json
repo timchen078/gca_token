@@ -1,6 +1,6 @@
 {
   "documentStatus": "prepared",
-  "lastReviewedDate": "2026-05-14",
+  "lastReviewedDate": "2026-05-23",
   "canonicalIdentity": {
     "network": "Base Mainnet",
     "chainId": 8453,
@@ -27,6 +27,10 @@
     "walletWarningEvidenceUrl": "https://gcagochina.com/wallet-warning.json",
     "externalReviewStatusPageUrl": "https://gcagochina.com/external-reviews.html",
     "externalReviewStatusUrl": "https://gcagochina.com/external-reviews.json",
+    "teamPageUrl": "https://gcagochina.com/team.html",
+    "baseScanRemediationPageUrl": "https://gcagochina.com/basescan-remediation.html",
+    "baseScanRemediationUrl": "https://gcagochina.com/basescan-remediation.json",
+    "githubRepoUrl": "https://github.com/timchen078/gca_token",
     "marketQualityPageUrl": "https://gcagochina.com/market-quality.html",
     "marketQualityUrl": "https://gcagochina.com/market-quality.json",
     "listingReadinessPageUrl": "https://gcagochina.com/listing-readiness.html",
@@ -41,15 +45,16 @@
   },
   "platforms": {
     "baseScan": {
-      "profileStatus": "resubmitted-awaiting-review",
+      "profileStatus": "remediation-required-before-next-submission",
       "submissionDate": "2026-05-09",
       "returnNoticeDate": "2026-05-13",
+      "latestReturnNoticeDate": "2026-05-23",
       "returnReason": "information-insufficient",
       "replyInbox": "cxy070800@gmail.com",
       "resubmissionDate": "2026-05-13",
-      "lastCheckedDate": "2026-05-18",
-      "lastCheckedResult": "No approval email received and no public token profile publication confirmed by owner as of 2026-05-18.",
-      "nextAction": "Wait for BaseScan email/review; do not submit duplicates unless BaseScan asks for corrections."
+      "lastCheckedDate": "2026-05-23",
+      "lastCheckedResult": "BaseScan returned the token profile update again as information-insufficient; domain email and public professional profile evidence should be fixed before the next submission.",
+      "nextAction": "Create and publish a working gcagochina.com domain email, publish a Tim Chen LinkedIn or equivalent external professional profile, rerun public-site checks, then resubmit through the official BaseScan form."
     },
     "blockaid": {
       "reportStatus": "owner-observed-no-warning-visible",
@@ -87,7 +92,7 @@
   "safePublicClaims": [
     "BaseScan source verification is complete.",
     "BaseScan deployer-wallet ownership verification is complete.",
-    "The public BaseScan token profile update was returned as information-insufficient on 2026-05-13, resubmitted on 2026-05-13, and is awaiting BaseScan email/review; no approval email or public profile publication was confirmed as of 2026-05-18.",
+    "The public BaseScan token profile update was returned again as information-insufficient on 2026-05-23; remediation is required before the next submission.",
     "GeckoTerminal token information was approved on 2026-05-11.",
     "Owner reported on 2026-05-14 that no wallet risk warning was visible in the tested wallet/DEX flow.",
     "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool.",

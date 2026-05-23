@@ -1,7 +1,7 @@
 {
   "schema": "https://gcagochina.com/listing-readiness.json",
   "pageUrl": "https://gcagochina.com/listing-readiness.html",
-  "lastUpdated": "2026-05-12",
+  "lastUpdated": "2026-05-23",
   "projectName": "GCA",
   "tokenSymbol": "GCA",
   "network": "Base Mainnet",
@@ -25,6 +25,9 @@
     "website": "https://gcagochina.com/",
     "verify": "https://gcagochina.com/verify.html",
     "status": "https://gcagochina.com/status.html",
+    "teamPage": "https://gcagochina.com/team.html",
+    "baseScanRemediationPage": "https://gcagochina.com/basescan-remediation.html",
+    "baseScanRemediation": "https://gcagochina.com/basescan-remediation.json",
     "listingKit": "https://gcagochina.com/listing-kit.html",
     "onchainProofsPage": "https://gcagochina.com/onchain-proofs.html",
     "onchainProofs": "https://gcagochina.com/onchain-proofs.json",
@@ -72,9 +75,9 @@
     {
       "id": "basescan-token-profile",
       "label": "BaseScan token profile",
-      "status": "resubmitted-awaiting-review",
-      "lastCheckedDate": "2026-05-18",
-      "evidence": "Token information update was submitted on 2026-05-09, returned by BaseScan as information-insufficient on 2026-05-13, and resubmitted on 2026-05-13; it is awaiting BaseScan review before publication. No approval email or public profile publication was confirmed as of 2026-05-18."
+      "status": "remediation-required-before-next-submission",
+      "lastCheckedDate": "2026-05-23",
+      "evidence": "Token information update was returned again by BaseScan as information-insufficient on 2026-05-23. Domain email and public professional profile evidence should be fixed before the next submission."
     },
     {
       "id": "geckoterminal-token-info",
@@ -151,7 +154,8 @@
     ]
   },
   "nextActions": [
-    "Wait for BaseScan email/review; no approval email or public profile publication was confirmed as of 2026-05-18, so do not submit duplicates unless BaseScan asks for corrections.",
+    "Create and publish a working gcagochina.com domain email before the next BaseScan submission.",
+    "Publish a Tim Chen LinkedIn or equivalent external professional profile, or prepare a clear explanation of official-domain team page and GitHub evidence.",
     "Keep the GCA/USDT pool, website, logo, whitepaper, Telegram, X, and metadata files live.",
     "Grow legitimate public activity and liquidity depth before CoinGecko or CoinMarketCap submission.",
     "Use the market quality plan before presenting market-growth updates.",

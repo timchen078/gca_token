@@ -29,6 +29,10 @@ Use this file as the single operating checklist for external review, wallet-warn
 - Public wallet warning evidence JSON: `https://gcagochina.com/wallet-warning.json`
 - Public external review status page: `https://gcagochina.com/external-reviews.html`
 - Public external review status JSON: `https://gcagochina.com/external-reviews.json`
+- Public team profile: `https://gcagochina.com/team.html`
+- BaseScan remediation page: `https://gcagochina.com/basescan-remediation.html`
+- BaseScan remediation JSON: `https://gcagochina.com/basescan-remediation.json`
+- Public GitHub repository: `https://github.com/timchen078/gca_token`
 - Market quality page: `https://gcagochina.com/market-quality.html`
 - Market quality JSON: `https://gcagochina.com/market-quality.json`
 - Listing readiness page: `https://gcagochina.com/listing-readiness.html`
@@ -42,7 +46,7 @@ Use this file as the single operating checklist for external review, wallet-warn
 
 | Platform | Current status | Contact / inbox | Next action |
 | --- | --- | --- | --- |
-| BaseScan token profile | Submitted on 2026-05-09, returned by BaseScan as information-insufficient on 2026-05-13, and resubmitted on 2026-05-13; last checked on 2026-05-18 with no approval email or public profile publication confirmed | `cxy070800@gmail.com` / `GCAgochina@outlook.com` | Wait for BaseScan email/review; do not submit duplicates unless BaseScan asks for corrections. |
+| BaseScan token profile | Submitted on 2026-05-09, returned as information-insufficient on 2026-05-13, resubmitted on 2026-05-13, and returned again as information-insufficient on 2026-05-23 | `cxy070800@gmail.com` / `GCAgochina@outlook.com` | Create and publish a working `gcagochina.com` domain email, publish a Tim Chen LinkedIn or equivalent external professional profile, rerun checks, then resubmit through the official BaseScan form. |
 | Blockaid / MetaMask warning | False-positive report submitted on 2026-05-10; follow-up submitted on 2026-05-13; owner observed no wallet risk warning visible on 2026-05-14 | Owner browser / wallet UI / `GCAgochina@outlook.com` | Keep monitoring wallet and Uniswap warning UI. Do not submit another duplicate unless Blockaid, MetaMask, or Uniswap asks for more information. |
 | GeckoTerminal | Token information update approved on 2026-05-11 | `GCAgochina@outlook.com` | No duplicate update unless official details change or GeckoTerminal asks for a correction. |
 | DEX Screener | Discoverable through the live GCA/USDT pool | Not submitted as a direct paid metadata update | Keep the GCA/USDT pool, website, token list, and GeckoTerminal data consistent. |
@@ -52,12 +56,15 @@ Use this file as the single operating checklist for external review, wallet-warn
 
 ## BaseScan Review Check
 
-1. Check `cxy070800@gmail.com` inbox and spam.
-2. Check BaseScan account notifications.
-3. Use `launch/basescan_resubmission_package.md` and `launch/basescan_resubmission_values.json`.
-4. Confirm `https://gcagochina.com/verify.html`, `https://gcagochina.com/markets.html`, and the GCA/USDT GeckoTerminal pool still load.
-5. Sign with the deployer wallet again if BaseScan asks for address ownership verification.
-6. Do not submit duplicate token update requests unless BaseScan asks for corrections.
+1. Create and test a working `gcagochina.com` domain email such as `support@gcagochina.com`.
+2. Publish that domain email on support, about, and team pages before resubmission.
+3. Publish a Tim Chen LinkedIn or equivalent external professional profile showing the GCA role, or prepare a clear explanation of official-domain team page and GitHub evidence.
+4. Check `cxy070800@gmail.com` inbox and spam.
+5. Check BaseScan account notifications.
+6. Use `launch/basescan_resubmission_package.md` and `launch/basescan_resubmission_values.json`.
+7. Confirm `https://gcagochina.com/verify.html`, `https://gcagochina.com/markets.html`, and the GCA/USDT GeckoTerminal pool still load.
+8. Sign with the deployer wallet again if BaseScan asks for address ownership verification.
+9. Do not submit duplicate token update requests until the owner-controlled blockers above are fixed.
 
 ## Weekly Check
 
@@ -71,7 +78,7 @@ Use this file as the single operating checklist for external review, wallet-warn
 
 - BaseScan source verification is complete.
 - BaseScan deployer-wallet ownership verification is complete.
-- The public BaseScan token profile update was returned as information-insufficient on 2026-05-13, resubmitted on 2026-05-13, and is awaiting BaseScan email/review. Last checked on 2026-05-18 with no approval email received or public profile publication confirmed.
+- The public BaseScan token profile update was returned again as information-insufficient on 2026-05-23; remediation is required before the next submission.
 - GeckoTerminal token information was approved on 2026-05-11.
 - Owner observed no wallet risk warning visible on 2026-05-14 after the 2026-05-10 Blockaid report and 2026-05-13 follow-up.
 - This observation is not permanent security-vendor approval or a cross-wallet guarantee.
@@ -101,6 +108,9 @@ Contract: 0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6
 Official website: https://gcagochina.com/
 Official verify page: https://gcagochina.com/verify.html
 Official market page: https://gcagochina.com/markets.html
+Team profile: https://gcagochina.com/team.html
+BaseScan remediation: https://gcagochina.com/basescan-remediation.html
+Public GitHub repository: https://github.com/timchen078/gca_token
 Official logo: https://gcagochina.com/assets/gca-logo.svg
 Brand kit: https://gcagochina.com/brand-kit.html
 Whitepaper: https://gcagochina.com/whitepaper.html
