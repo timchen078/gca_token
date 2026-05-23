@@ -741,6 +741,9 @@ def validate_domain_email_page(text: str) -> None:
         "MX",
         "SPF",
         "DKIM / DMARC",
+        "Operator DNS Check",
+        "tools/check_domain_email_dns.py",
+        "--dkim-selector &lt;provider-selector&gt;",
         "Evidence Packet",
         "What To Save Before BaseScan Resubmission",
         "support-page-domain-email",
@@ -764,6 +767,7 @@ def validate_domain_email_json(text: str) -> None:
     base_scan_use = payload.get("baseScanUse", {})
     boundaries = payload.get("publicClaimBoundaries", {})
     evidence = payload.get("activationEvidencePacket", {})
+    dns_check = payload.get("operatorDnsCheck", {})
     policy = payload.get("baseScanSubmissionPolicy", {})
     dns = payload.get("dnsChecklist", [])
 
@@ -790,6 +794,14 @@ def validate_domain_email_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing provider-status evidence")
     if "domain-email-dns-mx-spf-dkim-dmarc.txt" not in evidence.get("recommendedFilenames", []):
         raise SiteCheckError(f"{label}: missing DNS evidence filename")
+    if dns_check.get("tool") != "tools/check_domain_email_dns.py":
+        raise SiteCheckError(f"{label}: wrong operator DNS check tool")
+    if "--dkim-selector <provider-selector>" not in dns_check.get("command", ""):
+        raise SiteCheckError(f"{label}: missing DKIM selector command")
+    if "DKIM" not in dns_check.get("checks", []):
+        raise SiteCheckError(f"{label}: missing DKIM operator DNS check")
+    if "does not touch wallets or contracts" not in dns_check.get("boundaries", []):
+        raise SiteCheckError(f"{label}: missing operator DNS check wallet boundary")
     if policy.get("nextCleanSubmissionSender") != "support@gcagochina.com after activation":
         raise SiteCheckError(f"{label}: wrong next BaseScan sender policy")
     if "activation evidence packet is archived for owner records" not in policy.get("doNotResubmitBefore", []):

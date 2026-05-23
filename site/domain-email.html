@@ -360,6 +360,10 @@
             <h3>DKIM / DMARC</h3>
             <p class="note">DKIM proves message signing. DMARC can start with monitoring mode, then become stricter after mail delivery is stable.</p>
           </div>
+          <div class="card">
+            <h3>Operator DNS Check</h3>
+            <p class="note">After records are added, run <code>python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox support --dkim-selector &lt;provider-selector&gt; --json</code>. This is a read-only public DNS check for MX, SPF, DMARC, and DKIM.</p>
+          </div>
         </div>
       </section>
 
@@ -383,7 +387,7 @@
           <div class="row"><span>Public support</span><strong><code>support.html</code>, <code>support.json</code>, <code>zh-support.html</code>, <code>register.html</code>, and member intake pages.</strong></div>
           <div class="row"><span>BaseScan package</span><strong><code>basescan-remediation.html</code>, <code>basescan-remediation.json</code>, <code>launch/basescan_form_values.json</code>, and <code>launch/basescan_resubmission_values.json</code>.</strong></div>
           <div class="row"><span>Project identity</span><strong><code>project.json</code>, <code>listing-kit.html</code>, <code>reviewer-kit.json</code>, and external review status files.</strong></div>
-          <div class="row"><span>Validation</span><strong>Run the public site checks and send the next BaseScan request from the same domain email where possible.</strong></div>
+          <div class="row"><span>Validation</span><strong>Run <code>tools/check_domain_email_dns.py</code>, then run the public site checks and send the next BaseScan request from the same domain email where possible.</strong></div>
         </div>
       </section>
 
