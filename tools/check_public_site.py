@@ -33,6 +33,8 @@ STATUS_PAGE_URL = "https://gcagochina.com/status.html"
 ABOUT_PAGE_URL = "https://gcagochina.com/about.html"
 ACTION_PLAN_PAGE_URL = "https://gcagochina.com/action-plan.html"
 TEAM_PAGE_URL = "https://gcagochina.com/team.html"
+TIM_CHEN_PROFILE_PAGE_URL = "https://gcagochina.com/tim-chen.html"
+TIM_CHEN_PROFILE_URL = "https://gcagochina.com/tim-chen.json"
 BASESCAN_REMEDIATION_PAGE_URL = "https://gcagochina.com/basescan-remediation.html"
 BASESCAN_REMEDIATION_URL = "https://gcagochina.com/basescan-remediation.json"
 GITHUB_REPO_URL = "https://github.com/timchen078/gca_token"
@@ -551,8 +553,9 @@ def validate_status_page(text: str) -> None:
     assert_contains(text, "Deployer-wallet ownership verified on BaseScan", label)
     assert_contains(text, "BaseScan public token profile publication", label)
     assert_contains(text, "Returned 2026-05-23; remediation required", label)
-    assert_contains(text, "fix domain email and public professional profile evidence before resubmission", label)
+    assert_contains(text, "Tim Chen profile published, fix domain email before resubmission", label)
     assert_contains(text, "team.html", label)
+    assert_contains(text, "tim-chen.html", label)
     assert_contains(text, "basescan-remediation.html", label)
     assert_contains(text, "GeckoTerminal token information update", label)
     assert_contains(text, "Approved", label)
@@ -643,6 +646,8 @@ def validate_team_page(text: str) -> None:
         "Tim Chen",
         "Founder, CEO, and Project Lead for GCA",
         "team.html#tim-chen",
+        TIM_CHEN_PROFILE_PAGE_URL,
+        "official-domain professional profile",
         GITHUB_REPO_URL,
         X_URL,
         "https://t.me/gcagochinaofficial",
@@ -653,6 +658,70 @@ def validate_team_page(text: str) -> None:
     ):
         assert_contains(text, expected, label)
     assert_no_forbidden_public_claims(text, label)
+
+
+def validate_tim_chen_profile_page(text: str) -> None:
+    label = "/tim-chen.html"
+    assert_social_preview_meta(text, label, TIM_CHEN_PROFILE_PAGE_URL)
+    for expected in (
+        "Tim Chen | GCA Public Professional Profile",
+        "Public Professional Profile",
+        "Founder / CEO / Project Lead",
+        "Founder, CEO, and Project Lead for GCA | Go China Access",
+        "official-domain equivalent public professional profile",
+        "BaseScan use",
+        "No Hidden Claims",
+        TIM_CHEN_PROFILE_PAGE_URL,
+        TEAM_PAGE_URL,
+        "team.html#tim-chen",
+        GITHUB_REPO_URL,
+        MAINNET_ADDRESS,
+    ):
+        assert_contains(text, expected, label)
+    assert_not_contains(text, 'href="tim-chen.json"', label)
+    assert_not_contains(text, 'href="project.json"', label)
+    assert_no_forbidden_public_claims(text, label)
+
+
+def validate_tim_chen_profile_json(text: str) -> None:
+    label = "/tim-chen.json"
+    payload = load_json(text, label)
+    person = payload.get("person", {})
+    scope = payload.get("professionalScope", {})
+    links = payload.get("publicEvidenceLinks", {})
+    reviewer = payload.get("reviewerUse", {})
+
+    if payload.get("schema") != TIM_CHEN_PROFILE_URL:
+        raise SiteCheckError(f"{label}: wrong schema")
+    if payload.get("pageUrl") != TIM_CHEN_PROFILE_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong pageUrl")
+    if payload.get("lastUpdated") != "2026-05-23":
+        raise SiteCheckError(f"{label}: wrong lastUpdated")
+    if payload.get("status") != "official-domain-professional-profile-published":
+        raise SiteCheckError(f"{label}: wrong status")
+    if payload.get("profileType") != "official-domain-equivalent-public-professional-profile":
+        raise SiteCheckError(f"{label}: wrong profileType")
+    if person.get("name") != "Tim Chen":
+        raise SiteCheckError(f"{label}: wrong person name")
+    if person.get("publicRole") != "Founder, CEO, and Project Lead":
+        raise SiteCheckError(f"{label}: wrong public role")
+    if person.get("profileUrl") != TIM_CHEN_PROFILE_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong profile URL")
+    if person.get("teamPageUrl") != f"{TEAM_PAGE_URL}#tim-chen":
+        raise SiteCheckError(f"{label}: wrong team page URL")
+    if scope.get("chainId") != 8453:
+        raise SiteCheckError(f"{label}: wrong chainId")
+    if scope.get("contractAddress") != MAINNET_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong contractAddress")
+    if links.get("professionalProfile") != TIM_CHEN_PROFILE_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong professionalProfile")
+    if links.get("githubRepository") != GITHUB_REPO_URL:
+        raise SiteCheckError(f"{label}: wrong GitHub repository")
+    if reviewer.get("linkedinStillStrongerIfRequired") is not True:
+        raise SiteCheckError(f"{label}: missing LinkedIn caveat")
+    if "BaseScan token profile" not in reviewer.get("baseScanUse", ""):
+        raise SiteCheckError(f"{label}: missing BaseScan use")
+    assert_no_forbidden_public_claims(json.dumps(payload), label)
 
 
 def validate_basescan_remediation_page(text: str) -> None:
@@ -666,11 +735,12 @@ def validate_basescan_remediation_page(text: str) -> None:
         "Owner action required",
         "support@gcagochina.com",
         "Professional profile",
+        TIM_CHEN_PROFILE_PAGE_URL,
         "Tim Chen",
         "team.html",
         GITHUB_REPO_URL,
         "Ready to resubmit today?",
-        "No. Fix domain email",
+        "No. Professional profile evidence is now published; fix domain email",
         "Do not claim the BaseScan token profile is approved",
     ):
         assert_contains(text, expected, label)
@@ -699,6 +769,8 @@ def validate_basescan_remediation_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong contractAddress")
     if identity.get("team") != TEAM_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong team page")
+    if identity.get("timChenProfessionalProfile") != TIM_CHEN_PROFILE_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong Tim Chen profile page")
     if identity.get("github") != GITHUB_REPO_URL:
         raise SiteCheckError(f"{label}: wrong GitHub URL")
     if email_state.get("domainEmailRecommendedBeforeNextSubmission") is not True:
@@ -709,6 +781,12 @@ def validate_basescan_remediation_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong public founder")
     if team.get("officialTeamPage") != f"{TEAM_PAGE_URL}#tim-chen":
         raise SiteCheckError(f"{label}: wrong founder profile permalink")
+    if team.get("officialProfessionalProfile") != TIM_CHEN_PROFILE_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong official professional profile")
+    if team.get("officialProfessionalProfileData") != TIM_CHEN_PROFILE_URL:
+        raise SiteCheckError(f"{label}: wrong official professional profile data")
+    if team.get("equivalentOfficialProfessionalProfilePublished") is not True:
+        raise SiteCheckError(f"{label}: missing official-domain professional profile")
     if team.get("externalProfessionalProfileStillRecommended") is not True:
         raise SiteCheckError(f"{label}: missing external professional profile recommendation")
     if gate.get("ready") is not False:
@@ -827,7 +905,7 @@ def validate_zh_cn_page(text: str) -> None:
         "Tim Chen",
         "BaseScan 已验证",
         "GeckoTerminal 信息",
-        "2026-05-23 被退回；需先补域名邮箱和公开职业资料",
+        "2026-05-23 被退回；职业资料已发布，仍需域名邮箱",
         "第三方审计",
         "尚未完成",
         "邮箱注册 API",
@@ -2280,7 +2358,7 @@ def validate_zh_members_page(text: str) -> None:
         "已上线",
         "人工审核和储备钱包处理",
         "尚未完成",
-        "2026-05-23 被退回；需先补域名邮箱和公开职业资料",
+        "2026-05-23 被退回；职业资料已发布，仍需域名邮箱",
         "Platform-Only Evidence Path",
         "Reviewer Data Room",
         "verify.html",
@@ -9839,6 +9917,9 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong marketQualityPage")
     if links.get("teamPage") != TEAM_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong teamPage")
+    base_scan_profile = reviews.get("baseScanTokenProfile", {})
+    if base_scan_profile.get("professionalProfile") != TIM_CHEN_PROFILE_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong professionalProfile")
     if links.get("baseScanRemediationPage") != BASESCAN_REMEDIATION_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong baseScanRemediationPage")
     if links.get("baseScanRemediation") != BASESCAN_REMEDIATION_URL:
@@ -9867,11 +9948,11 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong quoteAssetAddress")
     if reviews.get("baseScanSource", {}).get("status") != "verified":
         raise SiteCheckError(f"{label}: wrong BaseScan source status")
-    if reviews.get("baseScanTokenProfile", {}).get("status") != "remediation-required-before-next-submission":
+    if base_scan_profile.get("status") != "remediation-required-before-next-submission":
         raise SiteCheckError(f"{label}: wrong BaseScan profile status")
-    if reviews.get("baseScanTokenProfile", {}).get("lastCheckedDate") != "2026-05-23":
+    if base_scan_profile.get("lastCheckedDate") != "2026-05-23":
         raise SiteCheckError(f"{label}: wrong BaseScan profile last checked date")
-    if "returned the token profile update again" not in reviews.get("baseScanTokenProfile", {}).get("lastCheckedResult", ""):
+    if "Tim Chen official-domain professional profile evidence is now published" not in base_scan_profile.get("lastCheckedResult", ""):
         raise SiteCheckError(f"{label}: missing BaseScan profile last checked result")
     blockaid = reviews.get("blockaidMetaMask", {})
     if blockaid.get("status") != "owner-observed-no-warning-visible":
@@ -9912,7 +9993,8 @@ def validate_external_reviews_page(text: str) -> None:
     assert_contains(text, "Data Room", label)
     assert_contains(text, "Trust Center", label)
     assert_contains(text, "Returned 2026-05-23; remediation required", label)
-    assert_contains(text, "fix domain email and public professional profile evidence before resubmission", label)
+    assert_contains(text, "Tim Chen profile published, fix domain email before resubmission", label)
+    assert_contains(text, "tim-chen.html", label)
     assert_contains(text, "Owner observed no warning visible 2026-05-14", label)
     assert_contains(text, "Approved 2026-05-11", label)
     assert_contains(text, "CoinGecko tracked listing submission", label)
@@ -10035,7 +10117,8 @@ def validate_listing_readiness_page(text: str) -> None:
     assert_contains(text, "CoinGecko tracked listing request", label)
     assert_contains(text, "CoinMarketCap tracked listing request", label)
     assert_contains(text, "Returned again 2026-05-23; remediation required before next submission", label)
-    assert_contains(text, "Domain email and public professional profile evidence still required", label)
+    assert_contains(text, "Tim Chen profile published; domain email still required", label)
+    assert_contains(text, "Tim Chen Professional Profile", label)
     assert_contains(text, "Approved 2026-05-11", label)
     assert_contains(text, "No artificial activity policy", label)
     assert_contains(text, OFFICIAL_DEXSCREENER_URL, label)
@@ -10056,6 +10139,8 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/start.html",
         "https://gcagochina.com/about.html",
         "https://gcagochina.com/team.html",
+        "https://gcagochina.com/tim-chen.html",
+        "https://gcagochina.com/tim-chen.json",
         "https://gcagochina.com/basescan-remediation.html",
         "https://gcagochina.com/basescan-remediation.json",
         "https://gcagochina.com/action-plan.html",
@@ -10195,6 +10280,8 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /start.html", label)
     assert_contains(text, "Allow: /about.html", label)
     assert_contains(text, "Allow: /team.html", label)
+    assert_contains(text, "Allow: /tim-chen.html", label)
+    assert_contains(text, "Allow: /tim-chen.json", label)
     assert_contains(text, "Allow: /basescan-remediation.html", label)
     assert_contains(text, "Allow: /basescan-remediation.json", label)
     assert_contains(text, "Allow: /action-plan.html", label)
@@ -10337,6 +10424,8 @@ CHECKS: list[EndpointCheck] = [
     ("/unsubscribe.html", validate_unsubscribe_page),
     ("/about.html", validate_about_page),
     ("/team.html", validate_team_page),
+    ("/tim-chen.html", validate_tim_chen_profile_page),
+    ("/tim-chen.json", validate_tim_chen_profile_json),
     ("/basescan-remediation.html", validate_basescan_remediation_page),
     ("/basescan-remediation.json", validate_basescan_remediation_json),
     ("/action-plan.html", validate_action_plan_page),

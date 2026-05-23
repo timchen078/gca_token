@@ -37,7 +37,7 @@
 - Public whitepaper URL is live at `https://gcagochina.com/whitepaper.html`.
 - Current public contact email `GCAgochina@outlook.com` is published on the official website for data platform verification.
 - BaseScan token update was submitted with `cxy070800@gmail.com`, returned by BaseScan as information-insufficient on 2026-05-13, resubmitted on 2026-05-13, and returned again as information-insufficient on 2026-05-23.
-- BaseScan token profile remediation package is published; the next submission should wait until a project-domain email and public professional profile evidence are ready.
+- BaseScan token profile remediation package is published; Tim Chen public professional profile evidence is now published, and the next submission should wait until a project-domain email is ready.
 - BaseScan review follow-up runbook prepared.
 - BaseScan resubmission values recorded at `launch/basescan_resubmission_package.md` and `launch/basescan_resubmission_values.json`.
 - Token allocation plan updated: 400,000,000 GCA target public allocation and 600,000,000 GCA owner-held reserve.
@@ -125,7 +125,7 @@
 ## Needs Owner Input Or External Service
 
 - Create and publish a working `gcagochina.com` domain email before the next BaseScan submission.
-- Publish a Tim Chen LinkedIn or equivalent external professional profile, or prepare a clear explanation of official-domain team page and GitHub evidence.
+- Include the published Tim Chen professional profile URL `https://gcagochina.com/tim-chen.html`; add LinkedIn later only if BaseScan specifically requires a third-party social-network profile.
 - Use `launch/basescan_resubmission_package.md` and `launch/basescan_resubmission_values.json` as the record of the 2026-05-13 BaseScan token update resubmission.
 - Use `launch/external_review_followup_tracker.md` for BaseScan, Blockaid, GeckoTerminal, DEX Screener, CoinGecko, CoinMarketCap, and audit follow-up status before sending any new platform request.
 - Use `https://gcagochina.com/brand-kit.html` and `https://gcagochina.com/brand-kit.json` when wallets, data platforms, moderators, or community posts need official GCA logo assets and metadata usage boundaries.

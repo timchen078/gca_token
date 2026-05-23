@@ -28,6 +28,8 @@
     "externalReviewStatusPageUrl": "https://gcagochina.com/external-reviews.html",
     "externalReviewStatusUrl": "https://gcagochina.com/external-reviews.json",
     "teamPageUrl": "https://gcagochina.com/team.html",
+    "timChenProfessionalProfileUrl": "https://gcagochina.com/tim-chen.html",
+    "timChenProfessionalProfileDataUrl": "https://gcagochina.com/tim-chen.json",
     "baseScanRemediationPageUrl": "https://gcagochina.com/basescan-remediation.html",
     "baseScanRemediationUrl": "https://gcagochina.com/basescan-remediation.json",
     "githubRepoUrl": "https://github.com/timchen078/gca_token",
@@ -53,8 +55,8 @@
       "replyInbox": "cxy070800@gmail.com",
       "resubmissionDate": "2026-05-13",
       "lastCheckedDate": "2026-05-23",
-      "lastCheckedResult": "BaseScan returned the token profile update again as information-insufficient; domain email and public professional profile evidence should be fixed before the next submission.",
-      "nextAction": "Create and publish a working gcagochina.com domain email, publish a Tim Chen LinkedIn or equivalent external professional profile, rerun public-site checks, then resubmit through the official BaseScan form."
+      "lastCheckedResult": "BaseScan returned the token profile update again as information-insufficient; Tim Chen official-domain professional profile evidence is now published and project-domain email remains the main blocker before the next submission.",
+      "nextAction": "Create and publish a working gcagochina.com domain email, include the Tim Chen professional profile URL, rerun public-site checks, then resubmit through the official BaseScan form."
     },
     "blockaid": {
       "reportStatus": "owner-observed-no-warning-visible",

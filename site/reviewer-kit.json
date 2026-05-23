@@ -217,7 +217,7 @@
       "Use the reviewer kit page and JSON when a platform asks for centralized public evidence.",
       "If a reviewer asks for local member-ledger evidence, export a public redacted review package and verify its digest before sharing.",
       "Do not send duplicate Blockaid reports unless Blockaid, MetaMask, or Uniswap asks for more information.",
-      "Do not submit another BaseScan token update until the project-domain email and public professional profile evidence are ready.",
+      "Do not submit another BaseScan token update until the project-domain email is ready; include the published Tim Chen professional profile URL when resubmitting.",
       "Keep the official GCA/USDT pool, logo, website, Telegram, X, and JSON links consistent."
     ]
   }
