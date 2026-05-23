@@ -186,7 +186,7 @@ Use this page before Telegram posts, moderator replies, or community link sharin
 Public page: `https://gcagochina.com/external-reviews.html`
 Machine-readable JSON: `https://gcagochina.com/external-reviews.json`
 
-Use this page when wallets, data platforms, reviewers, or community moderators need a public status summary. It separates completed BaseScan source and GeckoTerminal verification from pending BaseScan profile publication, Blockaid / MetaMask warning review, deferred CoinGecko / CoinMarketCap tracked-listing submissions, and third-party audit status.
+Use this page when wallets, data platforms, reviewers, or community moderators need a public status summary. It separates completed BaseScan source and GeckoTerminal verification from BaseScan token profile remediation, Blockaid / MetaMask warning review, deferred CoinGecko / CoinMarketCap tracked-listing submissions, and third-party audit status.
 
 ## Public Wallet Warning Evidence
 
