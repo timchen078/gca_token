@@ -124,7 +124,7 @@
 
 ## Needs Owner Input Or External Service
 
-- Use the domain email setup plan at `https://gcagochina.com/domain-email.html`, then create and publish a working `gcagochina.com` domain email before the next BaseScan submission.
+- Use the domain email setup plan at `https://gcagochina.com/domain-email.html`, then create and publish a working `gcagochina.com` domain email and archive the activation evidence packet before the next BaseScan submission.
 - Include the published Tim Chen professional profile URL `https://gcagochina.com/tim-chen.html`; add LinkedIn later only if BaseScan specifically requires a third-party social-network profile.
 - Use `launch/basescan_resubmission_package.md` and `launch/basescan_resubmission_values.json` as the record of the 2026-05-13 BaseScan token update resubmission.
 - Use `launch/external_review_followup_tracker.md` for BaseScan, Blockaid, GeckoTerminal, DEX Screener, CoinGecko, CoinMarketCap, and audit follow-up status before sending any new platform request.

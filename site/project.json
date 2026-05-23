@@ -246,7 +246,7 @@
     "baseScanOwnership": "verified",
     "baseScanTokenProfile": "remediation-required-before-next-submission",
     "baseScanTokenProfileLastCheckedDate": "2026-05-23",
-    "baseScanTokenProfileLastCheckedResult": "BaseScan returned the token profile update again as information-insufficient; the Tim Chen official-domain professional profile is now published, the domain email setup plan is published, and project-domain email remains the main owner-controlled blocker before the next submission.",
+    "baseScanTokenProfileLastCheckedResult": "BaseScan returned the token profile update again as information-insufficient; the Tim Chen official-domain professional profile is now published, the domain email setup plan and activation evidence packet are published, and project-domain email remains the main owner-controlled blocker before the next submission.",
     "baseScanRemediationPage": "https://gcagochina.com/basescan-remediation.html",
     "domainEmailSetupPlan": "https://gcagochina.com/domain-email.html",
     "domainEmailSetupPlanData": "https://gcagochina.com/domain-email.json",

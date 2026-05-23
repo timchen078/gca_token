@@ -2809,7 +2809,7 @@ def validate_listing_kit_page(text: str) -> None:
     assert_contains(text, "Official GCA/USDT route", label)
     assert_contains(text, "BaseScan", label)
     assert_contains(text, "returned again as information-insufficient on 2026-05-23", label)
-    assert_contains(text, "domain email setup plan is published", label)
+    assert_contains(text, "domain email setup plan and activation evidence packet are published", label)
     assert_contains(text, "domain-email.html", label)
     assert_contains(text, "GeckoTerminal", label)
     assert_contains(text, "Approved", label)
@@ -8942,9 +8942,11 @@ def validate_listing_readiness_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong BaseScan profile last checked date")
     if "returned again by BaseScan as information-insufficient on 2026-05-23" not in base_scan_profile.get("evidence", ""):
         raise SiteCheckError(f"{label}: missing BaseScan profile last checked evidence")
-    if "domain email setup plan is published" not in base_scan_profile.get("evidence", ""):
+    if "domain email setup plan" not in base_scan_profile.get("evidence", ""):
         raise SiteCheckError(f"{label}: missing domain email setup evidence")
-    if "Use the domain email setup plan at https://gcagochina.com/domain-email.html, then create and publish a working gcagochina.com domain email before the next BaseScan submission." not in payload.get("nextActions", []):
+    if "activation evidence packet" not in base_scan_profile.get("evidence", ""):
+        raise SiteCheckError(f"{label}: missing domain email activation evidence packet")
+    if "Use the domain email setup plan at https://gcagochina.com/domain-email.html, then create and publish a working gcagochina.com domain email and archive the activation evidence packet before the next BaseScan submission." not in payload.get("nextActions", []):
         raise SiteCheckError(f"{label}: missing domain email setup next action")
     if "CoinGecko tracked listing request" not in payload.get("notReadyFor", []):
         raise SiteCheckError(f"{label}: missing CoinGecko defer boundary")
@@ -10093,6 +10095,10 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong domainEmailSetupPlan")
     if base_scan_profile.get("domainEmailSetupPlanData") != DOMAIN_EMAIL_URL:
         raise SiteCheckError(f"{label}: wrong domainEmailSetupPlanData")
+    if base_scan_profile.get("domainEmailActivationEvidencePacket") != "https://gcagochina.com/domain-email.html#evidenceTitle":
+        raise SiteCheckError(f"{label}: wrong domainEmailActivationEvidencePacket")
+    if "archive the activation evidence packet" not in base_scan_profile.get("nextAction", ""):
+        raise SiteCheckError(f"{label}: missing activation evidence packet next action")
     if links.get("baseScanRemediationPage") != BASESCAN_REMEDIATION_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong baseScanRemediationPage")
     if links.get("baseScanRemediation") != BASESCAN_REMEDIATION_URL:
@@ -10129,6 +10135,10 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing BaseScan profile last checked result")
     if "domain email setup plan" not in base_scan_profile.get("lastCheckedResult", ""):
         raise SiteCheckError(f"{label}: missing BaseScan domain email plan result")
+    if "activation evidence packet" not in base_scan_profile.get("lastCheckedResult", ""):
+        raise SiteCheckError(f"{label}: missing BaseScan domain email evidence packet result")
+    if base_scan_profile.get("domainEmailActivationEvidencePacket") != "https://gcagochina.com/domain-email.html#evidenceTitle":
+        raise SiteCheckError(f"{label}: wrong domainEmailActivationEvidencePacket")
     if "expanded BaseScan reply template" not in base_scan_profile.get("lastCheckedResult", ""):
         raise SiteCheckError(f"{label}: missing BaseScan reply template result")
     if base_scan_profile.get("platformReplyTemplate") != PLATFORM_REPLIES_PAGE_URL:
@@ -10174,9 +10184,11 @@ def validate_external_reviews_page(text: str) -> None:
     assert_contains(text, "Data Room", label)
     assert_contains(text, "Trust Center", label)
     assert_contains(text, "Returned 2026-05-23; remediation required", label)
-    assert_contains(text, "Tim Chen profile, domain email plan, and reply template published", label)
+    assert_contains(text, "Tim Chen profile, domain email plan, activation evidence packet, and reply template published", label)
     assert_contains(text, "tim-chen.html", label)
     assert_contains(text, "Domain Email Plan", label)
+    assert_contains(text, "Email Evidence Packet", label)
+    assert_contains(text, "domain-email.html#evidenceTitle", label)
     assert_contains(text, "domain-email.html", label)
     assert_contains(text, "expanded BaseScan reply template", label)
     assert_contains(text, "Platform Replies", label)
@@ -10303,7 +10315,8 @@ def validate_listing_readiness_page(text: str) -> None:
     assert_contains(text, "CoinGecko tracked listing request", label)
     assert_contains(text, "CoinMarketCap tracked listing request", label)
     assert_contains(text, "Returned again 2026-05-23; remediation required before next submission", label)
-    assert_contains(text, "Tim Chen profile published; domain email still required", label)
+    assert_contains(text, "Tim Chen profile published; domain email and evidence packet still required", label)
+    assert_contains(text, "Plan and evidence packet published; mailbox not active yet", label)
     assert_contains(text, "Tim Chen Professional Profile", label)
     assert_contains(text, "Approved 2026-05-11", label)
     assert_contains(text, "No artificial activity policy", label)

@@ -47,9 +47,10 @@
   "latestReturnNoticeDate": "2026-05-23",
   "reviewStatus": "remediation-required-before-next-submission",
   "lastCheckedDate": "2026-05-23",
-  "lastCheckedResult": "BaseScan returned the token profile update again as information-insufficient; Tim Chen official-domain professional profile evidence is now published, the domain email setup plan is published, and project-domain email remains the main blocker before the next submission.",
+  "lastCheckedResult": "BaseScan returned the token profile update again as information-insufficient; Tim Chen official-domain professional profile evidence is now published, the domain email setup plan and activation evidence packet are published, and project-domain email remains the main blocker before the next submission.",
   "domainEmailSetupPlanUrl": "https://gcagochina.com/domain-email.html",
   "domainEmailSetupPlanDataUrl": "https://gcagochina.com/domain-email.json",
+  "domainEmailActivationEvidencePacketUrl": "https://gcagochina.com/domain-email.html#evidenceTitle",
   "returnReason": "BaseScan could not process the update because the submitted token/project information was insufficient.",
   "resubmissionRequired": true,
   "nextSubmissionReady": false,
@@ -61,6 +62,7 @@
     "Contract source is verified on BaseScan",
     "Contract address is the valid Base Mainnet GCA token contract",
     "Official social links are included",
+    "Domain email activation evidence packet is archived after support@gcagochina.com tests pass",
     "Deployer wallet signs the address ownership message if BaseScan asks"
   ],
   "socialLinks": [
