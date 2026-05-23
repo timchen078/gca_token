@@ -52,6 +52,28 @@
       "support-page-domain-email.png"
     ]
   },
+  "operatorDnsCheck": {
+    "tool": "tools/check_domain_email_dns.py",
+    "command": "python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox support --dkim-selector <provider-selector> --json",
+    "checks": [
+      "MX",
+      "SPF",
+      "DMARC",
+      "DKIM"
+    ],
+    "readyRequires": [
+      "MX present",
+      "single SPF present",
+      "DMARC present",
+      "DKIM present for provider selector"
+    ],
+    "boundaries": [
+      "read-only DNS check",
+      "does not send email",
+      "does not submit BaseScan request",
+      "does not touch wallets or contracts"
+    ]
+  },
   "baseScanSubmissionPolicy": {
     "nextCleanSubmissionSender": "support@gcagochina.com after activation",
     "doNotResubmitBefore": [
