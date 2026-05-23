@@ -2,7 +2,7 @@
   "schema": "https://gcagochina.com/announcements.json",
   "pageUrl": "https://gcagochina.com/announcements.html",
   "status": "public-announcement-hub-published",
-  "lastUpdated": "2026-05-17",
+  "lastUpdated": "2026-05-23",
   "projectName": "GCA",
   "conceptExpansion": "Go China Access",
   "currentStage": "early-public-operations",
@@ -71,6 +71,22 @@
         "#GCA #GoChina #Base"
       ],
       "claimBoundary": "Project update only; no market forecast, no return promise, no external audit claim."
+    },
+    {
+      "id": "x-build-003",
+      "platform": "X",
+      "status": "published",
+      "publishedDate": "2026-05-23",
+      "url": "https://x.com/GCAAIGoChina/status/2058090599535030302",
+      "title": "GCA build update",
+      "message": [
+        "GCA / Go China Access build update.",
+        "GCA is live on Base Mainnet with an official GCA/USDT route, member access pages, read-only wallet balance checks, 100 credits / GCA Member ledger records, public team profile, BaseScan remediation tracker, brand kit, whitepaper, trust center, and reviewer data room.",
+        "Current focus: project-domain email, Tim Chen public professional profile evidence, and consistent identity, links, pool route, and review status across platforms.",
+        "https://gcagochina.com",
+        "#GCA #GoChinaAccess #Base #BaseMainnet #Web3 #DeFi #AIQuant #Onchain #Uniswap"
+      ],
+      "claimBoundary": "Build update only; no price forecast, no return promise, no external audit claim, and no BaseScan approval claim."
     }
   ],
   "nextContentQueue": [
@@ -119,7 +135,7 @@
     "communityPage": "https://gcagochina.com/community.html",
     "community": "https://gcagochina.com/community.json",
     "officialX": "https://x.com/GCAAIGoChina",
-    "latestXPost": "https://x.com/GCAAIGoChina/status/2055944057134927984",
+    "latestXPost": "https://x.com/GCAAIGoChina/status/2058090599535030302",
     "officialTelegram": "https://t.me/gcagochinaofficial",
     "verify": "https://gcagochina.com/verify.html",
     "radarIssue004Page": "https://gcagochina.com/radar-issue-004.html",

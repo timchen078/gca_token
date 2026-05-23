@@ -18,7 +18,7 @@ DEFAULT_BASE_URL = "https://gcagochina.com/"
 MAINNET_ADDRESS = "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6"
 X_URL = "https://x.com/GCAAIGoChina"
 FIRST_X_POST_URL = "https://x.com/GCAAIGoChina/status/2054660559124255151"
-LATEST_X_POST_URL = "https://x.com/GCAAIGoChina/status/2055944057134927984"
+LATEST_X_POST_URL = "https://x.com/GCAAIGoChina/status/2058090599535030302"
 OFFICIAL_POOL_ADDRESS = "0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0"
 BASE_USDT_ADDRESS = "0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2"
 OLD_WETH_POOL_ADDRESS = "0x79fc0b367adbd79118c664f5ee27eb6ff8cb69ff"
@@ -3683,7 +3683,7 @@ def validate_community_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong firstPostPublishedDate")
     if x_launch.get("latestPostUrl") != LATEST_X_POST_URL:
         raise SiteCheckError(f"{label}: wrong latestPostUrl")
-    if x_launch.get("latestPostPublishedDate") != "2026-05-17":
+    if x_launch.get("latestPostPublishedDate") != "2026-05-23":
         raise SiteCheckError(f"{label}: wrong latestPostPublishedDate")
     if not any("GCA is building Go China Access" in item for item in x_launch.get("firstPostText", [])):
         raise SiteCheckError(f"{label}: missing X first post text")
@@ -3915,7 +3915,7 @@ def validate_campaign_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong pageUrl")
     if payload.get("status") != "public-campaign-calendar-published":
         raise SiteCheckError(f"{label}: wrong status")
-    if payload.get("lastUpdated") != "2026-05-17":
+    if payload.get("lastUpdated") != "2026-05-23":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
@@ -4051,7 +4051,7 @@ def validate_content_library_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong pageUrl")
     if payload.get("status") != "public-bilingual-content-library-published":
         raise SiteCheckError(f"{label}: wrong status")
-    if payload.get("lastUpdated") != "2026-05-17":
+    if payload.get("lastUpdated") != "2026-05-23":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
@@ -4178,7 +4178,7 @@ def validate_publishing_desk_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong pageUrl")
     if payload.get("status") != "public-publishing-desk-published":
         raise SiteCheckError(f"{label}: wrong status")
-    if payload.get("lastUpdated") != "2026-05-17":
+    if payload.get("lastUpdated") != "2026-05-23":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")

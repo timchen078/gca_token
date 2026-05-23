@@ -11,7 +11,7 @@ This runbook records the current official X profile state for GCA and the safe l
 - Bio: `GCA | Go China Access. Weekly Go China Radar and Web3 risk education on Base Mainnet. Fixed supply. No promises, no financial advice.`
 - Avatar status: not updated in X yet. Use `site/assets/gca-logo.png` when updating.
 - First public X post: posted at `https://x.com/GCAAIGoChina/status/2054660559124255151`.
-- Latest public X post: posted at `https://x.com/GCAAIGoChina/status/2055944057134927984`.
+- Latest public X post: posted at `https://x.com/GCAAIGoChina/status/2058090599535030302`.
 - Pin status: no official X post is pinned yet.
 
 ## Profile Checklist
@@ -51,6 +51,33 @@ https://gcagochina.com
 ```
 
 URL: `https://x.com/GCAAIGoChina/status/2055944057134927984`
+
+## Third Published Post
+
+```text
+GCA / Go China Access build update
+
+GCA is live on Base Mainnet.
+
+Published now:
+- Official GCA/USDT route
+- Member access pages
+- Read-only wallet balance checks
+- 100 credits / GCA Member ledger records
+- Public team profile and BaseScan remediation tracker
+- Brand kit, whitepaper, trust center, and reviewer data room
+
+Current focus:
+- Set up project-domain email
+- Add Tim Chen public professional profile evidence
+- Keep GCA identity, links, pool route, and review status consistent across platforms
+
+Start here: https://gcagochina.com
+
+#GCA #GoChinaAccess #Base #BaseMainnet #Web3 #DeFi #AIQuant #Onchain #Uniswap
+```
+
+URL: `https://x.com/GCAAIGoChina/status/2058090599535030302`
 
 ## Suggested Thread Follow-Up
 

@@ -14,7 +14,7 @@ SECOND_RESERVE_TX = "0xfffb674448abdbd3af45bb0a30c48e5fbb0e675542b971f031381254b
 TELEGRAM_URL = "https://t.me/gcagochinaofficial"
 X_URL = "https://x.com/GCAAIGoChina"
 FIRST_X_POST_URL = "https://x.com/GCAAIGoChina/status/2054660559124255151"
-LATEST_X_POST_URL = "https://x.com/GCAAIGoChina/status/2055944057134927984"
+LATEST_X_POST_URL = "https://x.com/GCAAIGoChina/status/2058090599535030302"
 SWAP_TEST_BUY_TX = "0xf79e52ea56a299a30c2d297be99c970295864ed262c01fdcb7e3f60ca669b040"
 SWAP_TEST_SELL_TX = "0x0ff618062abc6e28933699d4e3bd723026f8505e4a0155db3068073b6fdc86e7"
 OFFICIAL_POOL_ADDRESS = "0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0"
@@ -2269,8 +2269,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(community["xLaunchPack"]["firstPostUrl"], FIRST_X_POST_URL)
         self.assertEqual(community["xLaunchPack"]["firstPostPublishedDate"], "2026-05-14")
         self.assertEqual(community["xLaunchPack"]["latestPostUrl"], LATEST_X_POST_URL)
-        self.assertEqual(community["xLaunchPack"]["latestPostPublishedDate"], "2026-05-17")
-        self.assertTrue(any("No return promises" in item for item in community["xLaunchPack"]["latestPostText"]))
+        self.assertEqual(community["xLaunchPack"]["latestPostPublishedDate"], "2026-05-23")
+        self.assertTrue(any("BaseScan remediation tracker" in item for item in community["xLaunchPack"]["latestPostText"]))
         self.assertTrue(any("GCA is building Go China Access" in item for item in community["xLaunchPack"]["firstPostText"]))
         self.assertTrue(any("Verify: https://gcagochina.com/verify.html" in item for item in community["xLaunchPack"]["pinnedPostDraft"]))
         self.assertTrue(any("Do not post market-price claims" in item for item in community["xLaunchPack"]["postingChecklist"]))
@@ -2341,7 +2341,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(announcements["schema"], ANNOUNCEMENTS_URL)
         self.assertEqual(announcements["pageUrl"], ANNOUNCEMENTS_PAGE_URL)
         self.assertEqual(announcements["status"], "public-announcement-hub-published")
-        self.assertEqual(announcements["lastUpdated"], "2026-05-17")
+        self.assertEqual(announcements["lastUpdated"], "2026-05-23")
         self.assertEqual(announcements["chainId"], 8453)
         self.assertEqual(announcements["contractAddress"], MAINNET_ADDRESS)
         self.assertEqual(announcements["officialX"], X_URL)
@@ -2426,7 +2426,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(campaign["schema"], CAMPAIGN_URL)
         self.assertEqual(campaign["pageUrl"], CAMPAIGN_PAGE_URL)
         self.assertEqual(campaign["status"], "public-campaign-calendar-published")
-        self.assertEqual(campaign["lastUpdated"], "2026-05-17")
+        self.assertEqual(campaign["lastUpdated"], "2026-05-23")
         self.assertEqual(campaign["chainId"], 8453)
         self.assertEqual(campaign["contractAddress"], MAINNET_ADDRESS)
         self.assertEqual(campaign["officialX"], X_URL)
@@ -2506,7 +2506,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(library["schema"], CONTENT_LIBRARY_URL)
         self.assertEqual(library["pageUrl"], CONTENT_LIBRARY_PAGE_URL)
         self.assertEqual(library["status"], "public-bilingual-content-library-published")
-        self.assertEqual(library["lastUpdated"], "2026-05-17")
+        self.assertEqual(library["lastUpdated"], "2026-05-23")
         self.assertEqual(library["chainId"], 8453)
         self.assertEqual(library["contractAddress"], MAINNET_ADDRESS)
         self.assertEqual(library["officialX"], X_URL)
@@ -2602,7 +2602,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(desk["schema"], PUBLISHING_DESK_URL)
         self.assertEqual(desk["pageUrl"], PUBLISHING_DESK_PAGE_URL)
         self.assertEqual(desk["status"], "public-publishing-desk-published")
-        self.assertEqual(desk["lastUpdated"], "2026-05-17")
+        self.assertEqual(desk["lastUpdated"], "2026-05-23")
         self.assertEqual(desk["chainId"], 8453)
         self.assertEqual(desk["contractAddress"], MAINNET_ADDRESS)
         self.assertEqual(desk["officialX"], X_URL)
