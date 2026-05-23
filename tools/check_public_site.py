@@ -10049,6 +10049,10 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong trustCenterPage")
     if links.get("trustCenter") != TRUST_CENTER_URL:
         raise SiteCheckError(f"{label}: wrong trustCenter")
+    if links.get("platformRepliesPage") != PLATFORM_REPLIES_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong platformRepliesPage")
+    if links.get("platformReplies") != PLATFORM_REPLIES_URL:
+        raise SiteCheckError(f"{label}: wrong platformReplies")
     if links.get("marketQualityPage") != MARKET_QUALITY_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong marketQualityPage")
     if links.get("teamPage") != TEAM_PAGE_URL:
@@ -10094,6 +10098,14 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong BaseScan profile last checked date")
     if "Tim Chen official-domain professional profile evidence is now published" not in base_scan_profile.get("lastCheckedResult", ""):
         raise SiteCheckError(f"{label}: missing BaseScan profile last checked result")
+    if "domain email setup plan" not in base_scan_profile.get("lastCheckedResult", ""):
+        raise SiteCheckError(f"{label}: missing BaseScan domain email plan result")
+    if "expanded BaseScan reply template" not in base_scan_profile.get("lastCheckedResult", ""):
+        raise SiteCheckError(f"{label}: missing BaseScan reply template result")
+    if base_scan_profile.get("platformReplyTemplate") != PLATFORM_REPLIES_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong platformReplyTemplate")
+    if base_scan_profile.get("platformReplyTemplateData") != PLATFORM_REPLIES_URL:
+        raise SiteCheckError(f"{label}: wrong platformReplyTemplateData")
     blockaid = reviews.get("blockaidMetaMask", {})
     if blockaid.get("status") != "owner-observed-no-warning-visible":
         raise SiteCheckError(f"{label}: wrong Blockaid status")
@@ -10133,10 +10145,13 @@ def validate_external_reviews_page(text: str) -> None:
     assert_contains(text, "Data Room", label)
     assert_contains(text, "Trust Center", label)
     assert_contains(text, "Returned 2026-05-23; remediation required", label)
-    assert_contains(text, "Tim Chen profile published, fix domain email before resubmission", label)
+    assert_contains(text, "Tim Chen profile, domain email plan, and reply template published", label)
     assert_contains(text, "tim-chen.html", label)
     assert_contains(text, "Domain Email Plan", label)
     assert_contains(text, "domain-email.html", label)
+    assert_contains(text, "expanded BaseScan reply template", label)
+    assert_contains(text, "Platform Replies", label)
+    assert_contains(text, "platform-replies.html", label)
     assert_contains(text, "Owner observed no warning visible 2026-05-14", label)
     assert_contains(text, "Approved 2026-05-11", label)
     assert_contains(text, "CoinGecko tracked listing submission", label)
