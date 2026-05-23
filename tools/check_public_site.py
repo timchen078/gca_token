@@ -9811,8 +9811,11 @@ def validate_platform_replies_json(text: str) -> None:
         "BaseScan returned the request again as information-insufficient on 2026-05-23",
         "Tim Chen professional profile: https://gcagochina.com/tim-chen.html",
         "Domain email setup plan: https://gcagochina.com/domain-email.html",
+        "Domain email setup data: https://gcagochina.com/domain-email.json",
+        "Domain email activation evidence packet: https://gcagochina.com/domain-email.html#evidenceTitle",
         "Return-notice response:",
         "a working gcagochina.com domain email remains the remaining owner-controlled blocker",
+        "activation evidence packet defines the provider-status, DNS, inbound, outbound, and website-email proof",
         "We will not claim BaseScan token profile approval until BaseScan publishes the profile.",
     ):
         if expected not in basescan_body:
@@ -9857,7 +9860,10 @@ def validate_platform_replies_page(text: str) -> None:
     assert_contains(text, "Tim Chen professional profile: https://gcagochina.com/tim-chen.html", label)
     assert_contains(text, "BaseScan remediation tracker: https://gcagochina.com/basescan-remediation.html", label)
     assert_contains(text, "Domain email setup plan: https://gcagochina.com/domain-email.html", label)
+    assert_contains(text, "Domain email setup data: https://gcagochina.com/domain-email.json", label)
+    assert_contains(text, "Domain email activation evidence packet: https://gcagochina.com/domain-email.html#evidenceTitle", label)
     assert_contains(text, "a working gcagochina.com domain email remains the remaining owner-controlled blocker", label)
+    assert_contains(text, "activation evidence packet defines the provider-status, DNS, inbound, outbound, and website-email proof", label)
     assert_contains(text, "Metadata Correction", label)
     assert_contains(text, "Local Review Package Handoff", label)
     assert_contains(text, "Community Moderator", label)

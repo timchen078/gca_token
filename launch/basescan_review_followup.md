@@ -23,8 +23,10 @@ BaseScan replied that it could not process the token update request because the 
 ## Waiting Checklist
 
 - Create and test a working `gcagochina.com` domain email such as `support@gcagochina.com`
+- Archive the domain email activation evidence packet: provider active screenshot, DNS proof, inbound test, outbound test, and updated support-page screenshot
 - Tim Chen professional profile remains live: `https://gcagochina.com/tim-chen.html`
 - Domain email setup plan remains live: `https://gcagochina.com/domain-email.html`
+- Domain email setup JSON remains live: `https://gcagochina.com/domain-email.json`
 - Add LinkedIn later only if BaseScan specifically requires a third-party social-network profile
 - Public team profile remains live: `https://gcagochina.com/team.html`
 - BaseScan remediation page remains live: `https://gcagochina.com/basescan-remediation.html`
@@ -69,7 +71,7 @@ BaseScan replied that it could not process the token update request because the 
 
 Use this until approval:
 
-`BaseScan source verification and deployer-wallet ownership verification are complete. The public BaseScan token profile update was returned again as information-insufficient on 2026-05-23. The profile is not approved or published. Tim Chen public professional profile evidence is now published at https://gcagochina.com/tim-chen.html; the next submission should wait until a project-domain email is ready.`
+`BaseScan source verification and deployer-wallet ownership verification are complete. The public BaseScan token profile update was returned again as information-insufficient on 2026-05-23. The profile is not approved or published. Tim Chen public professional profile evidence is now published at https://gcagochina.com/tim-chen.html; the domain email activation evidence packet is defined at https://gcagochina.com/domain-email.html#evidenceTitle; the next submission should wait until a project-domain email is ready.`
 
 Do not use:
 
@@ -105,6 +107,8 @@ Whitepaper: https://gcagochina.com/whitepaper.html
 External review status: https://gcagochina.com/external-reviews.html
 Tim Chen professional profile: https://gcagochina.com/tim-chen.html
 Domain email setup plan: https://gcagochina.com/domain-email.html
+Domain email setup data: https://gcagochina.com/domain-email.json
+Domain email activation evidence packet: https://gcagochina.com/domain-email.html#evidenceTitle
 Community kit: https://gcagochina.com/community.html
 Official GCA/USDT pool: https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0
 Official Telegram: https://t.me/gcagochinaofficial

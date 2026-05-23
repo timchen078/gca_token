@@ -24,6 +24,7 @@ This package records the current BaseScan token information remediation state. T
 - Project status: `https://gcagochina.com/status.html`
 - Team profile: `https://gcagochina.com/team.html`
 - Domain email setup plan: `https://gcagochina.com/domain-email.html`
+- Domain email setup JSON and evidence packet: `https://gcagochina.com/domain-email.json`
 - BaseScan remediation: `https://gcagochina.com/basescan-remediation.html`
 - BaseScan remediation JSON: `https://gcagochina.com/basescan-remediation.json`
 - Public GitHub repository: `https://github.com/timchen078/gca_token`
@@ -49,10 +50,11 @@ This package records the current BaseScan token information remediation state. T
 ## Owner-Required Fixes Before The Next Submission
 
 1. Use the published domain email setup plan at `https://gcagochina.com/domain-email.html`, then create and test a working `gcagochina.com` domain email such as `support@gcagochina.com`, `hello@gcagochina.com`, or `team@gcagochina.com`.
-2. Publish that domain email on the support, about, and team pages.
-3. Submit to BaseScan from the domain email when possible, or clearly explain the official primary email in the form.
-4. Include the Tim Chen professional profile URL `https://gcagochina.com/tim-chen.html` in the next submission. Add LinkedIn later only if BaseScan specifically requires a third-party social-network profile.
-5. Re-run the public site checker after the email/profile change and before submitting.
+2. Archive the domain email activation evidence packet: provider active screenshot, MX/SPF/DKIM/DMARC lookup proof, inbound test, outbound test, and updated support-page screenshot.
+3. Publish that domain email on the support, about, and team pages.
+4. Submit to BaseScan from the domain email when possible, or clearly explain the official primary email in the form.
+5. Include the Tim Chen professional profile URL `https://gcagochina.com/tim-chen.html` in the next submission. Add LinkedIn later only if BaseScan specifically requires a third-party social-network profile.
+6. Re-run the public site checker after the email/profile change and before submitting.
 
 ## Description
 
@@ -97,6 +99,6 @@ Used for the 2026-05-13 resubmission:
 
 ## Safe Public Claim
 
-`BaseScan source verification and deployer-wallet ownership verification are complete. The public BaseScan token profile update was returned again as information-insufficient on 2026-05-23. The profile is not approved or published. Tim Chen public professional profile evidence is now published at https://gcagochina.com/tim-chen.html; the next submission should wait until a project-domain email is ready.`
+`BaseScan source verification and deployer-wallet ownership verification are complete. The public BaseScan token profile update was returned again as information-insufficient on 2026-05-23. The profile is not approved or published. Tim Chen public professional profile evidence is now published at https://gcagochina.com/tim-chen.html; the domain email activation evidence packet is defined at https://gcagochina.com/domain-email.html#evidenceTitle; the next submission should wait until a project-domain email is ready.`
 
 Do not say the BaseScan token profile is approved, published, live, complete, or accepted until the public BaseScan token page shows the submitted information.

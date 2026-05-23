@@ -5,9 +5,22 @@
   "resubmissionDate": "2026-05-13",
   "latestReturnNoticeDate": "2026-05-23",
   "lastCheckedDate": "2026-05-23",
-  "lastCheckedResult": "BaseScan returned the token profile update again as information-insufficient; Tim Chen official-domain professional profile evidence is now published, the domain email setup plan is published, and project-domain email remains the main blocker before the next submission.",
+  "lastCheckedResult": "BaseScan returned the token profile update again as information-insufficient; Tim Chen official-domain professional profile evidence is now published, the domain email setup plan and activation evidence packet are published, and project-domain email remains the main blocker before the next submission.",
   "domainEmailSetupPlanUrl": "https://gcagochina.com/domain-email.html",
   "domainEmailSetupPlanDataUrl": "https://gcagochina.com/domain-email.json",
+  "domainEmailActivationEvidencePacket": {
+    "status": "defined-not-collected",
+    "pageUrl": "https://gcagochina.com/domain-email.html#evidenceTitle",
+    "dataUrl": "https://gcagochina.com/domain-email.json",
+    "requiredEvidence": [
+      "mail provider active screenshot for support@gcagochina.com",
+      "MX/SPF/DKIM/DMARC lookup proof",
+      "inbound Gmail or Outlook test",
+      "outbound authenticated reply test",
+      "updated support-page screenshot showing the same sender email"
+    ],
+    "nextAction": "Collect this packet after support@gcagochina.com is active and before the next clean BaseScan resubmission."
+  },
   "browserSubmissionStatus": "returned-remediation-required",
   "nextSubmissionReady": false,
   "returnReason": "information-insufficient",

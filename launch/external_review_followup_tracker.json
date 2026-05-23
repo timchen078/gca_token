@@ -32,6 +32,7 @@
     "timChenProfessionalProfileDataUrl": "https://gcagochina.com/tim-chen.json",
     "baseScanRemediationPageUrl": "https://gcagochina.com/basescan-remediation.html",
     "baseScanRemediationUrl": "https://gcagochina.com/basescan-remediation.json",
+    "domainEmailActivationEvidencePacketUrl": "https://gcagochina.com/domain-email.html#evidenceTitle",
     "githubRepoUrl": "https://github.com/timchen078/gca_token",
     "marketQualityPageUrl": "https://gcagochina.com/market-quality.html",
     "marketQualityUrl": "https://gcagochina.com/market-quality.json",
@@ -55,10 +56,11 @@
       "replyInbox": "cxy070800@gmail.com",
       "resubmissionDate": "2026-05-13",
       "lastCheckedDate": "2026-05-23",
-      "lastCheckedResult": "BaseScan returned the token profile update again as information-insufficient; Tim Chen official-domain professional profile evidence is now published, the domain email setup plan is published, and project-domain email remains the main blocker before the next submission.",
+      "lastCheckedResult": "BaseScan returned the token profile update again as information-insufficient; Tim Chen official-domain professional profile evidence is now published, the domain email setup plan and activation evidence packet are published, and project-domain email remains the main blocker before the next submission.",
       "domainEmailSetupPlan": "https://gcagochina.com/domain-email.html",
       "domainEmailSetupPlanData": "https://gcagochina.com/domain-email.json",
-      "nextAction": "Use the domain email setup plan, create and publish a working gcagochina.com domain email, include the Tim Chen professional profile URL, rerun public-site checks, then resubmit through the official BaseScan form."
+      "domainEmailActivationEvidencePacket": "https://gcagochina.com/domain-email.html#evidenceTitle",
+      "nextAction": "Use the domain email setup plan, create and publish a working gcagochina.com domain email, archive the activation evidence packet, include the Tim Chen professional profile URL, rerun public-site checks, then resubmit through the official BaseScan form."
     },
     "blockaid": {
       "reportStatus": "owner-observed-no-warning-visible",
