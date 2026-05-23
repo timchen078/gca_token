@@ -9724,6 +9724,22 @@ def validate_platform_replies_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong reviewerKitPage")
     if links.get("reviewerKit") != REVIEWER_KIT_URL:
         raise SiteCheckError(f"{label}: wrong reviewerKit")
+    if links.get("teamPage") != TEAM_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong teamPage")
+    if links.get("timChenProfessionalProfile") != TIM_CHEN_PROFILE_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong timChenProfessionalProfile")
+    if links.get("timChenProfessionalProfileData") != TIM_CHEN_PROFILE_URL:
+        raise SiteCheckError(f"{label}: wrong timChenProfessionalProfileData")
+    if links.get("baseScanRemediationPage") != BASESCAN_REMEDIATION_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong baseScanRemediationPage")
+    if links.get("baseScanRemediation") != BASESCAN_REMEDIATION_URL:
+        raise SiteCheckError(f"{label}: wrong baseScanRemediation")
+    if links.get("domainEmailSetupPlan") != DOMAIN_EMAIL_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong domainEmailSetupPlan")
+    if links.get("domainEmailSetupPlanData") != DOMAIN_EMAIL_URL:
+        raise SiteCheckError(f"{label}: wrong domainEmailSetupPlanData")
+    if links.get("supportPage") != SUPPORT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong supportPage")
     if links.get("accessApiPage") != ACCESS_API_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong accessApiPage")
     if links.get("accessApi") != ACCESS_API_URL:
@@ -9767,6 +9783,17 @@ def validate_platform_replies_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing Blockaid follow-up date")
     if "The owner observed no wallet risk warning visible on 2026-05-14; no security-vendor approval is claimed." not in wallet_body:
         raise SiteCheckError(f"{label}: missing warning boundary")
+    basescan_body = "\n".join(templates.get("baseScanProfile", {}).get("body", []))
+    for expected in (
+        "BaseScan returned the request again as information-insufficient on 2026-05-23",
+        "Tim Chen professional profile: https://gcagochina.com/tim-chen.html",
+        "Domain email setup plan: https://gcagochina.com/domain-email.html",
+        "Return-notice response:",
+        "a working gcagochina.com domain email remains the remaining owner-controlled blocker",
+        "We will not claim BaseScan token profile approval until BaseScan publishes the profile.",
+    ):
+        if expected not in basescan_body:
+            raise SiteCheckError(f"{label}: BaseScan template missing {expected}")
     local_package_body = "\n".join(templates.get("localReviewPackageHandoff", {}).get("body", []))
     for expected in (
         "redacted-public",
@@ -9803,6 +9830,11 @@ def validate_platform_replies_page(text: str) -> None:
     assert_contains(text, MAINNET_ADDRESS, label)
     assert_contains(text, "Wallet Warning Reviewer", label)
     assert_contains(text, "BaseScan Token Profile", label)
+    assert_contains(text, "BaseScan returned the request again as information-insufficient on 2026-05-23", label)
+    assert_contains(text, "Tim Chen professional profile: https://gcagochina.com/tim-chen.html", label)
+    assert_contains(text, "BaseScan remediation tracker: https://gcagochina.com/basescan-remediation.html", label)
+    assert_contains(text, "Domain email setup plan: https://gcagochina.com/domain-email.html", label)
+    assert_contains(text, "a working gcagochina.com domain email remains the remaining owner-controlled blocker", label)
     assert_contains(text, "Metadata Correction", label)
     assert_contains(text, "Local Review Package Handoff", label)
     assert_contains(text, "Community Moderator", label)
