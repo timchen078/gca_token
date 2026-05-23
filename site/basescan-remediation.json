@@ -25,6 +25,8 @@
     "verify": "https://gcagochina.com/verify.html",
     "whitepaper": "https://gcagochina.com/whitepaper.html",
     "support": "https://gcagochina.com/support.html",
+    "platformRepliesPage": "https://gcagochina.com/platform-replies.html",
+    "platformRepliesData": "https://gcagochina.com/platform-replies.json",
     "brandKit": "https://gcagochina.com/brand-kit.html",
     "logoSvg": "https://gcagochina.com/assets/gca-logo.svg",
     "logoPng": "https://gcagochina.com/assets/gca-logo.png",
@@ -93,7 +95,7 @@
       "Create and publish a working gcagochina.com domain email, then submit from that domain email or clearly explain the official primary email in the form.",
       "Include the published Tim Chen professional profile URL https://gcagochina.com/tim-chen.html in the next BaseScan submission, and add LinkedIn later only if BaseScan specifically requires a third-party social-network profile.",
       "Re-run the public site checker after email/team-profile changes.",
-      "Use the updated BaseScan reply template and include GitHub, team page, start page, support page, and whitepaper."
+      "Use the updated BaseScan reply template at https://gcagochina.com/platform-replies.html and include GitHub, team page, start page, support page, and whitepaper."
     ]
   }
 }

@@ -1317,6 +1317,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("No. Professional profile evidence is now published; fix domain email before the next submission.", page)
         self.assertIn("Do not claim the BaseScan token profile is approved", page)
         self.assertIn("Reviewer Data Room", page)
+        self.assertIn("Platform Replies", page)
+        self.assertIn(PLATFORM_REPLIES_PAGE_URL, page)
+        self.assertIn("Platform Replies template", page)
         self.assertIn(TEAM_PAGE_URL, page)
         self.assertIn(TIM_CHEN_PROFILE_PAGE_URL, page)
         self.assertIn(DOMAIN_EMAIL_PAGE_URL, page)
@@ -1333,6 +1336,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(data["officialIdentity"]["timChenProfessionalProfile"], TIM_CHEN_PROFILE_PAGE_URL)
         self.assertEqual(data["officialIdentity"]["domainEmailSetupPlan"], DOMAIN_EMAIL_PAGE_URL)
         self.assertEqual(data["officialIdentity"]["domainEmailSetupPlanData"], DOMAIN_EMAIL_URL)
+        self.assertEqual(data["officialIdentity"]["platformRepliesPage"], PLATFORM_REPLIES_PAGE_URL)
+        self.assertEqual(data["officialIdentity"]["platformRepliesData"], PLATFORM_REPLIES_URL)
         self.assertEqual(data["officialIdentity"]["github"], GITHUB_REPO_URL)
         self.assertTrue(data["currentEmailState"]["domainEmailRecommendedBeforeNextSubmission"])
         self.assertEqual(data["currentEmailState"]["domainEmailSetupPlan"], DOMAIN_EMAIL_PAGE_URL)
@@ -1345,6 +1350,10 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertTrue(data["teamTransparency"]["equivalentOfficialProfessionalProfilePublished"])
         self.assertTrue(data["teamTransparency"]["externalProfessionalProfileStillRecommended"])
         self.assertFalse(data["nextSubmissionGate"]["ready"])
+        self.assertIn(
+            "Use the updated BaseScan reply template at https://gcagochina.com/platform-replies.html",
+            " ".join(data["nextSubmissionGate"]["requiredBeforeReady"]),
+        )
 
     def test_well_known_identity_files_are_public_and_conservative(self):
         identity = json.loads((ROOT / "site" / ".well-known" / "gca-token.json").read_text())

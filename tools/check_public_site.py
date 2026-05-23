@@ -807,6 +807,9 @@ def validate_basescan_remediation_page(text: str) -> None:
         GITHUB_REPO_URL,
         "Ready to resubmit today?",
         "No. Professional profile evidence is now published; fix domain email",
+        "Platform Replies",
+        PLATFORM_REPLIES_PAGE_URL,
+        "Platform Replies template",
         "Do not claim the BaseScan token profile is approved",
     ):
         assert_contains(text, expected, label)
@@ -841,6 +844,10 @@ def validate_basescan_remediation_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong domainEmailSetupPlan")
     if identity.get("domainEmailSetupPlanData") != DOMAIN_EMAIL_URL:
         raise SiteCheckError(f"{label}: wrong domainEmailSetupPlanData")
+    if identity.get("platformRepliesPage") != PLATFORM_REPLIES_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong platformRepliesPage")
+    if identity.get("platformRepliesData") != PLATFORM_REPLIES_URL:
+        raise SiteCheckError(f"{label}: wrong platformRepliesData")
     if identity.get("github") != GITHUB_REPO_URL:
         raise SiteCheckError(f"{label}: wrong GitHub URL")
     if email_state.get("domainEmailRecommendedBeforeNextSubmission") is not True:
@@ -865,6 +872,8 @@ def validate_basescan_remediation_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing external professional profile recommendation")
     if gate.get("ready") is not False:
         raise SiteCheckError(f"{label}: submission gate should not be ready")
+    if not any("https://gcagochina.com/platform-replies.html" in item for item in gate.get("requiredBeforeReady", [])):
+        raise SiteCheckError(f"{label}: missing Platform Replies next-submission gate")
     assert_no_forbidden_public_claims(text, label)
 
 
