@@ -3718,6 +3718,8 @@ def validate_community_page(text: str) -> None:
     assert_contains(text, FIRST_X_POST_URL, label)
     assert_contains(text, "Latest official X post", label)
     assert_contains(text, LATEST_X_POST_URL, label)
+    assert_contains(text, "Tim Chen public professional profile evidence and the domain email setup plan are now published", label)
+    assert_contains(text, "working project-domain email is still required", label)
     assert_contains(text, ANNOUNCEMENTS_PAGE_URL, label)
     assert_contains(text, CAMPAIGN_PAGE_URL, label)
     assert_contains(text, CONTENT_LIBRARY_PAGE_URL, label)
@@ -3844,6 +3846,10 @@ def validate_community_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong latestPostUrl")
     if x_launch.get("latestPostPublishedDate") != "2026-05-23":
         raise SiteCheckError(f"{label}: wrong latestPostPublishedDate")
+    if "Tim Chen public professional profile evidence and the domain email setup plan are now published" not in x_launch.get("currentStatusAfterLatestPost", ""):
+        raise SiteCheckError(f"{label}: missing current status after latest post")
+    if "working gcagochina.com mailbox is still required" not in x_launch.get("currentStatusAfterLatestPost", ""):
+        raise SiteCheckError(f"{label}: missing current domain mailbox boundary")
     if not any("GCA is building Go China Access" in item for item in x_launch.get("firstPostText", [])):
         raise SiteCheckError(f"{label}: missing X first post text")
     if not any("Verify: https://gcagochina.com/verify.html" in item for item in x_launch.get("pinnedPostDraft", [])):
@@ -3922,6 +3928,8 @@ def validate_announcements_page(text: str) -> None:
     assert_contains(text, "Every 3 days", label)
     assert_contains(text, "Published X Posts", label)
     assert_contains(text, "Latest Post Text", label)
+    assert_contains(text, "Current note after this post", label)
+    assert_contains(text, "domain email setup plan are now published", label)
     assert_contains(text, "Next 3-Day Content Queue", label)
     assert_contains(text, "Safe Messaging Rules", label)
     assert_contains(text, "Do Not Claim", label)
@@ -3968,6 +3976,11 @@ def validate_announcements_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing first X post")
     if not any(post.get("url") == LATEST_X_POST_URL for post in posts if isinstance(post, dict)):
         raise SiteCheckError(f"{label}: missing latest X post")
+    latest_post = next((post for post in posts if isinstance(post, dict) and post.get("url") == LATEST_X_POST_URL), {})
+    if "Tim Chen public professional profile evidence and the domain email setup plan are now published" not in latest_post.get("currentStatusAfterPost", ""):
+        raise SiteCheckError(f"{label}: missing latest post current status")
+    if "working gcagochina.com mailbox is still required" not in latest_post.get("currentStatusAfterPost", ""):
+        raise SiteCheckError(f"{label}: missing latest post domain mailbox boundary")
     if links.get("announcementsPage") != ANNOUNCEMENTS_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong announcementsPage")
     if links.get("announcements") != ANNOUNCEMENTS_URL:
