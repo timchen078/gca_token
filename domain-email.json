@@ -35,6 +35,33 @@
     "Confirm messages are not landing in spam during the first test",
     "Archive test screenshots or message headers for owner records"
   ],
+  "activationEvidencePacket": {
+    "purpose": "Evidence to retain before the next clean BaseScan resubmission so sender email, website contact email, and domain ownership evidence are consistent.",
+    "requiredEvidence": [
+      "Mail provider dashboard shows support@gcagochina.com as verified or active",
+      "DNS lookup confirms MX, SPF, DKIM, and DMARC records after propagation",
+      "Inbound test from Gmail or Outlook to support@gcagochina.com is received",
+      "Outbound reply from support@gcagochina.com to Gmail or Outlook shows the domain email as the visible sender",
+      "Updated support page shows the same domain email used in the BaseScan form"
+    ],
+    "recommendedFilenames": [
+      "domain-email-provider-active.png",
+      "domain-email-dns-mx-spf-dkim-dmarc.txt",
+      "domain-email-inbound-test.png",
+      "domain-email-outbound-test.png",
+      "support-page-domain-email.png"
+    ]
+  },
+  "baseScanSubmissionPolicy": {
+    "nextCleanSubmissionSender": "support@gcagochina.com after activation",
+    "doNotResubmitBefore": [
+      "inbound test passes",
+      "outbound authenticated send test passes",
+      "public website email has been updated to match the sender",
+      "activation evidence packet is archived for owner records"
+    ],
+    "ifBaseScanAsksBeforeActivation": "Reply with GCAgochina@outlook.com only as the current active contact and explain that support@gcagochina.com is still being activated; do not claim the domain mailbox is live."
+  },
   "filesToUpdateAfterActivation": [
     "site/support.html",
     "site/support.json",
