@@ -2,7 +2,7 @@
   "schema": "https://gcagochina.com/community.json",
   "pageUrl": "https://gcagochina.com/community.html",
   "status": "public-community-kit-published",
-  "lastUpdated": "2026-05-17",
+  "lastUpdated": "2026-05-23",
   "projectName": "GCA",
   "conceptExpansion": "Go China Access",
   "currentStage": "early-public-operations",
@@ -29,7 +29,7 @@
     "Official market route: GCA/USDT on Base Mainnet.",
     "Official X: https://x.com/GCAAIGoChina",
     "First official X post: https://x.com/GCAAIGoChina/status/2054660559124255151",
-    "Latest official X post: https://x.com/GCAAIGoChina/status/2055944057134927984",
+    "Latest official X post: https://x.com/GCAAIGoChina/status/2058090599535030302",
     "Announcement hub: https://gcagochina.com/announcements.html",
     "Campaign calendar: https://gcagochina.com/campaign.html",
     "Bilingual content library: https://gcagochina.com/content-library.html",
@@ -43,8 +43,8 @@
     "pageUrl": "https://gcagochina.com/announcements.html",
     "url": "https://gcagochina.com/announcements.json",
     "contentCadence": "every-3-days",
-    "latestPostUrl": "https://x.com/GCAAIGoChina/status/2055944057134927984",
-    "latestPostPublishedDate": "2026-05-17"
+    "latestPostUrl": "https://x.com/GCAAIGoChina/status/2058090599535030302",
+    "latestPostPublishedDate": "2026-05-23"
   },
   "campaignCalendar": {
     "status": "public-campaign-calendar-published",
@@ -77,13 +77,15 @@
     "profilePhotoAsset": "https://gcagochina.com/assets/gca-logo.png",
     "firstPostUrl": "https://x.com/GCAAIGoChina/status/2054660559124255151",
     "firstPostPublishedDate": "2026-05-14",
-    "latestPostUrl": "https://x.com/GCAAIGoChina/status/2055944057134927984",
-    "latestPostPublishedDate": "2026-05-17",
+    "latestPostUrl": "https://x.com/GCAAIGoChina/status/2058090599535030302",
+    "latestPostPublishedDate": "2026-05-23",
     "latestPostText": [
-      "GCA / Go China Access is building on Base: fixed-supply GCA, public docs, wallet verification, member access, and credits for future China-facing Web3 tools.",
-      "No return promises. Just building transparently.",
+      "GCA / Go China Access build update.",
+      "GCA is live on Base Mainnet.",
+      "Published now: official GCA/USDT route, member access pages, read-only wallet balance checks, 100 credits / GCA Member ledger records, public team profile and BaseScan remediation tracker, brand kit, whitepaper, trust center, and reviewer data room.",
+      "Current focus: project-domain email, Tim Chen public professional profile evidence, and consistent identity, links, pool route, and review status across platforms.",
       "https://gcagochina.com",
-      "#GCA #GoChina #Base"
+      "#GCA #GoChinaAccess #Base #BaseMainnet #Web3 #DeFi #AIQuant #Onchain #Uniswap"
     ],
     "firstPostText": [
       "GCA is building Go China Access.",
