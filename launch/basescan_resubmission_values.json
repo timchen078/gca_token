@@ -14,6 +14,7 @@
     "dataUrl": "https://gcagochina.com/domain-email.json",
     "requiredEvidence": [
       "mail provider active screenshot for support@gcagochina.com",
+      "tools/check_domain_email_dns.py JSON output with readyForBaseScanEmailEvidence true",
       "MX/SPF/DKIM/DMARC lookup proof",
       "inbound Gmail or Outlook test",
       "outbound authenticated reply test",

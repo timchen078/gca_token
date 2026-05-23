@@ -23,6 +23,8 @@ BaseScan replied that it could not process the token update request because the 
 ## Waiting Checklist
 
 - Create and test a working `gcagochina.com` domain email such as `support@gcagochina.com`
+- Use the domain email activation runbook at `launch/domain_email_activation_runbook.md`
+- Run `python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox support --dkim-selector <provider-selector> --json` and confirm `readyForBaseScanEmailEvidence` is true
 - Archive the domain email activation evidence packet: provider active screenshot, DNS proof, inbound test, outbound test, and updated support-page screenshot
 - Tim Chen professional profile remains live: `https://gcagochina.com/tim-chen.html`
 - Domain email setup plan remains live: `https://gcagochina.com/domain-email.html`

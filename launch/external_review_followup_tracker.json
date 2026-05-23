@@ -60,7 +60,7 @@
       "domainEmailSetupPlan": "https://gcagochina.com/domain-email.html",
       "domainEmailSetupPlanData": "https://gcagochina.com/domain-email.json",
       "domainEmailActivationEvidencePacket": "https://gcagochina.com/domain-email.html#evidenceTitle",
-      "nextAction": "Use the domain email setup plan, create and publish a working gcagochina.com domain email, archive the activation evidence packet, include the Tim Chen professional profile URL, rerun public-site checks, then resubmit through the official BaseScan form."
+      "nextAction": "Use the domain email setup plan and launch/domain_email_activation_runbook.md, create and publish a working gcagochina.com domain email, run tools/check_domain_email_dns.py, archive the activation evidence packet, include the Tim Chen professional profile URL, rerun public-site checks, then resubmit through the official BaseScan form."
     },
     "blockaid": {
       "reportStatus": "owner-observed-no-warning-visible",

@@ -1320,6 +1320,26 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("GCA has published a domain email setup plan.", data["publicClaimBoundaries"]["safeClaims"])
         self.assertIn("support@gcagochina.com is active before inbound and outbound tests pass", data["publicClaimBoundaries"]["doNotClaim"])
 
+    def test_domain_email_activation_runbook_is_actionable_and_bounded(self):
+        runbook = (ROOT / "launch" / "domain_email_activation_runbook.md").read_text()
+
+        self.assertIn("GCA Domain Email Activation Runbook", runbook)
+        self.assertIn("support@gcagochina.com", runbook)
+        self.assertIn("GCAgochina@outlook.com", runbook)
+        self.assertIn("https://gcagochina.com/domain-email.html", runbook)
+        self.assertIn("tools/check_domain_email_dns.py", runbook)
+        self.assertIn("--dkim-selector <provider-selector>", runbook)
+        self.assertIn("readyForBaseScanEmailEvidence", runbook)
+        self.assertIn("domain-email-provider-active.png", runbook)
+        self.assertIn("domain-email-dns-mx-spf-dkim-dmarc.txt", runbook)
+        self.assertIn("support-page-domain-email.png", runbook)
+        self.assertIn("Public Site Switch Gate", runbook)
+        self.assertIn("BaseScan Submission Gate", runbook)
+        self.assertIn("The DNS checker is read-only", runbook)
+        self.assertIn("does not send email", runbook)
+        self.assertIn("touch wallets/contracts", runbook)
+        self.assertIn("Do not claim", runbook)
+
     def test_basescan_remediation_page_and_json_track_return_notice(self):
         page = (ROOT / "site" / "basescan-remediation.html").read_text()
         data = json.loads((ROOT / "site" / "basescan-remediation.json").read_text())
@@ -6984,6 +7004,7 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "launch" / "custody_roadmap_runbook.md",
             ROOT / "launch" / "audit_readiness_runbook.md",
             ROOT / "launch" / "member_pre_registration_runbook.md",
+            ROOT / "launch" / "domain_email_activation_runbook.md",
             ROOT / "launch" / "telegram_channel_runbook.md",
             ROOT / "launch" / "telegram_pinned_buy_announcement.md",
             ROOT / "launch" / "x_profile_runbook.md",
@@ -7035,6 +7056,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(TIM_CHEN_PROFILE_PAGE_URL, followup)
         self.assertIn(DOMAIN_EMAIL_PAGE_URL, followup)
         self.assertIn(DOMAIN_EMAIL_URL, followup)
+        self.assertIn("launch/domain_email_activation_runbook.md", followup)
+        self.assertIn("tools/check_domain_email_dns.py", followup)
+        self.assertIn("readyForBaseScanEmailEvidence", followup)
         self.assertIn("domain email activation evidence packet", followup)
         self.assertIn("https://gcagochina.com/domain-email.html#evidenceTitle", followup)
         self.assertIn(BASESCAN_REMEDIATION_PAGE_URL, followup)
@@ -7083,6 +7107,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertTrue(values["resubmissionRequired"])
         self.assertFalse(values["nextSubmissionReady"])
         self.assertIn("Official website is reachable over HTTPS", values["resubmissionChecklist"])
+        self.assertIn("Domain email DNS checker returns readyForBaseScanEmailEvidence true after the provider DKIM selector is added", values["resubmissionChecklist"])
         self.assertIn("Domain email activation evidence packet is archived after support@gcagochina.com tests pass", values["resubmissionChecklist"])
         self.assertIn("Deployer wallet signs the address ownership message if BaseScan asks", values["resubmissionChecklist"])
         self.assertEqual(values["socialLinks"][0]["platform"], "Telegram")
@@ -7108,6 +7133,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(TIM_CHEN_PROFILE_PAGE_URL, package)
         self.assertIn(DOMAIN_EMAIL_PAGE_URL, package)
         self.assertIn(DOMAIN_EMAIL_URL, package)
+        self.assertIn("launch/domain_email_activation_runbook.md", package)
+        self.assertIn("tools/check_domain_email_dns.py", package)
+        self.assertIn("readyForBaseScanEmailEvidence", package)
         self.assertIn("activation evidence packet", package)
         self.assertIn("https://gcagochina.com/domain-email.html#evidenceTitle", package)
         self.assertIn(BASESCAN_REMEDIATION_PAGE_URL, package)
@@ -7138,6 +7166,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["domainEmailActivationEvidencePacket"]["status"], "defined-not-collected")
         self.assertEqual(values["domainEmailActivationEvidencePacket"]["pageUrl"], "https://gcagochina.com/domain-email.html#evidenceTitle")
         self.assertEqual(values["domainEmailActivationEvidencePacket"]["dataUrl"], DOMAIN_EMAIL_URL)
+        self.assertIn("tools/check_domain_email_dns.py JSON output with readyForBaseScanEmailEvidence true", values["domainEmailActivationEvidencePacket"]["requiredEvidence"])
         self.assertIn("MX/SPF/DKIM/DMARC lookup proof", values["domainEmailActivationEvidencePacket"]["requiredEvidence"])
         self.assertEqual(values["officialTelegram"], TELEGRAM_URL)
         self.assertEqual(values["officialX"], X_URL)
@@ -7481,6 +7510,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Use `https://gcagochina.com/external-reviews.html`", status)
         self.assertIn("Use `https://gcagochina.com/reviewer-kit.html`", status)
         self.assertIn("Use `https://gcagochina.com/platform-replies.html`", status)
+        self.assertIn("Domain email activation runbook prepared", status)
+        self.assertIn("launch/domain_email_activation_runbook.md", status)
         self.assertIn("archive the activation evidence packet before the next BaseScan submission", status)
         self.assertIn("For platform requests involving local member-ledger evidence", status)
         self.assertIn("Use `https://gcagochina.com/trust.html`", status)
@@ -7815,6 +7846,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(DOMAIN_EMAIL_PAGE_URL, tracker)
         self.assertIn(DOMAIN_EMAIL_URL, tracker)
         self.assertIn("https://gcagochina.com/domain-email.html#evidenceTitle", tracker)
+        self.assertIn("launch/domain_email_activation_runbook.md", tracker)
+        self.assertIn("tools/check_domain_email_dns.py", tracker)
+        self.assertIn("readyForBaseScanEmailEvidence", tracker)
         self.assertIn("archive the activation evidence packet", tracker)
         self.assertIn(MARKET_QUALITY_PAGE_URL, tracker)
         self.assertIn(MARKET_QUALITY_URL, tracker)
@@ -7913,6 +7947,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["platforms"]["baseScan"]["domainEmailSetupPlanData"], DOMAIN_EMAIL_URL)
         self.assertEqual(values["platforms"]["baseScan"]["domainEmailActivationEvidencePacket"], "https://gcagochina.com/domain-email.html#evidenceTitle")
         self.assertIn("Use the domain email setup plan", values["platforms"]["baseScan"]["nextAction"])
+        self.assertIn("launch/domain_email_activation_runbook.md", values["platforms"]["baseScan"]["nextAction"])
+        self.assertIn("tools/check_domain_email_dns.py", values["platforms"]["baseScan"]["nextAction"])
         self.assertIn("create and publish a working gcagochina.com domain email", values["platforms"]["baseScan"]["nextAction"])
         self.assertIn("archive the activation evidence packet", values["platforms"]["baseScan"]["nextAction"])
         self.assertEqual(values["platforms"]["blockaid"]["reportStatus"], "owner-observed-no-warning-visible")

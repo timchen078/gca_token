@@ -39,6 +39,7 @@
 - BaseScan token update was submitted with `cxy070800@gmail.com`, returned by BaseScan as information-insufficient on 2026-05-13, resubmitted on 2026-05-13, and returned again as information-insufficient on 2026-05-23.
 - BaseScan token profile remediation package is published; Tim Chen public professional profile evidence is now published, and the next submission should wait until a project-domain email is ready.
 - Domain email DNS readiness checker prepared at `tools/check_domain_email_dns.py`; it checks public MX/SPF/DMARC/DKIM records only and does not send email, submit BaseScan requests, or touch wallets/contracts.
+- Domain email activation runbook prepared at `launch/domain_email_activation_runbook.md`; it defines the owner-side mailbox activation, DNS-check, evidence-packet, public-site switch, and BaseScan resubmission gates.
 - BaseScan review follow-up runbook prepared.
 - BaseScan resubmission values recorded at `launch/basescan_resubmission_package.md` and `launch/basescan_resubmission_values.json`.
 - Token allocation plan updated: 400,000,000 GCA target public allocation and 600,000,000 GCA owner-held reserve.

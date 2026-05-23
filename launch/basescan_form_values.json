@@ -62,6 +62,7 @@
     "Contract source is verified on BaseScan",
     "Contract address is the valid Base Mainnet GCA token contract",
     "Official social links are included",
+    "Domain email DNS checker returns readyForBaseScanEmailEvidence true after the provider DKIM selector is added",
     "Domain email activation evidence packet is archived after support@gcagochina.com tests pass",
     "Deployer wallet signs the address ownership message if BaseScan asks"
   ],

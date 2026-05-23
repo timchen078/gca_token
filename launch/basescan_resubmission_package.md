@@ -50,11 +50,13 @@ This package records the current BaseScan token information remediation state. T
 ## Owner-Required Fixes Before The Next Submission
 
 1. Use the published domain email setup plan at `https://gcagochina.com/domain-email.html`, then create and test a working `gcagochina.com` domain email such as `support@gcagochina.com`, `hello@gcagochina.com`, or `team@gcagochina.com`.
-2. Archive the domain email activation evidence packet: provider active screenshot, MX/SPF/DKIM/DMARC lookup proof, inbound test, outbound test, and updated support-page screenshot.
-3. Publish that domain email on the support, about, and team pages.
-4. Submit to BaseScan from the domain email when possible, or clearly explain the official primary email in the form.
-5. Include the Tim Chen professional profile URL `https://gcagochina.com/tim-chen.html` in the next submission. Add LinkedIn later only if BaseScan specifically requires a third-party social-network profile.
-6. Re-run the public site checker after the email/profile change and before submitting.
+2. Follow `launch/domain_email_activation_runbook.md`.
+3. Run `python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox support --dkim-selector <provider-selector> --json` and confirm `readyForBaseScanEmailEvidence` is true.
+4. Archive the domain email activation evidence packet: provider active screenshot, MX/SPF/DKIM/DMARC lookup proof, inbound test, outbound test, and updated support-page screenshot.
+5. Publish that domain email on the support, about, and team pages.
+6. Submit to BaseScan from the domain email when possible, or clearly explain the official primary email in the form.
+7. Include the Tim Chen professional profile URL `https://gcagochina.com/tim-chen.html` in the next submission. Add LinkedIn later only if BaseScan specifically requires a third-party social-network profile.
+8. Re-run the public site checker after the email/profile change and before submitting.
 
 ## Description
 
