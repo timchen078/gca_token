@@ -741,7 +741,11 @@ def validate_domain_email_page(text: str) -> None:
         "MX",
         "SPF",
         "DKIM / DMARC",
+        "Evidence Packet",
+        "What To Save Before BaseScan Resubmission",
+        "support-page-domain-email",
         "Ready Means All Four Are True",
+        "Submission policy: send the next clean BaseScan update from",
         "domain email setup plan",
         "support.html",
         "basescan-remediation.html",
@@ -759,6 +763,8 @@ def validate_domain_email_json(text: str) -> None:
     payload = load_json(text, label)
     base_scan_use = payload.get("baseScanUse", {})
     boundaries = payload.get("publicClaimBoundaries", {})
+    evidence = payload.get("activationEvidencePacket", {})
+    policy = payload.get("baseScanSubmissionPolicy", {})
     dns = payload.get("dnsChecklist", [])
 
     if payload.get("schema") != DOMAIN_EMAIL_URL:
@@ -780,6 +786,14 @@ def validate_domain_email_json(text: str) -> None:
     for expected in ("MX", "SPF", "DKIM", "DMARC"):
         if not any(expected in item for item in dns):
             raise SiteCheckError(f"{label}: missing DNS checklist item {expected}")
+    if "Mail provider dashboard shows support@gcagochina.com as verified or active" not in evidence.get("requiredEvidence", []):
+        raise SiteCheckError(f"{label}: missing provider-status evidence")
+    if "domain-email-dns-mx-spf-dkim-dmarc.txt" not in evidence.get("recommendedFilenames", []):
+        raise SiteCheckError(f"{label}: missing DNS evidence filename")
+    if policy.get("nextCleanSubmissionSender") != "support@gcagochina.com after activation":
+        raise SiteCheckError(f"{label}: wrong next BaseScan sender policy")
+    if "activation evidence packet is archived for owner records" not in policy.get("doNotResubmitBefore", []):
+        raise SiteCheckError(f"{label}: missing evidence archive gate")
     if "site/support.html" not in payload.get("filesToUpdateAfterActivation", []):
         raise SiteCheckError(f"{label}: missing support update file")
     if "GCA has published a domain email setup plan." not in boundaries.get("safeClaims", []):
