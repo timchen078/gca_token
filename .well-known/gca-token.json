@@ -152,7 +152,7 @@
   "platformStatus": {
     "baseScanSource": "verified",
     "baseScanOwnership": "verified",
-    "baseScanTokenProfile": "resubmitted-awaiting-review",
+    "baseScanTokenProfile": "remediation-required-before-next-submission",
     "geckoTerminalTokenInfo": "approved-2026-05-11",
     "reviewerKit": "public-reviewer-kit-published",
     "platformReplies": "public-platform-reply-kit-published",

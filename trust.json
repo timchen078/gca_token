@@ -61,7 +61,7 @@
   "verificationSnapshot": {
     "baseScanSource": "verified",
     "baseScanOwnership": "verified",
-    "baseScanTokenProfile": "resubmitted-awaiting-review",
+    "baseScanTokenProfile": "remediation-required-before-next-submission",
     "geckoTerminalTokenInfo": "approved-2026-05-11",
     "walletWarning": "owner-observed-no-warning-visible",
     "blockaidReportDate": "2026-05-10",
@@ -74,7 +74,7 @@
   "contractFacts": {
     "sourceVerifiedOnBaseScan": true,
     "deployerWalletOwnershipVerified": true,
-    "tokenProfileStatus": "resubmitted-awaiting-review",
+    "tokenProfileStatus": "remediation-required-before-next-submission",
     "fixedSupply": true,
     "totalSupply": "1000000000",
     "postDeploymentMintFunction": false,
@@ -147,7 +147,7 @@
   "externalReviewStatus": {
     "baseScanSource": "verified",
     "baseScanOwnership": "verified",
-    "baseScanTokenProfile": "resubmitted-awaiting-review",
+    "baseScanTokenProfile": "remediation-required-before-next-submission",
     "geckoTerminal": "approved-2026-05-11",
     "blockaidMetaMask": "owner-observed-no-warning-visible",
     "blockaidReportSubmissionDate": "2026-05-10",

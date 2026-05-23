@@ -150,7 +150,7 @@
         "onchainProofStatus": "public-onchain-proofs-published",
         "supplyDisclosureStatus": "public-supply-disclosure-published",
         "geckoTerminalStatus": "approved-2026-05-11",
-        "baseScanTokenProfileStatus": "resubmitted-awaiting-review",
+        "baseScanTokenProfileStatus": "remediation-required-before-next-submission",
         "blockaidMetaMaskStatus": "owner-observed-no-warning-visible",
         "walletWarningEvidenceStatus": "warning-report-submitted-owner-observed-no-warning-visible",
         "thirdPartyAuditStatus": "not-completed",

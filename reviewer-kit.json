@@ -95,7 +95,7 @@
   "externalReviewStatus": {
     "baseScanSource": "verified",
     "baseScanOwnership": "verified",
-    "baseScanTokenProfile": "resubmitted-awaiting-review",
+    "baseScanTokenProfile": "remediation-required-before-next-submission",
     "baseScanTokenProfileResubmissionDate": "2026-05-13",
     "blockaidMetaMask": "owner-observed-no-warning-visible",
     "blockaidInitialSubmissionDate": "2026-05-10",

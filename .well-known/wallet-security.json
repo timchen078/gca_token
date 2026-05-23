@@ -42,7 +42,7 @@
   "baseScanStatus": {
     "sourceVerification": "verified",
     "deployerWalletOwnership": "verified",
-    "tokenProfile": "resubmitted-awaiting-review",
+    "tokenProfile": "remediation-required-before-next-submission",
     "tokenProfileResubmissionDate": "2026-05-13"
   },
   "officialMarket": {
