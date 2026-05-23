@@ -20,6 +20,8 @@
     "about": "https://gcagochina.com/about.html",
     "team": "https://gcagochina.com/team.html",
     "timChenProfessionalProfile": "https://gcagochina.com/tim-chen.html",
+    "domainEmailSetupPlan": "https://gcagochina.com/domain-email.html",
+    "domainEmailSetupPlanData": "https://gcagochina.com/domain-email.json",
     "verify": "https://gcagochina.com/verify.html",
     "whitepaper": "https://gcagochina.com/whitepaper.html",
     "support": "https://gcagochina.com/support.html",
@@ -32,6 +34,8 @@
   },
   "currentEmailState": {
     "publishedPrimaryEmail": "GCAgochina@outlook.com",
+    "domainEmailSetupPlan": "https://gcagochina.com/domain-email.html",
+    "domainEmailSetupPlanData": "https://gcagochina.com/domain-email.json",
     "domainEmailRecommendedBeforeNextSubmission": true,
     "recommendedDomainEmailExamples": [
       "support@gcagochina.com",
