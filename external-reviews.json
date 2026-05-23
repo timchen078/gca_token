@@ -76,13 +76,14 @@
       "resubmissionDate": "2026-05-13",
       "latestReturnNoticeDate": "2026-05-23",
       "lastCheckedDate": "2026-05-23",
-      "lastCheckedResult": "BaseScan returned the token profile update again as information-insufficient; owner-controlled remediation is required before the next submission.",
+      "lastCheckedResult": "BaseScan returned the token profile update again as information-insufficient; owner-controlled remediation is required before the next submission. Tim Chen official-domain professional profile evidence is now published at https://gcagochina.com/tim-chen.html.",
       "returnReason": "information-insufficient",
       "remediationPage": "https://gcagochina.com/basescan-remediation.html",
       "teamPage": "https://gcagochina.com/team.html",
+      "professionalProfile": "https://gcagochina.com/tim-chen.html",
       "github": "https://github.com/timchen078/gca_token",
       "publicClaim": "The public BaseScan token profile update was returned again as information-insufficient on 2026-05-23. BaseScan profile publication is not approved or complete.",
-      "nextAction": "Create and publish a working gcagochina.com domain email, publish a Tim Chen LinkedIn or equivalent external professional profile, rerun public-site checks, then resubmit through the official BaseScan form."
+      "nextAction": "Create and publish a working gcagochina.com domain email, include the Tim Chen professional profile URL, rerun public-site checks, then resubmit through the official BaseScan form."
     },
     "blockaidMetaMask": {
       "status": "owner-observed-no-warning-visible",
@@ -149,7 +150,7 @@
   ],
   "nextActions": [
     "Create and publish a working gcagochina.com domain email before the next BaseScan submission.",
-    "Publish a Tim Chen LinkedIn or equivalent external professional profile, or prepare a clear explanation of official-domain team page and GitHub evidence.",
+    "Include the published Tim Chen professional profile URL https://gcagochina.com/tim-chen.html in the next BaseScan submission; add LinkedIn later if BaseScan specifically requires a third-party social-network profile.",
     "Keep monitoring wallet-warning UI before claiming any broader warning-free or security-vendor approval status.",
     "Keep GCA/USDT market links, logo, whitepaper, Telegram, X, and metadata files live.",
     "Use the risk-remediation plan when a reviewer asks how volatility, LP custody, supply concentration, or audit status will be reduced.",

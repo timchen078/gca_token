@@ -19,6 +19,7 @@
     "startPage": "https://gcagochina.com/start.html",
     "about": "https://gcagochina.com/about.html",
     "team": "https://gcagochina.com/team.html",
+    "timChenProfessionalProfile": "https://gcagochina.com/tim-chen.html",
     "verify": "https://gcagochina.com/verify.html",
     "whitepaper": "https://gcagochina.com/whitepaper.html",
     "support": "https://gcagochina.com/support.html",
@@ -42,9 +43,13 @@
   "teamTransparency": {
     "publicFounder": "Tim Chen",
     "officialTeamPage": "https://gcagochina.com/team.html#tim-chen",
+    "officialProfessionalProfile": "https://gcagochina.com/tim-chen.html",
+    "officialProfessionalProfileData": "https://gcagochina.com/tim-chen.json",
+    "equivalentOfficialProfessionalProfilePublished": true,
+    "equivalentOfficialProfessionalProfileType": "official-domain-equivalent-public-professional-profile",
     "projectGitHub": "https://github.com/timchen078/gca_token",
     "externalProfessionalProfileStillRecommended": true,
-    "ownerActionRequired": "Publish a LinkedIn profile or equivalent public professional profile showing Tim Chen's GCA role, then include the full URL in the next BaseScan submission."
+    "ownerActionRequired": "Include https://gcagochina.com/tim-chen.html in the next BaseScan submission. If BaseScan specifically requires a third-party social-network profile, publish a LinkedIn profile as stronger external evidence."
   },
   "remediationChecklist": [
     {
@@ -64,8 +69,8 @@
     },
     {
       "id": "team-founder-transparency",
-      "status": "partially-implemented-owner-action-required",
-      "evidence": "Official-domain team page is published at https://gcagochina.com/team.html, but an external professional profile is still recommended before resubmission."
+      "status": "implemented-official-domain-equivalent",
+      "evidence": "Official-domain team page is published at https://gcagochina.com/team.html and the Tim Chen public professional profile is published at https://gcagochina.com/tim-chen.html. A LinkedIn profile can still be added if BaseScan specifically requires a third-party social-network profile."
     },
     {
       "id": "domain-email",
@@ -82,7 +87,7 @@
     "ready": false,
     "requiredBeforeReady": [
       "Create and publish a working gcagochina.com domain email, then submit from that domain email or clearly explain the official primary email in the form.",
-      "Publish a Tim Chen LinkedIn or equivalent public professional profile showing the GCA role, or prepare a clear explanation if using the official-domain team page and GitHub as equivalent evidence.",
+      "Include the published Tim Chen professional profile URL https://gcagochina.com/tim-chen.html in the next BaseScan submission, and add LinkedIn later only if BaseScan specifically requires a third-party social-network profile.",
       "Re-run the public site checker after email/team-profile changes.",
       "Use the updated BaseScan reply template and include GitHub, team page, start page, support page, and whitepaper."
     ]

@@ -23,6 +23,8 @@ Allow: /zh-data.html
 Allow: /zh-api-status.html
 Allow: /about.html
 Allow: /team.html
+Allow: /tim-chen.html
+Allow: /tim-chen.json
 Allow: /basescan-remediation.html
 Allow: /basescan-remediation.json
 Allow: /action-plan.html

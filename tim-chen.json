@@ -1,0 +1,54 @@
+{
+  "schema": "https://gcagochina.com/tim-chen.json",
+  "pageUrl": "https://gcagochina.com/tim-chen.html",
+  "lastUpdated": "2026-05-23",
+  "status": "official-domain-professional-profile-published",
+  "profileType": "official-domain-equivalent-public-professional-profile",
+  "person": {
+    "name": "Tim Chen",
+    "publicRole": "Founder, CEO, and Project Lead",
+    "organization": "GCA | Go China Access",
+    "profileUrl": "https://gcagochina.com/tim-chen.html",
+    "teamPageUrl": "https://gcagochina.com/team.html#tim-chen"
+  },
+  "professionalScope": {
+    "currentProject": "GCA | Go China Access",
+    "network": "Base Mainnet",
+    "chainId": 8453,
+    "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+    "responsibilities": [
+      "Public token identity and website operations",
+      "Member access roadmap and community operations",
+      "Non-custodial risk-tool planning",
+      "Platform reviewer responses and public documentation",
+      "Safe public messaging boundaries"
+    ],
+    "currentStage": "early-public-operations"
+  },
+  "publicEvidenceLinks": {
+    "officialWebsite": "https://gcagochina.com/",
+    "teamPage": "https://gcagochina.com/team.html",
+    "professionalProfile": "https://gcagochina.com/tim-chen.html",
+    "projectAbout": "https://gcagochina.com/about.html",
+    "projectVerify": "https://gcagochina.com/verify.html",
+    "projectStatus": "https://gcagochina.com/status.html",
+    "productSpec": "https://gcagochina.com/product.html",
+    "baseScanRemediation": "https://gcagochina.com/basescan-remediation.html",
+    "externalReviews": "https://gcagochina.com/external-reviews.html",
+    "githubRepository": "https://github.com/timchen078/gca_token",
+    "officialX": "https://x.com/GCAAIGoChina",
+    "officialTelegram": "https://t.me/gcagochinaofficial"
+  },
+  "reviewerUse": {
+    "baseScanUse": "Use this page as Tim Chen public professional profile evidence for founder and team transparency in the next BaseScan token profile update.",
+    "machineReadableUse": "Use this JSON only when a reviewer or platform asks for structured public profile data.",
+    "linkedinStillStrongerIfRequired": true,
+    "note": "This is an official-domain public professional profile. It does not claim third-party identity verification by LinkedIn, BaseScan, or another external platform."
+  },
+  "disclosureBoundaries": [
+    "This page does not claim BaseScan token profile approval.",
+    "This page does not claim a completed third-party audit.",
+        "This page does not claim promised investment performance, price support, deep liquidity, LP lock, reserve lock, or multisig custody.",
+    "This page does not request private keys, seed phrases, exchange API secrets, withdrawal permissions, custody, one-time codes, or remote-control access."
+  ]
+}
