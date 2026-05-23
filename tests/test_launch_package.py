@@ -39,6 +39,8 @@ ACTION_PLAN_PAGE_URL = "https://gcagochina.com/action-plan.html"
 TEAM_PAGE_URL = "https://gcagochina.com/team.html"
 TIM_CHEN_PROFILE_PAGE_URL = "https://gcagochina.com/tim-chen.html"
 TIM_CHEN_PROFILE_URL = "https://gcagochina.com/tim-chen.json"
+DOMAIN_EMAIL_PAGE_URL = "https://gcagochina.com/domain-email.html"
+DOMAIN_EMAIL_URL = "https://gcagochina.com/domain-email.json"
 BASESCAN_REMEDIATION_PAGE_URL = "https://gcagochina.com/basescan-remediation.html"
 BASESCAN_REMEDIATION_URL = "https://gcagochina.com/basescan-remediation.json"
 GITHUB_REPO_URL = "https://github.com/timchen078/gca_token"
@@ -217,11 +219,15 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("/team.html", script)
         self.assertIn("/tim-chen.html", script)
         self.assertIn("/tim-chen.json", script)
+        self.assertIn("/domain-email.html", script)
+        self.assertIn("/domain-email.json", script)
         self.assertIn("/basescan-remediation.html", script)
         self.assertIn("/basescan-remediation.json", script)
         self.assertIn(TEAM_PAGE_URL, script)
         self.assertIn(TIM_CHEN_PROFILE_PAGE_URL, script)
         self.assertIn(TIM_CHEN_PROFILE_URL, script)
+        self.assertIn(DOMAIN_EMAIL_PAGE_URL, script)
+        self.assertIn(DOMAIN_EMAIL_URL, script)
         self.assertIn(BASESCAN_REMEDIATION_PAGE_URL, script)
         self.assertIn(BASESCAN_REMEDIATION_URL, script)
         self.assertIn(GITHUB_REPO_URL, script)
@@ -485,6 +491,8 @@ class LaunchPackageTests(unittest.TestCase):
         module.validate_team_page((ROOT / "site" / "team.html").read_text())
         module.validate_tim_chen_profile_page((ROOT / "site" / "tim-chen.html").read_text())
         module.validate_tim_chen_profile_json((ROOT / "site" / "tim-chen.json").read_text())
+        module.validate_domain_email_page((ROOT / "site" / "domain-email.html").read_text())
+        module.validate_domain_email_json((ROOT / "site" / "domain-email.json").read_text())
         module.validate_basescan_remediation_page((ROOT / "site" / "basescan-remediation.html").read_text())
         module.validate_basescan_remediation_json((ROOT / "site" / "basescan-remediation.json").read_text())
         module.validate_data_page((ROOT / "site" / "data.html").read_text())
@@ -872,6 +880,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Allow: /team.html", robots)
         self.assertIn("Allow: /tim-chen.html", robots)
         self.assertIn("Allow: /tim-chen.json", robots)
+        self.assertIn("Allow: /domain-email.html", robots)
+        self.assertIn("Allow: /domain-email.json", robots)
         self.assertIn("Allow: /basescan-remediation.html", robots)
         self.assertIn("Allow: /basescan-remediation.json", robots)
         self.assertIn("Allow: /action-plan.html", robots)
@@ -1004,6 +1014,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(TEAM_PAGE_URL, sitemap)
         self.assertIn(TIM_CHEN_PROFILE_PAGE_URL, sitemap)
         self.assertIn(TIM_CHEN_PROFILE_URL, sitemap)
+        self.assertIn(DOMAIN_EMAIL_PAGE_URL, sitemap)
+        self.assertIn(DOMAIN_EMAIL_URL, sitemap)
         self.assertIn(BASESCAN_REMEDIATION_PAGE_URL, sitemap)
         self.assertIn(BASESCAN_REMEDIATION_URL, sitemap)
         self.assertIn(ACTION_PLAN_PAGE_URL, sitemap)
@@ -1256,6 +1268,42 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertTrue(data["reviewerUse"]["linkedinStillStrongerIfRequired"])
         self.assertIn("BaseScan token profile", data["reviewerUse"]["baseScanUse"])
 
+    def test_domain_email_setup_page_and_json_gate_basescan_resubmission(self):
+        page = (ROOT / "site" / "domain-email.html").read_text()
+        data = json.loads((ROOT / "site" / "domain-email.json").read_text())
+
+        self.assertIn("GCA Domain Email Setup Plan", page)
+        self.assertIn("BaseScan Email Remediation", page)
+        self.assertIn("GCAgochina@outlook.com", page)
+        self.assertIn("support@gcagochina.com", page)
+        self.assertIn("Not active yet", page)
+        self.assertIn("Required before resubmission", page)
+        self.assertIn("MX", page)
+        self.assertIn("SPF", page)
+        self.assertIn("DKIM / DMARC", page)
+        self.assertIn("Ready Means All Four Are True", page)
+        self.assertIn("domain email setup plan", page)
+        self.assertIn("support.html", page)
+        self.assertIn("basescan-remediation.html", page)
+        self.assertIn("tim-chen.html", page)
+        self.assertNotIn('href="domain-email.json"', page)
+        self.assertNotIn('href="project.json"', page)
+
+        self.assertEqual(data["schema"], DOMAIN_EMAIL_URL)
+        self.assertEqual(data["pageUrl"], DOMAIN_EMAIL_PAGE_URL)
+        self.assertEqual(data["status"], "domain-email-setup-plan-published-not-active")
+        self.assertEqual(data["currentPublicEmail"], "GCAgochina@outlook.com")
+        self.assertEqual(data["targetDomainEmail"], "support@gcagochina.com")
+        self.assertEqual(data["baseScanUse"]["resubmissionReady"], False)
+        self.assertIn("support@gcagochina.com can receive external email", data["baseScanUse"]["readyWhen"])
+        self.assertTrue(any("MX" in item for item in data["dnsChecklist"]))
+        self.assertTrue(any("SPF" in item for item in data["dnsChecklist"]))
+        self.assertTrue(any("DKIM" in item for item in data["dnsChecklist"]))
+        self.assertTrue(any("DMARC" in item for item in data["dnsChecklist"]))
+        self.assertIn("site/support.html", data["filesToUpdateAfterActivation"])
+        self.assertIn("GCA has published a domain email setup plan.", data["publicClaimBoundaries"]["safeClaims"])
+        self.assertIn("support@gcagochina.com is active before inbound and outbound tests pass", data["publicClaimBoundaries"]["doNotClaim"])
+
     def test_basescan_remediation_page_and_json_track_return_notice(self):
         page = (ROOT / "site" / "basescan-remediation.html").read_text()
         data = json.loads((ROOT / "site" / "basescan-remediation.json").read_text())
@@ -1271,6 +1319,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Reviewer Data Room", page)
         self.assertIn(TEAM_PAGE_URL, page)
         self.assertIn(TIM_CHEN_PROFILE_PAGE_URL, page)
+        self.assertIn(DOMAIN_EMAIL_PAGE_URL, page)
         self.assertIn(GITHUB_REPO_URL, page)
         self.assertNotIn('href="basescan-remediation.json"', page)
 
@@ -1282,8 +1331,12 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(data["contractAddress"], MAINNET_ADDRESS)
         self.assertEqual(data["officialIdentity"]["team"], TEAM_PAGE_URL)
         self.assertEqual(data["officialIdentity"]["timChenProfessionalProfile"], TIM_CHEN_PROFILE_PAGE_URL)
+        self.assertEqual(data["officialIdentity"]["domainEmailSetupPlan"], DOMAIN_EMAIL_PAGE_URL)
+        self.assertEqual(data["officialIdentity"]["domainEmailSetupPlanData"], DOMAIN_EMAIL_URL)
         self.assertEqual(data["officialIdentity"]["github"], GITHUB_REPO_URL)
         self.assertTrue(data["currentEmailState"]["domainEmailRecommendedBeforeNextSubmission"])
+        self.assertEqual(data["currentEmailState"]["domainEmailSetupPlan"], DOMAIN_EMAIL_PAGE_URL)
+        self.assertEqual(data["currentEmailState"]["domainEmailSetupPlanData"], DOMAIN_EMAIL_URL)
         self.assertIn("support@gcagochina.com", data["currentEmailState"]["recommendedDomainEmailExamples"])
         self.assertEqual(data["teamTransparency"]["publicFounder"], "Tim Chen")
         self.assertEqual(data["teamTransparency"]["officialTeamPage"], f"{TEAM_PAGE_URL}#tim-chen")
@@ -1516,6 +1569,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("wait for a working project-domain email", site)
         self.assertIn('href="verify.html"', site)
         self.assertIn('href="tim-chen.html"', site)
+        self.assertIn('href="domain-email.html"', site)
         self.assertIn('href="buy.html"', site)
         self.assertIn('href="markets.html"', site)
         self.assertIn('href="liquidity.html"', site)
@@ -4865,7 +4919,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Long Description", kit)
         self.assertIn("BaseScan", kit)
         self.assertIn("returned again as information-insufficient on 2026-05-23", kit)
-        self.assertIn("project-domain email is ready; include the published Tim Chen professional profile URL", kit)
+        self.assertIn("project-domain email is ready; the domain email setup plan is published", kit)
+        self.assertIn("domain-email.html", kit)
         self.assertIn("GeckoTerminal", kit)
         self.assertIn("approved on 2026-05-11", kit)
         self.assertIn("CoinGecko / CMC", kit)
@@ -5025,6 +5080,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(project["platformStatus"]["baseScanTokenProfileLastCheckedDate"], "2026-05-23")
         self.assertIn("returned the token profile update again", project["platformStatus"]["baseScanTokenProfileLastCheckedResult"])
         self.assertEqual(project["platformStatus"]["baseScanRemediationPage"], BASESCAN_REMEDIATION_PAGE_URL)
+        self.assertEqual(project["platformStatus"]["domainEmailSetupPlan"], DOMAIN_EMAIL_PAGE_URL)
+        self.assertEqual(project["platformStatus"]["domainEmailSetupPlanData"], DOMAIN_EMAIL_URL)
+        self.assertEqual(project["platformStatus"]["timChenProfessionalProfile"], TIM_CHEN_PROFILE_PAGE_URL)
         self.assertEqual(project["platformStatus"]["teamPage"], TEAM_PAGE_URL)
         self.assertEqual(project["platformStatus"]["geckoTerminalTokenInfo"], "approved-2026-05-11")
         self.assertEqual(project["platformStatus"]["narrativeSystem"], "public-narrative-system-published")
@@ -5292,7 +5350,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("artificial activity", checks["no-artificial-activity-policy"]["evidence"])
         self.assertIn("No third-party audit has been completed.", readiness["publicClaimBoundaries"]["safeClaims"])
         self.assertIn("CoinGecko or CoinMarketCap listing before publication", readiness["publicClaimBoundaries"]["doNotClaim"])
-        self.assertIn("Create and publish a working gcagochina.com domain email before the next BaseScan submission.", readiness["nextActions"])
+        self.assertIn("Use the domain email setup plan at https://gcagochina.com/domain-email.html, then create and publish a working gcagochina.com domain email before the next BaseScan submission.", readiness["nextActions"])
         self.assertIn("Include the published Tim Chen professional profile URL https://gcagochina.com/tim-chen.html in the next BaseScan submission; add LinkedIn later if BaseScan specifically requires a third-party social-network profile.", readiness["nextActions"])
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, json.dumps(readiness))
 
@@ -5525,6 +5583,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Returned 2026-05-23; remediation required", page)
         self.assertIn("Tim Chen profile published, fix domain email before resubmission", page)
         self.assertIn(TIM_CHEN_PROFILE_PAGE_URL, page)
+        self.assertIn("Domain Email Plan", page)
+        self.assertIn("domain-email.html", page)
         self.assertIn("Owner observed no warning visible 2026-05-14", page)
         self.assertIn("Approved 2026-05-11", page)
         self.assertIn("Trust Center", page)
@@ -5584,6 +5644,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(reviews["reviews"]["baseScanTokenProfile"]["status"], "remediation-required-before-next-submission")
         self.assertEqual(reviews["reviews"]["baseScanTokenProfile"]["lastCheckedDate"], "2026-05-23")
         self.assertIn("returned the token profile update again", reviews["reviews"]["baseScanTokenProfile"]["lastCheckedResult"])
+        self.assertEqual(reviews["reviews"]["baseScanTokenProfile"]["domainEmailSetupPlan"], DOMAIN_EMAIL_PAGE_URL)
+        self.assertEqual(reviews["reviews"]["baseScanTokenProfile"]["domainEmailSetupPlanData"], DOMAIN_EMAIL_URL)
         self.assertEqual(reviews["reviews"]["blockaidMetaMask"]["status"], "owner-observed-no-warning-visible")
         self.assertEqual(reviews["reviews"]["blockaidMetaMask"]["submissionDate"], "2026-05-10")
         self.assertEqual(reviews["reviews"]["blockaidMetaMask"]["followUpSubmissionDate"], "2026-05-13")
@@ -6732,6 +6794,8 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "site" / "faq.html",
             ROOT / "site" / "status.html",
             ROOT / "site" / "listing-kit.html",
+            ROOT / "site" / "domain-email.html",
+            ROOT / "site" / "domain-email.json",
             ROOT / "site" / "wallet-warning.html",
             ROOT / "site" / "wallet-warning.json",
             ROOT / "site" / "external-reviews.html",
@@ -6897,6 +6961,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(COMMUNITY_PAGE_URL, followup)
         self.assertIn(EXTERNAL_REVIEW_PAGE_URL, followup)
         self.assertIn(TEAM_PAGE_URL, followup)
+        self.assertIn(TIM_CHEN_PROFILE_PAGE_URL, followup)
+        self.assertIn(DOMAIN_EMAIL_PAGE_URL, followup)
         self.assertIn(BASESCAN_REMEDIATION_PAGE_URL, followup)
         self.assertIn(GITHUB_REPO_URL, followup)
         self.assertIn("GCAgochina@outlook.com", followup)
@@ -6937,6 +7003,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["latestReturnNoticeDate"], "2026-05-23")
         self.assertEqual(values["lastCheckedDate"], "2026-05-23")
         self.assertIn("returned the token profile update again", values["lastCheckedResult"])
+        self.assertEqual(values["domainEmailSetupPlanUrl"], DOMAIN_EMAIL_PAGE_URL)
+        self.assertEqual(values["domainEmailSetupPlanDataUrl"], DOMAIN_EMAIL_URL)
         self.assertTrue(values["resubmissionRequired"])
         self.assertFalse(values["nextSubmissionReady"])
         self.assertIn("Official website is reachable over HTTPS", values["resubmissionChecklist"])
@@ -6961,6 +7029,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Next submission ready: no", package)
         self.assertIn("Official email: `GCAgochina@outlook.com`", package)
         self.assertIn(TEAM_PAGE_URL, package)
+        self.assertIn(TIM_CHEN_PROFILE_PAGE_URL, package)
+        self.assertIn(DOMAIN_EMAIL_PAGE_URL, package)
         self.assertIn(BASESCAN_REMEDIATION_PAGE_URL, package)
         self.assertIn(GITHUB_REPO_URL, package)
         self.assertIn(BRAND_KIT_PAGE_URL, package)
@@ -6984,6 +7054,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["contractAddress"], MAINNET_ADDRESS)
         self.assertEqual(values["officialEmail"], "GCAgochina@outlook.com")
         self.assertEqual(values["replyInbox"], "cxy070800@gmail.com")
+        self.assertEqual(values["domainEmailSetupPlanUrl"], DOMAIN_EMAIL_PAGE_URL)
+        self.assertEqual(values["domainEmailSetupPlanDataUrl"], DOMAIN_EMAIL_URL)
         self.assertEqual(values["officialTelegram"], TELEGRAM_URL)
         self.assertEqual(values["officialX"], X_URL)
         self.assertEqual(values["brandKitPageUrl"], BRAND_KIT_PAGE_URL)
@@ -7038,6 +7110,8 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "site" / "faq.html",
             ROOT / "site" / "status.html",
             ROOT / "site" / "listing-kit.html",
+            ROOT / "site" / "domain-email.html",
+            ROOT / "site" / "domain-email.json",
             ROOT / "site" / "wallet-warning.html",
             ROOT / "site" / "wallet-warning.json",
             ROOT / "site" / "external-reviews.html",
@@ -7649,6 +7723,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(WALLET_WARNING_URL, tracker)
         self.assertIn(EXTERNAL_REVIEW_PAGE_URL, tracker)
         self.assertIn(EXTERNAL_REVIEW_URL, tracker)
+        self.assertIn(DOMAIN_EMAIL_PAGE_URL, tracker)
+        self.assertIn(DOMAIN_EMAIL_URL, tracker)
         self.assertIn(MARKET_QUALITY_PAGE_URL, tracker)
         self.assertIn(MARKET_QUALITY_URL, tracker)
         self.assertIn(LISTING_READINESS_PAGE_URL, tracker)
@@ -7672,7 +7748,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(TELEGRAM_URL, tracker)
         self.assertIn(OFFICIAL_GECKOTERMINAL_URL, tracker)
         self.assertIn("returned again as information-insufficient on 2026-05-23", tracker)
-        self.assertIn("Create and test a working `gcagochina.com` domain email", tracker)
+        self.assertIn("Use the domain email setup plan at `https://gcagochina.com/domain-email.html`", tracker)
+        self.assertIn("create and test a working `gcagochina.com` domain email", tracker)
         self.assertIn("Include the published Tim Chen professional profile", tracker)
         self.assertIn("launch/basescan_resubmission_package.md", tracker)
         self.assertIn("launch/basescan_resubmission_values.json", tracker)
@@ -7705,6 +7782,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["canonicalIdentity"]["externalReviewStatusPageUrl"], EXTERNAL_REVIEW_PAGE_URL)
         self.assertEqual(values["canonicalIdentity"]["externalReviewStatusUrl"], EXTERNAL_REVIEW_URL)
         self.assertEqual(values["canonicalIdentity"]["teamPageUrl"], TEAM_PAGE_URL)
+        self.assertEqual(values["canonicalIdentity"]["timChenProfessionalProfileUrl"], TIM_CHEN_PROFILE_PAGE_URL)
+        self.assertEqual(values["canonicalIdentity"]["timChenProfessionalProfileDataUrl"], TIM_CHEN_PROFILE_URL)
         self.assertEqual(values["canonicalIdentity"]["baseScanRemediationPageUrl"], BASESCAN_REMEDIATION_PAGE_URL)
         self.assertEqual(values["canonicalIdentity"]["baseScanRemediationUrl"], BASESCAN_REMEDIATION_URL)
         self.assertEqual(values["canonicalIdentity"]["githubRepoUrl"], GITHUB_REPO_URL)
@@ -7738,7 +7817,10 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["platforms"]["baseScan"]["latestReturnNoticeDate"], "2026-05-23")
         self.assertEqual(values["platforms"]["baseScan"]["returnReason"], "information-insufficient")
         self.assertEqual(values["platforms"]["baseScan"]["replyInbox"], "cxy070800@gmail.com")
-        self.assertIn("Create and publish a working gcagochina.com domain email", values["platforms"]["baseScan"]["nextAction"])
+        self.assertEqual(values["platforms"]["baseScan"]["domainEmailSetupPlan"], DOMAIN_EMAIL_PAGE_URL)
+        self.assertEqual(values["platforms"]["baseScan"]["domainEmailSetupPlanData"], DOMAIN_EMAIL_URL)
+        self.assertIn("Use the domain email setup plan", values["platforms"]["baseScan"]["nextAction"])
+        self.assertIn("create and publish a working gcagochina.com domain email", values["platforms"]["baseScan"]["nextAction"])
         self.assertEqual(values["platforms"]["blockaid"]["reportStatus"], "owner-observed-no-warning-visible")
         self.assertEqual(values["platforms"]["blockaid"]["submissionDate"], "2026-05-10")
         self.assertEqual(values["platforms"]["blockaid"]["followUpSubmissionDate"], "2026-05-13")

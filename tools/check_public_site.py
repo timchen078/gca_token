@@ -35,6 +35,8 @@ ACTION_PLAN_PAGE_URL = "https://gcagochina.com/action-plan.html"
 TEAM_PAGE_URL = "https://gcagochina.com/team.html"
 TIM_CHEN_PROFILE_PAGE_URL = "https://gcagochina.com/tim-chen.html"
 TIM_CHEN_PROFILE_URL = "https://gcagochina.com/tim-chen.json"
+DOMAIN_EMAIL_PAGE_URL = "https://gcagochina.com/domain-email.html"
+DOMAIN_EMAIL_URL = "https://gcagochina.com/domain-email.json"
 BASESCAN_REMEDIATION_PAGE_URL = "https://gcagochina.com/basescan-remediation.html"
 BASESCAN_REMEDIATION_URL = "https://gcagochina.com/basescan-remediation.json"
 GITHUB_REPO_URL = "https://github.com/timchen078/gca_token"
@@ -246,6 +248,8 @@ def validate_root(text: str) -> None:
     assert_contains(text, "About GCA", label)
     assert_contains(text, "about.html", label)
     assert_contains(text, "Tim Chen", label)
+    assert_contains(text, "Domain Email Plan", label)
+    assert_contains(text, "domain-email.html", label)
     assert_contains(text, "Wallet Warning", label)
     assert_contains(text, "External Reviews", label)
     assert_contains(text, "Platform Replies", label)
@@ -724,6 +728,67 @@ def validate_tim_chen_profile_json(text: str) -> None:
     assert_no_forbidden_public_claims(json.dumps(payload), label)
 
 
+def validate_domain_email_page(text: str) -> None:
+    label = "/domain-email.html"
+    assert_social_preview_meta(text, label, DOMAIN_EMAIL_PAGE_URL)
+    for expected in (
+        "GCA Domain Email Setup Plan",
+        "BaseScan Email Remediation",
+        "GCAgochina@outlook.com",
+        "support@gcagochina.com",
+        "Not active yet",
+        "Required before resubmission",
+        "MX",
+        "SPF",
+        "DKIM / DMARC",
+        "Ready Means All Four Are True",
+        "domain email setup plan",
+        "support.html",
+        "basescan-remediation.html",
+        "tim-chen.html",
+        "BaseScan Remediation",
+    ):
+        assert_contains(text, expected, label)
+    assert_not_contains(text, 'href="domain-email.json"', label)
+    assert_not_contains(text, 'href="project.json"', label)
+    assert_no_forbidden_public_claims(text, label)
+
+
+def validate_domain_email_json(text: str) -> None:
+    label = "/domain-email.json"
+    payload = load_json(text, label)
+    base_scan_use = payload.get("baseScanUse", {})
+    boundaries = payload.get("publicClaimBoundaries", {})
+    dns = payload.get("dnsChecklist", [])
+
+    if payload.get("schema") != DOMAIN_EMAIL_URL:
+        raise SiteCheckError(f"{label}: wrong schema")
+    if payload.get("pageUrl") != DOMAIN_EMAIL_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong pageUrl")
+    if payload.get("lastUpdated") != "2026-05-23":
+        raise SiteCheckError(f"{label}: wrong lastUpdated")
+    if payload.get("status") != "domain-email-setup-plan-published-not-active":
+        raise SiteCheckError(f"{label}: wrong status")
+    if payload.get("currentPublicEmail") != "GCAgochina@outlook.com":
+        raise SiteCheckError(f"{label}: wrong currentPublicEmail")
+    if payload.get("targetDomainEmail") != "support@gcagochina.com":
+        raise SiteCheckError(f"{label}: wrong targetDomainEmail")
+    if base_scan_use.get("resubmissionReady") is not False:
+        raise SiteCheckError(f"{label}: BaseScan resubmission must not be marked ready")
+    if "support@gcagochina.com can receive external email" not in base_scan_use.get("readyWhen", []):
+        raise SiteCheckError(f"{label}: missing inbound ready gate")
+    for expected in ("MX", "SPF", "DKIM", "DMARC"):
+        if not any(expected in item for item in dns):
+            raise SiteCheckError(f"{label}: missing DNS checklist item {expected}")
+    if "site/support.html" not in payload.get("filesToUpdateAfterActivation", []):
+        raise SiteCheckError(f"{label}: missing support update file")
+    if "GCA has published a domain email setup plan." not in boundaries.get("safeClaims", []):
+        raise SiteCheckError(f"{label}: missing safe setup-plan claim")
+    if "support@gcagochina.com is active before inbound and outbound tests pass" not in boundaries.get("doNotClaim", []):
+        raise SiteCheckError(f"{label}: missing inactive-domain-email boundary")
+    assert_no_forbidden_public_claims(json.dumps(payload), label)
+
+
 def validate_basescan_remediation_page(text: str) -> None:
     label = "/basescan-remediation.html"
     assert_social_preview_meta(text, label, BASESCAN_REMEDIATION_PAGE_URL)
@@ -736,6 +801,7 @@ def validate_basescan_remediation_page(text: str) -> None:
         "support@gcagochina.com",
         "Professional profile",
         TIM_CHEN_PROFILE_PAGE_URL,
+        DOMAIN_EMAIL_PAGE_URL,
         "Tim Chen",
         "team.html",
         GITHUB_REPO_URL,
@@ -771,10 +837,18 @@ def validate_basescan_remediation_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong team page")
     if identity.get("timChenProfessionalProfile") != TIM_CHEN_PROFILE_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong Tim Chen profile page")
+    if identity.get("domainEmailSetupPlan") != DOMAIN_EMAIL_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong domainEmailSetupPlan")
+    if identity.get("domainEmailSetupPlanData") != DOMAIN_EMAIL_URL:
+        raise SiteCheckError(f"{label}: wrong domainEmailSetupPlanData")
     if identity.get("github") != GITHUB_REPO_URL:
         raise SiteCheckError(f"{label}: wrong GitHub URL")
     if email_state.get("domainEmailRecommendedBeforeNextSubmission") is not True:
         raise SiteCheckError(f"{label}: missing domain email recommendation")
+    if email_state.get("domainEmailSetupPlan") != DOMAIN_EMAIL_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong email-state domainEmailSetupPlan")
+    if email_state.get("domainEmailSetupPlanData") != DOMAIN_EMAIL_URL:
+        raise SiteCheckError(f"{label}: wrong email-state domainEmailSetupPlanData")
     if "support@gcagochina.com" not in email_state.get("recommendedDomainEmailExamples", []):
         raise SiteCheckError(f"{label}: missing recommended support domain email")
     if team.get("publicFounder") != "Tim Chen":
@@ -818,6 +892,7 @@ def validate_action_plan_page(text: str) -> None:
         "Platform-Only Evidence Path",
         "Reviewer Data Room",
         "BaseScan returned 2026-05-23; remediation required",
+        "domain-email.html",
         "Public account intake, read-only wallet checks, and eligible ledger records are live",
         "eligible ledger records are live",
         MAINNET_ADDRESS,
@@ -2426,6 +2501,7 @@ def validate_data_page(text: str) -> None:
         "Platform replies data",
         "Wallet security profile",
         "External reviews data",
+        "Domain email setup data",
         "Token safety data",
         "On-chain proofs data",
         "Liquidity statement data",
@@ -2455,6 +2531,7 @@ def validate_data_page(text: str) -> None:
         "reviewer-kit.json",
         "platform-replies.json",
         "external-reviews.json",
+        "domain-email.json",
         "token-safety.json",
         "onchain-proofs.json",
         "liquidity.json",
@@ -2546,6 +2623,8 @@ def validate_site_map_page(text: str) -> None:
         "API Status",
         "api-status.html",
         "Trust and Review",
+        "Domain Email Plan",
+        "domain-email.html",
         "Security Materials",
         "External Review",
         "Supply and Custody",
@@ -2707,6 +2786,8 @@ def validate_listing_kit_page(text: str) -> None:
     assert_contains(text, "Official GCA/USDT route", label)
     assert_contains(text, "BaseScan", label)
     assert_contains(text, "returned again as information-insufficient on 2026-05-23", label)
+    assert_contains(text, "domain email setup plan is published", label)
+    assert_contains(text, "domain-email.html", label)
     assert_contains(text, "GeckoTerminal", label)
     assert_contains(text, "Approved", label)
     assert_contains(text, "no completed third-party audit", label)
@@ -7359,6 +7440,12 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong BaseScan profile last checked date")
     if "returned the token profile update again" not in status.get("baseScanTokenProfileLastCheckedResult", ""):
         raise SiteCheckError(f"{label}: missing BaseScan profile last checked result")
+    if status.get("domainEmailSetupPlan") != DOMAIN_EMAIL_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong domainEmailSetupPlan")
+    if status.get("domainEmailSetupPlanData") != DOMAIN_EMAIL_URL:
+        raise SiteCheckError(f"{label}: wrong domainEmailSetupPlanData")
+    if status.get("timChenProfessionalProfile") != TIM_CHEN_PROFILE_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong Tim Chen professional profile")
     if status.get("geckoTerminalTokenInfo") != "approved-2026-05-11":
         raise SiteCheckError(f"{label}: unexpected GeckoTerminal status")
     if external_reviews.get("baseScanTokenProfileLastCheckedDate") != "2026-05-23":
@@ -8819,6 +8906,10 @@ def validate_listing_readiness_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong BaseScan profile last checked date")
     if "returned again by BaseScan as information-insufficient on 2026-05-23" not in base_scan_profile.get("evidence", ""):
         raise SiteCheckError(f"{label}: missing BaseScan profile last checked evidence")
+    if "domain email setup plan is published" not in base_scan_profile.get("evidence", ""):
+        raise SiteCheckError(f"{label}: missing domain email setup evidence")
+    if "Use the domain email setup plan at https://gcagochina.com/domain-email.html, then create and publish a working gcagochina.com domain email before the next BaseScan submission." not in payload.get("nextActions", []):
+        raise SiteCheckError(f"{label}: missing domain email setup next action")
     if "CoinGecko tracked listing request" not in payload.get("notReadyFor", []):
         raise SiteCheckError(f"{label}: missing CoinGecko defer boundary")
     if "CoinMarketCap tracked listing request" not in payload.get("notReadyFor", []):
@@ -9920,6 +10011,10 @@ def validate_external_reviews_json(text: str) -> None:
     base_scan_profile = reviews.get("baseScanTokenProfile", {})
     if base_scan_profile.get("professionalProfile") != TIM_CHEN_PROFILE_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong professionalProfile")
+    if base_scan_profile.get("domainEmailSetupPlan") != DOMAIN_EMAIL_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong domainEmailSetupPlan")
+    if base_scan_profile.get("domainEmailSetupPlanData") != DOMAIN_EMAIL_URL:
+        raise SiteCheckError(f"{label}: wrong domainEmailSetupPlanData")
     if links.get("baseScanRemediationPage") != BASESCAN_REMEDIATION_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong baseScanRemediationPage")
     if links.get("baseScanRemediation") != BASESCAN_REMEDIATION_URL:
@@ -9995,6 +10090,8 @@ def validate_external_reviews_page(text: str) -> None:
     assert_contains(text, "Returned 2026-05-23; remediation required", label)
     assert_contains(text, "Tim Chen profile published, fix domain email before resubmission", label)
     assert_contains(text, "tim-chen.html", label)
+    assert_contains(text, "Domain Email Plan", label)
+    assert_contains(text, "domain-email.html", label)
     assert_contains(text, "Owner observed no warning visible 2026-05-14", label)
     assert_contains(text, "Approved 2026-05-11", label)
     assert_contains(text, "CoinGecko tracked listing submission", label)
@@ -10141,6 +10238,8 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/team.html",
         "https://gcagochina.com/tim-chen.html",
         "https://gcagochina.com/tim-chen.json",
+        "https://gcagochina.com/domain-email.html",
+        "https://gcagochina.com/domain-email.json",
         "https://gcagochina.com/basescan-remediation.html",
         "https://gcagochina.com/basescan-remediation.json",
         "https://gcagochina.com/action-plan.html",
@@ -10282,6 +10381,8 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /team.html", label)
     assert_contains(text, "Allow: /tim-chen.html", label)
     assert_contains(text, "Allow: /tim-chen.json", label)
+    assert_contains(text, "Allow: /domain-email.html", label)
+    assert_contains(text, "Allow: /domain-email.json", label)
     assert_contains(text, "Allow: /basescan-remediation.html", label)
     assert_contains(text, "Allow: /basescan-remediation.json", label)
     assert_contains(text, "Allow: /action-plan.html", label)
@@ -10426,6 +10527,8 @@ CHECKS: list[EndpointCheck] = [
     ("/team.html", validate_team_page),
     ("/tim-chen.html", validate_tim_chen_profile_page),
     ("/tim-chen.json", validate_tim_chen_profile_json),
+    ("/domain-email.html", validate_domain_email_page),
+    ("/domain-email.json", validate_domain_email_json),
     ("/basescan-remediation.html", validate_basescan_remediation_page),
     ("/basescan-remediation.json", validate_basescan_remediation_json),
     ("/action-plan.html", validate_action_plan_page),

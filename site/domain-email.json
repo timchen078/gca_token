@@ -1,0 +1,68 @@
+{
+  "schema": "https://gcagochina.com/domain-email.json",
+  "pageUrl": "https://gcagochina.com/domain-email.html",
+  "lastUpdated": "2026-05-23",
+  "status": "domain-email-setup-plan-published-not-active",
+  "projectName": "GCA",
+  "domain": "gcagochina.com",
+  "currentPublicEmail": "GCAgochina@outlook.com",
+  "targetDomainEmail": "support@gcagochina.com",
+  "targetAliases": [
+    "team@gcagochina.com",
+    "security@gcagochina.com"
+  ],
+  "baseScanUse": {
+    "currentBlocker": "BaseScan requested clearer project/team information and an official-domain sender/contact email. Tim Chen's official-domain professional profile is published; domain email remains the main owner-controlled blocker.",
+    "resubmissionReady": false,
+    "readyWhen": [
+      "support@gcagochina.com can receive external email",
+      "support@gcagochina.com can send authenticated external email",
+      "public website pages show the same domain email used in the BaseScan request",
+      "BaseScan resubmission includes https://gcagochina.com/tim-chen.html"
+    ]
+  },
+  "dnsChecklist": [
+    "Add provider MX records for gcagochina.com",
+    "Add or merge SPF TXT record for the chosen mail provider",
+    "Add DKIM TXT or CNAME records from the provider dashboard",
+    "Add DMARC TXT record at _dmarc.gcagochina.com, starting in monitoring mode if needed",
+    "Wait for DNS propagation and provider verification"
+  ],
+  "testChecklist": [
+    "Send an inbound test from Gmail or Outlook to support@gcagochina.com",
+    "Reply from support@gcagochina.com to Gmail or Outlook",
+    "Confirm the visible sender is support@gcagochina.com",
+    "Confirm messages are not landing in spam during the first test",
+    "Archive test screenshots or message headers for owner records"
+  ],
+  "filesToUpdateAfterActivation": [
+    "site/support.html",
+    "site/support.json",
+    "site/zh-support.html",
+    "site/register.html",
+    "site/members.html",
+    "site/project.json",
+    "site/listing-kit.html",
+    "site/basescan-remediation.html",
+    "site/basescan-remediation.json",
+    "site/external-reviews.json",
+    "site/reviewer-kit.json",
+    "launch/basescan_form_values.json",
+    "launch/basescan_resubmission_values.json",
+    "launch/basescan_resubmission_package.md",
+    "launch/external_review_followup_tracker.json",
+    "launch/external_review_followup_tracker.md"
+  ],
+  "publicClaimBoundaries": {
+    "safeClaims": [
+      "GCA has published a domain email setup plan.",
+      "A working gcagochina.com domain email is still required before the next BaseScan token profile resubmission.",
+      "The current active public contact remains GCAgochina@outlook.com until domain email tests pass."
+    ],
+    "doNotClaim": [
+      "support@gcagochina.com is active before inbound and outbound tests pass",
+      "BaseScan token profile approval before BaseScan publishes it",
+      "third-party audit completion before an independent report is published"
+    ]
+  }
+}

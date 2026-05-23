@@ -23,6 +23,7 @@ This package records the current BaseScan token information remediation state. T
 - Verify page: `https://gcagochina.com/verify.html`
 - Project status: `https://gcagochina.com/status.html`
 - Team profile: `https://gcagochina.com/team.html`
+- Domain email setup plan: `https://gcagochina.com/domain-email.html`
 - BaseScan remediation: `https://gcagochina.com/basescan-remediation.html`
 - BaseScan remediation JSON: `https://gcagochina.com/basescan-remediation.json`
 - Public GitHub repository: `https://github.com/timchen078/gca_token`
@@ -47,7 +48,7 @@ This package records the current BaseScan token information remediation state. T
 
 ## Owner-Required Fixes Before The Next Submission
 
-1. Create and test a working `gcagochina.com` domain email such as `support@gcagochina.com`, `hello@gcagochina.com`, or `team@gcagochina.com`.
+1. Use the published domain email setup plan at `https://gcagochina.com/domain-email.html`, then create and test a working `gcagochina.com` domain email such as `support@gcagochina.com`, `hello@gcagochina.com`, or `team@gcagochina.com`.
 2. Publish that domain email on the support, about, and team pages.
 3. Submit to BaseScan from the domain email when possible, or clearly explain the official primary email in the form.
 4. Include the Tim Chen professional profile URL `https://gcagochina.com/tim-chen.html` in the next submission. Add LinkedIn later only if BaseScan specifically requires a third-party social-network profile.

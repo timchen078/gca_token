@@ -24,6 +24,7 @@ BaseScan replied that it could not process the token update request because the 
 
 - Create and test a working `gcagochina.com` domain email such as `support@gcagochina.com`
 - Tim Chen professional profile remains live: `https://gcagochina.com/tim-chen.html`
+- Domain email setup plan remains live: `https://gcagochina.com/domain-email.html`
 - Add LinkedIn later only if BaseScan specifically requires a third-party social-network profile
 - Public team profile remains live: `https://gcagochina.com/team.html`
 - BaseScan remediation page remains live: `https://gcagochina.com/basescan-remediation.html`
@@ -103,6 +104,7 @@ Brand kit: https://gcagochina.com/brand-kit.html
 Whitepaper: https://gcagochina.com/whitepaper.html
 External review status: https://gcagochina.com/external-reviews.html
 Tim Chen professional profile: https://gcagochina.com/tim-chen.html
+Domain email setup plan: https://gcagochina.com/domain-email.html
 Community kit: https://gcagochina.com/community.html
 Official GCA/USDT pool: https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0
 Official Telegram: https://t.me/gcagochinaofficial
