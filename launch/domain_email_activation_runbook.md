@@ -33,6 +33,25 @@ python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox suppor
 10. Reply from `support@gcagochina.com` back to Gmail or Outlook and confirm the visible sender is the domain mailbox.
 11. Save the activation evidence packet before changing public BaseScan form values.
 
+## Local Evidence Packet Builder
+
+After DNS and manual email tests are complete, build a local packet for owner records:
+
+```bash
+python3 tools/build_domain_email_evidence_packet.py \
+  --dkim-selector <provider-selector> \
+  --provider-active domain-email-provider-active.png \
+  --dns-proof domain-email-dns-mx-spf-dkim-dmarc.txt \
+  --inbound-test domain-email-inbound-test.png \
+  --outbound-test domain-email-outbound-test.png \
+  --support-page-proof support-page-domain-email.png \
+  --website-email-updated \
+  --output-json launch/domain_email_evidence_packet.json \
+  --output-md launch/domain_email_evidence_packet.md
+```
+
+The packet builder marks `readyForBaseScanResubmission` as true only when DNS is ready, all five evidence references are present, and the website email has been switched to the target domain email. It does not send email, submit BaseScan requests, write to DNS, or touch wallets/contracts.
+
 ## Evidence Packet
 
 Save these owner records before the next BaseScan submission:
@@ -44,6 +63,7 @@ Save these owner records before the next BaseScan submission:
 - `support-page-domain-email.png`: official support page showing the same domain email used in the BaseScan form.
 
 The DNS checker is read-only. It does not send email, submit BaseScan requests, write files by itself, print secrets, or touch wallets/contracts.
+The packet builder writes only local owner evidence files when `--output-json` or `--output-md` is provided.
 
 ## Public Site Switch Gate
 

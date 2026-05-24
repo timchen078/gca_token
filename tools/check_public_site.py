@@ -744,6 +744,9 @@ def validate_domain_email_page(text: str) -> None:
         "Operator DNS Check",
         "tools/check_domain_email_dns.py",
         "--dkim-selector &lt;provider-selector&gt;",
+        "Evidence Packet Builder",
+        "tools/build_domain_email_evidence_packet.py",
+        "launch/domain_email_evidence_packet.json",
         "Evidence Packet",
         "What To Save Before BaseScan Resubmission",
         "support-page-domain-email",
@@ -768,6 +771,7 @@ def validate_domain_email_json(text: str) -> None:
     boundaries = payload.get("publicClaimBoundaries", {})
     evidence = payload.get("activationEvidencePacket", {})
     dns_check = payload.get("operatorDnsCheck", {})
+    packet_builder = payload.get("operatorEvidencePacketBuilder", {})
     policy = payload.get("baseScanSubmissionPolicy", {})
     dns = payload.get("dnsChecklist", [])
 
@@ -775,7 +779,7 @@ def validate_domain_email_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != DOMAIN_EMAIL_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
-    if payload.get("lastUpdated") != "2026-05-23":
+    if payload.get("lastUpdated") != "2026-05-24":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("status") != "domain-email-setup-plan-published-not-active":
         raise SiteCheckError(f"{label}: wrong status")
@@ -802,6 +806,14 @@ def validate_domain_email_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing DKIM operator DNS check")
     if "does not touch wallets or contracts" not in dns_check.get("boundaries", []):
         raise SiteCheckError(f"{label}: missing operator DNS check wallet boundary")
+    if packet_builder.get("tool") != "tools/build_domain_email_evidence_packet.py":
+        raise SiteCheckError(f"{label}: wrong operator evidence packet builder")
+    if "launch/domain_email_evidence_packet.json" not in packet_builder.get("outputs", []):
+        raise SiteCheckError(f"{label}: missing evidence packet JSON output")
+    if "readyForBaseScanEmailEvidence is true in the DNS check" not in packet_builder.get("readyRequires", []):
+        raise SiteCheckError(f"{label}: missing DNS ready requirement for evidence packet")
+    if "does not submit BaseScan request" not in packet_builder.get("boundaries", []):
+        raise SiteCheckError(f"{label}: missing packet builder BaseScan boundary")
     if policy.get("nextCleanSubmissionSender") != "support@gcagochina.com after activation":
         raise SiteCheckError(f"{label}: wrong next BaseScan sender policy")
     if "activation evidence packet is archived for owner records" not in policy.get("doNotResubmitBefore", []):

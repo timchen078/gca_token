@@ -1,7 +1,7 @@
 {
   "schema": "https://gcagochina.com/domain-email.json",
   "pageUrl": "https://gcagochina.com/domain-email.html",
-  "lastUpdated": "2026-05-23",
+  "lastUpdated": "2026-05-24",
   "status": "domain-email-setup-plan-published-not-active",
   "projectName": "GCA",
   "domain": "gcagochina.com",
@@ -71,6 +71,30 @@
       "read-only DNS check",
       "does not send email",
       "does not submit BaseScan request",
+      "does not touch wallets or contracts"
+    ]
+  },
+  "operatorEvidencePacketBuilder": {
+    "tool": "tools/build_domain_email_evidence_packet.py",
+    "command": "python3 tools/build_domain_email_evidence_packet.py --dkim-selector <provider-selector> --provider-active domain-email-provider-active.png --dns-proof domain-email-dns-mx-spf-dkim-dmarc.txt --inbound-test domain-email-inbound-test.png --outbound-test domain-email-outbound-test.png --support-page-proof support-page-domain-email.png --website-email-updated --output-json launch/domain_email_evidence_packet.json --output-md launch/domain_email_evidence_packet.md",
+    "readyRequires": [
+      "readyForBaseScanEmailEvidence is true in the DNS check",
+      "provider active proof is saved",
+      "DNS lookup proof is saved",
+      "inbound test proof is saved",
+      "outbound test proof is saved",
+      "support page proof is saved",
+      "website email has been switched to support@gcagochina.com"
+    ],
+    "outputs": [
+      "launch/domain_email_evidence_packet.json",
+      "launch/domain_email_evidence_packet.md"
+    ],
+    "boundaries": [
+      "local owner evidence packet only",
+      "does not send email",
+      "does not submit BaseScan request",
+      "does not write DNS records",
       "does not touch wallets or contracts"
     ]
   },
