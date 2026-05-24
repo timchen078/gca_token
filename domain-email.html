@@ -364,6 +364,10 @@
             <h3>Operator DNS Check</h3>
             <p class="note">After records are added, run <code>python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox support --dkim-selector &lt;provider-selector&gt; --json</code>. This is a read-only public DNS check for MX, SPF, DMARC, and DKIM.</p>
           </div>
+          <div class="card">
+            <h3>Evidence Packet Builder</h3>
+            <p class="note">After DNS and manual mail tests pass, run <code>python3 tools/build_domain_email_evidence_packet.py --dkim-selector &lt;provider-selector&gt; --website-email-updated --output-json launch/domain_email_evidence_packet.json --output-md launch/domain_email_evidence_packet.md</code>. The packet blocks BaseScan resubmission until DNS, screenshots, and website email alignment are complete.</p>
+          </div>
         </div>
       </section>
 
@@ -377,6 +381,7 @@
           <div class="row"><span>Inbound proof</span><strong>Save a test email sent from Gmail or Outlook to <code>support@gcagochina.com</code>, including the received timestamp.</strong></div>
           <div class="row"><span>Outbound proof</span><strong>Save a reply from <code>support@gcagochina.com</code> back to Gmail or Outlook, showing the visible sender address.</strong></div>
           <div class="row"><span>Website proof</span><strong>Save the updated support page showing the same domain email used in the BaseScan form, for example <code>support-page-domain-email.png</code>.</strong></div>
+          <div class="row"><span>Local packet</span><strong>Generate <code>launch/domain_email_evidence_packet.json</code> and <code>launch/domain_email_evidence_packet.md</code> only after the five evidence files exist.</strong></div>
         </div>
       </section>
 
