@@ -839,6 +839,9 @@ def validate_basescan_remediation_page(text: str) -> None:
         "support@gcagochina.com",
         "Professional profile",
         TIM_CHEN_PROFILE_PAGE_URL,
+        "Preflight checker",
+        "tools/check_basescan_resubmission_readiness.py",
+        "BaseScan values, domain email evidence packet, and reviewer URLs",
         DOMAIN_EMAIL_PAGE_URL,
         "Tim Chen",
         "team.html",
@@ -866,7 +869,7 @@ def validate_basescan_remediation_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != BASESCAN_REMEDIATION_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
-    if payload.get("lastUpdated") != "2026-05-23":
+    if payload.get("lastUpdated") != "2026-05-24":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("status") != "basescan-remediation-required-before-next-submission":
         raise SiteCheckError(f"{label}: wrong status")
@@ -910,6 +913,15 @@ def validate_basescan_remediation_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing external professional profile recommendation")
     if gate.get("ready") is not False:
         raise SiteCheckError(f"{label}: submission gate should not be ready")
+    preflight = gate.get("preflightTool", {})
+    if preflight.get("tool") != "tools/check_basescan_resubmission_readiness.py":
+        raise SiteCheckError(f"{label}: wrong preflight tool")
+    if "--require-ready" not in preflight.get("command", ""):
+        raise SiteCheckError(f"{label}: missing preflight require-ready command")
+    if "reviewer URLs are reachable" not in preflight.get("requires", []):
+        raise SiteCheckError(f"{label}: missing reviewer URL preflight gate")
+    if "does not submit BaseScan request" not in preflight.get("boundaries", []):
+        raise SiteCheckError(f"{label}: missing preflight BaseScan boundary")
     if not any("https://gcagochina.com/platform-replies.html" in item for item in gate.get("requiredBeforeReady", [])):
         raise SiteCheckError(f"{label}: missing Platform Replies next-submission gate")
     assert_no_forbidden_public_claims(text, label)

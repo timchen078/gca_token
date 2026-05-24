@@ -22,6 +22,23 @@
     ],
     "nextAction": "Collect this packet after support@gcagochina.com is active and before the next clean BaseScan resubmission."
   },
+  "preflightCheck": {
+    "tool": "tools/check_basescan_resubmission_readiness.py",
+    "command": "python3 tools/check_basescan_resubmission_readiness.py --json --require-ready",
+    "readyRequires": [
+      "nextSubmissionReady is true",
+      "officialEmail is support@gcagochina.com",
+      "launch/domain_email_evidence_packet.json has readyForBaseScanResubmission true",
+      "reviewer URLs are reachable"
+    ],
+    "boundaries": [
+      "read-only preflight",
+      "does not submit BaseScan request",
+      "does not send email",
+      "does not write DNS records",
+      "does not touch wallets or contracts"
+    ]
+  },
   "browserSubmissionStatus": "returned-remediation-required",
   "nextSubmissionReady": false,
   "returnReason": "information-insufficient",

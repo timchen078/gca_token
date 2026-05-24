@@ -57,6 +57,13 @@ This package records the current BaseScan token information remediation state. T
 6. Submit to BaseScan from the domain email when possible, or clearly explain the official primary email in the form.
 7. Include the Tim Chen professional profile URL `https://gcagochina.com/tim-chen.html` in the next submission. Add LinkedIn later only if BaseScan specifically requires a third-party social-network profile.
 8. Re-run the public site checker after the email/profile change and before submitting.
+9. Run the read-only BaseScan preflight checker before opening the form:
+
+```bash
+python3 tools/check_basescan_resubmission_readiness.py --json --require-ready
+```
+
+The preflight must report `readyForBaseScanResubmission: true` before the owner sends a clean resubmission. It validates the local BaseScan values packet, the domain email evidence packet, and reviewer URLs only; it does not submit BaseScan forms, send email, write DNS records, or touch wallets/contracts.
 
 ## Description
 

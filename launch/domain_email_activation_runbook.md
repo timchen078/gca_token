@@ -52,6 +52,14 @@ python3 tools/build_domain_email_evidence_packet.py \
 
 The packet builder marks `readyForBaseScanResubmission` as true only when DNS is ready, all five evidence references are present, and the website email has been switched to the target domain email. It does not send email, submit BaseScan requests, write to DNS, or touch wallets/contracts.
 
+Before opening the BaseScan form, run the final read-only preflight:
+
+```bash
+python3 tools/check_basescan_resubmission_readiness.py --json --require-ready
+```
+
+Only proceed when the preflight reports `readyForBaseScanResubmission` as true. The preflight checks the BaseScan values packet, domain email evidence packet, and public reviewer URLs; it does not submit anything.
+
 ## Evidence Packet
 
 Save these owner records before the next BaseScan submission:

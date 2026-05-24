@@ -331,6 +331,7 @@
           <div class="list">
             <div class="row"><span>Domain email</span><strong>Create and test a working <code>gcagochina.com</code> email such as <code>support@gcagochina.com</code>, publish it on the website, then submit from that address when possible. The setup checklist is now published at <a href="domain-email.html">https://gcagochina.com/domain-email.html</a>.</strong></div>
             <div class="row"><span>Professional profile</span><strong>Official-domain profile published at <a href="tim-chen.html">https://gcagochina.com/tim-chen.html</a>. Add LinkedIn later only if BaseScan specifically requires a third-party social-network profile.</strong></div>
+            <div class="row"><span>Preflight checker</span><strong>Run <code>python3 tools/check_basescan_resubmission_readiness.py --json --require-ready</code> only after the domain email evidence packet is complete. A failed preflight means do not resubmit yet.</strong></div>
             <div class="row"><span>Submission timing</span><strong>Do not submit another duplicate until the remaining owner-controlled blocker, project-domain email, is fixed.</strong></div>
           </div>
         </div>
@@ -413,6 +414,7 @@
         <h2 id="submissionTitle">Current Ready State</h2>
         <div class="list">
           <div class="row"><span>Ready to resubmit today?</span><strong class="pending">No. Professional profile evidence is now published; fix domain email before the next submission.</strong></div>
+          <div class="row"><span>Preflight required</span><strong>BaseScan values, domain email evidence packet, and reviewer URLs must pass <code>tools/check_basescan_resubmission_readiness.py</code> before one clean owner resubmission.</strong></div>
           <div class="row"><span>Safe current claim</span><strong>BaseScan source and deployer-wallet ownership verification are complete; token profile publication is not complete.</strong></div>
           <div class="row"><span>Next form should include</span><strong>Tim Chen professional profile, team page, GitHub repository, domain email, whitepaper, brand kit, start page, support page, Platform Replies template, Telegram, X, and GCA/USDT market route.</strong></div>
         </div>

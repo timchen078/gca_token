@@ -1,0 +1,136 @@
+import json
+import tempfile
+import unittest
+from contextlib import redirect_stdout
+from io import StringIO
+from pathlib import Path
+
+from tools.check_basescan_resubmission_readiness import (
+    REQUIRED_URL_FIELDS,
+    TARGET_DOMAIN_EMAIL,
+    build_readiness_report,
+    check_public_urls,
+    main,
+)
+
+
+class FakeResponse:
+    def __init__(self, status=200, body=b"ok"):
+        self.status = status
+        self.body = body
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc, tb):
+        return False
+
+    def read(self, size=-1):
+        return self.body[:size] if size != -1 else self.body
+
+
+def ready_values():
+    values = {
+        "packageStatus": "ready-for-resubmission",
+        "nextSubmissionReady": True,
+        "chainId": 8453,
+        "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+        "officialEmail": TARGET_DOMAIN_EMAIL,
+        "timChenProfessionalProfileUrl": "https://gcagochina.com/tim-chen.html",
+        "domainEmailSetupPlanUrl": "https://gcagochina.com/domain-email.html",
+    }
+    for field in REQUIRED_URL_FIELDS:
+        values.setdefault(field, f"https://gcagochina.com/{field}.html")
+    return values
+
+
+def ready_evidence_packet():
+    return {
+        "status": "ready-for-owner-resubmission",
+        "readyForBaseScanResubmission": True,
+        "targetDomainEmail": TARGET_DOMAIN_EMAIL,
+        "dnsReadiness": {"readyForBaseScanEmailEvidence": True, "missingOrBlockedChecks": []},
+        "websiteEmailUpdatedToTarget": True,
+    }
+
+
+class BaseScanResubmissionReadinessTests(unittest.TestCase):
+    def test_report_blocks_when_values_and_evidence_are_not_ready(self):
+        values = ready_values()
+        values["nextSubmissionReady"] = False
+        values["officialEmail"] = "GCAgochina@outlook.com"
+
+        report = build_readiness_report(
+            values=values,
+            evidence_packet=None,
+            public_url_checks=check_public_urls(values, skip=True),
+            generated_at="2026-05-24T00:00:00Z",
+        )
+
+        self.assertFalse(report["readyForBaseScanResubmission"])
+        self.assertEqual(report["status"], "blocked-before-basescan-resubmission")
+        self.assertIn("next-submission-ready-flag", report["missingOrBlockedRequirements"])
+        self.assertIn("official-domain-email", report["missingOrBlockedRequirements"])
+        self.assertIn("domain-email-evidence-packet", report["missingOrBlockedRequirements"])
+        self.assertFalse(report["boundaries"]["submitsBaseScanRequest"])
+        self.assertFalse(report["boundaries"]["touchesWalletOrContract"])
+
+    def test_report_is_ready_when_values_evidence_and_public_urls_pass(self):
+        values = ready_values()
+        report = build_readiness_report(
+            values=values,
+            evidence_packet=ready_evidence_packet(),
+            public_url_checks=check_public_urls(values, skip=True),
+            generated_at="2026-05-24T00:00:00Z",
+        )
+
+        self.assertTrue(report["readyForBaseScanResubmission"])
+        self.assertEqual(report["status"], "ready-for-owner-resubmission")
+        self.assertEqual(report["missingOrBlockedRequirements"], [])
+        self.assertIn("one clean BaseScan resubmission", report["nextAction"])
+
+    def test_public_url_failure_blocks_readiness(self):
+        values = ready_values()
+        url_checks = check_public_urls(values, timeout=1, opener=lambda request, timeout: FakeResponse(status=500))
+
+        report = build_readiness_report(
+            values=values,
+            evidence_packet=ready_evidence_packet(),
+            public_url_checks=url_checks,
+            generated_at="2026-05-24T00:00:00Z",
+        )
+
+        self.assertFalse(report["readyForBaseScanResubmission"])
+        self.assertTrue(any(item.startswith("public-url:") for item in report["missingOrBlockedRequirements"]))
+
+    def test_cli_blocks_current_unready_package_without_network(self):
+        with tempfile.TemporaryDirectory() as temp:
+            temp_path = Path(temp)
+            values_path = temp_path / "values.json"
+            evidence_path = temp_path / "packet.json"
+            values = ready_values()
+            values["nextSubmissionReady"] = False
+            values["officialEmail"] = "GCAgochina@outlook.com"
+            values_path.write_text(json.dumps(values), encoding="utf-8")
+            evidence_path.write_text(json.dumps({"readyForBaseScanResubmission": False}), encoding="utf-8")
+
+            output = StringIO()
+            with redirect_stdout(output):
+                exit_code = main([
+                    "--values",
+                    str(values_path),
+                    "--evidence-packet",
+                    str(evidence_path),
+                    "--skip-url-checks",
+                    "--json",
+                    "--require-ready",
+                ])
+
+            self.assertEqual(exit_code, 1)
+            payload = json.loads(output.getvalue())
+            self.assertFalse(payload["readyForBaseScanResubmission"])
+            self.assertIn("Do not resubmit BaseScan yet", payload["nextAction"])
+
+
+if __name__ == "__main__":
+    unittest.main()
