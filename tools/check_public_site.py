@@ -10055,6 +10055,8 @@ def validate_trust_json(text: str) -> None:
         "verify": "https://gcagochina.com/verify.html",
         "reviewerKit": REVIEWER_KIT_URL,
         "platformReplies": PLATFORM_REPLIES_URL,
+        "domainEmailSetupPlanPage": DOMAIN_EMAIL_PAGE_URL,
+        "domainEmailSetupPlan": DOMAIN_EMAIL_URL,
         "walletWarningEvidence": WALLET_WARNING_URL,
         "blockaidFollowup": BLOCKAID_FOLLOWUP_URL,
         "walletSecurityProfile": WALLET_SECURITY_PROFILE_URL,
@@ -10087,6 +10089,27 @@ def validate_trust_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong BaseScan ownership status")
     if snapshot.get("baseScanTokenProfile") != "remediation-required-before-next-submission":
         raise SiteCheckError(f"{label}: wrong BaseScan token profile status")
+    if snapshot.get("baseScanDomainEmailGate") != "blocked-by-dns-snapshot-2026-05-25":
+        raise SiteCheckError(f"{label}: wrong BaseScan domain email gate")
+    if snapshot.get("baseScanDomainEmailTarget") != "support@gcagochina.com":
+        raise SiteCheckError(f"{label}: wrong BaseScan domain email target")
+    dns_snapshot = snapshot.get("baseScanDomainEmailDnsSnapshot", {})
+    if dns_snapshot.get("readyForBaseScanEmailEvidence") is not False:
+        raise SiteCheckError(f"{label}: domain email DNS snapshot should be blocked")
+    if dns_snapshot.get("snapshotPage") != f"{DOMAIN_EMAIL_PAGE_URL}#snapshotTitle":
+        raise SiteCheckError(f"{label}: wrong domain email DNS snapshot page")
+    if dns_snapshot.get("evidencePacket") != f"{DOMAIN_EMAIL_PAGE_URL}#evidenceTitle":
+        raise SiteCheckError(f"{label}: wrong domain email evidence packet")
+    if dns_snapshot.get("checks", {}).get("mx") != "missing":
+        raise SiteCheckError(f"{label}: missing MX blocker")
+    if dns_snapshot.get("checks", {}).get("spf") != "missing":
+        raise SiteCheckError(f"{label}: missing SPF blocker")
+    if dns_snapshot.get("checks", {}).get("dmarc") != "missing":
+        raise SiteCheckError(f"{label}: missing DMARC blocker")
+    if dns_snapshot.get("checks", {}).get("dkim") != "selector-required":
+        raise SiteCheckError(f"{label}: missing DKIM selector blocker")
+    if set(dns_snapshot.get("missingOrBlockedChecks", [])) != {"mx", "spf", "dmarc", "dkim"}:
+        raise SiteCheckError(f"{label}: wrong missing domain email checks")
     if snapshot.get("geckoTerminalTokenInfo") != "approved-2026-05-11":
         raise SiteCheckError(f"{label}: wrong GeckoTerminal status")
     if snapshot.get("walletWarning") != "owner-observed-no-warning-visible":
@@ -10143,6 +10166,12 @@ def validate_trust_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong Blockaid follow-up URL")
     if reviews.get("thirdPartyAudit") != "not-completed-deferred":
         raise SiteCheckError(f"{label}: wrong third-party audit status")
+    if reviews.get("baseScanDomainEmailGate") != "blocked-by-dns-snapshot-2026-05-25":
+        raise SiteCheckError(f"{label}: wrong external-review domain email gate")
+    if reviews.get("baseScanDomainEmailTarget") != "support@gcagochina.com":
+        raise SiteCheckError(f"{label}: wrong external-review domain email target")
+    if "The domain email setup plan and latest DNS snapshot are published; support@gcagochina.com is not ready for BaseScan evidence until MX/SPF/DMARC/DKIM checks pass." not in payload.get("safePublicClaims", []):
+        raise SiteCheckError(f"{label}: missing domain email safe claim")
     if "No third-party audit has been completed." not in payload.get("safePublicClaims", []):
         raise SiteCheckError(f"{label}: missing audit safe claim")
     if "security-vendor approval, permanent warning-free status, or cross-wallet warning removal before vendor/current wallet UI confirms it" not in payload.get("doNotClaim", []):
@@ -10175,6 +10204,10 @@ def validate_trust_page(text: str) -> None:
     assert_contains(text, MAINNET_ADDRESS, label)
     assert_contains(text, "BaseScan source code", label)
     assert_contains(text, "Returned 2026-05-23; remediation required", label)
+    assert_contains(text, "BaseScan domain email evidence", label)
+    assert_contains(text, "2026-05-25 DNS snapshot", label)
+    assert_contains(text, "MX/SPF/DMARC missing", label)
+    assert_contains(text, "DKIM selector required", label)
     assert_contains(text, "Approved 2026-05-11", label)
     assert_contains(text, "Owner observed no warning visible", label)
     assert_contains(text, "No completed third-party audit", label)
