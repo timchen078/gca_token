@@ -10232,7 +10232,7 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != EXTERNAL_REVIEW_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
-    if payload.get("lastUpdated") != "2026-05-23":
+    if payload.get("lastUpdated") != "2026-05-25":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("status") != "external-review-status-active":
         raise SiteCheckError(f"{label}: wrong status")
@@ -10269,10 +10269,25 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong domainEmailSetupPlan")
     if base_scan_profile.get("domainEmailSetupPlanData") != DOMAIN_EMAIL_URL:
         raise SiteCheckError(f"{label}: wrong domainEmailSetupPlanData")
+    if base_scan_profile.get("domainEmailDnsSnapshot") != f"{DOMAIN_EMAIL_PAGE_URL}#snapshotTitle":
+        raise SiteCheckError(f"{label}: wrong domainEmailDnsSnapshot")
     if base_scan_profile.get("domainEmailActivationEvidencePacket") != "https://gcagochina.com/domain-email.html#evidenceTitle":
         raise SiteCheckError(f"{label}: wrong domainEmailActivationEvidencePacket")
     if "archive the activation evidence packet" not in base_scan_profile.get("nextAction", ""):
         raise SiteCheckError(f"{label}: missing activation evidence packet next action")
+    dns_readiness = base_scan_profile.get("domainEmailDnsReadiness", {})
+    if dns_readiness.get("readyForBaseScanEmailEvidence") is not False:
+        raise SiteCheckError(f"{label}: domain email DNS readiness should be false")
+    if dns_readiness.get("checks", {}).get("mx") != "missing":
+        raise SiteCheckError(f"{label}: missing MX blocker")
+    if dns_readiness.get("checks", {}).get("spf") != "missing":
+        raise SiteCheckError(f"{label}: missing SPF blocker")
+    if dns_readiness.get("checks", {}).get("dmarc") != "missing":
+        raise SiteCheckError(f"{label}: missing DMARC blocker")
+    if dns_readiness.get("checks", {}).get("dkim") != "selector-required":
+        raise SiteCheckError(f"{label}: missing DKIM selector blocker")
+    if set(dns_readiness.get("missingOrBlockedChecks", [])) != {"mx", "spf", "dmarc", "dkim"}:
+        raise SiteCheckError(f"{label}: wrong domain email missing checks")
     if links.get("baseScanRemediationPage") != BASESCAN_REMEDIATION_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong baseScanRemediationPage")
     if links.get("baseScanRemediation") != BASESCAN_REMEDIATION_URL:
@@ -10311,6 +10326,10 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing BaseScan domain email plan result")
     if "activation evidence packet" not in base_scan_profile.get("lastCheckedResult", ""):
         raise SiteCheckError(f"{label}: missing BaseScan domain email evidence packet result")
+    if "2026-05-25 DNS snapshot" not in base_scan_profile.get("lastCheckedResult", ""):
+        raise SiteCheckError(f"{label}: missing latest DNS snapshot result")
+    if "readyForBaseScanEmailEvidence is false" not in base_scan_profile.get("lastCheckedResult", ""):
+        raise SiteCheckError(f"{label}: missing readyForBaseScanEmailEvidence boundary")
     if base_scan_profile.get("domainEmailActivationEvidencePacket") != "https://gcagochina.com/domain-email.html#evidenceTitle":
         raise SiteCheckError(f"{label}: wrong domainEmailActivationEvidencePacket")
     if "expanded BaseScan reply template" not in base_scan_profile.get("lastCheckedResult", ""):
@@ -10342,6 +10361,8 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong CoinMarketCap status")
     if reviews.get("thirdPartyAudit", {}).get("status") != "not-completed-deferred":
         raise SiteCheckError(f"{label}: wrong audit status")
+    if "The BaseScan domain email evidence gate is blocked by the 2026-05-25 DNS snapshot: MX/SPF/DMARC missing and DKIM selector required." not in payload.get("safePublicClaims", []):
+        raise SiteCheckError(f"{label}: missing domain email safe claim")
     if "No third-party audit has been completed." not in payload.get("safePublicClaims", []):
         raise SiteCheckError(f"{label}: missing audit safe claim")
     assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
@@ -10361,9 +10382,16 @@ def validate_external_reviews_page(text: str) -> None:
     assert_contains(text, "Tim Chen profile, domain email plan, activation evidence packet, and reply template published", label)
     assert_contains(text, "tim-chen.html", label)
     assert_contains(text, "Domain Email Plan", label)
+    assert_contains(text, "DNS Snapshot", label)
     assert_contains(text, "Email Evidence Packet", label)
+    assert_contains(text, "domain-email.html#snapshotTitle", label)
     assert_contains(text, "domain-email.html#evidenceTitle", label)
     assert_contains(text, "domain-email.html", label)
+    assert_contains(text, "BaseScan domain email evidence", label)
+    assert_contains(text, "2026-05-25 DNS snapshot", label)
+    assert_contains(text, "MX/SPF/DMARC missing", label)
+    assert_contains(text, "DKIM selector required", label)
+    assert_contains(text, "readyForBaseScanEmailEvidence false", label)
     assert_contains(text, "expanded BaseScan reply template", label)
     assert_contains(text, "Platform Replies", label)
     assert_contains(text, "platform-replies.html", label)
