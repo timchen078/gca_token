@@ -9912,8 +9912,11 @@ def validate_platform_replies_json(text: str) -> None:
         "Domain email setup plan: https://gcagochina.com/domain-email.html",
         "Domain email setup data: https://gcagochina.com/domain-email.json",
         "Domain email activation evidence packet: https://gcagochina.com/domain-email.html#evidenceTitle",
+        "Latest domain email DNS snapshot: https://gcagochina.com/domain-email.html#snapshotTitle",
         "Return-notice response:",
         "a working gcagochina.com domain email remains the remaining owner-controlled blocker",
+        "2026-05-25 read-only DNS snapshot shows MX/SPF/DMARC missing and DKIM selector required",
+        "readyForBaseScanEmailEvidence is false",
         "activation evidence packet defines the provider-status, DNS, inbound, outbound, and website-email proof",
         "We will not claim BaseScan token profile approval until BaseScan publishes the profile.",
     ):
@@ -9961,7 +9964,10 @@ def validate_platform_replies_page(text: str) -> None:
     assert_contains(text, "Domain email setup plan: https://gcagochina.com/domain-email.html", label)
     assert_contains(text, "Domain email setup data: https://gcagochina.com/domain-email.json", label)
     assert_contains(text, "Domain email activation evidence packet: https://gcagochina.com/domain-email.html#evidenceTitle", label)
+    assert_contains(text, "Latest domain email DNS snapshot: https://gcagochina.com/domain-email.html#snapshotTitle", label)
     assert_contains(text, "a working gcagochina.com domain email remains the remaining owner-controlled blocker", label)
+    assert_contains(text, "2026-05-25 read-only DNS snapshot shows MX/SPF/DMARC missing and DKIM selector required", label)
+    assert_contains(text, "readyForBaseScanEmailEvidence is false", label)
     assert_contains(text, "activation evidence packet defines the provider-status, DNS, inbound, outbound, and website-email proof", label)
     assert_contains(text, "Metadata Correction", label)
     assert_contains(text, "Local Review Package Handoff", label)
