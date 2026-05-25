@@ -747,6 +747,12 @@ def validate_domain_email_page(text: str) -> None:
         "Evidence Packet Builder",
         "tools/build_domain_email_evidence_packet.py",
         "launch/domain_email_evidence_packet.json",
+        "Live DNS Snapshot",
+        "2026-05-25 Read-Only DNS Check",
+        "MX Missing",
+        "SPF Missing",
+        "DMARC Missing",
+        "DKIM Selector required",
         "Evidence Packet",
         "What To Save Before BaseScan Resubmission",
         "support-page-domain-email",
@@ -770,6 +776,7 @@ def validate_domain_email_json(text: str) -> None:
     base_scan_use = payload.get("baseScanUse", {})
     boundaries = payload.get("publicClaimBoundaries", {})
     evidence = payload.get("activationEvidencePacket", {})
+    snapshot = payload.get("liveDnsSnapshot", {})
     dns_check = payload.get("operatorDnsCheck", {})
     packet_builder = payload.get("operatorEvidencePacketBuilder", {})
     policy = payload.get("baseScanSubmissionPolicy", {})
@@ -779,7 +786,7 @@ def validate_domain_email_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != DOMAIN_EMAIL_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
-    if payload.get("lastUpdated") != "2026-05-24":
+    if payload.get("lastUpdated") != "2026-05-25":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("status") != "domain-email-setup-plan-published-not-active":
         raise SiteCheckError(f"{label}: wrong status")
@@ -791,6 +798,17 @@ def validate_domain_email_json(text: str) -> None:
         raise SiteCheckError(f"{label}: BaseScan resubmission must not be marked ready")
     if "support@gcagochina.com can receive external email" not in base_scan_use.get("readyWhen", []):
         raise SiteCheckError(f"{label}: missing inbound ready gate")
+    if snapshot.get("checkedAt") != "2026-05-25T15:04:09Z":
+        raise SiteCheckError(f"{label}: wrong live DNS snapshot timestamp")
+    if snapshot.get("readyForBaseScanEmailEvidence") is not False:
+        raise SiteCheckError(f"{label}: live DNS snapshot must not be ready")
+    if set(snapshot.get("missingOrBlockedChecks", [])) != {"mx", "spf", "dmarc", "dkim"}:
+        raise SiteCheckError(f"{label}: wrong live DNS missing checks")
+    if snapshot.get("checks", {}).get("dkim") != "selector-required":
+        raise SiteCheckError(f"{label}: missing DKIM selector-required snapshot")
+    for expected_key in ("mx", "spf", "dmarc"):
+        if snapshot.get("checks", {}).get(expected_key) != "missing":
+            raise SiteCheckError(f"{label}: missing {expected_key} DNS snapshot")
     for expected in ("MX", "SPF", "DKIM", "DMARC"):
         if not any(expected in item for item in dns):
             raise SiteCheckError(f"{label}: missing DNS checklist item {expected}")
