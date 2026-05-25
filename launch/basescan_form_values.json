@@ -46,10 +46,27 @@
   "resubmissionDate": "2026-05-13",
   "latestReturnNoticeDate": "2026-05-23",
   "reviewStatus": "remediation-required-before-next-submission",
-  "lastCheckedDate": "2026-05-23",
-  "lastCheckedResult": "BaseScan returned the token profile update again as information-insufficient; Tim Chen official-domain professional profile evidence is now published, the domain email setup plan and activation evidence packet are published, and project-domain email remains the main blocker before the next submission.",
+  "lastCheckedDate": "2026-05-25",
+  "lastCheckedResult": "BaseScan returned the token profile update again as information-insufficient; Tim Chen official-domain professional profile evidence is now published, the domain email setup plan and activation evidence packet are published, and the 2026-05-25 DNS snapshot shows MX/SPF/DMARC missing and DKIM selector required, so readyForBaseScanEmailEvidence is false.",
   "domainEmailSetupPlanUrl": "https://gcagochina.com/domain-email.html",
   "domainEmailSetupPlanDataUrl": "https://gcagochina.com/domain-email.json",
+  "domainEmailDnsSnapshotUrl": "https://gcagochina.com/domain-email.html#snapshotTitle",
+  "domainEmailDnsReadiness": {
+    "checkedAt": "2026-05-25T15:04:09Z",
+    "readyForBaseScanEmailEvidence": false,
+    "checks": {
+      "mx": "missing",
+      "spf": "missing",
+      "dmarc": "missing",
+      "dkim": "selector-required"
+    },
+    "missingOrBlockedChecks": [
+      "mx",
+      "spf",
+      "dmarc",
+      "dkim"
+    ]
+  },
   "domainEmailActivationEvidencePacketUrl": "https://gcagochina.com/domain-email.html#evidenceTitle",
   "returnReason": "BaseScan could not process the update because the submitted token/project information was insufficient.",
   "resubmissionRequired": true,
