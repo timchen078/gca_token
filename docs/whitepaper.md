@@ -173,7 +173,7 @@ Third-party audit quote requests were submitted to QuillAudits, Hacken, and Open
 
 ## BaseScan Token Profile Status
 
-BaseScan source verification and deployer-wallet ownership verification are complete. The public BaseScan token profile update was returned by BaseScan as information-insufficient on 2026-05-13, resubmitted on 2026-05-13, and returned again as information-insufficient on 2026-05-23. The profile is not approved or published. Tim Chen public professional profile evidence is now published, the domain email setup plan is published at `https://gcagochina.com/domain-email.html`, and the next submission should still wait until a working project-domain email is ready.
+BaseScan source verification and deployer-wallet ownership verification are complete. The public BaseScan token profile update was returned by BaseScan as information-insufficient on 2026-05-13, resubmitted on 2026-05-13, and returned again as information-insufficient on 2026-05-23. The profile is not approved or published. Tim Chen public professional profile evidence is now published at `https://gcagochina.com/tim-chen.html`, the domain email setup plan is published at `https://gcagochina.com/domain-email.html`, and the latest 2026-05-25 DNS snapshot at `https://gcagochina.com/domain-email.html#snapshotTitle` shows MX/SPF/DMARC missing and DKIM selector required, so `readyForBaseScanEmailEvidence` is false. The next submission should still wait until a working project-domain email is ready.
 
 GeckoTerminal token information was approved on 2026-05-11. The official website links to the current GCA/USDT GeckoTerminal pool.
 
