@@ -371,6 +371,20 @@
         </div>
       </section>
 
+      <section class="section panel" aria-labelledby="snapshotTitle">
+        <p class="eyebrow">Live DNS Snapshot</p>
+        <h2 id="snapshotTitle">2026-05-25 Read-Only DNS Check</h2>
+        <p class="note">The current public DNS check is not ready for BaseScan email evidence. This snapshot only records what public DNS returns; it does not write DNS records, send email, submit BaseScan forms, or touch wallets/contracts.</p>
+        <div class="list">
+          <div class="row"><span>MX Missing</span><strong>No mail exchanger is visible for <code>gcagochina.com</code>, so inbound mail to <code>support@gcagochina.com</code> is not proven yet.</strong></div>
+          <div class="row"><span>SPF Missing</span><strong>No root-domain SPF TXT record is visible for the chosen mail provider.</strong></div>
+          <div class="row"><span>DMARC Missing</span><strong>No <code>_dmarc.gcagochina.com</code> policy record is visible yet.</strong></div>
+          <div class="row"><span>DKIM Selector required</span><strong>The checker needs the exact provider selector after the mailbox is created, then it can verify the DKIM record.</strong></div>
+          <div class="row"><span>Readiness</span><strong class="pending">Not ready for BaseScan email evidence.</strong></div>
+          <div class="row"><span>Next action</span><strong>Create the mailbox, add the provider MX/SPF/DMARC/DKIM records, then rerun <code>python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox support --dkim-selector &lt;provider-selector&gt; --json</code>.</strong></div>
+        </div>
+      </section>
+
       <section class="section panel" aria-labelledby="evidenceTitle">
         <p class="eyebrow">Evidence Packet</p>
         <h2 id="evidenceTitle">What To Save Before BaseScan Resubmission</h2>
