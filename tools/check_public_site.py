@@ -9709,6 +9709,10 @@ def validate_reviewer_kit_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong trustCenterPage")
     if links.get("trustCenter") != TRUST_CENTER_URL:
         raise SiteCheckError(f"{label}: wrong trustCenter")
+    if links.get("domainEmailSetupPlanPage") != DOMAIN_EMAIL_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong domainEmailSetupPlanPage")
+    if links.get("domainEmailSetupPlan") != DOMAIN_EMAIL_URL:
+        raise SiteCheckError(f"{label}: wrong domainEmailSetupPlan")
     if market.get("pair") != "GCA/USDT":
         raise SiteCheckError(f"{label}: wrong pair")
     if market.get("poolAddress") != OFFICIAL_POOL_ADDRESS:
@@ -9727,6 +9731,27 @@ def validate_reviewer_kit_json(text: str) -> None:
         raise SiteCheckError(f"{label}: third-party audit must be false")
     if reviews.get("baseScanTokenProfile") != "remediation-required-before-next-submission":
         raise SiteCheckError(f"{label}: wrong BaseScan profile status")
+    if reviews.get("baseScanDomainEmailGate") != "blocked-by-dns-snapshot-2026-05-25":
+        raise SiteCheckError(f"{label}: wrong BaseScan domain email gate")
+    if reviews.get("baseScanDomainEmailTarget") != "support@gcagochina.com":
+        raise SiteCheckError(f"{label}: wrong BaseScan domain email target")
+    dns_snapshot = reviews.get("baseScanDomainEmailDnsSnapshot", {})
+    if dns_snapshot.get("readyForBaseScanEmailEvidence") is not False:
+        raise SiteCheckError(f"{label}: domain email DNS snapshot should be blocked")
+    if dns_snapshot.get("snapshotPage") != f"{DOMAIN_EMAIL_PAGE_URL}#snapshotTitle":
+        raise SiteCheckError(f"{label}: wrong domain email DNS snapshot page")
+    if dns_snapshot.get("evidencePacket") != f"{DOMAIN_EMAIL_PAGE_URL}#evidenceTitle":
+        raise SiteCheckError(f"{label}: wrong domain email evidence packet")
+    if dns_snapshot.get("checks", {}).get("mx") != "missing":
+        raise SiteCheckError(f"{label}: missing MX blocker")
+    if dns_snapshot.get("checks", {}).get("spf") != "missing":
+        raise SiteCheckError(f"{label}: missing SPF blocker")
+    if dns_snapshot.get("checks", {}).get("dmarc") != "missing":
+        raise SiteCheckError(f"{label}: missing DMARC blocker")
+    if dns_snapshot.get("checks", {}).get("dkim") != "selector-required":
+        raise SiteCheckError(f"{label}: missing DKIM selector blocker")
+    if set(dns_snapshot.get("missingOrBlockedChecks", [])) != {"mx", "spf", "dmarc", "dkim"}:
+        raise SiteCheckError(f"{label}: wrong missing domain email checks")
     if reviews.get("blockaidMetaMask") != "owner-observed-no-warning-visible":
         raise SiteCheckError(f"{label}: wrong Blockaid status")
     if reviews.get("blockaidFollowUpSubmissionDate") != "2026-05-13":
@@ -9760,6 +9785,12 @@ def validate_reviewer_kit_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong liquidity evidence link")
     if payload.get("evidenceLinks", {}).get("custodyRoadmap") != CUSTODY_ROADMAP_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong custody roadmap evidence link")
+    if payload.get("evidenceLinks", {}).get("domainEmailSetupPlan") != DOMAIN_EMAIL_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong domain email setup evidence link")
+    if payload.get("evidenceLinks", {}).get("domainEmailDnsSnapshot") != f"{DOMAIN_EMAIL_PAGE_URL}#snapshotTitle":
+        raise SiteCheckError(f"{label}: wrong domain email DNS snapshot evidence link")
+    if payload.get("evidenceLinks", {}).get("domainEmailActivationEvidencePacket") != f"{DOMAIN_EMAIL_PAGE_URL}#evidenceTitle":
+        raise SiteCheckError(f"{label}: wrong domain email activation evidence link")
     if "security-vendor approval, permanent warning-free status, or cross-wallet warning removal before vendor/current wallet UI confirms it" not in boundaries.get("doNotClaim", []):
         raise SiteCheckError(f"{label}: missing warning boundary")
     assert_current_pool_text(json.dumps(payload), label)
@@ -9783,6 +9814,13 @@ def validate_reviewer_kit_page(text: str) -> None:
     assert_contains(text, "Risk Remediation", label)
     assert_contains(text, "Custody Roadmap", label)
     assert_contains(text, "BaseScan Profile", label)
+    assert_contains(text, "Domain Email Gate", label)
+    assert_contains(text, "2026-05-25 DNS snapshot", label)
+    assert_contains(text, "MX/SPF/DMARC missing", label)
+    assert_contains(text, "DKIM selector required", label)
+    assert_contains(text, "readyForBaseScanEmailEvidence", label)
+    assert_contains(text, "domain-email.html#snapshotTitle", label)
+    assert_contains(text, "domain-email.html#evidenceTitle", label)
     assert_contains(text, "On-chain Proofs", label)
     assert_contains(text, "Local Review Package", label)
     assert_contains(text, "tools/export_gca_review_package.py", label)
