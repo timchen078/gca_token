@@ -1379,8 +1379,12 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Remediation required", page)
         self.assertIn("Owner action required", page)
         self.assertIn("support@gcagochina.com", page)
+        self.assertIn("2026-05-25 DNS snapshot", page)
+        self.assertIn("MX / SPF / DMARC missing", page)
+        self.assertIn("DKIM selector required", page)
         self.assertIn("Professional profile", page)
-        self.assertIn("No. Professional profile evidence is now published; fix domain email before the next submission.", page)
+        self.assertIn("No. Professional profile evidence is published; fix domain email DNS and evidence before the next submission.", page)
+        self.assertIn("Current email blocker", page)
         self.assertIn("Preflight checker", page)
         self.assertIn("tools/check_basescan_resubmission_readiness.py", page)
         self.assertIn("BaseScan values, domain email evidence packet, and reviewer URLs", page)
@@ -1400,7 +1404,7 @@ class LaunchPackageTests(unittest.TestCase):
 
         self.assertEqual(data["schema"], BASESCAN_REMEDIATION_URL)
         self.assertEqual(data["pageUrl"], BASESCAN_REMEDIATION_PAGE_URL)
-        self.assertEqual(data["lastUpdated"], "2026-05-24")
+        self.assertEqual(data["lastUpdated"], "2026-05-25")
         self.assertEqual(data["status"], "basescan-remediation-required-before-next-submission")
         self.assertEqual(data["chainId"], 8453)
         self.assertEqual(data["contractAddress"], MAINNET_ADDRESS)
@@ -1414,6 +1418,10 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertTrue(data["currentEmailState"]["domainEmailRecommendedBeforeNextSubmission"])
         self.assertEqual(data["currentEmailState"]["domainEmailSetupPlan"], DOMAIN_EMAIL_PAGE_URL)
         self.assertEqual(data["currentEmailState"]["domainEmailSetupPlanData"], DOMAIN_EMAIL_URL)
+        self.assertEqual(data["currentEmailState"]["latestDnsSnapshot"]["checkedAt"], "2026-05-25T15:04:09Z")
+        self.assertFalse(data["currentEmailState"]["latestDnsSnapshot"]["readyForBaseScanEmailEvidence"])
+        self.assertEqual(data["currentEmailState"]["latestDnsSnapshot"]["checks"]["dkim"], "selector-required")
+        self.assertCountEqual(data["currentEmailState"]["latestDnsSnapshot"]["missingOrBlockedChecks"], ["mx", "spf", "dmarc", "dkim"])
         self.assertIn("support@gcagochina.com", data["currentEmailState"]["recommendedDomainEmailExamples"])
         self.assertEqual(data["teamTransparency"]["publicFounder"], "Tim Chen")
         self.assertEqual(data["teamTransparency"]["officialTeamPage"], f"{TEAM_PAGE_URL}#tim-chen")
@@ -1432,6 +1440,10 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("does not sign wallet messages", data["nextSubmissionGate"]["submissionPackageBuilder"]["boundaries"])
         self.assertIn(
             "Use the updated BaseScan reply template at https://gcagochina.com/platform-replies.html",
+            " ".join(data["nextSubmissionGate"]["requiredBeforeReady"]),
+        )
+        self.assertIn(
+            "Fix the 2026-05-25 DNS snapshot blockers",
             " ".join(data["nextSubmissionGate"]["requiredBeforeReady"]),
         )
 

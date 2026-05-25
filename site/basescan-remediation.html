@@ -330,6 +330,7 @@
           <h2>Required Before Next Submission</h2>
           <div class="list">
             <div class="row"><span>Domain email</span><strong>Create and test a working <code>gcagochina.com</code> email such as <code>support@gcagochina.com</code>, publish it on the website, then submit from that address when possible. The setup checklist is now published at <a href="domain-email.html">https://gcagochina.com/domain-email.html</a>.</strong></div>
+            <div class="row"><span>2026-05-25 DNS snapshot</span><strong>The latest read-only check shows MX / SPF / DMARC missing and DKIM selector required. This means the domain email evidence packet is not ready yet.</strong></div>
             <div class="row"><span>Professional profile</span><strong>Official-domain profile published at <a href="tim-chen.html">https://gcagochina.com/tim-chen.html</a>. Add LinkedIn later only if BaseScan specifically requires a third-party social-network profile.</strong></div>
             <div class="row"><span>Preflight checker</span><strong>Run <code>python3 tools/check_basescan_resubmission_readiness.py --json --require-ready</code> only after the domain email evidence packet is complete. A failed preflight means do not resubmit yet.</strong></div>
             <div class="row"><span>Submission package</span><strong>After preflight passes, run <code>python3 tools/build_basescan_submission_package.py --json --require-ready</code> to generate a local BaseScan form draft. The tool does not submit the form.</strong></div>
@@ -392,7 +393,7 @@
           </div>
           <div class="card">
             <h3>Email Domain</h3>
-            <p class="note">The current public primary email is still <code>GCAgochina@outlook.com</code>. A project-domain email is the main remaining operational fix.</p>
+            <p class="note">The current public primary email is still <code>GCAgochina@outlook.com</code>. A project-domain email is the main remaining operational fix. The 2026-05-25 DNS snapshot shows MX, SPF, and DMARC missing, with DKIM selector required.</p>
             <div class="link-row">
               <a class="text-link" href="support.html">Support</a>
               <a class="text-link" href="domain-email.html">Domain Email Plan</a>
@@ -414,7 +415,8 @@
         <p class="eyebrow">Next Submission Gate</p>
         <h2 id="submissionTitle">Current Ready State</h2>
         <div class="list">
-          <div class="row"><span>Ready to resubmit today?</span><strong class="pending">No. Professional profile evidence is now published; fix domain email before the next submission.</strong></div>
+          <div class="row"><span>Ready to resubmit today?</span><strong class="pending">No. Professional profile evidence is published; fix domain email DNS and evidence before the next submission.</strong></div>
+          <div class="row"><span>Current email blocker</span><strong>MX, SPF, and DMARC are missing for <code>gcagochina.com</code>; DKIM still needs the provider selector. Do not use <code>support@gcagochina.com</code> in BaseScan until these pass and inbound/outbound tests are saved.</strong></div>
           <div class="row"><span>Preflight required</span><strong>BaseScan values, domain email evidence packet, and reviewer URLs must pass <code>tools/check_basescan_resubmission_readiness.py</code> before one clean owner resubmission.</strong></div>
           <div class="row"><span>Final draft required</span><strong>Use <code>tools/build_basescan_submission_package.py</code> to produce the copyable JSON/Markdown submission package after preflight passes.</strong></div>
           <div class="row"><span>Safe current claim</span><strong>BaseScan source and deployer-wallet ownership verification are complete; token profile publication is not complete.</strong></div>

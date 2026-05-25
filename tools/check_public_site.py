@@ -855,6 +855,9 @@ def validate_basescan_remediation_page(text: str) -> None:
         "Domain Email",
         "Owner action required",
         "support@gcagochina.com",
+        "2026-05-25 DNS snapshot",
+        "MX / SPF / DMARC missing",
+        "DKIM selector required",
         "Professional profile",
         TIM_CHEN_PROFILE_PAGE_URL,
         "Preflight checker",
@@ -868,7 +871,8 @@ def validate_basescan_remediation_page(text: str) -> None:
         "team.html",
         GITHUB_REPO_URL,
         "Ready to resubmit today?",
-        "No. Professional profile evidence is now published; fix domain email",
+        "No. Professional profile evidence is published; fix domain email DNS and evidence",
+        "Current email blocker",
         "Platform Replies",
         PLATFORM_REPLIES_PAGE_URL,
         "Platform Replies template",
@@ -890,7 +894,7 @@ def validate_basescan_remediation_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != BASESCAN_REMEDIATION_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
-    if payload.get("lastUpdated") != "2026-05-24":
+    if payload.get("lastUpdated") != "2026-05-25":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("status") != "basescan-remediation-required-before-next-submission":
         raise SiteCheckError(f"{label}: wrong status")
@@ -918,6 +922,15 @@ def validate_basescan_remediation_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong email-state domainEmailSetupPlan")
     if email_state.get("domainEmailSetupPlanData") != DOMAIN_EMAIL_URL:
         raise SiteCheckError(f"{label}: wrong email-state domainEmailSetupPlanData")
+    latest_dns = email_state.get("latestDnsSnapshot", {})
+    if latest_dns.get("checkedAt") != "2026-05-25T15:04:09Z":
+        raise SiteCheckError(f"{label}: wrong latest DNS snapshot timestamp")
+    if latest_dns.get("readyForBaseScanEmailEvidence") is not False:
+        raise SiteCheckError(f"{label}: latest DNS snapshot must not be ready")
+    if set(latest_dns.get("missingOrBlockedChecks", [])) != {"mx", "spf", "dmarc", "dkim"}:
+        raise SiteCheckError(f"{label}: wrong latest DNS missing checks")
+    if latest_dns.get("checks", {}).get("dkim") != "selector-required":
+        raise SiteCheckError(f"{label}: missing DKIM selector-required blocker")
     if "support@gcagochina.com" not in email_state.get("recommendedDomainEmailExamples", []):
         raise SiteCheckError(f"{label}: missing recommended support domain email")
     if team.get("publicFounder") != "Tim Chen":
@@ -954,6 +967,8 @@ def validate_basescan_remediation_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing final submission wallet-signing boundary")
     if not any("https://gcagochina.com/platform-replies.html" in item for item in gate.get("requiredBeforeReady", [])):
         raise SiteCheckError(f"{label}: missing Platform Replies next-submission gate")
+    if not any("2026-05-25 DNS snapshot blockers" in item for item in gate.get("requiredBeforeReady", [])):
+        raise SiteCheckError(f"{label}: missing latest DNS snapshot gate")
     assert_no_forbidden_public_claims(text, label)
 
 
