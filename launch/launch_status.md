@@ -41,6 +41,7 @@
 - Domain email DNS readiness checker prepared at `tools/check_domain_email_dns.py`; it checks public MX/SPF/DMARC/DKIM records only and does not send email, submit BaseScan requests, or touch wallets/contracts.
 - Domain email evidence packet builder prepared at `tools/build_domain_email_evidence_packet.py`; it combines DNS readiness with owner-saved provider, inbound, outbound, DNS, and website proof before marking BaseScan resubmission ready.
 - BaseScan resubmission preflight checker prepared at `tools/check_basescan_resubmission_readiness.py`; it blocks resubmission unless BaseScan values, domain email evidence, and reviewer URLs are ready.
+- BaseScan final submission package builder prepared at `tools/build_basescan_submission_package.py`; it generates local JSON/Markdown form drafts only after the resubmission preflight passes.
 - Domain email activation runbook prepared at `launch/domain_email_activation_runbook.md`; it defines the owner-side mailbox activation, DNS-check, evidence-packet, public-site switch, and BaseScan resubmission gates.
 - BaseScan review follow-up runbook prepared.
 - BaseScan resubmission values recorded at `launch/basescan_resubmission_package.md` and `launch/basescan_resubmission_values.json`.

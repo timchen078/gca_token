@@ -65,6 +65,18 @@ python3 tools/check_basescan_resubmission_readiness.py --json --require-ready
 
 The preflight must report `readyForBaseScanResubmission: true` before the owner sends a clean resubmission. It validates the local BaseScan values packet, the domain email evidence packet, and reviewer URLs only; it does not submit BaseScan forms, send email, write DNS records, or touch wallets/contracts.
 
+10. After the preflight passes, generate the final local submission draft:
+
+```bash
+python3 tools/build_basescan_submission_package.py \
+  --json \
+  --require-ready \
+  --output-json launch/basescan_final_submission_package.json \
+  --output-md launch/basescan_final_submission_package.md
+```
+
+The submission package builder is also gated by the same preflight. It writes a local JSON/Markdown draft only and does not submit BaseScan forms, sign wallet messages, send email, write DNS records, or touch wallets/contracts.
+
 ## Description
 
 Short description:

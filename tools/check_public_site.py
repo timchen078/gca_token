@@ -842,6 +842,9 @@ def validate_basescan_remediation_page(text: str) -> None:
         "Preflight checker",
         "tools/check_basescan_resubmission_readiness.py",
         "BaseScan values, domain email evidence packet, and reviewer URLs",
+        "Submission package",
+        "tools/build_basescan_submission_package.py",
+        "Final draft required",
         DOMAIN_EMAIL_PAGE_URL,
         "Tim Chen",
         "team.html",
@@ -922,6 +925,15 @@ def validate_basescan_remediation_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing reviewer URL preflight gate")
     if "does not submit BaseScan request" not in preflight.get("boundaries", []):
         raise SiteCheckError(f"{label}: missing preflight BaseScan boundary")
+    submission_builder = gate.get("submissionPackageBuilder", {})
+    if submission_builder.get("tool") != "tools/build_basescan_submission_package.py":
+        raise SiteCheckError(f"{label}: wrong submission package builder")
+    if "launch/basescan_final_submission_package.json" not in submission_builder.get("outputs", []):
+        raise SiteCheckError(f"{label}: missing final submission JSON output")
+    if "readyForOwnerSubmission is true" not in submission_builder.get("readyRequires", []):
+        raise SiteCheckError(f"{label}: missing final submission ready gate")
+    if "does not sign wallet messages" not in submission_builder.get("boundaries", []):
+        raise SiteCheckError(f"{label}: missing final submission wallet-signing boundary")
     if not any("https://gcagochina.com/platform-replies.html" in item for item in gate.get("requiredBeforeReady", [])):
         raise SiteCheckError(f"{label}: missing Platform Replies next-submission gate")
     assert_no_forbidden_public_claims(text, label)

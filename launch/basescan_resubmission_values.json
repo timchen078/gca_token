@@ -39,6 +39,28 @@
       "does not touch wallets or contracts"
     ]
   },
+  "submissionPackageBuilder": {
+    "tool": "tools/build_basescan_submission_package.py",
+    "command": "python3 tools/build_basescan_submission_package.py --json --require-ready --output-json launch/basescan_final_submission_package.json --output-md launch/basescan_final_submission_package.md",
+    "readyRequires": [
+      "preflightCheck passes",
+      "readyForOwnerSubmission is true",
+      "officialEmail is support@gcagochina.com",
+      "domain email evidence packet is complete"
+    ],
+    "outputs": [
+      "launch/basescan_final_submission_package.json",
+      "launch/basescan_final_submission_package.md"
+    ],
+    "boundaries": [
+      "local draft only",
+      "does not submit BaseScan request",
+      "does not sign wallet messages",
+      "does not send email",
+      "does not write DNS records",
+      "does not touch wallets or contracts"
+    ]
+  },
   "browserSubmissionStatus": "returned-remediation-required",
   "nextSubmissionReady": false,
   "returnReason": "information-insufficient",

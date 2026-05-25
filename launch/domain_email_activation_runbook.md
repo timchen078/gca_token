@@ -60,6 +60,14 @@ python3 tools/check_basescan_resubmission_readiness.py --json --require-ready
 
 Only proceed when the preflight reports `readyForBaseScanResubmission` as true. The preflight checks the BaseScan values packet, domain email evidence packet, and public reviewer URLs; it does not submit anything.
 
+After the preflight passes, generate the final copyable BaseScan draft:
+
+```bash
+python3 tools/build_basescan_submission_package.py --json --require-ready --output-json launch/basescan_final_submission_package.json --output-md launch/basescan_final_submission_package.md
+```
+
+The final draft builder still does not submit the form. It only produces the local package the owner can copy into one clean BaseScan update.
+
 ## Evidence Packet
 
 Save these owner records before the next BaseScan submission:
