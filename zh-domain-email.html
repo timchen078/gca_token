@@ -394,6 +394,19 @@
         <p class="note">官方设置资料：<a href="https://developers.cloudflare.com/email-routing/get-started/" target="_blank" rel="noreferrer">Cloudflare Email Routing</a>、<a href="https://support.google.com/a/answer/9222085" target="_blank" rel="noreferrer">Google Workspace MX</a>、<a href="https://learn.microsoft.com/en-us/microsoft-365/admin/setup/add-domain?view=o365-worldwide" target="_blank" rel="noreferrer">Microsoft 365 自定义域名</a>、<a href="https://www.zoho.com/mail/help/adminconsole/add-domains.html" target="_blank" rel="noreferrer">Zoho Mail 自定义域名</a>。</p>
       </section>
 
+      <section class="section panel" aria-labelledby="providerMatrixTitle">
+        <p class="eyebrow">邮箱方案矩阵</p>
+        <h2 id="providerMatrixTitle">先选能通过证据门槛的低成本完整邮箱</h2>
+        <p class="note">购买邮箱套餐前，先跑本地 provider matrix。它不会查询实时价格、不会猜 DNS 值，只帮你判断完整邮箱、只收信转发、只发信 SMTP/API 哪些能用于 BaseScan 复审。</p>
+        <div class="list">
+          <div class="row"><span>优先检查</span><strong>Zoho Mail 或同等级低成本托管邮箱，但前提是能创建 <code>support@gcagochina.com</code>，并提供 MX、SPF、DKIM、DMARC 设置。</strong></div>
+          <div class="row"><span>也可使用</span><strong>Google Workspace 或 Microsoft 365，只要能以 <code>support@gcagochina.com</code> 收信和认证发信。</strong></div>
+          <div class="row"><span>单独不够</span><strong>Cloudflare Email Routing only，或没有同地址收信能力的 send-only SMTP/API。</strong></div>
+          <div class="row"><span>矩阵命令</span><strong><code>python3 tools/build_domain_email_provider_matrix.py --markdown</code></strong></div>
+          <div class="row"><span>保存清单</span><strong><code>python3 tools/build_domain_email_provider_matrix.py --output-json launch/domain_email_provider_matrix.json --output-md launch/domain_email_provider_matrix.md</code></strong></div>
+        </div>
+      </section>
+
       <section class="section panel" aria-labelledby="dnsTitle">
         <p class="eyebrow">DNS Entry Worksheet</p>
         <h2 id="dnsTitle">DNS 里每一条该填什么</h2>
