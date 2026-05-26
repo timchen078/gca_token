@@ -11,20 +11,20 @@
 - Review status: remediation-required-before-next-submission
 - Return notice date: 2026-05-13
 - Latest return notice date: 2026-05-23
-- Last checked: 2026-05-25; BaseScan return remains open and the latest DNS snapshot shows the domain email evidence gate is not ready
+- Last checked: 2026-05-26; BaseScan return remains open and the latest DNS snapshot shows the domain email evidence gate is not ready
 - Reply inbox: `cxy070800@gmail.com`
 
 Do not describe the BaseScan token profile as complete, published, or accepted until BaseScan confirms the update and the public contract page shows the submitted token information.
 
 ## Why It Was Returned
 
-BaseScan replied that it could not process the token update request because the submitted information about the token/project was insufficient. A cleaner resubmission was sent on 2026-05-13, but BaseScan returned the update again on 2026-05-23. Tim Chen official-domain professional profile evidence is now published; the current remaining blocker is the project-domain email evidence gate. The 2026-05-25 DNS snapshot shows MX/SPF/DMARC missing and DKIM selector required, so `readyForBaseScanEmailEvidence` is false.
+BaseScan replied that it could not process the token update request because the submitted information about the token/project was insufficient. A cleaner resubmission was sent on 2026-05-13, but BaseScan returned the update again on 2026-05-23. Tim Chen official-domain professional profile evidence is now published; the current remaining blocker is the project-domain email evidence gate. The 2026-05-26 DNS snapshot shows MX/SPF/DMARC missing and DKIM selector required, so `readyForBaseScanEmailEvidence` is false.
 
 ## Waiting Checklist
 
 - Create and test a working `gcagochina.com` domain email such as `support@gcagochina.com`
 - Use the domain email activation runbook at `launch/domain_email_activation_runbook.md`
-- Review the current DNS snapshot at `https://gcagochina.com/domain-email.html#snapshotTitle`: MX/SPF/DMARC missing and DKIM selector required as of 2026-05-25
+- Review the current DNS snapshot at `https://gcagochina.com/domain-email.html#snapshotTitle`: MX/SPF/DMARC missing and DKIM selector required as of 2026-05-26
 - Run `python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox support --dkim-selector <provider-selector> --json` and confirm `readyForBaseScanEmailEvidence` is true
 - Archive the domain email activation evidence packet: provider active screenshot, DNS proof, inbound test, outbound test, and updated support-page screenshot
 - Tim Chen professional profile remains live: `https://gcagochina.com/tim-chen.html`
@@ -76,7 +76,7 @@ BaseScan replied that it could not process the token update request because the 
 
 Use this until approval:
 
-`BaseScan source verification and deployer-wallet ownership verification are complete. The public BaseScan token profile update was returned again as information-insufficient on 2026-05-23. The profile is not approved or published. Tim Chen public professional profile evidence is now published at https://gcagochina.com/tim-chen.html with team, GitHub, X, Telegram, and structured profile-data links for reviewer due diligence; the latest 2026-05-25 DNS snapshot at https://gcagochina.com/domain-email.html#snapshotTitle shows MX/SPF/DMARC missing and DKIM selector required, so readyForBaseScanEmailEvidence is false; the domain email activation evidence packet is defined at https://gcagochina.com/domain-email.html#evidenceTitle. The next submission should wait until a working project-domain email is ready.`
+`BaseScan source verification and deployer-wallet ownership verification are complete. The public BaseScan token profile update was returned again as information-insufficient on 2026-05-23. The profile is not approved or published. Tim Chen public professional profile evidence is now published at https://gcagochina.com/tim-chen.html with team, GitHub, X, Telegram, and structured profile-data links for reviewer due diligence; the latest 2026-05-26 DNS snapshot at https://gcagochina.com/domain-email.html#snapshotTitle shows MX/SPF/DMARC missing and DKIM selector required, so readyForBaseScanEmailEvidence is false; the domain email activation evidence packet is defined at https://gcagochina.com/domain-email.html#evidenceTitle. The next submission should wait until a working project-domain email is ready.`
 
 Do not use:
 
@@ -122,5 +122,5 @@ Official Telegram: https://t.me/gcagochinaofficial
 Official X: https://x.com/GCAAIGoChina
 Official contact email: GCAgochina@outlook.com
 
-The official website now centralizes the verify page, project status, product spec, release gates, listing kit, brand kit, community kit, support page, token list, and machine-readable project JSON. The latest 2026-05-25 DNS snapshot shows MX/SPF/DMARC missing and DKIM selector required, so readyForBaseScanEmailEvidence is false until support@gcagochina.com is active and tested. Please let us know if any additional field correction or owner-wallet signature is required.
+The official website now centralizes the verify page, project status, product spec, release gates, listing kit, brand kit, community kit, support page, token list, and machine-readable project JSON. The latest 2026-05-26 DNS snapshot shows MX/SPF/DMARC missing and DKIM selector required, so readyForBaseScanEmailEvidence is false until support@gcagochina.com is active and tested. Please let us know if any additional field correction or owner-wallet signature is required.
 ```

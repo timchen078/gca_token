@@ -62,14 +62,14 @@ READY_VALUES = {
 }
 
 READY_PREFLIGHT = {
-    "generatedAt": "2026-05-25T00:00:00Z",
+    "generatedAt": "2026-05-26T00:00:00Z",
     "status": "ready-for-owner-resubmission",
     "readyForBaseScanResubmission": True,
     "missingOrBlockedRequirements": [],
 }
 
 BLOCKED_PREFLIGHT = {
-    "generatedAt": "2026-05-25T00:00:00Z",
+    "generatedAt": "2026-05-26T00:00:00Z",
     "status": "blocked-before-basescan-resubmission",
     "readyForBaseScanResubmission": False,
     "missingOrBlockedRequirements": ["official-domain-email", "domain-email-evidence-packet"],
@@ -88,7 +88,7 @@ class BaseScanSubmissionPackageTests(unittest.TestCase):
         package = build_submission_package(
             values=READY_VALUES,
             readiness_report=BLOCKED_PREFLIGHT,
-            generated_at="2026-05-25T00:00:00Z",
+            generated_at="2026-05-26T00:00:00Z",
         )
 
         self.assertFalse(package["readyForOwnerSubmission"])
@@ -101,7 +101,7 @@ class BaseScanSubmissionPackageTests(unittest.TestCase):
         package = build_submission_package(
             values=READY_VALUES,
             readiness_report=READY_PREFLIGHT,
-            generated_at="2026-05-25T00:00:00Z",
+            generated_at="2026-05-26T00:00:00Z",
         )
 
         self.assertTrue(package["readyForOwnerSubmission"])
@@ -114,7 +114,7 @@ class BaseScanSubmissionPackageTests(unittest.TestCase):
         package = build_submission_package(
             values=READY_VALUES,
             readiness_report=READY_PREFLIGHT,
-            generated_at="2026-05-25T00:00:00Z",
+            generated_at="2026-05-26T00:00:00Z",
         )
 
         markdown = render_markdown(package)

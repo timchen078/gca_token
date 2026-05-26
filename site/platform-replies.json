@@ -2,7 +2,7 @@
   "schema": "https://gcagochina.com/platform-replies.json",
   "pageUrl": "https://gcagochina.com/platform-replies.html",
   "status": "public-platform-reply-kit-published",
-  "lastUpdated": "2026-05-25",
+  "lastUpdated": "2026-05-26",
   "projectName": "GCA",
   "network": "Base Mainnet",
   "chainId": 8453,
@@ -127,7 +127,7 @@
         "- Clear token/project information: about page, whitepaper, product page, status page, and reviewer kit are published.",
         "- Placeholders or broken links: public site checks validate the current readable pages, JSON routing, logo assets, and official GCA/USDT route.",
         "- Founder/team transparency: Tim Chen is published on the team page and a standalone official-domain professional profile with public role scope, GitHub repository, official X, official Telegram, and structured profile data for reviewers.",
-        "- Sender/domain email: the current active email is still GCAgochina@outlook.com; a working gcagochina.com domain email remains the remaining owner-controlled blocker before the next clean resubmission. The latest 2026-05-25 read-only DNS snapshot shows MX/SPF/DMARC missing and DKIM selector required, so readyForBaseScanEmailEvidence is false. The activation evidence packet defines the provider-status, DNS, inbound, outbound, and website-email proof to retain before resubmitting.",
+        "- Sender/domain email: the current active email is still GCAgochina@outlook.com; a working gcagochina.com domain email remains the remaining owner-controlled blocker before the next clean resubmission. The latest 2026-05-26 read-only DNS snapshot shows MX/SPF/DMARC missing and DKIM selector required, so readyForBaseScanEmailEvidence is false. The activation evidence packet defines the provider-status, DNS, inbound, outbound, and website-email proof to retain before resubmitting.",
         "Please let us know if any field correction or additional verification is required. We will not claim BaseScan token profile approval until BaseScan publishes the profile."
       ]
     },

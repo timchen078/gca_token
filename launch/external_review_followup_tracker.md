@@ -52,7 +52,7 @@ Use this file as the single operating checklist for external review, wallet-warn
 
 | Platform | Current status | Contact / inbox | Next action |
 | --- | --- | --- | --- |
-| BaseScan token profile | Submitted on 2026-05-09, returned as information-insufficient on 2026-05-13, resubmitted on 2026-05-13, and returned again as information-insufficient on 2026-05-23 | `cxy070800@gmail.com` / `GCAgochina@outlook.com` | Fix the 2026-05-25 DNS snapshot blockers, create and publish a working `gcagochina.com` domain email, run `tools/check_domain_email_dns.py`, archive the activation evidence packet, include the Tim Chen professional profile URL, rerun checks, then resubmit through the official BaseScan form. |
+| BaseScan token profile | Submitted on 2026-05-09, returned as information-insufficient on 2026-05-13, resubmitted on 2026-05-13, and returned again as information-insufficient on 2026-05-23 | `cxy070800@gmail.com` / `GCAgochina@outlook.com` | Fix the 2026-05-26 DNS snapshot blockers, create and publish a working `gcagochina.com` domain email, run `tools/check_domain_email_dns.py`, archive the activation evidence packet, include the Tim Chen professional profile URL, rerun checks, then resubmit through the official BaseScan form. |
 | Blockaid / MetaMask warning | False-positive report submitted on 2026-05-10; follow-up submitted on 2026-05-13; owner observed no wallet risk warning visible on 2026-05-14 | Owner browser / wallet UI / `GCAgochina@outlook.com` | Keep monitoring wallet and Uniswap warning UI. Do not submit another duplicate unless Blockaid, MetaMask, or Uniswap asks for more information. |
 | GeckoTerminal | Token information update approved on 2026-05-11 | `GCAgochina@outlook.com` | No duplicate update unless official details change or GeckoTerminal asks for a correction. |
 | DEX Screener | Discoverable through the live GCA/USDT pool | Not submitted as a direct paid metadata update | Keep the GCA/USDT pool, website, token list, and GeckoTerminal data consistent. |
@@ -64,7 +64,7 @@ Use this file as the single operating checklist for external review, wallet-warn
 
 1. Use the domain email setup plan at `https://gcagochina.com/domain-email.html`, then create and test a working `gcagochina.com` domain email such as `support@gcagochina.com`.
 2. Follow `launch/domain_email_activation_runbook.md`.
-3. Review the current DNS snapshot at `https://gcagochina.com/domain-email.html#snapshotTitle`: MX/SPF/DMARC missing and DKIM selector required as of 2026-05-25.
+3. Review the current DNS snapshot at `https://gcagochina.com/domain-email.html#snapshotTitle`: MX/SPF/DMARC missing and DKIM selector required as of 2026-05-26.
 4. Run `python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox support --dkim-selector <provider-selector> --json` and confirm `readyForBaseScanEmailEvidence` is true.
 5. Archive the activation evidence packet: provider active screenshot, DNS proof, inbound test, outbound test, and updated support-page screenshot.
 6. Publish that domain email on support, about, and team pages before resubmission.
@@ -89,7 +89,7 @@ Use this file as the single operating checklist for external review, wallet-warn
 - BaseScan source verification is complete.
 - BaseScan deployer-wallet ownership verification is complete.
 - The public BaseScan token profile update was returned again as information-insufficient on 2026-05-23; remediation is required before the next submission.
-- The BaseScan domain email evidence gate is blocked by the 2026-05-25 DNS snapshot: MX/SPF/DMARC missing and DKIM selector required.
+- The BaseScan domain email evidence gate is blocked by the 2026-05-26 DNS snapshot: MX/SPF/DMARC missing and DKIM selector required.
 - GeckoTerminal token information was approved on 2026-05-11.
 - Owner observed no wallet risk warning visible on 2026-05-14 after the 2026-05-10 Blockaid report and 2026-05-13 follow-up.
 - This observation is not permanent security-vendor approval or a cross-wallet guarantee.
@@ -138,7 +138,7 @@ Official X: https://x.com/GCAAIGoChina
 Official email: GCAgochina@outlook.com
 Official contact email: cxy070800@gmail.com
 
-The latest 2026-05-25 DNS snapshot shows MX/SPF/DMARC missing and DKIM selector required, so readyForBaseScanEmailEvidence is false until support@gcagochina.com is active and tested.
+The latest 2026-05-26 DNS snapshot shows MX/SPF/DMARC missing and DKIM selector required, so readyForBaseScanEmailEvidence is false until support@gcagochina.com is active and tested.
 
 Please let us know if any field correction or additional verification is required.
 ```
