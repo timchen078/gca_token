@@ -47,6 +47,23 @@
     "Add DMARC TXT record at _dmarc.gcagochina.com, starting in monitoring mode if needed",
     "Wait for DNS propagation and provider verification"
   ],
+  "mailProviderDecision": {
+    "requirement": "Use a full hosted mailbox or mail service that can receive external mail and send authenticated outbound mail as support@gcagochina.com.",
+    "notEnoughByItself": "Receive-only forwarding, including Cloudflare Email Routing by itself, is not enough for the next clean BaseScan resubmission because it does not prove outbound sender alignment.",
+    "acceptablePaths": [
+      "Google Workspace if MX, SPF, DKIM, and DMARC records are configured and outbound replies show support@gcagochina.com",
+      "Microsoft 365 if the custom domain and required mail DNS records are configured and outbound replies show support@gcagochina.com",
+      "Zoho Mail if the custom domain, MX, SPF, DKIM, and DMARC records are configured and outbound replies show support@gcagochina.com",
+      "Another hosted mailbox provider if it satisfies the same inbound, outbound, SPF, DKIM, and DMARC evidence gates"
+    ],
+    "decisionRule": "Pick the lowest-cost provider that gives a real mailbox UI or authenticated SMTP/API sending path for support@gcagochina.com; do not update public support or BaseScan values until inbound and outbound tests pass.",
+    "referenceDocs": [
+      "https://developers.cloudflare.com/email-routing/get-started/",
+      "https://support.google.com/a/answer/9222085",
+      "https://learn.microsoft.com/en-us/microsoft-365/admin/setup/add-domain?view=o365-worldwide",
+      "https://www.zoho.com/mail/help/adminconsole/add-domains.html"
+    ]
+  },
   "dnsEntryWorksheet": [
     {
       "record": "MX",

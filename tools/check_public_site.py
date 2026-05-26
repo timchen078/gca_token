@@ -782,6 +782,12 @@ def validate_domain_email_page(text: str) -> None:
         "Evidence Packet",
         "What To Save Before BaseScan Resubmission",
         "support-page-domain-email",
+        "Provider Selection Gate",
+        "Choose A Full Mailbox, Not Receive-Only Routing",
+        "Cloudflare Email Routing can be useful for forwarding inbound mail",
+        "Google Workspace",
+        "Microsoft 365",
+        "Zoho Mail",
         "Ready Means All Four Are True",
         "Submission policy: send the next clean BaseScan update from",
         "domain email setup plan",
@@ -806,6 +812,7 @@ def validate_domain_email_json(text: str) -> None:
     dns_check = payload.get("operatorDnsCheck", {})
     packet_builder = payload.get("operatorEvidencePacketBuilder", {})
     policy = payload.get("baseScanSubmissionPolicy", {})
+    provider = payload.get("mailProviderDecision", {})
     dns = payload.get("dnsChecklist", [])
 
     if payload.get("schema") != DOMAIN_EMAIL_URL:
@@ -838,6 +845,17 @@ def validate_domain_email_json(text: str) -> None:
     for expected in ("MX", "SPF", "DKIM", "DMARC"):
         if not any(expected in item for item in dns):
             raise SiteCheckError(f"{label}: missing DNS checklist item {expected}")
+    if "full hosted mailbox" not in provider.get("requirement", ""):
+        raise SiteCheckError(f"{label}: missing full-mailbox provider requirement")
+    if "Cloudflare Email Routing" not in provider.get("notEnoughByItself", ""):
+        raise SiteCheckError(f"{label}: missing Cloudflare receive-only caveat")
+    for expected in ("Google Workspace", "Microsoft 365", "Zoho Mail"):
+        if not any(expected in item for item in provider.get("acceptablePaths", [])):
+            raise SiteCheckError(f"{label}: missing provider path {expected}")
+    if "support@gcagochina.com" not in provider.get("decisionRule", ""):
+        raise SiteCheckError(f"{label}: missing support mailbox decision rule")
+    if "https://developers.cloudflare.com/email-routing/get-started/" not in provider.get("referenceDocs", []):
+        raise SiteCheckError(f"{label}: missing Cloudflare reference doc")
     if "Mail provider dashboard shows support@gcagochina.com as verified or active" not in evidence.get("requiredEvidence", []):
         raise SiteCheckError(f"{label}: missing provider-status evidence")
     if "domain-email-dns-mx-spf-dkim-dmarc.txt" not in evidence.get("recommendedFilenames", []):
@@ -1453,6 +1471,12 @@ def validate_zh_domain_email_page(text: str) -> None:
         "DKIM",
         "DMARC",
         "邮箱服务商后台",
+        "邮箱服务商选择",
+        "要选完整邮箱，不要只选收信转发",
+        "Cloudflare Email Routing 可以做收信转发",
+        "Google Workspace",
+        "Microsoft 365",
+        "Zoho Mail",
         "root-domain SPF TXT",
         "--dkim-selector &lt;provider-selector&gt;",
         "2026-05-26 快照仍显示 MX/SPF/DMARC missing，DKIM selector required",

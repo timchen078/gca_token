@@ -26,6 +26,22 @@ Result: `readyForBaseScanEmailEvidence` is false. Public DNS currently reports `
 
 Next owner action: create `support@gcagochina.com` at the chosen mail provider, add the provider MX/SPF/DMARC/DKIM records, rerun the checker with `--dkim-selector <provider-selector>`, then collect inbound and outbound message evidence.
 
+## Mail Provider Selection
+
+Choose a full hosted mailbox or mail service, not receive-only forwarding alone. BaseScan's practical requirement is that the website contact email, sender email, and domain ownership path match. That means the mailbox must receive external mail and send authenticated outbound mail as `support@gcagochina.com`.
+
+Minimum acceptable provider capability:
+
+- Inbound mail for `support@gcagochina.com`
+- Outbound sending or replies where the visible sender is `support@gcagochina.com`
+- MX records for inbound routing
+- SPF, DKIM, and DMARC records for sender authentication
+- A provider dashboard or mail UI that can be screenshotted for owner evidence
+
+Cloudflare Email Routing can be useful for inbound forwarding, but receive-only forwarding by itself is not enough for the next clean BaseScan resubmission because it does not prove outbound sender alignment. If using Cloudflare, pair it with a real outbound sending path or choose a full mailbox provider instead.
+
+Common full-mailbox paths include Google Workspace, Microsoft 365, Zoho Mail, or another hosted mailbox provider. The brand is less important than passing the evidence gates: DNS ready, inbound test received, outbound reply sent from the domain email, and public site email aligned.
+
 ## DNS Entry Worksheet
 
 Use this worksheet when the mail provider shows DNS setup instructions. Copy provider values exactly; do not guess mail server hosts, DKIM selectors, verification strings, or record types.
