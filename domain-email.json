@@ -47,6 +47,44 @@
     "Add DMARC TXT record at _dmarc.gcagochina.com, starting in monitoring mode if needed",
     "Wait for DNS propagation and provider verification"
   ],
+  "dnsEntryWorksheet": [
+    {
+      "record": "MX",
+      "purpose": "Routes inbound mail for support@gcagochina.com.",
+      "type": "MX",
+      "nameOrHost": "@ or gcagochina.com, exactly as the DNS host expects.",
+      "valueSource": "Copy the provider mail server host and priority from the provider dashboard; do not guess.",
+      "readyCheck": "tools/check_domain_email_dns.py reports MX present for gcagochina.com.",
+      "commonMistake": "Adding the MX record under support.gcagochina.com instead of the root domain."
+    },
+    {
+      "record": "SPF",
+      "purpose": "Authorizes the chosen provider to send authenticated mail for gcagochina.com.",
+      "type": "TXT",
+      "nameOrHost": "@ or gcagochina.com, exactly as the DNS host expects.",
+      "valueSource": "Copy the provider SPF string and merge it into the existing root-domain v=spf1 TXT record if one already exists.",
+      "readyCheck": "tools/check_domain_email_dns.py reports a single SPF record.",
+      "commonMistake": "Publishing multiple root-domain SPF TXT records instead of merging provider includes into one value."
+    },
+    {
+      "record": "DKIM",
+      "purpose": "Proves that outbound mail is signed by the provider.",
+      "type": "TXT or CNAME, exactly as the provider requires.",
+      "nameOrHost": "<provider-selector>._domainkey or the exact host shown by the provider.",
+      "valueSource": "Copy the provider DKIM value and selector exactly; record the selector for --dkim-selector.",
+      "readyCheck": "tools/check_domain_email_dns.py reports DKIM present when rerun with --dkim-selector <provider-selector>.",
+      "commonMistake": "Using a guessed selector or omitting the _domainkey host segment when the provider requires it."
+    },
+    {
+      "record": "DMARC",
+      "purpose": "Publishes the domain mail policy for receiving mail systems.",
+      "type": "TXT",
+      "nameOrHost": "_dmarc",
+      "valueSource": "Start with the provider recommendation or monitoring mode such as v=DMARC1; p=none; until delivery is stable.",
+      "readyCheck": "tools/check_domain_email_dns.py reports DMARC present at _dmarc.gcagochina.com.",
+      "commonMistake": "Adding DMARC at the root domain instead of _dmarc.gcagochina.com."
+    }
+  ],
   "testChecklist": [
     "Send an inbound test from Gmail or Outlook to support@gcagochina.com",
     "Reply from support@gcagochina.com to Gmail or Outlook",
