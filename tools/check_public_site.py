@@ -924,6 +924,10 @@ def validate_basescan_remediation_page(text: str) -> None:
         "Preflight checker",
         "tools/check_basescan_resubmission_readiness.py",
         "BaseScan values, domain email evidence packet, and reviewer URLs",
+        "Reviewer checklist",
+        "Reviewer checklist required",
+        "tools/build_basescan_reviewer_checklist.py --markdown",
+        "launch/basescan_reviewer_checklist.json",
         "Submission package",
         "tools/build_basescan_submission_package.py",
         "Final draft required",
@@ -1017,6 +1021,17 @@ def validate_basescan_remediation_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing reviewer URL preflight gate")
     if "does not submit BaseScan request" not in preflight.get("boundaries", []):
         raise SiteCheckError(f"{label}: missing preflight BaseScan boundary")
+    checklist_builder = gate.get("reviewerChecklistBuilder", {})
+    if checklist_builder.get("tool") != "tools/build_basescan_reviewer_checklist.py":
+        raise SiteCheckError(f"{label}: wrong reviewer checklist builder")
+    if "--markdown" not in checklist_builder.get("command", ""):
+        raise SiteCheckError(f"{label}: missing reviewer checklist markdown command")
+    if "launch/basescan_reviewer_checklist.json" not in checklist_builder.get("ownerArtifactCommand", ""):
+        raise SiteCheckError(f"{label}: missing reviewer checklist owner artifact")
+    if "sender-domain-email blocker" not in checklist_builder.get("purpose", ""):
+        raise SiteCheckError(f"{label}: missing reviewer checklist domain-email purpose")
+    if "does not sign wallet messages" not in checklist_builder.get("boundaries", []):
+        raise SiteCheckError(f"{label}: missing reviewer checklist wallet boundary")
     submission_builder = gate.get("submissionPackageBuilder", {})
     if submission_builder.get("tool") != "tools/build_basescan_submission_package.py":
         raise SiteCheckError(f"{label}: wrong submission package builder")
