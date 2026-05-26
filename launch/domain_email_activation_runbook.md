@@ -42,6 +42,26 @@ Cloudflare Email Routing can be useful for inbound forwarding, but receive-only 
 
 Common full-mailbox paths include Google Workspace, Microsoft 365, Zoho Mail, or another hosted mailbox provider. The brand is less important than passing the evidence gates: DNS ready, inbound test received, outbound reply sent from the domain email, and public site email aligned.
 
+## Provider Decision Matrix
+
+Before buying a mailbox plan, generate the local provider decision matrix:
+
+```bash
+python3 tools/build_domain_email_provider_matrix.py --markdown
+```
+
+For a copyable owner artifact:
+
+```bash
+python3 tools/build_domain_email_provider_matrix.py \
+  --output-json launch/domain_email_provider_matrix.json \
+  --output-md launch/domain_email_provider_matrix.md
+```
+
+Use the matrix to separate full mailbox options from incomplete paths. The recommended first check is Zoho Mail or an equivalent low-cost hosted mailbox, only if it creates `support@gcagochina.com`, receives external mail, sends authenticated outbound mail, and provides MX, SPF, DKIM, and DMARC setup. Google Workspace and Microsoft 365 are also acceptable if those gates pass. Cloudflare Email Routing only, or send-only SMTP/API without inbound mail for `support@gcagochina.com`, is not enough by itself for a clean BaseScan resubmission.
+
+The matrix does not fetch live prices, write DNS records, send email, submit BaseScan requests, store secrets, or touch wallets/contracts.
+
 ## DNS Entry Worksheet
 
 Use this worksheet when the mail provider shows DNS setup instructions. Copy provider values exactly; do not guess mail server hosts, DKIM selectors, verification strings, or record types.

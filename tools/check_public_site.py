@@ -788,6 +788,11 @@ def validate_domain_email_page(text: str) -> None:
         "Google Workspace",
         "Microsoft 365",
         "Zoho Mail",
+        "Provider Decision Matrix",
+        "Pick The Lowest-Cost Full Mailbox That Passes Evidence Gates",
+        "tools/build_domain_email_provider_matrix.py --markdown",
+        "launch/domain_email_provider_matrix.json",
+        "Cloudflare Email Routing only",
         "Ready Means All Four Are True",
         "Switch Plan Generator",
         "Find Every Public Email Reference Before Switching",
@@ -815,6 +820,7 @@ def validate_domain_email_json(text: str) -> None:
     snapshot = payload.get("liveDnsSnapshot", {})
     dns_check = payload.get("operatorDnsCheck", {})
     packet_builder = payload.get("operatorEvidencePacketBuilder", {})
+    provider_matrix = payload.get("operatorProviderMatrixBuilder", {})
     switch_builder = payload.get("operatorSwitchPlanBuilder", {})
     policy = payload.get("baseScanSubmissionPolicy", {})
     provider = payload.get("mailProviderDecision", {})
@@ -861,6 +867,24 @@ def validate_domain_email_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing support mailbox decision rule")
     if "https://developers.cloudflare.com/email-routing/get-started/" not in provider.get("referenceDocs", []):
         raise SiteCheckError(f"{label}: missing Cloudflare reference doc")
+    if provider_matrix.get("tool") != "tools/build_domain_email_provider_matrix.py":
+        raise SiteCheckError(f"{label}: wrong provider matrix tool")
+    if "--markdown" not in provider_matrix.get("command", ""):
+        raise SiteCheckError(f"{label}: missing provider matrix markdown command")
+    if "launch/domain_email_provider_matrix.json" not in provider_matrix.get("ownerArtifactCommand", ""):
+        raise SiteCheckError(f"{label}: missing provider matrix owner artifact")
+    if "without fetching live prices or guessing DNS records" not in provider_matrix.get("purpose", ""):
+        raise SiteCheckError(f"{label}: missing provider matrix purpose boundary")
+    if "Zoho Mail" not in provider_matrix.get("recommendedFirstCheck", ""):
+        raise SiteCheckError(f"{label}: missing provider matrix recommended first check")
+    if "Cloudflare Email Routing only" not in provider_matrix.get("notEnoughAlone", []):
+        raise SiteCheckError(f"{label}: missing provider matrix Cloudflare caveat")
+    if "mail provider purchase" not in provider_matrix.get("runBefore", []):
+        raise SiteCheckError(f"{label}: missing provider matrix run-before gate")
+    if "does not fetch live prices" not in provider_matrix.get("boundaries", []):
+        raise SiteCheckError(f"{label}: missing provider matrix price boundary")
+    if "does not submit BaseScan request" not in provider_matrix.get("boundaries", []):
+        raise SiteCheckError(f"{label}: missing provider matrix BaseScan boundary")
     if "Mail provider dashboard shows support@gcagochina.com as verified or active" not in evidence.get("requiredEvidence", []):
         raise SiteCheckError(f"{label}: missing provider-status evidence")
     if "domain-email-dns-mx-spf-dkim-dmarc.txt" not in evidence.get("recommendedFilenames", []):
@@ -1509,6 +1533,11 @@ def validate_zh_domain_email_page(text: str) -> None:
         "Google Workspace",
         "Microsoft 365",
         "Zoho Mail",
+        "邮箱方案矩阵",
+        "先选能通过证据门槛的低成本完整邮箱",
+        "tools/build_domain_email_provider_matrix.py --markdown",
+        "launch/domain_email_provider_matrix.json",
+        "Cloudflare Email Routing only",
         "root-domain SPF TXT",
         "--dkim-selector &lt;provider-selector&gt;",
         "2026-05-26 快照仍显示 MX/SPF/DMARC missing，DKIM selector required",

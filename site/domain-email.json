@@ -47,10 +47,10 @@
     "Add DMARC TXT record at _dmarc.gcagochina.com, starting in monitoring mode if needed",
     "Wait for DNS propagation and provider verification"
   ],
-  "mailProviderDecision": {
-    "requirement": "Use a full hosted mailbox or mail service that can receive external mail and send authenticated outbound mail as support@gcagochina.com.",
-    "notEnoughByItself": "Receive-only forwarding, including Cloudflare Email Routing by itself, is not enough for the next clean BaseScan resubmission because it does not prove outbound sender alignment.",
-    "acceptablePaths": [
+    "mailProviderDecision": {
+        "requirement": "Use a full hosted mailbox or mail service that can receive external mail and send authenticated outbound mail as support@gcagochina.com.",
+        "notEnoughByItself": "Receive-only forwarding, including Cloudflare Email Routing by itself, is not enough for the next clean BaseScan resubmission because it does not prove outbound sender alignment.",
+        "acceptablePaths": [
       "Google Workspace if MX, SPF, DKIM, and DMARC records are configured and outbound replies show support@gcagochina.com",
       "Microsoft 365 if the custom domain and required mail DNS records are configured and outbound replies show support@gcagochina.com",
       "Zoho Mail if the custom domain, MX, SPF, DKIM, and DMARC records are configured and outbound replies show support@gcagochina.com",
@@ -60,13 +60,37 @@
     "referenceDocs": [
       "https://developers.cloudflare.com/email-routing/get-started/",
       "https://support.google.com/a/answer/9222085",
-      "https://learn.microsoft.com/en-us/microsoft-365/admin/setup/add-domain?view=o365-worldwide",
-      "https://www.zoho.com/mail/help/adminconsole/add-domains.html"
-    ]
-  },
-  "dnsEntryWorksheet": [
-    {
-      "record": "MX",
+            "https://learn.microsoft.com/en-us/microsoft-365/admin/setup/add-domain?view=o365-worldwide",
+            "https://www.zoho.com/mail/help/adminconsole/add-domains.html"
+        ]
+    },
+    "operatorProviderMatrixBuilder": {
+        "tool": "tools/build_domain_email_provider_matrix.py",
+        "command": "python3 tools/build_domain_email_provider_matrix.py --markdown",
+        "ownerArtifactCommand": "python3 tools/build_domain_email_provider_matrix.py --output-json launch/domain_email_provider_matrix.json --output-md launch/domain_email_provider_matrix.md",
+        "purpose": "Compare full-mailbox paths against receive-only or send-only options before buying an email plan, without fetching live prices or guessing DNS records.",
+        "recommendedFirstCheck": "Zoho Mail or an equivalent low-cost hosted mailbox, only if it creates support@gcagochina.com and provides MX, SPF, DKIM, and DMARC setup.",
+        "notEnoughAlone": [
+            "Cloudflare Email Routing only",
+            "send-only SMTP/API without inbound mail for support@gcagochina.com"
+        ],
+        "runBefore": [
+            "mail provider purchase",
+            "DNS record entry",
+            "domain email evidence packet",
+            "BaseScan resubmission preflight"
+        ],
+        "boundaries": [
+            "does not fetch live prices",
+            "does not write DNS records",
+            "does not send email",
+            "does not submit BaseScan request",
+            "does not touch wallets or contracts"
+        ]
+    },
+    "dnsEntryWorksheet": [
+        {
+            "record": "MX",
       "purpose": "Routes inbound mail for support@gcagochina.com.",
       "type": "MX",
       "nameOrHost": "@ or gcagochina.com, exactly as the DNS host expects.",

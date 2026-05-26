@@ -357,6 +357,19 @@
         <p class="note">Reference docs for operator setup: <a href="https://developers.cloudflare.com/email-routing/get-started/" target="_blank" rel="noreferrer">Cloudflare Email Routing</a>, <a href="https://support.google.com/a/answer/9222085" target="_blank" rel="noreferrer">Google Workspace MX setup</a>, <a href="https://learn.microsoft.com/en-us/microsoft-365/admin/setup/add-domain?view=o365-worldwide" target="_blank" rel="noreferrer">Microsoft 365 custom domain setup</a>, and <a href="https://www.zoho.com/mail/help/adminconsole/add-domains.html" target="_blank" rel="noreferrer">Zoho Mail custom domain setup</a>.</p>
       </section>
 
+      <section class="section panel" aria-labelledby="providerMatrixTitle">
+        <p class="eyebrow">Provider Decision Matrix</p>
+        <h2 id="providerMatrixTitle">Pick The Lowest-Cost Full Mailbox That Passes Evidence Gates</h2>
+        <p class="note">Use the local provider matrix before buying a mailbox plan. It does not fetch live prices or guess DNS records; it separates full mailbox options from receive-only or send-only paths that are not enough for a clean BaseScan resubmission.</p>
+        <div class="list">
+          <div class="row"><span>Recommended first check</span><strong>Zoho Mail or an equivalent low-cost hosted mailbox, only if it creates <code>support@gcagochina.com</code> and provides MX, SPF, DKIM, and DMARC setup.</strong></div>
+          <div class="row"><span>Also acceptable</span><strong>Google Workspace or Microsoft 365 if the owner prefers those ecosystems and outbound replies visibly send from <code>support@gcagochina.com</code>.</strong></div>
+          <div class="row"><span>Not enough alone</span><strong>Cloudflare Email Routing only, or any send-only SMTP/API service without inbound mail for the same address.</strong></div>
+          <div class="row"><span>Matrix command</span><strong><code>python3 tools/build_domain_email_provider_matrix.py --markdown</code></strong></div>
+          <div class="row"><span>Owner artifact</span><strong><code>python3 tools/build_domain_email_provider_matrix.py --output-json launch/domain_email_provider_matrix.json --output-md launch/domain_email_provider_matrix.md</code></strong></div>
+        </div>
+      </section>
+
       <section class="section panel" aria-labelledby="recordsTitle">
         <p class="eyebrow">DNS Record Gate</p>
         <h2 id="recordsTitle">Records To Copy From The Mail Provider</h2>
