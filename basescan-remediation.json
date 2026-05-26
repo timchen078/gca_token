@@ -71,6 +71,15 @@
     "equivalentOfficialProfessionalProfilePublished": true,
     "equivalentOfficialProfessionalProfileType": "official-domain-equivalent-public-professional-profile",
     "projectGitHub": "https://github.com/timchen078/gca_token",
+    "founderEvidencePacket": {
+      "profile": "https://gcagochina.com/tim-chen.html",
+      "profileData": "https://gcagochina.com/tim-chen.json",
+      "teamAnchor": "https://gcagochina.com/team.html#tim-chen",
+      "repository": "https://github.com/timchen078/gca_token",
+      "officialX": "https://x.com/GCAAIGoChina",
+      "officialTelegram": "https://t.me/gcagochinaofficial",
+      "reviewerWording": "Tim Chen is the published founder, CEO, and project lead for GCA. The official-domain profile provides role scope and public evidence links; add LinkedIn later only if BaseScan specifically requires third-party social-network evidence."
+    },
     "externalProfessionalProfileStillRecommended": true,
     "ownerActionRequired": "Include https://gcagochina.com/tim-chen.html in the next BaseScan submission. If BaseScan specifically requires a third-party social-network profile, publish a LinkedIn profile as stronger external evidence."
   },
