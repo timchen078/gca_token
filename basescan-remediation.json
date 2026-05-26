@@ -21,6 +21,7 @@
     "team": "https://gcagochina.com/team.html",
     "timChenProfessionalProfile": "https://gcagochina.com/tim-chen.html",
     "domainEmailSetupPlan": "https://gcagochina.com/domain-email.html",
+    "domainEmailDnsWorksheet": "https://gcagochina.com/domain-email.html#worksheetTitle",
     "domainEmailSetupPlanData": "https://gcagochina.com/domain-email.json",
     "verify": "https://gcagochina.com/verify.html",
     "whitepaper": "https://gcagochina.com/whitepaper.html",
@@ -37,6 +38,7 @@
   "currentEmailState": {
     "publishedPrimaryEmail": "GCAgochina@outlook.com",
     "domainEmailSetupPlan": "https://gcagochina.com/domain-email.html",
+    "domainEmailDnsWorksheet": "https://gcagochina.com/domain-email.html#worksheetTitle",
     "domainEmailSetupPlanData": "https://gcagochina.com/domain-email.json",
     "domainEmailRecommendedBeforeNextSubmission": true,
     "latestDnsSnapshot": {
@@ -107,7 +109,7 @@
     {
       "id": "domain-email",
       "status": "owner-action-required",
-      "evidence": "The published primary email is currently GCAgochina@outlook.com. BaseScan specifically flagged sender email/domain mismatch. The 2026-05-26 read-only DNS snapshot shows MX, SPF, and DMARC missing, with DKIM selector required, so a working gcagochina.com email should be configured before resubmission."
+      "evidence": "The published primary email is currently GCAgochina@outlook.com. BaseScan specifically flagged sender email/domain mismatch. The 2026-05-26 read-only DNS snapshot shows MX, SPF, and DMARC missing, with DKIM selector required, so a working gcagochina.com email should be configured before resubmission. The public DNS Entry Worksheet at https://gcagochina.com/domain-email.html#worksheetTitle lists the MX, SPF, DKIM, and DMARC fields to copy from the mailbox provider."
     },
     {
       "id": "full-social-links",
@@ -119,6 +121,7 @@
     "ready": false,
     "requiredBeforeReady": [
       "Create and publish a working gcagochina.com domain email, then submit from that domain email or clearly explain the official primary email in the form.",
+      "Use the DNS Entry Worksheet at https://gcagochina.com/domain-email.html#worksheetTitle when copying MX, SPF, DKIM, and DMARC records from the mailbox provider.",
       "Fix the 2026-05-26 DNS snapshot blockers: add MX, SPF, DMARC, and DKIM records, rerun the checker with the provider DKIM selector, and archive inbound/outbound evidence.",
       "Include the published Tim Chen professional profile URL https://gcagochina.com/tim-chen.html in the next BaseScan submission, and add LinkedIn later only if BaseScan specifically requires a third-party social-network profile.",
       "Re-run the public site checker after email/team-profile changes.",
