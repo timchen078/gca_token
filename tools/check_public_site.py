@@ -44,6 +44,7 @@ ZH_CN_PAGE_URL = "https://gcagochina.com/zh-cn.html"
 ZH_BUY_PAGE_URL = "https://gcagochina.com/zh-buy.html"
 ZH_APPLY_PAGE_URL = "https://gcagochina.com/zh-apply.html"
 ZH_STATUS_PAGE_URL = "https://gcagochina.com/zh-status.html"
+ZH_DOMAIN_EMAIL_PAGE_URL = "https://gcagochina.com/zh-domain-email.html"
 ZH_LIQUIDITY_PAGE_URL = "https://gcagochina.com/zh-liquidity.html"
 ZH_SUPPLY_PAGE_URL = "https://gcagochina.com/zh-supply.html"
 ZH_SECURITY_PAGE_URL = "https://gcagochina.com/zh-security.html"
@@ -1370,6 +1371,8 @@ def validate_zh_status_page(text: str) -> None:
         "BaseScan 源码",
         "已验证",
         "2026-05-23 退回整改",
+        "中文域名邮箱整改",
+        "zh-domain-email.html",
         "已通过 2026-05-11",
         "合约没有后续增发函数",
         "BaseScan 部署钱包所有权验证已完成",
@@ -1423,6 +1426,63 @@ def validate_zh_status_page(text: str) -> None:
         ),
     )
     assert_current_pool_text(text, label)
+    assert_no_forbidden_public_claims(text, label)
+
+
+def validate_zh_domain_email_page(text: str) -> None:
+    label = "/zh-domain-email.html"
+    assert_social_preview_meta(text, label, ZH_DOMAIN_EMAIL_PAGE_URL)
+    for expected in (
+        "GCA 中文域名邮箱整改",
+        "BaseScan 邮箱整改",
+        "support@gcagochina.com",
+        "GCAgochina@outlook.com",
+        "2026-05-26 未通过",
+        "等邮箱证据完成",
+        "不能说已启用",
+        "不能重复提交",
+        "不能猜 DNS",
+        "私钥",
+        "助记词",
+        "交易所 API Secret",
+        "提现权限",
+        "正确操作顺序",
+        "DNS Entry Worksheet",
+        "MX",
+        "SPF",
+        "DKIM",
+        "DMARC",
+        "邮箱服务商后台",
+        "root-domain SPF TXT",
+        "--dkim-selector &lt;provider-selector&gt;",
+        "2026-05-26 快照仍显示 MX/SPF/DMARC missing，DKIM selector required",
+        "tools/check_domain_email_dns.py",
+        "tools/build_domain_email_evidence_packet.py",
+        "tools/check_basescan_resubmission_readiness.py",
+        "tools/build_basescan_submission_package.py",
+        "不会提交 BaseScan",
+        "不会发送邮件",
+        "不会写 DNS",
+        "不会操作钱包或合约",
+        "中文审核状态",
+        "zh-status.html",
+        "中文支持",
+        "zh-support.html",
+        "中文站点地图",
+        "zh-site-map.html",
+        "Domain Email Plan",
+        "domain-email.html",
+        "DNS Worksheet",
+        "domain-email.html#worksheetTitle",
+        "BaseScan Remediation",
+        "basescan-remediation.html",
+        "Platform Replies",
+        "platform-replies.html",
+        "Tim Chen Profile",
+        "tim-chen.html",
+    ):
+        assert_contains(text, expected, label)
+    assert_not_contains(text, 'href="domain-email.json"', label)
     assert_no_forbidden_public_claims(text, label)
 
 
@@ -10602,6 +10662,7 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/zh-buy.html",
         "https://gcagochina.com/zh-apply.html",
         "https://gcagochina.com/zh-status.html",
+        "https://gcagochina.com/zh-domain-email.html",
         "https://gcagochina.com/zh-liquidity.html",
         "https://gcagochina.com/zh-supply.html",
         "https://gcagochina.com/zh-security.html",
@@ -10745,6 +10806,7 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /zh-buy.html", label)
     assert_contains(text, "Allow: /zh-apply.html", label)
     assert_contains(text, "Allow: /zh-status.html", label)
+    assert_contains(text, "Allow: /zh-domain-email.html", label)
     assert_contains(text, "Allow: /zh-liquidity.html", label)
     assert_contains(text, "Allow: /zh-supply.html", label)
     assert_contains(text, "Allow: /zh-security.html", label)
@@ -10889,6 +10951,7 @@ CHECKS: list[EndpointCheck] = [
     ("/zh-buy.html", validate_zh_buy_page),
     ("/zh-apply.html", validate_zh_apply_page),
     ("/zh-status.html", validate_zh_status_page),
+    ("/zh-domain-email.html", validate_zh_domain_email_page),
     ("/zh-liquidity.html", validate_zh_liquidity_page),
     ("/zh-supply.html", validate_zh_supply_page),
     ("/zh-security.html", validate_zh_security_page),

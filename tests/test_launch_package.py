@@ -48,6 +48,7 @@ ZH_CN_PAGE_URL = "https://gcagochina.com/zh-cn.html"
 ZH_BUY_PAGE_URL = "https://gcagochina.com/zh-buy.html"
 ZH_APPLY_PAGE_URL = "https://gcagochina.com/zh-apply.html"
 ZH_STATUS_PAGE_URL = "https://gcagochina.com/zh-status.html"
+ZH_DOMAIN_EMAIL_PAGE_URL = "https://gcagochina.com/zh-domain-email.html"
 ZH_LIQUIDITY_PAGE_URL = "https://gcagochina.com/zh-liquidity.html"
 ZH_SUPPLY_PAGE_URL = "https://gcagochina.com/zh-supply.html"
 ZH_SECURITY_PAGE_URL = "https://gcagochina.com/zh-security.html"
@@ -235,6 +236,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("/zh-buy.html", script)
         self.assertIn("/zh-apply.html", script)
         self.assertIn("/zh-status.html", script)
+        self.assertIn("/zh-domain-email.html", script)
         self.assertIn("/zh-liquidity.html", script)
         self.assertIn("/zh-supply.html", script)
         self.assertIn("/zh-security.html", script)
@@ -453,6 +455,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("validate_zh_buy_page", script)
         self.assertIn("validate_zh_apply_page", script)
         self.assertIn("validate_zh_status_page", script)
+        self.assertIn("validate_zh_domain_email_page", script)
         self.assertIn("validate_zh_liquidity_page", script)
         self.assertIn("validate_zh_supply_page", script)
         self.assertIn("validate_zh_security_page", script)
@@ -502,6 +505,7 @@ class LaunchPackageTests(unittest.TestCase):
         module.validate_zh_buy_page((ROOT / "site" / "zh-buy.html").read_text())
         module.validate_zh_apply_page((ROOT / "site" / "zh-apply.html").read_text())
         module.validate_zh_status_page((ROOT / "site" / "zh-status.html").read_text())
+        module.validate_zh_domain_email_page((ROOT / "site" / "zh-domain-email.html").read_text())
         module.validate_zh_liquidity_page((ROOT / "site" / "zh-liquidity.html").read_text())
         module.validate_zh_supply_page((ROOT / "site" / "zh-supply.html").read_text())
         module.validate_zh_security_page((ROOT / "site" / "zh-security.html").read_text())
@@ -889,6 +893,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Allow: /zh-buy.html", robots)
         self.assertIn("Allow: /zh-apply.html", robots)
         self.assertIn("Allow: /zh-status.html", robots)
+        self.assertIn("Allow: /zh-domain-email.html", robots)
         self.assertIn("Allow: /zh-liquidity.html", robots)
         self.assertIn("Allow: /zh-supply.html", robots)
         self.assertIn("Allow: /zh-security.html", robots)
@@ -1023,6 +1028,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(ZH_BUY_PAGE_URL, sitemap)
         self.assertIn(ZH_APPLY_PAGE_URL, sitemap)
         self.assertIn(ZH_STATUS_PAGE_URL, sitemap)
+        self.assertIn(ZH_DOMAIN_EMAIL_PAGE_URL, sitemap)
         self.assertIn(ZH_LIQUIDITY_PAGE_URL, sitemap)
         self.assertIn(ZH_SUPPLY_PAGE_URL, sitemap)
         self.assertIn(ZH_SECURITY_PAGE_URL, sitemap)
@@ -7038,6 +7044,7 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "site" / "status.html",
             ROOT / "site" / "listing-kit.html",
             ROOT / "site" / "domain-email.html",
+            ROOT / "site" / "zh-domain-email.html",
             ROOT / "site" / "domain-email.json",
             ROOT / "site" / "wallet-warning.html",
             ROOT / "site" / "wallet-warning.json",
@@ -7410,6 +7417,7 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "site" / "status.html",
             ROOT / "site" / "listing-kit.html",
             ROOT / "site" / "domain-email.html",
+            ROOT / "site" / "zh-domain-email.html",
             ROOT / "site" / "domain-email.json",
             ROOT / "site" / "wallet-warning.html",
             ROOT / "site" / "wallet-warning.json",
