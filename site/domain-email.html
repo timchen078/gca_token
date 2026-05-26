@@ -371,6 +371,19 @@
         </div>
       </section>
 
+      <section class="section panel" aria-labelledby="worksheetTitle">
+        <p class="eyebrow">DNS Entry Worksheet</p>
+        <h2 id="worksheetTitle">Fields To Fill At The DNS Host</h2>
+        <p class="note">Use this worksheet when the mailbox provider shows DNS instructions. Copy provider values exactly; do not guess mail server hosts, DKIM selectors, or verification strings.</p>
+        <div class="list">
+          <div class="row"><span>MX</span><strong>Type: <code>MX</code>. Name/host: <code>@</code> or <code>gcagochina.com</code>. Value and priority: copy from the provider dashboard. Ready check: MX present for <code>gcagochina.com</code>.</strong></div>
+          <div class="row"><span>SPF</span><strong>Type: <code>TXT</code>. Name/host: <code>@</code> or <code>gcagochina.com</code>. Value source: provider SPF string. Ready check: one root-domain <code>v=spf1</code> TXT record; merge includes instead of creating multiple SPF records.</strong></div>
+          <div class="row"><span>DKIM</span><strong>Type: <code>TXT</code> or <code>CNAME</code>, exactly as the provider requires. Name/host: provider selector such as <code>&lt;selector&gt;._domainkey</code>. Ready check: rerun the DNS checker with <code>--dkim-selector &lt;provider-selector&gt;</code>.</strong></div>
+          <div class="row"><span>DMARC</span><strong>Type: <code>TXT</code>. Name/host: <code>_dmarc</code>. Starter value can use monitoring mode, for example <code>v=DMARC1; p=none;</code>, until delivery is stable. Ready check: DMARC present at <code>_dmarc.gcagochina.com</code>.</strong></div>
+          <div class="row"><span>Evidence</span><strong>After records propagate, save provider status, DNS lookup proof, inbound mail proof, outbound mail proof, and updated support-page proof before BaseScan resubmission.</strong></div>
+        </div>
+      </section>
+
       <section class="section panel" aria-labelledby="snapshotTitle">
         <p class="eyebrow">Live DNS Snapshot</p>
         <h2 id="snapshotTitle">2026-05-26 Read-Only DNS Check</h2>

@@ -26,6 +26,19 @@ Result: `readyForBaseScanEmailEvidence` is false. Public DNS currently reports `
 
 Next owner action: create `support@gcagochina.com` at the chosen mail provider, add the provider MX/SPF/DMARC/DKIM records, rerun the checker with `--dkim-selector <provider-selector>`, then collect inbound and outbound message evidence.
 
+## DNS Entry Worksheet
+
+Use this worksheet when the mail provider shows DNS setup instructions. Copy provider values exactly; do not guess mail server hosts, DKIM selectors, verification strings, or record types.
+
+| Record | Type | Name / Host | Value Source | Ready Check | Common Mistake |
+| --- | --- | --- | --- | --- | --- |
+| MX | `MX` | `@` or `gcagochina.com` | Provider mail server host and priority | `tools/check_domain_email_dns.py` reports MX present | Adding MX under `support.gcagochina.com` instead of the root domain |
+| SPF | `TXT` | `@` or `gcagochina.com` | Provider SPF string merged into one root-domain `v=spf1` TXT record | Checker reports a single SPF record | Publishing multiple SPF TXT records |
+| DKIM | Provider-required `TXT` or `CNAME` | Provider selector, usually `<provider-selector>._domainkey` | Provider DKIM value and exact selector | Checker reports DKIM present with `--dkim-selector <provider-selector>` | Guessing the selector or omitting `_domainkey` |
+| DMARC | `TXT` | `_dmarc` | Provider recommendation or starter monitoring value such as `v=DMARC1; p=none;` | Checker reports DMARC present at `_dmarc.gcagochina.com` | Adding DMARC at the root domain |
+
+After records propagate, save provider status, DNS lookup proof, inbound mail proof, outbound mail proof, and updated support-page proof before BaseScan resubmission.
+
 ## Activation Steps
 
 1. Create the mailbox at the chosen email provider as `support@gcagochina.com`.
