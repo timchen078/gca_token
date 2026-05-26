@@ -474,6 +474,18 @@
         <p class="note">这些命令都是本地或只读检查；不会提交 BaseScan，不会发送邮件，不会写 DNS，不会操作钱包或合约。</p>
       </section>
 
+      <section class="section panel" aria-labelledby="switchPlanTitle">
+        <p class="eyebrow">邮箱切换清单</p>
+        <h2 id="switchPlanTitle">切换官网邮箱前先找全旧邮箱引用</h2>
+        <p class="note"><code>support@gcagochina.com</code> 真的可收可发、证据包通过后，再用这个只读工具扫描官网、launch 资料、docs 和会员后端联系邮箱常量，找出还在使用 <code>GCAgochina@outlook.com</code> 的文件。</p>
+        <div class="list">
+          <div class="row"><span>JSON 清单</span><strong><code>python3 tools/build_domain_email_switch_plan.py --json</code></strong></div>
+          <div class="row"><span>Markdown 清单</span><strong><code>python3 tools/build_domain_email_switch_plan.py --markdown</code></strong></div>
+          <div class="row"><span>保存给自己</span><strong><code>python3 tools/build_domain_email_switch_plan.py --output-json launch/domain_email_switch_plan.json --output-md launch/domain_email_switch_plan.md</code></strong></div>
+          <div class="row"><span>边界</span><strong>这个工具不会改文件、不会发邮件、不会写 DNS、不会提交 BaseScan、不会操作钱包或合约。</strong></div>
+        </div>
+      </section>
+
       <section class="section two" aria-label="复审链接">
         <div class="panel">
           <h2>给自己看的中文入口</h2>
