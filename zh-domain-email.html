@@ -381,6 +381,19 @@
         </div>
       </section>
 
+      <section class="section panel" aria-labelledby="providerTitle">
+        <p class="eyebrow">邮箱服务商选择</p>
+        <h2 id="providerTitle">要选完整邮箱，不要只选收信转发</h2>
+        <p class="note">BaseScan 看重的是官网邮箱、提交邮箱和发件身份一致。因此只让 <code>support@gcagochina.com</code> 收到邮件还不够，还必须能从这个地址对外发信或回复，并通过域名认证。</p>
+        <div class="list">
+          <div class="row"><span>最低可用方案</span><strong>邮箱服务必须支持收信、认证发信、MX、SPF、DKIM、DMARC，并能显示发件人为 <code>support@gcagochina.com</code>。</strong></div>
+          <div class="row"><span>只收不发不够</span><strong>Cloudflare Email Routing 可以做收信转发，但单独使用收信转发不能证明 BaseScan 需要的发件人域名一致。</strong></div>
+          <div class="row"><span>常见完整邮箱</span><strong>Google Workspace、Microsoft 365、Zoho Mail 或其他托管邮箱都可以考虑；关键不是品牌，而是 DNS 通过、收信通过、发信通过。</strong></div>
+          <div class="row"><span>选择规则</span><strong>选最便宜但能真正以 <code>support@gcagochina.com</code> 发信的方案；收发测试没通过前，不要把官网邮箱切过去。</strong></div>
+        </div>
+        <p class="note">官方设置资料：<a href="https://developers.cloudflare.com/email-routing/get-started/" target="_blank" rel="noreferrer">Cloudflare Email Routing</a>、<a href="https://support.google.com/a/answer/9222085" target="_blank" rel="noreferrer">Google Workspace MX</a>、<a href="https://learn.microsoft.com/en-us/microsoft-365/admin/setup/add-domain?view=o365-worldwide" target="_blank" rel="noreferrer">Microsoft 365 自定义域名</a>、<a href="https://www.zoho.com/mail/help/adminconsole/add-domains.html" target="_blank" rel="noreferrer">Zoho Mail 自定义域名</a>。</p>
+      </section>
+
       <section class="section panel" aria-labelledby="dnsTitle">
         <p class="eyebrow">DNS Entry Worksheet</p>
         <h2 id="dnsTitle">DNS 里每一条该填什么</h2>

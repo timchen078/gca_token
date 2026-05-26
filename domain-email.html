@@ -344,6 +344,19 @@
         </div>
       </section>
 
+      <section class="section panel" aria-labelledby="providerTitle">
+        <p class="eyebrow">Provider Selection Gate</p>
+        <h2 id="providerTitle">Choose A Full Mailbox, Not Receive-Only Routing</h2>
+        <p class="note">For BaseScan, the practical requirement is not only receiving mail at the project domain. The owner should be able to send and reply as <code>support@gcagochina.com</code> with authenticated domain mail.</p>
+        <div class="list">
+          <div class="row"><span>Minimum acceptable</span><strong>A hosted mailbox or mail service that supports inbound mail, authenticated outbound sending, MX, SPF, DKIM, and DMARC for <code>gcagochina.com</code>.</strong></div>
+          <div class="row"><span>Receive-only is not enough</span><strong>Cloudflare Email Routing can be useful for forwarding inbound mail, but receive-only forwarding alone does not prove outbound sender alignment for a BaseScan resubmission.</strong></div>
+          <div class="row"><span>Common full-mailbox paths</span><strong>Google Workspace, Microsoft 365, Zoho Mail, or another hosted mailbox provider are acceptable only if the exact provider DNS records pass and outbound replies visibly come from <code>support@gcagochina.com</code>.</strong></div>
+          <div class="row"><span>Decision rule</span><strong>Pick the cheapest option that gives a real mailbox UI or SMTP/API sending path for <code>support@gcagochina.com</code>; do not switch the public site until both receiving and sending tests pass.</strong></div>
+        </div>
+        <p class="note">Reference docs for operator setup: <a href="https://developers.cloudflare.com/email-routing/get-started/" target="_blank" rel="noreferrer">Cloudflare Email Routing</a>, <a href="https://support.google.com/a/answer/9222085" target="_blank" rel="noreferrer">Google Workspace MX setup</a>, <a href="https://learn.microsoft.com/en-us/microsoft-365/admin/setup/add-domain?view=o365-worldwide" target="_blank" rel="noreferrer">Microsoft 365 custom domain setup</a>, and <a href="https://www.zoho.com/mail/help/adminconsole/add-domains.html" target="_blank" rel="noreferrer">Zoho Mail custom domain setup</a>.</p>
+      </section>
+
       <section class="section panel" aria-labelledby="recordsTitle">
         <p class="eyebrow">DNS Record Gate</p>
         <h2 id="recordsTitle">Records To Copy From The Mail Provider</h2>
