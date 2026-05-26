@@ -2,7 +2,7 @@
   "schema": "https://gcagochina.com/reviewer-kit.json",
   "pageUrl": "https://gcagochina.com/reviewer-kit.html",
   "status": "public-reviewer-kit-published",
-  "lastUpdated": "2026-05-25",
+  "lastUpdated": "2026-05-26",
   "projectName": "GCA",
   "conceptExpansion": "Go China Access",
   "network": "Base Mainnet",
@@ -99,10 +99,10 @@
     "baseScanOwnership": "verified",
     "baseScanTokenProfile": "remediation-required-before-next-submission",
     "baseScanTokenProfileResubmissionDate": "2026-05-13",
-    "baseScanDomainEmailGate": "blocked-by-dns-snapshot-2026-05-25",
+    "baseScanDomainEmailGate": "blocked-by-dns-snapshot-2026-05-26",
     "baseScanDomainEmailTarget": "support@gcagochina.com",
     "baseScanDomainEmailDnsSnapshot": {
-      "checkedAt": "2026-05-25T15:04:09Z",
+      "checkedAt": "2026-05-26T08:32:28Z",
       "snapshotPage": "https://gcagochina.com/domain-email.html#snapshotTitle",
       "evidencePacket": "https://gcagochina.com/domain-email.html#evidenceTitle",
       "readyForBaseScanEmailEvidence": false,
@@ -242,7 +242,7 @@
       "Use the reviewer kit page and JSON when a platform asks for centralized public evidence.",
       "If a reviewer asks for local member-ledger evidence, export a public redacted review package and verify its digest before sharing.",
       "Do not send duplicate Blockaid reports unless Blockaid, MetaMask, or Uniswap asks for more information.",
-      "Use the domain email setup plan at https://gcagochina.com/domain-email.html; do not submit another BaseScan token update until the project-domain email is ready; the 2026-05-25 DNS snapshot shows MX/SPF/DMARC missing and DKIM selector required, so readyForBaseScanEmailEvidence is false.",
+      "Use the domain email setup plan at https://gcagochina.com/domain-email.html; do not submit another BaseScan token update until the project-domain email is ready; the 2026-05-26 DNS snapshot shows MX/SPF/DMARC missing and DKIM selector required, so readyForBaseScanEmailEvidence is false.",
       "After support@gcagochina.com is active, archive the activation evidence packet at https://gcagochina.com/domain-email.html#evidenceTitle and include the published Tim Chen professional profile URL when resubmitting.",
       "Keep the official GCA/USDT pool, logo, website, Telegram, X, and JSON links consistent."
     ]
