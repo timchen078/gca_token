@@ -49,6 +49,7 @@ Export the same review package directly from local JSONL data without starting t
 - BaseScan review follow-up: `launch/basescan_review_followup.md`
 - BaseScan resubmission package: `launch/basescan_resubmission_package.md`
 - BaseScan resubmission values: `launch/basescan_resubmission_values.json`
+- Domain email switch plan tool: `tools/build_domain_email_switch_plan.py`
 - Token allocation plan: `launch/token_allocation_plan.md`
 - Liquidity plan: `launch/liquidity_plan.json`
 - Liquidity pool runbook: `launch/liquidity_pool_runbook.md`

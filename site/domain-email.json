@@ -172,6 +172,26 @@
       "does not touch wallets or contracts"
     ]
   },
+  "operatorSwitchPlanBuilder": {
+    "tool": "tools/build_domain_email_switch_plan.py",
+    "command": "python3 tools/build_domain_email_switch_plan.py --json",
+    "ownerArtifactCommand": "python3 tools/build_domain_email_switch_plan.py --output-json launch/domain_email_switch_plan.json --output-md launch/domain_email_switch_plan.md",
+    "purpose": "Find public site, launch, docs, and operator contact files that still reference GCAgochina@outlook.com before switching to support@gcagochina.com after activation.",
+    "runAfter": [
+      "support@gcagochina.com receives external email",
+      "support@gcagochina.com sends authenticated external email",
+      "domain email evidence packet is ready",
+      "BaseScan resubmission preflight is ready"
+    ],
+    "boundaries": [
+      "read-only scan by default",
+      "does not edit files",
+      "does not send email",
+      "does not submit BaseScan request",
+      "does not write DNS records",
+      "does not touch wallets or contracts"
+    ]
+  },
   "baseScanSubmissionPolicy": {
     "nextCleanSubmissionSender": "support@gcagochina.com after activation",
     "doNotResubmitBefore": [

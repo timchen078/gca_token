@@ -109,6 +109,24 @@ python3 tools/build_basescan_submission_package.py --json --require-ready --outp
 
 The final draft builder still does not submit the form. It only produces the local package the owner can copy into one clean BaseScan update.
 
+## Public Email Switch Planner
+
+Before replacing `GCAgochina@outlook.com` across public files, run the read-only switch planner:
+
+```bash
+python3 tools/build_domain_email_switch_plan.py --json
+```
+
+For a copyable owner artifact:
+
+```bash
+python3 tools/build_domain_email_switch_plan.py \
+  --output-json launch/domain_email_switch_plan.json \
+  --output-md launch/domain_email_switch_plan.md
+```
+
+The planner scans public site files, launch materials, docs, and the member backend contact constant for old-email references. It does not edit files, send email, write DNS records, submit BaseScan requests, or touch wallets/contracts. Use it after the evidence packet and BaseScan preflight are ready, then update public support pages first, structured project/listing/reviewer JSON second, BaseScan launch values third, and platform reply templates last.
+
 ## Evidence Packet
 
 Save these owner records before the next BaseScan submission:

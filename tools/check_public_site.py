@@ -789,6 +789,10 @@ def validate_domain_email_page(text: str) -> None:
         "Microsoft 365",
         "Zoho Mail",
         "Ready Means All Four Are True",
+        "Switch Plan Generator",
+        "Find Every Public Email Reference Before Switching",
+        "tools/build_domain_email_switch_plan.py --json",
+        "launch/domain_email_switch_plan.json",
         "Submission policy: send the next clean BaseScan update from",
         "domain email setup plan",
         "support.html",
@@ -811,6 +815,7 @@ def validate_domain_email_json(text: str) -> None:
     snapshot = payload.get("liveDnsSnapshot", {})
     dns_check = payload.get("operatorDnsCheck", {})
     packet_builder = payload.get("operatorEvidencePacketBuilder", {})
+    switch_builder = payload.get("operatorSwitchPlanBuilder", {})
     policy = payload.get("baseScanSubmissionPolicy", {})
     provider = payload.get("mailProviderDecision", {})
     dns = payload.get("dnsChecklist", [])
@@ -876,6 +881,18 @@ def validate_domain_email_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing DNS ready requirement for evidence packet")
     if "does not submit BaseScan request" not in packet_builder.get("boundaries", []):
         raise SiteCheckError(f"{label}: missing packet builder BaseScan boundary")
+    if switch_builder.get("tool") != "tools/build_domain_email_switch_plan.py":
+        raise SiteCheckError(f"{label}: wrong operator switch plan builder")
+    if "--json" not in switch_builder.get("command", ""):
+        raise SiteCheckError(f"{label}: missing switch plan JSON command")
+    if "launch/domain_email_switch_plan.json" not in switch_builder.get("ownerArtifactCommand", ""):
+        raise SiteCheckError(f"{label}: missing switch plan owner artifact")
+    if "GCAgochina@outlook.com" not in switch_builder.get("purpose", ""):
+        raise SiteCheckError(f"{label}: missing current-email switch purpose")
+    if "support@gcagochina.com" not in switch_builder.get("purpose", ""):
+        raise SiteCheckError(f"{label}: missing target-email switch purpose")
+    if "does not edit files" not in switch_builder.get("boundaries", []):
+        raise SiteCheckError(f"{label}: missing switch plan edit boundary")
     if policy.get("nextCleanSubmissionSender") != "support@gcagochina.com after activation":
         raise SiteCheckError(f"{label}: wrong next BaseScan sender policy")
     if "activation evidence packet is archived for owner records" not in policy.get("doNotResubmitBefore", []):
@@ -1488,6 +1505,10 @@ def validate_zh_domain_email_page(text: str) -> None:
         "不会发送邮件",
         "不会写 DNS",
         "不会操作钱包或合约",
+        "邮箱切换清单",
+        "切换官网邮箱前先找全旧邮箱引用",
+        "tools/build_domain_email_switch_plan.py --json",
+        "launch/domain_email_switch_plan.json",
         "中文审核状态",
         "zh-status.html",
         "中文支持",
