@@ -1406,6 +1406,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("2026-05-26 DNS snapshot", page)
         self.assertIn("MX / SPF / DMARC missing", page)
         self.assertIn("DKIM selector required", page)
+        self.assertIn("DNS Entry Worksheet", page)
+        self.assertIn("DNS Worksheet", page)
+        self.assertIn("domain-email.html#worksheetTitle", page)
         self.assertIn("Professional profile", page)
         self.assertIn("No. Professional profile evidence is published; fix domain email DNS and evidence before the next submission.", page)
         self.assertIn("Current email blocker", page)
@@ -1435,12 +1438,14 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(data["officialIdentity"]["team"], TEAM_PAGE_URL)
         self.assertEqual(data["officialIdentity"]["timChenProfessionalProfile"], TIM_CHEN_PROFILE_PAGE_URL)
         self.assertEqual(data["officialIdentity"]["domainEmailSetupPlan"], DOMAIN_EMAIL_PAGE_URL)
+        self.assertEqual(data["officialIdentity"]["domainEmailDnsWorksheet"], f"{DOMAIN_EMAIL_PAGE_URL}#worksheetTitle")
         self.assertEqual(data["officialIdentity"]["domainEmailSetupPlanData"], DOMAIN_EMAIL_URL)
         self.assertEqual(data["officialIdentity"]["platformRepliesPage"], PLATFORM_REPLIES_PAGE_URL)
         self.assertEqual(data["officialIdentity"]["platformRepliesData"], PLATFORM_REPLIES_URL)
         self.assertEqual(data["officialIdentity"]["github"], GITHUB_REPO_URL)
         self.assertTrue(data["currentEmailState"]["domainEmailRecommendedBeforeNextSubmission"])
         self.assertEqual(data["currentEmailState"]["domainEmailSetupPlan"], DOMAIN_EMAIL_PAGE_URL)
+        self.assertEqual(data["currentEmailState"]["domainEmailDnsWorksheet"], f"{DOMAIN_EMAIL_PAGE_URL}#worksheetTitle")
         self.assertEqual(data["currentEmailState"]["domainEmailSetupPlanData"], DOMAIN_EMAIL_URL)
         self.assertEqual(data["currentEmailState"]["latestDnsSnapshot"]["checkedAt"], "2026-05-26T08:32:28Z")
         self.assertFalse(data["currentEmailState"]["latestDnsSnapshot"]["readyForBaseScanEmailEvidence"])
@@ -1468,6 +1473,10 @@ class LaunchPackageTests(unittest.TestCase):
         )
         self.assertIn(
             "Fix the 2026-05-26 DNS snapshot blockers",
+            " ".join(data["nextSubmissionGate"]["requiredBeforeReady"]),
+        )
+        self.assertIn(
+            "DNS Entry Worksheet",
             " ".join(data["nextSubmissionGate"]["requiredBeforeReady"]),
         )
 

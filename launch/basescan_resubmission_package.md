@@ -27,6 +27,7 @@ This package records the current BaseScan token information remediation state. T
 - Tim Chen profile data: `https://gcagochina.com/tim-chen.json`
 - Domain email setup plan: `https://gcagochina.com/domain-email.html`
 - Domain email setup JSON and evidence packet: `https://gcagochina.com/domain-email.json`
+- Domain email DNS worksheet: `https://gcagochina.com/domain-email.html#worksheetTitle`
 - Domain email DNS snapshot: `https://gcagochina.com/domain-email.html#snapshotTitle`
 - BaseScan remediation: `https://gcagochina.com/basescan-remediation.html`
 - BaseScan remediation JSON: `https://gcagochina.com/basescan-remediation.json`
@@ -52,7 +53,7 @@ This package records the current BaseScan token information remediation state. T
 
 ## Owner-Required Fixes Before The Next Submission
 
-1. Use the published domain email setup plan at `https://gcagochina.com/domain-email.html`, then create and test a working `gcagochina.com` domain email such as `support@gcagochina.com`, `hello@gcagochina.com`, or `team@gcagochina.com`.
+1. Use the published domain email setup plan at `https://gcagochina.com/domain-email.html` and the DNS Entry Worksheet at `https://gcagochina.com/domain-email.html#worksheetTitle`, then create and test a working `gcagochina.com` domain email such as `support@gcagochina.com`, `hello@gcagochina.com`, or `team@gcagochina.com`.
 2. Follow `launch/domain_email_activation_runbook.md`.
 3. Fix the current 2026-05-26 DNS snapshot blockers: MX/SPF/DMARC missing and DKIM selector required.
 4. Run `python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox support --dkim-selector <provider-selector> --json` and confirm `readyForBaseScanEmailEvidence` is true.

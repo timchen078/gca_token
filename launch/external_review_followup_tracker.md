@@ -34,6 +34,7 @@ Use this file as the single operating checklist for external review, wallet-warn
 - Tim Chen professional profile JSON: `https://gcagochina.com/tim-chen.json`
 - Domain email setup plan: `https://gcagochina.com/domain-email.html`
 - Domain email setup JSON: `https://gcagochina.com/domain-email.json`
+- Domain email DNS worksheet: `https://gcagochina.com/domain-email.html#worksheetTitle`
 - Domain email DNS snapshot: `https://gcagochina.com/domain-email.html#snapshotTitle`
 - Domain email activation evidence packet: `https://gcagochina.com/domain-email.html#evidenceTitle`
 - BaseScan remediation page: `https://gcagochina.com/basescan-remediation.html`
@@ -62,7 +63,7 @@ Use this file as the single operating checklist for external review, wallet-warn
 
 ## BaseScan Review Check
 
-1. Use the domain email setup plan at `https://gcagochina.com/domain-email.html`, then create and test a working `gcagochina.com` domain email such as `support@gcagochina.com`.
+1. Use the domain email setup plan at `https://gcagochina.com/domain-email.html` and the DNS Entry Worksheet at `https://gcagochina.com/domain-email.html#worksheetTitle`, then create and test a working `gcagochina.com` domain email such as `support@gcagochina.com`.
 2. Follow `launch/domain_email_activation_runbook.md`.
 3. Review the current DNS snapshot at `https://gcagochina.com/domain-email.html#snapshotTitle`: MX/SPF/DMARC missing and DKIM selector required as of 2026-05-26.
 4. Run `python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox support --dkim-selector <provider-selector> --json` and confirm `readyForBaseScanEmailEvidence` is true.
@@ -123,6 +124,7 @@ Team profile: https://gcagochina.com/team.html
 Tim Chen professional profile: https://gcagochina.com/tim-chen.html
 Domain email setup plan: https://gcagochina.com/domain-email.html
 Domain email setup data: https://gcagochina.com/domain-email.json
+Domain email DNS worksheet: https://gcagochina.com/domain-email.html#worksheetTitle
 Latest DNS snapshot: https://gcagochina.com/domain-email.html#snapshotTitle
 Domain email activation evidence packet: https://gcagochina.com/domain-email.html#evidenceTitle
 BaseScan remediation: https://gcagochina.com/basescan-remediation.html
