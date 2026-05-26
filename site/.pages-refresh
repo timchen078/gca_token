@@ -1,0 +1,2 @@
+published-from-main: pending
+purpose: trigger GCA Pages publish workflow after domain email provider matrix update
