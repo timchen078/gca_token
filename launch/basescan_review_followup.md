@@ -28,6 +28,8 @@ BaseScan replied that it could not process the token update request because the 
 - Run `python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox support --dkim-selector <provider-selector> --json` and confirm `readyForBaseScanEmailEvidence` is true
 - Archive the domain email activation evidence packet: provider active screenshot, DNS proof, inbound test, outbound test, and updated support-page screenshot
 - Tim Chen professional profile remains live: `https://gcagochina.com/tim-chen.html`
+- Tim Chen profile data remains live: `https://gcagochina.com/tim-chen.json`
+- Team founder anchor remains live: `https://gcagochina.com/team.html#tim-chen`
 - Domain email setup plan remains live: `https://gcagochina.com/domain-email.html`
 - Domain email setup JSON remains live: `https://gcagochina.com/domain-email.json`
 - Add LinkedIn later only if BaseScan specifically requires a third-party social-network profile
@@ -74,7 +76,7 @@ BaseScan replied that it could not process the token update request because the 
 
 Use this until approval:
 
-`BaseScan source verification and deployer-wallet ownership verification are complete. The public BaseScan token profile update was returned again as information-insufficient on 2026-05-23. The profile is not approved or published. Tim Chen public professional profile evidence is now published at https://gcagochina.com/tim-chen.html; the latest 2026-05-25 DNS snapshot at https://gcagochina.com/domain-email.html#snapshotTitle shows MX/SPF/DMARC missing and DKIM selector required, so readyForBaseScanEmailEvidence is false; the domain email activation evidence packet is defined at https://gcagochina.com/domain-email.html#evidenceTitle. The next submission should wait until a working project-domain email is ready.`
+`BaseScan source verification and deployer-wallet ownership verification are complete. The public BaseScan token profile update was returned again as information-insufficient on 2026-05-23. The profile is not approved or published. Tim Chen public professional profile evidence is now published at https://gcagochina.com/tim-chen.html with team, GitHub, X, Telegram, and structured profile-data links for reviewer due diligence; the latest 2026-05-25 DNS snapshot at https://gcagochina.com/domain-email.html#snapshotTitle shows MX/SPF/DMARC missing and DKIM selector required, so readyForBaseScanEmailEvidence is false; the domain email activation evidence packet is defined at https://gcagochina.com/domain-email.html#evidenceTitle. The next submission should wait until a working project-domain email is ready.`
 
 Do not use:
 
@@ -109,6 +111,7 @@ Brand kit: https://gcagochina.com/brand-kit.html
 Whitepaper: https://gcagochina.com/whitepaper.html
 External review status: https://gcagochina.com/external-reviews.html
 Tim Chen professional profile: https://gcagochina.com/tim-chen.html
+Tim Chen profile data: https://gcagochina.com/tim-chen.json
 Domain email setup plan: https://gcagochina.com/domain-email.html
 Domain email setup data: https://gcagochina.com/domain-email.json
 Latest DNS snapshot: https://gcagochina.com/domain-email.html#snapshotTitle

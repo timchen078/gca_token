@@ -702,7 +702,8 @@ def validate_tim_chen_profile_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != TIM_CHEN_PROFILE_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
-    if payload.get("lastUpdated") != "2026-05-23":
+    last_updated = payload.get("lastUpdated")
+    if last_updated not in {"2026-05-23", "2026-05-26"}:
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("status") != "official-domain-professional-profile-published":
         raise SiteCheckError(f"{label}: wrong status")
@@ -724,6 +725,14 @@ def validate_tim_chen_profile_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong professionalProfile")
     if links.get("githubRepository") != GITHUB_REPO_URL:
         raise SiteCheckError(f"{label}: wrong GitHub repository")
+    packet = payload.get("baseScanFounderEvidencePacket")
+    if last_updated == "2026-05-26":
+        if not isinstance(packet, dict) or packet.get("namedFounder") != "Tim Chen":
+            raise SiteCheckError(f"{label}: missing founder evidence packet")
+        evidence_links = packet.get("evidenceLinks", [])
+        for expected_link in (TIM_CHEN_PROFILE_PAGE_URL, f"{TEAM_PAGE_URL}#tim-chen", GITHUB_REPO_URL):
+            if expected_link not in evidence_links:
+                raise SiteCheckError(f"{label}: missing founder evidence link {expected_link}")
     if reviewer.get("linkedinStillStrongerIfRequired") is not True:
         raise SiteCheckError(f"{label}: missing LinkedIn caveat")
     if "BaseScan token profile" not in reviewer.get("baseScanUse", ""):

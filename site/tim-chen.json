@@ -1,7 +1,7 @@
 {
   "schema": "https://gcagochina.com/tim-chen.json",
   "pageUrl": "https://gcagochina.com/tim-chen.html",
-  "lastUpdated": "2026-05-23",
+  "lastUpdated": "2026-05-26",
   "status": "official-domain-professional-profile-published",
   "profileType": "official-domain-equivalent-public-professional-profile",
   "person": {
@@ -39,6 +39,25 @@
     "officialX": "https://x.com/GCAAIGoChina",
     "officialTelegram": "https://t.me/gcagochinaofficial"
   },
+  "baseScanFounderEvidencePacket": {
+    "purpose": "Direct founder and team transparency evidence for BaseScan token-profile review.",
+    "namedFounder": "Tim Chen",
+    "publicRole": "Founder, CEO, and Project Lead for GCA | Go China Access",
+    "roleScope": [
+      "GCA token identity and official website",
+      "member access roadmap and release gates",
+      "public reviewer responses and documentation",
+      "community communications for official GCA channels"
+    ],
+    "evidenceLinks": [
+      "https://gcagochina.com/tim-chen.html",
+      "https://gcagochina.com/team.html#tim-chen",
+      "https://github.com/timchen078/gca_token",
+      "https://x.com/GCAAIGoChina",
+      "https://t.me/gcagochinaofficial"
+    ],
+    "reviewerWording": "Use https://gcagochina.com/tim-chen.html as the official-domain equivalent public professional profile for Tim Chen's GCA founder / CEO / project lead role. Add LinkedIn later only if a platform specifically requires a third-party social-network profile."
+  },
   "reviewerUse": {
     "baseScanUse": "Use this page as Tim Chen public professional profile evidence for founder and team transparency in the next BaseScan token profile update.",
     "machineReadableUse": "Use this JSON only when a reviewer or platform asks for structured public profile data.",
@@ -48,7 +67,7 @@
   "disclosureBoundaries": [
     "This page does not claim BaseScan token profile approval.",
     "This page does not claim a completed third-party audit.",
-        "This page does not claim promised investment performance, price support, deep liquidity, LP lock, reserve lock, or multisig custody.",
+    "This page does not claim promised investment performance, price support, deep liquidity, LP lock, reserve lock, or multisig custody.",
     "This page does not request private keys, seed phrases, exchange API secrets, withdrawal permissions, custody, one-time codes, or remote-control access."
   ]
 }
