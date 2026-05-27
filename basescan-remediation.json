@@ -42,7 +42,7 @@
     "domainEmailSetupPlanData": "https://gcagochina.com/domain-email.json",
     "domainEmailRecommendedBeforeNextSubmission": true,
     "latestDnsSnapshot": {
-      "checkedAt": "2026-05-27T07:30:47Z",
+      "checkedAt": "2026-05-27T11:36:50Z",
       "readyForBaseScanEmailEvidence": false,
       "missingOrBlockedChecks": [
         "mx",
