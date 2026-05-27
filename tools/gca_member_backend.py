@@ -84,11 +84,7 @@ OPERATOR_ACTION_PLAN_VERSION = "gca_operator_action_plan_v1"
 DOMAIN_EMAIL_EVIDENCE_PACKET_COMMAND = (
     ".venv/bin/python tools/build_domain_email_evidence_packet.py "
     "--dkim-selector PROVIDER_SELECTOR "
-    "--provider-active domain-email-provider-active.png "
-    "--dns-proof domain-email-dns-mx-spf-dkim-dmarc.txt "
-    "--inbound-test domain-email-inbound-test.png "
-    "--outbound-test domain-email-outbound-test.png "
-    "--support-page-proof support-page-domain-email.png "
+    "--evidence-dir launch/domain_email_evidence "
     "--website-email-updated "
     "--output-json launch/domain_email_evidence_packet.json "
     "--output-md launch/domain_email_evidence_packet.md "
@@ -1428,7 +1424,7 @@ class GcaMemberBackend:
                     "build-domain-email-evidence-packet",
                     "medium",
                     "Build domain email evidence packet",
-                    "After mailbox DNS and send/receive tests pass, archive provider-active, DNS proof, inbound test, outbound test, and support-page proof references into the local evidence packet before any BaseScan resubmission.",
+                    "After mailbox DNS and send/receive tests pass, save the five evidence files under launch/domain_email_evidence, then build the local evidence packet before any BaseScan resubmission.",
                     "domain-email-evidence-packet",
                     DOMAIN_EMAIL_EVIDENCE_PACKET_COMMAND,
                 )

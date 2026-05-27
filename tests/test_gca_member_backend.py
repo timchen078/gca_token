@@ -520,8 +520,7 @@ class GcaMemberBackendTests(unittest.TestCase):
         self.assertIn("check_domain_email_dns.py", action_by_id["activate-domain-email-evidence"]["command"])
         evidence_command = action_by_id["build-domain-email-evidence-packet"]["command"]
         self.assertIn("build_domain_email_evidence_packet.py", evidence_command)
-        self.assertIn("--provider-active", evidence_command)
-        self.assertIn("--inbound-test", evidence_command)
+        self.assertIn("--evidence-dir launch/domain_email_evidence", evidence_command)
         self.assertIn("launch/domain_email_evidence_packet.json", evidence_command)
         self.assertIn("check_domain_email_public_switch.py", action_by_id["complete-public-email-switch"]["command"])
         self.assertTrue(plan["supportReviewPreview"])

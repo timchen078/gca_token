@@ -23,6 +23,7 @@ except ModuleNotFoundError:  # pragma: no cover - used when running from tools/
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_CONFIG_PATH = ROOT / "site" / "domain-email.json"
+DEFAULT_EVIDENCE_DIR = ROOT / "launch" / "domain_email_evidence"
 
 EVIDENCE_FIELDS = (
     (
@@ -71,6 +72,31 @@ def load_json_file(path: Path) -> dict[str, Any]:
 
 def clean_reference(value: str | None) -> str:
     return (value or "").strip()
+
+
+def display_path(path: Path) -> str:
+    try:
+        return path.resolve().relative_to(ROOT).as_posix()
+    except ValueError:
+        return path.as_posix()
+
+
+def build_references_from_evidence_dir(evidence_dir: Path) -> dict[str, str]:
+    references: dict[str, str] = {}
+    for key, _label, recommended_filename in EVIDENCE_FIELDS:
+        candidate = evidence_dir / recommended_filename
+        if candidate.is_file():
+            references[key] = display_path(candidate)
+    return references
+
+
+def merge_evidence_references(cli_references: dict[str, str], evidence_dir: Path | None) -> dict[str, str]:
+    references = build_references_from_evidence_dir(evidence_dir) if evidence_dir else {}
+    for key, value in cli_references.items():
+        cleaned = clean_reference(value)
+        if cleaned:
+            references[key] = cleaned
+    return references
 
 
 def build_manual_evidence(references: dict[str, str]) -> list[dict[str, Any]]:
@@ -212,6 +238,14 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--inbound-test", default="", help="Evidence reference for inbound mail test.")
     parser.add_argument("--outbound-test", default="", help="Evidence reference for outbound mail test.")
     parser.add_argument("--support-page-proof", default="", help="Evidence reference for updated support page proof.")
+    parser.add_argument(
+        "--evidence-dir",
+        default="",
+        help=(
+            "Optional directory containing the five recommended evidence files. "
+            f"Defaults can be placed under {DEFAULT_EVIDENCE_DIR.relative_to(ROOT).as_posix()}."
+        ),
+    )
     parser.add_argument("--website-email-updated", action="store_true", help="Confirm public website email now matches target.")
     parser.add_argument("--output-json", default="", help="Write packet JSON to this path.")
     parser.add_argument("--output-md", default="", help="Write packet Markdown to this path.")
@@ -234,13 +268,14 @@ def main(argv: list[str] | None = None) -> int:
                 dkim_selector=args.dkim_selector,
                 timeout=args.timeout,
             )
-        manual_evidence = build_manual_evidence({
+        evidence_references = merge_evidence_references({
             "providerActive": args.provider_active,
             "dnsProof": args.dns_proof,
             "inboundTest": args.inbound_test,
             "outboundTest": args.outbound_test,
             "supportPageProof": args.support_page_proof,
-        })
+        }, Path(args.evidence_dir) if args.evidence_dir else None)
+        manual_evidence = build_manual_evidence(evidence_references)
         packet = build_packet(
             domain_email_config=config,
             dns_result=dns_result,

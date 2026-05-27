@@ -179,7 +179,7 @@ def build_packet(
         "records": records,
         "nextCommandsAfterDnsEntry": [
             "python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox support --dkim-selector <provider-selector> --json",
-            "python3 tools/build_domain_email_evidence_packet.py --dkim-selector <provider-selector> --provider-active domain-email-provider-active.png --dns-proof domain-email-dns-mx-spf-dkim-dmarc.txt --inbound-test domain-email-inbound-test.png --outbound-test domain-email-outbound-test.png --support-page-proof support-page-domain-email.png --website-email-updated --output-json launch/domain_email_evidence_packet.json --output-md launch/domain_email_evidence_packet.md",
+            "python3 tools/build_domain_email_evidence_packet.py --dkim-selector <provider-selector> --evidence-dir launch/domain_email_evidence --website-email-updated --output-json launch/domain_email_evidence_packet.json --output-md launch/domain_email_evidence_packet.md",
             "python3 tools/check_basescan_resubmission_readiness.py --json --require-ready",
         ],
         "boundaries": {

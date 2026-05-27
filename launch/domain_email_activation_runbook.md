@@ -115,16 +115,12 @@ python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox suppor
 
 ## Local Evidence Packet Builder
 
-After DNS and manual email tests are complete, build a local packet for owner records:
+After DNS and manual email tests are complete, save the five proof files under `launch/domain_email_evidence`, then build a local packet for owner records:
 
 ```bash
 python3 tools/build_domain_email_evidence_packet.py \
   --dkim-selector <provider-selector> \
-  --provider-active domain-email-provider-active.png \
-  --dns-proof domain-email-dns-mx-spf-dkim-dmarc.txt \
-  --inbound-test domain-email-inbound-test.png \
-  --outbound-test domain-email-outbound-test.png \
-  --support-page-proof support-page-domain-email.png \
+  --evidence-dir launch/domain_email_evidence \
   --website-email-updated \
   --output-json launch/domain_email_evidence_packet.json \
   --output-md launch/domain_email_evidence_packet.md
@@ -179,11 +175,13 @@ The same public switch gate is now included in `tools/check_basescan_resubmissio
 
 Save these owner records before the next BaseScan submission:
 
-- `domain-email-provider-active.png`: provider dashboard showing `support@gcagochina.com` as active or verified.
-- `domain-email-dns-mx-spf-dkim-dmarc.txt`: output from the DNS checker or equivalent DNS lookup proof.
-- `domain-email-inbound-test.png`: inbound message received at `support@gcagochina.com`.
-- `domain-email-outbound-test.png`: outbound reply from `support@gcagochina.com` showing the visible sender.
-- `support-page-domain-email.png`: official support page showing the same domain email used in the BaseScan form.
+Save all five files in `launch/domain_email_evidence`:
+
+- `launch/domain_email_evidence/domain-email-provider-active.png`: provider dashboard showing `support@gcagochina.com` as active or verified.
+- `launch/domain_email_evidence/domain-email-dns-mx-spf-dkim-dmarc.txt`: output from the DNS checker or equivalent DNS lookup proof.
+- `launch/domain_email_evidence/domain-email-inbound-test.png`: inbound message received at `support@gcagochina.com`.
+- `launch/domain_email_evidence/domain-email-outbound-test.png`: outbound reply from `support@gcagochina.com` showing the visible sender.
+- `launch/domain_email_evidence/support-page-domain-email.png`: official support page showing the same domain email used in the BaseScan form.
 
 The DNS checker is read-only. It does not send email, submit BaseScan requests, write files by itself, print secrets, or touch wallets/contracts.
 The packet builder writes only local owner evidence files when `--output-json` or `--output-md` is provided.

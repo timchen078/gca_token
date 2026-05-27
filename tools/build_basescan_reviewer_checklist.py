@@ -164,7 +164,7 @@ def build_checklist(
         "checklist": items,
         "preflightCommands": [
             "python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox support --dkim-selector <provider-selector> --json",
-            "python3 tools/build_domain_email_evidence_packet.py --dkim-selector <provider-selector> --website-email-updated --output-json launch/domain_email_evidence_packet.json --output-md launch/domain_email_evidence_packet.md",
+            "python3 tools/build_domain_email_evidence_packet.py --dkim-selector <provider-selector> --evidence-dir launch/domain_email_evidence --website-email-updated --output-json launch/domain_email_evidence_packet.json --output-md launch/domain_email_evidence_packet.md",
             "python3 tools/build_domain_email_switch_plan.py --json",
             "python3 tools/check_basescan_resubmission_readiness.py --json --require-ready",
             "python3 tools/build_basescan_submission_package.py --json --require-ready --output-json launch/basescan_final_submission_package.json --output-md launch/basescan_final_submission_package.md",
