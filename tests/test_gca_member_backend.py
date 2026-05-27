@@ -513,6 +513,11 @@ class GcaMemberBackendTests(unittest.TestCase):
         self.assertIn("review-pending-reserve-transfers", item_ids)
         self.assertIn("review-holding-ready-wallets", item_ids)
         self.assertIn("complete-basescan-preflight", item_ids)
+        self.assertIn("activate-domain-email-evidence", item_ids)
+        self.assertIn("complete-public-email-switch", item_ids)
+        action_by_id = {item["id"]: item for item in plan["items"]}
+        self.assertIn("check_domain_email_dns.py", action_by_id["activate-domain-email-evidence"]["command"])
+        self.assertIn("check_domain_email_public_switch.py", action_by_id["complete-public-email-switch"]["command"])
         self.assertTrue(plan["supportReviewPreview"])
         self.assertEqual(plan["supportReviewPreview"][0]["memberLedgerId"], response["memberLedger"]["memberLedgerId"])
         self.assertFalse(plan["boundaries"]["writesProductionData"])
@@ -818,6 +823,8 @@ class GcaMemberBackendTests(unittest.TestCase):
             self.assertTrue(action_plan["sourceStatus"]["operatorDigestAvailable"])
             self.assertTrue(any(item["id"] == "review-support-replies" for item in action_plan["items"]))
             self.assertTrue(any(item["id"] == "complete-basescan-preflight" for item in action_plan["items"]))
+            self.assertTrue(any(item["id"] == "activate-domain-email-evidence" for item in action_plan["items"]))
+            self.assertTrue(any(item["id"] == "complete-public-email-switch" for item in action_plan["items"]))
             self.assertFalse(action_plan["boundaries"]["automaticTokenTransfer"])
 
             review_request = Request(

@@ -1390,6 +1390,7 @@ class GcaMemberBackend:
                 for item in base_scan.get("missingOrBlockedRequirements", [])
                 if str(item or "").strip()
             ]
+            blocker_ids = {item for item in blockers if item}
             blocker_text = ", ".join(blockers[:5]) if blockers else "see BaseScan preflight summary"
             old_email_files = safe_operator_int(base_scan.get("filesStillUsingOldEmail"))
             suffix = f" Public switch still has {old_email_files} old-email file(s)." if old_email_files else ""
@@ -1401,6 +1402,27 @@ class GcaMemberBackend:
                 "basescan-preflight",
                 ".venv/bin/python tools/check_basescan_resubmission_readiness.py --skip-url-checks --json",
             )
+            if blocker_ids.intersection({"official-domain-email", "domain-email-evidence-packet", "next-submission-ready-flag"}):
+                add_item(
+                    "activate-domain-email-evidence",
+                    "medium",
+                    "Activate domain email evidence",
+                    "Create and test the project-domain support mailbox, complete MX/SPF/DKIM/DMARC readiness, and archive provider, inbound, outbound, and support-page evidence before the next BaseScan resubmission.",
+                    "domain-email",
+                    ".venv/bin/python tools/check_domain_email_dns.py --domain gcagochina.com --mailbox support --dkim-selector PROVIDER_SELECTOR --json",
+                )
+            if (
+                old_email_files
+                or blocker_ids.intersection({"domain-email-public-switch-check", "domain-email-public-switch-old-email"})
+            ):
+                add_item(
+                    "complete-public-email-switch",
+                    "medium",
+                    "Complete public email switch",
+                    "After the domain mailbox evidence is ready, switch critical public, support, and BaseScan files to the project-domain mailbox and rerun the public switch checker.",
+                    "domain-email-public-switch",
+                    ".venv/bin/python tools/check_domain_email_public_switch.py --json --require-switched",
+                )
 
         reply_ready = safe_operator_int(
             (digest.get("supportQueue") or {}).get("replyReadyRows")
