@@ -18,6 +18,7 @@
       "support@gcagochina.com can receive external email",
       "support@gcagochina.com can send authenticated external email",
       "public website pages show the same domain email used in the BaseScan request",
+      "tools/check_domain_email_public_switch.py --json --require-switched passes",
       "BaseScan resubmission includes https://gcagochina.com/tim-chen.html"
     ]
   },
@@ -255,6 +256,10 @@
       "any critical file still contains GCAgochina@outlook.com",
       "any critical file is missing support@gcagochina.com after the switch",
       "any critical file listed in filesToUpdateAfterActivation is missing"
+    ],
+    "enforcedBy": [
+      "tools/check_basescan_resubmission_readiness.py",
+      "tools/build_basescan_submission_package.py"
     ],
     "boundaries": [
       "read-only check",
