@@ -88,6 +88,32 @@
             "does not touch wallets or contracts"
         ]
     },
+    "operatorDnsEntryPacketBuilder": {
+        "tool": "tools/build_domain_email_dns_entry_packet.py",
+        "commandTemplate": "python3 tools/build_domain_email_dns_entry_packet.py --provider <provider-name> --mx \"10 <provider-mx>\" --spf \"v=spf1 include:<provider> ~all\" --dkim-selector <provider-selector> --dkim-type TXT --dkim-value \"<provider-dkim-value>\" --dmarc \"v=DMARC1; p=none;\" --output-json launch/domain_email_dns_entry_packet.json --output-md launch/domain_email_dns_entry_packet.md",
+        "purpose": "Convert provider-supplied MX, SPF, DKIM, and DMARC values into a local copyable DNS worksheet before the owner enters records at the DNS host.",
+        "runAfter": [
+            "mail provider purchase",
+            "provider dashboard shows exact MX/SPF/DKIM/DMARC values"
+        ],
+        "runBefore": [
+            "DNS record entry",
+            "tools/check_domain_email_dns.py",
+            "domain email evidence packet",
+            "BaseScan resubmission preflight"
+        ],
+        "outputs": [
+            "launch/domain_email_dns_entry_packet.json",
+            "launch/domain_email_dns_entry_packet.md"
+        ],
+        "boundaries": [
+            "does not write DNS records",
+            "does not send email",
+            "does not submit BaseScan request",
+            "does not touch wallets or contracts",
+            "does not store secrets"
+        ]
+    },
     "dnsEntryWorksheet": [
         {
             "record": "MX",

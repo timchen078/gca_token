@@ -62,6 +62,25 @@ Use the matrix to separate full mailbox options from incomplete paths. The recom
 
 The matrix does not fetch live prices, write DNS records, send email, submit BaseScan requests, store secrets, or touch wallets/contracts.
 
+## DNS Entry Packet Builder
+
+After the provider dashboard shows the exact DNS records, generate a local copyable packet before entering records at the DNS host:
+
+```bash
+python3 tools/build_domain_email_dns_entry_packet.py \
+  --provider <provider-name> \
+  --mx "10 <provider-mx>" \
+  --spf "v=spf1 include:<provider> ~all" \
+  --dkim-selector <provider-selector> \
+  --dkim-type TXT \
+  --dkim-value "<provider-dkim-value>" \
+  --dmarc "v=DMARC1; p=none;" \
+  --output-json launch/domain_email_dns_entry_packet.json \
+  --output-md launch/domain_email_dns_entry_packet.md
+```
+
+Use the provider's exact values. The packet builder validates basic format, creates `launch/domain_email_dns_entry_packet.json` and `launch/domain_email_dns_entry_packet.md`, and still does not write DNS records, send email, submit BaseScan requests, store secrets, or touch wallets/contracts.
+
 ## DNS Entry Worksheet
 
 Use this worksheet when the mail provider shows DNS setup instructions. Copy provider values exactly; do not guess mail server hosts, DKIM selectors, verification strings, or record types.

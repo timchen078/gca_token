@@ -479,6 +479,7 @@
         <p class="eyebrow">本地检查命令</p>
         <h2 id="toolsTitle">证据完成后再跑这些</h2>
         <div class="list">
+          <div class="row"><span>DNS 录入包</span><strong><code>python3 tools/build_domain_email_dns_entry_packet.py --provider &lt;provider-name&gt; --mx "10 &lt;provider-mx&gt;" --spf "v=spf1 include:&lt;provider&gt; ~all" --dkim-selector &lt;provider-selector&gt; --dkim-type TXT --dkim-value "&lt;provider-dkim-value&gt;" --dmarc "v=DMARC1; p=none;" --output-json launch/domain_email_dns_entry_packet.json --output-md launch/domain_email_dns_entry_packet.md</code></strong></div>
           <div class="row"><span>DNS 只读检查</span><strong><code>python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox support --dkim-selector &lt;provider-selector&gt; --json</code></strong></div>
           <div class="row"><span>证据包生成</span><strong><code>python3 tools/build_domain_email_evidence_packet.py --dkim-selector &lt;provider-selector&gt; --website-email-updated --output-json launch/domain_email_evidence_packet.json --output-md launch/domain_email_evidence_packet.md</code></strong></div>
           <div class="row"><span>BaseScan 预检</span><strong><code>python3 tools/check_basescan_resubmission_readiness.py --json --require-ready</code></strong></div>

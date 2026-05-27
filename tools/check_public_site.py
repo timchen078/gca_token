@@ -792,6 +792,9 @@ def validate_domain_email_page(text: str) -> None:
         "Pick The Lowest-Cost Full Mailbox That Passes Evidence Gates",
         "tools/build_domain_email_provider_matrix.py --markdown",
         "launch/domain_email_provider_matrix.json",
+        "DNS Entry Packet Builder",
+        "tools/build_domain_email_dns_entry_packet.py",
+        "launch/domain_email_dns_entry_packet.json",
         "Cloudflare Email Routing only",
         "Ready Means All Four Are True",
         "Switch Plan Generator",
@@ -821,6 +824,7 @@ def validate_domain_email_json(text: str) -> None:
     dns_check = payload.get("operatorDnsCheck", {})
     packet_builder = payload.get("operatorEvidencePacketBuilder", {})
     provider_matrix = payload.get("operatorProviderMatrixBuilder", {})
+    dns_entry_builder = payload.get("operatorDnsEntryPacketBuilder", {})
     switch_builder = payload.get("operatorSwitchPlanBuilder", {})
     policy = payload.get("baseScanSubmissionPolicy", {})
     provider = payload.get("mailProviderDecision", {})
@@ -885,6 +889,20 @@ def validate_domain_email_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing provider matrix price boundary")
     if "does not submit BaseScan request" not in provider_matrix.get("boundaries", []):
         raise SiteCheckError(f"{label}: missing provider matrix BaseScan boundary")
+    if dns_entry_builder.get("tool") != "tools/build_domain_email_dns_entry_packet.py":
+        raise SiteCheckError(f"{label}: wrong DNS entry packet builder")
+    if "launch/domain_email_dns_entry_packet.json" not in dns_entry_builder.get("commandTemplate", ""):
+        raise SiteCheckError(f"{label}: missing DNS entry packet JSON output")
+    if "provider-supplied MX, SPF, DKIM, and DMARC values" not in dns_entry_builder.get("purpose", ""):
+        raise SiteCheckError(f"{label}: missing DNS entry packet purpose")
+    if "provider dashboard shows exact MX/SPF/DKIM/DMARC values" not in dns_entry_builder.get("runAfter", []):
+        raise SiteCheckError(f"{label}: missing DNS entry packet run-after gate")
+    if "DNS record entry" not in dns_entry_builder.get("runBefore", []):
+        raise SiteCheckError(f"{label}: missing DNS entry packet run-before gate")
+    if "does not write DNS records" not in dns_entry_builder.get("boundaries", []):
+        raise SiteCheckError(f"{label}: missing DNS entry packet DNS-write boundary")
+    if "does not store secrets" not in dns_entry_builder.get("boundaries", []):
+        raise SiteCheckError(f"{label}: missing DNS entry packet secrets boundary")
     if "Mail provider dashboard shows support@gcagochina.com as verified or active" not in evidence.get("requiredEvidence", []):
         raise SiteCheckError(f"{label}: missing provider-status evidence")
     if "domain-email-dns-mx-spf-dkim-dmarc.txt" not in evidence.get("recommendedFilenames", []):
@@ -1537,6 +1555,8 @@ def validate_zh_domain_email_page(text: str) -> None:
         "先选能通过证据门槛的低成本完整邮箱",
         "tools/build_domain_email_provider_matrix.py --markdown",
         "launch/domain_email_provider_matrix.json",
+        "tools/build_domain_email_dns_entry_packet.py",
+        "launch/domain_email_dns_entry_packet.json",
         "Cloudflare Email Routing only",
         "root-domain SPF TXT",
         "--dkim-selector &lt;provider-selector&gt;",
