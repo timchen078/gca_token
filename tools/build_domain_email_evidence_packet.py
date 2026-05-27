@@ -24,6 +24,7 @@ except ModuleNotFoundError:  # pragma: no cover - used when running from tools/
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_CONFIG_PATH = ROOT / "site" / "domain-email.json"
 DEFAULT_EVIDENCE_DIR = ROOT / "launch" / "domain_email_evidence"
+EVIDENCE_README_FILENAME = "README.txt"
 
 EVIDENCE_FIELDS = (
     (
@@ -90,6 +91,65 @@ def build_references_from_evidence_dir(evidence_dir: Path) -> dict[str, str]:
     return references
 
 
+def build_evidence_directory_status(evidence_dir: Path) -> dict[str, Any]:
+    rows: list[dict[str, Any]] = []
+    for key, label, recommended_filename in EVIDENCE_FIELDS:
+        candidate = evidence_dir / recommended_filename
+        rows.append({
+            "key": key,
+            "label": label,
+            "fileName": recommended_filename,
+            "path": display_path(candidate),
+            "exists": candidate.is_file(),
+        })
+    missing = [row["fileName"] for row in rows if not row["exists"]]
+    readme = evidence_dir / EVIDENCE_README_FILENAME
+    evidence_dir_path = evidence_dir.resolve()
+    default_evidence_path = DEFAULT_EVIDENCE_DIR.resolve()
+    return {
+        "path": display_path(evidence_dir),
+        "exists": evidence_dir.is_dir(),
+        "readmeFile": display_path(readme),
+        "readmeExists": readme.is_file(),
+        "complete": not missing,
+        "missingFiles": missing,
+        "requiredFiles": rows,
+        "ignoredByGit": evidence_dir_path == default_evidence_path or evidence_dir_path.is_relative_to(default_evidence_path),
+    }
+
+
+def render_evidence_directory_readme(status: dict[str, Any]) -> str:
+    lines = [
+        "GCA Domain Email Evidence Directory",
+        "",
+        "Place the five owner-side proof files in this directory before building the BaseScan evidence packet.",
+        "These files may contain mailbox screenshots or other private operational evidence, so this directory is ignored by git.",
+        "",
+        "Required files:",
+    ]
+    for row in status["requiredFiles"]:
+        lines.append(f"- {row['fileName']}: {row['label']}")
+    lines.extend([
+        "",
+        "After all five files are saved, run:",
+        "python3 tools/build_domain_email_evidence_packet.py --dkim-selector <provider-selector> --evidence-dir launch/domain_email_evidence --website-email-updated --output-json launch/domain_email_evidence_packet.json --output-md launch/domain_email_evidence_packet.md --json",
+        "",
+        "Boundaries:",
+        "- This local folder does not send email.",
+        "- This local folder does not submit BaseScan requests.",
+        "- This local folder does not write DNS records.",
+        "- This local folder does not touch wallets, contracts, liquidity, or private keys.",
+    ])
+    return "\n".join(lines) + "\n"
+
+
+def initialize_evidence_directory(evidence_dir: Path) -> dict[str, Any]:
+    evidence_dir.mkdir(parents=True, exist_ok=True)
+    status = build_evidence_directory_status(evidence_dir)
+    write_text(evidence_dir / EVIDENCE_README_FILENAME, render_evidence_directory_readme(status))
+    return build_evidence_directory_status(evidence_dir)
+
+
 def merge_evidence_references(cli_references: dict[str, str], evidence_dir: Path | None) -> dict[str, str]:
     references = build_references_from_evidence_dir(evidence_dir) if evidence_dir else {}
     for key, value in cli_references.items():
@@ -119,6 +179,7 @@ def build_packet(
     dns_result: dict[str, Any],
     manual_evidence: list[dict[str, Any]],
     website_email_updated: bool,
+    evidence_directory: dict[str, Any] | None = None,
     generated_at: str | None = None,
 ) -> dict[str, Any]:
     target_email = str(domain_email_config.get("targetDomainEmail") or dns_result.get("targetMailbox") or "")
@@ -155,6 +216,7 @@ def build_packet(
             "checks": dns_result.get("checks", {}),
         },
         "manualEvidence": manual_evidence,
+        "evidenceDirectory": evidence_directory or {},
         "websiteEmailUpdatedToTarget": website_email_updated,
         "nextAction": (
             "Archive this packet and resubmit BaseScan only from the matching domain email."
@@ -246,6 +308,11 @@ def build_parser() -> argparse.ArgumentParser:
             f"Defaults can be placed under {DEFAULT_EVIDENCE_DIR.relative_to(ROOT).as_posix()}."
         ),
     )
+    parser.add_argument(
+        "--init-evidence-dir",
+        action="store_true",
+        help="Create the local evidence directory and README checklist, then print directory status JSON.",
+    )
     parser.add_argument("--website-email-updated", action="store_true", help="Confirm public website email now matches target.")
     parser.add_argument("--output-json", default="", help="Write packet JSON to this path.")
     parser.add_argument("--output-md", default="", help="Write packet Markdown to this path.")
@@ -256,6 +323,12 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
+    evidence_dir = Path(args.evidence_dir) if args.evidence_dir else DEFAULT_EVIDENCE_DIR
+
+    if args.init_evidence_dir:
+        status = initialize_evidence_directory(evidence_dir)
+        print(json.dumps(status, indent=2, sort_keys=True))
+        return 0
 
     try:
         config = load_json_file(Path(args.config))
@@ -274,12 +347,13 @@ def main(argv: list[str] | None = None) -> int:
             "inboundTest": args.inbound_test,
             "outboundTest": args.outbound_test,
             "supportPageProof": args.support_page_proof,
-        }, Path(args.evidence_dir) if args.evidence_dir else None)
+        }, evidence_dir if args.evidence_dir else None)
         manual_evidence = build_manual_evidence(evidence_references)
         packet = build_packet(
             domain_email_config=config,
             dns_result=dns_result,
             manual_evidence=manual_evidence,
+            evidence_directory=build_evidence_directory_status(evidence_dir) if args.evidence_dir else None,
             website_email_updated=args.website_email_updated,
         )
     except (DomainEmailDnsError, EvidencePacketError) as exc:

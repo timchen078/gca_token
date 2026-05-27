@@ -6,9 +6,12 @@ from io import StringIO
 from pathlib import Path
 
 from tools.build_domain_email_evidence_packet import (
+    DEFAULT_EVIDENCE_DIR,
     build_manual_evidence,
+    build_evidence_directory_status,
     build_packet,
     build_references_from_evidence_dir,
+    initialize_evidence_directory,
     main,
     merge_evidence_references,
     render_markdown,
@@ -168,6 +171,40 @@ class DomainEmailEvidencePacketTests(unittest.TestCase):
             self.assertTrue(all(row["provided"] for row in manual_evidence))
             self.assertTrue(packet["readyForBaseScanResubmission"])
 
+    def test_evidence_directory_status_lists_missing_files(self):
+        with tempfile.TemporaryDirectory() as temp:
+            evidence_dir = Path(temp) / "evidence"
+            evidence_dir.mkdir()
+            (evidence_dir / "domain-email-inbound-test.png").write_text("evidence", encoding="utf-8")
+
+            status = build_evidence_directory_status(evidence_dir)
+
+            self.assertTrue(status["exists"])
+            self.assertFalse(status["complete"])
+            self.assertFalse(status["ignoredByGit"])
+            self.assertIn("domain-email-provider-active.png", status["missingFiles"])
+            self.assertFalse(next(row for row in status["requiredFiles"] if row["key"] == "providerActive")["exists"])
+            self.assertTrue(next(row for row in status["requiredFiles"] if row["key"] == "inboundTest")["exists"])
+
+    def test_default_evidence_directory_status_is_marked_git_ignored(self):
+        status = build_evidence_directory_status(DEFAULT_EVIDENCE_DIR)
+
+        self.assertTrue(status["ignoredByGit"])
+        self.assertEqual(status["path"], "launch/domain_email_evidence")
+
+    def test_initialize_evidence_directory_writes_local_readme(self):
+        with tempfile.TemporaryDirectory() as temp:
+            evidence_dir = Path(temp) / "launch" / "domain_email_evidence"
+
+            status = initialize_evidence_directory(evidence_dir)
+            readme = evidence_dir / "README.txt"
+
+            self.assertTrue(status["exists"])
+            self.assertTrue(status["readmeExists"])
+            self.assertTrue(readme.exists())
+            self.assertIn("Required files:", readme.read_text(encoding="utf-8"))
+            self.assertIn("does not submit BaseScan requests", readme.read_text(encoding="utf-8"))
+
     def test_cli_reference_overrides_evidence_dir_file(self):
         with tempfile.TemporaryDirectory() as temp:
             evidence_dir = Path(temp) / "evidence"
@@ -181,6 +218,24 @@ class DomainEmailEvidencePacketTests(unittest.TestCase):
 
             self.assertEqual(references["providerActive"], "manual-provider-active.png")
             self.assertNotIn("dnsProof", references)
+
+    def test_cli_can_initialize_evidence_dir_without_dns_or_email_calls(self):
+        with tempfile.TemporaryDirectory() as temp:
+            evidence_dir = Path(temp) / "launch" / "domain_email_evidence"
+
+            output = StringIO()
+            with redirect_stdout(output):
+                exit_code = main([
+                    "--evidence-dir",
+                    str(evidence_dir),
+                    "--init-evidence-dir",
+                ])
+
+            status = json.loads(output.getvalue())
+            self.assertEqual(exit_code, 0)
+            self.assertTrue(status["readmeExists"])
+            self.assertIn("domain-email-outbound-test.png", status["missingFiles"])
+            self.assertTrue((evidence_dir / "README.txt").exists())
 
     def test_cli_can_use_evidence_dir_for_saved_proofs(self):
         with tempfile.TemporaryDirectory() as temp:
@@ -213,6 +268,7 @@ class DomainEmailEvidencePacketTests(unittest.TestCase):
             self.assertEqual(exit_code, 0)
             packet = json.loads(packet_json.read_text(encoding="utf-8"))
             self.assertTrue(packet["readyForBaseScanResubmission"])
+            self.assertTrue(packet["evidenceDirectory"]["complete"])
             self.assertIn("domain-email-inbound-test.png", output.getvalue())
 
 

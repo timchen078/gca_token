@@ -115,6 +115,14 @@ python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox suppor
 
 ## Local Evidence Packet Builder
 
+Initialize the ignored local evidence directory first:
+
+```bash
+python3 tools/build_domain_email_evidence_packet.py \
+  --init-evidence-dir \
+  --evidence-dir launch/domain_email_evidence
+```
+
 After DNS and manual email tests are complete, save the five proof files under `launch/domain_email_evidence`, then build a local packet for owner records:
 
 ```bash

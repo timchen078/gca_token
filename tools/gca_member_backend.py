@@ -1424,7 +1424,7 @@ class GcaMemberBackend:
                     "build-domain-email-evidence-packet",
                     "medium",
                     "Build domain email evidence packet",
-                    "After mailbox DNS and send/receive tests pass, save the five evidence files under launch/domain_email_evidence, then build the local evidence packet before any BaseScan resubmission.",
+                    "Run the evidence-directory initializer, then after mailbox DNS and send/receive tests pass, save the five evidence files under launch/domain_email_evidence and build the local packet before any BaseScan resubmission.",
                     "domain-email-evidence-packet",
                     DOMAIN_EMAIL_EVIDENCE_PACKET_COMMAND,
                 )

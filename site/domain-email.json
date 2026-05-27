@@ -201,6 +201,7 @@
   },
   "operatorEvidencePacketBuilder": {
     "tool": "tools/build_domain_email_evidence_packet.py",
+    "initCommand": "python3 tools/build_domain_email_evidence_packet.py --init-evidence-dir --evidence-dir launch/domain_email_evidence",
     "command": "python3 tools/build_domain_email_evidence_packet.py --dkim-selector <provider-selector> --evidence-dir launch/domain_email_evidence --website-email-updated --output-json launch/domain_email_evidence_packet.json --output-md launch/domain_email_evidence_packet.md",
     "evidenceDirectory": "launch/domain_email_evidence",
     "readyRequires": [

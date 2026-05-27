@@ -397,7 +397,7 @@
           </div>
           <div class="card">
             <h3>Evidence Packet Builder</h3>
-            <p class="note">After DNS and manual mail tests pass, save the five proof files in <code>launch/domain_email_evidence</code>, then run <code>python3 tools/build_domain_email_evidence_packet.py --dkim-selector &lt;provider-selector&gt; --evidence-dir launch/domain_email_evidence --website-email-updated --output-json launch/domain_email_evidence_packet.json --output-md launch/domain_email_evidence_packet.md</code>. The packet blocks BaseScan resubmission until DNS, screenshots, and website email alignment are complete.</p>
+            <p class="note">First run <code>python3 tools/build_domain_email_evidence_packet.py --init-evidence-dir --evidence-dir launch/domain_email_evidence</code> to create the local checklist. After DNS and manual mail tests pass, save the five proof files in <code>launch/domain_email_evidence</code>, then run <code>python3 tools/build_domain_email_evidence_packet.py --dkim-selector &lt;provider-selector&gt; --evidence-dir launch/domain_email_evidence --website-email-updated --output-json launch/domain_email_evidence_packet.json --output-md launch/domain_email_evidence_packet.md</code>. The packet blocks BaseScan resubmission until DNS, screenshots, and website email alignment are complete.</p>
           </div>
           <div class="card">
             <h3>Public Switch Checker</h3>
