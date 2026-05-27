@@ -210,7 +210,7 @@ def build_next_actions(daily: dict[str, Any], member_ops: dict[str, Any], suppor
             actions.append(f"Do not resubmit the BaseScan token profile yet; complete blocked item(s): {blocked_text}.")
 
     if not member_ops["available"]:
-        actions.append("When `ADMIN_READ_TOKEN` is available locally, run member ops to refresh account, ledger, support, and optional holding reports.")
+        actions.append("When local operator credentials are available, run member ops to refresh account, ledger, support, and optional holding reports.")
     elif not member_ops["ok"]:
         actions.append("Investigate the latest member-access ops failure before using support or benefit queues.")
 

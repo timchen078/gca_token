@@ -118,7 +118,7 @@ class GcaOperatorDigestTests(unittest.TestCase):
             self.assertFalse(digest["supportQueue"]["available"])
             self.assertFalse(digest["holdingPeriod"]["available"])
             self.assertTrue(any("run_gca_daily_ops.py" in action for action in digest["nextActions"]))
-            self.assertTrue(any("ADMIN_READ_TOKEN" in action for action in digest["nextActions"]))
+            self.assertTrue(any("local operator credentials" in action for action in digest["nextActions"]))
 
     def test_cli_writes_digest_files(self):
         with tempfile.TemporaryDirectory() as temp:

@@ -9,6 +9,7 @@ on:
       - main
     paths:
       - "tools/run_gca_daily_ops.py"
+      - "tools/build_gca_operator_digest.py"
       - "tools/check_public_site.py"
       - "tools/check_gca_registration_api.py"
       - ".github/workflows/check-gca-daily-ops.yml"
@@ -47,9 +48,16 @@ jobs:
           set -euo pipefail
 
           export SSL_CERT_FILE="$(python -c 'import certifi; print(certifi.where())')"
+          DAILY_OPS_ARGS=(
+            --timeout 30
+            --summary-output /tmp/gca_daily_ops_summary.json
+            --build-digest
+            --digest-output /tmp/gca_operator_digest.md
+            --digest-json-output /tmp/gca_operator_digest.json
+          )
 
           for attempt in {1..20}; do
-            if python tools/run_gca_daily_ops.py --timeout 30 --summary-output /tmp/gca_daily_ops_summary.json; then
+            if python tools/run_gca_daily_ops.py "${DAILY_OPS_ARGS[@]}"; then
               exit 0
             fi
 
@@ -57,4 +65,16 @@ jobs:
             sleep 15
           done
 
-          python tools/run_gca_daily_ops.py --timeout 30 --summary-output /tmp/gca_daily_ops_summary.json
+          python tools/run_gca_daily_ops.py "${DAILY_OPS_ARGS[@]}"
+
+      - name: Upload daily ops artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gca-public-daily-ops
+          if-no-files-found: ignore
+          retention-days: 14
+          path: |
+            /tmp/gca_daily_ops_summary.json
+            /tmp/gca_operator_digest.md
+            /tmp/gca_operator_digest.json
