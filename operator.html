@@ -462,7 +462,7 @@
 
       <section class="section panel" aria-labelledby="operatorDigestTitle">
         <h2 id="operatorDigestTitle">Operator Digest</h2>
-        <p class="note">Load the latest redacted local digest created by <code>tools/run_gca_daily_ops.py --build-digest</code>. It summarizes public health, member ops counts, support queue counts, holding evidence, and next actions without exposing user records, emails, admin tokens, wallet signatures, transactions, or automatic transfers.</p>
+        <p class="note">Load the latest redacted local digest created by <code>tools/run_gca_daily_ops.py --build-digest</code>. It summarizes public health, BaseScan preflight status, member ops counts, support queue counts, holding evidence, and next actions without exposing user records, emails, admin tokens, wallet signatures, transactions, or automatic transfers.</p>
         <div class="grid section" aria-label="GCA operator digest status">
           <div class="fact">
             <span class="label">Digest status</span>
@@ -475,6 +475,18 @@
           <div class="fact">
             <span class="label">Public health</span>
             <span class="value" id="digestPublicStatus">-</span>
+          </div>
+          <div class="fact">
+            <span class="label">BaseScan preflight</span>
+            <span class="value" id="digestBaseScanStatus">-</span>
+          </div>
+          <div class="fact">
+            <span class="label">Public email switch</span>
+            <span class="value" id="digestBaseScanEmailSwitch">-</span>
+          </div>
+          <div class="fact">
+            <span class="label">BaseScan blockers</span>
+            <span class="value" id="digestBaseScanBlockers">0</span>
           </div>
           <div class="fact">
             <span class="label">Member ops</span>
@@ -765,6 +777,9 @@
       const digestStatus = document.getElementById("digestStatus");
       const digestGeneratedAt = document.getElementById("digestGeneratedAt");
       const digestPublicStatus = document.getElementById("digestPublicStatus");
+      const digestBaseScanStatus = document.getElementById("digestBaseScanStatus");
+      const digestBaseScanEmailSwitch = document.getElementById("digestBaseScanEmailSwitch");
+      const digestBaseScanBlockers = document.getElementById("digestBaseScanBlockers");
       const digestMemberStatus = document.getElementById("digestMemberStatus");
       const digestSupportRows = document.getElementById("digestSupportRows");
       const digestHoldingReady = document.getElementById("digestHoldingReady");
@@ -860,11 +875,19 @@
         const member = payload.memberOps || {};
         const support = payload.supportQueue || {};
         const holding = payload.holdingPeriod || {};
+        const baseScan = daily.baseScanPreflight || {};
         const memberSupport = member.supportQueue || {};
         const memberHolding = member.holdingPeriod || {};
         digestStatus.textContent = payload.available ? (payload.digestOk ? "Loaded" : "Attention") : "Missing";
         digestGeneratedAt.textContent = payload.digestGeneratedAt || payload.generatedAt || "-";
         digestPublicStatus.textContent = digestStatusLabel(daily.available, daily.ok);
+        digestBaseScanStatus.textContent = baseScan.available
+          ? (baseScan.readyForBaseScanResubmission ? "ready" : "blocked")
+          : "missing";
+        digestBaseScanEmailSwitch.textContent = baseScan.publicEmailSwitchStatus || "-";
+        digestBaseScanBlockers.textContent = Array.isArray(baseScan.missingOrBlockedRequirements)
+          ? baseScan.missingOrBlockedRequirements.length
+          : 0;
         digestMemberStatus.textContent = digestStatusLabel(member.available, member.ok);
         digestSupportRows.textContent = support.replyReadyRows ?? memberSupport.replyReadyRows ?? 0;
         digestHoldingReady.textContent = holding.counts?.observedEligibleFor30Days ?? memberHolding.observedEligibleFor30Days ?? 0;
@@ -875,6 +898,9 @@
         digestStatus.textContent = "Unavailable";
         digestGeneratedAt.textContent = "-";
         digestPublicStatus.textContent = "-";
+        digestBaseScanStatus.textContent = "-";
+        digestBaseScanEmailSwitch.textContent = "-";
+        digestBaseScanBlockers.textContent = "0";
         digestMemberStatus.textContent = "-";
         digestSupportRows.textContent = "0";
         digestHoldingReady.textContent = "0";
