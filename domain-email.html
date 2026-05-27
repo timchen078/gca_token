@@ -367,6 +367,7 @@
           <div class="row"><span>Not enough alone</span><strong>Cloudflare Email Routing only, or any send-only SMTP/API service without inbound mail for the same address.</strong></div>
           <div class="row"><span>Matrix command</span><strong><code>python3 tools/build_domain_email_provider_matrix.py --markdown</code></strong></div>
           <div class="row"><span>Owner artifact</span><strong><code>python3 tools/build_domain_email_provider_matrix.py --output-json launch/domain_email_provider_matrix.json --output-md launch/domain_email_provider_matrix.md</code></strong></div>
+          <div class="row"><span>DNS entry packet</span><strong><code>python3 tools/build_domain_email_dns_entry_packet.py --provider &lt;provider-name&gt; --mx "10 &lt;provider-mx&gt;" --spf "v=spf1 include:&lt;provider&gt; ~all" --dkim-selector &lt;provider-selector&gt; --dkim-type TXT --dkim-value "&lt;provider-dkim-value&gt;" --dmarc "v=DMARC1; p=none;" --output-json launch/domain_email_dns_entry_packet.json --output-md launch/domain_email_dns_entry_packet.md</code></strong></div>
         </div>
       </section>
 
@@ -389,6 +390,10 @@
           <div class="card">
             <h3>Operator DNS Check</h3>
             <p class="note">After records are added, run <code>python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox support --dkim-selector &lt;provider-selector&gt; --json</code>. This is a read-only public DNS check for MX, SPF, DMARC, and DKIM.</p>
+          </div>
+          <div class="card">
+            <h3>DNS Entry Packet Builder</h3>
+            <p class="note">Before entering DNS records, run <code>python3 tools/build_domain_email_dns_entry_packet.py</code> with the provider's exact MX, SPF, DKIM, and DMARC values. It generates a local copyable packet and does not write DNS records.</p>
           </div>
           <div class="card">
             <h3>Evidence Packet Builder</h3>
