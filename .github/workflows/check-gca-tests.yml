@@ -1,0 +1,51 @@
+name: Check GCA Tests
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "cloudflare/**"
+      - "deployments/**"
+      - "docs/**"
+      - "launch/**"
+      - "site/**"
+      - "tests/**"
+      - "token/**"
+      - "tools/**"
+      - "verification/**"
+      - "requirements-token-dev.txt"
+      - ".github/workflows/check-gca-tests.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: gca-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  unittest:
+    name: Run full GCA unit tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out main
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install validation dependencies
+        shell: bash
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-token-dev.txt
+
+      - name: Run full validation suite
+        shell: bash
+        run: python -m unittest -v
