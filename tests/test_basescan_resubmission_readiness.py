@@ -54,6 +54,15 @@ def ready_evidence_packet():
     }
 
 
+def ready_public_switch_report():
+    return {
+        "status": "public-email-switch-complete",
+        "readyForBaseScanPublicEmailAlignment": True,
+        "targetDomainEmail": TARGET_DOMAIN_EMAIL,
+        "summary": {"filesStillUsingCurrentEmail": 0},
+    }
+
+
 class BaseScanResubmissionReadinessTests(unittest.TestCase):
     def test_report_blocks_when_values_and_evidence_are_not_ready(self):
         values = ready_values()
@@ -63,6 +72,7 @@ class BaseScanResubmissionReadinessTests(unittest.TestCase):
         report = build_readiness_report(
             values=values,
             evidence_packet=None,
+            public_switch_report=None,
             public_url_checks=check_public_urls(values, skip=True),
             generated_at="2026-05-24T00:00:00Z",
         )
@@ -72,6 +82,7 @@ class BaseScanResubmissionReadinessTests(unittest.TestCase):
         self.assertIn("next-submission-ready-flag", report["missingOrBlockedRequirements"])
         self.assertIn("official-domain-email", report["missingOrBlockedRequirements"])
         self.assertIn("domain-email-evidence-packet", report["missingOrBlockedRequirements"])
+        self.assertIn("domain-email-public-switch-check", report["missingOrBlockedRequirements"])
         self.assertFalse(report["boundaries"]["submitsBaseScanRequest"])
         self.assertFalse(report["boundaries"]["touchesWalletOrContract"])
 
@@ -80,6 +91,7 @@ class BaseScanResubmissionReadinessTests(unittest.TestCase):
         report = build_readiness_report(
             values=values,
             evidence_packet=ready_evidence_packet(),
+            public_switch_report=ready_public_switch_report(),
             public_url_checks=check_public_urls(values, skip=True),
             generated_at="2026-05-24T00:00:00Z",
         )
@@ -96,6 +108,7 @@ class BaseScanResubmissionReadinessTests(unittest.TestCase):
         report = build_readiness_report(
             values=values,
             evidence_packet=ready_evidence_packet(),
+            public_switch_report=ready_public_switch_report(),
             public_url_checks=url_checks,
             generated_at="2026-05-24T00:00:00Z",
         )
@@ -103,16 +116,40 @@ class BaseScanResubmissionReadinessTests(unittest.TestCase):
         self.assertFalse(report["readyForBaseScanResubmission"])
         self.assertTrue(any(item.startswith("public-url:") for item in report["missingOrBlockedRequirements"]))
 
+    def test_public_email_switch_failure_blocks_readiness(self):
+        values = ready_values()
+        public_switch = {
+            "status": "public-email-switch-pending",
+            "readyForBaseScanPublicEmailAlignment": False,
+            "targetDomainEmail": TARGET_DOMAIN_EMAIL,
+            "summary": {"filesStillUsingCurrentEmail": 3},
+        }
+
+        report = build_readiness_report(
+            values=values,
+            evidence_packet=ready_evidence_packet(),
+            public_switch_report=public_switch,
+            public_url_checks=check_public_urls(values, skip=True),
+            generated_at="2026-05-24T00:00:00Z",
+        )
+
+        self.assertFalse(report["readyForBaseScanResubmission"])
+        self.assertIn("domain-email-public-switch-check", report["missingOrBlockedRequirements"])
+        self.assertIn("domain-email-public-switch-old-email", report["missingOrBlockedRequirements"])
+        self.assertEqual(report["domainEmailPublicSwitchSummary"]["status"], "public-email-switch-pending")
+
     def test_cli_blocks_current_unready_package_without_network(self):
         with tempfile.TemporaryDirectory() as temp:
             temp_path = Path(temp)
             values_path = temp_path / "values.json"
             evidence_path = temp_path / "packet.json"
+            switch_path = temp_path / "switch.json"
             values = ready_values()
             values["nextSubmissionReady"] = False
             values["officialEmail"] = "GCAgochina@outlook.com"
             values_path.write_text(json.dumps(values), encoding="utf-8")
             evidence_path.write_text(json.dumps({"readyForBaseScanResubmission": False}), encoding="utf-8")
+            switch_path.write_text(json.dumps({"readyForBaseScanPublicEmailAlignment": False}), encoding="utf-8")
 
             output = StringIO()
             with redirect_stdout(output):
@@ -121,6 +158,8 @@ class BaseScanResubmissionReadinessTests(unittest.TestCase):
                     str(values_path),
                     "--evidence-packet",
                     str(evidence_path),
+                    "--public-switch-report",
+                    str(switch_path),
                     "--skip-url-checks",
                     "--json",
                     "--require-ready",

@@ -798,7 +798,8 @@ def validate_domain_email_page(text: str) -> None:
         "Public Switch Checker",
         "tools/check_domain_email_public_switch.py --json --require-switched",
         "Cloudflare Email Routing only",
-        "Ready Means All Four Are True",
+        "Ready Means All Five Are True",
+        "no critical file still publishing the old Outlook email",
         "Switch Plan Generator",
         "Find Every Public Email Reference Before Switching",
         "tools/build_domain_email_switch_plan.py --json",
@@ -849,6 +850,8 @@ def validate_domain_email_json(text: str) -> None:
         raise SiteCheckError(f"{label}: BaseScan resubmission must not be marked ready")
     if "support@gcagochina.com can receive external email" not in base_scan_use.get("readyWhen", []):
         raise SiteCheckError(f"{label}: missing inbound ready gate")
+    if "tools/check_domain_email_public_switch.py --json --require-switched passes" not in base_scan_use.get("readyWhen", []):
+        raise SiteCheckError(f"{label}: missing public switch ready gate")
     if snapshot.get("checkedAt") not in {"2026-05-25T15:04:09Z", "2026-05-27T07:30:47Z"}:
         raise SiteCheckError(f"{label}: wrong live DNS snapshot timestamp")
     if snapshot.get("readyForBaseScanEmailEvidence") is not False:
@@ -950,6 +953,10 @@ def validate_domain_email_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing public switch checker run-after gate")
     if "any critical file still contains GCAgochina@outlook.com" not in public_switch_checker.get("blocksWhen", []):
         raise SiteCheckError(f"{label}: missing public switch checker current-email block")
+    if "tools/check_basescan_resubmission_readiness.py" not in public_switch_checker.get("enforcedBy", []):
+        raise SiteCheckError(f"{label}: missing public switch checker preflight enforcement")
+    if "tools/build_basescan_submission_package.py" not in public_switch_checker.get("enforcedBy", []):
+        raise SiteCheckError(f"{label}: missing public switch checker submission package enforcement")
     if "read-only check" not in public_switch_checker.get("boundaries", []):
         raise SiteCheckError(f"{label}: missing public switch checker read-only boundary")
     if "does not edit files" not in public_switch_checker.get("boundaries", []):
@@ -1595,6 +1602,7 @@ def validate_zh_domain_email_page(text: str) -> None:
         "公开邮箱切换检查",
         "tools/check_domain_email_public_switch.py --json --require-switched",
         "如果关键文件还出现",
+        "公开邮箱切换门槛",
         "中文审核状态",
         "zh-status.html",
         "中文支持",

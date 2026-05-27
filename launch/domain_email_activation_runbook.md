@@ -138,7 +138,7 @@ Before opening the BaseScan form, run the final read-only preflight:
 python3 tools/check_basescan_resubmission_readiness.py --json --require-ready
 ```
 
-Only proceed when the preflight reports `readyForBaseScanResubmission` as true. The preflight checks the BaseScan values packet, domain email evidence packet, and public reviewer URLs; it does not submit anything.
+Only proceed when the preflight reports `readyForBaseScanResubmission` as true. The preflight checks the BaseScan values packet, domain email evidence packet, public email switch alignment, and public reviewer URLs; it does not submit anything.
 
 After the preflight passes, generate the final copyable BaseScan draft:
 
@@ -173,6 +173,7 @@ python3 tools/check_domain_email_public_switch.py --json --require-switched
 ```
 
 The checker uses the critical file list from `site/domain-email.json` and blocks if any listed public/support/BaseScan file still contains `GCAgochina@outlook.com`, if the target domain email is missing, or if a critical file is missing. It does not edit files, send email, write DNS records, submit BaseScan requests, or touch wallets/contracts.
+The same public switch gate is now included in `tools/check_basescan_resubmission_readiness.py` and `tools/build_basescan_submission_package.py`, so the final BaseScan package cannot be marked ready while critical files still publish the old Outlook email.
 
 ## Evidence Packet
 

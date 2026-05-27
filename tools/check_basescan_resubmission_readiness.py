@@ -2,8 +2,9 @@
 """Check whether GCA is ready for a clean BaseScan token-profile resubmission.
 
 The preflight is read-only. It validates the local BaseScan values packet, the
-domain-email evidence packet, and public reviewer URLs. It does not submit
-BaseScan forms, send email, write DNS records, or touch wallets/contracts.
+domain-email evidence packet, public email switch alignment, and public
+reviewer URLs. It does not submit BaseScan forms, send email, write DNS
+records, or touch wallets/contracts.
 """
 
 from __future__ import annotations
@@ -19,8 +20,16 @@ from typing import Any, Callable
 
 try:
     from tools.check_domain_email_dns import utc_now
+    from tools.check_domain_email_public_switch import (
+        PublicSwitchCheckError,
+        build_report as build_public_switch_report,
+    )
 except ModuleNotFoundError:  # pragma: no cover - used when running from tools/
     from check_domain_email_dns import utc_now
+    from check_domain_email_public_switch import (
+        PublicSwitchCheckError,
+        build_report as build_public_switch_report,
+    )
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -232,6 +241,38 @@ def validate_evidence_packet(packet: dict[str, Any] | None) -> list[dict[str, An
     ]
 
 
+def validate_public_switch_report(report: dict[str, Any] | None) -> list[dict[str, Any]]:
+    if report is None:
+        return [
+            status_entry(
+                "domain-email-public-switch-check",
+                False,
+                "Missing public domain-email switch check.",
+                None,
+            )
+        ]
+    return [
+        status_entry(
+            "domain-email-public-switch-check",
+            report.get("readyForBaseScanPublicEmailAlignment") is True,
+            "Critical public/support/BaseScan files must be aligned to support@gcagochina.com.",
+            report.get("status"),
+        ),
+        status_entry(
+            "domain-email-public-switch-target",
+            str(report.get("targetDomainEmail", "")).lower() == TARGET_DOMAIN_EMAIL.lower(),
+            "Public switch target email must match support@gcagochina.com.",
+            report.get("targetDomainEmail"),
+        ),
+        status_entry(
+            "domain-email-public-switch-old-email",
+            report.get("summary", {}).get("filesStillUsingCurrentEmail") == 0,
+            "No critical public file should still publish the old Outlook email after the switch.",
+            report.get("summary", {}).get("filesStillUsingCurrentEmail"),
+        ),
+    ]
+
+
 def missing_keys_from_checks(checks: list[dict[str, Any]]) -> list[str]:
     return [str(check.get("key") or check.get("field") or check.get("url")) for check in checks if not check.get("ok")]
 
@@ -240,11 +281,13 @@ def build_readiness_report(
     *,
     values: dict[str, Any],
     evidence_packet: dict[str, Any] | None,
+    public_switch_report: dict[str, Any] | None,
     public_url_checks: list[dict[str, Any]],
     generated_at: str | None = None,
 ) -> dict[str, Any]:
     values_checks = validate_values(values)
     evidence_checks = validate_evidence_packet(evidence_packet)
+    public_switch_checks = validate_public_switch_report(public_switch_report)
     public_checks = [
         status_entry(
             f"public-url:{check.get('field')}",
@@ -255,7 +298,7 @@ def build_readiness_report(
         for check in public_url_checks
     ]
 
-    all_checks = values_checks + evidence_checks + public_checks
+    all_checks = values_checks + evidence_checks + public_switch_checks + public_checks
     blocked = missing_keys_from_checks(all_checks)
     ready = not blocked
 
@@ -270,6 +313,8 @@ def build_readiness_report(
         "missingOrBlockedRequirements": blocked,
         "valuesChecks": values_checks,
         "domainEmailEvidenceChecks": evidence_checks,
+        "domainEmailPublicSwitchChecks": public_switch_checks,
+        "domainEmailPublicSwitchSummary": public_switch_report,
         "publicUrlChecks": public_url_checks,
         "nextAction": (
             "Owner may proceed with one clean BaseScan resubmission from support@gcagochina.com."
@@ -302,6 +347,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Check GCA BaseScan resubmission readiness.")
     parser.add_argument("--values", default=str(DEFAULT_VALUES_PATH), help="Path to BaseScan resubmission values JSON.")
     parser.add_argument("--evidence-packet", default=str(DEFAULT_EVIDENCE_PACKET_PATH), help="Path to domain email evidence packet JSON.")
+    parser.add_argument("--public-switch-report", default="", help="Optional saved domain email public switch check JSON. If omitted, the checker scans current files.")
     parser.add_argument("--timeout", type=float, default=15.0, help="Public URL request timeout in seconds.")
     parser.add_argument("--skip-url-checks", action="store_true", help="Skip public URL reachability checks.")
     parser.add_argument("--json", action="store_true", help="Print JSON output.")
@@ -315,13 +361,19 @@ def main(argv: list[str] | None = None) -> int:
     try:
         values = load_json_file(Path(args.values))
         evidence_packet = maybe_load_json_file(Path(args.evidence_packet))
+        public_switch_report = (
+            load_json_file(Path(args.public_switch_report))
+            if args.public_switch_report
+            else build_public_switch_report()
+        )
         public_url_checks = check_public_urls(values, skip=args.skip_url_checks, timeout=args.timeout)
         report = build_readiness_report(
             values=values,
             evidence_packet=evidence_packet,
+            public_switch_report=public_switch_report,
             public_url_checks=public_url_checks,
         )
-    except BaseScanReadinessError as exc:
+    except (BaseScanReadinessError, PublicSwitchCheckError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2
 

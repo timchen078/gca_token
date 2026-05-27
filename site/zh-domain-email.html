@@ -498,6 +498,7 @@
           <div class="row"><span>Markdown 清单</span><strong><code>python3 tools/build_domain_email_switch_plan.py --markdown</code></strong></div>
           <div class="row"><span>保存给自己</span><strong><code>python3 tools/build_domain_email_switch_plan.py --output-json launch/domain_email_switch_plan.json --output-md launch/domain_email_switch_plan.md</code></strong></div>
           <div class="row"><span>切换后检查</span><strong><code>python3 tools/check_domain_email_public_switch.py --json --require-switched</code>，如果关键文件还出现 <code>GCAgochina@outlook.com</code>，就不要复提 BaseScan。</strong></div>
+          <div class="row"><span>最终预检</span><strong><code>tools/check_basescan_resubmission_readiness.py</code> 和 <code>tools/build_basescan_submission_package.py</code> 已经接入这个公开邮箱切换门槛。</strong></div>
           <div class="row"><span>边界</span><strong>这个工具不会改文件、不会发邮件、不会写 DNS、不会提交 BaseScan、不会操作钱包或合约。</strong></div>
         </div>
       </section>
