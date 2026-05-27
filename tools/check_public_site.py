@@ -568,7 +568,7 @@ def validate_status_page(text: str) -> None:
         text,
         (
             "2026-05-25 DNS snapshot: MX/SPF/DMARC missing, DKIM selector required",
-            "2026-05-26 DNS snapshot: MX/SPF/DMARC missing, DKIM selector required",
+            "2026-05-27 DNS snapshot: MX/SPF/DMARC missing, DKIM selector required",
         ),
         label,
         "domain email DNS snapshot status",
@@ -830,7 +830,7 @@ def validate_domain_email_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != DOMAIN_EMAIL_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
-    if payload.get("lastUpdated") not in {"2026-05-25", "2026-05-26"}:
+    if payload.get("lastUpdated") not in {"2026-05-25", "2026-05-27"}:
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("status") != "domain-email-setup-plan-published-not-active":
         raise SiteCheckError(f"{label}: wrong status")
@@ -842,7 +842,7 @@ def validate_domain_email_json(text: str) -> None:
         raise SiteCheckError(f"{label}: BaseScan resubmission must not be marked ready")
     if "support@gcagochina.com can receive external email" not in base_scan_use.get("readyWhen", []):
         raise SiteCheckError(f"{label}: missing inbound ready gate")
-    if snapshot.get("checkedAt") not in {"2026-05-25T15:04:09Z", "2026-05-26T08:32:28Z"}:
+    if snapshot.get("checkedAt") not in {"2026-05-25T15:04:09Z", "2026-05-27T07:30:47Z"}:
         raise SiteCheckError(f"{label}: wrong live DNS snapshot timestamp")
     if snapshot.get("readyForBaseScanEmailEvidence") is not False:
         raise SiteCheckError(f"{label}: live DNS snapshot must not be ready")
@@ -983,7 +983,7 @@ def validate_basescan_remediation_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != BASESCAN_REMEDIATION_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
-    if payload.get("lastUpdated") not in {"2026-05-25", "2026-05-26"}:
+    if payload.get("lastUpdated") not in {"2026-05-25", "2026-05-27"}:
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("status") != "basescan-remediation-required-before-next-submission":
         raise SiteCheckError(f"{label}: wrong status")
@@ -1012,7 +1012,7 @@ def validate_basescan_remediation_json(text: str) -> None:
     if email_state.get("domainEmailSetupPlanData") != DOMAIN_EMAIL_URL:
         raise SiteCheckError(f"{label}: wrong email-state domainEmailSetupPlanData")
     latest_dns = email_state.get("latestDnsSnapshot", {})
-    if latest_dns.get("checkedAt") not in {"2026-05-25T15:04:09Z", "2026-05-26T08:32:28Z"}:
+    if latest_dns.get("checkedAt") not in {"2026-05-25T15:04:09Z", "2026-05-27T07:30:47Z"}:
         raise SiteCheckError(f"{label}: wrong latest DNS snapshot timestamp")
     if latest_dns.get("readyForBaseScanEmailEvidence") is not False:
         raise SiteCheckError(f"{label}: latest DNS snapshot must not be ready")
@@ -1068,7 +1068,7 @@ def validate_basescan_remediation_json(text: str) -> None:
     if not any("https://gcagochina.com/platform-replies.html" in item for item in gate.get("requiredBeforeReady", [])):
         raise SiteCheckError(f"{label}: missing Platform Replies next-submission gate")
     if not any(
-        "2026-05-25 DNS snapshot blockers" in item or "2026-05-26 DNS snapshot blockers" in item
+        "2026-05-25 DNS snapshot blockers" in item or "2026-05-27 DNS snapshot blockers" in item
         for item in gate.get("requiredBeforeReady", [])
     ):
         raise SiteCheckError(f"{label}: missing latest DNS snapshot gate")
@@ -1511,7 +1511,7 @@ def validate_zh_domain_email_page(text: str) -> None:
         "BaseScan 邮箱整改",
         "support@gcagochina.com",
         "GCAgochina@outlook.com",
-        "2026-05-26 未通过",
+        "2026-05-27 未通过",
         "等邮箱证据完成",
         "不能说已启用",
         "不能重复提交",
@@ -1540,7 +1540,7 @@ def validate_zh_domain_email_page(text: str) -> None:
         "Cloudflare Email Routing only",
         "root-domain SPF TXT",
         "--dkim-selector &lt;provider-selector&gt;",
-        "2026-05-26 快照仍显示 MX/SPF/DMARC missing，DKIM selector required",
+        "2026-05-27 快照仍显示 MX/SPF/DMARC missing，DKIM selector required",
         "tools/check_domain_email_dns.py",
         "tools/build_domain_email_evidence_packet.py",
         "tools/check_basescan_resubmission_readiness.py",
@@ -3159,7 +3159,7 @@ def validate_whitepaper_page(text: str) -> None:
     assert_contains(text, "no third-party audit has been completed", label)
     assert_contains(text, "returned again as information-insufficient on 2026-05-23", label)
     assert_contains(text, "domain-email.html#snapshotTitle", label)
-    assert_contains_any(text, ("2026-05-25 DNS snapshot", "2026-05-26 DNS snapshot"), label, "DNS snapshot")
+    assert_contains_any(text, ("2026-05-25 DNS snapshot", "2026-05-27 DNS snapshot"), label, "DNS snapshot")
     assert_contains(text, "MX/SPF/DMARC missing", label)
     assert_contains(text, "DKIM selector required", label)
     assert_contains(text, "readyForBaseScanEmailEvidence", label)
@@ -9913,7 +9913,7 @@ def validate_reviewer_kit_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong BaseScan profile status")
     if reviews.get("baseScanDomainEmailGate") not in {
         "blocked-by-dns-snapshot-2026-05-25",
-        "blocked-by-dns-snapshot-2026-05-26",
+        "blocked-by-dns-snapshot-2026-05-27",
     }:
         raise SiteCheckError(f"{label}: wrong BaseScan domain email gate")
     if reviews.get("baseScanDomainEmailTarget") != "support@gcagochina.com":
@@ -9998,7 +9998,7 @@ def validate_reviewer_kit_page(text: str) -> None:
     assert_contains(text, "Custody Roadmap", label)
     assert_contains(text, "BaseScan Profile", label)
     assert_contains(text, "Domain Email Gate", label)
-    assert_contains_any(text, ("2026-05-25 DNS snapshot", "2026-05-26 DNS snapshot"), label, "DNS snapshot")
+    assert_contains_any(text, ("2026-05-25 DNS snapshot", "2026-05-27 DNS snapshot"), label, "DNS snapshot")
     assert_contains(text, "MX/SPF/DMARC missing", label)
     assert_contains(text, "DKIM selector required", label)
     assert_contains(text, "readyForBaseScanEmailEvidence", label)
@@ -10274,7 +10274,7 @@ def validate_trust_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong BaseScan token profile status")
     if snapshot.get("baseScanDomainEmailGate") not in {
         "blocked-by-dns-snapshot-2026-05-25",
-        "blocked-by-dns-snapshot-2026-05-26",
+        "blocked-by-dns-snapshot-2026-05-27",
     }:
         raise SiteCheckError(f"{label}: wrong BaseScan domain email gate")
     if snapshot.get("baseScanDomainEmailTarget") != "support@gcagochina.com":
@@ -10354,7 +10354,7 @@ def validate_trust_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong third-party audit status")
     if reviews.get("baseScanDomainEmailGate") not in {
         "blocked-by-dns-snapshot-2026-05-25",
-        "blocked-by-dns-snapshot-2026-05-26",
+        "blocked-by-dns-snapshot-2026-05-27",
     }:
         raise SiteCheckError(f"{label}: wrong external-review domain email gate")
     if reviews.get("baseScanDomainEmailTarget") != "support@gcagochina.com":
@@ -10394,7 +10394,7 @@ def validate_trust_page(text: str) -> None:
     assert_contains(text, "BaseScan source code", label)
     assert_contains(text, "Returned 2026-05-23; remediation required", label)
     assert_contains(text, "BaseScan domain email evidence", label)
-    assert_contains_any(text, ("2026-05-25 DNS snapshot", "2026-05-26 DNS snapshot"), label, "DNS snapshot")
+    assert_contains_any(text, ("2026-05-25 DNS snapshot", "2026-05-27 DNS snapshot"), label, "DNS snapshot")
     assert_contains(text, "MX/SPF/DMARC missing", label)
     assert_contains(text, "DKIM selector required", label)
     assert_contains(text, "Approved 2026-05-11", label)
@@ -10421,7 +10421,7 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != EXTERNAL_REVIEW_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
-    if payload.get("lastUpdated") not in {"2026-05-25", "2026-05-26"}:
+    if payload.get("lastUpdated") not in {"2026-05-25", "2026-05-27"}:
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("status") != "external-review-status-active":
         raise SiteCheckError(f"{label}: wrong status")
@@ -10517,7 +10517,7 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing BaseScan domain email evidence packet result")
     if not (
         "2026-05-25 DNS snapshot" in base_scan_profile.get("lastCheckedResult", "")
-        or "2026-05-26 DNS snapshot" in base_scan_profile.get("lastCheckedResult", "")
+        or "2026-05-27 DNS snapshot" in base_scan_profile.get("lastCheckedResult", "")
     ):
         raise SiteCheckError(f"{label}: missing latest DNS snapshot result")
     if "readyForBaseScanEmailEvidence is false" not in base_scan_profile.get("lastCheckedResult", ""):
@@ -10557,7 +10557,7 @@ def validate_external_reviews_json(text: str) -> None:
         claim in payload.get("safePublicClaims", [])
         for claim in (
             "The BaseScan domain email evidence gate is blocked by the 2026-05-25 DNS snapshot: MX/SPF/DMARC missing and DKIM selector required.",
-            "The BaseScan domain email evidence gate is blocked by the 2026-05-26 DNS snapshot: MX/SPF/DMARC missing and DKIM selector required.",
+            "The BaseScan domain email evidence gate is blocked by the 2026-05-27 DNS snapshot: MX/SPF/DMARC missing and DKIM selector required.",
         )
     ):
         raise SiteCheckError(f"{label}: missing domain email safe claim")
@@ -10586,7 +10586,7 @@ def validate_external_reviews_page(text: str) -> None:
     assert_contains(text, "domain-email.html#evidenceTitle", label)
     assert_contains(text, "domain-email.html", label)
     assert_contains(text, "BaseScan domain email evidence", label)
-    assert_contains_any(text, ("2026-05-25 DNS snapshot", "2026-05-26 DNS snapshot"), label, "DNS snapshot")
+    assert_contains_any(text, ("2026-05-25 DNS snapshot", "2026-05-27 DNS snapshot"), label, "DNS snapshot")
     assert_contains(text, "MX/SPF/DMARC missing", label)
     assert_contains(text, "DKIM selector required", label)
     assert_contains(text, "readyForBaseScanEmailEvidence false", label)

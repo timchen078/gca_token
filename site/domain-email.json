@@ -1,7 +1,7 @@
 {
   "schema": "https://gcagochina.com/domain-email.json",
   "pageUrl": "https://gcagochina.com/domain-email.html",
-  "lastUpdated": "2026-05-26",
+  "lastUpdated": "2026-05-27",
   "status": "domain-email-setup-plan-published-not-active",
   "projectName": "GCA",
   "domain": "gcagochina.com",
@@ -12,7 +12,7 @@
     "security@gcagochina.com"
   ],
   "baseScanUse": {
-    "currentBlocker": "BaseScan requested clearer project/team information and an official-domain sender/contact email. Tim Chen's official-domain professional profile is published; the 2026-05-26 public DNS snapshot still shows MX, SPF, and DMARC missing, with DKIM requiring the provider selector.",
+    "currentBlocker": "BaseScan requested clearer project/team information and an official-domain sender/contact email. Tim Chen's official-domain professional profile is published; the 2026-05-27 public DNS snapshot still shows MX, SPF, and DMARC missing, with DKIM requiring the provider selector.",
     "resubmissionReady": false,
     "readyWhen": [
       "support@gcagochina.com can receive external email",
@@ -22,7 +22,7 @@
     ]
   },
   "liveDnsSnapshot": {
-    "checkedAt": "2026-05-26T08:32:28Z",
+    "checkedAt": "2026-05-27T07:30:47Z",
     "tool": "tools/check_domain_email_dns.py",
     "command": "python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox support --json",
     "readyForBaseScanEmailEvidence": false,

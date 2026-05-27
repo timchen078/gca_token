@@ -4,8 +4,8 @@
   "returnNoticeDate": "2026-05-13",
   "resubmissionDate": "2026-05-13",
   "latestReturnNoticeDate": "2026-05-23",
-  "lastCheckedDate": "2026-05-26",
-  "lastCheckedResult": "BaseScan returned the token profile update again as information-insufficient; Tim Chen official-domain professional profile evidence is published, and the 2026-05-26 read-only DNS snapshot confirms project-domain email remains blocked because MX, SPF, and DMARC are missing and DKIM still requires the provider selector.",
+  "lastCheckedDate": "2026-05-27",
+  "lastCheckedResult": "BaseScan returned the token profile update again as information-insufficient; Tim Chen official-domain professional profile evidence is published, and the 2026-05-27 read-only DNS snapshot confirms project-domain email remains blocked because MX, SPF, and DMARC are missing and DKIM still requires the provider selector.",
   "domainEmailSetupPlanUrl": "https://gcagochina.com/domain-email.html",
   "domainEmailSetupPlanDataUrl": "https://gcagochina.com/domain-email.json",
   "domainEmailActivationEvidencePacket": {
@@ -21,7 +21,7 @@
       "updated support-page screenshot showing the same sender email"
     ],
     "latestPublicDnsSnapshot": {
-      "checkedAt": "2026-05-26T08:32:28Z",
+      "checkedAt": "2026-05-27T07:30:47Z",
       "tool": "tools/check_domain_email_dns.py",
       "command": "python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox support --json",
       "readyForBaseScanEmailEvidence": false,
