@@ -76,6 +76,7 @@ def summarize_daily(payload: dict[str, Any] | None) -> dict[str, Any]:
             "includeMemberOps": False,
             "includeHoldingReport": False,
             "steps": [],
+            "baseScanPreflight": {"available": False, "readyForBaseScanResubmission": None, "status": "missing"},
         }
     steps = []
     for step in payload.get("steps") or []:
@@ -86,6 +87,7 @@ def summarize_daily(payload: dict[str, Any] | None) -> dict[str, Any]:
             "ok": bool(step.get("ok")),
             "returnCode": step.get("returnCode", ""),
         })
+    preflight = payload.get("baseScanPreflight") if isinstance(payload.get("baseScanPreflight"), dict) else {}
     return {
         "available": True,
         "ok": bool(payload.get("ok")),
@@ -93,6 +95,16 @@ def summarize_daily(payload: dict[str, Any] | None) -> dict[str, Any]:
         "includeMemberOps": bool(payload.get("includeMemberOps")),
         "includeHoldingReport": bool(payload.get("includeHoldingReport")),
         "steps": steps,
+        "baseScanPreflight": {
+            "available": bool(preflight.get("available")),
+            "readyForBaseScanResubmission": preflight.get("readyForBaseScanResubmission"),
+            "status": str(preflight.get("status") or ""),
+            "publicEmailSwitchStatus": str(preflight.get("publicEmailSwitchStatus") or ""),
+            "filesStillUsingOldEmail": as_int(preflight.get("filesStillUsingOldEmail")),
+            "missingOrBlockedRequirements": [
+                str(item) for item in preflight.get("missingOrBlockedRequirements", []) if str(item)
+            ],
+        },
     }
 
 
@@ -188,6 +200,15 @@ def build_next_actions(daily: dict[str, Any], member_ops: dict[str, Any], suppor
         suffix = f" Failed step(s): {', '.join(failed)}." if failed else ""
         actions.append(f"Investigate the latest public daily ops failure.{suffix}")
 
+    base_scan = daily.get("baseScanPreflight", {})
+    if daily["available"] and isinstance(base_scan, dict):
+        if not base_scan.get("available"):
+            actions.append("Refresh the non-blocking BaseScan preflight status in the next daily ops run.")
+        elif base_scan.get("readyForBaseScanResubmission") is False:
+            blocked = base_scan.get("missingOrBlockedRequirements") if isinstance(base_scan.get("missingOrBlockedRequirements"), list) else []
+            blocked_text = ", ".join(str(item) for item in blocked[:5]) if blocked else "see BaseScan preflight summary"
+            actions.append(f"Do not resubmit the BaseScan token profile yet; complete blocked item(s): {blocked_text}.")
+
     if not member_ops["available"]:
         actions.append("When `ADMIN_READ_TOKEN` is available locally, run member ops to refresh account, ledger, support, and optional holding reports.")
     elif not member_ops["ok"]:
@@ -244,6 +265,13 @@ def render_markdown(digest: dict[str, Any]) -> str:
         f"- Generated at: `{daily.get('generatedAt') or 'not available'}`",
         f"- Member ops included: `{str(daily.get('includeMemberOps')).lower()}`",
         f"- Holding report included: `{str(daily.get('includeHoldingReport')).lower()}`",
+        "",
+        "## BaseScan Preflight",
+        "",
+        f"- Status: `{daily.get('baseScanPreflight', {}).get('status') or 'not available'}`",
+        f"- Ready for resubmission: `{str(daily.get('baseScanPreflight', {}).get('readyForBaseScanResubmission')).lower()}`",
+        f"- Public email switch: `{daily.get('baseScanPreflight', {}).get('publicEmailSwitchStatus') or 'not available'}`",
+        f"- Blocked requirements: `{len(daily.get('baseScanPreflight', {}).get('missingOrBlockedRequirements') or [])}`",
         "",
         "## Member Operations",
         "",

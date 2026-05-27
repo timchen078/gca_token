@@ -41,6 +41,7 @@ DEFAULT_API_BASE_URL = "https://gca-registration-api.gcagochina.workers.dev"
 
 
 CommandRunner = Callable[[Sequence[str], Path, float], subprocess.CompletedProcess[str]]
+BASESCAN_PREFLIGHT_STEP_ID = "basescan-resubmission-preflight-status"
 
 
 def utc_now() -> str:
@@ -64,6 +65,43 @@ def default_runner(command: Sequence[str], cwd: Path, timeout: float) -> subproc
     )
 
 
+def summarize_basescan_preflight(stdout: str) -> dict[str, Any]:
+    try:
+        payload = json.loads(stdout or "{}")
+    except json.JSONDecodeError as exc:
+        return {
+            "available": False,
+            "readyForBaseScanResubmission": None,
+            "status": "unreadable-preflight-output",
+            "missingOrBlockedRequirements": [],
+            "publicEmailSwitchStatus": "",
+            "error": f"invalid JSON: {exc}",
+        }
+    if not isinstance(payload, dict):
+        return {
+            "available": False,
+            "readyForBaseScanResubmission": None,
+            "status": "unreadable-preflight-output",
+            "missingOrBlockedRequirements": [],
+            "publicEmailSwitchStatus": "",
+            "error": "preflight output must be a JSON object",
+        }
+
+    switch = payload.get("domainEmailPublicSwitchSummary")
+    switch_summary = switch.get("summary") if isinstance(switch, dict) and isinstance(switch.get("summary"), dict) else {}
+    return {
+        "available": True,
+        "readyForBaseScanResubmission": payload.get("readyForBaseScanResubmission") is True,
+        "status": str(payload.get("status") or ""),
+        "missingOrBlockedRequirements": [
+            str(item) for item in payload.get("missingOrBlockedRequirements", []) if str(item)
+        ],
+        "publicEmailSwitchStatus": str(switch.get("status") or "") if isinstance(switch, dict) else "",
+        "filesStillUsingOldEmail": switch_summary.get("filesStillUsingCurrentEmail", 0),
+        "nextAction": str(payload.get("nextAction") or ""),
+    }
+
+
 def run_step(
     *,
     step_id: str,
@@ -71,25 +109,45 @@ def run_step(
     cwd: Path,
     timeout: float,
     runner: CommandRunner,
+    blocks_summary_ok: bool = True,
 ) -> dict[str, Any]:
     try:
         completed = runner(command, cwd, timeout)
-        return {
+        result = {
             "id": step_id,
             "ok": completed.returncode == 0,
+            "blocksSummaryOk": blocks_summary_ok,
             "returnCode": completed.returncode,
             "command": shlex.join(str(part) for part in command),
             "stdoutTail": truncate(completed.stdout or ""),
             "stderrTail": truncate(completed.stderr or ""),
         }
+        if step_id == BASESCAN_PREFLIGHT_STEP_ID:
+            result["statusSummary"] = summarize_basescan_preflight(completed.stdout or "")
+        return result
     except subprocess.TimeoutExpired as exc:
         return {
             "id": step_id,
             "ok": False,
+            "blocksSummaryOk": blocks_summary_ok,
             "returnCode": None,
             "command": shlex.join(str(part) for part in command),
             "stdoutTail": truncate(exc.stdout or ""),
             "stderrTail": truncate(exc.stderr or f"timeout after {timeout} seconds"),
+            **(
+                {
+                    "statusSummary": {
+                        "available": False,
+                        "readyForBaseScanResubmission": None,
+                        "status": "preflight-timeout",
+                        "missingOrBlockedRequirements": [],
+                        "publicEmailSwitchStatus": "",
+                        "error": f"timeout after {timeout} seconds",
+                    }
+                }
+                if step_id == BASESCAN_PREFLIGHT_STEP_ID
+                else {}
+            ),
         }
 
 
@@ -103,11 +161,12 @@ def build_steps(
     include_holding_report: bool,
     holding_no_live_read: bool,
     holding_force_same_day: bool,
-) -> list[tuple[str, list[str], float]]:
+    include_basescan_preflight_status: bool,
+) -> list[tuple[str, list[str], float, bool]]:
     if include_holding_report and not include_member_ops:
         raise ValueError("--include-holding-report requires --include-member-ops")
     python = sys.executable
-    steps: list[tuple[str, list[str], float]] = [
+    steps: list[tuple[str, list[str], float, bool]] = [
         (
             "public-site",
             [
@@ -119,6 +178,7 @@ def build_steps(
                 str(timeout),
             ],
             max(timeout * 8, 120),
+            True,
         ),
         (
             "registration-api-public",
@@ -132,8 +192,23 @@ def build_steps(
                 str(timeout),
             ],
             max(timeout * 3, 60),
+            True,
         ),
     ]
+    if include_basescan_preflight_status:
+        steps.append(
+            (
+                BASESCAN_PREFLIGHT_STEP_ID,
+                [
+                    python,
+                    "tools/check_basescan_resubmission_readiness.py",
+                    "--skip-url-checks",
+                    "--json",
+                ],
+                max(timeout * 3, 60),
+                False,
+            )
+        )
     if include_member_ops:
         member_command = [
             python,
@@ -156,6 +231,7 @@ def build_steps(
                 "member-access-ops",
                 member_command,
                 max(timeout * 4, 90),
+                True,
             )
         )
     return steps
@@ -171,6 +247,7 @@ def run_daily_ops(
     include_holding_report: bool = False,
     holding_no_live_read: bool = False,
     holding_force_same_day: bool = False,
+    include_basescan_preflight_status: bool = True,
     summary_output: Path = DEFAULT_SUMMARY_OUTPUT,
     build_digest: bool = False,
     digest_output: Path = DEFAULT_DIGEST_OUTPUT,
@@ -178,8 +255,15 @@ def run_daily_ops(
     runner: CommandRunner = default_runner,
 ) -> dict[str, Any]:
     steps = [
-        run_step(step_id=step_id, command=command, cwd=ROOT, timeout=step_timeout, runner=runner)
-        for step_id, command, step_timeout in build_steps(
+        run_step(
+            step_id=step_id,
+            command=command,
+            cwd=ROOT,
+            timeout=step_timeout,
+            runner=runner,
+            blocks_summary_ok=blocks_summary_ok,
+        )
+        for step_id, command, step_timeout, blocks_summary_ok in build_steps(
             site_base_url=site_base_url,
             api_base_url=api_base_url,
             timeout=timeout,
@@ -188,10 +272,19 @@ def run_daily_ops(
             include_holding_report=include_holding_report,
             holding_no_live_read=holding_no_live_read,
             holding_force_same_day=holding_force_same_day,
+            include_basescan_preflight_status=include_basescan_preflight_status,
         )
     ]
+    basescan_preflight = next(
+        (
+            step.get("statusSummary")
+            for step in steps
+            if step.get("id") == BASESCAN_PREFLIGHT_STEP_ID and isinstance(step.get("statusSummary"), dict)
+        ),
+        {"available": False, "readyForBaseScanResubmission": None, "status": "not-run", "missingOrBlockedRequirements": []},
+    )
     summary = {
-        "ok": all(step["ok"] for step in steps),
+        "ok": all(step["ok"] for step in steps if step.get("blocksSummaryOk", True)),
         "packetVersion": "gca_daily_ops_summary_v1",
         "generatedAt": utc_now(),
         "siteBaseUrl": site_base_url,
@@ -200,6 +293,8 @@ def run_daily_ops(
         "includeHoldingReport": include_holding_report,
         "holdingNoLiveRead": holding_no_live_read,
         "holdingForceSameDay": holding_force_same_day,
+        "includeBaseScanPreflightStatus": include_basescan_preflight_status,
+        "baseScanPreflight": basescan_preflight,
         "buildDigest": build_digest,
         "steps": steps,
         "summaryOutput": str(summary_output),
@@ -222,6 +317,9 @@ def run_daily_ops(
             "requiresTransaction": False,
             "automaticTokenTransfer": False,
             "memberBenefitTransferAutomatic": False,
+            "baseScanPreflightStatusOnly": True,
+            "baseScanPreflightBlocksDailyOps": False,
+            "submitsBaseScanRequest": False,
         },
     }
     summary_output.parent.mkdir(parents=True, exist_ok=True)
@@ -260,6 +358,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--include-holding-report", action="store_true", help="Also refresh the local GCA Member 30-day holding report.")
     parser.add_argument("--holding-no-live-read", action="store_true", help="Build holding report from existing snapshots without RPC reads.")
     parser.add_argument("--holding-force-same-day", action="store_true", help="Append a fresh holding snapshot even if today already exists.")
+    parser.add_argument("--skip-basescan-preflight-status", action="store_true", help="Skip the non-blocking BaseScan resubmission preflight status step.")
     parser.add_argument("--summary-output", type=Path, default=DEFAULT_SUMMARY_OUTPUT, help="Daily summary JSON output.")
     parser.add_argument("--build-digest", action="store_true", help="Also build the redacted local operator digest from summary files.")
     parser.add_argument("--digest-output", type=Path, default=DEFAULT_DIGEST_OUTPUT, help="Markdown operator digest output path.")
@@ -281,6 +380,7 @@ def main(argv: list[str] | None = None) -> int:
         include_holding_report=args.include_holding_report,
         holding_no_live_read=args.holding_no_live_read,
         holding_force_same_day=args.holding_force_same_day,
+        include_basescan_preflight_status=not args.skip_basescan_preflight_status,
         summary_output=args.summary_output,
         build_digest=args.build_digest,
         digest_output=args.digest_output,

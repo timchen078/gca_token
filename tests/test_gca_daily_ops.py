@@ -8,12 +8,29 @@ from pathlib import Path
 from tools.run_gca_daily_ops import run_daily_ops
 
 
+BASESCAN_BLOCKED_OUTPUT = json.dumps({
+    "readyForBaseScanResubmission": False,
+    "status": "blocked-before-basescan-resubmission",
+    "missingOrBlockedRequirements": [
+        "official-domain-email",
+        "domain-email-public-switch-check",
+    ],
+    "domainEmailPublicSwitchSummary": {
+        "status": "public-email-switch-pending",
+        "summary": {"filesStillUsingCurrentEmail": 3},
+    },
+    "nextAction": "Do not resubmit BaseScan yet. Complete the blocked requirements first.",
+})
+
+
 class GcaDailyOpsTests(unittest.TestCase):
     def test_daily_ops_public_only_runs_site_and_api_checks(self):
         seen = []
 
         def runner(command, cwd, timeout):
             seen.append({"command": list(command), "cwd": cwd, "timeout": timeout})
+            if any("check_basescan_resubmission_readiness.py" in part for part in command):
+                return subprocess.CompletedProcess(command, 0, stdout=BASESCAN_BLOCKED_OUTPUT, stderr="")
             return subprocess.CompletedProcess(command, 0, stdout='{"ok": true}', stderr="")
 
         with tempfile.TemporaryDirectory() as temp:
@@ -27,10 +44,22 @@ class GcaDailyOpsTests(unittest.TestCase):
 
         self.assertTrue(summary["ok"])
         self.assertFalse(summary["includeMemberOps"])
-        self.assertEqual([step["id"] for step in summary["steps"]], ["public-site", "registration-api-public"])
+        self.assertEqual(
+            [step["id"] for step in summary["steps"]],
+            ["public-site", "registration-api-public", "basescan-resubmission-preflight-status"],
+        )
         self.assertTrue(summary["boundaries"]["publicOnlyByDefault"])
         self.assertFalse(summary["boundaries"]["writesProductionData"])
         self.assertFalse(summary["boundaries"]["automaticTokenTransfer"])
+        self.assertTrue(summary["includeBaseScanPreflightStatus"])
+        self.assertTrue(summary["boundaries"]["baseScanPreflightStatusOnly"])
+        self.assertFalse(summary["boundaries"]["baseScanPreflightBlocksDailyOps"])
+        self.assertFalse(summary["boundaries"]["submitsBaseScanRequest"])
+        self.assertFalse(summary["baseScanPreflight"]["readyForBaseScanResubmission"])
+        self.assertEqual(summary["baseScanPreflight"]["status"], "blocked-before-basescan-resubmission")
+        self.assertEqual(summary["baseScanPreflight"]["publicEmailSwitchStatus"], "public-email-switch-pending")
+        self.assertIn("official-domain-email", summary["baseScanPreflight"]["missingOrBlockedRequirements"])
+        self.assertFalse(summary["steps"][-1]["blocksSummaryOk"])
         self.assertFalse(summary["includeHoldingReport"])
         self.assertFalse(summary["buildDigest"])
         self.assertFalse(summary["operatorDigest"]["requested"])
@@ -39,9 +68,29 @@ class GcaDailyOpsTests(unittest.TestCase):
         commands = [" ".join(item["command"]) for item in seen]
         self.assertTrue(any("tools/check_public_site.py" in command for command in commands))
         self.assertTrue(any("tools/check_gca_registration_api.py" in command and "--public-only" in command for command in commands))
+        self.assertTrue(any("tools/check_basescan_resubmission_readiness.py" in command and "--skip-url-checks" in command for command in commands))
+
+    def test_daily_ops_can_skip_basescan_status_explicitly(self):
+        def runner(command, cwd, timeout):
+            return subprocess.CompletedProcess(command, 0, stdout='{"ok": true}', stderr="")
+
+        with tempfile.TemporaryDirectory() as temp:
+            summary = run_daily_ops(
+                summary_output=Path(temp) / "summary.json",
+                include_basescan_preflight_status=False,
+                runner=runner,
+            )
+
+        self.assertTrue(summary["ok"])
+        self.assertFalse(summary["includeBaseScanPreflightStatus"])
+        self.assertEqual([step["id"] for step in summary["steps"]], ["public-site", "registration-api-public"])
+        self.assertFalse(summary["baseScanPreflight"]["available"])
+        self.assertEqual(summary["baseScanPreflight"]["status"], "not-run")
 
     def test_daily_ops_can_include_member_ops_explicitly(self):
         def runner(command, cwd, timeout):
+            if any("check_basescan_resubmission_readiness.py" in part for part in command):
+                return subprocess.CompletedProcess(command, 0, stdout=BASESCAN_BLOCKED_OUTPUT, stderr="")
             return subprocess.CompletedProcess(command, 0, stdout="ok", stderr="")
 
         with tempfile.TemporaryDirectory() as temp:
@@ -62,6 +111,8 @@ class GcaDailyOpsTests(unittest.TestCase):
 
     def test_daily_ops_can_include_holding_report_explicitly(self):
         def runner(command, cwd, timeout):
+            if any("check_basescan_resubmission_readiness.py" in part for part in command):
+                return subprocess.CompletedProcess(command, 0, stdout=BASESCAN_BLOCKED_OUTPUT, stderr="")
             return subprocess.CompletedProcess(command, 0, stdout="ok", stderr="")
 
         with tempfile.TemporaryDirectory() as temp:
@@ -92,6 +143,8 @@ class GcaDailyOpsTests(unittest.TestCase):
 
     def test_daily_ops_holding_report_can_rebuild_without_live_wallet_reads(self):
         def runner(command, cwd, timeout):
+            if any("check_basescan_resubmission_readiness.py" in part for part in command):
+                return subprocess.CompletedProcess(command, 0, stdout=BASESCAN_BLOCKED_OUTPUT, stderr="")
             return subprocess.CompletedProcess(command, 0, stdout="ok", stderr="")
 
         with tempfile.TemporaryDirectory() as temp:
@@ -114,6 +167,8 @@ class GcaDailyOpsTests(unittest.TestCase):
         def runner(command, cwd, timeout):
             if any("check_public_site.py" in part for part in command):
                 return subprocess.CompletedProcess(command, 1, stdout="", stderr="site failed")
+            if any("check_basescan_resubmission_readiness.py" in part for part in command):
+                return subprocess.CompletedProcess(command, 0, stdout=BASESCAN_BLOCKED_OUTPUT, stderr="")
             return subprocess.CompletedProcess(command, 0, stdout='{"ok": true}', stderr="")
 
         with tempfile.TemporaryDirectory() as temp:
@@ -123,6 +178,7 @@ class GcaDailyOpsTests(unittest.TestCase):
             self.assertFalse(summary["ok"])
             self.assertFalse(summary["steps"][0]["ok"])
             self.assertEqual(summary["steps"][0]["stderrTail"], "site failed")
+            self.assertFalse(summary["steps"][2]["blocksSummaryOk"])
             self.assertTrue(summary_output.exists())
             serialized = json.dumps(summary)
             self.assertNotIn("ADMIN_READ_TOKEN", serialized)
@@ -130,6 +186,8 @@ class GcaDailyOpsTests(unittest.TestCase):
 
     def test_daily_ops_can_build_redacted_operator_digest(self):
         def runner(command, cwd, timeout):
+            if any("check_basescan_resubmission_readiness.py" in part for part in command):
+                return subprocess.CompletedProcess(command, 0, stdout=BASESCAN_BLOCKED_OUTPUT, stderr="")
             return subprocess.CompletedProcess(command, 0, stdout='{"ok": true, "email": "private-user@example.com"}', stderr="")
 
         with tempfile.TemporaryDirectory() as temp:
