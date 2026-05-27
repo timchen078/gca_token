@@ -1,2 +1,2 @@
-published-from-main: 27d8f633185c865877a8c3cb19b875ba15296974
-reason: refresh GitHub Pages deployment after provider matrix update
+published-from-main: pending
+purpose: trigger GCA Pages publish workflow after domain email provider matrix update
