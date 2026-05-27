@@ -3966,10 +3966,15 @@ def validate_roadmap_page(text: str) -> None:
         ("roadmap.json", "narrative.json", "radar.json", "community.json", "support.json", "listing-readiness.json"),
     )
     assert_contains(text, "Concept-stage utility buildout", label)
+    assert_contains(text, "account and ledger path live", label)
     assert_contains(text, "Controlled HTTPS member account UI", label)
+    assert_contains(text, "Live at", label)
     assert_contains(text, "Read-only GCA balance verification", label)
+    assert_contains(text, "Live via Worker eth_call", label)
     assert_contains(text, "100 Web3 Radar utility credit records", label)
+    assert_contains(text, "Live for eligible wallet records", label)
     assert_contains(text, "GCA Member records", label)
+    assert_contains(text, "benefit remains manual review", label)
     assert_contains(text, "External Dependencies", label)
     assert_contains(text, "Returned 2026-05-23; remediation required", label)
     assert_contains(text, "Owner observed no warning visible", label)
@@ -3995,6 +4000,8 @@ def validate_roadmap_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong status")
     if payload.get("currentStage") != "concept-stage-utility-buildout":
         raise SiteCheckError(f"{label}: wrong currentStage")
+    if payload.get("lastUpdated") != "2026-05-27":
+        raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
     if payload.get("contractAddress") != MAINNET_ADDRESS:
@@ -4023,6 +4030,8 @@ def validate_roadmap_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing controlled account UI priority")
     if not any(priority.get("id") == "utility-credit-ledger" for priority in payload.get("nextBuildPriorities", [])):
         raise SiteCheckError(f"{label}: missing utility credit ledger priority")
+    if not any(milestone.get("id") == "account-ledger-path-live" for milestone in payload.get("completedMilestones", [])):
+        raise SiteCheckError(f"{label}: missing account ledger live milestone")
     if "GCA is concept-stage and has live account intake, read-only wallet verification, eligible ledger records, and staged non-custodial quant research access." not in payload.get("publicClaimBoundaries", {}).get("safeClaims", []):
         raise SiteCheckError(f"{label}: missing concept-stage safe claim")
     if "the 10,000 GCA member benefit is automatic or self-service transferred before holding-period verification, support approval, and manual reserve-wallet processing" not in payload.get("publicClaimBoundaries", {}).get("doNotClaim", []):
