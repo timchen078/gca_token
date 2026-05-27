@@ -1137,6 +1137,14 @@ class GcaMemberBackend:
                 "includeMemberOps": False,
                 "includeHoldingReport": False,
                 "steps": [],
+                "baseScanPreflight": {
+                    "available": False,
+                    "readyForBaseScanResubmission": None,
+                    "status": "missing",
+                    "publicEmailSwitchStatus": "",
+                    "filesStillUsingOldEmail": 0,
+                    "missingOrBlockedRequirements": [],
+                },
             },
             "memberOps": {
                 "available": False,
@@ -1208,6 +1216,7 @@ class GcaMemberBackend:
         support_status_counts = support.get("statusCounts") if isinstance(support.get("statusCounts"), dict) else {}
         holding_counts = holding.get("counts") if isinstance(holding.get("counts"), dict) else {}
         holding_lane_counts = holding.get("laneCounts") if isinstance(holding.get("laneCounts"), dict) else {}
+        base_scan = daily.get("baseScanPreflight") if isinstance(daily.get("baseScanPreflight"), dict) else {}
 
         source_file_status = {}
         for key, value in source_files.items():
@@ -1245,6 +1254,22 @@ class GcaMemberBackend:
                 "includeMemberOps": safe_operator_bool(daily.get("includeMemberOps")),
                 "includeHoldingReport": safe_operator_bool(daily.get("includeHoldingReport")),
                 "steps": steps,
+                "baseScanPreflight": {
+                    "available": safe_operator_bool(base_scan.get("available")),
+                    "readyForBaseScanResubmission": (
+                        True if base_scan.get("readyForBaseScanResubmission") is True
+                        else False if base_scan.get("readyForBaseScanResubmission") is False
+                        else None
+                    ),
+                    "status": safe_operator_text(base_scan.get("status"), 120),
+                    "publicEmailSwitchStatus": safe_operator_text(base_scan.get("publicEmailSwitchStatus"), 120),
+                    "filesStillUsingOldEmail": safe_operator_int(base_scan.get("filesStillUsingOldEmail")),
+                    "missingOrBlockedRequirements": [
+                        safe_operator_text(item, 120)
+                        for item in base_scan.get("missingOrBlockedRequirements", [])
+                        if str(item or "").strip()
+                    ][:20],
+                },
             },
             "memberOps": {
                 "available": safe_operator_bool(member.get("available")),
@@ -1356,6 +1381,25 @@ class GcaMemberBackend:
                 "Fix public health check failure",
                 f"Daily public health has failing step(s): {', '.join(failed_steps) or 'unknown'}. Fix this before sending users or reviewers to public links.",
                 "daily-ops",
+            )
+
+        base_scan = daily.get("baseScanPreflight") if isinstance(daily.get("baseScanPreflight"), dict) else {}
+        if base_scan.get("available") and base_scan.get("readyForBaseScanResubmission") is False:
+            blockers = [
+                safe_operator_text(item, 120)
+                for item in base_scan.get("missingOrBlockedRequirements", [])
+                if str(item or "").strip()
+            ]
+            blocker_text = ", ".join(blockers[:5]) if blockers else "see BaseScan preflight summary"
+            old_email_files = safe_operator_int(base_scan.get("filesStillUsingOldEmail"))
+            suffix = f" Public switch still has {old_email_files} old-email file(s)." if old_email_files else ""
+            add_item(
+                "complete-basescan-preflight",
+                "medium",
+                "Complete BaseScan preflight blockers",
+                f"BaseScan token-profile resubmission is still blocked: {blocker_text}.{suffix}",
+                "basescan-preflight",
+                ".venv/bin/python tools/check_basescan_resubmission_readiness.py --skip-url-checks --json",
             )
 
         reply_ready = safe_operator_int(

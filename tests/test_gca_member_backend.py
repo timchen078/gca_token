@@ -401,6 +401,18 @@ class GcaMemberBackendTests(unittest.TestCase):
                 "includeMemberOps": False,
                 "includeHoldingReport": False,
                 "steps": [{"id": "public-site", "ok": True, "returnCode": 0, "stdoutTail": "private-user@example.com"}],
+                "baseScanPreflight": {
+                    "available": True,
+                    "readyForBaseScanResubmission": False,
+                    "status": "blocked-before-basescan-resubmission",
+                    "publicEmailSwitchStatus": "public-email-switch-pending",
+                    "filesStillUsingOldEmail": 14,
+                    "missingOrBlockedRequirements": [
+                        "official-domain-email",
+                        "domain-email-public-switch-check",
+                        "private-user@example.com",
+                    ],
+                },
             },
             "memberOps": {
                 "available": True,
@@ -432,6 +444,10 @@ class GcaMemberBackendTests(unittest.TestCase):
         self.assertEqual(digest["sourceFileStatus"]["dailyOps"]["fileName"], "gca_daily_ops_summary.json")
         self.assertEqual(digest["outputs"]["markdownFile"], "gca_operator_digest.md")
         self.assertEqual(digest["dailyOps"]["steps"][0]["id"], "public-site")
+        self.assertFalse(digest["dailyOps"]["baseScanPreflight"]["readyForBaseScanResubmission"])
+        self.assertEqual(digest["dailyOps"]["baseScanPreflight"]["status"], "blocked-before-basescan-resubmission")
+        self.assertEqual(digest["dailyOps"]["baseScanPreflight"]["filesStillUsingOldEmail"], 14)
+        self.assertIn("official-domain-email", digest["dailyOps"]["baseScanPreflight"]["missingOrBlockedRequirements"])
         self.assertEqual(digest["memberOps"]["recordCount"], 12)
         self.assertEqual(digest["supportQueue"]["replyReadyRows"], 1)
         self.assertEqual(digest["holdingPeriod"]["counts"]["observedEligibleFor30Days"], 1)
@@ -464,7 +480,19 @@ class GcaMemberBackendTests(unittest.TestCase):
             "ok": True,
             "packetVersion": "gca_operator_digest_v1",
             "generatedAt": "2026-05-20T16:38:07Z",
-            "dailyOps": {"available": True, "ok": True, "steps": []},
+            "dailyOps": {
+                "available": True,
+                "ok": True,
+                "steps": [],
+                "baseScanPreflight": {
+                    "available": True,
+                    "readyForBaseScanResubmission": False,
+                    "status": "blocked-before-basescan-resubmission",
+                    "publicEmailSwitchStatus": "public-email-switch-pending",
+                    "filesStillUsingOldEmail": 14,
+                    "missingOrBlockedRequirements": ["official-domain-email", "domain-email-public-switch-check"],
+                },
+            },
             "memberOps": {
                 "available": True,
                 "ok": True,
@@ -484,6 +512,7 @@ class GcaMemberBackendTests(unittest.TestCase):
         self.assertIn("review-support-replies", item_ids)
         self.assertIn("review-pending-reserve-transfers", item_ids)
         self.assertIn("review-holding-ready-wallets", item_ids)
+        self.assertIn("complete-basescan-preflight", item_ids)
         self.assertTrue(plan["supportReviewPreview"])
         self.assertEqual(plan["supportReviewPreview"][0]["memberLedgerId"], response["memberLedger"]["memberLedgerId"])
         self.assertFalse(plan["boundaries"]["writesProductionData"])
@@ -752,6 +781,14 @@ class GcaMemberBackendTests(unittest.TestCase):
                     "ok": True,
                     "generatedAt": "2026-05-20T16:38:07Z",
                     "steps": [{"id": "public-site", "ok": True, "returnCode": 0}],
+                    "baseScanPreflight": {
+                        "available": True,
+                        "readyForBaseScanResubmission": False,
+                        "status": "blocked-before-basescan-resubmission",
+                        "publicEmailSwitchStatus": "public-email-switch-pending",
+                        "filesStillUsingOldEmail": 14,
+                        "missingOrBlockedRequirements": ["official-domain-email"],
+                    },
                 },
                 "memberOps": {
                     "available": True,
@@ -770,6 +807,7 @@ class GcaMemberBackendTests(unittest.TestCase):
             self.assertTrue(digest["available"])
             self.assertEqual(digest["status"], "loaded")
             self.assertEqual(digest["dailyOps"]["steps"][0]["id"], "public-site")
+            self.assertEqual(digest["dailyOps"]["baseScanPreflight"]["status"], "blocked-before-basescan-resubmission")
             self.assertEqual(digest["supportQueue"]["replyReadyRows"], 1)
             self.assertFalse(digest["boundaries"]["automaticTokenTransfer"])
 
@@ -779,6 +817,7 @@ class GcaMemberBackendTests(unittest.TestCase):
             self.assertEqual(action_plan["packetVersion"], "gca_operator_action_plan_v1")
             self.assertTrue(action_plan["sourceStatus"]["operatorDigestAvailable"])
             self.assertTrue(any(item["id"] == "review-support-replies" for item in action_plan["items"]))
+            self.assertTrue(any(item["id"] == "complete-basescan-preflight" for item in action_plan["items"]))
             self.assertFalse(action_plan["boundaries"]["automaticTokenTransfer"])
 
             review_request = Request(
