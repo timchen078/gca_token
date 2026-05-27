@@ -795,6 +795,13 @@ def validate_domain_email_page(text: str) -> None:
         "DNS Entry Packet Builder",
         "tools/build_domain_email_dns_entry_packet.py",
         "launch/domain_email_dns_entry_packet.json",
+        "Owner Action Packet",
+        "Do These In Order Before BaseScan",
+        "domain-email-provider-active.png",
+        "domain-email-dns-mx-spf-dkim-dmarc.txt",
+        "tools/check_basescan_resubmission_readiness.py --json --require-ready",
+        "Stop condition",
+        "do not update public email values until inbound, outbound, DNS, and evidence checks pass",
         "Public Switch Checker",
         "tools/check_domain_email_public_switch.py --json --require-switched",
         "Cloudflare Email Routing only",
@@ -828,6 +835,7 @@ def validate_domain_email_json(text: str) -> None:
     packet_builder = payload.get("operatorEvidencePacketBuilder", {})
     provider_matrix = payload.get("operatorProviderMatrixBuilder", {})
     dns_entry_builder = payload.get("operatorDnsEntryPacketBuilder", {})
+    owner_packet = payload.get("ownerActionPacket", {})
     switch_builder = payload.get("operatorSwitchPlanBuilder", {})
     public_switch_checker = payload.get("operatorPublicSwitchChecker", {})
     policy = payload.get("baseScanSubmissionPolicy", {})
@@ -852,7 +860,7 @@ def validate_domain_email_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing inbound ready gate")
     if "tools/check_domain_email_public_switch.py --json --require-switched passes" not in base_scan_use.get("readyWhen", []):
         raise SiteCheckError(f"{label}: missing public switch ready gate")
-    if snapshot.get("checkedAt") not in {"2026-05-25T15:04:09Z", "2026-05-27T07:30:47Z"}:
+    if snapshot.get("checkedAt") not in {"2026-05-25T15:04:09Z", "2026-05-27T07:30:47Z", "2026-05-27T11:36:50Z"}:
         raise SiteCheckError(f"{label}: wrong live DNS snapshot timestamp")
     if snapshot.get("readyForBaseScanEmailEvidence") is not False:
         raise SiteCheckError(f"{label}: live DNS snapshot must not be ready")
@@ -909,6 +917,24 @@ def validate_domain_email_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing DNS entry packet DNS-write boundary")
     if "does not store secrets" not in dns_entry_builder.get("boundaries", []):
         raise SiteCheckError(f"{label}: missing DNS entry packet secrets boundary")
+    if owner_packet.get("status") != "blocked-until-mailbox-dns-and-evidence-pass":
+        raise SiteCheckError(f"{label}: wrong owner action packet status")
+    if "remaining BaseScan domain-email blocker" not in owner_packet.get("purpose", ""):
+        raise SiteCheckError(f"{label}: missing owner action packet purpose")
+    if not any("Enable a full mailbox for support@gcagochina.com" in step for step in owner_packet.get("stepsInOrder", [])):
+        raise SiteCheckError(f"{label}: missing owner mailbox action step")
+    if "domain-email-provider-active.png" not in owner_packet.get("requiredEvidenceFiles", []):
+        raise SiteCheckError(f"{label}: missing owner provider evidence file")
+    if "domain-email-dns-mx-spf-dkim-dmarc.txt" not in owner_packet.get("requiredEvidenceFiles", []):
+        raise SiteCheckError(f"{label}: missing owner DNS evidence file")
+    if not any("check_basescan_resubmission_readiness.py --json --require-ready" in command for command in owner_packet.get("operatorCommands", [])):
+        raise SiteCheckError(f"{label}: missing owner BaseScan preflight command")
+    if "Outbound visible sender is not support@gcagochina.com." not in owner_packet.get("stopConditions", []):
+        raise SiteCheckError(f"{label}: missing owner outbound stop condition")
+    if "BaseScan resubmission preflight reports readyForBaseScanResubmission true" not in owner_packet.get("readyToResubmitWhen", []):
+        raise SiteCheckError(f"{label}: missing owner preflight ready gate")
+    if "does not submit BaseScan request" not in owner_packet.get("boundaries", []):
+        raise SiteCheckError(f"{label}: missing owner BaseScan boundary")
     if "Mail provider dashboard shows support@gcagochina.com as verified or active" not in evidence.get("requiredEvidence", []):
         raise SiteCheckError(f"{label}: missing provider-status evidence")
     if "domain-email-dns-mx-spf-dkim-dmarc.txt" not in evidence.get("recommendedFilenames", []):
@@ -1056,7 +1082,7 @@ def validate_basescan_remediation_json(text: str) -> None:
     if email_state.get("domainEmailSetupPlanData") != DOMAIN_EMAIL_URL:
         raise SiteCheckError(f"{label}: wrong email-state domainEmailSetupPlanData")
     latest_dns = email_state.get("latestDnsSnapshot", {})
-    if latest_dns.get("checkedAt") not in {"2026-05-25T15:04:09Z", "2026-05-27T07:30:47Z"}:
+    if latest_dns.get("checkedAt") not in {"2026-05-25T15:04:09Z", "2026-05-27T07:30:47Z", "2026-05-27T11:36:50Z"}:
         raise SiteCheckError(f"{label}: wrong latest DNS snapshot timestamp")
     if latest_dns.get("readyForBaseScanEmailEvidence") is not False:
         raise SiteCheckError(f"{label}: latest DNS snapshot must not be ready")

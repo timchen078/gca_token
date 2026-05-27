@@ -23,7 +23,7 @@
     ]
   },
   "liveDnsSnapshot": {
-    "checkedAt": "2026-05-27T07:30:47Z",
+    "checkedAt": "2026-05-27T11:36:50Z",
     "tool": "tools/check_domain_email_dns.py",
     "command": "python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox support --json",
     "readyForBaseScanEmailEvidence": false,
@@ -40,6 +40,58 @@
       "dkim": "selector-required"
     },
     "nextAction": "Create support@gcagochina.com at the mail provider, add MX/SPF/DMARC/DKIM records, rerun with --dkim-selector from the provider, then collect inbound and outbound email evidence."
+  },
+  "ownerActionPacket": {
+    "status": "blocked-until-mailbox-dns-and-evidence-pass",
+    "purpose": "Give the owner one short execution order for the remaining BaseScan domain-email blocker without editing DNS, sending email, or submitting BaseScan from this repository.",
+    "stepsInOrder": [
+      "Enable a full mailbox for support@gcagochina.com that can receive external mail and send authenticated replies from the same address.",
+      "Save domain-email-provider-active.png showing support@gcagochina.com as active or verified in the provider dashboard.",
+      "Build the DNS entry packet with the provider's exact MX, SPF, DKIM, and DMARC values before entering records.",
+      "Enter MX, one merged SPF TXT record, DKIM with the exact provider selector, and DMARC at _dmarc.",
+      "Run tools/check_domain_email_dns.py with --dkim-selector <provider-selector> and save domain-email-dns-mx-spf-dkim-dmarc.txt.",
+      "Save inbound and outbound mail evidence: domain-email-inbound-test.png and domain-email-outbound-test.png.",
+      "Switch public support/BaseScan email values only after evidence is complete, then save support-page-domain-email.png.",
+      "Run tools/check_basescan_resubmission_readiness.py --json --require-ready and proceed only when readyForBaseScanResubmission is true."
+    ],
+    "requiredEvidenceFiles": [
+      "domain-email-provider-active.png",
+      "domain-email-dns-mx-spf-dkim-dmarc.txt",
+      "domain-email-inbound-test.png",
+      "domain-email-outbound-test.png",
+      "support-page-domain-email.png"
+    ],
+    "operatorCommands": [
+      "python3 tools/build_domain_email_provider_matrix.py --markdown",
+      "python3 tools/build_domain_email_dns_entry_packet.py --provider <provider-name> --mx \"10 <provider-mx>\" --spf \"v=spf1 include:<provider> ~all\" --dkim-selector <provider-selector> --dkim-type TXT --dkim-value \"<provider-dkim-value>\" --dmarc \"v=DMARC1; p=none;\" --output-json launch/domain_email_dns_entry_packet.json --output-md launch/domain_email_dns_entry_packet.md",
+      "python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox support --dkim-selector <provider-selector> --json",
+      "python3 tools/build_domain_email_evidence_packet.py --dkim-selector <provider-selector> --evidence-dir launch/domain_email_evidence --website-email-updated --output-json launch/domain_email_evidence_packet.json --output-md launch/domain_email_evidence_packet.md",
+      "python3 tools/check_domain_email_public_switch.py --json --require-switched",
+      "python3 tools/check_basescan_resubmission_readiness.py --json --require-ready"
+    ],
+    "stopConditions": [
+      "Any required evidence file is missing.",
+      "DNS check does not report readyForBaseScanEmailEvidence true.",
+      "Outbound visible sender is not support@gcagochina.com.",
+      "Public support/BaseScan files still publish GCAgochina@outlook.com after the switch.",
+      "BaseScan resubmission preflight fails or reports readyForBaseScanResubmission false."
+    ],
+    "readyToResubmitWhen": [
+      "support@gcagochina.com receives external mail",
+      "support@gcagochina.com sends authenticated external mail",
+      "MX, SPF, DMARC, and DKIM checks pass",
+      "public support/BaseScan files publish the same domain email",
+      "domain email evidence packet is complete",
+      "BaseScan resubmission preflight reports readyForBaseScanResubmission true"
+    ],
+    "boundaries": [
+      "does not buy email service",
+      "does not write DNS records",
+      "does not send email",
+      "does not submit BaseScan request",
+      "does not touch wallets or contracts",
+      "does not store secrets"
+    ]
   },
   "dnsChecklist": [
     "Add provider MX records for gcagochina.com",

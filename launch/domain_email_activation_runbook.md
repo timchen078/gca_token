@@ -22,9 +22,26 @@ Command run:
 python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox support --json
 ```
 
+Checked at: `2026-05-27T11:36:50Z`.
+
 Result: `readyForBaseScanEmailEvidence` is false. Public DNS currently reports `missingOrBlockedChecks` as `["mx", "spf", "dmarc", "dkim"]`: MX is missing, SPF is missing, DMARC is missing, and DKIM is still `selector-required` because the mail provider selector has not been supplied.
 
 Next owner action: create `support@gcagochina.com` at the chosen mail provider, add the provider MX/SPF/DMARC/DKIM records, rerun the checker with `--dkim-selector <provider-selector>`, then collect inbound and outbound message evidence.
+
+## Owner Action Packet
+
+Use this short order when doing the actual mailbox work. Stop immediately if any item cannot be proven.
+
+1. Enable a full mailbox for `support@gcagochina.com` that receives external mail and sends authenticated replies from the same address.
+2. Save `domain-email-provider-active.png` showing the mailbox as active or verified in the provider dashboard.
+3. Build the DNS entry packet with the provider's exact MX, SPF, DKIM, and DMARC values before entering records.
+4. Enter MX, one merged SPF TXT record, DKIM with the exact provider selector, and DMARC at `_dmarc`.
+5. Run `python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox support --dkim-selector <provider-selector> --json` and save `domain-email-dns-mx-spf-dkim-dmarc.txt`.
+6. Save inbound and outbound mail evidence as `domain-email-inbound-test.png` and `domain-email-outbound-test.png`.
+7. Switch public support/BaseScan email values only after evidence is complete, then save `support-page-domain-email.png`.
+8. Run `python3 tools/check_basescan_resubmission_readiness.py --json --require-ready`. BaseScan can be resubmitted only when the preflight reports `readyForBaseScanResubmission` as true.
+
+Stop conditions: any required evidence file is missing; DNS is not ready; outbound visible sender is not `support@gcagochina.com`; public files still publish `GCAgochina@outlook.com` after the switch; or BaseScan preflight fails.
 
 ## Mail Provider Selection
 

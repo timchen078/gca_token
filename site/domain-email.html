@@ -371,6 +371,23 @@
         </div>
       </section>
 
+      <section class="section panel" aria-labelledby="ownerPacketTitle">
+        <p class="eyebrow">Owner Gate</p>
+        <h2 id="ownerPacketTitle">Owner Action Packet: Do These In Order Before BaseScan</h2>
+        <p class="note">This is the short execution path for the owner. Stop immediately if a step cannot be proven; do not update public email values until inbound, outbound, DNS, and evidence checks pass.</p>
+        <div class="list">
+          <div class="row"><span>1. Enable mailbox</span><strong>Buy or enable a full mailbox for <code>support@gcagochina.com</code> that can receive external mail and send authenticated replies from the same address.</strong></div>
+          <div class="row"><span>2. Save provider proof</span><strong>Save <code>domain-email-provider-active.png</code> showing <code>support@gcagochina.com</code> as active or verified in the provider dashboard.</strong></div>
+          <div class="row"><span>3. Build DNS worksheet</span><strong>Run the DNS entry packet builder with the provider's exact MX, SPF, DKIM, and DMARC values before entering records.</strong></div>
+          <div class="row"><span>4. Enter DNS records</span><strong>Add MX, one merged SPF TXT, DKIM with the exact provider selector, and DMARC at <code>_dmarc</code>.</strong></div>
+          <div class="row"><span>5. Verify DNS</span><strong>Run <code>python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox support --dkim-selector &lt;provider-selector&gt; --json</code> and save <code>domain-email-dns-mx-spf-dkim-dmarc.txt</code>.</strong></div>
+          <div class="row"><span>6. Prove mail flow</span><strong>Save inbound and outbound screenshots: <code>domain-email-inbound-test.png</code> and <code>domain-email-outbound-test.png</code>.</strong></div>
+          <div class="row"><span>7. Switch public email</span><strong>Only after evidence is complete, switch public support/BaseScan values and save <code>support-page-domain-email.png</code>.</strong></div>
+          <div class="row"><span>8. Final preflight</span><strong>Run <code>python3 tools/check_basescan_resubmission_readiness.py --json --require-ready</code>. BaseScan can be resubmitted only when it reports ready.</strong></div>
+          <div class="row"><span>Stop condition</span><strong class="pending">If any evidence file is missing, DNS is not ready, outbound sender is not <code>support@gcagochina.com</code>, or the preflight fails, do not submit BaseScan yet.</strong></div>
+        </div>
+      </section>
+
       <section class="section panel" aria-labelledby="recordsTitle">
         <p class="eyebrow">DNS Record Gate</p>
         <h2 id="recordsTitle">Records To Copy From The Mail Provider</h2>
