@@ -242,6 +242,29 @@
       "does not touch wallets or contracts"
     ]
   },
+  "operatorPublicSwitchChecker": {
+    "tool": "tools/check_domain_email_public_switch.py",
+    "command": "python3 tools/check_domain_email_public_switch.py --json --require-switched",
+    "purpose": "Read-only gate that verifies critical public, support, and BaseScan files no longer publish GCAgochina@outlook.com and do publish support@gcagochina.com after domain email activation.",
+    "runAfter": [
+      "domain email evidence packet is ready",
+      "public files have been manually switched to support@gcagochina.com",
+      "domain email switch plan has been reviewed"
+    ],
+    "blocksWhen": [
+      "any critical file still contains GCAgochina@outlook.com",
+      "any critical file is missing support@gcagochina.com after the switch",
+      "any critical file listed in filesToUpdateAfterActivation is missing"
+    ],
+    "boundaries": [
+      "read-only check",
+      "does not edit files",
+      "does not send email",
+      "does not submit BaseScan request",
+      "does not write DNS records",
+      "does not touch wallets or contracts"
+    ]
+  },
   "baseScanSubmissionPolicy": {
     "nextCleanSubmissionSender": "support@gcagochina.com after activation",
     "doNotResubmitBefore": [
