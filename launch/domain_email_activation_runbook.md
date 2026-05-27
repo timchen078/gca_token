@@ -166,6 +166,14 @@ python3 tools/build_domain_email_switch_plan.py \
 
 The planner scans public site files, launch materials, docs, and the member backend contact constant for old-email references. It does not edit files, send email, write DNS records, submit BaseScan requests, or touch wallets/contracts. Use it after the evidence packet and BaseScan preflight are ready, then update public support pages first, structured project/listing/reviewer JSON second, BaseScan launch values third, and platform reply templates last.
 
+After the manual switch is done, run the read-only public switch checker:
+
+```bash
+python3 tools/check_domain_email_public_switch.py --json --require-switched
+```
+
+The checker uses the critical file list from `site/domain-email.json` and blocks if any listed public/support/BaseScan file still contains `GCAgochina@outlook.com`, if the target domain email is missing, or if a critical file is missing. It does not edit files, send email, write DNS records, submit BaseScan requests, or touch wallets/contracts.
+
 ## Evidence Packet
 
 Save these owner records before the next BaseScan submission:

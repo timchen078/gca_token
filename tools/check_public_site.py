@@ -795,6 +795,8 @@ def validate_domain_email_page(text: str) -> None:
         "DNS Entry Packet Builder",
         "tools/build_domain_email_dns_entry_packet.py",
         "launch/domain_email_dns_entry_packet.json",
+        "Public Switch Checker",
+        "tools/check_domain_email_public_switch.py --json --require-switched",
         "Cloudflare Email Routing only",
         "Ready Means All Four Are True",
         "Switch Plan Generator",
@@ -826,6 +828,7 @@ def validate_domain_email_json(text: str) -> None:
     provider_matrix = payload.get("operatorProviderMatrixBuilder", {})
     dns_entry_builder = payload.get("operatorDnsEntryPacketBuilder", {})
     switch_builder = payload.get("operatorSwitchPlanBuilder", {})
+    public_switch_checker = payload.get("operatorPublicSwitchChecker", {})
     policy = payload.get("baseScanSubmissionPolicy", {})
     provider = payload.get("mailProviderDecision", {})
     dns = payload.get("dnsChecklist", [])
@@ -935,6 +938,22 @@ def validate_domain_email_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing target-email switch purpose")
     if "does not edit files" not in switch_builder.get("boundaries", []):
         raise SiteCheckError(f"{label}: missing switch plan edit boundary")
+    if public_switch_checker.get("tool") != "tools/check_domain_email_public_switch.py":
+        raise SiteCheckError(f"{label}: wrong public switch checker tool")
+    if "--require-switched" not in public_switch_checker.get("command", ""):
+        raise SiteCheckError(f"{label}: missing public switch checker require gate")
+    if "no longer publish GCAgochina@outlook.com" not in public_switch_checker.get("purpose", ""):
+        raise SiteCheckError(f"{label}: missing public switch checker current-email purpose")
+    if "support@gcagochina.com" not in public_switch_checker.get("purpose", ""):
+        raise SiteCheckError(f"{label}: missing public switch checker target-email purpose")
+    if "domain email switch plan has been reviewed" not in public_switch_checker.get("runAfter", []):
+        raise SiteCheckError(f"{label}: missing public switch checker run-after gate")
+    if "any critical file still contains GCAgochina@outlook.com" not in public_switch_checker.get("blocksWhen", []):
+        raise SiteCheckError(f"{label}: missing public switch checker current-email block")
+    if "read-only check" not in public_switch_checker.get("boundaries", []):
+        raise SiteCheckError(f"{label}: missing public switch checker read-only boundary")
+    if "does not edit files" not in public_switch_checker.get("boundaries", []):
+        raise SiteCheckError(f"{label}: missing public switch checker edit boundary")
     if policy.get("nextCleanSubmissionSender") != "support@gcagochina.com after activation":
         raise SiteCheckError(f"{label}: wrong next BaseScan sender policy")
     if "activation evidence packet is archived for owner records" not in policy.get("doNotResubmitBefore", []):
@@ -1573,6 +1592,9 @@ def validate_zh_domain_email_page(text: str) -> None:
         "切换官网邮箱前先找全旧邮箱引用",
         "tools/build_domain_email_switch_plan.py --json",
         "launch/domain_email_switch_plan.json",
+        "公开邮箱切换检查",
+        "tools/check_domain_email_public_switch.py --json --require-switched",
+        "如果关键文件还出现",
         "中文审核状态",
         "zh-status.html",
         "中文支持",

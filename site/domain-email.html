@@ -399,6 +399,10 @@
             <h3>Evidence Packet Builder</h3>
             <p class="note">After DNS and manual mail tests pass, run <code>python3 tools/build_domain_email_evidence_packet.py --dkim-selector &lt;provider-selector&gt; --website-email-updated --output-json launch/domain_email_evidence_packet.json --output-md launch/domain_email_evidence_packet.md</code>. The packet blocks BaseScan resubmission until DNS, screenshots, and website email alignment are complete.</p>
           </div>
+          <div class="card">
+            <h3>Public Switch Checker</h3>
+            <p class="note">After the public files are manually switched, run <code>python3 tools/check_domain_email_public_switch.py --json --require-switched</code>. It blocks if any critical support, project, or BaseScan file still publishes <code>GCAgochina@outlook.com</code>.</p>
+          </div>
         </div>
       </section>
 
@@ -462,6 +466,7 @@
           <div class="row"><span>JSON plan</span><strong><code>python3 tools/build_domain_email_switch_plan.py --json</code></strong></div>
           <div class="row"><span>Markdown plan</span><strong><code>python3 tools/build_domain_email_switch_plan.py --markdown</code></strong></div>
           <div class="row"><span>Owner artifact</span><strong><code>python3 tools/build_domain_email_switch_plan.py --output-json launch/domain_email_switch_plan.json --output-md launch/domain_email_switch_plan.md</code></strong></div>
+          <div class="row"><span>Readiness check</span><strong><code>python3 tools/check_domain_email_public_switch.py --json --require-switched</code></strong></div>
           <div class="row"><span>Boundary</span><strong>The planner does not edit files, send email, write DNS, submit BaseScan requests, or touch wallets/contracts.</strong></div>
         </div>
       </section>
