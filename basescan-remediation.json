@@ -177,6 +177,13 @@
         "launch/basescan_final_submission_package.json",
         "launch/basescan_final_submission_package.md"
       ],
+      "copyPasteBlocks": [
+        "baseScanReviewerComment",
+        "basicInformationPlainText",
+        "evidenceLinksPlainText",
+        "marketAndSupplyPlainText"
+      ],
+      "blockedDraftMarker": "DRAFT ONLY - DO NOT SUBMIT BASESCAN YET.",
       "boundaries": [
         "local draft only",
         "does not submit BaseScan request",
