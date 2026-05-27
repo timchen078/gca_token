@@ -81,6 +81,19 @@ PACKAGE_DIGEST_ALGORITHM = "sha256-json-sort-keys-excluding-packageDigestSha256"
 OPERATOR_DIGEST_VERSION = "gca_operator_digest_v1"
 OPERATOR_DIGEST_FILE = "gca_operator_digest.json"
 OPERATOR_ACTION_PLAN_VERSION = "gca_operator_action_plan_v1"
+DOMAIN_EMAIL_EVIDENCE_PACKET_COMMAND = (
+    ".venv/bin/python tools/build_domain_email_evidence_packet.py "
+    "--dkim-selector PROVIDER_SELECTOR "
+    "--provider-active domain-email-provider-active.png "
+    "--dns-proof domain-email-dns-mx-spf-dkim-dmarc.txt "
+    "--inbound-test domain-email-inbound-test.png "
+    "--outbound-test domain-email-outbound-test.png "
+    "--support-page-proof support-page-domain-email.png "
+    "--website-email-updated "
+    "--output-json launch/domain_email_evidence_packet.json "
+    "--output-md launch/domain_email_evidence_packet.md "
+    "--json"
+)
 SUPPORT_REVIEW_UPDATE_STATUSES = {
     "received",
     "wallet_pending",
@@ -1410,6 +1423,14 @@ class GcaMemberBackend:
                     "Create and test the project-domain support mailbox, complete MX/SPF/DKIM/DMARC readiness, and archive provider, inbound, outbound, and support-page evidence before the next BaseScan resubmission.",
                     "domain-email",
                     ".venv/bin/python tools/check_domain_email_dns.py --domain gcagochina.com --mailbox support --dkim-selector PROVIDER_SELECTOR --json",
+                )
+                add_item(
+                    "build-domain-email-evidence-packet",
+                    "medium",
+                    "Build domain email evidence packet",
+                    "After mailbox DNS and send/receive tests pass, archive provider-active, DNS proof, inbound test, outbound test, and support-page proof references into the local evidence packet before any BaseScan resubmission.",
+                    "domain-email-evidence-packet",
+                    DOMAIN_EMAIL_EVIDENCE_PACKET_COMMAND,
                 )
             if (
                 old_email_files
