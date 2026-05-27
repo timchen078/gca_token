@@ -150,7 +150,7 @@ After the preflight passes, generate the final copyable BaseScan draft:
 python3 tools/build_basescan_submission_package.py --json --require-ready --output-json launch/basescan_final_submission_package.json --output-md launch/basescan_final_submission_package.md
 ```
 
-The final draft builder still does not submit the form. It only produces the local package the owner can copy into one clean BaseScan update.
+The final draft builder still does not submit the form. It only produces the local package the owner can copy into one clean BaseScan update. The package includes copy/paste blocks for the reviewer comment, BaseScan basic information, reviewer evidence links, and market/supply context. If any preflight gate is still blocked, the reviewer comment is clearly marked `DRAFT ONLY - DO NOT SUBMIT BASESCAN YET.`.
 
 ## Public Email Switch Planner
 

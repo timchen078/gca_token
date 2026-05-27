@@ -47,6 +47,10 @@ DEFAULT_VALUES_PATH = ROOT / "launch" / "basescan_resubmission_values.json"
 DEFAULT_EVIDENCE_PACKET_PATH = ROOT / "launch" / "domain_email_evidence_packet.json"
 
 
+def format_lines(items: list[str]) -> str:
+    return "\n".join(items)
+
+
 def build_form_fields(values: dict[str, Any]) -> dict[str, Any]:
     market = values.get("officialMarketPool", {})
     supply = values.get("supplyDisclosure", {})
@@ -101,6 +105,104 @@ def build_form_fields(values: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def build_copy_paste_blocks(
+    *,
+    values: dict[str, Any],
+    readiness_report: dict[str, Any],
+    form_fields: dict[str, Any],
+) -> dict[str, str]:
+    basic = form_fields["basicInformation"]
+    social = form_fields["socialProfiles"]
+    price = form_fields["priceData"]
+    supply = form_fields["supplyContext"]
+    missing = [str(item) for item in readiness_report.get("missingOrBlockedRequirements", [])]
+    ready = bool(readiness_report.get("readyForBaseScanResubmission"))
+
+    basic_block = format_lines([
+        f"Contract Address: {basic['contractAddress']}",
+        f"Project Name: {basic['projectName']}",
+        f"Project Website: {basic['projectWebsite']}",
+        f"Project Email Address: {basic['projectEmailAddress']}",
+        f"32x32 SVG Logo: {basic['logoSvg32x32']}",
+        f"Project Description: {basic['projectDescription']}",
+        f"Project Sector: {basic['projectSector']}",
+        f"Network: {basic['network']} / chainId {basic['chainId']}",
+        f"Token Symbol: {basic['tokenSymbol']}",
+        f"Decimals: {basic['decimals']}",
+        f"Total Supply: {basic['totalSupply']}",
+    ])
+    evidence_block = format_lines([
+        f"Team page: {social['team']}",
+        f"Tim Chen professional profile: {social['timChenProfessionalProfile']}",
+        f"Whitepaper: {social['whitepaper']}",
+        f"Support: {social['support']}",
+        f"Brand Kit: {social['brandKit']}",
+        f"Community: {social['community']}",
+        f"External review status: {social['externalReviewStatus']}",
+        f"Domain email evidence plan: {social['domainEmailEvidencePlan']}",
+        f"BaseScan remediation tracker: {social['baseScanRemediation']}",
+        f"GitHub source repository: {social['github']}",
+        f"Telegram: {social['telegram']}",
+        f"X: {social['x']}",
+    ])
+    market_block = format_lines([
+        f"Official market route: {price['officialMarketRoute']}",
+        f"DEX: {price['dex']}",
+        f"Pool: {price['poolAddress']}",
+        f"GeckoTerminal: {price['geckoTerminal']}",
+        f"DEX Screener: {price['dexScreener']}",
+        f"Target public allocation: {supply['targetPublicAllocation']}",
+        f"Owner-held reserve: {supply['ownerHeldReserve']}",
+        f"Owner reserve wallet: {supply['ownerReserveWallet']}",
+        f"Supply disclosure: {supply['supplyDisclosure']}",
+        f"Reserve boundary: {supply['reserveBoundary']}",
+    ])
+
+    if ready:
+        reviewer_comment = format_lines([
+            "Hello BaseScan team,",
+            "",
+            "Please review the updated GCA token profile metadata for Base Mainnet / chainId 8453.",
+            "",
+            f"Contract: {basic['contractAddress']}",
+            f"Official website: {basic['projectWebsite']}",
+            f"Official project email: {basic['projectEmailAddress']}",
+            f"Founder/team transparency: {social['team']} and {social['timChenProfessionalProfile']}",
+            f"Whitepaper: {social['whitepaper']}",
+            f"Public remediation tracker: {social['baseScanRemediation']}",
+            f"Domain email evidence plan: {social['domainEmailEvidencePlan']}",
+            f"Source repository: {social['github']}",
+            f"Official market route: {price['officialMarketRoute']} on {price['dex']}",
+            f"Pool: {price['poolAddress']}",
+            "",
+            "The contract source is verified on BaseScan and deployer-wallet ownership has previously been verified. "
+            "This request is only for token profile metadata.",
+            "",
+            "We are not claiming BaseScan token profile approval before publication, third-party audit completion, "
+            "locked reserve custody, deep liquidity, or price support.",
+            "",
+            "Thank you.",
+        ])
+    else:
+        reviewer_comment = format_lines([
+            "DRAFT ONLY - DO NOT SUBMIT BASESCAN YET.",
+            "",
+            "The local preflight is still blocked, so this text is for owner preparation only.",
+            "",
+            "Blocked requirements:",
+            *(f"- {item}" for item in missing),
+            "",
+            str(readiness_report.get("nextAction") or "Resolve the blocked requirements and rerun the preflight."),
+        ])
+
+    return {
+        "baseScanReviewerComment": reviewer_comment,
+        "basicInformationPlainText": basic_block,
+        "evidenceLinksPlainText": evidence_block,
+        "marketAndSupplyPlainText": market_block,
+    }
+
+
 def build_submission_package(
     *,
     values: dict[str, Any],
@@ -108,6 +210,7 @@ def build_submission_package(
     generated_at: str | None = None,
 ) -> dict[str, Any]:
     ready = bool(readiness_report.get("readyForBaseScanResubmission"))
+    form_fields = build_form_fields(values)
     return {
         "schema": "gca-basescan-submission-package-v1",
         "generatedAt": generated_at or utc_now(),
@@ -125,7 +228,12 @@ def build_submission_package(
             "readyForBaseScanResubmission": ready,
             "generatedAt": readiness_report.get("generatedAt"),
         },
-        "formFields": build_form_fields(values),
+        "formFields": form_fields,
+        "copyPasteBlocks": build_copy_paste_blocks(
+            values=values,
+            readiness_report=readiness_report,
+            form_fields=form_fields,
+        ),
         "safeSubmissionNote": (
             "BaseScan source verification and deployer-wallet ownership verification are complete. "
             "This is a token profile metadata update request only."
@@ -150,6 +258,7 @@ def render_markdown(package: dict[str, Any]) -> str:
     price = fields["priceData"]
     sale = fields["saleDetails"]
     supply = fields["supplyContext"]
+    copy_blocks = package["copyPasteBlocks"]
 
     lines = [
         "# GCA BaseScan Submission Package",
@@ -166,6 +275,33 @@ def render_markdown(package: dict[str, Any]) -> str:
         for item in package["missingOrBlockedRequirements"]:
             lines.append(f"- `{item}`")
         lines.append("")
+
+    lines.extend([
+        "## Copy/Paste Reviewer Comment",
+        "",
+        "```text",
+        copy_blocks["baseScanReviewerComment"],
+        "```",
+        "",
+        "## Copy/Paste Basic Information",
+        "",
+        "```text",
+        copy_blocks["basicInformationPlainText"],
+        "```",
+        "",
+        "## Copy/Paste Evidence Links",
+        "",
+        "```text",
+        copy_blocks["evidenceLinksPlainText"],
+        "```",
+        "",
+        "## Copy/Paste Market And Supply",
+        "",
+        "```text",
+        copy_blocks["marketAndSupplyPlainText"],
+        "```",
+        "",
+    ])
 
     lines.extend([
         "## Basic Information",

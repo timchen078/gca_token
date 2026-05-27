@@ -1107,6 +1107,10 @@ def validate_basescan_remediation_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing final submission JSON output")
     if "readyForOwnerSubmission is true" not in submission_builder.get("readyRequires", []):
         raise SiteCheckError(f"{label}: missing final submission ready gate")
+    if "baseScanReviewerComment" not in submission_builder.get("copyPasteBlocks", []):
+        raise SiteCheckError(f"{label}: missing final submission reviewer comment copy block")
+    if submission_builder.get("blockedDraftMarker") != "DRAFT ONLY - DO NOT SUBMIT BASESCAN YET.":
+        raise SiteCheckError(f"{label}: missing final submission blocked draft marker")
     if "does not sign wallet messages" not in submission_builder.get("boundaries", []):
         raise SiteCheckError(f"{label}: missing final submission wallet-signing boundary")
     if not any("https://gcagochina.com/platform-replies.html" in item for item in gate.get("requiredBeforeReady", [])):

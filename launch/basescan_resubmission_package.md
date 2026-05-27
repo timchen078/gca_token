@@ -82,6 +82,8 @@ python3 tools/build_basescan_submission_package.py \
 
 The submission package builder is also gated by the same preflight. It writes a local JSON/Markdown draft only and does not submit BaseScan forms, sign wallet messages, send email, write DNS records, or touch wallets/contracts.
 
+The final package includes copy/paste blocks for the BaseScan reviewer comment, basic information, evidence links, market route, and supply context. If the preflight is still blocked, the reviewer comment begins with `DRAFT ONLY - DO NOT SUBMIT BASESCAN YET.` so the owner does not accidentally paste an unready package into the live form.
+
 ## Description
 
 Short description:

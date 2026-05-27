@@ -1532,7 +1532,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("launch/basescan_reviewer_checklist.json", page)
         self.assertIn("Submission package", page)
         self.assertIn("tools/build_basescan_submission_package.py", page)
+        self.assertIn("copy/paste blocks for the reviewer comment", page)
         self.assertIn("Final draft required", page)
+        self.assertIn("DRAFT ONLY - DO NOT SUBMIT BASESCAN YET.", page)
         self.assertIn("Do not claim the BaseScan token profile is approved", page)
         self.assertIn("Reviewer Data Room", page)
         self.assertIn("Platform Replies", page)
@@ -1588,6 +1590,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(data["nextSubmissionGate"]["submissionPackageBuilder"]["tool"], "tools/build_basescan_submission_package.py")
         self.assertIn("launch/basescan_final_submission_package.json", data["nextSubmissionGate"]["submissionPackageBuilder"]["outputs"])
         self.assertIn("readyForOwnerSubmission is true", data["nextSubmissionGate"]["submissionPackageBuilder"]["readyRequires"])
+        self.assertIn("baseScanReviewerComment", data["nextSubmissionGate"]["submissionPackageBuilder"]["copyPasteBlocks"])
+        self.assertEqual(data["nextSubmissionGate"]["submissionPackageBuilder"]["blockedDraftMarker"], "DRAFT ONLY - DO NOT SUBMIT BASESCAN YET.")
         self.assertIn("does not sign wallet messages", data["nextSubmissionGate"]["submissionPackageBuilder"]["boundaries"])
         self.assertIn(
             "Use the updated BaseScan reply template at https://gcagochina.com/platform-replies.html",
@@ -7441,6 +7445,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("tools/check_basescan_resubmission_readiness.py", package)
         self.assertIn("tools/build_basescan_submission_package.py", package)
         self.assertIn("launch/basescan_final_submission_package.json", package)
+        self.assertIn("copy/paste blocks for the BaseScan reviewer comment", package)
+        self.assertIn("DRAFT ONLY - DO NOT SUBMIT BASESCAN YET.", package)
         self.assertIn("readyForBaseScanResubmission: true", package)
         self.assertIn("readyForBaseScanEmailEvidence", package)
         self.assertIn("activation evidence packet", package)
