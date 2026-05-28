@@ -420,6 +420,10 @@
             <h3>Public Switch Checker</h3>
             <p class="note">After the public files are manually switched, run <code>python3 tools/check_domain_email_public_switch.py --json --require-switched</code>. It blocks if any critical support, project, or BaseScan file still publishes <code>GCAgochina@outlook.com</code>.</p>
           </div>
+          <div class="card">
+            <h3>Snapshot Alignment Checker</h3>
+            <p class="note">Before reusing BaseScan or platform reply copy, run <code>python3 tools/check_domain_email_snapshot_alignment.py --json --require-aligned</code>. It checks public site, launch, and docs materials against the canonical <code>liveDnsSnapshot</code> in <code>domain-email.json</code> and blocks stale DNS snapshot dates.</p>
+          </div>
         </div>
       </section>
 
