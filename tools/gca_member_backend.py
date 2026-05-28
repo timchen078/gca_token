@@ -1152,6 +1152,9 @@ class GcaMemberBackend:
                     "status": "missing",
                     "publicEmailSwitchStatus": "",
                     "filesStillUsingOldEmail": 0,
+                    "snapshotAlignmentStatus": "",
+                    "snapshotAlignmentStaleMarkers": 0,
+                    "snapshotAlignmentMissingCurrentDate": 0,
                     "missingOrBlockedRequirements": [],
                 },
             },
@@ -1273,6 +1276,9 @@ class GcaMemberBackend:
                     "status": safe_operator_text(base_scan.get("status"), 120),
                     "publicEmailSwitchStatus": safe_operator_text(base_scan.get("publicEmailSwitchStatus"), 120),
                     "filesStillUsingOldEmail": safe_operator_int(base_scan.get("filesStillUsingOldEmail")),
+                    "snapshotAlignmentStatus": safe_operator_text(base_scan.get("snapshotAlignmentStatus"), 120),
+                    "snapshotAlignmentStaleMarkers": safe_operator_int(base_scan.get("snapshotAlignmentStaleMarkers")),
+                    "snapshotAlignmentMissingCurrentDate": safe_operator_int(base_scan.get("snapshotAlignmentMissingCurrentDate")),
                     "missingOrBlockedRequirements": [
                         safe_operator_text(item, 120)
                         for item in base_scan.get("missingOrBlockedRequirements", [])
@@ -1402,7 +1408,18 @@ class GcaMemberBackend:
             blocker_ids = {item for item in blockers if item}
             blocker_text = ", ".join(blockers[:5]) if blockers else "see BaseScan preflight summary"
             old_email_files = safe_operator_int(base_scan.get("filesStillUsingOldEmail"))
-            suffix = f" Public switch still has {old_email_files} old-email file(s)." if old_email_files else ""
+            stale_snapshot_files = safe_operator_int(base_scan.get("snapshotAlignmentStaleMarkers"))
+            missing_snapshot_files = safe_operator_int(base_scan.get("snapshotAlignmentMissingCurrentDate"))
+            suffix_parts = []
+            if old_email_files:
+                suffix_parts.append(f"Public switch still has {old_email_files} old-email file(s).")
+            if stale_snapshot_files or missing_snapshot_files:
+                suffix_parts.append(
+                    "DNS snapshot alignment has "
+                    f"{stale_snapshot_files} stale marker file(s) and "
+                    f"{missing_snapshot_files} missing current-date file(s)."
+                )
+            suffix = f" {' '.join(suffix_parts)}" if suffix_parts else ""
             add_item(
                 "complete-basescan-preflight",
                 "medium",
@@ -1439,6 +1456,23 @@ class GcaMemberBackend:
                     "After the domain mailbox evidence is ready, switch critical public, support, and BaseScan files to the project-domain mailbox and rerun the public switch checker.",
                     "domain-email-public-switch",
                     ".venv/bin/python tools/check_domain_email_public_switch.py --json --require-switched",
+                )
+            if (
+                stale_snapshot_files
+                or missing_snapshot_files
+                or blocker_ids.intersection({
+                    "domain-email-snapshot-alignment",
+                    "stale-dns-snapshot-markers",
+                    "missing-current-snapshot-date",
+                })
+            ):
+                add_item(
+                    "fix-domain-email-snapshot-alignment",
+                    "medium",
+                    "Fix domain email snapshot alignment",
+                    "Update public, launch, and reply artifacts so every domain-email DNS snapshot reference matches the canonical site/domain-email.json snapshot before the next platform reply.",
+                    "domain-email-snapshot-alignment",
+                    ".venv/bin/python tools/check_domain_email_snapshot_alignment.py --json --require-aligned",
                 )
 
         reply_ready = safe_operator_int(

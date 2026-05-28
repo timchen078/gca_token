@@ -100,6 +100,55 @@ class GcaOperatorDigestTests(unittest.TestCase):
             serialized = json.dumps(digest) + markdown.read_text(encoding="utf-8") + json_output.read_text(encoding="utf-8")
             self.assertNotIn("private-user@example.com", serialized)
 
+    def test_build_digest_surfaces_basescan_snapshot_alignment(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            daily = root / "daily.json"
+            markdown = root / "digest.md"
+            json_output = root / "digest.json"
+            write_json(daily, {
+                "ok": True,
+                "packetVersion": "gca_daily_ops_summary_v1",
+                "generatedAt": "2026-05-20T16:00:00Z",
+                "includeMemberOps": False,
+                "includeHoldingReport": False,
+                "steps": [
+                    {"id": "public-site", "ok": True, "returnCode": 0},
+                    {"id": "registration-api-public", "ok": True, "returnCode": 0},
+                    {"id": "basescan-resubmission-preflight-status", "ok": True, "returnCode": 0},
+                ],
+                "baseScanPreflight": {
+                    "available": True,
+                    "readyForBaseScanResubmission": False,
+                    "status": "blocked-before-basescan-resubmission",
+                    "publicEmailSwitchStatus": "public-email-switched",
+                    "filesStillUsingOldEmail": 0,
+                    "snapshotAlignmentStatus": "stale-dns-snapshot-markers",
+                    "snapshotAlignmentStaleMarkers": 2,
+                    "snapshotAlignmentMissingCurrentDate": 1,
+                    "missingOrBlockedRequirements": ["domain-email-snapshot-alignment"],
+                },
+            })
+
+            digest = build_operator_digest(
+                daily_summary=daily,
+                member_ops_summary=root / "missing-member.json",
+                support_queue_summary=root / "missing-support.json",
+                holding_summary=root / "missing-holding.json",
+                digest_output=markdown,
+                json_output=json_output,
+                generated_at="2026-05-20T16:02:00Z",
+            )
+
+            preflight = digest["dailyOps"]["baseScanPreflight"]
+            self.assertEqual(preflight["snapshotAlignmentStatus"], "stale-dns-snapshot-markers")
+            self.assertEqual(preflight["snapshotAlignmentStaleMarkers"], 2)
+            self.assertEqual(preflight["snapshotAlignmentMissingCurrentDate"], 1)
+            self.assertTrue(any("DNS snapshot alignment" in action for action in digest["nextActions"]))
+            rendered = markdown.read_text(encoding="utf-8")
+            self.assertIn("DNS snapshot alignment", rendered)
+            self.assertIn("Stale snapshot markers", rendered)
+
     def test_digest_handles_missing_summaries_with_next_actions(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)

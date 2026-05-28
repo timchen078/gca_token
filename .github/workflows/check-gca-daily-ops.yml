@@ -10,8 +10,14 @@ on:
     paths:
       - "tools/run_gca_daily_ops.py"
       - "tools/build_gca_operator_digest.py"
+      - "tools/check_basescan_resubmission_readiness.py"
+      - "tools/check_domain_email_public_switch.py"
+      - "tools/check_domain_email_snapshot_alignment.py"
       - "tools/check_public_site.py"
       - "tools/check_gca_registration_api.py"
+      - "launch/basescan_resubmission_values.json"
+      - "site/basescan-remediation.json"
+      - "site/domain-email.json"
       - ".github/workflows/check-gca-daily-ops.yml"
 
 permissions:

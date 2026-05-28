@@ -75,6 +75,10 @@ def summarize_basescan_preflight(stdout: str) -> dict[str, Any]:
             "status": "unreadable-preflight-output",
             "missingOrBlockedRequirements": [],
             "publicEmailSwitchStatus": "",
+            "filesStillUsingOldEmail": 0,
+            "snapshotAlignmentStatus": "",
+            "snapshotAlignmentStaleMarkers": 0,
+            "snapshotAlignmentMissingCurrentDate": 0,
             "error": f"invalid JSON: {exc}",
         }
     if not isinstance(payload, dict):
@@ -84,11 +88,21 @@ def summarize_basescan_preflight(stdout: str) -> dict[str, Any]:
             "status": "unreadable-preflight-output",
             "missingOrBlockedRequirements": [],
             "publicEmailSwitchStatus": "",
+            "filesStillUsingOldEmail": 0,
+            "snapshotAlignmentStatus": "",
+            "snapshotAlignmentStaleMarkers": 0,
+            "snapshotAlignmentMissingCurrentDate": 0,
             "error": "preflight output must be a JSON object",
         }
 
     switch = payload.get("domainEmailPublicSwitchSummary")
     switch_summary = switch.get("summary") if isinstance(switch, dict) and isinstance(switch.get("summary"), dict) else {}
+    snapshot = payload.get("domainEmailSnapshotAlignmentSummary")
+    snapshot_summary = (
+        snapshot.get("summary")
+        if isinstance(snapshot, dict) and isinstance(snapshot.get("summary"), dict)
+        else {}
+    )
     return {
         "available": True,
         "readyForBaseScanResubmission": payload.get("readyForBaseScanResubmission") is True,
@@ -98,6 +112,9 @@ def summarize_basescan_preflight(stdout: str) -> dict[str, Any]:
         ],
         "publicEmailSwitchStatus": str(switch.get("status") or "") if isinstance(switch, dict) else "",
         "filesStillUsingOldEmail": switch_summary.get("filesStillUsingCurrentEmail", 0),
+        "snapshotAlignmentStatus": str(snapshot.get("status") or "") if isinstance(snapshot, dict) else "",
+        "snapshotAlignmentStaleMarkers": snapshot_summary.get("filesWithStaleSnapshotMarkers", 0),
+        "snapshotAlignmentMissingCurrentDate": snapshot_summary.get("filesMissingCurrentSnapshotDate", 0),
         "nextAction": str(payload.get("nextAction") or ""),
     }
 
@@ -142,6 +159,10 @@ def run_step(
                         "status": "preflight-timeout",
                         "missingOrBlockedRequirements": [],
                         "publicEmailSwitchStatus": "",
+                        "filesStillUsingOldEmail": 0,
+                        "snapshotAlignmentStatus": "",
+                        "snapshotAlignmentStaleMarkers": 0,
+                        "snapshotAlignmentMissingCurrentDate": 0,
                         "error": f"timeout after {timeout} seconds",
                     }
                 }
@@ -281,7 +302,17 @@ def run_daily_ops(
             for step in steps
             if step.get("id") == BASESCAN_PREFLIGHT_STEP_ID and isinstance(step.get("statusSummary"), dict)
         ),
-        {"available": False, "readyForBaseScanResubmission": None, "status": "not-run", "missingOrBlockedRequirements": []},
+        {
+            "available": False,
+            "readyForBaseScanResubmission": None,
+            "status": "not-run",
+            "missingOrBlockedRequirements": [],
+            "publicEmailSwitchStatus": "",
+            "filesStillUsingOldEmail": 0,
+            "snapshotAlignmentStatus": "",
+            "snapshotAlignmentStaleMarkers": 0,
+            "snapshotAlignmentMissingCurrentDate": 0,
+        },
     )
     summary = {
         "ok": all(step["ok"] for step in steps if step.get("blocksSummaryOk", True)),

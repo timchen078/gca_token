@@ -19,7 +19,35 @@ BASESCAN_BLOCKED_OUTPUT = json.dumps({
         "status": "public-email-switch-pending",
         "summary": {"filesStillUsingCurrentEmail": 3},
     },
+    "domainEmailSnapshotAlignmentSummary": {
+        "status": "aligned",
+        "summary": {
+            "filesWithStaleSnapshotMarkers": 0,
+            "filesMissingCurrentSnapshotDate": 0,
+        },
+    },
     "nextAction": "Do not resubmit BaseScan yet. Complete the blocked requirements first.",
+})
+
+BASESCAN_STALE_SNAPSHOT_OUTPUT = json.dumps({
+    "readyForBaseScanResubmission": False,
+    "status": "blocked-before-basescan-resubmission",
+    "missingOrBlockedRequirements": [
+        "domain-email-snapshot-alignment",
+        "stale-dns-snapshot-markers",
+    ],
+    "domainEmailPublicSwitchSummary": {
+        "status": "public-email-switched",
+        "summary": {"filesStillUsingCurrentEmail": 0},
+    },
+    "domainEmailSnapshotAlignmentSummary": {
+        "status": "stale-dns-snapshot-markers",
+        "summary": {
+            "filesWithStaleSnapshotMarkers": 2,
+            "filesMissingCurrentSnapshotDate": 1,
+        },
+    },
+    "nextAction": "Do not reuse platform packets yet. Fix stale or missing domain-email DNS snapshot references first.",
 })
 
 
@@ -58,6 +86,10 @@ class GcaDailyOpsTests(unittest.TestCase):
         self.assertFalse(summary["baseScanPreflight"]["readyForBaseScanResubmission"])
         self.assertEqual(summary["baseScanPreflight"]["status"], "blocked-before-basescan-resubmission")
         self.assertEqual(summary["baseScanPreflight"]["publicEmailSwitchStatus"], "public-email-switch-pending")
+        self.assertEqual(summary["baseScanPreflight"]["filesStillUsingOldEmail"], 3)
+        self.assertEqual(summary["baseScanPreflight"]["snapshotAlignmentStatus"], "aligned")
+        self.assertEqual(summary["baseScanPreflight"]["snapshotAlignmentStaleMarkers"], 0)
+        self.assertEqual(summary["baseScanPreflight"]["snapshotAlignmentMissingCurrentDate"], 0)
         self.assertIn("official-domain-email", summary["baseScanPreflight"]["missingOrBlockedRequirements"])
         self.assertFalse(summary["steps"][-1]["blocksSummaryOk"])
         self.assertFalse(summary["includeHoldingReport"])
@@ -86,6 +118,28 @@ class GcaDailyOpsTests(unittest.TestCase):
         self.assertEqual([step["id"] for step in summary["steps"]], ["public-site", "registration-api-public"])
         self.assertFalse(summary["baseScanPreflight"]["available"])
         self.assertEqual(summary["baseScanPreflight"]["status"], "not-run")
+        self.assertEqual(summary["baseScanPreflight"]["snapshotAlignmentStatus"], "")
+        self.assertEqual(summary["baseScanPreflight"]["snapshotAlignmentStaleMarkers"], 0)
+
+    def test_daily_ops_summarizes_basescan_snapshot_alignment_status(self):
+        def runner(command, cwd, timeout):
+            if any("check_basescan_resubmission_readiness.py" in part for part in command):
+                return subprocess.CompletedProcess(command, 0, stdout=BASESCAN_STALE_SNAPSHOT_OUTPUT, stderr="")
+            return subprocess.CompletedProcess(command, 0, stdout='{"ok": true}', stderr="")
+
+        with tempfile.TemporaryDirectory() as temp:
+            summary = run_daily_ops(
+                summary_output=Path(temp) / "summary.json",
+                runner=runner,
+            )
+
+        self.assertTrue(summary["ok"])
+        self.assertEqual(summary["baseScanPreflight"]["publicEmailSwitchStatus"], "public-email-switched")
+        self.assertEqual(summary["baseScanPreflight"]["filesStillUsingOldEmail"], 0)
+        self.assertEqual(summary["baseScanPreflight"]["snapshotAlignmentStatus"], "stale-dns-snapshot-markers")
+        self.assertEqual(summary["baseScanPreflight"]["snapshotAlignmentStaleMarkers"], 2)
+        self.assertEqual(summary["baseScanPreflight"]["snapshotAlignmentMissingCurrentDate"], 1)
+        self.assertIn("domain-email-snapshot-alignment", summary["baseScanPreflight"]["missingOrBlockedRequirements"])
 
     def test_daily_ops_can_include_member_ops_explicitly(self):
         def runner(command, cwd, timeout):

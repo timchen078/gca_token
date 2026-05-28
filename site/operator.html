@@ -485,6 +485,10 @@
             <span class="value" id="digestBaseScanEmailSwitch">-</span>
           </div>
           <div class="fact">
+            <span class="label">DNS snapshot alignment</span>
+            <span class="value" id="digestBaseScanSnapshotAlignment">-</span>
+          </div>
+          <div class="fact">
             <span class="label">BaseScan blockers</span>
             <span class="value" id="digestBaseScanBlockers">0</span>
           </div>
@@ -779,6 +783,7 @@
       const digestPublicStatus = document.getElementById("digestPublicStatus");
       const digestBaseScanStatus = document.getElementById("digestBaseScanStatus");
       const digestBaseScanEmailSwitch = document.getElementById("digestBaseScanEmailSwitch");
+      const digestBaseScanSnapshotAlignment = document.getElementById("digestBaseScanSnapshotAlignment");
       const digestBaseScanBlockers = document.getElementById("digestBaseScanBlockers");
       const digestMemberStatus = document.getElementById("digestMemberStatus");
       const digestSupportRows = document.getElementById("digestSupportRows");
@@ -885,6 +890,7 @@
           ? (baseScan.readyForBaseScanResubmission ? "ready" : "blocked")
           : "missing";
         digestBaseScanEmailSwitch.textContent = baseScan.publicEmailSwitchStatus || "-";
+        digestBaseScanSnapshotAlignment.textContent = baseScan.snapshotAlignmentStatus || "-";
         digestBaseScanBlockers.textContent = Array.isArray(baseScan.missingOrBlockedRequirements)
           ? baseScan.missingOrBlockedRequirements.length
           : 0;
@@ -900,6 +906,7 @@
         digestPublicStatus.textContent = "-";
         digestBaseScanStatus.textContent = "-";
         digestBaseScanEmailSwitch.textContent = "-";
+        digestBaseScanSnapshotAlignment.textContent = "-";
         digestBaseScanBlockers.textContent = "0";
         digestMemberStatus.textContent = "-";
         digestSupportRows.textContent = "0";
