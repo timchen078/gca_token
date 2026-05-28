@@ -41,6 +41,8 @@ TIM_CHEN_PROFILE_PAGE_URL = "https://gcagochina.com/tim-chen.html"
 TIM_CHEN_PROFILE_URL = "https://gcagochina.com/tim-chen.json"
 DOMAIN_EMAIL_PAGE_URL = "https://gcagochina.com/domain-email.html"
 DOMAIN_EMAIL_URL = "https://gcagochina.com/domain-email.json"
+DOMAIN_EMAIL_EVIDENCE_PAGE_URL = "https://gcagochina.com/domain-email-evidence.html"
+DOMAIN_EMAIL_EVIDENCE_URL = "https://gcagochina.com/domain-email-evidence.json"
 BASESCAN_REMEDIATION_PAGE_URL = "https://gcagochina.com/basescan-remediation.html"
 BASESCAN_REMEDIATION_URL = "https://gcagochina.com/basescan-remediation.json"
 GITHUB_REPO_URL = "https://github.com/timchen078/gca_token"
@@ -222,6 +224,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("/tim-chen.json", script)
         self.assertIn("/domain-email.html", script)
         self.assertIn("/domain-email.json", script)
+        self.assertIn("/domain-email-evidence.html", script)
+        self.assertIn("/domain-email-evidence.json", script)
         self.assertIn("/basescan-remediation.html", script)
         self.assertIn("/basescan-remediation.json", script)
         self.assertIn(TEAM_PAGE_URL, script)
@@ -229,6 +233,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(TIM_CHEN_PROFILE_URL, script)
         self.assertIn(DOMAIN_EMAIL_PAGE_URL, script)
         self.assertIn(DOMAIN_EMAIL_URL, script)
+        self.assertIn(DOMAIN_EMAIL_EVIDENCE_PAGE_URL, script)
+        self.assertIn(DOMAIN_EMAIL_EVIDENCE_URL, script)
         self.assertIn(BASESCAN_REMEDIATION_PAGE_URL, script)
         self.assertIn(BASESCAN_REMEDIATION_URL, script)
         self.assertIn(GITHUB_REPO_URL, script)
@@ -447,6 +453,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("validate_unsubscribe_page", script)
         self.assertIn("validate_about_page", script)
         self.assertIn("validate_team_page", script)
+        self.assertIn("validate_domain_email_evidence_page", script)
+        self.assertIn("validate_domain_email_evidence_json", script)
         self.assertIn("validate_basescan_remediation_page", script)
         self.assertIn("validate_basescan_remediation_json", script)
         self.assertIn("validate_site_map_page", script)
@@ -496,6 +504,8 @@ class LaunchPackageTests(unittest.TestCase):
         module.validate_tim_chen_profile_json((ROOT / "site" / "tim-chen.json").read_text())
         module.validate_domain_email_page((ROOT / "site" / "domain-email.html").read_text())
         module.validate_domain_email_json((ROOT / "site" / "domain-email.json").read_text())
+        module.validate_domain_email_evidence_page((ROOT / "site" / "domain-email-evidence.html").read_text())
+        module.validate_domain_email_evidence_json((ROOT / "site" / "domain-email-evidence.json").read_text())
         module.validate_basescan_remediation_page((ROOT / "site" / "basescan-remediation.html").read_text())
         module.validate_basescan_remediation_json((ROOT / "site" / "basescan-remediation.json").read_text())
         module.validate_data_page((ROOT / "site" / "data.html").read_text())
@@ -904,6 +914,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Allow: /tim-chen.json", robots)
         self.assertIn("Allow: /domain-email.html", robots)
         self.assertIn("Allow: /domain-email.json", robots)
+        self.assertIn("Allow: /domain-email-evidence.html", robots)
+        self.assertIn("Allow: /domain-email-evidence.json", robots)
         self.assertIn("Allow: /basescan-remediation.html", robots)
         self.assertIn("Allow: /basescan-remediation.json", robots)
         self.assertIn("Allow: /action-plan.html", robots)
@@ -1039,6 +1051,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(TIM_CHEN_PROFILE_URL, sitemap)
         self.assertIn(DOMAIN_EMAIL_PAGE_URL, sitemap)
         self.assertIn(DOMAIN_EMAIL_URL, sitemap)
+        self.assertIn(DOMAIN_EMAIL_EVIDENCE_PAGE_URL, sitemap)
+        self.assertIn(DOMAIN_EMAIL_EVIDENCE_URL, sitemap)
         self.assertIn(BASESCAN_REMEDIATION_PAGE_URL, sitemap)
         self.assertIn(BASESCAN_REMEDIATION_URL, sitemap)
         self.assertIn(ACTION_PLAN_PAGE_URL, sitemap)
@@ -1369,6 +1383,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("launch/domain_email_switch_preview.patch", page)
         self.assertIn("Submission policy: send the next clean BaseScan update from", page)
         self.assertIn("domain email setup plan", page)
+        self.assertIn("Evidence Checklist", page)
+        self.assertIn("domain-email-evidence.html", page)
         self.assertIn("support.html", page)
         self.assertIn("basescan-remediation.html", page)
         self.assertIn("tim-chen.html", page)
@@ -1450,6 +1466,16 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("launch/domain_email_evidence_packet.json", data["operatorEvidencePacketBuilder"]["outputs"])
         self.assertIn("readyForBaseScanEmailEvidence is true in the DNS check", data["operatorEvidencePacketBuilder"]["readyRequires"])
         self.assertIn("does not submit BaseScan request", data["operatorEvidencePacketBuilder"]["boundaries"])
+        evidence_checklist = data["operatorEvidenceChecklist"]
+        self.assertEqual(evidence_checklist["pageUrl"], DOMAIN_EMAIL_EVIDENCE_PAGE_URL)
+        self.assertEqual(evidence_checklist["jsonUrl"], DOMAIN_EMAIL_EVIDENCE_URL)
+        self.assertEqual(evidence_checklist["status"], "blocked-until-domain-email-evidence-collected")
+        self.assertIn("private domain email evidence packet", evidence_checklist["purpose"])
+        self.assertEqual(evidence_checklist["privateEvidenceDirectory"], "launch/domain_email_evidence")
+        self.assertIn("domain-email-provider-active.png", evidence_checklist["requiredEvidenceFiles"])
+        self.assertIn("support-page-domain-email.png", evidence_checklist["requiredEvidenceFiles"])
+        self.assertIn("does not publish private mailbox screenshots", evidence_checklist["boundaries"])
+        self.assertIn("does not submit BaseScan request", evidence_checklist["boundaries"])
         switch_builder = data["operatorSwitchPlanBuilder"]
         self.assertEqual(switch_builder["tool"], "tools/build_domain_email_switch_plan.py")
         self.assertIn("--json", switch_builder["command"])
@@ -1490,6 +1516,89 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("site/support.html", data["filesToUpdateAfterActivation"])
         self.assertIn("GCA has published a domain email setup plan.", data["publicClaimBoundaries"]["safeClaims"])
         self.assertIn("support@gcagochina.com is active before inbound and outbound tests pass", data["publicClaimBoundaries"]["doNotClaim"])
+
+    def test_domain_email_evidence_checklist_page_and_json_are_public_safe(self):
+        page = (ROOT / "site" / "domain-email-evidence.html").read_text()
+        data = json.loads((ROOT / "site" / "domain-email-evidence.json").read_text())
+
+        self.assertIn("GCA Domain Email Evidence Checklist", page)
+        self.assertIn("Public Reviewer Checklist", page)
+        self.assertIn("Blocked Until Evidence Collected", page)
+        self.assertIn("GCAgochina@outlook.com", page)
+        self.assertIn("support@gcagochina.com", page)
+        self.assertIn("launch/domain_email_evidence", page)
+        self.assertIn("Required Evidence Files", page)
+        self.assertIn("domain-email-provider-active.png", page)
+        self.assertIn("domain-email-dns-mx-spf-dkim-dmarc.txt", page)
+        self.assertIn("domain-email-inbound-test.png", page)
+        self.assertIn("domain-email-outbound-test.png", page)
+        self.assertIn("support-page-domain-email.png", page)
+        self.assertIn("tools/build_domain_email_evidence_packet.py", page)
+        self.assertIn("tools/check_domain_email_dns.py", page)
+        self.assertIn("tools/check_basescan_resubmission_readiness.py --json --require-ready", page)
+        self.assertIn("readyForBaseScanEmailEvidence", page)
+        self.assertIn("readyForBaseScanResubmission", page)
+        self.assertIn("No DNS Writes", page)
+        self.assertIn("No Email Sending", page)
+        self.assertIn("No BaseScan Submission", page)
+        self.assertIn("No Wallet Actions", page)
+        self.assertIn("No Private Screenshot Publishing", page)
+        self.assertIn("domain-email.html", page)
+        self.assertIn("basescan-remediation.html", page)
+        self.assertIn("tim-chen.html", page)
+        self.assertIn("platform-replies.html", page)
+        self.assertNotIn('href="domain-email-evidence.json"', page)
+        self.assertNotIn('href="domain-email.json"', page)
+        self.assertNotIn('href="project.json"', page)
+
+        self.assertEqual(data["schema"], DOMAIN_EMAIL_EVIDENCE_URL)
+        self.assertEqual(data["pageUrl"], DOMAIN_EMAIL_EVIDENCE_PAGE_URL)
+        self.assertEqual(data["lastUpdated"], "2026-05-28")
+        self.assertEqual(data["status"], "blocked-until-domain-email-evidence-collected")
+        self.assertEqual(data["currentPublicEmail"], "GCAgochina@outlook.com")
+        self.assertEqual(data["targetDomainEmail"], "support@gcagochina.com")
+        self.assertEqual(data["evidenceDirectory"], "launch/domain_email_evidence")
+        self.assertTrue(data["evidenceDirectoryIgnoredByGit"])
+        self.assertTrue(data["publicSafe"])
+        self.assertFalse(data["privateEvidencePublished"])
+        self.assertFalse(data["baseScanUse"]["readyForResubmission"])
+        self.assertEqual(data["baseScanUse"]["reviewerPage"], DOMAIN_EMAIL_EVIDENCE_PAGE_URL)
+        self.assertEqual(data["baseScanUse"]["setupPlan"], DOMAIN_EMAIL_PAGE_URL)
+        self.assertEqual(data["baseScanUse"]["baseScanRemediation"], BASESCAN_REMEDIATION_PAGE_URL)
+        self.assertEqual(data["baseScanUse"]["founderProfile"], TIM_CHEN_PROFILE_PAGE_URL)
+        self.assertCountEqual(
+            [item["fileName"] for item in data["requiredEvidenceFiles"]],
+            [
+                "domain-email-provider-active.png",
+                "domain-email-dns-mx-spf-dkim-dmarc.txt",
+                "domain-email-inbound-test.png",
+                "domain-email-outbound-test.png",
+                "support-page-domain-email.png",
+            ],
+        )
+        for item in data["requiredEvidenceFiles"]:
+            self.assertFalse(item["safeToCommit"])
+            self.assertTrue(item["keepPrivate"])
+            self.assertTrue(item["path"].startswith("launch/domain_email_evidence/"))
+        self.assertIn("Choose a full mailbox provider that can receive and send as support@gcagochina.com.", data["stepsInOrder"])
+        self.assertIn("Build launch/domain_email_evidence_packet.json and run the BaseScan resubmission preflight.", data["stepsInOrder"])
+        self.assertIn("build_domain_email_evidence_packet.py --init-evidence-dir", data["commands"]["initEvidenceDirectory"])
+        self.assertIn("--dkim-selector <provider-selector>", data["commands"]["dnsCheck"])
+        self.assertIn("launch/domain_email_evidence_packet.json", data["commands"]["buildEvidencePacket"])
+        self.assertEqual(data["commands"]["finalPreflight"], "python3 tools/check_basescan_resubmission_readiness.py --json --require-ready")
+        self.assertIn("Any required evidence file is missing.", data["stopConditions"])
+        self.assertFalse(data["boundaries"]["writesDnsRecords"])
+        self.assertFalse(data["boundaries"]["sendsEmail"])
+        self.assertFalse(data["boundaries"]["submitsBaseScanRequest"])
+        self.assertFalse(data["boundaries"]["touchesWalletsOrContracts"])
+        self.assertFalse(data["boundaries"]["storesSecrets"])
+        self.assertFalse(data["boundaries"]["commitsPrivateEvidence"])
+        self.assertIn("Do not claim support@gcagochina.com is active before inbound and outbound tests pass.", data["publicClaimBoundaries"])
+        self.assertEqual(data["relatedPublicPages"]["domainEmailPlan"], DOMAIN_EMAIL_PAGE_URL)
+        self.assertEqual(data["relatedPublicPages"]["baseScanRemediation"], BASESCAN_REMEDIATION_PAGE_URL)
+        self.assertEqual(data["relatedPublicPages"]["founderProfile"], TIM_CHEN_PROFILE_PAGE_URL)
+        self.assertEqual(data["relatedPublicPages"]["platformReplies"], PLATFORM_REPLIES_PAGE_URL)
+        self.assertEqual(data["relatedPublicPages"]["dataRoom"], DATA_PAGE_URL)
 
     def test_domain_email_activation_runbook_is_actionable_and_bounded(self):
         runbook = (ROOT / "launch" / "domain_email_activation_runbook.md").read_text()

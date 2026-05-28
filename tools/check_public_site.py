@@ -37,6 +37,8 @@ TIM_CHEN_PROFILE_PAGE_URL = "https://gcagochina.com/tim-chen.html"
 TIM_CHEN_PROFILE_URL = "https://gcagochina.com/tim-chen.json"
 DOMAIN_EMAIL_PAGE_URL = "https://gcagochina.com/domain-email.html"
 DOMAIN_EMAIL_URL = "https://gcagochina.com/domain-email.json"
+DOMAIN_EMAIL_EVIDENCE_PAGE_URL = "https://gcagochina.com/domain-email-evidence.html"
+DOMAIN_EMAIL_EVIDENCE_URL = "https://gcagochina.com/domain-email-evidence.json"
 BASESCAN_REMEDIATION_PAGE_URL = "https://gcagochina.com/basescan-remediation.html"
 BASESCAN_REMEDIATION_URL = "https://gcagochina.com/basescan-remediation.json"
 GITHUB_REPO_URL = "https://github.com/timchen078/gca_token"
@@ -821,6 +823,8 @@ def validate_domain_email_page(text: str) -> None:
         "basescan-remediation.html",
         "tim-chen.html",
         "BaseScan Remediation",
+        "Evidence Checklist",
+        "domain-email-evidence.html",
     ):
         assert_contains(text, expected, label)
     assert_not_contains(text, 'href="domain-email.json"', label)
@@ -837,6 +841,7 @@ def validate_domain_email_json(text: str) -> None:
     snapshot = payload.get("liveDnsSnapshot", {})
     dns_check = payload.get("operatorDnsCheck", {})
     packet_builder = payload.get("operatorEvidencePacketBuilder", {})
+    evidence_checklist = payload.get("operatorEvidenceChecklist", {})
     provider_matrix = payload.get("operatorProviderMatrixBuilder", {})
     dns_entry_builder = payload.get("operatorDnsEntryPacketBuilder", {})
     owner_packet = payload.get("ownerActionPacket", {})
@@ -959,6 +964,24 @@ def validate_domain_email_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing DNS ready requirement for evidence packet")
     if "does not submit BaseScan request" not in packet_builder.get("boundaries", []):
         raise SiteCheckError(f"{label}: missing packet builder BaseScan boundary")
+    if evidence_checklist.get("pageUrl") != DOMAIN_EMAIL_EVIDENCE_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong evidence checklist page URL")
+    if evidence_checklist.get("jsonUrl") != DOMAIN_EMAIL_EVIDENCE_URL:
+        raise SiteCheckError(f"{label}: wrong evidence checklist JSON URL")
+    if evidence_checklist.get("status") != "blocked-until-domain-email-evidence-collected":
+        raise SiteCheckError(f"{label}: wrong evidence checklist status")
+    if "private domain email evidence packet" not in evidence_checklist.get("purpose", ""):
+        raise SiteCheckError(f"{label}: missing evidence checklist purpose")
+    if evidence_checklist.get("privateEvidenceDirectory") != "launch/domain_email_evidence":
+        raise SiteCheckError(f"{label}: wrong evidence checklist private directory")
+    if "domain-email-provider-active.png" not in evidence_checklist.get("requiredEvidenceFiles", []):
+        raise SiteCheckError(f"{label}: missing checklist provider evidence file")
+    if "support-page-domain-email.png" not in evidence_checklist.get("requiredEvidenceFiles", []):
+        raise SiteCheckError(f"{label}: missing checklist support page proof")
+    if "does not publish private mailbox screenshots" not in evidence_checklist.get("boundaries", []):
+        raise SiteCheckError(f"{label}: missing checklist private screenshot boundary")
+    if "does not submit BaseScan request" not in evidence_checklist.get("boundaries", []):
+        raise SiteCheckError(f"{label}: missing checklist BaseScan boundary")
     if switch_builder.get("tool") != "tools/build_domain_email_switch_plan.py":
         raise SiteCheckError(f"{label}: wrong operator switch plan builder")
     if "--json" not in switch_builder.get("command", ""):
@@ -1007,6 +1030,157 @@ def validate_domain_email_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing safe setup-plan claim")
     if "support@gcagochina.com is active before inbound and outbound tests pass" not in boundaries.get("doNotClaim", []):
         raise SiteCheckError(f"{label}: missing inactive-domain-email boundary")
+    assert_no_forbidden_public_claims(json.dumps(payload), label)
+
+
+def validate_domain_email_evidence_page(text: str) -> None:
+    label = "/domain-email-evidence.html"
+    assert_social_preview_meta(text, label, DOMAIN_EMAIL_EVIDENCE_PAGE_URL)
+    for expected in (
+        "GCA Domain Email Evidence Checklist",
+        "Public Reviewer Checklist",
+        "Blocked Until Evidence Collected",
+        "GCAgochina@outlook.com",
+        "support@gcagochina.com",
+        "launch/domain_email_evidence",
+        "Current Boundary",
+        "Not active yet",
+        "Reviewer Use",
+        "Required Evidence Files",
+        "Five Files To Save Privately Before Resubmission",
+        "domain-email-provider-active.png",
+        "domain-email-dns-mx-spf-dkim-dmarc.txt",
+        "domain-email-inbound-test.png",
+        "domain-email-outbound-test.png",
+        "support-page-domain-email.png",
+        "Execution Order",
+        "Do These In Order",
+        "readyForBaseScanEmailEvidence",
+        "Operator Commands",
+        "tools/build_domain_email_evidence_packet.py",
+        "tools/check_domain_email_dns.py",
+        "tools/check_basescan_resubmission_readiness.py --json --require-ready",
+        "Stop Conditions",
+        "readyForBaseScanResubmission",
+        "Boundaries",
+        "No DNS Writes",
+        "No Email Sending",
+        "No BaseScan Submission",
+        "No Wallet Actions",
+        "No Secret Storage",
+        "No Private Screenshot Publishing",
+        "domain-email.html",
+        "basescan-remediation.html",
+        "tim-chen.html",
+        "platform-replies.html",
+    ):
+        assert_contains(text, expected, label)
+    assert_not_contains(text, 'href="domain-email-evidence.json"', label)
+    assert_not_contains(text, 'href="domain-email.json"', label)
+    assert_not_contains(text, 'href="project.json"', label)
+    assert_no_forbidden_public_claims(text, label)
+
+
+def validate_domain_email_evidence_json(text: str) -> None:
+    label = "/domain-email-evidence.json"
+    payload = load_json(text, label)
+    base_scan_use = payload.get("baseScanUse", {})
+    commands = payload.get("commands", {})
+    boundaries = payload.get("boundaries", {})
+    related = payload.get("relatedPublicPages", {})
+    evidence_files = payload.get("requiredEvidenceFiles", [])
+
+    if payload.get("schema") != DOMAIN_EMAIL_EVIDENCE_URL:
+        raise SiteCheckError(f"{label}: wrong schema")
+    if payload.get("pageUrl") != DOMAIN_EMAIL_EVIDENCE_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong pageUrl")
+    if payload.get("lastUpdated") != "2026-05-28":
+        raise SiteCheckError(f"{label}: wrong lastUpdated")
+    if payload.get("status") != "blocked-until-domain-email-evidence-collected":
+        raise SiteCheckError(f"{label}: wrong status")
+    if payload.get("currentPublicEmail") != "GCAgochina@outlook.com":
+        raise SiteCheckError(f"{label}: wrong currentPublicEmail")
+    if payload.get("targetDomainEmail") != "support@gcagochina.com":
+        raise SiteCheckError(f"{label}: wrong targetDomainEmail")
+    if payload.get("evidenceDirectory") != "launch/domain_email_evidence":
+        raise SiteCheckError(f"{label}: wrong evidence directory")
+    if payload.get("evidenceDirectoryIgnoredByGit") is not True:
+        raise SiteCheckError(f"{label}: evidence directory must be git-ignored")
+    if payload.get("publicSafe") is not True:
+        raise SiteCheckError(f"{label}: publicSafe must be true")
+    if payload.get("privateEvidencePublished") is not False:
+        raise SiteCheckError(f"{label}: private evidence must not be public")
+    if base_scan_use.get("readyForResubmission") is not False:
+        raise SiteCheckError(f"{label}: BaseScan resubmission must not be ready")
+    if base_scan_use.get("reviewerPage") != DOMAIN_EMAIL_EVIDENCE_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong reviewerPage")
+    if base_scan_use.get("setupPlan") != DOMAIN_EMAIL_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong setupPlan")
+    if base_scan_use.get("baseScanRemediation") != BASESCAN_REMEDIATION_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong baseScanRemediation")
+    if base_scan_use.get("founderProfile") != TIM_CHEN_PROFILE_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong founderProfile")
+
+    expected_files = {
+        "domain-email-provider-active.png",
+        "domain-email-dns-mx-spf-dkim-dmarc.txt",
+        "domain-email-inbound-test.png",
+        "domain-email-outbound-test.png",
+        "support-page-domain-email.png",
+    }
+    actual_files = {item.get("fileName") for item in evidence_files if isinstance(item, dict)}
+    if expected_files != actual_files:
+        raise SiteCheckError(f"{label}: wrong evidence file set")
+    for item in evidence_files:
+        if item.get("safeToCommit") is not False or item.get("keepPrivate") is not True:
+            raise SiteCheckError(f"{label}: evidence file must stay private")
+        if not item.get("path", "").startswith("launch/domain_email_evidence/"):
+            raise SiteCheckError(f"{label}: evidence path outside private directory")
+
+    for expected in (
+        "Choose a full mailbox provider that can receive and send as support@gcagochina.com.",
+        "Switch public support/BaseScan email values only after DNS and mail-flow evidence are complete.",
+        "Build launch/domain_email_evidence_packet.json and run the BaseScan resubmission preflight.",
+    ):
+        if expected not in payload.get("stepsInOrder", []):
+            raise SiteCheckError(f"{label}: missing step {expected}")
+    if "build_domain_email_evidence_packet.py --init-evidence-dir" not in commands.get("initEvidenceDirectory", ""):
+        raise SiteCheckError(f"{label}: missing init evidence command")
+    if "--dkim-selector <provider-selector>" not in commands.get("dnsCheck", ""):
+        raise SiteCheckError(f"{label}: missing DNS selector command")
+    if "launch/domain_email_evidence_packet.json" not in commands.get("buildEvidencePacket", ""):
+        raise SiteCheckError(f"{label}: missing evidence packet output")
+    if commands.get("finalPreflight") != "python3 tools/check_basescan_resubmission_readiness.py --json --require-ready":
+        raise SiteCheckError(f"{label}: wrong final preflight command")
+    for expected in (
+        "support@gcagochina.com cannot receive external email.",
+        "Any required evidence file is missing.",
+        "BaseScan resubmission preflight reports readyForBaseScanResubmission false.",
+    ):
+        if expected not in payload.get("stopConditions", []):
+            raise SiteCheckError(f"{label}: missing stop condition {expected}")
+    for expected_key in (
+        "writesDnsRecords",
+        "sendsEmail",
+        "submitsBaseScanRequest",
+        "touchesWalletsOrContracts",
+        "storesSecrets",
+        "commitsPrivateEvidence",
+    ):
+        if boundaries.get(expected_key) is not False:
+            raise SiteCheckError(f"{label}: boundary {expected_key} must be false")
+    if "Do not claim support@gcagochina.com is active before inbound and outbound tests pass." not in payload.get("publicClaimBoundaries", []):
+        raise SiteCheckError(f"{label}: missing inactive-mailbox public claim boundary")
+    if related.get("domainEmailPlan") != DOMAIN_EMAIL_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong related domain email plan")
+    if related.get("baseScanRemediation") != BASESCAN_REMEDIATION_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong related BaseScan remediation")
+    if related.get("founderProfile") != TIM_CHEN_PROFILE_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong related founder profile")
+    if related.get("platformReplies") != PLATFORM_REPLIES_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong related platform replies")
+    if related.get("dataRoom") != DATA_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong related data room")
     assert_no_forbidden_public_claims(json.dumps(payload), label)
 
 
@@ -2894,6 +3068,7 @@ def validate_data_page(text: str) -> None:
         "Wallet security profile",
         "External reviews data",
         "Domain email setup data",
+        "Domain email evidence checklist data",
         "Token safety data",
         "On-chain proofs data",
         "Liquidity statement data",
@@ -2924,6 +3099,7 @@ def validate_data_page(text: str) -> None:
         "platform-replies.json",
         "external-reviews.json",
         "domain-email.json",
+        "domain-email-evidence.json",
         "token-safety.json",
         "onchain-proofs.json",
         "liquidity.json",
@@ -3017,6 +3193,8 @@ def validate_site_map_page(text: str) -> None:
         "Trust and Review",
         "Domain Email Plan",
         "domain-email.html",
+        "Domain Email Evidence Checklist",
+        "domain-email-evidence.html",
         "Security Materials",
         "External Review",
         "Supply and Custody",
@@ -10878,6 +11056,8 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/tim-chen.json",
         "https://gcagochina.com/domain-email.html",
         "https://gcagochina.com/domain-email.json",
+        "https://gcagochina.com/domain-email-evidence.html",
+        "https://gcagochina.com/domain-email-evidence.json",
         "https://gcagochina.com/basescan-remediation.html",
         "https://gcagochina.com/basescan-remediation.json",
         "https://gcagochina.com/action-plan.html",
@@ -11022,6 +11202,8 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /tim-chen.json", label)
     assert_contains(text, "Allow: /domain-email.html", label)
     assert_contains(text, "Allow: /domain-email.json", label)
+    assert_contains(text, "Allow: /domain-email-evidence.html", label)
+    assert_contains(text, "Allow: /domain-email-evidence.json", label)
     assert_contains(text, "Allow: /basescan-remediation.html", label)
     assert_contains(text, "Allow: /basescan-remediation.json", label)
     assert_contains(text, "Allow: /action-plan.html", label)
@@ -11169,6 +11351,8 @@ CHECKS: list[EndpointCheck] = [
     ("/tim-chen.json", validate_tim_chen_profile_json),
     ("/domain-email.html", validate_domain_email_page),
     ("/domain-email.json", validate_domain_email_json),
+    ("/domain-email-evidence.html", validate_domain_email_evidence_page),
+    ("/domain-email-evidence.json", validate_domain_email_evidence_json),
     ("/basescan-remediation.html", validate_basescan_remediation_page),
     ("/basescan-remediation.json", validate_basescan_remediation_json),
     ("/action-plan.html", validate_action_plan_page),
