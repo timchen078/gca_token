@@ -281,6 +281,8 @@
     "tool": "tools/build_domain_email_switch_plan.py",
     "command": "python3 tools/build_domain_email_switch_plan.py --json",
     "ownerArtifactCommand": "python3 tools/build_domain_email_switch_plan.py --output-json launch/domain_email_switch_plan.json --output-md launch/domain_email_switch_plan.md",
+    "patchPreviewCommand": "python3 tools/build_domain_email_switch_plan.py --patch",
+    "ownerPatchPreviewCommand": "python3 tools/build_domain_email_switch_plan.py --output-patch launch/domain_email_switch_preview.patch",
     "purpose": "Find public site, launch, docs, and operator contact files that still reference GCAgochina@outlook.com before switching to support@gcagochina.com after activation.",
     "runAfter": [
       "support@gcagochina.com receives external email",
@@ -290,6 +292,7 @@
     ],
     "boundaries": [
       "read-only scan by default",
+      "patch preview is generated only and not applied",
       "does not edit files",
       "does not send email",
       "does not submit BaseScan request",

@@ -9,6 +9,7 @@ ready.
 from __future__ import annotations
 
 import argparse
+import difflib
 import json
 from pathlib import Path
 from typing import Any
@@ -138,6 +139,17 @@ def build_plan(
             "filesRequiringSwitchAfterActivation": len(switch_required),
             "categories": dict(sorted(categories.items())),
         },
+        "patchPreview": {
+            "command": "python3 tools/build_domain_email_switch_plan.py --patch",
+            "ownerArtifactCommand": (
+                "python3 tools/build_domain_email_switch_plan.py "
+                "--output-patch launch/domain_email_switch_preview.patch"
+            ),
+            "filesWithExactReplacement": len(switch_required),
+            "replacementOccurrences": sum(record["currentEmailOccurrences"] for record in switch_required),
+            "exactReplacementOnly": True,
+            "appliesChanges": False,
+        },
         "requiredPreconditions": [
             "support@gcagochina.com receives external email",
             "support@gcagochina.com sends authenticated external email",
@@ -164,6 +176,74 @@ def build_plan(
     }
 
 
+def build_patch_preview(plan: dict[str, Any], *, root: Path = ROOT) -> dict[str, Any]:
+    current_email = str(plan.get("currentEmail") or CURRENT_EMAIL)
+    target_email = str(plan.get("targetDomainEmail") or TARGET_EMAIL)
+    diff_lines: list[str] = []
+    records: list[dict[str, Any]] = []
+    root = root.resolve()
+
+    for record in plan.get("records", []):
+        if not isinstance(record, dict) or not record.get("switchRequiredAfterActivation"):
+            continue
+        relative_path = str(record.get("path") or "")
+        if not relative_path or Path(relative_path).is_absolute():
+            continue
+        path = (root / relative_path).resolve()
+        try:
+            path.relative_to(root)
+        except ValueError:
+            continue
+        try:
+            before = path.read_text(encoding="utf-8")
+        except (FileNotFoundError, UnicodeDecodeError):
+            continue
+        after = before.replace(current_email, target_email)
+        if after == before:
+            continue
+        file_diff = list(
+            difflib.unified_diff(
+                before.splitlines(keepends=True),
+                after.splitlines(keepends=True),
+                fromfile=f"a/{relative_path}",
+                tofile=f"b/{relative_path}",
+            )
+        )
+        diff_lines.extend(file_diff)
+        records.append({
+            "path": relative_path,
+            "category": str(record.get("category") or ""),
+            "replacementOccurrences": int(record.get("currentEmailOccurrences") or 0),
+        })
+
+    return {
+        "schema": "gca-domain-email-switch-patch-preview-v1",
+        "status": "preview-only-not-applied",
+        "currentEmail": current_email,
+        "targetDomainEmail": target_email,
+        "summary": {
+            "filesWithExactReplacement": len(records),
+            "replacementOccurrences": sum(record["replacementOccurrences"] for record in records),
+            "diffLines": len(diff_lines),
+        },
+        "records": records,
+        "patch": "".join(diff_lines),
+        "boundaries": {
+            "previewOnly": True,
+            "writesPublicFiles": False,
+            "sendsEmail": False,
+            "writesDns": False,
+            "submitsBaseScanRequest": False,
+            "touchesWalletsOrContracts": False,
+        },
+    }
+
+
+def render_patch_preview(plan: dict[str, Any]) -> str:
+    preview = build_patch_preview(plan)
+    return preview["patch"]
+
+
 def render_markdown(plan: dict[str, Any]) -> str:
     lines = [
         "# GCA Domain Email Public Switch Plan",
@@ -177,6 +257,14 @@ def render_markdown(plan: dict[str, Any]) -> str:
         "",
     ]
     lines.extend(f"- {item}" for item in plan["requiredPreconditions"])
+    lines.extend([
+        "",
+        "## Patch Preview",
+        "",
+        f"- Command: `{plan['patchPreview']['command']}`",
+        f"- Owner artifact: `{plan['patchPreview']['ownerArtifactCommand']}`",
+        "- The patch preview is an exact replacement diff only; it is not applied by this tool.",
+    ])
     lines.extend(["", "## Switch Order", ""])
     lines.extend(f"{index}. {item}" for index, item in enumerate(plan["switchOrder"], start=1))
     lines.extend(["", "## File Records", ""])
@@ -194,6 +282,7 @@ def render_markdown(plan: dict[str, Any]) -> str:
             "## Boundaries",
             "",
             "- This plan does not change public files by itself.",
+            "- The patch preview is a generated diff only and does not write public files.",
             "- This plan does not send email, write DNS, submit BaseScan requests, or touch wallets/contracts.",
         ]
     )
@@ -204,8 +293,10 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Build the GCA domain email public switch plan.")
     parser.add_argument("--json", action="store_true", help="Print JSON instead of a text summary.")
     parser.add_argument("--markdown", action="store_true", help="Print markdown instead of a text summary.")
+    parser.add_argument("--patch", action="store_true", help="Print a unified diff preview for exact email replacements.")
     parser.add_argument("--output-json", help="Optional JSON output path.")
     parser.add_argument("--output-md", help="Optional markdown output path.")
+    parser.add_argument("--output-patch", help="Optional unified diff patch preview output path.")
     return parser.parse_args()
 
 
@@ -217,8 +308,12 @@ def main() -> int:
         Path(args.output_json).write_text(json.dumps(plan, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     if args.output_md:
         Path(args.output_md).write_text(render_markdown(plan), encoding="utf-8")
+    if args.output_patch:
+        Path(args.output_patch).write_text(render_patch_preview(plan), encoding="utf-8")
 
-    if args.json:
+    if args.patch:
+        print(render_patch_preview(plan), end="")
+    elif args.json:
         print(json.dumps(plan, indent=2, sort_keys=True))
     elif args.markdown:
         print(render_markdown(plan), end="")

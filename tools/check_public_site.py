@@ -961,10 +961,16 @@ def validate_domain_email_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing switch plan JSON command")
     if "launch/domain_email_switch_plan.json" not in switch_builder.get("ownerArtifactCommand", ""):
         raise SiteCheckError(f"{label}: missing switch plan owner artifact")
+    if "--patch" not in switch_builder.get("patchPreviewCommand", ""):
+        raise SiteCheckError(f"{label}: missing switch plan patch preview command")
+    if "launch/domain_email_switch_preview.patch" not in switch_builder.get("ownerPatchPreviewCommand", ""):
+        raise SiteCheckError(f"{label}: missing switch plan patch preview artifact")
     if "GCAgochina@outlook.com" not in switch_builder.get("purpose", ""):
         raise SiteCheckError(f"{label}: missing current-email switch purpose")
     if "support@gcagochina.com" not in switch_builder.get("purpose", ""):
         raise SiteCheckError(f"{label}: missing target-email switch purpose")
+    if "patch preview is generated only and not applied" not in switch_builder.get("boundaries", []):
+        raise SiteCheckError(f"{label}: missing switch plan patch preview boundary")
     if "does not edit files" not in switch_builder.get("boundaries", []):
         raise SiteCheckError(f"{label}: missing switch plan edit boundary")
     if public_switch_checker.get("tool") != "tools/check_domain_email_public_switch.py":

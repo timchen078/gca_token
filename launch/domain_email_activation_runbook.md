@@ -185,7 +185,20 @@ python3 tools/build_domain_email_switch_plan.py \
   --output-md launch/domain_email_switch_plan.md
 ```
 
-The planner scans public site files, launch materials, docs, and the member backend contact constant for old-email references. It does not edit files, send email, write DNS records, submit BaseScan requests, or touch wallets/contracts. Use it after the evidence packet and BaseScan preflight are ready, then update public support pages first, structured project/listing/reviewer JSON second, BaseScan launch values third, and platform reply templates last.
+To preview exact old-email replacements before editing public files:
+
+```bash
+python3 tools/build_domain_email_switch_plan.py --patch
+```
+
+For a saved diff preview:
+
+```bash
+python3 tools/build_domain_email_switch_plan.py \
+  --output-patch launch/domain_email_switch_preview.patch
+```
+
+The planner scans public site files, launch materials, docs, and the member backend contact constant for old-email references. The patch preview is an exact replacement diff only and is not applied by the tool. It does not edit files, send email, write DNS records, submit BaseScan requests, or touch wallets/contracts. Use it after the evidence packet and BaseScan preflight are ready, then update public support pages first, structured project/listing/reviewer JSON second, BaseScan launch values third, and platform reply templates last.
 
 After the manual switch is done, run the read-only public switch checker:
 
