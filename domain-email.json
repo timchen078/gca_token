@@ -338,6 +338,10 @@
       "any monitored artifact still cites an older DNS snapshot date",
       "any monitored artifact that belongs to the domain-email gate is missing the current snapshot date"
     ],
+    "enforcedBy": [
+      "tools/check_basescan_resubmission_readiness.py",
+      "tools/build_basescan_submission_package.py"
+    ],
     "canonicalSnapshot": {
       "source": "site/domain-email.json liveDnsSnapshot",
       "checkedAt": "2026-05-28T12:41:11Z",

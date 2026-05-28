@@ -135,6 +135,8 @@
         "launch/basescan_resubmission_values.json has nextSubmissionReady true",
         "launch/domain_email_evidence_packet.json has readyForBaseScanResubmission true",
         "official email is support@gcagochina.com",
+        "public email switch alignment passes",
+        "domain email snapshot alignment passes",
         "reviewer URLs are reachable"
       ],
       "boundaries": [
@@ -171,7 +173,9 @@
         "BaseScan resubmission preflight passes",
         "readyForOwnerSubmission is true",
         "official email is support@gcagochina.com",
-        "domain email evidence packet is complete"
+        "domain email evidence packet is complete",
+        "public email switch alignment passes",
+        "domain email snapshot alignment passes"
       ],
       "outputs": [
         "launch/basescan_final_submission_package.json",
