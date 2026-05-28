@@ -27,6 +27,10 @@ try:
         PublicSwitchCheckError,
         build_report as build_public_switch_report,
     )
+    from tools.check_domain_email_snapshot_alignment import (
+        SnapshotAlignmentError,
+        build_report as build_snapshot_alignment_report,
+    )
 except ModuleNotFoundError:  # pragma: no cover - used when running from tools/
     from check_basescan_resubmission_readiness import (
         BaseScanReadinessError,
@@ -39,6 +43,10 @@ except ModuleNotFoundError:  # pragma: no cover - used when running from tools/
     from check_domain_email_public_switch import (
         PublicSwitchCheckError,
         build_report as build_public_switch_report,
+    )
+    from check_domain_email_snapshot_alignment import (
+        SnapshotAlignmentError,
+        build_report as build_snapshot_alignment_report,
     )
 
 
@@ -365,6 +373,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--values", default=str(DEFAULT_VALUES_PATH), help="Path to BaseScan resubmission values JSON.")
     parser.add_argument("--evidence-packet", default=str(DEFAULT_EVIDENCE_PACKET_PATH), help="Path to domain email evidence packet JSON.")
     parser.add_argument("--public-switch-report", default="", help="Optional saved domain email public switch check JSON. If omitted, the checker scans current files.")
+    parser.add_argument("--snapshot-alignment-report", default="", help="Optional saved domain email snapshot alignment JSON. If omitted, the checker scans current files.")
     parser.add_argument("--timeout", type=float, default=15.0, help="Public URL request timeout in seconds.")
     parser.add_argument("--skip-url-checks", action="store_true", help="Skip public URL reachability checks.")
     parser.add_argument("--output-json", default="", help="Write submission package JSON to this path.")
@@ -385,15 +394,21 @@ def main(argv: list[str] | None = None) -> int:
             if args.public_switch_report
             else build_public_switch_report()
         )
+        snapshot_alignment_report = (
+            load_json_file(Path(args.snapshot_alignment_report))
+            if args.snapshot_alignment_report
+            else build_snapshot_alignment_report()
+        )
         public_url_checks = check_public_urls(values, skip=args.skip_url_checks, timeout=args.timeout)
         readiness_report = build_readiness_report(
             values=values,
             evidence_packet=evidence_packet,
             public_switch_report=public_switch_report,
+            snapshot_alignment_report=snapshot_alignment_report,
             public_url_checks=public_url_checks,
         )
         package = build_submission_package(values=values, readiness_report=readiness_report)
-    except (BaseScanReadinessError, PublicSwitchCheckError) as exc:
+    except (BaseScanReadinessError, PublicSwitchCheckError, SnapshotAlignmentError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2
 

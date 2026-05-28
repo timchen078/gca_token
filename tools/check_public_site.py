@@ -1017,7 +1017,7 @@ def validate_basescan_remediation_page(text: str) -> None:
         TIM_CHEN_PROFILE_PAGE_URL,
         "Preflight checker",
         "tools/check_basescan_resubmission_readiness.py",
-        "BaseScan values, domain email evidence packet, and reviewer URLs",
+        "BaseScan values, domain email evidence packet, public email switch alignment, domain email snapshot alignment, and reviewer URLs",
         "Reviewer checklist",
         "Reviewer checklist required",
         "tools/build_basescan_reviewer_checklist.py --markdown",
@@ -1113,6 +1113,10 @@ def validate_basescan_remediation_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing preflight require-ready command")
     if "reviewer URLs are reachable" not in preflight.get("requires", []):
         raise SiteCheckError(f"{label}: missing reviewer URL preflight gate")
+    if "public email switch alignment passes" not in preflight.get("requires", []):
+        raise SiteCheckError(f"{label}: missing public email switch preflight gate")
+    if "domain email snapshot alignment passes" not in preflight.get("requires", []):
+        raise SiteCheckError(f"{label}: missing domain email snapshot alignment preflight gate")
     if "does not submit BaseScan request" not in preflight.get("boundaries", []):
         raise SiteCheckError(f"{label}: missing preflight BaseScan boundary")
     checklist_builder = gate.get("reviewerChecklistBuilder", {})
@@ -1133,6 +1137,10 @@ def validate_basescan_remediation_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing final submission JSON output")
     if "readyForOwnerSubmission is true" not in submission_builder.get("readyRequires", []):
         raise SiteCheckError(f"{label}: missing final submission ready gate")
+    if "public email switch alignment passes" not in submission_builder.get("readyRequires", []):
+        raise SiteCheckError(f"{label}: missing final submission public switch gate")
+    if "domain email snapshot alignment passes" not in submission_builder.get("readyRequires", []):
+        raise SiteCheckError(f"{label}: missing final submission snapshot alignment gate")
     if "baseScanReviewerComment" not in submission_builder.get("copyPasteBlocks", []):
         raise SiteCheckError(f"{label}: missing final submission reviewer comment copy block")
     if submission_builder.get("blockedDraftMarker") != "DRAFT ONLY - DO NOT SUBMIT BASESCAN YET.":

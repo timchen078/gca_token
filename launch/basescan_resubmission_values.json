@@ -47,6 +47,8 @@
       "nextSubmissionReady is true",
       "officialEmail is support@gcagochina.com",
       "launch/domain_email_evidence_packet.json has readyForBaseScanResubmission true",
+      "tools/check_domain_email_public_switch.py reports readyForBaseScanPublicEmailAlignment true",
+      "tools/check_domain_email_snapshot_alignment.py reports alignedForPublicPlatformPackets true",
       "reviewer URLs are reachable"
     ],
     "boundaries": [
@@ -64,7 +66,9 @@
       "preflightCheck passes",
       "readyForOwnerSubmission is true",
       "officialEmail is support@gcagochina.com",
-      "domain email evidence packet is complete"
+      "domain email evidence packet is complete",
+      "public email switch alignment passes",
+      "domain email snapshot alignment passes"
     ],
     "outputs": [
       "launch/basescan_final_submission_package.json",

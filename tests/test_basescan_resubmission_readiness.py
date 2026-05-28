@@ -63,6 +63,23 @@ def ready_public_switch_report():
     }
 
 
+def ready_snapshot_alignment_report():
+    return {
+        "status": "aligned",
+        "alignedForPublicPlatformPackets": True,
+        "canonicalSnapshot": {
+            "date": "2026-05-28",
+            "checkedAt": "2026-05-28T12:41:11Z",
+            "readyForBaseScanEmailEvidence": False,
+        },
+        "summary": {
+            "filesWithStaleSnapshotMarkers": 0,
+            "filesMissingCurrentSnapshotDate": 0,
+            "missingMonitoredFiles": 0,
+        },
+    }
+
+
 class BaseScanResubmissionReadinessTests(unittest.TestCase):
     def test_report_blocks_when_values_and_evidence_are_not_ready(self):
         values = ready_values()
@@ -73,6 +90,7 @@ class BaseScanResubmissionReadinessTests(unittest.TestCase):
             values=values,
             evidence_packet=None,
             public_switch_report=None,
+            snapshot_alignment_report=None,
             public_url_checks=check_public_urls(values, skip=True),
             generated_at="2026-05-24T00:00:00Z",
         )
@@ -83,6 +101,7 @@ class BaseScanResubmissionReadinessTests(unittest.TestCase):
         self.assertIn("official-domain-email", report["missingOrBlockedRequirements"])
         self.assertIn("domain-email-evidence-packet", report["missingOrBlockedRequirements"])
         self.assertIn("domain-email-public-switch-check", report["missingOrBlockedRequirements"])
+        self.assertIn("domain-email-snapshot-alignment", report["missingOrBlockedRequirements"])
         self.assertFalse(report["boundaries"]["submitsBaseScanRequest"])
         self.assertFalse(report["boundaries"]["touchesWalletOrContract"])
 
@@ -92,6 +111,7 @@ class BaseScanResubmissionReadinessTests(unittest.TestCase):
             values=values,
             evidence_packet=ready_evidence_packet(),
             public_switch_report=ready_public_switch_report(),
+            snapshot_alignment_report=ready_snapshot_alignment_report(),
             public_url_checks=check_public_urls(values, skip=True),
             generated_at="2026-05-24T00:00:00Z",
         )
@@ -109,6 +129,7 @@ class BaseScanResubmissionReadinessTests(unittest.TestCase):
             values=values,
             evidence_packet=ready_evidence_packet(),
             public_switch_report=ready_public_switch_report(),
+            snapshot_alignment_report=ready_snapshot_alignment_report(),
             public_url_checks=url_checks,
             generated_at="2026-05-24T00:00:00Z",
         )
@@ -129,6 +150,7 @@ class BaseScanResubmissionReadinessTests(unittest.TestCase):
             values=values,
             evidence_packet=ready_evidence_packet(),
             public_switch_report=public_switch,
+            snapshot_alignment_report=ready_snapshot_alignment_report(),
             public_url_checks=check_public_urls(values, skip=True),
             generated_at="2026-05-24T00:00:00Z",
         )
@@ -138,18 +160,41 @@ class BaseScanResubmissionReadinessTests(unittest.TestCase):
         self.assertIn("domain-email-public-switch-old-email", report["missingOrBlockedRequirements"])
         self.assertEqual(report["domainEmailPublicSwitchSummary"]["status"], "public-email-switch-pending")
 
+    def test_snapshot_alignment_failure_blocks_readiness(self):
+        values = ready_values()
+        snapshot_alignment = ready_snapshot_alignment_report()
+        snapshot_alignment["status"] = "stale-dns-snapshot-markers"
+        snapshot_alignment["alignedForPublicPlatformPackets"] = False
+        snapshot_alignment["summary"]["filesWithStaleSnapshotMarkers"] = 2
+
+        report = build_readiness_report(
+            values=values,
+            evidence_packet=ready_evidence_packet(),
+            public_switch_report=ready_public_switch_report(),
+            snapshot_alignment_report=snapshot_alignment,
+            public_url_checks=check_public_urls(values, skip=True),
+            generated_at="2026-05-24T00:00:00Z",
+        )
+
+        self.assertFalse(report["readyForBaseScanResubmission"])
+        self.assertIn("domain-email-snapshot-alignment", report["missingOrBlockedRequirements"])
+        self.assertIn("domain-email-snapshot-stale-markers", report["missingOrBlockedRequirements"])
+        self.assertEqual(report["domainEmailSnapshotAlignmentSummary"]["status"], "stale-dns-snapshot-markers")
+
     def test_cli_blocks_current_unready_package_without_network(self):
         with tempfile.TemporaryDirectory() as temp:
             temp_path = Path(temp)
             values_path = temp_path / "values.json"
             evidence_path = temp_path / "packet.json"
             switch_path = temp_path / "switch.json"
+            snapshot_path = temp_path / "snapshot.json"
             values = ready_values()
             values["nextSubmissionReady"] = False
             values["officialEmail"] = "GCAgochina@outlook.com"
             values_path.write_text(json.dumps(values), encoding="utf-8")
             evidence_path.write_text(json.dumps({"readyForBaseScanResubmission": False}), encoding="utf-8")
             switch_path.write_text(json.dumps({"readyForBaseScanPublicEmailAlignment": False}), encoding="utf-8")
+            snapshot_path.write_text(json.dumps(ready_snapshot_alignment_report()), encoding="utf-8")
 
             output = StringIO()
             with redirect_stdout(output):
@@ -160,6 +205,8 @@ class BaseScanResubmissionReadinessTests(unittest.TestCase):
                     str(evidence_path),
                     "--public-switch-report",
                     str(switch_path),
+                    "--snapshot-alignment-report",
+                    str(snapshot_path),
                     "--skip-url-checks",
                     "--json",
                     "--require-ready",
