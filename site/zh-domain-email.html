@@ -331,6 +331,7 @@
         <p class="lead">当前公开邮箱仍是 <code>GCAgochina@outlook.com</code>。在收件、发件、MX/SPF/DKIM/DMARC 和证据包都通过前，不要把 <code>support@gcagochina.com</code> 写成已启用邮箱，也不要重复提交 BaseScan。</p>
         <div class="actions">
           <a class="button primary" href="domain-email.html#worksheetTitle">打开英文 DNS Worksheet</a>
+          <a class="button primary" href="domain-email-evidence.html">打开公开证据清单</a>
           <a class="button secondary" href="basescan-remediation.html">BaseScan 整改页</a>
           <a class="button secondary" href="platform-replies.html">平台回复模板</a>
           <a class="button" href="zh-status.html">中文审核状态</a>
@@ -363,6 +364,7 @@
           <div class="list">
             <div class="row"><span>不能说已启用</span><strong><code>support@gcagochina.com</code> 还没通过收件、发件和 DNS 认证测试。</strong></div>
             <div class="row"><span>不能重复提交</span><strong>BaseScan 下一次 clean resubmission 应等域名邮箱证据包完成后再做。</strong></div>
+            <div class="row"><span>不能漏证据清单</span><strong>先用 <a href="domain-email-evidence.html">公开证据清单</a> 对齐服务商、DNS、收件、发件、官网邮箱和 BaseScan 复审证据。</strong></div>
             <div class="row"><span>不能猜 DNS</span><strong>MX、SPF、DKIM、DMARC 的值必须从邮箱服务商后台逐项复制。</strong></div>
             <div class="row"><span>不能上传敏感信息</span><strong>不需要私钥、助记词、钱包签名、验证码、交易所 API Secret 或提现权限。</strong></div>
           </div>
@@ -375,8 +377,9 @@
             <div class="row"><span>2. 复制 DNS</span><strong>把服务商给出的 MX / SPF / DKIM / DMARC 记录添加到 <code>gcagochina.com</code> 的 DNS。</strong></div>
             <div class="row"><span>3. 等传播</span><strong>等 DNS 生效，并用只读 DNS 检查器确认状态。</strong></div>
             <div class="row"><span>4. 测试收发</span><strong>用 Gmail 或 Outlook 发信到目标邮箱，再从目标邮箱回复。</strong></div>
-            <div class="row"><span>5. 保存证据</span><strong>保存服务商启用状态、DNS 查询、收件、发件和官网邮箱切换截图。</strong></div>
-            <div class="row"><span>6. 再复审</span><strong>证据包和预检通过后，再准备 BaseScan 表单。</strong></div>
+            <div class="row"><span>5. 对照清单</span><strong>打开 <a href="domain-email-evidence.html">domain-email-evidence.html</a>，逐项确认哪些证据已收集、哪些仍缺。</strong></div>
+            <div class="row"><span>6. 保存证据</span><strong>保存服务商启用状态、DNS 查询、收件、发件和官网邮箱切换截图。</strong></div>
+            <div class="row"><span>7. 再复审</span><strong>证据包和预检通过后，再准备 BaseScan 表单。</strong></div>
           </div>
         </div>
       </section>
@@ -482,6 +485,7 @@
           <div class="row"><span>DNS 录入包</span><strong><code>python3 tools/build_domain_email_dns_entry_packet.py --provider &lt;provider-name&gt; --mx "10 &lt;provider-mx&gt;" --spf "v=spf1 include:&lt;provider&gt; ~all" --dkim-selector &lt;provider-selector&gt; --dkim-type TXT --dkim-value "&lt;provider-dkim-value&gt;" --dmarc "v=DMARC1; p=none;" --output-json launch/domain_email_dns_entry_packet.json --output-md launch/domain_email_dns_entry_packet.md</code></strong></div>
           <div class="row"><span>DNS 只读检查</span><strong><code>python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox support --dkim-selector &lt;provider-selector&gt; --json</code></strong></div>
           <div class="row"><span>证据目录初始化</span><strong><code>python3 tools/build_domain_email_evidence_packet.py --init-evidence-dir --evidence-dir launch/domain_email_evidence</code></strong></div>
+          <div class="row"><span>公开证据清单</span><strong><a href="domain-email-evidence.html">domain-email-evidence.html</a>，用于对齐 provider、DNS、inbound、outbound、support-page 和 final resubmission proof。</strong></div>
           <div class="row"><span>证据包生成</span><strong><code>python3 tools/build_domain_email_evidence_packet.py --dkim-selector &lt;provider-selector&gt; --evidence-dir launch/domain_email_evidence --website-email-updated --output-json launch/domain_email_evidence_packet.json --output-md launch/domain_email_evidence_packet.md</code></strong></div>
           <div class="row"><span>公开邮箱切换检查</span><strong><code>python3 tools/check_domain_email_public_switch.py --json --require-switched</code></strong></div>
           <div class="row"><span>BaseScan 预检</span><strong><code>python3 tools/check_basescan_resubmission_readiness.py --json --require-ready</code></strong></div>
@@ -518,6 +522,7 @@
           <h2>给平台看的英文证据</h2>
           <div class="link-row">
             <a class="text-link" href="domain-email.html">Domain Email Plan</a>
+            <a class="text-link" href="domain-email-evidence.html">Evidence Checklist</a>
             <a class="text-link" href="domain-email.html#worksheetTitle">DNS Worksheet</a>
             <a class="text-link" href="basescan-remediation.html">BaseScan Remediation</a>
             <a class="text-link" href="platform-replies.html">Platform Replies</a>

@@ -581,6 +581,9 @@ def validate_status_page(text: str) -> None:
     )
     assert_contains(text, "BaseScan remediation DNS gate", label)
     assert_contains(text, "mailbox activation, DNS authentication, and inbound/outbound evidence before resubmission", label)
+    assert_contains(text, "Domain email evidence checklist", label)
+    assert_contains(text, "domain-email-evidence.html", label)
+    assert_contains(text, "public evidence checklist", label)
     assert_contains(text, "team.html", label)
     assert_contains(text, "tim-chen.html", label)
     assert_contains(text, "basescan-remediation.html", label)
@@ -1378,6 +1381,9 @@ def validate_action_plan_page(text: str) -> None:
         "tools/check_domain_email_dns.py",
         "readyForBaseScanEmailEvidence",
         "evidence packet before BaseScan resubmission",
+        "public evidence checklist",
+        "domain-email-evidence.html",
+        "Email Evidence Checklist",
         "Improve Market Quality Legitimately",
         "Make Member Access Real",
         "Publish Consistent Content",
@@ -1728,6 +1734,8 @@ def validate_zh_status_page(text: str) -> None:
         "2026-05-23 退回整改",
         "中文域名邮箱整改",
         "zh-domain-email.html",
+        "公开证据清单",
+        "domain-email-evidence.html",
         "已通过 2026-05-11",
         "合约没有后续增发函数",
         "BaseScan 部署钱包所有权验证已完成",
@@ -1797,6 +1805,10 @@ def validate_zh_domain_email_page(text: str) -> None:
         "不能说已启用",
         "不能重复提交",
         "不能猜 DNS",
+        "不能漏证据清单",
+        "公开证据清单",
+        "domain-email-evidence.html",
+        "Evidence Checklist",
         "私钥",
         "助记词",
         "交易所 API Secret",
@@ -2236,6 +2248,8 @@ def validate_zh_support_page(text: str) -> None:
         "钱包显示或风险提示",
         "风险提示消失不等于永久批准",
         "平台资料更正",
+        "邮箱证据清单",
+        "domain-email-evidence.html",
         "GCA 只能提交更正请求，不能保证平台即时处理",
         "购买和池子问题",
         "GCA 官方不能替用户决定买卖、滑点、价格或交易时机",
@@ -3451,6 +3465,8 @@ def validate_whitepaper_page(text: str) -> None:
     assert_contains(text, "no third-party audit has been completed", label)
     assert_contains(text, "returned again as information-insufficient on 2026-05-23", label)
     assert_contains(text, "domain-email.html#snapshotTitle", label)
+    assert_contains(text, "public evidence checklist", label)
+    assert_contains(text, "domain-email-evidence.html", label)
     assert_contains_any(text, ("2026-05-25 DNS snapshot", "2026-05-28 DNS snapshot"), label, "DNS snapshot")
     assert_contains(text, "MX/SPF/DMARC missing", label)
     assert_contains(text, "DKIM selector required", label)
@@ -4321,7 +4337,7 @@ def validate_community_page(text: str) -> None:
     assert_contains(text, FIRST_X_POST_URL, label)
     assert_contains(text, "Latest official X post", label)
     assert_contains(text, LATEST_X_POST_URL, label)
-    assert_contains(text, "Tim Chen public professional profile evidence and the domain email setup plan are now published", label)
+    assert_contains(text, "Tim Chen public professional profile evidence, the domain email setup plan, and the public evidence checklist are now published", label)
     assert_contains(text, "working project-domain email is still required", label)
     assert_contains(text, ANNOUNCEMENTS_PAGE_URL, label)
     assert_contains(text, CAMPAIGN_PAGE_URL, label)
@@ -4449,7 +4465,7 @@ def validate_community_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong latestPostUrl")
     if x_launch.get("latestPostPublishedDate") != "2026-05-23":
         raise SiteCheckError(f"{label}: wrong latestPostPublishedDate")
-    if "Tim Chen public professional profile evidence and the domain email setup plan are now published" not in x_launch.get("currentStatusAfterLatestPost", ""):
+    if "Tim Chen public professional profile evidence, the domain email setup plan, and the public evidence checklist are now published" not in x_launch.get("currentStatusAfterLatestPost", ""):
         raise SiteCheckError(f"{label}: missing current status after latest post")
     if "working gcagochina.com mailbox is still required" not in x_launch.get("currentStatusAfterLatestPost", ""):
         raise SiteCheckError(f"{label}: missing current domain mailbox boundary")
@@ -4532,7 +4548,7 @@ def validate_announcements_page(text: str) -> None:
     assert_contains(text, "Published X Posts", label)
     assert_contains(text, "Latest Post Text", label)
     assert_contains(text, "Current note after this post", label)
-    assert_contains(text, "domain email setup plan are now published", label)
+    assert_contains(text, "domain email setup plan, and the public evidence checklist are now published", label)
     assert_contains(text, "Next 3-Day Content Queue", label)
     assert_contains(text, "Safe Messaging Rules", label)
     assert_contains(text, "Do Not Claim", label)
@@ -4580,7 +4596,7 @@ def validate_announcements_json(text: str) -> None:
     if not any(post.get("url") == LATEST_X_POST_URL for post in posts if isinstance(post, dict)):
         raise SiteCheckError(f"{label}: missing latest X post")
     latest_post = next((post for post in posts if isinstance(post, dict) and post.get("url") == LATEST_X_POST_URL), {})
-    if "Tim Chen public professional profile evidence and the domain email setup plan are now published" not in latest_post.get("currentStatusAfterPost", ""):
+    if "Tim Chen public professional profile evidence, the domain email setup plan, and the public evidence checklist are now published" not in latest_post.get("currentStatusAfterPost", ""):
         raise SiteCheckError(f"{label}: missing latest post current status")
     if "working gcagochina.com mailbox is still required" not in latest_post.get("currentStatusAfterPost", ""):
         raise SiteCheckError(f"{label}: missing latest post domain mailbox boundary")
