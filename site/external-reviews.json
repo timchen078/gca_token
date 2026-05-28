@@ -51,6 +51,14 @@
     "telegram": "https://t.me/gcagochinaofficial",
     "x": "https://x.com/GCAAIGoChina"
   },
+  "emailAlignment": {
+    "currentPublicEmail": "GCAgochina@outlook.com",
+    "targetDomainEmailAfterActivation": "support@gcagochina.com",
+    "status": "target-domain-email-planned-not-active",
+    "domainEmailSetupPlan": "https://gcagochina.com/domain-email.html",
+    "activationEvidencePacket": "https://gcagochina.com/domain-email.html#evidenceTitle",
+    "baseScanUse": "Do not use support@gcagochina.com in BaseScan or public support fields until the mailbox can receive external mail, send authenticated outbound replies, MX/SPF/DKIM/DMARC checks pass, and the evidence packet is archived."
+  },
   "market": {
     "officialPair": "GCA/USDT",
     "dex": "Uniswap v4",

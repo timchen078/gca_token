@@ -10535,6 +10535,7 @@ def validate_external_reviews_json(text: str) -> None:
     market = payload.get("market", {})
     reviews = payload.get("reviews", {})
     links = payload.get("officialLinks", {})
+    email_alignment = payload.get("emailAlignment", {})
 
     if payload.get("schema") != EXTERNAL_REVIEW_URL:
         raise SiteCheckError(f"{label}: wrong schema")
@@ -10570,6 +10571,18 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong marketQualityPage")
     if links.get("teamPage") != TEAM_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong teamPage")
+    if email_alignment.get("currentPublicEmail") != "GCAgochina@outlook.com":
+        raise SiteCheckError(f"{label}: wrong currentPublicEmail")
+    if email_alignment.get("targetDomainEmailAfterActivation") != "support@gcagochina.com":
+        raise SiteCheckError(f"{label}: wrong targetDomainEmailAfterActivation")
+    if email_alignment.get("status") != "target-domain-email-planned-not-active":
+        raise SiteCheckError(f"{label}: wrong email alignment status")
+    if email_alignment.get("domainEmailSetupPlan") != DOMAIN_EMAIL_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong email alignment domainEmailSetupPlan")
+    if email_alignment.get("activationEvidencePacket") != f"{DOMAIN_EMAIL_PAGE_URL}#evidenceTitle":
+        raise SiteCheckError(f"{label}: wrong email alignment activationEvidencePacket")
+    if "Do not use support@gcagochina.com" not in email_alignment.get("baseScanUse", ""):
+        raise SiteCheckError(f"{label}: missing email alignment boundary")
     base_scan_profile = reviews.get("baseScanTokenProfile", {})
     if base_scan_profile.get("professionalProfile") != TIM_CHEN_PROFILE_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong professionalProfile")
@@ -10705,6 +10718,10 @@ def validate_external_reviews_page(text: str) -> None:
     assert_contains(text, "domain-email.html#evidenceTitle", label)
     assert_contains(text, "domain-email.html", label)
     assert_contains(text, "BaseScan domain email evidence", label)
+    assert_contains(text, "Domain Email Alignment", label)
+    assert_contains(text, "GCAgochina@outlook.com", label)
+    assert_contains(text, "support@gcagochina.com", label)
+    assert_contains(text, "Planned, not active", label)
     assert_contains_any(text, ("2026-05-25 DNS snapshot", "2026-05-28 DNS snapshot"), label, "DNS snapshot")
     assert_contains(text, "MX/SPF/DMARC missing", label)
     assert_contains(text, "DKIM selector required", label)
