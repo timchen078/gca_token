@@ -32,6 +32,8 @@
     "timChenProfessionalProfileDataUrl": "https://gcagochina.com/tim-chen.json",
     "baseScanRemediationPageUrl": "https://gcagochina.com/basescan-remediation.html",
     "baseScanRemediationUrl": "https://gcagochina.com/basescan-remediation.json",
+    "domainEmailEvidenceChecklistUrl": "https://gcagochina.com/domain-email-evidence.html",
+    "domainEmailEvidenceChecklistDataUrl": "https://gcagochina.com/domain-email-evidence.json",
     "domainEmailActivationEvidencePacketUrl": "https://gcagochina.com/domain-email.html#evidenceTitle",
     "githubRepoUrl": "https://github.com/timchen078/gca_token",
     "marketQualityPageUrl": "https://gcagochina.com/market-quality.html",
@@ -77,8 +79,9 @@
           "dkim"
         ]
       },
+      "domainEmailEvidenceChecklist": "https://gcagochina.com/domain-email-evidence.html",
       "domainEmailActivationEvidencePacket": "https://gcagochina.com/domain-email.html#evidenceTitle",
-      "nextAction": "Use the domain email setup plan, DNS Entry Worksheet, and launch/domain_email_activation_runbook.md; fix the 2026-05-28 DNS snapshot blockers; create and publish a working gcagochina.com domain email; run tools/check_domain_email_dns.py; archive the activation evidence packet; include the Tim Chen professional profile URL; rerun public-site checks; then resubmit through the official BaseScan form."
+      "nextAction": "Use the domain email setup plan, DNS Entry Worksheet, public evidence checklist, and launch/domain_email_activation_runbook.md; fix the 2026-05-28 DNS snapshot blockers; create and publish a working gcagochina.com domain email; run tools/check_domain_email_dns.py; archive the activation evidence packet; include the Tim Chen professional profile URL; rerun public-site checks; then resubmit through the official BaseScan form."
     },
     "blockaid": {
       "reportStatus": "owner-observed-no-warning-visible",

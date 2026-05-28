@@ -33,6 +33,8 @@ BaseScan replied that it could not process the token update request because the 
 - Domain email setup plan remains live: `https://gcagochina.com/domain-email.html`
 - Domain email setup JSON remains live: `https://gcagochina.com/domain-email.json`
 - Domain email DNS worksheet remains live: `https://gcagochina.com/domain-email.html#worksheetTitle`
+- Domain email evidence checklist remains live: `https://gcagochina.com/domain-email-evidence.html`
+- Domain email evidence checklist JSON remains live: `https://gcagochina.com/domain-email-evidence.json`
 - Add LinkedIn later only if BaseScan specifically requires a third-party social-network profile
 - Public team profile remains live: `https://gcagochina.com/team.html`
 - BaseScan remediation page remains live: `https://gcagochina.com/basescan-remediation.html`
@@ -116,6 +118,8 @@ Tim Chen profile data: https://gcagochina.com/tim-chen.json
 Domain email setup plan: https://gcagochina.com/domain-email.html
 Domain email setup data: https://gcagochina.com/domain-email.json
 Domain email DNS worksheet: https://gcagochina.com/domain-email.html#worksheetTitle
+Domain email evidence checklist: https://gcagochina.com/domain-email-evidence.html
+Domain email evidence checklist data: https://gcagochina.com/domain-email-evidence.json
 Latest DNS snapshot: https://gcagochina.com/domain-email.html#snapshotTitle
 Domain email activation evidence packet: https://gcagochina.com/domain-email.html#evidenceTitle
 Community kit: https://gcagochina.com/community.html

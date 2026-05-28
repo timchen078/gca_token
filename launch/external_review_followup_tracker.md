@@ -36,6 +36,8 @@ Use this file as the single operating checklist for external review, wallet-warn
 - Domain email setup JSON: `https://gcagochina.com/domain-email.json`
 - Domain email DNS worksheet: `https://gcagochina.com/domain-email.html#worksheetTitle`
 - Domain email DNS snapshot: `https://gcagochina.com/domain-email.html#snapshotTitle`
+- Domain email evidence checklist: `https://gcagochina.com/domain-email-evidence.html`
+- Domain email evidence checklist JSON: `https://gcagochina.com/domain-email-evidence.json`
 - Domain email activation evidence packet: `https://gcagochina.com/domain-email.html#evidenceTitle`
 - BaseScan remediation page: `https://gcagochina.com/basescan-remediation.html`
 - BaseScan remediation JSON: `https://gcagochina.com/basescan-remediation.json`
@@ -125,6 +127,8 @@ Tim Chen professional profile: https://gcagochina.com/tim-chen.html
 Domain email setup plan: https://gcagochina.com/domain-email.html
 Domain email setup data: https://gcagochina.com/domain-email.json
 Domain email DNS worksheet: https://gcagochina.com/domain-email.html#worksheetTitle
+Domain email evidence checklist: https://gcagochina.com/domain-email-evidence.html
+Domain email evidence checklist data: https://gcagochina.com/domain-email-evidence.json
 Latest DNS snapshot: https://gcagochina.com/domain-email.html#snapshotTitle
 Domain email activation evidence packet: https://gcagochina.com/domain-email.html#evidenceTitle
 BaseScan remediation: https://gcagochina.com/basescan-remediation.html

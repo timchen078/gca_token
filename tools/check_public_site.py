@@ -1210,6 +1210,9 @@ def validate_basescan_remediation_page(text: str) -> None:
         "tools/build_basescan_submission_package.py",
         "Final draft required",
         DOMAIN_EMAIL_PAGE_URL,
+        DOMAIN_EMAIL_EVIDENCE_PAGE_URL,
+        "Domain email evidence checklist",
+        "Evidence Checklist",
         "Tim Chen",
         "team.html",
         GITHUB_REPO_URL,
@@ -1253,6 +1256,10 @@ def validate_basescan_remediation_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong domainEmailSetupPlan")
     if identity.get("domainEmailSetupPlanData") != DOMAIN_EMAIL_URL:
         raise SiteCheckError(f"{label}: wrong domainEmailSetupPlanData")
+    if identity.get("domainEmailEvidenceChecklist") != DOMAIN_EMAIL_EVIDENCE_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong domainEmailEvidenceChecklist")
+    if identity.get("domainEmailEvidenceChecklistData") != DOMAIN_EMAIL_EVIDENCE_URL:
+        raise SiteCheckError(f"{label}: wrong domainEmailEvidenceChecklistData")
     if identity.get("platformRepliesPage") != PLATFORM_REPLIES_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong platformRepliesPage")
     if identity.get("platformRepliesData") != PLATFORM_REPLIES_URL:
@@ -1265,6 +1272,10 @@ def validate_basescan_remediation_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong email-state domainEmailSetupPlan")
     if email_state.get("domainEmailSetupPlanData") != DOMAIN_EMAIL_URL:
         raise SiteCheckError(f"{label}: wrong email-state domainEmailSetupPlanData")
+    if email_state.get("domainEmailEvidenceChecklist") != DOMAIN_EMAIL_EVIDENCE_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong email-state domainEmailEvidenceChecklist")
+    if email_state.get("domainEmailEvidenceChecklistData") != DOMAIN_EMAIL_EVIDENCE_URL:
+        raise SiteCheckError(f"{label}: wrong email-state domainEmailEvidenceChecklistData")
     latest_dns = email_state.get("latestDnsSnapshot", {})
     if latest_dns.get("checkedAt") not in {"2026-05-25T15:04:09Z", "2026-05-28T12:41:11Z", "2026-05-28T12:41:11Z"}:
         raise SiteCheckError(f"{label}: wrong latest DNS snapshot timestamp")
@@ -1274,6 +1285,8 @@ def validate_basescan_remediation_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong latest DNS missing checks")
     if latest_dns.get("checks", {}).get("dkim") != "selector-required":
         raise SiteCheckError(f"{label}: missing DKIM selector-required blocker")
+    if latest_dns.get("evidenceChecklist") != DOMAIN_EMAIL_EVIDENCE_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong latest DNS evidence checklist")
     if "support@gcagochina.com" not in email_state.get("recommendedDomainEmailExamples", []):
         raise SiteCheckError(f"{label}: missing recommended support domain email")
     if team.get("publicFounder") != "Tim Chen":
@@ -1333,6 +1346,8 @@ def validate_basescan_remediation_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing final submission wallet-signing boundary")
     if not any("https://gcagochina.com/platform-replies.html" in item for item in gate.get("requiredBeforeReady", [])):
         raise SiteCheckError(f"{label}: missing Platform Replies next-submission gate")
+    if not any(DOMAIN_EMAIL_EVIDENCE_PAGE_URL in item for item in gate.get("requiredBeforeReady", [])):
+        raise SiteCheckError(f"{label}: missing domain email evidence checklist gate")
     if not any(
         "2026-05-25 DNS snapshot blockers" in item or "2026-05-28 DNS snapshot blockers" in item
         for item in gate.get("requiredBeforeReady", [])
@@ -10190,6 +10205,10 @@ def validate_reviewer_kit_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong domainEmailSetupPlanPage")
     if links.get("domainEmailSetupPlan") != DOMAIN_EMAIL_URL:
         raise SiteCheckError(f"{label}: wrong domainEmailSetupPlan")
+    if links.get("domainEmailEvidenceChecklistPage") != DOMAIN_EMAIL_EVIDENCE_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong domainEmailEvidenceChecklistPage")
+    if links.get("domainEmailEvidenceChecklist") != DOMAIN_EMAIL_EVIDENCE_URL:
+        raise SiteCheckError(f"{label}: wrong domainEmailEvidenceChecklist")
     if market.get("pair") != "GCA/USDT":
         raise SiteCheckError(f"{label}: wrong pair")
     if market.get("poolAddress") != OFFICIAL_POOL_ADDRESS:
@@ -10222,6 +10241,8 @@ def validate_reviewer_kit_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong domain email DNS snapshot page")
     if dns_snapshot.get("evidencePacket") != f"{DOMAIN_EMAIL_PAGE_URL}#evidenceTitle":
         raise SiteCheckError(f"{label}: wrong domain email evidence packet")
+    if dns_snapshot.get("evidenceChecklist") != DOMAIN_EMAIL_EVIDENCE_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong domain email evidence checklist")
     if dns_snapshot.get("checks", {}).get("mx") != "missing":
         raise SiteCheckError(f"{label}: missing MX blocker")
     if dns_snapshot.get("checks", {}).get("spf") != "missing":
@@ -10269,8 +10290,13 @@ def validate_reviewer_kit_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong domain email setup evidence link")
     if payload.get("evidenceLinks", {}).get("domainEmailDnsSnapshot") != f"{DOMAIN_EMAIL_PAGE_URL}#snapshotTitle":
         raise SiteCheckError(f"{label}: wrong domain email DNS snapshot evidence link")
+    if payload.get("evidenceLinks", {}).get("domainEmailEvidenceChecklist") != DOMAIN_EMAIL_EVIDENCE_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong domain email evidence checklist link")
     if payload.get("evidenceLinks", {}).get("domainEmailActivationEvidencePacket") != f"{DOMAIN_EMAIL_PAGE_URL}#evidenceTitle":
         raise SiteCheckError(f"{label}: wrong domain email activation evidence link")
+    next_actions = " ".join(payload.get("reviewerUse", {}).get("nextActions", []))
+    if DOMAIN_EMAIL_EVIDENCE_PAGE_URL not in next_actions:
+        raise SiteCheckError(f"{label}: missing domain email evidence checklist next action")
     if "security-vendor approval, permanent warning-free status, or cross-wallet warning removal before vendor/current wallet UI confirms it" not in boundaries.get("doNotClaim", []):
         raise SiteCheckError(f"{label}: missing warning boundary")
     assert_current_pool_text(json.dumps(payload), label)
@@ -10300,6 +10326,9 @@ def validate_reviewer_kit_page(text: str) -> None:
     assert_contains(text, "DKIM selector required", label)
     assert_contains(text, "readyForBaseScanEmailEvidence", label)
     assert_contains(text, "domain-email.html#snapshotTitle", label)
+    assert_contains(text, "domain-email-evidence.html", label)
+    assert_contains(text, "Evidence Checklist", label)
+    assert_contains(text, "public evidence checklist", label)
     assert_contains(text, "domain-email.html#evidenceTitle", label)
     assert_contains(text, "On-chain Proofs", label)
     assert_contains(text, "Local Review Package", label)
@@ -10378,6 +10407,10 @@ def validate_platform_replies_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong domainEmailSetupPlan")
     if links.get("domainEmailSetupPlanData") != DOMAIN_EMAIL_URL:
         raise SiteCheckError(f"{label}: wrong domainEmailSetupPlanData")
+    if links.get("domainEmailEvidenceChecklistPage") != DOMAIN_EMAIL_EVIDENCE_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong domainEmailEvidenceChecklistPage")
+    if links.get("domainEmailEvidenceChecklist") != DOMAIN_EMAIL_EVIDENCE_URL:
+        raise SiteCheckError(f"{label}: wrong domainEmailEvidenceChecklist")
     if links.get("supportPage") != SUPPORT_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong supportPage")
     if links.get("accessApiPage") != ACCESS_API_PAGE_URL:
@@ -10429,10 +10462,14 @@ def validate_platform_replies_json(text: str) -> None:
         "Tim Chen professional profile: https://gcagochina.com/tim-chen.html",
         "Domain email setup plan: https://gcagochina.com/domain-email.html",
         "Domain email setup data: https://gcagochina.com/domain-email.json",
+        "Domain email evidence checklist: https://gcagochina.com/domain-email-evidence.html",
+        "Domain email evidence checklist data: https://gcagochina.com/domain-email-evidence.json",
         "Domain email activation evidence packet: https://gcagochina.com/domain-email.html#evidenceTitle",
         "Latest domain email DNS snapshot: https://gcagochina.com/domain-email.html#snapshotTitle",
         "Return-notice response:",
         "a working gcagochina.com domain email remains the remaining owner-controlled blocker",
+        "public evidence checklist at https://gcagochina.com/domain-email-evidence.html defines the provider-status",
+        "private screenshots remain local until a reviewer asks for them",
         "read-only DNS snapshot shows MX/SPF/DMARC missing and DKIM selector required",
         "readyForBaseScanEmailEvidence is false",
         "activation evidence packet defines the provider-status, DNS, inbound, outbound, and website-email proof",
@@ -10481,9 +10518,13 @@ def validate_platform_replies_page(text: str) -> None:
     assert_contains(text, "BaseScan remediation tracker: https://gcagochina.com/basescan-remediation.html", label)
     assert_contains(text, "Domain email setup plan: https://gcagochina.com/domain-email.html", label)
     assert_contains(text, "Domain email setup data: https://gcagochina.com/domain-email.json", label)
+    assert_contains(text, "Domain email evidence checklist: https://gcagochina.com/domain-email-evidence.html", label)
+    assert_contains(text, "Domain email evidence checklist data: https://gcagochina.com/domain-email-evidence.json", label)
     assert_contains(text, "Domain email activation evidence packet: https://gcagochina.com/domain-email.html#evidenceTitle", label)
     assert_contains(text, "Latest domain email DNS snapshot: https://gcagochina.com/domain-email.html#snapshotTitle", label)
     assert_contains(text, "a working gcagochina.com domain email remains the remaining owner-controlled blocker", label)
+    assert_contains(text, "public evidence checklist at https://gcagochina.com/domain-email-evidence.html defines the provider-status", label)
+    assert_contains(text, "private screenshots remain local until a reviewer asks for them", label)
     assert_contains(text, "read-only DNS snapshot shows MX/SPF/DMARC missing and DKIM selector required", label)
     assert_contains(text, "readyForBaseScanEmailEvidence is false", label)
     assert_contains(text, "activation evidence packet defines the provider-status, DNS, inbound, outbound, and website-email proof", label)
@@ -10757,6 +10798,8 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong email alignment status")
     if email_alignment.get("domainEmailSetupPlan") != DOMAIN_EMAIL_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong email alignment domainEmailSetupPlan")
+    if email_alignment.get("domainEmailEvidenceChecklist") != DOMAIN_EMAIL_EVIDENCE_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong email alignment domainEmailEvidenceChecklist")
     if email_alignment.get("activationEvidencePacket") != f"{DOMAIN_EMAIL_PAGE_URL}#evidenceTitle":
         raise SiteCheckError(f"{label}: wrong email alignment activationEvidencePacket")
     if "Do not use support@gcagochina.com" not in email_alignment.get("baseScanUse", ""):
@@ -10770,10 +10813,16 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong domainEmailSetupPlanData")
     if base_scan_profile.get("domainEmailDnsSnapshot") != f"{DOMAIN_EMAIL_PAGE_URL}#snapshotTitle":
         raise SiteCheckError(f"{label}: wrong domainEmailDnsSnapshot")
+    if base_scan_profile.get("domainEmailEvidenceChecklist") != DOMAIN_EMAIL_EVIDENCE_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong domainEmailEvidenceChecklist")
+    if base_scan_profile.get("domainEmailEvidenceChecklistData") != DOMAIN_EMAIL_EVIDENCE_URL:
+        raise SiteCheckError(f"{label}: wrong domainEmailEvidenceChecklistData")
     if base_scan_profile.get("domainEmailActivationEvidencePacket") != "https://gcagochina.com/domain-email.html#evidenceTitle":
         raise SiteCheckError(f"{label}: wrong domainEmailActivationEvidencePacket")
     if "archive the activation evidence packet" not in base_scan_profile.get("nextAction", ""):
         raise SiteCheckError(f"{label}: missing activation evidence packet next action")
+    if DOMAIN_EMAIL_EVIDENCE_PAGE_URL not in base_scan_profile.get("nextAction", ""):
+        raise SiteCheckError(f"{label}: missing domain email evidence checklist next action")
     dns_readiness = base_scan_profile.get("domainEmailDnsReadiness", {})
     if dns_readiness.get("readyForBaseScanEmailEvidence") is not False:
         raise SiteCheckError(f"{label}: domain email DNS readiness should be false")
@@ -10823,6 +10872,8 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing BaseScan profile last checked result")
     if "domain email setup plan" not in base_scan_profile.get("lastCheckedResult", ""):
         raise SiteCheckError(f"{label}: missing BaseScan domain email plan result")
+    if "public evidence checklist" not in base_scan_profile.get("lastCheckedResult", ""):
+        raise SiteCheckError(f"{label}: missing BaseScan domain email evidence checklist result")
     if "activation evidence packet" not in base_scan_profile.get("lastCheckedResult", ""):
         raise SiteCheckError(f"{label}: missing BaseScan domain email evidence packet result")
     if not (
@@ -10887,12 +10938,15 @@ def validate_external_reviews_page(text: str) -> None:
     assert_contains(text, "Data Room", label)
     assert_contains(text, "Trust Center", label)
     assert_contains(text, "Returned 2026-05-23; remediation required", label)
-    assert_contains(text, "Tim Chen profile, domain email plan, activation evidence packet, and reply template published", label)
+    assert_contains(text, "Tim Chen profile, domain email plan, evidence checklist, activation evidence packet, and reply template published", label)
     assert_contains(text, "tim-chen.html", label)
     assert_contains(text, "Domain Email Plan", label)
     assert_contains(text, "DNS Snapshot", label)
     assert_contains(text, "Email Evidence Packet", label)
     assert_contains(text, "domain-email.html#snapshotTitle", label)
+    assert_contains(text, "domain-email-evidence.html", label)
+    assert_contains(text, "Evidence Checklist", label)
+    assert_contains(text, "Domain email evidence checklist", label)
     assert_contains(text, "domain-email.html#evidenceTitle", label)
     assert_contains(text, "domain-email.html", label)
     assert_contains(text, "BaseScan domain email evidence", label)

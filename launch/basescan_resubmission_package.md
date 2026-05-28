@@ -28,6 +28,8 @@ This package records the current BaseScan token information remediation state. T
 - Domain email setup plan: `https://gcagochina.com/domain-email.html`
 - Domain email setup JSON and evidence packet: `https://gcagochina.com/domain-email.json`
 - Domain email DNS worksheet: `https://gcagochina.com/domain-email.html#worksheetTitle`
+- Domain email evidence checklist: `https://gcagochina.com/domain-email-evidence.html`
+- Domain email evidence checklist JSON: `https://gcagochina.com/domain-email-evidence.json`
 - Domain email DNS snapshot: `https://gcagochina.com/domain-email.html#snapshotTitle`
 - BaseScan remediation: `https://gcagochina.com/basescan-remediation.html`
 - BaseScan remediation JSON: `https://gcagochina.com/basescan-remediation.json`
@@ -127,6 +129,6 @@ Used for the 2026-05-13 resubmission:
 
 ## Safe Public Claim
 
-`BaseScan source verification and deployer-wallet ownership verification are complete. The public BaseScan token profile update was returned again as information-insufficient on 2026-05-23. The profile is not approved or published. Tim Chen public professional profile evidence is now published at https://gcagochina.com/tim-chen.html with team, GitHub, X, Telegram, and structured profile-data links for reviewer due diligence; the latest 2026-05-28 DNS snapshot at https://gcagochina.com/domain-email.html#snapshotTitle shows MX/SPF/DMARC missing and DKIM selector required, so readyForBaseScanEmailEvidence is false; the domain email activation evidence packet is defined at https://gcagochina.com/domain-email.html#evidenceTitle. The next submission should wait until a working project-domain email is ready.`
+`BaseScan source verification and deployer-wallet ownership verification are complete. The public BaseScan token profile update was returned again as information-insufficient on 2026-05-23. The profile is not approved or published. Tim Chen public professional profile evidence is now published at https://gcagochina.com/tim-chen.html with team, GitHub, X, Telegram, and structured profile-data links for reviewer due diligence; the latest 2026-05-28 DNS snapshot at https://gcagochina.com/domain-email.html#snapshotTitle shows MX/SPF/DMARC missing and DKIM selector required, so readyForBaseScanEmailEvidence is false; the public domain email evidence checklist is published at https://gcagochina.com/domain-email-evidence.html, and the domain email activation evidence packet is defined at https://gcagochina.com/domain-email.html#evidenceTitle. The next submission should wait until a working project-domain email is ready.`
 
 Do not say the BaseScan token profile is approved, published, live, complete, or accepted until the public BaseScan token page shows the submitted information.

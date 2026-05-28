@@ -8,10 +8,14 @@
   "lastCheckedResult": "BaseScan returned the token profile update again as information-insufficient; Tim Chen official-domain professional profile evidence is published, and the 2026-05-28 read-only DNS snapshot confirms project-domain email remains blocked because MX, SPF, and DMARC are missing and DKIM still requires the provider selector.",
   "domainEmailSetupPlanUrl": "https://gcagochina.com/domain-email.html",
   "domainEmailSetupPlanDataUrl": "https://gcagochina.com/domain-email.json",
+  "domainEmailEvidenceChecklistUrl": "https://gcagochina.com/domain-email-evidence.html",
+  "domainEmailEvidenceChecklistDataUrl": "https://gcagochina.com/domain-email-evidence.json",
   "domainEmailActivationEvidencePacket": {
     "status": "defined-not-collected",
     "pageUrl": "https://gcagochina.com/domain-email.html#evidenceTitle",
     "dataUrl": "https://gcagochina.com/domain-email.json",
+    "checklistUrl": "https://gcagochina.com/domain-email-evidence.html",
+    "checklistDataUrl": "https://gcagochina.com/domain-email-evidence.json",
     "requiredEvidence": [
       "mail provider active screenshot for support@gcagochina.com",
       "tools/check_domain_email_dns.py JSON output with readyForBaseScanEmailEvidence true",

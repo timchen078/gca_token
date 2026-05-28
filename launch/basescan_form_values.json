@@ -67,6 +67,8 @@
       "dkim"
     ]
   },
+  "domainEmailEvidenceChecklistUrl": "https://gcagochina.com/domain-email-evidence.html",
+  "domainEmailEvidenceChecklistDataUrl": "https://gcagochina.com/domain-email-evidence.json",
   "domainEmailActivationEvidencePacketUrl": "https://gcagochina.com/domain-email.html#evidenceTitle",
   "returnReason": "BaseScan could not process the update because the submitted token/project information was insufficient.",
   "resubmissionRequired": true,
@@ -79,6 +81,7 @@
     "Contract source is verified on BaseScan",
     "Contract address is the valid Base Mainnet GCA token contract",
     "Official social links are included",
+    "Public domain email evidence checklist is ready at https://gcagochina.com/domain-email-evidence.html",
     "Domain email DNS checker returns readyForBaseScanEmailEvidence true after the provider DKIM selector is added",
     "Domain email activation evidence packet is archived after support@gcagochina.com tests pass",
     "Deployer wallet signs the address ownership message if BaseScan asks"
