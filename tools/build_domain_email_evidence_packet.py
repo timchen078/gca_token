@@ -143,6 +143,116 @@ def render_evidence_directory_readme(status: dict[str, Any]) -> str:
     return "\n".join(lines) + "\n"
 
 
+def build_evidence_checklist(
+    domain_email_config: dict[str, Any],
+    *,
+    evidence_dir: Path = DEFAULT_EVIDENCE_DIR,
+    generated_at: str | None = None,
+) -> dict[str, Any]:
+    domain = str(domain_email_config.get("domain") or "gcagochina.com")
+    current_email = str(domain_email_config.get("currentPublicEmail") or "GCAgochina@outlook.com")
+    target_email = str(domain_email_config.get("targetDomainEmail") or "support@gcagochina.com")
+    status = build_evidence_directory_status(evidence_dir)
+    required_files = []
+    for row in status["requiredFiles"]:
+        required_files.append({
+            "key": row["key"],
+            "label": row["label"],
+            "fileName": row["fileName"],
+            "path": row["path"],
+            "safeToCommit": False,
+            "reason": "May contain mailbox screenshots, DNS proof, or operational review evidence; keep under the git-ignored evidence directory.",
+        })
+
+    return {
+        "schema": "gca-domain-email-evidence-checklist-v1",
+        "generatedAt": generated_at or utc_now(),
+        "project": "GCA",
+        "domain": domain,
+        "currentPublicEmail": current_email,
+        "targetDomainEmail": target_email,
+        "status": "blocked-until-domain-email-evidence-collected",
+        "evidenceDirectory": status["path"],
+        "evidenceDirectoryIgnoredByGit": status["ignoredByGit"],
+        "requiredEvidenceFiles": required_files,
+        "stepsInOrder": [
+            f"Choose a full mailbox provider that can receive and send as {target_email}.",
+            "Initialize the local evidence directory with the evidence packet tool.",
+            f"Save provider proof showing {target_email} active or verified.",
+            "Add provider MX, SPF, DKIM, and DMARC DNS records exactly as supplied by the provider.",
+            "Save DNS proof after the read-only DNS checker reports readyForBaseScanEmailEvidence true.",
+            f"Send an inbound test from Gmail or Outlook to {target_email} and save the received-message proof.",
+            f"Reply from {target_email} back to Gmail or Outlook and save visible-sender proof.",
+            "Switch public support/BaseScan email values only after DNS and mail-flow evidence are complete.",
+            "Save support-page-domain-email.png showing the same domain email used in the BaseScan form.",
+            "Build launch/domain_email_evidence_packet.json and run the BaseScan resubmission preflight.",
+        ],
+        "commands": {
+            "initEvidenceDirectory": "python3 tools/build_domain_email_evidence_packet.py --init-evidence-dir --evidence-dir launch/domain_email_evidence",
+            "dnsCheck": "python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox support --dkim-selector <provider-selector> --json",
+            "buildEvidencePacket": "python3 tools/build_domain_email_evidence_packet.py --dkim-selector <provider-selector> --evidence-dir launch/domain_email_evidence --website-email-updated --output-json launch/domain_email_evidence_packet.json --output-md launch/domain_email_evidence_packet.md --json",
+            "finalPreflight": "python3 tools/check_basescan_resubmission_readiness.py --json --require-ready",
+        },
+        "stopConditions": [
+            f"{target_email} cannot receive external email.",
+            f"{target_email} cannot send authenticated replies with the visible sender set to the domain email.",
+            "MX/SPF/DKIM/DMARC DNS checks are not ready.",
+            "Any required evidence file is missing.",
+            f"Public support/BaseScan files still publish {current_email} after the switch.",
+            "BaseScan resubmission preflight reports readyForBaseScanResubmission false.",
+        ],
+        "publicClaimBoundaries": [
+            f"Do not claim {target_email} is active before inbound and outbound tests pass.",
+            "Do not claim BaseScan token profile approval before BaseScan publishes the profile.",
+            "Do not commit mailbox screenshots or private evidence files to the repository.",
+        ],
+        "boundaries": {
+            "writesDnsRecords": False,
+            "sendsEmail": False,
+            "submitsBaseScanRequest": False,
+            "touchesWalletsOrContracts": False,
+            "storesSecrets": False,
+            "commitsPrivateEvidence": False,
+        },
+    }
+
+
+def render_evidence_checklist_markdown(checklist: dict[str, Any]) -> str:
+    lines = [
+        "# GCA Domain Email Evidence Checklist",
+        "",
+        f"- Status: `{checklist['status']}`",
+        f"- Current public email: `{checklist['currentPublicEmail']}`",
+        f"- Target domain email: `{checklist['targetDomainEmail']}`",
+        f"- Evidence directory: `{checklist['evidenceDirectory']}`",
+        f"- Evidence directory ignored by git: `{str(checklist['evidenceDirectoryIgnoredByGit']).lower()}`",
+        "",
+        "## Required Evidence Files",
+        "",
+    ]
+    for item in checklist["requiredEvidenceFiles"]:
+        lines.append(f"- `{item['fileName']}`: {item['label']} Keep private: `{str(not item['safeToCommit']).lower()}`.")
+    lines.extend(["", "## Steps In Order", ""])
+    for index, step in enumerate(checklist["stepsInOrder"], start=1):
+        lines.append(f"{index}. {step}")
+    lines.extend(["", "## Commands", ""])
+    for label, command in checklist["commands"].items():
+        lines.append(f"- `{label}`: `{command}`")
+    lines.extend(["", "## Stop Conditions", ""])
+    for condition in checklist["stopConditions"]:
+        lines.append(f"- {condition}")
+    lines.extend(["", "## Boundaries", ""])
+    lines.extend([
+        "- This checklist does not write DNS records.",
+        "- This checklist does not send email.",
+        "- This checklist does not submit BaseScan requests.",
+        "- This checklist does not touch wallets, contracts, liquidity, or private keys.",
+        "- Private mailbox screenshots and proof files must stay in the git-ignored evidence directory.",
+        "",
+    ])
+    return "\n".join(lines)
+
+
 def initialize_evidence_directory(evidence_dir: Path) -> dict[str, Any]:
     evidence_dir.mkdir(parents=True, exist_ok=True)
     status = build_evidence_directory_status(evidence_dir)
@@ -314,8 +424,11 @@ def build_parser() -> argparse.ArgumentParser:
         help="Create the local evidence directory and README checklist, then print directory status JSON.",
     )
     parser.add_argument("--website-email-updated", action="store_true", help="Confirm public website email now matches target.")
+    parser.add_argument("--checklist", action="store_true", help="Print a public-safe evidence collection checklist instead of building the final packet.")
     parser.add_argument("--output-json", default="", help="Write packet JSON to this path.")
     parser.add_argument("--output-md", default="", help="Write packet Markdown to this path.")
+    parser.add_argument("--output-checklist-json", default="", help="Write public-safe evidence checklist JSON to this path.")
+    parser.add_argument("--output-checklist-md", default="", help="Write public-safe evidence checklist Markdown to this path.")
     parser.add_argument("--json", action="store_true", help="Print packet JSON to stdout.")
     return parser
 
@@ -332,6 +445,15 @@ def main(argv: list[str] | None = None) -> int:
 
     try:
         config = load_json_file(Path(args.config))
+        if args.checklist or args.output_checklist_json or args.output_checklist_md:
+            checklist = build_evidence_checklist(config, evidence_dir=evidence_dir)
+            if args.output_checklist_json:
+                write_text(Path(args.output_checklist_json), json.dumps(checklist, indent=2, sort_keys=True) + "\n")
+            if args.output_checklist_md:
+                write_text(Path(args.output_checklist_md), render_evidence_checklist_markdown(checklist))
+            if args.json or args.checklist or not (args.output_checklist_json or args.output_checklist_md):
+                print(json.dumps(checklist, indent=2, sort_keys=True))
+            return 0
         if args.dns_json:
             dns_result = load_json_file(Path(args.dns_json))
         else:

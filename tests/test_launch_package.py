@@ -1535,6 +1535,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("After records propagate", runbook)
         self.assertIn("tools/check_domain_email_dns.py", runbook)
         self.assertIn("tools/build_domain_email_evidence_packet.py", runbook)
+        self.assertIn("launch/domain_email_evidence_checklist.md", runbook)
+        self.assertIn("launch/domain_email_evidence_checklist.json", runbook)
         self.assertIn("tools/check_basescan_resubmission_readiness.py", runbook)
         self.assertIn("tools/build_basescan_submission_package.py", runbook)
         self.assertIn("launch/basescan_final_submission_package.json", runbook)

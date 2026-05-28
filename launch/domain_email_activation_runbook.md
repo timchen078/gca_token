@@ -132,6 +132,13 @@ python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox suppor
 
 ## Local Evidence Packet Builder
 
+The public-safe checklist for this stage is committed at:
+
+- `launch/domain_email_evidence_checklist.md`
+- `launch/domain_email_evidence_checklist.json`
+
+It lists the five proof files to collect and the stop conditions without storing private mailbox screenshots in git.
+
 Initialize the ignored local evidence directory first:
 
 ```bash

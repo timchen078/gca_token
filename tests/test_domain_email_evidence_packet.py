@@ -7,6 +7,7 @@ from pathlib import Path
 
 from tools.build_domain_email_evidence_packet import (
     DEFAULT_EVIDENCE_DIR,
+    build_evidence_checklist,
     build_manual_evidence,
     build_evidence_directory_status,
     build_packet,
@@ -14,10 +15,12 @@ from tools.build_domain_email_evidence_packet import (
     initialize_evidence_directory,
     main,
     merge_evidence_references,
+    render_evidence_checklist_markdown,
     render_markdown,
 )
 
 
+ROOT = Path(__file__).resolve().parents[1]
 DOMAIN_EMAIL_CONFIG = {
     "domain": "gcagochina.com",
     "currentPublicEmail": "GCAgochina@outlook.com",
@@ -109,6 +112,43 @@ class DomainEmailEvidencePacketTests(unittest.TestCase):
         self.assertIn("This packet does not submit a BaseScan request.", markdown)
         self.assertIn("This packet does not touch wallets, contracts, liquidity, or DNS records.", markdown)
 
+    def test_evidence_checklist_names_private_files_and_boundaries(self):
+        checklist = build_evidence_checklist(
+            DOMAIN_EMAIL_CONFIG,
+            evidence_dir=DEFAULT_EVIDENCE_DIR,
+            generated_at="2026-05-24T00:00:00Z",
+        )
+        markdown = render_evidence_checklist_markdown(checklist)
+
+        self.assertEqual(checklist["schema"], "gca-domain-email-evidence-checklist-v1")
+        self.assertEqual(checklist["targetDomainEmail"], "support@gcagochina.com")
+        self.assertEqual(checklist["status"], "blocked-until-domain-email-evidence-collected")
+        self.assertTrue(checklist["evidenceDirectoryIgnoredByGit"])
+        self.assertFalse(checklist["boundaries"]["writesDnsRecords"])
+        self.assertFalse(checklist["boundaries"]["sendsEmail"])
+        self.assertFalse(checklist["boundaries"]["submitsBaseScanRequest"])
+        self.assertTrue(all(item["safeToCommit"] is False for item in checklist["requiredEvidenceFiles"]))
+        self.assertIn("domain-email-provider-active.png", markdown)
+        self.assertIn("domain-email-outbound-test.png", markdown)
+        self.assertIn("Private mailbox screenshots", markdown)
+
+    def test_committed_evidence_checklist_artifacts_are_public_safe(self):
+        json_path = ROOT / "launch" / "domain_email_evidence_checklist.json"
+        md_path = ROOT / "launch" / "domain_email_evidence_checklist.md"
+
+        checklist = json.loads(json_path.read_text(encoding="utf-8"))
+        markdown = md_path.read_text(encoding="utf-8")
+
+        self.assertEqual(checklist["schema"], "gca-domain-email-evidence-checklist-v1")
+        self.assertEqual(checklist["targetDomainEmail"], "support@gcagochina.com")
+        self.assertEqual(checklist["evidenceDirectory"], "launch/domain_email_evidence")
+        self.assertTrue(checklist["evidenceDirectoryIgnoredByGit"])
+        self.assertFalse(checklist["boundaries"]["commitsPrivateEvidence"])
+        self.assertFalse(checklist["boundaries"]["touchesWalletsOrContracts"])
+        self.assertIn("domain-email-dns-mx-spf-dkim-dmarc.txt", markdown)
+        self.assertIn("tools/check_basescan_resubmission_readiness.py", markdown)
+        self.assertIn("Private mailbox screenshots and proof files must stay", markdown)
+
     def test_cli_can_write_json_and_markdown_from_saved_dns_result(self):
         with tempfile.TemporaryDirectory() as temp:
             temp_path = Path(temp)
@@ -149,6 +189,32 @@ class DomainEmailEvidencePacketTests(unittest.TestCase):
             self.assertTrue(packet["readyForBaseScanResubmission"])
             self.assertIn("ready-for-owner-resubmission", packet_md.read_text(encoding="utf-8"))
             self.assertIn("ready-for-owner-resubmission", output.getvalue())
+
+    def test_cli_can_write_public_safe_checklist_without_dns_or_email_calls(self):
+        with tempfile.TemporaryDirectory() as temp:
+            temp_path = Path(temp)
+            config_path = temp_path / "domain-email.json"
+            checklist_json = temp_path / "checklist.json"
+            checklist_md = temp_path / "checklist.md"
+            config_path.write_text(json.dumps(DOMAIN_EMAIL_CONFIG), encoding="utf-8")
+
+            output = StringIO()
+            with redirect_stdout(output):
+                exit_code = main([
+                    "--config",
+                    str(config_path),
+                    "--checklist",
+                    "--output-checklist-json",
+                    str(checklist_json),
+                    "--output-checklist-md",
+                    str(checklist_md),
+                    "--json",
+                ])
+
+            self.assertEqual(exit_code, 0)
+            self.assertIn("gca-domain-email-evidence-checklist-v1", checklist_json.read_text(encoding="utf-8"))
+            self.assertIn("GCA Domain Email Evidence Checklist", checklist_md.read_text(encoding="utf-8"))
+            self.assertIn("blocked-until-domain-email-evidence-collected", output.getvalue())
 
     def test_evidence_dir_fills_recommended_file_references(self):
         with tempfile.TemporaryDirectory() as temp:
