@@ -25,6 +25,8 @@
     "domainEmailSetupPlanData": "https://gcagochina.com/domain-email.json",
     "domainEmailEvidenceChecklist": "https://gcagochina.com/domain-email-evidence.html",
     "domainEmailEvidenceChecklistData": "https://gcagochina.com/domain-email-evidence.json",
+    "baseScanPreflightPage": "https://gcagochina.com/basescan-preflight.html",
+    "baseScanPreflightData": "https://gcagochina.com/basescan-preflight.json",
     "verify": "https://gcagochina.com/verify.html",
     "whitepaper": "https://gcagochina.com/whitepaper.html",
     "support": "https://gcagochina.com/support.html",

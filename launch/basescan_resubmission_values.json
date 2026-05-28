@@ -106,6 +106,8 @@
   "timChenProfessionalProfileDataUrl": "https://gcagochina.com/tim-chen.json",
   "baseScanRemediationPageUrl": "https://gcagochina.com/basescan-remediation.html",
   "baseScanRemediationUrl": "https://gcagochina.com/basescan-remediation.json",
+  "baseScanPreflightPageUrl": "https://gcagochina.com/basescan-preflight.html",
+  "baseScanPreflightUrl": "https://gcagochina.com/basescan-preflight.json",
   "githubRepoUrl": "https://github.com/timchen078/gca_token",
   "listingKitUrl": "https://gcagochina.com/listing-kit.html",
   "brandKitPageUrl": "https://gcagochina.com/brand-kit.html",

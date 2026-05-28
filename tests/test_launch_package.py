@@ -45,6 +45,8 @@ DOMAIN_EMAIL_EVIDENCE_PAGE_URL = "https://gcagochina.com/domain-email-evidence.h
 DOMAIN_EMAIL_EVIDENCE_URL = "https://gcagochina.com/domain-email-evidence.json"
 BASESCAN_REMEDIATION_PAGE_URL = "https://gcagochina.com/basescan-remediation.html"
 BASESCAN_REMEDIATION_URL = "https://gcagochina.com/basescan-remediation.json"
+BASESCAN_PREFLIGHT_PAGE_URL = "https://gcagochina.com/basescan-preflight.html"
+BASESCAN_PREFLIGHT_URL = "https://gcagochina.com/basescan-preflight.json"
 GITHUB_REPO_URL = "https://github.com/timchen078/gca_token"
 ZH_CN_PAGE_URL = "https://gcagochina.com/zh-cn.html"
 ZH_BUY_PAGE_URL = "https://gcagochina.com/zh-buy.html"
@@ -228,6 +230,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("/domain-email-evidence.json", script)
         self.assertIn("/basescan-remediation.html", script)
         self.assertIn("/basescan-remediation.json", script)
+        self.assertIn("/basescan-preflight.html", script)
+        self.assertIn("/basescan-preflight.json", script)
         self.assertIn(TEAM_PAGE_URL, script)
         self.assertIn(TIM_CHEN_PROFILE_PAGE_URL, script)
         self.assertIn(TIM_CHEN_PROFILE_URL, script)
@@ -237,6 +241,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(DOMAIN_EMAIL_EVIDENCE_URL, script)
         self.assertIn(BASESCAN_REMEDIATION_PAGE_URL, script)
         self.assertIn(BASESCAN_REMEDIATION_URL, script)
+        self.assertIn(BASESCAN_PREFLIGHT_PAGE_URL, script)
+        self.assertIn(BASESCAN_PREFLIGHT_URL, script)
         self.assertIn(GITHUB_REPO_URL, script)
         self.assertIn("/zh-cn.html", script)
         self.assertIn("/zh-buy.html", script)
@@ -457,6 +463,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("validate_domain_email_evidence_json", script)
         self.assertIn("validate_basescan_remediation_page", script)
         self.assertIn("validate_basescan_remediation_json", script)
+        self.assertIn("validate_basescan_preflight_page", script)
+        self.assertIn("validate_basescan_preflight_json", script)
         self.assertIn("validate_site_map_page", script)
         self.assertIn("validate_action_plan_page", script)
         self.assertIn("validate_zh_cn_page", script)
@@ -508,6 +516,8 @@ class LaunchPackageTests(unittest.TestCase):
         module.validate_domain_email_evidence_json((ROOT / "site" / "domain-email-evidence.json").read_text())
         module.validate_basescan_remediation_page((ROOT / "site" / "basescan-remediation.html").read_text())
         module.validate_basescan_remediation_json((ROOT / "site" / "basescan-remediation.json").read_text())
+        module.validate_basescan_preflight_page((ROOT / "site" / "basescan-preflight.html").read_text())
+        module.validate_basescan_preflight_json((ROOT / "site" / "basescan-preflight.json").read_text())
         module.validate_data_page((ROOT / "site" / "data.html").read_text())
         module.validate_site_map_page((ROOT / "site" / "site-map.html").read_text())
         module.validate_action_plan_page((ROOT / "site" / "action-plan.html").read_text())
@@ -918,6 +928,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Allow: /domain-email-evidence.json", robots)
         self.assertIn("Allow: /basescan-remediation.html", robots)
         self.assertIn("Allow: /basescan-remediation.json", robots)
+        self.assertIn("Allow: /basescan-preflight.html", robots)
+        self.assertIn("Allow: /basescan-preflight.json", robots)
         self.assertIn("Allow: /action-plan.html", robots)
         self.assertIn("Allow: /zh-cn.html", robots)
         self.assertIn("Allow: /zh-buy.html", robots)
@@ -1695,6 +1707,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Current email blocker", page)
         self.assertIn("Preflight checker", page)
         self.assertIn("tools/check_basescan_resubmission_readiness.py", page)
+        self.assertIn("Readable preflight gate", page)
+        self.assertIn(BASESCAN_PREFLIGHT_PAGE_URL, page)
         self.assertIn("BaseScan values, domain email evidence packet, public email switch alignment, domain email snapshot alignment, and reviewer URLs", page)
         self.assertIn("Reviewer checklist", page)
         self.assertIn("Reviewer checklist required", page)
@@ -1729,6 +1743,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(data["officialIdentity"]["domainEmailSetupPlanData"], DOMAIN_EMAIL_URL)
         self.assertEqual(data["officialIdentity"]["domainEmailEvidenceChecklist"], DOMAIN_EMAIL_EVIDENCE_PAGE_URL)
         self.assertEqual(data["officialIdentity"]["domainEmailEvidenceChecklistData"], DOMAIN_EMAIL_EVIDENCE_URL)
+        self.assertEqual(data["officialIdentity"]["baseScanPreflightPage"], BASESCAN_PREFLIGHT_PAGE_URL)
+        self.assertEqual(data["officialIdentity"]["baseScanPreflightData"], BASESCAN_PREFLIGHT_URL)
         self.assertEqual(data["officialIdentity"]["platformRepliesPage"], PLATFORM_REPLIES_PAGE_URL)
         self.assertEqual(data["officialIdentity"]["platformRepliesData"], PLATFORM_REPLIES_URL)
         self.assertEqual(data["officialIdentity"]["github"], GITHUB_REPO_URL)
@@ -1788,6 +1804,79 @@ class LaunchPackageTests(unittest.TestCase):
             DOMAIN_EMAIL_EVIDENCE_PAGE_URL,
             " ".join(data["nextSubmissionGate"]["requiredBeforeReady"]),
         )
+
+    def test_basescan_preflight_page_and_json_gate_next_resubmission(self):
+        page = (ROOT / "site" / "basescan-preflight.html").read_text()
+        data = json.loads((ROOT / "site" / "basescan-preflight.json").read_text())
+
+        self.assertIn("GCA BaseScan Resubmission Preflight", page)
+        self.assertIn("BaseScan Preflight / Read-Only Gate", page)
+        self.assertIn("Ready To Resubmit", page)
+        self.assertIn("Latest DNS Snapshot", page)
+        self.assertIn("2026-05-28", page)
+        self.assertIn("Main Blocker", page)
+        self.assertIn("Domain email", page)
+        self.assertIn("Current Blockers", page)
+        self.assertIn("Required Inputs Before One Clean Submission", page)
+        self.assertIn("support@gcagochina.com", page)
+        self.assertIn("GCAgochina@outlook.com", page)
+        self.assertIn("MX missing", page)
+        self.assertIn("SPF missing", page)
+        self.assertIn("DMARC missing", page)
+        self.assertIn("DKIM selector required", page)
+        self.assertIn("launch/domain_email_evidence_packet.json", page)
+        self.assertIn("readyForBaseScanResubmission", page)
+        self.assertIn("tools/check_domain_email_dns.py", page)
+        self.assertIn("tools/build_domain_email_evidence_packet.py", page)
+        self.assertIn("tools/check_domain_email_public_switch.py", page)
+        self.assertIn("tools/check_domain_email_snapshot_alignment.py", page)
+        self.assertIn("tools/check_basescan_resubmission_readiness.py", page)
+        self.assertIn("tools/build_basescan_submission_package.py", page)
+        self.assertIn("DRAFT ONLY - DO NOT SUBMIT BASESCAN YET.", page)
+        self.assertIn("Evidence Links To Include When Ready", page)
+        self.assertIn("Do Not Submit Or Claim Yet", page)
+        self.assertIn(TIM_CHEN_PROFILE_PAGE_URL, page)
+        self.assertIn(DOMAIN_EMAIL_PAGE_URL, page)
+        self.assertIn(DOMAIN_EMAIL_EVIDENCE_PAGE_URL, page)
+        self.assertIn(BASESCAN_REMEDIATION_PAGE_URL, page)
+        self.assertIn(GITHUB_REPO_URL, page)
+        self.assertNotIn('href="basescan-preflight.json"', page)
+
+        self.assertEqual(data["schema"], BASESCAN_PREFLIGHT_URL)
+        self.assertEqual(data["pageUrl"], BASESCAN_PREFLIGHT_PAGE_URL)
+        self.assertEqual(data["lastUpdated"], "2026-05-28")
+        self.assertEqual(data["status"], "blocked-domain-email-before-basescan-resubmission")
+        self.assertFalse(data["readyForBaseScanResubmission"])
+        self.assertEqual(data["chainId"], 8453)
+        self.assertEqual(data["contractAddress"], MAINNET_ADDRESS)
+        self.assertEqual(data["officialEmailCurrent"], "GCAgochina@outlook.com")
+        self.assertEqual(data["targetDomainEmail"], "support@gcagochina.com")
+        self.assertEqual(data["latestDnsSnapshot"]["checkedAt"], "2026-05-28T12:41:11Z")
+        self.assertFalse(data["latestDnsSnapshot"]["readyForBaseScanEmailEvidence"])
+        self.assertCountEqual(data["latestDnsSnapshot"]["missingOrBlockedChecks"], ["mx", "spf", "dmarc", "dkim"])
+        self.assertIn("support@gcagochina.com is not yet proven", " ".join(data["currentBlockers"]))
+        self.assertIn("Public support/about/team/BaseScan values align", " ".join(data["requiredInputsBeforeSubmission"]))
+        self.assertIn("tools/check_domain_email_dns.py", data["commands"]["dnsCheck"])
+        self.assertIn("tools/build_domain_email_evidence_packet.py", data["commands"]["evidencePacket"])
+        self.assertIn("tools/check_domain_email_public_switch.py", data["commands"]["publicSwitchCheck"])
+        self.assertIn("tools/check_domain_email_snapshot_alignment.py", data["commands"]["snapshotAlignment"])
+        self.assertIn("tools/check_basescan_resubmission_readiness.py --json --require-ready", data["commands"]["baseScanPreflight"])
+        self.assertIn("tools/build_basescan_submission_package.py", data["commands"]["finalDraft"])
+        self.assertEqual(data["evidenceLinks"]["timChenProfessionalProfile"], TIM_CHEN_PROFILE_PAGE_URL)
+        self.assertEqual(data["evidenceLinks"]["domainEmailEvidenceChecklist"], DOMAIN_EMAIL_EVIDENCE_PAGE_URL)
+        self.assertEqual(data["evidenceLinks"]["baseScanRemediation"], BASESCAN_REMEDIATION_PAGE_URL)
+        self.assertEqual(data["evidenceLinks"]["githubRepository"], GITHUB_REPO_URL)
+        self.assertIn("readyForBaseScanResubmission is true", data["doNotSubmitUntil"])
+        self.assertIn("public token profile publication is not complete", data["publicClaimBoundary"])
+        for key in (
+            "submitsBaseScanRequest",
+            "sendsEmail",
+            "writesDnsRecords",
+            "signsWalletMessages",
+            "touchesWalletsOrContracts",
+            "publishesPrivateMailboxScreenshots",
+        ):
+            self.assertFalse(data["boundaries"][key])
 
     def test_well_known_identity_files_are_public_and_conservative(self):
         identity = json.loads((ROOT / "site" / ".well-known" / "gca-token.json").read_text())
@@ -7436,6 +7525,8 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "site" / "domain-email.html",
             ROOT / "site" / "zh-domain-email.html",
             ROOT / "site" / "domain-email.json",
+            ROOT / "site" / "basescan-preflight.html",
+            ROOT / "site" / "basescan-preflight.json",
             ROOT / "site" / "wallet-warning.html",
             ROOT / "site" / "wallet-warning.json",
             ROOT / "site" / "external-reviews.html",
@@ -7715,6 +7806,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("launch/basescan_final_submission_package.json", package)
         self.assertIn("copy/paste blocks for the BaseScan reviewer comment", package)
         self.assertIn("DRAFT ONLY - DO NOT SUBMIT BASESCAN YET.", package)
+        self.assertIn(BASESCAN_PREFLIGHT_PAGE_URL, package)
+        self.assertIn(BASESCAN_PREFLIGHT_URL, package)
         self.assertIn("readyForBaseScanResubmission: true", package)
         self.assertIn("readyForBaseScanEmailEvidence", package)
         self.assertIn("activation evidence packet", package)
@@ -7777,6 +7870,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["teamPageUrl"], TEAM_PAGE_URL)
         self.assertEqual(values["baseScanRemediationPageUrl"], BASESCAN_REMEDIATION_PAGE_URL)
         self.assertEqual(values["baseScanRemediationUrl"], BASESCAN_REMEDIATION_URL)
+        self.assertEqual(values["baseScanPreflightPageUrl"], BASESCAN_PREFLIGHT_PAGE_URL)
+        self.assertEqual(values["baseScanPreflightUrl"], BASESCAN_PREFLIGHT_URL)
         self.assertEqual(values["githubRepoUrl"], GITHUB_REPO_URL)
         self.assertEqual(values["officialMarketPool"]["pair"], "GCA/USDT")
         self.assertEqual(values["officialMarketPool"]["poolAddress"], OFFICIAL_POOL_ADDRESS)
@@ -7826,6 +7921,8 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "site" / "domain-email.html",
             ROOT / "site" / "zh-domain-email.html",
             ROOT / "site" / "domain-email.json",
+            ROOT / "site" / "basescan-preflight.html",
+            ROOT / "site" / "basescan-preflight.json",
             ROOT / "site" / "wallet-warning.html",
             ROOT / "site" / "wallet-warning.json",
             ROOT / "site" / "external-reviews.html",

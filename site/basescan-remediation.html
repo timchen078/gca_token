@@ -302,6 +302,7 @@
           <a class="button" href="support.html">Support</a>
           <a class="button" href="brand-kit.html">Brand Kit</a>
           <a class="button" href="platform-replies.html">Platform Replies</a>
+          <a class="button" href="basescan-preflight.html">BaseScan Preflight</a>
           <a class="button" href="data.html">Reviewer Data Room</a>
         </div>
       </section>
@@ -333,6 +334,7 @@
             <div class="row"><span>2026-05-28 DNS snapshot</span><strong>The latest read-only check shows MX / SPF / DMARC missing and DKIM selector required. This means the domain email evidence packet is not ready yet.</strong></div>
             <div class="row"><span>Professional profile</span><strong>Official-domain profile published at <a href="tim-chen.html">https://gcagochina.com/tim-chen.html</a>. Add LinkedIn later only if BaseScan specifically requires a third-party social-network profile.</strong></div>
             <div class="row"><span>Preflight checker</span><strong>Run <code>python3 tools/check_basescan_resubmission_readiness.py --json --require-ready</code> only after the domain email evidence packet is complete. A failed preflight means do not resubmit yet.</strong></div>
+            <div class="row"><span>Readable preflight gate</span><strong>Use <a href="basescan-preflight.html">https://gcagochina.com/basescan-preflight.html</a> as the public status page for current BaseScan resubmission blockers, commands, and boundaries.</strong></div>
             <div class="row"><span>Reviewer checklist</span><strong>Run <code>python3 tools/build_basescan_reviewer_checklist.py --markdown</code> to map BaseScan return reasons to current GCA evidence before preparing the final form package. The tool is read-only and does not submit BaseScan requests.</strong></div>
             <div class="row"><span>Submission package</span><strong>After preflight passes, run <code>python3 tools/build_basescan_submission_package.py --json --require-ready</code> to generate a local BaseScan form draft with copy/paste blocks for the reviewer comment, basic information, evidence links, market route, and supply context. The tool does not submit the form.</strong></div>
             <div class="row"><span>Submission timing</span><strong>Do not submit another duplicate until the remaining owner-controlled blocker, project-domain email, is fixed.</strong></div>

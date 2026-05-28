@@ -41,6 +41,8 @@ DOMAIN_EMAIL_EVIDENCE_PAGE_URL = "https://gcagochina.com/domain-email-evidence.h
 DOMAIN_EMAIL_EVIDENCE_URL = "https://gcagochina.com/domain-email-evidence.json"
 BASESCAN_REMEDIATION_PAGE_URL = "https://gcagochina.com/basescan-remediation.html"
 BASESCAN_REMEDIATION_URL = "https://gcagochina.com/basescan-remediation.json"
+BASESCAN_PREFLIGHT_PAGE_URL = "https://gcagochina.com/basescan-preflight.html"
+BASESCAN_PREFLIGHT_URL = "https://gcagochina.com/basescan-preflight.json"
 GITHUB_REPO_URL = "https://github.com/timchen078/gca_token"
 ZH_CN_PAGE_URL = "https://gcagochina.com/zh-cn.html"
 ZH_BUY_PAGE_URL = "https://gcagochina.com/zh-buy.html"
@@ -587,6 +589,7 @@ def validate_status_page(text: str) -> None:
     assert_contains(text, "team.html", label)
     assert_contains(text, "tim-chen.html", label)
     assert_contains(text, "basescan-remediation.html", label)
+    assert_contains(text, "basescan-preflight.html", label)
     assert_contains(text, "GeckoTerminal token information update", label)
     assert_contains(text, "Approved", label)
     assert_contains(text, "No third-party audit has been completed", label)
@@ -1204,6 +1207,8 @@ def validate_basescan_remediation_page(text: str) -> None:
         TIM_CHEN_PROFILE_PAGE_URL,
         "Preflight checker",
         "tools/check_basescan_resubmission_readiness.py",
+        "Readable preflight gate",
+        BASESCAN_PREFLIGHT_PAGE_URL,
         "BaseScan values, domain email evidence packet, public email switch alignment, domain email snapshot alignment, and reviewer URLs",
         "Reviewer checklist",
         "Reviewer checklist required",
@@ -1263,6 +1268,10 @@ def validate_basescan_remediation_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong domainEmailEvidenceChecklist")
     if identity.get("domainEmailEvidenceChecklistData") != DOMAIN_EMAIL_EVIDENCE_URL:
         raise SiteCheckError(f"{label}: wrong domainEmailEvidenceChecklistData")
+    if identity.get("baseScanPreflightPage") != BASESCAN_PREFLIGHT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong baseScanPreflightPage")
+    if identity.get("baseScanPreflightData") != BASESCAN_PREFLIGHT_URL:
+        raise SiteCheckError(f"{label}: wrong baseScanPreflightData")
     if identity.get("platformRepliesPage") != PLATFORM_REPLIES_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong platformRepliesPage")
     if identity.get("platformRepliesData") != PLATFORM_REPLIES_URL:
@@ -1359,6 +1368,113 @@ def validate_basescan_remediation_json(text: str) -> None:
     assert_no_forbidden_public_claims(text, label)
 
 
+def validate_basescan_preflight_page(text: str) -> None:
+    label = "/basescan-preflight.html"
+    assert_social_preview_meta(text, label, BASESCAN_PREFLIGHT_PAGE_URL)
+    for expected in (
+        "GCA BaseScan Resubmission Preflight",
+        "BaseScan Preflight / Read-Only Gate",
+        "Ready To Resubmit",
+        "Latest DNS Snapshot",
+        "2026-05-28",
+        "Main Blocker",
+        "Domain email",
+        "Read-only checks",
+        "Current Blockers",
+        "Required Inputs Before One Clean Submission",
+        "support@gcagochina.com",
+        "GCAgochina@outlook.com",
+        "MX missing",
+        "SPF missing",
+        "DMARC missing",
+        "DKIM selector required",
+        "launch/domain_email_evidence_packet.json",
+        "readyForBaseScanResubmission",
+        "tools/check_domain_email_dns.py",
+        "tools/build_domain_email_evidence_packet.py",
+        "tools/check_domain_email_public_switch.py",
+        "tools/check_domain_email_snapshot_alignment.py",
+        "tools/check_basescan_resubmission_readiness.py",
+        "tools/build_basescan_submission_package.py",
+        "DRAFT ONLY - DO NOT SUBMIT BASESCAN YET.",
+        "Evidence Links To Include When Ready",
+        "Tim Chen profile",
+        "team.html#tim-chen",
+        "domain-email.html",
+        "domain-email-evidence.html",
+        "basescan-remediation.html",
+        GITHUB_REPO_URL,
+        "GCA/USDT on Base Mainnet",
+        "Do Not Submit Or Claim Yet",
+        "does not sign wallet messages, submit forms, send email, write DNS records, or touch contracts",
+    ):
+        assert_contains(text, expected, label)
+    assert_no_forbidden_public_claims(text, label)
+    assert_not_contains(text, 'href="basescan-preflight.json"', label)
+
+
+def validate_basescan_preflight_json(text: str) -> None:
+    label = "/basescan-preflight.json"
+    payload = load_json(text, label)
+    commands = payload.get("commands", {})
+    links = payload.get("evidenceLinks", {})
+    boundaries = payload.get("boundaries", {})
+    snapshot = payload.get("latestDnsSnapshot", {})
+
+    if payload.get("schema") != BASESCAN_PREFLIGHT_URL:
+        raise SiteCheckError(f"{label}: wrong schema")
+    if payload.get("pageUrl") != BASESCAN_PREFLIGHT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong pageUrl")
+    if payload.get("lastUpdated") != "2026-05-28":
+        raise SiteCheckError(f"{label}: wrong lastUpdated")
+    if payload.get("status") != "blocked-domain-email-before-basescan-resubmission":
+        raise SiteCheckError(f"{label}: wrong status")
+    if payload.get("readyForBaseScanResubmission") is not False:
+        raise SiteCheckError(f"{label}: should not be ready yet")
+    if payload.get("chainId") != 8453:
+        raise SiteCheckError(f"{label}: wrong chainId")
+    if payload.get("contractAddress") != MAINNET_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong contractAddress")
+    if payload.get("officialEmailCurrent") != "GCAgochina@outlook.com":
+        raise SiteCheckError(f"{label}: wrong current official email")
+    if payload.get("targetDomainEmail") != "support@gcagochina.com":
+        raise SiteCheckError(f"{label}: wrong target domain email")
+    if snapshot.get("checkedAt") != "2026-05-28T12:41:11Z":
+        raise SiteCheckError(f"{label}: wrong DNS snapshot")
+    if snapshot.get("readyForBaseScanEmailEvidence") is not False:
+        raise SiteCheckError(f"{label}: DNS should not be ready")
+    if set(snapshot.get("missingOrBlockedChecks", [])) != {"mx", "spf", "dmarc", "dkim"}:
+        raise SiteCheckError(f"{label}: wrong missing DNS checks")
+    for key in ("dnsCheck", "evidencePacket", "publicSwitchCheck", "snapshotAlignment", "baseScanPreflight", "finalDraft"):
+        if key not in commands:
+            raise SiteCheckError(f"{label}: missing command {key}")
+    if "tools/check_basescan_resubmission_readiness.py --json --require-ready" not in commands.get("baseScanPreflight", ""):
+        raise SiteCheckError(f"{label}: wrong BaseScan preflight command")
+    if links.get("timChenProfessionalProfile") != TIM_CHEN_PROFILE_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong Tim Chen evidence link")
+    if links.get("domainEmailEvidenceChecklist") != DOMAIN_EMAIL_EVIDENCE_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong evidence checklist link")
+    if links.get("baseScanRemediation") != BASESCAN_REMEDIATION_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong remediation link")
+    if links.get("githubRepository") != GITHUB_REPO_URL:
+        raise SiteCheckError(f"{label}: wrong GitHub link")
+    if "readyForBaseScanResubmission is true" not in payload.get("doNotSubmitUntil", []):
+        raise SiteCheckError(f"{label}: missing do-not-submit readiness gate")
+    if "public token profile publication is not complete" not in payload.get("publicClaimBoundary", ""):
+        raise SiteCheckError(f"{label}: missing public claim boundary")
+    for key in (
+        "submitsBaseScanRequest",
+        "sendsEmail",
+        "writesDnsRecords",
+        "signsWalletMessages",
+        "touchesWalletsOrContracts",
+        "publishesPrivateMailboxScreenshots",
+    ):
+        if boundaries.get(key) is not False:
+            raise SiteCheckError(f"{label}: boundary {key} must be false")
+    assert_no_forbidden_public_claims(json.dumps(payload), label)
+
+
 def validate_action_plan_page(text: str) -> None:
     label = "/action-plan.html"
     assert_social_preview_meta(text, label, ACTION_PLAN_PAGE_URL)
@@ -1400,6 +1516,8 @@ def validate_action_plan_page(text: str) -> None:
         "Domain Email Plan",
         "basescan-remediation.html",
         "BaseScan Remediation",
+        "basescan-preflight.html",
+        "BaseScan Preflight",
         "Public account intake, read-only wallet checks, and eligible ledger records are live",
         "eligible ledger records are live",
         MAINNET_ADDRESS,
@@ -3098,6 +3216,7 @@ def validate_data_page(text: str) -> None:
         "External reviews data",
         "Domain email setup data",
         "Domain email evidence checklist data",
+        "BaseScan preflight data",
         "Token safety data",
         "On-chain proofs data",
         "Liquidity statement data",
@@ -3129,6 +3248,7 @@ def validate_data_page(text: str) -> None:
         "external-reviews.json",
         "domain-email.json",
         "domain-email-evidence.json",
+        "basescan-preflight.json",
         "token-safety.json",
         "onchain-proofs.json",
         "liquidity.json",
@@ -3224,6 +3344,8 @@ def validate_site_map_page(text: str) -> None:
         "domain-email.html",
         "Domain Email Evidence Checklist",
         "domain-email-evidence.html",
+        "BaseScan Preflight",
+        "basescan-preflight.html",
         "Security Materials",
         "External Review",
         "Supply and Custody",
@@ -11145,6 +11267,8 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/domain-email-evidence.json",
         "https://gcagochina.com/basescan-remediation.html",
         "https://gcagochina.com/basescan-remediation.json",
+        "https://gcagochina.com/basescan-preflight.html",
+        "https://gcagochina.com/basescan-preflight.json",
         "https://gcagochina.com/action-plan.html",
         "https://gcagochina.com/register.html",
         "https://gcagochina.com/unsubscribe.html",
@@ -11291,6 +11415,8 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /domain-email-evidence.json", label)
     assert_contains(text, "Allow: /basescan-remediation.html", label)
     assert_contains(text, "Allow: /basescan-remediation.json", label)
+    assert_contains(text, "Allow: /basescan-preflight.html", label)
+    assert_contains(text, "Allow: /basescan-preflight.json", label)
     assert_contains(text, "Allow: /action-plan.html", label)
     assert_contains(text, "Allow: /register.html", label)
     assert_contains(text, "Allow: /unsubscribe.html", label)
@@ -11440,6 +11566,8 @@ CHECKS: list[EndpointCheck] = [
     ("/domain-email-evidence.json", validate_domain_email_evidence_json),
     ("/basescan-remediation.html", validate_basescan_remediation_page),
     ("/basescan-remediation.json", validate_basescan_remediation_json),
+    ("/basescan-preflight.html", validate_basescan_preflight_page),
+    ("/basescan-preflight.json", validate_basescan_preflight_json),
     ("/action-plan.html", validate_action_plan_page),
     ("/zh-cn.html", validate_zh_cn_page),
     ("/zh-buy.html", validate_zh_buy_page),

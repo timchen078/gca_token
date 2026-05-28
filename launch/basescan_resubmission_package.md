@@ -33,6 +33,8 @@ This package records the current BaseScan token information remediation state. T
 - Domain email DNS snapshot: `https://gcagochina.com/domain-email.html#snapshotTitle`
 - BaseScan remediation: `https://gcagochina.com/basescan-remediation.html`
 - BaseScan remediation JSON: `https://gcagochina.com/basescan-remediation.json`
+- BaseScan preflight gate: `https://gcagochina.com/basescan-preflight.html`
+- BaseScan preflight JSON: `https://gcagochina.com/basescan-preflight.json`
 - Public GitHub repository: `https://github.com/timchen078/gca_token`
 - Listing kit: `https://gcagochina.com/listing-kit.html`
 - Brand kit: `https://gcagochina.com/brand-kit.html`
