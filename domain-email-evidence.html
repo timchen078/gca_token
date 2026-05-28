@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GCA Domain Email Evidence Checklist | Go China Access</title>
+    <meta name="description" content="Public GCA checklist for collecting domain email evidence before the next BaseScan token profile resubmission.">
+    <link rel="canonical" href="https://gcagochina.com/domain-email-evidence.html">
+    <link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">
+    <link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="GCA | Go China Access">
+    <meta property="og:title" content="GCA Domain Email Evidence Checklist | Go China Access">
+    <meta property="og:description" content="Public checklist for collecting GCA domain email evidence before BaseScan resubmission.">
+    <meta property="og:url" content="https://gcagochina.com/domain-email-evidence.html">
+    <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="GCA Domain Email Evidence Checklist | Go China Access">
+    <meta name="twitter:description" content="Public checklist for collecting GCA domain email evidence before BaseScan resubmission.">
+    <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f7f8f5;
+        --ink: #151817;
+        --muted: #5e6763;
+        --line: #dfe4dd;
+        --panel: #ffffff;
+        --soft: #eef3ef;
+        --red: #d71920;
+        --blue: #1557d7;
+        --green: #087f5b;
+        --gold: #a87810;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: var(--bg);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.5;
+      }
+
+      a { color: var(--blue); text-decoration: none; }
+      a:hover { text-decoration: underline; }
+
+      .shell {
+        width: min(1080px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 3;
+        border-bottom: 1px solid var(--line);
+        background: rgba(247, 248, 245, 0.94);
+        backdrop-filter: blur(16px);
+      }
+
+      nav {
+        min-height: 68px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+      }
+
+      .brand,
+      .nav-links,
+      .actions {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .brand {
+        color: var(--ink);
+        font-weight: 850;
+      }
+
+      .brand img {
+        width: 34px;
+        height: 34px;
+      }
+
+      .nav-links {
+        gap: 16px;
+        font-size: 14px;
+      }
+
+      main { padding: 42px 0 64px; }
+      h1, h2, h3, p { margin-top: 0; }
+
+      h1 {
+        max-width: 940px;
+        margin-bottom: 18px;
+        font-size: clamp(42px, 6vw, 72px);
+        line-height: 1.02;
+        letter-spacing: 0;
+      }
+
+      h2 {
+        margin-bottom: 12px;
+        font-size: 25px;
+        letter-spacing: 0;
+      }
+
+      h3 {
+        margin-bottom: 8px;
+        font-size: 18px;
+        letter-spacing: 0;
+      }
+
+      .eyebrow {
+        margin: 0 0 14px;
+        color: var(--red);
+        font-size: 13px;
+        font-weight: 850;
+        text-transform: uppercase;
+      }
+
+      .lead {
+        max-width: 880px;
+        margin-bottom: 14px;
+        color: var(--muted);
+        font-size: 18px;
+      }
+
+      .note, li { color: var(--muted); }
+      .actions { margin-top: 24px; }
+
+      .button {
+        min-height: 40px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        color: var(--ink);
+        padding: 9px 12px;
+        font-size: 14px;
+        font-weight: 760;
+      }
+
+      .button.primary {
+        border-color: var(--red);
+        background: var(--red);
+        color: #fff;
+      }
+
+      .section { margin-top: 30px; }
+
+      .panel,
+      .fact,
+      .card {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+      }
+
+      .panel { padding: 24px; }
+      .fact, .card { padding: 16px; }
+
+      .facts,
+      .grid,
+      .two {
+        display: grid;
+        gap: 14px;
+      }
+
+      .facts {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        margin-top: 26px;
+      }
+
+      .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+      .label {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 760;
+        text-transform: uppercase;
+      }
+
+      .value {
+        display: block;
+        margin-top: 7px;
+        font-size: 17px;
+        font-weight: 850;
+        overflow-wrap: anywhere;
+      }
+
+      .good { color: var(--green); }
+      .pending { color: var(--gold); }
+
+      .list {
+        display: grid;
+        gap: 10px;
+      }
+
+      .row {
+        display: grid;
+        grid-template-columns: minmax(190px, 0.8fr) minmax(0, 1.2fr);
+        gap: 12px;
+        align-items: start;
+        border-top: 1px solid var(--line);
+        padding-top: 10px;
+      }
+
+      .row:first-child {
+        border-top: 0;
+        padding-top: 0;
+      }
+
+      .row strong {
+        min-width: 0;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+        text-align: right;
+      }
+
+      .notice {
+        border-color: #ecd28c;
+        background: #fff8e6;
+      }
+
+      code {
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        background: var(--soft);
+        padding: 2px 5px;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 0.92em;
+        overflow-wrap: anywhere;
+      }
+
+      footer {
+        border-top: 1px solid var(--line);
+        padding: 22px 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      @media (max-width: 900px) {
+        nav {
+          align-items: flex-start;
+          flex-direction: column;
+          padding: 14px 0;
+        }
+
+        .facts,
+        .grid,
+        .two,
+        .row {
+          grid-template-columns: 1fr;
+        }
+
+        .row strong {
+          text-align: left;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav class="shell" aria-label="Primary">
+        <a class="brand" href="index.html" aria-label="GCA home">
+          <img src="assets/gca-logo.svg" alt="GCA logo">
+          <span>GCA</span>
+        </a>
+        <div class="nav-links">
+          <a href="domain-email.html">Domain Email Plan</a>
+          <a href="basescan-remediation.html">BaseScan</a>
+          <a href="tim-chen.html">Tim Chen</a>
+          <a href="platform-replies.html">Replies</a>
+          <a href="data.html">Data Room</a>
+        </div>
+      </nav>
+    </header>
+
+    <main class="shell">
+      <section aria-labelledby="title">
+        <p class="eyebrow">Public Reviewer Checklist</p>
+        <h1 id="title">GCA Domain Email Evidence Checklist</h1>
+        <p class="lead">This public page mirrors the owner evidence checklist for activating <code>support@gcagochina.com</code> before the next BaseScan token profile resubmission. It does not publish private mailbox screenshots and does not claim the target mailbox is active yet.</p>
+        <div class="actions">
+          <a class="button primary" href="domain-email.html">Domain Email Plan</a>
+          <a class="button" href="basescan-remediation.html">BaseScan Remediation</a>
+          <a class="button" href="tim-chen.html">Tim Chen Profile</a>
+          <a class="button" href="platform-replies.html">Platform Replies</a>
+        </div>
+      </section>
+
+      <section class="facts" aria-label="Evidence checklist facts">
+        <div class="fact">
+          <span class="label">Status</span>
+          <span class="value pending">Blocked Until Evidence Collected</span>
+        </div>
+        <div class="fact">
+          <span class="label">Current Public Email</span>
+          <span class="value">GCAgochina@outlook.com</span>
+        </div>
+        <div class="fact">
+          <span class="label">Target Domain Email</span>
+          <span class="value pending">support@gcagochina.com</span>
+        </div>
+        <div class="fact">
+          <span class="label">Private Evidence Directory</span>
+          <span class="value">launch/domain_email_evidence</span>
+        </div>
+      </section>
+
+      <section class="section two" aria-label="Readiness and boundary">
+        <div class="panel notice">
+          <h2>Current Boundary</h2>
+          <p class="note">The active public contact remains <code>GCAgochina@outlook.com</code> until the domain mailbox can both receive external mail and send authenticated replies as <code>support@gcagochina.com</code>.</p>
+          <div class="list">
+            <div class="row"><span>Mailbox status</span><strong class="pending">Not active yet.</strong></div>
+            <div class="row"><span>BaseScan status</span><strong class="pending">Do not resubmit as ready until the final preflight passes.</strong></div>
+            <div class="row"><span>Private evidence</span><strong>Mailbox screenshots, DNS proof files, and message screenshots must stay local and git-ignored.</strong></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2>Reviewer Use</h2>
+          <p class="note">A reviewer can use this page to see the exact evidence gates GCA is collecting, without requiring private mailbox screenshots to be posted on the public website.</p>
+          <div class="list">
+            <div class="row"><span>Official plan</span><strong><a href="domain-email.html">domain-email.html</a></strong></div>
+            <div class="row"><span>BaseScan blocker</span><strong><a href="basescan-remediation.html">basescan-remediation.html</a></strong></div>
+            <div class="row"><span>Founder evidence</span><strong><a href="tim-chen.html">tim-chen.html</a></strong></div>
+            <div class="row"><span>Reply packet</span><strong><a href="platform-replies.html">platform-replies.html</a></strong></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="filesTitle">
+        <p class="eyebrow">Required Evidence Files</p>
+        <h2 id="filesTitle">Five Files To Save Privately Before Resubmission</h2>
+        <div class="list">
+          <div class="row"><span>Provider status</span><strong><code>domain-email-provider-active.png</code>: mail provider dashboard shows <code>support@gcagochina.com</code> as verified or active.</strong></div>
+          <div class="row"><span>DNS proof</span><strong><code>domain-email-dns-mx-spf-dkim-dmarc.txt</code>: MX, SPF, DKIM, and DMARC lookup proof is saved after propagation.</strong></div>
+          <div class="row"><span>Inbound proof</span><strong><code>domain-email-inbound-test.png</code>: inbound test from Gmail or Outlook to <code>support@gcagochina.com</code> is received.</strong></div>
+          <div class="row"><span>Outbound proof</span><strong><code>domain-email-outbound-test.png</code>: outbound reply from <code>support@gcagochina.com</code> shows the visible domain sender.</strong></div>
+          <div class="row"><span>Website proof</span><strong><code>support-page-domain-email.png</code>: updated support page shows the same domain email used in the BaseScan form.</strong></div>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="stepsTitle">
+        <p class="eyebrow">Execution Order</p>
+        <h2 id="stepsTitle">Do These In Order</h2>
+        <ol>
+          <li>Choose a full mailbox provider that can receive and send as <code>support@gcagochina.com</code>.</li>
+          <li>Initialize the local evidence directory with the evidence packet tool.</li>
+          <li>Save provider proof showing <code>support@gcagochina.com</code> active or verified.</li>
+          <li>Add provider MX, SPF, DKIM, and DMARC DNS records exactly as supplied by the provider.</li>
+          <li>Save DNS proof after the read-only DNS checker reports <code>readyForBaseScanEmailEvidence</code> true.</li>
+          <li>Send an inbound test from Gmail or Outlook to <code>support@gcagochina.com</code> and save the received-message proof.</li>
+          <li>Reply from <code>support@gcagochina.com</code> back to Gmail or Outlook and save visible-sender proof.</li>
+          <li>Switch public support/BaseScan email values only after DNS and mail-flow evidence are complete.</li>
+          <li>Save <code>support-page-domain-email.png</code> showing the same domain email used in the BaseScan form.</li>
+          <li>Build <code>launch/domain_email_evidence_packet.json</code> and run the BaseScan resubmission preflight.</li>
+        </ol>
+      </section>
+
+      <section class="section panel" aria-labelledby="commandsTitle">
+        <p class="eyebrow">Operator Commands</p>
+        <h2 id="commandsTitle">Read-Only And Local Evidence Commands</h2>
+        <div class="list">
+          <div class="row"><span>Initialize evidence directory</span><strong><code>python3 tools/build_domain_email_evidence_packet.py --init-evidence-dir --evidence-dir launch/domain_email_evidence</code></strong></div>
+          <div class="row"><span>Check DNS</span><strong><code>python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox support --dkim-selector &lt;provider-selector&gt; --json</code></strong></div>
+          <div class="row"><span>Build evidence packet</span><strong><code>python3 tools/build_domain_email_evidence_packet.py --dkim-selector &lt;provider-selector&gt; --evidence-dir launch/domain_email_evidence --website-email-updated --output-json launch/domain_email_evidence_packet.json --output-md launch/domain_email_evidence_packet.md --json</code></strong></div>
+          <div class="row"><span>Final preflight</span><strong><code>python3 tools/check_basescan_resubmission_readiness.py --json --require-ready</code></strong></div>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="stopTitle">
+        <p class="eyebrow">Stop Conditions</p>
+        <h2 id="stopTitle">Do Not Submit BaseScan If Any Condition Is True</h2>
+        <ul>
+          <li><code>support@gcagochina.com</code> cannot receive external email.</li>
+          <li><code>support@gcagochina.com</code> cannot send authenticated replies with the visible sender set to the domain email.</li>
+          <li>MX, SPF, DKIM, and DMARC DNS checks are not ready.</li>
+          <li>Any required evidence file is missing.</li>
+          <li>Public support/BaseScan files still publish <code>GCAgochina@outlook.com</code> after the switch.</li>
+          <li>BaseScan resubmission preflight reports <code>readyForBaseScanResubmission</code> false.</li>
+        </ul>
+      </section>
+
+      <section class="section panel" aria-labelledby="boundariesTitle">
+        <p class="eyebrow">Boundaries</p>
+        <h2 id="boundariesTitle">What This Checklist Does Not Do</h2>
+        <div class="grid">
+          <div class="card">
+            <h3>No DNS Writes</h3>
+            <p class="note">The checklist does not write DNS records. The owner must enter provider records in the DNS host.</p>
+          </div>
+          <div class="card">
+            <h3>No Email Sending</h3>
+            <p class="note">The checklist does not send email or test mailbox flow automatically.</p>
+          </div>
+          <div class="card">
+            <h3>No BaseScan Submission</h3>
+            <p class="note">The checklist does not submit BaseScan requests or claim BaseScan approval.</p>
+          </div>
+          <div class="card">
+            <h3>No Wallet Actions</h3>
+            <p class="note">The checklist does not touch wallets, contracts, liquidity, private keys, or token transfers.</p>
+          </div>
+          <div class="card">
+            <h3>No Secret Storage</h3>
+            <p class="note">The checklist does not store mailbox passwords, API keys, DNS tokens, or private evidence in public files.</p>
+          </div>
+          <div class="card">
+            <h3>No Private Screenshot Publishing</h3>
+            <p class="note">Private mailbox screenshots and proof files must remain in the git-ignored evidence directory.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="shell">GCA domain email evidence checklist. The active public contact remains GCAgochina@outlook.com until domain email tests pass.</div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,110 @@
+{
+  "schema": "https://gcagochina.com/domain-email-evidence.json",
+  "pageUrl": "https://gcagochina.com/domain-email-evidence.html",
+  "lastUpdated": "2026-05-28",
+  "status": "blocked-until-domain-email-evidence-collected",
+  "project": "GCA",
+  "domain": "gcagochina.com",
+  "currentPublicEmail": "GCAgochina@outlook.com",
+  "targetDomainEmail": "support@gcagochina.com",
+  "evidenceDirectory": "launch/domain_email_evidence",
+  "evidenceDirectoryIgnoredByGit": true,
+  "publicSafe": true,
+  "privateEvidencePublished": false,
+  "baseScanUse": {
+    "purpose": "Public checklist for the private evidence packet required before the next clean BaseScan token profile resubmission.",
+    "readyForResubmission": false,
+    "reviewerPage": "https://gcagochina.com/domain-email-evidence.html",
+    "setupPlan": "https://gcagochina.com/domain-email.html",
+    "baseScanRemediation": "https://gcagochina.com/basescan-remediation.html",
+    "founderProfile": "https://gcagochina.com/tim-chen.html"
+  },
+  "requiredEvidenceFiles": [
+    {
+      "key": "providerActive",
+      "fileName": "domain-email-provider-active.png",
+      "path": "launch/domain_email_evidence/domain-email-provider-active.png",
+      "label": "Mail provider dashboard shows support@gcagochina.com as verified or active.",
+      "safeToCommit": false,
+      "keepPrivate": true
+    },
+    {
+      "key": "dnsProof",
+      "fileName": "domain-email-dns-mx-spf-dkim-dmarc.txt",
+      "path": "launch/domain_email_evidence/domain-email-dns-mx-spf-dkim-dmarc.txt",
+      "label": "MX, SPF, DKIM, and DMARC lookup proof is saved after propagation.",
+      "safeToCommit": false,
+      "keepPrivate": true
+    },
+    {
+      "key": "inboundTest",
+      "fileName": "domain-email-inbound-test.png",
+      "path": "launch/domain_email_evidence/domain-email-inbound-test.png",
+      "label": "Inbound test from Gmail or Outlook to support@gcagochina.com is received.",
+      "safeToCommit": false,
+      "keepPrivate": true
+    },
+    {
+      "key": "outboundTest",
+      "fileName": "domain-email-outbound-test.png",
+      "path": "launch/domain_email_evidence/domain-email-outbound-test.png",
+      "label": "Outbound reply from support@gcagochina.com shows the visible domain sender.",
+      "safeToCommit": false,
+      "keepPrivate": true
+    },
+    {
+      "key": "supportPageProof",
+      "fileName": "support-page-domain-email.png",
+      "path": "launch/domain_email_evidence/support-page-domain-email.png",
+      "label": "Updated support page shows the same domain email used in the BaseScan form.",
+      "safeToCommit": false,
+      "keepPrivate": true
+    }
+  ],
+  "stepsInOrder": [
+    "Choose a full mailbox provider that can receive and send as support@gcagochina.com.",
+    "Initialize the local evidence directory with the evidence packet tool.",
+    "Save provider proof showing support@gcagochina.com active or verified.",
+    "Add provider MX, SPF, DKIM, and DMARC DNS records exactly as supplied by the provider.",
+    "Save DNS proof after the read-only DNS checker reports readyForBaseScanEmailEvidence true.",
+    "Send an inbound test from Gmail or Outlook to support@gcagochina.com and save the received-message proof.",
+    "Reply from support@gcagochina.com back to Gmail or Outlook and save visible-sender proof.",
+    "Switch public support/BaseScan email values only after DNS and mail-flow evidence are complete.",
+    "Save support-page-domain-email.png showing the same domain email used in the BaseScan form.",
+    "Build launch/domain_email_evidence_packet.json and run the BaseScan resubmission preflight."
+  ],
+  "commands": {
+    "initEvidenceDirectory": "python3 tools/build_domain_email_evidence_packet.py --init-evidence-dir --evidence-dir launch/domain_email_evidence",
+    "dnsCheck": "python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox support --dkim-selector <provider-selector> --json",
+    "buildEvidencePacket": "python3 tools/build_domain_email_evidence_packet.py --dkim-selector <provider-selector> --evidence-dir launch/domain_email_evidence --website-email-updated --output-json launch/domain_email_evidence_packet.json --output-md launch/domain_email_evidence_packet.md --json",
+    "finalPreflight": "python3 tools/check_basescan_resubmission_readiness.py --json --require-ready"
+  },
+  "stopConditions": [
+    "support@gcagochina.com cannot receive external email.",
+    "support@gcagochina.com cannot send authenticated replies with the visible sender set to the domain email.",
+    "MX/SPF/DKIM/DMARC DNS checks are not ready.",
+    "Any required evidence file is missing.",
+    "Public support/BaseScan files still publish GCAgochina@outlook.com after the switch.",
+    "BaseScan resubmission preflight reports readyForBaseScanResubmission false."
+  ],
+  "boundaries": {
+    "writesDnsRecords": false,
+    "sendsEmail": false,
+    "submitsBaseScanRequest": false,
+    "touchesWalletsOrContracts": false,
+    "storesSecrets": false,
+    "commitsPrivateEvidence": false
+  },
+  "publicClaimBoundaries": [
+    "Do not claim support@gcagochina.com is active before inbound and outbound tests pass.",
+    "Do not claim BaseScan token profile approval before BaseScan publishes the profile.",
+    "Do not commit mailbox screenshots or private evidence files to the repository."
+  ],
+  "relatedPublicPages": {
+    "domainEmailPlan": "https://gcagochina.com/domain-email.html",
+    "baseScanRemediation": "https://gcagochina.com/basescan-remediation.html",
+    "founderProfile": "https://gcagochina.com/tim-chen.html",
+    "platformReplies": "https://gcagochina.com/platform-replies.html",
+    "dataRoom": "https://gcagochina.com/data.html"
+  }
+}

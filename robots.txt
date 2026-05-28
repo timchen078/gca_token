@@ -28,6 +28,8 @@ Allow: /tim-chen.html
 Allow: /tim-chen.json
 Allow: /domain-email.html
 Allow: /domain-email.json
+Allow: /domain-email-evidence.html
+Allow: /domain-email-evidence.json
 Allow: /basescan-remediation.html
 Allow: /basescan-remediation.json
 Allow: /action-plan.html

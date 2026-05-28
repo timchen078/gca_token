@@ -277,6 +277,28 @@
       "does not touch wallets or contracts"
     ]
   },
+  "operatorEvidenceChecklist": {
+    "pageUrl": "https://gcagochina.com/domain-email-evidence.html",
+    "jsonUrl": "https://gcagochina.com/domain-email-evidence.json",
+    "status": "blocked-until-domain-email-evidence-collected",
+    "purpose": "Public, reviewer-safe checklist for the private domain email evidence packet without publishing mailbox screenshots.",
+    "privateEvidenceDirectory": "launch/domain_email_evidence",
+    "requiredEvidenceFiles": [
+      "domain-email-provider-active.png",
+      "domain-email-dns-mx-spf-dkim-dmarc.txt",
+      "domain-email-inbound-test.png",
+      "domain-email-outbound-test.png",
+      "support-page-domain-email.png"
+    ],
+    "boundaries": [
+      "does not publish private mailbox screenshots",
+      "does not write DNS records",
+      "does not send email",
+      "does not submit BaseScan request",
+      "does not touch wallets or contracts",
+      "does not store secrets"
+    ]
+  },
   "operatorSwitchPlanBuilder": {
     "tool": "tools/build_domain_email_switch_plan.py",
     "command": "python3 tools/build_domain_email_switch_plan.py --json",
