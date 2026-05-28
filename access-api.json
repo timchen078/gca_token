@@ -633,6 +633,8 @@
         "digestGeneratedAt",
         "dailyOps",
         "dailyOps.baseScanPreflight",
+        "dailyOps.baseScanPreflight.oldEmailFilePaths",
+        "dailyOps.baseScanPreflight.missingTargetEmailFilePaths",
         "dailyOps.baseScanPreflight.snapshotAlignmentStatus",
         "dailyOps.baseScanPreflight.snapshotAlignmentStaleMarkers",
         "memberOps",

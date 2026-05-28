@@ -485,6 +485,14 @@
             <span class="value" id="digestBaseScanEmailSwitch">-</span>
           </div>
           <div class="fact">
+            <span class="label">Old email files</span>
+            <span class="value" id="digestBaseScanOldEmailFiles">0</span>
+          </div>
+          <div class="fact">
+            <span class="label">Missing target email files</span>
+            <span class="value" id="digestBaseScanMissingTargetFiles">0</span>
+          </div>
+          <div class="fact">
             <span class="label">DNS snapshot alignment</span>
             <span class="value" id="digestBaseScanSnapshotAlignment">-</span>
           </div>
@@ -783,6 +791,8 @@
       const digestPublicStatus = document.getElementById("digestPublicStatus");
       const digestBaseScanStatus = document.getElementById("digestBaseScanStatus");
       const digestBaseScanEmailSwitch = document.getElementById("digestBaseScanEmailSwitch");
+      const digestBaseScanOldEmailFiles = document.getElementById("digestBaseScanOldEmailFiles");
+      const digestBaseScanMissingTargetFiles = document.getElementById("digestBaseScanMissingTargetFiles");
       const digestBaseScanSnapshotAlignment = document.getElementById("digestBaseScanSnapshotAlignment");
       const digestBaseScanBlockers = document.getElementById("digestBaseScanBlockers");
       const digestMemberStatus = document.getElementById("digestMemberStatus");
@@ -890,6 +900,10 @@
           ? (baseScan.readyForBaseScanResubmission ? "ready" : "blocked")
           : "missing";
         digestBaseScanEmailSwitch.textContent = baseScan.publicEmailSwitchStatus || "-";
+        digestBaseScanOldEmailFiles.textContent = baseScan.filesStillUsingOldEmail ?? 0;
+        digestBaseScanMissingTargetFiles.textContent = Array.isArray(baseScan.missingTargetEmailFilePaths)
+          ? baseScan.missingTargetEmailFilePaths.length
+          : 0;
         digestBaseScanSnapshotAlignment.textContent = baseScan.snapshotAlignmentStatus || "-";
         digestBaseScanBlockers.textContent = Array.isArray(baseScan.missingOrBlockedRequirements)
           ? baseScan.missingOrBlockedRequirements.length
@@ -906,6 +920,8 @@
         digestPublicStatus.textContent = "-";
         digestBaseScanStatus.textContent = "-";
         digestBaseScanEmailSwitch.textContent = "-";
+        digestBaseScanOldEmailFiles.textContent = "0";
+        digestBaseScanMissingTargetFiles.textContent = "0";
         digestBaseScanSnapshotAlignment.textContent = "-";
         digestBaseScanBlockers.textContent = "0";
         digestMemberStatus.textContent = "-";
