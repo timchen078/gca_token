@@ -262,6 +262,14 @@
         margin-top: 5px;
       }
 
+      .bot-field {
+        position: absolute;
+        left: -10000px;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+      }
+
       .status {
         min-height: 44px;
         border: 1px solid var(--line);
@@ -372,6 +380,10 @@
               原因（可选）
               <input id="reason" name="reason" type="text" placeholder="例如 unsubscribe_request">
             </label>
+            <label class="bot-field" aria-hidden="true" tabindex="-1">
+              Website
+              <input id="website" name="website" type="text" autocomplete="off" tabindex="-1">
+            </label>
             <label class="check">
               <input id="suppression" name="suppression" type="checkbox" required>
               <span>我确认请求 GCA 将这个邮箱加入不再联系名单。</span>
@@ -422,6 +434,7 @@
           packetVersion: "gca_contact_suppression_v1",
           email,
           reason,
+          website: document.getElementById("website").value.trim(),
           source: "unsubscribe.html",
           acknowledgements: {
             contactSuppressionRequested: document.getElementById("suppression").checked,
