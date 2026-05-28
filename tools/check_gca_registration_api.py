@@ -126,6 +126,17 @@ def require(condition: bool, message: str) -> None:
         raise ApiCheckError(message)
 
 
+def require_honeypot_config(payload: dict[str, Any], context: str) -> None:
+    anti_spam = payload.get("antiSpam", {})
+    require(isinstance(anti_spam, dict), f"{context} must include antiSpam object")
+    require(
+        set(anti_spam.get("honeypotFields", [])) == {"website", "company", "homepage"},
+        f"{context} returned wrong honeypot fields",
+    )
+    require(anti_spam.get("rejectsFilledHoneypotFields") is True, f"{context} must reject filled honeypot fields")
+    require(anti_spam.get("rateLimitsStillRequired") is True, f"{context} must keep rate-limit boundary")
+
+
 def check_health(*, base_url: str, timeout: float, cafile: str, opener: Callable[..., Any]) -> dict[str, Any]:
     url = build_url(base_url, "/health")
     status, _, payload = http_json_request(url=url, timeout=timeout, cafile=cafile, opener=opener)
@@ -138,6 +149,7 @@ def check_health(*, base_url: str, timeout: float, cafile: str, opener: Callable
     require(payload.get("memberAccessVersion") == "gca_member_access_v1", "health endpoint returned wrong member access packet version")
     require(payload.get("chainId") == 8453, "health endpoint returned wrong chainId")
     require(payload.get("contractAddress") == "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6", "health endpoint returned wrong GCA contract")
+    require_honeypot_config(payload, "health endpoint")
     return {
         "id": "health",
         "ok": True,
@@ -149,6 +161,7 @@ def check_health(*, base_url: str, timeout: float, cafile: str, opener: Callable
         "memberAccessVersion": payload.get("memberAccessVersion"),
         "chainId": payload.get("chainId"),
         "contractAddress": payload.get("contractAddress"),
+        "antiSpamHoneypotFields": payload.get("antiSpam", {}).get("honeypotFields", []),
     }
 
 
@@ -225,6 +238,7 @@ def check_access_config(*, base_url: str, timeout: float, cafile: str, opener: C
     require(payload.get("boundaries", {}).get("automaticTokenTransfer") is False, "access config must not auto-transfer tokens")
     require(payload.get("thresholds", {}).get("holderBonusMinimumGca") == "10000", "access config holder threshold mismatch")
     require(payload.get("thresholds", {}).get("gcaMemberMinimumGca") == "1000000", "access config member threshold mismatch")
+    require_honeypot_config(payload, "access config")
     return {
         "id": "access-config",
         "ok": True,
@@ -232,6 +246,7 @@ def check_access_config(*, base_url: str, timeout: float, cafile: str, opener: C
         "memberAccessVersion": payload.get("memberAccessVersion"),
         "readOnlyWalletVerification": True,
         "automaticTokenTransfer": False,
+        "antiSpamHoneypotFields": payload.get("antiSpam", {}).get("honeypotFields", []),
     }
 
 

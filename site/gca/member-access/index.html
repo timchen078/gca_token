@@ -245,6 +245,14 @@
         margin-top: 14px;
       }
 
+      .bot-field {
+        position: absolute;
+        left: -10000px;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+      }
+
       label {
         font-size: 13px;
         font-weight: 800;
@@ -403,6 +411,10 @@
             <label for="evidenceTxHash">Public Evidence Transaction Hash</label>
             <input id="evidenceTxHash" type="text" autocomplete="off" placeholder="0x...">
           </div>
+          <div class="field bot-field" aria-hidden="true">
+            <label for="website">Website</label>
+            <input id="website" type="text" autocomplete="off" tabindex="-1">
+          </div>
           <div class="field">
             <label><input id="contactConsent" type="checkbox"> I agree GCA can contact this email about account, credits, and member review updates.</label>
             <label><input id="securityBoundary" type="checkbox"> I will not submit private keys, seed phrases, wallet passwords, exchange API secrets, withdrawal permission, or remote-control requests.</label>
@@ -473,6 +485,7 @@
       const walletAddress = document.getElementById("walletAddress");
       const holdingStartDate = document.getElementById("holdingStartDate");
       const evidenceTxHash = document.getElementById("evidenceTxHash");
+      const website = document.getElementById("website");
       const contactConsent = document.getElementById("contactConsent");
       const securityBoundary = document.getElementById("securityBoundary");
       const memberTerms = document.getElementById("memberTerms");
@@ -526,6 +539,7 @@
           source: "gca/member-access",
           language: "en",
           programIntent: "gca_member",
+          website: website.value.trim(),
           user: {
             email: email.value.trim(),
             displayName: displayName.value.trim(),

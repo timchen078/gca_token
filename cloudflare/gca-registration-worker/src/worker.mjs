@@ -25,6 +25,7 @@ const DEFAULT_ALLOWED_ORIGINS = [
 const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 const ADDRESS_RE = /^0x[a-fA-F0-9]{40}$/;
 const TX_HASH_RE = /^0x[a-fA-F0-9]{64}$/;
+const HONEYPOT_FIELDS = ["website", "company", "homepage"];
 const FORBIDDEN_KEY_PATTERNS = [
   "privatekey",
   "seedphrase",
@@ -122,6 +123,14 @@ function holdingDaysFromDate(value) {
   return Math.floor(diff / 86_400_000);
 }
 
+function rejectHoneypotFields(packet) {
+  for (const field of HONEYPOT_FIELDS) {
+    if (Object.prototype.hasOwnProperty.call(packet, field) && String(packet[field] || "").trim() !== "") {
+      throw new ApiError("bot trap field must be empty");
+    }
+  }
+}
+
 function balanceOfCalldata(wallet) {
   const normalized = normalizeWallet(wallet).replace(/^0x/, "");
   return `${BALANCE_OF_SELECTOR}${normalized.padStart(64, "0")}`;
@@ -189,6 +198,7 @@ async function readJsonRequest(request) {
   if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
     throw new ApiError("Request body must be a JSON object");
   }
+  rejectHoneypotFields(payload);
   rejectForbiddenKeys(payload);
   return payload;
 }
@@ -1111,6 +1121,11 @@ function accessConfig(origin, env) {
       creditLedgerAdmin: "/gca/credit-ledger",
       memberLedgerAdmin: "/gca/member-ledger"
     },
+    antiSpam: {
+      honeypotFields: HONEYPOT_FIELDS,
+      rejectsFilledHoneypotFields: true,
+      rateLimitsStillRequired: true
+    },
     thresholds: accessThresholds(),
     boundaries: accessBoundaries()
   }, 200, origin, env);
@@ -1211,7 +1226,12 @@ function health(origin, env) {
     chainId: CHAIN_ID,
     contractAddress: CONTRACT_ADDRESS,
     memberAccessLedger: "cloudflare-d1",
-    storage: "cloudflare-d1"
+    storage: "cloudflare-d1",
+    antiSpam: {
+      honeypotFields: HONEYPOT_FIELDS,
+      rejectsFilledHoneypotFields: true,
+      rateLimitsStillRequired: true
+    }
   }, 200, origin, env);
 }
 
@@ -1232,18 +1252,18 @@ export default {
       }
       if (url.pathname === "/gca/email-registrations") {
         if (request.method === "POST") {
-          return submitEmailRegistration(request, env, origin);
+          return await submitEmailRegistration(request, env, origin);
         }
         if (request.method === "GET") {
-          return listEmailRegistrations(request, env, origin);
+          return await listEmailRegistrations(request, env, origin);
         }
       }
       if (url.pathname === "/gca/wallet-verifications") {
         if (request.method === "POST") {
-          return submitWalletVerification(request, env, origin);
+          return await submitWalletVerification(request, env, origin);
         }
         if (request.method === "GET") {
-          return listMemberTable(
+          return await listMemberTable(
             request,
             env,
             origin,
@@ -1255,10 +1275,10 @@ export default {
       }
       if (url.pathname === "/gca/member-access") {
         if (request.method === "POST") {
-          return submitMemberAccess(request, env, origin);
+          return await submitMemberAccess(request, env, origin);
         }
         if (request.method === "GET") {
-          return listMemberTable(
+          return await listMemberTable(
             request,
             env,
             origin,
@@ -1272,7 +1292,7 @@ export default {
         }
       }
       if (url.pathname === "/gca/credit-ledger" && request.method === "GET") {
-        return listMemberTable(
+        return await listMemberTable(
           request,
           env,
           origin,
@@ -1282,7 +1302,7 @@ export default {
         );
       }
       if (url.pathname === "/gca/member-ledger" && request.method === "GET") {
-        return listMemberTable(
+        return await listMemberTable(
           request,
           env,
           origin,
@@ -1293,10 +1313,10 @@ export default {
       }
       if (url.pathname === "/gca/contact-suppressions") {
         if (request.method === "POST") {
-          return submitContactSuppression(request, env, origin);
+          return await submitContactSuppression(request, env, origin);
         }
         if (request.method === "GET") {
-          return listContactSuppressions(request, env, origin);
+          return await listContactSuppressions(request, env, origin);
         }
       }
       return jsonResponse({ ok: false, error: "not found" }, 404, origin, env);

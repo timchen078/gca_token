@@ -49,6 +49,8 @@ Member-access requests store:
 
 It does not collect wallet private keys, seed phrases, wallet passwords, exchange API secrets, withdrawal permissions, one-time codes, or remote-control access. It does not request wallet signatures or transactions for wallet verification. It does not automatically transfer GCA. The 10,000 GCA member benefit remains a manual reserve-wallet transfer review after eligibility is recorded.
 
+Public registration, contact-suppression, wallet-verification, and member-access submissions also include empty `website`, `company`, and `homepage` honeypot fields. Normal users never fill these fields; the Worker rejects any request where one of them contains content. This is a light anti-spam control and does not replace Cloudflare rate limits or future account-session CSRF controls.
+
 ## Deployed Cloudflare Resources
 
 - Worker: `gca-registration-api`
@@ -58,6 +60,7 @@ It does not collect wallet private keys, seed phrases, wallet passwords, exchang
 - Public site integration: `site/register.html`
 - Public contact suppression integration: `site/unsubscribe.html`
 - Public member access integration: `site/gca/member-access/index.html`
+- Public form anti-spam: empty `website`, `company`, and `homepage` honeypot fields rejected by the Worker
 - Admin read endpoint: `GET /gca/email-registrations`
 - Public contact suppression endpoint: `POST /gca/contact-suppressions`
 - Admin contact suppression endpoint: `GET /gca/contact-suppressions`

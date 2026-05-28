@@ -14,6 +14,11 @@ HEALTH_PAYLOAD = {
     "chainId": 8453,
     "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
     "storage": "cloudflare-d1",
+    "antiSpam": {
+        "honeypotFields": ["website", "company", "homepage"],
+        "rejectsFilledHoneypotFields": True,
+        "rateLimitsStillRequired": True,
+    },
 }
 
 ACCESS_CONFIG_PAYLOAD = {
@@ -27,6 +32,11 @@ ACCESS_CONFIG_PAYLOAD = {
     "boundaries": {
         "readOnlyWalletVerification": True,
         "automaticTokenTransfer": False,
+    },
+    "antiSpam": {
+        "honeypotFields": ["website", "company", "homepage"],
+        "rejectsFilledHoneypotFields": True,
+        "rateLimitsStillRequired": True,
     },
 }
 
@@ -131,6 +141,7 @@ class GcaRegistrationApiCheckTests(unittest.TestCase):
         self.assertEqual(len(result["checks"]), 18)
         self.assertTrue(any(item["id"] == "admin-email-registrations-read" for item in result["checks"]))
         self.assertTrue(any(item["id"] == "admin-member-ledger-read" for item in result["checks"]))
+        self.assertTrue(any(item.get("antiSpamHoneypotFields") == ["website", "company", "homepage"] for item in result["checks"]))
         serialized = json.dumps(result)
         self.assertNotIn("secret-token", serialized)
         self.assertNotIn("private-user@example.com", serialized)

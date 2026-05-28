@@ -289,6 +289,14 @@
         margin-top: 5px;
       }
 
+      .bot-field {
+        position: absolute;
+        left: -10000px;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+      }
+
       .status {
         min-height: 44px;
         border: 1px solid var(--line);
@@ -415,6 +423,10 @@
               昵称或备注（可选）
               <input id="displayName" name="displayName" type="text" autocomplete="name" placeholder="例如 Tim 或 Telegram 昵称">
             </label>
+            <label class="bot-field" aria-hidden="true" tabindex="-1">
+              Website
+              <input id="website" name="website" type="text" autocomplete="off" tabindex="-1">
+            </label>
             <label class="check">
               <input id="consent" name="consent" type="checkbox" required>
               <span>我同意 GCA 使用这个邮箱发送项目更新、会员入口上线通知、产品测试邀请和官方支持回访。</span>
@@ -481,6 +493,7 @@
           packetVersion: "gca_email_registration_v1",
           email,
           displayName,
+          website: document.getElementById("website").value.trim(),
           source: "register.html",
           language: "zh-CN",
           interests: ["gca_updates", "member_access", "product_test_invite"],

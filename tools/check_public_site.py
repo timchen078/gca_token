@@ -452,6 +452,8 @@ def validate_register_page(text: str) -> None:
         "Cloudflare Workers + D1 已上线",
         "接口状态见",
         "自动提交未完成",
+        "bot-field",
+        'website: document.getElementById("website").value.trim()',
         "GCAgochina@outlook.com",
         "Base Mainnet / chainId 8453",
         MAINNET_ADDRESS,
@@ -498,6 +500,8 @@ def validate_unsubscribe_page(text: str) -> None:
         "noSecretsNoCustody",
         "GCAgochina@outlook.com",
         "自动提交未完成",
+        "bot-field",
+        'website: document.getElementById("website").value.trim()',
         "私钥",
         "助记词",
         "交易所 API Secret",
@@ -3725,6 +3729,8 @@ def validate_member_access_page(text: str) -> None:
     assert_contains(text, "100 Web3 Radar utility credits", label)
     assert_contains(text, "credits ledger", label)
     assert_contains(text, "GCA Member ledger", label)
+    assert_contains(text, "bot-field", label)
+    assert_contains(text, "website: website.value.trim()", label)
     assert_contains(text, "not automatic", label)
     assert_contains(text, "manual reserve-wallet transfer review", label)
     assert_platform_only_data_room(
@@ -6109,6 +6115,7 @@ def validate_access_api_page(text: str) -> None:
     assert_contains(text, "token-protected admin reads for account-level ledger routes", label)
     assert_contains(text, "ADMIN_READ_TOKEN protected operator read", label)
     assert_contains(text, "CSRF protection", label)
+    assert_contains(text, "website / company / homepage honeypot bot-trap fields", label)
     assert_contains(text, "rate limits", label)
     assert_contains(text, "structured audit logs", label)
     assert_contains(text, "Private key or seed phrase", label)
@@ -6271,6 +6278,8 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong custom domain example config")
     if production_email_backend.get("publicWebsiteFallback") != "official-email-fallback":
         raise SiteCheckError(f"{label}: wrong public website fallback")
+    if set(production_email_backend.get("antiSpamHoneypotFields", [])) != {"website", "company", "homepage"}:
+        raise SiteCheckError(f"{label}: wrong anti-spam honeypot fields")
     for ledger in ("email_registrations", "pre_registrations", "wallet_verifications", "credit_ledger", "member_ledger", "member_benefit_transfers", "support_reviews"):
         if ledger not in local_backend.get("writesJsonlLedgers", []):
             raise SiteCheckError(f"{label}: missing local ledger {ledger}")
@@ -6278,6 +6287,7 @@ def validate_access_api_json(text: str) -> None:
         "controlledHttpsOriginRequired",
         "authenticatedAccountSessionRequired",
         "csrfProtectionRequiredForStateChangingRoutes",
+        "honeypotBotTrapFieldsEnabled",
         "rateLimitsRequired",
         "structuredAuditLogsRequired",
         "serverSideChainValidationRequired",
@@ -6348,6 +6358,7 @@ def validate_access_api_json(text: str) -> None:
     for expected_check in (
         "email must be valid and normalized",
         "no wallet address is required",
+        "website/company/homepage honeypot fields must be empty",
         "no credits, GCA Member status, or token transfer is automatically activated",
     ):
         if expected_check not in email_registration.get("serverChecks", []):
@@ -6368,6 +6379,7 @@ def validate_access_api_json(text: str) -> None:
     for expected_check in (
         "email must be valid and normalized",
         "suppression is idempotent by suppressionId",
+        "website/company/homepage honeypot fields must be empty",
         "no wallet address is required",
         "no credits, GCA Member status, or token transfer is changed",
     ):
@@ -6453,6 +6465,8 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing contract check")
     if "balance source must be read-only eth_call balanceOf" not in wallet.get("serverChecks", []):
         raise SiteCheckError(f"{label}: missing balance source check")
+    if "website/company/homepage honeypot fields must be empty" not in wallet.get("serverChecks", []):
+        raise SiteCheckError(f"{label}: missing wallet honeypot check")
     if payload.get("memberPacketVersion") != "gca_member_preregistration_v2":
         raise SiteCheckError(f"{label}: wrong top-level member packet version")
     if payload.get("emailRegistrationPacketVersion") != "gca_email_registration_v1":
@@ -6487,6 +6501,8 @@ def validate_access_api_json(text: str) -> None:
     ):
         if field not in member_access.get("requiredRequestFields", []):
             raise SiteCheckError(f"{label}: missing member access request field {field}")
+    if "website/company/homepage honeypot fields must be empty" not in member_access.get("serverChecks", []):
+        raise SiteCheckError(f"{label}: missing member access honeypot check")
     member_ledger = endpoint_map["GET /gca/member-ledger"]
     for field in (
         "holdingStartDate",

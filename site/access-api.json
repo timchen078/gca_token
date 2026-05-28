@@ -2,7 +2,7 @@
   "schema": "https://gcagochina.com/access-api.json",
   "pageUrl": "https://gcagochina.com/access-api.html",
   "status": "public-access-api-member-access-live",
-  "lastUpdated": "2026-05-20",
+  "lastUpdated": "2026-05-28",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "title": "GCA Access API Contract",
@@ -109,12 +109,18 @@
     "walletVerificationEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/wallet-verifications",
     "accessConfigEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/access-config",
     "adminCreditLedgerEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/credit-ledger",
-    "adminMemberLedgerEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/member-ledger"
+    "adminMemberLedgerEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/member-ledger",
+    "antiSpamHoneypotFields": [
+      "website",
+      "company",
+      "homepage"
+    ]
   },
   "securityModel": {
     "controlledHttpsOriginRequired": true,
     "authenticatedAccountSessionRequired": true,
     "csrfProtectionRequiredForStateChangingRoutes": true,
+    "honeypotBotTrapFieldsEnabled": true,
     "rateLimitsRequired": true,
     "structuredAuditLogsRequired": true,
     "serverSideChainValidationRequired": true,
@@ -165,6 +171,7 @@
       "serverChecks": [
         "email must be valid and normalized",
         "registration is idempotent by emailRegistrationId",
+        "website/company/homepage honeypot fields must be empty",
         "no wallet address is required",
         "no wallet signature, transaction, private key, seed phrase, exchange API secret, or withdrawal permission is requested",
         "no credits, GCA Member status, or token transfer is automatically activated"
@@ -228,6 +235,7 @@
       "serverChecks": [
         "email must be valid and normalized",
         "suppression is idempotent by suppressionId",
+        "website/company/homepage honeypot fields must be empty",
         "no wallet address is required",
         "no wallet signature, transaction, private key, seed phrase, exchange API secret, or withdrawal permission is requested",
         "no credits, GCA Member status, or token transfer is changed"
@@ -314,6 +322,12 @@
         "evidenceTxHash",
         "memberBenefitReviewEvidence"
       ],
+      "serverChecks": [
+        "email and wallet address are normalized",
+        "website/company/homepage honeypot fields must be empty",
+        "read-only wallet verification runs before ledger writes",
+        "no wallet signature, transaction, private key, seed phrase, exchange API secret, or withdrawal permission is requested"
+      ],
       "responseFields": [
         "account",
         "walletVerification",
@@ -345,6 +359,7 @@
         "chainId must be 8453",
         "contractAddress must be 0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
         "walletAddress must be a valid EVM address",
+        "website/company/homepage honeypot fields must be empty",
         "balance source must be read-only eth_call balanceOf"
       ],
       "responseFields": [
