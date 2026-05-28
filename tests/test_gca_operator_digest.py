@@ -123,6 +123,8 @@ class GcaOperatorDigestTests(unittest.TestCase):
                     "status": "blocked-before-basescan-resubmission",
                     "publicEmailSwitchStatus": "public-email-switched",
                     "filesStillUsingOldEmail": 0,
+                    "oldEmailFilePaths": [],
+                    "missingTargetEmailFilePaths": ["site/external-reviews.json"],
                     "snapshotAlignmentStatus": "stale-dns-snapshot-markers",
                     "snapshotAlignmentStaleMarkers": 2,
                     "snapshotAlignmentMissingCurrentDate": 1,
@@ -144,10 +146,55 @@ class GcaOperatorDigestTests(unittest.TestCase):
             self.assertEqual(preflight["snapshotAlignmentStatus"], "stale-dns-snapshot-markers")
             self.assertEqual(preflight["snapshotAlignmentStaleMarkers"], 2)
             self.assertEqual(preflight["snapshotAlignmentMissingCurrentDate"], 1)
+            self.assertEqual(preflight["missingTargetEmailFilePaths"], ["site/external-reviews.json"])
             self.assertTrue(any("DNS snapshot alignment" in action for action in digest["nextActions"]))
+            self.assertTrue(any("site/external-reviews.json" in action for action in digest["nextActions"]))
             rendered = markdown.read_text(encoding="utf-8")
             self.assertIn("DNS snapshot alignment", rendered)
             self.assertIn("Stale snapshot markers", rendered)
+            self.assertIn("Missing target-email files", rendered)
+
+    def test_build_digest_lists_old_email_switch_files(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            daily = root / "daily.json"
+            markdown = root / "digest.md"
+            json_output = root / "digest.json"
+            write_json(daily, {
+                "ok": True,
+                "packetVersion": "gca_daily_ops_summary_v1",
+                "generatedAt": "2026-05-20T16:00:00Z",
+                "includeMemberOps": False,
+                "includeHoldingReport": False,
+                "steps": [{"id": "basescan-resubmission-preflight-status", "ok": True, "returnCode": 0}],
+                "baseScanPreflight": {
+                    "available": True,
+                    "readyForBaseScanResubmission": False,
+                    "status": "blocked-before-basescan-resubmission",
+                    "publicEmailSwitchStatus": "public-email-switch-pending",
+                    "filesStillUsingOldEmail": 2,
+                    "oldEmailFilePaths": ["site/support.html", "site/project.json"],
+                    "missingTargetEmailFilePaths": [],
+                    "snapshotAlignmentStatus": "aligned",
+                    "snapshotAlignmentStaleMarkers": 0,
+                    "snapshotAlignmentMissingCurrentDate": 0,
+                    "missingOrBlockedRequirements": ["domain-email-public-switch-old-email"],
+                },
+            })
+
+            digest = build_operator_digest(
+                daily_summary=daily,
+                member_ops_summary=root / "missing-member.json",
+                support_queue_summary=root / "missing-support.json",
+                holding_summary=root / "missing-holding.json",
+                digest_output=markdown,
+                json_output=json_output,
+                generated_at="2026-05-20T16:02:00Z",
+            )
+
+            preflight = digest["dailyOps"]["baseScanPreflight"]
+            self.assertEqual(preflight["oldEmailFilePaths"], ["site/support.html", "site/project.json"])
+            self.assertTrue(any("site/support.html" in action for action in digest["nextActions"]))
 
     def test_digest_handles_missing_summaries_with_next_actions(self):
         with tempfile.TemporaryDirectory() as temp:

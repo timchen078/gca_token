@@ -1152,6 +1152,8 @@ class GcaMemberBackend:
                     "status": "missing",
                     "publicEmailSwitchStatus": "",
                     "filesStillUsingOldEmail": 0,
+                    "oldEmailFilePaths": [],
+                    "missingTargetEmailFilePaths": [],
                     "snapshotAlignmentStatus": "",
                     "snapshotAlignmentStaleMarkers": 0,
                     "snapshotAlignmentMissingCurrentDate": 0,
@@ -1276,6 +1278,16 @@ class GcaMemberBackend:
                     "status": safe_operator_text(base_scan.get("status"), 120),
                     "publicEmailSwitchStatus": safe_operator_text(base_scan.get("publicEmailSwitchStatus"), 120),
                     "filesStillUsingOldEmail": safe_operator_int(base_scan.get("filesStillUsingOldEmail")),
+                    "oldEmailFilePaths": [
+                        safe_operator_text(item, 160)
+                        for item in base_scan.get("oldEmailFilePaths", [])
+                        if str(item or "").strip()
+                    ][:20],
+                    "missingTargetEmailFilePaths": [
+                        safe_operator_text(item, 160)
+                        for item in base_scan.get("missingTargetEmailFilePaths", [])
+                        if str(item or "").strip()
+                    ][:20],
                     "snapshotAlignmentStatus": safe_operator_text(base_scan.get("snapshotAlignmentStatus"), 120),
                     "snapshotAlignmentStaleMarkers": safe_operator_int(base_scan.get("snapshotAlignmentStaleMarkers")),
                     "snapshotAlignmentMissingCurrentDate": safe_operator_int(base_scan.get("snapshotAlignmentMissingCurrentDate")),
@@ -1408,11 +1420,24 @@ class GcaMemberBackend:
             blocker_ids = {item for item in blockers if item}
             blocker_text = ", ".join(blockers[:5]) if blockers else "see BaseScan preflight summary"
             old_email_files = safe_operator_int(base_scan.get("filesStillUsingOldEmail"))
+            old_email_paths = [
+                safe_operator_text(item, 160)
+                for item in base_scan.get("oldEmailFilePaths", [])
+                if str(item or "").strip()
+            ][:5]
+            missing_target_paths = [
+                safe_operator_text(item, 160)
+                for item in base_scan.get("missingTargetEmailFilePaths", [])
+                if str(item or "").strip()
+            ][:5]
             stale_snapshot_files = safe_operator_int(base_scan.get("snapshotAlignmentStaleMarkers"))
             missing_snapshot_files = safe_operator_int(base_scan.get("snapshotAlignmentMissingCurrentDate"))
             suffix_parts = []
             if old_email_files:
-                suffix_parts.append(f"Public switch still has {old_email_files} old-email file(s).")
+                path_suffix = f" Example file(s): {', '.join(old_email_paths)}." if old_email_paths else ""
+                suffix_parts.append(f"Public switch still has {old_email_files} old-email file(s).{path_suffix}")
+            if missing_target_paths:
+                suffix_parts.append(f"Critical file(s) missing target domain email: {', '.join(missing_target_paths)}.")
             if stale_snapshot_files or missing_snapshot_files:
                 suffix_parts.append(
                     "DNS snapshot alignment has "

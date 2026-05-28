@@ -57,6 +57,12 @@ def as_bool(value: Any) -> bool:
     return value is True
 
 
+def as_string_list(value: Any, limit: int = 20) -> list[str]:
+    if not isinstance(value, list):
+        return []
+    return [str(item) for item in value if str(item or "").strip()][:limit]
+
+
 def file_status(path: Path, payload: dict[str, Any] | None) -> dict[str, Any]:
     return {
         "path": str(path),
@@ -82,6 +88,8 @@ def summarize_daily(payload: dict[str, Any] | None) -> dict[str, Any]:
                 "status": "missing",
                 "publicEmailSwitchStatus": "",
                 "filesStillUsingOldEmail": 0,
+                "oldEmailFilePaths": [],
+                "missingTargetEmailFilePaths": [],
                 "snapshotAlignmentStatus": "",
                 "snapshotAlignmentStaleMarkers": 0,
                 "snapshotAlignmentMissingCurrentDate": 0,
@@ -111,6 +119,8 @@ def summarize_daily(payload: dict[str, Any] | None) -> dict[str, Any]:
             "status": str(preflight.get("status") or ""),
             "publicEmailSwitchStatus": str(preflight.get("publicEmailSwitchStatus") or ""),
             "filesStillUsingOldEmail": as_int(preflight.get("filesStillUsingOldEmail")),
+            "oldEmailFilePaths": as_string_list(preflight.get("oldEmailFilePaths")),
+            "missingTargetEmailFilePaths": as_string_list(preflight.get("missingTargetEmailFilePaths")),
             "snapshotAlignmentStatus": str(preflight.get("snapshotAlignmentStatus") or ""),
             "snapshotAlignmentStaleMarkers": as_int(preflight.get("snapshotAlignmentStaleMarkers")),
             "snapshotAlignmentMissingCurrentDate": as_int(preflight.get("snapshotAlignmentMissingCurrentDate")),
@@ -221,6 +231,12 @@ def build_next_actions(daily: dict[str, Any], member_ops: dict[str, Any], suppor
             blocked = base_scan.get("missingOrBlockedRequirements") if isinstance(base_scan.get("missingOrBlockedRequirements"), list) else []
             blocked_text = ", ".join(str(item) for item in blocked[:5]) if blocked else "see BaseScan preflight summary"
             actions.append(f"Do not resubmit the BaseScan token profile yet; complete blocked item(s): {blocked_text}.")
+            old_email_paths = as_string_list(base_scan.get("oldEmailFilePaths"), limit=5)
+            missing_target_paths = as_string_list(base_scan.get("missingTargetEmailFilePaths"), limit=5)
+            if old_email_paths:
+                actions.append(f"After domain email evidence is ready, switch old email references in: {', '.join(old_email_paths)}.")
+            if missing_target_paths:
+                actions.append(f"Add the target domain email to critical file(s) before final switch verification: {', '.join(missing_target_paths)}.")
             if as_int(base_scan.get("snapshotAlignmentStaleMarkers")) or as_int(base_scan.get("snapshotAlignmentMissingCurrentDate")):
                 actions.append("Fix domain-email DNS snapshot alignment before reusing BaseScan or platform reply packets.")
 
@@ -286,6 +302,8 @@ def render_markdown(digest: dict[str, Any]) -> str:
         f"- Status: `{daily.get('baseScanPreflight', {}).get('status') or 'not available'}`",
         f"- Ready for resubmission: `{str(daily.get('baseScanPreflight', {}).get('readyForBaseScanResubmission')).lower()}`",
         f"- Public email switch: `{daily.get('baseScanPreflight', {}).get('publicEmailSwitchStatus') or 'not available'}`",
+        f"- Old-email files: `{daily.get('baseScanPreflight', {}).get('filesStillUsingOldEmail') or 0}`",
+        f"- Missing target-email files: `{len(daily.get('baseScanPreflight', {}).get('missingTargetEmailFilePaths') or [])}`",
         f"- DNS snapshot alignment: `{daily.get('baseScanPreflight', {}).get('snapshotAlignmentStatus') or 'not available'}`",
         f"- Stale snapshot markers: `{daily.get('baseScanPreflight', {}).get('snapshotAlignmentStaleMarkers') or 0}`",
         f"- Blocked requirements: `{len(daily.get('baseScanPreflight', {}).get('missingOrBlockedRequirements') or [])}`",

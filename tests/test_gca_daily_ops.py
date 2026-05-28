@@ -18,6 +18,26 @@ BASESCAN_BLOCKED_OUTPUT = json.dumps({
     "domainEmailPublicSwitchSummary": {
         "status": "public-email-switch-pending",
         "summary": {"filesStillUsingCurrentEmail": 3},
+        "records": [
+            {
+                "path": "site/support.html",
+                "status": "needs-switch",
+                "currentEmailOccurrences": 2,
+                "targetEmailOccurrences": 0,
+            },
+            {
+                "path": "site/project.json",
+                "status": "needs-switch",
+                "currentEmailOccurrences": 1,
+                "targetEmailOccurrences": 0,
+            },
+            {
+                "path": "site/external-reviews.json",
+                "status": "target-email-missing",
+                "currentEmailOccurrences": 0,
+                "targetEmailOccurrences": 0,
+            },
+        ],
     },
     "domainEmailSnapshotAlignmentSummary": {
         "status": "aligned",
@@ -87,6 +107,8 @@ class GcaDailyOpsTests(unittest.TestCase):
         self.assertEqual(summary["baseScanPreflight"]["status"], "blocked-before-basescan-resubmission")
         self.assertEqual(summary["baseScanPreflight"]["publicEmailSwitchStatus"], "public-email-switch-pending")
         self.assertEqual(summary["baseScanPreflight"]["filesStillUsingOldEmail"], 3)
+        self.assertEqual(summary["baseScanPreflight"]["oldEmailFilePaths"], ["site/support.html", "site/project.json"])
+        self.assertEqual(summary["baseScanPreflight"]["missingTargetEmailFilePaths"], ["site/external-reviews.json"])
         self.assertEqual(summary["baseScanPreflight"]["snapshotAlignmentStatus"], "aligned")
         self.assertEqual(summary["baseScanPreflight"]["snapshotAlignmentStaleMarkers"], 0)
         self.assertEqual(summary["baseScanPreflight"]["snapshotAlignmentMissingCurrentDate"], 0)
@@ -120,6 +142,8 @@ class GcaDailyOpsTests(unittest.TestCase):
         self.assertEqual(summary["baseScanPreflight"]["status"], "not-run")
         self.assertEqual(summary["baseScanPreflight"]["snapshotAlignmentStatus"], "")
         self.assertEqual(summary["baseScanPreflight"]["snapshotAlignmentStaleMarkers"], 0)
+        self.assertEqual(summary["baseScanPreflight"]["oldEmailFilePaths"], [])
+        self.assertEqual(summary["baseScanPreflight"]["missingTargetEmailFilePaths"], [])
 
     def test_daily_ops_summarizes_basescan_snapshot_alignment_status(self):
         def runner(command, cwd, timeout):

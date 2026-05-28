@@ -407,6 +407,8 @@ class GcaMemberBackendTests(unittest.TestCase):
                     "status": "blocked-before-basescan-resubmission",
                     "publicEmailSwitchStatus": "public-email-switch-pending",
                     "filesStillUsingOldEmail": 14,
+                    "oldEmailFilePaths": ["site/support.html", "site/project.json"],
+                    "missingTargetEmailFilePaths": ["site/external-reviews.json"],
                     "snapshotAlignmentStatus": "stale-dns-snapshot-markers",
                     "snapshotAlignmentStaleMarkers": 2,
                     "snapshotAlignmentMissingCurrentDate": 1,
@@ -451,6 +453,8 @@ class GcaMemberBackendTests(unittest.TestCase):
         self.assertFalse(digest["dailyOps"]["baseScanPreflight"]["readyForBaseScanResubmission"])
         self.assertEqual(digest["dailyOps"]["baseScanPreflight"]["status"], "blocked-before-basescan-resubmission")
         self.assertEqual(digest["dailyOps"]["baseScanPreflight"]["filesStillUsingOldEmail"], 14)
+        self.assertEqual(digest["dailyOps"]["baseScanPreflight"]["oldEmailFilePaths"], ["site/support.html", "site/project.json"])
+        self.assertEqual(digest["dailyOps"]["baseScanPreflight"]["missingTargetEmailFilePaths"], ["site/external-reviews.json"])
         self.assertEqual(digest["dailyOps"]["baseScanPreflight"]["snapshotAlignmentStatus"], "stale-dns-snapshot-markers")
         self.assertEqual(digest["dailyOps"]["baseScanPreflight"]["snapshotAlignmentStaleMarkers"], 2)
         self.assertEqual(digest["dailyOps"]["baseScanPreflight"]["snapshotAlignmentMissingCurrentDate"], 1)
@@ -497,6 +501,8 @@ class GcaMemberBackendTests(unittest.TestCase):
                     "status": "blocked-before-basescan-resubmission",
                     "publicEmailSwitchStatus": "public-email-switch-pending",
                     "filesStillUsingOldEmail": 14,
+                    "oldEmailFilePaths": ["site/support.html", "site/project.json"],
+                    "missingTargetEmailFilePaths": ["site/external-reviews.json"],
                     "snapshotAlignmentStatus": "stale-dns-snapshot-markers",
                     "snapshotAlignmentStaleMarkers": 2,
                     "snapshotAlignmentMissingCurrentDate": 1,
@@ -810,9 +816,11 @@ class GcaMemberBackendTests(unittest.TestCase):
                         "available": True,
                         "readyForBaseScanResubmission": False,
                         "status": "blocked-before-basescan-resubmission",
-                        "publicEmailSwitchStatus": "public-email-switch-pending",
-                        "filesStillUsingOldEmail": 14,
-                        "snapshotAlignmentStatus": "aligned",
+                    "publicEmailSwitchStatus": "public-email-switch-pending",
+                    "filesStillUsingOldEmail": 14,
+                    "oldEmailFilePaths": ["site/support.html"],
+                    "missingTargetEmailFilePaths": [],
+                    "snapshotAlignmentStatus": "aligned",
                         "snapshotAlignmentStaleMarkers": 0,
                         "snapshotAlignmentMissingCurrentDate": 0,
                         "missingOrBlockedRequirements": ["official-domain-email"],
@@ -837,6 +845,7 @@ class GcaMemberBackendTests(unittest.TestCase):
             self.assertEqual(digest["dailyOps"]["steps"][0]["id"], "public-site")
             self.assertEqual(digest["dailyOps"]["baseScanPreflight"]["status"], "blocked-before-basescan-resubmission")
             self.assertEqual(digest["dailyOps"]["baseScanPreflight"]["snapshotAlignmentStatus"], "aligned")
+            self.assertEqual(digest["dailyOps"]["baseScanPreflight"]["oldEmailFilePaths"], ["site/support.html"])
             self.assertEqual(digest["supportQueue"]["replyReadyRows"], 1)
             self.assertFalse(digest["boundaries"]["automaticTokenTransfer"])
 

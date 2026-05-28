@@ -76,6 +76,8 @@ def summarize_basescan_preflight(stdout: str) -> dict[str, Any]:
             "missingOrBlockedRequirements": [],
             "publicEmailSwitchStatus": "",
             "filesStillUsingOldEmail": 0,
+            "oldEmailFilePaths": [],
+            "missingTargetEmailFilePaths": [],
             "snapshotAlignmentStatus": "",
             "snapshotAlignmentStaleMarkers": 0,
             "snapshotAlignmentMissingCurrentDate": 0,
@@ -89,6 +91,8 @@ def summarize_basescan_preflight(stdout: str) -> dict[str, Any]:
             "missingOrBlockedRequirements": [],
             "publicEmailSwitchStatus": "",
             "filesStillUsingOldEmail": 0,
+            "oldEmailFilePaths": [],
+            "missingTargetEmailFilePaths": [],
             "snapshotAlignmentStatus": "",
             "snapshotAlignmentStaleMarkers": 0,
             "snapshotAlignmentMissingCurrentDate": 0,
@@ -97,6 +101,17 @@ def summarize_basescan_preflight(stdout: str) -> dict[str, Any]:
 
     switch = payload.get("domainEmailPublicSwitchSummary")
     switch_summary = switch.get("summary") if isinstance(switch, dict) and isinstance(switch.get("summary"), dict) else {}
+    switch_records = switch.get("records") if isinstance(switch, dict) and isinstance(switch.get("records"), list) else []
+    old_email_file_paths = [
+        str(record.get("path"))
+        for record in switch_records
+        if isinstance(record, dict) and record.get("currentEmailOccurrences", 0) and str(record.get("path") or "")
+    ]
+    missing_target_email_file_paths = [
+        str(record.get("path"))
+        for record in switch_records
+        if isinstance(record, dict) and record.get("status") == "target-email-missing" and str(record.get("path") or "")
+    ]
     snapshot = payload.get("domainEmailSnapshotAlignmentSummary")
     snapshot_summary = (
         snapshot.get("summary")
@@ -112,6 +127,8 @@ def summarize_basescan_preflight(stdout: str) -> dict[str, Any]:
         ],
         "publicEmailSwitchStatus": str(switch.get("status") or "") if isinstance(switch, dict) else "",
         "filesStillUsingOldEmail": switch_summary.get("filesStillUsingCurrentEmail", 0),
+        "oldEmailFilePaths": old_email_file_paths,
+        "missingTargetEmailFilePaths": missing_target_email_file_paths,
         "snapshotAlignmentStatus": str(snapshot.get("status") or "") if isinstance(snapshot, dict) else "",
         "snapshotAlignmentStaleMarkers": snapshot_summary.get("filesWithStaleSnapshotMarkers", 0),
         "snapshotAlignmentMissingCurrentDate": snapshot_summary.get("filesMissingCurrentSnapshotDate", 0),
@@ -160,6 +177,8 @@ def run_step(
                         "missingOrBlockedRequirements": [],
                         "publicEmailSwitchStatus": "",
                         "filesStillUsingOldEmail": 0,
+                        "oldEmailFilePaths": [],
+                        "missingTargetEmailFilePaths": [],
                         "snapshotAlignmentStatus": "",
                         "snapshotAlignmentStaleMarkers": 0,
                         "snapshotAlignmentMissingCurrentDate": 0,
@@ -309,6 +328,8 @@ def run_daily_ops(
             "missingOrBlockedRequirements": [],
             "publicEmailSwitchStatus": "",
             "filesStillUsingOldEmail": 0,
+            "oldEmailFilePaths": [],
+            "missingTargetEmailFilePaths": [],
             "snapshotAlignmentStatus": "",
             "snapshotAlignmentStaleMarkers": 0,
             "snapshotAlignmentMissingCurrentDate": 0,
