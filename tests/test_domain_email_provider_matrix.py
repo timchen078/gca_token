@@ -8,6 +8,7 @@ from pathlib import Path
 from tools.build_domain_email_provider_matrix import build_matrix, main, render_markdown
 
 
+ROOT = Path(__file__).resolve().parents[1]
 CONFIG = {
     "domain": "gcagochina.com",
     "currentPublicEmail": "GCAgochina@outlook.com",
@@ -82,6 +83,25 @@ class DomainEmailProviderMatrixTests(unittest.TestCase):
             self.assertIn("gca-domain-email-provider-matrix-v1", json_path.read_text(encoding="utf-8"))
             self.assertIn("GCA Domain Email Provider Decision Matrix", md_path.read_text(encoding="utf-8"))
             self.assertIn("not-sufficient-alone", output.getvalue())
+
+    def test_committed_owner_artifacts_are_available_for_next_basescan_step(self):
+        json_path = ROOT / "launch" / "domain_email_provider_matrix.json"
+        md_path = ROOT / "launch" / "domain_email_provider_matrix.md"
+
+        matrix = json.loads(json_path.read_text(encoding="utf-8"))
+        markdown = md_path.read_text(encoding="utf-8")
+
+        self.assertEqual(matrix["schema"], "gca-domain-email-provider-matrix-v1")
+        self.assertEqual(matrix["targetDomainEmail"], "support@gcagochina.com")
+        self.assertEqual(matrix["status"], "choose-full-mailbox-before-basescan-resubmission")
+        self.assertTrue(matrix["noLivePricing"])
+        self.assertFalse(matrix["boundaries"]["fetchesLivePrices"])
+        self.assertFalse(matrix["boundaries"]["writesDnsRecords"])
+        self.assertFalse(matrix["boundaries"]["submitsBaseScanRequest"])
+        self.assertIn("Zoho Mail or equivalent low-cost hosted mailbox", markdown)
+        self.assertIn("Cloudflare Email Routing only", markdown)
+        self.assertIn("not-sufficient-alone", markdown)
+        self.assertIn("tools/check_basescan_resubmission_readiness.py", markdown)
 
 
 if __name__ == "__main__":

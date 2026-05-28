@@ -1,0 +1,141 @@
+{
+  "boundaries": {
+    "fetchesLivePrices": false,
+    "sendsEmail": false,
+    "storesSecrets": false,
+    "submitsBaseScanRequest": false,
+    "touchesWalletsOrContracts": false,
+    "writesDnsRecords": false
+  },
+  "currentPublicEmail": "GCAgochina@outlook.com",
+  "decisionRule": "Choose the lowest-cost full mailbox path that can receive external mail, send authenticated external mail, publish MX/SPF/DKIM/DMARC, and produce evidence for support@gcagochina.com.",
+  "domain": "gcagochina.com",
+  "generatedAt": "2026-05-28T14:26:32Z",
+  "nextCommandsAfterProviderSetup": [
+    "python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox support --dkim-selector <provider-selector> --json",
+    "python3 tools/build_domain_email_evidence_packet.py --dkim-selector <provider-selector> --evidence-dir launch/domain_email_evidence --website-email-updated --output-json launch/domain_email_evidence_packet.json --output-md launch/domain_email_evidence_packet.md",
+    "python3 tools/build_domain_email_switch_plan.py --json",
+    "python3 tools/check_basescan_resubmission_readiness.py --json --require-ready",
+    "python3 tools/build_basescan_submission_package.py --json --require-ready --output-json launch/basescan_final_submission_package.json --output-md launch/basescan_final_submission_package.md"
+  ],
+  "noLivePricing": true,
+  "ownerQuestionsBeforePurchase": [
+    "Can the provider create support@gcagochina.com as a real mailbox or send-as identity?",
+    "Can the provider receive external mail at support@gcagochina.com?",
+    "Can the provider send replies where the visible sender is support@gcagochina.com?",
+    "Does the provider expose MX, SPF, DKIM, and DMARC setup steps for custom domains?",
+    "Can the owner access DNS for gcagochina.com to add those records?"
+  ],
+  "pricingNote": "This matrix intentionally does not publish live prices. Check provider dashboards directly before purchase because prices and plans can change.",
+  "providerOptions": [
+    {
+      "fit": "recommended-first-check",
+      "key": "zoho-mail",
+      "label": "Zoho Mail or equivalent low-cost hosted mailbox",
+      "mustProvide": [
+        "mailbox UI or authenticated outbound sending as support@gcagochina.com",
+        "inbound mail routing for gcagochina.com",
+        "provider MX records",
+        "provider SPF value",
+        "provider DKIM selector and record",
+        "DMARC guidance or starter record"
+      ],
+      "notEnoughIf": [
+        "only forwarding inbound mail",
+        "no outbound sender as support@gcagochina.com",
+        "no DKIM selector or no authenticated sending proof"
+      ],
+      "why": "Often suitable when the owner wants a lower-cost full mailbox path, provided it creates a real mailbox and publishes MX, SPF, DKIM, and DMARC."
+    },
+    {
+      "fit": "acceptable-full-mailbox",
+      "key": "google-workspace",
+      "label": "Google Workspace",
+      "mustProvide": [
+        "domain verification",
+        "Gmail mailbox for support@gcagochina.com",
+        "Google MX records",
+        "Google SPF include merged into one SPF record",
+        "Google DKIM selector and TXT record",
+        "DMARC TXT record"
+      ],
+      "notEnoughIf": [
+        "domain verification is incomplete",
+        "visible outbound sender is still a non-domain Gmail address"
+      ],
+      "why": "Acceptable if the custom domain is verified and the mailbox can send and receive as support@gcagochina.com with MX, SPF, DKIM, and DMARC configured."
+    },
+    {
+      "fit": "acceptable-full-mailbox",
+      "key": "microsoft-365",
+      "label": "Microsoft 365",
+      "mustProvide": [
+        "domain verification",
+        "Exchange mailbox or alias that sends as support@gcagochina.com",
+        "Microsoft MX record",
+        "Microsoft SPF include merged into one SPF record",
+        "Microsoft DKIM records",
+        "DMARC TXT record"
+      ],
+      "notEnoughIf": [
+        "support@gcagochina.com is only an unverified alias",
+        "outbound sender alignment is not visible in replies"
+      ],
+      "why": "Acceptable if the custom domain is verified and Outlook sends and receives as support@gcagochina.com with the required mail DNS records."
+    },
+    {
+      "fit": "not-sufficient-alone",
+      "key": "cloudflare-email-routing-only",
+      "label": "Cloudflare Email Routing only",
+      "mustProvide": [
+        "a separate authenticated outbound sending path if used",
+        "clear proof that replies visibly come from support@gcagochina.com"
+      ],
+      "notEnoughIf": [
+        "the setup only forwards inbound mail to Outlook or Gmail",
+        "BaseScan replies are still sent from GCAgochina@outlook.com"
+      ],
+      "why": "Useful for inbound forwarding, but receive-only routing does not prove outbound sender alignment for a clean BaseScan resubmission."
+    },
+    {
+      "fit": "not-sufficient-alone",
+      "key": "smtp-or-api-send-only",
+      "label": "Outbound SMTP/API only",
+      "mustProvide": [
+        "inbound mailbox or routing for support@gcagochina.com",
+        "authenticated outbound signing",
+        "message evidence for both directions"
+      ],
+      "notEnoughIf": [
+        "support@gcagochina.com cannot receive user or reviewer replies"
+      ],
+      "why": "Send-only services can help with authenticated outbound mail, but BaseScan also needs a contact path that receives external mail at the same domain address."
+    }
+  ],
+  "recommendedDefault": "Start by checking a low-cost full hosted mailbox such as Zoho Mail or an equivalent provider, then use Google Workspace or Microsoft 365 if you prefer those ecosystems.",
+  "recordsToCollectFromProvider": [
+    {
+      "doNotGuess": true,
+      "ownerInput": "copy provider host, value, and priority exactly",
+      "record": "MX"
+    },
+    {
+      "doNotGuess": true,
+      "ownerInput": "copy provider SPF include and merge into one root-domain v=spf1 record",
+      "record": "SPF"
+    },
+    {
+      "doNotGuess": true,
+      "ownerInput": "copy provider selector, record type, host, and value exactly",
+      "record": "DKIM"
+    },
+    {
+      "doNotGuess": false,
+      "ownerInput": "add _dmarc.gcagochina.com, starting with monitoring mode if needed",
+      "record": "DMARC"
+    }
+  ],
+  "schema": "gca-domain-email-provider-matrix-v1",
+  "status": "choose-full-mailbox-before-basescan-resubmission",
+  "targetDomainEmail": "support@gcagochina.com"
+}
