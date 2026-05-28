@@ -32,6 +32,8 @@ Allow: /domain-email-evidence.html
 Allow: /domain-email-evidence.json
 Allow: /basescan-remediation.html
 Allow: /basescan-remediation.json
+Allow: /basescan-preflight.html
+Allow: /basescan-preflight.json
 Allow: /action-plan.html
 Allow: /site-map.html
 Allow: /verify.html

@@ -1,0 +1,82 @@
+{
+  "schema": "https://gcagochina.com/basescan-preflight.json",
+  "pageUrl": "https://gcagochina.com/basescan-preflight.html",
+  "lastUpdated": "2026-05-28",
+  "projectName": "GCA",
+  "tokenSymbol": "GCA",
+  "network": "Base Mainnet",
+  "chainId": 8453,
+  "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+  "status": "blocked-domain-email-before-basescan-resubmission",
+  "readyForBaseScanResubmission": false,
+  "officialEmailCurrent": "GCAgochina@outlook.com",
+  "targetDomainEmail": "support@gcagochina.com",
+  "latestDnsSnapshot": {
+    "checkedAt": "2026-05-28T12:41:11Z",
+    "readyForBaseScanEmailEvidence": false,
+    "missingOrBlockedChecks": [
+      "mx",
+      "spf",
+      "dmarc",
+      "dkim"
+    ],
+    "checks": {
+      "mx": "missing",
+      "spf": "missing",
+      "dmarc": "missing",
+      "dkim": "selector-required"
+    }
+  },
+  "currentBlockers": [
+    "support@gcagochina.com is not yet proven as a working inbound and outbound mailbox.",
+    "MX, SPF, and DMARC are missing for gcagochina.com.",
+    "DKIM still requires the mailbox provider selector and value.",
+    "Public support and BaseScan values still use GCAgochina@outlook.com until the target mailbox is ready.",
+    "launch/domain_email_evidence_packet.json is not ready for final BaseScan submission evidence."
+  ],
+  "requiredInputsBeforeSubmission": [
+    "launch/basescan_resubmission_values.json marks nextSubmissionReady true and uses Base Mainnet / chainId 8453.",
+    "Domain email provider status, DNS lookup proof, inbound mail proof, outbound reply proof, and support-page proof are saved privately.",
+    "Public support/about/team/BaseScan values align to the activated project-domain mailbox after it works.",
+    "Domain email snapshot alignment points platform packets to the current DNS snapshot.",
+    "Reviewer URLs are reachable: team, Tim Chen, whitepaper, brand kit, support, GitHub, platform replies, and official market route."
+  ],
+  "commands": {
+    "dnsCheck": "python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox support --dkim-selector <provider-selector> --json",
+    "evidencePacket": "python3 tools/build_domain_email_evidence_packet.py --dkim-selector <provider-selector> --evidence-dir launch/domain_email_evidence --website-email-updated --output-json launch/domain_email_evidence_packet.json --output-md launch/domain_email_evidence_packet.md",
+    "publicSwitchCheck": "python3 tools/check_domain_email_public_switch.py --json --require-switched",
+    "snapshotAlignment": "python3 tools/check_domain_email_snapshot_alignment.py --json --require-aligned",
+    "baseScanPreflight": "python3 tools/check_basescan_resubmission_readiness.py --json --require-ready",
+    "finalDraft": "python3 tools/build_basescan_submission_package.py --json --require-ready --output-json launch/basescan_final_submission_package.json --output-md launch/basescan_final_submission_package.md"
+  },
+  "evidenceLinks": {
+    "timChenProfessionalProfile": "https://gcagochina.com/tim-chen.html",
+    "teamAnchor": "https://gcagochina.com/team.html#tim-chen",
+    "domainEmailPlan": "https://gcagochina.com/domain-email.html",
+    "domainEmailDnsWorksheet": "https://gcagochina.com/domain-email.html#worksheetTitle",
+    "domainEmailEvidenceChecklist": "https://gcagochina.com/domain-email-evidence.html",
+    "baseScanRemediation": "https://gcagochina.com/basescan-remediation.html",
+    "platformReplies": "https://gcagochina.com/platform-replies.html",
+    "whitepaper": "https://gcagochina.com/whitepaper.html",
+    "brandKit": "https://gcagochina.com/brand-kit.html",
+    "githubRepository": "https://github.com/timchen078/gca_token",
+    "officialMarketRoute": "https://gcagochina.com/markets.html"
+  },
+  "doNotSubmitUntil": [
+    "readyForBaseScanResubmission is true",
+    "readyForBaseScanEmailEvidence is true",
+    "readyForBaseScanPublicEmailAlignment is true",
+    "domain email snapshot alignment is current",
+    "final submission package builder runs without the DRAFT ONLY marker"
+  ],
+  "publicClaimBoundary": "BaseScan source verification and deployer-wallet ownership verification are complete; public token profile publication is not complete.",
+  "boundaries": {
+    "submitsBaseScanRequest": false,
+    "sendsEmail": false,
+    "writesDnsRecords": false,
+    "signsWalletMessages": false,
+    "touchesWalletsOrContracts": false,
+    "publishesPrivateMailboxScreenshots": false
+  },
+  "nextAction": "Activate and test support@gcagochina.com, collect DNS and mail-flow evidence, switch public email values only after the mailbox works, then run the read-only preflight before opening BaseScan."
+}
