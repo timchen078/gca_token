@@ -21,6 +21,8 @@
     "trustCenter": "https://gcagochina.com/trust.json",
     "domainEmailSetupPlanPage": "https://gcagochina.com/domain-email.html",
     "domainEmailSetupPlan": "https://gcagochina.com/domain-email.json",
+    "domainEmailEvidenceChecklistPage": "https://gcagochina.com/domain-email-evidence.html",
+    "domainEmailEvidenceChecklist": "https://gcagochina.com/domain-email-evidence.json",
     "brandKitPage": "https://gcagochina.com/brand-kit.html",
     "brandKit": "https://gcagochina.com/brand-kit.json",
     "onchainProofsPage": "https://gcagochina.com/onchain-proofs.html",
@@ -105,6 +107,7 @@
       "checkedAt": "2026-05-28T12:41:11Z",
       "snapshotPage": "https://gcagochina.com/domain-email.html#snapshotTitle",
       "evidencePacket": "https://gcagochina.com/domain-email.html#evidenceTitle",
+      "evidenceChecklist": "https://gcagochina.com/domain-email-evidence.html",
       "readyForBaseScanEmailEvidence": false,
       "checks": {
         "mx": "missing",
@@ -144,6 +147,7 @@
     "blockaidFollowup": "https://gcagochina.com/blockaid-followup.html",
     "domainEmailSetupPlan": "https://gcagochina.com/domain-email.html",
     "domainEmailDnsSnapshot": "https://gcagochina.com/domain-email.html#snapshotTitle",
+    "domainEmailEvidenceChecklist": "https://gcagochina.com/domain-email-evidence.html",
     "domainEmailActivationEvidencePacket": "https://gcagochina.com/domain-email.html#evidenceTitle",
     "liquidityStatement": "https://gcagochina.com/liquidity.html",
     "walletSecurityProfile": "https://gcagochina.com/.well-known/wallet-security.json",
@@ -242,8 +246,8 @@
       "Use the reviewer kit page and JSON when a platform asks for centralized public evidence.",
       "If a reviewer asks for local member-ledger evidence, export a public redacted review package and verify its digest before sharing.",
       "Do not send duplicate Blockaid reports unless Blockaid, MetaMask, or Uniswap asks for more information.",
-      "Use the domain email setup plan at https://gcagochina.com/domain-email.html; do not submit another BaseScan token update until the project-domain email is ready; the 2026-05-28 DNS snapshot shows MX/SPF/DMARC missing and DKIM selector required, so readyForBaseScanEmailEvidence is false.",
-      "After support@gcagochina.com is active, archive the activation evidence packet at https://gcagochina.com/domain-email.html#evidenceTitle and include the published Tim Chen professional profile URL when resubmitting.",
+      "Use the domain email setup plan at https://gcagochina.com/domain-email.html and the evidence checklist at https://gcagochina.com/domain-email-evidence.html; do not submit another BaseScan token update until the project-domain email is ready; the 2026-05-28 DNS snapshot shows MX/SPF/DMARC missing and DKIM selector required, so readyForBaseScanEmailEvidence is false.",
+      "After support@gcagochina.com is active, archive the activation evidence packet at https://gcagochina.com/domain-email.html#evidenceTitle, complete the public evidence checklist, and include the published Tim Chen professional profile URL when resubmitting.",
       "Keep the official GCA/USDT pool, logo, website, Telegram, X, and JSON links consistent."
     ]
   }
