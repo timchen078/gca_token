@@ -19,6 +19,8 @@
     "platformReplies": "https://gcagochina.com/platform-replies.json",
     "domainEmailSetupPlanPage": "https://gcagochina.com/domain-email.html",
     "domainEmailSetupPlan": "https://gcagochina.com/domain-email.json",
+    "domainEmailEvidenceChecklistPage": "https://gcagochina.com/domain-email-evidence.html",
+    "domainEmailEvidenceChecklist": "https://gcagochina.com/domain-email-evidence.json",
     "walletWarningEvidencePage": "https://gcagochina.com/wallet-warning.html",
     "walletWarningEvidence": "https://gcagochina.com/wallet-warning.json",
     "walletSecurityProfile": "https://gcagochina.com/.well-known/wallet-security.json",
@@ -70,6 +72,7 @@
       "checkedAt": "2026-05-28T12:41:11Z",
       "snapshotPage": "https://gcagochina.com/domain-email.html#snapshotTitle",
       "evidencePacket": "https://gcagochina.com/domain-email.html#evidenceTitle",
+      "evidenceChecklist": "https://gcagochina.com/domain-email-evidence.html",
       "readyForBaseScanEmailEvidence": false,
       "checks": {
         "mx": "missing",
@@ -184,7 +187,7 @@
   "safePublicClaims": [
     "GCA is deployed on Base Mainnet with fixed total supply.",
     "BaseScan source and deployer-wallet ownership verification are complete.",
-    "The domain email setup plan and latest DNS snapshot are published; support@gcagochina.com is not ready for BaseScan evidence until MX/SPF/DMARC/DKIM checks pass.",
+    "The domain email setup plan, public evidence checklist, and latest DNS snapshot are published; support@gcagochina.com is not ready for BaseScan evidence until MX/SPF/DMARC/DKIM checks pass.",
     "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool.",
     "GeckoTerminal token information was approved on 2026-05-11.",
     "Owner reported on 2026-05-14 that no wallet risk warning was visible in the tested wallet/DEX flow.",

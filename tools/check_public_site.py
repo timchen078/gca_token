@@ -3371,8 +3371,9 @@ def validate_listing_kit_page(text: str) -> None:
     assert_contains(text, "Official GCA/USDT route", label)
     assert_contains(text, "BaseScan", label)
     assert_contains(text, "returned again as information-insufficient on 2026-05-23", label)
-    assert_contains(text, "domain email setup plan and activation evidence packet are published", label)
+    assert_contains(text, "domain email setup plan, public evidence checklist, and activation evidence packet are published", label)
     assert_contains(text, "domain-email.html", label)
+    assert_contains(text, "domain-email-evidence.html", label)
     assert_contains(text, "GeckoTerminal", label)
     assert_contains(text, "Approved", label)
     assert_contains(text, "no completed third-party audit", label)
@@ -8069,6 +8070,12 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong domainEmailSetupPlan")
     if status.get("domainEmailSetupPlanData") != DOMAIN_EMAIL_URL:
         raise SiteCheckError(f"{label}: wrong domainEmailSetupPlanData")
+    if status.get("domainEmailEvidenceChecklist") != DOMAIN_EMAIL_EVIDENCE_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong domainEmailEvidenceChecklist")
+    if status.get("domainEmailEvidenceChecklistData") != DOMAIN_EMAIL_EVIDENCE_URL:
+        raise SiteCheckError(f"{label}: wrong domainEmailEvidenceChecklistData")
+    if "public evidence checklist" not in status.get("baseScanTokenProfileLastCheckedResult", ""):
+        raise SiteCheckError(f"{label}: missing domain email evidence checklist status")
     if status.get("timChenProfessionalProfile") != TIM_CHEN_PROFILE_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong Tim Chen professional profile")
     if status.get("geckoTerminalTokenInfo") != "approved-2026-05-11":
@@ -9533,9 +9540,11 @@ def validate_listing_readiness_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing BaseScan profile last checked evidence")
     if "domain email setup plan" not in base_scan_profile.get("evidence", ""):
         raise SiteCheckError(f"{label}: missing domain email setup evidence")
+    if "public evidence checklist" not in base_scan_profile.get("evidence", ""):
+        raise SiteCheckError(f"{label}: missing domain email evidence checklist")
     if "activation evidence packet" not in base_scan_profile.get("evidence", ""):
         raise SiteCheckError(f"{label}: missing domain email activation evidence packet")
-    if "Use the domain email setup plan at https://gcagochina.com/domain-email.html, then create and publish a working gcagochina.com domain email and archive the activation evidence packet before the next BaseScan submission." not in payload.get("nextActions", []):
+    if "Use the domain email setup plan at https://gcagochina.com/domain-email.html and evidence checklist at https://gcagochina.com/domain-email-evidence.html, then create and publish a working gcagochina.com domain email and archive the activation evidence packet before the next BaseScan submission." not in payload.get("nextActions", []):
         raise SiteCheckError(f"{label}: missing domain email setup next action")
     if "CoinGecko tracked listing request" not in payload.get("notReadyFor", []):
         raise SiteCheckError(f"{label}: missing CoinGecko defer boundary")
@@ -10578,6 +10587,8 @@ def validate_trust_json(text: str) -> None:
         "platformReplies": PLATFORM_REPLIES_URL,
         "domainEmailSetupPlanPage": DOMAIN_EMAIL_PAGE_URL,
         "domainEmailSetupPlan": DOMAIN_EMAIL_URL,
+        "domainEmailEvidenceChecklistPage": DOMAIN_EMAIL_EVIDENCE_PAGE_URL,
+        "domainEmailEvidenceChecklist": DOMAIN_EMAIL_EVIDENCE_URL,
         "walletWarningEvidence": WALLET_WARNING_URL,
         "blockaidFollowup": BLOCKAID_FOLLOWUP_URL,
         "walletSecurityProfile": WALLET_SECURITY_PROFILE_URL,
@@ -10624,6 +10635,8 @@ def validate_trust_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong domain email DNS snapshot page")
     if dns_snapshot.get("evidencePacket") != f"{DOMAIN_EMAIL_PAGE_URL}#evidenceTitle":
         raise SiteCheckError(f"{label}: wrong domain email evidence packet")
+    if dns_snapshot.get("evidenceChecklist") != DOMAIN_EMAIL_EVIDENCE_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong domain email evidence checklist")
     if dns_snapshot.get("checks", {}).get("mx") != "missing":
         raise SiteCheckError(f"{label}: missing MX blocker")
     if dns_snapshot.get("checks", {}).get("spf") != "missing":
@@ -10697,7 +10710,7 @@ def validate_trust_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong external-review domain email gate")
     if reviews.get("baseScanDomainEmailTarget") != "support@gcagochina.com":
         raise SiteCheckError(f"{label}: wrong external-review domain email target")
-    if "The domain email setup plan and latest DNS snapshot are published; support@gcagochina.com is not ready for BaseScan evidence until MX/SPF/DMARC/DKIM checks pass." not in payload.get("safePublicClaims", []):
+    if "The domain email setup plan, public evidence checklist, and latest DNS snapshot are published; support@gcagochina.com is not ready for BaseScan evidence until MX/SPF/DMARC/DKIM checks pass." not in payload.get("safePublicClaims", []):
         raise SiteCheckError(f"{label}: missing domain email safe claim")
     if "No third-party audit has been completed." not in payload.get("safePublicClaims", []):
         raise SiteCheckError(f"{label}: missing audit safe claim")
@@ -11083,8 +11096,10 @@ def validate_listing_readiness_page(text: str) -> None:
     assert_contains(text, "CoinGecko tracked listing request", label)
     assert_contains(text, "CoinMarketCap tracked listing request", label)
     assert_contains(text, "Returned again 2026-05-23; remediation required before next submission", label)
-    assert_contains(text, "Tim Chen profile published; domain email and evidence packet still required", label)
-    assert_contains(text, "Plan and evidence packet published; mailbox not active yet", label)
+    assert_contains(text, "Tim Chen profile and domain email evidence checklist published; working mailbox still required", label)
+    assert_contains(text, "Plan, public evidence checklist, and packet path published; mailbox not active yet", label)
+    assert_contains(text, "Domain Email Evidence Checklist", label)
+    assert_contains(text, "domain-email-evidence.html", label)
     assert_contains(text, "Tim Chen Professional Profile", label)
     assert_contains(text, "Approved 2026-05-11", label)
     assert_contains(text, "No artificial activity policy", label)

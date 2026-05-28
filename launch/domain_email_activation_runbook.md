@@ -10,6 +10,8 @@ This runbook is the owner-side checklist for activating a project-domain mailbox
 - Current public status: domain email setup plan published, mailbox not active yet
 - Public plan: `https://gcagochina.com/domain-email.html`
 - Public JSON: `https://gcagochina.com/domain-email.json`
+- Public evidence checklist: `https://gcagochina.com/domain-email-evidence.html`
+- Public evidence checklist JSON: `https://gcagochina.com/domain-email-evidence.json`
 - DNS checker: `tools/check_domain_email_dns.py`
 
 Do not claim that `support@gcagochina.com` is active until inbound mail, outbound authenticated sending, and public DNS authentication checks have all passed.
@@ -34,12 +36,13 @@ Use this short order when doing the actual mailbox work. Stop immediately if any
 
 1. Enable a full mailbox for `support@gcagochina.com` that receives external mail and sends authenticated replies from the same address.
 2. Save `domain-email-provider-active.png` showing the mailbox as active or verified in the provider dashboard.
-3. Build the DNS entry packet with the provider's exact MX, SPF, DKIM, and DMARC values before entering records.
-4. Enter MX, one merged SPF TXT record, DKIM with the exact provider selector, and DMARC at `_dmarc`.
-5. Run `python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox support --dkim-selector <provider-selector> --json` and save `domain-email-dns-mx-spf-dkim-dmarc.txt`.
-6. Save inbound and outbound mail evidence as `domain-email-inbound-test.png` and `domain-email-outbound-test.png`.
-7. Switch public support/BaseScan email values only after evidence is complete, then save `support-page-domain-email.png`.
-8. Run `python3 tools/check_basescan_resubmission_readiness.py --json --require-ready`. BaseScan can be resubmitted only when the preflight reports `readyForBaseScanResubmission` as true.
+3. Keep `https://gcagochina.com/domain-email-evidence.html` open while collecting owner proof files so public checklist status and private evidence stay aligned.
+4. Build the DNS entry packet with the provider's exact MX, SPF, DKIM, and DMARC values before entering records.
+5. Enter MX, one merged SPF TXT record, DKIM with the exact provider selector, and DMARC at `_dmarc`.
+6. Run `python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox support --dkim-selector <provider-selector> --json` and save `domain-email-dns-mx-spf-dkim-dmarc.txt`.
+7. Save inbound and outbound mail evidence as `domain-email-inbound-test.png` and `domain-email-outbound-test.png`.
+8. Switch public support/BaseScan email values only after evidence is complete, then save `support-page-domain-email.png`.
+9. Run `python3 tools/check_basescan_resubmission_readiness.py --json --require-ready`. BaseScan can be resubmitted only when the preflight reports `readyForBaseScanResubmission` as true.
 
 Stop conditions: any required evidence file is missing; DNS is not ready; outbound visible sender is not `support@gcagochina.com`; public files still publish `GCAgochina@outlook.com` after the switch; or BaseScan preflight fails.
 
@@ -128,7 +131,8 @@ python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox suppor
 8. Confirm the JSON output has `"readyForBaseScanEmailEvidence": true` and an empty `missingOrBlockedChecks` array.
 9. Send an inbound test from Gmail or Outlook to `support@gcagochina.com`.
 10. Reply from `support@gcagochina.com` back to Gmail or Outlook and confirm the visible sender is the domain mailbox.
-11. Save the activation evidence packet before changing public BaseScan form values.
+11. Cross-check the public evidence checklist at `https://gcagochina.com/domain-email-evidence.html`.
+12. Save the activation evidence packet before changing public BaseScan form values.
 
 ## Local Evidence Packet Builder
 

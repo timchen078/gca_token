@@ -37,9 +37,10 @@
 - Public whitepaper URL is live at `https://gcagochina.com/whitepaper.html`.
 - Current public contact email `GCAgochina@outlook.com` is published on the official website for data platform verification.
 - BaseScan token update was submitted with `cxy070800@gmail.com`, returned by BaseScan as information-insufficient on 2026-05-13, resubmitted on 2026-05-13, and returned again as information-insufficient on 2026-05-23.
-- BaseScan token profile remediation package is published; Tim Chen public professional profile evidence is now published, and the 2026-05-28 DNS snapshot shows MX/SPF/DMARC missing with DKIM selector required, so the next submission should wait until a project-domain email is ready.
+- BaseScan token profile remediation package is published; Tim Chen public professional profile evidence, domain email setup plan, public evidence checklist, and activation evidence packet path are now published, and the 2026-05-28 DNS snapshot shows MX/SPF/DMARC missing with DKIM selector required, so the next submission should wait until a project-domain email is ready.
 - Domain email DNS readiness checker prepared at `tools/check_domain_email_dns.py`; it checks public MX/SPF/DMARC/DKIM records only and does not send email, submit BaseScan requests, or touch wallets/contracts.
 - Domain email evidence packet builder prepared at `tools/build_domain_email_evidence_packet.py`; it combines DNS readiness with owner-saved provider, inbound, outbound, DNS, and website proof before marking BaseScan resubmission ready.
+- Public domain email evidence checklist is published at `https://gcagochina.com/domain-email-evidence.html` and `https://gcagochina.com/domain-email-evidence.json`; owner-side proof collection is still required before BaseScan resubmission.
 - BaseScan resubmission preflight checker prepared at `tools/check_basescan_resubmission_readiness.py`; it blocks resubmission unless BaseScan values, domain email evidence, and reviewer URLs are ready.
 - BaseScan final submission package builder prepared at `tools/build_basescan_submission_package.py`; it generates local JSON/Markdown form drafts only after the resubmission preflight passes.
 - Domain email activation runbook prepared at `launch/domain_email_activation_runbook.md`; it defines the owner-side mailbox activation, DNS-check, evidence-packet, public-site switch, and BaseScan resubmission gates.
@@ -129,7 +130,7 @@
 
 ## Needs Owner Input Or External Service
 
-- Use the domain email setup plan at `https://gcagochina.com/domain-email.html`, fix the 2026-05-28 DNS snapshot blockers at `https://gcagochina.com/domain-email.html#snapshotTitle` (MX/SPF/DMARC missing and DKIM selector required), create and publish a working `gcagochina.com` domain email, run `python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox support --dkim-selector <provider-selector> --json`, and archive the activation evidence packet before the next BaseScan submission.
+- Use the domain email setup plan at `https://gcagochina.com/domain-email.html` and public evidence checklist at `https://gcagochina.com/domain-email-evidence.html`, fix the 2026-05-28 DNS snapshot blockers at `https://gcagochina.com/domain-email.html#snapshotTitle` (MX/SPF/DMARC missing and DKIM selector required), create and publish a working `gcagochina.com` domain email, run `python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox support --dkim-selector <provider-selector> --json`, and archive the activation evidence packet before the next BaseScan submission.
 - Include the published Tim Chen professional profile URL `https://gcagochina.com/tim-chen.html`; add LinkedIn later only if BaseScan specifically requires a third-party social-network profile.
 - Use `launch/basescan_resubmission_package.md` and `launch/basescan_resubmission_values.json` as the record of the 2026-05-13 BaseScan token update resubmission.
 - Use `launch/external_review_followup_tracker.md` for BaseScan, Blockaid, GeckoTerminal, DEX Screener, CoinGecko, CoinMarketCap, and audit follow-up status before sending any new platform request.
