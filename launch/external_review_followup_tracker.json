@@ -55,14 +55,14 @@
       "returnReason": "information-insufficient",
       "replyInbox": "cxy070800@gmail.com",
       "resubmissionDate": "2026-05-13",
-      "lastCheckedDate": "2026-05-27",
-      "lastCheckedResult": "BaseScan returned the token profile update again as information-insufficient; Tim Chen official-domain professional profile evidence is now published, the domain email setup plan and activation evidence packet are published, and the 2026-05-27 DNS snapshot shows MX/SPF/DMARC missing and DKIM selector required, so readyForBaseScanEmailEvidence is false.",
+      "lastCheckedDate": "2026-05-28",
+      "lastCheckedResult": "BaseScan returned the token profile update again as information-insufficient; Tim Chen official-domain professional profile evidence is now published, the domain email setup plan and activation evidence packet are published, and the 2026-05-28 DNS snapshot shows MX/SPF/DMARC missing and DKIM selector required, so readyForBaseScanEmailEvidence is false.",
       "domainEmailSetupPlan": "https://gcagochina.com/domain-email.html",
       "domainEmailSetupPlanData": "https://gcagochina.com/domain-email.json",
       "domainEmailDnsWorksheet": "https://gcagochina.com/domain-email.html#worksheetTitle",
       "domainEmailDnsSnapshot": "https://gcagochina.com/domain-email.html#snapshotTitle",
       "domainEmailDnsReadiness": {
-        "checkedAt": "2026-05-27T07:30:47Z",
+        "checkedAt": "2026-05-28T12:41:11Z",
         "readyForBaseScanEmailEvidence": false,
         "checks": {
           "mx": "missing",
@@ -78,7 +78,7 @@
         ]
       },
       "domainEmailActivationEvidencePacket": "https://gcagochina.com/domain-email.html#evidenceTitle",
-      "nextAction": "Use the domain email setup plan, DNS Entry Worksheet, and launch/domain_email_activation_runbook.md; fix the 2026-05-27 DNS snapshot blockers; create and publish a working gcagochina.com domain email; run tools/check_domain_email_dns.py; archive the activation evidence packet; include the Tim Chen professional profile URL; rerun public-site checks; then resubmit through the official BaseScan form."
+      "nextAction": "Use the domain email setup plan, DNS Entry Worksheet, and launch/domain_email_activation_runbook.md; fix the 2026-05-28 DNS snapshot blockers; create and publish a working gcagochina.com domain email; run tools/check_domain_email_dns.py; archive the activation evidence packet; include the Tim Chen professional profile URL; rerun public-site checks; then resubmit through the official BaseScan form."
     },
     "blockaid": {
       "reportStatus": "owner-observed-no-warning-visible",
@@ -117,7 +117,7 @@
     "BaseScan source verification is complete.",
     "BaseScan deployer-wallet ownership verification is complete.",
     "The public BaseScan token profile update was returned again as information-insufficient on 2026-05-23; remediation is required before the next submission.",
-    "The BaseScan domain email evidence gate is blocked by the 2026-05-27 DNS snapshot: MX/SPF/DMARC missing and DKIM selector required.",
+    "The BaseScan domain email evidence gate is blocked by the 2026-05-28 DNS snapshot: MX/SPF/DMARC missing and DKIM selector required.",
     "GeckoTerminal token information was approved on 2026-05-11.",
     "Owner reported on 2026-05-14 that no wallet risk warning was visible in the tested wallet/DEX flow.",
     "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool.",

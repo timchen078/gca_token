@@ -14,7 +14,7 @@ This runbook is the owner-side checklist for activating a project-domain mailbox
 
 Do not claim that `support@gcagochina.com` is active until inbound mail, outbound authenticated sending, and public DNS authentication checks have all passed.
 
-## Latest Read-Only DNS Snapshot (2026-05-27)
+## Latest Read-Only DNS Snapshot (2026-05-28)
 
 Command run:
 
@@ -22,7 +22,7 @@ Command run:
 python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox support --json
 ```
 
-Checked at: `2026-05-27T11:36:50Z`.
+Checked at: `2026-05-28T12:41:11Z`.
 
 Result: `readyForBaseScanEmailEvidence` is false. Public DNS currently reports `missingOrBlockedChecks` as `["mx", "spf", "dmarc", "dkim"]`: MX is missing, SPF is missing, DMARC is missing, and DKIM is still `selector-required` because the mail provider selector has not been supplied.
 

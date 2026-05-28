@@ -46,13 +46,13 @@
   "resubmissionDate": "2026-05-13",
   "latestReturnNoticeDate": "2026-05-23",
   "reviewStatus": "remediation-required-before-next-submission",
-  "lastCheckedDate": "2026-05-27",
-  "lastCheckedResult": "BaseScan returned the token profile update again as information-insufficient; Tim Chen official-domain professional profile evidence is now published, the domain email setup plan and activation evidence packet are published, and the 2026-05-27 DNS snapshot shows MX/SPF/DMARC missing and DKIM selector required, so readyForBaseScanEmailEvidence is false.",
+  "lastCheckedDate": "2026-05-28",
+  "lastCheckedResult": "BaseScan returned the token profile update again as information-insufficient; Tim Chen official-domain professional profile evidence is now published, the domain email setup plan and activation evidence packet are published, and the 2026-05-28 DNS snapshot shows MX/SPF/DMARC missing and DKIM selector required, so readyForBaseScanEmailEvidence is false.",
   "domainEmailSetupPlanUrl": "https://gcagochina.com/domain-email.html",
   "domainEmailSetupPlanDataUrl": "https://gcagochina.com/domain-email.json",
   "domainEmailDnsSnapshotUrl": "https://gcagochina.com/domain-email.html#snapshotTitle",
   "domainEmailDnsReadiness": {
-    "checkedAt": "2026-05-27T07:30:47Z",
+    "checkedAt": "2026-05-28T12:41:11Z",
     "readyForBaseScanEmailEvidence": false,
     "checks": {
       "mx": "missing",
