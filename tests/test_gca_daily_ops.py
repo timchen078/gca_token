@@ -335,6 +335,9 @@ class GcaDailyOpsTests(unittest.TestCase):
             page = html_output.read_text(encoding="utf-8")
             self.assertEqual(payload["snapshotGeneratedAt"], summary["generatedAt"])
             self.assertEqual(payload["dailyOps"]["steps"][0]["command"], "python3 tools/check_public_site.py --base-url https://gcagochina.com/ --timeout 20")
+            self.assertEqual(payload["baseScanPreflight"]["oldEmailFilePaths"], ["site/support.html", "site/project.json"])
+            self.assertEqual(payload["baseScanPreflight"]["missingTargetEmailFilePaths"], ["site/external-reviews.json"])
+            self.assertEqual(payload["ownerActionQueue"][0]["id"], "activate-domain-mailbox")
             self.assertIn(summary["generatedAt"], page)
             self.assertNotIn("/Users/", json.dumps(payload))
             self.assertFalse(summary["boundaries"]["adminTokenPrinted"])
@@ -354,6 +357,13 @@ class GcaDailyOpsTests(unittest.TestCase):
                 "publicEmailSwitchStatus": "public-email-switch-pending",
                 "snapshotAlignmentStatus": "aligned",
                 "filesStillUsingOldEmail": 3,
+                "oldEmailFilePaths": [
+                    "site/support.html",
+                    "site/project.json",
+                    "/Users/abc/Desktop/gca_token/site/private.html",
+                    "../outside.json",
+                ],
+                "missingTargetEmailFilePaths": ["site/external-reviews.json"],
                 "missingOrBlockedRequirements": [
                     "official-domain-email",
                     "domain-email-public-switch-check",
@@ -397,12 +407,17 @@ class GcaDailyOpsTests(unittest.TestCase):
             self.assertEqual(payload["dailyOps"]["steps"][0]["command"], "python3 tools/check_public_site.py --base-url https://gcagochina.com/ --timeout 20")
             self.assertEqual(payload["dailyOps"]["steps"][2]["blocksSummaryOk"], False)
             self.assertEqual(payload["baseScanPreflight"]["filesStillUsingOldEmail"], 3)
+            self.assertEqual(payload["baseScanPreflight"]["oldEmailFilePaths"], ["site/support.html", "site/project.json"])
+            self.assertEqual(payload["baseScanPreflight"]["missingTargetEmailFilePaths"], ["site/external-reviews.json"])
+            self.assertEqual(payload["ownerActionQueue"][-1]["id"], "final-basescan-preflight")
             self.assertFalse(payload["boundaries"]["adminTokenPrinted"])
             self.assertFalse(payload["boundaries"]["userEmailsPrinted"])
             serialized = json_output.read_text(encoding="utf-8")
             page = html_output.read_text(encoding="utf-8")
             self.assertIn("2026-05-30T10:11:12Z", page)
             self.assertIn("<code>filesStillUsingOldEmail</code> as 3 tracked files", page)
+            self.assertIn("<code>site/support.html</code>", page)
+            self.assertIn("<code>site/external-reviews.json</code>", page)
             self.assertNotIn("/Users/abc", serialized)
             self.assertNotIn('href="daily-status.json"', page)
 

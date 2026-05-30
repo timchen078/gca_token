@@ -7240,6 +7240,8 @@ def validate_daily_status_page(text: str) -> None:
         "basescan-resubmission-preflight-status",
         "readyForBaseScanResubmission",
         "files publishing the old Outlook email",
+        "Old-email queue",
+        "Missing target-email queue",
         "GCAgochina@outlook.com",
         "support@gcagochina.com",
         "does not write production data",
@@ -7315,6 +7317,22 @@ def validate_daily_status_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong snapshot alignment status")
     if basescan.get("filesStillUsingOldEmail") != 15:
         raise SiteCheckError(f"{label}: wrong old-email file count")
+    if "site/support.html" not in basescan.get("oldEmailFilePaths", []):
+        raise SiteCheckError(f"{label}: missing public old-email queue path")
+    if not isinstance(basescan.get("missingTargetEmailFilePaths"), list):
+        raise SiteCheckError(f"{label}: missing target-email queue should be a list")
+    action_queue = payload.get("ownerActionQueue", [])
+    if not isinstance(action_queue, list) or len(action_queue) < 4:
+        raise SiteCheckError(f"{label}: missing owner action queue")
+    action_ids = {item.get("id") for item in action_queue if isinstance(item, dict)}
+    for action_id in (
+        "activate-domain-mailbox",
+        "complete-domain-email-evidence",
+        "switch-public-email-after-mailbox-live",
+        "final-basescan-preflight",
+    ):
+        if action_id not in action_ids:
+            raise SiteCheckError(f"{label}: missing owner action {action_id}")
     if basescan.get("targetDomainEmail") != "support@gcagochina.com":
         raise SiteCheckError(f"{label}: wrong target domain email")
     if basescan.get("currentPublicEmail") != "GCAgochina@outlook.com":

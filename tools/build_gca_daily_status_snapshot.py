@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+from html import escape
 import json
 import re
 import shlex
@@ -88,6 +89,44 @@ def public_step(step: dict[str, Any] | None) -> dict[str, Any]:
     }
 
 
+def public_relative_paths(paths: Any, *, limit: int = 30) -> list[str]:
+    if not isinstance(paths, list):
+        return []
+    safe_paths: list[str] = []
+    for item in paths:
+        value = str(item or "").strip()
+        if not value:
+            continue
+        normalized = value.replace("\\", "/")
+        parts = [part for part in normalized.split("/") if part]
+        if (
+            normalized.startswith("/")
+            or ":" in normalized
+            or ".." in parts
+            or normalized.startswith(("~", "$"))
+            or "/Users/" in normalized
+        ):
+            continue
+        if not normalized.startswith(("site/", "docs/", "launch/", "tools/")):
+            continue
+        if normalized not in safe_paths:
+            safe_paths.append(normalized)
+        if len(safe_paths) >= limit:
+            break
+    return safe_paths
+
+
+def format_path_queue(paths: list[str]) -> str:
+    if not paths:
+        return "No public relative files reported by the latest preflight."
+    visible = paths[:8]
+    rendered = ", ".join(f"<code>{escape(path)}</code>" for path in visible)
+    remaining = len(paths) - len(visible)
+    if remaining > 0:
+        rendered += f", and {remaining} more tracked file(s)"
+    return rendered
+
+
 def build_daily_status_payload(summary: dict[str, Any]) -> dict[str, Any]:
     generated_at = str(summary.get("generatedAt") or "")
     if not re.fullmatch(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z", generated_at):
@@ -101,6 +140,8 @@ def build_daily_status_payload(summary: dict[str, Any]) -> dict[str, Any]:
     missing_requirements = [
         str(item) for item in basescan.get("missingOrBlockedRequirements", []) if str(item)
     ]
+    old_email_paths = public_relative_paths(basescan.get("oldEmailFilePaths"))
+    missing_target_paths = public_relative_paths(basescan.get("missingTargetEmailFilePaths"))
 
     return {
         "schema": DAILY_STATUS_URL,
@@ -154,11 +195,39 @@ def build_daily_status_payload(summary: dict[str, Any]) -> dict[str, Any]:
             "publicEmailSwitchStatus": str(basescan.get("publicEmailSwitchStatus") or ""),
             "snapshotAlignmentStatus": str(basescan.get("snapshotAlignmentStatus") or ""),
             "filesStillUsingOldEmail": int(basescan.get("filesStillUsingOldEmail") or 0),
+            "oldEmailFilePaths": old_email_paths,
+            "missingTargetEmailFilePaths": missing_target_paths,
             "missingOrBlockedRequirements": missing_requirements,
             "nextAction": str(basescan.get("nextAction") or ""),
             "targetDomainEmail": TARGET_DOMAIN_EMAIL,
             "currentPublicEmail": CURRENT_PUBLIC_EMAIL,
         },
+        "ownerActionQueue": [
+            {
+                "id": "activate-domain-mailbox",
+                "status": "owner-action-required",
+                "action": "Create and test support@gcagochina.com with working inbound and outbound mail.",
+                "publicEvidenceUrl": "https://gcagochina.com/domain-email.html",
+            },
+            {
+                "id": "complete-domain-email-evidence",
+                "status": "owner-action-required",
+                "action": "Add MX, SPF, DKIM, and DMARC records, then collect provider, inbound, outbound, DNS, and website evidence.",
+                "publicEvidenceUrl": "https://gcagochina.com/domain-email-evidence.html",
+            },
+            {
+                "id": "switch-public-email-after-mailbox-live",
+                "status": "deferred-until-mailbox-ready",
+                "action": "After the mailbox evidence passes, switch tracked public files from the Outlook email to support@gcagochina.com in one controlled pass.",
+                "publicEvidenceUrl": "https://gcagochina.com/daily-status.html",
+            },
+            {
+                "id": "final-basescan-preflight",
+                "status": "blocked-until-domain-email-ready",
+                "action": "Run tools/check_basescan_resubmission_readiness.py --json --require-ready before preparing another BaseScan submission.",
+                "publicEvidenceUrl": "https://gcagochina.com/basescan-preflight.html",
+            },
+        ],
         "safePublicSummary": [
             "The public GCA website check passed on the latest daily ops snapshot.",
             "The public registration API check passed without secrets and without writing test records.",
@@ -198,7 +267,10 @@ def replace_once(text: str, pattern: str, replacement: str, label: str) -> str:
 def update_daily_status_html(template: str, payload: dict[str, Any]) -> str:
     generated_at = str(payload["snapshotGeneratedAt"])
     last_updated = str(payload["lastUpdated"])
-    old_email_count = int(payload["baseScanPreflight"]["filesStillUsingOldEmail"])
+    basescan = payload["baseScanPreflight"]
+    old_email_count = int(basescan["filesStillUsingOldEmail"])
+    old_email_queue = format_path_queue(list(basescan.get("oldEmailFilePaths", [])))
+    missing_target_queue = format_path_queue(list(basescan.get("missingTargetEmailFilePaths", [])))
     text = replace_once(
         template,
         r"Daily Ops Snapshot / \d{4}-\d{2}-\d{2}",
@@ -216,6 +288,18 @@ def update_daily_status_html(template: str, payload: dict[str, Any]) -> str:
         r"<code>filesStillUsingOldEmail</code> as \d+ tracked files",
         f"<code>filesStillUsingOldEmail</code> as {old_email_count} tracked files",
         "old email count",
+    )
+    text = replace_once(
+        text,
+        r"<div class=\"row\"><span>Old-email queue</span><strong>[\s\S]*?</strong></div>",
+        f"<div class=\"row\"><span>Old-email queue</span><strong>{old_email_queue}</strong></div>",
+        "old email queue",
+    )
+    text = replace_once(
+        text,
+        r"<div class=\"row\"><span>Missing target-email queue</span><strong>[\s\S]*?</strong></div>",
+        f"<div class=\"row\"><span>Missing target-email queue</span><strong>{missing_target_queue}</strong></div>",
+        "missing target email queue",
     )
     return text
 
