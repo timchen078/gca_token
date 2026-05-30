@@ -333,6 +333,7 @@
           <a class="button primary" href="domain-email.html#worksheetTitle">打开英文 DNS Worksheet</a>
           <a class="button primary" href="domain-email-evidence.html">打开公开证据清单</a>
           <a class="button primary" href="zh-basescan-preflight.html">打开中文 BaseScan 预检</a>
+          <a class="button secondary" href="basescan-handoff.html">BaseScan Handoff</a>
           <a class="button secondary" href="daily-status.html">每日状态队列</a>
           <a class="button secondary" href="action-plan.html">下一步计划</a>
           <a class="button secondary" href="basescan-remediation.html">BaseScan 整改页</a>
@@ -493,6 +494,7 @@
           <div class="row"><span>公开邮箱切换检查</span><strong><code>python3 tools/check_domain_email_public_switch.py --json --require-switched</code></strong></div>
           <div class="row"><span>BaseScan 预检</span><strong><code>python3 tools/check_basescan_resubmission_readiness.py --json --require-ready</code></strong></div>
           <div class="row"><span>中文预检页</span><strong><a href="zh-basescan-preflight.html">zh-basescan-preflight.html</a> 用中文解释何时可以重提，何时必须停下。</strong></div>
+          <div class="row"><span>审核交接页</span><strong><a href="basescan-handoff.html">basescan-handoff.html</a> 是给 BaseScan 审核员看的完整证据索引；邮箱没通过前只作为 blocked handoff 使用。</strong></div>
           <div class="row"><span>最终表单草稿</span><strong><code>python3 tools/build_basescan_submission_package.py --json --require-ready --output-json launch/basescan_final_submission_package.json --output-md launch/basescan_final_submission_package.md</code></strong></div>
         </div>
         <p class="note">这些命令都是本地或只读检查；不会提交 BaseScan，不会发送邮件，不会写 DNS，不会操作钱包或合约。</p>
