@@ -338,6 +338,7 @@
             <div class="row"><span>DNS 证据</span><strong>2026-05-30 快照：MX missing、SPF missing、DMARC missing，DKIM selector required。</strong></div>
             <div class="row"><span>公开邮箱一致性</span><strong>官网支持页和 BaseScan 表单值仍应使用 <code>GCAgochina@outlook.com</code>，直到目标邮箱真的通过。</strong></div>
             <div class="row"><span>证据包</span><strong><code>launch/domain_email_evidence_packet.json</code> 还不能作为最终 BaseScan 复审证据。</strong></div>
+            <div class="row"><span>Reviewer checklist</span><strong>当前已生成 <code>launch/basescan_reviewer_checklist.json</code> 和 <code>launch/basescan_reviewer_checklist.md</code>，但状态仍是 blocked；唯一明确 blocker 是 <code>sender-domain-email</code>。</strong></div>
             <div class="row"><span>最终表单</span><strong>只有预检显示 <code>readyForBaseScanResubmission</code> true 后，才准备一份 clean resubmission。</strong></div>
           </div>
         </div>
@@ -379,7 +380,11 @@
             <p class="note"><code>python3 tools/check_basescan_resubmission_readiness.py --json --require-ready</code></p>
           </div>
           <div class="card">
-            <h3>6. 最终表单草稿</h3>
+            <h3>6. Reviewer checklist</h3>
+            <p class="note"><code>python3 tools/build_basescan_reviewer_checklist.py --markdown</code>。如果仍显示 <code>sender-domain-email</code>，说明还不能重提。</p>
+          </div>
+          <div class="card">
+            <h3>7. 最终表单草稿</h3>
             <p class="note"><code>python3 tools/build_basescan_submission_package.py --json --require-ready --output-json launch/basescan_final_submission_package.json --output-md launch/basescan_final_submission_package.md</code></p>
           </div>
         </div>
