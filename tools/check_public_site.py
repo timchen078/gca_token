@@ -568,6 +568,14 @@ def validate_status_page(text: str) -> None:
     assert_contains(text, "about.html", label)
     assert_contains(text, "Action Plan", label)
     assert_contains(text, "action-plan.html", label)
+    assert_contains(text, "Daily Status Queue", label)
+    assert_contains(text, "daily-status.html", label)
+    assert_contains(text, "Daily public status snapshot", label)
+    assert_contains(text, "Published with BaseScan owner action queue", label)
+    assert_contains(text, "Daily status action queue", label)
+    assert_contains(text, "ownerActionQueue", label)
+    assert_contains(text, "filesStillUsingOldEmail", label)
+    assert_contains(text, "15 tracked files", label)
     assert_contains(text, "中文入口", label)
     assert_contains(text, "zh-cn.html", label)
     assert_contains(text, "Contract source verified on BaseScan", label)
@@ -1907,6 +1915,13 @@ def validate_zh_status_page(text: str) -> None:
         "zh-domain-email.html",
         "中文 BaseScan 预检",
         "zh-basescan-preflight.html",
+        "每日状态队列",
+        "daily-status.html",
+        "下一步计划",
+        "action-plan.html",
+        "ownerActionQueue",
+        "旧邮箱切换队列",
+        "filesStillUsingOldEmail",
         "公开证据清单",
         "domain-email-evidence.html",
         "已通过 2026-05-11",
