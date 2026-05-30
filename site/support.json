@@ -149,6 +149,8 @@
     "operationsRunbook": "https://gcagochina.com/operations.json",
     "reviewerKitPage": "https://gcagochina.com/reviewer-kit.html",
     "reviewerKit": "https://gcagochina.com/reviewer-kit.json",
+    "baseScanHandoffPage": "https://gcagochina.com/basescan-handoff.html",
+    "baseScanHandoff": "https://gcagochina.com/basescan-handoff.json",
     "platformRepliesPage": "https://gcagochina.com/platform-replies.html",
     "platformReplies": "https://gcagochina.com/platform-replies.json"
   }

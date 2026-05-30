@@ -43,6 +43,8 @@ BASESCAN_REMEDIATION_PAGE_URL = "https://gcagochina.com/basescan-remediation.htm
 BASESCAN_REMEDIATION_URL = "https://gcagochina.com/basescan-remediation.json"
 BASESCAN_PREFLIGHT_PAGE_URL = "https://gcagochina.com/basescan-preflight.html"
 BASESCAN_PREFLIGHT_URL = "https://gcagochina.com/basescan-preflight.json"
+BASESCAN_HANDOFF_PAGE_URL = "https://gcagochina.com/basescan-handoff.html"
+BASESCAN_HANDOFF_URL = "https://gcagochina.com/basescan-handoff.json"
 GITHUB_REPO_URL = "https://github.com/timchen078/gca_token"
 ZH_CN_PAGE_URL = "https://gcagochina.com/zh-cn.html"
 ZH_BUY_PAGE_URL = "https://gcagochina.com/zh-buy.html"
@@ -1518,6 +1520,144 @@ def validate_basescan_preflight_json(text: str) -> None:
         "signsWalletMessages",
         "touchesWalletsOrContracts",
         "publishesPrivateMailboxScreenshots",
+    ):
+        if boundaries.get(key) is not False:
+            raise SiteCheckError(f"{label}: boundary {key} must be false")
+    assert_no_forbidden_public_claims(json.dumps(payload), label)
+
+
+def validate_basescan_handoff_page(text: str) -> None:
+    label = "/basescan-handoff.html"
+    assert_social_preview_meta(text, label, BASESCAN_HANDOFF_PAGE_URL)
+    for expected in (
+        "GCA BaseScan Handoff",
+        "BaseScan Evidence Index",
+        "Ready For Resubmission",
+        "No",
+        "support@gcagochina.com",
+        "GCAgochina@outlook.com",
+        "readyForBaseScanResubmission",
+        "Do not resubmit BaseScan yet",
+        "BaseScan source verification",
+        "Deployer-wallet ownership verification",
+        "Returned again as information-insufficient on 2026-05-23",
+        "2026-05-30: MX/SPF/DMARC missing; DKIM selector required",
+        "Team Transparency",
+        "Project Clarity",
+        "Domain Email",
+        "Contract Evidence",
+        "Supply Disclosure",
+        "Official Market Route",
+        "Required Order",
+        "tools/check_basescan_resubmission_readiness.py --json --require-ready",
+        "Submit one clean BaseScan request only after the final preflight passes",
+        "Platform-Only Evidence Path",
+        "Reviewer Data Room",
+        "does not submit BaseScan forms",
+        "does not send email, write DNS records, sign messages, or touch wallets/contracts",
+        "does not claim BaseScan token profile approval",
+        "does not publish private mailbox screenshots",
+        MAINNET_ADDRESS,
+        "Base Mainnet chain ID 8453",
+        "team.html",
+        "tim-chen.html",
+        "domain-email.html",
+        "domain-email-evidence.html",
+        "basescan-preflight.html",
+        "technical-report.html",
+        "onchain-proofs.html",
+        "token-safety.html",
+        "reserve-statement.html",
+        "holder-distribution.html",
+        "liquidity.html",
+        "platform-replies.html",
+        "data.html",
+    ):
+        assert_contains(text, expected, label)
+    assert_no_forbidden_public_claims(text, label)
+    assert_not_contains(text, 'href="basescan-handoff.json"', label)
+
+
+def validate_basescan_handoff_json(text: str) -> None:
+    label = "/basescan-handoff.json"
+    payload = load_json(text, label)
+    profile = payload.get("baseScanProfileStatus", {})
+    dns = payload.get("domainEmailGate", {})
+    links = payload.get("officialLinks", {})
+    boundaries = payload.get("boundaries", {})
+
+    if payload.get("schema") != BASESCAN_HANDOFF_URL:
+        raise SiteCheckError(f"{label}: wrong schema")
+    if payload.get("pageUrl") != BASESCAN_HANDOFF_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong pageUrl")
+    if payload.get("status") != "blocked-until-domain-email-evidence-and-final-preflight-pass":
+        raise SiteCheckError(f"{label}: wrong status")
+    if payload.get("chainId") != 8453:
+        raise SiteCheckError(f"{label}: wrong chainId")
+    if payload.get("contractAddress") != MAINNET_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong contractAddress")
+    if profile.get("readyForBaseScanResubmission") is not False:
+        raise SiteCheckError(f"{label}: should not be ready")
+    if profile.get("targetSender") != "support@gcagochina.com":
+        raise SiteCheckError(f"{label}: wrong target sender")
+    if profile.get("currentActiveContact") != "GCAgochina@outlook.com":
+        raise SiteCheckError(f"{label}: wrong current contact")
+    if dns.get("readyForBaseScanEmailEvidence") is not False:
+        raise SiteCheckError(f"{label}: DNS evidence should not be ready")
+    if dns.get("snapshotPage") != f"{DOMAIN_EMAIL_PAGE_URL}#snapshotTitle":
+        raise SiteCheckError(f"{label}: wrong DNS snapshot page")
+    if dns.get("evidenceChecklistPage") != DOMAIN_EMAIL_EVIDENCE_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong evidence checklist page")
+    if set(dns.get("missingOrBlockedChecks", [])) != {"mx", "spf", "dmarc", "dkim"}:
+        raise SiteCheckError(f"{label}: wrong DNS blockers")
+    if links.get("baseScanHandoffPage") != BASESCAN_HANDOFF_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong handoff page link")
+    if links.get("baseScanHandoff") != BASESCAN_HANDOFF_URL:
+        raise SiteCheckError(f"{label}: wrong handoff data link")
+    for key, expected in (
+        ("reviewerKitPage", REVIEWER_KIT_PAGE_URL),
+        ("baseScanPreflightPage", BASESCAN_PREFLIGHT_PAGE_URL),
+        ("baseScanRemediationPage", BASESCAN_REMEDIATION_PAGE_URL),
+        ("domainEmailPlanPage", DOMAIN_EMAIL_PAGE_URL),
+        ("domainEmailEvidenceChecklistPage", DOMAIN_EMAIL_EVIDENCE_PAGE_URL),
+        ("teamPage", TEAM_PAGE_URL),
+        ("timChenProfessionalProfile", TIM_CHEN_PROFILE_PAGE_URL),
+        ("technicalReportPage", TECHNICAL_REPORT_PAGE_URL),
+        ("onchainProofsPage", ONCHAIN_PROOFS_PAGE_URL),
+        ("tokenSafetyPage", TOKEN_SAFETY_PAGE_URL),
+        ("reserveStatementPage", RESERVE_STATEMENT_PAGE_URL),
+        ("holderDistributionPage", HOLDER_DISTRIBUTION_PAGE_URL),
+        ("liquidityPage", LIQUIDITY_PAGE_URL),
+        ("platformRepliesPage", PLATFORM_REPLIES_PAGE_URL),
+        ("dataRoom", DATA_PAGE_URL),
+    ):
+        if links.get(key) != expected:
+            raise SiteCheckError(f"{label}: wrong official link {key}")
+    reason_text = json.dumps(payload.get("reviewerReasonMap", []))
+    for expected in (
+        "project/team information not clear enough",
+        "sender email does not match official domain",
+        "links, logo, website, and metadata need review",
+        "contract, supply, and market evidence",
+        "blocked-until-support@gcagochina.com-is-active",
+        TIM_CHEN_PROFILE_PAGE_URL,
+        DOMAIN_EMAIL_EVIDENCE_PAGE_URL,
+        TECHNICAL_REPORT_PAGE_URL,
+        LIQUIDITY_PAGE_URL,
+    ):
+        assert_contains(reason_text, expected, label)
+    if "tools/check_basescan_resubmission_readiness.py --json --require-ready passes" not in payload.get("requiredBeforeNextSubmission", []):
+        raise SiteCheckError(f"{label}: missing final preflight requirement")
+    if "Submit one clean BaseScan request only after the final preflight passes." not in payload.get("submissionSequence", []):
+        raise SiteCheckError(f"{label}: missing clean submission sequence")
+    for key in (
+        "submitsBaseScanRequest",
+        "sendsEmail",
+        "writesDns",
+        "signsMessage",
+        "touchesWalletOrContract",
+        "claimsBaseScanApproval",
+        "publishesPrivateMailboxEvidence",
     ):
         if boundaries.get(key) is not False:
             raise SiteCheckError(f"{label}: boundary {key} must be false")
@@ -3376,6 +3516,7 @@ def validate_data_page(text: str) -> None:
         "Domain email setup data",
         "Domain email evidence checklist data",
         "BaseScan preflight data",
+        "BaseScan handoff data",
         "Token safety data",
         "On-chain proofs data",
         "Liquidity statement data",
@@ -3409,6 +3550,7 @@ def validate_data_page(text: str) -> None:
         "domain-email.json",
         "domain-email-evidence.json",
         "basescan-preflight.json",
+        "basescan-handoff.json",
         "token-safety.json",
         "onchain-proofs.json",
         "liquidity.json",
@@ -3509,6 +3651,8 @@ def validate_site_map_page(text: str) -> None:
         "domain-email-evidence.html",
         "BaseScan Preflight",
         "basescan-preflight.html",
+        "BaseScan Handoff",
+        "basescan-handoff.html",
         "Security Materials",
         "External Review",
         "Supply and Custody",
@@ -4490,6 +4634,10 @@ def validate_support_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong reviewerKitPage")
     if links.get("reviewerKit") != REVIEWER_KIT_URL:
         raise SiteCheckError(f"{label}: wrong reviewerKit")
+    if links.get("baseScanHandoffPage") != BASESCAN_HANDOFF_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong baseScanHandoffPage")
+    if links.get("baseScanHandoff") != BASESCAN_HANDOFF_URL:
+        raise SiteCheckError(f"{label}: wrong baseScanHandoff")
     if links.get("platformRepliesPage") != PLATFORM_REPLIES_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong platformRepliesPage")
     if links.get("platformReplies") != PLATFORM_REPLIES_URL:
@@ -8452,6 +8600,16 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong reviewerKitPageUrl")
     if payload.get("reviewerKitUrl") != REVIEWER_KIT_URL:
         raise SiteCheckError(f"{label}: wrong reviewerKitUrl")
+    if payload.get("baseScanHandoffPageUrl") != BASESCAN_HANDOFF_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong baseScanHandoffPageUrl")
+    if payload.get("baseScanHandoffUrl") != BASESCAN_HANDOFF_URL:
+        raise SiteCheckError(f"{label}: wrong baseScanHandoffUrl")
+    if payload.get("baseScanHandoff", {}).get("status") != "blocked-until-domain-email-evidence-and-final-preflight-pass":
+        raise SiteCheckError(f"{label}: wrong baseScanHandoff status")
+    if payload.get("baseScanHandoff", {}).get("pageUrl") != BASESCAN_HANDOFF_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong baseScanHandoff pageUrl")
+    if payload.get("baseScanHandoff", {}).get("url") != BASESCAN_HANDOFF_URL:
+        raise SiteCheckError(f"{label}: wrong baseScanHandoff url")
     if payload.get("platformRepliesPageUrl") != PLATFORM_REPLIES_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong platformRepliesPageUrl")
     if payload.get("platformRepliesUrl") != PLATFORM_REPLIES_URL:
@@ -10720,6 +10878,10 @@ def validate_reviewer_kit_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong CoinGecko status")
     if handoff.get("status") != "blocked-until-domain-email-evidence-and-final-preflight-pass":
         raise SiteCheckError(f"{label}: wrong BaseScan handoff status")
+    if handoff.get("pageUrl") != BASESCAN_HANDOFF_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong BaseScan handoff pageUrl")
+    if handoff.get("dataUrl") != BASESCAN_HANDOFF_URL:
+        raise SiteCheckError(f"{label}: wrong BaseScan handoff dataUrl")
     if handoff.get("targetSender") != "support@gcagochina.com":
         raise SiteCheckError(f"{label}: wrong BaseScan handoff target sender")
     if handoff.get("currentActiveContact") != "GCAgochina@outlook.com":
@@ -10785,6 +10947,8 @@ def validate_reviewer_kit_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing audit safe claim")
     if payload.get("evidenceLinks", {}).get("liquidityStatement") != LIQUIDITY_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong liquidity evidence link")
+    if payload.get("evidenceLinks", {}).get("baseScanResubmissionHandoff") != BASESCAN_HANDOFF_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong BaseScan handoff evidence link")
     if payload.get("evidenceLinks", {}).get("custodyRoadmap") != CUSTODY_ROADMAP_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong custody roadmap evidence link")
     if payload.get("evidenceLinks", {}).get("domainEmailSetupPlan") != DOMAIN_EMAIL_PAGE_URL:
@@ -10808,6 +10972,7 @@ def validate_reviewer_kit_page(text: str) -> None:
     assert_contains(text, "GCA Reviewer Kit", label)
     assert_contains(text, "BaseScan Resubmission Handoff", label)
     assert_contains(text, "BaseScan Handoff", label)
+    assert_contains(text, "basescan-handoff.html", label)
     assert_contains(text, "Platform-Only Evidence Path", label)
     assert_contains(text, "Data Room", label)
     assert_contains(text, "Raw JSON for platforms only", label)
@@ -11637,6 +11802,8 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/basescan-remediation.json",
         "https://gcagochina.com/basescan-preflight.html",
         "https://gcagochina.com/basescan-preflight.json",
+        "https://gcagochina.com/basescan-handoff.html",
+        "https://gcagochina.com/basescan-handoff.json",
         "https://gcagochina.com/action-plan.html",
         "https://gcagochina.com/register.html",
         "https://gcagochina.com/unsubscribe.html",
@@ -11788,6 +11955,8 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /basescan-remediation.json", label)
     assert_contains(text, "Allow: /basescan-preflight.html", label)
     assert_contains(text, "Allow: /basescan-preflight.json", label)
+    assert_contains(text, "Allow: /basescan-handoff.html", label)
+    assert_contains(text, "Allow: /basescan-handoff.json", label)
     assert_contains(text, "Allow: /action-plan.html", label)
     assert_contains(text, "Allow: /register.html", label)
     assert_contains(text, "Allow: /unsubscribe.html", label)
@@ -11942,6 +12111,8 @@ CHECKS: list[EndpointCheck] = [
     ("/basescan-remediation.json", validate_basescan_remediation_json),
     ("/basescan-preflight.html", validate_basescan_preflight_page),
     ("/basescan-preflight.json", validate_basescan_preflight_json),
+    ("/basescan-handoff.html", validate_basescan_handoff_page),
+    ("/basescan-handoff.json", validate_basescan_handoff_json),
     ("/action-plan.html", validate_action_plan_page),
     ("/zh-cn.html", validate_zh_cn_page),
     ("/zh-buy.html", validate_zh_buy_page),
