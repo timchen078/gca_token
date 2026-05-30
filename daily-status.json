@@ -1,0 +1,75 @@
+{
+  "schema": "https://gcagochina.com/daily-status.json",
+  "pageUrl": "https://gcagochina.com/daily-status.html",
+  "status": "daily-public-ops-snapshot-published",
+  "lastUpdated": "2026-05-30",
+  "snapshotSource": "tools/run_gca_daily_ops.py",
+  "snapshotGeneratedAt": "2026-05-30T08:55:44Z",
+  "project": "GCA",
+  "chainId": 8453,
+  "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+  "publicSite": {
+    "status": "ok",
+    "baseUrl": "https://gcagochina.com/",
+    "checkCommand": "python3 tools/check_public_site.py --base-url https://gcagochina.com/ --timeout 20",
+    "scope": [
+      "canonical token identity",
+      "public readable pages",
+      "Data Room machine-readable files",
+      "GCA/USDT market route",
+      "public claim boundaries"
+    ]
+  },
+  "registrationApi": {
+    "status": "ok",
+    "apiBaseUrl": "https://gca-registration-api.gcagochina.workers.dev",
+    "checkCommand": "python3 tools/check_gca_registration_api.py --base-url https://gca-registration-api.gcagochina.workers.dev --public-only --timeout 20",
+    "publicOnly": true,
+    "healthEndpoint": "https://gca-registration-api.gcagochina.workers.dev/health",
+    "adminReads": "token-protected",
+    "writesTestRecords": false
+  },
+  "baseScanPreflight": {
+    "status": "blocked-before-basescan-resubmission",
+    "readyForBaseScanResubmission": false,
+    "publicEmailSwitchStatus": "public-email-switch-pending",
+    "snapshotAlignmentStatus": "aligned",
+    "filesStillUsingOldEmail": 15,
+    "missingOrBlockedRequirements": [
+      "next-submission-ready-flag",
+      "official-domain-email",
+      "domain-email-evidence-packet",
+      "domain-email-public-switch-check",
+      "domain-email-public-switch-old-email"
+    ],
+    "nextAction": "Do not resubmit BaseScan yet. Complete the blocked requirements first.",
+    "targetDomainEmail": "support@gcagochina.com",
+    "currentPublicEmail": "GCAgochina@outlook.com"
+  },
+  "safePublicSummary": [
+    "The public GCA website check passed on the latest daily ops snapshot.",
+    "The public registration API check passed without secrets and without writing test records.",
+    "BaseScan token profile resubmission remains blocked until the project-domain email evidence path is complete.",
+    "Admin reads, user records, private evidence files, wallet actions, and token transfers are not exposed by this public snapshot."
+  ],
+  "boundaries": {
+    "publicOnly": true,
+    "adminTokenPrinted": false,
+    "userEmailsPrinted": false,
+    "writesProductionData": false,
+    "submitsBaseScanRequest": false,
+    "sendsEmail": false,
+    "writesDns": false,
+    "requiresSignature": false,
+    "requiresTransaction": false,
+    "touchesWalletsOrContracts": false
+  },
+  "links": {
+    "dailyStatusPage": "https://gcagochina.com/daily-status.html",
+    "apiStatusPage": "https://gcagochina.com/api-status.html",
+    "baseScanPreflightPage": "https://gcagochina.com/basescan-preflight.html",
+    "domainEmailPage": "https://gcagochina.com/domain-email.html",
+    "domainEmailEvidencePage": "https://gcagochina.com/domain-email-evidence.html",
+    "dataRoom": "https://gcagochina.com/data.html"
+  }
+}
