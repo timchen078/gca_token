@@ -411,6 +411,42 @@
     "launch/external_review_followup_tracker.json",
     "launch/external_review_followup_tracker.md"
   ],
+  "currentPublicSwitchSnapshot": {
+    "checkedAt": "2026-05-30T08:27:55Z",
+    "source": "tools/run_gca_daily_ops.py BaseScan preflight status summary",
+    "status": "public-email-switch-pending",
+    "filesStillUsingCurrentEmail": 15,
+    "currentEmail": "GCAgochina@outlook.com",
+    "targetDomainEmail": "support@gcagochina.com",
+    "oldEmailFilePaths": [
+      "site/support.html",
+      "site/support.json",
+      "site/zh-support.html",
+      "site/register.html",
+      "site/members.html",
+      "site/project.json",
+      "site/listing-kit.html",
+      "site/basescan-remediation.html",
+      "site/basescan-remediation.json",
+      "site/external-reviews.json",
+      "launch/basescan_form_values.json",
+      "launch/basescan_resubmission_values.json",
+      "launch/basescan_resubmission_package.md",
+      "launch/external_review_followup_tracker.json",
+      "launch/external_review_followup_tracker.md"
+    ],
+    "targetAwareButStillTracked": [
+      "site/reviewer-kit.json"
+    ],
+    "switchOnlyAfter": [
+      "support@gcagochina.com receives external mail",
+      "support@gcagochina.com sends authenticated external mail",
+      "MX, SPF, DKIM, and DMARC evidence passes",
+      "domain email evidence packet is complete",
+      "tools/check_domain_email_public_switch.py --json --require-switched passes"
+    ],
+    "nextAction": "Keep GCAgochina@outlook.com as the active public contact until support@gcagochina.com passes inbound, outbound, DNS, and evidence-packet checks; then switch all tracked files in one pass."
+  },
   "publicClaimBoundaries": {
     "safeClaims": [
       "GCA has published a domain email setup plan.",

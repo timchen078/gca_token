@@ -510,6 +510,19 @@
         </div>
       </section>
 
+      <section class="section panel" aria-labelledby="currentSwitchTitle">
+        <p class="eyebrow">当前预检快照</p>
+        <h2 id="currentSwitchTitle">还有 15 个关键文件仍在发布当前 Outlook 邮箱</h2>
+        <p class="note">这是正常状态，因为 <code>support@gcagochina.com</code> 还没有通过收信、发信、DNS 和证据包检查。不要提前切换；等证据齐全后，把这些文件一起改完，再跑公开邮箱切换检查。</p>
+        <div class="list">
+          <div class="row"><span>支持和注册入口</span><strong><code>site/support.html</code>、<code>site/support.json</code>、<code>site/zh-support.html</code>、<code>site/register.html</code>、<code>site/members.html</code>。</strong></div>
+          <div class="row"><span>项目和上币资料</span><strong><code>site/project.json</code>、<code>site/listing-kit.html</code>、<code>site/basescan-remediation.html</code>、<code>site/basescan-remediation.json</code>、<code>site/external-reviews.json</code>。</strong></div>
+          <div class="row"><span>复审提交包</span><strong><code>launch/basescan_form_values.json</code>、<code>launch/basescan_resubmission_values.json</code>、<code>launch/basescan_resubmission_package.md</code>、<code>launch/external_review_followup_tracker.json</code>、<code>launch/external_review_followup_tracker.md</code>。</strong></div>
+          <div class="row"><span>已含目标邮箱</span><strong><code>site/reviewer-kit.json</code> 已经包含目标域名邮箱，但仍放在激活后对齐清单里，避免复审证据不一致。</strong></div>
+          <div class="row"><span>最终检查</span><strong>切换后必须让 <code>tools/check_domain_email_public_switch.py --json --require-switched</code> 显示旧邮箱文件数量为 0，再准备 BaseScan 复审包。</strong></div>
+        </div>
+      </section>
+
       <section class="section two" aria-label="复审链接">
         <div class="panel">
           <h2>给自己看的中文入口</h2>

@@ -822,6 +822,11 @@ def validate_domain_email_page(text: str) -> None:
         "no critical file still publishing the old Outlook email",
         "Switch Plan Generator",
         "Find Every Public Email Reference Before Switching",
+        "Current Preflight Snapshot",
+        "15 Critical Files Still Publish The Current Outlook Email",
+        "site/project.json",
+        "launch/basescan_resubmission_package.md",
+        "site/reviewer-kit.json",
         "tools/build_domain_email_switch_plan.py --json",
         "launch/domain_email_switch_plan.json",
         "Submission policy: send the next clean BaseScan update from",
@@ -855,6 +860,7 @@ def validate_domain_email_json(text: str) -> None:
     switch_builder = payload.get("operatorSwitchPlanBuilder", {})
     public_switch_checker = payload.get("operatorPublicSwitchChecker", {})
     policy = payload.get("baseScanSubmissionPolicy", {})
+    current_switch = payload.get("currentPublicSwitchSnapshot", {})
     provider = payload.get("mailProviderDecision", {})
     dns = payload.get("dnsChecklist", [])
 
@@ -1033,6 +1039,22 @@ def validate_domain_email_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing evidence archive gate")
     if "site/support.html" not in payload.get("filesToUpdateAfterActivation", []):
         raise SiteCheckError(f"{label}: missing support update file")
+    if current_switch.get("status") != "public-email-switch-pending":
+        raise SiteCheckError(f"{label}: wrong current public switch status")
+    if current_switch.get("filesStillUsingCurrentEmail") != 15:
+        raise SiteCheckError(f"{label}: wrong current old-email file count")
+    if current_switch.get("currentEmail") != "GCAgochina@outlook.com":
+        raise SiteCheckError(f"{label}: wrong current switch email")
+    if current_switch.get("targetDomainEmail") != "support@gcagochina.com":
+        raise SiteCheckError(f"{label}: wrong current switch target email")
+    if "site/project.json" not in current_switch.get("oldEmailFilePaths", []):
+        raise SiteCheckError(f"{label}: missing current switch project file")
+    if "launch/basescan_resubmission_package.md" not in current_switch.get("oldEmailFilePaths", []):
+        raise SiteCheckError(f"{label}: missing current switch launch package file")
+    if "site/reviewer-kit.json" not in current_switch.get("targetAwareButStillTracked", []):
+        raise SiteCheckError(f"{label}: missing target-aware reviewer kit file")
+    if "tools/check_domain_email_public_switch.py --json --require-switched passes" not in current_switch.get("switchOnlyAfter", []):
+        raise SiteCheckError(f"{label}: missing current switch final checker gate")
     if "GCA has published a domain email setup plan." not in boundaries.get("safeClaims", []):
         raise SiteCheckError(f"{label}: missing safe setup-plan claim")
     if "support@gcagochina.com is active before inbound and outbound tests pass" not in boundaries.get("doNotClaim", []):
@@ -1974,6 +1996,11 @@ def validate_zh_domain_email_page(text: str) -> None:
         "不会操作钱包或合约",
         "邮箱切换清单",
         "切换官网邮箱前先找全旧邮箱引用",
+        "当前预检快照",
+        "还有 15 个关键文件仍在发布当前 Outlook 邮箱",
+        "site/project.json",
+        "launch/basescan_resubmission_package.md",
+        "site/reviewer-kit.json",
         "tools/build_domain_email_switch_plan.py --json",
         "launch/domain_email_switch_plan.json",
         "公开邮箱切换检查",
