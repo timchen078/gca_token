@@ -2112,6 +2112,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("team.html#tim-chen", page)
         self.assertIn("domain-email.html", page)
         self.assertIn("domain-email-evidence.html", page)
+        self.assertIn("BaseScan Handoff", page)
+        self.assertIn("basescan-handoff.html", page)
         self.assertIn("basescan-remediation.html", page)
         self.assertIn(GITHUB_REPO_URL, page)
         self.assertIn("Base Mainnet GCA/USDT", page)
