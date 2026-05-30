@@ -120,6 +120,8 @@ ACCESS_API_PAGE_URL = "https://gcagochina.com/access-api.html"
 ACCESS_API_URL = "https://gcagochina.com/access-api.json"
 API_STATUS_PAGE_URL = "https://gcagochina.com/api-status.html"
 API_STATUS_URL = "https://gcagochina.com/api-status.json"
+DAILY_STATUS_PAGE_URL = "https://gcagochina.com/daily-status.html"
+DAILY_STATUS_URL = "https://gcagochina.com/daily-status.json"
 REVIEW_QUEUE_PAGE_URL = "https://gcagochina.com/review-queue.html"
 REVIEW_QUEUE_URL = "https://gcagochina.com/review-queue.json"
 CREDITS_PAGE_URL = "https://gcagochina.com/credits.html"
@@ -316,6 +318,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("/access-api.json", script)
         self.assertIn("/api-status.html", script)
         self.assertIn("/api-status.json", script)
+        self.assertIn("/daily-status.html", script)
+        self.assertIn("/daily-status.json", script)
         self.assertIn("/review-queue.html", script)
         self.assertIn("/review-queue.json", script)
         self.assertIn("/credits.html", script)
@@ -407,6 +411,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("validate_access_api_json", script)
         self.assertIn("validate_api_status_page", script)
         self.assertIn("validate_api_status_json", script)
+        self.assertIn("validate_daily_status_page", script)
+        self.assertIn("validate_daily_status_json", script)
         self.assertIn("validate_review_queue_page", script)
         self.assertIn("validate_review_queue_json", script)
         self.assertIn("validate_credits_page", script)
@@ -624,6 +630,8 @@ class LaunchPackageTests(unittest.TestCase):
         module.validate_access_api_json((ROOT / "site" / "access-api.json").read_text())
         module.validate_api_status_page((ROOT / "site" / "api-status.html").read_text())
         module.validate_api_status_json((ROOT / "site" / "api-status.json").read_text())
+        module.validate_daily_status_page((ROOT / "site" / "daily-status.html").read_text())
+        module.validate_daily_status_json((ROOT / "site" / "daily-status.json").read_text())
         module.validate_review_queue_page((ROOT / "site" / "review-queue.html").read_text())
         module.validate_review_queue_json((ROOT / "site" / "review-queue.json").read_text())
         module.validate_credits_page((ROOT / "site" / "credits.html").read_text())
@@ -1045,6 +1053,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Allow: /access-api.json", robots)
         self.assertIn("Allow: /api-status.html", robots)
         self.assertIn("Allow: /api-status.json", robots)
+        self.assertIn("Allow: /daily-status.html", robots)
+        self.assertIn("Allow: /daily-status.json", robots)
         self.assertIn("Allow: /review-queue.html", robots)
         self.assertIn("Allow: /review-queue.json", robots)
         self.assertIn("Allow: /credits.html", robots)
@@ -1099,6 +1109,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(DATA_PAGE_URL, sitemap)
         self.assertIn(API_STATUS_PAGE_URL, sitemap)
         self.assertIn(API_STATUS_URL, sitemap)
+        self.assertIn(DAILY_STATUS_PAGE_URL, sitemap)
+        self.assertIn(DAILY_STATUS_URL, sitemap)
         self.assertIn(SITE_MAP_PAGE_URL, sitemap)
         self.assertIn(VERIFY_PAGE_URL, sitemap)
         self.assertIn("https://gcagochina.com/status.html", sitemap)
@@ -1238,6 +1250,44 @@ class LaunchPackageTests(unittest.TestCase):
                 if robots_allow(path) not in robots
             ],
         )
+
+    def test_daily_status_page_and_json_publish_public_ops_snapshot(self):
+        page = (ROOT / "site" / "daily-status.html").read_text()
+        payload = json.loads((ROOT / "site" / "daily-status.json").read_text())
+
+        self.assertIn("GCA Daily Status Snapshot", page)
+        self.assertIn("Daily Ops Snapshot / 2026-05-30", page)
+        self.assertIn("public-site", page)
+        self.assertIn("registration-api-public", page)
+        self.assertIn("basescan-resubmission-preflight-status", page)
+        self.assertIn("readyForBaseScanResubmission", page)
+        self.assertIn("filesStillUsingOldEmail", page)
+        self.assertIn("support@gcagochina.com", page)
+        self.assertIn("GCAgochina@outlook.com", page)
+        self.assertIn("submit BaseScan forms", page)
+        self.assertNotIn('href="daily-status.json"', page)
+
+        self.assertEqual(payload["schema"], DAILY_STATUS_URL)
+        self.assertEqual(payload["pageUrl"], DAILY_STATUS_PAGE_URL)
+        self.assertEqual(payload["project"], "GCA")
+        self.assertEqual(payload["chainId"], 8453)
+        self.assertEqual(payload["contractAddress"], MAINNET_ADDRESS)
+        self.assertEqual(payload["publicSite"]["status"], "ok")
+        self.assertEqual(payload["registrationApi"]["status"], "ok")
+        self.assertTrue(payload["registrationApi"]["publicOnly"])
+        self.assertFalse(payload["registrationApi"]["writesTestRecords"])
+        self.assertEqual(payload["baseScanPreflight"]["status"], "blocked-before-basescan-resubmission")
+        self.assertFalse(payload["baseScanPreflight"]["readyForBaseScanResubmission"])
+        self.assertEqual(payload["baseScanPreflight"]["filesStillUsingOldEmail"], 15)
+        self.assertEqual(payload["baseScanPreflight"]["targetDomainEmail"], "support@gcagochina.com")
+        self.assertEqual(payload["baseScanPreflight"]["currentPublicEmail"], "GCAgochina@outlook.com")
+        self.assertTrue(payload["boundaries"]["publicOnly"])
+        self.assertFalse(payload["boundaries"]["adminTokenPrinted"])
+        self.assertFalse(payload["boundaries"]["userEmailsPrinted"])
+        self.assertFalse(payload["boundaries"]["writesProductionData"])
+        self.assertFalse(payload["boundaries"]["submitsBaseScanRequest"])
+        self.assertFalse(payload["boundaries"]["touchesWalletsOrContracts"])
+        self.assertEqual(payload["links"]["dataRoom"], DATA_PAGE_URL)
 
     def test_start_page_guides_normal_users_away_from_raw_json(self):
         page = (ROOT / "site" / "start.html").read_text()

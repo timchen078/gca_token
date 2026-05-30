@@ -134,6 +134,8 @@ Allow: /access-api.html
 Allow: /access-api.json
 Allow: /api-status.html
 Allow: /api-status.json
+Allow: /daily-status.html
+Allow: /daily-status.json
 Allow: /review-queue.html
 Allow: /review-queue.json
 Allow: /credits.html

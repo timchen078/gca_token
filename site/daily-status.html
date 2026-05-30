@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GCA Daily Status Snapshot | Operations Snapshot</title>
+    <meta name="description" content="Public GCA daily operations snapshot for website health, registration API status, BaseScan preflight blockers, and safe operational boundaries.">
+    <link rel="canonical" href="https://gcagochina.com/daily-status.html">
+    <link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">
+    <link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="GCA | Go China Access">
+    <meta property="og:title" content="GCA Daily Status Snapshot | Operations Snapshot">
+    <meta property="og:description" content="Public GCA daily operations snapshot for website health, registration API status, BaseScan preflight blockers, and safe operational boundaries.">
+    <meta property="og:url" content="https://gcagochina.com/daily-status.html">
+    <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="GCA Daily Status Snapshot | Operations Snapshot">
+    <meta name="twitter:description" content="Public GCA daily operations snapshot for website health, registration API status, BaseScan preflight blockers, and safe operational boundaries.">
+    <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f7f8f5;
+        --ink: #151817;
+        --muted: #5e6763;
+        --line: #dfe4dd;
+        --panel: #ffffff;
+        --soft: #eef3ef;
+        --red: #d71920;
+        --blue: #1557d7;
+        --green: #087f5b;
+        --gold: #a87810;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: var(--bg);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.5;
+      }
+
+      a { color: var(--blue); text-decoration: none; }
+      a:hover { text-decoration: underline; }
+
+      .shell {
+        width: min(1120px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 3;
+        border-bottom: 1px solid var(--line);
+        background: rgba(247, 248, 245, 0.94);
+        backdrop-filter: blur(16px);
+      }
+
+      nav {
+        min-height: 68px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+      }
+
+      .brand,
+      .nav-links,
+      .actions,
+      .link-row {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .brand { color: var(--ink); font-weight: 850; }
+      .brand img { width: 34px; height: 34px; }
+      .nav-links { gap: 16px; font-size: 14px; }
+
+      main { padding: 42px 0 64px; }
+      h1, h2, h3, p { margin-top: 0; }
+
+      h1 {
+        max-width: 940px;
+        margin-bottom: 18px;
+        font-size: clamp(42px, 6vw, 76px);
+        line-height: 1.02;
+        letter-spacing: 0;
+      }
+
+      h2 { margin-bottom: 12px; font-size: 25px; letter-spacing: 0; }
+      h3 { margin-bottom: 8px; font-size: 18px; letter-spacing: 0; }
+
+      .eyebrow {
+        margin: 0 0 14px;
+        color: var(--red);
+        font-size: 13px;
+        font-weight: 850;
+        text-transform: uppercase;
+      }
+
+      .lead {
+        max-width: 900px;
+        margin-bottom: 14px;
+        color: var(--muted);
+        font-size: 18px;
+      }
+
+      .note,
+      li { color: var(--muted); }
+      .actions { margin-top: 24px; }
+
+      .button,
+      .text-link {
+        min-height: 40px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        color: var(--ink);
+        padding: 9px 12px;
+        font-size: 14px;
+        font-weight: 760;
+      }
+
+      .button.primary {
+        border-color: var(--red);
+        background: var(--red);
+        color: #fff;
+      }
+
+      .section { margin-top: 30px; }
+
+      .panel,
+      .fact,
+      .card {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+      }
+
+      .panel { padding: 24px; }
+      .fact, .card { padding: 16px; }
+
+      .facts,
+      .grid,
+      .two {
+        display: grid;
+        gap: 14px;
+      }
+
+      .facts {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        margin-top: 26px;
+      }
+
+      .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+      .label {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 760;
+        text-transform: uppercase;
+      }
+
+      .value {
+        display: block;
+        margin-top: 7px;
+        font-size: 17px;
+        font-weight: 850;
+        overflow-wrap: anywhere;
+      }
+
+      .good { color: var(--green); }
+      .pending { color: var(--gold); }
+
+      .list { display: grid; gap: 10px; }
+
+      .row {
+        display: grid;
+        grid-template-columns: minmax(190px, 0.8fr) minmax(0, 1.2fr);
+        gap: 12px;
+        align-items: start;
+        border-top: 1px solid var(--line);
+        padding-top: 10px;
+      }
+
+      .row:first-child { border-top: 0; padding-top: 0; }
+
+      .row strong {
+        min-width: 0;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+        text-align: right;
+      }
+
+      .notice {
+        border-color: #ecd28c;
+        background: #fff8e6;
+      }
+
+      code {
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        background: var(--soft);
+        padding: 2px 5px;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 0.92em;
+        overflow-wrap: anywhere;
+      }
+
+      footer {
+        border-top: 1px solid var(--line);
+        padding: 22px 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      @media (max-width: 900px) {
+        nav {
+          align-items: flex-start;
+          flex-direction: column;
+          padding: 14px 0;
+        }
+
+        .facts,
+        .grid,
+        .two,
+        .row {
+          grid-template-columns: 1fr;
+        }
+
+        .row strong { text-align: left; }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav class="shell" aria-label="Primary">
+        <a class="brand" href="index.html" aria-label="GCA home">
+          <img src="assets/gca-logo.svg" alt="GCA logo">
+          <span>GCA</span>
+        </a>
+        <div class="nav-links">
+          <a href="status.html">Status</a>
+          <a href="api-status.html">API Status</a>
+          <a href="basescan-preflight.html">BaseScan Preflight</a>
+          <a href="domain-email.html">Domain Email</a>
+          <a href="data.html">Data Room</a>
+        </div>
+      </nav>
+    </header>
+
+    <main class="shell">
+      <section aria-labelledby="title">
+        <p class="eyebrow">Daily Ops Snapshot / 2026-05-30</p>
+        <h1 id="title">GCA Daily Status Snapshot</h1>
+        <p class="lead">This page publishes the safe public result of the latest GCA daily operations snapshot. It summarizes public website health, live registration API status, and the current BaseScan preflight blocker without exposing admin tokens, user records, private mailbox evidence, wallet actions, or production write data.</p>
+        <p class="lead">Latest snapshot source: <code>tools/run_gca_daily_ops.py</code>, generated at <code>2026-05-30T08:55:44Z</code>.</p>
+        <div class="actions">
+          <a class="button primary" href="status.html">Project Status</a>
+          <a class="button" href="api-status.html">API Status</a>
+          <a class="button" href="basescan-preflight.html">BaseScan Preflight</a>
+          <a class="button" href="domain-email.html">Domain Email Plan</a>
+          <a class="button" href="data.html">Reviewer Data Room</a>
+        </div>
+      </section>
+
+      <section class="facts" aria-label="Daily operations facts">
+        <div class="fact">
+          <span class="label">Daily Ops</span>
+          <span class="value good">Passed</span>
+        </div>
+        <div class="fact">
+          <span class="label">Public Site</span>
+          <span class="value good">Passed</span>
+        </div>
+        <div class="fact">
+          <span class="label">Registration API</span>
+          <span class="value good">Passed</span>
+        </div>
+        <div class="fact">
+          <span class="label">BaseScan Preflight</span>
+          <span class="value pending">Blocked before resubmission</span>
+        </div>
+        <div class="fact">
+          <span class="label">Old Email Files</span>
+          <span class="value pending">15</span>
+        </div>
+        <div class="fact">
+          <span class="label">Public Snapshot</span>
+          <span class="value">No secrets / no user records</span>
+        </div>
+      </section>
+
+      <section class="section two" aria-label="Daily status details">
+        <div class="panel">
+          <h2>Passing Public Checks</h2>
+          <div class="list">
+            <div class="row"><span><code>public-site</code></span><strong><code>tools/check_public_site.py --base-url https://gcagochina.com/ --timeout 20</code> passed for the latest snapshot.</strong></div>
+            <div class="row"><span><code>registration-api-public</code></span><strong><code>tools/check_gca_registration_api.py --base-url https://gca-registration-api.gcagochina.workers.dev --public-only --timeout 20</code> passed without secrets and without writing test records.</strong></div>
+            <div class="row"><span>API base</span><strong><code>https://gca-registration-api.gcagochina.workers.dev</code></strong></div>
+            <div class="row"><span>Admin reads</span><strong>Token-protected; unauthenticated public reads are rejected.</strong></div>
+          </div>
+        </div>
+
+        <div class="panel notice">
+          <h2>BaseScan Still Blocked</h2>
+          <p class="note">BaseScan source and deployer-wallet ownership verification are complete, but the public token profile resubmission should not be sent yet.</p>
+          <div class="list">
+            <div class="row"><span><code>basescan-resubmission-preflight-status</code></span><strong class="pending"><code>readyForBaseScanResubmission</code> remains false.</strong></div>
+            <div class="row"><span>Current email</span><strong><code>GCAgochina@outlook.com</code></strong></div>
+            <div class="row"><span>Target domain email</span><strong><code>support@gcagochina.com</code></strong></div>
+            <div class="row"><span>Remaining blocker</span><strong>Complete the project-domain email evidence path, then switch public email values and run the final preflight.</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="blockersTitle">
+        <p class="eyebrow">Current BaseScan Blockers</p>
+        <h2 id="blockersTitle">Do Not Resubmit Until These Are Clear</h2>
+        <div class="grid">
+          <div class="card">
+            <h3>Official Domain Email</h3>
+            <p class="note">The activated sender/contact email should match <code>support@gcagochina.com</code> before the next clean BaseScan request.</p>
+          </div>
+          <div class="card">
+            <h3>Evidence Packet</h3>
+            <p class="note">The domain email evidence packet must prove provider status, DNS records, inbound mail, outbound mail, and the updated support-page email.</p>
+          </div>
+          <div class="card">
+            <h3>Public Email Switch</h3>
+            <p class="note">The current snapshot still reports <code>filesStillUsingOldEmail</code> as 15 tracked files publishing the old Outlook email. Keep that until the domain mailbox is actually ready.</p>
+          </div>
+          <div class="card">
+            <h3>Snapshot Alignment</h3>
+            <p class="note">Domain-email snapshot alignment is currently aligned, so the published blocker explanation is internally consistent.</p>
+          </div>
+          <div class="card">
+            <h3>Final Submission Package</h3>
+            <p class="note">Only build a final BaseScan package after <code>tools/check_basescan_resubmission_readiness.py --json --require-ready</code> passes.</p>
+          </div>
+          <div class="card">
+            <h3>Reviewer Checklist</h3>
+            <p class="note">Current reviewer checklist artifacts are generated but blocked by <code>sender-domain-email</code>.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="boundaryTitle">
+        <p class="eyebrow">Public Boundary</p>
+        <h2 id="boundaryTitle">What This Snapshot Does Not Do</h2>
+        <ul>
+          <li>It does not print admin tokens, user emails, wallet records, or private evidence files.</li>
+          <li>It does not write production data, send email, write DNS records, sign messages, submit BaseScan forms, or touch wallets/contracts.</li>
+          <li>It does not claim BaseScan token profile approval, external audit completion, tracked listing approval, deep liquidity, or price support.</li>
+          <li>It only records a public health snapshot and the current non-blocking BaseScan preflight status.</li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <div class="shell">GCA daily public status. Use this page for operational health context; use the Data Room only when a platform requests machine-readable evidence.</div>
+    </footer>
+  </body>
+</html>

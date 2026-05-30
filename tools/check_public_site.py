@@ -116,6 +116,8 @@ ACCESS_API_PAGE_URL = "https://gcagochina.com/access-api.html"
 ACCESS_API_URL = "https://gcagochina.com/access-api.json"
 API_STATUS_PAGE_URL = "https://gcagochina.com/api-status.html"
 API_STATUS_URL = "https://gcagochina.com/api-status.json"
+DAILY_STATUS_PAGE_URL = "https://gcagochina.com/daily-status.html"
+DAILY_STATUS_URL = "https://gcagochina.com/daily-status.json"
 REVIEW_QUEUE_PAGE_URL = "https://gcagochina.com/review-queue.html"
 REVIEW_QUEUE_URL = "https://gcagochina.com/review-queue.json"
 CREDITS_PAGE_URL = "https://gcagochina.com/credits.html"
@@ -3354,6 +3356,7 @@ def validate_data_page(text: str) -> None:
         "Chinese operations guide",
         "Access API contract data",
         "API status data",
+        "Daily status snapshot data",
         "Review queue data",
         "Release gates data",
         "Privacy notice data",
@@ -3386,6 +3389,7 @@ def validate_data_page(text: str) -> None:
         "zh-operations.html",
         "access-api.json",
         "api-status.json",
+        "daily-status.json",
         "review-queue.json",
         "release-gates.json",
         "privacy.json",
@@ -3465,6 +3469,8 @@ def validate_site_map_page(text: str) -> None:
         "Operations",
         "API Status",
         "api-status.html",
+        "Daily Status",
+        "daily-status.html",
         "Trust and Review",
         "Domain Email Plan",
         "domain-email.html",
@@ -7220,6 +7226,113 @@ def validate_api_status_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong GitHub workflow URL")
     if links.get("memberAccessPage") != MEMBER_ACCESS_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong member access page")
+    assert_no_forbidden_public_claims(json.dumps(payload), label)
+
+
+def validate_daily_status_page(text: str) -> None:
+    label = "/daily-status.html"
+    assert_social_preview_meta(text, label, DAILY_STATUS_PAGE_URL)
+    for expected in (
+        "GCA Daily Status Snapshot",
+        "Daily Ops Snapshot / 2026-05-30",
+        "public-site",
+        "registration-api-public",
+        "basescan-resubmission-preflight-status",
+        "readyForBaseScanResubmission",
+        "files publishing the old Outlook email",
+        "GCAgochina@outlook.com",
+        "support@gcagochina.com",
+        "does not write production data",
+        "submit BaseScan forms",
+        "Data Room",
+    ):
+        assert_contains(text, expected, label)
+    assert_not_contains(text, 'href="daily-status.json"', label)
+    assert_no_forbidden_public_claims(text, label)
+
+
+def validate_daily_status_json(text: str) -> None:
+    label = "/daily-status.json"
+    payload = load_json(text, label)
+    public_site = payload.get("publicSite", {})
+    registration_api = payload.get("registrationApi", {})
+    basescan = payload.get("baseScanPreflight", {})
+    boundaries = payload.get("boundaries", {})
+    links = payload.get("links", {})
+
+    if payload.get("schema") != DAILY_STATUS_URL:
+        raise SiteCheckError(f"{label}: wrong schema")
+    if payload.get("pageUrl") != DAILY_STATUS_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong pageUrl")
+    if payload.get("status") != "daily-public-ops-snapshot-published":
+        raise SiteCheckError(f"{label}: wrong status")
+    if payload.get("project") != "GCA":
+        raise SiteCheckError(f"{label}: wrong project")
+    if payload.get("chainId") != 8453:
+        raise SiteCheckError(f"{label}: wrong chainId")
+    if payload.get("contractAddress") != MAINNET_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong contract address")
+    if public_site.get("status") != "ok":
+        raise SiteCheckError(f"{label}: public site check should be ok")
+    if public_site.get("baseUrl") != DEFAULT_BASE_URL:
+        raise SiteCheckError(f"{label}: wrong public site base URL")
+    if registration_api.get("status") != "ok":
+        raise SiteCheckError(f"{label}: registration API check should be ok")
+    if registration_api.get("apiBaseUrl") != "https://gca-registration-api.gcagochina.workers.dev":
+        raise SiteCheckError(f"{label}: wrong registration API base URL")
+    if registration_api.get("publicOnly") is not True:
+        raise SiteCheckError(f"{label}: registration API should be public-only")
+    if registration_api.get("writesTestRecords") is not False:
+        raise SiteCheckError(f"{label}: registration API check should not write test records")
+    if basescan.get("status") != "blocked-before-basescan-resubmission":
+        raise SiteCheckError(f"{label}: wrong BaseScan preflight status")
+    if basescan.get("readyForBaseScanResubmission") is not False:
+        raise SiteCheckError(f"{label}: BaseScan ready flag should be false")
+    if basescan.get("publicEmailSwitchStatus") != "public-email-switch-pending":
+        raise SiteCheckError(f"{label}: wrong public email switch status")
+    if basescan.get("snapshotAlignmentStatus") != "aligned":
+        raise SiteCheckError(f"{label}: wrong snapshot alignment status")
+    if basescan.get("filesStillUsingOldEmail") != 15:
+        raise SiteCheckError(f"{label}: wrong old-email file count")
+    if basescan.get("targetDomainEmail") != "support@gcagochina.com":
+        raise SiteCheckError(f"{label}: wrong target domain email")
+    if basescan.get("currentPublicEmail") != "GCAgochina@outlook.com":
+        raise SiteCheckError(f"{label}: wrong current public email")
+    missing = set(basescan.get("missingOrBlockedRequirements", []))
+    for requirement in (
+        "next-submission-ready-flag",
+        "official-domain-email",
+        "domain-email-evidence-packet",
+        "domain-email-public-switch-check",
+        "domain-email-public-switch-old-email",
+    ):
+        if requirement not in missing:
+            raise SiteCheckError(f"{label}: missing BaseScan blocker {requirement}")
+    for key in (
+        "publicOnly",
+        "adminTokenPrinted",
+        "userEmailsPrinted",
+        "writesProductionData",
+        "submitsBaseScanRequest",
+        "sendsEmail",
+        "writesDns",
+        "requiresSignature",
+        "requiresTransaction",
+        "touchesWalletsOrContracts",
+    ):
+        expected = True if key == "publicOnly" else False
+        if boundaries.get(key) is not expected:
+            raise SiteCheckError(f"{label}: wrong boundary {key}")
+    if links.get("dailyStatusPage") != DAILY_STATUS_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong daily status page link")
+    if links.get("apiStatusPage") != API_STATUS_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong API status page link")
+    if links.get("baseScanPreflightPage") != BASESCAN_PREFLIGHT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong BaseScan preflight page link")
+    if links.get("domainEmailPage") != DOMAIN_EMAIL_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong domain email page link")
+    if links.get("dataRoom") != DATA_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong data room link")
     assert_no_forbidden_public_claims(json.dumps(payload), label)
 
 
@@ -11511,6 +11624,8 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/access-api.json",
         "https://gcagochina.com/api-status.html",
         "https://gcagochina.com/api-status.json",
+        "https://gcagochina.com/daily-status.html",
+        "https://gcagochina.com/daily-status.json",
         "https://gcagochina.com/review-queue.html",
         "https://gcagochina.com/review-queue.json",
         "https://gcagochina.com/credits.html",
@@ -11665,6 +11780,8 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /access-api.json", label)
     assert_contains(text, "Allow: /api-status.html", label)
     assert_contains(text, "Allow: /api-status.json", label)
+    assert_contains(text, "Allow: /daily-status.html", label)
+    assert_contains(text, "Allow: /daily-status.json", label)
     assert_contains(text, "Allow: /review-queue.html", label)
     assert_contains(text, "Allow: /review-queue.json", label)
     assert_contains(text, "Allow: /credits.html", label)
@@ -11809,6 +11926,8 @@ CHECKS: list[EndpointCheck] = [
     ("/access-api.json", validate_access_api_json),
     ("/api-status.html", validate_api_status_page),
     ("/api-status.json", validate_api_status_json),
+    ("/daily-status.html", validate_daily_status_page),
+    ("/daily-status.json", validate_daily_status_json),
     ("/review-queue.html", validate_review_queue_page),
     ("/review-queue.json", validate_review_queue_json),
     ("/credits.html", validate_credits_page),
