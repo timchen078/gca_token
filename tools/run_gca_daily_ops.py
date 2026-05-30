@@ -19,6 +19,12 @@ from pathlib import Path
 from typing import Any, Callable, Sequence
 
 try:
+    from tools.build_gca_daily_status_snapshot import (
+        DEFAULT_HTML_OUTPUT as DEFAULT_DAILY_STATUS_HTML_OUTPUT,
+        DEFAULT_JSON_OUTPUT as DEFAULT_DAILY_STATUS_JSON_OUTPUT,
+        DailyStatusSnapshotError,
+        build_snapshot,
+    )
     from tools.build_gca_operator_digest import (
         DEFAULT_DIGEST_OUTPUT,
         DEFAULT_JSON_OUTPUT as DEFAULT_DIGEST_JSON_OUTPUT,
@@ -26,6 +32,12 @@ try:
         build_operator_digest,
     )
 except ImportError:
+    from build_gca_daily_status_snapshot import (
+        DEFAULT_HTML_OUTPUT as DEFAULT_DAILY_STATUS_HTML_OUTPUT,
+        DEFAULT_JSON_OUTPUT as DEFAULT_DAILY_STATUS_JSON_OUTPUT,
+        DailyStatusSnapshotError,
+        build_snapshot,
+    )
     from build_gca_operator_digest import (
         DEFAULT_DIGEST_OUTPUT,
         DEFAULT_JSON_OUTPUT as DEFAULT_DIGEST_JSON_OUTPUT,
@@ -292,6 +304,9 @@ def run_daily_ops(
     build_digest: bool = False,
     digest_output: Path = DEFAULT_DIGEST_OUTPUT,
     digest_json_output: Path = DEFAULT_DIGEST_JSON_OUTPUT,
+    update_public_status: bool = False,
+    daily_status_json_output: Path = DEFAULT_DAILY_STATUS_JSON_OUTPUT,
+    daily_status_html_output: Path = DEFAULT_DAILY_STATUS_HTML_OUTPUT,
     runner: CommandRunner = default_runner,
 ) -> dict[str, Any]:
     steps = [
@@ -357,6 +372,13 @@ def run_daily_ops(
             "markdownOutput": str(digest_output),
             "jsonOutput": str(digest_json_output),
         },
+        "publicStatusSnapshot": {
+            "requested": update_public_status,
+            "built": False,
+            "ok": None,
+            "jsonOutput": str(daily_status_json_output),
+            "htmlOutput": str(daily_status_html_output),
+        },
         "boundaries": {
             "publicOnlyByDefault": True,
             "readsTokenProtectedUserRecordsOnlyWhenIncludeMemberOpsIsTrue": True,
@@ -372,6 +394,7 @@ def run_daily_ops(
             "baseScanPreflightStatusOnly": True,
             "baseScanPreflightBlocksDailyOps": False,
             "submitsBaseScanRequest": False,
+            "writesPublicStatusArtifactsOnlyWhenRequested": True,
         },
     }
     summary_output.parent.mkdir(parents=True, exist_ok=True)
@@ -397,6 +420,24 @@ def run_daily_ops(
                 "error": str(exc),
             })
         summary_output.write_text(json.dumps(summary, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    if update_public_status:
+        try:
+            snapshot = build_snapshot(summary_output, daily_status_json_output, daily_status_html_output)
+            summary["publicStatusSnapshot"].update({
+                "built": True,
+                "ok": True,
+                "snapshotGeneratedAt": snapshot.get("snapshotGeneratedAt", ""),
+                "baseScanPreflightStatus": snapshot.get("baseScanPreflight", {}).get("status", ""),
+                "filesStillUsingOldEmail": snapshot.get("baseScanPreflight", {}).get("filesStillUsingOldEmail", 0),
+            })
+        except DailyStatusSnapshotError as exc:
+            summary["ok"] = False
+            summary["publicStatusSnapshot"].update({
+                "built": False,
+                "ok": False,
+                "error": str(exc),
+            })
+        summary_output.write_text(json.dumps(summary, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     return summary
 
 
@@ -415,6 +456,9 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--build-digest", action="store_true", help="Also build the redacted local operator digest from summary files.")
     parser.add_argument("--digest-output", type=Path, default=DEFAULT_DIGEST_OUTPUT, help="Markdown operator digest output path.")
     parser.add_argument("--digest-json-output", type=Path, default=DEFAULT_DIGEST_JSON_OUTPUT, help="JSON operator digest output path.")
+    parser.add_argument("--update-public-status", action="store_true", help="Also refresh site/daily-status.html and site/daily-status.json from this summary.")
+    parser.add_argument("--daily-status-json-output", type=Path, default=DEFAULT_DAILY_STATUS_JSON_OUTPUT, help="Public daily status JSON output path.")
+    parser.add_argument("--daily-status-html-output", type=Path, default=DEFAULT_DAILY_STATUS_HTML_OUTPUT, help="Public daily status HTML output path.")
     args = parser.parse_args(argv)
     if args.include_holding_report and not args.include_member_ops:
         parser.error("--include-holding-report requires --include-member-ops")
@@ -437,6 +481,9 @@ def main(argv: list[str] | None = None) -> int:
         build_digest=args.build_digest,
         digest_output=args.digest_output,
         digest_json_output=args.digest_json_output,
+        update_public_status=args.update_public_status,
+        daily_status_json_output=args.daily_status_json_output,
+        daily_status_html_output=args.daily_status_html_output,
     )
     print(json.dumps(summary, ensure_ascii=False, indent=2, sort_keys=True))
     return 0 if summary["ok"] else 1

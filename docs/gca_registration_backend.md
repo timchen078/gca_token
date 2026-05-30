@@ -146,14 +146,12 @@ The consolidated public daily ops workflow at `.github/workflows/check-gca-daily
 To refresh the public daily status page after a local daily ops run:
 
 ```bash
-.venv/bin/python tools/run_gca_daily_ops.py --summary-output /tmp/gca_daily_ops_summary.json
-.venv/bin/python tools/build_gca_daily_status_snapshot.py \
-  --summary-input /tmp/gca_daily_ops_summary.json \
-  --json-output site/daily-status.json \
-  --html-output site/daily-status.html
+.venv/bin/python tools/run_gca_daily_ops.py \
+  --summary-output /tmp/gca_daily_ops_summary.json \
+  --update-public-status
 ```
 
-The snapshot builder removes local machine paths from published command strings and does not publish admin tokens, user records, wallet signatures, transactions, or private evidence files.
+The daily ops command calls `tools/build_gca_daily_status_snapshot.py` when `--update-public-status` is set. The snapshot builder removes local machine paths from published command strings and does not publish admin tokens, user records, wallet signatures, transactions, or private evidence files.
 
 To read recent email registrations:
 

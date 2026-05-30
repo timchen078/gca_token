@@ -304,6 +304,42 @@ class GcaDailyOpsTests(unittest.TestCase):
             self.assertNotIn("stdoutTail", serialized)
             self.assertNotIn("secret-token", serialized)
 
+    def test_daily_ops_can_refresh_public_status_snapshot(self):
+        def runner(command, cwd, timeout):
+            if any("check_basescan_resubmission_readiness.py" in part for part in command):
+                return subprocess.CompletedProcess(command, 0, stdout=BASESCAN_BLOCKED_OUTPUT, stderr="")
+            return subprocess.CompletedProcess(command, 0, stdout='{"ok": true}', stderr="")
+
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            summary_output = root / "summary.json"
+            json_output = root / "daily-status.json"
+            html_output = root / "daily-status.html"
+            html_output.write_text((Path(__file__).resolve().parents[1] / "site" / "daily-status.html").read_text(), encoding="utf-8")
+
+            summary = run_daily_ops(
+                summary_output=summary_output,
+                update_public_status=True,
+                daily_status_json_output=json_output,
+                daily_status_html_output=html_output,
+                runner=runner,
+            )
+
+            self.assertTrue(summary["ok"])
+            self.assertTrue(summary["publicStatusSnapshot"]["requested"])
+            self.assertTrue(summary["publicStatusSnapshot"]["built"])
+            self.assertTrue(summary["publicStatusSnapshot"]["ok"])
+            self.assertEqual(summary["publicStatusSnapshot"]["baseScanPreflightStatus"], "blocked-before-basescan-resubmission")
+            self.assertEqual(summary["publicStatusSnapshot"]["filesStillUsingOldEmail"], 3)
+            payload = json.loads(json_output.read_text(encoding="utf-8"))
+            page = html_output.read_text(encoding="utf-8")
+            self.assertEqual(payload["snapshotGeneratedAt"], summary["generatedAt"])
+            self.assertEqual(payload["dailyOps"]["steps"][0]["command"], "python3 tools/check_public_site.py --base-url https://gcagochina.com/ --timeout 20")
+            self.assertIn(summary["generatedAt"], page)
+            self.assertNotIn("/Users/", json.dumps(payload))
+            self.assertFalse(summary["boundaries"]["adminTokenPrinted"])
+            self.assertFalse(summary["boundaries"]["writesProductionData"])
+
     def test_daily_status_snapshot_builder_publishes_public_safe_artifacts(self):
         summary = {
             "ok": True,

@@ -4,14 +4,14 @@
   "status": "daily-public-ops-snapshot-published",
   "lastUpdated": "2026-05-30",
   "snapshotSource": "tools/run_gca_daily_ops.py",
-  "snapshotGeneratedAt": "2026-05-30T09:05:56Z",
+  "snapshotGeneratedAt": "2026-05-30T09:51:30Z",
   "project": "GCA",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "dailyOps": {
     "packetVersion": "gca_daily_ops_summary_v1",
     "ok": true,
-    "generatedAt": "2026-05-30T09:05:56Z",
+    "generatedAt": "2026-05-30T09:51:30Z",
     "publicOnlyByDefault": true,
     "steps": [
       {
