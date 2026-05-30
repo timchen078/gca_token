@@ -378,6 +378,7 @@
           <a class="button" href="zh-cn.html">中文入口</a>
           <a class="button" href="about.html">About GCA</a>
           <a class="button primary" href="status.html">Project Status</a>
+          <a class="button secondary" href="daily-status.html">Daily Status Queue</a>
           <a class="button secondary" href="domain-email.html">Domain Email Plan</a>
           <a class="button secondary" href="domain-email-evidence.html">Email Evidence Checklist</a>
           <a class="button secondary" href="release-gates.html">Release Gates</a>
@@ -487,6 +488,24 @@
               <a class="text-link" href="release-gates.html">Release Gates</a>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section class="section panel notice" aria-labelledby="dailyQueueTitle">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Current Daily Queue</p>
+            <h2 id="dailyQueueTitle">BaseScan Action Queue From Latest Daily Status</h2>
+          </div>
+          <p class="note">The public daily status page turns the latest safe ops snapshot into a reviewer-readable queue. This action plan mirrors the current blocker order without exposing private evidence, user records, or admin data.</p>
+        </div>
+        <div class="list">
+          <div class="row"><span>Daily status source</span><strong><a href="daily-status.html">daily-status.html</a></strong></div>
+          <div class="row"><span>1. Activate domain mailbox</span><strong>Create and test <code>support@gcagochina.com</code> with working inbound and outbound mail.</strong></div>
+          <div class="row"><span>2. Complete email evidence</span><strong>Add MX, SPF, DKIM, and DMARC records, then collect provider, inbound, outbound, DNS, and website evidence.</strong></div>
+          <div class="row"><span>3. Switch public email later</span><strong>Only after the mailbox evidence passes, switch tracked public files from <code>GCAgochina@outlook.com</code> to <code>support@gcagochina.com</code> in one controlled pass.</strong></div>
+          <div class="row"><span>Old-email switch queue</span><strong>Current daily status reports <code>filesStillUsingOldEmail</code> as 15 tracked files, including <code>site/support.html</code>, <code>site/support.json</code>, <code>site/zh-support.html</code>, <code>site/register.html</code>, <code>site/members.html</code>, <code>site/project.json</code>, <code>site/listing-kit.html</code>, and BaseScan launch materials.</strong></div>
+          <div class="row"><span>4. Final BaseScan preflight</span><strong>Run <code>tools/check_basescan_resubmission_readiness.py --json --require-ready</code> before preparing another BaseScan submission.</strong></div>
         </div>
       </section>
 
