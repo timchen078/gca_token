@@ -18,6 +18,8 @@
   "statusPageUrl": "https://gcagochina.com/status.html",
   "reviewerKitPageUrl": "https://gcagochina.com/reviewer-kit.html",
   "reviewerKitUrl": "https://gcagochina.com/reviewer-kit.json",
+  "baseScanHandoffPageUrl": "https://gcagochina.com/basescan-handoff.html",
+  "baseScanHandoffUrl": "https://gcagochina.com/basescan-handoff.json",
   "platformRepliesPageUrl": "https://gcagochina.com/platform-replies.html",
   "platformRepliesUrl": "https://gcagochina.com/platform-replies.json",
   "trustCenterPageUrl": "https://gcagochina.com/trust.html",
@@ -122,6 +124,12 @@
       "data platform metadata review",
       "community moderator verification"
     ]
+  },
+  "baseScanHandoff": {
+    "status": "blocked-until-domain-email-evidence-and-final-preflight-pass",
+    "pageUrl": "https://gcagochina.com/basescan-handoff.html",
+    "url": "https://gcagochina.com/basescan-handoff.json",
+    "useCase": "Direct evidence index for the next clean BaseScan token profile resubmission after project-domain email evidence and final preflight pass."
   },
   "platformReplies": {
     "status": "public-platform-reply-kit-published",

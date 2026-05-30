@@ -1,0 +1,132 @@
+{
+  "schema": "https://gcagochina.com/basescan-handoff.json",
+  "pageUrl": "https://gcagochina.com/basescan-handoff.html",
+  "status": "blocked-until-domain-email-evidence-and-final-preflight-pass",
+  "lastUpdated": "2026-05-30",
+  "projectName": "GCA",
+  "conceptExpansion": "Go China Access",
+  "network": "Base Mainnet",
+  "chainId": 8453,
+  "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+  "baseScanProfileStatus": {
+    "sourceVerification": "complete",
+    "deployerWalletOwnershipVerification": "complete",
+    "publicTokenProfile": "returned-information-insufficient-2026-05-23",
+    "readyForBaseScanResubmission": false,
+    "targetSender": "support@gcagochina.com",
+    "currentActiveContact": "GCAgochina@outlook.com",
+    "nextAction": "Do not resubmit yet. Activate the project-domain mailbox, collect evidence, switch public email values, and run the final preflight first."
+  },
+  "domainEmailGate": {
+    "targetDomainEmail": "support@gcagochina.com",
+    "snapshotDate": "2026-05-30",
+    "snapshotPage": "https://gcagochina.com/domain-email.html#snapshotTitle",
+    "evidenceChecklistPage": "https://gcagochina.com/domain-email-evidence.html",
+    "evidencePacketAnchor": "https://gcagochina.com/domain-email.html#evidenceTitle",
+    "readyForBaseScanEmailEvidence": false,
+    "checks": {
+      "mx": "missing",
+      "spf": "missing",
+      "dmarc": "missing",
+      "dkim": "selector-required"
+    },
+    "missingOrBlockedChecks": [
+      "mx",
+      "spf",
+      "dmarc",
+      "dkim"
+    ]
+  },
+  "officialLinks": {
+    "website": "https://gcagochina.com/",
+    "baseScanHandoffPage": "https://gcagochina.com/basescan-handoff.html",
+    "baseScanHandoff": "https://gcagochina.com/basescan-handoff.json",
+    "reviewerKitPage": "https://gcagochina.com/reviewer-kit.html",
+    "reviewerKit": "https://gcagochina.com/reviewer-kit.json",
+    "baseScanPreflightPage": "https://gcagochina.com/basescan-preflight.html",
+    "baseScanPreflight": "https://gcagochina.com/basescan-preflight.json",
+    "baseScanRemediationPage": "https://gcagochina.com/basescan-remediation.html",
+    "domainEmailPlanPage": "https://gcagochina.com/domain-email.html",
+    "domainEmailEvidenceChecklistPage": "https://gcagochina.com/domain-email-evidence.html",
+    "teamPage": "https://gcagochina.com/team.html",
+    "timChenProfessionalProfile": "https://gcagochina.com/tim-chen.html",
+    "technicalReportPage": "https://gcagochina.com/technical-report.html",
+    "onchainProofsPage": "https://gcagochina.com/onchain-proofs.html",
+    "tokenSafetyPage": "https://gcagochina.com/token-safety.html",
+    "reserveStatementPage": "https://gcagochina.com/reserve-statement.html",
+    "holderDistributionPage": "https://gcagochina.com/holder-distribution.html",
+    "supplyPage": "https://gcagochina.com/supply.html",
+    "liquidityPage": "https://gcagochina.com/liquidity.html",
+    "marketsPage": "https://gcagochina.com/markets.html",
+    "platformRepliesPage": "https://gcagochina.com/platform-replies.html",
+    "dataRoom": "https://gcagochina.com/data.html",
+    "baseScanContract": "https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6"
+  },
+  "reviewerReasonMap": [
+    {
+      "baseScanReturnReason": "project/team information not clear enough",
+      "evidencePages": [
+        "https://gcagochina.com/about.html",
+        "https://gcagochina.com/team.html",
+        "https://gcagochina.com/tim-chen.html",
+        "https://gcagochina.com/whitepaper.html",
+        "https://gcagochina.com/roadmap.html"
+      ],
+      "status": "published"
+    },
+    {
+      "baseScanReturnReason": "sender email does not match official domain",
+      "evidencePages": [
+        "https://gcagochina.com/domain-email.html",
+        "https://gcagochina.com/domain-email-evidence.html",
+        "https://gcagochina.com/basescan-preflight.html"
+      ],
+      "status": "blocked-until-support@gcagochina.com-is-active"
+    },
+    {
+      "baseScanReturnReason": "links, logo, website, and metadata need review",
+      "evidencePages": [
+        "https://gcagochina.com/verify.html",
+        "https://gcagochina.com/brand-kit.html",
+        "https://gcagochina.com/data.html",
+        "https://gcagochina.com/reviewer-kit.html"
+      ],
+      "status": "published"
+    },
+    {
+      "baseScanReturnReason": "contract, supply, and market evidence",
+      "evidencePages": [
+        "https://gcagochina.com/technical-report.html",
+        "https://gcagochina.com/onchain-proofs.html",
+        "https://gcagochina.com/supply.html",
+        "https://gcagochina.com/reserve-statement.html",
+        "https://gcagochina.com/liquidity.html"
+      ],
+      "status": "published"
+    }
+  ],
+  "requiredBeforeNextSubmission": [
+    "support@gcagochina.com receives external email",
+    "support@gcagochina.com sends authenticated external email",
+    "MX, SPF, DKIM, and DMARC evidence is collected",
+    "public support and BaseScan files publish support@gcagochina.com",
+    "tools/check_basescan_resubmission_readiness.py --json --require-ready passes"
+  ],
+  "submissionSequence": [
+    "Activate support@gcagochina.com as a full mailbox.",
+    "Add provider MX, SPF, DKIM, and DMARC records.",
+    "Save provider, DNS, inbound, outbound, and support-page evidence.",
+    "Switch public support/BaseScan email values after evidence is complete.",
+    "Run tools/check_basescan_resubmission_readiness.py --json --require-ready.",
+    "Submit one clean BaseScan request only after the final preflight passes."
+  ],
+  "boundaries": {
+    "submitsBaseScanRequest": false,
+    "sendsEmail": false,
+    "writesDns": false,
+    "signsMessage": false,
+    "touchesWalletOrContract": false,
+    "claimsBaseScanApproval": false,
+    "publishesPrivateMailboxEvidence": false
+  }
+}

@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GCA BaseScan Handoff | Evidence Index</title>
+    <meta name="description" content="Direct GCA BaseScan handoff page with the current resubmission blocker, evidence index, review sequence, and public claim boundaries.">
+    <link rel="canonical" href="https://gcagochina.com/basescan-handoff.html">
+    <link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">
+    <link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="GCA | Go China Access">
+    <meta property="og:title" content="GCA BaseScan Handoff | Evidence Index">
+    <meta property="og:description" content="Direct GCA BaseScan handoff page with the current resubmission blocker, evidence index, review sequence, and public claim boundaries.">
+    <meta property="og:url" content="https://gcagochina.com/basescan-handoff.html">
+    <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="GCA BaseScan Handoff | Evidence Index">
+    <meta name="twitter:description" content="Direct GCA BaseScan handoff page with the current resubmission blocker, evidence index, review sequence, and public claim boundaries.">
+    <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f7f8f5;
+        --ink: #151817;
+        --muted: #5e6763;
+        --line: #dfe4dd;
+        --panel: #ffffff;
+        --soft: #eef3ef;
+        --red: #d71920;
+        --blue: #1557d7;
+        --green: #087f5b;
+        --gold: #a87810;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: var(--bg);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.5;
+      }
+
+      a { color: var(--blue); text-decoration: none; }
+      a:hover { text-decoration: underline; }
+
+      .shell {
+        width: min(1120px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 3;
+        border-bottom: 1px solid var(--line);
+        background: rgba(247, 248, 245, 0.94);
+        backdrop-filter: blur(16px);
+      }
+
+      nav,
+      .brand,
+      .nav-links,
+      .actions {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      nav {
+        min-height: 68px;
+        justify-content: space-between;
+      }
+
+      .brand {
+        color: var(--ink);
+        font-weight: 850;
+      }
+
+      .brand img {
+        width: 34px;
+        height: 34px;
+      }
+
+      .nav-links {
+        gap: 16px;
+        font-size: 14px;
+      }
+
+      main { padding: 42px 0 64px; }
+      h1, h2, h3, p { margin-top: 0; }
+
+      h1 {
+        max-width: 960px;
+        margin-bottom: 18px;
+        font-size: clamp(42px, 6vw, 76px);
+        line-height: 1.02;
+        letter-spacing: 0;
+      }
+
+      h2 {
+        margin-bottom: 12px;
+        font-size: 25px;
+        letter-spacing: 0;
+      }
+
+      h3 {
+        margin-bottom: 8px;
+        font-size: 18px;
+        letter-spacing: 0;
+      }
+
+      .eyebrow {
+        margin: 0 0 14px;
+        color: var(--red);
+        font-size: 13px;
+        font-weight: 850;
+        text-transform: uppercase;
+      }
+
+      .lead {
+        max-width: 940px;
+        margin-bottom: 14px;
+        color: var(--muted);
+        font-size: 18px;
+      }
+
+      .note, li { color: var(--muted); }
+      .actions { margin-top: 24px; }
+
+      .button,
+      .text-link {
+        min-height: 40px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        color: var(--ink);
+        padding: 9px 12px;
+        font-size: 14px;
+        font-weight: 760;
+      }
+
+      .button.primary {
+        border-color: var(--red);
+        background: var(--red);
+        color: #fff;
+      }
+
+      .section { margin-top: 30px; }
+
+      .panel,
+      .fact,
+      .card {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+      }
+
+      .panel { padding: 24px; }
+      .fact, .card { padding: 16px; }
+
+      .facts,
+      .grid,
+      .two {
+        display: grid;
+        gap: 14px;
+      }
+
+      .facts {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        margin-top: 26px;
+      }
+
+      .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+      .label {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 760;
+        text-transform: uppercase;
+      }
+
+      .value {
+        display: block;
+        margin-top: 7px;
+        font-size: 17px;
+        font-weight: 850;
+        overflow-wrap: anywhere;
+      }
+
+      .good { color: var(--green); }
+      .pending { color: var(--gold); }
+
+      .list {
+        display: grid;
+        gap: 10px;
+      }
+
+      .row {
+        display: grid;
+        grid-template-columns: minmax(190px, 0.8fr) minmax(0, 1.2fr);
+        gap: 12px;
+        align-items: start;
+        border-top: 1px solid var(--line);
+        padding-top: 10px;
+      }
+
+      .row:first-child {
+        border-top: 0;
+        padding-top: 0;
+      }
+
+      .row strong {
+        min-width: 0;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+        text-align: right;
+      }
+
+      .notice {
+        border-color: #ecd28c;
+        background: #fff8e6;
+      }
+
+      code {
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        background: var(--soft);
+        padding: 2px 5px;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 0.92em;
+        overflow-wrap: anywhere;
+      }
+
+      footer {
+        border-top: 1px solid var(--line);
+        padding: 22px 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      @media (max-width: 900px) {
+        nav {
+          align-items: flex-start;
+          flex-direction: column;
+          padding: 14px 0;
+        }
+
+        .facts,
+        .grid,
+        .two {
+          grid-template-columns: 1fr;
+        }
+
+        .row {
+          grid-template-columns: 1fr;
+        }
+
+        .row strong {
+          text-align: left;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav class="shell" aria-label="Primary">
+        <a class="brand" href="index.html" aria-label="GCA home">
+          <img src="assets/gca-logo.svg" alt="GCA logo">
+          <span>GCA</span>
+        </a>
+        <div class="nav-links">
+          <a href="verify.html">Verify</a>
+          <a href="reviewer-kit.html">Reviewer Kit</a>
+          <a href="basescan-preflight.html">BaseScan Preflight</a>
+          <a href="domain-email.html">Domain Email</a>
+          <a href="platform-replies.html">Platform Replies</a>
+          <a href="data.html">Data Room</a>
+        </div>
+      </nav>
+    </header>
+
+    <main class="shell">
+      <section aria-labelledby="title">
+        <p class="eyebrow">BaseScan Evidence Index</p>
+        <h1 id="title">GCA BaseScan Handoff</h1>
+        <p class="lead">A direct handoff page for the next GCA BaseScan token profile review. It summarizes what is already published, what remains blocked, and the exact evidence order to complete before one clean resubmission.</p>
+        <div class="actions">
+          <a class="button primary" href="basescan-preflight.html">Runbook Preflight</a>
+          <a class="button primary" href="domain-email-evidence.html">Email Evidence Checklist</a>
+          <a class="button" href="team.html">Team Profile</a>
+          <a class="button" href="tim-chen.html">Tim Chen Profile</a>
+          <a class="button" href="technical-report.html">Technical Report</a>
+          <a class="button" href="onchain-proofs.html">On-chain Proofs</a>
+          <a class="button" href="platform-replies.html">Reply Copy</a>
+        </div>
+      </section>
+
+      <section class="facts" aria-label="BaseScan handoff summary">
+        <div class="fact">
+          <span class="label">Profile Status</span>
+          <span class="value pending">Remediation required</span>
+        </div>
+        <div class="fact">
+          <span class="label">Ready For Resubmission</span>
+          <span class="value pending">No</span>
+        </div>
+        <div class="fact">
+          <span class="label">Target Sender</span>
+          <span class="value">support@gcagochina.com</span>
+        </div>
+        <div class="fact">
+          <span class="label">Current Contact</span>
+          <span class="value">GCAgochina@outlook.com</span>
+        </div>
+      </section>
+
+      <section class="section panel notice" aria-labelledby="gateTitle">
+        <h2 id="gateTitle">Current Gate</h2>
+        <p class="note"><code>readyForBaseScanResubmission</code> is false. Do not resubmit BaseScan yet. The remaining owner-controlled blocker is a working project-domain mailbox that can receive external mail, send authenticated external replies, pass DNS evidence checks, and match the public support/BaseScan email values after the switch.</p>
+        <div class="list">
+          <div class="row"><span>BaseScan source verification</span><strong class="good">Complete</strong></div>
+          <div class="row"><span>Deployer-wallet ownership verification</span><strong class="good">Complete</strong></div>
+          <div class="row"><span>Public token profile</span><strong class="pending">Returned again as information-insufficient on 2026-05-23</strong></div>
+          <div class="row"><span>Domain email DNS snapshot</span><strong class="pending">2026-05-30: MX/SPF/DMARC missing; DKIM selector required</strong></div>
+        </div>
+      </section>
+
+      <section class="section grid" aria-label="BaseScan return reason mapping">
+        <div class="card">
+          <h3>Team Transparency</h3>
+          <p class="note">Use <a href="team.html">team.html</a> and <a href="tim-chen.html">tim-chen.html</a> for the founder and professional-profile evidence that BaseScan requested.</p>
+        </div>
+        <div class="card">
+          <h3>Project Clarity</h3>
+          <p class="note">Use <a href="about.html">about.html</a>, <a href="whitepaper.html">whitepaper.html</a>, <a href="utility.html">utility.html</a>, and <a href="roadmap.html">roadmap.html</a> for the concept-stage utility and product boundary.</p>
+        </div>
+        <div class="card">
+          <h3>Domain Email</h3>
+          <p class="note">Use <a href="domain-email.html">domain-email.html</a>, <a href="domain-email.html#snapshotTitle">the DNS snapshot</a>, and <a href="domain-email-evidence.html">domain-email-evidence.html</a>. This is still blocked until the mailbox is live.</p>
+        </div>
+        <div class="card">
+          <h3>Contract Evidence</h3>
+          <p class="note">Use <a href="technical-report.html">technical-report.html</a>, <a href="token-safety.html">token-safety.html</a>, and <a href="onchain-proofs.html">onchain-proofs.html</a> for fixed-supply and verified-source evidence.</p>
+        </div>
+        <div class="card">
+          <h3>Supply Disclosure</h3>
+          <p class="note">Use <a href="supply.html">supply.html</a>, <a href="reserve-statement.html">reserve-statement.html</a>, and <a href="holder-distribution.html">holder-distribution.html</a> for reserve and concentration context.</p>
+        </div>
+        <div class="card">
+          <h3>Official Market Route</h3>
+          <p class="note">Use <a href="liquidity.html">liquidity.html</a> and <a href="markets.html">markets.html</a> for the Base Mainnet GCA/USDT pool. Liquidity remains starter-depth only.</p>
+        </div>
+      </section>
+
+      <section class="section two" aria-label="Evidence order and boundaries">
+        <div class="panel">
+          <h2>Required Order</h2>
+          <ol>
+            <li>Activate <code>support@gcagochina.com</code> as a full mailbox.</li>
+            <li>Add MX, SPF, DKIM, and DMARC records from the mail provider.</li>
+            <li>Save provider, DNS, inbound, outbound, and support-page evidence.</li>
+            <li>Switch public support/BaseScan email values after the evidence is complete.</li>
+            <li>Run <code>tools/check_basescan_resubmission_readiness.py --json --require-ready</code>.</li>
+            <li>Submit one clean BaseScan request only after the final preflight passes.</li>
+          </ol>
+        </div>
+        <div class="panel">
+          <h2>Boundaries</h2>
+          <ul>
+            <li>This page does not submit BaseScan forms.</li>
+            <li>It does not send email, write DNS records, sign messages, or touch wallets/contracts.</li>
+            <li>It does not claim BaseScan token profile approval before BaseScan publishes it.</li>
+            <li>It does not publish private mailbox screenshots or private evidence files.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="platformPathTitle">
+        <h2 id="platformPathTitle">Platform-Only Evidence Path</h2>
+        <p class="note">Start with this human-readable handoff page. If BaseScan, a wallet, an explorer, or another reviewer asks for structured data, use the matching raw JSON files from the <a href="data.html">Reviewer Data Room</a>.</p>
+      </section>
+    </main>
+
+    <footer>
+      <div class="shell">GCA BaseScan handoff. Verify Base Mainnet chain ID 8453 and contract 0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6 before using this evidence.</div>
+    </footer>
+  </body>
+</html>
