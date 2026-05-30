@@ -8,7 +8,7 @@
 - Submission date: 2026-05-09
 - Resubmission date: 2026-05-13
 - Submission status: returned again; ready for one owner resubmission
-- Review status: remediation-required-before-next-submission
+- Review status: ready-for-owner-resubmission
 - Return notice date: 2026-05-13
 - Latest return notice date: 2026-05-23
 - Last checked: 2026-05-30; BaseScan return remains open and the latest DNS snapshot shows the domain email evidence gate is ready
@@ -64,7 +64,7 @@ BaseScan replied that it could not process the token update request because the 
 ## If BaseScan Approves
 
 1. Confirm the contract page displays the GCA logo, website, whitepaper, and contact details.
-2. Update `launch/launch_status.md`, `docs/mainnet_public_profile.md`, `docs/whitepaper.md`, `site/index.html`, and `site/whitepaper.html` from "remediation-required-before-next-submission" to "accepted and published".
+2. Update `launch/launch_status.md`, `docs/mainnet_public_profile.md`, `docs/whitepaper.md`, `site/index.html`, and `site/whitepaper.html` from "ready-for-owner-resubmission" to "accepted and published".
 3. Keep the third-party audit disclosure unchanged unless an independent auditor provides a report or public verification page.
 4. Run the full test suite before publishing the updated site.
 

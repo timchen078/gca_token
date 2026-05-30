@@ -76,7 +76,7 @@
     {
       "id": "basescan-token-profile",
       "label": "BaseScan token profile",
-      "status": "remediation-required-before-next-submission",
+      "status": "ready-for-owner-resubmission",
       "lastCheckedDate": "2026-05-30",
       "evidence": "Token information update was returned again by BaseScan as information-insufficient on 2026-05-23. Tim Chen official-domain professional profile evidence is published; the domain email setup plan, public evidence checklist, and activation evidence packet are published; support@gcagochina.com is active and the 2026-05-30 DNS snapshot shows MX/SPF/DKIM/DMARC present."
     },

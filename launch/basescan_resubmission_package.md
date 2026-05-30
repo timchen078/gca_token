@@ -13,7 +13,7 @@ This package records the current BaseScan token information remediation state. T
 - Total supply: 1,000,000,000 GCA
 - Contract source: verified on BaseScan
 - Deployer-wallet ownership: previously verified; sign again if BaseScan asks
-- BaseScan profile status: remediation-required-before-next-submission
+- BaseScan profile status: ready-for-owner-resubmission
 - Latest return notice: 2026-05-23
 - Next submission ready: yes; Tim Chen professional profile is published, the 2026-05-30 DNS snapshot shows MX/SPF/DKIM/DMARC present, and readyForBaseScanEmailEvidence is true
 

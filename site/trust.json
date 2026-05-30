@@ -165,7 +165,7 @@
   "externalReviewStatus": {
     "baseScanSource": "verified",
     "baseScanOwnership": "verified",
-    "baseScanTokenProfile": "remediation-required-before-next-submission",
+    "baseScanTokenProfile": "ready-for-owner-resubmission",
     "baseScanDomainEmailGate": "ready-domain-email-evidence-2026-05-30",
     "baseScanDomainEmailTarget": "support@gcagochina.com",
     "geckoTerminal": "approved-2026-05-11",

@@ -14,7 +14,7 @@ This runbook records the current official X profile state for GCA and the safe l
 - Latest public X post: posted at `https://x.com/GCAAIGoChina/status/2058090599535030302`.
 - Tim Chen public professional profile: published at `https://gcagochina.com/tim-chen.html`.
 - Domain email setup plan: published at `https://gcagochina.com/domain-email.html`.
-- Domain email evidence checklist: published at `https://gcagochina.com/domain-email-evidence.html`; working `gcagochina.com` mailbox still required before the next BaseScan token profile resubmission.
+- Domain email evidence checklist: published at `https://gcagochina.com/domain-email-evidence.html`; `support@gcagochina.com` is active and ready for one clean BaseScan token profile resubmission.
 - Pin status: no official X post is pinned yet.
 
 ## Profile Checklist
@@ -82,7 +82,7 @@ Start here: https://gcagochina.com
 
 URL: `https://x.com/GCAAIGoChina/status/2058090599535030302`
 
-Current note after this post: Tim Chen public professional profile evidence, the domain email setup plan, and the public evidence checklist are now published. The remaining BaseScan owner-controlled blocker is a working project-domain email.
+Current note after this post: Tim Chen public professional profile evidence, the domain email setup plan, the public evidence checklist, and the project-domain mailbox are now ready. The remaining external dependency is BaseScan review after one clean owner-controlled submission from `support@gcagochina.com`.
 
 ## Suggested Thread Follow-Up
 

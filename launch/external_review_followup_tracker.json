@@ -50,7 +50,7 @@
   },
   "platforms": {
     "baseScan": {
-      "profileStatus": "remediation-required-before-next-submission",
+      "profileStatus": "ready-for-owner-resubmission",
       "submissionDate": "2026-05-09",
       "returnNoticeDate": "2026-05-13",
       "latestReturnNoticeDate": "2026-05-23",

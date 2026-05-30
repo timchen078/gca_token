@@ -1360,7 +1360,6 @@ def validate_basescan_remediation_json(text: str) -> None:
     if payload.get("lastUpdated") not in {"2026-05-25", "2026-05-30"}:
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("status") not in {
-        "basescan-remediation-required-before-next-submission",
         "basescan-ready-for-owner-resubmission",
     }:
         raise SiteCheckError(f"{label}: wrong status")
@@ -3917,7 +3916,7 @@ def validate_listing_kit_page(text: str) -> None:
     assert_contains(text, "Official GCA/USDT route", label)
     assert_contains(text, "BaseScan", label)
     assert_contains(text, "returned again as information-insufficient on 2026-05-23", label)
-    assert_contains(text, "domain email setup plan, public evidence checklist, and activation evidence packet are published", label)
+    assert_contains(text, "The project-domain email is now ready; submit one clean update", label)
     assert_contains(text, "domain-email.html", label)
     assert_contains(text, "domain-email-evidence.html", label)
     assert_contains(text, "GeckoTerminal", label)
@@ -4070,7 +4069,7 @@ def validate_token_safety_json(text: str) -> None:
     ):
         if controls.get(key) is not False:
             raise SiteCheckError(f"{label}: {key} must be false")
-    if pending.get("baseScanTokenProfile") != "remediation-required-before-next-submission":
+    if pending.get("baseScanTokenProfile") != "ready-for-owner-resubmission":
         raise SiteCheckError(f"{label}: wrong BaseScan profile status")
     if pending.get("blockaidMetaMaskWarning") != "owner-observed-no-warning-visible":
         raise SiteCheckError(f"{label}: wrong wallet warning status")
@@ -4811,7 +4810,7 @@ def validate_roadmap_json(text: str) -> None:
         raise SiteCheckError(f"{label}: LP lock must not be claimed")
     if market.get("liquidityDepth") != "starter-depth-only":
         raise SiteCheckError(f"{label}: wrong liquidityDepth")
-    if dependencies.get("baseScanTokenProfile") != "remediation-required-before-next-submission":
+    if dependencies.get("baseScanTokenProfile") != "ready-for-owner-resubmission":
         raise SiteCheckError(f"{label}: wrong BaseScan status")
     if dependencies.get("blockaidMetaMaskWarning") != "owner-observed-no-warning-visible":
         raise SiteCheckError(f"{label}: wrong wallet warning status")
@@ -8135,7 +8134,7 @@ def validate_release_gates_json(text: str) -> None:
             raise SiteCheckError(f"{label}: {key} must be true")
     if state.get("liveTradingEnabled") is not False:
         raise SiteCheckError(f"{label}: liveTradingEnabled must be false")
-    if state.get("baseScanTokenProfile") != "remediation-required-before-next-submission":
+    if state.get("baseScanTokenProfile") != "ready-for-owner-resubmission":
         raise SiteCheckError(f"{label}: wrong BaseScan state")
     if state.get("thirdPartyAudit") != "not-completed":
         raise SiteCheckError(f"{label}: wrong audit state")
@@ -8378,7 +8377,7 @@ def validate_terms_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong contact suppression endpoint")
     if "chain state" not in contact_suppression.get("doesNotChange", []):
         raise SiteCheckError(f"{label}: missing contact suppression chain boundary")
-    if status.get("baseScanTokenProfile") != "remediation-required-before-next-submission":
+    if status.get("baseScanTokenProfile") != "ready-for-owner-resubmission":
         raise SiteCheckError(f"{label}: wrong BaseScan status")
     if status.get("geckoTerminalTokenInfo") != "approved-2026-05-11":
         raise SiteCheckError(f"{label}: wrong GeckoTerminal status")
@@ -8759,7 +8758,7 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong poolAddress")
     if market.get("quoteAssetAddress") != BASE_USDT_ADDRESS:
         raise SiteCheckError(f"{label}: wrong quoteAssetAddress")
-    if status.get("baseScanTokenProfile") != "remediation-required-before-next-submission":
+    if status.get("baseScanTokenProfile") != "ready-for-owner-resubmission":
         raise SiteCheckError(f"{label}: unexpected BaseScan status")
     if status.get("baseScanTokenProfileLastCheckedDate") != "2026-05-30":
         raise SiteCheckError(f"{label}: wrong BaseScan profile last checked date")
@@ -9640,7 +9639,7 @@ def validate_wallet_security_json(text: str) -> None:
         raise SiteCheckError(f"{label}: owner-visible warning state must be true")
     if basescan.get("sourceVerification") != "verified":
         raise SiteCheckError(f"{label}: wrong BaseScan source status")
-    if basescan.get("tokenProfile") != "remediation-required-before-next-submission":
+    if basescan.get("tokenProfile") != "ready-for-owner-resubmission":
         raise SiteCheckError(f"{label}: wrong BaseScan token profile status")
     if market.get("pair") != "GCA/USDT":
         raise SiteCheckError(f"{label}: wrong official market pair")
