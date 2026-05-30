@@ -4,7 +4,7 @@
   "status": "daily-public-ops-snapshot-published",
   "lastUpdated": "2026-05-30",
   "snapshotSource": "tools/run_gca_daily_ops.py",
-  "snapshotGeneratedAt": "2026-05-30T08:55:44Z",
+  "snapshotGeneratedAt": "2026-05-30T09:05:56Z",
   "project": "GCA",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
