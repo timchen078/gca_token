@@ -12,7 +12,7 @@ from tools.check_domain_email_snapshot_alignment import (
 
 
 class DomainEmailSnapshotAlignmentTests(unittest.TestCase):
-    def write_fixture(self, root: Path, *, checked_at: str = "2026-05-28T12:41:11Z") -> Path:
+    def write_fixture(self, root: Path, *, checked_at: str = "2026-05-30T08:13:47Z") -> Path:
         site = root / "site"
         site.mkdir(parents=True, exist_ok=True)
         config_path = site / "domain-email.json"
@@ -32,9 +32,9 @@ class DomainEmailSnapshotAlignmentTests(unittest.TestCase):
         report = build_report()
 
         self.assertEqual(report["schema"], "gca-domain-email-snapshot-alignment-v1")
-        self.assertEqual(report["canonicalSnapshot"]["checkedAt"], "2026-05-28T12:41:11Z")
-        self.assertEqual(report["canonicalSnapshot"]["date"], "2026-05-28")
-        self.assertEqual(report["canonicalSnapshot"]["gateSlug"], "blocked-by-dns-snapshot-2026-05-28")
+        self.assertEqual(report["canonicalSnapshot"]["checkedAt"], "2026-05-30T08:13:47Z")
+        self.assertEqual(report["canonicalSnapshot"]["date"], "2026-05-30")
+        self.assertEqual(report["canonicalSnapshot"]["gateSlug"], "blocked-by-dns-snapshot-2026-05-30")
         self.assertFalse(report["canonicalSnapshot"]["readyForBaseScanEmailEvidence"])
         self.assertEqual(report["status"], "aligned")
         self.assertTrue(report["alignedForPublicPlatformPackets"])
@@ -83,7 +83,7 @@ class DomainEmailSnapshotAlignmentTests(unittest.TestCase):
         self.assertEqual(report["status"], "missing-current-snapshot-date")
         self.assertFalse(report["alignedForPublicPlatformPackets"])
         self.assertIn("missing-current-snapshot-date", report["blockedRequirements"])
-        self.assertIn("add the canonical DNS snapshot date 2026-05-28", report["records"][0]["action"])
+        self.assertIn("add the canonical DNS snapshot date 2026-05-30", report["records"][0]["action"])
 
     def test_missing_monitored_file_blocks_alignment(self):
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -103,14 +103,14 @@ class DomainEmailSnapshotAlignmentTests(unittest.TestCase):
 
     def test_invalid_canonical_snapshot_is_rejected(self):
         with self.assertRaises(SnapshotAlignmentError):
-            canonical_snapshot({"liveDnsSnapshot": {"checkedAt": "2026-05-28"}})
+            canonical_snapshot({"liveDnsSnapshot": {"checkedAt": "2026-05-30"}})
 
     def test_markdown_report_names_boundaries(self):
         report = build_report(monitored_files=["site/domain-email.json"])
         markdown = render_markdown(report)
 
         self.assertIn("GCA Domain Email Snapshot Alignment", markdown)
-        self.assertIn("Canonical snapshot date: `2026-05-28`", markdown)
+        self.assertIn("Canonical snapshot date: `2026-05-30`", markdown)
         self.assertIn("Aligned for public platform packets: `true`", markdown)
         self.assertIn("does not edit files, send email, write DNS, submit BaseScan requests, or touch wallets/contracts", markdown)
 

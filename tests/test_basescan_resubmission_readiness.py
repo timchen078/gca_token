@@ -68,8 +68,8 @@ def ready_snapshot_alignment_report():
         "status": "aligned",
         "alignedForPublicPlatformPackets": True,
         "canonicalSnapshot": {
-            "date": "2026-05-28",
-            "checkedAt": "2026-05-28T12:41:11Z",
+            "date": "2026-05-30",
+            "checkedAt": "2026-05-30T08:13:47Z",
             "readyForBaseScanEmailEvidence": False,
         },
         "summary": {
