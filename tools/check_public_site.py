@@ -49,6 +49,7 @@ ZH_BUY_PAGE_URL = "https://gcagochina.com/zh-buy.html"
 ZH_APPLY_PAGE_URL = "https://gcagochina.com/zh-apply.html"
 ZH_STATUS_PAGE_URL = "https://gcagochina.com/zh-status.html"
 ZH_DOMAIN_EMAIL_PAGE_URL = "https://gcagochina.com/zh-domain-email.html"
+ZH_BASESCAN_PREFLIGHT_PAGE_URL = "https://gcagochina.com/zh-basescan-preflight.html"
 ZH_LIQUIDITY_PAGE_URL = "https://gcagochina.com/zh-liquidity.html"
 ZH_SUPPLY_PAGE_URL = "https://gcagochina.com/zh-supply.html"
 ZH_SECURITY_PAGE_URL = "https://gcagochina.com/zh-security.html"
@@ -1565,6 +1566,8 @@ def validate_zh_cn_page(text: str) -> None:
         "zh-apply.html",
         "中文审核状态",
         "zh-status.html",
+        "中文 BaseScan 预检",
+        "zh-basescan-preflight.html",
         "中文池子和流动性说明",
         "zh-liquidity.html",
         "中文总量和储备说明",
@@ -1630,6 +1633,8 @@ def validate_zh_cn_page(text: str) -> None:
         "members.html",
         "zh-apply.html",
         "zh-status.html",
+        "zh-domain-email.html",
+        "zh-basescan-preflight.html",
         "zh-liquidity.html",
         "zh-supply.html",
         "zh-security.html",
@@ -1852,6 +1857,8 @@ def validate_zh_status_page(text: str) -> None:
         "2026-05-23 退回整改",
         "中文域名邮箱整改",
         "zh-domain-email.html",
+        "中文 BaseScan 预检",
+        "zh-basescan-preflight.html",
         "公开证据清单",
         "domain-email-evidence.html",
         "已通过 2026-05-11",
@@ -1926,6 +1933,8 @@ def validate_zh_domain_email_page(text: str) -> None:
         "不能漏证据清单",
         "公开证据清单",
         "domain-email-evidence.html",
+        "打开中文 BaseScan 预检",
+        "zh-basescan-preflight.html",
         "Evidence Checklist",
         "私钥",
         "助记词",
@@ -1957,6 +1966,7 @@ def validate_zh_domain_email_page(text: str) -> None:
         "tools/check_domain_email_dns.py",
         "tools/build_domain_email_evidence_packet.py",
         "tools/check_basescan_resubmission_readiness.py",
+        "中文预检页",
         "tools/build_basescan_submission_package.py",
         "不会提交 BaseScan",
         "不会发送邮件",
@@ -1972,6 +1982,8 @@ def validate_zh_domain_email_page(text: str) -> None:
         "公开邮箱切换门槛",
         "中文审核状态",
         "zh-status.html",
+        "中文 BaseScan 预检",
+        "zh-basescan-preflight.html",
         "中文支持",
         "zh-support.html",
         "中文站点地图",
@@ -1989,6 +2001,71 @@ def validate_zh_domain_email_page(text: str) -> None:
     ):
         assert_contains(text, expected, label)
     assert_not_contains(text, 'href="domain-email.json"', label)
+    assert_no_forbidden_public_claims(text, label)
+
+
+def validate_zh_basescan_preflight_page(text: str) -> None:
+    label = "/zh-basescan-preflight.html"
+    assert_social_preview_meta(text, label, ZH_BASESCAN_PREFLIGHT_PAGE_URL)
+    for expected in (
+        "GCA 中文 BaseScan 预检",
+        "BaseScan 预检 / 只读门槛",
+        "现在能重提吗",
+        "不能",
+        "最新 DNS 快照",
+        "2026-05-28",
+        "主要卡点",
+        "域名邮箱",
+        "只读检查",
+        "support@gcagochina.com",
+        "GCAgochina@outlook.com",
+        "MX missing",
+        "SPF missing",
+        "DMARC missing",
+        "DKIM selector required",
+        "readyForBaseScanResubmission",
+        "launch/domain_email_evidence_packet.json",
+        "当前卡点",
+        "重提前必须有的材料",
+        "服务商证明",
+        "DNS 证明",
+        "收件证明",
+        "发件证明",
+        "公开资料切换",
+        "tools/check_domain_email_dns.py",
+        "tools/build_domain_email_evidence_packet.py",
+        "tools/check_domain_email_public_switch.py",
+        "tools/check_domain_email_snapshot_alignment.py",
+        "tools/check_basescan_resubmission_readiness.py",
+        "tools/build_basescan_submission_package.py",
+        "不会提交 BaseScan",
+        "不会发送邮件",
+        "不会写 DNS",
+        "不会签名",
+        "不会转账",
+        "不会操作钱包或合约",
+        "通过后要给 BaseScan 的证据链接",
+        "tim-chen.html",
+        "team.html#tim-chen",
+        "domain-email.html",
+        "domain-email-evidence.html",
+        "basescan-remediation.html",
+        GITHUB_REPO_URL,
+        "Base Mainnet GCA/USDT",
+        "现在不要做这些",
+        "不要重复提交",
+        "不要说邮箱已启用",
+        "不要说 BaseScan 已通过",
+        "DRAFT ONLY - DO NOT SUBMIT BASESCAN YET.",
+        "不要公开私密截图",
+        "不要做链上动作",
+        "zh-domain-email.html",
+        "zh-status.html",
+        "zh-site-map.html",
+        "basescan-preflight.html",
+    ):
+        assert_contains(text, expected, label)
+    assert_not_contains(text, 'href="basescan-preflight.json"', label)
     assert_no_forbidden_public_claims(text, label)
 
 
@@ -2944,12 +3021,14 @@ def validate_zh_data_page(text: str) -> None:
         "zh-wallet-verify.html",
         "zh-access.html",
         "zh-release-gates.html",
+        "zh-basescan-preflight.html",
         "zh-api-status.html",
         "zh-operations.html",
         "zh-support.html",
         "register.html",
         "zh-site-map.html",
         "site-map.html",
+        "如果你想判断 BaseScan 现在能不能重提",
         "verify.html",
         "about.html",
         "status.html",
@@ -11277,6 +11356,7 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/zh-apply.html",
         "https://gcagochina.com/zh-status.html",
         "https://gcagochina.com/zh-domain-email.html",
+        "https://gcagochina.com/zh-basescan-preflight.html",
         "https://gcagochina.com/zh-liquidity.html",
         "https://gcagochina.com/zh-supply.html",
         "https://gcagochina.com/zh-security.html",
@@ -11425,6 +11505,7 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /zh-apply.html", label)
     assert_contains(text, "Allow: /zh-status.html", label)
     assert_contains(text, "Allow: /zh-domain-email.html", label)
+    assert_contains(text, "Allow: /zh-basescan-preflight.html", label)
     assert_contains(text, "Allow: /zh-liquidity.html", label)
     assert_contains(text, "Allow: /zh-supply.html", label)
     assert_contains(text, "Allow: /zh-security.html", label)
@@ -11574,6 +11655,7 @@ CHECKS: list[EndpointCheck] = [
     ("/zh-apply.html", validate_zh_apply_page),
     ("/zh-status.html", validate_zh_status_page),
     ("/zh-domain-email.html", validate_zh_domain_email_page),
+    ("/zh-basescan-preflight.html", validate_zh_basescan_preflight_page),
     ("/zh-liquidity.html", validate_zh_liquidity_page),
     ("/zh-supply.html", validate_zh_supply_page),
     ("/zh-security.html", validate_zh_security_page),

@@ -53,6 +53,7 @@ ZH_BUY_PAGE_URL = "https://gcagochina.com/zh-buy.html"
 ZH_APPLY_PAGE_URL = "https://gcagochina.com/zh-apply.html"
 ZH_STATUS_PAGE_URL = "https://gcagochina.com/zh-status.html"
 ZH_DOMAIN_EMAIL_PAGE_URL = "https://gcagochina.com/zh-domain-email.html"
+ZH_BASESCAN_PREFLIGHT_PAGE_URL = "https://gcagochina.com/zh-basescan-preflight.html"
 ZH_LIQUIDITY_PAGE_URL = "https://gcagochina.com/zh-liquidity.html"
 ZH_SUPPLY_PAGE_URL = "https://gcagochina.com/zh-supply.html"
 ZH_SECURITY_PAGE_URL = "https://gcagochina.com/zh-security.html"
@@ -244,11 +245,13 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(BASESCAN_PREFLIGHT_PAGE_URL, script)
         self.assertIn(BASESCAN_PREFLIGHT_URL, script)
         self.assertIn(GITHUB_REPO_URL, script)
+        self.assertIn(ZH_BASESCAN_PREFLIGHT_PAGE_URL, script)
         self.assertIn("/zh-cn.html", script)
         self.assertIn("/zh-buy.html", script)
         self.assertIn("/zh-apply.html", script)
         self.assertIn("/zh-status.html", script)
         self.assertIn("/zh-domain-email.html", script)
+        self.assertIn("/zh-basescan-preflight.html", script)
         self.assertIn("/zh-liquidity.html", script)
         self.assertIn("/zh-supply.html", script)
         self.assertIn("/zh-security.html", script)
@@ -526,6 +529,7 @@ class LaunchPackageTests(unittest.TestCase):
         module.validate_zh_apply_page((ROOT / "site" / "zh-apply.html").read_text())
         module.validate_zh_status_page((ROOT / "site" / "zh-status.html").read_text())
         module.validate_zh_domain_email_page((ROOT / "site" / "zh-domain-email.html").read_text())
+        module.validate_zh_basescan_preflight_page((ROOT / "site" / "zh-basescan-preflight.html").read_text())
         module.validate_zh_liquidity_page((ROOT / "site" / "zh-liquidity.html").read_text())
         module.validate_zh_supply_page((ROOT / "site" / "zh-supply.html").read_text())
         module.validate_zh_security_page((ROOT / "site" / "zh-security.html").read_text())
@@ -936,6 +940,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Allow: /zh-apply.html", robots)
         self.assertIn("Allow: /zh-status.html", robots)
         self.assertIn("Allow: /zh-domain-email.html", robots)
+        self.assertIn("Allow: /zh-basescan-preflight.html", robots)
         self.assertIn("Allow: /zh-liquidity.html", robots)
         self.assertIn("Allow: /zh-supply.html", robots)
         self.assertIn("Allow: /zh-security.html", robots)
@@ -1067,12 +1072,15 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(DOMAIN_EMAIL_EVIDENCE_URL, sitemap)
         self.assertIn(BASESCAN_REMEDIATION_PAGE_URL, sitemap)
         self.assertIn(BASESCAN_REMEDIATION_URL, sitemap)
+        self.assertIn(BASESCAN_PREFLIGHT_PAGE_URL, sitemap)
+        self.assertIn(BASESCAN_PREFLIGHT_URL, sitemap)
         self.assertIn(ACTION_PLAN_PAGE_URL, sitemap)
         self.assertIn(ZH_CN_PAGE_URL, sitemap)
         self.assertIn(ZH_BUY_PAGE_URL, sitemap)
         self.assertIn(ZH_APPLY_PAGE_URL, sitemap)
         self.assertIn(ZH_STATUS_PAGE_URL, sitemap)
         self.assertIn(ZH_DOMAIN_EMAIL_PAGE_URL, sitemap)
+        self.assertIn(ZH_BASESCAN_PREFLIGHT_PAGE_URL, sitemap)
         self.assertIn(ZH_LIQUIDITY_PAGE_URL, sitemap)
         self.assertIn(ZH_SUPPLY_PAGE_URL, sitemap)
         self.assertIn(ZH_SECURITY_PAGE_URL, sitemap)
@@ -1877,6 +1885,46 @@ class LaunchPackageTests(unittest.TestCase):
             "publishesPrivateMailboxScreenshots",
         ):
             self.assertFalse(data["boundaries"][key])
+
+    def test_zh_basescan_preflight_page_guides_owner_without_json_links(self):
+        page = (ROOT / "site" / "zh-basescan-preflight.html").read_text()
+
+        self.assertIn("GCA 中文 BaseScan 预检", page)
+        self.assertIn("BaseScan 预检 / 只读门槛", page)
+        self.assertIn("现在能重提吗", page)
+        self.assertIn("不能", page)
+        self.assertIn("2026-05-28", page)
+        self.assertIn("support@gcagochina.com", page)
+        self.assertIn("GCAgochina@outlook.com", page)
+        self.assertIn("MX missing", page)
+        self.assertIn("SPF missing", page)
+        self.assertIn("DMARC missing", page)
+        self.assertIn("DKIM selector required", page)
+        self.assertIn("readyForBaseScanResubmission", page)
+        self.assertIn("launch/domain_email_evidence_packet.json", page)
+        self.assertIn("tools/check_domain_email_dns.py", page)
+        self.assertIn("tools/build_domain_email_evidence_packet.py", page)
+        self.assertIn("tools/check_domain_email_public_switch.py", page)
+        self.assertIn("tools/check_domain_email_snapshot_alignment.py", page)
+        self.assertIn("tools/check_basescan_resubmission_readiness.py", page)
+        self.assertIn("tools/build_basescan_submission_package.py", page)
+        self.assertIn("不会提交 BaseScan", page)
+        self.assertIn("不会发送邮件", page)
+        self.assertIn("不会写 DNS", page)
+        self.assertIn("不会签名", page)
+        self.assertIn("不会转账", page)
+        self.assertIn("不会操作钱包或合约", page)
+        self.assertIn("DRAFT ONLY - DO NOT SUBMIT BASESCAN YET.", page)
+        self.assertIn("tim-chen.html", page)
+        self.assertIn("team.html#tim-chen", page)
+        self.assertIn("domain-email.html", page)
+        self.assertIn("domain-email-evidence.html", page)
+        self.assertIn("basescan-remediation.html", page)
+        self.assertIn(GITHUB_REPO_URL, page)
+        self.assertIn("Base Mainnet GCA/USDT", page)
+        self.assertIn("zh-domain-email.html", page)
+        self.assertIn("zh-status.html", page)
+        self.assertNotIn('href="basescan-preflight.json"', page)
 
     def test_well_known_identity_files_are_public_and_conservative(self):
         identity = json.loads((ROOT / "site" / ".well-known" / "gca-token.json").read_text())
@@ -7526,6 +7574,7 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "site" / "zh-domain-email.html",
             ROOT / "site" / "domain-email.json",
             ROOT / "site" / "basescan-preflight.html",
+            ROOT / "site" / "zh-basescan-preflight.html",
             ROOT / "site" / "basescan-preflight.json",
             ROOT / "site" / "wallet-warning.html",
             ROOT / "site" / "wallet-warning.json",
@@ -7922,6 +7971,7 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "site" / "zh-domain-email.html",
             ROOT / "site" / "domain-email.json",
             ROOT / "site" / "basescan-preflight.html",
+            ROOT / "site" / "zh-basescan-preflight.html",
             ROOT / "site" / "basescan-preflight.json",
             ROOT / "site" / "wallet-warning.html",
             ROOT / "site" / "wallet-warning.json",

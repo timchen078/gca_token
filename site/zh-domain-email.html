@@ -332,6 +332,7 @@
         <div class="actions">
           <a class="button primary" href="domain-email.html#worksheetTitle">打开英文 DNS Worksheet</a>
           <a class="button primary" href="domain-email-evidence.html">打开公开证据清单</a>
+          <a class="button primary" href="zh-basescan-preflight.html">打开中文 BaseScan 预检</a>
           <a class="button secondary" href="basescan-remediation.html">BaseScan 整改页</a>
           <a class="button secondary" href="platform-replies.html">平台回复模板</a>
           <a class="button" href="zh-status.html">中文审核状态</a>
@@ -489,6 +490,7 @@
           <div class="row"><span>证据包生成</span><strong><code>python3 tools/build_domain_email_evidence_packet.py --dkim-selector &lt;provider-selector&gt; --evidence-dir launch/domain_email_evidence --website-email-updated --output-json launch/domain_email_evidence_packet.json --output-md launch/domain_email_evidence_packet.md</code></strong></div>
           <div class="row"><span>公开邮箱切换检查</span><strong><code>python3 tools/check_domain_email_public_switch.py --json --require-switched</code></strong></div>
           <div class="row"><span>BaseScan 预检</span><strong><code>python3 tools/check_basescan_resubmission_readiness.py --json --require-ready</code></strong></div>
+          <div class="row"><span>中文预检页</span><strong><a href="zh-basescan-preflight.html">zh-basescan-preflight.html</a> 用中文解释何时可以重提，何时必须停下。</strong></div>
           <div class="row"><span>最终表单草稿</span><strong><code>python3 tools/build_basescan_submission_package.py --json --require-ready --output-json launch/basescan_final_submission_package.json --output-md launch/basescan_final_submission_package.md</code></strong></div>
         </div>
         <p class="note">这些命令都是本地或只读检查；不会提交 BaseScan，不会发送邮件，不会写 DNS，不会操作钱包或合约。</p>
@@ -513,6 +515,7 @@
           <h2>给自己看的中文入口</h2>
           <div class="link-row">
             <a class="text-link" href="zh-status.html">中文审核状态</a>
+            <a class="text-link" href="zh-basescan-preflight.html">中文 BaseScan 预检</a>
             <a class="text-link" href="zh-support.html">中文支持</a>
             <a class="text-link" href="zh-site-map.html">中文站点地图</a>
             <a class="text-link" href="zh-data.html">中文数据室说明</a>
