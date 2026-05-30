@@ -1,0 +1,133 @@
+{
+  "baseScanTokenProfileStatus": "remediation-required-before-next-submission",
+  "blockedItems": [
+    "sender-domain-email"
+  ],
+  "boundaries": {
+    "readOnlyByDefault": true,
+    "sendsEmail": false,
+    "signsWalletMessage": false,
+    "submitsBaseScanRequest": false,
+    "touchesWalletsOrContracts": false,
+    "writesDns": false,
+    "writesPublicFiles": false
+  },
+  "checklist": [
+    {
+      "action": "Keep public site checks passing before every resubmission.",
+      "evidence": "Public HTTPS website, start page, verification page, sitemap, and robots file are published and checked by tools/check_public_site.py.",
+      "key": "website-accessible",
+      "links": [
+        "https://gcagochina.com/",
+        "https://gcagochina.com/start.html",
+        "https://gcagochina.com/verify.html"
+      ],
+      "status": "implemented",
+      "title": "Website accessible and safe to visit"
+    },
+    {
+      "action": "Use the readable pages first; raw JSON only when a reviewer asks for machine-readable data.",
+      "evidence": "About, status, whitepaper, product, trust, and reviewer pages describe GCA without claiming approval, audit completion, or guaranteed market outcomes.",
+      "key": "clear-project-information",
+      "links": [
+        "https://gcagochina.com/about.html",
+        "https://gcagochina.com/whitepaper.html",
+        "https://gcagochina.com/support.html",
+        "https://gcagochina.com/basescan-remediation.html",
+        "https://gcagochina.com/reviewer-kit.html"
+      ],
+      "status": "implemented",
+      "title": "Clear token and project information"
+    },
+    {
+      "action": "Run .venv/bin/python tools/check_public_site.py after each public-material change.",
+      "evidence": "The public site checker validates canonical identity, current GCA/USDT route, public pages, raw JSON routing, sitemap, and robots.",
+      "key": "placeholder-and-link-review",
+      "links": [
+        "https://gcagochina.com/data.html",
+        "https://gcagochina.com/site-map.html"
+      ],
+      "status": "implemented-with-automated-check",
+      "title": "No obvious placeholders or broken reviewer links"
+    },
+    {
+      "action": "Add LinkedIn only if BaseScan specifically requires a third-party social-network profile.",
+      "evidence": "Tim Chen is published on the team page and standalone official-domain professional profile with GitHub, X, Telegram, and role scope.",
+      "key": "founder-team-transparency",
+      "links": [
+        "https://gcagochina.com/team.html",
+        "https://gcagochina.com/tim-chen.html",
+        "https://github.com/timchen078/gca_token",
+        "https://t.me/gcagochinaofficial",
+        "https://x.com/GCAAIGoChina"
+      ],
+      "status": "implemented-official-domain-equivalent",
+      "title": "Founder and team transparency"
+    },
+    {
+      "action": "Activate support@gcagochina.com, add MX/SPF/DKIM/DMARC, verify inbound/outbound tests, switch public email, then archive the evidence packet.",
+      "evidence": "Current public email is still GCAgochina@outlook.com. Domain email setup is published, but the latest DNS snapshot is not ready for BaseScan evidence.",
+      "key": "sender-domain-email",
+      "links": [
+        "https://gcagochina.com/domain-email.html",
+        "https://gcagochina.com/domain-email.html#worksheetTitle",
+        "https://gcagochina.com/domain-email.json"
+      ],
+      "status": "blocked-owner-action-required",
+      "title": "Sender email matches project domain"
+    },
+    {
+      "action": "Keep the chain as Base Mainnet / chainId 8453 and contract address unchanged.",
+      "evidence": "BaseScan source verification and deployer-wallet ownership verification are complete; the contract has fixed supply and no post-deployment mint function.",
+      "key": "source-and-contract",
+      "links": [
+        "https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+        "https://gcagochina.com/onchain-proofs.html",
+        "https://gcagochina.com/token-safety.html"
+      ],
+      "status": "implemented",
+      "title": "Verified source and fixed-supply token facts"
+    },
+    {
+      "action": "Use the same 32x32 SVG logo URL and whitepaper URL in BaseScan.",
+      "evidence": "SVG/PNG logos, social card, brand kit, and whitepaper are published over HTTPS.",
+      "key": "brand-logo-whitepaper",
+      "links": [
+        "https://gcagochina.com/brand-kit.html",
+        "https://gcagochina.com/assets/gca-logo.svg",
+        "https://gcagochina.com/assets/gca-logo.png",
+        "https://gcagochina.com/whitepaper.html"
+      ],
+      "status": "implemented",
+      "title": "Logo, brand kit, and whitepaper"
+    },
+    {
+      "action": "Keep all public materials pointed to the GCA/USDT route, not the older WETH pilot pool.",
+      "evidence": "Telegram, X, GitHub, and the official Base Mainnet GCA/USDT market route are published. GeckoTerminal token information is approved.",
+      "key": "social-and-market-links",
+      "links": [
+        "https://t.me/gcagochinaofficial",
+        "https://x.com/GCAAIGoChina",
+        "https://github.com/timchen078/gca_token",
+        "https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+        "https://dexscreener.com/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0"
+      ],
+      "status": "implemented",
+      "title": "Official social links and market route"
+    }
+  ],
+  "domainEmailReady": false,
+  "latestReturnNoticeDate": "2026-05-23",
+  "officialEmail": "GCAgochina@outlook.com",
+  "preflightCommands": [
+    "python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox support --dkim-selector <provider-selector> --json",
+    "python3 tools/build_domain_email_evidence_packet.py --dkim-selector <provider-selector> --evidence-dir launch/domain_email_evidence --website-email-updated --output-json launch/domain_email_evidence_packet.json --output-md launch/domain_email_evidence_packet.md",
+    "python3 tools/build_domain_email_switch_plan.py --json",
+    "python3 tools/check_basescan_resubmission_readiness.py --json --require-ready",
+    "python3 tools/build_basescan_submission_package.py --json --require-ready --output-json launch/basescan_final_submission_package.json --output-md launch/basescan_final_submission_package.md"
+  ],
+  "readyForCleanResubmission": false,
+  "schema": "gca-basescan-reviewer-checklist-v1",
+  "status": "blocked-before-basescan-resubmission",
+  "targetDomainEmail": "support@gcagochina.com"
+}

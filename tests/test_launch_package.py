@@ -1734,8 +1734,12 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("BaseScan values, domain email evidence packet, public email switch alignment, domain email snapshot alignment, and reviewer URLs", page)
         self.assertIn("Reviewer checklist", page)
         self.assertIn("Reviewer checklist required", page)
+        self.assertIn("A current blocked checklist has been generated", page)
+        self.assertIn("Current checklist artifacts are present and intentionally blocked", page)
         self.assertIn("tools/build_basescan_reviewer_checklist.py --markdown", page)
         self.assertIn("launch/basescan_reviewer_checklist.json", page)
+        self.assertIn("launch/basescan_reviewer_checklist.md", page)
+        self.assertIn("sender-domain-email", page)
         self.assertIn("Submission package", page)
         self.assertIn("tools/build_basescan_submission_package.py", page)
         self.assertIn("copy/paste blocks for the reviewer comment", page)
@@ -1801,6 +1805,12 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("launch/basescan_reviewer_checklist.json", checklist_builder["ownerArtifactCommand"])
         self.assertIn("sender-domain-email blocker", checklist_builder["purpose"])
         self.assertIn("domain email switch plan has been reviewed", checklist_builder["runAfter"])
+        self.assertEqual(checklist_builder["currentArtifactStatus"], "generated-blocked-before-domain-email-evidence")
+        self.assertIn("launch/basescan_reviewer_checklist.json", checklist_builder["currentArtifacts"])
+        self.assertIn("launch/basescan_reviewer_checklist.md", checklist_builder["currentArtifacts"])
+        self.assertEqual(checklist_builder["currentBlockedItems"], ["sender-domain-email"])
+        self.assertIn("domain email evidence packet is ready", checklist_builder["regenerateAfter"])
+        self.assertIn("public email switch alignment passes", checklist_builder["regenerateAfter"])
         self.assertIn("does not sign wallet messages", checklist_builder["boundaries"])
         self.assertEqual(data["nextSubmissionGate"]["submissionPackageBuilder"]["tool"], "tools/build_basescan_submission_package.py")
         self.assertIn("launch/basescan_final_submission_package.json", data["nextSubmissionGate"]["submissionPackageBuilder"]["outputs"])
@@ -1826,6 +1836,27 @@ class LaunchPackageTests(unittest.TestCase):
             DOMAIN_EMAIL_EVIDENCE_PAGE_URL,
             " ".join(data["nextSubmissionGate"]["requiredBeforeReady"]),
         )
+
+    def test_basescan_reviewer_checklist_artifacts_are_current_and_blocked(self):
+        data = json.loads((ROOT / "launch" / "basescan_reviewer_checklist.json").read_text())
+        markdown = (ROOT / "launch" / "basescan_reviewer_checklist.md").read_text()
+
+        self.assertEqual(data["schema"], "gca-basescan-reviewer-checklist-v1")
+        self.assertEqual(data["status"], "blocked-before-basescan-resubmission")
+        self.assertFalse(data["readyForCleanResubmission"])
+        self.assertEqual(data["blockedItems"], ["sender-domain-email"])
+        self.assertEqual(data["officialEmail"], "GCAgochina@outlook.com")
+        self.assertEqual(data["targetDomainEmail"], "support@gcagochina.com")
+        self.assertFalse(data["domainEmailReady"])
+        self.assertEqual(data["baseScanTokenProfileStatus"], "remediation-required-before-next-submission")
+        self.assertIn("does not submit BaseScan requests", markdown)
+        self.assertIn("Sender email matches project domain", markdown)
+        self.assertIn("Ready for clean resubmission: `false`", markdown)
+        keys = [item["key"] for item in data["checklist"]]
+        self.assertIn("website-accessible", keys)
+        self.assertIn("founder-team-transparency", keys)
+        self.assertIn("source-and-contract", keys)
+        self.assertIn("social-and-market-links", keys)
 
     def test_basescan_preflight_page_and_json_gate_next_resubmission(self):
         page = (ROOT / "site" / "basescan-preflight.html").read_text()

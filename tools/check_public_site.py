@@ -1235,8 +1235,12 @@ def validate_basescan_remediation_page(text: str) -> None:
         "BaseScan values, domain email evidence packet, public email switch alignment, domain email snapshot alignment, and reviewer URLs",
         "Reviewer checklist",
         "Reviewer checklist required",
+        "A current blocked checklist has been generated",
+        "Current checklist artifacts are present and intentionally blocked",
         "tools/build_basescan_reviewer_checklist.py --markdown",
         "launch/basescan_reviewer_checklist.json",
+        "launch/basescan_reviewer_checklist.md",
+        "sender-domain-email",
         "Submission package",
         "tools/build_basescan_submission_package.py",
         "Final draft required",
@@ -1362,6 +1366,18 @@ def validate_basescan_remediation_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing reviewer checklist domain-email purpose")
     if "does not sign wallet messages" not in checklist_builder.get("boundaries", []):
         raise SiteCheckError(f"{label}: missing reviewer checklist wallet boundary")
+    if checklist_builder.get("currentArtifactStatus") != "generated-blocked-before-domain-email-evidence":
+        raise SiteCheckError(f"{label}: wrong reviewer checklist artifact status")
+    if "launch/basescan_reviewer_checklist.json" not in checklist_builder.get("currentArtifacts", []):
+        raise SiteCheckError(f"{label}: missing current reviewer checklist JSON artifact")
+    if "launch/basescan_reviewer_checklist.md" not in checklist_builder.get("currentArtifacts", []):
+        raise SiteCheckError(f"{label}: missing current reviewer checklist markdown artifact")
+    if checklist_builder.get("currentBlockedItems") != ["sender-domain-email"]:
+        raise SiteCheckError(f"{label}: wrong current reviewer checklist blockers")
+    if "domain email evidence packet is ready" not in checklist_builder.get("regenerateAfter", []):
+        raise SiteCheckError(f"{label}: missing reviewer checklist domain-email evidence regeneration gate")
+    if "public email switch alignment passes" not in checklist_builder.get("regenerateAfter", []):
+        raise SiteCheckError(f"{label}: missing reviewer checklist public-switch regeneration gate")
     submission_builder = gate.get("submissionPackageBuilder", {})
     if submission_builder.get("tool") != "tools/build_basescan_submission_package.py":
         raise SiteCheckError(f"{label}: wrong submission package builder")

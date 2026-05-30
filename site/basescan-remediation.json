@@ -161,9 +161,9 @@
       "ownerArtifactCommand": "python3 tools/build_basescan_reviewer_checklist.py --output-json launch/basescan_reviewer_checklist.json --output-md launch/basescan_reviewer_checklist.md",
       "purpose": "Map BaseScan return reasons to current public GCA evidence and identify the remaining sender-domain-email blocker before the final submission package.",
       "runAfter": [
-        "domain email evidence packet is ready",
-        "domain email switch plan has been reviewed",
-        "public site checker passes"
+        "public site checker passes",
+        "regenerate after domain email evidence packet is ready",
+        "domain email switch plan has been reviewed"
       ],
       "boundaries": [
         "read-only checklist by default",
@@ -172,6 +172,20 @@
         "does not write DNS records",
         "does not sign wallet messages",
         "does not touch wallets or contracts"
+      ],
+      "currentArtifactStatus": "generated-blocked-before-domain-email-evidence",
+      "currentArtifacts": [
+        "launch/basescan_reviewer_checklist.json",
+        "launch/basescan_reviewer_checklist.md"
+      ],
+      "currentBlockedItems": [
+        "sender-domain-email"
+      ],
+      "regenerateAfter": [
+        "domain email evidence packet is ready",
+        "public email switch alignment passes",
+        "domain email snapshot alignment passes",
+        "public site checker passes"
       ]
     },
     "submissionPackageBuilder": {
