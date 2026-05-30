@@ -481,6 +481,19 @@
         </div>
       </section>
 
+      <section class="section panel" aria-labelledby="currentSwitchTitle">
+        <p class="eyebrow">Current Preflight Snapshot</p>
+        <h2 id="currentSwitchTitle">15 Critical Files Still Publish The Current Outlook Email</h2>
+        <p class="note">The latest read-only BaseScan preflight shows that the public switch is still intentionally pending. Keep these files unchanged until <code>support@gcagochina.com</code> passes inbound, outbound, DNS, and evidence-packet checks; then switch them together and rerun the checker.</p>
+        <div class="list">
+          <div class="row"><span>Support and intake</span><strong><code>site/support.html</code>, <code>site/support.json</code>, <code>site/zh-support.html</code>, <code>site/register.html</code>, and <code>site/members.html</code>.</strong></div>
+          <div class="row"><span>Project and listing</span><strong><code>site/project.json</code>, <code>site/listing-kit.html</code>, <code>site/basescan-remediation.html</code>, <code>site/basescan-remediation.json</code>, and <code>site/external-reviews.json</code>.</strong></div>
+          <div class="row"><span>Launch packets</span><strong><code>launch/basescan_form_values.json</code>, <code>launch/basescan_resubmission_values.json</code>, <code>launch/basescan_resubmission_package.md</code>, <code>launch/external_review_followup_tracker.json</code>, and <code>launch/external_review_followup_tracker.md</code>.</strong></div>
+          <div class="row"><span>Already target-aware</span><strong><code>site/reviewer-kit.json</code> already contains the target domain email but remains in the activation list so reviewer evidence stays aligned after the switch.</strong></div>
+          <div class="row"><span>Final check</span><strong>After switching, <code>tools/check_domain_email_public_switch.py --json --require-switched</code> must report zero old-email files before a BaseScan resubmission package is prepared.</strong></div>
+        </div>
+      </section>
+
       <section class="section panel" aria-labelledby="switchPlanTitle">
         <p class="eyebrow">Switch Plan Generator</p>
         <h2 id="switchPlanTitle">Find Every Public Email Reference Before Switching</h2>
