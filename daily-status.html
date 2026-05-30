@@ -317,33 +317,33 @@
 
         <div class="panel notice">
           <h2>BaseScan Still Blocked</h2>
-          <p class="note">BaseScan source and deployer-wallet ownership verification are complete, but the public token profile resubmission should not be sent yet.</p>
+          <p class="note">BaseScan source and deployer-wallet ownership verification are complete, and the owner-side public/domain-email preflight is ready for one clean submission from <code>support@gcagochina.com</code>. Public token-profile publication is still pending BaseScan review.</p>
           <div class="list">
-            <div class="row"><span><code>basescan-resubmission-preflight-status</code></span><strong class="pending"><code>readyForBaseScanResubmission</code> remains false.</strong></div>
-            <div class="row"><span>Current email</span><strong><code>GCAgochina@outlook.com</code></strong></div>
+            <div class="row"><span><code>basescan-resubmission-preflight-status</code></span><strong><code>readyForBaseScanResubmission</code> is true.</strong></div>
+            <div class="row"><span>Current email</span><strong><code>support@gcagochina.com</code></strong></div>
             <div class="row"><span>Target domain email</span><strong><code>support@gcagochina.com</code></strong></div>
-            <div class="row"><span>Remaining blocker</span><strong>Complete the project-domain email evidence path, then switch public email values and run the final preflight.</strong></div>
-            <div class="row"><span>Old-email queue</span><strong><code>site/support.html</code>, <code>site/support.json</code>, <code>site/zh-support.html</code>, <code>site/register.html</code>, <code>site/members.html</code>, <code>site/project.json</code>, <code>site/listing-kit.html</code>, <code>site/basescan-remediation.html</code>, and 7 more tracked file(s)</strong></div>
+            <div class="row"><span>Remaining blocker</span><strong>No local domain-email blocker remains; owner must submit the clean package and wait for BaseScan review.</strong></div>
+            <div class="row"><span>Old-email queue</span><strong>No public relative files reported by the latest preflight.</strong></div>
             <div class="row"><span>Missing target-email queue</span><strong>No public relative files reported by the latest preflight.</strong></div>
           </div>
         </div>
       </section>
 
       <section class="section panel" aria-labelledby="blockersTitle">
-        <p class="eyebrow">Current BaseScan Blockers</p>
-        <h2 id="blockersTitle">Do Not Resubmit Until These Are Clear</h2>
+        <p class="eyebrow">Current BaseScan Owner Queue</p>
+        <h2 id="blockersTitle">Submit Once, Then Wait For Review</h2>
         <div class="grid">
           <div class="card">
             <h3>Official Domain Email</h3>
-            <p class="note">The activated sender/contact email should match <code>support@gcagochina.com</code> before the next clean BaseScan request.</p>
+            <p class="note">The activated sender/contact email matches <code>support@gcagochina.com</code> for the next clean BaseScan request.</p>
           </div>
           <div class="card">
             <h3>Evidence Packet</h3>
-            <p class="note">The domain email evidence packet must prove provider status, DNS records, inbound mail, outbound mail, and the updated support-page email.</p>
+            <p class="note">The private domain email evidence packet records provider status, DNS records, inbound mail, outbound mail, and the updated support-page email.</p>
           </div>
           <div class="card">
             <h3>Public Email Switch</h3>
-            <p class="note">The current snapshot still reports <code>filesStillUsingOldEmail</code> as 15 tracked files publishing the old Outlook email. Keep that until the domain mailbox is actually ready.</p>
+            <p class="note">The current snapshot reports <code>filesStillUsingOldEmail</code> as 0 tracked files publishing the old Outlook email.</p>
           </div>
           <div class="card">
             <h3>Snapshot Alignment</h3>
@@ -351,11 +351,11 @@
           </div>
           <div class="card">
             <h3>Final Submission Package</h3>
-            <p class="note">Only build a final BaseScan package after <code>tools/check_basescan_resubmission_readiness.py --json --require-ready</code> passes.</p>
+            <p class="note">The final package should be copied only after <code>tools/check_basescan_resubmission_readiness.py --json --require-ready</code> passes immediately before submission.</p>
           </div>
           <div class="card">
             <h3>Reviewer Checklist</h3>
-            <p class="note">Current reviewer checklist artifacts are generated but blocked by <code>sender-domain-email</code>.</p>
+            <p class="note">Current reviewer checklist artifacts are generated; BaseScan publication itself is still pending official review.</p>
           </div>
         </div>
       </section>

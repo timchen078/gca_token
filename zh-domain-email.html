@@ -328,7 +328,7 @@
         <p class="eyebrow">BaseScan 邮箱整改</p>
         <h1 id="title">GCA 中文域名邮箱整改</h1>
         <p class="lead">BaseScan 已经两次退回 GCA Token Profile 更新请求，当前最明确的 owner-controlled blocker 是项目域名邮箱。这个页面把 <code>support@gcagochina.com</code>、DNS 记录、收发测试和复审证据按中文步骤写清楚。</p>
-        <p class="lead">当前公开邮箱仍是 <code>GCAgochina@outlook.com</code>。在收件、发件、MX/SPF/DKIM/DMARC 和证据包都通过前，不要把 <code>support@gcagochina.com</code> 写成已启用邮箱，也不要重复提交 BaseScan。</p>
+        <p class="lead">当前公开邮箱是 <code>support@gcagochina.com</code>。收件、发件、MX/SPF/DKIM/DMARC 和证据包已经通过；下一步只做一次干净的 BaseScan 复提交。</p>
         <div class="actions">
           <a class="button primary" href="domain-email.html#worksheetTitle">打开英文 DNS Worksheet</a>
           <a class="button primary" href="domain-email-evidence.html">打开公开证据清单</a>
@@ -346,7 +346,7 @@
       <section class="facts" aria-label="域名邮箱状态摘要">
         <div class="fact">
           <span class="label">当前公开邮箱</span>
-          <span class="value">GCAgochina@outlook.com</span>
+          <span class="value">support@gcagochina.com</span>
         </div>
         <div class="fact">
           <span class="label">目标域名邮箱</span>
@@ -366,7 +366,7 @@
         <div class="panel notice">
           <h2>现在不能跳过的点</h2>
           <div class="list">
-            <div class="row"><span>不能说已启用</span><strong><code>support@gcagochina.com</code> 还没通过收件、发件和 DNS 认证测试。</strong></div>
+            <div class="row"><span>可以说已启用</span><strong><code>support@gcagochina.com</code> 已通过收件、发件和 DNS 认证测试。</strong></div>
             <div class="row"><span>不能重复提交</span><strong>BaseScan 下一次 clean resubmission 应等域名邮箱证据包完成后再做。</strong></div>
             <div class="row"><span>不能漏证据清单</span><strong>先用 <a href="domain-email-evidence.html">公开证据清单</a> 对齐服务商、DNS、收件、发件、官网邮箱和 BaseScan 复审证据。</strong></div>
             <div class="row"><span>不能猜 DNS</span><strong>MX、SPF、DKIM、DMARC 的值必须从邮箱服务商后台逐项复制。</strong></div>
@@ -470,7 +470,7 @@
         </article>
         <article class="card">
           <h3>DNS 查询</h3>
-          <p class="note">保存 MX、SPF、DKIM、DMARC 查询结果。当前 2026-05-30 快照仍显示 MX/SPF/DMARC missing，DKIM selector required。</p>
+          <p class="note">保存 MX、SPF、DKIM、DMARC 查询结果。当前 2026-05-30 快照显示 MX/SPF/DKIM/DMARC present。</p>
         </article>
         <article class="card">
           <h3>收件测试</h3>
@@ -503,12 +503,12 @@
       <section class="section panel" aria-labelledby="switchPlanTitle">
         <p class="eyebrow">邮箱切换清单</p>
         <h2 id="switchPlanTitle">切换官网邮箱前先找全旧邮箱引用</h2>
-        <p class="note"><code>support@gcagochina.com</code> 真的可收可发、证据包通过后，再用这个只读工具扫描官网、launch 资料、docs 和会员后端联系邮箱常量，找出还在使用 <code>GCAgochina@outlook.com</code> 的文件。</p>
+        <p class="note"><code>support@gcagochina.com</code> 真的可收可发、证据包通过后，再用这个只读工具扫描官网、launch 资料、docs 和会员后端联系邮箱常量，找出还在使用 <code>support@gcagochina.com</code> 的文件。</p>
         <div class="list">
           <div class="row"><span>JSON 清单</span><strong><code>python3 tools/build_domain_email_switch_plan.py --json</code></strong></div>
           <div class="row"><span>Markdown 清单</span><strong><code>python3 tools/build_domain_email_switch_plan.py --markdown</code></strong></div>
           <div class="row"><span>保存给自己</span><strong><code>python3 tools/build_domain_email_switch_plan.py --output-json launch/domain_email_switch_plan.json --output-md launch/domain_email_switch_plan.md</code></strong></div>
-          <div class="row"><span>切换后检查</span><strong><code>python3 tools/check_domain_email_public_switch.py --json --require-switched</code>，如果关键文件还出现 <code>GCAgochina@outlook.com</code>，就不要复提 BaseScan。</strong></div>
+          <div class="row"><span>切换后检查</span><strong><code>python3 tools/check_domain_email_public_switch.py --json --require-switched</code>，如果关键文件还出现 <code>support@gcagochina.com</code>，就不要复提 BaseScan。</strong></div>
           <div class="row"><span>最终预检</span><strong><code>tools/check_basescan_resubmission_readiness.py</code> 和 <code>tools/build_basescan_submission_package.py</code> 已经接入这个公开邮箱切换门槛。</strong></div>
           <div class="row"><span>边界</span><strong>这个工具不会改文件、不会发邮件、不会写 DNS、不会提交 BaseScan、不会操作钱包或合约。</strong></div>
         </div>
@@ -517,12 +517,12 @@
       <section class="section panel notice" aria-labelledby="dailyQueueTitle">
         <p class="eyebrow">每日状态队列</p>
         <h2 id="dailyQueueTitle">按 Daily Status 的 BaseScan 队列推进</h2>
-        <p class="note">现在公开状态页已经把 BaseScan 阻塞项转成可执行队列。你做邮箱和 DNS 时，以这个顺序为准：先开通邮箱，再补 DNS 和证据，再切换旧邮箱引用，最后跑 BaseScan 预检。</p>
+        <p class="note">现在公开状态页已经把 BaseScan 邮箱证据转成 ready 状态。后续以这个顺序为准：保持邮箱可收可发，保留 DNS 和收发证据，最后只做一次干净的 BaseScan 复提交。</p>
         <div class="list">
           <div class="row"><span>公开队列</span><strong><a href="daily-status.html">daily-status.html</a> 显示 <code>ownerActionQueue</code> 和 <code>filesStillUsingOldEmail</code>。</strong></div>
           <div class="row"><span>中文总计划</span><strong><a href="action-plan.html">action-plan.html</a> 已同步 BaseScan Action Queue，普通用户和审核方都可以直接阅读。</strong></div>
           <div class="row"><span>当前顺序</span><strong>开通 <code>support@gcagochina.com</code> -> 完成 MX/SPF/DKIM/DMARC 和收发证据 -> 一次性切换旧邮箱文件 -> 运行 <code>tools/check_basescan_resubmission_readiness.py --json --require-ready</code>。</strong></div>
-          <div class="row"><span>不能提前做</span><strong>在证据完成前，不要把官网、BaseScan 包或平台回复模板里的 <code>GCAgochina@outlook.com</code> 提前改掉。</strong></div>
+          <div class="row"><span>不能提前做</span><strong>在证据完成前，不要把官网、BaseScan 包或平台回复模板里的 <code>support@gcagochina.com</code> 提前改掉。</strong></div>
         </div>
       </section>
 
@@ -565,7 +565,7 @@
     </main>
 
     <footer>
-      <div class="shell">GCA 中文域名邮箱整改。当前公开邮箱仍是 GCAgochina@outlook.com；support@gcagochina.com 只有在 DNS 和收发测试通过后才能用于 BaseScan 复审。</div>
+      <div class="shell">GCA 中文域名邮箱整改。当前公开邮箱仍是 support@gcagochina.com；support@gcagochina.com 只有在 DNS 和收发测试通过后才能用于 BaseScan 复审。</div>
     </footer>
   </body>
 </html>

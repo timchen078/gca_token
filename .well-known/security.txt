@@ -1,4 +1,4 @@
-Contact: mailto:GCAgochina@outlook.com
+Contact: mailto:support@gcagochina.com
 Preferred-Languages: en, zh
 Canonical: https://gcagochina.com/.well-known/security.txt
 Policy: https://gcagochina.com/security.html

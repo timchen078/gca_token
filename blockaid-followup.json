@@ -9,7 +9,7 @@
   "network": "Base Mainnet",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
-  "contactEmail": "GCAgochina@outlook.com",
+  "contactEmail": "support@gcagochina.com",
   "purpose": "Public follow-up package for Blockaid, wallet-security reviewers, and DEX interfaces after Blockaid requested more documentation about price volatility, LP lock status, supply concentration, and audit status.",
   "blockaidContext": {
     "initialReportDate": "2026-05-10",

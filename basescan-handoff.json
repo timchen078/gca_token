@@ -1,7 +1,7 @@
 {
   "schema": "https://gcagochina.com/basescan-handoff.json",
   "pageUrl": "https://gcagochina.com/basescan-handoff.html",
-  "status": "blocked-until-domain-email-evidence-and-final-preflight-pass",
+  "status": "ready-for-owner-resubmission",
   "lastUpdated": "2026-05-30",
   "projectName": "GCA",
   "conceptExpansion": "Go China Access",
@@ -12,10 +12,10 @@
     "sourceVerification": "complete",
     "deployerWalletOwnershipVerification": "complete",
     "publicTokenProfile": "returned-information-insufficient-2026-05-23",
-    "readyForBaseScanResubmission": false,
+    "readyForBaseScanResubmission": true,
     "targetSender": "support@gcagochina.com",
-    "currentActiveContact": "GCAgochina@outlook.com",
-    "nextAction": "Do not resubmit yet. Activate the project-domain mailbox, collect evidence, switch public email values, and run the final preflight first."
+    "currentActiveContact": "support@gcagochina.com",
+    "nextAction": "Owner may submit one clean BaseScan token profile update from support@gcagochina.com after final local preflight passes."
   },
   "domainEmailGate": {
     "targetDomainEmail": "support@gcagochina.com",
@@ -23,19 +23,14 @@
     "snapshotPage": "https://gcagochina.com/domain-email.html#snapshotTitle",
     "evidenceChecklistPage": "https://gcagochina.com/domain-email-evidence.html",
     "evidencePacketAnchor": "https://gcagochina.com/domain-email.html#evidenceTitle",
-    "readyForBaseScanEmailEvidence": false,
+    "readyForBaseScanEmailEvidence": true,
     "checks": {
-      "mx": "missing",
-      "spf": "missing",
-      "dmarc": "missing",
-      "dkim": "selector-required"
+      "mx": "present",
+      "spf": "present",
+      "dkim": "present",
+      "dmarc": "present"
     },
-    "missingOrBlockedChecks": [
-      "mx",
-      "spf",
-      "dmarc",
-      "dkim"
-    ]
+    "missingOrBlockedChecks": []
   },
   "officialLinks": {
     "website": "https://gcagochina.com/",
@@ -81,7 +76,7 @@
         "https://gcagochina.com/domain-email-evidence.html",
         "https://gcagochina.com/basescan-preflight.html"
       ],
-      "status": "blocked-until-support@gcagochina.com-is-active"
+      "status": "implemented-domain-email-ready"
     },
     {
       "baseScanReturnReason": "links, logo, website, and metadata need review",

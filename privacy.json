@@ -4,7 +4,7 @@
   "lastUpdated": "2026-05-20",
   "status": "public-privacy-notice-published",
   "scope": "GCA public website, live email registration, live contact suppression, local member pre-registration packets, wallet balance verification, controlled HTTPS account intake",
-  "contactEmail": "GCAgochina@outlook.com",
+  "contactEmail": "support@gcagochina.com",
   "currentStaticSiteBehavior": {
     "mode": "live-email-registration-and-contact-suppression-api-with-local-member-pre-registration",
     "automaticServerStorage": true,
@@ -93,7 +93,7 @@
     ]
   },
   "userRequests": {
-    "contactEmail": "GCAgochina@outlook.com",
+    "contactEmail": "support@gcagochina.com",
     "unsubscribePage": "https://gcagochina.com/unsubscribe.html",
     "contactSuppressionEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/contact-suppressions",
     "requestTypes": [

@@ -303,11 +303,11 @@
       <section class="facts" aria-label="Evidence checklist facts">
         <div class="fact">
           <span class="label">Status</span>
-          <span class="value pending">Blocked Until Evidence Collected</span>
+          <span class="value good">Evidence Collected</span>
         </div>
         <div class="fact">
           <span class="label">Current Public Email</span>
-          <span class="value">GCAgochina@outlook.com</span>
+          <span class="value">support@gcagochina.com</span>
         </div>
         <div class="fact">
           <span class="label">Target Domain Email</span>
@@ -322,10 +322,10 @@
       <section class="section two" aria-label="Readiness and boundary">
         <div class="panel notice">
           <h2>Current Boundary</h2>
-          <p class="note">The active public contact remains <code>GCAgochina@outlook.com</code> until the domain mailbox can both receive external mail and send authenticated replies as <code>support@gcagochina.com</code>.</p>
+          <p class="note">The active public contact is <code>support@gcagochina.com</code>. DNS, inbound, outbound, and public-site alignment evidence is retained privately for reviewer follow-up.</p>
           <div class="list">
-            <div class="row"><span>Mailbox status</span><strong class="pending">Not active yet.</strong></div>
-            <div class="row"><span>BaseScan status</span><strong class="pending">Do not resubmit as ready until the final preflight passes.</strong></div>
+            <div class="row"><span>Mailbox status</span><strong class="good">Active and aligned to support@gcagochina.com.</strong></div>
+            <div class="row"><span>BaseScan status</span><strong class="pending">Ready for one owner resubmission; token profile approval is still pending BaseScan review.</strong></div>
             <div class="row"><span>Private evidence</span><strong>Mailbox screenshots, DNS proof files, and message screenshots must stay local and git-ignored.</strong></div>
           </div>
         </div>
@@ -335,7 +335,7 @@
           <p class="note">A reviewer can use this page to see the exact evidence gates GCA is collecting, without requiring private mailbox screenshots to be posted on the public website.</p>
           <div class="list">
             <div class="row"><span>Official plan</span><strong><a href="domain-email.html">domain-email.html</a></strong></div>
-            <div class="row"><span>BaseScan blocker</span><strong><a href="basescan-remediation.html">basescan-remediation.html</a></strong></div>
+          <div class="row"><span>BaseScan remediation</span><strong><a href="basescan-remediation.html">basescan-remediation.html</a></strong></div>
             <div class="row"><span>Founder evidence</span><strong><a href="tim-chen.html">tim-chen.html</a></strong></div>
             <div class="row"><span>Reply packet</span><strong><a href="platform-replies.html">platform-replies.html</a></strong></div>
           </div>
@@ -388,9 +388,9 @@
         <ul>
           <li><code>support@gcagochina.com</code> cannot receive external email.</li>
           <li><code>support@gcagochina.com</code> cannot send authenticated replies with the visible sender set to the domain email.</li>
-          <li>MX, SPF, DKIM, and DMARC DNS checks are not ready.</li>
+          <li>MX, SPF, DKIM, and DMARC DNS checks stop reporting ready.</li>
           <li>Any required evidence file is missing.</li>
-          <li>Public support/BaseScan files still publish <code>GCAgochina@outlook.com</code> after the switch.</li>
+          <li>Public support/BaseScan files still publish the old Outlook contact after the switch.</li>
           <li>BaseScan resubmission preflight reports <code>readyForBaseScanResubmission</code> false.</li>
         </ul>
       </section>
@@ -428,7 +428,7 @@
     </main>
 
     <footer>
-      <div class="shell">GCA domain email evidence checklist. The active public contact remains GCAgochina@outlook.com until domain email tests pass.</div>
+      <div class="shell">GCA domain email evidence checklist. The active public contact remains support@gcagochina.com until domain email tests pass.</div>
     </footer>
   </body>
 </html>

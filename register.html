@@ -383,7 +383,7 @@
           <a class="button secondary" href="zh-members.html">中文会员规则</a>
           <a class="button secondary" href="zh-support.html">中文支持和资料提交</a>
           <a class="button secondary" href="unsubscribe.html">邮箱退订</a>
-          <a class="button" href="mailto:GCAgochina@outlook.com?subject=GCA%20Email%20Registration">直接发邮件</a>
+          <a class="button" href="mailto:support@gcagochina.com?subject=GCA%20Email%20Registration">直接发邮件</a>
         </div>
       </section>
 
@@ -406,7 +406,7 @@
         </div>
         <div class="fact">
           <span class="label">官方邮箱</span>
-          <span class="value">GCAgochina@outlook.com</span>
+          <span class="value">support@gcagochina.com</span>
         </div>
       </section>
 
@@ -436,7 +436,7 @@
               <span>我确认不会提交私钥、助记词、交易所 API Secret、提现权限、验证码、钱包密码或远程控制权限。</span>
             </label>
             <button class="button primary" type="submit">提交邮箱注册</button>
-            <a class="button secondary" id="mailFallback" href="mailto:GCAgochina@outlook.com?subject=GCA%20Email%20Registration" hidden>发送注册邮件</a>
+            <a class="button secondary" id="mailFallback" href="mailto:support@gcagochina.com?subject=GCA%20Email%20Registration" hidden>发送注册邮件</a>
             <div class="status" id="status" role="status">填写邮箱后提交。官网会优先提交到 GCA HTTPS 注册 API；如果 API 暂不可用，会显示官方邮箱兜底。正式 API 地址为 https://gca-registration-api.gcagochina.workers.dev/gca/email-registrations。接口状态见 <a href="zh-api-status.html">中文 API 状态</a>。</div>
           </form>
         </div>
@@ -478,7 +478,7 @@
       const form = document.getElementById("registerForm");
       const statusBox = document.getElementById("status");
       const mailFallback = document.getElementById("mailFallback");
-      const officialEmail = "GCAgochina@outlook.com";
+      const officialEmail = "support@gcagochina.com";
       const productionApiBase = window.GCA_EMAIL_API_BASE || "https://gca-registration-api.gcagochina.workers.dev";
 
       function setStatus(message, mode = "") {

@@ -400,11 +400,11 @@
         </div>
         <div class="panel">
           <h3>BaseScan Profile</h3>
-          <p class="note">Source and deployer-wallet ownership are verified. Public token profile was returned again as information-insufficient on 2026-05-23; remediation is required before the next submission. The remaining owner-controlled blocker is the domain email gate: the <a href="domain-email.html">Domain Email Plan</a> and <a href="domain-email-evidence.html">Evidence Checklist</a> are published, but the 2026-05-30 DNS snapshot shows MX/SPF/DMARC missing and DKIM selector required, so <code>readyForBaseScanEmailEvidence</code> is false.</p>
+          <p class="note">Source and deployer-wallet ownership are verified. Public token profile was returned again as information-insufficient on 2026-05-23; the owner-controlled domain email gate is now ready: the <a href="domain-email.html">Domain Email Plan</a> and <a href="domain-email-evidence.html">Evidence Checklist</a> are published, and the 2026-05-30 DNS snapshot shows MX/SPF/DKIM/DMARC present, so <code>readyForBaseScanEmailEvidence</code> is true.</p>
         </div>
         <div class="panel">
           <h3>Domain Email Gate</h3>
-          <p class="note"><a href="domain-email.html#snapshotTitle">2026-05-30 DNS snapshot</a>: MX/SPF/DMARC missing; DKIM selector required. Use the <a href="domain-email-evidence.html">public evidence checklist</a> to collect provider, DNS, inbound, outbound, website-email, and BaseScan resubmission proof. Save the <a href="domain-email.html#evidenceTitle">activation evidence packet</a> only after <code>support@gcagochina.com</code> is active and inbound/outbound tests pass.</p>
+          <p class="note"><a href="domain-email.html#snapshotTitle">2026-05-30 DNS snapshot</a>: MX/SPF/DKIM/DMARC present. Use the <a href="domain-email-evidence.html">public evidence checklist</a> to collect provider, DNS, inbound, outbound, website-email, and BaseScan resubmission proof. Save the <a href="domain-email.html#evidenceTitle">activation evidence packet</a> only after <code>support@gcagochina.com</code> is active and inbound/outbound tests pass.</p>
         </div>
         <div class="panel">
           <h3>Proof Links</h3>
@@ -458,9 +458,9 @@
 
       <section class="section panel warning" id="basescanHandoff" aria-labelledby="basescanHandoffTitle">
         <h2 id="basescanHandoffTitle">BaseScan Resubmission Handoff</h2>
-        <p class="note">This is the short evidence index to use before the next BaseScan token profile resubmission. The standalone handoff page is <a href="basescan-handoff.html">basescan-handoff.html</a>. The package is still blocked until <code>support@gcagochina.com</code> is active, authenticated, and reflected across public support/BaseScan files.</p>
+        <p class="note">This is the short evidence index to use before the next BaseScan token profile resubmission. The standalone handoff page is <a href="basescan-handoff.html">basescan-handoff.html</a>. The owner-side package is ready with <code>support@gcagochina.com</code> active, authenticated, and reflected across public support/BaseScan files; public token-profile publication is still pending BaseScan review.</p>
         <div class="list">
-          <div class="row"><span>Current gate</span><strong><code>readyForBaseScanResubmission</code> is false; do not resubmit yet.</strong></div>
+          <div class="row"><span>Current gate</span><strong><code>readyForBaseScanResubmission</code> is true; submit one clean owner-controlled request from <code>support@gcagochina.com</code>.</strong></div>
           <div class="row"><span>Founder / team transparency</span><strong><a href="team.html">Team profile</a> and <a href="tim-chen.html">Tim Chen professional profile</a></strong></div>
           <div class="row"><span>Domain email evidence</span><strong><a href="domain-email.html">Domain Email Plan</a>, <a href="domain-email.html#snapshotTitle">DNS snapshot</a>, and <a href="domain-email-evidence.html">Evidence Checklist</a></strong></div>
           <div class="row"><span>Final preflight gate</span><strong><a href="basescan-preflight.html">BaseScan Preflight</a> and <a href="daily-status.html">Daily Status Queue</a></strong></div>

@@ -294,7 +294,7 @@
       <section aria-labelledby="title">
         <p class="eyebrow">BaseScan Evidence Index</p>
         <h1 id="title">GCA BaseScan Handoff</h1>
-        <p class="lead">A direct handoff page for the next GCA BaseScan token profile review. It summarizes what is already published, what remains blocked, and the exact evidence order to complete before one clean resubmission.</p>
+        <p class="lead">A direct handoff page for the next GCA BaseScan token profile review. It summarizes what is published, what evidence is ready, and the exact package to use for one clean resubmission.</p>
         <div class="actions">
           <a class="button primary" href="basescan-preflight.html">Runbook Preflight</a>
           <a class="button primary" href="domain-email-evidence.html">Email Evidence Checklist</a>
@@ -321,18 +321,18 @@
         </div>
         <div class="fact">
           <span class="label">Current Contact</span>
-          <span class="value">GCAgochina@outlook.com</span>
+          <span class="value">support@gcagochina.com</span>
         </div>
       </section>
 
       <section class="section panel notice" aria-labelledby="gateTitle">
         <h2 id="gateTitle">Current Gate</h2>
-        <p class="note"><code>readyForBaseScanResubmission</code> is false. Do not resubmit BaseScan yet. The remaining owner-controlled blocker is a working project-domain mailbox that can receive external mail, send authenticated external replies, pass DNS evidence checks, and match the public support/BaseScan email values after the switch.</p>
+        <p class="note"><code>readyForBaseScanResubmission</code> is true. The project-domain mailbox can receive external mail, send authenticated replies, pass DNS evidence checks, and matches the public support/BaseScan email values.</p>
         <div class="list">
           <div class="row"><span>BaseScan source verification</span><strong class="good">Complete</strong></div>
           <div class="row"><span>Deployer-wallet ownership verification</span><strong class="good">Complete</strong></div>
           <div class="row"><span>Public token profile</span><strong class="pending">Returned again as information-insufficient on 2026-05-23</strong></div>
-          <div class="row"><span>Domain email DNS snapshot</span><strong class="pending">2026-05-30: MX/SPF/DMARC missing; DKIM selector required</strong></div>
+          <div class="row"><span>Domain email DNS snapshot</span><strong class="pending">2026-05-30: MX/SPF/DKIM/DMARC present</strong></div>
         </div>
       </section>
 
@@ -347,7 +347,7 @@
         </div>
         <div class="card">
           <h3>Domain Email</h3>
-          <p class="note">Use <a href="domain-email.html">domain-email.html</a>, <a href="domain-email.html#snapshotTitle">the DNS snapshot</a>, and <a href="domain-email-evidence.html">domain-email-evidence.html</a>. This is still blocked until the mailbox is live.</p>
+          <p class="note">Use <a href="domain-email.html">domain-email.html</a>, <a href="domain-email.html#snapshotTitle">the DNS snapshot</a>, and <a href="domain-email-evidence.html">domain-email-evidence.html</a>. The mailbox and DNS evidence are ready; BaseScan publication is still pending reviewer approval.</p>
         </div>
         <div class="card">
           <h3>Contract Evidence</h3>

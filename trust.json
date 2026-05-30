@@ -7,7 +7,7 @@
   "network": "Base Mainnet",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
-  "officialEmail": "GCAgochina@outlook.com",
+  "officialEmail": "support@gcagochina.com",
   "officialLinks": {
     "website": "https://gcagochina.com/",
     "trustCenterPage": "https://gcagochina.com/trust.html",
@@ -65,27 +65,22 @@
   "verificationSnapshot": {
     "baseScanSource": "verified",
     "baseScanOwnership": "verified",
-    "baseScanTokenProfile": "remediation-required-before-next-submission",
-    "baseScanDomainEmailGate": "blocked-by-dns-snapshot-2026-05-30",
+    "baseScanTokenProfile": "ready-for-owner-resubmission",
+    "baseScanDomainEmailGate": "ready-domain-email-evidence-2026-05-30",
     "baseScanDomainEmailTarget": "support@gcagochina.com",
     "baseScanDomainEmailDnsSnapshot": {
-      "checkedAt": "2026-05-30T08:13:47Z",
-      "snapshotPage": "https://gcagochina.com/domain-email.html#snapshotTitle",
-      "evidencePacket": "https://gcagochina.com/domain-email.html#evidenceTitle",
-      "evidenceChecklist": "https://gcagochina.com/domain-email-evidence.html",
-      "readyForBaseScanEmailEvidence": false,
+      "checkedAt": "2026-05-30T16:24:34Z",
+      "readyForBaseScanEmailEvidence": true,
+      "missingOrBlockedChecks": [],
       "checks": {
-        "mx": "missing",
-        "spf": "missing",
-        "dmarc": "missing",
-        "dkim": "selector-required"
+        "mx": "present",
+        "spf": "present",
+        "dmarc": "present",
+        "dkim": "present"
       },
-      "missingOrBlockedChecks": [
-        "mx",
-        "spf",
-        "dmarc",
-        "dkim"
-      ]
+      "evidencePage": "https://gcagochina.com/domain-email.html",
+      "evidenceChecklist": "https://gcagochina.com/domain-email-evidence.html",
+      "privateEvidencePacket": "launch/domain_email_evidence_packet.json"
     },
     "geckoTerminalTokenInfo": "approved-2026-05-11",
     "walletWarning": "owner-observed-no-warning-visible",
@@ -99,7 +94,7 @@
   "contractFacts": {
     "sourceVerifiedOnBaseScan": true,
     "deployerWalletOwnershipVerified": true,
-    "tokenProfileStatus": "remediation-required-before-next-submission",
+    "tokenProfileStatus": "ready-for-owner-resubmission",
     "fixedSupply": true,
     "totalSupply": "1000000000",
     "postDeploymentMintFunction": false,
@@ -161,8 +156,6 @@
     "holderDistribution": "https://gcagochina.com/holder-distribution.json",
     "riskRemediationPage": "https://gcagochina.com/risk-remediation.html",
     "riskRemediation": "https://gcagochina.com/risk-remediation.json",
-    "custodyRoadmapPage": "https://gcagochina.com/custody-roadmap.html",
-    "custodyRoadmap": "https://gcagochina.com/custody-roadmap.json",
     "lpLockClaimed": false,
     "ownerReserveTransferTxs": [
       "0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67",
@@ -173,7 +166,7 @@
     "baseScanSource": "verified",
     "baseScanOwnership": "verified",
     "baseScanTokenProfile": "remediation-required-before-next-submission",
-    "baseScanDomainEmailGate": "blocked-by-dns-snapshot-2026-05-30",
+    "baseScanDomainEmailGate": "ready-domain-email-evidence-2026-05-30",
     "baseScanDomainEmailTarget": "support@gcagochina.com",
     "geckoTerminal": "approved-2026-05-11",
     "blockaidMetaMask": "owner-observed-no-warning-visible",
@@ -187,7 +180,7 @@
   "safePublicClaims": [
     "GCA is deployed on Base Mainnet with fixed total supply.",
     "BaseScan source and deployer-wallet ownership verification are complete.",
-    "The domain email setup plan, public evidence checklist, and latest DNS snapshot are published; support@gcagochina.com is not ready for BaseScan evidence until MX/SPF/DMARC/DKIM checks pass.",
+    "The official domain email support@gcagochina.com is active, public DNS records pass MX/SPF/DKIM/DMARC checks, and private mail-flow evidence is retained for reviewer follow-up.",
     "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool.",
     "GeckoTerminal token information was approved on 2026-05-11.",
     "Owner reported on 2026-05-14 that no wallet risk warning was visible in the tested wallet/DEX flow.",

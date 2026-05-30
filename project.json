@@ -126,7 +126,7 @@
     ]
   },
   "baseScanHandoff": {
-    "status": "blocked-until-domain-email-evidence-and-final-preflight-pass",
+    "status": "ready-for-owner-resubmission",
     "pageUrl": "https://gcagochina.com/basescan-handoff.html",
     "url": "https://gcagochina.com/basescan-handoff.json",
     "useCase": "Direct evidence index for the next clean BaseScan token profile resubmission after project-domain email evidence and final preflight pass."
@@ -198,7 +198,7 @@
     "useCase": "Public future-audit handoff scope and checklist. This is not a completed third-party audit."
   },
   "baseScanContractUrl": "https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
-  "officialEmail": "GCAgochina@outlook.com",
+  "officialEmail": "support@gcagochina.com",
   "officialSocialLinks": [
     {
       "platform": "Telegram",
@@ -253,8 +253,8 @@
     "baseScanSource": "verified",
     "baseScanOwnership": "verified",
     "baseScanTokenProfile": "remediation-required-before-next-submission",
-    "baseScanTokenProfileLastCheckedDate": "2026-05-23",
-    "baseScanTokenProfileLastCheckedResult": "BaseScan returned the token profile update again as information-insufficient; the Tim Chen official-domain professional profile is now published, the domain email setup plan, public evidence checklist, and activation evidence packet are published, and project-domain email remains the main owner-controlled blocker before the next submission.",
+    "baseScanTokenProfileLastCheckedDate": "2026-05-30",
+    "baseScanTokenProfileLastCheckedResult": "BaseScan returned the token profile update again as information-insufficient; the Tim Chen official-domain professional profile is published, the domain email setup plan, public evidence checklist, and activation evidence packet are published, the 2026-05-30 DNS snapshot shows MX/SPF/DKIM/DMARC present, and support@gcagochina.com evidence is ready for one owner resubmission.",
     "baseScanRemediationPage": "https://gcagochina.com/basescan-remediation.html",
     "domainEmailSetupPlan": "https://gcagochina.com/domain-email.html",
     "domainEmailSetupPlanData": "https://gcagochina.com/domain-email.json",
@@ -463,7 +463,7 @@
     "pageUrl": "https://gcagochina.com/external-reviews.html",
     "url": "https://gcagochina.com/external-reviews.json",
     "baseScanTokenProfile": "remediation-required-before-next-submission",
-    "baseScanTokenProfileLastCheckedDate": "2026-05-23",
+    "baseScanTokenProfileLastCheckedDate": "2026-05-30",
     "baseScanRemediationPage": "https://gcagochina.com/basescan-remediation.html",
     "teamPage": "https://gcagochina.com/team.html",
     "timChenProfessionalProfile": "https://gcagochina.com/tim-chen.html",
@@ -493,7 +493,7 @@
       "status": "public-support-intake-published",
       "pageUrl": "https://gcagochina.com/support.html",
       "url": "https://gcagochina.com/support.json",
-      "officialEmail": "GCAgochina@outlook.com",
+      "officialEmail": "support@gcagochina.com",
       "directSubmissionEndpointConfigured": false
     },
     "privacyAndTerms": {
@@ -533,7 +533,7 @@
     },
     "supportWorkflow": {
       "targetFirstResponse": "5-10 business days after account intake; not a guarantee",
-      "contactEmail": "GCAgochina@outlook.com",
+      "contactEmail": "support@gcagochina.com",
       "reviewQueuePage": "https://gcagochina.com/review-queue.html",
       "reviewQueue": "https://gcagochina.com/review-queue.json",
       "operationsRunbookPage": "https://gcagochina.com/operations.html",

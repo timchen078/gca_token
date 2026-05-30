@@ -7,7 +7,7 @@
   "network": "Base Mainnet",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
-  "status": "basescan-remediation-required-before-next-submission",
+  "status": "basescan-ready-for-owner-resubmission",
   "baseScanReturnNotice": {
     "ownerProvidedNoticeDate": "2026-05-23",
     "from": "Team BaseScan.org [Aiman Hakimi]",
@@ -40,7 +40,7 @@
     "github": "https://github.com/timchen078/gca_token"
   },
   "currentEmailState": {
-    "publishedPrimaryEmail": "GCAgochina@outlook.com",
+    "publishedPrimaryEmail": "support@gcagochina.com",
     "domainEmailSetupPlan": "https://gcagochina.com/domain-email.html",
     "domainEmailDnsWorksheet": "https://gcagochina.com/domain-email.html#worksheetTitle",
     "domainEmailSetupPlanData": "https://gcagochina.com/domain-email.json",
@@ -48,29 +48,25 @@
     "domainEmailEvidenceChecklistData": "https://gcagochina.com/domain-email-evidence.json",
     "domainEmailRecommendedBeforeNextSubmission": true,
     "latestDnsSnapshot": {
-      "checkedAt": "2026-05-30T08:13:47Z",
-      "readyForBaseScanEmailEvidence": false,
-      "missingOrBlockedChecks": [
-        "mx",
-        "spf",
-        "dmarc",
-        "dkim"
-      ],
+      "checkedAt": "2026-05-30T16:24:34Z",
+      "readyForBaseScanEmailEvidence": true,
+      "missingOrBlockedChecks": [],
       "checks": {
-        "mx": "missing",
-        "spf": "missing",
-        "dmarc": "missing",
-        "dkim": "selector-required"
+        "mx": "present",
+        "spf": "present",
+        "dmarc": "present",
+        "dkim": "present"
       },
       "evidencePage": "https://gcagochina.com/domain-email.html",
-      "evidenceChecklist": "https://gcagochina.com/domain-email-evidence.html"
+      "evidenceChecklist": "https://gcagochina.com/domain-email-evidence.html",
+      "privateEvidencePacket": "launch/domain_email_evidence_packet.json"
     },
     "recommendedDomainEmailExamples": [
       "support@gcagochina.com",
       "hello@gcagochina.com",
       "team@gcagochina.com"
     ],
-    "ownerActionRequired": "Create and test a working gcagochina.com domain email, publish it on support/about/team pages, and submit to BaseScan from that address when possible."
+    "ownerActionRequired": "Submit one clean BaseScan token profile update from support@gcagochina.com and keep private provider/DNS/inbound/outbound/support-page evidence available if the reviewer requests it."
   },
   "teamTransparency": {
     "publicFounder": "Tim Chen",
@@ -115,8 +111,8 @@
     },
     {
       "id": "domain-email",
-      "status": "owner-action-required",
-      "evidence": "The published primary email is currently GCAgochina@outlook.com. BaseScan specifically flagged sender email/domain mismatch. The 2026-05-30 read-only DNS snapshot shows MX, SPF, and DMARC missing, with DKIM selector required, so a working gcagochina.com email should be configured before resubmission. The public DNS Entry Worksheet at https://gcagochina.com/domain-email.html#worksheetTitle lists the MX, SPF, DKIM, and DMARC fields to copy from the mailbox provider. The public evidence checklist at https://gcagochina.com/domain-email-evidence.html defines the provider, DNS, inbound, outbound, support-page, and final-resubmission proof to collect."
+      "status": "implemented-domain-email-ready",
+      "evidence": "The published primary email is support@gcagochina.com. Zoho Mail is configured for the domain, public DNS records pass MX, SPF, DKIM, and DMARC checks, inbound and outbound tests are archived privately, and the public evidence checklist remains available at https://gcagochina.com/domain-email-evidence.html."
     },
     {
       "id": "full-social-links",
@@ -125,14 +121,11 @@
     }
   ],
   "nextSubmissionGate": {
-    "ready": false,
+    "ready": true,
     "requiredBeforeReady": [
-      "Create and publish a working gcagochina.com domain email, then submit from that domain email or clearly explain the official primary email in the form.",
-      "Use the DNS Entry Worksheet at https://gcagochina.com/domain-email.html#worksheetTitle when copying MX, SPF, DKIM, and DMARC records from the mailbox provider.",
-      "Use the public domain email evidence checklist at https://gcagochina.com/domain-email-evidence.html to collect provider, DNS, inbound, outbound, website-email, and BaseScan resubmission proof before resubmission.",
-      "Fix the 2026-05-30 DNS snapshot blockers: add MX, SPF, DMARC, and DKIM records, rerun the checker with the provider DKIM selector, and archive inbound/outbound evidence.",
-      "Include the published Tim Chen professional profile URL https://gcagochina.com/tim-chen.html in the next BaseScan submission, and add LinkedIn later only if BaseScan specifically requires a third-party social-network profile.",
-      "Re-run the public site checker after email/team-profile changes.",
+      "Use support@gcagochina.com as the official BaseScan project email.",
+      "Keep the public domain email evidence checklist available at https://gcagochina.com/domain-email-evidence.html and retain private mailbox evidence for reviewer follow-up.",
+      "Include the published Tim Chen professional profile URL https://gcagochina.com/tim-chen.html in the next BaseScan submission.",
       "Run python3 tools/check_basescan_resubmission_readiness.py --json --require-ready and proceed only when readyForBaseScanResubmission is true.",
       "Use the updated BaseScan reply template at https://gcagochina.com/platform-replies.html and include GitHub, team page, start page, support page, and whitepaper."
     ],
@@ -159,7 +152,7 @@
       "tool": "tools/build_basescan_reviewer_checklist.py",
       "command": "python3 tools/build_basescan_reviewer_checklist.py --markdown",
       "ownerArtifactCommand": "python3 tools/build_basescan_reviewer_checklist.py --output-json launch/basescan_reviewer_checklist.json --output-md launch/basescan_reviewer_checklist.md",
-      "purpose": "Map BaseScan return reasons to current public GCA evidence and identify the remaining sender-domain-email blocker before the final submission package.",
+      "purpose": "Map BaseScan return reasons to current public GCA evidence before the final submission package.",
       "runAfter": [
         "public site checker passes",
         "regenerate after domain email evidence packet is ready",
@@ -173,14 +166,12 @@
         "does not sign wallet messages",
         "does not touch wallets or contracts"
       ],
-      "currentArtifactStatus": "generated-blocked-before-domain-email-evidence",
+      "currentArtifactStatus": "ready-after-domain-email-evidence",
       "currentArtifacts": [
         "launch/basescan_reviewer_checklist.json",
         "launch/basescan_reviewer_checklist.md"
       ],
-      "currentBlockedItems": [
-        "sender-domain-email"
-      ],
+      "currentBlockedItems": [],
       "regenerateAfter": [
         "domain email evidence packet is ready",
         "public email switch alignment passes",
