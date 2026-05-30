@@ -252,7 +252,7 @@
   "platformStatus": {
     "baseScanSource": "verified",
     "baseScanOwnership": "verified",
-    "baseScanTokenProfile": "remediation-required-before-next-submission",
+    "baseScanTokenProfile": "ready-for-owner-resubmission",
     "baseScanTokenProfileLastCheckedDate": "2026-05-30",
     "baseScanTokenProfileLastCheckedResult": "BaseScan returned the token profile update again as information-insufficient; the Tim Chen official-domain professional profile is published, the domain email setup plan, public evidence checklist, and activation evidence packet are published, the 2026-05-30 DNS snapshot shows MX/SPF/DKIM/DMARC present, and support@gcagochina.com evidence is ready for one owner resubmission.",
     "baseScanRemediationPage": "https://gcagochina.com/basescan-remediation.html",
@@ -462,7 +462,7 @@
     "status": "external-review-status-active",
     "pageUrl": "https://gcagochina.com/external-reviews.html",
     "url": "https://gcagochina.com/external-reviews.json",
-    "baseScanTokenProfile": "remediation-required-before-next-submission",
+    "baseScanTokenProfile": "ready-for-owner-resubmission",
     "baseScanTokenProfileLastCheckedDate": "2026-05-30",
     "baseScanRemediationPage": "https://gcagochina.com/basescan-remediation.html",
     "teamPage": "https://gcagochina.com/team.html",

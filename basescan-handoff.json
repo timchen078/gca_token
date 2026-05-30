@@ -108,10 +108,10 @@
     "tools/check_basescan_resubmission_readiness.py --json --require-ready passes"
   ],
   "submissionSequence": [
-    "Activate support@gcagochina.com as a full mailbox.",
-    "Add provider MX, SPF, DKIM, and DMARC records.",
-    "Save provider, DNS, inbound, outbound, and support-page evidence.",
-    "Switch public support/BaseScan email values after evidence is complete.",
+    "Confirm support@gcagochina.com is still active as a full mailbox.",
+    "Confirm MX, SPF, DKIM, and DMARC records still pass.",
+    "Keep provider, DNS, inbound, outbound, and support-page evidence archived privately.",
+    "Confirm public support/BaseScan email values still publish support@gcagochina.com.",
     "Run tools/check_basescan_resubmission_readiness.py --json --require-ready.",
     "Submit one clean BaseScan request only after the final preflight passes."
   ],

@@ -13,7 +13,7 @@
     "creditsSelfServiceClaimable": true,
     "gcaMemberSelfServiceClaimable": true,
     "liveTradingEnabled": false,
-    "baseScanTokenProfile": "remediation-required-before-next-submission",
+    "baseScanTokenProfile": "ready-for-owner-resubmission",
     "thirdPartyAudit": "not-completed",
     "liquidityDepth": "starter-depth-only",
     "accessPortal": "live-account-portal",

@@ -100,7 +100,7 @@
     }
   ],
   "externalDependencies": {
-    "baseScanTokenProfile": "remediation-required-before-next-submission",
+    "baseScanTokenProfile": "ready-for-owner-resubmission",
     "blockaidMetaMaskWarning": "owner-observed-no-warning-visible",
     "geckoTerminalTokenInfo": "approved-2026-05-11",
     "thirdPartyAudit": "not-completed-deferred",

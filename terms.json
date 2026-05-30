@@ -87,7 +87,7 @@
   },
   "externalStatus": {
     "baseScanSource": "verified",
-    "baseScanTokenProfile": "remediation-required-before-next-submission",
+    "baseScanTokenProfile": "ready-for-owner-resubmission",
     "geckoTerminalTokenInfo": "approved-2026-05-11",
     "blockaidMetaMask": "owner-observed-no-warning-visible",
     "thirdPartyAudit": "not-completed",

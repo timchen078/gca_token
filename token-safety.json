@@ -22,7 +22,7 @@
     "custodyOrWithdrawalPath": false
   },
   "pendingOrNotClaimed": {
-    "baseScanTokenProfile": "remediation-required-before-next-submission",
+    "baseScanTokenProfile": "ready-for-owner-resubmission",
     "blockaidMetaMaskWarning": "owner-observed-no-warning-visible",
     "thirdPartyAudit": "not-completed",
     "ownerReserveCustody": "normal-owner-controlled-wallet-not-lock-vesting-or-multisig",
