@@ -10596,6 +10596,7 @@ def validate_reviewer_kit_json(text: str) -> None:
     boundaries = payload.get("publicClaimBoundaries", {})
     evidence = payload.get("historicalFunctionalSwapEvidence", {})
     local_package = payload.get("localReviewPackage", {})
+    handoff = payload.get("baseScanResubmissionHandoff", {})
 
     if payload.get("schema") != REVIEWER_KIT_URL:
         raise SiteCheckError(f"{label}: wrong schema")
@@ -10717,6 +10718,50 @@ def validate_reviewer_kit_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong GeckoTerminal status")
     if reviews.get("coinGecko") != "deferred":
         raise SiteCheckError(f"{label}: wrong CoinGecko status")
+    if handoff.get("status") != "blocked-until-domain-email-evidence-and-final-preflight-pass":
+        raise SiteCheckError(f"{label}: wrong BaseScan handoff status")
+    if handoff.get("targetSender") != "support@gcagochina.com":
+        raise SiteCheckError(f"{label}: wrong BaseScan handoff target sender")
+    if handoff.get("currentActiveContact") != "GCAgochina@outlook.com":
+        raise SiteCheckError(f"{label}: wrong BaseScan handoff current contact")
+    if handoff.get("readyForBaseScanResubmission") is not False:
+        raise SiteCheckError(f"{label}: BaseScan handoff should be blocked")
+    required = set(handoff.get("requiredBeforeNextSubmission", []))
+    if "tools/check_basescan_resubmission_readiness.py --json --require-ready passes" not in required:
+        raise SiteCheckError(f"{label}: missing final preflight requirement")
+    handoff_ids = {item.get("id") for item in handoff.get("evidenceIndex", [])}
+    for expected_id in (
+        "founder-team-transparency",
+        "domain-email-plan",
+        "domain-email-evidence-checklist",
+        "basescan-preflight",
+        "daily-status-queue",
+        "technical-report",
+        "onchain-proofs",
+        "reserve-and-holder-disclosure",
+        "official-market-route",
+        "platform-reply-copy",
+    ):
+        if expected_id not in handoff_ids:
+            raise SiteCheckError(f"{label}: missing BaseScan handoff evidence {expected_id}")
+    handoff_text = json.dumps(handoff)
+    for expected in (
+        TIM_CHEN_PROFILE_PAGE_URL,
+        DOMAIN_EMAIL_PAGE_URL,
+        DOMAIN_EMAIL_EVIDENCE_PAGE_URL,
+        BASESCAN_PREFLIGHT_PAGE_URL,
+        DAILY_STATUS_PAGE_URL,
+        TECHNICAL_REPORT_PAGE_URL,
+        ONCHAIN_PROOFS_PAGE_URL,
+        RESERVE_STATEMENT_PAGE_URL,
+        HOLDER_DISTRIBUTION_PAGE_URL,
+        LIQUIDITY_PAGE_URL,
+        PLATFORM_REPLIES_PAGE_URL,
+    ):
+        assert_contains(handoff_text, expected, label)
+    for key in ("submitsBaseScanRequest", "sendsEmail", "writesDns", "claimsBaseScanApproval", "publishesPrivateMailboxEvidence"):
+        if handoff.get("boundaries", {}).get(key) is not False:
+            raise SiteCheckError(f"{label}: BaseScan handoff boundary {key} must be false")
     if evidence.get("status") != "observed-historical-functional-evidence-only":
         raise SiteCheckError(f"{label}: wrong functional evidence status")
     if local_package.get("status") != "local-export-tool-ready":
@@ -10761,6 +10806,8 @@ def validate_reviewer_kit_json(text: str) -> None:
 def validate_reviewer_kit_page(text: str) -> None:
     label = "/reviewer-kit.html"
     assert_contains(text, "GCA Reviewer Kit", label)
+    assert_contains(text, "BaseScan Resubmission Handoff", label)
+    assert_contains(text, "BaseScan Handoff", label)
     assert_contains(text, "Platform-Only Evidence Path", label)
     assert_contains(text, "Data Room", label)
     assert_contains(text, "Raw JSON for platforms only", label)
@@ -10776,7 +10823,19 @@ def validate_reviewer_kit_page(text: str) -> None:
     assert_contains(text, "Risk Remediation", label)
     assert_contains(text, "Custody Roadmap", label)
     assert_contains(text, "BaseScan Profile", label)
+    assert_contains(text, "Current gate", label)
+    assert_contains(text, "readyForBaseScanResubmission", label)
+    assert_contains(text, "do not resubmit yet", label)
+    assert_contains(text, "Founder / team transparency", label)
+    assert_contains(text, "Team profile", label)
+    assert_contains(text, "Tim Chen professional profile", label)
     assert_contains(text, "Domain Email Gate", label)
+    assert_contains(text, "Final preflight gate", label)
+    assert_contains(text, "Daily Status Queue", label)
+    assert_contains(text, "Contract and safety evidence", label)
+    assert_contains(text, "Supply and reserve evidence", label)
+    assert_contains(text, "Market route evidence", label)
+    assert_contains(text, "Reviewer copy", label)
     assert_contains_any(text, ("2026-05-25 DNS snapshot", "2026-05-30 DNS snapshot"), label, "DNS snapshot")
     assert_contains(text, "MX/SPF/DMARC missing", label)
     assert_contains(text, "DKIM selector required", label)

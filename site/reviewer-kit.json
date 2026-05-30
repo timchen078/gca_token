@@ -133,6 +133,91 @@
     "thirdPartyAudit": "not-completed-deferred",
     "blockaidOwnerObservationDate": "2026-05-14"
   },
+  "baseScanResubmissionHandoff": {
+    "status": "blocked-until-domain-email-evidence-and-final-preflight-pass",
+    "targetSender": "support@gcagochina.com",
+    "currentActiveContact": "GCAgochina@outlook.com",
+    "readyForBaseScanResubmission": false,
+    "currentGate": "Do not resubmit BaseScan yet. Activate the project-domain mailbox, collect evidence, switch public email values, and run the final preflight first.",
+    "requiredBeforeNextSubmission": [
+      "support@gcagochina.com receives external email",
+      "support@gcagochina.com sends authenticated external email",
+      "MX, SPF, DKIM, and DMARC evidence is collected",
+      "public support and BaseScan files publish support@gcagochina.com",
+      "tools/check_basescan_resubmission_readiness.py --json --require-ready passes"
+    ],
+    "evidenceIndex": [
+      {
+        "id": "founder-team-transparency",
+        "label": "Founder and team transparency",
+        "page": "https://gcagochina.com/team.html",
+        "secondaryPage": "https://gcagochina.com/tim-chen.html",
+        "status": "published"
+      },
+      {
+        "id": "domain-email-plan",
+        "label": "Domain email setup plan",
+        "page": "https://gcagochina.com/domain-email.html",
+        "status": "published-but-mailbox-not-ready"
+      },
+      {
+        "id": "domain-email-evidence-checklist",
+        "label": "Domain email evidence checklist",
+        "page": "https://gcagochina.com/domain-email-evidence.html",
+        "status": "blocked-until-private-evidence-collected"
+      },
+      {
+        "id": "basescan-preflight",
+        "label": "BaseScan resubmission preflight",
+        "page": "https://gcagochina.com/basescan-preflight.html",
+        "status": "blocked"
+      },
+      {
+        "id": "daily-status-queue",
+        "label": "Daily status and owner action queue",
+        "page": "https://gcagochina.com/daily-status.html",
+        "status": "published"
+      },
+      {
+        "id": "technical-report",
+        "label": "Technical report",
+        "page": "https://gcagochina.com/technical-report.html",
+        "status": "published"
+      },
+      {
+        "id": "onchain-proofs",
+        "label": "On-chain proofs",
+        "page": "https://gcagochina.com/onchain-proofs.html",
+        "status": "published"
+      },
+      {
+        "id": "reserve-and-holder-disclosure",
+        "label": "Reserve and holder disclosure",
+        "page": "https://gcagochina.com/reserve-statement.html",
+        "secondaryPage": "https://gcagochina.com/holder-distribution.html",
+        "status": "published"
+      },
+      {
+        "id": "official-market-route",
+        "label": "Official GCA/USDT market route",
+        "page": "https://gcagochina.com/liquidity.html",
+        "status": "published-starter-depth-only"
+      },
+      {
+        "id": "platform-reply-copy",
+        "label": "Consistent platform reply copy",
+        "page": "https://gcagochina.com/platform-replies.html",
+        "status": "published"
+      }
+    ],
+    "boundaries": {
+      "submitsBaseScanRequest": false,
+      "sendsEmail": false,
+      "writesDns": false,
+      "claimsBaseScanApproval": false,
+      "publishesPrivateMailboxEvidence": false
+    }
+  },
   "evidenceLinks": {
     "identity": "https://gcagochina.com/verify.html",
     "brandAssets": "https://gcagochina.com/brand-kit.html",
