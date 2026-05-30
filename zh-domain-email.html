@@ -333,6 +333,8 @@
           <a class="button primary" href="domain-email.html#worksheetTitle">打开英文 DNS Worksheet</a>
           <a class="button primary" href="domain-email-evidence.html">打开公开证据清单</a>
           <a class="button primary" href="zh-basescan-preflight.html">打开中文 BaseScan 预检</a>
+          <a class="button secondary" href="daily-status.html">每日状态队列</a>
+          <a class="button secondary" href="action-plan.html">下一步计划</a>
           <a class="button secondary" href="basescan-remediation.html">BaseScan 整改页</a>
           <a class="button secondary" href="platform-replies.html">平台回复模板</a>
           <a class="button" href="zh-status.html">中文审核状态</a>
@@ -507,6 +509,18 @@
           <div class="row"><span>切换后检查</span><strong><code>python3 tools/check_domain_email_public_switch.py --json --require-switched</code>，如果关键文件还出现 <code>GCAgochina@outlook.com</code>，就不要复提 BaseScan。</strong></div>
           <div class="row"><span>最终预检</span><strong><code>tools/check_basescan_resubmission_readiness.py</code> 和 <code>tools/build_basescan_submission_package.py</code> 已经接入这个公开邮箱切换门槛。</strong></div>
           <div class="row"><span>边界</span><strong>这个工具不会改文件、不会发邮件、不会写 DNS、不会提交 BaseScan、不会操作钱包或合约。</strong></div>
+        </div>
+      </section>
+
+      <section class="section panel notice" aria-labelledby="dailyQueueTitle">
+        <p class="eyebrow">每日状态队列</p>
+        <h2 id="dailyQueueTitle">按 Daily Status 的 BaseScan 队列推进</h2>
+        <p class="note">现在公开状态页已经把 BaseScan 阻塞项转成可执行队列。你做邮箱和 DNS 时，以这个顺序为准：先开通邮箱，再补 DNS 和证据，再切换旧邮箱引用，最后跑 BaseScan 预检。</p>
+        <div class="list">
+          <div class="row"><span>公开队列</span><strong><a href="daily-status.html">daily-status.html</a> 显示 <code>ownerActionQueue</code> 和 <code>filesStillUsingOldEmail</code>。</strong></div>
+          <div class="row"><span>中文总计划</span><strong><a href="action-plan.html">action-plan.html</a> 已同步 BaseScan Action Queue，普通用户和审核方都可以直接阅读。</strong></div>
+          <div class="row"><span>当前顺序</span><strong>开通 <code>support@gcagochina.com</code> -> 完成 MX/SPF/DKIM/DMARC 和收发证据 -> 一次性切换旧邮箱文件 -> 运行 <code>tools/check_basescan_resubmission_readiness.py --json --require-ready</code>。</strong></div>
+          <div class="row"><span>不能提前做</span><strong>在证据完成前，不要把官网、BaseScan 包或平台回复模板里的 <code>GCAgochina@outlook.com</code> 提前改掉。</strong></div>
         </div>
       </section>
 
