@@ -8,6 +8,35 @@
   "project": "GCA",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+  "dailyOps": {
+    "packetVersion": "gca_daily_ops_summary_v1",
+    "ok": true,
+    "generatedAt": "2026-05-30T09:05:56Z",
+    "publicOnlyByDefault": true,
+    "steps": [
+      {
+        "id": "public-site",
+        "ok": true,
+        "status": "passed",
+        "blocksSummaryOk": true,
+        "command": "python3 tools/check_public_site.py --base-url https://gcagochina.com/ --timeout 20"
+      },
+      {
+        "id": "registration-api-public",
+        "ok": true,
+        "status": "passed",
+        "blocksSummaryOk": true,
+        "command": "python3 tools/check_gca_registration_api.py --base-url https://gca-registration-api.gcagochina.workers.dev --public-only --timeout 20"
+      },
+      {
+        "id": "basescan-resubmission-preflight-status",
+        "ok": true,
+        "status": "passed",
+        "blocksSummaryOk": false,
+        "command": "python3 tools/check_basescan_resubmission_readiness.py --skip-url-checks --json"
+      }
+    ]
+  },
   "publicSite": {
     "status": "ok",
     "baseUrl": "https://gcagochina.com/",

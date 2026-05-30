@@ -7257,6 +7257,7 @@ def validate_daily_status_json(text: str) -> None:
     public_site = payload.get("publicSite", {})
     registration_api = payload.get("registrationApi", {})
     basescan = payload.get("baseScanPreflight", {})
+    daily_ops = payload.get("dailyOps", {})
     boundaries = payload.get("boundaries", {})
     links = payload.get("links", {})
 
@@ -7272,6 +7273,26 @@ def validate_daily_status_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong chainId")
     if payload.get("contractAddress") != MAINNET_ADDRESS:
         raise SiteCheckError(f"{label}: wrong contract address")
+    if daily_ops.get("packetVersion") != "gca_daily_ops_summary_v1":
+        raise SiteCheckError(f"{label}: wrong daily ops packet version")
+    if daily_ops.get("ok") is not True:
+        raise SiteCheckError(f"{label}: daily ops should be ok")
+    if daily_ops.get("generatedAt") != payload.get("snapshotGeneratedAt"):
+        raise SiteCheckError(f"{label}: daily ops generatedAt should match snapshotGeneratedAt")
+    if daily_ops.get("publicOnlyByDefault") is not True:
+        raise SiteCheckError(f"{label}: daily ops should be public-only by default")
+    daily_steps = {item.get("id"): item for item in daily_ops.get("steps", []) if isinstance(item, dict)}
+    for step_id in ("public-site", "registration-api-public", "basescan-resubmission-preflight-status"):
+        step = daily_steps.get(step_id)
+        if step is None:
+            raise SiteCheckError(f"{label}: missing daily ops step {step_id}")
+        if step.get("ok") is not True or step.get("status") != "passed":
+            raise SiteCheckError(f"{label}: daily ops step should have passed {step_id}")
+        command = str(step.get("command") or "")
+        if "/Users/" in command or ".venv/bin/python" in command:
+            raise SiteCheckError(f"{label}: daily ops command leaks local path {step_id}")
+    if daily_steps["basescan-resubmission-preflight-status"].get("blocksSummaryOk") is not False:
+        raise SiteCheckError(f"{label}: BaseScan daily ops step should stay non-blocking")
     if public_site.get("status") != "ok":
         raise SiteCheckError(f"{label}: public site check should be ok")
     if public_site.get("baseUrl") != DEFAULT_BASE_URL:

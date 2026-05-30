@@ -5,6 +5,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
+from tools.build_gca_daily_status_snapshot import build_snapshot
 from tools.run_gca_daily_ops import run_daily_ops
 
 
@@ -302,6 +303,72 @@ class GcaDailyOpsTests(unittest.TestCase):
             self.assertNotIn("private-user@example.com", serialized)
             self.assertNotIn("stdoutTail", serialized)
             self.assertNotIn("secret-token", serialized)
+
+    def test_daily_status_snapshot_builder_publishes_public_safe_artifacts(self):
+        summary = {
+            "ok": True,
+            "packetVersion": "gca_daily_ops_summary_v1",
+            "generatedAt": "2026-05-30T10:11:12Z",
+            "siteBaseUrl": "https://gcagochina.com/",
+            "apiBaseUrl": "https://gca-registration-api.gcagochina.workers.dev",
+            "boundaries": {"publicOnlyByDefault": True},
+            "baseScanPreflight": {
+                "status": "blocked-before-basescan-resubmission",
+                "readyForBaseScanResubmission": False,
+                "publicEmailSwitchStatus": "public-email-switch-pending",
+                "snapshotAlignmentStatus": "aligned",
+                "filesStillUsingOldEmail": 3,
+                "missingOrBlockedRequirements": [
+                    "official-domain-email",
+                    "domain-email-public-switch-check",
+                ],
+                "nextAction": "Do not resubmit BaseScan yet.",
+            },
+            "steps": [
+                {
+                    "id": "public-site",
+                    "ok": True,
+                    "blocksSummaryOk": True,
+                    "command": "/Users/abc/Desktop/gca_token/.venv/bin/python tools/check_public_site.py --base-url https://gcagochina.com/ --timeout 20",
+                },
+                {
+                    "id": "registration-api-public",
+                    "ok": True,
+                    "blocksSummaryOk": True,
+                    "command": "/Users/abc/Desktop/gca_token/.venv/bin/python tools/check_gca_registration_api.py --base-url https://gca-registration-api.gcagochina.workers.dev --public-only --timeout 20",
+                },
+                {
+                    "id": "basescan-resubmission-preflight-status",
+                    "ok": True,
+                    "blocksSummaryOk": False,
+                    "command": "/Users/abc/Desktop/gca_token/.venv/bin/python tools/check_basescan_resubmission_readiness.py --skip-url-checks --json",
+                },
+            ],
+        }
+
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            summary_input = root / "summary.json"
+            json_output = root / "daily-status.json"
+            html_output = root / "daily-status.html"
+            summary_input.write_text(json.dumps(summary), encoding="utf-8")
+            html_output.write_text((Path(__file__).resolve().parents[1] / "site" / "daily-status.html").read_text(), encoding="utf-8")
+
+            payload = build_snapshot(summary_input, json_output, html_output)
+
+            self.assertEqual(payload["snapshotGeneratedAt"], "2026-05-30T10:11:12Z")
+            self.assertEqual(payload["dailyOps"]["steps"][0]["id"], "public-site")
+            self.assertEqual(payload["dailyOps"]["steps"][0]["command"], "python3 tools/check_public_site.py --base-url https://gcagochina.com/ --timeout 20")
+            self.assertEqual(payload["dailyOps"]["steps"][2]["blocksSummaryOk"], False)
+            self.assertEqual(payload["baseScanPreflight"]["filesStillUsingOldEmail"], 3)
+            self.assertFalse(payload["boundaries"]["adminTokenPrinted"])
+            self.assertFalse(payload["boundaries"]["userEmailsPrinted"])
+            serialized = json_output.read_text(encoding="utf-8")
+            page = html_output.read_text(encoding="utf-8")
+            self.assertIn("2026-05-30T10:11:12Z", page)
+            self.assertIn("<code>filesStillUsingOldEmail</code> as 3 tracked files", page)
+            self.assertNotIn("/Users/abc", serialized)
+            self.assertNotIn('href="daily-status.json"', page)
 
 
 if __name__ == "__main__":

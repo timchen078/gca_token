@@ -143,6 +143,18 @@ The GitHub Actions workflow at `.github/workflows/check-gca-registration-api.yml
 
 The consolidated public daily ops workflow at `.github/workflows/check-gca-daily-ops.yml` runs `tools/run_gca_daily_ops.py` in default public-only mode. It checks the public website and public registration API together, and it does not pass `--include-member-ops` or `--include-holding-report`.
 
+To refresh the public daily status page after a local daily ops run:
+
+```bash
+.venv/bin/python tools/run_gca_daily_ops.py --summary-output /tmp/gca_daily_ops_summary.json
+.venv/bin/python tools/build_gca_daily_status_snapshot.py \
+  --summary-input /tmp/gca_daily_ops_summary.json \
+  --json-output site/daily-status.json \
+  --html-output site/daily-status.html
+```
+
+The snapshot builder removes local machine paths from published command strings and does not publish admin tokens, user records, wallet signatures, transactions, or private evidence files.
+
 To read recent email registrations:
 
 ```bash
