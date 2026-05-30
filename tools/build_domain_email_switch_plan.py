@@ -46,6 +46,7 @@ EXCLUDED_PARTS = {
     "assets",
     "brand",
     "token",
+    "domain_email_evidence",
 }
 
 
@@ -114,6 +115,23 @@ def scan_file(path: Path, current_email: str, target_email: str) -> dict[str, An
     }
 
 
+def public_switch_is_complete() -> bool:
+    config_path = ROOT / "site" / "domain-email.json"
+    try:
+        payload = json.loads(config_path.read_text(encoding="utf-8"))
+    except (FileNotFoundError, json.JSONDecodeError):
+        return False
+    current_public_email = payload.get("currentPublicEmail")
+    target_domain_email = payload.get("targetDomainEmail")
+    snapshot = payload.get("currentPublicSwitchSnapshot")
+    return (
+        current_public_email == target_domain_email == TARGET_EMAIL
+        and isinstance(snapshot, dict)
+        and snapshot.get("status") == "public-email-switch-complete"
+        and snapshot.get("filesStillUsingCurrentEmail") == 0
+    )
+
+
 def build_plan(
     *,
     current_email: str = CURRENT_EMAIL,
@@ -128,12 +146,19 @@ def build_plan(
     categories: dict[str, int] = {}
     for record in records:
         categories[record["category"]] = categories.get(record["category"], 0) + 1
+    switch_complete = public_switch_is_complete()
+    if switch_complete:
+        for record in records:
+            if record["switchRequiredAfterActivation"]:
+                record["switchRequiredAfterActivation"] = False
+                record["notes"] = "Legacy previous-email reference retained for audit context; public switch is complete."
+        switch_required = []
 
     return {
         "schema": "gca-domain-email-switch-plan-v1",
         "currentEmail": current_email,
         "targetDomainEmail": target_email,
-        "status": "blocked-until-domain-email-evidence-ready",
+        "status": "public-email-switch-complete" if switch_complete else "blocked-until-domain-email-evidence-ready",
         "summary": {
             "scannedFilesWithEmailReferences": len(records),
             "filesRequiringSwitchAfterActivation": len(switch_required),

@@ -1,7 +1,7 @@
 # GCA Domain Email Provider Decision Matrix
 
 - Status: `choose-full-mailbox-before-basescan-resubmission`
-- Current public email: `GCAgochina@outlook.com`
+- Current public email: `support@gcagochina.com`
 - Target domain email: `support@gcagochina.com`
 - No live pricing: `true`
 

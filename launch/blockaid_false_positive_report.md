@@ -18,7 +18,7 @@ This report is for risk-provider review only. The owner later observed no wallet
 - Chain: `Base Mainnet / chainId 8453`
 - Wallet: `MetaMask / Uniswap token warning`
 - Address: `0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`
-- Email: `GCAgochina@outlook.com`
+- Email: `support@gcagochina.com`
 
 ## Current Follow-Up Context
 

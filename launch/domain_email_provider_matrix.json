@@ -7,7 +7,7 @@
     "touchesWalletsOrContracts": false,
     "writesDnsRecords": false
   },
-  "currentPublicEmail": "GCAgochina@outlook.com",
+  "currentPublicEmail": "support@gcagochina.com",
   "decisionRule": "Choose the lowest-cost full mailbox path that can receive external mail, send authenticated external mail, publish MX/SPF/DKIM/DMARC, and produce evidence for support@gcagochina.com.",
   "domain": "gcagochina.com",
   "generatedAt": "2026-05-28T14:26:32Z",
@@ -93,7 +93,7 @@
       ],
       "notEnoughIf": [
         "the setup only forwards inbound mail to Outlook or Gmail",
-        "BaseScan replies are still sent from GCAgochina@outlook.com"
+        "BaseScan replies are still sent from support@gcagochina.com"
       ],
       "why": "Useful for inbound forwarding, but receive-only routing does not prove outbound sender alignment for a clean BaseScan resubmission."
     },

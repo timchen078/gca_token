@@ -5,30 +5,30 @@ This runbook is the owner-side checklist for activating a project-domain mailbox
 ## Current State
 
 - Domain: `gcagochina.com`
-- Current public contact: `GCAgochina@outlook.com`
+- Current public contact: `support@gcagochina.com`
 - Target BaseScan-ready mailbox: `support@gcagochina.com`
-- Current public status: domain email setup plan published, mailbox not active yet
+- Current public status: domain email setup plan published, mailbox active and evidence-ready
 - Public plan: `https://gcagochina.com/domain-email.html`
 - Public JSON: `https://gcagochina.com/domain-email.json`
 - Public evidence checklist: `https://gcagochina.com/domain-email-evidence.html`
 - Public evidence checklist JSON: `https://gcagochina.com/domain-email-evidence.json`
 - DNS checker: `tools/check_domain_email_dns.py`
 
-Do not claim that `support@gcagochina.com` is active until inbound mail, outbound authenticated sending, and public DNS authentication checks have all passed.
+Do not claim BaseScan token profile approval until BaseScan publishes it. The domain mailbox can be described as active and evidence-backed while private screenshots remain local.
 
 ## Latest Read-Only DNS Snapshot (2026-05-30)
 
 Command run:
 
 ```bash
-python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox support --json
+python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox support --dkim-selector zmail --json
 ```
 
-Checked at: `2026-05-30T08:13:47Z`.
+Checked at: `2026-05-30T16:24:34Z`.
 
-Result: `readyForBaseScanEmailEvidence` is false. Public DNS currently reports `missingOrBlockedChecks` as `["mx", "spf", "dmarc", "dkim"]`: MX is missing, SPF is missing, DMARC is missing, and DKIM is still `selector-required` because the mail provider selector has not been supplied.
+Result: `readyForBaseScanEmailEvidence` is true. Public DNS currently reports `missingOrBlockedChecks` as `[]`: MX, SPF, DMARC, and DKIM are present for the active Zoho-backed project mailbox.
 
-Next owner action: create `support@gcagochina.com` at the chosen mail provider, add the provider MX/SPF/DMARC/DKIM records, rerun the checker with `--dkim-selector <provider-selector>`, then collect inbound and outbound message evidence.
+Next owner action: keep `support@gcagochina.com` active, retain provider/DNS/inbound/outbound screenshots privately, and use one clean owner-controlled BaseScan resubmission from the same domain email.
 
 ## Owner Action Packet
 
@@ -44,7 +44,7 @@ Use this short order when doing the actual mailbox work. Stop immediately if any
 8. Switch public support/BaseScan email values only after evidence is complete, then save `support-page-domain-email.png`.
 9. Run `python3 tools/check_basescan_resubmission_readiness.py --json --require-ready`. BaseScan can be resubmitted only when the preflight reports `readyForBaseScanResubmission` as true.
 
-Stop conditions: any required evidence file is missing; DNS is not ready; outbound visible sender is not `support@gcagochina.com`; public files still publish `GCAgochina@outlook.com` after the switch; or BaseScan preflight fails.
+Stop conditions: any required evidence file is missing; DNS readiness regresses; outbound visible sender is not `support@gcagochina.com`; public files still publish the old Outlook email after the switch; or BaseScan preflight fails.
 
 ## Mail Provider Selection
 
@@ -182,7 +182,7 @@ The final draft builder still does not submit the form. It only produces the loc
 
 ## Public Email Switch Planner
 
-Before replacing `GCAgochina@outlook.com` across public files, run the read-only switch planner:
+Before replacing public email values in future updates, run the read-only switch planner:
 
 ```bash
 python3 tools/build_domain_email_switch_plan.py --json
@@ -217,7 +217,7 @@ After the manual switch is done, run the read-only public switch checker:
 python3 tools/check_domain_email_public_switch.py --json --require-switched
 ```
 
-The checker uses the critical file list from `site/domain-email.json` and blocks if any listed public/support/BaseScan file still contains `GCAgochina@outlook.com`, if the target domain email is missing, or if a critical file is missing. It does not edit files, send email, write DNS records, submit BaseScan requests, or touch wallets/contracts.
+The checker uses the critical file list from `site/domain-email.json` and blocks if any listed public/support/BaseScan file still contains `support@gcagochina.com`, if the target domain email is missing, or if a critical file is missing. It does not edit files, send email, write DNS records, submit BaseScan requests, or touch wallets/contracts.
 Before reusing platform copy after a new DNS check, run the read-only snapshot alignment checker:
 
 ```bash
@@ -246,7 +246,7 @@ The packet builder writes only local owner evidence files when `--output-json` o
 
 Only after the evidence packet is ready:
 
-1. Replace public contact references from `GCAgochina@outlook.com` to `support@gcagochina.com` where appropriate.
+1. Replace public contact references from `support@gcagochina.com` to `support@gcagochina.com` where appropriate.
 2. Update `site/support.html`, `site/support.json`, `site/zh-support.html`, `site/register.html`, `site/members.html`, `site/project.json`, `site/listing-kit.html`, `site/basescan-remediation.html`, `site/basescan-remediation.json`, `site/external-reviews.json`, `site/reviewer-kit.json`, and BaseScan launch values.
 3. Re-run JSON validation, the domain email DNS check, the public site checker, and the full test suite.
 4. Submit the next BaseScan profile update from the same domain email where possible.
@@ -269,7 +269,7 @@ Do not submit another clean BaseScan token update until all of these are true:
 - If SPF is marked `multiple`, merge SPF values into one root-domain TXT record.
 - If DMARC is missing, add `_dmarc.gcagochina.com`.
 - If DKIM is missing, check the provider selector and DNS host record type/value.
-- If outbound mail lands in spam, keep the public site on `GCAgochina@outlook.com` until delivery is stable.
+- If outbound mail lands in spam, keep the public site on `support@gcagochina.com` until delivery is stable.
 
 ## Public Claim Boundary
 

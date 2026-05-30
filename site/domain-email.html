@@ -306,19 +306,19 @@
       <section class="facts" aria-label="Domain email facts">
         <div class="fact">
           <span class="label">Current Public Email</span>
-          <span class="value">GCAgochina@outlook.com</span>
+          <span class="value">support@gcagochina.com</span>
         </div>
         <div class="fact">
           <span class="label">Target Domain Email</span>
-          <span class="value pending">support@gcagochina.com</span>
+          <span class="value good">support@gcagochina.com</span>
         </div>
         <div class="fact">
           <span class="label">Readiness</span>
-          <span class="value pending">Not active yet</span>
+          <span class="value good">Active</span>
         </div>
         <div class="fact">
           <span class="label">BaseScan Gate</span>
-          <span class="value pending">Required before resubmission</span>
+          <span class="value good">Ready for resubmission</span>
         </div>
       </section>
 
@@ -330,17 +330,17 @@
             <div class="row"><span>DNS records</span><strong>Add the provider's MX, SPF, DKIM, and DMARC records at the DNS host for <code>gcagochina.com</code>.</strong></div>
             <div class="row"><span>Inbound test</span><strong>Send a test message from Gmail or Outlook to <code>support@gcagochina.com</code> and confirm it arrives.</strong></div>
             <div class="row"><span>Outbound test</span><strong>Reply from <code>support@gcagochina.com</code> to Gmail or Outlook and confirm the sender displays the domain email.</strong></div>
-            <div class="row"><span>Website switch</span><strong>Only after tests pass, replace public support and BaseScan submission email values with the domain email.</strong></div>
+            <div class="row"><span>Website switch</span><strong>Public support and BaseScan submission email values now use the domain email.</strong></div>
           </div>
         </div>
 
         <div class="panel notice">
           <h2>Current Boundary</h2>
-          <p class="note">Until the mailbox is live, public pages continue to show <code>GCAgochina@outlook.com</code> as the active contact. BaseScan resubmission should wait so the next package does not contain a mismatch between website email and sender email.</p>
+          <p class="note">The mailbox is live, public pages show <code>support@gcagochina.com</code> as the active contact, and BaseScan resubmission materials now use the same sender and website email.</p>
           <div class="list">
-            <div class="row"><span>Do not claim</span><strong>A working <code>gcagochina.com</code> email before tests pass.</strong></div>
-            <div class="row"><span>Do not submit</span><strong>Another duplicate BaseScan update before the email evidence is ready.</strong></div>
-            <div class="row"><span>Safe claim</span><strong>Domain email setup is the remaining owner-controlled BaseScan blocker.</strong></div>
+            <div class="row"><span>Do not claim</span><strong>BaseScan token profile approval before BaseScan publishes it.</strong></div>
+            <div class="row"><span>Do not submit duplicates</span><strong>Use one clean BaseScan update from <code>support@gcagochina.com</code> and wait for reviewer response.</strong></div>
+            <div class="row"><span>Safe claim</span><strong>Domain email evidence is ready for owner resubmission.</strong></div>
           </div>
         </div>
       </section>
@@ -385,7 +385,7 @@
           <div class="row"><span>6. Prove mail flow</span><strong>Save inbound and outbound screenshots: <code>domain-email-inbound-test.png</code> and <code>domain-email-outbound-test.png</code>.</strong></div>
           <div class="row"><span>7. Switch public email</span><strong>Only after evidence is complete, switch public support/BaseScan values and save <code>support-page-domain-email.png</code>.</strong></div>
           <div class="row"><span>8. Final preflight</span><strong>Run <code>python3 tools/check_basescan_resubmission_readiness.py --json --require-ready</code>. BaseScan can be resubmitted only when it reports ready.</strong></div>
-          <div class="row"><span>Stop condition</span><strong class="pending">If any evidence file is missing, DNS is not ready, outbound sender is not <code>support@gcagochina.com</code>, or the preflight fails, do not submit BaseScan yet.</strong></div>
+          <div class="row"><span>Stop condition</span><strong class="pending">If any evidence file becomes missing, DNS readiness regresses, outbound sender is not <code>support@gcagochina.com</code>, or the preflight fails, pause and fix the evidence before resubmitting.</strong></div>
         </div>
       </section>
 
@@ -419,7 +419,7 @@
           </div>
           <div class="card">
             <h3>Public Switch Checker</h3>
-            <p class="note">After the public files are manually switched, run <code>python3 tools/check_domain_email_public_switch.py --json --require-switched</code>. It blocks if any critical support, project, or BaseScan file still publishes <code>GCAgochina@outlook.com</code>.</p>
+            <p class="note">After the public files are manually switched, run <code>python3 tools/check_domain_email_public_switch.py --json --require-switched</code>. It blocks if any critical support, project, or BaseScan file still publishes the old Outlook contact instead of <code>support@gcagochina.com</code>.</p>
           </div>
           <div class="card">
             <h3>Snapshot Alignment Checker</h3>
@@ -444,14 +444,14 @@
       <section class="section panel" aria-labelledby="snapshotTitle">
         <p class="eyebrow">Live DNS Snapshot</p>
         <h2 id="snapshotTitle">2026-05-30 Read-Only DNS Check</h2>
-        <p class="note">The current public DNS check is not ready for BaseScan email evidence. This snapshot only records what public DNS returns; it does not write DNS records, send email, submit BaseScan forms, or touch wallets/contracts.</p>
+        <p class="note">The current public DNS check is ready for BaseScan email evidence. This snapshot only records what public DNS returns; it does not write DNS records, send email, submit BaseScan forms, or touch wallets/contracts.</p>
         <div class="list">
-          <div class="row"><span>MX Missing</span><strong>No mail exchanger is visible for <code>gcagochina.com</code>, so inbound mail to <code>support@gcagochina.com</code> is not proven yet.</strong></div>
-          <div class="row"><span>SPF Missing</span><strong>No root-domain SPF TXT record is visible for the chosen mail provider.</strong></div>
-          <div class="row"><span>DMARC Missing</span><strong>No <code>_dmarc.gcagochina.com</code> policy record is visible yet.</strong></div>
-          <div class="row"><span>DKIM Selector required</span><strong>The checker needs the exact provider selector after the mailbox is created, then it can verify the DKIM record.</strong></div>
-          <div class="row"><span>Readiness</span><strong class="pending">Not ready for BaseScan email evidence.</strong></div>
-          <div class="row"><span>Next action</span><strong>Create the mailbox, add the provider MX/SPF/DMARC/DKIM records, then rerun <code>python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox support --dkim-selector &lt;provider-selector&gt; --json</code>.</strong></div>
+	          <div class="row"><span>MX Present</span><strong>Zoho MX records are visible for <code>gcagochina.com</code>, so inbound mail to <code>support@gcagochina.com</code> is routed.</strong></div>
+	          <div class="row"><span>SPF Present</span><strong>The root-domain SPF TXT record authorizes Zoho Mail.</strong></div>
+	          <div class="row"><span>DMARC Present</span><strong>The <code>_dmarc.gcagochina.com</code> monitoring policy is visible.</strong></div>
+	          <div class="row"><span>DKIM Present</span><strong>The <code>zmail._domainkey.gcagochina.com</code> DKIM TXT record is visible and the read-only checker passes.</strong></div>
+	          <div class="row"><span>Readiness</span><strong class="good">Ready for BaseScan email evidence.</strong></div>
+	          <div class="row"><span>Next action</span><strong>Keep the mailbox active, retain provider/DNS/inbound/outbound evidence privately, and use <code>support@gcagochina.com</code> for one clean BaseScan resubmission.</strong></div>
         </div>
       </section>
 
@@ -483,13 +483,13 @@
 
       <section class="section panel" aria-labelledby="currentSwitchTitle">
         <p class="eyebrow">Current Preflight Snapshot</p>
-        <h2 id="currentSwitchTitle">15 Critical Files Still Publish The Current Outlook Email</h2>
-        <p class="note">The latest read-only BaseScan preflight shows that the public switch is still intentionally pending. Keep these files unchanged until <code>support@gcagochina.com</code> passes inbound, outbound, DNS, and evidence-packet checks; then switch them together and rerun the checker.</p>
+	        <h2 id="currentSwitchTitle">0 Critical Files Still Publish The Old Outlook Email</h2>
+	        <p class="note">The latest read-only BaseScan preflight shows that the public switch is complete. Support, website, BaseScan package, and reviewer-facing files now publish <code>support@gcagochina.com</code>.</p>
         <div class="list">
           <div class="row"><span>Support and intake</span><strong><code>site/support.html</code>, <code>site/support.json</code>, <code>site/zh-support.html</code>, <code>site/register.html</code>, and <code>site/members.html</code>.</strong></div>
-          <div class="row"><span>Project and listing</span><strong><code>site/project.json</code>, <code>site/listing-kit.html</code>, <code>site/basescan-remediation.html</code>, <code>site/basescan-remediation.json</code>, and <code>site/external-reviews.json</code>.</strong></div>
+          <div class="row"><span>Project and listing</span><strong><code>site/project.json</code>, <code>site/listing-kit.html</code>, <code>site/reviewer-kit.json</code>, <code>site/basescan-remediation.html</code>, <code>site/basescan-remediation.json</code>, and <code>site/external-reviews.json</code>.</strong></div>
           <div class="row"><span>Launch packets</span><strong><code>launch/basescan_form_values.json</code>, <code>launch/basescan_resubmission_values.json</code>, <code>launch/basescan_resubmission_package.md</code>, <code>launch/external_review_followup_tracker.json</code>, and <code>launch/external_review_followup_tracker.md</code>.</strong></div>
-          <div class="row"><span>Already target-aware</span><strong><code>site/reviewer-kit.json</code> already contains the target domain email but remains in the activation list so reviewer evidence stays aligned after the switch.</strong></div>
+	          <div class="row"><span>Public switch</span><strong>The critical files report zero old-email occurrences and remain aligned to <code>support@gcagochina.com</code>.</strong></div>
           <div class="row"><span>Final check</span><strong>After switching, <code>tools/check_domain_email_public_switch.py --json --require-switched</code> must report zero old-email files before a BaseScan resubmission package is prepared.</strong></div>
         </div>
       </section>
@@ -519,12 +519,12 @@
           <li><code>tools/check_domain_email_public_switch.py --json --require-switched</code> passes with no critical file still publishing the old Outlook email.</li>
           <li>The next BaseScan package includes Tim Chen's professional profile at <code>https://gcagochina.com/tim-chen.html</code>.</li>
         </ul>
-        <p class="note">Submission policy: send the next clean BaseScan update from <code>support@gcagochina.com</code> after activation, or clearly explain the domain email status if BaseScan asks for a reply before the mailbox is ready.</p>
+	        <p class="note">Submission policy: send the next clean BaseScan update from <code>support@gcagochina.com</code> and keep private mailbox evidence ready if the reviewer asks for it.</p>
       </section>
     </main>
 
     <footer>
-      <div class="shell">GCA domain email setup plan. Current live contact remains GCAgochina@outlook.com until domain email tests pass.</div>
+	      <div class="shell">GCA domain email setup plan. Current live contact is support@gcagochina.com; BaseScan profile publication is still pending reviewer approval.</div>
     </footer>
     <!-- pages-refresh: 2026-05-30 domain-email-owner-packet -->
   </body>

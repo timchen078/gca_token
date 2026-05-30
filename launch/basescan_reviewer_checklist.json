@@ -1,8 +1,6 @@
 {
-  "baseScanTokenProfileStatus": "remediation-required-before-next-submission",
-  "blockedItems": [
-    "sender-domain-email"
-  ],
+  "baseScanTokenProfileStatus": "ready-for-owner-resubmission",
+  "blockedItems": [],
   "boundaries": {
     "readOnlyByDefault": true,
     "sendsEmail": false,
@@ -65,15 +63,15 @@
       "title": "Founder and team transparency"
     },
     {
-      "action": "Activate support@gcagochina.com, add MX/SPF/DKIM/DMARC, verify inbound/outbound tests, switch public email, then archive the evidence packet.",
-      "evidence": "Current public email is still GCAgochina@outlook.com. Domain email setup is published, but the latest DNS snapshot is not ready for BaseScan evidence.",
+      "action": "Submit one clean BaseScan token-profile update from support@gcagochina.com, attaching the public evidence links and retaining private mailbox screenshots for reviewer follow-up.",
+      "evidence": "The official project-domain mailbox support@gcagochina.com is active, public DNS records pass MX/SPF/DKIM/DMARC checks, inbound and outbound tests are archived privately, and public support/BaseScan materials publish the same domain email.",
       "key": "sender-domain-email",
       "links": [
         "https://gcagochina.com/domain-email.html",
         "https://gcagochina.com/domain-email.html#worksheetTitle",
         "https://gcagochina.com/domain-email.json"
       ],
-      "status": "blocked-owner-action-required",
+      "status": "implemented-domain-email-evidence-ready",
       "title": "Sender email matches project domain"
     },
     {
@@ -116,9 +114,9 @@
       "title": "Official social links and market route"
     }
   ],
-  "domainEmailReady": false,
+  "domainEmailReady": true,
   "latestReturnNoticeDate": "2026-05-23",
-  "officialEmail": "GCAgochina@outlook.com",
+  "officialEmail": "support@gcagochina.com",
   "preflightCommands": [
     "python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox support --dkim-selector <provider-selector> --json",
     "python3 tools/build_domain_email_evidence_packet.py --dkim-selector <provider-selector> --evidence-dir launch/domain_email_evidence --website-email-updated --output-json launch/domain_email_evidence_packet.json --output-md launch/domain_email_evidence_packet.md",
@@ -126,8 +124,8 @@
     "python3 tools/check_basescan_resubmission_readiness.py --json --require-ready",
     "python3 tools/build_basescan_submission_package.py --json --require-ready --output-json launch/basescan_final_submission_package.json --output-md launch/basescan_final_submission_package.md"
   ],
-  "readyForCleanResubmission": false,
+  "readyForCleanResubmission": true,
   "schema": "gca-basescan-reviewer-checklist-v1",
-  "status": "blocked-before-basescan-resubmission",
+  "status": "ready-for-owner-review",
   "targetDomainEmail": "support@gcagochina.com"
 }

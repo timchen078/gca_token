@@ -1,17 +1,17 @@
 {
-  "packageStatus": "remediation-required",
+  "packageStatus": "ready-for-resubmission",
   "previousSubmissionDate": "2026-05-09",
   "returnNoticeDate": "2026-05-13",
   "resubmissionDate": "2026-05-13",
   "latestReturnNoticeDate": "2026-05-23",
   "lastCheckedDate": "2026-05-30",
-  "lastCheckedResult": "BaseScan returned the token profile update again as information-insufficient; Tim Chen official-domain professional profile evidence is published, and the 2026-05-30 read-only DNS snapshot confirms project-domain email remains blocked because MX, SPF, and DMARC are missing and DKIM still requires the provider selector.",
+  "lastCheckedResult": "BaseScan returned the token profile update again as information-insufficient; Tim Chen official-domain professional profile evidence is published, support@gcagochina.com is active as the project-domain email, the 2026-05-30 read-only DNS snapshot shows MX/SPF/DKIM/DMARC present, readyForBaseScanEmailEvidence is true, and the domain email evidence packet is ready for one clean owner-controlled resubmission.",
   "domainEmailSetupPlanUrl": "https://gcagochina.com/domain-email.html",
   "domainEmailSetupPlanDataUrl": "https://gcagochina.com/domain-email.json",
   "domainEmailEvidenceChecklistUrl": "https://gcagochina.com/domain-email-evidence.html",
   "domainEmailEvidenceChecklistDataUrl": "https://gcagochina.com/domain-email-evidence.json",
   "domainEmailActivationEvidencePacket": {
-    "status": "defined-not-collected",
+    "status": "ready-for-owner-resubmission",
     "pageUrl": "https://gcagochina.com/domain-email.html#evidenceTitle",
     "dataUrl": "https://gcagochina.com/domain-email.json",
     "checklistUrl": "https://gcagochina.com/domain-email-evidence.html",
@@ -25,24 +25,22 @@
       "updated support-page screenshot showing the same sender email"
     ],
     "latestPublicDnsSnapshot": {
-      "checkedAt": "2026-05-30T08:13:47Z",
+      "checkedAt": "2026-05-30T16:24:34Z",
       "tool": "tools/check_domain_email_dns.py",
-      "command": "python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox support --json",
-      "readyForBaseScanEmailEvidence": false,
-      "missingOrBlockedChecks": [
-        "mx",
-        "spf",
-        "dmarc",
-        "dkim"
-      ],
+      "command": "python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox support --dkim-selector zmail --json",
+      "readyForBaseScanEmailEvidence": true,
+      "missingOrBlockedChecks": [],
       "checks": {
-        "mx": "missing",
-        "spf": "missing",
-        "dmarc": "missing",
-        "dkim": "selector-required"
-      }
+        "mx": "present",
+        "spf": "present",
+        "dmarc": "present",
+        "dkim": "present"
+      },
+      "dkimSelector": "zmail",
+      "provider": "Zoho Mail",
+      "nextAction": "Use support@gcagochina.com for one clean BaseScan token-profile resubmission and keep the private provider, DNS, inbound, outbound, and support-page evidence archived locally."
     },
-    "nextAction": "Collect this packet after support@gcagochina.com is active and before the next clean BaseScan resubmission."
+    "nextAction": "Owner may use support@gcagochina.com for one clean BaseScan resubmission, with private provider/DNS/inbound/outbound/support-page evidence retained locally."
   },
   "preflightCheck": {
     "tool": "tools/check_basescan_resubmission_readiness.py",
@@ -87,8 +85,8 @@
       "does not touch wallets or contracts"
     ]
   },
-  "browserSubmissionStatus": "returned-remediation-required",
-  "nextSubmissionReady": false,
+  "browserSubmissionStatus": "ready-for-owner-submission",
+  "nextSubmissionReady": true,
   "returnReason": "information-insufficient",
   "network": "Base Mainnet",
   "chainId": 8453,
@@ -122,8 +120,8 @@
   "whitepaperUrl": "https://gcagochina.com/whitepaper.html",
   "logoSvgUrl": "https://gcagochina.com/assets/gca-logo.svg",
   "logoPngUrl": "https://gcagochina.com/assets/gca-logo.png",
-  "officialEmail": "GCAgochina@outlook.com",
-  "domainEmailRecommendedBeforeNextSubmission": true,
+  "officialEmail": "support@gcagochina.com",
+  "domainEmailRecommendedBeforeNextSubmission": false,
   "recommendedDomainEmailExamples": [
     "support@gcagochina.com",
     "hello@gcagochina.com",

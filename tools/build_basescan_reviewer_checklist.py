@@ -61,6 +61,19 @@ def build_checklist(
     market = values["officialMarketPool"]
     external_status = reviewer_kit["externalReviewStatus"]
 
+    domain_email_ready = domain_email["baseScanUse"].get("resubmissionReady") is True
+    sender_status = "implemented-domain-email-evidence-ready" if domain_email_ready else "blocked-owner-action-required"
+    sender_evidence = (
+        "The official project-domain mailbox support@gcagochina.com is active, public DNS records pass MX/SPF/DKIM/DMARC checks, inbound and outbound tests are archived privately, and public support/BaseScan materials publish the same domain email."
+        if domain_email_ready
+        else "Current public email is still GCAgochina@outlook.com. Domain email setup is published, but the latest DNS snapshot is not ready for BaseScan evidence."
+    )
+    sender_action = (
+        "Submit one clean BaseScan token-profile update from support@gcagochina.com, attaching the public evidence links and retaining private mailbox screenshots for reviewer follow-up."
+        if domain_email_ready
+        else "Activate support@gcagochina.com, add MX/SPF/DKIM/DMARC, verify inbound/outbound tests, switch public email, then archive the evidence packet."
+    )
+
     items = [
         checklist_item(
             "website-accessible",
@@ -109,14 +122,14 @@ def build_checklist(
         checklist_item(
             "sender-domain-email",
             "Sender email matches project domain",
-            "blocked-owner-action-required",
-            "Current public email is still GCAgochina@outlook.com. Domain email setup is published, but the latest DNS snapshot is not ready for BaseScan evidence.",
+            sender_status,
+            sender_evidence,
             [
                 email_state["domainEmailSetupPlan"],
                 email_state["domainEmailDnsWorksheet"],
                 email_state["domainEmailSetupPlanData"],
             ],
-            "Activate support@gcagochina.com, add MX/SPF/DKIM/DMARC, verify inbound/outbound tests, switch public email, then archive the evidence packet.",
+            sender_action,
         ),
         checklist_item(
             "source-and-contract",

@@ -1,0 +1,147 @@
+{
+  "baseScanSubmissionPolicy": {
+    "includeDomainEmailData": "https://gcagochina.com/domain-email.json",
+    "includeDomainEmailPlan": "https://gcagochina.com/domain-email.html",
+    "includeProfessionalProfile": "https://gcagochina.com/tim-chen.html",
+    "nextCleanSubmissionSender": "support@gcagochina.com"
+  },
+  "boundaries": {
+    "changesDns": false,
+    "printsSecrets": false,
+    "sendsEmail": false,
+    "submitsBaseScanRequest": false,
+    "touchesWalletOrContract": false
+  },
+  "currentPublicEmail": "support@gcagochina.com",
+  "dnsReadiness": {
+    "checkedAt": "2026-05-30T16:26:32Z",
+    "checks": {
+      "dkim": {
+        "message": "DKIM selector checked at zmail._domainkey.gcagochina.com.",
+        "records": [
+          "v=DKIM1; k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCdun5swHBrHImcalKQapfzpF79vA+fm2o1DPvh9X6467/w3PNStFB3ohhl8BaCLIOjSQ0KkRrIBqjnf7cu4Ig6yQl0qnOflRfUcZt5t+VMer89CMZIo3aZ9+CvbfKRzHRKasQ4LSoXTOZwLy7u9slVeeUMk4zARe/6UePmIWhKswIDAQAB"
+        ],
+        "status": "present"
+      },
+      "dmarc": {
+        "message": "DMARC publishes domain-level email authentication policy.",
+        "records": [
+          "v=DMARC1; p=none; rua=mailto:support@gcagochina.com"
+        ],
+        "status": "present"
+      },
+      "mx": {
+        "message": "MX routes inbound mail for the project domain.",
+        "records": [
+          "10 mx.zoho.com.",
+          "50 mx3.zoho.com.",
+          "20 mx2.zoho.com."
+        ],
+        "status": "present"
+      },
+      "spf": {
+        "message": "SPF authorizes outbound mail sources for the project domain.",
+        "records": [
+          "v=spf1 include:zohomail.com ~all"
+        ],
+        "status": "present"
+      }
+    },
+    "dkimSelector": "zmail",
+    "missingOrBlockedChecks": [],
+    "readyForBaseScanEmailEvidence": true
+  },
+  "domain": "gcagochina.com",
+  "evidenceDirectory": {
+    "complete": true,
+    "exists": true,
+    "ignoredByGit": true,
+    "missingFiles": [],
+    "path": "launch/domain_email_evidence",
+    "readmeExists": true,
+    "readmeFile": "launch/domain_email_evidence/README.txt",
+    "requiredFiles": [
+      {
+        "exists": true,
+        "fileName": "domain-email-provider-active.png",
+        "key": "providerActive",
+        "label": "Mail provider dashboard shows support@gcagochina.com as verified or active.",
+        "path": "launch/domain_email_evidence/domain-email-provider-active.png"
+      },
+      {
+        "exists": true,
+        "fileName": "domain-email-dns-mx-spf-dkim-dmarc.txt",
+        "key": "dnsProof",
+        "label": "MX, SPF, DKIM, and DMARC lookup proof is saved after propagation.",
+        "path": "launch/domain_email_evidence/domain-email-dns-mx-spf-dkim-dmarc.txt"
+      },
+      {
+        "exists": true,
+        "fileName": "domain-email-inbound-test.png",
+        "key": "inboundTest",
+        "label": "Inbound test from Gmail or Outlook to support@gcagochina.com is received.",
+        "path": "launch/domain_email_evidence/domain-email-inbound-test.png"
+      },
+      {
+        "exists": true,
+        "fileName": "domain-email-outbound-test.png",
+        "key": "outboundTest",
+        "label": "Outbound reply from support@gcagochina.com shows the visible domain sender.",
+        "path": "launch/domain_email_evidence/domain-email-outbound-test.png"
+      },
+      {
+        "exists": true,
+        "fileName": "support-page-domain-email.png",
+        "key": "supportPageProof",
+        "label": "Updated support page shows the same domain email used in the BaseScan form.",
+        "path": "launch/domain_email_evidence/support-page-domain-email.png"
+      }
+    ]
+  },
+  "generatedAt": "2026-05-30T16:26:32Z",
+  "manualEvidence": [
+    {
+      "key": "providerActive",
+      "label": "Mail provider dashboard shows support@gcagochina.com as verified or active.",
+      "provided": true,
+      "recommendedFilename": "domain-email-provider-active.png",
+      "reference": "launch/domain_email_evidence/domain-email-provider-active.png"
+    },
+    {
+      "key": "dnsProof",
+      "label": "MX, SPF, DKIM, and DMARC lookup proof is saved after propagation.",
+      "provided": true,
+      "recommendedFilename": "domain-email-dns-mx-spf-dkim-dmarc.txt",
+      "reference": "launch/domain_email_evidence/domain-email-dns-mx-spf-dkim-dmarc.txt"
+    },
+    {
+      "key": "inboundTest",
+      "label": "Inbound test from Gmail or Outlook to support@gcagochina.com is received.",
+      "provided": true,
+      "recommendedFilename": "domain-email-inbound-test.png",
+      "reference": "launch/domain_email_evidence/domain-email-inbound-test.png"
+    },
+    {
+      "key": "outboundTest",
+      "label": "Outbound reply from support@gcagochina.com shows the visible domain sender.",
+      "provided": true,
+      "recommendedFilename": "domain-email-outbound-test.png",
+      "reference": "launch/domain_email_evidence/domain-email-outbound-test.png"
+    },
+    {
+      "key": "supportPageProof",
+      "label": "Updated support page shows the same domain email used in the BaseScan form.",
+      "provided": true,
+      "recommendedFilename": "support-page-domain-email.png",
+      "reference": "launch/domain_email_evidence/support-page-domain-email.png"
+    }
+  ],
+  "missingOrBlockedRequirements": [],
+  "nextAction": "Archive this packet and resubmit BaseScan only from the matching domain email.",
+  "project": "GCA",
+  "readyForBaseScanResubmission": true,
+  "schema": "gca-domain-email-evidence-packet-v1",
+  "status": "ready-for-owner-resubmission",
+  "targetDomainEmail": "support@gcagochina.com",
+  "websiteEmailUpdatedToTarget": true
+}

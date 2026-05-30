@@ -73,7 +73,7 @@ This package prepares GCA information for token data and DEX discovery platforms
 - Taxes: none
 - Blacklist: none
 - Admin controls: none
-- Official email for data platform submissions: `GCAgochina@outlook.com`
+- Official email for data platform submissions: `support@gcagochina.com`
 
 ## Public URLs
 
@@ -248,7 +248,7 @@ Recommended action:
 
 Status: approved on 2026-05-11. The current official market pool is GCA/USDT, and the official website links to the GCA/USDT GeckoTerminal pool.
 
-GeckoTerminal support says to navigate to the token pool, open the Token Info section, click Update Token Info, and submit accurate information. It warns that requests may be rejected for insufficient verification, incorrect information, wrong channel, or duplicates. The GCA request was submitted from the owner's browser session with `GCAgochina@outlook.com`; owner OTP verification was completed, GeckoTerminal displayed a successful submission message, and an approval email was received on 2026-05-11.
+GeckoTerminal support says to navigate to the token pool, open the Token Info section, click Update Token Info, and submit accurate information. It warns that requests may be rejected for insufficient verification, incorrect information, wrong channel, or duplicates. The GCA request was submitted from the owner's browser session with `support@gcagochina.com`; owner OTP verification was completed, GeckoTerminal displayed a successful submission message, and an approval email was received on 2026-05-11.
 
 Recommended action:
 

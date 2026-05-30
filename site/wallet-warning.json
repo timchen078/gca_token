@@ -56,7 +56,7 @@
     "followUpSubmissionDate": "2026-05-13",
     "followUpSubmissionResult": "Blockaid support portal returned HTTP 200 OK",
     "submittedThrough": "https://report.blockaid.io/mistake",
-    "contactEmail": "GCAgochina@outlook.com",
+    "contactEmail": "support@gcagochina.com",
     "reportedDomain": "gcagochina.com",
     "reportedWalletSurface": "MetaMask / Uniswap token warning",
     "nextAction": "Keep monitoring wallet and DEX warning UI; do not claim security-vendor approval or permanent warning-free status unless a vendor confirms it.",

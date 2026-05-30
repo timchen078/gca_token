@@ -54,13 +54,13 @@
     "x": "https://x.com/GCAAIGoChina"
   },
   "emailAlignment": {
-    "currentPublicEmail": "GCAgochina@outlook.com",
+    "currentPublicEmail": "support@gcagochina.com",
     "targetDomainEmailAfterActivation": "support@gcagochina.com",
-    "status": "target-domain-email-planned-not-active",
+    "status": "target-domain-email-active-evidence-ready",
     "domainEmailSetupPlan": "https://gcagochina.com/domain-email.html",
     "domainEmailEvidenceChecklist": "https://gcagochina.com/domain-email-evidence.html",
     "activationEvidencePacket": "https://gcagochina.com/domain-email.html#evidenceTitle",
-    "baseScanUse": "Do not use support@gcagochina.com in BaseScan or public support fields until the mailbox can receive external mail, send authenticated outbound replies, MX/SPF/DKIM/DMARC checks pass, and the evidence packet is archived."
+    "baseScanUse": "Use support@gcagochina.com in the next clean BaseScan resubmission; the mailbox receives external mail, sends authenticated outbound replies, MX/SPF/DKIM/DMARC checks pass, and the evidence packet is archived."
   },
   "market": {
     "officialPair": "GCA/USDT",
@@ -83,13 +83,13 @@
       "publicClaim": "BaseScan deployer-wallet ownership verification is complete."
     },
     "baseScanTokenProfile": {
-      "status": "remediation-required-before-next-submission",
+      "status": "ready-for-owner-resubmission",
       "submissionDate": "2026-05-09",
       "returnNoticeDate": "2026-05-13",
       "resubmissionDate": "2026-05-13",
       "latestReturnNoticeDate": "2026-05-23",
-      "lastCheckedDate": "2026-05-23",
-      "lastCheckedResult": "BaseScan returned the token profile update again as information-insufficient; owner-controlled remediation is required before the next submission. Tim Chen official-domain professional profile evidence is now published, the domain email setup plan, public evidence checklist, and activation evidence packet are now published, and the expanded BaseScan reply template is now published. The latest 2026-05-30 DNS snapshot shows MX/SPF/DMARC missing and DKIM selector required, so readyForBaseScanEmailEvidence is false.",
+      "lastCheckedDate": "2026-05-30",
+      "lastCheckedResult": "BaseScan returned the token profile update again as information-insufficient; Tim Chen official-domain professional profile evidence is published, support@gcagochina.com is active as the project-domain email, the domain email setup plan, public evidence checklist, activation evidence packet, and expanded BaseScan reply template are published, and the 2026-05-30 DNS snapshot shows MX/SPF/DKIM/DMARC present, so readyForBaseScanEmailEvidence is true.",
       "returnReason": "information-insufficient",
       "remediationPage": "https://gcagochina.com/basescan-remediation.html",
       "domainEmailSetupPlan": "https://gcagochina.com/domain-email.html",
@@ -99,20 +99,15 @@
       "domainEmailEvidenceChecklistData": "https://gcagochina.com/domain-email-evidence.json",
       "domainEmailActivationEvidencePacket": "https://gcagochina.com/domain-email.html#evidenceTitle",
       "domainEmailDnsReadiness": {
-        "checkedAt": "2026-05-30T08:13:47Z",
-        "readyForBaseScanEmailEvidence": false,
+        "checkedAt": "2026-05-30T16:24:34Z",
+        "readyForBaseScanEmailEvidence": true,
+        "missingOrBlockedChecks": [],
         "checks": {
-          "mx": "missing",
-          "spf": "missing",
-          "dmarc": "missing",
-          "dkim": "selector-required"
-        },
-        "missingOrBlockedChecks": [
-          "mx",
-          "spf",
-          "dmarc",
-          "dkim"
-        ]
+          "mx": "present",
+          "spf": "present",
+          "dkim": "present",
+          "dmarc": "present"
+        }
       },
       "platformReplyTemplate": "https://gcagochina.com/platform-replies.html",
       "platformReplyTemplateData": "https://gcagochina.com/platform-replies.json",
@@ -120,7 +115,7 @@
       "professionalProfile": "https://gcagochina.com/tim-chen.html",
       "github": "https://github.com/timchen078/gca_token",
       "publicClaim": "The public BaseScan token profile update was returned again as information-insufficient on 2026-05-23. BaseScan profile publication is not approved or complete.",
-      "nextAction": "Use the domain email setup plan at https://gcagochina.com/domain-email.html and evidence checklist at https://gcagochina.com/domain-email-evidence.html, fix the 2026-05-30 DNS snapshot blockers, create and publish a working gcagochina.com domain email, archive the activation evidence packet, include the Tim Chen professional profile URL, rerun public-site checks, then resubmit through the official BaseScan form."
+      "nextAction": "Use the domain email setup plan at https://gcagochina.com/domain-email.html, evidence checklist at https://gcagochina.com/domain-email-evidence.html, launch/domain_email_activation_runbook.md, and tools/check_domain_email_dns.py; keep the 2026-05-30 DNS snapshot ready, archive the activation evidence packet privately, include the Tim Chen professional profile URL, rerun public-site checks, then submit one clean update through the official BaseScan form from support@gcagochina.com."
     },
     "blockaidMetaMask": {
       "status": "owner-observed-no-warning-visible",
@@ -169,8 +164,8 @@
   "safePublicClaims": [
     "GCA is deployed on Base Mainnet with fixed total supply.",
     "BaseScan source and deployer-wallet ownership verification are complete.",
-    "The BaseScan token profile update was returned again as information-insufficient on 2026-05-23; remediation is required before the next submission.",
-    "The BaseScan domain email evidence gate is blocked by the 2026-05-30 DNS snapshot: MX/SPF/DMARC missing and DKIM selector required.",
+    "The BaseScan token profile update was returned again as information-insufficient on 2026-05-23; owner-side remediation is ready for one clean resubmission.",
+    "The BaseScan domain email evidence gate is ready after the 2026-05-30 DNS snapshot: MX/SPF/DKIM/DMARC present.",
     "GeckoTerminal token information was approved on 2026-05-11.",
     "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool.",
     "Owner reported on 2026-05-14 that no wallet risk warning was visible in the tested wallet/DEX flow.",
@@ -187,7 +182,7 @@
     "deep liquidity, price support, return promises, or ranking acceptance"
   ],
   "nextActions": [
-    "Use the domain email setup plan at https://gcagochina.com/domain-email.html and evidence checklist at https://gcagochina.com/domain-email-evidence.html, then fix the 2026-05-30 DNS snapshot blockers, create and publish a working gcagochina.com domain email, and archive the activation evidence packet before the next BaseScan submission.",
+    "Use the domain email setup plan at https://gcagochina.com/domain-email.html and evidence checklist at https://gcagochina.com/domain-email-evidence.html, keep support@gcagochina.com active, retain the activation evidence packet privately, and submit one clean BaseScan update from the official domain mailbox.",
     "Include the published Tim Chen professional profile URL https://gcagochina.com/tim-chen.html in the next BaseScan submission; add LinkedIn later if BaseScan specifically requires a third-party social-network profile.",
     "Use the expanded BaseScan reply template at https://gcagochina.com/platform-replies.html after the project-domain email is active, or earlier only if BaseScan specifically asks for more information.",
     "Keep monitoring wallet-warning UI before claiming any broader warning-free or security-vendor approval status.",

@@ -58,7 +58,7 @@ Could you please review whether any suspected-honeypot or transfer-blocking labe
 
 Thank you.
 GCA / Go China Access
-GCAgochina@outlook.com
+support@gcagochina.com
 ```
 
 ## Claims To Avoid

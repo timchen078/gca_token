@@ -1,7 +1,7 @@
 # GCA Domain Email Evidence Checklist
 
 - Status: `blocked-until-domain-email-evidence-collected`
-- Current public email: `GCAgochina@outlook.com`
+- Current public email: `support@gcagochina.com`
 - Target domain email: `support@gcagochina.com`
 - Evidence directory: `launch/domain_email_evidence`
 - Evidence directory ignored by git: `true`
@@ -38,9 +38,9 @@
 
 - support@gcagochina.com cannot receive external email.
 - support@gcagochina.com cannot send authenticated replies with the visible sender set to the domain email.
-- MX/SPF/DKIM/DMARC DNS checks are not ready.
+- MX/SPF/DKIM/DMARC DNS checks stop reporting ready.
 - Any required evidence file is missing.
-- Public support/BaseScan files still publish GCAgochina@outlook.com after the switch.
+- Public support/BaseScan files still publish support@gcagochina.com after the switch.
 - BaseScan resubmission preflight reports readyForBaseScanResubmission false.
 
 ## Boundaries

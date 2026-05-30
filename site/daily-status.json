@@ -32,8 +32,8 @@
         "id": "basescan-resubmission-preflight-status",
         "ok": true,
         "status": "passed",
-        "blocksSummaryOk": false,
-        "command": "python3 tools/check_basescan_resubmission_readiness.py --skip-url-checks --json"
+        "blocksSummaryOk": true,
+        "command": "python3 tools/check_basescan_resubmission_readiness.py --skip-url-checks --json --require-ready"
       }
     ]
   },
@@ -59,70 +59,42 @@
     "writesTestRecords": false
   },
   "baseScanPreflight": {
-    "status": "blocked-before-basescan-resubmission",
-    "readyForBaseScanResubmission": false,
-    "publicEmailSwitchStatus": "public-email-switch-pending",
+    "status": "ready-for-owner-resubmission",
+    "readyForBaseScanResubmission": true,
+    "publicEmailSwitchStatus": "public-email-switch-complete",
     "snapshotAlignmentStatus": "aligned",
-    "filesStillUsingOldEmail": 15,
-    "oldEmailFilePaths": [
-      "site/support.html",
-      "site/support.json",
-      "site/zh-support.html",
-      "site/register.html",
-      "site/members.html",
-      "site/project.json",
-      "site/listing-kit.html",
-      "site/basescan-remediation.html",
-      "site/basescan-remediation.json",
-      "site/external-reviews.json",
-      "launch/basescan_form_values.json",
-      "launch/basescan_resubmission_values.json",
-      "launch/basescan_resubmission_package.md",
-      "launch/external_review_followup_tracker.json",
-      "launch/external_review_followup_tracker.md"
-    ],
+    "filesStillUsingOldEmail": 0,
+    "oldEmailFilePaths": [],
     "missingTargetEmailFilePaths": [],
-    "missingOrBlockedRequirements": [
-      "next-submission-ready-flag",
-      "official-domain-email",
-      "domain-email-evidence-packet",
-      "domain-email-public-switch-check",
-      "domain-email-public-switch-old-email"
-    ],
-    "nextAction": "Do not resubmit BaseScan yet. Complete the blocked requirements first.",
+    "missingOrBlockedRequirements": [],
+    "nextAction": "Owner may proceed with one clean BaseScan resubmission from support@gcagochina.com.",
     "targetDomainEmail": "support@gcagochina.com",
-    "currentPublicEmail": "GCAgochina@outlook.com"
+    "currentPublicEmail": "support@gcagochina.com"
   },
   "ownerActionQueue": [
     {
-      "id": "activate-domain-mailbox",
-      "status": "owner-action-required",
-      "action": "Create and test support@gcagochina.com with working inbound and outbound mail.",
+      "id": "maintain-domain-mailbox",
+      "status": "ready-monitor",
+      "action": "Keep support@gcagochina.com able to receive and send authenticated mail while BaseScan reviews the update.",
       "publicEvidenceUrl": "https://gcagochina.com/domain-email.html"
     },
     {
-      "id": "complete-domain-email-evidence",
-      "status": "owner-action-required",
-      "action": "Add MX, SPF, DKIM, and DMARC records, then collect provider, inbound, outbound, DNS, and website evidence.",
+      "id": "retain-domain-email-evidence",
+      "status": "ready-private-evidence-retained",
+      "action": "Keep provider, DNS, inbound, outbound, and support-page evidence archived privately for reviewer follow-up.",
       "publicEvidenceUrl": "https://gcagochina.com/domain-email-evidence.html"
     },
     {
-      "id": "switch-public-email-after-mailbox-live",
-      "status": "deferred-until-mailbox-ready",
-      "action": "After the mailbox evidence passes, switch tracked public files from the Outlook email to support@gcagochina.com in one controlled pass.",
-      "publicEvidenceUrl": "https://gcagochina.com/daily-status.html"
-    },
-    {
       "id": "final-basescan-preflight",
-      "status": "blocked-until-domain-email-ready",
-      "action": "Run tools/check_basescan_resubmission_readiness.py --json --require-ready before preparing another BaseScan submission.",
+      "status": "ready",
+      "action": "Run tools/check_basescan_resubmission_readiness.py --json --require-ready before copying the final package into BaseScan.",
       "publicEvidenceUrl": "https://gcagochina.com/basescan-preflight.html"
     }
   ],
   "safePublicSummary": [
     "The public GCA website check passed on the latest daily ops snapshot.",
     "The public registration API check passed without secrets and without writing test records.",
-    "BaseScan token profile resubmission remains blocked until the project-domain email evidence path is complete.",
+    "BaseScan token profile resubmission is ready for one owner-controlled submission from support@gcagochina.com.",
     "Admin reads, user records, private evidence files, wallet actions, and token transfers are not exposed by this public snapshot."
   ],
   "boundaries": {

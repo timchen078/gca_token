@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>GCA 中文 BaseScan 预检 | 复审前置门槛</title>
-    <meta name="description" content="GCA 中文 BaseScan 预检页：说明当前不要重复提交 BaseScan，域名邮箱、DNS、证据包、公开邮箱切换和最终表单草稿的前置门槛。">
+    <meta name="description" content="GCA 中文 BaseScan 预检页：说明当前可以准备一次干净复提交，域名邮箱、DNS、证据包、公开邮箱切换和最终表单草稿已对齐。">
     <link rel="canonical" href="https://gcagochina.com/zh-basescan-preflight.html">
     <link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">
     <link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">
@@ -299,8 +299,8 @@
       <section aria-labelledby="title">
         <p class="eyebrow">BaseScan 预检 / 只读门槛</p>
         <h1 id="title">GCA 中文 BaseScan 预检</h1>
-        <p class="lead">这一页给你自己操作用：判断现在能不能再次提交 BaseScan Token Profile。当前结论很明确：不要重复提交。先把 <code>support@gcagochina.com</code> 做成可收可发的项目域名邮箱，再补齐 DNS、证据包、官网公开邮箱切换和最终表单草稿。</p>
-        <p class="lead">当前公开邮箱仍是 <code>GCAgochina@outlook.com</code>。2026-05-30 DNS 快照仍显示 MX missing、SPF missing、DMARC missing，DKIM selector required；因此 <code>readyForBaseScanResubmission</code> 必须保持 false。</p>
+        <p class="lead">这一页给你自己操作用：判断现在能不能再次提交 BaseScan Token Profile。当前结论：可以准备一次干净的复提交；<code>support@gcagochina.com</code> 已可收可发，DNS、证据包、官网公开邮箱和最终表单草稿已对齐。</p>
+        <p class="lead">当前公开邮箱是 <code>support@gcagochina.com</code>。2026-05-30 DNS 快照显示 MX present、SPF present、DKIM present、DMARC present；因此 <code>readyForBaseScanResubmission</code> 可以为 true。</p>
         <div class="actions">
           <a class="button primary" href="zh-domain-email.html">中文域名邮箱整改</a>
           <a class="button primary" href="domain-email-evidence.html">公开证据清单</a>
@@ -315,7 +315,7 @@
       <section class="facts" aria-label="BaseScan 中文预检摘要">
         <div class="fact">
           <span class="label">现在能重提吗</span>
-          <span class="value pending">不能</span>
+          <span class="value good">可以准备一次</span>
         </div>
         <div class="fact">
           <span class="label">最新 DNS 快照</span>
@@ -323,7 +323,7 @@
         </div>
         <div class="fact">
           <span class="label">主要卡点</span>
-          <span class="value pending">域名邮箱</span>
+          <span class="value pending">等待审核</span>
         </div>
         <div class="fact">
           <span class="label">操作边界</span>
@@ -333,14 +333,14 @@
 
       <section class="section two" aria-label="当前卡点和准备材料">
         <div class="panel notice">
-          <h2>当前卡点</h2>
+          <h2>当前状态</h2>
           <div class="list">
-            <div class="row"><span>域名邮箱</span><strong><code>support@gcagochina.com</code> 还没有证明为可收可发的正式邮箱。</strong></div>
-            <div class="row"><span>DNS 证据</span><strong>2026-05-30 快照：MX missing、SPF missing、DMARC missing，DKIM selector required。</strong></div>
-            <div class="row"><span>公开邮箱一致性</span><strong>官网支持页和 BaseScan 表单值仍应使用 <code>GCAgochina@outlook.com</code>，直到目标邮箱真的通过。</strong></div>
-            <div class="row"><span>证据包</span><strong><code>launch/domain_email_evidence_packet.json</code> 还不能作为最终 BaseScan 复审证据。</strong></div>
-            <div class="row"><span>Reviewer checklist</span><strong>当前已生成 <code>launch/basescan_reviewer_checklist.json</code> 和 <code>launch/basescan_reviewer_checklist.md</code>，但状态仍是 blocked；唯一明确 blocker 是 <code>sender-domain-email</code>。</strong></div>
-            <div class="row"><span>最终表单</span><strong>只有预检显示 <code>readyForBaseScanResubmission</code> true 后，才准备一份 clean resubmission。</strong></div>
+            <div class="row"><span>域名邮箱</span><strong><code>support@gcagochina.com</code> 已完成 Zoho 邮箱、DNS、收件和发件证据，可作为下一次 BaseScan 复审邮箱。</strong></div>
+            <div class="row"><span>DNS 证据</span><strong>2026-05-30 快照：MX present、SPF present、DKIM present、DMARC present；MX/SPF/DKIM/DMARC present。</strong></div>
+            <div class="row"><span>公开邮箱一致性</span><strong>官网支持页、机器可读文件和 BaseScan 表单草稿已统一使用 <code>support@gcagochina.com</code>。</strong></div>
+            <div class="row"><span>证据包</span><strong><code>launch/domain_email_evidence_packet.json</code> 已可作为下一次 BaseScan 复审的本地证据索引；私密截图仍不公开。</strong></div>
+            <div class="row"><span>Reviewer checklist</span><strong><code>launch/basescan_reviewer_checklist.json</code> 和 <code>launch/basescan_reviewer_checklist.md</code> 已生成，域名邮箱项为 ready。</strong></div>
+            <div class="row"><span>最终表单</span><strong>预检显示 <code>readyForBaseScanResubmission</code> true，可以由 owner 提交一次 clean resubmission。</strong></div>
           </div>
         </div>
 
@@ -351,7 +351,7 @@
             <div class="row"><span>DNS 证明</span><strong>MX、SPF、DKIM、DMARC 查询通过，并保存截图或命令输出。</strong></div>
             <div class="row"><span>收件证明</span><strong>从 Gmail 或 Outlook 发到目标邮箱，确认收到。</strong></div>
             <div class="row"><span>发件证明</span><strong>从目标邮箱回复，发件人显示为 <code>support@gcagochina.com</code>。</strong></div>
-            <div class="row"><span>公开资料切换</span><strong>官网、支持页、团队页和 BaseScan 表单值统一到目标域名邮箱。</strong></div>
+            <div class="row"><span>公开资料切换</span><strong>官网、支持页、团队页和 BaseScan 表单值已统一到 <code>support@gcagochina.com</code>。</strong></div>
           </div>
         </div>
       </section>
@@ -382,7 +382,7 @@
           </div>
           <div class="card">
             <h3>6. Reviewer checklist</h3>
-            <p class="note"><code>python3 tools/build_basescan_reviewer_checklist.py --markdown</code>。如果仍显示 <code>sender-domain-email</code>，说明还不能重提。</p>
+            <p class="note"><code>python3 tools/build_basescan_reviewer_checklist.py --markdown</code>。如果不再显示 <code>sender-domain-email</code>，说明可以准备复提交。</p>
           </div>
           <div class="card">
             <h3>7. 最终表单草稿</h3>
@@ -410,10 +410,10 @@
         <div class="panel notice">
           <h2>现在不要做这些</h2>
           <div class="list">
-            <div class="row"><span>不要重复提交</span><strong>预检未通过前，不要再开新的 BaseScan Token Profile update。</strong></div>
-            <div class="row"><span>不要说邮箱已启用</span><strong>收件、发件和 DNS 证据没通过前，不要宣传 <code>support@gcagochina.com</code> 已启用。</strong></div>
+            <div class="row"><span>不要重复提交</span><strong>预检通过后，只开一次新的 BaseScan Token Profile update。</strong></div>
+            <div class="row"><span>可以说邮箱已启用</span><strong>可以说 <code>support@gcagochina.com</code> 已启用；但不要公开邮箱后台或收发截图，除非 reviewer 要求。</strong></div>
             <div class="row"><span>不要说 BaseScan 已通过</span><strong>源码验证和部署钱包验证已完成；公开 Token Profile 仍未完成。</strong></div>
-            <div class="row"><span>保留草稿标记</span><strong>最终包未通过时，reviewer comment 必须保留 <code>DRAFT ONLY - DO NOT SUBMIT BASESCAN YET.</code></strong></div>
+            <div class="row"><span>保留草稿标记</span><strong>最终包通过时，reviewer comment 不应包含 <code>DRAFT ONLY - DO NOT SUBMIT BASESCAN YET.</code></strong></div>
             <div class="row"><span>不要公开私密截图</span><strong>邮箱收发截图、邮箱后台截图先只保存本地，除非 reviewer 要求再提供。</strong></div>
             <div class="row"><span>不要做链上动作</span><strong>这页不签名、不授权、不转账、不改合约、不碰池子。</strong></div>
           </div>
@@ -422,7 +422,7 @@
     </main>
 
     <footer>
-      <div class="shell">GCA 中文 BaseScan 预检。当前结论：先完成域名邮箱和证据包，再做下一次 clean resubmission。</div>
+      <div class="shell">GCA 中文 BaseScan 预检。当前结论：域名邮箱和证据包已就绪，可以由 owner 提交一次 clean resubmission，然后等待 BaseScan 回复。</div>
     </footer>
   </body>
 </html>

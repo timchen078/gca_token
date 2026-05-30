@@ -12,442 +12,498 @@
     "appliesChanges": false,
     "command": "python3 tools/build_domain_email_switch_plan.py --patch",
     "exactReplacementOnly": true,
-    "filesWithExactReplacement": 68,
+    "filesWithExactReplacement": 0,
     "ownerArtifactCommand": "python3 tools/build_domain_email_switch_plan.py --output-patch launch/domain_email_switch_preview.patch",
-    "replacementOccurrences": 139
+    "replacementOccurrences": 0
   },
   "records": [
     {
       "category": "project documentation",
-      "currentEmailOccurrences": 1,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "docs/mainnet_public_profile.md",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 0
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 2
     },
     {
       "category": "project documentation",
-      "currentEmailOccurrences": 1,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "docs/whitepaper.md",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 0
-    },
-    {
-      "category": "owner launch package",
-      "currentEmailOccurrences": 1,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
-      "path": "launch/basescan_form_values.json",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 1
-    },
-    {
-      "category": "owner launch package",
-      "currentEmailOccurrences": 2,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
-      "path": "launch/basescan_resubmission_package.md",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 1
-    },
-    {
-      "category": "owner launch package",
-      "currentEmailOccurrences": 1,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
-      "path": "launch/basescan_resubmission_values.json",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 5
-    },
-    {
-      "category": "owner launch package",
-      "currentEmailOccurrences": 2,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
-      "path": "launch/basescan_review_followup.md",
-      "switchRequiredAfterActivation": true,
+      "switchRequiredAfterActivation": false,
       "targetEmailOccurrences": 2
-    },
-    {
-      "category": "owner launch package",
-      "currentEmailOccurrences": 2,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
-      "path": "launch/basescan_reviewer_checklist.json",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 2
-    },
-    {
-      "category": "owner launch package",
-      "currentEmailOccurrences": 2,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
-      "path": "launch/basescan_reviewer_checklist.md",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 2
-    },
-    {
-      "category": "owner launch package",
-      "currentEmailOccurrences": 1,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
-      "path": "launch/blockaid_false_positive_report.md",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 0
-    },
-    {
-      "category": "owner launch package",
-      "currentEmailOccurrences": 1,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
-      "path": "launch/blockaid_followup_reply.md",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 0
-    },
-    {
-      "category": "owner launch package",
-      "currentEmailOccurrences": 3,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
-      "path": "launch/data_platform_form_values.json",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 0
-    },
-    {
-      "category": "owner launch package",
-      "currentEmailOccurrences": 2,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
-      "path": "launch/data_platform_package.md",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 0
-    },
-    {
-      "category": "owner launch package",
-      "currentEmailOccurrences": 6,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
-      "path": "launch/domain_email_activation_runbook.md",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 20
     },
     {
       "category": "owner launch package",
       "currentEmailOccurrences": 0,
       "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
-      "path": "launch/domain_email_evidence/README.txt",
+      "path": "launch/basescan_final_submission_package.json",
       "switchRequiredAfterActivation": false,
       "targetEmailOccurrences": 3
     },
     {
       "category": "owner launch package",
-      "currentEmailOccurrences": 2,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
-      "path": "launch/domain_email_evidence_checklist.json",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 11
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "launch/basescan_final_submission_package.md",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 3
     },
     {
       "category": "owner launch package",
-      "currentEmailOccurrences": 2,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "launch/basescan_form_values.json",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 3
+    },
+    {
+      "category": "owner launch package",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "launch/basescan_resubmission_package.md",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 5
+    },
+    {
+      "category": "owner launch package",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "launch/basescan_resubmission_values.json",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 8
+    },
+    {
+      "category": "owner launch package",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "launch/basescan_review_followup.md",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 5
+    },
+    {
+      "category": "owner launch package",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "launch/basescan_reviewer_checklist.json",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 4
+    },
+    {
+      "category": "owner launch package",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "launch/basescan_reviewer_checklist.md",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 4
+    },
+    {
+      "category": "owner launch package",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "launch/blockaid_false_positive_report.md",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 1
+    },
+    {
+      "category": "owner launch package",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "launch/blockaid_followup_reply.md",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 1
+    },
+    {
+      "category": "owner launch package",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "launch/data_platform_form_values.json",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 3
+    },
+    {
+      "category": "owner launch package",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "launch/data_platform_package.md",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 2
+    },
+    {
+      "category": "owner launch package",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "launch/domain_email_activation_runbook.md",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 23
+    },
+    {
+      "category": "owner launch package",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "launch/domain_email_evidence_checklist.json",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 13
+    },
+    {
+      "category": "owner launch package",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "launch/domain_email_evidence_checklist.md",
-      "switchRequiredAfterActivation": true,
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 12
+    },
+    {
+      "category": "owner launch package",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "launch/domain_email_evidence_packet.json",
+      "switchRequiredAfterActivation": false,
       "targetEmailOccurrences": 10
     },
     {
       "category": "owner launch package",
-      "currentEmailOccurrences": 2,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "launch/domain_email_evidence_packet.md",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 5
+    },
+    {
+      "category": "owner launch package",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "launch/domain_email_provider_matrix.json",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 15
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 17
     },
     {
       "category": "owner launch package",
-      "currentEmailOccurrences": 1,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "launch/domain_email_provider_matrix.md",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 7
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 8
     },
     {
       "category": "owner launch package",
       "currentEmailOccurrences": 1,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
-      "path": "launch/external_review_followup_tracker.json",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 0
+      "notes": "Legacy previous-email reference retained for audit context; public switch is complete.",
+      "path": "launch/domain_email_switch_plan.json",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 3
     },
     {
       "category": "owner launch package",
-      "currentEmailOccurrences": 4,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
-      "path": "launch/external_review_followup_tracker.md",
-      "switchRequiredAfterActivation": true,
+      "currentEmailOccurrences": 1,
+      "notes": "Legacy previous-email reference retained for audit context; public switch is complete.",
+      "path": "launch/domain_email_switch_plan.md",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 3
+    },
+    {
+      "category": "owner launch package",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "launch/external_review_followup_tracker.json",
+      "switchRequiredAfterActivation": false,
       "targetEmailOccurrences": 2
     },
     {
       "category": "owner launch package",
-      "currentEmailOccurrences": 1,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "launch/external_review_followup_tracker.md",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 7
+    },
+    {
+      "category": "owner launch package",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "launch/geckoterminal_form_values.json",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 0
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 1
     },
     {
       "category": "owner launch package",
-      "currentEmailOccurrences": 3,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "launch/geckoterminal_update_runbook.md",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 0
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 3
     },
     {
       "category": "owner launch package",
-      "currentEmailOccurrences": 2,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "launch/launch_status.md",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 0
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 4
     },
     {
       "category": "owner launch package",
-      "currentEmailOccurrences": 2,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "launch/member_pre_registration_runbook.md",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 0
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 2
     },
     {
       "category": "well-known identity",
-      "currentEmailOccurrences": 1,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "site/.well-known/gca-token.json",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 0
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 1
     },
     {
       "category": "well-known identity",
-      "currentEmailOccurrences": 1,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "site/.well-known/security.txt",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 0
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 1
     },
     {
       "category": "public page",
-      "currentEmailOccurrences": 2,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "site/about.html",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 0
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 2
     },
     {
       "category": "public page",
-      "currentEmailOccurrences": 1,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "site/action-plan.html",
-      "switchRequiredAfterActivation": true,
+      "switchRequiredAfterActivation": false,
       "targetEmailOccurrences": 4
     },
     {
       "category": "public page",
-      "currentEmailOccurrences": 1,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "site/basescan-handoff.html",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 2
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 3
     },
     {
       "category": "public structured data",
-      "currentEmailOccurrences": 1,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "site/basescan-handoff.json",
-      "switchRequiredAfterActivation": true,
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 8
+    },
+    {
+      "category": "public page",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "site/basescan-preflight.html",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 3
+    },
+    {
+      "category": "public structured data",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "site/basescan-preflight.json",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 5
+    },
+    {
+      "category": "public page",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "site/basescan-remediation.html",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 5
+    },
+    {
+      "category": "public structured data",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "site/basescan-remediation.json",
+      "switchRequiredAfterActivation": false,
       "targetEmailOccurrences": 7
     },
     {
-      "category": "public page",
-      "currentEmailOccurrences": 1,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
-      "path": "site/basescan-preflight.html",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 2
-    },
-    {
       "category": "public structured data",
-      "currentEmailOccurrences": 2,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
-      "path": "site/basescan-preflight.json",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 3
-    },
-    {
-      "category": "public page",
-      "currentEmailOccurrences": 1,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
-      "path": "site/basescan-remediation.html",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 2
-    },
-    {
-      "category": "public structured data",
-      "currentEmailOccurrences": 2,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
-      "path": "site/basescan-remediation.json",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 3
-    },
-    {
-      "category": "public structured data",
-      "currentEmailOccurrences": 1,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "site/blockaid-followup.json",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 0
-    },
-    {
-      "category": "public structured data",
-      "currentEmailOccurrences": 1,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
-      "path": "site/brand-kit.json",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 0
-    },
-    {
-      "category": "public page",
-      "currentEmailOccurrences": 1,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
-      "path": "site/daily-status.html",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 2
-    },
-    {
-      "category": "public structured data",
-      "currentEmailOccurrences": 1,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
-      "path": "site/daily-status.json",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 3
-    },
-    {
-      "category": "public page",
-      "currentEmailOccurrences": 4,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
-      "path": "site/domain-email-evidence.html",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 12
-    },
-    {
-      "category": "public structured data",
-      "currentEmailOccurrences": 2,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
-      "path": "site/domain-email-evidence.json",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 11
-    },
-    {
-      "category": "public page",
-      "currentEmailOccurrences": 4,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
-      "path": "site/domain-email.html",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 21
-    },
-    {
-      "category": "public structured data",
-      "currentEmailOccurrences": 9,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
-      "path": "site/domain-email.json",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 37
-    },
-    {
-      "category": "public page",
-      "currentEmailOccurrences": 1,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
-      "path": "site/external-reviews.html",
-      "switchRequiredAfterActivation": true,
+      "switchRequiredAfterActivation": false,
       "targetEmailOccurrences": 1
     },
     {
       "category": "public structured data",
-      "currentEmailOccurrences": 1,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "site/brand-kit.json",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 1
+    },
+    {
+      "category": "public page",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "site/daily-status.html",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 4
+    },
+    {
+      "category": "public structured data",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "site/daily-status.json",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 5
+    },
+    {
+      "category": "public page",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "site/domain-email-evidence.html",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 15
+    },
+    {
+      "category": "public structured data",
+      "currentEmailOccurrences": 2,
+      "notes": "Legacy previous-email reference retained for audit context; public switch is complete.",
+      "path": "site/domain-email-evidence.json",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 11
+    },
+    {
+      "category": "public page",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "site/domain-email.html",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 28
+    },
+    {
+      "category": "public structured data",
+      "currentEmailOccurrences": 6,
+      "notes": "Legacy previous-email reference retained for audit context; public switch is complete.",
+      "path": "site/domain-email.json",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 41
+    },
+    {
+      "category": "public page",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "site/external-reviews.html",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 4
+    },
+    {
+      "category": "public structured data",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "site/external-reviews.json",
-      "switchRequiredAfterActivation": true,
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 6
+    },
+    {
+      "category": "public page",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "site/index.html",
+      "switchRequiredAfterActivation": false,
       "targetEmailOccurrences": 2
     },
     {
       "category": "public page",
-      "currentEmailOccurrences": 2,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
-      "path": "site/index.html",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 0
-    },
-    {
-      "category": "public page",
-      "currentEmailOccurrences": 1,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "site/listing-kit.html",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 0
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 1
+    },
+    {
+      "category": "public page",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "site/listing-readiness.html",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 1
     },
     {
       "category": "public structured data",
-      "currentEmailOccurrences": 1,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "site/listing-readiness.json",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 2
+    },
+    {
+      "category": "public structured data",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "site/member-program.json",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 0
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 1
     },
     {
       "category": "public page",
-      "currentEmailOccurrences": 2,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "site/members.html",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 0
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 2
     },
     {
       "category": "public page",
-      "currentEmailOccurrences": 2,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "site/platform-replies.html",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 0
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 2
     },
     {
       "category": "public structured data",
-      "currentEmailOccurrences": 2,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "site/platform-replies.json",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 0
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 2
     },
     {
       "category": "public page",
-      "currentEmailOccurrences": 5,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "site/privacy.html",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 0
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 5
     },
     {
       "category": "public structured data",
-      "currentEmailOccurrences": 2,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "site/privacy.json",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 0
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 2
     },
     {
       "category": "public structured data",
-      "currentEmailOccurrences": 3,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "site/project.json",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 0
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 4
     },
     {
       "category": "public page",
-      "currentEmailOccurrences": 4,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "site/register.html",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 0
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 4
     },
     {
       "category": "public page",
@@ -455,15 +511,15 @@
       "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "site/reviewer-kit.html",
       "switchRequiredAfterActivation": false,
-      "targetEmailOccurrences": 2
+      "targetEmailOccurrences": 3
     },
     {
       "category": "public structured data",
-      "currentEmailOccurrences": 1,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "site/reviewer-kit.json",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 6
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 8
     },
     {
       "category": "public page",
@@ -471,103 +527,103 @@
       "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "site/status.html",
       "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 2
+    },
+    {
+      "category": "public page",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "site/support.html",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 2
+    },
+    {
+      "category": "public structured data",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "site/support.json",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 1
+    },
+    {
+      "category": "public structured data",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "site/trust.json",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 4
+    },
+    {
+      "category": "public page",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "site/unsubscribe.html",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 4
+    },
+    {
+      "category": "public page",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "site/wallet-warning.html",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 1
+    },
+    {
+      "category": "public structured data",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "site/wallet-warning.json",
+      "switchRequiredAfterActivation": false,
       "targetEmailOccurrences": 1
     },
     {
       "category": "public page",
-      "currentEmailOccurrences": 2,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
-      "path": "site/support.html",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 0
-    },
-    {
-      "category": "public structured data",
-      "currentEmailOccurrences": 1,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
-      "path": "site/support.json",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 0
-    },
-    {
-      "category": "public structured data",
-      "currentEmailOccurrences": 1,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
-      "path": "site/trust.json",
-      "switchRequiredAfterActivation": true,
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "site/whitepaper.html",
+      "switchRequiredAfterActivation": false,
       "targetEmailOccurrences": 3
     },
     {
       "category": "public page",
-      "currentEmailOccurrences": 4,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
-      "path": "site/unsubscribe.html",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 0
-    },
-    {
-      "category": "public page",
-      "currentEmailOccurrences": 1,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
-      "path": "site/wallet-warning.html",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 0
-    },
-    {
-      "category": "public structured data",
-      "currentEmailOccurrences": 1,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
-      "path": "site/wallet-warning.json",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 0
-    },
-    {
-      "category": "public page",
-      "currentEmailOccurrences": 2,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
-      "path": "site/whitepaper.html",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 0
-    },
-    {
-      "category": "public page",
-      "currentEmailOccurrences": 2,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "site/zh-apply.html",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 0
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 2
     },
     {
       "category": "public page",
-      "currentEmailOccurrences": 2,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "site/zh-basescan-preflight.html",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 5
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 8
     },
     {
       "category": "public page",
-      "currentEmailOccurrences": 2,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "site/zh-cn.html",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 0
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 2
     },
     {
       "category": "public page",
-      "currentEmailOccurrences": 6,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "site/zh-domain-email.html",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 18
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 23
     },
     {
       "category": "public page",
-      "currentEmailOccurrences": 2,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "site/zh-faq.html",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 0
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 2
     },
     {
       "category": "public page",
@@ -579,19 +635,19 @@
     },
     {
       "category": "public page",
-      "currentEmailOccurrences": 4,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "site/zh-support.html",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 0
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 4
     },
     {
       "category": "operator backend/tool",
-      "currentEmailOccurrences": 1,
-      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "tools/gca_member_backend.py",
-      "switchRequiredAfterActivation": true,
-      "targetEmailOccurrences": 0
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 1
     }
   ],
   "requiredPreconditions": [
@@ -602,18 +658,18 @@
     "tools/check_basescan_resubmission_readiness.py reports readyForBaseScanResubmission true"
   ],
   "schema": "gca-domain-email-switch-plan-v1",
-  "status": "blocked-until-domain-email-evidence-ready",
+  "status": "public-email-switch-complete",
   "summary": {
     "categories": {
       "operator backend/tool": 1,
-      "owner launch package": 22,
+      "owner launch package": 27,
       "project documentation": 2,
-      "public page": 28,
-      "public structured data": 17,
+      "public page": 29,
+      "public structured data": 18,
       "well-known identity": 2
     },
-    "filesRequiringSwitchAfterActivation": 68,
-    "scannedFilesWithEmailReferences": 72
+    "filesRequiringSwitchAfterActivation": 0,
+    "scannedFilesWithEmailReferences": 79
   },
   "switchOrder": [
     "Update public support and user-intake pages first.",

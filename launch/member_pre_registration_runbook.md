@@ -12,7 +12,7 @@ This runbook keeps the legacy static member pre-registration flow operationally 
 - Local operator URL: `http://127.0.0.1:8787/members.html`
 - Local operator console: `http://127.0.0.1:8787/operator.html`
 - Local same-origin API: `POST /gca/pre-registrations`, `POST /gca/wallet-verifications`, `GET /gca/operator-summary`, `GET /gca/credit-ledger`, `GET /gca/member-ledger`, `POST /gca/member-benefit-transfers`, `GET /gca/member-benefit-transfers`, and `GET /gca/member-review`
-- Fallback collection methods: copy packet, download JSON, or email packet to `GCAgochina@outlook.com`
+- Fallback collection methods: copy packet, download JSON, or email packet to `support@gcagochina.com`
 - Public account and eligible ledger status: live through Workers + D1
 - GCA user access page: `/gca/member-access`
 - GCA intake path: `/gca/member-access`
@@ -88,7 +88,7 @@ Pre-registration stores a pending review record only. Wallet verification reads 
 5. Run wallet verification only for queued wallets and only through the Web3 Radar backend.
 6. Confirm the credit and member ledgers show service-access records only.
 7. Record support status as `received`, `wallet_pending`, `eligible`, `needs_more_information`, `rejected`, or `ledger_recorded`.
-8. Use `GCAgochina@outlook.com` as the public support contact while the project does not have a separate support desk.
+8. Use `support@gcagochina.com` as the public support contact while the project does not have a separate support desk.
 9. Treat 5-10 business days after account intake as a first-response target, not a guarantee.
 10. Do not describe the 10,000 GCA member benefit as automatic or self-service transferred.
 

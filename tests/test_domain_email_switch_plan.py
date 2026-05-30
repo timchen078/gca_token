@@ -25,14 +25,14 @@ class DomainEmailSwitchPlanTests(unittest.TestCase):
         self.assertEqual(plan["schema"], "gca-domain-email-switch-plan-v1")
         self.assertEqual(plan["currentEmail"], CURRENT_EMAIL)
         self.assertEqual(plan["targetDomainEmail"], TARGET_EMAIL)
-        self.assertEqual(plan["status"], "blocked-until-domain-email-evidence-ready")
-        self.assertGreater(plan["summary"]["filesRequiringSwitchAfterActivation"], 10)
+        self.assertEqual(plan["status"], "public-email-switch-complete")
+        self.assertEqual(plan["summary"]["filesRequiringSwitchAfterActivation"], 0)
         self.assertIn("public page", plan["summary"]["categories"])
         self.assertIn("public structured data", plan["summary"]["categories"])
         self.assertIn("owner launch package", plan["summary"]["categories"])
         self.assertEqual(plan["patchPreview"]["command"], "python3 tools/build_domain_email_switch_plan.py --patch")
         self.assertIn("launch/domain_email_switch_preview.patch", plan["patchPreview"]["ownerArtifactCommand"])
-        self.assertGreater(plan["patchPreview"]["replacementOccurrences"], 10)
+        self.assertEqual(plan["patchPreview"]["replacementOccurrences"], 0)
         self.assertFalse(plan["patchPreview"]["appliesChanges"])
         self.assertIn(
             "launch/domain_email_evidence_packet.json reports readyForBaseScanResubmission true",
@@ -50,11 +50,12 @@ class DomainEmailSwitchPlanTests(unittest.TestCase):
 
         records = {record["path"]: record for record in plan["records"]}
         self.assertIn("site/support.html", records)
-        self.assertTrue(records["site/support.html"]["switchRequiredAfterActivation"])
+        self.assertFalse(records["site/support.html"]["switchRequiredAfterActivation"])
         self.assertIn("site/domain-email.html", records)
         self.assertGreater(records["site/domain-email.html"]["targetEmailOccurrences"], 0)
         self.assertIn("launch/basescan_resubmission_package.md", records)
         self.assertIn("tools/gca_member_backend.py", records)
+        self.assertFalse(any(path.startswith("launch/domain_email_evidence/") for path in records))
 
     def test_markdown_is_copyable_and_output_is_explicit(self):
         plan = build_plan()
@@ -79,12 +80,9 @@ class DomainEmailSwitchPlanTests(unittest.TestCase):
 
         self.assertEqual(preview["schema"], "gca-domain-email-switch-patch-preview-v1")
         self.assertEqual(preview["status"], "preview-only-not-applied")
-        self.assertGreater(preview["summary"]["filesWithExactReplacement"], 10)
-        self.assertGreater(preview["summary"]["replacementOccurrences"], 10)
-        self.assertIn("--- a/site/support.html", patch)
-        self.assertIn("+++ b/site/support.html", patch)
-        self.assertIn(CURRENT_EMAIL, patch)
-        self.assertIn(TARGET_EMAIL, patch)
+        self.assertEqual(preview["summary"]["filesWithExactReplacement"], 0)
+        self.assertEqual(preview["summary"]["replacementOccurrences"], 0)
+        self.assertEqual(patch, "")
         self.assertFalse(preview["boundaries"]["writesPublicFiles"])
         self.assertFalse(preview["boundaries"]["submitsBaseScanRequest"])
 
@@ -102,7 +100,7 @@ class DomainEmailSwitchPlanTests(unittest.TestCase):
 
             self.assertIn("gca-domain-email-switch-plan-v1", json_path.read_text())
             self.assertIn("GCA Domain Email Public Switch Plan", md_path.read_text())
-            self.assertIn("--- a/site/support.html", patch_path.read_text())
+            self.assertEqual(patch_path.read_text(), "")
 
     def test_committed_owner_artifacts_are_available_and_preview_only(self):
         json_path = ROOT / "launch" / "domain_email_switch_plan.json"
@@ -118,19 +116,16 @@ class DomainEmailSwitchPlanTests(unittest.TestCase):
         patch = patch_path.read_text(encoding="utf-8")
 
         self.assertEqual(plan["schema"], "gca-domain-email-switch-plan-v1")
-        self.assertEqual(plan["status"], "blocked-until-domain-email-evidence-ready")
+        self.assertEqual(plan["status"], "public-email-switch-complete")
         self.assertEqual(plan["currentEmail"], CURRENT_EMAIL)
         self.assertEqual(plan["targetDomainEmail"], TARGET_EMAIL)
         self.assertFalse(plan["boundaries"]["writesPublicFiles"])
         self.assertFalse(plan["patchPreview"]["appliesChanges"])
-        self.assertGreater(plan["summary"]["filesRequiringSwitchAfterActivation"], 10)
+        self.assertEqual(plan["summary"]["filesRequiringSwitchAfterActivation"], 0)
         self.assertIn("support@gcagochina.com receives external email", plan["requiredPreconditions"])
         self.assertIn("GCA Domain Email Public Switch Plan", markdown)
         self.assertIn("This plan does not change public files by itself.", markdown)
-        self.assertIn("--- a/site/support.html", patch)
-        self.assertIn("+++ b/site/support.html", patch)
-        self.assertIn(CURRENT_EMAIL, patch)
-        self.assertIn(TARGET_EMAIL, patch)
+        self.assertEqual(patch, "")
 
     def test_cli_can_print_patch_preview(self):
         completed = subprocess.run(
@@ -142,9 +137,7 @@ class DomainEmailSwitchPlanTests(unittest.TestCase):
         )
 
         self.assertEqual(completed.returncode, 0, completed.stderr)
-        self.assertIn("--- a/site/support.html", completed.stdout)
-        self.assertIn("+++ b/site/support.html", completed.stdout)
-        self.assertIn(TARGET_EMAIL, completed.stdout)
+        self.assertEqual(completed.stdout, "")
 
 
 if __name__ == "__main__":

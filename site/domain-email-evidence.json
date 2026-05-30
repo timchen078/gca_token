@@ -2,18 +2,18 @@
   "schema": "https://gcagochina.com/domain-email-evidence.json",
   "pageUrl": "https://gcagochina.com/domain-email-evidence.html",
   "lastUpdated": "2026-05-30",
-  "status": "blocked-until-domain-email-evidence-collected",
+  "status": "domain-email-evidence-collected-private-ready",
   "project": "GCA",
   "domain": "gcagochina.com",
-  "currentPublicEmail": "GCAgochina@outlook.com",
+  "currentPublicEmail": "support@gcagochina.com",
   "targetDomainEmail": "support@gcagochina.com",
   "evidenceDirectory": "launch/domain_email_evidence",
   "evidenceDirectoryIgnoredByGit": true,
   "publicSafe": true,
   "privateEvidencePublished": false,
   "baseScanUse": {
-    "purpose": "Public checklist for the private evidence packet required before the next clean BaseScan token profile resubmission.",
-    "readyForResubmission": false,
+    "purpose": "Public checklist for the completed private evidence packet required for the next clean BaseScan token profile resubmission.",
+    "readyForResubmission": true,
     "reviewerPage": "https://gcagochina.com/domain-email-evidence.html",
     "setupPlan": "https://gcagochina.com/domain-email.html",
     "baseScanRemediation": "https://gcagochina.com/basescan-remediation.html",
@@ -80,10 +80,10 @@
     "finalPreflight": "python3 tools/check_basescan_resubmission_readiness.py --json --require-ready"
   },
   "stopConditions": [
-    "support@gcagochina.com cannot receive external email.",
+    "support@gcagochina.com stops receiving external email.",
     "support@gcagochina.com cannot send authenticated replies with the visible sender set to the domain email.",
-    "MX/SPF/DKIM/DMARC DNS checks are not ready.",
-    "Any required evidence file is missing.",
+    "MX/SPF/DKIM/DMARC DNS checks stop reporting ready.",
+    "Any required evidence file is missing from the private local evidence directory.",
     "Public support/BaseScan files still publish GCAgochina@outlook.com after the switch.",
     "BaseScan resubmission preflight reports readyForBaseScanResubmission false."
   ],
@@ -96,9 +96,9 @@
     "commitsPrivateEvidence": false
   },
   "publicClaimBoundaries": [
-    "Do not claim support@gcagochina.com is active before inbound and outbound tests pass.",
     "Do not claim BaseScan token profile approval before BaseScan publishes the profile.",
-    "Do not commit mailbox screenshots or private evidence files to the repository."
+    "Do not commit mailbox screenshots or private evidence files to the repository.",
+    "Do not claim a third-party audit unless an independent audit report is published."
   ],
   "relatedPublicPages": {
     "domainEmailPlan": "https://gcagochina.com/domain-email.html",
@@ -106,5 +106,6 @@
     "founderProfile": "https://gcagochina.com/tim-chen.html",
     "platformReplies": "https://gcagochina.com/platform-replies.html",
     "dataRoom": "https://gcagochina.com/data.html"
-  }
+  },
+  "previousPublicEmail": "GCAgochina@outlook.com"
 }

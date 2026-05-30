@@ -36,7 +36,7 @@
   "sourceVerification": "verified",
   "deployer": "0x18d007bcb6be029f8ccd7cb13e324aa21891092d",
   "baseScanContract": "https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
-  "officialEmail": "GCAgochina@outlook.com",
+  "officialEmail": "support@gcagochina.com",
   "officialEmailNote": "Official public project email listed on gcagochina.com. The original reply inbox was cxy070800@gmail.com.",
   "timChenProfessionalProfileUrl": "https://gcagochina.com/tim-chen.html",
   "timChenProfessionalProfileDataUrl": "https://gcagochina.com/tim-chen.json",
@@ -45,34 +45,32 @@
   "returnNoticeDate": "2026-05-13",
   "resubmissionDate": "2026-05-13",
   "latestReturnNoticeDate": "2026-05-23",
-  "reviewStatus": "remediation-required-before-next-submission",
+  "reviewStatus": "ready-for-resubmission",
   "lastCheckedDate": "2026-05-30",
-  "lastCheckedResult": "BaseScan returned the token profile update again as information-insufficient; Tim Chen official-domain professional profile evidence is now published, the domain email setup plan, public evidence checklist, and activation evidence packet are published, and the 2026-05-30 DNS snapshot shows MX/SPF/DMARC missing and DKIM selector required, so readyForBaseScanEmailEvidence is false.",
+  "lastCheckedResult": "BaseScan returned the token profile update again as information-insufficient; Tim Chen official-domain professional profile evidence is published, support@gcagochina.com is active as the project-domain email, the 2026-05-30 DNS snapshot shows MX/SPF/DKIM/DMARC present, readyForBaseScanEmailEvidence is true, and the domain email evidence packet is ready.",
   "domainEmailSetupPlanUrl": "https://gcagochina.com/domain-email.html",
   "domainEmailSetupPlanDataUrl": "https://gcagochina.com/domain-email.json",
   "domainEmailDnsSnapshotUrl": "https://gcagochina.com/domain-email.html#snapshotTitle",
   "domainEmailDnsReadiness": {
-    "checkedAt": "2026-05-30T08:13:47Z",
-    "readyForBaseScanEmailEvidence": false,
+    "checkedAt": "2026-05-30T16:24:34Z",
+    "readyForBaseScanEmailEvidence": true,
+    "missingOrBlockedChecks": [],
     "checks": {
-      "mx": "missing",
-      "spf": "missing",
-      "dmarc": "missing",
-      "dkim": "selector-required"
+      "mx": "present",
+      "spf": "present",
+      "dmarc": "present",
+      "dkim": "present"
     },
-    "missingOrBlockedChecks": [
-      "mx",
-      "spf",
-      "dmarc",
-      "dkim"
-    ]
+    "evidencePage": "https://gcagochina.com/domain-email.html",
+    "evidenceChecklist": "https://gcagochina.com/domain-email-evidence.html",
+    "privateEvidencePacket": "launch/domain_email_evidence_packet.json"
   },
   "domainEmailEvidenceChecklistUrl": "https://gcagochina.com/domain-email-evidence.html",
   "domainEmailEvidenceChecklistDataUrl": "https://gcagochina.com/domain-email-evidence.json",
   "domainEmailActivationEvidencePacketUrl": "https://gcagochina.com/domain-email.html#evidenceTitle",
   "returnReason": "BaseScan could not process the update because the submitted token/project information was insufficient.",
   "resubmissionRequired": true,
-  "nextSubmissionReady": false,
+  "nextSubmissionReady": true,
   "resubmissionChecklist": [
     "Official website is reachable over HTTPS",
     "Official project email is listed on the website",

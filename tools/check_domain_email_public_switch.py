@@ -120,7 +120,7 @@ def build_report(
 ) -> dict[str, Any]:
     root = root.resolve()
     config = read_json(config_path)
-    current_email = config.get("currentPublicEmail") or DEFAULT_CURRENT_EMAIL
+    current_email = config.get("previousPublicEmail") or config.get("currentPublicEmail") or DEFAULT_CURRENT_EMAIL
     target_email = config.get("targetDomainEmail") or DEFAULT_TARGET_EMAIL
     critical_files = config.get("filesToUpdateAfterActivation", [])
     if not isinstance(critical_files, list) or not all(isinstance(item, str) for item in critical_files):

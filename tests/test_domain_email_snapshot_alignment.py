@@ -32,10 +32,10 @@ class DomainEmailSnapshotAlignmentTests(unittest.TestCase):
         report = build_report()
 
         self.assertEqual(report["schema"], "gca-domain-email-snapshot-alignment-v1")
-        self.assertEqual(report["canonicalSnapshot"]["checkedAt"], "2026-05-30T08:13:47Z")
+        self.assertEqual(report["canonicalSnapshot"]["checkedAt"], "2026-05-30T16:24:34Z")
         self.assertEqual(report["canonicalSnapshot"]["date"], "2026-05-30")
         self.assertEqual(report["canonicalSnapshot"]["gateSlug"], "blocked-by-dns-snapshot-2026-05-30")
-        self.assertFalse(report["canonicalSnapshot"]["readyForBaseScanEmailEvidence"])
+        self.assertTrue(report["canonicalSnapshot"]["readyForBaseScanEmailEvidence"])
         self.assertEqual(report["status"], "aligned")
         self.assertTrue(report["alignedForPublicPlatformPackets"])
         self.assertEqual(report["blockedRequirements"], [])

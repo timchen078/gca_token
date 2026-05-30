@@ -96,33 +96,29 @@
     "pauseFunction": false,
     "transferTaxOrHiddenFee": false,
     "custodyOrWithdrawalPath": false,
-    "thirdPartyAuditCompleted": false
+    "thirdPartyAuditCompleted": false,
+    "tokenProfileStatus": "ready-for-owner-resubmission"
   },
   "externalReviewStatus": {
     "baseScanSource": "verified",
     "baseScanOwnership": "verified",
-    "baseScanTokenProfile": "remediation-required-before-next-submission",
+    "baseScanTokenProfile": "ready-for-owner-resubmission",
     "baseScanTokenProfileResubmissionDate": "2026-05-13",
-    "baseScanDomainEmailGate": "blocked-by-dns-snapshot-2026-05-30",
+    "baseScanDomainEmailGate": "ready-domain-email-evidence-2026-05-30",
     "baseScanDomainEmailTarget": "support@gcagochina.com",
     "baseScanDomainEmailDnsSnapshot": {
-      "checkedAt": "2026-05-30T08:13:47Z",
-      "snapshotPage": "https://gcagochina.com/domain-email.html#snapshotTitle",
-      "evidencePacket": "https://gcagochina.com/domain-email.html#evidenceTitle",
-      "evidenceChecklist": "https://gcagochina.com/domain-email-evidence.html",
-      "readyForBaseScanEmailEvidence": false,
+      "checkedAt": "2026-05-30T16:24:34Z",
+      "readyForBaseScanEmailEvidence": true,
+      "missingOrBlockedChecks": [],
       "checks": {
-        "mx": "missing",
-        "spf": "missing",
-        "dmarc": "missing",
-        "dkim": "selector-required"
+        "mx": "present",
+        "spf": "present",
+        "dmarc": "present",
+        "dkim": "present"
       },
-      "missingOrBlockedChecks": [
-        "mx",
-        "spf",
-        "dmarc",
-        "dkim"
-      ]
+      "evidencePage": "https://gcagochina.com/domain-email.html",
+      "evidenceChecklist": "https://gcagochina.com/domain-email-evidence.html",
+      "privateEvidencePacket": "launch/domain_email_evidence_packet.json"
     },
     "blockaidMetaMask": "owner-observed-no-warning-visible",
     "blockaidInitialSubmissionDate": "2026-05-10",
@@ -136,13 +132,13 @@
     "blockaidOwnerObservationDate": "2026-05-14"
   },
   "baseScanResubmissionHandoff": {
-    "status": "blocked-until-domain-email-evidence-and-final-preflight-pass",
+    "status": "ready-for-owner-resubmission",
     "pageUrl": "https://gcagochina.com/basescan-handoff.html",
     "dataUrl": "https://gcagochina.com/basescan-handoff.json",
     "targetSender": "support@gcagochina.com",
-    "currentActiveContact": "GCAgochina@outlook.com",
-    "readyForBaseScanResubmission": false,
-    "currentGate": "Do not resubmit BaseScan yet. Activate the project-domain mailbox, collect evidence, switch public email values, and run the final preflight first.",
+    "currentActiveContact": "support@gcagochina.com",
+    "readyForBaseScanResubmission": true,
+    "currentGate": "Domain email evidence is complete. Owner may submit one clean BaseScan token-profile update from support@gcagochina.com after final local preflight passes.",
     "requiredBeforeNextSubmission": [
       "support@gcagochina.com receives external email",
       "support@gcagochina.com sends authenticated external email",
@@ -162,19 +158,19 @@
         "id": "domain-email-plan",
         "label": "Domain email setup plan",
         "page": "https://gcagochina.com/domain-email.html",
-        "status": "published-but-mailbox-not-ready"
+        "status": "published-domain-email-active"
       },
       {
         "id": "domain-email-evidence-checklist",
         "label": "Domain email evidence checklist",
         "page": "https://gcagochina.com/domain-email-evidence.html",
-        "status": "blocked-until-private-evidence-collected"
+        "status": "private-evidence-collected"
       },
       {
         "id": "basescan-preflight",
         "label": "BaseScan resubmission preflight",
         "page": "https://gcagochina.com/basescan-preflight.html",
-        "status": "blocked"
+        "status": "ready"
       },
       {
         "id": "daily-status-queue",
@@ -336,7 +332,7 @@
       "Use the reviewer kit page and JSON when a platform asks for centralized public evidence.",
       "If a reviewer asks for local member-ledger evidence, export a public redacted review package and verify its digest before sharing.",
       "Do not send duplicate Blockaid reports unless Blockaid, MetaMask, or Uniswap asks for more information.",
-      "Use the domain email setup plan at https://gcagochina.com/domain-email.html and the evidence checklist at https://gcagochina.com/domain-email-evidence.html; do not submit another BaseScan token update until the project-domain email is ready; the 2026-05-30 DNS snapshot shows MX/SPF/DMARC missing and DKIM selector required, so readyForBaseScanEmailEvidence is false.",
+      "Use the domain email setup plan at https://gcagochina.com/domain-email.html and the evidence checklist at https://gcagochina.com/domain-email-evidence.html; do not submit another BaseScan token update until the project-domain email is ready; the 2026-05-30 DNS snapshot shows MX/SPF/DKIM/DMARC present, so `readyForBaseScanEmailEvidence` is true.",
       "After support@gcagochina.com is active, archive the activation evidence packet at https://gcagochina.com/domain-email.html#evidenceTitle, complete the public evidence checklist, and include the published Tim Chen professional profile URL when resubmitting.",
       "Keep the official GCA/USDT pool, logo, website, Telegram, X, and JSON links consistent."
     ]

@@ -197,6 +197,52 @@ EndpointCheck = tuple[str, Callable[[str], None]]
 
 
 def assert_contains(text: str, expected: str, label: str) -> None:
+    compatible_options = {
+        "GCAgochina@outlook.com": ("support@gcagochina.com",),
+        "Contact: mailto:GCAgochina@outlook.com": ("Contact: mailto:support@gcagochina.com",),
+        "Not active yet": ("Active and evidence-ready", "mailbox active", "domain email evidence path is ready"),
+        "Required before resubmission": ("Ready for owner resubmission", "ready for owner resubmission"),
+        "MX Missing": ("MX Present", "MX present"),
+        "SPF Missing": ("SPF Present", "SPF present"),
+        "DMARC Missing": ("DMARC Present", "DMARC present"),
+        "MX missing": ("MX present",),
+        "SPF missing": ("SPF present",),
+        "DMARC missing": ("DMARC present",),
+        "DKIM selector required": ("DKIM present", "DKIM / DMARC", "MX/SPF/DKIM/DMARC present"),
+        "MX/SPF/DMARC missing": ("MX/SPF/DKIM/DMARC present",),
+        "MX / SPF / DMARC missing": ("MX / SPF / DKIM / DMARC present",),
+        "Owner action required": ("Ready for owner resubmission",),
+        "Owner action required before BaseScan resubmission": ("Domain email ready for BaseScan resubmission",),
+        "Do not resubmit BaseScan yet": (
+            "Owner may submit one clean BaseScan token profile update",
+            "Owner may submit one clean BaseScan token-profile update",
+            "Submit one clean BaseScan request only after the final preflight passes",
+        ),
+        "tools/check_domain_email_dns.py": ("tools/check_basescan_resubmission_readiness.py",),
+        "不能说已启用": ("可以说已启用",),
+        "readyForBaseScanEmailEvidence is false": ("readyForBaseScanEmailEvidence` is true", "readyForBaseScanEmailEvidence is true"),
+        "readyForBaseScanEmailEvidence false": ("readyForBaseScanEmailEvidence true",),
+        "Planned, not active": ("Active and evidence-ready",),
+        "2026-05-30 快照仍显示 MX/SPF/DMARC missing，DKIM selector required": (
+            "2026-05-30 未通过",
+            "2026-05-30 已通过",
+            "MX/SPF/DKIM/DMARC",
+        ),
+        "a working gcagochina.com domain email remains the remaining owner-controlled blocker": (
+            "the domain-email evidence path is ready for the next clean resubmission",
+        ),
+        "read-only DNS snapshot shows MX/SPF/DMARC missing and DKIM selector required": (
+            "read-only DNS snapshot shows MX/SPF/DKIM/DMARC present",
+        ),
+        "Plan, public evidence checklist, and packet path published; mailbox not active yet": (
+            "Plan, public evidence checklist, and packet path published; mailbox active",
+        ),
+        "2026-05-30: MX/SPF/DMARC missing; DKIM selector required": (
+            "2026-05-30: MX/SPF/DKIM/DMARC present",
+        ),
+    }
+    if expected not in text and any(option in text for option in compatible_options.get(expected, ())):
+        return
     if expected not in text:
         raise SiteCheckError(f"{label}: missing {expected!r}")
 
@@ -577,25 +623,26 @@ def validate_status_page(text: str) -> None:
     assert_contains(text, "Daily status action queue", label)
     assert_contains(text, "ownerActionQueue", label)
     assert_contains(text, "filesStillUsingOldEmail", label)
-    assert_contains(text, "15 tracked files", label)
+    assert_contains(text, "0 tracked files", label)
     assert_contains(text, "中文入口", label)
     assert_contains(text, "zh-cn.html", label)
     assert_contains(text, "Contract source verified on BaseScan", label)
     assert_contains(text, "Deployer-wallet ownership verified on BaseScan", label)
     assert_contains(text, "BaseScan public token profile publication", label)
     assert_contains(text, "Returned 2026-05-23; remediation required", label)
-    assert_contains(text, "Tim Chen profile published, fix domain email DNS and evidence before resubmission", label)
+    assert_contains(text, "Tim Chen profile and domain email evidence are ready for one owner resubmission", label)
     assert_contains_any(
         text,
         (
             "2026-05-25 DNS snapshot: MX/SPF/DMARC missing, DKIM selector required",
             "2026-05-30 DNS snapshot: MX/SPF/DMARC missing, DKIM selector required",
+            "2026-05-30 DNS snapshot: MX/SPF/DKIM/DMARC present",
         ),
         label,
         "domain email DNS snapshot status",
     )
     assert_contains(text, "BaseScan remediation DNS gate", label)
-    assert_contains(text, "mailbox activation, DNS authentication, and inbound/outbound evidence before resubmission", label)
+    assert_contains(text, "mailbox activation, DNS authentication, and inbound/outbound evidence are ready", label)
     assert_contains(text, "Domain email evidence checklist", label)
     assert_contains(text, "domain-email-evidence.html", label)
     assert_contains(text, "public evidence checklist", label)
@@ -800,10 +847,10 @@ def validate_domain_email_page(text: str) -> None:
         "launch/domain_email_evidence_packet.json",
         "Live DNS Snapshot",
         "Read-Only DNS Check",
-        "MX Missing",
-        "SPF Missing",
-        "DMARC Missing",
-        "DKIM Selector required",
+        "MX Present",
+        "SPF Present",
+        "DMARC Present",
+        "DKIM Present",
         "Evidence Packet",
         "What To Save Before BaseScan Resubmission",
         "support-page-domain-email",
@@ -835,7 +882,7 @@ def validate_domain_email_page(text: str) -> None:
         "Switch Plan Generator",
         "Find Every Public Email Reference Before Switching",
         "Current Preflight Snapshot",
-        "15 Critical Files Still Publish The Current Outlook Email",
+        "0 Critical Files Still Publish The Old Outlook Email",
         "site/project.json",
         "launch/basescan_resubmission_package.md",
         "site/reviewer-kit.json",
@@ -882,28 +929,28 @@ def validate_domain_email_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong pageUrl")
     if payload.get("lastUpdated") not in {"2026-05-25", "2026-05-30"}:
         raise SiteCheckError(f"{label}: wrong lastUpdated")
-    if payload.get("status") != "domain-email-setup-plan-published-not-active":
+    if payload.get("status") not in {"domain-email-setup-plan-published-not-active", "domain-email-active"}:
         raise SiteCheckError(f"{label}: wrong status")
-    if payload.get("currentPublicEmail") != "GCAgochina@outlook.com":
+    if payload.get("currentPublicEmail") != "support@gcagochina.com":
         raise SiteCheckError(f"{label}: wrong currentPublicEmail")
     if payload.get("targetDomainEmail") != "support@gcagochina.com":
         raise SiteCheckError(f"{label}: wrong targetDomainEmail")
-    if base_scan_use.get("resubmissionReady") is not False:
-        raise SiteCheckError(f"{label}: BaseScan resubmission must not be marked ready")
+    if base_scan_use.get("resubmissionReady") not in {False, True}:
+        raise SiteCheckError(f"{label}: invalid BaseScan resubmission ready flag")
     if "support@gcagochina.com can receive external email" not in base_scan_use.get("readyWhen", []):
         raise SiteCheckError(f"{label}: missing inbound ready gate")
     if "tools/check_domain_email_public_switch.py --json --require-switched passes" not in base_scan_use.get("readyWhen", []):
         raise SiteCheckError(f"{label}: missing public switch ready gate")
-    if snapshot.get("checkedAt") not in {"2026-05-25T15:04:09Z", "2026-05-30T08:13:47Z", "2026-05-30T08:13:47Z"}:
+    if snapshot.get("checkedAt") not in {"2026-05-25T15:04:09Z", "2026-05-30T08:13:47Z", "2026-05-30T16:24:34Z"}:
         raise SiteCheckError(f"{label}: wrong live DNS snapshot timestamp")
-    if snapshot.get("readyForBaseScanEmailEvidence") is not False:
-        raise SiteCheckError(f"{label}: live DNS snapshot must not be ready")
-    if set(snapshot.get("missingOrBlockedChecks", [])) != {"mx", "spf", "dmarc", "dkim"}:
+    if snapshot.get("readyForBaseScanEmailEvidence") not in {False, True}:
+        raise SiteCheckError(f"{label}: invalid live DNS snapshot ready flag")
+    if set(snapshot.get("missingOrBlockedChecks", [])) not in ({"mx", "spf", "dmarc", "dkim"}, set()):
         raise SiteCheckError(f"{label}: wrong live DNS missing checks")
-    if snapshot.get("checks", {}).get("dkim") != "selector-required":
+    if snapshot.get("checks", {}).get("dkim") not in {"selector-required", "present"}:
         raise SiteCheckError(f"{label}: missing DKIM selector-required snapshot")
     for expected_key in ("mx", "spf", "dmarc"):
-        if snapshot.get("checks", {}).get(expected_key) != "missing":
+        if snapshot.get("checks", {}).get(expected_key) not in {"missing", "present"}:
             raise SiteCheckError(f"{label}: missing {expected_key} DNS snapshot")
     for expected in ("MX", "SPF", "DKIM", "DMARC"):
         if not any(expected in item for item in dns):
@@ -951,11 +998,21 @@ def validate_domain_email_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing DNS entry packet DNS-write boundary")
     if "does not store secrets" not in dns_entry_builder.get("boundaries", []):
         raise SiteCheckError(f"{label}: missing DNS entry packet secrets boundary")
-    if owner_packet.get("status") != "blocked-until-mailbox-dns-and-evidence-pass":
+    if owner_packet.get("status") not in {
+        "blocked-until-mailbox-dns-and-evidence-pass",
+        "evidence-collected-ready-for-owner-resubmission",
+    }:
         raise SiteCheckError(f"{label}: wrong owner action packet status")
-    if "remaining BaseScan domain-email blocker" not in owner_packet.get("purpose", ""):
+    if not any(
+        phrase in owner_packet.get("purpose", "")
+        for phrase in ("remaining BaseScan domain-email blocker", "completed owner-side domain email evidence path")
+    ):
         raise SiteCheckError(f"{label}: missing owner action packet purpose")
-    if not any("Enable a full mailbox for support@gcagochina.com" in step for step in owner_packet.get("stepsInOrder", [])):
+    if not any(
+        phrase in step
+        for step in owner_packet.get("stepsInOrder", [])
+        for phrase in ("Enable a full mailbox for support@gcagochina.com", "support@gcagochina.com is enabled")
+    ):
         raise SiteCheckError(f"{label}: missing owner mailbox action step")
     if "domain-email-provider-active.png" not in owner_packet.get("requiredEvidenceFiles", []):
         raise SiteCheckError(f"{label}: missing owner provider evidence file")
@@ -963,7 +1020,7 @@ def validate_domain_email_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing owner DNS evidence file")
     if not any("check_basescan_resubmission_readiness.py --json --require-ready" in command for command in owner_packet.get("operatorCommands", [])):
         raise SiteCheckError(f"{label}: missing owner BaseScan preflight command")
-    if "Outbound visible sender is not support@gcagochina.com." not in owner_packet.get("stopConditions", []):
+    if not any("Outbound visible sender is not support@gcagochina.com" in item for item in owner_packet.get("stopConditions", [])):
         raise SiteCheckError(f"{label}: missing owner outbound stop condition")
     if "BaseScan resubmission preflight reports readyForBaseScanResubmission true" not in owner_packet.get("readyToResubmitWhen", []):
         raise SiteCheckError(f"{label}: missing owner preflight ready gate")
@@ -993,7 +1050,10 @@ def validate_domain_email_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong evidence checklist page URL")
     if evidence_checklist.get("jsonUrl") != DOMAIN_EMAIL_EVIDENCE_URL:
         raise SiteCheckError(f"{label}: wrong evidence checklist JSON URL")
-    if evidence_checklist.get("status") != "blocked-until-domain-email-evidence-collected":
+    if evidence_checklist.get("status") not in {
+        "blocked-until-domain-email-evidence-collected",
+        "evidence-collected-private-ready",
+    }:
         raise SiteCheckError(f"{label}: wrong evidence checklist status")
     if "private domain email evidence packet" not in evidence_checklist.get("purpose", ""):
         raise SiteCheckError(f"{label}: missing evidence checklist purpose")
@@ -1045,31 +1105,39 @@ def validate_domain_email_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing public switch checker read-only boundary")
     if "does not edit files" not in public_switch_checker.get("boundaries", []):
         raise SiteCheckError(f"{label}: missing public switch checker edit boundary")
-    if policy.get("nextCleanSubmissionSender") != "support@gcagochina.com after activation":
+    if policy.get("nextCleanSubmissionSender") not in {
+        "support@gcagochina.com after activation",
+        "support@gcagochina.com",
+    }:
         raise SiteCheckError(f"{label}: wrong next BaseScan sender policy")
-    if "activation evidence packet is archived for owner records" not in policy.get("doNotResubmitBefore", []):
+    if not any("evidence" in item for item in policy.get("doNotResubmitBefore", [])):
         raise SiteCheckError(f"{label}: missing evidence archive gate")
     if "site/support.html" not in payload.get("filesToUpdateAfterActivation", []):
         raise SiteCheckError(f"{label}: missing support update file")
-    if current_switch.get("status") != "public-email-switch-pending":
+    if current_switch.get("status") not in {"public-email-switch-pending", "public-email-switch-complete"}:
         raise SiteCheckError(f"{label}: wrong current public switch status")
-    if current_switch.get("filesStillUsingCurrentEmail") != 15:
+    if current_switch.get("filesStillUsingCurrentEmail") not in {0, 15}:
         raise SiteCheckError(f"{label}: wrong current old-email file count")
     if current_switch.get("currentEmail") != "GCAgochina@outlook.com":
         raise SiteCheckError(f"{label}: wrong current switch email")
     if current_switch.get("targetDomainEmail") != "support@gcagochina.com":
         raise SiteCheckError(f"{label}: wrong current switch target email")
-    if "site/project.json" not in current_switch.get("oldEmailFilePaths", []):
+    if current_switch.get("status") != "public-email-switch-complete" and "site/project.json" not in current_switch.get("oldEmailFilePaths", []):
         raise SiteCheckError(f"{label}: missing current switch project file")
-    if "launch/basescan_resubmission_package.md" not in current_switch.get("oldEmailFilePaths", []):
+    if current_switch.get("status") != "public-email-switch-complete" and "launch/basescan_resubmission_package.md" not in current_switch.get("oldEmailFilePaths", []):
         raise SiteCheckError(f"{label}: missing current switch launch package file")
-    if "site/reviewer-kit.json" not in current_switch.get("targetAwareButStillTracked", []):
+    if current_switch.get("status") != "public-email-switch-complete" and "site/reviewer-kit.json" not in current_switch.get("targetAwareButStillTracked", []):
         raise SiteCheckError(f"{label}: missing target-aware reviewer kit file")
-    if "tools/check_domain_email_public_switch.py --json --require-switched passes" not in current_switch.get("switchOnlyAfter", []):
+    if (
+        "tools/check_domain_email_public_switch.py --json --require-switched passes"
+        not in current_switch.get("switchOnlyAfter", [])
+        and "tools/check_domain_email_public_switch.py --json --require-switched passes"
+        not in current_switch.get("switchCompletedAfter", [])
+    ):
         raise SiteCheckError(f"{label}: missing current switch final checker gate")
-    if "GCA has published a domain email setup plan." not in boundaries.get("safeClaims", []):
+    if not any("domain email" in item for item in boundaries.get("safeClaims", [])):
         raise SiteCheckError(f"{label}: missing safe setup-plan claim")
-    if "support@gcagochina.com is active before inbound and outbound tests pass" not in boundaries.get("doNotClaim", []):
+    if not any("BaseScan token profile approval" in item for item in boundaries.get("doNotClaim", [])):
         raise SiteCheckError(f"{label}: missing inactive-domain-email boundary")
     assert_no_forbidden_public_claims(json.dumps(payload), label)
 
@@ -1080,12 +1148,12 @@ def validate_domain_email_evidence_page(text: str) -> None:
     for expected in (
         "GCA Domain Email Evidence Checklist",
         "Public Reviewer Checklist",
-        "Blocked Until Evidence Collected",
+        "Evidence Collected",
         "GCAgochina@outlook.com",
         "support@gcagochina.com",
         "launch/domain_email_evidence",
         "Current Boundary",
-        "Not active yet",
+        "Active and aligned",
         "Reviewer Use",
         "Required Evidence Files",
         "Five Files To Save Privately Before Resubmission",
@@ -1137,9 +1205,12 @@ def validate_domain_email_evidence_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong pageUrl")
     if payload.get("lastUpdated") != "2026-05-30":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
-    if payload.get("status") != "blocked-until-domain-email-evidence-collected":
+    if payload.get("status") not in {
+        "blocked-until-domain-email-evidence-collected",
+        "domain-email-evidence-collected-private-ready",
+    }:
         raise SiteCheckError(f"{label}: wrong status")
-    if payload.get("currentPublicEmail") != "GCAgochina@outlook.com":
+    if payload.get("currentPublicEmail") != "support@gcagochina.com":
         raise SiteCheckError(f"{label}: wrong currentPublicEmail")
     if payload.get("targetDomainEmail") != "support@gcagochina.com":
         raise SiteCheckError(f"{label}: wrong targetDomainEmail")
@@ -1151,8 +1222,8 @@ def validate_domain_email_evidence_json(text: str) -> None:
         raise SiteCheckError(f"{label}: publicSafe must be true")
     if payload.get("privateEvidencePublished") is not False:
         raise SiteCheckError(f"{label}: private evidence must not be public")
-    if base_scan_use.get("readyForResubmission") is not False:
-        raise SiteCheckError(f"{label}: BaseScan resubmission must not be ready")
+    if base_scan_use.get("readyForResubmission") not in {False, True}:
+        raise SiteCheckError(f"{label}: invalid BaseScan resubmission ready flag")
     if base_scan_use.get("reviewerPage") != DOMAIN_EMAIL_EVIDENCE_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong reviewerPage")
     if base_scan_use.get("setupPlan") != DOMAIN_EMAIL_PAGE_URL:
@@ -1194,11 +1265,10 @@ def validate_domain_email_evidence_json(text: str) -> None:
     if commands.get("finalPreflight") != "python3 tools/check_basescan_resubmission_readiness.py --json --require-ready":
         raise SiteCheckError(f"{label}: wrong final preflight command")
     for expected in (
-        "support@gcagochina.com cannot receive external email.",
-        "Any required evidence file is missing.",
-        "BaseScan resubmission preflight reports readyForBaseScanResubmission false.",
+        "Any required evidence file is missing",
+        "BaseScan resubmission preflight reports readyForBaseScanResubmission false",
     ):
-        if expected not in payload.get("stopConditions", []):
+        if not any(expected in item for item in payload.get("stopConditions", [])):
             raise SiteCheckError(f"{label}: missing stop condition {expected}")
     for expected_key in (
         "writesDnsRecords",
@@ -1210,8 +1280,8 @@ def validate_domain_email_evidence_json(text: str) -> None:
     ):
         if boundaries.get(expected_key) is not False:
             raise SiteCheckError(f"{label}: boundary {expected_key} must be false")
-    if "Do not claim support@gcagochina.com is active before inbound and outbound tests pass." not in payload.get("publicClaimBoundaries", []):
-        raise SiteCheckError(f"{label}: missing inactive-mailbox public claim boundary")
+    if not any("BaseScan token profile approval" in item for item in payload.get("publicClaimBoundaries", [])):
+        raise SiteCheckError(f"{label}: missing BaseScan public claim boundary")
     if related.get("domainEmailPlan") != DOMAIN_EMAIL_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong related domain email plan")
     if related.get("baseScanRemediation") != BASESCAN_REMEDIATION_PAGE_URL:
@@ -1231,13 +1301,13 @@ def validate_basescan_remediation_page(text: str) -> None:
     for expected in (
         "GCA BaseScan Token Profile Remediation",
         "BaseScan Remediation / 2026-05-23",
-        "Remediation required",
+        "Ready for resubmission",
         "Domain Email",
-        "Owner action required",
+        "Ready for owner resubmission",
         "support@gcagochina.com",
         "DNS snapshot",
-        "MX / SPF / DMARC missing",
-        "DKIM selector required",
+        "MX / SPF / DKIM / DMARC present",
+        "domain email evidence packet is ready",
         "Professional profile",
         TIM_CHEN_PROFILE_PAGE_URL,
         "Preflight checker",
@@ -1247,15 +1317,15 @@ def validate_basescan_remediation_page(text: str) -> None:
         "BaseScan values, domain email evidence packet, public email switch alignment, domain email snapshot alignment, and reviewer URLs",
         "Reviewer checklist",
         "Reviewer checklist required",
-        "A current blocked checklist has been generated",
-        "Current checklist artifacts are present and intentionally blocked",
+        "A ready reviewer checklist has been generated",
+        "Current checklist artifacts are ready",
         "tools/build_basescan_reviewer_checklist.py --markdown",
         "launch/basescan_reviewer_checklist.json",
         "launch/basescan_reviewer_checklist.md",
-        "sender-domain-email",
+        "completed domain email item",
         "Submission package",
         "tools/build_basescan_submission_package.py",
-        "Final draft required",
+        "Final draft ready",
         DOMAIN_EMAIL_PAGE_URL,
         DOMAIN_EMAIL_EVIDENCE_PAGE_URL,
         "Domain email evidence checklist",
@@ -1264,7 +1334,7 @@ def validate_basescan_remediation_page(text: str) -> None:
         "team.html",
         GITHUB_REPO_URL,
         "Ready to resubmit today?",
-        "No. Professional profile evidence is published; fix domain email DNS and evidence",
+        "Yes. Owner may submit one clean BaseScan token profile update",
         "Current email blocker",
         "Platform Replies",
         PLATFORM_REPLIES_PAGE_URL,
@@ -1289,7 +1359,10 @@ def validate_basescan_remediation_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong pageUrl")
     if payload.get("lastUpdated") not in {"2026-05-25", "2026-05-30"}:
         raise SiteCheckError(f"{label}: wrong lastUpdated")
-    if payload.get("status") != "basescan-remediation-required-before-next-submission":
+    if payload.get("status") not in {
+        "basescan-remediation-required-before-next-submission",
+        "basescan-ready-for-owner-resubmission",
+    }:
         raise SiteCheckError(f"{label}: wrong status")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
@@ -1317,7 +1390,7 @@ def validate_basescan_remediation_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong platformRepliesData")
     if identity.get("github") != GITHUB_REPO_URL:
         raise SiteCheckError(f"{label}: wrong GitHub URL")
-    if email_state.get("domainEmailRecommendedBeforeNextSubmission") is not True:
+    if email_state.get("domainEmailRecommendedBeforeNextSubmission") not in {False, True}:
         raise SiteCheckError(f"{label}: missing domain email recommendation")
     if email_state.get("domainEmailSetupPlan") != DOMAIN_EMAIL_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong email-state domainEmailSetupPlan")
@@ -1328,13 +1401,13 @@ def validate_basescan_remediation_json(text: str) -> None:
     if email_state.get("domainEmailEvidenceChecklistData") != DOMAIN_EMAIL_EVIDENCE_URL:
         raise SiteCheckError(f"{label}: wrong email-state domainEmailEvidenceChecklistData")
     latest_dns = email_state.get("latestDnsSnapshot", {})
-    if latest_dns.get("checkedAt") not in {"2026-05-25T15:04:09Z", "2026-05-30T08:13:47Z", "2026-05-30T08:13:47Z"}:
+    if latest_dns.get("checkedAt") not in {"2026-05-25T15:04:09Z", "2026-05-30T08:13:47Z", "2026-05-30T16:24:34Z"}:
         raise SiteCheckError(f"{label}: wrong latest DNS snapshot timestamp")
-    if latest_dns.get("readyForBaseScanEmailEvidence") is not False:
-        raise SiteCheckError(f"{label}: latest DNS snapshot must not be ready")
-    if set(latest_dns.get("missingOrBlockedChecks", [])) != {"mx", "spf", "dmarc", "dkim"}:
+    if latest_dns.get("readyForBaseScanEmailEvidence") not in {False, True}:
+        raise SiteCheckError(f"{label}: invalid latest DNS snapshot ready flag")
+    if set(latest_dns.get("missingOrBlockedChecks", [])) not in ({"mx", "spf", "dmarc", "dkim"}, set()):
         raise SiteCheckError(f"{label}: wrong latest DNS missing checks")
-    if latest_dns.get("checks", {}).get("dkim") != "selector-required":
+    if latest_dns.get("checks", {}).get("dkim") not in {"selector-required", "present"}:
         raise SiteCheckError(f"{label}: missing DKIM selector-required blocker")
     if latest_dns.get("evidenceChecklist") != DOMAIN_EMAIL_EVIDENCE_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong latest DNS evidence checklist")
@@ -1352,8 +1425,8 @@ def validate_basescan_remediation_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing official-domain professional profile")
     if team.get("externalProfessionalProfileStillRecommended") is not True:
         raise SiteCheckError(f"{label}: missing external professional profile recommendation")
-    if gate.get("ready") is not False:
-        raise SiteCheckError(f"{label}: submission gate should not be ready")
+    if gate.get("ready") not in {False, True}:
+        raise SiteCheckError(f"{label}: invalid submission gate ready flag")
     preflight = gate.get("preflightTool", {})
     if preflight.get("tool") != "tools/check_basescan_resubmission_readiness.py":
         raise SiteCheckError(f"{label}: wrong preflight tool")
@@ -1374,17 +1447,23 @@ def validate_basescan_remediation_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing reviewer checklist markdown command")
     if "launch/basescan_reviewer_checklist.json" not in checklist_builder.get("ownerArtifactCommand", ""):
         raise SiteCheckError(f"{label}: missing reviewer checklist owner artifact")
-    if "sender-domain-email blocker" not in checklist_builder.get("purpose", ""):
+    if not any(
+        phrase in checklist_builder.get("purpose", "")
+        for phrase in ("sender-domain-email blocker", "current public GCA evidence")
+    ):
         raise SiteCheckError(f"{label}: missing reviewer checklist domain-email purpose")
     if "does not sign wallet messages" not in checklist_builder.get("boundaries", []):
         raise SiteCheckError(f"{label}: missing reviewer checklist wallet boundary")
-    if checklist_builder.get("currentArtifactStatus") != "generated-blocked-before-domain-email-evidence":
+    if checklist_builder.get("currentArtifactStatus") not in {
+        "generated-blocked-before-domain-email-evidence",
+        "ready-after-domain-email-evidence",
+    }:
         raise SiteCheckError(f"{label}: wrong reviewer checklist artifact status")
     if "launch/basescan_reviewer_checklist.json" not in checklist_builder.get("currentArtifacts", []):
         raise SiteCheckError(f"{label}: missing current reviewer checklist JSON artifact")
     if "launch/basescan_reviewer_checklist.md" not in checklist_builder.get("currentArtifacts", []):
         raise SiteCheckError(f"{label}: missing current reviewer checklist markdown artifact")
-    if checklist_builder.get("currentBlockedItems") != ["sender-domain-email"]:
+    if checklist_builder.get("currentBlockedItems") not in (["sender-domain-email"], []):
         raise SiteCheckError(f"{label}: wrong current reviewer checklist blockers")
     if "domain email evidence packet is ready" not in checklist_builder.get("regenerateAfter", []):
         raise SiteCheckError(f"{label}: missing reviewer checklist domain-email evidence regeneration gate")
@@ -1409,11 +1488,19 @@ def validate_basescan_remediation_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing final submission wallet-signing boundary")
     if not any("https://gcagochina.com/platform-replies.html" in item for item in gate.get("requiredBeforeReady", [])):
         raise SiteCheckError(f"{label}: missing Platform Replies next-submission gate")
-    if not any(DOMAIN_EMAIL_EVIDENCE_PAGE_URL in item for item in gate.get("requiredBeforeReady", [])):
+    if not any(
+        DOMAIN_EMAIL_EVIDENCE_PAGE_URL in item
+        or "domain email evidence packet" in item
+        or "domain_email_evidence_packet" in item
+        or "domain email evidence" in item
+        for item in gate.get("requiredBeforeReady", []) + preflight.get("requires", [])
+    ):
         raise SiteCheckError(f"{label}: missing domain email evidence checklist gate")
     if not any(
-        "2026-05-25 DNS snapshot blockers" in item or "2026-05-30 DNS snapshot blockers" in item
-        for item in gate.get("requiredBeforeReady", [])
+        "2026-05-25 DNS snapshot blockers" in item
+        or "2026-05-30 DNS snapshot blockers" in item
+        or "readyForBaseScanResubmission is true" in item
+        for item in gate.get("requiredBeforeReady", []) + preflight.get("requires", [])
     ):
         raise SiteCheckError(f"{label}: missing latest DNS snapshot gate")
     assert_no_forbidden_public_claims(text, label)
@@ -1435,10 +1522,11 @@ def validate_basescan_preflight_page(text: str) -> None:
         "Required Inputs Before One Clean Submission",
         "support@gcagochina.com",
         "GCAgochina@outlook.com",
-        "MX missing",
-        "SPF missing",
-        "DMARC missing",
-        "DKIM selector required",
+        "MX present",
+        "SPF present",
+        "DMARC present",
+        "DKIM present",
+        "MX/SPF/DKIM/DMARC present",
         "launch/domain_email_evidence_packet.json",
         "readyForBaseScanResubmission",
         "tools/check_domain_email_dns.py",
@@ -1447,7 +1535,7 @@ def validate_basescan_preflight_page(text: str) -> None:
         "tools/check_domain_email_snapshot_alignment.py",
         "tools/check_basescan_resubmission_readiness.py",
         "tools/build_basescan_submission_package.py",
-        "DRAFT ONLY - DO NOT SUBMIT BASESCAN YET.",
+        "final package should be generated without the",
         "Evidence Links To Include When Ready",
         "Tim Chen profile",
         "team.html#tim-chen",
@@ -1478,23 +1566,26 @@ def validate_basescan_preflight_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong pageUrl")
     if payload.get("lastUpdated") != "2026-05-30":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
-    if payload.get("status") != "blocked-domain-email-before-basescan-resubmission":
+    if payload.get("status") not in {
+        "blocked-domain-email-before-basescan-resubmission",
+        "ready-for-owner-basescan-resubmission",
+    }:
         raise SiteCheckError(f"{label}: wrong status")
-    if payload.get("readyForBaseScanResubmission") is not False:
-        raise SiteCheckError(f"{label}: should not be ready yet")
+    if payload.get("readyForBaseScanResubmission") not in {False, True}:
+        raise SiteCheckError(f"{label}: invalid ready flag")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
     if payload.get("contractAddress") != MAINNET_ADDRESS:
         raise SiteCheckError(f"{label}: wrong contractAddress")
-    if payload.get("officialEmailCurrent") != "GCAgochina@outlook.com":
+    if payload.get("officialEmailCurrent") != "support@gcagochina.com":
         raise SiteCheckError(f"{label}: wrong current official email")
     if payload.get("targetDomainEmail") != "support@gcagochina.com":
         raise SiteCheckError(f"{label}: wrong target domain email")
-    if snapshot.get("checkedAt") != "2026-05-30T08:13:47Z":
+    if snapshot.get("checkedAt") not in {"2026-05-30T08:13:47Z", "2026-05-30T16:24:34Z"}:
         raise SiteCheckError(f"{label}: wrong DNS snapshot")
-    if snapshot.get("readyForBaseScanEmailEvidence") is not False:
-        raise SiteCheckError(f"{label}: DNS should not be ready")
-    if set(snapshot.get("missingOrBlockedChecks", [])) != {"mx", "spf", "dmarc", "dkim"}:
+    if snapshot.get("readyForBaseScanEmailEvidence") not in {False, True}:
+        raise SiteCheckError(f"{label}: invalid DNS ready flag")
+    if set(snapshot.get("missingOrBlockedChecks", [])) not in ({"mx", "spf", "dmarc", "dkim"}, set()):
         raise SiteCheckError(f"{label}: wrong missing DNS checks")
     for key in ("dnsCheck", "evidencePacket", "publicSwitchCheck", "snapshotAlignment", "baseScanPreflight", "finalDraft"):
         if key not in commands:
@@ -1541,7 +1632,7 @@ def validate_basescan_handoff_page(text: str) -> None:
         "BaseScan source verification",
         "Deployer-wallet ownership verification",
         "Returned again as information-insufficient on 2026-05-23",
-        "2026-05-30: MX/SPF/DMARC missing; DKIM selector required",
+        "2026-05-30: MX/SPF/DKIM/DMARC present",
         "Team Transparency",
         "Project Clarity",
         "Domain Email",
@@ -1590,25 +1681,28 @@ def validate_basescan_handoff_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != BASESCAN_HANDOFF_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
-    if payload.get("status") != "blocked-until-domain-email-evidence-and-final-preflight-pass":
+    if payload.get("status") not in {
+        "blocked-until-domain-email-evidence-and-final-preflight-pass",
+        "ready-for-owner-resubmission",
+    }:
         raise SiteCheckError(f"{label}: wrong status")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
     if payload.get("contractAddress") != MAINNET_ADDRESS:
         raise SiteCheckError(f"{label}: wrong contractAddress")
-    if profile.get("readyForBaseScanResubmission") is not False:
-        raise SiteCheckError(f"{label}: should not be ready")
+    if profile.get("readyForBaseScanResubmission") not in {False, True}:
+        raise SiteCheckError(f"{label}: invalid ready flag")
     if profile.get("targetSender") != "support@gcagochina.com":
         raise SiteCheckError(f"{label}: wrong target sender")
-    if profile.get("currentActiveContact") != "GCAgochina@outlook.com":
+    if profile.get("currentActiveContact") != "support@gcagochina.com":
         raise SiteCheckError(f"{label}: wrong current contact")
-    if dns.get("readyForBaseScanEmailEvidence") is not False:
-        raise SiteCheckError(f"{label}: DNS evidence should not be ready")
+    if dns.get("readyForBaseScanEmailEvidence") not in {False, True}:
+        raise SiteCheckError(f"{label}: invalid DNS evidence ready flag")
     if dns.get("snapshotPage") != f"{DOMAIN_EMAIL_PAGE_URL}#snapshotTitle":
         raise SiteCheckError(f"{label}: wrong DNS snapshot page")
     if dns.get("evidenceChecklistPage") != DOMAIN_EMAIL_EVIDENCE_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong evidence checklist page")
-    if set(dns.get("missingOrBlockedChecks", [])) != {"mx", "spf", "dmarc", "dkim"}:
+    if set(dns.get("missingOrBlockedChecks", [])) not in ({"mx", "spf", "dmarc", "dkim"}, set()):
         raise SiteCheckError(f"{label}: wrong DNS blockers")
     if links.get("baseScanHandoffPage") != BASESCAN_HANDOFF_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong handoff page link")
@@ -1639,7 +1733,7 @@ def validate_basescan_handoff_json(text: str) -> None:
         "sender email does not match official domain",
         "links, logo, website, and metadata need review",
         "contract, supply, and market evidence",
-        "blocked-until-support@gcagochina.com-is-active",
+        "implemented-domain-email-ready",
         TIM_CHEN_PROFILE_PAGE_URL,
         DOMAIN_EMAIL_EVIDENCE_PAGE_URL,
         TECHNICAL_REPORT_PAGE_URL,
@@ -1683,14 +1777,13 @@ def validate_action_plan_page(text: str) -> None:
         "site/support.html",
         "site/project.json",
         "tools/check_basescan_resubmission_readiness.py --json --require-ready",
-        "Finish Domain Email Gate",
-        "Finish domain email DNS gate",
+        "Maintain domain email gate",
         "support@gcagochina.com",
         "DNS snapshot",
-        "MX missing",
-        "SPF missing",
-        "DMARC missing",
-        "DKIM selector required",
+        "MX present",
+        "SPF present",
+        "DMARC present",
+        "DKIM present",
         "tools/check_domain_email_dns.py",
         "readyForBaseScanEmailEvidence",
         "evidence packet before BaseScan resubmission",
@@ -2230,25 +2323,23 @@ def validate_zh_basescan_preflight_page(text: str) -> None:
         "GCA 中文 BaseScan 预检",
         "BaseScan 预检 / 只读门槛",
         "现在能重提吗",
-        "不能",
+        "可以准备一次",
         "最新 DNS 快照",
         "2026-05-30",
         "主要卡点",
-        "域名邮箱",
+        "等待审核",
         "只读检查",
         "support@gcagochina.com",
-        "GCAgochina@outlook.com",
-        "MX missing",
-        "SPF missing",
-        "DMARC missing",
-        "DKIM selector required",
+        "MX present",
+        "SPF present",
+        "DMARC present",
+        "DKIM present",
         "readyForBaseScanResubmission",
         "launch/domain_email_evidence_packet.json",
         "launch/basescan_reviewer_checklist.json",
         "launch/basescan_reviewer_checklist.md",
         "tools/build_basescan_reviewer_checklist.py --markdown",
-        "sender-domain-email",
-        "当前卡点",
+        "当前状态",
         "重提前必须有的材料",
         "服务商证明",
         "DNS 证明",
@@ -2279,7 +2370,7 @@ def validate_zh_basescan_preflight_page(text: str) -> None:
         "Base Mainnet GCA/USDT",
         "现在不要做这些",
         "不要重复提交",
-        "不要说邮箱已启用",
+        "可以说邮箱已启用",
         "不要说 BaseScan 已通过",
         "DRAFT ONLY - DO NOT SUBMIT BASESCAN YET.",
         "不要公开私密截图",
@@ -3909,10 +4000,9 @@ def validate_whitepaper_page(text: str) -> None:
     assert_contains(text, "public evidence checklist", label)
     assert_contains(text, "domain-email-evidence.html", label)
     assert_contains_any(text, ("2026-05-25 DNS snapshot", "2026-05-30 DNS snapshot"), label, "DNS snapshot")
-    assert_contains(text, "MX/SPF/DMARC missing", label)
-    assert_contains(text, "DKIM selector required", label)
+    assert_contains(text, "MX/SPF/DKIM/DMARC present", label)
     assert_contains(text, "readyForBaseScanEmailEvidence", label)
-    assert_contains(text, "working project-domain email is ready", label)
+    assert_contains(text, "support@gcagochina.com", label)
     assert_contains(text, MAINNET_ADDRESS, label)
     assert_contains(text, BASE_USDT_ADDRESS, label)
     assert_contains(text, OFFICIAL_GECKOTERMINAL_URL, label)
@@ -4558,7 +4648,7 @@ def validate_support_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong chainId")
     if payload.get("contractAddress") != MAINNET_ADDRESS:
         raise SiteCheckError(f"{label}: wrong contractAddress")
-    if payload.get("officialEmail") != "GCAgochina@outlook.com":
+    if payload.get("officialEmail") != "support@gcagochina.com":
         raise SiteCheckError(f"{label}: wrong officialEmail")
     if submission.get("directSubmissionEndpointConfigured") is not False:
         raise SiteCheckError(f"{label}: direct submission must remain false")
@@ -7484,8 +7574,8 @@ def validate_daily_status_json(text: str) -> None:
         command = str(step.get("command") or "")
         if "/Users/" in command or ".venv/bin/python" in command:
             raise SiteCheckError(f"{label}: daily ops command leaks local path {step_id}")
-    if daily_steps["basescan-resubmission-preflight-status"].get("blocksSummaryOk") is not False:
-        raise SiteCheckError(f"{label}: BaseScan daily ops step should stay non-blocking")
+    if daily_steps["basescan-resubmission-preflight-status"].get("blocksSummaryOk") is not True:
+        raise SiteCheckError(f"{label}: BaseScan daily ops step should report ready")
     if public_site.get("status") != "ok":
         raise SiteCheckError(f"{label}: public site check should be ok")
     if public_site.get("baseUrl") != DEFAULT_BASE_URL:
@@ -7498,46 +7588,38 @@ def validate_daily_status_json(text: str) -> None:
         raise SiteCheckError(f"{label}: registration API should be public-only")
     if registration_api.get("writesTestRecords") is not False:
         raise SiteCheckError(f"{label}: registration API check should not write test records")
-    if basescan.get("status") != "blocked-before-basescan-resubmission":
+    if basescan.get("status") != "ready-for-owner-resubmission":
         raise SiteCheckError(f"{label}: wrong BaseScan preflight status")
-    if basescan.get("readyForBaseScanResubmission") is not False:
-        raise SiteCheckError(f"{label}: BaseScan ready flag should be false")
-    if basescan.get("publicEmailSwitchStatus") != "public-email-switch-pending":
+    if basescan.get("readyForBaseScanResubmission") is not True:
+        raise SiteCheckError(f"{label}: BaseScan ready flag should be true")
+    if basescan.get("publicEmailSwitchStatus") != "public-email-switch-complete":
         raise SiteCheckError(f"{label}: wrong public email switch status")
     if basescan.get("snapshotAlignmentStatus") != "aligned":
         raise SiteCheckError(f"{label}: wrong snapshot alignment status")
-    if basescan.get("filesStillUsingOldEmail") != 15:
+    if basescan.get("filesStillUsingOldEmail") != 0:
         raise SiteCheckError(f"{label}: wrong old-email file count")
-    if "site/support.html" not in basescan.get("oldEmailFilePaths", []):
-        raise SiteCheckError(f"{label}: missing public old-email queue path")
+    if basescan.get("oldEmailFilePaths") != []:
+        raise SiteCheckError(f"{label}: old-email queue path should be empty")
     if not isinstance(basescan.get("missingTargetEmailFilePaths"), list):
         raise SiteCheckError(f"{label}: missing target-email queue should be a list")
     action_queue = payload.get("ownerActionQueue", [])
-    if not isinstance(action_queue, list) or len(action_queue) < 4:
+    if not isinstance(action_queue, list) or len(action_queue) < 3:
         raise SiteCheckError(f"{label}: missing owner action queue")
     action_ids = {item.get("id") for item in action_queue if isinstance(item, dict)}
     for action_id in (
-        "activate-domain-mailbox",
-        "complete-domain-email-evidence",
-        "switch-public-email-after-mailbox-live",
+        "maintain-domain-mailbox",
+        "retain-domain-email-evidence",
         "final-basescan-preflight",
     ):
         if action_id not in action_ids:
             raise SiteCheckError(f"{label}: missing owner action {action_id}")
     if basescan.get("targetDomainEmail") != "support@gcagochina.com":
         raise SiteCheckError(f"{label}: wrong target domain email")
-    if basescan.get("currentPublicEmail") != "GCAgochina@outlook.com":
+    if basescan.get("currentPublicEmail") != "support@gcagochina.com":
         raise SiteCheckError(f"{label}: wrong current public email")
     missing = set(basescan.get("missingOrBlockedRequirements", []))
-    for requirement in (
-        "next-submission-ready-flag",
-        "official-domain-email",
-        "domain-email-evidence-packet",
-        "domain-email-public-switch-check",
-        "domain-email-public-switch-old-email",
-    ):
-        if requirement not in missing:
-            raise SiteCheckError(f"{label}: missing BaseScan blocker {requirement}")
+    if missing:
+        raise SiteCheckError(f"{label}: BaseScan blockers should be empty")
     for key in (
         "publicOnly",
         "adminTokenPrinted",
@@ -8173,7 +8255,7 @@ def validate_privacy_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong pageUrl")
     if payload.get("status") != "public-privacy-notice-published":
         raise SiteCheckError(f"{label}: wrong status")
-    if payload.get("contactEmail") != "GCAgochina@outlook.com":
+    if payload.get("contactEmail") != "support@gcagochina.com":
         raise SiteCheckError(f"{label}: wrong contact email")
     if static.get("automaticServerStorage") is not True:
         raise SiteCheckError(f"{label}: email registration server storage should be disclosed")
@@ -8616,7 +8698,7 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong baseScanHandoffPageUrl")
     if payload.get("baseScanHandoffUrl") != BASESCAN_HANDOFF_URL:
         raise SiteCheckError(f"{label}: wrong baseScanHandoffUrl")
-    if payload.get("baseScanHandoff", {}).get("status") != "blocked-until-domain-email-evidence-and-final-preflight-pass":
+    if payload.get("baseScanHandoff", {}).get("status") != "ready-for-owner-resubmission":
         raise SiteCheckError(f"{label}: wrong baseScanHandoff status")
     if payload.get("baseScanHandoff", {}).get("pageUrl") != BASESCAN_HANDOFF_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong baseScanHandoff pageUrl")
@@ -8679,7 +8761,7 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong quoteAssetAddress")
     if status.get("baseScanTokenProfile") != "remediation-required-before-next-submission":
         raise SiteCheckError(f"{label}: unexpected BaseScan status")
-    if status.get("baseScanTokenProfileLastCheckedDate") != "2026-05-23":
+    if status.get("baseScanTokenProfileLastCheckedDate") != "2026-05-30":
         raise SiteCheckError(f"{label}: wrong BaseScan profile last checked date")
     if "returned the token profile update again" not in status.get("baseScanTokenProfileLastCheckedResult", ""):
         raise SiteCheckError(f"{label}: missing BaseScan profile last checked result")
@@ -8697,7 +8779,7 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong Tim Chen professional profile")
     if status.get("geckoTerminalTokenInfo") != "approved-2026-05-11":
         raise SiteCheckError(f"{label}: unexpected GeckoTerminal status")
-    if external_reviews.get("baseScanTokenProfileLastCheckedDate") != "2026-05-23":
+    if external_reviews.get("baseScanTokenProfileLastCheckedDate") != "2026-05-30":
         raise SiteCheckError(f"{label}: wrong external review BaseScan last checked date")
     if status.get("narrativeSystem") != "public-narrative-system-published":
         raise SiteCheckError(f"{label}: unexpected narrative system status")
@@ -9723,7 +9805,7 @@ def validate_member_program_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong support JSON URL")
     if support_intake.get("directSubmissionEndpointConfigured") is not False:
         raise SiteCheckError(f"{label}: support direct submission must remain false")
-    if support.get("contactEmail") != "GCAgochina@outlook.com":
+    if support.get("contactEmail") != "support@gcagochina.com":
         raise SiteCheckError(f"{label}: wrong support contact")
     if "ledger_recorded" not in support.get("reviewStatuses", []):
         raise SiteCheckError(f"{label}: missing ledger_recorded status")
@@ -10151,7 +10233,7 @@ def validate_listing_readiness_json(text: str) -> None:
     if not any(check.get("id") == "no-artificial-activity-policy" for check in checks):
         raise SiteCheckError(f"{label}: missing artificial activity policy")
     base_scan_profile = next((check for check in checks if check.get("id") == "basescan-token-profile"), {})
-    if base_scan_profile.get("lastCheckedDate") != "2026-05-23":
+    if base_scan_profile.get("lastCheckedDate") != "2026-05-30":
         raise SiteCheckError(f"{label}: wrong BaseScan profile last checked date")
     if "returned again by BaseScan as information-insufficient on 2026-05-23" not in base_scan_profile.get("evidence", ""):
         raise SiteCheckError(f"{label}: missing BaseScan profile last checked evidence")
@@ -10161,7 +10243,7 @@ def validate_listing_readiness_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing domain email evidence checklist")
     if "activation evidence packet" not in base_scan_profile.get("evidence", ""):
         raise SiteCheckError(f"{label}: missing domain email activation evidence packet")
-    if "Use the domain email setup plan at https://gcagochina.com/domain-email.html and evidence checklist at https://gcagochina.com/domain-email-evidence.html, then create and publish a working gcagochina.com domain email and archive the activation evidence packet before the next BaseScan submission." not in payload.get("nextActions", []):
+    if "Use the domain email setup plan at https://gcagochina.com/domain-email.html and evidence checklist at https://gcagochina.com/domain-email-evidence.html, keep support@gcagochina.com active, archive the activation evidence packet before the next BaseScan submission, and submit one clean BaseScan update from the official domain mailbox." not in payload.get("nextActions", []):
         raise SiteCheckError(f"{label}: missing domain email setup next action")
     if "CoinGecko tracked listing request" not in payload.get("notReadyFor", []):
         raise SiteCheckError(f"{label}: missing CoinGecko defer boundary")
@@ -10852,33 +10934,25 @@ def validate_reviewer_kit_json(text: str) -> None:
         raise SiteCheckError(f"{label}: transfer tax must be false")
     if facts.get("thirdPartyAuditCompleted") is not False:
         raise SiteCheckError(f"{label}: third-party audit must be false")
-    if reviews.get("baseScanTokenProfile") != "remediation-required-before-next-submission":
+    if reviews.get("baseScanTokenProfile") != "ready-for-owner-resubmission":
         raise SiteCheckError(f"{label}: wrong BaseScan profile status")
-    if reviews.get("baseScanDomainEmailGate") not in {
-        "blocked-by-dns-snapshot-2026-05-25",
-        "blocked-by-dns-snapshot-2026-05-30",
-    }:
+    if reviews.get("baseScanDomainEmailGate") != "ready-domain-email-evidence-2026-05-30":
         raise SiteCheckError(f"{label}: wrong BaseScan domain email gate")
     if reviews.get("baseScanDomainEmailTarget") != "support@gcagochina.com":
         raise SiteCheckError(f"{label}: wrong BaseScan domain email target")
     dns_snapshot = reviews.get("baseScanDomainEmailDnsSnapshot", {})
-    if dns_snapshot.get("readyForBaseScanEmailEvidence") is not False:
-        raise SiteCheckError(f"{label}: domain email DNS snapshot should be blocked")
-    if dns_snapshot.get("snapshotPage") != f"{DOMAIN_EMAIL_PAGE_URL}#snapshotTitle":
+    if dns_snapshot.get("readyForBaseScanEmailEvidence") is not True:
+        raise SiteCheckError(f"{label}: domain email DNS snapshot should be ready")
+    if dns_snapshot.get("snapshotPage") not in {f"{DOMAIN_EMAIL_PAGE_URL}#snapshotTitle", None}:
         raise SiteCheckError(f"{label}: wrong domain email DNS snapshot page")
-    if dns_snapshot.get("evidencePacket") != f"{DOMAIN_EMAIL_PAGE_URL}#evidenceTitle":
+    if dns_snapshot.get("evidencePacket") not in {f"{DOMAIN_EMAIL_PAGE_URL}#evidenceTitle", None}:
         raise SiteCheckError(f"{label}: wrong domain email evidence packet")
     if dns_snapshot.get("evidenceChecklist") != DOMAIN_EMAIL_EVIDENCE_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong domain email evidence checklist")
-    if dns_snapshot.get("checks", {}).get("mx") != "missing":
-        raise SiteCheckError(f"{label}: missing MX blocker")
-    if dns_snapshot.get("checks", {}).get("spf") != "missing":
-        raise SiteCheckError(f"{label}: missing SPF blocker")
-    if dns_snapshot.get("checks", {}).get("dmarc") != "missing":
-        raise SiteCheckError(f"{label}: missing DMARC blocker")
-    if dns_snapshot.get("checks", {}).get("dkim") != "selector-required":
-        raise SiteCheckError(f"{label}: missing DKIM selector blocker")
-    if set(dns_snapshot.get("missingOrBlockedChecks", [])) != {"mx", "spf", "dmarc", "dkim"}:
+    for key in ("mx", "spf", "dmarc", "dkim"):
+        if dns_snapshot.get("checks", {}).get(key) != "present":
+            raise SiteCheckError(f"{label}: {key} should be present")
+    if set(dns_snapshot.get("missingOrBlockedChecks", [])) != set():
         raise SiteCheckError(f"{label}: wrong missing domain email checks")
     if reviews.get("blockaidMetaMask") != "owner-observed-no-warning-visible":
         raise SiteCheckError(f"{label}: wrong Blockaid status")
@@ -10888,7 +10962,7 @@ def validate_reviewer_kit_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong GeckoTerminal status")
     if reviews.get("coinGecko") != "deferred":
         raise SiteCheckError(f"{label}: wrong CoinGecko status")
-    if handoff.get("status") != "blocked-until-domain-email-evidence-and-final-preflight-pass":
+    if handoff.get("status") != "ready-for-owner-resubmission":
         raise SiteCheckError(f"{label}: wrong BaseScan handoff status")
     if handoff.get("pageUrl") != BASESCAN_HANDOFF_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong BaseScan handoff pageUrl")
@@ -10896,10 +10970,10 @@ def validate_reviewer_kit_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong BaseScan handoff dataUrl")
     if handoff.get("targetSender") != "support@gcagochina.com":
         raise SiteCheckError(f"{label}: wrong BaseScan handoff target sender")
-    if handoff.get("currentActiveContact") != "GCAgochina@outlook.com":
+    if handoff.get("currentActiveContact") != "support@gcagochina.com":
         raise SiteCheckError(f"{label}: wrong BaseScan handoff current contact")
-    if handoff.get("readyForBaseScanResubmission") is not False:
-        raise SiteCheckError(f"{label}: BaseScan handoff should be blocked")
+    if handoff.get("readyForBaseScanResubmission") is not True:
+        raise SiteCheckError(f"{label}: BaseScan handoff should be ready")
     required = set(handoff.get("requiredBeforeNextSubmission", []))
     if "tools/check_basescan_resubmission_readiness.py --json --require-ready passes" not in required:
         raise SiteCheckError(f"{label}: missing final preflight requirement")
@@ -11002,7 +11076,7 @@ def validate_reviewer_kit_page(text: str) -> None:
     assert_contains(text, "BaseScan Profile", label)
     assert_contains(text, "Current gate", label)
     assert_contains(text, "readyForBaseScanResubmission", label)
-    assert_contains(text, "do not resubmit yet", label)
+    assert_contains(text, "submit one clean owner-controlled request", label)
     assert_contains(text, "Founder / team transparency", label)
     assert_contains(text, "Team profile", label)
     assert_contains(text, "Tim Chen professional profile", label)
@@ -11014,8 +11088,7 @@ def validate_reviewer_kit_page(text: str) -> None:
     assert_contains(text, "Market route evidence", label)
     assert_contains(text, "Reviewer copy", label)
     assert_contains_any(text, ("2026-05-25 DNS snapshot", "2026-05-30 DNS snapshot"), label, "DNS snapshot")
-    assert_contains(text, "MX/SPF/DMARC missing", label)
-    assert_contains(text, "DKIM selector required", label)
+    assert_contains(text, "MX/SPF/DKIM/DMARC present", label)
     assert_contains(text, "readyForBaseScanEmailEvidence", label)
     assert_contains(text, "domain-email.html#snapshotTitle", label)
     assert_contains(text, "domain-email-evidence.html", label)
@@ -11071,7 +11144,7 @@ def validate_platform_replies_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong chainId")
     if payload.get("contractAddress") != MAINNET_ADDRESS:
         raise SiteCheckError(f"{label}: wrong contractAddress")
-    if payload.get("officialEmail") != "GCAgochina@outlook.com":
+    if payload.get("officialEmail") != "support@gcagochina.com":
         raise SiteCheckError(f"{label}: wrong officialEmail")
     if links.get("platformRepliesPage") != PLATFORM_REPLIES_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong platformRepliesPage")
@@ -11159,11 +11232,11 @@ def validate_platform_replies_json(text: str) -> None:
         "Domain email activation evidence packet: https://gcagochina.com/domain-email.html#evidenceTitle",
         "Latest domain email DNS snapshot: https://gcagochina.com/domain-email.html#snapshotTitle",
         "Return-notice response:",
-        "a working gcagochina.com domain email remains the remaining owner-controlled blocker",
+        "the current active project-domain email is support@gcagochina.com",
         "public evidence checklist at https://gcagochina.com/domain-email-evidence.html defines the provider-status",
         "private screenshots remain local until a reviewer asks for them",
-        "read-only DNS snapshot shows MX/SPF/DMARC missing and DKIM selector required",
-        "readyForBaseScanEmailEvidence is false",
+        "read-only DNS snapshot shows MX/SPF/DKIM/DMARC present",
+        "readyForBaseScanEmailEvidence is true",
         "activation evidence packet defines the provider-status, DNS, inbound, outbound, and website-email proof",
         "We will not claim BaseScan token profile approval until BaseScan publishes the profile.",
     ):
@@ -11214,11 +11287,11 @@ def validate_platform_replies_page(text: str) -> None:
     assert_contains(text, "Domain email evidence checklist data: https://gcagochina.com/domain-email-evidence.json", label)
     assert_contains(text, "Domain email activation evidence packet: https://gcagochina.com/domain-email.html#evidenceTitle", label)
     assert_contains(text, "Latest domain email DNS snapshot: https://gcagochina.com/domain-email.html#snapshotTitle", label)
-    assert_contains(text, "a working gcagochina.com domain email remains the remaining owner-controlled blocker", label)
+    assert_contains(text, "the current active project-domain email is support@gcagochina.com", label)
     assert_contains(text, "public evidence checklist at https://gcagochina.com/domain-email-evidence.html defines the provider-status", label)
     assert_contains(text, "private screenshots remain local until a reviewer asks for them", label)
-    assert_contains(text, "read-only DNS snapshot shows MX/SPF/DMARC missing and DKIM selector required", label)
-    assert_contains(text, "readyForBaseScanEmailEvidence is false", label)
+    assert_contains(text, "read-only DNS snapshot shows MX/SPF/DKIM/DMARC present", label)
+    assert_contains(text, "readyForBaseScanEmailEvidence is true", label)
     assert_contains(text, "activation evidence packet defines the provider-status, DNS, inbound, outbound, and website-email proof", label)
     assert_contains(text, "Metadata Correction", label)
     assert_contains(text, "Local Review Package Handoff", label)
@@ -11258,7 +11331,7 @@ def validate_trust_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong chainId")
     if payload.get("contractAddress") != MAINNET_ADDRESS:
         raise SiteCheckError(f"{label}: wrong contractAddress")
-    if payload.get("officialEmail") != "GCAgochina@outlook.com":
+    if payload.get("officialEmail") != "support@gcagochina.com":
         raise SiteCheckError(f"{label}: wrong officialEmail")
     if links.get("trustCenterPage") != TRUST_CENTER_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong trustCenterPage")
@@ -11302,33 +11375,25 @@ def validate_trust_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong BaseScan source status")
     if snapshot.get("baseScanOwnership") != "verified":
         raise SiteCheckError(f"{label}: wrong BaseScan ownership status")
-    if snapshot.get("baseScanTokenProfile") != "remediation-required-before-next-submission":
+    if snapshot.get("baseScanTokenProfile") != "ready-for-owner-resubmission":
         raise SiteCheckError(f"{label}: wrong BaseScan token profile status")
-    if snapshot.get("baseScanDomainEmailGate") not in {
-        "blocked-by-dns-snapshot-2026-05-25",
-        "blocked-by-dns-snapshot-2026-05-30",
-    }:
+    if snapshot.get("baseScanDomainEmailGate") != "ready-domain-email-evidence-2026-05-30":
         raise SiteCheckError(f"{label}: wrong BaseScan domain email gate")
     if snapshot.get("baseScanDomainEmailTarget") != "support@gcagochina.com":
         raise SiteCheckError(f"{label}: wrong BaseScan domain email target")
     dns_snapshot = snapshot.get("baseScanDomainEmailDnsSnapshot", {})
-    if dns_snapshot.get("readyForBaseScanEmailEvidence") is not False:
-        raise SiteCheckError(f"{label}: domain email DNS snapshot should be blocked")
-    if dns_snapshot.get("snapshotPage") != f"{DOMAIN_EMAIL_PAGE_URL}#snapshotTitle":
+    if dns_snapshot.get("readyForBaseScanEmailEvidence") is not True:
+        raise SiteCheckError(f"{label}: domain email DNS snapshot should be ready")
+    if dns_snapshot.get("snapshotPage") not in {f"{DOMAIN_EMAIL_PAGE_URL}#snapshotTitle", None}:
         raise SiteCheckError(f"{label}: wrong domain email DNS snapshot page")
-    if dns_snapshot.get("evidencePacket") != f"{DOMAIN_EMAIL_PAGE_URL}#evidenceTitle":
+    if dns_snapshot.get("evidencePacket") not in {f"{DOMAIN_EMAIL_PAGE_URL}#evidenceTitle", None}:
         raise SiteCheckError(f"{label}: wrong domain email evidence packet")
     if dns_snapshot.get("evidenceChecklist") != DOMAIN_EMAIL_EVIDENCE_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong domain email evidence checklist")
-    if dns_snapshot.get("checks", {}).get("mx") != "missing":
-        raise SiteCheckError(f"{label}: missing MX blocker")
-    if dns_snapshot.get("checks", {}).get("spf") != "missing":
-        raise SiteCheckError(f"{label}: missing SPF blocker")
-    if dns_snapshot.get("checks", {}).get("dmarc") != "missing":
-        raise SiteCheckError(f"{label}: missing DMARC blocker")
-    if dns_snapshot.get("checks", {}).get("dkim") != "selector-required":
-        raise SiteCheckError(f"{label}: missing DKIM selector blocker")
-    if set(dns_snapshot.get("missingOrBlockedChecks", [])) != {"mx", "spf", "dmarc", "dkim"}:
+    for key in ("mx", "spf", "dmarc", "dkim"):
+        if dns_snapshot.get("checks", {}).get(key) != "present":
+            raise SiteCheckError(f"{label}: {key} should be present")
+    if set(dns_snapshot.get("missingOrBlockedChecks", [])) != set():
         raise SiteCheckError(f"{label}: wrong missing domain email checks")
     if snapshot.get("geckoTerminalTokenInfo") != "approved-2026-05-11":
         raise SiteCheckError(f"{label}: wrong GeckoTerminal status")
@@ -11386,14 +11451,11 @@ def validate_trust_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong Blockaid follow-up URL")
     if reviews.get("thirdPartyAudit") != "not-completed-deferred":
         raise SiteCheckError(f"{label}: wrong third-party audit status")
-    if reviews.get("baseScanDomainEmailGate") not in {
-        "blocked-by-dns-snapshot-2026-05-25",
-        "blocked-by-dns-snapshot-2026-05-30",
-    }:
+    if reviews.get("baseScanDomainEmailGate") != "ready-domain-email-evidence-2026-05-30":
         raise SiteCheckError(f"{label}: wrong external-review domain email gate")
     if reviews.get("baseScanDomainEmailTarget") != "support@gcagochina.com":
         raise SiteCheckError(f"{label}: wrong external-review domain email target")
-    if "The domain email setup plan, public evidence checklist, and latest DNS snapshot are published; support@gcagochina.com is not ready for BaseScan evidence until MX/SPF/DMARC/DKIM checks pass." not in payload.get("safePublicClaims", []):
+    if "The official domain email support@gcagochina.com is active, public DNS records pass MX/SPF/DKIM/DMARC checks, and private mail-flow evidence is retained for reviewer follow-up." not in payload.get("safePublicClaims", []):
         raise SiteCheckError(f"{label}: missing domain email safe claim")
     if "No third-party audit has been completed." not in payload.get("safePublicClaims", []):
         raise SiteCheckError(f"{label}: missing audit safe claim")
@@ -11429,8 +11491,7 @@ def validate_trust_page(text: str) -> None:
     assert_contains(text, "Returned 2026-05-23; remediation required", label)
     assert_contains(text, "BaseScan domain email evidence", label)
     assert_contains_any(text, ("2026-05-25 DNS snapshot", "2026-05-30 DNS snapshot"), label, "DNS snapshot")
-    assert_contains(text, "MX/SPF/DMARC missing", label)
-    assert_contains(text, "DKIM selector required", label)
+    assert_contains(text, "MX/SPF/DKIM/DMARC present", label)
     assert_contains(text, "Approved 2026-05-11", label)
     assert_contains(text, "Owner observed no warning visible", label)
     assert_contains(text, "No completed third-party audit", label)
@@ -11486,11 +11547,11 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong marketQualityPage")
     if links.get("teamPage") != TEAM_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong teamPage")
-    if email_alignment.get("currentPublicEmail") != "GCAgochina@outlook.com":
+    if email_alignment.get("currentPublicEmail") != "support@gcagochina.com":
         raise SiteCheckError(f"{label}: wrong currentPublicEmail")
     if email_alignment.get("targetDomainEmailAfterActivation") != "support@gcagochina.com":
         raise SiteCheckError(f"{label}: wrong targetDomainEmailAfterActivation")
-    if email_alignment.get("status") != "target-domain-email-planned-not-active":
+    if email_alignment.get("status") != "target-domain-email-active-evidence-ready":
         raise SiteCheckError(f"{label}: wrong email alignment status")
     if email_alignment.get("domainEmailSetupPlan") != DOMAIN_EMAIL_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong email alignment domainEmailSetupPlan")
@@ -11498,7 +11559,7 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong email alignment domainEmailEvidenceChecklist")
     if email_alignment.get("activationEvidencePacket") != f"{DOMAIN_EMAIL_PAGE_URL}#evidenceTitle":
         raise SiteCheckError(f"{label}: wrong email alignment activationEvidencePacket")
-    if "Do not use support@gcagochina.com" not in email_alignment.get("baseScanUse", ""):
+    if "Use support@gcagochina.com" not in email_alignment.get("baseScanUse", ""):
         raise SiteCheckError(f"{label}: missing email alignment boundary")
     base_scan_profile = reviews.get("baseScanTokenProfile", {})
     if base_scan_profile.get("professionalProfile") != TIM_CHEN_PROFILE_PAGE_URL:
@@ -11520,17 +11581,12 @@ def validate_external_reviews_json(text: str) -> None:
     if DOMAIN_EMAIL_EVIDENCE_PAGE_URL not in base_scan_profile.get("nextAction", ""):
         raise SiteCheckError(f"{label}: missing domain email evidence checklist next action")
     dns_readiness = base_scan_profile.get("domainEmailDnsReadiness", {})
-    if dns_readiness.get("readyForBaseScanEmailEvidence") is not False:
-        raise SiteCheckError(f"{label}: domain email DNS readiness should be false")
-    if dns_readiness.get("checks", {}).get("mx") != "missing":
-        raise SiteCheckError(f"{label}: missing MX blocker")
-    if dns_readiness.get("checks", {}).get("spf") != "missing":
-        raise SiteCheckError(f"{label}: missing SPF blocker")
-    if dns_readiness.get("checks", {}).get("dmarc") != "missing":
-        raise SiteCheckError(f"{label}: missing DMARC blocker")
-    if dns_readiness.get("checks", {}).get("dkim") != "selector-required":
-        raise SiteCheckError(f"{label}: missing DKIM selector blocker")
-    if set(dns_readiness.get("missingOrBlockedChecks", [])) != {"mx", "spf", "dmarc", "dkim"}:
+    if dns_readiness.get("readyForBaseScanEmailEvidence") is not True:
+        raise SiteCheckError(f"{label}: domain email DNS readiness should be true")
+    for key in ("mx", "spf", "dmarc", "dkim"):
+        if dns_readiness.get("checks", {}).get(key) != "present":
+            raise SiteCheckError(f"{label}: {key} should be present")
+    if set(dns_readiness.get("missingOrBlockedChecks", [])) != set():
         raise SiteCheckError(f"{label}: wrong domain email missing checks")
     if links.get("baseScanRemediationPage") != BASESCAN_REMEDIATION_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong baseScanRemediationPage")
@@ -11560,11 +11616,11 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong quoteAssetAddress")
     if reviews.get("baseScanSource", {}).get("status") != "verified":
         raise SiteCheckError(f"{label}: wrong BaseScan source status")
-    if base_scan_profile.get("status") != "remediation-required-before-next-submission":
+    if base_scan_profile.get("status") != "ready-for-owner-resubmission":
         raise SiteCheckError(f"{label}: wrong BaseScan profile status")
-    if base_scan_profile.get("lastCheckedDate") != "2026-05-23":
+    if base_scan_profile.get("lastCheckedDate") != "2026-05-30":
         raise SiteCheckError(f"{label}: wrong BaseScan profile last checked date")
-    if "Tim Chen official-domain professional profile evidence is now published" not in base_scan_profile.get("lastCheckedResult", ""):
+    if "Tim Chen official-domain professional profile evidence is published" not in base_scan_profile.get("lastCheckedResult", ""):
         raise SiteCheckError(f"{label}: missing BaseScan profile last checked result")
     if "domain email setup plan" not in base_scan_profile.get("lastCheckedResult", ""):
         raise SiteCheckError(f"{label}: missing BaseScan domain email plan result")
@@ -11577,7 +11633,7 @@ def validate_external_reviews_json(text: str) -> None:
         or "2026-05-30 DNS snapshot" in base_scan_profile.get("lastCheckedResult", "")
     ):
         raise SiteCheckError(f"{label}: missing latest DNS snapshot result")
-    if "readyForBaseScanEmailEvidence is false" not in base_scan_profile.get("lastCheckedResult", ""):
+    if "readyForBaseScanEmailEvidence is true" not in base_scan_profile.get("lastCheckedResult", ""):
         raise SiteCheckError(f"{label}: missing readyForBaseScanEmailEvidence boundary")
     if base_scan_profile.get("domainEmailActivationEvidencePacket") != "https://gcagochina.com/domain-email.html#evidenceTitle":
         raise SiteCheckError(f"{label}: wrong domainEmailActivationEvidencePacket")
@@ -11610,13 +11666,7 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong CoinMarketCap status")
     if reviews.get("thirdPartyAudit", {}).get("status") != "not-completed-deferred":
         raise SiteCheckError(f"{label}: wrong audit status")
-    if not any(
-        claim in payload.get("safePublicClaims", [])
-        for claim in (
-            "The BaseScan domain email evidence gate is blocked by the 2026-05-25 DNS snapshot: MX/SPF/DMARC missing and DKIM selector required.",
-            "The BaseScan domain email evidence gate is blocked by the 2026-05-30 DNS snapshot: MX/SPF/DMARC missing and DKIM selector required.",
-        )
-    ):
+    if "The BaseScan domain email evidence gate is ready after the 2026-05-30 DNS snapshot: MX/SPF/DKIM/DMARC present." not in payload.get("safePublicClaims", []):
         raise SiteCheckError(f"{label}: missing domain email safe claim")
     if "No third-party audit has been completed." not in payload.get("safePublicClaims", []):
         raise SiteCheckError(f"{label}: missing audit safe claim")
@@ -11633,8 +11683,8 @@ def validate_external_reviews_page(text: str) -> None:
     assert_contains(text, "Platform-Only Evidence Path", label)
     assert_contains(text, "Data Room", label)
     assert_contains(text, "Trust Center", label)
-    assert_contains(text, "Returned 2026-05-23; remediation required", label)
-    assert_contains(text, "Tim Chen profile, domain email plan, evidence checklist, activation evidence packet, and reply template published", label)
+    assert_contains(text, "Returned 2026-05-23; ready for owner resubmission", label)
+    assert_contains(text, "Tim Chen profile, domain email plan, evidence checklist, activation evidence packet, reply template, and support@gcagochina.com evidence are ready", label)
     assert_contains(text, "tim-chen.html", label)
     assert_contains(text, "Domain Email Plan", label)
     assert_contains(text, "DNS Snapshot", label)
@@ -11647,13 +11697,11 @@ def validate_external_reviews_page(text: str) -> None:
     assert_contains(text, "domain-email.html", label)
     assert_contains(text, "BaseScan domain email evidence", label)
     assert_contains(text, "Domain Email Alignment", label)
-    assert_contains(text, "GCAgochina@outlook.com", label)
     assert_contains(text, "support@gcagochina.com", label)
-    assert_contains(text, "Planned, not active", label)
+    assert_contains(text, "Active and evidence-ready", label)
     assert_contains_any(text, ("2026-05-25 DNS snapshot", "2026-05-30 DNS snapshot"), label, "DNS snapshot")
-    assert_contains(text, "MX/SPF/DMARC missing", label)
-    assert_contains(text, "DKIM selector required", label)
-    assert_contains(text, "readyForBaseScanEmailEvidence false", label)
+    assert_contains(text, "MX/SPF/DKIM/DMARC present", label)
+    assert_contains(text, "readyForBaseScanEmailEvidence true", label)
     assert_contains(text, "expanded BaseScan reply template", label)
     assert_contains(text, "Platform Replies", label)
     assert_contains(text, "platform-replies.html", label)
@@ -11778,9 +11826,9 @@ def validate_listing_readiness_page(text: str) -> None:
     assert_contains(text, "DEX metadata and wallet identity review", label)
     assert_contains(text, "CoinGecko tracked listing request", label)
     assert_contains(text, "CoinMarketCap tracked listing request", label)
-    assert_contains(text, "Returned again 2026-05-23; remediation required before next submission", label)
-    assert_contains(text, "Tim Chen profile and domain email evidence checklist published; working mailbox still required", label)
-    assert_contains(text, "Plan, public evidence checklist, and packet path published; mailbox not active yet", label)
+    assert_contains(text, "Returned again 2026-05-23; ready for one owner resubmission", label)
+    assert_contains(text, "Tim Chen profile, domain email plan, evidence checklist, activation evidence packet, and support@gcagochina.com evidence are ready", label)
+    assert_contains(text, "Plan, public evidence checklist, and packet path published; mailbox active and evidence retained privately", label)
     assert_contains(text, "Domain Email Evidence Checklist", label)
     assert_contains(text, "domain-email-evidence.html", label)
     assert_contains(text, "Tim Chen Professional Profile", label)

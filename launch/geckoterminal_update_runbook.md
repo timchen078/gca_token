@@ -5,7 +5,7 @@ This runbook records the accurate GeckoTerminal token information update request
 ## Status
 
 - Current status: approved on 2026-05-11.
-- Submission email: `GCAgochina@outlook.com`
+- Submission email: `support@gcagochina.com`
 - Browser confirmation: owner completed OTP verification; GeckoTerminal displayed "Your form was submitted successfully" and later emailed approval.
 - Approval evidence: owner-provided email screenshot says "Your request to update information for GCA has been approved."
 - Target pool: `https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0`
@@ -13,7 +13,7 @@ This runbook records the accurate GeckoTerminal token information update request
 - Pair: GCA/USDT
 - Contract address: `0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`
 - Official website: `https://gcagochina.com/`
-- Official contact email for GeckoTerminal submission: `GCAgochina@outlook.com`
+- Official contact email for GeckoTerminal submission: `support@gcagochina.com`
 - Official Telegram: `https://t.me/gcagochinaofficial`
 - Official X: `https://x.com/GCAAIGoChina`
 - Owner reserve wallet: `0x5e8F84748612B913aAcC937492AC25dc5630E246`
@@ -43,7 +43,7 @@ These steps were completed from the owner's browser session on 2026-05-09:
 4. Left social link fields blank because the official Telegram channel and current official X profile did not exist yet.
 5. Uploaded `site/assets/gca-logo.png` as the icon image.
 6. Submitted with the regular, no-fee pass.
-7. Confirmed `GCAgochina@outlook.com` by OTP.
+7. Confirmed `support@gcagochina.com` by OTP.
 8. Recorded GeckoTerminal's successful submission message in `launch/launch_status.md`.
 
 ## Copyable Description

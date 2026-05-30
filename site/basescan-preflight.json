@@ -7,38 +7,32 @@
   "network": "Base Mainnet",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
-  "status": "blocked-domain-email-before-basescan-resubmission",
-  "readyForBaseScanResubmission": false,
-  "officialEmailCurrent": "GCAgochina@outlook.com",
+  "status": "ready-for-owner-basescan-resubmission",
+  "readyForBaseScanResubmission": true,
+  "officialEmailCurrent": "support@gcagochina.com",
   "targetDomainEmail": "support@gcagochina.com",
   "latestDnsSnapshot": {
-    "checkedAt": "2026-05-30T08:13:47Z",
-    "readyForBaseScanEmailEvidence": false,
-    "missingOrBlockedChecks": [
-      "mx",
-      "spf",
-      "dmarc",
-      "dkim"
-    ],
+    "checkedAt": "2026-05-30T16:24:34Z",
+    "tool": "tools/check_domain_email_dns.py",
+    "command": "python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox support --dkim-selector zmail --json",
+    "readyForBaseScanEmailEvidence": true,
+    "missingOrBlockedChecks": [],
     "checks": {
-      "mx": "missing",
-      "spf": "missing",
-      "dmarc": "missing",
-      "dkim": "selector-required"
-    }
+      "mx": "present",
+      "spf": "present",
+      "dmarc": "present",
+      "dkim": "present"
+    },
+    "dkimSelector": "zmail",
+    "provider": "Zoho Mail",
+    "nextAction": "Use support@gcagochina.com for one clean BaseScan token-profile resubmission and keep the private provider, DNS, inbound, outbound, and support-page evidence archived locally."
   },
-  "currentBlockers": [
-    "support@gcagochina.com is not yet proven as a working inbound and outbound mailbox.",
-    "MX, SPF, and DMARC are missing for gcagochina.com.",
-    "DKIM still requires the mailbox provider selector and value.",
-    "Public support and BaseScan values still use GCAgochina@outlook.com until the target mailbox is ready.",
-    "launch/domain_email_evidence_packet.json is not ready for final BaseScan submission evidence."
-  ],
+  "currentBlockers": [],
   "requiredInputsBeforeSubmission": [
     "launch/basescan_resubmission_values.json marks nextSubmissionReady true and uses Base Mainnet / chainId 8453.",
     "Domain email provider status, DNS lookup proof, inbound mail proof, outbound reply proof, and support-page proof are saved privately.",
-    "Public support/about/team/BaseScan values align to the activated project-domain mailbox after it works.",
-    "Domain email snapshot alignment points platform packets to the current DNS snapshot.",
+    "Public support/about/team/BaseScan values align to support@gcagochina.com.",
+    "Domain email snapshot alignment points platform packets to the current ready DNS snapshot.",
     "Reviewer URLs are reachable: team, Tim Chen, whitepaper, brand kit, support, GitHub, platform replies, and official market route."
   ],
   "commands": {
@@ -78,5 +72,5 @@
     "touchesWalletsOrContracts": false,
     "publishesPrivateMailboxScreenshots": false
   },
-  "nextAction": "Activate and test support@gcagochina.com, collect DNS and mail-flow evidence, switch public email values only after the mailbox works, then run the read-only preflight before opening BaseScan."
+  "nextAction": "Generate the final BaseScan submission package, then submit one clean owner-controlled token profile update from support@gcagochina.com."
 }

@@ -68,7 +68,7 @@
   "logoPngUrl": "https://gcagochina.com/assets/gca-logo.png",
   "whitepaperUrl": "https://gcagochina.com/whitepaper.html",
   "explorerUrl": "https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
-  "officialEmail": "GCAgochina@outlook.com",
+  "officialEmail": "support@gcagochina.com",
   "socialLinks": [
     {
       "platform": "Telegram",
@@ -121,7 +121,7 @@
       "notMemberAccess": "cash, income, reimbursement, voting control, guaranteed lifetime access, trading permission, or risk-control bypass"
     },
     "supportWorkflow": {
-      "contactEmail": "GCAgochina@outlook.com",
+      "contactEmail": "support@gcagochina.com",
       "targetFirstResponse": "5-10 business days after account intake is received; not a guarantee",
       "reviewStatuses": [
         "received",
@@ -143,7 +143,7 @@
       "status": "public-support-intake-published",
       "pageUrl": "https://gcagochina.com/support.html",
       "url": "https://gcagochina.com/support.json",
-      "officialEmail": "GCAgochina@outlook.com",
+      "officialEmail": "support@gcagochina.com",
       "directSubmissionEndpointConfigured": false
     },
     "roadmap": {

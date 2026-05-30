@@ -23,7 +23,7 @@ DAILY_STATUS_PAGE_URL = "https://gcagochina.com/daily-status.html"
 DAILY_STATUS_URL = "https://gcagochina.com/daily-status.json"
 MAINNET_ADDRESS = "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6"
 TARGET_DOMAIN_EMAIL = "support@gcagochina.com"
-CURRENT_PUBLIC_EMAIL = "GCAgochina@outlook.com"
+CURRENT_PUBLIC_EMAIL = TARGET_DOMAIN_EMAIL
 
 
 class DailyStatusSnapshotError(ValueError):
@@ -142,6 +142,57 @@ def build_daily_status_payload(summary: dict[str, Any]) -> dict[str, Any]:
     ]
     old_email_paths = public_relative_paths(basescan.get("oldEmailFilePaths"))
     missing_target_paths = public_relative_paths(basescan.get("missingTargetEmailFilePaths"))
+    ready_for_basescan = basescan.get("readyForBaseScanResubmission") is True
+    if ready_for_basescan:
+        owner_action_queue = [
+            {
+                "id": "maintain-domain-mailbox",
+                "status": "ready-monitor",
+                "action": "Keep support@gcagochina.com able to receive and send authenticated mail while BaseScan reviews the update.",
+                "publicEvidenceUrl": "https://gcagochina.com/domain-email.html",
+            },
+            {
+                "id": "retain-domain-email-evidence",
+                "status": "ready-private-evidence-retained",
+                "action": "Keep provider, DNS, inbound, outbound, and support-page evidence archived privately for reviewer follow-up.",
+                "publicEvidenceUrl": "https://gcagochina.com/domain-email-evidence.html",
+            },
+            {
+                "id": "final-basescan-preflight",
+                "status": "ready",
+                "action": "Run tools/check_basescan_resubmission_readiness.py --json --require-ready before copying the final package into BaseScan.",
+                "publicEvidenceUrl": "https://gcagochina.com/basescan-preflight.html",
+            },
+        ]
+        basescan_summary = "BaseScan token profile resubmission is ready for one owner-controlled submission from support@gcagochina.com."
+    else:
+        owner_action_queue = [
+            {
+                "id": "activate-domain-mailbox",
+                "status": "owner-action-required",
+                "action": "Create and test support@gcagochina.com with working inbound and outbound mail.",
+                "publicEvidenceUrl": "https://gcagochina.com/domain-email.html",
+            },
+            {
+                "id": "complete-domain-email-evidence",
+                "status": "owner-action-required",
+                "action": "Add MX, SPF, DKIM, and DMARC records, then collect provider, inbound, outbound, DNS, and website evidence.",
+                "publicEvidenceUrl": "https://gcagochina.com/domain-email-evidence.html",
+            },
+            {
+                "id": "switch-public-email-after-mailbox-live",
+                "status": "deferred-until-mailbox-ready",
+                "action": "After the mailbox evidence passes, switch tracked public files from the Outlook email to support@gcagochina.com in one controlled pass.",
+                "publicEvidenceUrl": "https://gcagochina.com/daily-status.html",
+            },
+            {
+                "id": "final-basescan-preflight",
+                "status": "blocked-until-domain-email-ready",
+                "action": "Run tools/check_basescan_resubmission_readiness.py --json --require-ready before preparing another BaseScan submission.",
+                "publicEvidenceUrl": "https://gcagochina.com/basescan-preflight.html",
+            },
+        ]
+        basescan_summary = "BaseScan token profile resubmission remains blocked until the project-domain email evidence path is complete."
 
     return {
         "schema": DAILY_STATUS_URL,
@@ -164,7 +215,7 @@ def build_daily_status_payload(summary: dict[str, Any]) -> dict[str, Any]:
                 {
                     "id": "basescan-resubmission-preflight-status",
                     **basescan_step,
-                    "blocksSummaryOk": False,
+                    "blocksSummaryOk": basescan_step["blocksSummaryOk"],
                 },
             ],
         },
@@ -200,38 +251,13 @@ def build_daily_status_payload(summary: dict[str, Any]) -> dict[str, Any]:
             "missingOrBlockedRequirements": missing_requirements,
             "nextAction": str(basescan.get("nextAction") or ""),
             "targetDomainEmail": TARGET_DOMAIN_EMAIL,
-            "currentPublicEmail": CURRENT_PUBLIC_EMAIL,
+            "currentPublicEmail": str(basescan.get("currentPublicEmail") or CURRENT_PUBLIC_EMAIL),
         },
-        "ownerActionQueue": [
-            {
-                "id": "activate-domain-mailbox",
-                "status": "owner-action-required",
-                "action": "Create and test support@gcagochina.com with working inbound and outbound mail.",
-                "publicEvidenceUrl": "https://gcagochina.com/domain-email.html",
-            },
-            {
-                "id": "complete-domain-email-evidence",
-                "status": "owner-action-required",
-                "action": "Add MX, SPF, DKIM, and DMARC records, then collect provider, inbound, outbound, DNS, and website evidence.",
-                "publicEvidenceUrl": "https://gcagochina.com/domain-email-evidence.html",
-            },
-            {
-                "id": "switch-public-email-after-mailbox-live",
-                "status": "deferred-until-mailbox-ready",
-                "action": "After the mailbox evidence passes, switch tracked public files from the Outlook email to support@gcagochina.com in one controlled pass.",
-                "publicEvidenceUrl": "https://gcagochina.com/daily-status.html",
-            },
-            {
-                "id": "final-basescan-preflight",
-                "status": "blocked-until-domain-email-ready",
-                "action": "Run tools/check_basescan_resubmission_readiness.py --json --require-ready before preparing another BaseScan submission.",
-                "publicEvidenceUrl": "https://gcagochina.com/basescan-preflight.html",
-            },
-        ],
+        "ownerActionQueue": owner_action_queue,
         "safePublicSummary": [
             "The public GCA website check passed on the latest daily ops snapshot.",
             "The public registration API check passed without secrets and without writing test records.",
-            "BaseScan token profile resubmission remains blocked until the project-domain email evidence path is complete.",
+            basescan_summary,
             "Admin reads, user records, private evidence files, wallet actions, and token transfers are not exposed by this public snapshot.",
         ],
         "boundaries": {

@@ -2,57 +2,52 @@
   "schema": "https://gcagochina.com/domain-email.json",
   "pageUrl": "https://gcagochina.com/domain-email.html",
   "lastUpdated": "2026-05-30",
-  "status": "domain-email-setup-plan-published-not-active",
+  "status": "domain-email-active",
   "projectName": "GCA",
   "domain": "gcagochina.com",
-  "currentPublicEmail": "GCAgochina@outlook.com",
+  "currentPublicEmail": "support@gcagochina.com",
   "targetDomainEmail": "support@gcagochina.com",
   "targetAliases": [
     "team@gcagochina.com",
     "security@gcagochina.com"
   ],
   "baseScanUse": {
-    "currentBlocker": "BaseScan requested clearer project/team information and an official-domain sender/contact email. Tim Chen's official-domain professional profile is published; the 2026-05-30 public DNS snapshot still shows MX, SPF, and DMARC missing, with DKIM requiring the provider selector.",
-    "resubmissionReady": false,
+    "currentBlocker": "No domain-email blocker remains in the local readiness packet. support@gcagochina.com is active, public DNS records pass MX/SPF/DKIM/DMARC checks, inbound and outbound tests are archived privately, and public support/BaseScan materials publish the same domain email.",
+    "resubmissionReady": true,
     "readyWhen": [
       "support@gcagochina.com can receive external email",
       "support@gcagochina.com can send authenticated external email",
+      "MX, SPF, DKIM, and DMARC DNS checks pass for gcagochina.com",
       "public website pages show the same domain email used in the BaseScan request",
       "tools/check_domain_email_public_switch.py --json --require-switched passes",
       "BaseScan resubmission includes https://gcagochina.com/tim-chen.html"
     ]
   },
   "liveDnsSnapshot": {
-    "checkedAt": "2026-05-30T08:13:47Z",
+    "checkedAt": "2026-05-30T16:24:34Z",
     "tool": "tools/check_domain_email_dns.py",
-    "command": "python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox support --json",
-    "readyForBaseScanEmailEvidence": false,
-    "missingOrBlockedChecks": [
-      "mx",
-      "spf",
-      "dmarc",
-      "dkim"
-    ],
+    "command": "python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox support --dkim-selector zmail --json",
+    "readyForBaseScanEmailEvidence": true,
+    "missingOrBlockedChecks": [],
     "checks": {
-      "mx": "missing",
-      "spf": "missing",
-      "dmarc": "missing",
-      "dkim": "selector-required"
+      "mx": "present",
+      "spf": "present",
+      "dmarc": "present",
+      "dkim": "present"
     },
-    "nextAction": "Create support@gcagochina.com at the mail provider, add MX/SPF/DMARC/DKIM records, rerun with --dkim-selector from the provider, then collect inbound and outbound email evidence."
+    "dkimSelector": "zmail",
+    "provider": "Zoho Mail",
+    "nextAction": "Use support@gcagochina.com for one clean BaseScan token-profile resubmission and keep the private provider, DNS, inbound, outbound, and support-page evidence archived locally."
   },
   "ownerActionPacket": {
-    "status": "blocked-until-mailbox-dns-and-evidence-pass",
-    "purpose": "Give the owner one short execution order for the remaining BaseScan domain-email blocker without editing DNS, sending email, or submitting BaseScan from this repository.",
+    "status": "evidence-collected-ready-for-owner-resubmission",
+    "purpose": "Record the completed owner-side domain email evidence path for the next BaseScan resubmission without publishing private mailbox screenshots.",
     "stepsInOrder": [
-      "Enable a full mailbox for support@gcagochina.com that can receive external mail and send authenticated replies from the same address.",
-      "Save domain-email-provider-active.png showing support@gcagochina.com as active or verified in the provider dashboard.",
-      "Build the DNS entry packet with the provider's exact MX, SPF, DKIM, and DMARC values before entering records.",
-      "Enter MX, one merged SPF TXT record, DKIM with the exact provider selector, and DMARC at _dmarc.",
-      "Run tools/check_domain_email_dns.py with --dkim-selector <provider-selector> and save domain-email-dns-mx-spf-dkim-dmarc.txt.",
-      "Save inbound and outbound mail evidence: domain-email-inbound-test.png and domain-email-outbound-test.png.",
-      "Switch public support/BaseScan email values only after evidence is complete, then save support-page-domain-email.png.",
-      "Run tools/check_basescan_resubmission_readiness.py --json --require-ready and proceed only when readyForBaseScanResubmission is true."
+      "support@gcagochina.com is enabled as a full hosted mailbox alias in Zoho Mail.",
+      "Provider active proof, DNS lookup proof, inbound test proof, outbound test proof, and support-page proof are saved privately under launch/domain_email_evidence/.",
+      "MX, SPF, DKIM, and DMARC records are present in public DNS for gcagochina.com.",
+      "Public support/BaseScan materials publish support@gcagochina.com.",
+      "Run tools/check_basescan_resubmission_readiness.py --json --require-ready before copying the final package into BaseScan."
     ],
     "requiredEvidenceFiles": [
       "domain-email-provider-active.png",
@@ -70,8 +65,8 @@
       "python3 tools/check_basescan_resubmission_readiness.py --json --require-ready"
     ],
     "stopConditions": [
-      "Any required evidence file is missing.",
-      "DNS check does not report readyForBaseScanEmailEvidence true.",
+      "Any required evidence file is missing from the private local evidence directory.",
+      "DNS check no longer reports readyForBaseScanEmailEvidence true.",
       "Outbound visible sender is not support@gcagochina.com.",
       "Public support/BaseScan files still publish GCAgochina@outlook.com after the switch.",
       "BaseScan resubmission preflight fails or reports readyForBaseScanResubmission false."
@@ -100,10 +95,10 @@
     "Add DMARC TXT record at _dmarc.gcagochina.com, starting in monitoring mode if needed",
     "Wait for DNS propagation and provider verification"
   ],
-    "mailProviderDecision": {
-        "requirement": "Use a full hosted mailbox or mail service that can receive external mail and send authenticated outbound mail as support@gcagochina.com.",
-        "notEnoughByItself": "Receive-only forwarding, including Cloudflare Email Routing by itself, is not enough for the next clean BaseScan resubmission because it does not prove outbound sender alignment.",
-        "acceptablePaths": [
+  "mailProviderDecision": {
+    "requirement": "Use a full hosted mailbox or mail service that can receive external mail and send authenticated outbound mail as support@gcagochina.com.",
+    "notEnoughByItself": "Receive-only forwarding, including Cloudflare Email Routing by itself, is not enough for the next clean BaseScan resubmission because it does not prove outbound sender alignment.",
+    "acceptablePaths": [
       "Google Workspace if MX, SPF, DKIM, and DMARC records are configured and outbound replies show support@gcagochina.com",
       "Microsoft 365 if the custom domain and required mail DNS records are configured and outbound replies show support@gcagochina.com",
       "Zoho Mail if the custom domain, MX, SPF, DKIM, and DMARC records are configured and outbound replies show support@gcagochina.com",
@@ -113,63 +108,63 @@
     "referenceDocs": [
       "https://developers.cloudflare.com/email-routing/get-started/",
       "https://support.google.com/a/answer/9222085",
-            "https://learn.microsoft.com/en-us/microsoft-365/admin/setup/add-domain?view=o365-worldwide",
-            "https://www.zoho.com/mail/help/adminconsole/add-domains.html"
-        ]
-    },
-    "operatorProviderMatrixBuilder": {
-        "tool": "tools/build_domain_email_provider_matrix.py",
-        "command": "python3 tools/build_domain_email_provider_matrix.py --markdown",
-        "ownerArtifactCommand": "python3 tools/build_domain_email_provider_matrix.py --output-json launch/domain_email_provider_matrix.json --output-md launch/domain_email_provider_matrix.md",
-        "purpose": "Compare full-mailbox paths against receive-only or send-only options before buying an email plan, without fetching live prices or guessing DNS records.",
-        "recommendedFirstCheck": "Zoho Mail or an equivalent low-cost hosted mailbox, only if it creates support@gcagochina.com and provides MX, SPF, DKIM, and DMARC setup.",
-        "notEnoughAlone": [
-            "Cloudflare Email Routing only",
-            "send-only SMTP/API without inbound mail for support@gcagochina.com"
-        ],
-        "runBefore": [
-            "mail provider purchase",
-            "DNS record entry",
-            "domain email evidence packet",
-            "BaseScan resubmission preflight"
-        ],
-        "boundaries": [
-            "does not fetch live prices",
-            "does not write DNS records",
-            "does not send email",
-            "does not submit BaseScan request",
-            "does not touch wallets or contracts"
-        ]
-    },
-    "operatorDnsEntryPacketBuilder": {
-        "tool": "tools/build_domain_email_dns_entry_packet.py",
-        "commandTemplate": "python3 tools/build_domain_email_dns_entry_packet.py --provider <provider-name> --mx \"10 <provider-mx>\" --spf \"v=spf1 include:<provider> ~all\" --dkim-selector <provider-selector> --dkim-type TXT --dkim-value \"<provider-dkim-value>\" --dmarc \"v=DMARC1; p=none;\" --output-json launch/domain_email_dns_entry_packet.json --output-md launch/domain_email_dns_entry_packet.md",
-        "purpose": "Convert provider-supplied MX, SPF, DKIM, and DMARC values into a local copyable DNS worksheet before the owner enters records at the DNS host.",
-        "runAfter": [
-            "mail provider purchase",
-            "provider dashboard shows exact MX/SPF/DKIM/DMARC values"
-        ],
-        "runBefore": [
-            "DNS record entry",
-            "tools/check_domain_email_dns.py",
-            "domain email evidence packet",
-            "BaseScan resubmission preflight"
-        ],
-        "outputs": [
-            "launch/domain_email_dns_entry_packet.json",
-            "launch/domain_email_dns_entry_packet.md"
-        ],
-        "boundaries": [
-            "does not write DNS records",
-            "does not send email",
-            "does not submit BaseScan request",
-            "does not touch wallets or contracts",
-            "does not store secrets"
-        ]
-    },
-    "dnsEntryWorksheet": [
-        {
-            "record": "MX",
+      "https://learn.microsoft.com/en-us/microsoft-365/admin/setup/add-domain?view=o365-worldwide",
+      "https://www.zoho.com/mail/help/adminconsole/add-domains.html"
+    ]
+  },
+  "operatorProviderMatrixBuilder": {
+    "tool": "tools/build_domain_email_provider_matrix.py",
+    "command": "python3 tools/build_domain_email_provider_matrix.py --markdown",
+    "ownerArtifactCommand": "python3 tools/build_domain_email_provider_matrix.py --output-json launch/domain_email_provider_matrix.json --output-md launch/domain_email_provider_matrix.md",
+    "purpose": "Compare full-mailbox paths against receive-only or send-only options before buying an email plan, without fetching live prices or guessing DNS records.",
+    "recommendedFirstCheck": "Zoho Mail or an equivalent low-cost hosted mailbox, only if it creates support@gcagochina.com and provides MX, SPF, DKIM, and DMARC setup.",
+    "notEnoughAlone": [
+      "Cloudflare Email Routing only",
+      "send-only SMTP/API without inbound mail for support@gcagochina.com"
+    ],
+    "runBefore": [
+      "mail provider purchase",
+      "DNS record entry",
+      "domain email evidence packet",
+      "BaseScan resubmission preflight"
+    ],
+    "boundaries": [
+      "does not fetch live prices",
+      "does not write DNS records",
+      "does not send email",
+      "does not submit BaseScan request",
+      "does not touch wallets or contracts"
+    ]
+  },
+  "operatorDnsEntryPacketBuilder": {
+    "tool": "tools/build_domain_email_dns_entry_packet.py",
+    "commandTemplate": "python3 tools/build_domain_email_dns_entry_packet.py --provider <provider-name> --mx \"10 <provider-mx>\" --spf \"v=spf1 include:<provider> ~all\" --dkim-selector <provider-selector> --dkim-type TXT --dkim-value \"<provider-dkim-value>\" --dmarc \"v=DMARC1; p=none;\" --output-json launch/domain_email_dns_entry_packet.json --output-md launch/domain_email_dns_entry_packet.md",
+    "purpose": "Convert provider-supplied MX, SPF, DKIM, and DMARC values into a local copyable DNS worksheet before the owner enters records at the DNS host.",
+    "runAfter": [
+      "mail provider purchase",
+      "provider dashboard shows exact MX/SPF/DKIM/DMARC values"
+    ],
+    "runBefore": [
+      "DNS record entry",
+      "tools/check_domain_email_dns.py",
+      "domain email evidence packet",
+      "BaseScan resubmission preflight"
+    ],
+    "outputs": [
+      "launch/domain_email_dns_entry_packet.json",
+      "launch/domain_email_dns_entry_packet.md"
+    ],
+    "boundaries": [
+      "does not write DNS records",
+      "does not send email",
+      "does not submit BaseScan request",
+      "does not touch wallets or contracts",
+      "does not store secrets"
+    ]
+  },
+  "dnsEntryWorksheet": [
+    {
+      "record": "MX",
       "purpose": "Routes inbound mail for support@gcagochina.com.",
       "type": "MX",
       "nameOrHost": "@ or gcagochina.com, exactly as the DNS host expects.",
@@ -280,7 +275,7 @@
   "operatorEvidenceChecklist": {
     "pageUrl": "https://gcagochina.com/domain-email-evidence.html",
     "jsonUrl": "https://gcagochina.com/domain-email-evidence.json",
-    "status": "blocked-until-domain-email-evidence-collected",
+    "status": "evidence-collected-private-ready",
     "purpose": "Public, reviewer-safe checklist for the private domain email evidence packet without publishing mailbox screenshots.",
     "privateEvidenceDirectory": "launch/domain_email_evidence",
     "requiredEvidenceFiles": [
@@ -305,7 +300,7 @@
     "ownerArtifactCommand": "python3 tools/build_domain_email_switch_plan.py --output-json launch/domain_email_switch_plan.json --output-md launch/domain_email_switch_plan.md",
     "patchPreviewCommand": "python3 tools/build_domain_email_switch_plan.py --patch",
     "ownerPatchPreviewCommand": "python3 tools/build_domain_email_switch_plan.py --output-patch launch/domain_email_switch_preview.patch",
-    "purpose": "Find public site, launch, docs, and operator contact files that still reference GCAgochina@outlook.com before switching to support@gcagochina.com after activation.",
+    "purpose": "Audit public site, launch, docs, and operator contact files for any remaining legacy GCAgochina@outlook.com references now that support@gcagochina.com is the active public contact.",
     "runAfter": [
       "support@gcagochina.com receives external email",
       "support@gcagochina.com sends authenticated external email",
@@ -369,9 +364,9 @@
     ],
     "canonicalSnapshot": {
       "source": "site/domain-email.json liveDnsSnapshot",
-      "checkedAt": "2026-05-30T08:13:47Z",
+      "checkedAt": "2026-05-30T16:24:34Z",
       "date": "2026-05-30",
-      "readyForBaseScanEmailEvidence": false
+      "readyForBaseScanEmailEvidence": true
     },
     "boundaries": [
       "read-only check",
@@ -384,14 +379,14 @@
     ]
   },
   "baseScanSubmissionPolicy": {
-    "nextCleanSubmissionSender": "support@gcagochina.com after activation",
+    "nextCleanSubmissionSender": "support@gcagochina.com",
     "doNotResubmitBefore": [
-      "inbound test passes",
-      "outbound authenticated send test passes",
-      "public website email has been updated to match the sender",
-      "activation evidence packet is archived for owner records"
+      "BaseScan readiness preflight passes",
+      "final submission package is generated without the DRAFT ONLY marker",
+      "owner is logged into BaseScan with the correct account",
+      "private evidence files remain available if BaseScan asks for proof"
     ],
-    "ifBaseScanAsksBeforeActivation": "Reply with GCAgochina@outlook.com only as the current active contact and explain that support@gcagochina.com is still being activated; do not claim the domain mailbox is live."
+    "ifBaseScanAsksBeforeActivation": "Activation is complete. Reply from support@gcagochina.com and link the public domain-email readiness page plus Tim Chen professional profile."
   },
   "filesToUpdateAfterActivation": [
     "site/support.html",
@@ -412,31 +407,20 @@
     "launch/external_review_followup_tracker.md"
   ],
   "currentPublicSwitchSnapshot": {
-    "checkedAt": "2026-05-30T08:27:55Z",
-    "source": "tools/run_gca_daily_ops.py BaseScan preflight status summary",
-    "status": "public-email-switch-pending",
-    "filesStillUsingCurrentEmail": 15,
+    "checkedAt": "2026-05-30T16:24:34Z",
+    "source": "tools/check_domain_email_public_switch.py --json --require-switched",
+    "status": "public-email-switch-complete",
+    "filesStillUsingCurrentEmail": 0,
     "currentEmail": "GCAgochina@outlook.com",
     "targetDomainEmail": "support@gcagochina.com",
-    "oldEmailFilePaths": [
-      "site/support.html",
-      "site/support.json",
-      "site/zh-support.html",
-      "site/register.html",
-      "site/members.html",
-      "site/project.json",
-      "site/listing-kit.html",
-      "site/basescan-remediation.html",
-      "site/basescan-remediation.json",
-      "site/external-reviews.json",
-      "launch/basescan_form_values.json",
-      "launch/basescan_resubmission_values.json",
-      "launch/basescan_resubmission_package.md",
-      "launch/external_review_followup_tracker.json",
-      "launch/external_review_followup_tracker.md"
-    ],
-    "targetAwareButStillTracked": [
-      "site/reviewer-kit.json"
+    "oldEmailFilePaths": [],
+    "targetAwareButStillTracked": [],
+    "switchCompletedAfter": [
+      "support@gcagochina.com receives external mail",
+      "support@gcagochina.com sends authenticated external mail",
+      "MX, SPF, DKIM, and DMARC evidence passes",
+      "domain email evidence packet is complete",
+      "tools/check_domain_email_public_switch.py --json --require-switched passes"
     ],
     "switchOnlyAfter": [
       "support@gcagochina.com receives external mail",
@@ -445,18 +429,19 @@
       "domain email evidence packet is complete",
       "tools/check_domain_email_public_switch.py --json --require-switched passes"
     ],
-    "nextAction": "Keep GCAgochina@outlook.com as the active public contact until support@gcagochina.com passes inbound, outbound, DNS, and evidence-packet checks; then switch all tracked files in one pass."
+    "nextAction": "Proceed only with one clean owner-controlled BaseScan resubmission from support@gcagochina.com."
   },
   "publicClaimBoundaries": {
     "safeClaims": [
-      "GCA has published a domain email setup plan.",
-      "A working gcagochina.com domain email is still required before the next BaseScan token profile resubmission.",
-      "The current active public contact remains GCAgochina@outlook.com until domain email tests pass."
+      "GCA has activated support@gcagochina.com as the official project-domain support email.",
+      "Public DNS for gcagochina.com has MX, SPF, DKIM, and DMARC records present for the domain email evidence packet.",
+      "Private provider, DNS, inbound, outbound, and support-page evidence is archived locally for reviewer follow-up."
     ],
     "doNotClaim": [
-      "support@gcagochina.com is active before inbound and outbound tests pass",
       "BaseScan token profile approval before BaseScan publishes it",
-      "third-party audit completion before an independent report is published"
+      "third-party audit completion before an independent report is published",
+      "locked reserve before on-chain custody changes"
     ]
-  }
+  },
+  "previousPublicEmail": "GCAgochina@outlook.com"
 }

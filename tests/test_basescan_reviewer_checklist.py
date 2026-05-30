@@ -10,18 +10,18 @@ class BaseScanReviewerChecklistTests(unittest.TestCase):
         report = module.build_checklist()
 
         self.assertEqual(report["schema"], "gca-basescan-reviewer-checklist-v1")
-        self.assertEqual(report["status"], "blocked-before-basescan-resubmission")
-        self.assertFalse(report["readyForCleanResubmission"])
+        self.assertEqual(report["status"], "ready-for-owner-review")
+        self.assertTrue(report["readyForCleanResubmission"])
         self.assertEqual(report["latestReturnNoticeDate"], "2026-05-23")
         self.assertEqual(report["targetDomainEmail"], "support@gcagochina.com")
-        self.assertIn("sender-domain-email", report["blockedItems"])
+        self.assertEqual(report["blockedItems"], [])
 
         items = {item["key"]: item for item in report["checklist"]}
         self.assertEqual(items["website-accessible"]["status"], "implemented")
         self.assertEqual(items["clear-project-information"]["status"], "implemented")
         self.assertEqual(items["placeholder-and-link-review"]["status"], "implemented-with-automated-check")
         self.assertEqual(items["founder-team-transparency"]["status"], "implemented-official-domain-equivalent")
-        self.assertEqual(items["sender-domain-email"]["status"], "blocked-owner-action-required")
+        self.assertEqual(items["sender-domain-email"]["status"], "implemented-domain-email-evidence-ready")
         self.assertEqual(items["source-and-contract"]["status"], "implemented")
         self.assertEqual(items["brand-logo-whitepaper"]["status"], "implemented")
         self.assertEqual(items["social-and-market-links"]["status"], "implemented")
@@ -41,7 +41,7 @@ class BaseScanReviewerChecklistTests(unittest.TestCase):
         report = module.build_checklist()
         markdown = module.render_markdown(report)
         self.assertIn("# GCA BaseScan Reviewer Checklist", markdown)
-        self.assertIn("Ready for clean resubmission: `false`", markdown)
+        self.assertIn("Ready for clean resubmission: `true`", markdown)
         self.assertIn("Sender email matches project domain", markdown)
         self.assertIn("does not submit BaseScan requests", markdown)
 
