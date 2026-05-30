@@ -1,0 +1,1283 @@
+--- a/docs/mainnet_public_profile.md
++++ b/docs/mainnet_public_profile.md
+@@ -40,7 +40,7 @@
+ 
+ ## Official Contact
+ 
+-- Project contact email: `GCAgochina@outlook.com`
++- Project contact email: `support@gcagochina.com`
+ - Official Telegram: `https://t.me/gcagochinaofficial`
+ - Official X: `https://x.com/GCAAIGoChina`
+ - The contact email is publicly listed on the official website for data platform verification.
+--- a/docs/whitepaper.md
++++ b/docs/whitepaper.md
+@@ -179,7 +179,7 @@
+ 
+ ## Official Contact
+ 
+-Project contact email: `GCAgochina@outlook.com`
++Project contact email: `support@gcagochina.com`
+ 
+ Official Telegram: `https://t.me/gcagochinaofficial`
+ 
+--- a/launch/basescan_form_values.json
++++ b/launch/basescan_form_values.json
+@@ -36,7 +36,7 @@
+   "sourceVerification": "verified",
+   "deployer": "0x18d007bcb6be029f8ccd7cb13e324aa21891092d",
+   "baseScanContract": "https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+-  "officialEmail": "GCAgochina@outlook.com",
++  "officialEmail": "support@gcagochina.com",
+   "officialEmailNote": "Official public project email listed on gcagochina.com. The original reply inbox was cxy070800@gmail.com.",
+   "timChenProfessionalProfileUrl": "https://gcagochina.com/tim-chen.html",
+   "timChenProfessionalProfileDataUrl": "https://gcagochina.com/tim-chen.json",
+--- a/launch/basescan_resubmission_package.md
++++ b/launch/basescan_resubmission_package.md
+@@ -53,7 +53,7 @@
+ - Logo PNG: `https://gcagochina.com/assets/gca-logo.png`
+ - Official Telegram: `https://t.me/gcagochinaofficial`
+ - Official X: `https://x.com/GCAAIGoChina`
+-- Official email: `GCAgochina@outlook.com`
++- Official email: `support@gcagochina.com`
+ 
+ ## Owner-Required Fixes Before The Next Submission
+ 
+@@ -122,7 +122,7 @@
+ 
+ 1. Confirm `https://gcagochina.com/` loads over HTTPS.
+ 2. Confirm `https://gcagochina.com/assets/gca-logo.svg` loads and is the 32x32 SVG logo.
+-3. Confirm the official email `GCAgochina@outlook.com` is visible on the website support page.
++3. Confirm the official email `support@gcagochina.com` is visible on the website support page.
+ 4. Include the official Telegram and X links.
+ 5. Include the whitepaper, listing kit, product spec, and release gates URLs.
+ 6. Include the Base Mainnet chain ID and exact token contract.
+--- a/launch/basescan_resubmission_values.json
++++ b/launch/basescan_resubmission_values.json
+@@ -122,7 +122,7 @@
+   "whitepaperUrl": "https://gcagochina.com/whitepaper.html",
+   "logoSvgUrl": "https://gcagochina.com/assets/gca-logo.svg",
+   "logoPngUrl": "https://gcagochina.com/assets/gca-logo.png",
+-  "officialEmail": "GCAgochina@outlook.com",
++  "officialEmail": "support@gcagochina.com",
+   "domainEmailRecommendedBeforeNextSubmission": true,
+   "recommendedDomainEmailExamples": [
+     "support@gcagochina.com",
+--- a/launch/basescan_review_followup.md
++++ b/launch/basescan_review_followup.md
+@@ -57,7 +57,7 @@
+ - Official Telegram remains live: `https://t.me/gcagochinaofficial`
+ - Official X remains live: `https://x.com/GCAAIGoChina`
+ - HTTPS remains active for the website, logo, and whitepaper URLs.
+-- Use official public email: `GCAgochina@outlook.com`
++- Use official public email: `support@gcagochina.com`
+ - If BaseScan asks for ownership verification again, sign with the deployer wallet.
+ - Do not submit duplicate token update requests unless BaseScan asks for corrections.
+ 
+@@ -126,7 +126,7 @@
+ Official GCA/USDT pool: https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0
+ Official Telegram: https://t.me/gcagochinaofficial
+ Official X: https://x.com/GCAAIGoChina
+-Official contact email: GCAgochina@outlook.com
++Official contact email: support@gcagochina.com
+ 
+ The official website now centralizes the verify page, project status, product spec, release gates, listing kit, brand kit, community kit, support page, token list, and machine-readable project JSON. The latest 2026-05-30 DNS snapshot shows MX/SPF/DMARC missing and DKIM selector required, so readyForBaseScanEmailEvidence is false until support@gcagochina.com is active and tested. Please let us know if any additional field correction or owner-wallet signature is required.
+ ```
+--- a/launch/basescan_reviewer_checklist.json
++++ b/launch/basescan_reviewer_checklist.json
+@@ -66,7 +66,7 @@
+     },
+     {
+       "action": "Activate support@gcagochina.com, add MX/SPF/DKIM/DMARC, verify inbound/outbound tests, switch public email, then archive the evidence packet.",
+-      "evidence": "Current public email is still GCAgochina@outlook.com. Domain email setup is published, but the latest DNS snapshot is not ready for BaseScan evidence.",
++      "evidence": "Current public email is still support@gcagochina.com. Domain email setup is published, but the latest DNS snapshot is not ready for BaseScan evidence.",
+       "key": "sender-domain-email",
+       "links": [
+         "https://gcagochina.com/domain-email.html",
+@@ -118,7 +118,7 @@
+   ],
+   "domainEmailReady": false,
+   "latestReturnNoticeDate": "2026-05-23",
+-  "officialEmail": "GCAgochina@outlook.com",
++  "officialEmail": "support@gcagochina.com",
+   "preflightCommands": [
+     "python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox support --dkim-selector <provider-selector> --json",
+     "python3 tools/build_domain_email_evidence_packet.py --dkim-selector <provider-selector> --evidence-dir launch/domain_email_evidence --website-email-updated --output-json launch/domain_email_evidence_packet.json --output-md launch/domain_email_evidence_packet.md",
+--- a/launch/basescan_reviewer_checklist.md
++++ b/launch/basescan_reviewer_checklist.md
+@@ -3,7 +3,7 @@
+ - Status: `blocked-before-basescan-resubmission`
+ - Ready for clean resubmission: `false`
+ - Latest return notice: `2026-05-23`
+-- Current official email: `GCAgochina@outlook.com`
++- Current official email: `support@gcagochina.com`
+ - Target domain email: `support@gcagochina.com`
+ 
+ ## Checklist
+@@ -14,7 +14,7 @@
+ | Clear token and project information | `implemented` | About, status, whitepaper, product, trust, and reviewer pages describe GCA without claiming approval, audit completion, or guaranteed market outcomes. | Use the readable pages first; raw JSON only when a reviewer asks for machine-readable data. |
+ | No obvious placeholders or broken reviewer links | `implemented-with-automated-check` | The public site checker validates canonical identity, current GCA/USDT route, public pages, raw JSON routing, sitemap, and robots. | Run .venv/bin/python tools/check_public_site.py after each public-material change. |
+ | Founder and team transparency | `implemented-official-domain-equivalent` | Tim Chen is published on the team page and standalone official-domain professional profile with GitHub, X, Telegram, and role scope. | Add LinkedIn only if BaseScan specifically requires a third-party social-network profile. |
+-| Sender email matches project domain | `blocked-owner-action-required` | Current public email is still GCAgochina@outlook.com. Domain email setup is published, but the latest DNS snapshot is not ready for BaseScan evidence. | Activate support@gcagochina.com, add MX/SPF/DKIM/DMARC, verify inbound/outbound tests, switch public email, then archive the evidence packet. |
++| Sender email matches project domain | `blocked-owner-action-required` | Current public email is still support@gcagochina.com. Domain email setup is published, but the latest DNS snapshot is not ready for BaseScan evidence. | Activate support@gcagochina.com, add MX/SPF/DKIM/DMARC, verify inbound/outbound tests, switch public email, then archive the evidence packet. |
+ | Verified source and fixed-supply token facts | `implemented` | BaseScan source verification and deployer-wallet ownership verification are complete; the contract has fixed supply and no post-deployment mint function. | Keep the chain as Base Mainnet / chainId 8453 and contract address unchanged. |
+ | Logo, brand kit, and whitepaper | `implemented` | SVG/PNG logos, social card, brand kit, and whitepaper are published over HTTPS. | Use the same 32x32 SVG logo URL and whitepaper URL in BaseScan. |
+ | Official social links and market route | `implemented` | Telegram, X, GitHub, and the official Base Mainnet GCA/USDT market route are published. GeckoTerminal token information is approved. | Keep all public materials pointed to the GCA/USDT route, not the older WETH pilot pool. |
+--- a/launch/blockaid_false_positive_report.md
++++ b/launch/blockaid_false_positive_report.md
+@@ -18,7 +18,7 @@
+ - Chain: `Base Mainnet / chainId 8453`
+ - Wallet: `MetaMask / Uniswap token warning`
+ - Address: `0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`
+-- Email: `GCAgochina@outlook.com`
++- Email: `support@gcagochina.com`
+ 
+ ## Current Follow-Up Context
+ 
+--- a/launch/blockaid_followup_reply.md
++++ b/launch/blockaid_followup_reply.md
+@@ -58,7 +58,7 @@
+ 
+ Thank you.
+ GCA / Go China Access
+-GCAgochina@outlook.com
++support@gcagochina.com
+ ```
+ 
+ ## Claims To Avoid
+--- a/launch/data_platform_form_values.json
++++ b/launch/data_platform_form_values.json
+@@ -68,7 +68,7 @@
+   "logoPngUrl": "https://gcagochina.com/assets/gca-logo.png",
+   "whitepaperUrl": "https://gcagochina.com/whitepaper.html",
+   "explorerUrl": "https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+-  "officialEmail": "GCAgochina@outlook.com",
++  "officialEmail": "support@gcagochina.com",
+   "socialLinks": [
+     {
+       "platform": "Telegram",
+@@ -121,7 +121,7 @@
+       "notMemberAccess": "cash, income, reimbursement, voting control, guaranteed lifetime access, trading permission, or risk-control bypass"
+     },
+     "supportWorkflow": {
+-      "contactEmail": "GCAgochina@outlook.com",
++      "contactEmail": "support@gcagochina.com",
+       "targetFirstResponse": "5-10 business days after account intake is received; not a guarantee",
+       "reviewStatuses": [
+         "received",
+@@ -143,7 +143,7 @@
+       "status": "public-support-intake-published",
+       "pageUrl": "https://gcagochina.com/support.html",
+       "url": "https://gcagochina.com/support.json",
+-      "officialEmail": "GCAgochina@outlook.com",
++      "officialEmail": "support@gcagochina.com",
+       "directSubmissionEndpointConfigured": false
+     },
+     "roadmap": {
+--- a/launch/data_platform_package.md
++++ b/launch/data_platform_package.md
+@@ -73,7 +73,7 @@
+ - Taxes: none
+ - Blacklist: none
+ - Admin controls: none
+-- Official email for data platform submissions: `GCAgochina@outlook.com`
++- Official email for data platform submissions: `support@gcagochina.com`
+ 
+ ## Public URLs
+ 
+@@ -248,7 +248,7 @@
+ 
+ Status: approved on 2026-05-11. The current official market pool is GCA/USDT, and the official website links to the GCA/USDT GeckoTerminal pool.
+ 
+-GeckoTerminal support says to navigate to the token pool, open the Token Info section, click Update Token Info, and submit accurate information. It warns that requests may be rejected for insufficient verification, incorrect information, wrong channel, or duplicates. The GCA request was submitted from the owner's browser session with `GCAgochina@outlook.com`; owner OTP verification was completed, GeckoTerminal displayed a successful submission message, and an approval email was received on 2026-05-11.
++GeckoTerminal support says to navigate to the token pool, open the Token Info section, click Update Token Info, and submit accurate information. It warns that requests may be rejected for insufficient verification, incorrect information, wrong channel, or duplicates. The GCA request was submitted from the owner's browser session with `support@gcagochina.com`; owner OTP verification was completed, GeckoTerminal displayed a successful submission message, and an approval email was received on 2026-05-11.
+ 
+ Recommended action:
+ 
+--- a/launch/domain_email_activation_runbook.md
++++ b/launch/domain_email_activation_runbook.md
+@@ -5,7 +5,7 @@
+ ## Current State
+ 
+ - Domain: `gcagochina.com`
+-- Current public contact: `GCAgochina@outlook.com`
++- Current public contact: `support@gcagochina.com`
+ - Target BaseScan-ready mailbox: `support@gcagochina.com`
+ - Current public status: domain email setup plan published, mailbox not active yet
+ - Public plan: `https://gcagochina.com/domain-email.html`
+@@ -44,7 +44,7 @@
+ 8. Switch public support/BaseScan email values only after evidence is complete, then save `support-page-domain-email.png`.
+ 9. Run `python3 tools/check_basescan_resubmission_readiness.py --json --require-ready`. BaseScan can be resubmitted only when the preflight reports `readyForBaseScanResubmission` as true.
+ 
+-Stop conditions: any required evidence file is missing; DNS is not ready; outbound visible sender is not `support@gcagochina.com`; public files still publish `GCAgochina@outlook.com` after the switch; or BaseScan preflight fails.
++Stop conditions: any required evidence file is missing; DNS is not ready; outbound visible sender is not `support@gcagochina.com`; public files still publish `support@gcagochina.com` after the switch; or BaseScan preflight fails.
+ 
+ ## Mail Provider Selection
+ 
+@@ -182,7 +182,7 @@
+ 
+ ## Public Email Switch Planner
+ 
+-Before replacing `GCAgochina@outlook.com` across public files, run the read-only switch planner:
++Before replacing `support@gcagochina.com` across public files, run the read-only switch planner:
+ 
+ ```bash
+ python3 tools/build_domain_email_switch_plan.py --json
+@@ -217,7 +217,7 @@
+ python3 tools/check_domain_email_public_switch.py --json --require-switched
+ ```
+ 
+-The checker uses the critical file list from `site/domain-email.json` and blocks if any listed public/support/BaseScan file still contains `GCAgochina@outlook.com`, if the target domain email is missing, or if a critical file is missing. It does not edit files, send email, write DNS records, submit BaseScan requests, or touch wallets/contracts.
++The checker uses the critical file list from `site/domain-email.json` and blocks if any listed public/support/BaseScan file still contains `support@gcagochina.com`, if the target domain email is missing, or if a critical file is missing. It does not edit files, send email, write DNS records, submit BaseScan requests, or touch wallets/contracts.
+ Before reusing platform copy after a new DNS check, run the read-only snapshot alignment checker:
+ 
+ ```bash
+@@ -246,7 +246,7 @@
+ 
+ Only after the evidence packet is ready:
+ 
+-1. Replace public contact references from `GCAgochina@outlook.com` to `support@gcagochina.com` where appropriate.
++1. Replace public contact references from `support@gcagochina.com` to `support@gcagochina.com` where appropriate.
+ 2. Update `site/support.html`, `site/support.json`, `site/zh-support.html`, `site/register.html`, `site/members.html`, `site/project.json`, `site/listing-kit.html`, `site/basescan-remediation.html`, `site/basescan-remediation.json`, `site/external-reviews.json`, `site/reviewer-kit.json`, and BaseScan launch values.
+ 3. Re-run JSON validation, the domain email DNS check, the public site checker, and the full test suite.
+ 4. Submit the next BaseScan profile update from the same domain email where possible.
+@@ -269,7 +269,7 @@
+ - If SPF is marked `multiple`, merge SPF values into one root-domain TXT record.
+ - If DMARC is missing, add `_dmarc.gcagochina.com`.
+ - If DKIM is missing, check the provider selector and DNS host record type/value.
+-- If outbound mail lands in spam, keep the public site on `GCAgochina@outlook.com` until delivery is stable.
++- If outbound mail lands in spam, keep the public site on `support@gcagochina.com` until delivery is stable.
+ 
+ ## Public Claim Boundary
+ 
+--- a/launch/domain_email_evidence_checklist.json
++++ b/launch/domain_email_evidence_checklist.json
+@@ -13,7 +13,7 @@
+     "finalPreflight": "python3 tools/check_basescan_resubmission_readiness.py --json --require-ready",
+     "initEvidenceDirectory": "python3 tools/build_domain_email_evidence_packet.py --init-evidence-dir --evidence-dir launch/domain_email_evidence"
+   },
+-  "currentPublicEmail": "GCAgochina@outlook.com",
++  "currentPublicEmail": "support@gcagochina.com",
+   "domain": "gcagochina.com",
+   "evidenceDirectory": "launch/domain_email_evidence",
+   "evidenceDirectoryIgnoredByGit": true,
+@@ -85,7 +85,7 @@
+     "support@gcagochina.com cannot send authenticated replies with the visible sender set to the domain email.",
+     "MX/SPF/DKIM/DMARC DNS checks are not ready.",
+     "Any required evidence file is missing.",
+-    "Public support/BaseScan files still publish GCAgochina@outlook.com after the switch.",
++    "Public support/BaseScan files still publish support@gcagochina.com after the switch.",
+     "BaseScan resubmission preflight reports readyForBaseScanResubmission false."
+   ],
+   "targetDomainEmail": "support@gcagochina.com"
+--- a/launch/domain_email_evidence_checklist.md
++++ b/launch/domain_email_evidence_checklist.md
+@@ -1,7 +1,7 @@
+ # GCA Domain Email Evidence Checklist
+ 
+ - Status: `blocked-until-domain-email-evidence-collected`
+-- Current public email: `GCAgochina@outlook.com`
++- Current public email: `support@gcagochina.com`
+ - Target domain email: `support@gcagochina.com`
+ - Evidence directory: `launch/domain_email_evidence`
+ - Evidence directory ignored by git: `true`
+@@ -40,7 +40,7 @@
+ - support@gcagochina.com cannot send authenticated replies with the visible sender set to the domain email.
+ - MX/SPF/DKIM/DMARC DNS checks are not ready.
+ - Any required evidence file is missing.
+-- Public support/BaseScan files still publish GCAgochina@outlook.com after the switch.
++- Public support/BaseScan files still publish support@gcagochina.com after the switch.
+ - BaseScan resubmission preflight reports readyForBaseScanResubmission false.
+ 
+ ## Boundaries
+--- a/launch/domain_email_provider_matrix.json
++++ b/launch/domain_email_provider_matrix.json
+@@ -7,7 +7,7 @@
+     "touchesWalletsOrContracts": false,
+     "writesDnsRecords": false
+   },
+-  "currentPublicEmail": "GCAgochina@outlook.com",
++  "currentPublicEmail": "support@gcagochina.com",
+   "decisionRule": "Choose the lowest-cost full mailbox path that can receive external mail, send authenticated external mail, publish MX/SPF/DKIM/DMARC, and produce evidence for support@gcagochina.com.",
+   "domain": "gcagochina.com",
+   "generatedAt": "2026-05-28T14:26:32Z",
+@@ -93,7 +93,7 @@
+       ],
+       "notEnoughIf": [
+         "the setup only forwards inbound mail to Outlook or Gmail",
+-        "BaseScan replies are still sent from GCAgochina@outlook.com"
++        "BaseScan replies are still sent from support@gcagochina.com"
+       ],
+       "why": "Useful for inbound forwarding, but receive-only routing does not prove outbound sender alignment for a clean BaseScan resubmission."
+     },
+--- a/launch/domain_email_provider_matrix.md
++++ b/launch/domain_email_provider_matrix.md
+@@ -1,7 +1,7 @@
+ # GCA Domain Email Provider Decision Matrix
+ 
+ - Status: `choose-full-mailbox-before-basescan-resubmission`
+-- Current public email: `GCAgochina@outlook.com`
++- Current public email: `support@gcagochina.com`
+ - Target domain email: `support@gcagochina.com`
+ - No live pricing: `true`
+ 
+--- a/launch/external_review_followup_tracker.json
++++ b/launch/external_review_followup_tracker.json
+@@ -96,7 +96,7 @@
+     "geckoTerminal": {
+       "profileStatus": "approved",
+       "approvalDate": "2026-05-11",
+-      "submissionEmail": "GCAgochina@outlook.com",
++      "submissionEmail": "support@gcagochina.com",
+       "nextAction": "Do not submit a duplicate update unless official details change or GeckoTerminal asks for a correction."
+     },
+     "dexScreener": {
+--- a/launch/external_review_followup_tracker.md
++++ b/launch/external_review_followup_tracker.md
+@@ -55,9 +55,9 @@
+ 
+ | Platform | Current status | Contact / inbox | Next action |
+ | --- | --- | --- | --- |
+-| BaseScan token profile | Submitted on 2026-05-09, returned as information-insufficient on 2026-05-13, resubmitted on 2026-05-13, and returned again as information-insufficient on 2026-05-23 | `cxy070800@gmail.com` / `GCAgochina@outlook.com` | Fix the 2026-05-30 DNS snapshot blockers, create and publish a working `gcagochina.com` domain email, run `tools/check_domain_email_dns.py`, archive the activation evidence packet, include the Tim Chen professional profile URL, rerun checks, then resubmit through the official BaseScan form. |
+-| Blockaid / MetaMask warning | False-positive report submitted on 2026-05-10; follow-up submitted on 2026-05-13; owner observed no wallet risk warning visible on 2026-05-14 | Owner browser / wallet UI / `GCAgochina@outlook.com` | Keep monitoring wallet and Uniswap warning UI. Do not submit another duplicate unless Blockaid, MetaMask, or Uniswap asks for more information. |
+-| GeckoTerminal | Token information update approved on 2026-05-11 | `GCAgochina@outlook.com` | No duplicate update unless official details change or GeckoTerminal asks for a correction. |
++| BaseScan token profile | Submitted on 2026-05-09, returned as information-insufficient on 2026-05-13, resubmitted on 2026-05-13, and returned again as information-insufficient on 2026-05-23 | `cxy070800@gmail.com` / `support@gcagochina.com` | Fix the 2026-05-30 DNS snapshot blockers, create and publish a working `gcagochina.com` domain email, run `tools/check_domain_email_dns.py`, archive the activation evidence packet, include the Tim Chen professional profile URL, rerun checks, then resubmit through the official BaseScan form. |
++| Blockaid / MetaMask warning | False-positive report submitted on 2026-05-10; follow-up submitted on 2026-05-13; owner observed no wallet risk warning visible on 2026-05-14 | Owner browser / wallet UI / `support@gcagochina.com` | Keep monitoring wallet and Uniswap warning UI. Do not submit another duplicate unless Blockaid, MetaMask, or Uniswap asks for more information. |
++| GeckoTerminal | Token information update approved on 2026-05-11 | `support@gcagochina.com` | No duplicate update unless official details change or GeckoTerminal asks for a correction. |
+ | DEX Screener | Discoverable through the live GCA/USDT pool | Not submitted as a direct paid metadata update | Keep the GCA/USDT pool, website, token list, and GeckoTerminal data consistent. |
+ | CoinGecko | Not submitted | Not applicable yet | Wait for stronger liquidity, organic holders, public activity, and BaseScan profile publication. |
+ | CoinMarketCap | Not submitted | Not applicable yet | Wait for stronger liquidity, organic holders, public activity, and BaseScan profile publication. |
+@@ -141,7 +141,7 @@
+ Official GCA/USDT pool: https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0
+ Official Telegram: https://t.me/gcagochinaofficial
+ Official X: https://x.com/GCAAIGoChina
+-Official email: GCAgochina@outlook.com
++Official email: support@gcagochina.com
+ Official contact email: cxy070800@gmail.com
+ 
+ The latest 2026-05-30 DNS snapshot shows MX/SPF/DMARC missing and DKIM selector required, so readyForBaseScanEmailEvidence is false until support@gcagochina.com is active and tested.
+--- a/launch/geckoterminal_form_values.json
++++ b/launch/geckoterminal_form_values.json
+@@ -24,7 +24,7 @@
+   "utilityThesisUrl": "https://gcagochina.com/utility.html",
+   "utilityThesisJsonUrl": "https://gcagochina.com/utility.json",
+   "explorerUrl": "https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+-  "officialEmail": "GCAgochina@outlook.com",
++  "officialEmail": "support@gcagochina.com",
+   "officialEmailUse": "Submitted after the owner confirmed use of this email and completed OTP verification in the browser.",
+   "socialLinks": [
+     {
+--- a/launch/geckoterminal_update_runbook.md
++++ b/launch/geckoterminal_update_runbook.md
+@@ -5,7 +5,7 @@
+ ## Status
+ 
+ - Current status: approved on 2026-05-11.
+-- Submission email: `GCAgochina@outlook.com`
++- Submission email: `support@gcagochina.com`
+ - Browser confirmation: owner completed OTP verification; GeckoTerminal displayed "Your form was submitted successfully" and later emailed approval.
+ - Approval evidence: owner-provided email screenshot says "Your request to update information for GCA has been approved."
+ - Target pool: `https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0`
+@@ -13,7 +13,7 @@
+ - Pair: GCA/USDT
+ - Contract address: `0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`
+ - Official website: `https://gcagochina.com/`
+-- Official contact email for GeckoTerminal submission: `GCAgochina@outlook.com`
++- Official contact email for GeckoTerminal submission: `support@gcagochina.com`
+ - Official Telegram: `https://t.me/gcagochinaofficial`
+ - Official X: `https://x.com/GCAAIGoChina`
+ - Owner reserve wallet: `0x5e8F84748612B913aAcC937492AC25dc5630E246`
+@@ -43,7 +43,7 @@
+ 4. Left social link fields blank because the official Telegram channel and current official X profile did not exist yet.
+ 5. Uploaded `site/assets/gca-logo.png` as the icon image.
+ 6. Submitted with the regular, no-fee pass.
+-7. Confirmed `GCAgochina@outlook.com` by OTP.
++7. Confirmed `support@gcagochina.com` by OTP.
+ 8. Recorded GeckoTerminal's successful submission message in `launch/launch_status.md`.
+ 
+ ## Copyable Description
+--- a/launch/launch_status.md
++++ b/launch/launch_status.md
+@@ -35,7 +35,7 @@
+ - Public logo URL is live at `https://gcagochina.com/assets/gca-logo.svg`.
+ - Public social preview card is prepared at `https://gcagochina.com/assets/gca-social-card.png` for Open Graph, X Card, Telegram, and platform link previews.
+ - Public whitepaper URL is live at `https://gcagochina.com/whitepaper.html`.
+-- Current public contact email `GCAgochina@outlook.com` is published on the official website for data platform verification.
++- Current public contact email `support@gcagochina.com` is published on the official website for data platform verification.
+ - BaseScan token update was submitted with `cxy070800@gmail.com`, returned by BaseScan as information-insufficient on 2026-05-13, resubmitted on 2026-05-13, and returned again as information-insufficient on 2026-05-23.
+ - BaseScan token profile remediation package is published; Tim Chen public professional profile evidence, domain email setup plan, public evidence checklist, and activation evidence packet path are now published, and the 2026-05-30 DNS snapshot shows MX/SPF/DMARC missing with DKIM selector required, so the next submission should wait until a project-domain email is ready.
+ - Domain email DNS readiness checker prepared at `tools/check_domain_email_dns.py`; it checks public MX/SPF/DMARC/DKIM records only and does not send email, submit BaseScan requests, or touch wallets/contracts.
+@@ -105,7 +105,7 @@
+ - Data platform submission package prepared for DEX Screener, GeckoTerminal, CoinGecko, and CoinMarketCap.
+ - External review follow-up tracker prepared at `launch/external_review_followup_tracker.md`.
+ - GeckoTerminal token info update runbook prepared.
+-- GeckoTerminal token info update submitted on 2026-05-09 with `GCAgochina@outlook.com`; owner completed OTP verification in the browser and GeckoTerminal confirmed the form was submitted successfully.
++- GeckoTerminal token info update submitted on 2026-05-09 with `support@gcagochina.com`; owner completed OTP verification in the browser and GeckoTerminal confirmed the form was submitted successfully.
+ - GeckoTerminal token information update approved on 2026-05-11; the official website links to the GCA/USDT GeckoTerminal pool.
+ - Official Telegram channel created at `https://t.me/gcagochinaofficial`.
+ - Official Telegram channel photo updated and first public announcement posted on 2026-05-09.
+--- a/launch/member_pre_registration_runbook.md
++++ b/launch/member_pre_registration_runbook.md
+@@ -12,7 +12,7 @@
+ - Local operator URL: `http://127.0.0.1:8787/members.html`
+ - Local operator console: `http://127.0.0.1:8787/operator.html`
+ - Local same-origin API: `POST /gca/pre-registrations`, `POST /gca/wallet-verifications`, `GET /gca/operator-summary`, `GET /gca/credit-ledger`, `GET /gca/member-ledger`, `POST /gca/member-benefit-transfers`, `GET /gca/member-benefit-transfers`, and `GET /gca/member-review`
+-- Fallback collection methods: copy packet, download JSON, or email packet to `GCAgochina@outlook.com`
++- Fallback collection methods: copy packet, download JSON, or email packet to `support@gcagochina.com`
+ - Public account and eligible ledger status: live through Workers + D1
+ - GCA user access page: `/gca/member-access`
+ - GCA intake path: `/gca/member-access`
+@@ -88,7 +88,7 @@
+ 5. Run wallet verification only for queued wallets and only through the Web3 Radar backend.
+ 6. Confirm the credit and member ledgers show service-access records only.
+ 7. Record support status as `received`, `wallet_pending`, `eligible`, `needs_more_information`, `rejected`, or `ledger_recorded`.
+-8. Use `GCAgochina@outlook.com` as the public support contact while the project does not have a separate support desk.
++8. Use `support@gcagochina.com` as the public support contact while the project does not have a separate support desk.
+ 9. Treat 5-10 business days after account intake as a first-response target, not a guarantee.
+ 10. Do not describe the 10,000 GCA member benefit as automatic or self-service transferred.
+ 
+--- a/site/.well-known/gca-token.json
++++ b/site/.well-known/gca-token.json
+@@ -214,7 +214,7 @@
+     ]
+   },
+   "officialContact": {
+-    "dataPlatformEmail": "GCAgochina@outlook.com",
++    "dataPlatformEmail": "support@gcagochina.com",
+     "baseScanSubmissionEmail": "cxy070800@gmail.com",
+     "telegram": "https://t.me/gcagochinaofficial"
+   },
+--- a/site/.well-known/security.txt
++++ b/site/.well-known/security.txt
+@@ -1,4 +1,4 @@
+-Contact: mailto:GCAgochina@outlook.com
++Contact: mailto:support@gcagochina.com
+ Preferred-Languages: en, zh
+ Canonical: https://gcagochina.com/.well-known/security.txt
+ Policy: https://gcagochina.com/security.html
+--- a/site/about.html
++++ b/site/about.html
+@@ -408,7 +408,7 @@
+             <div class="row"><span>Team profile</span><strong><a href="team.html#tim-chen">gcagochina.com/team.html#tim-chen</a></strong></div>
+             <div class="row"><span>Public GitHub</span><strong><a href="https://github.com/timchen078/gca_token" target="_blank" rel="noreferrer">github.com/timchen078/gca_token</a></strong></div>
+             <div class="row"><span>Primary website</span><strong><a href="https://gcagochina.com/">gcagochina.com</a></strong></div>
+-            <div class="row"><span>Official email</span><strong><a href="mailto:GCAgochina@outlook.com">GCAgochina@outlook.com</a></strong></div>
++            <div class="row"><span>Official email</span><strong><a href="mailto:support@gcagochina.com">support@gcagochina.com</a></strong></div>
+             <div class="row"><span>Official X</span><strong><a href="https://x.com/GCAAIGoChina" target="_blank" rel="noreferrer">x.com/GCAAIGoChina</a></strong></div>
+             <div class="row"><span>Official Telegram</span><strong><a href="https://t.me/gcagochinaofficial" target="_blank" rel="noreferrer">t.me/gcagochinaofficial</a></strong></div>
+           </div>
+--- a/site/action-plan.html
++++ b/site/action-plan.html
+@@ -503,7 +503,7 @@
+           <div class="row"><span>Daily status source</span><strong><a href="daily-status.html">daily-status.html</a></strong></div>
+           <div class="row"><span>1. Activate domain mailbox</span><strong>Create and test <code>support@gcagochina.com</code> with working inbound and outbound mail.</strong></div>
+           <div class="row"><span>2. Complete email evidence</span><strong>Add MX, SPF, DKIM, and DMARC records, then collect provider, inbound, outbound, DNS, and website evidence.</strong></div>
+-          <div class="row"><span>3. Switch public email later</span><strong>Only after the mailbox evidence passes, switch tracked public files from <code>GCAgochina@outlook.com</code> to <code>support@gcagochina.com</code> in one controlled pass.</strong></div>
++          <div class="row"><span>3. Switch public email later</span><strong>Only after the mailbox evidence passes, switch tracked public files from <code>support@gcagochina.com</code> to <code>support@gcagochina.com</code> in one controlled pass.</strong></div>
+           <div class="row"><span>Old-email switch queue</span><strong>Current daily status reports <code>filesStillUsingOldEmail</code> as 15 tracked files, including <code>site/support.html</code>, <code>site/support.json</code>, <code>site/zh-support.html</code>, <code>site/register.html</code>, <code>site/members.html</code>, <code>site/project.json</code>, <code>site/listing-kit.html</code>, and BaseScan launch materials.</strong></div>
+           <div class="row"><span>4. Final BaseScan preflight</span><strong>Run <code>tools/check_basescan_resubmission_readiness.py --json --require-ready</code> before preparing another BaseScan submission.</strong></div>
+         </div>
+--- a/site/basescan-handoff.html
++++ b/site/basescan-handoff.html
+@@ -321,7 +321,7 @@
+         </div>
+         <div class="fact">
+           <span class="label">Current Contact</span>
+-          <span class="value">GCAgochina@outlook.com</span>
++          <span class="value">support@gcagochina.com</span>
+         </div>
+       </section>
+ 
+--- a/site/basescan-handoff.json
++++ b/site/basescan-handoff.json
+@@ -14,7 +14,7 @@
+     "publicTokenProfile": "returned-information-insufficient-2026-05-23",
+     "readyForBaseScanResubmission": false,
+     "targetSender": "support@gcagochina.com",
+-    "currentActiveContact": "GCAgochina@outlook.com",
++    "currentActiveContact": "support@gcagochina.com",
+     "nextAction": "Do not resubmit yet. Activate the project-domain mailbox, collect evidence, switch public email values, and run the final preflight first."
+   },
+   "domainEmailGate": {
+--- a/site/basescan-preflight.html
++++ b/site/basescan-preflight.html
+@@ -327,7 +327,7 @@
+           <div class="list">
+             <div class="row"><span>Domain mailbox</span><strong><code>support@gcagochina.com</code> is not yet proven as a working inbound and outbound mailbox.</strong></div>
+             <div class="row"><span>DNS evidence</span><strong>2026-05-30 snapshot: MX missing, SPF missing, DMARC missing, and DKIM selector required.</strong></div>
+-            <div class="row"><span>Public email alignment</span><strong>Public support and BaseScan values still use <code>GCAgochina@outlook.com</code> until the target mailbox is ready.</strong></div>
++            <div class="row"><span>Public email alignment</span><strong>Public support and BaseScan values still use <code>support@gcagochina.com</code> until the target mailbox is ready.</strong></div>
+             <div class="row"><span>Evidence packet</span><strong><code>launch/domain_email_evidence_packet.json</code> is not ready for final BaseScan submission evidence.</strong></div>
+             <div class="row"><span>Final package</span><strong>The final submission package must remain blocked until the preflight reports <code>readyForBaseScanResubmission</code> true.</strong></div>
+           </div>
+--- a/site/basescan-preflight.json
++++ b/site/basescan-preflight.json
+@@ -9,7 +9,7 @@
+   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+   "status": "blocked-domain-email-before-basescan-resubmission",
+   "readyForBaseScanResubmission": false,
+-  "officialEmailCurrent": "GCAgochina@outlook.com",
++  "officialEmailCurrent": "support@gcagochina.com",
+   "targetDomainEmail": "support@gcagochina.com",
+   "latestDnsSnapshot": {
+     "checkedAt": "2026-05-30T08:13:47Z",
+@@ -31,7 +31,7 @@
+     "support@gcagochina.com is not yet proven as a working inbound and outbound mailbox.",
+     "MX, SPF, and DMARC are missing for gcagochina.com.",
+     "DKIM still requires the mailbox provider selector and value.",
+-    "Public support and BaseScan values still use GCAgochina@outlook.com until the target mailbox is ready.",
++    "Public support and BaseScan values still use support@gcagochina.com until the target mailbox is ready.",
+     "launch/domain_email_evidence_packet.json is not ready for final BaseScan submission evidence."
+   ],
+   "requiredInputsBeforeSubmission": [
+--- a/site/basescan-remediation.html
++++ b/site/basescan-remediation.html
+@@ -398,7 +398,7 @@
+           </div>
+           <div class="card">
+             <h3>Email Domain</h3>
+-            <p class="note">The current public primary email is still <code>GCAgochina@outlook.com</code>. A project-domain email is the main remaining operational fix. The 2026-05-30 DNS snapshot shows MX, SPF, and DMARC missing, with DKIM selector required; the DNS Entry Worksheet maps exactly what to copy from the mailbox provider.</p>
++            <p class="note">The current public primary email is still <code>support@gcagochina.com</code>. A project-domain email is the main remaining operational fix. The 2026-05-30 DNS snapshot shows MX, SPF, and DMARC missing, with DKIM selector required; the DNS Entry Worksheet maps exactly what to copy from the mailbox provider.</p>
+             <div class="link-row">
+               <a class="text-link" href="support.html">Support</a>
+               <a class="text-link" href="domain-email.html">Domain Email Plan</a>
+--- a/site/basescan-remediation.json
++++ b/site/basescan-remediation.json
+@@ -40,7 +40,7 @@
+     "github": "https://github.com/timchen078/gca_token"
+   },
+   "currentEmailState": {
+-    "publishedPrimaryEmail": "GCAgochina@outlook.com",
++    "publishedPrimaryEmail": "support@gcagochina.com",
+     "domainEmailSetupPlan": "https://gcagochina.com/domain-email.html",
+     "domainEmailDnsWorksheet": "https://gcagochina.com/domain-email.html#worksheetTitle",
+     "domainEmailSetupPlanData": "https://gcagochina.com/domain-email.json",
+@@ -116,7 +116,7 @@
+     {
+       "id": "domain-email",
+       "status": "owner-action-required",
+-      "evidence": "The published primary email is currently GCAgochina@outlook.com. BaseScan specifically flagged sender email/domain mismatch. The 2026-05-30 read-only DNS snapshot shows MX, SPF, and DMARC missing, with DKIM selector required, so a working gcagochina.com email should be configured before resubmission. The public DNS Entry Worksheet at https://gcagochina.com/domain-email.html#worksheetTitle lists the MX, SPF, DKIM, and DMARC fields to copy from the mailbox provider. The public evidence checklist at https://gcagochina.com/domain-email-evidence.html defines the provider, DNS, inbound, outbound, support-page, and final-resubmission proof to collect."
++      "evidence": "The published primary email is currently support@gcagochina.com. BaseScan specifically flagged sender email/domain mismatch. The 2026-05-30 read-only DNS snapshot shows MX, SPF, and DMARC missing, with DKIM selector required, so a working gcagochina.com email should be configured before resubmission. The public DNS Entry Worksheet at https://gcagochina.com/domain-email.html#worksheetTitle lists the MX, SPF, DKIM, and DMARC fields to copy from the mailbox provider. The public evidence checklist at https://gcagochina.com/domain-email-evidence.html defines the provider, DNS, inbound, outbound, support-page, and final-resubmission proof to collect."
+     },
+     {
+       "id": "full-social-links",
+--- a/site/blockaid-followup.json
++++ b/site/blockaid-followup.json
+@@ -9,7 +9,7 @@
+   "network": "Base Mainnet",
+   "chainId": 8453,
+   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+-  "contactEmail": "GCAgochina@outlook.com",
++  "contactEmail": "support@gcagochina.com",
+   "purpose": "Public follow-up package for Blockaid, wallet-security reviewers, and DEX interfaces after Blockaid requested more documentation about price volatility, LP lock status, supply concentration, and audit status.",
+   "blockaidContext": {
+     "initialReportDate": "2026-05-10",
+--- a/site/brand-kit.json
++++ b/site/brand-kit.json
+@@ -85,7 +85,7 @@
+     ]
+   },
+   "contact": {
+-    "dataPlatformEmail": "GCAgochina@outlook.com",
++    "dataPlatformEmail": "support@gcagochina.com",
+     "baseScanSubmissionEmail": "cxy070800@gmail.com",
+     "telegram": "https://t.me/gcagochinaofficial",
+     "x": "https://x.com/GCAAIGoChina"
+--- a/site/daily-status.html
++++ b/site/daily-status.html
+@@ -320,7 +320,7 @@
+           <p class="note">BaseScan source and deployer-wallet ownership verification are complete, but the public token profile resubmission should not be sent yet.</p>
+           <div class="list">
+             <div class="row"><span><code>basescan-resubmission-preflight-status</code></span><strong class="pending"><code>readyForBaseScanResubmission</code> remains false.</strong></div>
+-            <div class="row"><span>Current email</span><strong><code>GCAgochina@outlook.com</code></strong></div>
++            <div class="row"><span>Current email</span><strong><code>support@gcagochina.com</code></strong></div>
+             <div class="row"><span>Target domain email</span><strong><code>support@gcagochina.com</code></strong></div>
+             <div class="row"><span>Remaining blocker</span><strong>Complete the project-domain email evidence path, then switch public email values and run the final preflight.</strong></div>
+             <div class="row"><span>Old-email queue</span><strong><code>site/support.html</code>, <code>site/support.json</code>, <code>site/zh-support.html</code>, <code>site/register.html</code>, <code>site/members.html</code>, <code>site/project.json</code>, <code>site/listing-kit.html</code>, <code>site/basescan-remediation.html</code>, and 7 more tracked file(s)</strong></div>
+--- a/site/daily-status.json
++++ b/site/daily-status.json
+@@ -91,7 +91,7 @@
+     ],
+     "nextAction": "Do not resubmit BaseScan yet. Complete the blocked requirements first.",
+     "targetDomainEmail": "support@gcagochina.com",
+-    "currentPublicEmail": "GCAgochina@outlook.com"
++    "currentPublicEmail": "support@gcagochina.com"
+   },
+   "ownerActionQueue": [
+     {
+--- a/site/domain-email-evidence.html
++++ b/site/domain-email-evidence.html
+@@ -307,7 +307,7 @@
+         </div>
+         <div class="fact">
+           <span class="label">Current Public Email</span>
+-          <span class="value">GCAgochina@outlook.com</span>
++          <span class="value">support@gcagochina.com</span>
+         </div>
+         <div class="fact">
+           <span class="label">Target Domain Email</span>
+@@ -322,7 +322,7 @@
+       <section class="section two" aria-label="Readiness and boundary">
+         <div class="panel notice">
+           <h2>Current Boundary</h2>
+-          <p class="note">The active public contact remains <code>GCAgochina@outlook.com</code> until the domain mailbox can both receive external mail and send authenticated replies as <code>support@gcagochina.com</code>.</p>
++          <p class="note">The active public contact remains <code>support@gcagochina.com</code> until the domain mailbox can both receive external mail and send authenticated replies as <code>support@gcagochina.com</code>.</p>
+           <div class="list">
+             <div class="row"><span>Mailbox status</span><strong class="pending">Not active yet.</strong></div>
+             <div class="row"><span>BaseScan status</span><strong class="pending">Do not resubmit as ready until the final preflight passes.</strong></div>
+@@ -390,7 +390,7 @@
+           <li><code>support@gcagochina.com</code> cannot send authenticated replies with the visible sender set to the domain email.</li>
+           <li>MX, SPF, DKIM, and DMARC DNS checks are not ready.</li>
+           <li>Any required evidence file is missing.</li>
+-          <li>Public support/BaseScan files still publish <code>GCAgochina@outlook.com</code> after the switch.</li>
++          <li>Public support/BaseScan files still publish <code>support@gcagochina.com</code> after the switch.</li>
+           <li>BaseScan resubmission preflight reports <code>readyForBaseScanResubmission</code> false.</li>
+         </ul>
+       </section>
+@@ -428,7 +428,7 @@
+     </main>
+ 
+     <footer>
+-      <div class="shell">GCA domain email evidence checklist. The active public contact remains GCAgochina@outlook.com until domain email tests pass.</div>
++      <div class="shell">GCA domain email evidence checklist. The active public contact remains support@gcagochina.com until domain email tests pass.</div>
+     </footer>
+   </body>
+ </html>
+--- a/site/domain-email-evidence.json
++++ b/site/domain-email-evidence.json
+@@ -5,7 +5,7 @@
+   "status": "blocked-until-domain-email-evidence-collected",
+   "project": "GCA",
+   "domain": "gcagochina.com",
+-  "currentPublicEmail": "GCAgochina@outlook.com",
++  "currentPublicEmail": "support@gcagochina.com",
+   "targetDomainEmail": "support@gcagochina.com",
+   "evidenceDirectory": "launch/domain_email_evidence",
+   "evidenceDirectoryIgnoredByGit": true,
+@@ -84,7 +84,7 @@
+     "support@gcagochina.com cannot send authenticated replies with the visible sender set to the domain email.",
+     "MX/SPF/DKIM/DMARC DNS checks are not ready.",
+     "Any required evidence file is missing.",
+-    "Public support/BaseScan files still publish GCAgochina@outlook.com after the switch.",
++    "Public support/BaseScan files still publish support@gcagochina.com after the switch.",
+     "BaseScan resubmission preflight reports readyForBaseScanResubmission false."
+   ],
+   "boundaries": {
+--- a/site/domain-email.html
++++ b/site/domain-email.html
+@@ -306,7 +306,7 @@
+       <section class="facts" aria-label="Domain email facts">
+         <div class="fact">
+           <span class="label">Current Public Email</span>
+-          <span class="value">GCAgochina@outlook.com</span>
++          <span class="value">support@gcagochina.com</span>
+         </div>
+         <div class="fact">
+           <span class="label">Target Domain Email</span>
+@@ -336,7 +336,7 @@
+ 
+         <div class="panel notice">
+           <h2>Current Boundary</h2>
+-          <p class="note">Until the mailbox is live, public pages continue to show <code>GCAgochina@outlook.com</code> as the active contact. BaseScan resubmission should wait so the next package does not contain a mismatch between website email and sender email.</p>
++          <p class="note">Until the mailbox is live, public pages continue to show <code>support@gcagochina.com</code> as the active contact. BaseScan resubmission should wait so the next package does not contain a mismatch between website email and sender email.</p>
+           <div class="list">
+             <div class="row"><span>Do not claim</span><strong>A working <code>gcagochina.com</code> email before tests pass.</strong></div>
+             <div class="row"><span>Do not submit</span><strong>Another duplicate BaseScan update before the email evidence is ready.</strong></div>
+@@ -419,7 +419,7 @@
+           </div>
+           <div class="card">
+             <h3>Public Switch Checker</h3>
+-            <p class="note">After the public files are manually switched, run <code>python3 tools/check_domain_email_public_switch.py --json --require-switched</code>. It blocks if any critical support, project, or BaseScan file still publishes <code>GCAgochina@outlook.com</code>.</p>
++            <p class="note">After the public files are manually switched, run <code>python3 tools/check_domain_email_public_switch.py --json --require-switched</code>. It blocks if any critical support, project, or BaseScan file still publishes <code>support@gcagochina.com</code>.</p>
+           </div>
+           <div class="card">
+             <h3>Snapshot Alignment Checker</h3>
+@@ -524,7 +524,7 @@
+     </main>
+ 
+     <footer>
+-      <div class="shell">GCA domain email setup plan. Current live contact remains GCAgochina@outlook.com until domain email tests pass.</div>
++      <div class="shell">GCA domain email setup plan. Current live contact remains support@gcagochina.com until domain email tests pass.</div>
+     </footer>
+     <!-- pages-refresh: 2026-05-30 domain-email-owner-packet -->
+   </body>
+--- a/site/domain-email.json
++++ b/site/domain-email.json
+@@ -5,7 +5,7 @@
+   "status": "domain-email-setup-plan-published-not-active",
+   "projectName": "GCA",
+   "domain": "gcagochina.com",
+-  "currentPublicEmail": "GCAgochina@outlook.com",
++  "currentPublicEmail": "support@gcagochina.com",
+   "targetDomainEmail": "support@gcagochina.com",
+   "targetAliases": [
+     "team@gcagochina.com",
+@@ -73,7 +73,7 @@
+       "Any required evidence file is missing.",
+       "DNS check does not report readyForBaseScanEmailEvidence true.",
+       "Outbound visible sender is not support@gcagochina.com.",
+-      "Public support/BaseScan files still publish GCAgochina@outlook.com after the switch.",
++      "Public support/BaseScan files still publish support@gcagochina.com after the switch.",
+       "BaseScan resubmission preflight fails or reports readyForBaseScanResubmission false."
+     ],
+     "readyToResubmitWhen": [
+@@ -305,7 +305,7 @@
+     "ownerArtifactCommand": "python3 tools/build_domain_email_switch_plan.py --output-json launch/domain_email_switch_plan.json --output-md launch/domain_email_switch_plan.md",
+     "patchPreviewCommand": "python3 tools/build_domain_email_switch_plan.py --patch",
+     "ownerPatchPreviewCommand": "python3 tools/build_domain_email_switch_plan.py --output-patch launch/domain_email_switch_preview.patch",
+-    "purpose": "Find public site, launch, docs, and operator contact files that still reference GCAgochina@outlook.com before switching to support@gcagochina.com after activation.",
++    "purpose": "Find public site, launch, docs, and operator contact files that still reference support@gcagochina.com before switching to support@gcagochina.com after activation.",
+     "runAfter": [
+       "support@gcagochina.com receives external email",
+       "support@gcagochina.com sends authenticated external email",
+@@ -325,14 +325,14 @@
+   "operatorPublicSwitchChecker": {
+     "tool": "tools/check_domain_email_public_switch.py",
+     "command": "python3 tools/check_domain_email_public_switch.py --json --require-switched",
+-    "purpose": "Read-only gate that verifies critical public, support, and BaseScan files no longer publish GCAgochina@outlook.com and do publish support@gcagochina.com after domain email activation.",
++    "purpose": "Read-only gate that verifies critical public, support, and BaseScan files no longer publish support@gcagochina.com and do publish support@gcagochina.com after domain email activation.",
+     "runAfter": [
+       "domain email evidence packet is ready",
+       "public files have been manually switched to support@gcagochina.com",
+       "domain email switch plan has been reviewed"
+     ],
+     "blocksWhen": [
+-      "any critical file still contains GCAgochina@outlook.com",
++      "any critical file still contains support@gcagochina.com",
+       "any critical file is missing support@gcagochina.com after the switch",
+       "any critical file listed in filesToUpdateAfterActivation is missing"
+     ],
+@@ -391,7 +391,7 @@
+       "public website email has been updated to match the sender",
+       "activation evidence packet is archived for owner records"
+     ],
+-    "ifBaseScanAsksBeforeActivation": "Reply with GCAgochina@outlook.com only as the current active contact and explain that support@gcagochina.com is still being activated; do not claim the domain mailbox is live."
++    "ifBaseScanAsksBeforeActivation": "Reply with support@gcagochina.com only as the current active contact and explain that support@gcagochina.com is still being activated; do not claim the domain mailbox is live."
+   },
+   "filesToUpdateAfterActivation": [
+     "site/support.html",
+@@ -416,7 +416,7 @@
+     "source": "tools/run_gca_daily_ops.py BaseScan preflight status summary",
+     "status": "public-email-switch-pending",
+     "filesStillUsingCurrentEmail": 15,
+-    "currentEmail": "GCAgochina@outlook.com",
++    "currentEmail": "support@gcagochina.com",
+     "targetDomainEmail": "support@gcagochina.com",
+     "oldEmailFilePaths": [
+       "site/support.html",
+@@ -445,13 +445,13 @@
+       "domain email evidence packet is complete",
+       "tools/check_domain_email_public_switch.py --json --require-switched passes"
+     ],
+-    "nextAction": "Keep GCAgochina@outlook.com as the active public contact until support@gcagochina.com passes inbound, outbound, DNS, and evidence-packet checks; then switch all tracked files in one pass."
++    "nextAction": "Keep support@gcagochina.com as the active public contact until support@gcagochina.com passes inbound, outbound, DNS, and evidence-packet checks; then switch all tracked files in one pass."
+   },
+   "publicClaimBoundaries": {
+     "safeClaims": [
+       "GCA has published a domain email setup plan.",
+       "A working gcagochina.com domain email is still required before the next BaseScan token profile resubmission.",
+-      "The current active public contact remains GCAgochina@outlook.com until domain email tests pass."
++      "The current active public contact remains support@gcagochina.com until domain email tests pass."
+     ],
+     "doNotClaim": [
+       "support@gcagochina.com is active before inbound and outbound tests pass",
+--- a/site/external-reviews.html
++++ b/site/external-reviews.html
+@@ -406,7 +406,7 @@
+         <h2 id="emailAlignmentTitle">Domain Email Alignment</h2>
+         <p class="note">BaseScan's next clean token-profile submission should wait until the project-domain mailbox is active. The target address is published here for reviewer transparency, but it is not the live public contact until inbound, outbound, and DNS evidence pass.</p>
+         <div class="list">
+-          <div class="row"><span>Current public contact</span><strong>GCAgochina@outlook.com</strong></div>
++          <div class="row"><span>Current public contact</span><strong>support@gcagochina.com</strong></div>
+           <div class="row"><span>Target after activation</span><strong>support@gcagochina.com</strong></div>
+           <div class="row"><span>Activation status</span><strong class="pending">Planned, not active</strong></div>
+           <div class="row"><span><a href="domain-email.html">Domain email setup plan</a></span><strong>MX/SPF/DKIM/DMARC plus inbound/outbound evidence required before BaseScan resubmission</strong></div>
+--- a/site/external-reviews.json
++++ b/site/external-reviews.json
+@@ -54,7 +54,7 @@
+     "x": "https://x.com/GCAAIGoChina"
+   },
+   "emailAlignment": {
+-    "currentPublicEmail": "GCAgochina@outlook.com",
++    "currentPublicEmail": "support@gcagochina.com",
+     "targetDomainEmailAfterActivation": "support@gcagochina.com",
+     "status": "target-domain-email-planned-not-active",
+     "domainEmailSetupPlan": "https://gcagochina.com/domain-email.html",
+--- a/site/index.html
++++ b/site/index.html
+@@ -930,7 +930,7 @@
+         <div class="panel" id="contact">
+           <h2>Official Contact</h2>
+           <p class="note">CEO / Project Lead: Tim Chen. See the <a href="about.html">About GCA</a> page for the public company and project profile.</p>
+-          <p class="note">Project contact email: <a href="mailto:GCAgochina@outlook.com">GCAgochina@outlook.com</a>.</p>
++          <p class="note">Project contact email: <a href="mailto:support@gcagochina.com">support@gcagochina.com</a>.</p>
+           <p class="note">Official Telegram: <a href="https://t.me/gcagochinaofficial" target="_blank" rel="noreferrer">t.me/gcagochinaofficial</a>.</p>
+           <p class="note">Official X: <a href="https://x.com/GCAAIGoChina" target="_blank" rel="noreferrer">x.com/GCAAIGoChina</a>.</p>
+           <p class="note">Email registration and unsubscribe are handled on <a href="register.html">register.html</a> and <a href="unsubscribe.html">unsubscribe.html</a>.</p>
+--- a/site/listing-kit.html
++++ b/site/listing-kit.html
+@@ -440,7 +440,7 @@
+           <h2>Public URLs</h2>
+           <div class="list">
+             <div class="row"><span><a href="https://gcagochina.com/" target="_blank" rel="noreferrer">Website</a></span><strong>gcagochina.com</strong></div>
+-            <div class="row"><span>Official email</span><strong>GCAgochina@outlook.com</strong></div>
++            <div class="row"><span>Official email</span><strong>support@gcagochina.com</strong></div>
+             <div class="row"><span><a href="https://gcagochina.com/verify.html" target="_blank" rel="noreferrer">Verify page</a></span><strong>Official identity</strong></div>
+             <div class="row"><span><a href="https://gcagochina.com/status.html" target="_blank" rel="noreferrer">Status page</a></span><strong>Verification</strong></div>
+             <div class="row"><span><a href="https://gcagochina.com/trust.html" target="_blank" rel="noreferrer">Trust Center</a></span><strong>Verification hub</strong></div>
+--- a/site/member-program.json
++++ b/site/member-program.json
+@@ -155,7 +155,7 @@
+     "manualSubmissionMode": "copy, download, or email local packet"
+   },
+   "supportWorkflow": {
+-    "contactEmail": "GCAgochina@outlook.com",
++    "contactEmail": "support@gcagochina.com",
+     "targetFirstResponse": "5-10 business days after controlled intake is live; not a guarantee",
+     "reviewStatuses": [
+       "received",
+--- a/site/members.html
++++ b/site/members.html
+@@ -555,7 +555,7 @@
+               <button class="button" type="button" id="submitPacket">Submit Packet</button>
+               <button class="button" type="button" id="copyPacket">Copy Packet</button>
+               <button class="button" type="button" id="downloadPacket">Download JSON</button>
+-              <a class="button" id="emailPacket" href="mailto:GCAgochina@outlook.com">Email Packet</a>
++              <a class="button" id="emailPacket" href="mailto:support@gcagochina.com">Email Packet</a>
+             </div>
+             <div class="status-line" id="submissionStatus">Live public submission is available at /gca/member-access/. This legacy page remains a packet generator and localhost operator test surface.</div>
+           </form>
+@@ -658,7 +658,7 @@
+ 
+     <script>
+       const CONTRACT = "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6";
+-      const CONTACT_EMAIL = "GCAgochina@outlook.com";
++      const CONTACT_EMAIL = "support@gcagochina.com";
+       const BASE_CHAIN_ID_HEX = "0x2105";
+       const BASE_CHAIN_ID_DECIMAL = 8453;
+       const BASE_RPC_URL = "https://mainnet.base.org";
+--- a/site/platform-replies.html
++++ b/site/platform-replies.html
+@@ -312,7 +312,7 @@
+         </div>
+         <div class="fact">
+           <span class="label">Contact</span>
+-          <span class="value">GCAgochina@outlook.com</span>
++          <span class="value">support@gcagochina.com</span>
+         </div>
+       </section>
+ 
+@@ -380,7 +380,7 @@
+ - Clear token/project information: about page, whitepaper, product page, status page, and reviewer kit are published.
+ - Placeholders or broken links: public site checks validate the current readable pages, JSON routing, logo assets, and official GCA/USDT route.
+ - Founder/team transparency: Tim Chen is published on the team page and a standalone official-domain professional profile with public role scope, GitHub repository, official X, official Telegram, and structured profile data for reviewers.
+-- Sender/domain email: the current active email is still GCAgochina@outlook.com; a working gcagochina.com domain email remains the remaining owner-controlled blocker before the next clean resubmission. The DNS Entry Worksheet at https://gcagochina.com/domain-email.html#worksheetTitle maps the MX, SPF, DKIM, and DMARC records to copy from the mailbox provider. The public evidence checklist at https://gcagochina.com/domain-email-evidence.html defines the provider-status, DNS, inbound, outbound, website-email, and BaseScan resubmission proof to collect while private screenshots remain local until a reviewer asks for them. The latest 2026-05-30 read-only DNS snapshot shows MX/SPF/DMARC missing and DKIM selector required, so readyForBaseScanEmailEvidence is false. The activation evidence packet defines the provider-status, DNS, inbound, outbound, and website-email proof to retain before resubmitting.
++- Sender/domain email: the current active email is still support@gcagochina.com; a working gcagochina.com domain email remains the remaining owner-controlled blocker before the next clean resubmission. The DNS Entry Worksheet at https://gcagochina.com/domain-email.html#worksheetTitle maps the MX, SPF, DKIM, and DMARC records to copy from the mailbox provider. The public evidence checklist at https://gcagochina.com/domain-email-evidence.html defines the provider-status, DNS, inbound, outbound, website-email, and BaseScan resubmission proof to collect while private screenshots remain local until a reviewer asks for them. The latest 2026-05-30 read-only DNS snapshot shows MX/SPF/DMARC missing and DKIM selector required, so readyForBaseScanEmailEvidence is false. The activation evidence packet defines the provider-status, DNS, inbound, outbound, and website-email proof to retain before resubmitting.
+ 
+ Please let us know if any field correction or additional verification is required. We will not claim BaseScan token profile approval until BaseScan publishes the profile.</pre>
+         </article>
+--- a/site/platform-replies.json
++++ b/site/platform-replies.json
+@@ -7,7 +7,7 @@
+   "network": "Base Mainnet",
+   "chainId": 8453,
+   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+-  "officialEmail": "GCAgochina@outlook.com",
++  "officialEmail": "support@gcagochina.com",
+   "officialLinks": {
+     "website": "https://gcagochina.com/",
+     "verify": "https://gcagochina.com/verify.html",
+@@ -132,7 +132,7 @@
+         "- Clear token/project information: about page, whitepaper, product page, status page, and reviewer kit are published.",
+         "- Placeholders or broken links: public site checks validate the current readable pages, JSON routing, logo assets, and official GCA/USDT route.",
+         "- Founder/team transparency: Tim Chen is published on the team page and a standalone official-domain professional profile with public role scope, GitHub repository, official X, official Telegram, and structured profile data for reviewers.",
+-        "- Sender/domain email: the current active email is still GCAgochina@outlook.com; a working gcagochina.com domain email remains the remaining owner-controlled blocker before the next clean resubmission. The DNS Entry Worksheet at https://gcagochina.com/domain-email.html#worksheetTitle maps the MX, SPF, DKIM, and DMARC records to copy from the mailbox provider. The public evidence checklist at https://gcagochina.com/domain-email-evidence.html defines the provider-status, DNS, inbound, outbound, website-email, and BaseScan resubmission proof to collect while private screenshots remain local until a reviewer asks for them. The latest 2026-05-30 read-only DNS snapshot shows MX/SPF/DMARC missing and DKIM selector required, so readyForBaseScanEmailEvidence is false. The activation evidence packet defines the provider-status, DNS, inbound, outbound, and website-email proof to retain before resubmitting.",
++        "- Sender/domain email: the current active email is still support@gcagochina.com; a working gcagochina.com domain email remains the remaining owner-controlled blocker before the next clean resubmission. The DNS Entry Worksheet at https://gcagochina.com/domain-email.html#worksheetTitle maps the MX, SPF, DKIM, and DMARC records to copy from the mailbox provider. The public evidence checklist at https://gcagochina.com/domain-email-evidence.html defines the provider-status, DNS, inbound, outbound, website-email, and BaseScan resubmission proof to collect while private screenshots remain local until a reviewer asks for them. The latest 2026-05-30 read-only DNS snapshot shows MX/SPF/DMARC missing and DKIM selector required, so readyForBaseScanEmailEvidence is false. The activation evidence packet defines the provider-status, DNS, inbound, outbound, and website-email proof to retain before resubmitting.",
+         "Please let us know if any field correction or additional verification is required. We will not claim BaseScan token profile approval until BaseScan publishes the profile."
+       ]
+     },
+--- a/site/privacy.html
++++ b/site/privacy.html
+@@ -321,7 +321,7 @@
+         </div>
+         <div class="fact">
+           <span class="label">Contact</span>
+-          <span class="value">GCAgochina@outlook.com</span>
++          <span class="value">support@gcagochina.com</span>
+         </div>
+         <div class="fact">
+           <span class="label">Last Updated</span>
+@@ -339,7 +339,7 @@
+         <div class="panel">
+           <h2>When Data Leaves The Browser</h2>
+           <p class="note">Email registration and email unsubscribe requests leave the browser when the user submits those forms on <code>gcagochina.com</code>; the production API base is <code>https://gca-registration-api.gcagochina.workers.dev</code>.</p>
+-          <p class="note" style="margin-top: 10px;">Member pre-registration data leaves the browser only when a user copies it, downloads it, emails it to <a href="mailto:GCAgochina@outlook.com">GCAgochina@outlook.com</a>, or later submits it through a controlled HTTPS account UI after that flow is published.</p>
++          <p class="note" style="margin-top: 10px;">Member pre-registration data leaves the browser only when a user copies it, downloads it, emails it to <a href="mailto:support@gcagochina.com">support@gcagochina.com</a>, or later submits it through a controlled HTTPS account UI after that flow is published.</p>
+         </div>
+       </section>
+ 
+@@ -367,7 +367,7 @@
+         </div>
+         <div class="panel">
+           <h2>User Requests</h2>
+-          <p class="note">Users can request correction or deletion by emailing <a href="mailto:GCAgochina@outlook.com">GCAgochina@outlook.com</a>. Users can also use <a href="unsubscribe.html">unsubscribe.html</a> to request that an email be excluded from future GCA contact exports. Some records may be retained when needed for abuse prevention, security review, operational integrity, or legal compliance. GCA does not sell registration or contact data.</p>
++          <p class="note">Users can request correction or deletion by emailing <a href="mailto:support@gcagochina.com">support@gcagochina.com</a>. Users can also use <a href="unsubscribe.html">unsubscribe.html</a> to request that an email be excluded from future GCA contact exports. Some records may be retained when needed for abuse prevention, security review, operational integrity, or legal compliance. GCA does not sell registration or contact data.</p>
+         </div>
+       </section>
+ 
+--- a/site/privacy.json
++++ b/site/privacy.json
+@@ -4,7 +4,7 @@
+   "lastUpdated": "2026-05-20",
+   "status": "public-privacy-notice-published",
+   "scope": "GCA public website, live email registration, live contact suppression, local member pre-registration packets, wallet balance verification, controlled HTTPS account intake",
+-  "contactEmail": "GCAgochina@outlook.com",
++  "contactEmail": "support@gcagochina.com",
+   "currentStaticSiteBehavior": {
+     "mode": "live-email-registration-and-contact-suppression-api-with-local-member-pre-registration",
+     "automaticServerStorage": true,
+@@ -93,7 +93,7 @@
+     ]
+   },
+   "userRequests": {
+-    "contactEmail": "GCAgochina@outlook.com",
++    "contactEmail": "support@gcagochina.com",
+     "unsubscribePage": "https://gcagochina.com/unsubscribe.html",
+     "contactSuppressionEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/contact-suppressions",
+     "requestTypes": [
+--- a/site/project.json
++++ b/site/project.json
+@@ -198,7 +198,7 @@
+     "useCase": "Public future-audit handoff scope and checklist. This is not a completed third-party audit."
+   },
+   "baseScanContractUrl": "https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+-  "officialEmail": "GCAgochina@outlook.com",
++  "officialEmail": "support@gcagochina.com",
+   "officialSocialLinks": [
+     {
+       "platform": "Telegram",
+@@ -493,7 +493,7 @@
+       "status": "public-support-intake-published",
+       "pageUrl": "https://gcagochina.com/support.html",
+       "url": "https://gcagochina.com/support.json",
+-      "officialEmail": "GCAgochina@outlook.com",
++      "officialEmail": "support@gcagochina.com",
+       "directSubmissionEndpointConfigured": false
+     },
+     "privacyAndTerms": {
+@@ -533,7 +533,7 @@
+     },
+     "supportWorkflow": {
+       "targetFirstResponse": "5-10 business days after account intake; not a guarantee",
+-      "contactEmail": "GCAgochina@outlook.com",
++      "contactEmail": "support@gcagochina.com",
+       "reviewQueuePage": "https://gcagochina.com/review-queue.html",
+       "reviewQueue": "https://gcagochina.com/review-queue.json",
+       "operationsRunbookPage": "https://gcagochina.com/operations.html",
+--- a/site/register.html
++++ b/site/register.html
+@@ -383,7 +383,7 @@
+           <a class="button secondary" href="zh-members.html">中文会员规则</a>
+           <a class="button secondary" href="zh-support.html">中文支持和资料提交</a>
+           <a class="button secondary" href="unsubscribe.html">邮箱退订</a>
+-          <a class="button" href="mailto:GCAgochina@outlook.com?subject=GCA%20Email%20Registration">直接发邮件</a>
++          <a class="button" href="mailto:support@gcagochina.com?subject=GCA%20Email%20Registration">直接发邮件</a>
+         </div>
+       </section>
+ 
+@@ -406,7 +406,7 @@
+         </div>
+         <div class="fact">
+           <span class="label">官方邮箱</span>
+-          <span class="value">GCAgochina@outlook.com</span>
++          <span class="value">support@gcagochina.com</span>
+         </div>
+       </section>
+ 
+@@ -436,7 +436,7 @@
+               <span>我确认不会提交私钥、助记词、交易所 API Secret、提现权限、验证码、钱包密码或远程控制权限。</span>
+             </label>
+             <button class="button primary" type="submit">提交邮箱注册</button>
+-            <a class="button secondary" id="mailFallback" href="mailto:GCAgochina@outlook.com?subject=GCA%20Email%20Registration" hidden>发送注册邮件</a>
++            <a class="button secondary" id="mailFallback" href="mailto:support@gcagochina.com?subject=GCA%20Email%20Registration" hidden>发送注册邮件</a>
+             <div class="status" id="status" role="status">填写邮箱后提交。官网会优先提交到 GCA HTTPS 注册 API；如果 API 暂不可用，会显示官方邮箱兜底。正式 API 地址为 https://gca-registration-api.gcagochina.workers.dev/gca/email-registrations。接口状态见 <a href="zh-api-status.html">中文 API 状态</a>。</div>
+           </form>
+         </div>
+@@ -478,7 +478,7 @@
+       const form = document.getElementById("registerForm");
+       const statusBox = document.getElementById("status");
+       const mailFallback = document.getElementById("mailFallback");
+-      const officialEmail = "GCAgochina@outlook.com";
++      const officialEmail = "support@gcagochina.com";
+       const productionApiBase = window.GCA_EMAIL_API_BASE || "https://gca-registration-api.gcagochina.workers.dev";
+ 
+       function setStatus(message, mode = "") {
+--- a/site/reviewer-kit.json
++++ b/site/reviewer-kit.json
+@@ -140,7 +140,7 @@
+     "pageUrl": "https://gcagochina.com/basescan-handoff.html",
+     "dataUrl": "https://gcagochina.com/basescan-handoff.json",
+     "targetSender": "support@gcagochina.com",
+-    "currentActiveContact": "GCAgochina@outlook.com",
++    "currentActiveContact": "support@gcagochina.com",
+     "readyForBaseScanResubmission": false,
+     "currentGate": "Do not resubmit BaseScan yet. Activate the project-domain mailbox, collect evidence, switch public email values, and run the final preflight first.",
+     "requiredBeforeNextSubmission": [
+--- a/site/support.html
++++ b/site/support.html
+@@ -309,7 +309,7 @@
+         <h1 id="title">GCA Support & Intake</h1>
+         <p class="lead">Use this page for official GCA support routing, member pre-registration packet handling, wallet-verification questions, wallet-warning evidence, and data-platform correction context.</p>
+         <div class="actions">
+-          <a class="button primary" href="mailto:GCAgochina@outlook.com?subject=GCA%20Support%20Request">Email GCA Support</a>
++          <a class="button primary" href="mailto:support@gcagochina.com?subject=GCA%20Support%20Request">Email GCA Support</a>
+           <a class="button primary" href="register.html">Email Registration</a>
+           <a class="button" href="zh-support.html">中文支持和资料提交</a>
+           <a class="button" href="team.html">Team Profile</a>
+@@ -334,7 +334,7 @@
+       <section class="facts" aria-label="Support facts">
+         <div class="fact">
+           <span class="label">Official Email</span>
+-          <span class="value">GCAgochina@outlook.com</span>
++          <span class="value">support@gcagochina.com</span>
+         </div>
+         <div class="fact">
+           <span class="label">Domain Email</span>
+--- a/site/support.json
++++ b/site/support.json
+@@ -6,7 +6,7 @@
+   "network": "Base Mainnet",
+   "chainId": 8453,
+   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+-  "officialEmail": "GCAgochina@outlook.com",
++  "officialEmail": "support@gcagochina.com",
+   "currentSubmissionMode": {
+     "memberPage": "https://gcagochina.com/members.html",
+     "mode": "copy-download-email",
+--- a/site/trust.json
++++ b/site/trust.json
+@@ -7,7 +7,7 @@
+   "network": "Base Mainnet",
+   "chainId": 8453,
+   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+-  "officialEmail": "GCAgochina@outlook.com",
++  "officialEmail": "support@gcagochina.com",
+   "officialLinks": {
+     "website": "https://gcagochina.com/",
+     "trustCenterPage": "https://gcagochina.com/trust.html",
+--- a/site/unsubscribe.html
++++ b/site/unsubscribe.html
+@@ -348,7 +348,7 @@
+         <div class="actions">
+           <a class="button primary" href="#unsubscribeForm">开始退订</a>
+           <a class="button secondary" href="register.html">返回邮箱注册</a>
+-          <a class="button" href="mailto:GCAgochina@outlook.com?subject=GCA%20Email%20Unsubscribe">直接发邮件</a>
++          <a class="button" href="mailto:support@gcagochina.com?subject=GCA%20Email%20Unsubscribe">直接发邮件</a>
+         </div>
+       </section>
+ 
+@@ -359,7 +359,7 @@
+         </div>
+         <div class="fact">
+           <span class="label">官方邮箱</span>
+-          <span class="value">GCAgochina@outlook.com</span>
++          <span class="value">support@gcagochina.com</span>
+         </div>
+         <div class="fact">
+           <span class="label">API</span>
+@@ -393,7 +393,7 @@
+               <span>我确认不会提交私钥、助记词、交易所 API Secret、提现权限、验证码、钱包密码或远程控制权限。</span>
+             </label>
+             <button class="button primary" type="submit">提交退订请求</button>
+-            <a class="button secondary" id="mailFallback" href="mailto:GCAgochina@outlook.com?subject=GCA%20Email%20Unsubscribe" hidden>发送退订邮件</a>
++            <a class="button secondary" id="mailFallback" href="mailto:support@gcagochina.com?subject=GCA%20Email%20Unsubscribe" hidden>发送退订邮件</a>
+             <div class="status" id="status" role="status">填写邮箱后提交。官网会优先提交到 GCA HTTPS 联系偏好 API；如果 API 暂不可用，会显示官方邮箱兜底。</div>
+           </form>
+         </div>
+@@ -419,7 +419,7 @@
+       const form = document.getElementById("unsubscribeForm");
+       const statusBox = document.getElementById("status");
+       const mailFallback = document.getElementById("mailFallback");
+-      const officialEmail = "GCAgochina@outlook.com";
++      const officialEmail = "support@gcagochina.com";
+       const productionApiBase = window.GCA_EMAIL_API_BASE || "https://gca-registration-api.gcagochina.workers.dev";
+ 
+       function setStatus(message, mode = "") {
+--- a/site/wallet-warning.html
++++ b/site/wallet-warning.html
+@@ -366,7 +366,7 @@
+           <div class="list">
+             <div class="row"><span>Reported domain</span><strong>gcagochina.com</strong></div>
+             <div class="row"><span>Reported surface</span><strong>MetaMask / Uniswap token warning</strong></div>
+-            <div class="row"><span>Contact</span><strong>GCAgochina@outlook.com</strong></div>
++            <div class="row"><span>Contact</span><strong>support@gcagochina.com</strong></div>
+             <div class="row"><span><a href="blockaid-followup.html">Blockaid Follow-up</a></span><strong>Risk-factor response package</strong></div>
+             <div class="row"><span><a href="trust.html">Trust Center</a></span><strong>Consolidated verification hub</strong></div>
+             <div class="row"><span><a href="token-safety.html">Token Safety Checklist</a></span><strong>Wallet-security review profile</strong></div>
+--- a/site/wallet-warning.json
++++ b/site/wallet-warning.json
+@@ -56,7 +56,7 @@
+     "followUpSubmissionDate": "2026-05-13",
+     "followUpSubmissionResult": "Blockaid support portal returned HTTP 200 OK",
+     "submittedThrough": "https://report.blockaid.io/mistake",
+-    "contactEmail": "GCAgochina@outlook.com",
++    "contactEmail": "support@gcagochina.com",
+     "reportedDomain": "gcagochina.com",
+     "reportedWalletSurface": "MetaMask / Uniswap token warning",
+     "nextAction": "Keep monitoring wallet and DEX warning UI; do not claim security-vendor approval or permanent warning-free status unless a vendor confirms it.",
+--- a/site/whitepaper.html
++++ b/site/whitepaper.html
+@@ -293,7 +293,7 @@
+         <p>GeckoTerminal token information was approved on 2026-05-11. The official website links to the current GCA/USDT GeckoTerminal pool.</p>
+ 
+         <h2>Official Contact</h2>
+-        <p>Project contact email: <a href="mailto:GCAgochina@outlook.com">GCAgochina@outlook.com</a>.</p>
++        <p>Project contact email: <a href="mailto:support@gcagochina.com">support@gcagochina.com</a>.</p>
+         <p>Official Telegram: <a href="https://t.me/gcagochinaofficial" target="_blank" rel="noreferrer">https://t.me/gcagochinaofficial</a>.</p>
+         <p>Official X: <a href="https://x.com/GCAAIGoChina" target="_blank" rel="noreferrer">https://x.com/GCAAIGoChina</a>.</p>
+ 
+--- a/site/zh-apply.html
++++ b/site/zh-apply.html
+@@ -504,7 +504,7 @@
+         <div class="panel">
+           <h2>官方渠道</h2>
+           <div class="list">
+-            <div class="row"><span>邮箱</span><strong><a href="mailto:GCAgochina@outlook.com">GCAgochina@outlook.com</a></strong></div>
++            <div class="row"><span>邮箱</span><strong><a href="mailto:support@gcagochina.com">support@gcagochina.com</a></strong></div>
+             <div class="row"><span>X</span><strong><a href="https://x.com/GCAAIGoChina" target="_blank" rel="noreferrer">x.com/GCAAIGoChina</a></strong></div>
+             <div class="row"><span>Telegram</span><strong><a href="https://t.me/gcagochinaofficial" target="_blank" rel="noreferrer">t.me/gcagochinaofficial</a></strong></div>
+           </div>
+--- a/site/zh-basescan-preflight.html
++++ b/site/zh-basescan-preflight.html
+@@ -300,7 +300,7 @@
+         <p class="eyebrow">BaseScan 预检 / 只读门槛</p>
+         <h1 id="title">GCA 中文 BaseScan 预检</h1>
+         <p class="lead">这一页给你自己操作用：判断现在能不能再次提交 BaseScan Token Profile。当前结论很明确：不要重复提交。先把 <code>support@gcagochina.com</code> 做成可收可发的项目域名邮箱，再补齐 DNS、证据包、官网公开邮箱切换和最终表单草稿。</p>
+-        <p class="lead">当前公开邮箱仍是 <code>GCAgochina@outlook.com</code>。2026-05-30 DNS 快照仍显示 MX missing、SPF missing、DMARC missing，DKIM selector required；因此 <code>readyForBaseScanResubmission</code> 必须保持 false。</p>
++        <p class="lead">当前公开邮箱仍是 <code>support@gcagochina.com</code>。2026-05-30 DNS 快照仍显示 MX missing、SPF missing、DMARC missing，DKIM selector required；因此 <code>readyForBaseScanResubmission</code> 必须保持 false。</p>
+         <div class="actions">
+           <a class="button primary" href="zh-domain-email.html">中文域名邮箱整改</a>
+           <a class="button primary" href="domain-email-evidence.html">公开证据清单</a>
+@@ -337,7 +337,7 @@
+           <div class="list">
+             <div class="row"><span>域名邮箱</span><strong><code>support@gcagochina.com</code> 还没有证明为可收可发的正式邮箱。</strong></div>
+             <div class="row"><span>DNS 证据</span><strong>2026-05-30 快照：MX missing、SPF missing、DMARC missing，DKIM selector required。</strong></div>
+-            <div class="row"><span>公开邮箱一致性</span><strong>官网支持页和 BaseScan 表单值仍应使用 <code>GCAgochina@outlook.com</code>，直到目标邮箱真的通过。</strong></div>
++            <div class="row"><span>公开邮箱一致性</span><strong>官网支持页和 BaseScan 表单值仍应使用 <code>support@gcagochina.com</code>，直到目标邮箱真的通过。</strong></div>
+             <div class="row"><span>证据包</span><strong><code>launch/domain_email_evidence_packet.json</code> 还不能作为最终 BaseScan 复审证据。</strong></div>
+             <div class="row"><span>Reviewer checklist</span><strong>当前已生成 <code>launch/basescan_reviewer_checklist.json</code> 和 <code>launch/basescan_reviewer_checklist.md</code>，但状态仍是 blocked；唯一明确 blocker 是 <code>sender-domain-email</code>。</strong></div>
+             <div class="row"><span>最终表单</span><strong>只有预检显示 <code>readyForBaseScanResubmission</code> true 后，才准备一份 clean resubmission。</strong></div>
+--- a/site/zh-cn.html
++++ b/site/zh-cn.html
+@@ -571,7 +571,7 @@
+         </div>
+         <div class="list">
+           <div class="row"><span>官网</span><strong><a href="https://gcagochina.com/">gcagochina.com</a></strong></div>
+-          <div class="row"><span>邮箱</span><strong><a href="mailto:GCAgochina@outlook.com">GCAgochina@outlook.com</a></strong></div>
++          <div class="row"><span>邮箱</span><strong><a href="mailto:support@gcagochina.com">support@gcagochina.com</a></strong></div>
+           <div class="row"><span>X</span><strong><a href="https://x.com/GCAAIGoChina" target="_blank" rel="noreferrer">x.com/GCAAIGoChina</a></strong></div>
+           <div class="row"><span>Telegram</span><strong><a href="https://t.me/gcagochinaofficial" target="_blank" rel="noreferrer">t.me/gcagochinaofficial</a></strong></div>
+         </div>
+--- a/site/zh-domain-email.html
++++ b/site/zh-domain-email.html
+@@ -328,7 +328,7 @@
+         <p class="eyebrow">BaseScan 邮箱整改</p>
+         <h1 id="title">GCA 中文域名邮箱整改</h1>
+         <p class="lead">BaseScan 已经两次退回 GCA Token Profile 更新请求，当前最明确的 owner-controlled blocker 是项目域名邮箱。这个页面把 <code>support@gcagochina.com</code>、DNS 记录、收发测试和复审证据按中文步骤写清楚。</p>
+-        <p class="lead">当前公开邮箱仍是 <code>GCAgochina@outlook.com</code>。在收件、发件、MX/SPF/DKIM/DMARC 和证据包都通过前，不要把 <code>support@gcagochina.com</code> 写成已启用邮箱，也不要重复提交 BaseScan。</p>
++        <p class="lead">当前公开邮箱仍是 <code>support@gcagochina.com</code>。在收件、发件、MX/SPF/DKIM/DMARC 和证据包都通过前，不要把 <code>support@gcagochina.com</code> 写成已启用邮箱，也不要重复提交 BaseScan。</p>
+         <div class="actions">
+           <a class="button primary" href="domain-email.html#worksheetTitle">打开英文 DNS Worksheet</a>
+           <a class="button primary" href="domain-email-evidence.html">打开公开证据清单</a>
+@@ -346,7 +346,7 @@
+       <section class="facts" aria-label="域名邮箱状态摘要">
+         <div class="fact">
+           <span class="label">当前公开邮箱</span>
+-          <span class="value">GCAgochina@outlook.com</span>
++          <span class="value">support@gcagochina.com</span>
+         </div>
+         <div class="fact">
+           <span class="label">目标域名邮箱</span>
+@@ -503,12 +503,12 @@
+       <section class="section panel" aria-labelledby="switchPlanTitle">
+         <p class="eyebrow">邮箱切换清单</p>
+         <h2 id="switchPlanTitle">切换官网邮箱前先找全旧邮箱引用</h2>
+-        <p class="note"><code>support@gcagochina.com</code> 真的可收可发、证据包通过后，再用这个只读工具扫描官网、launch 资料、docs 和会员后端联系邮箱常量，找出还在使用 <code>GCAgochina@outlook.com</code> 的文件。</p>
++        <p class="note"><code>support@gcagochina.com</code> 真的可收可发、证据包通过后，再用这个只读工具扫描官网、launch 资料、docs 和会员后端联系邮箱常量，找出还在使用 <code>support@gcagochina.com</code> 的文件。</p>
+         <div class="list">
+           <div class="row"><span>JSON 清单</span><strong><code>python3 tools/build_domain_email_switch_plan.py --json</code></strong></div>
+           <div class="row"><span>Markdown 清单</span><strong><code>python3 tools/build_domain_email_switch_plan.py --markdown</code></strong></div>
+           <div class="row"><span>保存给自己</span><strong><code>python3 tools/build_domain_email_switch_plan.py --output-json launch/domain_email_switch_plan.json --output-md launch/domain_email_switch_plan.md</code></strong></div>
+-          <div class="row"><span>切换后检查</span><strong><code>python3 tools/check_domain_email_public_switch.py --json --require-switched</code>，如果关键文件还出现 <code>GCAgochina@outlook.com</code>，就不要复提 BaseScan。</strong></div>
++          <div class="row"><span>切换后检查</span><strong><code>python3 tools/check_domain_email_public_switch.py --json --require-switched</code>，如果关键文件还出现 <code>support@gcagochina.com</code>，就不要复提 BaseScan。</strong></div>
+           <div class="row"><span>最终预检</span><strong><code>tools/check_basescan_resubmission_readiness.py</code> 和 <code>tools/build_basescan_submission_package.py</code> 已经接入这个公开邮箱切换门槛。</strong></div>
+           <div class="row"><span>边界</span><strong>这个工具不会改文件、不会发邮件、不会写 DNS、不会提交 BaseScan、不会操作钱包或合约。</strong></div>
+         </div>
+@@ -522,7 +522,7 @@
+           <div class="row"><span>公开队列</span><strong><a href="daily-status.html">daily-status.html</a> 显示 <code>ownerActionQueue</code> 和 <code>filesStillUsingOldEmail</code>。</strong></div>
+           <div class="row"><span>中文总计划</span><strong><a href="action-plan.html">action-plan.html</a> 已同步 BaseScan Action Queue，普通用户和审核方都可以直接阅读。</strong></div>
+           <div class="row"><span>当前顺序</span><strong>开通 <code>support@gcagochina.com</code> -> 完成 MX/SPF/DKIM/DMARC 和收发证据 -> 一次性切换旧邮箱文件 -> 运行 <code>tools/check_basescan_resubmission_readiness.py --json --require-ready</code>。</strong></div>
+-          <div class="row"><span>不能提前做</span><strong>在证据完成前，不要把官网、BaseScan 包或平台回复模板里的 <code>GCAgochina@outlook.com</code> 提前改掉。</strong></div>
++          <div class="row"><span>不能提前做</span><strong>在证据完成前，不要把官网、BaseScan 包或平台回复模板里的 <code>support@gcagochina.com</code> 提前改掉。</strong></div>
+         </div>
+       </section>
+ 
+@@ -565,7 +565,7 @@
+     </main>
+ 
+     <footer>
+-      <div class="shell">GCA 中文域名邮箱整改。当前公开邮箱仍是 GCAgochina@outlook.com；support@gcagochina.com 只有在 DNS 和收发测试通过后才能用于 BaseScan 复审。</div>
++      <div class="shell">GCA 中文域名邮箱整改。当前公开邮箱仍是 support@gcagochina.com；support@gcagochina.com 只有在 DNS 和收发测试通过后才能用于 BaseScan 复审。</div>
+     </footer>
+   </body>
+ </html>
+--- a/site/zh-faq.html
++++ b/site/zh-faq.html
+@@ -498,7 +498,7 @@
+         <div class="panel">
+           <h2>官方渠道</h2>
+           <div class="list">
+-            <div class="row"><span>邮箱</span><strong><a href="mailto:GCAgochina@outlook.com">GCAgochina@outlook.com</a></strong></div>
++            <div class="row"><span>邮箱</span><strong><a href="mailto:support@gcagochina.com">support@gcagochina.com</a></strong></div>
+             <div class="row"><span>X</span><strong><a href="https://x.com/GCAAIGoChina" target="_blank" rel="noreferrer">x.com/GCAAIGoChina</a></strong></div>
+             <div class="row"><span>Telegram</span><strong><a href="https://t.me/gcagochinaofficial" target="_blank" rel="noreferrer">t.me/gcagochinaofficial</a></strong></div>
+           </div>
+--- a/site/zh-support.html
++++ b/site/zh-support.html
+@@ -384,7 +384,7 @@
+         <p class="lead">这里是中文用户联系 GCA 官方、提交会员审核资料、反馈钱包风险提示、请求平台资料更正和确认安全边界的入口。</p>
+         <p class="lead">GCA 支持只需要公开链上资料和必要联系信息，不需要也不会索要私钥、助记词、交易所 API Secret、提现权限、验证码或远程控制权限。</p>
+         <div class="actions">
+-          <a class="button primary" href="mailto:GCAgochina@outlook.com">发送邮件</a>
++          <a class="button primary" href="mailto:support@gcagochina.com">发送邮件</a>
+           <a class="button primary" href="register.html">邮箱注册</a>
+           <a class="button secondary" href="https://t.me/gcagochinaofficial" target="_blank" rel="noreferrer">Telegram 官方频道</a>
+           <a class="button secondary" href="https://x.com/GCAAIGoChina" target="_blank" rel="noreferrer">X 官方账号</a>
+@@ -401,7 +401,7 @@
+       <section class="facts" aria-label="GCA 中文支持核心信息">
+         <div class="fact">
+           <span class="label">官方邮箱</span>
+-          <span class="value">GCAgochina@outlook.com</span>
++          <span class="value">support@gcagochina.com</span>
+         </div>
+         <div class="fact">
+           <span class="label">网络</span>
+@@ -539,7 +539,7 @@
+         </div>
+         <div class="list">
+           <div class="row"><span>官网</span><strong><a href="https://gcagochina.com/">gcagochina.com</a></strong></div>
+-          <div class="row"><span>邮箱</span><strong><a href="mailto:GCAgochina@outlook.com">GCAgochina@outlook.com</a></strong></div>
++          <div class="row"><span>邮箱</span><strong><a href="mailto:support@gcagochina.com">support@gcagochina.com</a></strong></div>
+           <div class="row"><span>X</span><strong><a href="https://x.com/GCAAIGoChina" target="_blank" rel="noreferrer">x.com/GCAAIGoChina</a></strong></div>
+           <div class="row"><span>Telegram</span><strong><a href="https://t.me/gcagochinaofficial" target="_blank" rel="noreferrer">t.me/gcagochinaofficial</a></strong></div>
+         </div>
+--- a/tools/gca_member_backend.py
++++ b/tools/gca_member_backend.py
+@@ -50,7 +50,7 @@
+ MEMBER_BENEFIT_AMOUNT = "10000 GCA"
+ PACKET_VERSION = "gca_member_preregistration_v2"
+ EMAIL_REGISTRATION_VERSION = "gca_email_registration_v1"
+-CONTACT_EMAIL = "GCAgochina@outlook.com"
++CONTACT_EMAIL = "support@gcagochina.com"
+ ALLOWED_PROGRAM_INTENTS = {"holder_bonus", "gca_member", "general_waitlist"}
+ EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
+ ADDRESS_RE = re.compile(r"^0x[a-fA-F0-9]{40}$")

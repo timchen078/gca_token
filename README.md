@@ -53,6 +53,9 @@ Export the same review package directly from local JSONL data without starting t
 - Domain email provider matrix tool: `tools/build_domain_email_provider_matrix.py`
 - Domain email DNS entry packet tool: `tools/build_domain_email_dns_entry_packet.py`
 - Domain email switch plan tool: `tools/build_domain_email_switch_plan.py`
+- Domain email switch plan artifact: `launch/domain_email_switch_plan.json`
+- Domain email switch plan markdown: `launch/domain_email_switch_plan.md`
+- Domain email switch patch preview: `launch/domain_email_switch_preview.patch`
 - Domain email public switch checker: `tools/check_domain_email_public_switch.py`
 - Token allocation plan: `launch/token_allocation_plan.md`
 - Liquidity plan: `launch/liquidity_plan.json`

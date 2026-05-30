@@ -1,0 +1,626 @@
+{
+  "boundaries": {
+    "readOnlyScanByDefault": true,
+    "sendsEmail": false,
+    "submitsBaseScanRequest": false,
+    "touchesWalletsOrContracts": false,
+    "writesDns": false,
+    "writesPublicFiles": false
+  },
+  "currentEmail": "GCAgochina@outlook.com",
+  "patchPreview": {
+    "appliesChanges": false,
+    "command": "python3 tools/build_domain_email_switch_plan.py --patch",
+    "exactReplacementOnly": true,
+    "filesWithExactReplacement": 68,
+    "ownerArtifactCommand": "python3 tools/build_domain_email_switch_plan.py --output-patch launch/domain_email_switch_preview.patch",
+    "replacementOccurrences": 139
+  },
+  "records": [
+    {
+      "category": "project documentation",
+      "currentEmailOccurrences": 1,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "docs/mainnet_public_profile.md",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 0
+    },
+    {
+      "category": "project documentation",
+      "currentEmailOccurrences": 1,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "docs/whitepaper.md",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 0
+    },
+    {
+      "category": "owner launch package",
+      "currentEmailOccurrences": 1,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "launch/basescan_form_values.json",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 1
+    },
+    {
+      "category": "owner launch package",
+      "currentEmailOccurrences": 2,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "launch/basescan_resubmission_package.md",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 1
+    },
+    {
+      "category": "owner launch package",
+      "currentEmailOccurrences": 1,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "launch/basescan_resubmission_values.json",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 5
+    },
+    {
+      "category": "owner launch package",
+      "currentEmailOccurrences": 2,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "launch/basescan_review_followup.md",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 2
+    },
+    {
+      "category": "owner launch package",
+      "currentEmailOccurrences": 2,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "launch/basescan_reviewer_checklist.json",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 2
+    },
+    {
+      "category": "owner launch package",
+      "currentEmailOccurrences": 2,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "launch/basescan_reviewer_checklist.md",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 2
+    },
+    {
+      "category": "owner launch package",
+      "currentEmailOccurrences": 1,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "launch/blockaid_false_positive_report.md",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 0
+    },
+    {
+      "category": "owner launch package",
+      "currentEmailOccurrences": 1,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "launch/blockaid_followup_reply.md",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 0
+    },
+    {
+      "category": "owner launch package",
+      "currentEmailOccurrences": 3,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "launch/data_platform_form_values.json",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 0
+    },
+    {
+      "category": "owner launch package",
+      "currentEmailOccurrences": 2,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "launch/data_platform_package.md",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 0
+    },
+    {
+      "category": "owner launch package",
+      "currentEmailOccurrences": 6,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "launch/domain_email_activation_runbook.md",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 20
+    },
+    {
+      "category": "owner launch package",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "launch/domain_email_evidence/README.txt",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 3
+    },
+    {
+      "category": "owner launch package",
+      "currentEmailOccurrences": 2,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "launch/domain_email_evidence_checklist.json",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 11
+    },
+    {
+      "category": "owner launch package",
+      "currentEmailOccurrences": 2,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "launch/domain_email_evidence_checklist.md",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 10
+    },
+    {
+      "category": "owner launch package",
+      "currentEmailOccurrences": 2,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "launch/domain_email_provider_matrix.json",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 15
+    },
+    {
+      "category": "owner launch package",
+      "currentEmailOccurrences": 1,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "launch/domain_email_provider_matrix.md",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 7
+    },
+    {
+      "category": "owner launch package",
+      "currentEmailOccurrences": 1,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "launch/external_review_followup_tracker.json",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 0
+    },
+    {
+      "category": "owner launch package",
+      "currentEmailOccurrences": 4,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "launch/external_review_followup_tracker.md",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 2
+    },
+    {
+      "category": "owner launch package",
+      "currentEmailOccurrences": 1,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "launch/geckoterminal_form_values.json",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 0
+    },
+    {
+      "category": "owner launch package",
+      "currentEmailOccurrences": 3,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "launch/geckoterminal_update_runbook.md",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 0
+    },
+    {
+      "category": "owner launch package",
+      "currentEmailOccurrences": 2,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "launch/launch_status.md",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 0
+    },
+    {
+      "category": "owner launch package",
+      "currentEmailOccurrences": 2,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "launch/member_pre_registration_runbook.md",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 0
+    },
+    {
+      "category": "well-known identity",
+      "currentEmailOccurrences": 1,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "site/.well-known/gca-token.json",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 0
+    },
+    {
+      "category": "well-known identity",
+      "currentEmailOccurrences": 1,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "site/.well-known/security.txt",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 0
+    },
+    {
+      "category": "public page",
+      "currentEmailOccurrences": 2,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "site/about.html",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 0
+    },
+    {
+      "category": "public page",
+      "currentEmailOccurrences": 1,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "site/action-plan.html",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 4
+    },
+    {
+      "category": "public page",
+      "currentEmailOccurrences": 1,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "site/basescan-handoff.html",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 2
+    },
+    {
+      "category": "public structured data",
+      "currentEmailOccurrences": 1,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "site/basescan-handoff.json",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 7
+    },
+    {
+      "category": "public page",
+      "currentEmailOccurrences": 1,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "site/basescan-preflight.html",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 2
+    },
+    {
+      "category": "public structured data",
+      "currentEmailOccurrences": 2,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "site/basescan-preflight.json",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 3
+    },
+    {
+      "category": "public page",
+      "currentEmailOccurrences": 1,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "site/basescan-remediation.html",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 2
+    },
+    {
+      "category": "public structured data",
+      "currentEmailOccurrences": 2,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "site/basescan-remediation.json",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 3
+    },
+    {
+      "category": "public structured data",
+      "currentEmailOccurrences": 1,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "site/blockaid-followup.json",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 0
+    },
+    {
+      "category": "public structured data",
+      "currentEmailOccurrences": 1,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "site/brand-kit.json",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 0
+    },
+    {
+      "category": "public page",
+      "currentEmailOccurrences": 1,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "site/daily-status.html",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 2
+    },
+    {
+      "category": "public structured data",
+      "currentEmailOccurrences": 1,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "site/daily-status.json",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 3
+    },
+    {
+      "category": "public page",
+      "currentEmailOccurrences": 4,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "site/domain-email-evidence.html",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 12
+    },
+    {
+      "category": "public structured data",
+      "currentEmailOccurrences": 2,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "site/domain-email-evidence.json",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 11
+    },
+    {
+      "category": "public page",
+      "currentEmailOccurrences": 4,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "site/domain-email.html",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 21
+    },
+    {
+      "category": "public structured data",
+      "currentEmailOccurrences": 9,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "site/domain-email.json",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 37
+    },
+    {
+      "category": "public page",
+      "currentEmailOccurrences": 1,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "site/external-reviews.html",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 1
+    },
+    {
+      "category": "public structured data",
+      "currentEmailOccurrences": 1,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "site/external-reviews.json",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 2
+    },
+    {
+      "category": "public page",
+      "currentEmailOccurrences": 2,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "site/index.html",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 0
+    },
+    {
+      "category": "public page",
+      "currentEmailOccurrences": 1,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "site/listing-kit.html",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 0
+    },
+    {
+      "category": "public structured data",
+      "currentEmailOccurrences": 1,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "site/member-program.json",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 0
+    },
+    {
+      "category": "public page",
+      "currentEmailOccurrences": 2,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "site/members.html",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 0
+    },
+    {
+      "category": "public page",
+      "currentEmailOccurrences": 2,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "site/platform-replies.html",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 0
+    },
+    {
+      "category": "public structured data",
+      "currentEmailOccurrences": 2,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "site/platform-replies.json",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 0
+    },
+    {
+      "category": "public page",
+      "currentEmailOccurrences": 5,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "site/privacy.html",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 0
+    },
+    {
+      "category": "public structured data",
+      "currentEmailOccurrences": 2,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "site/privacy.json",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 0
+    },
+    {
+      "category": "public structured data",
+      "currentEmailOccurrences": 3,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "site/project.json",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 0
+    },
+    {
+      "category": "public page",
+      "currentEmailOccurrences": 4,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "site/register.html",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 0
+    },
+    {
+      "category": "public page",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "site/reviewer-kit.html",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 2
+    },
+    {
+      "category": "public structured data",
+      "currentEmailOccurrences": 1,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "site/reviewer-kit.json",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 6
+    },
+    {
+      "category": "public page",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "site/status.html",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 1
+    },
+    {
+      "category": "public page",
+      "currentEmailOccurrences": 2,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "site/support.html",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 0
+    },
+    {
+      "category": "public structured data",
+      "currentEmailOccurrences": 1,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "site/support.json",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 0
+    },
+    {
+      "category": "public structured data",
+      "currentEmailOccurrences": 1,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "site/trust.json",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 3
+    },
+    {
+      "category": "public page",
+      "currentEmailOccurrences": 4,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "site/unsubscribe.html",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 0
+    },
+    {
+      "category": "public page",
+      "currentEmailOccurrences": 1,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "site/wallet-warning.html",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 0
+    },
+    {
+      "category": "public structured data",
+      "currentEmailOccurrences": 1,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "site/wallet-warning.json",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 0
+    },
+    {
+      "category": "public page",
+      "currentEmailOccurrences": 2,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "site/whitepaper.html",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 0
+    },
+    {
+      "category": "public page",
+      "currentEmailOccurrences": 2,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "site/zh-apply.html",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 0
+    },
+    {
+      "category": "public page",
+      "currentEmailOccurrences": 2,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "site/zh-basescan-preflight.html",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 5
+    },
+    {
+      "category": "public page",
+      "currentEmailOccurrences": 2,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "site/zh-cn.html",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 0
+    },
+    {
+      "category": "public page",
+      "currentEmailOccurrences": 6,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "site/zh-domain-email.html",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 18
+    },
+    {
+      "category": "public page",
+      "currentEmailOccurrences": 2,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "site/zh-faq.html",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 0
+    },
+    {
+      "category": "public page",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "site/zh-status.html",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 1
+    },
+    {
+      "category": "public page",
+      "currentEmailOccurrences": 4,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "site/zh-support.html",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 0
+    },
+    {
+      "category": "operator backend/tool",
+      "currentEmailOccurrences": 1,
+      "notes": "Replace or review current public contact references after the domain mailbox is active.",
+      "path": "tools/gca_member_backend.py",
+      "switchRequiredAfterActivation": true,
+      "targetEmailOccurrences": 0
+    }
+  ],
+  "requiredPreconditions": [
+    "support@gcagochina.com receives external email",
+    "support@gcagochina.com sends authenticated external email",
+    "MX, SPF, DKIM, and DMARC checks pass",
+    "launch/domain_email_evidence_packet.json reports readyForBaseScanResubmission true",
+    "tools/check_basescan_resubmission_readiness.py reports readyForBaseScanResubmission true"
+  ],
+  "schema": "gca-domain-email-switch-plan-v1",
+  "status": "blocked-until-domain-email-evidence-ready",
+  "summary": {
+    "categories": {
+      "operator backend/tool": 1,
+      "owner launch package": 22,
+      "project documentation": 2,
+      "public page": 28,
+      "public structured data": 17,
+      "well-known identity": 2
+    },
+    "filesRequiringSwitchAfterActivation": 68,
+    "scannedFilesWithEmailReferences": 72
+  },
+  "switchOrder": [
+    "Update public support and user-intake pages first.",
+    "Update public structured project/listing/reviewer JSON next.",
+    "Update BaseScan launch values and platform reply templates.",
+    "Run the full test suite and public site checker.",
+    "Submit one clean BaseScan update from the activated domain mailbox where possible."
+  ],
+  "targetDomainEmail": "support@gcagochina.com"
+}

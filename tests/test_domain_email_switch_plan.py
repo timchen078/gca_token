@@ -1,3 +1,4 @@
+import json
 import tempfile
 import subprocess
 import sys
@@ -102,6 +103,34 @@ class DomainEmailSwitchPlanTests(unittest.TestCase):
             self.assertIn("gca-domain-email-switch-plan-v1", json_path.read_text())
             self.assertIn("GCA Domain Email Public Switch Plan", md_path.read_text())
             self.assertIn("--- a/site/support.html", patch_path.read_text())
+
+    def test_committed_owner_artifacts_are_available_and_preview_only(self):
+        json_path = ROOT / "launch" / "domain_email_switch_plan.json"
+        md_path = ROOT / "launch" / "domain_email_switch_plan.md"
+        patch_path = ROOT / "launch" / "domain_email_switch_preview.patch"
+
+        self.assertTrue(json_path.exists())
+        self.assertTrue(md_path.exists())
+        self.assertTrue(patch_path.exists())
+
+        plan = json.loads(json_path.read_text(encoding="utf-8"))
+        markdown = md_path.read_text(encoding="utf-8")
+        patch = patch_path.read_text(encoding="utf-8")
+
+        self.assertEqual(plan["schema"], "gca-domain-email-switch-plan-v1")
+        self.assertEqual(plan["status"], "blocked-until-domain-email-evidence-ready")
+        self.assertEqual(plan["currentEmail"], CURRENT_EMAIL)
+        self.assertEqual(plan["targetDomainEmail"], TARGET_EMAIL)
+        self.assertFalse(plan["boundaries"]["writesPublicFiles"])
+        self.assertFalse(plan["patchPreview"]["appliesChanges"])
+        self.assertGreater(plan["summary"]["filesRequiringSwitchAfterActivation"], 10)
+        self.assertIn("support@gcagochina.com receives external email", plan["requiredPreconditions"])
+        self.assertIn("GCA Domain Email Public Switch Plan", markdown)
+        self.assertIn("This plan does not change public files by itself.", markdown)
+        self.assertIn("--- a/site/support.html", patch)
+        self.assertIn("+++ b/site/support.html", patch)
+        self.assertIn(CURRENT_EMAIL, patch)
+        self.assertIn(TARGET_EMAIL, patch)
 
     def test_cli_can_print_patch_preview(self):
         completed = subprocess.run(
