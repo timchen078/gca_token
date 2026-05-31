@@ -32,16 +32,16 @@ Next owner action: keep `support@gcagochina.com` active, retain provider/DNS/inb
 
 ## Owner Action Packet
 
-Use this short order when doing the actual mailbox work. Stop immediately if any item cannot be proven.
+Use this short order before the next BaseScan owner submission. Stop immediately if any item cannot be proven.
 
-1. Enable a full mailbox for `support@gcagochina.com` that receives external mail and sends authenticated replies from the same address.
-2. Save `domain-email-provider-active.png` showing the mailbox as active or verified in the provider dashboard.
+1. Confirm the full mailbox for `support@gcagochina.com` still receives external mail and sends authenticated replies from the same address.
+2. Keep `domain-email-provider-active.png` showing the mailbox as active or verified in the provider dashboard.
 3. Keep `https://gcagochina.com/domain-email-evidence.html` open while collecting owner proof files so public checklist status and private evidence stay aligned.
-4. Build the DNS entry packet with the provider's exact MX, SPF, DKIM, and DMARC values before entering records.
-5. Enter MX, one merged SPF TXT record, DKIM with the exact provider selector, and DMARC at `_dmarc`.
-6. Run `python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox support --dkim-selector <provider-selector> --json` and save `domain-email-dns-mx-spf-dkim-dmarc.txt`.
-7. Save inbound and outbound mail evidence as `domain-email-inbound-test.png` and `domain-email-outbound-test.png`.
-8. Switch public support/BaseScan email values only after evidence is complete, then save `support-page-domain-email.png`.
+4. Keep the DNS entry packet with the provider's exact MX, SPF, DKIM, and DMARC values for owner records.
+5. Confirm MX, one merged SPF TXT record, DKIM with the exact provider selector, and DMARC at `_dmarc` still pass.
+6. Run `python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox support --dkim-selector zmail --json` and save `domain-email-dns-mx-spf-dkim-dmarc.txt`.
+7. Keep inbound and outbound mail evidence as `domain-email-inbound-test.png` and `domain-email-outbound-test.png`.
+8. Confirm public support/BaseScan email values already show `support@gcagochina.com`, then keep `support-page-domain-email.png`.
 9. Run `python3 tools/check_basescan_resubmission_readiness.py --json --require-ready`. BaseScan can be resubmitted only when the preflight reports `readyForBaseScanResubmission` as true.
 
 Stop conditions: any required evidence file is missing; DNS readiness regresses; outbound visible sender is not `support@gcagochina.com`; public files still publish the old Outlook email after the switch; or BaseScan preflight fails.
@@ -217,7 +217,7 @@ After the manual switch is done, run the read-only public switch checker:
 python3 tools/check_domain_email_public_switch.py --json --require-switched
 ```
 
-The checker uses the critical file list from `site/domain-email.json` and blocks if any listed public/support/BaseScan file still contains `support@gcagochina.com`, if the target domain email is missing, or if a critical file is missing. It does not edit files, send email, write DNS records, submit BaseScan requests, or touch wallets/contracts.
+The checker uses the critical file list from `site/domain-email.json` and blocks if any listed public/support/BaseScan file still contains the old Outlook email, if the target domain email is missing, or if a critical file is missing. It does not edit files, send email, write DNS records, submit BaseScan requests, or touch wallets/contracts.
 Before reusing platform copy after a new DNS check, run the read-only snapshot alignment checker:
 
 ```bash
@@ -244,9 +244,9 @@ The packet builder writes only local owner evidence files when `--output-json` o
 
 ## Public Site Switch Gate
 
-Only after the evidence packet is ready:
+Current state: public support/BaseScan email values have already been switched to `support@gcagochina.com`. Use this gate only to re-check alignment before the next BaseScan submission.
 
-1. Replace public contact references from `support@gcagochina.com` to `support@gcagochina.com` where appropriate.
+1. Confirm no critical public/support/BaseScan file still publishes the old Outlook email.
 2. Update `site/support.html`, `site/support.json`, `site/zh-support.html`, `site/register.html`, `site/members.html`, `site/project.json`, `site/listing-kit.html`, `site/basescan-remediation.html`, `site/basescan-remediation.json`, `site/external-reviews.json`, `site/reviewer-kit.json`, and BaseScan launch values.
 3. Re-run JSON validation, the domain email DNS check, the public site checker, and the full test suite.
 4. Submit the next BaseScan profile update from the same domain email where possible.
@@ -276,11 +276,11 @@ Do not submit another clean BaseScan token update until all of these are true:
 Safe to say:
 
 - GCA has published a domain email setup plan.
-- A working `gcagochina.com` domain email is required before the next clean BaseScan token profile resubmission.
+- `support@gcagochina.com` is the active project-domain mailbox for the next clean BaseScan token profile resubmission.
 - The DNS checker is a read-only operator tool for MX, SPF, DMARC, and DKIM readiness.
 
 Do not say:
 
-- `support@gcagochina.com` is active before tests pass.
+- BaseScan has accepted `support@gcagochina.com` as sufficient evidence before BaseScan confirms the profile update.
 - BaseScan has approved or published the token profile before BaseScan actually publishes it.
 - The DNS checker is a third-party audit or security approval.

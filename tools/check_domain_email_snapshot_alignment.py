@@ -235,7 +235,7 @@ def build_report(
         },
         "records": records,
         "nextAction": (
-            "Snapshot references are aligned; continue with mailbox DNS activation before BaseScan resubmission."
+            "Snapshot references are aligned; continue with the final BaseScan preflight before owner resubmission."
             if aligned
             else "Do not reuse platform packets yet. Fix stale or missing domain-email DNS snapshot references first."
         ),
