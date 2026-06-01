@@ -187,6 +187,12 @@
         color: #fff;
       }
 
+      .button.secondary {
+        border-color: #cad7ec;
+        background: #eef4ff;
+        color: #123e90;
+      }
+
       .grid {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -248,6 +254,29 @@
       .boundary-card span {
         color: var(--muted);
         font-size: 14px;
+      }
+
+      .decision-list {
+        display: grid;
+        gap: 10px;
+        margin-top: 16px;
+      }
+
+      .decision {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fff;
+        padding: 12px;
+      }
+
+      .decision strong {
+        display: block;
+        margin-bottom: 4px;
+      }
+
+      .decision span {
+        color: var(--muted);
+        font-size: 13px;
       }
 
       .data-list {
@@ -369,14 +398,13 @@
         </a>
         <div class="nav-links">
           <a href="index.html">Home</a>
+          <a href="start.html">Start Here</a>
           <a href="verify.html">Verify</a>
           <a href="buy.html">Buy Guide</a>
+          <a href="gca/member-access/">Member Access</a>
           <a href="markets.html">Markets</a>
-          <a href="listing-kit.html">Listing Kit</a>
           <a href="trust.html">Trust Center</a>
-          <a href="members.html">Members</a>
-          <a href="zh-site-map.html">中文站点地图</a>
-          <a href="zh-data.html">中文数据室</a>
+          <a href="zh-cn.html">中文</a>
         </div>
       </nav>
     </header>
@@ -388,19 +416,25 @@
           <h1 id="title">GCA Data Room</h1>
           <p class="lead">Start with the human-readable HTML pages. JSON files are not broken pages; they are machine-readable data files for wallets, explorers, DEX data platforms, listing reviewers, and security vendors when a platform asks for structured metadata. Regular visitors should use the HTML pages.</p>
           <div class="actions">
-            <a class="button primary" href="index.html">Back to GCA Home</a>
-            <a class="button primary" href="site-map.html">Human Site Map</a>
+            <a class="button primary" href="start.html">Start Here</a>
+            <a class="button primary" href="verify.html">Verify GCA</a>
+            <a class="button primary" href="gca/member-access/">Member Access</a>
+            <a class="button secondary" href="zh-cn.html">中文入口</a>
             <a class="button secondary" href="zh-site-map.html">中文站点地图</a>
-            <a class="button secondary" href="zh-data.html">中文数据室说明</a>
+            <a class="button" href="buy.html">Buy Guide</a>
             <a class="button" href="listing-kit.html">Human Listing Kit</a>
-            <a class="button" href="trust.html">Trust Center</a>
-            <a class="button" href="verify.html">Verify GCA</a>
+            <a class="button" href="site-map.html">Human Site Map</a>
           </div>
         </div>
 
         <aside class="panel">
-          <h2>How to Use</h2>
-          <p class="note">If you are a normal website visitor, open the HTML links first. If BaseScan, GeckoTerminal, a wallet, or a reviewer asks for a JSON file, use the matching raw data link in the same row.</p>
+          <h2>If You Landed Here By Mistake</h2>
+          <p class="note">This page is mainly a reviewer desk. If you are buying, verifying, registering, or checking member access, use a readable page first.</p>
+          <div class="decision-list">
+            <div class="decision"><strong>Normal visitor</strong><span>Open Start Here, Verify GCA, Buy Guide, or the Chinese entry instead of raw JSON.</span></div>
+            <div class="decision"><strong>Platform reviewer</strong><span>Use Raw JSON only when a wallet, explorer, DEX data tool, or listing form asks for machine-readable metadata.</span></div>
+            <div class="decision"><strong>Support case</strong><span>Use Support and never send private keys, seed phrases, wallet passwords, or exchange API secrets.</span></div>
+          </div>
           <div class="callout">
             <p class="note" style="margin-bottom: 0;">Canonical contract: <code>0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6</code><br>Network: Base Mainnet / chainId 8453</p>
           </div>
@@ -412,10 +446,15 @@
         <h2 id="humanFirstTitle">Open These Before Raw JSON</h2>
         <p class="note">These pages are the safer entry points for users, community members, and support reviewers. Raw JSON remains below only as technical evidence.</p>
         <div class="quick-grid">
+          <a class="quick-link" href="start.html">Start Here <span>user path</span></a>
           <a class="quick-link" href="verify.html">Verify GCA <span>identity</span></a>
           <a class="quick-link" href="buy.html">Buy Guide <span>official route</span></a>
+          <a class="quick-link" href="gca/member-access/">Member Access <span>wallet check</span></a>
+          <a class="quick-link" href="register.html">Email Register <span>public intake</span></a>
           <a class="quick-link" href="markets.html">Markets <span>pool links</span></a>
           <a class="quick-link" href="site-map.html">Site Map <span>all pages</span></a>
+          <a class="quick-link" href="listing-kit.html">Human Listing Kit <span>platform form</span></a>
+          <a class="quick-link" href="support.html">Support <span>help desk</span></a>
           <a class="quick-link" href="zh-site-map.html">中文站点地图 <span>Chinese index</span></a>
           <a class="quick-link" href="zh-data.html">中文数据室说明 <span>JSON guide</span></a>
           <a class="quick-link" href="members.html">Members <span>pre-registration</span></a>
