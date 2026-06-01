@@ -5286,9 +5286,10 @@ class LaunchPackageTests(unittest.TestCase):
         supply = (ROOT / "site" / "supply.html").read_text()
 
         self.assertIn("GCA Supply and Reserve", supply)
-        self.assertIn("Platform-Only Evidence Path", supply)
-        self.assertIn("Data Room", supply)
-        self.assertIn("Raw JSON for platforms only", supply)
+        self.assertIn("Supply References", supply)
+        self.assertNotIn("Platform-Only Evidence Path", supply)
+        self.assertNotIn("Data Room", supply)
+        self.assertNotIn('href="data.html"', supply)
         self.assertIn("smart contract total supply is fixed at 1,000,000,000 GCA", supply)
         self.assertIn("400,000,000 GCA / 40%", supply)
         self.assertIn("600,000,000 GCA / 60%", supply)
@@ -5374,13 +5375,10 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Source SHA-256", security)
         self.assertIn("6ba294fe0f6e20485f90297eede83ce620291ab525c92abb3bcf6547d1cf4cce", security)
         self.assertIn("No independent third-party audit has been completed", security)
-        self.assertPlatformOnlyDataRoom(
-            security,
-            "token-safety.json",
-            "technical-report.json",
-            "audit-readiness.json",
-            "risk-remediation.json",
-        )
+        self.assertIn("Security References", security)
+        self.assertNotIn("Platform-Only Evidence Path", security)
+        self.assertNotIn("Data Room", security)
+        self.assertNotIn('href="data.html"', security)
         self.assertIn("Token Safety Checklist", security)
         self.assertIn('href="token-safety.html"', security)
         self.assertIn("Quote requests were submitted to QuillAudits, Hacken, and OpenZeppelin on 2026-05-10", security)
@@ -6269,9 +6267,11 @@ class LaunchPackageTests(unittest.TestCase):
 
         self.assertIn("GCA Wallet Warning Evidence", page)
         self.assertIn("Token Safety Checklist", page)
-        self.assertIn("Platform-Only Evidence Path", page)
-        self.assertIn("Data Room", page)
-        self.assertIn("raw JSON", page)
+        self.assertIn("Wallet Warning References", page)
+        self.assertNotIn("Platform-Only Evidence Path", page)
+        self.assertNotIn("Data Room", page)
+        self.assertNotIn("raw JSON", page)
+        self.assertNotIn('href="data.html"', page)
         self.assertIn("Trust Center", page)
         self.assertIn("Blockaid Follow-up", page)
         self.assertIn("Follow-up submitted 2026-05-13", page)
@@ -6936,21 +6936,17 @@ class LaunchPackageTests(unittest.TestCase):
         trust = json.loads((ROOT / "site" / "trust.json").read_text())
 
         self.assertIn("GCA Trust Center", page)
-        self.assertPlatformOnlyDataRoom(
-            page,
-            "trust.json",
-            ".well-known/wallet-security.json",
-            "tokenlist.json",
-            "project.json",
-            ".well-known/gca-token.json",
-        )
+        self.assertIn("Trust References", page)
+        self.assertNotIn("Platform-Only Evidence Path", page)
+        self.assertNotIn("Data Room", page)
+        self.assertNotIn("Raw JSON", page)
+        self.assertNotIn('href="data.html"', page)
         self.assertIn("Verification Snapshot", page)
         self.assertIn("Contract Facts", page)
         self.assertIn("Market And Liquidity", page)
         self.assertIn("Supply And Reserve", page)
         self.assertIn("Evidence Links", page)
         self.assertIn("Normal visitor path", page)
-        self.assertIn("Raw JSON is available", page)
         self.assertIn("Blockaid Follow-up", page)
         self.assertIn("Liquidity Statement", page)
         self.assertIn("Technical Report", page)
@@ -7072,7 +7068,10 @@ class LaunchPackageTests(unittest.TestCase):
         quality = json.loads((ROOT / "site" / "market-quality.json").read_text())
 
         self.assertIn("GCA Market Quality Plan", page)
-        self.assertPlatformOnlyDataRoom(page, "market-quality.json")
+        self.assertIn("Market Quality References", page)
+        self.assertNotIn("Platform-Only Evidence Path", page)
+        self.assertNotIn("Data Room", page)
+        self.assertNotIn('href="data.html"', page)
         self.assertIn("transparent liquidity", page)
         self.assertIn("legitimate public participation", page)
         self.assertIn("Starter-depth only", page)
@@ -7114,7 +7113,10 @@ class LaunchPackageTests(unittest.TestCase):
         liquidity = json.loads((ROOT / "site" / "liquidity.json").read_text())
 
         self.assertIn("GCA Liquidity And LP Custody", page)
-        self.assertPlatformOnlyDataRoom(page, "liquidity.json")
+        self.assertIn("Liquidity References", page)
+        self.assertNotIn("Platform-Only Evidence Path", page)
+        self.assertNotIn("Data Room", page)
+        self.assertNotIn('href="data.html"', page)
         self.assertIn("Base Mainnet / 8453", page)
         self.assertIn("GCA/USDT", page)
         self.assertIn("Starter-depth only", page)
@@ -7166,9 +7168,10 @@ class LaunchPackageTests(unittest.TestCase):
         holders = json.loads((ROOT / "site" / "holder-distribution.json").read_text())
 
         self.assertIn("GCA Holder Distribution", page)
-        self.assertIn("Platform-Only Evidence Path", page)
-        self.assertIn("Data Room", page)
-        self.assertIn("Raw JSON for platforms only", page)
+        self.assertIn("Holder References", page)
+        self.assertNotIn("Platform-Only Evidence Path", page)
+        self.assertNotIn("Data Room", page)
+        self.assertNotIn('href="data.html"', page)
         self.assertIn("Base Mainnet / 8453", page)
         self.assertIn("1,000,000,000 GCA", page)
         self.assertIn("400,000,000 GCA / 40%", page)
@@ -7231,8 +7234,10 @@ class LaunchPackageTests(unittest.TestCase):
         plan = json.loads((ROOT / "site" / "risk-remediation.json").read_text())
 
         self.assertIn("GCA Risk Remediation Plan", page)
-        self.assertIn("Platform-Only Evidence Path", page)
-        self.assertIn("Data Room", page)
+        self.assertIn("Risk Remediation References", page)
+        self.assertNotIn("Platform-Only Evidence Path", page)
+        self.assertNotIn("Data Room", page)
+        self.assertNotIn('href="data.html"', page)
         self.assertIn("Price Volatility", page)
         self.assertIn("LP Custody", page)
         self.assertIn("Supply Concentration", page)
@@ -7421,9 +7426,10 @@ class LaunchPackageTests(unittest.TestCase):
 
         self.assertIn("GCA Token Safety Checklist", page)
         self.assertIn("Platform Metadata", page)
-        self.assertIn("Platform-Only Evidence Path", page)
-        self.assertIn("Data Room", page)
-        self.assertIn("Raw JSON for platforms only", page)
+        self.assertIn("Token Safety References", page)
+        self.assertNotIn("Platform-Only Evidence Path", page)
+        self.assertNotIn("Data Room", page)
+        self.assertNotIn('href="data.html"', page)
         self.assertIn("Verified Positive Controls", page)
         self.assertIn("Pending Or Not Claimed", page)
         self.assertIn("No mint function", page)

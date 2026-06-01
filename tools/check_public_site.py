@@ -278,6 +278,18 @@ def assert_platform_only_data_room(text: str, label: str, forbidden_hrefs: tuple
         assert_not_contains(text, f'href="{href}"', label)
 
 
+def assert_no_public_data_room_terms(text: str, label: str) -> None:
+    for forbidden in (
+        "Platform-Only Evidence Path",
+        "Data Room",
+        'href="data.html"',
+        "Raw JSON",
+        "raw JSON",
+        "platform-only raw data",
+    ):
+        assert_not_contains(text, forbidden, label)
+
+
 def assert_social_preview_meta(text: str, label: str, canonical_url: str) -> None:
     assert_contains(text, f'<link rel="canonical" href="{canonical_url}">', label)
     assert_contains(text, '<meta property="og:type" content="website">', label)
@@ -3812,11 +3824,10 @@ def validate_security_page(text: str) -> None:
     label = "/security.html"
     assert_social_preview_meta(text, label, SECURITY_PAGE_URL)
     assert_contains(text, "GCA Security", label)
-    assert_platform_only_data_room(
-        text,
-        label,
-        ("token-safety.json", "technical-report.json", "audit-readiness.json", "risk-remediation.json"),
-    )
+    assert_contains(text, "Security References", label)
+    assert_no_public_data_room_terms(text, label)
+    for forbidden in ("token-safety.json", "technical-report.json", "audit-readiness.json", "risk-remediation.json"):
+        assert_not_contains(text, f'href="{forbidden}"', label)
     assert_contains(text, "Verified on BaseScan", label)
     assert_contains(text, "fixed-supply ERC-20 contract on Base Mainnet", label)
     assert_contains(text, "No independent third-party audit has been completed", label)
@@ -3889,9 +3900,8 @@ def validate_token_safety_page(text: str) -> None:
     label = "/token-safety.html"
     assert_contains(text, "GCA Token Safety Checklist", label)
     assert_contains(text, "Platform Metadata", label)
-    assert_contains(text, "Platform-Only Evidence Path", label)
-    assert_contains(text, "Data Room", label)
-    assert_contains(text, "Raw JSON for platforms only", label)
+    assert_contains(text, "Token Safety References", label)
+    assert_no_public_data_room_terms(text, label)
     assert_contains(text, "Verified Positive Controls", label)
     assert_contains(text, "Pending Or Not Claimed", label)
     assert_contains(text, "No mint function", label)
@@ -8219,9 +8229,8 @@ def validate_terms_json(text: str) -> None:
 def validate_supply_page(text: str) -> None:
     label = "/supply.html"
     assert_contains(text, "GCA Supply and Reserve", label)
-    assert_contains(text, "Platform-Only Evidence Path", label)
-    assert_contains(text, "Data Room", label)
-    assert_contains(text, "Raw JSON for platforms only", label)
+    assert_contains(text, "Supply References", label)
+    assert_no_public_data_room_terms(text, label)
     assert_contains(text, "1,000,000,000 GCA", label)
     assert_contains(text, "400,000,000 GCA / 40%", label)
     assert_contains(text, "600,000,000 GCA / 60%", label)
@@ -10080,7 +10089,9 @@ def validate_market_quality_json(text: str) -> None:
 def validate_market_quality_page(text: str) -> None:
     label = "/market-quality.html"
     assert_contains(text, "GCA Market Quality Plan", label)
-    assert_platform_only_data_room(text, label, ("market-quality.json",))
+    assert_contains(text, "Market Quality References", label)
+    assert_no_public_data_room_terms(text, label)
+    assert_not_contains(text, 'href="market-quality.json"', label)
     assert_contains(text, "transparent liquidity", label)
     assert_contains(text, "legitimate public participation", label)
     assert_contains(text, "Starter-depth only", label)
@@ -10155,7 +10166,9 @@ def validate_liquidity_json(text: str) -> None:
 def validate_liquidity_page(text: str) -> None:
     label = "/liquidity.html"
     assert_contains(text, "GCA Liquidity And LP Custody", label)
-    assert_platform_only_data_room(text, label, ("liquidity.json",))
+    assert_contains(text, "Liquidity References", label)
+    assert_no_public_data_room_terms(text, label)
+    assert_not_contains(text, 'href="liquidity.json"', label)
     assert_contains(text, "Base Mainnet / 8453", label)
     assert_contains(text, "GCA/USDT", label)
     assert_contains(text, "Starter-depth only", label)
@@ -10240,9 +10253,8 @@ def validate_holder_distribution_json(text: str) -> None:
 def validate_holder_distribution_page(text: str) -> None:
     label = "/holder-distribution.html"
     assert_contains(text, "GCA Holder Distribution", label)
-    assert_contains(text, "Platform-Only Evidence Path", label)
-    assert_contains(text, "Data Room", label)
-    assert_contains(text, "Raw JSON for platforms only", label)
+    assert_contains(text, "Holder References", label)
+    assert_no_public_data_room_terms(text, label)
     assert_contains(text, "Base Mainnet / 8453", label)
     assert_contains(text, "1,000,000,000 GCA", label)
     assert_contains(text, "400,000,000 GCA / 40%", label)
@@ -10355,8 +10367,8 @@ def validate_risk_remediation_page(text: str) -> None:
     label = "/risk-remediation.html"
     assert_social_preview_meta(text, label, RISK_REMEDIATION_PAGE_URL)
     assert_contains(text, "GCA Risk Remediation Plan", label)
-    assert_contains(text, "Platform-Only Evidence Path", label)
-    assert_contains(text, "Data Room", label)
+    assert_contains(text, "Risk Remediation References", label)
+    assert_no_public_data_room_terms(text, label)
     assert_contains(text, "Custody Roadmap", label)
     assert_contains(text, "Price Volatility", label)
     assert_contains(text, "LP Custody", label)
@@ -11257,18 +11269,16 @@ def validate_trust_json(text: str) -> None:
 def validate_trust_page(text: str) -> None:
     label = "/trust.html"
     assert_contains(text, "GCA Trust Center", label)
-    assert_platform_only_data_room(
-        text,
-        label,
-        ("trust.json", ".well-known/wallet-security.json", "tokenlist.json", "project.json", ".well-known/gca-token.json"),
-    )
+    assert_contains(text, "Trust References", label)
+    assert_no_public_data_room_terms(text, label)
+    for forbidden in ("trust.json", ".well-known/wallet-security.json", "tokenlist.json", "project.json", ".well-known/gca-token.json"):
+        assert_not_contains(text, f'href="{forbidden}"', label)
     assert_contains(text, "Verification Snapshot", label)
     assert_contains(text, "Contract Facts", label)
     assert_contains(text, "Market And Liquidity", label)
     assert_contains(text, "Supply And Reserve", label)
     assert_contains(text, "Evidence Links", label)
     assert_contains(text, "Normal visitor path", label)
-    assert_contains(text, "Raw JSON is available", label)
     assert_contains(text, "Blockaid Follow-up", label)
     assert_contains(text, "Liquidity Statement", label)
     assert_contains(text, "Holder Distribution", label)
@@ -11577,9 +11587,8 @@ def validate_wallet_warning_page(text: str) -> None:
     label = "/wallet-warning.html"
     assert_contains(text, "GCA Wallet Warning Evidence", label)
     assert_contains(text, "Token Safety Checklist", label)
-    assert_contains(text, "Platform-Only Evidence Path", label)
-    assert_contains(text, "Data Room", label)
-    assert_contains(text, "raw JSON", label)
+    assert_contains(text, "Wallet Warning References", label)
+    assert_no_public_data_room_terms(text, label)
     assert_contains(text, "Blockaid Follow-up", label)
     assert_contains(text, "Trust Center", label)
     assert_contains(text, "Follow-up submitted 2026-05-13", label)
