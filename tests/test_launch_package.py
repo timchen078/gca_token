@@ -1400,6 +1400,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(f"{TEAM_PAGE_URL}#tim-chen", page)
         self.assertIn(GITHUB_REPO_URL, page)
         self.assertIn(MAINNET_ADDRESS, data["professionalScope"]["contractAddress"])
+        self.assertNotIn("Platform-Only Evidence Path", page)
+        self.assertNotIn("Data Room", page)
         self.assertNotIn('href="tim-chen.json"', page)
         self.assertNotIn('href="project.json"', page)
 
@@ -5543,6 +5545,10 @@ class LaunchPackageTests(unittest.TestCase):
         page = (ROOT / "site" / "listing-readiness.html").read_text()
 
         self.assertIn("GCA Listing Readiness", page)
+        self.assertIn("Listing Readiness References", page)
+        self.assertNotIn("Platform-Only Evidence Path", page)
+        self.assertNotIn("Data Room", page)
+        self.assertNotIn('href="data.html"', page)
         self.assertIn("Status: Not Ready", page)
         self.assertIn("DEX metadata and wallet identity review", page)
         self.assertIn("CoinGecko tracked listing request", page)
@@ -5558,13 +5564,6 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("No artificial activity policy", page)
         self.assertIn("Do not use artificial activity", page)
         self.assertIn("self-trading, wash trading, or misleading volume", page)
-        self.assertPlatformOnlyDataRoom(
-            page,
-            "listing-readiness.json",
-            "project.json",
-            "market-quality.json",
-            "external-reviews.json",
-        )
         self.assertIn(MAINNET_ADDRESS, page)
         self.assertIn(OFFICIAL_POOL_ADDRESS, page)
         self.assertIn(BASE_USDT_ADDRESS, page)
@@ -6302,14 +6301,10 @@ class LaunchPackageTests(unittest.TestCase):
         proofs = json.loads((ROOT / "site" / "onchain-proofs.json").read_text())
 
         self.assertIn("GCA On-chain Proofs", page)
-        self.assertPlatformOnlyDataRoom(
-            page,
-            "onchain-proofs.json",
-            "technical-report.json",
-            "reserve-statement.json",
-            "supply.json",
-            "tokenlist.json",
-        )
+        self.assertIn("On-chain References", page)
+        self.assertNotIn("Platform-Only Evidence Path", page)
+        self.assertNotIn("Data Room", page)
+        self.assertNotIn('href="data.html"', page)
         self.assertIn("Deployment Proof", page)
         self.assertIn("Source Verification", page)
         self.assertIn("Fixed Supply And Reserve Proof", page)
@@ -6371,13 +6366,10 @@ class LaunchPackageTests(unittest.TestCase):
         kit = json.loads((ROOT / "site" / "brand-kit.json").read_text())
 
         self.assertIn("GCA Brand Kit", page)
-        self.assertPlatformOnlyDataRoom(
-            page,
-            "brand-kit.json",
-            "tokenlist.json",
-            ".well-known/gca-token.json",
-            "project.json",
-        )
+        self.assertIn("Brand References", page)
+        self.assertNotIn("Platform-Only Evidence Path", page)
+        self.assertNotIn("Data Room", page)
+        self.assertNotIn('href="data.html"', page)
         self.assertIn("Logo SVG", page)
         self.assertIn("Logo PNG", page)
         self.assertIn("Social Card", page)
@@ -6442,8 +6434,10 @@ class LaunchPackageTests(unittest.TestCase):
 
         self.assertIn("GCA External Review Status", page)
         self.assertIn("Wallet Warning Evidence", page)
-        self.assertIn("Platform-Only Evidence Path", page)
-        self.assertIn("Data Room", page)
+        self.assertIn("External Review References", page)
+        self.assertNotIn("Platform-Only Evidence Path", page)
+        self.assertNotIn("Data Room", page)
+        self.assertNotIn('href="data.html"', page)
         self.assertIn("BaseScan source code verification", page)
         self.assertIn("Returned again 2026-05-23", page)
         self.assertIn("Tim Chen profile, domain email plan, evidence checklist, activation evidence packet, reply template, and support@gcagochina.com evidence are ready", page)
@@ -7565,8 +7559,10 @@ class LaunchPackageTests(unittest.TestCase):
         reserve_launch = (ROOT / "launch" / "blockaid_reserve_statement.md").read_text()
 
         self.assertIn("GCA Technical Report", technical_page)
-        self.assertIn("Platform-Only Evidence Path", technical_page)
-        self.assertIn("Data Room", technical_page)
+        self.assertIn("Technical Report References", technical_page)
+        self.assertNotIn("Platform-Only Evidence Path", technical_page)
+        self.assertNotIn("Data Room", technical_page)
+        self.assertNotIn('href="data.html"', technical_page)
         self.assertIn("internal technical report", technical_page)
         self.assertIn("not a third-party audit", technical_page)
         self.assertIn("LP locking is not currently claimed", technical_page)
@@ -7604,8 +7600,10 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("no third-party audit has been completed", technical["riskReviewerNotes"]["residualRisks"])
 
         self.assertIn("GCA Reserve Address Statement", reserve_page)
-        self.assertIn("Platform-Only Evidence Path", reserve_page)
-        self.assertIn("Data Room", reserve_page)
+        self.assertIn("Reserve References", reserve_page)
+        self.assertNotIn("Platform-Only Evidence Path", reserve_page)
+        self.assertNotIn("Data Room", reserve_page)
+        self.assertNotIn('href="data.html"', reserve_page)
         self.assertIn("Owner-controlled, not locked", reserve_page)
         self.assertIn("No LP lock is currently claimed", reserve_page)
         self.assertIn("Custody Roadmap", reserve_page)

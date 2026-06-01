@@ -794,6 +794,7 @@ def validate_tim_chen_profile_page(text: str) -> None:
         MAINNET_ADDRESS,
     ):
         assert_contains(text, expected, label)
+    assert_no_public_data_room_terms(text, label)
     assert_not_contains(text, 'href="tim-chen.json"', label)
     assert_not_contains(text, 'href="project.json"', label)
     assert_no_forbidden_public_claims(text, label)
@@ -4135,8 +4136,8 @@ def validate_blockaid_followup_json(text: str) -> None:
 def validate_technical_report_page(text: str) -> None:
     label = "/technical-report.html"
     assert_contains(text, "GCA Technical Report", label)
-    assert_contains(text, "Platform-Only Evidence Path", label)
-    assert_contains(text, "Data Room", label)
+    assert_contains(text, "Technical Report References", label)
+    assert_no_public_data_room_terms(text, label)
     assert_contains(text, "internal technical report", label)
     assert_contains(text, "not a third-party audit", label)
     assert_contains(text, "Verified Positive Controls", label)
@@ -4220,8 +4221,8 @@ def validate_technical_report_json(text: str) -> None:
 def validate_reserve_statement_page(text: str) -> None:
     label = "/reserve-statement.html"
     assert_contains(text, "GCA Reserve Address Statement", label)
-    assert_contains(text, "Platform-Only Evidence Path", label)
-    assert_contains(text, "Data Room", label)
+    assert_contains(text, "Reserve References", label)
+    assert_no_public_data_room_terms(text, label)
     assert_contains(text, "Owner-controlled, not locked", label)
     assert_contains(text, "Custody Boundary", label)
     assert_contains(text, "On-chain Reserve Transfer Proofs", label)
@@ -8292,11 +8293,8 @@ def validate_brand_kit_json(text: str) -> None:
 def validate_brand_kit_page(text: str) -> None:
     label = "/brand-kit.html"
     assert_contains(text, "GCA Brand Kit", label)
-    assert_platform_only_data_room(
-        text,
-        label,
-        ("brand-kit.json", "tokenlist.json", ".well-known/gca-token.json", "project.json"),
-    )
+    assert_contains(text, "Brand References", label)
+    assert_no_public_data_room_terms(text, label)
     assert_contains(text, "Logo SVG", label)
     assert_contains(text, "Logo PNG", label)
     assert_contains(text, "32 x 32", label)
@@ -10555,11 +10553,8 @@ def validate_onchain_proofs_json(text: str) -> None:
 def validate_onchain_proofs_page(text: str) -> None:
     label = "/onchain-proofs.html"
     assert_contains(text, "GCA On-chain Proofs", label)
-    assert_platform_only_data_room(
-        text,
-        label,
-        ("onchain-proofs.json", "technical-report.json", "reserve-statement.json", "supply.json", "tokenlist.json"),
-    )
+    assert_contains(text, "On-chain References", label)
+    assert_no_public_data_room_terms(text, label)
     assert_contains(text, "Deployment Proof", label)
     assert_contains(text, "Source Verification", label)
     assert_contains(text, "Fixed Supply And Reserve Proof", label)
@@ -11419,8 +11414,8 @@ def validate_external_reviews_page(text: str) -> None:
     assert_contains(text, "Blockaid Follow-up", label)
     assert_contains(text, "Risk Remediation", label)
     assert_contains(text, "Custody Roadmap", label)
-    assert_contains(text, "Platform-Only Evidence Path", label)
-    assert_contains(text, "Data Room", label)
+    assert_contains(text, "External Review References", label)
+    assert_no_public_data_room_terms(text, label)
     assert_contains(text, "Trust Center", label)
     assert_contains(text, "Returned 2026-05-23; ready for owner resubmission", label)
     assert_contains(text, "Tim Chen profile, domain email plan, evidence checklist, activation evidence packet, reply template, and support@gcagochina.com evidence are ready", label)
@@ -11555,11 +11550,8 @@ def validate_wallet_warning_page(text: str) -> None:
 def validate_listing_readiness_page(text: str) -> None:
     label = "/listing-readiness.html"
     assert_contains(text, "GCA Listing Readiness", label)
-    assert_platform_only_data_room(
-        text,
-        label,
-        ("listing-readiness.json", "project.json", "market-quality.json", "external-reviews.json"),
-    )
+    assert_contains(text, "Listing Readiness References", label)
+    assert_no_public_data_room_terms(text, label)
     assert_contains(text, "Status: Not Ready", label)
     assert_contains(text, "DEX metadata and wallet identity review", label)
     assert_contains(text, "CoinGecko tracked listing request", label)
