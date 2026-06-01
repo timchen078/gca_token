@@ -418,8 +418,8 @@ def validate_start_page(text: str) -> None:
         "Start Here",
         "Readable User Entry",
         "normal user entry for GCA / Go China Access",
-        "raw JSON",
-        "Raw JSON 主要给 BaseScan",
+        "Start with readable official pages",
+        "普通用户优先打开 HTML 页面和官网入口",
         "Four-Step User Path",
         "What To Open First",
         "Verify Identity",
@@ -427,7 +427,7 @@ def validate_start_page(text: str) -> None:
         "Register or Check Access",
         "Ask Support Safely",
         "普通用户优先打开这些页面",
-        "When To Use Raw JSON",
+        "Only If A Platform Requests Files",
         "Reviewer Data Room",
         "Current Project Boundaries",
         "Base Mainnet / chainId 8453",
@@ -440,7 +440,9 @@ def validate_start_page(text: str) -> None:
         "中文购买说明",
         "中文会员规则",
         "中文会员审核资料清单",
+        "中文用户中心",
         "中文 API 状态",
+        "中文支持入口",
         "private keys",
         "seed phrases",
         "exchange API secrets",
@@ -450,7 +452,6 @@ def validate_start_page(text: str) -> None:
         "10,000 GCA member benefit remains manual reserve-wallet review only",
         "Data Room files are machine-readable evidence",
         "Team Profile",
-        "BaseScan Remediation",
         "verify.html",
         "buy.html",
         "zh-buy.html",
@@ -459,8 +460,15 @@ def validate_start_page(text: str) -> None:
         "site-map.html",
         "data.html",
         "reviewer-kit.html",
+        "listing-kit.html",
     ):
         assert_contains(text, expected, label)
+    for forbidden in (
+        "Raw JSON 主要给 BaseScan",
+        "BaseScan Remediation",
+        "Platform Replies",
+    ):
+        assert_not_contains(text, forbidden, label)
     for forbidden in (
         'href="project.json"',
         'href="tokenlist.json"',
