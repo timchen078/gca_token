@@ -324,7 +324,6 @@ def validate_root(text: str) -> None:
     assert_contains(text, "Listing Readiness", label)
     assert_contains(text, "On-chain Proofs", label)
     assert_contains(text, "Brand Kit", label)
-    assert_contains(text, "Reviewer Data Room", label)
     assert_contains(text, "Site Map", label)
     assert_contains(text, "site-map.html", label)
     assert_contains(text, "Action Plan", label)
@@ -369,7 +368,6 @@ def validate_root(text: str) -> None:
     assert_contains(text, "register.html", label)
     assert_contains(text, "邮箱退订", label)
     assert_contains(text, "unsubscribe.html", label)
-    assert_contains(text, "data.html", label)
     assert_contains(text, "Member Ledger", label)
     assert_contains(text, "Benefit Transfer Runbook", label)
     assert_contains(text, "member-benefit-transfer.html", label)
@@ -408,6 +406,8 @@ def validate_root(text: str) -> None:
     assert_not_contains(text, "BaseScan token profile update was returned again as information-insufficient on 2026-05-23", label)
     assert_contains(text, "team.html", label)
     assert_contains(text, MAINNET_ADDRESS, label)
+    assert_not_contains(text, "Reviewer Data Room", label)
+    assert_not_contains(text, 'href="data.html"', label)
     assert_current_pool_text(text, label)
 
 
@@ -427,8 +427,7 @@ def validate_start_page(text: str) -> None:
         "Register or Check Access",
         "Ask Support Safely",
         "普通用户优先打开这些页面",
-        "Only If A Platform Requests Files",
-        "Reviewer Data Room",
+        "Use Readable Support Pages",
         "Current Project Boundaries",
         "Base Mainnet / chainId 8453",
         MAINNET_ADDRESS,
@@ -450,7 +449,6 @@ def validate_start_page(text: str) -> None:
         "remote-control access",
         "No third-party audit has been completed",
         "10,000 GCA member benefit remains manual reserve-wallet review only",
-        "Data Room files are machine-readable evidence",
         "Team Profile",
         "verify.html",
         "buy.html",
@@ -458,11 +456,12 @@ def validate_start_page(text: str) -> None:
         "register.html",
         "gca/member-access/",
         "site-map.html",
-        "data.html",
-        "reviewer-kit.html",
+        "support.html",
         "listing-kit.html",
     ):
         assert_contains(text, expected, label)
+    assert_not_contains(text, "Reviewer Data Room", label)
+    assert_not_contains(text, 'href="data.html"', label)
     for forbidden in (
         "Raw JSON 主要给 BaseScan",
         "BaseScan Remediation",
@@ -705,8 +704,9 @@ def validate_about_page(text: str) -> None:
         "BaseScan Remediation",
         "team.html#tim-chen",
         GITHUB_REPO_URL,
-        "Platform-Only Evidence Path",
-        "Reviewer Data Room",
+        "Project Evidence",
+        "Readable Reference Pages",
+        "Use these readable pages for project identity",
         "GCAgochina@outlook.com",
         X_URL,
         "https://t.me/gcagochinaofficial",
@@ -723,21 +723,21 @@ def validate_about_page(text: str) -> None:
         "support.html",
         "status.html",
         "external-reviews.html",
-        "reviewer-kit.html",
-        "data.html",
+        "brand-kit.html",
+        "listing-kit.html",
+        "technical-report.html",
+        "reserve-statement.html",
     ):
         assert_contains(text, expected, label)
-    assert_platform_only_data_room(
-        text,
-        label,
-        (
-            "project.json",
-            "tokenlist.json",
-            "brand-kit.json",
-            "platform-replies.json",
-            "technical-report.json",
-        ),
-    )
+    for forbidden in (
+        "Platform-Only Evidence Path",
+        "Reviewer Data Room",
+        "Raw JSON",
+        "Data Room",
+        'href="data.html"',
+        "platform-replies.html",
+    ):
+        assert_not_contains(text, forbidden, label)
     assert_current_pool_text(text, label)
 
 
@@ -2455,8 +2455,8 @@ def validate_zh_supply_page(text: str) -> None:
         "不能宣传为技术上不可流通",
         "储备多签、锁仓或归属合约尚未完成",
         "不要通过人工制造交易活动、自我成交或误导性宣传来改善市场数据",
-        "Platform-Only Evidence Path",
-        "Reviewer Data Room",
+        "供应资料",
+        "继续查看总量和储备",
         "zh-cn.html",
         "zh-apply.html",
         "zh-status.html",
@@ -2467,23 +2467,11 @@ def validate_zh_supply_page(text: str) -> None:
         "supply.html",
         "reserve-statement.html",
         "holder-distribution.html",
-        "custody-roadmap.html",
-        "risk-remediation.html",
         "onchain-proofs.html",
-        "data.html",
     ):
         assert_contains(text, expected, label)
-    assert_platform_only_data_room(
-        text,
-        label,
-        (
-            "supply.json",
-            "reserve-statement.json",
-            "holder-distribution.json",
-            "custody-roadmap.json",
-            "risk-remediation.json",
-        ),
-    )
+    for forbidden in ("Platform-Only Evidence Path", "Reviewer Data Room", "平台审核资料", 'href="data.html"'):
+        assert_not_contains(text, forbidden, label)
     assert_current_pool_text(text, label)
     assert_no_forbidden_public_claims(text, label)
 
@@ -2523,8 +2511,8 @@ def validate_zh_security_page(text: str) -> None:
         "不要说 Blockaid、MetaMask 或任何安全厂商永久批准 GCA",
         "不要承诺价格、成交量、流动性、上币、审核通过或永久无风险提示",
         "不要通过人工制造交易活动、自我成交或误导性宣传来改善市场数据",
-        "Platform-Only Evidence Path",
-        "Reviewer Data Room",
+        "安全资料",
+        "继续查看安全说明",
         "zh-cn.html",
         "zh-status.html",
         "zh-liquidity.html",
@@ -2537,21 +2525,10 @@ def validate_zh_security_page(text: str) -> None:
         "wallet-warning.html",
         "audit-readiness.html",
         "risk-remediation.html",
-        "data.html",
     ):
         assert_contains(text, expected, label)
-    assert_platform_only_data_room(
-        text,
-        label,
-        (
-            "token-safety.json",
-            "technical-report.json",
-            "blockaid-followup.json",
-            "wallet-warning.json",
-            "audit-readiness.json",
-            "risk-remediation.json",
-        ),
-    )
+    for forbidden in ("Platform-Only Evidence Path", "Reviewer Data Room", "平台审核资料", 'href="data.html"', "reviewer-kit.html"):
+        assert_not_contains(text, forbidden, label)
     assert_current_pool_text(text, label)
     assert_no_forbidden_public_claims(text, label)
 
@@ -2591,8 +2568,7 @@ def validate_zh_roadmap_page(text: str) -> None:
         "不能说第三方审计已经完成",
         "不能说 BaseScan Token Profile 已经通过",
         "不能承诺价格、成交量、流动性、上所、审核通过或交易结果",
-        "Platform-Only Evidence Path",
-        "Reviewer Data Room",
+        "继续查看产品路线",
         "zh-cn.html",
         "zh-apply.html",
         "zh-status.html",
@@ -2606,20 +2582,10 @@ def validate_zh_roadmap_page(text: str) -> None:
         "utility.html",
         "release-gates.html",
         "support.html",
-        "data.html",
     ):
         assert_contains(text, expected, label)
-    assert_platform_only_data_room(
-        text,
-        label,
-        (
-            "roadmap.json",
-            "product.json",
-            "utility.json",
-            "release-gates.json",
-            "member-ledger.json",
-        ),
-    )
+    for forbidden in ("Platform-Only Evidence Path", "Reviewer Data Room", "平台审核资料", 'href="data.html"'):
+        assert_not_contains(text, forbidden, label)
     assert_current_pool_text(text, label)
     assert_no_forbidden_public_claims(text, label)
 
@@ -2666,8 +2632,7 @@ def validate_zh_faq_page(text: str) -> None:
         "不是投资建议",
         "不要把小额测试交易说成真实市场需求",
         "不要通过人工制造交易量、自我成交或误导性宣传来改善市场数据",
-        "Platform-Only Evidence Path",
-        "Reviewer Data Room",
+        "常用官方页面",
         "GCAgochina@outlook.com",
         X_URL,
         "https://t.me/gcagochinaofficial",
@@ -2689,20 +2654,10 @@ def validate_zh_faq_page(text: str) -> None:
         "zh-wallet-verify.html",
         "zh-release-gates.html",
         "release-gates.html",
-        "data.html",
     ):
         assert_contains(text, expected, label)
-    assert_platform_only_data_room(
-        text,
-        label,
-        (
-            "project.json",
-            "tokenlist.json",
-            "reviewer-kit.json",
-            "platform-replies.json",
-            "member-ledger.json",
-        ),
-    )
+    for forbidden in ("Platform-Only Evidence Path", "Reviewer Data Room", "平台审核资料", 'href="data.html"', "reviewer-kit.html", "platform-replies.html"):
+        assert_not_contains(text, forbidden, label)
     assert_current_pool_text(text, label)
     assert_no_forbidden_public_claims(text, label)
 
@@ -2874,17 +2829,6 @@ def validate_zh_api_status_page(text: str) -> None:
 def validate_zh_operations_page(text: str) -> None:
     label = "/zh-operations.html"
     assert_social_preview_meta(text, label, ZH_OPERATIONS_PAGE_URL)
-    assert_platform_only_data_room(
-        text,
-        label,
-        (
-            "operations.json",
-            "api-status.json",
-            "access-api.json",
-            "privacy.json",
-            "terms.json",
-        ),
-    )
     for expected in (
         "GCA 中文运营流程",
         "中文运营流程 / 2026-05-20",
@@ -2931,9 +2875,8 @@ def validate_zh_operations_page(text: str) -> None:
         "只读 GCA 余额验证",
         "30 天持有资料",
         "支持审核队列",
-        "Platform-Only Evidence Path",
-        "Raw JSON",
-        "Reviewer Data Room",
+        "运营支持入口",
+        "继续处理用户流程",
         "zh-api-status.html",
         "zh-access.html",
         "zh-release-gates.html",
@@ -2941,29 +2884,18 @@ def validate_zh_operations_page(text: str) -> None:
         "operations.html",
         "operator.html",
         "review-queue.html",
-        "data.html",
         "privacy.html",
         "terms.html",
     ):
         assert_contains(text, expected, label)
+    for forbidden in ("Platform-Only Evidence Path", "Reviewer Data Room", "平台审核资料", 'href="data.html"'):
+        assert_not_contains(text, forbidden, label)
     assert_no_forbidden_public_claims(text, label)
 
 
 def validate_zh_access_page(text: str) -> None:
     label = "/zh-access.html"
     assert_social_preview_meta(text, label, ZH_ACCESS_PAGE_URL)
-    assert_platform_only_data_room(
-        text,
-        label,
-        (
-            "access.json",
-            "access-api.json",
-            "operations.json",
-            "review-queue.json",
-            "credits.json",
-            "member-ledger.json",
-        ),
-    )
     for expected in (
         "GCA 中文用户中心",
         "中文用户中心 / 2026-05-20",
@@ -3014,9 +2946,8 @@ def validate_zh_access_page(text: str) -> None:
         "提现权限",
         "不会自动激活 100 credits、GCA Member 或 10,000 GCA 会员权益",
         "未来交易相关功能必须先经过风控、模拟盘或测试环境",
-        "Platform-Only Evidence Path",
-        "Raw JSON",
-        "Reviewer Data Room",
+        "用户资料入口",
+        "继续查看账户资料",
         "access.html",
         "access-api.html",
         "operations.html",
@@ -3028,6 +2959,8 @@ def validate_zh_access_page(text: str) -> None:
         "gca/member-access/",
     ):
         assert_contains(text, expected, label)
+    for forbidden in ("Platform-Only Evidence Path", "Reviewer Data Room", "平台审核资料", 'href="data.html"'):
+        assert_not_contains(text, forbidden, label)
     assert_current_pool_text(text, label)
     assert_no_forbidden_public_claims(text, label)
 
@@ -3035,19 +2968,6 @@ def validate_zh_access_page(text: str) -> None:
 def validate_zh_release_gates_page(text: str) -> None:
     label = "/zh-release-gates.html"
     assert_social_preview_meta(text, label, ZH_RELEASE_GATES_PAGE_URL)
-    assert_platform_only_data_room(
-        text,
-        label,
-        (
-            "release-gates.json",
-            "access.json",
-            "access-api.json",
-            "operations.json",
-            "review-queue.json",
-            "credits.json",
-            "member-ledger.json",
-        ),
-    )
     for expected in (
         "GCA 中文上线门槛",
         "中文上线门槛 / 2026-05-20",
@@ -3070,9 +2990,8 @@ def validate_zh_release_gates_page(text: str) -> None:
         "验证码",
         "交易所 API Secret",
         "提现权限",
-        "Platform-Only Evidence Path",
-        "Raw JSON",
-        "Reviewer Data Room",
+        "上线资料",
+        "继续查看上线门槛",
         "register.html",
         "zh-api-status.html",
         "中文运营流程",
@@ -3095,13 +3014,14 @@ def validate_zh_release_gates_page(text: str) -> None:
         "credits.html",
         "member-ledger.html",
         "zh-wallet-verify.html",
-        "data.html",
         "Base Mainnet / chainId 8453",
         MAINNET_ADDRESS,
         "GCA/USDT",
         OFFICIAL_POOL_ADDRESS,
     ):
         assert_contains(text, expected, label)
+    for forbidden in ("Platform-Only Evidence Path", "Reviewer Data Room", "平台审核资料", 'href="data.html"'):
+        assert_not_contains(text, forbidden, label)
     assert_current_pool_text(text, label)
     assert_no_forbidden_public_claims(text, label)
 
@@ -3109,18 +3029,6 @@ def validate_zh_release_gates_page(text: str) -> None:
 def validate_zh_wallet_verify_page(text: str) -> None:
     label = "/zh-wallet-verify.html"
     assert_social_preview_meta(text, label, ZH_WALLET_VERIFY_PAGE_URL)
-    assert_platform_only_data_room(
-        text,
-        label,
-        (
-            "access.json",
-            "access-api.json",
-            "review-queue.json",
-            "operations.json",
-            "member-ledger.json",
-            "release-gates.json",
-        ),
-    )
     for expected in (
         "GCA 中文只读钱包验证",
         "只读钱包验证 / 2026-05-20",
@@ -3170,12 +3078,12 @@ def validate_zh_wallet_verify_page(text: str) -> None:
         "operations.html",
         "member-ledger.html",
         "release-gates.html",
-        "Platform-Only Evidence Path",
-        "Raw JSON",
-        "Reviewer Data Room",
-        "data.html",
+        "钱包验证入口",
+        "继续完成账户资料",
     ):
         assert_contains(text, expected, label)
+    for forbidden in ("Platform-Only Evidence Path", "Reviewer Data Room", "平台审核资料", 'href="data.html"'):
+        assert_not_contains(text, forbidden, label)
     assert_current_pool_text(text, label)
     assert_no_forbidden_public_claims(text, label)
 
@@ -3360,32 +3268,13 @@ def validate_zh_data_page(text: str) -> None:
 def validate_zh_site_map_page(text: str) -> None:
     label = "/zh-site-map.html"
     assert_social_preview_meta(text, label, ZH_SITE_MAP_PAGE_URL)
-    assert_platform_only_data_room(
-        text,
-        label,
-        (
-            "project.json",
-            "tokenlist.json",
-            "reviewer-kit.json",
-            "platform-replies.json",
-            "member-program.json",
-            "member-ledger.json",
-            "member-benefit.json",
-            "member-benefit-transfer.json",
-            "review-queue.json",
-            "support.json",
-        ),
-    )
     for expected in (
         "GCA 中文站点地图",
         "中文站点地图 / 2026-05-20",
         "Start Here / 用户入口",
         "start.html",
-        "中文用户优先 HTML / 平台审核才用 JSON",
-        "如果你看到 JSON 像代码，不代表官网坏了",
-        "中文数据室说明",
-        "Reviewer Data Room",
-        "Platform-Only Evidence Path",
+        "中文用户优先使用可读 HTML 页面",
+        "如果你打开了无法阅读的原始资料页面",
         "Base Mainnet / chainId 8453",
         MAINNET_ADDRESS,
         "GCA/USDT",
@@ -3399,10 +3288,10 @@ def validate_zh_site_map_page(text: str) -> None:
         "中文会员资料",
         "英文可读技术页",
         "产品和接口规划",
-        "审核和信任资料",
-        "给 BaseScan、钱包、数据平台和安全厂商看的页面",
-        "平台审核资料",
-        "Raw JSON 只从 Data Room 打开",
+        "信任资料",
+        "给用户和平台看的可读页面",
+        "资料说明",
+        "普通分享优先使用可读页面",
         "安全和审计状态",
         "第三方审计尚未完成",
         "链上和市场资料",
@@ -3420,9 +3309,10 @@ def validate_zh_site_map_page(text: str) -> None:
         "交易所 API Secret",
         "提现权限",
         "远程控制权限",
-        "不是领取页面",
-        "不会自动激活权益",
-        "machine-readable metadata",
+        "普通用户使用可读页面和官方支持",
+        "不需要打开原始数据文件",
+        "需要更多资料",
+        "先打开可读资料页",
         "zh-cn.html",
         "zh-buy.html",
         "zh-apply.html",
@@ -3463,10 +3353,7 @@ def validate_zh_site_map_page(text: str) -> None:
         "operations.html",
         "review-queue.html",
         "operator.html",
-        "data.html",
-        "reviewer-kit.html",
         "basescan-handoff.html",
-        "platform-replies.html",
         "listing-kit.html",
         "security.html",
         "token-safety.html",
@@ -3493,9 +3380,20 @@ def validate_zh_site_map_page(text: str) -> None:
         "radar-issue-004.html",
         "member-access-brief-001.html",
         "site-map.html",
-        "zh-data.html",
     ):
         assert_contains(text, expected, label)
+    for forbidden in (
+        "Reviewer Data Room",
+        "Platform-Only Evidence Path",
+        "平台审核资料",
+        "Raw JSON",
+        "中文数据室",
+        'href="data.html"',
+        "zh-data.html",
+        "reviewer-kit.html",
+        "platform-replies.html",
+    ):
+        assert_not_contains(text, forbidden, label)
     assert_current_pool_text(text, label)
     assert_no_forbidden_public_claims(text, label)
 
@@ -3538,8 +3436,8 @@ def validate_zh_members_page(text: str) -> None:
         "人工审核和储备钱包处理",
         "尚未完成",
         "2026-05-23 被退回；职业资料、域名邮箱证据、公开证据清单、中文预检页和最终提交包已准备好",
-        "Platform-Only Evidence Path",
-        "Reviewer Data Room",
+        "会员入口",
+        "提交和跟进会员资料",
         "verify.html",
         "buy.html",
         "zh-apply.html",
@@ -3557,23 +3455,16 @@ def validate_zh_members_page(text: str) -> None:
         "zh-release-gates.html",
         "release-gates.html",
         "support.html",
-        "data.html",
     ):
         assert_contains(text, expected, label)
-    assert_platform_only_data_room(
-        text,
-        label,
-        (
-            "project.json",
-            "tokenlist.json",
-            "reviewer-kit.json",
-            "platform-replies.json",
-            "member-ledger.json",
-        ),
-    )
     for forbidden in (
         "重要边界",
         "请这样对外描述",
+        "Platform-Only Evidence Path",
+        "Reviewer Data Room",
+        'href="data.html"',
+        "reviewer-kit.html",
+        "platform-replies.html",
     ):
         assert_not_contains(text, forbidden, label)
     assert_current_pool_text(text, label)
@@ -3683,7 +3574,7 @@ def validate_site_map_page(text: str) -> None:
         "Start Here",
         "start.html",
         "Normal visitors should open HTML pages first",
-        "Reviewer Data Room",
+        "Use Readable Evidence Pages First",
         "Verify GCA",
         "Buy Guide",
         "About GCA",
@@ -3715,8 +3606,8 @@ def validate_site_map_page(text: str) -> None:
         "zh-member-checklist.html",
         "中文站点地图",
         "zh-site-map.html",
-        "中文数据室说明",
-        "zh-data.html",
+        "中文只读钱包验证",
+        "zh-wallet-verify.html",
         "中文 API 状态",
         "zh-api-status.html",
         "中文运营流程",
@@ -3757,34 +3648,22 @@ def validate_site_map_page(text: str) -> None:
         "Community Channels",
         "Campaign Desk",
         "Radar Issues",
-        "Platform-Only Evidence Path",
-        "Machine-readable JSON files",
+        "Need Evidence",
+        "Trust Center",
         MAINNET_ADDRESS,
         "Base Mainnet",
         "8453",
         "GCA/USDT",
         OFFICIAL_POOL_ADDRESS,
-        "data.html",
         "zh-site-map.html",
-        "zh-data.html",
         "about.html",
-        "reviewer-kit.html",
-        "platform-replies.html",
+        "support.html",
         "brand-kit.html",
         "onchain-proofs.html",
     ):
         assert_contains(text, expected, label)
-    assert_platform_only_data_room(
-        text,
-        label,
-        (
-            "project.json",
-            "tokenlist.json",
-            "reviewer-kit.json",
-            "platform-replies.json",
-            "member-ledger.json",
-        ),
-    )
+    for forbidden in ("Reviewer Data Room", "Platform-Only Evidence Path", 'href="data.html"', "zh-data.html"):
+        assert_not_contains(text, forbidden, label)
     assert_current_pool_text(text, label)
     assert_no_forbidden_public_claims(text, label)
 
@@ -4468,23 +4347,18 @@ def validate_member_access_page(text: str) -> None:
     assert_contains(text, "website: website.value.trim()", label)
     assert_contains(text, "not automatic", label)
     assert_contains(text, "manual reserve-wallet transfer review", label)
-    assert_platform_only_data_room(
-        text,
-        label,
-        (
-            "../../member-program.json",
-            "../../member-ledger.json",
-            "../../member-benefit.json",
-            "../../privacy.json",
-            "../../terms.json",
-        ),
-    )
+    assert_contains(text, "API And Account References", label)
+    assert_contains(text, "Support page", label)
+    assert_contains(text, "../../support.html", label)
     assert_not_contains(text, "wallet_switchEthereumChain", label)
     assert_not_contains(text, "wallet_addEthereumChain", label)
     assert_not_contains(text, "eth_sendTransaction", label)
     assert_not_contains(text, "personal_sign", label)
     assert_not_contains(text, OLD_WETH_POOL_ADDRESS, label)
     assert_not_contains(text, "GCA/WETH", label)
+    assert_not_contains(text, "Platform-Only Evidence Path", label)
+    assert_not_contains(text, "Data Room", label)
+    assert_not_contains(text, "../../data.html", label)
 
 
 def validate_operator_page(text: str) -> None:
