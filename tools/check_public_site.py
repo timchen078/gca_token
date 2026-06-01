@@ -490,10 +490,12 @@ def validate_verify(text: str) -> None:
     assert_contains(text, "Trust Center", label)
     assert_contains(text, "On-chain Proofs", label)
     assert_contains(text, "Brand Kit", label)
-    assert_contains(text, "Platform Metadata", label)
-    assert_contains(text, "Data Room", label)
-    assert_contains(text, "platform-only raw metadata", label)
+    assert_contains(text, "Project References", label)
+    assert_contains(text, "Listing Kit", label)
     assert_contains(text, OFFICIAL_DEXSCREENER_URL, label)
+    assert_not_contains(text, 'href="data.html"', label)
+    assert_not_contains(text, "Data Room", label)
+    assert_not_contains(text, "raw metadata", label)
     assert_current_pool_text(text, label)
 
 
@@ -3680,10 +3682,13 @@ def validate_404_page(text: str) -> None:
         "Verify GCA",
         "Buy Guide",
         "Support",
-        "Reviewer Data Room",
         "For Users",
         "For Members",
-        "For Reviewers",
+        "For Project Evidence",
+        "Trust Center",
+        "On-chain Proofs",
+        "Listing Kit",
+        "Brand Kit",
         "Current Boundaries",
         "BaseScan source verification is complete",
         "GeckoTerminal token information was approved",
@@ -3697,22 +3702,21 @@ def validate_404_page(text: str) -> None:
         "verify.html",
         "buy.html",
         "support.html",
-        "data.html",
         "zh-site-map.html",
-        "zh-data.html",
+        "zh-support.html",
     ):
         assert_contains(text, expected, label)
-    assert_platform_only_data_room(
-        text,
-        label,
-        (
-            "project.json",
-            "tokenlist.json",
-            "reviewer-kit.json",
-            "platform-replies.json",
-            "member-ledger.json",
-        ),
-    )
+    for forbidden in (
+        "Reviewer Data Room",
+        "Platform-Only Evidence Path",
+        "Raw JSON",
+        "Data Room",
+        "中文数据室",
+        'href="data.html"',
+        "zh-data.html",
+        "raw machine-readable",
+    ):
+        assert_not_contains(text, forbidden, label)
     assert_current_pool_text(text, label)
     assert_no_forbidden_public_claims(text, label)
 
