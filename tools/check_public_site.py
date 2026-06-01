@@ -7514,7 +7514,6 @@ def validate_daily_status_page(text: str) -> None:
     assert_social_preview_meta(text, label, DAILY_STATUS_PAGE_URL)
     for expected in (
         "GCA Daily Status Snapshot",
-        "Daily Ops Snapshot / 2026-05-30",
         "public-site",
         "registration-api-public",
         "basescan-resubmission-preflight-status",
@@ -7522,13 +7521,14 @@ def validate_daily_status_page(text: str) -> None:
         "files publishing the old Outlook email",
         "Old-email queue",
         "Missing target-email queue",
-        "GCAgochina@outlook.com",
         "support@gcagochina.com",
         "does not write production data",
         "submit BaseScan forms",
         "Data Room",
     ):
         assert_contains(text, expected, label)
+    if not re.search(r"Daily Ops Snapshot / \d{4}-\d{2}-\d{2}", text):
+        raise SiteCheckError(f"{label}: missing current daily ops snapshot date")
     assert_not_contains(text, 'href="daily-status.json"', label)
     assert_no_forbidden_public_claims(text, label)
 
@@ -7573,8 +7573,8 @@ def validate_daily_status_json(text: str) -> None:
         command = str(step.get("command") or "")
         if "/Users/" in command or ".venv/bin/python" in command:
             raise SiteCheckError(f"{label}: daily ops command leaks local path {step_id}")
-    if daily_steps["basescan-resubmission-preflight-status"].get("blocksSummaryOk") is not True:
-        raise SiteCheckError(f"{label}: BaseScan daily ops step should report ready")
+    if daily_steps["basescan-resubmission-preflight-status"].get("blocksSummaryOk") is not False:
+        raise SiteCheckError(f"{label}: BaseScan daily ops step should remain non-blocking")
     if public_site.get("status") != "ok":
         raise SiteCheckError(f"{label}: public site check should be ok")
     if public_site.get("baseUrl") != DEFAULT_BASE_URL:

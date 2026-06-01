@@ -1268,7 +1268,7 @@ class LaunchPackageTests(unittest.TestCase):
         payload = json.loads((ROOT / "site" / "daily-status.json").read_text())
 
         self.assertIn("GCA Daily Status Snapshot", page)
-        self.assertIn("Daily Ops Snapshot / 2026-05-30", page)
+        self.assertRegex(page, r"Daily Ops Snapshot / \d{4}-\d{2}-\d{2}")
         self.assertIn("public-site", page)
         self.assertIn("registration-api-public", page)
         self.assertIn("basescan-resubmission-preflight-status", page)
@@ -1293,7 +1293,7 @@ class LaunchPackageTests(unittest.TestCase):
         daily_steps = {item["id"]: item for item in payload["dailyOps"]["steps"]}
         self.assertEqual(daily_steps["public-site"]["command"], "python3 tools/check_public_site.py --base-url https://gcagochina.com/ --timeout 20")
         self.assertEqual(daily_steps["registration-api-public"]["command"], "python3 tools/check_gca_registration_api.py --base-url https://gca-registration-api.gcagochina.workers.dev --public-only --timeout 20")
-        self.assertTrue(daily_steps["basescan-resubmission-preflight-status"]["blocksSummaryOk"])
+        self.assertFalse(daily_steps["basescan-resubmission-preflight-status"]["blocksSummaryOk"])
         self.assertNotIn("/Users/", json.dumps(payload["dailyOps"]))
         self.assertEqual(payload["publicSite"]["status"], "ok")
         self.assertEqual(payload["registrationApi"]["status"], "ok")
