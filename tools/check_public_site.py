@@ -1623,11 +1623,13 @@ def validate_basescan_handoff_page(text: str) -> None:
         "GCA BaseScan Handoff",
         "BaseScan Evidence Index",
         "Ready For Resubmission",
-        "No",
+        "Yes",
         "support@gcagochina.com",
-        "GCAgochina@outlook.com",
         "readyForBaseScanResubmission",
-        "Do not resubmit BaseScan yet",
+        "Final Copy Package",
+        "launch/basescan_final_submission_package.md",
+        "tools/build_basescan_submission_package.py --json --require-ready",
+        "Copy/Paste Reviewer Comment",
         "BaseScan source verification",
         "Deployer-wallet ownership verification",
         "Returned again as information-insufficient on 2026-05-23",
@@ -1672,6 +1674,7 @@ def validate_basescan_handoff_json(text: str) -> None:
     label = "/basescan-handoff.json"
     payload = load_json(text, label)
     profile = payload.get("baseScanProfileStatus", {})
+    final_package = payload.get("finalSubmissionPackage", {})
     dns = payload.get("domainEmailGate", {})
     links = payload.get("officialLinks", {})
     boundaries = payload.get("boundaries", {})
@@ -1695,6 +1698,30 @@ def validate_basescan_handoff_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong target sender")
     if profile.get("currentActiveContact") != "support@gcagochina.com":
         raise SiteCheckError(f"{label}: wrong current contact")
+    if final_package.get("status") != "ready-for-owner-submission":
+        raise SiteCheckError(f"{label}: wrong final package status")
+    if "tools/build_basescan_submission_package.py --json --require-ready" not in final_package.get("builderCommand", ""):
+        raise SiteCheckError(f"{label}: missing final package builder command")
+    if final_package.get("outputMarkdown") != "launch/basescan_final_submission_package.md":
+        raise SiteCheckError(f"{label}: wrong final package markdown output")
+    if final_package.get("outputJson") != "launch/basescan_final_submission_package.json":
+        raise SiteCheckError(f"{label}: wrong final package json output")
+    if final_package.get("targetSender") != "support@gcagochina.com":
+        raise SiteCheckError(f"{label}: wrong final package target sender")
+    if final_package.get("ownerOnly") is not True:
+        raise SiteCheckError(f"{label}: final package should be owner-only")
+    for expected_block in (
+        "baseScanReviewerComment",
+        "basicInformationPlainText",
+        "evidenceLinksPlainText",
+        "marketAndSupplyPlainText",
+    ):
+        if expected_block not in final_package.get("copyPasteBlocks", []):
+            raise SiteCheckError(f"{label}: missing final package block {expected_block}")
+    final_boundaries = final_package.get("boundaries", {})
+    for key in ("submitsBaseScanRequest", "sendsEmail", "signsWalletMessage", "touchesWalletOrContract"):
+        if final_boundaries.get(key) is not False:
+            raise SiteCheckError(f"{label}: final package boundary {key} must be false")
     if dns.get("readyForBaseScanEmailEvidence") not in {False, True}:
         raise SiteCheckError(f"{label}: invalid DNS evidence ready flag")
     if dns.get("snapshotPage") != f"{DOMAIN_EMAIL_PAGE_URL}#snapshotTitle":
@@ -1741,6 +1768,8 @@ def validate_basescan_handoff_json(text: str) -> None:
         assert_contains(reason_text, expected, label)
     if "tools/check_basescan_resubmission_readiness.py --json --require-ready passes" not in payload.get("requiredBeforeNextSubmission", []):
         raise SiteCheckError(f"{label}: missing final preflight requirement")
+    if "Regenerate launch/basescan_final_submission_package.md with tools/build_basescan_submission_package.py --json --require-ready." not in payload.get("submissionSequence", []):
+        raise SiteCheckError(f"{label}: missing final package regeneration sequence")
     if "Submit one clean BaseScan request only after the final preflight passes." not in payload.get("submissionSequence", []):
         raise SiteCheckError(f"{label}: missing clean submission sequence")
     for key in (

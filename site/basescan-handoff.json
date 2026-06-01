@@ -17,6 +17,27 @@
     "currentActiveContact": "support@gcagochina.com",
     "nextAction": "Owner may submit one clean BaseScan token profile update from support@gcagochina.com after final local preflight passes."
   },
+  "finalSubmissionPackage": {
+    "status": "ready-for-owner-submission",
+    "builderCommand": "python3 tools/build_basescan_submission_package.py --json --require-ready --output-json launch/basescan_final_submission_package.json --output-md launch/basescan_final_submission_package.md",
+    "outputMarkdown": "launch/basescan_final_submission_package.md",
+    "outputJson": "launch/basescan_final_submission_package.json",
+    "copyPasteBlocks": [
+      "baseScanReviewerComment",
+      "basicInformationPlainText",
+      "evidenceLinksPlainText",
+      "marketAndSupplyPlainText"
+    ],
+    "targetSender": "support@gcagochina.com",
+    "ownerOnly": true,
+    "boundaries": {
+      "localDraftOnly": true,
+      "submitsBaseScanRequest": false,
+      "sendsEmail": false,
+      "signsWalletMessage": false,
+      "touchesWalletOrContract": false
+    }
+  },
   "domainEmailGate": {
     "targetDomainEmail": "support@gcagochina.com",
     "snapshotDate": "2026-05-30",
@@ -113,6 +134,7 @@
     "Keep provider, DNS, inbound, outbound, and support-page evidence archived privately.",
     "Confirm public support/BaseScan email values still publish support@gcagochina.com.",
     "Run tools/check_basescan_resubmission_readiness.py --json --require-ready.",
+    "Regenerate launch/basescan_final_submission_package.md with tools/build_basescan_submission_package.py --json --require-ready.",
     "Submit one clean BaseScan request only after the final preflight passes."
   ],
   "boundaries": {
