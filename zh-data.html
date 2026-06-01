@@ -216,6 +216,29 @@
         gap: 10px;
       }
 
+      .decision-list {
+        display: grid;
+        gap: 10px;
+        margin-top: 14px;
+      }
+
+      .decision {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fff;
+        padding: 13px;
+      }
+
+      .decision strong {
+        display: block;
+        margin-bottom: 4px;
+      }
+
+      .decision span {
+        color: var(--muted);
+        font-size: 14px;
+      }
+
       .row {
         display: grid;
         grid-template-columns: minmax(170px, 0.8fr) minmax(0, 1.2fr);
@@ -292,12 +315,13 @@
         <div class="nav-links">
           <a href="index.html">Home</a>
           <a href="zh-cn.html">中文入口</a>
+          <a href="verify.html">验证</a>
           <a href="zh-buy.html">购买</a>
+          <a href="gca/member-access/">会员入口</a>
+          <a href="register.html">邮箱注册</a>
           <a href="zh-members.html">会员规则</a>
-          <a href="zh-member-checklist.html">资料清单</a>
           <a href="zh-site-map.html">站点地图</a>
           <a href="zh-support.html">支持</a>
-          <a href="data.html">Data Room</a>
         </div>
       </nav>
     </header>
@@ -307,18 +331,45 @@
         <p class="eyebrow">中文数据室说明 / 2026-05-20</p>
         <h1 id="title">GCA 中文数据室说明</h1>
         <p class="lead">JSON 文件不是坏页面，也不是领取入口。它们是 Raw JSON / machine-readable files，看起来像代码是正常的，主要给钱包、浏览器、DEX 数据工具、上币审核、数据平台和安全厂商使用。</p>
-        <p class="lead">普通用户优先 HTML / 平台审核才用 JSON。买币、注册、会员资料、钱包验证、支持沟通和项目介绍，都应该先打开中文 HTML 页面。</p>
+        <p class="lead">普通用户优先 HTML / 平台审核才用 JSON。购买、注册、会员资料、钱包验证、支持沟通和项目介绍，都应该先打开中文 HTML 页面，不要从 JSON 文件开始。</p>
         <div class="actions">
           <a class="button primary" href="zh-cn.html">中文入口</a>
+          <a class="button primary" href="verify.html">Verify GCA</a>
           <a class="button primary" href="zh-buy.html">中文购买说明</a>
+          <a class="button primary" href="gca/member-access/">会员入口</a>
+          <a class="button primary" href="register.html">邮箱注册</a>
           <a class="button secondary" href="zh-member-checklist.html">中文会员审核资料清单</a>
           <a class="button secondary" href="zh-site-map.html">中文站点地图</a>
           <a class="button secondary" href="zh-wallet-verify.html">中文只读钱包验证</a>
-          <a class="button secondary" href="zh-operations.html">中文运营流程</a>
-          <a class="button secondary" href="zh-basescan-preflight.html">中文 BaseScan 预检</a>
-          <a class="button secondary" href="basescan-handoff.html">BaseScan Handoff</a>
           <a class="button secondary" href="zh-support.html">中文支持和资料提交</a>
           <a class="button" href="data.html">Reviewer Data Room</a>
+        </div>
+      </section>
+
+      <section class="section two" aria-label="中文数据室入口选择">
+        <div class="panel">
+          <p class="eyebrow">普通用户路径</p>
+          <h2>如果你只是使用官网，从这里开始</h2>
+          <div class="decision-list">
+            <div class="decision"><strong>先验证身份</strong><span>打开 Verify GCA 或中文入口，确认 Base Mainnet、合约地址、官网和社群链接。</span></div>
+            <div class="decision"><strong>再看购买和会员</strong><span>购买说明、邮箱注册、会员入口、资料清单和只读钱包验证都是可读 HTML 页面。</span></div>
+            <div class="decision"><strong>需要帮助时走支持页</strong><span>支持页面不会要求私钥、助记词、验证码、交易所 API Secret、提现权限或远程控制。</span></div>
+          </div>
+          <div class="actions">
+            <a class="button primary" href="zh-buy.html">中文购买说明</a>
+            <a class="button primary" href="gca/member-access/">会员入口</a>
+            <a class="button" href="zh-support.html">中文支持</a>
+          </div>
+        </div>
+        <div class="panel">
+          <p class="eyebrow">平台审核路径</p>
+          <h2>只有平台要求结构化资料时再打开</h2>
+          <p class="note">BaseScan、钱包、安全厂商、DEX 数据工具或上币审核明确要求 machine-readable metadata、Raw JSON 或结构化资料时，才使用 Reviewer Data Room。普通用户不要把 JSON 当成官网功能页。</p>
+          <div class="actions">
+            <a class="button" href="data.html">Reviewer Data Room</a>
+            <a class="button" href="reviewer-kit.html">Reviewer Kit</a>
+            <a class="button" href="basescan-handoff.html">BaseScan Handoff</a>
+          </div>
         </div>
       </section>
 
