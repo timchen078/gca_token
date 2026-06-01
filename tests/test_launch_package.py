@@ -2360,10 +2360,12 @@ class LaunchPackageTests(unittest.TestCase):
 
     def test_public_site_discloses_current_operational_status(self):
         site = (ROOT / "site" / "index.html").read_text()
-        self.assertIn("BaseScan token profile update was returned again as information-insufficient on 2026-05-23", site)
-        self.assertIn("Public team and Tim Chen professional profile evidence, the domain email setup plan, public evidence checklist, activation evidence packet, and support@gcagochina.com mailbox are now ready", site)
-        self.assertIn("public evidence checklist", site)
-        self.assertIn("one clean owner resubmission", site)
+        self.assertIn("Official Trust And Listing Materials", site)
+        self.assertIn("Identity And Contact", site)
+        self.assertIn("Safety And Proofs", site)
+        self.assertIn("Listing And Brand", site)
+        self.assertNotIn("BaseScan token profile update was returned again as information-insufficient on 2026-05-23", site)
+        self.assertNotIn("one clean owner resubmission", site)
         self.assertIn('href="verify.html"', site)
         self.assertIn('href="tim-chen.html"', site)
         self.assertIn('href="domain-email.html"', site)
