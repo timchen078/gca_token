@@ -473,7 +473,7 @@ def validate_start_page(text: str) -> None:
 def validate_verify(text: str) -> None:
     label = "/verify.html"
     assert_contains(text, "Verify GCA", label)
-    assert_contains(text, "Returned 2026-05-23; remediation required", label)
+    assert_contains(text, "Returned 2026-05-23; ready for owner resubmission", label)
     assert_contains(text, "well-known token identity", label)
     assert_contains(text, "Wallet Warning", label)
     assert_contains(text, "External Reviews", label)
@@ -629,7 +629,7 @@ def validate_status_page(text: str) -> None:
     assert_contains(text, "Contract source verified on BaseScan", label)
     assert_contains(text, "Deployer-wallet ownership verified on BaseScan", label)
     assert_contains(text, "BaseScan public token profile publication", label)
-    assert_contains(text, "Returned 2026-05-23; remediation required", label)
+    assert_contains(text, "Returned 2026-05-23; ready for owner resubmission", label)
     assert_contains(text, "Tim Chen profile and domain email evidence are ready for one owner resubmission", label)
     assert_contains_any(
         text,
@@ -1832,7 +1832,7 @@ def validate_action_plan_page(text: str) -> None:
         "Do not create fake trading activity",
         "Platform-Only Evidence Path",
         "Reviewer Data Room",
-        "BaseScan returned 2026-05-23; remediation required",
+        "BaseScan returned 2026-05-23; owner package ready",
         "domain-email.html",
         "Domain Email Plan",
         "basescan-remediation.html",
@@ -4800,7 +4800,7 @@ def validate_roadmap_page(text: str) -> None:
     assert_contains(text, "GCA Member records", label)
     assert_contains(text, "benefit remains manual review", label)
     assert_contains(text, "External Dependencies", label)
-    assert_contains(text, "Returned 2026-05-23; remediation required", label)
+    assert_contains(text, "Returned 2026-05-23; ready for owner resubmission", label)
     assert_contains(text, "Owner observed no warning visible", label)
     assert_contains(text, "Not completed", label)
     assert_contains(text, "Account and Ledger", label)
@@ -4905,8 +4905,8 @@ def validate_community_page(text: str) -> None:
     assert_contains(text, FIRST_X_POST_URL, label)
     assert_contains(text, "Latest official X post", label)
     assert_contains(text, LATEST_X_POST_URL, label)
-    assert_contains(text, "Tim Chen public professional profile evidence, the domain email setup plan, and the public evidence checklist are now published", label)
-    assert_contains(text, "working project-domain email is still required", label)
+    assert_contains(text, "Tim Chen public professional profile evidence, the domain email setup plan, public evidence checklist, activation evidence packet, and support@gcagochina.com mailbox are ready", label)
+    assert_contains(text, "one clean owner resubmission while waiting for BaseScan review", label)
     assert_contains(text, ANNOUNCEMENTS_PAGE_URL, label)
     assert_contains(text, CAMPAIGN_PAGE_URL, label)
     assert_contains(text, CONTENT_LIBRARY_PAGE_URL, label)
@@ -5033,9 +5033,9 @@ def validate_community_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong latestPostUrl")
     if x_launch.get("latestPostPublishedDate") != "2026-05-23":
         raise SiteCheckError(f"{label}: wrong latestPostPublishedDate")
-    if "Tim Chen public professional profile evidence, the domain email setup plan, and the public evidence checklist are now published" not in x_launch.get("currentStatusAfterLatestPost", ""):
+    if "Tim Chen public professional profile evidence, the domain email setup plan, public evidence checklist, activation evidence packet, and support@gcagochina.com mailbox are now ready" not in x_launch.get("currentStatusAfterLatestPost", ""):
         raise SiteCheckError(f"{label}: missing current status after latest post")
-    if "working gcagochina.com mailbox is still required" not in x_launch.get("currentStatusAfterLatestPost", ""):
+    if "one clean owner resubmission while waiting for BaseScan review and publication" not in x_launch.get("currentStatusAfterLatestPost", ""):
         raise SiteCheckError(f"{label}: missing current domain mailbox boundary")
     if not any("GCA is building Go China Access" in item for item in x_launch.get("firstPostText", [])):
         raise SiteCheckError(f"{label}: missing X first post text")
@@ -5164,9 +5164,9 @@ def validate_announcements_json(text: str) -> None:
     if not any(post.get("url") == LATEST_X_POST_URL for post in posts if isinstance(post, dict)):
         raise SiteCheckError(f"{label}: missing latest X post")
     latest_post = next((post for post in posts if isinstance(post, dict) and post.get("url") == LATEST_X_POST_URL), {})
-    if "Tim Chen public professional profile evidence, the domain email setup plan, and the public evidence checklist are now published" not in latest_post.get("currentStatusAfterPost", ""):
+    if "Tim Chen public professional profile evidence, the domain email setup plan, public evidence checklist, activation evidence packet, and support@gcagochina.com mailbox are now ready" not in latest_post.get("currentStatusAfterPost", ""):
         raise SiteCheckError(f"{label}: missing latest post current status")
-    if "working gcagochina.com mailbox is still required" not in latest_post.get("currentStatusAfterPost", ""):
+    if "one clean owner resubmission while waiting for BaseScan review and publication" not in latest_post.get("currentStatusAfterPost", ""):
         raise SiteCheckError(f"{label}: missing latest post domain mailbox boundary")
     if links.get("announcementsPage") != ANNOUNCEMENTS_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong announcementsPage")
@@ -8132,8 +8132,8 @@ def validate_release_gates_page(text: str) -> None:
     assert_contains(text, "risk-control review", label)
     assert_contains(text, "support review queue", label)
     assert_contains(text, "simulation or testnet first", label)
-    assert_contains(text, "BaseScan token profile remediation", label)
-    assert_contains(text, "Returned 2026-05-23; owner evidence required", label)
+    assert_contains(text, "BaseScan token profile publication", label)
+    assert_contains(text, "Returned 2026-05-23; owner package ready, awaiting review", label)
     assert_contains(text, "no third-party audit", label)
     assert_contains(text, "No custody", label)
     assert_contains(text, "no withdrawal permission", label)
@@ -8358,7 +8358,7 @@ def validate_terms_page(text: str) -> None:
     assert_contains(text, "Account-Level Service Access", label)
     assert_contains(text, "No Custody Or Withdrawal Permission", label)
     assert_contains(text, "No Outcome Promise", label)
-    assert_contains(text, "Returned 2026-05-23; remediation required", label)
+    assert_contains(text, "Returned 2026-05-23; ready for owner resubmission", label)
     assert_contains(text, "GCA/USDT on Base Mainnet", label)
     assert_contains(text, "Privacy Notice", label)
     assert_not_contains(text, OLD_WETH_POOL_ADDRESS, label)
@@ -11524,7 +11524,7 @@ def validate_trust_page(text: str) -> None:
     assert_contains(text, "Base Mainnet / 8453", label)
     assert_contains(text, MAINNET_ADDRESS, label)
     assert_contains(text, "BaseScan source code", label)
-    assert_contains(text, "Returned 2026-05-23; remediation required", label)
+    assert_contains(text, "Returned 2026-05-23; ready for owner resubmission", label)
     assert_contains(text, "BaseScan domain email evidence", label)
     assert_contains_any(text, ("2026-05-25 DNS snapshot", "2026-05-30 DNS snapshot"), label, "DNS snapshot")
     assert_contains(text, "MX/SPF/DKIM/DMARC present", label)
