@@ -2836,14 +2836,10 @@ class LaunchPackageTests(unittest.TestCase):
         terms = json.loads((ROOT / "site" / "terms.json").read_text())
 
         self.assertIn("GCA Privacy Notice", privacy_page)
-        self.assertPlatformOnlyDataRoom(
-            privacy_page,
-            "privacy.json",
-            "terms.json",
-            "member-program.json",
-            "member-ledger.json",
-            "support.json",
-        )
+        self.assertIn("Privacy References", privacy_page)
+        self.assertNotIn("Platform-Only Evidence Path", privacy_page)
+        self.assertNotIn("Data Room", privacy_page)
+        self.assertNotIn('href="data.html"', privacy_page)
         self.assertIn("live email registration", privacy_page)
         self.assertIn("contact suppression", privacy_page)
         self.assertIn("Email API live / member packet local", privacy_page)
@@ -2889,14 +2885,10 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(privacy["userRequests"]["contactSuppressionEndpoint"], "https://gca-registration-api.gcagochina.workers.dev/gca/contact-suppressions")
 
         self.assertIn("GCA Participation Terms", terms_page)
-        self.assertPlatformOnlyDataRoom(
-            terms_page,
-            "terms.json",
-            "privacy.json",
-            "member-program.json",
-            "member-ledger.json",
-            "support.json",
-        )
+        self.assertIn("Participation References", terms_page)
+        self.assertNotIn("Platform-Only Evidence Path", terms_page)
+        self.assertNotIn("Data Room", terms_page)
+        self.assertNotIn('href="data.html"', terms_page)
         self.assertIn("Pre-Registration Only", terms_page)
         self.assertIn("Email Registration", terms_page)
         self.assertIn("Email Unsubscribe", terms_page)
@@ -3572,14 +3564,10 @@ class LaunchPackageTests(unittest.TestCase):
         narrative = json.loads((ROOT / "site" / "narrative.json").read_text())
 
         self.assertIn("GCA Narrative System", page)
-        self.assertPlatformOnlyDataRoom(
-            page,
-            "narrative.json",
-            "radar.json",
-            "utility.json",
-            "roadmap.json",
-            "community.json",
-        )
+        self.assertIn("Narrative References", page)
+        self.assertNotIn("Platform-Only Evidence Path", page)
+        self.assertNotIn("Data Room", page)
+        self.assertNotIn('href="data.html"', page)
         self.assertIn("Narrative meets risk control", page)
         self.assertIn("China Narrative Radar", page)
         self.assertIn("Weekly Go China Radar", page)
@@ -4124,9 +4112,10 @@ class LaunchPackageTests(unittest.TestCase):
         product = json.loads((ROOT / "site" / "product.json").read_text())
 
         self.assertIn("GCA AI Quant Access Product Spec", page)
-        self.assertIn("Platform-Only Evidence Path", page)
-        self.assertIn("Data Room", page)
-        self.assertIn("JSON", page)
+        self.assertIn("Product References", page)
+        self.assertNotIn("Platform-Only Evidence Path", page)
+        self.assertNotIn("Data Room", page)
+        self.assertNotIn('href="data.html"', page)
         for forbidden in (
             'href="product.json"',
             'href="access.json"',

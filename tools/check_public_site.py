@@ -5412,11 +5412,8 @@ def validate_publishing_desk_json(text: str) -> None:
 def validate_narrative_page(text: str) -> None:
     label = "/narrative.html"
     assert_contains(text, "GCA Narrative System", label)
-    assert_platform_only_data_room(
-        text,
-        label,
-        ("narrative.json", "radar.json", "utility.json", "roadmap.json", "community.json"),
-    )
+    assert_contains(text, "Narrative References", label)
+    assert_no_public_data_room_terms(text, label)
     assert_contains(text, "Narrative meets risk control", label)
     assert_contains(text, "China Narrative Radar", label)
     assert_contains(text, "Weekly Go China Radar", label)
@@ -5888,19 +5885,8 @@ def validate_utility_json(text: str) -> None:
 def validate_product_page(text: str) -> None:
     label = "/product.html"
     assert_contains(text, "GCA AI Quant Access Product Spec", label)
-    assert_platform_only_data_room(
-        text,
-        label,
-        (
-            "product.json",
-            "access.json",
-            "access-api.json",
-            "review-queue.json",
-            "release-gates.json",
-            "credits.json",
-            "utility.json",
-        ),
-    )
+    assert_contains(text, "Product References", label)
+    assert_no_public_data_room_terms(text, label)
     assert_contains(text, "Access Portal", label)
     assert_contains(text, "Access API", label)
     assert_contains(text, "Release Gates", label)
@@ -7125,15 +7111,8 @@ def validate_access_api_json(text: str) -> None:
 def validate_api_status_page(text: str) -> None:
     label = "/api-status.html"
     assert_social_preview_meta(text, label, API_STATUS_PAGE_URL)
-    assert_platform_only_data_room(
-        text,
-        label,
-        (
-            "api-status.json",
-            "access-api.json",
-            "operations.json",
-        ),
-    )
+    assert_contains(text, "API Status References", label)
+    assert_no_public_data_room_terms(text, label)
     for expected in (
         "GCA Registration API Status",
         "Registration API Status / 2026-05-20",
@@ -7172,7 +7151,7 @@ def validate_api_status_page(text: str) -> None:
         "Public visitors cannot read the registration ledger or suppression ledger",
         "100 credits and GCA Member ledger records are live for eligible wallet submissions",
         "10,000 GCA member benefit remains manual review",
-        "Data Room",
+        "Daily Status Snapshot",
         "Access API Contract",
         "Operations Runbook",
         "Operator Console",
@@ -8005,11 +7984,8 @@ def validate_release_gates_json(text: str) -> None:
 def validate_privacy_page(text: str) -> None:
     label = "/privacy.html"
     assert_contains(text, "GCA Privacy Notice", label)
-    assert_platform_only_data_room(
-        text,
-        label,
-        ("privacy.json", "terms.json", "member-program.json", "member-ledger.json", "support.json"),
-    )
+    assert_contains(text, "Privacy References", label)
+    assert_no_public_data_room_terms(text, label)
     assert_contains(text, "live email registration", label)
     assert_contains(text, "contact suppression", label)
     assert_contains(text, "Email API live / member packet local", label)
@@ -8097,11 +8073,8 @@ def validate_privacy_json(text: str) -> None:
 def validate_terms_page(text: str) -> None:
     label = "/terms.html"
     assert_contains(text, "GCA Participation Terms", label)
-    assert_platform_only_data_room(
-        text,
-        label,
-        ("terms.json", "privacy.json", "member-program.json", "member-ledger.json", "support.json"),
-    )
+    assert_contains(text, "Participation References", label)
+    assert_no_public_data_room_terms(text, label)
     assert_contains(text, "Pre-Registration Only", label)
     assert_contains(text, "Email Registration", label)
     assert_contains(text, "Email Unsubscribe", label)
