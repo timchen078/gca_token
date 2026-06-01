@@ -2012,12 +2012,11 @@ def validate_zh_buy_page(text: str) -> None:
         "第三方审计尚未完成",
         "LP 锁尚未完成",
         "BaseScan Token Profile",
-        "不要承诺价格、成交量、流动性、上所、审核通过或永久无风险提示",
-        "Platform-Only Evidence Path",
-        "Reviewer Data Room",
+        "不要承诺价格、成交量、流动性、上所或永久无风险提示",
+        "支持和官方资料",
+        "中文站点地图",
         "zh-cn.html",
         "zh-apply.html",
-        "zh-status.html",
         "zh-liquidity.html",
         "zh-supply.html",
         "zh-security.html",
@@ -2025,28 +2024,27 @@ def validate_zh_buy_page(text: str) -> None:
         "zh-faq.html",
         "zh-members.html",
         "zh-wallet-verify.html",
-        "中文会员审核资料清单",
-        "zh-member-checklist.html",
         "verify.html",
         "markets.html",
         "buy.html",
         "members.html",
         "support.html",
-        "data.html",
-        "zh-data.html",
+        "zh-support.html",
+        "zh-site-map.html",
     ):
         assert_contains(text, expected, label)
-    assert_platform_only_data_room(
-        text,
-        label,
-        (
-            "project.json",
-            "tokenlist.json",
-            "reviewer-kit.json",
-            "platform-replies.json",
-            "member-ledger.json",
-        ),
-    )
+    for forbidden in (
+        "Platform-Only Evidence Path",
+        "Reviewer Data Room",
+        "平台审核资料",
+        "中文数据室说明",
+        "Platform Replies",
+        "zh-data.html",
+        'href="data.html"',
+        "zh-member-checklist.html",
+        "中文会员审核资料清单",
+    ):
+        assert_not_contains(text, forbidden, label)
     assert_current_pool_text(text, label)
     assert_no_forbidden_public_claims(text, label)
 
@@ -2422,34 +2420,34 @@ def validate_zh_liquidity_page(text: str) -> None:
         "LP 锁尚未完成",
         "不能宣传为锁定流动性",
         "不要通过人工制造交易活动、自我成交或误导性宣传来改善市场数据",
-        "Platform-Only Evidence Path",
-        "Reviewer Data Room",
+        "需要帮助",
+        "购买、池子和钱包问题",
         "zh-cn.html",
         "zh-apply.html",
-        "zh-status.html",
+        "zh-support.html",
+        "zh-members.html",
         "zh-faq.html",
         "verify.html",
         "buy.html",
         "markets.html",
         "liquidity.html",
         "market-quality.html",
-        "custody-roadmap.html",
         "holder-distribution.html",
-        "risk-remediation.html",
-        "data.html",
+        "support.html",
     ):
         assert_contains(text, expected, label)
-    assert_platform_only_data_room(
-        text,
-        label,
-        (
-            "liquidity.json",
-            "market-quality.json",
-            "risk-remediation.json",
-            "custody-roadmap.json",
-            "holder-distribution.json",
-        ),
-    )
+    for forbidden in (
+        "Platform-Only Evidence Path",
+        "Reviewer Data Room",
+        "平台审核资料",
+        "平台和审核入口",
+        "Platform Replies",
+        'href="data.html"',
+        "reviewer-kit.html",
+        "risk-remediation.html",
+        "custody-roadmap.html",
+    ):
+        assert_not_contains(text, forbidden, label)
     assert_current_pool_text(text, label)
     assert_no_forbidden_public_claims(text, label)
 
