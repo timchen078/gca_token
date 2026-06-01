@@ -305,7 +305,7 @@
       <section class="facts" aria-label="Preflight summary">
         <div class="fact">
           <span class="label">Ready To Resubmit</span>
-          <span class="value pending">No</span>
+          <span class="value good">Yes</span>
         </div>
         <div class="fact">
           <span class="label">Latest DNS Snapshot</span>
@@ -313,7 +313,7 @@
         </div>
         <div class="fact">
           <span class="label">Main Blocker</span>
-          <span class="value pending">Domain email</span>
+          <span class="value good">No local blocker</span>
         </div>
         <div class="fact">
           <span class="label">Boundary</span>
@@ -323,13 +323,13 @@
 
       <section class="section two" aria-label="Current blockers and required inputs">
         <div class="panel notice">
-          <h2>Current Blockers</h2>
+          <h2>Current Ready Evidence</h2>
           <div class="list">
             <div class="row"><span>Domain mailbox</span><strong><code>support@gcagochina.com</code> is proven as the working inbound and outbound project mailbox.</strong></div>
             <div class="row"><span>DNS evidence</span><strong>2026-05-30 snapshot: MX present, SPF present, DKIM present, DMARC present; MX/SPF/DKIM/DMARC present.</strong></div>
             <div class="row"><span>Public email alignment</span><strong>Public support and BaseScan values use <code>support@gcagochina.com</code>.</strong></div>
             <div class="row"><span>Evidence packet</span><strong><code>launch/domain_email_evidence_packet.json</code> is ready for final BaseScan submission evidence.</strong></div>
-            <div class="row"><span>Final package</span><strong>The final submission package is ready when the preflight reports <code>readyForBaseScanResubmission</code> true.</strong></div>
+            <div class="row"><span>Final package</span><strong><code>launch/basescan_final_submission_package.md</code> is ready for owner copy/paste after the preflight reports <code>readyForBaseScanResubmission</code> true.</strong></div>
           </div>
         </div>
 
@@ -343,6 +343,12 @@
             <div class="row"><span>Reviewer URLs</span><strong>Team profile, Tim Chen profile, whitepaper, brand kit, support, GitHub, platform replies, and official market links must be reachable.</strong></div>
           </div>
         </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="finalCopyTitle">
+        <p class="eyebrow">Owner Copy Package</p>
+        <h2 id="finalCopyTitle">Final Package Is Ready Locally</h2>
+        <p class="note">Use <code>launch/basescan_final_submission_package.md</code> as the final copy source for the BaseScan form. It contains the reviewer comment, basic token information, evidence links, and market/supply text. Submit only one clean request from <code>support@gcagochina.com</code>, then wait for BaseScan review.</p>
       </section>
 
       <section class="section panel" aria-labelledby="commandsTitle">
@@ -391,9 +397,9 @@
         </div>
 
         <div class="panel">
-          <h2>Do Not Submit Or Claim Yet</h2>
+          <h2>Submit Once And Keep Claim Boundaries</h2>
           <div class="list">
-            <div class="row"><span>No duplicate BaseScan request</span><strong>Do not open another token profile update until the preflight passes.</strong></div>
+            <div class="row"><span>No duplicate BaseScan request</span><strong>The preflight is ready; submit only one clean token profile update and avoid duplicate follow-ups while BaseScan reviews it.</strong></div>
             <div class="row"><span>Domain email evidence</span><strong>Claim only that <code>support@gcagochina.com</code> is active and evidence-backed; keep private screenshots local unless a reviewer asks for them.</strong></div>
             <div class="row"><span>No BaseScan profile approval claim</span><strong>Source verification and deployer-wallet ownership verification are complete; public token profile publication is not complete.</strong></div>
             <div class="row"><span>Blocked draft marker</span><strong>The final package should be generated without the <code>DRAFT ONLY - DO NOT SUBMIT BASESCAN YET.</code> marker before copying into BaseScan</strong></div>
