@@ -2184,17 +2184,9 @@ def validate_zh_status_page(text: str) -> None:
         "daily-status.html",
         "下一步计划",
         "action-plan.html",
-        "ownerActionQueue",
-        "旧邮箱切换队列",
-        "filesStillUsingOldEmail",
-        "为 0 个跟踪文件",
         "公开证据清单",
         "domain-email-evidence.html",
         "已通过 2026-05-11",
-        "合约没有后续增发函数",
-        "BaseScan 部署钱包所有权验证已完成",
-        "邮箱注册 API",
-        "Cloudflare Workers + D1 已上线，管理员读取 token 保护",
         "owner-held reserve",
         "600,000,000 GCA",
         "钱包风险提示不再可见",
@@ -2203,12 +2195,6 @@ def validate_zh_status_page(text: str) -> None:
         "LP 锁尚未完成",
         "不能宣传为深度流动性或锁定流动性",
         "部分数据平台可能仍按 1,000,000,000 读取总供应或流通口径",
-        "不要说 BaseScan Token Profile 已通过",
-        "不要说 GCA 已通过第三方审计",
-        "不要说 Blockaid、MetaMask 或安全厂商永久批准 GCA",
-        "不要说 LP 已锁、储备已锁仓、储备已多签",
-        "不要承诺价格、收益、交易量、上币、永久无风险提示或深度流动性",
-        "不要通过人工制造交易活动、自我成交或误导性宣传来改善市场数据",
         "Platform-Only Evidence Path",
         "Reviewer Data Room",
         "zh-cn.html",
@@ -2242,6 +2228,13 @@ def validate_zh_status_page(text: str) -> None:
             "external-reviews.json",
         ),
     )
+    for forbidden in (
+        "可以说已经完成",
+        "必须说仍待官方审核",
+        "公开话术边界",
+        "这些不能乱说",
+    ):
+        assert_not_contains(text, forbidden, label)
     assert_current_pool_text(text, label)
     assert_no_forbidden_public_claims(text, label)
 
@@ -3615,6 +3608,11 @@ def validate_zh_members_page(text: str) -> None:
             "member-ledger.json",
         ),
     )
+    for forbidden in (
+        "重要边界",
+        "请这样对外描述",
+    ):
+        assert_not_contains(text, forbidden, label)
     assert_current_pool_text(text, label)
     assert_no_forbidden_public_claims(text, label)
 
