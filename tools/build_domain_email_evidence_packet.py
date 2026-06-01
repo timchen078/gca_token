@@ -150,7 +150,8 @@ def build_evidence_checklist(
     generated_at: str | None = None,
 ) -> dict[str, Any]:
     domain = str(domain_email_config.get("domain") or "gcagochina.com")
-    current_email = str(domain_email_config.get("currentPublicEmail") or "GCAgochina@outlook.com")
+    previous_email = str(domain_email_config.get("previousPublicEmail") or "GCAgochina@outlook.com")
+    current_email = str(domain_email_config.get("currentPublicEmail") or previous_email)
     target_email = str(domain_email_config.get("targetDomainEmail") or "support@gcagochina.com")
     status = build_evidence_directory_status(evidence_dir)
     required_files = []
@@ -169,6 +170,7 @@ def build_evidence_checklist(
         "generatedAt": generated_at or utc_now(),
         "project": "GCA",
         "domain": domain,
+        "previousPublicEmail": previous_email,
         "currentPublicEmail": current_email,
         "targetDomainEmail": target_email,
         "status": "blocked-until-domain-email-evidence-collected",
@@ -198,7 +200,7 @@ def build_evidence_checklist(
             f"{target_email} cannot send authenticated replies with the visible sender set to the domain email.",
             "MX/SPF/DKIM/DMARC DNS checks are not ready.",
             "Any required evidence file is missing.",
-            f"Public support/BaseScan files still publish {current_email} after the switch.",
+            f"Public support/BaseScan files still publish the previous email {previous_email} after the switch.",
             "BaseScan resubmission preflight reports readyForBaseScanResubmission false.",
         ],
         "publicClaimBoundaries": [
@@ -222,6 +224,7 @@ def render_evidence_checklist_markdown(checklist: dict[str, Any]) -> str:
         "# GCA Domain Email Evidence Checklist",
         "",
         f"- Status: `{checklist['status']}`",
+        f"- Previous public email: `{checklist['previousPublicEmail']}`",
         f"- Current public email: `{checklist['currentPublicEmail']}`",
         f"- Target domain email: `{checklist['targetDomainEmail']}`",
         f"- Evidence directory: `{checklist['evidenceDirectory']}`",

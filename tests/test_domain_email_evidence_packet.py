@@ -121,6 +121,7 @@ class DomainEmailEvidencePacketTests(unittest.TestCase):
         markdown = render_evidence_checklist_markdown(checklist)
 
         self.assertEqual(checklist["schema"], "gca-domain-email-evidence-checklist-v1")
+        self.assertEqual(checklist["previousPublicEmail"], "GCAgochina@outlook.com")
         self.assertEqual(checklist["targetDomainEmail"], "support@gcagochina.com")
         self.assertEqual(checklist["status"], "blocked-until-domain-email-evidence-collected")
         self.assertTrue(checklist["evidenceDirectoryIgnoredByGit"])
@@ -130,6 +131,9 @@ class DomainEmailEvidencePacketTests(unittest.TestCase):
         self.assertTrue(all(item["safeToCommit"] is False for item in checklist["requiredEvidenceFiles"]))
         self.assertIn("domain-email-provider-active.png", markdown)
         self.assertIn("domain-email-outbound-test.png", markdown)
+        self.assertIn("Previous public email: `GCAgochina@outlook.com`", markdown)
+        self.assertIn("previous email GCAgochina@outlook.com", markdown)
+        self.assertNotIn("Public support/BaseScan files still publish support@gcagochina.com after the switch.", markdown)
         self.assertIn("Private mailbox screenshots", markdown)
 
     def test_committed_evidence_checklist_artifacts_are_public_safe(self):
@@ -140,6 +144,8 @@ class DomainEmailEvidencePacketTests(unittest.TestCase):
         markdown = md_path.read_text(encoding="utf-8")
 
         self.assertEqual(checklist["schema"], "gca-domain-email-evidence-checklist-v1")
+        self.assertEqual(checklist["previousPublicEmail"], "GCAgochina@outlook.com")
+        self.assertEqual(checklist["currentPublicEmail"], "support@gcagochina.com")
         self.assertEqual(checklist["targetDomainEmail"], "support@gcagochina.com")
         self.assertEqual(checklist["evidenceDirectory"], "launch/domain_email_evidence")
         self.assertTrue(checklist["evidenceDirectoryIgnoredByGit"])
@@ -147,6 +153,9 @@ class DomainEmailEvidencePacketTests(unittest.TestCase):
         self.assertFalse(checklist["boundaries"]["touchesWalletsOrContracts"])
         self.assertIn("domain-email-dns-mx-spf-dkim-dmarc.txt", markdown)
         self.assertIn("tools/check_basescan_resubmission_readiness.py", markdown)
+        self.assertIn("Previous public email: `GCAgochina@outlook.com`", markdown)
+        self.assertIn("previous email GCAgochina@outlook.com", markdown)
+        self.assertNotIn("Public support/BaseScan files still publish support@gcagochina.com after the switch.", markdown)
         self.assertIn("Private mailbox screenshots and proof files must stay", markdown)
 
     def test_cli_can_write_json_and_markdown_from_saved_dns_result(self):
