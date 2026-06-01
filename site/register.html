@@ -363,6 +363,8 @@
           <a href="zh-cn.html">中文入口</a>
           <a href="buy.html">购买</a>
           <a href="members.html">会员</a>
+          <a href="gca/member-access/">会员入口</a>
+          <a href="zh-wallet-verify.html">只读验证</a>
           <a href="zh-support.html">支持</a>
           <a href="unsubscribe.html">退订</a>
           <a href="privacy.html">Privacy</a>
@@ -381,6 +383,8 @@
           <a class="button primary" href="#registerForm">开始邮箱注册</a>
           <a class="button secondary" href="zh-api-status.html">中文 API 状态</a>
           <a class="button secondary" href="zh-members.html">中文会员规则</a>
+          <a class="button secondary" href="gca/member-access/">进入会员入口</a>
+          <a class="button secondary" href="zh-wallet-verify.html">只读钱包验证</a>
           <a class="button secondary" href="zh-support.html">中文支持和资料提交</a>
           <a class="button secondary" href="unsubscribe.html">邮箱退订</a>
           <a class="button" href="mailto:support@gcagochina.com?subject=GCA%20Email%20Registration">直接发邮件</a>
@@ -407,6 +411,25 @@
         <div class="fact">
           <span class="label">官方邮箱</span>
           <span class="value">support@gcagochina.com</span>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="flowTitle">
+        <p class="eyebrow">流程区别</p>
+        <h2 id="flowTitle">邮箱注册和会员验证不是同一步</h2>
+        <div class="grid">
+          <article class="card">
+            <h3>1. 邮箱注册</h3>
+            <p class="note">只记录你的联系邮箱，用于项目更新、会员入口上线通知、产品测试邀请和官方支持回访。它不会读取钱包，也不会自动创建 100 credits 或 GCA Member 记录。</p>
+          </article>
+          <article class="card">
+            <h3>2. 只读钱包验证</h3>
+            <p class="note">如果你已经买入 GCA，再进入 <a href="gca/member-access/">会员入口</a> 提交一个 Base 钱包。后台只用 <code>balanceOf</code> 读取 GCA 余额，不需要签名或链上交易。</p>
+          </article>
+          <article class="card">
+            <h3>3. 人工审核资料</h3>
+            <p class="note">准备钱包地址、购买交易哈希、持有开始日期和只读余额验证结果。10,000 GCA 会员权益仍按公开规则人工审核，不是提交邮箱后自动发放。</p>
+          </article>
         </div>
       </section>
 
@@ -461,11 +484,11 @@
         </article>
         <article class="card">
           <h3>后续想申请会员</h3>
-          <p class="note">查看 <a href="zh-members.html">中文会员规则</a>，准备钱包地址、购买交易哈希、持有开始日期和只读余额验证资料。</p>
+          <p class="note">查看 <a href="zh-members.html">中文会员规则</a>，再进入 <a href="gca/member-access/">会员入口</a>。准备钱包地址、购买交易哈希、持有开始日期和只读余额验证资料。</p>
         </article>
         <article class="card">
           <h3>遇到平台或钱包问题</h3>
-          <p class="note">进入 <a href="zh-support.html">中文支持和资料提交</a>，只提交公开链上资料和截图，不提交任何敏感信息。</p>
+          <p class="note">进入 <a href="zh-support.html">中文支持和资料提交</a> 或 <a href="zh-wallet-verify.html">只读钱包验证说明</a>，只提交公开链上资料和截图，不提交任何敏感信息。</p>
         </article>
       </section>
     </main>
