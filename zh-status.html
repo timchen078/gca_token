@@ -3,22 +3,22 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>GCA 中文审核状态 | Go China Access</title>
-    <meta name="description" content="GCA 中文审核状态：BaseScan 源码验证、BaseScan Token Profile 退回整改、GeckoTerminal 已通过、钱包风险状态、第三方审计、LP 锁和储备披露。">
+    <title>GCA 中文项目进度 | Go China Access</title>
+    <meta name="description" content="GCA 中文项目进度：Base Mainnet 合约、官方 GCA/USDT 池、购买入口、会员入口、钱包验证、邮箱注册和产品路线。">
     <link rel="canonical" href="https://gcagochina.com/zh-status.html">
     <link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">
     <link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="GCA | Go China Access">
-    <meta property="og:title" content="GCA 中文审核状态 | Go China Access">
-    <meta property="og:description" content="中文用户查看 GCA 外部审核、钱包风险、审计、LP 和储备披露状态。">
+    <meta property="og:title" content="GCA 中文项目进度 | Go China Access">
+    <meta property="og:description" content="中文用户查看 GCA 合约、官方池、购买入口、会员入口、钱包验证和产品路线。">
     <meta property="og:url" content="https://gcagochina.com/zh-status.html">
     <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="GCA 中文审核状态 | Go China Access">
-    <meta name="twitter:description" content="中文用户查看 GCA 外部审核、钱包风险、审计、LP 和储备披露状态。">
+    <meta name="twitter:title" content="GCA 中文项目进度 | Go China Access">
+    <meta name="twitter:description" content="中文用户查看 GCA 合约、官方池、购买入口、会员入口、钱包验证和产品路线。">
     <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
     <style>
       :root {
@@ -188,6 +188,26 @@
         color: #123e90;
       }
 
+      .facts,
+      .grid,
+      .two {
+        display: grid;
+        gap: 14px;
+      }
+
+      .facts {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        margin-top: 26px;
+      }
+
+      .grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .two {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
       .section {
         margin-top: 30px;
       }
@@ -204,106 +224,68 @@
         padding: 24px;
       }
 
-      .facts,
-      .grid,
-      .two {
-        display: grid;
-        gap: 14px;
+      .card,
+      .fact {
+        padding: 18px;
       }
 
-      .facts {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        margin-top: 26px;
-      }
-
-      .grid,
-      .two {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .fact,
-      .card {
-        padding: 16px;
-      }
-
-      .label {
+      .fact .label,
+      .row span {
         display: block;
         color: var(--muted);
-        font-size: 12px;
+        font-size: 13px;
         font-weight: 760;
-        text-transform: uppercase;
       }
 
-      .value {
+      .fact .value {
         display: block;
-        margin-top: 7px;
+        margin-top: 8px;
+        overflow-wrap: anywhere;
         font-size: 17px;
         font-weight: 850;
-        overflow-wrap: anywhere;
       }
 
       .good {
         color: var(--green);
       }
 
-      .pending {
-        color: var(--gold);
-      }
-
       .section-head {
         display: flex;
-        align-items: end;
+        align-items: flex-start;
         justify-content: space-between;
         gap: 18px;
-        margin-bottom: 16px;
+        margin-bottom: 18px;
       }
 
-      .section-head p {
-        max-width: 720px;
-        margin-bottom: 0;
+      .section-head .note {
+        max-width: 520px;
       }
 
       .list {
         display: grid;
-        gap: 10px;
+        gap: 0;
+        border-top: 1px solid var(--line);
       }
 
       .row {
         display: grid;
-        grid-template-columns: minmax(160px, 0.8fr) minmax(0, 1.2fr);
+        grid-template-columns: minmax(160px, 0.35fr) 1fr;
         gap: 12px;
-        align-items: start;
-        border-top: 1px solid var(--line);
-        padding-top: 10px;
+        padding: 14px 0;
+        border-bottom: 1px solid var(--line);
       }
 
       .row strong {
-        min-width: 0;
-        overflow-wrap: anywhere;
-        word-break: break-word;
-        text-align: right;
-      }
-
-      .notice {
-        border-color: #ecd28c;
-        background: #fff8e6;
-      }
-
-      code {
-        padding: 2px 5px;
-        border-radius: 6px;
-        background: var(--soft);
         overflow-wrap: anywhere;
       }
 
       footer {
         border-top: 1px solid var(--line);
-        padding: 24px 0;
+        padding: 24px 0 32px;
         color: var(--muted);
-        font-size: 14px;
       }
 
-      @media (max-width: 900px) {
+      @media (max-width: 840px) {
         nav,
         .section-head {
           align-items: flex-start;
@@ -315,17 +297,29 @@
         .two {
           grid-template-columns: 1fr;
         }
+      }
 
-        nav {
-          padding: 14px 0;
+      @media (max-width: 560px) {
+        .shell {
+          width: min(100% - 24px, 1080px);
+        }
+
+        main {
+          padding-top: 30px;
+        }
+
+        h1 {
+          font-size: 42px;
+        }
+
+        .panel,
+        .card,
+        .fact {
+          padding: 18px;
         }
 
         .row {
           grid-template-columns: 1fr;
-        }
-
-        .row strong {
-          text-align: left;
         }
       }
     </style>
@@ -340,74 +334,59 @@
         <div class="nav-links">
           <a href="index.html">Home</a>
           <a href="zh-cn.html">中文入口</a>
-          <a href="zh-apply.html">参与</a>
           <a href="zh-buy.html">购买</a>
-          <a href="zh-liquidity.html">池子</a>
-          <a href="zh-supply.html">总量</a>
-          <a href="zh-security.html">安全</a>
-          <a href="zh-domain-email.html">邮箱</a>
-          <a href="zh-roadmap.html">路线图</a>
+          <a href="zh-apply.html">参与</a>
+          <a href="zh-members.html">会员</a>
+          <a href="zh-wallet-verify.html">钱包验证</a>
+          <a href="register.html">注册</a>
           <a href="zh-faq.html">FAQ</a>
-          <a href="zh-members.html">会员规则</a>
-          <a href="verify.html">Verify</a>
-          <a href="support.html">Support</a>
+          <a href="zh-support.html">支持</a>
         </div>
       </nav>
     </header>
 
     <main class="shell">
       <section aria-labelledby="title">
-        <p class="eyebrow">中文审核状态</p>
-        <h1 id="title">GCA 中文审核状态</h1>
-        <p class="lead">这一页把 GCA 目前外部平台、钱包提示、审计、LP、储备和市场质量状态用中文讲清楚。它的目标是避免把“源码已验证”“资料已提交”“风险提示已观察不到”“第三方审计完成”这些不同状态混在一起。</p>
-        <p class="lead">公开记录显示：BaseScan 源码验证已完成，GeckoTerminal 信息更新已通过；BaseScan Token Profile 已于 2026-05-23 被退回，Tim Chen 公开职业资料、域名邮箱证据、公开证据清单和最终提交包已准备好。当前可以由 owner 使用 support@gcagochina.com 做一次干净重提，但公开资料仍必须写“等待 BaseScan 官方审核和发布”；第三方审计、LP 锁、储备多签或锁仓尚未完成。</p>
+        <p class="eyebrow">中文项目进度</p>
+        <h1 id="title">GCA 中文项目进度</h1>
+        <p class="lead">这里是普通用户查看 GCA 当前入口的页面：合约、官方池、购买说明、会员入口、钱包验证、邮箱注册和支持渠道集中在一起。</p>
+        <p class="lead">GCA 正在把 Go China 叙事、中文 Web3 研究和 AI Quant Access 产品路线连接起来。用户先确认链上身份，再进入购买、注册或会员验证流程。</p>
         <div class="actions">
           <a class="button primary" href="verify.html">验证 GCA</a>
-          <a class="button primary" href="external-reviews.html">External Reviews</a>
-          <a class="button secondary" href="wallet-warning.html">Wallet Warning</a>
-          <a class="button secondary" href="blockaid-followup.html">Blockaid Follow-up</a>
-          <a class="button" href="zh-cn.html">中文入口</a>
-          <a class="button" href="zh-buy.html">中文购买说明</a>
-          <a class="button" href="zh-apply.html">中文参与指引</a>
-          <a class="button" href="zh-liquidity.html">中文池子和流动性说明</a>
-          <a class="button" href="zh-supply.html">中文总量和储备说明</a>
-          <a class="button" href="zh-security.html">中文安全和审计说明</a>
-          <a class="button secondary" href="zh-domain-email.html">中文域名邮箱整改</a>
-          <a class="button secondary" href="zh-basescan-preflight.html">中文 BaseScan 预检</a>
-          <a class="button secondary" href="daily-status.html">每日状态队列</a>
-          <a class="button secondary" href="action-plan.html">下一步计划</a>
-          <a class="button secondary" href="zh-roadmap.html">中文路线图</a>
-          <a class="button secondary" href="zh-access.html">中文用户中心预览</a>
-          <a class="button secondary" href="zh-api-status.html">中文 API 状态</a>
+          <a class="button primary" href="zh-buy.html">中文购买说明</a>
+          <a class="button primary" href="gca/member-access/">会员入口</a>
+          <a class="button secondary" href="zh-wallet-verify.html">只读钱包验证</a>
+          <a class="button" href="register.html">邮箱注册</a>
+          <a class="button" href="zh-support.html">中文支持</a>
         </div>
       </section>
 
-      <section class="facts" aria-label="GCA 中文审核状态摘要">
+      <section class="facts" aria-label="GCA 中文项目进度摘要">
         <div class="fact">
-          <span class="label">BaseScan 源码</span>
-          <span class="value good">已验证</span>
+          <span class="label">网络</span>
+          <span class="value">Base Mainnet / chainId 8453</span>
         </div>
         <div class="fact">
-          <span class="label">BaseScan Token Profile</span>
-          <span class="value pending">2026-05-23 退回整改</span>
+          <span class="label">合约源代码</span>
+          <span class="value good">BaseScan 源代码已验证</span>
         </div>
         <div class="fact">
-          <span class="label">GeckoTerminal</span>
-          <span class="value good">已通过 2026-05-11</span>
+          <span class="label">官方交易路线</span>
+          <span class="value good">Base 上的 GCA/USDT 池</span>
         </div>
         <div class="fact">
-          <span class="label">第三方审计</span>
-          <span class="value pending">尚未完成</span>
+          <span class="label">账户入口</span>
+          <span class="value good">会员入口和邮箱注册已上线</span>
         </div>
       </section>
 
       <section class="section panel" aria-labelledby="identityTitle">
         <div class="section-head">
           <div>
-            <p class="eyebrow">核心身份</p>
-            <h2 id="identityTitle">审核前先核对这些</h2>
+            <p class="eyebrow">使用前确认</p>
+            <h2 id="identityTitle">GCA 官方身份</h2>
           </div>
-          <p class="note">任何平台审核、钱包反馈或用户沟通都必须使用同一套链上身份和官方市场路线。</p>
+          <p class="note">打开钱包或 DEX 前，先确认网络、合约和官方池地址一致。</p>
         </div>
         <div class="list">
           <div class="row"><span>网络</span><strong>Base Mainnet / chainId 8453</strong></div>
@@ -417,95 +396,112 @@
         </div>
       </section>
 
-      <section class="section grid" aria-label="平台状态详情">
+      <section class="section grid" aria-label="GCA 当前用户入口">
         <article class="card">
-          <h2>BaseScan 状态</h2>
-          <p class="note">源码验证和部署钱包所有权验证已完成。BaseScan Token Profile 资料曾因信息不足未通过，2026-05-23 再次被退回。Tim Chen 公开职业资料、域名邮箱证据、公开证据清单、中文预检页和最终提交包已准备好。除非 BaseScan 页面公开显示或邮件明确通过，否则中文材料只能写“已准备一次干净重提，等待 BaseScan 官方审核和发布”。域名邮箱中文操作页见 <a href="zh-domain-email.html">zh-domain-email.html</a>，中文预检见 <a href="zh-basescan-preflight.html">zh-basescan-preflight.html</a>，公开证据清单见 <a href="domain-email-evidence.html">domain-email-evidence.html</a>。</p>
-        </article>
-
-        <article class="card">
-          <h2>Blockaid / MetaMask 状态</h2>
-          <p class="note">已提交误报反馈和跟进材料。项目方曾在 2026-05-14 观察到钱包风险提示不再可见，但这不是 Blockaid、MetaMask 或任何安全厂商的永久批准。钱包提示未来仍可能因模型或市场数据变化再次出现。</p>
-        </article>
-
-        <article class="card">
-          <h2>GeckoTerminal 状态</h2>
-          <p class="note">GeckoTerminal 代币信息更新已通过，公开记录日期为 2026-05-11。官网、Logo、白皮书、Telegram、X 和官方 GCA/USDT 池链接应继续保持一致。</p>
-        </article>
-
-        <article class="card">
-          <h2>第三方审计状态</h2>
-          <p class="note">目前没有独立审计报告，也没有 Certik、Hacken、Trail of Bits 或其他独立审计公司发布的完整审计报告。已有内部技术 review 和公开技术报告，但它们不能替代第三方审计。</p>
-        </article>
-
-        <article class="card">
-          <h2>LP 和流动性状态</h2>
-          <p class="note">官方公开交易路线是 Base Mainnet Uniswap v4 GCA/USDT 池。当前仍是早期流动性，交易可能出现较高滑点和价格影响；LP 锁尚未完成，不能宣传为深度流动性或锁定流动性。</p>
-        </article>
-
-        <article class="card">
-          <h2>储备和流通显示</h2>
-          <p class="note">GCA 总量固定为 1,000,000,000。公开资料披露 600,000,000 GCA 为 owner-held reserve，但该地址不是锁仓、多签或归属合约，所以部分数据平台可能仍按 1,000,000,000 读取总供应或流通口径。</p>
-        </article>
-      </section>
-
-      <section class="section two" aria-label="官方链接和证据">
-        <div class="panel">
-          <h2>建议给用户看的页面</h2>
+          <h2>购买入口</h2>
+          <p class="note">中文购买页已经统一到 Base Mainnet 的 GCA/USDT 池，适合先核对合约、池子和滑点设置。</p>
           <div class="link-row">
+            <a class="text-link" href="zh-buy.html">购买说明</a>
+            <a class="text-link" href="markets.html">市场页</a>
+            <a class="text-link" href="zh-liquidity.html">池子说明</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <h2>会员入口</h2>
+          <p class="note">用户可以提交邮箱和 Base 钱包，系统用只读方式检查 GCA 余额，并记录符合条件的会员路径。</p>
+          <div class="link-row">
+            <a class="text-link" href="gca/member-access/">会员入口</a>
+            <a class="text-link" href="zh-members.html">会员规则</a>
+            <a class="text-link" href="zh-apply.html">参与指引</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <h2>钱包验证</h2>
+          <p class="note">只读钱包验证只读取公开余额，不会要求私钥、助记词、授权转账、交易所 API Secret 或提现权限。</p>
+          <div class="link-row">
+            <a class="text-link" href="zh-wallet-verify.html">钱包验证</a>
             <a class="text-link" href="verify.html">验证页</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <h2>产品方向</h2>
+          <p class="note">GCA 的产品方向是 Go China AI Quant Access，连接市场研究、清算复盘、回测、风险提醒和 ENTRY_READY 复核。</p>
+          <div class="link-row">
+            <a class="text-link" href="product.html">产品页</a>
+            <a class="text-link" href="zh-roadmap.html">路线图</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <h2>社区和支持</h2>
+          <p class="note">用户问题优先通过官方支持页、邮箱、Telegram 和 X 核对，不从陌生私信入口开始。</p>
+          <div class="link-row">
+            <a class="text-link" href="zh-support.html">中文支持</a>
+            <a class="text-link" href="support.html">Support</a>
+            <a class="text-link" href="https://t.me/gcagochinaofficial" target="_blank" rel="noreferrer">Telegram</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <h2>项目资料</h2>
+          <p class="note">需要了解总量、储备、Logo、白皮书和常见问题时，从可读页面进入，不需要直接打开 JSON 文件。</p>
+          <div class="link-row">
+            <a class="text-link" href="zh-supply.html">总量说明</a>
+            <a class="text-link" href="brand-kit.html">Brand Kit</a>
+            <a class="text-link" href="whitepaper.html">Whitepaper</a>
+            <a class="text-link" href="zh-faq.html">FAQ</a>
+          </div>
+        </article>
+      </section>
+
+      <section class="section two" aria-label="官方入口">
+        <div class="panel">
+          <h2>常用入口</h2>
+          <div class="link-row">
             <a class="text-link" href="zh-cn.html">中文入口</a>
-            <a class="text-link" href="zh-buy.html">中文购买说明</a>
-            <a class="text-link" href="zh-apply.html">中文参与指引</a>
-            <a class="text-link" href="zh-liquidity.html">中文池子和流动性说明</a>
-            <a class="text-link" href="zh-supply.html">中文总量和储备说明</a>
-            <a class="text-link" href="zh-security.html">中文安全和审计说明</a>
-            <a class="text-link" href="zh-domain-email.html">中文域名邮箱整改</a>
-            <a class="text-link" href="zh-basescan-preflight.html">中文 BaseScan 预检</a>
-            <a class="text-link" href="zh-roadmap.html">中文路线图</a>
-            <a class="text-link" href="zh-faq.html">中文 FAQ</a>
-            <a class="text-link" href="zh-members.html">中文会员规则</a>
-            <a class="text-link" href="zh-access.html">中文用户中心预览</a>
-            <a class="text-link" href="markets.html">官方市场</a>
-            <a class="text-link" href="liquidity.html">流动性说明</a>
-            <a class="text-link" href="holder-distribution.html">持仓分布</a>
+            <a class="text-link" href="verify.html">验证 GCA</a>
+            <a class="text-link" href="zh-buy.html">购买说明</a>
+            <a class="text-link" href="gca/member-access/">会员入口</a>
+            <a class="text-link" href="register.html">邮箱注册</a>
+            <a class="text-link" href="zh-support.html">中文支持</a>
           </div>
         </div>
 
         <div class="panel">
-          <h2>建议给平台看的页面</h2>
+          <h2>继续了解</h2>
           <div class="link-row">
-            <a class="text-link" href="external-reviews.html">External Reviews</a>
-            <a class="text-link" href="reviewer-kit.html">Reviewer Kit</a>
-            <a class="text-link" href="wallet-warning.html">Wallet Warning Evidence</a>
-            <a class="text-link" href="blockaid-followup.html">Blockaid Follow-up</a>
-            <a class="text-link" href="technical-report.html">Technical Report</a>
-            <a class="text-link" href="risk-remediation.html">Risk Remediation</a>
-            <a class="text-link" href="custody-roadmap.html">Custody Roadmap</a>
-            <a class="text-link" href="audit-readiness.html">Audit Readiness</a>
+            <a class="text-link" href="zh-roadmap.html">中文路线图</a>
+            <a class="text-link" href="zh-security.html">安全说明</a>
+            <a class="text-link" href="zh-supply.html">总量说明</a>
+            <a class="text-link" href="zh-site-map.html">中文站点地图</a>
+            <a class="text-link" href="tim-chen.html">Tim Chen</a>
+            <a class="text-link" href="team.html">Team</a>
           </div>
         </div>
       </section>
 
-      <section class="section panel" aria-labelledby="dataTitle">
+      <section class="section panel" aria-labelledby="nextTitle">
         <div class="section-head">
           <div>
-            <p class="eyebrow">Platform-Only Evidence Path</p>
-            <h2 id="dataTitle">平台审核资料</h2>
+            <p class="eyebrow">下一步</p>
+            <h2 id="nextTitle">从验证到参与</h2>
           </div>
-          <p class="note">普通用户优先阅读 HTML 页面。原始 JSON 文件只给钱包、浏览器、DEX 数据工具、上币审核或安全厂商在需要结构化资料时使用。</p>
+          <p class="note">建议顺序：验证 GCA 身份，查看购买说明，完成邮箱注册，再按持有条件进入会员入口。</p>
         </div>
         <div class="actions">
-          <a class="button" href="data.html">Reviewer Data Room</a>
-          <a class="button" href="reviewer-kit.html">Reviewer Kit</a>
-          <a class="button" href="platform-replies.html">Platform Replies</a>
-          <a class="button" href="support.html">联系支持</a>
+          <a class="button primary" href="verify.html">先验证</a>
+          <a class="button primary" href="zh-buy.html">再购买</a>
+          <a class="button secondary" href="register.html">邮箱注册</a>
+          <a class="button secondary" href="gca/member-access/">提交会员资料</a>
         </div>
       </section>
     </main>
 
     <footer>
-      <div class="shell">GCA 中文审核状态。公开材料必须区分“已验证”“退回整改”“观察不到提示”“尚未完成”和“已通过”。</div>
+      <div class="shell">GCA 中文项目进度。交互前请确认 Base Mainnet chainId 8453、GCA 合约和官方 GCA/USDT 池。</div>
     </footer>
   </body>
 </html>
