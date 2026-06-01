@@ -70,11 +70,11 @@
       "targetPublicAllocation": "400000000"
     }
   },
-  "generatedAt": "2026-06-01T11:58:07Z",
+  "generatedAt": "2026-06-01T12:17:25Z",
   "missingOrBlockedRequirements": [],
   "nextAction": "Owner may copy this package into one clean BaseScan token profile update.",
   "preflightSummary": {
-    "generatedAt": "2026-06-01T11:58:07Z",
+    "generatedAt": "2026-06-01T12:17:25Z",
     "readyForBaseScanResubmission": true,
     "status": "ready-for-owner-resubmission"
   },

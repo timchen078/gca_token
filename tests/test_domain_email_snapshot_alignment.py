@@ -34,7 +34,7 @@ class DomainEmailSnapshotAlignmentTests(unittest.TestCase):
         self.assertEqual(report["schema"], "gca-domain-email-snapshot-alignment-v1")
         self.assertEqual(report["canonicalSnapshot"]["checkedAt"], "2026-05-30T16:24:34Z")
         self.assertEqual(report["canonicalSnapshot"]["date"], "2026-05-30")
-        self.assertEqual(report["canonicalSnapshot"]["gateSlug"], "blocked-by-dns-snapshot-2026-05-30")
+        self.assertEqual(report["canonicalSnapshot"]["gateSlug"], "ready-by-dns-snapshot-2026-05-30")
         self.assertTrue(report["canonicalSnapshot"]["readyForBaseScanEmailEvidence"])
         self.assertEqual(report["status"], "aligned")
         self.assertTrue(report["alignedForPublicPlatformPackets"])
@@ -66,6 +66,21 @@ class DomainEmailSnapshotAlignmentTests(unittest.TestCase):
         self.assertIn("stale-dns-snapshot-markers", report["blockedRequirements"])
         self.assertEqual(report["records"][0]["staleSnapshotMarkerDates"], ["2026-05-27"])
         self.assertIn("replace stale DNS snapshot markers", report["records"][0]["action"])
+
+    def test_unready_snapshot_keeps_blocked_gate_slug(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            config_path = self.write_fixture(root)
+            artifact = root / "site" / "domain-email.html"
+            artifact.write_text("Latest 2026-05-30 DNS snapshot: still waiting for records.", encoding="utf-8")
+
+            report = build_report(
+                root=root,
+                config_path=config_path,
+                monitored_files=["site/domain-email.html"],
+            )
+
+        self.assertEqual(report["canonicalSnapshot"]["gateSlug"], "blocked-by-dns-snapshot-2026-05-30")
 
     def test_missing_current_snapshot_date_blocks_alignment(self):
         with tempfile.TemporaryDirectory() as temp_dir:

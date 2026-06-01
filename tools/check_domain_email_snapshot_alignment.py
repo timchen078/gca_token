@@ -53,7 +53,7 @@ SNAPSHOT_DATE_PATTERNS = [
     re.compile(r"\b(?P<date>20\d{2}-\d{2}-\d{2})\s+(?:read-only\s+|public\s+)?dns\s+snapshot\b", re.I),
     re.compile(r"\b(?P<date>20\d{2}-\d{2}-\d{2})\s+read-only\s+dns\s+check\b", re.I),
     re.compile(r"\blatest\s+read-only\s+dns\s+snapshot\s+\((?P<date>20\d{2}-\d{2}-\d{2})\)", re.I),
-    re.compile(r"\bblocked-by-dns-snapshot-(?P<date>20\d{2}-\d{2}-\d{2})\b", re.I),
+    re.compile(r"\b(?:blocked|ready)-by-dns-snapshot-(?P<date>20\d{2}-\d{2}-\d{2})\b", re.I),
     re.compile(r"\b(?P<date>20\d{2}-\d{2}-\d{2})\s+dns\s+快照\b", re.I),
     re.compile(r"当前\s+(?P<date>20\d{2}-\d{2}-\d{2})\s+快照"),
 ]
@@ -113,12 +113,13 @@ def canonical_snapshot(config: dict[str, Any]) -> dict[str, Any]:
         raise SnapshotAlignmentError("liveDnsSnapshot.readyForBaseScanEmailEvidence must be boolean")
 
     date = checked_at.split("T", 1)[0]
+    gate_prefix = "ready-by-dns-snapshot" if ready and not missing_or_blocked else "blocked-by-dns-snapshot"
     return {
         "checkedAt": checked_at,
         "date": date,
         "readyForBaseScanEmailEvidence": ready,
         "missingOrBlockedChecks": missing_or_blocked,
-        "gateSlug": f"blocked-by-dns-snapshot-{date}",
+        "gateSlug": f"{gate_prefix}-{date}",
     }
 
 
