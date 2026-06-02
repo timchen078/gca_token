@@ -1854,8 +1854,9 @@ def validate_action_plan_page(text: str) -> None:
         "Do Later",
         "What Not To Say",
         "Do not create fake trading activity",
-        "Platform-Only Evidence Path",
-        "Reviewer Data Room",
+        "Readable Reference Path",
+        "Use These Pages First",
+        "Normal users and community moderators should start from the readable verification",
         "BaseScan returned 2026-05-23; owner package ready",
         "domain-email.html",
         "Domain Email Plan",
@@ -1880,20 +1881,22 @@ def validate_action_plan_page(text: str) -> None:
         "publishing-desk.html",
         "audit-readiness.html",
         "custody-roadmap.html",
-        "data.html",
+        "site-map.html",
+        "verify.html",
+        "trust.html",
+        "status.html",
+        "support.html",
     ):
         assert_contains(text, expected, label)
-    assert_platform_only_data_room(
-        text,
-        label,
-        (
-            "project.json",
-            "tokenlist.json",
-            "reviewer-kit.json",
-            "platform-replies.json",
-            "member-ledger.json",
-        ),
-    )
+    assert_no_public_data_room_terms(text, label)
+    for forbidden_href in (
+        "project.json",
+        "tokenlist.json",
+        "reviewer-kit.json",
+        "platform-replies.json",
+        "member-ledger.json",
+    ):
+        assert_not_contains(text, f'href="{forbidden_href}"', label)
     assert_current_pool_text(text, label)
     assert_no_forbidden_public_claims(text, label)
 
@@ -3097,21 +3100,9 @@ def validate_zh_wallet_verify_page(text: str) -> None:
 def validate_zh_member_checklist_page(text: str) -> None:
     label = "/zh-member-checklist.html"
     assert_social_preview_meta(text, label, ZH_MEMBER_CHECKLIST_PAGE_URL)
-    assert_platform_only_data_room(
-        text,
-        label,
-        (
-            "member-program.json",
-            "member-ledger.json",
-            "member-benefit.json",
-            "member-benefit-transfer.json",
-            "review-queue.json",
-        ),
-    )
     for expected in (
         "GCA 中文会员审核资料清单",
         "会员审核资料清单 / 2026-05-20",
-        "不是领取页面",
         "公开账户入口、只读钱包验证、100 credits 账本和 GCA Member 账本已经上线",
         "Base Mainnet / chainId 8453",
         MAINNET_ADDRESS,
@@ -3147,20 +3138,29 @@ def validate_zh_member_checklist_page(text: str) -> None:
         "zh-support.html",
         "zh-access.html",
         "zh-api-status.html",
-        "zh-data.html",
+        "zh-site-map.html",
         "members.html",
         "gca/member-access/",
         "member-ledger.html",
         "member-benefit.html",
         "member-benefit-transfer.html",
         "review-queue.html",
-        "Platform-Only Evidence Path",
-        "Raw JSON",
-        "Reviewer Data Room",
-        "中文数据室说明",
-        "data.html",
+        "普通用户审核路径",
+        "优先打开这些页面",
+        "会员资料、钱包验证、支持沟通和审核状态都应从可读页面进入",
+        "中文站点地图",
+        "中文支持",
     ):
         assert_contains(text, expected, label)
+    assert_no_public_data_room_terms(text, label)
+    for forbidden_href in (
+        "member-program.json",
+        "member-ledger.json",
+        "member-benefit.json",
+        "member-benefit-transfer.json",
+        "review-queue.json",
+    ):
+        assert_not_contains(text, f'href="{forbidden_href}"', label)
     assert_current_pool_text(text, label)
     assert_no_forbidden_public_claims(text, label)
 
