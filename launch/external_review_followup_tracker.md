@@ -41,6 +41,9 @@ Use this file as the single operating checklist for external review, wallet-warn
 - Domain email activation evidence packet: `https://gcagochina.com/domain-email.html#evidenceTitle`
 - BaseScan remediation page: `https://gcagochina.com/basescan-remediation.html`
 - BaseScan remediation JSON: `https://gcagochina.com/basescan-remediation.json`
+- BaseScan Handoff copy blocks: `https://gcagochina.com/basescan-handoff.html`
+- BaseScan Handoff JSON: `https://gcagochina.com/basescan-handoff.json`
+- Chinese BaseScan owner submission flow: `https://gcagochina.com/zh-basescan-submit.html`
 - Public GitHub repository: `https://github.com/timchen078/gca_token`
 - Market quality page: `https://gcagochina.com/market-quality.html`
 - Market quality JSON: `https://gcagochina.com/market-quality.json`
@@ -55,7 +58,7 @@ Use this file as the single operating checklist for external review, wallet-warn
 
 | Platform | Current status | Contact / inbox | Next action |
 | --- | --- | --- | --- |
-| BaseScan token profile | Submitted on 2026-05-09, returned as information-insufficient on 2026-05-13, resubmitted on 2026-05-13, and returned again as information-insufficient on 2026-05-23 | `cxy070800@gmail.com` / `support@gcagochina.com` | Domain email evidence is ready; include the Tim Chen professional profile URL, rerun checks, then submit one clean update through the official BaseScan form from `support@gcagochina.com`. |
+| BaseScan token profile | Submitted on 2026-05-09, returned as information-insufficient on 2026-05-13, resubmitted on 2026-05-13, and returned again as information-insufficient on 2026-05-23 | Current: `support@gcagochina.com`; historical old thread: `cxy070800@gmail.com` | Use `https://gcagochina.com/zh-basescan-submit.html` and `https://gcagochina.com/basescan-handoff.html`; include the Tim Chen professional profile URL, rerun checks, then submit one clean update through the official BaseScan form from `support@gcagochina.com`. |
 | Blockaid / MetaMask warning | False-positive report submitted on 2026-05-10; follow-up submitted on 2026-05-13; owner observed no wallet risk warning visible on 2026-05-14 | Owner browser / wallet UI / `support@gcagochina.com` | Keep monitoring wallet and Uniswap warning UI. Do not submit another duplicate unless Blockaid, MetaMask, or Uniswap asks for more information. |
 | GeckoTerminal | Token information update approved on 2026-05-11 | `support@gcagochina.com` | No duplicate update unless official details change or GeckoTerminal asks for a correction. |
 | DEX Screener | Discoverable through the live GCA/USDT pool | Not submitted as a direct paid metadata update | Keep the GCA/USDT pool, website, token list, and GeckoTerminal data consistent. |
@@ -72,12 +75,14 @@ Use this file as the single operating checklist for external review, wallet-warn
 5. archive the activation evidence packet: provider active screenshot, DNS proof, inbound test, outbound test, and updated support-page screenshot.
 6. Keep that domain email published on support, about, and team pages before resubmission.
 7. Include the published Tim Chen professional profile `https://gcagochina.com/tim-chen.html`; add LinkedIn later only if BaseScan specifically requires a third-party social-network profile.
-8. Check `cxy070800@gmail.com` inbox and spam.
-9. Check BaseScan account notifications.
-10. Use `launch/basescan_resubmission_package.md` and `launch/basescan_resubmission_values.json`.
-11. Confirm `https://gcagochina.com/verify.html`, `https://gcagochina.com/markets.html`, and the GCA/USDT GeckoTerminal pool still load.
-12. Sign with the deployer wallet again if BaseScan asks for address ownership verification.
-13. Do not submit duplicate token update requests after the one clean owner-controlled resubmission unless BaseScan asks for corrections.
+8. Open the Chinese owner checklist at `https://gcagochina.com/zh-basescan-submit.html`.
+9. Copy form values from `https://gcagochina.com/basescan-handoff.html`; do not use old WETH links, old project emails, or raw JSON pages as the user-facing submission source.
+10. Check the historical `cxy070800@gmail.com` inbox and spam only for old thread replies, and check `support@gcagochina.com` for the current official-domain submission.
+11. Check BaseScan account notifications.
+12. Use `launch/basescan_resubmission_package.md` and `launch/basescan_resubmission_values.json`.
+13. Confirm `https://gcagochina.com/verify.html`, `https://gcagochina.com/markets.html`, and the GCA/USDT GeckoTerminal pool still load.
+14. Sign with the deployer wallet again only if BaseScan asks for address ownership verification; do not sign token approvals, swaps, transfers, or contract transactions for metadata submission.
+15. Do not submit duplicate token update requests after the one clean owner-controlled resubmission unless BaseScan asks for corrections.
 
 ## Weekly Check
 
@@ -131,6 +136,8 @@ Domain email evidence checklist: https://gcagochina.com/domain-email-evidence.ht
 Domain email evidence checklist data: https://gcagochina.com/domain-email-evidence.json
 Latest DNS snapshot: https://gcagochina.com/domain-email.html#snapshotTitle
 Domain email activation evidence packet: https://gcagochina.com/domain-email.html#evidenceTitle
+BaseScan Handoff copy blocks: https://gcagochina.com/basescan-handoff.html
+Chinese owner submission flow: https://gcagochina.com/zh-basescan-submit.html
 BaseScan remediation: https://gcagochina.com/basescan-remediation.html
 Public GitHub repository: https://github.com/timchen078/gca_token
 Official logo: https://gcagochina.com/assets/gca-logo.svg
@@ -142,7 +149,7 @@ Official GCA/USDT pool: https://www.geckoterminal.com/base/pools/0xfe6a598bf738d
 Official Telegram: https://t.me/gcagochinaofficial
 Official X: https://x.com/GCAAIGoChina
 Official email: support@gcagochina.com
-Official contact email: cxy070800@gmail.com
+Historical submission email for old thread only: cxy070800@gmail.com
 
 The latest 2026-05-30 DNS snapshot shows MX/SPF/DKIM/DMARC present, so `readyForBaseScanEmailEvidence` is true; support@gcagochina.com is active and private evidence is retained for reviewer follow-up.
 

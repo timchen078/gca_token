@@ -11337,7 +11337,7 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != EXTERNAL_REVIEW_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
-    if payload.get("lastUpdated") not in {"2026-05-25", "2026-05-30"}:
+    if payload.get("lastUpdated") not in {"2026-05-25", "2026-05-30", "2026-06-02"}:
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("status") != "external-review-status-active":
         raise SiteCheckError(f"{label}: wrong status")
@@ -11367,6 +11367,12 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong marketQualityPage")
     if links.get("teamPage") != TEAM_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong teamPage")
+    if links.get("baseScanHandoffPage") != BASESCAN_HANDOFF_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong baseScanHandoffPage")
+    if links.get("baseScanHandoff") != BASESCAN_HANDOFF_URL:
+        raise SiteCheckError(f"{label}: wrong baseScanHandoff")
+    if links.get("baseScanChineseOwnerFlow") != ZH_BASESCAN_SUBMIT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong baseScanChineseOwnerFlow")
     if email_alignment.get("currentPublicEmail") != "support@gcagochina.com":
         raise SiteCheckError(f"{label}: wrong currentPublicEmail")
     if email_alignment.get("targetDomainEmailAfterActivation") != "support@gcagochina.com":
@@ -11400,6 +11406,10 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing activation evidence packet next action")
     if DOMAIN_EMAIL_EVIDENCE_PAGE_URL not in base_scan_profile.get("nextAction", ""):
         raise SiteCheckError(f"{label}: missing domain email evidence checklist next action")
+    if BASESCAN_HANDOFF_PAGE_URL not in base_scan_profile.get("nextAction", ""):
+        raise SiteCheckError(f"{label}: missing BaseScan handoff next action")
+    if ZH_BASESCAN_SUBMIT_PAGE_URL not in base_scan_profile.get("nextAction", ""):
+        raise SiteCheckError(f"{label}: missing Chinese owner flow next action")
     dns_readiness = base_scan_profile.get("domainEmailDnsReadiness", {})
     if dns_readiness.get("readyForBaseScanEmailEvidence") is not True:
         raise SiteCheckError(f"{label}: domain email DNS readiness should be true")
@@ -11438,7 +11448,7 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong BaseScan source status")
     if base_scan_profile.get("status") != "ready-for-owner-resubmission":
         raise SiteCheckError(f"{label}: wrong BaseScan profile status")
-    if base_scan_profile.get("lastCheckedDate") != "2026-05-30":
+    if base_scan_profile.get("lastCheckedDate") not in {"2026-05-30", "2026-06-02"}:
         raise SiteCheckError(f"{label}: wrong BaseScan profile last checked date")
     if "Tim Chen official-domain professional profile evidence is published" not in base_scan_profile.get("lastCheckedResult", ""):
         raise SiteCheckError(f"{label}: missing BaseScan profile last checked result")
@@ -11459,6 +11469,16 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong domainEmailActivationEvidencePacket")
     if "expanded BaseScan reply template" not in base_scan_profile.get("lastCheckedResult", ""):
         raise SiteCheckError(f"{label}: missing BaseScan reply template result")
+    if "BaseScan Handoff copy blocks" not in base_scan_profile.get("lastCheckedResult", ""):
+        raise SiteCheckError(f"{label}: missing BaseScan handoff result")
+    if "Chinese owner submission flow" not in base_scan_profile.get("lastCheckedResult", ""):
+        raise SiteCheckError(f"{label}: missing Chinese owner flow result")
+    if base_scan_profile.get("baseScanHandoffPage") != BASESCAN_HANDOFF_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong baseScanHandoffPage")
+    if base_scan_profile.get("baseScanHandoff") != BASESCAN_HANDOFF_URL:
+        raise SiteCheckError(f"{label}: wrong baseScanHandoff")
+    if base_scan_profile.get("chineseOwnerSubmissionFlow") != ZH_BASESCAN_SUBMIT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong chineseOwnerSubmissionFlow")
     if base_scan_profile.get("platformReplyTemplate") != PLATFORM_REPLIES_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong platformReplyTemplate")
     if base_scan_profile.get("platformReplyTemplateData") != PLATFORM_REPLIES_URL:
@@ -11504,11 +11524,16 @@ def validate_external_reviews_page(text: str) -> None:
     assert_no_public_data_room_terms(text, label)
     assert_contains(text, "Trust Center", label)
     assert_contains(text, "Returned 2026-05-23; ready for owner resubmission", label)
-    assert_contains(text, "Tim Chen profile, domain email plan, evidence checklist, activation evidence packet, reply template, and support@gcagochina.com evidence are ready", label)
+    assert_contains(text, "Tim Chen profile, domain email plan, evidence checklist, activation evidence packet, reply template, BaseScan Handoff copy blocks, Chinese owner flow, and support@gcagochina.com evidence are ready", label)
     assert_contains(text, "tim-chen.html", label)
     assert_contains(text, "Domain Email Plan", label)
     assert_contains(text, "DNS Snapshot", label)
     assert_contains(text, "Email Evidence Packet", label)
+    assert_contains(text, "BaseScan Handoff", label)
+    assert_contains(text, "basescan-handoff.html", label)
+    assert_contains(text, "中文 BaseScan 提交流程", label)
+    assert_contains(text, "zh-basescan-submit.html", label)
+    assert_contains(text, "no wallet transaction, approve, swap, or contract operation is needed", label)
     assert_contains(text, "domain-email.html#snapshotTitle", label)
     assert_contains(text, "domain-email-evidence.html", label)
     assert_contains(text, "Evidence Checklist", label)
