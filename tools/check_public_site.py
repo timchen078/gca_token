@@ -10361,8 +10361,7 @@ def validate_custody_roadmap_page(text: str) -> None:
     label = "/custody-roadmap.html"
     assert_social_preview_meta(text, label, CUSTODY_ROADMAP_PAGE_URL)
     assert_contains(text, "GCA Custody Roadmap", label)
-    assert_contains(text, "Platform-Only Evidence Path", label)
-    assert_contains(text, "Data Room", label)
+    assert_contains(text, "Readable Custody Review Path", label)
     assert_contains(text, "Reserve Wallet", label)
     assert_contains(text, "Owner-controlled, not locked", label)
     assert_contains(text, "No LP lock claimed", label)
@@ -10374,12 +10373,14 @@ def validate_custody_roadmap_page(text: str) -> None:
     assert_contains(text, RESERVE_WALLET, label)
     assert_current_pool_text(text, label)
     assert_no_forbidden_public_claims(text, label)
+    assert_no_public_data_room_terms(text, label)
     for forbidden in (
         'href="custody-roadmap.json"',
         'href="reserve-statement.json"',
         'href="holder-distribution.json"',
         'href="liquidity.json"',
         'href="risk-remediation.json"',
+        'href="onchain-proofs.json"',
     ):
         assert_not_contains(text, forbidden, label)
 
@@ -10436,8 +10437,7 @@ def validate_audit_readiness_page(text: str) -> None:
     label = "/audit-readiness.html"
     assert_social_preview_meta(text, label, AUDIT_READINESS_PAGE_URL)
     assert_contains(text, "GCA Audit Readiness", label)
-    assert_contains(text, "Platform-Only Evidence Path", label)
-    assert_contains(text, "Data Room", label)
+    assert_contains(text, "Readable Auditor Intake Path", label)
     assert_contains(text, "No completed third-party audit", label)
     assert_contains(text, "not a completed third-party audit", label)
     assert_contains(text, "Contract Scope", label)
@@ -10449,6 +10449,7 @@ def validate_audit_readiness_page(text: str) -> None:
     assert_contains(text, MAINNET_ADDRESS, label)
     assert_contains(text, "Base Mainnet / 8453", label)
     assert_no_forbidden_public_claims(text, label)
+    assert_no_public_data_room_terms(text, label)
     for forbidden in (
         'href="audit-readiness.json"',
         'href="technical-report.json"',
@@ -10972,11 +10973,17 @@ def validate_platform_replies_json(text: str) -> None:
 def validate_platform_replies_page(text: str) -> None:
     label = "/platform-replies.html"
     assert_contains(text, "GCA Platform Replies", label)
-    assert_platform_only_data_room(
-        text,
-        label,
-        ("platform-replies.json", "reviewer-kit.json", "wallet-warning.json", "external-reviews.json", "listing-readiness.json", "project.json"),
-    )
+    assert_contains(text, "Readable Platform Reply Path", label)
+    assert_no_public_data_room_terms(text, label)
+    for forbidden in (
+        "platform-replies.json",
+        "reviewer-kit.json",
+        "wallet-warning.json",
+        "external-reviews.json",
+        "listing-readiness.json",
+        "project.json",
+    ):
+        assert_not_contains(text, f'href="{forbidden}"', label)
     assert_contains(text, "Trust Center", label)
     assert_contains(text, "Base Mainnet / 8453", label)
     assert_contains(text, MAINNET_ADDRESS, label)

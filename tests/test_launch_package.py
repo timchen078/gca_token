@@ -6779,15 +6779,20 @@ class LaunchPackageTests(unittest.TestCase):
         replies = json.loads((ROOT / "site" / "platform-replies.json").read_text())
 
         self.assertIn("GCA Platform Replies", page)
-        self.assertPlatformOnlyDataRoom(
-            page,
+        self.assertIn("Readable Platform Reply Path", page)
+        self.assertNotIn("Platform-Only Evidence Path", page)
+        self.assertNotIn("Data Room", page)
+        self.assertNotIn("Raw JSON", page)
+        self.assertNotIn('href="data.html"', page)
+        for forbidden in (
             "platform-replies.json",
             "reviewer-kit.json",
             "wallet-warning.json",
             "external-reviews.json",
             "listing-readiness.json",
             "project.json",
-        )
+        ):
+            self.assertNotIn(f'href="{forbidden}"', page)
         self.assertIn("Trust Center", page)
         self.assertIn("Wallet Warning Reviewer", page)
         self.assertIn("BaseScan Token Profile", page)
@@ -7264,8 +7269,11 @@ class LaunchPackageTests(unittest.TestCase):
         roadmap = json.loads((ROOT / "site" / "custody-roadmap.json").read_text())
 
         self.assertIn("GCA Custody Roadmap", page)
-        self.assertIn("Platform-Only Evidence Path", page)
-        self.assertIn("Data Room", page)
+        self.assertIn("Readable Custody Review Path", page)
+        self.assertNotIn("Platform-Only Evidence Path", page)
+        self.assertNotIn("Data Room", page)
+        self.assertNotIn("Raw JSON", page)
+        self.assertNotIn('href="data.html"', page)
         self.assertIn("Owner-controlled, not locked", page)
         self.assertIn("No LP lock claimed", page)
         self.assertIn("not a reserve lock claim", page)
@@ -7284,6 +7292,7 @@ class LaunchPackageTests(unittest.TestCase):
             'href="holder-distribution.json"',
             'href="liquidity.json"',
             'href="risk-remediation.json"',
+            'href="onchain-proofs.json"',
         ):
             self.assertNotIn(forbidden, page)
 
@@ -7332,8 +7341,11 @@ class LaunchPackageTests(unittest.TestCase):
         runbook = (ROOT / "launch" / "audit_readiness_runbook.md").read_text()
 
         self.assertIn("GCA Audit Readiness", page)
-        self.assertIn("Platform-Only Evidence Path", page)
-        self.assertIn("Data Room", page)
+        self.assertIn("Readable Auditor Intake Path", page)
+        self.assertNotIn("Platform-Only Evidence Path", page)
+        self.assertNotIn("Data Room", page)
+        self.assertNotIn("Raw JSON", page)
+        self.assertNotIn('href="data.html"', page)
         self.assertIn("No completed third-party audit", page)
         self.assertIn("not a completed third-party audit", page)
         self.assertIn("Contract Scope", page)
