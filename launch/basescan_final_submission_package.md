@@ -1,9 +1,24 @@
 # GCA BaseScan Submission Package
 
-- Generated: `2026-06-01T12:17:25Z`
+- Generated: `2026-06-02T10:07:55Z`
 - Status: `ready-for-owner-submission`
 - Ready for owner submission: `true`
 - Next action: Owner may copy this package into one clean BaseScan token profile update.
+
+## Reviewer Remediation Summary
+
+- Return reason: official website, support path, or project information was unclear
+  Response: Published a readable website, support page, whitepaper, external review status, and project documentation.
+  Evidence: https://gcagochina.com/ | https://gcagochina.com/support.html | https://gcagochina.com/whitepaper.html | https://gcagochina.com/external-reviews.html
+- Return reason: sender email did not match the official project domain
+  Response: Switched the official project contact to the active domain mailbox support@gcagochina.com.
+  Evidence: support@gcagochina.com | https://gcagochina.com/domain-email.html
+- Return reason: founder and team transparency needed more public evidence
+  Response: Published the team page and Tim Chen official-domain professional profile for reviewer use.
+  Evidence: https://gcagochina.com/team.html | https://gcagochina.com/tim-chen.html
+- Return reason: logo, links, metadata, or contract evidence needed a cleaner route
+  Response: Published the brand kit, remediation tracker, GitHub repository, and market/supply evidence links in one package.
+  Evidence: https://gcagochina.com/brand-kit.html | https://gcagochina.com/basescan-remediation.html | https://github.com/timchen078/gca_token
 
 ## Copy/Paste Reviewer Comment
 
@@ -11,6 +26,14 @@
 Hello BaseScan team,
 
 Please review the updated GCA token profile metadata for Base Mainnet / chainId 8453.
+
+This resubmission directly addresses the prior information-insufficient return reasons:
+- Official website and support path: https://gcagochina.com/ and https://gcagochina.com/support.html
+- Official project-domain email: support@gcagochina.com
+- Founder/team transparency: https://gcagochina.com/team.html and https://gcagochina.com/tim-chen.html
+- Project documentation and status: https://gcagochina.com/whitepaper.html and https://gcagochina.com/external-reviews.html
+- Logo, brand, and metadata evidence: https://gcagochina.com/brand-kit.html
+- Contract/source and remediation evidence: https://gcagochina.com/basescan-remediation.html
 
 Contract: 0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6
 Official website: https://gcagochina.com/

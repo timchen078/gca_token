@@ -112,10 +112,16 @@ class BaseScanSubmissionPackageTests(unittest.TestCase):
         self.assertEqual(package["formFields"]["priceData"]["officialMarketRoute"], "GCA/USDT")
         self.assertEqual(package["formFields"]["saleDetails"]["publicSale"], "Not applicable. No ICO/IEO or public token sale has been conducted.")
         self.assertIn("Please review the updated GCA token profile metadata", package["copyPasteBlocks"]["baseScanReviewerComment"])
+        self.assertIn("prior information-insufficient return reasons", package["copyPasteBlocks"]["baseScanReviewerComment"])
+        self.assertIn("Official project-domain email", package["copyPasteBlocks"]["baseScanReviewerComment"])
+        self.assertIn("Logo, brand, and metadata evidence", package["copyPasteBlocks"]["baseScanReviewerComment"])
         self.assertIn("support@gcagochina.com", package["copyPasteBlocks"]["baseScanReviewerComment"])
         self.assertIn("not claiming BaseScan token profile approval", package["copyPasteBlocks"]["baseScanReviewerComment"])
         self.assertIn("Tim Chen professional profile", package["copyPasteBlocks"]["evidenceLinksPlainText"])
         self.assertIn("GCA/USDT", package["copyPasteBlocks"]["marketAndSupplyPlainText"])
+        self.assertEqual(len(package["reviewerRemediationSummary"]), 4)
+        self.assertIn("sender email did not match", package["reviewerRemediationSummary"][1]["returnReason"])
+        self.assertIn("support@gcagochina.com", package["reviewerRemediationSummary"][1]["response"])
 
     def test_markdown_includes_submission_boundary(self):
         package = build_submission_package(
@@ -128,6 +134,8 @@ class BaseScanSubmissionPackageTests(unittest.TestCase):
 
         self.assertIn("GCA BaseScan Submission Package", markdown)
         self.assertIn("Ready for owner submission: `true`", markdown)
+        self.assertIn("Reviewer Remediation Summary", markdown)
+        self.assertIn("Return reason: founder and team transparency", markdown)
         self.assertIn("Copy/Paste Reviewer Comment", markdown)
         self.assertIn("Copy/Paste Basic Information", markdown)
         self.assertIn("Project Email Address: `support@gcagochina.com`", markdown)

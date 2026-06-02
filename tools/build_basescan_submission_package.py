@@ -172,6 +172,14 @@ def build_copy_paste_blocks(
             "",
             "Please review the updated GCA token profile metadata for Base Mainnet / chainId 8453.",
             "",
+            "This resubmission directly addresses the prior information-insufficient return reasons:",
+            f"- Official website and support path: {basic['projectWebsite']} and {social['support']}",
+            f"- Official project-domain email: {basic['projectEmailAddress']}",
+            f"- Founder/team transparency: {social['team']} and {social['timChenProfessionalProfile']}",
+            f"- Project documentation and status: {social['whitepaper']} and {social['externalReviewStatus']}",
+            f"- Logo, brand, and metadata evidence: {social['brandKit']}",
+            f"- Contract/source and remediation evidence: {social['baseScanRemediation']}",
+            "",
             f"Contract: {basic['contractAddress']}",
             f"Official website: {basic['projectWebsite']}",
             f"Official project email: {basic['projectEmailAddress']}",
@@ -211,6 +219,33 @@ def build_copy_paste_blocks(
     }
 
 
+def build_reviewer_remediation_summary(form_fields: dict[str, Any]) -> list[dict[str, str]]:
+    basic = form_fields["basicInformation"]
+    social = form_fields["socialProfiles"]
+    return [
+        {
+            "returnReason": "official website, support path, or project information was unclear",
+            "response": "Published a readable website, support page, whitepaper, external review status, and project documentation.",
+            "primaryEvidence": f"{basic['projectWebsite']} | {social['support']} | {social['whitepaper']} | {social['externalReviewStatus']}",
+        },
+        {
+            "returnReason": "sender email did not match the official project domain",
+            "response": "Switched the official project contact to the active domain mailbox support@gcagochina.com.",
+            "primaryEvidence": f"{basic['projectEmailAddress']} | {social['domainEmailEvidencePlan']}",
+        },
+        {
+            "returnReason": "founder and team transparency needed more public evidence",
+            "response": "Published the team page and Tim Chen official-domain professional profile for reviewer use.",
+            "primaryEvidence": f"{social['team']} | {social['timChenProfessionalProfile']}",
+        },
+        {
+            "returnReason": "logo, links, metadata, or contract evidence needed a cleaner route",
+            "response": "Published the brand kit, remediation tracker, GitHub repository, and market/supply evidence links in one package.",
+            "primaryEvidence": f"{social['brandKit']} | {social['baseScanRemediation']} | {social['github']}",
+        },
+    ]
+
+
 def build_submission_package(
     *,
     values: dict[str, Any],
@@ -236,6 +271,7 @@ def build_submission_package(
             "readyForBaseScanResubmission": ready,
             "generatedAt": readiness_report.get("generatedAt"),
         },
+        "reviewerRemediationSummary": build_reviewer_remediation_summary(form_fields),
         "formFields": form_fields,
         "copyPasteBlocks": build_copy_paste_blocks(
             values=values,
@@ -267,6 +303,7 @@ def render_markdown(package: dict[str, Any]) -> str:
     sale = fields["saleDetails"]
     supply = fields["supplyContext"]
     copy_blocks = package["copyPasteBlocks"]
+    remediation_summary = package.get("reviewerRemediationSummary", [])
 
     lines = [
         "# GCA BaseScan Submission Package",
@@ -283,6 +320,18 @@ def render_markdown(package: dict[str, Any]) -> str:
         for item in package["missingOrBlockedRequirements"]:
             lines.append(f"- `{item}`")
         lines.append("")
+
+    lines.extend([
+        "## Reviewer Remediation Summary",
+        "",
+    ])
+    for item in remediation_summary:
+        lines.extend([
+            f"- Return reason: {item['returnReason']}",
+            f"  Response: {item['response']}",
+            f"  Evidence: {item['primaryEvidence']}",
+        ])
+    lines.append("")
 
     lines.extend([
         "## Copy/Paste Reviewer Comment",
