@@ -2772,15 +2772,6 @@ def validate_zh_support_page(text: str) -> None:
 def validate_zh_api_status_page(text: str) -> None:
     label = "/zh-api-status.html"
     assert_social_preview_meta(text, label, ZH_API_STATUS_PAGE_URL)
-    assert_platform_only_data_room(
-        text,
-        label,
-        (
-            "api-status.json",
-            "access-api.json",
-            "operations.json",
-        ),
-    )
     for expected in (
         "GCA 中文 API 状态",
         "中文 API 状态 / 2026-05-20",
@@ -2822,9 +2813,8 @@ def validate_zh_api_status_page(text: str) -> None:
         "tools/run_gca_registration_ops.py",
         "中文运营流程",
         "zh-operations.html",
-        "Platform-Only Evidence Path",
-        "Raw JSON",
-        "Reviewer Data Room",
+        "中文 API 状态引用",
+        "普通用户可以使用当前中文页面",
         "api-status.html",
         "access-api.html",
         "operations.html",
@@ -2833,9 +2823,12 @@ def validate_zh_api_status_page(text: str) -> None:
         "register.html",
         "unsubscribe.html",
         "zh-support.html",
-        "data.html",
+        "zh-site-map.html",
     ):
         assert_contains(text, expected, label)
+    assert_no_public_data_room_terms(text, label)
+    for forbidden_href in ("api-status.json", "access-api.json", "operations.json"):
+        assert_not_contains(text, f'href="{forbidden_href}"', label)
     assert_no_forbidden_public_claims(text, label)
 
 
@@ -5682,8 +5675,8 @@ def validate_member_access_brief_001_page(text: str) -> None:
     assert_social_preview_meta(text, label, MEMBER_ACCESS_BRIEF_001_PAGE_URL)
     for expected in (
         "GCA Member Access Brief 001",
-        "Reviewer Data Room",
-        "data.html",
+        "Review Queue",
+        "review-queue.html",
         "Brief 001 / 2026-05-23 / Ready for review",
         "Ready for operator review",
         "1,000,000 GCA",
@@ -5702,6 +5695,7 @@ def validate_member_access_brief_001_page(text: str) -> None:
         "not financial advice",
     ):
         assert_contains(text, expected, label)
+    assert_no_public_data_room_terms(text, label)
     assert_no_forbidden_public_claims(text, label)
     assert_not_contains(text, OLD_WETH_POOL_ADDRESS, label)
     assert_not_contains(text, "GCA/WETH", label)
@@ -7316,11 +7310,14 @@ def validate_daily_status_page(text: str) -> None:
         "support@gcagochina.com",
         "does not write production data",
         "submit BaseScan forms",
-        "Data Room",
+        "Site Map",
+        "API status",
+        "domain email pages",
     ):
         assert_contains(text, expected, label)
     if not re.search(r"Daily Ops Snapshot / \d{4}-\d{2}-\d{2}", text):
         raise SiteCheckError(f"{label}: missing current daily ops snapshot date")
+    assert_no_public_data_room_terms(text, label)
     assert_not_contains(text, 'href="daily-status.json"', label)
     assert_no_forbidden_public_claims(text, label)
 
