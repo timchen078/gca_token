@@ -1349,7 +1349,7 @@ def validate_basescan_remediation_page(text: str) -> None:
         "completed domain email item",
         "Submission package",
         "tools/build_basescan_submission_package.py",
-        "Final draft ready",
+        "Final package ready",
         DOMAIN_EMAIL_PAGE_URL,
         DOMAIN_EMAIL_EVIDENCE_PAGE_URL,
         "Domain email evidence checklist",
@@ -1370,6 +1370,7 @@ def validate_basescan_remediation_page(text: str) -> None:
         assert_contains(text, expected, label)
     assert_no_forbidden_public_claims(text, label)
     assert_no_public_data_room_terms(text, label)
+    assert_not_contains(text, "DRAFT ONLY - DO NOT SUBMIT BASESCAN YET.", label)
 
 
 def validate_basescan_remediation_json(text: str) -> None:
@@ -1564,7 +1565,7 @@ def validate_basescan_preflight_page(text: str) -> None:
         "Final Package Is Ready Locally",
         "launch/basescan_final_submission_package.md",
         "Submit only one clean request",
-        "final package should be generated without the",
+        "reviewer comment is clean for submission",
         "Evidence Links To Include When Ready",
         "Tim Chen profile",
         "team.html#tim-chen",
@@ -1581,6 +1582,7 @@ def validate_basescan_preflight_page(text: str) -> None:
         assert_contains(text, expected, label)
     assert_no_forbidden_public_claims(text, label)
     assert_no_public_data_room_terms(text, label)
+    assert_not_contains(text, "DRAFT ONLY - DO NOT SUBMIT BASESCAN YET.", label)
     assert_not_contains(text, 'href="basescan-preflight.json"', label)
 
 
@@ -2387,7 +2389,7 @@ def validate_zh_basescan_preflight_page(text: str) -> None:
         "不要重复提交",
         "可以说邮箱已启用",
         "不要说 BaseScan 已通过",
-        "DRAFT ONLY - DO NOT SUBMIT BASESCAN YET.",
+        "最终提交包检查",
         "不要公开私密截图",
         "不要做链上动作",
         "zh-domain-email.html",
@@ -2398,6 +2400,7 @@ def validate_zh_basescan_preflight_page(text: str) -> None:
         assert_contains(text, expected, label)
     assert_not_contains(text, 'href="basescan-preflight.json"', label)
     assert_no_forbidden_public_claims(text, label)
+    assert_not_contains(text, "DRAFT ONLY - DO NOT SUBMIT BASESCAN YET.", label)
 
 
 def validate_zh_liquidity_page(text: str) -> None:
