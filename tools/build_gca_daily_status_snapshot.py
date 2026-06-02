@@ -61,6 +61,9 @@ def normalize_public_command(command: str) -> str:
         if part.startswith(str(ROOT)):
             normalized.append(part.replace(str(ROOT) + "/", "", 1))
             continue
+        if re.fullmatch(r"\d+\.0", part):
+            normalized.append(part[:-2])
+            continue
         normalized.append(part)
     return shlex.join(normalized)
 
