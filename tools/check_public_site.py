@@ -1662,9 +1662,18 @@ def validate_basescan_handoff_page(text: str) -> None:
         "support@gcagochina.com",
         "readyForBaseScanResubmission",
         "Final Copy Package",
+        "BaseScan Form Copy Blocks",
         "launch/basescan_final_submission_package.md",
         "tools/build_basescan_submission_package.py --json --require-ready",
         "Copy/Paste Reviewer Comment",
+        "Please review the updated GCA token profile metadata",
+        "Copy/Paste Basic Information",
+        "Project Email Address: support@gcagochina.com",
+        "Copy/Paste Evidence Links",
+        "GitHub source repository: https://github.com/timchen078/gca_token",
+        "Copy/Paste Market And Supply",
+        "Official market route: GCA/USDT",
+        "Reserve boundary: Do not describe the reserve as locked",
         "BaseScan source verification",
         "Deployer-wallet ownership verification",
         "Returned again as information-insufficient on 2026-05-23",
@@ -1753,6 +1762,19 @@ def validate_basescan_handoff_json(text: str) -> None:
     ):
         if expected_block not in final_package.get("copyPasteBlocks", []):
             raise SiteCheckError(f"{label}: missing final package block {expected_block}")
+        content = final_package.get("copyPasteContent", {}).get(expected_block, "")
+        if not isinstance(content, str) or not content.strip():
+            raise SiteCheckError(f"{label}: missing final package content {expected_block}")
+    copy_content = final_package.get("copyPasteContent", {})
+    for expected_text in (
+        "Please review the updated GCA token profile metadata",
+        "Project Email Address: support@gcagochina.com",
+        "Tim Chen professional profile: https://gcagochina.com/tim-chen.html",
+        "Official market route: GCA/USDT",
+        "Reserve boundary: Do not describe the reserve as locked",
+    ):
+        if not any(expected_text in str(value) for value in copy_content.values()):
+            raise SiteCheckError(f"{label}: missing copy-paste text {expected_text}")
     final_boundaries = final_package.get("boundaries", {})
     for key in ("submitsBaseScanRequest", "sendsEmail", "signsWalletMessage", "touchesWalletOrContract"):
         if final_boundaries.get(key) is not False:
