@@ -68,11 +68,11 @@ Published now:
 - Read-only wallet balance checks
 - 100 credits / GCA Member ledger records
 - Public team profile and BaseScan remediation tracker
-- Brand kit, whitepaper, trust center, and reviewer data room
+- Brand kit, whitepaper, trust center, reviewer kit, and BaseScan Handoff
 
 Current focus:
-- Set up project-domain email
-- Add Tim Chen public professional profile evidence
+- Use one clean owner-controlled BaseScan submission from support@gcagochina.com
+- Copy from the BaseScan Handoff and Chinese owner flow
 - Keep GCA identity, links, pool route, and review status consistent across platforms
 
 Start here: https://gcagochina.com
@@ -82,7 +82,7 @@ Start here: https://gcagochina.com
 
 URL: `https://x.com/GCAAIGoChina/status/2058090599535030302`
 
-Current note after this post: Tim Chen public professional profile evidence, the domain email setup plan, the public evidence checklist, and the project-domain mailbox are now ready. The remaining external dependency is BaseScan review after one clean owner-controlled submission from `support@gcagochina.com`.
+Current note after this post: Tim Chen public professional profile evidence, the domain email setup plan, the public evidence checklist, the activation evidence packet, the BaseScan Handoff, the Chinese owner flow, and the project-domain mailbox are now ready. The remaining external dependency is BaseScan review after one clean owner-controlled submission from `support@gcagochina.com`.
 
 ## Suggested Thread Follow-Up
 

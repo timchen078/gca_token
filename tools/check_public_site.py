@@ -655,7 +655,10 @@ def validate_status_page(text: str) -> None:
     assert_contains(text, "Deployer-wallet ownership verified on BaseScan", label)
     assert_contains(text, "BaseScan public token profile publication", label)
     assert_contains(text, "Returned 2026-05-23; ready for owner resubmission", label)
-    assert_contains(text, "Tim Chen profile and domain email evidence are ready for one owner resubmission", label)
+    assert_contains(text, "BaseScan Handoff, Chinese owner flow, Tim Chen profile, and domain email evidence are ready for one owner resubmission from support@gcagochina.com", label)
+    assert_contains(text, "BaseScan Handoff", label)
+    assert_contains(text, "中文 BaseScan 提交流程", label)
+    assert_contains(text, "no wallet transaction, approve, swap, or contract operation needed", label)
     assert_contains_any(
         text,
         (
@@ -1872,7 +1875,15 @@ def validate_action_plan_page(text: str) -> None:
         "DKIM present",
         "tools/check_domain_email_dns.py",
         "readyForBaseScanEmailEvidence",
-        "evidence packet before BaseScan resubmission",
+        "Submit One Clean BaseScan Update",
+        "Copy owner submission package",
+        "BaseScan Handoff",
+        "basescan-handoff.html",
+        "中文 BaseScan 提交流程",
+        "zh-basescan-submit.html",
+        "no wallet transaction, approve, swap, or contract operation is needed",
+        "private evidence packet ready for reviewer follow-up",
+        "Duplicate BaseScan follow-ups",
         "public evidence checklist",
         "domain-email-evidence.html",
         "Email Evidence Checklist",
@@ -4798,7 +4809,7 @@ def validate_community_page(text: str) -> None:
     assert_contains(text, FIRST_X_POST_URL, label)
     assert_contains(text, "Latest official X post", label)
     assert_contains(text, LATEST_X_POST_URL, label)
-    assert_contains(text, "Tim Chen public professional profile evidence, the domain email setup plan, public evidence checklist, activation evidence packet, and support@gcagochina.com mailbox are ready", label)
+    assert_contains(text, "Tim Chen public professional profile evidence, the domain email setup plan, public evidence checklist, activation evidence packet, BaseScan Handoff, Chinese owner flow, and support@gcagochina.com mailbox are ready", label)
     assert_contains(text, "one clean owner resubmission while waiting for BaseScan review", label)
     assert_contains(text, ANNOUNCEMENTS_PAGE_URL, label)
     assert_contains(text, CAMPAIGN_PAGE_URL, label)
@@ -4926,7 +4937,7 @@ def validate_community_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong latestPostUrl")
     if x_launch.get("latestPostPublishedDate") != "2026-05-23":
         raise SiteCheckError(f"{label}: wrong latestPostPublishedDate")
-    if "Tim Chen public professional profile evidence, the domain email setup plan, public evidence checklist, activation evidence packet, and support@gcagochina.com mailbox are now ready" not in x_launch.get("currentStatusAfterLatestPost", ""):
+    if "Tim Chen public professional profile evidence, the domain email setup plan, public evidence checklist, activation evidence packet, BaseScan Handoff, Chinese owner flow, and support@gcagochina.com mailbox are now ready" not in x_launch.get("currentStatusAfterLatestPost", ""):
         raise SiteCheckError(f"{label}: missing current status after latest post")
     if "one clean owner resubmission while waiting for BaseScan review and publication" not in x_launch.get("currentStatusAfterLatestPost", ""):
         raise SiteCheckError(f"{label}: missing current domain mailbox boundary")
@@ -5006,7 +5017,7 @@ def validate_announcements_page(text: str) -> None:
     assert_contains(text, "Published X Posts", label)
     assert_contains(text, "Latest Post Text", label)
     assert_contains(text, "Current note after this post", label)
-    assert_contains(text, "domain email setup plan, and the public evidence checklist are now published", label)
+    assert_contains(text, "BaseScan Handoff, Chinese owner flow", label)
     assert_contains(text, "Next 3-Day Content Queue", label)
     assert_contains(text, "Safe Messaging Rules", label)
     assert_contains(text, "Do Not Claim", label)
@@ -5054,7 +5065,7 @@ def validate_announcements_json(text: str) -> None:
     if not any(post.get("url") == LATEST_X_POST_URL for post in posts if isinstance(post, dict)):
         raise SiteCheckError(f"{label}: missing latest X post")
     latest_post = next((post for post in posts if isinstance(post, dict) and post.get("url") == LATEST_X_POST_URL), {})
-    if "Tim Chen public professional profile evidence, the domain email setup plan, public evidence checklist, activation evidence packet, and support@gcagochina.com mailbox are now ready" not in latest_post.get("currentStatusAfterPost", ""):
+    if "Tim Chen public professional profile evidence, the domain email setup plan, public evidence checklist, activation evidence packet, BaseScan Handoff, Chinese owner flow, and support@gcagochina.com mailbox are now ready" not in latest_post.get("currentStatusAfterPost", ""):
         raise SiteCheckError(f"{label}: missing latest post current status")
     if "one clean owner resubmission while waiting for BaseScan review and publication" not in latest_post.get("currentStatusAfterPost", ""):
         raise SiteCheckError(f"{label}: missing latest post domain mailbox boundary")
