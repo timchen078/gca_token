@@ -413,7 +413,7 @@
           </div>
           <div>
             <h3>6. Support Reply</h3>
-            <p class="note">Reply with status, next step, and public links. Do not promise approval timing, platform listing, price support, audit approval, or trading results.</p>
+            <p class="note">Reply with status, next step, and public links from a full internal export only. A <code>redacted-public</code> export is for reviewer evidence handoff and must not be used as a contactable support queue. Do not promise approval timing, platform listing, price support, audit approval, or trading results.</p>
           </div>
           <div>
             <h3>7. Ledger Handoff</h3>
@@ -506,6 +506,7 @@
             <div class="row"><span>Eligible</span><strong>Say pending ledger activation</strong></div>
             <div class="row"><span>Below threshold</span><strong>State read-only balance result</strong></div>
             <div class="row"><span>Platform follow-up</span><strong>Send public URLs and status only</strong></div>
+            <div class="row"><span>Redacted export</span><strong>Do not send user replies from <code>redacted-public</code> data</strong></div>
             <div class="row"><span>Closed</span><strong>State final review status</strong></div>
           </div>
         </div>
@@ -529,6 +530,10 @@
           <div>
             <h3>Redacted Package Only</h3>
             <p class="note">External reviewer handoff must use the redacted package and verified digest. Full-local records remain internal operator evidence.</p>
+          </div>
+          <div>
+            <h3>No Replies From Redacted Exports</h3>
+            <p class="note">Public-redacted exports are evidence handoff artifacts only. Run the internal operator export before sending account-specific support replies.</p>
           </div>
         </div>
       </section>

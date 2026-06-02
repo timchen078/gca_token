@@ -6276,9 +6276,12 @@ def validate_operations_page(text: str) -> None:
     assert_contains(text, "Member evidence note", label)
     assert_contains(text, "Local Review Package Handoff", label)
     assert_contains(text, "redacted-public", label)
+    assert_contains(text, "must not be used as a contactable support queue", label)
+    assert_contains(text, "Do not send user replies from", label)
     assert_contains(text, "packageDigestSha256", label)
     assert_contains(text, "tools/export_gca_review_package.py", label)
     assert_contains(text, "tools/verify_gca_review_package.py", label)
+    assert_contains(text, "No Replies From Redacted Exports", label)
     assert_contains(text, "Manual support cannot override on-chain wallet-balance verification", label)
     assert_contains(text, "Private key or seed phrase", label)
     assert_contains(text, "Exchange API secret or withdrawal permission", label)
@@ -6435,7 +6438,11 @@ def validate_operations_json(text: str) -> None:
         raise SiteCheckError(f"{label}: email ops token must not print")
     if controls.get("emailRegistrationOpsPublicCheckRequiresSecrets") is not False:
         raise SiteCheckError(f"{label}: public email ops check must not require secrets")
-    for key in ("externalReviewPackageMustBeRedacted", "reviewPackageDigestRequiredBeforeSharing"):
+    for key in (
+        "externalReviewPackageMustBeRedacted",
+        "reviewPackageDigestRequiredBeforeSharing",
+        "publicRedactedExportForReviewerHandoffOnly",
+    ):
         if controls.get(key) is not True:
             raise SiteCheckError(f"{label}: {key} must be true")
     for key in (
@@ -6444,6 +6451,7 @@ def validate_operations_json(text: str) -> None:
         "manualSupportCanOverrideBalanceVerification",
         "manualSupportCanBypassReleaseGates",
         "fullLocalPackageExternalSharingAllowed",
+        "redactedExportCanGenerateUserReplies",
     ):
         if controls.get(key) is not False:
             raise SiteCheckError(f"{label}: {key} must be false")
@@ -6548,12 +6556,16 @@ def validate_operations_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing email API safe claim")
     if "GCA operators can sync email registration records into an ignored local JSONL ledger and export public-redacted contact CSVs." not in boundaries.get("safeClaims", []):
         raise SiteCheckError(f"{label}: missing email ops safe claim")
+    if "Public-redacted exports are for reviewer evidence handoff only and cannot be used as contactable user support queues." not in boundaries.get("safeClaims", []):
+        raise SiteCheckError(f"{label}: missing redacted export safe claim")
     if not any("private-data dropbox" in item for item in boundaries.get("doNotClaim", [])):
         raise SiteCheckError(f"{label}: missing private-data boundary")
     if not any("support can override wallet-balance verification" in item for item in boundaries.get("doNotClaim", [])):
         raise SiteCheckError(f"{label}: missing support override boundary")
     if not any("redacted local review package" in item for item in boundaries.get("doNotClaim", [])):
         raise SiteCheckError(f"{label}: missing review package boundary")
+    if not any("contactable support queue" in item for item in boundaries.get("doNotClaim", [])):
+        raise SiteCheckError(f"{label}: missing redacted support queue boundary")
     assert_current_pool_text(json.dumps(payload), label)
     assert_no_forbidden_public_claims(json.dumps(payload), label)
 

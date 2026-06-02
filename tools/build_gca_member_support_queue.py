@@ -180,6 +180,7 @@ def stringify(value: Any) -> str:
 
 
 def build_queue_rows(payload: dict[str, Any]) -> list[dict[str, str]]:
+    source_redacted = bool(payload.get("redactedForExternalSharing"))
     accounts = dataset_records(payload, "member-access")
     wallet_by_account, wallet_by_wallet = index_records(dataset_records(payload, "wallet-verifications"))
     credit_by_account, credit_by_wallet = index_records(dataset_records(payload, "credit-ledger"))
@@ -198,12 +199,23 @@ def build_queue_rows(payload: dict[str, Any]) -> list[dict[str, str]]:
             member=member,
             support_status=support_status,
         )
+        visible_email = "" if source_redacted else stringify(account.get("email", ""))
+        visible_display_name = "" if source_redacted else stringify(account.get("displayName", ""))
+        reply_ready = bool(visible_email.strip())
+        if source_redacted:
+            subject = "GCA support queue blocked - redacted export"
+            body = (
+                "This row was generated from a public-redacted GCA member-access export. "
+                "Do not send it as a user reply and do not treat it as a contactable support queue. "
+                "Run the operator pipeline with a full internal export before contacting the account."
+            )
+            next_step = "Use a non-redacted internal export before sending support replies."
         rows.append({
-            "replyReady": "true" if str(account.get("email") or "").strip() else "false",
+            "replyReady": "true" if reply_ready else "false",
             "supportStatus": support_status,
-            "email": stringify(account.get("email", "")),
+            "email": visible_email,
             "emailSha256": stringify(account.get("emailSha256", "")),
-            "displayName": stringify(account.get("displayName", "")),
+            "displayName": visible_display_name,
             "accountId": stringify(account.get("accountId", "")),
             "walletAddress": stringify(account.get("walletAddress") or wallet.get("walletAddress") or ""),
             "gcaBalance": stringify(wallet.get("gcaBalance") or member.get("verifiedBalance") or ""),
@@ -226,6 +238,7 @@ def write_csv(path: Path, rows: list[dict[str, str]]) -> None:
 
 
 def build_support_queue(payload: dict[str, Any], output: Path, summary_output: Path) -> dict[str, Any]:
+    source_redacted = bool(payload.get("redactedForExternalSharing"))
     rows = build_queue_rows(payload)
     write_csv(output, rows)
     counts: dict[str, int] = {}
@@ -236,14 +249,16 @@ def build_support_queue(payload: dict[str, Any], output: Path, summary_output: P
         "packetVersion": "gca_member_support_queue_v1",
         "generatedAt": utc_now(),
         "sourceExportedAt": payload.get("exportedAt", ""),
-        "sourceRedactedForExternalSharing": bool(payload.get("redactedForExternalSharing")),
+        "sourceRedactedForExternalSharing": source_redacted,
         "output": str(output),
         "summaryOutput": str(summary_output),
         "rows": len(rows),
         "replyReadyRows": sum(1 for row in rows if row["replyReady"] == "true"),
+        "replySuppressedRows": len(rows) if source_redacted else 0,
         "statusCounts": counts,
         "boundaries": {
             "operatorReviewRequiredBeforeSending": True,
+            "redactedExportBlocksUserReplies": True,
             "offlineQueueOnly": True,
             "writesProductionData": False,
             "adminTokenPrinted": False,

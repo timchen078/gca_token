@@ -104,7 +104,7 @@
     {
       "id": "support-reply",
       "label": "Support Reply",
-      "operatorAction": "Reply with status, next step, and public links. Do not promise approval timing, listing approval, price support, audit approval, or trading results.",
+      "operatorAction": "Reply with status, next step, and public links from a full internal export only. Public-redacted exports are reviewer handoff artifacts and must not be used as contactable support queues. Do not promise approval timing, listing approval, price support, audit approval, or trading results.",
       "outputStatus": "received or closed"
     },
     {
@@ -173,6 +173,8 @@
     "requiresTransactionForBalanceRead": false,
     "manualSupportCanOverrideBalanceVerification": false,
     "manualSupportCanBypassReleaseGates": false,
+    "redactedExportCanGenerateUserReplies": false,
+    "publicRedactedExportForReviewerHandoffOnly": true,
     "emailRegistrationOpsAdminTokenPrinted": false,
     "emailRegistrationOpsPublicCheckRequiresSecrets": false,
     "externalReviewPackageMustBeRedacted": true,
@@ -228,6 +230,7 @@
     "eligible": "Say pending ledger activation.",
     "below_threshold": "State read-only balance result.",
     "platform_follow_up": "Send public URLs and consistent status only.",
+    "redacted_export": "Do not send user replies from redacted-public data; rerun a full internal export first.",
     "closed": "State final review status."
   },
   "reviewPackageHandoff": {
@@ -313,6 +316,7 @@
       "GCA operators can export a redacted-public local review package for reviewer evidence handoff when local ledger records exist.",
       "GCA email registration and unsubscribe APIs are live on Cloudflare Workers + D1.",
       "GCA operators can sync email registration records into an ignored local JSONL ledger and export public-redacted contact CSVs.",
+      "Public-redacted exports are for reviewer evidence handoff only and cannot be used as contactable user support queues.",
       "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool."
     ],
     "doNotClaim": [
@@ -321,6 +325,7 @@
       "GCA Member status bypasses wallet verification, holding-period evidence, or support review",
       "the 10,000 GCA member benefit is automatic or self-service transferred before holding-period verification, support approval, and manual reserve-wallet processing",
       "support can override wallet-balance verification, release gates, or ledger activation",
+      "a public-redacted export is a contactable support queue or permission to send account-specific user replies",
       "review status provides trading permission, live order execution, custody, withdrawals, price support, listing approval, or completed third-party audit",
       "a redacted local review package is a third-party audit, security-vendor approval, listing approval, or liquidity-depth claim"
     ]

@@ -71,6 +71,18 @@ class GcaMemberSupportQueueTests(unittest.TestCase):
         self.assertEqual(rows[0]["replyReady"], "false")
         self.assertEqual(rows[0]["supportStatus"], "wallet_verification_pending")
 
+    def test_redacted_export_blocks_contactable_replies_and_personal_fields(self):
+        payload = member_access_export_payload()
+        payload["redactedForExternalSharing"] = True
+        rows = build_queue_rows(payload)
+
+        self.assertEqual(rows[0]["replyReady"], "false")
+        self.assertEqual(rows[0]["email"], "")
+        self.assertEqual(rows[0]["displayName"], "")
+        self.assertEqual(rows[0]["subject"], "GCA support queue blocked - redacted export")
+        self.assertIn("Do not send it as a user reply", rows[0]["body"])
+        self.assertIn("non-redacted internal export", rows[0]["nextStep"])
+
     def test_build_support_queue_writes_csv_and_summary(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
@@ -84,12 +96,31 @@ class GcaMemberSupportQueueTests(unittest.TestCase):
             self.assertFalse(summary["boundaries"]["writesProductionData"])
             self.assertFalse(summary["boundaries"]["automaticTokenTransfer"])
             self.assertTrue(summary["boundaries"]["operatorReviewRequiredBeforeSending"])
+            self.assertTrue(summary["boundaries"]["redactedExportBlocksUserReplies"])
             self.assertTrue(output.exists())
             self.assertTrue(summary_output.exists())
             with output.open(newline="", encoding="utf-8") as handle:
                 rows = list(csv.DictReader(handle))
             self.assertEqual(rows[0]["email"], "user@example.com")
             self.assertIn("GCA Member status active", rows[0]["subject"])
+
+    def test_redacted_support_queue_summary_suppresses_all_replies(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            output = root / "support.csv"
+            summary_output = root / "support-summary.json"
+            payload = member_access_export_payload()
+            payload["redactedForExternalSharing"] = True
+
+            summary = build_support_queue(payload, output, summary_output)
+
+            self.assertTrue(summary["sourceRedactedForExternalSharing"])
+            self.assertEqual(summary["replyReadyRows"], 0)
+            self.assertEqual(summary["replySuppressedRows"], summary["rows"])
+            with output.open(newline="", encoding="utf-8") as handle:
+                rows = list(csv.DictReader(handle))
+            self.assertEqual(rows[0]["email"], "")
+            self.assertEqual(rows[0]["replyReady"], "false")
 
     def test_cli_builds_support_queue_from_export_file(self):
         with tempfile.TemporaryDirectory() as temp:
