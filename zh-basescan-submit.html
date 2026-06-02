@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GCA 中文 BaseScan 提交流程 | Owner 操作清单</title>
+    <meta name="description" content="GCA 中文 BaseScan 提交流程：给 owner 手动登录 BaseScan 后使用，说明官方邮箱、提交入口、复制块来源、字段顺序、签名边界和提交后记录。">
+    <link rel="canonical" href="https://gcagochina.com/zh-basescan-submit.html">
+    <link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">
+    <link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="GCA | Go China Access">
+    <meta property="og:title" content="GCA 中文 BaseScan 提交流程 | Owner 操作清单">
+    <meta property="og:description" content="中文说明 GCA 下一次 BaseScan Token Profile 复提交的 owner 操作顺序、复制块来源和安全边界。">
+    <meta property="og:url" content="https://gcagochina.com/zh-basescan-submit.html">
+    <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="GCA 中文 BaseScan 提交流程 | Owner 操作清单">
+    <meta name="twitter:description" content="中文说明 GCA 下一次 BaseScan Token Profile 复提交的 owner 操作顺序、复制块来源和安全边界。">
+    <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f7f8f5;
+        --ink: #151817;
+        --muted: #5e6763;
+        --line: #dfe4dd;
+        --panel: #ffffff;
+        --soft: #eef3ef;
+        --red: #d71920;
+        --blue: #1557d7;
+        --green: #087f5b;
+        --gold: #a87810;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: var(--bg);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+        line-height: 1.58;
+      }
+
+      a { color: var(--blue); text-decoration: none; }
+      a:hover { text-decoration: underline; }
+
+      .shell {
+        width: min(1080px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 3;
+        border-bottom: 1px solid var(--line);
+        background: rgba(247, 248, 245, 0.94);
+        backdrop-filter: blur(16px);
+      }
+
+      nav,
+      .brand,
+      .nav-links,
+      .actions,
+      .link-row {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      nav {
+        min-height: 68px;
+        justify-content: space-between;
+      }
+
+      .brand {
+        color: var(--ink);
+        font-weight: 850;
+      }
+
+      .brand img {
+        width: 34px;
+        height: 34px;
+      }
+
+      .nav-links {
+        gap: 16px;
+        font-size: 14px;
+      }
+
+      main { padding: 42px 0 64px; }
+      h1, h2, h3, p { margin-top: 0; }
+
+      h1 {
+        max-width: 920px;
+        margin-bottom: 18px;
+        font-size: clamp(42px, 6vw, 76px);
+        line-height: 1.02;
+        letter-spacing: 0;
+      }
+
+      h2 {
+        margin-bottom: 12px;
+        font-size: 25px;
+        letter-spacing: 0;
+      }
+
+      h3 {
+        margin-bottom: 8px;
+        font-size: 18px;
+        letter-spacing: 0;
+      }
+
+      .eyebrow {
+        margin: 0 0 14px;
+        color: var(--red);
+        font-size: 13px;
+        font-weight: 850;
+        letter-spacing: 0;
+        text-transform: uppercase;
+      }
+
+      .lead {
+        max-width: 900px;
+        margin-bottom: 14px;
+        color: var(--muted);
+        font-size: 18px;
+      }
+
+      .note, li { color: var(--muted); }
+      .actions { margin-top: 24px; }
+
+      .button,
+      .text-link {
+        min-height: 40px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        color: var(--ink);
+        padding: 9px 12px;
+        font-size: 14px;
+        font-weight: 760;
+      }
+
+      .button.primary {
+        border-color: var(--red);
+        background: var(--red);
+        color: #fff;
+      }
+
+      .button.secondary {
+        border-color: #cad7ec;
+        background: #eef4ff;
+        color: #123e90;
+      }
+
+      .section { margin-top: 30px; }
+
+      .panel,
+      .fact,
+      .card {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+      }
+
+      .panel { padding: 24px; }
+      .fact, .card { padding: 16px; }
+
+      .facts,
+      .grid,
+      .two {
+        display: grid;
+        gap: 14px;
+      }
+
+      .facts {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        margin-top: 26px;
+      }
+
+      .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+      .label {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 760;
+        text-transform: uppercase;
+      }
+
+      .value {
+        display: block;
+        margin-top: 7px;
+        font-size: 17px;
+        font-weight: 850;
+        overflow-wrap: anywhere;
+      }
+
+      .good { color: var(--green); }
+      .pending { color: var(--gold); }
+
+      .list {
+        display: grid;
+        gap: 10px;
+      }
+
+      .row {
+        display: grid;
+        grid-template-columns: minmax(170px, 0.8fr) minmax(0, 1.2fr);
+        gap: 12px;
+        align-items: start;
+        border-top: 1px solid var(--line);
+        padding-top: 10px;
+      }
+
+      .row:first-child {
+        border-top: 0;
+        padding-top: 0;
+      }
+
+      .row strong {
+        min-width: 0;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+        text-align: right;
+      }
+
+      .notice {
+        border-color: #ecd28c;
+        background: #fff8e6;
+      }
+
+      code {
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        background: var(--soft);
+        padding: 2px 5px;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 0.92em;
+        overflow-wrap: anywhere;
+      }
+
+      footer {
+        border-top: 1px solid var(--line);
+        padding: 22px 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      @media (max-width: 900px) {
+        nav {
+          align-items: flex-start;
+          flex-direction: column;
+          padding: 14px 0;
+        }
+
+        .facts,
+        .grid,
+        .two,
+        .row {
+          grid-template-columns: 1fr;
+        }
+
+        .row strong {
+          text-align: left;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav class="shell" aria-label="Primary">
+        <a class="brand" href="index.html" aria-label="GCA home">
+          <img src="assets/gca-logo.svg" alt="GCA logo">
+          <span>GCA</span>
+        </a>
+        <div class="nav-links">
+          <a href="zh-cn.html">中文入口</a>
+          <a href="zh-status.html">进度</a>
+          <a href="zh-basescan-preflight.html">预检</a>
+          <a href="basescan-handoff.html">复制包</a>
+          <a href="zh-support.html">中文支持</a>
+          <a href="zh-site-map.html">站点地图</a>
+        </div>
+      </nav>
+    </header>
+
+    <main class="shell">
+      <section aria-labelledby="title">
+        <p class="eyebrow">BaseScan 提交 / owner 手动操作</p>
+        <h1 id="title">GCA 中文 BaseScan 提交流程</h1>
+        <p class="lead">这一页给 owner 在浏览器里手动提交 BaseScan Token Profile 更新时使用。当前准备方向是：只提交一次干净的复审请求，统一使用 <code>support@gcagochina.com</code>、Tim Chen 职业资料、官网证据链接和 GCA/USDT 官方市场路线。</p>
+        <p class="lead">这页不会提交 BaseScan，不会发送邮件，不会连接钱包，也不会触碰合约。真正提交仍需要你登录 BaseScan，并在网页里手动确认。</p>
+        <div class="actions">
+          <a class="button primary" href="https://basescan.org/tokenupdate/" target="_blank" rel="noreferrer">打开 BaseScan Token Update</a>
+          <a class="button secondary" href="basescan-handoff.html">打开复制包</a>
+          <a class="button secondary" href="zh-basescan-preflight.html">先看中文预检</a>
+          <a class="button" href="domain-email-evidence.html">邮箱证据清单</a>
+          <a class="button" href="zh-site-map.html">中文站点地图</a>
+        </div>
+      </section>
+
+      <section class="facts" aria-label="BaseScan 提交摘要">
+        <div class="fact">
+          <span class="label">提交邮箱</span>
+          <span class="value good">support@gcagochina.com</span>
+        </div>
+        <div class="fact">
+          <span class="label">合约</span>
+          <span class="value">0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6</span>
+        </div>
+        <div class="fact">
+          <span class="label">复制来源</span>
+          <span class="value good">BaseScan Handoff</span>
+        </div>
+        <div class="fact">
+          <span class="label">当前状态</span>
+          <span class="value pending">等待 BaseScan 审核</span>
+        </div>
+      </section>
+
+      <section class="section two" aria-label="提交前和提交入口">
+        <div class="panel notice">
+          <h2>提交前确认</h2>
+          <div class="list">
+            <div class="row"><span>预检状态</span><strong><code>readyForBaseScanResubmission</code> 必须为 true。</strong></div>
+            <div class="row"><span>官方邮箱</span><strong>表单和回复统一使用 <code>support@gcagochina.com</code>。</strong></div>
+            <div class="row"><span>团队资料</span><strong>必须带上 <a href="tim-chen.html">Tim Chen 职业资料</a> 和 <a href="team.html#tim-chen">团队页</a>。</strong></div>
+            <div class="row"><span>项目资料</span><strong>必须带上官网、白皮书、品牌资料、支持页、GitHub、Telegram、X 和 GCA/USDT 池 <code>0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0</code>。</strong></div>
+            <div class="row"><span>提交次数</span><strong>只开一次新的 BaseScan Token Profile update，然后等 BaseScan 邮件回复。</strong></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2>手动打开顺序</h2>
+          <div class="list">
+            <div class="row"><span>1</span><strong>登录 BaseScan 账号。</strong></div>
+            <div class="row"><span>2</span><strong>打开 <a href="https://basescan.org/tokenupdate/" target="_blank" rel="noreferrer">https://basescan.org/tokenupdate/</a>。</strong></div>
+            <div class="row"><span>3</span><strong>选择 Base Mainnet，填写 GCA 合约地址。</strong></div>
+            <div class="row"><span>4</span><strong>打开 <a href="basescan-handoff.html">BaseScan Handoff</a>，按块复制 reviewer comment、basic information、evidence links、market and supply。</strong></div>
+            <div class="row"><span>5</span><strong>如果 BaseScan 要求签名，只用部署钱包签 BaseScan 页面显示的地址所有权消息；不要签交易、授权或转账。</strong></div>
+            <div class="row"><span>6</span><strong>提交后保存 ticket id、提交时间、确认邮件和后续回复。</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="fieldTitle">
+        <p class="eyebrow">表单字段</p>
+        <h2 id="fieldTitle">BaseScan 表单怎么填</h2>
+        <div class="grid">
+          <div class="card">
+            <h3>基础信息</h3>
+            <p class="note">从 <a href="basescan-handoff.html">BaseScan Handoff</a> 的 <code>Copy/Paste Basic Information</code> 复制。应包含 Project Name: GCA、Project Email Address: support@gcagochina.com、Token Symbol: GCA、Decimals: 18、Total Supply: 1000000000。</p>
+          </div>
+          <div class="card">
+            <h3>审核说明</h3>
+            <p class="note">从 <a href="basescan-handoff.html">BaseScan Handoff</a> 的 <code>Copy/Paste Reviewer Comment</code> 复制。它已经解释了官网、域名邮箱、Tim Chen 资料、白皮书、品牌资料、GitHub 和市场路线。</p>
+          </div>
+          <div class="card">
+            <h3>证据链接</h3>
+            <p class="note">从 <a href="basescan-handoff.html">BaseScan Handoff</a> 的 <code>Copy/Paste Evidence Links</code> 复制。不要改成旧邮箱或旧池子链接。</p>
+          </div>
+          <div class="card">
+            <h3>市场和供应</h3>
+            <p class="note">从 <a href="basescan-handoff.html">BaseScan Handoff</a> 的 <code>Copy/Paste Market And Supply</code> 复制。官方市场路线是 Base 上的 GCA/USDT 池。</p>
+          </div>
+          <div class="card">
+            <h3>Logo</h3>
+            <p class="note">使用 <code>https://gcagochina.com/assets/gca-logo.svg</code>。如果表单要求 32x32 图标，仍使用官方 SVG 链接。</p>
+          </div>
+          <div class="card">
+            <h3>官网和支持</h3>
+            <p class="note">官网是 <code>https://gcagochina.com/</code>，支持入口是 <code>https://gcagochina.com/support.html</code>，官方邮箱是 <code>support@gcagochina.com</code>。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section two" aria-label="保存记录和安全边界">
+        <div class="panel">
+          <h2>提交后要保存什么</h2>
+          <div class="list">
+            <div class="row"><span>BaseScan ticket</span><strong>保存 ticket id、提交页面截图或确认邮件。</strong></div>
+            <div class="row"><span>提交邮箱</span><strong>确认邮件发到 <code>support@gcagochina.com</code>。</strong></div>
+            <div class="row"><span>提交内容</span><strong>保留本次使用的 handoff 页面日期和复制块版本。</strong></div>
+            <div class="row"><span>签名记录</span><strong>如果签了地址所有权消息，保存 BaseScan 页面给出的消息内容和签名结果。</strong></div>
+            <div class="row"><span>后续回复</span><strong>如果 BaseScan 继续退回，先对照退回原因修官网和资料，再重新生成提交包。</strong></div>
+          </div>
+        </div>
+
+        <div class="panel notice">
+          <h2>不要做这些</h2>
+          <div class="list">
+            <div class="row"><span>不要说已通过</span><strong>BaseScan Token Profile 只有在公开页面显示后，才能说已经发布。</strong></div>
+            <div class="row"><span>不要换回旧邮箱</span><strong>不要再用 <code>cxy070800@gmail.com</code> 作为项目邮箱提交。</strong></div>
+            <div class="row"><span>不要使用旧池</span><strong>公开市场路线统一使用 GCA/USDT，不再把早期 WETH 测试池作为主入口。</strong></div>
+            <div class="row"><span>不要夸大安全</span><strong>第三方审计尚未完成，不要写外部审计已完成。</strong></div>
+            <div class="row"><span>不要公开私密证据</span><strong>邮箱后台、收发截图、BaseScan 登录状态只保存本地，除非 reviewer 单独要求。</strong></div>
+            <div class="row"><span>不要碰钱包资产</span><strong>BaseScan 资料提交不需要授权、转账、approve、swap 或改池子。</strong></div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="shell">GCA 中文 BaseScan 提交流程。提交由 owner 手动完成；本页只整理公开资料、复制来源和安全边界。</div>
+    </footer>
+  </body>
+</html>
