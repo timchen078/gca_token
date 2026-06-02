@@ -52,6 +52,7 @@ ZH_APPLY_PAGE_URL = "https://gcagochina.com/zh-apply.html"
 ZH_STATUS_PAGE_URL = "https://gcagochina.com/zh-status.html"
 ZH_DOMAIN_EMAIL_PAGE_URL = "https://gcagochina.com/zh-domain-email.html"
 ZH_BASESCAN_PREFLIGHT_PAGE_URL = "https://gcagochina.com/zh-basescan-preflight.html"
+ZH_BASESCAN_SUBMIT_PAGE_URL = "https://gcagochina.com/zh-basescan-submit.html"
 ZH_LIQUIDITY_PAGE_URL = "https://gcagochina.com/zh-liquidity.html"
 ZH_SUPPLY_PAGE_URL = "https://gcagochina.com/zh-supply.html"
 ZH_SECURITY_PAGE_URL = "https://gcagochina.com/zh-security.html"
@@ -2404,6 +2405,8 @@ def validate_zh_basescan_preflight_page(text: str) -> None:
         "domain-email-evidence.html",
         "BaseScan Handoff",
         "basescan-handoff.html",
+        "zh-basescan-submit.html",
+        "中文 BaseScan 提交流程",
         "basescan-remediation.html",
         GITHUB_REPO_URL,
         "Base Mainnet GCA/USDT",
@@ -2423,6 +2426,68 @@ def validate_zh_basescan_preflight_page(text: str) -> None:
     assert_not_contains(text, 'href="basescan-preflight.json"', label)
     assert_no_forbidden_public_claims(text, label)
     assert_not_contains(text, "DRAFT ONLY - DO NOT SUBMIT BASESCAN YET.", label)
+
+
+def validate_zh_basescan_submit_page(text: str) -> None:
+    label = "/zh-basescan-submit.html"
+    assert_social_preview_meta(text, label, ZH_BASESCAN_SUBMIT_PAGE_URL)
+    for expected in (
+        "GCA 中文 BaseScan 提交流程",
+        "BaseScan 提交 / owner 手动操作",
+        "owner 在浏览器里手动提交 BaseScan Token Profile 更新",
+        "support@gcagochina.com",
+        "不会提交 BaseScan",
+        "不会发送邮件",
+        "不会连接钱包",
+        "不会触碰合约",
+        "打开 BaseScan Token Update",
+        "https://basescan.org/tokenupdate/",
+        "BaseScan Handoff",
+        "zh-basescan-preflight.html",
+        "domain-email-evidence.html",
+        "提交前确认",
+        "readyForBaseScanResubmission",
+        "Tim Chen 职业资料",
+        "team.html#tim-chen",
+        "官网、白皮书、品牌资料、支持页、GitHub、Telegram、X 和 GCA/USDT 池",
+        "只开一次新的 BaseScan Token Profile update",
+        "手动打开顺序",
+        "选择 Base Mainnet",
+        MAINNET_ADDRESS,
+        "Copy/Paste Basic Information",
+        "Copy/Paste Reviewer Comment",
+        "Copy/Paste Evidence Links",
+        "Copy/Paste Market And Supply",
+        "Project Email Address: support@gcagochina.com",
+        "Token Symbol: GCA",
+        "Decimals: 18",
+        "Total Supply: 1000000000",
+        "https://gcagochina.com/assets/gca-logo.svg",
+        "https://gcagochina.com/support.html",
+        "提交后要保存什么",
+        "BaseScan ticket",
+        "签名记录",
+        "不要说已通过",
+        "不要换回旧邮箱",
+        "不要使用旧池",
+        "不要夸大安全",
+        "第三方审计尚未完成",
+        "不要公开私密证据",
+        "不要碰钱包资产",
+        "不需要授权、转账、approve、swap 或改池子",
+        "GCA/USDT",
+    ):
+        assert_contains(text, expected, label)
+    for forbidden in (
+        'href="basescan-handoff.json"',
+        'href="basescan-preflight.json"',
+        'href="domain-email-evidence.json"',
+        "BaseScan Token Profile 已通过",
+        "external audit completed",
+    ):
+        assert_not_contains(text, forbidden, label)
+    assert_current_pool_text(text, label)
+    assert_no_forbidden_public_claims(text, label)
 
 
 def validate_zh_liquidity_page(text: str) -> None:
@@ -3365,6 +3430,8 @@ def validate_zh_site_map_page(text: str) -> None:
         "zh-access.html",
         "zh-release-gates.html",
         "zh-basescan-preflight.html",
+        "zh-basescan-submit.html",
+        "中文 BaseScan 提交流程",
         "BaseScan Handoff",
         "basescan-handoff.html",
         "zh-api-status.html",
@@ -3678,6 +3745,8 @@ def validate_site_map_page(text: str) -> None:
         "basescan-preflight.html",
         "BaseScan Handoff",
         "basescan-handoff.html",
+        "zh-basescan-submit.html",
+        "中文 BaseScan 提交流程",
         "Security Materials",
         "External Review",
         "Supply and Custody",
@@ -11622,6 +11691,7 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/zh-status.html",
         "https://gcagochina.com/zh-domain-email.html",
         "https://gcagochina.com/zh-basescan-preflight.html",
+        "https://gcagochina.com/zh-basescan-submit.html",
         "https://gcagochina.com/zh-liquidity.html",
         "https://gcagochina.com/zh-supply.html",
         "https://gcagochina.com/zh-security.html",
@@ -11775,6 +11845,7 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /zh-status.html", label)
     assert_contains(text, "Allow: /zh-domain-email.html", label)
     assert_contains(text, "Allow: /zh-basescan-preflight.html", label)
+    assert_contains(text, "Allow: /zh-basescan-submit.html", label)
     assert_contains(text, "Allow: /zh-liquidity.html", label)
     assert_contains(text, "Allow: /zh-supply.html", label)
     assert_contains(text, "Allow: /zh-security.html", label)
@@ -11929,6 +12000,7 @@ CHECKS: list[EndpointCheck] = [
     ("/zh-status.html", validate_zh_status_page),
     ("/zh-domain-email.html", validate_zh_domain_email_page),
     ("/zh-basescan-preflight.html", validate_zh_basescan_preflight_page),
+    ("/zh-basescan-submit.html", validate_zh_basescan_submit_page),
     ("/zh-liquidity.html", validate_zh_liquidity_page),
     ("/zh-supply.html", validate_zh_supply_page),
     ("/zh-security.html", validate_zh_security_page),
