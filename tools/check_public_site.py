@@ -1354,6 +1354,8 @@ def validate_basescan_remediation_page(text: str) -> None:
         DOMAIN_EMAIL_EVIDENCE_PAGE_URL,
         "Domain email evidence checklist",
         "Evidence Checklist",
+        "BaseScan Handoff",
+        "basescan-handoff.html",
         "Tim Chen",
         "team.html",
         GITHUB_REPO_URL,
@@ -1367,6 +1369,7 @@ def validate_basescan_remediation_page(text: str) -> None:
     ):
         assert_contains(text, expected, label)
     assert_no_forbidden_public_claims(text, label)
+    assert_no_public_data_room_terms(text, label)
 
 
 def validate_basescan_remediation_json(text: str) -> None:
@@ -1568,6 +1571,8 @@ def validate_basescan_preflight_page(text: str) -> None:
         "domain-email.html",
         "domain-email-evidence.html",
         "basescan-remediation.html",
+        "basescan-handoff.html",
+        "BaseScan Handoff",
         GITHUB_REPO_URL,
         "GCA/USDT on Base Mainnet",
         "Submit Once And Keep Claim Boundaries",
@@ -1575,6 +1580,7 @@ def validate_basescan_preflight_page(text: str) -> None:
     ):
         assert_contains(text, expected, label)
     assert_no_forbidden_public_claims(text, label)
+    assert_no_public_data_room_terms(text, label)
     assert_not_contains(text, 'href="basescan-preflight.json"', label)
 
 
@@ -1670,8 +1676,7 @@ def validate_basescan_handoff_page(text: str) -> None:
         "Required Order",
         "tools/check_basescan_resubmission_readiness.py --json --require-ready",
         "Submit one clean BaseScan request only after the final preflight passes",
-        "Platform-Only Evidence Path",
-        "Reviewer Data Room",
+        "Readable Handoff Path",
         "does not submit BaseScan forms",
         "does not send email, write DNS records, sign messages, or touch wallets/contracts",
         "does not claim BaseScan token profile approval",
@@ -1690,10 +1695,11 @@ def validate_basescan_handoff_page(text: str) -> None:
         "holder-distribution.html",
         "liquidity.html",
         "platform-replies.html",
-        "data.html",
+        "trust.html",
     ):
         assert_contains(text, expected, label)
     assert_no_forbidden_public_claims(text, label)
+    assert_no_public_data_room_terms(text, label)
     assert_not_contains(text, 'href="basescan-handoff.json"', label)
 
 
@@ -3977,8 +3983,7 @@ def validate_token_safety_json(text: str) -> None:
 def validate_blockaid_followup_page(text: str) -> None:
     label = "/blockaid-followup.html"
     assert_contains(text, "GCA Blockaid Follow-up", label)
-    assert_contains(text, "Platform-Only Evidence Path", label)
-    assert_contains(text, "Data Room", label)
+    assert_contains(text, "Readable Security Review Path", label)
     assert_contains(text, "Risk Factor Response", label)
     assert_contains(text, "Price Volatility", label)
     assert_contains(text, "LP Lock", label)
@@ -3996,6 +4001,7 @@ def validate_blockaid_followup_page(text: str) -> None:
     assert_contains(text, RESERVE_WALLET, label)
     assert_current_pool_text(text, label)
     assert_no_forbidden_public_claims(text, label)
+    assert_no_public_data_room_terms(text, label)
     for forbidden in (
         'href="blockaid-followup.json"',
         'href="technical-report.json"',
@@ -10764,9 +10770,7 @@ def validate_reviewer_kit_page(text: str) -> None:
     assert_contains(text, "BaseScan Resubmission Handoff", label)
     assert_contains(text, "BaseScan Handoff", label)
     assert_contains(text, "basescan-handoff.html", label)
-    assert_contains(text, "Platform-Only Evidence Path", label)
-    assert_contains(text, "Data Room", label)
-    assert_contains(text, "Raw JSON for platforms only", label)
+    assert_contains(text, "Readable Reviewer Path", label)
     assert_contains(text, "Base Mainnet / 8453", label)
     assert_contains(text, MAINNET_ADDRESS, label)
     assert_contains(text, "GCA/USDT", label)
@@ -10813,6 +10817,7 @@ def validate_reviewer_kit_page(text: str) -> None:
     assert_contains(text, OFFICIAL_DEXSCREENER_URL, label)
     assert_contains(text, OFFICIAL_GECKOTERMINAL_URL, label)
     assert_current_pool_text(text, label)
+    assert_no_public_data_room_terms(text, label)
     for forbidden in (
         'href="reviewer-kit.json"',
         'href="project.json"',
