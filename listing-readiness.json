@@ -78,7 +78,7 @@
       "label": "BaseScan token profile",
       "status": "ready-for-owner-resubmission",
       "lastCheckedDate": "2026-05-30",
-      "evidence": "Token information update was returned again by BaseScan as information-insufficient on 2026-05-23. Tim Chen official-domain professional profile evidence is published; the domain email setup plan, public evidence checklist, and activation evidence packet are published; support@gcagochina.com is active and the 2026-05-30 DNS snapshot shows MX/SPF/DKIM/DMARC present."
+      "evidence": "Token information update was returned again by BaseScan as information-insufficient on 2026-05-23. Tim Chen official-domain professional profile evidence is published; the domain email setup plan, public evidence checklist, and activation evidence packet are published; BaseScan Handoff copy blocks and Chinese owner flow are published; support@gcagochina.com is active and the 2026-05-30 DNS snapshot shows MX/SPF/DKIM/DMARC present."
     },
     {
       "id": "geckoterminal-token-info",
@@ -156,6 +156,7 @@
   },
   "nextActions": [
     "Use the domain email setup plan at https://gcagochina.com/domain-email.html and evidence checklist at https://gcagochina.com/domain-email-evidence.html, keep support@gcagochina.com active, archive the activation evidence packet before the next BaseScan submission, and submit one clean BaseScan update from the official domain mailbox.",
+    "Use the BaseScan Handoff at https://gcagochina.com/basescan-handoff.html and Chinese owner flow at https://gcagochina.com/zh-basescan-submit.html as the owner-side copy and checklist for that same clean submission.",
     "Include the published Tim Chen professional profile URL https://gcagochina.com/tim-chen.html in the next BaseScan submission; add LinkedIn later if BaseScan specifically requires a third-party social-network profile.",
     "Keep the GCA/USDT pool, website, logo, whitepaper, Telegram, X, and metadata files live.",
     "Grow legitimate public activity and liquidity depth before CoinGecko or CoinMarketCap submission.",

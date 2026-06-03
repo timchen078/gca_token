@@ -45,6 +45,9 @@ Allow: /data.html
 Allow: /status.html
 Allow: /listing-kit.html
 Allow: /whitepaper.html
+Allow: /project-profile.html
+Allow: /tokenlist.html
+Allow: /member-program.html
 Allow: /buy.html
 Allow: /markets.html
 Allow: /security.html
