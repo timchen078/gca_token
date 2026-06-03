@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GCA Member Program | Holder Bonus and Member Review</title>
+    <meta name="description" content="Readable GCA member program rules for 10,000 GCA holder bonus review, 1,000,000 GCA member review, 30-day holding evidence, and manual member benefit processing.">
+    <link rel="canonical" href="https://gcagochina.com/member-program.html">
+    <link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">
+    <link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="GCA | Go China Access">
+    <meta property="og:title" content="GCA Member Program | Holder Bonus and Member Review">
+    <meta property="og:description" content="Readable GCA member program rules for holder bonus, GCA Member review, holding evidence, and manual member benefit processing.">
+    <meta property="og:url" content="https://gcagochina.com/member-program.html">
+    <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f7f8f5;
+        --ink: #151817;
+        --muted: #5e6763;
+        --line: #dfe4dd;
+        --panel: #ffffff;
+        --soft: #eef3ef;
+        --red: #d71920;
+        --blue: #1557d7;
+        --green: #087f5b;
+        --gold: #a87810;
+      }
+
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: var(--bg);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.5;
+      }
+      a { color: var(--blue); text-decoration: none; }
+      a:hover { text-decoration: underline; }
+      .shell { width: min(1120px, calc(100% - 32px)); margin: 0 auto; }
+      header { position: sticky; top: 0; z-index: 3; border-bottom: 1px solid var(--line); background: rgba(247, 248, 245, 0.94); backdrop-filter: blur(16px); }
+      nav { min-height: 68px; display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+      .brand { display: inline-flex; align-items: center; gap: 10px; color: var(--ink); font-weight: 850; }
+      .brand img { width: 34px; height: 34px; }
+      .nav-links { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; font-size: 14px; }
+      main { padding: 42px 0 64px; }
+      h1, h2, h3, p { margin-top: 0; }
+      h1 { max-width: 900px; margin-bottom: 18px; font-size: clamp(42px, 6vw, 76px); line-height: 0.98; letter-spacing: 0; }
+      h2 { margin-bottom: 12px; font-size: 25px; letter-spacing: 0; }
+      h3 { margin-bottom: 8px; font-size: 18px; letter-spacing: 0; }
+      .eyebrow { margin: 0 0 14px; color: var(--red); font-size: 13px; font-weight: 850; letter-spacing: 0; text-transform: uppercase; }
+      .lead { max-width: 840px; margin-bottom: 14px; color: var(--muted); font-size: 18px; }
+      .note { margin: 0; color: var(--muted); }
+      .actions, .link-row { display: flex; flex-wrap: wrap; gap: 10px; }
+      .actions { margin-top: 24px; }
+      .button, .text-link { min-height: 40px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); color: var(--ink); padding: 9px 12px; font-size: 14px; font-weight: 760; }
+      .button.primary { border-color: var(--red); background: var(--red); color: #fff; }
+      .button.secondary { border-color: #cad7ec; background: #eef4ff; color: #123e90; }
+      .text-link { background: var(--soft); font-size: 13px; }
+      .section { margin-top: 30px; }
+      .panel, .card, .fact { border: 1px solid var(--line); border-radius: 8px; background: var(--panel); }
+      .panel { padding: 24px; }
+      .facts, .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+      .facts { margin-top: 26px; }
+      .fact, .card { padding: 16px; }
+      .card { min-height: 190px; display: flex; flex-direction: column; justify-content: space-between; gap: 16px; }
+      .label { display: block; color: var(--muted); font-size: 12px; font-weight: 760; text-transform: uppercase; }
+      .value { display: block; margin-top: 7px; font-size: 17px; font-weight: 850; overflow-wrap: anywhere; }
+      .value.good { color: var(--green); }
+      .value.pending { color: var(--gold); }
+      .steps { counter-reset: step; display: grid; gap: 12px; margin-top: 16px; }
+      .step { border: 1px solid var(--line); border-radius: 8px; background: #fff; padding: 16px; }
+      .step::before { counter-increment: step; content: counter(step); display: inline-flex; width: 28px; height: 28px; align-items: center; justify-content: center; margin-bottom: 10px; border-radius: 8px; background: var(--red); color: #fff; font-weight: 850; }
+      .rows { display: grid; gap: 10px; }
+      .row { display: grid; grid-template-columns: minmax(120px, 0.8fr) minmax(0, 1.35fr); gap: 14px; border-top: 1px solid var(--line); padding-top: 10px; }
+      .row strong { min-width: 0; overflow-wrap: anywhere; text-align: right; }
+      code { padding: 2px 5px; border-radius: 6px; background: var(--soft); overflow-wrap: anywhere; }
+      footer { border-top: 1px solid var(--line); padding: 24px 0; color: var(--muted); font-size: 14px; }
+      @media (max-width: 900px) {
+        nav { align-items: flex-start; flex-direction: column; padding: 14px 0; }
+        .facts, .grid { grid-template-columns: 1fr; }
+        .row { grid-template-columns: 1fr; }
+        .row strong { text-align: left; }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav class="shell" aria-label="Primary">
+        <a class="brand" href="index.html" aria-label="GCA home">
+          <img src="assets/gca-logo.svg" alt="GCA logo">
+          <span>GCA</span>
+        </a>
+        <div class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="members.html">Members</a>
+          <a href="gca/member-access/">Member Access</a>
+          <a href="credits.html">Credits</a>
+          <a href="member-benefit.html">Benefit</a>
+          <a href="support.html">Support</a>
+          <a href="zh-members.html">中文会员规则</a>
+        </div>
+      </nav>
+    </header>
+
+    <main class="shell">
+      <section aria-labelledby="title">
+        <p class="eyebrow">Readable Member Rules</p>
+        <h1 id="title">GCA Member Program</h1>
+        <p class="lead">The GCA member program connects registered accounts, read-only wallet balance verification, utility credits, and GCA Member review.</p>
+        <p class="lead">The current rule: buying and holding 1,000,000 GCA for one month is the eligibility path for GCA Member review, and approved members can enter a one-time 10,000 GCA member benefit review.</p>
+        <div class="actions">
+          <a class="button primary" href="gca/member-access/">Open Member Access</a>
+          <a class="button primary" href="register.html">Email Register</a>
+          <a class="button secondary" href="zh-members.html">中文会员规则</a>
+          <a class="button secondary" href="zh-member-checklist.html">中文审核资料清单</a>
+          <a class="button" href="member-benefit.html">Member Benefit</a>
+          <a class="button" href="support.html">Support</a>
+        </div>
+      </section>
+
+      <section class="facts" aria-label="Member program facts">
+        <div class="fact"><span class="label">Holder Bonus</span><span class="value good">10,000 GCA minimum</span></div>
+        <div class="fact"><span class="label">Utility Credits</span><span class="value good">100 credits review</span></div>
+        <div class="fact"><span class="label">GCA Member</span><span class="value good">1,000,000 GCA</span></div>
+        <div class="fact"><span class="label">Holding Period</span><span class="value">30 consecutive days</span></div>
+        <div class="fact"><span class="label">Benefit Review</span><span class="value">10,000 GCA</span></div>
+        <div class="fact"><span class="label">Contract</span><span class="value">0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6</span></div>
+      </section>
+
+      <section class="section grid" aria-label="Member program tiers">
+        <div class="card">
+          <div>
+            <h3>Holder Bonus</h3>
+            <p class="note">A registered user with one verified wallet holding at least 10,000 GCA can be reviewed for one 100 Web3 Radar utility credits ledger entry.</p>
+          </div>
+          <div class="link-row">
+            <a class="text-link" href="credits.html">Credits Catalog</a>
+            <a class="text-link" href="gca/member-access/">Member Access</a>
+          </div>
+        </div>
+        <div class="card">
+          <div>
+            <h3>GCA Member</h3>
+            <p class="note">A registered user can enter GCA Member review after buying and continuously holding at least 1,000,000 GCA for 30 consecutive days.</p>
+          </div>
+          <div class="link-row">
+            <a class="text-link" href="member-benefit.html">Member Benefit</a>
+            <a class="text-link" href="member-ledger.html">Member Ledger</a>
+          </div>
+        </div>
+        <div class="card">
+          <div>
+            <h3>Manual Benefit Review</h3>
+            <p class="note">The 10,000 GCA member benefit is reviewed by support and processed from project or owner-held reserve. It is not minting and is not self-service.</p>
+          </div>
+          <div class="link-row">
+            <a class="text-link" href="member-benefit-transfer.html">Transfer Runbook</a>
+            <a class="text-link" href="support.html">Support</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="flowTitle">
+        <p class="eyebrow">Flow</p>
+        <h2 id="flowTitle">How The Program Works</h2>
+        <div class="steps">
+          <div class="step">
+            <h3>Register an email account</h3>
+            <p class="note">Use the email registration page or member access page. Do not submit private keys, seed phrases, wallet passwords, exchange API secrets, or withdrawal permissions.</p>
+          </div>
+          <div class="step">
+            <h3>Verify one wallet by read-only balance check</h3>
+            <p class="note">The member access page checks GCA balance with a read-only ERC-20 balanceOf call on Base Mainnet. It does not require a transaction or signature.</p>
+          </div>
+          <div class="step">
+            <h3>Enter the correct review lane</h3>
+            <p class="note">10,000 GCA can enter holder bonus review. 1,000,000 GCA held for 30 consecutive days can enter GCA Member and member benefit review.</p>
+          </div>
+          <div class="step">
+            <h3>Wait for support review</h3>
+            <p class="note">Support checks account uniqueness, wallet evidence, holding period, and member benefit evidence before any manual reserve-wallet transfer is processed.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="referencesTitle">
+        <p class="eyebrow">References</p>
+        <h2 id="referencesTitle">Readable Member References</h2>
+        <div class="rows">
+          <div class="row"><span>Member access page</span><strong><a href="gca/member-access/">/gca/member-access/</a></strong></div>
+          <div class="row"><span>Member benefit rules</span><strong><a href="member-benefit.html">member-benefit.html</a></strong></div>
+          <div class="row"><span>Credits catalog</span><strong><a href="credits.html">credits.html</a></strong></div>
+          <div class="row"><span>Member ledger explanation</span><strong><a href="member-ledger.html">member-ledger.html</a></strong></div>
+          <div class="row"><span>Chinese checklist</span><strong><a href="zh-member-checklist.html">zh-member-checklist.html</a></strong></div>
+          <div class="row"><span>Support</span><strong><a href="support.html">support.html</a></strong></div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="shell">GCA member program. One registered user, one verified wallet, read-only balance verification, and support review before member benefit processing.</div>
+    </footer>
+  </body>
+</html>

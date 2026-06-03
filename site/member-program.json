@@ -1,5 +1,6 @@
 {
   "schema": "https://gcagochina.com/member-program.json",
+  "pageUrl": "https://gcagochina.com/member-program.html",
   "lastUpdated": "2026-05-14",
   "status": "rules-published-public-claim-not-connected",
   "network": "Base Mainnet",
@@ -10,6 +11,7 @@
   },
   "publicPages": {
     "members": "https://gcagochina.com/members.html",
+    "memberProgram": "https://gcagochina.com/member-program.html",
     "memberAccessPreview": "https://gcagochina.com/gca/member-access/",
     "memberLedger": "https://gcagochina.com/member-ledger.html",
     "memberLedgerSchema": "https://gcagochina.com/member-ledger.json",

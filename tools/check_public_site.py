@@ -31,6 +31,8 @@ UNSUBSCRIBE_PAGE_URL = "https://gcagochina.com/unsubscribe.html"
 BUY_PAGE_URL = "https://gcagochina.com/buy.html"
 STATUS_PAGE_URL = "https://gcagochina.com/status.html"
 ABOUT_PAGE_URL = "https://gcagochina.com/about.html"
+PROJECT_PROFILE_PAGE_URL = "https://gcagochina.com/project-profile.html"
+TOKENLIST_PAGE_URL = "https://gcagochina.com/tokenlist.html"
 ACTION_PLAN_PAGE_URL = "https://gcagochina.com/action-plan.html"
 TEAM_PAGE_URL = "https://gcagochina.com/team.html"
 TIM_CHEN_PROFILE_PAGE_URL = "https://gcagochina.com/tim-chen.html"
@@ -77,6 +79,7 @@ RISK_PAGE_URL = "https://gcagochina.com/risk.html"
 FAQ_PAGE_URL = "https://gcagochina.com/faq.html"
 WHITEPAPER_PAGE_URL = "https://gcagochina.com/whitepaper.html"
 MEMBER_PROGRAM_URL = "https://gcagochina.com/member-program.json"
+MEMBER_PROGRAM_PAGE_URL = "https://gcagochina.com/member-program.html"
 MEMBER_LEDGER_PAGE_URL = "https://gcagochina.com/member-ledger.html"
 MEMBER_LEDGER_URL = "https://gcagochina.com/member-ledger.json"
 MEMBER_ACCESS_PAGE_URL = "https://gcagochina.com/gca/member-access/"
@@ -8401,6 +8404,93 @@ def validate_brand_kit_page(text: str) -> None:
     assert_current_pool_text(text, label)
 
 
+def validate_project_profile_page(text: str) -> None:
+    label = "/project-profile.html"
+    assert_social_preview_meta(text, label, PROJECT_PROFILE_PAGE_URL)
+    for expected in (
+        "GCA Project Profile",
+        "Readable Project Profile",
+        "Go China Access",
+        "Base Mainnet",
+        "8453",
+        MAINNET_ADDRESS,
+        "1,000,000,000 GCA",
+        "No post-deploy mint",
+        "support@gcagochina.com",
+        "Tim Chen",
+        "Project Profile",
+        "Token List Guide",
+        "Member Program",
+        "Reviewer Kit",
+        "Listing Kit",
+        "Data Room",
+    ):
+        assert_contains(text, expected, label)
+    assert_current_pool_text(text, label)
+    assert_no_forbidden_public_claims(text, label)
+    for forbidden in ('href="project.json"', 'href="tokenlist.json"', 'href="member-program.json"'):
+        assert_not_contains(text, forbidden, label)
+
+
+def validate_tokenlist_page(text: str) -> None:
+    label = "/tokenlist.html"
+    assert_social_preview_meta(text, label, TOKENLIST_PAGE_URL)
+    for expected in (
+        "GCA Token List Guide",
+        "Readable Token Metadata",
+        "Wallet Import",
+        "Manual Wallet Fields",
+        "Base Mainnet",
+        "8453",
+        MAINNET_ADDRESS,
+        "Token symbol",
+        "Decimals",
+        "assets/gca-logo.png",
+        "Official Market Route",
+        "Token Safety",
+        "Platform Metadata",
+        "Data Room",
+    ):
+        assert_contains(text, expected, label)
+    assert_current_pool_text(text, label)
+    assert_no_forbidden_public_claims(text, label)
+    for forbidden in ('href="tokenlist.json"', 'href="project.json"', 'href="member-program.json"'):
+        assert_not_contains(text, forbidden, label)
+
+
+def validate_member_program_page(text: str) -> None:
+    label = "/member-program.html"
+    assert_social_preview_meta(text, label, MEMBER_PROGRAM_PAGE_URL)
+    for expected in (
+        "GCA Member Program",
+        "Readable Member Rules",
+        "Holder Bonus",
+        "10,000 GCA",
+        "100 Web3 Radar utility credits",
+        "GCA Member",
+        "1,000,000 GCA",
+        "30 consecutive days",
+        "manual reserve-wallet transfer",
+        "read-only ERC-20 balanceOf call",
+        "Open Member Access",
+        "Email Register",
+        "中文会员规则",
+        "Member Benefit",
+        "Support",
+    ):
+        assert_contains(text, expected, label)
+    assert_contains(text, MAINNET_ADDRESS, label)
+    assert_no_forbidden_public_claims(text, label)
+    for forbidden in (
+        'href="member-program.json"',
+        'href="member-ledger.json"',
+        'href="member-benefit.json"',
+        'href="support.json"',
+        "Platform-Only Evidence Path",
+    ):
+        assert_not_contains(text, forbidden, label)
+
+
 def validate_project_json(text: str) -> None:
     label = "/project.json"
     payload = load_json(text, label)
@@ -11809,6 +11899,7 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/member-access-brief-001.html",
         "https://gcagochina.com/member-access-brief-001.json",
         "https://gcagochina.com/gca/member-access/",
+        "https://gcagochina.com/member-program.html",
         "https://gcagochina.com/member-program.json",
         "https://gcagochina.com/member-ledger.html",
         "https://gcagochina.com/member-ledger.json",
@@ -11846,7 +11937,9 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/supply.json",
         "https://gcagochina.com/listing-readiness.html",
         "https://gcagochina.com/listing-readiness.json",
+        "https://gcagochina.com/project-profile.html",
         "https://gcagochina.com/project.json",
+        "https://gcagochina.com/tokenlist.html",
         "https://gcagochina.com/tokenlist.json",
         "https://gcagochina.com/.well-known/gca-token.json",
         "https://gcagochina.com/.well-known/wallet-security.json",
@@ -11974,6 +12067,7 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /member-benefit-transfer.json", label)
     assert_contains(text, "Allow: /operator.html", label)
     assert_contains(text, "Allow: /members.html", label)
+    assert_contains(text, "Allow: /member-program.html", label)
     assert_contains(text, "Allow: /member-program.json", label)
     assert_contains(text, "Allow: /gca/member-access/", label)
     assert_contains(text, "Allow: /support.html", label)
@@ -12002,7 +12096,9 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /credits.json", label)
     assert_contains(text, "Allow: /release-gates.html", label)
     assert_contains(text, "Allow: /release-gates.json", label)
+    assert_contains(text, "Allow: /project-profile.html", label)
     assert_contains(text, "Allow: /project.json", label)
+    assert_contains(text, "Allow: /tokenlist.html", label)
     assert_contains(text, "Allow: /tokenlist.json", label)
     assert_contains(text, "Allow: /.well-known/gca-token.json", label)
     assert_contains(text, "Allow: /.well-known/wallet-security.json", label)
@@ -12058,6 +12154,8 @@ CHECKS: list[EndpointCheck] = [
     ("/status.html", validate_status_page),
     ("/listing-kit.html", validate_listing_kit_page),
     ("/whitepaper.html", validate_whitepaper_page),
+    ("/project-profile.html", validate_project_profile_page),
+    ("/tokenlist.html", validate_tokenlist_page),
     ("/buy.html", validate_buy_page),
     ("/markets.html", validate_markets),
     ("/security.html", validate_security_page),
@@ -12101,6 +12199,7 @@ CHECKS: list[EndpointCheck] = [
     ("/supply.json", validate_supply_json),
     ("/members.html", validate_members),
     ("/gca/member-access/", validate_member_access_page),
+    ("/member-program.html", validate_member_program_page),
     ("/member-program.json", validate_member_program_json),
     ("/member-ledger.html", validate_member_ledger_page),
     ("/member-ledger.json", validate_member_ledger_json),

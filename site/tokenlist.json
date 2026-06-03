@@ -23,6 +23,7 @@
       "extensions": {
         "projectName": "Go China Access",
         "website": "https://gcagochina.com/",
+        "projectProfilePage": "https://gcagochina.com/project-profile.html",
         "verify": "https://gcagochina.com/verify.html",
         "statusPage": "https://gcagochina.com/status.html",
         "reviewerKitPage": "https://gcagochina.com/reviewer-kit.html",
@@ -62,6 +63,7 @@
         "externalReviewStatus": "https://gcagochina.com/external-reviews.json",
         "listingReadinessPage": "https://gcagochina.com/listing-readiness.html",
         "listingReadiness": "https://gcagochina.com/listing-readiness.json",
+        "tokenListPage": "https://gcagochina.com/tokenlist.html",
         "projectJson": "https://gcagochina.com/project.json",
         "wellKnownTokenIdentity": "https://gcagochina.com/.well-known/gca-token.json",
         "walletSecurityProfile": "https://gcagochina.com/.well-known/wallet-security.json",
@@ -94,6 +96,7 @@
                 "liquidityStatement": "https://gcagochina.com/liquidity.json",
                 "riskPage": "https://gcagochina.com/risk.html",
                 "faq": "https://gcagochina.com/faq.html",
+        "memberProgramRulesPage": "https://gcagochina.com/member-program.html",
         "memberProgramRules": "https://gcagochina.com/member-program.json",
         "memberLedgerPage": "https://gcagochina.com/member-ledger.html",
         "memberLedgerSchema": "https://gcagochina.com/member-ledger.json",
