@@ -10210,6 +10210,8 @@ def validate_listing_readiness_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != LISTING_READINESS_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
+    if payload.get("lastUpdated") != "2026-06-04":
+        raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("status") != "not-ready":
         raise SiteCheckError(f"{label}: wrong status")
     if payload.get("chainId") != 8453:
@@ -10234,6 +10236,14 @@ def validate_listing_readiness_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong externalReviewStatusPage")
     if payload.get("canonicalLinks", {}).get("externalReviewStatus") != EXTERNAL_REVIEW_URL:
         raise SiteCheckError(f"{label}: wrong externalReviewStatus")
+    if payload.get("canonicalLinks", {}).get("baseScanHandoffPage") != BASESCAN_HANDOFF_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong baseScanHandoffPage")
+    if payload.get("canonicalLinks", {}).get("baseScanHandoff") != BASESCAN_HANDOFF_URL:
+        raise SiteCheckError(f"{label}: wrong baseScanHandoff")
+    if payload.get("canonicalLinks", {}).get("dailyStatusPage") != DAILY_STATUS_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong dailyStatusPage")
+    if payload.get("canonicalLinks", {}).get("dailyStatus") != DAILY_STATUS_URL:
+        raise SiteCheckError(f"{label}: wrong dailyStatus")
     if payload.get("canonicalLinks", {}).get("onchainProofsPage") != ONCHAIN_PROOFS_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong onchainProofsPage")
     if payload.get("canonicalLinks", {}).get("onchainProofs") != ONCHAIN_PROOFS_URL:
@@ -10247,10 +10257,18 @@ def validate_listing_readiness_json(text: str) -> None:
     if not any(check.get("id") == "no-artificial-activity-policy" for check in checks):
         raise SiteCheckError(f"{label}: missing artificial activity policy")
     base_scan_profile = next((check for check in checks if check.get("id") == "basescan-token-profile"), {})
-    if base_scan_profile.get("lastCheckedDate") != "2026-05-30":
+    if base_scan_profile.get("lastCheckedDate") != "2026-06-04":
         raise SiteCheckError(f"{label}: wrong BaseScan profile last checked date")
+    if base_scan_profile.get("finalSubmissionPackageGeneratedAt") != "2026-06-04T08:49:54Z":
+        raise SiteCheckError(f"{label}: wrong BaseScan final package timestamp")
+    if base_scan_profile.get("dailyStatusGeneratedAt") != "2026-06-04T08:59:57Z":
+        raise SiteCheckError(f"{label}: wrong daily status timestamp")
     if "returned again by BaseScan as information-insufficient on 2026-05-23" not in base_scan_profile.get("evidence", ""):
         raise SiteCheckError(f"{label}: missing BaseScan profile last checked evidence")
+    if "2026-06-04T08:49:54Z" not in base_scan_profile.get("evidence", ""):
+        raise SiteCheckError(f"{label}: missing BaseScan final package evidence")
+    if "2026-06-04T08:59:57Z" not in base_scan_profile.get("evidence", ""):
+        raise SiteCheckError(f"{label}: missing daily status evidence")
     if "domain email setup plan" not in base_scan_profile.get("evidence", ""):
         raise SiteCheckError(f"{label}: missing domain email setup evidence")
     if "public evidence checklist" not in base_scan_profile.get("evidence", ""):
@@ -11883,9 +11901,11 @@ def validate_listing_readiness_page(text: str) -> None:
     assert_contains(text, "DEX metadata and wallet identity review", label)
     assert_contains(text, "CoinGecko tracked listing request", label)
     assert_contains(text, "CoinMarketCap tracked listing request", label)
-    assert_contains(text, "Returned again 2026-05-23; Handoff and Chinese owner flow ready for one support@gcagochina.com submission", label)
+    assert_contains(text, "Returned again 2026-05-23; final package refreshed 2026-06-04; Handoff and Chinese owner flow ready for one support@gcagochina.com submission", label)
     assert_contains(text, "Tim Chen profile, domain email plan, evidence checklist, activation evidence packet, BaseScan Handoff, Chinese owner flow, and support@gcagochina.com evidence are ready", label)
     assert_contains(text, "Plan, public evidence checklist, and packet path published; mailbox active and evidence retained privately", label)
+    assert_contains(text, "Snapshot refreshed 2026-06-04T08:59:57Z", label)
+    assert_contains(text, "Final submission package generated 2026-06-04T08:49:54Z", label)
     assert_contains(text, "Domain Email Evidence Checklist", label)
     assert_contains(text, "domain-email-evidence.html", label)
     assert_contains(text, "Tim Chen Professional Profile", label)
