@@ -209,6 +209,18 @@ class LaunchPackageTests(unittest.TestCase):
 
         self.assertEqual([], offenders)
 
+    def test_public_html_pages_do_not_use_stale_member_access_labels(self):
+        offenders = []
+        stale_labels = ("中文用户中心预览", "Balance Preview")
+        for path in (ROOT / "site").rglob("*.html"):
+            rel = str(path.relative_to(ROOT / "site"))
+            page = path.read_text()
+            for label in stale_labels:
+                if label in page:
+                    offenders.append(f"{rel}: {label}")
+
+        self.assertEqual([], offenders)
+
     def test_public_site_health_check_script_matches_canonical_identity(self):
         script_path = ROOT / "tools" / "check_public_site.py"
         script = script_path.read_text()
