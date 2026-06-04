@@ -11499,7 +11499,7 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != EXTERNAL_REVIEW_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
-    if payload.get("lastUpdated") not in {"2026-05-25", "2026-05-30", "2026-06-02"}:
+    if payload.get("lastUpdated") not in {"2026-05-25", "2026-05-30", "2026-06-02", "2026-06-04"}:
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("status") != "external-review-status-active":
         raise SiteCheckError(f"{label}: wrong status")
@@ -11521,6 +11521,10 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong trustCenterPage")
     if links.get("trustCenter") != TRUST_CENTER_URL:
         raise SiteCheckError(f"{label}: wrong trustCenter")
+    if links.get("dailyStatusPage") != DAILY_STATUS_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong dailyStatusPage")
+    if links.get("dailyStatus") != DAILY_STATUS_URL:
+        raise SiteCheckError(f"{label}: wrong dailyStatus")
     if links.get("platformRepliesPage") != PLATFORM_REPLIES_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong platformRepliesPage")
     if links.get("platformReplies") != PLATFORM_REPLIES_URL:
@@ -11610,7 +11614,7 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong BaseScan source status")
     if base_scan_profile.get("status") != "ready-for-owner-resubmission":
         raise SiteCheckError(f"{label}: wrong BaseScan profile status")
-    if base_scan_profile.get("lastCheckedDate") not in {"2026-05-30", "2026-06-02"}:
+    if base_scan_profile.get("lastCheckedDate") not in {"2026-05-30", "2026-06-02", "2026-06-04"}:
         raise SiteCheckError(f"{label}: wrong BaseScan profile last checked date")
     if "Tim Chen official-domain professional profile evidence is published" not in base_scan_profile.get("lastCheckedResult", ""):
         raise SiteCheckError(f"{label}: missing BaseScan profile last checked result")
@@ -11635,10 +11639,18 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing BaseScan handoff result")
     if "Chinese owner submission flow" not in base_scan_profile.get("lastCheckedResult", ""):
         raise SiteCheckError(f"{label}: missing Chinese owner flow result")
+    if "2026-06-04T08:49:54Z" not in base_scan_profile.get("lastCheckedResult", ""):
+        raise SiteCheckError(f"{label}: missing final owner package timestamp")
+    if "2026-06-04T08:59:57Z" not in base_scan_profile.get("lastCheckedResult", ""):
+        raise SiteCheckError(f"{label}: missing daily status snapshot timestamp")
     if base_scan_profile.get("baseScanHandoffPage") != BASESCAN_HANDOFF_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong baseScanHandoffPage")
     if base_scan_profile.get("baseScanHandoff") != BASESCAN_HANDOFF_URL:
         raise SiteCheckError(f"{label}: wrong baseScanHandoff")
+    if base_scan_profile.get("dailyStatusPage") != DAILY_STATUS_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong dailyStatusPage")
+    if base_scan_profile.get("dailyStatus") != DAILY_STATUS_URL:
+        raise SiteCheckError(f"{label}: wrong dailyStatus")
     if base_scan_profile.get("chineseOwnerSubmissionFlow") != ZH_BASESCAN_SUBMIT_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong chineseOwnerSubmissionFlow")
     if base_scan_profile.get("platformReplyTemplate") != PLATFORM_REPLIES_PAGE_URL:
@@ -11670,6 +11682,8 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong audit status")
     if "The BaseScan domain email evidence gate is ready after the 2026-05-30 DNS snapshot: MX/SPF/DKIM/DMARC present." not in payload.get("safePublicClaims", []):
         raise SiteCheckError(f"{label}: missing domain email safe claim")
+    if "The latest BaseScan final submission package was generated on 2026-06-04T08:49:54Z, and the daily public status snapshot confirms readyForBaseScanResubmission is true." not in payload.get("safePublicClaims", []):
+        raise SiteCheckError(f"{label}: missing final package safe claim")
     if "No third-party audit has been completed." not in payload.get("safePublicClaims", []):
         raise SiteCheckError(f"{label}: missing audit safe claim")
     assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
@@ -11685,8 +11699,10 @@ def validate_external_reviews_page(text: str) -> None:
     assert_contains(text, "External Review References", label)
     assert_no_public_data_room_terms(text, label)
     assert_contains(text, "Trust Center", label)
-    assert_contains(text, "Returned 2026-05-23; Handoff and Chinese owner flow ready for one support@gcagochina.com submission", label)
+    assert_contains(text, "Returned 2026-05-23; final package refreshed 2026-06-04 for one support@gcagochina.com submission", label)
     assert_contains(text, "Tim Chen profile, domain email plan, evidence checklist, activation evidence packet, reply template, BaseScan Handoff copy blocks, Chinese owner flow, and support@gcagochina.com evidence are ready", label)
+    assert_contains(text, "2026-06-04T08:49:54Z", label)
+    assert_contains(text, "2026-06-04T08:59:57Z", label)
     assert_contains(text, "tim-chen.html", label)
     assert_contains(text, "Domain Email Plan", label)
     assert_contains(text, "DNS Snapshot", label)
