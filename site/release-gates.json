@@ -2,7 +2,7 @@
   "schema": "https://gcagochina.com/release-gates.json",
   "pageUrl": "https://gcagochina.com/release-gates.html",
   "status": "public-release-gates-account-ledger-path-live",
-  "lastUpdated": "2026-05-20",
+  "lastUpdated": "2026-06-04",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "title": "GCA Product Release Gates",
@@ -14,6 +14,10 @@
     "gcaMemberSelfServiceClaimable": true,
     "liveTradingEnabled": false,
     "baseScanTokenProfile": "ready-for-owner-resubmission",
+    "baseScanTokenProfileLastCheckedDate": "2026-06-04",
+    "baseScanFinalSubmissionPackageGeneratedAt": "2026-06-04T08:49:54Z",
+    "dailyStatusGeneratedAt": "2026-06-04T08:59:57Z",
+    "baseScanResubmissionReady": true,
     "thirdPartyAudit": "not-completed",
     "liquidityDepth": "starter-depth-only",
     "accessPortal": "live-account-portal",
@@ -129,6 +133,19 @@
       ]
     },
     {
+      "id": "basescan-token-profile",
+      "label": "BaseScan token profile",
+      "status": "ready-for-owner-resubmission",
+      "requiredBefore": "BaseScan token profile publication claim",
+      "publicReference": "https://gcagochina.com/basescan-handoff.html",
+      "finalSubmissionPackageGeneratedAt": "2026-06-04T08:49:54Z",
+      "dailyStatusGeneratedAt": "2026-06-04T08:59:57Z",
+      "blocks": [
+        "BaseScan token profile approval claim",
+        "explorer profile publication claim"
+      ]
+    },
+    {
       "id": "review-queue-contract",
       "status": "published-contract-only",
       "requiredBefore": "public credit or member status approval",
@@ -161,7 +178,8 @@
       "GCA has a live controlled account UI, read-only wallet verification, and eligible D1 ledger records for 100 credits / GCA Member review.",
       "The 10,000 GCA member benefit requires 1,000,000 GCA, 30-day holding evidence, member ledger review, and manual reserve-wallet processing.",
       "Any future trading-related feature must pass risk-control review and simulation or testnet first.",
-      "GCA has published a public access operations runbook for manual review handling."
+      "GCA has published a public access operations runbook for manual review handling.",
+      "The latest BaseScan owner submission package was generated on 2026-06-04T08:49:54Z, and the daily public status snapshot was refreshed on 2026-06-04T08:59:57Z."
     ],
     "doNotClaim": [
       "credits are cash, income, reimbursement, trading permission, or transferable value",
@@ -197,6 +215,15 @@
     "reviewQueue": "https://gcagochina.com/review-queue.json",
     "operationsRunbookPage": "https://gcagochina.com/operations.html",
     "operationsRunbook": "https://gcagochina.com/operations.json",
-    "memberAccessPage": "https://gcagochina.com/gca/member-access/"
+    "memberAccessPage": "https://gcagochina.com/gca/member-access/",
+    "baseScanHandoffPage": "https://gcagochina.com/basescan-handoff.html",
+    "baseScanHandoff": "https://gcagochina.com/basescan-handoff.json",
+    "dailyStatusPage": "https://gcagochina.com/daily-status.html",
+    "dailyStatus": "https://gcagochina.com/daily-status.json",
+    "reviewerKitPage": "https://gcagochina.com/reviewer-kit.html",
+    "reviewerKit": "https://gcagochina.com/reviewer-kit.json",
+    "trustCenterPage": "https://gcagochina.com/trust.html",
+    "trustCenter": "https://gcagochina.com/trust.json",
+    "zhBaseScanSubmit": "https://gcagochina.com/zh-basescan-submit.html"
   }
 }

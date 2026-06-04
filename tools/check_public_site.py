@@ -499,7 +499,9 @@ def validate_start_page(text: str) -> None:
 def validate_verify(text: str) -> None:
     label = "/verify.html"
     assert_contains(text, "Verify GCA", label)
-    assert_contains(text, "Returned 2026-05-23; Handoff and Chinese owner flow ready for one support@gcagochina.com submission", label)
+    assert_contains(text, "Returned 2026-05-23; final package refreshed 2026-06-04; Handoff and Chinese owner flow ready for one support@gcagochina.com submission", label)
+    assert_contains(text, "Latest reviewer package", label)
+    assert_contains(text, "Final package 2026-06-04T08:49:54Z; daily status 2026-06-04T08:59:57Z", label)
     assert_contains(text, "well-known token identity", label)
     assert_contains(text, "Wallet Warning", label)
     assert_contains(text, "External Reviews", label)
@@ -3122,7 +3124,7 @@ def validate_zh_release_gates_page(text: str) -> None:
     assert_social_preview_meta(text, label, ZH_RELEASE_GATES_PAGE_URL)
     for expected in (
         "GCA 中文上线门槛",
-        "中文上线门槛 / 2026-05-20",
+        "中文上线门槛 / 2026-06-04",
         "邮箱注册 API 已上线",
         "Cloudflare Workers + D1 已上线",
         "受控 HTTPS 账户 UI",
@@ -3133,6 +3135,10 @@ def validate_zh_release_gates_page(text: str) -> None:
         "GCA Member",
         "10,000 GCA 会员权益",
         "符合条件写入账本，会员权益仍需人工审核",
+        "BaseScan 证据包",
+        "Final package 2026-06-04T08:49:54Z",
+        "daily status 2026-06-04T08:59:57Z",
+        "不发起交易或签名",
         "支持审核队列",
         "风控",
         "模拟盘或测试环境",
@@ -3154,6 +3160,9 @@ def validate_zh_release_gates_page(text: str) -> None:
         "zh-wallet-verify.html",
         "中文会员审核资料清单",
         "zh-member-checklist.html",
+        "zh-basescan-submit.html",
+        "basescan-handoff.html",
+        "daily-status.html",
         "zh-roadmap.html",
         "zh-status.html",
         "privacy.html",
@@ -3172,6 +3181,8 @@ def validate_zh_release_gates_page(text: str) -> None:
         OFFICIAL_POOL_ADDRESS,
     ):
         assert_contains(text, expected, label)
+    assert_not_contains(text, "不能说已经上线完整余额验证 UI", label)
+    assert_not_contains(text, "只能说计划使用", label)
     for forbidden in ("Platform-Only Evidence Path", "Reviewer Data Room", "平台审核资料", 'href="data.html"'):
         assert_not_contains(text, forbidden, label)
     assert_current_pool_text(text, label)
@@ -4026,6 +4037,9 @@ def validate_token_safety_page(text: str) -> None:
     assert_no_public_data_room_terms(text, label)
     assert_contains(text, "Verified Positive Controls", label)
     assert_contains(text, "Pending Or Not Claimed", label)
+    assert_contains(text, "Returned 2026-05-23; final package refreshed 2026-06-04; Handoff and Chinese owner flow ready for one support@gcagochina.com submission", label)
+    assert_contains(text, "Latest reviewer package", label)
+    assert_contains(text, "Final package 2026-06-04T08:49:54Z; daily status 2026-06-04T08:59:57Z", label)
     assert_contains(text, "No mint function", label)
     assert_contains(text, "No third-party audit", label)
     assert_contains(text, "permanent warning-free status", label)
@@ -4771,7 +4785,9 @@ def validate_roadmap_page(text: str) -> None:
     assert_contains(text, "GCA Member records", label)
     assert_contains(text, "benefit remains manual review", label)
     assert_contains(text, "External Dependencies", label)
-    assert_contains(text, "Returned 2026-05-23; Handoff and Chinese owner flow ready for one support@gcagochina.com submission", label)
+    assert_contains(text, "Returned 2026-05-23; final package refreshed 2026-06-04; Handoff and Chinese owner flow ready for one support@gcagochina.com submission", label)
+    assert_contains(text, "Latest reviewer package", label)
+    assert_contains(text, "Final package 2026-06-04T08:49:54Z; daily status 2026-06-04T08:59:57Z", label)
     assert_contains(text, "Owner observed no warning visible", label)
     assert_contains(text, "Pending independent report", label)
     assert_contains(text, "Account and Ledger", label)
@@ -8020,7 +8036,11 @@ def validate_release_gates_page(text: str) -> None:
     assert_contains(text, "support review queue", label)
     assert_contains(text, "simulation or testnet first", label)
     assert_contains(text, "BaseScan token profile publication", label)
-    assert_contains(text, "Returned 2026-05-23; Handoff and Chinese owner flow ready for one support@gcagochina.com submission", label)
+    assert_contains(text, "Returned 2026-05-23; final package refreshed 2026-06-04; Handoff and Chinese owner flow ready for one support@gcagochina.com submission", label)
+    assert_contains(text, "Latest reviewer package", label)
+    assert_contains(text, "Final package 2026-06-04T08:49:54Z; daily status 2026-06-04T08:59:57Z", label)
+    assert_contains(text, "basescan-handoff.html", label)
+    assert_contains(text, "daily-status.html", label)
     assert_contains(text, "no third-party audit", label)
     assert_contains(text, "No custody", label)
     assert_contains(text, "no withdrawal permission", label)
@@ -8045,6 +8065,8 @@ def validate_release_gates_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong pageUrl")
     if payload.get("status") != "public-release-gates-account-ledger-path-live":
         raise SiteCheckError(f"{label}: wrong status")
+    if payload.get("lastUpdated") != "2026-06-04":
+        raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
     if payload.get("contractAddress") != MAINNET_ADDRESS:
@@ -8060,6 +8082,14 @@ def validate_release_gates_json(text: str) -> None:
         raise SiteCheckError(f"{label}: liveTradingEnabled must be false")
     if state.get("baseScanTokenProfile") != "ready-for-owner-resubmission":
         raise SiteCheckError(f"{label}: wrong BaseScan state")
+    if state.get("baseScanTokenProfileLastCheckedDate") != "2026-06-04":
+        raise SiteCheckError(f"{label}: wrong BaseScan last checked date")
+    if state.get("baseScanFinalSubmissionPackageGeneratedAt") != "2026-06-04T08:49:54Z":
+        raise SiteCheckError(f"{label}: wrong BaseScan final package timestamp")
+    if state.get("dailyStatusGeneratedAt") != "2026-06-04T08:59:57Z":
+        raise SiteCheckError(f"{label}: wrong daily status timestamp")
+    if state.get("baseScanResubmissionReady") is not True:
+        raise SiteCheckError(f"{label}: BaseScan resubmission should be ready")
     if state.get("thirdPartyAudit") != "not-completed":
         raise SiteCheckError(f"{label}: wrong audit state")
     for gate in (
@@ -8074,9 +8104,17 @@ def validate_release_gates_json(text: str) -> None:
         "support-review-queue",
         "risk-control-review",
         "simulation-first",
+        "basescan-token-profile",
     ):
         if gate not in gate_ids:
             raise SiteCheckError(f"{label}: missing gate {gate}")
+    base_scan_gate = next((item for item in payload.get("releaseGates", []) if item.get("id") == "basescan-token-profile"), {})
+    if base_scan_gate.get("status") != "ready-for-owner-resubmission":
+        raise SiteCheckError(f"{label}: wrong BaseScan release gate status")
+    if base_scan_gate.get("finalSubmissionPackageGeneratedAt") != "2026-06-04T08:49:54Z":
+        raise SiteCheckError(f"{label}: wrong BaseScan release gate final package timestamp")
+    if base_scan_gate.get("dailyStatusGeneratedAt") != "2026-06-04T08:59:57Z":
+        raise SiteCheckError(f"{label}: wrong BaseScan release gate daily status timestamp")
     for item in (
         "read-only GCA balance verification",
         "credit ledger record",
@@ -8128,8 +8166,28 @@ def validate_release_gates_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong utilityJson")
     if links.get("memberLedger") != MEMBER_LEDGER_URL:
         raise SiteCheckError(f"{label}: wrong memberLedger")
+    if links.get("baseScanHandoffPage") != BASESCAN_HANDOFF_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong baseScanHandoffPage")
+    if links.get("baseScanHandoff") != BASESCAN_HANDOFF_URL:
+        raise SiteCheckError(f"{label}: wrong baseScanHandoff")
+    if links.get("dailyStatusPage") != DAILY_STATUS_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong dailyStatusPage")
+    if links.get("dailyStatus") != DAILY_STATUS_URL:
+        raise SiteCheckError(f"{label}: wrong dailyStatus")
+    if links.get("reviewerKitPage") != REVIEWER_KIT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong reviewerKitPage")
+    if links.get("reviewerKit") != REVIEWER_KIT_URL:
+        raise SiteCheckError(f"{label}: wrong reviewerKit")
+    if links.get("trustCenterPage") != TRUST_CENTER_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong trustCenterPage")
+    if links.get("trustCenter") != TRUST_CENTER_URL:
+        raise SiteCheckError(f"{label}: wrong trustCenter")
+    if links.get("zhBaseScanSubmit") != ZH_BASESCAN_SUBMIT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong zhBaseScanSubmit")
     if not any("live controlled account UI" in item for item in payload.get("publicClaimBoundaries", {}).get("safeClaims", [])):
         raise SiteCheckError(f"{label}: missing release-gates safe claim")
+    if "The latest BaseScan owner submission package was generated on 2026-06-04T08:49:54Z, and the daily public status snapshot was refreshed on 2026-06-04T08:59:57Z." not in payload.get("publicClaimBoundaries", {}).get("safeClaims", []):
+        raise SiteCheckError(f"{label}: missing latest BaseScan package safe claim")
     if not any("automatic or self-service transferred" in item for item in payload.get("publicClaimBoundaries", {}).get("doNotClaim", [])):
         raise SiteCheckError(f"{label}: missing member benefit boundary")
     assert_no_forbidden_public_claims(json.dumps(payload), label)
@@ -8239,7 +8297,9 @@ def validate_terms_page(text: str) -> None:
     assert_contains(text, "Account-Level Service Access", label)
     assert_contains(text, "No Custody Or Withdrawal Permission", label)
     assert_contains(text, "No Outcome Promise", label)
-    assert_contains(text, "Returned 2026-05-23; Handoff and Chinese owner flow ready for one support@gcagochina.com submission", label)
+    assert_contains(text, "Returned 2026-05-23; final package refreshed 2026-06-04; Handoff and Chinese owner flow ready for one support@gcagochina.com submission", label)
+    assert_contains(text, "Latest reviewer package", label)
+    assert_contains(text, "Final package 2026-06-04T08:49:54Z; daily status 2026-06-04T08:59:57Z", label)
     assert_contains(text, "GCA/USDT on Base Mainnet", label)
     assert_contains(text, "Privacy Notice", label)
     assert_not_contains(text, OLD_WETH_POOL_ADDRESS, label)
