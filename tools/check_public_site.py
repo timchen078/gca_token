@@ -3625,6 +3625,8 @@ def validate_data_page(text: str) -> None:
         "zh-data.html",
         "Human Listing Kit",
         "Choose the Right Link",
+        "Platform-only structured metadata",
+        "Open only when BaseScan, wallets, explorers, DEX tools, or security vendors ask for raw JSON",
         "Open Page",
         "Raw JSON for platforms only",
         "It can look like code in a browser",

@@ -190,6 +190,9 @@ class LaunchPackageTests(unittest.TestCase):
         linked_json = set(re.findall(r'href="([^"]+\.json)"', data_room))
         public_json = {str(path.relative_to(ROOT / "site")) for path in (ROOT / "site").rglob("*.json")}
 
+        self.assertIn('<details class="platform-json">', data_room)
+        self.assertIn("Platform-only structured metadata", data_room)
+        self.assertNotIn('<details class="platform-json" open>', data_room)
         self.assertEqual(set(), public_json - linked_json)
         self.assertEqual(set(), linked_json - public_json)
 
