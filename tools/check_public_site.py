@@ -2765,6 +2765,9 @@ def validate_zh_faq_page(text: str) -> None:
         "GCA/USDT",
         OFFICIAL_POOL_ADDRESS,
         "官方公开路线是 Base Mainnet 上的 GCA/USDT 池",
+        "BaseScan 源码和部署钱包验证已完成",
+        "support@gcagochina.com、Tim Chen 公开职业资料和最终提交包已准备",
+        "BaseScan 公开代币资料仍待官方发布",
         "为什么钱包里看不到 GCA",
         "为什么有些平台显示流通量是 10 亿",
         "别人买了 GCA，我的钱包会收到钱吗",
@@ -2781,9 +2784,10 @@ def validate_zh_faq_page(text: str) -> None:
         "credits 和 GCA Member 账本记录可以写入",
         "不是投资建议",
         "不要把小额测试交易说成真实市场需求",
+        "2026-06-04 最终提交包已准备",
         "不要通过人工制造交易量、自我成交或误导性宣传来改善市场数据",
         "常用官方页面",
-        "GCAgochina@outlook.com",
+        "support@gcagochina.com",
         X_URL,
         "https://t.me/gcagochinaofficial",
         "zh-cn.html",
@@ -2806,7 +2810,17 @@ def validate_zh_faq_page(text: str) -> None:
         "release-gates.html",
     ):
         assert_contains(text, expected, label)
-    for forbidden in ("Platform-Only Evidence Path", "Reviewer Data Room", "平台审核资料", 'href="data.html"', "reviewer-kit.html", "platform-replies.html"):
+    for forbidden in (
+        "Platform-Only Evidence Path",
+        "Reviewer Data Room",
+        "平台审核资料",
+        'href="data.html"',
+        "reviewer-kit.html",
+        "platform-replies.html",
+        "仍需补域名邮箱后再提交",
+        "BaseScan 公开代币资料 2026-05-23 被退回整改",
+        "GCAgochina@outlook.com",
+    ):
         assert_not_contains(text, forbidden, label)
     assert_current_pool_text(text, label)
     assert_no_forbidden_public_claims(text, label)
