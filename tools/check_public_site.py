@@ -1669,6 +1669,8 @@ def validate_basescan_handoff_page(text: str) -> None:
         "support@gcagochina.com",
         "readyForBaseScanResubmission",
         "Final Copy Package",
+        "Package generated",
+        "2026-06-04T08:49:54Z",
         "BaseScan Form Copy Blocks",
         "launch/basescan_final_submission_package.md",
         "tools/build_basescan_submission_package.py --json --require-ready",
@@ -1751,6 +1753,8 @@ def validate_basescan_handoff_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong current contact")
     if final_package.get("status") != "ready-for-owner-submission":
         raise SiteCheckError(f"{label}: wrong final package status")
+    if final_package.get("generatedAt") != "2026-06-04T08:49:54Z":
+        raise SiteCheckError(f"{label}: wrong final package generatedAt")
     if "tools/build_basescan_submission_package.py --json --require-ready" not in final_package.get("builderCommand", ""):
         raise SiteCheckError(f"{label}: missing final package builder command")
     if final_package.get("outputMarkdown") != "launch/basescan_final_submission_package.md":

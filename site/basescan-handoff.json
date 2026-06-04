@@ -2,7 +2,7 @@
   "schema": "https://gcagochina.com/basescan-handoff.json",
   "pageUrl": "https://gcagochina.com/basescan-handoff.html",
   "status": "ready-for-owner-resubmission",
-  "lastUpdated": "2026-06-02",
+  "lastUpdated": "2026-06-04",
   "projectName": "GCA",
   "conceptExpansion": "Go China Access",
   "network": "Base Mainnet",
@@ -19,6 +19,7 @@
   },
   "finalSubmissionPackage": {
     "status": "ready-for-owner-submission",
+    "generatedAt": "2026-06-04T08:49:54Z",
     "builderCommand": "python3 tools/build_basescan_submission_package.py --json --require-ready --output-json launch/basescan_final_submission_package.json --output-md launch/basescan_final_submission_package.md",
     "outputMarkdown": "launch/basescan_final_submission_package.md",
     "outputJson": "launch/basescan_final_submission_package.json",
