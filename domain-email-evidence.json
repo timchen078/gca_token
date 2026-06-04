@@ -84,7 +84,7 @@
     "support@gcagochina.com cannot send authenticated replies with the visible sender set to the domain email.",
     "MX/SPF/DKIM/DMARC DNS checks stop reporting ready.",
     "Any required evidence file is missing from the private local evidence directory.",
-    "Public support/BaseScan files still publish GCAgochina@outlook.com after the switch.",
+    "Public support/BaseScan files still publish the previous public email after the switch.",
     "BaseScan resubmission preflight reports readyForBaseScanResubmission false."
   ],
   "boundaries": {
