@@ -249,10 +249,14 @@
       }
 
       textarea {
-        min-height: 220px;
+        min-height: 180px;
         resize: vertical;
         font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
         font-size: 12px;
+      }
+
+      textarea[readonly] {
+        background: var(--soft);
       }
 
       input[type="checkbox"] {
@@ -503,6 +507,16 @@
             <p class="note zh-note">点击只验证钱包或提交账户后，这里会显示实时 D1 账本返回结果。</p>
           </div>
           <div class="list" id="ledgerFacts"></div>
+          <div class="field">
+            <label for="reviewPacket">Review Packet <span class="zh">审核资料包</span></label>
+            <textarea id="reviewPacket" readonly placeholder="Build a review packet after filling email, wallet, holding start date, and transaction hash. 填写邮箱、钱包、持有开始日期和交易哈希后生成审核资料包。"></textarea>
+          </div>
+          <div class="actions">
+            <button class="button" type="button" id="buildReviewPacket">Build Review Packet / 生成资料包</button>
+            <button class="button" type="button" id="copyReviewPacket">Copy Packet / 复制资料包</button>
+            <a class="button" id="emailReviewPacket" href="mailto:support@gcagochina.com?subject=GCA%20Member%20Access%20Review%20Packet">Email Support / 发给支持</a>
+          </div>
+          <p class="note zh-note">资料包只包含公开资料和只读验证结果。请不要在邮件或备注里加入私钥、助记词、验证码、交易所 API Secret 或提现权限。</p>
         </div>
       </section>
 
@@ -551,6 +565,7 @@
 
     <script>
       const API_BASE = "https://gca-registration-api.gcagochina.workers.dev";
+      const SUPPORT_EMAIL = "support@gcagochina.com";
       const displayName = document.getElementById("displayName");
       const email = document.getElementById("email");
       const walletAddress = document.getElementById("walletAddress");
@@ -565,6 +580,11 @@
       const submitAccess = document.getElementById("submitAccess");
       const balanceResult = document.getElementById("balanceResult");
       const ledgerFacts = document.getElementById("ledgerFacts");
+      const reviewPacket = document.getElementById("reviewPacket");
+      const buildReviewPacket = document.getElementById("buildReviewPacket");
+      const copyReviewPacket = document.getElementById("copyReviewPacket");
+      const emailReviewPacket = document.getElementById("emailReviewPacket");
+      let latestAccessResponse = null;
 
       function isWalletAddress(value) {
         return /^0x[a-fA-F0-9]{40}$/.test(String(value || "").trim());
@@ -593,6 +613,67 @@
           row.append(left, right);
           ledgerFacts.append(row);
         }
+      }
+
+      function valueOrPending(value) {
+        return value && String(value).trim() ? String(value).trim() : "Not provided / 未填写";
+      }
+
+      function latestResponseLines() {
+        if (!latestAccessResponse) {
+          return [
+            "Live verification result: Not run yet / 尚未运行",
+            "Next step: Run read-only wallet verification or submit the account form first / 请先只读验证钱包或提交账户表单"
+          ];
+        }
+        const verification = latestAccessResponse.walletVerification || {};
+        const credit = latestAccessResponse.creditLedger || {};
+        const member = latestAccessResponse.memberLedger || {};
+        return [
+          `Wallet verification status / 钱包验证状态: ${valueOrPending(verification.status)}`,
+          `GCA balance / GCA 余额: ${verification.gcaBalance ? `${verification.gcaBalance} GCA` : "Not returned / 未返回"}`,
+          `10,000 GCA holder bonus eligible / 10,000 GCA 条件: ${verification.holderBonusEligible ? "Yes / 是" : "No / 否"}`,
+          `100 credits ledger / 100 credits 账本: ${credit.creditLedgerId ? `${credit.creditAmount} credits, ${credit.status}` : "Not created / 未创建"}`,
+          `1,000,000 GCA member eligible / 100 万 GCA 会员条件: ${verification.gcaMemberEligible ? "Yes / 是" : "No / 否"}`,
+          `Holding days verified / 已验证持有天数: ${String(verification.holdingPeriodDaysVerified || 0)}`,
+          `GCA Member ledger / GCA Member 账本: ${member.memberLedgerId ? `${member.tierName}, ${member.status}` : "Not created / 未创建"}`,
+          `Member benefit status / 会员权益状态: ${member.memberBenefitClaimStatus || "Not applicable / 不适用"}`,
+          `Next step / 下一步: ${latestAccessResponse.nextStep || "Support review if needed / 如需人工处理请联系支持"}`
+        ];
+      }
+
+      function buildReviewPacketText() {
+        const lines = [
+          "GCA Member Access Review Packet / GCA 会员审核资料包",
+          `Generated at / 生成时间: ${new Date().toISOString()}`,
+          "",
+          "Account fields / 账户资料",
+          `Email / 邮箱: ${valueOrPending(email.value)}`,
+          `Display name / 显示名称: ${valueOrPending(displayName.value)}`,
+          `Base wallet address / Base 钱包地址: ${valueOrPending(walletAddress.value)}`,
+          `Holding start date / 持有开始日期: ${valueOrPending(holdingStartDate.value)}`,
+          `Public evidence transaction hash / 公开交易哈希: ${valueOrPending(evidenceTxHash.value)}`,
+          "",
+          "Requested review paths / 申请审核路径",
+          "10,000 GCA holder path for 100 Web3 Radar utility credits / 10,000 GCA 持有者 100 credits 审核",
+          "1,000,000 GCA held for 30 days for GCA Member review / 100 万枚 GCA 连续持有 30 天 GCA Member 审核",
+          "10,000 GCA member benefit review after GCA Member approval / GCA Member 通过后的一次性 10,000 GCA 会员权益审核",
+          "",
+          "Live result / 实时结果",
+          ...latestResponseLines(),
+          "",
+          "Boundaries / 安全边界",
+          "This packet contains public account and chain evidence only. It must not include private keys, seed phrases, wallet passwords, exchange API secrets, withdrawal permission, one-time codes, remote-control access, wallet approvals, wallet signatures, or requests for automatic token transfers.",
+          "本资料包只包含公开账户资料和链上证据。不要加入私钥、助记词、钱包密码、交易所 API Secret、提现权限、验证码、远程控制权限、钱包授权、钱包签名或自动转币请求。"
+        ];
+        return lines.join("\n");
+      }
+
+      function updateReviewPacket() {
+        reviewPacket.value = buildReviewPacketText();
+        const subject = encodeURIComponent("GCA Member Access Review Packet");
+        const body = encodeURIComponent(reviewPacket.value);
+        emailReviewPacket.href = `mailto:${SUPPORT_EMAIL}?subject=${subject}&body=${body}`;
       }
 
       function accessPayload() {
@@ -642,6 +723,7 @@
       }
 
       function renderAccessResponse(payload) {
+        latestAccessResponse = payload;
         const verification = payload.walletVerification || {};
         const credit = payload.creditLedger || {};
         const member = payload.memberLedger || {};
@@ -665,6 +747,7 @@
           ["Member benefit status / 会员权益状态", member.memberBenefitClaimStatus || "Not applicable / 不适用"],
           ["Automatic transfer / 自动转账", payload.boundaries && payload.boundaries.automaticTokenTransfer ? "Yes / 是" : "No / 否"]
         ]);
+        updateReviewPacket();
       }
 
       connectWallet.addEventListener("click", async () => {
@@ -695,6 +778,7 @@
         } catch (error) {
           const message = error && error.message ? error.message : "Unknown wallet or RPC error";
           renderResult(balanceResult, "warn", "Read-only check failed / 只读检查失败", message);
+          updateReviewPacket();
         } finally {
           checkBalance.disabled = false;
         }
@@ -709,10 +793,35 @@
         } catch (error) {
           const message = error && error.message ? error.message : "Account submission failed.";
           renderResult(balanceResult, "warn", "Submission failed / 提交失败", message);
+          updateReviewPacket();
         } finally {
           submitAccess.disabled = false;
         }
       });
+
+      buildReviewPacket.addEventListener("click", () => {
+        updateReviewPacket();
+        renderResult(balanceResult, "", "Review packet ready / 审核资料包已生成", "Copy the packet or email it to support@gcagochina.com if manual review is needed. 如需人工审核，可复制资料包或通过邮件发送给 support@gcagochina.com。");
+      });
+
+      copyReviewPacket.addEventListener("click", async () => {
+        updateReviewPacket();
+        try {
+          await navigator.clipboard.writeText(reviewPacket.value);
+          renderResult(balanceResult, "good", "Review packet copied / 审核资料包已复制", "Paste it into your support email or save it with your review evidence. 可粘贴到支持邮件或保存为审核资料。");
+        } catch (error) {
+          reviewPacket.focus();
+          reviewPacket.select();
+          renderResult(balanceResult, "warn", "Copy manually / 请手动复制", "Clipboard access is unavailable in this browser. Select the packet text and copy it manually. 当前浏览器不能自动复制，请手动复制文本框内容。");
+        }
+      });
+
+      [displayName, email, walletAddress, holdingStartDate, evidenceTxHash].forEach((field) => {
+        field.addEventListener("input", updateReviewPacket);
+        field.addEventListener("change", updateReviewPacket);
+      });
+
+      updateReviewPacket();
     </script>
   </body>
 </html>
