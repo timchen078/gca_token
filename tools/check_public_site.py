@@ -8564,7 +8564,7 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong contractAddress")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
-    if payload.get("lastUpdated") != "2026-05-21":
+    if payload.get("lastUpdated") != "2026-06-04":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("memberProgramRulesUrl") != MEMBER_PROGRAM_URL:
         raise SiteCheckError(f"{label}: wrong memberProgramRulesUrl")
@@ -8660,6 +8660,10 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong operationsRunbookPageUrl")
     if payload.get("operationsRunbookUrl") != OPERATIONS_URL:
         raise SiteCheckError(f"{label}: wrong operationsRunbookUrl")
+    if payload.get("dailyStatusPageUrl") != DAILY_STATUS_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong dailyStatusPageUrl")
+    if payload.get("dailyStatusUrl") != DAILY_STATUS_URL:
+        raise SiteCheckError(f"{label}: wrong dailyStatusUrl")
     if payload.get("releaseGatesPageUrl") != RELEASE_GATES_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong releaseGatesPageUrl")
     if payload.get("releaseGatesUrl") != RELEASE_GATES_URL:
@@ -8704,6 +8708,10 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong baseScanHandoff pageUrl")
     if payload.get("baseScanHandoff", {}).get("url") != BASESCAN_HANDOFF_URL:
         raise SiteCheckError(f"{label}: wrong baseScanHandoff url")
+    if payload.get("baseScanHandoff", {}).get("finalSubmissionPackageGeneratedAt") != "2026-06-04T08:49:54Z":
+        raise SiteCheckError(f"{label}: wrong baseScanHandoff finalSubmissionPackageGeneratedAt")
+    if payload.get("baseScanHandoff", {}).get("dailyStatusGeneratedAt") != "2026-06-04T08:59:57Z":
+        raise SiteCheckError(f"{label}: wrong baseScanHandoff dailyStatusGeneratedAt")
     if payload.get("platformRepliesPageUrl") != PLATFORM_REPLIES_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong platformRepliesPageUrl")
     if payload.get("platformRepliesUrl") != PLATFORM_REPLIES_URL:
@@ -8761,10 +8769,24 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong quoteAssetAddress")
     if status.get("baseScanTokenProfile") != "ready-for-owner-resubmission":
         raise SiteCheckError(f"{label}: unexpected BaseScan status")
-    if status.get("baseScanTokenProfileLastCheckedDate") != "2026-05-30":
+    if status.get("baseScanTokenProfileLastCheckedDate") != "2026-06-04":
         raise SiteCheckError(f"{label}: wrong BaseScan profile last checked date")
     if "returned the token profile update again" not in status.get("baseScanTokenProfileLastCheckedResult", ""):
         raise SiteCheckError(f"{label}: missing BaseScan profile last checked result")
+    if "2026-06-04T08:49:54Z" not in status.get("baseScanTokenProfileLastCheckedResult", ""):
+        raise SiteCheckError(f"{label}: missing BaseScan final package timestamp")
+    if "2026-06-04T08:59:57Z" not in status.get("baseScanTokenProfileLastCheckedResult", ""):
+        raise SiteCheckError(f"{label}: missing daily status timestamp")
+    if status.get("baseScanFinalSubmissionPackageGeneratedAt") != "2026-06-04T08:49:54Z":
+        raise SiteCheckError(f"{label}: wrong baseScanFinalSubmissionPackageGeneratedAt")
+    if status.get("dailyStatusPage") != DAILY_STATUS_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong platformStatus dailyStatusPage")
+    if status.get("dailyStatus") != DAILY_STATUS_URL:
+        raise SiteCheckError(f"{label}: wrong platformStatus dailyStatus")
+    if status.get("dailyStatusGeneratedAt") != "2026-06-04T08:59:57Z":
+        raise SiteCheckError(f"{label}: wrong dailyStatusGeneratedAt")
+    if status.get("externalReviewStatusLastUpdated") != "2026-06-04":
+        raise SiteCheckError(f"{label}: wrong externalReviewStatusLastUpdated")
     if status.get("domainEmailSetupPlan") != DOMAIN_EMAIL_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong domainEmailSetupPlan")
     if status.get("domainEmailSetupPlanData") != DOMAIN_EMAIL_URL:
@@ -8779,8 +8801,22 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong Tim Chen professional profile")
     if status.get("geckoTerminalTokenInfo") != "approved-2026-05-11":
         raise SiteCheckError(f"{label}: unexpected GeckoTerminal status")
-    if external_reviews.get("baseScanTokenProfileLastCheckedDate") != "2026-05-30":
+    if external_reviews.get("lastUpdated") != "2026-06-04":
+        raise SiteCheckError(f"{label}: wrong external review lastUpdated")
+    if external_reviews.get("baseScanTokenProfileLastCheckedDate") != "2026-06-04":
         raise SiteCheckError(f"{label}: wrong external review BaseScan last checked date")
+    if "2026-06-04T08:49:54Z" not in external_reviews.get("baseScanTokenProfileLastCheckedResult", ""):
+        raise SiteCheckError(f"{label}: missing external review BaseScan final package timestamp")
+    if "2026-06-04T08:59:57Z" not in external_reviews.get("baseScanTokenProfileLastCheckedResult", ""):
+        raise SiteCheckError(f"{label}: missing external review daily status timestamp")
+    if external_reviews.get("dailyStatusPage") != DAILY_STATUS_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong external review dailyStatusPage")
+    if external_reviews.get("dailyStatus") != DAILY_STATUS_URL:
+        raise SiteCheckError(f"{label}: wrong external review dailyStatus")
+    if external_reviews.get("baseScanFinalSubmissionPackageGeneratedAt") != "2026-06-04T08:49:54Z":
+        raise SiteCheckError(f"{label}: wrong external review baseScanFinalSubmissionPackageGeneratedAt")
+    if external_reviews.get("dailyStatusGeneratedAt") != "2026-06-04T08:59:57Z":
+        raise SiteCheckError(f"{label}: wrong external review dailyStatusGeneratedAt")
     if status.get("narrativeSystem") != "public-narrative-system-published":
         raise SiteCheckError(f"{label}: unexpected narrative system status")
     if status.get("weeklyGoChinaRadar") != "weekly-go-china-radar-issue-003-published":
