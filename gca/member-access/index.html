@@ -4,21 +4,21 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>GCA Member Access | Go China Access</title>
-    <meta name="description" content="Live GCA member access UI for email account intake, read-only Base Mainnet GCA balance verification, 100 credits, and GCA Member ledger review.">
+    <meta name="description" content="Live bilingual GCA member access UI for email account intake, read-only Base Mainnet GCA balance verification, 100 credits, and GCA Member ledger review.">
     <link rel="canonical" href="https://gcagochina.com/gca/member-access/">
     <link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">
     <link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="GCA | Go China Access">
     <meta property="og:title" content="GCA Member Access | Go China Access">
-    <meta property="og:description" content="Live GCA member access UI for email account intake, read-only Base Mainnet GCA balance verification, 100 credits, and GCA Member ledger review.">
+    <meta property="og:description" content="Live bilingual GCA member access UI for email account intake, read-only Base Mainnet GCA balance verification, 100 credits, and GCA Member ledger review.">
     <meta property="og:url" content="https://gcagochina.com/gca/member-access/">
     <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="GCA Member Access | Go China Access">
-    <meta name="twitter:description" content="Live GCA member access UI for email account intake, read-only Base Mainnet GCA balance verification, 100 credits, and GCA Member ledger review.">
+    <meta name="twitter:description" content="Live bilingual GCA member access UI for email account intake, read-only Base Mainnet GCA balance verification, 100 credits, and GCA Member ledger review.">
     <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
     <style>
       :root {
@@ -125,6 +125,23 @@
         font-size: 18px;
       }
 
+      .eyebrow {
+        margin: 0 0 12px;
+        color: var(--red);
+        font-size: 13px;
+        font-weight: 850;
+        letter-spacing: 0;
+        text-transform: uppercase;
+      }
+
+      .zh {
+        display: block;
+        margin-top: 5px;
+        color: var(--ink);
+        font-family: "PingFang SC", "Microsoft YaHei", Inter, ui-sans-serif, system-ui, sans-serif;
+        font-weight: 750;
+      }
+
       .section {
         margin-top: 30px;
       }
@@ -182,6 +199,11 @@
 
       .note {
         margin: 0;
+      }
+
+      .note.zh-note {
+        margin-top: 8px;
+        color: #3f464e;
       }
 
       .actions {
@@ -262,6 +284,7 @@
         display: flex;
         align-items: flex-start;
         gap: 8px;
+        flex-wrap: wrap;
       }
 
       .result {
@@ -350,6 +373,8 @@
           <a href="../../buy.html">Buy GCA</a>
           <a href="../../register.html">Email Registration</a>
           <a href="../../members.html">Members</a>
+          <a href="../../zh-members.html">中文会员</a>
+          <a href="../../zh-member-checklist.html">中文清单</a>
           <a href="../../member-ledger.html">Ledger Schema</a>
           <a href="../../support.html">Support</a>
           <a href="../../zh-wallet-verify.html">中文只读验证</a>
@@ -362,12 +387,16 @@
 
     <main class="shell">
       <section aria-labelledby="title">
-        <h1 id="title">GCA Member Access</h1>
+        <p class="eyebrow">Bilingual live account entry / 中英双语会员入口</p>
+        <h1 id="title">GCA Member Access <span class="zh">GCA 会员账户入口</span></h1>
         <p class="lead">This controlled HTTPS account UI submits a GCA member account request, verifies a Base wallet with read-only ERC-20 balanceOf, and writes D1 ledger records for 100 Web3 Radar utility credits and GCA Member review.</p>
+        <p class="lead zh-note">中文用户可以在这里提交邮箱、Base 钱包地址、持有开始日期和公开交易哈希。后台只读取 GCA 余额，不会要求私钥、助记词、授权转账或钱包签名。</p>
         <p class="lead">The 10,000 GCA member benefit is not automatic. If a member ledger becomes active, the benefit remains pending manual reserve-wallet transfer review.</p>
+        <p class="lead zh-note">10,000 GCA 会员权益不是自动领取。通过 GCA Member 记录后，仍需要支持团队人工审核和储备钱包处理。</p>
         <div class="actions">
-          <a class="button primary" href="#accountForm">Open Account Form</a>
+          <a class="button primary" href="#accountForm">Open Account Form / 打开表单</a>
           <a class="button" href="../../buy.html">Buy GCA First</a>
+          <a class="button" href="../../zh-buy.html">中文购买说明</a>
           <a class="button" href="../../register.html">Email Registration</a>
           <a class="button" href="../../zh-access.html">中文说明</a>
           <a class="button" href="../../zh-member-checklist.html">中文资料清单</a>
@@ -380,39 +409,46 @@
           <span class="label">Account UI</span>
           <span class="value">Live controlled HTTPS</span>
           <p class="note">Submits to Cloudflare Workers + D1.</p>
+          <p class="note zh-note">账户入口已上线，提交到 Cloudflare Workers + D1。</p>
         </div>
         <div class="fact">
           <span class="label">Balance Method</span>
           <span class="value">Backend eth_call</span>
           <p class="note">Read-only Base Mainnet GCA balance verification.</p>
+          <p class="note zh-note">只读验证 Base Mainnet 上的 GCA 余额。</p>
         </div>
         <div class="fact">
           <span class="label">Ledger Effect</span>
           <span class="value">Credits and member records</span>
           <p class="note">No signature, no transaction, no automatic token transfer.</p>
+          <p class="note zh-note">不签名、不发交易、不自动转币。</p>
         </div>
       </section>
 
       <section class="section panel" aria-labelledby="beforeSubmitTitle">
-        <h2 id="beforeSubmitTitle">Before You Submit</h2>
+        <h2 id="beforeSubmitTitle">Before You Submit <span class="zh">提交前请确认</span></h2>
         <p class="note">Use this page after you have an email and one Base wallet ready. Email registration, read-only wallet verification, and member review are separate steps; submitting this form does not create an automatic token transfer.</p>
+        <p class="note zh-note">请准备一个邮箱和一个 Base 钱包地址。邮箱注册、只读钱包验证和会员审核是不同步骤；提交此表单不会自动产生任何代币转账。</p>
         <div class="grid" style="margin-top: 14px;">
           <div class="fact">
             <span class="label">Step 1</span>
-            <span class="value">Confirm official route</span>
+            <span class="value">Confirm official route <span class="zh">确认官方路径</span></span>
             <p class="note">If you still need GCA, start from the official buy guide and verify Base Mainnet, the GCA contract, and the GCA/USDT pool before interacting.</p>
+            <p class="note zh-note">如果还需要购买 GCA，请先从官方购买说明进入，并核对 Base Mainnet、GCA 合约和 GCA/USDT 池。</p>
             <div class="actions"><a class="button" href="../../buy.html">Open Buy Guide</a></div>
           </div>
           <div class="fact">
             <span class="label">Step 2</span>
-            <span class="value">Keep review evidence</span>
+            <span class="value">Keep review evidence <span class="zh">保留审核资料</span></span>
             <p class="note">Save the wallet address, purchase transaction hash, holding start date, and read-only balance verification result for any 10,000 GCA or 1,000,000 GCA / 30-day review path.</p>
+            <p class="note zh-note">请保留钱包地址、购买交易哈希、持有开始日期和只读余额验证结果。</p>
             <div class="actions"><a class="button" href="../../zh-member-checklist.html">中文资料清单</a></div>
           </div>
           <div class="fact">
             <span class="label">Step 3</span>
-            <span class="value">Use support for exceptions</span>
+            <span class="value">Use support for exceptions <span class="zh">异常走支持</span></span>
             <p class="note">If the result is below threshold, the API is unavailable, or you need a manual review note, use support. Do not send private keys, seed phrases, exchange API secrets, withdrawal permission, or one-time codes.</p>
+            <p class="note zh-note">如果余额低于门槛、API 不可用或需要补充说明，请用支持入口。不要提交任何敏感信息。</p>
             <div class="actions"><a class="button" href="../../support.html">Support</a></div>
           </div>
         </div>
@@ -420,26 +456,27 @@
 
       <section class="section two" id="accountForm" aria-label="GCA account form">
         <div class="panel">
-          <h2>Create or Update Access Record</h2>
+          <h2>Create or Update Access Record <span class="zh">创建或更新账户记录</span></h2>
           <p class="note">Use the same email and one Base wallet for GCA access. Wallet verification only reads the GCA balance; it never asks for private keys, seed phrases, approvals, or wallet signatures.</p>
+          <p class="note zh-note">请使用同一个邮箱和一个 Base 钱包。钱包验证只读取 GCA 余额，不要求私钥、助记词、授权或钱包签名。</p>
           <div class="field">
-            <label for="displayName">Display Name</label>
+            <label for="displayName">Display Name <span class="zh">显示名称</span></label>
             <input id="displayName" type="text" autocomplete="name" placeholder="Tim Chen">
           </div>
           <div class="field">
-            <label for="email">Email</label>
+            <label for="email">Email <span class="zh">邮箱</span></label>
             <input id="email" type="email" autocomplete="email" placeholder="name@example.com">
           </div>
           <div class="field">
-            <label for="walletAddress">Base Wallet Address</label>
+            <label for="walletAddress">Base Wallet Address <span class="zh">Base 钱包地址</span></label>
             <input id="walletAddress" type="text" autocomplete="off" placeholder="0x...">
           </div>
           <div class="field">
-            <label for="holdingStartDate">Holding Start Date for 1,000,000 GCA Review</label>
+            <label for="holdingStartDate">Holding Start Date for 1,000,000 GCA Review <span class="zh">100 万枚 GCA 审核的持有开始日期</span></label>
             <input id="holdingStartDate" type="date">
           </div>
           <div class="field">
-            <label for="evidenceTxHash">Public Evidence Transaction Hash</label>
+            <label for="evidenceTxHash">Public Evidence Transaction Hash <span class="zh">公开交易哈希</span></label>
             <input id="evidenceTxHash" type="text" autocomplete="off" placeholder="0x...">
           </div>
           <div class="field bot-field" aria-hidden="true">
@@ -447,22 +484,23 @@
             <input id="website" type="text" autocomplete="off" tabindex="-1">
           </div>
           <div class="field">
-            <label><input id="contactConsent" type="checkbox"> I agree GCA can contact this email about account, credits, and member review updates.</label>
-            <label><input id="securityBoundary" type="checkbox"> I will not submit private keys, seed phrases, wallet passwords, exchange API secrets, withdrawal permission, or remote-control requests.</label>
-            <label><input id="memberTerms" type="checkbox"> I understand credits and GCA Member records are account-level utility records; the 10,000 GCA benefit requires manual review and is not automatic.</label>
+            <label><input id="contactConsent" type="checkbox"> I agree GCA can contact this email about account, credits, and member review updates. <span class="zh">我同意 GCA 通过此邮箱联系账户、积分和会员审核事项。</span></label>
+            <label><input id="securityBoundary" type="checkbox"> I will not submit private keys, seed phrases, wallet passwords, exchange API secrets, withdrawal permission, or remote-control requests. <span class="zh">我不会提交私钥、助记词、钱包密码、交易所 API Secret、提现权限或远程控制请求。</span></label>
+            <label><input id="memberTerms" type="checkbox"> I understand credits and GCA Member records are account-level utility records; the 10,000 GCA benefit requires manual review and is not automatic. <span class="zh">我理解 credits 和 GCA Member 是账户级功能记录；10,000 GCA 会员权益需要人工审核，不会自动发放。</span></label>
           </div>
           <div class="actions">
-            <button class="button" type="button" id="connectWallet">Use Wallet Address</button>
-            <button class="button" type="button" id="checkBalance">Verify Wallet Only</button>
-            <button class="button primary" type="button" id="submitAccess">Submit Account + Write Ledgers</button>
+            <button class="button" type="button" id="connectWallet">Use Wallet Address / 读取钱包地址</button>
+            <button class="button" type="button" id="checkBalance">Verify Wallet Only / 只验证钱包</button>
+            <button class="button primary" type="button" id="submitAccess">Submit Account + Write Ledgers / 提交账户并写入账本</button>
           </div>
         </div>
 
         <div class="panel">
-          <h2>Live Result</h2>
+          <h2>Live Result <span class="zh">实时结果</span></h2>
           <div id="balanceResult" class="result">
             <strong>Not submitted</strong>
             <p class="note">Run wallet verification or submit the account form to see the live D1 ledger response.</p>
+            <p class="note zh-note">点击只验证钱包或提交账户后，这里会显示实时 D1 账本返回结果。</p>
           </div>
           <div class="list" id="ledgerFacts"></div>
         </div>
@@ -470,7 +508,7 @@
 
       <section class="section two" aria-label="Access boundaries">
         <div class="panel">
-          <h2>Thresholds</h2>
+          <h2>Thresholds <span class="zh">门槛</span></h2>
           <div class="list">
             <div class="row"><span>Holder Bonus</span><strong>10,000 GCA</strong></div>
             <div class="row"><span>GCA Member</span><strong>1,000,000 GCA / 30 days</strong></div>
@@ -482,19 +520,21 @@
         </div>
 
         <div class="panel">
-          <h2>Access Boundaries</h2>
+          <h2>Access Boundaries <span class="zh">安全边界</span></h2>
           <ul>
             <li>This UI does not request custody, approvals, signatures, private keys, seed phrases, exchange API secrets, or withdrawal permission.</li>
             <li>Wallet verification is a backend read-only <code>eth_call</code> against the official GCA contract on Base Mainnet.</li>
             <li>100 credits and GCA Member status are utility ledger records, not cash, income, reimbursement, trading permission, or risk-control bypass.</li>
             <li>The 10,000 GCA member benefit remains pending manual reserve-wallet transfer review after eligibility is recorded.</li>
+            <li>中文用户只需要提交公开资料：邮箱、Base 钱包地址、公开交易哈希和持有开始日期；不要提交任何敏感资料。</li>
           </ul>
         </div>
       </section>
 
       <section class="section panel" id="technicalEvidence" aria-labelledby="technicalEvidenceTitle">
-        <h2 id="technicalEvidenceTitle">API And Account References</h2>
+        <h2 id="technicalEvidenceTitle">API And Account References <span class="zh">API 和账户参考</span></h2>
         <p class="note">The live API is hosted at <code>https://gca-registration-api.gcagochina.workers.dev</code>. Admin ledger reads are token-protected; public account submission and wallet verification do not expose the admin token.</p>
+        <p class="note zh-note">公开提交和只读钱包验证不会暴露管理员读取 token。管理员账本读取接口仍受保护。</p>
         <div class="list">
           <div class="row"><span>Access config</span><strong><a href="https://gca-registration-api.gcagochina.workers.dev/gca/access-config">/gca/access-config</a></strong></div>
           <div class="row"><span>Member account endpoint</span><strong>POST /gca/member-access</strong></div>
@@ -506,7 +546,7 @@
     </main>
 
     <footer>
-      <div class="shell">GCA member access is live for account intake, read-only wallet verification, credits ledger, and GCA Member ledger records. Token transfers remain manual review only.</div>
+      <div class="shell">GCA member access is live for account intake, read-only wallet verification, credits ledger, and GCA Member ledger records. Token transfers remain manual review only. 中文用户可在本页提交邮箱、Base 钱包和公开交易资料。</div>
     </footer>
 
     <script>
@@ -557,13 +597,13 @@
 
       function accessPayload() {
         if (!isWalletAddress(walletAddress.value)) {
-          throw new Error("Paste a valid Base wallet address.");
+          throw new Error("Paste a valid Base wallet address. 请填写有效的 Base 钱包地址。");
         }
         if (!email.value.trim()) {
-          throw new Error("Email is required.");
+          throw new Error("Email is required. 请填写邮箱。");
         }
         if (!contactConsent.checked || !securityBoundary.checked || !memberTerms.checked) {
-          throw new Error("All acknowledgements are required.");
+          throw new Error("All acknowledgements are required. 请勾选全部确认项。");
         }
         return {
           packetVersion: "gca_member_access_v1",
@@ -606,30 +646,30 @@
         const credit = payload.creditLedger || {};
         const member = payload.memberLedger || {};
         const title = member.status === "active"
-          ? "GCA Member active"
+          ? "GCA Member active / 会员记录已激活"
           : credit.status === "ledger_recorded"
-            ? "100 credits active"
+            ? "100 credits active / 100 credits 已记录"
             : verification.status === "below_threshold"
-              ? "Below threshold"
-              : "Wallet verified";
+              ? "Below threshold / 未达到门槛"
+              : "Wallet verified / 钱包已验证";
         const className = verification.status === "below_threshold" ? "warn" : "good";
         renderResult(balanceResult, className, title, payload.nextStep || "Live response received.");
         renderLedgerFacts([
-          ["Wallet", verification.walletAddress],
-          ["GCA balance", verification.gcaBalance ? `${verification.gcaBalance} GCA` : ""],
-          ["Holder bonus eligible", verification.holderBonusEligible ? "Yes" : "No"],
-          ["Credit ledger", credit.creditLedgerId ? `${credit.creditAmount} credits / ${credit.status}` : "Not created"],
-          ["GCA Member eligible", verification.gcaMemberEligible ? "Yes" : "No"],
-          ["Holding days verified", String(verification.holdingPeriodDaysVerified || 0)],
-          ["Member ledger", member.memberLedgerId ? `${member.tierName} / ${member.status}` : "Not created"],
-          ["Member benefit status", member.memberBenefitClaimStatus || "Not applicable"],
-          ["Automatic transfer", payload.boundaries && payload.boundaries.automaticTokenTransfer ? "Yes" : "No"]
+          ["Wallet / 钱包", verification.walletAddress],
+          ["GCA balance / GCA 余额", verification.gcaBalance ? `${verification.gcaBalance} GCA` : ""],
+          ["Holder bonus eligible / 10,000 GCA 条件", verification.holderBonusEligible ? "Yes / 是" : "No / 否"],
+          ["Credit ledger / credits 账本", credit.creditLedgerId ? `${credit.creditAmount} credits / ${credit.status}` : "Not created / 未创建"],
+          ["GCA Member eligible / 会员条件", verification.gcaMemberEligible ? "Yes / 是" : "No / 否"],
+          ["Holding days verified / 已验证持有天数", String(verification.holdingPeriodDaysVerified || 0)],
+          ["Member ledger / 会员账本", member.memberLedgerId ? `${member.tierName} / ${member.status}` : "Not created / 未创建"],
+          ["Member benefit status / 会员权益状态", member.memberBenefitClaimStatus || "Not applicable / 不适用"],
+          ["Automatic transfer / 自动转账", payload.boundaries && payload.boundaries.automaticTokenTransfer ? "Yes / 是" : "No / 否"]
         ]);
       }
 
       connectWallet.addEventListener("click", async () => {
         if (!window.ethereum) {
-          renderResult(balanceResult, "warn", "Wallet not detected", "Paste a Base wallet address manually.");
+          renderResult(balanceResult, "warn", "Wallet not detected / 未检测到钱包", "Paste a Base wallet address manually. 请手动粘贴 Base 钱包地址。");
           return;
         }
         const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
@@ -640,11 +680,11 @@
 
       checkBalance.addEventListener("click", async () => {
         if (!isWalletAddress(walletAddress.value)) {
-          renderResult(balanceResult, "warn", "Wallet address needed", "Paste a valid Base wallet address before running read-only backend verification.");
+          renderResult(balanceResult, "warn", "Wallet address needed / 需要钱包地址", "Paste a valid Base wallet address before running read-only backend verification. 请先填写有效的 Base 钱包地址。");
           return;
         }
         checkBalance.disabled = true;
-        renderResult(balanceResult, "", "Checking Base Mainnet", "The backend is reading GCA balance with eth_call. No wallet signature or transaction is requested.");
+        renderResult(balanceResult, "", "Checking Base Mainnet / 正在只读检查", "The backend is reading GCA balance with eth_call. No wallet signature or transaction is requested. 后端正在只读读取 GCA 余额，不需要钱包签名或交易。");
         try {
           const payload = await postJson("/gca/wallet-verifications", {
             walletAddress: walletAddress.value.trim(),
@@ -654,7 +694,7 @@
           renderAccessResponse(payload);
         } catch (error) {
           const message = error && error.message ? error.message : "Unknown wallet or RPC error";
-          renderResult(balanceResult, "warn", "Read-only check failed", message);
+          renderResult(balanceResult, "warn", "Read-only check failed / 只读检查失败", message);
         } finally {
           checkBalance.disabled = false;
         }
@@ -662,13 +702,13 @@
 
       submitAccess.addEventListener("click", async () => {
         submitAccess.disabled = true;
-        renderResult(balanceResult, "", "Submitting account", "Writing the access request, wallet verification, and eligible ledger records to Cloudflare D1.");
+        renderResult(balanceResult, "", "Submitting account / 正在提交账户", "Writing the access request, wallet verification, and eligible ledger records to Cloudflare D1. 正在写入账户请求、钱包验证和符合条件的账本记录。");
         try {
           const payload = await postJson("/gca/member-access", accessPayload());
           renderAccessResponse(payload);
         } catch (error) {
           const message = error && error.message ? error.message : "Account submission failed.";
-          renderResult(balanceResult, "warn", "Submission failed", message);
+          renderResult(balanceResult, "warn", "Submission failed / 提交失败", message);
         } finally {
           submitAccess.disabled = false;
         }
