@@ -11,14 +11,14 @@
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="GCA | Go China Access">
     <meta property="og:title" content="GCA 中文购买说明 | Go China Access">
-    <meta property="og:description" content="中文用户查看 GCA 官方购买入口、GCA/USDT 池、MetaMask 导入方式和交易前风险边界。">
+    <meta property="og:description" content="中文用户查看 GCA 官方购买入口、GCA/USDT 池、MetaMask 导入方式和购买前核对参数。">
     <meta property="og:url" content="https://gcagochina.com/zh-buy.html">
     <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="GCA 中文购买说明 | Go China Access">
-    <meta name="twitter:description" content="中文用户查看 GCA 官方购买入口、GCA/USDT 池、MetaMask 导入方式和交易前风险边界。">
+    <meta name="twitter:description" content="中文用户查看 GCA 官方购买入口、GCA/USDT 池、MetaMask 导入方式和购买前核对参数。">
     <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
     <style>
       :root {
@@ -377,7 +377,7 @@
         <p class="eyebrow">中文购买说明</p>
         <h1 id="title">GCA 中文购买说明</h1>
         <p class="lead">购买前先验证链、合约、官方 GCA/USDT 池和钱包弹窗。GCA 官方公开交易路线是 Base Mainnet 上的 GCA/USDT 池。</p>
-        <p class="lead">交易前请核对 Base Mainnet、GCA 合约、Base USDT、官方 GCA/USDT 池、价格影响、滑点和钱包提示；早期池子深度有限，建议先小额测试。</p>
+        <p class="lead">建议先用小额测试熟悉 Base 钱包、USDT 交易对、预估输出和滑点设置，再按自己的节奏继续操作。</p>
         <div class="actions">
           <a class="button primary" href="https://app.uniswap.org/swap?chain=base&amp;inputCurrency=0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2&amp;outputCurrency=0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6" target="_blank" rel="noreferrer">打开 Uniswap Swap</a>
           <a class="button secondary" href="verify.html">验证 GCA</a>
@@ -495,7 +495,7 @@
         <article class="card">
           <div>
             <h2>3. 小额测试</h2>
-            <p class="note">早期池子深度有限，小额买卖也可能带来明显价格影响。签名前看清 expected output、price impact、slippage 和钱包确认内容。</p>
+            <p class="note">先小额测试可以熟悉交易路径。签名前看清 expected output、price impact、slippage 和钱包确认内容。</p>
           </div>
           <div class="link-row">
             <a class="text-link" href="zh-liquidity.html">池子和流动性说明</a>
@@ -564,18 +564,17 @@
       <section class="section panel notice" aria-labelledby="riskTitle">
         <div class="section-head">
           <div>
-            <p class="eyebrow">风险边界</p>
-            <h2 id="riskTitle">购买前必须理解</h2>
+            <p class="eyebrow">购买提示</p>
+            <h2 id="riskTitle">签名前确认这些内容</h2>
           </div>
-          <p class="note">GCA 是早期概念阶段项目，产品层仍在建设；账户提交和只读钱包验证已经上线，会员资格仍需人工确认。交易前你需要自己确认风险。</p>
+          <p class="note">购买入口只提供官方路线和核对参数。安全资料、池子说明、会员规则和审核资料可以在对应页面继续查看。</p>
         </div>
         <ul>
-          <li>交易前请核对链、合约、池子、价格影响、滑点和钱包确认内容。</li>
-          <li>早期池子是 starter-depth only，价格影响和滑点可能很敏感。</li>
-          <li>第三方审计尚未完成，不能宣传为 Certik、Hacken、Trail of Bits 或其他独立审计方已经通过。</li>
-          <li>LP 锁尚未完成，不能宣传为锁定流动性。</li>
-          <li>BaseScan Token Profile 仍以 BaseScan 最终公开页面为准。</li>
-          <li>不要承诺价格、成交量、流动性、上所或永久无风险提示。</li>
+          <li>确认钱包网络是 Base Mainnet / chainId 8453。</li>
+          <li>确认输出代币是 GCA，合约地址完全一致。</li>
+          <li>确认使用的是 Base USDT 和官方 GCA/USDT 池。</li>
+          <li>确认 expected output、price impact、slippage 和钱包确认内容。</li>
+          <li>如果钱包没有显示 GCA，使用本页的 MetaMask 参数手动导入。</li>
         </ul>
       </section>
 
