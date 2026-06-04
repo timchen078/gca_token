@@ -120,20 +120,22 @@ def build_report(
 ) -> dict[str, Any]:
     root = root.resolve()
     config = read_json(config_path)
-    current_email = config.get("previousPublicEmail") or config.get("currentPublicEmail") or DEFAULT_CURRENT_EMAIL
+    legacy_email = config.get("previousPublicEmail") or config.get("legacyEmail") or DEFAULT_CURRENT_EMAIL
     target_email = config.get("targetDomainEmail") or DEFAULT_TARGET_EMAIL
     critical_files = config.get("filesToUpdateAfterActivation", [])
     if not isinstance(critical_files, list) or not all(isinstance(item, str) for item in critical_files):
         raise PublicSwitchCheckError("filesToUpdateAfterActivation must be a list of relative file paths")
 
-    records = [inspect_file(root, path, current_email, target_email) for path in critical_files]
+    records = [inspect_file(root, path, legacy_email, target_email) for path in critical_files]
     status, ready, blockers = summarize_status(records)
     current_refs = sum(record["currentEmailOccurrences"] for record in records)
     target_refs = sum(record["targetEmailOccurrences"] for record in records)
+    current_public_email = target_email if ready else str(config.get("currentPublicEmail") or legacy_email)
     return {
         "schema": "gca-domain-email-public-switch-check-v1",
         "configFile": str(config_path),
-        "currentEmail": current_email,
+        "currentEmail": current_public_email,
+        "legacyEmail": legacy_email,
         "targetDomainEmail": target_email,
         "status": status,
         "readyForBaseScanPublicEmailAlignment": ready,
@@ -167,7 +169,8 @@ def render_markdown(report: dict[str, Any]) -> str:
     lines = [
         "# GCA Domain Email Public Switch Check",
         "",
-        f"- Current email: `{report['currentEmail']}`",
+        f"- Current public email: `{report['currentEmail']}`",
+        f"- Legacy email scanned: `{report['legacyEmail']}`",
         f"- Target domain email: `{report['targetDomainEmail']}`",
         f"- Status: `{report['status']}`",
         f"- Ready for BaseScan public email alignment: `{str(report['readyForBaseScanPublicEmailAlignment']).lower()}`",

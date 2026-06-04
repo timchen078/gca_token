@@ -7,7 +7,8 @@
     "writesDns": false,
     "writesPublicFiles": false
   },
-  "currentEmail": "GCAgochina@outlook.com",
+  "currentEmail": "support@gcagochina.com",
+  "legacyEmail": "GCAgochina@outlook.com",
   "patchPreview": {
     "appliesChanges": false,
     "command": "python3 tools/build_domain_email_switch_plan.py --patch",
@@ -39,7 +40,7 @@
       "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "launch/basescan_final_submission_package.json",
       "switchRequiredAfterActivation": false,
-      "targetEmailOccurrences": 3
+      "targetEmailOccurrences": 6
     },
     {
       "category": "owner launch package",
@@ -47,7 +48,7 @@
       "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "launch/basescan_final_submission_package.md",
       "switchRequiredAfterActivation": false,
-      "targetEmailOccurrences": 3
+      "targetEmailOccurrences": 6
     },
     {
       "category": "owner launch package",
@@ -101,6 +102,14 @@
       "category": "owner launch package",
       "currentEmailOccurrences": 0,
       "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "launch/basescan_token_submission.md",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 4
+    },
+    {
+      "category": "owner launch package",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "launch/blockaid_false_positive_report.md",
       "switchRequiredAfterActivation": false,
       "targetEmailOccurrences": 1
@@ -139,19 +148,19 @@
     },
     {
       "category": "owner launch package",
-      "currentEmailOccurrences": 0,
-      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "currentEmailOccurrences": 2,
+      "notes": "Legacy previous-email reference retained for audit context; public switch is complete.",
       "path": "launch/domain_email_evidence_checklist.json",
       "switchRequiredAfterActivation": false,
-      "targetEmailOccurrences": 13
+      "targetEmailOccurrences": 12
     },
     {
       "category": "owner launch package",
-      "currentEmailOccurrences": 0,
-      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "currentEmailOccurrences": 2,
+      "notes": "Legacy previous-email reference retained for audit context; public switch is complete.",
       "path": "launch/domain_email_evidence_checklist.md",
       "switchRequiredAfterActivation": false,
-      "targetEmailOccurrences": 12
+      "targetEmailOccurrences": 11
     },
     {
       "category": "owner launch package",
@@ -207,7 +216,7 @@
       "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "launch/external_review_followup_tracker.json",
       "switchRequiredAfterActivation": false,
-      "targetEmailOccurrences": 2
+      "targetEmailOccurrences": 4
     },
     {
       "category": "owner launch package",
@@ -215,7 +224,7 @@
       "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "launch/external_review_followup_tracker.md",
       "switchRequiredAfterActivation": false,
-      "targetEmailOccurrences": 7
+      "targetEmailOccurrences": 8
     },
     {
       "category": "owner launch package",
@@ -239,7 +248,7 @@
       "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "launch/launch_status.md",
       "switchRequiredAfterActivation": false,
-      "targetEmailOccurrences": 4
+      "targetEmailOccurrences": 5
     },
     {
       "category": "owner launch package",
@@ -248,6 +257,14 @@
       "path": "launch/member_pre_registration_runbook.md",
       "switchRequiredAfterActivation": false,
       "targetEmailOccurrences": 2
+    },
+    {
+      "category": "owner launch package",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "launch/x_profile_runbook.md",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 3
     },
     {
       "category": "well-known identity",
@@ -271,7 +288,7 @@
       "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "site/about.html",
       "switchRequiredAfterActivation": false,
-      "targetEmailOccurrences": 2
+      "targetEmailOccurrences": 3
     },
     {
       "category": "public page",
@@ -279,7 +296,23 @@
       "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "site/action-plan.html",
       "switchRequiredAfterActivation": false,
-      "targetEmailOccurrences": 4
+      "targetEmailOccurrences": 5
+    },
+    {
+      "category": "public page",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "site/announcements.html",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 2
+    },
+    {
+      "category": "public structured data",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "site/announcements.json",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 2
     },
     {
       "category": "public page",
@@ -287,7 +320,7 @@
       "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "site/basescan-handoff.html",
       "switchRequiredAfterActivation": false,
-      "targetEmailOccurrences": 3
+      "targetEmailOccurrences": 9
     },
     {
       "category": "public structured data",
@@ -295,7 +328,7 @@
       "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "site/basescan-handoff.json",
       "switchRequiredAfterActivation": false,
-      "targetEmailOccurrences": 8
+      "targetEmailOccurrences": 13
     },
     {
       "category": "public page",
@@ -303,7 +336,7 @@
       "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "site/basescan-preflight.html",
       "switchRequiredAfterActivation": false,
-      "targetEmailOccurrences": 3
+      "targetEmailOccurrences": 4
     },
     {
       "category": "public structured data",
@@ -349,6 +382,22 @@
       "category": "public page",
       "currentEmailOccurrences": 0,
       "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "site/community.html",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 1
+    },
+    {
+      "category": "public structured data",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "site/community.json",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 3
+    },
+    {
+      "category": "public page",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "site/daily-status.html",
       "switchRequiredAfterActivation": false,
       "targetEmailOccurrences": 4
@@ -371,7 +420,7 @@
     },
     {
       "category": "public structured data",
-      "currentEmailOccurrences": 2,
+      "currentEmailOccurrences": 1,
       "notes": "Legacy previous-email reference retained for audit context; public switch is complete.",
       "path": "site/domain-email-evidence.json",
       "switchRequiredAfterActivation": false,
@@ -383,15 +432,15 @@
       "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "site/domain-email.html",
       "switchRequiredAfterActivation": false,
-      "targetEmailOccurrences": 28
+      "targetEmailOccurrences": 31
     },
     {
       "category": "public structured data",
-      "currentEmailOccurrences": 6,
+      "currentEmailOccurrences": 2,
       "notes": "Legacy previous-email reference retained for audit context; public switch is complete.",
       "path": "site/domain-email.json",
       "switchRequiredAfterActivation": false,
-      "targetEmailOccurrences": 41
+      "targetEmailOccurrences": 42
     },
     {
       "category": "public page",
@@ -399,7 +448,7 @@
       "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "site/external-reviews.html",
       "switchRequiredAfterActivation": false,
-      "targetEmailOccurrences": 4
+      "targetEmailOccurrences": 5
     },
     {
       "category": "public structured data",
@@ -407,7 +456,15 @@
       "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "site/external-reviews.json",
       "switchRequiredAfterActivation": false,
-      "targetEmailOccurrences": 6
+      "targetEmailOccurrences": 7
+    },
+    {
+      "category": "public page",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "site/gca/member-access/index.html",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 4
     },
     {
       "category": "public page",
@@ -423,7 +480,7 @@
       "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "site/listing-kit.html",
       "switchRequiredAfterActivation": false,
-      "targetEmailOccurrences": 1
+      "targetEmailOccurrences": 2
     },
     {
       "category": "public page",
@@ -431,7 +488,7 @@
       "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "site/listing-readiness.html",
       "switchRequiredAfterActivation": false,
-      "targetEmailOccurrences": 1
+      "targetEmailOccurrences": 2
     },
     {
       "category": "public structured data",
@@ -490,12 +547,20 @@
       "targetEmailOccurrences": 2
     },
     {
+      "category": "public page",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "site/project-profile.html",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 1
+    },
+    {
       "category": "public structured data",
       "currentEmailOccurrences": 0,
       "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "site/project.json",
       "switchRequiredAfterActivation": false,
-      "targetEmailOccurrences": 4
+      "targetEmailOccurrences": 6
     },
     {
       "category": "public page",
@@ -504,6 +569,14 @@
       "path": "site/register.html",
       "switchRequiredAfterActivation": false,
       "targetEmailOccurrences": 4
+    },
+    {
+      "category": "public page",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "site/release-gates.html",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 1
     },
     {
       "category": "public page",
@@ -525,9 +598,25 @@
       "category": "public page",
       "currentEmailOccurrences": 0,
       "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "site/risk.html",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 1
+    },
+    {
+      "category": "public page",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "site/roadmap.html",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 1
+    },
+    {
+      "category": "public page",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "site/status.html",
       "switchRequiredAfterActivation": false,
-      "targetEmailOccurrences": 2
+      "targetEmailOccurrences": 1
     },
     {
       "category": "public page",
@@ -546,6 +635,38 @@
       "targetEmailOccurrences": 1
     },
     {
+      "category": "public page",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "site/team.html",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 1
+    },
+    {
+      "category": "public page",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "site/terms.html",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 1
+    },
+    {
+      "category": "public page",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "site/token-safety.html",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 1
+    },
+    {
+      "category": "public page",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "site/trust.html",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 1
+    },
+    {
       "category": "public structured data",
       "currentEmailOccurrences": 0,
       "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
@@ -560,6 +681,14 @@
       "path": "site/unsubscribe.html",
       "switchRequiredAfterActivation": false,
       "targetEmailOccurrences": 4
+    },
+    {
+      "category": "public page",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "site/verify.html",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 1
     },
     {
       "category": "public page",
@@ -589,6 +718,14 @@
       "category": "public page",
       "currentEmailOccurrences": 0,
       "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "site/zh-access.html",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 2
+    },
+    {
+      "category": "public page",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "site/zh-apply.html",
       "switchRequiredAfterActivation": false,
       "targetEmailOccurrences": 2
@@ -605,6 +742,14 @@
       "category": "public page",
       "currentEmailOccurrences": 0,
       "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "site/zh-basescan-submit.html",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 6
+    },
+    {
+      "category": "public page",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "site/zh-cn.html",
       "switchRequiredAfterActivation": false,
       "targetEmailOccurrences": 2
@@ -615,7 +760,7 @@
       "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "site/zh-domain-email.html",
       "switchRequiredAfterActivation": false,
-      "targetEmailOccurrences": 23
+      "targetEmailOccurrences": 19
     },
     {
       "category": "public page",
@@ -623,13 +768,21 @@
       "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
       "path": "site/zh-faq.html",
       "switchRequiredAfterActivation": false,
-      "targetEmailOccurrences": 2
+      "targetEmailOccurrences": 4
     },
     {
       "category": "public page",
       "currentEmailOccurrences": 0,
       "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
-      "path": "site/zh-status.html",
+      "path": "site/zh-member-checklist.html",
+      "switchRequiredAfterActivation": false,
+      "targetEmailOccurrences": 1
+    },
+    {
+      "category": "public page",
+      "currentEmailOccurrences": 0,
+      "notes": "Target domain email is already mentioned as a future or evidence-gated mailbox.",
+      "path": "site/zh-release-gates.html",
       "switchRequiredAfterActivation": false,
       "targetEmailOccurrences": 1
     },
@@ -662,14 +815,14 @@
   "summary": {
     "categories": {
       "operator backend/tool": 1,
-      "owner launch package": 27,
+      "owner launch package": 29,
       "project documentation": 2,
-      "public page": 29,
-      "public structured data": 18,
+      "public page": 44,
+      "public structured data": 20,
       "well-known identity": 2
     },
     "filesRequiringSwitchAfterActivation": 0,
-    "scannedFilesWithEmailReferences": 79
+    "scannedFilesWithEmailReferences": 98
   },
   "switchOrder": [
     "Update public support and user-intake pages first.",

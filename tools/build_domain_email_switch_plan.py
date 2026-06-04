@@ -137,10 +137,11 @@ def build_plan(
     current_email: str = CURRENT_EMAIL,
     target_email: str = TARGET_EMAIL,
 ) -> dict[str, Any]:
+    legacy_email = current_email
     records = [
         record
         for path in iter_scan_files()
-        if (record := scan_file(path, current_email, target_email)) is not None
+        if (record := scan_file(path, legacy_email, target_email)) is not None
     ]
     switch_required = [record for record in records if record["switchRequiredAfterActivation"]]
     categories: dict[str, int] = {}
@@ -156,7 +157,8 @@ def build_plan(
 
     return {
         "schema": "gca-domain-email-switch-plan-v1",
-        "currentEmail": current_email,
+        "currentEmail": target_email if switch_complete else current_email,
+        "legacyEmail": legacy_email,
         "targetDomainEmail": target_email,
         "status": "public-email-switch-complete" if switch_complete else "blocked-until-domain-email-evidence-ready",
         "summary": {
@@ -202,7 +204,8 @@ def build_plan(
 
 
 def build_patch_preview(plan: dict[str, Any], *, root: Path = ROOT) -> dict[str, Any]:
-    current_email = str(plan.get("currentEmail") or CURRENT_EMAIL)
+    legacy_email = str(plan.get("legacyEmail") or plan.get("currentEmail") or CURRENT_EMAIL)
+    current_email = str(plan.get("currentEmail") or TARGET_EMAIL)
     target_email = str(plan.get("targetDomainEmail") or TARGET_EMAIL)
     diff_lines: list[str] = []
     records: list[dict[str, Any]] = []
@@ -223,7 +226,7 @@ def build_patch_preview(plan: dict[str, Any], *, root: Path = ROOT) -> dict[str,
             before = path.read_text(encoding="utf-8")
         except (FileNotFoundError, UnicodeDecodeError):
             continue
-        after = before.replace(current_email, target_email)
+        after = before.replace(legacy_email, target_email)
         if after == before:
             continue
         file_diff = list(
@@ -245,6 +248,7 @@ def build_patch_preview(plan: dict[str, Any], *, root: Path = ROOT) -> dict[str,
         "schema": "gca-domain-email-switch-patch-preview-v1",
         "status": "preview-only-not-applied",
         "currentEmail": current_email,
+        "legacyEmail": legacy_email,
         "targetDomainEmail": target_email,
         "summary": {
             "filesWithExactReplacement": len(records),
@@ -273,7 +277,8 @@ def render_markdown(plan: dict[str, Any]) -> str:
     lines = [
         "# GCA Domain Email Public Switch Plan",
         "",
-        f"- Current email: `{plan['currentEmail']}`",
+        f"- Current public email: `{plan['currentEmail']}`",
+        f"- Legacy email scanned: `{plan['legacyEmail']}`",
         f"- Target domain email: `{plan['targetDomainEmail']}`",
         f"- Status: `{plan['status']}`",
         f"- Files requiring switch after activation: `{plan['summary']['filesRequiringSwitchAfterActivation']}`",
@@ -293,7 +298,7 @@ def render_markdown(plan: dict[str, Any]) -> str:
     lines.extend(["", "## Switch Order", ""])
     lines.extend(f"{index}. {item}" for index, item in enumerate(plan["switchOrder"], start=1))
     lines.extend(["", "## File Records", ""])
-    lines.append("| File | Category | Current refs | Target refs | Action |")
+    lines.append("| File | Category | Legacy refs | Target refs | Action |")
     lines.append("| --- | --- | ---: | ---: | --- |")
     for record in plan["records"]:
         action = "switch after evidence" if record["switchRequiredAfterActivation"] else "review target mention"

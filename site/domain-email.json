@@ -68,7 +68,7 @@
       "Any required evidence file is missing from the private local evidence directory.",
       "DNS check no longer reports readyForBaseScanEmailEvidence true.",
       "Outbound visible sender is not support@gcagochina.com.",
-      "Public support/BaseScan files still publish GCAgochina@outlook.com after the switch.",
+      "Public support/BaseScan files still publish the previous public email after the switch.",
       "BaseScan resubmission preflight fails or reports readyForBaseScanResubmission false."
     ],
     "readyToResubmitWhen": [
@@ -300,7 +300,7 @@
     "ownerArtifactCommand": "python3 tools/build_domain_email_switch_plan.py --output-json launch/domain_email_switch_plan.json --output-md launch/domain_email_switch_plan.md",
     "patchPreviewCommand": "python3 tools/build_domain_email_switch_plan.py --patch",
     "ownerPatchPreviewCommand": "python3 tools/build_domain_email_switch_plan.py --output-patch launch/domain_email_switch_preview.patch",
-    "purpose": "Audit public site, launch, docs, and operator contact files for any remaining legacy GCAgochina@outlook.com references now that support@gcagochina.com is the active public contact.",
+    "purpose": "Audit public site, launch, docs, and operator contact files for any remaining legacy Outlook-email references now that support@gcagochina.com is the active public contact.",
     "runAfter": [
       "support@gcagochina.com receives external email",
       "support@gcagochina.com sends authenticated external email",
@@ -320,14 +320,14 @@
   "operatorPublicSwitchChecker": {
     "tool": "tools/check_domain_email_public_switch.py",
     "command": "python3 tools/check_domain_email_public_switch.py --json --require-switched",
-    "purpose": "Read-only gate that verifies critical public, support, and BaseScan files no longer publish GCAgochina@outlook.com and do publish support@gcagochina.com after domain email activation.",
+    "purpose": "Read-only gate that verifies critical public, support, and BaseScan files no longer publish the previous public email and do publish support@gcagochina.com after domain email activation.",
     "runAfter": [
       "domain email evidence packet is ready",
       "public files have been manually switched to support@gcagochina.com",
       "domain email switch plan has been reviewed"
     ],
     "blocksWhen": [
-      "any critical file still contains GCAgochina@outlook.com",
+      "any critical file still contains the previous public email",
       "any critical file is missing support@gcagochina.com after the switch",
       "any critical file listed in filesToUpdateAfterActivation is missing"
     ],
@@ -411,7 +411,8 @@
     "source": "tools/check_domain_email_public_switch.py --json --require-switched",
     "status": "public-email-switch-complete",
     "filesStillUsingCurrentEmail": 0,
-    "currentEmail": "GCAgochina@outlook.com",
+    "currentEmail": "support@gcagochina.com",
+    "legacyEmail": "GCAgochina@outlook.com",
     "targetDomainEmail": "support@gcagochina.com",
     "oldEmailFilePaths": [],
     "targetAwareButStillTracked": [],

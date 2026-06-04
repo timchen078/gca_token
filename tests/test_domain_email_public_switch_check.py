@@ -39,7 +39,8 @@ class DomainEmailPublicSwitchCheckTests(unittest.TestCase):
         report = build_report()
 
         self.assertEqual(report["schema"], "gca-domain-email-public-switch-check-v1")
-        self.assertEqual(report["currentEmail"], "GCAgochina@outlook.com")
+        self.assertEqual(report["currentEmail"], "support@gcagochina.com")
+        self.assertEqual(report["legacyEmail"], "GCAgochina@outlook.com")
         self.assertEqual(report["targetDomainEmail"], "support@gcagochina.com")
         self.assertEqual(report["status"], "public-email-switch-complete")
         self.assertTrue(report["readyForBaseScanPublicEmailAlignment"])
@@ -99,6 +100,8 @@ class DomainEmailPublicSwitchCheckTests(unittest.TestCase):
         markdown = render_markdown(report)
 
         self.assertIn("# GCA Domain Email Public Switch Check", markdown)
+        self.assertIn("Current public email: `support@gcagochina.com`", markdown)
+        self.assertIn("Legacy email scanned: `GCAgochina@outlook.com`", markdown)
         self.assertIn("Ready for BaseScan public email alignment: `true`", markdown)
         self.assertIn("Critical File Records", markdown)
         self.assertIn("site/support.html", markdown)

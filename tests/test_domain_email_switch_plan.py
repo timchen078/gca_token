@@ -23,7 +23,8 @@ class DomainEmailSwitchPlanTests(unittest.TestCase):
         plan = build_plan()
 
         self.assertEqual(plan["schema"], "gca-domain-email-switch-plan-v1")
-        self.assertEqual(plan["currentEmail"], CURRENT_EMAIL)
+        self.assertEqual(plan["currentEmail"], TARGET_EMAIL)
+        self.assertEqual(plan["legacyEmail"], CURRENT_EMAIL)
         self.assertEqual(plan["targetDomainEmail"], TARGET_EMAIL)
         self.assertEqual(plan["status"], "public-email-switch-complete")
         self.assertEqual(plan["summary"]["filesRequiringSwitchAfterActivation"], 0)
@@ -62,7 +63,8 @@ class DomainEmailSwitchPlanTests(unittest.TestCase):
         markdown = render_markdown(plan)
 
         self.assertIn("# GCA Domain Email Public Switch Plan", markdown)
-        self.assertIn("Current email: `GCAgochina@outlook.com`", markdown)
+        self.assertIn("Current public email: `support@gcagochina.com`", markdown)
+        self.assertIn("Legacy email scanned: `GCAgochina@outlook.com`", markdown)
         self.assertIn("Target domain email: `support@gcagochina.com`", markdown)
         self.assertIn("## Required Preconditions", markdown)
         self.assertIn("## Patch Preview", markdown)
@@ -117,7 +119,8 @@ class DomainEmailSwitchPlanTests(unittest.TestCase):
 
         self.assertEqual(plan["schema"], "gca-domain-email-switch-plan-v1")
         self.assertEqual(plan["status"], "public-email-switch-complete")
-        self.assertEqual(plan["currentEmail"], CURRENT_EMAIL)
+        self.assertEqual(plan["currentEmail"], TARGET_EMAIL)
+        self.assertEqual(plan["legacyEmail"], CURRENT_EMAIL)
         self.assertEqual(plan["targetDomainEmail"], TARGET_EMAIL)
         self.assertFalse(plan["boundaries"]["writesPublicFiles"])
         self.assertFalse(plan["patchPreview"]["appliesChanges"])

@@ -1110,8 +1110,8 @@ def validate_domain_email_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing switch plan patch preview command")
     if "launch/domain_email_switch_preview.patch" not in switch_builder.get("ownerPatchPreviewCommand", ""):
         raise SiteCheckError(f"{label}: missing switch plan patch preview artifact")
-    if "GCAgochina@outlook.com" not in switch_builder.get("purpose", ""):
-        raise SiteCheckError(f"{label}: missing current-email switch purpose")
+    if "legacy Outlook-email references" not in switch_builder.get("purpose", ""):
+        raise SiteCheckError(f"{label}: missing legacy-email switch purpose")
     if "support@gcagochina.com" not in switch_builder.get("purpose", ""):
         raise SiteCheckError(f"{label}: missing target-email switch purpose")
     if "patch preview is generated only and not applied" not in switch_builder.get("boundaries", []):
@@ -1122,14 +1122,14 @@ def validate_domain_email_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong public switch checker tool")
     if "--require-switched" not in public_switch_checker.get("command", ""):
         raise SiteCheckError(f"{label}: missing public switch checker require gate")
-    if "no longer publish GCAgochina@outlook.com" not in public_switch_checker.get("purpose", ""):
-        raise SiteCheckError(f"{label}: missing public switch checker current-email purpose")
+    if "no longer publish the previous public email" not in public_switch_checker.get("purpose", ""):
+        raise SiteCheckError(f"{label}: missing public switch checker legacy-email purpose")
     if "support@gcagochina.com" not in public_switch_checker.get("purpose", ""):
         raise SiteCheckError(f"{label}: missing public switch checker target-email purpose")
     if "domain email switch plan has been reviewed" not in public_switch_checker.get("runAfter", []):
         raise SiteCheckError(f"{label}: missing public switch checker run-after gate")
-    if "any critical file still contains GCAgochina@outlook.com" not in public_switch_checker.get("blocksWhen", []):
-        raise SiteCheckError(f"{label}: missing public switch checker current-email block")
+    if "any critical file still contains the previous public email" not in public_switch_checker.get("blocksWhen", []):
+        raise SiteCheckError(f"{label}: missing public switch checker legacy-email block")
     if "tools/check_basescan_resubmission_readiness.py" not in public_switch_checker.get("enforcedBy", []):
         raise SiteCheckError(f"{label}: missing public switch checker preflight enforcement")
     if "tools/build_basescan_submission_package.py" not in public_switch_checker.get("enforcedBy", []):
@@ -1151,8 +1151,10 @@ def validate_domain_email_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong current public switch status")
     if current_switch.get("filesStillUsingCurrentEmail") not in {0, 15}:
         raise SiteCheckError(f"{label}: wrong current old-email file count")
-    if current_switch.get("currentEmail") != "GCAgochina@outlook.com":
+    if current_switch.get("currentEmail") != "support@gcagochina.com":
         raise SiteCheckError(f"{label}: wrong current switch email")
+    if current_switch.get("legacyEmail") != "GCAgochina@outlook.com":
+        raise SiteCheckError(f"{label}: wrong current switch legacy email")
     if current_switch.get("targetDomainEmail") != "support@gcagochina.com":
         raise SiteCheckError(f"{label}: wrong current switch target email")
     if current_switch.get("status") != "public-email-switch-complete" and "site/project.json" not in current_switch.get("oldEmailFilePaths", []):
