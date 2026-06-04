@@ -17,11 +17,11 @@
   "domain": "gcagochina.com",
   "evidenceDirectory": "launch/domain_email_evidence",
   "evidenceDirectoryIgnoredByGit": true,
-  "generatedAt": "2026-06-01T12:23:58Z",
+  "generatedAt": "2026-06-04T10:15:31Z",
   "previousPublicEmail": "GCAgochina@outlook.com",
   "project": "GCA",
   "publicClaimBoundaries": [
-    "Do not claim support@gcagochina.com is active before inbound and outbound tests pass.",
+    "Do not publish private mailbox screenshots while stating support@gcagochina.com evidence is archived privately.",
     "Do not claim BaseScan token profile approval before BaseScan publishes the profile.",
     "Do not commit mailbox screenshots or private evidence files to the repository."
   ],
@@ -68,7 +68,7 @@
     }
   ],
   "schema": "gca-domain-email-evidence-checklist-v1",
-  "status": "blocked-until-domain-email-evidence-collected",
+  "status": "evidence-collected-private-ready",
   "stepsInOrder": [
     "Choose a full mailbox provider that can receive and send as support@gcagochina.com.",
     "Initialize the local evidence directory with the evidence packet tool.",

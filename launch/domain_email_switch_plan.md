@@ -54,8 +54,8 @@
 | `launch/domain_email_evidence_packet.md` | owner launch package | 0 | 5 | review target mention |
 | `launch/domain_email_provider_matrix.json` | owner launch package | 0 | 17 | review target mention |
 | `launch/domain_email_provider_matrix.md` | owner launch package | 0 | 8 | review target mention |
-| `launch/domain_email_switch_plan.json` | owner launch package | 1 | 3 | review target mention |
-| `launch/domain_email_switch_plan.md` | owner launch package | 1 | 3 | review target mention |
+| `launch/domain_email_switch_plan.json` | owner launch package | 1 | 4 | review target mention |
+| `launch/domain_email_switch_plan.md` | owner launch package | 1 | 4 | review target mention |
 | `launch/external_review_followup_tracker.json` | owner launch package | 0 | 4 | review target mention |
 | `launch/external_review_followup_tracker.md` | owner launch package | 0 | 8 | review target mention |
 | `launch/geckoterminal_form_values.json` | owner launch package | 0 | 1 | review target mention |

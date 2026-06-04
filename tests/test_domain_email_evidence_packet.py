@@ -136,6 +136,23 @@ class DomainEmailEvidencePacketTests(unittest.TestCase):
         self.assertNotIn("Public support/BaseScan files still publish support@gcagochina.com after the switch.", markdown)
         self.assertIn("Private mailbox screenshots", markdown)
 
+    def test_evidence_collected_checklist_requires_complete_private_directory(self):
+        with tempfile.TemporaryDirectory() as temp:
+            evidence_dir = Path(temp) / "launch" / "domain_email_evidence"
+            evidence_dir.mkdir(parents=True)
+            for filename in COMPLETE_REFERENCES.values():
+                (evidence_dir / filename).write_text("evidence", encoding="utf-8")
+
+            checklist = build_evidence_checklist(
+                {**DOMAIN_EMAIL_CONFIG, "currentPublicEmail": "support@gcagochina.com"},
+                evidence_dir=evidence_dir,
+                evidence_collected=True,
+                generated_at="2026-05-24T00:00:00Z",
+            )
+
+        self.assertEqual(checklist["status"], "evidence-collected-private-ready")
+        self.assertEqual(checklist["currentPublicEmail"], "support@gcagochina.com")
+
     def test_committed_evidence_checklist_artifacts_are_public_safe(self):
         json_path = ROOT / "launch" / "domain_email_evidence_checklist.json"
         md_path = ROOT / "launch" / "domain_email_evidence_checklist.md"
@@ -147,6 +164,7 @@ class DomainEmailEvidencePacketTests(unittest.TestCase):
         self.assertEqual(checklist["previousPublicEmail"], "GCAgochina@outlook.com")
         self.assertEqual(checklist["currentPublicEmail"], "support@gcagochina.com")
         self.assertEqual(checklist["targetDomainEmail"], "support@gcagochina.com")
+        self.assertEqual(checklist["status"], "evidence-collected-private-ready")
         self.assertEqual(checklist["evidenceDirectory"], "launch/domain_email_evidence")
         self.assertTrue(checklist["evidenceDirectoryIgnoredByGit"])
         self.assertFalse(checklist["boundaries"]["commitsPrivateEvidence"])

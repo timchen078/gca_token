@@ -200,7 +200,7 @@
       "notes": "Legacy previous-email reference retained for audit context; public switch is complete.",
       "path": "launch/domain_email_switch_plan.json",
       "switchRequiredAfterActivation": false,
-      "targetEmailOccurrences": 3
+      "targetEmailOccurrences": 4
     },
     {
       "category": "owner launch package",
@@ -208,7 +208,7 @@
       "notes": "Legacy previous-email reference retained for audit context; public switch is complete.",
       "path": "launch/domain_email_switch_plan.md",
       "switchRequiredAfterActivation": false,
-      "targetEmailOccurrences": 3
+      "targetEmailOccurrences": 4
     },
     {
       "category": "owner launch package",

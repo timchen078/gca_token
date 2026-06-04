@@ -1,6 +1,6 @@
 # GCA Domain Email Evidence Checklist
 
-- Status: `blocked-until-domain-email-evidence-collected`
+- Status: `evidence-collected-private-ready`
 - Previous public email: `GCAgochina@outlook.com`
 - Current public email: `support@gcagochina.com`
 - Target domain email: `support@gcagochina.com`

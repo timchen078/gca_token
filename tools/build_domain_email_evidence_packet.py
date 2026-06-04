@@ -147,6 +147,7 @@ def build_evidence_checklist(
     domain_email_config: dict[str, Any],
     *,
     evidence_dir: Path = DEFAULT_EVIDENCE_DIR,
+    evidence_collected: bool = False,
     generated_at: str | None = None,
 ) -> dict[str, Any]:
     domain = str(domain_email_config.get("domain") or "gcagochina.com")
@@ -165,6 +166,16 @@ def build_evidence_checklist(
             "reason": "May contain mailbox screenshots, DNS proof, or operational review evidence; keep under the git-ignored evidence directory.",
         })
 
+    ready = evidence_collected and bool(status.get("complete"))
+    public_claim_boundaries = [
+        "Do not claim BaseScan token profile approval before BaseScan publishes the profile.",
+        "Do not commit mailbox screenshots or private evidence files to the repository.",
+    ]
+    if ready:
+        public_claim_boundaries.insert(0, f"Do not publish private mailbox screenshots while stating {target_email} evidence is archived privately.")
+    else:
+        public_claim_boundaries.insert(0, f"Do not claim {target_email} is active before inbound and outbound tests pass.")
+
     return {
         "schema": "gca-domain-email-evidence-checklist-v1",
         "generatedAt": generated_at or utc_now(),
@@ -173,7 +184,7 @@ def build_evidence_checklist(
         "previousPublicEmail": previous_email,
         "currentPublicEmail": current_email,
         "targetDomainEmail": target_email,
-        "status": "blocked-until-domain-email-evidence-collected",
+        "status": "evidence-collected-private-ready" if ready else "blocked-until-domain-email-evidence-collected",
         "evidenceDirectory": status["path"],
         "evidenceDirectoryIgnoredByGit": status["ignoredByGit"],
         "requiredEvidenceFiles": required_files,
@@ -203,11 +214,7 @@ def build_evidence_checklist(
             f"Public support/BaseScan files still publish the previous email {previous_email} after the switch.",
             "BaseScan resubmission preflight reports readyForBaseScanResubmission false.",
         ],
-        "publicClaimBoundaries": [
-            f"Do not claim {target_email} is active before inbound and outbound tests pass.",
-            "Do not claim BaseScan token profile approval before BaseScan publishes the profile.",
-            "Do not commit mailbox screenshots or private evidence files to the repository.",
-        ],
+        "publicClaimBoundaries": public_claim_boundaries,
         "boundaries": {
             "writesDnsRecords": False,
             "sendsEmail": False,
@@ -428,6 +435,11 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--website-email-updated", action="store_true", help="Confirm public website email now matches target.")
     parser.add_argument("--checklist", action="store_true", help="Print a public-safe evidence collection checklist instead of building the final packet.")
+    parser.add_argument(
+        "--evidence-collected",
+        action="store_true",
+        help="Mark the public-safe checklist as evidence-collected-private-ready when the private evidence directory is complete.",
+    )
     parser.add_argument("--output-json", default="", help="Write packet JSON to this path.")
     parser.add_argument("--output-md", default="", help="Write packet Markdown to this path.")
     parser.add_argument("--output-checklist-json", default="", help="Write public-safe evidence checklist JSON to this path.")
@@ -449,7 +461,11 @@ def main(argv: list[str] | None = None) -> int:
     try:
         config = load_json_file(Path(args.config))
         if args.checklist or args.output_checklist_json or args.output_checklist_md:
-            checklist = build_evidence_checklist(config, evidence_dir=evidence_dir)
+            checklist = build_evidence_checklist(
+                config,
+                evidence_dir=evidence_dir,
+                evidence_collected=args.evidence_collected,
+            )
             if args.output_checklist_json:
                 write_text(Path(args.output_checklist_json), json.dumps(checklist, indent=2, sort_keys=True) + "\n")
             if args.output_checklist_md:
