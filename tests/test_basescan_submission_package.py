@@ -66,6 +66,20 @@ READY_PREFLIGHT = {
     "status": "ready-for-owner-resubmission",
     "readyForBaseScanResubmission": True,
     "missingOrBlockedRequirements": [],
+    "domainEmailPublicSwitchSummary": {
+        "status": "public-email-switch-complete",
+        "readyForBaseScanPublicEmailAlignment": True,
+        "targetDomainEmail": "support@gcagochina.com",
+        "currentEmail": "support@gcagochina.com",
+        "legacyEmail": "GCAgochina@outlook.com",
+        "forbiddenLegacyEmails": ["GCAgochina@outlook.com", "cxy070800@gmail.com"],
+        "summary": {
+            "filesStillUsingCurrentEmail": 0,
+            "filesPublishingForbiddenLegacyEmail": 0,
+            "currentEmailOccurrences": 0,
+            "forbiddenLegacyEmailOccurrences": 0,
+        },
+    },
 }
 
 BLOCKED_PREFLIGHT = {
@@ -115,10 +129,20 @@ class BaseScanSubmissionPackageTests(unittest.TestCase):
         self.assertIn("prior information-insufficient return reasons", package["copyPasteBlocks"]["baseScanReviewerComment"])
         self.assertIn("Official project-domain email", package["copyPasteBlocks"]["baseScanReviewerComment"])
         self.assertIn("Logo, brand, and metadata evidence", package["copyPasteBlocks"]["baseScanReviewerComment"])
+        self.assertIn("Public email guard", package["copyPasteBlocks"]["baseScanReviewerComment"])
+        self.assertIn("0 tracked public files publishing forbidden legacy", package["copyPasteBlocks"]["baseScanReviewerComment"])
         self.assertIn("support@gcagochina.com", package["copyPasteBlocks"]["baseScanReviewerComment"])
         self.assertIn("not claiming BaseScan token profile approval", package["copyPasteBlocks"]["baseScanReviewerComment"])
         self.assertIn("Tim Chen professional profile", package["copyPasteBlocks"]["evidenceLinksPlainText"])
         self.assertIn("GCA/USDT", package["copyPasteBlocks"]["marketAndSupplyPlainText"])
+        self.assertEqual(package["preflightSummary"]["filesStillUsingOldEmail"], 0)
+        self.assertEqual(package["preflightSummary"]["filesPublishingForbiddenLegacyEmail"], 0)
+        self.assertEqual(package["publicEmailGuard"]["targetDomainEmail"], "support@gcagochina.com")
+        self.assertEqual(package["publicEmailGuard"]["filesStillUsingOldEmail"], 0)
+        self.assertEqual(package["publicEmailGuard"]["filesPublishingForbiddenLegacyEmail"], 0)
+        self.assertEqual(package["publicEmailGuard"]["forbiddenLegacyEmailCount"], 2)
+        self.assertIn("redacted-non-domain-legacy-inbox", package["publicEmailGuard"]["forbiddenLegacyEmailLabels"])
+        self.assertNotIn("cxy070800@gmail.com", json.dumps(package))
         self.assertEqual(len(package["reviewerRemediationSummary"]), 4)
         self.assertIn("sender email did not match", package["reviewerRemediationSummary"][1]["returnReason"])
         self.assertIn("support@gcagochina.com", package["reviewerRemediationSummary"][1]["response"])
@@ -135,6 +159,10 @@ class BaseScanSubmissionPackageTests(unittest.TestCase):
         self.assertIn("GCA BaseScan Submission Package", markdown)
         self.assertIn("Ready for owner submission: `true`", markdown)
         self.assertIn("Reviewer Remediation Summary", markdown)
+        self.assertIn("Public Email Guard", markdown)
+        self.assertIn("Files publishing forbidden legacy email: `0`", markdown)
+        self.assertIn("redacted-non-domain-legacy-inbox", markdown)
+        self.assertNotIn("cxy070800@gmail.com", markdown)
         self.assertIn("Return reason: founder and team transparency", markdown)
         self.assertIn("Copy/Paste Reviewer Comment", markdown)
         self.assertIn("Copy/Paste Basic Information", markdown)

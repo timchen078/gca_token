@@ -127,6 +127,7 @@ def build_copy_paste_blocks(
     supply = form_fields["supplyContext"]
     missing = [str(item) for item in readiness_report.get("missingOrBlockedRequirements", [])]
     ready = bool(readiness_report.get("readyForBaseScanResubmission"))
+    email_guard = build_public_email_guard(readiness_report)
 
     basic_block = format_lines([
         f"Contract Address: {basic['contractAddress']}",
@@ -181,6 +182,9 @@ def build_copy_paste_blocks(
             f"- Project documentation and status: {social['whitepaper']} and {social['externalReviewStatus']}",
             f"- Logo, brand, and metadata evidence: {social['brandKit']}",
             f"- Contract/source and remediation evidence: {social['baseScanRemediation']}",
+            "- Public email guard: the current preflight reports "
+            f"{email_guard['filesStillUsingOldEmail']} tracked public files publishing the old Outlook email "
+            f"and {email_guard['filesPublishingForbiddenLegacyEmail']} tracked public files publishing forbidden legacy personal/non-domain email.",
             "",
             f"Contract: {basic['contractAddress']}",
             f"Official website: {basic['projectWebsite']}",
@@ -248,6 +252,42 @@ def build_reviewer_remediation_summary(form_fields: dict[str, Any]) -> list[dict
     ]
 
 
+def redact_forbidden_legacy_email(email: str) -> str:
+    normalized = email.strip().lower()
+    if normalized == "gcagochina@outlook.com":
+        return "redacted-legacy-outlook-inbox"
+    if normalized == "cxy070800@gmail.com":
+        return "redacted-non-domain-legacy-inbox"
+    return "redacted-forbidden-legacy-email"
+
+
+def build_public_email_guard(readiness_report: dict[str, Any]) -> dict[str, Any]:
+    public_switch = readiness_report.get("domainEmailPublicSwitchSummary", {})
+    summary = public_switch.get("summary", {})
+    legacy_email = public_switch.get("legacyEmail")
+    forbidden_legacy_email_labels = sorted({
+        redact_forbidden_legacy_email(str(email))
+        for email in public_switch.get("forbiddenLegacyEmails", [])
+    })
+    return {
+        "status": public_switch.get("status"),
+        "readyForBaseScanPublicEmailAlignment": public_switch.get("readyForBaseScanPublicEmailAlignment") is True,
+        "targetDomainEmail": public_switch.get("targetDomainEmail"),
+        "currentPublicEmail": public_switch.get("currentEmail"),
+        "legacyEmailLabel": redact_forbidden_legacy_email(str(legacy_email)) if legacy_email else None,
+        "forbiddenLegacyEmailCount": len(public_switch.get("forbiddenLegacyEmails", [])),
+        "forbiddenLegacyEmailLabels": forbidden_legacy_email_labels,
+        "filesStillUsingOldEmail": int(summary.get("filesStillUsingCurrentEmail") or 0),
+        "filesPublishingForbiddenLegacyEmail": int(summary.get("filesPublishingForbiddenLegacyEmail") or 0),
+        "currentEmailOccurrences": int(summary.get("currentEmailOccurrences") or 0),
+        "forbiddenLegacyEmailOccurrences": int(summary.get("forbiddenLegacyEmailOccurrences") or 0),
+        "boundary": (
+            "This guard is a read-only public-file scan. It does not send email, submit BaseScan requests, "
+            "write DNS records, or touch wallets/contracts."
+        ),
+    }
+
+
 def build_submission_package(
     *,
     values: dict[str, Any],
@@ -256,6 +296,7 @@ def build_submission_package(
 ) -> dict[str, Any]:
     ready = bool(readiness_report.get("readyForBaseScanResubmission"))
     form_fields = build_form_fields(values)
+    public_email_guard = build_public_email_guard(readiness_report)
     return {
         "schema": "gca-basescan-submission-package-v1",
         "generatedAt": generated_at or utc_now(),
@@ -272,7 +313,10 @@ def build_submission_package(
             "status": readiness_report.get("status"),
             "readyForBaseScanResubmission": ready,
             "generatedAt": readiness_report.get("generatedAt"),
+            "filesStillUsingOldEmail": public_email_guard["filesStillUsingOldEmail"],
+            "filesPublishingForbiddenLegacyEmail": public_email_guard["filesPublishingForbiddenLegacyEmail"],
         },
+        "publicEmailGuard": public_email_guard,
         "reviewerRemediationSummary": build_reviewer_remediation_summary(form_fields),
         "formFields": form_fields,
         "copyPasteBlocks": build_copy_paste_blocks(
@@ -306,6 +350,7 @@ def render_markdown(package: dict[str, Any]) -> str:
     supply = fields["supplyContext"]
     copy_blocks = package["copyPasteBlocks"]
     remediation_summary = package.get("reviewerRemediationSummary", [])
+    public_email_guard = package.get("publicEmailGuard", {})
 
     lines = [
         "# GCA BaseScan Submission Package",
@@ -334,6 +379,19 @@ def render_markdown(package: dict[str, Any]) -> str:
             f"  Evidence: {item['primaryEvidence']}",
         ])
     lines.append("")
+
+    lines.extend([
+        "## Public Email Guard",
+        "",
+        f"- Status: `{public_email_guard.get('status')}`",
+        f"- Target domain email: `{public_email_guard.get('targetDomainEmail')}`",
+        f"- Current public email: `{public_email_guard.get('currentPublicEmail')}`",
+        f"- Files still publishing old email: `{public_email_guard.get('filesStillUsingOldEmail')}`",
+        f"- Files publishing forbidden legacy email: `{public_email_guard.get('filesPublishingForbiddenLegacyEmail')}`",
+        f"- Forbidden legacy email labels scanned: `{', '.join(public_email_guard.get('forbiddenLegacyEmailLabels') or [])}`",
+        f"- Boundary: {public_email_guard.get('boundary')}",
+        "",
+    ])
 
     lines.extend([
         "## Copy/Paste Reviewer Comment",

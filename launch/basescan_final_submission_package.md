@@ -20,6 +20,16 @@
   Response: Published the brand kit, remediation tracker, GitHub repository, and market/supply evidence links in one package.
   Evidence: https://gcagochina.com/brand-kit.html | https://gcagochina.com/basescan-remediation.html | https://github.com/timchen078/gca_token
 
+## Public Email Guard
+
+- Status: `public-email-switch-complete`
+- Target domain email: `support@gcagochina.com`
+- Current public email: `support@gcagochina.com`
+- Files still publishing old email: `0`
+- Files publishing forbidden legacy email: `0`
+- Forbidden legacy email labels scanned: `redacted-legacy-outlook-inbox, redacted-non-domain-legacy-inbox`
+- Boundary: This guard is a read-only public-file scan. It does not send email, submit BaseScan requests, write DNS records, or touch wallets/contracts.
+
 ## Copy/Paste Reviewer Comment
 
 ```text
@@ -34,6 +44,7 @@ This resubmission directly addresses the prior information-insufficient return r
 - Project documentation and status: https://gcagochina.com/whitepaper.html and https://gcagochina.com/external-reviews.html
 - Logo, brand, and metadata evidence: https://gcagochina.com/brand-kit.html
 - Contract/source and remediation evidence: https://gcagochina.com/basescan-remediation.html
+- Public email guard: the current preflight reports 0 tracked public files publishing the old Outlook email and 0 tracked public files publishing forbidden legacy personal/non-domain email.
 
 Contract: 0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6
 Official website: https://gcagochina.com/
