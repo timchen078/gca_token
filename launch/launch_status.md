@@ -36,7 +36,7 @@
 - Public social preview card is prepared at `https://gcagochina.com/assets/gca-social-card.png` for Open Graph, X Card, Telegram, and platform link previews.
 - Public whitepaper URL is live at `https://gcagochina.com/whitepaper.html`.
 - Current public contact email `support@gcagochina.com` is published on the official website for data platform verification.
-- BaseScan token update was submitted with `cxy070800@gmail.com`, returned by BaseScan as information-insufficient on 2026-05-13, resubmitted on 2026-05-13, and returned again as information-insufficient on 2026-05-23.
+- BaseScan token update was originally submitted from a non-domain legacy inbox, returned by BaseScan as information-insufficient on 2026-05-13, resubmitted on 2026-05-13, and returned again as information-insufficient on 2026-05-23.
 - BaseScan token profile remediation package is ready for owner resubmission; Tim Chen public professional profile evidence, domain email setup plan, public evidence checklist, activation evidence packet path, and the 2026-05-30 DNS snapshot are now aligned with support@gcagochina.com.
 - Domain email DNS readiness checker prepared at `tools/check_domain_email_dns.py`; it checks public MX/SPF/DMARC/DKIM records only and does not send email, submit BaseScan requests, or touch wallets/contracts.
 - Domain email evidence packet builder prepared at `tools/build_domain_email_evidence_packet.py`; it combines DNS readiness with owner-saved provider, inbound, outbound, DNS, and website proof before marking BaseScan resubmission ready.
@@ -132,7 +132,7 @@
 ## Needs Owner Input Or External Service
 
 - Use the domain email setup plan at `https://gcagochina.com/domain-email.html` and public evidence checklist at `https://gcagochina.com/domain-email-evidence.html`, keep the 2026-05-30 DNS snapshot ready at `https://gcagochina.com/domain-email.html#snapshotTitle` (MX/SPF/DKIM/DMARC present), keep `support@gcagochina.com` working, run `python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox support --dkim-selector zmail --json`, and archive the activation evidence packet before the next BaseScan submission while keeping private screenshots out of git.
-- Use `https://gcagochina.com/zh-basescan-submit.html` as the Chinese owner checklist and `https://gcagochina.com/basescan-handoff.html` as the copy-block source before opening `https://basescan.org/tokenupdate/`; keep historical `cxy070800@gmail.com` only for old thread replies, not as the current official project email.
+- Use `https://gcagochina.com/zh-basescan-submit.html` as the Chinese owner checklist and `https://gcagochina.com/basescan-handoff.html` as the copy-block source before opening `https://basescan.org/tokenupdate/`; keep the redacted non-domain legacy inbox only for old thread monitoring, not as the current official project email.
 - Include the published Tim Chen professional profile URL `https://gcagochina.com/tim-chen.html`; add LinkedIn later only if BaseScan specifically requires a third-party social-network profile.
 - Use `launch/basescan_resubmission_package.md` and `launch/basescan_resubmission_values.json` as the record of the 2026-05-13 BaseScan token update resubmission.
 - Use `launch/external_review_followup_tracker.md` for BaseScan, Blockaid, GeckoTerminal, DEX Screener, CoinGecko, CoinMarketCap, and audit follow-up status before sending any new platform request.

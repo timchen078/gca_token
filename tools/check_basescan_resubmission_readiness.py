@@ -278,6 +278,12 @@ def validate_public_switch_report(report: dict[str, Any] | None) -> list[dict[st
             "No critical public file should still publish the old Outlook email after the switch.",
             report.get("summary", {}).get("filesStillUsingCurrentEmail"),
         ),
+        status_entry(
+            "domain-email-public-switch-forbidden-legacy-email",
+            report.get("summary", {}).get("filesPublishingForbiddenLegacyEmail", 0) == 0,
+            "No critical public file should publish any forbidden legacy personal or non-domain email.",
+            report.get("summary", {}).get("filesPublishingForbiddenLegacyEmail", 0),
+        ),
     ]
 
 

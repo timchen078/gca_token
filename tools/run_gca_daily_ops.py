@@ -89,6 +89,8 @@ def summarize_basescan_preflight(stdout: str) -> dict[str, Any]:
             "publicEmailSwitchStatus": "",
             "filesStillUsingOldEmail": 0,
             "oldEmailFilePaths": [],
+            "filesPublishingForbiddenLegacyEmail": 0,
+            "forbiddenLegacyEmailFilePaths": [],
             "missingTargetEmailFilePaths": [],
             "snapshotAlignmentStatus": "",
             "snapshotAlignmentStaleMarkers": 0,
@@ -104,6 +106,8 @@ def summarize_basescan_preflight(stdout: str) -> dict[str, Any]:
             "publicEmailSwitchStatus": "",
             "filesStillUsingOldEmail": 0,
             "oldEmailFilePaths": [],
+            "filesPublishingForbiddenLegacyEmail": 0,
+            "forbiddenLegacyEmailFilePaths": [],
             "missingTargetEmailFilePaths": [],
             "snapshotAlignmentStatus": "",
             "snapshotAlignmentStaleMarkers": 0,
@@ -118,6 +122,15 @@ def summarize_basescan_preflight(stdout: str) -> dict[str, Any]:
         str(record.get("path"))
         for record in switch_records
         if isinstance(record, dict) and record.get("currentEmailOccurrences", 0) and str(record.get("path") or "")
+    ]
+    forbidden_legacy_email_file_paths = [
+        str(record.get("path"))
+        for record in switch_records
+        if (
+            isinstance(record, dict)
+            and record.get("forbiddenLegacyEmailOccurrences", record.get("currentEmailOccurrences", 0))
+            and str(record.get("path") or "")
+        )
     ]
     missing_target_email_file_paths = [
         str(record.get("path"))
@@ -140,6 +153,11 @@ def summarize_basescan_preflight(stdout: str) -> dict[str, Any]:
         "publicEmailSwitchStatus": str(switch.get("status") or "") if isinstance(switch, dict) else "",
         "filesStillUsingOldEmail": switch_summary.get("filesStillUsingCurrentEmail", 0),
         "oldEmailFilePaths": old_email_file_paths,
+        "filesPublishingForbiddenLegacyEmail": switch_summary.get(
+            "filesPublishingForbiddenLegacyEmail",
+            switch_summary.get("filesStillUsingCurrentEmail", 0),
+        ),
+        "forbiddenLegacyEmailFilePaths": forbidden_legacy_email_file_paths,
         "missingTargetEmailFilePaths": missing_target_email_file_paths,
         "snapshotAlignmentStatus": str(snapshot.get("status") or "") if isinstance(snapshot, dict) else "",
         "snapshotAlignmentStaleMarkers": snapshot_summary.get("filesWithStaleSnapshotMarkers", 0),
@@ -190,6 +208,8 @@ def run_step(
                         "publicEmailSwitchStatus": "",
                         "filesStillUsingOldEmail": 0,
                         "oldEmailFilePaths": [],
+                        "filesPublishingForbiddenLegacyEmail": 0,
+                        "forbiddenLegacyEmailFilePaths": [],
                         "missingTargetEmailFilePaths": [],
                         "snapshotAlignmentStatus": "",
                         "snapshotAlignmentStaleMarkers": 0,
@@ -344,6 +364,8 @@ def run_daily_ops(
             "publicEmailSwitchStatus": "",
             "filesStillUsingOldEmail": 0,
             "oldEmailFilePaths": [],
+            "filesPublishingForbiddenLegacyEmail": 0,
+            "forbiddenLegacyEmailFilePaths": [],
             "missingTargetEmailFilePaths": [],
             "snapshotAlignmentStatus": "",
             "snapshotAlignmentStaleMarkers": 0,
@@ -429,6 +451,10 @@ def run_daily_ops(
                 "snapshotGeneratedAt": snapshot.get("snapshotGeneratedAt", ""),
                 "baseScanPreflightStatus": snapshot.get("baseScanPreflight", {}).get("status", ""),
                 "filesStillUsingOldEmail": snapshot.get("baseScanPreflight", {}).get("filesStillUsingOldEmail", 0),
+                "filesPublishingForbiddenLegacyEmail": snapshot.get("baseScanPreflight", {}).get(
+                    "filesPublishingForbiddenLegacyEmail",
+                    0,
+                ),
             })
         except DailyStatusSnapshotError as exc:
             summary["ok"] = False

@@ -144,6 +144,7 @@ def build_daily_status_payload(summary: dict[str, Any]) -> dict[str, Any]:
         str(item) for item in basescan.get("missingOrBlockedRequirements", []) if str(item)
     ]
     old_email_paths = public_relative_paths(basescan.get("oldEmailFilePaths"))
+    forbidden_legacy_email_paths = public_relative_paths(basescan.get("forbiddenLegacyEmailFilePaths"))
     missing_target_paths = public_relative_paths(basescan.get("missingTargetEmailFilePaths"))
     ready_for_basescan = basescan.get("readyForBaseScanResubmission") is True
     if ready_for_basescan:
@@ -250,6 +251,10 @@ def build_daily_status_payload(summary: dict[str, Any]) -> dict[str, Any]:
             "snapshotAlignmentStatus": str(basescan.get("snapshotAlignmentStatus") or ""),
             "filesStillUsingOldEmail": int(basescan.get("filesStillUsingOldEmail") or 0),
             "oldEmailFilePaths": old_email_paths,
+            "filesPublishingForbiddenLegacyEmail": int(
+                basescan.get("filesPublishingForbiddenLegacyEmail") or 0
+            ),
+            "forbiddenLegacyEmailFilePaths": forbidden_legacy_email_paths,
             "missingTargetEmailFilePaths": missing_target_paths,
             "missingOrBlockedRequirements": missing_requirements,
             "nextAction": str(basescan.get("nextAction") or ""),
@@ -298,7 +303,9 @@ def update_daily_status_html(template: str, payload: dict[str, Any]) -> str:
     last_updated = str(payload["lastUpdated"])
     basescan = payload["baseScanPreflight"]
     old_email_count = int(basescan["filesStillUsingOldEmail"])
+    forbidden_legacy_email_count = int(basescan["filesPublishingForbiddenLegacyEmail"])
     old_email_queue = format_path_queue(list(basescan.get("oldEmailFilePaths", [])))
+    forbidden_legacy_email_queue = format_path_queue(list(basescan.get("forbiddenLegacyEmailFilePaths", [])))
     missing_target_queue = format_path_queue(list(basescan.get("missingTargetEmailFilePaths", [])))
     text = replace_once(
         template,
@@ -323,6 +330,18 @@ def update_daily_status_html(template: str, payload: dict[str, Any]) -> str:
         r"<div class=\"row\"><span>Old-email queue</span><strong>[\s\S]*?</strong></div>",
         f"<div class=\"row\"><span>Old-email queue</span><strong>{old_email_queue}</strong></div>",
         "old email queue",
+    )
+    text = replace_once(
+        text,
+        r"<code>filesPublishingForbiddenLegacyEmail</code> as \d+ tracked files",
+        f"<code>filesPublishingForbiddenLegacyEmail</code> as {forbidden_legacy_email_count} tracked files",
+        "forbidden legacy email count",
+    )
+    text = replace_once(
+        text,
+        r"<div class=\"row\"><span>Forbidden legacy-email queue</span><strong>[\s\S]*?</strong></div>",
+        f"<div class=\"row\"><span>Forbidden legacy-email queue</span><strong>{forbidden_legacy_email_queue}</strong></div>",
+        "forbidden legacy email queue",
     )
     text = replace_once(
         text,

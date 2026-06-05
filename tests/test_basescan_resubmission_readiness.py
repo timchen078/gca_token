@@ -59,7 +59,7 @@ def ready_public_switch_report():
         "status": "public-email-switch-complete",
         "readyForBaseScanPublicEmailAlignment": True,
         "targetDomainEmail": TARGET_DOMAIN_EMAIL,
-        "summary": {"filesStillUsingCurrentEmail": 0},
+        "summary": {"filesStillUsingCurrentEmail": 0, "filesPublishingForbiddenLegacyEmail": 0},
     }
 
 
@@ -159,6 +159,32 @@ class BaseScanResubmissionReadinessTests(unittest.TestCase):
         self.assertIn("domain-email-public-switch-check", report["missingOrBlockedRequirements"])
         self.assertIn("domain-email-public-switch-old-email", report["missingOrBlockedRequirements"])
         self.assertEqual(report["domainEmailPublicSwitchSummary"]["status"], "public-email-switch-pending")
+
+    def test_forbidden_legacy_email_blocks_readiness_even_without_old_outlook(self):
+        values = ready_values()
+        public_switch = {
+            "status": "public-email-switch-pending",
+            "readyForBaseScanPublicEmailAlignment": False,
+            "targetDomainEmail": TARGET_DOMAIN_EMAIL,
+            "summary": {
+                "filesStillUsingCurrentEmail": 0,
+                "filesPublishingForbiddenLegacyEmail": 1,
+            },
+        }
+
+        report = build_readiness_report(
+            values=values,
+            evidence_packet=ready_evidence_packet(),
+            public_switch_report=public_switch,
+            snapshot_alignment_report=ready_snapshot_alignment_report(),
+            public_url_checks=check_public_urls(values, skip=True),
+            generated_at="2026-05-24T00:00:00Z",
+        )
+
+        self.assertFalse(report["readyForBaseScanResubmission"])
+        self.assertIn("domain-email-public-switch-check", report["missingOrBlockedRequirements"])
+        self.assertIn("domain-email-public-switch-forbidden-legacy-email", report["missingOrBlockedRequirements"])
+        self.assertNotIn("domain-email-public-switch-old-email", report["missingOrBlockedRequirements"])
 
     def test_snapshot_alignment_failure_blocks_readiness(self):
         values = ready_values()

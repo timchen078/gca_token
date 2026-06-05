@@ -7,6 +7,7 @@ from pathlib import Path
 
 from tools.check_domain_email_public_switch import (
     DEFAULT_CURRENT_EMAIL,
+    DEFAULT_FORBIDDEN_LEGACY_EMAILS,
     DEFAULT_TARGET_EMAIL,
     build_report,
     render_markdown,
@@ -41,11 +42,14 @@ class DomainEmailPublicSwitchCheckTests(unittest.TestCase):
         self.assertEqual(report["schema"], "gca-domain-email-public-switch-check-v1")
         self.assertEqual(report["currentEmail"], "support@gcagochina.com")
         self.assertEqual(report["legacyEmail"], "GCAgochina@outlook.com")
+        self.assertIn("cxy070800@gmail.com", report["forbiddenLegacyEmails"])
         self.assertEqual(report["targetDomainEmail"], "support@gcagochina.com")
         self.assertEqual(report["status"], "public-email-switch-complete")
         self.assertTrue(report["readyForBaseScanPublicEmailAlignment"])
         self.assertEqual(report["blockedRequirements"], [])
         self.assertEqual(report["summary"]["filesStillUsingCurrentEmail"], 0)
+        self.assertEqual(report["summary"]["filesPublishingForbiddenLegacyEmail"], 0)
+        self.assertEqual(report["summary"]["forbiddenLegacyEmailOccurrences"], 0)
         self.assertFalse(report["boundaries"]["writesPublicFiles"])
         self.assertFalse(report["boundaries"]["submitsBaseScanRequest"])
         self.assertFalse(report["boundaries"]["touchesWalletsOrContracts"])
@@ -68,7 +72,35 @@ class DomainEmailPublicSwitchCheckTests(unittest.TestCase):
         self.assertTrue(report["readyForBaseScanPublicEmailAlignment"])
         self.assertEqual(report["blockedRequirements"], [])
         self.assertEqual(report["summary"]["filesStillUsingCurrentEmail"], 0)
+        self.assertEqual(report["summary"]["filesPublishingForbiddenLegacyEmail"], 0)
         self.assertEqual(report["summary"]["targetEmailOccurrences"], 3)
+
+    def test_legacy_personal_gmail_blocks_readiness_even_when_target_email_is_present(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            legacy_personal_gmail = "cxy070800@gmail.com"
+            config_path = write_fixture(
+                root,
+                {
+                    "site/support.html": f"Contact {DEFAULT_TARGET_EMAIL}",
+                    "launch/basescan_resubmission_values.json": (
+                        f'{{"officialEmail":"{DEFAULT_TARGET_EMAIL}",'
+                        f'"historicalBadEmail":"{legacy_personal_gmail}"}}'
+                    ),
+                },
+            )
+
+            report = build_report(root=root, config_path=config_path)
+
+        self.assertEqual(report["status"], "public-email-switch-pending")
+        self.assertFalse(report["readyForBaseScanPublicEmailAlignment"])
+        self.assertEqual(report["summary"]["filesStillUsingCurrentEmail"], 0)
+        self.assertEqual(report["summary"]["filesPublishingForbiddenLegacyEmail"], 1)
+        self.assertEqual(report["summary"]["forbiddenLegacyEmailOccurrences"], 1)
+        blocked_record = next(
+            record for record in report["records"] if record["path"] == "launch/basescan_resubmission_values.json"
+        )
+        self.assertEqual(blocked_record["forbiddenLegacyEmailsPresent"], [legacy_personal_gmail])
 
     def test_missing_and_targetless_critical_files_block_readiness(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -102,6 +134,8 @@ class DomainEmailPublicSwitchCheckTests(unittest.TestCase):
         self.assertIn("# GCA Domain Email Public Switch Check", markdown)
         self.assertIn("Current public email: `support@gcagochina.com`", markdown)
         self.assertIn("Legacy email scanned: `GCAgochina@outlook.com`", markdown)
+        for email in DEFAULT_FORBIDDEN_LEGACY_EMAILS:
+            self.assertIn(email, markdown)
         self.assertIn("Ready for BaseScan public email alignment: `true`", markdown)
         self.assertIn("Critical File Records", markdown)
         self.assertIn("site/support.html", markdown)

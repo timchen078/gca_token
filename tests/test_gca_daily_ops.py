@@ -18,24 +18,30 @@ BASESCAN_BLOCKED_OUTPUT = json.dumps({
     ],
     "domainEmailPublicSwitchSummary": {
         "status": "public-email-switch-pending",
-        "summary": {"filesStillUsingCurrentEmail": 3},
+        "summary": {
+            "filesStillUsingCurrentEmail": 3,
+            "filesPublishingForbiddenLegacyEmail": 3,
+        },
         "records": [
             {
                 "path": "site/support.html",
                 "status": "needs-switch",
                 "currentEmailOccurrences": 2,
+                "forbiddenLegacyEmailOccurrences": 2,
                 "targetEmailOccurrences": 0,
             },
             {
                 "path": "site/project.json",
                 "status": "needs-switch",
                 "currentEmailOccurrences": 1,
+                "forbiddenLegacyEmailOccurrences": 1,
                 "targetEmailOccurrences": 0,
             },
             {
                 "path": "site/external-reviews.json",
                 "status": "target-email-missing",
                 "currentEmailOccurrences": 0,
+                "forbiddenLegacyEmailOccurrences": 0,
                 "targetEmailOccurrences": 0,
             },
         ],
@@ -59,7 +65,10 @@ BASESCAN_STALE_SNAPSHOT_OUTPUT = json.dumps({
     ],
     "domainEmailPublicSwitchSummary": {
         "status": "public-email-switched",
-        "summary": {"filesStillUsingCurrentEmail": 0},
+        "summary": {
+            "filesStillUsingCurrentEmail": 0,
+            "filesPublishingForbiddenLegacyEmail": 0,
+        },
     },
     "domainEmailSnapshotAlignmentSummary": {
         "status": "stale-dns-snapshot-markers",
@@ -109,6 +118,11 @@ class GcaDailyOpsTests(unittest.TestCase):
         self.assertEqual(summary["baseScanPreflight"]["publicEmailSwitchStatus"], "public-email-switch-pending")
         self.assertEqual(summary["baseScanPreflight"]["filesStillUsingOldEmail"], 3)
         self.assertEqual(summary["baseScanPreflight"]["oldEmailFilePaths"], ["site/support.html", "site/project.json"])
+        self.assertEqual(summary["baseScanPreflight"]["filesPublishingForbiddenLegacyEmail"], 3)
+        self.assertEqual(
+            summary["baseScanPreflight"]["forbiddenLegacyEmailFilePaths"],
+            ["site/support.html", "site/project.json"],
+        )
         self.assertEqual(summary["baseScanPreflight"]["missingTargetEmailFilePaths"], ["site/external-reviews.json"])
         self.assertEqual(summary["baseScanPreflight"]["snapshotAlignmentStatus"], "aligned")
         self.assertEqual(summary["baseScanPreflight"]["snapshotAlignmentStaleMarkers"], 0)
@@ -144,6 +158,7 @@ class GcaDailyOpsTests(unittest.TestCase):
         self.assertEqual(summary["baseScanPreflight"]["snapshotAlignmentStatus"], "")
         self.assertEqual(summary["baseScanPreflight"]["snapshotAlignmentStaleMarkers"], 0)
         self.assertEqual(summary["baseScanPreflight"]["oldEmailFilePaths"], [])
+        self.assertEqual(summary["baseScanPreflight"]["forbiddenLegacyEmailFilePaths"], [])
         self.assertEqual(summary["baseScanPreflight"]["missingTargetEmailFilePaths"], [])
 
     def test_daily_ops_summarizes_basescan_snapshot_alignment_status(self):
@@ -161,6 +176,7 @@ class GcaDailyOpsTests(unittest.TestCase):
         self.assertTrue(summary["ok"])
         self.assertEqual(summary["baseScanPreflight"]["publicEmailSwitchStatus"], "public-email-switched")
         self.assertEqual(summary["baseScanPreflight"]["filesStillUsingOldEmail"], 0)
+        self.assertEqual(summary["baseScanPreflight"]["filesPublishingForbiddenLegacyEmail"], 0)
         self.assertEqual(summary["baseScanPreflight"]["snapshotAlignmentStatus"], "stale-dns-snapshot-markers")
         self.assertEqual(summary["baseScanPreflight"]["snapshotAlignmentStaleMarkers"], 2)
         self.assertEqual(summary["baseScanPreflight"]["snapshotAlignmentMissingCurrentDate"], 1)
@@ -331,11 +347,13 @@ class GcaDailyOpsTests(unittest.TestCase):
             self.assertTrue(summary["publicStatusSnapshot"]["ok"])
             self.assertEqual(summary["publicStatusSnapshot"]["baseScanPreflightStatus"], "blocked-before-basescan-resubmission")
             self.assertEqual(summary["publicStatusSnapshot"]["filesStillUsingOldEmail"], 3)
+            self.assertEqual(summary["publicStatusSnapshot"]["filesPublishingForbiddenLegacyEmail"], 3)
             payload = json.loads(json_output.read_text(encoding="utf-8"))
             page = html_output.read_text(encoding="utf-8")
             self.assertEqual(payload["snapshotGeneratedAt"], summary["generatedAt"])
             self.assertEqual(payload["dailyOps"]["steps"][0]["command"], "python3 tools/check_public_site.py --base-url https://gcagochina.com/ --timeout 20")
             self.assertEqual(payload["baseScanPreflight"]["oldEmailFilePaths"], ["site/support.html", "site/project.json"])
+            self.assertEqual(payload["baseScanPreflight"]["forbiddenLegacyEmailFilePaths"], ["site/support.html", "site/project.json"])
             self.assertEqual(payload["baseScanPreflight"]["missingTargetEmailFilePaths"], ["site/external-reviews.json"])
             self.assertEqual(payload["ownerActionQueue"][0]["id"], "activate-domain-mailbox")
             self.assertIn(summary["generatedAt"], page)
@@ -357,7 +375,14 @@ class GcaDailyOpsTests(unittest.TestCase):
                 "publicEmailSwitchStatus": "public-email-switch-pending",
                 "snapshotAlignmentStatus": "aligned",
                 "filesStillUsingOldEmail": 3,
+                "filesPublishingForbiddenLegacyEmail": 3,
                 "oldEmailFilePaths": [
+                    "site/support.html",
+                    "site/project.json",
+                    "/Users/abc/Desktop/gca_token/site/private.html",
+                    "../outside.json",
+                ],
+                "forbiddenLegacyEmailFilePaths": [
                     "site/support.html",
                     "site/project.json",
                     "/Users/abc/Desktop/gca_token/site/private.html",
@@ -408,6 +433,8 @@ class GcaDailyOpsTests(unittest.TestCase):
             self.assertEqual(payload["dailyOps"]["steps"][2]["blocksSummaryOk"], False)
             self.assertEqual(payload["baseScanPreflight"]["filesStillUsingOldEmail"], 3)
             self.assertEqual(payload["baseScanPreflight"]["oldEmailFilePaths"], ["site/support.html", "site/project.json"])
+            self.assertEqual(payload["baseScanPreflight"]["filesPublishingForbiddenLegacyEmail"], 3)
+            self.assertEqual(payload["baseScanPreflight"]["forbiddenLegacyEmailFilePaths"], ["site/support.html", "site/project.json"])
             self.assertEqual(payload["baseScanPreflight"]["missingTargetEmailFilePaths"], ["site/external-reviews.json"])
             self.assertEqual(payload["ownerActionQueue"][-1]["id"], "final-basescan-preflight")
             self.assertFalse(payload["boundaries"]["adminTokenPrinted"])
@@ -416,9 +443,11 @@ class GcaDailyOpsTests(unittest.TestCase):
             page = html_output.read_text(encoding="utf-8")
             self.assertIn("2026-05-30T10:11:12Z", page)
             self.assertIn("<code>filesStillUsingOldEmail</code> as 3 tracked files", page)
+            self.assertIn("<code>filesPublishingForbiddenLegacyEmail</code> as 3 tracked files", page)
             self.assertIn("<code>site/support.html</code>", page)
             self.assertIn("<code>site/external-reviews.json</code>", page)
             self.assertNotIn("/Users/abc", serialized)
+            self.assertNotIn("cxy070800@gmail.com", serialized + page)
             self.assertNotIn('href="daily-status.json"', page)
 
 

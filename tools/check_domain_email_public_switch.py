@@ -19,6 +19,10 @@ ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_CONFIG = ROOT / "site" / "domain-email.json"
 DEFAULT_CURRENT_EMAIL = "GCAgochina@outlook.com"
 DEFAULT_TARGET_EMAIL = "support@gcagochina.com"
+DEFAULT_FORBIDDEN_LEGACY_EMAILS = (
+    DEFAULT_CURRENT_EMAIL,
+    "cxy070800@gmail.com",
+)
 
 
 class PublicSwitchCheckError(RuntimeError):
@@ -57,13 +61,34 @@ def safe_relative_path(root: Path, relative_path: str) -> Path:
     return path
 
 
-def inspect_file(root: Path, relative_path: str, current_email: str, target_email: str) -> dict[str, Any]:
+def dedupe_emails(emails: list[str]) -> list[str]:
+    seen: set[str] = set()
+    deduped: list[str] = []
+    for email in emails:
+        normalized = str(email).strip()
+        key = normalized.lower()
+        if not normalized or key in seen:
+            continue
+        seen.add(key)
+        deduped.append(normalized)
+    return deduped
+
+
+def inspect_file(
+    root: Path,
+    relative_path: str,
+    current_email: str,
+    target_email: str,
+    forbidden_legacy_emails: list[str],
+) -> dict[str, Any]:
     path = safe_relative_path(root, relative_path)
     if not path.exists():
         return {
             "path": relative_path,
             "exists": False,
             "currentEmailOccurrences": 0,
+            "forbiddenLegacyEmailOccurrences": 0,
+            "forbiddenLegacyEmailsPresent": [],
             "targetEmailOccurrences": 0,
             "status": "missing",
             "action": "restore or remove this critical file entry before BaseScan resubmission",
@@ -74,9 +99,15 @@ def inspect_file(root: Path, relative_path: str, current_email: str, target_emai
         raise PublicSwitchCheckError(f"critical file is not UTF-8 text: {relative_path}") from exc
     current_count = text.count(current_email)
     target_count = text.count(target_email)
-    if current_count:
+    forbidden_counts = {
+        email: text.count(email)
+        for email in forbidden_legacy_emails
+        if email.lower() != target_email.lower() and text.count(email)
+    }
+    forbidden_count = sum(forbidden_counts.values())
+    if forbidden_count:
         status = "needs-switch"
-        action = f"replace {current_email} with {target_email} after domain email evidence is ready"
+        action = "remove or replace forbidden legacy email references with the target domain email before BaseScan resubmission"
     elif target_count:
         status = "switched"
         action = "no action"
@@ -87,6 +118,8 @@ def inspect_file(root: Path, relative_path: str, current_email: str, target_emai
         "path": relative_path,
         "exists": True,
         "currentEmailOccurrences": current_count,
+        "forbiddenLegacyEmailOccurrences": forbidden_count,
+        "forbiddenLegacyEmailsPresent": sorted(forbidden_counts),
         "targetEmailOccurrences": target_count,
         "status": status,
         "action": action,
@@ -122,13 +155,25 @@ def build_report(
     config = read_json(config_path)
     legacy_email = config.get("previousPublicEmail") or config.get("legacyEmail") or DEFAULT_CURRENT_EMAIL
     target_email = config.get("targetDomainEmail") or DEFAULT_TARGET_EMAIL
+    configured_forbidden = config.get("forbiddenLegacyEmails", [])
+    if configured_forbidden and not (
+        isinstance(configured_forbidden, list) and all(isinstance(item, str) for item in configured_forbidden)
+    ):
+        raise PublicSwitchCheckError("forbiddenLegacyEmails must be a list of email strings when provided")
+    forbidden_legacy_emails = dedupe_emails(
+        [str(legacy_email), *DEFAULT_FORBIDDEN_LEGACY_EMAILS, *(configured_forbidden or [])]
+    )
     critical_files = config.get("filesToUpdateAfterActivation", [])
     if not isinstance(critical_files, list) or not all(isinstance(item, str) for item in critical_files):
         raise PublicSwitchCheckError("filesToUpdateAfterActivation must be a list of relative file paths")
 
-    records = [inspect_file(root, path, legacy_email, target_email) for path in critical_files]
+    records = [
+        inspect_file(root, path, legacy_email, target_email, forbidden_legacy_emails)
+        for path in critical_files
+    ]
     status, ready, blockers = summarize_status(records)
     current_refs = sum(record["currentEmailOccurrences"] for record in records)
+    forbidden_refs = sum(record["forbiddenLegacyEmailOccurrences"] for record in records)
     target_refs = sum(record["targetEmailOccurrences"] for record in records)
     current_public_email = target_email if ready else str(config.get("currentPublicEmail") or legacy_email)
     return {
@@ -136,16 +181,21 @@ def build_report(
         "configFile": str(config_path),
         "currentEmail": current_public_email,
         "legacyEmail": legacy_email,
+        "forbiddenLegacyEmails": forbidden_legacy_emails,
         "targetDomainEmail": target_email,
         "status": status,
         "readyForBaseScanPublicEmailAlignment": ready,
         "blockedRequirements": blockers,
         "summary": {
             "criticalFilesChecked": len(records),
-            "filesStillUsingCurrentEmail": sum(1 for record in records if record["status"] == "needs-switch"),
+            "filesStillUsingCurrentEmail": sum(1 for record in records if record["currentEmailOccurrences"]),
+            "filesPublishingForbiddenLegacyEmail": sum(
+                1 for record in records if record["forbiddenLegacyEmailOccurrences"]
+            ),
             "filesMissingTargetEmail": sum(1 for record in records if record["status"] == "target-email-missing"),
             "missingCriticalFiles": sum(1 for record in records if record["status"] == "missing"),
             "currentEmailOccurrences": current_refs,
+            "forbiddenLegacyEmailOccurrences": forbidden_refs,
             "targetEmailOccurrences": target_refs,
         },
         "records": records,
@@ -171,6 +221,8 @@ def render_markdown(report: dict[str, Any]) -> str:
         "",
         f"- Current public email: `{report['currentEmail']}`",
         f"- Legacy email scanned: `{report['legacyEmail']}`",
+        "- Forbidden legacy emails scanned: "
+        + ", ".join(f"`{email}`" for email in report.get("forbiddenLegacyEmails", [])),
         f"- Target domain email: `{report['targetDomainEmail']}`",
         f"- Status: `{report['status']}`",
         f"- Ready for BaseScan public email alignment: `{str(report['readyForBaseScanPublicEmailAlignment']).lower()}`",
@@ -187,13 +239,14 @@ def render_markdown(report: dict[str, Any]) -> str:
         "",
         "## Critical File Records",
         "",
-        "| File | Status | Current refs | Target refs | Action |",
-        "| --- | --- | ---: | ---: | --- |",
+        "| File | Status | Current refs | Forbidden refs | Target refs | Action |",
+        "| --- | --- | ---: | ---: | ---: | --- |",
     ])
     for record in report["records"]:
         lines.append(
             f"| `{record['path']}` | `{record['status']}` | "
-            f"{record['currentEmailOccurrences']} | {record['targetEmailOccurrences']} | {record['action']} |"
+            f"{record['currentEmailOccurrences']} | {record.get('forbiddenLegacyEmailOccurrences', 0)} | "
+            f"{record['targetEmailOccurrences']} | {record['action']} |"
         )
     lines.extend([
         "",

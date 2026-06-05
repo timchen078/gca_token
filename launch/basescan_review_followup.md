@@ -13,7 +13,7 @@
 - Latest return notice date: 2026-05-23
 - Last checked: 2026-06-05; BaseScan return remains open, the final owner package was generated at `2026-06-05T11:01:28Z`, and the daily public status snapshot was refreshed at `2026-06-05T11:10:15Z`
 - Reply inbox: `support@gcagochina.com`
-- Historical prior inbox: `cxy070800@gmail.com`
+- Historical prior inbox: redacted non-domain legacy inbox
 
 Do not describe the BaseScan token profile as complete, published, or accepted until BaseScan confirms the update and the public contract page shows the submitted token information.
 
@@ -45,7 +45,7 @@ BaseScan replied that it could not process the token update request because the 
 - BaseScan remediation page remains live: `https://gcagochina.com/basescan-remediation.html`
 - Public GitHub repository remains live: `https://github.com/timchen078/gca_token`
 - Official inbox and spam folder for `support@gcagochina.com`
-- Historical Gmail inbox and spam folder for `cxy070800@gmail.com` only if BaseScan replies to an old thread
+- Redacted non-domain legacy inbox and spam folder only if BaseScan replies to an old thread
 - BaseScan account notifications
 - Contract page: `https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`
 - Public website remains live: `https://gcagochina.com/`
