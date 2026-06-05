@@ -57,6 +57,7 @@ ZH_STATUS_PAGE_URL = "https://gcagochina.com/zh-status.html"
 ZH_DOMAIN_EMAIL_PAGE_URL = "https://gcagochina.com/zh-domain-email.html"
 ZH_BASESCAN_PREFLIGHT_PAGE_URL = "https://gcagochina.com/zh-basescan-preflight.html"
 ZH_BASESCAN_SUBMIT_PAGE_URL = "https://gcagochina.com/zh-basescan-submit.html"
+ZH_BASESCAN_HANDOFF_PAGE_URL = "https://gcagochina.com/zh-basescan-handoff.html"
 ZH_LIQUIDITY_PAGE_URL = "https://gcagochina.com/zh-liquidity.html"
 ZH_SUPPLY_PAGE_URL = "https://gcagochina.com/zh-supply.html"
 ZH_SECURITY_PAGE_URL = "https://gcagochina.com/zh-security.html"
@@ -562,6 +563,8 @@ class LaunchPackageTests(unittest.TestCase):
         module.validate_zh_status_page((ROOT / "site" / "zh-status.html").read_text())
         module.validate_zh_domain_email_page((ROOT / "site" / "zh-domain-email.html").read_text())
         module.validate_zh_basescan_preflight_page((ROOT / "site" / "zh-basescan-preflight.html").read_text())
+        module.validate_zh_basescan_submit_page((ROOT / "site" / "zh-basescan-submit.html").read_text())
+        module.validate_zh_basescan_handoff_page((ROOT / "site" / "zh-basescan-handoff.html").read_text())
         module.validate_zh_liquidity_page((ROOT / "site" / "zh-liquidity.html").read_text())
         module.validate_zh_supply_page((ROOT / "site" / "zh-supply.html").read_text())
         module.validate_zh_security_page((ROOT / "site" / "zh-security.html").read_text())
@@ -978,6 +981,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Allow: /zh-status.html", robots)
         self.assertIn("Allow: /zh-domain-email.html", robots)
         self.assertIn("Allow: /zh-basescan-preflight.html", robots)
+        self.assertIn("Allow: /zh-basescan-submit.html", robots)
+        self.assertIn("Allow: /zh-basescan-handoff.html", robots)
         self.assertIn("Allow: /zh-liquidity.html", robots)
         self.assertIn("Allow: /zh-supply.html", robots)
         self.assertIn("Allow: /zh-security.html", robots)
@@ -1123,6 +1128,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(ZH_STATUS_PAGE_URL, sitemap)
         self.assertIn(ZH_DOMAIN_EMAIL_PAGE_URL, sitemap)
         self.assertIn(ZH_BASESCAN_PREFLIGHT_PAGE_URL, sitemap)
+        self.assertIn(ZH_BASESCAN_SUBMIT_PAGE_URL, sitemap)
+        self.assertIn(ZH_BASESCAN_HANDOFF_PAGE_URL, sitemap)
         self.assertIn(ZH_LIQUIDITY_PAGE_URL, sitemap)
         self.assertIn(ZH_SUPPLY_PAGE_URL, sitemap)
         self.assertIn(ZH_SECURITY_PAGE_URL, sitemap)
@@ -2232,6 +2239,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("不会连接钱包", page)
         self.assertIn("不会触碰合约", page)
         self.assertIn("https://basescan.org/tokenupdate/", page)
+        self.assertIn("zh-basescan-handoff.html", page)
+        self.assertIn("中文复审复制包", page)
         self.assertIn("BaseScan Handoff", page)
         self.assertIn("zh-basescan-preflight.html", page)
         self.assertIn("domain-email-evidence.html", page)
@@ -2260,6 +2269,56 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertNotIn('href="basescan-handoff.json"', page)
         self.assertNotIn('href="basescan-preflight.json"', page)
         self.assertNotIn('href="domain-email-evidence.json"', page)
+
+    def test_zh_basescan_handoff_page_provides_copy_blocks_without_wallet_actions(self):
+        page = (ROOT / "site" / "zh-basescan-handoff.html").read_text()
+
+        self.assertIn("GCA 中文 BaseScan 复审复制包", page)
+        self.assertIn("BaseScan 复审复制包 / Owner Handoff", page)
+        self.assertIn("下一次 BaseScan Token Profile 复审需要复制的英文内容", page)
+        self.assertIn("support@gcagochina.com", page)
+        self.assertIn("Base Mainnet / 8453", page)
+        self.assertIn("GCA/USDT", page)
+        self.assertIn("不会提交 BaseScan", page)
+        self.assertIn("不会发送邮件", page)
+        self.assertIn("不会写 DNS", page)
+        self.assertIn("不会连接钱包", page)
+        self.assertIn("不会签名", page)
+        self.assertIn("不会转账", page)
+        self.assertIn("不会操作合约", page)
+        self.assertIn("https://basescan.org/tokenupdate/", page)
+        self.assertIn("zh-basescan-submit.html", page)
+        self.assertIn("zh-basescan-preflight.html", page)
+        self.assertIn("basescan-handoff.html", page)
+        self.assertIn("readyForBaseScanResubmission", page)
+        self.assertIn("team.html#tim-chen", page)
+        self.assertIn("tim-chen.html", page)
+        self.assertIn("Copy/Paste Reviewer Comment", page)
+        self.assertIn("Please review the updated GCA token profile metadata", page)
+        self.assertIn("Official project email: support@gcagochina.com", page)
+        self.assertIn("Copy/Paste Basic Information", page)
+        self.assertIn("Project Email Address: support@gcagochina.com", page)
+        self.assertIn("32x32 SVG Logo: https://gcagochina.com/assets/gca-logo.svg", page)
+        self.assertIn("Token Symbol: GCA", page)
+        self.assertIn("Decimals: 18", page)
+        self.assertIn("Total Supply: 1000000000", page)
+        self.assertIn("Copy/Paste Evidence Links", page)
+        self.assertIn(GITHUB_REPO_URL, page)
+        self.assertIn("https://x.com/GCAAIGoChina", page)
+        self.assertIn("Copy/Paste Market And Supply", page)
+        self.assertIn(OFFICIAL_POOL_ADDRESS, page)
+        self.assertIn(OFFICIAL_GECKOTERMINAL_URL, page)
+        self.assertIn(OFFICIAL_DEXSCREENER_URL, page)
+        self.assertIn(RESERVE_WALLET, page)
+        self.assertIn("Reserve boundary: Do not describe the reserve as locked", page)
+        self.assertIn("BaseScan ticket", page)
+        self.assertIn("不要说已通过", page)
+        self.assertIn("不要使用旧邮箱", page)
+        self.assertIn("不要使用旧池", page)
+        self.assertIn("不要说外部审计完成", page)
+        self.assertNotIn('href="basescan-handoff.json"', page)
+        self.assertNotIn('href="basescan-preflight.json"', page)
+        self.assertNotIn(OLD_WETH_POOL_ADDRESS, page)
 
     def test_well_known_identity_files_are_public_and_conservative(self):
         identity = json.loads((ROOT / "site" / ".well-known" / "gca-token.json").read_text())
@@ -8163,6 +8222,7 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "site" / "basescan-preflight.html",
             ROOT / "site" / "zh-basescan-preflight.html",
             ROOT / "site" / "zh-basescan-submit.html",
+            ROOT / "site" / "zh-basescan-handoff.html",
             ROOT / "site" / "basescan-preflight.json",
             ROOT / "site" / "wallet-warning.html",
             ROOT / "site" / "wallet-warning.json",
