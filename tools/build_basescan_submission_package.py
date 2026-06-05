@@ -62,6 +62,7 @@ def format_lines(items: list[str]) -> str:
 def build_form_fields(values: dict[str, Any]) -> dict[str, Any]:
     market = values.get("officialMarketPool", {})
     supply = values.get("supplyDisclosure", {})
+    supply_page = supply.get("supplyDisclosurePageUrl") or supply.get("supplyDisclosureUrl")
     return {
         "basicInformation": {
             "contractAddress": values.get("contractAddress"),
@@ -107,7 +108,8 @@ def build_form_fields(values: dict[str, Any]) -> dict[str, Any]:
             "targetPublicAllocation": supply.get("targetPublicAllocation"),
             "ownerHeldReserve": supply.get("ownerHeldReserve"),
             "ownerReserveWallet": supply.get("ownerReserveWallet"),
-            "supplyDisclosure": supply.get("supplyDisclosureUrl"),
+            "supplyDisclosure": supply_page,
+            "supplyDisclosureData": supply.get("supplyDisclosureUrl"),
             "reserveBoundary": "Do not describe the reserve as locked, vested, or multisig-controlled unless custody changes on-chain.",
         },
     }
@@ -427,6 +429,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--skip-url-checks", action="store_true", help="Skip public URL reachability checks.")
     parser.add_argument("--output-json", default="", help="Write submission package JSON to this path.")
     parser.add_argument("--output-md", default="", help="Write submission package Markdown to this path.")
+    parser.add_argument("--generated-at", default="", help="Override generatedAt timestamp for deterministic owner packages.")
     parser.add_argument("--json", action="store_true", help="Print package JSON to stdout.")
     parser.add_argument("--require-ready", action="store_true", help="Exit non-zero when package is not ready.")
     return parser
@@ -456,7 +459,11 @@ def main(argv: list[str] | None = None) -> int:
             snapshot_alignment_report=snapshot_alignment_report,
             public_url_checks=public_url_checks,
         )
-        package = build_submission_package(values=values, readiness_report=readiness_report)
+        package = build_submission_package(
+            values=values,
+            readiness_report=readiness_report,
+            generated_at=args.generated_at or None,
+        )
     except (BaseScanReadinessError, PublicSwitchCheckError, SnapshotAlignmentError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2
