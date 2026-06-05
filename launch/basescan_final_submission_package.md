@@ -1,6 +1,6 @@
 # GCA BaseScan Submission Package
 
-- Generated: `2026-06-05T10:37:46Z`
+- Generated: `2026-06-05T11:01:28Z`
 - Status: `ready-for-owner-submission`
 - Ready for owner submission: `true`
 - Next action: Owner may copy this package into one clean BaseScan token profile update.
