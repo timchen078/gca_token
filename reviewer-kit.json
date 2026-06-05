@@ -107,7 +107,7 @@
     "baseScanTokenProfile": "ready-for-owner-resubmission",
     "baseScanTokenProfileResubmissionDate": "2026-05-13",
     "baseScanTokenProfileLastCheckedDate": "2026-06-04",
-    "baseScanFinalSubmissionPackageGeneratedAt": "2026-06-04T08:49:54Z",
+    "baseScanFinalSubmissionPackageGeneratedAt": "2026-06-05T10:37:46Z",
     "dailyStatusGeneratedAt": "2026-06-05T10:29:19Z",
     "dailyStatusPage": "https://gcagochina.com/daily-status.html",
     "dailyStatus": "https://gcagochina.com/daily-status.json",
@@ -145,7 +145,7 @@
     "targetSender": "support@gcagochina.com",
     "currentActiveContact": "support@gcagochina.com",
     "readyForBaseScanResubmission": true,
-    "finalSubmissionPackageGeneratedAt": "2026-06-04T08:49:54Z",
+    "finalSubmissionPackageGeneratedAt": "2026-06-05T10:37:46Z",
     "dailyStatusGeneratedAt": "2026-06-05T10:29:19Z",
     "dailyStatusPage": "https://gcagochina.com/daily-status.html",
     "dailyStatus": "https://gcagochina.com/daily-status.json",
@@ -344,7 +344,7 @@
       "Use the reviewer kit page and JSON when a platform asks for centralized public evidence.",
       "If a reviewer asks for local member-ledger evidence, export a public redacted review package and verify its digest before sharing.",
       "Do not send duplicate Blockaid reports unless Blockaid, MetaMask, or Uniswap asks for more information.",
-      "Use the domain email setup plan at https://gcagochina.com/domain-email.html and the evidence checklist at https://gcagochina.com/domain-email-evidence.html; support@gcagochina.com is active and the 2026-05-30 DNS snapshot shows MX/SPF/DKIM/DMARC present, so `readyForBaseScanEmailEvidence` is true. The final BaseScan owner package was regenerated on 2026-06-04T08:49:54Z and the daily public status snapshot was refreshed on 2026-06-05T10:29:19Z.",
+      "Use the domain email setup plan at https://gcagochina.com/domain-email.html and the evidence checklist at https://gcagochina.com/domain-email-evidence.html; support@gcagochina.com is active and the 2026-05-30 DNS snapshot shows MX/SPF/DKIM/DMARC present, so `readyForBaseScanEmailEvidence` is true. The final BaseScan owner package was regenerated on 2026-06-05T10:37:46Z and the daily public status snapshot was refreshed on 2026-06-05T10:29:19Z.",
       "Before resubmitting, keep the activation evidence packet available at https://gcagochina.com/domain-email.html#evidenceTitle, rerun the final preflight, and include the published Tim Chen professional profile URL.",
       "Keep the official GCA/USDT pool, logo, website, Telegram, X, and JSON links consistent."
     ]
