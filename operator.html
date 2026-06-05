@@ -578,6 +578,33 @@
         </div>
       </section>
 
+      <section class="section panel" aria-labelledby="memberOpsTitle">
+        <h2 id="memberOpsTitle">Member Access Ops Pipeline</h2>
+        <p class="note">Use this after account, wallet verification, credit ledger, member ledger, or member-benefit review records exist in the live Worker. It requires the ignored local <code>cloudflare/gca-registration-worker/.env.admin.local</code> file with <code>ADMIN_READ_TOKEN</code>. The pipeline reads token-protected records, writes ignored local reports, and never prints the token, writes production data, requests signatures, sends transactions, or transfers GCA automatically.</p>
+        <div class="handoff-grid section">
+          <div>
+            <div class="field">
+              <label for="memberOpsCommandText">Member ops command</label>
+              <textarea id="memberOpsCommandText" class="copy" readonly>.venv/bin/python tools/run_gca_member_access_ops.py --base-url https://gca-registration-api.gcagochina.workers.dev --limit 100 --redact none --summary-output .gca_access_data/gca_member_access_ops_summary.json</textarea>
+            </div>
+            <div class="field">
+              <label for="memberHoldingCommandText">Optional 30-day holding report</label>
+              <textarea id="memberHoldingCommandText" class="copy" readonly>.venv/bin/python tools/run_gca_member_access_ops.py --base-url https://gca-registration-api.gcagochina.workers.dev --limit 100 --redact none --include-holding-report --holding-no-live-read --summary-output .gca_access_data/gca_member_access_ops_summary.json</textarea>
+            </div>
+          </div>
+          <div>
+            <div class="list">
+              <div class="row"><span>Token file</span><strong><code>cloudflare/gca-registration-worker/.env.admin.local</code></strong></div>
+              <div class="row"><span>Export JSON</span><strong><code>.gca_access_data/cloudflare_member_access_export.json</code></strong></div>
+              <div class="row"><span>Report summary</span><strong><code>.gca_access_data/member_access_report/gca_member_access_summary.json</code></strong></div>
+              <div class="row"><span>Support queue</span><strong><code>.gca_access_data/member_access_report/gca_member_support_queue.csv</code></strong></div>
+              <div class="row"><span>Holding summary</span><strong><code>.gca_access_data/member_access_report/gca_holding_period_summary.json</code></strong></div>
+              <div class="row"><span>Boundary</span><strong>No automatic member-benefit transfer</strong></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section class="section two">
         <div class="panel">
           <h2>Operator Boundaries</h2>
