@@ -12416,9 +12416,12 @@ def validate_listing_readiness_page(text: str) -> None:
 
 def validate_security_txt(text: str) -> None:
     label = "/.well-known/security.txt"
-    assert_contains(text, "Contact: mailto:GCAgochina@outlook.com", label)
+    assert_contains(text, "Contact: mailto:support@gcagochina.com", label)
+    assert_contains(text, "Preferred-Languages: en, zh", label)
     assert_contains(text, "Policy: https://gcagochina.com/security.html", label)
     assert_contains(text, "Canonical: https://gcagochina.com/.well-known/security.txt", label)
+    assert_contains(text, "Expires: 2027-05-12T00:00:00+07:00", label)
+    assert_not_contains(text, "GCAgochina@outlook.com", label)
 
 
 def validate_sitemap(text: str) -> None:

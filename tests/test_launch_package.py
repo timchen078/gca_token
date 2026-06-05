@@ -2584,6 +2584,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Policy: https://gcagochina.com/security.html", security)
         self.assertIn("Preferred-Languages: en, zh", security)
         self.assertIn("Expires: 2027-05-12T00:00:00+07:00", security)
+        self.assertNotIn("GCAgochina@outlook.com", security)
 
     def test_public_site_discloses_current_operational_status(self):
         site = (ROOT / "site" / "index.html").read_text()
