@@ -309,7 +309,7 @@
 
     <main class="shell">
       <section aria-labelledby="title">
-        <p class="eyebrow">中文运营流程 / 2026-05-20</p>
+        <p class="eyebrow">中文运营流程 / 2026-06-05</p>
         <h1 id="title">GCA 中文运营流程</h1>
         <p class="lead">这一页说明用户在官网提交邮箱和会员账户资料以后，GCA 运营者应该怎样同步 Cloudflare D1 记录、导出联系名单、处理退订、保留本地账本，并把会员权益审核接到支持流程里。</p>
         <p class="lead">当前邮箱注册、邮箱退订、账户入口、只读钱包验证、符合条件的 100 credits / GCA Member 账本记录已经上线；10,000 GCA 会员权益仍需人工审核。</p>
@@ -384,6 +384,38 @@
           <h2>一键运营同步</h2>
           <p class="note">这个命令只给运营者在本地运行。它读取 token 保护的管理员接口，同步注册和退订记录，导出内部 CSV、public-redacted CSV 和运营汇总。</p>
           <pre>python3 tools/run_gca_registration_ops.py --limit 100 --data-dir .gca_access_data</pre>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="memberOpsTitle">
+        <p class="eyebrow">Member Access Ops</p>
+        <h2 id="memberOpsTitle">会员后台运营流程</h2>
+        <p class="note">当 live Worker 已经有账户、钱包验证、100 credits、GCA Member 或会员权益审核记录后，运营者在本地运行这个流程。它需要 ignored 的 <code>cloudflare/gca-registration-worker/.env.admin.local</code> 文件和 <code>ADMIN_READ_TOKEN</code>。输出只写到 <code>.gca_access_data/</code>，不提交到公开仓库。</p>
+        <div class="grid">
+          <article class="card">
+            <h3>1. 受保护导出</h3>
+            <p class="note">运行 <code>.venv/bin/python tools/run_gca_member_access_ops.py --base-url https://gca-registration-api.gcagochina.workers.dev --limit 100 --redact none --summary-output .gca_access_data/gca_member_access_ops_summary.json</code>，只在本机读取 token 保护的会员后台数据。</p>
+          </article>
+          <article class="card">
+            <h3>2. 本地报告</h3>
+            <p class="note">输出包含 <code>.gca_access_data/cloudflare_member_access_export.json</code>、账户/钱包/credits/member CSV，以及 <code>.gca_access_data/member_access_report/gca_member_access_summary.json</code>。</p>
+          </article>
+          <article class="card">
+            <h3>3. 支持审核队列</h3>
+            <p class="note">流程生成 <code>.gca_access_data/member_access_report/gca_member_support_queue.csv</code>，用于人工确认用户状态、补资料要求和支持回复，不能自动批准权益。</p>
+          </article>
+          <article class="card">
+            <h3>4. 30 天持有资料</h3>
+            <p class="note">需要 30 天持有审核时，使用 <code>--include-holding-report --holding-no-live-read</code> 基于已有快照生成报告；汇总写到 <code>.gca_access_data/member_access_report/gca_holding_period_summary.json</code>。</p>
+          </article>
+          <article class="card">
+            <h3>5. 运营摘要刷新</h3>
+            <p class="note">会员后台同步后运行 <code>.venv/bin/python tools/run_gca_daily_ops.py --build-digest --update-public-status</code>，让本地运营摘要展示会员数量和处理状态，不暴露用户明细。</p>
+          </article>
+          <article class="card">
+            <h3>6. 不自动转账</h3>
+            <p class="note">会员后台流程只做只读余额检查和本地账本整理；不会请求签名、交易或钱包授权，也不会自动转账 GCA。10,000 GCA 会员权益仍由储备钱包人工处理。</p>
+          </article>
         </div>
       </section>
 
