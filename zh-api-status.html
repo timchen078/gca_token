@@ -310,9 +310,10 @@
 
     <main class="shell">
       <section aria-labelledby="title">
-        <p class="eyebrow">中文 API 状态 / 2026-05-20</p>
+        <p class="eyebrow">中文 API 状态 / 2026-06-05</p>
         <h1 id="title">GCA 中文 API 状态</h1>
         <p class="lead">这一页用中文说明 GCA 邮箱注册和邮箱退订接口的当前状态。公网邮箱注册已经接到 Cloudflare Workers + D1，普通用户可以通过官网表单提交邮箱；管理员读取接口仍需要本地管理 token。</p>
+        <p class="lead">最新公网只读检查已在 <code>2026-06-05T11:46:47Z</code> 通过，检查范围包括健康接口、CORS 和未授权管理员读取拦截，不写入测试注册记录。</p>
         <p class="lead">这个 API 只处理邮箱注册和不再联系请求，不需要钱包、不需要签名、不需要付款，也不会激活 100 credits、GCA Member 或 10,000 GCA 会员权益。</p>
         <div class="actions">
           <a class="button primary" href="register.html">打开邮箱注册</a>
@@ -338,6 +339,10 @@
         <div class="fact">
           <span class="label">公开检查</span>
           <span class="value good">只读 / 不需要 secrets</span>
+        </div>
+        <div class="fact">
+          <span class="label">最新检查</span>
+          <span class="value good">2026-06-05 通过</span>
         </div>
         <div class="fact">
           <span class="label">管理员读取</span>
