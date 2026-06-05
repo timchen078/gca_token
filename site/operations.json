@@ -54,6 +54,34 @@
       "publicRedactedCsvRequiredBeforeExternalSharing": true
     }
   },
+  "memberAccessOpsPipeline": {
+    "status": "token-protected-member-ops-ready",
+    "provider": "Cloudflare Workers + D1",
+    "workerBaseUrl": "https://gca-registration-api.gcagochina.workers.dev",
+    "adminTokenFile": "cloudflare/gca-registration-worker/.env.admin.local",
+    "adminTokenEnvironmentVariable": "ADMIN_READ_TOKEN",
+    "pipelineCommand": ".venv/bin/python tools/run_gca_member_access_ops.py --base-url https://gca-registration-api.gcagochina.workers.dev --limit 100 --redact none --summary-output .gca_access_data/gca_member_access_ops_summary.json",
+    "offlineHoldingReportCommand": ".venv/bin/python tools/run_gca_member_access_ops.py --base-url https://gca-registration-api.gcagochina.workers.dev --limit 100 --redact none --include-holding-report --holding-no-live-read --summary-output .gca_access_data/gca_member_access_ops_summary.json",
+    "digestRefreshCommand": ".venv/bin/python tools/run_gca_daily_ops.py --build-digest --update-public-status",
+    "localExportJson": ".gca_access_data/cloudflare_member_access_export.json",
+    "reportSummaryOutput": ".gca_access_data/member_access_report/gca_member_access_summary.json",
+    "supportQueueOutput": ".gca_access_data/member_access_report/gca_member_support_queue.csv",
+    "supportQueueSummaryOutput": ".gca_access_data/member_access_report/gca_member_support_queue_summary.json",
+    "holdingPeriodSummaryOutput": ".gca_access_data/member_access_report/gca_holding_period_summary.json",
+    "pipelineSummaryOutput": ".gca_access_data/gca_member_access_ops_summary.json",
+    "boundaries": {
+      "operatorOnly": true,
+      "ignoredLocalOutputs": true,
+      "writesProductionData": false,
+      "adminTokenPrinted": false,
+      "requiresSignature": false,
+      "requiresTransaction": false,
+      "automaticTokenTransfer": false,
+      "memberBenefitTransferAutomatic": false,
+      "holdingReportLiveReadOptional": true,
+      "holdingNoLiveReadUsesExistingSnapshots": true
+    }
+  },
   "identity": {
     "network": "Base Mainnet",
     "chainId": 8453,

@@ -4560,6 +4560,14 @@ def validate_operator_page(text: str) -> None:
     assert_contains(text, "Copy Handoff Reply", label)
     assert_contains(text, "Copy Contact Export Commands", label)
     assert_contains(text, "Email Registration Intake", label)
+    assert_contains(text, "Member Access Ops Pipeline", label)
+    assert_contains(text, "tools/run_gca_member_access_ops.py", label)
+    assert_contains(text, "cloudflare/gca-registration-worker/.env.admin.local", label)
+    assert_contains(text, "ADMIN_READ_TOKEN", label)
+    assert_contains(text, ".gca_access_data/cloudflare_member_access_export.json", label)
+    assert_contains(text, ".gca_access_data/member_access_report/gca_member_support_queue.csv", label)
+    assert_contains(text, ".gca_access_data/member_access_report/gca_holding_period_summary.json", label)
+    assert_contains(text, "No automatic member-benefit transfer", label)
     assert_contains(text, "Latest Email Registration Records", label)
     assert_contains(text, "Read-only API check command", label)
     assert_contains(text, "tools/check_gca_registration_api.py", label)
@@ -6451,6 +6459,14 @@ def validate_operations_page(text: str) -> None:
     assert_contains(text, ".gca_access_data/email_registrations.jsonl", label)
     assert_contains(text, ".gca_access_data/gca_email_contacts_public_redacted.csv", label)
     assert_contains(text, ".gca_access_data/gca_registration_ops_summary.json", label)
+    assert_contains(text, "Member Access Ops Pipeline", label)
+    assert_contains(text, "tools/run_gca_member_access_ops.py", label)
+    assert_contains(text, ".gca_access_data/cloudflare_member_access_export.json", label)
+    assert_contains(text, ".gca_access_data/member_access_report/gca_member_access_summary.json", label)
+    assert_contains(text, ".gca_access_data/member_access_report/gca_member_support_queue.csv", label)
+    assert_contains(text, ".gca_access_data/member_access_report/gca_holding_period_summary.json", label)
+    assert_contains(text, "--include-holding-report --holding-no-live-read", label)
+    assert_contains(text, "No Automatic Transfer", label)
     for step in (
         "Intake Triage",
         "Identity Check",
@@ -6581,6 +6597,48 @@ def validate_operations_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong ops summary")
     if email_ops.get("boundaries", {}).get("publicRedactedCsvRequiredBeforeExternalSharing") is not True:
         raise SiteCheckError(f"{label}: missing redacted CSV boundary")
+    member_ops = payload.get("memberAccessOpsPipeline", {})
+    if member_ops.get("status") != "token-protected-member-ops-ready":
+        raise SiteCheckError(f"{label}: wrong member ops status")
+    if member_ops.get("provider") != "Cloudflare Workers + D1":
+        raise SiteCheckError(f"{label}: wrong member ops provider")
+    if member_ops.get("workerBaseUrl") != "https://gca-registration-api.gcagochina.workers.dev":
+        raise SiteCheckError(f"{label}: wrong member ops worker base")
+    if member_ops.get("adminTokenFile") != "cloudflare/gca-registration-worker/.env.admin.local":
+        raise SiteCheckError(f"{label}: wrong member ops token file")
+    if member_ops.get("adminTokenEnvironmentVariable") != "ADMIN_READ_TOKEN":
+        raise SiteCheckError(f"{label}: wrong member ops token variable")
+    if "tools/run_gca_member_access_ops.py" not in member_ops.get("pipelineCommand", ""):
+        raise SiteCheckError(f"{label}: missing member ops pipeline command")
+    if "--include-holding-report --holding-no-live-read" not in member_ops.get("offlineHoldingReportCommand", ""):
+        raise SiteCheckError(f"{label}: missing offline holding command")
+    if "tools/run_gca_daily_ops.py --build-digest --update-public-status" not in member_ops.get("digestRefreshCommand", ""):
+        raise SiteCheckError(f"{label}: missing digest refresh command")
+    if member_ops.get("localExportJson") != ".gca_access_data/cloudflare_member_access_export.json":
+        raise SiteCheckError(f"{label}: wrong member export output")
+    if member_ops.get("supportQueueOutput") != ".gca_access_data/member_access_report/gca_member_support_queue.csv":
+        raise SiteCheckError(f"{label}: wrong support queue output")
+    if member_ops.get("holdingPeriodSummaryOutput") != ".gca_access_data/member_access_report/gca_holding_period_summary.json":
+        raise SiteCheckError(f"{label}: wrong holding summary output")
+    member_boundaries = member_ops.get("boundaries", {})
+    for key in (
+        "operatorOnly",
+        "ignoredLocalOutputs",
+        "holdingReportLiveReadOptional",
+        "holdingNoLiveReadUsesExistingSnapshots",
+    ):
+        if member_boundaries.get(key) is not True:
+            raise SiteCheckError(f"{label}: missing member ops boundary {key}")
+    for key in (
+        "writesProductionData",
+        "adminTokenPrinted",
+        "requiresSignature",
+        "requiresTransaction",
+        "automaticTokenTransfer",
+        "memberBenefitTransferAutomatic",
+    ):
+        if member_boundaries.get(key) is not False:
+            raise SiteCheckError(f"{label}: unsafe member ops boundary {key}")
     for workflow_id in (
         "intake-triage",
         "identity-check",
