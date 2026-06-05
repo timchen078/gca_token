@@ -194,6 +194,7 @@ FORBIDDEN_PUBLIC_CLAIM_PATTERNS = [
     "刷量",
     "对倒",
 ]
+LEGACY_PERSONAL_GMAIL = "cxy070800@gmail.com"
 
 
 class SiteCheckError(AssertionError):
@@ -12955,6 +12956,7 @@ def run_checks(base_url: str, timeout: float, allow_insecure_tls: bool = False) 
             url, body = fetch_text(base_url, path, timeout, context)
             validator(body)
             assert_no_forbidden_public_claims(body, path)
+            assert_not_contains(body, LEGACY_PERSONAL_GMAIL, path)
         except SiteCheckError as exc:
             failures.append(str(exc))
             print(f"[fail] {path}: {exc}", file=sys.stderr)

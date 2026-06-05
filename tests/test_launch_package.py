@@ -224,6 +224,20 @@ class LaunchPackageTests(unittest.TestCase):
 
         self.assertEqual([], offenders)
 
+    def test_public_site_text_files_do_not_publish_legacy_personal_gmail(self):
+        offenders = []
+        legacy_email = "cxy070800@gmail.com"
+        text_suffixes = {".css", ".html", ".js", ".json", ".svg", ".txt", ".xml"}
+        for path in (ROOT / "site").rglob("*"):
+            if path.suffix not in text_suffixes:
+                continue
+            rel = str(path.relative_to(ROOT / "site"))
+            content = path.read_text()
+            if legacy_email in content:
+                offenders.append(rel)
+
+        self.assertEqual([], offenders)
+
     def test_public_site_health_check_script_matches_canonical_identity(self):
         script_path = ROOT / "tools" / "check_public_site.py"
         script = script_path.read_text()
@@ -2469,6 +2483,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(identity["officialUrls"]["x"], X_URL)
         self.assertEqual(identity["officialUrls"]["creditsCatalogPage"], CREDITS_PAGE_URL)
         self.assertEqual(identity["officialUrls"]["creditsCatalog"], CREDITS_URL)
+        self.assertEqual(identity["officialContact"]["dataPlatformEmail"], "support@gcagochina.com")
+        self.assertEqual(identity["officialContact"]["baseScanSubmissionEmail"], "support@gcagochina.com")
         self.assertEqual(identity["market"]["officialPair"], "GCA/USDT")
         self.assertEqual(identity["market"]["poolAddress"], OFFICIAL_POOL_ADDRESS)
         self.assertEqual(identity["market"]["quoteAssetAddress"], BASE_USDT_ADDRESS)
@@ -6785,6 +6801,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("token logo display", kit["metadataUse"]["safeUse"])
         self.assertIn("third-party audit completion", kit["metadataUse"]["doNotUseToImply"])
         self.assertEqual(kit["contact"]["dataPlatformEmail"], "support@gcagochina.com")
+        self.assertEqual(kit["contact"]["baseScanSubmissionEmail"], "support@gcagochina.com")
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, json.dumps(kit))
         self.assertNotIn("GCA/WETH", json.dumps(kit))
 
