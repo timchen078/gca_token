@@ -79,7 +79,7 @@ GCA, short for Go China Access, is a fixed-supply ERC-20 token on Base Mainnet. 
 - Do not describe the owner reserve as locked, vested, or multisig-controlled.
 - Do not describe liquidity as deep or stable.
 - Do not claim price support, yield, return promises, or finished product utility.
-- Do not claim 100 utility credits, GCA Member status, account UI, or trading-related product access are public self-service features before the published release gates are completed.
+- Do not claim 100 utility credits, GCA Member status, account UI, or trading-related product access are automatic public token-claim or trading-access features before the published release gates are completed.
 - Do not claim platform revenue distribution or automatic live trading permission.
 
 ## If GeckoTerminal Later Asks For More Information

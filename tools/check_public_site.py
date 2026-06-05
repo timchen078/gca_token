@@ -6598,8 +6598,8 @@ def validate_access_json(text: str) -> None:
     for key in (
         "controlledHttpsAccountUiLive",
         "directSubmissionEndpointConfigured",
-        "creditsSelfServiceClaimable",
-        "gcaMemberSelfServiceClaimable",
+        "creditsEligibilitySubmissionLive",
+        "gcaMemberEligibilitySubmissionLive",
         "walletVerificationLive",
         "creditLedgerWritesLive",
         "memberLedgerWritesLive",
@@ -6835,8 +6835,8 @@ def validate_operations_json(text: str) -> None:
         "backendLive",
         "accountAndMemberBackendLive",
         "controlledHttpsAccountUiLive",
-        "creditsSelfServiceClaimable",
-        "gcaMemberSelfServiceClaimable",
+        "creditsEligibilitySubmissionLive",
+        "gcaMemberEligibilitySubmissionLive",
         "ledgerWritesLive",
     ):
         if state.get(key) is not True:
@@ -7241,8 +7241,8 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: local development backend should be available")
     for key in (
         "controlledHttpsAccountUiLive",
-        "creditsSelfServiceClaimable",
-        "gcaMemberSelfServiceClaimable",
+        "creditsEligibilitySubmissionLive",
+        "gcaMemberEligibilitySubmissionLive",
         "walletVerificationLive",
         "creditLedgerWritesLive",
         "memberLedgerWritesLive",
@@ -8062,19 +8062,26 @@ def validate_review_queue_json(text: str) -> None:
         raise SiteCheckError(f"{label}: contractOnly must be true")
     for key in (
         "controlledHttpsAccountUiLive",
-        "creditsSelfServiceClaimable",
-        "gcaMemberSelfServiceClaimable",
+        "creditsEligibilitySubmissionLive",
+        "gcaMemberEligibilitySubmissionLive",
         "ledgerWritesLive",
+        "creditLedgerRecordCreationLive",
+        "memberLedgerRecordCreationLive",
+        "manualReviewRequired",
     ):
         if state.get(key) is not True:
             raise SiteCheckError(f"{label}: {key} must be true")
     for key in (
         "publicQueueLive",
         "publicSubmissionQueueLive",
+        "memberBenefitSelfServiceClaimable",
+        "memberBenefitAutomaticTransfer",
         "liveTradingEnabled",
     ):
         if state.get(key) is not False:
             raise SiteCheckError(f"{label}: {key} must be false")
+    if "member-benefit transfer remains manual" not in state.get("publicClaimBoundary", ""):
+        raise SiteCheckError(f"{label}: missing public claim boundary")
     if identity.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
     if identity.get("contractAddress") != MAINNET_ADDRESS:
@@ -8253,7 +8260,7 @@ def validate_credits_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong currentStage")
     if state.get("draftServiceCatalogOnly") is not False:
         raise SiteCheckError(f"{label}: draftServiceCatalogOnly must be false")
-    for key in ("publicAccountUiLive", "creditsSelfServiceClaimable", "gcaMemberSelfServiceClaimable", "controlledHttpsAccountUiLive", "walletVerificationLive", "creditLedgerWritesLive", "memberLedgerWritesLive"):
+    for key in ("publicAccountUiLive", "creditsEligibilitySubmissionLive", "gcaMemberEligibilitySubmissionLive", "controlledHttpsAccountUiLive", "walletVerificationLive", "creditLedgerWritesLive", "memberLedgerWritesLive"):
         if state.get(key) is not True:
             raise SiteCheckError(f"{label}: {key} must be true")
     if state.get("liveTradingEnabled") is not False:
@@ -8449,7 +8456,7 @@ def validate_release_gates_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong currentStage")
     if state.get("publicProductSpecOnly") is not False:
         raise SiteCheckError(f"{label}: publicProductSpecOnly must be false")
-    for key in ("publicAccountUiLive", "creditsSelfServiceClaimable", "gcaMemberSelfServiceClaimable", "walletVerificationLive", "creditLedgerWritesLive", "memberLedgerWritesLive", "memberBenefitManualReviewOnly"):
+    for key in ("publicAccountUiLive", "creditsEligibilitySubmissionLive", "gcaMemberEligibilitySubmissionLive", "walletVerificationLive", "creditLedgerWritesLive", "memberLedgerWritesLive", "memberBenefitManualReviewOnly"):
         if state.get(key) is not True:
             raise SiteCheckError(f"{label}: {key} must be true")
     if state.get("liveTradingEnabled") is not False:
@@ -9391,13 +9398,13 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: unexpected privacy and terms status")
     if payload.get("roadmap", {}).get("status") != "public-roadmap-published":
         raise SiteCheckError(f"{label}: unexpected roadmap status")
-    if payload.get("roadmap", {}).get("publicSelfServiceClaimsLive") is not True:
+    if payload.get("roadmap", {}).get("publicEligibilitySubmissionLive") is not True:
         raise SiteCheckError(f"{label}: roadmap must mark account/ledger path live")
     if payload.get("utilityBridge", {}).get("status") != "public-utility-bridge-spec-published":
         raise SiteCheckError(f"{label}: unexpected access layer status")
     if payload.get("utilityBridge", {}).get("url") != UTILITY_URL:
         raise SiteCheckError(f"{label}: wrong access layer url")
-    if payload.get("utilityBridge", {}).get("publicSelfServiceClaimsLive") is not True:
+    if payload.get("utilityBridge", {}).get("publicEligibilitySubmissionLive") is not True:
         raise SiteCheckError(f"{label}: access layer must mark account/ledger path live")
     if payload.get("utilityBridge", {}).get("requiresControlledWalletVerification") is not True:
         raise SiteCheckError(f"{label}: access layer must require controlled wallet verification")
@@ -9430,10 +9437,10 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong credits catalog stage")
     if credits.get("publicAccountUiLive") is not True:
         raise SiteCheckError(f"{label}: credits account UI must be true")
-    if credits.get("creditsSelfServiceClaimable") is not True:
-        raise SiteCheckError(f"{label}: credits self-service must be true")
-    if credits.get("gcaMemberSelfServiceClaimable") is not True:
-        raise SiteCheckError(f"{label}: member self-service must be true")
+    if credits.get("creditsEligibilitySubmissionLive") is not True:
+        raise SiteCheckError(f"{label}: credits eligibility submission must be true")
+    if credits.get("gcaMemberEligibilitySubmissionLive") is not True:
+        raise SiteCheckError(f"{label}: member eligibility submission must be true")
     if credits.get("holderBonusCreditAmount") != "100 GCA AI Quant Access credits":
         raise SiteCheckError(f"{label}: wrong credits holder bonus")
     if "Support Review Queue" not in credits.get("serviceNames", []):
@@ -9447,8 +9454,18 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong review queue url")
     if review_queue.get("publicQueueLive") is not False:
         raise SiteCheckError(f"{label}: review queue publicQueueLive must be false")
-    if review_queue.get("creditsSelfServiceClaimable") is not True:
+    if review_queue.get("creditsEligibilitySubmissionLive") is not True:
         raise SiteCheckError(f"{label}: review queue credits must be true")
+    for key in (
+        "creditLedgerRecordCreationLive",
+        "memberLedgerRecordCreationLive",
+        "manualReviewRequired",
+    ):
+        if review_queue.get(key) is not True:
+            raise SiteCheckError(f"{label}: review queue {key} must be true")
+    for key in ("memberBenefitSelfServiceClaimable", "memberBenefitAutomaticTransfer"):
+        if review_queue.get(key) is not False:
+            raise SiteCheckError(f"{label}: review queue {key} must be false")
     if "wallet-balance-review" not in review_queue.get("lanes", []):
         raise SiteCheckError(f"{label}: missing review queue lane")
     operations = payload.get("accessOperationsRunbook", {})
@@ -9472,9 +9489,9 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong release gates url")
     if payload.get("releaseGates", {}).get("publicAccountUiLive") is not True:
         raise SiteCheckError(f"{label}: release gates account UI must be true")
-    if payload.get("releaseGates", {}).get("creditsSelfServiceClaimable") is not True:
+    if payload.get("releaseGates", {}).get("creditsEligibilitySubmissionLive") is not True:
         raise SiteCheckError(f"{label}: release gates credits must be true")
-    if payload.get("releaseGates", {}).get("gcaMemberSelfServiceClaimable") is not True:
+    if payload.get("releaseGates", {}).get("gcaMemberEligibilitySubmissionLive") is not True:
         raise SiteCheckError(f"{label}: release gates member status must be true")
     if "risk-control review" not in payload.get("releaseGates", {}).get("requiredBeforePublicClaims", []):
         raise SiteCheckError(f"{label}: missing release gates risk-control gate")
@@ -10040,9 +10057,9 @@ def validate_well_known_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong releaseGates page")
     if payload.get("releaseGates", {}).get("url") != RELEASE_GATES_URL:
         raise SiteCheckError(f"{label}: wrong releaseGates url")
-    if payload.get("releaseGates", {}).get("creditsSelfServiceClaimable") is not True:
+    if payload.get("releaseGates", {}).get("creditsEligibilitySubmissionLive") is not True:
         raise SiteCheckError(f"{label}: release gates credits must be true")
-    if payload.get("releaseGates", {}).get("gcaMemberSelfServiceClaimable") is not True:
+    if payload.get("releaseGates", {}).get("gcaMemberEligibilitySubmissionLive") is not True:
         raise SiteCheckError(f"{label}: release gates member must be true")
     if payload.get("reviewQueueContract", {}).get("pageUrl") != REVIEW_QUEUE_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong reviewQueueContract page")

@@ -203,7 +203,7 @@ Use this page for legitimate market-growth communication. The approved public di
 Page: `https://gcagochina.com/roadmap.html`
 JSON: `https://gcagochina.com/roadmap.json`
 
-Use this page when a reviewer or community moderator asks what has been completed, what is next, and which claims are still unavailable. It keeps public self-service member claiming, BaseScan profile publication, security-vendor approval, third-party audit completion, and tracked listings marked as unresolved until confirmed.
+Use this page when a reviewer or community moderator asks what has been completed, what is next, and which claims are still unavailable. It keeps automatic member-benefit transfers, BaseScan profile publication, security-vendor approval, third-party audit completion, and tracked listings marked as unresolved until confirmed.
 
 ## Public Community Kit
 

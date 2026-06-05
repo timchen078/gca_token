@@ -323,10 +323,10 @@
 
     <main class="shell">
       <section aria-labelledby="title">
-        <p class="eyebrow">Review Queue Contract / 2026-05-14</p>
+        <p class="eyebrow">Review Queue Contract / 2026-06-05</p>
         <h1 id="title">GCA Review Queue Contract</h1>
         <p class="lead">This page defines the manual review workflow behind GCA account intake, read-only wallet balance checks, 100 GCA AI Quant Access credits, GCA Member status, 30-day holding-period review, 10,000 GCA member benefit review, and support review after the public account path is live.</p>
-        <p class="lead">The public account UI can now submit eligible wallet records to the Workers + D1 backend. This queue page remains a manual review contract and operating contract for internal operator review, not a public ledger browser, private-data dropbox, or custody request channel.</p>
+        <p class="lead">The public account UI can submit wallet-review records to the Workers + D1 backend. Eligibility submission and ledger-record creation are live; reserve-wallet member-benefit transfers remain manual review only. This queue page is a manual review contract and operating contract, not a public ledger browser, private-data dropbox, automatic token-claim route, or custody request channel.</p>
         <div class="actions">
           <a class="button primary" href="operations.html">Operations Runbook</a>
           <a class="button primary" href="access-api.html">Access API Contract</a>
@@ -344,12 +344,30 @@
             <span class="value pending">Operator-only review records</span>
           </div>
           <div class="fact">
-            <span class="label">Self-service claims</span>
-            <span class="value good">Account and ledger intake live; token benefit manual only</span>
+            <span class="label">Eligibility intake</span>
+            <span class="value good">Submissions and ledgers live; token benefit manual only</span>
           </div>
           <div class="fact">
             <span class="label">Balance check</span>
             <span class="value">eth_call balanceOf</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="claimBoundaryTitle">
+        <h2 id="claimBoundaryTitle">Claim Boundary</h2>
+        <div class="grid">
+          <div>
+            <h3>100 Credits</h3>
+            <p class="note">A 10,000 GCA holder can submit a wallet review for a one-time account-level 100 GCA AI Quant Access credits record. Credits are service-account records, not cash, income, reimbursement, or transferable tokens.</p>
+          </div>
+          <div>
+            <h3>GCA Member</h3>
+            <p class="note">A 1,000,000 GCA holder can submit 30 consecutive days of holding evidence for GCA Member review. Member status still requires support review and ledger approval.</p>
+          </div>
+          <div>
+            <h3>10,000 GCA Benefit</h3>
+            <p class="note">The member benefit is not automatic and is not self-service. Any approved transfer must come from a project or owner-held reserve wallet after holding-period verification, support approval, and manual processing.</p>
           </div>
         </div>
       </section>
@@ -444,9 +462,9 @@
         <div class="panel">
           <h2>Do Not Claim</h2>
           <ul>
-            <li>Do not claim 100 utility credits are self-service claimable before controlled account UI and ledgers are live.</li>
+            <li>Do not claim 100 utility credits are cash, income, reimbursement, trading permission, or transferable token value.</li>
             <li>Do not claim GCA Member status is active before member ledger activation.</li>
-            <li>Do not claim the 10,000 GCA member benefit is active before 30-day holding verification and member ledger activation.</li>
+            <li>Do not claim the 10,000 GCA member benefit is automatic, self-service, or active before 30-day holding verification, support approval, and manual reserve-wallet processing.</li>
             <li>Manual support cannot override on-chain wallet-balance verification.</li>
             <li>Do not claim exchange listing approval, completed third-party audit, mature liquidity, price support, or trading outcomes.</li>
           </ul>
@@ -465,7 +483,7 @@
 
       <section class="section panel" id="reviewQueueReferences" aria-labelledby="reviewQueueReferencesTitle">
         <h2 id="reviewQueueReferencesTitle">Review Queue References</h2>
-        <p class="note">Use the readable review queue, operations, API, and support pages first. These pages do not make a public queue or self-service claiming live.</p>
+        <p class="note">Use the readable review queue, operations, API, and support pages first. These pages do not make review records public or create automatic token claiming.</p>
         <div class="actions">
           <a class="button" href="gca/member-access/">Member Access</a>
           <a class="button" href="member-ledger.html">Member Ledger</a>
@@ -489,7 +507,7 @@
     </main>
 
     <footer>
-      <div class="shell">GCA Review Queue Contract is a public operating contract only. It does not make public account UI, credit claiming, member claiming, custody, withdrawals, or live trading available.</div>
+      <div class="shell">GCA Review Queue Contract is a public operating contract only. It does not make review records public, create automatic credit redemption, enable member-benefit self-service transfers, or provide custody, withdrawals, or live trading.</div>
     </footer>
   </body>
 </html>

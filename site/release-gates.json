@@ -10,8 +10,8 @@
     "currentStage": "account-ledger-path-live",
     "publicProductSpecOnly": false,
     "publicAccountUiLive": true,
-    "creditsSelfServiceClaimable": true,
-    "gcaMemberSelfServiceClaimable": true,
+    "creditsEligibilitySubmissionLive": true,
+    "gcaMemberEligibilitySubmissionLive": true,
     "liveTradingEnabled": false,
     "baseScanTokenProfile": "ready-for-owner-resubmission",
     "baseScanTokenProfileLastCheckedDate": "2026-06-05",
@@ -35,9 +35,9 @@
       "label": "Access Portal",
       "status": "live-account-ui",
       "blocks": [
-        "self-service account claims",
-        "self-service credit claiming",
-        "self-service GCA Member claiming"
+        "unreviewed account activation",
+        "automatic credit-token claiming",
+        "automatic GCA Member activation"
       ]
     },
     {
@@ -56,7 +56,7 @@
       "status": "published-runbook-only",
       "blocks": [
         "manual support ambiguity",
-        "public self-service queue claims",
+        "public review-record browser claims",
         "ledger handoff without audit trail"
       ]
     },
@@ -65,9 +65,9 @@
       "label": "Controlled HTTPS account UI",
       "status": "live",
       "blocks": [
-        "self-service credit claiming",
-        "self-service GCA Member claiming",
-        "self-service 10,000 GCA member benefit claiming",
+        "automatic credit-token claiming",
+        "unreviewed GCA Member activation",
+        "self-service 10,000 GCA member-benefit transfer",
         "public account reliance"
       ]
     },

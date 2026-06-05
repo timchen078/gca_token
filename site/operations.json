@@ -17,8 +17,8 @@
     "accountAndMemberBackendLive": true,
     "publicSubmissionQueueLive": true,
     "controlledHttpsAccountUiLive": true,
-    "creditsSelfServiceClaimable": true,
-    "gcaMemberSelfServiceClaimable": true,
+    "creditsEligibilitySubmissionLive": true,
+    "gcaMemberEligibilitySubmissionLive": true,
     "ledgerWritesLive": true,
     "liveTradingEnabled": false
   },

@@ -151,7 +151,7 @@
       "pageUrl": "https://gcagochina.com/roadmap.html",
       "url": "https://gcagochina.com/roadmap.json",
       "currentStage": "concept-stage-utility-buildout",
-      "publicSelfServiceClaimsLive": true
+      "publicEligibilitySubmissionLive": true
     },
     "communityKit": {
       "status": "public-community-kit-published",
