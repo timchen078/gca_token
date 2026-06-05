@@ -1713,6 +1713,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertNotIn('href="domain-email.json"', page)
         self.assertNotIn('href="project.json"', page)
         self.assertNotIn("until domain email tests pass", page)
+        self.assertNotIn("GCAgochina@outlook.com", page)
 
         self.assertEqual(data["schema"], DOMAIN_EMAIL_EVIDENCE_URL)
         self.assertEqual(data["pageUrl"], DOMAIN_EMAIL_EVIDENCE_PAGE_URL)

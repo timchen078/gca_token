@@ -1187,7 +1187,6 @@ def validate_domain_email_evidence_page(text: str) -> None:
         "GCA Domain Email Evidence Checklist",
         "Public Reviewer Checklist",
         "Evidence Collected",
-        "GCAgochina@outlook.com",
         "support@gcagochina.com",
         "Target Domain Email",
         "private mailbox and DNS proof remain archived locally for reviewer follow-up",
@@ -1228,6 +1227,7 @@ def validate_domain_email_evidence_page(text: str) -> None:
     assert_not_contains(text, 'href="domain-email.json"', label)
     assert_not_contains(text, 'href="project.json"', label)
     assert_not_contains(text, "until domain email tests pass", label)
+    assert_not_contains(text, "GCAgochina@outlook.com", label)
     assert_no_forbidden_public_claims(text, label)
 
 
