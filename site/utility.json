@@ -5,17 +5,17 @@
   "lastUpdated": "2026-05-20",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
-  "title": "GCA Utility Bridge",
+  "title": "GCA AI Quant Access",
   "positioning": {
     "tagline": "Narrative meets risk control.",
     "concept": "Go China Access",
-    "connectedProduct": "Web3 Radar non-custodial quant risk toolkit",
+    "connectedProduct": "GCA AI Quant Access non-custodial quant risk toolkit",
     "publicStatus": "account-ledger-path-live-utility-bridge-spec-published",
     "summary": "GCA has live account intake, read-only wallet verification, and eligible ledger records for staged access and membership workflows; reports, backtests, risk warnings, ENTRY_READY reviews, position sizing, education, member research, and support services remain controlled service modules."
   },
   "bridgePrinciples": [
     "Users keep funds in their own wallets or exchange accounts.",
-    "The GCA utility bridge must not request private keys, seed phrases, exchange API secrets, withdrawal permission, or custody.",
+    "The GCA access layer must not request private keys, seed phrases, exchange API secrets, withdrawal permission, or custody.",
     "Wallet verification should use read-only ERC-20 balance checks before any credit or member ledger record is written.",
     "Utility credits and GCA Member status are account-level records only, and the 10,000 GCA member benefit requires manual review and reserve-wallet processing.",
     "Token ownership must not bypass strategy risk checks, testnet requirements, manual review, or trading safety controls."
@@ -34,7 +34,7 @@
     {
       "step": "credit_ledger",
       "status": "eligible-ledger-record-live",
-      "description": "Eligible registered users can receive one 100 Web3 Radar utility credits service ledger record after controlled verification."
+      "description": "Eligible registered users can receive one 100 GCA AI Quant Access credits service ledger record after controlled verification."
     },
     {
       "step": "member_ledger",
@@ -65,7 +65,7 @@
     "registeredUserLimit": "one bonus per registered user",
     "walletLimit": "one verified wallet per registered user",
     "minimumHolding": "10000 GCA",
-    "creditAmount": "100 Web3 Radar utility credits",
+    "creditAmount": "100 GCA AI Quant Access credits",
     "creditExpiry": "180 days after ledger activation unless a later published policy extends it",
     "creditUse": "reports, backtests, risk warnings, ENTRY_READY signal review, position calculators, or education access",
     "notCreditUse": "cash, token claims, income, reimbursement, trading permission, leverage, custody, withdrawal access, or risk-control bypass"
@@ -121,15 +121,15 @@
   ],
   "publicClaimBoundaries": {
     "safeClaims": [
-      "GCA has published a public utility bridge specification.",
+      "GCA has published a public access layer specification.",
       "GCA utility has live account-level intake and eligible ledger records for non-custodial quant risk tools.",
-      "The 100 Web3 Radar utility credits and GCA Member status require controlled wallet verification before ledger activation.",
+      "The 100 GCA AI Quant Access credits and GCA Member status require controlled wallet verification before ledger activation.",
       "The GCA Member benefit requires 1,000,000 GCA held for 30 consecutive days before one-time 10,000 GCA review.",
       "The public member account page can submit account intake, read-only wallet verification, and eligible credit/member ledger records.",
       "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool."
     ],
     "doNotClaim": [
-      "100 Web3 Radar utility credits are cash, income, reimbursement, trading permission, or transferable value",
+      "100 GCA AI Quant Access credits are cash, income, reimbursement, trading permission, or transferable value",
       "GCA Member status bypasses wallet verification, holding-period evidence, or support review",
       "the 10,000 GCA member benefit is automatic or self-service transferred before holding-period verification, support approval, and manual reserve-wallet processing",
       "credits or member status are cash, income, reimbursement, trading permission, leverage, custody, withdrawal access, or risk-control bypass",

@@ -2016,7 +2016,7 @@ def validate_zh_cn_page(text: str) -> None:
         "清算复盘",
         "ENTRY_READY",
         "10,000 GCA",
-        "100 Web3 Radar utility credits",
+        "100 GCA AI Quant Access credits",
         "1,000,000 GCA",
         "连续持有 30 天",
         "GCAgochina@outlook.com",
@@ -2169,7 +2169,7 @@ def validate_zh_apply_page(text: str) -> None:
         "官网公开路线是 Base 上的 GCA/USDT 池",
         "保存钱包地址、购买交易哈希、持有开始日期和只读余额验证结果",
         "10,000 GCA 路径",
-        "100 Web3 Radar utility credits",
+        "100 GCA AI Quant Access credits",
         "1,000,000 GCA Member 路径",
         "连续持有至少 1,000,000 GCA 满 30 天",
         "10,000 GCA 会员权益审核",
@@ -2709,9 +2709,9 @@ def validate_zh_roadmap_page(text: str) -> None:
         "Liquidation Replay",
         "Backtesting and Risk Alerts",
         "ENTRY_READY Review",
-        "Web3 Radar-style utility access",
+        "GCA AI Quant Access utility access",
         "10,000 GCA 持有者",
-        "100 Web3 Radar utility credits",
+        "100 GCA AI Quant Access credits",
         "1,000,000 GCA 持有者",
         "连续持有 30 天",
         "一次性 10,000 GCA 会员权益审核路径",
@@ -2780,7 +2780,7 @@ def validate_zh_faq_page(text: str) -> None:
         "风险提示消失是不是永久安全",
         "会员规则是什么",
         "10,000 GCA",
-        "100 Web3 Radar utility credits",
+        "100 GCA AI Quant Access credits",
         "1,000,000 GCA",
         "连续持有 1,000,000 GCA 满 30 天",
         "credits 和 GCA Member 账本记录可以写入",
@@ -2864,7 +2864,7 @@ def validate_zh_support_page(text: str) -> None:
         "优先在会员入口生成审核资料包",
         "钱包地址、购买交易哈希、持有开始日期、只读余额验证结果",
         "生成审核资料包",
-        "10,000 GCA / 100 Web3 Radar utility credits",
+        "10,000 GCA / 100 GCA AI Quant Access credits",
         "1,000,000 GCA / 30 天 GCA Member",
         "钱包显示或风险提示",
         "风险提示消失不等于永久批准",
@@ -3102,7 +3102,7 @@ def validate_zh_access_page(text: str) -> None:
         "zh-support.html",
         "只读余额验证",
         "10,000 GCA",
-        "100 Web3 Radar utility credits",
+        "100 GCA AI Quant Access credits",
         "1,000,000 GCA",
         "30 天持有审核",
         "10,000 GCA 会员权益审核",
@@ -3232,7 +3232,7 @@ def validate_zh_wallet_verify_page(text: str) -> None:
         "购买交易哈希",
         "持有开始日期",
         "10,000 GCA",
-        "100 Web3 Radar utility credits",
+        "100 GCA AI Quant Access credits",
         "1,000,000 GCA",
         "连续持有 30 天",
         "GCA Member",
@@ -3283,7 +3283,7 @@ def validate_zh_member_checklist_page(text: str) -> None:
         "eth_call",
         "balanceOf",
         "10,000 GCA / 100 credits 审核",
-        "100 Web3 Radar utility credits",
+        "100 GCA AI Quant Access credits",
         "1,000,000 GCA / 30 天 GCA Member 审核",
         "连续持有至少 1,000,000 GCA 满 30 天",
         "10,000 GCA 会员权益审核",
@@ -3605,7 +3605,7 @@ def validate_zh_members_page(text: str) -> None:
         OFFICIAL_POOL_ADDRESS,
         "账户提交和账本记录已上线",
         "10,000 GCA 持有者",
-        "100 Web3 Radar utility credits",
+        "100 GCA AI Quant Access credits",
         "1,000,000 GCA 连续持有 30 天",
         "GCA Member",
         "10,000 GCA 会员权益审核",
@@ -4514,7 +4514,7 @@ def validate_member_access_page(text: str) -> None:
     assert_contains(text, "gca_member_access_v1", label)
     assert_contains(text, "10,000 GCA", label)
     assert_contains(text, "1,000,000 GCA", label)
-    assert_contains(text, "100 Web3 Radar utility credits", label)
+    assert_contains(text, "100 GCA AI Quant Access credits", label)
     assert_contains(text, "credits ledger", label)
     assert_contains(text, "GCA Member ledger", label)
     assert_contains(text, "100 万枚 GCA 审核的持有开始日期", label)
@@ -4796,7 +4796,7 @@ def validate_roadmap_page(text: str) -> None:
     assert_contains(text, "Live at", label)
     assert_contains(text, "Read-only GCA balance verification", label)
     assert_contains(text, "Live via Worker eth_call", label)
-    assert_contains(text, "100 Web3 Radar utility credit records", label)
+    assert_contains(text, "100 GCA AI Quant Access credit records", label)
     assert_contains(text, "Live for eligible wallet records", label)
     assert_contains(text, "GCA Member records", label)
     assert_contains(text, "benefit remains manual review", label)
@@ -5964,15 +5964,15 @@ def validate_utility_page(text: str) -> None:
     assert_contains(text, "GCA Utility Thesis", label)
     assert_contains(text, "Utility References", label)
     assert_no_public_data_room_terms(text, label)
-    assert_contains(text, "Utility Bridge Specification", label)
-    assert_contains(text, "Web3 Radar-style non-custodial quant tools", label)
+    assert_contains(text, "GCA AI Quant Access Specification", label)
+    assert_contains(text, "GCA AI Quant Access non-custodial quant tools", label)
     assert_contains(text, "read-only wallet verification", label)
     assert_contains(text, "no custody", label)
     assert_contains(text, "no withdrawal permission", label)
     assert_contains(text, "no exchange API secret collection", label)
     assert_contains(text, "no platform revenue distribution", label)
     assert_contains(text, "controlled HTTPS account UI", label)
-    assert_contains(text, "100 Web3 Radar utility credits", label)
+    assert_contains(text, "100 GCA AI Quant Access credits", label)
     assert_contains(text, "GCA Member status", label)
     assert_contains(text, "10,000 GCA member benefit", label)
     assert_contains(text, "Credits Catalog", label)
@@ -6001,13 +6001,13 @@ def validate_utility_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong chainId")
     if payload.get("contractAddress") != MAINNET_ADDRESS:
         raise SiteCheckError(f"{label}: wrong contractAddress")
-    if positioning.get("connectedProduct") != "Web3 Radar non-custodial quant risk toolkit":
+    if positioning.get("connectedProduct") != "GCA AI Quant Access non-custodial quant risk toolkit":
         raise SiteCheckError(f"{label}: wrong connectedProduct")
     if "read-only ERC-20 balance checks" not in " ".join(payload.get("bridgePrinciples", [])):
         raise SiteCheckError(f"{label}: missing read-only verification principle")
     if holder_bonus.get("minimumHolding") != "10000 GCA":
         raise SiteCheckError(f"{label}: wrong holder bonus minimum")
-    if holder_bonus.get("creditAmount") != "100 Web3 Radar utility credits":
+    if holder_bonus.get("creditAmount") != "100 GCA AI Quant Access credits":
         raise SiteCheckError(f"{label}: wrong holder bonus credit amount")
     if "risk-control bypass" not in holder_bonus.get("notCreditUse", ""):
         raise SiteCheckError(f"{label}: missing holder bonus risk boundary")
@@ -6044,7 +6044,7 @@ def validate_utility_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong accessApiPage")
     if links.get("accessApi") != ACCESS_API_URL:
         raise SiteCheckError(f"{label}: wrong accessApi")
-    if "GCA has published a public utility bridge specification." not in boundaries.get("safeClaims", []):
+    if "GCA has published a public access layer specification." not in boundaries.get("safeClaims", []):
         raise SiteCheckError(f"{label}: missing utility safe claim")
     if not any("credits or member status are cash" in item for item in boundaries.get("doNotClaim", [])):
         raise SiteCheckError(f"{label}: missing credit/member boundary")
@@ -6145,7 +6145,7 @@ def validate_product_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing review queue contract gate")
     if access.get("holderBonusMinimum") != "10000 GCA":
         raise SiteCheckError(f"{label}: wrong holder bonus minimum")
-    if access.get("holderBonusCreditAmount") != "100 Web3 Radar utility credits":
+    if access.get("holderBonusCreditAmount") != "100 GCA AI Quant Access credits":
         raise SiteCheckError(f"{label}: wrong holder bonus credit")
     if access.get("gcaMemberMinimum") != "1000000 GCA":
         raise SiteCheckError(f"{label}: wrong member minimum")
@@ -6235,7 +6235,7 @@ def validate_access_page(text: str) -> None:
     assert_contains(text, "eth_call", label)
     assert_contains(text, "balanceOf", label)
     assert_contains(text, "10,000 GCA", label)
-    assert_contains(text, "100 Web3 Radar utility credits", label)
+    assert_contains(text, "100 GCA AI Quant Access credits", label)
     assert_contains(text, "1,000,000 GCA", label)
     assert_contains(text, "30 consecutive days", label)
     assert_contains(text, "GCA Member", label)
@@ -6334,7 +6334,7 @@ def validate_access_json(text: str) -> None:
             raise SiteCheckError(f"{label}: missing journey {journey_id}")
     if thresholds.get("holderBonus", {}).get("minimumHolding") != "10000 GCA":
         raise SiteCheckError(f"{label}: wrong holder minimum")
-    if thresholds.get("holderBonus", {}).get("creditAmount") != "100 Web3 Radar utility credits":
+    if thresholds.get("holderBonus", {}).get("creditAmount") != "100 GCA AI Quant Access credits":
         raise SiteCheckError(f"{label}: wrong credit amount")
     if thresholds.get("holderBonus", {}).get("notLive") is not False:
         raise SiteCheckError(f"{label}: holder path must be live")
@@ -6465,7 +6465,7 @@ def validate_operations_page(text: str) -> None:
     assert_contains(text, "Decision Rules", label)
     assert_contains(text, "eth_call", label)
     assert_contains(text, "balanceOf", label)
-    assert_contains(text, "100 Web3 Radar utility credits", label)
+    assert_contains(text, "100 GCA AI Quant Access credits", label)
     assert_contains(text, "GCA Member", label)
     assert_contains(text, "gca_member_preregistration_v2", label)
     assert_contains(text, "holdingStartDate", label)
@@ -6687,7 +6687,7 @@ def validate_operations_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong packet version control")
     if rules.get("holderBonusMinimum") != "10000 GCA":
         raise SiteCheckError(f"{label}: wrong holder bonus minimum")
-    if rules.get("holderBonusCreditAmount") != "100 Web3 Radar utility credits":
+    if rules.get("holderBonusCreditAmount") != "100 GCA AI Quant Access credits":
         raise SiteCheckError(f"{label}: wrong holder bonus amount")
     if rules.get("gcaMemberMinimum") != "1000000 GCA":
         raise SiteCheckError(f"{label}: wrong member minimum")
@@ -6699,7 +6699,7 @@ def validate_operations_json(text: str) -> None:
         raise SiteCheckError(f"{label}: support override rule must be true")
     if thresholds.get("holderBonusMinimum") != "10000 GCA":
         raise SiteCheckError(f"{label}: wrong thresholds holder minimum")
-    if thresholds.get("holderBonusCreditAmount") != "100 Web3 Radar utility credits":
+    if thresholds.get("holderBonusCreditAmount") != "100 GCA AI Quant Access credits":
         raise SiteCheckError(f"{label}: wrong thresholds credit amount")
     if thresholds.get("gcaMemberMinimum") != "1000000 GCA":
         raise SiteCheckError(f"{label}: wrong thresholds member minimum")
@@ -6826,7 +6826,7 @@ def validate_access_api_page(text: str) -> None:
     assert_contains(text, "reviewer evidence", label)
     assert_contains(text, "read-only Base receipt data", label)
     assert_contains(text, "balanceOf", label)
-    assert_contains(text, "100 Web3 Radar utility credits", label)
+    assert_contains(text, "100 GCA AI Quant Access credits", label)
     assert_contains(text, "GCA Member", label)
     assert_contains(text, "gca_member_access_v1", label)
     assert_contains(text, "memberBenefitReviewEvidence", label)
@@ -7247,7 +7247,7 @@ def validate_access_api_json(text: str) -> None:
             raise SiteCheckError(f"{label}: missing support review request field {field}")
     if thresholds.get("holderBonusMinimum") != "10000 GCA":
         raise SiteCheckError(f"{label}: wrong holderBonusMinimum")
-    if thresholds.get("holderBonusCreditAmount") != "100 Web3 Radar utility credits":
+    if thresholds.get("holderBonusCreditAmount") != "100 GCA AI Quant Access credits":
         raise SiteCheckError(f"{label}: wrong holderBonusCreditAmount")
     if thresholds.get("gcaMemberMinimum") != "1000000 GCA":
         raise SiteCheckError(f"{label}: wrong gcaMemberMinimum")
@@ -7658,7 +7658,7 @@ def validate_review_queue_page(text: str) -> None:
         assert_contains(text, status, label)
     assert_contains(text, "eth_call", label)
     assert_contains(text, "balanceOf", label)
-    assert_contains(text, "100 Web3 Radar utility credits", label)
+    assert_contains(text, "100 GCA AI Quant Access credits", label)
     assert_contains(text, "GCA Member", label)
     assert_contains(text, "gca_member_preregistration_v2", label)
     assert_contains(text, "holdingStartDate", label)
@@ -7773,7 +7773,7 @@ def validate_review_queue_json(text: str) -> None:
             raise SiteCheckError(f"{label}: missing allowed evidence {evidence}")
     if thresholds.get("holderBonusMinimum") != "10000 GCA":
         raise SiteCheckError(f"{label}: wrong holder threshold")
-    if thresholds.get("holderBonusCreditAmount") != "100 Web3 Radar utility credits":
+    if thresholds.get("holderBonusCreditAmount") != "100 GCA AI Quant Access credits":
         raise SiteCheckError(f"{label}: wrong credit amount")
     if thresholds.get("gcaMemberMinimum") != "1000000 GCA":
         raise SiteCheckError(f"{label}: wrong member threshold")
@@ -7841,7 +7841,7 @@ def validate_credits_page(text: str) -> None:
     assert_contains(text, "Access API", label)
     assert_contains(text, "account ledger path live", label)
     assert_contains(text, "eligible ledger record live", label)
-    assert_contains(text, "100 Web3 Radar utility credits", label)
+    assert_contains(text, "100 GCA AI Quant Access credits", label)
     assert_contains(text, "10,000 GCA", label)
     assert_contains(text, "1,000,000 GCA", label)
     assert_contains(text, "Liquidation Replay", label)
@@ -7902,7 +7902,7 @@ def validate_credits_json(text: str) -> None:
         raise SiteCheckError(f"{label}: liveTradingEnabled must be false")
     if holder_bonus.get("minimumHolding") != "10000 GCA":
         raise SiteCheckError(f"{label}: wrong holder bonus minimum")
-    if holder_bonus.get("creditAmount") != "100 Web3 Radar utility credits":
+    if holder_bonus.get("creditAmount") != "100 GCA AI Quant Access credits":
         raise SiteCheckError(f"{label}: wrong holder bonus credit")
     if holder_bonus.get("notLive") is not False:
         raise SiteCheckError(f"{label}: holder bonus must be live")
@@ -8018,7 +8018,7 @@ def validate_credits_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong reviewQueue")
     if links.get("memberLedger") != MEMBER_LEDGER_URL:
         raise SiteCheckError(f"{label}: wrong memberLedger")
-    if "GCA has published a service catalog for Web3 Radar utility credits." not in boundaries.get("safeClaims", []):
+    if "GCA has published a service catalog for GCA AI Quant Access credits." not in boundaries.get("safeClaims", []):
         raise SiteCheckError(f"{label}: missing credits safe claim")
     if not any("automatic or self-service transferred" in item for item in boundaries.get("doNotClaim", [])):
         raise SiteCheckError(f"{label}: missing member benefit boundary")
@@ -8603,7 +8603,7 @@ def validate_member_program_page(text: str) -> None:
         "Readable Member Rules",
         "Holder Bonus",
         "10,000 GCA",
-        "100 Web3 Radar utility credits",
+        "100 GCA AI Quant Access credits",
         "GCA Member",
         "1,000,000 GCA",
         "30 consecutive days",
@@ -9036,13 +9036,13 @@ def validate_project_json(text: str) -> None:
     if payload.get("roadmap", {}).get("publicSelfServiceClaimsLive") is not True:
         raise SiteCheckError(f"{label}: roadmap must mark account/ledger path live")
     if payload.get("utilityBridge", {}).get("status") != "public-utility-bridge-spec-published":
-        raise SiteCheckError(f"{label}: unexpected utility bridge status")
+        raise SiteCheckError(f"{label}: unexpected access layer status")
     if payload.get("utilityBridge", {}).get("url") != UTILITY_URL:
-        raise SiteCheckError(f"{label}: wrong utility bridge url")
+        raise SiteCheckError(f"{label}: wrong access layer url")
     if payload.get("utilityBridge", {}).get("publicSelfServiceClaimsLive") is not True:
-        raise SiteCheckError(f"{label}: utility bridge must mark account/ledger path live")
+        raise SiteCheckError(f"{label}: access layer must mark account/ledger path live")
     if payload.get("utilityBridge", {}).get("requiresControlledWalletVerification") is not True:
-        raise SiteCheckError(f"{label}: utility bridge must require controlled wallet verification")
+        raise SiteCheckError(f"{label}: access layer must require controlled wallet verification")
     if status.get("productSpec") != "public-product-spec-published":
         raise SiteCheckError(f"{label}: unexpected product spec status")
     if status.get("releaseGates") != "public-release-gates-published":
@@ -9076,7 +9076,7 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: credits self-service must be true")
     if credits.get("gcaMemberSelfServiceClaimable") is not True:
         raise SiteCheckError(f"{label}: member self-service must be true")
-    if credits.get("holderBonusCreditAmount") != "100 Web3 Radar utility credits":
+    if credits.get("holderBonusCreditAmount") != "100 GCA AI Quant Access credits":
         raise SiteCheckError(f"{label}: wrong credits holder bonus")
     if "Support Review Queue" not in credits.get("serviceNames", []):
         raise SiteCheckError(f"{label}: missing credits service")
@@ -9839,7 +9839,7 @@ def validate_member_program_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong participation terms page")
     if holder_bonus.get("minimumHolding") != "10000 GCA":
         raise SiteCheckError(f"{label}: wrong holder bonus threshold")
-    if holder_bonus.get("creditAmount") != "100 Web3 Radar utility credits":
+    if holder_bonus.get("creditAmount") != "100 GCA AI Quant Access credits":
         raise SiteCheckError(f"{label}: wrong credit amount")
     if holder_bonus.get("creditExpiry") != "180 days after ledger activation unless a later published policy extends it":
         raise SiteCheckError(f"{label}: wrong credit expiry")
@@ -10176,7 +10176,7 @@ def validate_member_ledger_json(text: str) -> None:
         raise SiteCheckError(f"{label}: browser balance preview should reflect live controlled UI")
     if thresholds.get("holderBonusMinimum") != "10000 GCA":
         raise SiteCheckError(f"{label}: wrong holder threshold")
-    if thresholds.get("holderBonusCreditAmount") != "100 Web3 Radar utility credits":
+    if thresholds.get("holderBonusCreditAmount") != "100 GCA AI Quant Access credits":
         raise SiteCheckError(f"{label}: wrong credit amount")
     if thresholds.get("creditExpiryDaysAfterLedgerActivation") != 180:
         raise SiteCheckError(f"{label}: wrong credit expiry")
@@ -10271,7 +10271,7 @@ def validate_member_ledger_page(text: str) -> None:
     assert_contains(text, "10,000 GCA after approval", label)
     assert_contains(text, "180 days", label)
     assert_contains(text, "30 days", label)
-    assert_contains(text, "eligible 10,000 GCA holders can create one account-level 100 Web3 Radar utility credits ledger record", label)
+    assert_contains(text, "eligible 10,000 GCA holders can create one account-level 100 GCA AI Quant Access credits ledger record", label)
     assert_not_contains(text, OLD_WETH_POOL_ADDRESS, label)
 
 

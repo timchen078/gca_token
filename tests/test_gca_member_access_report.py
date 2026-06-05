@@ -60,7 +60,7 @@ def member_access_export_payload():
                     "accountId": "gca_account_1",
                     "walletAddress": "0x18d0007bc6be029f8ccd7cb13e324aa21891092d",
                     "creditAmount": 100,
-                    "creditType": "Web3 Radar utility credits",
+                    "creditType": "GCA AI Quant Access credits",
                     "activatedAt": "2026-05-20T15:00:00Z",
                     "expiresAt": "2026-11-16T15:00:00Z",
                     "remainingCredits": 100,

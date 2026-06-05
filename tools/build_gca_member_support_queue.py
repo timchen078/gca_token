@@ -127,7 +127,7 @@ def build_reply(
         body = (
             f"Hello {name},\n\n"
             f"We checked the submitted Base wallet {wallet_address}. The verified GCA balance is currently below the 10,000 GCA holder-credit threshold. "
-            "No 100 Web3 Radar utility credits ledger record has been activated for this wallet at this time.\n\n"
+            "No 100 GCA AI Quant Access credits ledger record has been activated for this wallet at this time.\n\n"
             "You may request another read-only check after your wallet balance changes. This status does not involve wallet signatures, custody, or token transfers."
         )
         return subject, body, "Mark below-threshold or invite the user to request a later read-only recheck."
@@ -137,7 +137,7 @@ def build_reply(
         body = (
             f"Hello {name},\n\n"
             f"Your submitted Base wallet {wallet_address} has passed the 10,000 GCA holder-credit check. "
-            "A one-time 100 Web3 Radar utility credits ledger record has been recorded for account-level service access.\n\n"
+            "A one-time 100 GCA AI Quant Access credits ledger record has been recorded for account-level service access.\n\n"
             "GCA Member status still requires at least 1,000,000 GCA and the separate 30-day holding-period review. Credits are not cash, income, reimbursement, or trading permission."
         )
         return subject, body, "Confirm credit-ledger record and explain GCA Member threshold if asked."

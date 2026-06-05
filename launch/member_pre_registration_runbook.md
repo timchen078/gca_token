@@ -45,7 +45,7 @@ Local backend behavior:
 - Enables same-origin `POST /gca/pre-registrations` only when the page is opened from `localhost` or `127.0.0.1`.
 - Verifies the submitted wallet with read-only Base Mainnet `eth_call` / ERC-20 `balanceOf`.
 - Writes append-only local JSONL files under `.gca_access_data/`.
-- Creates a 100 Web3 Radar utility credits ledger record when the wallet holds at least 10,000 GCA.
+- Creates a 100 GCA AI Quant Access credits ledger record when the wallet holds at least 10,000 GCA.
 - Creates a GCA Member ledger record when the wallet holds at least 1,000,000 GCA; it activates the member record only when the 30-day holding evidence is present and the public transaction hash format is valid.
 - Keeps the 10,000 GCA member benefit as `pending_manual_reserve_transfer`; it never sends tokens automatically.
 - Rejects sensitive field names such as private key, seed phrase, mnemonic, exchange API secret, withdrawal permission, recovery phrase, or one-time code.
@@ -56,9 +56,9 @@ This is a local operator backend for testing and evidence export. Public account
 
 Use `https://gcagochina.com/gca/member-access/` for public account intake. The page posts to the Cloudflare Workers + D1 backend and stores only non-sensitive account, wallet, and review metadata. `site/members.html` remains a legacy packet generator and local-operator test surface.
 
-## Web3 Radar Prepared Intake
+## GCA AI Quant Access Prepared Intake
 
-GCA now has a public access bridge:
+GCA now has a public account path:
 
 - `POST /gca/member-access`
 - `POST /gca/wallet-verifications`
@@ -69,7 +69,7 @@ Pre-registration stores a pending review record only. Wallet verification reads 
 
 ## Credit And Member Rules
 
-- 100 Web3 Radar utility credits are account-level service credits only.
+- 100 GCA AI Quant Access credits are account-level service credits only.
 - Credit use scope: reports, backtests, risk warnings, ENTRY_READY signal review, position calculators, or education access.
 - Credit expiry: 180 days after ledger activation unless a later published policy extends it.
 - Credits are not transferable and cannot be redeemed for cash, token claims, income, reimbursement, or trading permission.
@@ -85,7 +85,7 @@ Pre-registration stores a pending review record only. Wallet verification reads 
 2. Deduplicate by email and wallet address.
 3. Mark packet status as `received`.
 4. Mark wallet verification status as `pending`.
-5. Run wallet verification only for queued wallets and only through the Web3 Radar backend.
+5. Run wallet verification only for queued wallets and only through the GCA AI Quant Access backend.
 6. Confirm the credit and member ledgers show service-access records only.
 7. Record support status as `received`, `wallet_pending`, `eligible`, `needs_more_information`, `rejected`, or `ledger_recorded`.
 8. Use `support@gcagochina.com` as the public support contact while the project does not have a separate support desk.

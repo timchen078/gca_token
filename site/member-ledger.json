@@ -56,7 +56,7 @@
   },
   "thresholds": {
     "holderBonusMinimum": "10000 GCA",
-    "holderBonusCreditAmount": "100 Web3 Radar utility credits",
+    "holderBonusCreditAmount": "100 GCA AI Quant Access credits",
     "creditExpiryDaysAfterLedgerActivation": 180,
     "gcaMemberMinimum": "1000000 GCA",
     "gcaMemberMinimumHoldingDays": 30,
@@ -118,7 +118,7 @@
         "remainingCredits",
         "status"
       ],
-      "creditType": "Web3 Radar utility credits",
+      "creditType": "GCA AI Quant Access credits",
       "allowedStatuses": [
         "not_connected",
         "queued",

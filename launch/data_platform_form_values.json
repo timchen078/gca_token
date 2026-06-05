@@ -84,7 +84,7 @@
   "utilityPositioning": {
     "status": "public-utility-bridge-spec-published",
     "specUrl": "https://gcagochina.com/utility.json",
-    "connectedProduct": "Web3 Radar non-custodial quant risk toolkit",
+    "connectedProduct": "GCA AI Quant Access non-custodial quant risk toolkit",
     "suitableUtility": [
       "liquidation replay reports",
       "risk-warning credits",
@@ -93,15 +93,15 @@
       "position-size calculators",
       "subscription discounts",
       "risk-control training",
-      "one-time 100 Web3 Radar utility credits ledger record for each registered user who verifies one wallet holding at least 10000 GCA",
-      "GCA Member status plus one-time 10000 GCA member benefit review in the Web3 Radar member ledger for each registered user who verifies one wallet buying and continuously holding at least 1000000 GCA for 30 days"
+      "one-time 100 GCA AI Quant Access credits ledger record for each registered user who verifies one wallet holding at least 10000 GCA",
+      "GCA Member status plus one-time 10000 GCA member benefit review in the GCA Member ledger for each registered user who verifies one wallet buying and continuously holding at least 1000000 GCA for 30 days"
     ],
     "plannedFirstCampaign": {
       "status": "account-ledger-path-live",
       "registeredUserLimit": "one bonus per registered user",
       "walletLimit": "one verified wallet per registered user",
       "minimumHolding": "10000 GCA",
-      "bonus": "100 Web3 Radar utility credits",
+      "bonus": "100 GCA AI Quant Access credits",
       "creditExpiry": "180 days after ledger activation unless a later published policy extends it",
       "creditUse": "reports, backtests, risk warnings, ENTRY_READY signal review, position calculators, or education access",
       "notCreditUse": "cash, token claims, income, reimbursement, trading permission, or risk-control bypass"

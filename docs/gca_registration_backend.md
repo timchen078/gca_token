@@ -40,7 +40,7 @@ Member-access requests store:
 - Base wallet address
 - generated `accountId`
 - read-only wallet verification result from Base Mainnet ERC-20 `balanceOf`
-- 100 Web3 Radar utility credit ledger record when the verified wallet holds at least 10,000 GCA
+- 100 GCA AI Quant Access credit ledger record when the verified wallet holds at least 10,000 GCA
 - GCA Member ledger record when the verified wallet holds at least 1,000,000 GCA
 - holding start date and public evidence transaction hash for 30-day member review
 - member benefit status

@@ -53,7 +53,7 @@ The full fixed supply was minted to the deployer wallet at deployment. The 40/60
 - Public positioning: Narrative meets risk control
 - Narrative language: China Narrative Radar, Weekly Go China Radar, Liquidation Replay, ENTRY_READY Review, GCA Member Club, Go China Watchlist, and Risk First Trading
 - Weekly Radar issue 002: `https://gcagochina.com/radar.html`
-- Utility bridge spec: `https://gcagochina.com/utility.json`
+- Access layer spec: `https://gcagochina.com/utility.json`
 - Product spec: `https://gcagochina.com/product.html`
 - Product spec JSON: `https://gcagochina.com/product.json`
 - Access portal: `https://gcagochina.com/access.html`
@@ -71,7 +71,7 @@ The full fixed supply was minted to the deployer wallet at deployment. The 40/60
 - Member benefit transfer runbook: `https://gcagochina.com/member-benefit-transfer.html`
 - Member benefit transfer runbook JSON: `https://gcagochina.com/member-benefit-transfer.json`
 - Planned GCA AI Quant Access layer: liquidation replay reports, risk-warning credits, realistic backtest usage, ENTRY_READY signal review, position-size calculators, subscription discounts, and risk-control training
-- First campaign path: each registered user may verify one wallet holding at least 10,000 GCA and create a one-time 100 Web3 Radar utility credits ledger record through the live account path
+- First campaign path: each registered user may verify one wallet holding at least 10,000 GCA and create a one-time 100 GCA AI Quant Access credits ledger record through the live account path
 - GCA Member tier: each registered user may verify one wallet buying and continuously holding at least 1,000,000 GCA for 30 days, then qualify for GCA Member review and one-time 10,000 GCA member benefit review; token transfer remains manual reserve-wallet processing only
 - Public access portal: controlled HTTPS account UI, read-only `eth_call` / `balanceOf` GCA balance verification, 30-day holding-period review, support review record, 100 credits ledger activation, GCA Member ledger activation, and 10,000 GCA member benefit status
 - Public access API contract: live controlled HTTPS routes for access config, wallet verification, member access, credit ledger admin read, member ledger admin read, support review planning, and member review planning
@@ -82,7 +82,7 @@ The full fixed supply was minted to the deployer wallet at deployment. The 40/60
 - Product release gates: controlled HTTPS account UI, read-only GCA balance verification, credit ledger activation, member ledger activation, support review queue, risk-control review, and simulation or testnet first
 
 Do not describe the current project as having a finished product, guaranteed utility, guaranteed market demand, return promise, or revenue distribution model.
-Do not describe holder credits, GCA Member status, or the 10,000 GCA member benefit as cash, income, reimbursement, voting control, guaranteed lifetime access, trading permission, or a way to bypass Web3 Radar risk controls.
+Do not describe holder credits, GCA Member status, or the 10,000 GCA member benefit as cash, income, reimbursement, voting control, guaranteed lifetime access, trading permission, or a way to bypass GCA AI Quant Access risk controls.
 
 ## BaseScan Token Profile Status
 

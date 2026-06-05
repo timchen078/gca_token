@@ -125,7 +125,7 @@ This package prepares GCA information for token data and DEX discovery platforms
 - FAQ: `https://gcagochina.com/faq.html`
 - Member pre-registration: `https://gcagochina.com/members.html`
 - Utility thesis: `https://gcagochina.com/utility.html`
-- Utility bridge JSON: `https://gcagochina.com/utility.json`
+- Access layer JSON: `https://gcagochina.com/utility.json`
 - Product spec: `https://gcagochina.com/product.html`
 - Product spec JSON: `https://gcagochina.com/product.json`
 - Access portal: `https://gcagochina.com/access.html`
@@ -214,7 +214,7 @@ GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stand
 
 ## Utility Positioning
 
-Suitable GCA utility is access-based: reports, credits, education, backtest usage, signal review, position calculators, and membership discounts. The public utility bridge spec is published at `https://gcagochina.com/utility.json`. It should not be positioned as custody, redemption rights, platform revenue distribution, automatic live trading permission, or a return promise.
+Suitable GCA utility is access-based: reports, credits, education, backtest usage, signal review, position calculators, and membership discounts. The public access layer spec is published at `https://gcagochina.com/utility.json`. It should not be positioned as custody, redemption rights, platform revenue distribution, automatic live trading permission, or a return promise.
 
 The public product spec is published at `https://gcagochina.com/product.html` and `https://gcagochina.com/product.json`. It defines GCA AI Quant Access as a staged product layer with China Narrative Radar, Weekly Go China Radar, Liquidation Replay, Risk Warning Credits, Backtest Lab, ENTRY_READY Review, Position Size Calculator, and GCA Member Workspace. Public account intake, read-only wallet verification, and eligible ledger records are live; trading and research tools remain gated behind product release controls.
 
@@ -222,13 +222,13 @@ The public review queue contract is published at `https://gcagochina.com/review-
 
 The public access operations runbook is published at `https://gcagochina.com/operations.html` and `https://gcagochina.com/operations.json`. It defines operator SOP for non-sensitive intake, Base Mainnet identity checks, read-only `eth_call` / `balanceOf` wallet-balance review, eligibility decisions, support replies, ledger handoff, platform follow-up, and closure. The backend account and ledger path is live; the runbook still does not create custody, public ledger browsing, or automatic token-transfer claims.
 
-The public credits catalog is published at `https://gcagochina.com/credits.html` and `https://gcagochina.com/credits.json`. It is a service catalog for 100 Web3 Radar utility credits and GCA Member workflows, including Liquidation Replay, Risk Warning Review, Backtest Lab, ENTRY_READY Review, Position Size Calculator, Risk-Control Training, Member Research Notes, and Support Review Queue. Eligible account submissions can write credit/member ledger records; service delivery and token-benefit transfers remain controlled by support review.
+The public credits catalog is published at `https://gcagochina.com/credits.html` and `https://gcagochina.com/credits.json`. It is a service catalog for 100 GCA AI Quant Access credits and GCA Member workflows, including Liquidation Replay, Risk Warning Review, Backtest Lab, ENTRY_READY Review, Position Size Calculator, Risk-Control Training, Member Research Notes, and Support Review Queue. Eligible account submissions can write credit/member ledger records; service delivery and token-benefit transfers remain controlled by support review.
 
 The product release gates are published at `https://gcagochina.com/release-gates.html` and `https://gcagochina.com/release-gates.json`. They show the controlled HTTPS account UI, read-only GCA balance verification, credit ledger records, and member ledger records as live, while support review, member-benefit manual processing, risk-control review, and simulation or testnet first remain required before broader product or trading workflows.
 
-Verified first campaign backend: each registered user may verify one wallet holding at least 10,000 GCA and receive a one-time 100 Web3 Radar utility credits ledger record. This should be described only as account-level service credits for reports, backtests, risk warnings, ENTRY_READY signal review, calculators, or education access; it is not cash, token claims, income, reimbursement, or trading permission.
+Verified first campaign backend: each registered user may verify one wallet holding at least 10,000 GCA and receive a one-time 100 GCA AI Quant Access credits ledger record. This should be described only as account-level service credits for reports, backtests, risk warnings, ENTRY_READY signal review, calculators, or education access; it is not cash, token claims, income, reimbursement, or trading permission.
 
-Verified GCA Member backend: each registered user may verify one wallet buying and continuously holding at least 1,000,000 GCA for 30 days and qualify for GCA Member status plus one-time 10,000 GCA member benefit review in the Web3 Radar member ledger. Possible GCA Member benefits include the reserve-funded 10,000 GCA member benefit, higher utility credit limits, member research notes, priority report queue, member training sessions, and priority support; it is not cash, income, reimbursement, voting control, guaranteed lifetime access, trading permission, or risk-control bypass.
+Verified GCA Member backend: each registered user may verify one wallet buying and continuously holding at least 1,000,000 GCA for 30 days and qualify for GCA Member status plus one-time 10,000 GCA member benefit review in the GCA Member ledger. Possible GCA Member benefits include the reserve-funded 10,000 GCA member benefit, higher utility credit limits, member research notes, priority report queue, member training sessions, and priority support; it is not cash, income, reimbursement, voting control, guaranteed lifetime access, trading permission, or risk-control bypass.
 
 ## Platform-Specific Notes
 

@@ -126,7 +126,7 @@
   ],
   "gcaAccessRules": {
     "holderBonusMinimum": "10000 GCA",
-    "holderBonusCreditAmount": "100 Web3 Radar utility credits",
+    "holderBonusCreditAmount": "100 GCA AI Quant Access credits",
     "gcaMemberMinimum": "1000000 GCA",
     "gcaMemberMinimumHoldingDays": 30,
     "gcaMemberBenefitAmount": "10000 GCA",

@@ -701,7 +701,7 @@ class GcaMemberBackend:
             "email": registration["email"],
             "walletAddress": registration["walletAddress"],
             "creditAmount": CREDIT_AMOUNT,
-            "creditType": "Web3 Radar utility credits",
+            "creditType": "GCA AI Quant Access credits",
             "activatedAt": activated.isoformat().replace("+00:00", "Z"),
             "expiresAt": (activated + timedelta(days=CREDIT_EXPIRY_DAYS)).isoformat().replace("+00:00", "Z"),
             "remainingCredits": CREDIT_AMOUNT,

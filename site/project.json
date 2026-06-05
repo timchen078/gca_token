@@ -330,7 +330,7 @@
       "member account UI refinements",
       "operator review dashboard for wallet and ledger records",
       "30-day GCA Member holding-period review",
-      "100 Web3 Radar utility credits service delivery workflow",
+      "100 GCA AI Quant Access credits service delivery workflow",
       "GCA Member support workflow",
       "10,000 GCA member benefit status",
       "support review queue and audit trail"
@@ -341,7 +341,7 @@
     "status": "public-utility-bridge-spec-published",
     "pageUrl": "https://gcagochina.com/utility.html",
     "url": "https://gcagochina.com/utility.json",
-    "connectedProduct": "Web3 Radar non-custodial quant risk toolkit",
+    "connectedProduct": "GCA AI Quant Access non-custodial quant risk toolkit",
     "publicSelfServiceClaimsLive": true,
     "requiresControlledWalletVerification": true,
     "notUtility": [
@@ -534,7 +534,7 @@
       "pageUrl": "https://gcagochina.com/member-ledger.html",
       "url": "https://gcagochina.com/member-ledger.json",
       "holderBonusMinimum": "10000 GCA",
-      "holderBonusCreditAmount": "100 Web3 Radar utility credits",
+      "holderBonusCreditAmount": "100 GCA AI Quant Access credits",
       "gcaMemberMinimum": "1000000 GCA",
       "gcaMemberMinimumHoldingDays": 30,
       "gcaMemberBenefitAmount": "10000 GCA",
@@ -542,7 +542,7 @@
     },
     "holderBonus": {
       "minimumHolding": "10000 GCA",
-      "creditAmount": "100 Web3 Radar utility credits",
+      "creditAmount": "100 GCA AI Quant Access credits",
       "creditExpiry": "180 days after ledger activation unless a later published policy extends it",
       "spendScope": "reports, backtests, risk warnings, ENTRY_READY signal review, position calculators, or education access",
       "notCreditUse": "cash, token claims, income, reimbursement, trading permission, or risk-control bypass"
@@ -651,7 +651,7 @@
     "url": "https://gcagochina.com/credits.json",
     "currentStage": "account-ledger-path-live",
     "holderBonusMinimum": "10000 GCA",
-    "holderBonusCreditAmount": "100 Web3 Radar utility credits",
+    "holderBonusCreditAmount": "100 GCA AI Quant Access credits",
     "gcaMemberMinimum": "1000000 GCA",
     "gcaMemberMinimumHoldingDays": 30,
     "gcaMemberBenefitAmount": "10000 GCA",

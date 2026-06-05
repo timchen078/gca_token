@@ -40,7 +40,7 @@
     "minimumHolding": "10000 GCA",
     "registeredUserLimit": "one bonus per registered user",
     "walletLimit": "one verified wallet per registered user",
-    "creditAmount": "100 Web3 Radar utility credits",
+    "creditAmount": "100 GCA AI Quant Access credits",
     "creditActivation": "after controlled HTTPS account UI is live and wallet balance verification succeeds",
     "creditExpiry": "180 days after ledger activation unless a later published policy extends it",
     "spendScope": [
@@ -55,7 +55,7 @@
       "credits are account-level service credits only",
       "credits are not transferable",
       "credits are not GCA token claims and cannot be redeemed for cash, income, reimbursement, or trading permission",
-      "credits cannot bypass Web3 Radar risk controls",
+      "credits cannot bypass GCA AI Quant Access risk controls",
       "credits are consumed only after a requested service is delivered or queued according to the account UI"
     ]
   },

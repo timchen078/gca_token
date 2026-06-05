@@ -4,7 +4,7 @@
   "status": "public-review-queue-contract-published",
   "lastUpdated": "2026-05-20",
   "title": "GCA Review Queue Contract",
-  "scope": "Public manual-review contract for live GCA account intake, read-only wallet verification, 100 Web3 Radar utility credits, GCA Member review, support review, and platform profile follow-up. This file does not create a public ledger browser or automatic token-transfer claim.",
+  "scope": "Public manual-review contract for live GCA account intake, read-only wallet verification, 100 GCA AI Quant Access credits, GCA Member review, support review, and platform profile follow-up. This file does not create a public ledger browser or automatic token-transfer claim.",
   "currentState": {
     "currentStage": "manual-review-contract",
     "contractOnly": true,
@@ -48,7 +48,7 @@
     },
     {
       "id": "holder-credit-review",
-      "purpose": "Review 10,000 GCA eligibility for a one-time 100 Web3 Radar utility credits record after ledger activation.",
+      "purpose": "Review 10,000 GCA eligibility for a one-time 100 GCA AI Quant Access credits record after ledger activation.",
       "allowedStatuses": [
         "queued",
         "eligible",
@@ -131,7 +131,7 @@
   },
   "eligibilityThresholds": {
     "holderBonusMinimum": "10000 GCA",
-    "holderBonusCreditAmount": "100 Web3 Radar utility credits",
+    "holderBonusCreditAmount": "100 GCA AI Quant Access credits",
     "gcaMemberMinimum": "1000000 GCA",
     "gcaMemberMinimumHoldingDays": 30,
     "gcaMemberBenefitAmount": "10000 GCA",
@@ -207,7 +207,7 @@
     ],
     "doNotClaim": [
       "the review queue is a public ledger browser or private-data dropbox",
-      "100 Web3 Radar utility credits are cash, income, reimbursement, trading permission, or transferable value",
+      "100 GCA AI Quant Access credits are cash, income, reimbursement, trading permission, or transferable value",
       "GCA Member status bypasses wallet verification, holding-period evidence, or support review",
       "the 10,000 GCA member benefit is automatic or self-service transferred before holding-period verification, support approval, and manual reserve-wallet processing",
       "support can override wallet-balance verification, release gates, or public safety boundaries",

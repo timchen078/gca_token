@@ -5,7 +5,7 @@ Version: 0.6
 Official buy guide: `https://gcagochina.com/buy.html`
 
 Utility thesis: `https://gcagochina.com/utility.html`
-Utility bridge spec: `https://gcagochina.com/utility.json`
+Access layer spec: `https://gcagochina.com/utility.json`
 Product spec: `https://gcagochina.com/product.html`
 Product spec JSON: `https://gcagochina.com/product.json`
 Access portal: `https://gcagochina.com/access.html`
@@ -76,7 +76,7 @@ The GCA narrative system uses repeatable names so the project can be memorable w
 
 The current public content format is Weekly Go China Radar. Issue 002, Trust Stack Before Growth, is a reusable update for verification links, public trust signals, risk notes, utility hooks, and community talking points. It is not live market data, financial advice, a buy/sell recommendation, or a price forecast.
 
-The product bridge connects GCA with Web3 Radar-style non-custodial quant tooling through live account intake and eligible ledger records. Suitable utility includes:
+The product layer connects GCA with GCA AI Quant Access non-custodial quant tooling through live account intake and eligible ledger records. Suitable utility includes:
 
 - Liquidation replay reports
 - Risk-warning credits
@@ -85,8 +85,8 @@ The product bridge connects GCA with Web3 Radar-style non-custodial quant toolin
 - Position-size calculators
 - Subscription discounts
 - Risk-control training
-- Planned first campaign: each registered user may verify one wallet holding at least 10,000 GCA and receive a one-time 100 Web3 Radar utility credits bonus after the access bridge is live
-- Planned GCA Member tier: each registered user may verify one wallet buying and continuously holding at least 1,000,000 GCA for 30 days, then qualify for GCA Member status and one-time 10,000 GCA member benefit review after the access bridge is live
+- Planned first campaign: each registered user may verify one wallet holding at least 10,000 GCA and receive a one-time 100 GCA AI Quant Access credits bonus after the account path is live
+- Planned GCA Member tier: each registered user may verify one wallet buying and continuously holding at least 1,000,000 GCA for 30 days, then qualify for GCA Member status and one-time 10,000 GCA member benefit review after the account path is live
 
 The public product specification for this direction is GCA AI Quant Access. It records live account/ledger intake and describes China Narrative Radar, Weekly Go China Radar, Liquidation Replay, Risk Warning Credits, Backtest Lab, ENTRY_READY Review, Position Size Calculator, and GCA Member Workspace. It is not a live trading terminal, live market data service, financial advice, or a finished trading product.
 
@@ -100,7 +100,7 @@ The public review queue contract defines the manual review lanes that sit betwee
 
 The public access operations runbook defines how operators should handle manual reviews after account intake and eligible ledger records are live. It requires non-sensitive intake only, Base Mainnet identity checks, read-only `eth_call` / `balanceOf` wallet-balance review, 30-day holding-period review for GCA Member benefit eligibility, decision records for 10,000 GCA credits eligibility and 1,000,000 GCA Member eligibility, support replies, ledger handoff, platform follow-up, and closure notes. It does not make the project a custody system, public ledger browser, or self-service token-transfer claim page.
 
-The public credits catalog is a service catalog for Web3 Radar utility credits. It maps the 100 Web3 Radar utility credits campaign to service units such as Liquidation Replay, Risk Warning Review, Backtest Lab, ENTRY_READY Review, Position Size Calculator, Risk-Control Training, Member Research Notes, and Support Review Queue. Eligible account and wallet submissions can now write credit/member ledger records; actual service delivery and the 10,000 GCA member benefit remain subject to support review and published release boundaries.
+The public credits catalog is a service catalog for GCA AI Quant Access credits. It maps the 100 GCA AI Quant Access credits campaign to service units such as Liquidation Replay, Risk Warning Review, Backtest Lab, ENTRY_READY Review, Position Size Calculator, Risk-Control Training, Member Research Notes, and Support Review Queue. Eligible account and wallet submissions can now write credit/member ledger records; actual service delivery and the 10,000 GCA member benefit remain subject to support review and published release boundaries.
 
 The public release-gates page now distinguishes live access gates from remaining product gates: controlled HTTPS account UI, read-only GCA balance verification, eligible credit ledger writes, and eligible member ledger writes are live; support review, member-benefit manual processing, risk-control review, and simulation or testnet first remain required before broader product or trading workflows.
 
@@ -109,7 +109,7 @@ Near-term work should focus on:
 - Creating official community channels
 - Publishing a clearer community thesis
 - Collecting feedback before committing to a specific product release
-- Defining the Web3 Radar access bridge
+- Defining the GCA AI Quant Access account path
 - Keeping public disclosures accurate as the project evolves
 
 This concept does not imply a price target, return promise, revenue share, or completed application.
@@ -118,7 +118,7 @@ This concept does not imply a price target, return promise, revenue share, or co
 
 GCA should be positioned as an access and membership layer, not as a yield product. Token utility should unlock reports, credits, education, and research workflows. It should not distribute platform revenue, promise outcomes, provide custody, request withdrawal permission, or bypass trading risk checks.
 
-The 10,000 GCA holder bonus is an account-level service credit campaign. The 100 Web3 Radar utility credits should only be usable for reports, backtests, risk warnings, ENTRY_READY signal review, position calculators, or education access. They should not be cash, token claims, income, reimbursement, trading permission, or a reason to bypass risk controls.
+The 10,000 GCA holder bonus is an account-level service credit campaign. The 100 GCA AI Quant Access credits should only be usable for reports, backtests, risk warnings, ENTRY_READY signal review, position calculators, or education access. They should not be cash, token claims, income, reimbursement, trading permission, or a reason to bypass risk controls.
 
 The 1,000,000 GCA Member tier is an account-level service-access tier, not a financial status. It requires verified purchase and continuous holding for 30 days before member benefit review. Possible GCA Member benefits include a one-time 10,000 GCA member benefit from project or owner-held reserve, higher utility credit limits, member research notes, priority report queue, member training sessions, and priority support. The 10,000 GCA member benefit is documented as a manual reserve transfer after approval, not automatic claiming or new minting. GCA Member status and the member benefit should not provide cash, income, reimbursement, voting control, guaranteed lifetime access, trading permission, or a way to bypass risk controls.
 
