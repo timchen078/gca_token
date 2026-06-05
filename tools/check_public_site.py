@@ -8081,7 +8081,7 @@ def validate_release_gates_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong pageUrl")
     if payload.get("status") != "public-release-gates-account-ledger-path-live":
         raise SiteCheckError(f"{label}: wrong status")
-    if payload.get("lastUpdated") != "2026-06-04":
+    if payload.get("lastUpdated") != "2026-06-05":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
@@ -8098,7 +8098,7 @@ def validate_release_gates_json(text: str) -> None:
         raise SiteCheckError(f"{label}: liveTradingEnabled must be false")
     if state.get("baseScanTokenProfile") != "ready-for-owner-resubmission":
         raise SiteCheckError(f"{label}: wrong BaseScan state")
-    if state.get("baseScanTokenProfileLastCheckedDate") != "2026-06-04":
+    if state.get("baseScanTokenProfileLastCheckedDate") != "2026-06-05":
         raise SiteCheckError(f"{label}: wrong BaseScan last checked date")
     if state.get("baseScanFinalSubmissionPackageGeneratedAt") != "2026-06-05T11:01:28Z":
         raise SiteCheckError(f"{label}: wrong BaseScan final package timestamp")
@@ -8640,7 +8640,7 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong contractAddress")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
-    if payload.get("lastUpdated") != "2026-06-04":
+    if payload.get("lastUpdated") != "2026-06-05":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("memberProgramRulesUrl") != MEMBER_PROGRAM_URL:
         raise SiteCheckError(f"{label}: wrong memberProgramRulesUrl")
@@ -8845,7 +8845,7 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong quoteAssetAddress")
     if status.get("baseScanTokenProfile") != "ready-for-owner-resubmission":
         raise SiteCheckError(f"{label}: unexpected BaseScan status")
-    if status.get("baseScanTokenProfileLastCheckedDate") != "2026-06-04":
+    if status.get("baseScanTokenProfileLastCheckedDate") != "2026-06-05":
         raise SiteCheckError(f"{label}: wrong BaseScan profile last checked date")
     if "returned the token profile update again" not in status.get("baseScanTokenProfileLastCheckedResult", ""):
         raise SiteCheckError(f"{label}: missing BaseScan profile last checked result")
@@ -8861,7 +8861,7 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong platformStatus dailyStatus")
     if status.get("dailyStatusGeneratedAt") != "2026-06-05T11:10:15Z":
         raise SiteCheckError(f"{label}: wrong dailyStatusGeneratedAt")
-    if status.get("externalReviewStatusLastUpdated") != "2026-06-04":
+    if status.get("externalReviewStatusLastUpdated") != "2026-06-05":
         raise SiteCheckError(f"{label}: wrong externalReviewStatusLastUpdated")
     if status.get("domainEmailSetupPlan") != DOMAIN_EMAIL_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong domainEmailSetupPlan")
@@ -8877,9 +8877,9 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong Tim Chen professional profile")
     if status.get("geckoTerminalTokenInfo") != "approved-2026-05-11":
         raise SiteCheckError(f"{label}: unexpected GeckoTerminal status")
-    if external_reviews.get("lastUpdated") != "2026-06-04":
+    if external_reviews.get("lastUpdated") != "2026-06-05":
         raise SiteCheckError(f"{label}: wrong external review lastUpdated")
-    if external_reviews.get("baseScanTokenProfileLastCheckedDate") != "2026-06-04":
+    if external_reviews.get("baseScanTokenProfileLastCheckedDate") != "2026-06-05":
         raise SiteCheckError(f"{label}: wrong external review BaseScan last checked date")
     if "2026-06-05T11:01:28Z" not in external_reviews.get("baseScanTokenProfileLastCheckedResult", ""):
         raise SiteCheckError(f"{label}: missing external review BaseScan final package timestamp")
@@ -10286,7 +10286,7 @@ def validate_listing_readiness_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != LISTING_READINESS_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
-    if payload.get("lastUpdated") != "2026-06-04":
+    if payload.get("lastUpdated") != "2026-06-05":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("status") != "not-ready":
         raise SiteCheckError(f"{label}: wrong status")
@@ -10333,7 +10333,7 @@ def validate_listing_readiness_json(text: str) -> None:
     if not any(check.get("id") == "no-artificial-activity-policy" for check in checks):
         raise SiteCheckError(f"{label}: missing artificial activity policy")
     base_scan_profile = next((check for check in checks if check.get("id") == "basescan-token-profile"), {})
-    if base_scan_profile.get("lastCheckedDate") != "2026-06-04":
+    if base_scan_profile.get("lastCheckedDate") != "2026-06-05":
         raise SiteCheckError(f"{label}: wrong BaseScan profile last checked date")
     if base_scan_profile.get("finalSubmissionPackageGeneratedAt") != "2026-06-05T11:01:28Z":
         raise SiteCheckError(f"{label}: wrong BaseScan final package timestamp")
@@ -10965,7 +10965,7 @@ def validate_reviewer_kit_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong pageUrl")
     if payload.get("status") != "public-reviewer-kit-published":
         raise SiteCheckError(f"{label}: wrong status")
-    if payload.get("lastUpdated") != "2026-06-04":
+    if payload.get("lastUpdated") != "2026-06-05":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
@@ -11055,7 +11055,7 @@ def validate_reviewer_kit_json(text: str) -> None:
         raise SiteCheckError(f"{label}: third-party audit must be false")
     if reviews.get("baseScanTokenProfile") != "ready-for-owner-resubmission":
         raise SiteCheckError(f"{label}: wrong BaseScan profile status")
-    if reviews.get("baseScanTokenProfileLastCheckedDate") != "2026-06-04":
+    if reviews.get("baseScanTokenProfileLastCheckedDate") != "2026-06-05":
         raise SiteCheckError(f"{label}: wrong BaseScan profile last checked date")
     if reviews.get("baseScanFinalSubmissionPackageGeneratedAt") != "2026-06-05T11:01:28Z":
         raise SiteCheckError(f"{label}: wrong BaseScan final package timestamp")
@@ -11479,7 +11479,7 @@ def validate_trust_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong pageUrl")
     if payload.get("status") != "public-trust-center-published":
         raise SiteCheckError(f"{label}: wrong status")
-    if payload.get("lastUpdated") != "2026-06-04":
+    if payload.get("lastUpdated") != "2026-06-05":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
@@ -11533,7 +11533,7 @@ def validate_trust_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong BaseScan ownership status")
     if snapshot.get("baseScanTokenProfile") != "ready-for-owner-resubmission":
         raise SiteCheckError(f"{label}: wrong BaseScan token profile status")
-    if snapshot.get("baseScanTokenProfileLastCheckedDate") != "2026-06-04":
+    if snapshot.get("baseScanTokenProfileLastCheckedDate") != "2026-06-05":
         raise SiteCheckError(f"{label}: wrong BaseScan token profile last checked date")
     if snapshot.get("baseScanFinalSubmissionPackageGeneratedAt") != "2026-06-05T11:01:28Z":
         raise SiteCheckError(f"{label}: wrong BaseScan final package timestamp")
@@ -11617,7 +11617,7 @@ def validate_trust_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong Blockaid follow-up URL")
     if reviews.get("thirdPartyAudit") != "not-completed-deferred":
         raise SiteCheckError(f"{label}: wrong third-party audit status")
-    if reviews.get("baseScanTokenProfileLastCheckedDate") != "2026-06-04":
+    if reviews.get("baseScanTokenProfileLastCheckedDate") != "2026-06-05":
         raise SiteCheckError(f"{label}: wrong external-review BaseScan last checked date")
     if reviews.get("baseScanFinalSubmissionPackageGeneratedAt") != "2026-06-05T11:01:28Z":
         raise SiteCheckError(f"{label}: wrong external-review final package timestamp")
@@ -11697,7 +11697,7 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != EXTERNAL_REVIEW_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
-    if payload.get("lastUpdated") not in {"2026-05-25", "2026-05-30", "2026-06-02", "2026-06-04"}:
+    if payload.get("lastUpdated") not in {"2026-05-25", "2026-05-30", "2026-06-02", "2026-06-05"}:
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("status") != "external-review-status-active":
         raise SiteCheckError(f"{label}: wrong status")
@@ -11812,7 +11812,7 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong BaseScan source status")
     if base_scan_profile.get("status") != "ready-for-owner-resubmission":
         raise SiteCheckError(f"{label}: wrong BaseScan profile status")
-    if base_scan_profile.get("lastCheckedDate") not in {"2026-05-30", "2026-06-02", "2026-06-04"}:
+    if base_scan_profile.get("lastCheckedDate") not in {"2026-05-30", "2026-06-02", "2026-06-05"}:
         raise SiteCheckError(f"{label}: wrong BaseScan profile last checked date")
     if "Tim Chen official-domain professional profile evidence is published" not in base_scan_profile.get("lastCheckedResult", ""):
         raise SiteCheckError(f"{label}: missing BaseScan profile last checked result")
