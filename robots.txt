@@ -10,6 +10,7 @@ Allow: /zh-status.html
 Allow: /zh-domain-email.html
 Allow: /zh-basescan-preflight.html
 Allow: /zh-basescan-submit.html
+Allow: /zh-basescan-handoff.html
 Allow: /zh-liquidity.html
 Allow: /zh-supply.html
 Allow: /zh-security.html
