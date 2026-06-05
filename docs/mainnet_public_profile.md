@@ -70,7 +70,7 @@ The full fixed supply was minted to the deployer wallet at deployment. The 40/60
 - Release gates JSON: `https://gcagochina.com/release-gates.json`
 - Member benefit transfer runbook: `https://gcagochina.com/member-benefit-transfer.html`
 - Member benefit transfer runbook JSON: `https://gcagochina.com/member-benefit-transfer.json`
-- Planned Web3 Radar bridge: liquidation replay reports, risk-warning credits, realistic backtest usage, ENTRY_READY signal review, position-size calculators, subscription discounts, and risk-control training
+- Planned GCA AI Quant Access layer: liquidation replay reports, risk-warning credits, realistic backtest usage, ENTRY_READY signal review, position-size calculators, subscription discounts, and risk-control training
 - First campaign path: each registered user may verify one wallet holding at least 10,000 GCA and create a one-time 100 Web3 Radar utility credits ledger record through the live account path
 - GCA Member tier: each registered user may verify one wallet buying and continuously holding at least 1,000,000 GCA for 30 days, then qualify for GCA Member review and one-time 10,000 GCA member benefit review; token transfer remains manual reserve-wallet processing only
 - Public access portal: controlled HTTPS account UI, read-only `eth_call` / `balanceOf` GCA balance verification, 30-day holding-period review, support review record, 100 credits ledger activation, GCA Member ledger activation, and 10,000 GCA member benefit status

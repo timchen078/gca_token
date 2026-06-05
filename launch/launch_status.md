@@ -207,7 +207,7 @@
 - Owner observed no wallet risk warning visible on 2026-05-14 after the Blockaid report and follow-up. Treat this as a current UI observation, not security-vendor approval or a permanent cross-wallet guarantee.
 - The owner reserve is in a normal owner-controlled wallet. Do not describe it as locked, vested, or multisig-controlled unless custody changes on-chain.
 - The product direction is still concept-stage. Do not describe GCA as a finished platform or as having guaranteed utility.
-- The Web3 Radar bridge now has public account intake, read-only wallet verification, and eligible 100 credits / GCA Member ledger records on the Workers + D1 path; the 10,000 GCA member benefit remains manual review and reserve-wallet processing only.
+- The GCA AI Quant Access account path now has public account intake, read-only wallet verification, and eligible 100 credits / GCA Member ledger records on the Workers + D1 path; the 10,000 GCA member benefit remains manual review and reserve-wallet processing only.
 - The public member page reads a wallet's GCA balance through a read-only backend `eth_call`; it does not request a wallet signature, transaction, private key, or custody permission.
 - The local operator backend can still create local JSONL ledger records for testing, while the public `gcagochina.com/gca/member-access/` path writes eligible production records through Cloudflare Workers + D1.
 - The local operator console now shows the last exported review package mode, `packageDigestSha256`, local verify command, and copyable handoff reply; only `redacted-public` exports are suitable for external reviewer handoff, and full-local exports require explicit browser confirmation before download.
