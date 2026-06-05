@@ -68,6 +68,7 @@ ZH_ACCESS_PAGE_URL = "https://gcagochina.com/zh-access.html"
 ZH_RELEASE_GATES_PAGE_URL = "https://gcagochina.com/zh-release-gates.html"
 ZH_WALLET_VERIFY_PAGE_URL = "https://gcagochina.com/zh-wallet-verify.html"
 ZH_MEMBER_CHECKLIST_PAGE_URL = "https://gcagochina.com/zh-member-checklist.html"
+ZH_MEMBER_BENEFIT_TRANSFER_PAGE_URL = "https://gcagochina.com/zh-member-benefit-transfer.html"
 ZH_SITE_MAP_PAGE_URL = "https://gcagochina.com/zh-site-map.html"
 ZH_DATA_PAGE_URL = "https://gcagochina.com/zh-data.html"
 ZH_API_STATUS_PAGE_URL = "https://gcagochina.com/zh-api-status.html"
@@ -287,6 +288,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("/zh-release-gates.html", script)
         self.assertIn("/zh-wallet-verify.html", script)
         self.assertIn("/zh-member-checklist.html", script)
+        self.assertIn("/zh-member-benefit-transfer.html", script)
         self.assertIn("/zh-site-map.html", script)
         self.assertIn("/zh-data.html", script)
         self.assertIn("/zh-api-status.html", script)
@@ -571,6 +573,7 @@ class LaunchPackageTests(unittest.TestCase):
         module.validate_zh_release_gates_page((ROOT / "site" / "zh-release-gates.html").read_text())
         module.validate_zh_wallet_verify_page((ROOT / "site" / "zh-wallet-verify.html").read_text())
         module.validate_zh_member_checklist_page((ROOT / "site" / "zh-member-checklist.html").read_text())
+        module.validate_zh_member_benefit_transfer_page((ROOT / "site" / "zh-member-benefit-transfer.html").read_text())
         module.validate_zh_site_map_page((ROOT / "site" / "zh-site-map.html").read_text())
         module.validate_zh_data_page((ROOT / "site" / "zh-data.html").read_text())
         module.validate_zh_api_status_page((ROOT / "site" / "zh-api-status.html").read_text())
@@ -986,6 +989,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Allow: /zh-release-gates.html", robots)
         self.assertIn("Allow: /zh-wallet-verify.html", robots)
         self.assertIn("Allow: /zh-member-checklist.html", robots)
+        self.assertIn("Allow: /zh-member-benefit-transfer.html", robots)
         self.assertIn("Allow: /zh-site-map.html", robots)
         self.assertIn("Allow: /zh-data.html", robots)
         self.assertIn("Allow: /zh-api-status.html", robots)
@@ -4169,6 +4173,49 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("self-service claimable today", " ".join(transfer["publicClaimBoundaries"]["doNotClaim"]))
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, json.dumps(transfer))
         self.assertNotIn("GCA/WETH", json.dumps(transfer))
+
+    def test_zh_member_benefit_transfer_page_explains_manual_runbook(self):
+        page = (ROOT / "site" / "zh-member-benefit-transfer.html").read_text()
+
+        self.assertIn("GCA 中文会员权益转账流程", page)
+        self.assertIn(ZH_MEMBER_BENEFIT_TRANSFER_PAGE_URL, page)
+        self.assertIn("中文会员权益转账流程 / 2026-06-05", page)
+        self.assertIn("1,000,000 GCA 连续持有 30 天", page)
+        self.assertIn("10,000 GCA 会员权益", page)
+        self.assertIn("人工审核和手动转账", page)
+        self.assertIn("不是自动领取页面", page)
+        self.assertIn("不是新铸币", page)
+        self.assertIn("GCA 合约没有后续增发函数", page)
+        self.assertIn("Base Mainnet / chainId 8453", page)
+        self.assertIn(MAINNET_ADDRESS, page)
+        self.assertIn("GCA/USDT", page)
+        self.assertIn(OFFICIAL_POOL_ADDRESS, page)
+        self.assertIn(RESERVE_WALLET, page)
+        self.assertIn("memberBenefitTransferTx", page)
+        self.assertIn("gca_member_preregistration_v2", page)
+        self.assertIn("memberBenefitReviewEvidenceStatus", page)
+        self.assertIn("evidenceTxHashFormatOk", page)
+        self.assertIn("只读 balanceOf 复核至少 1,000,000 GCA", page)
+        self.assertIn("手动发送 10,000 GCA", page)
+        self.assertIn("私钥", page)
+        self.assertIn("助记词", page)
+        self.assertIn("交易所 API Secret", page)
+        self.assertIn("提现权限", page)
+        self.assertIn("不能说：持有 1,000,000 GCA 会自动触发转账", page)
+        self.assertIn("不能说：10,000 GCA 会员权益今天可以自助领取", page)
+        self.assertIn("不会自动转账", page)
+        self.assertIn("不会托管资金", page)
+        self.assertIn("不会要求用户签名授权", page)
+        self.assertIn('href="zh-members.html"', page)
+        self.assertIn('href="zh-member-checklist.html"', page)
+        self.assertIn('href="zh-wallet-verify.html"', page)
+        self.assertIn('href="zh-support.html"', page)
+        self.assertIn('href="gca/member-access/"', page)
+        self.assertNotIn('href="member-benefit-transfer.json"', page)
+        self.assertNotIn("Platform-Only Evidence Path", page)
+        self.assertNotIn("Reviewer Data Room", page)
+        self.assertNotIn(OLD_WETH_POOL_ADDRESS, page)
+        self.assertNotIn("GCA/WETH", page)
 
     def test_utility_page_connects_gca_to_quant_tools_safely(self):
         utility = (ROOT / "site" / "utility.html").read_text()
@@ -8204,6 +8251,7 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "site" / "zh-release-gates.html",
             ROOT / "site" / "zh-wallet-verify.html",
             ROOT / "site" / "zh-member-checklist.html",
+            ROOT / "site" / "zh-member-benefit-transfer.html",
             ROOT / "site" / "zh-site-map.html",
             ROOT / "site" / "zh-data.html",
             ROOT / "site" / "zh-api-status.html",
