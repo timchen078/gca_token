@@ -258,8 +258,8 @@
     "url": "https://gcagochina.com/release-gates.json",
     "currentStage": "account-ledger-path-live",
     "publicAccountUiLive": true,
-    "creditsSelfServiceClaimable": true,
-    "gcaMemberSelfServiceClaimable": true,
+    "creditsEligibilitySubmissionLive": true,
+    "gcaMemberEligibilitySubmissionLive": true,
     "liveTradingEnabled": false,
     "requiredBeforePublicClaims": [
       "controlled HTTPS account UI",
@@ -278,8 +278,13 @@
     "pageUrl": "https://gcagochina.com/review-queue.html",
     "url": "https://gcagochina.com/review-queue.json",
     "publicQueueLive": false,
-    "creditsSelfServiceClaimable": false,
-    "gcaMemberSelfServiceClaimable": false,
+    "creditsEligibilitySubmissionLive": true,
+    "gcaMemberEligibilitySubmissionLive": true,
+    "creditLedgerRecordCreationLive": true,
+    "memberLedgerRecordCreationLive": true,
+    "manualReviewRequired": true,
+    "memberBenefitSelfServiceClaimable": false,
+    "memberBenefitAutomaticTransfer": false,
     "operationsRunbookPage": "https://gcagochina.com/operations.html",
     "operationsRunbook": "https://gcagochina.com/operations.json"
   },
@@ -293,8 +298,8 @@
     "backendLive": true,
     "publicSubmissionQueueLive": true,
     "controlledHttpsAccountUiLive": true,
-    "creditsSelfServiceClaimable": true,
-    "gcaMemberSelfServiceClaimable": true,
+    "creditsEligibilitySubmissionLive": true,
+    "gcaMemberEligibilitySubmissionLive": true,
     "ledgerWritesLive": true,
     "liveTradingEnabled": false
   }

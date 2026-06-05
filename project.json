@@ -335,14 +335,14 @@
       "10,000 GCA member benefit status",
       "support review queue and audit trail"
     ],
-    "publicSelfServiceClaimsLive": true
+    "publicEligibilitySubmissionLive": true
   },
   "utilityBridge": {
     "status": "public-utility-bridge-spec-published",
     "pageUrl": "https://gcagochina.com/utility.html",
     "url": "https://gcagochina.com/utility.json",
     "connectedProduct": "GCA AI Quant Access non-custodial quant risk toolkit",
-    "publicSelfServiceClaimsLive": true,
+    "publicEligibilitySubmissionLive": true,
     "requiresControlledWalletVerification": true,
     "notUtility": [
       "custody",
@@ -621,8 +621,8 @@
     "url": "https://gcagochina.com/release-gates.json",
     "currentStage": "account-ledger-path-live",
     "publicAccountUiLive": true,
-    "creditsSelfServiceClaimable": true,
-    "gcaMemberSelfServiceClaimable": true,
+    "creditsEligibilitySubmissionLive": true,
+    "gcaMemberEligibilitySubmissionLive": true,
     "liveTradingEnabled": false,
     "requiredBeforePublicClaims": [
       "eligible account record",
@@ -656,8 +656,8 @@
     "gcaMemberMinimumHoldingDays": 30,
     "gcaMemberBenefitAmount": "10000 GCA",
     "publicAccountUiLive": true,
-    "creditsSelfServiceClaimable": true,
-    "gcaMemberSelfServiceClaimable": true,
+    "creditsEligibilitySubmissionLive": true,
+    "gcaMemberEligibilitySubmissionLive": true,
     "serviceNames": [
       "Liquidation Replay",
       "Risk Warning Review",
@@ -685,8 +685,8 @@
     "currentStage": "controlled-account-ui-live",
     "controlledHttpsAccountUiLive": true,
     "directSubmissionEndpointConfigured": true,
-    "creditsSelfServiceClaimable": true,
-    "gcaMemberSelfServiceClaimable": true,
+    "creditsEligibilitySubmissionLive": true,
+    "gcaMemberEligibilitySubmissionLive": true,
     "liveTradingEnabled": false,
     "memberAccessPreview": "https://gcagochina.com/gca/member-access/",
     "memberPreRegistrationPage": "https://gcagochina.com/members.html",
@@ -710,8 +710,8 @@
     "publicEndpointLive": true,
     "controlledHttpsAccountUiLive": true,
     "directSubmissionEndpointConfigured": true,
-    "creditsSelfServiceClaimable": true,
-    "gcaMemberSelfServiceClaimable": true,
+    "creditsEligibilitySubmissionLive": true,
+    "gcaMemberEligibilitySubmissionLive": true,
     "liveTradingEnabled": false,
     "endpoints": [
       "/gca/email-registrations",
@@ -738,9 +738,14 @@
     "publicQueueLive": false,
     "publicSubmissionQueueLive": false,
     "controlledHttpsAccountUiLive": true,
-    "creditsSelfServiceClaimable": true,
-    "gcaMemberSelfServiceClaimable": true,
+    "creditsEligibilitySubmissionLive": true,
+    "gcaMemberEligibilitySubmissionLive": true,
     "ledgerWritesLive": true,
+    "creditLedgerRecordCreationLive": true,
+    "memberLedgerRecordCreationLive": true,
+    "manualReviewRequired": true,
+    "memberBenefitSelfServiceClaimable": false,
+    "memberBenefitAutomaticTransfer": false,
     "lanes": [
       "pre-registration-intake",
       "wallet-balance-review",
@@ -767,8 +772,8 @@
     "accountAndMemberBackendLive": true,
     "publicSubmissionQueueLive": true,
     "controlledHttpsAccountUiLive": true,
-    "creditsSelfServiceClaimable": true,
-    "gcaMemberSelfServiceClaimable": true,
+    "creditsEligibilitySubmissionLive": true,
+    "gcaMemberEligibilitySubmissionLive": true,
     "ledgerWritesLive": true,
     "liveTradingEnabled": false
   }
