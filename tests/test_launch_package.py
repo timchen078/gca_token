@@ -1686,6 +1686,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Evidence Collected", page)
         self.assertIn("support@gcagochina.com", page)
         self.assertIn("support@gcagochina.com", page)
+        self.assertIn("Target Domain Email", page)
+        self.assertIn("private mailbox and DNS proof remain archived locally for reviewer follow-up", page)
         self.assertIn("launch/domain_email_evidence", page)
         self.assertIn("Required Evidence Files", page)
         self.assertIn("domain-email-provider-active.png", page)
@@ -1710,6 +1712,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertNotIn('href="domain-email-evidence.json"', page)
         self.assertNotIn('href="domain-email.json"', page)
         self.assertNotIn('href="project.json"', page)
+        self.assertNotIn("until domain email tests pass", page)
 
         self.assertEqual(data["schema"], DOMAIN_EMAIL_EVIDENCE_URL)
         self.assertEqual(data["pageUrl"], DOMAIN_EMAIL_EVIDENCE_PAGE_URL)
