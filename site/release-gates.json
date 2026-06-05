@@ -16,7 +16,7 @@
     "baseScanTokenProfile": "ready-for-owner-resubmission",
     "baseScanTokenProfileLastCheckedDate": "2026-06-04",
     "baseScanFinalSubmissionPackageGeneratedAt": "2026-06-05T11:01:28Z",
-    "dailyStatusGeneratedAt": "2026-06-05T10:29:19Z",
+    "dailyStatusGeneratedAt": "2026-06-05T11:10:15Z",
     "baseScanResubmissionReady": true,
     "thirdPartyAudit": "not-completed",
     "liquidityDepth": "starter-depth-only",
@@ -139,7 +139,7 @@
       "requiredBefore": "BaseScan token profile publication claim",
       "publicReference": "https://gcagochina.com/basescan-handoff.html",
       "finalSubmissionPackageGeneratedAt": "2026-06-05T11:01:28Z",
-      "dailyStatusGeneratedAt": "2026-06-05T10:29:19Z",
+      "dailyStatusGeneratedAt": "2026-06-05T11:10:15Z",
       "blocks": [
         "BaseScan token profile approval claim",
         "explorer profile publication claim"
@@ -179,7 +179,7 @@
       "The 10,000 GCA member benefit requires 1,000,000 GCA, 30-day holding evidence, member ledger review, and manual reserve-wallet processing.",
       "Any future trading-related feature must pass risk-control review and simulation or testnet first.",
       "GCA has published a public access operations runbook for manual review handling.",
-      "The latest BaseScan owner submission package was generated on 2026-06-05T11:01:28Z, and the daily public status snapshot was refreshed on 2026-06-05T10:29:19Z."
+      "The latest BaseScan owner submission package was generated on 2026-06-05T11:01:28Z, and the daily public status snapshot was refreshed on 2026-06-05T11:10:15Z."
     ],
     "doNotClaim": [
       "credits are cash, income, reimbursement, trading permission, or transferable value",
