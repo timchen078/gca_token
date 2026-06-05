@@ -3,7 +3,7 @@
   "pageUrl": "https://gcagochina.com/terms.html",
   "lastUpdated": "2026-05-20",
   "status": "public-participation-terms-published",
-  "scope": "GCA public website, member pre-registration, planned 100 credits, planned GCA Member status, future Web3 Radar access bridge",
+  "scope": "GCA public website, member pre-registration, planned 100 credits, planned GCA Member status, GCA AI Quant Access account path",
   "network": "Base Mainnet",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
@@ -12,7 +12,7 @@
     "emailContactSuppressionLive": true,
     "preRegistrationOnly": true,
     "publicSelfServiceClaimConnected": false,
-    "createsLiveWeb3RadarAccount": false,
+    "createsLiveGcaAiQuantAccessAccount": false,
     "activatesLiveTradingPermission": false,
     "emailRegistrationTransfersTokens": false,
     "emailContactSuppressionChangesChainState": false,
@@ -31,7 +31,7 @@
       "official support follow-up"
     ],
     "doesNotCreate": [
-      "live Web3 Radar account",
+      "live GCA AI Quant Access account",
       "self-service credit claim",
       "automatic GCA Member activation",
       "token transfer"
@@ -55,7 +55,7 @@
   "programTerms": {
     "holderBonus": {
       "minimumHolding": "10000 GCA",
-      "plannedCredit": "100 Web3 Radar utility credits",
+      "plannedCredit": "100 GCA AI Quant Access credits",
       "creditUseWindow": "180 days after ledger activation unless a later published policy extends it",
       "currentPublicClaimStatus": "not-connected",
       "scope": [

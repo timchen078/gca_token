@@ -24,9 +24,9 @@
       "description": "GCA as the access token for the public story and planned service workflows."
     },
     {
-      "layer": "productBridge",
+      "layer": "productLayer",
       "name": "AI Quant Access",
-      "description": "A planned bridge to non-custodial market research, backtests, and risk tools."
+      "description": "A planned product layer for non-custodial market research, backtests, and risk tools."
     },
     {
       "layer": "operatingRule",
