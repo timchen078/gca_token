@@ -82,9 +82,9 @@
       "label": "BaseScan token profile",
       "status": "ready-for-owner-resubmission",
       "lastCheckedDate": "2026-06-06",
-      "finalSubmissionPackageGeneratedAt": "2026-06-05T11:01:28Z",
+      "finalSubmissionPackageGeneratedAt": "2026-06-06T11:10:54Z",
       "dailyStatusGeneratedAt": "2026-06-06T11:02:01Z",
-      "evidence": "Token information update was returned again by BaseScan as information-insufficient on 2026-05-23. Tim Chen official-domain professional profile evidence is published; support@gcagochina.com is active as the project-domain email; the domain email setup plan, public evidence checklist, activation evidence packet, expanded BaseScan reply template, BaseScan Handoff copy blocks, and Chinese owner flow are published. The final owner submission package was regenerated on 2026-06-05T11:01:28Z, the daily public status snapshot was refreshed on 2026-06-06T11:02:01Z, and the 2026-05-30 DNS snapshot shows MX/SPF/DKIM/DMARC present."
+      "evidence": "Token information update was returned again by BaseScan as information-insufficient on 2026-05-23. Tim Chen official-domain professional profile evidence is published; support@gcagochina.com is active as the project-domain email; the domain email setup plan, public evidence checklist, activation evidence packet, expanded BaseScan reply template, BaseScan Handoff copy blocks, and Chinese owner flow are published. The final owner submission package was regenerated on 2026-06-06T11:10:54Z, the daily public status snapshot was refreshed on 2026-06-06T11:02:01Z, and the 2026-05-30 DNS snapshot shows MX/SPF/DKIM/DMARC present."
     },
     {
       "id": "geckoterminal-token-info",
