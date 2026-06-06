@@ -301,6 +301,7 @@
         <p class="lead">这一页给你自己操作用：判断现在能不能再次提交 BaseScan Token Profile。当前结论：可以准备一次干净的复提交；<code>support@gcagochina.com</code> 已可收可发，DNS、证据包、官网公开邮箱和最终表单草稿已对齐。</p>
         <p class="lead">当前公开邮箱是 <code>support@gcagochina.com</code>。2026-05-30 DNS 快照显示 MX present、SPF present、DKIM present、DMARC present；因此 <code>readyForBaseScanResubmission</code> 可以为 true。</p>
         <p class="lead">最终提交包已在 <code>2026-06-06T11:10:54Z</code> 刷新；本页同步到同一批 BaseScan Handoff 和最终复制包。</p>
+        <p class="lead">下面出现的 <code>launch/</code> 路径是本机 owner 工具输出，不是公开证据链接；BaseScan 表单里只引用“通过后要给 BaseScan 的证据链接”这一栏里的公网页面。</p>
         <div class="actions">
           <a class="button primary" href="zh-domain-email.html">中文域名邮箱整改</a>
           <a class="button primary" href="domain-email-evidence.html">公开证据清单</a>
@@ -344,6 +345,7 @@
             <div class="row"><span>证据包</span><strong><code>launch/domain_email_evidence_packet.json</code> 已可作为下一次 BaseScan 复审的本地证据索引；私密截图仍不公开。</strong></div>
             <div class="row"><span>Reviewer checklist</span><strong><code>launch/basescan_reviewer_checklist.json</code> 和 <code>launch/basescan_reviewer_checklist.md</code> 已生成，域名邮箱项为 ready。</strong></div>
             <div class="row"><span>最终表单</span><strong>预检显示 <code>readyForBaseScanResubmission</code> true，最终复制包时间为 <code>2026-06-06T11:10:54Z</code>，可以由 owner 提交一次 clean resubmission。</strong></div>
+            <div class="row"><span>本地路径边界</span><strong><code>launch/*.md/json</code> 是本机生成物，只作为复制和归档来源；不要把它当成官网 URL 提交。</strong></div>
           </div>
         </div>
 
@@ -393,6 +395,7 @@
           </div>
         </div>
         <p class="note">这些命令不会提交 BaseScan，不会发送邮件，不会写 DNS，不会签名，不会转账，也不会操作钱包或合约。</p>
+        <p class="note">命令里的 <code>launch/</code>、<code>tools/</code> 和本地 JSON/MD 文件不对外发布；如果 BaseScan 要证据链接，使用下一栏列出的 <code>https://gcagochina.com/...</code> 页面。</p>
       </section>
 
       <section class="section two" aria-label="复审证据和禁止事项">
@@ -420,6 +423,7 @@
             <div class="row"><span>可以说邮箱已启用</span><strong>可以说 <code>support@gcagochina.com</code> 已启用；但不要公开邮箱后台或收发截图，除非 reviewer 要求。</strong></div>
             <div class="row"><span>不要说 BaseScan 已通过</span><strong>源码验证和部署钱包验证已完成；公开 Token Profile 仍未完成。</strong></div>
             <div class="row"><span>最终提交包检查</span><strong>最终包通过 ready 检查后，才把 reviewer comment 复制到 BaseScan；如果工具提示阻塞，先修复阻塞项再重新生成。</strong></div>
+            <div class="row"><span>不要提交本地包地址</span><strong>不要把 <code>launch/basescan_final_submission_package.md</code> 或 <code>launch/*.json</code> 写成官网证据链接。</strong></div>
             <div class="row"><span>不要公开私密截图</span><strong>邮箱收发截图、邮箱后台截图先只保存本地，除非 reviewer 要求再提供。</strong></div>
             <div class="row"><span>不要做链上动作</span><strong>这页不签名、不授权、不转账、不改合约、不碰池子。</strong></div>
           </div>
@@ -428,7 +432,7 @@
     </main>
 
     <footer>
-      <div class="shell">GCA 中文 BaseScan 预检。当前结论：域名邮箱和证据包已就绪，可以由 owner 提交一次 clean resubmission，然后等待 BaseScan 回复。</div>
+      <div class="shell">GCA 中文 BaseScan 预检。当前结论：域名邮箱和证据包已就绪，可以由 owner 提交一次 clean resubmission，然后等待 BaseScan 回复；本地 launch 包不是公网证据链接。</div>
     </footer>
   </body>
 </html>

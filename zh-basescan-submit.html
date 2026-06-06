@@ -302,6 +302,7 @@
         <h1 id="title">GCA 中文 BaseScan 提交流程</h1>
         <p class="lead">这一页给 owner 在浏览器里手动提交 BaseScan Token Profile 更新时使用。当前准备方向是：只提交一次干净的复审请求，统一使用 <code>support@gcagochina.com</code>、Tim Chen 职业资料、官网证据链接和 GCA/USDT 官方市场路线。</p>
         <p class="lead">这页不会提交 BaseScan，不会发送邮件，不会连接钱包，也不会触碰合约。真正提交仍需要你登录 BaseScan，并在网页里手动确认。</p>
+        <p class="lead">提交表单时不要把本机 <code>launch/</code> 文件写成官网证据链接；<code>launch/*.md/json</code> 只用于本地生成复制文本，给 BaseScan 的链接应来自 <code>gcagochina.com</code> 的公开页面。</p>
         <div class="actions">
           <a class="button primary" href="https://basescan.org/tokenupdate/" target="_blank" rel="noreferrer">打开 BaseScan Token Update</a>
           <a class="button secondary" href="zh-basescan-handoff.html">打开中文复制包</a>
@@ -341,6 +342,7 @@
             <div class="row"><span>团队资料</span><strong>必须带上 <a href="tim-chen.html">Tim Chen 职业资料</a> 和 <a href="team.html#tim-chen">团队页</a>。</strong></div>
             <div class="row"><span>项目资料</span><strong>必须带上官网、白皮书、品牌资料、支持页、GitHub、Telegram、X、GCA/USDT 池 <code>0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0</code>，以及 Access / Claim Boundary。</strong></div>
             <div class="row"><span>会员边界</span><strong>100 credits 是账户服务记录；GCA Member 需要 1,000,000 GCA 连续持有 30 天证据；10,000 GCA 会员权益不是自动领取或自助转账。</strong></div>
+            <div class="row"><span>本地包边界</span><strong><code>launch/*.md/json</code> 只作为本机复制来源，不是公网 URL；不要把它写进 BaseScan 的证据链接字段。</strong></div>
             <div class="row"><span>提交次数</span><strong>只开一次新的 BaseScan Token Profile update，然后等 BaseScan 邮件回复。</strong></div>
           </div>
         </div>
@@ -414,6 +416,7 @@
             <div class="row"><span>不要夸大安全</span><strong>第三方审计尚未完成，不要写外部审计已完成。</strong></div>
             <div class="row"><span>不要说自动领取</span><strong>会员权益必须说成人工审核和储备钱包处理，不能说自动发放、自助领取、现金或收益。</strong></div>
             <div class="row"><span>不要公开私密证据</span><strong>邮箱后台、收发截图、BaseScan 登录状态只保存本地，除非 reviewer 单独要求。</strong></div>
+            <div class="row"><span>不要公开本地包</span><strong>不要把 <code>launch/basescan_final_submission_package.md</code>、<code>launch/*.json</code> 或任何本机路径当作官网链接提交。</strong></div>
             <div class="row"><span>不要碰钱包资产</span><strong>BaseScan 资料提交不需要授权、转账、approve、swap 或改池子。</strong></div>
           </div>
         </div>
@@ -421,7 +424,7 @@
     </main>
 
     <footer>
-      <div class="shell">GCA 中文 BaseScan 提交流程。提交由 owner 手动完成；本页只整理公开资料、复制来源和安全边界。</div>
+      <div class="shell">GCA 中文 BaseScan 提交流程。提交由 owner 手动完成；本页只整理公开资料、复制来源和安全边界；本地 launch 包不是公网证据链接。</div>
     </footer>
   </body>
 </html>
