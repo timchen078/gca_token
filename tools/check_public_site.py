@@ -3149,10 +3149,10 @@ def validate_zh_api_status_page(text: str) -> None:
     assert_social_preview_meta(text, label, ZH_API_STATUS_PAGE_URL)
     for expected in (
         "GCA 中文 API 状态",
-        "中文 API 状态 / 2026-06-05",
-        "2026-06-05T11:46:47Z",
+        "中文 API 状态 / 2026-06-06",
+        "2026-06-06T11:21:14Z",
         "最新检查",
-        "2026-06-05 通过",
+        "2026-06-06 通过",
         "邮箱注册和邮箱退订接口",
         "Cloudflare Workers + D1",
         "管理员读取接口仍需要本地管理 token",
@@ -7683,14 +7683,14 @@ def validate_api_status_page(text: str) -> None:
     assert_no_public_data_room_terms(text, label)
     for expected in (
         "GCA Registration API Status",
-        "Registration API Status / 2026-06-05",
-        "2026-06-05T11:46:47Z",
+        "Registration API Status / 2026-06-06",
+        "2026-06-06T11:21:14Z",
         "Cloudflare Workers + D1",
         "https://gca-registration-api.gcagochina.workers.dev",
         "Public Check",
         "Live / no secrets",
         "Latest Check",
-        "2026-06-05 passed",
+        "2026-06-06 passed",
         "Admin Read",
         "Token protected",
         "api.gcagochina.com pending zone access",
@@ -7749,7 +7749,7 @@ def validate_api_status_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong status")
     if payload.get("lastUpdated") != "2026-06-06":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
-    if payload.get("latestPublicCheckAt") != "2026-06-05T11:46:47Z":
+    if payload.get("latestPublicCheckAt") != "2026-06-06T11:21:14Z":
         raise SiteCheckError(f"{label}: wrong latest public check timestamp")
     if payload.get("latestPublicCheckStatus") != "passed":
         raise SiteCheckError(f"{label}: wrong latest public check status")
