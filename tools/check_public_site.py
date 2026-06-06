@@ -1700,6 +1700,9 @@ def validate_basescan_handoff_page(text: str) -> None:
         "support@gcagochina.com",
         "readyForBaseScanResubmission",
         "Final Copy Package",
+        "Local path boundary",
+        "owner-local artifacts, not public website links",
+        "paste the generated text into BaseScan",
         "Package generated",
         "2026-06-06T11:10:54Z",
         "BaseScan Form Copy Blocks",
@@ -1736,8 +1739,11 @@ def validate_basescan_handoff_page(text: str) -> None:
         "Readable Handoff Path",
         "does not submit BaseScan forms",
         "does not send email, write DNS records, sign messages, or touch wallets/contracts",
+        "does not expose local",
+        "package files as public website URLs",
         "does not claim BaseScan token profile approval",
         "does not publish private mailbox screenshots",
+        "owner-side copy source, not a public evidence URL",
         MAINNET_ADDRESS,
         "Base Mainnet chain ID 8453",
         "team.html",
@@ -1802,6 +1808,30 @@ def validate_basescan_handoff_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong final package target sender")
     if final_package.get("ownerOnly") is not True:
         raise SiteCheckError(f"{label}: final package should be owner-only")
+    local_boundary = final_package.get("localPathBoundary", {})
+    if local_boundary.get("mode") != "owner-local-artifact":
+        raise SiteCheckError(f"{label}: wrong final package local boundary mode")
+    if local_boundary.get("ownerPathPattern") != "launch/*.md/json":
+        raise SiteCheckError(f"{label}: wrong final package local path pattern")
+    if local_boundary.get("publicWebsitePathServed") is not False:
+        raise SiteCheckError(f"{label}: launch package should not be served as public website path")
+    if local_boundary.get("doNotPublishAsPublicUrl") is not True:
+        raise SiteCheckError(f"{label}: launch package public-url guard missing")
+    if "Paste the generated text into the BaseScan form" not in local_boundary.get("instruction", ""):
+        raise SiteCheckError(f"{label}: missing local package paste instruction")
+    public_pages = set(local_boundary.get("reviewerFacingPublicPages", []))
+    for expected_page in (
+        BASESCAN_HANDOFF_PAGE_URL,
+        BASESCAN_PREFLIGHT_PAGE_URL,
+        REVIEWER_KIT_PAGE_URL,
+        DOMAIN_EMAIL_PAGE_URL,
+        TIM_CHEN_PROFILE_PAGE_URL,
+        TECHNICAL_REPORT_PAGE_URL,
+        LIQUIDITY_PAGE_URL,
+        PLATFORM_REPLIES_PAGE_URL,
+    ):
+        if expected_page not in public_pages:
+            raise SiteCheckError(f"{label}: missing reviewer-facing public page {expected_page}")
     for expected_block in (
         "baseScanReviewerComment",
         "basicInformationPlainText",
@@ -1890,6 +1920,7 @@ def validate_basescan_handoff_json(text: str) -> None:
         "touchesWalletOrContract",
         "claimsBaseScanApproval",
         "publishesPrivateMailboxEvidence",
+        "publishesLocalLaunchArtifacts",
     ):
         if boundaries.get(key) is not False:
             raise SiteCheckError(f"{label}: boundary {key} must be false")

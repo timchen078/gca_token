@@ -2118,6 +2118,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("readyForBaseScanResubmission", page)
         self.assertIn("The project-domain mailbox can receive external mail", page)
         self.assertIn("Final Copy Package", page)
+        self.assertIn("Local path boundary", page)
+        self.assertIn("owner-local artifacts, not public website links", page)
+        self.assertIn("paste the generated text into BaseScan", page)
         self.assertIn("Package generated", page)
         self.assertIn("2026-06-06T11:10:54Z", page)
         self.assertIn("BaseScan Form Copy Blocks", page)
@@ -2150,6 +2153,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Required Order", page)
         self.assertIn("tools/check_basescan_resubmission_readiness.py --json --require-ready", page)
         self.assertIn("Readable Handoff Path", page)
+        self.assertIn("does not expose local", page)
+        self.assertIn("package files as public website URLs", page)
+        self.assertIn("owner-side copy source, not a public evidence URL", page)
         self.assertNotIn("Platform-Only Evidence Path", page)
         self.assertNotIn("Reviewer Data Room", page)
         self.assertNotIn("Data Room", page)
@@ -2188,6 +2194,15 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("evidenceLinksPlainText", data["finalSubmissionPackage"]["copyPasteBlocks"])
         self.assertIn("marketAndSupplyPlainText", data["finalSubmissionPackage"]["copyPasteBlocks"])
         self.assertIn("accessAndClaimBoundaryPlainText", data["finalSubmissionPackage"]["copyPasteBlocks"])
+        local_boundary = data["finalSubmissionPackage"]["localPathBoundary"]
+        self.assertEqual(local_boundary["mode"], "owner-local-artifact")
+        self.assertEqual(local_boundary["ownerPathPattern"], "launch/*.md/json")
+        self.assertFalse(local_boundary["publicWebsitePathServed"])
+        self.assertTrue(local_boundary["doNotPublishAsPublicUrl"])
+        self.assertIn("Paste the generated text into the BaseScan form", local_boundary["instruction"])
+        self.assertIn(BASESCAN_HANDOFF_PAGE_URL, local_boundary["reviewerFacingPublicPages"])
+        self.assertIn(REVIEWER_KIT_PAGE_URL, local_boundary["reviewerFacingPublicPages"])
+        self.assertIn(TIM_CHEN_PROFILE_PAGE_URL, local_boundary["reviewerFacingPublicPages"])
         copy_content = data["finalSubmissionPackage"]["copyPasteContent"]
         self.assertIn("Please review the updated GCA token profile metadata", copy_content["baseScanReviewerComment"])
         self.assertIn("Access and member-benefit boundaries", copy_content["baseScanReviewerComment"])
@@ -2222,6 +2237,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("implemented-domain-email-ready", reason_text)
         self.assertFalse(data["boundaries"]["submitsBaseScanRequest"])
         self.assertFalse(data["boundaries"]["claimsBaseScanApproval"])
+        self.assertFalse(data["boundaries"]["publishesLocalLaunchArtifacts"])
 
     def test_zh_basescan_preflight_page_guides_owner_without_json_links(self):
         page = (ROOT / "site" / "zh-basescan-preflight.html").read_text()
