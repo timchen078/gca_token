@@ -1856,6 +1856,8 @@ class LaunchPackageTests(unittest.TestCase):
 
         self.assertIn("GCA BaseScan Token Profile Remediation", page)
         self.assertIn("BaseScan Remediation / 2026-05-23", page)
+        self.assertIn("2026-06-06T11:10:54Z", page)
+        self.assertIn("public BaseScan preflight page now matches that package", page)
         self.assertIn("Ready for resubmission", page)
         self.assertIn("one clean owner-controlled resubmission", page)
         self.assertIn("support@gcagochina.com", page)
@@ -1908,7 +1910,7 @@ class LaunchPackageTests(unittest.TestCase):
 
         self.assertEqual(data["schema"], BASESCAN_REMEDIATION_URL)
         self.assertEqual(data["pageUrl"], BASESCAN_REMEDIATION_PAGE_URL)
-        self.assertEqual(data["lastUpdated"], "2026-05-30")
+        self.assertEqual(data["lastUpdated"], "2026-06-06")
         self.assertEqual(data["status"], "basescan-ready-for-owner-resubmission")
         self.assertEqual(data["chainId"], 8453)
         self.assertEqual(data["contractAddress"], MAINNET_ADDRESS)
@@ -1943,6 +1945,11 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertTrue(data["teamTransparency"]["equivalentOfficialProfessionalProfilePublished"])
         self.assertTrue(data["teamTransparency"]["externalProfessionalProfileStillRecommended"])
         self.assertTrue(data["nextSubmissionGate"]["ready"])
+        final_package = data["nextSubmissionGate"]["finalSubmissionPackage"]
+        self.assertEqual(final_package["generatedAt"], "2026-06-06T11:10:54Z")
+        self.assertEqual(final_package["markdown"], "launch/basescan_final_submission_package.md")
+        self.assertEqual(final_package["json"], "launch/basescan_final_submission_package.json")
+        self.assertEqual(final_package["preflightLastUpdated"], "2026-06-06")
         self.assertEqual(data["nextSubmissionGate"]["preflightTool"]["tool"], "tools/check_basescan_resubmission_readiness.py")
         self.assertIn("--require-ready", data["nextSubmissionGate"]["preflightTool"]["command"])
         self.assertIn("public email switch alignment passes", data["nextSubmissionGate"]["preflightTool"]["requires"])

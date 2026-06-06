@@ -1343,6 +1343,8 @@ def validate_basescan_remediation_page(text: str) -> None:
     for expected in (
         "GCA BaseScan Token Profile Remediation",
         "BaseScan Remediation / 2026-05-23",
+        "2026-06-06T11:10:54Z",
+        "public BaseScan preflight page now matches that package",
         "Ready for resubmission",
         "Domain Email",
         "Ready for owner resubmission",
@@ -1403,7 +1405,7 @@ def validate_basescan_remediation_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != BASESCAN_REMEDIATION_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
-    if payload.get("lastUpdated") not in {"2026-05-25", "2026-05-30"}:
+    if payload.get("lastUpdated") != "2026-06-06":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("status") not in {
         "basescan-ready-for-owner-resubmission",
@@ -1472,6 +1474,15 @@ def validate_basescan_remediation_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing external professional profile recommendation")
     if gate.get("ready") not in {False, True}:
         raise SiteCheckError(f"{label}: invalid submission gate ready flag")
+    final_package = gate.get("finalSubmissionPackage", {})
+    if final_package.get("generatedAt") != "2026-06-06T11:10:54Z":
+        raise SiteCheckError(f"{label}: wrong final submission package timestamp")
+    if final_package.get("markdown") != "launch/basescan_final_submission_package.md":
+        raise SiteCheckError(f"{label}: wrong final submission markdown path")
+    if final_package.get("json") != "launch/basescan_final_submission_package.json":
+        raise SiteCheckError(f"{label}: wrong final submission json path")
+    if final_package.get("preflightLastUpdated") != "2026-06-06":
+        raise SiteCheckError(f"{label}: wrong final submission preflight date")
     preflight = gate.get("preflightTool", {})
     if preflight.get("tool") != "tools/check_basescan_resubmission_readiness.py":
         raise SiteCheckError(f"{label}: wrong preflight tool")
@@ -12668,6 +12679,8 @@ def validate_sitemap(text: str) -> None:
         "zh-api-status.html",
         "daily-status.html",
         "daily-status.json",
+        "basescan-remediation.html",
+        "basescan-remediation.json",
         "basescan-handoff.html",
         "basescan-handoff.json",
         "zh-basescan-handoff.html",
