@@ -1,6 +1,6 @@
 {
   "documentStatus": "prepared",
-  "lastReviewedDate": "2026-06-05",
+  "lastReviewedDate": "2026-06-06",
   "canonicalIdentity": {
     "network": "Base Mainnet",
     "chainId": 8453,
@@ -61,8 +61,8 @@
       "replyInbox": "support@gcagochina.com",
       "historicalReplyInbox": "redacted-non-domain-legacy-inbox",
       "resubmissionDate": "2026-05-13",
-      "lastCheckedDate": "2026-06-05",
-      "lastCheckedResult": "BaseScan returned the token profile update again as information-insufficient; Tim Chen official-domain professional profile evidence is now published, the domain email setup plan, public evidence checklist, activation evidence packet, BaseScan Handoff copy blocks, and Chinese owner submission flow are published. The final owner submission package was regenerated on 2026-06-05T11:01:28Z, the daily public status snapshot was refreshed on 2026-06-05T11:10:15Z, and the 2026-05-30 DNS snapshot passes MX/SPF/DKIM/DMARC checks, so readyForBaseScanEmailEvidence is true.",
+      "lastCheckedDate": "2026-06-06",
+      "lastCheckedResult": "BaseScan returned the token profile update again as information-insufficient; Tim Chen official-domain professional profile evidence is now published, the domain email setup plan, public evidence checklist, activation evidence packet, BaseScan Handoff copy blocks, and Chinese owner submission flow are published. The final owner submission package was regenerated on 2026-06-05T11:01:28Z, the daily public status snapshot was refreshed on 2026-06-06T11:02:01Z, and the 2026-05-30 DNS snapshot passes MX/SPF/DKIM/DMARC checks, so readyForBaseScanEmailEvidence is true.",
       "domainEmailSetupPlan": "https://gcagochina.com/domain-email.html",
       "domainEmailSetupPlanData": "https://gcagochina.com/domain-email.json",
       "domainEmailDnsWorksheet": "https://gcagochina.com/domain-email.html#worksheetTitle",
