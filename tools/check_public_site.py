@@ -12483,6 +12483,17 @@ def validate_security_txt(text: str) -> None:
 
 def validate_sitemap(text: str) -> None:
     label = "/sitemap.xml"
+
+    def assert_sitemap_lastmod(path: str, expected: str) -> None:
+        pattern = re.compile(
+            rf"<loc>https://gcagochina\.com/{re.escape(path)}</loc>\s*<lastmod>(?P<lastmod>[^<]+)</lastmod>"
+        )
+        match = pattern.search(text)
+        if not match:
+            raise SiteCheckError(f"{label}: missing sitemap entry for {path}")
+        if match.group("lastmod") != expected:
+            raise SiteCheckError(f"{label}: wrong lastmod for {path}")
+
     for expected in (
         "https://gcagochina.com/start.html",
         "https://gcagochina.com/about.html",
@@ -12640,6 +12651,33 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/.well-known/security.txt",
     ):
         assert_contains(text, expected, label)
+    for path in (
+        "api-status.html",
+        "api-status.json",
+        "zh-api-status.html",
+        "daily-status.html",
+        "daily-status.json",
+        "basescan-handoff.html",
+        "basescan-handoff.json",
+        "zh-basescan-handoff.html",
+        "external-reviews.html",
+        "external-reviews.json",
+        "listing-readiness.html",
+        "listing-readiness.json",
+        "project.json",
+        "reviewer-kit.html",
+        "reviewer-kit.json",
+        "release-gates.html",
+        "release-gates.json",
+        "trust.html",
+        "trust.json",
+        "terms.html",
+        "token-safety.html",
+        "verify.html",
+        "roadmap.html",
+        "zh-release-gates.html",
+    ):
+        assert_sitemap_lastmod(path, "2026-06-06")
 
 
 def validate_robots(text: str) -> None:
