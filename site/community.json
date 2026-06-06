@@ -36,6 +36,7 @@
     "Issue 004 ready brief: https://gcagochina.com/radar-issue-004.html",
     "Member Access Brief 001: https://gcagochina.com/member-access-brief-001.html",
     "Publishing desk: https://gcagochina.com/publishing-desk.html",
+    "Security boundary: https://gcagochina.com/security.html",
     "Current status: concept-stage utility buildout with public account intake, read-only wallet verification, and eligible 100 credits / GCA Member ledger records live; BaseScan token profile was returned again as information-insufficient on 2026-05-23, the BaseScan Handoff, Chinese owner flow, Tim Chen profile, domain email evidence, and support@gcagochina.com mailbox are ready for one clean owner resubmission, the owner observed no wallet risk warning visible on 2026-05-14, and no third-party audit has been completed."
   ],
   "announcementHub": {
@@ -66,7 +67,7 @@
     "status": "public-publishing-desk-published",
     "pageUrl": "https://gcagochina.com/publishing-desk.html",
     "url": "https://gcagochina.com/publishing-desk.json",
-    "nextPublishTargetDate": "2026-05-23",
+    "nextPublishTargetDate": "2026-06-07",
     "manualPublishOnly": true
   },
   "xLaunchPack": {

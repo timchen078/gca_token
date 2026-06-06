@@ -5267,7 +5267,7 @@ def validate_community_page(text: str) -> None:
     assert_contains(text, CONTENT_LIBRARY_PAGE_URL, label)
     assert_contains(text, PUBLISHING_DESK_PAGE_URL, label)
     assert_contains(text, "Moderator replies", label)
-    assert_contains(text, MEMBER_ACCESS_BRIEF_001_PAGE_URL, label)
+    assert_contains(text, SECURITY_PAGE_URL, label)
     assert_contains(text, "Wallet Warning Reply", label)
     assert_contains(text, "Price Display Reply", label)
     assert_contains(text, "Member Access Reply", label)
@@ -5370,7 +5370,7 @@ def validate_community_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong publishingDesk pageUrl")
     if publishing_desk.get("url") != PUBLISHING_DESK_URL:
         raise SiteCheckError(f"{label}: wrong publishingDesk url")
-    if publishing_desk.get("nextPublishTargetDate") != "2026-05-23":
+    if publishing_desk.get("nextPublishTargetDate") != "2026-06-07":
         raise SiteCheckError(f"{label}: wrong publishingDesk nextPublishTargetDate")
     if publishing_desk.get("manualPublishOnly") is not True:
         raise SiteCheckError(f"{label}: publishingDesk must be manual")
@@ -5475,7 +5475,7 @@ def validate_announcements_page(text: str) -> None:
     assert_contains(text, FIRST_X_POST_URL, label)
     assert_contains(text, LATEST_X_POST_URL, label)
     assert_contains(text, RADAR_ISSUE_004_PAGE_URL, label)
-    assert_contains(text, MEMBER_ACCESS_BRIEF_001_PAGE_URL, label)
+    assert_contains(text, SECURITY_PAGE_URL, label)
     assert_contains(text, "No return promises", label)
     assert_contains(text, "not financial advice", label)
     assert_contains(text, X_URL, label)
@@ -5546,10 +5546,12 @@ def validate_announcements_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong memberAccessBrief001")
     if links.get("latestXPost") != LATEST_X_POST_URL:
         raise SiteCheckError(f"{label}: wrong latestXPost")
-    if not any(item.get("recommendedLink") == MEMBER_ACCESS_BRIEF_001_PAGE_URL for item in payload.get("nextContentQueue", []) if isinstance(item, dict)):
-        raise SiteCheckError(f"{label}: missing member access brief queue link")
-    if not any(item.get("recommendedLink") == UTILITY_PAGE_URL for item in payload.get("nextContentQueue", []) if isinstance(item, dict)):
-        raise SiteCheckError(f"{label}: missing utility queue link")
+    if "2026-06-06T11:10:54Z" not in latest_post.get("currentStatusAfterPost", ""):
+        raise SiteCheckError(f"{label}: missing final package refresh timestamp")
+    if not any(item.get("recommendedLink") == SECURITY_PAGE_URL for item in payload.get("nextContentQueue", []) if isinstance(item, dict)):
+        raise SiteCheckError(f"{label}: missing security boundary queue link")
+    if not any(item.get("recommendedLink") == "https://gcagochina.com/product.html" for item in payload.get("nextContentQueue", []) if isinstance(item, dict)):
+        raise SiteCheckError(f"{label}: missing product spec queue link")
     if payload.get("campaignCalendar", {}).get("status") != "public-campaign-calendar-published":
         raise SiteCheckError(f"{label}: wrong campaign calendar status")
     content_library = payload.get("contentLibrary", {})
@@ -5590,6 +5592,7 @@ def validate_campaign_page(text: str) -> None:
     assert_contains(text, "10 posts", label)
     assert_contains(text, "Manual review before publish", label)
     assert_contains(text, "Next Copy-Ready X Draft", label)
+    assert_contains(text, "2026-06-07", label)
     assert_contains(text, "30-Day Content Queue", label)
     assert_contains(text, "Weekly Go China Radar", label)
     assert_contains(text, "Member Access Buildout", label)
@@ -5623,7 +5626,7 @@ def validate_campaign_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong pageUrl")
     if payload.get("status") != "public-campaign-calendar-published":
         raise SiteCheckError(f"{label}: wrong status")
-    if payload.get("lastUpdated") != "2026-05-23":
+    if payload.get("lastUpdated") != "2026-06-06":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
@@ -5639,9 +5642,9 @@ def validate_campaign_json(text: str) -> None:
         raise SiteCheckError(f"{label}: operator review must be required")
     if window.get("contentLibrary") != CONTENT_LIBRARY_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong campaign window content library")
-    if draft.get("targetDate") != "2026-05-23":
+    if draft.get("targetDate") != "2026-06-07":
         raise SiteCheckError(f"{label}: wrong next draft date")
-    if draft.get("recommendedLink") != MEMBER_ACCESS_BRIEF_001_PAGE_URL:
+    if draft.get("recommendedLink") != SECURITY_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong next draft link")
     if not isinstance(queue, list) or len(queue) != 10:
         raise SiteCheckError(f"{label}: expected 10 queued posts")
@@ -5673,7 +5676,7 @@ def validate_campaign_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong publishingDesk pageUrl")
     if publishing_desk.get("url") != PUBLISHING_DESK_URL:
         raise SiteCheckError(f"{label}: wrong publishingDesk url")
-    if publishing_desk.get("nextPublishTargetDate") != "2026-05-23":
+    if publishing_desk.get("nextPublishTargetDate") != "2026-06-07":
         raise SiteCheckError(f"{label}: wrong publishingDesk nextPublishTargetDate")
     if publishing_desk.get("manualPublishOnly") is not True:
         raise SiteCheckError(f"{label}: publishingDesk must be manual")
@@ -5756,7 +5759,7 @@ def validate_content_library_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong pageUrl")
     if payload.get("status") != "public-bilingual-content-library-published":
         raise SiteCheckError(f"{label}: wrong status")
-    if payload.get("lastUpdated") != "2026-05-23":
+    if payload.get("lastUpdated") != "2026-06-06":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
@@ -5823,7 +5826,7 @@ def validate_publishing_desk_page(text: str) -> None:
     for expected in (
         "GCA Publishing Desk",
         "Manual publishing hub",
-        "2026-05-23",
+        "2026-06-07",
         "X and Telegram",
         "Ready for operator review",
         "Manual publish only",
@@ -5859,7 +5862,7 @@ def validate_publishing_desk_page(text: str) -> None:
         "https://t.me/gcagochinaofficial",
         CONTENT_LIBRARY_PAGE_URL,
         CAMPAIGN_PAGE_URL,
-        MEMBER_ACCESS_BRIEF_001_PAGE_URL,
+        SECURITY_PAGE_URL,
         LATEST_X_POST_URL,
         MAINNET_ADDRESS,
     ):
@@ -5880,7 +5883,7 @@ def validate_publishing_desk_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong pageUrl")
     if payload.get("status") != "public-publishing-desk-published":
         raise SiteCheckError(f"{label}: wrong status")
-    if payload.get("lastUpdated") != "2026-05-23":
+    if payload.get("lastUpdated") != "2026-06-06":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
@@ -5894,15 +5897,15 @@ def validate_publishing_desk_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong officialMarketRoute")
     if next_action.get("status") != "ready-for-operator-review":
         raise SiteCheckError(f"{label}: wrong next action status")
-    if next_action.get("targetDate") != "2026-05-23":
+    if next_action.get("targetDate") != "2026-06-07":
         raise SiteCheckError(f"{label}: wrong targetDate")
-    if next_action.get("sourceDraftId") != "gca-draft-2026-05-23-member-access":
+    if next_action.get("sourceDraftId") != "gca-draft-2026-06-07-security":
         raise SiteCheckError(f"{label}: wrong sourceDraftId")
-    if next_action.get("topic") != "GCA Member Access Brief 001":
+    if next_action.get("topic") != "Security Boundary":
         raise SiteCheckError(f"{label}: wrong topic")
     if next_action.get("channels") != ["X", "Telegram"]:
         raise SiteCheckError(f"{label}: wrong channels")
-    if next_action.get("recommendedLink") != MEMBER_ACCESS_BRIEF_001_PAGE_URL:
+    if next_action.get("recommendedLink") != SECURITY_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong recommendedLink")
     if next_action.get("contentLibrary") != CONTENT_LIBRARY_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong contentLibrary")
@@ -9398,7 +9401,7 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong content campaign url")
     if payload.get("contentCampaign", {}).get("draftCount") != 10:
         raise SiteCheckError(f"{label}: wrong content campaign draft count")
-    if payload.get("contentCampaign", {}).get("nextDraftLink") != MEMBER_ACCESS_BRIEF_001_PAGE_URL:
+    if payload.get("contentCampaign", {}).get("nextDraftLink") != SECURITY_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong content campaign nextDraftLink")
     content_library = payload.get("contentLibrary", {})
     if content_library.get("status") != "public-bilingual-content-library-published":
@@ -9416,7 +9419,7 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong publishing desk page")
     if publishing_desk.get("url") != PUBLISHING_DESK_URL:
         raise SiteCheckError(f"{label}: wrong publishing desk url")
-    if publishing_desk.get("nextPublishTargetDate") != "2026-05-23":
+    if publishing_desk.get("nextPublishTargetDate") != "2026-06-07":
         raise SiteCheckError(f"{label}: wrong publishing desk target date")
     if publishing_desk.get("manualPublishOnly") is not True:
         raise SiteCheckError(f"{label}: publishing desk must be manual")

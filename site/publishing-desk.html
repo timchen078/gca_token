@@ -181,7 +181,8 @@
 
       .facts,
       .grid,
-      .cards {
+      .cards,
+      .two {
         display: grid;
         gap: 14px;
       }
@@ -192,6 +193,10 @@
       }
 
       .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .two {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
@@ -266,6 +271,7 @@
       .note,
       li {
         color: var(--muted);
+        overflow-wrap: anywhere;
       }
 
       .note {
@@ -285,6 +291,12 @@
         padding-top: 0;
       }
 
+      .row strong {
+        min-width: 0;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+      }
+
       pre,
       code {
         border: 1px solid var(--line);
@@ -296,6 +308,8 @@
       code {
         padding: 2px 5px;
         font-size: 0.92em;
+        overflow-wrap: anywhere;
+        word-break: break-word;
       }
 
       pre {
@@ -327,6 +341,7 @@
         .facts,
         .grid,
         .cards,
+        .two,
         .form-grid {
           grid-template-columns: 1fr;
         }
@@ -368,7 +383,7 @@
       <section class="facts" aria-label="Publishing facts">
         <div class="fact">
           <span class="label">Next Target</span>
-          <span class="value">2026-05-23</span>
+          <span class="value">2026-06-07</span>
         </div>
         <div class="fact">
           <span class="label">Channels</span>
@@ -387,22 +402,22 @@
       <section class="section grid" aria-label="Next publish copy">
         <div class="panel">
           <h2>Next X Draft</h2>
-          <p class="note">Topic: GCA Member Access Brief 001. Source: <a href="member-access-brief-001.html">member-access-brief-001.html</a>. Target: 2026-05-23.</p>
+          <p class="note">Topic: Security Boundary. Source: <a href="security.html">security.html</a>. Target: 2026-06-07.</p>
           <div class="copy-actions">
             <button class="button" type="button" data-copy-target="xDraftCopy">Copy English X</button>
             <span class="copy-status" id="xDraftCopyStatus" aria-live="polite">Ready to copy</span>
           </div>
-          <pre id="xDraftCopy">GCA Member Access Brief 001 is ready for review.
+          <pre id="xDraftCopy">GCA security boundary update is ready for review.
 
-Planned GCA Member rule: purchase and continuously hold 1,000,000 GCA for 30 days before review eligibility.
+GCA contract facts are public: fixed supply, verified source, no blacklist, no pause, no transfer tax, and no hidden mint path.
 
-The one-time member benefit review is 10,000 GCA after support and ledger approval, funded from reserve only. No new minting. Account intake is live; token transfer is manual only.
+Current boundary: no completed third-party audit yet. BaseScan token profile publication is still pending official review, while the owner package was refreshed on 2026-06-06.
 
-https://gcagochina.com/member-access-brief-001.html
+https://gcagochina.com/security.html
 
 Not financial advice.
 
-#GCA #GoChina #Base #Web3</pre>
+#GCA #GoChina #Base #Web3Security</pre>
         </div>
         <div class="panel">
           <h2>中文版本</h2>
@@ -411,17 +426,17 @@ Not financial advice.
             <button class="button" type="button" data-copy-target="xChineseCopy">Copy Chinese X</button>
             <span class="copy-status" id="xChineseCopyStatus" aria-live="polite">Ready to copy</span>
           </div>
-          <pre id="xChineseCopy">GCA Member Access Brief 001 已准备好审核。
+          <pre id="xChineseCopy">GCA 安全边界更新已准备好审核。
 
-计划中的 GCA Member 规则：购买并连续持有 1,000,000 GCA 满 30 天，才进入审核资格。
+GCA 合约事实是公开的：固定供应、源码已验证、无黑名单、无暂停、无转账税、无隐藏增发路径。
 
-一次性会员权益审核为 10,000 GCA，必须经过客服和账本审核后由储备转账，不增发；账户入口已上线，转账仍是人工处理。
+当前边界：第三方审计尚未完成。BaseScan 公开代币资料仍等待官方审核，owner 提交包已在 2026-06-06 刷新。
 
-https://gcagochina.com/member-access-brief-001.html
+https://gcagochina.com/security.html
 
 非投资建议。
 
-#GCA #GoChina #Base #Web3</pre>
+#GCA #GoChina #Base #Web3Security</pre>
         </div>
       </section>
 
@@ -431,12 +446,12 @@ https://gcagochina.com/member-access-brief-001.html
           <button class="button" type="button" data-copy-target="telegramCopy">Copy Telegram</button>
           <span class="copy-status" id="telegramCopyStatus" aria-live="polite">Ready to copy</span>
         </div>
-        <pre id="telegramCopy">GCA Member Access Brief 001 is ready for operator review.
+        <pre id="telegramCopy">GCA Security Boundary update is ready for operator review.
 
-The planned member rule requires 1,000,000 GCA held for 30 consecutive days before review eligibility. The planned 10,000 GCA member benefit requires support and ledger approval and must come from reserve only.
+Public contract facts: fixed supply, verified source, no blacklist, no pause, no transfer tax, and no hidden mint path.
 
-Account intake and eligible ledger records are live; member benefit transfers remain manual review only. Verify official links first:
-https://gcagochina.com/member-access-brief-001.html</pre>
+Current boundary: no completed third-party audit yet, and BaseScan token profile publication is still pending official review. Verify official links first:
+https://gcagochina.com/security.html</pre>
       </section>
 
       <section class="section cards" aria-label="Publishing workflow">
@@ -479,7 +494,7 @@ https://gcagochina.com/member-access-brief-001.html</pre>
           </div>
           <div>
             <label for="postPublishedDate">Published date</label>
-            <input id="postPublishedDate" type="date" value="2026-05-23">
+            <input id="postPublishedDate" type="date" value="2026-06-07">
           </div>
           <div>
             <label for="postUrl">Published URL</label>
@@ -487,7 +502,7 @@ https://gcagochina.com/member-access-brief-001.html</pre>
           </div>
           <div>
             <label for="postTitle">Ledger title</label>
-            <input id="postTitle" type="text" value="GCA Member Access Brief 001">
+            <input id="postTitle" type="text" value="Security Boundary">
           </div>
         </div>
         <div class="copy-actions">
@@ -606,8 +621,8 @@ https://gcagochina.com/member-access-brief-001.html</pre>
       function generateLedgerSnippet() {
         const platform = document.getElementById("postPlatform").value;
         const url = document.getElementById("postUrl").value.trim();
-        const publishedDate = document.getElementById("postPublishedDate").value || "2026-05-23";
-        const title = document.getElementById("postTitle").value.trim() || "GCA Member Access Brief 001";
+        const publishedDate = document.getElementById("postPublishedDate").value || "2026-06-07";
+        const title = document.getElementById("postTitle").value.trim() || "Security Boundary";
         const output = document.getElementById("postLedgerSnippet");
         const status = document.getElementById("postLedgerSnippetStatus");
         if (!url) {

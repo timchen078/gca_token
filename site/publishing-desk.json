@@ -2,7 +2,7 @@
   "schema": "https://gcagochina.com/publishing-desk.json",
   "pageUrl": "https://gcagochina.com/publishing-desk.html",
   "status": "public-publishing-desk-published",
-  "lastUpdated": "2026-05-23",
+  "lastUpdated": "2026-06-06",
   "projectName": "GCA",
   "conceptExpansion": "Go China Access",
   "currentStage": "early-public-operations",
@@ -14,39 +14,39 @@
   "officialMarketRoute": "GCA/USDT",
   "nextPublishAction": {
     "status": "ready-for-operator-review",
-    "targetDate": "2026-05-23",
-    "sourceDraftId": "gca-draft-2026-05-23-member-access",
-    "topic": "GCA Member Access Brief 001",
+    "targetDate": "2026-06-07",
+    "sourceDraftId": "gca-draft-2026-06-07-security",
+    "topic": "Security Boundary",
     "channels": ["X", "Telegram"],
-    "recommendedLink": "https://gcagochina.com/member-access-brief-001.html",
+    "recommendedLink": "https://gcagochina.com/security.html",
     "contentLibrary": "https://gcagochina.com/content-library.html",
     "campaignCalendar": "https://gcagochina.com/campaign.html",
     "requiresManualPosting": true,
     "requiresOperatorReview": true,
     "xEnglish": [
-      "GCA Member Access Brief 001 is ready for review.",
-      "Planned GCA Member rule: purchase and continuously hold 1,000,000 GCA for 30 days before review eligibility.",
-      "The one-time member benefit review is 10,000 GCA after support and ledger approval, funded from reserve only. No new minting. Account intake is live; token transfer is manual only.",
-      "https://gcagochina.com/member-access-brief-001.html",
+      "GCA security boundary update is ready for review.",
+      "GCA contract facts are public: fixed supply, verified source, no blacklist, no pause, no transfer tax, and no hidden mint path.",
+      "Current boundary: no completed third-party audit yet. BaseScan token profile publication is still pending official review, while the owner package was refreshed on 2026-06-06.",
+      "https://gcagochina.com/security.html",
       "Not financial advice.",
-      "#GCA #GoChina #Base #Web3"
+      "#GCA #GoChina #Base #Web3Security"
     ],
     "xChinese": [
-      "GCA Member Access Brief 001 已准备好审核。",
-      "计划中的 GCA Member 规则：购买并连续持有 1,000,000 GCA 满 30 天，才进入审核资格。",
-      "一次性会员权益审核为 10,000 GCA，必须经过客服和账本审核后由储备转账，不增发；账户入口已上线，转账仍是人工处理。",
-      "https://gcagochina.com/member-access-brief-001.html",
+      "GCA 安全边界更新已准备好审核。",
+      "GCA 合约事实是公开的：固定供应、源码已验证、无黑名单、无暂停、无转账税、无隐藏增发路径。",
+      "当前边界：第三方审计尚未完成。BaseScan 公开代币资料仍等待官方审核，owner 提交包已在 2026-06-06 刷新。",
+      "https://gcagochina.com/security.html",
       "非投资建议。",
-      "#GCA #GoChina #Base #Web3"
+      "#GCA #GoChina #Base #Web3Security"
     ],
     "telegram": [
-      "GCA Member Access Brief 001 is ready for operator review.",
-      "The planned member rule requires 1,000,000 GCA held for 30 consecutive days before review eligibility. The planned 10,000 GCA member benefit requires support and ledger approval and must come from reserve only.",
-      "Account intake and eligible ledger records are live; member benefit transfers remain manual review only. Verify official links first: https://gcagochina.com/member-access-brief-001.html"
+      "GCA Security Boundary update is ready for operator review.",
+      "Public contract facts: fixed supply, verified source, no blacklist, no pause, no transfer tax, and no hidden mint path.",
+      "Current boundary: no completed third-party audit yet, and BaseScan token profile publication is still pending official review. Verify official links first: https://gcagochina.com/security.html"
     ],
-    "hashtags": ["#GCA", "#GoChina", "#Base", "#Web3"],
-    "visualTheme": "Red GCA mark beside a simple member access checklist: 1,000,000 GCA, 30 days, review.",
-    "claimBoundary": "Member access education only; no automatic benefit, no approval promise, no price, return, listing, audit, or approval claim."
+    "hashtags": ["#GCA", "#GoChina", "#Base", "#Web3Security"],
+    "visualTheme": "Red GCA mark beside a contract-controls checklist and external-audit pending marker.",
+    "claimBoundary": "Security-boundary education only; no price, return, audit-completion, BaseScan approval, wallet-vendor approval, listing, or market-prediction claim."
   },
   "operatorChecklist": [
     "Open the official X profile only: https://x.com/GCAAIGoChina",
