@@ -1,7 +1,7 @@
 {
   "schema": "https://gcagochina.com/basescan-preflight.json",
   "pageUrl": "https://gcagochina.com/basescan-preflight.html",
-  "lastUpdated": "2026-05-30",
+  "lastUpdated": "2026-06-06",
   "projectName": "GCA",
   "tokenSymbol": "GCA",
   "network": "Base Mainnet",
@@ -28,6 +28,14 @@
     "nextAction": "Use support@gcagochina.com for one clean BaseScan token-profile resubmission and keep the private provider, DNS, inbound, outbound, and support-page evidence archived locally."
   },
   "currentBlockers": [],
+  "preflightRefresh": {
+    "refreshedAt": "2026-06-06",
+    "finalSubmissionPackageGeneratedAt": "2026-06-06T11:10:54Z",
+    "finalSubmissionPackageMarkdown": "launch/basescan_final_submission_package.md",
+    "finalSubmissionPackageJson": "launch/basescan_final_submission_package.json",
+    "dailyStatusSnapshotRefreshedAt": "2026-06-06T11:02:01Z",
+    "reason": "Align the public BaseScan preflight page with the current final owner submission package and BaseScan Handoff."
+  },
   "requiredInputsBeforeSubmission": [
     "launch/basescan_resubmission_values.json marks nextSubmissionReady true and uses Base Mainnet / chainId 8453.",
     "Domain email provider status, DNS lookup proof, inbound mail proof, outbound reply proof, and support-page proof are saved privately.",

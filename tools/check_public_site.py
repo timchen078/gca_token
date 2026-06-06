@@ -1561,9 +1561,11 @@ def validate_basescan_preflight_page(text: str) -> None:
         "Yes",
         "Latest DNS Snapshot",
         "2026-05-30",
+        "Preflight Refresh",
+        "2026-06-06",
+        "2026-06-06T11:10:54Z",
         "Main Blocker",
         "No local blocker",
-        "Read-only checks",
         "Current Ready Evidence",
         "Required Inputs Before One Clean Submission",
         "support@gcagochina.com",
@@ -1616,7 +1618,7 @@ def validate_basescan_preflight_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != BASESCAN_PREFLIGHT_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
-    if payload.get("lastUpdated") != "2026-05-30":
+    if payload.get("lastUpdated") != "2026-06-06":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("status") not in {
         "blocked-domain-email-before-basescan-resubmission",
@@ -1633,6 +1635,13 @@ def validate_basescan_preflight_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong current official email")
     if payload.get("targetDomainEmail") != "support@gcagochina.com":
         raise SiteCheckError(f"{label}: wrong target domain email")
+    refresh = payload.get("preflightRefresh", {})
+    if refresh.get("finalSubmissionPackageGeneratedAt") != "2026-06-06T11:10:54Z":
+        raise SiteCheckError(f"{label}: wrong final package refresh timestamp")
+    if refresh.get("finalSubmissionPackageMarkdown") != "launch/basescan_final_submission_package.md":
+        raise SiteCheckError(f"{label}: wrong final package markdown path")
+    if refresh.get("finalSubmissionPackageJson") != "launch/basescan_final_submission_package.json":
+        raise SiteCheckError(f"{label}: wrong final package json path")
     if snapshot.get("checkedAt") not in {"2026-05-30T08:13:47Z", "2026-05-30T16:24:34Z"}:
         raise SiteCheckError(f"{label}: wrong DNS snapshot")
     if snapshot.get("readyForBaseScanEmailEvidence") not in {False, True}:
@@ -2424,9 +2433,11 @@ def validate_zh_basescan_preflight_page(text: str) -> None:
         "可以准备一次",
         "最新 DNS 快照",
         "2026-05-30",
+        "最终包刷新",
+        "2026-06-06",
+        "2026-06-06T11:10:54Z",
         "主要卡点",
         "等待审核",
-        "只读检查",
         "support@gcagochina.com",
         "MX present",
         "SPF present",
@@ -12660,6 +12671,9 @@ def validate_sitemap(text: str) -> None:
         "basescan-handoff.html",
         "basescan-handoff.json",
         "zh-basescan-handoff.html",
+        "basescan-preflight.html",
+        "basescan-preflight.json",
+        "zh-basescan-preflight.html",
         "external-reviews.html",
         "external-reviews.json",
         "listing-readiness.html",
