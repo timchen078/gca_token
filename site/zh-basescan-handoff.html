@@ -298,6 +298,7 @@
         <h1 id="title">GCA 中文 BaseScan 复审复制包</h1>
         <p class="lead">这一页把下一次 BaseScan Token Profile 复审需要复制的英文内容集中到一个中文操作界面里。你手动登录 BaseScan 后，按顺序复制下面五个块：Reviewer Comment、Basic Information、Evidence Links、Market And Supply、Access And Claim Boundary。</p>
         <p class="lead">当前提交口径统一使用 <code>support@gcagochina.com</code>、Tim Chen 职业资料、官网证据、GCA/USDT 官方市场路线和 Base Mainnet / chainId 8453。这里不会提交 BaseScan、不会发送邮件、不会写 DNS、不会连接钱包、不会签名、不会转账、不会操作合约。</p>
+        <p class="lead">如果看到 <code>launch/*.md/json</code>，它只代表仓库里的 owner 本地复制源，不是 gcagochina.com 的公开链接；对外提交只引用本页和下面列出的官网证据页面。</p>
         <div class="actions">
           <a class="button primary" href="https://basescan.org/tokenupdate/" target="_blank" rel="noreferrer">打开 BaseScan Token Update</a>
           <a class="button secondary" href="zh-basescan-submit.html">中文提交流程</a>
@@ -336,6 +337,7 @@
             <div class="row"><span>团队资料</span><strong>必须带上 <a href="team.html#tim-chen">团队页</a> 和 <a href="tim-chen.html">Tim Chen 职业资料</a>。</strong></div>
             <div class="row"><span>市场路线</span><strong>官方交易入口只写 Base 上的 GCA/USDT 池 <code>0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0</code>。</strong></div>
             <div class="row"><span>领取边界</span><strong>100 credits 是账户服务记录；10,000 GCA 会员权益不是自动领取，必须经过 1,000,000 GCA / 30 天持有证据、支持审核和储备钱包人工处理。</strong></div>
+            <div class="row"><span>本地包边界</span><strong><code>launch/*.md/json</code> 只用于本地生成复制文本，不要当成公网 URL 提交给 BaseScan；对外用 <code>zh-basescan-handoff.html</code>、<code>basescan-handoff.html</code> 和公开证据页。</strong></div>
             <div class="row"><span>提交节奏</span><strong>只提交一次干净请求，保存 ticket id 和确认邮件。</strong></div>
           </div>
         </div>
@@ -474,6 +476,7 @@ Not automatic: No automatic token claim, no self-service member-benefit transfer
             <div class="row"><span>不要说外部审计完成</span><strong>第三方审计尚未完成，只能说公开技术资料和内部 review 已准备。</strong></div>
             <div class="row"><span>不要说自动领取</span><strong>100 credits、GCA Member 和 10,000 GCA 会员权益都不能说成现金、可转让代币、自动领取或自助转账。</strong></div>
             <div class="row"><span>不要公开后台截图</span><strong>邮箱后台、收发截图、登录状态只保存本地，除非 reviewer 明确要求。</strong></div>
+            <div class="row"><span>不要公开本地包</span><strong>不要把 <code>launch/basescan_final_submission_package.md</code> 或 <code>launch/*.json</code> 写成 <code>https://gcagochina.com/launch/...</code>；这些文件只作为本机复制来源。</strong></div>
             <div class="row"><span>不要碰链上资产</span><strong>BaseScan 资料提交不需要 approve、swap、转账、改池子或任何合约操作。</strong></div>
           </div>
         </div>
@@ -481,7 +484,7 @@ Not automatic: No automatic token claim, no self-service member-benefit transfer
     </main>
 
     <footer>
-      <div class="shell">GCA 中文 BaseScan 复审复制包。该页面只整理公开材料和 owner 手动提交文本，不提交表单、不发送邮件、不连接钱包、不操作合约。</div>
+      <div class="shell">GCA 中文 BaseScan 复审复制包。该页面只整理公开材料和 owner 手动提交文本，不提交表单、不发送邮件、不连接钱包、不操作合约；本地 launch 包不是公网证据链接。</div>
     </footer>
   </body>
 </html>
