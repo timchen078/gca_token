@@ -356,6 +356,7 @@
         <h2 id="copyPackageTitle">Final Copy Package</h2>
         <p class="note">The owner-side copy package is generated locally after the final preflight passes. Use it as the single source for BaseScan form text, then submit only once from <code>support@gcagochina.com</code>.</p>
         <div class="list">
+          <div class="row"><span>Local path boundary</span><strong><code>launch/*.md/json</code> files are owner-local artifacts, not public website links; paste the generated text into BaseScan and cite the official pages below.</strong></div>
           <div class="row"><span>Build command</span><strong><code>python3 tools/build_basescan_submission_package.py --json --require-ready --output-json launch/basescan_final_submission_package.json --output-md launch/basescan_final_submission_package.md</code></strong></div>
           <div class="row"><span>Package generated</span><strong><code>2026-06-06T11:10:54Z</code></strong></div>
           <div class="row"><span>Reviewer comment</span><strong>Copy from <code>launch/basescan_final_submission_package.md</code> / Copy/Paste Reviewer Comment</strong></div>
@@ -507,6 +508,7 @@ Not automatic: No automatic token claim, no self-service member-benefit transfer
           <ul>
             <li>This page does not submit BaseScan forms.</li>
             <li>It does not send email, write DNS records, sign messages, or touch wallets/contracts.</li>
+            <li>It does not expose local <code>launch/</code> package files as public website URLs.</li>
             <li>It does not claim BaseScan token profile approval before BaseScan publishes it.</li>
             <li>It does not publish private mailbox screenshots or private evidence files.</li>
           </ul>
@@ -515,7 +517,7 @@ Not automatic: No automatic token claim, no self-service member-benefit transfer
 
       <section class="section panel" aria-labelledby="platformPathTitle">
         <h2 id="platformPathTitle">Readable Handoff Path</h2>
-        <p class="note">Start with this human-readable handoff page, then use the linked team, domain-email, contract, supply, liquidity, and platform-reply pages as the review packet for the next BaseScan submission.</p>
+        <p class="note">Start with this human-readable handoff page, then use the linked team, domain-email, contract, supply, liquidity, and platform-reply pages as the review packet for the next BaseScan submission. The final <code>launch/</code> package remains an owner-side copy source, not a public evidence URL.</p>
       </section>
     </main>
 
