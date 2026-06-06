@@ -44,6 +44,7 @@ This resubmission directly addresses the prior information-insufficient return r
 - Project documentation and status: https://gcagochina.com/whitepaper.html and https://gcagochina.com/external-reviews.html
 - Logo, brand, and metadata evidence: https://gcagochina.com/brand-kit.html
 - Contract/source and remediation evidence: https://gcagochina.com/basescan-remediation.html
+- Access and member-benefit boundaries: https://gcagochina.com/review-queue.html and https://gcagochina.com/release-gates.html
 - Public email guard: the current preflight reports 0 tracked public files publishing the old Outlook email and 0 tracked public files publishing forbidden legacy personal/non-domain email.
 
 Contract: 0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6
@@ -56,6 +57,8 @@ Domain email evidence plan: https://gcagochina.com/domain-email.html
 Source repository: https://github.com/timchen078/gca_token
 Official market route: GCA/USDT on Uniswap v4
 Pool: 0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0
+Access boundary: Public account intake and eligibility submission are live, but 100 GCA AI Quant Access credits are account-level service records, not cash or transferable tokens. GCA Member review requires 1,000,000 GCA plus 30 consecutive days of holding evidence, and any 10,000 GCA member benefit remains manual reserve-wallet processing after support approval.
+Not automatic: No automatic token claim, no self-service member-benefit transfer, no custody, no withdrawal path, no trading permission, and no price or liquidity support is claimed.
 
 The contract source is verified on BaseScan and deployer-wallet ownership has previously been verified. This request is only for token profile metadata.
 
@@ -95,6 +98,10 @@ BaseScan remediation tracker: https://gcagochina.com/basescan-remediation.html
 GitHub source repository: https://github.com/timchen078/gca_token
 Telegram: https://t.me/gcagochinaofficial
 X: https://x.com/GCAAIGoChina
+Access portal: https://gcagochina.com/access.html
+Review queue contract: https://gcagochina.com/review-queue.html
+Release gates: https://gcagochina.com/release-gates.html
+Member benefit rules: https://gcagochina.com/member-benefit.html
 ```
 
 ## Copy/Paste Market And Supply
@@ -110,6 +117,18 @@ Owner-held reserve: 600000000
 Owner reserve wallet: 0x5e8F84748612B913aAcC937492AC25dc5630E246
 Supply disclosure: https://gcagochina.com/supply.html
 Reserve boundary: Do not describe the reserve as locked, vested, or multisig-controlled unless custody changes on-chain.
+```
+
+## Copy/Paste Access And Claim Boundary
+
+```text
+Access portal: https://gcagochina.com/access.html
+Access API: https://gcagochina.com/access-api.html
+Review queue contract: https://gcagochina.com/review-queue.html
+Release gates: https://gcagochina.com/release-gates.html
+Member benefit rules: https://gcagochina.com/member-benefit.html
+Access boundary: Public account intake and eligibility submission are live, but 100 GCA AI Quant Access credits are account-level service records, not cash or transferable tokens. GCA Member review requires 1,000,000 GCA plus 30 consecutive days of holding evidence, and any 10,000 GCA member benefit remains manual reserve-wallet processing after support approval.
+Not automatic: No automatic token claim, no self-service member-benefit transfer, no custody, no withdrawal path, no trading permission, and no price or liquidity support is claimed.
 ```
 
 ## Basic Information
@@ -153,6 +172,16 @@ Reserve boundary: Do not describe the reserve as locked, vested, or multisig-con
 - Owner reserve wallet: `0x5e8F84748612B913aAcC937492AC25dc5630E246`
 - Supply disclosure: `https://gcagochina.com/supply.html`
 - Reserve boundary: Do not describe the reserve as locked, vested, or multisig-controlled unless custody changes on-chain.
+
+## Access And Claim Boundary
+
+- Access portal: `https://gcagochina.com/access.html`
+- Access API: `https://gcagochina.com/access-api.html`
+- Review queue contract: `https://gcagochina.com/review-queue.html`
+- Release gates: `https://gcagochina.com/release-gates.html`
+- Member benefit rules: `https://gcagochina.com/member-benefit.html`
+- Access boundary: Public account intake and eligibility submission are live, but 100 GCA AI Quant Access credits are account-level service records, not cash or transferable tokens. GCA Member review requires 1,000,000 GCA plus 30 consecutive days of holding evidence, and any 10,000 GCA member benefit remains manual reserve-wallet processing after support approval.
+- Not automatic: No automatic token claim, no self-service member-benefit transfer, no custody, no withdrawal path, no trading permission, and no price or liquidity support is claimed.
 
 ## Boundaries
 

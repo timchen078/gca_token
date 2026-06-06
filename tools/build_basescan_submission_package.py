@@ -63,6 +63,23 @@ def build_form_fields(values: dict[str, Any]) -> dict[str, Any]:
     market = values.get("officialMarketPool", {})
     supply = values.get("supplyDisclosure", {})
     supply_page = supply.get("supplyDisclosurePageUrl") or supply.get("supplyDisclosureUrl")
+    access_boundary = {
+        "accessPortal": "https://gcagochina.com/access.html",
+        "accessApi": "https://gcagochina.com/access-api.html",
+        "reviewQueue": "https://gcagochina.com/review-queue.html",
+        "releaseGates": "https://gcagochina.com/release-gates.html",
+        "memberBenefit": "https://gcagochina.com/member-benefit.html",
+        "summary": (
+            "Public account intake and eligibility submission are live, but 100 GCA AI Quant Access credits "
+            "are account-level service records, not cash or transferable tokens. GCA Member review requires "
+            "1,000,000 GCA plus 30 consecutive days of holding evidence, and any 10,000 GCA member benefit "
+            "remains manual reserve-wallet processing after support approval."
+        ),
+        "notAutomatic": (
+            "No automatic token claim, no self-service member-benefit transfer, no custody, no withdrawal path, "
+            "no trading permission, and no price or liquidity support is claimed."
+        ),
+    }
     return {
         "basicInformation": {
             "contractAddress": values.get("contractAddress"),
@@ -112,6 +129,7 @@ def build_form_fields(values: dict[str, Any]) -> dict[str, Any]:
             "supplyDisclosureData": supply.get("supplyDisclosureUrl"),
             "reserveBoundary": "Do not describe the reserve as locked, vested, or multisig-controlled unless custody changes on-chain.",
         },
+        "accessClaimBoundary": access_boundary,
     }
 
 
@@ -125,6 +143,7 @@ def build_copy_paste_blocks(
     social = form_fields["socialProfiles"]
     price = form_fields["priceData"]
     supply = form_fields["supplyContext"]
+    access = form_fields["accessClaimBoundary"]
     missing = [str(item) for item in readiness_report.get("missingOrBlockedRequirements", [])]
     ready = bool(readiness_report.get("readyForBaseScanResubmission"))
     email_guard = build_public_email_guard(readiness_report)
@@ -155,6 +174,10 @@ def build_copy_paste_blocks(
         f"GitHub source repository: {social['github']}",
         f"Telegram: {social['telegram']}",
         f"X: {social['x']}",
+        f"Access portal: {access['accessPortal']}",
+        f"Review queue contract: {access['reviewQueue']}",
+        f"Release gates: {access['releaseGates']}",
+        f"Member benefit rules: {access['memberBenefit']}",
     ])
     market_block = format_lines([
         f"Official market route: {price['officialMarketRoute']}",
@@ -167,6 +190,15 @@ def build_copy_paste_blocks(
         f"Owner reserve wallet: {supply['ownerReserveWallet']}",
         f"Supply disclosure: {supply['supplyDisclosure']}",
         f"Reserve boundary: {supply['reserveBoundary']}",
+    ])
+    access_block = format_lines([
+        f"Access portal: {access['accessPortal']}",
+        f"Access API: {access['accessApi']}",
+        f"Review queue contract: {access['reviewQueue']}",
+        f"Release gates: {access['releaseGates']}",
+        f"Member benefit rules: {access['memberBenefit']}",
+        f"Access boundary: {access['summary']}",
+        f"Not automatic: {access['notAutomatic']}",
     ])
 
     if ready:
@@ -182,6 +214,7 @@ def build_copy_paste_blocks(
             f"- Project documentation and status: {social['whitepaper']} and {social['externalReviewStatus']}",
             f"- Logo, brand, and metadata evidence: {social['brandKit']}",
             f"- Contract/source and remediation evidence: {social['baseScanRemediation']}",
+            f"- Access and member-benefit boundaries: {access['reviewQueue']} and {access['releaseGates']}",
             "- Public email guard: the current preflight reports "
             f"{email_guard['filesStillUsingOldEmail']} tracked public files publishing the old Outlook email "
             f"and {email_guard['filesPublishingForbiddenLegacyEmail']} tracked public files publishing forbidden legacy personal/non-domain email.",
@@ -196,6 +229,8 @@ def build_copy_paste_blocks(
             f"Source repository: {social['github']}",
             f"Official market route: {price['officialMarketRoute']} on {price['dex']}",
             f"Pool: {price['poolAddress']}",
+            f"Access boundary: {access['summary']}",
+            f"Not automatic: {access['notAutomatic']}",
             "",
             "The contract source is verified on BaseScan and deployer-wallet ownership has previously been verified. "
             "This request is only for token profile metadata.",
@@ -222,6 +257,7 @@ def build_copy_paste_blocks(
         "basicInformationPlainText": basic_block,
         "evidenceLinksPlainText": evidence_block,
         "marketAndSupplyPlainText": market_block,
+        "accessAndClaimBoundaryPlainText": access_block,
     }
 
 
@@ -348,6 +384,7 @@ def render_markdown(package: dict[str, Any]) -> str:
     price = fields["priceData"]
     sale = fields["saleDetails"]
     supply = fields["supplyContext"]
+    access = fields["accessClaimBoundary"]
     copy_blocks = package["copyPasteBlocks"]
     remediation_summary = package.get("reviewerRemediationSummary", [])
     public_email_guard = package.get("publicEmailGuard", {})
@@ -418,6 +455,12 @@ def render_markdown(package: dict[str, Any]) -> str:
         copy_blocks["marketAndSupplyPlainText"],
         "```",
         "",
+        "## Copy/Paste Access And Claim Boundary",
+        "",
+        "```text",
+        copy_blocks["accessAndClaimBoundaryPlainText"],
+        "```",
+        "",
     ])
 
     lines.extend([
@@ -462,6 +505,16 @@ def render_markdown(package: dict[str, Any]) -> str:
         f"- Owner reserve wallet: `{supply['ownerReserveWallet']}`",
         f"- Supply disclosure: `{supply['supplyDisclosure']}`",
         f"- Reserve boundary: {supply['reserveBoundary']}",
+        "",
+        "## Access And Claim Boundary",
+        "",
+        f"- Access portal: `{access['accessPortal']}`",
+        f"- Access API: `{access['accessApi']}`",
+        f"- Review queue contract: `{access['reviewQueue']}`",
+        f"- Release gates: `{access['releaseGates']}`",
+        f"- Member benefit rules: `{access['memberBenefit']}`",
+        f"- Access boundary: {access['summary']}",
+        f"- Not automatic: {access['notAutomatic']}",
         "",
         "## Boundaries",
         "",
@@ -516,6 +569,7 @@ def main(argv: list[str] | None = None) -> int:
             public_switch_report=public_switch_report,
             snapshot_alignment_report=snapshot_alignment_report,
             public_url_checks=public_url_checks,
+            generated_at=args.generated_at or None,
         )
         package = build_submission_package(
             values=values,

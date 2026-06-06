@@ -129,12 +129,19 @@ class BaseScanSubmissionPackageTests(unittest.TestCase):
         self.assertIn("prior information-insufficient return reasons", package["copyPasteBlocks"]["baseScanReviewerComment"])
         self.assertIn("Official project-domain email", package["copyPasteBlocks"]["baseScanReviewerComment"])
         self.assertIn("Logo, brand, and metadata evidence", package["copyPasteBlocks"]["baseScanReviewerComment"])
+        self.assertIn("Access and member-benefit boundaries", package["copyPasteBlocks"]["baseScanReviewerComment"])
         self.assertIn("Public email guard", package["copyPasteBlocks"]["baseScanReviewerComment"])
         self.assertIn("0 tracked public files publishing forbidden legacy", package["copyPasteBlocks"]["baseScanReviewerComment"])
         self.assertIn("support@gcagochina.com", package["copyPasteBlocks"]["baseScanReviewerComment"])
+        self.assertIn("Public account intake and eligibility submission are live", package["copyPasteBlocks"]["baseScanReviewerComment"])
+        self.assertIn("No automatic token claim", package["copyPasteBlocks"]["baseScanReviewerComment"])
         self.assertIn("not claiming BaseScan token profile approval", package["copyPasteBlocks"]["baseScanReviewerComment"])
         self.assertIn("Tim Chen professional profile", package["copyPasteBlocks"]["evidenceLinksPlainText"])
+        self.assertIn("Review queue contract: https://gcagochina.com/review-queue.html", package["copyPasteBlocks"]["evidenceLinksPlainText"])
         self.assertIn("GCA/USDT", package["copyPasteBlocks"]["marketAndSupplyPlainText"])
+        self.assertIn("Access API: https://gcagochina.com/access-api.html", package["copyPasteBlocks"]["accessAndClaimBoundaryPlainText"])
+        self.assertIn("Member benefit rules: https://gcagochina.com/member-benefit.html", package["copyPasteBlocks"]["accessAndClaimBoundaryPlainText"])
+        self.assertIn("manual reserve-wallet processing", package["copyPasteBlocks"]["accessAndClaimBoundaryPlainText"])
         self.assertEqual(package["preflightSummary"]["filesStillUsingOldEmail"], 0)
         self.assertEqual(package["preflightSummary"]["filesPublishingForbiddenLegacyEmail"], 0)
         self.assertEqual(package["publicEmailGuard"]["targetDomainEmail"], "support@gcagochina.com")
@@ -166,6 +173,9 @@ class BaseScanSubmissionPackageTests(unittest.TestCase):
         self.assertIn("Return reason: founder and team transparency", markdown)
         self.assertIn("Copy/Paste Reviewer Comment", markdown)
         self.assertIn("Copy/Paste Basic Information", markdown)
+        self.assertIn("Copy/Paste Access And Claim Boundary", markdown)
+        self.assertIn("Access And Claim Boundary", markdown)
+        self.assertIn("No automatic token claim", markdown)
         self.assertIn("Project Email Address: `support@gcagochina.com`", markdown)
         self.assertIn("This package does not submit a BaseScan request.", markdown)
 
@@ -186,6 +196,8 @@ class BaseScanSubmissionPackageTests(unittest.TestCase):
                     "--evidence-packet",
                     str(evidence_path),
                     "--skip-url-checks",
+                    "--generated-at",
+                    "2026-05-26T00:00:00Z",
                     "--json",
                     "--require-ready",
                 ])
@@ -193,6 +205,8 @@ class BaseScanSubmissionPackageTests(unittest.TestCase):
             self.assertEqual(exit_code, 1)
             payload = json.loads(output.getvalue())
             self.assertFalse(payload["readyForOwnerSubmission"])
+            self.assertEqual(payload["generatedAt"], "2026-05-26T00:00:00Z")
+            self.assertEqual(payload["preflightSummary"]["generatedAt"], "2026-05-26T00:00:00Z")
             self.assertIn("Do not submit BaseScan yet", payload["nextAction"])
             self.assertIn("DRAFT ONLY - DO NOT SUBMIT BASESCAN YET.", payload["copyPasteBlocks"]["baseScanReviewerComment"])
 

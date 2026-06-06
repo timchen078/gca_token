@@ -1694,6 +1694,12 @@ def validate_basescan_handoff_page(text: str) -> None:
         "Copy/Paste Market And Supply",
         "Official market route: GCA/USDT",
         "Reserve boundary: Do not describe the reserve as locked",
+        "Copy/Paste Access And Claim Boundary",
+        "Access and member-benefit boundaries",
+        "Access API: https://gcagochina.com/access-api.html",
+        "Review queue contract: https://gcagochina.com/review-queue.html",
+        "No automatic token claim",
+        "manual reserve-wallet processing",
         "BaseScan source verification",
         "Deployer-wallet ownership verification",
         "Returned again as information-insufficient on 2026-05-23",
@@ -1781,6 +1787,7 @@ def validate_basescan_handoff_json(text: str) -> None:
         "basicInformationPlainText",
         "evidenceLinksPlainText",
         "marketAndSupplyPlainText",
+        "accessAndClaimBoundaryPlainText",
     ):
         if expected_block not in final_package.get("copyPasteBlocks", []):
             raise SiteCheckError(f"{label}: missing final package block {expected_block}")
@@ -1794,6 +1801,10 @@ def validate_basescan_handoff_json(text: str) -> None:
         "Tim Chen professional profile: https://gcagochina.com/tim-chen.html",
         "Official market route: GCA/USDT",
         "Reserve boundary: Do not describe the reserve as locked",
+        "Access and member-benefit boundaries",
+        "Review queue contract: https://gcagochina.com/review-queue.html",
+        "No automatic token claim",
+        "manual reserve-wallet processing",
     ):
         if not any(expected_text in str(value) for value in copy_content.values()):
             raise SiteCheckError(f"{label}: missing copy-paste text {expected_text}")
