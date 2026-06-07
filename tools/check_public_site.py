@@ -9052,6 +9052,8 @@ def validate_brand_kit_page(text: str) -> None:
 def validate_project_profile_page(text: str) -> None:
     label = "/project-profile.html"
     assert_social_preview_meta(text, label, PROJECT_PROFILE_PAGE_URL)
+    if text.count('<h1 id="title">GCA Project Profile</h1>') != 1:
+        raise SiteCheckError(f"{label}: expected exactly one project profile h1")
     for expected in (
         "GCA Project Profile",
         "Readable Project Profile",
@@ -9069,6 +9071,20 @@ def validate_project_profile_page(text: str) -> None:
         "Reviewer Kit",
         "Listing Kit",
         "Data Room",
+        "BaseScan Review Map",
+        "Return Reason To Public Evidence",
+        "Website accessible and safe to visit",
+        "Clear token and project information",
+        "Placeholders and broken links",
+        "Founder and team transparency",
+        "Sender email matches project domain",
+        "Logo, social, and metadata URLs",
+        "Source and deployer-wallet ownership are verified",
+        "not approved until BaseScan publishes it",
+        "MX/SPF/DKIM/DMARC present",
+        "tools/check_public_site.py",
+        "team.html#tim-chen",
+        "domain-email-evidence.html",
     ):
         assert_contains(text, expected, label)
     assert_current_pool_text(text, label)
@@ -9143,6 +9159,7 @@ def validate_project_json(text: str) -> None:
     status = payload.get("platformStatus", {})
     member_program = payload.get("memberProgram", {})
     external_reviews = payload.get("externalReviewStatus", {})
+    reason_map = payload.get("baseScanReviewerReasonMap", {})
 
     if payload.get("contractAddress") != MAINNET_ADDRESS:
         raise SiteCheckError(f"{label}: wrong contractAddress")
@@ -9345,6 +9362,52 @@ def validate_project_json(text: str) -> None:
     social_links = payload.get("officialSocialLinks", [])
     if not any(link.get("platform") == "X" and link.get("url") == X_URL for link in social_links):
         raise SiteCheckError(f"{label}: missing official X social link")
+    if reason_map.get("status") != "published-on-project-profile":
+        raise SiteCheckError(f"{label}: wrong BaseScan reviewer reason map status")
+    if reason_map.get("sourceNoticeDate") != "2026-05-23":
+        raise SiteCheckError(f"{label}: wrong BaseScan reviewer reason map notice date")
+    if reason_map.get("pageUrl") != f"{PROJECT_PROFILE_PAGE_URL}#basescanMapTitle":
+        raise SiteCheckError(f"{label}: wrong BaseScan reviewer reason map page")
+    if "information-insufficient return reasons" not in reason_map.get("purpose", ""):
+        raise SiteCheckError(f"{label}: missing BaseScan reviewer reason map purpose")
+    reason_items = reason_map.get("items", [])
+    if not isinstance(reason_items, list) or len(reason_items) != 6:
+        raise SiteCheckError(f"{label}: expected six BaseScan reviewer reason map items")
+    reason_items_by_id = {item.get("id"): item for item in reason_items if isinstance(item, dict)}
+    expected_reason_ids = {
+        "website-accessible-safe",
+        "clear-project-token-information",
+        "placeholder-broken-link-review",
+        "founder-team-transparency",
+        "domain-email-match",
+        "logo-social-metadata",
+    }
+    if set(reason_items_by_id) != expected_reason_ids:
+        raise SiteCheckError(f"{label}: wrong BaseScan reviewer reason map ids")
+    founder_item = reason_items_by_id["founder-team-transparency"]
+    if founder_item.get("status") != "implemented-official-domain-equivalent":
+        raise SiteCheckError(f"{label}: wrong founder evidence status")
+    for expected_link in (f"{TEAM_PAGE_URL}#tim-chen", TIM_CHEN_PROFILE_PAGE_URL, GITHUB_REPO_URL, X_URL):
+        if expected_link not in founder_item.get("evidencePages", []):
+            raise SiteCheckError(f"{label}: missing founder evidence link {expected_link}")
+    domain_item = reason_items_by_id["domain-email-match"]
+    if domain_item.get("status") != "implemented-domain-email-ready":
+        raise SiteCheckError(f"{label}: wrong domain email reason status")
+    if domain_item.get("officialEmail") != "support@gcagochina.com":
+        raise SiteCheckError(f"{label}: wrong BaseScan reason map official email")
+    if DOMAIN_EMAIL_PAGE_URL not in domain_item.get("evidencePages", []):
+        raise SiteCheckError(f"{label}: missing domain email evidence page")
+    if "MX/SPF/DKIM/DMARC present" not in domain_item.get("dnsEvidence", ""):
+        raise SiteCheckError(f"{label}: missing domain email DNS evidence")
+    placeholder_item = reason_items_by_id["placeholder-broken-link-review"]
+    if "check_public_site.py" not in placeholder_item.get("checkCommand", ""):
+        raise SiteCheckError(f"{label}: missing public site check command in reason map")
+    logo_item = reason_items_by_id["logo-social-metadata"]
+    for expected_link in ("https://gcagochina.com/assets/gca-logo.svg", BRAND_KIT_PAGE_URL, WHITEPAPER_PAGE_URL):
+        if expected_link not in logo_item.get("evidencePages", []):
+            raise SiteCheckError(f"{label}: missing logo/social metadata evidence link {expected_link}")
+    if "pending until BaseScan publishes it" not in reason_map.get("currentBoundary", ""):
+        raise SiteCheckError(f"{label}: missing BaseScan pending boundary")
     if market.get("officialPair") != "GCA/USDT":
         raise SiteCheckError(f"{label}: wrong officialPair")
     if market.get("poolAddress") != OFFICIAL_POOL_ADDRESS:
