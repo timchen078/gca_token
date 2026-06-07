@@ -447,6 +447,11 @@
             <p class="note">Live token-protected admin read for GCA Member ledger records and member-benefit review status.</p>
           </div>
           <div class="fact">
+            <span class="label">GET/POST</span>
+            <span class="value">/gca/credit-usage</span>
+            <p class="note">Prepared token-protected credit usage ledger. The Worker bundle dry-run passes and D1 migration is applied; production publish is pending Cloudflare Workers service permission.</p>
+          </div>
+          <div class="fact">
             <span class="label">Future Domain</span>
             <span class="value">api.gcagochina.com</span>
             <p class="note">Pending until the Cloudflare account used for Workers can manage the <code>gcagochina.com</code> DNS zone.</p>
@@ -464,6 +469,11 @@
           <h2>Admin Check</h2>
           <p class="note">This local operator check reads a small record sample with <code>ADMIN_READ_TOKEN</code>. Keep the token file local and do not publish it.</p>
           <pre>python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5</pre>
+        </div>
+        <div class="panel">
+          <h2>Deploy Readiness</h2>
+          <p class="note">This checks Worker bundling, D1 visibility, and read-only Worker deployment permission before publishing a new Worker version.</p>
+          <pre>python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth</pre>
         </div>
       </section>
 

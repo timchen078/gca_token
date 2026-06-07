@@ -20,6 +20,8 @@
     "creditUsageLedgerPrepared": true,
     "creditUsageLedgerWritesLive": false,
     "creditUsageWorkerDeployBlocked": true,
+    "creditUsageWorkerDryRunPassed": true,
+    "creditUsageWorkerDeployBlockedBy": "Cloudflare authentication or Workers service permission error [code: 10000]",
     "memberLedgerWritesLive": true
   },
   "holderBonus": {
@@ -117,9 +119,10 @@
     }
   ],
   "usageLedger": {
-    "status": "local-operator-credit-usage-ledger-ready-worker-deploy-pending",
+    "status": "local-operator-credit-usage-ledger-ready-worker-deploy-permission-pending",
     "endpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/credit-usage",
     "localEndpoint": "http://127.0.0.1:8787/gca/credit-usage",
+    "workerDeployReadinessCommand": "python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth",
     "packetVersion": "gca_credit_usage_v1",
     "records": [
       "creditUsageId",

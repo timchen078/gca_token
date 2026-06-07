@@ -492,7 +492,7 @@
           <div class="fact">
             <span class="label">POST / GET</span>
             <span class="value">/gca/credit-usage</span>
-            <p class="note">Prepared token-protected operator ledger for reviewed service-level credit usage. Local backend support is implemented; the Cloudflare Worker route is pending deploy permission. It records service ID, credits used, before/after balance, and status; it never connects wallets, requests signatures, sends tokens, or creates trading permission.</p>
+            <p class="note">Prepared token-protected operator ledger for reviewed service-level credit usage. Local backend support is implemented, the D1 migration is applied, and <code>wrangler deploy --dry-run</code> passes; the Cloudflare Worker route is pending Workers service publish permission. It records service ID, credits used, before/after balance, and status; it never connects wallets, requests signatures, sends tokens, or creates trading permission.</p>
           </div>
           <div class="fact">
             <span class="label">GET</span>

@@ -22,6 +22,8 @@
     "creditUsageLedgerPrepared": true,
     "creditUsageLedgerWritesLive": false,
     "creditUsageWorkerDeployBlocked": true,
+    "creditUsageWorkerDryRunPassed": true,
+    "creditUsageWorkerDeployBlockedBy": "Cloudflare authentication or Workers service permission error [code: 10000]",
     "ledgerWritesLive": true,
     "liveTradingEnabled": false
   },
@@ -66,6 +68,7 @@
     "pipelineCommand": ".venv/bin/python tools/run_gca_member_access_ops.py --base-url https://gca-registration-api.gcagochina.workers.dev --limit 100 --redact none --summary-output .gca_access_data/gca_member_access_ops_summary.json",
     "offlineHoldingReportCommand": ".venv/bin/python tools/run_gca_member_access_ops.py --base-url https://gca-registration-api.gcagochina.workers.dev --limit 100 --redact none --include-holding-report --holding-no-live-read --summary-output .gca_access_data/gca_member_access_ops_summary.json",
     "digestRefreshCommand": ".venv/bin/python tools/run_gca_daily_ops.py --build-digest --update-public-status",
+    "workerDeployReadinessCommand": "python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth",
     "localExportJson": ".gca_access_data/cloudflare_member_access_export.json",
     "reportSummaryOutput": ".gca_access_data/member_access_report/gca_member_access_summary.json",
     "creditUsageCsv": ".gca_access_data/member_access_report/gca_credit_usage.csv",

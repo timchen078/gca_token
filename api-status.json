@@ -144,10 +144,23 @@
       "status": "live-token-protected",
       "requiresAdminReadToken": true,
       "publicLedgerReadable": false
+    },
+    {
+      "id": "credit-usage-read-write",
+      "method": "GET/POST",
+      "path": "/gca/credit-usage",
+      "url": "https://gca-registration-api.gcagochina.workers.dev/gca/credit-usage",
+      "status": "prepared-worker-deploy-permission-pending",
+      "requiresAdminReadToken": true,
+      "publicLedgerReadable": false,
+      "workerDryRunPassed": true,
+      "blockedBy": "Cloudflare authentication or Workers service permission error [code: 10000]"
     }
   ],
   "checks": {
     "tool": "tools/check_gca_registration_api.py",
+    "workerDeployReadinessTool": "tools/check_gca_worker_deploy_readiness.py",
+    "workerDeployReadinessCommand": "python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth",
     "publicOnlyCommand": "python3 tools/check_gca_registration_api.py --public-only --timeout 30",
     "adminCommand": "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5",
     "publicOnlyWorkflow": ".github/workflows/check-gca-registration-api.yml",
