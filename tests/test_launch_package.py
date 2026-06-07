@@ -36,6 +36,7 @@ DATA_PAGE_URL = "https://gcagochina.com/data.html"
 SITE_MAP_PAGE_URL = "https://gcagochina.com/site-map.html"
 ABOUT_PAGE_URL = "https://gcagochina.com/about.html"
 ACTION_PLAN_PAGE_URL = "https://gcagochina.com/action-plan.html"
+PROJECT_PROFILE_PAGE_URL = "https://gcagochina.com/project-profile.html"
 TEAM_PAGE_URL = "https://gcagochina.com/team.html"
 TIM_CHEN_PROFILE_PAGE_URL = "https://gcagochina.com/tim-chen.html"
 TIM_CHEN_PROFILE_URL = "https://gcagochina.com/tim-chen.json"
@@ -1895,6 +1896,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Do not claim the BaseScan token profile is approved", page)
         self.assertIn("BaseScan Handoff", page)
         self.assertIn("basescan-handoff.html", page)
+        self.assertIn("Project Profile Map", page)
+        self.assertIn("project-profile.html#basescanMapTitle", page)
         self.assertNotIn("Reviewer Data Room", page)
         self.assertNotIn("Data Room", page)
         self.assertNotIn("Raw JSON", page)
@@ -1915,6 +1918,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(data["chainId"], 8453)
         self.assertEqual(data["contractAddress"], MAINNET_ADDRESS)
         self.assertEqual(data["officialIdentity"]["team"], TEAM_PAGE_URL)
+        self.assertEqual(data["officialIdentity"]["projectProfilePage"], PROJECT_PROFILE_PAGE_URL)
+        self.assertEqual(data["officialIdentity"]["projectProfileBaseScanMap"], f"{PROJECT_PROFILE_PAGE_URL}#basescanMapTitle")
         self.assertEqual(data["officialIdentity"]["timChenProfessionalProfile"], TIM_CHEN_PROFILE_PAGE_URL)
         self.assertEqual(data["officialIdentity"]["domainEmailSetupPlan"], DOMAIN_EMAIL_PAGE_URL)
         self.assertEqual(data["officialIdentity"]["domainEmailDnsWorksheet"], f"{DOMAIN_EMAIL_PAGE_URL}#worksheetTitle")
@@ -1983,6 +1988,10 @@ class LaunchPackageTests(unittest.TestCase):
         )
         self.assertIn(
             "Use support@gcagochina.com as the official BaseScan project email",
+            " ".join(data["nextSubmissionGate"]["requiredBeforeReady"]),
+        )
+        self.assertIn(
+            f"{PROJECT_PROFILE_PAGE_URL}#basescanMapTitle",
             " ".join(data["nextSubmissionGate"]["requiredBeforeReady"]),
         )
         self.assertIn(
@@ -2132,6 +2141,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Project Email Address: support@gcagochina.com", page)
         self.assertIn("Copy/Paste Evidence Links", page)
         self.assertIn("GitHub source repository: https://github.com/timchen078/gca_token", page)
+        self.assertIn("Project profile and BaseScan reviewer map: https://gcagochina.com/project-profile.html#basescanMapTitle", page)
         self.assertIn("Copy/Paste Market And Supply", page)
         self.assertIn("Official market route: GCA/USDT", page)
         self.assertIn("Reserve boundary: Do not describe the reserve as locked", page)
@@ -2146,6 +2156,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("2026-05-30: MX/SPF/DKIM/DMARC present", page)
         self.assertIn("Team Transparency", page)
         self.assertIn("Project Clarity", page)
+        self.assertIn("Project Profile Map", page)
         self.assertIn("Domain Email", page)
         self.assertIn("Contract Evidence", page)
         self.assertIn("Supply Disclosure", page)
@@ -2165,6 +2176,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Base Mainnet chain ID 8453", page)
         self.assertIn("team.html", page)
         self.assertIn("tim-chen.html", page)
+        self.assertIn("project-profile.html#basescanMapTitle", page)
         self.assertIn("domain-email.html", page)
         self.assertIn("domain-email-evidence.html", page)
         self.assertIn("basescan-preflight.html", page)
@@ -2202,10 +2214,13 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Paste the generated text into the BaseScan form", local_boundary["instruction"])
         self.assertIn(BASESCAN_HANDOFF_PAGE_URL, local_boundary["reviewerFacingPublicPages"])
         self.assertIn(REVIEWER_KIT_PAGE_URL, local_boundary["reviewerFacingPublicPages"])
+        self.assertIn(PROJECT_PROFILE_PAGE_URL, local_boundary["reviewerFacingPublicPages"])
         self.assertIn(TIM_CHEN_PROFILE_PAGE_URL, local_boundary["reviewerFacingPublicPages"])
         copy_content = data["finalSubmissionPackage"]["copyPasteContent"]
         self.assertIn("Please review the updated GCA token profile metadata", copy_content["baseScanReviewerComment"])
         self.assertIn("Access and member-benefit boundaries", copy_content["baseScanReviewerComment"])
+        self.assertIn("Consolidated project profile and return-reason map", copy_content["baseScanReviewerComment"])
+        self.assertIn("Project profile and BaseScan reviewer map: https://gcagochina.com/project-profile.html#basescanMapTitle", copy_content["evidenceLinksPlainText"])
         self.assertIn("Project Email Address: support@gcagochina.com", copy_content["basicInformationPlainText"])
         self.assertIn("Tim Chen professional profile: https://gcagochina.com/tim-chen.html", copy_content["evidenceLinksPlainText"])
         self.assertIn("Official market route: GCA/USDT", copy_content["marketAndSupplyPlainText"])
@@ -2223,6 +2238,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertCountEqual(data["domainEmailGate"]["missingOrBlockedChecks"], [])
         self.assertEqual(data["officialLinks"]["baseScanHandoffPage"], BASESCAN_HANDOFF_PAGE_URL)
         self.assertEqual(data["officialLinks"]["baseScanHandoff"], BASESCAN_HANDOFF_URL)
+        self.assertEqual(data["officialLinks"]["projectProfilePage"], PROJECT_PROFILE_PAGE_URL)
+        self.assertEqual(data["officialLinks"]["projectProfileBaseScanMap"], f"{PROJECT_PROFILE_PAGE_URL}#basescanMapTitle")
         self.assertEqual(data["officialLinks"]["reviewerKitPage"], REVIEWER_KIT_PAGE_URL)
         self.assertEqual(data["officialLinks"]["baseScanPreflightPage"], BASESCAN_PREFLIGHT_PAGE_URL)
         self.assertEqual(data["officialLinks"]["domainEmailEvidenceChecklistPage"], DOMAIN_EMAIL_EVIDENCE_PAGE_URL)
@@ -7107,6 +7124,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("BaseScan Resubmission Handoff", page)
         self.assertIn("BaseScan Handoff", page)
         self.assertIn("basescan-handoff.html", page)
+        self.assertIn("Project Profile Map", page)
+        self.assertIn("project-profile.html#basescanMapTitle", page)
         self.assertIn("Readable Reviewer Path", page)
         self.assertNotIn("Platform-Only Evidence Path", page)
         self.assertNotIn("Data Room", page)
@@ -7135,6 +7154,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Founder / team transparency", page)
         self.assertIn("Team profile", page)
         self.assertIn("Tim Chen professional profile", page)
+        self.assertIn("Return-reason map", page)
+        self.assertIn("Project Profile BaseScan reviewer map", page)
         self.assertIn("Domain Email Gate", page)
         self.assertIn("Final preflight gate", page)
         self.assertIn("Daily Status Queue", page)
@@ -7190,6 +7211,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(kit["contractAddress"], MAINNET_ADDRESS)
         self.assertEqual(kit["officialLinks"]["reviewerKitPage"], REVIEWER_KIT_PAGE_URL)
         self.assertEqual(kit["officialLinks"]["reviewerKit"], REVIEWER_KIT_URL)
+        self.assertEqual(kit["officialLinks"]["projectProfilePage"], PROJECT_PROFILE_PAGE_URL)
+        self.assertEqual(kit["officialLinks"]["projectProfileBaseScanMap"], f"{PROJECT_PROFILE_PAGE_URL}#basescanMapTitle")
         self.assertEqual(kit["officialLinks"]["baseScanHandoffPage"], BASESCAN_HANDOFF_PAGE_URL)
         self.assertEqual(kit["officialLinks"]["baseScanHandoff"], BASESCAN_HANDOFF_URL)
         self.assertEqual(kit["officialLinks"]["dailyStatusPage"], DAILY_STATUS_PAGE_URL)
@@ -7235,6 +7258,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(kit["evidenceLinks"]["custodyRoadmap"], CUSTODY_ROADMAP_PAGE_URL)
         self.assertEqual(kit["evidenceLinks"]["auditReadiness"], AUDIT_READINESS_PAGE_URL)
         self.assertEqual(kit["evidenceLinks"]["baseScanResubmissionHandoff"], BASESCAN_HANDOFF_PAGE_URL)
+        self.assertEqual(kit["evidenceLinks"]["projectProfileBaseScanMap"], f"{PROJECT_PROFILE_PAGE_URL}#basescanMapTitle")
         self.assertEqual(kit["evidenceLinks"]["domainEmailSetupPlan"], DOMAIN_EMAIL_PAGE_URL)
         self.assertEqual(kit["evidenceLinks"]["domainEmailDnsSnapshot"], f"{DOMAIN_EMAIL_PAGE_URL}#snapshotTitle")
         self.assertEqual(kit["evidenceLinks"]["domainEmailEvidenceChecklist"], DOMAIN_EMAIL_EVIDENCE_PAGE_URL)
@@ -7284,6 +7308,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("tools/check_basescan_resubmission_readiness.py --json --require-ready passes", kit["baseScanResubmissionHandoff"]["requiredBeforeNextSubmission"])
         handoff_ids = {item["id"] for item in kit["baseScanResubmissionHandoff"]["evidenceIndex"]}
         self.assertIn("founder-team-transparency", handoff_ids)
+        self.assertIn("project-profile-return-reason-map", handoff_ids)
         self.assertIn("domain-email-plan", handoff_ids)
         self.assertIn("domain-email-evidence-checklist", handoff_ids)
         self.assertIn("basescan-preflight", handoff_ids)
@@ -7313,6 +7338,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("wallet-security review", kit["reviewerUse"]["recommendedFor"])
         self.assertIn("listing approval claim", kit["reviewerUse"]["notFor"])
         self.assertIn(DOMAIN_EMAIL_EVIDENCE_PAGE_URL, " ".join(kit["reviewerUse"]["nextActions"]))
+        self.assertIn(f"{PROJECT_PROFILE_PAGE_URL}#basescanMapTitle", " ".join(kit["reviewerUse"]["nextActions"]))
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, json.dumps(kit))
 
     def test_platform_replies_page_and_json_publish_copyable_templates(self):
@@ -7338,6 +7364,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Wallet Warning Reviewer", page)
         self.assertIn("BaseScan Token Profile", page)
         self.assertIn("BaseScan returned the request again as information-insufficient on 2026-05-23", page)
+        self.assertIn("Project profile and BaseScan reviewer map: https://gcagochina.com/project-profile.html#basescanMapTitle", page)
         self.assertIn("Tim Chen professional profile: https://gcagochina.com/tim-chen.html", page)
         self.assertIn("BaseScan remediation tracker: https://gcagochina.com/basescan-remediation.html", page)
         self.assertIn("Domain email setup plan: https://gcagochina.com/domain-email.html", page)
@@ -7349,6 +7376,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("private screenshots remain local until a reviewer asks for them", page)
         self.assertIn("latest 2026-05-30 read-only DNS snapshot shows MX/SPF/DKIM/DMARC present", page)
         self.assertIn("readyForBaseScanEmailEvidence is true", page)
+        self.assertIn("the project profile BaseScan reviewer map", page)
         self.assertIn("Metadata Correction", page)
         self.assertIn("Local Review Package Handoff", page)
         self.assertIn("Community Moderator", page)
@@ -7380,6 +7408,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(replies["officialLinks"]["trustCenter"], TRUST_CENTER_URL)
         self.assertEqual(replies["officialLinks"]["reviewerKitPage"], REVIEWER_KIT_PAGE_URL)
         self.assertEqual(replies["officialLinks"]["reviewerKit"], REVIEWER_KIT_URL)
+        self.assertEqual(replies["officialLinks"]["projectProfilePage"], PROJECT_PROFILE_PAGE_URL)
+        self.assertEqual(replies["officialLinks"]["projectProfileBaseScanMap"], f"{PROJECT_PROFILE_PAGE_URL}#basescanMapTitle")
         self.assertEqual(replies["officialLinks"]["teamPage"], TEAM_PAGE_URL)
         self.assertEqual(replies["officialLinks"]["timChenProfessionalProfile"], TIM_CHEN_PROFILE_PAGE_URL)
         self.assertEqual(replies["officialLinks"]["timChenProfessionalProfileData"], TIM_CHEN_PROFILE_URL)
@@ -7413,6 +7443,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("The owner observed no wallet risk warning visible on 2026-05-14; no security-vendor approval is claimed.", wallet_body)
         basescan_body = "\n".join(replies["replyTemplates"]["baseScanProfile"]["body"])
         self.assertIn("BaseScan returned the request again as information-insufficient on 2026-05-23", basescan_body)
+        self.assertIn("Project profile and BaseScan reviewer map: https://gcagochina.com/project-profile.html#basescanMapTitle", basescan_body)
         self.assertIn("Tim Chen professional profile: https://gcagochina.com/tim-chen.html", basescan_body)
         self.assertIn("Domain email setup plan: https://gcagochina.com/domain-email.html", basescan_body)
         self.assertIn("Domain email setup data: https://gcagochina.com/domain-email.json", basescan_body)
@@ -7421,6 +7452,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Domain email activation evidence packet: https://gcagochina.com/domain-email.html#evidenceTitle", basescan_body)
         self.assertIn("Latest domain email DNS snapshot: https://gcagochina.com/domain-email.html#snapshotTitle", basescan_body)
         self.assertIn("Return-notice response:", basescan_body)
+        self.assertIn("the project profile BaseScan reviewer map", basescan_body)
         self.assertIn("the current active project-domain email is support@gcagochina.com", basescan_body)
         self.assertIn("public evidence checklist at https://gcagochina.com/domain-email-evidence.html defines the provider-status", basescan_body)
         self.assertIn("private screenshots remain local until a reviewer asks for them", basescan_body)

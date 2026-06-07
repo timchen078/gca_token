@@ -1376,6 +1376,8 @@ def validate_basescan_remediation_page(text: str) -> None:
         "Evidence Checklist",
         "BaseScan Handoff",
         "basescan-handoff.html",
+        "Project Profile Map",
+        f"{PROJECT_PROFILE_PAGE_URL}#basescanMapTitle",
         "Tim Chen",
         "team.html",
         GITHUB_REPO_URL,
@@ -1417,6 +1419,10 @@ def validate_basescan_remediation_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong contractAddress")
     if identity.get("team") != TEAM_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong team page")
+    if identity.get("projectProfilePage") != PROJECT_PROFILE_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong projectProfilePage")
+    if identity.get("projectProfileBaseScanMap") != f"{PROJECT_PROFILE_PAGE_URL}#basescanMapTitle":
+        raise SiteCheckError(f"{label}: wrong projectProfileBaseScanMap")
     if identity.get("timChenProfessionalProfile") != TIM_CHEN_PROFILE_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong Tim Chen profile page")
     if identity.get("domainEmailSetupPlan") != DOMAIN_EMAIL_PAGE_URL:
@@ -1544,6 +1550,8 @@ def validate_basescan_remediation_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing final submission wallet-signing boundary")
     if not any("https://gcagochina.com/platform-replies.html" in item for item in gate.get("requiredBeforeReady", [])):
         raise SiteCheckError(f"{label}: missing Platform Replies next-submission gate")
+    if not any(f"{PROJECT_PROFILE_PAGE_URL}#basescanMapTitle" in item for item in gate.get("requiredBeforeReady", [])):
+        raise SiteCheckError(f"{label}: missing project profile BaseScan map next-submission gate")
     if not any(
         DOMAIN_EMAIL_EVIDENCE_PAGE_URL in item
         or "domain email evidence packet" in item
@@ -1714,6 +1722,7 @@ def validate_basescan_handoff_page(text: str) -> None:
         "Project Email Address: support@gcagochina.com",
         "Copy/Paste Evidence Links",
         "GitHub source repository: https://github.com/timchen078/gca_token",
+        "Project profile and BaseScan reviewer map: https://gcagochina.com/project-profile.html#basescanMapTitle",
         "Copy/Paste Market And Supply",
         "Official market route: GCA/USDT",
         "Reserve boundary: Do not describe the reserve as locked",
@@ -1729,6 +1738,7 @@ def validate_basescan_handoff_page(text: str) -> None:
         "2026-05-30: MX/SPF/DKIM/DMARC present",
         "Team Transparency",
         "Project Clarity",
+        "Project Profile Map",
         "Domain Email",
         "Contract Evidence",
         "Supply Disclosure",
@@ -1748,6 +1758,7 @@ def validate_basescan_handoff_page(text: str) -> None:
         "Base Mainnet chain ID 8453",
         "team.html",
         "tim-chen.html",
+        "project-profile.html#basescanMapTitle",
         "domain-email.html",
         "domain-email-evidence.html",
         "basescan-preflight.html",
@@ -1823,6 +1834,7 @@ def validate_basescan_handoff_json(text: str) -> None:
     for expected_page in (
         BASESCAN_HANDOFF_PAGE_URL,
         BASESCAN_PREFLIGHT_PAGE_URL,
+        PROJECT_PROFILE_PAGE_URL,
         REVIEWER_KIT_PAGE_URL,
         DOMAIN_EMAIL_PAGE_URL,
         TIM_CHEN_PROFILE_PAGE_URL,
@@ -1849,6 +1861,7 @@ def validate_basescan_handoff_json(text: str) -> None:
         "Please review the updated GCA token profile metadata",
         "Project Email Address: support@gcagochina.com",
         "Tim Chen professional profile: https://gcagochina.com/tim-chen.html",
+        "Project profile and BaseScan reviewer map: https://gcagochina.com/project-profile.html#basescanMapTitle",
         "Official market route: GCA/USDT",
         "Reserve boundary: Do not describe the reserve as locked",
         "Access and member-benefit boundaries",
@@ -1875,6 +1888,8 @@ def validate_basescan_handoff_json(text: str) -> None:
     if links.get("baseScanHandoff") != BASESCAN_HANDOFF_URL:
         raise SiteCheckError(f"{label}: wrong handoff data link")
     for key, expected in (
+        ("projectProfilePage", PROJECT_PROFILE_PAGE_URL),
+        ("projectProfileBaseScanMap", f"{PROJECT_PROFILE_PAGE_URL}#basescanMapTitle"),
         ("reviewerKitPage", REVIEWER_KIT_PAGE_URL),
         ("baseScanPreflightPage", BASESCAN_PREFLIGHT_PAGE_URL),
         ("baseScanRemediationPage", BASESCAN_REMEDIATION_PAGE_URL),
@@ -1901,6 +1916,7 @@ def validate_basescan_handoff_json(text: str) -> None:
         "contract, supply, and market evidence",
         "implemented-domain-email-ready",
         TIM_CHEN_PROFILE_PAGE_URL,
+        f"{PROJECT_PROFILE_PAGE_URL}#basescanMapTitle",
         DOMAIN_EMAIL_EVIDENCE_PAGE_URL,
         TECHNICAL_REPORT_PAGE_URL,
         LIQUIDITY_PAGE_URL,
@@ -11554,6 +11570,10 @@ def validate_reviewer_kit_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong contractAddress")
     if links.get("verify") != "https://gcagochina.com/verify.html":
         raise SiteCheckError(f"{label}: wrong verify link")
+    if links.get("projectProfilePage") != PROJECT_PROFILE_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong projectProfilePage")
+    if links.get("projectProfileBaseScanMap") != f"{PROJECT_PROFILE_PAGE_URL}#basescanMapTitle":
+        raise SiteCheckError(f"{label}: wrong projectProfileBaseScanMap")
     if links.get("reviewerKitPage") != REVIEWER_KIT_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong reviewerKitPage")
     if links.get("reviewerKit") != REVIEWER_KIT_URL:
@@ -11698,6 +11718,7 @@ def validate_reviewer_kit_json(text: str) -> None:
     handoff_ids = {item.get("id") for item in handoff.get("evidenceIndex", [])}
     for expected_id in (
         "founder-team-transparency",
+        "project-profile-return-reason-map",
         "domain-email-plan",
         "domain-email-evidence-checklist",
         "basescan-preflight",
@@ -11713,6 +11734,7 @@ def validate_reviewer_kit_json(text: str) -> None:
     handoff_text = json.dumps(handoff)
     for expected in (
         TIM_CHEN_PROFILE_PAGE_URL,
+        f"{PROJECT_PROFILE_PAGE_URL}#basescanMapTitle",
         DOMAIN_EMAIL_PAGE_URL,
         DOMAIN_EMAIL_EVIDENCE_PAGE_URL,
         BASESCAN_PREFLIGHT_PAGE_URL,
@@ -11753,6 +11775,8 @@ def validate_reviewer_kit_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong liquidity evidence link")
     if payload.get("evidenceLinks", {}).get("baseScanResubmissionHandoff") != BASESCAN_HANDOFF_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong BaseScan handoff evidence link")
+    if payload.get("evidenceLinks", {}).get("projectProfileBaseScanMap") != f"{PROJECT_PROFILE_PAGE_URL}#basescanMapTitle":
+        raise SiteCheckError(f"{label}: wrong project profile BaseScan map evidence link")
     if payload.get("evidenceLinks", {}).get("custodyRoadmap") != CUSTODY_ROADMAP_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong custody roadmap evidence link")
     if payload.get("evidenceLinks", {}).get("domainEmailSetupPlan") != DOMAIN_EMAIL_PAGE_URL:
@@ -11783,6 +11807,8 @@ def validate_reviewer_kit_page(text: str) -> None:
     assert_contains(text, "BaseScan Resubmission Handoff", label)
     assert_contains(text, "BaseScan Handoff", label)
     assert_contains(text, "basescan-handoff.html", label)
+    assert_contains(text, "Project Profile Map", label)
+    assert_contains(text, "project-profile.html#basescanMapTitle", label)
     assert_contains(text, "Readable Reviewer Path", label)
     assert_contains(text, "Base Mainnet / 8453", label)
     assert_contains(text, MAINNET_ADDRESS, label)
@@ -11800,6 +11826,8 @@ def validate_reviewer_kit_page(text: str) -> None:
     assert_contains(text, "readyForBaseScanResubmission", label)
     assert_contains(text, "submit one clean owner-controlled request", label)
     assert_contains(text, "Founder / team transparency", label)
+    assert_contains(text, "Return-reason map", label)
+    assert_contains(text, "Project Profile BaseScan reviewer map", label)
     assert_contains(text, "Team profile", label)
     assert_contains(text, "Tim Chen professional profile", label)
     assert_contains(text, "Domain Email Gate", label)
@@ -11885,6 +11913,10 @@ def validate_platform_replies_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong reviewerKitPage")
     if links.get("reviewerKit") != REVIEWER_KIT_URL:
         raise SiteCheckError(f"{label}: wrong reviewerKit")
+    if links.get("projectProfilePage") != PROJECT_PROFILE_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong projectProfilePage")
+    if links.get("projectProfileBaseScanMap") != f"{PROJECT_PROFILE_PAGE_URL}#basescanMapTitle":
+        raise SiteCheckError(f"{label}: wrong projectProfileBaseScanMap")
     if links.get("teamPage") != TEAM_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong teamPage")
     if links.get("timChenProfessionalProfile") != TIM_CHEN_PROFILE_PAGE_URL:
@@ -11951,6 +11983,7 @@ def validate_platform_replies_json(text: str) -> None:
     basescan_body = "\n".join(templates.get("baseScanProfile", {}).get("body", []))
     for expected in (
         "BaseScan returned the request again as information-insufficient on 2026-05-23",
+        "Project profile and BaseScan reviewer map: https://gcagochina.com/project-profile.html#basescanMapTitle",
         "Tim Chen professional profile: https://gcagochina.com/tim-chen.html",
         "Domain email setup plan: https://gcagochina.com/domain-email.html",
         "Domain email setup data: https://gcagochina.com/domain-email.json",
@@ -11959,6 +11992,7 @@ def validate_platform_replies_json(text: str) -> None:
         "Domain email activation evidence packet: https://gcagochina.com/domain-email.html#evidenceTitle",
         "Latest domain email DNS snapshot: https://gcagochina.com/domain-email.html#snapshotTitle",
         "Return-notice response:",
+        "the project profile BaseScan reviewer map",
         "the current active project-domain email is support@gcagochina.com",
         "public evidence checklist at https://gcagochina.com/domain-email-evidence.html defines the provider-status",
         "private screenshots remain local until a reviewer asks for them",
@@ -12012,6 +12046,7 @@ def validate_platform_replies_page(text: str) -> None:
     assert_contains(text, "Wallet Warning Reviewer", label)
     assert_contains(text, "BaseScan Token Profile", label)
     assert_contains(text, "BaseScan returned the request again as information-insufficient on 2026-05-23", label)
+    assert_contains(text, "Project profile and BaseScan reviewer map: https://gcagochina.com/project-profile.html#basescanMapTitle", label)
     assert_contains(text, "Tim Chen professional profile: https://gcagochina.com/tim-chen.html", label)
     assert_contains(text, "BaseScan remediation tracker: https://gcagochina.com/basescan-remediation.html", label)
     assert_contains(text, "Domain email setup plan: https://gcagochina.com/domain-email.html", label)
@@ -12026,6 +12061,7 @@ def validate_platform_replies_page(text: str) -> None:
     assert_contains(text, "read-only DNS snapshot shows MX/SPF/DKIM/DMARC present", label)
     assert_contains(text, "readyForBaseScanEmailEvidence is true", label)
     assert_contains(text, "activation evidence packet defines the provider-status, DNS, inbound, outbound, and website-email proof", label)
+    assert_contains(text, "the project profile BaseScan reviewer map", label)
     assert_contains(text, "Metadata Correction", label)
     assert_contains(text, "Local Review Package Handoff", label)
     assert_contains(text, "Community Moderator", label)

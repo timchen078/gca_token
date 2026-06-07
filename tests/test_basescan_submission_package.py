@@ -35,6 +35,7 @@ READY_VALUES = {
     "communityUrl": "https://gcagochina.com/community.json",
     "externalReviewStatusPageUrl": "https://gcagochina.com/external-reviews.html",
     "externalReviewStatusUrl": "https://gcagochina.com/external-reviews.json",
+    "projectProfilePageUrl": "https://gcagochina.com/project-profile.html",
     "projectJsonUrl": "https://gcagochina.com/project.json",
     "tokenListUrl": "https://gcagochina.com/tokenlist.json",
     "wellKnownTokenIdentityUrl": "https://gcagochina.com/.well-known/gca-token.json",
@@ -129,6 +130,8 @@ class BaseScanSubmissionPackageTests(unittest.TestCase):
         self.assertIn("prior information-insufficient return reasons", package["copyPasteBlocks"]["baseScanReviewerComment"])
         self.assertIn("Official project-domain email", package["copyPasteBlocks"]["baseScanReviewerComment"])
         self.assertIn("Logo, brand, and metadata evidence", package["copyPasteBlocks"]["baseScanReviewerComment"])
+        self.assertIn("Consolidated project profile and return-reason map", package["copyPasteBlocks"]["baseScanReviewerComment"])
+        self.assertIn("https://gcagochina.com/project-profile.html#basescanMapTitle", package["copyPasteBlocks"]["baseScanReviewerComment"])
         self.assertIn("Access and member-benefit boundaries", package["copyPasteBlocks"]["baseScanReviewerComment"])
         self.assertIn("Public email guard", package["copyPasteBlocks"]["baseScanReviewerComment"])
         self.assertIn("0 tracked public files publishing forbidden legacy", package["copyPasteBlocks"]["baseScanReviewerComment"])
@@ -137,6 +140,7 @@ class BaseScanSubmissionPackageTests(unittest.TestCase):
         self.assertIn("No automatic token claim", package["copyPasteBlocks"]["baseScanReviewerComment"])
         self.assertIn("not claiming BaseScan token profile approval", package["copyPasteBlocks"]["baseScanReviewerComment"])
         self.assertIn("Tim Chen professional profile", package["copyPasteBlocks"]["evidenceLinksPlainText"])
+        self.assertIn("Project profile and BaseScan reviewer map: https://gcagochina.com/project-profile.html#basescanMapTitle", package["copyPasteBlocks"]["evidenceLinksPlainText"])
         self.assertIn("Review queue contract: https://gcagochina.com/review-queue.html", package["copyPasteBlocks"]["evidenceLinksPlainText"])
         self.assertIn("GCA/USDT", package["copyPasteBlocks"]["marketAndSupplyPlainText"])
         self.assertIn("Access API: https://gcagochina.com/access-api.html", package["copyPasteBlocks"]["accessAndClaimBoundaryPlainText"])
@@ -167,6 +171,8 @@ class BaseScanSubmissionPackageTests(unittest.TestCase):
         self.assertIn("Ready for owner submission: `true`", markdown)
         self.assertIn("Reviewer Remediation Summary", markdown)
         self.assertIn("Public Email Guard", markdown)
+        self.assertIn("Project profile and BaseScan reviewer map", markdown)
+        self.assertIn("https://gcagochina.com/project-profile.html#basescanMapTitle", markdown)
         self.assertIn("Files publishing forbidden legacy email: `0`", markdown)
         self.assertIn("redacted-non-domain-legacy-inbox", markdown)
         self.assertNotIn("cxy070800@gmail.com", markdown)

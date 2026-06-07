@@ -13,6 +13,8 @@
   "officialLinks": {
     "website": "https://gcagochina.com/",
     "verify": "https://gcagochina.com/verify.html",
+    "projectProfilePage": "https://gcagochina.com/project-profile.html",
+    "projectProfileBaseScanMap": "https://gcagochina.com/project-profile.html#basescanMapTitle",
     "reviewerKitPage": "https://gcagochina.com/reviewer-kit.html",
     "reviewerKit": "https://gcagochina.com/reviewer-kit.json",
     "platformRepliesPage": "https://gcagochina.com/platform-replies.html",
@@ -166,6 +168,12 @@
         "status": "published"
       },
       {
+        "id": "project-profile-return-reason-map",
+        "label": "Consolidated project profile and BaseScan return-reason map",
+        "page": "https://gcagochina.com/project-profile.html#basescanMapTitle",
+        "status": "published"
+      },
+      {
         "id": "domain-email-plan",
         "label": "Domain email setup plan",
         "page": "https://gcagochina.com/domain-email.html",
@@ -231,6 +239,7 @@
   },
   "evidenceLinks": {
     "identity": "https://gcagochina.com/verify.html",
+    "projectProfileBaseScanMap": "https://gcagochina.com/project-profile.html#basescanMapTitle",
     "baseScanResubmissionHandoff": "https://gcagochina.com/basescan-handoff.html",
     "brandAssets": "https://gcagochina.com/brand-kit.html",
     "sourceAndOnchainProofs": "https://gcagochina.com/onchain-proofs.html",
@@ -344,7 +353,7 @@
       "Use the reviewer kit page and JSON when a platform asks for centralized public evidence.",
       "If a reviewer asks for local member-ledger evidence, export a public redacted review package and verify its digest before sharing.",
       "Do not send duplicate Blockaid reports unless Blockaid, MetaMask, or Uniswap asks for more information.",
-      "Use the domain email setup plan at https://gcagochina.com/domain-email.html and the evidence checklist at https://gcagochina.com/domain-email-evidence.html; support@gcagochina.com is active and the 2026-05-30 DNS snapshot shows MX/SPF/DKIM/DMARC present, so `readyForBaseScanEmailEvidence` is true. The final BaseScan owner package was regenerated on 2026-06-06T11:10:54Z and the daily public status snapshot was refreshed on 2026-06-07T13:06:12Z.",
+      "Use the project profile BaseScan reviewer map at https://gcagochina.com/project-profile.html#basescanMapTitle, the domain email setup plan at https://gcagochina.com/domain-email.html, and the evidence checklist at https://gcagochina.com/domain-email-evidence.html; support@gcagochina.com is active and the 2026-05-30 DNS snapshot shows MX/SPF/DKIM/DMARC present, so `readyForBaseScanEmailEvidence` is true. The final BaseScan owner package was regenerated on 2026-06-06T11:10:54Z and the daily public status snapshot was refreshed on 2026-06-07T13:06:12Z.",
       "Before resubmitting, keep the activation evidence packet available at https://gcagochina.com/domain-email.html#evidenceTitle, rerun the final preflight, and include the published Tim Chen professional profile URL.",
       "Keep the official GCA/USDT pool, logo, website, Telegram, X, and JSON links consistent."
     ]

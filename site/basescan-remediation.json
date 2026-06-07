@@ -17,6 +17,8 @@
   "officialIdentity": {
     "website": "https://gcagochina.com/",
     "startPage": "https://gcagochina.com/start.html",
+    "projectProfilePage": "https://gcagochina.com/project-profile.html",
+    "projectProfileBaseScanMap": "https://gcagochina.com/project-profile.html#basescanMapTitle",
     "about": "https://gcagochina.com/about.html",
     "team": "https://gcagochina.com/team.html",
     "timChenProfessionalProfile": "https://gcagochina.com/tim-chen.html",
@@ -97,7 +99,7 @@
     {
       "id": "clear-project-information",
       "status": "implemented",
-      "evidence": "Readable project profile, start page, whitepaper, product spec, trust center, and status pages are published."
+      "evidence": "Readable project profile, BaseScan return-reason map, start page, whitepaper, product spec, trust center, and status pages are published at https://gcagochina.com/project-profile.html#basescanMapTitle."
     },
     {
       "id": "placeholder-and-broken-link-review",
@@ -134,6 +136,7 @@
     "requiredBeforeReady": [
       "Use support@gcagochina.com as the official BaseScan project email.",
       "Keep the public domain email evidence checklist available at https://gcagochina.com/domain-email-evidence.html and retain private mailbox evidence for reviewer follow-up.",
+      "Include the Project Profile BaseScan reviewer map https://gcagochina.com/project-profile.html#basescanMapTitle in the next BaseScan submission.",
       "Include the published Tim Chen professional profile URL https://gcagochina.com/tim-chen.html in the next BaseScan submission.",
       "Run python3 tools/check_basescan_resubmission_readiness.py --json --require-ready and proceed only when readyForBaseScanResubmission is true.",
       "Use the updated BaseScan reply template at https://gcagochina.com/platform-replies.html and include GitHub, team page, start page, support page, and whitepaper."

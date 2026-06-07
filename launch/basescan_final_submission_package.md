@@ -9,7 +9,7 @@
 
 - Return reason: official website, support path, or project information was unclear
   Response: Published a readable website, support page, whitepaper, external review status, and project documentation.
-  Evidence: https://gcagochina.com/ | https://gcagochina.com/support.html | https://gcagochina.com/whitepaper.html | https://gcagochina.com/external-reviews.html
+  Evidence: https://gcagochina.com/ | https://gcagochina.com/support.html | https://gcagochina.com/whitepaper.html | https://gcagochina.com/external-reviews.html | https://gcagochina.com/project-profile.html#basescanMapTitle
 - Return reason: sender email did not match the official project domain
   Response: Switched the official project contact to the active domain mailbox support@gcagochina.com.
   Evidence: support@gcagochina.com | https://gcagochina.com/domain-email.html
@@ -42,6 +42,7 @@ This resubmission directly addresses the prior information-insufficient return r
 - Official project-domain email: support@gcagochina.com
 - Founder/team transparency: https://gcagochina.com/team.html and https://gcagochina.com/tim-chen.html
 - Project documentation and status: https://gcagochina.com/whitepaper.html and https://gcagochina.com/external-reviews.html
+- Consolidated project profile and return-reason map: https://gcagochina.com/project-profile.html#basescanMapTitle
 - Logo, brand, and metadata evidence: https://gcagochina.com/brand-kit.html
 - Contract/source and remediation evidence: https://gcagochina.com/basescan-remediation.html
 - Access and member-benefit boundaries: https://gcagochina.com/review-queue.html and https://gcagochina.com/release-gates.html
@@ -52,6 +53,7 @@ Official website: https://gcagochina.com/
 Official project email: support@gcagochina.com
 Founder/team transparency: https://gcagochina.com/team.html and https://gcagochina.com/tim-chen.html
 Whitepaper: https://gcagochina.com/whitepaper.html
+Project profile and BaseScan reviewer map: https://gcagochina.com/project-profile.html#basescanMapTitle
 Public remediation tracker: https://gcagochina.com/basescan-remediation.html
 Domain email evidence plan: https://gcagochina.com/domain-email.html
 Source repository: https://github.com/timchen078/gca_token
@@ -93,6 +95,7 @@ Support: https://gcagochina.com/support.html
 Brand Kit: https://gcagochina.com/brand-kit.html
 Community: https://gcagochina.com/community.html
 External review status: https://gcagochina.com/external-reviews.html
+Project profile and BaseScan reviewer map: https://gcagochina.com/project-profile.html#basescanMapTitle
 Domain email evidence plan: https://gcagochina.com/domain-email.html
 BaseScan remediation tracker: https://gcagochina.com/basescan-remediation.html
 GitHub source repository: https://github.com/timchen078/gca_token
@@ -151,6 +154,7 @@ Not automatic: No automatic token claim, no self-service member-benefit transfer
 - Whitepaper: `https://gcagochina.com/whitepaper.html`
 - Support: `https://gcagochina.com/support.html`
 - Brand Kit: `https://gcagochina.com/brand-kit.html`
+- Project profile and BaseScan reviewer map: `https://gcagochina.com/project-profile.html#basescanMapTitle`
 - Domain email evidence plan: `https://gcagochina.com/domain-email.html`
 - BaseScan remediation: `https://gcagochina.com/basescan-remediation.html`
 
