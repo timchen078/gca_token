@@ -218,6 +218,87 @@
       "url": "https://x.com/GCAAIGoChina"
     }
   ],
+  "baseScanReviewerReasonMap": {
+    "status": "published-on-project-profile",
+    "sourceNoticeDate": "2026-05-23",
+    "purpose": "Map BaseScan's information-insufficient return reasons to current public GCA evidence before the next owner-controlled token profile resubmission.",
+    "pageUrl": "https://gcagochina.com/project-profile.html#basescanMapTitle",
+    "items": [
+      {
+        "id": "website-accessible-safe",
+        "returnReason": "official website is not accessible or safe to visit",
+        "status": "implemented",
+        "evidencePages": [
+          "https://gcagochina.com/",
+          "https://gcagochina.com/start.html",
+          "https://gcagochina.com/site-map.html",
+          "https://gcagochina.com/daily-status.html"
+        ]
+      },
+      {
+        "id": "clear-project-token-information",
+        "returnReason": "unclear token or project information",
+        "status": "implemented",
+        "evidencePages": [
+          "https://gcagochina.com/project-profile.html",
+          "https://gcagochina.com/about.html",
+          "https://gcagochina.com/whitepaper.html",
+          "https://gcagochina.com/product.html",
+          "https://gcagochina.com/roadmap.html",
+          "https://gcagochina.com/status.html"
+        ]
+      },
+      {
+        "id": "placeholder-broken-link-review",
+        "returnReason": "placeholders, unupdated images, or broken links",
+        "status": "implemented-with-public-site-check",
+        "evidencePages": [
+          "https://gcagochina.com/project-profile.html",
+          "https://gcagochina.com/brand-kit.html",
+          "https://gcagochina.com/data.html"
+        ],
+        "checkCommand": "python3 tools/check_public_site.py --base-url https://gcagochina.com/ --timeout 20"
+      },
+      {
+        "id": "founder-team-transparency",
+        "returnReason": "project does not provide transparent founder and team information with public professional profiles",
+        "status": "implemented-official-domain-equivalent",
+        "evidencePages": [
+          "https://gcagochina.com/team.html#tim-chen",
+          "https://gcagochina.com/tim-chen.html",
+          "https://github.com/timchen078/gca_token",
+          "https://x.com/GCAAIGoChina",
+          "https://t.me/gcagochinaofficial"
+        ],
+        "note": "Add LinkedIn later only if BaseScan specifically requires third-party social-network evidence."
+      },
+      {
+        "id": "domain-email-match",
+        "returnReason": "sender email does not match the token or project official domain",
+        "status": "implemented-domain-email-ready",
+        "officialEmail": "support@gcagochina.com",
+        "evidencePages": [
+          "https://gcagochina.com/domain-email.html",
+          "https://gcagochina.com/domain-email-evidence.html",
+          "https://gcagochina.com/basescan-preflight.html"
+        ],
+        "dnsEvidence": "2026-05-30 snapshot shows MX/SPF/DKIM/DMARC present."
+      },
+      {
+        "id": "logo-social-metadata",
+        "returnReason": "missing or inconsistent logo, social, whitepaper, or project metadata links",
+        "status": "implemented",
+        "evidencePages": [
+          "https://gcagochina.com/assets/gca-logo.svg",
+          "https://gcagochina.com/brand-kit.html",
+          "https://gcagochina.com/community.html",
+          "https://gcagochina.com/whitepaper.html",
+          "https://gcagochina.com/reviewer-kit.html"
+        ]
+      }
+    ],
+    "currentBoundary": "BaseScan source and deployer-wallet ownership verification are complete. Public token profile metadata remains pending until BaseScan publishes it."
+  },
   "market": {
     "officialPair": "GCA/USDT",
     "dex": "Uniswap v4",
