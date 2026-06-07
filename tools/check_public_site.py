@@ -5543,6 +5543,7 @@ def validate_announcements_page(text: str) -> None:
     assert_contains(text, FIRST_X_POST_URL, label)
     assert_contains(text, LATEST_X_POST_URL, label)
     assert_contains(text, RADAR_ISSUE_004_PAGE_URL, label)
+    assert_contains(text, PRODUCT_PAGE_URL, label)
     assert_contains(text, SECURITY_PAGE_URL, label)
     assert_contains(text, "No return promises", label)
     assert_contains(text, "operator-reviewed public updates", label)
@@ -5616,10 +5617,10 @@ def validate_announcements_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong latestXPost")
     if "2026-06-06T11:10:54Z" not in latest_post.get("currentStatusAfterPost", ""):
         raise SiteCheckError(f"{label}: missing final package refresh timestamp")
-    if not any(item.get("recommendedLink") == SECURITY_PAGE_URL for item in payload.get("nextContentQueue", []) if isinstance(item, dict)):
+    if not any(item.get("topic") == "Product Utility Intro" and item.get("recommendedLink") == PRODUCT_PAGE_URL for item in payload.get("nextContentQueue", []) if isinstance(item, dict)):
+        raise SiteCheckError(f"{label}: missing product utility intro queue link")
+    if not any(item.get("topic") == "Security Boundary" and item.get("recommendedLink") == SECURITY_PAGE_URL for item in payload.get("nextContentQueue", []) if isinstance(item, dict)):
         raise SiteCheckError(f"{label}: missing security boundary queue link")
-    if not any(item.get("recommendedLink") == "https://gcagochina.com/product.html" for item in payload.get("nextContentQueue", []) if isinstance(item, dict)):
-        raise SiteCheckError(f"{label}: missing product spec queue link")
     if payload.get("campaignCalendar", {}).get("status") != "public-campaign-calendar-published":
         raise SiteCheckError(f"{label}: wrong campaign calendar status")
     content_library = payload.get("contentLibrary", {})
@@ -5694,7 +5695,7 @@ def validate_campaign_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong pageUrl")
     if payload.get("status") != "public-campaign-calendar-published":
         raise SiteCheckError(f"{label}: wrong status")
-    if payload.get("lastUpdated") != "2026-06-06":
+    if payload.get("lastUpdated") != "2026-06-07":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
@@ -5712,7 +5713,11 @@ def validate_campaign_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong campaign window content library")
     if draft.get("targetDate") != "2026-06-07":
         raise SiteCheckError(f"{label}: wrong next draft date")
-    if draft.get("recommendedLink") != SECURITY_PAGE_URL:
+    if draft.get("id") != "x-product-utility-intro-001":
+        raise SiteCheckError(f"{label}: wrong next draft id")
+    if draft.get("topic") != "Product Utility Intro":
+        raise SiteCheckError(f"{label}: wrong next draft topic")
+    if draft.get("recommendedLink") != PRODUCT_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong next draft link")
     if not isinstance(queue, list) or len(queue) != 10:
         raise SiteCheckError(f"{label}: expected 10 queued posts")
@@ -5796,8 +5801,8 @@ def validate_content_library_page(text: str) -> None:
         "Member Access Buildout",
         "Verification First",
         "Official Market Route",
+        "Product Utility Intro",
         "Security Boundary",
-        "Product Spec",
         "Build Update Recap",
         "No return promises",
         "Official links first. No price or return claim.",
@@ -5828,7 +5833,7 @@ def validate_content_library_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong pageUrl")
     if payload.get("status") != "public-bilingual-content-library-published":
         raise SiteCheckError(f"{label}: wrong status")
-    if payload.get("lastUpdated") != "2026-06-06":
+    if payload.get("lastUpdated") != "2026-06-07":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
@@ -5852,6 +5857,8 @@ def validate_content_library_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing issue 004 recommended link")
     if not any(item.get("recommendedLink") == MEMBER_ACCESS_BRIEF_001_PAGE_URL for item in drafts if isinstance(item, dict)):
         raise SiteCheckError(f"{label}: missing member access brief recommended link")
+    if not any(item.get("topic") == "Product Utility Intro" and item.get("recommendedLink") == PRODUCT_PAGE_URL for item in drafts if isinstance(item, dict)):
+        raise SiteCheckError(f"{label}: missing product utility intro draft")
     if not any(item.get("topic") == "Security Boundary" for item in drafts if isinstance(item, dict)):
         raise SiteCheckError(f"{label}: missing security boundary draft")
     for item in drafts:
@@ -5932,6 +5939,7 @@ def validate_publishing_desk_page(text: str) -> None:
         "https://t.me/gcagochinaofficial",
         CONTENT_LIBRARY_PAGE_URL,
         CAMPAIGN_PAGE_URL,
+        PRODUCT_PAGE_URL,
         SECURITY_PAGE_URL,
         LATEST_X_POST_URL,
         MAINNET_ADDRESS,
@@ -5953,7 +5961,7 @@ def validate_publishing_desk_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong pageUrl")
     if payload.get("status") != "public-publishing-desk-published":
         raise SiteCheckError(f"{label}: wrong status")
-    if payload.get("lastUpdated") != "2026-06-06":
+    if payload.get("lastUpdated") != "2026-06-07":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
@@ -5969,13 +5977,13 @@ def validate_publishing_desk_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong next action status")
     if next_action.get("targetDate") != "2026-06-07":
         raise SiteCheckError(f"{label}: wrong targetDate")
-    if next_action.get("sourceDraftId") != "gca-draft-2026-06-07-security":
+    if next_action.get("sourceDraftId") != "gca-draft-2026-06-07-product-intro":
         raise SiteCheckError(f"{label}: wrong sourceDraftId")
-    if next_action.get("topic") != "Security Boundary":
+    if next_action.get("topic") != "Product Utility Intro":
         raise SiteCheckError(f"{label}: wrong topic")
     if next_action.get("channels") != ["X", "Telegram"]:
         raise SiteCheckError(f"{label}: wrong channels")
-    if next_action.get("recommendedLink") != SECURITY_PAGE_URL:
+    if next_action.get("recommendedLink") != PRODUCT_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong recommendedLink")
     if next_action.get("contentLibrary") != CONTENT_LIBRARY_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong contentLibrary")
@@ -9471,7 +9479,7 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong content campaign url")
     if payload.get("contentCampaign", {}).get("draftCount") != 10:
         raise SiteCheckError(f"{label}: wrong content campaign draft count")
-    if payload.get("contentCampaign", {}).get("nextDraftLink") != SECURITY_PAGE_URL:
+    if payload.get("contentCampaign", {}).get("nextDraftLink") != PRODUCT_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong content campaign nextDraftLink")
     content_library = payload.get("contentLibrary", {})
     if content_library.get("status") != "public-bilingual-content-library-published":
