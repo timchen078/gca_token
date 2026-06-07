@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "check": "node --check src/worker.mjs",
+    "deploy:dry-run": "wrangler deploy --dry-run",
+    "deploy:readiness": "python3 ../../tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare",
     "deploy": "wrangler deploy",
     "d1:create": "wrangler d1 create gca_registration",
     "d1:migrate:local": "wrangler d1 migrations apply gca_registration --local",

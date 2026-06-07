@@ -1,6 +1,7 @@
 name = "gca-registration-api"
 main = "src/worker.mjs"
 compatibility_date = "2026-05-19"
+account_id = "5d966731ce064f1f6b252b36d1e16d94"
 workers_dev = true
 preview_urls = false
 

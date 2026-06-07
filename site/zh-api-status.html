@@ -390,6 +390,10 @@
             <p class="note"><code>GET /gca/credit-ledger</code> 和 <code>GET /gca/member-ledger</code> 都是管理员 token 保护接口，公网不能直接读用户账本。</p>
           </article>
           <article class="card">
+            <h3>Credit 使用记录</h3>
+            <p class="note"><code>GET/POST /gca/credit-usage</code> 已完成源码、D1 迁移和 Worker dry-run；正式发布仍等待 Cloudflare Workers service 权限通过。</p>
+          </article>
+          <article class="card">
             <h3>未来域名</h3>
             <p class="note"><code>api.gcagochina.com</code> 仍等待 Cloudflare DNS 区域权限；当前正式入口先使用 workers.dev 地址。</p>
           </article>
@@ -406,6 +410,11 @@
           <h2>本地管理员检查</h2>
           <p class="note">这个命令只适合运营者在本地执行，用本地 token 读取少量样本，确认管理员读取接口可用。不要把 token 文件公开。</p>
           <pre>python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5</pre>
+        </div>
+        <div class="panel">
+          <h2>部署权限检查</h2>
+          <p class="note">发布新的 Worker 版本前先运行这个命令，确认打包、D1 可见性和 Workers 发布权限。</p>
+          <pre>python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth</pre>
         </div>
       </section>
 

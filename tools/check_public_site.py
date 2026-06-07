@@ -3296,6 +3296,9 @@ def validate_zh_api_status_page(text: str) -> None:
         "GET /gca/contact-suppressions",
         "GET /gca/credit-ledger",
         "GET /gca/member-ledger",
+        "GET/POST /gca/credit-usage",
+        "部署权限检查",
+        "python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth",
         "api.gcagochina.com",
         "python3 tools/check_gca_registration_api.py --public-only --timeout 30",
         "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5",
@@ -7844,6 +7847,9 @@ def validate_api_status_page(text: str) -> None:
         "/gca/member-access",
         "/gca/credit-ledger",
         "/gca/member-ledger",
+        "/gca/credit-usage",
+        "Deploy Readiness",
+        "python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth",
         "Public visitors should receive an authorization error",
         "Public visitors cannot read the suppression ledger",
         "python3 tools/check_gca_registration_api.py --public-only --timeout 30",
@@ -7963,8 +7969,24 @@ def validate_api_status_json(text: str) -> None:
         if endpoint.get("publicLedgerReadable") is not False:
             raise SiteCheckError(f"{label}: admin endpoint ledger must not be public {endpoint_id}")
 
+    credit_usage = admin_endpoints.get("credit-usage-read-write")
+    if credit_usage is None:
+        raise SiteCheckError(f"{label}: missing credit usage deploy-pending endpoint")
+    if credit_usage.get("method") != "GET/POST" or credit_usage.get("path") != "/gca/credit-usage":
+        raise SiteCheckError(f"{label}: wrong credit usage endpoint route")
+    if credit_usage.get("status") != "prepared-worker-deploy-permission-pending":
+        raise SiteCheckError(f"{label}: wrong credit usage endpoint status")
+    if credit_usage.get("requiresAdminReadToken") is not True or credit_usage.get("publicLedgerReadable") is not False:
+        raise SiteCheckError(f"{label}: wrong credit usage admin boundary")
+    if credit_usage.get("workerDryRunPassed") is not True:
+        raise SiteCheckError(f"{label}: credit usage Worker dry run should be recorded as passed")
+
     if checks.get("tool") != "tools/check_gca_registration_api.py":
         raise SiteCheckError(f"{label}: wrong check tool")
+    if checks.get("workerDeployReadinessTool") != "tools/check_gca_worker_deploy_readiness.py":
+        raise SiteCheckError(f"{label}: wrong deploy readiness tool")
+    if checks.get("workerDeployReadinessCommand") != "python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth":
+        raise SiteCheckError(f"{label}: wrong deploy readiness command")
     if checks.get("publicOnlyCommand") != "python3 tools/check_gca_registration_api.py --public-only --timeout 30":
         raise SiteCheckError(f"{label}: wrong public check command")
     if checks.get("adminCommand") != "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5":

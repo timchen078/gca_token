@@ -12,6 +12,8 @@ https://gca-registration-api.gcagochina.workers.dev/gca/wallet-verifications
 https://gca-registration-api.gcagochina.workers.dev/gca/access-config
 ```
 
+The credit usage route is implemented in source and its D1 migration has been applied, but the updated Worker has not been published yet because the current Cloudflare authorization can see D1 but cannot publish Workers services. Treat `/gca/credit-usage` as deploy-ready, not production-live, until `tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth` passes and `wrangler deploy` succeeds.
+
 ## What It Stores
 
 - email
@@ -69,8 +71,11 @@ Public registration, contact-suppression, wallet-verification, and member-access
 - Public access config endpoint: `GET /gca/access-config`
 - Admin wallet verification endpoint: `GET /gca/wallet-verifications`
 - Admin credit ledger endpoint: `GET /gca/credit-ledger`
+- Admin credit usage endpoint: `GET/POST /gca/credit-usage` prepared in source; pending Worker publish permission
 - Admin member ledger endpoint: `GET /gca/member-ledger`
 - Member D1 migration: `cloudflare/gca-registration-worker/migrations/0003_member_access_ledgers.sql`
+- Credit usage D1 migration: `cloudflare/gca-registration-worker/migrations/0004_credit_usage_ledger.sql`
+- Worker deploy readiness tool: `tools/check_gca_worker_deploy_readiness.py`
 - Admin read secret: configured in Cloudflare as `ADMIN_READ_TOKEN`
 - Privacy hash salt: configured in Cloudflare as `PRIVACY_HASH_SALT`
 - Read-only live API check tool: `tools/check_gca_registration_api.py`
@@ -91,6 +96,8 @@ Public registration, contact-suppression, wallet-verification, and member-access
 
 The future custom domain `api.gcagochina.com` still requires Wrangler to be logged into a Cloudflare account that can see the `gcagochina.com` zone. DNS currently uses Cloudflare nameservers, but the currently authorized account does not contain that zone, so Cloudflare rejects the custom-domain deployment with `The zone "gcagochina.com" does not exist on your account`.
 
+The current `wrangler.toml` includes the Cloudflare `account_id` so Wrangler does not need to auto-discover the account before deploy. If `wrangler d1 list` succeeds but `wrangler deployments list --json` or `wrangler deploy` returns `Authentication error [code: 10000]`, the active Cloudflare token/session is missing Workers service permissions for this account. Re-authorize Wrangler or use an API token with access to the target account and Workers Scripts permissions before publishing the Worker.
+
 ## Deployment Commands
 
 Run these commands from `cloudflare/gca-registration-worker/` after logging in to the correct Cloudflare account:
@@ -108,8 +115,11 @@ Then apply the migration and set required secrets:
 npx wrangler d1 migrations apply gca_registration --remote
 npx wrangler secret put ADMIN_READ_TOKEN
 npx wrangler secret put PRIVACY_HASH_SALT
+npm run deploy:readiness
 npx wrangler deploy
 ```
+
+The readiness command is safe to run before every deploy. It performs static checks, `wrangler deploy --dry-run`, D1 visibility, and a read-only Worker deployment-permission check. It does not write D1 records, deploy the Worker, print `ADMIN_READ_TOKEN`, or read user ledgers.
 
 The current configuration publishes through `workers.dev`. Switch to a Cloudflare custom domain only after the official domain is managed by Cloudflare.
 
