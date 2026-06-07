@@ -5935,6 +5935,7 @@ def validate_publishing_desk_page(text: str) -> None:
         "No return promises",
         "Official links first. No price or return claim.",
         "先核对官方链接。不做价格或收益承诺。",
+        "Product-utility introduction only",
         X_URL,
         "https://t.me/gcagochinaofficial",
         CONTENT_LIBRARY_PAGE_URL,
@@ -5945,6 +5946,7 @@ def validate_publishing_desk_page(text: str) -> None:
         MAINNET_ADDRESS,
     ):
         assert_contains(text, expected, label)
+    assert_not_contains(text, "Member access education only", label)
     assert_not_contains(text, "https://gcagochina.com/publishing-desk.json", label)
     assert_no_forbidden_public_claims(text, label)
 
@@ -5996,6 +5998,8 @@ def validate_publishing_desk_json(text: str) -> None:
     for key in ("xEnglish", "xChinese", "telegram", "hashtags"):
         if not next_action.get(key):
             raise SiteCheckError(f"{label}: missing next action {key}")
+    if "Product-utility introduction only" not in next_action.get("claimBoundary", ""):
+        raise SiteCheckError(f"{label}: wrong product claim boundary")
     if "third-party audit completion before an independent report is public" not in payload.get("doNotPublish", []):
         raise SiteCheckError(f"{label}: missing audit boundary")
     if not any("announcements.json" in item.get("target", "") for item in payload.get("postPublishLedgerUpdate", []) if isinstance(item, dict)):
