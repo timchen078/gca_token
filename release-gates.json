@@ -2,7 +2,7 @@
   "schema": "https://gcagochina.com/release-gates.json",
   "pageUrl": "https://gcagochina.com/release-gates.html",
   "status": "public-release-gates-account-ledger-path-live",
-  "lastUpdated": "2026-06-06",
+  "lastUpdated": "2026-06-07",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "title": "GCA Product Release Gates",
@@ -14,9 +14,9 @@
     "gcaMemberEligibilitySubmissionLive": true,
     "liveTradingEnabled": false,
     "baseScanTokenProfile": "ready-for-owner-resubmission",
-    "baseScanTokenProfileLastCheckedDate": "2026-06-06",
+    "baseScanTokenProfileLastCheckedDate": "2026-06-07",
     "baseScanFinalSubmissionPackageGeneratedAt": "2026-06-06T11:10:54Z",
-    "dailyStatusGeneratedAt": "2026-06-06T12:13:21Z",
+    "dailyStatusGeneratedAt": "2026-06-07T13:06:12Z",
     "baseScanResubmissionReady": true,
     "thirdPartyAudit": "not-completed",
     "liquidityDepth": "starter-depth-only",
@@ -139,7 +139,7 @@
       "requiredBefore": "BaseScan token profile publication claim",
       "publicReference": "https://gcagochina.com/basescan-handoff.html",
       "finalSubmissionPackageGeneratedAt": "2026-06-06T11:10:54Z",
-      "dailyStatusGeneratedAt": "2026-06-06T12:13:21Z",
+      "dailyStatusGeneratedAt": "2026-06-07T13:06:12Z",
       "blocks": [
         "BaseScan token profile approval claim",
         "explorer profile publication claim"
@@ -179,7 +179,7 @@
       "The 10,000 GCA member benefit requires 1,000,000 GCA, 30-day holding evidence, member ledger review, and manual reserve-wallet processing.",
       "Any future trading-related feature must pass risk-control review and simulation or testnet first.",
       "GCA has published a public access operations runbook for manual review handling.",
-      "The latest BaseScan owner submission package was generated on 2026-06-06T11:10:54Z, and the daily public status snapshot was refreshed on 2026-06-06T12:13:21Z."
+      "The latest BaseScan owner submission package was generated on 2026-06-06T11:10:54Z, and the daily public status snapshot was refreshed on 2026-06-07T13:06:12Z."
     ],
     "doNotClaim": [
       "credits are cash, income, reimbursement, trading permission, or transferable value",

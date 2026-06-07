@@ -1,7 +1,7 @@
 {
   "schema": "https://gcagochina.com/basescan-remediation.json",
   "pageUrl": "https://gcagochina.com/basescan-remediation.html",
-  "lastUpdated": "2026-06-06",
+  "lastUpdated": "2026-06-07",
   "projectName": "GCA",
   "tokenSymbol": "GCA",
   "network": "Base Mainnet",
@@ -129,7 +129,7 @@
       "json": "launch/basescan_final_submission_package.json",
       "preflightPage": "https://gcagochina.com/basescan-preflight.html",
       "preflightData": "https://gcagochina.com/basescan-preflight.json",
-      "preflightLastUpdated": "2026-06-06"
+      "preflightLastUpdated": "2026-06-07"
     },
     "requiredBeforeReady": [
       "Use support@gcagochina.com as the official BaseScan project email.",
