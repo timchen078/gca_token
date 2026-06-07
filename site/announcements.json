@@ -118,7 +118,7 @@
     "State that starter-depth liquidity can create high slippage and price impact."
   ],
   "doNotClaim": [
-    "price targets, returns, market predictions, or investment advice",
+    "price targets, returns, market predictions, or unsupported investment-style claims",
     "BaseScan token profile approval before BaseScan publishes it",
     "security-vendor approval or permanent wallet-warning clearance without vendor confirmation",
     "third-party audit completion before an independent report is published",

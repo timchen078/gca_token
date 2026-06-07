@@ -25,7 +25,7 @@
     "Keep the wording factual and project-build focused."
   ],
   "doNotAdd": [
-    "return promises, price targets, market predictions, or investment advice",
+    "return promises, price targets, market predictions, or unsupported investment-style claims",
     "third-party audit claim until an independent report is public",
     "BaseScan or security-vendor approval claim unless the platform confirms it",
     "LP lock, reserve lock, buyback, or price-support claim before evidence exists"
@@ -42,14 +42,14 @@
         "GCA Weekly Go China Radar is our public rhythm for the Go China narrative: market education, risk-first research, and transparent build updates around future China-facing Web3 tools.",
         "Built on Base. Fixed supply. Verify first.",
         "https://gcagochina.com/radar-issue-004.html",
-        "No return promises. Not financial advice.",
+        "Official links first. No price or return claim.",
         "#GCA #GoChina #Base #Web3"
       ],
       "xChinese": [
         "GCA Weekly Go China Radar 是我们的公开内容节奏：围绕 Go China 叙事、市场教育、风险优先研究，以及未来面向中国场景的 Web3 工具建设持续更新。",
         "Base 链上部署。固定供应。先验证，再行动。",
         "https://gcagochina.com/radar-issue-004.html",
-        "不承诺价格结果。非投资建议。",
+        "先核对官方链接。不做价格或收益承诺。",
         "#GCA #GoChina #Base #Web3"
       ],
       "telegram": [
@@ -96,7 +96,7 @@
         "Contract: 0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
         "Official route: GCA/USDT",
         "https://gcagochina.com/verify.html",
-        "Use official links only. Not financial advice."
+        "Use official links only. Verify the contract and route first."
       ],
       "xChinese": [
         "使用 GCA 前先验证：",
@@ -104,7 +104,7 @@
         "合约：0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
         "官方路线：GCA/USDT",
         "https://gcagochina.com/verify.html",
-        "只使用官方链接。非投资建议。"
+        "只使用官方链接。先核对合约和交易路线。"
       ],
       "telegram": [
         "Verification checklist: Base Mainnet / chainId 8453, GCA contract, official website, official X, official Telegram, and current GCA/USDT route.",
@@ -148,13 +148,13 @@
         "The current official GCA market route is GCA/USDT on Base Mainnet.",
         "Liquidity is still early-stage, so trades can face high price impact and slippage. Verify the route before using any interface.",
         "https://gcagochina.com/markets.html",
-        "No market prediction. Not financial advice."
+        "Verify route and slippage before any action."
       ],
       "xChinese": [
         "当前 GCA 官方市场路线是 Base Mainnet 上的 GCA/USDT。",
         "流动性仍处于早期阶段，交易可能出现较高价格影响和滑点。使用任何界面前先核对官方路线。",
         "https://gcagochina.com/markets.html",
-        "不做市场预测。非投资建议。"
+        "先核对交易路线和滑点，再行动。"
       ],
       "telegram": [
         "Official route: GCA/USDT on Base Mainnet.",

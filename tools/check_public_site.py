@@ -5545,7 +5545,7 @@ def validate_announcements_page(text: str) -> None:
     assert_contains(text, RADAR_ISSUE_004_PAGE_URL, label)
     assert_contains(text, SECURITY_PAGE_URL, label)
     assert_contains(text, "No return promises", label)
-    assert_contains(text, "not financial advice", label)
+    assert_contains(text, "operator-reviewed public updates", label)
     assert_contains(text, X_URL, label)
     assert_contains(text, "https://t.me/gcagochinaofficial", label)
     assert_contains(text, MAINNET_ADDRESS, label)
@@ -5667,7 +5667,7 @@ def validate_campaign_page(text: str) -> None:
     assert_contains(text, "Verification First", label)
     assert_contains(text, "Do Not Publish", label)
     assert_contains(text, "No return promises", label)
-    assert_contains(text, "Not financial advice", label)
+    assert_contains(text, "Official links first. No price or return claim.", label)
     assert_contains(text, X_URL, label)
     assert_contains(text, "https://t.me/gcagochinaofficial", label)
     assert_contains(text, CONTENT_LIBRARY_PAGE_URL, label)
@@ -5800,7 +5800,8 @@ def validate_content_library_page(text: str) -> None:
         "Product Spec",
         "Build Update Recap",
         "No return promises",
-        "Not financial advice",
+        "Official links first. No price or return claim.",
+        "先核对官方链接。不做价格或收益承诺。",
         "Base Mainnet / chainId 8453",
         "GCA/USDT",
         RADAR_ISSUE_004_PAGE_URL,
@@ -5925,7 +5926,8 @@ def validate_publishing_desk_page(text: str) -> None:
         "Base Mainnet / chainId 8453",
         "GCA/USDT",
         "No return promises",
-        "Not financial advice",
+        "Official links first. No price or return claim.",
+        "先核对官方链接。不做价格或收益承诺。",
         X_URL,
         "https://t.me/gcagochinaofficial",
         CONTENT_LIBRARY_PAGE_URL,
