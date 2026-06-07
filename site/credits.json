@@ -17,6 +17,9 @@
     "reviewQueueContract": "public-review-queue-contract-published",
     "walletVerificationLive": true,
     "creditLedgerWritesLive": true,
+    "creditUsageLedgerPrepared": true,
+    "creditUsageLedgerWritesLive": false,
+    "creditUsageWorkerDeployBlocked": true,
     "memberLedgerWritesLive": true
   },
   "holderBonus": {
@@ -113,6 +116,26 @@
       "notPurpose": "Not an emergency trading desk, exchange support channel, or transaction recovery service."
     }
   ],
+  "usageLedger": {
+    "status": "local-operator-credit-usage-ledger-ready-worker-deploy-pending",
+    "endpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/credit-usage",
+    "localEndpoint": "http://127.0.0.1:8787/gca/credit-usage",
+    "packetVersion": "gca_credit_usage_v1",
+    "records": [
+      "creditUsageId",
+      "creditLedgerId",
+      "walletAddress",
+      "serviceId",
+      "creditAmountUsed",
+      "remainingCreditsBefore",
+      "remainingCreditsAfter",
+      "usedAt",
+      "status"
+    ],
+    "operatorOnly": true,
+    "selfServiceRedemption": false,
+    "automaticWalletAction": false
+  },
   "redemptionBoundaries": {
     "accountLevelOnly": true,
     "transferable": false,
@@ -122,6 +145,8 @@
     "incomeOrReimbursement": false,
     "tradingPermission": false,
     "riskControlBypass": false,
+    "operatorUsageReviewRequired": true,
+    "selfServiceRedemption": false,
     "requiresControlledAccountUi": false,
     "requiresLedgerActivation": false,
     "requiresSupportReview": true
@@ -196,12 +221,14 @@
     "safeClaims": [
       "GCA has published a service catalog for GCA AI Quant Access credits.",
       "The 10,000 GCA holder bonus can create one account-level 100 GCA AI Quant Access credits ledger record after controlled verification.",
+      "Operator-reviewed service delivery can be recorded through the local GCA credit usage ledger with before/after remaining credits; the Cloudflare Worker route is prepared and pending deploy permission.",
       "The 1,000,000 GCA Member threshold requires 30 consecutive days of holding before a one-time 10,000 GCA member benefit review.",
       "Credits and member status are account-level service records; the 10,000 GCA member benefit is manual review only.",
       "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool."
     ],
     "doNotClaim": [
       "credits or member status are cash, income, reimbursement, trading permission, or transferable value",
+      "credit usage is automatic, public self-service, cash settlement, or wallet settlement",
       "the 10,000 GCA member benefit is automatic or self-service transferred",
       "token ownership bypasses risk controls, support review, or simulation-first requirements",
       "service units are final commercial pricing before public terms are published"

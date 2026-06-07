@@ -70,6 +70,23 @@ def member_access_export_payload():
                     "status": "ledger_recorded",
                 }],
             },
+            "credit-usage": {
+                "records": [{
+                    "creditUsageId": "gca_credit_use_1",
+                    "creditLedgerId": "gca_credit_1",
+                    "accountId": "gca_account_1",
+                    "walletAddress": "0x18d0007bc6be029f8ccd7cb13e324aa21891092d",
+                    "serviceId": "risk-warning-review",
+                    "serviceName": "Risk Warning Review",
+                    "creditAmountUsed": 10,
+                    "remainingCreditsBefore": 100,
+                    "remainingCreditsAfter": 90,
+                    "usedAt": "2026-05-20T15:10:00Z",
+                    "source": "gca-credit-usage-operator",
+                    "operatorNote": "Delivered risk warning review.",
+                    "status": "usage_recorded",
+                }],
+            },
             "member-ledger": {
                 "records": [
                     {
@@ -131,6 +148,9 @@ class GcaMemberAccessReportTests(unittest.TestCase):
             self.assertTrue(summary["ok"])
             self.assertEqual(summary["counts"]["accounts"], 1)
             self.assertEqual(summary["counts"]["creditLedgerRecorded"], 1)
+            self.assertEqual(summary["counts"]["creditUsageRecords"], 1)
+            self.assertEqual(summary["counts"]["creditUsageRecorded"], 1)
+            self.assertEqual(summary["counts"]["creditsConsumed"], 10)
             self.assertEqual(summary["counts"]["activeGcaMembers"], 1)
             self.assertEqual(summary["counts"]["queuedGcaMembers"], 1)
             self.assertEqual(summary["counts"]["pendingManualReserveTransfers"], 1)
@@ -139,6 +159,7 @@ class GcaMemberAccessReportTests(unittest.TestCase):
             self.assertFalse(summary["boundaries"]["writesProductionData"])
             self.assertFalse(summary["boundaries"]["automaticTokenTransfer"])
             self.assertTrue(summary_output.exists())
+            self.assertTrue(Path(summary["outputs"]["creditUsageCsv"]).exists())
 
             with Path(summary["outputs"]["memberBenefitReviewQueueCsv"]).open(newline="", encoding="utf-8") as handle:
                 rows = list(csv.DictReader(handle))

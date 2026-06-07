@@ -444,7 +444,7 @@
           </div>
           <div>
             <h3>2. Local Reports</h3>
-            <p class="note">Expected outputs include <code>.gca_access_data/cloudflare_member_access_export.json</code>, account/wallet/credit/member CSVs, and <code>.gca_access_data/member_access_report/gca_member_access_summary.json</code>.</p>
+            <p class="note">Expected outputs include <code>.gca_access_data/cloudflare_member_access_export.json</code>, account/wallet/credit/credit-usage/member CSVs, and <code>.gca_access_data/member_access_report/gca_member_access_summary.json</code>.</p>
           </div>
           <div>
             <h3>3. Support Queue</h3>
@@ -459,7 +459,11 @@
             <p class="note">After member ops, rerun <code>.venv/bin/python tools/run_gca_daily_ops.py --build-digest --update-public-status</code> so the local operator digest shows member counts without exposing user records.</p>
           </div>
           <div>
-            <h3>6. No Automatic Transfer</h3>
+            <h3>6. Credit Usage Ledger</h3>
+            <p class="note">For reviewed service delivery, record <code>creditUsageId</code>, <code>serviceId</code>, <code>creditAmountUsed</code>, and remaining credits before/after through the local operator-only credit usage ledger. The Cloudflare Worker route is prepared and pending deploy permission.</p>
+          </div>
+          <div>
+            <h3>7. No Automatic Transfer</h3>
             <p class="note">The member ops pipeline never sends GCA. Any 10,000 GCA member benefit remains manual reserve-wallet processing after review.</p>
           </div>
         </div>
@@ -481,6 +485,9 @@
             <div class="row"><span>evidenceTxHash</span><strong>Public purchase or transfer tx</strong></div>
             <div class="row"><span>evidenceTxHashFormatOk</span><strong><code>0x</code> format check</strong></div>
             <div class="row"><span>memberBenefitReviewEvidenceStatus</span><strong>Pending support and ledger review</strong></div>
+            <div class="row"><span>creditUsageId</span><strong>Credit usage record reference when credits are consumed</strong></div>
+            <div class="row"><span>creditAmountUsed</span><strong>Service unit deduction amount</strong></div>
+            <div class="row"><span>remainingCreditsAfter</span><strong>Post-usage credit balance</strong></div>
             <div class="row"><span>reviewerNote</span><strong>No secrets</strong></div>
             <div class="row"><span>publicEvidenceReference</span><strong>Public support, reviewer, or chain reference</strong></div>
             <div class="row"><span>reviewPackageRedactionMode</span><strong><code>redacted-public</code> for external handoff</strong></div>

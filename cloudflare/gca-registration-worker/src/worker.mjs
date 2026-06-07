@@ -1,6 +1,7 @@
 const EMAIL_REGISTRATION_VERSION = "gca_email_registration_v1";
 const CONTACT_SUPPRESSION_VERSION = "gca_contact_suppression_v1";
 const MEMBER_ACCESS_VERSION = "gca_member_access_v1";
+const CREDIT_USAGE_VERSION = "gca_credit_usage_v1";
 const CHAIN_ID = 8453;
 const CONTRACT_ADDRESS = "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6";
 const BASE_RPC_URL = "https://mainnet.base.org";
@@ -14,6 +15,16 @@ const CREDIT_EXPIRY_DAYS = 180;
 const MEMBER_REFRESH_DAYS = 30;
 const MEMBER_HOLD_DAYS = 30;
 const MEMBER_BENEFIT_AMOUNT = "10000 GCA";
+const CREDIT_SERVICE_CATALOG = {
+  "liquidation-replay-report": { name: "Liquidation Replay", creditUnit: 30 },
+  "risk-warning-review": { name: "Risk Warning Review", creditUnit: 10 },
+  "backtest-lab-run": { name: "Backtest Lab", creditUnit: 20 },
+  "entry-ready-review": { name: "ENTRY_READY Review", creditUnit: 15 },
+  "position-size-calculator": { name: "Position Size Calculator", creditUnit: 5 },
+  "risk-control-training": { name: "Risk-Control Training", creditUnit: 10 },
+  "member-research-notes": { name: "Member Research Notes", creditUnit: 20 },
+  "support-review-queue": { name: "Support Review Queue", creditUnit: 0 }
+};
 const DEFAULT_ALLOWED_ORIGINS = [
   "https://gcagochina.com",
   "https://www.gcagochina.com",
@@ -304,6 +315,41 @@ function extractMemberAccess(packet) {
   };
 }
 
+function extractCreditUsage(packet) {
+  if (packet.packetVersion && packet.packetVersion !== CREDIT_USAGE_VERSION) {
+    throw new ApiError(`packetVersion must be ${CREDIT_USAGE_VERSION}`);
+  }
+  const creditLedgerId = String(packet.creditLedgerId || "").trim();
+  const serviceId = String(packet.serviceId || "").trim();
+  const service = CREDIT_SERVICE_CATALOG[serviceId];
+  if (!creditLedgerId) {
+    throw new ApiError("creditLedgerId is required");
+  }
+  if (!service) {
+    throw new ApiError("serviceId is not supported");
+  }
+  const rawAmount = packet.creditAmountUsed ?? service.creditUnit;
+  const creditAmountUsed = Number(rawAmount);
+  if (!Number.isInteger(creditAmountUsed) || creditAmountUsed < 0 || creditAmountUsed > CREDIT_AMOUNT) {
+    throw new ApiError("creditAmountUsed must be an integer between 0 and 100");
+  }
+  if (creditAmountUsed === 0 && service.creditUnit !== 0) {
+    throw new ApiError("creditAmountUsed must be greater than 0 for this service");
+  }
+  const walletAddress = String(packet.walletAddress || "").trim()
+    ? normalizeWallet(packet.walletAddress)
+    : "";
+  return {
+    creditLedgerId,
+    serviceId,
+    serviceName: service.name,
+    creditAmountUsed,
+    walletAddress,
+    operatorNote: String(packet.operatorNote || "").trim().slice(0, 500),
+    source: String(packet.source || "gca-credit-usage-operator").trim().slice(0, 120) || "gca-credit-usage-operator"
+  };
+}
+
 async function sha256Hex(value) {
   const data = new TextEncoder().encode(value);
   const digest = await crypto.subtle.digest("SHA-256", data);
@@ -494,6 +540,32 @@ function rowToCreditLedger(row) {
     transferable: Boolean(row.transferable),
     cashRedeemable: Boolean(row.cash_redeemable),
     status: row.status
+  };
+}
+
+function rowToCreditUsage(row) {
+  if (!row) {
+    return null;
+  }
+  return {
+    creditUsageId: row.credit_usage_id,
+    creditLedgerId: row.credit_ledger_id,
+    accountId: row.account_id,
+    emailSha256: row.email_hash,
+    walletAddress: row.wallet_address,
+    serviceId: row.service_id,
+    serviceName: row.service_name,
+    creditAmountUsed: Number(row.credit_amount_used),
+    remainingCreditsBefore: Number(row.remaining_credits_before),
+    remainingCreditsAfter: Number(row.remaining_credits_after),
+    usedAt: row.used_at,
+    source: row.source,
+    operatorNote: row.operator_note || "",
+    status: row.status,
+    requiresSignature: Boolean(row.requires_signature),
+    requiresTransaction: Boolean(row.requires_transaction),
+    automaticTokenTransfer: Boolean(row.automatic_token_transfer),
+    writesWallet: Boolean(row.writes_wallet)
   };
 }
 
@@ -816,7 +888,7 @@ async function maybeWriteCreditLedger(db, account, verification, now) {
         transferable,
         cash_redeemable,
         status
-      ) VALUES (?1, ?2, ?3, ?4, ?5, 'Web3 Radar utility credits', ?6, ?7, ?5, 'cloudflare-wallet-balance-verification', 0, 0, 'ledger_recorded')`
+      ) VALUES (?1, ?2, ?3, ?4, ?5, 'GCA AI Quant Access credits', ?6, ?7, ?5, 'cloudflare-wallet-balance-verification', 0, 0, 'ledger_recorded')`
     )
     .bind(
       creditLedgerId,
@@ -833,6 +905,109 @@ async function maybeWriteCreditLedger(db, account, verification, now) {
     .bind(creditLedgerId)
     .first();
   return rowToCreditLedger(row);
+}
+
+async function recordCreditUsage(request, env, origin) {
+  if (!isAdminAuthorized(request, env)) {
+    return jsonResponse({ ok: false, error: "admin authorization is required" }, 401, origin, env);
+  }
+  const db = requireDatabase(env);
+  const packet = await readJsonRequest(request);
+  const usageInput = extractCreditUsage(packet);
+  const creditRow = await db
+    .prepare("SELECT * FROM gca_credit_ledger WHERE credit_ledger_id = ?1 LIMIT 1")
+    .bind(usageInput.creditLedgerId)
+    .first();
+  if (!creditRow) {
+    throw new ApiError("creditLedgerId was not found", 404);
+  }
+  if (usageInput.walletAddress && usageInput.walletAddress !== creditRow.wallet_address) {
+    throw new ApiError("walletAddress must match the credit ledger wallet");
+  }
+  const remainingBefore = Number(creditRow.remaining_credits || 0);
+  if (!Number.isInteger(remainingBefore) || remainingBefore < 0) {
+    throw new ApiError("credit ledger remainingCredits is invalid", 409);
+  }
+  if (usageInput.creditAmountUsed > remainingBefore) {
+    throw new ApiError("creditAmountUsed exceeds remaining credits", 409);
+  }
+  const now = nowIso();
+  const remainingAfter = remainingBefore - usageInput.creditAmountUsed;
+  const status = remainingAfter === 0 ? "exhausted" : "usage_recorded";
+  const creditStatus = remainingAfter === 0 ? "exhausted" : "ledger_recorded";
+  const usageId = await stableId(
+    "gca_credit_use",
+    usageInput.creditLedgerId,
+    usageInput.serviceId,
+    usageInput.creditAmountUsed,
+    now
+  );
+  await db
+    .prepare(
+      `INSERT INTO gca_credit_usage (
+        credit_usage_id,
+        credit_ledger_id,
+        account_id,
+        email_hash,
+        wallet_address,
+        service_id,
+        service_name,
+        credit_amount_used,
+        remaining_credits_before,
+        remaining_credits_after,
+        used_at,
+        source,
+        operator_note,
+        status,
+        requires_signature,
+        requires_transaction,
+        automatic_token_transfer,
+        writes_wallet
+      ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, 0, 0, 0, 0)`
+    )
+    .bind(
+      usageId,
+      usageInput.creditLedgerId,
+      creditRow.account_id,
+      creditRow.email_hash,
+      creditRow.wallet_address,
+      usageInput.serviceId,
+      usageInput.serviceName,
+      usageInput.creditAmountUsed,
+      remainingBefore,
+      remainingAfter,
+      now,
+      usageInput.source,
+      usageInput.operatorNote,
+      status
+    )
+    .run();
+  await db
+    .prepare("UPDATE gca_credit_ledger SET remaining_credits = ?1, status = ?2 WHERE credit_ledger_id = ?3")
+    .bind(remainingAfter, creditStatus, usageInput.creditLedgerId)
+    .run();
+  const usageRow = await db
+    .prepare("SELECT * FROM gca_credit_usage WHERE credit_usage_id = ?1 LIMIT 1")
+    .bind(usageId)
+    .first();
+  const updatedCreditRow = await db
+    .prepare("SELECT * FROM gca_credit_ledger WHERE credit_ledger_id = ?1 LIMIT 1")
+    .bind(usageInput.creditLedgerId)
+    .first();
+  return jsonResponse({
+    ok: true,
+    packetVersion: CREDIT_USAGE_VERSION,
+    creditUsage: rowToCreditUsage(usageRow),
+    creditLedger: rowToCreditLedger(updatedCreditRow),
+    boundaries: {
+      adminOnly: true,
+      localOrOperatorReviewOnly: true,
+      requiresSignature: false,
+      requiresTransaction: false,
+      automaticTokenTransfer: false,
+      writesWallet: false
+    }
+  }, 201, origin, env);
 }
 
 async function maybeWriteMemberLedger(db, account, verification, evidence, now) {
@@ -1082,7 +1257,7 @@ function accessThresholds() {
   return {
     holderBonusMinimumGca: "10000",
     holderBonusCreditAmount: CREDIT_AMOUNT,
-    holderBonusCreditType: "Web3 Radar utility credits",
+    holderBonusCreditType: "GCA AI Quant Access credits",
     gcaMemberMinimumGca: "1000000",
     gcaMemberHoldingDays: MEMBER_HOLD_DAYS,
     memberBenefitAmount: MEMBER_BENEFIT_AMOUNT,
@@ -1119,6 +1294,7 @@ function accessConfig(origin, env) {
       memberAccess: "/gca/member-access",
       walletVerifications: "/gca/wallet-verifications",
       creditLedgerAdmin: "/gca/credit-ledger",
+      creditUsageAdmin: "/gca/credit-usage",
       memberLedgerAdmin: "/gca/member-ledger"
     },
     antiSpam: {
@@ -1204,6 +1380,8 @@ async function listMemberTable(request, env, origin, table, mapper, allowedFilte
     ? "checked_at"
     : table === "gca_credit_ledger"
       ? "activated_at"
+      : table === "gca_credit_usage"
+        ? "used_at"
       : table === "gca_member_ledger"
         ? "updated_at"
         : "updated_at";
@@ -1223,6 +1401,7 @@ function health(origin, env) {
     packetVersion: EMAIL_REGISTRATION_VERSION,
     contactSuppressionVersion: CONTACT_SUPPRESSION_VERSION,
     memberAccessVersion: MEMBER_ACCESS_VERSION,
+    creditUsageVersion: CREDIT_USAGE_VERSION,
     chainId: CHAIN_ID,
     contractAddress: CONTRACT_ADDRESS,
     memberAccessLedger: "cloudflare-d1",
@@ -1300,6 +1479,24 @@ export default {
           rowToCreditLedger,
           [["walletAddress", "wallet_address", normalizeWallet]]
         );
+      }
+      if (url.pathname === "/gca/credit-usage") {
+        if (request.method === "POST") {
+          return await recordCreditUsage(request, env, origin);
+        }
+        if (request.method === "GET") {
+          return await listMemberTable(
+            request,
+            env,
+            origin,
+            "gca_credit_usage",
+            rowToCreditUsage,
+            [
+              ["walletAddress", "wallet_address", normalizeWallet],
+              ["creditLedgerId", "credit_ledger_id", null]
+            ]
+          );
+        }
       }
       if (url.pathname === "/gca/member-ledger" && request.method === "GET") {
         return await listMemberTable(

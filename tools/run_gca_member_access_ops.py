@@ -6,7 +6,7 @@ This helper combines the live admin export and offline report builder:
 1. Read token-protected Cloudflare Worker member-access datasets, or load an
    existing export file with ``--input``.
 2. Save the export JSON into the ignored local data directory.
-3. Build account, wallet, credit, member, and manual member-benefit review CSVs.
+3. Build account, wallet, credit, credit usage, member, and manual member-benefit review CSVs.
 
 It does not write production data, connect to wallets, request signatures,
 send transactions, or automatically transfer GCA.

@@ -94,6 +94,7 @@ class GcaRegistrationApiCheckTests(unittest.TestCase):
                 "/gca/wallet-verifications",
                 "/gca/member-access",
                 "/gca/credit-ledger",
+                "/gca/credit-usage",
                 "/gca/member-ledger",
             }:
                 if not request.headers.get("Authorization"):
@@ -138,8 +139,9 @@ class GcaRegistrationApiCheckTests(unittest.TestCase):
         self.assertTrue(result["boundaries"]["adminReadTokenRequired"])
         self.assertTrue(result["boundaries"]["tokenProtectedAdminReadChecked"])
         self.assertEqual({item["method"] for item in seen}, {"GET", "OPTIONS"})
-        self.assertEqual(len(result["checks"]), 18)
+        self.assertEqual(len(result["checks"]), 20)
         self.assertTrue(any(item["id"] == "admin-email-registrations-read" for item in result["checks"]))
+        self.assertTrue(any(item["id"] == "admin-credit-usage-read" for item in result["checks"]))
         self.assertTrue(any(item["id"] == "admin-member-ledger-read" for item in result["checks"]))
         self.assertTrue(any(item.get("antiSpamHoneypotFields") == ["website", "company", "homepage"] for item in result["checks"]))
         serialized = json.dumps(result)
@@ -180,7 +182,7 @@ class GcaRegistrationApiCheckTests(unittest.TestCase):
         self.assertTrue(result["boundaries"]["publicOnly"])
         self.assertFalse(result["boundaries"]["adminReadTokenRequired"])
         self.assertFalse(result["boundaries"]["tokenProtectedAdminReadChecked"])
-        self.assertEqual(len(result["checks"]), 12)
+        self.assertEqual(len(result["checks"]), 13)
         self.assertNotIn("admin-email-registrations-read", {item["id"] for item in result["checks"]})
         self.assertTrue(all(item["authorization"] == "" for item in seen))
 

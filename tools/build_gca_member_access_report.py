@@ -4,8 +4,8 @@
 This is an offline operator helper. It reads the JSON produced by
 ``tools/export_cloudflare_member_access.py`` and writes local CSV/summary
 files for account review, wallet verification review, credit review, GCA
-Member review, and manual member-benefit follow-up. It never calls Cloudflare,
-wallets, or RPC endpoints.
+credit usage review, Member review, and manual member-benefit follow-up. It
+never calls Cloudflare, wallets, or RPC endpoints.
 """
 
 from __future__ import annotations
@@ -74,6 +74,22 @@ CREDIT_FIELDS = [
     "source",
     "transferable",
     "cashRedeemable",
+    "status",
+]
+
+CREDIT_USAGE_FIELDS = [
+    "creditUsageId",
+    "creditLedgerId",
+    "accountId",
+    "walletAddress",
+    "serviceId",
+    "serviceName",
+    "creditAmountUsed",
+    "remainingCreditsBefore",
+    "remainingCreditsAfter",
+    "usedAt",
+    "source",
+    "operatorNote",
     "status",
 ]
 
@@ -201,15 +217,21 @@ def count_records(records: list[dict[str, Any]], field: str, value: Any) -> int:
     return sum(1 for record in records if record.get(field) == value)
 
 
+def count_any(records: list[dict[str, Any]], field: str, values: set[Any]) -> int:
+    return sum(1 for record in records if record.get(field) in values)
+
+
 def build_report(payload: dict[str, Any], output_dir: Path, summary_output: Path) -> dict[str, Any]:
     accounts = dataset_records(payload, "member-access")
     wallet_verifications = dataset_records(payload, "wallet-verifications")
     credits = dataset_records(payload, "credit-ledger")
+    credit_usage = dataset_records(payload, "credit-usage")
     members = dataset_records(payload, "member-ledger")
 
     account_rows = [select_row(record, ACCOUNT_FIELDS) for record in accounts]
     wallet_rows = [select_row(record, WALLET_FIELDS) for record in wallet_verifications]
     credit_rows = [select_row(record, CREDIT_FIELDS) for record in credits]
+    credit_usage_rows = [select_row(record, CREDIT_USAGE_FIELDS) for record in credit_usage]
     member_rows = [select_row(record, MEMBER_FIELDS) for record in members]
     benefit_queue_rows = build_benefit_queue(members)
 
@@ -217,6 +239,7 @@ def build_report(payload: dict[str, Any], output_dir: Path, summary_output: Path
         "accountsCsv": output_dir / "gca_member_accounts.csv",
         "walletVerificationsCsv": output_dir / "gca_wallet_verifications.csv",
         "creditLedgerCsv": output_dir / "gca_credit_ledger.csv",
+        "creditUsageCsv": output_dir / "gca_credit_usage.csv",
         "memberLedgerCsv": output_dir / "gca_member_ledger.csv",
         "memberBenefitReviewQueueCsv": output_dir / "gca_member_benefit_review_queue.csv",
     }
@@ -224,6 +247,7 @@ def build_report(payload: dict[str, Any], output_dir: Path, summary_output: Path
     write_csv(outputs["accountsCsv"], account_rows, ACCOUNT_FIELDS)
     write_csv(outputs["walletVerificationsCsv"], wallet_rows, WALLET_FIELDS)
     write_csv(outputs["creditLedgerCsv"], credit_rows, CREDIT_FIELDS)
+    write_csv(outputs["creditUsageCsv"], credit_usage_rows, CREDIT_USAGE_FIELDS)
     write_csv(outputs["memberLedgerCsv"], member_rows, MEMBER_FIELDS)
     write_csv(outputs["memberBenefitReviewQueueCsv"], benefit_queue_rows, BENEFIT_QUEUE_FIELDS)
 
@@ -240,6 +264,9 @@ def build_report(payload: dict[str, Any], output_dir: Path, summary_output: Path
             "gcaMemberEligibleWallets": count_records(wallet_verifications, "gcaMemberEligible", True),
             "creditLedgerRecords": len(credits),
             "creditLedgerRecorded": count_records(credits, "status", "ledger_recorded"),
+            "creditUsageRecords": len(credit_usage),
+            "creditUsageRecorded": count_any(credit_usage, "status", {"usage_recorded", "exhausted"}),
+            "creditsConsumed": sum(int(record.get("creditAmountUsed") or 0) for record in credit_usage),
             "memberLedgerRecords": len(members),
             "activeGcaMembers": count_records(members, "status", "active"),
             "queuedGcaMembers": count_records(members, "status", "queued"),

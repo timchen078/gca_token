@@ -378,6 +378,51 @@ class GcaMemberBackendTests(unittest.TestCase):
         self.assertEqual(len(store.read_all("member_benefit_transfers")), 1)
         self.assertEqual(len(store.read_all("member_ledger")), 2)
 
+    def test_record_credit_usage_updates_remaining_credit_ledger(self):
+        backend, store = self.make_backend(MEMBER_THRESHOLD_UNITS)
+        response = backend.submit_pre_registration(sample_packet())
+        credit_id = response["creditLedger"]["creditLedgerId"]
+
+        usage = backend.record_credit_usage({
+            "creditLedgerId": credit_id,
+            "serviceId": "risk-warning-review",
+            "creditAmountUsed": 10,
+            "walletAddress": WALLET,
+            "operatorNote": "Delivered the reviewed risk-warning service unit.",
+        })
+
+        self.assertTrue(usage["ok"])
+        self.assertEqual(usage["packetVersion"], "gca_credit_usage_v1")
+        self.assertEqual(usage["creditUsage"]["creditLedgerId"], credit_id)
+        self.assertEqual(usage["creditUsage"]["serviceId"], "risk-warning-review")
+        self.assertEqual(usage["creditUsage"]["serviceName"], "Risk Warning Review")
+        self.assertEqual(usage["creditUsage"]["creditAmountUsed"], 10)
+        self.assertEqual(usage["creditUsage"]["remainingCreditsBefore"], 100)
+        self.assertEqual(usage["creditUsage"]["remainingCreditsAfter"], 90)
+        self.assertEqual(usage["creditUsage"]["status"], "usage_recorded")
+        self.assertEqual(usage["creditLedger"]["remainingCredits"], 90)
+        self.assertFalse(usage["creditUsage"]["automaticTokenTransfer"])
+        self.assertFalse(usage["creditUsage"]["writesWallet"])
+        self.assertEqual(usage["supportReview"]["creditUsageId"], usage["creditUsage"]["creditUsageId"])
+        self.assertEqual(len(store.read_all("credit_usage")), 1)
+        self.assertEqual(len(store.read_all("credit_ledger")), 2)
+        self.assertEqual(len(store.read_all("support_reviews")), 2)
+
+        summary = backend.operator_summary()
+        self.assertEqual(summary["totals"]["creditLedgerRecords"], 1)
+        self.assertEqual(summary["totals"]["creditUsageRecords"], 1)
+        self.assertEqual(summary["totals"]["creditsConsumed"], 10)
+        self.assertEqual(summary["totals"]["remainingCredits"], 90)
+        self.assertEqual(summary["dataLedgers"]["credit_usage"]["count"], 1)
+        self.assertTrue(summary["operatorBoundaries"]["recordsCreditUsageOnly"])
+
+        with self.assertRaises(BackendError):
+            backend.record_credit_usage({
+                "creditLedgerId": credit_id,
+                "serviceId": "liquidation-replay-report",
+                "creditAmountUsed": 91,
+            })
+
     def test_operator_digest_reads_redacted_local_digest_without_user_records(self):
         backend, store = self.make_backend(MEMBER_THRESHOLD_UNITS)
         digest_path = store.data_dir / "gca_operator_digest.json"
@@ -786,6 +831,30 @@ class GcaMemberBackendTests(unittest.TestCase):
                 payload = json.loads(response.read().decode())
             self.assertTrue(payload["ok"])
             self.assertEqual(payload["creditLedger"]["status"], "ledger_recorded")
+            credit_id = payload["creditLedger"]["creditLedgerId"]
+
+            usage_request = Request(
+                f"{base_url}/gca/credit-usage",
+                data=json.dumps({
+                    "creditLedgerId": credit_id,
+                    "serviceId": "risk-warning-review",
+                    "creditAmountUsed": 10,
+                    "walletAddress": WALLET,
+                    "operatorNote": "Local operator recorded a delivered service unit.",
+                }).encode(),
+                headers={"Content-Type": "application/json"},
+                method="POST",
+            )
+            with urlopen(usage_request, timeout=10) as response:
+                usage_payload = json.loads(response.read().decode())
+            self.assertTrue(usage_payload["ok"])
+            self.assertEqual(usage_payload["creditUsage"]["remainingCreditsAfter"], 90)
+
+            with urlopen(f"{base_url}/gca/credit-usage?creditLedgerId={credit_id}", timeout=10) as response:
+                usage_ledger = json.loads(response.read().decode())
+            self.assertTrue(usage_ledger["ok"])
+            self.assertEqual(usage_ledger["count"], 1)
+            self.assertEqual(usage_ledger["records"][0]["serviceId"], "risk-warning-review")
 
             with urlopen(f"{base_url}/gca/member-ledger?walletAddress={WALLET}", timeout=10) as response:
                 ledger = json.loads(response.read().decode())
@@ -797,6 +866,8 @@ class GcaMemberBackendTests(unittest.TestCase):
                 summary = json.loads(response.read().decode())
             self.assertTrue(summary["ok"])
             self.assertEqual(summary["totals"]["memberLedgerRecords"], 1)
+            self.assertEqual(summary["totals"]["creditUsageRecords"], 1)
+            self.assertEqual(summary["totals"]["creditsConsumed"], 10)
             self.assertEqual(summary["totals"]["emailRegistrations"], 1)
             self.assertEqual(summary["dataLedgers"]["pre_registrations"]["count"], 1)
             self.assertEqual(summary["dataLedgers"]["email_registrations"]["count"], 1)

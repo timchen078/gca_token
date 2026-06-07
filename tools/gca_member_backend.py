@@ -48,8 +48,19 @@ CREDIT_AMOUNT = 100
 CREDIT_EXPIRY_DAYS = 180
 MEMBER_REFRESH_DAYS = 30
 MEMBER_BENEFIT_AMOUNT = "10000 GCA"
+CREDIT_SERVICE_CATALOG = {
+    "liquidation-replay-report": {"name": "Liquidation Replay", "creditUnit": 30},
+    "risk-warning-review": {"name": "Risk Warning Review", "creditUnit": 10},
+    "backtest-lab-run": {"name": "Backtest Lab", "creditUnit": 20},
+    "entry-ready-review": {"name": "ENTRY_READY Review", "creditUnit": 15},
+    "position-size-calculator": {"name": "Position Size Calculator", "creditUnit": 5},
+    "risk-control-training": {"name": "Risk-Control Training", "creditUnit": 10},
+    "member-research-notes": {"name": "Member Research Notes", "creditUnit": 20},
+    "support-review-queue": {"name": "Support Review Queue", "creditUnit": 0},
+}
 PACKET_VERSION = "gca_member_preregistration_v2"
 EMAIL_REGISTRATION_VERSION = "gca_email_registration_v1"
+CREDIT_USAGE_VERSION = "gca_credit_usage_v1"
 CONTACT_EMAIL = "support@gcagochina.com"
 ALLOWED_PROGRAM_INTENTS = {"holder_bonus", "gca_member", "general_waitlist"}
 EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
@@ -70,6 +81,7 @@ LEDGER_NAMES = (
     "pre_registrations",
     "wallet_verifications",
     "credit_ledger",
+    "credit_usage",
     "member_ledger",
     "member_benefit_transfers",
     "support_reviews",
@@ -327,6 +339,39 @@ def extract_member_evidence(packet: dict[str, Any]) -> dict[str, Any]:
         "evidenceNote": str(evidence.get("evidenceNote") or packet.get("evidenceNote") or "").strip(),
         "finalEligibilityStillRequiresSupportAndLedgerReview": True,
         "doesNotCreateLedgerRecord": False,
+    }
+
+
+def extract_credit_usage(packet: dict[str, Any]) -> dict[str, Any]:
+    if packet.get("packetVersion") not in (None, CREDIT_USAGE_VERSION):
+        raise BackendError(f"packetVersion must be {CREDIT_USAGE_VERSION}")
+    credit_ledger_id = str(packet.get("creditLedgerId") or "").strip()
+    service_id = str(packet.get("serviceId") or "").strip()
+    service = CREDIT_SERVICE_CATALOG.get(service_id)
+    if not credit_ledger_id:
+        raise BackendError("creditLedgerId is required")
+    if not service:
+        raise BackendError("serviceId is not supported")
+    raw_amount = packet.get("creditAmountUsed", service["creditUnit"])
+    try:
+        credit_amount_used = int(raw_amount)
+    except (TypeError, ValueError) as exc:
+        raise BackendError("creditAmountUsed must be an integer between 0 and 100") from exc
+    if credit_amount_used < 0 or credit_amount_used > CREDIT_AMOUNT:
+        raise BackendError("creditAmountUsed must be an integer between 0 and 100")
+    if credit_amount_used == 0 and int(service["creditUnit"]) != 0:
+        raise BackendError("creditAmountUsed must be greater than 0 for this service")
+    wallet_address = str(packet.get("walletAddress") or "").strip()
+    if wallet_address:
+        wallet_address = normalize_wallet(wallet_address)
+    return {
+        "creditLedgerId": credit_ledger_id,
+        "serviceId": service_id,
+        "serviceName": str(service["name"]),
+        "creditAmountUsed": credit_amount_used,
+        "walletAddress": wallet_address,
+        "operatorNote": safe_operator_text(packet.get("operatorNote"), 500),
+        "source": safe_operator_text(packet.get("source") or "local-credit-usage-operator", 120),
     }
 
 
@@ -713,6 +758,115 @@ class GcaMemberBackend:
         }
         return self.store.append("credit_ledger", record)
 
+    def record_credit_usage(self, payload: dict[str, Any]) -> dict[str, Any]:
+        usage_input = extract_credit_usage(payload)
+        credit_versions = self.store.find("credit_ledger", creditLedgerId=usage_input["creditLedgerId"])
+        if not credit_versions:
+            raise BackendError("creditLedgerId was not found", HTTPStatus.NOT_FOUND)
+        credit = credit_versions[-1]
+        wallet_address = usage_input["walletAddress"]
+        if wallet_address and wallet_address != str(credit.get("walletAddress") or "").lower():
+            raise BackendError("walletAddress must match the credit ledger wallet")
+
+        remaining_before = safe_operator_int(credit.get("remainingCredits"))
+        if usage_input["creditAmountUsed"] > remaining_before:
+            raise BackendError("creditAmountUsed exceeds remaining credits", HTTPStatus.CONFLICT)
+
+        used_at = iso_now()
+        remaining_after = remaining_before - usage_input["creditAmountUsed"]
+        usage_id = stable_id(
+            "gca_credit_use",
+            usage_input["creditLedgerId"],
+            usage_input["serviceId"],
+            usage_input["creditAmountUsed"],
+            used_at,
+        )
+        status = "exhausted" if remaining_after == 0 else "usage_recorded"
+        usage_record = {
+            "creditUsageId": usage_id,
+            "creditLedgerId": usage_input["creditLedgerId"],
+            "registrationId": credit.get("registrationId", ""),
+            "email": credit.get("email", ""),
+            "walletAddress": credit.get("walletAddress", ""),
+            "serviceId": usage_input["serviceId"],
+            "serviceName": usage_input["serviceName"],
+            "creditAmountUsed": usage_input["creditAmountUsed"],
+            "remainingCreditsBefore": remaining_before,
+            "remainingCreditsAfter": remaining_after,
+            "usedAt": used_at,
+            "source": usage_input["source"],
+            "operatorNote": usage_input["operatorNote"],
+            "status": status,
+            "localOnly": True,
+            "selfServicePublicClaim": False,
+            "requiresSignature": False,
+            "requiresTransaction": False,
+            "automaticTokenTransfer": False,
+            "writesWallet": False,
+        }
+        self.store.append("credit_usage", usage_record)
+
+        updated_credit = dict(credit)
+        updated_credit.update({
+            "remainingCredits": remaining_after,
+            "lastUsedAt": used_at,
+            "lastCreditUsageId": usage_id,
+            "lastServiceId": usage_input["serviceId"],
+            "status": "exhausted" if remaining_after == 0 else "ledger_recorded",
+        })
+        self.store.append("credit_ledger", updated_credit)
+
+        review = {
+            "reviewId": stable_id("gca_review_credit_usage", usage_id),
+            "registrationId": credit.get("registrationId", ""),
+            "lane": "gca-credit-usage",
+            "status": "ledger_recorded",
+            "updatedAt": used_at,
+            "walletAddress": credit.get("walletAddress", ""),
+            "holderBonusEligible": True,
+            "gcaMemberEligible": False,
+            "creditLedgerId": usage_input["creditLedgerId"],
+            "creditUsageId": usage_id,
+            "serviceId": usage_input["serviceId"],
+            "serviceName": usage_input["serviceName"],
+            "creditAmountUsed": usage_input["creditAmountUsed"],
+            "remainingCreditsBefore": remaining_before,
+            "remainingCreditsAfter": remaining_after,
+            "memberLedgerId": "",
+            "memberBenefitClaimStatus": "",
+            "nextStep": "Credit usage was recorded in the local operator ledger. Confirm service delivery evidence before any support follow-up.",
+            "publicEvidenceReference": usage_id,
+            "supportNote": usage_input["operatorNote"] or "GCA AI Quant Access credit usage recorded by local operator backend.",
+            "source": "local-credit-usage-operator",
+            "localOnly": True,
+            "selfServicePublicClaim": False,
+            "automaticUserReply": False,
+            "automaticTokenTransfer": False,
+            "requiresSignature": False,
+            "requiresTransaction": False,
+            "writesProductionData": False,
+        }
+        self.store.append("support_reviews", review)
+
+        return {
+            "ok": True,
+            "packetVersion": CREDIT_USAGE_VERSION,
+            "creditUsage": usage_record,
+            "creditLedger": updated_credit,
+            "supportReview": review,
+            "alreadyRecorded": False,
+            "boundaries": {
+                "localhostOnly": True,
+                "localJsonlLedgerOnly": True,
+                "writesProductionData": False,
+                "walletCalls": False,
+                "requiresSignature": False,
+                "requiresTransaction": False,
+                "automaticTokenTransfer": False,
+                "writesWallet": False,
+            },
+        }
+
     def maybe_create_member_ledger(
         self,
         registration: dict[str, Any],
@@ -1060,6 +1214,8 @@ class GcaMemberBackend:
             "email",
             "registrationId",
             "creditLedgerId",
+            "creditUsageId",
+            "serviceId",
             "memberLedgerId",
             "transferRecordId",
             "memberBenefitTransferTx",
@@ -1072,6 +1228,7 @@ class GcaMemberBackend:
     def operator_summary(self, limit: int = 25) -> dict[str, Any]:
         ledgers = {name: self.store.read_all(name) for name in LEDGER_NAMES}
         credit_records = latest_records_by(ledgers["credit_ledger"], "creditLedgerId")
+        credit_usage_records = latest_records_by(ledgers["credit_usage"], "creditUsageId")
         member_records = latest_records_by(ledgers["member_ledger"], "memberLedgerId")
         transfer_records = latest_records_by(ledgers["member_benefit_transfers"], "transferRecordId")
         review_records = ledgers["support_reviews"]
@@ -1096,6 +1253,9 @@ class GcaMemberBackend:
                 "preRegistrations": len(ledgers["pre_registrations"]),
                 "walletVerifications": len(ledgers["wallet_verifications"]),
                 "creditLedgerRecords": len(credit_records),
+                "creditUsageRecords": len(credit_usage_records),
+                "creditsConsumed": sum(int(record.get("creditAmountUsed") or 0) for record in credit_usage_records),
+                "exhaustedCreditLedgers": sum(1 for record in credit_records if record.get("status") == "exhausted"),
                 "memberLedgerRecords": len(member_records),
                 "activeMembers": sum(1 for record in member_records if record.get("status") == "active"),
                 "queuedMembers": sum(1 for record in member_records if record.get("status") == "queued"),
@@ -1118,6 +1278,7 @@ class GcaMemberBackend:
                 "readOnlyWalletVerification": True,
                 "manualReserveTransferOnly": True,
                 "recordsManualTransfersOnly": True,
+                "recordsCreditUsageOnly": True,
             },
         }
         return summary
@@ -1714,6 +1875,7 @@ class GcaMemberBackend:
             "reviewChecklist": [
                 "Confirm each wallet verification uses Base Mainnet chainId 8453 and the official GCA contract.",
                 "Confirm holder credits remain utility credits only and are not cash, income, or trading permission.",
+                "Confirm any credit usage record has a creditUsageId, serviceId, creditAmountUsed, and remainingCreditsAfter value.",
                 "Confirm GCA Member records require at least 1,000,000 GCA and 30 consecutive holding days before benefit review.",
                 "Confirm any 10,000 GCA member benefit transfer has a successful Base Mainnet GCA Transfer log to the verified member wallet.",
                 "Confirm no user secret, private key, seed phrase, exchange API secret, withdrawal permission, or custody request appears in notes.",
@@ -1803,6 +1965,7 @@ def build_handler(site_dir: Path, backend: GcaMemberBackend) -> type[SimpleHTTPR
                     "/gca/pre-registrations": "pre_registrations",
                     "/gca/wallet-verifications": "wallet_verifications",
                     "/gca/credit-ledger": "credit_ledger",
+                    "/gca/credit-usage": "credit_usage",
                     "/gca/member-ledger": "member_ledger",
                     "/gca/member-benefit-transfers": "member_benefit_transfers",
                     "/gca/member-review": "support_reviews",
@@ -1830,6 +1993,9 @@ def build_handler(site_dir: Path, backend: GcaMemberBackend) -> type[SimpleHTTPR
                     return
                 if parsed.path == "/gca/wallet-verifications":
                     self.send_json({"ok": True, "walletVerification": backend.wallet_verification_from_request(payload)}, HTTPStatus.CREATED)
+                    return
+                if parsed.path == "/gca/credit-usage":
+                    self.send_json(backend.record_credit_usage(payload), HTTPStatus.CREATED)
                     return
                 if parsed.path == "/gca/member-benefit-transfers":
                     result = backend.record_member_benefit_transfer(payload)

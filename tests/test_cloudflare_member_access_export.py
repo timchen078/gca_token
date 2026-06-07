@@ -76,11 +76,11 @@ class CloudflareMemberAccessExportTests(unittest.TestCase):
         )
 
         self.assertTrue(payload["ok"])
-        self.assertEqual(payload["datasetCount"], 4)
-        self.assertEqual(payload["recordCount"], 4)
+        self.assertEqual(payload["datasetCount"], 5)
+        self.assertEqual(payload["recordCount"], 5)
         self.assertEqual(
             {item["path"] for item in seen},
-            {"/gca/member-access", "/gca/wallet-verifications", "/gca/credit-ledger", "/gca/member-ledger"},
+            {"/gca/member-access", "/gca/wallet-verifications", "/gca/credit-ledger", "/gca/credit-usage", "/gca/member-ledger"},
         )
         self.assertTrue(all(item["authorization"] == "Bearer secret-token" for item in seen))
         self.assertTrue(all(item["user_agent"] == "GCA-Operator-Member-Access-Export/1.0" for item in seen))

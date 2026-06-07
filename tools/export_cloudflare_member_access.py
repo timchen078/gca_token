@@ -41,12 +41,14 @@ DATASET_PATHS = {
     "member-access": "/gca/member-access",
     "wallet-verifications": "/gca/wallet-verifications",
     "credit-ledger": "/gca/credit-ledger",
+    "credit-usage": "/gca/credit-usage",
     "member-ledger": "/gca/member-ledger",
 }
 DATASET_FILTERS = {
     "member-access": {"email", "walletAddress"},
     "wallet-verifications": {"walletAddress"},
     "credit-ledger": {"walletAddress"},
+    "credit-usage": {"walletAddress"},
     "member-ledger": {"walletAddress"},
 }
 
@@ -249,7 +251,7 @@ def write_json(path: Path, payload: dict[str, Any]) -> None:
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Export token-protected GCA member access, wallet verification, credit, and member ledger records.",
+        description="Export token-protected GCA member access, wallet verification, credit ledger, credit usage, and member ledger records.",
     )
     parser.add_argument("--base-url", default=DEFAULT_API_BASE, help=f"Worker API base URL. Default: {DEFAULT_API_BASE}")
     parser.add_argument("--token-file", type=Path, default=DEFAULT_TOKEN_FILE, help="Path to ignored local admin env file.")
