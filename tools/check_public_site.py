@@ -5060,9 +5060,19 @@ def validate_operator_page(text: str) -> None:
     assert_contains(text, "Email registrations", label)
     assert_contains(text, "Pre-registrations", label)
     assert_contains(text, "100 credits records", label)
+    assert_contains(text, "Service requests", label)
+    assert_contains(text, "Pending service review", label)
+    assert_contains(text, "Requested credit holds", label)
     assert_contains(text, "Active GCA Members", label)
     assert_contains(text, "Pending reserve transfers", label)
     assert_contains(text, "Recorded transfers", label)
+    assert_contains(text, "Record Service Request", label)
+    assert_contains(text, 'id="serviceRequestForm"', label)
+    assert_contains(text, 'const SERVICE_REQUEST_ENDPOINT_PATH = "/gca/service-requests";', label)
+    assert_contains(text, "Latest Service Requests", label)
+    assert_contains(text, "renderServiceRequests", label)
+    assert_contains(text, "recordServiceRequest", label)
+    assert_contains(text, "does not deduct credits", label)
     assert_contains(text, "Record Manual Member Benefit Transfer", label)
     assert_contains(text, "Member Ledger ID", label)
     assert_contains(text, "Manual Transfer Tx Hash", label)
@@ -5072,6 +5082,7 @@ def validate_operator_page(text: str) -> None:
     assert_contains(text, "/gca/pre-registrations", label)
     assert_contains(text, "/gca/wallet-verifications", label)
     assert_contains(text, "/gca/credit-ledger", label)
+    assert_contains(text, "/gca/service-requests", label)
     assert_contains(text, "/gca/member-ledger", label)
     assert_contains(text, "/gca/review-package", label)
     assert_contains(text, "/gca/member-benefit-transfers", label)
@@ -6926,6 +6937,9 @@ def validate_operations_page(text: str) -> None:
     assert_contains(text, ".gca_access_data/member_access_report/gca_member_access_summary.json", label)
     assert_contains(text, ".gca_access_data/member_access_report/gca_member_support_queue.csv", label)
     assert_contains(text, ".gca_access_data/member_access_report/gca_holding_period_summary.json", label)
+    assert_contains(text, "Service Request Queue", label)
+    assert_contains(text, "service_requests", label)
+    assert_contains(text, "does not deduct credits", label)
     assert_contains(text, "--include-holding-report --holding-no-live-read", label)
     assert_contains(text, "No Automatic Transfer", label)
     for step in (
@@ -6936,6 +6950,7 @@ def validate_operations_page(text: str) -> None:
         "Eligibility Decision",
         "Support Reply",
         "Ledger Handoff",
+        "Service Request Triage",
         "Platform Follow-Up",
         "Review Package Handoff",
         "Closure",
@@ -7021,6 +7036,10 @@ def validate_operations_json(text: str) -> None:
     ):
         if state.get(key) is not False:
             raise SiteCheckError(f"{label}: {key} must be false")
+    if state.get("serviceRequestQueueLocalLive") is not True:
+        raise SiteCheckError(f"{label}: serviceRequestQueueLocalLive must be true")
+    if state.get("serviceRequestQueueProductionLive") is not False:
+        raise SiteCheckError(f"{label}: serviceRequestQueueProductionLive must be false")
     if state.get("publicSubmissionQueueLive") is not True:
         raise SiteCheckError(f"{label}: publicSubmissionQueueLive must be true")
     if identity.get("chainId") != 8453:
@@ -7079,6 +7098,8 @@ def validate_operations_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong member export output")
     if member_ops.get("supportQueueOutput") != ".gca_access_data/member_access_report/gca_member_support_queue.csv":
         raise SiteCheckError(f"{label}: wrong support queue output")
+    if member_ops.get("serviceRequestQueueLocalLedger") != ".gca_access_data/service_requests.jsonl":
+        raise SiteCheckError(f"{label}: wrong service request queue ledger")
     if member_ops.get("holdingPeriodSummaryOutput") != ".gca_access_data/member_access_report/gca_holding_period_summary.json":
         raise SiteCheckError(f"{label}: wrong holding summary output")
     member_boundaries = member_ops.get("boundaries", {})
@@ -7108,6 +7129,7 @@ def validate_operations_json(text: str) -> None:
         "eligibility-decision",
         "support-reply",
         "ledger-handoff",
+        "service-request-triage",
         "platform-follow-up",
         "review-package-handoff",
         "closure",
@@ -7127,6 +7149,9 @@ def validate_operations_json(text: str) -> None:
         "evidenceTxHash",
         "evidenceTxHashFormatOk",
         "memberBenefitReviewEvidenceStatus",
+        "serviceRequestId",
+        "requestedCreditHold",
+        "remainingCreditsAtRequest",
         "reviewerNote",
         "publicEvidenceReference",
         "reviewPackageRedactionMode",
@@ -7146,6 +7171,7 @@ def validate_operations_json(text: str) -> None:
         "0x-format evidence transaction hash check",
         "member evidence note",
         "non-sensitive support note",
+        "non-sensitive service request scope",
         "public review reference",
         "public-redacted local review package digest",
     ):
@@ -7161,6 +7187,8 @@ def validate_operations_json(text: str) -> None:
     for key in (
         "externalReviewPackageMustBeRedacted",
         "reviewPackageDigestRequiredBeforeSharing",
+        "serviceRequestQueueLocalOnly",
+        "serviceRequestDoesNotDeductCredits",
         "publicRedactedExportForReviewerHandoffOnly",
     ):
         if controls.get(key) is not True:
@@ -7334,6 +7362,7 @@ def validate_access_api_page(text: str) -> None:
     assert_contains(text, "/gca/member-access", label)
     assert_contains(text, "/gca/wallet-verifications", label)
     assert_contains(text, "/gca/credit-ledger", label)
+    assert_contains(text, "/gca/service-requests", label)
     assert_contains(text, "/gca/member-ledger", label)
     assert_contains(text, "/gca/support-review", label)
     assert_contains(text, "/gca/member-review", label)
@@ -7349,6 +7378,8 @@ def validate_access_api_page(text: str) -> None:
     assert_contains(text, "read-only Base receipt data", label)
     assert_contains(text, "balanceOf", label)
     assert_contains(text, "100 GCA AI Quant Access credits", label)
+    assert_contains(text, "requested GCA AI Quant Access service scope", label)
+    assert_contains(text, "does not deduct credits", label)
     assert_contains(text, "GCA Member", label)
     assert_contains(text, "gca_member_access_v1", label)
     assert_contains(text, "memberBenefitReviewEvidence", label)
@@ -7426,6 +7457,10 @@ def validate_access_api_json(text: str) -> None:
             raise SiteCheckError(f"{label}: {key} must be true")
     if state.get("liveTradingEnabled") is not False:
         raise SiteCheckError(f"{label}: liveTradingEnabled must be false")
+    if state.get("serviceRequestQueueLocalLive") is not True:
+        raise SiteCheckError(f"{label}: serviceRequestQueueLocalLive must be true")
+    if state.get("serviceRequestQueueProductionLive") is not False:
+        raise SiteCheckError(f"{label}: serviceRequestQueueProductionLive must be false")
     for key in (
         "backendLive",
         "publicEndpointLive",
@@ -7452,6 +7487,8 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong local operator summary endpoint")
     if local_backend.get("localReviewPackageEndpoint") != "/gca/review-package":
         raise SiteCheckError(f"{label}: wrong local review package endpoint")
+    if local_backend.get("localServiceRequestEndpoint") != "/gca/service-requests":
+        raise SiteCheckError(f"{label}: wrong local service request endpoint")
     if local_backend.get("localReviewPackageExporter") != "tools/export_gca_review_package.py":
         raise SiteCheckError(f"{label}: wrong local review package exporter")
     if local_backend.get("localReviewPackageVerifier") != "tools/verify_gca_review_package.py":
@@ -7526,7 +7563,7 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong public website fallback")
     if set(production_email_backend.get("antiSpamHoneypotFields", [])) != {"website", "company", "homepage"}:
         raise SiteCheckError(f"{label}: wrong anti-spam honeypot fields")
-    for ledger in ("email_registrations", "pre_registrations", "wallet_verifications", "credit_ledger", "member_ledger", "member_benefit_transfers", "support_reviews"):
+    for ledger in ("email_registrations", "pre_registrations", "wallet_verifications", "credit_ledger", "service_requests", "credit_usage", "member_ledger", "member_benefit_transfers", "support_reviews"):
         if ledger not in local_backend.get("writesJsonlLedgers", []):
             raise SiteCheckError(f"{label}: missing local ledger {ledger}")
     for key in (
@@ -7597,6 +7634,35 @@ def validate_access_api_json(text: str) -> None:
             raise SiteCheckError(f"{label}: missing endpoint {endpoint_key}")
         if endpoint.get("status") != expected_status:
             raise SiteCheckError(f"{label}: endpoint {endpoint_key} should be {expected_status}")
+    expected_local_service_request_statuses = {
+        "GET /gca/service-requests": "local-only-not-public-production",
+        "POST /gca/service-requests": "local-only-not-public-production",
+    }
+    for endpoint_key, expected_status in expected_local_service_request_statuses.items():
+        endpoint = endpoint_map.get(endpoint_key)
+        if endpoint is None:
+            raise SiteCheckError(f"{label}: missing endpoint {endpoint_key}")
+        if endpoint.get("status") != expected_status:
+            raise SiteCheckError(f"{label}: endpoint {endpoint_key} should be {expected_status}")
+    service_request_create = endpoint_map["POST /gca/service-requests"]
+    for field in (
+        "email",
+        "serviceId",
+        "acknowledgements.noSecretsNoCustody",
+        "acknowledgements.manualReviewOnly",
+        "acknowledgements.noTradingPermission",
+    ):
+        if field not in service_request_create.get("requiredRequestFields", []):
+            raise SiteCheckError(f"{label}: missing service request field {field}")
+    for expected_check in (
+        "the route queues review only and does not deduct credits",
+        "no wallet connection, signature, transaction, private key, seed phrase, exchange API secret, withdrawal permission, or live order permission is requested",
+    ):
+        if expected_check not in service_request_create.get("serverChecks", []):
+            raise SiteCheckError(f"{label}: missing service request check {expected_check}")
+    service_request_read = endpoint_map["GET /gca/service-requests"]
+    if "doesNotDeductCredits" not in service_request_read.get("responseFields", []):
+        raise SiteCheckError(f"{label}: missing service request deduction boundary")
     email_registration = endpoint_map["POST /gca/email-registrations"]
     for field in ("email", "acknowledgements.emailContactConsent", "acknowledgements.noSecretsNoCustody"):
         if field not in email_registration.get("requiredRequestFields", []):
@@ -8429,6 +8495,9 @@ def validate_credits_page(text: str) -> None:
     assert_contains(text, "controlled HTTPS account UI", label)
     assert_contains(text, "read-only GCA balance verification", label)
     assert_contains(text, "credit ledger record live for eligible holders", label)
+    assert_contains(text, "Service requests", label)
+    assert_contains(text, "local operator request queue ready", label)
+    assert_contains(text, "does not deduct credits", label)
     assert_contains(text, "member ledger record live for eligible holders", label)
     assert_contains(text, "support review queue", label)
     assert_contains(text, "No custody", label)
@@ -8451,6 +8520,7 @@ def validate_credits_json(text: str) -> None:
     redemption = payload.get("redemptionBoundaries", {})
     safety = payload.get("safetyArchitecture", {})
     release_gates = payload.get("releaseGates", {})
+    service_request_queue = payload.get("serviceRequestQueue", {})
     market = payload.get("officialMarket", {})
     links = payload.get("officialLinks", {})
     boundaries = payload.get("publicClaimBoundaries", {})
@@ -8474,6 +8544,10 @@ def validate_credits_json(text: str) -> None:
             raise SiteCheckError(f"{label}: {key} must be true")
     if state.get("liveTradingEnabled") is not False:
         raise SiteCheckError(f"{label}: liveTradingEnabled must be false")
+    if state.get("serviceRequestQueueLocalLive") is not True:
+        raise SiteCheckError(f"{label}: serviceRequestQueueLocalLive must be true")
+    if state.get("serviceRequestQueueProductionLive") is not False:
+        raise SiteCheckError(f"{label}: serviceRequestQueueProductionLive must be false")
     if holder_bonus.get("minimumHolding") != "10000 GCA":
         raise SiteCheckError(f"{label}: wrong holder bonus minimum")
     if holder_bonus.get("creditAmount") != "100 GCA AI Quant Access credits":
@@ -8527,6 +8601,10 @@ def validate_credits_json(text: str) -> None:
         raise SiteCheckError(f"{label}: requiresControlledAccountUi should be false after account UI launch")
     if redemption.get("requiresLedgerActivation") is not False:
         raise SiteCheckError(f"{label}: requiresLedgerActivation should be false after ledger path launch")
+    if redemption.get("serviceRequestBeforeCreditUsage") is not True:
+        raise SiteCheckError(f"{label}: serviceRequestBeforeCreditUsage must be true")
+    if redemption.get("serviceRequestDeductsCredits") is not False:
+        raise SiteCheckError(f"{label}: serviceRequestDeductsCredits must be false")
     for key in (
         "transferable",
         "cashEquivalent",
@@ -8550,6 +8628,18 @@ def validate_credits_json(text: str) -> None:
             raise SiteCheckError(f"{label}: {key} must be false")
     if safety.get("simulationFirstRequiredBeforeFutureExecution") is not True:
         raise SiteCheckError(f"{label}: simulation-first requirement must be true")
+    if service_request_queue.get("status") != "local-operator-service-request-queue-ready":
+        raise SiteCheckError(f"{label}: wrong service request queue status")
+    if service_request_queue.get("localEndpoint") != "http://127.0.0.1:8787/gca/service-requests":
+        raise SiteCheckError(f"{label}: wrong service request local endpoint")
+    if service_request_queue.get("packetVersion") != "gca_service_request_v1":
+        raise SiteCheckError(f"{label}: wrong service request packet version")
+    if service_request_queue.get("productionWorkerEndpointLive") is not False:
+        raise SiteCheckError(f"{label}: service request production endpoint must be false")
+    if service_request_queue.get("deductsCredits") is not False:
+        raise SiteCheckError(f"{label}: service request must not deduct credits")
+    if service_request_queue.get("createsTradingPermission") is not False:
+        raise SiteCheckError(f"{label}: service request must not create trading permission")
     if release_gates.get("releaseGatesPage") != RELEASE_GATES_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong releaseGatesPage")
     if release_gates.get("releaseGates") != RELEASE_GATES_URL:

@@ -61,6 +61,7 @@ CREDIT_SERVICE_CATALOG = {
 PACKET_VERSION = "gca_member_preregistration_v2"
 EMAIL_REGISTRATION_VERSION = "gca_email_registration_v1"
 CREDIT_USAGE_VERSION = "gca_credit_usage_v1"
+SERVICE_REQUEST_VERSION = "gca_service_request_v1"
 CONTACT_EMAIL = "support@gcagochina.com"
 ALLOWED_PROGRAM_INTENTS = {"holder_bonus", "gca_member", "general_waitlist"}
 EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
@@ -81,6 +82,7 @@ LEDGER_NAMES = (
     "pre_registrations",
     "wallet_verifications",
     "credit_ledger",
+    "service_requests",
     "credit_usage",
     "member_ledger",
     "member_benefit_transfers",
@@ -116,6 +118,11 @@ SUPPORT_REVIEW_UPDATE_STATUSES = {
     "pending_manual_reserve_transfer",
     "closed_resolved",
     "closed_no_action",
+}
+SERVICE_REQUEST_STATUSES = {
+    "queued_operator_review",
+    "queued_missing_credit_ledger",
+    "queued_insufficient_credits",
 }
 
 
@@ -372,6 +379,61 @@ def extract_credit_usage(packet: dict[str, Any]) -> dict[str, Any]:
         "walletAddress": wallet_address,
         "operatorNote": safe_operator_text(packet.get("operatorNote"), 500),
         "source": safe_operator_text(packet.get("source") or "local-credit-usage-operator", 120),
+    }
+
+
+def extract_service_request(packet: dict[str, Any]) -> dict[str, Any]:
+    if packet.get("packetVersion") not in (None, SERVICE_REQUEST_VERSION):
+        raise BackendError(f"packetVersion must be {SERVICE_REQUEST_VERSION}")
+    email = normalize_email(str(packet.get("email") or ""))
+    service_id = str(packet.get("serviceId") or "").strip()
+    service = CREDIT_SERVICE_CATALOG.get(service_id)
+    if not service:
+        raise BackendError("serviceId is not supported")
+    acknowledgements = packet.get("acknowledgements")
+    if not isinstance(acknowledgements, dict):
+        acknowledgements = {}
+    no_secrets = bool(packet.get("securityBoundaryAccepted") or acknowledgements.get("noSecretsNoCustody"))
+    manual_review = bool(packet.get("manualReviewAccepted") or acknowledgements.get("manualReviewOnly"))
+    no_trading_permission = bool(packet.get("noTradingPermissionAccepted") or acknowledgements.get("noTradingPermission"))
+    if not no_secrets:
+        raise BackendError("security boundary acknowledgement is required")
+    if not manual_review:
+        raise BackendError("manual review acknowledgement is required")
+    if not no_trading_permission:
+        raise BackendError("no trading permission acknowledgement is required")
+    wallet_address = str(packet.get("walletAddress") or "").strip()
+    if wallet_address:
+        wallet_address = normalize_wallet(wallet_address)
+    credit_ledger_id = str(packet.get("creditLedgerId") or "").strip()
+    requested_credit_hold = int(service["creditUnit"])
+    raw_requested_credit_hold = packet.get("requestedCreditHold")
+    if raw_requested_credit_hold not in (None, ""):
+        try:
+            requested_credit_hold = int(raw_requested_credit_hold)
+        except (TypeError, ValueError) as exc:
+            raise BackendError("requestedCreditHold must be an integer between 0 and 100") from exc
+    if requested_credit_hold < 0 or requested_credit_hold > CREDIT_AMOUNT:
+        raise BackendError("requestedCreditHold must be an integer between 0 and 100")
+    if requested_credit_hold == 0 and int(service["creditUnit"]) != 0:
+        raise BackendError("requestedCreditHold must be greater than 0 for this service")
+    return {
+        "email": email,
+        "walletAddress": wallet_address,
+        "creditLedgerId": credit_ledger_id,
+        "serviceId": service_id,
+        "serviceName": str(service["name"]),
+        "requestedCreditHold": requested_credit_hold,
+        "requestTitle": safe_operator_text(packet.get("requestTitle"), 140),
+        "requestSummary": safe_operator_text(packet.get("requestSummary"), 1200),
+        "marketContext": safe_operator_text(packet.get("marketContext"), 500),
+        "preferredLanguage": safe_operator_text(packet.get("preferredLanguage") or "zh-CN", 32),
+        "source": safe_operator_text(packet.get("source") or "local-service-request", 120),
+        "acknowledgements": {
+            "noSecretsNoCustody": no_secrets,
+            "manualReviewOnly": manual_review,
+            "noTradingPermission": no_trading_permission,
+        },
     }
 
 
@@ -757,6 +819,122 @@ class GcaMemberBackend:
             "status": "ledger_recorded",
         }
         return self.store.append("credit_ledger", record)
+
+    def record_service_request(self, payload: dict[str, Any]) -> dict[str, Any]:
+        request_input = extract_service_request(payload)
+        credit = None
+        remaining_credits = ""
+        if request_input["creditLedgerId"]:
+            credit_versions = self.store.find("credit_ledger", creditLedgerId=request_input["creditLedgerId"])
+            if not credit_versions:
+                raise BackendError("creditLedgerId was not found", HTTPStatus.NOT_FOUND)
+            credit = credit_versions[-1]
+            if str(credit.get("email") or "").lower() != request_input["email"]:
+                raise BackendError("email must match the credit ledger email")
+            if request_input["walletAddress"] and request_input["walletAddress"] != str(credit.get("walletAddress") or "").lower():
+                raise BackendError("walletAddress must match the credit ledger wallet")
+            remaining_credits = safe_operator_int(credit.get("remainingCredits"))
+            status = (
+                "queued_operator_review"
+                if request_input["requestedCreditHold"] <= remaining_credits
+                else "queued_insufficient_credits"
+            )
+        else:
+            status = "queued_missing_credit_ledger"
+
+        requested_at = iso_now()
+        service_request_id = stable_id(
+            "gca_service_req",
+            request_input["email"],
+            request_input["serviceId"],
+            requested_at,
+        )
+        service_request = {
+            "serviceRequestId": service_request_id,
+            "packetVersion": SERVICE_REQUEST_VERSION,
+            "createdAt": requested_at,
+            "status": status,
+            "email": request_input["email"],
+            "walletAddress": request_input["walletAddress"] or (str(credit.get("walletAddress") or "") if credit else ""),
+            "creditLedgerId": request_input["creditLedgerId"],
+            "serviceId": request_input["serviceId"],
+            "serviceName": request_input["serviceName"],
+            "requestedCreditHold": request_input["requestedCreditHold"],
+            "remainingCreditsAtRequest": remaining_credits,
+            "requestTitle": request_input["requestTitle"],
+            "requestSummary": request_input["requestSummary"],
+            "marketContext": request_input["marketContext"],
+            "preferredLanguage": request_input["preferredLanguage"],
+            "source": request_input["source"],
+            "acknowledgements": request_input["acknowledgements"],
+            "localOnly": True,
+            "operatorReviewRequired": True,
+            "doesNotDeductCredits": True,
+            "requiresSignature": False,
+            "requiresTransaction": False,
+            "automaticTokenTransfer": False,
+            "writesWallet": False,
+            "createsTradingPermission": False,
+        }
+        self.store.append("service_requests", service_request)
+
+        review_status = "received" if status == "queued_operator_review" else "needs_more_information"
+        next_step = "Operator should review the request, confirm service scope, and only record credit usage after delivery evidence exists."
+        if status == "queued_missing_credit_ledger":
+            next_step = "Ask the user to complete member access and wallet verification before service fulfillment."
+        if status == "queued_insufficient_credits":
+            next_step = "Confirm remaining credits or route the request to support before any service delivery."
+        review = {
+            "reviewId": stable_id("gca_review_service_request", service_request_id),
+            "registrationId": str(credit.get("registrationId") or "") if credit else "",
+            "lane": "gca-service-request",
+            "status": review_status,
+            "updatedAt": requested_at,
+            "walletAddress": service_request["walletAddress"],
+            "holderBonusEligible": bool(credit),
+            "gcaMemberEligible": False,
+            "serviceRequestId": service_request_id,
+            "creditLedgerId": request_input["creditLedgerId"],
+            "serviceId": request_input["serviceId"],
+            "serviceName": request_input["serviceName"],
+            "requestedCreditHold": request_input["requestedCreditHold"],
+            "remainingCreditsAtRequest": remaining_credits,
+            "memberLedgerId": "",
+            "memberBenefitClaimStatus": "",
+            "nextStep": next_step,
+            "publicEvidenceReference": service_request_id,
+            "supportNote": request_input["requestSummary"] or "GCA AI Quant Access service request queued for operator review.",
+            "source": "local-service-request",
+            "localOnly": True,
+            "selfServicePublicClaim": False,
+            "automaticUserReply": False,
+            "automaticTokenTransfer": False,
+            "requiresSignature": False,
+            "requiresTransaction": False,
+            "writesProductionData": False,
+        }
+        self.store.append("support_reviews", review)
+
+        return {
+            "ok": True,
+            "packetVersion": SERVICE_REQUEST_VERSION,
+            "serviceRequest": service_request,
+            "supportReview": review,
+            "creditLedger": credit,
+            "nextStep": next_step,
+            "boundaries": {
+                "localhostOnly": True,
+                "localJsonlLedgerOnly": True,
+                "writesProductionData": False,
+                "walletCalls": False,
+                "deductsCredits": False,
+                "requiresSignature": False,
+                "requiresTransaction": False,
+                "automaticTokenTransfer": False,
+                "writesWallet": False,
+                "createsTradingPermission": False,
+            },
+        }
 
     def record_credit_usage(self, payload: dict[str, Any]) -> dict[str, Any]:
         usage_input = extract_credit_usage(payload)
@@ -1214,6 +1392,7 @@ class GcaMemberBackend:
             "email",
             "registrationId",
             "creditLedgerId",
+            "serviceRequestId",
             "creditUsageId",
             "serviceId",
             "memberLedgerId",
@@ -1228,6 +1407,7 @@ class GcaMemberBackend:
     def operator_summary(self, limit: int = 25) -> dict[str, Any]:
         ledgers = {name: self.store.read_all(name) for name in LEDGER_NAMES}
         credit_records = latest_records_by(ledgers["credit_ledger"], "creditLedgerId")
+        service_request_records = latest_records_by(ledgers["service_requests"], "serviceRequestId")
         credit_usage_records = latest_records_by(ledgers["credit_usage"], "creditUsageId")
         member_records = latest_records_by(ledgers["member_ledger"], "memberLedgerId")
         transfer_records = latest_records_by(ledgers["member_benefit_transfers"], "transferRecordId")
@@ -1253,6 +1433,18 @@ class GcaMemberBackend:
                 "preRegistrations": len(ledgers["pre_registrations"]),
                 "walletVerifications": len(ledgers["wallet_verifications"]),
                 "creditLedgerRecords": len(credit_records),
+                "serviceRequests": len(service_request_records),
+                "serviceRequestsPendingOperatorReview": sum(
+                    1
+                    for record in service_request_records
+                    if record.get("status") == "queued_operator_review"
+                ),
+                "serviceRequestsNeedingMoreInformation": sum(
+                    1
+                    for record in service_request_records
+                    if record.get("status") in {"queued_missing_credit_ledger", "queued_insufficient_credits"}
+                ),
+                "requestedCreditHolds": sum(int(record.get("requestedCreditHold") or 0) for record in service_request_records),
                 "creditUsageRecords": len(credit_usage_records),
                 "creditsConsumed": sum(int(record.get("creditAmountUsed") or 0) for record in credit_usage_records),
                 "exhaustedCreditLedgers": sum(1 for record in credit_records if record.get("status") == "exhausted"),
@@ -1278,6 +1470,7 @@ class GcaMemberBackend:
                 "readOnlyWalletVerification": True,
                 "manualReserveTransferOnly": True,
                 "recordsManualTransfersOnly": True,
+                "recordsServiceRequestsOnly": True,
                 "recordsCreditUsageOnly": True,
             },
         }
@@ -1875,6 +2068,7 @@ class GcaMemberBackend:
             "reviewChecklist": [
                 "Confirm each wallet verification uses Base Mainnet chainId 8453 and the official GCA contract.",
                 "Confirm holder credits remain utility credits only and are not cash, income, or trading permission.",
+                "Confirm each service request has a serviceRequestId, serviceId, requestedCreditHold, and operator-review status before delivery.",
                 "Confirm any credit usage record has a creditUsageId, serviceId, creditAmountUsed, and remainingCreditsAfter value.",
                 "Confirm GCA Member records require at least 1,000,000 GCA and 30 consecutive holding days before benefit review.",
                 "Confirm any 10,000 GCA member benefit transfer has a successful Base Mainnet GCA Transfer log to the verified member wallet.",
@@ -1965,6 +2159,7 @@ def build_handler(site_dir: Path, backend: GcaMemberBackend) -> type[SimpleHTTPR
                     "/gca/pre-registrations": "pre_registrations",
                     "/gca/wallet-verifications": "wallet_verifications",
                     "/gca/credit-ledger": "credit_ledger",
+                    "/gca/service-requests": "service_requests",
                     "/gca/credit-usage": "credit_usage",
                     "/gca/member-ledger": "member_ledger",
                     "/gca/member-benefit-transfers": "member_benefit_transfers",
@@ -1993,6 +2188,9 @@ def build_handler(site_dir: Path, backend: GcaMemberBackend) -> type[SimpleHTTPR
                     return
                 if parsed.path == "/gca/wallet-verifications":
                     self.send_json({"ok": True, "walletVerification": backend.wallet_verification_from_request(payload)}, HTTPStatus.CREATED)
+                    return
+                if parsed.path == "/gca/service-requests":
+                    self.send_json(backend.record_service_request(payload), HTTPStatus.CREATED)
                     return
                 if parsed.path == "/gca/credit-usage":
                     self.send_json(backend.record_credit_usage(payload), HTTPStatus.CREATED)

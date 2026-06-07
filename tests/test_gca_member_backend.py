@@ -423,6 +423,72 @@ class GcaMemberBackendTests(unittest.TestCase):
                 "creditAmountUsed": 91,
             })
 
+    def test_record_service_request_queues_review_without_deducting_credits(self):
+        backend, store = self.make_backend(MEMBER_THRESHOLD_UNITS)
+        response = backend.submit_pre_registration(sample_packet())
+        credit_id = response["creditLedger"]["creditLedgerId"]
+
+        service_request = backend.record_service_request({
+            "packetVersion": "gca_service_request_v1",
+            "email": "member@example.com",
+            "walletAddress": WALLET,
+            "creditLedgerId": credit_id,
+            "serviceId": "entry-ready-review",
+            "requestTitle": "Review my entry setup",
+            "requestSummary": "I want an ENTRY_READY review for a public chart setup.",
+            "marketContext": "BTC range trade planning only; no account credentials included.",
+            "acknowledgements": {
+                "noSecretsNoCustody": True,
+                "manualReviewOnly": True,
+                "noTradingPermission": True,
+            },
+        })
+
+        self.assertTrue(service_request["ok"])
+        self.assertEqual(service_request["packetVersion"], "gca_service_request_v1")
+        self.assertEqual(service_request["serviceRequest"]["status"], "queued_operator_review")
+        self.assertEqual(service_request["serviceRequest"]["serviceId"], "entry-ready-review")
+        self.assertEqual(service_request["serviceRequest"]["requestedCreditHold"], 15)
+        self.assertEqual(service_request["serviceRequest"]["remainingCreditsAtRequest"], 100)
+        self.assertTrue(service_request["serviceRequest"]["doesNotDeductCredits"])
+        self.assertFalse(service_request["boundaries"]["deductsCredits"])
+        self.assertFalse(service_request["boundaries"]["createsTradingPermission"])
+        self.assertEqual(service_request["supportReview"]["lane"], "gca-service-request")
+        self.assertEqual(len(store.read_all("service_requests")), 1)
+        self.assertEqual(len(store.read_all("credit_usage")), 0)
+        self.assertEqual(store.read_all("credit_ledger")[-1]["remainingCredits"], 100)
+
+        summary = backend.operator_summary()
+        self.assertEqual(summary["totals"]["serviceRequests"], 1)
+        self.assertEqual(summary["totals"]["serviceRequestsPendingOperatorReview"], 1)
+        self.assertEqual(summary["totals"]["requestedCreditHolds"], 15)
+        self.assertTrue(summary["operatorBoundaries"]["recordsServiceRequestsOnly"])
+
+        missing_credit = backend.record_service_request({
+            "packetVersion": "gca_service_request_v1",
+            "email": "member@example.com",
+            "serviceId": "support-review-queue",
+            "requestTitle": "General support review",
+            "acknowledgements": {
+                "noSecretsNoCustody": True,
+                "manualReviewOnly": True,
+                "noTradingPermission": True,
+            },
+        })
+        self.assertEqual(missing_credit["serviceRequest"]["status"], "queued_missing_credit_ledger")
+        self.assertEqual(missing_credit["supportReview"]["status"], "needs_more_information")
+
+        with self.assertRaises(BackendError):
+            backend.record_service_request({
+                "packetVersion": "gca_service_request_v1",
+                "email": "member@example.com",
+                "serviceId": "entry-ready-review",
+                "acknowledgements": {
+                    "noSecretsNoCustody": True,
+                    "manualReviewOnly": True,
+                },
+            })
+
     def test_operator_digest_reads_redacted_local_digest_without_user_records(self):
         backend, store = self.make_backend(MEMBER_THRESHOLD_UNITS)
         digest_path = store.data_dir / "gca_operator_digest.json"
@@ -833,6 +899,37 @@ class GcaMemberBackendTests(unittest.TestCase):
             self.assertEqual(payload["creditLedger"]["status"], "ledger_recorded")
             credit_id = payload["creditLedger"]["creditLedgerId"]
 
+            service_request = Request(
+                f"{base_url}/gca/service-requests",
+                data=json.dumps({
+                    "packetVersion": "gca_service_request_v1",
+                    "email": "member@example.com",
+                    "walletAddress": WALLET,
+                    "creditLedgerId": credit_id,
+                    "serviceId": "risk-warning-review",
+                    "requestTitle": "Risk warning review",
+                    "requestSummary": "Please queue a reviewed service request before any credit usage is recorded.",
+                    "acknowledgements": {
+                        "noSecretsNoCustody": True,
+                        "manualReviewOnly": True,
+                        "noTradingPermission": True,
+                    },
+                }).encode(),
+                headers={"Content-Type": "application/json"},
+                method="POST",
+            )
+            with urlopen(service_request, timeout=10) as response:
+                service_payload = json.loads(response.read().decode())
+            self.assertTrue(service_payload["ok"])
+            self.assertEqual(service_payload["serviceRequest"]["status"], "queued_operator_review")
+            self.assertTrue(service_payload["serviceRequest"]["doesNotDeductCredits"])
+
+            with urlopen(f"{base_url}/gca/service-requests?creditLedgerId={credit_id}", timeout=10) as response:
+                service_ledger = json.loads(response.read().decode())
+            self.assertTrue(service_ledger["ok"])
+            self.assertEqual(service_ledger["count"], 1)
+            self.assertEqual(service_ledger["records"][0]["serviceId"], "risk-warning-review")
+
             usage_request = Request(
                 f"{base_url}/gca/credit-usage",
                 data=json.dumps({
@@ -866,6 +963,7 @@ class GcaMemberBackendTests(unittest.TestCase):
                 summary = json.loads(response.read().decode())
             self.assertTrue(summary["ok"])
             self.assertEqual(summary["totals"]["memberLedgerRecords"], 1)
+            self.assertEqual(summary["totals"]["serviceRequests"], 1)
             self.assertEqual(summary["totals"]["creditUsageRecords"], 1)
             self.assertEqual(summary["totals"]["creditsConsumed"], 10)
             self.assertEqual(summary["totals"]["emailRegistrations"], 1)

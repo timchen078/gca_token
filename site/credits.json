@@ -22,6 +22,8 @@
     "creditUsageWorkerDeployBlocked": true,
     "creditUsageWorkerDryRunPassed": true,
     "creditUsageWorkerDeployBlockedBy": "Cloudflare authentication or Workers service permission error [code: 10000]",
+    "serviceRequestQueueLocalLive": true,
+    "serviceRequestQueueProductionLive": false,
     "memberLedgerWritesLive": true
   },
   "holderBonus": {
@@ -139,6 +141,27 @@
     "selfServiceRedemption": false,
     "automaticWalletAction": false
   },
+  "serviceRequestQueue": {
+    "status": "local-operator-service-request-queue-ready",
+    "localEndpoint": "http://127.0.0.1:8787/gca/service-requests",
+    "packetVersion": "gca_service_request_v1",
+    "records": [
+      "serviceRequestId",
+      "email",
+      "walletAddress",
+      "creditLedgerId",
+      "serviceId",
+      "requestedCreditHold",
+      "remainingCreditsAtRequest",
+      "status"
+    ],
+    "operatorOnly": true,
+    "productionWorkerEndpointLive": false,
+    "deductsCredits": false,
+    "requiresSupportReview": true,
+    "automaticWalletAction": false,
+    "createsTradingPermission": false
+  },
   "redemptionBoundaries": {
     "accountLevelOnly": true,
     "transferable": false,
@@ -148,6 +171,8 @@
     "incomeOrReimbursement": false,
     "tradingPermission": false,
     "riskControlBypass": false,
+    "serviceRequestBeforeCreditUsage": true,
+    "serviceRequestDeductsCredits": false,
     "operatorUsageReviewRequired": true,
     "selfServiceRedemption": false,
     "requiresControlledAccountUi": false,
@@ -225,6 +250,7 @@
       "GCA has published a service catalog for GCA AI Quant Access credits.",
       "The 10,000 GCA holder bonus can create one account-level 100 GCA AI Quant Access credits ledger record after controlled verification.",
       "Operator-reviewed service delivery can be recorded through the local GCA credit usage ledger with before/after remaining credits; the Cloudflare Worker route is prepared and pending deploy permission.",
+      "Operators can queue requested service scope in the local service request ledger before delivery; queued requests do not deduct credits.",
       "The 1,000,000 GCA Member threshold requires 30 consecutive days of holding before a one-time 10,000 GCA member benefit review.",
       "Credits and member status are account-level service records; the 10,000 GCA member benefit is manual review only.",
       "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool."
@@ -232,6 +258,7 @@
     "doNotClaim": [
       "credits or member status are cash, income, reimbursement, trading permission, or transferable value",
       "credit usage is automatic, public self-service, cash settlement, or wallet settlement",
+      "service request queue records are automatic service delivery, credit deduction, cash settlement, wallet settlement, or trading permission",
       "the 10,000 GCA member benefit is automatic or self-service transferred",
       "token ownership bypasses risk controls, support review, or simulation-first requirements",
       "service units are final commercial pricing before public terms are published"

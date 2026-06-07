@@ -4957,6 +4957,8 @@ class LaunchPackageTests(unittest.TestCase):
             "POST /gca/member-access",
             "POST /gca/wallet-verifications",
             "GET /gca/credit-ledger",
+            "GET /gca/service-requests",
+            "POST /gca/service-requests",
             "GET /gca/credit-usage",
             "POST /gca/credit-usage",
             "GET /gca/member-ledger",
@@ -4972,7 +4974,7 @@ class LaunchPackageTests(unittest.TestCase):
         }:
             self.assertIn(endpoint_key, endpoint_keys)
         for endpoint in api["endpoints"]:
-            if endpoint["id"] in {"operator-summary", "operator-digest", "operator-action-plan", "review-package", "member-review-update", "member-benefit-transfers-read", "member-benefit-transfers-create"}:
+            if endpoint["id"] in {"operator-summary", "operator-digest", "operator-action-plan", "review-package", "member-review-update", "member-benefit-transfers-read", "member-benefit-transfers-create", "service-requests-read", "service-requests-create"}:
                 self.assertEqual(endpoint["status"], "local-only-not-public-production")
             elif endpoint["id"] in {"email-registrations-create", "contact-suppressions-create", "access-config-read", "member-access-create", "wallet-verifications"}:
                 self.assertEqual(endpoint["status"], "production-workers-dev-live")
