@@ -403,6 +403,14 @@
           <span class="value" id="creditLedgerCount">0</span>
         </div>
         <div class="fact">
+          <span class="label">Credit usage records</span>
+          <span class="value" id="creditUsageCount">0</span>
+        </div>
+        <div class="fact">
+          <span class="label">Credits consumed</span>
+          <span class="value" id="creditsConsumedCount">0</span>
+        </div>
+        <div class="fact">
           <span class="label">Active GCA Members</span>
           <span class="value" id="activeMemberCount">0</span>
         </div>
@@ -618,7 +626,7 @@
         </div>
         <div class="panel">
           <h2>Local API</h2>
-          <p class="note"><code>GET /gca/operator-summary</code> powers local ledger counts, <code>GET /gca/operator-digest</code> loads the latest redacted daily digest, and <code>GET /gca/operator-action-plan</code> ranks manual next actions. <code>GET /gca/review-package</code> exports a local reviewer evidence package with <code>recordManifest</code> and <code>packageDigestSha256</code> for support and platform follow-up. Use <code>?redact=public</code> before external sharing to redact user email, Telegram, reviewer notes, support notes, and evidence notes while keeping public wallet and transaction evidence. Export the same package without running the server with <code>tools/export_gca_review_package.py</code>, then verify it with <code>tools/verify_gca_review_package.py</code>. Individual records remain available through <code>GET /gca/pre-registrations</code>, <code>GET /gca/wallet-verifications</code>, <code>GET /gca/credit-ledger</code>, <code>GET /gca/member-ledger</code>, <code>GET /gca/member-benefit-transfers</code>, and <code>GET /gca/member-review</code>. <code>POST /gca/member-review</code> appends a local support status update, and <code>POST /gca/member-benefit-transfers</code> records a completed manual reserve-wallet transfer after the operator signs it outside this app and the backend verifies the receipt with read-only Base Mainnet data.</p>
+          <p class="note"><code>GET /gca/operator-summary</code> powers local ledger counts, <code>GET /gca/operator-digest</code> loads the latest redacted daily digest, and <code>GET /gca/operator-action-plan</code> ranks manual next actions. <code>GET /gca/review-package</code> exports a local reviewer evidence package with <code>recordManifest</code> and <code>packageDigestSha256</code> for support and platform follow-up. Use <code>?redact=public</code> before external sharing to redact user email, Telegram, reviewer notes, support notes, and evidence notes while keeping public wallet and transaction evidence. Export the same package without running the server with <code>tools/export_gca_review_package.py</code>, then verify it with <code>tools/verify_gca_review_package.py</code>. Individual records remain available through <code>GET /gca/pre-registrations</code>, <code>GET /gca/wallet-verifications</code>, <code>GET /gca/credit-ledger</code>, <code>GET /gca/credit-usage</code>, <code>GET /gca/member-ledger</code>, <code>GET /gca/member-benefit-transfers</code>, and <code>GET /gca/member-review</code>. <code>POST /gca/credit-usage</code> records operator-reviewed utility credit usage, <code>POST /gca/member-review</code> appends a local support status update, and <code>POST /gca/member-benefit-transfers</code> records a completed manual reserve-wallet transfer after the operator signs it outside this app and the backend verifies the receipt with read-only Base Mainnet data.</p>
           <pre id="summaryJson">Waiting for local backend...</pre>
         </div>
       </section>
@@ -649,6 +657,46 @@
             <p class="status warn" id="handoffStatus">No export yet</p>
           </div>
         </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="creditUsageTitle">
+        <h2 id="creditUsageTitle">Record Credit Usage</h2>
+        <p class="note">Use this after a reviewed GCA AI Quant Access service unit has been delivered or accepted for delivery. This writes a local credit-usage ledger record and updates the local remaining credits count. It does not connect to a wallet, request a signature, send tokens, or create trading access.</p>
+        <form class="form section" id="creditUsageForm">
+          <div class="field">
+            <label for="usageCreditLedgerId">Credit Ledger ID</label>
+            <input id="usageCreditLedgerId" name="creditLedgerId" autocomplete="off" placeholder="gca_credit_...">
+          </div>
+          <div class="field">
+            <label for="usageServiceId">Service Unit</label>
+            <select id="usageServiceId" name="serviceId">
+              <option value="risk-warning-review">Risk Warning Review - 10 credits</option>
+              <option value="position-size-calculator">Position Size Calculator - 5 credits</option>
+              <option value="entry-ready-review">ENTRY_READY Review - 15 credits</option>
+              <option value="backtest-lab-run">Backtest Lab - 20 credits</option>
+              <option value="liquidation-replay-report">Liquidation Replay - 30 credits</option>
+              <option value="risk-control-training">Risk-Control Training - 10 credits</option>
+              <option value="member-research-notes">Member Research Notes - 20 credits</option>
+              <option value="support-review-queue">Support Review Queue - 0 credits</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="usageCreditAmountUsed">Credits Used</label>
+            <input id="usageCreditAmountUsed" name="creditAmountUsed" inputmode="numeric" autocomplete="off" value="10" placeholder="10">
+          </div>
+          <div class="field">
+            <label for="usageWalletAddress">Wallet Address (optional)</label>
+            <input id="usageWalletAddress" name="walletAddress" autocomplete="off" placeholder="0x...">
+          </div>
+          <div class="field">
+            <label for="usageOperatorNote">Operator Note</label>
+            <textarea id="usageOperatorNote" name="operatorNote" placeholder="Record the delivered service context. Do not paste private keys, seed phrases, exchange API secrets, one-time codes, or withdrawal permissions."></textarea>
+          </div>
+          <div class="actions">
+            <button class="button primary" id="recordCreditUsageButton" type="submit" disabled>Record Credit Usage</button>
+            <span class="status" id="creditUsageStatus">Local backend required</span>
+          </div>
+        </form>
       </section>
 
       <section class="section panel" aria-labelledby="transferTitle">
@@ -784,6 +832,7 @@
       const REVIEW_PACKAGE_ENDPOINT_PATH = "/gca/review-package";
       const MEMBER_REVIEW_ENDPOINT_PATH = "/gca/member-review";
       const MEMBER_BENEFIT_TRANSFER_ENDPOINT_PATH = "/gca/member-benefit-transfers";
+      const CREDIT_USAGE_ENDPOINT_PATH = "/gca/credit-usage";
       const connectionStatus = document.getElementById("connectionStatus");
       const refreshButton = document.getElementById("refreshButton");
       const loadActionPlanButton = document.getElementById("loadActionPlanButton");
@@ -796,6 +845,9 @@
       const transferForm = document.getElementById("transferForm");
       const recordTransferButton = document.getElementById("recordTransferButton");
       const transferStatus = document.getElementById("transferStatus");
+      const creditUsageForm = document.getElementById("creditUsageForm");
+      const recordCreditUsageButton = document.getElementById("recordCreditUsageButton");
+      const creditUsageStatus = document.getElementById("creditUsageStatus");
       const reviewUpdateForm = document.getElementById("reviewUpdateForm");
       const recordReviewUpdateButton = document.getElementById("recordReviewUpdateButton");
       const reviewUpdateStatus = document.getElementById("reviewUpdateStatus");
@@ -837,6 +889,8 @@
         emailRegistrationCount: document.getElementById("emailRegistrationCount"),
         preRegistrationCount: document.getElementById("preRegistrationCount"),
         creditLedgerCount: document.getElementById("creditLedgerCount"),
+        creditUsageCount: document.getElementById("creditUsageCount"),
+        creditsConsumedCount: document.getElementById("creditsConsumedCount"),
         activeMemberCount: document.getElementById("activeMemberCount"),
         pendingTransferCount: document.getElementById("pendingTransferCount"),
         recordedTransferCount: document.getElementById("recordedTransferCount"),
@@ -852,6 +906,11 @@
       function setTransferStatus(text, kind = "") {
         transferStatus.textContent = text;
         transferStatus.className = `status ${kind}`.trim();
+      }
+
+      function setCreditUsageStatus(text, kind = "") {
+        creditUsageStatus.textContent = text;
+        creditUsageStatus.className = `status ${kind}`.trim();
       }
 
       function setReviewUpdateStatus(text, kind = "") {
@@ -885,6 +944,7 @@
         loadDigestButton.disabled = !backendConnected;
         exportButton.disabled = !backendConnected;
         exportPublicButton.disabled = !backendConnected;
+        recordCreditUsageButton.disabled = !backendConnected;
         recordTransferButton.disabled = !backendConnected;
         recordReviewUpdateButton.disabled = !backendConnected;
         if (!backendConnected) {
@@ -1131,6 +1191,7 @@
           setStatus("Public website view: use /gca/member-access/ for Workers + D1 intake; local backend actions are disabled here", "warn");
           refreshButton.disabled = true;
           setBackendControlsEnabled(false);
+          setCreditUsageStatus("Public website view only", "warn");
           setTransferStatus("Public website view only", "warn");
           setReviewUpdateStatus("Public website view only", "warn");
           setHandoffStatus("Public website view only; export disabled", "warn");
@@ -1153,6 +1214,8 @@
           statNodes.emailRegistrationCount.textContent = totals.emailRegistrations ?? 0;
           statNodes.preRegistrationCount.textContent = totals.preRegistrations ?? 0;
           statNodes.creditLedgerCount.textContent = totals.creditLedgerRecords ?? 0;
+          statNodes.creditUsageCount.textContent = totals.creditUsageRecords ?? 0;
+          statNodes.creditsConsumedCount.textContent = totals.creditsConsumed ?? 0;
           statNodes.activeMemberCount.textContent = totals.activeMembers ?? 0;
           statNodes.pendingTransferCount.textContent = totals.pendingManualReserveTransfers ?? 0;
           statNodes.recordedTransferCount.textContent = totals.memberBenefitTransfers ?? 0;
@@ -1161,6 +1224,7 @@
           renderReviews(payload.dataLedgers?.support_reviews?.latest || []);
           setBackendControlsEnabled(true);
           setStatus("Local operator backend connected", "good");
+          setCreditUsageStatus("Ready to record credit usage", "good");
           setTransferStatus("Ready to record manual transfer", "good");
           setReviewUpdateStatus("Ready to record support review update", "good");
           await loadOperatorDigest({ silent: true });
@@ -1173,6 +1237,7 @@
           renderReviews([]);
           renderActionPlanUnavailable("Local backend unavailable. Run the backend and refresh before loading the action plan.");
           renderDigestUnavailable("Local backend unavailable. Run the backend and refresh before loading the operator digest.");
+          setCreditUsageStatus("Local backend unavailable", "warn");
           setTransferStatus("Local backend unavailable", "warn");
           setReviewUpdateStatus("Local backend unavailable", "warn");
           setHandoffStatus("Local backend unavailable; export disabled", "warn");
@@ -1372,6 +1437,50 @@
         }
       }
 
+      async function recordCreditUsage(event) {
+        event.preventDefault();
+        if (!LOCAL_BACKEND_HOSTS.has(window.location.hostname)) {
+          setCreditUsageStatus("Open the local backend URL before recording", "warn");
+          return;
+        }
+        if (!backendConnected) {
+          setCreditUsageStatus("Local backend unavailable; refresh before recording", "warn");
+          return;
+        }
+
+        const form = new FormData(creditUsageForm);
+        const payload = {
+          creditLedgerId: String(form.get("creditLedgerId") || "").trim(),
+          serviceId: String(form.get("serviceId") || "").trim(),
+          creditAmountUsed: Number(String(form.get("creditAmountUsed") || "").trim()),
+          walletAddress: String(form.get("walletAddress") || "").trim(),
+          operatorNote: String(form.get("operatorNote") || "").trim(),
+        };
+
+        setCreditUsageStatus("Recording credit usage");
+        recordCreditUsageButton.disabled = true;
+        try {
+          const response = await fetch(CREDIT_USAGE_ENDPOINT_PATH, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+          const result = await response.json();
+          if (!response.ok || !result.ok) {
+            throw new Error(result.error || `HTTP ${response.status}`);
+          }
+          const remaining = result.creditUsage?.remainingCreditsAfter ?? result.creditLedger?.remainingCredits ?? "-";
+          setCreditUsageStatus(`Credit usage recorded; remaining credits ${remaining}`, "good");
+          creditUsageForm.reset();
+          document.getElementById("usageCreditAmountUsed").value = "10";
+          await refreshOperatorSummary();
+        } catch (error) {
+          setCreditUsageStatus(error.message, "warn");
+        } finally {
+          recordCreditUsageButton.disabled = !backendConnected;
+        }
+      }
+
       async function recordMemberBenefitTransfer(event) {
         event.preventDefault();
         if (!LOCAL_BACKEND_HOSTS.has(window.location.hostname)) {
@@ -1466,6 +1575,7 @@
       copyHandoffButton.addEventListener("click", copyHandoffReply);
       copyContactExportCommandsButton.addEventListener("click", copyContactExportCommands);
       copyDigestCommandButton.addEventListener("click", copyDigestCommand);
+      creditUsageForm.addEventListener("submit", recordCreditUsage);
       transferForm.addEventListener("submit", recordMemberBenefitTransfer);
       reviewUpdateForm.addEventListener("submit", recordSupportReviewUpdate);
       reviewStatusFilter.addEventListener("change", applyReviewFilters);

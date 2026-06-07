@@ -27,6 +27,9 @@
     "memberAccessPacketVersion": "gca_member_access_v1",
     "walletVerificationLive": true,
     "creditLedgerWritesLive": true,
+    "creditUsageLedgerPrepared": true,
+    "creditUsageLedgerWritesLive": false,
+    "creditUsageWorkerDeployBlocked": true,
     "memberLedgerWritesLive": true
   },
   "localDevelopmentBackend": {
@@ -43,6 +46,7 @@
     "localOperatorActionPlanEndpoint": "/gca/operator-action-plan",
     "localReviewPackageEndpoint": "/gca/review-package",
     "localSupportReviewUpdateEndpoint": "/gca/member-review",
+    "localCreditUsageEndpoint": "/gca/credit-usage",
     "localReviewPackageExporter": "tools/export_gca_review_package.py",
     "localReviewPackageVerifier": "tools/verify_gca_review_package.py",
     "localReviewPackageRedactionModes": [
@@ -55,6 +59,7 @@
       "pre_registrations",
       "wallet_verifications",
       "credit_ledger",
+      "credit_usage",
       "member_ledger",
       "member_benefit_transfers",
       "support_reviews"
@@ -105,10 +110,12 @@
     "customDomainExampleConfig": "cloudflare/gca-registration-worker/wrangler.custom-domain.example.toml",
     "publicWebsiteFallback": "official-email-fallback",
     "memberAccessMigration": "cloudflare/gca-registration-worker/migrations/0003_member_access_ledgers.sql",
+    "creditUsageMigration": "cloudflare/gca-registration-worker/migrations/0004_credit_usage_ledger.sql",
     "memberAccessEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/member-access",
     "walletVerificationEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/wallet-verifications",
     "accessConfigEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/access-config",
     "adminCreditLedgerEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/credit-ledger",
+    "adminCreditUsageEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/credit-usage",
     "adminMemberLedgerEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/member-ledger",
     "antiSpamHoneypotFields": [
       "website",
@@ -399,10 +406,83 @@
         "not_connected",
         "queued",
         "ledger_recorded",
+        "exhausted",
         "partially_used",
         "used",
         "expired",
         "revoked"
+      ]
+    },
+    {
+      "id": "credit-usage-read",
+      "method": "GET",
+      "path": "/gca/credit-usage",
+      "status": "prepared-worker-deploy-pending",
+      "purpose": "Read account-level GCA AI Quant Access credit usage records through ADMIN_READ_TOKEN protected operator access after the Worker route is deployed; local operator backend support is implemented.",
+      "requiredRequestFields": [
+        "authorization bearer token"
+      ],
+      "optionalRequestFields": [
+        "limit",
+        "walletAddress",
+        "creditLedgerId"
+      ],
+      "responseFields": [
+        "creditUsageId",
+        "creditLedgerId",
+        "walletAddress",
+        "serviceId",
+        "serviceName",
+        "creditAmountUsed",
+        "remainingCreditsBefore",
+        "remainingCreditsAfter",
+        "usedAt",
+        "status",
+        "requiresSignature",
+        "requiresTransaction",
+        "automaticTokenTransfer",
+        "writesWallet"
+      ],
+      "allowedStatuses": [
+        "usage_recorded",
+        "exhausted"
+      ]
+    },
+    {
+      "id": "credit-usage-create",
+      "method": "POST",
+      "path": "/gca/credit-usage",
+      "status": "prepared-worker-deploy-pending",
+      "purpose": "Record operator-reviewed utility credit usage against an existing credit ledger entry and update remaining credits after the Worker route is deployed; local operator backend support is implemented.",
+      "requiredRequestFields": [
+        "authorization bearer token",
+        "creditLedgerId",
+        "serviceId",
+        "creditAmountUsed"
+      ],
+      "optionalRequestFields": [
+        "walletAddress",
+        "operatorNote"
+      ],
+      "serverChecks": [
+        "creditLedgerId must exist",
+        "serviceId must be in the published GCA AI Quant Access service catalog",
+        "creditAmountUsed must be an integer between 0 and 100",
+        "creditAmountUsed cannot exceed remainingCredits",
+        "walletAddress must match the credit ledger wallet when supplied",
+        "no wallet connection, signature, transaction, private key, seed phrase, exchange API secret, or withdrawal permission is requested"
+      ],
+      "responseFields": [
+        "creditUsage",
+        "creditLedger",
+        "boundaries",
+        "remainingCreditsAfter",
+        "automaticTokenTransfer",
+        "writesWallet"
+      ],
+      "allowedStatuses": [
+        "usage_recorded",
+        "exhausted"
       ]
     },
     {
@@ -615,7 +695,7 @@
       "method": "GET",
       "path": "/gca/operator-summary",
       "status": "local-only-not-public-production",
-      "purpose": "Return local operator console counts and latest JSONL records for email registrations, pre-registrations, wallet verifications, credit ledger, member ledger, member benefit transfers, and support reviews.",
+      "purpose": "Return local operator console counts and latest JSONL records for email registrations, pre-registrations, wallet verifications, credit ledger, credit usage, member ledger, member benefit transfers, and support reviews.",
       "requiredRequestFields": [
         "localhostClient"
       ],
@@ -624,6 +704,8 @@
         "dataLedgers",
         "totals",
         "operatorBoundaries",
+        "creditUsageRecords",
+        "creditsConsumed",
         "memberBenefitTransfers",
         "transferredMemberBenefits",
         "publicSelfServiceClaim",
@@ -795,6 +877,7 @@
       "The member access API is live on Cloudflare Workers + D1 and uses gca_member_access_v1.",
       "The Worker verifies Base Mainnet GCA balances with read-only eth_call and ERC-20 balanceOf.",
       "Eligible 10,000 GCA holders can create one 100 GCA AI Quant Access credits ledger record.",
+      "GCA operators can record service-level credit usage against an existing credit ledger in the local operator backend; the Cloudflare Worker route is prepared and pending deploy permission.",
       "Eligible 1,000,000 GCA / 30-day holders can create a GCA Member review ledger record.",
       "The API contract forbids private keys, seed phrases, exchange API secrets, withdrawal permission, custody, and risk-control bypass.",
       "The 10,000 GCA member benefit remains manual review and reserve-wallet processing only.",
@@ -802,6 +885,7 @@
     ],
     "doNotClaim": [
       "credits or member status are cash, income, reimbursement, trading permission, or transferable value",
+      "credit usage is public self-service redemption, cash settlement, or automatic wallet action",
       "GCA Member approval is automatic without wallet balance and 30-day holding-period review",
       "the 10,000 GCA member benefit is automatic or self-service transferred",
       "the API collects private keys, seed phrases, exchange API secrets, withdrawal permission, custody, or one-time codes",
