@@ -491,6 +491,11 @@
           </div>
           <div class="fact">
             <span class="label">POST / GET</span>
+            <span class="value">/gca/service-requests</span>
+            <p class="note">Local-only operator queue for requested GCA AI Quant Access service scope before delivery. It records service ID, optional credit ledger ID, requested credit hold, and review status; it does not deduct credits, connect wallets, request signatures, send tokens, write production data, or create trading permission.</p>
+          </div>
+          <div class="fact">
+            <span class="label">POST / GET</span>
             <span class="value">/gca/credit-usage</span>
             <p class="note">Prepared token-protected operator ledger for reviewed service-level credit usage. Local backend support is implemented, the D1 migration is applied, and <code>wrangler deploy --dry-run</code> passes; the Cloudflare Worker route is pending Workers service publish permission. It records service ID, credits used, before/after balance, and status; it never connects wallets, requests signatures, sends tokens, or creates trading permission.</p>
           </div>
@@ -551,6 +556,7 @@
             <div class="row"><span>Contact suppression</span><strong>email, contactSuppressionRequested, no-secrets acknowledgement</strong></div>
             <div class="row"><span>Member evidence</span><strong><code>memberBenefitReviewEvidence</code>, <code>holdingStartDate</code>, <code>evidenceTxHash</code>, <code>evidenceTxHashFormatOk</code></strong></div>
             <div class="row"><span>Wallet verification</span><strong>registrationId, walletAddress, chainId, contractAddress</strong></div>
+            <div class="row"><span>Service request</span><strong>email, serviceId, no-secrets acknowledgement, manual-review acknowledgement</strong></div>
             <div class="row"><span>Credit usage</span><strong>creditLedgerId, serviceId, creditAmountUsed, admin token</strong></div>
             <div class="row"><span>Support review</span><strong>status, nextStep, reviewId or memberLedgerId / walletAddress</strong></div>
             <div class="row"><span>Ledger reads</span><strong>ADMIN_READ_TOKEN protected operator read</strong></div>
@@ -564,6 +570,7 @@
             <div class="row"><span>Contact suppression</span><strong>suppressed</strong></div>
             <div class="row"><span>Wallet check</span><strong>verified, below_threshold, failed, expired</strong></div>
             <div class="row"><span>Credit ledger</span><strong>queued, ledger_recorded, partially_used, used, expired, revoked</strong></div>
+            <div class="row"><span>Service request</span><strong>queued_operator_review, queued_missing_credit_ledger, queued_insufficient_credits</strong></div>
             <div class="row"><span>Credit usage</span><strong>usage_recorded, exhausted</strong></div>
             <div class="row"><span>Member ledger</span><strong>active, needs_refresh, below_threshold, paused, revoked</strong></div>
             <div class="row"><span>Member benefit</span><strong>10,000 GCA after 30-day hold review</strong></div>

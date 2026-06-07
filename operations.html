@@ -420,15 +420,19 @@
             <p class="note">Use the reviewed backend path to inspect and reconcile credit or member records, then keep manual-review notes for any 10,000 GCA member benefit handling.</p>
           </div>
           <div>
-            <h3>8. Platform Follow-Up</h3>
+            <h3>8. Service Request Triage</h3>
+            <p class="note">Queue requested GCA AI Quant Access service scope in the local <code>service_requests</code> ledger before delivery. This does not deduct credits; the credit usage ledger is written only after reviewed delivery.</p>
+          </div>
+          <div>
+            <h3>9. Platform Follow-Up</h3>
             <p class="note">When a reviewer asks for more information, send public URLs only and keep pool, contract, status, and claim boundaries consistent.</p>
           </div>
           <div>
-            <h3>9. Review Package Handoff</h3>
+            <h3>10. Review Package Handoff</h3>
             <p class="note">When a reviewer asks for local member-ledger evidence, export only the <code>redacted-public</code> package, verify <code>packageDigestSha256</code>, and use the <a href="platform-replies.html">Platform Replies</a> local review package template. Never send a full-local package externally.</p>
           </div>
           <div>
-            <h3>10. Closure</h3>
+            <h3>11. Closure</h3>
             <p class="note">Close the record only after status, evidence reference, reviewer note, and next public link are recorded without secrets.</p>
           </div>
         </div>
@@ -464,7 +468,11 @@
             <p class="note">For reviewed service delivery, record <code>creditUsageId</code>, <code>serviceId</code>, <code>creditAmountUsed</code>, and remaining credits before/after through the local operator-only credit usage ledger. The Cloudflare Worker route is prepared and pending deploy permission.</p>
           </div>
           <div>
-            <h3>7. No Automatic Transfer</h3>
+            <h3>7. Service Request Queue</h3>
+            <p class="note">Before delivery, record requested service scope through the local <code>service_requests</code> queue. It stores <code>serviceRequestId</code>, <code>serviceId</code>, optional <code>creditLedgerId</code>, requested credit hold, and status. It does not deduct credits; credit usage is recorded only after reviewed delivery.</p>
+          </div>
+          <div>
+            <h3>8. No Automatic Transfer</h3>
             <p class="note">The member ops pipeline never sends GCA. Any 10,000 GCA member benefit remains manual reserve-wallet processing after review.</p>
           </div>
         </div>

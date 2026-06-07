@@ -407,6 +407,18 @@
           <span class="value" id="creditUsageCount">0</span>
         </div>
         <div class="fact">
+          <span class="label">Service requests</span>
+          <span class="value" id="serviceRequestCount">0</span>
+        </div>
+        <div class="fact">
+          <span class="label">Pending service review</span>
+          <span class="value" id="serviceRequestPendingCount">0</span>
+        </div>
+        <div class="fact">
+          <span class="label">Requested credit holds</span>
+          <span class="value" id="serviceRequestHoldCount">0</span>
+        </div>
+        <div class="fact">
           <span class="label">Credits consumed</span>
           <span class="value" id="creditsConsumedCount">0</span>
         </div>
@@ -626,7 +638,7 @@
         </div>
         <div class="panel">
           <h2>Local API</h2>
-          <p class="note"><code>GET /gca/operator-summary</code> powers local ledger counts, <code>GET /gca/operator-digest</code> loads the latest redacted daily digest, and <code>GET /gca/operator-action-plan</code> ranks manual next actions. <code>GET /gca/review-package</code> exports a local reviewer evidence package with <code>recordManifest</code> and <code>packageDigestSha256</code> for support and platform follow-up. Use <code>?redact=public</code> before external sharing to redact user email, Telegram, reviewer notes, support notes, and evidence notes while keeping public wallet and transaction evidence. Export the same package without running the server with <code>tools/export_gca_review_package.py</code>, then verify it with <code>tools/verify_gca_review_package.py</code>. Individual records remain available through <code>GET /gca/pre-registrations</code>, <code>GET /gca/wallet-verifications</code>, <code>GET /gca/credit-ledger</code>, <code>GET /gca/credit-usage</code>, <code>GET /gca/member-ledger</code>, <code>GET /gca/member-benefit-transfers</code>, and <code>GET /gca/member-review</code>. <code>POST /gca/credit-usage</code> records operator-reviewed utility credit usage, <code>POST /gca/member-review</code> appends a local support status update, and <code>POST /gca/member-benefit-transfers</code> records a completed manual reserve-wallet transfer after the operator signs it outside this app and the backend verifies the receipt with read-only Base Mainnet data.</p>
+          <p class="note"><code>GET /gca/operator-summary</code> powers local ledger counts, <code>GET /gca/operator-digest</code> loads the latest redacted daily digest, and <code>GET /gca/operator-action-plan</code> ranks manual next actions. <code>GET /gca/review-package</code> exports a local reviewer evidence package with <code>recordManifest</code> and <code>packageDigestSha256</code> for support and platform follow-up. Use <code>?redact=public</code> before external sharing to redact user email, Telegram, reviewer notes, support notes, and evidence notes while keeping public wallet and transaction evidence. Export the same package without running the server with <code>tools/export_gca_review_package.py</code>, then verify it with <code>tools/verify_gca_review_package.py</code>. Individual records remain available through <code>GET /gca/pre-registrations</code>, <code>GET /gca/wallet-verifications</code>, <code>GET /gca/credit-ledger</code>, <code>GET /gca/service-requests</code>, <code>GET /gca/credit-usage</code>, <code>GET /gca/member-ledger</code>, <code>GET /gca/member-benefit-transfers</code>, and <code>GET /gca/member-review</code>. <code>POST /gca/service-requests</code> queues an operator-reviewed service scope request without deducting credits, <code>POST /gca/credit-usage</code> records operator-reviewed utility credit usage after delivery, <code>POST /gca/member-review</code> appends a local support status update, and <code>POST /gca/member-benefit-transfers</code> records a completed manual reserve-wallet transfer after the operator signs it outside this app and the backend verifies the receipt with read-only Base Mainnet data.</p>
           <pre id="summaryJson">Waiting for local backend...</pre>
         </div>
       </section>
@@ -657,6 +669,70 @@
             <p class="status warn" id="handoffStatus">No export yet</p>
           </div>
         </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="serviceRequestTitle">
+        <h2 id="serviceRequestTitle">Record Service Request</h2>
+        <p class="note">Use this before delivery when a user asks for a GCA AI Quant Access service unit. This writes a local <code>service_requests</code> record and a support review entry only. It does not deduct credits, connect wallets, request signatures, send tokens, write production data, or create trading permission.</p>
+        <form class="form section" id="serviceRequestForm">
+          <div class="field">
+            <label for="serviceRequestEmail">User Email</label>
+            <input id="serviceRequestEmail" name="email" type="email" autocomplete="off" placeholder="user@example.com">
+          </div>
+          <div class="field">
+            <label for="serviceRequestCreditLedgerId">Credit Ledger ID (optional)</label>
+            <input id="serviceRequestCreditLedgerId" name="creditLedgerId" autocomplete="off" placeholder="gca_credit_...">
+          </div>
+          <div class="field">
+            <label for="serviceRequestWalletAddress">Wallet Address (optional)</label>
+            <input id="serviceRequestWalletAddress" name="walletAddress" autocomplete="off" placeholder="0x...">
+          </div>
+          <div class="field">
+            <label for="serviceRequestServiceId">Service Unit</label>
+            <select id="serviceRequestServiceId" name="serviceId">
+              <option value="risk-warning-review" data-credit-unit="10">Risk Warning Review - 10 credits</option>
+              <option value="position-size-calculator" data-credit-unit="5">Position Size Calculator - 5 credits</option>
+              <option value="entry-ready-review" data-credit-unit="15">ENTRY_READY Review - 15 credits</option>
+              <option value="backtest-lab-run" data-credit-unit="20">Backtest Lab - 20 credits</option>
+              <option value="liquidation-replay-report" data-credit-unit="30">Liquidation Replay - 30 credits</option>
+              <option value="risk-control-training" data-credit-unit="10">Risk-Control Training - 10 credits</option>
+              <option value="member-research-notes" data-credit-unit="20">Member Research Notes - 20 credits</option>
+              <option value="support-review-queue" data-credit-unit="0">Support Review Queue - 0 credits</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="serviceRequestCreditHold">Requested Credit Hold</label>
+            <input id="serviceRequestCreditHold" name="requestedCreditHold" inputmode="numeric" autocomplete="off" value="10" placeholder="10">
+          </div>
+          <div class="field">
+            <label for="serviceRequestLanguage">Preferred Language</label>
+            <select id="serviceRequestLanguage" name="preferredLanguage">
+              <option value="zh-CN">Chinese</option>
+              <option value="en">English</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="serviceRequestTitleField">Request Title</label>
+            <input id="serviceRequestTitleField" name="requestTitle" autocomplete="off" placeholder="Example: ENTRY_READY review for a trade idea">
+          </div>
+          <div class="field">
+            <label for="serviceRequestSummary">Request Summary</label>
+            <textarea id="serviceRequestSummary" name="requestSummary" placeholder="Record only non-sensitive service scope. Do not paste private keys, seed phrases, exchange API secrets, one-time codes, withdrawal permissions, or live order instructions."></textarea>
+          </div>
+          <div class="field">
+            <label for="serviceRequestMarketContext">Market Context (optional)</label>
+            <textarea id="serviceRequestMarketContext" name="marketContext" placeholder="Optional non-sensitive context such as pair, timeframe, or risk question."></textarea>
+          </div>
+          <div class="field">
+            <label><input name="noSecretsNoCustody" type="checkbox" checked> No secrets, custody, withdrawal permission, or one-time codes will be collected.</label>
+            <label><input name="manualReviewOnly" type="checkbox" checked> This request enters manual operator review only.</label>
+            <label><input name="noTradingPermission" type="checkbox" checked> This does not create trading permission or live order execution.</label>
+          </div>
+          <div class="actions">
+            <button class="button primary" id="recordServiceRequestButton" type="submit" disabled>Record Service Request</button>
+            <span class="status" id="serviceRequestStatus">Local backend required</span>
+          </div>
+        </form>
       </section>
 
       <section class="section panel" aria-labelledby="creditUsageTitle">
@@ -697,6 +773,29 @@
             <span class="status" id="creditUsageStatus">Local backend required</span>
           </div>
         </form>
+      </section>
+
+      <section class="section">
+        <h2>Latest Service Requests</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Request ID</th>
+                <th>Status</th>
+                <th>Email</th>
+                <th>Wallet</th>
+                <th>Credit Ledger</th>
+                <th>Service</th>
+                <th>Credit Hold</th>
+                <th>Created</th>
+              </tr>
+            </thead>
+            <tbody id="serviceRequestRows">
+              <tr><td colspan="8">No local service request records loaded.</td></tr>
+            </tbody>
+          </table>
+        </div>
       </section>
 
       <section class="section panel" aria-labelledby="transferTitle">
@@ -832,6 +931,7 @@
       const REVIEW_PACKAGE_ENDPOINT_PATH = "/gca/review-package";
       const MEMBER_REVIEW_ENDPOINT_PATH = "/gca/member-review";
       const MEMBER_BENEFIT_TRANSFER_ENDPOINT_PATH = "/gca/member-benefit-transfers";
+      const SERVICE_REQUEST_ENDPOINT_PATH = "/gca/service-requests";
       const CREDIT_USAGE_ENDPOINT_PATH = "/gca/credit-usage";
       const connectionStatus = document.getElementById("connectionStatus");
       const refreshButton = document.getElementById("refreshButton");
@@ -848,11 +948,17 @@
       const creditUsageForm = document.getElementById("creditUsageForm");
       const recordCreditUsageButton = document.getElementById("recordCreditUsageButton");
       const creditUsageStatus = document.getElementById("creditUsageStatus");
+      const serviceRequestForm = document.getElementById("serviceRequestForm");
+      const serviceRequestServiceId = document.getElementById("serviceRequestServiceId");
+      const serviceRequestCreditHold = document.getElementById("serviceRequestCreditHold");
+      const recordServiceRequestButton = document.getElementById("recordServiceRequestButton");
+      const serviceRequestStatus = document.getElementById("serviceRequestStatus");
       const reviewUpdateForm = document.getElementById("reviewUpdateForm");
       const recordReviewUpdateButton = document.getElementById("recordReviewUpdateButton");
       const reviewUpdateStatus = document.getElementById("reviewUpdateStatus");
       const summaryJson = document.getElementById("summaryJson");
       const reviewRows = document.getElementById("reviewRows");
+      const serviceRequestRows = document.getElementById("serviceRequestRows");
       const reviewStatusFilter = document.getElementById("reviewStatusFilter");
       const reviewSearchInput = document.getElementById("reviewSearchInput");
       const clearReviewFiltersButton = document.getElementById("clearReviewFiltersButton");
@@ -890,6 +996,9 @@
         preRegistrationCount: document.getElementById("preRegistrationCount"),
         creditLedgerCount: document.getElementById("creditLedgerCount"),
         creditUsageCount: document.getElementById("creditUsageCount"),
+        serviceRequestCount: document.getElementById("serviceRequestCount"),
+        serviceRequestPendingCount: document.getElementById("serviceRequestPendingCount"),
+        serviceRequestHoldCount: document.getElementById("serviceRequestHoldCount"),
         creditsConsumedCount: document.getElementById("creditsConsumedCount"),
         activeMemberCount: document.getElementById("activeMemberCount"),
         pendingTransferCount: document.getElementById("pendingTransferCount"),
@@ -911,6 +1020,11 @@
       function setCreditUsageStatus(text, kind = "") {
         creditUsageStatus.textContent = text;
         creditUsageStatus.className = `status ${kind}`.trim();
+      }
+
+      function setServiceRequestStatus(text, kind = "") {
+        serviceRequestStatus.textContent = text;
+        serviceRequestStatus.className = `status ${kind}`.trim();
       }
 
       function setReviewUpdateStatus(text, kind = "") {
@@ -944,6 +1058,7 @@
         loadDigestButton.disabled = !backendConnected;
         exportButton.disabled = !backendConnected;
         exportPublicButton.disabled = !backendConnected;
+        recordServiceRequestButton.disabled = !backendConnected;
         recordCreditUsageButton.disabled = !backendConnected;
         recordTransferButton.disabled = !backendConnected;
         recordReviewUpdateButton.disabled = !backendConnected;
@@ -1138,6 +1253,32 @@
         applyReviewFilters();
       }
 
+      function renderServiceRequests(records) {
+        if (!Array.isArray(records) || !records.length) {
+          serviceRequestRows.innerHTML = '<tr><td colspan="8">No local service request records yet.</td></tr>';
+          return;
+        }
+        serviceRequestRows.innerHTML = records.map((record) => `
+          <tr>
+            <td>${escapeHtml(record.serviceRequestId || "none")}</td>
+            <td>${escapeHtml(record.status)}</td>
+            <td>${escapeHtml(record.email)}</td>
+            <td>${escapeHtml(record.walletAddress || "none")}</td>
+            <td>${escapeHtml(record.creditLedgerId || "none")}</td>
+            <td>${escapeHtml(record.serviceName || record.serviceId)}</td>
+            <td>${escapeHtml(record.requestedCreditHold ?? 0)}</td>
+            <td>${escapeHtml(record.createdAt)}</td>
+          </tr>
+        `).join("");
+      }
+
+      function syncServiceRequestCreditHold() {
+        const selected = serviceRequestServiceId.selectedOptions[0];
+        if (selected) {
+          serviceRequestCreditHold.value = selected.dataset.creditUnit || "0";
+        }
+      }
+
       function setFormValue(form, name, value) {
         const field = form.elements[name];
         if (field) {
@@ -1191,12 +1332,14 @@
           setStatus("Public website view: use /gca/member-access/ for Workers + D1 intake; local backend actions are disabled here", "warn");
           refreshButton.disabled = true;
           setBackendControlsEnabled(false);
+          setServiceRequestStatus("Public website view only", "warn");
           setCreditUsageStatus("Public website view only", "warn");
           setTransferStatus("Public website view only", "warn");
           setReviewUpdateStatus("Public website view only", "warn");
           setHandoffStatus("Public website view only; export disabled", "warn");
           summaryJson.textContent = "Open http://127.0.0.1:8787/operator.html after running tools/gca_member_backend.py to view local ledgers.";
           renderEmailRegistrations([]);
+          renderServiceRequests([]);
           renderActionPlanUnavailable("Public website view only. Open http://127.0.0.1:8787/operator.html to load the local action plan.");
           renderDigestUnavailable("Public website view only. Open http://127.0.0.1:8787/operator.html to load the local operator digest.");
           return;
@@ -1215,15 +1358,20 @@
           statNodes.preRegistrationCount.textContent = totals.preRegistrations ?? 0;
           statNodes.creditLedgerCount.textContent = totals.creditLedgerRecords ?? 0;
           statNodes.creditUsageCount.textContent = totals.creditUsageRecords ?? 0;
+          statNodes.serviceRequestCount.textContent = totals.serviceRequests ?? 0;
+          statNodes.serviceRequestPendingCount.textContent = totals.serviceRequestsPendingOperatorReview ?? 0;
+          statNodes.serviceRequestHoldCount.textContent = totals.requestedCreditHolds ?? 0;
           statNodes.creditsConsumedCount.textContent = totals.creditsConsumed ?? 0;
           statNodes.activeMemberCount.textContent = totals.activeMembers ?? 0;
           statNodes.pendingTransferCount.textContent = totals.pendingManualReserveTransfers ?? 0;
           statNodes.recordedTransferCount.textContent = totals.memberBenefitTransfers ?? 0;
           summaryJson.textContent = JSON.stringify(payload, null, 2);
           renderEmailRegistrations(payload.dataLedgers?.email_registrations?.latest || []);
+          renderServiceRequests(payload.dataLedgers?.service_requests?.latest || []);
           renderReviews(payload.dataLedgers?.support_reviews?.latest || []);
           setBackendControlsEnabled(true);
           setStatus("Local operator backend connected", "good");
+          setServiceRequestStatus("Ready to record service requests", "good");
           setCreditUsageStatus("Ready to record credit usage", "good");
           setTransferStatus("Ready to record manual transfer", "good");
           setReviewUpdateStatus("Ready to record support review update", "good");
@@ -1234,9 +1382,11 @@
           setStatus("Local backend unavailable; export and record controls disabled", "warn");
           summaryJson.textContent = `${error.message}\n\nRun: .venv/bin/python tools/gca_member_backend.py --host 127.0.0.1 --port 8787`;
           renderEmailRegistrations([]);
+          renderServiceRequests([]);
           renderReviews([]);
           renderActionPlanUnavailable("Local backend unavailable. Run the backend and refresh before loading the action plan.");
           renderDigestUnavailable("Local backend unavailable. Run the backend and refresh before loading the operator digest.");
+          setServiceRequestStatus("Local backend unavailable", "warn");
           setCreditUsageStatus("Local backend unavailable", "warn");
           setTransferStatus("Local backend unavailable", "warn");
           setReviewUpdateStatus("Local backend unavailable", "warn");
@@ -1481,6 +1631,60 @@
         }
       }
 
+      async function recordServiceRequest(event) {
+        event.preventDefault();
+        if (!LOCAL_BACKEND_HOSTS.has(window.location.hostname)) {
+          setServiceRequestStatus("Open the local backend URL before recording", "warn");
+          return;
+        }
+        if (!backendConnected) {
+          setServiceRequestStatus("Local backend unavailable; refresh before recording", "warn");
+          return;
+        }
+
+        const form = new FormData(serviceRequestForm);
+        const payload = {
+          packetVersion: "gca_service_request_v1",
+          email: String(form.get("email") || "").trim(),
+          creditLedgerId: String(form.get("creditLedgerId") || "").trim(),
+          walletAddress: String(form.get("walletAddress") || "").trim(),
+          serviceId: String(form.get("serviceId") || "").trim(),
+          requestedCreditHold: Number(String(form.get("requestedCreditHold") || "").trim()),
+          preferredLanguage: String(form.get("preferredLanguage") || "").trim(),
+          requestTitle: String(form.get("requestTitle") || "").trim(),
+          requestSummary: String(form.get("requestSummary") || "").trim(),
+          marketContext: String(form.get("marketContext") || "").trim(),
+          acknowledgements: {
+            noSecretsNoCustody: Boolean(form.get("noSecretsNoCustody")),
+            manualReviewOnly: Boolean(form.get("manualReviewOnly")),
+            noTradingPermission: Boolean(form.get("noTradingPermission")),
+          },
+          source: "local-operator-console",
+        };
+
+        setServiceRequestStatus("Recording service request");
+        recordServiceRequestButton.disabled = true;
+        try {
+          const response = await fetch(SERVICE_REQUEST_ENDPOINT_PATH, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+          const result = await response.json();
+          if (!response.ok || !result.ok) {
+            throw new Error(result.error || `HTTP ${response.status}`);
+          }
+          setServiceRequestStatus(`Service request queued: ${result.serviceRequest?.status || "queued"}`, "good");
+          serviceRequestForm.reset();
+          syncServiceRequestCreditHold();
+          await refreshOperatorSummary();
+        } catch (error) {
+          setServiceRequestStatus(error.message, "warn");
+        } finally {
+          recordServiceRequestButton.disabled = !backendConnected;
+        }
+      }
+
       async function recordMemberBenefitTransfer(event) {
         event.preventDefault();
         if (!LOCAL_BACKEND_HOSTS.has(window.location.hostname)) {
@@ -1575,6 +1779,8 @@
       copyHandoffButton.addEventListener("click", copyHandoffReply);
       copyContactExportCommandsButton.addEventListener("click", copyContactExportCommands);
       copyDigestCommandButton.addEventListener("click", copyDigestCommand);
+      serviceRequestServiceId.addEventListener("change", syncServiceRequestCreditHold);
+      serviceRequestForm.addEventListener("submit", recordServiceRequest);
       creditUsageForm.addEventListener("submit", recordCreditUsage);
       transferForm.addEventListener("submit", recordMemberBenefitTransfer);
       reviewUpdateForm.addEventListener("submit", recordSupportReviewUpdate);
@@ -1593,6 +1799,7 @@
         const index = Number(button.getAttribute("data-review-index"));
         prefillReviewUpdate(latestSupportReviews[index]);
       });
+      syncServiceRequestCreditHold();
       refreshOperatorSummary();
     </script>
   </body>

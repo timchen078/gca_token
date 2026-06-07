@@ -32,6 +32,8 @@
     "creditUsageWorkerDeployBlocked": true,
     "creditUsageWorkerDryRunPassed": true,
     "creditUsageWorkerDeployBlockedBy": "Cloudflare authentication or Workers service permission error [code: 10000]",
+    "serviceRequestQueueLocalLive": true,
+    "serviceRequestQueueProductionLive": false,
     "memberLedgerWritesLive": true
   },
   "localDevelopmentBackend": {
@@ -48,6 +50,7 @@
     "localOperatorActionPlanEndpoint": "/gca/operator-action-plan",
     "localReviewPackageEndpoint": "/gca/review-package",
     "localSupportReviewUpdateEndpoint": "/gca/member-review",
+    "localServiceRequestEndpoint": "/gca/service-requests",
     "localCreditUsageEndpoint": "/gca/credit-usage",
     "localReviewPackageExporter": "tools/export_gca_review_package.py",
     "localReviewPackageVerifier": "tools/verify_gca_review_package.py",
@@ -61,6 +64,7 @@
       "pre_registrations",
       "wallet_verifications",
       "credit_ledger",
+      "service_requests",
       "credit_usage",
       "member_ledger",
       "member_benefit_transfers",
@@ -420,6 +424,88 @@
       ]
     },
     {
+      "id": "service-requests-read",
+      "method": "GET",
+      "path": "/gca/service-requests",
+      "status": "local-only-not-public-production",
+      "purpose": "Read local operator-only GCA AI Quant Access service request queue records before reviewed service delivery. This route is not a public production Worker endpoint.",
+      "requiredRequestFields": [
+        "localhostClient"
+      ],
+      "optionalRequestFields": [
+        "limit",
+        "email",
+        "walletAddress",
+        "creditLedgerId",
+        "serviceRequestId"
+      ],
+      "responseFields": [
+        "serviceRequestId",
+        "email",
+        "walletAddress",
+        "creditLedgerId",
+        "serviceId",
+        "serviceName",
+        "requestedCreditHold",
+        "remainingCreditsAtRequest",
+        "status",
+        "createdAt",
+        "doesNotDeductCredits",
+        "operatorReviewRequired"
+      ],
+      "allowedStatuses": [
+        "queued_operator_review",
+        "queued_missing_credit_ledger",
+        "queued_insufficient_credits"
+      ]
+    },
+    {
+      "id": "service-requests-create",
+      "method": "POST",
+      "path": "/gca/service-requests",
+      "status": "local-only-not-public-production",
+      "purpose": "Queue a local operator-reviewed service scope request without deducting credits. Actual service delivery and credit usage remain separate operator actions.",
+      "requiredRequestFields": [
+        "localhostClient",
+        "email",
+        "serviceId",
+        "acknowledgements.noSecretsNoCustody",
+        "acknowledgements.manualReviewOnly",
+        "acknowledgements.noTradingPermission"
+      ],
+      "optionalRequestFields": [
+        "walletAddress",
+        "creditLedgerId",
+        "requestedCreditHold",
+        "requestTitle",
+        "requestSummary",
+        "marketContext",
+        "preferredLanguage"
+      ],
+      "serverChecks": [
+        "serviceId must be in the published GCA AI Quant Access service catalog",
+        "requestedCreditHold must be an integer between 0 and 100",
+        "creditLedgerId must exist when provided",
+        "email must match the credit ledger email when creditLedgerId is provided",
+        "walletAddress must match the credit ledger wallet when supplied",
+        "no wallet connection, signature, transaction, private key, seed phrase, exchange API secret, withdrawal permission, or live order permission is requested",
+        "the route queues review only and does not deduct credits"
+      ],
+      "responseFields": [
+        "serviceRequest",
+        "supportReview",
+        "creditLedger",
+        "boundaries",
+        "deductsCredits",
+        "createsTradingPermission"
+      ],
+      "allowedStatuses": [
+        "queued_operator_review",
+        "queued_missing_credit_ledger",
+        "queued_insufficient_credits"
+      ]
+    },
+    {
       "id": "credit-usage-read",
       "method": "GET",
       "path": "/gca/credit-usage",
@@ -701,7 +787,7 @@
       "method": "GET",
       "path": "/gca/operator-summary",
       "status": "local-only-not-public-production",
-      "purpose": "Return local operator console counts and latest JSONL records for email registrations, pre-registrations, wallet verifications, credit ledger, credit usage, member ledger, member benefit transfers, and support reviews.",
+      "purpose": "Return local operator console counts and latest JSONL records for email registrations, pre-registrations, wallet verifications, credit ledger, service request queue, credit usage, member ledger, member benefit transfers, and support reviews.",
       "requiredRequestFields": [
         "localhostClient"
       ],
@@ -710,6 +796,9 @@
         "dataLedgers",
         "totals",
         "operatorBoundaries",
+        "serviceRequests",
+        "serviceRequestsPendingOperatorReview",
+        "requestedCreditHolds",
         "creditUsageRecords",
         "creditsConsumed",
         "memberBenefitTransfers",
@@ -884,6 +973,7 @@
       "The Worker verifies Base Mainnet GCA balances with read-only eth_call and ERC-20 balanceOf.",
       "Eligible 10,000 GCA holders can create one 100 GCA AI Quant Access credits ledger record.",
       "GCA operators can record service-level credit usage against an existing credit ledger in the local operator backend; the Cloudflare Worker route is prepared and pending deploy permission.",
+      "GCA operators can queue service scope requests in the local operator backend before delivery; the queue does not deduct credits or create trading permission.",
       "Eligible 1,000,000 GCA / 30-day holders can create a GCA Member review ledger record.",
       "The API contract forbids private keys, seed phrases, exchange API secrets, withdrawal permission, custody, and risk-control bypass.",
       "The 10,000 GCA member benefit remains manual review and reserve-wallet processing only.",
@@ -892,6 +982,7 @@
     "doNotClaim": [
       "credits or member status are cash, income, reimbursement, trading permission, or transferable value",
       "credit usage is public self-service redemption, cash settlement, or automatic wallet action",
+      "a service request queue record means service delivery, credit deduction, trading permission, or wallet action has already happened",
       "GCA Member approval is automatic without wallet balance and 30-day holding-period review",
       "the 10,000 GCA member benefit is automatic or self-service transferred",
       "the API collects private keys, seed phrases, exchange API secrets, withdrawal permission, custody, or one-time codes",
