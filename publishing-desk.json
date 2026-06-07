@@ -28,7 +28,7 @@
       "GCA contract facts are public: fixed supply, verified source, no blacklist, no pause, no transfer tax, and no hidden mint path.",
       "Current boundary: no completed third-party audit yet. BaseScan token profile publication is still pending official review, while the owner package was refreshed on 2026-06-06.",
       "https://gcagochina.com/security.html",
-      "Not financial advice.",
+      "Official links first. No price or return claim.",
       "#GCA #GoChina #Base #Web3Security"
     ],
     "xChinese": [
@@ -36,7 +36,7 @@
       "GCA 合约事实是公开的：固定供应、源码已验证、无黑名单、无暂停、无转账税、无隐藏增发路径。",
       "当前边界：第三方审计尚未完成。BaseScan 公开代币资料仍等待官方审核，owner 提交包已在 2026-06-06 刷新。",
       "https://gcagochina.com/security.html",
-      "非投资建议。",
+      "先核对官方链接。不做价格或收益承诺。",
       "#GCA #GoChina #Base #Web3Security"
     ],
     "telegram": [
@@ -77,7 +77,7 @@
     }
   ],
   "doNotPublish": [
-    "return promises, price targets, market predictions, or investment advice",
+    "return promises, price targets, market predictions, or unsupported investment-style claims",
     "third-party audit completion before an independent report is public",
     "BaseScan token profile approval before BaseScan publishes it",
     "security-vendor approval before the vendor confirms it",

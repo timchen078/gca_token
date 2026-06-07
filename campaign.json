@@ -45,7 +45,7 @@
       "GCA contract facts are public: fixed supply, verified source, no blacklist, no pause, no transfer tax, and no hidden mint path.",
       "Current boundary: no completed third-party audit yet. BaseScan token profile publication is still pending official review, while the owner package was refreshed on 2026-06-06.",
       "https://gcagochina.com/security.html",
-      "Not financial advice.",
+      "Official links first. No price or return claim.",
       "#GCA #GoChina #Base #Web3Security"
     ],
     "claimBoundary": "Public security-boundary update only; review before posting and do not add price, return, listing, audit-completion, wallet-vendor, or BaseScan approval claims."
@@ -119,7 +119,7 @@
     "Risk-first education, public documentation, and transparent operations."
   ],
   "doNotPublish": [
-    "return promises, price targets, market predictions, or investment advice",
+    "return promises, price targets, market predictions, or unsupported investment-style claims",
     "third-party audit claim until an independent report is public",
     "BaseScan or security-vendor approval claim unless the platform confirms it",
     "artificial activity language, LP lock claim, or reserve lock claim before evidence exists"
