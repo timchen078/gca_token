@@ -87,6 +87,12 @@
       "publicEvidenceUrl": "https://gcagochina.com/domain-email-evidence.html"
     },
     {
+      "id": "confirm-project-profile-map",
+      "status": "ready-public-evidence-published",
+      "action": "Use the Project Profile BaseScan reviewer map before final preflight so the return-reason evidence chain stays visible.",
+      "publicEvidenceUrl": "https://gcagochina.com/project-profile.html#basescanMapTitle"
+    },
+    {
       "id": "final-basescan-preflight",
       "status": "ready",
       "action": "Run tools/check_basescan_resubmission_readiness.py --json --require-ready before copying the final package into BaseScan.",
@@ -97,6 +103,7 @@
     "The public GCA website check passed on the latest daily ops snapshot.",
     "The public registration API check passed without secrets and without writing test records.",
     "BaseScan token profile resubmission is ready for one owner-controlled submission from support@gcagochina.com.",
+    "The Project Profile BaseScan reviewer map is published at https://gcagochina.com/project-profile.html#basescanMapTitle.",
     "Admin reads, user records, private evidence files, wallet actions, and token transfers are not exposed by this public snapshot."
   ],
   "boundaries": {
@@ -115,6 +122,7 @@
     "dailyStatusPage": "https://gcagochina.com/daily-status.html",
     "apiStatusPage": "https://gcagochina.com/api-status.html",
     "baseScanPreflightPage": "https://gcagochina.com/basescan-preflight.html",
+    "projectProfileBaseScanMap": "https://gcagochina.com/project-profile.html#basescanMapTitle",
     "domainEmailPage": "https://gcagochina.com/domain-email.html",
     "domainEmailEvidencePage": "https://gcagochina.com/domain-email-evidence.html",
     "dataRoom": "https://gcagochina.com/data.html"

@@ -21,6 +21,7 @@ SITE_BASE_URL = "https://gcagochina.com/"
 API_BASE_URL = "https://gca-registration-api.gcagochina.workers.dev"
 DAILY_STATUS_PAGE_URL = "https://gcagochina.com/daily-status.html"
 DAILY_STATUS_URL = "https://gcagochina.com/daily-status.json"
+PROJECT_PROFILE_BASESCAN_MAP_URL = "https://gcagochina.com/project-profile.html#basescanMapTitle"
 MAINNET_ADDRESS = "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6"
 TARGET_DOMAIN_EMAIL = "support@gcagochina.com"
 CURRENT_PUBLIC_EMAIL = TARGET_DOMAIN_EMAIL
@@ -162,6 +163,12 @@ def build_daily_status_payload(summary: dict[str, Any]) -> dict[str, Any]:
                 "publicEvidenceUrl": "https://gcagochina.com/domain-email-evidence.html",
             },
             {
+                "id": "confirm-project-profile-map",
+                "status": "ready-public-evidence-published",
+                "action": "Use the Project Profile BaseScan reviewer map before final preflight so the return-reason evidence chain stays visible.",
+                "publicEvidenceUrl": PROJECT_PROFILE_BASESCAN_MAP_URL,
+            },
+            {
                 "id": "final-basescan-preflight",
                 "status": "ready",
                 "action": "Run tools/check_basescan_resubmission_readiness.py --json --require-ready before copying the final package into BaseScan.",
@@ -266,6 +273,7 @@ def build_daily_status_payload(summary: dict[str, Any]) -> dict[str, Any]:
             "The public GCA website check passed on the latest daily ops snapshot.",
             "The public registration API check passed without secrets and without writing test records.",
             basescan_summary,
+            f"The Project Profile BaseScan reviewer map is published at {PROJECT_PROFILE_BASESCAN_MAP_URL}.",
             "Admin reads, user records, private evidence files, wallet actions, and token transfers are not exposed by this public snapshot.",
         ],
         "boundaries": {
@@ -284,6 +292,7 @@ def build_daily_status_payload(summary: dict[str, Any]) -> dict[str, Any]:
             "dailyStatusPage": DAILY_STATUS_PAGE_URL,
             "apiStatusPage": "https://gcagochina.com/api-status.html",
             "baseScanPreflightPage": "https://gcagochina.com/basescan-preflight.html",
+            "projectProfileBaseScanMap": PROJECT_PROFILE_BASESCAN_MAP_URL,
             "domainEmailPage": "https://gcagochina.com/domain-email.html",
             "domainEmailEvidencePage": "https://gcagochina.com/domain-email-evidence.html",
             "dataRoom": "https://gcagochina.com/data.html",

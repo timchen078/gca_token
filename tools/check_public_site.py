@@ -1961,6 +1961,9 @@ def validate_action_plan_page(text: str) -> None:
         "BaseScan Action Queue From Latest Daily Status",
         "Old-email switch queue",
         "filesStillUsingOldEmail",
+        "Confirm project profile map",
+        "Project Profile Map",
+        "project-profile.html#basescanMapTitle",
         "site/support.html",
         "site/project.json",
         "tools/check_basescan_resubmission_readiness.py --json --require-ready",
@@ -8020,6 +8023,8 @@ def validate_daily_status_page(text: str) -> None:
         "readyForBaseScanResubmission",
         "Ready for owner resubmission",
         "BaseScan Ready For Owner Submission",
+        "Project Profile reviewer map",
+        "project-profile.html#basescanMapTitle",
         "Old Email Files",
         "files publishing the old Outlook email",
         "Old-email queue",
@@ -8114,10 +8119,23 @@ def validate_daily_status_json(text: str) -> None:
     for action_id in (
         "maintain-domain-mailbox",
         "retain-domain-email-evidence",
+        "confirm-project-profile-map",
         "final-basescan-preflight",
     ):
         if action_id not in action_ids:
             raise SiteCheckError(f"{label}: missing owner action {action_id}")
+    project_profile_actions = [
+        item for item in action_queue
+        if isinstance(item, dict) and item.get("id") == "confirm-project-profile-map"
+    ]
+    if not project_profile_actions:
+        raise SiteCheckError(f"{label}: missing project profile action")
+    if project_profile_actions[0].get("publicEvidenceUrl") != f"{PROJECT_PROFILE_PAGE_URL}#basescanMapTitle":
+        raise SiteCheckError(f"{label}: wrong project profile action URL")
+    if links.get("projectProfileBaseScanMap") != f"{PROJECT_PROFILE_PAGE_URL}#basescanMapTitle":
+        raise SiteCheckError(f"{label}: wrong projectProfileBaseScanMap link")
+    if "The Project Profile BaseScan reviewer map is published at https://gcagochina.com/project-profile.html#basescanMapTitle." not in payload.get("safePublicSummary", []):
+        raise SiteCheckError(f"{label}: missing project profile safe summary")
     if basescan.get("targetDomainEmail") != "support@gcagochina.com":
         raise SiteCheckError(f"{label}: wrong target domain email")
     if basescan.get("currentPublicEmail") != "support@gcagochina.com":
