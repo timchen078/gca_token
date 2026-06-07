@@ -402,22 +402,24 @@
       <section class="section grid" aria-label="Next publish copy">
         <div class="panel">
           <h2>Next X Draft</h2>
-          <p class="note">Topic: Security Boundary. Source: <a href="security.html">security.html</a>. Target: 2026-06-07.</p>
+          <p class="note">Topic: Product Utility Intro. Source: <a href="product.html">product.html</a>. Target: 2026-06-07.</p>
           <div class="copy-actions">
             <button class="button" type="button" data-copy-target="xDraftCopy">Copy English X</button>
             <span class="copy-status" id="xDraftCopyStatus" aria-live="polite">Ready to copy</span>
           </div>
-          <pre id="xDraftCopy">GCA security boundary update is ready for review.
+          <pre id="xDraftCopy">GCA / Go China Access is shaping the token around GCA AI Quant Access: a non-custodial product path for China-facing Web3 research and quant risk workflows.
 
-GCA contract facts are public: fixed supply, verified source, no blacklist, no pause, no transfer tax, and no hidden mint path.
+Planned modules: China Narrative Radar, Liquidation Replay, risk-warning credits, Backtest Lab, ENTRY_READY Review, Position Size Calculator, GCA Member Workspace, research notes, training, and support review.
 
-Current boundary: no completed third-party audit yet. BaseScan token profile publication is still pending official review, while the owner package was refreshed on 2026-06-06.
+Live foundation: public account intake, read-only wallet balance verification, eligible 100 credits ledger records, and eligible GCA Member ledger records.
 
-https://gcagochina.com/security.html
+Release boundary: trading-related tools still require risk controls, simulation/testnet checks, and manual review before broader use.
+
+https://gcagochina.com/product.html
 
 Official links first. No price or return claim.
 
-#GCA #GoChina #Base #Web3Security</pre>
+#GCA #GoChina #Base #AIQuant #Web3Tools</pre>
         </div>
         <div class="panel">
           <h2>中文版本</h2>
@@ -426,17 +428,19 @@ Official links first. No price or return claim.
             <button class="button" type="button" data-copy-target="xChineseCopy">Copy Chinese X</button>
             <span class="copy-status" id="xChineseCopyStatus" aria-live="polite">Ready to copy</span>
           </div>
-          <pre id="xChineseCopy">GCA 安全边界更新已准备好审核。
+          <pre id="xChineseCopy">GCA / Go China Access 正在围绕 GCA AI Quant Access 建设：面向中国 Web3 研究和量化风控流程的非托管产品路径。
 
-GCA 合约事实是公开的：固定供应、源码已验证、无黑名单、无暂停、无转账税、无隐藏增发路径。
+规划模块：China Narrative Radar、爆仓复盘、风险预警 credits、Backtest Lab、ENTRY_READY Review、仓位计算器、GCA Member Workspace、研究笔记、训练和支持审核。
 
-当前边界：第三方审计尚未完成。BaseScan 公开代币资料仍等待官方审核，owner 提交包已在 2026-06-06 刷新。
+已上线基础：公开账户入口、只读钱包余额验证、符合条件的 100 credits 账本记录、符合条件的 GCA Member 账本记录。
 
-https://gcagochina.com/security.html
+上线边界：交易相关工具仍需要风控、模拟盘/测试网检查和人工审核后再扩大使用。
+
+https://gcagochina.com/product.html
 
 先核对官方链接。不做价格或收益承诺。
 
-#GCA #GoChina #Base #Web3Security</pre>
+#GCA #GoChina #Base #AIQuant #Web3Tools</pre>
         </div>
       </section>
 
@@ -446,12 +450,11 @@ https://gcagochina.com/security.html
           <button class="button" type="button" data-copy-target="telegramCopy">Copy Telegram</button>
           <span class="copy-status" id="telegramCopyStatus" aria-live="polite">Ready to copy</span>
         </div>
-        <pre id="telegramCopy">GCA Security Boundary update is ready for operator review.
+        <pre id="telegramCopy">GCA AI Quant Access product direction: China-facing Web3 research, wallet verification, utility credits, member review, liquidation replay, backtests, ENTRY_READY review, position sizing, training, and support workflows.
 
-Public contract facts: fixed supply, verified source, no blacklist, no pause, no transfer tax, and no hidden mint path.
+Live foundation: account intake, read-only wallet verification, eligible credits ledger, and eligible GCA Member ledger records. Trading-related modules remain release-gated.
 
-Current boundary: no completed third-party audit yet, and BaseScan token profile publication is still pending official review. Verify official links first:
-https://gcagochina.com/security.html</pre>
+Product page: https://gcagochina.com/product.html</pre>
       </section>
 
       <section class="section cards" aria-label="Publishing workflow">
@@ -502,7 +505,7 @@ https://gcagochina.com/security.html</pre>
           </div>
           <div>
             <label for="postTitle">Ledger title</label>
-            <input id="postTitle" type="text" value="Security Boundary">
+            <input id="postTitle" type="text" value="Product Utility Intro">
           </div>
         </div>
         <div class="copy-actions">
@@ -545,6 +548,7 @@ https://gcagochina.com/security.html</pre>
           <a class="button" href="campaign.html">Campaign Calendar</a>
           <a class="button" href="announcements.html">Announcements</a>
           <a class="button" href="community.html">Community Kit</a>
+          <a class="button" href="https://gcagochina.com/security.html">Security Boundary</a>
           <a class="button" href="radar-issue-004.html">Issue 004</a>
         </div>
       </section>
@@ -622,7 +626,7 @@ https://gcagochina.com/security.html</pre>
         const platform = document.getElementById("postPlatform").value;
         const url = document.getElementById("postUrl").value.trim();
         const publishedDate = document.getElementById("postPublishedDate").value || "2026-06-07";
-        const title = document.getElementById("postTitle").value.trim() || "Security Boundary";
+        const title = document.getElementById("postTitle").value.trim() || "Product Utility Intro";
         const output = document.getElementById("postLedgerSnippet");
         const status = document.getElementById("postLedgerSnippetStatus");
         if (!url) {
@@ -632,7 +636,7 @@ https://gcagochina.com/security.html</pre>
         }
 
         const message = platform === "Telegram" ? paragraphListFrom("telegramCopy") : paragraphListFrom("xDraftCopy");
-        const postId = `${platform.toLowerCase()}-member-access-001-${publishedDate.replaceAll("-", "")}`;
+        const postId = `${platform.toLowerCase()}-product-utility-intro-001-${publishedDate.replaceAll("-", "")}`;
         const snippet = {
           publishedPost: {
             id: postId,

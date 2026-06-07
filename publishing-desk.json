@@ -2,7 +2,7 @@
   "schema": "https://gcagochina.com/publishing-desk.json",
   "pageUrl": "https://gcagochina.com/publishing-desk.html",
   "status": "public-publishing-desk-published",
-  "lastUpdated": "2026-06-06",
+  "lastUpdated": "2026-06-07",
   "projectName": "GCA",
   "conceptExpansion": "Go China Access",
   "currentStage": "early-public-operations",
@@ -15,38 +15,40 @@
   "nextPublishAction": {
     "status": "ready-for-operator-review",
     "targetDate": "2026-06-07",
-    "sourceDraftId": "gca-draft-2026-06-07-security",
-    "topic": "Security Boundary",
+    "sourceDraftId": "gca-draft-2026-06-07-product-intro",
+    "topic": "Product Utility Intro",
     "channels": ["X", "Telegram"],
-    "recommendedLink": "https://gcagochina.com/security.html",
+    "recommendedLink": "https://gcagochina.com/product.html",
     "contentLibrary": "https://gcagochina.com/content-library.html",
     "campaignCalendar": "https://gcagochina.com/campaign.html",
     "requiresManualPosting": true,
     "requiresOperatorReview": true,
     "xEnglish": [
-      "GCA security boundary update is ready for review.",
-      "GCA contract facts are public: fixed supply, verified source, no blacklist, no pause, no transfer tax, and no hidden mint path.",
-      "Current boundary: no completed third-party audit yet. BaseScan token profile publication is still pending official review, while the owner package was refreshed on 2026-06-06.",
-      "https://gcagochina.com/security.html",
+      "GCA / Go China Access is shaping the token around GCA AI Quant Access: a non-custodial product path for China-facing Web3 research and quant risk workflows.",
+      "Planned modules: China Narrative Radar, Liquidation Replay, risk-warning credits, Backtest Lab, ENTRY_READY Review, Position Size Calculator, GCA Member Workspace, research notes, training, and support review.",
+      "Live foundation: public account intake, read-only wallet balance verification, eligible 100 credits ledger records, and eligible GCA Member ledger records.",
+      "Release boundary: trading-related tools still require risk controls, simulation/testnet checks, and manual review before broader use.",
+      "https://gcagochina.com/product.html",
       "Official links first. No price or return claim.",
-      "#GCA #GoChina #Base #Web3Security"
+      "#GCA #GoChina #Base #AIQuant #Web3Tools"
     ],
     "xChinese": [
-      "GCA 安全边界更新已准备好审核。",
-      "GCA 合约事实是公开的：固定供应、源码已验证、无黑名单、无暂停、无转账税、无隐藏增发路径。",
-      "当前边界：第三方审计尚未完成。BaseScan 公开代币资料仍等待官方审核，owner 提交包已在 2026-06-06 刷新。",
-      "https://gcagochina.com/security.html",
+      "GCA / Go China Access 正在围绕 GCA AI Quant Access 建设：面向中国 Web3 研究和量化风控流程的非托管产品路径。",
+      "规划模块：China Narrative Radar、爆仓复盘、风险预警 credits、Backtest Lab、ENTRY_READY Review、仓位计算器、GCA Member Workspace、研究笔记、训练和支持审核。",
+      "已上线基础：公开账户入口、只读钱包余额验证、符合条件的 100 credits 账本记录、符合条件的 GCA Member 账本记录。",
+      "上线边界：交易相关工具仍需要风控、模拟盘/测试网检查和人工审核后再扩大使用。",
+      "https://gcagochina.com/product.html",
       "先核对官方链接。不做价格或收益承诺。",
-      "#GCA #GoChina #Base #Web3Security"
+      "#GCA #GoChina #Base #AIQuant #Web3Tools"
     ],
     "telegram": [
-      "GCA Security Boundary update is ready for operator review.",
-      "Public contract facts: fixed supply, verified source, no blacklist, no pause, no transfer tax, and no hidden mint path.",
-      "Current boundary: no completed third-party audit yet, and BaseScan token profile publication is still pending official review. Verify official links first: https://gcagochina.com/security.html"
+      "GCA AI Quant Access product direction: China-facing Web3 research, wallet verification, utility credits, member review, liquidation replay, backtests, ENTRY_READY review, position sizing, training, and support workflows.",
+      "Live foundation: account intake, read-only wallet verification, eligible credits ledger, and eligible GCA Member ledger records. Trading-related modules remain release-gated.",
+      "Product page: https://gcagochina.com/product.html"
     ],
-    "hashtags": ["#GCA", "#GoChina", "#Base", "#Web3Security"],
-    "visualTheme": "Red GCA mark beside a contract-controls checklist and external-audit pending marker.",
-    "claimBoundary": "Security-boundary education only; no price, return, audit-completion, BaseScan approval, wallet-vendor approval, listing, or market-prediction claim."
+    "hashtags": ["#GCA", "#GoChina", "#Base", "#AIQuant", "#Web3Tools"],
+    "visualTheme": "Red GCA mark beside a GCA AI Quant Access module map, wallet verification, credits, member review, and risk tools.",
+    "claimBoundary": "Product-utility introduction only; no price, return, audit-completion, BaseScan approval, wallet-vendor approval, listing, self-service trading, automatic token benefit, or market-prediction claim."
   },
   "operatorChecklist": [
     "Open the official X profile only: https://x.com/GCAAIGoChina",
