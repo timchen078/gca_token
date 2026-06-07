@@ -505,7 +505,7 @@ def validate_verify(text: str) -> None:
     assert_contains(text, "Verify GCA", label)
     assert_contains(text, "Returned 2026-05-23; final package refreshed 2026-06-06; Handoff and Chinese owner flow ready for one support@gcagochina.com submission", label)
     assert_contains(text, "Latest reviewer package", label)
-    assert_contains(text, "Final package 2026-06-06T11:10:54Z; daily status 2026-06-06T12:13:21Z", label)
+    assert_contains(text, "Final package 2026-06-06T11:10:54Z; daily status 2026-06-07T13:06:12Z", label)
     assert_contains(text, "well-known token identity", label)
     assert_contains(text, "Wallet Warning", label)
     assert_contains(text, "External Reviews", label)
@@ -1405,7 +1405,7 @@ def validate_basescan_remediation_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != BASESCAN_REMEDIATION_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
-    if payload.get("lastUpdated") != "2026-06-06":
+    if payload.get("lastUpdated") != "2026-06-07":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("status") not in {
         "basescan-ready-for-owner-resubmission",
@@ -1481,7 +1481,7 @@ def validate_basescan_remediation_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong final submission markdown path")
     if final_package.get("json") != "launch/basescan_final_submission_package.json":
         raise SiteCheckError(f"{label}: wrong final submission json path")
-    if final_package.get("preflightLastUpdated") != "2026-06-06":
+    if final_package.get("preflightLastUpdated") != "2026-06-07":
         raise SiteCheckError(f"{label}: wrong final submission preflight date")
     preflight = gate.get("preflightTool", {})
     if preflight.get("tool") != "tools/check_basescan_resubmission_readiness.py":
@@ -1573,7 +1573,7 @@ def validate_basescan_preflight_page(text: str) -> None:
         "Latest DNS Snapshot",
         "2026-05-30",
         "Preflight Refresh",
-        "2026-06-06",
+        "2026-06-07",
         "2026-06-06T11:10:54Z",
         "Main Blocker",
         "No local blocker",
@@ -1629,7 +1629,7 @@ def validate_basescan_preflight_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != BASESCAN_PREFLIGHT_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
-    if payload.get("lastUpdated") != "2026-06-06":
+    if payload.get("lastUpdated") != "2026-06-07":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("status") not in {
         "blocked-domain-email-before-basescan-resubmission",
@@ -2476,7 +2476,7 @@ def validate_zh_basescan_preflight_page(text: str) -> None:
         "最新 DNS 快照",
         "2026-05-30",
         "最终包刷新",
-        "2026-06-06",
+        "2026-06-07",
         "2026-06-06T11:10:54Z",
         "launch/",
         "本机 owner 工具输出",
@@ -3239,10 +3239,10 @@ def validate_zh_api_status_page(text: str) -> None:
     assert_social_preview_meta(text, label, ZH_API_STATUS_PAGE_URL)
     for expected in (
         "GCA 中文 API 状态",
-        "中文 API 状态 / 2026-06-06",
-        "2026-06-06T11:21:14Z",
+        "中文 API 状态 / 2026-06-07",
+        "2026-06-07T13:06:12Z",
         "最新检查",
-        "2026-06-06 通过",
+        "2026-06-07 通过",
         "邮箱注册和邮箱退订接口",
         "Cloudflare Workers + D1",
         "管理员读取接口仍需要本地管理 token",
@@ -3478,7 +3478,7 @@ def validate_zh_release_gates_page(text: str) -> None:
         "符合条件写入账本，会员权益仍需人工审核",
         "BaseScan 证据包",
         "Final package 2026-06-06T11:10:54Z",
-        "daily status 2026-06-06T12:13:21Z",
+        "daily status 2026-06-07T13:06:12Z",
         "不发起交易或签名",
         "支持审核队列",
         "风控",
@@ -4470,7 +4470,7 @@ def validate_token_safety_page(text: str) -> None:
     assert_contains(text, "Pending Or Not Claimed", label)
     assert_contains(text, "Returned 2026-05-23; final package refreshed 2026-06-06; Handoff and Chinese owner flow ready for one support@gcagochina.com submission", label)
     assert_contains(text, "Latest reviewer package", label)
-    assert_contains(text, "Final package 2026-06-06T11:10:54Z; daily status 2026-06-06T12:13:21Z", label)
+    assert_contains(text, "Final package 2026-06-06T11:10:54Z; daily status 2026-06-07T13:06:12Z", label)
     assert_contains(text, "No mint function", label)
     assert_contains(text, "No third-party audit", label)
     assert_contains(text, "permanent warning-free status", label)
@@ -5226,7 +5226,7 @@ def validate_roadmap_page(text: str) -> None:
     assert_contains(text, "External Dependencies", label)
     assert_contains(text, "Returned 2026-05-23; final package refreshed 2026-06-06; Handoff and Chinese owner flow ready for one support@gcagochina.com submission", label)
     assert_contains(text, "Latest reviewer package", label)
-    assert_contains(text, "Final package 2026-06-06T11:10:54Z; daily status 2026-06-06T12:13:21Z", label)
+    assert_contains(text, "Final package 2026-06-06T11:10:54Z; daily status 2026-06-07T13:06:12Z", label)
     assert_contains(text, "Owner observed no warning visible", label)
     assert_contains(text, "Pending independent report", label)
     assert_contains(text, "Account and Ledger", label)
@@ -7790,14 +7790,14 @@ def validate_api_status_page(text: str) -> None:
     assert_no_public_data_room_terms(text, label)
     for expected in (
         "GCA Registration API Status",
-        "Registration API Status / 2026-06-06",
-        "2026-06-06T11:21:14Z",
+        "Registration API Status / 2026-06-07",
+        "2026-06-07T13:06:12Z",
         "Cloudflare Workers + D1",
         "https://gca-registration-api.gcagochina.workers.dev",
         "Public Check",
         "Live / no secrets",
         "Latest Check",
-        "2026-06-06 passed",
+        "2026-06-07 passed",
         "Admin Read",
         "Token protected",
         "api.gcagochina.com pending zone access",
@@ -7854,9 +7854,9 @@ def validate_api_status_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong pageUrl")
     if payload.get("status") != "public-member-access-api-status-published":
         raise SiteCheckError(f"{label}: wrong status")
-    if payload.get("lastUpdated") != "2026-06-06":
+    if payload.get("lastUpdated") != "2026-06-07":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
-    if payload.get("latestPublicCheckAt") != "2026-06-06T11:21:14Z":
+    if payload.get("latestPublicCheckAt") != "2026-06-07T13:06:12Z":
         raise SiteCheckError(f"{label}: wrong latest public check timestamp")
     if payload.get("latestPublicCheckStatus") != "passed":
         raise SiteCheckError(f"{label}: wrong latest public check status")
@@ -8562,7 +8562,7 @@ def validate_release_gates_page(text: str) -> None:
     assert_contains(text, "BaseScan token profile publication", label)
     assert_contains(text, "Returned 2026-05-23; final package refreshed 2026-06-06; Handoff and Chinese owner flow ready for one support@gcagochina.com submission", label)
     assert_contains(text, "Latest reviewer package", label)
-    assert_contains(text, "Final package 2026-06-06T11:10:54Z; daily status 2026-06-06T12:13:21Z", label)
+    assert_contains(text, "Final package 2026-06-06T11:10:54Z; daily status 2026-06-07T13:06:12Z", label)
     assert_contains(text, "basescan-handoff.html", label)
     assert_contains(text, "daily-status.html", label)
     assert_contains(text, "no third-party audit", label)
@@ -8589,7 +8589,7 @@ def validate_release_gates_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong pageUrl")
     if payload.get("status") != "public-release-gates-account-ledger-path-live":
         raise SiteCheckError(f"{label}: wrong status")
-    if payload.get("lastUpdated") != "2026-06-06":
+    if payload.get("lastUpdated") != "2026-06-07":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
@@ -8606,11 +8606,11 @@ def validate_release_gates_json(text: str) -> None:
         raise SiteCheckError(f"{label}: liveTradingEnabled must be false")
     if state.get("baseScanTokenProfile") != "ready-for-owner-resubmission":
         raise SiteCheckError(f"{label}: wrong BaseScan state")
-    if state.get("baseScanTokenProfileLastCheckedDate") != "2026-06-06":
+    if state.get("baseScanTokenProfileLastCheckedDate") != "2026-06-07":
         raise SiteCheckError(f"{label}: wrong BaseScan last checked date")
     if state.get("baseScanFinalSubmissionPackageGeneratedAt") != "2026-06-06T11:10:54Z":
         raise SiteCheckError(f"{label}: wrong BaseScan final package timestamp")
-    if state.get("dailyStatusGeneratedAt") != "2026-06-06T12:13:21Z":
+    if state.get("dailyStatusGeneratedAt") != "2026-06-07T13:06:12Z":
         raise SiteCheckError(f"{label}: wrong daily status timestamp")
     if state.get("baseScanResubmissionReady") is not True:
         raise SiteCheckError(f"{label}: BaseScan resubmission should be ready")
@@ -8637,7 +8637,7 @@ def validate_release_gates_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong BaseScan release gate status")
     if base_scan_gate.get("finalSubmissionPackageGeneratedAt") != "2026-06-06T11:10:54Z":
         raise SiteCheckError(f"{label}: wrong BaseScan release gate final package timestamp")
-    if base_scan_gate.get("dailyStatusGeneratedAt") != "2026-06-06T12:13:21Z":
+    if base_scan_gate.get("dailyStatusGeneratedAt") != "2026-06-07T13:06:12Z":
         raise SiteCheckError(f"{label}: wrong BaseScan release gate daily status timestamp")
     for item in (
         "read-only GCA balance verification",
@@ -8710,7 +8710,7 @@ def validate_release_gates_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong zhBaseScanSubmit")
     if not any("live controlled account UI" in item for item in payload.get("publicClaimBoundaries", {}).get("safeClaims", [])):
         raise SiteCheckError(f"{label}: missing release-gates safe claim")
-    if "The latest BaseScan owner submission package was generated on 2026-06-06T11:10:54Z, and the daily public status snapshot was refreshed on 2026-06-06T12:13:21Z." not in payload.get("publicClaimBoundaries", {}).get("safeClaims", []):
+    if "The latest BaseScan owner submission package was generated on 2026-06-06T11:10:54Z, and the daily public status snapshot was refreshed on 2026-06-07T13:06:12Z." not in payload.get("publicClaimBoundaries", {}).get("safeClaims", []):
         raise SiteCheckError(f"{label}: missing latest BaseScan package safe claim")
     if not any("automatic or self-service transferred" in item for item in payload.get("publicClaimBoundaries", {}).get("doNotClaim", [])):
         raise SiteCheckError(f"{label}: missing member benefit boundary")
@@ -8823,7 +8823,7 @@ def validate_terms_page(text: str) -> None:
     assert_contains(text, "No Outcome Promise", label)
     assert_contains(text, "Returned 2026-05-23; final package refreshed 2026-06-06; Handoff and Chinese owner flow ready for one support@gcagochina.com submission", label)
     assert_contains(text, "Latest reviewer package", label)
-    assert_contains(text, "Final package 2026-06-06T11:10:54Z; daily status 2026-06-06T12:13:21Z", label)
+    assert_contains(text, "Final package 2026-06-06T11:10:54Z; daily status 2026-06-07T13:06:12Z", label)
     assert_contains(text, "GCA/USDT on Base Mainnet", label)
     assert_contains(text, "Privacy Notice", label)
     assert_not_contains(text, OLD_WETH_POOL_ADDRESS, label)
@@ -9148,7 +9148,7 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong contractAddress")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
-    if payload.get("lastUpdated") != "2026-06-06":
+    if payload.get("lastUpdated") != "2026-06-07":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("memberProgramRulesUrl") != MEMBER_PROGRAM_URL:
         raise SiteCheckError(f"{label}: wrong memberProgramRulesUrl")
@@ -9294,7 +9294,7 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong baseScanHandoff url")
     if payload.get("baseScanHandoff", {}).get("finalSubmissionPackageGeneratedAt") != "2026-06-06T11:10:54Z":
         raise SiteCheckError(f"{label}: wrong baseScanHandoff finalSubmissionPackageGeneratedAt")
-    if payload.get("baseScanHandoff", {}).get("dailyStatusGeneratedAt") != "2026-06-06T12:13:21Z":
+    if payload.get("baseScanHandoff", {}).get("dailyStatusGeneratedAt") != "2026-06-07T13:06:12Z":
         raise SiteCheckError(f"{label}: wrong baseScanHandoff dailyStatusGeneratedAt")
     if payload.get("platformRepliesPageUrl") != PLATFORM_REPLIES_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong platformRepliesPageUrl")
@@ -9353,13 +9353,13 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong quoteAssetAddress")
     if status.get("baseScanTokenProfile") != "ready-for-owner-resubmission":
         raise SiteCheckError(f"{label}: unexpected BaseScan status")
-    if status.get("baseScanTokenProfileLastCheckedDate") != "2026-06-06":
+    if status.get("baseScanTokenProfileLastCheckedDate") != "2026-06-07":
         raise SiteCheckError(f"{label}: wrong BaseScan profile last checked date")
     if "returned the token profile update again" not in status.get("baseScanTokenProfileLastCheckedResult", ""):
         raise SiteCheckError(f"{label}: missing BaseScan profile last checked result")
     if "2026-06-06T11:10:54Z" not in status.get("baseScanTokenProfileLastCheckedResult", ""):
         raise SiteCheckError(f"{label}: missing BaseScan final package timestamp")
-    if "2026-06-06T12:13:21Z" not in status.get("baseScanTokenProfileLastCheckedResult", ""):
+    if "2026-06-07T13:06:12Z" not in status.get("baseScanTokenProfileLastCheckedResult", ""):
         raise SiteCheckError(f"{label}: missing daily status timestamp")
     if status.get("baseScanFinalSubmissionPackageGeneratedAt") != "2026-06-06T11:10:54Z":
         raise SiteCheckError(f"{label}: wrong baseScanFinalSubmissionPackageGeneratedAt")
@@ -9367,9 +9367,9 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong platformStatus dailyStatusPage")
     if status.get("dailyStatus") != DAILY_STATUS_URL:
         raise SiteCheckError(f"{label}: wrong platformStatus dailyStatus")
-    if status.get("dailyStatusGeneratedAt") != "2026-06-06T12:13:21Z":
+    if status.get("dailyStatusGeneratedAt") != "2026-06-07T13:06:12Z":
         raise SiteCheckError(f"{label}: wrong dailyStatusGeneratedAt")
-    if status.get("externalReviewStatusLastUpdated") != "2026-06-06":
+    if status.get("externalReviewStatusLastUpdated") != "2026-06-07":
         raise SiteCheckError(f"{label}: wrong externalReviewStatusLastUpdated")
     if status.get("domainEmailSetupPlan") != DOMAIN_EMAIL_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong domainEmailSetupPlan")
@@ -9385,13 +9385,13 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong Tim Chen professional profile")
     if status.get("geckoTerminalTokenInfo") != "approved-2026-05-11":
         raise SiteCheckError(f"{label}: unexpected GeckoTerminal status")
-    if external_reviews.get("lastUpdated") != "2026-06-06":
+    if external_reviews.get("lastUpdated") != "2026-06-07":
         raise SiteCheckError(f"{label}: wrong external review lastUpdated")
-    if external_reviews.get("baseScanTokenProfileLastCheckedDate") != "2026-06-06":
+    if external_reviews.get("baseScanTokenProfileLastCheckedDate") != "2026-06-07":
         raise SiteCheckError(f"{label}: wrong external review BaseScan last checked date")
     if "2026-06-06T11:10:54Z" not in external_reviews.get("baseScanTokenProfileLastCheckedResult", ""):
         raise SiteCheckError(f"{label}: missing external review BaseScan final package timestamp")
-    if "2026-06-06T12:13:21Z" not in external_reviews.get("baseScanTokenProfileLastCheckedResult", ""):
+    if "2026-06-07T13:06:12Z" not in external_reviews.get("baseScanTokenProfileLastCheckedResult", ""):
         raise SiteCheckError(f"{label}: missing external review daily status timestamp")
     if external_reviews.get("dailyStatusPage") != DAILY_STATUS_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong external review dailyStatusPage")
@@ -9399,7 +9399,7 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong external review dailyStatus")
     if external_reviews.get("baseScanFinalSubmissionPackageGeneratedAt") != "2026-06-06T11:10:54Z":
         raise SiteCheckError(f"{label}: wrong external review baseScanFinalSubmissionPackageGeneratedAt")
-    if external_reviews.get("dailyStatusGeneratedAt") != "2026-06-06T12:13:21Z":
+    if external_reviews.get("dailyStatusGeneratedAt") != "2026-06-07T13:06:12Z":
         raise SiteCheckError(f"{label}: wrong external review dailyStatusGeneratedAt")
     if status.get("narrativeSystem") != "public-narrative-system-published":
         raise SiteCheckError(f"{label}: unexpected narrative system status")
@@ -10804,7 +10804,7 @@ def validate_listing_readiness_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != LISTING_READINESS_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
-    if payload.get("lastUpdated") != "2026-06-06":
+    if payload.get("lastUpdated") != "2026-06-07":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("status") != "not-ready":
         raise SiteCheckError(f"{label}: wrong status")
@@ -10851,17 +10851,17 @@ def validate_listing_readiness_json(text: str) -> None:
     if not any(check.get("id") == "no-artificial-activity-policy" for check in checks):
         raise SiteCheckError(f"{label}: missing artificial activity policy")
     base_scan_profile = next((check for check in checks if check.get("id") == "basescan-token-profile"), {})
-    if base_scan_profile.get("lastCheckedDate") != "2026-06-06":
+    if base_scan_profile.get("lastCheckedDate") != "2026-06-07":
         raise SiteCheckError(f"{label}: wrong BaseScan profile last checked date")
     if base_scan_profile.get("finalSubmissionPackageGeneratedAt") != "2026-06-06T11:10:54Z":
         raise SiteCheckError(f"{label}: wrong BaseScan final package timestamp")
-    if base_scan_profile.get("dailyStatusGeneratedAt") != "2026-06-06T12:13:21Z":
+    if base_scan_profile.get("dailyStatusGeneratedAt") != "2026-06-07T13:06:12Z":
         raise SiteCheckError(f"{label}: wrong daily status timestamp")
     if "returned again by BaseScan as information-insufficient on 2026-05-23" not in base_scan_profile.get("evidence", ""):
         raise SiteCheckError(f"{label}: missing BaseScan profile last checked evidence")
     if "2026-06-06T11:10:54Z" not in base_scan_profile.get("evidence", ""):
         raise SiteCheckError(f"{label}: missing BaseScan final package evidence")
-    if "2026-06-06T12:13:21Z" not in base_scan_profile.get("evidence", ""):
+    if "2026-06-07T13:06:12Z" not in base_scan_profile.get("evidence", ""):
         raise SiteCheckError(f"{label}: missing daily status evidence")
     if "domain email setup plan" not in base_scan_profile.get("evidence", ""):
         raise SiteCheckError(f"{label}: missing domain email setup evidence")
@@ -11483,7 +11483,7 @@ def validate_reviewer_kit_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong pageUrl")
     if payload.get("status") != "public-reviewer-kit-published":
         raise SiteCheckError(f"{label}: wrong status")
-    if payload.get("lastUpdated") != "2026-06-06":
+    if payload.get("lastUpdated") != "2026-06-07":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
@@ -11573,11 +11573,11 @@ def validate_reviewer_kit_json(text: str) -> None:
         raise SiteCheckError(f"{label}: third-party audit must be false")
     if reviews.get("baseScanTokenProfile") != "ready-for-owner-resubmission":
         raise SiteCheckError(f"{label}: wrong BaseScan profile status")
-    if reviews.get("baseScanTokenProfileLastCheckedDate") != "2026-06-06":
+    if reviews.get("baseScanTokenProfileLastCheckedDate") != "2026-06-07":
         raise SiteCheckError(f"{label}: wrong BaseScan profile last checked date")
     if reviews.get("baseScanFinalSubmissionPackageGeneratedAt") != "2026-06-06T11:10:54Z":
         raise SiteCheckError(f"{label}: wrong BaseScan final package timestamp")
-    if reviews.get("dailyStatusGeneratedAt") != "2026-06-06T12:13:21Z":
+    if reviews.get("dailyStatusGeneratedAt") != "2026-06-07T13:06:12Z":
         raise SiteCheckError(f"{label}: wrong daily status timestamp")
     if reviews.get("dailyStatusPage") != DAILY_STATUS_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong external-review dailyStatusPage")
@@ -11623,7 +11623,7 @@ def validate_reviewer_kit_json(text: str) -> None:
         raise SiteCheckError(f"{label}: BaseScan handoff should be ready")
     if handoff.get("finalSubmissionPackageGeneratedAt") != "2026-06-06T11:10:54Z":
         raise SiteCheckError(f"{label}: wrong BaseScan handoff final package timestamp")
-    if handoff.get("dailyStatusGeneratedAt") != "2026-06-06T12:13:21Z":
+    if handoff.get("dailyStatusGeneratedAt") != "2026-06-07T13:06:12Z":
         raise SiteCheckError(f"{label}: wrong BaseScan handoff daily status timestamp")
     if handoff.get("dailyStatusPage") != DAILY_STATUS_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong BaseScan handoff dailyStatusPage")
@@ -11707,7 +11707,7 @@ def validate_reviewer_kit_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing domain email evidence checklist next action")
     if "2026-06-06T11:10:54Z" not in next_actions:
         raise SiteCheckError(f"{label}: missing final package timestamp next action")
-    if "2026-06-06T12:13:21Z" not in next_actions:
+    if "2026-06-07T13:06:12Z" not in next_actions:
         raise SiteCheckError(f"{label}: missing daily status timestamp next action")
     if "security-vendor approval, permanent warning-free status, or cross-wallet warning removal before vendor/current wallet UI confirms it" not in boundaries.get("doNotClaim", []):
         raise SiteCheckError(f"{label}: missing warning boundary")
@@ -11743,9 +11743,9 @@ def validate_reviewer_kit_page(text: str) -> None:
     assert_contains(text, "Final preflight gate", label)
     assert_contains(text, "Daily Status Queue", label)
     assert_contains(text, "Latest reviewer package", label)
-    assert_contains(text, "Final package generated 2026-06-06T11:10:54Z; daily status refreshed 2026-06-06T12:13:21Z", label)
+    assert_contains(text, "Final package generated 2026-06-06T11:10:54Z; daily status refreshed 2026-06-07T13:06:12Z", label)
     assert_contains(text, "2026-06-06T11:10:54Z", label)
-    assert_contains(text, "2026-06-06T12:13:21Z", label)
+    assert_contains(text, "2026-06-07T13:06:12Z", label)
     assert_contains(text, "Contract and safety evidence", label)
     assert_contains(text, "Supply and reserve evidence", label)
     assert_contains(text, "Market route evidence", label)
@@ -11997,7 +11997,7 @@ def validate_trust_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong pageUrl")
     if payload.get("status") != "public-trust-center-published":
         raise SiteCheckError(f"{label}: wrong status")
-    if payload.get("lastUpdated") != "2026-06-06":
+    if payload.get("lastUpdated") != "2026-06-07":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
@@ -12051,11 +12051,11 @@ def validate_trust_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong BaseScan ownership status")
     if snapshot.get("baseScanTokenProfile") != "ready-for-owner-resubmission":
         raise SiteCheckError(f"{label}: wrong BaseScan token profile status")
-    if snapshot.get("baseScanTokenProfileLastCheckedDate") != "2026-06-06":
+    if snapshot.get("baseScanTokenProfileLastCheckedDate") != "2026-06-07":
         raise SiteCheckError(f"{label}: wrong BaseScan token profile last checked date")
     if snapshot.get("baseScanFinalSubmissionPackageGeneratedAt") != "2026-06-06T11:10:54Z":
         raise SiteCheckError(f"{label}: wrong BaseScan final package timestamp")
-    if snapshot.get("dailyStatusGeneratedAt") != "2026-06-06T12:13:21Z":
+    if snapshot.get("dailyStatusGeneratedAt") != "2026-06-07T13:06:12Z":
         raise SiteCheckError(f"{label}: wrong daily status timestamp")
     if snapshot.get("dailyStatusPage") != DAILY_STATUS_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong snapshot dailyStatusPage")
@@ -12135,11 +12135,11 @@ def validate_trust_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong Blockaid follow-up URL")
     if reviews.get("thirdPartyAudit") != "not-completed-deferred":
         raise SiteCheckError(f"{label}: wrong third-party audit status")
-    if reviews.get("baseScanTokenProfileLastCheckedDate") != "2026-06-06":
+    if reviews.get("baseScanTokenProfileLastCheckedDate") != "2026-06-07":
         raise SiteCheckError(f"{label}: wrong external-review BaseScan last checked date")
     if reviews.get("baseScanFinalSubmissionPackageGeneratedAt") != "2026-06-06T11:10:54Z":
         raise SiteCheckError(f"{label}: wrong external-review final package timestamp")
-    if reviews.get("dailyStatusGeneratedAt") != "2026-06-06T12:13:21Z":
+    if reviews.get("dailyStatusGeneratedAt") != "2026-06-07T13:06:12Z":
         raise SiteCheckError(f"{label}: wrong external-review daily status timestamp")
     if reviews.get("dailyStatusPage") != DAILY_STATUS_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong external-review dailyStatusPage")
@@ -12151,7 +12151,7 @@ def validate_trust_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong external-review domain email target")
     if "The official domain email support@gcagochina.com is active, public DNS records pass MX/SPF/DKIM/DMARC checks, and private mail-flow evidence is retained for reviewer follow-up." not in payload.get("safePublicClaims", []):
         raise SiteCheckError(f"{label}: missing domain email safe claim")
-    if "The latest BaseScan owner submission package was generated on 2026-06-06T11:10:54Z, and the daily public status snapshot was refreshed on 2026-06-06T12:13:21Z." not in payload.get("safePublicClaims", []):
+    if "The latest BaseScan owner submission package was generated on 2026-06-06T11:10:54Z, and the daily public status snapshot was refreshed on 2026-06-07T13:06:12Z." not in payload.get("safePublicClaims", []):
         raise SiteCheckError(f"{label}: missing latest BaseScan package safe claim")
     if "No third-party audit has been completed." not in payload.get("safePublicClaims", []):
         raise SiteCheckError(f"{label}: missing audit safe claim")
@@ -12185,9 +12185,9 @@ def validate_trust_page(text: str) -> None:
     assert_contains(text, "Returned 2026-05-23; final package refreshed 2026-06-06; Handoff and Chinese owner flow ready for one support@gcagochina.com submission", label)
     assert_contains(text, "BaseScan domain email evidence", label)
     assert_contains(text, "Latest reviewer package", label)
-    assert_contains(text, "Final package 2026-06-06T11:10:54Z; daily status 2026-06-06T12:13:21Z", label)
+    assert_contains(text, "Final package 2026-06-06T11:10:54Z; daily status 2026-06-07T13:06:12Z", label)
     assert_contains(text, "2026-06-06T11:10:54Z", label)
-    assert_contains(text, "2026-06-06T12:13:21Z", label)
+    assert_contains(text, "2026-06-07T13:06:12Z", label)
     assert_contains_any(text, ("2026-05-25 DNS snapshot", "2026-05-30 DNS snapshot"), label, "DNS snapshot")
     assert_contains(text, "MX/SPF/DKIM/DMARC present", label)
     assert_contains(text, "Approved 2026-05-11", label)
@@ -12215,7 +12215,7 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != EXTERNAL_REVIEW_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
-    if payload.get("lastUpdated") not in {"2026-05-25", "2026-05-30", "2026-06-02", "2026-06-05", "2026-06-06"}:
+    if payload.get("lastUpdated") not in {"2026-05-25", "2026-05-30", "2026-06-02", "2026-06-05", "2026-06-07"}:
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("status") != "external-review-status-active":
         raise SiteCheckError(f"{label}: wrong status")
@@ -12330,7 +12330,7 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong BaseScan source status")
     if base_scan_profile.get("status") != "ready-for-owner-resubmission":
         raise SiteCheckError(f"{label}: wrong BaseScan profile status")
-    if base_scan_profile.get("lastCheckedDate") not in {"2026-05-30", "2026-06-02", "2026-06-05", "2026-06-06"}:
+    if base_scan_profile.get("lastCheckedDate") not in {"2026-05-30", "2026-06-02", "2026-06-05", "2026-06-07"}:
         raise SiteCheckError(f"{label}: wrong BaseScan profile last checked date")
     if "Tim Chen official-domain professional profile evidence is published" not in base_scan_profile.get("lastCheckedResult", ""):
         raise SiteCheckError(f"{label}: missing BaseScan profile last checked result")
@@ -12357,7 +12357,7 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing Chinese owner flow result")
     if "2026-06-06T11:10:54Z" not in base_scan_profile.get("lastCheckedResult", ""):
         raise SiteCheckError(f"{label}: missing final owner package timestamp")
-    if "2026-06-06T12:13:21Z" not in base_scan_profile.get("lastCheckedResult", ""):
+    if "2026-06-07T13:06:12Z" not in base_scan_profile.get("lastCheckedResult", ""):
         raise SiteCheckError(f"{label}: missing daily status snapshot timestamp")
     if base_scan_profile.get("baseScanHandoffPage") != BASESCAN_HANDOFF_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong baseScanHandoffPage")
@@ -12418,7 +12418,7 @@ def validate_external_reviews_page(text: str) -> None:
     assert_contains(text, "Returned 2026-05-23; final package refreshed 2026-06-06 for one support@gcagochina.com submission", label)
     assert_contains(text, "Tim Chen profile, domain email plan, evidence checklist, activation evidence packet, reply template, BaseScan Handoff copy blocks, Chinese owner flow, and support@gcagochina.com evidence are ready", label)
     assert_contains(text, "2026-06-06T11:10:54Z", label)
-    assert_contains(text, "2026-06-06T12:13:21Z", label)
+    assert_contains(text, "2026-06-07T13:06:12Z", label)
     assert_contains(text, "tim-chen.html", label)
     assert_contains(text, "Domain Email Plan", label)
     assert_contains(text, "DNS Snapshot", label)
@@ -12566,7 +12566,7 @@ def validate_listing_readiness_page(text: str) -> None:
     assert_contains(text, "Returned again 2026-05-23; final package refreshed 2026-06-06; Handoff and Chinese owner flow ready for one support@gcagochina.com submission", label)
     assert_contains(text, "Tim Chen profile, domain email plan, evidence checklist, activation evidence packet, BaseScan Handoff, Chinese owner flow, and support@gcagochina.com evidence are ready", label)
     assert_contains(text, "Plan, public evidence checklist, and packet path published; mailbox active and evidence retained privately", label)
-    assert_contains(text, "Snapshot refreshed 2026-06-06T12:13:21Z", label)
+    assert_contains(text, "Snapshot refreshed 2026-06-07T13:06:12Z", label)
     assert_contains(text, "Final submission package generated 2026-06-06T11:10:54Z", label)
     assert_contains(text, "Domain Email Evidence Checklist", label)
     assert_contains(text, "domain-email-evidence.html", label)
@@ -12766,9 +12766,6 @@ def validate_sitemap(text: str) -> None:
         "daily-status.json",
         "basescan-remediation.html",
         "basescan-remediation.json",
-        "basescan-handoff.html",
-        "basescan-handoff.json",
-        "zh-basescan-handoff.html",
         "basescan-preflight.html",
         "basescan-preflight.json",
         "zh-basescan-preflight.html",
@@ -12788,6 +12785,12 @@ def validate_sitemap(text: str) -> None:
         "verify.html",
         "roadmap.html",
         "zh-release-gates.html",
+    ):
+        assert_sitemap_lastmod(path, "2026-06-07")
+    for path in (
+        "basescan-handoff.html",
+        "basescan-handoff.json",
+        "zh-basescan-handoff.html",
     ):
         assert_sitemap_lastmod(path, "2026-06-06")
 
