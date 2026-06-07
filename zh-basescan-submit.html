@@ -300,7 +300,7 @@
       <section aria-labelledby="title">
         <p class="eyebrow">BaseScan 提交 / owner 手动操作</p>
         <h1 id="title">GCA 中文 BaseScan 提交流程</h1>
-        <p class="lead">这一页给 owner 在浏览器里手动提交 BaseScan Token Profile 更新时使用。当前准备方向是：只提交一次干净的复审请求，统一使用 <code>support@gcagochina.com</code>、Tim Chen 职业资料、官网证据链接和 GCA/USDT 官方市场路线。</p>
+        <p class="lead">这一页给 owner 在浏览器里手动提交 BaseScan Token Profile 更新时使用。当前准备方向是：只提交一次干净的复审请求，统一使用 <code>support@gcagochina.com</code>、Tim Chen 职业资料、Project Profile 审核映射页、官网证据链接和 GCA/USDT 官方市场路线。</p>
         <p class="lead">这页不会提交 BaseScan，不会发送邮件，不会连接钱包，也不会触碰合约。真正提交仍需要你登录 BaseScan，并在网页里手动确认。</p>
         <p class="lead">提交表单时不要把本机 <code>launch/</code> 文件写成官网证据链接；<code>launch/*.md/json</code> 只用于本地生成复制文本，给 BaseScan 的链接应来自 <code>gcagochina.com</code> 的公开页面。</p>
         <div class="actions">
@@ -310,6 +310,7 @@
           <a class="button secondary" href="zh-basescan-preflight.html">先看中文预检</a>
           <a class="button secondary" href="zh-basescan-followup.html">提交后跟进</a>
           <a class="button" href="domain-email-evidence.html">邮箱证据清单</a>
+          <a class="button" href="project-profile.html#basescanMapTitle">项目资料映射</a>
           <a class="button" href="zh-site-map.html">中文站点地图</a>
         </div>
       </section>
@@ -339,8 +340,8 @@
           <div class="list">
             <div class="row"><span>预检状态</span><strong><code>readyForBaseScanResubmission</code> 必须为 true。</strong></div>
             <div class="row"><span>官方邮箱</span><strong>表单和回复统一使用 <code>support@gcagochina.com</code>。</strong></div>
-            <div class="row"><span>团队资料</span><strong>必须带上 <a href="tim-chen.html">Tim Chen 职业资料</a> 和 <a href="team.html#tim-chen">团队页</a>。</strong></div>
-            <div class="row"><span>项目资料</span><strong>必须带上官网、白皮书、品牌资料、支持页、GitHub、Telegram、X、GCA/USDT 池 <code>0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0</code>，以及 Access / Claim Boundary。</strong></div>
+            <div class="row"><span>团队资料</span><strong>必须带上 <a href="tim-chen.html">Tim Chen 职业资料</a>、<a href="team.html#tim-chen">团队页</a> 和 <a href="project-profile.html#basescanMapTitle">Project Profile BaseScan reviewer map</a>。</strong></div>
+            <div class="row"><span>项目资料</span><strong>必须带上官网、Project Profile 审核映射、白皮书、品牌资料、支持页、GitHub、Telegram、X、GCA/USDT 池 <code>0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0</code>，以及 Access / Claim Boundary。</strong></div>
             <div class="row"><span>会员边界</span><strong>100 credits 是账户服务记录；GCA Member 需要 1,000,000 GCA 连续持有 30 天证据；10,000 GCA 会员权益不是自动领取或自助转账。</strong></div>
             <div class="row"><span>本地包边界</span><strong><code>launch/*.md/json</code> 只作为本机复制来源，不是公网 URL；不要把它写进 BaseScan 的证据链接字段。</strong></div>
             <div class="row"><span>提交次数</span><strong>只开一次新的 BaseScan Token Profile update，然后等 BaseScan 邮件回复。</strong></div>
@@ -353,7 +354,7 @@
             <div class="row"><span>1</span><strong>登录 BaseScan 账号。</strong></div>
             <div class="row"><span>2</span><strong>打开 <a href="https://basescan.org/tokenupdate/" target="_blank" rel="noreferrer">https://basescan.org/tokenupdate/</a>。</strong></div>
             <div class="row"><span>3</span><strong>选择 Base Mainnet，填写 GCA 合约地址。</strong></div>
-            <div class="row"><span>4</span><strong>打开 <a href="zh-basescan-handoff.html">中文 BaseScan 复审复制包</a>，按块复制 reviewer comment、basic information、evidence links、market and supply、access and claim boundary；英文 reviewer 也可看 <a href="basescan-handoff.html">English Handoff</a>。</strong></div>
+            <div class="row"><span>4</span><strong>打开 <a href="zh-basescan-handoff.html">中文 BaseScan 复审复制包</a>，按块复制 reviewer comment、basic information、evidence links、market and supply、access and claim boundary；同时确认 <a href="project-profile.html#basescanMapTitle">Project Profile BaseScan reviewer map</a> 已在证据链接里；英文 reviewer 也可看 <a href="basescan-handoff.html">English Handoff</a>。</strong></div>
             <div class="row"><span>5</span><strong>如果 BaseScan 要求签名，只用部署钱包签 BaseScan 页面显示的地址所有权消息；不要签交易、授权或转账。</strong></div>
             <div class="row"><span>6</span><strong>提交后保存 ticket id、提交时间、确认邮件和后续回复。</strong></div>
           </div>
@@ -370,11 +371,11 @@
           </div>
           <div class="card">
             <h3>审核说明</h3>
-            <p class="note">从 <a href="zh-basescan-handoff.html">中文 BaseScan 复审复制包</a> 的 <code>Copy/Paste Reviewer Comment</code> 复制。它已经解释了官网、域名邮箱、Tim Chen 资料、白皮书、品牌资料、GitHub 和市场路线。</p>
+            <p class="note">从 <a href="zh-basescan-handoff.html">中文 BaseScan 复审复制包</a> 的 <code>Copy/Paste Reviewer Comment</code> 复制。它已经解释了官网、域名邮箱、Tim Chen 资料、Project Profile BaseScan reviewer map、白皮书、品牌资料、GitHub 和市场路线。</p>
           </div>
           <div class="card">
             <h3>证据链接</h3>
-            <p class="note">从 <a href="zh-basescan-handoff.html">中文 BaseScan 复审复制包</a> 的 <code>Copy/Paste Evidence Links</code> 复制。不要改成旧邮箱或旧池子链接。</p>
+            <p class="note">从 <a href="zh-basescan-handoff.html">中文 BaseScan 复审复制包</a> 的 <code>Copy/Paste Evidence Links</code> 复制。里面应包含 <code>https://gcagochina.com/project-profile.html#basescanMapTitle</code>；不要改成旧邮箱或旧池子链接。</p>
           </div>
           <div class="card">
             <h3>市场和供应</h3>
