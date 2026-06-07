@@ -15,6 +15,7 @@
     "verify": "https://gcagochina.com/verify.html",
     "reviewerKitPage": "https://gcagochina.com/reviewer-kit.html",
     "reviewerKit": "https://gcagochina.com/reviewer-kit.json",
+    "projectProfileBaseScanMap": "https://gcagochina.com/project-profile.html#basescanMapTitle",
     "platformRepliesPage": "https://gcagochina.com/platform-replies.html",
     "platformReplies": "https://gcagochina.com/platform-replies.json",
     "domainEmailSetupPlanPage": "https://gcagochina.com/domain-email.html",
@@ -81,6 +82,7 @@
     "baseScanHandoffPage": "https://gcagochina.com/basescan-handoff.html",
     "baseScanHandoff": "https://gcagochina.com/basescan-handoff.json",
     "baseScanChineseOwnerFlow": "https://gcagochina.com/zh-basescan-submit.html",
+    "baseScanProjectProfileMap": "https://gcagochina.com/project-profile.html#basescanMapTitle",
     "baseScanDomainEmailDnsSnapshot": {
       "checkedAt": "2026-05-30T16:24:34Z",
       "readyForBaseScanEmailEvidence": true,
@@ -199,6 +201,7 @@
     "GCA is deployed on Base Mainnet with fixed total supply.",
     "BaseScan source and deployer-wallet ownership verification are complete.",
     "The official domain email support@gcagochina.com is active, public DNS records pass MX/SPF/DKIM/DMARC checks, and private mail-flow evidence is retained for reviewer follow-up.",
+    "The Project Profile BaseScan reviewer map is published at https://gcagochina.com/project-profile.html#basescanMapTitle.",
     "The latest BaseScan owner submission package was generated on 2026-06-06T11:10:54Z, and the daily public status snapshot was refreshed on 2026-06-07T13:06:12Z.",
     "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool.",
     "GeckoTerminal token information was approved on 2026-05-11.",

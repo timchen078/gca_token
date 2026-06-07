@@ -30,6 +30,7 @@
     "teamPageUrl": "https://gcagochina.com/team.html",
     "timChenProfessionalProfileUrl": "https://gcagochina.com/tim-chen.html",
     "timChenProfessionalProfileDataUrl": "https://gcagochina.com/tim-chen.json",
+    "projectProfileBaseScanMapUrl": "https://gcagochina.com/project-profile.html#basescanMapTitle",
     "baseScanRemediationPageUrl": "https://gcagochina.com/basescan-remediation.html",
     "baseScanRemediationUrl": "https://gcagochina.com/basescan-remediation.json",
     "domainEmailEvidenceChecklistUrl": "https://gcagochina.com/domain-email-evidence.html",
@@ -62,7 +63,7 @@
       "historicalReplyInbox": "redacted-non-domain-legacy-inbox",
       "resubmissionDate": "2026-05-13",
       "lastCheckedDate": "2026-06-07",
-      "lastCheckedResult": "BaseScan returned the token profile update again as information-insufficient; Tim Chen official-domain professional profile evidence is now published, the domain email setup plan, public evidence checklist, activation evidence packet, BaseScan Handoff copy blocks, and Chinese owner submission flow are published. The final owner submission package was regenerated on 2026-06-06T11:10:54Z, the daily public status snapshot was refreshed on 2026-06-07T13:06:12Z, and the 2026-05-30 DNS snapshot passes MX/SPF/DKIM/DMARC checks, so readyForBaseScanEmailEvidence is true.",
+      "lastCheckedResult": "BaseScan returned the token profile update again as information-insufficient; Tim Chen official-domain professional profile evidence is now published, the Project Profile BaseScan reviewer map is published, the domain email setup plan, public evidence checklist, activation evidence packet, BaseScan Handoff copy blocks, and Chinese owner submission flow are published. The final owner submission package was regenerated on 2026-06-06T11:10:54Z, the daily public status snapshot was refreshed on 2026-06-07T13:06:12Z, and the 2026-05-30 DNS snapshot passes MX/SPF/DKIM/DMARC checks, so readyForBaseScanEmailEvidence is true.",
       "domainEmailSetupPlan": "https://gcagochina.com/domain-email.html",
       "domainEmailSetupPlanData": "https://gcagochina.com/domain-email.json",
       "domainEmailDnsWorksheet": "https://gcagochina.com/domain-email.html#worksheetTitle",
@@ -88,7 +89,8 @@
       "dailyStatusPage": "https://gcagochina.com/daily-status.html",
       "dailyStatus": "https://gcagochina.com/daily-status.json",
       "chineseOwnerSubmissionFlow": "https://gcagochina.com/zh-basescan-submit.html",
-      "nextAction": "Use the Chinese owner submission flow, BaseScan Handoff copy blocks, domain email setup plan, DNS Entry Worksheet, public evidence checklist, daily status snapshot, and launch/domain_email_activation_runbook.md; keep the 2026-05-30 DNS snapshot ready; keep support@gcagochina.com active; run tools/check_domain_email_dns.py and the final BaseScan preflight; archive the activation evidence packet; include the Tim Chen professional profile URL; rerun public-site checks; then submit one clean update through the official BaseScan form from support@gcagochina.com."
+      "projectProfileBaseScanMap": "https://gcagochina.com/project-profile.html#basescanMapTitle",
+      "nextAction": "Use the Chinese owner submission flow, BaseScan Handoff copy blocks, Project Profile BaseScan reviewer map, domain email setup plan, DNS Entry Worksheet, public evidence checklist, daily status snapshot, and launch/domain_email_activation_runbook.md; keep the 2026-05-30 DNS snapshot ready; keep support@gcagochina.com active; run tools/check_domain_email_dns.py and the final BaseScan preflight; archive the activation evidence packet; include the Tim Chen professional profile URL; rerun public-site checks; then submit one clean update through the official BaseScan form from support@gcagochina.com."
     },
     "blockaid": {
       "reportStatus": "owner-observed-no-warning-visible",
@@ -128,6 +130,7 @@
     "BaseScan deployer-wallet ownership verification is complete.",
     "The public BaseScan token profile update was returned again as information-insufficient on 2026-05-23; owner-side remediation is ready for one clean resubmission.",
     "The BaseScan domain email evidence gate is ready after the 2026-05-30 DNS snapshot: MX/SPF/DKIM/DMARC present.",
+    "The Project Profile BaseScan reviewer map is published at https://gcagochina.com/project-profile.html#basescanMapTitle.",
     "GeckoTerminal token information was approved on 2026-05-11.",
     "Owner reported on 2026-05-14 that no wallet risk warning was visible in the tested wallet/DEX flow.",
     "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool.",

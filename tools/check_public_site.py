@@ -665,6 +665,8 @@ def validate_status_page(text: str) -> None:
     assert_contains(text, "Next Buildout", label)
     assert_contains(text, "BaseScan reviewer handoff", label)
     assert_contains(text, "Prepared with official contact, market, supply, and evidence links", label)
+    assert_contains(text, "Project Profile reviewer map", label)
+    assert_contains(text, "project-profile.html#basescanMapTitle", label)
     assert_contains(text, "中文 BaseScan 提交流程", label)
     assert_contains(text, "Published for owner-side browser submission", label)
     assert_contains_any(
@@ -12119,6 +12121,7 @@ def validate_trust_json(text: str) -> None:
     for key, expected in {
         "verify": "https://gcagochina.com/verify.html",
         "reviewerKit": REVIEWER_KIT_URL,
+        "projectProfileBaseScanMap": f"{PROJECT_PROFILE_PAGE_URL}#basescanMapTitle",
         "platformReplies": PLATFORM_REPLIES_URL,
         "domainEmailSetupPlanPage": DOMAIN_EMAIL_PAGE_URL,
         "domainEmailSetupPlan": DOMAIN_EMAIL_URL,
@@ -12172,6 +12175,8 @@ def validate_trust_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong BaseScan domain email gate")
     if snapshot.get("baseScanDomainEmailTarget") != "support@gcagochina.com":
         raise SiteCheckError(f"{label}: wrong BaseScan domain email target")
+    if snapshot.get("baseScanProjectProfileMap") != f"{PROJECT_PROFILE_PAGE_URL}#basescanMapTitle":
+        raise SiteCheckError(f"{label}: wrong BaseScan project profile map")
     dns_snapshot = snapshot.get("baseScanDomainEmailDnsSnapshot", {})
     if dns_snapshot.get("readyForBaseScanEmailEvidence") is not True:
         raise SiteCheckError(f"{label}: domain email DNS snapshot should be ready")
@@ -12258,6 +12263,8 @@ def validate_trust_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong external-review domain email target")
     if "The official domain email support@gcagochina.com is active, public DNS records pass MX/SPF/DKIM/DMARC checks, and private mail-flow evidence is retained for reviewer follow-up." not in payload.get("safePublicClaims", []):
         raise SiteCheckError(f"{label}: missing domain email safe claim")
+    if "The Project Profile BaseScan reviewer map is published at https://gcagochina.com/project-profile.html#basescanMapTitle." not in payload.get("safePublicClaims", []):
+        raise SiteCheckError(f"{label}: missing project profile safe claim")
     if "The latest BaseScan owner submission package was generated on 2026-06-06T11:10:54Z, and the daily public status snapshot was refreshed on 2026-06-07T13:06:12Z." not in payload.get("safePublicClaims", []):
         raise SiteCheckError(f"{label}: missing latest BaseScan package safe claim")
     if "No third-party audit has been completed." not in payload.get("safePublicClaims", []):
@@ -12280,6 +12287,8 @@ def validate_trust_page(text: str) -> None:
     assert_contains(text, "Supply And Reserve", label)
     assert_contains(text, "Evidence Links", label)
     assert_contains(text, "Normal visitor path", label)
+    assert_contains(text, "Project Profile reviewer map", label)
+    assert_contains(text, "project-profile.html#basescanMapTitle", label)
     assert_contains(text, "Blockaid Follow-up", label)
     assert_contains(text, "Liquidity Statement", label)
     assert_contains(text, "Holder Distribution", label)
@@ -12344,6 +12353,8 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong trustCenterPage")
     if links.get("trustCenter") != TRUST_CENTER_URL:
         raise SiteCheckError(f"{label}: wrong trustCenter")
+    if links.get("projectProfileBaseScanMap") != f"{PROJECT_PROFILE_PAGE_URL}#basescanMapTitle":
+        raise SiteCheckError(f"{label}: wrong projectProfileBaseScanMap")
     if links.get("dailyStatusPage") != DAILY_STATUS_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong dailyStatusPage")
     if links.get("dailyStatus") != DAILY_STATUS_URL:
@@ -12379,6 +12390,8 @@ def validate_external_reviews_json(text: str) -> None:
     base_scan_profile = reviews.get("baseScanTokenProfile", {})
     if base_scan_profile.get("professionalProfile") != TIM_CHEN_PROFILE_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong professionalProfile")
+    if base_scan_profile.get("projectProfileBaseScanMap") != f"{PROJECT_PROFILE_PAGE_URL}#basescanMapTitle":
+        raise SiteCheckError(f"{label}: wrong projectProfileBaseScanMap")
     if base_scan_profile.get("domainEmailSetupPlan") != DOMAIN_EMAIL_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong domainEmailSetupPlan")
     if base_scan_profile.get("domainEmailSetupPlanData") != DOMAIN_EMAIL_URL:
@@ -12399,6 +12412,8 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing BaseScan handoff next action")
     if ZH_BASESCAN_SUBMIT_PAGE_URL not in base_scan_profile.get("nextAction", ""):
         raise SiteCheckError(f"{label}: missing Chinese owner flow next action")
+    if f"{PROJECT_PROFILE_PAGE_URL}#basescanMapTitle" not in base_scan_profile.get("nextAction", ""):
+        raise SiteCheckError(f"{label}: missing project profile map next action")
     dns_readiness = base_scan_profile.get("domainEmailDnsReadiness", {})
     if dns_readiness.get("readyForBaseScanEmailEvidence") is not True:
         raise SiteCheckError(f"{label}: domain email DNS readiness should be true")
@@ -12441,6 +12456,8 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong BaseScan profile last checked date")
     if "Tim Chen official-domain professional profile evidence is published" not in base_scan_profile.get("lastCheckedResult", ""):
         raise SiteCheckError(f"{label}: missing BaseScan profile last checked result")
+    if "Project Profile BaseScan reviewer map is published" not in base_scan_profile.get("lastCheckedResult", ""):
+        raise SiteCheckError(f"{label}: missing BaseScan project profile map result")
     if "domain email setup plan" not in base_scan_profile.get("lastCheckedResult", ""):
         raise SiteCheckError(f"{label}: missing BaseScan domain email plan result")
     if "public evidence checklist" not in base_scan_profile.get("lastCheckedResult", ""):
@@ -12505,6 +12522,8 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong audit status")
     if "The BaseScan domain email evidence gate is ready after the 2026-05-30 DNS snapshot: MX/SPF/DKIM/DMARC present." not in payload.get("safePublicClaims", []):
         raise SiteCheckError(f"{label}: missing domain email safe claim")
+    if "The Project Profile BaseScan reviewer map is published at https://gcagochina.com/project-profile.html#basescanMapTitle." not in payload.get("safePublicClaims", []):
+        raise SiteCheckError(f"{label}: missing project profile safe claim")
     if "The latest BaseScan final submission package was generated on 2026-06-06T11:10:54Z, and the daily public status snapshot confirms readyForBaseScanResubmission is true." not in payload.get("safePublicClaims", []):
         raise SiteCheckError(f"{label}: missing final package safe claim")
     if "No third-party audit has been completed." not in payload.get("safePublicClaims", []):
@@ -12523,10 +12542,12 @@ def validate_external_reviews_page(text: str) -> None:
     assert_no_public_data_room_terms(text, label)
     assert_contains(text, "Trust Center", label)
     assert_contains(text, "Returned 2026-05-23; final package refreshed 2026-06-06 for one support@gcagochina.com submission", label)
-    assert_contains(text, "Tim Chen profile, domain email plan, evidence checklist, activation evidence packet, reply template, BaseScan Handoff copy blocks, Chinese owner flow, and support@gcagochina.com evidence are ready", label)
+    assert_contains(text, "Tim Chen profile, Project Profile reviewer map, domain email plan, evidence checklist, activation evidence packet, reply template, BaseScan Handoff copy blocks, Chinese owner flow, and support@gcagochina.com evidence are ready", label)
     assert_contains(text, "2026-06-06T11:10:54Z", label)
     assert_contains(text, "2026-06-07T13:06:12Z", label)
     assert_contains(text, "tim-chen.html", label)
+    assert_contains(text, "Project Profile Map", label)
+    assert_contains(text, "project-profile.html#basescanMapTitle", label)
     assert_contains(text, "Domain Email Plan", label)
     assert_contains(text, "DNS Snapshot", label)
     assert_contains(text, "Email Evidence Packet", label)
@@ -12671,7 +12692,9 @@ def validate_listing_readiness_page(text: str) -> None:
     assert_contains(text, "CoinGecko tracked listing request", label)
     assert_contains(text, "CoinMarketCap tracked listing request", label)
     assert_contains(text, "Returned again 2026-05-23; final package refreshed 2026-06-06; Handoff and Chinese owner flow ready for one support@gcagochina.com submission", label)
-    assert_contains(text, "Tim Chen profile, domain email plan, evidence checklist, activation evidence packet, BaseScan Handoff, Chinese owner flow, and support@gcagochina.com evidence are ready", label)
+    assert_contains(text, "Tim Chen profile, Project Profile reviewer map, domain email plan, evidence checklist, activation evidence packet, BaseScan Handoff, Chinese owner flow, and support@gcagochina.com evidence are ready", label)
+    assert_contains(text, "Project Profile reviewer map", label)
+    assert_contains(text, "project-profile.html#basescanMapTitle", label)
     assert_contains(text, "Plan, public evidence checklist, and packet path published; mailbox active and evidence retained privately", label)
     assert_contains(text, "Snapshot refreshed 2026-06-07T13:06:12Z", label)
     assert_contains(text, "Final submission package generated 2026-06-06T11:10:54Z", label)

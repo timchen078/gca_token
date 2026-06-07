@@ -28,6 +28,7 @@ BaseScan token updates must be submitted through the official BaseScan token upd
 - Product spec page: `https://gcagochina.com/product.html`
 - Credits catalog page: `https://gcagochina.com/credits.html`
 - Release gates page: `https://gcagochina.com/release-gates.html`
+- Project Profile BaseScan reviewer map: `https://gcagochina.com/project-profile.html#basescanMapTitle`
 - BaseScan Handoff page: `https://gcagochina.com/basescan-handoff.html`
 - Daily public status page: `https://gcagochina.com/daily-status.html`
 - Final owner package generated: `2026-06-06T11:10:54Z`
@@ -45,6 +46,7 @@ GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stand
 - Public utility thesis URL: `https://gcagochina.com/utility.html`
 - Public product spec URL: `https://gcagochina.com/product.html`
 - Public release gates URL: `https://gcagochina.com/release-gates.html`
+- Project Profile BaseScan reviewer map: `https://gcagochina.com/project-profile.html#basescanMapTitle`
 - BaseScan Handoff URL: `https://gcagochina.com/basescan-handoff.html`
 - Daily public status URL: `https://gcagochina.com/daily-status.html`
 - Official GCA/USDT pool URL: `https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0`
@@ -69,6 +71,6 @@ GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stand
 
 ## Current Submission Status
 
-Submitted from the owner's browser session on 2026-05-09 with the earlier owner email, returned as information-insufficient on 2026-05-13, resubmitted on 2026-05-13, and returned again as information-insufficient on 2026-05-23. The current next submission should use `support@gcagochina.com`, Tim Chen public professional profile evidence, the public domain-email evidence checklist, BaseScan Handoff copy blocks generated at `2026-06-06T11:10:54Z`, the daily public status snapshot refreshed at `2026-06-07T13:06:12Z`, Telegram, X, GitHub, and the official GCA/USDT route. The public token profile is not complete until BaseScan accepts and publishes the submitted update.
+Submitted from the owner's browser session on 2026-05-09 with the earlier owner email, returned as information-insufficient on 2026-05-13, resubmitted on 2026-05-13, and returned again as information-insufficient on 2026-05-23. The current next submission should use `support@gcagochina.com`, Tim Chen public professional profile evidence, the Project Profile BaseScan reviewer map, the public domain-email evidence checklist, BaseScan Handoff copy blocks generated at `2026-06-06T11:10:54Z`, the daily public status snapshot refreshed at `2026-06-07T13:06:12Z`, Telegram, X, GitHub, and the official GCA/USDT route. The public token profile is not complete until BaseScan accepts and publishes the submitted update.
 
 Copyable form values are stored in `launch/basescan_final_submission_package.md` and published for owner review at `https://gcagochina.com/basescan-handoff.html`; the Chinese owner flow is published at `https://gcagochina.com/zh-basescan-submit.html`.
