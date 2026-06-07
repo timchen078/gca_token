@@ -2,16 +2,16 @@
   "schema": "https://gcagochina.com/daily-status.json",
   "pageUrl": "https://gcagochina.com/daily-status.html",
   "status": "daily-public-ops-snapshot-published",
-  "lastUpdated": "2026-06-06",
+  "lastUpdated": "2026-06-07",
   "snapshotSource": "tools/run_gca_daily_ops.py",
-  "snapshotGeneratedAt": "2026-06-06T12:13:21Z",
+  "snapshotGeneratedAt": "2026-06-07T12:38:08Z",
   "project": "GCA",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "dailyOps": {
     "packetVersion": "gca_daily_ops_summary_v1",
     "ok": true,
-    "generatedAt": "2026-06-06T12:13:21Z",
+    "generatedAt": "2026-06-07T12:38:08Z",
     "publicOnlyByDefault": true,
     "steps": [
       {
