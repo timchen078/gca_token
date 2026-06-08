@@ -4870,6 +4870,10 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertTrue(api["currentState"]["creditUsageLedgerPrepared"])
         self.assertFalse(api["currentState"]["creditUsageLedgerWritesLive"])
         self.assertTrue(api["currentState"]["creditUsageWorkerDeployBlocked"])
+        self.assertTrue(api["currentState"]["serviceRequestQueueWorkerPrepared"])
+        self.assertTrue(api["currentState"]["serviceRequestQueueWorkerDryRunPassed"])
+        self.assertTrue(api["currentState"]["serviceRequestQueueWorkerDeployBlocked"])
+        self.assertFalse(api["currentState"]["serviceRequestQueueProductionLive"])
         self.assertTrue(api["currentState"]["memberLedgerWritesLive"])
         self.assertEqual(api["localDevelopmentBackend"]["status"], "local-only-backend-available")
         self.assertEqual(api["localDevelopmentBackend"]["script"], "tools/gca_member_backend.py")
@@ -4919,9 +4923,11 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(api["productionEmailRegistrationBackend"]["contactSuppressionFile"], ".gca_access_data/gca_contact_suppressions.jsonl")
         self.assertEqual(api["productionEmailRegistrationBackend"]["memberAccessMigration"], "cloudflare/gca-registration-worker/migrations/0003_member_access_ledgers.sql")
         self.assertEqual(api["productionEmailRegistrationBackend"]["creditUsageMigration"], "cloudflare/gca-registration-worker/migrations/0004_credit_usage_ledger.sql")
+        self.assertEqual(api["productionEmailRegistrationBackend"]["serviceRequestMigration"], "cloudflare/gca-registration-worker/migrations/0005_service_requests.sql")
         self.assertEqual(api["productionEmailRegistrationBackend"]["memberAccessEndpoint"], "https://gca-registration-api.gcagochina.workers.dev/gca/member-access")
         self.assertEqual(api["productionEmailRegistrationBackend"]["walletVerificationEndpoint"], "https://gca-registration-api.gcagochina.workers.dev/gca/wallet-verifications")
         self.assertEqual(api["productionEmailRegistrationBackend"]["accessConfigEndpoint"], "https://gca-registration-api.gcagochina.workers.dev/gca/access-config")
+        self.assertEqual(api["productionEmailRegistrationBackend"]["adminServiceRequestsEndpoint"], "https://gca-registration-api.gcagochina.workers.dev/gca/service-requests")
         self.assertEqual(api["productionEmailRegistrationBackend"]["adminCreditUsageEndpoint"], "https://gca-registration-api.gcagochina.workers.dev/gca/credit-usage")
         self.assertCountEqual(api["productionEmailRegistrationBackend"]["antiSpamHoneypotFields"], ["website", "company", "homepage"])
         self.assertTrue(api["productionEmailRegistrationBackend"]["adminReadTokenConfigured"])
@@ -4974,19 +4980,20 @@ class LaunchPackageTests(unittest.TestCase):
         }:
             self.assertIn(endpoint_key, endpoint_keys)
         for endpoint in api["endpoints"]:
-            if endpoint["id"] in {"operator-summary", "operator-digest", "operator-action-plan", "review-package", "member-review-update", "member-benefit-transfers-read", "member-benefit-transfers-create", "service-requests-read", "service-requests-create"}:
+            if endpoint["id"] in {"operator-summary", "operator-digest", "operator-action-plan", "review-package", "member-review-update", "member-benefit-transfers-read", "member-benefit-transfers-create"}:
                 self.assertEqual(endpoint["status"], "local-only-not-public-production")
             elif endpoint["id"] in {"email-registrations-create", "contact-suppressions-create", "access-config-read", "member-access-create", "wallet-verifications"}:
                 self.assertEqual(endpoint["status"], "production-workers-dev-live")
             elif endpoint["id"] in {"email-registrations-read", "contact-suppressions-read", "credit-ledger", "member-ledger"}:
                 self.assertEqual(endpoint["status"], "token-protected-admin-live")
-            elif endpoint["id"] in {"credit-usage-read", "credit-usage-create"}:
+            elif endpoint["id"] in {"service-requests-read", "service-requests-create", "credit-usage-read", "credit-usage-create"}:
                 self.assertEqual(endpoint["status"], "prepared-worker-deploy-pending")
             else:
                 self.assertEqual(endpoint["status"], "planned-not-live")
         self.assertEqual(api["memberPacketVersion"], "gca_member_preregistration_v2")
         self.assertEqual(api["emailRegistrationPacketVersion"], "gca_email_registration_v1")
         self.assertEqual(api["contactSuppressionPacketVersion"], "gca_contact_suppression_v1")
+        self.assertEqual(api["serviceRequestPacketVersion"], "gca_service_request_v1")
         self.assertIn("memberBenefitReviewEvidence.holdingStartDate", api["memberEvidenceFields"])
         self.assertIn("memberBenefitReviewEvidence.evidenceTxHashFormatOk", api["memberEvidenceFields"])
         email_endpoint = next(item for item in api["endpoints"] if item["id"] == "email-registrations-create")
@@ -5026,6 +5033,13 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("holdingStartDate", member_ledger_endpoint["responseFields"])
         self.assertIn("evidenceTxHashFormatOk", member_ledger_endpoint["responseFields"])
         self.assertIn("memberBenefitTransferTx", member_ledger_endpoint["responseFields"])
+        service_request_create_endpoint = next(item for item in api["endpoints"] if item["id"] == "service-requests-create")
+        self.assertIn("authorization bearer token", service_request_create_endpoint["requiredRequestFields"])
+        self.assertIn("serviceId", service_request_create_endpoint["requiredRequestFields"])
+        self.assertIn("the route queues review only and does not deduct credits", service_request_create_endpoint["serverChecks"])
+        service_request_read_endpoint = next(item for item in api["endpoints"] if item["id"] == "service-requests-read")
+        self.assertIn("authorization bearer token", service_request_read_endpoint["requiredRequestFields"])
+        self.assertIn("doesNotDeductCredits", service_request_read_endpoint["responseFields"])
         credit_usage_create_endpoint = next(item for item in api["endpoints"] if item["id"] == "credit-usage-create")
         self.assertIn("creditLedgerId", credit_usage_create_endpoint["requiredRequestFields"])
         self.assertIn("serviceId", credit_usage_create_endpoint["requiredRequestFields"])
@@ -5300,6 +5314,10 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertTrue(ops["currentState"]["creditUsageLedgerPrepared"])
         self.assertFalse(ops["currentState"]["creditUsageLedgerWritesLive"])
         self.assertTrue(ops["currentState"]["creditUsageWorkerDeployBlocked"])
+        self.assertTrue(ops["currentState"]["serviceRequestQueueWorkerPrepared"])
+        self.assertTrue(ops["currentState"]["serviceRequestQueueWorkerDryRunPassed"])
+        self.assertTrue(ops["currentState"]["serviceRequestQueueWorkerDeployBlocked"])
+        self.assertFalse(ops["currentState"]["serviceRequestQueueProductionLive"])
         self.assertTrue(ops["currentState"]["ledgerWritesLive"])
         self.assertFalse(ops["currentState"]["liveTradingEnabled"])
         email_ops = ops["emailRegistrationOpsPipeline"]
@@ -5327,6 +5345,7 @@ class LaunchPackageTests(unittest.TestCase):
             "eligibility-decision",
             "support-reply",
             "ledger-handoff",
+            "service-request-triage",
             "credit-usage-recording",
             "platform-follow-up",
             "review-package-handoff",
@@ -5366,6 +5385,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertFalse(ops["operatorControls"]["fullLocalPackageExternalSharingAllowed"])
         self.assertFalse(ops["operatorControls"]["redactedExportCanGenerateUserReplies"])
         self.assertTrue(ops["operatorControls"]["reviewPackageDigestRequiredBeforeSharing"])
+        self.assertTrue(ops["operatorControls"]["serviceRequestQueueWorkerPrepared"])
+        self.assertFalse(ops["operatorControls"]["serviceRequestQueueProductionLive"])
+        self.assertTrue(ops["operatorControls"]["serviceRequestDoesNotDeductCredits"])
         self.assertTrue(ops["operatorControls"]["creditUsageLedgerPrepared"])
         self.assertFalse(ops["operatorControls"]["creditUsageLedgerWritesLive"])
         self.assertEqual(ops["operatorControls"]["memberPacketVersionMustEqual"], "gca_member_preregistration_v2")
@@ -5473,6 +5495,10 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertTrue(credits["currentState"]["creditUsageLedgerPrepared"])
         self.assertFalse(credits["currentState"]["creditUsageLedgerWritesLive"])
         self.assertTrue(credits["currentState"]["creditUsageWorkerDeployBlocked"])
+        self.assertTrue(credits["currentState"]["serviceRequestQueueWorkerPrepared"])
+        self.assertTrue(credits["currentState"]["serviceRequestQueueWorkerDryRunPassed"])
+        self.assertTrue(credits["currentState"]["serviceRequestQueueWorkerDeployBlocked"])
+        self.assertFalse(credits["currentState"]["serviceRequestQueueProductionLive"])
         self.assertTrue(credits["currentState"]["memberLedgerWritesLive"])
         self.assertFalse(credits["currentState"]["liveTradingEnabled"])
         self.assertEqual(credits["holderBonus"]["minimumHolding"], "10000 GCA")
@@ -5502,6 +5528,11 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(credits["usageLedger"]["packetVersion"], "gca_credit_usage_v1")
         self.assertIn("remainingCreditsAfter", credits["usageLedger"]["records"])
         self.assertFalse(credits["usageLedger"]["selfServiceRedemption"])
+        self.assertEqual(credits["serviceRequestQueue"]["status"], "local-operator-service-request-queue-ready-worker-deploy-permission-pending")
+        self.assertEqual(credits["serviceRequestQueue"]["endpoint"], "https://gca-registration-api.gcagochina.workers.dev/gca/service-requests")
+        self.assertEqual(credits["serviceRequestQueue"]["packetVersion"], "gca_service_request_v1")
+        self.assertFalse(credits["serviceRequestQueue"]["deductsCredits"])
+        self.assertFalse(credits["serviceRequestQueue"]["createsTradingPermission"])
         self.assertTrue(credits["redemptionBoundaries"]["accountLevelOnly"])
         self.assertFalse(credits["redemptionBoundaries"]["transferable"])
         self.assertFalse(credits["redemptionBoundaries"]["cashEquivalent"])

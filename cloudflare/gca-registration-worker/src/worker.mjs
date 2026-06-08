@@ -2,6 +2,7 @@ const EMAIL_REGISTRATION_VERSION = "gca_email_registration_v1";
 const CONTACT_SUPPRESSION_VERSION = "gca_contact_suppression_v1";
 const MEMBER_ACCESS_VERSION = "gca_member_access_v1";
 const CREDIT_USAGE_VERSION = "gca_credit_usage_v1";
+const SERVICE_REQUEST_VERSION = "gca_service_request_v1";
 const CHAIN_ID = 8453;
 const CONTRACT_ADDRESS = "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6";
 const BASE_RPC_URL = "https://mainnet.base.org";
@@ -350,6 +351,60 @@ function extractCreditUsage(packet) {
   };
 }
 
+function extractServiceRequest(packet) {
+  if (packet.packetVersion && packet.packetVersion !== SERVICE_REQUEST_VERSION) {
+    throw new ApiError(`packetVersion must be ${SERVICE_REQUEST_VERSION}`);
+  }
+  const acknowledgements = packet.acknowledgements && typeof packet.acknowledgements === "object"
+    ? packet.acknowledgements
+    : {};
+  const email = normalizeEmail(packet.email || "");
+  const serviceId = String(packet.serviceId || "").trim();
+  const service = CREDIT_SERVICE_CATALOG[serviceId];
+  if (!service) {
+    throw new ApiError("serviceId is not supported");
+  }
+  const noSecrets = Boolean(packet.securityBoundaryAccepted || acknowledgements.noSecretsNoCustody);
+  const manualReview = Boolean(packet.manualReviewAccepted || acknowledgements.manualReviewOnly);
+  const noTradingPermission = Boolean(packet.noTradingPermissionAccepted || acknowledgements.noTradingPermission);
+  if (!noSecrets) {
+    throw new ApiError("security boundary acknowledgement is required");
+  }
+  if (!manualReview) {
+    throw new ApiError("manual review acknowledgement is required");
+  }
+  if (!noTradingPermission) {
+    throw new ApiError("no trading permission acknowledgement is required");
+  }
+  const walletAddress = String(packet.walletAddress || "").trim()
+    ? normalizeWallet(packet.walletAddress)
+    : "";
+  const creditLedgerId = String(packet.creditLedgerId || "").trim();
+  const rawCreditHold = packet.requestedCreditHold === undefined || packet.requestedCreditHold === ""
+    ? service.creditUnit
+    : packet.requestedCreditHold;
+  const requestedCreditHold = Number(rawCreditHold);
+  if (!Number.isInteger(requestedCreditHold) || requestedCreditHold < 0 || requestedCreditHold > CREDIT_AMOUNT) {
+    throw new ApiError("requestedCreditHold must be an integer between 0 and 100");
+  }
+  if (requestedCreditHold === 0 && service.creditUnit !== 0) {
+    throw new ApiError("requestedCreditHold must be greater than 0 for this service");
+  }
+  return {
+    email,
+    walletAddress,
+    creditLedgerId,
+    serviceId,
+    serviceName: service.name,
+    requestedCreditHold,
+    requestTitle: String(packet.requestTitle || "").trim().slice(0, 140),
+    requestSummary: String(packet.requestSummary || "").trim().slice(0, 1200),
+    marketContext: String(packet.marketContext || "").trim().slice(0, 500),
+    preferredLanguage: String(packet.preferredLanguage || "zh-CN").trim().slice(0, 32) || "zh-CN",
+    source: String(packet.source || "gca-service-request-operator").trim().slice(0, 120) || "gca-service-request-operator"
+  };
+}
+
 async function sha256Hex(value) {
   const data = new TextEncoder().encode(value);
   const digest = await crypto.subtle.digest("SHA-256", data);
@@ -566,6 +621,41 @@ function rowToCreditUsage(row) {
     requiresTransaction: Boolean(row.requires_transaction),
     automaticTokenTransfer: Boolean(row.automatic_token_transfer),
     writesWallet: Boolean(row.writes_wallet)
+  };
+}
+
+function rowToServiceRequest(row, includeEmail = true) {
+  if (!row) {
+    return null;
+  }
+  return {
+    serviceRequestId: row.service_request_id,
+    packetVersion: SERVICE_REQUEST_VERSION,
+    createdAt: row.created_at,
+    status: row.status,
+    email: includeEmail ? row.email : undefined,
+    emailSha256: row.email_hash,
+    accountId: row.account_id || "",
+    walletAddress: row.wallet_address || "",
+    creditLedgerId: row.credit_ledger_id || "",
+    serviceId: row.service_id,
+    serviceName: row.service_name,
+    requestedCreditHold: Number(row.requested_credit_hold),
+    remainingCreditsAtRequest: row.remaining_credits_at_request === null || row.remaining_credits_at_request === undefined
+      ? null
+      : Number(row.remaining_credits_at_request),
+    requestTitle: row.request_title || "",
+    requestSummary: row.request_summary || "",
+    marketContext: row.market_context || "",
+    preferredLanguage: row.preferred_language || "zh-CN",
+    source: row.source,
+    operatorReviewRequired: Boolean(row.operator_review_required),
+    doesNotDeductCredits: Boolean(row.does_not_deduct_credits),
+    requiresSignature: Boolean(row.requires_signature),
+    requiresTransaction: Boolean(row.requires_transaction),
+    automaticTokenTransfer: Boolean(row.automatic_token_transfer),
+    writesWallet: Boolean(row.writes_wallet),
+    createsTradingPermission: Boolean(row.creates_trading_permission)
   };
 }
 
@@ -1010,6 +1100,119 @@ async function recordCreditUsage(request, env, origin) {
   }, 201, origin, env);
 }
 
+async function recordServiceRequest(request, env, origin) {
+  if (!isAdminAuthorized(request, env)) {
+    return jsonResponse({ ok: false, error: "admin authorization is required" }, 401, origin, env);
+  }
+  const db = requireDatabase(env);
+  const packet = await readJsonRequest(request);
+  const requestInput = extractServiceRequest(packet);
+  const emailHash = await sha256Hex(requestInput.email);
+  let creditRow = null;
+  let accountId = "";
+  let walletAddress = requestInput.walletAddress;
+  let remainingCreditsAtRequest = null;
+  let status = "queued_missing_credit_ledger";
+
+  if (requestInput.creditLedgerId) {
+    creditRow = await db
+      .prepare("SELECT * FROM gca_credit_ledger WHERE credit_ledger_id = ?1 LIMIT 1")
+      .bind(requestInput.creditLedgerId)
+      .first();
+    if (!creditRow) {
+      throw new ApiError("creditLedgerId was not found", 404);
+    }
+    if (creditRow.email_hash !== emailHash) {
+      throw new ApiError("email must match the credit ledger email");
+    }
+    if (requestInput.walletAddress && requestInput.walletAddress !== creditRow.wallet_address) {
+      throw new ApiError("walletAddress must match the credit ledger wallet");
+    }
+    accountId = creditRow.account_id || "";
+    walletAddress = creditRow.wallet_address || requestInput.walletAddress;
+    remainingCreditsAtRequest = Number(creditRow.remaining_credits || 0);
+    if (!Number.isInteger(remainingCreditsAtRequest) || remainingCreditsAtRequest < 0) {
+      throw new ApiError("credit ledger remainingCredits is invalid", 409);
+    }
+    status = requestInput.requestedCreditHold <= remainingCreditsAtRequest
+      ? "queued_operator_review"
+      : "queued_insufficient_credits";
+  }
+
+  const now = nowIso();
+  const serviceRequestId = await stableId("gca_service_req", requestInput.email, requestInput.serviceId, now);
+  await db
+    .prepare(
+      `INSERT INTO gca_service_requests (
+        service_request_id,
+        account_id,
+        email,
+        email_hash,
+        wallet_address,
+        credit_ledger_id,
+        service_id,
+        service_name,
+        requested_credit_hold,
+        remaining_credits_at_request,
+        request_title,
+        request_summary,
+        market_context,
+        preferred_language,
+        source,
+        status,
+        created_at,
+        operator_review_required,
+        does_not_deduct_credits,
+        requires_signature,
+        requires_transaction,
+        automatic_token_transfer,
+        writes_wallet,
+        creates_trading_permission
+      ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, 1, 1, 0, 0, 0, 0, 0)`
+    )
+    .bind(
+      serviceRequestId,
+      accountId,
+      requestInput.email,
+      emailHash,
+      walletAddress,
+      requestInput.creditLedgerId,
+      requestInput.serviceId,
+      requestInput.serviceName,
+      requestInput.requestedCreditHold,
+      remainingCreditsAtRequest,
+      requestInput.requestTitle,
+      requestInput.requestSummary,
+      requestInput.marketContext,
+      requestInput.preferredLanguage,
+      requestInput.source,
+      status,
+      now
+    )
+    .run();
+  const serviceRequestRow = await db
+    .prepare("SELECT * FROM gca_service_requests WHERE service_request_id = ?1 LIMIT 1")
+    .bind(serviceRequestId)
+    .first();
+  return jsonResponse({
+    ok: true,
+    packetVersion: SERVICE_REQUEST_VERSION,
+    serviceRequest: rowToServiceRequest(serviceRequestRow),
+    creditLedger: creditRow ? rowToCreditLedger(creditRow) : null,
+    nextStep: "Operator should review scope and only record credit usage after service delivery evidence exists.",
+    boundaries: {
+      adminOnly: true,
+      operatorReviewOnly: true,
+      deductsCredits: false,
+      requiresSignature: false,
+      requiresTransaction: false,
+      automaticTokenTransfer: false,
+      writesWallet: false,
+      createsTradingPermission: false
+    }
+  }, 201, origin, env);
+}
+
 async function maybeWriteMemberLedger(db, account, verification, evidence, now) {
   if (!verification.gcaMemberEligible) {
     return null;
@@ -1286,6 +1489,8 @@ function accessConfig(origin, env) {
     ok: true,
     service: "gca-registration-api",
     memberAccessVersion: MEMBER_ACCESS_VERSION,
+    creditUsageVersion: CREDIT_USAGE_VERSION,
+    serviceRequestVersion: SERVICE_REQUEST_VERSION,
     chainId: CHAIN_ID,
     contractAddress: CONTRACT_ADDRESS,
     apiBaseUrl: "https://gca-registration-api.gcagochina.workers.dev",
@@ -1294,6 +1499,7 @@ function accessConfig(origin, env) {
       memberAccess: "/gca/member-access",
       walletVerifications: "/gca/wallet-verifications",
       creditLedgerAdmin: "/gca/credit-ledger",
+      serviceRequestsAdmin: "/gca/service-requests",
       creditUsageAdmin: "/gca/credit-usage",
       memberLedgerAdmin: "/gca/member-ledger"
     },
@@ -1382,6 +1588,8 @@ async function listMemberTable(request, env, origin, table, mapper, allowedFilte
       ? "activated_at"
       : table === "gca_credit_usage"
         ? "used_at"
+      : table === "gca_service_requests"
+        ? "created_at"
       : table === "gca_member_ledger"
         ? "updated_at"
         : "updated_at";
@@ -1402,6 +1610,7 @@ function health(origin, env) {
     contactSuppressionVersion: CONTACT_SUPPRESSION_VERSION,
     memberAccessVersion: MEMBER_ACCESS_VERSION,
     creditUsageVersion: CREDIT_USAGE_VERSION,
+    serviceRequestVersion: SERVICE_REQUEST_VERSION,
     chainId: CHAIN_ID,
     contractAddress: CONTRACT_ADDRESS,
     memberAccessLedger: "cloudflare-d1",
@@ -1494,6 +1703,25 @@ export default {
             [
               ["walletAddress", "wallet_address", normalizeWallet],
               ["creditLedgerId", "credit_ledger_id", null]
+            ]
+          );
+        }
+      }
+      if (url.pathname === "/gca/service-requests") {
+        if (request.method === "POST") {
+          return await recordServiceRequest(request, env, origin);
+        }
+        if (request.method === "GET") {
+          return await listMemberTable(
+            request,
+            env,
+            origin,
+            "gca_service_requests",
+            rowToServiceRequest,
+            [
+              ["walletAddress", "wallet_address", normalizeWallet],
+              ["creditLedgerId", "credit_ledger_id", null],
+              ["serviceRequestId", "service_request_id", null]
             ]
           );
         }

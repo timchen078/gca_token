@@ -7038,6 +7038,13 @@ def validate_operations_json(text: str) -> None:
             raise SiteCheckError(f"{label}: {key} must be false")
     if state.get("serviceRequestQueueLocalLive") is not True:
         raise SiteCheckError(f"{label}: serviceRequestQueueLocalLive must be true")
+    for key in (
+        "serviceRequestQueueWorkerPrepared",
+        "serviceRequestQueueWorkerDryRunPassed",
+        "serviceRequestQueueWorkerDeployBlocked",
+    ):
+        if state.get(key) is not True:
+            raise SiteCheckError(f"{label}: {key} must be true")
     if state.get("serviceRequestQueueProductionLive") is not False:
         raise SiteCheckError(f"{label}: serviceRequestQueueProductionLive must be false")
     if state.get("publicSubmissionQueueLive") is not True:
@@ -7100,6 +7107,10 @@ def validate_operations_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong support queue output")
     if member_ops.get("serviceRequestQueueLocalLedger") != ".gca_access_data/service_requests.jsonl":
         raise SiteCheckError(f"{label}: wrong service request queue ledger")
+    if member_ops.get("serviceRequestQueueWorkerEndpoint") != "https://gca-registration-api.gcagochina.workers.dev/gca/service-requests":
+        raise SiteCheckError(f"{label}: wrong service request worker endpoint")
+    if member_ops.get("serviceRequestCsv") != ".gca_access_data/member_access_report/gca_service_requests.csv":
+        raise SiteCheckError(f"{label}: wrong service request csv")
     if member_ops.get("holdingPeriodSummaryOutput") != ".gca_access_data/member_access_report/gca_holding_period_summary.json":
         raise SiteCheckError(f"{label}: wrong holding summary output")
     member_boundaries = member_ops.get("boundaries", {})
@@ -7187,7 +7198,7 @@ def validate_operations_json(text: str) -> None:
     for key in (
         "externalReviewPackageMustBeRedacted",
         "reviewPackageDigestRequiredBeforeSharing",
-        "serviceRequestQueueLocalOnly",
+        "serviceRequestQueueWorkerPrepared",
         "serviceRequestDoesNotDeductCredits",
         "publicRedactedExportForReviewerHandoffOnly",
     ):
@@ -7200,6 +7211,7 @@ def validate_operations_json(text: str) -> None:
         "manualSupportCanBypassReleaseGates",
         "fullLocalPackageExternalSharingAllowed",
         "redactedExportCanGenerateUserReplies",
+        "serviceRequestQueueProductionLive",
     ):
         if controls.get(key) is not False:
             raise SiteCheckError(f"{label}: {key} must be false")
@@ -7459,6 +7471,13 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: liveTradingEnabled must be false")
     if state.get("serviceRequestQueueLocalLive") is not True:
         raise SiteCheckError(f"{label}: serviceRequestQueueLocalLive must be true")
+    for key in (
+        "serviceRequestQueueWorkerPrepared",
+        "serviceRequestQueueWorkerDryRunPassed",
+        "serviceRequestQueueWorkerDeployBlocked",
+    ):
+        if state.get(key) is not True:
+            raise SiteCheckError(f"{label}: {key} must be true")
     if state.get("serviceRequestQueueProductionLive") is not False:
         raise SiteCheckError(f"{label}: serviceRequestQueueProductionLive must be false")
     for key in (
@@ -7527,12 +7546,16 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong contact suppression tool")
     if production_email_backend.get("contactSuppressionMigration") != "cloudflare/gca-registration-worker/migrations/0002_contact_suppressions.sql":
         raise SiteCheckError(f"{label}: wrong contact suppression migration")
+    if production_email_backend.get("serviceRequestMigration") != "cloudflare/gca-registration-worker/migrations/0005_service_requests.sql":
+        raise SiteCheckError(f"{label}: wrong service request migration")
     if production_email_backend.get("contactSuppressionEndpoint") != "https://gca-registration-api.gcagochina.workers.dev/gca/contact-suppressions":
         raise SiteCheckError(f"{label}: wrong contact suppression endpoint")
     if production_email_backend.get("adminContactSuppressionReadEndpoint") != "https://gca-registration-api.gcagochina.workers.dev/gca/contact-suppressions":
         raise SiteCheckError(f"{label}: wrong admin contact suppression read endpoint")
     if production_email_backend.get("contactSuppressionSyncTool") != "tools/sync_cloudflare_contact_suppressions.py":
         raise SiteCheckError(f"{label}: wrong contact suppression sync tool")
+    if production_email_backend.get("adminServiceRequestsEndpoint") != "https://gca-registration-api.gcagochina.workers.dev/gca/service-requests":
+        raise SiteCheckError(f"{label}: wrong admin service requests endpoint")
     if production_email_backend.get("defaultAdminExportOutput") != ".gca_access_data/cloudflare_email_registrations_export.json":
         raise SiteCheckError(f"{label}: wrong default admin export output")
     if production_email_backend.get("publicRedactedAdminExportOutput") != ".gca_access_data/cloudflare_email_registrations_public_redacted.json":
@@ -7635,8 +7658,8 @@ def validate_access_api_json(text: str) -> None:
         if endpoint.get("status") != expected_status:
             raise SiteCheckError(f"{label}: endpoint {endpoint_key} should be {expected_status}")
     expected_local_service_request_statuses = {
-        "GET /gca/service-requests": "local-only-not-public-production",
-        "POST /gca/service-requests": "local-only-not-public-production",
+        "GET /gca/service-requests": "prepared-worker-deploy-pending",
+        "POST /gca/service-requests": "prepared-worker-deploy-pending",
     }
     for endpoint_key, expected_status in expected_local_service_request_statuses.items():
         endpoint = endpoint_map.get(endpoint_key)
@@ -7646,6 +7669,7 @@ def validate_access_api_json(text: str) -> None:
             raise SiteCheckError(f"{label}: endpoint {endpoint_key} should be {expected_status}")
     service_request_create = endpoint_map["POST /gca/service-requests"]
     for field in (
+        "authorization bearer token",
         "email",
         "serviceId",
         "acknowledgements.noSecretsNoCustody",
@@ -7661,6 +7685,8 @@ def validate_access_api_json(text: str) -> None:
         if expected_check not in service_request_create.get("serverChecks", []):
             raise SiteCheckError(f"{label}: missing service request check {expected_check}")
     service_request_read = endpoint_map["GET /gca/service-requests"]
+    if "authorization bearer token" not in service_request_read.get("requiredRequestFields", []):
+        raise SiteCheckError(f"{label}: service request read must require admin token")
     if "doesNotDeductCredits" not in service_request_read.get("responseFields", []):
         raise SiteCheckError(f"{label}: missing service request deduction boundary")
     email_registration = endpoint_map["POST /gca/email-registrations"]
@@ -8046,6 +8072,18 @@ def validate_api_status_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong credit usage admin boundary")
     if credit_usage.get("workerDryRunPassed") is not True:
         raise SiteCheckError(f"{label}: credit usage Worker dry run should be recorded as passed")
+
+    service_requests = admin_endpoints.get("service-requests-read-write")
+    if service_requests is None:
+        raise SiteCheckError(f"{label}: missing service request deploy-pending endpoint")
+    if service_requests.get("method") != "GET/POST" or service_requests.get("path") != "/gca/service-requests":
+        raise SiteCheckError(f"{label}: wrong service request endpoint route")
+    if service_requests.get("status") != "prepared-worker-deploy-permission-pending":
+        raise SiteCheckError(f"{label}: wrong service request endpoint status")
+    if service_requests.get("requiresAdminReadToken") is not True or service_requests.get("publicLedgerReadable") is not False:
+        raise SiteCheckError(f"{label}: wrong service request admin boundary")
+    if service_requests.get("workerDryRunPassed") is not True:
+        raise SiteCheckError(f"{label}: service request Worker dry run should be recorded as passed")
 
     if checks.get("tool") != "tools/check_gca_registration_api.py":
         raise SiteCheckError(f"{label}: wrong check tool")
@@ -8496,7 +8534,7 @@ def validate_credits_page(text: str) -> None:
     assert_contains(text, "read-only GCA balance verification", label)
     assert_contains(text, "credit ledger record live for eligible holders", label)
     assert_contains(text, "Service requests", label)
-    assert_contains(text, "local operator request queue ready", label)
+    assert_contains(text, "operator request queue ready", label)
     assert_contains(text, "does not deduct credits", label)
     assert_contains(text, "member ledger record live for eligible holders", label)
     assert_contains(text, "support review queue", label)
@@ -8546,6 +8584,13 @@ def validate_credits_json(text: str) -> None:
         raise SiteCheckError(f"{label}: liveTradingEnabled must be false")
     if state.get("serviceRequestQueueLocalLive") is not True:
         raise SiteCheckError(f"{label}: serviceRequestQueueLocalLive must be true")
+    for key in (
+        "serviceRequestQueueWorkerPrepared",
+        "serviceRequestQueueWorkerDryRunPassed",
+        "serviceRequestQueueWorkerDeployBlocked",
+    ):
+        if state.get(key) is not True:
+            raise SiteCheckError(f"{label}: {key} must be true")
     if state.get("serviceRequestQueueProductionLive") is not False:
         raise SiteCheckError(f"{label}: serviceRequestQueueProductionLive must be false")
     if holder_bonus.get("minimumHolding") != "10000 GCA":
@@ -8628,8 +8673,10 @@ def validate_credits_json(text: str) -> None:
             raise SiteCheckError(f"{label}: {key} must be false")
     if safety.get("simulationFirstRequiredBeforeFutureExecution") is not True:
         raise SiteCheckError(f"{label}: simulation-first requirement must be true")
-    if service_request_queue.get("status") != "local-operator-service-request-queue-ready":
+    if service_request_queue.get("status") != "local-operator-service-request-queue-ready-worker-deploy-permission-pending":
         raise SiteCheckError(f"{label}: wrong service request queue status")
+    if service_request_queue.get("endpoint") != "https://gca-registration-api.gcagochina.workers.dev/gca/service-requests":
+        raise SiteCheckError(f"{label}: wrong service request worker endpoint")
     if service_request_queue.get("localEndpoint") != "http://127.0.0.1:8787/gca/service-requests":
         raise SiteCheckError(f"{label}: wrong service request local endpoint")
     if service_request_queue.get("packetVersion") != "gca_service_request_v1":

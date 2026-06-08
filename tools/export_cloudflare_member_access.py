@@ -41,13 +41,21 @@ DATASET_PATHS = {
     "member-access": "/gca/member-access",
     "wallet-verifications": "/gca/wallet-verifications",
     "credit-ledger": "/gca/credit-ledger",
+    "service-requests": "/gca/service-requests",
     "credit-usage": "/gca/credit-usage",
     "member-ledger": "/gca/member-ledger",
 }
+LIVE_DATASET_NAMES = (
+    "member-access",
+    "wallet-verifications",
+    "credit-ledger",
+    "member-ledger",
+)
 DATASET_FILTERS = {
     "member-access": {"email", "walletAddress"},
     "wallet-verifications": {"walletAddress"},
     "credit-ledger": {"walletAddress"},
+    "service-requests": {"walletAddress"},
     "credit-usage": {"walletAddress"},
     "member-ledger": {"walletAddress"},
 }
@@ -178,6 +186,7 @@ def build_export_payload(
     datasets: dict[str, dict[str, Any]],
     base_url: str,
     redacted: bool,
+    pending_routes_included: bool = False,
 ) -> dict[str, Any]:
     return {
         "ok": True,
@@ -188,6 +197,7 @@ def build_export_payload(
         "datasets": datasets,
         "datasetCount": len(datasets),
         "recordCount": sum(int(item.get("recordsReturned", 0)) for item in datasets.values()),
+        "pendingWorkerRoutesIncluded": pending_routes_included,
         "boundaries": {
             "localOperatorExportOnly": True,
             "adminTokenPrinted": False,
@@ -197,6 +207,7 @@ def build_export_payload(
             "transactionRequired": False,
             "automaticTokenTransfer": False,
             "memberBenefitTransferAutomatic": False,
+            "pendingWorkerRoutesOptional": True,
         },
     }
 
@@ -210,11 +221,15 @@ def export_datasets(
     email: str = "",
     wallet_address: str = "",
     redacted: bool = False,
+    include_pending_routes: bool = False,
     timeout: float = 20,
     cafile: str = "",
     opener: Callable[..., Any] = urlopen,
 ) -> dict[str, Any]:
-    dataset_names = tuple(DATASET_PATHS) if dataset == "all" else (dataset,)
+    if dataset == "all":
+        dataset_names = tuple(DATASET_PATHS) if include_pending_routes else LIVE_DATASET_NAMES
+    else:
+        dataset_names = (dataset,)
     datasets: dict[str, dict[str, Any]] = {}
     for dataset_name in dataset_names:
         source_url = build_admin_url(
@@ -241,7 +256,12 @@ def export_datasets(
             source_url=source_url,
             redacted=redacted,
         )
-    return build_export_payload(datasets=datasets, base_url=base_url, redacted=redacted)
+    return build_export_payload(
+        datasets=datasets,
+        base_url=base_url,
+        redacted=redacted,
+        pending_routes_included=include_pending_routes,
+    )
 
 
 def write_json(path: Path, payload: dict[str, Any]) -> None:
@@ -261,6 +281,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         default="all",
         help="Dataset to export. Default: all.",
     )
+    parser.add_argument("--include-pending-routes", action="store_true", help="Include Worker routes that are prepared locally but not yet deployed live.")
     parser.add_argument("--limit", type=int, default=100, help="Maximum records per dataset, 1-100. Default: 100.")
     parser.add_argument("--email", default="", help="Optional email filter. Supported only by member-access.")
     parser.add_argument("--wallet-address", default="", help="Optional Base wallet filter for member datasets.")
@@ -283,6 +304,7 @@ def main(argv: list[str] | None = None) -> int:
             email=args.email,
             wallet_address=args.wallet_address,
             redacted=args.redact == "public",
+            include_pending_routes=args.include_pending_routes,
             timeout=args.timeout,
             cafile=args.cafile,
         )

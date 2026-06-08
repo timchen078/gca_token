@@ -20,6 +20,7 @@ class GcaWorkerDeployReadinessTests(unittest.TestCase):
         (worker_dir / "node_modules" / ".bin").mkdir(parents=True)
         (worker_dir / "src" / "worker.mjs").write_text("export default {};\n", encoding="utf-8")
         (worker_dir / "migrations" / "0004_credit_usage_ledger.sql").write_text("CREATE TABLE gca_credit_usage(id TEXT);\n", encoding="utf-8")
+        (worker_dir / "migrations" / "0005_service_requests.sql").write_text("CREATE TABLE gca_service_requests(id TEXT);\n", encoding="utf-8")
         (worker_dir / "package-lock.json").write_text("{}\n", encoding="utf-8")
         (worker_dir / "node_modules" / ".bin" / "wrangler").write_text("#!/bin/sh\n", encoding="utf-8")
         self.worker_dir = worker_dir

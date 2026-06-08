@@ -137,7 +137,7 @@ def require_honeypot_config(payload: dict[str, Any], context: str) -> None:
     require(anti_spam.get("rateLimitsStillRequired") is True, f"{context} must keep rate-limit boundary")
 
 
-def check_health(*, base_url: str, timeout: float, cafile: str, opener: Callable[..., Any]) -> dict[str, Any]:
+def check_health(*, base_url: str, timeout: float, cafile: str, opener: Callable[..., Any], include_pending_routes: bool = False) -> dict[str, Any]:
     url = build_url(base_url, "/health")
     status, _, payload = http_json_request(url=url, timeout=timeout, cafile=cafile, opener=opener)
     require(status == 200, "health endpoint must return HTTP 200")
@@ -147,6 +147,10 @@ def check_health(*, base_url: str, timeout: float, cafile: str, opener: Callable
     require(payload.get("packetVersion") == "gca_email_registration_v1", "health endpoint returned wrong email packet version")
     require(payload.get("contactSuppressionVersion") == "gca_contact_suppression_v1", "health endpoint returned wrong suppression packet version")
     require(payload.get("memberAccessVersion") == "gca_member_access_v1", "health endpoint returned wrong member access packet version")
+    if include_pending_routes or "creditUsageVersion" in payload:
+        require(payload.get("creditUsageVersion") == "gca_credit_usage_v1", "health endpoint returned wrong credit usage packet version")
+    if include_pending_routes or "serviceRequestVersion" in payload:
+        require(payload.get("serviceRequestVersion") == "gca_service_request_v1", "health endpoint returned wrong service request packet version")
     require(payload.get("chainId") == 8453, "health endpoint returned wrong chainId")
     require(payload.get("contractAddress") == "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6", "health endpoint returned wrong GCA contract")
     require_honeypot_config(payload, "health endpoint")
@@ -159,6 +163,8 @@ def check_health(*, base_url: str, timeout: float, cafile: str, opener: Callable
         "packetVersion": payload.get("packetVersion"),
         "contactSuppressionVersion": payload.get("contactSuppressionVersion"),
         "memberAccessVersion": payload.get("memberAccessVersion"),
+        "creditUsageVersion": payload.get("creditUsageVersion"),
+        "serviceRequestVersion": payload.get("serviceRequestVersion"),
         "chainId": payload.get("chainId"),
         "contractAddress": payload.get("contractAddress"),
         "antiSpamHoneypotFields": payload.get("antiSpam", {}).get("honeypotFields", []),
@@ -228,12 +234,16 @@ def check_unauthorized_admin_read(
     }
 
 
-def check_access_config(*, base_url: str, timeout: float, cafile: str, opener: Callable[..., Any]) -> dict[str, Any]:
+def check_access_config(*, base_url: str, timeout: float, cafile: str, opener: Callable[..., Any], include_pending_routes: bool = False) -> dict[str, Any]:
     url = build_url(base_url, "/gca/access-config")
     status, _, payload = http_json_request(url=url, timeout=timeout, cafile=cafile, opener=opener)
     require(status == 200, "access config endpoint must return HTTP 200")
     require(payload.get("ok") is True, "access config endpoint must return ok=true")
     require(payload.get("memberAccessVersion") == "gca_member_access_v1", "access config returned wrong version")
+    if include_pending_routes or "creditUsageVersion" in payload:
+        require(payload.get("creditUsageVersion") == "gca_credit_usage_v1", "access config returned wrong credit usage version")
+    if include_pending_routes or "serviceRequestVersion" in payload:
+        require(payload.get("serviceRequestVersion") == "gca_service_request_v1", "access config returned wrong service request version")
     require(payload.get("boundaries", {}).get("readOnlyWalletVerification") is True, "access config must keep read-only wallet verification")
     require(payload.get("boundaries", {}).get("automaticTokenTransfer") is False, "access config must not auto-transfer tokens")
     require(payload.get("thresholds", {}).get("holderBonusMinimumGca") == "10000", "access config holder threshold mismatch")
@@ -244,6 +254,8 @@ def check_access_config(*, base_url: str, timeout: float, cafile: str, opener: C
         "ok": True,
         "status": status,
         "memberAccessVersion": payload.get("memberAccessVersion"),
+        "creditUsageVersion": payload.get("creditUsageVersion"),
+        "serviceRequestVersion": payload.get("serviceRequestVersion"),
         "readOnlyWalletVerification": True,
         "automaticTokenTransfer": False,
         "antiSpamHoneypotFields": payload.get("antiSpam", {}).get("honeypotFields", []),
@@ -296,6 +308,7 @@ def run_checks(
     limit: int = 5,
     timeout: float = 20,
     cafile: str = "",
+    include_pending_routes: bool = False,
     opener: Callable[..., Any] = urlopen,
 ) -> dict[str, Any]:
     if limit < 1 or limit > 100:
@@ -304,8 +317,8 @@ def run_checks(
     if not public_only and not clean_token:
         raise ApiCheckError("ADMIN_READ_TOKEN is required unless --public-only is used")
     checks = [
-        check_health(base_url=base_url, timeout=timeout, cafile=cafile, opener=opener),
-        check_access_config(base_url=base_url, timeout=timeout, cafile=cafile, opener=opener),
+        check_health(base_url=base_url, timeout=timeout, cafile=cafile, opener=opener, include_pending_routes=include_pending_routes),
+        check_access_config(base_url=base_url, timeout=timeout, cafile=cafile, opener=opener, include_pending_routes=include_pending_routes),
         check_cors_preflight(
             base_url=base_url,
             path="/gca/email-registrations",
@@ -384,14 +397,6 @@ def run_checks(
         ),
         check_unauthorized_admin_read(
             base_url=base_url,
-            path="/gca/credit-usage",
-            check_id="unauth-credit-usage-read",
-            timeout=timeout,
-            cafile=cafile,
-            opener=opener,
-        ),
-        check_unauthorized_admin_read(
-            base_url=base_url,
             path="/gca/member-ledger",
             check_id="unauth-member-ledger-read",
             timeout=timeout,
@@ -399,6 +404,43 @@ def run_checks(
             opener=opener,
         ),
     ]
+    if include_pending_routes:
+        checks.extend([
+            check_cors_preflight(
+                base_url=base_url,
+                path="/gca/credit-usage",
+                check_id="cors-credit-usage",
+                origin=origin,
+                timeout=timeout,
+                cafile=cafile,
+                opener=opener,
+            ),
+            check_cors_preflight(
+                base_url=base_url,
+                path="/gca/service-requests",
+                check_id="cors-service-requests",
+                origin=origin,
+                timeout=timeout,
+                cafile=cafile,
+                opener=opener,
+            ),
+            check_unauthorized_admin_read(
+                base_url=base_url,
+                path="/gca/credit-usage",
+                check_id="unauth-credit-usage-read",
+                timeout=timeout,
+                cafile=cafile,
+                opener=opener,
+            ),
+            check_unauthorized_admin_read(
+                base_url=base_url,
+                path="/gca/service-requests",
+                check_id="unauth-service-requests-read",
+                timeout=timeout,
+                cafile=cafile,
+                opener=opener,
+            ),
+        ])
     if not public_only:
         checks.extend([
             check_authorized_admin_read(
@@ -453,16 +495,6 @@ def run_checks(
             ),
             check_authorized_admin_read(
                 base_url=base_url,
-                path="/gca/credit-usage",
-                check_id="admin-credit-usage-read",
-                token=clean_token,
-                limit=limit,
-                timeout=timeout,
-                cafile=cafile,
-                opener=opener,
-            ),
-            check_authorized_admin_read(
-                base_url=base_url,
                 path="/gca/member-ledger",
                 check_id="admin-member-ledger-read",
                 token=clean_token,
@@ -472,6 +504,29 @@ def run_checks(
                 opener=opener,
             ),
         ])
+        if include_pending_routes:
+            checks.extend([
+                check_authorized_admin_read(
+                    base_url=base_url,
+                    path="/gca/credit-usage",
+                    check_id="admin-credit-usage-read",
+                    token=clean_token,
+                    limit=limit,
+                    timeout=timeout,
+                    cafile=cafile,
+                    opener=opener,
+                ),
+                check_authorized_admin_read(
+                    base_url=base_url,
+                    path="/gca/service-requests",
+                    check_id="admin-service-requests-read",
+                    token=clean_token,
+                    limit=limit,
+                    timeout=timeout,
+                    cafile=cafile,
+                    opener=opener,
+                )
+            ])
     return {
         "ok": all(item["ok"] for item in checks),
         "checkedAt": utc_now(),
@@ -485,6 +540,7 @@ def run_checks(
             "submitsContactSuppression": False,
             "submitsWalletVerification": False,
             "submitsMemberAccess": False,
+            "submitsServiceRequest": False,
             "adminTokenPrinted": False,
             "userEmailsPrinted": False,
             "walletConnectionRequired": False,
@@ -494,6 +550,7 @@ def run_checks(
             "publicOnly": public_only,
             "adminReadTokenRequired": not public_only,
             "tokenProtectedAdminReadChecked": not public_only,
+            "pendingWorkerRoutesIncluded": include_pending_routes,
         },
     }
 
@@ -505,6 +562,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--public-only", action="store_true", help="Skip token-protected admin reads. Suitable for public CI without secrets.")
     parser.add_argument("--origin", default=DEFAULT_ORIGIN, help=f"CORS origin to verify. Default: {DEFAULT_ORIGIN}")
     parser.add_argument("--limit", type=int, default=5, help="Maximum admin records to count, 1-100. Default: 5.")
+    parser.add_argument("--include-pending-routes", action="store_true", help="Also check prepared Worker routes that may not be deployed live yet.")
     parser.add_argument("--timeout", type=float, default=20, help="HTTP timeout in seconds. Default: 20.")
     parser.add_argument("--cafile", default="", help=f"Optional CA bundle path. Default fallback: {DEFAULT_CA_FILE}")
     return parser.parse_args(argv)
@@ -522,6 +580,7 @@ def main(argv: list[str] | None = None) -> int:
             limit=args.limit,
             timeout=args.timeout,
             cafile=args.cafile,
+            include_pending_routes=args.include_pending_routes,
         )
     except (ApiCheckError, ExportError) as exc:
         print(json.dumps({"ok": False, "error": str(exc)}, ensure_ascii=False, sort_keys=True), file=sys.stderr)

@@ -444,6 +444,14 @@
           <span class="label">Member Access Version</span>
           <span class="value">gca_member_access_v1</span>
         </div>
+        <div class="fact">
+          <span class="label">Service Request Version</span>
+          <span class="value">gca_service_request_v1</span>
+        </div>
+        <div class="fact">
+          <span class="label">Service Request Migration</span>
+          <span class="value">cloudflare/gca-registration-worker/migrations/0005_service_requests.sql</span>
+        </div>
       </section>
 
       <section class="section panel" aria-labelledby="endpointsTitle">
@@ -492,7 +500,7 @@
           <div class="fact">
             <span class="label">POST / GET</span>
             <span class="value">/gca/service-requests</span>
-            <p class="note">Local-only operator queue for requested GCA AI Quant Access service scope before delivery. It records service ID, optional credit ledger ID, requested credit hold, and review status; it does not deduct credits, connect wallets, request signatures, send tokens, write production data, or create trading permission.</p>
+            <p class="note">Prepared token-protected operator queue for requested GCA AI Quant Access service scope before delivery. Local backend support is implemented, the D1 migration is prepared, and <code>wrangler deploy --dry-run</code> passes; the Cloudflare Worker route is pending Workers service publish permission. It records service ID, optional credit ledger ID, requested credit hold, and review status; it does not deduct credits, connect wallets, request signatures, send tokens, or create trading permission.</p>
           </div>
           <div class="fact">
             <span class="label">POST / GET</span>

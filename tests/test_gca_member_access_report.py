@@ -70,6 +70,34 @@ def member_access_export_payload():
                     "status": "ledger_recorded",
                 }],
             },
+            "service-requests": {
+                "records": [{
+                    "serviceRequestId": "gca_service_req_1",
+                    "status": "queued_operator_review",
+                    "createdAt": "2026-05-20T15:05:00Z",
+                    "accountId": "gca_account_1",
+                    "email": "user@example.com",
+                    "emailSha256": "0" * 64,
+                    "walletAddress": "0x18d0007bc6be029f8ccd7cb13e324aa21891092d",
+                    "creditLedgerId": "gca_credit_1",
+                    "serviceId": "risk-warning-review",
+                    "serviceName": "Risk Warning Review",
+                    "requestedCreditHold": 10,
+                    "remainingCreditsAtRequest": 100,
+                    "requestTitle": "Risk warning review",
+                    "requestSummary": "Review a position plan before manual action.",
+                    "marketContext": "BTC/ETH volatility watch.",
+                    "preferredLanguage": "zh-CN",
+                    "source": "gca-service-request-operator",
+                    "operatorReviewRequired": True,
+                    "doesNotDeductCredits": True,
+                    "requiresSignature": False,
+                    "requiresTransaction": False,
+                    "automaticTokenTransfer": False,
+                    "writesWallet": False,
+                    "createsTradingPermission": False,
+                }],
+            },
             "credit-usage": {
                 "records": [{
                     "creditUsageId": "gca_credit_use_1",
@@ -148,6 +176,9 @@ class GcaMemberAccessReportTests(unittest.TestCase):
             self.assertTrue(summary["ok"])
             self.assertEqual(summary["counts"]["accounts"], 1)
             self.assertEqual(summary["counts"]["creditLedgerRecorded"], 1)
+            self.assertEqual(summary["counts"]["serviceRequestRecords"], 1)
+            self.assertEqual(summary["counts"]["queuedServiceRequests"], 1)
+            self.assertEqual(summary["counts"]["requestedCreditHoldQueued"], 10)
             self.assertEqual(summary["counts"]["creditUsageRecords"], 1)
             self.assertEqual(summary["counts"]["creditUsageRecorded"], 1)
             self.assertEqual(summary["counts"]["creditsConsumed"], 10)
@@ -159,6 +190,7 @@ class GcaMemberAccessReportTests(unittest.TestCase):
             self.assertFalse(summary["boundaries"]["writesProductionData"])
             self.assertFalse(summary["boundaries"]["automaticTokenTransfer"])
             self.assertTrue(summary_output.exists())
+            self.assertTrue(Path(summary["outputs"]["serviceRequestsCsv"]).exists())
             self.assertTrue(Path(summary["outputs"]["creditUsageCsv"]).exists())
 
             with Path(summary["outputs"]["memberBenefitReviewQueueCsv"]).open(newline="", encoding="utf-8") as handle:

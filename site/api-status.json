@@ -146,6 +146,17 @@
       "publicLedgerReadable": false
     },
     {
+      "id": "service-requests-read-write",
+      "method": "GET/POST",
+      "path": "/gca/service-requests",
+      "url": "https://gca-registration-api.gcagochina.workers.dev/gca/service-requests",
+      "status": "prepared-worker-deploy-permission-pending",
+      "requiresAdminReadToken": true,
+      "publicLedgerReadable": false,
+      "workerDryRunPassed": true,
+      "blockedBy": "Cloudflare authentication or Workers service permission error [code: 10000]"
+    },
+    {
       "id": "credit-usage-read-write",
       "method": "GET/POST",
       "path": "/gca/credit-usage",

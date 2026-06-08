@@ -93,6 +93,33 @@ CREDIT_USAGE_FIELDS = [
     "status",
 ]
 
+SERVICE_REQUEST_FIELDS = [
+    "serviceRequestId",
+    "status",
+    "createdAt",
+    "accountId",
+    "email",
+    "emailSha256",
+    "walletAddress",
+    "creditLedgerId",
+    "serviceId",
+    "serviceName",
+    "requestedCreditHold",
+    "remainingCreditsAtRequest",
+    "requestTitle",
+    "requestSummary",
+    "marketContext",
+    "preferredLanguage",
+    "source",
+    "operatorReviewRequired",
+    "doesNotDeductCredits",
+    "requiresSignature",
+    "requiresTransaction",
+    "automaticTokenTransfer",
+    "writesWallet",
+    "createsTradingPermission",
+]
+
 MEMBER_FIELDS = [
     "memberLedgerId",
     "accountId",
@@ -225,12 +252,14 @@ def build_report(payload: dict[str, Any], output_dir: Path, summary_output: Path
     accounts = dataset_records(payload, "member-access")
     wallet_verifications = dataset_records(payload, "wallet-verifications")
     credits = dataset_records(payload, "credit-ledger")
+    service_requests = dataset_records(payload, "service-requests")
     credit_usage = dataset_records(payload, "credit-usage")
     members = dataset_records(payload, "member-ledger")
 
     account_rows = [select_row(record, ACCOUNT_FIELDS) for record in accounts]
     wallet_rows = [select_row(record, WALLET_FIELDS) for record in wallet_verifications]
     credit_rows = [select_row(record, CREDIT_FIELDS) for record in credits]
+    service_request_rows = [select_row(record, SERVICE_REQUEST_FIELDS) for record in service_requests]
     credit_usage_rows = [select_row(record, CREDIT_USAGE_FIELDS) for record in credit_usage]
     member_rows = [select_row(record, MEMBER_FIELDS) for record in members]
     benefit_queue_rows = build_benefit_queue(members)
@@ -239,6 +268,7 @@ def build_report(payload: dict[str, Any], output_dir: Path, summary_output: Path
         "accountsCsv": output_dir / "gca_member_accounts.csv",
         "walletVerificationsCsv": output_dir / "gca_wallet_verifications.csv",
         "creditLedgerCsv": output_dir / "gca_credit_ledger.csv",
+        "serviceRequestsCsv": output_dir / "gca_service_requests.csv",
         "creditUsageCsv": output_dir / "gca_credit_usage.csv",
         "memberLedgerCsv": output_dir / "gca_member_ledger.csv",
         "memberBenefitReviewQueueCsv": output_dir / "gca_member_benefit_review_queue.csv",
@@ -247,6 +277,7 @@ def build_report(payload: dict[str, Any], output_dir: Path, summary_output: Path
     write_csv(outputs["accountsCsv"], account_rows, ACCOUNT_FIELDS)
     write_csv(outputs["walletVerificationsCsv"], wallet_rows, WALLET_FIELDS)
     write_csv(outputs["creditLedgerCsv"], credit_rows, CREDIT_FIELDS)
+    write_csv(outputs["serviceRequestsCsv"], service_request_rows, SERVICE_REQUEST_FIELDS)
     write_csv(outputs["creditUsageCsv"], credit_usage_rows, CREDIT_USAGE_FIELDS)
     write_csv(outputs["memberLedgerCsv"], member_rows, MEMBER_FIELDS)
     write_csv(outputs["memberBenefitReviewQueueCsv"], benefit_queue_rows, BENEFIT_QUEUE_FIELDS)
@@ -264,6 +295,15 @@ def build_report(payload: dict[str, Any], output_dir: Path, summary_output: Path
             "gcaMemberEligibleWallets": count_records(wallet_verifications, "gcaMemberEligible", True),
             "creditLedgerRecords": len(credits),
             "creditLedgerRecorded": count_records(credits, "status", "ledger_recorded"),
+            "serviceRequestRecords": len(service_requests),
+            "queuedServiceRequests": count_records(service_requests, "status", "queued_operator_review"),
+            "serviceRequestsMissingCreditLedger": count_records(service_requests, "status", "queued_missing_credit_ledger"),
+            "serviceRequestsInsufficientCredits": count_records(service_requests, "status", "queued_insufficient_credits"),
+            "requestedCreditHoldQueued": sum(
+                int(record.get("requestedCreditHold") or 0)
+                for record in service_requests
+                if record.get("status") == "queued_operator_review"
+            ),
             "creditUsageRecords": len(credit_usage),
             "creditUsageRecorded": count_any(credit_usage, "status", {"usage_recorded", "exhausted"}),
             "creditsConsumed": sum(int(record.get("creditAmountUsed") or 0) for record in credit_usage),

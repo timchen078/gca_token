@@ -65,8 +65,8 @@ class GcaMemberAccessOpsTests(unittest.TestCase):
             )
 
             self.assertTrue(summary["ok"])
-            self.assertEqual(summary["export"]["datasetCount"], 5)
-            self.assertEqual(summary["export"]["recordCount"], 5)
+            self.assertEqual(summary["export"]["datasetCount"], 4)
+            self.assertEqual(summary["export"]["recordCount"], 4)
             self.assertTrue((root / "export.json").exists())
             self.assertTrue((root / "report" / "gca_member_accounts.csv").exists())
             self.assertTrue((root / "support.csv").exists())
@@ -76,7 +76,12 @@ class GcaMemberAccessOpsTests(unittest.TestCase):
             self.assertEqual(summary["supportQueue"]["rows"], 1)
             self.assertEqual(
                 {item["path"] for item in seen},
-                {"/gca/member-access", "/gca/wallet-verifications", "/gca/credit-ledger", "/gca/credit-usage", "/gca/member-ledger"},
+                {
+                    "/gca/member-access",
+                    "/gca/wallet-verifications",
+                    "/gca/credit-ledger",
+                    "/gca/member-ledger",
+                },
             )
             self.assertTrue(all(item["authorization"] == "Bearer secret-token" for item in seen))
             self.assertTrue(all(item["timeout"] == 7 for item in seen))

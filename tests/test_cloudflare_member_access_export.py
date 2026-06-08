@@ -76,11 +76,16 @@ class CloudflareMemberAccessExportTests(unittest.TestCase):
         )
 
         self.assertTrue(payload["ok"])
-        self.assertEqual(payload["datasetCount"], 5)
-        self.assertEqual(payload["recordCount"], 5)
+        self.assertEqual(payload["datasetCount"], 4)
+        self.assertEqual(payload["recordCount"], 4)
         self.assertEqual(
             {item["path"] for item in seen},
-            {"/gca/member-access", "/gca/wallet-verifications", "/gca/credit-ledger", "/gca/credit-usage", "/gca/member-ledger"},
+            {
+                "/gca/member-access",
+                "/gca/wallet-verifications",
+                "/gca/credit-ledger",
+                "/gca/member-ledger",
+            },
         )
         self.assertTrue(all(item["authorization"] == "Bearer secret-token" for item in seen))
         self.assertTrue(all(item["user_agent"] == "GCA-Operator-Member-Access-Export/1.0" for item in seen))
@@ -91,6 +96,28 @@ class CloudflareMemberAccessExportTests(unittest.TestCase):
         self.assertNotIn("Private User", serialized)
         self.assertFalse(payload["boundaries"]["writesProductionData"])
         self.assertFalse(payload["boundaries"]["automaticTokenTransfer"])
+        self.assertFalse(payload["pendingWorkerRoutesIncluded"])
+
+    def test_export_can_include_pending_service_request_dataset_explicitly(self):
+        seen = []
+
+        def opener(request, timeout):
+            seen.append({"path": urlparse(request.full_url).path})
+            return FakeResponse({"ok": True, "count": 0, "records": []})
+
+        payload = export_datasets(
+            base_url="https://worker.example",
+            token="secret-token",
+            dataset="all",
+            limit=1,
+            include_pending_routes=True,
+            opener=opener,
+        )
+
+        self.assertEqual(payload["datasetCount"], 6)
+        self.assertIn("/gca/service-requests", {item["path"] for item in seen})
+        self.assertIn("/gca/credit-usage", {item["path"] for item in seen})
+        self.assertTrue(payload["pendingWorkerRoutesIncluded"])
 
     def test_redacted_export_removes_email_and_display_name(self):
         record = {
