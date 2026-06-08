@@ -2,7 +2,7 @@
   "schema": "https://gcagochina.com/access-api.json",
   "pageUrl": "https://gcagochina.com/access-api.html",
   "status": "public-access-api-member-access-live",
-  "lastUpdated": "2026-05-28",
+  "lastUpdated": "2026-06-08",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "title": "GCA Access API Contract",
@@ -33,6 +33,10 @@
     "creditUsageWorkerDryRunPassed": true,
     "creditUsageWorkerDeployBlockedBy": "Cloudflare authentication or Workers service permission error [code: 10000]",
     "serviceRequestQueueLocalLive": true,
+    "serviceRequestQueueWorkerPrepared": true,
+    "serviceRequestQueueWorkerDryRunPassed": true,
+    "serviceRequestQueueWorkerDeployBlocked": true,
+    "serviceRequestQueueWorkerDeployBlockedBy": "Cloudflare authentication or Workers service permission error [code: 10000]",
     "serviceRequestQueueProductionLive": false,
     "memberLedgerWritesLive": true
   },
@@ -121,10 +125,12 @@
     "publicWebsiteFallback": "official-email-fallback",
     "memberAccessMigration": "cloudflare/gca-registration-worker/migrations/0003_member_access_ledgers.sql",
     "creditUsageMigration": "cloudflare/gca-registration-worker/migrations/0004_credit_usage_ledger.sql",
+    "serviceRequestMigration": "cloudflare/gca-registration-worker/migrations/0005_service_requests.sql",
     "memberAccessEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/member-access",
     "walletVerificationEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/wallet-verifications",
     "accessConfigEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/access-config",
     "adminCreditLedgerEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/credit-ledger",
+    "adminServiceRequestsEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/service-requests",
     "adminCreditUsageEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/credit-usage",
     "adminMemberLedgerEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/member-ledger",
     "antiSpamHoneypotFields": [
@@ -159,6 +165,7 @@
   "memberPacketVersion": "gca_member_preregistration_v2",
   "emailRegistrationPacketVersion": "gca_email_registration_v1",
   "contactSuppressionPacketVersion": "gca_contact_suppression_v1",
+  "serviceRequestPacketVersion": "gca_service_request_v1",
   "memberEvidenceFields": [
     "memberBenefitReviewEvidence.holdingStartDate",
     "memberBenefitReviewEvidence.daysSinceHoldingStartPreview",
@@ -427,14 +434,13 @@
       "id": "service-requests-read",
       "method": "GET",
       "path": "/gca/service-requests",
-      "status": "local-only-not-public-production",
-      "purpose": "Read local operator-only GCA AI Quant Access service request queue records before reviewed service delivery. This route is not a public production Worker endpoint.",
+      "status": "prepared-worker-deploy-pending",
+      "purpose": "Read operator-only GCA AI Quant Access service request queue records before reviewed service delivery through ADMIN_READ_TOKEN protected access after the Worker route is deployed; local operator backend support is implemented.",
       "requiredRequestFields": [
-        "localhostClient"
+        "authorization bearer token"
       ],
       "optionalRequestFields": [
         "limit",
-        "email",
         "walletAddress",
         "creditLedgerId",
         "serviceRequestId"
@@ -463,10 +469,10 @@
       "id": "service-requests-create",
       "method": "POST",
       "path": "/gca/service-requests",
-      "status": "local-only-not-public-production",
-      "purpose": "Queue a local operator-reviewed service scope request without deducting credits. Actual service delivery and credit usage remain separate operator actions.",
+      "status": "prepared-worker-deploy-pending",
+      "purpose": "Queue an operator-reviewed service scope request without deducting credits after the Worker route is deployed; local operator backend support is implemented. Actual service delivery and credit usage remain separate operator actions.",
       "requiredRequestFields": [
-        "localhostClient",
+        "authorization bearer token",
         "email",
         "serviceId",
         "acknowledgements.noSecretsNoCustody",
@@ -493,7 +499,6 @@
       ],
       "responseFields": [
         "serviceRequest",
-        "supportReview",
         "creditLedger",
         "boundaries",
         "deductsCredits",

@@ -441,7 +441,7 @@
       <section class="section panel" aria-labelledby="memberOpsTitle">
         <h2 id="memberOpsTitle">Member Access Ops Pipeline</h2>
         <p class="note">Use this local operator pipeline after live account, wallet verification, credit ledger, member ledger, or member-benefit review records exist. It requires the ignored local <code>cloudflare/gca-registration-worker/.env.admin.local</code> file with <code>ADMIN_READ_TOKEN</code>. The output stays in <code>.gca_access_data/</code> and is not committed.</p>
-        <p class="note">For the prepared credit-usage Worker route, run <code>python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth</code> before publishing. The current bundle dry-run passes, but Cloudflare Workers service publish permission must pass before the production route is marked live.</p>
+        <p class="note">For the prepared service-request and credit-usage Worker routes, run <code>python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth</code> before publishing. The current bundle dry-run passes, but Cloudflare Workers service publish permission must pass before these production routes are marked live.</p>
         <div class="grid">
           <div>
             <h3>1. Token-Protected Export</h3>
@@ -449,7 +449,7 @@
           </div>
           <div>
             <h3>2. Local Reports</h3>
-            <p class="note">Expected outputs include <code>.gca_access_data/cloudflare_member_access_export.json</code>, account/wallet/credit/credit-usage/member CSVs, and <code>.gca_access_data/member_access_report/gca_member_access_summary.json</code>.</p>
+            <p class="note">Expected outputs include <code>.gca_access_data/cloudflare_member_access_export.json</code>, account/wallet/credit/service-request/credit-usage/member CSVs, and <code>.gca_access_data/member_access_report/gca_member_access_summary.json</code>.</p>
           </div>
           <div>
             <h3>3. Support Queue</h3>
@@ -469,7 +469,7 @@
           </div>
           <div>
             <h3>7. Service Request Queue</h3>
-            <p class="note">Before delivery, record requested service scope through the local <code>service_requests</code> queue. It stores <code>serviceRequestId</code>, <code>serviceId</code>, optional <code>creditLedgerId</code>, requested credit hold, and status. It does not deduct credits; credit usage is recorded only after reviewed delivery.</p>
+            <p class="note">Before delivery, record requested service scope through the operator <code>service_requests</code> queue. Local backend support is ready and the Cloudflare Worker route is prepared pending publish permission. It stores <code>serviceRequestId</code>, <code>serviceId</code>, optional <code>creditLedgerId</code>, requested credit hold, and status. It does not deduct credits; credit usage is recorded only after reviewed delivery.</p>
           </div>
           <div>
             <h3>8. No Automatic Transfer</h3>

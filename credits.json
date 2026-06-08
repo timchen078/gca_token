@@ -2,7 +2,7 @@
   "schema": "https://gcagochina.com/credits.json",
   "pageUrl": "https://gcagochina.com/credits.html",
   "status": "public-credits-catalog-ledger-path-live",
-  "lastUpdated": "2026-05-20",
+  "lastUpdated": "2026-06-08",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "title": "GCA Utility Credits Catalog",
@@ -23,6 +23,10 @@
     "creditUsageWorkerDryRunPassed": true,
     "creditUsageWorkerDeployBlockedBy": "Cloudflare authentication or Workers service permission error [code: 10000]",
     "serviceRequestQueueLocalLive": true,
+    "serviceRequestQueueWorkerPrepared": true,
+    "serviceRequestQueueWorkerDryRunPassed": true,
+    "serviceRequestQueueWorkerDeployBlocked": true,
+    "serviceRequestQueueWorkerDeployBlockedBy": "Cloudflare authentication or Workers service permission error [code: 10000]",
     "serviceRequestQueueProductionLive": false,
     "memberLedgerWritesLive": true
   },
@@ -142,8 +146,10 @@
     "automaticWalletAction": false
   },
   "serviceRequestQueue": {
-    "status": "local-operator-service-request-queue-ready",
+    "status": "local-operator-service-request-queue-ready-worker-deploy-permission-pending",
+    "endpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/service-requests",
     "localEndpoint": "http://127.0.0.1:8787/gca/service-requests",
+    "workerDeployReadinessCommand": "python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth",
     "packetVersion": "gca_service_request_v1",
     "records": [
       "serviceRequestId",
