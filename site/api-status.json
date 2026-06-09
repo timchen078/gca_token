@@ -180,6 +180,39 @@
     "writesTestRecords": false,
     "readOnly": true
   },
+  "pendingRoutesDeployHandoff": {
+    "document": "docs/gca_worker_pending_routes_deploy_handoff.md",
+    "status": "prepared-not-production-live",
+    "blockedBy": "Cloudflare authentication or Workers service permission error [code: 10000]",
+    "routes": [
+      "/gca/service-requests",
+      "/gca/credit-usage"
+    ],
+    "readOnlyGateCommand": "python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth",
+    "remoteMigrationCommand": "cd cloudflare/gca-registration-worker && npx wrangler d1 migrations apply gca_registration --remote",
+    "deployCommand": "cd cloudflare/gca-registration-worker && npx wrangler deploy",
+    "postDeployPublicSmokeCommand": "python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes",
+    "postDeployAdminSmokeCommand": "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes",
+    "statusUpdateAllowedAfter": [
+      "readiness gate passes",
+      "remote D1 migrations apply successfully",
+      "wrangler deploy succeeds",
+      "public smoke check passes with --include-pending-routes",
+      "admin smoke check passes with --include-pending-routes"
+    ],
+    "boundaries": {
+      "operatorOnly": true,
+      "requiresAdminReadToken": true,
+      "publicLedgerReadable": false,
+      "serviceRequestsDoNotDeductCredits": true,
+      "noWalletConnection": true,
+      "noWalletSignature": true,
+      "noTransaction": true,
+      "noAutomaticTokenTransfer": true,
+      "noTradingPermission": true,
+      "doNotClaimLiveBeforeSmokeChecks": true
+    }
+  },
   "operatorTools": {
     "adminExport": "tools/export_cloudflare_email_registrations.py",
     "adminSync": "tools/sync_cloudflare_email_registrations.py",
