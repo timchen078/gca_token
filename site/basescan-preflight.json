@@ -1,7 +1,7 @@
 {
   "schema": "https://gcagochina.com/basescan-preflight.json",
   "pageUrl": "https://gcagochina.com/basescan-preflight.html",
-  "lastUpdated": "2026-06-07",
+  "lastUpdated": "2026-06-09",
   "projectName": "GCA",
   "tokenSymbol": "GCA",
   "network": "Base Mainnet",
@@ -33,7 +33,7 @@
     "finalSubmissionPackageGeneratedAt": "2026-06-06T11:10:54Z",
     "finalSubmissionPackageMarkdown": "launch/basescan_final_submission_package.md",
     "finalSubmissionPackageJson": "launch/basescan_final_submission_package.json",
-    "dailyStatusSnapshotRefreshedAt": "2026-06-07T13:06:12Z",
+    "dailyStatusSnapshotRefreshedAt": "2026-06-09T14:59:01Z",
     "reason": "Align the public BaseScan preflight page with the current final owner submission package and BaseScan Handoff."
   },
   "requiredInputsBeforeSubmission": [
