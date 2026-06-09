@@ -480,6 +480,16 @@
           <p class="note">This checks Worker bundling, D1 visibility, and read-only Worker deployment permission before publishing a new Worker version.</p>
           <pre>python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth</pre>
         </div>
+        <div class="panel">
+          <h2>Pending Routes Handoff</h2>
+          <p class="note">The prepared <code>/gca/service-requests</code> and <code>/gca/credit-usage</code> routes remain non-live until Worker publish permission is restored, remote D1 migrations apply, deploy succeeds, and both public and admin smoke checks pass with <code>--include-pending-routes</code>.</p>
+          <div class="list">
+            <div class="row"><span>Source handoff</span><strong>docs/gca_worker_pending_routes_deploy_handoff.md</strong></div>
+            <div class="row"><span>Migration</span><strong>npx wrangler d1 migrations apply gca_registration --remote</strong></div>
+            <div class="row"><span>Public smoke</span><strong>python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes</strong></div>
+            <div class="row"><span>Admin smoke</span><strong>python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes</strong></div>
+          </div>
+        </div>
       </section>
 
       <section class="section two" aria-label="Operator tooling">
