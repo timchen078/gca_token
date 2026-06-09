@@ -543,6 +543,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("validate_faq_page", script)
         self.assertIn("FORBIDDEN_PUBLIC_CLAIM_PATTERNS", script)
         self.assertIn("assert_no_forbidden_public_claims", script)
+        self.assertIn("assert_no_public_raw_data_links", script)
         self.assertIn("profit sharing", script)
         self.assertIn("risk[- ]?free", script)
         self.assertIn("保本", script)
@@ -550,6 +551,14 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("对倒", script)
         self.assertIn("[ok]", script)
         self.assertIn("[fail]", script)
+        module.assert_no_public_raw_data_links('<a href="verify.html">Verify</a>', "/example.html")
+        module.assert_no_public_raw_data_links('<a href="project.json">Project JSON</a>', "/data.html")
+        with self.assertRaises(module.SiteCheckError):
+            module.assert_no_public_raw_data_links('<a href="data.html">Data Room</a>', "/example.html")
+        with self.assertRaises(module.SiteCheckError):
+            module.assert_no_public_raw_data_links('<a href="project.json">Project JSON</a>', "/example.html")
+        with self.assertRaises(module.SiteCheckError):
+            module.assert_no_public_raw_data_links("<p>Raw JSON</p>", "/example.html")
 
         module.validate_root((ROOT / "site" / "index.html").read_text())
         module.validate_start_page((ROOT / "site" / "start.html").read_text())

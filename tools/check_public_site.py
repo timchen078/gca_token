@@ -298,6 +298,17 @@ def assert_no_public_data_room_terms(text: str, label: str) -> None:
         assert_not_contains(text, forbidden, label)
 
 
+def assert_no_public_raw_data_links(text: str, label: str) -> None:
+    if label in {"/data.html", "/zh-data.html"} or not (label == "/" or label.endswith(".html") or label.endswith("/")):
+        return
+    for match in re.finditer(r"""href\s*=\s*["']([^"']+)["']""", text, flags=re.IGNORECASE):
+        href = match.group(1).split("#", 1)[0].split("?", 1)[0]
+        if href in {"data.html", "zh-data.html"} or href.endswith(".json"):
+            raise SiteCheckError(f"{label}: public page links raw data href {match.group(1)!r}")
+    for forbidden in ("Reviewer Data Room", "Data Room", "Raw JSON", "中文数据室"):
+        assert_not_contains(text, forbidden, label)
+
+
 def assert_social_preview_meta(text: str, label: str, canonical_url: str) -> None:
     assert_contains(text, f'<link rel="canonical" href="{canonical_url}">', label)
     assert_contains(text, '<meta property="og:type" content="website">', label)
@@ -13718,6 +13729,7 @@ def run_checks(base_url: str, timeout: float, allow_insecure_tls: bool = False) 
         try:
             url, body = fetch_text(base_url, path, timeout, context)
             validator(body)
+            assert_no_public_raw_data_links(body, path)
             assert_no_forbidden_public_claims(body, path)
             assert_not_contains(body, LEGACY_PERSONAL_GMAIL, path)
         except SiteCheckError as exc:
