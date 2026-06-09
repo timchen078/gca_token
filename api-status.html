@@ -449,12 +449,12 @@
           <div class="fact">
             <span class="label">GET/POST</span>
             <span class="value">/gca/service-requests</span>
-            <p class="note">Prepared token-protected service request queue. The Worker bundle dry-run passes and D1 migration is prepared; production publish is pending Cloudflare Workers service permission.</p>
+            <p class="note">Prepared token-protected service request queue. The Worker bundle dry-run passes and D1 migration is prepared; production remains non-live until <code>cloudflare-auth-session</code>, D1 visibility, Worker deploy permission, remote migration, deploy, and pending-route smoke checks pass.</p>
           </div>
           <div class="fact">
             <span class="label">GET/POST</span>
             <span class="value">/gca/credit-usage</span>
-            <p class="note">Prepared token-protected credit usage ledger. The Worker bundle dry-run passes and D1 migration is applied; production publish is pending Cloudflare Workers service permission.</p>
+            <p class="note">Prepared token-protected credit usage ledger. The Worker bundle dry-run passes and D1 migration is applied; production remains non-live until <code>cloudflare-auth-session</code>, D1 visibility, Worker deploy permission, remote migration, deploy, and pending-route smoke checks pass.</p>
           </div>
           <div class="fact">
             <span class="label">Future Domain</span>
@@ -482,7 +482,7 @@
         </div>
         <div class="panel">
           <h2>Pending Routes Handoff</h2>
-          <p class="note">The prepared <code>/gca/service-requests</code> and <code>/gca/credit-usage</code> routes remain non-live until Worker publish permission is restored, remote D1 migrations apply, deploy succeeds, and both public and admin smoke checks pass with <code>--include-pending-routes</code>.</p>
+          <p class="note">The prepared <code>/gca/service-requests</code> and <code>/gca/credit-usage</code> routes remain non-live until Cloudflare account authentication, D1 visibility, Worker publish permission, remote D1 migrations apply, deploy succeeds, and both public and admin smoke checks pass with <code>--include-pending-routes</code>.</p>
           <div class="list">
             <div class="row"><span>Source handoff</span><strong>docs/gca_worker_pending_routes_deploy_handoff.md</strong></div>
             <div class="row"><span>Migration</span><strong>npx wrangler d1 migrations apply gca_registration --remote</strong></div>
