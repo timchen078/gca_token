@@ -309,6 +309,15 @@ def assert_no_public_raw_data_links(text: str, label: str) -> None:
         assert_not_contains(text, forbidden, label)
 
 
+def assert_no_public_operator_links(text: str, label: str) -> None:
+    if label == "/operator.html" or not (label == "/" or label.endswith(".html") or label.endswith("/")):
+        return
+    for match in re.finditer(r"""href\s*=\s*["']([^"']+)["']""", text, flags=re.IGNORECASE):
+        href = match.group(1).split("#", 1)[0].split("?", 1)[0]
+        if href == "operator.html":
+            raise SiteCheckError(f"{label}: public page links local operator console href {match.group(1)!r}")
+
+
 def assert_social_preview_meta(text: str, label: str, canonical_url: str) -> None:
     assert_contains(text, f'<link rel="canonical" href="{canonical_url}">', label)
     assert_contains(text, '<meta property="og:type" content="website">', label)
@@ -13736,6 +13745,7 @@ def run_checks(base_url: str, timeout: float, allow_insecure_tls: bool = False) 
             url, body = fetch_text(base_url, path, timeout, context)
             validator(body)
             assert_no_public_raw_data_links(body, path)
+            assert_no_public_operator_links(body, path)
             assert_no_forbidden_public_claims(body, path)
             assert_not_contains(body, LEGACY_PERSONAL_GMAIL, path)
         except SiteCheckError as exc:

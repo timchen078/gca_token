@@ -544,6 +544,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("FORBIDDEN_PUBLIC_CLAIM_PATTERNS", script)
         self.assertIn("assert_no_forbidden_public_claims", script)
         self.assertIn("assert_no_public_raw_data_links", script)
+        self.assertIn("assert_no_public_operator_links", script)
         self.assertIn("profit sharing", script)
         self.assertIn("risk[- ]?free", script)
         self.assertIn("保本", script)
@@ -559,6 +560,10 @@ class LaunchPackageTests(unittest.TestCase):
             module.assert_no_public_raw_data_links('<a href="project.json">Project JSON</a>', "/example.html")
         with self.assertRaises(module.SiteCheckError):
             module.assert_no_public_raw_data_links("<p>Raw JSON</p>", "/example.html")
+        module.assert_no_public_operator_links("<code>http://127.0.0.1:8787/operator.html</code>", "/example.html")
+        module.assert_no_public_operator_links('<a href="operator.html">Operator</a>', "/operator.html")
+        with self.assertRaises(module.SiteCheckError):
+            module.assert_no_public_operator_links('<a href="operator.html">Operator</a>', "/example.html")
 
         module.validate_root((ROOT / "site" / "index.html").read_text())
         module.validate_start_page((ROOT / "site" / "start.html").read_text())
