@@ -9507,7 +9507,7 @@ def validate_project_profile_page(text: str) -> None:
         "Member Program",
         "Reviewer Kit",
         "Listing Kit",
-        "Data Room",
+        "Platform Replies",
         "BaseScan Review Map",
         "Return Reason To Public Evidence",
         "Website accessible and safe to visit",
@@ -9526,7 +9526,14 @@ def validate_project_profile_page(text: str) -> None:
         assert_contains(text, expected, label)
     assert_current_pool_text(text, label)
     assert_no_forbidden_public_claims(text, label)
-    for forbidden in ('href="project.json"', 'href="tokenlist.json"', 'href="member-program.json"'):
+    for forbidden in (
+        'href="project.json"',
+        'href="tokenlist.json"',
+        'href="member-program.json"',
+        'href="data.html"',
+        "Data Room",
+        "Raw JSON",
+    ):
         assert_not_contains(text, forbidden, label)
 
 
@@ -9547,12 +9554,21 @@ def validate_tokenlist_page(text: str) -> None:
         "Official Market Route",
         "Token Safety",
         "Platform Metadata",
-        "Data Room",
+        "Reviewer Kit",
+        "Listing Kit",
+        "Platform Replies",
     ):
         assert_contains(text, expected, label)
     assert_current_pool_text(text, label)
     assert_no_forbidden_public_claims(text, label)
-    for forbidden in ('href="tokenlist.json"', 'href="project.json"', 'href="member-program.json"'):
+    for forbidden in (
+        'href="tokenlist.json"',
+        'href="project.json"',
+        'href="member-program.json"',
+        'href="data.html"',
+        "Data Room",
+        "Raw JSON",
+    ):
         assert_not_contains(text, forbidden, label)
 
 
