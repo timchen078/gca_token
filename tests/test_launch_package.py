@@ -1076,7 +1076,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Allow: /member-benefit.json", robots)
         self.assertIn("Allow: /member-benefit-transfer.html", robots)
         self.assertIn("Allow: /member-benefit-transfer.json", robots)
-        self.assertIn("Allow: /operator.html", robots)
+        self.assertIn("Disallow: /operator.html", robots)
         self.assertIn("Allow: /support.html", robots)
         self.assertIn("Allow: /support.json", robots)
         self.assertIn("Allow: /roadmap.html", robots)
@@ -1231,7 +1231,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(MEMBER_BENEFIT_URL, sitemap)
         self.assertIn(MEMBER_BENEFIT_TRANSFER_PAGE_URL, sitemap)
         self.assertIn(MEMBER_BENEFIT_TRANSFER_URL, sitemap)
-        self.assertIn(OPERATOR_PAGE_URL, sitemap)
+        self.assertNotIn(OPERATOR_PAGE_URL, sitemap)
         self.assertIn(SUPPORT_PAGE_URL, sitemap)
         self.assertIn(SUPPORT_URL, sitemap)
         self.assertIn(ROADMAP_PAGE_URL, sitemap)
@@ -1300,6 +1300,7 @@ class LaunchPackageTests(unittest.TestCase):
             for path in (ROOT / "site").rglob("*")
             if path.is_file() and path.suffix in {".html", ".json"}
             and str(path.relative_to(ROOT / "site")) != "404.html"
+            and str(path.relative_to(ROOT / "site")) != "operator.html"
         ]
         self.assertEqual(
             [],
@@ -2785,7 +2786,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertNotIn("Reviewer Data Room", site)
         self.assertIn('href="member-ledger.html"', site)
         self.assertIn('href="support.html"', site)
-        self.assertIn('href="operator.html"', site)
+        self.assertNotIn('href="operator.html"', site)
         self.assertIn('href="roadmap.html"', site)
         self.assertIn('href="community.html"', site)
         self.assertIn('href="announcements.html"', site)
@@ -2832,7 +2833,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("one-time 10,000 GCA member benefit review", site)
         self.assertIn("Benefit Transfer Runbook", site)
         self.assertIn("member-benefit-transfer.html", site)
-        self.assertIn("Operator Console", site)
+        self.assertNotIn("Operator Console", site)
         self.assertIn("GCA Member status", site)
         self.assertIn("member benefit review. Trading-related modules follow staged release gates", site)
         self.assertIn("400,000,000 GCA / 40%", site)
@@ -2958,6 +2959,7 @@ class LaunchPackageTests(unittest.TestCase):
 
         self.assertIn("GCA Local Operator Console", page)
         self.assertIn("Local-only GCA operator console", page)
+        self.assertIn('<meta name="robots" content="noindex,nofollow">', page)
         self.assertIn("tools/gca_member_backend.py", page)
         self.assertIn("tools/export_gca_review_package.py", page)
         self.assertIn("http://127.0.0.1:8787/operator.html", page)

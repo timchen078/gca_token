@@ -402,8 +402,7 @@ def validate_root(text: str) -> None:
     assert_contains(text, "Member Ledger", label)
     assert_contains(text, "Benefit Transfer Runbook", label)
     assert_contains(text, "member-benefit-transfer.html", label)
-    assert_contains(text, "Operator Console", label)
-    assert_contains(text, "operator.html", label)
+    assert_not_contains(text, 'href="operator.html"', label)
     assert_contains(text, "Support & Intake", label)
     assert_contains(text, "Roadmap", label)
     assert_contains(text, "Community Kit", label)
@@ -4067,7 +4066,6 @@ def validate_zh_site_map_page(text: str) -> None:
         "access-api.html",
         "operations.html",
         "review-queue.html",
-        "operator.html",
         "basescan-handoff.html",
         "listing-kit.html",
         "security.html",
@@ -4107,6 +4105,7 @@ def validate_zh_site_map_page(text: str) -> None:
         "zh-data.html",
         "reviewer-kit.html",
         "platform-replies.html",
+        'href="operator.html"',
     ):
         assert_not_contains(text, forbidden, label)
     assert_current_pool_text(text, label)
@@ -4389,7 +4388,13 @@ def validate_site_map_page(text: str) -> None:
         "onchain-proofs.html",
     ):
         assert_contains(text, expected, label)
-    for forbidden in ("Reviewer Data Room", "Platform-Only Evidence Path", 'href="data.html"', "zh-data.html"):
+    for forbidden in (
+        "Reviewer Data Room",
+        "Platform-Only Evidence Path",
+        'href="data.html"',
+        "zh-data.html",
+        'href="operator.html"',
+    ):
         assert_not_contains(text, forbidden, label)
     assert_current_pool_text(text, label)
     assert_no_forbidden_public_claims(text, label)
@@ -5078,6 +5083,7 @@ def validate_operator_page(text: str) -> None:
     label = "/operator.html"
     assert_contains(text, "GCA Local Operator Console", label)
     assert_contains(text, "Local-only GCA operator console", label)
+    assert_contains(text, '<meta name="robots" content="noindex,nofollow">', label)
     assert_contains(text, "tools/gca_member_backend.py", label)
     assert_contains(text, "tools/export_gca_review_package.py", label)
     assert_contains(text, "http://127.0.0.1:8787/operator.html", label)
@@ -13287,7 +13293,6 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/member-benefit.json",
         "https://gcagochina.com/member-benefit-transfer.html",
         "https://gcagochina.com/member-benefit-transfer.json",
-        "https://gcagochina.com/operator.html",
         "https://gcagochina.com/support.html",
         "https://gcagochina.com/support.json",
         "https://gcagochina.com/privacy.html",
@@ -13326,6 +13331,7 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/.well-known/security.txt",
     ):
         assert_contains(text, expected, label)
+    assert_not_contains(text, "https://gcagochina.com/operator.html", label)
     for path in (
         "api-status.html",
         "api-status.json",
@@ -13483,7 +13489,7 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /member-benefit.json", label)
     assert_contains(text, "Allow: /member-benefit-transfer.html", label)
     assert_contains(text, "Allow: /member-benefit-transfer.json", label)
-    assert_contains(text, "Allow: /operator.html", label)
+    assert_contains(text, "Disallow: /operator.html", label)
     assert_contains(text, "Allow: /members.html", label)
     assert_contains(text, "Allow: /member-program.html", label)
     assert_contains(text, "Allow: /member-program.json", label)
