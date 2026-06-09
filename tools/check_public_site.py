@@ -6949,6 +6949,10 @@ def validate_operations_page(text: str) -> None:
     assert_contains(text, "Service Request Queue", label)
     assert_contains(text, "service_requests", label)
     assert_contains(text, "does not deduct credits", label)
+    assert_contains(text, "cloudflare-auth-session", label)
+    assert_contains(text, "authRecovery", label)
+    assert_contains(text, "--include-pending-routes", label)
+    assert_contains(text, "Cloudflare account-auth, D1 visibility, Worker deploy", label)
     assert_contains(text, "--include-holding-report --holding-no-live-read", label)
     assert_contains(text, "No Automatic Transfer", label)
     for step in (
@@ -7056,6 +7060,10 @@ def validate_operations_json(text: str) -> None:
             raise SiteCheckError(f"{label}: {key} must be true")
     if state.get("serviceRequestQueueProductionLive") is not False:
         raise SiteCheckError(f"{label}: serviceRequestQueueProductionLive must be false")
+    if "Cloudflare account authentication" not in state.get("creditUsageWorkerDeployBlockedBy", ""):
+        raise SiteCheckError(f"{label}: credit usage blockedBy should mention Cloudflare account authentication")
+    if "D1 visibility" not in state.get("serviceRequestQueueWorkerDeployBlockedBy", ""):
+        raise SiteCheckError(f"{label}: service request blockedBy should mention D1 visibility")
     if state.get("publicSubmissionQueueLive") is not True:
         raise SiteCheckError(f"{label}: publicSubmissionQueueLive must be true")
     if identity.get("chainId") != 8453:
@@ -7110,6 +7118,23 @@ def validate_operations_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing offline holding command")
     if "tools/run_gca_daily_ops.py --build-digest --update-public-status" not in member_ops.get("digestRefreshCommand", ""):
         raise SiteCheckError(f"{label}: missing digest refresh command")
+    if member_ops.get("workerDeployReadinessAuthSessionCheck") != "cloudflare-auth-session":
+        raise SiteCheckError(f"{label}: missing member ops auth session readiness check")
+    if member_ops.get("workerDeployReadinessAuthRecoveryField") != "authRecovery":
+        raise SiteCheckError(f"{label}: missing member ops auth recovery field")
+    if member_ops.get("pendingRoutePostDeployPublicSmokeCommand") != "python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes":
+        raise SiteCheckError(f"{label}: wrong pending public smoke command")
+    if member_ops.get("pendingRoutePostDeployAdminSmokeCommand") != "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes":
+        raise SiteCheckError(f"{label}: wrong pending admin smoke command")
+    for gate in (
+        "cloudflare-auth-session passes",
+        "D1 visibility passes",
+        "Worker deploy permission passes",
+        "public smoke check passes with --include-pending-routes",
+        "admin smoke check passes with --include-pending-routes",
+    ):
+        if gate not in member_ops.get("pendingRouteReleaseGates", []):
+            raise SiteCheckError(f"{label}: missing pending route release gate {gate}")
     if member_ops.get("localExportJson") != ".gca_access_data/cloudflare_member_access_export.json":
         raise SiteCheckError(f"{label}: wrong member export output")
     if member_ops.get("supportQueueOutput") != ".gca_access_data/member_access_report/gca_member_support_queue.csv":
@@ -7321,6 +7346,8 @@ def validate_operations_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing operations safe claim")
     if "GCA operators can export a redacted-public local review package for reviewer evidence handoff when local ledger records exist." not in boundaries.get("safeClaims", []):
         raise SiteCheckError(f"{label}: missing review package safe claim")
+    if "GCA operators can record service-level credit usage with before/after remaining credits in the local operator backend; the Cloudflare Worker route is prepared but remains non-live until Cloudflare auth, D1 visibility, deploy, and pending-route smoke gates pass." not in boundaries.get("safeClaims", []):
+        raise SiteCheckError(f"{label}: missing pending route gated safe claim")
     if "GCA email registration and unsubscribe APIs are live on Cloudflare Workers + D1." not in boundaries.get("safeClaims", []):
         raise SiteCheckError(f"{label}: missing email API safe claim")
     if "GCA operators can sync email registration records into an ignored local JSONL ledger and export public-redacted contact CSVs." not in boundaries.get("safeClaims", []):
@@ -7389,6 +7416,9 @@ def validate_access_api_page(text: str) -> None:
     assert_contains(text, "/gca/member-review", label)
     assert_contains(text, "/gca/member-benefit-transfers", label)
     assert_contains(text, "eth_call", label)
+    assert_contains(text, "cloudflare-auth-session", label)
+    assert_contains(text, "--include-pending-routes", label)
+    assert_contains(text, "D1 visibility, Worker deploy permission", label)
     assert_contains(text, "/gca/review-package", label)
     assert_contains(text, "?redact=public", label)
     assert_contains(text, "packageDigestSha256", label)
@@ -7583,6 +7613,23 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: admin read token should be configured")
     if production_email_backend.get("privacyHashSaltConfigured") is not True:
         raise SiteCheckError(f"{label}: privacy hash salt should be configured")
+    if production_email_backend.get("workerDeployReadinessAuthSessionCheck") != "cloudflare-auth-session":
+        raise SiteCheckError(f"{label}: missing auth session deploy readiness check")
+    if production_email_backend.get("workerDeployReadinessAuthRecoveryField") != "authRecovery":
+        raise SiteCheckError(f"{label}: missing auth recovery deploy readiness field")
+    if production_email_backend.get("pendingRoutePostDeployPublicSmokeCommand") != "python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes":
+        raise SiteCheckError(f"{label}: wrong pending route public smoke command")
+    if production_email_backend.get("pendingRoutePostDeployAdminSmokeCommand") != "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes":
+        raise SiteCheckError(f"{label}: wrong pending route admin smoke command")
+    for gate in (
+        "cloudflare-auth-session passes",
+        "D1 visibility passes",
+        "Worker deploy permission passes",
+        "public smoke check passes with --include-pending-routes",
+        "admin smoke check passes with --include-pending-routes",
+    ):
+        if gate not in production_email_backend.get("pendingRouteReleaseGates", []):
+            raise SiteCheckError(f"{label}: missing pending route release gate {gate}")
     if production_email_backend.get("requiresCloudflareAccountDeployment") is not False:
         raise SiteCheckError(f"{label}: Cloudflare deployment should be complete")
     if production_email_backend.get("requiresAdminReadTokenSecret") is not False:
@@ -7907,6 +7954,8 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong operationsRunbook")
     if "GCA has a live public access API for email registration, contact suppression, access config, member access, and read-only wallet verification." not in boundaries.get("safeClaims", []):
         raise SiteCheckError(f"{label}: missing API safe claim")
+    if "GCA operators can record service-level credit usage against an existing credit ledger in the local operator backend; the Cloudflare Worker route is prepared but remains non-live until Cloudflare auth, D1 visibility, deploy, and pending-route smoke gates pass." not in boundaries.get("safeClaims", []):
+        raise SiteCheckError(f"{label}: missing pending route API safe claim")
     if not any("automatic or self-service transferred" in item for item in boundaries.get("doNotClaim", [])):
         raise SiteCheckError(f"{label}: missing member benefit boundary")
     if not any("private keys, seed phrases" in item for item in boundaries.get("doNotClaim", [])):
@@ -8543,7 +8592,8 @@ def validate_credits_page(text: str) -> None:
     assert_contains(text, "read-only GCA balance verification", label)
     assert_contains(text, "credit ledger record live for eligible holders", label)
     assert_contains(text, "Service requests", label)
-    assert_contains(text, "operator request queue ready", label)
+    assert_contains(text, "operator queue ready", label)
+    assert_contains(text, "Cloudflare auth/D1/deploy gate pending", label)
     assert_contains(text, "does not deduct credits", label)
     assert_contains(text, "member ledger record live for eligible holders", label)
     assert_contains(text, "support review queue", label)
@@ -8567,6 +8617,7 @@ def validate_credits_json(text: str) -> None:
     redemption = payload.get("redemptionBoundaries", {})
     safety = payload.get("safetyArchitecture", {})
     release_gates = payload.get("releaseGates", {})
+    usage_ledger = payload.get("usageLedger", {})
     service_request_queue = payload.get("serviceRequestQueue", {})
     market = payload.get("officialMarket", {})
     links = payload.get("officialLinks", {})
@@ -8682,7 +8733,28 @@ def validate_credits_json(text: str) -> None:
             raise SiteCheckError(f"{label}: {key} must be false")
     if safety.get("simulationFirstRequiredBeforeFutureExecution") is not True:
         raise SiteCheckError(f"{label}: simulation-first requirement must be true")
-    if service_request_queue.get("status") != "local-operator-service-request-queue-ready-worker-deploy-permission-pending":
+    if usage_ledger.get("status") != "local-operator-credit-usage-ledger-ready-worker-auth-d1-deploy-gate-pending":
+        raise SiteCheckError(f"{label}: wrong usage ledger status")
+    if usage_ledger.get("endpoint") != "https://gca-registration-api.gcagochina.workers.dev/gca/credit-usage":
+        raise SiteCheckError(f"{label}: wrong usage ledger endpoint")
+    if usage_ledger.get("workerDeployReadinessAuthSessionCheck") != "cloudflare-auth-session":
+        raise SiteCheckError(f"{label}: missing usage ledger auth session readiness check")
+    if usage_ledger.get("workerDeployReadinessAuthRecoveryField") != "authRecovery":
+        raise SiteCheckError(f"{label}: missing usage ledger auth recovery field")
+    if usage_ledger.get("postDeployPublicSmokeCommand") != "python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes":
+        raise SiteCheckError(f"{label}: wrong usage ledger public smoke command")
+    if usage_ledger.get("postDeployAdminSmokeCommand") != "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes":
+        raise SiteCheckError(f"{label}: wrong usage ledger admin smoke command")
+    for gate in (
+        "cloudflare-auth-session passes",
+        "D1 visibility passes",
+        "Worker deploy permission passes",
+        "public smoke check passes with --include-pending-routes",
+        "admin smoke check passes with --include-pending-routes",
+    ):
+        if gate not in usage_ledger.get("releaseGatesBeforeLive", []):
+            raise SiteCheckError(f"{label}: missing usage ledger release gate {gate}")
+    if service_request_queue.get("status") != "local-operator-service-request-queue-ready-worker-auth-d1-deploy-gate-pending":
         raise SiteCheckError(f"{label}: wrong service request queue status")
     if service_request_queue.get("endpoint") != "https://gca-registration-api.gcagochina.workers.dev/gca/service-requests":
         raise SiteCheckError(f"{label}: wrong service request worker endpoint")
@@ -8696,6 +8768,23 @@ def validate_credits_json(text: str) -> None:
         raise SiteCheckError(f"{label}: service request must not deduct credits")
     if service_request_queue.get("createsTradingPermission") is not False:
         raise SiteCheckError(f"{label}: service request must not create trading permission")
+    if service_request_queue.get("workerDeployReadinessAuthSessionCheck") != "cloudflare-auth-session":
+        raise SiteCheckError(f"{label}: missing service request auth session readiness check")
+    if service_request_queue.get("workerDeployReadinessAuthRecoveryField") != "authRecovery":
+        raise SiteCheckError(f"{label}: missing service request auth recovery field")
+    if service_request_queue.get("postDeployPublicSmokeCommand") != "python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes":
+        raise SiteCheckError(f"{label}: wrong service request public smoke command")
+    if service_request_queue.get("postDeployAdminSmokeCommand") != "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes":
+        raise SiteCheckError(f"{label}: wrong service request admin smoke command")
+    for gate in (
+        "cloudflare-auth-session passes",
+        "D1 visibility passes",
+        "Worker deploy permission passes",
+        "public smoke check passes with --include-pending-routes",
+        "admin smoke check passes with --include-pending-routes",
+    ):
+        if gate not in service_request_queue.get("releaseGatesBeforeLive", []):
+            raise SiteCheckError(f"{label}: missing service request release gate {gate}")
     if release_gates.get("releaseGatesPage") != RELEASE_GATES_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong releaseGatesPage")
     if release_gates.get("releaseGates") != RELEASE_GATES_URL:
@@ -8740,6 +8829,8 @@ def validate_credits_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong memberLedger")
     if "GCA has published a service catalog for GCA AI Quant Access credits." not in boundaries.get("safeClaims", []):
         raise SiteCheckError(f"{label}: missing credits safe claim")
+    if "Operator-reviewed service delivery can be recorded through the local GCA credit usage ledger with before/after remaining credits; the Cloudflare Worker route is prepared but remains non-live until Cloudflare auth, D1 visibility, deploy, and pending-route smoke gates pass." not in boundaries.get("safeClaims", []):
+        raise SiteCheckError(f"{label}: missing pending route credits safe claim")
     if not any("automatic or self-service transferred" in item for item in boundaries.get("doNotClaim", [])):
         raise SiteCheckError(f"{label}: missing member benefit boundary")
     if not any("cash, income" in item for item in boundaries.get("doNotClaim", [])):

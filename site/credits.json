@@ -21,12 +21,12 @@
     "creditUsageLedgerWritesLive": false,
     "creditUsageWorkerDeployBlocked": true,
     "creditUsageWorkerDryRunPassed": true,
-    "creditUsageWorkerDeployBlockedBy": "Cloudflare authentication or Workers service permission error [code: 10000]",
+    "creditUsageWorkerDeployBlockedBy": "Cloudflare account authentication or Workers service permission error [code: 10000]; D1 visibility must also pass before deploy",
     "serviceRequestQueueLocalLive": true,
     "serviceRequestQueueWorkerPrepared": true,
     "serviceRequestQueueWorkerDryRunPassed": true,
     "serviceRequestQueueWorkerDeployBlocked": true,
-    "serviceRequestQueueWorkerDeployBlockedBy": "Cloudflare authentication or Workers service permission error [code: 10000]",
+    "serviceRequestQueueWorkerDeployBlockedBy": "Cloudflare account authentication or Workers service permission error [code: 10000]; D1 visibility must also pass before deploy",
     "serviceRequestQueueProductionLive": false,
     "memberLedgerWritesLive": true
   },
@@ -125,10 +125,23 @@
     }
   ],
   "usageLedger": {
-    "status": "local-operator-credit-usage-ledger-ready-worker-deploy-permission-pending",
+    "status": "local-operator-credit-usage-ledger-ready-worker-auth-d1-deploy-gate-pending",
     "endpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/credit-usage",
     "localEndpoint": "http://127.0.0.1:8787/gca/credit-usage",
     "workerDeployReadinessCommand": "python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth",
+    "workerDeployReadinessAuthSessionCheck": "cloudflare-auth-session",
+    "workerDeployReadinessAuthRecoveryField": "authRecovery",
+    "postDeployPublicSmokeCommand": "python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes",
+    "postDeployAdminSmokeCommand": "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes",
+    "releaseGatesBeforeLive": [
+      "cloudflare-auth-session passes",
+      "D1 visibility passes",
+      "Worker deploy permission passes",
+      "remote D1 migrations apply successfully",
+      "wrangler deploy succeeds",
+      "public smoke check passes with --include-pending-routes",
+      "admin smoke check passes with --include-pending-routes"
+    ],
     "packetVersion": "gca_credit_usage_v1",
     "records": [
       "creditUsageId",
@@ -146,10 +159,23 @@
     "automaticWalletAction": false
   },
   "serviceRequestQueue": {
-    "status": "local-operator-service-request-queue-ready-worker-deploy-permission-pending",
+    "status": "local-operator-service-request-queue-ready-worker-auth-d1-deploy-gate-pending",
     "endpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/service-requests",
     "localEndpoint": "http://127.0.0.1:8787/gca/service-requests",
     "workerDeployReadinessCommand": "python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth",
+    "workerDeployReadinessAuthSessionCheck": "cloudflare-auth-session",
+    "workerDeployReadinessAuthRecoveryField": "authRecovery",
+    "postDeployPublicSmokeCommand": "python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes",
+    "postDeployAdminSmokeCommand": "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes",
+    "releaseGatesBeforeLive": [
+      "cloudflare-auth-session passes",
+      "D1 visibility passes",
+      "Worker deploy permission passes",
+      "remote D1 migrations apply successfully",
+      "wrangler deploy succeeds",
+      "public smoke check passes with --include-pending-routes",
+      "admin smoke check passes with --include-pending-routes"
+    ],
     "packetVersion": "gca_service_request_v1",
     "records": [
       "serviceRequestId",
@@ -255,7 +281,7 @@
     "safeClaims": [
       "GCA has published a service catalog for GCA AI Quant Access credits.",
       "The 10,000 GCA holder bonus can create one account-level 100 GCA AI Quant Access credits ledger record after controlled verification.",
-      "Operator-reviewed service delivery can be recorded through the local GCA credit usage ledger with before/after remaining credits; the Cloudflare Worker route is prepared and pending deploy permission.",
+      "Operator-reviewed service delivery can be recorded through the local GCA credit usage ledger with before/after remaining credits; the Cloudflare Worker route is prepared but remains non-live until Cloudflare auth, D1 visibility, deploy, and pending-route smoke gates pass.",
       "Operators can queue requested service scope in the local service request ledger before delivery; queued requests do not deduct credits.",
       "The 1,000,000 GCA Member threshold requires 30 consecutive days of holding before a one-time 10,000 GCA member benefit review.",
       "Credits and member status are account-level service records; the 10,000 GCA member benefit is manual review only.",
