@@ -390,8 +390,12 @@
             <p class="note"><code>GET /gca/credit-ledger</code> 和 <code>GET /gca/member-ledger</code> 都是管理员 token 保护接口，公网不能直接读用户账本。</p>
           </article>
           <article class="card">
+            <h3>服务请求队列</h3>
+            <p class="note"><code>GET/POST /gca/service-requests</code> 已完成源码、D1 迁移和 Worker dry-run；正式发布仍等待 <code>cloudflare-auth-session</code>、D1 可见性和 Workers 发布权限全部通过。</p>
+          </article>
+          <article class="card">
             <h3>Credit 使用记录</h3>
-            <p class="note"><code>GET/POST /gca/credit-usage</code> 已完成源码、D1 迁移和 Worker dry-run；正式发布仍等待 Cloudflare Workers service 权限通过。</p>
+            <p class="note"><code>GET/POST /gca/credit-usage</code> 已完成源码、D1 迁移和 Worker dry-run；正式发布仍等待 Cloudflare 账号认证、D1 可见性和 Workers service 权限通过。</p>
           </article>
           <article class="card">
             <h3>未来域名</h3>
@@ -413,8 +417,13 @@
         </div>
         <div class="panel">
           <h2>部署权限检查</h2>
-          <p class="note">发布新的 Worker 版本前先运行这个命令，确认打包、D1 可见性和 Workers 发布权限。</p>
+          <p class="note">发布新的 Worker 版本前先运行这个命令，确认打包、Cloudflare 账号认证、D1 可见性和 Workers 发布权限。如果报告出现 <code>authRecovery.status</code>，先按 <code>authRecovery.safeNextActions</code> 处理，不能直接迁移或部署。</p>
           <pre>python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth</pre>
+        </div>
+        <div class="panel">
+          <h2>待发布接口验收</h2>
+          <p class="note"><code>/gca/service-requests</code> 和 <code>/gca/credit-usage</code> 不能只因为 dry-run 通过就说已上线。必须完成远端 D1 migration、<code>wrangler deploy</code>、公开 smoke check 和管理员 smoke check。</p>
+          <pre>python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes</pre>
         </div>
       </section>
 
