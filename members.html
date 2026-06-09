@@ -431,7 +431,7 @@
       <section aria-labelledby="title">
         <h1 id="title">GCA Member Access</h1>
         <p class="lead">Use the live <a href="gca/member-access/">GCA Member Access</a> page for production account intake. It submits to the Workers + D1 backend, verifies a Base wallet with read-only GCA <code>balanceOf</code>, and writes eligible 100 credits / GCA Member ledger records.</p>
-        <p class="lead">This legacy page remains as a local packet generator and operator test surface. For localhost testing, run <code>tools/gca_member_backend.py</code>; in that mode the Submit Packet button posts to <code>/gca/pre-registrations</code> and writes local JSONL records for operator review at <a href="operator.html">operator.html</a>.</p>
+        <p class="lead">This legacy page remains as a local packet generator and operator test surface. For localhost testing, run <code>tools/gca_member_backend.py</code>; in that mode the Submit Packet button posts to <code>/gca/pre-registrations</code> and writes local JSONL records for operator review at <code>http://127.0.0.1:8787/operator.html</code>.</p>
         <div class="actions">
           <a class="button primary" href="gca/member-access/">Open Live Member Access</a>
           <a class="button" href="member-ledger.html">Member Ledger</a>
@@ -482,7 +482,6 @@
               <p class="note">Run <code>tools/gca_member_backend.py</code>, open this page from localhost, then Submit Packet can post to <code>/gca/pre-registrations</code> and write local JSONL review records.</p>
             </div>
             <div class="link-row">
-              <a class="text-link" href="operator.html">Operator Console</a>
               <a class="text-link" href="member-ledger.html">Ledger Schema</a>
             </div>
           </div>
