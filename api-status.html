@@ -339,10 +339,11 @@
 
     <main class="shell">
       <section aria-labelledby="title">
-        <p class="eyebrow">Registration API Status / 2026-06-07</p>
+        <p class="eyebrow">Registration API Status / 2026-06-09</p>
         <h1 id="title">GCA Registration API Status</h1>
         <p class="lead">This is the public status page for the live GCA email registration and contact suppression backend. The current production API runs on Cloudflare Workers + D1 at <code>https://gca-registration-api.gcagochina.workers.dev</code>.</p>
-        <p class="lead">Latest public smoke check passed at <code>2026-06-07T13:06:12Z</code> with the public-only API checker. The check verified the health endpoint, CORS, access config, and token-protected admin read boundaries without writing test records.</p>
+        <p class="lead">Latest public smoke check passed at <code>2026-06-09T14:51:16Z</code> with the public-only API checker. The check verified the health endpoint, CORS, access config, and token-protected admin read boundaries without writing test records.</p>
+        <p class="lead">Latest deploy-readiness check at <code>2026-06-09T14:41:26Z</code> passed Worker dry-run and D1 visibility, but failed <code>cloudflare-auth-session</code> and Worker deploy permission with Cloudflare error <code>10000</code>. Do not apply remote migrations or deploy until those two checks pass.</p>
         <p class="lead">The public checks verify health and read protections without writing test registrations. Admin reads remain token protected and should only be run locally by an operator with the local admin token file.</p>
         <div class="actions">
           <a class="button primary" href="register.html">Email Registration</a>
@@ -369,7 +370,7 @@
         </div>
         <div class="fact">
           <span class="label">Latest Check</span>
-          <span class="value good">2026-06-07 passed</span>
+          <span class="value good">2026-06-09 passed</span>
         </div>
         <div class="fact">
           <span class="label">Admin Read</span>
@@ -449,12 +450,12 @@
           <div class="fact">
             <span class="label">GET/POST</span>
             <span class="value">/gca/service-requests</span>
-            <p class="note">Prepared token-protected service request queue. The Worker bundle dry-run passes and D1 migration is prepared; production remains non-live until <code>cloudflare-auth-session</code>, D1 visibility, Worker deploy permission, remote migration, deploy, and pending-route smoke checks pass.</p>
+            <p class="note">Prepared token-protected service request queue. The 2026-06-09 readiness check passed Worker dry-run and D1 visibility; production remains non-live because <code>cloudflare-auth-session</code> and Worker deploy permission failed with Cloudflare error <code>10000</code>. Remote migration, deploy, and pending-route smoke checks are still blocked.</p>
           </div>
           <div class="fact">
             <span class="label">GET/POST</span>
             <span class="value">/gca/credit-usage</span>
-            <p class="note">Prepared token-protected credit usage ledger. The Worker bundle dry-run passes and D1 migration is applied; production remains non-live until <code>cloudflare-auth-session</code>, D1 visibility, Worker deploy permission, remote migration, deploy, and pending-route smoke checks pass.</p>
+            <p class="note">Prepared token-protected credit usage ledger. The 2026-06-09 readiness check passed Worker dry-run and D1 visibility; production remains non-live because <code>cloudflare-auth-session</code> and Worker deploy permission failed with Cloudflare error <code>10000</code>. Remote migration, deploy, and pending-route smoke checks are still blocked.</p>
           </div>
           <div class="fact">
             <span class="label">Future Domain</span>
@@ -477,12 +478,12 @@
         </div>
         <div class="panel">
           <h2>Deploy Readiness</h2>
-          <p class="note">This checks Worker bundling, Cloudflare account authentication, D1 visibility, and read-only Worker deployment permission before publishing a new Worker version. If the report includes <code>authRecovery.status</code>, use its safe next actions before migrations or deploy.</p>
+          <p class="note">This checks Worker bundling, Cloudflare account authentication, D1 visibility, and read-only Worker deployment permission before publishing a new Worker version. Latest result: dry-run passed, D1 visibility passed, <code>cloudflare-auth-session</code> failed, and Worker deploy permission failed with error <code>10000</code>. If the report includes <code>authRecovery.status</code>, use its safe next actions before migrations or deploy.</p>
           <pre>python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth</pre>
         </div>
         <div class="panel">
           <h2>Pending Routes Handoff</h2>
-          <p class="note">The prepared <code>/gca/service-requests</code> and <code>/gca/credit-usage</code> routes remain non-live until Cloudflare account authentication, D1 visibility, Worker publish permission, remote D1 migrations apply, deploy succeeds, and both public and admin smoke checks pass with <code>--include-pending-routes</code>.</p>
+          <p class="note">The prepared <code>/gca/service-requests</code> and <code>/gca/credit-usage</code> routes remain non-live. D1 visibility passed on 2026-06-09, but Cloudflare account authentication and Worker publish permission still fail with error <code>10000</code>; remote D1 migrations apply, deploy, and both public/admin smoke checks with <code>--include-pending-routes</code> remain blocked.</p>
           <div class="list">
             <div class="row"><span>Source handoff</span><strong>docs/gca_worker_pending_routes_deploy_handoff.md</strong></div>
             <div class="row"><span>Migration</span><strong>npx wrangler d1 migrations apply gca_registration --remote</strong></div>
