@@ -172,6 +172,8 @@
     "tool": "tools/check_gca_registration_api.py",
     "workerDeployReadinessTool": "tools/check_gca_worker_deploy_readiness.py",
     "workerDeployReadinessCommand": "python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth",
+    "workerDeployReadinessAuthSessionCheck": "cloudflare-auth-session",
+    "workerDeployReadinessAuthRecoveryField": "authRecovery",
     "publicOnlyCommand": "python3 tools/check_gca_registration_api.py --public-only --timeout 30",
     "adminCommand": "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5",
     "publicOnlyWorkflow": ".github/workflows/check-gca-registration-api.yml",
