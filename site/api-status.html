@@ -477,7 +477,7 @@
         </div>
         <div class="panel">
           <h2>Deploy Readiness</h2>
-          <p class="note">This checks Worker bundling, D1 visibility, and read-only Worker deployment permission before publishing a new Worker version.</p>
+          <p class="note">This checks Worker bundling, Cloudflare account authentication, D1 visibility, and read-only Worker deployment permission before publishing a new Worker version. If the report includes <code>authRecovery.status</code>, use its safe next actions before migrations or deploy.</p>
           <pre>python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth</pre>
         </div>
         <div class="panel">

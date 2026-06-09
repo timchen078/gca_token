@@ -31,6 +31,7 @@ BUNDLED_NODE_BIN = Path.home() / ".cache" / "codex-runtimes" / "codex-primary-ru
 
 ACCOUNT_ID_RE = re.compile(r"^[a-f0-9]{32}$")
 UUID_RE = re.compile(r"^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$")
+SECRET_LINE_RE = re.compile(r"\b(ADMIN_READ_TOKEN|PRIVACY_HASH_SALT|CLOUDFLARE_API_TOKEN)\s*=\s*[^ \n\r\t]+")
 
 
 class ReadinessError(RuntimeError):
@@ -68,11 +69,72 @@ def sanitized_command_result(result: subprocess.CompletedProcess[str]) -> dict[s
     elif result.returncode == 0:
         summary = "Command completed successfully."
     else:
-        lines = [line.strip() for line in combined.splitlines() if line.strip()]
-        summary = lines[-1][:240] if lines else "Command failed without output."
+        lines = [
+            SECRET_LINE_RE.sub(r"\1=<redacted>", line.strip())
+            for line in combined.splitlines()
+            if line.strip() and "Logs were written to" not in line
+        ]
+        summary = lines[-1][:240] if lines else "Wrangler command failed; see local Wrangler logs."
     return {
         "returnCode": result.returncode,
         "summary": summary,
+    }
+
+
+def has_auth_error(checks: list[dict[str, Any]]) -> bool:
+    for item in checks:
+        result = item.get("result")
+        if isinstance(result, dict) and "code: 10000" in str(result.get("summary", "")):
+            return True
+    return False
+
+
+def build_auth_recovery(checks: list[dict[str, Any]], *, run_cloudflare: bool) -> dict[str, Any]:
+    cloudflare_failed = [
+        item["id"]
+        for item in checks
+        if item["id"].startswith("cloudflare-") and item["status"] == "failed"
+    ]
+    code_10000_seen = has_auth_error(checks)
+    if not run_cloudflare:
+        status = "not-checked"
+    elif cloudflare_failed:
+        status = "cloudflare-auth-or-permission-blocked"
+    else:
+        status = "cloudflare-permission-checks-passed"
+
+    safe_next_actions = [
+        "Confirm Wrangler is logged into the Cloudflare account that owns the gca-registration-api Worker and gca_registration D1 database.",
+        "If needed, run wrangler logout and wrangler login, or set a Cloudflare API token scoped to the target account.",
+        "Re-run python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth before applying migrations or deploying.",
+    ]
+    if code_10000_seen:
+        safe_next_actions.insert(0, "Resolve Cloudflare authentication or permission error [code: 10000] before any publish attempt.")
+
+    return {
+        "status": status,
+        "code10000Seen": code_10000_seen,
+        "failedCloudflareChecks": cloudflare_failed,
+        "requiredCapabilities": [
+            "read authenticated Cloudflare account membership for the configured account_id",
+            "list the configured gca_registration D1 database",
+            "read gca-registration-api Worker deployment history",
+            "apply remote D1 migrations only after readiness passes",
+            "deploy the gca-registration-api Worker only after readiness passes",
+        ],
+        "safeNextActions": safe_next_actions,
+        "blockedUntilReadinessPasses": [
+            "npx wrangler d1 migrations apply gca_registration --remote",
+            "npx wrangler deploy",
+            "mark /gca/service-requests or /gca/credit-usage as production-live",
+            "export pending-route ledgers from production",
+        ],
+        "boundaries": {
+            "writesD1Records": False,
+            "deploysWorker": False,
+            "printsAdminReadToken": False,
+            "readsUserLedgers": False,
+        },
     }
 
 
@@ -179,6 +241,19 @@ def build_report(
         skipped(checks, "wrangler-deploy-dry-run", "Pass --run-wrangler to run Wrangler deploy --dry-run.")
 
     if run_cloudflare:
+        whoami_args = [*wrangler, "whoami", "--json"]
+        if ACCOUNT_ID_RE.fullmatch(account_id):
+            whoami_args.extend(["--account", account_id])
+        whoami = runner(whoami_args, worker_dir, timeout)
+        whoami_result = sanitized_command_result(whoami)
+        check(
+            checks,
+            "cloudflare-auth-session",
+            whoami.returncode == 0,
+            "Wrangler can read the authenticated Cloudflare identity for the configured account without exposing identity details.",
+            result=whoami_result,
+        )
+
         d1_list = runner([*wrangler, "d1", "list"], worker_dir, timeout)
         d1_result = sanitized_command_result(d1_list)
         d1_ok = d1_list.returncode == 0 and database_id in f"{d1_list.stdout}\n{d1_list.stderr}"
@@ -200,6 +275,7 @@ def build_report(
             result=deployment_result,
         )
     else:
+        skipped(checks, "cloudflare-auth-session", "Pass --run-cloudflare to check Wrangler account authentication.")
         skipped(checks, "cloudflare-d1-visible", "Pass --run-cloudflare to check Cloudflare D1 visibility.")
         skipped(checks, "cloudflare-worker-deploy-permission", "Pass --run-cloudflare to check Worker deployment permissions.")
 
@@ -217,6 +293,7 @@ def build_report(
         "readyToAttemptDeploy": not failed,
         "failedChecks": [item["id"] for item in failed],
         "checks": checks,
+        "authRecovery": build_auth_recovery(checks, run_cloudflare=run_cloudflare),
         "boundaries": {
             "writesD1Records": False,
             "deploysWorker": False,

@@ -13,6 +13,8 @@ class GcaWorkerPendingRoutesHandoffTests(unittest.TestCase):
         expected_fragments = [
             "Authentication error [code: 10000]",
             "Do not run `wrangler deploy` until the read-only deploy permission gate passes.",
+            "cloudflare-auth-session",
+            "authRecovery.status: cloudflare-auth-or-permission-blocked",
             "python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth",
             "npx wrangler d1 migrations apply gca_registration --remote",
             "0005_service_requests.sql",
@@ -58,6 +60,8 @@ class GcaWorkerPendingRoutesHandoffTests(unittest.TestCase):
             handoff["readOnlyGateCommand"],
             "python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth",
         )
+        self.assertEqual(api["checks"]["workerDeployReadinessAuthSessionCheck"], "cloudflare-auth-session")
+        self.assertEqual(api["checks"]["workerDeployReadinessAuthRecoveryField"], "authRecovery")
         self.assertEqual(
             handoff["remoteMigrationCommand"],
             "cd cloudflare/gca-registration-worker && npx wrangler d1 migrations apply gca_registration --remote",
@@ -107,6 +111,8 @@ class GcaWorkerPendingRoutesHandoffTests(unittest.TestCase):
         for expected in (
             "Pending Routes Handoff",
             "docs/gca_worker_pending_routes_deploy_handoff.md",
+            "Cloudflare account authentication",
+            "authRecovery.status",
             "remote D1 migrations apply",
             "--include-pending-routes",
             "/gca/service-requests",
@@ -118,6 +124,8 @@ class GcaWorkerPendingRoutesHandoffTests(unittest.TestCase):
         self.assertIn("Admin service request endpoint: `GET/POST /gca/service-requests` prepared in source", backend_doc)
         self.assertIn("Service request D1 migration: `cloudflare/gca-registration-worker/migrations/0005_service_requests.sql`", backend_doc)
         self.assertIn("remote D1 migrations are applied", backend_doc)
+        self.assertIn("cloudflare-auth-session", backend_doc)
+        self.assertIn("authRecovery.safeNextActions", backend_doc)
 
 
 if __name__ == "__main__":

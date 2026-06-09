@@ -46,6 +46,8 @@ Do not run `wrangler deploy` until the read-only deploy permission gate passes.
 
 - Work only from `/Users/abc/Desktop/gca_token`.
 - Cloudflare login or API token must target the account that owns the `gca-registration-api` Worker and the `gca_registration` D1 database.
+- The readiness report must show `cloudflare-auth-session`, `cloudflare-d1-visible`, and `cloudflare-worker-deploy-permission` as passed.
+- If the readiness report contains `authRecovery.status: cloudflare-auth-or-permission-blocked`, follow `authRecovery.safeNextActions` before applying migrations or deploying.
 - `npx wrangler d1 list` must show the `gca_registration` database.
 - `npx wrangler deployments list --json` must work for this Worker.
 - `cloudflare/gca-registration-worker/.env.admin.local` may exist locally for admin smoke checks, but it must stay ignored by git.
@@ -61,7 +63,7 @@ cd /Users/abc/Desktop/gca_token
 python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth
 ```
 
-This command is safe before deploy. It checks local files, Worker bundling, D1 visibility, and read-only Worker deployment permission. It does not write D1 data, deploy the Worker, read user ledgers, or print secrets.
+This command is safe before deploy. It checks local files, Worker bundling, Cloudflare account authentication, D1 visibility, and read-only Worker deployment permission. It does not write D1 data, deploy the Worker, read user ledgers, or print secrets.
 
 Stop if any required check fails.
 

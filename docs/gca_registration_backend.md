@@ -99,7 +99,9 @@ Public registration, contact-suppression, wallet-verification, and member-access
 
 The future custom domain `api.gcagochina.com` still requires Wrangler to be logged into a Cloudflare account that can see the `gcagochina.com` zone. DNS currently uses Cloudflare nameservers, but the currently authorized account does not contain that zone, so Cloudflare rejects the custom-domain deployment with `The zone "gcagochina.com" does not exist on your account`.
 
-The current `wrangler.toml` includes the Cloudflare `account_id` so Wrangler does not need to auto-discover the account before deploy. If `wrangler d1 list` succeeds but `wrangler deployments list --json` or `wrangler deploy` returns `Authentication error [code: 10000]`, the active Cloudflare token/session is missing Workers service permissions for this account. Re-authorize Wrangler or use an API token with access to the target account and Workers Scripts permissions before publishing the Worker.
+The current `wrangler.toml` includes the Cloudflare `account_id` so Wrangler does not need to auto-discover the account before deploy. If `wrangler whoami --json --account <account_id>`, `wrangler d1 list`, `wrangler deployments list --json`, or `wrangler deploy` returns `Authentication error [code: 10000]`, the active Cloudflare token/session is missing access to the configured account, D1 database, or Worker service. Re-authorize Wrangler or use an API token with access to the target account before publishing the Worker.
+
+The deploy readiness report includes a `cloudflare-auth-session` check and an `authRecovery` section. Use that section to confirm whether the blocker is account authentication, D1 visibility, or Worker deployment permission. It does not write D1 records, deploy the Worker, read user ledgers, or print secrets.
 
 ## Deployment Commands
 
@@ -122,7 +124,7 @@ npm run deploy:readiness
 npx wrangler deploy
 ```
 
-The readiness command is safe to run before every deploy. It performs static checks, `wrangler deploy --dry-run`, D1 visibility, and a read-only Worker deployment-permission check. It does not write D1 records, deploy the Worker, print `ADMIN_READ_TOKEN`, or read user ledgers.
+The readiness command is safe to run before every deploy. It performs static checks, `wrangler deploy --dry-run`, account-authentication visibility, D1 visibility, and a read-only Worker deployment-permission check. It does not write D1 records, deploy the Worker, print `ADMIN_READ_TOKEN`, or read user ledgers. If a remote check fails, read the `authRecovery.safeNextActions` field before attempting migrations or deploy.
 
 The current configuration publishes through `workers.dev`. Switch to a Cloudflare custom domain only after the official domain is managed by Cloudflare.
 
