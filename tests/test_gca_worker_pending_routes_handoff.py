@@ -54,7 +54,10 @@ class GcaWorkerPendingRoutesHandoffTests(unittest.TestCase):
 
         self.assertEqual(handoff["document"], "docs/gca_worker_pending_routes_deploy_handoff.md")
         self.assertEqual(handoff["status"], "prepared-not-production-live")
-        self.assertEqual(handoff["blockedBy"], "Cloudflare authentication or Workers service permission error [code: 10000]")
+        self.assertEqual(
+            handoff["blockedBy"],
+            "Cloudflare account authentication or Workers service permission error [code: 10000]; D1 visibility must also pass before deploy",
+        )
         self.assertCountEqual(handoff["routes"], ["/gca/service-requests", "/gca/credit-usage"])
         self.assertEqual(
             handoff["readOnlyGateCommand"],
@@ -78,6 +81,9 @@ class GcaWorkerPendingRoutesHandoffTests(unittest.TestCase):
             handoff["postDeployAdminSmokeCommand"],
             "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes",
         )
+        self.assertIn("cloudflare-auth-session passes", handoff["statusUpdateAllowedAfter"])
+        self.assertIn("D1 visibility passes", handoff["statusUpdateAllowedAfter"])
+        self.assertIn("Worker deploy permission passes", handoff["statusUpdateAllowedAfter"])
         self.assertIn("remote D1 migrations apply successfully", handoff["statusUpdateAllowedAfter"])
         self.assertIn("admin smoke check passes with --include-pending-routes", handoff["statusUpdateAllowedAfter"])
 
@@ -101,8 +107,15 @@ class GcaWorkerPendingRoutesHandoffTests(unittest.TestCase):
             for endpoint in api["adminEndpoints"]
             if endpoint["path"] in {"/gca/service-requests", "/gca/credit-usage"}
         }
+        blocked_by = {
+            endpoint["path"]: endpoint["blockedBy"]
+            for endpoint in api["adminEndpoints"]
+            if endpoint["path"] in {"/gca/service-requests", "/gca/credit-usage"}
+        }
         self.assertEqual(route_statuses["/gca/service-requests"], "prepared-worker-deploy-permission-pending")
         self.assertEqual(route_statuses["/gca/credit-usage"], "prepared-worker-deploy-permission-pending")
+        self.assertIn("Cloudflare account authentication", blocked_by["/gca/service-requests"])
+        self.assertIn("D1 visibility", blocked_by["/gca/credit-usage"])
 
     def test_api_status_page_and_backend_doc_point_to_handoff(self):
         page = (ROOT / "site" / "api-status.html").read_text(encoding="utf-8")
@@ -112,6 +125,8 @@ class GcaWorkerPendingRoutesHandoffTests(unittest.TestCase):
             "Pending Routes Handoff",
             "docs/gca_worker_pending_routes_deploy_handoff.md",
             "Cloudflare account authentication",
+            "D1 visibility",
+            "Worker publish permission",
             "authRecovery.status",
             "remote D1 migrations apply",
             "--include-pending-routes",

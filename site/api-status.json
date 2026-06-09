@@ -154,7 +154,7 @@
       "requiresAdminReadToken": true,
       "publicLedgerReadable": false,
       "workerDryRunPassed": true,
-      "blockedBy": "Cloudflare authentication or Workers service permission error [code: 10000]"
+      "blockedBy": "Cloudflare account authentication or Workers service permission error [code: 10000]; D1 visibility must also pass before deploy"
     },
     {
       "id": "credit-usage-read-write",
@@ -165,7 +165,7 @@
       "requiresAdminReadToken": true,
       "publicLedgerReadable": false,
       "workerDryRunPassed": true,
-      "blockedBy": "Cloudflare authentication or Workers service permission error [code: 10000]"
+      "blockedBy": "Cloudflare account authentication or Workers service permission error [code: 10000]; D1 visibility must also pass before deploy"
     }
   ],
   "checks": {
@@ -185,7 +185,7 @@
   "pendingRoutesDeployHandoff": {
     "document": "docs/gca_worker_pending_routes_deploy_handoff.md",
     "status": "prepared-not-production-live",
-    "blockedBy": "Cloudflare authentication or Workers service permission error [code: 10000]",
+    "blockedBy": "Cloudflare account authentication or Workers service permission error [code: 10000]; D1 visibility must also pass before deploy",
     "routes": [
       "/gca/service-requests",
       "/gca/credit-usage"
@@ -196,7 +196,9 @@
     "postDeployPublicSmokeCommand": "python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes",
     "postDeployAdminSmokeCommand": "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes",
     "statusUpdateAllowedAfter": [
-      "readiness gate passes",
+      "cloudflare-auth-session passes",
+      "D1 visibility passes",
+      "Worker deploy permission passes",
       "remote D1 migrations apply successfully",
       "wrangler deploy succeeds",
       "public smoke check passes with --include-pending-routes",

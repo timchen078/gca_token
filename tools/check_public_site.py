@@ -7999,6 +7999,10 @@ def validate_api_status_page(text: str) -> None:
         "/gca/member-ledger",
         "/gca/credit-usage",
         "Deploy Readiness",
+        "cloudflare-auth-session",
+        "D1 visibility",
+        "Worker deploy permission",
+        "Worker publish permission",
         "python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth",
         "Public visitors should receive an authorization error",
         "Public visitors cannot read the suppression ledger",
@@ -8030,6 +8034,7 @@ def validate_api_status_json(text: str) -> None:
     public_endpoints = {item.get("id"): item for item in payload.get("publicEndpoints", [])}
     admin_endpoints = {item.get("id"): item for item in payload.get("adminEndpoints", [])}
     checks = payload.get("checks", {})
+    handoff = payload.get("pendingRoutesDeployHandoff", {})
     boundaries = payload.get("publicBoundaries", {})
     links = payload.get("officialLinks", {})
 
@@ -8130,6 +8135,10 @@ def validate_api_status_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong credit usage admin boundary")
     if credit_usage.get("workerDryRunPassed") is not True:
         raise SiteCheckError(f"{label}: credit usage Worker dry run should be recorded as passed")
+    if "Cloudflare account authentication" not in credit_usage.get("blockedBy", ""):
+        raise SiteCheckError(f"{label}: credit usage blockedBy should mention Cloudflare account authentication")
+    if "D1 visibility" not in credit_usage.get("blockedBy", ""):
+        raise SiteCheckError(f"{label}: credit usage blockedBy should mention D1 visibility")
 
     service_requests = admin_endpoints.get("service-requests-read-write")
     if service_requests is None:
@@ -8142,6 +8151,10 @@ def validate_api_status_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong service request admin boundary")
     if service_requests.get("workerDryRunPassed") is not True:
         raise SiteCheckError(f"{label}: service request Worker dry run should be recorded as passed")
+    if "Cloudflare account authentication" not in service_requests.get("blockedBy", ""):
+        raise SiteCheckError(f"{label}: service request blockedBy should mention Cloudflare account authentication")
+    if "D1 visibility" not in service_requests.get("blockedBy", ""):
+        raise SiteCheckError(f"{label}: service request blockedBy should mention D1 visibility")
 
     if checks.get("tool") != "tools/check_gca_registration_api.py":
         raise SiteCheckError(f"{label}: wrong check tool")
@@ -8149,6 +8162,10 @@ def validate_api_status_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong deploy readiness tool")
     if checks.get("workerDeployReadinessCommand") != "python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth":
         raise SiteCheckError(f"{label}: wrong deploy readiness command")
+    if checks.get("workerDeployReadinessAuthSessionCheck") != "cloudflare-auth-session":
+        raise SiteCheckError(f"{label}: wrong auth session deploy readiness check")
+    if checks.get("workerDeployReadinessAuthRecoveryField") != "authRecovery":
+        raise SiteCheckError(f"{label}: wrong auth recovery deploy readiness field")
     if checks.get("publicOnlyCommand") != "python3 tools/check_gca_registration_api.py --public-only --timeout 30":
         raise SiteCheckError(f"{label}: wrong public check command")
     if checks.get("adminCommand") != "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5":
@@ -8161,6 +8178,33 @@ def validate_api_status_json(text: str) -> None:
         raise SiteCheckError(f"{label}: admin check should require local token file")
     if checks.get("writesTestRecords") is not False or checks.get("readOnly") is not True:
         raise SiteCheckError(f"{label}: checks should be read-only")
+    if handoff.get("document") != "docs/gca_worker_pending_routes_deploy_handoff.md":
+        raise SiteCheckError(f"{label}: wrong pending routes handoff document")
+    if handoff.get("status") != "prepared-not-production-live":
+        raise SiteCheckError(f"{label}: wrong pending routes handoff status")
+    if "Cloudflare account authentication" not in handoff.get("blockedBy", ""):
+        raise SiteCheckError(f"{label}: handoff blockedBy should mention Cloudflare account authentication")
+    if "D1 visibility" not in handoff.get("blockedBy", ""):
+        raise SiteCheckError(f"{label}: handoff blockedBy should mention D1 visibility")
+    if set(handoff.get("routes", [])) != {"/gca/service-requests", "/gca/credit-usage"}:
+        raise SiteCheckError(f"{label}: wrong pending routes handoff routes")
+    if handoff.get("readOnlyGateCommand") != "python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth":
+        raise SiteCheckError(f"{label}: wrong pending routes gate command")
+    if handoff.get("postDeployPublicSmokeCommand") != "python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes":
+        raise SiteCheckError(f"{label}: wrong pending routes public smoke command")
+    if handoff.get("postDeployAdminSmokeCommand") != "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes":
+        raise SiteCheckError(f"{label}: wrong pending routes admin smoke command")
+    for gate in (
+        "cloudflare-auth-session passes",
+        "D1 visibility passes",
+        "Worker deploy permission passes",
+        "remote D1 migrations apply successfully",
+        "wrangler deploy succeeds",
+        "public smoke check passes with --include-pending-routes",
+        "admin smoke check passes with --include-pending-routes",
+    ):
+        if gate not in handoff.get("statusUpdateAllowedAfter", []):
+            raise SiteCheckError(f"{label}: missing pending routes status gate {gate}")
 
     for key in (
         "noPrivateKeyCollection",
