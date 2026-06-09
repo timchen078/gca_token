@@ -391,11 +391,11 @@
           </article>
           <article class="card">
             <h3>服务请求队列</h3>
-            <p class="note"><code>GET/POST /gca/service-requests</code> 已完成源码、D1 迁移和 Worker dry-run；正式发布仍等待 <code>cloudflare-auth-session</code>、D1 可见性和 Workers 发布权限全部通过。</p>
+            <p class="note"><code>GET/POST /gca/service-requests</code> 已完成源码、D1 迁移和 Worker dry-run；正式发布仍等待 <code>cloudflare-auth-session</code>、D1 可见性、Worker 发布权限、远端 D1 migration、<code>wrangler deploy</code> 和待发布接口 smoke 检查全部通过。</p>
           </article>
           <article class="card">
             <h3>Credit 使用记录</h3>
-            <p class="note"><code>GET/POST /gca/credit-usage</code> 已完成源码、D1 迁移和 Worker dry-run；正式发布仍等待 Cloudflare 账号认证、D1 可见性和 Workers service 权限通过。</p>
+            <p class="note"><code>GET/POST /gca/credit-usage</code> 已完成源码、D1 迁移和 Worker dry-run；正式发布仍等待 Cloudflare 账号认证、D1 可见性、Worker 发布权限、远端 D1 migration、<code>wrangler deploy</code> 和待发布接口 smoke 检查全部通过。</p>
           </article>
           <article class="card">
             <h3>未来域名</h3>
@@ -422,8 +422,9 @@
         </div>
         <div class="panel">
           <h2>待发布接口验收</h2>
-          <p class="note"><code>/gca/service-requests</code> 和 <code>/gca/credit-usage</code> 不能只因为 dry-run 通过就说已上线。必须完成远端 D1 migration、<code>wrangler deploy</code>、公开 smoke check 和管理员 smoke check。</p>
+          <p class="note"><code>/gca/service-requests</code> 和 <code>/gca/credit-usage</code> 不能只因为 dry-run 通过就说已上线。必须完成 Cloudflare 账号认证、D1 可见性、Worker 发布权限、远端 D1 migration、<code>wrangler deploy</code>、公开 smoke check 和管理员 smoke check，并且两个 smoke check 都要带 <code>--include-pending-routes</code>。</p>
           <pre>python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes</pre>
+          <pre>python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes</pre>
         </div>
       </section>
 
