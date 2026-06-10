@@ -1388,6 +1388,10 @@ def validate_basescan_remediation_page(text: str) -> None:
         "launch/basescan_reviewer_checklist.json",
         "launch/basescan_reviewer_checklist.md",
         "completed domain email item",
+        "final submission package",
+        "daily public status",
+        "daily status",
+        "2026-06-10T09:16:45Z",
         "Submission package",
         "tools/build_basescan_submission_package.py",
         "Final package ready",
@@ -1546,6 +1550,10 @@ def validate_basescan_remediation_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing current reviewer checklist JSON artifact")
     if "launch/basescan_reviewer_checklist.md" not in checklist_builder.get("currentArtifacts", []):
         raise SiteCheckError(f"{label}: missing current reviewer checklist markdown artifact")
+    if checklist_builder.get("baseScanFinalSubmissionPackageGeneratedAt") != "2026-06-06T11:10:54Z":
+        raise SiteCheckError(f"{label}: wrong reviewer checklist final submission package timestamp")
+    if checklist_builder.get("dailyStatusGeneratedAt") != "2026-06-10T09:16:45Z":
+        raise SiteCheckError(f"{label}: wrong reviewer checklist daily status timestamp")
     if checklist_builder.get("currentBlockedItems") not in (["sender-domain-email"], []):
         raise SiteCheckError(f"{label}: wrong current reviewer checklist blockers")
     if "domain email evidence packet is ready" not in checklist_builder.get("regenerateAfter", []):
