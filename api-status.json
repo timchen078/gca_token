@@ -2,10 +2,10 @@
   "schema": "https://gcagochina.com/api-status.json",
   "pageUrl": "https://gcagochina.com/api-status.html",
   "status": "public-member-access-api-status-published",
-  "lastUpdated": "2026-06-09",
-  "latestPublicCheckAt": "2026-06-09T14:51:16Z",
+  "lastUpdated": "2026-06-10",
+  "latestPublicCheckAt": "2026-06-10T08:46:16Z",
   "latestPublicCheckStatus": "passed",
-  "latestDeployReadinessCheckAt": "2026-06-09T14:41:26Z",
+  "latestDeployReadinessCheckAt": "2026-06-10T08:54:41Z",
   "latestDeployReadinessStatus": "blocked-cloudflare-auth-or-worker-deploy-permission-code-10000",
   "latestDeployReadinessSummary": {
     "wranglerDeployDryRun": "passed",
@@ -166,7 +166,7 @@
       "requiresAdminReadToken": true,
       "publicLedgerReadable": false,
       "workerDryRunPassed": true,
-      "blockedBy": "Latest 2026-06-09 readiness check passed Worker dry-run and D1 visibility; blocked by Cloudflare account authentication and Worker deploy permission error [code: 10000]"
+      "blockedBy": "Latest 2026-06-10 readiness check passed Worker dry-run and D1 visibility; blocked by Cloudflare account authentication and Worker deploy permission error [code: 10000]"
     },
     {
       "id": "credit-usage-read-write",
@@ -177,7 +177,7 @@
       "requiresAdminReadToken": true,
       "publicLedgerReadable": false,
       "workerDryRunPassed": true,
-      "blockedBy": "Latest 2026-06-09 readiness check passed Worker dry-run and D1 visibility; blocked by Cloudflare account authentication and Worker deploy permission error [code: 10000]"
+      "blockedBy": "Latest 2026-06-10 readiness check passed Worker dry-run and D1 visibility; blocked by Cloudflare account authentication and Worker deploy permission error [code: 10000]"
     }
   ],
   "checks": {
@@ -197,7 +197,7 @@
   "pendingRoutesDeployHandoff": {
     "document": "docs/gca_worker_pending_routes_deploy_handoff.md",
     "status": "prepared-not-production-live",
-    "blockedBy": "Latest 2026-06-09 readiness check passed Worker dry-run and D1 visibility; blocked by Cloudflare account authentication and Worker deploy permission error [code: 10000]",
+    "blockedBy": "Latest 2026-06-10 readiness check passed Worker dry-run and D1 visibility; blocked by Cloudflare account authentication and Worker deploy permission error [code: 10000]",
     "routes": [
       "/gca/service-requests",
       "/gca/credit-usage"
