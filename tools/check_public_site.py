@@ -3873,6 +3873,7 @@ def validate_zh_member_benefit_transfer_page(text: str) -> None:
 def validate_zh_data_page(text: str) -> None:
     label = "/zh-data.html"
     assert_social_preview_meta(text, label, ZH_DATA_PAGE_URL)
+    assert_contains(text, '<meta name="robots" content="noindex,nofollow">', label)
     assert_platform_only_data_room(
         text,
         label,
@@ -4201,6 +4202,7 @@ def validate_zh_members_page(text: str) -> None:
 def validate_data_page(text: str) -> None:
     label = "/data.html"
     assert_social_preview_meta(text, label, DATA_PAGE_URL)
+    assert_contains(text, '<meta name="robots" content="noindex,nofollow">', label)
     for expected in (
         "GCA Data Room",
         "JSON files are not broken pages",
@@ -13225,10 +13227,8 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/zh-member-checklist.html",
         "https://gcagochina.com/zh-member-benefit-transfer.html",
         "https://gcagochina.com/zh-site-map.html",
-        "https://gcagochina.com/zh-data.html",
         "https://gcagochina.com/zh-api-status.html",
         "https://gcagochina.com/zh-operations.html",
-        "https://gcagochina.com/data.html",
         "https://gcagochina.com/site-map.html",
         "https://gcagochina.com/verify.html",
         "https://gcagochina.com/status.html",
@@ -13340,6 +13340,8 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/.well-known/security.txt",
     ):
         assert_contains(text, expected, label)
+    assert_not_contains(text, "https://gcagochina.com/zh-data.html", label)
+    assert_not_contains(text, "https://gcagochina.com/data.html", label)
     assert_not_contains(text, "https://gcagochina.com/operator.html", label)
     for path in (
         "api-status.html",
@@ -13420,12 +13422,12 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /zh-member-checklist.html", label)
     assert_contains(text, "Allow: /zh-member-benefit-transfer.html", label)
     assert_contains(text, "Allow: /zh-site-map.html", label)
-    assert_contains(text, "Allow: /zh-data.html", label)
+    assert_contains(text, "Disallow: /zh-data.html", label)
     assert_contains(text, "Allow: /zh-api-status.html", label)
     assert_contains(text, "Allow: /zh-operations.html", label)
     assert_contains(text, "Allow: /site-map.html", label)
     assert_contains(text, "Allow: /verify.html", label)
-    assert_contains(text, "Allow: /data.html", label)
+    assert_contains(text, "Disallow: /data.html", label)
     assert_contains(text, "Allow: /status.html", label)
     assert_contains(text, "Allow: /listing-kit.html", label)
     assert_contains(text, "Allow: /whitepaper.html", label)

@@ -1028,7 +1028,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Allow: /zh-member-checklist.html", robots)
         self.assertIn("Allow: /zh-member-benefit-transfer.html", robots)
         self.assertIn("Allow: /zh-site-map.html", robots)
-        self.assertIn("Allow: /zh-data.html", robots)
+        self.assertIn("Disallow: /zh-data.html", robots)
         self.assertIn("Allow: /zh-api-status.html", robots)
         self.assertIn("Allow: /zh-operations.html", robots)
         self.assertIn("Allow: /site-map.html", robots)
@@ -1133,7 +1133,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Allow: /.well-known/gca-token.json", robots)
         self.assertIn("Allow: /.well-known/wallet-security.json", robots)
         self.assertIn("Allow: /.well-known/security.txt", robots)
-        self.assertIn("Allow: /data.html", robots)
+        self.assertIn("Disallow: /data.html", robots)
         self.assertIn("Sitemap: https://gcagochina.com/sitemap.xml", robots)
         self.assertIn("https://gcagochina.com/", sitemap)
         self.assertIn(START_PAGE_URL, sitemap)
@@ -1175,10 +1175,10 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(ZH_WALLET_VERIFY_PAGE_URL, sitemap)
         self.assertIn(ZH_MEMBER_CHECKLIST_PAGE_URL, sitemap)
         self.assertIn(ZH_SITE_MAP_PAGE_URL, sitemap)
-        self.assertIn(ZH_DATA_PAGE_URL, sitemap)
+        self.assertNotIn(ZH_DATA_PAGE_URL, sitemap)
         self.assertIn(ZH_API_STATUS_PAGE_URL, sitemap)
         self.assertIn(ZH_OPERATIONS_PAGE_URL, sitemap)
-        self.assertIn(DATA_PAGE_URL, sitemap)
+        self.assertNotIn(DATA_PAGE_URL, sitemap)
         self.assertIn(API_STATUS_PAGE_URL, sitemap)
         self.assertIn(API_STATUS_URL, sitemap)
         self.assertIn(DAILY_STATUS_PAGE_URL, sitemap)
@@ -1306,6 +1306,8 @@ class LaunchPackageTests(unittest.TestCase):
             if path.is_file() and path.suffix in {".html", ".json"}
             and str(path.relative_to(ROOT / "site")) != "404.html"
             and str(path.relative_to(ROOT / "site")) != "operator.html"
+            and str(path.relative_to(ROOT / "site")) != "data.html"
+            and str(path.relative_to(ROOT / "site")) != "zh-data.html"
         ]
         self.assertEqual(
             [],

@@ -25,7 +25,7 @@ Allow: /zh-wallet-verify.html
 Allow: /zh-member-checklist.html
 Allow: /zh-member-benefit-transfer.html
 Allow: /zh-site-map.html
-Allow: /zh-data.html
+Disallow: /zh-data.html
 Allow: /zh-api-status.html
 Allow: /about.html
 Allow: /team.html
@@ -44,7 +44,7 @@ Allow: /basescan-handoff.json
 Allow: /action-plan.html
 Allow: /site-map.html
 Allow: /verify.html
-Allow: /data.html
+Disallow: /data.html
 Allow: /status.html
 Allow: /listing-kit.html
 Allow: /whitepaper.html
