@@ -13,6 +13,8 @@ class BaseScanReviewerChecklistTests(unittest.TestCase):
         self.assertEqual(report["status"], "ready-for-owner-review")
         self.assertTrue(report["readyForCleanResubmission"])
         self.assertEqual(report["latestReturnNoticeDate"], "2026-05-23")
+        self.assertEqual(report["baseScanFinalSubmissionPackageGeneratedAt"], "2026-06-06T11:10:54Z")
+        self.assertEqual(report["dailyStatusGeneratedAt"], "2026-06-10T09:16:45Z")
         self.assertEqual(report["targetDomainEmail"], "support@gcagochina.com")
         self.assertEqual(report["blockedItems"], [])
 
@@ -42,6 +44,8 @@ class BaseScanReviewerChecklistTests(unittest.TestCase):
         markdown = module.render_markdown(report)
         self.assertIn("# GCA BaseScan Reviewer Checklist", markdown)
         self.assertIn("Ready for clean resubmission: `true`", markdown)
+        self.assertIn("Final submission package: `2026-06-06T11:10:54Z`", markdown)
+        self.assertIn("Daily public status: `2026-06-10T09:16:45Z`", markdown)
         self.assertIn("Sender email matches project domain", markdown)
         self.assertIn("does not submit BaseScan requests", markdown)
 

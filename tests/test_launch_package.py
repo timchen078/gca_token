@@ -2036,6 +2036,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(data["status"], "ready-for-owner-review")
         self.assertTrue(data["readyForCleanResubmission"])
         self.assertEqual(data["blockedItems"], [])
+        self.assertEqual(data["baseScanFinalSubmissionPackageGeneratedAt"], "2026-06-06T11:10:54Z")
+        self.assertEqual(data["dailyStatusGeneratedAt"], "2026-06-10T09:16:45Z")
         self.assertEqual(data["officialEmail"], "support@gcagochina.com")
         self.assertEqual(data["targetDomainEmail"], "support@gcagochina.com")
         self.assertTrue(data["domainEmailReady"])
@@ -2043,6 +2045,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("does not submit BaseScan requests", markdown)
         self.assertIn("Sender email matches project domain", markdown)
         self.assertIn("Ready for clean resubmission: `true`", markdown)
+        self.assertIn("Final submission package: `2026-06-06T11:10:54Z`", markdown)
+        self.assertIn("Daily public status: `2026-06-10T09:16:45Z`", markdown)
         keys = [item["key"] for item in data["checklist"]]
         self.assertIn("website-accessible", keys)
         self.assertIn("founder-team-transparency", keys)
