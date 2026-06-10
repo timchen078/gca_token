@@ -326,6 +326,15 @@
         overflow-wrap: anywhere;
       }
 
+      [hidden] {
+        display: none !important;
+      }
+
+      .public-gate {
+        border-color: #f0d28a;
+        background: #fff9e8;
+      }
+
       .copy {
         min-height: 120px;
         width: 100%;
@@ -376,7 +385,7 @@
         <p class="status" id="connectionStatus">Checking local backend</p>
         <h1>GCA Local Operator Console</h1>
         <p class="lead">This page reads local JSONL ledger records from <code>tools/gca_member_backend.py</code> when opened through <code>http://127.0.0.1:8787/operator.html</code>. The same review package can also be exported offline with <code>tools/export_gca_review_package.py</code>. The public website version is informational only and does not expose a public submission queue, self-service claim page, token transfer, or production account system.</p>
-        <div class="actions section">
+        <div class="actions section" id="operatorLocalActions" hidden>
           <button class="button primary" id="refreshButton" type="button">Refresh Local Ledgers</button>
           <button class="button" id="loadActionPlanButton" type="button" disabled>Load Action Plan</button>
           <button class="button" id="loadDigestButton" type="button" disabled>Load Operator Digest</button>
@@ -390,6 +399,18 @@
         </div>
       </section>
 
+      <section class="section panel public-gate" id="operatorPublicGate" aria-labelledby="operatorPublicGateTitle">
+        <h2 id="operatorPublicGateTitle">Local Console Not Available On Public Website</h2>
+        <p class="note">This page is reserved for local operator review. Public visitors should use the GCA member access and support pages. The public website view does not load ledgers, admin records, wallet actions, token transfers, or production account tools.</p>
+        <div class="actions">
+          <a class="button primary" href="gca/member-access/">Member Access</a>
+          <a class="button" href="support.html">Support</a>
+          <a class="button" href="status.html">Project Status</a>
+        </div>
+        <p class="note">Operators should run <code>.venv/bin/python tools/gca_member_backend.py --host 127.0.0.1 --port 8787</code> and open <code>http://127.0.0.1:8787/operator.html</code>.</p>
+      </section>
+
+      <div id="operatorLocalConsole" hidden>
       <section class="section grid" aria-label="GCA local ledger totals">
         <div class="fact">
           <span class="label">Email registrations</span>
@@ -918,6 +939,7 @@
           </table>
         </div>
       </section>
+      </div>
     </main>
 
     <footer>
@@ -934,6 +956,10 @@
       const MEMBER_BENEFIT_TRANSFER_ENDPOINT_PATH = "/gca/member-benefit-transfers";
       const SERVICE_REQUEST_ENDPOINT_PATH = "/gca/service-requests";
       const CREDIT_USAGE_ENDPOINT_PATH = "/gca/credit-usage";
+      const isLocalOperatorHost = LOCAL_BACKEND_HOSTS.has(window.location.hostname);
+      const operatorPublicGate = document.getElementById("operatorPublicGate");
+      const operatorLocalActions = document.getElementById("operatorLocalActions");
+      const operatorLocalConsole = document.getElementById("operatorLocalConsole");
       const connectionStatus = document.getElementById("connectionStatus");
       const refreshButton = document.getElementById("refreshButton");
       const loadActionPlanButton = document.getElementById("loadActionPlanButton");
@@ -1007,6 +1033,12 @@
       };
       let backendConnected = false;
       let latestSupportReviews = [];
+
+      function configureOperatorVisibility() {
+        operatorPublicGate.hidden = isLocalOperatorHost;
+        operatorLocalActions.hidden = !isLocalOperatorHost;
+        operatorLocalConsole.hidden = !isLocalOperatorHost;
+      }
 
       function setStatus(text, kind = "") {
         connectionStatus.textContent = text;
@@ -1329,7 +1361,7 @@
       }
 
       async function refreshOperatorSummary() {
-        if (!LOCAL_BACKEND_HOSTS.has(window.location.hostname)) {
+        if (!isLocalOperatorHost) {
           setStatus("Public website view: use /gca/member-access/ for Workers + D1 intake; local backend actions are disabled here", "warn");
           refreshButton.disabled = true;
           setBackendControlsEnabled(false);
@@ -1398,7 +1430,7 @@
       }
 
       async function loadOperatorDigest(options = {}) {
-        if (!LOCAL_BACKEND_HOSTS.has(window.location.hostname)) {
+        if (!isLocalOperatorHost) {
           renderDigestUnavailable("Public website view only. Open the local backend URL before loading the operator digest.");
           return;
         }
@@ -1428,7 +1460,7 @@
       }
 
       async function loadActionPlan(options = {}) {
-        if (!LOCAL_BACKEND_HOSTS.has(window.location.hostname)) {
+        if (!isLocalOperatorHost) {
           renderActionPlanUnavailable("Public website view only. Open the local backend URL before loading the action plan.");
           return;
         }
@@ -1521,7 +1553,7 @@
       }
 
       async function exportReviewPackage(redacted = false) {
-        if (!LOCAL_BACKEND_HOSTS.has(window.location.hostname)) {
+        if (!isLocalOperatorHost) {
           setStatus("Open the local backend URL before exporting", "warn");
           return;
         }
@@ -1590,7 +1622,7 @@
 
       async function recordCreditUsage(event) {
         event.preventDefault();
-        if (!LOCAL_BACKEND_HOSTS.has(window.location.hostname)) {
+        if (!isLocalOperatorHost) {
           setCreditUsageStatus("Open the local backend URL before recording", "warn");
           return;
         }
@@ -1634,7 +1666,7 @@
 
       async function recordServiceRequest(event) {
         event.preventDefault();
-        if (!LOCAL_BACKEND_HOSTS.has(window.location.hostname)) {
+        if (!isLocalOperatorHost) {
           setServiceRequestStatus("Open the local backend URL before recording", "warn");
           return;
         }
@@ -1688,7 +1720,7 @@
 
       async function recordMemberBenefitTransfer(event) {
         event.preventDefault();
-        if (!LOCAL_BACKEND_HOSTS.has(window.location.hostname)) {
+        if (!isLocalOperatorHost) {
           setTransferStatus("Open the local backend URL before recording", "warn");
           return;
         }
@@ -1730,7 +1762,7 @@
 
       async function recordSupportReviewUpdate(event) {
         event.preventDefault();
-        if (!LOCAL_BACKEND_HOSTS.has(window.location.hostname)) {
+        if (!isLocalOperatorHost) {
           setReviewUpdateStatus("Open the local backend URL before recording", "warn");
           return;
         }
@@ -1800,6 +1832,7 @@
         const index = Number(button.getAttribute("data-review-index"));
         prefillReviewUpdate(latestSupportReviews[index]);
       });
+      configureOperatorVisibility();
       syncServiceRequestCreditHold();
       refreshOperatorSummary();
     </script>
