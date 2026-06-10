@@ -1602,7 +1602,7 @@ def validate_basescan_preflight_page(text: str) -> None:
         "Latest DNS Snapshot",
         "2026-05-30",
         "Preflight Refresh",
-        "2026-06-09",
+        "2026-06-10",
         "2026-06-06T11:10:54Z",
         "Main Blocker",
         "No local blocker",
@@ -1658,7 +1658,7 @@ def validate_basescan_preflight_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != BASESCAN_PREFLIGHT_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
-    if payload.get("lastUpdated") != "2026-06-09":
+    if payload.get("lastUpdated") != "2026-06-10":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("status") not in {
         "blocked-domain-email-before-basescan-resubmission",
@@ -1682,6 +1682,8 @@ def validate_basescan_preflight_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong final package markdown path")
     if refresh.get("finalSubmissionPackageJson") != "launch/basescan_final_submission_package.json":
         raise SiteCheckError(f"{label}: wrong final package json path")
+    if refresh.get("dailyStatusSnapshotRefreshedAt") != "2026-06-10T09:16:45Z":
+        raise SiteCheckError(f"{label}: wrong daily status snapshot refresh timestamp")
     if snapshot.get("checkedAt") not in {"2026-05-30T08:13:47Z", "2026-05-30T16:24:34Z"}:
         raise SiteCheckError(f"{label}: wrong DNS snapshot")
     if snapshot.get("readyForBaseScanEmailEvidence") not in {False, True}:
@@ -2516,7 +2518,7 @@ def validate_zh_basescan_preflight_page(text: str) -> None:
         "最新 DNS 快照",
         "2026-05-30",
         "最终包刷新",
-        "2026-06-09",
+        "2026-06-10",
         "2026-06-06T11:10:54Z",
         "launch/",
         "本机 owner 工具输出",
