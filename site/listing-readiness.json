@@ -1,7 +1,7 @@
 {
   "schema": "https://gcagochina.com/listing-readiness.json",
   "pageUrl": "https://gcagochina.com/listing-readiness.html",
-  "lastUpdated": "2026-06-09",
+  "lastUpdated": "2026-06-10",
   "projectName": "GCA",
   "tokenSymbol": "GCA",
   "network": "Base Mainnet",
@@ -81,10 +81,10 @@
       "id": "basescan-token-profile",
       "label": "BaseScan token profile",
       "status": "ready-for-owner-resubmission",
-      "lastCheckedDate": "2026-06-09",
+      "lastCheckedDate": "2026-06-10",
       "finalSubmissionPackageGeneratedAt": "2026-06-06T11:10:54Z",
-      "dailyStatusGeneratedAt": "2026-06-09T14:59:01Z",
-      "evidence": "Token information update was returned again by BaseScan as information-insufficient on 2026-05-23. Tim Chen official-domain professional profile evidence is published; support@gcagochina.com is active as the project-domain email; the domain email setup plan, public evidence checklist, activation evidence packet, expanded BaseScan reply template, BaseScan Handoff copy blocks, and Chinese owner flow are published. The final owner submission package was regenerated on 2026-06-06T11:10:54Z, the daily public status snapshot was refreshed on 2026-06-09T14:59:01Z, and the 2026-05-30 DNS snapshot shows MX/SPF/DKIM/DMARC present."
+      "dailyStatusGeneratedAt": "2026-06-10T09:16:45Z",
+      "evidence": "Token information update was returned again by BaseScan as information-insufficient on 2026-05-23. Tim Chen official-domain professional profile evidence is published; support@gcagochina.com is active as the project-domain email; the domain email setup plan, public evidence checklist, activation evidence packet, expanded BaseScan reply template, BaseScan Handoff copy blocks, and Chinese owner flow are published. The final owner submission package was regenerated on 2026-06-06T11:10:54Z, the daily public status snapshot was refreshed on 2026-06-10T09:16:45Z, and the 2026-05-30 DNS snapshot shows MX/SPF/DKIM/DMARC present."
     },
     {
       "id": "geckoterminal-token-info",
