@@ -1,0 +1,162 @@
+{
+  "schema": "https://gcagochina.com/worker-routes-handoff.json",
+  "pageUrl": "https://gcagochina.com/worker-routes-handoff.html",
+  "status": "worker-routes-handoff-v1-published",
+  "handoffId": "worker-routes-handoff-v1",
+  "lastUpdated": "2026-06-11",
+  "chainId": 8453,
+  "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+  "workerBaseUrl": "https://gca-registration-api.gcagochina.workers.dev",
+  "sourceDocument": "docs/gca_worker_pending_routes_deploy_handoff.md",
+  "scope": "Public handoff for prepared operator-only Cloudflare Worker routes. The service-request and credit-usage routes are prepared in source and D1 migrations, but remain non-live until Cloudflare authentication, Worker deploy permission, remote D1 migrations, Worker deploy, and post-deploy public/admin smoke checks pass.",
+  "currentStatus": {
+    "workerDryRun": "passed-2026-06-10",
+    "d1Visibility": "passed-2026-06-10",
+    "cloudflareAuthSession": "blocked-error-10000",
+    "workerDeployPermission": "blocked-error-10000",
+    "remoteMigrations": "not-applied-for-pending-routes",
+    "workerDeploy": "not-run-for-pending-routes",
+    "postDeployPublicSmoke": "not-run-for-pending-routes",
+    "postDeployAdminSmoke": "not-run-for-pending-routes",
+    "productionRouteStatus": "prepared-not-production-live"
+  },
+  "alreadyLiveRoutes": [
+    "GET /health",
+    "GET /gca/access-config",
+    "POST /gca/email-registrations",
+    "POST /gca/contact-suppressions",
+    "POST /gca/wallet-verifications",
+    "POST /gca/member-access",
+    "token-protected GET /gca/email-registrations",
+    "token-protected GET /gca/contact-suppressions",
+    "token-protected GET /gca/wallet-verifications",
+    "token-protected GET /gca/member-access",
+    "token-protected GET /gca/credit-ledger",
+    "token-protected GET /gca/member-ledger"
+  ],
+  "preparedRoutes": [
+    {
+      "path": "/gca/service-requests",
+      "method": "GET/POST",
+      "access": "token-protected-admin",
+      "status": "prepared-worker-deploy-permission-pending",
+      "writesCredits": false,
+      "createsTradingPermission": false,
+      "productionLive": false
+    },
+    {
+      "path": "/gca/credit-usage",
+      "method": "GET/POST",
+      "access": "token-protected-admin",
+      "status": "prepared-worker-deploy-permission-pending",
+      "writtenOnlyAfterReviewedDelivery": true,
+      "productionLive": false
+    }
+  ],
+  "deployGates": [
+    {
+      "gate": 1,
+      "id": "read-only-readiness",
+      "command": "python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth",
+      "requiredPassChecks": [
+        "cloudflare-auth-session",
+        "cloudflare-d1-visible",
+        "cloudflare-worker-deploy-permission"
+      ],
+      "writesD1Records": false,
+      "deploysWorker": false,
+      "printsAdminReadToken": false,
+      "readsUserLedgers": false
+    },
+    {
+      "gate": 2,
+      "id": "remote-d1-migrations",
+      "command": "cd cloudflare/gca-registration-worker && npx wrangler d1 migrations apply gca_registration --remote",
+      "requiredAfter": "read-only-readiness",
+      "expectedMigrations": [
+        "0004_credit_usage_ledger.sql",
+        "0005_service_requests.sql"
+      ]
+    },
+    {
+      "gate": 3,
+      "id": "worker-deploy",
+      "command": "cd cloudflare/gca-registration-worker && npx wrangler deploy",
+      "requiredAfter": "remote-d1-migrations"
+    },
+    {
+      "gate": 4,
+      "id": "post-deploy-public-smoke",
+      "command": "python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes",
+      "requiredAfter": "worker-deploy",
+      "requiresAdminReadToken": false,
+      "writesTestRecords": false
+    },
+    {
+      "gate": 5,
+      "id": "post-deploy-admin-smoke",
+      "command": "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes",
+      "requiredAfter": "post-deploy-public-smoke",
+      "requiresAdminReadToken": true,
+      "printsAdminReadToken": false,
+      "publishesUserRecords": false
+    }
+  ],
+  "statusUpdateAllowedAfter": [
+    "cloudflare-auth-session passes",
+    "D1 visibility passes",
+    "Worker deploy permission passes",
+    "remote D1 migrations apply successfully",
+    "wrangler deploy succeeds",
+    "public smoke check passes with --include-pending-routes",
+    "admin smoke check passes with --include-pending-routes"
+  ],
+  "stopConditions": [
+    "readiness returns Authentication error [code: 10000]",
+    "remote D1 migration fails",
+    "wrangler deploy fails",
+    "/health does not expose gca_credit_usage_v1 and gca_service_request_v1",
+    "unauthenticated reads do not return authorization errors",
+    "admin smoke checks cannot read the new route response shapes",
+    "any command prints secrets or user record contents"
+  ],
+  "boundaries": {
+    "operatorOnly": true,
+    "requiresAdminReadToken": true,
+    "publicLedgerReadable": false,
+    "writesD1BeforeGate1": false,
+    "deploysWorkerBeforeGate1": false,
+    "connectsWallets": false,
+    "requestsWalletSignatures": false,
+    "sendsTransactions": false,
+    "transfersGca": false,
+    "createsTradingPermission": false,
+    "automaticCreditDeductionBeforeReview": false,
+    "productionLiveBeforeSmokeChecks": false
+  },
+  "safeClaims": [
+    "GCA has published a Worker Routes Handoff for the prepared service-request and credit-usage routes.",
+    "The service-request and credit-usage routes are prepared in source and D1 migrations.",
+    "The routes remain non-live until Cloudflare authentication, Worker deploy permission, remote D1 migrations, deploy, and public/admin smoke checks pass.",
+    "The routes are operator-only and token-protected; public visitors must not be able to read ledgers."
+  ],
+  "doNotClaim": [
+    "production self-service service delivery is live",
+    "credits are automatically deducted before operator review",
+    "the routes connect wallets or request wallet signatures",
+    "the routes send transactions, transfer GCA, or create trading permission",
+    "full user records, admin tokens, private evidence, or local export files are public"
+  ],
+  "officialLinks": {
+    "workerRoutesHandoffPage": "https://gcagochina.com/worker-routes-handoff.html",
+    "workerRoutesHandoff": "https://gcagochina.com/worker-routes-handoff.json",
+    "apiStatusPage": "https://gcagochina.com/api-status.html",
+    "apiStatus": "https://gcagochina.com/api-status.json",
+    "accessApiPage": "https://gcagochina.com/access-api.html",
+    "accessApi": "https://gcagochina.com/access-api.json",
+    "serviceDeliveryPlaybookPage": "https://gcagochina.com/service-delivery-playbook.html",
+    "serviceDeliveryPlaybook": "https://gcagochina.com/service-delivery-playbook.json",
+    "releaseGatesPage": "https://gcagochina.com/release-gates.html",
+    "releaseGates": "https://gcagochina.com/release-gates.json"
+  }
+}

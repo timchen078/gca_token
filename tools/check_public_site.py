@@ -117,6 +117,8 @@ LIQUIDATION_REPLAY_001_PAGE_URL = "https://gcagochina.com/liquidation-replay-001
 LIQUIDATION_REPLAY_001_URL = "https://gcagochina.com/liquidation-replay-001.json"
 SERVICE_DELIVERY_PLAYBOOK_PAGE_URL = "https://gcagochina.com/service-delivery-playbook.html"
 SERVICE_DELIVERY_PLAYBOOK_URL = "https://gcagochina.com/service-delivery-playbook.json"
+WORKER_ROUTES_HANDOFF_PAGE_URL = "https://gcagochina.com/worker-routes-handoff.html"
+WORKER_ROUTES_HANDOFF_URL = "https://gcagochina.com/worker-routes-handoff.json"
 UTILITY_PAGE_URL = "https://gcagochina.com/utility.html"
 UTILITY_URL = "https://gcagochina.com/utility.json"
 PRODUCT_PAGE_URL = "https://gcagochina.com/product.html"
@@ -4278,6 +4280,7 @@ def validate_data_page(text: str) -> None:
         "Issue 004 data",
         "Liquidation replay sample data",
         "Service delivery playbook data",
+        "Worker routes handoff data",
         "Publishing desk data",
         "Announcements data",
         "Content library data",
@@ -4301,6 +4304,7 @@ def validate_data_page(text: str) -> None:
         "member-access-brief-001.json",
         "liquidation-replay-001.json",
         "service-delivery-playbook.json",
+        "worker-routes-handoff.json",
         "operations.json",
         "zh-operations.html",
         "access-api.json",
@@ -4386,6 +4390,8 @@ def validate_site_map_page(text: str) -> None:
         "Member Program",
         "Operations",
         "API Status",
+        "Worker Routes Handoff",
+        "worker-routes-handoff.html",
         "api-status.html",
         "Daily Status",
         "daily-status.html",
@@ -6225,8 +6231,11 @@ def validate_narrative_page(text: str) -> None:
     assert_contains(text, "Published sample report", label)
     assert_contains(text, "Service Delivery Playbook", label)
     assert_contains(text, "Published operator-reviewed workflow", label)
+    assert_contains(text, "Worker Routes Handoff", label)
+    assert_contains(text, "Published deploy gate handoff", label)
     assert_contains(text, "liquidation-replay-001.html", label)
     assert_contains(text, "service-delivery-playbook.html", label)
+    assert_contains(text, "worker-routes-handoff.html", label)
     assert_contains(text, "gca/member-access/", label)
     assert_contains(text, "Review Queue", label)
     assert_contains(text, "Credits Ledger", label)
@@ -6324,6 +6333,18 @@ def validate_narrative_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong Service Delivery proof page")
     if product_proofs.get("service-delivery-playbook", {}).get("url") != SERVICE_DELIVERY_PLAYBOOK_URL:
         raise SiteCheckError(f"{label}: wrong Service Delivery proof json")
+    if live_workflows.get("worker-routes-handoff", {}).get("status") != "published-deploy-gate-handoff":
+        raise SiteCheckError(f"{label}: Worker Routes Handoff should be published")
+    if live_workflows.get("worker-routes-handoff", {}).get("publicUrl") != WORKER_ROUTES_HANDOFF_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong Worker Routes Handoff public URL")
+    if "remain non-live until Cloudflare auth" not in live_workflows.get("worker-routes-handoff", {}).get("claimBoundary", ""):
+        raise SiteCheckError(f"{label}: missing Worker Routes Handoff boundary")
+    if product_proofs.get("worker-routes-handoff", {}).get("status") != "published-deploy-gate-handoff":
+        raise SiteCheckError(f"{label}: missing Worker Routes Handoff published proof")
+    if product_proofs.get("worker-routes-handoff", {}).get("pageUrl") != WORKER_ROUTES_HANDOFF_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong Worker Routes Handoff proof page")
+    if product_proofs.get("worker-routes-handoff", {}).get("url") != WORKER_ROUTES_HANDOFF_URL:
+        raise SiteCheckError(f"{label}: wrong Worker Routes Handoff proof json")
     if "Liquidation Replay sample report" in payload.get("buildNext", []):
         raise SiteCheckError(f"{label}: Liquidation Replay should no longer be in buildNext")
     if "operator-reviewed service delivery playbook" in payload.get("buildNext", []):
@@ -6358,6 +6379,10 @@ def validate_narrative_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong serviceDeliveryPlaybookPage")
     if links.get("serviceDeliveryPlaybook") != SERVICE_DELIVERY_PLAYBOOK_URL:
         raise SiteCheckError(f"{label}: wrong serviceDeliveryPlaybook")
+    if links.get("workerRoutesHandoffPage") != WORKER_ROUTES_HANDOFF_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong workerRoutesHandoffPage")
+    if links.get("workerRoutesHandoff") != WORKER_ROUTES_HANDOFF_URL:
+        raise SiteCheckError(f"{label}: wrong workerRoutesHandoff")
     if links.get("liquidationReplay001Page") != LIQUIDATION_REPLAY_001_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong liquidationReplay001Page")
     if links.get("liquidationReplay001") != LIQUIDATION_REPLAY_001_URL:
@@ -6801,6 +6826,8 @@ def validate_service_delivery_playbook_page(text: str) -> None:
         "What Gets Recorded",
         "What Never Happens Here",
         "Route Status",
+        "Worker Routes Handoff",
+        "worker-routes-handoff.html",
         "Production Worker routes",
         "Cloudflare auth",
         "Copy-Ready Public Summary",
@@ -6898,6 +6925,10 @@ def validate_service_delivery_playbook_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong serviceDeliveryPlaybookPage")
     if links.get("serviceDeliveryPlaybook") != SERVICE_DELIVERY_PLAYBOOK_URL:
         raise SiteCheckError(f"{label}: wrong serviceDeliveryPlaybook")
+    if links.get("workerRoutesHandoffPage") != WORKER_ROUTES_HANDOFF_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong workerRoutesHandoffPage")
+    if links.get("workerRoutesHandoff") != WORKER_ROUTES_HANDOFF_URL:
+        raise SiteCheckError(f"{label}: wrong workerRoutesHandoff")
     if links.get("accessPortal") != ACCESS_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong accessPortal")
     if links.get("credits") != CREDITS_PAGE_URL:
@@ -6908,6 +6939,188 @@ def validate_service_delivery_playbook_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong operations")
     if links.get("liquidationReplay001Page") != LIQUIDATION_REPLAY_001_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong liquidationReplay001Page")
+    assert_no_forbidden_public_claims(json.dumps(payload), label)
+    assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
+    assert_not_contains(json.dumps(payload), "GCA/WETH", label)
+
+
+def validate_worker_routes_handoff_page(text: str) -> None:
+    label = "/worker-routes-handoff.html"
+    assert_social_preview_meta(text, label, WORKER_ROUTES_HANDOFF_PAGE_URL)
+    for expected in (
+        "GCA Worker Routes Handoff",
+        "Cloudflare Worker Deployment Handoff",
+        "Prepared, not production-live",
+        "Cloudflare error 10000",
+        "docs/gca_worker_pending_routes_deploy_handoff.md",
+        "Already Live Routes",
+        "Prepared But Non-Live",
+        "/gca/service-requests",
+        "/gca/credit-usage",
+        "Required Gate Order",
+        "Read-only readiness",
+        "Remote D1 migrations",
+        "Worker deploy",
+        "Post-Deploy Public Smoke",
+        "Post-Deploy Admin Smoke",
+        "python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth",
+        "npx wrangler d1 migrations apply gca_registration --remote",
+        "npx wrangler deploy",
+        "python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes",
+        "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes",
+        "Stop Conditions",
+        "Copy-Ready Status Summary",
+        "operator-only, token-protected",
+        "does not request wallet signatures",
+        "does not create trading permission",
+        WORKER_ROUTES_HANDOFF_PAGE_URL,
+    ):
+        assert_contains(text, expected, label)
+    assert_no_public_data_room_terms(text, label)
+    assert_no_forbidden_public_claims(text, label)
+
+
+def validate_worker_routes_handoff_json(text: str) -> None:
+    label = "/worker-routes-handoff.json"
+    payload = load_json(text, label)
+    current = payload.get("currentStatus", {})
+    prepared_routes = {item.get("path"): item for item in payload.get("preparedRoutes", []) if isinstance(item, dict)}
+    gates = payload.get("deployGates", [])
+    gate_map = {item.get("id"): item for item in gates if isinstance(item, dict)}
+    boundaries = payload.get("boundaries", {})
+    links = payload.get("officialLinks", {})
+
+    if payload.get("schema") != WORKER_ROUTES_HANDOFF_URL:
+        raise SiteCheckError(f"{label}: wrong schema")
+    if payload.get("pageUrl") != WORKER_ROUTES_HANDOFF_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong pageUrl")
+    if payload.get("status") != "worker-routes-handoff-v1-published":
+        raise SiteCheckError(f"{label}: wrong status")
+    if payload.get("handoffId") != "worker-routes-handoff-v1":
+        raise SiteCheckError(f"{label}: wrong handoffId")
+    if payload.get("lastUpdated") != "2026-06-11":
+        raise SiteCheckError(f"{label}: wrong lastUpdated")
+    if payload.get("chainId") != 8453:
+        raise SiteCheckError(f"{label}: wrong chainId")
+    if payload.get("contractAddress") != MAINNET_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong contractAddress")
+    if payload.get("workerBaseUrl") != "https://gca-registration-api.gcagochina.workers.dev":
+        raise SiteCheckError(f"{label}: wrong workerBaseUrl")
+    if payload.get("sourceDocument") != "docs/gca_worker_pending_routes_deploy_handoff.md":
+        raise SiteCheckError(f"{label}: wrong sourceDocument")
+    if "remain non-live" not in payload.get("scope", ""):
+        raise SiteCheckError(f"{label}: missing non-live scope boundary")
+
+    expected_status = {
+        "workerDryRun": "passed-2026-06-10",
+        "d1Visibility": "passed-2026-06-10",
+        "cloudflareAuthSession": "blocked-error-10000",
+        "workerDeployPermission": "blocked-error-10000",
+        "remoteMigrations": "not-applied-for-pending-routes",
+        "workerDeploy": "not-run-for-pending-routes",
+        "postDeployPublicSmoke": "not-run-for-pending-routes",
+        "postDeployAdminSmoke": "not-run-for-pending-routes",
+        "productionRouteStatus": "prepared-not-production-live",
+    }
+    for key, expected in expected_status.items():
+        if current.get(key) != expected:
+            raise SiteCheckError(f"{label}: wrong currentStatus {key}")
+
+    for route in (
+        "GET /health",
+        "POST /gca/member-access",
+        "token-protected GET /gca/member-ledger",
+    ):
+        if route not in payload.get("alreadyLiveRoutes", []):
+            raise SiteCheckError(f"{label}: missing already-live route {route}")
+
+    service_requests = prepared_routes.get("/gca/service-requests", {})
+    credit_usage = prepared_routes.get("/gca/credit-usage", {})
+    if service_requests.get("status") != "prepared-worker-deploy-permission-pending":
+        raise SiteCheckError(f"{label}: wrong service request status")
+    if service_requests.get("productionLive") is not False:
+        raise SiteCheckError(f"{label}: service request must not be production-live")
+    if service_requests.get("createsTradingPermission") is not False:
+        raise SiteCheckError(f"{label}: service request must not create trading permission")
+    if credit_usage.get("status") != "prepared-worker-deploy-permission-pending":
+        raise SiteCheckError(f"{label}: wrong credit usage status")
+    if credit_usage.get("writtenOnlyAfterReviewedDelivery") is not True:
+        raise SiteCheckError(f"{label}: credit usage must be written after reviewed delivery")
+    if credit_usage.get("productionLive") is not False:
+        raise SiteCheckError(f"{label}: credit usage must not be production-live")
+
+    if [item.get("id") for item in gates] != [
+        "read-only-readiness",
+        "remote-d1-migrations",
+        "worker-deploy",
+        "post-deploy-public-smoke",
+        "post-deploy-admin-smoke",
+    ]:
+        raise SiteCheckError(f"{label}: wrong deploy gate order")
+    readiness = gate_map.get("read-only-readiness", {})
+    if readiness.get("command") != "python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth":
+        raise SiteCheckError(f"{label}: wrong readiness command")
+    for key in ("writesD1Records", "deploysWorker", "printsAdminReadToken", "readsUserLedgers"):
+        if readiness.get(key) is not False:
+            raise SiteCheckError(f"{label}: readiness gate should not {key}")
+    expected_migrations = gate_map.get("remote-d1-migrations", {}).get("expectedMigrations", [])
+    for migration in ("0004_credit_usage_ledger.sql", "0005_service_requests.sql"):
+        if migration not in expected_migrations:
+            raise SiteCheckError(f"{label}: missing migration {migration}")
+    if "--include-pending-routes" not in gate_map.get("post-deploy-public-smoke", {}).get("command", ""):
+        raise SiteCheckError(f"{label}: missing pending-route public smoke flag")
+    if "--include-pending-routes" not in gate_map.get("post-deploy-admin-smoke", {}).get("command", ""):
+        raise SiteCheckError(f"{label}: missing pending-route admin smoke flag")
+
+    for gate in (
+        "cloudflare-auth-session passes",
+        "D1 visibility passes",
+        "Worker deploy permission passes",
+        "remote D1 migrations apply successfully",
+        "wrangler deploy succeeds",
+        "public smoke check passes with --include-pending-routes",
+        "admin smoke check passes with --include-pending-routes",
+    ):
+        if gate not in payload.get("statusUpdateAllowedAfter", []):
+            raise SiteCheckError(f"{label}: missing status gate {gate}")
+
+    for key in ("operatorOnly", "requiresAdminReadToken"):
+        if boundaries.get(key) is not True:
+            raise SiteCheckError(f"{label}: boundary {key} should be true")
+    for key in (
+        "publicLedgerReadable",
+        "writesD1BeforeGate1",
+        "deploysWorkerBeforeGate1",
+        "connectsWallets",
+        "requestsWalletSignatures",
+        "sendsTransactions",
+        "transfersGca",
+        "createsTradingPermission",
+        "automaticCreditDeductionBeforeReview",
+        "productionLiveBeforeSmokeChecks",
+    ):
+        if boundaries.get(key) is not False:
+            raise SiteCheckError(f"{label}: boundary {key} should be false")
+
+    if "GCA has published a Worker Routes Handoff for the prepared service-request and credit-usage routes." not in payload.get("safeClaims", []):
+        raise SiteCheckError(f"{label}: missing safe claim")
+    if "production self-service service delivery is live" not in payload.get("doNotClaim", []):
+        raise SiteCheckError(f"{label}: missing production self-service boundary")
+
+    expected_links = {
+        "workerRoutesHandoffPage": WORKER_ROUTES_HANDOFF_PAGE_URL,
+        "workerRoutesHandoff": WORKER_ROUTES_HANDOFF_URL,
+        "apiStatusPage": API_STATUS_PAGE_URL,
+        "apiStatus": API_STATUS_URL,
+        "serviceDeliveryPlaybookPage": SERVICE_DELIVERY_PLAYBOOK_PAGE_URL,
+        "serviceDeliveryPlaybook": SERVICE_DELIVERY_PLAYBOOK_URL,
+        "releaseGatesPage": RELEASE_GATES_PAGE_URL,
+        "releaseGates": RELEASE_GATES_URL,
+    }
+    for key, expected in expected_links.items():
+        if links.get(key) != expected:
+            raise SiteCheckError(f"{label}: wrong official link {key}")
+
     assert_no_forbidden_public_claims(json.dumps(payload), label)
     assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
     assert_not_contains(json.dumps(payload), "GCA/WETH", label)
@@ -8445,6 +8658,8 @@ def validate_api_status_page(text: str) -> None:
         "Live / no secrets",
         "Latest Check",
         "2026-06-10 passed",
+        "Worker Routes Handoff",
+        "worker-routes-handoff.html",
         "D1 visibility passed",
         "error <code>10000</code>",
         "Admin Read",
@@ -8661,6 +8876,10 @@ def validate_api_status_json(text: str) -> None:
         raise SiteCheckError(f"{label}: checks should be read-only")
     if handoff.get("document") != "docs/gca_worker_pending_routes_deploy_handoff.md":
         raise SiteCheckError(f"{label}: wrong pending routes handoff document")
+    if handoff.get("pageUrl") != WORKER_ROUTES_HANDOFF_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong pending routes handoff page")
+    if handoff.get("dataUrl") != WORKER_ROUTES_HANDOFF_URL:
+        raise SiteCheckError(f"{label}: wrong pending routes handoff json")
     if handoff.get("status") != "prepared-not-production-live":
         raise SiteCheckError(f"{label}: wrong pending routes handoff status")
     if "Cloudflare account authentication" not in handoff.get("blockedBy", ""):
@@ -8718,6 +8937,10 @@ def validate_api_status_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong GitHub workflow URL")
     if links.get("memberAccessPage") != MEMBER_ACCESS_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong member access page")
+    if links.get("workerRoutesHandoffPage") != WORKER_ROUTES_HANDOFF_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong workerRoutesHandoffPage")
+    if links.get("workerRoutesHandoff") != WORKER_ROUTES_HANDOFF_URL:
+        raise SiteCheckError(f"{label}: wrong workerRoutesHandoff")
     assert_no_forbidden_public_claims(json.dumps(payload), label)
 
 
@@ -13676,6 +13899,8 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/liquidation-replay-001.json",
         "https://gcagochina.com/service-delivery-playbook.html",
         "https://gcagochina.com/service-delivery-playbook.json",
+        "https://gcagochina.com/worker-routes-handoff.html",
+        "https://gcagochina.com/worker-routes-handoff.json",
         "https://gcagochina.com/gca/member-access/",
         "https://gcagochina.com/member-program.html",
         "https://gcagochina.com/member-program.json",
@@ -13760,6 +13985,8 @@ def validate_sitemap(text: str) -> None:
         "liquidation-replay-001.json",
         "service-delivery-playbook.html",
         "service-delivery-playbook.json",
+        "worker-routes-handoff.html",
+        "worker-routes-handoff.json",
     ):
         assert_sitemap_lastmod(path, "2026-06-11")
     for path in (
@@ -13862,6 +14089,8 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /liquidation-replay-001.json", label)
     assert_contains(text, "Allow: /service-delivery-playbook.html", label)
     assert_contains(text, "Allow: /service-delivery-playbook.json", label)
+    assert_contains(text, "Allow: /worker-routes-handoff.html", label)
+    assert_contains(text, "Allow: /worker-routes-handoff.json", label)
     assert_contains(text, "Allow: /member-access-brief-001.html", label)
     assert_contains(text, "Allow: /member-access-brief-001.json", label)
     assert_contains(text, "Allow: /market-quality.html", label)
@@ -14064,6 +14293,8 @@ CHECKS: list[EndpointCheck] = [
     ("/liquidation-replay-001.json", validate_liquidation_replay_001_json),
     ("/service-delivery-playbook.html", validate_service_delivery_playbook_page),
     ("/service-delivery-playbook.json", validate_service_delivery_playbook_json),
+    ("/worker-routes-handoff.html", validate_worker_routes_handoff_page),
+    ("/worker-routes-handoff.json", validate_worker_routes_handoff_json),
     ("/member-access-brief-001.html", validate_member_access_brief_001_page),
     ("/member-access-brief-001.json", validate_member_access_brief_001_json),
     ("/utility.html", validate_utility_page),

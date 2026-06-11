@@ -119,6 +119,8 @@ LIQUIDATION_REPLAY_001_PAGE_URL = "https://gcagochina.com/liquidation-replay-001
 LIQUIDATION_REPLAY_001_URL = "https://gcagochina.com/liquidation-replay-001.json"
 SERVICE_DELIVERY_PLAYBOOK_PAGE_URL = "https://gcagochina.com/service-delivery-playbook.html"
 SERVICE_DELIVERY_PLAYBOOK_URL = "https://gcagochina.com/service-delivery-playbook.json"
+WORKER_ROUTES_HANDOFF_PAGE_URL = "https://gcagochina.com/worker-routes-handoff.html"
+WORKER_ROUTES_HANDOFF_URL = "https://gcagochina.com/worker-routes-handoff.json"
 UTILITY_PAGE_URL = "https://gcagochina.com/utility.html"
 UTILITY_URL = "https://gcagochina.com/utility.json"
 PRODUCT_PAGE_URL = "https://gcagochina.com/product.html"
@@ -353,6 +355,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("/liquidation-replay-001.json", script)
         self.assertIn("/service-delivery-playbook.html", script)
         self.assertIn("/service-delivery-playbook.json", script)
+        self.assertIn("/worker-routes-handoff.html", script)
+        self.assertIn("/worker-routes-handoff.json", script)
         self.assertIn("/member-access-brief-001.html", script)
         self.assertIn("/member-access-brief-001.json", script)
         self.assertIn("/utility.html", script)
@@ -450,6 +454,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("validate_liquidation_replay_001_json", script)
         self.assertIn("validate_service_delivery_playbook_page", script)
         self.assertIn("validate_service_delivery_playbook_json", script)
+        self.assertIn("validate_worker_routes_handoff_page", script)
+        self.assertIn("validate_worker_routes_handoff_json", script)
         self.assertIn("validate_member_access_brief_001_page", script)
         self.assertIn("validate_member_access_brief_001_json", script)
         self.assertIn("validate_utility_page", script)
@@ -693,6 +699,8 @@ class LaunchPackageTests(unittest.TestCase):
         module.validate_liquidation_replay_001_json((ROOT / "site" / "liquidation-replay-001.json").read_text())
         module.validate_service_delivery_playbook_page((ROOT / "site" / "service-delivery-playbook.html").read_text())
         module.validate_service_delivery_playbook_json((ROOT / "site" / "service-delivery-playbook.json").read_text())
+        module.validate_worker_routes_handoff_page((ROOT / "site" / "worker-routes-handoff.html").read_text())
+        module.validate_worker_routes_handoff_json((ROOT / "site" / "worker-routes-handoff.json").read_text())
         module.validate_member_access_brief_001_page((ROOT / "site" / "member-access-brief-001.html").read_text())
         module.validate_member_access_brief_001_json((ROOT / "site" / "member-access-brief-001.json").read_text())
         module.validate_utility_page((ROOT / "site" / "utility.html").read_text())
@@ -1122,6 +1130,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Allow: /liquidation-replay-001.json", robots)
         self.assertIn("Allow: /service-delivery-playbook.html", robots)
         self.assertIn("Allow: /service-delivery-playbook.json", robots)
+        self.assertIn("Allow: /worker-routes-handoff.html", robots)
+        self.assertIn("Allow: /worker-routes-handoff.json", robots)
         self.assertIn("Allow: /member-access-brief-001.html", robots)
         self.assertIn("Allow: /member-access-brief-001.json", robots)
         self.assertIn("Allow: /privacy.html", robots)
@@ -1281,6 +1291,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(LIQUIDATION_REPLAY_001_URL, sitemap)
         self.assertIn(SERVICE_DELIVERY_PLAYBOOK_PAGE_URL, sitemap)
         self.assertIn(SERVICE_DELIVERY_PLAYBOOK_URL, sitemap)
+        self.assertIn(WORKER_ROUTES_HANDOFF_PAGE_URL, sitemap)
+        self.assertIn(WORKER_ROUTES_HANDOFF_URL, sitemap)
         self.assertIn(MEMBER_ACCESS_BRIEF_001_PAGE_URL, sitemap)
         self.assertIn(MEMBER_ACCESS_BRIEF_001_URL, sitemap)
         self.assertIn(PRIVACY_NOTICE_PAGE_URL, sitemap)
@@ -2846,6 +2858,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn('href="radar-issue-004.html"', site)
         self.assertIn('href="liquidation-replay-001.html"', site)
         self.assertIn('href="service-delivery-playbook.html"', site)
+        self.assertIn('href="worker-routes-handoff.html"', site)
         self.assertIn('href="member-access-brief-001.html"', site)
         self.assertIn('href="release-gates.html"', site)
         self.assertIn('href="privacy.html"', site)
@@ -4062,8 +4075,11 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Published sample report", page)
         self.assertIn("Service Delivery Playbook", page)
         self.assertIn("Published operator-reviewed workflow", page)
+        self.assertIn("Worker Routes Handoff", page)
+        self.assertIn("Published deploy gate handoff", page)
         self.assertIn("liquidation-replay-001.html", page)
         self.assertIn("service-delivery-playbook.html", page)
+        self.assertIn("worker-routes-handoff.html", page)
         self.assertIn("Service request / credit usage routes", page)
         self.assertIn("Worker deploy permission still required", page)
         self.assertIn("Account UI", page)
@@ -4125,6 +4141,12 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(product_proofs["service-delivery-playbook"]["status"], "published-operator-reviewed-workflow")
         self.assertEqual(product_proofs["service-delivery-playbook"]["pageUrl"], SERVICE_DELIVERY_PLAYBOOK_PAGE_URL)
         self.assertEqual(product_proofs["service-delivery-playbook"]["url"], SERVICE_DELIVERY_PLAYBOOK_URL)
+        self.assertEqual(live_workflows["worker-routes-handoff"]["status"], "published-deploy-gate-handoff")
+        self.assertEqual(live_workflows["worker-routes-handoff"]["publicUrl"], WORKER_ROUTES_HANDOFF_PAGE_URL)
+        self.assertIn("remain non-live until Cloudflare auth", live_workflows["worker-routes-handoff"]["claimBoundary"])
+        self.assertEqual(product_proofs["worker-routes-handoff"]["status"], "published-deploy-gate-handoff")
+        self.assertEqual(product_proofs["worker-routes-handoff"]["pageUrl"], WORKER_ROUTES_HANDOFF_PAGE_URL)
+        self.assertEqual(product_proofs["worker-routes-handoff"]["url"], WORKER_ROUTES_HANDOFF_URL)
         self.assertNotIn("Liquidation Replay sample report", narrative["buildNext"])
         self.assertNotIn("operator-reviewed service delivery playbook", narrative["buildNext"])
         self.assertIn("service request Worker route publish after Cloudflare deploy permission is restored", narrative["buildNext"])
@@ -4149,6 +4171,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(narrative["officialLinks"]["accessPortal"], "https://gcagochina.com/access.html")
         self.assertEqual(narrative["officialLinks"]["serviceDeliveryPlaybookPage"], SERVICE_DELIVERY_PLAYBOOK_PAGE_URL)
         self.assertEqual(narrative["officialLinks"]["serviceDeliveryPlaybook"], SERVICE_DELIVERY_PLAYBOOK_URL)
+        self.assertEqual(narrative["officialLinks"]["workerRoutesHandoffPage"], WORKER_ROUTES_HANDOFF_PAGE_URL)
+        self.assertEqual(narrative["officialLinks"]["workerRoutesHandoff"], WORKER_ROUTES_HANDOFF_URL)
         self.assertEqual(narrative["officialLinks"]["liquidationReplay001Page"], LIQUIDATION_REPLAY_001_PAGE_URL)
         self.assertEqual(narrative["officialLinks"]["liquidationReplay001"], LIQUIDATION_REPLAY_001_URL)
         self.assertEqual(narrative["officialLinks"]["memberAccessUi"], "https://gcagochina.com/gca/member-access/")
@@ -4372,6 +4396,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("What Gets Recorded", page)
         self.assertIn("What Never Happens Here", page)
         self.assertIn("Route Status", page)
+        self.assertIn("Worker Routes Handoff", page)
+        self.assertIn("worker-routes-handoff.html", page)
         self.assertIn("Production Worker routes", page)
         self.assertIn("Cloudflare auth", page)
         self.assertIn("Copy-Ready Public Summary", page)
@@ -4420,6 +4446,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("reports are financial advice or trading signals", playbook["publicClaimBoundaries"]["doNotClaim"])
         self.assertEqual(playbook["officialLinks"]["serviceDeliveryPlaybookPage"], SERVICE_DELIVERY_PLAYBOOK_PAGE_URL)
         self.assertEqual(playbook["officialLinks"]["serviceDeliveryPlaybook"], SERVICE_DELIVERY_PLAYBOOK_URL)
+        self.assertEqual(playbook["officialLinks"]["workerRoutesHandoffPage"], WORKER_ROUTES_HANDOFF_PAGE_URL)
+        self.assertEqual(playbook["officialLinks"]["workerRoutesHandoff"], WORKER_ROUTES_HANDOFF_URL)
         self.assertEqual(playbook["officialLinks"]["accessPortal"], ACCESS_PAGE_URL)
         self.assertEqual(playbook["officialLinks"]["credits"], CREDITS_PAGE_URL)
         self.assertEqual(playbook["officialLinks"]["reviewQueue"], REVIEW_QUEUE_PAGE_URL)
@@ -4427,6 +4455,108 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(playbook["officialLinks"]["liquidationReplay001Page"], LIQUIDATION_REPLAY_001_PAGE_URL)
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, json.dumps(playbook))
         self.assertNotIn("GCA/WETH", json.dumps(playbook))
+
+    def test_worker_routes_handoff_publishes_pending_route_deploy_gates(self):
+        page = (ROOT / "site" / "worker-routes-handoff.html").read_text()
+        handoff = json.loads((ROOT / "site" / "worker-routes-handoff.json").read_text())
+
+        self.assertIn("GCA Worker Routes Handoff", page)
+        self.assertIn("Cloudflare Worker Deployment Handoff", page)
+        self.assertIn("Prepared, not production-live", page)
+        self.assertIn("Cloudflare error 10000", page)
+        self.assertIn("docs/gca_worker_pending_routes_deploy_handoff.md", page)
+        self.assertIn("Already Live Routes", page)
+        self.assertIn("Prepared But Non-Live", page)
+        self.assertIn("/gca/service-requests", page)
+        self.assertIn("/gca/credit-usage", page)
+        self.assertIn("Required Gate Order", page)
+        self.assertIn("Read-only readiness", page)
+        self.assertIn("Remote D1 migrations", page)
+        self.assertIn("Worker deploy", page)
+        self.assertIn("Post-Deploy Public Smoke", page)
+        self.assertIn("Post-Deploy Admin Smoke", page)
+        self.assertIn("python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth", page)
+        self.assertIn("npx wrangler d1 migrations apply gca_registration --remote", page)
+        self.assertIn("npx wrangler deploy", page)
+        self.assertIn("python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes", page)
+        self.assertIn("python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes", page)
+        self.assertIn("Stop Conditions", page)
+        self.assertIn("Copy-Ready Status Summary", page)
+        self.assertIn("operator-only, token-protected", page)
+        self.assertIn("does not request wallet signatures", page)
+        self.assertIn("does not create trading permission", page)
+        self.assertIn(WORKER_ROUTES_HANDOFF_PAGE_URL, page)
+        self.assertNotIn('href="worker-routes-handoff.json"', page)
+        self.assertNotIn('href="data.html"', page)
+        self.assertNotIn(OLD_WETH_POOL_ADDRESS, page)
+        self.assertNotIn("GCA/WETH", page)
+
+        self.assertEqual(handoff["schema"], WORKER_ROUTES_HANDOFF_URL)
+        self.assertEqual(handoff["pageUrl"], WORKER_ROUTES_HANDOFF_PAGE_URL)
+        self.assertEqual(handoff["status"], "worker-routes-handoff-v1-published")
+        self.assertEqual(handoff["handoffId"], "worker-routes-handoff-v1")
+        self.assertEqual(handoff["lastUpdated"], "2026-06-11")
+        self.assertEqual(handoff["chainId"], 8453)
+        self.assertEqual(handoff["contractAddress"], MAINNET_ADDRESS)
+        self.assertEqual(handoff["workerBaseUrl"], "https://gca-registration-api.gcagochina.workers.dev")
+        self.assertEqual(handoff["sourceDocument"], "docs/gca_worker_pending_routes_deploy_handoff.md")
+        self.assertIn("remain non-live", handoff["scope"])
+        self.assertEqual(handoff["currentStatus"]["workerDryRun"], "passed-2026-06-10")
+        self.assertEqual(handoff["currentStatus"]["d1Visibility"], "passed-2026-06-10")
+        self.assertEqual(handoff["currentStatus"]["cloudflareAuthSession"], "blocked-error-10000")
+        self.assertEqual(handoff["currentStatus"]["workerDeployPermission"], "blocked-error-10000")
+        self.assertEqual(handoff["currentStatus"]["productionRouteStatus"], "prepared-not-production-live")
+        self.assertIn("GET /health", handoff["alreadyLiveRoutes"])
+        self.assertIn("POST /gca/member-access", handoff["alreadyLiveRoutes"])
+        self.assertIn("token-protected GET /gca/member-ledger", handoff["alreadyLiveRoutes"])
+        prepared_routes = {item["path"]: item for item in handoff["preparedRoutes"]}
+        self.assertEqual(prepared_routes["/gca/service-requests"]["status"], "prepared-worker-deploy-permission-pending")
+        self.assertFalse(prepared_routes["/gca/service-requests"]["productionLive"])
+        self.assertFalse(prepared_routes["/gca/service-requests"]["createsTradingPermission"])
+        self.assertEqual(prepared_routes["/gca/credit-usage"]["status"], "prepared-worker-deploy-permission-pending")
+        self.assertTrue(prepared_routes["/gca/credit-usage"]["writtenOnlyAfterReviewedDelivery"])
+        self.assertFalse(prepared_routes["/gca/credit-usage"]["productionLive"])
+        self.assertEqual([item["id"] for item in handoff["deployGates"]], [
+            "read-only-readiness",
+            "remote-d1-migrations",
+            "worker-deploy",
+            "post-deploy-public-smoke",
+            "post-deploy-admin-smoke",
+        ])
+        gates = {item["id"]: item for item in handoff["deployGates"]}
+        self.assertEqual(gates["read-only-readiness"]["command"], "python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth")
+        self.assertFalse(gates["read-only-readiness"]["writesD1Records"])
+        self.assertFalse(gates["read-only-readiness"]["deploysWorker"])
+        self.assertFalse(gates["read-only-readiness"]["printsAdminReadToken"])
+        self.assertIn("0004_credit_usage_ledger.sql", gates["remote-d1-migrations"]["expectedMigrations"])
+        self.assertIn("0005_service_requests.sql", gates["remote-d1-migrations"]["expectedMigrations"])
+        self.assertIn("--include-pending-routes", gates["post-deploy-public-smoke"]["command"])
+        self.assertIn("--include-pending-routes", gates["post-deploy-admin-smoke"]["command"])
+        self.assertTrue(handoff["boundaries"]["operatorOnly"])
+        self.assertTrue(handoff["boundaries"]["requiresAdminReadToken"])
+        for key in (
+            "publicLedgerReadable",
+            "connectsWallets",
+            "requestsWalletSignatures",
+            "sendsTransactions",
+            "transfersGca",
+            "createsTradingPermission",
+            "automaticCreditDeductionBeforeReview",
+            "productionLiveBeforeSmokeChecks",
+        ):
+            self.assertFalse(handoff["boundaries"][key])
+        self.assertIn("GCA has published a Worker Routes Handoff for the prepared service-request and credit-usage routes.", handoff["safeClaims"])
+        self.assertIn("production self-service service delivery is live", handoff["doNotClaim"])
+        self.assertEqual(handoff["officialLinks"]["workerRoutesHandoffPage"], WORKER_ROUTES_HANDOFF_PAGE_URL)
+        self.assertEqual(handoff["officialLinks"]["workerRoutesHandoff"], WORKER_ROUTES_HANDOFF_URL)
+        self.assertEqual(handoff["officialLinks"]["apiStatusPage"], API_STATUS_PAGE_URL)
+        self.assertEqual(handoff["officialLinks"]["apiStatus"], API_STATUS_URL)
+        self.assertEqual(handoff["officialLinks"]["serviceDeliveryPlaybookPage"], SERVICE_DELIVERY_PLAYBOOK_PAGE_URL)
+        self.assertEqual(handoff["officialLinks"]["serviceDeliveryPlaybook"], SERVICE_DELIVERY_PLAYBOOK_URL)
+        self.assertEqual(handoff["officialLinks"]["releaseGatesPage"], RELEASE_GATES_PAGE_URL)
+        self.assertEqual(handoff["officialLinks"]["releaseGates"], RELEASE_GATES_URL)
+        self.assertNotIn(OLD_WETH_POOL_ADDRESS, json.dumps(handoff))
+        self.assertNotIn("GCA/WETH", json.dumps(handoff))
 
     def test_member_access_brief_001_is_copyable_and_release_gated(self):
         page = (ROOT / "site" / "member-access-brief-001.html").read_text()
