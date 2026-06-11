@@ -11,7 +11,7 @@
 - Review status: ready-for-owner-resubmission
 - Return notice date: 2026-05-13
 - Latest return notice date: 2026-05-23
-- Last checked: 2026-06-11; BaseScan return remains open, the final owner package was generated at `2026-06-06T11:10:54Z`, the reviewer checklist references the `2026-06-10T09:16:45Z` public status package, and the live daily public status snapshot was refreshed at `2026-06-11T09:46:37Z`
+- Last checked: 2026-06-11; BaseScan return remains open, the final owner package was generated at `2026-06-06T11:10:54Z`, the reviewer checklist references the `2026-06-11T09:46:37Z` public status package, and the live daily public status snapshot was refreshed at `2026-06-11T09:46:37Z`
 - Reply inbox: `support@gcagochina.com`
 - Historical prior inbox: redacted non-domain legacy inbox
 
