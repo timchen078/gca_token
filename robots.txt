@@ -88,6 +88,8 @@ Allow: /radar.html
 Allow: /radar.json
 Allow: /radar-issue-004.html
 Allow: /radar-issue-004.json
+Allow: /liquidation-replay-001.html
+Allow: /liquidation-replay-001.json
 Allow: /member-access-brief-001.html
 Allow: /member-access-brief-001.json
 Allow: /listing-readiness.html
