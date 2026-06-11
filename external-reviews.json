@@ -1,7 +1,7 @@
 {
   "schema": "https://gcagochina.com/external-reviews.json",
   "pageUrl": "https://gcagochina.com/external-reviews.html",
-  "lastUpdated": "2026-06-10",
+  "lastUpdated": "2026-06-11",
   "projectName": "GCA",
   "tokenSymbol": "GCA",
   "network": "Base Mainnet",
@@ -19,6 +19,7 @@
     "baseScanHandoffPage": "https://gcagochina.com/basescan-handoff.html",
     "baseScanHandoff": "https://gcagochina.com/basescan-handoff.json",
     "baseScanChineseOwnerFlow": "https://gcagochina.com/zh-basescan-submit.html",
+    "baseScanChineseFollowup": "https://gcagochina.com/zh-basescan-followup.html",
     "onchainProofsPage": "https://gcagochina.com/onchain-proofs.html",
     "onchainProofs": "https://gcagochina.com/onchain-proofs.json",
     "walletWarningEvidencePage": "https://gcagochina.com/wallet-warning.html",
@@ -94,8 +95,8 @@
       "returnNoticeDate": "2026-05-13",
       "resubmissionDate": "2026-05-13",
       "latestReturnNoticeDate": "2026-05-23",
-      "lastCheckedDate": "2026-06-10",
-      "lastCheckedResult": "BaseScan returned the token profile update again as information-insufficient; Tim Chen official-domain professional profile evidence is published, the Project Profile BaseScan reviewer map is published, support@gcagochina.com is active as the project-domain email, the domain email setup plan, public evidence checklist, activation evidence packet, expanded BaseScan reply template, BaseScan Handoff copy blocks, and Chinese owner submission flow are published. The final owner submission package was regenerated on 2026-06-06T11:10:54Z, the daily public status snapshot was refreshed on 2026-06-10T09:16:45Z, and the 2026-05-30 DNS snapshot shows MX/SPF/DKIM/DMARC present, so readyForBaseScanEmailEvidence is true.",
+      "lastCheckedDate": "2026-06-11",
+      "lastCheckedResult": "BaseScan returned the token profile update again as information-insufficient; Tim Chen official-domain professional profile evidence is published, the Project Profile BaseScan reviewer map is published, support@gcagochina.com is active as the project-domain email, the domain email setup plan, public evidence checklist, activation evidence packet, expanded BaseScan reply template, BaseScan Handoff copy blocks, Chinese owner submission flow, and Chinese no-reply follow-up template are published. The final owner submission package was regenerated on 2026-06-06T11:10:54Z, the daily public status snapshot was refreshed on 2026-06-11T09:46:37Z, and the 2026-05-30 DNS snapshot shows MX/SPF/DKIM/DMARC present, so readyForBaseScanEmailEvidence is true. If there is still no reply, follow up inside the existing ticket and avoid duplicate token-profile submissions.",
       "returnReason": "information-insufficient",
       "remediationPage": "https://gcagochina.com/basescan-remediation.html",
       "domainEmailSetupPlan": "https://gcagochina.com/domain-email.html",
@@ -109,6 +110,7 @@
       "dailyStatusPage": "https://gcagochina.com/daily-status.html",
       "dailyStatus": "https://gcagochina.com/daily-status.json",
       "chineseOwnerSubmissionFlow": "https://gcagochina.com/zh-basescan-submit.html",
+      "chineseNoReplyFollowup": "https://gcagochina.com/zh-basescan-followup.html",
       "domainEmailDnsReadiness": {
         "checkedAt": "2026-05-30T16:24:34Z",
         "readyForBaseScanEmailEvidence": true,
@@ -127,7 +129,7 @@
       "projectProfileBaseScanMap": "https://gcagochina.com/project-profile.html#basescanMapTitle",
       "github": "https://github.com/timchen078/gca_token",
       "publicClaim": "The public BaseScan token profile update was returned again as information-insufficient on 2026-05-23. BaseScan profile publication is not approved or complete.",
-      "nextAction": "Use the Chinese owner flow at https://gcagochina.com/zh-basescan-submit.html and the BaseScan Handoff copy blocks at https://gcagochina.com/basescan-handoff.html with the Project Profile BaseScan reviewer map at https://gcagochina.com/project-profile.html#basescanMapTitle, domain email setup plan at https://gcagochina.com/domain-email.html, evidence checklist at https://gcagochina.com/domain-email-evidence.html, launch/domain_email_activation_runbook.md, and tools/check_domain_email_dns.py; keep the 2026-05-30 DNS snapshot ready, archive the activation evidence packet privately, include the Tim Chen professional profile URL, rerun public-site checks, then submit one clean update through the official BaseScan form from support@gcagochina.com."
+      "nextAction": "Use the Chinese owner flow at https://gcagochina.com/zh-basescan-submit.html and the BaseScan Handoff copy blocks at https://gcagochina.com/basescan-handoff.html with the Project Profile BaseScan reviewer map at https://gcagochina.com/project-profile.html#basescanMapTitle, domain email setup plan at https://gcagochina.com/domain-email.html, evidence checklist at https://gcagochina.com/domain-email-evidence.html, launch/domain_email_activation_runbook.md, and tools/check_domain_email_dns.py; keep the 2026-05-30 DNS snapshot ready, archive the activation evidence packet privately, include the Tim Chen professional profile URL, rerun public-site checks, then submit one clean update through the official BaseScan form from support@gcagochina.com. If the submitted ticket receives no reply, use https://gcagochina.com/zh-basescan-followup.html as an existing-ticket follow-up template instead of opening duplicate token-profile submissions."
     },
     "blockaidMetaMask": {
       "status": "owner-observed-no-warning-visible",
@@ -176,10 +178,10 @@
   "safePublicClaims": [
     "GCA is deployed on Base Mainnet with fixed total supply.",
     "BaseScan source and deployer-wallet ownership verification are complete.",
-    "The BaseScan token profile update was returned again as information-insufficient on 2026-05-23; owner-side remediation is ready for one clean resubmission.",
+    "The BaseScan token profile update was returned again as information-insufficient on 2026-05-23; owner-side remediation is ready for one clean resubmission and one existing-ticket no-reply follow-up if needed.",
     "The BaseScan domain email evidence gate is ready after the 2026-05-30 DNS snapshot: MX/SPF/DKIM/DMARC present.",
     "The Project Profile BaseScan reviewer map is published at https://gcagochina.com/project-profile.html#basescanMapTitle.",
-    "BaseScan Handoff copy blocks and the Chinese owner submission flow are published for one clean owner-controlled resubmission from support@gcagochina.com.",
+    "BaseScan Handoff copy blocks, the Chinese owner submission flow, and the Chinese no-reply follow-up template are published for owner-controlled BaseScan handling from support@gcagochina.com.",
     "The latest BaseScan final submission package was generated on 2026-06-06T11:10:54Z, and the daily public status snapshot confirms readyForBaseScanResubmission is true.",
     "GeckoTerminal token information was approved on 2026-05-11.",
     "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool.",
@@ -198,6 +200,7 @@
   ],
   "nextActions": [
     "Use the Chinese owner flow at https://gcagochina.com/zh-basescan-submit.html and the BaseScan Handoff copy blocks at https://gcagochina.com/basescan-handoff.html, keep support@gcagochina.com active, retain the activation evidence packet privately, rerun the final preflight, and submit one clean BaseScan update from the official domain mailbox.",
+    "If there is still no BaseScan reply after the clean support@gcagochina.com submission, use https://gcagochina.com/zh-basescan-followup.html to reply inside the existing ticket instead of opening duplicate token-profile submissions.",
     "Include the published Tim Chen professional profile URL https://gcagochina.com/tim-chen.html in the next BaseScan submission; add LinkedIn later if BaseScan specifically requires a third-party social-network profile.",
     "Use the expanded BaseScan reply template at https://gcagochina.com/platform-replies.html after the project-domain email is active, or earlier only if BaseScan specifically asks for more information.",
     "Keep monitoring wallet-warning UI before claiming any broader warning-free or security-vendor approval status.",
