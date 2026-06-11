@@ -92,6 +92,8 @@ Allow: /liquidation-replay-001.html
 Allow: /liquidation-replay-001.json
 Allow: /service-delivery-playbook.html
 Allow: /service-delivery-playbook.json
+Allow: /worker-routes-handoff.html
+Allow: /worker-routes-handoff.json
 Allow: /member-access-brief-001.html
 Allow: /member-access-brief-001.json
 Allow: /listing-readiness.html

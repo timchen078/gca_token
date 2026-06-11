@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GCA Worker Routes Handoff | Service Request Deployment</title>
+    <meta name="description" content="Public GCA handoff for the prepared Cloudflare Worker service-request and credit-usage routes, deploy gates, smoke checks, and no-custody boundaries.">
+    <link rel="canonical" href="https://gcagochina.com/worker-routes-handoff.html">
+    <link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">
+    <link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="GCA | Go China Access">
+    <meta property="og:title" content="GCA Worker Routes Handoff | Service Request Deployment">
+    <meta property="og:description" content="Public GCA handoff for prepared operator-only service-request and credit-usage routes, deploy gates, smoke checks, and no-custody boundaries.">
+    <meta property="og:url" content="https://gcagochina.com/worker-routes-handoff.html">
+    <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="GCA Worker Routes Handoff | Service Request Deployment">
+    <meta name="twitter:description" content="Public GCA handoff for prepared operator-only service-request and credit-usage routes, deploy gates, smoke checks, and no-custody boundaries.">
+    <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <style>
+      :root {
+        --ink: #121416;
+        --muted: #5c6670;
+        --soft: #f5f8f6;
+        --line: #dce5df;
+        --accent: #047857;
+        --accent-dark: #075e45;
+        --amber: #a16207;
+        --danger: #b91c1c;
+        --bg: #fbfcfb;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.55;
+      }
+
+      header {
+        border-bottom: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.94);
+        position: sticky;
+        top: 0;
+        z-index: 10;
+      }
+
+      .shell {
+        width: min(1120px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      nav {
+        min-height: 76px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        color: var(--ink);
+        font-weight: 900;
+        text-decoration: none;
+      }
+
+      .brand img {
+        width: 40px;
+        height: 40px;
+      }
+
+      .nav-links {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 14px;
+      }
+
+      .nav-links a,
+      .text-link {
+        color: #0b5cab;
+        font-weight: 750;
+        text-decoration: none;
+      }
+
+      main {
+        padding: 54px 0;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin-top: 0;
+      }
+
+      h1 {
+        max-width: 900px;
+        margin-bottom: 18px;
+        font-size: clamp(38px, 7vw, 78px);
+        line-height: 0.96;
+        letter-spacing: 0;
+      }
+
+      h2 {
+        margin-bottom: 16px;
+        font-size: 26px;
+        line-height: 1.15;
+        letter-spacing: 0;
+      }
+
+      h3 {
+        margin-bottom: 8px;
+        font-size: 18px;
+        letter-spacing: 0;
+      }
+
+      .eyebrow {
+        color: var(--accent);
+        font-size: 13px;
+        font-weight: 900;
+        letter-spacing: 0;
+        text-transform: uppercase;
+      }
+
+      .lead {
+        max-width: 920px;
+        color: var(--muted);
+        font-size: 19px;
+      }
+
+      .section {
+        margin-top: 28px;
+      }
+
+      .grid,
+      .facts,
+      .two {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .two {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .panel,
+      .fact {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fff;
+        min-width: 0;
+        padding: 22px;
+      }
+
+      .grid > *,
+      .facts > *,
+      .two > * {
+        min-width: 0;
+      }
+
+      .fact {
+        min-height: 136px;
+      }
+
+      .label {
+        display: block;
+        margin-bottom: 8px;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 850;
+        text-transform: uppercase;
+      }
+
+      .value {
+        display: block;
+        color: var(--ink);
+        font-size: 18px;
+        font-weight: 900;
+        overflow-wrap: anywhere;
+      }
+
+      .good {
+        color: var(--accent);
+      }
+
+      .pending {
+        color: var(--amber);
+      }
+
+      .blocked {
+        color: var(--danger);
+      }
+
+      .note {
+        color: var(--muted);
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 22px;
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 42px;
+        border: 1px solid var(--accent);
+        border-radius: 8px;
+        padding: 10px 14px;
+        background: #fff;
+        color: var(--accent-dark);
+        font-weight: 850;
+        text-decoration: none;
+      }
+
+      .button.primary {
+        background: var(--accent);
+        color: #fff;
+      }
+
+      .list {
+        display: grid;
+        gap: 0;
+      }
+
+      .row {
+        display: grid;
+        grid-template-columns: minmax(180px, 0.8fr) minmax(0, 1.6fr);
+        gap: 18px;
+        border-top: 1px solid var(--line);
+        padding: 15px 0;
+      }
+
+      .row:first-child {
+        border-top: 0;
+        padding-top: 0;
+      }
+
+      .row span {
+        color: var(--muted);
+        font-weight: 780;
+      }
+
+      .row strong {
+        font-size: 14px;
+        overflow-wrap: anywhere;
+      }
+
+      pre {
+        margin: 12px 0 0;
+        max-width: 100%;
+        overflow-x: auto;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #0f1720;
+        color: #edf7f2;
+        padding: 14px;
+        font-size: 13px;
+        line-height: 1.55;
+      }
+
+      code {
+        overflow-wrap: anywhere;
+      }
+
+      .warning {
+        background: #fff8ed;
+        border-color: #f3d19c;
+      }
+
+      ul {
+        margin: 0;
+        padding-left: 20px;
+      }
+
+      footer {
+        border-top: 1px solid var(--line);
+        padding: 28px 0;
+        color: var(--muted);
+        background: #fff;
+      }
+
+      @media (max-width: 860px) {
+        nav {
+          align-items: flex-start;
+          flex-direction: column;
+          padding: 16px 0;
+        }
+
+        .grid,
+        .facts,
+        .two {
+          grid-template-columns: 1fr;
+        }
+
+        .row {
+          grid-template-columns: 1fr;
+          gap: 6px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav class="shell" aria-label="Primary">
+        <a class="brand" href="index.html" aria-label="GCA home">
+          <img src="assets/gca-logo.svg" alt="GCA logo">
+          <span>GCA</span>
+        </a>
+        <div class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="api-status.html">API Status</a>
+          <a href="service-delivery-playbook.html">Service Delivery</a>
+          <a href="access-api.html">Access API</a>
+          <a href="release-gates.html">Release Gates</a>
+          <a href="site-map.html">Site Map</a>
+        </div>
+      </nav>
+    </header>
+
+    <main class="shell">
+      <section aria-labelledby="title">
+        <p class="eyebrow">Cloudflare Worker Deployment Handoff</p>
+        <h1 id="title">GCA Worker Routes Handoff</h1>
+        <p class="lead">This page publishes the operator deployment sequence for the prepared <code>/gca/service-requests</code> and <code>/gca/credit-usage</code> routes. The source, D1 migrations, and local dry-run are ready, but the production routes are still non-live until Cloudflare authentication, Worker deploy permission, remote D1 migrations, deploy, and smoke checks all pass.</p>
+        <p class="lead">The handoff is intentionally read-only until the deploy gates pass. It does not expose user records, does not print admin tokens, does not connect wallets, does not request wallet signatures, and does not create trading permission.</p>
+        <div class="actions">
+          <a class="button primary" href="api-status.html">API Status</a>
+          <a class="button" href="service-delivery-playbook.html">Service Delivery Playbook</a>
+          <a class="button" href="access-api.html">Access API Contract</a>
+          <a class="button" href="operations.html">Operations Runbook</a>
+          <a class="button" href="release-gates.html">Release Gates</a>
+        </div>
+      </section>
+
+      <section class="section facts" aria-label="Handoff facts">
+        <div class="fact">
+          <span class="label">Handoff ID</span>
+          <span class="value">worker-routes-handoff-v1</span>
+          <p class="note">Public deployment handoff for prepared operator routes.</p>
+        </div>
+        <div class="fact">
+          <span class="label">Current Status</span>
+          <span class="value pending">Prepared, not production-live</span>
+          <p class="note">Worker dry-run and D1 visibility passed on 2026-06-10.</p>
+        </div>
+        <div class="fact">
+          <span class="label">Current Blocker</span>
+          <span class="value blocked">Cloudflare error 10000</span>
+          <p class="note">Cloudflare auth session and Worker deploy permission must pass first.</p>
+        </div>
+        <div class="fact">
+          <span class="label">Prepared Routes</span>
+          <span class="value">2 operator routes</span>
+          <p class="note"><code>/gca/service-requests</code> and <code>/gca/credit-usage</code>.</p>
+        </div>
+        <div class="fact">
+          <span class="label">Access Model</span>
+          <span class="value">Token-protected admin</span>
+          <p class="note">Public visitors must not be able to read ledgers.</p>
+        </div>
+        <div class="fact">
+          <span class="label">Source Handoff</span>
+          <span class="value">docs/gca_worker_pending_routes_deploy_handoff.md</span>
+          <p class="note">Keep the docs copy as the operator source of truth.</p>
+        </div>
+      </section>
+
+      <section class="section two" aria-label="Live and prepared routes">
+        <div class="panel">
+          <h2>Already Live Routes</h2>
+          <div class="list">
+            <div class="row"><span>Public health</span><strong><code>GET /health</code></strong></div>
+            <div class="row"><span>Access config</span><strong><code>GET /gca/access-config</code></strong></div>
+            <div class="row"><span>Email registration</span><strong><code>POST /gca/email-registrations</code></strong></div>
+            <div class="row"><span>Contact suppression</span><strong><code>POST /gca/contact-suppressions</code></strong></div>
+            <div class="row"><span>Wallet verification</span><strong><code>POST /gca/wallet-verifications</code> with read-only <code>balanceOf</code></strong></div>
+            <div class="row"><span>Member access</span><strong><code>POST /gca/member-access</code> for eligible ledger records.</strong></div>
+          </div>
+        </div>
+        <div class="panel warning">
+          <h2>Prepared But Non-Live</h2>
+          <div class="list">
+            <div class="row"><span>Service request queue</span><strong><code>GET/POST /gca/service-requests</code>; prepared in source, pending Worker deploy.</strong></div>
+            <div class="row"><span>Credit usage ledger</span><strong><code>GET/POST /gca/credit-usage</code>; prepared in source, pending Worker deploy.</strong></div>
+            <div class="row"><span>Claim boundary</span><strong>Do not say these routes are production-live until both public and admin smoke checks pass with <code>--include-pending-routes</code>.</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="gatesTitle">
+        <h2 id="gatesTitle">Required Gate Order</h2>
+        <div class="list">
+          <div class="row"><span>1. Read-only readiness</span><strong>Run the deploy-readiness checker and require <code>cloudflare-auth-session</code>, D1 visibility, and Worker deploy permission to pass.</strong></div>
+          <div class="row"><span>2. Remote D1 migrations</span><strong>Apply <code>0004_credit_usage_ledger.sql</code> and <code>0005_service_requests.sql</code> only after Gate 1 passes.</strong></div>
+          <div class="row"><span>3. Worker deploy</span><strong>Deploy the updated Worker only after remote migrations complete successfully.</strong></div>
+          <div class="row"><span>4. Post-Deploy Public Smoke</span><strong>Confirm health/config versions, CORS, and unauthenticated admin-read rejection with <code>--include-pending-routes</code>.</strong></div>
+          <div class="row"><span>5. Post-Deploy Admin Smoke</span><strong>Use the local admin token file to check token-protected response shape without printing tokens or user records.</strong></div>
+          <div class="row"><span>6. Status update</span><strong>Only after Gates 1-5 pass, update public API status pages from prepared to live token-protected status.</strong></div>
+        </div>
+      </section>
+
+      <section class="section two" aria-label="Commands">
+        <div class="panel">
+          <h2>Gate 1 Command</h2>
+          <p class="note">Safe before deploy. It does not write D1 data, deploy Workers, read user ledgers, or print secrets.</p>
+          <pre>cd /Users/abc/Desktop/gca_token
+python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth</pre>
+        </div>
+        <div class="panel">
+          <h2>Gate 2 Command</h2>
+          <p class="note">Run only after the read-only readiness gate passes.</p>
+          <pre>cd /Users/abc/Desktop/gca_token/cloudflare/gca-registration-worker
+npx wrangler d1 migrations apply gca_registration --remote</pre>
+        </div>
+        <div class="panel">
+          <h2>Gate 3 Command</h2>
+          <p class="note">Run only after remote D1 migrations succeed.</p>
+          <pre>cd /Users/abc/Desktop/gca_token/cloudflare/gca-registration-worker
+npx wrangler deploy</pre>
+        </div>
+        <div class="panel">
+          <h2>Gate 4 Command</h2>
+          <p class="note">Public route check; no admin token required and no write test record.</p>
+          <pre>cd /Users/abc/Desktop/gca_token
+python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes</pre>
+        </div>
+        <div class="panel">
+          <h2>Gate 5 Command</h2>
+          <p class="note">Local operator check. Keep <code>ADMIN_READ_TOKEN</code> in the ignored token file and do not paste it into chat, commits, logs, or public pages.</p>
+          <pre>cd /Users/abc/Desktop/gca_token
+python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes</pre>
+        </div>
+        <div class="panel">
+          <h2>Optional Export After Success</h2>
+          <p class="note">Internal operator artifact only. Do not publish full user records.</p>
+          <pre>cd /Users/abc/Desktop/gca_token
+python3 tools/export_cloudflare_member_access.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 100 --include-pending-routes --output .gca_access_data/cloudflare_member_access_export.json</pre>
+        </div>
+      </section>
+
+      <section class="section two" aria-label="Safety boundaries">
+        <div class="panel">
+          <h2>Safe To Say</h2>
+          <ul>
+            <li>The service-request and credit-usage routes are prepared in source.</li>
+            <li>The deploy handoff is published for the owner/operator workflow.</li>
+            <li>The routes remain non-live until deploy gates and smoke checks pass.</li>
+            <li>The routes are operator-only and token-protected, not public user ledgers.</li>
+          </ul>
+        </div>
+        <div class="panel warning">
+          <h2>Do Not Claim Yet</h2>
+          <ul>
+            <li>Do not say production self-service service delivery is live.</li>
+            <li>Do not say credits are automatically deducted before operator review.</li>
+            <li>Do not say these routes connect wallets or request wallet signatures.</li>
+            <li>Do not say the workflow sends transactions, transfers GCA, or creates trading permission.</li>
+            <li>Do not publish full user records, admin tokens, private evidence, or local export files.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="stopTitle">
+        <h2 id="stopTitle">Stop Conditions</h2>
+        <div class="list">
+          <div class="row"><span>Cloudflare auth error</span><strong>Stop if readiness still returns <code>Authentication error [code: 10000]</code>.</strong></div>
+          <div class="row"><span>Migration failure</span><strong>Stop if remote D1 migrations fail or if the expected migration IDs are not applied.</strong></div>
+          <div class="row"><span>Deploy failure</span><strong>Stop if <code>wrangler deploy</code> fails or deploy history cannot be read.</strong></div>
+          <div class="row"><span>Health mismatch</span><strong>Stop if <code>/health</code> does not expose <code>gca_credit_usage_v1</code> and <code>gca_service_request_v1</code>.</strong></div>
+          <div class="row"><span>Auth boundary failure</span><strong>Stop if unauthenticated reads do not return authorization errors.</strong></div>
+          <div class="row"><span>Secret exposure</span><strong>Stop if any command prints secrets or user record contents.</strong></div>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="copyTitle">
+        <h2 id="copyTitle">Copy-Ready Status Summary</h2>
+        <p class="note">GCA has published the Worker Routes Handoff for the prepared service-request and credit-usage routes. The code and D1 migrations are ready, but production remains non-live until Cloudflare authentication, Worker deploy permission, remote D1 migrations, deploy, and public/admin smoke checks pass. The routes are operator-only, token-protected, no-custody, and do not request wallet signatures or create trading permission.</p>
+      </section>
+    </main>
+
+    <footer>
+      <div class="shell">GCA Worker Routes Handoff. Keep deployment gates, admin tokens, user ledgers, and public route claims separate.</div>
+    </footer>
+  </body>
+</html>

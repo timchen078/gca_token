@@ -93,6 +93,12 @@
       "status": "published-operator-reviewed-workflow",
       "publicUrl": "https://gcagochina.com/service-delivery-playbook.html",
       "claimBoundary": "operator-reviewed service delivery workflow only; production service-request and credit-usage Worker routes remain non-live until deploy gates pass"
+    },
+    {
+      "id": "worker-routes-handoff",
+      "status": "published-deploy-gate-handoff",
+      "publicUrl": "https://gcagochina.com/worker-routes-handoff.html",
+      "claimBoundary": "public deployment handoff only; /gca/service-requests and /gca/credit-usage remain non-live until Cloudflare auth, deploy permission, remote D1 migrations, deploy, and smoke checks pass"
     }
   ],
   "publishedProductProofs": [
@@ -111,6 +117,14 @@
       "pageUrl": "https://gcagochina.com/service-delivery-playbook.html",
       "url": "https://gcagochina.com/service-delivery-playbook.json",
       "claimBoundary": "operator-reviewed workflow only; production service-request and credit-usage Worker routes remain non-live until Cloudflare deploy gates pass"
+    },
+    {
+      "id": "worker-routes-handoff",
+      "module": "GCA Cloudflare Worker pending routes release",
+      "status": "published-deploy-gate-handoff",
+      "pageUrl": "https://gcagochina.com/worker-routes-handoff.html",
+      "url": "https://gcagochina.com/worker-routes-handoff.json",
+      "claimBoundary": "deploy handoff only; prepared routes are not production-live before Cloudflare auth, remote migrations, deploy, and smoke checks pass"
     }
   ],
   "buildNext": [
@@ -164,6 +178,8 @@
     "accessPortal": "https://gcagochina.com/access.html",
     "serviceDeliveryPlaybookPage": "https://gcagochina.com/service-delivery-playbook.html",
     "serviceDeliveryPlaybook": "https://gcagochina.com/service-delivery-playbook.json",
+    "workerRoutesHandoffPage": "https://gcagochina.com/worker-routes-handoff.html",
+    "workerRoutesHandoff": "https://gcagochina.com/worker-routes-handoff.json",
     "liquidationReplay001Page": "https://gcagochina.com/liquidation-replay-001.html",
     "liquidationReplay001": "https://gcagochina.com/liquidation-replay-001.json",
     "memberAccessUi": "https://gcagochina.com/gca/member-access/",

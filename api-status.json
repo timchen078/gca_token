@@ -196,6 +196,8 @@
   },
   "pendingRoutesDeployHandoff": {
     "document": "docs/gca_worker_pending_routes_deploy_handoff.md",
+    "pageUrl": "https://gcagochina.com/worker-routes-handoff.html",
+    "dataUrl": "https://gcagochina.com/worker-routes-handoff.json",
     "status": "prepared-not-production-live",
     "blockedBy": "Latest 2026-06-10 readiness check passed Worker dry-run and D1 visibility; blocked by Cloudflare account authentication and Worker deploy permission error [code: 10000]",
     "routes": [
@@ -258,6 +260,8 @@
     "accessApiPage": "https://gcagochina.com/access-api.html",
     "dataRoom": "https://gcagochina.com/data.html",
     "githubWorkflow": "https://github.com/timchen078/gca_token/actions/workflows/check-gca-registration-api.yml",
-    "memberAccessPage": "https://gcagochina.com/gca/member-access/"
+    "memberAccessPage": "https://gcagochina.com/gca/member-access/",
+    "workerRoutesHandoffPage": "https://gcagochina.com/worker-routes-handoff.html",
+    "workerRoutesHandoff": "https://gcagochina.com/worker-routes-handoff.json"
   }
 }
