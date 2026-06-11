@@ -34,6 +34,7 @@ ABOUT_PAGE_URL = "https://gcagochina.com/about.html"
 PROJECT_PROFILE_PAGE_URL = "https://gcagochina.com/project-profile.html"
 TOKENLIST_PAGE_URL = "https://gcagochina.com/tokenlist.html"
 ACTION_PLAN_PAGE_URL = "https://gcagochina.com/action-plan.html"
+ACTION_PLAN_JSON_URL = "https://gcagochina.com/action-plan.json"
 TEAM_PAGE_URL = "https://gcagochina.com/team.html"
 TIM_CHEN_PROFILE_PAGE_URL = "https://gcagochina.com/tim-chen.html"
 TIM_CHEN_PROFILE_URL = "https://gcagochina.com/tim-chen.json"
@@ -2077,6 +2078,107 @@ def validate_action_plan_page(text: str) -> None:
         assert_not_contains(text, f'href="{forbidden_href}"', label)
     assert_current_pool_text(text, label)
     assert_no_forbidden_public_claims(text, label)
+
+
+def validate_action_plan_json(text: str) -> None:
+    label = "/action-plan.json"
+    payload = load_json(text, label)
+    if payload.get("schema") != ACTION_PLAN_JSON_URL:
+        raise SiteCheckError(f"{label}: wrong schema")
+    if payload.get("pageUrl") != ACTION_PLAN_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong pageUrl")
+    if payload.get("lastUpdated") != "2026-06-11":
+        raise SiteCheckError(f"{label}: wrong lastUpdated")
+    if payload.get("projectName") != "GCA" or payload.get("tokenSymbol") != "GCA":
+        raise SiteCheckError(f"{label}: wrong project identity")
+    if payload.get("network") != "Base Mainnet" or payload.get("chainId") != 8453:
+        raise SiteCheckError(f"{label}: wrong network")
+    if payload.get("contractAddress") != MAINNET_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong contract address")
+    if payload.get("status") != "active-owner-action-plan":
+        raise SiteCheckError(f"{label}: wrong status")
+
+    market = payload.get("officialMarket") or {}
+    if market.get("pair") != "GCA/USDT":
+        raise SiteCheckError(f"{label}: wrong official pair")
+    if market.get("poolAddress") != OFFICIAL_POOL_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong pool address")
+    if market.get("quoteAssetAddress") != BASE_USDT_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong quote asset")
+    if market.get("liquidityDepthStatus") != "starter-depth-only":
+        raise SiteCheckError(f"{label}: wrong liquidity depth status")
+
+    facts = payload.get("currentFacts") or {}
+    required_facts = {
+        "baseScanSourceVerification": "complete",
+        "baseScanOwnerVerification": "complete",
+        "baseScanTokenProfile": "returned-information-insufficient-on-2026-05-23",
+        "domainEmail": "support@gcagochina.com",
+        "geckoTerminalTokenInfo": "approved-on-2026-05-11",
+        "thirdPartyAudit": "not-completed",
+        "coinGecko": "deferred",
+        "coinMarketCap": "deferred",
+    }
+    for key, expected in required_facts.items():
+        if facts.get(key) != expected:
+            raise SiteCheckError(f"{label}: wrong currentFacts.{key}")
+    if "MX/SPF/DKIM/DMARC present" not in str(facts.get("domainEmailDnsSnapshot") or ""):
+        raise SiteCheckError(f"{label}: missing domain email DNS snapshot")
+
+    queue = payload.get("priorityQueue")
+    if not isinstance(queue, list) or len(queue) < 5:
+        raise SiteCheckError(f"{label}: priorityQueue must contain at least five items")
+    expected_ids = [
+        "basescan-clean-owner-resubmission",
+        "legitimate-market-quality",
+        "member-access-operations",
+        "consistent-content-cadence",
+        "optional-trust-upgrades",
+    ]
+    if [item.get("id") for item in queue[:5]] != expected_ids:
+        raise SiteCheckError(f"{label}: wrong priorityQueue order")
+    first = queue[0] or {}
+    if first.get("ownerActionRequired") is not True:
+        raise SiteCheckError(f"{label}: BaseScan action must require owner action")
+    for expected in (
+        "https://gcagochina.com/project-profile.html#basescanMapTitle",
+        "https://gcagochina.com/tim-chen.html",
+        "https://gcagochina.com/domain-email-evidence.html",
+        "https://gcagochina.com/basescan-handoff.html",
+        "https://gcagochina.com/zh-basescan-submit.html",
+        "https://gcagochina.com/market-quality.html",
+        "https://gcagochina.com/review-queue.html",
+        "https://gcagochina.com/publishing-desk.html",
+        "https://gcagochina.com/audit-readiness.html",
+    ):
+        if expected not in json.dumps(queue):
+            raise SiteCheckError(f"{label}: missing queue link {expected}")
+
+    safe_claims = payload.get("safePublicClaims") or []
+    do_not_claim = payload.get("doNotClaim") or []
+    if "No third-party audit has been completed." not in safe_claims:
+        raise SiteCheckError(f"{label}: missing safe audit claim")
+    for expected in (
+        "BaseScan token-profile approval before publication",
+        "external audit completion before an independent report exists",
+        "deep liquidity, price support, returns, income, reimbursement, buybacks, or artificial volume",
+    ):
+        if expected not in do_not_claim:
+            raise SiteCheckError(f"{label}: missing doNotClaim entry {expected}")
+    for expected in (
+        ACTION_PLAN_PAGE_URL,
+        VERIFY_PAGE_URL,
+        STATUS_PAGE_URL,
+        "https://gcagochina.com/trust.html",
+        "https://gcagochina.com/external-reviews.html",
+        "https://gcagochina.com/support.html",
+        "https://gcagochina.com/site-map.html",
+    ):
+        if expected not in (payload.get("humanReadablePages") or []):
+            raise SiteCheckError(f"{label}: missing human readable page {expected}")
+    assert_no_public_data_room_terms(text, label)
+    assert_current_pool_text(text, label)
+    assert_no_forbidden_public_claims(json.dumps(payload), label)
 
 
 def validate_zh_cn_page(text: str) -> None:
@@ -4258,6 +4360,7 @@ def validate_data_page(text: str) -> None:
         "Domain email evidence checklist data",
         "BaseScan preflight data",
         "BaseScan handoff data",
+        "Action plan data",
         "Token safety data",
         "On-chain proofs data",
         "Liquidity statement data",
@@ -4295,6 +4398,7 @@ def validate_data_page(text: str) -> None:
         "domain-email-evidence.json",
         "basescan-preflight.json",
         "basescan-handoff.json",
+        "action-plan.json",
         "token-safety.json",
         "onchain-proofs.json",
         "liquidity.json",
@@ -13805,6 +13909,7 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/basescan-handoff.html",
         "https://gcagochina.com/basescan-handoff.json",
         "https://gcagochina.com/action-plan.html",
+        "https://gcagochina.com/action-plan.json",
         "https://gcagochina.com/register.html",
         "https://gcagochina.com/unsubscribe.html",
         "https://gcagochina.com/zh-cn.html",
@@ -13981,6 +14086,8 @@ def validate_sitemap(text: str) -> None:
     ):
         assert_sitemap_lastmod(path, "2026-06-10")
     for path in (
+        "action-plan.html",
+        "action-plan.json",
         "liquidation-replay-001.html",
         "liquidation-replay-001.json",
         "service-delivery-playbook.html",
@@ -14015,6 +14122,7 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /basescan-handoff.html", label)
     assert_contains(text, "Allow: /basescan-handoff.json", label)
     assert_contains(text, "Allow: /action-plan.html", label)
+    assert_contains(text, "Allow: /action-plan.json", label)
     assert_contains(text, "Allow: /register.html", label)
     assert_contains(text, "Allow: /unsubscribe.html", label)
     assert_contains(text, "Allow: /zh-cn.html", label)
@@ -14184,6 +14292,7 @@ CHECKS: list[EndpointCheck] = [
     ("/basescan-handoff.html", validate_basescan_handoff_page),
     ("/basescan-handoff.json", validate_basescan_handoff_json),
     ("/action-plan.html", validate_action_plan_page),
+    ("/action-plan.json", validate_action_plan_json),
     ("/zh-cn.html", validate_zh_cn_page),
     ("/zh-buy.html", validate_zh_buy_page),
     ("/zh-apply.html", validate_zh_apply_page),

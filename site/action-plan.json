@@ -1,0 +1,161 @@
+{
+  "schema": "https://gcagochina.com/action-plan.json",
+  "pageUrl": "https://gcagochina.com/action-plan.html",
+  "lastUpdated": "2026-06-11",
+  "projectName": "GCA",
+  "tokenSymbol": "GCA",
+  "network": "Base Mainnet",
+  "chainId": 8453,
+  "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+  "status": "active-owner-action-plan",
+  "summary": "GCA's current public action plan prioritizes one clean BaseScan owner resubmission, legitimate market quality, member access operations, consistent public content, and optional trust upgrades without artificial activity or unsupported claims.",
+  "officialMarket": {
+    "pair": "GCA/USDT",
+    "dex": "Uniswap v4",
+    "poolAddress": "0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "quoteAsset": "USDT",
+    "quoteAssetAddress": "0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2",
+    "liquidityDepthStatus": "starter-depth-only"
+  },
+  "currentFacts": {
+    "fixedSupply": "1,000,000,000 GCA",
+    "baseScanSourceVerification": "complete",
+    "baseScanOwnerVerification": "complete",
+    "baseScanTokenProfile": "returned-information-insufficient-on-2026-05-23",
+    "domainEmail": "support@gcagochina.com",
+    "domainEmailDnsSnapshot": "2026-05-30: MX/SPF/DKIM/DMARC present",
+    "geckoTerminalTokenInfo": "approved-on-2026-05-11",
+    "walletWarningOwnerObservation": "owner-reported-no-warning-visible-on-2026-05-14",
+    "thirdPartyAudit": "not-completed",
+    "coinGecko": "deferred",
+    "coinMarketCap": "deferred"
+  },
+  "priorityQueue": [
+    {
+      "rank": 1,
+      "id": "basescan-clean-owner-resubmission",
+      "title": "Submit one clean BaseScan update",
+      "status": "ready-for-owner-action",
+      "ownerActionRequired": true,
+      "publicEvidenceReady": true,
+      "summary": "Use the official-domain mailbox, Project Profile BaseScan map, Tim Chen profile, domain email evidence checklist, BaseScan Handoff copy blocks, and Chinese owner flow for one clean BaseScan token-profile resubmission.",
+      "links": [
+        "https://gcagochina.com/project-profile.html#basescanMapTitle",
+        "https://gcagochina.com/tim-chen.html",
+        "https://gcagochina.com/domain-email.html",
+        "https://gcagochina.com/domain-email-evidence.html",
+        "https://gcagochina.com/basescan-handoff.html",
+        "https://gcagochina.com/zh-basescan-submit.html",
+        "https://gcagochina.com/basescan-preflight.html"
+      ],
+      "boundaries": [
+        "No wallet transaction is required.",
+        "Do not open duplicate BaseScan token-profile submissions while an existing ticket is pending.",
+        "Do not claim BaseScan token-profile approval before BaseScan publishes it."
+      ]
+    },
+    {
+      "rank": 2,
+      "id": "legitimate-market-quality",
+      "title": "Improve market quality legitimately",
+      "status": "ongoing",
+      "ownerActionRequired": false,
+      "publicEvidenceReady": true,
+      "summary": "Keep official market links consistent, educate users, publish organic project updates, and consider deeper transparent liquidity only through owner-approved on-chain actions.",
+      "links": [
+        "https://gcagochina.com/markets.html",
+        "https://gcagochina.com/liquidity.html",
+        "https://gcagochina.com/market-quality.html",
+        "https://gcagochina.com/listing-readiness.html"
+      ],
+      "boundaries": [
+        "Do not use artificial activity, wash trading, or fake volume.",
+        "Do not claim deep liquidity while the pool remains starter-depth only."
+      ]
+    },
+    {
+      "rank": 3,
+      "id": "member-access-operations",
+      "title": "Make member access operations real",
+      "status": "live-for-intake-and-manual-review",
+      "ownerActionRequired": false,
+      "publicEvidenceReady": true,
+      "summary": "Public intake, read-only wallet checks, eligible ledger records, support workflow, and service delivery references are live; continue improving review operations and member status visibility.",
+      "links": [
+        "https://gcagochina.com/access.html",
+        "https://gcagochina.com/access-api.html",
+        "https://gcagochina.com/review-queue.html",
+        "https://gcagochina.com/operations.html",
+        "https://gcagochina.com/member-ledger.html",
+        "https://gcagochina.com/member-benefit.html"
+      ],
+      "boundaries": [
+        "Do not describe credits or member benefits as cash, income, automatic token claims, or trading permission.",
+        "The 10,000 GCA member benefit remains manual-review only."
+      ]
+    },
+    {
+      "rank": 4,
+      "id": "consistent-content-cadence",
+      "title": "Publish consistent public content",
+      "status": "ongoing",
+      "ownerActionRequired": false,
+      "publicEvidenceReady": true,
+      "summary": "Maintain the Go China narrative with project updates, risk education, product previews, and member-access explainers without price promises.",
+      "links": [
+        "https://gcagochina.com/campaign.html",
+        "https://gcagochina.com/content-library.html",
+        "https://gcagochina.com/publishing-desk.html",
+        "https://gcagochina.com/radar.html"
+      ],
+      "boundaries": [
+        "Do not promise price movement, returns, reimbursement, buybacks, or guaranteed platform outcomes."
+      ]
+    },
+    {
+      "rank": 5,
+      "id": "optional-trust-upgrades",
+      "title": "Choose trust upgrades only when needed",
+      "status": "optional-deferred",
+      "ownerActionRequired": true,
+      "publicEvidenceReady": true,
+      "summary": "Third-party audit, LP lock, Safe multisig, reserve lock, or vesting can improve reviewer confidence but require independent vendors or explicit owner on-chain action.",
+      "links": [
+        "https://gcagochina.com/audit-readiness.html",
+        "https://gcagochina.com/custody-roadmap.html",
+        "https://gcagochina.com/reserve-statement.html",
+        "https://gcagochina.com/risk-remediation.html"
+      ],
+      "boundaries": [
+        "Do not claim an external audit before an independent report is completed and published.",
+        "Do not claim reserves or LP are locked, vested, or multisig-controlled before on-chain evidence exists."
+      ]
+    }
+  ],
+  "safePublicClaims": [
+    "GCA is a fixed-supply ERC-20 token on Base Mainnet.",
+    "BaseScan source verification and deployer-wallet ownership verification are complete.",
+    "The public BaseScan token profile update was returned again as information-insufficient on 2026-05-23.",
+    "support@gcagochina.com is the official project-domain mailbox for platform communication.",
+    "GeckoTerminal token information was approved on 2026-05-11.",
+    "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool.",
+    "Current liquidity is starter-depth only.",
+    "No third-party audit has been completed."
+  ],
+  "doNotClaim": [
+    "BaseScan token-profile approval before publication",
+    "CoinGecko or CoinMarketCap listing before publication",
+    "external audit completion before an independent report exists",
+    "locked reserves, vested reserves, multisig reserves, or locked LP before on-chain evidence exists",
+    "deep liquidity, price support, returns, income, reimbursement, buybacks, or artificial volume"
+  ],
+  "humanReadablePages": [
+    "https://gcagochina.com/action-plan.html",
+    "https://gcagochina.com/verify.html",
+    "https://gcagochina.com/status.html",
+    "https://gcagochina.com/trust.html",
+    "https://gcagochina.com/external-reviews.html",
+    "https://gcagochina.com/support.html",
+    "https://gcagochina.com/site-map.html"
+  ]
+}

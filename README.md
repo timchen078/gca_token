@@ -110,6 +110,7 @@ Export the same review package directly from local JSONL data without starting t
 - Public roadmap page: `site/roadmap.html`
 - Public roadmap JSON: `site/roadmap.json`
 - Public next-step action plan: `site/action-plan.html`
+- Public next-step action plan JSON: `site/action-plan.json`
 - Public community kit page: `site/community.html`
 - Public community kit JSON: `site/community.json`
 - Public narrative system page: `site/narrative.html`
