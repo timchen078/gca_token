@@ -50,6 +50,8 @@ BASESCAN_PREFLIGHT_PAGE_URL = "https://gcagochina.com/basescan-preflight.html"
 BASESCAN_PREFLIGHT_URL = "https://gcagochina.com/basescan-preflight.json"
 BASESCAN_HANDOFF_PAGE_URL = "https://gcagochina.com/basescan-handoff.html"
 BASESCAN_HANDOFF_URL = "https://gcagochina.com/basescan-handoff.json"
+BASESCAN_FOLLOWUP_PAGE_URL = "https://gcagochina.com/basescan-followup.html"
+BASESCAN_FOLLOWUP_URL = "https://gcagochina.com/basescan-followup.json"
 GITHUB_REPO_URL = "https://github.com/timchen078/gca_token"
 ZH_CN_PAGE_URL = "https://gcagochina.com/zh-cn.html"
 ZH_BUY_PAGE_URL = "https://gcagochina.com/zh-buy.html"
@@ -602,6 +604,8 @@ class LaunchPackageTests(unittest.TestCase):
         module.validate_basescan_preflight_json((ROOT / "site" / "basescan-preflight.json").read_text())
         module.validate_basescan_handoff_page((ROOT / "site" / "basescan-handoff.html").read_text())
         module.validate_basescan_handoff_json((ROOT / "site" / "basescan-handoff.json").read_text())
+        module.validate_basescan_followup_page((ROOT / "site" / "basescan-followup.html").read_text())
+        module.validate_basescan_followup_json((ROOT / "site" / "basescan-followup.json").read_text())
         module.validate_data_page((ROOT / "site" / "data.html").read_text())
         module.validate_site_map_page((ROOT / "site" / "site-map.html").read_text())
         module.validate_action_plan_page((ROOT / "site" / "action-plan.html").read_text())
@@ -1029,6 +1033,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Allow: /basescan-preflight.json", robots)
         self.assertIn("Allow: /basescan-handoff.html", robots)
         self.assertIn("Allow: /basescan-handoff.json", robots)
+        self.assertIn("Allow: /basescan-followup.html", robots)
+        self.assertIn("Allow: /basescan-followup.json", robots)
         self.assertIn("Allow: /action-plan.html", robots)
         self.assertIn("Allow: /zh-cn.html", robots)
         self.assertIn("Allow: /zh-buy.html", robots)
@@ -1183,6 +1189,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(BASESCAN_PREFLIGHT_URL, sitemap)
         self.assertIn(BASESCAN_HANDOFF_PAGE_URL, sitemap)
         self.assertIn(BASESCAN_HANDOFF_URL, sitemap)
+        self.assertIn(BASESCAN_FOLLOWUP_PAGE_URL, sitemap)
+        self.assertIn(BASESCAN_FOLLOWUP_URL, sitemap)
         self.assertIn(ACTION_PLAN_PAGE_URL, sitemap)
         self.assertIn(ZH_CN_PAGE_URL, sitemap)
         self.assertIn(ZH_BUY_PAGE_URL, sitemap)
@@ -2327,6 +2335,80 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertFalse(data["boundaries"]["submitsBaseScanRequest"])
         self.assertFalse(data["boundaries"]["claimsBaseScanApproval"])
         self.assertFalse(data["boundaries"]["publishesLocalLaunchArtifacts"])
+
+    def test_basescan_followup_page_and_json_prepare_no_reply_ticket_reply(self):
+        page = (ROOT / "site" / "basescan-followup.html").read_text()
+        data = json.loads((ROOT / "site" / "basescan-followup.json").read_text())
+
+        self.assertIn("GCA BaseScan Follow-Up", page)
+        self.assertIn("BaseScan Ticket Follow-Up", page)
+        self.assertIn("support@gcagochina.com", page)
+        self.assertIn("Returned; ready for owner resubmission", page)
+        self.assertIn(MAINNET_ADDRESS, page)
+        self.assertIn("Existing ticket only", page)
+        self.assertIn("does not submit BaseScan forms", page)
+        self.assertIn("transfer tokens", page)
+        self.assertIn("approve swaps", page)
+        self.assertIn("No duplicate tickets", page)
+        self.assertIn("reply inside the existing ticket", page)
+        self.assertIn("Project and Team", page)
+        self.assertIn("BaseScan Package", page)
+        self.assertIn("Domain Email", page)
+        self.assertIn("Contract and Supply", page)
+        self.assertIn("Market Route", page)
+        self.assertIn("Review Boundaries", page)
+        self.assertIn("No-Reply Status Check", page)
+        self.assertIn("Follow-up: GCA Token Profile Update", page)
+        self.assertIn("Official project email: support@gcagochina.com", page)
+        self.assertIn("English follow-up page: https://gcagochina.com/basescan-followup.html", page)
+        self.assertIn("Chinese follow-up page: https://gcagochina.com/zh-basescan-followup.html", page)
+        self.assertIn("2026-06-11T12:01:21Z", page)
+        self.assertIn("readyForBaseScanResubmission as true", page)
+        self.assertIn("avoid duplicate token-profile submissions", page)
+        self.assertIn("Before Sending", page)
+        self.assertIn("Do Not Claim", page)
+        self.assertIn("BaseScan approval", page)
+        self.assertIn("Third-party audit", page)
+        self.assertIn("Reserve or LP lock", page)
+        self.assertIn("Market quality", page)
+        self.assertIn("Wallet or contract action", page)
+        self.assertIn("does not require approve, swap, transfer, wallet signature, or contract interaction", page)
+        self.assertNotIn('href="basescan-followup.json"', page)
+        self.assertNotIn('href="basescan-handoff.json"', page)
+        self.assertNotIn(OLD_WETH_POOL_ADDRESS, page)
+
+        self.assertEqual(data["schema"], BASESCAN_FOLLOWUP_URL)
+        self.assertEqual(data["pageUrl"], BASESCAN_FOLLOWUP_PAGE_URL)
+        self.assertEqual(data["status"], "existing-ticket-followup-ready")
+        self.assertEqual(data["lastUpdated"], "2026-06-11")
+        self.assertEqual(data["chainId"], 8453)
+        self.assertEqual(data["contractAddress"], MAINNET_ADDRESS)
+        self.assertEqual(data["officialMailbox"], "support@gcagochina.com")
+        self.assertIn("readyForBaseScanResubmission is true", json.dumps(data["useConditions"]))
+        self.assertEqual(data["officialLinks"]["baseScanHandoff"], BASESCAN_HANDOFF_PAGE_URL)
+        self.assertEqual(data["officialLinks"]["baseScanPreflight"], BASESCAN_PREFLIGHT_PAGE_URL)
+        self.assertEqual(data["officialLinks"]["projectProfileBaseScanMap"], f"{PROJECT_PROFILE_PAGE_URL}#basescanMapTitle")
+        self.assertEqual(data["officialLinks"]["timChenProfessionalProfile"], TIM_CHEN_PROFILE_PAGE_URL)
+        self.assertEqual(data["officialLinks"]["domainEmailEvidence"], DOMAIN_EMAIL_EVIDENCE_PAGE_URL)
+        self.assertEqual(data["officialLinks"]["englishFollowup"], BASESCAN_FOLLOWUP_PAGE_URL)
+        self.assertEqual(data["officialLinks"]["chineseFollowup"], ZH_BASESCAN_FOLLOWUP_PAGE_URL)
+        self.assertIn("Follow-up: GCA Token Profile Update", data["followupTemplate"]["subject"])
+        self.assertIn(BASESCAN_FOLLOWUP_PAGE_URL, data["followupTemplate"]["body"])
+        self.assertIn(ZH_BASESCAN_FOLLOWUP_PAGE_URL, data["followupTemplate"]["body"])
+        self.assertIn("avoid duplicate token-profile submissions", data["followupTemplate"]["body"])
+        for key in (
+            "submitsBaseScanRequest",
+            "sendsEmail",
+            "uploadsFiles",
+            "signsWalletMessages",
+            "touchesWalletsOrContracts",
+            "opensDuplicateTickets",
+            "claimsBaseScanApproval",
+            "claimsThirdPartyAudit",
+            "claimsLockedReserveOrLp",
+            "claimsDeepLiquidityOrPriceSupport",
+        ):
+            self.assertFalse(data["boundaries"][key])
 
     def test_zh_basescan_preflight_page_guides_owner_without_json_links(self):
         page = (ROOT / "site" / "zh-basescan-preflight.html").read_text()
@@ -7485,7 +7567,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertNotIn('href="data.html"', page)
         self.assertIn("BaseScan source code verification", page)
         self.assertIn("Returned again 2026-05-23", page)
-        self.assertIn("official-domain package and Chinese no-reply follow-up template are ready", page)
+        self.assertIn("official-domain package, English follow-up pack, and Chinese no-reply follow-up template are ready", page)
         self.assertIn("Chinese no-reply follow-up template are now published", page)
         self.assertIn("avoid duplicate token-profile submissions", page)
         self.assertIn("existing ticket", page)
@@ -7499,6 +7581,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Email Evidence Packet", page)
         self.assertIn("BaseScan Handoff", page)
         self.assertIn("basescan-handoff.html", page)
+        self.assertIn("BaseScan Follow-Up", page)
+        self.assertIn("basescan-followup.html", page)
         self.assertIn("中文 BaseScan 提交流程", page)
         self.assertIn("zh-basescan-submit.html", page)
         self.assertIn("no wallet transaction, approve, swap, or contract operation is needed", page)
@@ -7514,6 +7598,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("MX/SPF/DKIM/DMARC present", page)
         self.assertIn("readyForBaseScanEmailEvidence true", page)
         self.assertIn("expanded BaseScan reply template", page)
+        self.assertIn("English no-reply follow-up pack", page)
         self.assertIn("Platform Replies", page)
         self.assertIn("platform-replies.html", page)
         self.assertIn("Owner observed no warning visible 2026-05-14", page)
@@ -7574,6 +7659,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(reviews["officialLinks"]["baseScanRemediation"], BASESCAN_REMEDIATION_URL)
         self.assertEqual(reviews["officialLinks"]["baseScanHandoffPage"], BASESCAN_HANDOFF_PAGE_URL)
         self.assertEqual(reviews["officialLinks"]["baseScanHandoff"], BASESCAN_HANDOFF_URL)
+        self.assertEqual(reviews["officialLinks"]["baseScanFollowupPage"], BASESCAN_FOLLOWUP_PAGE_URL)
+        self.assertEqual(reviews["officialLinks"]["baseScanFollowup"], BASESCAN_FOLLOWUP_URL)
         self.assertEqual(reviews["officialLinks"]["baseScanChineseOwnerFlow"], ZH_BASESCAN_SUBMIT_PAGE_URL)
         self.assertEqual(reviews["officialLinks"]["baseScanChineseFollowup"], "https://gcagochina.com/zh-basescan-followup.html")
         self.assertEqual(reviews["officialLinks"]["onchainProofsPage"], ONCHAIN_PROOFS_PAGE_URL)
@@ -7592,6 +7679,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("activation evidence packet", reviews["reviews"]["baseScanTokenProfile"]["lastCheckedResult"])
         self.assertIn("expanded BaseScan reply template", reviews["reviews"]["baseScanTokenProfile"]["lastCheckedResult"])
         self.assertIn("BaseScan Handoff copy blocks", reviews["reviews"]["baseScanTokenProfile"]["lastCheckedResult"])
+        self.assertIn("English no-reply follow-up pack", reviews["reviews"]["baseScanTokenProfile"]["lastCheckedResult"])
         self.assertIn("Chinese owner submission flow", reviews["reviews"]["baseScanTokenProfile"]["lastCheckedResult"])
         self.assertIn("Chinese no-reply follow-up template", reviews["reviews"]["baseScanTokenProfile"]["lastCheckedResult"])
         self.assertIn("avoid duplicate token-profile submissions", reviews["reviews"]["baseScanTokenProfile"]["lastCheckedResult"])
@@ -7607,14 +7695,18 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(reviews["reviews"]["baseScanTokenProfile"]["domainEmailActivationEvidencePacket"], "https://gcagochina.com/domain-email.html#evidenceTitle")
         self.assertEqual(reviews["reviews"]["baseScanTokenProfile"]["baseScanHandoffPage"], BASESCAN_HANDOFF_PAGE_URL)
         self.assertEqual(reviews["reviews"]["baseScanTokenProfile"]["baseScanHandoff"], BASESCAN_HANDOFF_URL)
+        self.assertEqual(reviews["reviews"]["baseScanTokenProfile"]["baseScanFollowupPage"], BASESCAN_FOLLOWUP_PAGE_URL)
+        self.assertEqual(reviews["reviews"]["baseScanTokenProfile"]["baseScanFollowup"], BASESCAN_FOLLOWUP_URL)
         self.assertEqual(reviews["reviews"]["baseScanTokenProfile"]["dailyStatusPage"], DAILY_STATUS_PAGE_URL)
         self.assertEqual(reviews["reviews"]["baseScanTokenProfile"]["dailyStatus"], DAILY_STATUS_URL)
         self.assertEqual(reviews["reviews"]["baseScanTokenProfile"]["chineseOwnerSubmissionFlow"], ZH_BASESCAN_SUBMIT_PAGE_URL)
+        self.assertEqual(reviews["reviews"]["baseScanTokenProfile"]["englishNoReplyFollowup"], BASESCAN_FOLLOWUP_PAGE_URL)
         self.assertEqual(reviews["reviews"]["baseScanTokenProfile"]["chineseNoReplyFollowup"], "https://gcagochina.com/zh-basescan-followup.html")
         self.assertEqual(reviews["reviews"]["baseScanTokenProfile"]["projectProfileBaseScanMap"], f"{PROJECT_PROFILE_PAGE_URL}#basescanMapTitle")
         self.assertEqual(reviews["emailAlignment"]["domainEmailEvidenceChecklist"], DOMAIN_EMAIL_EVIDENCE_PAGE_URL)
         self.assertIn(DOMAIN_EMAIL_EVIDENCE_PAGE_URL, reviews["reviews"]["baseScanTokenProfile"]["nextAction"])
         self.assertIn(BASESCAN_HANDOFF_PAGE_URL, reviews["reviews"]["baseScanTokenProfile"]["nextAction"])
+        self.assertIn(BASESCAN_FOLLOWUP_PAGE_URL, reviews["reviews"]["baseScanTokenProfile"]["nextAction"])
         self.assertIn(ZH_BASESCAN_SUBMIT_PAGE_URL, reviews["reviews"]["baseScanTokenProfile"]["nextAction"])
         self.assertIn("zh-basescan-followup.html", reviews["reviews"]["baseScanTokenProfile"]["nextAction"])
         self.assertIn("duplicate token-profile submissions", reviews["reviews"]["baseScanTokenProfile"]["nextAction"])
@@ -7648,7 +7740,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(reviews["reviews"]["thirdPartyAudit"]["status"], "not-completed-deferred")
         self.assertIn("The BaseScan domain email evidence gate is ready after the 2026-05-30 DNS snapshot: MX/SPF/DKIM/DMARC present.", reviews["safePublicClaims"])
         self.assertIn("The Project Profile BaseScan reviewer map is published at https://gcagochina.com/project-profile.html#basescanMapTitle.", reviews["safePublicClaims"])
-        self.assertIn("BaseScan Handoff copy blocks, the Chinese owner submission flow, and the Chinese no-reply follow-up template are published for owner-controlled BaseScan handling from support@gcagochina.com.", reviews["safePublicClaims"])
+        self.assertIn("BaseScan Handoff copy blocks, the English no-reply follow-up pack, the Chinese owner submission flow, and the Chinese no-reply follow-up template are published for owner-controlled BaseScan handling from support@gcagochina.com.", reviews["safePublicClaims"])
         self.assertIn("The latest BaseScan final submission package was generated on 2026-06-06T11:10:54Z, and the daily public status snapshot confirms readyForBaseScanResubmission is true.", reviews["safePublicClaims"])
         self.assertIn("No third-party audit has been completed.", reviews["safePublicClaims"])
         self.assertIn("security-vendor approval, permanent warning-free status, or cross-wallet warning removal before vendor/current wallet UI confirms it", reviews["doNotClaim"])

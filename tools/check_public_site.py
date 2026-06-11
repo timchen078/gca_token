@@ -48,6 +48,8 @@ BASESCAN_PREFLIGHT_PAGE_URL = "https://gcagochina.com/basescan-preflight.html"
 BASESCAN_PREFLIGHT_URL = "https://gcagochina.com/basescan-preflight.json"
 BASESCAN_HANDOFF_PAGE_URL = "https://gcagochina.com/basescan-handoff.html"
 BASESCAN_HANDOFF_URL = "https://gcagochina.com/basescan-handoff.json"
+BASESCAN_FOLLOWUP_PAGE_URL = "https://gcagochina.com/basescan-followup.html"
+BASESCAN_FOLLOWUP_URL = "https://gcagochina.com/basescan-followup.json"
 GITHUB_REPO_URL = "https://github.com/timchen078/gca_token"
 ZH_CN_PAGE_URL = "https://gcagochina.com/zh-cn.html"
 ZH_BUY_PAGE_URL = "https://gcagochina.com/zh-buy.html"
@@ -1978,6 +1980,176 @@ def validate_basescan_handoff_json(text: str) -> None:
     ):
         if boundaries.get(key) is not False:
             raise SiteCheckError(f"{label}: boundary {key} must be false")
+    assert_no_forbidden_public_claims(json.dumps(payload), label)
+
+
+def validate_basescan_followup_page(text: str) -> None:
+    label = "/basescan-followup.html"
+    assert_social_preview_meta(text, label, BASESCAN_FOLLOWUP_PAGE_URL)
+    for expected in (
+        "GCA BaseScan Follow-Up",
+        "BaseScan Ticket Follow-Up",
+        "support@gcagochina.com",
+        "Returned; ready for owner resubmission",
+        MAINNET_ADDRESS,
+        "Existing ticket only",
+        "does not submit BaseScan forms",
+        "send email",
+        "sign wallet messages",
+        "transfer tokens",
+        "approve swaps",
+        "touch contracts",
+        "No duplicate tickets",
+        "reply inside the existing ticket",
+        "Project and Team",
+        "BaseScan Package",
+        "Domain Email",
+        "Contract and Supply",
+        "Market Route",
+        "Review Boundaries",
+        "No-Reply Status Check",
+        "Follow-up: GCA Token Profile Update",
+        "Network: Base Mainnet / chainId 8453",
+        "Official project email: support@gcagochina.com",
+        "English follow-up page: https://gcagochina.com/basescan-followup.html",
+        "Chinese follow-up page: https://gcagochina.com/zh-basescan-followup.html",
+        "2026-06-11T12:01:21Z",
+        "readyForBaseScanResubmission as true",
+        "avoid duplicate token-profile submissions",
+        "Before Sending",
+        "Do Not Claim",
+        "BaseScan approval",
+        "Third-party audit",
+        "Reserve or LP lock",
+        "Market quality",
+        "Wallet or contract action",
+        "does not require approve, swap, transfer, wallet signature, or contract interaction",
+        "basescan-handoff.html",
+        "basescan-preflight.html",
+        "domain-email-evidence.html",
+        "project-profile.html#basescanMapTitle",
+        "tim-chen.html",
+        "technical-report.html",
+        "onchain-proofs.html",
+        "token-safety.html",
+        "supply.html",
+        "reserve-statement.html",
+        "markets.html",
+        "liquidity.html",
+        "external-reviews.html",
+        "reviewer-kit.html",
+        "trust.html",
+        "release-gates.html",
+        "zh-basescan-followup.html",
+    ):
+        assert_contains(text, expected, label)
+    for forbidden in (
+        'href="basescan-followup.json"',
+        'href="basescan-handoff.json"',
+        'href="domain-email-evidence.json"',
+        "BaseScan token-profile approval is complete",
+        OLD_WETH_POOL_ADDRESS,
+    ):
+        assert_not_contains(text, forbidden, label)
+    assert_no_forbidden_public_claims(text, label)
+
+
+def validate_basescan_followup_json(text: str) -> None:
+    label = "/basescan-followup.json"
+    payload = load_json(text, label)
+    links = payload.get("officialLinks", {})
+    template = payload.get("followupTemplate", {})
+    boundaries = payload.get("boundaries", {})
+
+    if payload.get("schema") != BASESCAN_FOLLOWUP_URL:
+        raise SiteCheckError(f"{label}: wrong schema")
+    if payload.get("pageUrl") != BASESCAN_FOLLOWUP_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong pageUrl")
+    if payload.get("status") != "existing-ticket-followup-ready":
+        raise SiteCheckError(f"{label}: wrong status")
+    if payload.get("lastUpdated") != "2026-06-11":
+        raise SiteCheckError(f"{label}: wrong lastUpdated")
+    if payload.get("chainId") != 8453:
+        raise SiteCheckError(f"{label}: wrong chainId")
+    if payload.get("contractAddress") != MAINNET_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong contractAddress")
+    if payload.get("officialMailbox") != "support@gcagochina.com":
+        raise SiteCheckError(f"{label}: wrong officialMailbox")
+    conditions_text = json.dumps(payload.get("useConditions", []))
+    for expected in (
+        "support@gcagochina.com",
+        "official inbox, spam folder",
+        "readyForBaseScanResubmission is true",
+        "existing ticket",
+    ):
+        assert_contains(conditions_text, expected, label)
+    for key, expected in (
+        ("website", "https://gcagochina.com/"),
+        ("verify", VERIFY_PAGE_URL),
+        ("dailyStatus", DAILY_STATUS_PAGE_URL),
+        ("baseScanHandoff", BASESCAN_HANDOFF_PAGE_URL),
+        ("baseScanPreflight", BASESCAN_PREFLIGHT_PAGE_URL),
+        ("projectProfileBaseScanMap", f"{PROJECT_PROFILE_PAGE_URL}#basescanMapTitle"),
+        ("teamPage", TEAM_PAGE_URL),
+        ("timChenProfessionalProfile", TIM_CHEN_PROFILE_PAGE_URL),
+        ("domainEmailEvidence", DOMAIN_EMAIL_EVIDENCE_PAGE_URL),
+        ("domainEmailSnapshot", f"{DOMAIN_EMAIL_PAGE_URL}#snapshotTitle"),
+        ("technicalReport", TECHNICAL_REPORT_PAGE_URL),
+        ("onchainProofs", ONCHAIN_PROOFS_PAGE_URL),
+        ("tokenSafety", TOKEN_SAFETY_PAGE_URL),
+        ("supply", "https://gcagochina.com/supply.html"),
+        ("reserveStatement", RESERVE_STATEMENT_PAGE_URL),
+        ("markets", "https://gcagochina.com/markets.html"),
+        ("liquidity", LIQUIDITY_PAGE_URL),
+        ("externalReviews", EXTERNAL_REVIEW_PAGE_URL),
+        ("reviewerKit", REVIEWER_KIT_PAGE_URL),
+        ("trustCenter", TRUST_CENTER_PAGE_URL),
+        ("releaseGates", RELEASE_GATES_PAGE_URL),
+        ("englishFollowup", BASESCAN_FOLLOWUP_PAGE_URL),
+        ("chineseFollowup", ZH_BASESCAN_FOLLOWUP_PAGE_URL),
+    ):
+        if links.get(key) != expected:
+            raise SiteCheckError(f"{label}: wrong official link {key}")
+    if "Follow-up: GCA Token Profile Update" not in template.get("subject", ""):
+        raise SiteCheckError(f"{label}: wrong template subject")
+    for expected in (
+        "Network: Base Mainnet / chainId 8453",
+        MAINNET_ADDRESS,
+        "Official project email: support@gcagochina.com",
+        BASESCAN_HANDOFF_PAGE_URL,
+        f"{PROJECT_PROFILE_PAGE_URL}#basescanMapTitle",
+        TIM_CHEN_PROFILE_PAGE_URL,
+        DOMAIN_EMAIL_EVIDENCE_PAGE_URL,
+        DAILY_STATUS_PAGE_URL,
+        BASESCAN_FOLLOWUP_PAGE_URL,
+        ZH_BASESCAN_FOLLOWUP_PAGE_URL,
+        "2026-06-11T12:01:21Z",
+        "readyForBaseScanResubmission as true",
+        "avoid duplicate token-profile submissions",
+    ):
+        assert_contains(template.get("body", ""), expected, label)
+    for key in (
+        "submitsBaseScanRequest",
+        "sendsEmail",
+        "uploadsFiles",
+        "signsWalletMessages",
+        "touchesWalletsOrContracts",
+        "opensDuplicateTickets",
+        "claimsBaseScanApproval",
+        "claimsThirdPartyAudit",
+        "claimsLockedReserveOrLp",
+        "claimsDeepLiquidityOrPriceSupport",
+    ):
+        if boundaries.get(key) is not False:
+            raise SiteCheckError(f"{label}: boundary {key} must be false")
+    do_not_claim_text = json.dumps(payload.get("doNotClaim", []))
+    for expected in (
+        "BaseScan token-profile approval",
+        "third-party audit completion",
+        "reserve, LP, vesting, or multisig custody",
+        "deep liquidity, price support",
+    ):
+        assert_contains(do_not_claim_text, expected, label)
     assert_no_forbidden_public_claims(json.dumps(payload), label)
 
 
@@ -13517,6 +13689,10 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong baseScanHandoffPage")
     if links.get("baseScanHandoff") != BASESCAN_HANDOFF_URL:
         raise SiteCheckError(f"{label}: wrong baseScanHandoff")
+    if links.get("baseScanFollowupPage") != BASESCAN_FOLLOWUP_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong baseScanFollowupPage")
+    if links.get("baseScanFollowup") != BASESCAN_FOLLOWUP_URL:
+        raise SiteCheckError(f"{label}: wrong baseScanFollowup")
     if links.get("baseScanChineseOwnerFlow") != ZH_BASESCAN_SUBMIT_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong baseScanChineseOwnerFlow")
     if links.get("baseScanChineseFollowup") != "https://gcagochina.com/zh-basescan-followup.html":
@@ -13558,6 +13734,8 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing domain email evidence checklist next action")
     if BASESCAN_HANDOFF_PAGE_URL not in base_scan_profile.get("nextAction", ""):
         raise SiteCheckError(f"{label}: missing BaseScan handoff next action")
+    if BASESCAN_FOLLOWUP_PAGE_URL not in base_scan_profile.get("nextAction", ""):
+        raise SiteCheckError(f"{label}: missing English no-reply follow-up next action")
     if ZH_BASESCAN_SUBMIT_PAGE_URL not in base_scan_profile.get("nextAction", ""):
         raise SiteCheckError(f"{label}: missing Chinese owner flow next action")
     if "zh-basescan-followup.html" not in base_scan_profile.get("nextAction", ""):
@@ -13629,6 +13807,8 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing BaseScan reply template result")
     if "BaseScan Handoff copy blocks" not in base_scan_profile.get("lastCheckedResult", ""):
         raise SiteCheckError(f"{label}: missing BaseScan handoff result")
+    if "English no-reply follow-up pack" not in base_scan_profile.get("lastCheckedResult", ""):
+        raise SiteCheckError(f"{label}: missing English no-reply follow-up pack result")
     if "Chinese owner submission flow" not in base_scan_profile.get("lastCheckedResult", ""):
         raise SiteCheckError(f"{label}: missing Chinese owner flow result")
     if "Chinese no-reply follow-up template" not in base_scan_profile.get("lastCheckedResult", ""):
@@ -13645,12 +13825,18 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong baseScanHandoffPage")
     if base_scan_profile.get("baseScanHandoff") != BASESCAN_HANDOFF_URL:
         raise SiteCheckError(f"{label}: wrong baseScanHandoff")
+    if base_scan_profile.get("baseScanFollowupPage") != BASESCAN_FOLLOWUP_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong baseScanFollowupPage")
+    if base_scan_profile.get("baseScanFollowup") != BASESCAN_FOLLOWUP_URL:
+        raise SiteCheckError(f"{label}: wrong baseScanFollowup")
     if base_scan_profile.get("dailyStatusPage") != DAILY_STATUS_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong dailyStatusPage")
     if base_scan_profile.get("dailyStatus") != DAILY_STATUS_URL:
         raise SiteCheckError(f"{label}: wrong dailyStatus")
     if base_scan_profile.get("chineseOwnerSubmissionFlow") != ZH_BASESCAN_SUBMIT_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong chineseOwnerSubmissionFlow")
+    if base_scan_profile.get("englishNoReplyFollowup") != BASESCAN_FOLLOWUP_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong englishNoReplyFollowup")
     if base_scan_profile.get("platformReplyTemplate") != PLATFORM_REPLIES_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong platformReplyTemplate")
     if base_scan_profile.get("platformReplyTemplateData") != PLATFORM_REPLIES_URL:
@@ -13700,7 +13886,7 @@ def validate_external_reviews_page(text: str) -> None:
     assert_no_public_data_room_terms(text, label)
     assert_contains(text, "Trust Center", label)
     assert_contains(text, "Returned 2026-05-23; official-domain package ready; use one original-ticket follow-up if no reply", label)
-    assert_contains(text, "official-domain package and Chinese no-reply follow-up template are ready", label)
+    assert_contains(text, "official-domain package, English follow-up pack, and Chinese no-reply follow-up template are ready", label)
     assert_contains(text, "2026-06-06T11:10:54Z", label)
     assert_contains(text, "2026-06-11T12:01:21Z", label)
     assert_contains(text, "tim-chen.html", label)
@@ -13711,6 +13897,8 @@ def validate_external_reviews_page(text: str) -> None:
     assert_contains(text, "Email Evidence Packet", label)
     assert_contains(text, "BaseScan Handoff", label)
     assert_contains(text, "basescan-handoff.html", label)
+    assert_contains(text, "BaseScan Follow-Up", label)
+    assert_contains(text, "basescan-followup.html", label)
     assert_contains(text, "中文 BaseScan 提交流程", label)
     assert_contains(text, "zh-basescan-submit.html", label)
     assert_contains(text, "中文 BaseScan 跟进处理", label)
@@ -13731,6 +13919,7 @@ def validate_external_reviews_page(text: str) -> None:
     assert_contains(text, "MX/SPF/DKIM/DMARC present", label)
     assert_contains(text, "readyForBaseScanEmailEvidence true", label)
     assert_contains(text, "expanded BaseScan reply template", label)
+    assert_contains(text, "English no-reply follow-up pack", label)
     assert_contains(text, "Platform Replies", label)
     assert_contains(text, "platform-replies.html", label)
     assert_contains(text, "Owner observed no warning visible 2026-05-14", label)
@@ -13908,6 +14097,8 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/basescan-preflight.json",
         "https://gcagochina.com/basescan-handoff.html",
         "https://gcagochina.com/basescan-handoff.json",
+        "https://gcagochina.com/basescan-followup.html",
+        "https://gcagochina.com/basescan-followup.json",
         "https://gcagochina.com/action-plan.html",
         "https://gcagochina.com/action-plan.json",
         "https://gcagochina.com/register.html",
@@ -14088,6 +14279,8 @@ def validate_sitemap(text: str) -> None:
     for path in (
         "action-plan.html",
         "action-plan.json",
+        "basescan-followup.html",
+        "basescan-followup.json",
         "liquidation-replay-001.html",
         "liquidation-replay-001.json",
         "service-delivery-playbook.html",
@@ -14121,6 +14314,8 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /basescan-preflight.json", label)
     assert_contains(text, "Allow: /basescan-handoff.html", label)
     assert_contains(text, "Allow: /basescan-handoff.json", label)
+    assert_contains(text, "Allow: /basescan-followup.html", label)
+    assert_contains(text, "Allow: /basescan-followup.json", label)
     assert_contains(text, "Allow: /action-plan.html", label)
     assert_contains(text, "Allow: /action-plan.json", label)
     assert_contains(text, "Allow: /register.html", label)
@@ -14291,6 +14486,8 @@ CHECKS: list[EndpointCheck] = [
     ("/basescan-preflight.json", validate_basescan_preflight_json),
     ("/basescan-handoff.html", validate_basescan_handoff_page),
     ("/basescan-handoff.json", validate_basescan_handoff_json),
+    ("/basescan-followup.html", validate_basescan_followup_page),
+    ("/basescan-followup.json", validate_basescan_followup_json),
     ("/action-plan.html", validate_action_plan_page),
     ("/action-plan.json", validate_action_plan_json),
     ("/zh-cn.html", validate_zh_cn_page),

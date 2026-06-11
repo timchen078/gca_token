@@ -38,6 +38,8 @@ BaseScan replied that it could not process the token update request because the 
 - Domain email evidence checklist JSON remains live: `https://gcagochina.com/domain-email-evidence.json`
 - BaseScan Handoff remains live: `https://gcagochina.com/basescan-handoff.html`
 - BaseScan Handoff JSON remains live: `https://gcagochina.com/basescan-handoff.json`
+- English BaseScan no-reply follow-up remains live: `https://gcagochina.com/basescan-followup.html`
+- English BaseScan no-reply follow-up JSON remains live: `https://gcagochina.com/basescan-followup.json`
 - Daily public status remains live: `https://gcagochina.com/daily-status.html`
 - Daily public status JSON remains live: `https://gcagochina.com/daily-status.json`
 - Add LinkedIn later only if BaseScan specifically requires a third-party social-network profile
@@ -95,6 +97,7 @@ Contract: 0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6
 Official website: https://gcagochina.com/
 Official project email: support@gcagochina.com
 BaseScan Handoff: https://gcagochina.com/basescan-handoff.html
+English BaseScan follow-up: https://gcagochina.com/basescan-followup.html
 Project profile reviewer map: https://gcagochina.com/project-profile.html#basescanMapTitle
 Tim Chen professional profile: https://gcagochina.com/tim-chen.html
 Domain email evidence: https://gcagochina.com/domain-email-evidence.html
@@ -128,6 +131,8 @@ Thank you.
 Use this until approval:
 
 `BaseScan source verification and deployer-wallet ownership verification are complete. The public BaseScan token profile update was returned again as information-insufficient on 2026-05-23. The profile is not approved or published. Tim Chen public professional profile evidence is now published at https://gcagochina.com/tim-chen.html with team, GitHub, X, Telegram, and structured profile-data links for reviewer due diligence; the latest 2026-05-30 DNS snapshot at https://gcagochina.com/domain-email.html#snapshotTitle shows MX/SPF/DKIM/DMARC present, so readyForBaseScanEmailEvidence is true; the BaseScan Handoff was generated at 2026-06-06T11:10:54Z, and the live daily public status snapshot was refreshed at 2026-06-11T12:01:21Z. The owner may send one concise status-check follow-up from support@gcagochina.com if the request is already submitted, and should avoid duplicate token-profile submissions while BaseScan reviews it.`
+
+Public follow-up pack: `https://gcagochina.com/basescan-followup.html`
 
 Do not use:
 

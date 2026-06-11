@@ -47,6 +47,8 @@ Export the same review package directly from local JSONL data without starting t
 - BaseScan submission package: `launch/basescan_token_submission.md`
 - BaseScan form values: `launch/basescan_form_values.json`
 - BaseScan review follow-up: `launch/basescan_review_followup.md`
+- Public BaseScan follow-up page: `site/basescan-followup.html`
+- Public BaseScan follow-up JSON: `site/basescan-followup.json`
 - BaseScan resubmission package: `launch/basescan_resubmission_package.md`
 - BaseScan resubmission values: `launch/basescan_resubmission_values.json`
 - BaseScan reviewer checklist tool: `tools/build_basescan_reviewer_checklist.py`

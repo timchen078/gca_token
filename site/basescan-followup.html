@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GCA BaseScan Follow-Up | Ticket Reply Pack</title>
+    <meta name="description" content="GCA BaseScan follow-up page for no-reply ticket handling, reviewer evidence links, reply templates, and owner-side boundaries after a clean token profile submission.">
+    <link rel="canonical" href="https://gcagochina.com/basescan-followup.html">
+    <link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">
+    <link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="GCA | Go China Access">
+    <meta property="og:title" content="GCA BaseScan Follow-Up | Ticket Reply Pack">
+    <meta property="og:description" content="A concise BaseScan follow-up pack for existing-ticket status checks, evidence links, and no-duplicate-submission boundaries.">
+    <meta property="og:url" content="https://gcagochina.com/basescan-followup.html">
+    <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="GCA BaseScan Follow-Up | Ticket Reply Pack">
+    <meta name="twitter:description" content="A concise BaseScan follow-up pack for existing-ticket status checks, evidence links, and no-duplicate-submission boundaries.">
+    <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f7f8f5;
+        --ink: #151817;
+        --muted: #5e6763;
+        --line: #dfe4dd;
+        --panel: #ffffff;
+        --soft: #eef3ef;
+        --red: #d71920;
+        --blue: #1557d7;
+        --green: #087f5b;
+        --gold: #a87810;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: var(--bg);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.55;
+      }
+
+      a { color: var(--blue); text-decoration: none; }
+      a:hover { text-decoration: underline; }
+
+      .shell {
+        width: min(1120px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 3;
+        border-bottom: 1px solid var(--line);
+        background: rgba(247, 248, 245, 0.94);
+        backdrop-filter: blur(16px);
+      }
+
+      nav,
+      .brand,
+      .nav-links,
+      .actions,
+      .link-row {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      nav {
+        min-height: 68px;
+        justify-content: space-between;
+      }
+
+      .brand {
+        color: var(--ink);
+        font-weight: 850;
+      }
+
+      .brand img {
+        width: 34px;
+        height: 34px;
+      }
+
+      .nav-links {
+        gap: 16px;
+        font-size: 14px;
+      }
+
+      main { padding: 42px 0 64px; }
+      h1, h2, h3, p { margin-top: 0; }
+
+      h1 {
+        max-width: 960px;
+        margin-bottom: 18px;
+        font-size: clamp(42px, 6vw, 76px);
+        line-height: 1.02;
+        letter-spacing: 0;
+      }
+
+      h2 {
+        margin-bottom: 12px;
+        font-size: 25px;
+        letter-spacing: 0;
+      }
+
+      h3 {
+        margin-bottom: 8px;
+        font-size: 18px;
+        letter-spacing: 0;
+      }
+
+      .eyebrow {
+        margin: 0 0 14px;
+        color: var(--red);
+        font-size: 13px;
+        font-weight: 850;
+        text-transform: uppercase;
+      }
+
+      .lead {
+        max-width: 940px;
+        margin-bottom: 14px;
+        color: var(--muted);
+        font-size: 18px;
+      }
+
+      .note, li { color: var(--muted); }
+      .actions { margin-top: 24px; }
+
+      .button,
+      .text-link {
+        min-height: 40px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        color: var(--ink);
+        padding: 9px 12px;
+        font-size: 14px;
+        font-weight: 760;
+      }
+
+      .button.primary {
+        border-color: var(--red);
+        background: var(--red);
+        color: #fff;
+      }
+
+      .button.secondary {
+        border-color: #cad7ec;
+        background: #eef4ff;
+        color: #123e90;
+      }
+
+      .section { margin-top: 30px; }
+
+      .panel,
+      .fact,
+      .card {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+      }
+
+      .panel { padding: 24px; }
+      .fact, .card { padding: 16px; }
+
+      .facts,
+      .grid,
+      .two {
+        display: grid;
+        gap: 14px;
+      }
+
+      .facts {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        margin-top: 26px;
+      }
+
+      .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+      .label {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 760;
+        text-transform: uppercase;
+      }
+
+      .value {
+        display: block;
+        margin-top: 7px;
+        font-size: 17px;
+        font-weight: 850;
+        overflow-wrap: anywhere;
+      }
+
+      .good { color: var(--green); }
+      .pending { color: var(--gold); }
+
+      .list {
+        display: grid;
+        gap: 10px;
+      }
+
+      .row {
+        display: grid;
+        grid-template-columns: minmax(190px, 0.8fr) minmax(0, 1.2fr);
+        gap: 12px;
+        align-items: start;
+        border-top: 1px solid var(--line);
+        padding-top: 10px;
+      }
+
+      .row:first-child {
+        border-top: 0;
+        padding-top: 0;
+      }
+
+      .row strong {
+        min-width: 0;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+        text-align: right;
+      }
+
+      .notice {
+        border-color: #ecd28c;
+        background: #fff8e6;
+      }
+
+      code {
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        background: var(--soft);
+        padding: 2px 5px;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 0.92em;
+        overflow-wrap: anywhere;
+      }
+
+      pre.copy {
+        margin: 12px 0 0;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fbfcfa;
+        padding: 14px;
+        color: var(--ink);
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 13px;
+        line-height: 1.55;
+        overflow-x: auto;
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+
+      footer {
+        border-top: 1px solid var(--line);
+        padding: 22px 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      @media (max-width: 900px) {
+        nav {
+          align-items: flex-start;
+          flex-direction: column;
+          padding: 14px 0;
+        }
+
+        .facts,
+        .grid,
+        .two {
+          grid-template-columns: 1fr;
+        }
+
+        .row {
+          grid-template-columns: 1fr;
+        }
+
+        .row strong {
+          text-align: left;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav class="shell" aria-label="Primary">
+        <a class="brand" href="index.html" aria-label="GCA home">
+          <img src="assets/gca-logo.svg" alt="GCA logo">
+          <span>GCA</span>
+        </a>
+        <div class="nav-links">
+          <a href="verify.html">Verify</a>
+          <a href="basescan-handoff.html">BaseScan Handoff</a>
+          <a href="basescan-preflight.html">Preflight</a>
+          <a href="external-reviews.html">External Reviews</a>
+          <a href="platform-replies.html">Platform Replies</a>
+          <a href="zh-basescan-followup.html">中文跟进</a>
+        </div>
+      </nav>
+    </header>
+
+    <main class="shell">
+      <section aria-labelledby="title">
+        <p class="eyebrow">BaseScan Ticket Follow-Up</p>
+        <h1 id="title">GCA BaseScan Follow-Up</h1>
+        <p class="lead">Use this page after the owner has already submitted one clean BaseScan token profile request from <code>support@gcagochina.com</code> and there is no reply in the same ticket. It centralizes the status-check template, reviewer evidence links, and boundaries for avoiding duplicate token-profile submissions.</p>
+        <p class="lead">This page does not submit BaseScan forms, send email, upload files, sign wallet messages, transfer tokens, approve swaps, or touch contracts. The owner must manually review and send any reply from the official project-domain mailbox.</p>
+        <div class="actions">
+          <a class="button primary" href="basescan-handoff.html">BaseScan Handoff</a>
+          <a class="button secondary" href="basescan-preflight.html">Resubmission Preflight</a>
+          <a class="button secondary" href="domain-email-evidence.html">Email Evidence</a>
+          <a class="button" href="project-profile.html#basescanMapTitle">Reviewer Map</a>
+          <a class="button" href="tim-chen.html">Tim Chen Profile</a>
+          <a class="button" href="platform-replies.html">Reply Templates</a>
+        </div>
+      </section>
+
+      <section class="facts" aria-label="Follow-up summary">
+        <div class="fact">
+          <span class="label">Official Mailbox</span>
+          <span class="value good">support@gcagochina.com</span>
+        </div>
+        <div class="fact">
+          <span class="label">Profile Status</span>
+          <span class="value pending">Returned; ready for owner resubmission</span>
+        </div>
+        <div class="fact">
+          <span class="label">Contract</span>
+          <span class="value">0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6</span>
+        </div>
+        <div class="fact">
+          <span class="label">Follow-Up Mode</span>
+          <span class="value pending">Existing ticket only</span>
+        </div>
+      </section>
+
+      <section class="section panel notice" aria-labelledby="useTitle">
+        <h2 id="useTitle">Use Conditions</h2>
+        <div class="list">
+          <div class="row"><span>Clean request already sent</span><strong>The latest owner-controlled BaseScan request must already have been submitted from <code>support@gcagochina.com</code>.</strong></div>
+          <div class="row"><span>Inbox checked</span><strong>Check the official inbox, spam folder, and BaseScan account notifications before sending a no-reply status check.</strong></div>
+          <div class="row"><span>Public status current</span><strong><a href="daily-status.html">Daily status</a> must show the latest public snapshot and <code>readyForBaseScanResubmission</code> as true.</strong></div>
+          <div class="row"><span>No duplicate tickets</span><strong>reply inside the existing ticket/thread whenever possible. Do not open multiple token-profile submissions for the same correction cycle.</strong></div>
+        </div>
+      </section>
+
+      <section class="section grid" aria-label="Reviewer evidence map">
+        <article class="card">
+          <h3>Project and Team</h3>
+          <p class="note">Use <a href="team.html">Team</a>, <a href="tim-chen.html">Tim Chen Profile</a>, <a href="about.html">About</a>, and <a href="whitepaper.html">Whitepaper</a> for project and founder transparency.</p>
+        </article>
+        <article class="card">
+          <h3>BaseScan Package</h3>
+          <p class="note">Use <a href="basescan-handoff.html">BaseScan Handoff</a>, <a href="basescan-preflight.html">BaseScan Preflight</a>, and <a href="project-profile.html#basescanMapTitle">Project Profile reviewer map</a> for one clean owner-controlled submission path.</p>
+        </article>
+        <article class="card">
+          <h3>Domain Email</h3>
+          <p class="note">Use <a href="domain-email.html">Domain Email</a>, the <a href="domain-email.html#snapshotTitle">DNS snapshot</a>, and <a href="domain-email-evidence.html">Email Evidence Checklist</a>. Keep private mailbox screenshots off the public site unless a reviewer asks inside the ticket.</p>
+        </article>
+        <article class="card">
+          <h3>Contract and Supply</h3>
+          <p class="note">Use <a href="technical-report.html">Technical Report</a>, <a href="onchain-proofs.html">On-chain Proofs</a>, <a href="token-safety.html">Token Safety</a>, <a href="supply.html">Supply</a>, and <a href="reserve-statement.html">Reserve Statement</a>.</p>
+        </article>
+        <article class="card">
+          <h3>Market Route</h3>
+          <p class="note">Use <a href="markets.html">Markets</a> and <a href="liquidity.html">Liquidity</a> for the Base Mainnet GCA/USDT pool. Current market depth is still starter-depth only.</p>
+        </article>
+        <article class="card">
+          <h3>Review Boundaries</h3>
+          <p class="note">Use <a href="external-reviews.html">External Reviews</a>, <a href="reviewer-kit.html">Reviewer Kit</a>, <a href="trust.html">Trust Center</a>, and <a href="release-gates.html">Release Gates</a> to avoid overclaiming audit, profile approval, or custody status.</p>
+        </article>
+      </section>
+
+      <section class="section panel" aria-labelledby="copyTitle">
+        <h2 id="copyTitle">No-Reply Status Check</h2>
+        <p class="note">Use this only after confirming the current clean request was already submitted from <code>support@gcagochina.com</code> and no reply is visible in the official mailbox, spam folder, or BaseScan account notifications.</p>
+        <pre class="copy">Subject: Follow-up: GCA Token Profile Update - Base Mainnet Contract 0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6
+
+Hello BaseScan team,
+
+I am following up on the GCA token profile update request for Base Mainnet.
+
+Network: Base Mainnet / chainId 8453
+Contract: 0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6
+Official website: https://gcagochina.com/
+Official project email: support@gcagochina.com
+BaseScan Handoff: https://gcagochina.com/basescan-handoff.html
+Project profile reviewer map: https://gcagochina.com/project-profile.html#basescanMapTitle
+Tim Chen professional profile: https://gcagochina.com/tim-chen.html
+Domain email evidence: https://gcagochina.com/domain-email-evidence.html
+Daily public status: https://gcagochina.com/daily-status.html
+English follow-up page: https://gcagochina.com/basescan-followup.html
+Chinese follow-up page: https://gcagochina.com/zh-basescan-followup.html
+
+The current public materials address the prior information-insufficient return reasons: official HTTPS website, project-domain email, founder/team profile, whitepaper, brand kit, support page, domain email evidence, GitHub repository, Telegram, X, official GCA/USDT market route, and clear public claim boundaries.
+
+The latest daily public status snapshot was refreshed at 2026-06-11T12:01:21Z and reports readyForBaseScanResubmission as true. Could you please confirm whether the request is still in the review queue, or whether any additional field correction or owner-wallet signature is required?
+
+We will avoid duplicate token-profile submissions while this request is under review.
+
+Thank you.</pre>
+      </section>
+
+      <section class="section two" aria-label="Owner checklist and boundaries">
+        <div class="panel">
+          <h2>Before Sending</h2>
+          <ol>
+            <li>Confirm the latest clean BaseScan request came from <code>support@gcagochina.com</code>.</li>
+            <li>Confirm inbox, spam, and BaseScan account notifications have no reviewer reply.</li>
+            <li>Confirm <a href="daily-status.html">daily-status.html</a> opens and the current public snapshot is fresh.</li>
+            <li>Confirm <a href="basescan-handoff.html">basescan-handoff.html</a> opens and still shows the current copy package.</li>
+            <li>Reply once inside the existing ticket and wait.</li>
+          </ol>
+        </div>
+        <div class="panel notice">
+          <h2>Do Not Claim</h2>
+          <div class="list">
+            <div class="row"><span>BaseScan approval</span><strong>Do not claim token-profile approval until the BaseScan contract page publicly displays the submitted profile.</strong></div>
+            <div class="row"><span>Third-party audit</span><strong>No independent third-party audit has been completed.</strong></div>
+            <div class="row"><span>Reserve or LP lock</span><strong>Do not describe reserves, LP, or custody as locked, vested, or multisig-controlled unless the on-chain custody path changes.</strong></div>
+            <div class="row"><span>Market quality</span><strong>Do not claim deep liquidity, price support, or ranking acceptance.</strong></div>
+            <div class="row"><span>Wallet or contract action</span><strong>BaseScan profile follow-up does not require approve, swap, transfer, wallet signature, or contract interaction unless BaseScan explicitly asks for ownership verification.</strong></div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="shell">GCA BaseScan follow-up page. Use Base Mainnet chain ID 8453 and contract 0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6 when checking the ticket.</div>
+    </footer>
+  </body>
+</html>
