@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Liquidation Replay Sample 001 | GCA</title>
+    <meta name="description" content="GCA Liquidation Replay sample report for risk education, position sizing review, and non-custodial quant research access boundaries.">
+    <link rel="canonical" href="https://gcagochina.com/liquidation-replay-001.html">
+    <link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">
+    <link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="GCA | Go China Access">
+    <meta property="og:title" content="Liquidation Replay Sample 001 | GCA">
+    <meta property="og:description" content="A public GCA sample report showing how liquidation risk can be reviewed without custody, wallet signatures, or live trading execution.">
+    <meta property="og:url" content="https://gcagochina.com/liquidation-replay-001.html">
+    <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Liquidation Replay Sample 001 | GCA">
+    <meta name="twitter:description" content="A public GCA sample report showing how liquidation risk can be reviewed without custody, wallet signatures, or live trading execution.">
+    <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #111318;
+        --muted: #5f6773;
+        --line: #dfe3ea;
+        --panel: #ffffff;
+        --soft: #f6f7f9;
+        --red: #d71920;
+        --blue: #0052ff;
+        --green: #087f5b;
+        --gold: #8a650d;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: #fbfbfc;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.5;
+      }
+
+      a {
+        color: var(--blue);
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .shell {
+        width: min(1080px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      header {
+        border-bottom: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.94);
+        position: sticky;
+        top: 0;
+        z-index: 2;
+      }
+
+      nav {
+        min-height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--ink);
+        font-weight: 850;
+      }
+
+      .brand img {
+        width: 32px;
+        height: 32px;
+      }
+
+      .nav-links,
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .nav-links {
+        font-size: 14px;
+      }
+
+      main {
+        padding: 42px 0 56px;
+      }
+
+      .eyebrow {
+        margin: 0 0 14px;
+        color: var(--red);
+        font-size: 13px;
+        font-weight: 850;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 0;
+        max-width: 920px;
+        font-size: clamp(40px, 6vw, 72px);
+        line-height: 1;
+        letter-spacing: 0;
+      }
+
+      h2 {
+        margin: 0 0 14px;
+        font-size: 24px;
+      }
+
+      h3 {
+        margin: 0 0 8px;
+        font-size: 17px;
+      }
+
+      .lead {
+        max-width: 870px;
+        margin: 18px 0 0;
+        color: var(--muted);
+        font-size: 18px;
+      }
+
+      .actions {
+        margin-top: 24px;
+      }
+
+      .button {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        color: var(--ink);
+        min-height: 42px;
+        padding: 10px 14px;
+        font: inherit;
+        font-weight: 750;
+      }
+
+      .button.primary {
+        border-color: var(--red);
+        background: var(--red);
+        color: #fff;
+      }
+
+      .section {
+        margin-top: 30px;
+      }
+
+      .panel,
+      .fact {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+      }
+
+      .panel {
+        padding: 24px;
+      }
+
+      .grid,
+      .two,
+      .facts {
+        display: grid;
+        gap: 14px;
+      }
+
+      .grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .two,
+      .facts {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .fact {
+        min-height: 110px;
+        padding: 16px;
+      }
+
+      .label {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 750;
+        text-transform: uppercase;
+      }
+
+      .value {
+        display: block;
+        margin-top: 8px;
+        font-size: 17px;
+        font-weight: 850;
+        overflow-wrap: anywhere;
+      }
+
+      .good {
+        color: var(--green);
+      }
+
+      .pending {
+        color: var(--gold);
+      }
+
+      .note,
+      li {
+        color: var(--muted);
+      }
+
+      .note {
+        margin: 0;
+      }
+
+      .list {
+        display: grid;
+        gap: 10px;
+        margin-top: 12px;
+      }
+
+      .row {
+        display: grid;
+        grid-template-columns: minmax(132px, 0.8fr) minmax(0, 1.4fr);
+        gap: 12px;
+        align-items: start;
+        border-top: 1px solid var(--line);
+        padding-top: 10px;
+      }
+
+      .row strong {
+        min-width: 0;
+        overflow-wrap: anywhere;
+        text-align: right;
+      }
+
+      .warning {
+        border-color: #f1d28a;
+        background: #fff8e6;
+      }
+
+      footer {
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        padding: 22px 0;
+        font-size: 13px;
+      }
+
+      @media (max-width: 760px) {
+        nav {
+          align-items: flex-start;
+          flex-direction: column;
+          padding: 14px 0;
+        }
+
+        .grid,
+        .two,
+        .facts {
+          grid-template-columns: 1fr;
+        }
+
+        .row {
+          grid-template-columns: 1fr;
+        }
+
+        .row strong {
+          text-align: left;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav class="shell" aria-label="Primary navigation">
+        <a class="brand" href="index.html">
+          <img src="assets/gca-logo.svg" alt="GCA logo">
+          <span>GCA</span>
+        </a>
+        <div class="nav-links">
+          <a href="narrative.html">Narrative</a>
+          <a href="radar.html">Radar</a>
+          <a href="access.html">Access</a>
+          <a href="members.html">Members</a>
+          <a href="risk.html">Risk</a>
+          <a href="site-map.html">Site Map</a>
+        </div>
+      </nav>
+    </header>
+
+    <main class="shell">
+      <section aria-labelledby="title">
+        <p class="eyebrow">Liquidation Replay / Sample 001</p>
+        <h1 id="title">GCA Liquidation Replay Sample Report</h1>
+        <p class="lead">This public sample shows how GCA plans to turn a liquidation or near-liquidation event into a structured risk review: position sizing, leverage pressure, invalidation rules, and safer next actions.</p>
+        <p class="lead">It is educational sample content only. It is not live market data, not financial advice, not a trading signal, not automated execution, and not a promise of any market outcome.</p>
+        <div class="actions">
+          <a class="button primary" href="narrative.html">Narrative System</a>
+          <a class="button" href="radar.html">Weekly Radar</a>
+          <a class="button" href="review-queue.html">Review Queue</a>
+          <a class="button" href="credits.html">Credits Ledger</a>
+          <a class="button" href="risk.html">Risk Rules</a>
+        </div>
+      </section>
+
+      <section class="section facts" aria-label="Report facts">
+        <div class="fact">
+          <span class="label">Report ID</span>
+          <span class="value">liquidation-replay-001</span>
+          <p class="note">Published sample for public product proof.</p>
+        </div>
+        <div class="fact">
+          <span class="label">Status</span>
+          <span class="value good">Published sample</span>
+          <p class="note">Ready for education, review, and product demonstration.</p>
+        </div>
+        <div class="fact">
+          <span class="label">Scope</span>
+          <span class="value">Risk education</span>
+          <p class="note">No wallet signature, custody, API key, or live order routing.</p>
+        </div>
+        <div class="fact">
+          <span class="label">Network Context</span>
+          <span class="value">Base Mainnet / chainId 8453</span>
+          <p class="note">GCA contract: 0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6.</p>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="scenarioTitle">
+        <h2 id="scenarioTitle">Scenario Snapshot</h2>
+        <div class="list">
+          <div class="row"><span>Asset setup</span><strong>Hypothetical perpetual position, long bias, fast downside move</strong></div>
+          <div class="row"><span>Portfolio size</span><strong>$1,000 educational account example</strong></div>
+          <div class="row"><span>Position notional</span><strong>$5,000 exposure at 5x leverage</strong></div>
+          <div class="row"><span>Trigger event</span><strong>Price moved against the position before a defined exit rule was followed</strong></div>
+          <div class="row"><span>Main failure</span><strong>Oversized exposure plus no pre-committed invalidation level</strong></div>
+        </div>
+      </section>
+
+      <section class="section grid" aria-label="Risk findings">
+        <div class="panel">
+          <h2>Risk Mistake 1</h2>
+          <h3>Position size too large</h3>
+          <p class="note">A $5,000 notional position on a $1,000 account leaves little room for volatility. The replay reduces the example exposure to a size where a planned stop does not dominate the entire account.</p>
+        </div>
+        <div class="panel">
+          <h2>Risk Mistake 2</h2>
+          <h3>No invalidation rule</h3>
+          <p class="note">The sample requires an invalidation level before entry. If price reaches that level, the review says the trade idea is wrong and no new exposure should be added.</p>
+        </div>
+        <div class="panel">
+          <h2>Risk Mistake 3</h2>
+          <h3>Funding and volatility ignored</h3>
+          <p class="note">Liquidation risk is not only direction. Funding cost, sudden spread changes, and exchange-side mark price movement all need to be included in the replay.</p>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="replayTitle">
+        <h2 id="replayTitle">Safer Replay Template</h2>
+        <div class="list">
+          <div class="row"><span>Maximum account risk</span><strong>Define a fixed loss budget before entry; this sample uses 1% as an education-only reference.</strong></div>
+          <div class="row"><span>Position sizing</span><strong>Size from invalidation distance first, then check leverage, not the other way around.</strong></div>
+          <div class="row"><span>Entry condition</span><strong>Only enter if the setup, invalidation level, and exit plan are written before execution.</strong></div>
+          <div class="row"><span>Invalidation condition</span><strong>If the level is hit, close or stop reviewing the setup; do not average down by default.</strong></div>
+          <div class="row"><span>Post-event review</span><strong>Record what changed, whether the rule was followed, and what size would have survived normal volatility.</strong></div>
+        </div>
+      </section>
+
+      <section class="section two" aria-label="GCA access use">
+        <div class="panel">
+          <h2>How GCA Fits</h2>
+          <p class="note">Liquidation Replay is one of the planned GCA utility formats. A registered user can submit a case for operator review, and account-level credits can be used to organize report requests once the service route is deployed.</p>
+          <div class="list">
+            <div class="row"><span>100 credits</span><strong>Can be used as a service record for reports, backtests, risk warnings, and review requests.</strong></div>
+            <div class="row"><span>GCA Member</span><strong>May receive priority queue handling after 1,000,000 GCA / 30-day eligibility and manual review.</strong></div>
+          </div>
+        </div>
+        <div class="panel warning">
+          <h2>Boundaries</h2>
+          <ul>
+            <li>No private keys, seed phrases, wallet signatures, custody, withdrawal permission, or exchange withdrawal access.</li>
+            <li>No direct production exchange connection from this public sample.</li>
+            <li>No claim that this sample predicts price, prevents liquidation, or creates trading profit.</li>
+            <li>No third-party audit has been completed for the token contract or service workflow.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="copyTitle">
+        <h2 id="copyTitle">Copy-Ready Public Summary</h2>
+        <p class="note">GCA Liquidation Replay Sample 001 is now published. It shows how the Go China Access product layer can turn a high-risk trading event into a structured risk education report: sizing, invalidation, leverage pressure, and safer review steps. It is sample content only, not live market data, not financial advice, and not a trading signal.</p>
+      </section>
+
+      <section class="section panel" aria-labelledby="refsTitle">
+        <h2 id="refsTitle">Liquidation Replay References</h2>
+        <div class="actions">
+          <a class="button" href="narrative.html">Narrative System</a>
+          <a class="button" href="access.html">Access Portal</a>
+          <a class="button" href="member-access-brief-001.html">Member Access Brief</a>
+          <a class="button" href="site-map.html">Site Map</a>
+          <a class="button" href="https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0" target="_blank" rel="noreferrer">Official GCA/USDT Pool</a>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="shell">GCA Liquidation Replay sample. Always verify chain ID 8453, the official contract, and current release boundaries before relying on any public material.</div>
+    </footer>
+  </body>
+</html>

@@ -113,6 +113,8 @@ RADAR_ISSUE_004_PAGE_URL = "https://gcagochina.com/radar-issue-004.html"
 RADAR_ISSUE_004_URL = "https://gcagochina.com/radar-issue-004.json"
 MEMBER_ACCESS_BRIEF_001_PAGE_URL = "https://gcagochina.com/member-access-brief-001.html"
 MEMBER_ACCESS_BRIEF_001_URL = "https://gcagochina.com/member-access-brief-001.json"
+LIQUIDATION_REPLAY_001_PAGE_URL = "https://gcagochina.com/liquidation-replay-001.html"
+LIQUIDATION_REPLAY_001_URL = "https://gcagochina.com/liquidation-replay-001.json"
 UTILITY_PAGE_URL = "https://gcagochina.com/utility.html"
 UTILITY_URL = "https://gcagochina.com/utility.json"
 PRODUCT_PAGE_URL = "https://gcagochina.com/product.html"
@@ -4272,6 +4274,7 @@ def validate_data_page(text: str) -> None:
         "Narrative system data",
         "Weekly radar data",
         "Issue 004 data",
+        "Liquidation replay sample data",
         "Publishing desk data",
         "Announcements data",
         "Content library data",
@@ -4293,6 +4296,7 @@ def validate_data_page(text: str) -> None:
         "member-ledger.json",
         "member-benefit-transfer.json",
         "member-access-brief-001.json",
+        "liquidation-replay-001.json",
         "operations.json",
         "zh-operations.html",
         "access-api.json",
@@ -6214,6 +6218,8 @@ def validate_narrative_page(text: str) -> None:
     assert_contains(text, "GCA Member ledger", label)
     assert_contains(text, "Service request / credit usage routes", label)
     assert_contains(text, "Worker deploy permission still required", label)
+    assert_contains(text, "Published sample report", label)
+    assert_contains(text, "liquidation-replay-001.html", label)
     assert_contains(text, "gca/member-access/", label)
     assert_contains(text, "Review Queue", label)
     assert_contains(text, "Credits Ledger", label)
@@ -6286,8 +6292,21 @@ def validate_narrative_json(text: str) -> None:
         raise SiteCheckError(f"{label}: credits ledger should be live")
     if live_workflows.get("gca-member-ledger", {}).get("status") != "eligible-records-live-manual-benefit-review":
         raise SiteCheckError(f"{label}: member ledger should be live with manual review")
-    if "Liquidation Replay sample report" not in payload.get("buildNext", []):
-        raise SiteCheckError(f"{label}: missing next Liquidation Replay proof")
+    if live_workflows.get("liquidation-replay-001", {}).get("status") != "published-sample-report":
+        raise SiteCheckError(f"{label}: Liquidation Replay sample should be published")
+    if live_workflows.get("liquidation-replay-001", {}).get("publicUrl") != LIQUIDATION_REPLAY_001_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong Liquidation Replay public URL")
+    if "not live market data" not in live_workflows.get("liquidation-replay-001", {}).get("claimBoundary", ""):
+        raise SiteCheckError(f"{label}: missing Liquidation Replay boundary")
+    product_proofs = {item.get("id"): item for item in payload.get("publishedProductProofs", []) if isinstance(item, dict)}
+    if product_proofs.get("liquidation-replay-001", {}).get("status") != "published-sample-report":
+        raise SiteCheckError(f"{label}: missing Liquidation Replay published proof")
+    if product_proofs.get("liquidation-replay-001", {}).get("pageUrl") != LIQUIDATION_REPLAY_001_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong Liquidation Replay proof page")
+    if product_proofs.get("liquidation-replay-001", {}).get("url") != LIQUIDATION_REPLAY_001_URL:
+        raise SiteCheckError(f"{label}: wrong Liquidation Replay proof json")
+    if "Liquidation Replay sample report" in payload.get("buildNext", []):
+        raise SiteCheckError(f"{label}: Liquidation Replay should no longer be in buildNext")
     if "service request Worker route publish after Cloudflare deploy permission is restored" not in payload.get("buildNext", []):
         raise SiteCheckError(f"{label}: missing service request deploy blocker")
     if "credit usage Worker route publish after Cloudflare deploy permission is restored" not in payload.get("buildNext", []):
@@ -6314,6 +6333,10 @@ def validate_narrative_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong weeklyRadar")
     if links.get("accessPortal") != "https://gcagochina.com/access.html":
         raise SiteCheckError(f"{label}: wrong accessPortal")
+    if links.get("liquidationReplay001Page") != LIQUIDATION_REPLAY_001_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong liquidationReplay001Page")
+    if links.get("liquidationReplay001") != LIQUIDATION_REPLAY_001_URL:
+        raise SiteCheckError(f"{label}: wrong liquidationReplay001")
     if links.get("memberAccessUi") != "https://gcagochina.com/gca/member-access/":
         raise SiteCheckError(f"{label}: wrong memberAccessUi")
     if links.get("reviewQueue") != "https://gcagochina.com/review-queue.html":
@@ -6615,6 +6638,118 @@ def validate_member_access_brief_001_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong publishingDeskPage")
     if links.get("verify") != VERIFY_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong verify")
+    assert_no_forbidden_public_claims(json.dumps(payload), label)
+    assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
+    assert_not_contains(json.dumps(payload), "GCA/WETH", label)
+
+
+def validate_liquidation_replay_001_page(text: str) -> None:
+    label = "/liquidation-replay-001.html"
+    assert_social_preview_meta(text, label, LIQUIDATION_REPLAY_001_PAGE_URL)
+    for expected in (
+        "GCA Liquidation Replay Sample Report",
+        "Liquidation Replay / Sample 001",
+        "Published sample",
+        "Risk education",
+        "not live market data",
+        "not financial advice",
+        "not a trading signal",
+        "No wallet signature, custody, API key, or live order routing",
+        "Scenario Snapshot",
+        "Position size too large",
+        "No invalidation rule",
+        "Funding and volatility ignored",
+        "Safer Replay Template",
+        "100 credits",
+        "GCA Member",
+        "No third-party audit has been completed",
+        "Copy-Ready Public Summary",
+        "Liquidation Replay References",
+        LIQUIDATION_REPLAY_001_PAGE_URL,
+        MAINNET_ADDRESS,
+        "Base Mainnet / chainId 8453",
+        "GCA/USDT",
+    ):
+        assert_contains(text, expected, label)
+    assert_current_pool_text(text, label)
+    assert_no_public_data_room_terms(text, label)
+    assert_no_forbidden_public_claims(text, label)
+    assert_not_contains(text, OLD_WETH_POOL_ADDRESS, label)
+    assert_not_contains(text, "GCA/WETH", label)
+
+
+def validate_liquidation_replay_001_json(text: str) -> None:
+    label = "/liquidation-replay-001.json"
+    payload = load_json(text, label)
+    scenario = payload.get("scenario", {})
+    account_credit_use = payload.get("accountCreditUse", {})
+    market = payload.get("officialMarket", {})
+    boundaries = payload.get("publicClaimBoundaries", {})
+    links = payload.get("officialLinks", {})
+
+    if payload.get("schema") != LIQUIDATION_REPLAY_001_URL:
+        raise SiteCheckError(f"{label}: wrong schema")
+    if payload.get("pageUrl") != LIQUIDATION_REPLAY_001_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong pageUrl")
+    if payload.get("status") != "liquidation-replay-001-published-sample":
+        raise SiteCheckError(f"{label}: wrong status")
+    if payload.get("reportId") != "liquidation-replay-001":
+        raise SiteCheckError(f"{label}: wrong reportId")
+    if payload.get("lastUpdated") != "2026-06-11":
+        raise SiteCheckError(f"{label}: wrong lastUpdated")
+    if payload.get("chainId") != 8453:
+        raise SiteCheckError(f"{label}: wrong chainId")
+    if payload.get("contractAddress") != MAINNET_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong contractAddress")
+    if payload.get("sampleOnly") is not True:
+        raise SiteCheckError(f"{label}: sampleOnly must be true")
+    if payload.get("notLiveMarketData") is not True:
+        raise SiteCheckError(f"{label}: notLiveMarketData must be true")
+    if payload.get("notFinancialAdvice") is not True:
+        raise SiteCheckError(f"{label}: notFinancialAdvice must be true")
+    if payload.get("notTradingSignal") is not True:
+        raise SiteCheckError(f"{label}: notTradingSignal must be true")
+    if "not live market data" not in payload.get("scope", ""):
+        raise SiteCheckError(f"{label}: missing market-data boundary")
+    if scenario.get("leverage") != "5x":
+        raise SiteCheckError(f"{label}: wrong sample leverage")
+    if "oversized exposure" not in scenario.get("mainFailure", ""):
+        raise SiteCheckError(f"{label}: missing main failure")
+    for finding in ("Position size too large", "No invalidation rule", "Funding and mark-price movement ignored"):
+        if finding not in {item.get("name") for item in payload.get("riskFindings", [])}:
+            raise SiteCheckError(f"{label}: missing risk finding {finding}")
+    if "Define a fixed account-level loss budget before entry." not in payload.get("saferReplayTemplate", []):
+        raise SiteCheckError(f"{label}: missing loss-budget replay step")
+    if "100 credits" not in account_credit_use.get("holderBonus", ""):
+        raise SiteCheckError(f"{label}: missing holder credit use")
+    if "1,000,000 GCA / 30-day eligibility" not in account_credit_use.get("gcaMember", ""):
+        raise SiteCheckError(f"{label}: missing member queue use")
+    if "Cloudflare deploy permission" not in account_credit_use.get("serviceRouteStatus", ""):
+        raise SiteCheckError(f"{label}: missing service route deploy boundary")
+    if not any("private keys" in item for item in payload.get("releaseBoundaries", [])):
+        raise SiteCheckError(f"{label}: missing private-key boundary")
+    if "GCA has published Liquidation Replay Sample 001 as an education and product-proof report format." not in boundaries.get("safeClaims", []):
+        raise SiteCheckError(f"{label}: missing public sample safe claim")
+    if "Liquidation Replay predicts price" not in boundaries.get("doNotClaim", []):
+        raise SiteCheckError(f"{label}: missing price-prediction boundary")
+    if "Liquidation Replay is live automated trading" not in boundaries.get("doNotClaim", []):
+        raise SiteCheckError(f"{label}: missing automated-trading boundary")
+    if market.get("pair") != "GCA/USDT":
+        raise SiteCheckError(f"{label}: wrong pair")
+    if market.get("poolAddress") != OFFICIAL_POOL_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong poolAddress")
+    if market.get("quoteAssetAddress") != BASE_USDT_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong quoteAssetAddress")
+    if links.get("liquidationReplay001Page") != LIQUIDATION_REPLAY_001_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong liquidationReplay001Page")
+    if links.get("liquidationReplay001") != LIQUIDATION_REPLAY_001_URL:
+        raise SiteCheckError(f"{label}: wrong liquidationReplay001")
+    if links.get("narrativePage") != NARRATIVE_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong narrativePage")
+    if links.get("reviewQueue") != REVIEW_QUEUE_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong reviewQueue")
+    if links.get("creditsLedger") != CREDITS_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong creditsLedger")
     assert_no_forbidden_public_claims(json.dumps(payload), label)
     assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
     assert_not_contains(json.dumps(payload), "GCA/WETH", label)
@@ -13379,6 +13514,8 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/radar-issue-004.json",
         "https://gcagochina.com/member-access-brief-001.html",
         "https://gcagochina.com/member-access-brief-001.json",
+        "https://gcagochina.com/liquidation-replay-001.html",
+        "https://gcagochina.com/liquidation-replay-001.json",
         "https://gcagochina.com/gca/member-access/",
         "https://gcagochina.com/member-program.html",
         "https://gcagochina.com/member-program.json",
@@ -13458,6 +13595,11 @@ def validate_sitemap(text: str) -> None:
         "zh-release-gates.html",
     ):
         assert_sitemap_lastmod(path, "2026-06-10")
+    for path in (
+        "liquidation-replay-001.html",
+        "liquidation-replay-001.json",
+    ):
+        assert_sitemap_lastmod(path, "2026-06-11")
     for path in (
         "basescan-handoff.html",
         "basescan-handoff.json",
@@ -13554,6 +13696,8 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /radar.json", label)
     assert_contains(text, "Allow: /radar-issue-004.html", label)
     assert_contains(text, "Allow: /radar-issue-004.json", label)
+    assert_contains(text, "Allow: /liquidation-replay-001.html", label)
+    assert_contains(text, "Allow: /liquidation-replay-001.json", label)
     assert_contains(text, "Allow: /member-access-brief-001.html", label)
     assert_contains(text, "Allow: /member-access-brief-001.json", label)
     assert_contains(text, "Allow: /market-quality.html", label)
@@ -13752,6 +13896,8 @@ CHECKS: list[EndpointCheck] = [
     ("/radar.json", validate_radar_json),
     ("/radar-issue-004.html", validate_radar_issue_004_page),
     ("/radar-issue-004.json", validate_radar_issue_004_json),
+    ("/liquidation-replay-001.html", validate_liquidation_replay_001_page),
+    ("/liquidation-replay-001.json", validate_liquidation_replay_001_json),
     ("/member-access-brief-001.html", validate_member_access_brief_001_page),
     ("/member-access-brief-001.json", validate_member_access_brief_001_json),
     ("/utility.html", validate_utility_page),

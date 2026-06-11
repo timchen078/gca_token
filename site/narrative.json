@@ -81,10 +81,25 @@
       "status": "eligible-records-live-manual-benefit-review",
       "publicUrl": "https://gcagochina.com/member-ledger.html",
       "claimBoundary": "GCA Member status and the 10,000 GCA benefit remain operator-reviewed and manual"
+    },
+    {
+      "id": "liquidation-replay-001",
+      "status": "published-sample-report",
+      "publicUrl": "https://gcagochina.com/liquidation-replay-001.html",
+      "claimBoundary": "education sample only; not live market data, financial advice, trading signal, automated execution, or a market outcome promise"
+    }
+  ],
+  "publishedProductProofs": [
+    {
+      "id": "liquidation-replay-001",
+      "module": "Liquidation Replay",
+      "status": "published-sample-report",
+      "pageUrl": "https://gcagochina.com/liquidation-replay-001.html",
+      "url": "https://gcagochina.com/liquidation-replay-001.json",
+      "claimBoundary": "educational sample only; not live market data, financial advice, trading signal, automated execution, or a market outcome promise"
     }
   ],
   "buildNext": [
-    "Liquidation Replay sample report",
     "operator-reviewed service delivery playbook",
     "service request Worker route publish after Cloudflare deploy permission is restored",
     "credit usage Worker route publish after Cloudflare deploy permission is restored",
@@ -134,6 +149,8 @@
     "roadmap": "https://gcagochina.com/roadmap.html",
     "community": "https://gcagochina.com/community.html",
     "accessPortal": "https://gcagochina.com/access.html",
+    "liquidationReplay001Page": "https://gcagochina.com/liquidation-replay-001.html",
+    "liquidationReplay001": "https://gcagochina.com/liquidation-replay-001.json",
     "memberAccessUi": "https://gcagochina.com/gca/member-access/",
     "reviewQueue": "https://gcagochina.com/review-queue.html",
     "creditsLedger": "https://gcagochina.com/credits.html",

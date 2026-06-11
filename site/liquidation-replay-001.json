@@ -1,0 +1,96 @@
+{
+  "schema": "https://gcagochina.com/liquidation-replay-001.json",
+  "pageUrl": "https://gcagochina.com/liquidation-replay-001.html",
+  "status": "liquidation-replay-001-published-sample",
+  "reportId": "liquidation-replay-001",
+  "lastUpdated": "2026-06-11",
+  "projectName": "GCA",
+  "conceptExpansion": "Go China Access",
+  "module": "Liquidation Replay",
+  "network": "Base Mainnet",
+  "chainId": 8453,
+  "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+  "sampleOnly": true,
+  "notLiveMarketData": true,
+  "notFinancialAdvice": true,
+  "notTradingSignal": true,
+  "scope": "Liquidation Replay Sample 001 is public education content for showing how GCA can package liquidation and near-liquidation events into position sizing review, invalidation review, and safer next-action planning. It is not live market data, not financial advice, not a trading signal, not automated execution, and not a promise of any market outcome.",
+  "scenario": {
+    "assetSetup": "hypothetical perpetual position with long bias and fast downside move",
+    "portfolioSize": "$1,000 educational account example",
+    "positionNotional": "$5,000 exposure",
+    "leverage": "5x",
+    "triggerEvent": "price moved against the position before a defined exit rule was followed",
+    "mainFailure": "oversized exposure plus no pre-committed invalidation level"
+  },
+  "riskFindings": [
+    {
+      "name": "Position size too large",
+      "finding": "A $5,000 notional position on a $1,000 account leaves little room for normal volatility.",
+      "replayAction": "Reduce exposure until the planned invalidation loss fits the account-level loss budget."
+    },
+    {
+      "name": "No invalidation rule",
+      "finding": "The setup did not define a level where the trade idea becomes wrong.",
+      "replayAction": "Write invalidation before entry and stop adding exposure if that level is reached."
+    },
+    {
+      "name": "Funding and mark-price movement ignored",
+      "finding": "Liquidation pressure can come from funding, spread, and exchange-side mark price behavior, not only spot direction.",
+      "replayAction": "Review funding, mark price, spread, and volatility before selecting leverage."
+    }
+  ],
+  "saferReplayTemplate": [
+    "Define a fixed account-level loss budget before entry.",
+    "Size from invalidation distance first, then check leverage.",
+    "Only enter if setup, invalidation level, and exit plan are written before execution.",
+    "If invalidation is reached, stop reviewing the setup as valid and do not average down by default.",
+    "Record what changed, whether the rule was followed, and what position size would have survived normal volatility."
+  ],
+  "accountCreditUse": {
+    "holderBonus": "100 credits can be recorded for report requests, backtests, risk warnings, ENTRY_READY review, position sizing, or education access.",
+    "gcaMember": "GCA Member accounts may receive priority queue handling after 1,000,000 GCA / 30-day eligibility and manual review.",
+    "serviceRouteStatus": "service request and credit usage Worker routes are prepared but require Cloudflare deploy permission before public write operations."
+  },
+  "releaseBoundaries": [
+    "This sample does not collect private keys, seed phrases, wallet signatures, custody permissions, withdrawal permissions, or exchange withdrawal access.",
+    "This sample is not connected to a production exchange.",
+    "This sample does not predict price, prevent liquidation, or create trading profit.",
+    "No third-party audit has been completed for the token contract or service workflow."
+  ],
+  "publicClaimBoundaries": {
+    "safeClaims": [
+      "GCA has published Liquidation Replay Sample 001 as an education and product-proof report format.",
+      "Liquidation Replay reviews position sizing, invalidation rules, leverage pressure, and safer next-action planning.",
+      "The sample is not live market data, not financial advice, and not a trading signal.",
+      "The sample does not require private keys, seed phrases, wallet signatures, custody, withdrawals, or production exchange access."
+    ],
+    "doNotClaim": [
+      "Liquidation Replay predicts price",
+      "Liquidation Replay prevents liquidation",
+      "Liquidation Replay creates trading profit",
+      "Liquidation Replay is live automated trading",
+      "Liquidation Replay is audited by a third party"
+    ]
+  },
+  "officialMarket": {
+    "pair": "GCA/USDT",
+    "poolAddress": "0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "quoteAsset": "USDT",
+    "quoteAssetAddress": "0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2"
+  },
+  "officialLinks": {
+    "liquidationReplay001Page": "https://gcagochina.com/liquidation-replay-001.html",
+    "liquidationReplay001": "https://gcagochina.com/liquidation-replay-001.json",
+    "narrativePage": "https://gcagochina.com/narrative.html",
+    "narrative": "https://gcagochina.com/narrative.json",
+    "weeklyRadarPage": "https://gcagochina.com/radar.html",
+    "weeklyRadar": "https://gcagochina.com/radar.json",
+    "accessPortal": "https://gcagochina.com/access.html",
+    "reviewQueue": "https://gcagochina.com/review-queue.html",
+    "creditsLedger": "https://gcagochina.com/credits.html",
+    "memberAccessBrief001Page": "https://gcagochina.com/member-access-brief-001.html",
+    "officialPool": "https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "risk": "https://gcagochina.com/risk.html"
+  }
+}
