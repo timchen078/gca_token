@@ -87,6 +87,12 @@
       "status": "published-sample-report",
       "publicUrl": "https://gcagochina.com/liquidation-replay-001.html",
       "claimBoundary": "education sample only; not live market data, financial advice, trading signal, automated execution, or a market outcome promise"
+    },
+    {
+      "id": "service-delivery-playbook",
+      "status": "published-operator-reviewed-workflow",
+      "publicUrl": "https://gcagochina.com/service-delivery-playbook.html",
+      "claimBoundary": "operator-reviewed service delivery workflow only; production service-request and credit-usage Worker routes remain non-live until deploy gates pass"
     }
   ],
   "publishedProductProofs": [
@@ -97,10 +103,17 @@
       "pageUrl": "https://gcagochina.com/liquidation-replay-001.html",
       "url": "https://gcagochina.com/liquidation-replay-001.json",
       "claimBoundary": "educational sample only; not live market data, financial advice, trading signal, automated execution, or a market outcome promise"
+    },
+    {
+      "id": "service-delivery-playbook",
+      "module": "GCA AI Quant Access service delivery",
+      "status": "published-operator-reviewed-workflow",
+      "pageUrl": "https://gcagochina.com/service-delivery-playbook.html",
+      "url": "https://gcagochina.com/service-delivery-playbook.json",
+      "claimBoundary": "operator-reviewed workflow only; production service-request and credit-usage Worker routes remain non-live until Cloudflare deploy gates pass"
     }
   ],
   "buildNext": [
-    "operator-reviewed service delivery playbook",
     "service request Worker route publish after Cloudflare deploy permission is restored",
     "credit usage Worker route publish after Cloudflare deploy permission is restored",
     "Weekly Go China Radar issue 004"
@@ -149,6 +162,8 @@
     "roadmap": "https://gcagochina.com/roadmap.html",
     "community": "https://gcagochina.com/community.html",
     "accessPortal": "https://gcagochina.com/access.html",
+    "serviceDeliveryPlaybookPage": "https://gcagochina.com/service-delivery-playbook.html",
+    "serviceDeliveryPlaybook": "https://gcagochina.com/service-delivery-playbook.json",
     "liquidationReplay001Page": "https://gcagochina.com/liquidation-replay-001.html",
     "liquidationReplay001": "https://gcagochina.com/liquidation-replay-001.json",
     "memberAccessUi": "https://gcagochina.com/gca/member-access/",

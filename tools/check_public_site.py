@@ -115,6 +115,8 @@ MEMBER_ACCESS_BRIEF_001_PAGE_URL = "https://gcagochina.com/member-access-brief-0
 MEMBER_ACCESS_BRIEF_001_URL = "https://gcagochina.com/member-access-brief-001.json"
 LIQUIDATION_REPLAY_001_PAGE_URL = "https://gcagochina.com/liquidation-replay-001.html"
 LIQUIDATION_REPLAY_001_URL = "https://gcagochina.com/liquidation-replay-001.json"
+SERVICE_DELIVERY_PLAYBOOK_PAGE_URL = "https://gcagochina.com/service-delivery-playbook.html"
+SERVICE_DELIVERY_PLAYBOOK_URL = "https://gcagochina.com/service-delivery-playbook.json"
 UTILITY_PAGE_URL = "https://gcagochina.com/utility.html"
 UTILITY_URL = "https://gcagochina.com/utility.json"
 PRODUCT_PAGE_URL = "https://gcagochina.com/product.html"
@@ -4275,6 +4277,7 @@ def validate_data_page(text: str) -> None:
         "Weekly radar data",
         "Issue 004 data",
         "Liquidation replay sample data",
+        "Service delivery playbook data",
         "Publishing desk data",
         "Announcements data",
         "Content library data",
@@ -4297,6 +4300,7 @@ def validate_data_page(text: str) -> None:
         "member-benefit-transfer.json",
         "member-access-brief-001.json",
         "liquidation-replay-001.json",
+        "service-delivery-playbook.json",
         "operations.json",
         "zh-operations.html",
         "access-api.json",
@@ -6219,7 +6223,10 @@ def validate_narrative_page(text: str) -> None:
     assert_contains(text, "Service request / credit usage routes", label)
     assert_contains(text, "Worker deploy permission still required", label)
     assert_contains(text, "Published sample report", label)
+    assert_contains(text, "Service Delivery Playbook", label)
+    assert_contains(text, "Published operator-reviewed workflow", label)
     assert_contains(text, "liquidation-replay-001.html", label)
+    assert_contains(text, "service-delivery-playbook.html", label)
     assert_contains(text, "gca/member-access/", label)
     assert_contains(text, "Review Queue", label)
     assert_contains(text, "Credits Ledger", label)
@@ -6305,8 +6312,22 @@ def validate_narrative_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong Liquidation Replay proof page")
     if product_proofs.get("liquidation-replay-001", {}).get("url") != LIQUIDATION_REPLAY_001_URL:
         raise SiteCheckError(f"{label}: wrong Liquidation Replay proof json")
+    if live_workflows.get("service-delivery-playbook", {}).get("status") != "published-operator-reviewed-workflow":
+        raise SiteCheckError(f"{label}: Service Delivery Playbook should be published")
+    if live_workflows.get("service-delivery-playbook", {}).get("publicUrl") != SERVICE_DELIVERY_PLAYBOOK_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong Service Delivery Playbook public URL")
+    if "production service-request and credit-usage Worker routes remain non-live" not in live_workflows.get("service-delivery-playbook", {}).get("claimBoundary", ""):
+        raise SiteCheckError(f"{label}: missing Service Delivery route boundary")
+    if product_proofs.get("service-delivery-playbook", {}).get("status") != "published-operator-reviewed-workflow":
+        raise SiteCheckError(f"{label}: missing Service Delivery published proof")
+    if product_proofs.get("service-delivery-playbook", {}).get("pageUrl") != SERVICE_DELIVERY_PLAYBOOK_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong Service Delivery proof page")
+    if product_proofs.get("service-delivery-playbook", {}).get("url") != SERVICE_DELIVERY_PLAYBOOK_URL:
+        raise SiteCheckError(f"{label}: wrong Service Delivery proof json")
     if "Liquidation Replay sample report" in payload.get("buildNext", []):
         raise SiteCheckError(f"{label}: Liquidation Replay should no longer be in buildNext")
+    if "operator-reviewed service delivery playbook" in payload.get("buildNext", []):
+        raise SiteCheckError(f"{label}: Service Delivery Playbook should no longer be in buildNext")
     if "service request Worker route publish after Cloudflare deploy permission is restored" not in payload.get("buildNext", []):
         raise SiteCheckError(f"{label}: missing service request deploy blocker")
     if "credit usage Worker route publish after Cloudflare deploy permission is restored" not in payload.get("buildNext", []):
@@ -6333,6 +6354,10 @@ def validate_narrative_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong weeklyRadar")
     if links.get("accessPortal") != "https://gcagochina.com/access.html":
         raise SiteCheckError(f"{label}: wrong accessPortal")
+    if links.get("serviceDeliveryPlaybookPage") != SERVICE_DELIVERY_PLAYBOOK_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong serviceDeliveryPlaybookPage")
+    if links.get("serviceDeliveryPlaybook") != SERVICE_DELIVERY_PLAYBOOK_URL:
+        raise SiteCheckError(f"{label}: wrong serviceDeliveryPlaybook")
     if links.get("liquidationReplay001Page") != LIQUIDATION_REPLAY_001_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong liquidationReplay001Page")
     if links.get("liquidationReplay001") != LIQUIDATION_REPLAY_001_URL:
@@ -6750,6 +6775,139 @@ def validate_liquidation_replay_001_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong reviewQueue")
     if links.get("creditsLedger") != CREDITS_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong creditsLedger")
+    assert_no_forbidden_public_claims(json.dumps(payload), label)
+    assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
+    assert_not_contains(json.dumps(payload), "GCA/WETH", label)
+
+
+def validate_service_delivery_playbook_page(text: str) -> None:
+    label = "/service-delivery-playbook.html"
+    assert_social_preview_meta(text, label, SERVICE_DELIVERY_PLAYBOOK_PAGE_URL)
+    for expected in (
+        "GCA Service Delivery Playbook",
+        "Operator-Reviewed Service Delivery",
+        "Public playbook published",
+        "Manual review first",
+        "No custody",
+        "Delivery Flow",
+        "Account intake",
+        "Eligibility check",
+        "Service request",
+        "Human review",
+        "Credit usage record",
+        "Risk Reports",
+        "Research Tools",
+        "Member Support",
+        "What Gets Recorded",
+        "What Never Happens Here",
+        "Route Status",
+        "Production Worker routes",
+        "Cloudflare auth",
+        "Copy-Ready Public Summary",
+        "Service Delivery References",
+        "production service-request and credit-usage Worker routes remain non-live",
+        "not automated trading",
+        "no-custody",
+        "no automatic trading access",
+        SERVICE_DELIVERY_PLAYBOOK_PAGE_URL,
+    ):
+        assert_contains(text, expected, label)
+    assert_no_public_data_room_terms(text, label)
+    assert_no_forbidden_public_claims(text, label)
+
+
+def validate_service_delivery_playbook_json(text: str) -> None:
+    label = "/service-delivery-playbook.json"
+    payload = load_json(text, label)
+    route_status = payload.get("routeStatus", {})
+    ledger = payload.get("ledgerBehavior", {})
+    boundaries = payload.get("publicClaimBoundaries", {})
+    links = payload.get("officialLinks", {})
+
+    if payload.get("schema") != SERVICE_DELIVERY_PLAYBOOK_URL:
+        raise SiteCheckError(f"{label}: wrong schema")
+    if payload.get("pageUrl") != SERVICE_DELIVERY_PLAYBOOK_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong pageUrl")
+    if payload.get("status") != "service-delivery-playbook-v1-published":
+        raise SiteCheckError(f"{label}: wrong status")
+    if payload.get("playbookId") != "service-delivery-playbook-v1":
+        raise SiteCheckError(f"{label}: wrong playbookId")
+    if payload.get("lastUpdated") != "2026-06-11":
+        raise SiteCheckError(f"{label}: wrong lastUpdated")
+    if payload.get("chainId") != 8453:
+        raise SiteCheckError(f"{label}: wrong chainId")
+    if payload.get("contractAddress") != MAINNET_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong contractAddress")
+    if "not automated trading" not in payload.get("scope", ""):
+        raise SiteCheckError(f"{label}: missing automated-trading boundary")
+    for step in ("account-intake", "eligibility-check", "service-request", "human-review", "delivery", "credit-usage-record"):
+        if step not in {item.get("step") for item in payload.get("deliveryFlow", [])}:
+            raise SiteCheckError(f"{label}: missing delivery flow step {step}")
+    service_catalog = {item.get("id"): item for item in payload.get("serviceCatalog", []) if isinstance(item, dict)}
+    if service_catalog.get("liquidation-replay-report", {}).get("defaultCreditUnit") != 30:
+        raise SiteCheckError(f"{label}: wrong Liquidation Replay credit unit")
+    if service_catalog.get("entry-ready-review", {}).get("name") != "ENTRY_READY Review":
+        raise SiteCheckError(f"{label}: missing ENTRY_READY Review service")
+    request_ledger = ledger.get("serviceRequestLedger", {})
+    usage_ledger = ledger.get("creditUsageLedger", {})
+    if request_ledger.get("deductsCredits") is not False:
+        raise SiteCheckError(f"{label}: service request must not deduct credits")
+    if request_ledger.get("createsTradingPermission") is not False:
+        raise SiteCheckError(f"{label}: service request must not create trading permission")
+    if usage_ledger.get("writtenOnlyAfterReviewedDelivery") is not True:
+        raise SiteCheckError(f"{label}: credit usage must be written after reviewed delivery")
+    if usage_ledger.get("deductsBeforeReview") is not False:
+        raise SiteCheckError(f"{label}: credit usage must not deduct before review")
+    if route_status.get("localOperatorBackend") != "ready":
+        raise SiteCheckError(f"{label}: local operator backend should be ready")
+    if route_status.get("serviceRequestLocalEndpoint") != "http://127.0.0.1:8787/gca/service-requests":
+        raise SiteCheckError(f"{label}: wrong service request local endpoint")
+    if route_status.get("creditUsageLocalEndpoint") != "http://127.0.0.1:8787/gca/credit-usage":
+        raise SiteCheckError(f"{label}: wrong credit usage local endpoint")
+    if route_status.get("serviceRequestWorkerEndpoint") != "https://gca-registration-api.gcagochina.workers.dev/gca/service-requests":
+        raise SiteCheckError(f"{label}: wrong service request worker endpoint")
+    if route_status.get("creditUsageWorkerEndpoint") != "https://gca-registration-api.gcagochina.workers.dev/gca/credit-usage":
+        raise SiteCheckError(f"{label}: wrong credit usage worker endpoint")
+    if route_status.get("productionRoutesLive") is not False:
+        raise SiteCheckError(f"{label}: production routes must remain non-live")
+    if route_status.get("workerDryRunPassed") is not True:
+        raise SiteCheckError(f"{label}: Worker dry run should be recorded as passed")
+    if route_status.get("d1VisibilityPassed") is not True:
+        raise SiteCheckError(f"{label}: D1 visibility should be recorded as passed")
+    if "error code 10000" not in route_status.get("blockedBy", ""):
+        raise SiteCheckError(f"{label}: missing Cloudflare error boundary")
+    for gate in (
+        "cloudflare-auth-session passes",
+        "Worker deploy permission passes",
+        "remote D1 migrations apply successfully",
+        "wrangler deploy succeeds",
+        "public smoke check passes with --include-pending-routes",
+        "admin smoke check passes with --include-pending-routes",
+    ):
+        if gate not in route_status.get("releaseGates", []):
+            raise SiteCheckError(f"{label}: missing release gate {gate}")
+    if "Production service-request and credit-usage Worker routes are not live until all release gates pass." not in payload.get("releaseBoundaries", []):
+        raise SiteCheckError(f"{label}: missing production-route boundary")
+    if "GCA has published an operator-reviewed service delivery playbook for GCA AI Quant Access workflows." not in boundaries.get("safeClaims", []):
+        raise SiteCheckError(f"{label}: missing safe claim")
+    if "production self-service service delivery is live" not in boundaries.get("doNotClaim", []):
+        raise SiteCheckError(f"{label}: missing self-service boundary")
+    if "reports are financial advice or trading signals" not in boundaries.get("doNotClaim", []):
+        raise SiteCheckError(f"{label}: missing advice boundary")
+    if links.get("serviceDeliveryPlaybookPage") != SERVICE_DELIVERY_PLAYBOOK_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong serviceDeliveryPlaybookPage")
+    if links.get("serviceDeliveryPlaybook") != SERVICE_DELIVERY_PLAYBOOK_URL:
+        raise SiteCheckError(f"{label}: wrong serviceDeliveryPlaybook")
+    if links.get("accessPortal") != ACCESS_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong accessPortal")
+    if links.get("credits") != CREDITS_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong credits")
+    if links.get("reviewQueue") != REVIEW_QUEUE_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong reviewQueue")
+    if links.get("operations") != OPERATIONS_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong operations")
+    if links.get("liquidationReplay001Page") != LIQUIDATION_REPLAY_001_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong liquidationReplay001Page")
     assert_no_forbidden_public_claims(json.dumps(payload), label)
     assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
     assert_not_contains(json.dumps(payload), "GCA/WETH", label)
@@ -13516,6 +13674,8 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/member-access-brief-001.json",
         "https://gcagochina.com/liquidation-replay-001.html",
         "https://gcagochina.com/liquidation-replay-001.json",
+        "https://gcagochina.com/service-delivery-playbook.html",
+        "https://gcagochina.com/service-delivery-playbook.json",
         "https://gcagochina.com/gca/member-access/",
         "https://gcagochina.com/member-program.html",
         "https://gcagochina.com/member-program.json",
@@ -13598,6 +13758,8 @@ def validate_sitemap(text: str) -> None:
     for path in (
         "liquidation-replay-001.html",
         "liquidation-replay-001.json",
+        "service-delivery-playbook.html",
+        "service-delivery-playbook.json",
     ):
         assert_sitemap_lastmod(path, "2026-06-11")
     for path in (
@@ -13698,6 +13860,8 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /radar-issue-004.json", label)
     assert_contains(text, "Allow: /liquidation-replay-001.html", label)
     assert_contains(text, "Allow: /liquidation-replay-001.json", label)
+    assert_contains(text, "Allow: /service-delivery-playbook.html", label)
+    assert_contains(text, "Allow: /service-delivery-playbook.json", label)
     assert_contains(text, "Allow: /member-access-brief-001.html", label)
     assert_contains(text, "Allow: /member-access-brief-001.json", label)
     assert_contains(text, "Allow: /market-quality.html", label)
@@ -13898,6 +14062,8 @@ CHECKS: list[EndpointCheck] = [
     ("/radar-issue-004.json", validate_radar_issue_004_json),
     ("/liquidation-replay-001.html", validate_liquidation_replay_001_page),
     ("/liquidation-replay-001.json", validate_liquidation_replay_001_json),
+    ("/service-delivery-playbook.html", validate_service_delivery_playbook_page),
+    ("/service-delivery-playbook.json", validate_service_delivery_playbook_json),
     ("/member-access-brief-001.html", validate_member_access_brief_001_page),
     ("/member-access-brief-001.json", validate_member_access_brief_001_json),
     ("/utility.html", validate_utility_page),
