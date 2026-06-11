@@ -16,7 +16,7 @@ This package records the current BaseScan token information remediation state. T
 - BaseScan profile status: ready-for-owner-resubmission
 - Latest return notice: 2026-05-23
 - Final owner package: generated 2026-06-06T11:10:54Z
-- Latest daily public status: refreshed 2026-06-11T09:46:37Z
+- Latest daily public status: refreshed 2026-06-11T12:01:21Z
 - Next submission ready: yes; Tim Chen professional profile is published, the Project Profile BaseScan reviewer map is published, the 2026-05-30 DNS snapshot shows MX/SPF/DKIM/DMARC present, readyForBaseScanEmailEvidence is true, the BaseScan Handoff copy blocks are ready, and the daily public status snapshot confirms readyForBaseScanResubmission is true
 
 ## Official Links
@@ -94,7 +94,7 @@ python3 tools/build_basescan_submission_package.py \
 
 The submission package builder is also gated by the same preflight. It writes a local JSON/Markdown draft only and does not submit BaseScan forms, sign wallet messages, send email, write DNS records, or touch wallets/contracts.
 
-The final package generated at `2026-06-06T11:10:54Z` includes copy/paste blocks for the BaseScan reviewer comment, basic information, evidence links, market route, and supply context. The daily public status snapshot refreshed at `2026-06-11T09:46:37Z` confirms the public site check, public registration API check, and BaseScan preflight status are passing. If the preflight is still blocked in a future run, the reviewer comment begins with `DRAFT ONLY - DO NOT SUBMIT BASESCAN YET.` so the owner does not accidentally paste an unready package into the live form.
+The final package generated at `2026-06-06T11:10:54Z` includes copy/paste blocks for the BaseScan reviewer comment, basic information, evidence links, market route, and supply context. The daily public status snapshot refreshed at `2026-06-11T12:01:21Z` confirms the public site check, public registration API check, and BaseScan preflight status are passing. If the preflight is still blocked in a future run, the reviewer comment begins with `DRAFT ONLY - DO NOT SUBMIT BASESCAN YET.` so the owner does not accidentally paste an unready package into the live form.
 
 ## Description
 
@@ -139,6 +139,6 @@ Used for the 2026-05-13 resubmission:
 
 ## Safe Public Claim
 
-`BaseScan source verification and deployer-wallet ownership verification are complete. The public BaseScan token profile update was returned again as information-insufficient on 2026-05-23. The profile is not approved or published. Tim Chen public professional profile evidence is now published at https://gcagochina.com/tim-chen.html with team, GitHub, X, Telegram, and structured profile-data links for reviewer due diligence; the Project Profile BaseScan reviewer map is published at https://gcagochina.com/project-profile.html#basescanMapTitle; the latest 2026-05-30 DNS snapshot at https://gcagochina.com/domain-email.html#snapshotTitle shows MX/SPF/DKIM/DMARC present, so `readyForBaseScanEmailEvidence` is true; the public domain email evidence checklist is published at https://gcagochina.com/domain-email-evidence.html, the domain email activation evidence packet is defined at https://gcagochina.com/domain-email.html#evidenceTitle, the BaseScan Handoff was generated at 2026-06-06T11:10:54Z, and the daily public status snapshot was refreshed at 2026-06-11T09:46:37Z. The owner may submit one clean BaseScan update from support@gcagochina.com and should avoid duplicate follow-ups while BaseScan reviews it.`
+`BaseScan source verification and deployer-wallet ownership verification are complete. The public BaseScan token profile update was returned again as information-insufficient on 2026-05-23. The profile is not approved or published. Tim Chen public professional profile evidence is now published at https://gcagochina.com/tim-chen.html with team, GitHub, X, Telegram, and structured profile-data links for reviewer due diligence; the Project Profile BaseScan reviewer map is published at https://gcagochina.com/project-profile.html#basescanMapTitle; the latest 2026-05-30 DNS snapshot at https://gcagochina.com/domain-email.html#snapshotTitle shows MX/SPF/DKIM/DMARC present, so `readyForBaseScanEmailEvidence` is true; the public domain email evidence checklist is published at https://gcagochina.com/domain-email-evidence.html, the domain email activation evidence packet is defined at https://gcagochina.com/domain-email.html#evidenceTitle, the BaseScan Handoff was generated at 2026-06-06T11:10:54Z, and the daily public status snapshot was refreshed at 2026-06-11T12:01:21Z. The owner may submit one clean BaseScan update from support@gcagochina.com and should avoid duplicate follow-ups while BaseScan reviews it.`
 
 Do not say the BaseScan token profile is approved, published, live, complete, or accepted until the public BaseScan token page shows the submitted information.
