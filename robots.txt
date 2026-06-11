@@ -41,6 +41,8 @@ Allow: /basescan-preflight.html
 Allow: /basescan-preflight.json
 Allow: /basescan-handoff.html
 Allow: /basescan-handoff.json
+Allow: /basescan-followup.html
+Allow: /basescan-followup.json
 Allow: /action-plan.html
 Allow: /action-plan.json
 Allow: /site-map.html
