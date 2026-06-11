@@ -6208,6 +6208,15 @@ def validate_narrative_page(text: str) -> None:
     assert_contains(text, "ENTRY_READY Review", label)
     assert_contains(text, "GCA Member Club", label)
     assert_contains(text, "Risk First Trading", label)
+    assert_contains(text, "Controlled account UI", label)
+    assert_contains(text, "Live via Worker eth_call", label)
+    assert_contains(text, "100 credits ledger", label)
+    assert_contains(text, "GCA Member ledger", label)
+    assert_contains(text, "Service request / credit usage routes", label)
+    assert_contains(text, "Worker deploy permission still required", label)
+    assert_contains(text, "gca/member-access/", label)
+    assert_contains(text, "Review Queue", label)
+    assert_contains(text, "Credits Ledger", label)
     assert_contains(text, "without return promises", label)
     assert_contains(text, "Do not claim price support", label)
     assert_contains(text, MAINNET_ADDRESS, label)
@@ -6234,6 +6243,10 @@ def validate_narrative_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong contractAddress")
     if positioning.get("tagline") != "Narrative meets risk control.":
         raise SiteCheckError(f"{label}: wrong tagline")
+    if "live account intake" not in positioning.get("oneSentence", ""):
+        raise SiteCheckError(f"{label}: missing live account intake positioning")
+    if "read-only wallet verification" not in positioning.get("oneSentence", ""):
+        raise SiteCheckError(f"{label}: missing read-only verification positioning")
     for item in (
         "China Narrative Radar",
         "Weekly Go China Radar",
@@ -6258,6 +6271,27 @@ def validate_narrative_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong weekly radar page")
     if payload.get("weeklyRadar", {}).get("url") != RADAR_URL:
         raise SiteCheckError(f"{label}: wrong weekly radar url")
+    live_workflows = {item.get("id"): item for item in payload.get("liveWorkflows", []) if isinstance(item, dict)}
+    if live_workflows.get("controlled-account-ui", {}).get("status") != "live":
+        raise SiteCheckError(f"{label}: controlled account UI should be live")
+    if live_workflows.get("controlled-account-ui", {}).get("publicUrl") != "https://gcagochina.com/gca/member-access/":
+        raise SiteCheckError(f"{label}: wrong controlled account UI URL")
+    if "no wallet signature" not in live_workflows.get("controlled-account-ui", {}).get("claimBoundary", ""):
+        raise SiteCheckError(f"{label}: missing account UI boundary")
+    if live_workflows.get("read-only-gca-verification", {}).get("status") != "live":
+        raise SiteCheckError(f"{label}: read-only verification should be live")
+    if "balanceOf" not in live_workflows.get("read-only-gca-verification", {}).get("claimBoundary", ""):
+        raise SiteCheckError(f"{label}: missing read-only balanceOf boundary")
+    if live_workflows.get("credits-ledger", {}).get("status") != "eligible-records-live":
+        raise SiteCheckError(f"{label}: credits ledger should be live")
+    if live_workflows.get("gca-member-ledger", {}).get("status") != "eligible-records-live-manual-benefit-review":
+        raise SiteCheckError(f"{label}: member ledger should be live with manual review")
+    if "Liquidation Replay sample report" not in payload.get("buildNext", []):
+        raise SiteCheckError(f"{label}: missing next Liquidation Replay proof")
+    if "service request Worker route publish after Cloudflare deploy permission is restored" not in payload.get("buildNext", []):
+        raise SiteCheckError(f"{label}: missing service request deploy blocker")
+    if "credit usage Worker route publish after Cloudflare deploy permission is restored" not in payload.get("buildNext", []):
+        raise SiteCheckError(f"{label}: missing credit usage deploy blocker")
     if market.get("pair") != "GCA/USDT":
         raise SiteCheckError(f"{label}: wrong pair")
     if market.get("poolAddress") != OFFICIAL_POOL_ADDRESS:
@@ -6266,6 +6300,8 @@ def validate_narrative_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong quoteAssetAddress")
     if "Narrative meets risk control." not in boundaries.get("safeClaims", []):
         raise SiteCheckError(f"{label}: missing tagline safe claim")
+    if "The controlled account UI, read-only GCA balance verification, eligible credit records, and member ledger records are live or ledger-ready." not in boundaries.get("safeClaims", []):
+        raise SiteCheckError(f"{label}: missing live workflow safe claim")
     if "return guarantees" not in boundaries.get("doNotClaim", []):
         raise SiteCheckError(f"{label}: missing return boundary")
     if links.get("narrativePage") != NARRATIVE_PAGE_URL:
@@ -6276,6 +6312,16 @@ def validate_narrative_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong weeklyRadarPage")
     if links.get("weeklyRadar") != RADAR_URL:
         raise SiteCheckError(f"{label}: wrong weeklyRadar")
+    if links.get("accessPortal") != "https://gcagochina.com/access.html":
+        raise SiteCheckError(f"{label}: wrong accessPortal")
+    if links.get("memberAccessUi") != "https://gcagochina.com/gca/member-access/":
+        raise SiteCheckError(f"{label}: wrong memberAccessUi")
+    if links.get("reviewQueue") != "https://gcagochina.com/review-queue.html":
+        raise SiteCheckError(f"{label}: wrong reviewQueue")
+    if links.get("creditsLedger") != "https://gcagochina.com/credits.html":
+        raise SiteCheckError(f"{label}: wrong creditsLedger")
+    if links.get("memberLedger") != "https://gcagochina.com/member-ledger.html":
+        raise SiteCheckError(f"{label}: wrong memberLedger")
     assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
     assert_not_contains(json.dumps(payload), "GCA/WETH", label)
 

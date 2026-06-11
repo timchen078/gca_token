@@ -2,12 +2,12 @@
   "schema": "https://gcagochina.com/narrative.json",
   "pageUrl": "https://gcagochina.com/narrative.html",
   "status": "public-narrative-system-published",
-  "lastUpdated": "2026-05-14",
+  "lastUpdated": "2026-06-11",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "conceptExpansion": "Go China Access",
   "positioning": {
-    "oneSentence": "GCA is the access token for the Go China narrative: a China-facing Web3 intelligence community and planned non-custodial quant research access layer.",
+    "oneSentence": "GCA is the access token for the Go China narrative: a China-facing Web3 intelligence community with live account intake, read-only wallet verification, and a staged non-custodial quant research access layer.",
     "chineseOneSentence": "GCA \u662f Go China Access \u7684\u8bbf\u95ee\u4ee3\u5e01\uff0c\u8fde\u63a5\u4e2d\u6587 Web3 \u53d9\u4e8b\u3001\u5e02\u573a\u60c5\u62a5\u3001\u98ce\u9669\u6559\u80b2\u548c\u975e\u6258\u7ba1\u91cf\u5316\u7814\u7a76\u5de5\u5177\u3002",
     "tagline": "Narrative meets risk control.",
     "publicThesis": "China-facing Web3 narrative plus risk-first access to reports, backtests, warnings, signal review, position sizing, education, and member workflows."
@@ -26,7 +26,7 @@
     {
       "layer": "productLayer",
       "name": "AI Quant Access",
-      "description": "A planned product layer for non-custodial market research, backtests, and risk tools."
+      "description": "A staged product layer for non-custodial market research, backtests, account-level credits, and risk tools."
     },
     {
       "layer": "operatingRule",
@@ -57,13 +57,38 @@
       "scope": "one-time 10,000 GCA member benefit review, higher utility credit limits, member research notes, priority report queue, member training sessions, and priority support"
     }
   },
+  "liveWorkflows": [
+    {
+      "id": "controlled-account-ui",
+      "status": "live",
+      "publicUrl": "https://gcagochina.com/gca/member-access/",
+      "claimBoundary": "account intake only; no wallet signature, custody, token transfer, or trading permission"
+    },
+    {
+      "id": "read-only-gca-verification",
+      "status": "live",
+      "publicUrl": "https://gcagochina.com/zh-wallet-verify.html",
+      "claimBoundary": "read-only ERC-20 balanceOf check; no private key, seed phrase, signature, or transaction"
+    },
+    {
+      "id": "credits-ledger",
+      "status": "eligible-records-live",
+      "publicUrl": "https://gcagochina.com/credits.html",
+      "claimBoundary": "100 credits are account-level service records, not cash, income, reimbursement, or transferable tokens"
+    },
+    {
+      "id": "gca-member-ledger",
+      "status": "eligible-records-live-manual-benefit-review",
+      "publicUrl": "https://gcagochina.com/member-ledger.html",
+      "claimBoundary": "GCA Member status and the 10,000 GCA benefit remain operator-reviewed and manual"
+    }
+  ],
   "buildNext": [
-    "controlled HTTPS account UI",
-    "read-only GCA wallet balance verification",
-    "100 credits ledger activation",
-    "GCA Member ledger activation",
-    "Weekly Go China Radar issue 003 published",
-    "Liquidation Replay sample report"
+    "Liquidation Replay sample report",
+    "operator-reviewed service delivery playbook",
+    "service request Worker route publish after Cloudflare deploy permission is restored",
+    "credit usage Worker route publish after Cloudflare deploy permission is restored",
+    "Weekly Go China Radar issue 004"
   ],
   "weeklyRadar": {
     "status": "weekly-go-china-radar-issue-003-published",
@@ -85,6 +110,7 @@
       "Narrative meets risk control.",
       "GCA is building a concept-stage access layer around Go China Access, China Narrative Radar, and planned non-custodial quant research utility.",
       "GCA can be described as an access and membership token for reports, credits, education, and research workflows.",
+      "The controlled account UI, read-only GCA balance verification, eligible credit records, and member ledger records are live or ledger-ready.",
       "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool.",
       "No third-party audit has been completed."
     ],
@@ -107,6 +133,11 @@
     "utilityThesis": "https://gcagochina.com/utility.html",
     "roadmap": "https://gcagochina.com/roadmap.html",
     "community": "https://gcagochina.com/community.html",
+    "accessPortal": "https://gcagochina.com/access.html",
+    "memberAccessUi": "https://gcagochina.com/gca/member-access/",
+    "reviewQueue": "https://gcagochina.com/review-queue.html",
+    "creditsLedger": "https://gcagochina.com/credits.html",
+    "memberLedger": "https://gcagochina.com/member-ledger.html",
     "memberProgram": "https://gcagochina.com/member-program.json",
     "risk": "https://gcagochina.com/risk.html",
     "tokenSafety": "https://gcagochina.com/token-safety.json"
