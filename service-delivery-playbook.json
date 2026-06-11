@@ -1,0 +1,170 @@
+{
+  "schema": "https://gcagochina.com/service-delivery-playbook.json",
+  "pageUrl": "https://gcagochina.com/service-delivery-playbook.html",
+  "status": "service-delivery-playbook-v1-published",
+  "playbookId": "service-delivery-playbook-v1",
+  "lastUpdated": "2026-06-11",
+  "projectName": "GCA",
+  "conceptExpansion": "Go China Access",
+  "module": "GCA AI Quant Access service delivery",
+  "network": "Base Mainnet",
+  "chainId": 8453,
+  "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+  "scope": "The GCA Service Delivery Playbook defines an operator-reviewed workflow for account intake, read-only GCA wallet verification, service request queueing, manual report delivery, and credit usage records. It is not automated trading, not live production exchange routing, not custody, not financial advice, and not a promise of any market outcome.",
+  "deliveryFlow": [
+    {
+      "step": "account-intake",
+      "status": "live",
+      "description": "User registers through the official account path and submits one Base wallet for read-only GCA balance review."
+    },
+    {
+      "step": "eligibility-check",
+      "status": "live-read-only",
+      "description": "Wallet eligibility is checked with ERC-20 balanceOf data; no signature, transaction, private key, or seed phrase is required."
+    },
+    {
+      "step": "service-request",
+      "status": "local-operator-ready-worker-deploy-pending",
+      "description": "Operator records requested service scope, requested credit hold, service type, and review status in the service request queue."
+    },
+    {
+      "step": "human-review",
+      "status": "operator-reviewed",
+      "description": "Operator reviews scope, risk boundaries, user evidence, and whether the request can be answered without trading advice or custody."
+    },
+    {
+      "step": "delivery",
+      "status": "manual-delivery",
+      "description": "Approved work is delivered as a report, checklist, replay, backtest summary, risk warning, ENTRY_READY review, sizing note, or education session."
+    },
+    {
+      "step": "credit-usage-record",
+      "status": "local-operator-ready-worker-deploy-pending",
+      "description": "Credit usage is recorded only after reviewed delivery or accepted delivery, with before/after credit balance and operator notes."
+    }
+  ],
+  "serviceCatalog": [
+    {
+      "id": "liquidation-replay-report",
+      "name": "Liquidation Replay",
+      "deliveryType": "risk report",
+      "defaultCreditUnit": 30
+    },
+    {
+      "id": "risk-warning-review",
+      "name": "Risk Warning Review",
+      "deliveryType": "risk checklist",
+      "defaultCreditUnit": 20
+    },
+    {
+      "id": "backtest-lab-summary",
+      "name": "Backtest Lab",
+      "deliveryType": "research summary",
+      "defaultCreditUnit": 40
+    },
+    {
+      "id": "entry-ready-review",
+      "name": "ENTRY_READY Review",
+      "deliveryType": "signal-readiness review",
+      "defaultCreditUnit": 25
+    },
+    {
+      "id": "position-size-calculator",
+      "name": "Position Size Calculator",
+      "deliveryType": "sizing note",
+      "defaultCreditUnit": 15
+    },
+    {
+      "id": "risk-control-training",
+      "name": "Risk-Control Training",
+      "deliveryType": "education session",
+      "defaultCreditUnit": 50
+    }
+  ],
+  "ledgerBehavior": {
+    "serviceRequestLedger": {
+      "status": "local-operator-ready-worker-deploy-pending",
+      "records": [
+        "serviceRequestId",
+        "serviceId",
+        "requestedCreditHold",
+        "status",
+        "non-sensitive service scope"
+      ],
+      "deductsCredits": false,
+      "createsTradingPermission": false
+    },
+    "creditUsageLedger": {
+      "status": "local-operator-ready-worker-deploy-pending",
+      "records": [
+        "creditUsageId",
+        "creditLedgerId",
+        "serviceId",
+        "creditAmountUsed",
+        "remainingCreditsBefore",
+        "remainingCreditsAfter",
+        "deliveryStatus"
+      ],
+      "writtenOnlyAfterReviewedDelivery": true,
+      "deductsBeforeReview": false
+    }
+  },
+  "routeStatus": {
+    "localOperatorBackend": "ready",
+    "serviceRequestLocalEndpoint": "http://127.0.0.1:8787/gca/service-requests",
+    "creditUsageLocalEndpoint": "http://127.0.0.1:8787/gca/credit-usage",
+    "serviceRequestWorkerEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/service-requests",
+    "creditUsageWorkerEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/credit-usage",
+    "productionRoutesLive": false,
+    "workerDryRunPassed": true,
+    "d1VisibilityPassed": true,
+    "latestReadinessCheckAt": "2026-06-10T08:54:41Z",
+    "blockedBy": "Cloudflare auth session and Worker deploy permission error code 10000",
+    "releaseGates": [
+      "cloudflare-auth-session passes",
+      "Worker deploy permission passes",
+      "remote D1 migrations apply successfully",
+      "wrangler deploy succeeds",
+      "public smoke check passes with --include-pending-routes",
+      "admin smoke check passes with --include-pending-routes"
+    ]
+  },
+  "releaseBoundaries": [
+    "The playbook is public and local operator recording is ready.",
+    "Production service-request and credit-usage Worker routes are not live until all release gates pass.",
+    "Service requests do not deduct credits by themselves.",
+    "Credit usage is recorded only after reviewed delivery or accepted delivery.",
+    "Member status does not create automatic transfers or trading permission.",
+    "The workflow does not collect private keys, seed phrases, wallet signatures, custody permissions, withdrawal permissions, or exchange API secrets."
+  ],
+  "publicClaimBoundaries": {
+    "safeClaims": [
+      "GCA has published an operator-reviewed service delivery playbook for GCA AI Quant Access workflows.",
+      "The workflow covers account intake, read-only wallet verification, service request queueing, manual report delivery, and credit usage records.",
+      "Local operator recording is ready for service requests and credit usage records.",
+      "Production service-request and credit-usage Worker routes remain non-live until Cloudflare auth, deploy, migration, and smoke-check gates pass.",
+      "The workflow is no-custody, does not request wallet signatures, and does not create automatic trading access."
+    ],
+    "doNotClaim": [
+      "production self-service service delivery is live",
+      "credits are automatically deducted before operator review",
+      "service delivery creates trading permission",
+      "GCA AI Quant Access executes trades for users",
+      "member status automatically transfers tokens",
+      "reports are financial advice or trading signals"
+    ]
+  },
+  "officialLinks": {
+    "serviceDeliveryPlaybookPage": "https://gcagochina.com/service-delivery-playbook.html",
+    "serviceDeliveryPlaybook": "https://gcagochina.com/service-delivery-playbook.json",
+    "accessPortal": "https://gcagochina.com/access.html",
+    "credits": "https://gcagochina.com/credits.html",
+    "reviewQueue": "https://gcagochina.com/review-queue.html",
+    "operations": "https://gcagochina.com/operations.html",
+    "accessApi": "https://gcagochina.com/access-api.html",
+    "releaseGates": "https://gcagochina.com/release-gates.html",
+    "liquidationReplay001Page": "https://gcagochina.com/liquidation-replay-001.html",
+    "narrativePage": "https://gcagochina.com/narrative.html",
+    "narrative": "https://gcagochina.com/narrative.json"
+  }
+}

@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GCA Service Delivery Playbook | GCA AI Quant Access</title>
+    <meta name="description" content="Operator-reviewed GCA service delivery playbook for account intake, service requests, manual report review, credit usage records, and no-custody access boundaries.">
+    <link rel="canonical" href="https://gcagochina.com/service-delivery-playbook.html">
+    <link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">
+    <link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="GCA | Go China Access">
+    <meta property="og:title" content="GCA Service Delivery Playbook | GCA AI Quant Access">
+    <meta property="og:description" content="Operator-reviewed service delivery workflow for GCA AI Quant Access reports, credits, member priority review, and no-custody boundaries.">
+    <meta property="og:url" content="https://gcagochina.com/service-delivery-playbook.html">
+    <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="GCA Service Delivery Playbook | GCA AI Quant Access">
+    <meta name="twitter:description" content="Operator-reviewed service delivery workflow for GCA AI Quant Access reports, credits, member priority review, and no-custody boundaries.">
+    <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #111318;
+        --muted: #5f6773;
+        --line: #dfe3ea;
+        --panel: #ffffff;
+        --soft: #f6f7f9;
+        --red: #d71920;
+        --blue: #0052ff;
+        --green: #087f5b;
+        --gold: #8a650d;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: #fbfbfc;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.5;
+      }
+
+      a {
+        color: var(--blue);
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .shell {
+        width: min(1100px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      header {
+        border-bottom: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.94);
+        position: sticky;
+        top: 0;
+        z-index: 2;
+      }
+
+      nav {
+        min-height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--ink);
+        font-weight: 850;
+      }
+
+      .brand img {
+        width: 32px;
+        height: 32px;
+      }
+
+      .nav-links,
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .nav-links {
+        font-size: 14px;
+      }
+
+      main {
+        padding: 42px 0 56px;
+      }
+
+      .eyebrow {
+        margin: 0 0 14px;
+        color: var(--red);
+        font-size: 13px;
+        font-weight: 850;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 0;
+        max-width: 980px;
+        font-size: clamp(40px, 6vw, 72px);
+        line-height: 1;
+        letter-spacing: 0;
+      }
+
+      h2 {
+        margin: 0 0 14px;
+        font-size: 24px;
+      }
+
+      h3 {
+        margin: 0 0 8px;
+        font-size: 17px;
+      }
+
+      .lead {
+        max-width: 900px;
+        margin: 18px 0 0;
+        color: var(--muted);
+        font-size: 18px;
+      }
+
+      .actions {
+        margin-top: 24px;
+      }
+
+      .button {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        color: var(--ink);
+        min-height: 42px;
+        padding: 10px 14px;
+        font: inherit;
+        font-weight: 750;
+      }
+
+      .button.primary {
+        border-color: var(--red);
+        background: var(--red);
+        color: #fff;
+      }
+
+      .section {
+        margin-top: 30px;
+      }
+
+      .panel,
+      .fact {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+      }
+
+      .panel {
+        padding: 24px;
+      }
+
+      .grid,
+      .two,
+      .facts {
+        display: grid;
+        gap: 14px;
+      }
+
+      .grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .two,
+      .facts {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .fact {
+        min-height: 112px;
+        padding: 16px;
+      }
+
+      .label {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 750;
+        text-transform: uppercase;
+      }
+
+      .value {
+        display: block;
+        margin-top: 8px;
+        font-size: 17px;
+        font-weight: 850;
+        overflow-wrap: anywhere;
+      }
+
+      .good {
+        color: var(--green);
+      }
+
+      .pending {
+        color: var(--gold);
+      }
+
+      .note,
+      li {
+        color: var(--muted);
+      }
+
+      .note {
+        margin: 0;
+      }
+
+      .list {
+        display: grid;
+        gap: 10px;
+        margin-top: 12px;
+      }
+
+      .row {
+        display: grid;
+        grid-template-columns: minmax(140px, 0.8fr) minmax(0, 1.4fr);
+        gap: 12px;
+        align-items: start;
+        border-top: 1px solid var(--line);
+        padding-top: 10px;
+      }
+
+      .row strong {
+        min-width: 0;
+        overflow-wrap: anywhere;
+        text-align: right;
+      }
+
+      .warning {
+        border-color: #f1d28a;
+        background: #fff8e6;
+      }
+
+      footer {
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        padding: 22px 0;
+        font-size: 13px;
+      }
+
+      @media (max-width: 760px) {
+        nav {
+          align-items: flex-start;
+          flex-direction: column;
+          padding: 14px 0;
+        }
+
+        .grid,
+        .two,
+        .facts {
+          grid-template-columns: 1fr;
+        }
+
+        .row {
+          grid-template-columns: 1fr;
+        }
+
+        .row strong {
+          text-align: left;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav class="shell" aria-label="Primary navigation">
+        <a class="brand" href="index.html">
+          <img src="assets/gca-logo.svg" alt="GCA logo">
+          <span>GCA</span>
+        </a>
+        <div class="nav-links">
+          <a href="access.html">Access</a>
+          <a href="credits.html">Credits</a>
+          <a href="review-queue.html">Review Queue</a>
+          <a href="operations.html">Operations</a>
+          <a href="risk.html">Risk</a>
+        </div>
+      </nav>
+    </header>
+
+    <main class="shell">
+      <section aria-labelledby="title">
+        <p class="eyebrow">Operator-Reviewed Service Delivery</p>
+        <h1 id="title">GCA Service Delivery Playbook</h1>
+        <p class="lead">This playbook explains how GCA AI Quant Access services should move from account intake to manual review, report delivery, and credit usage records without custody, wallet signatures, exchange API secrets, or automatic trading access. It is not automated trading and not a self-service trading product.</p>
+        <p class="lead">The public website can show the service workflow today; production service-request and credit-usage Worker routes remain non-live until Cloudflare auth, Worker deploy permission, remote migrations, and pending-route smoke checks pass.</p>
+        <div class="actions">
+          <a class="button primary" href="access.html">Access Portal</a>
+          <a class="button" href="credits.html">Credits Catalog</a>
+          <a class="button" href="review-queue.html">Review Queue</a>
+          <a class="button" href="operations.html">Operations Runbook</a>
+          <a class="button" href="liquidation-replay-001.html">Liquidation Replay 001</a>
+        </div>
+      </section>
+
+      <section class="section facts" aria-label="Playbook facts">
+        <div class="fact">
+          <span class="label">Playbook ID</span>
+          <span class="value">service-delivery-playbook-v1</span>
+          <p class="note">Published operator-reviewed delivery workflow.</p>
+        </div>
+        <div class="fact">
+          <span class="label">Status</span>
+          <span class="value good">Public playbook published</span>
+          <p class="note">Local operator workflow ready; production routes pending deploy gates.</p>
+        </div>
+        <div class="fact">
+          <span class="label">Delivery Model</span>
+          <span class="value">Manual review first</span>
+          <p class="note">No self-service deduction and no automatic member benefit transfer.</p>
+        </div>
+        <div class="fact">
+          <span class="label">Safety Boundary</span>
+          <span class="value">No custody</span>
+          <p class="note">No private keys, seed phrases, signatures, withdrawal rights, or exchange API secrets.</p>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="flowTitle">
+        <h2 id="flowTitle">Delivery Flow</h2>
+        <div class="list">
+          <div class="row"><span>1. Account intake</span><strong>User registers through the official account path and submits one Base wallet for read-only GCA balance review.</strong></div>
+          <div class="row"><span>2. Eligibility check</span><strong>The backend or operator verifies the wallet with read-only ERC-20 balanceOf data; no signature or transaction is required.</strong></div>
+          <div class="row"><span>3. Service request</span><strong>Operator records the requested service scope, requested credit hold, service type, and review status in the service request queue.</strong></div>
+          <div class="row"><span>4. Human review</span><strong>Operator reviews scope, risk boundaries, user evidence, and whether the request can be answered without trading advice or custody.</strong></div>
+          <div class="row"><span>5. Delivery</span><strong>Approved work is delivered as a report, checklist, replay, backtest summary, risk warning, ENTRY_READY review, sizing note, or education session.</strong></div>
+          <div class="row"><span>6. Credit usage record</span><strong>Credit usage is recorded only after reviewed delivery or accepted delivery, with before/after credit balance and operator notes.</strong></div>
+        </div>
+      </section>
+
+      <section class="section grid" aria-label="Service catalog">
+        <div class="panel">
+          <h2>Risk Reports</h2>
+          <p class="note">Liquidation Replay, risk warning review, and position-size review focus on what happened, what invalidated the setup, and what risk rule should be used next.</p>
+        </div>
+        <div class="panel">
+          <h2>Research Tools</h2>
+          <p class="note">Backtest Lab, ENTRY_READY Review, and China Narrative Radar are research workflows. They do not create an order, guarantee an outcome, or bypass risk controls.</p>
+        </div>
+        <div class="panel">
+          <h2>Member Support</h2>
+          <p class="note">GCA Member accounts can receive priority queue handling after eligibility review, but member status does not create automatic transfers or trading permission.</p>
+        </div>
+      </section>
+
+      <section class="section two" aria-label="Ledger behavior">
+        <div class="panel">
+          <h2>What Gets Recorded</h2>
+          <div class="list">
+            <div class="row"><span>Service request</span><strong>serviceRequestId, serviceId, requested credit hold, status, and non-sensitive scope.</strong></div>
+            <div class="row"><span>Credit usage</span><strong>creditUsageId, creditLedgerId, serviceId, credits used, before/after remaining credits, and delivery status.</strong></div>
+            <div class="row"><span>Review evidence</span><strong>Public wallet address, public transaction hash when relevant, review status, and operator decision category.</strong></div>
+          </div>
+        </div>
+        <div class="panel warning">
+          <h2>What Never Happens Here</h2>
+          <ul>
+            <li>No private key, seed phrase, wallet signature, custody, withdrawal permission, or exchange API secret collection.</li>
+            <li>No production trading connection, no automatic order placement, and no automatic trading access.</li>
+            <li>No self-service credit deduction before operator review.</li>
+            <li>No cash, income, reimbursement, price target, or market outcome promise.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="routeTitle">
+        <h2 id="routeTitle">Route Status</h2>
+        <div class="list">
+          <div class="row"><span>Local operator backend</span><strong class="good">Ready for service_requests and credit_usage ledger records.</strong></div>
+          <div class="row"><span>Worker source and D1 migrations</span><strong class="good">Prepared; dry-run and D1 visibility passed on 2026-06-10.</strong></div>
+          <div class="row"><span>Production Worker routes</span><strong class="pending">Non-live until Cloudflare auth, Worker deploy permission, remote migration, deploy, and smoke checks pass.</strong></div>
+          <div class="row"><span>Public claim</span><strong>Say the playbook is published and local operator recording is ready; do not say production self-service service delivery is live.</strong></div>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="copyTitle">
+        <h2 id="copyTitle">Copy-Ready Public Summary</h2>
+        <p class="note">GCA Service Delivery Playbook is now published. It explains how GCA AI Quant Access requests move through account intake, read-only wallet checks, operator review, report delivery, and credit usage records. The workflow is no-custody and operator-reviewed; production service-request and credit-usage Worker routes remain non-live until Cloudflare deploy gates pass.</p>
+      </section>
+
+      <section class="section panel" aria-labelledby="refsTitle">
+        <h2 id="refsTitle">Service Delivery References</h2>
+        <div class="actions">
+          <a class="button" href="access.html">Access Portal</a>
+          <a class="button" href="credits.html">Credits Catalog</a>
+          <a class="button" href="review-queue.html">Review Queue</a>
+          <a class="button" href="operations.html">Operations Runbook</a>
+          <a class="button" href="access-api.html">Access API Status</a>
+          <a class="button" href="release-gates.html">Release Gates</a>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="shell">GCA service delivery playbook. Verify account, wallet, credit, member, and route status before describing any service as live.</div>
+    </footer>
+  </body>
+</html>
