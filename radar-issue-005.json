@@ -1,0 +1,129 @@
+{
+  "schema": "https://gcagochina.com/radar-issue-005.json",
+  "pageUrl": "https://gcagochina.com/radar-issue-005.html",
+  "status": "weekly-go-china-radar-issue-005-ready-for-review",
+  "issue": "issue-005",
+  "issueDate": "2026-06-14",
+  "publicationStatus": "operator-review-required-before-social-posting",
+  "chainId": 8453,
+  "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+  "title": "Weekly Go China Radar Issue 005",
+  "subtitle": "Access foundation, reviewer evidence, and release-gated GCA utility.",
+  "scope": "Issue 005 is a ready-for-review GCA content brief prepared for the 2026-06-14 public content slot. It explains public account intake, read-only wallet verification, utility credits, GCA Member review, BaseScan follow-up readiness, and release-gate boundaries. It is not live market data, not a buy or sell signal, and it makes no price, return, listing, audit, or security-vendor approval claim.",
+  "narrativeThemes": [
+    {
+      "name": "Public account foundation",
+      "description": "GCA now has a public path for registration, access information, read-only wallet verification, and reviewer-visible status evidence."
+    },
+    {
+      "name": "Utility without custody",
+      "description": "Credits, member records, and service requests are account-level workflow records, not cash, exchange custody, trading permission, or automatic token claims."
+    },
+    {
+      "name": "Reviewer evidence stays current",
+      "description": "The daily status snapshot, BaseScan follow-up pack, domain email evidence, and release gates keep public reviewer material current."
+    }
+  ],
+  "utilityHooks": [
+    {
+      "name": "Email Registration",
+      "type": "public intake path"
+    },
+    {
+      "name": "Read-Only Wallet Verification",
+      "type": "Base Mainnet balance check"
+    },
+    {
+      "name": "100 Credits Ledger",
+      "type": "account-level utility record"
+    },
+    {
+      "name": "GCA Member 30-Day Review",
+      "type": "manual eligibility workflow"
+    },
+    {
+      "name": "Manual Member Benefit Transfer",
+      "type": "reserve-wallet review workflow"
+    }
+  ],
+  "riskNotes": [
+    "GCA remains early-stage and the official market route has starter-depth liquidity.",
+    "BaseScan token profile publication is not complete until BaseScan publishes the public token profile.",
+    "No third-party audit has been completed.",
+    "Credits, member status, and the 10,000 GCA member benefit are not income, cash, reimbursement, or trading permission.",
+    "The member benefit is not automatic and must not be described as self-service claiming.",
+    "Public communication must not add price targets, return promises, listing promises, or artificial market activity language."
+  ],
+  "officialMarket": {
+    "pair": "GCA/USDT",
+    "poolAddress": "0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "quoteAsset": "USDT",
+    "quoteAssetAddress": "0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2",
+    "liquidityDepth": "starter-depth-only"
+  },
+  "copyReadyPost": {
+    "targetDate": "2026-06-14",
+    "channels": ["X", "Telegram"],
+    "requiresOperatorReview": true,
+    "xEnglish": [
+      "GCA Weekly Go China Radar Issue 005 is ready for review.",
+      "Focus: Access Foundation.",
+      "GCA now has public evidence for account intake, read-only wallet verification, utility credits, GCA Member review, BaseScan follow-up readiness, and release gates.",
+      "https://gcagochina.com/radar-issue-005.html",
+      "Base Mainnet. Fixed supply. Verify first.",
+      "No price, return, listing, audit, or security-vendor approval claim.",
+      "#GCA #GoChina #Base #Web3 #AIQuant"
+    ],
+    "xChinese": [
+      "GCA Weekly Go China Radar Issue 005 已准备好审核。",
+      "主题：Access Foundation。",
+      "GCA 已经形成公开证据链：账户入口、只读钱包验证、utility credits、GCA Member 审核、BaseScan 跟进状态和 release gates。",
+      "https://gcagochina.com/radar-issue-005.html",
+      "Base Mainnet。固定供应。先验证，再行动。",
+      "不做价格、收益、上所、审计或安全厂商通过承诺。",
+      "#GCA #GoChina #Base #Web3 #AIQuant"
+    ],
+    "telegram": [
+      "GCA Weekly Go China Radar Issue 005 is ready for operator review.",
+      "Focus: public account intake, read-only wallet verification, utility credits, GCA Member review, BaseScan follow-up readiness, and release gates.",
+      "Read the brief: https://gcagochina.com/radar-issue-005.html",
+      "Verify official links before using any wallet or market interface: https://gcagochina.com/verify.html"
+    ]
+  },
+  "publicClaimBoundaries": {
+    "safeClaims": [
+      "Issue 005 is a ready-for-review public content brief for the 2026-06-14 content slot.",
+      "GCA has public pages for account intake, read-only wallet verification, credits, member review, BaseScan follow-up, and release gates.",
+      "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool.",
+      "No third-party audit has been completed."
+    ],
+    "doNotClaim": [
+      "buy or sell signal",
+      "price target",
+      "return promise",
+      "future exchange listing",
+      "automatic token claim",
+      "cash, income, reimbursement, or trading permission",
+      "security-vendor approval before external publication exists",
+      "BaseScan token profile approval before BaseScan publishes it"
+    ]
+  },
+  "officialLinks": {
+    "radarIssue005Page": "https://gcagochina.com/radar-issue-005.html",
+    "radarIssue005": "https://gcagochina.com/radar-issue-005.json",
+    "radarIssue004Page": "https://gcagochina.com/radar-issue-004.html",
+    "radarIssue004": "https://gcagochina.com/radar-issue-004.json",
+    "currentRadarPage": "https://gcagochina.com/radar.html",
+    "currentRadar": "https://gcagochina.com/radar.json",
+    "accessPortal": "https://gcagochina.com/access.html",
+    "dailyStatus": "https://gcagochina.com/daily-status.html",
+    "reviewQueue": "https://gcagochina.com/review-queue.html",
+    "credits": "https://gcagochina.com/credits.html",
+    "memberLedger": "https://gcagochina.com/member-ledger.html",
+    "releaseGates": "https://gcagochina.com/release-gates.html",
+    "baseScanFollowup": "https://gcagochina.com/basescan-followup.html",
+    "verify": "https://gcagochina.com/verify.html",
+    "markets": "https://gcagochina.com/markets.html",
+    "risk": "https://gcagochina.com/risk.html"
+  }
+}
