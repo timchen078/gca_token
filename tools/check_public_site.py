@@ -114,6 +114,8 @@ RADAR_PAGE_URL = "https://gcagochina.com/radar.html"
 RADAR_URL = "https://gcagochina.com/radar.json"
 RADAR_ISSUE_004_PAGE_URL = "https://gcagochina.com/radar-issue-004.html"
 RADAR_ISSUE_004_URL = "https://gcagochina.com/radar-issue-004.json"
+RADAR_ISSUE_005_PAGE_URL = "https://gcagochina.com/radar-issue-005.html"
+RADAR_ISSUE_005_URL = "https://gcagochina.com/radar-issue-005.json"
 MEMBER_ACCESS_BRIEF_001_PAGE_URL = "https://gcagochina.com/member-access-brief-001.html"
 MEMBER_ACCESS_BRIEF_001_URL = "https://gcagochina.com/member-access-brief-001.json"
 LIQUIDATION_REPLAY_001_PAGE_URL = "https://gcagochina.com/liquidation-replay-001.html"
@@ -1675,7 +1677,7 @@ def validate_basescan_preflight_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != BASESCAN_PREFLIGHT_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
-    if payload.get("lastUpdated") != "2026-06-10":
+    if payload.get("lastUpdated") != "2026-06-14":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("status") not in {
         "blocked-domain-email-before-basescan-resubmission",
@@ -4396,6 +4398,7 @@ def validate_zh_site_map_page(text: str) -> None:
         "publishing-desk.html",
         "narrative.html",
         "radar.html",
+        "radar-issue-005.html",
         "radar-issue-004.html",
         "member-access-brief-001.html",
         "site-map.html",
@@ -4552,6 +4555,7 @@ def validate_data_page(text: str) -> None:
         "Roadmap data",
         "Narrative system data",
         "Weekly radar data",
+        "Issue 005 data",
         "Issue 004 data",
         "Liquidation replay sample data",
         "Service delivery playbook data",
@@ -4593,6 +4597,7 @@ def validate_data_page(text: str) -> None:
         "roadmap.json",
         "narrative.json",
         "radar.json",
+        "radar-issue-005.json",
         "radar-issue-004.json",
         "publishing-desk.json",
     ):
@@ -6851,6 +6856,129 @@ def validate_radar_issue_004_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong contentLibraryPage")
     if links.get("campaignPage") != CAMPAIGN_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong campaignPage")
+    if links.get("verify") != VERIFY_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong verify")
+    assert_no_forbidden_public_claims(json.dumps(payload), label)
+    assert_not_contains(json.dumps(payload), OLD_WETH_POOL_ADDRESS, label)
+    assert_not_contains(json.dumps(payload), "GCA/WETH", label)
+
+
+def validate_radar_issue_005_page(text: str) -> None:
+    label = "/radar-issue-005.html"
+    assert_social_preview_meta(text, label, RADAR_ISSUE_005_PAGE_URL)
+    assert_contains(text, "Issue 005 References", label)
+    assert_no_public_data_room_terms(text, label)
+    for expected in (
+        "Weekly Go China Radar Issue 005",
+        "Issue 005 / 2026-06-14 / Ready for review",
+        "Ready for review",
+        "Access Foundation",
+        "Public account foundation",
+        "Utility without custody",
+        "Reviewer evidence stays current",
+        "Email registration",
+        "Read-only Base Mainnet GCA balance check",
+        "100 credits",
+        "GCA Member",
+        "Manual reserve-wallet transfer review",
+        "No third-party audit has been completed",
+        "Copy-Ready Post",
+        RADAR_ISSUE_005_PAGE_URL,
+        MAINNET_ADDRESS,
+        BASE_USDT_ADDRESS,
+        OFFICIAL_POOL_ADDRESS,
+        "GCA/USDT",
+        "not live market data",
+        "not a buy or sell signal",
+    ):
+        assert_contains(text, expected, label)
+    assert_current_pool_text(text, label)
+    assert_no_forbidden_public_claims(text, label)
+
+
+def validate_radar_issue_005_json(text: str) -> None:
+    label = "/radar-issue-005.json"
+    payload = load_json(text, label)
+    market = payload.get("officialMarket", {})
+    links = payload.get("officialLinks", {})
+    copy_ready = payload.get("copyReadyPost", {})
+    boundaries = payload.get("publicClaimBoundaries", {})
+
+    if payload.get("schema") != RADAR_ISSUE_005_URL:
+        raise SiteCheckError(f"{label}: wrong schema")
+    if payload.get("pageUrl") != RADAR_ISSUE_005_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong pageUrl")
+    if payload.get("status") != "weekly-go-china-radar-issue-005-ready-for-review":
+        raise SiteCheckError(f"{label}: wrong status")
+    if payload.get("issue") != "issue-005":
+        raise SiteCheckError(f"{label}: wrong issue")
+    if payload.get("issueDate") != "2026-06-14":
+        raise SiteCheckError(f"{label}: wrong issueDate")
+    if payload.get("publicationStatus") != "operator-review-required-before-social-posting":
+        raise SiteCheckError(f"{label}: wrong publicationStatus")
+    if payload.get("chainId") != 8453:
+        raise SiteCheckError(f"{label}: wrong chainId")
+    if payload.get("contractAddress") != MAINNET_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong contractAddress")
+    if "not live market data" not in payload.get("scope", ""):
+        raise SiteCheckError(f"{label}: missing market-data boundary")
+    if "not a buy or sell signal" not in payload.get("scope", ""):
+        raise SiteCheckError(f"{label}: missing signal boundary")
+    for theme in ("Public account foundation", "Utility without custody", "Reviewer evidence stays current"):
+        if theme not in {item.get("name") for item in payload.get("narrativeThemes", [])}:
+            raise SiteCheckError(f"{label}: missing theme {theme}")
+    for hook in (
+        "Email Registration",
+        "Read-Only Wallet Verification",
+        "100 Credits Ledger",
+        "GCA Member 30-Day Review",
+        "Manual Member Benefit Transfer",
+    ):
+        if hook not in {item.get("name") for item in payload.get("utilityHooks", [])}:
+            raise SiteCheckError(f"{label}: missing utility hook {hook}")
+    if "No third-party audit has been completed." not in payload.get("riskNotes", []):
+        raise SiteCheckError(f"{label}: missing audit risk note")
+    if market.get("pair") != "GCA/USDT":
+        raise SiteCheckError(f"{label}: wrong pair")
+    if market.get("poolAddress") != OFFICIAL_POOL_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong poolAddress")
+    if market.get("quoteAssetAddress") != BASE_USDT_ADDRESS:
+        raise SiteCheckError(f"{label}: wrong quoteAssetAddress")
+    if copy_ready.get("targetDate") != "2026-06-14":
+        raise SiteCheckError(f"{label}: wrong copy target date")
+    if copy_ready.get("channels") != ["X", "Telegram"]:
+        raise SiteCheckError(f"{label}: wrong copy channels")
+    if copy_ready.get("requiresOperatorReview") is not True:
+        raise SiteCheckError(f"{label}: copy must require operator review")
+    for key in ("xEnglish", "xChinese", "telegram"):
+        if not copy_ready.get(key):
+            raise SiteCheckError(f"{label}: missing copy field {key}")
+    if "No third-party audit has been completed." not in boundaries.get("safeClaims", []):
+        raise SiteCheckError(f"{label}: missing audit safe claim")
+    if "buy or sell signal" not in boundaries.get("doNotClaim", []):
+        raise SiteCheckError(f"{label}: missing signal boundary")
+    if "return promise" not in boundaries.get("doNotClaim", []):
+        raise SiteCheckError(f"{label}: missing return boundary")
+    if links.get("radarIssue005Page") != RADAR_ISSUE_005_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong radarIssue005Page")
+    if links.get("radarIssue005") != RADAR_ISSUE_005_URL:
+        raise SiteCheckError(f"{label}: wrong radarIssue005")
+    if links.get("radarIssue004Page") != RADAR_ISSUE_004_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong radarIssue004Page")
+    if links.get("radarIssue004") != RADAR_ISSUE_004_URL:
+        raise SiteCheckError(f"{label}: wrong radarIssue004")
+    if links.get("currentRadarPage") != RADAR_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong currentRadarPage")
+    if links.get("currentRadar") != RADAR_URL:
+        raise SiteCheckError(f"{label}: wrong currentRadar")
+    if links.get("accessPortal") != ACCESS_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong accessPortal")
+    if links.get("dailyStatus") != DAILY_STATUS_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong dailyStatus")
+    if links.get("releaseGates") != RELEASE_GATES_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong releaseGates")
+    if links.get("baseScanFollowup") != BASESCAN_FOLLOWUP_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong baseScanFollowup")
     if links.get("verify") != VERIFY_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong verify")
     assert_no_forbidden_public_claims(json.dumps(payload), label)
@@ -10561,6 +10689,10 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong weeklyRadarPageUrl")
     if payload.get("weeklyRadarUrl") != RADAR_URL:
         raise SiteCheckError(f"{label}: wrong weeklyRadarUrl")
+    if payload.get("radarIssue005PageUrl") != RADAR_ISSUE_005_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong radarIssue005PageUrl")
+    if payload.get("radarIssue005Url") != RADAR_ISSUE_005_URL:
+        raise SiteCheckError(f"{label}: wrong radarIssue005Url")
     if payload.get("radarIssue004PageUrl") != RADAR_ISSUE_004_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong radarIssue004PageUrl")
     if payload.get("radarIssue004Url") != RADAR_ISSUE_004_URL:
@@ -10812,6 +10944,8 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: unexpected narrative system status")
     if status.get("weeklyGoChinaRadar") != "weekly-go-china-radar-issue-003-published":
         raise SiteCheckError(f"{label}: unexpected weekly radar status")
+    if status.get("weeklyGoChinaRadarIssue005") != "weekly-go-china-radar-issue-005-ready-for-review":
+        raise SiteCheckError(f"{label}: unexpected weekly radar issue 005 status")
     if status.get("accessPortal") != "public-access-portal-live":
         raise SiteCheckError(f"{label}: unexpected access portal status")
     if status.get("accessApiContract") != "public-access-api-member-access-live":
@@ -10921,6 +11055,21 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong issue 004 url")
     if issue_004.get("operatorReviewRequired") is not True:
         raise SiteCheckError(f"{label}: issue 004 must require review")
+    issue_005 = payload.get("weeklyGoChinaRadarIssue005", {})
+    if issue_005.get("status") != "weekly-go-china-radar-issue-005-ready-for-review":
+        raise SiteCheckError(f"{label}: wrong issue 005 status")
+    if issue_005.get("pageUrl") != RADAR_ISSUE_005_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong issue 005 page")
+    if issue_005.get("url") != RADAR_ISSUE_005_URL:
+        raise SiteCheckError(f"{label}: wrong issue 005 url")
+    if issue_005.get("issue") != "issue-005":
+        raise SiteCheckError(f"{label}: wrong issue 005 issue id")
+    if issue_005.get("issueDate") != "2026-06-14":
+        raise SiteCheckError(f"{label}: wrong issue 005 issue date")
+    if issue_005.get("operatorReviewRequired") is not True:
+        raise SiteCheckError(f"{label}: issue 005 must require review")
+    if issue_005.get("notBuySellSignal") is not True:
+        raise SiteCheckError(f"{label}: issue 005 must keep notBuySellSignal true")
     member_access_brief = payload.get("memberAccessBrief001", {})
     if member_access_brief.get("status") != "member-access-brief-001-ready-for-review":
         raise SiteCheckError(f"{label}: wrong member access brief status")
@@ -11181,6 +11330,10 @@ def validate_tokenlist_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong weeklyRadarPage")
     if extensions.get("weeklyRadar") != RADAR_URL:
         raise SiteCheckError(f"{label}: wrong weeklyRadar")
+    if extensions.get("radarIssue005Page") != RADAR_ISSUE_005_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong radarIssue005Page")
+    if extensions.get("radarIssue005") != RADAR_ISSUE_005_URL:
+        raise SiteCheckError(f"{label}: wrong radarIssue005")
     if extensions.get("radarIssue004Page") != RADAR_ISSUE_004_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong radarIssue004Page")
     if extensions.get("radarIssue004") != RADAR_ISSUE_004_URL:
@@ -11337,6 +11490,8 @@ def validate_tokenlist_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong narrativeSystemStatus")
     if extensions.get("weeklyRadarStatus") != "weekly-go-china-radar-issue-003-published":
         raise SiteCheckError(f"{label}: wrong weeklyRadarStatus")
+    if extensions.get("radarIssue005Status") != "weekly-go-china-radar-issue-005-ready-for-review":
+        raise SiteCheckError(f"{label}: wrong radarIssue005Status")
     if extensions.get("radarIssue004Status") != "weekly-go-china-radar-issue-004-ready-for-review":
         raise SiteCheckError(f"{label}: wrong radarIssue004Status")
     if extensions.get("memberAccessBrief001Status") != "member-access-brief-001-ready-for-review":
@@ -11433,6 +11588,10 @@ def validate_well_known_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong weeklyRadarPage")
     if urls.get("weeklyRadar") != RADAR_URL:
         raise SiteCheckError(f"{label}: wrong weeklyRadar")
+    if urls.get("radarIssue005Page") != RADAR_ISSUE_005_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong radarIssue005Page")
+    if urls.get("radarIssue005") != RADAR_ISSUE_005_URL:
+        raise SiteCheckError(f"{label}: wrong radarIssue005")
     if urls.get("privacyNoticePage") != PRIVACY_NOTICE_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong privacyNoticePage")
     if urls.get("privacyNotice") != PRIVACY_NOTICE_URL:
@@ -11571,6 +11730,8 @@ def validate_well_known_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong narrativeSystem status")
     if payload.get("platformStatus", {}).get("weeklyGoChinaRadar") != "weekly-go-china-radar-issue-003-published":
         raise SiteCheckError(f"{label}: wrong weeklyGoChinaRadar status")
+    if payload.get("platformStatus", {}).get("weeklyGoChinaRadarIssue005") != "weekly-go-china-radar-issue-005-ready-for-review":
+        raise SiteCheckError(f"{label}: wrong weeklyGoChinaRadarIssue005 status")
     if payload.get("platformStatus", {}).get("accessPortal") != "public-access-portal-live":
         raise SiteCheckError(f"{label}: wrong accessPortal status")
     if payload.get("platformStatus", {}).get("accessApiContract") != "public-access-api-member-access-live":
@@ -14187,6 +14348,8 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/narrative.json",
         "https://gcagochina.com/radar.html",
         "https://gcagochina.com/radar.json",
+        "https://gcagochina.com/radar-issue-005.html",
+        "https://gcagochina.com/radar-issue-005.json",
         "https://gcagochina.com/radar-issue-004.html",
         "https://gcagochina.com/radar-issue-004.json",
         "https://gcagochina.com/member-access-brief-001.html",
@@ -14386,6 +14549,8 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /narrative.json", label)
     assert_contains(text, "Allow: /radar.html", label)
     assert_contains(text, "Allow: /radar.json", label)
+    assert_contains(text, "Allow: /radar-issue-005.html", label)
+    assert_contains(text, "Allow: /radar-issue-005.json", label)
     assert_contains(text, "Allow: /radar-issue-004.html", label)
     assert_contains(text, "Allow: /radar-issue-004.json", label)
     assert_contains(text, "Allow: /liquidation-replay-001.html", label)
@@ -14593,6 +14758,8 @@ CHECKS: list[EndpointCheck] = [
     ("/narrative.json", validate_narrative_json),
     ("/radar.html", validate_radar_page),
     ("/radar.json", validate_radar_json),
+    ("/radar-issue-005.html", validate_radar_issue_005_page),
+    ("/radar-issue-005.json", validate_radar_issue_005_json),
     ("/radar-issue-004.html", validate_radar_issue_004_page),
     ("/radar-issue-004.json", validate_radar_issue_004_json),
     ("/liquidation-replay-001.html", validate_liquidation_replay_001_page),

@@ -119,6 +119,8 @@ Export the same review package directly from local JSONL data without starting t
 - Public narrative system JSON: `site/narrative.json`
 - Public Weekly Go China Radar page: `site/radar.html`
 - Public Weekly Go China Radar JSON: `site/radar.json`
+- Public Weekly Go China Radar Issue 005 page: `site/radar-issue-005.html`
+- Public Weekly Go China Radar Issue 005 JSON: `site/radar-issue-005.json`
 - Public privacy notice page: `site/privacy.html`
 - Public privacy notice JSON: `site/privacy.json`
 - Public participation terms page: `site/terms.html`
