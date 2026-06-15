@@ -2010,7 +2010,7 @@ def validate_basescan_followup_page(text: str) -> None:
         "Market Route",
         "Review Boundaries",
         "Latest Public Evidence",
-        "2026-06-14 Status Refresh",
+        "2026-06-15 Status Refresh",
         "public website check passing",
         "public registration API check passing",
         "No-Reply Status Check",
@@ -2019,7 +2019,7 @@ def validate_basescan_followup_page(text: str) -> None:
         "Official project email: support@gcagochina.com",
         "English follow-up page: https://gcagochina.com/basescan-followup.html",
         "Chinese follow-up page: https://gcagochina.com/zh-basescan-followup.html",
-        "2026-06-14T12:04:34Z",
+        "2026-06-15T14:41:27Z",
         "readyForBaseScanResubmission as true",
         "avoid duplicate token-profile submissions",
         "Before Sending",
@@ -2074,7 +2074,7 @@ def validate_basescan_followup_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong pageUrl")
     if payload.get("status") != "existing-ticket-followup-ready":
         raise SiteCheckError(f"{label}: wrong status")
-    if payload.get("lastUpdated") != "2026-06-14":
+    if payload.get("lastUpdated") != "2026-06-15":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
@@ -2130,13 +2130,13 @@ def validate_basescan_followup_json(text: str) -> None:
         DAILY_STATUS_PAGE_URL,
         BASESCAN_FOLLOWUP_PAGE_URL,
         ZH_BASESCAN_FOLLOWUP_PAGE_URL,
-        "2026-06-14T12:04:34Z",
+        "2026-06-15T14:41:27Z",
         "readyForBaseScanResubmission as true",
         "avoid duplicate token-profile submissions",
     ):
         assert_contains(template.get("body", ""), expected, label)
     latest = payload.get("latestPublicEvidence", {})
-    if latest.get("snapshotGeneratedAt") != "2026-06-14T12:04:34Z":
+    if latest.get("snapshotGeneratedAt") != "2026-06-15T14:41:27Z":
         raise SiteCheckError(f"{label}: wrong latest evidence snapshot")
     if latest.get("dailyStatusPage") != DAILY_STATUS_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong latest evidence daily status page")
@@ -3174,7 +3174,7 @@ def validate_zh_basescan_followup_page(text: str) -> None:
         "4. 长时间没有回复时的状态询问",
         "优先回复原 ticket，不要重复开新单",
         "Follow-up: GCA Token Profile Update",
-        "2026-06-14T12:04:34Z",
+        "2026-06-15T14:41:27Z",
         "readyForBaseScanResubmission as true",
         "avoid duplicate token-profile submissions",
         "要保存的记录",
@@ -14434,8 +14434,6 @@ def validate_sitemap(text: str) -> None:
         "api-status.html",
         "api-status.json",
         "zh-api-status.html",
-        "daily-status.html",
-        "daily-status.json",
         "basescan-remediation.html",
         "basescan-remediation.json",
         "basescan-preflight.html",
@@ -14474,8 +14472,10 @@ def validate_sitemap(text: str) -> None:
         "basescan-followup.html",
         "basescan-followup.json",
         "zh-basescan-followup.html",
+        "daily-status.html",
+        "daily-status.json",
     ):
-        assert_sitemap_lastmod(path, "2026-06-14")
+        assert_sitemap_lastmod(path, "2026-06-15")
     for path in (
         "basescan-handoff.html",
         "basescan-handoff.json",
