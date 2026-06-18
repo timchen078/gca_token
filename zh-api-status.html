@@ -310,11 +310,11 @@
 
     <main class="shell">
       <section aria-labelledby="title">
-        <p class="eyebrow">中文 API 状态 / 2026-06-10</p>
+        <p class="eyebrow">中文 API 状态 / 2026-06-18</p>
         <h1 id="title">GCA 中文 API 状态</h1>
         <p class="lead">这一页用中文说明 GCA 邮箱注册和邮箱退订接口的当前状态。公网邮箱注册已经接到 Cloudflare Workers + D1，普通用户可以通过官网表单提交邮箱；管理员读取接口仍需要本地管理 token。</p>
-        <p class="lead">最新公网只读检查已在 <code>2026-06-10T08:46:16Z</code> 通过，检查范围包括健康接口、CORS、access config 和未授权管理员读取拦截，不写入测试注册记录。</p>
-        <p class="lead">最新部署权限检查在 <code>2026-06-10T08:54:41Z</code> 通过了 Worker dry-run 和 D1 可见性，但 <code>cloudflare-auth-session</code> 和 Worker 发布权限因为 Cloudflare error <code>10000</code> 失败。解决这两个权限问题前，不能执行远端 migration 或 deploy。</p>
+        <p class="lead">最新公网只读检查已在 <code>2026-06-18T08:41:31Z</code> 通过，检查范围包括健康接口、CORS、access config 和未授权管理员读取拦截，不写入测试注册记录。</p>
+        <p class="lead">最新部署权限检查在 <code>2026-06-18T08:37:28Z</code> 通过了 Worker dry-run 和 D1 可见性，但 <code>cloudflare-auth-session</code> 和 Worker 发布权限因为 Cloudflare error <code>10000</code> 失败。解决这两个权限问题前，不能执行远端 migration 或 deploy。</p>
         <p class="lead">这个 API 只处理邮箱注册和不再联系请求，不需要钱包、不需要签名、不需要付款，也不会激活 100 credits、GCA Member 或 10,000 GCA 会员权益。</p>
         <div class="actions">
           <a class="button primary" href="register.html">打开邮箱注册</a>
@@ -343,7 +343,7 @@
         </div>
         <div class="fact">
           <span class="label">最新检查</span>
-          <span class="value good">2026-06-10 通过</span>
+          <span class="value good">2026-06-18 通过</span>
         </div>
         <div class="fact">
           <span class="label">管理员读取</span>
@@ -392,11 +392,11 @@
           </article>
           <article class="card">
             <h3>服务请求队列</h3>
-            <p class="note"><code>GET/POST /gca/service-requests</code> 已完成源码、D1 迁移和 Worker dry-run。2026-06-10 检查显示 D1 可见性已通过；正式发布仍被 <code>cloudflare-auth-session</code> 和 Worker 发布权限的 Cloudflare error <code>10000</code> 阻塞，远端 D1 migration、<code>wrangler deploy</code> 和待发布接口 smoke 检查仍不能执行。</p>
+            <p class="note"><code>GET/POST /gca/service-requests</code> 已完成源码、D1 迁移和 Worker dry-run。2026-06-18 检查显示 D1 可见性已通过；正式发布仍被 <code>cloudflare-auth-session</code> 和 Worker 发布权限的 Cloudflare error <code>10000</code> 阻塞，远端 D1 migration、<code>wrangler deploy</code> 和待发布接口 smoke 检查仍不能执行。</p>
           </article>
           <article class="card">
             <h3>Credit 使用记录</h3>
-            <p class="note"><code>GET/POST /gca/credit-usage</code> 已完成源码、D1 迁移和 Worker dry-run。2026-06-10 检查显示 D1 可见性已通过；正式发布仍被 Cloudflare 账号认证和 Worker 发布权限的 Cloudflare error <code>10000</code> 阻塞，远端 D1 migration、<code>wrangler deploy</code> 和待发布接口 smoke 检查仍不能执行。</p>
+            <p class="note"><code>GET/POST /gca/credit-usage</code> 已完成源码、D1 迁移和 Worker dry-run。2026-06-18 检查显示 D1 可见性已通过；正式发布仍被 Cloudflare 账号认证和 Worker 发布权限的 Cloudflare error <code>10000</code> 阻塞，远端 D1 migration、<code>wrangler deploy</code> 和待发布接口 smoke 检查仍不能执行。</p>
           </article>
           <article class="card">
             <h3>未来域名</h3>
@@ -423,7 +423,7 @@
         </div>
         <div class="panel">
           <h2>待发布接口验收</h2>
-          <p class="note"><code>/gca/service-requests</code> 和 <code>/gca/credit-usage</code> 不能只因为 dry-run 通过就说已上线。D1 可见性已经在 2026-06-10 检查中通过，但 Cloudflare 账号认证和 Worker 发布权限仍失败；必须先解决 error <code>10000</code>，再完成远端 D1 migration、<code>wrangler deploy</code>、公开 smoke check 和管理员 smoke check，并且两个 smoke check 都要带 <code>--include-pending-routes</code>。</p>
+          <p class="note"><code>/gca/service-requests</code> 和 <code>/gca/credit-usage</code> 不能只因为 dry-run 通过就说已上线。D1 可见性已经在 2026-06-18 检查中通过，但 Cloudflare 账号认证和 Worker 发布权限仍失败；必须先解决 error <code>10000</code>，再完成远端 D1 migration、<code>wrangler deploy</code>、公开 smoke check 和管理员 smoke check，并且两个 smoke check 都要带 <code>--include-pending-routes</code>。</p>
           <pre>python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes</pre>
           <pre>python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes</pre>
         </div>
