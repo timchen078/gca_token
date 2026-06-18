@@ -56,7 +56,7 @@ class GcaWorkerPendingRoutesHandoffTests(unittest.TestCase):
         self.assertEqual(handoff["status"], "prepared-not-production-live")
         self.assertEqual(
             handoff["blockedBy"],
-            "Latest 2026-06-10 readiness check passed Worker dry-run and D1 visibility; blocked by Cloudflare account authentication and Worker deploy permission error [code: 10000]",
+            "Latest 2026-06-18 readiness check passed Worker dry-run and D1 visibility; blocked by Cloudflare account authentication and Worker deploy permission error [code: 10000]",
         )
         self.assertCountEqual(handoff["routes"], ["/gca/service-requests", "/gca/credit-usage"])
         self.assertEqual(

@@ -2,7 +2,7 @@
   "schema": "https://gcagochina.com/access-api.json",
   "pageUrl": "https://gcagochina.com/access-api.html",
   "status": "public-access-api-member-access-live",
-  "lastUpdated": "2026-06-10",
+  "lastUpdated": "2026-06-18",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "title": "GCA Access API Contract",
@@ -31,12 +31,12 @@
     "creditUsageLedgerWritesLive": false,
     "creditUsageWorkerDeployBlocked": true,
     "creditUsageWorkerDryRunPassed": true,
-    "creditUsageWorkerDeployBlockedBy": "Latest 2026-06-10 readiness check passed Worker dry-run and D1 visibility; blocked by Cloudflare account authentication and Worker deploy permission error [code: 10000]",
+    "creditUsageWorkerDeployBlockedBy": "Latest 2026-06-18 readiness check passed Worker dry-run and D1 visibility; blocked by Cloudflare account authentication and Worker deploy permission error [code: 10000]",
     "serviceRequestQueueLocalLive": true,
     "serviceRequestQueueWorkerPrepared": true,
     "serviceRequestQueueWorkerDryRunPassed": true,
     "serviceRequestQueueWorkerDeployBlocked": true,
-    "serviceRequestQueueWorkerDeployBlockedBy": "Latest 2026-06-10 readiness check passed Worker dry-run and D1 visibility; blocked by Cloudflare account authentication and Worker deploy permission error [code: 10000]",
+    "serviceRequestQueueWorkerDeployBlockedBy": "Latest 2026-06-18 readiness check passed Worker dry-run and D1 visibility; blocked by Cloudflare account authentication and Worker deploy permission error [code: 10000]",
     "serviceRequestQueueProductionLive": false,
     "memberLedgerWritesLive": true
   },
@@ -101,7 +101,7 @@
     "workerDeployReadinessCommand": "python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth",
     "workerDeployReadinessAuthSessionCheck": "cloudflare-auth-session",
     "workerDeployReadinessAuthRecoveryField": "authRecovery",
-    "latestDeployReadinessCheckAt": "2026-06-10T08:54:41Z",
+    "latestDeployReadinessCheckAt": "2026-06-18T08:37:28Z",
     "latestDeployReadinessSummary": {
       "wranglerDeployDryRun": "passed",
       "cloudflareD1Visibility": "passed",
@@ -457,7 +457,7 @@
       "method": "GET",
       "path": "/gca/service-requests",
       "status": "prepared-worker-deploy-pending",
-      "purpose": "Read operator-only GCA AI Quant Access service request queue records before reviewed service delivery through ADMIN_READ_TOKEN protected access after the Worker route passes Cloudflare auth, Worker deploy permission, remote deploy, and pending-route smoke gates; local operator backend support is implemented, and D1 visibility passed on the 2026-06-10 readiness check.",
+      "purpose": "Read operator-only GCA AI Quant Access service request queue records before reviewed service delivery through ADMIN_READ_TOKEN protected access after the Worker route passes Cloudflare auth, Worker deploy permission, remote deploy, and pending-route smoke gates; local operator backend support is implemented, and D1 visibility passed on the 2026-06-18 readiness check.",
       "requiredRequestFields": [
         "authorization bearer token"
       ],
@@ -492,7 +492,7 @@
       "method": "POST",
       "path": "/gca/service-requests",
       "status": "prepared-worker-deploy-pending",
-      "purpose": "Queue an operator-reviewed service scope request without deducting credits after the Worker route passes Cloudflare auth, Worker deploy permission, remote deploy, and pending-route smoke gates; local operator backend support is implemented, and D1 visibility passed on the 2026-06-10 readiness check. Actual service delivery and credit usage remain separate operator actions.",
+      "purpose": "Queue an operator-reviewed service scope request without deducting credits after the Worker route passes Cloudflare auth, Worker deploy permission, remote deploy, and pending-route smoke gates; local operator backend support is implemented, and D1 visibility passed on the 2026-06-18 readiness check. Actual service delivery and credit usage remain separate operator actions.",
       "requiredRequestFields": [
         "authorization bearer token",
         "email",
@@ -537,7 +537,7 @@
       "method": "GET",
       "path": "/gca/credit-usage",
       "status": "prepared-worker-deploy-pending",
-      "purpose": "Read account-level GCA AI Quant Access credit usage records through ADMIN_READ_TOKEN protected operator access after the Worker route passes Cloudflare auth, Worker deploy permission, remote deploy, and pending-route smoke gates; local operator backend support is implemented, and D1 visibility passed on the 2026-06-10 readiness check.",
+      "purpose": "Read account-level GCA AI Quant Access credit usage records through ADMIN_READ_TOKEN protected operator access after the Worker route passes Cloudflare auth, Worker deploy permission, remote deploy, and pending-route smoke gates; local operator backend support is implemented, and D1 visibility passed on the 2026-06-18 readiness check.",
       "requiredRequestFields": [
         "authorization bearer token"
       ],
@@ -572,7 +572,7 @@
       "method": "POST",
       "path": "/gca/credit-usage",
       "status": "prepared-worker-deploy-pending",
-      "purpose": "Record operator-reviewed utility credit usage against an existing credit ledger entry and update remaining credits after the Worker route passes Cloudflare auth, Worker deploy permission, remote deploy, and pending-route smoke gates; local operator backend support is implemented, and D1 visibility passed on the 2026-06-10 readiness check.",
+      "purpose": "Record operator-reviewed utility credit usage against an existing credit ledger entry and update remaining credits after the Worker route passes Cloudflare auth, Worker deploy permission, remote deploy, and pending-route smoke gates; local operator backend support is implemented, and D1 visibility passed on the 2026-06-18 readiness check.",
       "requiredRequestFields": [
         "authorization bearer token",
         "creditLedgerId",
@@ -999,7 +999,7 @@
       "The member access API is live on Cloudflare Workers + D1 and uses gca_member_access_v1.",
       "The Worker verifies Base Mainnet GCA balances with read-only eth_call and ERC-20 balanceOf.",
       "Eligible 10,000 GCA holders can create one 100 GCA AI Quant Access credits ledger record.",
-      "GCA operators can record service-level credit usage against an existing credit ledger in the local operator backend; the Cloudflare Worker route is prepared, Worker dry-run and D1 visibility passed on 2026-06-10, and production remains non-live until Cloudflare auth, Worker deploy permission, remote deploy, and pending-route smoke gates pass.",
+      "GCA operators can record service-level credit usage against an existing credit ledger in the local operator backend; the Cloudflare Worker route is prepared, Worker dry-run and D1 visibility passed on 2026-06-18, and production remains non-live until Cloudflare auth, Worker deploy permission, remote deploy, and pending-route smoke gates pass.",
       "GCA operators can queue service scope requests in the local operator backend before delivery; the queue does not deduct credits or create trading permission.",
       "Eligible 1,000,000 GCA / 30-day holders can create a GCA Member review ledger record.",
       "The API contract forbids private keys, seed phrases, exchange API secrets, withdrawal permission, custody, and risk-control bypass.",

@@ -3605,11 +3605,11 @@ def validate_zh_api_status_page(text: str) -> None:
     assert_social_preview_meta(text, label, ZH_API_STATUS_PAGE_URL)
     for expected in (
         "GCA 中文 API 状态",
-        "中文 API 状态 / 2026-06-10",
-        "2026-06-10T08:46:16Z",
-        "2026-06-10T08:54:41Z",
+        "中文 API 状态 / 2026-06-18",
+        "2026-06-18T08:41:31Z",
+        "2026-06-18T08:37:28Z",
         "最新检查",
-        "2026-06-10 通过",
+        "2026-06-18 通过",
         "邮箱注册和邮箱退订接口",
         "Cloudflare Workers + D1",
         "管理员读取接口仍需要本地管理 token",
@@ -7283,7 +7283,7 @@ def validate_service_delivery_playbook_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong status")
     if payload.get("playbookId") != "service-delivery-playbook-v1":
         raise SiteCheckError(f"{label}: wrong playbookId")
-    if payload.get("lastUpdated") != "2026-06-11":
+    if payload.get("lastUpdated") != "2026-06-18":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
@@ -7422,7 +7422,7 @@ def validate_worker_routes_handoff_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong status")
     if payload.get("handoffId") != "worker-routes-handoff-v1":
         raise SiteCheckError(f"{label}: wrong handoffId")
-    if payload.get("lastUpdated") != "2026-06-11":
+    if payload.get("lastUpdated") != "2026-06-18":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
@@ -7436,8 +7436,8 @@ def validate_worker_routes_handoff_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing non-live scope boundary")
 
     expected_status = {
-        "workerDryRun": "passed-2026-06-10",
-        "d1Visibility": "passed-2026-06-10",
+        "workerDryRun": "passed-2026-06-18",
+        "d1Visibility": "passed-2026-06-18",
         "cloudflareAuthSession": "blocked-error-10000",
         "workerDeployPermission": "blocked-error-10000",
         "remoteMigrations": "not-applied-for-pending-routes",
@@ -8446,7 +8446,7 @@ def validate_operations_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing operations safe claim")
     if "GCA operators can export a redacted-public local review package for reviewer evidence handoff when local ledger records exist." not in boundaries.get("safeClaims", []):
         raise SiteCheckError(f"{label}: missing review package safe claim")
-    if "GCA operators can record service-level credit usage with before/after remaining credits in the local operator backend; the Cloudflare Worker route is prepared, Worker dry-run and D1 visibility passed on 2026-06-10, and production remains non-live until Cloudflare auth, Worker deploy permission, remote deploy, and pending-route smoke gates pass." not in boundaries.get("safeClaims", []):
+    if "GCA operators can record service-level credit usage with before/after remaining credits in the local operator backend; the Cloudflare Worker route is prepared, Worker dry-run and D1 visibility passed on 2026-06-18, and production remains non-live until Cloudflare auth, Worker deploy permission, remote deploy, and pending-route smoke gates pass." not in boundaries.get("safeClaims", []):
         raise SiteCheckError(f"{label}: missing pending route gated safe claim")
     if "GCA email registration and unsubscribe APIs are live on Cloudflare Workers + D1." not in boundaries.get("safeClaims", []):
         raise SiteCheckError(f"{label}: missing email API safe claim")
@@ -8518,7 +8518,7 @@ def validate_access_api_page(text: str) -> None:
     assert_contains(text, "eth_call", label)
     assert_contains(text, "cloudflare-auth-session", label)
     assert_contains(text, "--include-pending-routes", label)
-    assert_contains(text, "2026-06-10 readiness check also passed D1 visibility", label)
+    assert_contains(text, "2026-06-18 readiness check also passed D1 visibility", label)
     assert_contains(text, "error <code>10000</code>", label)
     assert_contains(text, "/gca/review-package", label)
     assert_contains(text, "?redact=public", label)
@@ -9055,7 +9055,7 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong operationsRunbook")
     if "GCA has a live public access API for email registration, contact suppression, access config, member access, and read-only wallet verification." not in boundaries.get("safeClaims", []):
         raise SiteCheckError(f"{label}: missing API safe claim")
-    if "GCA operators can record service-level credit usage against an existing credit ledger in the local operator backend; the Cloudflare Worker route is prepared, Worker dry-run and D1 visibility passed on 2026-06-10, and production remains non-live until Cloudflare auth, Worker deploy permission, remote deploy, and pending-route smoke gates pass." not in boundaries.get("safeClaims", []):
+    if "GCA operators can record service-level credit usage against an existing credit ledger in the local operator backend; the Cloudflare Worker route is prepared, Worker dry-run and D1 visibility passed on 2026-06-18, and production remains non-live until Cloudflare auth, Worker deploy permission, remote deploy, and pending-route smoke gates pass." not in boundaries.get("safeClaims", []):
         raise SiteCheckError(f"{label}: missing pending route API safe claim")
     if not any("automatic or self-service transferred" in item for item in boundaries.get("doNotClaim", [])):
         raise SiteCheckError(f"{label}: missing member benefit boundary")
@@ -9073,15 +9073,15 @@ def validate_api_status_page(text: str) -> None:
     assert_no_public_data_room_terms(text, label)
     for expected in (
         "GCA Registration API Status",
-        "Registration API Status / 2026-06-10",
-        "2026-06-10T08:46:16Z",
-        "2026-06-10T08:54:41Z",
+        "Registration API Status / 2026-06-18",
+        "2026-06-18T08:41:31Z",
+        "2026-06-18T08:37:28Z",
         "Cloudflare Workers + D1",
         "https://gca-registration-api.gcagochina.workers.dev",
         "Public Check",
         "Live / no secrets",
         "Latest Check",
-        "2026-06-10 passed",
+        "2026-06-18 passed",
         "Worker Routes Handoff",
         "worker-routes-handoff.html",
         "D1 visibility passed",
@@ -9150,13 +9150,13 @@ def validate_api_status_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong pageUrl")
     if payload.get("status") != "public-member-access-api-status-published":
         raise SiteCheckError(f"{label}: wrong status")
-    if payload.get("lastUpdated") != "2026-06-10":
+    if payload.get("lastUpdated") != "2026-06-18":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
-    if payload.get("latestPublicCheckAt") != "2026-06-10T08:46:16Z":
+    if payload.get("latestPublicCheckAt") != "2026-06-18T08:41:31Z":
         raise SiteCheckError(f"{label}: wrong latest public check timestamp")
     if payload.get("latestPublicCheckStatus") != "passed":
         raise SiteCheckError(f"{label}: wrong latest public check status")
-    if payload.get("latestDeployReadinessCheckAt") != "2026-06-10T08:54:41Z":
+    if payload.get("latestDeployReadinessCheckAt") != "2026-06-18T08:37:28Z":
         raise SiteCheckError(f"{label}: wrong latest deploy readiness timestamp")
     if payload.get("latestDeployReadinessStatus") != "blocked-cloudflare-auth-or-worker-deploy-permission-code-10000":
         raise SiteCheckError(f"{label}: wrong latest deploy readiness status")
@@ -10002,7 +10002,7 @@ def validate_credits_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong memberLedger")
     if "GCA has published a service catalog for GCA AI Quant Access credits." not in boundaries.get("safeClaims", []):
         raise SiteCheckError(f"{label}: missing credits safe claim")
-    if "Operator-reviewed service delivery can be recorded through the local GCA credit usage ledger with before/after remaining credits; the Cloudflare Worker route is prepared, Worker dry-run and D1 visibility passed on 2026-06-10, and production remains non-live until Cloudflare auth, Worker deploy permission, remote deploy, and pending-route smoke gates pass." not in boundaries.get("safeClaims", []):
+    if "Operator-reviewed service delivery can be recorded through the local GCA credit usage ledger with before/after remaining credits; the Cloudflare Worker route is prepared, Worker dry-run and D1 visibility passed on 2026-06-18, and production remains non-live until Cloudflare auth, Worker deploy permission, remote deploy, and pending-route smoke gates pass." not in boundaries.get("safeClaims", []):
         raise SiteCheckError(f"{label}: missing pending route credits safe claim")
     if not any("automatic or self-service transferred" in item for item in boundaries.get("doNotClaim", [])):
         raise SiteCheckError(f"{label}: missing member benefit boundary")
