@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GCA Position Size Calculator | Risk First Trading</title>
+    <meta name="description" content="Client-side GCA position size and risk budget calculator for stop distance, fees, slippage, leverage, margin, and reward-to-risk planning.">
+    <link rel="canonical" href="https://gcagochina.com/risk-calculator.html">
+    <link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">
+    <link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="GCA | Go China Access">
+    <meta property="og:title" content="GCA Position Size Calculator | Risk First Trading">
+    <meta property="og:description" content="Plan position size from account equity, risk budget, stop distance, costs, and leverage without connecting a wallet or exchange.">
+    <meta property="og:url" content="https://gcagochina.com/risk-calculator.html">
+    <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="GCA Position Size Calculator | Risk First Trading">
+    <meta name="twitter:description" content="Plan position size from account equity, risk budget, stop distance, costs, and leverage without connecting a wallet or exchange.">
+    <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f7f8f5;
+        --ink: #151817;
+        --muted: #5e6763;
+        --line: #dfe4dd;
+        --panel: #ffffff;
+        --soft: #eef3ef;
+        --red: #d71920;
+        --blue: #1557d7;
+        --green: #087f5b;
+        --gold: #9a7110;
+      }
+
+      * { box-sizing: border-box; }
+      body { margin: 0; color: var(--ink); background: var(--bg); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; line-height: 1.5; }
+      a { color: var(--blue); text-decoration: none; }
+      a:hover { text-decoration: underline; }
+      .shell { width: min(1160px, calc(100% - 32px)); margin: 0 auto; }
+      header { position: sticky; top: 0; z-index: 3; border-bottom: 1px solid var(--line); background: rgba(247, 248, 245, 0.95); backdrop-filter: blur(16px); }
+      nav { min-height: 68px; display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+      .brand { display: inline-flex; align-items: center; gap: 10px; color: var(--ink); font-weight: 850; }
+      .brand img { width: 34px; height: 34px; }
+      .nav-links { display: flex; align-items: center; gap: 16px; font-size: 14px; }
+      main { padding: 34px 0 64px; }
+      h1, h2, h3, p { margin-top: 0; }
+      h1 { max-width: 760px; margin-bottom: 14px; font-size: 54px; line-height: 1; letter-spacing: 0; }
+      h2 { margin-bottom: 14px; font-size: 24px; letter-spacing: 0; }
+      h3 { margin-bottom: 8px; font-size: 16px; letter-spacing: 0; }
+      .eyebrow { margin: 0 0 10px; color: var(--red); font-size: 13px; font-weight: 850; text-transform: uppercase; }
+      .lead { max-width: 820px; margin-bottom: 0; color: var(--muted); font-size: 17px; }
+      .tool-layout { display: grid; grid-template-columns: minmax(320px, 0.78fr) minmax(0, 1.22fr); gap: 18px; margin-top: 26px; align-items: start; }
+      .panel { border: 1px solid var(--line); border-radius: 8px; background: var(--panel); padding: 22px; }
+      .input-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+      .field { display: grid; gap: 6px; min-width: 0; }
+      .field.full { grid-column: 1 / -1; }
+      label { font-size: 13px; font-weight: 800; }
+      input { width: 100%; min-height: 42px; border: 1px solid var(--line); border-radius: 6px; background: #fff; color: var(--ink); padding: 10px 12px; font: inherit; }
+      input[type="range"] { min-height: 30px; padding: 0; accent-color: var(--red); }
+      .range-line { display: grid; grid-template-columns: minmax(0, 1fr) 76px; gap: 10px; align-items: center; }
+      .segmented { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; border-radius: 6px; background: var(--soft); padding: 4px; }
+      .segment { min-height: 36px; border: 0; border-radius: 4px; background: transparent; color: var(--muted); font: inherit; font-size: 13px; font-weight: 800; cursor: pointer; }
+      .segment[aria-pressed="true"] { background: #fff; color: var(--red); box-shadow: 0 1px 4px rgba(21, 24, 23, 0.12); }
+      .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+      .button { min-height: 42px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--line); border-radius: 6px; background: #fff; color: var(--ink); padding: 10px 14px; font: inherit; font-weight: 780; cursor: pointer; }
+      .button.primary { border-color: var(--red); background: var(--red); color: #fff; }
+      .summary { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+      .metric { min-width: 0; border-top: 2px solid var(--line); padding-top: 12px; }
+      .metric.primary { border-top-color: var(--red); }
+      .metric.good { border-top-color: var(--green); }
+      .label { display: block; color: var(--muted); font-size: 12px; font-weight: 760; text-transform: uppercase; }
+      .value { display: block; margin-top: 6px; font-size: 22px; font-weight: 850; overflow-wrap: anywhere; }
+      .value.compact { font-size: 17px; }
+      .plan { display: grid; gap: 10px; margin-top: 20px; }
+      .row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; border-top: 1px solid var(--line); padding-top: 10px; }
+      .row strong { text-align: right; overflow-wrap: anywhere; }
+      .warning-list { display: grid; gap: 8px; margin: 18px 0 0; padding: 0; list-style: none; }
+      .warning { border-left: 3px solid var(--gold); background: #fff8e6; padding: 10px 12px; color: #665019; }
+      .warning.high { border-left-color: var(--red); background: #fff0f0; color: #8d171c; }
+      .warning.good { border-left-color: var(--green); background: #edf8f3; color: #086447; }
+      .note { margin: 0; color: var(--muted); }
+      .boundary { margin-top: 18px; border-left: 3px solid var(--blue); background: #eef4ff; padding: 14px; }
+      footer { border-top: 1px solid var(--line); padding: 24px 0; color: var(--muted); font-size: 14px; }
+
+      @media (max-width: 860px) {
+        h1 { font-size: 40px; }
+        .tool-layout, .summary { grid-template-columns: 1fr; }
+        .input-grid { grid-template-columns: 1fr; }
+        .field.full { grid-column: auto; }
+        .row { grid-template-columns: 1fr; }
+        .row strong { text-align: left; }
+      }
+    </style>
+    <link rel="stylesheet" href="assets/gca-site.css?v=20260711">
+    <script src="assets/gca-site.js?v=20260711" defer></script>
+  </head>
+  <body>
+    <header>
+      <nav class="shell" aria-label="Primary">
+        <a class="brand" href="index.html" aria-label="GCA home">
+          <img src="assets/gca-logo.svg" alt="GCA logo">
+          <span>GCA</span>
+        </a>
+        <div class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="product.html">Product</a>
+          <a href="credits.html">Credits</a>
+          <a href="gca/member-access/">Members</a>
+        </div>
+      </nav>
+    </header>
+
+    <main class="shell" id="main-content">
+      <section aria-labelledby="title">
+        <p class="eyebrow">GCA AI Quant Access · Public Preview</p>
+        <h1 id="title">Position Size Calculator</h1>
+        <p class="lead">Turn account equity, stop distance, trading costs, and leverage into a defined risk budget before execution. 仓位与风险计算全部在当前浏览器完成。</p>
+      </section>
+
+      <section class="tool-layout" aria-label="Position size calculator">
+        <form class="panel" id="calculatorForm">
+          <h2>Trade Plan Inputs <span lang="zh-CN">交易计划输入</span></h2>
+          <div class="input-grid">
+            <div class="field full">
+              <label for="equity">Account equity / 账户权益</label>
+              <input id="equity" type="number" inputmode="decimal" min="1" step="any" value="10000">
+            </div>
+            <div class="field full">
+              <label for="riskRange">Risk per trade / 单笔风险</label>
+              <div class="range-line">
+                <input id="riskRange" type="range" min="0.1" max="5" step="0.1" value="1">
+                <input id="riskPercent" type="number" inputmode="decimal" min="0.1" max="5" step="0.1" value="1" aria-label="Risk percent">
+              </div>
+              <div class="segmented" aria-label="Common risk percentages">
+                <button class="segment" type="button" data-risk="0.5" aria-pressed="false">0.5%</button>
+                <button class="segment" type="button" data-risk="1" aria-pressed="true">1%</button>
+                <button class="segment" type="button" data-risk="1.5" aria-pressed="false">1.5%</button>
+                <button class="segment" type="button" data-risk="2" aria-pressed="false">2%</button>
+              </div>
+            </div>
+            <div class="field">
+              <label for="entryPrice">Entry price / 入场价</label>
+              <input id="entryPrice" type="number" inputmode="decimal" min="0.00000001" step="any" value="100">
+            </div>
+            <div class="field">
+              <label for="stopPrice">Stop price / 止损价</label>
+              <input id="stopPrice" type="number" inputmode="decimal" min="0.00000001" step="any" value="95">
+            </div>
+            <div class="field">
+              <label for="targetPrice">Target price / 目标价</label>
+              <input id="targetPrice" type="number" inputmode="decimal" min="0" step="any" value="110">
+            </div>
+            <div class="field">
+              <label for="leverage">Leverage / 杠杆倍数</label>
+              <input id="leverage" type="number" inputmode="decimal" min="1" max="100" step="1" value="1">
+            </div>
+            <div class="field">
+              <label for="feeBps">Round-trip fees (bps) / 双边费用</label>
+              <input id="feeBps" type="number" inputmode="decimal" min="0" max="1000" step="1" value="20">
+            </div>
+            <div class="field">
+              <label for="slippageBps">Slippage (bps) / 滑点</label>
+              <input id="slippageBps" type="number" inputmode="decimal" min="0" max="1000" step="1" value="10">
+            </div>
+          </div>
+          <div class="actions">
+            <button class="button primary" type="submit">Calculate / 计算</button>
+            <button class="button" type="button" id="resetCalculator">Reset / 重置</button>
+          </div>
+        </form>
+
+        <div class="panel" aria-live="polite">
+          <h2>Risk Plan <span lang="zh-CN">风险计划</span></h2>
+          <div class="summary">
+            <div class="metric primary">
+              <span class="label">Position Quantity / 仓位数量</span>
+              <span class="value" id="positionQuantity">-</span>
+            </div>
+            <div class="metric good">
+              <span class="label">Planned Max Loss / 计划最大损失</span>
+              <span class="value" id="plannedLoss">-</span>
+            </div>
+            <div class="metric">
+              <span class="label">Required Margin / 所需保证金</span>
+              <span class="value" id="requiredMargin">-</span>
+            </div>
+          </div>
+          <div class="plan">
+            <div class="row"><span>Direction / 方向</span><strong id="direction">-</strong></div>
+            <div class="row"><span>Risk budget / 风险预算</span><strong id="riskBudget">-</strong></div>
+            <div class="row"><span>Stop distance / 止损距离</span><strong id="stopDistance">-</strong></div>
+            <div class="row"><span>Position notional / 仓位名义价值</span><strong id="positionNotional">-</strong></div>
+            <div class="row"><span>Estimated costs / 预估成本</span><strong id="estimatedCosts">-</strong></div>
+            <div class="row"><span>Account exposure / 账户敞口</span><strong id="accountExposure">-</strong></div>
+            <div class="row"><span>Reward-to-risk / 盈亏比</span><strong id="rewardRisk">-</strong></div>
+          </div>
+          <ul class="warning-list" id="warnings"></ul>
+          <div class="actions">
+            <button class="button" type="button" id="copyPlan">Copy Plan / 复制计划</button>
+          </div>
+          <p class="boundary">This calculator uses only the numbers entered here. It does not connect to a wallet or exchange, fetch prices, place orders, reserve credits, or create trading permission. 本工具不连接钱包或交易所，不获取行情，也不下单。</p>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="shell">GCA Risk First Trading · Position sizing is calculated locally in this browser.</div>
+    </footer>
+
+    <script src="assets/risk-calculator.js"></script>
+    <script>
+      (() => {
+        "use strict";
+        const form = document.getElementById("calculatorForm");
+        const fields = {
+          equity: document.getElementById("equity"),
+          riskRange: document.getElementById("riskRange"),
+          riskPercent: document.getElementById("riskPercent"),
+          entry: document.getElementById("entryPrice"),
+          stop: document.getElementById("stopPrice"),
+          target: document.getElementById("targetPrice"),
+          leverage: document.getElementById("leverage"),
+          feeBps: document.getElementById("feeBps"),
+          slippageBps: document.getElementById("slippageBps")
+        };
+        const outputs = {
+          quantity: document.getElementById("positionQuantity"),
+          loss: document.getElementById("plannedLoss"),
+          margin: document.getElementById("requiredMargin"),
+          direction: document.getElementById("direction"),
+          riskBudget: document.getElementById("riskBudget"),
+          stopDistance: document.getElementById("stopDistance"),
+          notional: document.getElementById("positionNotional"),
+          costs: document.getElementById("estimatedCosts"),
+          exposure: document.getElementById("accountExposure"),
+          rewardRisk: document.getElementById("rewardRisk")
+        };
+        const warnings = document.getElementById("warnings");
+        const copyPlan = document.getElementById("copyPlan");
+        let latestPlan = "";
+
+        const number = (field) => Number(field.value);
+        const money = (value) => Number.isFinite(value)
+          ? new Intl.NumberFormat(undefined, { maximumFractionDigits: 2 }).format(value)
+          : "-";
+        const quantity = (value) => Number.isFinite(value)
+          ? new Intl.NumberFormat(undefined, { maximumFractionDigits: 8 }).format(value)
+          : "-";
+        const percent = (value) => Number.isFinite(value) ? `${value.toFixed(2)}%` : "-";
+
+        function setRisk(value) {
+          const risk = Math.min(5, Math.max(0.1, Number(value) || 1));
+          fields.riskRange.value = String(risk);
+          fields.riskPercent.value = String(risk);
+          document.querySelectorAll("[data-risk]").forEach((button) => {
+            button.setAttribute("aria-pressed", String(Number(button.dataset.risk) === risk));
+          });
+        }
+
+        function addWarning(message, level = "") {
+          const item = document.createElement("li");
+          item.className = `warning ${level}`.trim();
+          item.textContent = message;
+          warnings.append(item);
+        }
+
+        function clearOutputs() {
+          Object.values(outputs).forEach((output) => { output.textContent = "-"; });
+          warnings.replaceChildren();
+          addWarning("Enter positive equity, entry, and stop values. / 请输入有效的账户权益、入场价和止损价。", "high");
+          latestPlan = "";
+        }
+
+        function calculate() {
+          const equity = number(fields.equity);
+          const riskPercent = number(fields.riskPercent);
+          const entry = number(fields.entry);
+          const stop = number(fields.stop);
+          const target = number(fields.target);
+          const leverage = number(fields.leverage);
+          const feeBps = number(fields.feeBps);
+          const slippageBps = number(fields.slippageBps);
+
+          const plan = window.GcaRiskCalculator.calculatePositionPlan({
+            equity,
+            riskPercent,
+            entry,
+            stop,
+            target,
+            leverage,
+            feeBps,
+            slippageBps
+          });
+          if (!plan) {
+            clearOutputs();
+            return;
+          }
+
+          const direction = plan.direction === "long" ? "Long / 做多" : "Short / 做空";
+          const {
+            riskBudget,
+            stopDistance,
+            stopPercent,
+            positionQuantity,
+            positionNotional,
+            estimatedCosts,
+            plannedLoss,
+            requiredMargin,
+            exposurePercent,
+            rewardRisk,
+            targetOnCorrectSide
+          } = plan;
+
+          outputs.quantity.textContent = quantity(positionQuantity);
+          outputs.loss.textContent = money(plannedLoss);
+          outputs.margin.textContent = money(requiredMargin);
+          outputs.direction.textContent = direction;
+          outputs.riskBudget.textContent = `${money(riskBudget)} (${riskPercent.toFixed(2)}%)`;
+          outputs.stopDistance.textContent = `${money(stopDistance)} (${percent(stopPercent)})`;
+          outputs.notional.textContent = money(positionNotional);
+          outputs.costs.textContent = money(estimatedCosts);
+          outputs.exposure.textContent = percent(exposurePercent);
+          outputs.rewardRisk.textContent = rewardRisk === null ? "Not set / 未设置" : `${rewardRisk.toFixed(2)}R`;
+
+          warnings.replaceChildren();
+          if (riskPercent > 2) addWarning("Risk per trade is above 2% of account equity. / 单笔风险超过账户权益的 2%。", "high");
+          if (leverage > 10) addWarning("Leverage is above 10x; small price moves can consume margin quickly. / 杠杆超过 10 倍。", "high");
+          if (stopPercent < 0.25) addWarning("Stop distance is below 0.25%; fees, slippage, and market noise may dominate. / 止损距离低于 0.25%。");
+          if (requiredMargin > equity) addWarning("Required margin is above account equity at the selected leverage. / 所需保证金高于账户权益。", "high");
+          if (exposurePercent > 500) addWarning("Position notional exceeds 500% of account equity. / 仓位名义价值超过账户权益的 500%。", "high");
+          if (!targetOnCorrectSide) addWarning("Target is on the wrong side of entry for this direction. / 目标价与当前方向不一致。", "high");
+          if (warnings.childElementCount === 0) addWarning("Inputs are internally consistent. Recheck market liquidity and execution conditions before use. / 输入参数内部一致，请另外核对流动性和执行条件。", "good");
+
+          latestPlan = [
+            "GCA Position Size Plan / GCA 仓位计划",
+            `Direction / 方向: ${direction}`,
+            `Account equity / 账户权益: ${money(equity)}`,
+            `Risk budget / 风险预算: ${money(riskBudget)} (${riskPercent.toFixed(2)}%)`,
+            `Entry / 入场价: ${entry}`,
+            `Stop / 止损价: ${stop}`,
+            `Target / 目标价: ${target > 0 ? target : "Not set"}`,
+            `Quantity / 仓位数量: ${quantity(positionQuantity)}`,
+            `Notional / 名义价值: ${money(positionNotional)}`,
+            `Leverage / 杠杆: ${leverage}x`,
+            `Required margin / 所需保证金: ${money(requiredMargin)}`,
+            `Estimated costs / 预估成本: ${money(estimatedCosts)}`,
+            `Planned max loss / 计划最大损失: ${money(plannedLoss)}`,
+            `Reward-to-risk / 盈亏比: ${rewardRisk === null ? "Not set" : `${rewardRisk.toFixed(2)}R`}`
+          ].join("\n");
+        }
+
+        form.addEventListener("submit", (event) => { event.preventDefault(); calculate(); });
+        Object.values(fields).forEach((field) => field.addEventListener("input", () => {
+          if (field === fields.riskRange) setRisk(field.value);
+          if (field === fields.riskPercent) setRisk(field.value);
+          calculate();
+        }));
+        document.querySelectorAll("[data-risk]").forEach((button) => button.addEventListener("click", () => {
+          setRisk(button.dataset.risk);
+          calculate();
+        }));
+        document.getElementById("resetCalculator").addEventListener("click", () => {
+          form.reset();
+          setRisk(1);
+          calculate();
+        });
+        copyPlan.addEventListener("click", async () => {
+          if (!latestPlan) return;
+          try {
+            await navigator.clipboard.writeText(latestPlan);
+            copyPlan.textContent = "Copied / 已复制";
+            window.setTimeout(() => { copyPlan.textContent = "Copy Plan / 复制计划"; }, 1500);
+          } catch (error) {
+            copyPlan.textContent = "Copy unavailable / 请手动记录";
+          }
+        });
+
+        calculate();
+      })();
+    </script>
+  </body>
+</html>
