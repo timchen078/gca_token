@@ -850,6 +850,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
             "exportJson",
             "exportCsv",
             "importJson",
+            "importCsv",
             "clearJournal",
             "journalRows",
             "journalFilters",
@@ -877,6 +878,11 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn('href="backtest-lab.html#source=journal"', page)
         self.assertIn("engine.filterTrades(trades,filters())", page)
         self.assertIn("gca-trade-journal-filtered.csv", page)
+        self.assertIn("engine.parseCsv(await file.text())", page)
+        self.assertIn("CSV restored:", page)
+        self.assertIn("function restoreImported(imported)", page)
+        self.assertIn("if(merged.size>engine.MAX_TRADES)", page)
+        self.assertIn("Import would contain", page)
         self.assertIn("engine.groupPerformance(visibleTrades,breakdownDimension.value)", page)
         self.assertIn("let editingId = null", page)
         self.assertIn("edit.dataset.editId=trade.id", page)
@@ -904,11 +910,13 @@ class PublicSiteExperienceTests(unittest.TestCase):
             "const trades=JSON.parse(process.argv[2]);"
             "const summary=j.summarizeTrades(trades);"
             "const backup=j.buildBackup(trades,'2026-07-11T00:00:00Z');"
-            "process.stdout.write(JSON.stringify({summary,backup,parsed:j.parseBackup(JSON.stringify(backup)),csv:j.toCsv(trades),filtered:j.filterTrades(trades,{market:'BTC/USDT',direction:'long'}),dateFiltered:j.filterTrades(trades,{from:'2026-07-02',to:'2026-07-03'}),directionGroups:j.groupPerformance(trades,'direction'),setupGroups:j.groupPerformance(trades,'setup'),qualities:[j.sampleQuality(0),j.sampleQuality(29),j.sampleQuality(30),j.sampleQuality(99),j.sampleQuality(100)]}));"
+            "const csv=j.toCsv(trades);"
+            "const legacy='date,market,direction,return_percent,setup,notes\\n2026-07-04,btc/usdt,long,0.5,breakout,legacy note';"
+            "process.stdout.write(JSON.stringify({summary,backup,parsed:j.parseBackup(JSON.stringify(backup)),csv,parsedCsv:j.parseCsv(csv),legacyCsv:j.parseCsv(legacy),filtered:j.filterTrades(trades,{market:'BTC/USDT',direction:'long'}),dateFiltered:j.filterTrades(trades,{from:'2026-07-02',to:'2026-07-03'}),directionGroups:j.groupPerformance(trades,'direction'),setupGroups:j.groupPerformance(trades,'setup'),qualities:[j.sampleQuality(0),j.sampleQuality(29),j.sampleQuality(30),j.sampleQuality(99),j.sampleQuality(100)]}));"
         )
         trades = [
             {"id": "b", "date": "2026-07-02", "market": "eth/usdt", "direction": "short", "returnPercent": -0.5, "setup": "retest", "notes": "stopped", "createdAt": "2026-07-02T01:00:00Z"},
-            {"id": "a", "date": "2026-07-01", "market": "btc/usdt", "direction": "long", "returnPercent": 1.0, "setup": "breakout", "notes": "followed plan", "createdAt": "2026-07-01T01:00:00Z"},
+            {"id": "a", "date": "2026-07-01", "market": "btc/usdt", "direction": "long", "returnPercent": 1.0, "setup": "breakout", "notes": "followed, \"plan\"", "createdAt": "2026-07-01T01:00:00Z"},
             {"id": "c", "date": "2026-07-03", "market": "sol/usdt", "direction": "long", "returnPercent": -0.25, "setup": "range", "notes": "early entry", "createdAt": "2026-07-03T01:00:00Z"},
         ]
         completed = subprocess.run(
@@ -929,7 +937,14 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertEqual([trade["id"] for trade in summary["trades"]], ["a", "b", "c"])
         self.assertEqual(len(result["parsed"]["trades"]), 3)
         self.assertIn('"BTC/USDT"', result["csv"])
-        self.assertIn('"followed plan"', result["csv"])
+        self.assertIn('"followed, ""plan"""', result["csv"])
+        self.assertEqual(result["parsedCsv"]["trades"][0]["notes"], 'followed, "plan"')
+        self.assertIn("id,created_at", result["csv"].splitlines()[0])
+        self.assertEqual([trade["id"] for trade in result["parsedCsv"]["trades"]], ["a", "b", "c"])
+        self.assertEqual(result["parsedCsv"]["source"], "current-csv")
+        self.assertEqual(result["legacyCsv"]["source"], "legacy-csv")
+        self.assertEqual(result["legacyCsv"]["trades"][0]["market"], "BTC/USDT")
+        self.assertTrue(result["legacyCsv"]["trades"][0]["id"].startswith("csv-"))
         self.assertEqual([trade["id"] for trade in result["filtered"]], ["a"])
         self.assertEqual([trade["id"] for trade in result["dateFiltered"]], ["b", "c"])
         direction_groups = {group["label"]: group for group in result["directionGroups"]}
@@ -949,7 +964,9 @@ class PublicSiteExperienceTests(unittest.TestCase):
 
         invalid_script = (
             "const j=require(process.argv[1]);"
-            "process.stdout.write(JSON.stringify([j.normalizeTrade({date:'2026-02-31',market:'BTC/USDT',direction:'long',returnPercent:1}),j.normalizeTrade({date:'2026-07-01',market:'BTC/USDT',direction:'long',returnPercent:-100}),j.parseBackup('{}')]));"
+            "const duplicate=['date,market,direction,return_percent,setup,notes,id,created_at','2026-07-01,BTC/USDT,long,1,x,n,same,2026-07-01T00:00:00Z','2026-07-02,ETH/USDT,long,1,x,n,same,2026-07-02T00:00:00Z'].join('\\n');"
+            "const tooMany=['date,market,direction,return_percent,setup,notes',...Array.from({length:501},(_,i)=>`2026-07-01,BTC/USDT,long,1,x,${i}`)].join('\\n');"
+            "process.stdout.write(JSON.stringify([j.normalizeTrade({date:'2026-02-31',market:'BTC/USDT',direction:'long',returnPercent:1}),j.normalizeTrade({date:'2026-07-01',market:'BTC/USDT',direction:'long',returnPercent:-100}),j.parseBackup('{}'),j.parseCsv('bad,header\\n1,2'),j.parseCsv('date,market,direction,return_percent,setup,notes\\n2026-07-01,BTC/USDT,side,1,x,n'),j.parseCsv('date,market,direction,return_percent,setup,notes\\n2026-07-01,BTC/USDT,long,1,x,\"open'),j.parseCsv(duplicate),j.parseCsv(tooMany)]));"
         )
         invalid = subprocess.run(
             [node, "-e", invalid_script, str(module_path)],
@@ -957,7 +974,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
             capture_output=True,
             text=True,
         )
-        self.assertEqual(json.loads(invalid.stdout), [None, None, None])
+        self.assertEqual(json.loads(invalid.stdout), [None, None, None, None, None, None, None, None])
 
 
 if __name__ == "__main__":

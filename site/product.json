@@ -77,7 +77,7 @@
       "name": "Trade Journal",
       "status": "public-client-side-preview-live",
       "publicUrl": "https://gcagochina.com/trade-journal.html",
-      "purpose": "Store up to 500 completed-trade records on the current device, edit records without changing their identity, filter and group results, inspect an indexed compounded equity path and drawdown, export user-controlled backups, and send return sequences to Backtest Lab.",
+      "purpose": "Store up to 500 completed-trade records on the current device, edit records without changing their identity, filter and group results, inspect an indexed compounded equity path and drawdown, migrate records through validated JSON or CSV backup files, and send return sequences to Backtest Lab.",
       "storesOnServer": false,
       "connectsWallet": false,
       "connectsExchange": false,
