@@ -72,6 +72,8 @@
           <h2>Trade Record <span lang="zh-CN">交易记录</span></h2>
           <p class="boundary" id="planScenario" hidden>This is a planned-stop simulation imported from the Risk Tools workspace, not a completed-trade record. Replace exit, fees, funding, and process checks with actual execution data before treating it as a post-trade replay. / 这是计划止损模拟，不是真实成交复盘；成交后请替换实际数据。</p>
           <div class="grid">
+            <div class="field"><label for="tradeDate">Trade date / 交易日期</label><input id="tradeDate" type="date"></div>
+            <div class="field"><label for="market">Market / 交易对</label><input id="market" type="text" maxlength="40" placeholder="BTC/USDT"></div>
             <div class="field"><label for="direction">Direction / 方向</label><select id="direction"><option value="long">Long / 做多</option><option value="short">Short / 做空</option></select></div>
             <div class="field"><label for="eventType">Exit type / 退出类型</label><select id="eventType"><option value="stop">Stop / 止损</option><option value="manual">Manual / 手动退出</option><option value="liquidation">Liquidation / 强平</option><option value="target">Target / 止盈</option></select></div>
             <div class="field"><label for="accountEquity">Equity before trade / 交易前权益</label><input id="accountEquity" type="number" min="0.01" step="any" value="10000"></div>
@@ -85,6 +87,7 @@
             <div class="field full"><label for="notes">What happened? / 发生了什么</label><textarea id="notes" placeholder="Record the setup, catalyst, execution gap, and lesson. 记录交易逻辑、触发因素、执行偏差和结论。"></textarea></div>
           </div>
           <div class="checklist">
+            <label class="check"><input id="completedTradeConfirmed" type="checkbox" checked><span>This is a completed trade, not a planned scenario / 这是已完成交易，不是计划模拟</span></label>
             <label class="check"><input id="positionPlanned" type="checkbox" checked><span>Position was calculated before entry / 入场前已计算仓位</span></label>
             <label class="check"><input id="stopRespected" type="checkbox" checked><span>Planned stop was respected / 已遵守计划止损</span></label>
             <label class="check"><input id="addedToLosing" type="checkbox"><span>Added size while losing / 浮亏期间继续加仓</span></label>
@@ -94,7 +97,7 @@
           <div class="actions"><button class="button primary" type="submit">Run Replay / 开始复盘</button><button class="button" type="button" id="resetReplay">Reset / 重置</button></div>
         </form>
         <div class="panel" aria-live="polite">
-          <div class="result-head"><div><h2>Replay Result <span lang="zh-CN">复盘结果</span></h2><span class="status" id="status">CONTROLLED</span></div><button class="button" id="copyReplay" type="button">Copy Replay / 复制复盘</button></div>
+          <div class="result-head"><div><h2>Replay Result <span lang="zh-CN">复盘结果</span></h2><span class="status" id="status">CONTROLLED</span></div><div class="actions" style="margin-top:0"><button class="button" id="copyReplay" type="button">Copy Replay / 复制复盘</button><button class="button primary" id="saveReplayToJournal" type="button" disabled>Save to Journal / 保存到日志</button></div></div>
           <div class="metrics" style="margin-top:18px">
             <div class="metric"><span class="label">Net P&amp;L / 净盈亏</span><strong id="netPnl">0.00</strong></div>
             <div class="metric"><span class="label">Account impact / 账户影响</span><strong id="accountImpact">0.00%</strong></div>
@@ -110,18 +113,20 @@
           <ul class="flags" id="flags"></ul>
           <h3 style="margin-top:20px">Next Controls <span lang="zh-CN">下一步控制</span></h3>
           <ol class="steps" id="actions"></ol>
+          <p class="note" id="journalSaveStatus" aria-live="polite">Add a valid trade date and market to save this completed replay locally. / 填写交易日期和交易对后可保存到本地日志。</p>
           <div class="actions"><a class="button primary" href="risk-calculator.html">Recalculate Position / 重算仓位</a><a class="button" href="entry-ready.html">Run ENTRY_READY / 入场检查</a></div>
           <p class="boundary">This replay uses only the values entered in this browser. It does not calculate an exchange-specific liquidation price or maintenance margin, fetch market data, connect accounts, place orders, or deduct credits. 本工具不计算交易所特定强平价，不获取行情、不连接账户、不下单，也不扣除积分。</p>
         </div>
       </section>
     </main>
     <footer><div class="shell">GCA Risk First Trading · Review the process, then reduce repeatable risk.</div></footer>
+    <script src="assets/trade-journal.js"></script>
     <script src="assets/liquidation-replay.js"></script>
     <script>
       (() => {
         "use strict";
         const form = document.getElementById("replayForm");
-        const ids = ["direction","eventType","accountEquity","quantity","entry","exit","plannedStop","leverage","fees","funding","notes","positionPlanned","stopRespected","addedToLosing","exitRuleFollowed","journalComplete"];
+        const ids = ["tradeDate","market","direction","eventType","accountEquity","quantity","entry","exit","plannedStop","leverage","fees","funding","notes","completedTradeConfirmed","positionPlanned","stopRespected","addedToLosing","exitRuleFollowed","journalComplete"];
         const fields = Object.fromEntries(ids.map((id) => [id, document.getElementById(id)]));
         const number = new Intl.NumberFormat("en-US", { maximumFractionDigits: 8 });
         const money = new Intl.NumberFormat("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -129,9 +134,27 @@
         const flags = document.getElementById("flags");
         const actions = document.getElementById("actions");
         const copyButton = document.getElementById("copyReplay");
+        const saveButton = document.getElementById("saveReplayToJournal");
+        const journalSaveStatus = document.getElementById("journalSaveStatus");
         let latestReplay = "";
+        let latestResult = null;
 
+        function today() { const now=new Date();return new Date(now.getTime()-(now.getTimezoneOffset()*60000)).toISOString().slice(0,10); }
+        function recordId() { return globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(16).slice(2)}`; }
         function payload() { return Object.fromEntries(Object.entries(fields).map(([key, field]) => [key, field.type === "checkbox" ? field.checked : field.value])); }
+        function journalTrade(result, id) {
+          if (!result || !fields.completedTradeConfirmed.checked) return null;
+          return window.GcaTradeJournal.normalizeTrade({
+            id,
+            date: fields.tradeDate.value,
+            market: fields.market.value,
+            direction: result.direction,
+            returnPercent: result.accountImpactPercent,
+            setup: `${fields.eventType.value} replay`,
+            notes: fields.notes.value,
+            createdAt: new Date().toISOString()
+          });
+        }
         function applyPlanParameters() {
           const searchParams = new URLSearchParams(window.location.search);
           const fragmentParams = new URLSearchParams(window.location.hash.replace(/^#/, ""));
@@ -149,16 +172,20 @@
           });
           if (read("source") === "plan") {
             fields.eventType.value = "stop";
+            fields.completedTradeConfirmed.checked = false;
             document.getElementById("planScenario").hidden = false;
           }
         }
         function show(id, value) { document.getElementById(id).textContent = value; }
         function render(result) {
           if (!result) {
+            latestResult = null; saveButton.disabled = true;
             status.textContent = "CHECK_INPUTS"; status.className = "status critical";
             flags.innerHTML = '<li class="flag critical">Enter positive equity, entry, exit, quantity, and leverage values. / 请输入有效的权益、价格、数量和杠杆。</li>';
             actions.replaceChildren(); return;
           }
+          latestResult = result;
+          saveButton.disabled = !journalTrade(result, "preview");
           status.textContent = result.status;
           status.className = `status ${result.status === "CRITICAL_REVIEW" ? "critical" : result.status === "PROCESS_REVIEW" ? "review" : ""}`.trim();
           show("netPnl", `${result.netPnl >= 0 ? "+" : ""}${money.format(result.netPnl)}`);
@@ -180,9 +207,20 @@
         function evaluate() { render(window.GcaLiquidationReplay.replay(payload())); }
         form.addEventListener("submit", (event) => { event.preventDefault(); evaluate(); });
         form.addEventListener("input", evaluate); form.addEventListener("change", evaluate);
-        document.getElementById("resetReplay").addEventListener("click", () => { form.reset(); document.getElementById("planScenario").hidden = true; evaluate(); });
+        document.getElementById("resetReplay").addEventListener("click", () => { form.reset(); fields.tradeDate.value=today(); document.getElementById("planScenario").hidden = true; journalSaveStatus.textContent="Add a valid trade date and market to save this completed replay locally. / 填写交易日期和交易对后可保存到本地日志。"; evaluate(); });
         copyButton.addEventListener("click", async () => { try { await navigator.clipboard.writeText(latestReplay); copyButton.textContent="Copied / 已复制"; window.setTimeout(()=>{copyButton.textContent="Copy Replay / 复制复盘";},1500); } catch (error) { copyButton.textContent="Copy unavailable / 请手动记录"; } });
-        applyPlanParameters(); evaluate();
+        saveButton.addEventListener("click", () => {
+          const trade=journalTrade(latestResult,recordId());
+          if(!trade){journalSaveStatus.textContent="Confirm a completed trade and add a valid date and market first. / 请先确认真实交易并填写日期和交易对。";return;}
+          try {
+            const existing=window.GcaTradeJournal.parseBackup(window.localStorage.getItem(window.GcaTradeJournal.STORAGE_KEY));
+            const backup=window.GcaTradeJournal.buildBackup([...(existing?.trades||[]),trade],new Date().toISOString());
+            window.localStorage.setItem(window.GcaTradeJournal.STORAGE_KEY,JSON.stringify(backup));
+            saveButton.disabled=true;
+            journalSaveStatus.textContent=`Saved ${trade.market} ${trade.returnPercent>=0?"+":""}${trade.returnPercent.toFixed(2)}% to the local Trade Journal. / 已保存到本地交易日志。`;
+          } catch(error) { journalSaveStatus.textContent="Browser storage is unavailable. Copy the replay instead. / 浏览器存储不可用，请复制复盘内容。"; }
+        });
+        fields.tradeDate.value=today(); applyPlanParameters(); evaluate();
       })();
     </script>
   </body>
