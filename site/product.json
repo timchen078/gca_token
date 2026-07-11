@@ -10,8 +10,9 @@
     "concept": "Go China Access",
     "productName": "GCA AI Quant Access",
     "tagline": "Narrative meets risk control.",
-    "summary": "A non-custodial product direction for China-facing Web3 narrative research, liquidation review, backtests, risk warnings, ENTRY_READY reviews, position sizing, education, and member workflows. Account intake and eligible ledger records are live; trading/research tools remain staged behind product release gates.",
+    "summary": "A non-custodial product direction for China-facing Web3 narrative research, post-trade loss review, backtests, risk warnings, ENTRY_READY reviews, position sizing, education, and member workflows. Account intake and eligible ledger records are live; three browser-only risk tools are public previews while connected trading and research modules remain staged behind product release gates.",
     "currentStage": "account-ledger-path-live-product-tools-planned",
+    "publicRiskToolPreviewsLive": 3,
     "publicAccountUiLive": true,
     "liveTradingEnabled": false,
     "accessPortal": "https://gcagochina.com/access.html",
@@ -35,8 +36,13 @@
     {
       "id": "liquidation-replay",
       "name": "Liquidation Replay",
-      "status": "planned-report-workflow",
-      "purpose": "Review liquidation, over-sizing, leverage, stop placement, and execution mistakes after a trade.",
+      "status": "public-client-side-preview-live",
+      "publicUrl": "https://gcagochina.com/liquidation-replay.html",
+      "purpose": "Measure account impact, effective exposure, margin use, planned-stop deviation, costs, and execution discipline after a completed trade.",
+      "connectsWallet": false,
+      "connectsExchange": false,
+      "placesOrders": false,
+      "deductsCredits": false,
       "notPurpose": "Not compensation, reimbursement, insurance, or a promise that future losses can be avoided."
     },
     {
@@ -175,6 +181,7 @@
       "GCA has a live account and membership intake path for non-custodial quant risk tools.",
       "GCA has a public client-side Position Size Calculator preview that does not connect to wallets or exchanges, place orders, or deduct credits.",
       "GCA has a public client-side ENTRY_READY Review preview with transparent readiness gates and no order execution.",
+      "GCA has a public client-side Liquidation & Loss Replay preview for structured post-trade review without account connections or order execution.",
       "Any future trading-related feature must remain behind risk checks, simulation or testnet validation, and controlled account UI.",
       "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool."
     ],
@@ -202,6 +209,7 @@
     "market": "https://gcagochina.com/markets.html",
     "riskCalculator": "https://gcagochina.com/risk-calculator.html",
     "entryReadyReview": "https://gcagochina.com/entry-ready.html",
+    "liquidationReplay": "https://gcagochina.com/liquidation-replay.html",
     "creditsCatalogPage": "https://gcagochina.com/credits.html",
     "creditsCatalog": "https://gcagochina.com/credits.json",
     "accessPortalPage": "https://gcagochina.com/access.html",

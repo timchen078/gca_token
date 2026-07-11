@@ -270,6 +270,130 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertEqual(wrong_result["status"], "NOT_READY")
         self.assertFalse(wrong_result["priceStructureValid"])
 
+    def test_liquidation_replay_is_transparent_and_client_side(self):
+        page = (SITE / "liquidation-replay.html").read_text()
+        engine = (SITE / "assets" / "liquidation-replay.js").read_text()
+        product = (SITE / "product.json").read_text()
+        credits = (SITE / "credits.json").read_text()
+
+        for element_id in (
+            "direction",
+            "eventType",
+            "accountEquity",
+            "quantity",
+            "entry",
+            "exit",
+            "plannedStop",
+            "leverage",
+            "fees",
+            "funding",
+            "positionPlanned",
+            "stopRespected",
+            "addedToLosing",
+            "exitRuleFollowed",
+            "journalComplete",
+            "status",
+            "netPnl",
+            "accountImpact",
+            "effectiveLeverage",
+            "lossMultiple",
+            "copyReplay",
+        ):
+            self.assertIn(f'id="{element_id}"', page)
+
+        self.assertIn("const grossPnl = signedMove * quantity", engine)
+        self.assertIn("const netPnl = grossPnl - totalCosts", engine)
+        self.assertIn("const effectiveLeverage = positionNotional / accountEquity", engine)
+        self.assertIn("const initialMargin = positionNotional / leverage", engine)
+        self.assertIn('"CRITICAL_REVIEW"', engine)
+        self.assertIn('"PROCESS_REVIEW"', engine)
+        self.assertIn('"CONTROLLED"', engine)
+        self.assertIn('src="assets/liquidation-replay.js"', page)
+        self.assertIn("does not calculate an exchange-specific liquidation price", page)
+        self.assertNotIn("window.ethereum", page)
+        self.assertNotIn("fetch(", page)
+        self.assertNotIn("WebSocket", page)
+        self.assertIn('"publicUrl": "https://gcagochina.com/liquidation-replay.html"', product)
+        self.assertIn('"url": "https://gcagochina.com/liquidation-replay.html"', credits)
+        public_checker = (ROOT / "tools" / "check_public_site.py").read_text()
+        self.assertIn('(\"/liquidation-replay.html\", validate_liquidation_replay_page)', public_checker)
+
+    def test_liquidation_replay_engine_calculates_loss_and_escalates_risk(self):
+        bundled_node = Path("/Users/abc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node")
+        node = shutil.which("node") or (str(bundled_node) if bundled_node.exists() else "")
+        if not node:
+            self.skipTest("Node.js is unavailable")
+
+        module_path = SITE / "assets" / "liquidation-replay.js"
+        script = (
+            "const r=require(process.argv[1]);"
+            "const input=JSON.parse(process.argv[2]);"
+            "process.stdout.write(JSON.stringify(r.replay(input)));"
+        )
+        controlled_input = {
+            "direction": "long",
+            "accountEquity": 10000,
+            "entry": 100,
+            "exit": 95,
+            "quantity": 20,
+            "leverage": 2,
+            "fees": 0,
+            "funding": 0,
+            "plannedStop": 95,
+            "positionPlanned": True,
+            "stopRespected": True,
+            "addedToLosing": False,
+            "exitRuleFollowed": True,
+            "journalComplete": True,
+        }
+        controlled = subprocess.run(
+            [node, "-e", script, str(module_path), json.dumps(controlled_input)],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        replay = json.loads(controlled.stdout)
+        self.assertEqual(replay["status"], "CONTROLLED")
+        self.assertAlmostEqual(replay["grossPnl"], -100)
+        self.assertAlmostEqual(replay["netPnl"], -100)
+        self.assertAlmostEqual(replay["accountImpactPercent"], -1)
+        self.assertAlmostEqual(replay["positionNotional"], 2000)
+        self.assertAlmostEqual(replay["effectiveLeverage"], 0.2)
+        self.assertAlmostEqual(replay["initialMargin"], 1000)
+        self.assertAlmostEqual(replay["marginUtilizationPercent"], 10)
+        self.assertAlmostEqual(replay["lossMultiple"], 1)
+
+        critical_input = {
+            **controlled_input,
+            "accountEquity": 1000,
+            "exit": 80,
+            "quantity": 100,
+            "leverage": 10,
+            "stopRespected": False,
+            "addedToLosing": True,
+            "exitRuleFollowed": False,
+        }
+        critical = subprocess.run(
+            [node, "-e", script, str(module_path), json.dumps(critical_input)],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        critical_replay = json.loads(critical.stdout)
+        self.assertEqual(critical_replay["status"], "CRITICAL_REVIEW")
+        self.assertAlmostEqual(critical_replay["netPnl"], -2000)
+        self.assertAlmostEqual(critical_replay["accountImpactPercent"], -200)
+        self.assertAlmostEqual(critical_replay["effectiveLeverage"], 10)
+        self.assertGreaterEqual(len(critical_replay["flags"]), 4)
+
+        invalid = subprocess.run(
+            [node, "-e", script, str(module_path), json.dumps({**controlled_input, "accountEquity": 0})],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(invalid.stdout, "null")
+
 
 if __name__ == "__main__":
     unittest.main()
