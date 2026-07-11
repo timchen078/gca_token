@@ -136,9 +136,13 @@
             let backup = null;
             try { backup = window.GcaTradeJournal.parseBackup(window.localStorage.getItem(window.GcaTradeJournal.STORAGE_KEY)); }
             catch (error) {}
-            if (backup?.trades.length) {
-              tradeReturns.value = backup.trades.map((trade) => trade.returnPercent).join(", ");
-              notice.textContent = `${backup.trades.length} completed-trade return(s) loaded from this device. Review account-level cost before analysis. / 已从当前设备导入 ${backup.trades.length} 笔交易收益，请复核账户级成本。`;
+            const journalFilters={market:read("market"),direction:read("direction"),setup:read("setup"),from:read("from"),to:read("to")};
+            const selected=backup?window.GcaTradeJournal.filterTrades(backup.trades,journalFilters):[];
+            if (selected.length) {
+              tradeReturns.value = selected.map((trade) => trade.returnPercent).join(", ");
+              notice.textContent = `${selected.length} of ${backup.trades.length} completed-trade return(s) loaded from this device. Review account-level cost before analysis. / 已从当前设备导入 ${selected.length} / ${backup.trades.length} 笔交易收益，请复核账户级成本。`;
+            } else if (backup?.trades.length) {
+              notice.textContent = "No local journal entries match the selected filters. The example sample remains unchanged. / 本地日志没有符合筛选条件的记录，当前保留示例样本。";
             } else {
               notice.textContent = "No valid local journal entries were found. The example sample remains unchanged. / 未找到有效的本地日志，当前保留示例样本。";
             }

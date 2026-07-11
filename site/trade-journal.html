@@ -31,7 +31,7 @@
       .brand { display:inline-flex; align-items:center; gap:10px; color:var(--ink); font-weight:850; } .brand img { width:34px; height:34px; }
       .nav-links { display:flex; align-items:center; gap:16px; font-size:14px; }
       main { padding:34px 0 64px; }
-      h1,h2,p { margin-top:0; } h1 { max-width:880px; margin-bottom:14px; font-size:54px; line-height:1; letter-spacing:0; } h2 { margin-bottom:14px; font-size:24px; }
+      h1,h2,h3,p { margin-top:0; } h1 { max-width:880px; margin-bottom:14px; font-size:54px; line-height:1; letter-spacing:0; } h2 { margin-bottom:14px; font-size:24px; } h3 { margin-bottom:12px; font-size:17px; }
       .eyebrow { margin:0 0 10px; color:var(--red); font-size:13px; font-weight:850; text-transform:uppercase; }
       .lead,.note { color:var(--muted); } .lead { max-width:900px; margin-bottom:0; font-size:17px; } .note { margin:0; }
       .layout { display:grid; grid-template-columns:minmax(320px,.72fr) minmax(0,1.28fr); gap:18px; margin-top:26px; align-items:start; }
@@ -48,6 +48,7 @@
       .button[aria-disabled="true"] { opacity:.5; pointer-events:none; }
       .metric { min-height:92px; border:1px solid var(--line); border-radius:6px; background:#fbfcfa; padding:13px; }
       .metric span { display:block; color:var(--muted); font-size:12px; font-weight:780; } .metric strong { display:block; margin-top:7px; font-size:22px; overflow-wrap:anywhere; }
+      .filters { margin-bottom:18px; border-bottom:1px solid var(--line); padding-bottom:18px; }
       .status { margin-top:14px; border-left:3px solid var(--green); background:#edf8f3; color:#086447; padding:10px 12px; }
       .status.error { border-left-color:var(--red); background:#fff0f0; color:#8d171c; }
       .table-wrap { width:100%; max-width:100%; margin-top:18px; overflow:auto; border:1px solid var(--line); border-radius:6px; max-height:500px; }
@@ -83,6 +84,18 @@
         </form>
         <div class="panel">
           <h2>Journal Summary <span lang="zh-CN">日志摘要</span></h2>
+          <div class="filters" id="journalFilters">
+            <h3>Sample Filters <span lang="zh-CN">样本筛选</span></h3>
+            <div class="form-grid">
+              <div class="field"><label for="filterMarket">Market / 交易对</label><select id="filterMarket"><option value="">All markets</option></select></div>
+              <div class="field"><label for="filterDirection">Direction / 方向</label><select id="filterDirection"><option value="">All directions</option><option value="long">Long / 做多</option><option value="short">Short / 做空</option></select></div>
+              <div class="field"><label for="filterSetup">Setup / 策略标签</label><select id="filterSetup"><option value="">All setups</option></select></div>
+              <div class="field"><label for="filterFrom">From / 开始日期</label><input id="filterFrom" type="date"></div>
+              <div class="field"><label for="filterTo">To / 结束日期</label><input id="filterTo" type="date"></div>
+            </div>
+            <div class="actions"><button class="button" id="resetFilters" type="button">Reset Filters / 重置筛选</button></div>
+            <p class="note" id="filterStatus" aria-live="polite">Showing 0 of 0 trades. / 当前显示 0 / 0 笔。</p>
+          </div>
           <div class="metrics">
             <div class="metric"><span>Completed trades / 已完成交易</span><strong id="tradeCount">0</strong></div>
             <div class="metric"><span>Win rate / 胜率</span><strong id="winRate">0.00%</strong></div>
@@ -91,7 +104,7 @@
             <div class="metric"><span>Best return / 最佳收益</span><strong id="bestReturn">0.00%</strong></div>
             <div class="metric"><span>Max loss streak / 最大连亏</span><strong id="maxLossStreak">0</strong></div>
           </div>
-          <div class="actions"><a class="button primary" id="analyzeJournal" href="backtest-lab.html#source=journal" aria-disabled="true">Analyze in Backtest / 进入回测</a><button class="button" id="exportJson" type="button">Backup JSON</button><button class="button" id="exportCsv" type="button">Export CSV</button><label class="button" for="importJson">Restore JSON</label><input id="importJson" type="file" accept="application/json,.json" hidden><button class="button danger" id="clearJournal" type="button">Clear All</button></div>
+          <div class="actions"><a class="button primary" id="analyzeJournal" href="backtest-lab.html#source=journal" aria-disabled="true">Analyze Filtered Sample / 回测筛选样本</a><button class="button" id="exportJson" type="button">Backup All JSON</button><button class="button" id="exportCsv" type="button">Export Filtered CSV</button><label class="button" for="importJson">Restore JSON</label><input id="importJson" type="file" accept="application/json,.json" hidden><button class="button danger" id="clearJournal" type="button">Clear All</button></div>
           <div class="table-wrap"><table><thead><tr><th>Date</th><th>Market</th><th>Side</th><th>Return</th><th>Setup</th><th>Notes</th><th>Action</th></tr></thead><tbody id="journalRows"></tbody></table><p class="empty" id="emptyJournal">No completed trades recorded. / 暂无已完成交易记录。</p></div>
         </div>
       </section>
@@ -111,7 +124,12 @@
         const rows = document.getElementById("journalRows");
         const status = document.getElementById("journalStatus");
         const analyze = document.getElementById("analyzeJournal");
+        const filterFields = {
+          market: document.getElementById("filterMarket"), direction: document.getElementById("filterDirection"),
+          setup: document.getElementById("filterSetup"), from: document.getElementById("filterFrom"), to: document.getElementById("filterTo")
+        };
         let trades = [];
+        let visibleTrades = [];
 
         function today() { const now=new Date();return new Date(now.getTime()-(now.getTimezoneOffset()*60000)).toISOString().slice(0,10); }
         function id() { return globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(16).slice(2)}`; }
@@ -130,8 +148,18 @@
         function download(name, type, content) {
           const url=URL.createObjectURL(new Blob([content],{type})); const link=document.createElement("a"); link.href=url; link.download=name; link.click(); URL.revokeObjectURL(url);
         }
+        function updateSelect(select, values, emptyLabel) {
+          const current=select.value;select.replaceChildren();const empty=document.createElement("option");empty.value="";empty.textContent=emptyLabel;select.append(empty);
+          values.forEach((value)=>{const option=document.createElement("option");option.value=value;option.textContent=value;select.append(option);});
+          select.value=values.includes(current)?current:"";
+        }
+        function filters() { return Object.fromEntries(Object.entries(filterFields).map(([key,field])=>[key,field.value])); }
+        function updateFilterOptions() {
+          updateSelect(filterFields.market,[...new Set(trades.map((trade)=>trade.market))].sort(),"All markets");
+          updateSelect(filterFields.setup,[...new Set(trades.map((trade)=>trade.setup).filter(Boolean))].sort(),"All setups");
+        }
         function render() {
-          const summary=engine.summarizeTrades(trades); trades=summary.trades;
+          trades=engine.orderTrades(trades);updateFilterOptions();visibleTrades=engine.filterTrades(trades,filters());const summary=engine.summarizeTrades(visibleTrades);
           document.getElementById("tradeCount").textContent=String(summary.count);
           document.getElementById("winRate").textContent=`${summary.winRatePercent.toFixed(2)}%`;
           document.getElementById("averageReturn").textContent=signed(summary.averageReturnPercent);
@@ -139,8 +167,10 @@
           document.getElementById("bestReturn").textContent=signed(summary.bestReturnPercent);
           document.getElementById("maxLossStreak").textContent=String(summary.maxConsecutiveLosses);
           analyze.setAttribute("aria-disabled",String(!summary.count));
+          const params=new URLSearchParams({source:"journal"});Object.entries(filters()).forEach(([key,value])=>{if(value)params.set(key,value);});analyze.href=`backtest-lab.html#${params}`;
+          document.getElementById("filterStatus").textContent=`Showing ${summary.count} of ${trades.length} trade(s). / 当前显示 ${summary.count} / ${trades.length} 笔。`;
           rows.replaceChildren();
-          [...trades].reverse().forEach((trade) => {
+          [...visibleTrades].reverse().forEach((trade) => {
             const row=document.createElement("tr");
             const values=[trade.date,trade.market,trade.direction];
             values.forEach((value)=>{const cell=document.createElement("td");cell.textContent=value;row.append(cell);});
@@ -148,16 +178,18 @@
             [trade.setup,trade.notes].forEach((value,index)=>{const cell=document.createElement("td");cell.textContent=value||"—";if(index===1)cell.className="notes";row.append(cell);});
             const action=document.createElement("td");const remove=document.createElement("button");remove.type="button";remove.className="delete";remove.dataset.deleteId=trade.id;remove.textContent="Delete";action.append(remove);row.append(action);rows.append(row);
           });
-          document.getElementById("emptyJournal").hidden=summary.count>0;
+          const empty=document.getElementById("emptyJournal");empty.hidden=summary.count>0;empty.textContent=trades.length?"No trades match the current filters. / 当前筛选条件没有匹配记录。":"No completed trades recorded. / 暂无已完成交易记录。";
         }
 
         fields.date.value=today(); load(); render();
         form.addEventListener("submit",(event)=>{event.preventDefault();const trade=engine.normalizeTrade({id:id(),date:fields.date.value,market:fields.market.value,direction:fields.direction.value,returnPercent:fields.returnPercent.value,setup:fields.setup.value,notes:fields.notes.value,createdAt:new Date().toISOString()});if(!trade){setStatus("Check date, market, direction, and return. Return must be above -100%. / 请检查输入。",true);return;}trades.push(trade);if(save())setStatus("Trade added to this device. / 已保存到当前设备。",false);form.reset();fields.date.value=today();render();});
         rows.addEventListener("click",(event)=>{const button=event.target.closest("[data-delete-id]");if(!button)return;trades=trades.filter((trade)=>trade.id!==button.dataset.deleteId);save();render();setStatus("Trade removed. / 已删除该记录。",false);});
         document.getElementById("exportJson").addEventListener("click",()=>download("gca-trade-journal.json","application/json",JSON.stringify(engine.buildBackup(trades,new Date().toISOString()),null,2)));
-        document.getElementById("exportCsv").addEventListener("click",()=>download("gca-trade-journal.csv","text/csv;charset=utf-8",engine.toCsv(trades)));
+        document.getElementById("exportCsv").addEventListener("click",()=>download("gca-trade-journal-filtered.csv","text/csv;charset=utf-8",engine.toCsv(visibleTrades)));
         document.getElementById("importJson").addEventListener("change",async(event)=>{const file=event.target.files?.[0];if(!file)return;const backup=engine.parseBackup(await file.text());if(!backup){setStatus("Invalid GCA journal backup. / 备份文件无效。",true);event.target.value="";return;}const merged=new Map(trades.map((trade)=>[trade.id,trade]));backup.trades.forEach((trade)=>merged.set(trade.id,trade));trades=engine.orderTrades([...merged.values()]);save();render();setStatus(`Restored ${backup.trades.length} record(s). / 已恢复 ${backup.trades.length} 条记录。`,false);event.target.value="";});
         document.getElementById("clearJournal").addEventListener("click",()=>{if(!window.confirm("Clear all local journal entries? / 清空全部本地交易日志？"))return;trades=[];try{window.localStorage.removeItem(engine.STORAGE_KEY);}catch(error){}render();setStatus("Local journal cleared. / 本地日志已清空。",false);});
+        Object.values(filterFields).forEach((field)=>{field.addEventListener("input",render);field.addEventListener("change",render);});
+        document.getElementById("resetFilters").addEventListener("click",()=>{Object.values(filterFields).forEach((field)=>{field.value="";});render();});
       })();
     </script>
   </body>

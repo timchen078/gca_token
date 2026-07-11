@@ -52,6 +52,23 @@
       .slice(-MAX_TRADES);
   }
 
+  function filterTrades(values, filters) {
+    const source = orderTrades(Array.isArray(values) ? values : []);
+    const requested = filters && typeof filters === "object" ? filters : {};
+    const market = cleanText(requested.market, 40).toUpperCase();
+    const setup = cleanText(requested.setup, 80).toLowerCase();
+    const direction = requested.direction === "long" || requested.direction === "short" ? requested.direction : "";
+    const from = validDate(requested.from) ? String(requested.from) : "";
+    const to = validDate(requested.to) ? String(requested.to) : "";
+    return source.filter((trade) =>
+      (!market || trade.market === market) &&
+      (!setup || trade.setup.toLowerCase() === setup) &&
+      (!direction || trade.direction === direction) &&
+      (!from || trade.date >= from) &&
+      (!to || trade.date <= to)
+    );
+  }
+
   function summarizeTrades(values) {
     const trades = orderTrades(Array.isArray(values) ? values : []);
     const returns = trades.map((trade) => trade.returnPercent);
@@ -109,5 +126,5 @@
     return [header.join(","), ...rows].join("\n");
   }
 
-  return { STORAGE_KEY, SCHEMA, MAX_TRADES, normalizeTrade, orderTrades, summarizeTrades, buildBackup, parseBackup, toCsv };
+  return { STORAGE_KEY, SCHEMA, MAX_TRADES, normalizeTrade, orderTrades, filterTrades, summarizeTrades, buildBackup, parseBackup, toCsv };
 });

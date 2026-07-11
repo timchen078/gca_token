@@ -451,6 +451,8 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn("Account equity was imported", page)
         self.assertIn('id="journalImportNotice"', page)
         self.assertIn('read("source") === "journal"', page)
+        self.assertIn("window.GcaTradeJournal.filterTrades", page)
+        self.assertIn('market:read("market")', page)
         self.assertIn("does not test signals against candles or order books", page)
         self.assertNotIn("window.ethereum", page)
         self.assertNotIn("fetch(", page)
@@ -841,6 +843,14 @@ class PublicSiteExperienceTests(unittest.TestCase):
             "importJson",
             "clearJournal",
             "journalRows",
+            "journalFilters",
+            "filterMarket",
+            "filterDirection",
+            "filterSetup",
+            "filterFrom",
+            "filterTo",
+            "resetFilters",
+            "filterStatus",
         ):
             self.assertIn(f'id="{element_id}"', page)
 
@@ -848,6 +858,8 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn("window.localStorage.setItem(engine.STORAGE_KEY", page)
         self.assertIn("window.localStorage.removeItem(engine.STORAGE_KEY)", page)
         self.assertIn('href="backtest-lab.html#source=journal"', page)
+        self.assertIn("engine.filterTrades(trades,filters())", page)
+        self.assertIn("gca-trade-journal-filtered.csv", page)
         self.assertIn("does not upload trades", page)
         self.assertNotIn("window.ethereum", page)
         self.assertNotIn("fetch(", page)
@@ -869,7 +881,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
             "const trades=JSON.parse(process.argv[2]);"
             "const summary=j.summarizeTrades(trades);"
             "const backup=j.buildBackup(trades,'2026-07-11T00:00:00Z');"
-            "process.stdout.write(JSON.stringify({summary,backup,parsed:j.parseBackup(JSON.stringify(backup)),csv:j.toCsv(trades)}));"
+            "process.stdout.write(JSON.stringify({summary,backup,parsed:j.parseBackup(JSON.stringify(backup)),csv:j.toCsv(trades),filtered:j.filterTrades(trades,{market:'BTC/USDT',direction:'long'}),dateFiltered:j.filterTrades(trades,{from:'2026-07-02',to:'2026-07-03'})}));"
         )
         trades = [
             {"id": "b", "date": "2026-07-02", "market": "eth/usdt", "direction": "short", "returnPercent": -0.5, "setup": "retest", "notes": "stopped", "createdAt": "2026-07-02T01:00:00Z"},
@@ -894,6 +906,8 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertEqual(len(result["parsed"]["trades"]), 3)
         self.assertIn('"BTC/USDT"', result["csv"])
         self.assertIn('"followed plan"', result["csv"])
+        self.assertEqual([trade["id"] for trade in result["filtered"]], ["a"])
+        self.assertEqual([trade["id"] for trade in result["dateFiltered"]], ["b", "c"])
 
         invalid_script = (
             "const j=require(process.argv[1]);"
