@@ -29,6 +29,7 @@
           ["Home", "index.html"],
           ["Verify", "verify.html"],
           ["Buy", "buy.html"],
+          ["Tools", "tools.html"],
           ["Product", "product.html"],
           ["Members", "gca/member-access/"],
           ["Trust", "trust.html"],
@@ -142,4 +143,3 @@
   updateTopButton();
   window.addEventListener("scroll", updateTopButton, { passive: true });
 })();
-

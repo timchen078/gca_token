@@ -336,6 +336,7 @@
     "operationsRunbookPage": "https://gcagochina.com/operations.html",
     "operationsRunbook": "https://gcagochina.com/operations.json",
     "memberAccessPage": "https://gcagochina.com/gca/member-access/",
+    "riskToolsWorkspace": "https://gcagochina.com/tools.html",
     "liquidationReplay": "https://gcagochina.com/liquidation-replay.html",
     "backtestLab": "https://gcagochina.com/backtest-lab.html",
     "riskWarningReview": "https://gcagochina.com/risk-warning.html"

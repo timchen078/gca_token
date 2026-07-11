@@ -61,6 +61,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
             "index.html",
             "verify.html",
             "buy.html",
+            "tools.html",
             "product.html",
             "gca/member-access/",
             "trust.html",
@@ -609,6 +610,79 @@ class PublicSiteExperienceTests(unittest.TestCase):
             text=True,
         )
         self.assertEqual(invalid.stdout, "null")
+
+    def test_risk_tools_workspace_unifies_all_public_tools(self):
+        page = (SITE / "tools.html").read_text()
+        engine = (SITE / "assets" / "risk-tools.js").read_text()
+        product = (SITE / "product.json").read_text()
+        credits = (SITE / "credits.json").read_text()
+
+        for mode in ("prepare", "research", "review", "all"):
+            self.assertIn(f'data-mode="{mode}"', page)
+        for tool_id, url in (
+            ("risk-calculator", "risk-calculator.html"),
+            ("risk-warning", "risk-warning.html"),
+            ("entry-ready", "entry-ready.html"),
+            ("backtest-lab", "backtest-lab.html"),
+            ("liquidation-replay", "liquidation-replay.html"),
+        ):
+            self.assertIn(f'data-tool="{tool_id}"', page)
+            self.assertIn(f'href="{url}"', page)
+
+        self.assertIn('id="workflowSteps"', page)
+        self.assertIn('src="assets/risk-tools.js"', page)
+        self.assertIn('const key="gca_risk_tools_mode_v1"', page)
+        self.assertIn("window.localStorage.setItem(key,workflow.mode)", page)
+        self.assertNotIn("email", page.lower())
+        self.assertNotIn("walletAddress", page)
+        self.assertNotIn("window.ethereum", page)
+        self.assertNotIn("fetch(", page)
+        self.assertNotIn("WebSocket", page)
+        self.assertIn('"riskToolsWorkspace": "https://gcagochina.com/tools.html"', product)
+        self.assertIn('"riskToolsWorkspace": "https://gcagochina.com/tools.html"', credits)
+        self.assertIn('["Tools", "tools.html"]', (SITE / "assets" / "gca-site.js").read_text())
+        public_checker = (ROOT / "tools" / "check_public_site.py").read_text()
+        self.assertIn('(\"/tools.html\", validate_risk_tools_page)', public_checker)
+        self.assertIn("prepare:", engine)
+        self.assertIn("research:", engine)
+        self.assertIn("review:", engine)
+
+    def test_risk_tools_workflow_engine_returns_expected_order(self):
+        bundled_node = Path("/Users/abc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node")
+        node = shutil.which("node") or (str(bundled_node) if bundled_node.exists() else "")
+        if not node:
+            self.skipTest("Node.js is unavailable")
+
+        module_path = SITE / "assets" / "risk-tools.js"
+        script = (
+            "const w=require(process.argv[1]);"
+            "process.stdout.write(JSON.stringify(w.getWorkflow(process.argv[2])));"
+        )
+        expectations = {
+            "prepare": ["risk-calculator", "risk-warning", "entry-ready"],
+            "research": ["backtest-lab", "risk-warning", "entry-ready"],
+            "review": ["liquidation-replay", "risk-calculator", "risk-warning", "entry-ready"],
+            "all": ["risk-calculator", "risk-warning", "entry-ready", "backtest-lab", "liquidation-replay"],
+        }
+        for mode, expected in expectations.items():
+            completed = subprocess.run(
+                [node, "-e", script, str(module_path), mode],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            workflow = json.loads(completed.stdout)
+            self.assertEqual(workflow["mode"], mode)
+            self.assertEqual([item["id"] for item in workflow["tools"]], expected)
+            self.assertEqual([item["order"] for item in workflow["tools"]], list(range(1, len(expected) + 1)))
+
+        fallback = subprocess.run(
+            [node, "-e", script, str(module_path), "unknown"],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(json.loads(fallback.stdout)["mode"], "prepare")
 
 
 if __name__ == "__main__":
