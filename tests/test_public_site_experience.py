@@ -832,6 +832,9 @@ class PublicSiteExperienceTests(unittest.TestCase):
             "returnPercent",
             "setup",
             "notes",
+            "saveTrade",
+            "resetTrade",
+            "cancelEdit",
             "journalStatus",
             "tradeCount",
             "winRate",
@@ -866,6 +869,10 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn("engine.filterTrades(trades,filters())", page)
         self.assertIn("gca-trade-journal-filtered.csv", page)
         self.assertIn("engine.groupPerformance(visibleTrades,breakdownDimension.value)", page)
+        self.assertIn("let editingId = null", page)
+        self.assertIn("edit.dataset.editId=trade.id", page)
+        self.assertIn("Update Trade / 更新记录", page)
+        self.assertIn("createdAt:existing?.createdAt||new Date().toISOString()", page)
         self.assertIn("Simple total adds account returns without compounding", page)
         self.assertIn("does not upload trades", page)
         self.assertNotIn("window.ethereum", page)
