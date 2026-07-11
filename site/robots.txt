@@ -1,5 +1,6 @@
 User-agent: *
 Allow: /
+Allow: /data-viewer.html
 Allow: /start.html
 Allow: /register.html
 Allow: /unsubscribe.html
