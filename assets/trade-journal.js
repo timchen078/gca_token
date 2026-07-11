@@ -152,14 +152,125 @@
     return { schema: SCHEMA, exportedAt: payload.exportedAt || null, trades };
   }
 
+  function parseCsvRows(value) {
+    const source = String(value || "").replace(/^\uFEFF/, "");
+    if (!source.trim()) return null;
+    const rows = [];
+    let row = [];
+    let field = "";
+    let state = "unquoted";
+    const pushRow = () => {
+      row.push(field);
+      if (row.length > 1 || row[0].trim()) rows.push(row);
+      row = [];
+      field = "";
+    };
+
+    for (let index = 0; index < source.length; index += 1) {
+      const character = source[index];
+      if (state === "quoted") {
+        if (character === '"') {
+          if (source[index + 1] === '"') {
+            field += '"';
+            index += 1;
+          } else {
+            state = "after-quote";
+          }
+        } else {
+          field += character;
+        }
+        continue;
+      }
+      if (state === "after-quote") {
+        if (character === ",") {
+          row.push(field);
+          field = "";
+          state = "unquoted";
+        } else if (character === "\n") {
+          pushRow();
+          state = "unquoted";
+        } else if (character === "\r" && source[index + 1] === "\n") {
+          pushRow();
+          state = "unquoted";
+          index += 1;
+        } else {
+          return null;
+        }
+        continue;
+      }
+      if (character === '"') {
+        if (field) return null;
+        state = "quoted";
+      } else if (character === ",") {
+        row.push(field);
+        field = "";
+      } else if (character === "\n") {
+        pushRow();
+      } else if (character === "\r" && source[index + 1] === "\n") {
+        pushRow();
+        index += 1;
+      } else {
+        field += character;
+      }
+      if (rows.length > MAX_TRADES + 1) return null;
+    }
+    if (state === "quoted") return null;
+    if (field || row.length) pushRow();
+    return rows.length <= MAX_TRADES + 1 ? rows : null;
+  }
+
+  function stableCsvId(row, index) {
+    let hash = 2166136261;
+    const source = row.join("\u001f");
+    for (let offset = 0; offset < source.length; offset += 1) {
+      hash ^= source.charCodeAt(offset);
+      hash = Math.imul(hash, 16777619);
+    }
+    return `csv-${(hash >>> 0).toString(16).padStart(8, "0")}-${index}`;
+  }
+
+  function parseCsv(value) {
+    const rows = parseCsvRows(value);
+    if (!rows || rows.length < 2) return null;
+    const legacyHeader = ["date", "market", "direction", "return_percent", "setup", "notes"];
+    const currentHeader = [...legacyHeader, "id", "created_at"];
+    const header = rows[0].map((field) => field.trim().toLowerCase());
+    const isLegacy = header.length === legacyHeader.length && header.every((field, index) => field === legacyHeader[index]);
+    const isCurrent = header.length === currentHeader.length && header.every((field, index) => field === currentHeader[index]);
+    if (!isLegacy && !isCurrent) return null;
+
+    const trades = [];
+    const ids = new Set();
+    for (let index = 1; index < rows.length; index += 1) {
+      const row = rows[index];
+      if (row.length !== header.length) return null;
+      const fallbackTime = Date.parse(`${row[0]}T00:00:00Z`);
+      const fallbackCreatedAt = Number.isFinite(fallbackTime) ? new Date(fallbackTime + index).toISOString() : "";
+      const trade = normalizeTrade({
+        date: row[0],
+        market: row[1],
+        direction: row[2],
+        returnPercent: row[3],
+        setup: row[4],
+        notes: row[5],
+        id: isCurrent ? row[6] : stableCsvId(row, index),
+        createdAt: isCurrent ? row[7] : fallbackCreatedAt
+      });
+      if (!trade || ids.has(trade.id) || (isCurrent && (!row[6].trim() || !Number.isFinite(Date.parse(row[7]))))) return null;
+      ids.add(trade.id);
+      trades.push(trade);
+    }
+    return trades.length ? { schema: SCHEMA, source: isCurrent ? "current-csv" : "legacy-csv", trades: orderTrades(trades) } : null;
+  }
+
   function toCsv(values) {
     const quote = (value) => `"${String(value).replace(/"/g, '""')}"`;
-    const header = ["date", "market", "direction", "return_percent", "setup", "notes"];
+    const header = ["date", "market", "direction", "return_percent", "setup", "notes", "id", "created_at"];
     const rows = orderTrades(Array.isArray(values) ? values : []).map((trade) => [
-      trade.date, trade.market, trade.direction, trade.returnPercent, trade.setup, trade.notes
+      trade.date, trade.market, trade.direction, trade.returnPercent, trade.setup, trade.notes, trade.id, trade.createdAt
     ].map(quote).join(","));
     return [header.join(","), ...rows].join("\n");
   }
 
-  return { STORAGE_KEY, SCHEMA, MAX_TRADES, normalizeTrade, orderTrades, filterTrades, sampleQuality, summarizeTrades, groupPerformance, buildBackup, parseBackup, toCsv };
+  return { STORAGE_KEY, SCHEMA, MAX_TRADES, normalizeTrade, orderTrades, filterTrades, sampleQuality, summarizeTrades, groupPerformance, buildBackup, parseBackup, parseCsv, toCsv };
 });
