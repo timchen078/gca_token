@@ -57,7 +57,15 @@
       "status": "ledger-eligible-service-unit-staged",
       "creditUnit": 30,
       "unitType": "draft service credit unit",
-      "description": "Structured post-trade review of liquidation, over-sizing, leverage, stop placement, and execution mistakes.",
+      "description": "Structured post-trade review of account impact, effective exposure, margin use, planned-stop deviation, costs, and execution discipline.",
+      "publicPreview": {
+        "status": "live-client-side-preview",
+        "url": "https://gcagochina.com/liquidation-replay.html",
+        "deductsCredits": false,
+        "connectsWallet": false,
+        "connectsExchange": false,
+        "placesOrders": false
+      },
       "notPurpose": "Not compensation, reimbursement, insurance, or a promise that future losses can be avoided."
     },
     {
@@ -309,7 +317,8 @@
     "reviewQueue": "https://gcagochina.com/review-queue.json",
     "operationsRunbookPage": "https://gcagochina.com/operations.html",
     "operationsRunbook": "https://gcagochina.com/operations.json",
-    "memberAccessPage": "https://gcagochina.com/gca/member-access/"
+    "memberAccessPage": "https://gcagochina.com/gca/member-access/",
+    "liquidationReplay": "https://gcagochina.com/liquidation-replay.html"
   },
   "publicClaimBoundaries": {
     "safeClaims": [
