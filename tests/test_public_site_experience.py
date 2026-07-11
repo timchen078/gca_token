@@ -482,6 +482,134 @@ class PublicSiteExperienceTests(unittest.TestCase):
         )
         self.assertEqual(invalid.stdout, "null")
 
+    def test_risk_warning_review_is_transparent_and_client_side(self):
+        page = (SITE / "risk-warning.html").read_text()
+        engine = (SITE / "assets" / "risk-warning.js").read_text()
+        product = (SITE / "product.json").read_text()
+        credits = (SITE / "credits.json").read_text()
+
+        for element_id in (
+            "riskWarningForm",
+            "exposurePercent",
+            "leverage",
+            "riskPercent",
+            "stopDistancePercent",
+            "slippagePercent",
+            "volatilityPercent",
+            "liquidityCoverage",
+            "fundingPercent",
+            "correlatedPositions",
+            "stopDefined",
+            "exitPlanDefined",
+            "liquidityChecked",
+            "dataFresh",
+            "eventRisk",
+            "revengeTrade",
+            "fomo",
+            "status",
+            "score",
+            "accountScore",
+            "marketScore",
+            "processScore",
+        ):
+            self.assertIn(f'id="{element_id}"', page)
+
+        self.assertIn("const score = account + market + process", engine)
+        self.assertIn('status = "DO_NOT_PROCEED"', engine)
+        self.assertIn('status = "HIGH_RISK"', engine)
+        self.assertIn('status = "ELEVATED_REVIEW"', engine)
+        self.assertIn('"STANDARD_REVIEW"', engine)
+        self.assertIn('src="assets/risk-warning.js"', page)
+        self.assertIn("does not fetch prices or liquidity", page)
+        self.assertNotIn("window.ethereum", page)
+        self.assertNotIn("fetch(", page)
+        self.assertNotIn("WebSocket", page)
+        self.assertIn('"publicUrl": "https://gcagochina.com/risk-warning.html"', product)
+        self.assertIn('"url": "https://gcagochina.com/risk-warning.html"', credits)
+        public_checker = (ROOT / "tools" / "check_public_site.py").read_text()
+        self.assertIn('(\"/risk-warning.html\", validate_risk_warning_page)', public_checker)
+
+    def test_risk_warning_engine_scores_standard_and_blocked_setups(self):
+        bundled_node = Path("/Users/abc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node")
+        node = shutil.which("node") or (str(bundled_node) if bundled_node.exists() else "")
+        if not node:
+            self.skipTest("Node.js is unavailable")
+
+        module_path = SITE / "assets" / "risk-warning.js"
+        script = (
+            "const r=require(process.argv[1]);"
+            "const input=JSON.parse(process.argv[2]);"
+            "process.stdout.write(JSON.stringify(r.review(input)));"
+        )
+        standard_input = {
+            "exposurePercent": 20,
+            "leverage": 2,
+            "riskPercent": 1,
+            "stopDistancePercent": 5,
+            "slippagePercent": 0.1,
+            "volatilityPercent": 3,
+            "liquidityCoverage": 15,
+            "fundingPercent": 0.01,
+            "correlatedPositions": 0,
+            "stopDefined": True,
+            "exitPlanDefined": True,
+            "liquidityChecked": True,
+            "dataFresh": True,
+            "eventRisk": False,
+            "revengeTrade": False,
+            "fomo": False,
+        }
+        standard = subprocess.run(
+            [node, "-e", script, str(module_path), json.dumps(standard_input)],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        standard_result = json.loads(standard.stdout)
+        self.assertEqual(standard_result["status"], "STANDARD_REVIEW")
+        self.assertEqual(standard_result["score"], 2)
+        self.assertEqual(standard_result["categories"], {"account": 0, "market": 2, "process": 0})
+        self.assertEqual(standard_result["blockers"], [])
+
+        blocked_input = {
+            **standard_input,
+            "exposurePercent": 150,
+            "leverage": 25,
+            "riskPercent": 5,
+            "stopDistancePercent": 1,
+            "slippagePercent": 3,
+            "volatilityPercent": 20,
+            "liquidityCoverage": 0.5,
+            "fundingPercent": 0.2,
+            "correlatedPositions": 4,
+            "stopDefined": False,
+            "exitPlanDefined": False,
+            "liquidityChecked": False,
+            "dataFresh": False,
+            "eventRisk": True,
+            "revengeTrade": True,
+            "fomo": True,
+        }
+        blocked = subprocess.run(
+            [node, "-e", script, str(module_path), json.dumps(blocked_input)],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        blocked_result = json.loads(blocked.stdout)
+        self.assertEqual(blocked_result["status"], "DO_NOT_PROCEED")
+        self.assertEqual(blocked_result["score"], 100)
+        self.assertEqual(blocked_result["categories"], {"account": 40, "market": 35, "process": 25})
+        self.assertGreaterEqual(len(blocked_result["blockers"]), 6)
+
+        invalid = subprocess.run(
+            [node, "-e", script, str(module_path), json.dumps({**standard_input, "leverage": 0})],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(invalid.stdout, "null")
+
 
 if __name__ == "__main__":
     unittest.main()

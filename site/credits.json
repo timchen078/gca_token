@@ -75,6 +75,15 @@
       "creditUnit": 10,
       "unitType": "draft service credit unit",
       "description": "Risk warning review for volatility, crowding, exposure, stop placement, and trade-process discipline.",
+      "publicPreview": {
+        "status": "live-client-side-preview",
+        "url": "https://gcagochina.com/risk-warning.html",
+        "deductsCredits": false,
+        "connectsWallet": false,
+        "connectsExchange": false,
+        "fetchesMarketData": false,
+        "placesOrders": false
+      },
       "notPurpose": "Not financial advice, live market data, or a buy or sell recommendation."
     },
     {
@@ -328,7 +337,8 @@
     "operationsRunbook": "https://gcagochina.com/operations.json",
     "memberAccessPage": "https://gcagochina.com/gca/member-access/",
     "liquidationReplay": "https://gcagochina.com/liquidation-replay.html",
-    "backtestLab": "https://gcagochina.com/backtest-lab.html"
+    "backtestLab": "https://gcagochina.com/backtest-lab.html",
+    "riskWarningReview": "https://gcagochina.com/risk-warning.html"
   },
   "publicClaimBoundaries": {
     "safeClaims": [

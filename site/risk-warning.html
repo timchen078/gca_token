@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GCA Risk Warning Review | Exposure and Execution Check</title>
+    <meta name="description" content="Client-side GCA risk warning review for account exposure, leverage, loss budget, slippage, volatility, liquidity, funding, and process discipline.">
+    <link rel="canonical" href="https://gcagochina.com/risk-warning.html">
+    <link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">
+    <link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="GCA | Go China Access">
+    <meta property="og:title" content="GCA Risk Warning Review | Exposure and Execution Check">
+    <meta property="og:description" content="Review account exposure, leverage, loss budget, slippage, volatility, liquidity, funding, and process discipline.">
+    <meta property="og:url" content="https://gcagochina.com/risk-warning.html">
+    <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="GCA Risk Warning Review | Exposure and Execution Check">
+    <meta name="twitter:description" content="Review account exposure, leverage, loss budget, slippage, volatility, liquidity, funding, and process discipline.">
+    <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <style>
+      :root { color-scheme:light; --bg:#f7f8f5; --ink:#151817; --muted:#5e6763; --line:#dfe4dd; --panel:#fff; --soft:#eef3ef; --red:#d71920; --blue:#1557d7; --green:#087f5b; --gold:#9a7110; }
+      * { box-sizing:border-box; }
+      body { margin:0; color:var(--ink); background:var(--bg); font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; line-height:1.5; }
+      a { color:var(--blue); text-decoration:none; } a:hover { text-decoration:underline; }
+      .shell { width:min(1180px,calc(100% - 32px)); margin:0 auto; }
+      header { position:sticky; top:0; z-index:3; border-bottom:1px solid var(--line); background:rgba(247,248,245,.95); backdrop-filter:blur(16px); }
+      nav { min-height:68px; display:flex; align-items:center; justify-content:space-between; gap:18px; }
+      .brand { display:inline-flex; align-items:center; gap:10px; color:var(--ink); font-weight:850; } .brand img { width:34px; height:34px; }
+      .nav-links { display:flex; align-items:center; gap:16px; font-size:14px; }
+      main { padding:34px 0 64px; }
+      h1,h2,h3,p { margin-top:0; } h1 { max-width:920px; margin-bottom:14px; font-size:54px; line-height:1; letter-spacing:0; } h2 { margin-bottom:14px; font-size:24px; } h3 { margin-bottom:8px; font-size:16px; }
+      .eyebrow { margin:0 0 10px; color:var(--red); font-size:13px; font-weight:850; text-transform:uppercase; }
+      .lead,.note { color:var(--muted); } .lead { max-width:920px; margin-bottom:0; font-size:17px; } .note { margin:0; }
+      .layout { display:grid; grid-template-columns:minmax(370px,.9fr) minmax(0,1.1fr); gap:18px; margin-top:26px; align-items:start; }
+      .panel { border:1px solid var(--line); border-radius:8px; background:var(--panel); padding:22px; }
+      .grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+      .field { display:grid; gap:6px; min-width:0; } label { font-size:13px; font-weight:800; }
+      input { width:100%; min-height:42px; border:1px solid var(--line); border-radius:6px; background:#fff; color:var(--ink); padding:10px 12px; font:inherit; }
+      .checklist { display:grid; gap:8px; margin-top:18px; }
+      .check { display:grid; grid-template-columns:20px minmax(0,1fr); gap:10px; align-items:start; border-top:1px solid var(--line); padding-top:10px; }
+      .check input { width:auto; min-height:0; margin-top:4px; }
+      .actions { display:flex; flex-wrap:wrap; gap:10px; margin-top:18px; }
+      .button { min-height:42px; display:inline-flex; align-items:center; justify-content:center; border:1px solid var(--line); border-radius:6px; background:#fff; color:var(--ink); padding:10px 14px; font:inherit; font-weight:780; cursor:pointer; }
+      .button.primary { border-color:var(--red); background:var(--red); color:#fff; }
+      .result-head { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:16px; align-items:start; }
+      .status { display:inline-flex; min-height:38px; align-items:center; border-radius:6px; background:#edf8f3; color:#08704f; padding:8px 12px; font-weight:850; }
+      .status.review { background:#fff8e6; color:#795b10; } .status.critical { background:#fff0f0; color:#a41117; }
+      .score { font-size:48px; line-height:1; font-weight:900; }
+      .category { margin-top:16px; } .category-line { display:flex; justify-content:space-between; gap:10px; margin-bottom:6px; font-size:13px; font-weight:760; }
+      .bar { height:8px; overflow:hidden; border-radius:4px; background:var(--soft); } .bar span { display:block; height:100%; background:var(--red); transition:width 180ms ease; }
+      .issues,.steps { display:grid; gap:8px; margin:18px 0 0; padding:0; list-style:none; }
+      .issue { border-left:3px solid var(--gold); background:#fff8e6; padding:10px 12px; color:#665019; } .issue.blocker { border-left-color:var(--red); background:#fff0f0; color:#8d171c; } .issue.clear { border-left-color:var(--green); background:#edf8f3; color:#086447; }
+      .step { border-top:1px solid var(--line); padding-top:9px; color:var(--muted); }
+      .boundary { margin-top:18px; border-left:3px solid var(--blue); background:#eef4ff; padding:14px; }
+      footer { border-top:1px solid var(--line); padding:24px 0; color:var(--muted); font-size:14px; }
+      @media (max-width:860px) { h1{font-size:40px}.layout,.grid,.result-head{grid-template-columns:1fr}.score{font-size:38px} }
+    </style>
+    <link rel="stylesheet" href="assets/gca-site.css?v=20260711">
+    <script src="assets/gca-site.js?v=20260711" defer></script>
+  </head>
+  <body>
+    <header><nav class="shell" aria-label="Primary"><a class="brand" href="index.html"><img src="assets/gca-logo.svg" alt="GCA logo"><span>GCA</span></a><div class="nav-links"><a href="index.html">Home</a><a href="product.html">Product</a><a href="risk-calculator.html">Calculator</a><a href="gca/member-access/">Members</a></div></nav></header>
+    <main class="shell" id="main-content">
+      <section aria-labelledby="title"><p class="eyebrow">GCA AI Quant Access · Public Preview</p><h1 id="title">Risk Warning Review</h1><p class="lead">A manual pre-trade risk matrix for account exposure, leverage, loss budget, slippage, volatility, liquidity, funding, event risk, and execution discipline. 输入当前条件，查看透明评分与阻断项。</p></section>
+      <section class="layout" aria-label="Risk warning review tool">
+        <form class="panel" id="riskWarningForm">
+          <h2>Risk Inputs <span lang="zh-CN">风险输入</span></h2>
+          <div class="grid">
+            <div class="field"><label for="exposurePercent">Account exposure % / 账户敞口</label><input id="exposurePercent" type="number" min="0" step="0.1" value="20"></div>
+            <div class="field"><label for="leverage">Leverage / 杠杆</label><input id="leverage" type="number" min="1" max="100" step="1" value="2"></div>
+            <div class="field"><label for="riskPercent">Risk per trade % / 单笔风险</label><input id="riskPercent" type="number" min="0" step="0.1" value="1"></div>
+            <div class="field"><label for="stopDistancePercent">Stop distance % / 止损距离</label><input id="stopDistancePercent" type="number" min="0.01" step="0.01" value="5"></div>
+            <div class="field"><label for="slippagePercent">Estimated slippage % / 预计滑点</label><input id="slippagePercent" type="number" min="0" step="0.01" value="0.1"></div>
+            <div class="field"><label for="volatilityPercent">Observed volatility % / 观察波动率</label><input id="volatilityPercent" type="number" min="0" step="0.1" value="3"></div>
+            <div class="field"><label for="liquidityCoverage">Liquidity ÷ order size / 流动性覆盖倍数</label><input id="liquidityCoverage" type="number" min="0" step="0.1" value="15"></div>
+            <div class="field"><label for="fundingPercent">Funding rate % / 资金费率</label><input id="fundingPercent" type="number" step="0.001" value="0.01"></div>
+            <div class="field"><label for="correlatedPositions">Correlated positions / 相关仓位数</label><input id="correlatedPositions" type="number" min="0" step="1" value="0"></div>
+          </div>
+          <div class="checklist">
+            <label class="check"><input id="stopDefined" type="checkbox" checked><span>Stop or invalidation defined / 已定义止损或失效条件</span></label>
+            <label class="check"><input id="exitPlanDefined" type="checkbox" checked><span>Written exit plan defined / 已定义书面退出计划</span></label>
+            <label class="check"><input id="liquidityChecked" type="checkbox" checked><span>Liquidity and slippage independently checked / 已独立检查流动性与滑点</span></label>
+            <label class="check"><input id="dataFresh" type="checkbox" checked><span>Inputs confirmed current / 已确认输入数据为最新</span></label>
+            <label class="check"><input id="eventRisk" type="checkbox"><span>Known event inside holding window / 持仓期间存在已知事件</span></label>
+            <label class="check"><input id="revengeTrade" type="checkbox"><span>Revenge-trade conditions present / 存在报复性交易情绪</span></label>
+            <label class="check"><input id="fomo" type="checkbox"><span>FOMO conditions present / 存在追涨情绪</span></label>
+          </div>
+          <div class="actions"><button class="button primary" type="submit">Run Risk Review / 开始检查</button><button class="button" type="button" id="resetRiskWarning">Reset / 重置</button></div>
+        </form>
+        <div class="panel" aria-live="polite">
+          <div class="result-head"><div><h2>Risk Result <span lang="zh-CN">风险结果</span></h2><span class="status" id="status">STANDARD_REVIEW</span></div><div><span class="score" id="score">0</span><span class="note"> / 100</span></div></div>
+          <div class="category"><div class="category-line"><span>Account risk / 账户风险</span><strong id="accountScore">0 / 40</strong></div><div class="bar"><span id="accountBar" style="width:0"></span></div></div>
+          <div class="category"><div class="category-line"><span>Market risk / 市场风险</span><strong id="marketScore">0 / 35</strong></div><div class="bar"><span id="marketBar" style="width:0"></span></div></div>
+          <div class="category"><div class="category-line"><span>Process risk / 流程风险</span><strong id="processScore">0 / 25</strong></div><div class="bar"><span id="processBar" style="width:0"></span></div></div>
+          <ul class="issues" id="issues"></ul>
+          <h3 style="margin-top:20px">Required Actions <span lang="zh-CN">处理动作</span></h3><ol class="steps" id="actions"></ol>
+          <div class="actions"><a class="button primary" href="risk-calculator.html">Position Calculator</a><a class="button" href="entry-ready.html">ENTRY_READY</a><a class="button" href="backtest-lab.html">Backtest Lab</a><button class="button" id="copyRiskWarning" type="button">Copy / 复制</button></div>
+          <p class="boundary">The score reflects only the values and confirmations entered here. It does not fetch prices or liquidity, monitor positions, connect accounts, place orders, provide a safety guarantee, or deduct credits. 本评分不获取实时行情、不监控仓位、不连接账户，也不提供安全保证。</p>
+        </div>
+      </section>
+    </main>
+    <footer><div class="shell">GCA Risk First Trading · A low score is not proof that a trade is safe.</div></footer>
+    <script src="assets/risk-warning.js"></script>
+    <script>
+      (() => {
+        "use strict";
+        const form=document.getElementById("riskWarningForm");
+        const ids=["exposurePercent","leverage","riskPercent","stopDistancePercent","slippagePercent","volatilityPercent","liquidityCoverage","fundingPercent","correlatedPositions","stopDefined","exitPlanDefined","liquidityChecked","dataFresh","eventRisk","revengeTrade","fomo"];
+        const fields=Object.fromEntries(ids.map((id)=>[id,document.getElementById(id)]));
+        const maximums={account:40,market:35,process:25}; const issues=document.getElementById("issues"); const actions=document.getElementById("actions"); const status=document.getElementById("status"); const copyButton=document.getElementById("copyRiskWarning"); let latest="";
+        function payload(){return Object.fromEntries(Object.entries(fields).map(([key,field])=>[key,field.type==="checkbox"?field.checked:field.value]));}
+        function render(result){
+          if(!result){status.textContent="CHECK_INPUTS";status.className="status critical";issues.innerHTML='<li class="issue blocker">Enter valid non-negative inputs and leverage of at least 1x. / 请检查输入参数。</li>';actions.replaceChildren();return;}
+          status.textContent=result.status;status.className=`status ${result.status==="DO_NOT_PROCEED"||result.status==="HIGH_RISK"?"critical":result.status==="ELEVATED_REVIEW"?"review":""}`.trim();document.getElementById("score").textContent=String(result.score);
+          Object.entries(result.categories).forEach(([key,value])=>{document.getElementById(`${key}Score`).textContent=`${value} / ${maximums[key]}`;document.getElementById(`${key}Bar`).style.width=`${(value/maximums[key])*100}%`;});
+          issues.replaceChildren();result.blockers.forEach((message)=>{const item=document.createElement("li");item.className="issue blocker";item.textContent=message;issues.append(item);});result.warnings.forEach((message)=>{const item=document.createElement("li");item.className="issue";item.textContent=message;issues.append(item);});if(!result.blockers.length&&!result.warnings.length){const item=document.createElement("li");item.className="issue clear";item.textContent="No published warning threshold was triggered. / 当前未触发公开警告阈值。";issues.append(item);}
+          actions.replaceChildren();result.actions.forEach((message)=>{const item=document.createElement("li");item.className="step";item.textContent=message;actions.append(item);});latest=["GCA Risk Warning Review",`Status: ${result.status}`,`Score: ${result.score}/100`,`Account risk: ${result.categories.account}/40`,`Market risk: ${result.categories.market}/35`,`Process risk: ${result.categories.process}/25`,...result.blockers.map((item)=>`BLOCKER: ${item}`),...result.warnings.map((item)=>`WARNING: ${item}`),...result.actions.map((item)=>`ACTION: ${item}`)].join("\n");
+        }
+        function evaluate(){render(window.GcaRiskWarning.review(payload()));} form.addEventListener("submit",(event)=>{event.preventDefault();evaluate();});form.addEventListener("input",evaluate);form.addEventListener("change",evaluate);document.getElementById("resetRiskWarning").addEventListener("click",()=>{form.reset();evaluate();});copyButton.addEventListener("click",async()=>{try{await navigator.clipboard.writeText(latest);copyButton.textContent="Copied / 已复制";window.setTimeout(()=>{copyButton.textContent="Copy / 复制";},1500);}catch(error){copyButton.textContent="Copy unavailable";}});evaluate();
+      })();
+    </script>
+  </body>
+</html>

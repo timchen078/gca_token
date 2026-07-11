@@ -122,6 +122,7 @@ LIQUIDATION_REPLAY_001_PAGE_URL = "https://gcagochina.com/liquidation-replay-001
 LIQUIDATION_REPLAY_001_URL = "https://gcagochina.com/liquidation-replay-001.json"
 LIQUIDATION_REPLAY_PAGE_URL = "https://gcagochina.com/liquidation-replay.html"
 BACKTEST_LAB_PAGE_URL = "https://gcagochina.com/backtest-lab.html"
+RISK_WARNING_PAGE_URL = "https://gcagochina.com/risk-warning.html"
 SERVICE_DELIVERY_PLAYBOOK_PAGE_URL = "https://gcagochina.com/service-delivery-playbook.html"
 SERVICE_DELIVERY_PLAYBOOK_URL = "https://gcagochina.com/service-delivery-playbook.json"
 WORKER_ROUTES_HANDOFF_PAGE_URL = "https://gcagochina.com/worker-routes-handoff.html"
@@ -7716,6 +7717,23 @@ def validate_backtest_lab_page(text: str) -> None:
     assert_no_forbidden_public_claims(text, label)
 
 
+def validate_risk_warning_page(text: str) -> None:
+    label = "/risk-warning.html"
+    assert_contains(text, "GCA Risk Warning Review", label)
+    assert_contains(text, 'id="riskWarningForm"', label)
+    assert_contains(text, 'id="exposurePercent"', label)
+    assert_contains(text, 'id="liquidityCoverage"', label)
+    assert_contains(text, 'id="accountScore"', label)
+    assert_contains(text, 'id="marketScore"', label)
+    assert_contains(text, 'id="processScore"', label)
+    assert_contains(text, 'src="assets/risk-warning.js"', label)
+    assert_contains(text, "does not fetch prices or liquidity", label)
+    assert_not_contains(text, "window.ethereum", label)
+    assert_not_contains(text, "fetch(", label)
+    assert_not_contains(text, "WebSocket", label)
+    assert_no_forbidden_public_claims(text, label)
+
+
 def validate_product_json(text: str) -> None:
     label = "/product.json"
     payload = load_json(text, label)
@@ -14412,6 +14430,7 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/liquidation-replay-001.json",
         "https://gcagochina.com/liquidation-replay.html",
         "https://gcagochina.com/backtest-lab.html",
+        "https://gcagochina.com/risk-warning.html",
         "https://gcagochina.com/service-delivery-playbook.html",
         "https://gcagochina.com/service-delivery-playbook.json",
         "https://gcagochina.com/worker-routes-handoff.html",
@@ -14668,6 +14687,7 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /product.json", label)
     assert_contains(text, "Allow: /liquidation-replay.html", label)
     assert_contains(text, "Allow: /backtest-lab.html", label)
+    assert_contains(text, "Allow: /risk-warning.html", label)
     assert_contains(text, "Allow: /access.html", label)
     assert_contains(text, "Allow: /access.json", label)
     assert_contains(text, "Allow: /operations.html", label)
@@ -14828,6 +14848,7 @@ CHECKS: list[EndpointCheck] = [
     ("/liquidation-replay-001.json", validate_liquidation_replay_001_json),
     ("/liquidation-replay.html", validate_liquidation_replay_page),
     ("/backtest-lab.html", validate_backtest_lab_page),
+    ("/risk-warning.html", validate_risk_warning_page),
     ("/service-delivery-playbook.html", validate_service_delivery_playbook_page),
     ("/service-delivery-playbook.json", validate_service_delivery_playbook_json),
     ("/worker-routes-handoff.html", validate_worker_routes_handoff_page),
