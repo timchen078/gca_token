@@ -96,6 +96,32 @@
     };
   }
 
+  function groupPerformance(values, dimension) {
+    const key = ["market", "direction", "setup"].includes(dimension) ? dimension : "market";
+    const groups = new Map();
+    orderTrades(Array.isArray(values) ? values : []).forEach((trade) => {
+      const label = key === "setup" ? (trade.setup || "UNTAGGED") : trade[key];
+      if (!groups.has(label)) groups.set(label, []);
+      groups.get(label).push(trade);
+    });
+    return [...groups.entries()].map(([label, trades]) => {
+      const summary = summarizeTrades(trades);
+      return {
+        dimension: key,
+        label,
+        count: summary.count,
+        wins: summary.wins,
+        losses: summary.losses,
+        winRatePercent: summary.winRatePercent,
+        averageReturnPercent: summary.averageReturnPercent,
+        totalReturnPercent: summary.returns.reduce((sum, value) => sum + value, 0),
+        bestReturnPercent: summary.bestReturnPercent,
+        worstReturnPercent: summary.worstReturnPercent,
+        maxConsecutiveLosses: summary.maxConsecutiveLosses
+      };
+    }).sort((a, b) => b.count - a.count || a.label.localeCompare(b.label));
+  }
+
   function buildBackup(values, exportedAt) {
     return {
       schema: SCHEMA,
@@ -126,5 +152,5 @@
     return [header.join(","), ...rows].join("\n");
   }
 
-  return { STORAGE_KEY, SCHEMA, MAX_TRADES, normalizeTrade, orderTrades, filterTrades, summarizeTrades, buildBackup, parseBackup, toCsv };
+  return { STORAGE_KEY, SCHEMA, MAX_TRADES, normalizeTrade, orderTrades, filterTrades, summarizeTrades, groupPerformance, buildBackup, parseBackup, toCsv };
 });

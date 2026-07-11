@@ -49,6 +49,9 @@
       .metric { min-height:92px; border:1px solid var(--line); border-radius:6px; background:#fbfcfa; padding:13px; }
       .metric span { display:block; color:var(--muted); font-size:12px; font-weight:780; } .metric strong { display:block; margin-top:7px; font-size:22px; overflow-wrap:anywhere; }
       .filters { margin-bottom:18px; border-bottom:1px solid var(--line); padding-bottom:18px; }
+      .breakdown { margin-top:20px; border-top:1px solid var(--line); padding-top:18px; }
+      .breakdown-head { display:flex; flex-wrap:wrap; align-items:end; justify-content:space-between; gap:12px; }
+      .breakdown-head .field { min-width:190px; }
       .status { margin-top:14px; border-left:3px solid var(--green); background:#edf8f3; color:#086447; padding:10px 12px; }
       .status.error { border-left-color:var(--red); background:#fff0f0; color:#8d171c; }
       .table-wrap { width:100%; max-width:100%; margin-top:18px; overflow:auto; border:1px solid var(--line); border-radius:6px; max-height:500px; }
@@ -105,6 +108,10 @@
             <div class="metric"><span>Max loss streak / 最大连亏</span><strong id="maxLossStreak">0</strong></div>
           </div>
           <div class="actions"><a class="button primary" id="analyzeJournal" href="backtest-lab.html#source=journal" aria-disabled="true">Analyze Filtered Sample / 回测筛选样本</a><button class="button" id="exportJson" type="button">Backup All JSON</button><button class="button" id="exportCsv" type="button">Export Filtered CSV</button><label class="button" for="importJson">Restore JSON</label><input id="importJson" type="file" accept="application/json,.json" hidden><button class="button danger" id="clearJournal" type="button">Clear All</button></div>
+          <section class="breakdown" aria-labelledby="breakdownTitle">
+            <div class="breakdown-head"><div><h3 id="breakdownTitle">Performance Breakdown <span lang="zh-CN">分组表现</span></h3><p class="note">Compare groups inside the current filtered sample. / 对比当前筛选样本中的历史分组表现。</p></div><div class="field"><label for="breakdownDimension">Group by / 分组方式</label><select id="breakdownDimension"><option value="market">Market / 交易对</option><option value="setup">Setup / 策略标签</option><option value="direction">Direction / 方向</option></select></div></div>
+            <div class="table-wrap"><table><thead><tr><th>Group</th><th>Trades</th><th>Win rate</th><th>Average</th><th>Simple total</th><th>Best</th><th>Worst</th><th>Max loss streak</th></tr></thead><tbody id="breakdownRows"></tbody></table><p class="empty" id="emptyBreakdown">No grouped sample available. / 暂无可分组样本。</p></div>
+          </section>
           <div class="table-wrap"><table><thead><tr><th>Date</th><th>Market</th><th>Side</th><th>Return</th><th>Setup</th><th>Notes</th><th>Action</th></tr></thead><tbody id="journalRows"></tbody></table><p class="empty" id="emptyJournal">No completed trades recorded. / 暂无已完成交易记录。</p></div>
         </div>
       </section>
@@ -124,6 +131,8 @@
         const rows = document.getElementById("journalRows");
         const status = document.getElementById("journalStatus");
         const analyze = document.getElementById("analyzeJournal");
+        const breakdownDimension = document.getElementById("breakdownDimension");
+        const breakdownRows = document.getElementById("breakdownRows");
         const filterFields = {
           market: document.getElementById("filterMarket"), direction: document.getElementById("filterDirection"),
           setup: document.getElementById("filterSetup"), from: document.getElementById("filterFrom"), to: document.getElementById("filterTo")
@@ -169,6 +178,7 @@
           analyze.setAttribute("aria-disabled",String(!summary.count));
           const params=new URLSearchParams({source:"journal"});Object.entries(filters()).forEach(([key,value])=>{if(value)params.set(key,value);});analyze.href=`backtest-lab.html#${params}`;
           document.getElementById("filterStatus").textContent=`Showing ${summary.count} of ${trades.length} trade(s). / 当前显示 ${summary.count} / ${trades.length} 笔。`;
+          const groups=engine.groupPerformance(visibleTrades,breakdownDimension.value);breakdownRows.replaceChildren();groups.forEach((group)=>{const row=document.createElement("tr");[group.label,group.count,`${group.winRatePercent.toFixed(2)}%`,signed(group.averageReturnPercent),signed(group.totalReturnPercent),signed(group.bestReturnPercent),signed(group.worstReturnPercent),group.maxConsecutiveLosses].forEach((value,index)=>{const cell=document.createElement("td");cell.textContent=String(value);if(index>=3&&index<=6)cell.className=Number.parseFloat(value)>=0?"positive":"negative";row.append(cell);});breakdownRows.append(row);});document.getElementById("emptyBreakdown").hidden=groups.length>0;
           rows.replaceChildren();
           [...visibleTrades].reverse().forEach((trade) => {
             const row=document.createElement("tr");
@@ -190,6 +200,7 @@
         document.getElementById("clearJournal").addEventListener("click",()=>{if(!window.confirm("Clear all local journal entries? / 清空全部本地交易日志？"))return;trades=[];try{window.localStorage.removeItem(engine.STORAGE_KEY);}catch(error){}render();setStatus("Local journal cleared. / 本地日志已清空。",false);});
         Object.values(filterFields).forEach((field)=>{field.addEventListener("input",render);field.addEventListener("change",render);});
         document.getElementById("resetFilters").addEventListener("click",()=>{Object.values(filterFields).forEach((field)=>{field.value="";});render();});
+        breakdownDimension.addEventListener("change",render);
       })();
     </script>
   </body>
