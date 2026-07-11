@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GCA Risk Tools | Browser-Only Quant Workflow</title>
+    <meta name="description" content="Unified GCA workspace for position sizing, risk warnings, ENTRY_READY review, trade-sequence analysis, and loss replay.">
+    <link rel="canonical" href="https://gcagochina.com/tools.html">
+    <link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">
+    <link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="GCA | Go China Access">
+    <meta property="og:title" content="GCA Risk Tools | Browser-Only Quant Workflow">
+    <meta property="og:description" content="One workspace for GCA position sizing, risk warnings, ENTRY_READY review, sample analysis, and loss replay.">
+    <meta property="og:url" content="https://gcagochina.com/tools.html">
+    <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="GCA Risk Tools | Browser-Only Quant Workflow">
+    <meta name="twitter:description" content="One workspace for GCA position sizing, risk warnings, ENTRY_READY review, sample analysis, and loss replay.">
+    <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <style>
+      :root { color-scheme:light; --bg:#f7f8f5; --ink:#151817; --muted:#5e6763; --line:#dfe4dd; --panel:#fff; --soft:#eef3ef; --red:#d71920; --blue:#1557d7; --green:#087f5b; }
+      * { box-sizing:border-box; }
+      body { margin:0; color:var(--ink); background:var(--bg); font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; line-height:1.5; }
+      a { color:var(--blue); text-decoration:none; } a:hover { text-decoration:underline; }
+      .shell { width:min(1160px,calc(100% - 32px)); margin:0 auto; }
+      header { position:sticky; top:0; z-index:3; border-bottom:1px solid var(--line); background:rgba(247,248,245,.95); backdrop-filter:blur(16px); }
+      nav { min-height:68px; display:flex; align-items:center; justify-content:space-between; gap:18px; }
+      .brand { display:inline-flex; align-items:center; gap:10px; color:var(--ink); font-weight:850; } .brand img { width:34px; height:34px; }
+      .nav-links { display:flex; align-items:center; gap:16px; font-size:14px; }
+      main { padding:34px 0 64px; }
+      h1,h2,h3,p { margin-top:0; } h1 { max-width:920px; margin-bottom:14px; font-size:58px; line-height:1; letter-spacing:0; } h2 { margin-bottom:14px; font-size:25px; } h3 { margin-bottom:8px; font-size:18px; }
+      .eyebrow { margin:0 0 10px; color:var(--red); font-size:13px; font-weight:850; text-transform:uppercase; }
+      .lead,.note { color:var(--muted); } .lead { max-width:900px; margin-bottom:0; font-size:17px; } .note { margin:0; }
+      .mode-picker { display:flex; flex-wrap:wrap; gap:8px; margin-top:24px; }
+      .mode { min-height:42px; border:1px solid var(--line); border-radius:6px; background:#fff; color:var(--ink); padding:9px 13px; font:inherit; font-weight:780; cursor:pointer; }
+      .mode[aria-pressed="true"] { border-color:var(--red); background:var(--red); color:#fff; }
+      .section { margin-top:28px; }
+      .panel { border:1px solid var(--line); border-radius:8px; background:var(--panel); padding:22px; }
+      .workflow-head { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:18px; align-items:start; }
+      .workflow-count { min-width:84px; color:var(--red); font-size:38px; font-weight:900; text-align:right; }
+      .steps { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin-top:18px; }
+      .step { min-height:150px; border-left:3px solid var(--red); background:#fafbf9; padding:14px; }
+      .step-order { color:var(--red); font-size:12px; font-weight:850; text-transform:uppercase; }
+      .step h3 { margin-top:8px; }
+      .step a { display:inline-flex; margin-top:12px; font-weight:800; }
+      .tools-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; }
+      .tool { min-height:240px; display:flex; flex-direction:column; border:1px solid var(--line); border-radius:8px; background:var(--panel); padding:18px; }
+      .tool.is-active { border-color:#e8a3a6; box-shadow:inset 0 3px 0 var(--red); }
+      .tool-stage { color:var(--red); font-size:12px; font-weight:850; text-transform:uppercase; }
+      .tool .note { flex:1; }
+      .tool-link { min-height:42px; display:inline-flex; align-items:center; justify-content:center; margin-top:18px; border:1px solid var(--line); border-radius:6px; background:#fff; color:var(--ink); padding:9px 12px; font-weight:800; }
+      .tool.is-active .tool-link { border-color:var(--red); background:var(--red); color:#fff; }
+      .facts { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; }
+      .fact { border-top:1px solid var(--line); padding-top:12px; } .fact strong { display:block; margin-bottom:5px; }
+      .boundary { border-left:3px solid var(--blue); background:#eef4ff; padding:14px; }
+      footer { border-top:1px solid var(--line); padding:24px 0; color:var(--muted); font-size:14px; }
+      @media (max-width:900px) { h1{font-size:42px}.steps,.tools-grid,.facts{grid-template-columns:1fr}.workflow-head{grid-template-columns:1fr}.workflow-count{text-align:left}.tool{min-height:0} }
+    </style>
+    <link rel="stylesheet" href="assets/gca-site.css?v=20260711">
+    <script src="assets/gca-site.js?v=20260711" defer></script>
+  </head>
+  <body>
+    <header><nav class="shell" aria-label="Primary"><a class="brand" href="index.html"><img src="assets/gca-logo.svg" alt="GCA logo"><span>GCA</span></a><div class="nav-links"><a href="index.html">Home</a><a href="product.html">Product</a><a href="gca/member-access/">Members</a></div></nav></header>
+    <main class="shell" id="main-content">
+      <section aria-labelledby="title"><p class="eyebrow">GCA AI Quant Access · Public Workspace</p><h1 id="title">Risk Tools</h1><p class="lead">Choose a workflow, then open the five browser-only GCA tools in a practical order. 选择交易准备、策略研究或亏损复盘流程，按顺序使用 GCA 风险工具。</p><div class="mode-picker" role="group" aria-label="Choose workflow"><button class="mode" type="button" data-mode="prepare" aria-pressed="true">Prepare / 交易准备</button><button class="mode" type="button" data-mode="research" aria-pressed="false">Research / 策略研究</button><button class="mode" type="button" data-mode="review" aria-pressed="false">Review / 亏损复盘</button><button class="mode" type="button" data-mode="all" aria-pressed="false">All / 全部工具</button></div></section>
+      <section class="section panel" aria-labelledby="workflowTitle"><div class="workflow-head"><div><p class="eyebrow">Selected Workflow</p><h2 id="workflowTitle">Prepare a Trade</h2><p class="note" id="workflowDescription"></p></div><div class="workflow-count"><span id="workflowCount">3</span> steps</div></div><div class="steps" id="workflowSteps"></div></section>
+      <section class="section" aria-labelledby="toolsTitle"><p class="eyebrow">Public Preview Suite</p><h2 id="toolsTitle">Five Risk Tools</h2><div class="tools-grid" id="toolsGrid">
+        <article class="tool" data-tool="risk-calculator"><span class="tool-stage">Before entry</span><h3>Position Size Calculator</h3><p class="note">Calculate risk budget, stop distance, quantity, costs, margin, and exposure.</p><a class="tool-link" href="risk-calculator.html">Open Calculator</a></article>
+        <article class="tool" data-tool="risk-warning"><span class="tool-stage">Before entry</span><h3>Risk Warning Review</h3><p class="note">Score exposure, leverage, liquidity, volatility, execution friction, and discipline.</p><a class="tool-link" href="risk-warning.html">Run Warning Review</a></article>
+        <article class="tool" data-tool="entry-ready"><span class="tool-stage">Final pre-entry gate</span><h3>ENTRY_READY Review</h3><p class="note">Check structure, invalidation, execution conditions, and readiness blockers.</p><a class="tool-link" href="entry-ready.html">Run ENTRY_READY</a></article>
+        <article class="tool" data-tool="backtest-lab"><span class="tool-stage">Strategy research</span><h3>Backtest Lab</h3><p class="note">Analyze entered trade samples, expectancy, costs, drawdown, and streaks.</p><a class="tool-link" href="backtest-lab.html">Open Backtest Lab</a></article>
+        <article class="tool" data-tool="liquidation-replay"><span class="tool-stage">After exit</span><h3>Liquidation &amp; Loss Replay</h3><p class="note">Review account impact, effective exposure, margin use, stop deviation, and process errors.</p><a class="tool-link" href="liquidation-replay.html">Run Loss Replay</a></article>
+      </div></section>
+      <section class="section panel" aria-labelledby="factsTitle"><h2 id="factsTitle">Workspace Boundaries</h2><div class="facts"><div class="fact"><strong>Browser only</strong><span class="note">Calculations use values entered on the current device.</span></div><div class="fact"><strong>No execution</strong><span class="note">The tools do not connect exchanges or place orders.</span></div><div class="fact"><strong>No credit deduction</strong><span class="note">Public previews do not change account credit records.</span></div></div><p class="boundary" style="margin-top:18px">Workflow order is an operating checklist, not a buy or sell signal and not proof that a trade or strategy is safe. The workspace does not fetch live market data, connect wallets, monitor positions, or override risk controls.</p></section>
+    </main>
+    <footer><div class="shell">GCA Risk First Trading · Size, review, gate, test, and replay.</div></footer>
+    <script src="assets/risk-tools.js"></script>
+    <script>
+      (()=>{"use strict";const key="gca_risk_tools_mode_v1";const buttons=[...document.querySelectorAll("[data-mode]")];const steps=document.getElementById("workflowSteps");const cards=[...document.querySelectorAll("[data-tool]")];function select(mode){const workflow=window.GcaRiskTools.getWorkflow(mode);document.getElementById("workflowTitle").textContent=workflow.name;document.getElementById("workflowDescription").textContent=workflow.description;document.getElementById("workflowCount").textContent=String(workflow.tools.length);buttons.forEach((button)=>button.setAttribute("aria-pressed",String(button.dataset.mode===workflow.mode)));steps.replaceChildren();const active=new Set(workflow.tools.map((tool)=>tool.id));workflow.tools.forEach((tool)=>{const item=document.createElement("article");item.className="step";const order=document.createElement("span");order.className="step-order";order.textContent=`Step ${tool.order}`;const title=document.createElement("h3");title.textContent=tool.name;const note=document.createElement("p");note.className="note";note.textContent=tool.purpose;const link=document.createElement("a");link.href=tool.url;link.textContent=`Open ${tool.shortName}`;item.append(order,title,note,link);steps.append(item);});cards.forEach((card)=>card.classList.toggle("is-active",active.has(card.dataset.tool)));try{window.localStorage.setItem(key,workflow.mode);}catch(error){}const url=new URL(window.location.href);url.searchParams.set("mode",workflow.mode);window.history.replaceState({},"",url);}
+      buttons.forEach((button)=>button.addEventListener("click",()=>select(button.dataset.mode)));const requested=new URLSearchParams(window.location.search).get("mode");let saved="";try{saved=window.localStorage.getItem(key)||"";}catch(error){}select(requested||saved||"prepare");})();
+    </script>
+  </body>
+</html>
