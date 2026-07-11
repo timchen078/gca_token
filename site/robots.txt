@@ -1,5 +1,6 @@
 User-agent: *
 Allow: /
+Allow: /risk-calculator.html
 Allow: /data-viewer.html
 Allow: /start.html
 Allow: /register.html

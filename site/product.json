@@ -2,7 +2,7 @@
   "schema": "https://gcagochina.com/product.json",
   "pageUrl": "https://gcagochina.com/product.html",
   "status": "public-product-spec-published",
-  "lastUpdated": "2026-05-20",
+  "lastUpdated": "2026-07-11",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "title": "GCA AI Quant Access Product Spec",
@@ -63,8 +63,13 @@
     {
       "id": "position-size-calculator",
       "name": "Position Size Calculator",
-      "status": "planned-risk-tool",
-      "purpose": "Calculate risk budget, stop distance, leverage bounds, exposure limits, and maximum loss scenarios.",
+      "status": "public-client-side-preview-live",
+      "publicUrl": "https://gcagochina.com/risk-calculator.html",
+      "purpose": "Calculate risk budget, stop distance, position quantity, estimated costs, leverage margin, account exposure, maximum planned loss, and reward-to-risk locally in the browser.",
+      "connectsWallet": false,
+      "connectsExchange": false,
+      "placesOrders": false,
+      "deductsCredits": false,
       "notPurpose": "Not leverage encouragement or a replacement for user judgment."
     },
     {
@@ -163,6 +168,7 @@
       "GCA has published a public product specification for GCA AI Quant Access.",
       "The current product page is a public spec and account-ledger release map.",
       "GCA has a live account and membership intake path for non-custodial quant risk tools.",
+      "GCA has a public client-side Position Size Calculator preview that does not connect to wallets or exchanges, place orders, or deduct credits.",
       "Any future trading-related feature must remain behind risk checks, simulation or testnet validation, and controlled account UI.",
       "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool."
     ],
@@ -188,6 +194,7 @@
     "risk": "https://gcagochina.com/risk.html",
     "verify": "https://gcagochina.com/verify.html",
     "market": "https://gcagochina.com/markets.html",
+    "riskCalculator": "https://gcagochina.com/risk-calculator.html",
     "creditsCatalogPage": "https://gcagochina.com/credits.html",
     "creditsCatalog": "https://gcagochina.com/credits.json",
     "accessPortalPage": "https://gcagochina.com/access.html",

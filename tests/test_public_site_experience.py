@@ -1,4 +1,7 @@
+import json
 import re
+import shutil
+import subprocess
 import unittest
 from pathlib import Path
 
@@ -79,6 +82,81 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn("window.localStorage.removeItem(SNAPSHOT_KEY)", page)
         self.assertIn("restoreSnapshot();", page)
         self.assertNotIn("email: email.value", page[page.index("function snapshotFromResponse"):page.index("function latestResponseLines")])
+
+    def test_risk_calculator_is_client_side_and_has_no_execution_path(self):
+        page = (SITE / "risk-calculator.html").read_text()
+        product = (SITE / "product.json").read_text()
+        credits = (SITE / "credits.json").read_text()
+
+        for element_id in (
+            "equity",
+            "riskPercent",
+            "entryPrice",
+            "stopPrice",
+            "targetPrice",
+            "leverage",
+            "feeBps",
+            "slippageBps",
+            "positionQuantity",
+            "plannedLoss",
+            "requiredMargin",
+            "copyPlan",
+        ):
+            self.assertIn(f'id="{element_id}"', page)
+
+        calculator = (SITE / "assets" / "risk-calculator.js").read_text()
+        self.assertIn("const riskBudget = equity * (riskPercent / 100)", calculator)
+        self.assertIn("const riskPerUnit = stopDistance + (entry * costRate)", calculator)
+        self.assertIn("const positionQuantity = riskBudget / riskPerUnit", calculator)
+        self.assertIn("const requiredMargin = positionNotional / leverage", calculator)
+        self.assertIn('src="assets/risk-calculator.js"', page)
+        self.assertIn("does not connect to a wallet or exchange", page)
+        self.assertNotIn("window.ethereum", page)
+        self.assertNotIn("fetch(", page)
+        self.assertNotIn("WebSocket", page)
+        self.assertIn('"status": "public-client-side-preview-live"', product)
+        self.assertIn('"url": "https://gcagochina.com/risk-calculator.html"', credits)
+
+    def test_risk_calculator_formula_module(self):
+        bundled_node = Path("/Users/abc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node")
+        node = shutil.which("node") or (str(bundled_node) if bundled_node.exists() else "")
+        if not node:
+            self.skipTest("Node.js is unavailable")
+
+        module_path = SITE / "assets" / "risk-calculator.js"
+        script = (
+            "const c=require(process.argv[1]);"
+            "const p=c.calculatePositionPlan({equity:10000,riskPercent:1,entry:100,stop:95,target:110,leverage:2,feeBps:20,slippageBps:10});"
+            "process.stdout.write(JSON.stringify(p));"
+        )
+        result = subprocess.run(
+            [node, "-e", script, str(module_path)],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        plan = json.loads(result.stdout)
+
+        self.assertEqual(plan["direction"], "long")
+        self.assertAlmostEqual(plan["riskBudget"], 100)
+        self.assertAlmostEqual(plan["stopDistance"], 5)
+        self.assertAlmostEqual(plan["riskPerUnit"], 5.3)
+        self.assertAlmostEqual(plan["positionQuantity"], 100 / 5.3)
+        self.assertAlmostEqual(plan["plannedLoss"], 100)
+        self.assertAlmostEqual(plan["requiredMargin"], plan["positionNotional"] / 2)
+        self.assertTrue(plan["targetOnCorrectSide"])
+
+        invalid_script = (
+            "const c=require(process.argv[1]);"
+            "process.stdout.write(String(c.calculatePositionPlan({equity:0,riskPercent:1,entry:100,stop:95,leverage:1,feeBps:0,slippageBps:0})));"
+        )
+        invalid = subprocess.run(
+            [node, "-e", invalid_script, str(module_path)],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(invalid.stdout, "null")
 
 
 if __name__ == "__main__":
