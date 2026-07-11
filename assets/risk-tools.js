@@ -40,6 +40,13 @@
       url: "liquidation-replay.html",
       stage: "After exit",
       purpose: "Review account impact, effective exposure, margin use, stop deviation, and process errors."
+    },
+    "trade-journal": {
+      name: "Trade Journal",
+      shortName: "Journal",
+      url: "trade-journal.html",
+      stage: "After exit",
+      purpose: "Keep a browser-local completed-trade log and send the return sequence to Backtest Lab."
     }
   };
 
@@ -52,17 +59,17 @@
     research: {
       name: "Research a Strategy",
       description: "Analyze the sample, stress the current risk conditions, then validate the setup process.",
-      toolIds: ["backtest-lab", "risk-warning", "entry-ready"]
+      toolIds: ["trade-journal", "backtest-lab", "risk-warning", "entry-ready"]
     },
     review: {
       name: "Review a Loss",
       description: "Replay the loss, correct position sizing, reassess risk, then rebuild the entry gate.",
-      toolIds: ["liquidation-replay", "risk-calculator", "risk-warning", "entry-ready"]
+      toolIds: ["liquidation-replay", "trade-journal", "risk-calculator", "risk-warning", "entry-ready"]
     },
     all: {
       name: "All Risk Tools",
       description: "Open any public browser-only GCA tool directly.",
-      toolIds: ["risk-calculator", "risk-warning", "entry-ready", "backtest-lab", "liquidation-replay"]
+      toolIds: ["risk-calculator", "risk-warning", "entry-ready", "backtest-lab", "liquidation-replay", "trade-journal"]
     }
   };
 
