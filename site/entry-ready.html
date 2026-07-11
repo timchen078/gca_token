@@ -138,17 +138,27 @@
           if (!result.blockers.length && !result.warnings.length) { const item=document.createElement("li"); item.className="issue ready"; item.textContent="All published readiness gates passed. / 已通过全部公开准备度门槛。"; issues.append(item); }
           if (result.priceStructureValid) {
             const query = new URLSearchParams({ entry:String(result.entry), stop:String(result.stop), target:String(result.target), risk:String(result.riskPercent), leverage:String(result.leverage) });
-            calculatorLink.href = `risk-calculator.html?${query}`;
+            calculatorLink.href = `risk-calculator.html#${query}`;
           } else {
             calculatorLink.href = "risk-calculator.html";
           }
           latestReview = ["GCA ENTRY_READY Review",`Status: ${result.status}`,`Score: ${result.score}/100`,`Direction: ${result.direction}`,`Entry: ${result.entry}`,`Stop: ${result.stop}`,`Target: ${result.target}`,`Risk: ${result.riskPercent}%`,`Leverage: ${result.leverage}x`,"",...result.blockers.map((item)=>`BLOCKER: ${item}`),...result.warnings.map((item)=>`REVIEW: ${item}`)].join("\n");
         }
         function evaluate() { render(window.GcaEntryReady.evaluate(payload())); }
+        function applyPlanParameters() {
+          const searchParams = new URLSearchParams(window.location.search);
+          const fragmentParams = new URLSearchParams(window.location.hash.replace(/^#/, ""));
+          const read = (key) => fragmentParams.has(key) ? fragmentParams.get(key) : searchParams.get(key);
+          const mappings = [["entry",fields.entry],["stop",fields.stop],["target",fields.target],["risk",fields.riskPercent],["leverage",fields.leverage]];
+          mappings.forEach(([key,field])=>{const value=Number(read(key));if(Number.isFinite(value)&&value>0)field.value=String(value);});
+          const direction = read("direction");
+          if (direction === "long" || direction === "short") fields.direction.value = direction;
+        }
         form.addEventListener("submit", (event) => { event.preventDefault(); evaluate(); });
         form.addEventListener("input", evaluate); form.addEventListener("change", evaluate);
         document.getElementById("resetReview").addEventListener("click", () => { form.reset(); evaluate(); });
         copyReview.addEventListener("click", async () => { try { await navigator.clipboard.writeText(latestReview); copyReview.textContent="Copied / 已复制"; window.setTimeout(()=>{copyReview.textContent="Copy Review / 复制检查结果";},1500); } catch (error) { copyReview.textContent="Copy unavailable / 请手动记录"; } });
+        applyPlanParameters();
         evaluate();
       })();
     </script>

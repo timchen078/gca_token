@@ -112,7 +112,9 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn("const requiredMargin = positionNotional / leverage", calculator)
         self.assertIn('src="assets/risk-calculator.js"', page)
         self.assertIn("applyQueryParameters();", page)
-        self.assertIn('["entry", fields.entry]', page)
+        self.assertIn('["entry", fields.entry, false]', page)
+        self.assertIn('["equity", fields.equity, false]', page)
+        self.assertIn("window.location.hash", page)
         self.assertIn("does not connect to a wallet or exchange", page)
         self.assertNotIn("window.ethereum", page)
         self.assertNotIn("fetch(", page)
@@ -198,7 +200,9 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn('"ENTRY_READY"', engine)
         self.assertIn('src="assets/entry-ready.js"', page)
         self.assertIn("result.priceStructureValid", page)
-        self.assertIn("risk-calculator.html?", page)
+        self.assertIn("risk-calculator.html#", page)
+        self.assertIn("function applyPlanParameters()", page)
+        self.assertIn("window.location.hash", page)
         self.assertNotIn("window.ethereum", page)
         self.assertNotIn("fetch(", page)
         self.assertNotIn("WebSocket", page)
@@ -521,6 +525,8 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn('status = "ELEVATED_REVIEW"', engine)
         self.assertIn('"STANDARD_REVIEW"', engine)
         self.assertIn('src="assets/risk-warning.js"', page)
+        self.assertIn("function applyPlanParameters()", page)
+        self.assertIn("window.location.hash", page)
         self.assertIn("does not fetch prices or liquidity", page)
         self.assertNotIn("window.ethereum", page)
         self.assertNotIn("fetch(", page)
@@ -630,6 +636,25 @@ class PublicSiteExperienceTests(unittest.TestCase):
             self.assertIn(f'href="{url}"', page)
 
         self.assertIn('id="workflowSteps"', page)
+        for element_id in (
+            "tradePlanForm",
+            "planDirection",
+            "planEquity",
+            "planRisk",
+            "planLeverage",
+            "planEntry",
+            "planStop",
+            "planTarget",
+            "planExposure",
+            "planSlippage",
+            "planVolatility",
+            "planLiquidity",
+            "planStatus",
+            "planCalculator",
+            "planWarning",
+            "planEntryReady",
+        ):
+            self.assertIn(f'id="{element_id}"', page)
         self.assertIn('src="assets/risk-tools.js"', page)
         self.assertIn('const key="gca_risk_tools_mode_v1"', page)
         self.assertIn("window.localStorage.setItem(key,workflow.mode)", page)
@@ -638,6 +663,8 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertNotIn("window.ethereum", page)
         self.assertNotIn("fetch(", page)
         self.assertNotIn("WebSocket", page)
+        self.assertIn("Plan data stays in the URL fragment", page)
+        self.assertIn("The workspace does not save these plan values", page)
         self.assertIn('"riskToolsWorkspace": "https://gcagochina.com/tools.html"', product)
         self.assertIn('"riskToolsWorkspace": "https://gcagochina.com/tools.html"', credits)
         self.assertIn('["Tools", "tools.html"]', (SITE / "assets" / "gca-site.js").read_text())
@@ -683,6 +710,55 @@ class PublicSiteExperienceTests(unittest.TestCase):
             text=True,
         )
         self.assertEqual(json.loads(fallback.stdout)["mode"], "prepare")
+
+    def test_risk_tools_trade_plan_builds_fragment_only_handoffs(self):
+        bundled_node = Path("/Users/abc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node")
+        node = shutil.which("node") or (str(bundled_node) if bundled_node.exists() else "")
+        if not node:
+            self.skipTest("Node.js is unavailable")
+
+        module_path = SITE / "assets" / "risk-tools.js"
+        script = (
+            "const w=require(process.argv[1]);"
+            "const input=JSON.parse(process.argv[2]);"
+            "process.stdout.write(JSON.stringify(w.buildPlanLinks(input)));"
+        )
+        plan = {
+            "direction": "long",
+            "equity": 10000,
+            "risk": 1,
+            "entry": 100,
+            "stop": 95,
+            "target": 110,
+            "leverage": 2,
+            "exposure": 20,
+            "slippage": 0.1,
+            "volatility": 3,
+            "liquidity": 15,
+        }
+        completed = subprocess.run(
+            [node, "-e", script, str(module_path), json.dumps(plan)],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        links = json.loads(completed.stdout)
+        self.assertAlmostEqual(links["plan"]["stopDistance"], 5)
+        for key in ("calculator", "riskWarning", "entryReady"):
+            self.assertIn(".html#", links[key])
+            self.assertNotIn(".html?", links[key])
+        self.assertIn("equity=10000", links["calculator"])
+        self.assertIn("slippageBps=10", links["calculator"])
+        self.assertIn("stopDistance=5", links["riskWarning"])
+        self.assertIn("direction=long", links["entryReady"])
+
+        invalid = subprocess.run(
+            [node, "-e", script, str(module_path), json.dumps({**plan, "stop": 105})],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(invalid.stdout, "null")
 
 
 if __name__ == "__main__":

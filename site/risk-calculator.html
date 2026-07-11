@@ -261,18 +261,22 @@
         }
 
         function applyQueryParameters() {
-          const params = new URLSearchParams(window.location.search);
+          const searchParams = new URLSearchParams(window.location.search);
+          const fragmentParams = new URLSearchParams(window.location.hash.replace(/^#/, ""));
+          const read = (key) => fragmentParams.has(key) ? fragmentParams.get(key) : searchParams.get(key);
           const mappings = [
-            ["entry", fields.entry],
-            ["stop", fields.stop],
-            ["target", fields.target],
-            ["leverage", fields.leverage]
+            ["equity", fields.equity, false],
+            ["entry", fields.entry, false],
+            ["stop", fields.stop, false],
+            ["target", fields.target, false],
+            ["leverage", fields.leverage, false],
+            ["slippageBps", fields.slippageBps, true]
           ];
-          mappings.forEach(([key, field]) => {
-            const value = Number(params.get(key));
-            if (Number.isFinite(value) && value > 0) field.value = String(value);
+          mappings.forEach(([key, field, allowZero]) => {
+            const value = Number(read(key));
+            if (Number.isFinite(value) && (allowZero ? value >= 0 : value > 0)) field.value = String(value);
           });
-          const queryRisk = Number(params.get("risk"));
+          const queryRisk = Number(read("risk"));
           if (Number.isFinite(queryRisk) && queryRisk >= 0.1 && queryRisk <= 5) setRisk(queryRisk);
         }
 
