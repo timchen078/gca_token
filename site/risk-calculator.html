@@ -260,6 +260,22 @@
           });
         }
 
+        function applyQueryParameters() {
+          const params = new URLSearchParams(window.location.search);
+          const mappings = [
+            ["entry", fields.entry],
+            ["stop", fields.stop],
+            ["target", fields.target],
+            ["leverage", fields.leverage]
+          ];
+          mappings.forEach(([key, field]) => {
+            const value = Number(params.get(key));
+            if (Number.isFinite(value) && value > 0) field.value = String(value);
+          });
+          const queryRisk = Number(params.get("risk"));
+          if (Number.isFinite(queryRisk) && queryRisk >= 0.1 && queryRisk <= 5) setRisk(queryRisk);
+        }
+
         function addWarning(message, level = "") {
           const item = document.createElement("li");
           item.className = `warning ${level}`.trim();
@@ -378,6 +394,7 @@
           }
         });
 
+        applyQueryParameters();
         calculate();
       })();
     </script>

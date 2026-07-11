@@ -110,6 +110,8 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn("const positionQuantity = riskBudget / riskPerUnit", calculator)
         self.assertIn("const requiredMargin = positionNotional / leverage", calculator)
         self.assertIn('src="assets/risk-calculator.js"', page)
+        self.assertIn("applyQueryParameters();", page)
+        self.assertIn('["entry", fields.entry]', page)
         self.assertIn("does not connect to a wallet or exchange", page)
         self.assertNotIn("window.ethereum", page)
         self.assertNotIn("fetch(", page)
@@ -157,6 +159,116 @@ class PublicSiteExperienceTests(unittest.TestCase):
             text=True,
         )
         self.assertEqual(invalid.stdout, "null")
+
+    def test_entry_ready_review_is_transparent_and_client_side(self):
+        page = (SITE / "entry-ready.html").read_text()
+        engine = (SITE / "assets" / "entry-ready.js").read_text()
+        product = (SITE / "product.json").read_text()
+        credits = (SITE / "credits.json").read_text()
+
+        for element_id in (
+            "direction",
+            "timeframe",
+            "entry",
+            "stop",
+            "target",
+            "riskPercent",
+            "leverage",
+            "orderType",
+            "thesis",
+            "positionSized",
+            "maxLossAccepted",
+            "invalidationDefined",
+            "liquidityChecked",
+            "costsIncluded",
+            "volatilityReviewed",
+            "noRevengeTrade",
+            "noFomo",
+            "exitPlanDefined",
+            "status",
+            "score",
+            "calculatorLink",
+        ):
+            self.assertIn(f'id="{element_id}"', page)
+
+        self.assertIn('status = blockers.length > 0 || score < 70', engine)
+        self.assertIn('score >= 85 && warnings.length === 0', engine)
+        self.assertIn('"NOT_READY"', engine)
+        self.assertIn('"ENTRY_READY"', engine)
+        self.assertIn('src="assets/entry-ready.js"', page)
+        self.assertIn("result.priceStructureValid", page)
+        self.assertIn("risk-calculator.html?", page)
+        self.assertNotIn("window.ethereum", page)
+        self.assertNotIn("fetch(", page)
+        self.assertNotIn("WebSocket", page)
+        self.assertIn('"publicUrl": "https://gcagochina.com/entry-ready.html"', product)
+        self.assertIn('"url": "https://gcagochina.com/entry-ready.html"', credits)
+
+    def test_entry_ready_engine_blocks_incomplete_and_passes_complete_plan(self):
+        bundled_node = Path("/Users/abc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node")
+        node = shutil.which("node") or (str(bundled_node) if bundled_node.exists() else "")
+        if not node:
+            self.skipTest("Node.js is unavailable")
+
+        module_path = SITE / "assets" / "entry-ready.js"
+        base = {
+            "direction": "long",
+            "entry": 100,
+            "stop": 95,
+            "target": 110,
+            "riskPercent": 1,
+            "leverage": 2,
+            "thesis": "Breakout retest with defined invalidation below support.",
+            "timeframe": "4h",
+            "orderType": "limit",
+            "positionSized": True,
+            "maxLossAccepted": True,
+            "invalidationDefined": True,
+            "liquidityChecked": True,
+            "costsIncluded": True,
+            "volatilityReviewed": True,
+            "noRevengeTrade": True,
+            "noFomo": True,
+            "exitPlanDefined": True,
+        }
+        script = (
+            "const e=require(process.argv[1]);"
+            "const input=JSON.parse(process.argv[2]);"
+            "process.stdout.write(JSON.stringify(e.evaluate(input)));"
+        )
+        ready = subprocess.run(
+            [node, "-e", script, str(module_path), json.dumps(base)],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        ready_result = json.loads(ready.stdout)
+        self.assertEqual(ready_result["status"], "ENTRY_READY")
+        self.assertEqual(ready_result["score"], 100)
+        self.assertEqual(ready_result["blockers"], [])
+        self.assertEqual(ready_result["warnings"], [])
+
+        incomplete = {**base, "positionSized": False, "liquidityChecked": False}
+        blocked = subprocess.run(
+            [node, "-e", script, str(module_path), json.dumps(incomplete)],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        blocked_result = json.loads(blocked.stdout)
+        self.assertEqual(blocked_result["status"], "NOT_READY")
+        self.assertGreaterEqual(len(blocked_result["blockers"]), 2)
+
+        wrong_side = {**base, "stop": 105, "target": 90}
+        wrong = subprocess.run(
+            [node, "-e", script, str(module_path), json.dumps(wrong_side)],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        wrong_result = json.loads(wrong.stdout)
+        self.assertEqual(wrong_result["status"], "NOT_READY")
+        self.assertFalse(wrong_result["priceStructureValid"])
 
 
 if __name__ == "__main__":
