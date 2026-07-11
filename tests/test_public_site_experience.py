@@ -282,6 +282,8 @@ class PublicSiteExperienceTests(unittest.TestCase):
         credits = (SITE / "credits.json").read_text()
 
         for element_id in (
+            "tradeDate",
+            "market",
             "direction",
             "eventType",
             "accountEquity",
@@ -297,6 +299,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
             "addedToLosing",
             "exitRuleFollowed",
             "journalComplete",
+            "completedTradeConfirmed",
             "status",
             "netPnl",
             "accountImpact",
@@ -304,6 +307,8 @@ class PublicSiteExperienceTests(unittest.TestCase):
             "lossMultiple",
             "copyReplay",
             "planScenario",
+            "saveReplayToJournal",
+            "journalSaveStatus",
         ):
             self.assertIn(f'id="{element_id}"', page)
 
@@ -315,6 +320,10 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn('"PROCESS_REVIEW"', engine)
         self.assertIn('"CONTROLLED"', engine)
         self.assertIn('src="assets/liquidation-replay.js"', page)
+        self.assertIn('src="assets/trade-journal.js"', page)
+        self.assertIn("function journalTrade(result, id)", page)
+        self.assertIn("window.localStorage.setItem(window.GcaTradeJournal.STORAGE_KEY", page)
+        self.assertIn('fields.completedTradeConfirmed.checked = false', page)
         self.assertIn("function applyPlanParameters()", page)
         self.assertIn("window.location.hash", page)
         self.assertIn("planned-stop simulation", page)
