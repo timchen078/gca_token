@@ -119,10 +119,15 @@
         const sameOrigin = window.location.protocol === "file:" || source.origin === window.location.origin;
         if (!allowedProtocol || !sameOrigin || !source.pathname.endsWith(".json")) source = fallback;
 
+        const relatedPages = new Map([
+          ["/project.json", "project-profile.html"],
+          ["/.well-known/gca-token.json", "trust.html"],
+          ["/.well-known/wallet-security.json", "token-safety.html"]
+        ]);
         const fileName = source.pathname.split("/").pop() || "project.json";
         const title = fileName.replace(/\.json$/i, "").split("-").map((part) => part ? part[0].toUpperCase() + part.slice(1) : part).join(" ");
-        const readable = new URL(source.href);
-        readable.pathname = readable.pathname.replace(/\.json$/i, ".html");
+        const readable = new URL(relatedPages.get(source.pathname) || source.href, document.baseURI);
+        if (!relatedPages.has(source.pathname)) readable.pathname = readable.pathname.replace(/\.json$/i, ".html");
         readable.search = "";
         readable.hash = "";
 

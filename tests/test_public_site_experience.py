@@ -44,6 +44,10 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn('id="dataRoot"', page)
         self.assertIn('id="readablePage"', page)
         self.assertIn('id="rawLink"', page)
+        self.assertIn('["/project.json", "project-profile.html"]', page)
+        self.assertIn('["/.well-known/gca-token.json", "trust.html"]', page)
+        self.assertIn('["/.well-known/wallet-security.json", "token-safety.html"]', page)
+        self.assertIn("relatedPages.get(source.pathname)", page)
         self.assertIn('textContent = String(value)', page)
         self.assertNotRegex(page, re.compile(r'href="[^"]+\.json"'))
 
