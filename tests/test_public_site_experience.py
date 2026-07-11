@@ -841,6 +841,11 @@ class PublicSiteExperienceTests(unittest.TestCase):
             "averageReturn",
             "maxLossStreak",
             "sampleQuality",
+            "compoundedReturn",
+            "journalMaxDrawdown",
+            "equityTitle",
+            "journalEquityChart",
+            "emptyEquity",
             "analyzeJournal",
             "exportJson",
             "exportCsv",
@@ -863,6 +868,10 @@ class PublicSiteExperienceTests(unittest.TestCase):
             self.assertIn(f'id="{element_id}"', page)
 
         self.assertIn('src="assets/trade-journal.js"', page)
+        self.assertIn('src="assets/backtest-lab.js"', page)
+        self.assertIn("backtest.analyzeSequence({startingEquity:100,costPercent:0,tradeReturns:summary.returns})", page)
+        self.assertIn("drawEquityCurve(currentCurve)", page)
+        self.assertIn("assumes no deposits, withdrawals, or per-trade costs", page)
         self.assertIn("window.localStorage.setItem(engine.STORAGE_KEY", page)
         self.assertIn("window.localStorage.removeItem(engine.STORAGE_KEY)", page)
         self.assertIn('href="backtest-lab.html#source=journal"', page)
