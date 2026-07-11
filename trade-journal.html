@@ -53,6 +53,10 @@
       .breakdown { margin-top:20px; border-top:1px solid var(--line); padding-top:18px; }
       .breakdown-head { display:flex; flex-wrap:wrap; align-items:end; justify-content:space-between; gap:12px; }
       .breakdown-head .field { min-width:190px; }
+      .equity-section { margin-top:20px; border-top:1px solid var(--line); padding-top:18px; }
+      .equity-chart { margin-top:12px; border:1px solid var(--line); border-radius:6px; background:#fbfcfa; padding:12px; }
+      .equity-chart canvas { display:block; width:100%; height:220px; }
+      .equity-chart canvas[hidden] { display:none; }
       .status { margin-top:14px; border-left:3px solid var(--green); background:#edf8f3; color:#086447; padding:10px 12px; }
       .status.error { border-left-color:var(--red); background:#fff0f0; color:#8d171c; }
       .table-wrap { width:100%; max-width:100%; margin-top:18px; overflow:auto; border:1px solid var(--line); border-radius:6px; max-height:500px; }
@@ -110,8 +114,16 @@
             <div class="metric"><span>Best return / 最佳收益</span><strong id="bestReturn">0.00%</strong></div>
             <div class="metric"><span>Max loss streak / 最大连亏</span><strong id="maxLossStreak">0</strong></div>
             <div class="metric"><span>Sample quality / 样本质量</span><strong class="quality insufficient" id="sampleQuality">INSUFFICIENT_SAMPLE</strong></div>
+            <div class="metric"><span>Compounded return / 复合收益</span><strong id="compoundedReturn">0.00%</strong></div>
+            <div class="metric"><span>Maximum drawdown / 最大回撤</span><strong id="journalMaxDrawdown">0.00%</strong></div>
           </div>
           <div class="actions"><a class="button primary" id="analyzeJournal" href="backtest-lab.html#source=journal" aria-disabled="true">Analyze Filtered Sample / 回测筛选样本</a><button class="button" id="exportJson" type="button">Backup All JSON</button><button class="button" id="exportCsv" type="button">Export Filtered CSV</button><label class="button" for="importJson">Restore JSON</label><input id="importJson" type="file" accept="application/json,.json" hidden><button class="button danger" id="clearJournal" type="button">Clear All</button></div>
+          <section class="equity-section" aria-labelledby="equityTitle">
+            <h3 id="equityTitle">Filtered Equity Path <span lang="zh-CN">筛选样本权益曲线</span></h3>
+            <p class="note">Indexed equity starts at 100 and compounds the recorded account return of each visible trade in date order. / 指数权益从 100 开始，按日期顺序复合当前可见记录的账户收益率。</p>
+            <div class="equity-chart"><canvas id="journalEquityChart" role="img" aria-label="Indexed equity curve for the filtered completed-trade sample" hidden></canvas><p class="empty" id="emptyEquity">Add or restore completed trades to draw the filtered equity path. / 添加或恢复已完成交易后显示筛选权益曲线。</p></div>
+            <p class="note" style="margin-top:10px">This view assumes no deposits, withdrawals, or per-trade costs. Open Backtest Lab to model cost drag and inspect the full sequence. / 本视图不包含入金、出金或单笔成本，请在回测实验室中分析成本影响和完整序列。</p>
+          </section>
           <section class="breakdown" aria-labelledby="breakdownTitle">
             <div class="breakdown-head"><div><h3 id="breakdownTitle">Performance Breakdown <span lang="zh-CN">分组表现</span></h3><p class="note">Compare groups inside the current filtered sample. / 对比当前筛选样本中的历史分组表现。</p></div><div class="field"><label for="breakdownDimension">Group by / 分组方式</label><select id="breakdownDimension"><option value="market">Market / 交易对</option><option value="setup">Setup / 策略标签</option><option value="direction">Direction / 方向</option></select></div></div>
             <div class="table-wrap"><table><thead><tr><th>Group</th><th>Trades</th><th>Quality</th><th>Win rate</th><th>Average</th><th>Simple total</th><th>Best</th><th>Worst</th><th>Max loss streak</th></tr></thead><tbody id="breakdownRows"></tbody></table><p class="empty" id="emptyBreakdown">No grouped sample available. / 暂无可分组样本。</p></div>
@@ -122,11 +134,13 @@
       </section>
     </main>
     <footer><div class="shell">GCA Risk First Trading · Record the process before judging the strategy.</div></footer>
+    <script src="assets/backtest-lab.js"></script>
     <script src="assets/trade-journal.js"></script>
     <script>
       (() => {
         "use strict";
         const engine = window.GcaTradeJournal;
+        const backtest = window.GcaBacktestLab;
         const form = document.getElementById("journalForm");
         const fields = {
           date: document.getElementById("tradeDate"), market: document.getElementById("market"),
@@ -141,6 +155,8 @@
         const analyze = document.getElementById("analyzeJournal");
         const breakdownDimension = document.getElementById("breakdownDimension");
         const breakdownRows = document.getElementById("breakdownRows");
+        const equityChart = document.getElementById("journalEquityChart");
+        const emptyEquity = document.getElementById("emptyEquity");
         const filterFields = {
           market: document.getElementById("filterMarket"), direction: document.getElementById("filterDirection"),
           setup: document.getElementById("filterSetup"), from: document.getElementById("filterFrom"), to: document.getElementById("filterTo")
@@ -148,6 +164,7 @@
         let trades = [];
         let visibleTrades = [];
         let editingId = null;
+        let currentCurve = [];
 
         function today() { const now=new Date();return new Date(now.getTime()-(now.getTimezoneOffset()*60000)).toISOString().slice(0,10); }
         function id() { return globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(16).slice(2)}`; }
@@ -183,8 +200,16 @@
           updateSelect(filterFields.market,[...new Set(trades.map((trade)=>trade.market))].sort(),"All markets");
           updateSelect(filterFields.setup,[...new Set(trades.map((trade)=>trade.setup).filter(Boolean))].sort(),"All setups");
         }
+        function drawEquityCurve(curve) {
+          if(!curve.length)return;const ratio=Math.min(2,Math.max(1,window.devicePixelRatio||1));const rect=equityChart.getBoundingClientRect();const width=Math.max(280,Math.floor(rect.width));const height=220;equityChart.width=width*ratio;equityChart.height=height*ratio;const ctx=equityChart.getContext("2d");ctx.setTransform(ratio,0,0,ratio,0,0);ctx.clearRect(0,0,width,height);
+          const values=curve.map((point)=>point.equity);const min=Math.min(...values);const max=Math.max(...values);const spread=Math.max(1,max-min);const pad={top:18,right:18,bottom:28,left:18};const xFor=(index)=>pad.left+(index/Math.max(1,curve.length-1))*(width-pad.left-pad.right);const yFor=(value)=>pad.top+((max-value)/spread)*(height-pad.top-pad.bottom);
+          ctx.strokeStyle="#dfe4dd";ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pad.left,height-pad.bottom);ctx.lineTo(width-pad.right,height-pad.bottom);ctx.stroke();
+          ctx.strokeStyle="#1557d7";ctx.lineWidth=2.5;ctx.lineJoin="round";ctx.lineCap="round";ctx.beginPath();curve.forEach((point,index)=>{const x=xFor(index);const y=yFor(point.equity);if(index===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);});ctx.stroke();
+          const finalPoint=curve[curve.length-1];ctx.fillStyle="#d71920";ctx.beginPath();ctx.arc(xFor(curve.length-1),yFor(finalPoint.equity),4,0,Math.PI*2);ctx.fill();ctx.fillStyle="#5e6763";ctx.font="12px Inter, system-ui, sans-serif";ctx.fillText("100 start",pad.left,height-8);const finalLabel=`${finalPoint.equity.toFixed(2)} final`;ctx.fillText(finalLabel,Math.max(pad.left,width-pad.right-ctx.measureText(finalLabel).width),height-8);
+        }
         function render() {
           trades=engine.orderTrades(trades);updateFilterOptions();visibleTrades=engine.filterTrades(trades,filters());const summary=engine.summarizeTrades(visibleTrades);
+          const sequence=summary.count?backtest.analyzeSequence({startingEquity:100,costPercent:0,tradeReturns:summary.returns}):null;
           document.getElementById("tradeCount").textContent=String(summary.count);
           document.getElementById("winRate").textContent=`${summary.winRatePercent.toFixed(2)}%`;
           document.getElementById("averageReturn").textContent=signed(summary.averageReturnPercent);
@@ -192,6 +217,9 @@
           document.getElementById("bestReturn").textContent=signed(summary.bestReturnPercent);
           document.getElementById("maxLossStreak").textContent=String(summary.maxConsecutiveLosses);
           const quality=document.getElementById("sampleQuality");quality.textContent=summary.sampleQuality.code;quality.className=`quality ${summary.sampleQuality.code==="LARGER_SAMPLE"?"larger":summary.sampleQuality.code==="EARLY_SAMPLE"?"early":"insufficient"}`;
+          document.getElementById("compoundedReturn").textContent=sequence?signed(sequence.compoundedReturnPercent):"0.00%";
+          document.getElementById("journalMaxDrawdown").textContent=sequence?`${sequence.maxDrawdownPercent.toFixed(2)}%`:"0.00%";
+          currentCurve=sequence?sequence.curve:[];equityChart.hidden=!sequence;emptyEquity.hidden=Boolean(sequence);if(sequence){equityChart.setAttribute("aria-label",`Indexed equity curve for ${summary.count} filtered completed trade${summary.count===1?"":"s"}; final indexed equity ${sequence.finalEquity.toFixed(2)}`);drawEquityCurve(currentCurve);}
           analyze.setAttribute("aria-disabled",String(!summary.count));
           const params=new URLSearchParams({source:"journal"});Object.entries(filters()).forEach(([key,value])=>{if(value)params.set(key,value);});analyze.href=`backtest-lab.html#${params}`;
           document.getElementById("filterStatus").textContent=`Showing ${summary.count} of ${trades.length} trade(s). / 当前显示 ${summary.count} / ${trades.length} 笔。`;
@@ -220,6 +248,7 @@
         Object.values(filterFields).forEach((field)=>{field.addEventListener("input",render);field.addEventListener("change",render);});
         document.getElementById("resetFilters").addEventListener("click",()=>{Object.values(filterFields).forEach((field)=>{field.value="";});render();});
         breakdownDimension.addEventListener("change",render);
+        window.addEventListener("resize",()=>{if(currentCurve.length)drawEquityCurve(currentCurve);});
       })();
     </script>
   </body>
