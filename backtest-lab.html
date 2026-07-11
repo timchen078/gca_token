@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GCA Backtest Lab | Trade Sequence Analysis</title>
+    <meta name="description" content="Browser-only GCA trade sequence lab for equity curves, expectancy, profit factor, maximum drawdown, win rate, and loss streak analysis.">
+    <link rel="canonical" href="https://gcagochina.com/backtest-lab.html">
+    <link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">
+    <link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="GCA | Go China Access">
+    <meta property="og:title" content="GCA Backtest Lab | Trade Sequence Analysis">
+    <meta property="og:description" content="Analyze an entered trade-return sequence with an equity curve, expectancy, profit factor, drawdown, and streak statistics.">
+    <meta property="og:url" content="https://gcagochina.com/backtest-lab.html">
+    <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="GCA Backtest Lab | Trade Sequence Analysis">
+    <meta name="twitter:description" content="Analyze an entered trade-return sequence with an equity curve, expectancy, profit factor, drawdown, and streak statistics.">
+    <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <style>
+      :root { color-scheme:light; --bg:#f7f8f5; --ink:#151817; --muted:#5e6763; --line:#dfe4dd; --panel:#fff; --soft:#eef3ef; --red:#d71920; --blue:#1557d7; --green:#087f5b; --gold:#9a7110; }
+      * { box-sizing:border-box; }
+      body { margin:0; color:var(--ink); background:var(--bg); font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; line-height:1.5; }
+      a { color:var(--blue); text-decoration:none; } a:hover { text-decoration:underline; }
+      .shell { width:min(1200px,calc(100% - 32px)); margin:0 auto; }
+      header { position:sticky; top:0; z-index:3; border-bottom:1px solid var(--line); background:rgba(247,248,245,.95); backdrop-filter:blur(16px); }
+      nav { min-height:68px; display:flex; align-items:center; justify-content:space-between; gap:18px; }
+      .brand { display:inline-flex; align-items:center; gap:10px; color:var(--ink); font-weight:850; } .brand img { width:34px; height:34px; }
+      .nav-links { display:flex; align-items:center; gap:16px; font-size:14px; }
+      main { padding:34px 0 64px; }
+      h1,h2,h3,p { margin-top:0; } h1 { max-width:900px; margin-bottom:14px; font-size:54px; line-height:1; letter-spacing:0; } h2 { margin-bottom:14px; font-size:24px; } h3 { margin-bottom:8px; font-size:16px; }
+      .eyebrow { margin:0 0 10px; color:var(--red); font-size:13px; font-weight:850; text-transform:uppercase; }
+      .lead,.note { color:var(--muted); } .lead { max-width:920px; margin-bottom:0; font-size:17px; } .note { margin:0; }
+      .layout { display:grid; grid-template-columns:minmax(360px,.78fr) minmax(0,1.22fr); gap:18px; margin-top:26px; align-items:start; }
+      .panel { border:1px solid var(--line); border-radius:8px; background:var(--panel); padding:22px; }
+      .grid,.metrics { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+      .field { display:grid; gap:6px; min-width:0; } .field.full { grid-column:1/-1; }
+      label { font-size:13px; font-weight:800; }
+      input,textarea { width:100%; min-height:42px; border:1px solid var(--line); border-radius:6px; background:#fff; color:var(--ink); padding:10px 12px; font:inherit; }
+      textarea { min-height:300px; resize:vertical; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:13px; }
+      .actions { display:flex; flex-wrap:wrap; gap:10px; margin-top:18px; }
+      .button { min-height:42px; display:inline-flex; align-items:center; justify-content:center; border:1px solid var(--line); border-radius:6px; background:#fff; color:var(--ink); padding:10px 14px; font:inherit; font-weight:780; cursor:pointer; }
+      .button.primary { border-color:var(--red); background:var(--red); color:#fff; }
+      .result-head { display:flex; flex-wrap:wrap; justify-content:space-between; gap:14px; align-items:start; }
+      .status { display:inline-flex; min-height:38px; align-items:center; border-radius:6px; background:#edf8f3; color:#08704f; padding:8px 12px; font-weight:850; }
+      .status.review { background:#fff8e6; color:#795b10; } .status.critical { background:#fff0f0; color:#a41117; }
+      .metric { min-height:96px; border:1px solid var(--line); border-radius:6px; background:#fbfcfa; padding:14px; }
+      .metric .label { display:block; color:var(--muted); font-size:12px; font-weight:780; } .metric strong { display:block; margin-top:7px; font-size:21px; overflow-wrap:anywhere; }
+      .chart { margin-top:18px; border:1px solid var(--line); border-radius:6px; background:#fbfcfa; padding:12px; }
+      canvas { display:block; width:100%; height:220px; }
+      .warnings { display:grid; gap:8px; margin:18px 0 0; padding:0; list-style:none; }
+      .warning { border-left:3px solid var(--gold); background:#fff8e6; color:#665019; padding:10px 12px; }
+      .table-wrap { margin-top:18px; overflow:auto; border:1px solid var(--line); border-radius:6px; max-height:360px; }
+      table { width:100%; border-collapse:collapse; font-size:13px; } th,td { border-bottom:1px solid var(--line); padding:9px 10px; text-align:right; white-space:nowrap; } th:first-child,td:first-child { text-align:left; } th { position:sticky; top:0; background:#f4f6f3; }
+      .boundary { margin-top:18px; border-left:3px solid var(--blue); background:#eef4ff; padding:14px; }
+      footer { border-top:1px solid var(--line); padding:24px 0; color:var(--muted); font-size:14px; }
+      @media (max-width:900px) { h1{font-size:40px}.layout,.grid,.metrics{grid-template-columns:1fr}.field.full{grid-column:auto} textarea{min-height:220px} }
+    </style>
+    <link rel="stylesheet" href="assets/gca-site.css?v=20260711">
+    <script src="assets/gca-site.js?v=20260711" defer></script>
+  </head>
+  <body>
+    <header><nav class="shell" aria-label="Primary"><a class="brand" href="index.html"><img src="assets/gca-logo.svg" alt="GCA logo"><span>GCA</span></a><div class="nav-links"><a href="index.html">Home</a><a href="product.html">Product</a><a href="risk-calculator.html">Calculator</a><a href="gca/member-access/">Members</a></div></nav></header>
+    <main class="shell" id="main-content">
+      <section aria-labelledby="title"><p class="eyebrow">GCA AI Quant Access · Public Preview</p><h1 id="title">Backtest Lab</h1><p class="lead">Paste one net account return per completed trade to inspect compounding, expectancy, profit factor, maximum drawdown, and streak risk. 粘贴每笔账户收益率，分析复利、期望值、利润因子、最大回撤和连续亏损。</p></section>
+      <section class="layout" aria-label="Trade sequence analysis lab">
+        <form class="panel" id="backtestForm">
+          <h2>Trade Sample <span lang="zh-CN">交易样本</span></h2>
+          <div class="grid">
+            <div class="field"><label for="startingEquity">Starting equity / 初始权益</label><input id="startingEquity" type="number" min="0.01" step="any" value="10000"></div>
+            <div class="field"><label for="costPercent">Cost per trade % / 单笔成本</label><input id="costPercent" type="number" min="0" max="10" step="0.01" value="0.05"></div>
+            <div class="field full"><label for="tradeReturns">Account return per trade % / 每笔账户收益率</label><textarea id="tradeReturns" spellcheck="false">1.20, -0.70, 0.85, 1.40, -0.60, 0.55, -0.90, 1.10, 0.75, -0.50,
+1.35, -0.80, 0.65, 1.05, -0.55, 0.90, -0.75, 1.25, 0.60, -0.45,
+1.15, -0.65, 0.80, 1.30, -0.85, 0.70, -0.50, 1.00, 0.95, -0.70,
+1.45, -0.60, 0.50, 1.20, -0.90, 0.85, -0.55, 1.10, 0.70, -0.40</textarea></div>
+          </div>
+          <p class="note" style="margin-top:12px">Use commas, spaces, or new lines. Enter account-level percentage outcomes after position sizing; the lab subtracts the cost field from every trade.</p>
+          <div class="actions"><button class="button primary" type="submit">Analyze Sample / 分析样本</button><button class="button" type="button" id="resetBacktest">Reset / 重置</button></div>
+        </form>
+        <div class="panel" aria-live="polite">
+          <div class="result-head"><div><h2>Research Result <span lang="zh-CN">研究结果</span></h2><span class="status" id="status">RESEARCH_READY</span></div><div class="actions" style="margin-top:0"><button class="button" id="copyBacktest" type="button">Copy / 复制</button><button class="button" id="downloadCsv" type="button">CSV</button></div></div>
+          <div class="metrics" style="margin-top:18px">
+            <div class="metric"><span class="label">Final equity / 最终权益</span><strong id="finalEquity">0.00</strong></div>
+            <div class="metric"><span class="label">Compounded return / 复合收益</span><strong id="compoundedReturn">0.00%</strong></div>
+            <div class="metric"><span class="label">Trades / 交易笔数</span><strong id="tradeCount">0</strong></div>
+            <div class="metric"><span class="label">Win rate / 胜率</span><strong id="winRate">0.00%</strong></div>
+            <div class="metric"><span class="label">Expectancy per trade / 单笔期望</span><strong id="expectancy">0.00%</strong></div>
+            <div class="metric"><span class="label">Profit factor / 利润因子</span><strong id="profitFactor">—</strong></div>
+            <div class="metric"><span class="label">Maximum drawdown / 最大回撤</span><strong id="maxDrawdown">0.00%</strong></div>
+            <div class="metric"><span class="label">Max loss streak / 最大连亏</span><strong id="lossStreak">0</strong></div>
+            <div class="metric"><span class="label">Average win / 平均盈利</span><strong id="averageWin">0.00%</strong></div>
+            <div class="metric"><span class="label">Average loss / 平均亏损</span><strong id="averageLoss">0.00%</strong></div>
+          </div>
+          <div class="chart"><canvas id="equityChart" role="img" aria-label="Equity curve for entered trade sequence"></canvas></div>
+          <ul class="warnings" id="warnings"></ul>
+          <div class="table-wrap"><table><thead><tr><th>Trade</th><th>Raw %</th><th>Net %</th><th>Equity</th><th>Drawdown</th></tr></thead><tbody id="tradeRows"></tbody></table></div>
+          <div class="actions"><a class="button primary" href="risk-calculator.html">Position Calculator</a><a class="button" href="entry-ready.html">ENTRY_READY</a><a class="button" href="liquidation-replay.html">Loss Replay</a></div>
+          <p class="boundary">This lab analyzes only the trade outcomes entered here. It does not test signals against candles or order books, fetch market data, connect accounts, place orders, predict future performance, or deduct credits. 本工具只分析输入的交易结果，不接入行情、账户或真实交易。</p>
+        </div>
+      </section>
+    </main>
+    <footer><div class="shell">GCA Risk First Trading · A larger, unbiased sample is more useful than an attractive small sample.</div></footer>
+    <script src="assets/backtest-lab.js"></script>
+    <script>
+      (() => {
+        "use strict";
+        const form = document.getElementById("backtestForm");
+        const startingEquity = document.getElementById("startingEquity");
+        const costPercent = document.getElementById("costPercent");
+        const tradeReturns = document.getElementById("tradeReturns");
+        const status = document.getElementById("status");
+        const warnings = document.getElementById("warnings");
+        const rows = document.getElementById("tradeRows");
+        const canvas = document.getElementById("equityChart");
+        const copyButton = document.getElementById("copyBacktest");
+        const csvButton = document.getElementById("downloadCsv");
+        const initialSample = tradeReturns.value;
+        const money = new Intl.NumberFormat("en-US", { minimumFractionDigits:2, maximumFractionDigits:2 });
+        let latest = null;
+
+        function show(id, value) { document.getElementById(id).textContent = value; }
+        function drawCurve(curve) {
+          const ratio = Math.max(1, window.devicePixelRatio || 1);
+          const rect = canvas.getBoundingClientRect();
+          const width = Math.max(320, rect.width);
+          const height = 220;
+          canvas.width = width * ratio; canvas.height = height * ratio;
+          const ctx = canvas.getContext("2d"); ctx.scale(ratio, ratio); ctx.clearRect(0,0,width,height);
+          const values = curve.map((point) => point.equity); const min = Math.min(...values); const max = Math.max(...values); const spread = Math.max(1, max-min); const pad=16;
+          ctx.strokeStyle="#dfe4dd"; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(pad,height-pad); ctx.lineTo(width-pad,height-pad); ctx.stroke();
+          ctx.strokeStyle="#d71920"; ctx.lineWidth=2.5; ctx.beginPath();
+          curve.forEach((point,index)=>{ const x=pad+(index/Math.max(1,curve.length-1))*(width-pad*2); const y=pad+((max-point.equity)/spread)*(height-pad*2); if(index===0)ctx.moveTo(x,y);else ctx.lineTo(x,y); }); ctx.stroke();
+        }
+        function render(result) {
+          if (!result) { status.textContent="CHECK_INPUTS"; status.className="status critical"; warnings.innerHTML='<li class="warning">Enter valid equity, cost, and between 1 and 5,000 numeric returns. Net returns must stay above -100%. / 请检查输入参数。</li>'; rows.replaceChildren(); return; }
+          latest=result; status.textContent=result.status; status.className=`status ${result.status === "NEGATIVE_EXPECTANCY" ? "critical" : result.status === "RESEARCH_READY" ? "" : "review"}`.trim();
+          show("finalEquity",money.format(result.finalEquity)); show("compoundedReturn",`${result.compoundedReturnPercent>=0?"+":""}${result.compoundedReturnPercent.toFixed(2)}%`); show("tradeCount",String(result.tradeCount)); show("winRate",`${result.winRatePercent.toFixed(2)}%`); show("expectancy",`${result.averageReturnPercent>=0?"+":""}${result.averageReturnPercent.toFixed(3)}%`); show("profitFactor",result.profitFactor===null?"—":result.profitFactor.toFixed(2)); show("maxDrawdown",`${result.maxDrawdownPercent.toFixed(2)}%`); show("lossStreak",String(result.maxConsecutiveLosses)); show("averageWin",`${result.averageWinPercent.toFixed(3)}%`); show("averageLoss",`${result.averageLossPercent.toFixed(3)}%`);
+          warnings.replaceChildren(); result.warnings.forEach((message)=>{const item=document.createElement("li");item.className="warning";item.textContent=message;warnings.append(item);}); if(!result.warnings.length){const item=document.createElement("li");item.className="warning";item.textContent="No published sample warning was triggered. / 当前未触发公开样本警告。";warnings.append(item);}
+          rows.replaceChildren(); result.curve.slice(1).slice(-100).forEach((point)=>{const row=document.createElement("tr"); [point.trade,point.rawReturn.toFixed(3),point.netReturn.toFixed(3),money.format(point.equity),`${point.drawdownPercent.toFixed(2)}%`].forEach((value)=>{const cell=document.createElement("td");cell.textContent=String(value);row.append(cell);});rows.append(row);}); drawCurve(result.curve);
+        }
+        function evaluate(){render(window.GcaBacktestLab.analyzeSequence({startingEquity:startingEquity.value,costPercent:costPercent.value,tradeReturns:tradeReturns.value}));}
+        function summary(result){return ["GCA Backtest Lab",`Status: ${result.status}`,`Trades: ${result.tradeCount}`,`Final equity: ${money.format(result.finalEquity)}`,`Compounded return: ${result.compoundedReturnPercent.toFixed(2)}%`,`Win rate: ${result.winRatePercent.toFixed(2)}%`,`Expectancy: ${result.averageReturnPercent.toFixed(3)}%`,`Profit factor: ${result.profitFactor===null?"n/a":result.profitFactor.toFixed(2)}`,`Maximum drawdown: ${result.maxDrawdownPercent.toFixed(2)}%`,`Maximum loss streak: ${result.maxConsecutiveLosses}`,...result.warnings.map((item)=>`REVIEW: ${item}`)].join("\n");}
+        form.addEventListener("submit",(event)=>{event.preventDefault();evaluate();}); form.addEventListener("input",evaluate);
+        document.getElementById("resetBacktest").addEventListener("click",()=>{startingEquity.value="10000";costPercent.value="0.05";tradeReturns.value=initialSample;evaluate();});
+        copyButton.addEventListener("click",async()=>{if(!latest)return;try{await navigator.clipboard.writeText(summary(latest));copyButton.textContent="Copied / 已复制";window.setTimeout(()=>{copyButton.textContent="Copy / 复制";},1500);}catch(error){copyButton.textContent="Copy unavailable";}});
+        csvButton.addEventListener("click",()=>{if(!latest)return;const lines=["trade,raw_return_percent,net_return_percent,equity,drawdown_percent",...latest.curve.slice(1).map((point)=>[point.trade,point.rawReturn,point.netReturn,point.equity,point.drawdownPercent].join(","))];const url=URL.createObjectURL(new Blob([lines.join("\n")],{type:"text/csv"}));const link=document.createElement("a");link.href=url;link.download="gca-backtest-lab.csv";link.click();URL.revokeObjectURL(url);});
+        window.addEventListener("resize",()=>{if(latest)drawCurve(latest.curve);}); evaluate();
+      })();
+    </script>
+  </body>
+</html>

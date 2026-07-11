@@ -83,7 +83,16 @@
       "status": "ledger-eligible-service-unit-staged",
       "creditUnit": 20,
       "unitType": "draft service credit unit",
-      "description": "Backtest review with fees, slippage, drawdown, sample quality, and risk-constraint notes.",
+      "description": "Trade-return sample review with costs, compounding, expectancy, profit factor, drawdown, and streak statistics.",
+      "publicPreview": {
+        "status": "live-client-side-preview",
+        "url": "https://gcagochina.com/backtest-lab.html",
+        "deductsCredits": false,
+        "connectsWallet": false,
+        "connectsExchange": false,
+        "fetchesMarketData": false,
+        "placesOrders": false
+      },
       "notPurpose": "Not proof that a strategy will perform in live markets."
     },
     {
@@ -318,7 +327,8 @@
     "operationsRunbookPage": "https://gcagochina.com/operations.html",
     "operationsRunbook": "https://gcagochina.com/operations.json",
     "memberAccessPage": "https://gcagochina.com/gca/member-access/",
-    "liquidationReplay": "https://gcagochina.com/liquidation-replay.html"
+    "liquidationReplay": "https://gcagochina.com/liquidation-replay.html",
+    "backtestLab": "https://gcagochina.com/backtest-lab.html"
   },
   "publicClaimBoundaries": {
     "safeClaims": [
