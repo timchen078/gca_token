@@ -837,6 +837,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
             "winRate",
             "averageReturn",
             "maxLossStreak",
+            "sampleQuality",
             "analyzeJournal",
             "exportJson",
             "exportCsv",
@@ -865,6 +866,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn("engine.filterTrades(trades,filters())", page)
         self.assertIn("gca-trade-journal-filtered.csv", page)
         self.assertIn("engine.groupPerformance(visibleTrades,breakdownDimension.value)", page)
+        self.assertIn("Simple total adds account returns without compounding", page)
         self.assertIn("does not upload trades", page)
         self.assertNotIn("window.ethereum", page)
         self.assertNotIn("fetch(", page)
@@ -886,7 +888,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
             "const trades=JSON.parse(process.argv[2]);"
             "const summary=j.summarizeTrades(trades);"
             "const backup=j.buildBackup(trades,'2026-07-11T00:00:00Z');"
-            "process.stdout.write(JSON.stringify({summary,backup,parsed:j.parseBackup(JSON.stringify(backup)),csv:j.toCsv(trades),filtered:j.filterTrades(trades,{market:'BTC/USDT',direction:'long'}),dateFiltered:j.filterTrades(trades,{from:'2026-07-02',to:'2026-07-03'}),directionGroups:j.groupPerformance(trades,'direction'),setupGroups:j.groupPerformance(trades,'setup')}));"
+            "process.stdout.write(JSON.stringify({summary,backup,parsed:j.parseBackup(JSON.stringify(backup)),csv:j.toCsv(trades),filtered:j.filterTrades(trades,{market:'BTC/USDT',direction:'long'}),dateFiltered:j.filterTrades(trades,{from:'2026-07-02',to:'2026-07-03'}),directionGroups:j.groupPerformance(trades,'direction'),setupGroups:j.groupPerformance(trades,'setup'),qualities:[j.sampleQuality(0),j.sampleQuality(29),j.sampleQuality(30),j.sampleQuality(99),j.sampleQuality(100)]}));"
         )
         trades = [
             {"id": "b", "date": "2026-07-02", "market": "eth/usdt", "direction": "short", "returnPercent": -0.5, "setup": "retest", "notes": "stopped", "createdAt": "2026-07-02T01:00:00Z"},
@@ -907,6 +909,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertAlmostEqual(summary["winRatePercent"], 100 / 3)
         self.assertAlmostEqual(summary["averageReturnPercent"], 0.25 / 3)
         self.assertEqual(summary["maxConsecutiveLosses"], 2)
+        self.assertEqual(summary["sampleQuality"]["code"], "INSUFFICIENT_SAMPLE")
         self.assertEqual([trade["id"] for trade in summary["trades"]], ["a", "b", "c"])
         self.assertEqual(len(result["parsed"]["trades"]), 3)
         self.assertIn('"BTC/USDT"', result["csv"])
@@ -918,7 +921,15 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertEqual(direction_groups["short"]["count"], 1)
         self.assertAlmostEqual(direction_groups["long"]["averageReturnPercent"], 0.375)
         self.assertAlmostEqual(direction_groups["long"]["totalReturnPercent"], 0.75)
+        self.assertEqual(direction_groups["long"]["sampleQuality"]["code"], "INSUFFICIENT_SAMPLE")
         self.assertEqual([group["label"] for group in result["setupGroups"]], ["breakout", "range", "retest"])
+        self.assertEqual([quality["code"] for quality in result["qualities"]], [
+            "INSUFFICIENT_SAMPLE",
+            "INSUFFICIENT_SAMPLE",
+            "EARLY_SAMPLE",
+            "EARLY_SAMPLE",
+            "LARGER_SAMPLE",
+        ])
 
         invalid_script = (
             "const j=require(process.argv[1]);"

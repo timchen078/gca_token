@@ -69,6 +69,13 @@
     );
   }
 
+  function sampleQuality(count) {
+    const size = Number.isFinite(Number(count)) ? Math.max(0, Math.floor(Number(count))) : 0;
+    if (size >= 100) return { code: "LARGER_SAMPLE", label: "Larger sample", minimum: 100 };
+    if (size >= 30) return { code: "EARLY_SAMPLE", label: "Early sample", minimum: 30 };
+    return { code: "INSUFFICIENT_SAMPLE", label: "Insufficient sample", minimum: 0 };
+  }
+
   function summarizeTrades(values) {
     const trades = orderTrades(Array.isArray(values) ? values : []);
     const returns = trades.map((trade) => trade.returnPercent);
@@ -92,7 +99,8 @@
       averageReturnPercent: trades.length ? total / trades.length : 0,
       bestReturnPercent: trades.length ? Math.max(...returns) : 0,
       worstReturnPercent: trades.length ? Math.min(...returns) : 0,
-      maxConsecutiveLosses
+      maxConsecutiveLosses,
+      sampleQuality: sampleQuality(trades.length)
     };
   }
 
@@ -117,7 +125,8 @@
         totalReturnPercent: summary.returns.reduce((sum, value) => sum + value, 0),
         bestReturnPercent: summary.bestReturnPercent,
         worstReturnPercent: summary.worstReturnPercent,
-        maxConsecutiveLosses: summary.maxConsecutiveLosses
+        maxConsecutiveLosses: summary.maxConsecutiveLosses,
+        sampleQuality: summary.sampleQuality
       };
     }).sort((a, b) => b.count - a.count || a.label.localeCompare(b.label));
   }
@@ -152,5 +161,5 @@
     return [header.join(","), ...rows].join("\n");
   }
 
-  return { STORAGE_KEY, SCHEMA, MAX_TRADES, normalizeTrade, orderTrades, filterTrades, summarizeTrades, groupPerformance, buildBackup, parseBackup, toCsv };
+  return { STORAGE_KEY, SCHEMA, MAX_TRADES, normalizeTrade, orderTrades, filterTrades, sampleQuality, summarizeTrades, groupPerformance, buildBackup, parseBackup, toCsv };
 });
