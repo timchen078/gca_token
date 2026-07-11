@@ -68,6 +68,18 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn('navLinks.replaceChildren()', script)
         self.assertIn('aria-current", "page"', script)
 
+    def test_member_access_restores_non_sensitive_device_snapshot(self):
+        page = (SITE / "gca" / "member-access" / "index.html").read_text()
+
+        self.assertIn('id="savedSnapshot"', page)
+        self.assertIn('id="clearSnapshot"', page)
+        self.assertIn('const SNAPSHOT_KEY = "gca_member_access_snapshot_v1"', page)
+        self.assertIn("const SNAPSHOT_MAX_AGE_MS = 30 * 24 * 60 * 60 * 1000", page)
+        self.assertIn("window.localStorage.setItem(SNAPSHOT_KEY", page)
+        self.assertIn("window.localStorage.removeItem(SNAPSHOT_KEY)", page)
+        self.assertIn("restoreSnapshot();", page)
+        self.assertNotIn("email: email.value", page[page.index("function snapshotFromResponse"):page.index("function latestResponseLines")])
+
 
 if __name__ == "__main__":
     unittest.main()
