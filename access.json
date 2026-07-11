@@ -2,7 +2,7 @@
   "schema": "https://gcagochina.com/access.json",
   "pageUrl": "https://gcagochina.com/access.html",
   "status": "public-access-portal-live",
-  "lastUpdated": "2026-05-20",
+  "lastUpdated": "2026-07-11",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "title": "GCA Access Portal",
@@ -21,7 +21,10 @@
     "creditLedgerWritesLive": true,
     "memberLedgerWritesLive": true,
     "memberBenefitAutomaticTransfer": false,
-    "memberBenefitManualReviewOnly": true
+    "memberBenefitManualReviewOnly": true,
+    "deviceLocalStatusSnapshot": true,
+    "deviceLocalStatusSnapshotMaxAgeDays": 30,
+    "deviceLocalStatusSnapshotStoresEmail": false
   },
   "preparedRoutes": {
     "futureAccountPortal": "/gca/member-access",
@@ -86,6 +89,12 @@
       "label": "Use approved service access",
       "status": "planned-after-ledger",
       "description": "Credits and member status can map to reports, backtests, risk warnings, ENTRY_READY reviews, calculators, education, member notes, and support workflows."
+    },
+    {
+      "id": "device-local-status",
+      "label": "Return to the latest device-local account status",
+      "status": "live",
+      "description": "After a successful read-only verification or account submission, the member access page keeps a non-sensitive wallet, balance, credits, and member-status snapshot in that browser for up to 30 days. It does not store email, private keys, seed phrases, approvals, signatures, or wallet permissions."
     }
   ],
   "eligibilityThresholds": {

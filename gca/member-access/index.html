@@ -305,6 +305,46 @@
         border-left-color: var(--red);
       }
 
+      .snapshot {
+        margin-top: 18px;
+        border-top: 1px solid var(--line);
+        padding-top: 18px;
+      }
+
+      .snapshot-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .snapshot-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px 18px;
+        margin-top: 14px;
+      }
+
+      .snapshot-item {
+        min-width: 0;
+        border-top: 1px solid var(--line);
+        padding-top: 10px;
+      }
+
+      .snapshot-value {
+        display: block;
+        margin-top: 4px;
+        font-size: 16px;
+        font-weight: 850;
+        overflow-wrap: anywhere;
+      }
+
+      .snapshot-meta {
+        margin-top: 12px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
       .list {
         display: grid;
         gap: 10px;
@@ -341,8 +381,13 @@
 
       @media (max-width: 860px) {
         .grid,
-        .two {
+        .two,
+        .snapshot-grid {
           grid-template-columns: 1fr;
+        }
+
+        .snapshot-head {
+          flex-direction: column;
         }
 
         nav {
@@ -509,6 +554,35 @@
             <p class="note zh-note">点击只验证钱包或提交账户后，这里会显示实时 D1 账本返回结果。</p>
           </div>
           <div class="list" id="ledgerFacts"></div>
+          <div class="snapshot" id="savedSnapshot" hidden aria-live="polite">
+            <div class="snapshot-head">
+              <div>
+                <h3>Saved On This Device <span class="zh">本设备保存状态</span></h3>
+                <p class="note">A non-sensitive status snapshot is kept in this browser for up to 30 days.</p>
+                <p class="note zh-note">本浏览器最多保存 30 天非敏感状态，不保存邮箱、私钥或钱包权限。</p>
+              </div>
+              <button class="button" type="button" id="clearSnapshot">Clear / 清除</button>
+            </div>
+            <div class="snapshot-grid">
+              <div class="snapshot-item">
+                <span class="label">Wallet / 钱包</span>
+                <span class="snapshot-value" id="savedWallet">-</span>
+              </div>
+              <div class="snapshot-item">
+                <span class="label">GCA Balance / 余额</span>
+                <span class="snapshot-value" id="savedBalance">-</span>
+              </div>
+              <div class="snapshot-item">
+                <span class="label">Credits Remaining / 剩余积分</span>
+                <span class="snapshot-value" id="savedCredits">-</span>
+              </div>
+              <div class="snapshot-item">
+                <span class="label">Member Status / 会员状态</span>
+                <span class="snapshot-value" id="savedMemberStatus">-</span>
+              </div>
+            </div>
+            <p class="snapshot-meta" id="savedAt"></p>
+          </div>
           <div class="field">
             <label for="reviewPacket">Review Packet <span class="zh">审核资料包</span></label>
             <textarea id="reviewPacket" readonly placeholder="Build a review packet after filling email, wallet, holding start date, and transaction hash. 填写邮箱、钱包、持有开始日期和交易哈希后生成审核资料包。"></textarea>
@@ -586,6 +660,15 @@
       const buildReviewPacket = document.getElementById("buildReviewPacket");
       const copyReviewPacket = document.getElementById("copyReviewPacket");
       const emailReviewPacket = document.getElementById("emailReviewPacket");
+      const savedSnapshot = document.getElementById("savedSnapshot");
+      const savedWallet = document.getElementById("savedWallet");
+      const savedBalance = document.getElementById("savedBalance");
+      const savedCredits = document.getElementById("savedCredits");
+      const savedMemberStatus = document.getElementById("savedMemberStatus");
+      const savedAt = document.getElementById("savedAt");
+      const clearSnapshot = document.getElementById("clearSnapshot");
+      const SNAPSHOT_KEY = "gca_member_access_snapshot_v1";
+      const SNAPSHOT_MAX_AGE_MS = 30 * 24 * 60 * 60 * 1000;
       let latestAccessResponse = null;
 
       function isWalletAddress(value) {
@@ -619,6 +702,79 @@
 
       function valueOrPending(value) {
         return value && String(value).trim() ? String(value).trim() : "Not provided / 未填写";
+      }
+
+      function snapshotFromResponse(payload) {
+        const verification = payload.walletVerification || {};
+        const credit = payload.creditLedger || {};
+        const member = payload.memberLedger || {};
+        return {
+          version: 1,
+          savedAt: new Date().toISOString(),
+          walletAddress: String(verification.walletAddress || ""),
+          gcaBalance: String(verification.gcaBalance || "0"),
+          holderBonusEligible: Boolean(verification.holderBonusEligible),
+          gcaMemberEligible: Boolean(verification.gcaMemberEligible),
+          holdingPeriodDaysVerified: Number(verification.holdingPeriodDaysVerified || 0),
+          creditAmount: Number(credit.creditAmount || 0),
+          remainingCredits: Number(credit.remainingCredits ?? credit.creditAmount ?? 0),
+          creditStatus: String(credit.status || "not_created"),
+          memberStatus: String(member.status || "not_created"),
+          memberBenefitClaimStatus: String(member.memberBenefitClaimStatus || "not_applicable"),
+          nextStep: String(payload.nextStep || "")
+        };
+      }
+
+      function renderSnapshot(snapshot) {
+        if (!snapshot || !isWalletAddress(snapshot.walletAddress)) {
+          savedSnapshot.hidden = true;
+          return;
+        }
+        savedWallet.textContent = snapshot.walletAddress;
+        savedBalance.textContent = `${snapshot.gcaBalance || "0"} GCA`;
+        savedCredits.textContent = snapshot.creditStatus === "not_created"
+          ? "Not active / 未激活"
+          : `${String(snapshot.remainingCredits)} / ${String(snapshot.creditAmount)}`;
+        savedMemberStatus.textContent = snapshot.memberStatus === "not_created"
+          ? "Not active / 未激活"
+          : `${snapshot.memberStatus} · ${snapshot.memberBenefitClaimStatus}`;
+        const savedDate = new Date(snapshot.savedAt);
+        savedAt.textContent = Number.isNaN(savedDate.getTime())
+          ? "Saved status / 已保存状态"
+          : `Saved ${savedDate.toLocaleString()} · Refresh wallet verification for current balance. / 保存于 ${savedDate.toLocaleString()}，请重新验证钱包以获取当前余额。`;
+        savedSnapshot.hidden = false;
+        if (!walletAddress.value) walletAddress.value = snapshot.walletAddress;
+      }
+
+      function saveSnapshot(payload) {
+        const snapshot = snapshotFromResponse(payload);
+        if (!isWalletAddress(snapshot.walletAddress)) return;
+        try {
+          window.localStorage.setItem(SNAPSHOT_KEY, JSON.stringify(snapshot));
+        } catch (error) {
+          // The live result remains available even when browser storage is disabled.
+        }
+        renderSnapshot(snapshot);
+      }
+
+      function restoreSnapshot() {
+        try {
+          const raw = window.localStorage.getItem(SNAPSHOT_KEY);
+          if (!raw) return;
+          const snapshot = JSON.parse(raw);
+          const age = Date.now() - new Date(snapshot.savedAt).getTime();
+          if (!Number.isFinite(age) || age < 0 || age > SNAPSHOT_MAX_AGE_MS) {
+            window.localStorage.removeItem(SNAPSHOT_KEY);
+            return;
+          }
+          renderSnapshot(snapshot);
+        } catch (error) {
+          try {
+            window.localStorage.removeItem(SNAPSHOT_KEY);
+          } catch (storageError) {
+            // Browser storage is unavailable; continue without a restored snapshot.
+          }
+        }
       }
 
       function latestResponseLines() {
@@ -749,6 +905,7 @@
           ["Member benefit status / 会员权益状态", member.memberBenefitClaimStatus || "Not applicable / 不适用"],
           ["Automatic transfer / 自动转账", payload.boundaries && payload.boundaries.automaticTokenTransfer ? "Yes / 是" : "No / 否"]
         ]);
+        saveSnapshot(payload);
         updateReviewPacket();
       }
 
@@ -818,11 +975,22 @@
         }
       });
 
+      clearSnapshot.addEventListener("click", () => {
+        try {
+          window.localStorage.removeItem(SNAPSHOT_KEY);
+        } catch (error) {
+          // Ignore storage restrictions; hide the local snapshot in this page session.
+        }
+        savedSnapshot.hidden = true;
+        renderResult(balanceResult, "", "Device status cleared / 本设备状态已清除", "No on-chain token, D1 account record, credit ledger, or member record was changed. 链上代币、D1 账户、积分和会员记录均未改变。");
+      });
+
       [displayName, email, walletAddress, holdingStartDate, evidenceTxHash].forEach((field) => {
         field.addEventListener("input", updateReviewPacket);
         field.addEventListener("change", updateReviewPacket);
       });
 
+      restoreSnapshot();
       updateReviewPacket();
     </script>
   </body>
