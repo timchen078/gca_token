@@ -394,6 +394,94 @@ class PublicSiteExperienceTests(unittest.TestCase):
         )
         self.assertEqual(invalid.stdout, "null")
 
+    def test_backtest_lab_is_transparent_and_client_side(self):
+        page = (SITE / "backtest-lab.html").read_text()
+        engine = (SITE / "assets" / "backtest-lab.js").read_text()
+        product = (SITE / "product.json").read_text()
+        credits = (SITE / "credits.json").read_text()
+
+        for element_id in (
+            "backtestForm",
+            "startingEquity",
+            "costPercent",
+            "tradeReturns",
+            "status",
+            "finalEquity",
+            "compoundedReturn",
+            "tradeCount",
+            "winRate",
+            "expectancy",
+            "profitFactor",
+            "maxDrawdown",
+            "lossStreak",
+            "equityChart",
+            "downloadCsv",
+        ):
+            self.assertIn(f'id="{element_id}"', page)
+
+        self.assertIn("equity *= 1 + (netReturn / 100)", engine)
+        self.assertIn("const profitFactor = totalLosses > 0 ? totalWins / totalLosses : null", engine)
+        self.assertIn("maxDrawdownPercent = Math.max(maxDrawdownPercent, drawdownPercent)", engine)
+        self.assertIn('"NEGATIVE_EXPECTANCY"', engine)
+        self.assertIn('"INSUFFICIENT_SAMPLE"', engine)
+        self.assertIn('"RESEARCH_READY"', engine)
+        self.assertIn('src="assets/backtest-lab.js"', page)
+        self.assertIn("does not test signals against candles or order books", page)
+        self.assertNotIn("window.ethereum", page)
+        self.assertNotIn("fetch(", page)
+        self.assertNotIn("WebSocket", page)
+        self.assertIn('"publicUrl": "https://gcagochina.com/backtest-lab.html"', product)
+        self.assertIn('"url": "https://gcagochina.com/backtest-lab.html"', credits)
+        public_checker = (ROOT / "tools" / "check_public_site.py").read_text()
+        self.assertIn('(\"/backtest-lab.html\", validate_backtest_lab_page)', public_checker)
+
+    def test_backtest_lab_engine_calculates_expectancy_and_drawdown(self):
+        bundled_node = Path("/Users/abc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node")
+        node = shutil.which("node") or (str(bundled_node) if bundled_node.exists() else "")
+        if not node:
+            self.skipTest("Node.js is unavailable")
+
+        module_path = SITE / "assets" / "backtest-lab.js"
+        script = (
+            "const b=require(process.argv[1]);"
+            "const input=JSON.parse(process.argv[2]);"
+            "process.stdout.write(JSON.stringify(b.analyzeSequence(input)));"
+        )
+        sample = [value for _ in range(15) for value in (1, -0.5)]
+        ready = subprocess.run(
+            [node, "-e", script, str(module_path), json.dumps({"startingEquity": 10000, "costPercent": 0, "tradeReturns": sample})],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        result = json.loads(ready.stdout)
+        self.assertEqual(result["status"], "RESEARCH_READY")
+        self.assertEqual(result["tradeCount"], 30)
+        self.assertEqual(result["wins"], 15)
+        self.assertEqual(result["losses"], 15)
+        self.assertAlmostEqual(result["winRatePercent"], 50)
+        self.assertAlmostEqual(result["averageReturnPercent"], 0.25)
+        self.assertAlmostEqual(result["profitFactor"], 2)
+        self.assertEqual(result["maxConsecutiveLosses"], 1)
+        self.assertAlmostEqual(result["finalEquity"], 10000 * ((1.01 * 0.995) ** 15))
+
+        negative_sample = [value for _ in range(15) for value in (0.2, -1)]
+        negative = subprocess.run(
+            [node, "-e", script, str(module_path), json.dumps({"startingEquity": 10000, "costPercent": 0, "tradeReturns": negative_sample})],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(json.loads(negative.stdout)["status"], "NEGATIVE_EXPECTANCY")
+
+        invalid = subprocess.run(
+            [node, "-e", script, str(module_path), json.dumps({"startingEquity": 10000, "costPercent": 0, "tradeReturns": [-100]})],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(invalid.stdout, "null")
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -166,6 +166,7 @@ Allow: /credits.json
 Allow: /release-gates.html
 Allow: /release-gates.json
 Allow: /liquidation-replay.html
+Allow: /backtest-lab.html
 Allow: /project.json
 Allow: /tokenlist.json
 Allow: /.well-known/gca-token.json
