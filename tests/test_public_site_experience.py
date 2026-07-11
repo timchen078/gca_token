@@ -851,6 +851,10 @@ class PublicSiteExperienceTests(unittest.TestCase):
             "filterTo",
             "resetFilters",
             "filterStatus",
+            "breakdownTitle",
+            "breakdownDimension",
+            "breakdownRows",
+            "emptyBreakdown",
         ):
             self.assertIn(f'id="{element_id}"', page)
 
@@ -860,6 +864,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn('href="backtest-lab.html#source=journal"', page)
         self.assertIn("engine.filterTrades(trades,filters())", page)
         self.assertIn("gca-trade-journal-filtered.csv", page)
+        self.assertIn("engine.groupPerformance(visibleTrades,breakdownDimension.value)", page)
         self.assertIn("does not upload trades", page)
         self.assertNotIn("window.ethereum", page)
         self.assertNotIn("fetch(", page)
@@ -881,7 +886,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
             "const trades=JSON.parse(process.argv[2]);"
             "const summary=j.summarizeTrades(trades);"
             "const backup=j.buildBackup(trades,'2026-07-11T00:00:00Z');"
-            "process.stdout.write(JSON.stringify({summary,backup,parsed:j.parseBackup(JSON.stringify(backup)),csv:j.toCsv(trades),filtered:j.filterTrades(trades,{market:'BTC/USDT',direction:'long'}),dateFiltered:j.filterTrades(trades,{from:'2026-07-02',to:'2026-07-03'})}));"
+            "process.stdout.write(JSON.stringify({summary,backup,parsed:j.parseBackup(JSON.stringify(backup)),csv:j.toCsv(trades),filtered:j.filterTrades(trades,{market:'BTC/USDT',direction:'long'}),dateFiltered:j.filterTrades(trades,{from:'2026-07-02',to:'2026-07-03'}),directionGroups:j.groupPerformance(trades,'direction'),setupGroups:j.groupPerformance(trades,'setup')}));"
         )
         trades = [
             {"id": "b", "date": "2026-07-02", "market": "eth/usdt", "direction": "short", "returnPercent": -0.5, "setup": "retest", "notes": "stopped", "createdAt": "2026-07-02T01:00:00Z"},
@@ -908,6 +913,12 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn('"followed plan"', result["csv"])
         self.assertEqual([trade["id"] for trade in result["filtered"]], ["a"])
         self.assertEqual([trade["id"] for trade in result["dateFiltered"]], ["b", "c"])
+        direction_groups = {group["label"]: group for group in result["directionGroups"]}
+        self.assertEqual(direction_groups["long"]["count"], 2)
+        self.assertEqual(direction_groups["short"]["count"], 1)
+        self.assertAlmostEqual(direction_groups["long"]["averageReturnPercent"], 0.375)
+        self.assertAlmostEqual(direction_groups["long"]["totalReturnPercent"], 0.75)
+        self.assertEqual([group["label"] for group in result["setupGroups"]], ["breakout", "range", "retest"])
 
         invalid_script = (
             "const j=require(process.argv[1]);"
