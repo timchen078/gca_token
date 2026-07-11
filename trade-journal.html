@@ -58,7 +58,9 @@
       .table-wrap { width:100%; max-width:100%; margin-top:18px; overflow:auto; border:1px solid var(--line); border-radius:6px; max-height:500px; }
       table { width:100%; border-collapse:collapse; font-size:13px; } th,td { border-bottom:1px solid var(--line); padding:9px 10px; text-align:left; white-space:nowrap; } th { position:sticky; top:0; background:#f4f6f3; } td.notes { min-width:220px; max-width:360px; white-space:normal; overflow-wrap:anywhere; }
       .positive { color:var(--green); font-weight:800; } .negative { color:var(--red); font-weight:800; }
-      .delete { border:0; background:transparent; color:var(--red); font:inherit; font-weight:800; cursor:pointer; }
+      .row-actions { display:flex; align-items:center; gap:8px; }
+      .edit,.delete { border:0; background:transparent; font:inherit; font-weight:800; cursor:pointer; }
+      .edit { color:var(--blue); } .delete { color:var(--red); }
       .empty { color:var(--muted); text-align:center; padding:24px; }
       .boundary { margin-top:18px; border-left:3px solid var(--blue); background:#eef4ff; padding:14px; }
       footer { border-top:1px solid var(--line); padding:24px 0; color:var(--muted); font-size:14px; }
@@ -82,7 +84,7 @@
             <div class="field full"><label for="setup">Setup / 策略标签</label><input id="setup" type="text" maxlength="80" placeholder="Breakout retest"></div>
             <div class="field full"><label for="notes">Notes / 复盘备注</label><textarea id="notes" maxlength="500" placeholder="Record thesis, execution, rule deviations, and lesson. / 记录逻辑、执行、规则偏差与结论。"></textarea></div>
           </div>
-          <div class="actions"><button class="button primary" type="submit">Add Trade / 添加记录</button><button class="button" type="reset">Reset / 重置</button></div>
+          <div class="actions"><button class="button primary" id="saveTrade" type="submit">Add Trade / 添加记录</button><button class="button" id="resetTrade" type="button">Reset / 重置</button><button class="button" id="cancelEdit" type="button" hidden>Cancel Edit / 取消编辑</button></div>
           <p class="status" id="journalStatus" aria-live="polite">Ready. Entries remain on this device. / 已就绪，记录仅保存在当前设备。</p>
           <p class="boundary">This journal stores data in browser localStorage only. It does not upload trades, connect accounts, fetch market data, place orders, or deduct credits. Clearing browser storage can remove the journal, so export a backup when needed.</p>
         </form>
@@ -133,6 +135,9 @@
         };
         const rows = document.getElementById("journalRows");
         const status = document.getElementById("journalStatus");
+        const saveTradeButton = document.getElementById("saveTrade");
+        const resetTradeButton = document.getElementById("resetTrade");
+        const cancelEditButton = document.getElementById("cancelEdit");
         const analyze = document.getElementById("analyzeJournal");
         const breakdownDimension = document.getElementById("breakdownDimension");
         const breakdownRows = document.getElementById("breakdownRows");
@@ -142,11 +147,19 @@
         };
         let trades = [];
         let visibleTrades = [];
+        let editingId = null;
 
         function today() { const now=new Date();return new Date(now.getTime()-(now.getTimezoneOffset()*60000)).toISOString().slice(0,10); }
         function id() { return globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(16).slice(2)}`; }
         function signed(value) { return `${value > 0 ? "+" : ""}${value.toFixed(2)}%`; }
         function setStatus(message, error) { status.textContent=message; status.className=`status${error ? " error" : ""}`; }
+        function resetEditor() {
+          editingId=null;form.reset();fields.date.value=today();saveTradeButton.textContent="Add Trade / 添加记录";cancelEditButton.hidden=true;
+        }
+        function startEdit(trade) {
+          editingId=trade.id;fields.date.value=trade.date;fields.market.value=trade.market;fields.direction.value=trade.direction;fields.returnPercent.value=String(trade.returnPercent);fields.setup.value=trade.setup;fields.notes.value=trade.notes;
+          saveTradeButton.textContent="Update Trade / 更新记录";cancelEditButton.hidden=false;setStatus(`Editing ${trade.market} on ${trade.date}. / 正在编辑 ${trade.date} 的 ${trade.market} 记录。`,false);form.scrollIntoView({behavior:"smooth",block:"start"});
+        }
         function save() {
           const backup = engine.buildBackup(trades, new Date().toISOString());
           trades = backup.trades;
@@ -190,18 +203,20 @@
             values.forEach((value)=>{const cell=document.createElement("td");cell.textContent=value;row.append(cell);});
             const result=document.createElement("td");result.textContent=signed(trade.returnPercent);result.className=trade.returnPercent>=0?"positive":"negative";row.append(result);
             [trade.setup,trade.notes].forEach((value,index)=>{const cell=document.createElement("td");cell.textContent=value||"—";if(index===1)cell.className="notes";row.append(cell);});
-            const action=document.createElement("td");const remove=document.createElement("button");remove.type="button";remove.className="delete";remove.dataset.deleteId=trade.id;remove.textContent="Delete";action.append(remove);row.append(action);rows.append(row);
+            const action=document.createElement("td");const controls=document.createElement("div");controls.className="row-actions";const edit=document.createElement("button");edit.type="button";edit.className="edit";edit.dataset.editId=trade.id;edit.textContent="Edit";const remove=document.createElement("button");remove.type="button";remove.className="delete";remove.dataset.deleteId=trade.id;remove.textContent="Delete";controls.append(edit,remove);action.append(controls);row.append(action);rows.append(row);
           });
           const empty=document.getElementById("emptyJournal");empty.hidden=summary.count>0;empty.textContent=trades.length?"No trades match the current filters. / 当前筛选条件没有匹配记录。":"No completed trades recorded. / 暂无已完成交易记录。";
         }
 
-        fields.date.value=today(); load(); render();
-        form.addEventListener("submit",(event)=>{event.preventDefault();const trade=engine.normalizeTrade({id:id(),date:fields.date.value,market:fields.market.value,direction:fields.direction.value,returnPercent:fields.returnPercent.value,setup:fields.setup.value,notes:fields.notes.value,createdAt:new Date().toISOString()});if(!trade){setStatus("Check date, market, direction, and return. Return must be above -100%. / 请检查输入。",true);return;}trades.push(trade);if(save())setStatus("Trade added to this device. / 已保存到当前设备。",false);form.reset();fields.date.value=today();render();});
-        rows.addEventListener("click",(event)=>{const button=event.target.closest("[data-delete-id]");if(!button)return;trades=trades.filter((trade)=>trade.id!==button.dataset.deleteId);save();render();setStatus("Trade removed. / 已删除该记录。",false);});
+        resetEditor();load();render();
+        form.addEventListener("submit",(event)=>{event.preventDefault();const existing=editingId?trades.find((trade)=>trade.id===editingId):null;if(editingId&&!existing){resetEditor();setStatus("The record being edited no longer exists. / 正在编辑的记录已不存在。",true);return;}const trade=engine.normalizeTrade({id:existing?.id||id(),date:fields.date.value,market:fields.market.value,direction:fields.direction.value,returnPercent:fields.returnPercent.value,setup:fields.setup.value,notes:fields.notes.value,createdAt:existing?.createdAt||new Date().toISOString()});if(!trade){setStatus("Check date, market, direction, and return. Return must be above -100%. / 请检查输入。",true);return;}if(existing)trades=trades.map((item)=>item.id===existing.id?trade:item);else trades.push(trade);const saved=save();const updated=Boolean(existing);resetEditor();render();if(saved)setStatus(updated?"Trade updated on this device. / 已更新当前设备上的记录。":"Trade added to this device. / 已保存到当前设备。",false);});
+        rows.addEventListener("click",(event)=>{const editButton=event.target.closest("[data-edit-id]");if(editButton){const trade=trades.find((item)=>item.id===editButton.dataset.editId);if(trade)startEdit(trade);return;}const deleteButton=event.target.closest("[data-delete-id]");if(!deleteButton)return;if(editingId===deleteButton.dataset.deleteId)resetEditor();trades=trades.filter((trade)=>trade.id!==deleteButton.dataset.deleteId);save();render();setStatus("Trade removed. / 已删除该记录。",false);});
+        resetTradeButton.addEventListener("click",()=>{resetEditor();setStatus("Entry form reset. / 录入表单已重置。",false);});
+        cancelEditButton.addEventListener("click",()=>{resetEditor();setStatus("Edit cancelled. / 已取消编辑。",false);});
         document.getElementById("exportJson").addEventListener("click",()=>download("gca-trade-journal.json","application/json",JSON.stringify(engine.buildBackup(trades,new Date().toISOString()),null,2)));
         document.getElementById("exportCsv").addEventListener("click",()=>download("gca-trade-journal-filtered.csv","text/csv;charset=utf-8",engine.toCsv(visibleTrades)));
-        document.getElementById("importJson").addEventListener("change",async(event)=>{const file=event.target.files?.[0];if(!file)return;const backup=engine.parseBackup(await file.text());if(!backup){setStatus("Invalid GCA journal backup. / 备份文件无效。",true);event.target.value="";return;}const merged=new Map(trades.map((trade)=>[trade.id,trade]));backup.trades.forEach((trade)=>merged.set(trade.id,trade));trades=engine.orderTrades([...merged.values()]);save();render();setStatus(`Restored ${backup.trades.length} record(s). / 已恢复 ${backup.trades.length} 条记录。`,false);event.target.value="";});
-        document.getElementById("clearJournal").addEventListener("click",()=>{if(!window.confirm("Clear all local journal entries? / 清空全部本地交易日志？"))return;trades=[];try{window.localStorage.removeItem(engine.STORAGE_KEY);}catch(error){}render();setStatus("Local journal cleared. / 本地日志已清空。",false);});
+        document.getElementById("importJson").addEventListener("change",async(event)=>{const file=event.target.files?.[0];if(!file)return;const backup=engine.parseBackup(await file.text());if(!backup){setStatus("Invalid GCA journal backup. / 备份文件无效。",true);event.target.value="";return;}const merged=new Map(trades.map((trade)=>[trade.id,trade]));backup.trades.forEach((trade)=>merged.set(trade.id,trade));trades=engine.orderTrades([...merged.values()]);resetEditor();save();render();setStatus(`Restored ${backup.trades.length} record(s). / 已恢复 ${backup.trades.length} 条记录。`,false);event.target.value="";});
+        document.getElementById("clearJournal").addEventListener("click",()=>{if(!window.confirm("Clear all local journal entries? / 清空全部本地交易日志？"))return;trades=[];resetEditor();try{window.localStorage.removeItem(engine.STORAGE_KEY);}catch(error){}render();setStatus("Local journal cleared. / 本地日志已清空。",false);});
         Object.values(filterFields).forEach((field)=>{field.addEventListener("input",render);field.addEventListener("change",render);});
         document.getElementById("resetFilters").addEventListener("click",()=>{Object.values(filterFields).forEach((field)=>{field.value="";});render();});
         breakdownDimension.addEventListener("change",render);
