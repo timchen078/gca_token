@@ -56,8 +56,13 @@
     {
       "id": "entry-ready-review",
       "name": "ENTRY_READY Review",
-      "status": "planned-signal-review-workflow",
-      "purpose": "Review whether a trade idea has sufficient setup, invalidation, risk budget, and execution conditions.",
+      "status": "public-client-side-preview-live",
+      "publicUrl": "https://gcagochina.com/entry-ready.html",
+      "purpose": "Review price structure, invalidation, risk budget, execution conditions, liquidity, and trading discipline with a transparent client-side score and explicit blockers.",
+      "connectsWallet": false,
+      "connectsExchange": false,
+      "placesOrders": false,
+      "deductsCredits": false,
       "notPurpose": "Not automatic live order execution or a bypass of risk controls."
     },
     {
@@ -169,6 +174,7 @@
       "The current product page is a public spec and account-ledger release map.",
       "GCA has a live account and membership intake path for non-custodial quant risk tools.",
       "GCA has a public client-side Position Size Calculator preview that does not connect to wallets or exchanges, place orders, or deduct credits.",
+      "GCA has a public client-side ENTRY_READY Review preview with transparent readiness gates and no order execution.",
       "Any future trading-related feature must remain behind risk checks, simulation or testnet validation, and controlled account UI.",
       "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool."
     ],
@@ -195,6 +201,7 @@
     "verify": "https://gcagochina.com/verify.html",
     "market": "https://gcagochina.com/markets.html",
     "riskCalculator": "https://gcagochina.com/risk-calculator.html",
+    "entryReadyReview": "https://gcagochina.com/entry-ready.html",
     "creditsCatalogPage": "https://gcagochina.com/credits.html",
     "creditsCatalog": "https://gcagochina.com/credits.json",
     "accessPortalPage": "https://gcagochina.com/access.html",

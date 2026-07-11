@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GCA ENTRY_READY Review | Risk First Trading</title>
+    <meta name="description" content="Client-side GCA ENTRY_READY checklist for price structure, risk budget, execution conditions, liquidity, and trading discipline.">
+    <link rel="canonical" href="https://gcagochina.com/entry-ready.html">
+    <link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">
+    <link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="GCA | Go China Access">
+    <meta property="og:title" content="GCA ENTRY_READY Review | Risk First Trading">
+    <meta property="og:description" content="Review price structure, risk budget, execution conditions, liquidity, and discipline before entry.">
+    <meta property="og:url" content="https://gcagochina.com/entry-ready.html">
+    <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="GCA ENTRY_READY Review | Risk First Trading">
+    <meta name="twitter:description" content="Review price structure, risk budget, execution conditions, liquidity, and discipline before entry.">
+    <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <style>
+      :root { color-scheme: light; --bg:#f7f8f5; --ink:#151817; --muted:#5e6763; --line:#dfe4dd; --panel:#fff; --soft:#eef3ef; --red:#d71920; --blue:#1557d7; --green:#087f5b; --gold:#9a7110; }
+      * { box-sizing: border-box; }
+      body { margin:0; color:var(--ink); background:var(--bg); font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; line-height:1.5; }
+      a { color:var(--blue); text-decoration:none; } a:hover { text-decoration:underline; }
+      .shell { width:min(1160px,calc(100% - 32px)); margin:0 auto; }
+      header { position:sticky; top:0; z-index:3; border-bottom:1px solid var(--line); background:rgba(247,248,245,.95); backdrop-filter:blur(16px); }
+      nav { min-height:68px; display:flex; align-items:center; justify-content:space-between; gap:18px; }
+      .brand { display:inline-flex; align-items:center; gap:10px; color:var(--ink); font-weight:850; }
+      .brand img { width:34px; height:34px; }
+      .nav-links { display:flex; align-items:center; gap:16px; font-size:14px; }
+      main { padding:34px 0 64px; }
+      h1,h2,h3,p { margin-top:0; } h1 { max-width:760px; margin-bottom:14px; font-size:54px; line-height:1; letter-spacing:0; } h2 { margin-bottom:14px; font-size:24px; } h3 { margin-bottom:8px; font-size:16px; }
+      .eyebrow { margin:0 0 10px; color:var(--red); font-size:13px; font-weight:850; text-transform:uppercase; }
+      .lead,.note { color:var(--muted); } .lead { max-width:840px; margin-bottom:0; font-size:17px; } .note { margin:0; }
+      .layout { display:grid; grid-template-columns:minmax(360px,.9fr) minmax(0,1.1fr); gap:18px; margin-top:26px; align-items:start; }
+      .panel { border:1px solid var(--line); border-radius:8px; background:var(--panel); padding:22px; }
+      .grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+      .field { display:grid; gap:6px; min-width:0; } .field.full { grid-column:1/-1; }
+      label { font-size:13px; font-weight:800; }
+      input,select,textarea { width:100%; min-height:42px; border:1px solid var(--line); border-radius:6px; background:#fff; color:var(--ink); padding:10px 12px; font:inherit; }
+      textarea { min-height:92px; resize:vertical; }
+      .checklist { display:grid; gap:8px; margin-top:18px; }
+      .check { display:grid; grid-template-columns:20px minmax(0,1fr); gap:10px; align-items:start; border-top:1px solid var(--line); padding-top:10px; }
+      .check input { width:auto; min-height:0; margin-top:4px; }
+      .actions { display:flex; flex-wrap:wrap; gap:10px; margin-top:18px; }
+      .button { min-height:42px; display:inline-flex; align-items:center; justify-content:center; border:1px solid var(--line); border-radius:6px; background:#fff; color:var(--ink); padding:10px 14px; font:inherit; font-weight:780; cursor:pointer; }
+      .button.primary { border-color:var(--red); background:var(--red); color:#fff; }
+      .result-head { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:16px; align-items:start; }
+      .status { display:inline-flex; min-height:38px; align-items:center; border-radius:6px; background:#fff0f0; color:#a41117; padding:8px 12px; font-weight:850; }
+      .status.review { background:#fff8e6; color:#795b10; } .status.ready { background:#edf8f3; color:#08704f; }
+      .score { font-size:44px; line-height:1; font-weight:900; }
+      .category { margin-top:16px; } .category-line { display:flex; justify-content:space-between; gap:10px; margin-bottom:6px; font-size:13px; font-weight:760; }
+      .bar { height:8px; overflow:hidden; border-radius:4px; background:var(--soft); } .bar span { display:block; height:100%; background:var(--red); transition:width 180ms ease; }
+      .issues { display:grid; gap:8px; margin:18px 0 0; padding:0; list-style:none; }
+      .issue { border-left:3px solid var(--gold); background:#fff8e6; padding:10px 12px; color:#665019; } .issue.blocker { border-left-color:var(--red); background:#fff0f0; color:#8d171c; } .issue.ready { border-left-color:var(--green); background:#edf8f3; color:#086447; }
+      .boundary { margin-top:18px; border-left:3px solid var(--blue); background:#eef4ff; padding:14px; }
+      footer { border-top:1px solid var(--line); padding:24px 0; color:var(--muted); font-size:14px; }
+      @media (max-width:860px) { h1{font-size:40px}.layout,.grid{grid-template-columns:1fr}.field.full{grid-column:auto}.result-head{grid-template-columns:1fr}.score{font-size:36px} }
+    </style>
+    <link rel="stylesheet" href="assets/gca-site.css?v=20260711">
+    <script src="assets/gca-site.js?v=20260711" defer></script>
+  </head>
+  <body>
+    <header><nav class="shell" aria-label="Primary"><a class="brand" href="index.html"><img src="assets/gca-logo.svg" alt="GCA logo"><span>GCA</span></a><div class="nav-links"><a href="index.html">Home</a><a href="product.html">Product</a><a href="risk-calculator.html">Calculator</a><a href="gca/member-access/">Members</a></div></nav></header>
+    <main class="shell" id="main-content">
+      <section aria-labelledby="title"><p class="eyebrow">GCA AI Quant Access · Public Preview</p><h1 id="title">ENTRY_READY Review</h1><p class="lead">A transparent pre-entry gate for price structure, risk, execution, liquidity, and discipline. 入场前逐项检查，不连接钱包或交易所。</p></section>
+      <section class="layout" aria-label="ENTRY_READY review tool">
+        <form class="panel" id="reviewForm">
+          <h2>Setup <span lang="zh-CN">交易设置</span></h2>
+          <div class="grid">
+            <div class="field"><label for="direction">Direction / 方向</label><select id="direction"><option value="long">Long / 做多</option><option value="short">Short / 做空</option></select></div>
+            <div class="field"><label for="timeframe">Timeframe / 周期</label><select id="timeframe"><option value="">Select</option><option>15m</option><option>1h</option><option>4h</option><option>1d</option></select></div>
+            <div class="field"><label for="entry">Entry / 入场价</label><input id="entry" type="number" min="0.00000001" step="any" value="100"></div>
+            <div class="field"><label for="stop">Stop / 止损价</label><input id="stop" type="number" min="0.00000001" step="any" value="95"></div>
+            <div class="field"><label for="target">Target / 目标价</label><input id="target" type="number" min="0.00000001" step="any" value="110"></div>
+            <div class="field"><label for="riskPercent">Risk % / 风险比例</label><input id="riskPercent" type="number" min="0.1" max="5" step="0.1" value="1"></div>
+            <div class="field"><label for="leverage">Leverage / 杠杆</label><input id="leverage" type="number" min="1" max="100" step="1" value="1"></div>
+            <div class="field"><label for="orderType">Order type / 订单类型</label><select id="orderType"><option value="">Select</option><option value="limit">Limit</option><option value="market">Market</option><option value="stop-limit">Stop limit</option></select></div>
+            <div class="field full"><label for="thesis">Setup thesis / 交易逻辑</label><textarea id="thesis" placeholder="Why this setup exists, what confirms it, and what invalidates it. 写清交易逻辑、确认条件和失效条件。"></textarea></div>
+          </div>
+          <div class="checklist">
+            <label class="check"><input id="positionSized" type="checkbox"><span>Position size calculated / 已计算仓位</span></label>
+            <label class="check"><input id="maxLossAccepted" type="checkbox"><span>Maximum planned loss accepted / 已接受最大计划损失</span></label>
+            <label class="check"><input id="invalidationDefined" type="checkbox"><span>Invalidation condition defined / 已定义失效条件</span></label>
+            <label class="check"><input id="liquidityChecked" type="checkbox"><span>Liquidity and slippage checked / 已检查流动性和滑点</span></label>
+            <label class="check"><input id="costsIncluded" type="checkbox"><span>Fees and slippage included / 已计入费用和滑点</span></label>
+            <label class="check"><input id="volatilityReviewed" type="checkbox"><span>Event and volatility risk reviewed / 已检查事件和波动风险</span></label>
+            <label class="check"><input id="noRevengeTrade" type="checkbox"><span>Not a revenge trade / 不是报复性交易</span></label>
+            <label class="check"><input id="noFomo" type="checkbox"><span>Not driven by FOMO / 不是情绪追单</span></label>
+            <label class="check"><input id="exitPlanDefined" type="checkbox"><span>Exit and cancellation plan defined / 已定义退出和取消计划</span></label>
+          </div>
+          <div class="actions"><button class="button primary" type="submit">Run Review / 开始检查</button><button class="button" type="button" id="resetReview">Reset / 重置</button></div>
+        </form>
+        <div class="panel" aria-live="polite">
+          <div class="result-head"><div><h2>Readiness Result <span lang="zh-CN">准备度结果</span></h2><span class="status" id="status">NOT_READY</span></div><div><span class="score" id="score">0</span><span class="label">/ 100</span></div></div>
+          <div class="category"><div class="category-line"><span>Price structure / 价格结构</span><strong id="structureScore">0 / 25</strong></div><div class="bar"><span id="structureBar" style="width:0"></span></div></div>
+          <div class="category"><div class="category-line"><span>Risk budget / 风险预算</span><strong id="riskScore">0 / 30</strong></div><div class="bar"><span id="riskBar" style="width:0"></span></div></div>
+          <div class="category"><div class="category-line"><span>Execution / 执行条件</span><strong id="executionScore">0 / 25</strong></div><div class="bar"><span id="executionBar" style="width:0"></span></div></div>
+          <div class="category"><div class="category-line"><span>Discipline / 交易纪律</span><strong id="disciplineScore">0 / 20</strong></div><div class="bar"><span id="disciplineBar" style="width:0"></span></div></div>
+          <ul class="issues" id="issues"></ul>
+          <div class="actions"><a class="button primary" id="calculatorLink" href="risk-calculator.html">Open Position Calculator / 打开仓位计算器</a><button class="button" id="copyReview" type="button">Copy Review / 复制检查结果</button></div>
+          <p class="boundary">This review only evaluates the fields and confirmations entered here. It does not fetch prices, place orders, connect accounts, or override risk controls. 本检查不获取行情、不下单，也不会绕过风控。</p>
+        </div>
+      </section>
+    </main>
+    <footer><div class="shell">GCA Risk First Trading · ENTRY_READY is a transparent preparation gate, not an execution signal.</div></footer>
+    <script src="assets/entry-ready.js"></script>
+    <script>
+      (() => {
+        "use strict";
+        const form = document.getElementById("reviewForm");
+        const ids = ["direction","timeframe","entry","stop","target","riskPercent","leverage","orderType","thesis","positionSized","maxLossAccepted","invalidationDefined","liquidityChecked","costsIncluded","volatilityReviewed","noRevengeTrade","noFomo","exitPlanDefined"];
+        const fields = Object.fromEntries(ids.map((id) => [id, document.getElementById(id)]));
+        const categoryMaximums = { structure:25, risk:30, execution:25, discipline:20 };
+        const issues = document.getElementById("issues");
+        const status = document.getElementById("status");
+        const copyReview = document.getElementById("copyReview");
+        const calculatorLink = document.getElementById("calculatorLink");
+        let latestReview = "";
+
+        function payload() {
+          return Object.fromEntries(Object.entries(fields).map(([key, field]) => [key, field.type === "checkbox" ? field.checked : field.value]));
+        }
+        function render(result) {
+          status.textContent = result.status;
+          status.className = `status ${result.status === "ENTRY_READY" ? "ready" : result.status === "REVIEW" ? "review" : ""}`.trim();
+          document.getElementById("score").textContent = String(result.score);
+          Object.entries(result.categories).forEach(([key, value]) => {
+            document.getElementById(`${key}Score`).textContent = `${value} / ${categoryMaximums[key]}`;
+            document.getElementById(`${key}Bar`).style.width = `${(value / categoryMaximums[key]) * 100}%`;
+          });
+          issues.replaceChildren();
+          result.blockers.forEach((message) => { const item=document.createElement("li"); item.className="issue blocker"; item.textContent=message; issues.append(item); });
+          result.warnings.forEach((message) => { const item=document.createElement("li"); item.className="issue"; item.textContent=message; issues.append(item); });
+          if (!result.blockers.length && !result.warnings.length) { const item=document.createElement("li"); item.className="issue ready"; item.textContent="All published readiness gates passed. / 已通过全部公开准备度门槛。"; issues.append(item); }
+          if (result.priceStructureValid) {
+            const query = new URLSearchParams({ entry:String(result.entry), stop:String(result.stop), target:String(result.target), risk:String(result.riskPercent), leverage:String(result.leverage) });
+            calculatorLink.href = `risk-calculator.html?${query}`;
+          } else {
+            calculatorLink.href = "risk-calculator.html";
+          }
+          latestReview = ["GCA ENTRY_READY Review",`Status: ${result.status}`,`Score: ${result.score}/100`,`Direction: ${result.direction}`,`Entry: ${result.entry}`,`Stop: ${result.stop}`,`Target: ${result.target}`,`Risk: ${result.riskPercent}%`,`Leverage: ${result.leverage}x`,"",...result.blockers.map((item)=>`BLOCKER: ${item}`),...result.warnings.map((item)=>`REVIEW: ${item}`)].join("\n");
+        }
+        function evaluate() { render(window.GcaEntryReady.evaluate(payload())); }
+        form.addEventListener("submit", (event) => { event.preventDefault(); evaluate(); });
+        form.addEventListener("input", evaluate); form.addEventListener("change", evaluate);
+        document.getElementById("resetReview").addEventListener("click", () => { form.reset(); evaluate(); });
+        copyReview.addEventListener("click", async () => { try { await navigator.clipboard.writeText(latestReview); copyReview.textContent="Copied / 已复制"; window.setTimeout(()=>{copyReview.textContent="Copy Review / 复制检查结果";},1500); } catch (error) { copyReview.textContent="Copy unavailable / 请手动记录"; } });
+        evaluate();
+      })();
+    </script>
+  </body>
+</html>

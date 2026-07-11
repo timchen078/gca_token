@@ -85,6 +85,14 @@
       "creditUnit": 15,
       "unitType": "draft service credit unit",
       "description": "Setup, invalidation, risk budget, execution-condition, and readiness review for a trade idea.",
+      "publicPreview": {
+        "status": "live-client-side-preview",
+        "url": "https://gcagochina.com/entry-ready.html",
+        "deductsCredits": false,
+        "connectsWallet": false,
+        "connectsExchange": false,
+        "placesOrders": false
+      },
       "notPurpose": "Not automatic live order execution or a bypass of risk controls."
     },
     {
