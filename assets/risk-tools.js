@@ -77,5 +77,38 @@
     };
   }
 
-  return { tools, workflows, getWorkflow };
+  function buildPlanLinks(input) {
+    const plan = {
+      direction: input.direction === "short" ? "short" : "long",
+      equity: Number(input.equity),
+      risk: Number(input.risk),
+      entry: Number(input.entry),
+      stop: Number(input.stop),
+      target: Number(input.target),
+      leverage: Number(input.leverage),
+      exposure: Number(input.exposure),
+      slippage: Number(input.slippage),
+      volatility: Number(input.volatility),
+      liquidity: Number(input.liquidity)
+    };
+    const valid = plan.equity > 0 && plan.risk >= 0.1 && plan.risk <= 5 &&
+      plan.entry > 0 && plan.stop > 0 && plan.target > 0 &&
+      plan.leverage >= 1 && plan.leverage <= 100 && plan.exposure >= 0 &&
+      plan.slippage >= 0 && plan.volatility >= 0 && plan.liquidity >= 0;
+    const structureValid = plan.direction === "long"
+      ? plan.stop < plan.entry && plan.target > plan.entry
+      : plan.stop > plan.entry && plan.target < plan.entry;
+    if (!valid || !structureValid) return null;
+
+    const stopDistance = (Math.abs(plan.entry - plan.stop) / plan.entry) * 100;
+    const fragment = (values) => new URLSearchParams(values).toString();
+    return {
+      plan: { ...plan, stopDistance },
+      calculator: `risk-calculator.html#${fragment({ equity: plan.equity, entry: plan.entry, stop: plan.stop, target: plan.target, risk: plan.risk, leverage: plan.leverage, slippageBps: plan.slippage * 100 })}`,
+      riskWarning: `risk-warning.html#${fragment({ exposure: plan.exposure, leverage: plan.leverage, risk: plan.risk, stopDistance, slippage: plan.slippage, volatility: plan.volatility, liquidity: plan.liquidity })}`,
+      entryReady: `entry-ready.html#${fragment({ direction: plan.direction, entry: plan.entry, stop: plan.stop, target: plan.target, risk: plan.risk, leverage: plan.leverage })}`
+    };
+  }
+
+  return { tools, workflows, getWorkflow, buildPlanLinks };
 });

@@ -39,6 +39,14 @@
       .mode[aria-pressed="true"] { border-color:var(--red); background:var(--red); color:#fff; }
       .section { margin-top:28px; }
       .panel { border:1px solid var(--line); border-radius:8px; background:var(--panel); padding:22px; }
+      .plan-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; }
+      .field { display:grid; gap:6px; min-width:0; } .field label { font-size:12px; font-weight:800; }
+      .field input,.field select { width:100%; min-height:42px; border:1px solid var(--line); border-radius:6px; background:#fff; color:var(--ink); padding:9px 11px; font:inherit; }
+      .plan-status { margin-top:14px; border-left:3px solid var(--green); background:#edf8f3; color:#086447; padding:10px 12px; }
+      .plan-status.invalid { border-left-color:var(--red); background:#fff0f0; color:#8d171c; }
+      .plan-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:14px; }
+      .plan-link { min-height:42px; display:inline-flex; align-items:center; justify-content:center; border:1px solid var(--red); border-radius:6px; background:var(--red); color:#fff; padding:9px 13px; font-weight:800; }
+      .plan-link:hover { color:#fff; text-decoration:none; }
       .workflow-head { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:18px; align-items:start; }
       .workflow-count { min-width:84px; color:var(--red); font-size:38px; font-weight:900; text-align:right; }
       .steps { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin-top:18px; }
@@ -57,7 +65,8 @@
       .fact { border-top:1px solid var(--line); padding-top:12px; } .fact strong { display:block; margin-bottom:5px; }
       .boundary { border-left:3px solid var(--blue); background:#eef4ff; padding:14px; }
       footer { border-top:1px solid var(--line); padding:24px 0; color:var(--muted); font-size:14px; }
-      @media (max-width:900px) { h1{font-size:42px}.steps,.tools-grid,.facts{grid-template-columns:1fr}.workflow-head{grid-template-columns:1fr}.workflow-count{text-align:left}.tool{min-height:0} }
+      @media (max-width:900px) { h1{font-size:42px}.plan-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.steps,.tools-grid,.facts{grid-template-columns:1fr}.workflow-head{grid-template-columns:1fr}.workflow-count{text-align:left}.tool{min-height:0} }
+      @media (max-width:540px) { .plan-grid{grid-template-columns:1fr} }
     </style>
     <link rel="stylesheet" href="assets/gca-site.css?v=20260711">
     <script src="assets/gca-site.js?v=20260711" defer></script>
@@ -66,6 +75,19 @@
     <header><nav class="shell" aria-label="Primary"><a class="brand" href="index.html"><img src="assets/gca-logo.svg" alt="GCA logo"><span>GCA</span></a><div class="nav-links"><a href="index.html">Home</a><a href="product.html">Product</a><a href="gca/member-access/">Members</a></div></nav></header>
     <main class="shell" id="main-content">
       <section aria-labelledby="title"><p class="eyebrow">GCA AI Quant Access · Public Workspace</p><h1 id="title">Risk Tools</h1><p class="lead">Choose a workflow, then open the five browser-only GCA tools in a practical order. 选择交易准备、策略研究或亏损复盘流程，按顺序使用 GCA 风险工具。</p><div class="mode-picker" role="group" aria-label="Choose workflow"><button class="mode" type="button" data-mode="prepare" aria-pressed="true">Prepare / 交易准备</button><button class="mode" type="button" data-mode="research" aria-pressed="false">Research / 策略研究</button><button class="mode" type="button" data-mode="review" aria-pressed="false">Review / 亏损复盘</button><button class="mode" type="button" data-mode="all" aria-pressed="false">All / 全部工具</button></div></section>
+      <section class="section panel" aria-labelledby="planTitle"><p class="eyebrow">Shared Inputs</p><h2 id="planTitle">Trade Plan Handoff <span lang="zh-CN">交易计划传递</span></h2><p class="note">Enter the plan once, then open the first three pre-trade tools with matching parameters.</p><form id="tradePlanForm" class="plan-grid" style="margin-top:16px">
+        <div class="field"><label for="planDirection">Direction / 方向</label><select id="planDirection"><option value="long">Long / 做多</option><option value="short">Short / 做空</option></select></div>
+        <div class="field"><label for="planEquity">Equity / 账户权益</label><input id="planEquity" type="number" min="1" step="any" value="10000"></div>
+        <div class="field"><label for="planRisk">Risk % / 单笔风险</label><input id="planRisk" type="number" min="0.1" max="5" step="0.1" value="1"></div>
+        <div class="field"><label for="planLeverage">Leverage / 杠杆</label><input id="planLeverage" type="number" min="1" max="100" step="1" value="2"></div>
+        <div class="field"><label for="planEntry">Entry / 入场价</label><input id="planEntry" type="number" min="0.00000001" step="any" value="100"></div>
+        <div class="field"><label for="planStop">Stop / 止损价</label><input id="planStop" type="number" min="0.00000001" step="any" value="95"></div>
+        <div class="field"><label for="planTarget">Target / 目标价</label><input id="planTarget" type="number" min="0.00000001" step="any" value="110"></div>
+        <div class="field"><label for="planExposure">Exposure % / 账户敞口</label><input id="planExposure" type="number" min="0" step="0.1" value="20"></div>
+        <div class="field"><label for="planSlippage">Slippage % / 预计滑点</label><input id="planSlippage" type="number" min="0" step="0.01" value="0.1"></div>
+        <div class="field"><label for="planVolatility">Volatility % / 观察波动率</label><input id="planVolatility" type="number" min="0" step="0.1" value="3"></div>
+        <div class="field"><label for="planLiquidity">Liquidity coverage / 流动性覆盖</label><input id="planLiquidity" type="number" min="0" step="0.1" value="15"></div>
+      </form><p class="plan-status" id="planStatus" aria-live="polite"></p><div class="plan-actions"><a class="plan-link" id="planCalculator" href="risk-calculator.html">1. Position Calculator</a><a class="plan-link" id="planWarning" href="risk-warning.html">2. Risk Warning</a><a class="plan-link" id="planEntryReady" href="entry-ready.html">3. ENTRY_READY</a></div><p class="note" style="margin-top:12px">Plan data stays in the URL fragment and is not sent as part of the page request. The workspace does not save these plan values.</p></section>
       <section class="section panel" aria-labelledby="workflowTitle"><div class="workflow-head"><div><p class="eyebrow">Selected Workflow</p><h2 id="workflowTitle">Prepare a Trade</h2><p class="note" id="workflowDescription"></p></div><div class="workflow-count"><span id="workflowCount">3</span> steps</div></div><div class="steps" id="workflowSteps"></div></section>
       <section class="section" aria-labelledby="toolsTitle"><p class="eyebrow">Public Preview Suite</p><h2 id="toolsTitle">Five Risk Tools</h2><div class="tools-grid" id="toolsGrid">
         <article class="tool" data-tool="risk-calculator"><span class="tool-stage">Before entry</span><h3>Position Size Calculator</h3><p class="note">Calculate risk budget, stop distance, quantity, costs, margin, and exposure.</p><a class="tool-link" href="risk-calculator.html">Open Calculator</a></article>
@@ -80,7 +102,8 @@
     <script src="assets/risk-tools.js"></script>
     <script>
       (()=>{"use strict";const key="gca_risk_tools_mode_v1";const buttons=[...document.querySelectorAll("[data-mode]")];const steps=document.getElementById("workflowSteps");const cards=[...document.querySelectorAll("[data-tool]")];function select(mode){const workflow=window.GcaRiskTools.getWorkflow(mode);document.getElementById("workflowTitle").textContent=workflow.name;document.getElementById("workflowDescription").textContent=workflow.description;document.getElementById("workflowCount").textContent=String(workflow.tools.length);buttons.forEach((button)=>button.setAttribute("aria-pressed",String(button.dataset.mode===workflow.mode)));steps.replaceChildren();const active=new Set(workflow.tools.map((tool)=>tool.id));workflow.tools.forEach((tool)=>{const item=document.createElement("article");item.className="step";const order=document.createElement("span");order.className="step-order";order.textContent=`Step ${tool.order}`;const title=document.createElement("h3");title.textContent=tool.name;const note=document.createElement("p");note.className="note";note.textContent=tool.purpose;const link=document.createElement("a");link.href=tool.url;link.textContent=`Open ${tool.shortName}`;item.append(order,title,note,link);steps.append(item);});cards.forEach((card)=>card.classList.toggle("is-active",active.has(card.dataset.tool)));try{window.localStorage.setItem(key,workflow.mode);}catch(error){}const url=new URL(window.location.href);url.searchParams.set("mode",workflow.mode);window.history.replaceState({},"",url);}
-      buttons.forEach((button)=>button.addEventListener("click",()=>select(button.dataset.mode)));const requested=new URLSearchParams(window.location.search).get("mode");let saved="";try{saved=window.localStorage.getItem(key)||"";}catch(error){}select(requested||saved||"prepare");})();
+      const planIds=["Direction","Equity","Risk","Leverage","Entry","Stop","Target","Exposure","Slippage","Volatility","Liquidity"];const planFields=Object.fromEntries(planIds.map((name)=>[name.charAt(0).toLowerCase()+name.slice(1),document.getElementById(`plan${name}`)]));function updatePlan(){const input=Object.fromEntries(Object.entries(planFields).map(([key,field])=>[key,field.value]));const links=window.GcaRiskTools.buildPlanLinks(input);const state=document.getElementById("planStatus");if(!links){state.className="plan-status invalid";state.textContent="Check the prices and limits. Stop and target must match the selected direction. / 请检查价格与限制，止损和目标价必须与方向一致。";document.getElementById("planCalculator").href="risk-calculator.html";document.getElementById("planWarning").href="risk-warning.html";document.getElementById("planEntryReady").href="entry-ready.html";return;}state.className="plan-status";state.textContent=`Plan ready · Stop distance ${links.plan.stopDistance.toFixed(2)}% · Parameters remain in this browser tab. / 计划已就绪。`;document.getElementById("planCalculator").href=links.calculator;document.getElementById("planWarning").href=links.riskWarning;document.getElementById("planEntryReady").href=links.entryReady;}
+      document.getElementById("tradePlanForm").addEventListener("input",updatePlan);document.getElementById("tradePlanForm").addEventListener("change",updatePlan);buttons.forEach((button)=>button.addEventListener("click",()=>select(button.dataset.mode)));const requested=new URLSearchParams(window.location.search).get("mode");let saved="";try{saved=window.localStorage.getItem(key)||"";}catch(error){}select(requested||saved||"prepare");updatePlan();})();
     </script>
   </body>
 </html>
