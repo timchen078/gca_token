@@ -70,6 +70,7 @@
       <section class="layout" aria-label="Liquidation and loss replay tool">
         <form class="panel" id="replayForm">
           <h2>Trade Record <span lang="zh-CN">交易记录</span></h2>
+          <p class="boundary" id="planScenario" hidden>This is a planned-stop simulation imported from the Risk Tools workspace, not a completed-trade record. Replace exit, fees, funding, and process checks with actual execution data before treating it as a post-trade replay. / 这是计划止损模拟，不是真实成交复盘；成交后请替换实际数据。</p>
           <div class="grid">
             <div class="field"><label for="direction">Direction / 方向</label><select id="direction"><option value="long">Long / 做多</option><option value="short">Short / 做空</option></select></div>
             <div class="field"><label for="eventType">Exit type / 退出类型</label><select id="eventType"><option value="stop">Stop / 止损</option><option value="manual">Manual / 手动退出</option><option value="liquidation">Liquidation / 强平</option><option value="target">Target / 止盈</option></select></div>
@@ -131,6 +132,26 @@
         let latestReplay = "";
 
         function payload() { return Object.fromEntries(Object.entries(fields).map(([key, field]) => [key, field.type === "checkbox" ? field.checked : field.value])); }
+        function applyPlanParameters() {
+          const searchParams = new URLSearchParams(window.location.search);
+          const fragmentParams = new URLSearchParams(window.location.hash.replace(/^#/, ""));
+          const read = (key) => fragmentParams.has(key) ? fragmentParams.get(key) : searchParams.get(key);
+          const textFields = ["direction","accountEquity","quantity","entry","exit","plannedStop","leverage","fees","funding"];
+          textFields.forEach((key) => {
+            const value = read(key);
+            if (value === null) return;
+            if (key === "direction") {
+              if (value === "long" || value === "short") fields.direction.value = value;
+              return;
+            }
+            const parsed = Number(value);
+            if (Number.isFinite(parsed) && parsed >= 0) fields[key].value = String(parsed);
+          });
+          if (read("source") === "plan") {
+            fields.eventType.value = "stop";
+            document.getElementById("planScenario").hidden = false;
+          }
+        }
         function show(id, value) { document.getElementById(id).textContent = value; }
         function render(result) {
           if (!result) {
@@ -159,9 +180,9 @@
         function evaluate() { render(window.GcaLiquidationReplay.replay(payload())); }
         form.addEventListener("submit", (event) => { event.preventDefault(); evaluate(); });
         form.addEventListener("input", evaluate); form.addEventListener("change", evaluate);
-        document.getElementById("resetReplay").addEventListener("click", () => { form.reset(); evaluate(); });
+        document.getElementById("resetReplay").addEventListener("click", () => { form.reset(); document.getElementById("planScenario").hidden = true; evaluate(); });
         copyButton.addEventListener("click", async () => { try { await navigator.clipboard.writeText(latestReplay); copyButton.textContent="Copied / 已复制"; window.setTimeout(()=>{copyButton.textContent="Copy Replay / 复制复盘";},1500); } catch (error) { copyButton.textContent="Copy unavailable / 请手动记录"; } });
-        evaluate();
+        applyPlanParameters(); evaluate();
       })();
     </script>
   </body>

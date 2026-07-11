@@ -303,6 +303,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
             "effectiveLeverage",
             "lossMultiple",
             "copyReplay",
+            "planScenario",
         ):
             self.assertIn(f'id="{element_id}"', page)
 
@@ -314,6 +315,9 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn('"PROCESS_REVIEW"', engine)
         self.assertIn('"CONTROLLED"', engine)
         self.assertIn('src="assets/liquidation-replay.js"', page)
+        self.assertIn("function applyPlanParameters()", page)
+        self.assertIn("window.location.hash", page)
+        self.assertIn("planned-stop simulation", page)
         self.assertIn("does not calculate an exchange-specific liquidation price", page)
         self.assertNotIn("window.ethereum", page)
         self.assertNotIn("fetch(", page)
@@ -421,6 +425,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
             "lossStreak",
             "equityChart",
             "downloadCsv",
+            "planImportNotice",
         ):
             self.assertIn(f'id="{element_id}"', page)
 
@@ -431,6 +436,9 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn('"INSUFFICIENT_SAMPLE"', engine)
         self.assertIn('"RESEARCH_READY"', engine)
         self.assertIn('src="assets/backtest-lab.js"', page)
+        self.assertIn("function applyPlanParameters()", page)
+        self.assertIn("window.location.hash", page)
+        self.assertIn("Account equity was imported", page)
         self.assertIn("does not test signals against candles or order books", page)
         self.assertNotIn("window.ethereum", page)
         self.assertNotIn("fetch(", page)
@@ -646,6 +654,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
             "planStop",
             "planTarget",
             "planExposure",
+            "planFees",
             "planSlippage",
             "planVolatility",
             "planLiquidity",
@@ -653,6 +662,8 @@ class PublicSiteExperienceTests(unittest.TestCase):
             "planCalculator",
             "planWarning",
             "planEntryReady",
+            "planBacktest",
+            "planReplay",
         ):
             self.assertIn(f'id="{element_id}"', page)
         self.assertIn('src="assets/risk-tools.js"', page)
@@ -665,6 +676,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertNotIn("WebSocket", page)
         self.assertIn("Plan data stays in the URL fragment", page)
         self.assertIn("The workspace does not save these plan values", page)
+        self.assertIn("all five tools", page)
         self.assertIn('"riskToolsWorkspace": "https://gcagochina.com/tools.html"', product)
         self.assertIn('"riskToolsWorkspace": "https://gcagochina.com/tools.html"', credits)
         self.assertIn('["Tools", "tools.html"]', (SITE / "assets" / "gca-site.js").read_text())
@@ -733,6 +745,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
             "leverage": 2,
             "exposure": 20,
             "slippage": 0.1,
+            "fees": 0.2,
             "volatility": 3,
             "liquidity": 15,
         }
@@ -744,13 +757,34 @@ class PublicSiteExperienceTests(unittest.TestCase):
         )
         links = json.loads(completed.stdout)
         self.assertAlmostEqual(links["plan"]["stopDistance"], 5)
-        for key in ("calculator", "riskWarning", "entryReady"):
+        self.assertAlmostEqual(links["plan"]["riskBudget"], 100)
+        self.assertAlmostEqual(links["plan"]["riskPerUnit"], 5.3)
+        self.assertAlmostEqual(links["plan"]["quantity"], 100 / 5.3)
+        self.assertAlmostEqual(links["plan"]["scenarioExit"], 94.9)
+        for key in ("calculator", "riskWarning", "entryReady", "backtest", "replay"):
             self.assertIn(".html#", links[key])
             self.assertNotIn(".html?", links[key])
         self.assertIn("equity=10000", links["calculator"])
+        self.assertIn("feeBps=20", links["calculator"])
         self.assertIn("slippageBps=10", links["calculator"])
         self.assertIn("stopDistance=5", links["riskWarning"])
         self.assertIn("direction=long", links["entryReady"])
+        self.assertIn("startingEquity=10000", links["backtest"])
+        self.assertIn("source=plan", links["backtest"])
+        self.assertIn("accountEquity=10000", links["replay"])
+        self.assertIn("plannedStop=95", links["replay"])
+        self.assertIn("source=plan", links["replay"])
+
+        short_plan = {**plan, "direction": "short", "stop": 105, "target": 90}
+        short_completed = subprocess.run(
+            [node, "-e", script, str(module_path), json.dumps(short_plan)],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        short_links = json.loads(short_completed.stdout)
+        self.assertAlmostEqual(short_links["plan"]["scenarioExit"], 105.1)
+        self.assertIn("direction=short", short_links["replay"])
 
         invalid = subprocess.run(
             [node, "-e", script, str(module_path), json.dumps({**plan, "stop": 105})],
@@ -759,6 +793,14 @@ class PublicSiteExperienceTests(unittest.TestCase):
             text=True,
         )
         self.assertEqual(invalid.stdout, "null")
+
+        invalid_fees = subprocess.run(
+            [node, "-e", script, str(module_path), json.dumps({**plan, "fees": 11})],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(invalid_fees.stdout, "null")
 
 
 if __name__ == "__main__":
