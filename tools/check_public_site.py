@@ -7715,7 +7715,27 @@ def validate_backtest_lab_page(text: str) -> None:
     assert_contains(text, 'id="planImportNotice"', label)
     assert_contains(text, "Account equity was imported", label)
     assert_contains(text, 'src="assets/backtest-lab.js"', label)
+    assert_contains(text, 'src="assets/trade-journal.js"', label)
+    assert_contains(text, 'id="journalImportNotice"', label)
     assert_contains(text, "does not test signals against candles or order books", label)
+    assert_not_contains(text, "window.ethereum", label)
+    assert_not_contains(text, "fetch(", label)
+    assert_not_contains(text, "WebSocket", label)
+    assert_no_forbidden_public_claims(text, label)
+
+
+def validate_trade_journal_page(text: str) -> None:
+    label = "/trade-journal.html"
+    assert_contains(text, "GCA Trade Journal", label)
+    assert_contains(text, 'id="journalForm"', label)
+    assert_contains(text, 'id="returnPercent"', label)
+    assert_contains(text, 'id="journalRows"', label)
+    assert_contains(text, 'id="analyzeJournal"', label)
+    assert_contains(text, 'id="exportJson"', label)
+    assert_contains(text, 'id="exportCsv"', label)
+    assert_contains(text, 'id="importJson"', label)
+    assert_contains(text, 'src="assets/trade-journal.js"', label)
+    assert_contains(text, "does not upload trades", label)
     assert_not_contains(text, "window.ethereum", label)
     assert_not_contains(text, "fetch(", label)
     assert_not_contains(text, "WebSocket", label)
@@ -7759,6 +7779,7 @@ def validate_risk_tools_page(text: str) -> None:
     assert_contains(text, 'data-tool="entry-ready"', label)
     assert_contains(text, 'data-tool="backtest-lab"', label)
     assert_contains(text, 'data-tool="liquidation-replay"', label)
+    assert_contains(text, 'data-tool="trade-journal"', label)
     assert_contains(text, 'src="assets/risk-tools.js"', label)
     assert_contains(text, "Plan data stays in the URL fragment", label)
     assert_contains(text, "does not fetch live market data", label)
@@ -14884,6 +14905,7 @@ CHECKS: list[EndpointCheck] = [
     ("/liquidation-replay-001.json", validate_liquidation_replay_001_json),
     ("/liquidation-replay.html", validate_liquidation_replay_page),
     ("/backtest-lab.html", validate_backtest_lab_page),
+    ("/trade-journal.html", validate_trade_journal_page),
     ("/risk-warning.html", validate_risk_warning_page),
     ("/tools.html", validate_risk_tools_page),
     ("/service-delivery-playbook.html", validate_service_delivery_playbook_page),

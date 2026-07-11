@@ -436,9 +436,12 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn('"INSUFFICIENT_SAMPLE"', engine)
         self.assertIn('"RESEARCH_READY"', engine)
         self.assertIn('src="assets/backtest-lab.js"', page)
+        self.assertIn('src="assets/trade-journal.js"', page)
         self.assertIn("function applyPlanParameters()", page)
         self.assertIn("window.location.hash", page)
         self.assertIn("Account equity was imported", page)
+        self.assertIn('id="journalImportNotice"', page)
+        self.assertIn('read("source") === "journal"', page)
         self.assertIn("does not test signals against candles or order books", page)
         self.assertNotIn("window.ethereum", page)
         self.assertNotIn("fetch(", page)
@@ -676,7 +679,9 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertNotIn("WebSocket", page)
         self.assertIn("Plan data stays in the URL fragment", page)
         self.assertIn("The workspace does not save these plan values", page)
-        self.assertIn("all five tools", page)
+        self.assertIn("five plan-aware", page)
+        self.assertIn("Six Risk Tools", page)
+        self.assertIn('data-tool="trade-journal"', page)
         self.assertIn('"riskToolsWorkspace": "https://gcagochina.com/tools.html"', product)
         self.assertIn('"riskToolsWorkspace": "https://gcagochina.com/tools.html"', credits)
         self.assertIn('["Tools", "tools.html"]', (SITE / "assets" / "gca-site.js").read_text())
@@ -699,9 +704,9 @@ class PublicSiteExperienceTests(unittest.TestCase):
         )
         expectations = {
             "prepare": ["risk-calculator", "risk-warning", "entry-ready"],
-            "research": ["backtest-lab", "risk-warning", "entry-ready"],
-            "review": ["liquidation-replay", "risk-calculator", "risk-warning", "entry-ready"],
-            "all": ["risk-calculator", "risk-warning", "entry-ready", "backtest-lab", "liquidation-replay"],
+            "research": ["trade-journal", "backtest-lab", "risk-warning", "entry-ready"],
+            "review": ["liquidation-replay", "trade-journal", "risk-calculator", "risk-warning", "entry-ready"],
+            "all": ["risk-calculator", "risk-warning", "entry-ready", "backtest-lab", "liquidation-replay", "trade-journal"],
         }
         for mode, expected in expectations.items():
             completed = subprocess.run(
@@ -801,6 +806,97 @@ class PublicSiteExperienceTests(unittest.TestCase):
             text=True,
         )
         self.assertEqual(invalid_fees.stdout, "null")
+
+    def test_trade_journal_is_local_and_connected_to_backtest(self):
+        page = (SITE / "trade-journal.html").read_text()
+        engine = (SITE / "assets" / "trade-journal.js").read_text()
+        product = json.loads((SITE / "product.json").read_text())
+        credits = json.loads((SITE / "credits.json").read_text())
+
+        for element_id in (
+            "journalForm",
+            "tradeDate",
+            "market",
+            "direction",
+            "returnPercent",
+            "setup",
+            "notes",
+            "journalStatus",
+            "tradeCount",
+            "winRate",
+            "averageReturn",
+            "maxLossStreak",
+            "analyzeJournal",
+            "exportJson",
+            "exportCsv",
+            "importJson",
+            "clearJournal",
+            "journalRows",
+        ):
+            self.assertIn(f'id="{element_id}"', page)
+
+        self.assertIn('src="assets/trade-journal.js"', page)
+        self.assertIn("window.localStorage.setItem(engine.STORAGE_KEY", page)
+        self.assertIn("window.localStorage.removeItem(engine.STORAGE_KEY)", page)
+        self.assertIn('href="backtest-lab.html#source=journal"', page)
+        self.assertIn("does not upload trades", page)
+        self.assertNotIn("window.ethereum", page)
+        self.assertNotIn("fetch(", page)
+        self.assertNotIn("WebSocket", page)
+        self.assertIn('const STORAGE_KEY = "gca_trade_journal_v1"', engine)
+        self.assertEqual(product["positioning"]["publicRiskToolPreviewsLive"], 6)
+        self.assertEqual(product["officialLinks"]["tradeJournal"], "https://gcagochina.com/trade-journal.html")
+        self.assertEqual(credits["officialLinks"]["tradeJournal"], "https://gcagochina.com/trade-journal.html")
+
+    def test_trade_journal_engine_normalizes_summarizes_and_backs_up(self):
+        bundled_node = Path("/Users/abc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node")
+        node = shutil.which("node") or (str(bundled_node) if bundled_node.exists() else "")
+        if not node:
+            self.skipTest("Node.js is unavailable")
+
+        module_path = SITE / "assets" / "trade-journal.js"
+        script = (
+            "const j=require(process.argv[1]);"
+            "const trades=JSON.parse(process.argv[2]);"
+            "const summary=j.summarizeTrades(trades);"
+            "const backup=j.buildBackup(trades,'2026-07-11T00:00:00Z');"
+            "process.stdout.write(JSON.stringify({summary,backup,parsed:j.parseBackup(JSON.stringify(backup)),csv:j.toCsv(trades)}));"
+        )
+        trades = [
+            {"id": "b", "date": "2026-07-02", "market": "eth/usdt", "direction": "short", "returnPercent": -0.5, "setup": "retest", "notes": "stopped", "createdAt": "2026-07-02T01:00:00Z"},
+            {"id": "a", "date": "2026-07-01", "market": "btc/usdt", "direction": "long", "returnPercent": 1.0, "setup": "breakout", "notes": "followed plan", "createdAt": "2026-07-01T01:00:00Z"},
+            {"id": "c", "date": "2026-07-03", "market": "sol/usdt", "direction": "long", "returnPercent": -0.25, "setup": "range", "notes": "early entry", "createdAt": "2026-07-03T01:00:00Z"},
+        ]
+        completed = subprocess.run(
+            [node, "-e", script, str(module_path), json.dumps(trades)],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        result = json.loads(completed.stdout)
+        summary = result["summary"]
+        self.assertEqual(summary["count"], 3)
+        self.assertEqual(summary["wins"], 1)
+        self.assertEqual(summary["losses"], 2)
+        self.assertAlmostEqual(summary["winRatePercent"], 100 / 3)
+        self.assertAlmostEqual(summary["averageReturnPercent"], 0.25 / 3)
+        self.assertEqual(summary["maxConsecutiveLosses"], 2)
+        self.assertEqual([trade["id"] for trade in summary["trades"]], ["a", "b", "c"])
+        self.assertEqual(len(result["parsed"]["trades"]), 3)
+        self.assertIn('"BTC/USDT"', result["csv"])
+        self.assertIn('"followed plan"', result["csv"])
+
+        invalid_script = (
+            "const j=require(process.argv[1]);"
+            "process.stdout.write(JSON.stringify([j.normalizeTrade({date:'2026-02-31',market:'BTC/USDT',direction:'long',returnPercent:1}),j.normalizeTrade({date:'2026-07-01',market:'BTC/USDT',direction:'long',returnPercent:-100}),j.parseBackup('{}')]));"
+        )
+        invalid = subprocess.run(
+            [node, "-e", invalid_script, str(module_path)],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(json.loads(invalid.stdout), [None, None, None])
 
 
 if __name__ == "__main__":

@@ -70,6 +70,7 @@
         <form class="panel" id="backtestForm">
           <h2>Trade Sample <span lang="zh-CN">交易样本</span></h2>
           <p class="boundary" id="planImportNotice" hidden>Account equity was imported from the shared trade plan. Returns and account-level cost are not inferred from entry prices; enter an independent completed-trade sample. / 已导入账户权益，交易样本和账户级成本仍需独立填写。</p>
+          <p class="boundary" id="journalImportNotice" hidden></p>
           <div class="grid">
             <div class="field"><label for="startingEquity">Starting equity / 初始权益</label><input id="startingEquity" type="number" min="0.01" step="any" value="10000"></div>
             <div class="field"><label for="costPercent">Cost per trade % / 单笔成本</label><input id="costPercent" type="number" min="0" max="10" step="0.01" value="0.05"></div>
@@ -104,6 +105,7 @@
       </section>
     </main>
     <footer><div class="shell">GCA Risk First Trading · A larger, unbiased sample is more useful than an attractive small sample.</div></footer>
+    <script src="assets/trade-journal.js"></script>
     <script src="assets/backtest-lab.js"></script>
     <script>
       (() => {
@@ -129,6 +131,19 @@
           const importedEquity = Number(read("startingEquity"));
           if (Number.isFinite(importedEquity) && importedEquity > 0) startingEquity.value = String(importedEquity);
           if (read("source") === "plan") document.getElementById("planImportNotice").hidden = false;
+          if (read("source") === "journal") {
+            const notice = document.getElementById("journalImportNotice");
+            let backup = null;
+            try { backup = window.GcaTradeJournal.parseBackup(window.localStorage.getItem(window.GcaTradeJournal.STORAGE_KEY)); }
+            catch (error) {}
+            if (backup?.trades.length) {
+              tradeReturns.value = backup.trades.map((trade) => trade.returnPercent).join(", ");
+              notice.textContent = `${backup.trades.length} completed-trade return(s) loaded from this device. Review account-level cost before analysis. / 已从当前设备导入 ${backup.trades.length} 笔交易收益，请复核账户级成本。`;
+            } else {
+              notice.textContent = "No valid local journal entries were found. The example sample remains unchanged. / 未找到有效的本地日志，当前保留示例样本。";
+            }
+            notice.hidden = false;
+          }
         }
 
         function show(id, value) { document.getElementById(id).textContent = value; }
@@ -154,7 +169,7 @@
         function evaluate(){render(window.GcaBacktestLab.analyzeSequence({startingEquity:startingEquity.value,costPercent:costPercent.value,tradeReturns:tradeReturns.value}));}
         function summary(result){return ["GCA Backtest Lab",`Status: ${result.status}`,`Trades: ${result.tradeCount}`,`Final equity: ${money.format(result.finalEquity)}`,`Compounded return: ${result.compoundedReturnPercent.toFixed(2)}%`,`Win rate: ${result.winRatePercent.toFixed(2)}%`,`Expectancy: ${result.averageReturnPercent.toFixed(3)}%`,`Profit factor: ${result.profitFactor===null?"n/a":result.profitFactor.toFixed(2)}`,`Maximum drawdown: ${result.maxDrawdownPercent.toFixed(2)}%`,`Maximum loss streak: ${result.maxConsecutiveLosses}`,...result.warnings.map((item)=>`REVIEW: ${item}`)].join("\n");}
         form.addEventListener("submit",(event)=>{event.preventDefault();evaluate();}); form.addEventListener("input",evaluate);
-        document.getElementById("resetBacktest").addEventListener("click",()=>{startingEquity.value="10000";costPercent.value="0.05";tradeReturns.value=initialSample;document.getElementById("planImportNotice").hidden=true;evaluate();});
+        document.getElementById("resetBacktest").addEventListener("click",()=>{startingEquity.value="10000";costPercent.value="0.05";tradeReturns.value=initialSample;document.getElementById("planImportNotice").hidden=true;document.getElementById("journalImportNotice").hidden=true;evaluate();});
         copyButton.addEventListener("click",async()=>{if(!latest)return;try{await navigator.clipboard.writeText(summary(latest));copyButton.textContent="Copied / 已复制";window.setTimeout(()=>{copyButton.textContent="Copy / 复制";},1500);}catch(error){copyButton.textContent="Copy unavailable";}});
         csvButton.addEventListener("click",()=>{if(!latest)return;const lines=["trade,raw_return_percent,net_return_percent,equity,drawdown_percent",...latest.curve.slice(1).map((point)=>[point.trade,point.rawReturn,point.netReturn,point.equity,point.drawdownPercent].join(","))];const url=URL.createObjectURL(new Blob([lines.join("\n")],{type:"text/csv"}));const link=document.createElement("a");link.href=url;link.download="gca-backtest-lab.csv";link.click();URL.revokeObjectURL(url);});
         window.addEventListener("resize",()=>{if(latest)drawCurve(latest.curve);}); applyPlanParameters(); evaluate();
