@@ -23,6 +23,7 @@
     <style>
       :root { color-scheme:light; --bg:#f7f8f5; --ink:#151817; --muted:#5e6763; --line:#dfe4dd; --panel:#fff; --red:#d71920; --blue:#1557d7; --green:#087f5b; --gold:#8a6500; }
       * { box-sizing:border-box; }
+      [hidden] { display:none !important; }
       body { margin:0; color:var(--ink); background:var(--bg); font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; line-height:1.5; }
       a { color:var(--blue); text-decoration:none; } a:hover { text-decoration:underline; }
       .shell { width:min(1160px,calc(100% - 32px)); margin:0 auto; }
@@ -117,7 +118,7 @@
             <div class="metric"><span>Compounded return / 复合收益</span><strong id="compoundedReturn">0.00%</strong></div>
             <div class="metric"><span>Maximum drawdown / 最大回撤</span><strong id="journalMaxDrawdown">0.00%</strong></div>
           </div>
-          <div class="actions"><a class="button primary" id="analyzeJournal" href="backtest-lab.html#source=journal" aria-disabled="true">Analyze Filtered Sample / 回测筛选样本</a><button class="button" id="exportJson" type="button">Backup All JSON</button><button class="button" id="exportCsv" type="button">Export Filtered CSV</button><label class="button" for="importJson">Restore JSON</label><input id="importJson" type="file" accept="application/json,.json" hidden><label class="button" for="importCsv">Restore CSV</label><input id="importCsv" type="file" accept="text/csv,.csv" hidden><button class="button danger" id="clearJournal" type="button">Clear All</button></div>
+          <div class="actions"><a class="button primary" id="analyzeJournal" href="backtest-lab.html#source=journal" aria-disabled="true">Analyze Filtered Sample / 回测筛选样本</a><button class="button" id="exportJson" type="button">Backup All JSON</button><button class="button" id="exportCsv" type="button">Export Filtered CSV</button><label class="button" for="importJson">Restore JSON</label><input id="importJson" type="file" accept="application/json,.json" hidden><label class="button" for="importCsv">Restore CSV</label><input id="importCsv" type="file" accept="text/csv,.csv" hidden><button class="button" id="undoDelete" type="button" hidden>Undo Delete / 撤销删除</button><button class="button danger" id="clearJournal" type="button">Clear All</button></div>
           <section class="equity-section" aria-labelledby="equityTitle">
             <h3 id="equityTitle">Filtered Equity Path <span lang="zh-CN">筛选样本权益曲线</span></h3>
             <p class="note">Indexed equity starts at 100 and compounds the recorded account return of each visible trade in date order. / 指数权益从 100 开始，按日期顺序复合当前可见记录的账户收益率。</p>
@@ -152,6 +153,7 @@
         const saveTradeButton = document.getElementById("saveTrade");
         const resetTradeButton = document.getElementById("resetTrade");
         const cancelEditButton = document.getElementById("cancelEdit");
+        const undoDeleteButton = document.getElementById("undoDelete");
         const analyze = document.getElementById("analyzeJournal");
         const breakdownDimension = document.getElementById("breakdownDimension");
         const breakdownRows = document.getElementById("breakdownRows");
@@ -165,6 +167,7 @@
         let visibleTrades = [];
         let editingId = null;
         let currentCurve = [];
+        let lastDeletedTrade = null;
 
         function today() { const now=new Date();return new Date(now.getTime()-(now.getTimezoneOffset()*60000)).toISOString().slice(0,10); }
         function id() { return globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(16).slice(2)}`; }
@@ -173,6 +176,7 @@
         function resetEditor() {
           editingId=null;form.reset();fields.date.value=today();saveTradeButton.textContent="Add Trade / 添加记录";cancelEditButton.hidden=true;
         }
+        function clearUndo() { lastDeletedTrade=null;undoDeleteButton.hidden=true; }
         function startEdit(trade) {
           editingId=trade.id;fields.date.value=trade.date;fields.market.value=trade.market;fields.direction.value=trade.direction;fields.returnPercent.value=String(trade.returnPercent);fields.setup.value=trade.setup;fields.notes.value=trade.notes;
           saveTradeButton.textContent="Update Trade / 更新记录";cancelEditButton.hidden=false;setStatus(`Editing ${trade.market} on ${trade.date}. / 正在编辑 ${trade.date} 的 ${trade.market} 记录。`,false);form.scrollIntoView({behavior:"smooth",block:"start"});
@@ -191,7 +195,7 @@
           const url=URL.createObjectURL(new Blob([content],{type})); const link=document.createElement("a"); link.href=url; link.download=name; link.click(); URL.revokeObjectURL(url);
         }
         function restoreImported(imported) {
-          const existingIds=new Set(trades.map((trade)=>trade.id));let added=0;let updated=0;const merged=new Map(trades.map((trade)=>[trade.id,trade]));imported.forEach((trade)=>{if(existingIds.has(trade.id))updated+=1;else added+=1;merged.set(trade.id,trade);});if(merged.size>engine.MAX_TRADES)return {error:"limit",total:merged.size};trades=engine.orderTrades([...merged.values()]);resetEditor();save();render();return {added,updated,total:trades.length};
+          const existingIds=new Set(trades.map((trade)=>trade.id));let added=0;let updated=0;const merged=new Map(trades.map((trade)=>[trade.id,trade]));imported.forEach((trade)=>{if(existingIds.has(trade.id))updated+=1;else added+=1;merged.set(trade.id,trade);});if(merged.size>engine.MAX_TRADES)return {error:"limit",total:merged.size};trades=engine.orderTrades([...merged.values()]);resetEditor();clearUndo();save();render();return {added,updated,total:trades.length};
         }
         function updateSelect(select, values, emptyLabel) {
           const current=select.value;select.replaceChildren();const empty=document.createElement("option");empty.value="";empty.textContent=emptyLabel;select.append(empty);
@@ -240,15 +244,16 @@
         }
 
         resetEditor();load();render();
-        form.addEventListener("submit",(event)=>{event.preventDefault();const existing=editingId?trades.find((trade)=>trade.id===editingId):null;if(editingId&&!existing){resetEditor();setStatus("The record being edited no longer exists. / 正在编辑的记录已不存在。",true);return;}const trade=engine.normalizeTrade({id:existing?.id||id(),date:fields.date.value,market:fields.market.value,direction:fields.direction.value,returnPercent:fields.returnPercent.value,setup:fields.setup.value,notes:fields.notes.value,createdAt:existing?.createdAt||new Date().toISOString()});if(!trade){setStatus("Check date, market, direction, and return. Return must be above -100%. / 请检查输入。",true);return;}if(existing)trades=trades.map((item)=>item.id===existing.id?trade:item);else trades.push(trade);const saved=save();const updated=Boolean(existing);resetEditor();render();if(saved)setStatus(updated?"Trade updated on this device. / 已更新当前设备上的记录。":"Trade added to this device. / 已保存到当前设备。",false);});
-        rows.addEventListener("click",(event)=>{const editButton=event.target.closest("[data-edit-id]");if(editButton){const trade=trades.find((item)=>item.id===editButton.dataset.editId);if(trade)startEdit(trade);return;}const deleteButton=event.target.closest("[data-delete-id]");if(!deleteButton)return;if(editingId===deleteButton.dataset.deleteId)resetEditor();trades=trades.filter((trade)=>trade.id!==deleteButton.dataset.deleteId);save();render();setStatus("Trade removed. / 已删除该记录。",false);});
+        form.addEventListener("submit",(event)=>{event.preventDefault();const existing=editingId?trades.find((trade)=>trade.id===editingId):null;if(editingId&&!existing){resetEditor();setStatus("The record being edited no longer exists. / 正在编辑的记录已不存在。",true);return;}const trade=engine.normalizeTrade({id:existing?.id||id(),date:fields.date.value,market:fields.market.value,direction:fields.direction.value,returnPercent:fields.returnPercent.value,setup:fields.setup.value,notes:fields.notes.value,createdAt:existing?.createdAt||new Date().toISOString()});if(!trade){setStatus("Check date, market, direction, and return. Return must be above -100%. / 请检查输入。",true);return;}if(existing)trades=trades.map((item)=>item.id===existing.id?trade:item);else trades.push(trade);clearUndo();const saved=save();const updated=Boolean(existing);resetEditor();render();if(saved)setStatus(updated?"Trade updated on this device. / 已更新当前设备上的记录。":"Trade added to this device. / 已保存到当前设备。",false);});
+        rows.addEventListener("click",(event)=>{const editButton=event.target.closest("[data-edit-id]");if(editButton){const trade=trades.find((item)=>item.id===editButton.dataset.editId);if(trade)startEdit(trade);return;}const deleteButton=event.target.closest("[data-delete-id]");if(!deleteButton)return;const deleted=trades.find((trade)=>trade.id===deleteButton.dataset.deleteId);if(!deleted)return;if(editingId===deleted.id)resetEditor();lastDeletedTrade=deleted;undoDeleteButton.hidden=false;trades=trades.filter((trade)=>trade.id!==deleted.id);save();render();setStatus(`${deleted.market} trade removed. Undo is available until the next data change. / 已删除 ${deleted.market} 记录，可在下次数据变更前撤销。`,false);});
+        undoDeleteButton.addEventListener("click",()=>{if(!lastDeletedTrade)return;const restored=lastDeletedTrade;if(trades.some((trade)=>trade.id===restored.id)){clearUndo();setStatus("The deleted record already exists. / 已删除记录当前已存在。",true);return;}trades.push(restored);clearUndo();save();render();setStatus(`${restored.market} trade restored. / 已恢复 ${restored.market} 记录。`,false);});
         resetTradeButton.addEventListener("click",()=>{resetEditor();setStatus("Entry form reset. / 录入表单已重置。",false);});
         cancelEditButton.addEventListener("click",()=>{resetEditor();setStatus("Edit cancelled. / 已取消编辑。",false);});
         document.getElementById("exportJson").addEventListener("click",()=>download("gca-trade-journal.json","application/json",JSON.stringify(engine.buildBackup(trades,new Date().toISOString()),null,2)));
         document.getElementById("exportCsv").addEventListener("click",()=>download("gca-trade-journal-filtered.csv","text/csv;charset=utf-8",engine.toCsv(visibleTrades)));
         document.getElementById("importJson").addEventListener("change",async(event)=>{const file=event.target.files?.[0];if(!file)return;const backup=engine.parseBackup(await file.text());if(!backup){setStatus("Invalid GCA journal backup. / 备份文件无效。",true);event.target.value="";return;}const result=restoreImported(backup.trades);if(result.error){setStatus(`Import would contain ${result.total} records; the limit is ${engine.MAX_TRADES}. Export a backup, then clear or reduce the journal. / 导入后将有 ${result.total} 条，超过 ${engine.MAX_TRADES} 条上限，请先备份后清理或减少记录。`,true);}else{setStatus(`JSON restored: ${result.added} added, ${result.updated} updated. / JSON 已恢复：新增 ${result.added} 条，更新 ${result.updated} 条。`,false);}event.target.value="";});
         document.getElementById("importCsv").addEventListener("change",async(event)=>{const file=event.target.files?.[0];if(!file)return;const parsed=engine.parseCsv(await file.text());if(!parsed){setStatus("Invalid GCA journal CSV. Use a CSV exported by this journal. / CSV 无效，请使用本日志导出的 CSV。",true);event.target.value="";return;}const result=restoreImported(parsed.trades);if(result.error){setStatus(`Import would contain ${result.total} records; the limit is ${engine.MAX_TRADES}. Export a backup, then clear or reduce the journal. / 导入后将有 ${result.total} 条，超过 ${engine.MAX_TRADES} 条上限，请先备份后清理或减少记录。`,true);}else{setStatus(`CSV restored: ${result.added} added, ${result.updated} updated. / CSV 已恢复：新增 ${result.added} 条，更新 ${result.updated} 条。`,false);}event.target.value="";});
-        document.getElementById("clearJournal").addEventListener("click",()=>{if(!window.confirm("Clear all local journal entries? / 清空全部本地交易日志？"))return;trades=[];resetEditor();try{window.localStorage.removeItem(engine.STORAGE_KEY);}catch(error){}render();setStatus("Local journal cleared. / 本地日志已清空。",false);});
+        document.getElementById("clearJournal").addEventListener("click",()=>{if(!window.confirm("Clear all local journal entries? / 清空全部本地交易日志？"))return;trades=[];resetEditor();clearUndo();try{window.localStorage.removeItem(engine.STORAGE_KEY);}catch(error){}render();setStatus("Local journal cleared. / 本地日志已清空。",false);});
         Object.values(filterFields).forEach((field)=>{field.addEventListener("input",render);field.addEventListener("change",render);});
         document.getElementById("resetFilters").addEventListener("click",()=>{Object.values(filterFields).forEach((field)=>{field.value="";});render();});
         breakdownDimension.addEventListener("change",render);

@@ -851,6 +851,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
             "exportCsv",
             "importJson",
             "importCsv",
+            "undoDelete",
             "clearJournal",
             "journalRows",
             "journalFilters",
@@ -883,6 +884,10 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn("function restoreImported(imported)", page)
         self.assertIn("if(merged.size>engine.MAX_TRADES)", page)
         self.assertIn("Import would contain", page)
+        self.assertIn("let lastDeletedTrade = null", page)
+        self.assertIn("function clearUndo()", page)
+        self.assertIn("trade restored. / 已恢复", page)
+        self.assertIn("[hidden] { display:none !important; }", page)
         self.assertIn("engine.groupPerformance(visibleTrades,breakdownDimension.value)", page)
         self.assertIn("let editingId = null", page)
         self.assertIn("edit.dataset.editId=trade.id", page)
