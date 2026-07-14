@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GCA Member Workspace | Credits, Tools, and Service Requests</title>
+    <meta name="description" content="Browser-local GCA member workspace for device status, utility credits, risk tools, trade-journal summary, and manual service request packets.">
+    <link rel="canonical" href="https://gcagochina.com/member-workspace.html">
+    <link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">
+    <link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="GCA | Go China Access">
+    <meta property="og:title" content="GCA Member Workspace | Credits, Tools, and Service Requests">
+    <meta property="og:description" content="One browser-local workspace for GCA member status, credits, public risk tools, journal summary, and manual service requests.">
+    <meta property="og:url" content="https://gcagochina.com/member-workspace.html">
+    <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="GCA Member Workspace | Credits, Tools, and Service Requests">
+    <meta name="twitter:description" content="GCA member status, credits, public tools, journal summary, and manual service requests in one browser-local workspace.">
+    <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <style>
+      :root { color-scheme:light; --bg:#f7f8f5; --ink:#151817; --muted:#5e6763; --line:#dfe4dd; --panel:#fff; --soft:#eef3ef; --red:#d71920; --blue:#1557d7; --green:#087f5b; --gold:#8a6500; }
+      * { box-sizing:border-box; }
+      [hidden] { display:none !important; }
+      body { margin:0; color:var(--ink); background:var(--bg); font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; line-height:1.5; }
+      a { color:var(--blue); text-decoration:none; } a:hover { text-decoration:underline; }
+      .shell { width:min(1160px,calc(100% - 32px)); margin:0 auto; }
+      header { position:sticky; top:0; z-index:3; border-bottom:1px solid var(--line); background:rgba(247,248,245,.95); backdrop-filter:blur(16px); }
+      nav { min-height:68px; display:flex; align-items:center; justify-content:space-between; gap:18px; }
+      .brand { display:inline-flex; align-items:center; gap:10px; color:var(--ink); font-weight:850; } .brand img { width:34px; height:34px; }
+      .nav-links,.actions { display:flex; flex-wrap:wrap; align-items:center; gap:10px; } .nav-links { font-size:14px; }
+      main { padding:36px 0 64px; }
+      h1,h2,h3,p { margin-top:0; } h1 { max-width:920px; margin-bottom:14px; font-size:52px; line-height:1.03; letter-spacing:0; } h2 { margin-bottom:12px; font-size:25px; } h3 { margin-bottom:7px; font-size:18px; }
+      .eyebrow { margin:0 0 10px; color:var(--red); font-size:13px; font-weight:850; text-transform:uppercase; }
+      .lead,.note { color:var(--muted); } .lead { max-width:900px; margin-bottom:0; font-size:17px; } .note { margin:0; }
+      .section { margin-top:28px; }
+      .panel,.service { border:1px solid var(--line); border-radius:8px; background:var(--panel); }
+      .panel { padding:22px; }
+      .button { min-height:42px; display:inline-flex; align-items:center; justify-content:center; border:1px solid var(--line); border-radius:6px; background:#fff; color:var(--ink); padding:9px 13px; font:inherit; font-weight:800; cursor:pointer; }
+      .button:hover { text-decoration:none; } .button.primary { border-color:var(--red); background:var(--red); color:#fff; } .button[disabled] { cursor:not-allowed; opacity:.55; }
+      .status-message { border-left:3px solid var(--gold); background:#fff9e8; padding:12px 14px; color:#725400; }
+      .status-message.good { border-left-color:var(--green); background:#edf8f3; color:#086447; }
+      .metrics { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:16px; margin-top:18px; }
+      .metric { min-width:0; border-top:1px solid var(--line); padding-top:11px; }
+      .metric span { display:block; color:var(--muted); font-size:12px; font-weight:760; text-transform:uppercase; }
+      .metric strong { display:block; margin-top:6px; font-size:18px; overflow-wrap:anywhere; }
+      .workspace-grid { display:grid; grid-template-columns:minmax(0,1.15fr) minmax(300px,.85fr); gap:16px; }
+      .journal-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; margin-top:15px; }
+      .catalog { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; }
+      .service { min-height:218px; display:flex; flex-direction:column; padding:17px; }
+      .service-stage { color:var(--red); font-size:12px; font-weight:830; text-transform:uppercase; }
+      .service .note { flex:1; }
+      .service-meta { display:flex; justify-content:space-between; gap:10px; margin:13px 0 0; border-top:1px solid var(--line); padding-top:10px; font-size:13px; }
+      .service a { margin-top:13px; font-weight:800; }
+      .field { display:grid; gap:6px; margin-top:14px; }
+      .field label { font-size:12px; font-weight:800; }
+      input,select,textarea { width:100%; min-height:42px; border:1px solid var(--line); border-radius:6px; background:#fff; color:var(--ink); padding:9px 11px; font:inherit; }
+      textarea { min-height:128px; resize:vertical; } textarea[readonly] { min-height:390px; background:var(--soft); font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:12px; }
+      .selected-service { margin-top:15px; border-left:3px solid var(--blue); background:#eef4ff; padding:12px 14px; }
+      .boundary { border-left:3px solid var(--blue); background:#eef4ff; padding:14px; }
+      footer { border-top:1px solid var(--line); padding:24px 0; color:var(--muted); font-size:14px; }
+      @media (max-width:980px) { .catalog{grid-template-columns:repeat(2,minmax(0,1fr))}.metrics,.journal-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.workspace-grid{grid-template-columns:1fr} }
+      @media (max-width:680px) { h1{font-size:40px}.catalog,.metrics,.journal-grid{grid-template-columns:1fr}.service{min-height:0}nav{align-items:flex-start;flex-direction:column;padding:13px 0}.nav-links{gap:12px} }
+    </style>
+    <link rel="stylesheet" href="assets/gca-site.css?v=20260711">
+    <script src="assets/gca-site.js?v=20260711" defer></script>
+  </head>
+  <body>
+    <header><nav class="shell" aria-label="Primary"><a class="brand" href="index.html"><img src="assets/gca-logo.svg" alt="GCA logo"><span>GCA</span></a><div class="nav-links"><a href="gca/member-access/">Member Access</a><a href="tools.html">Risk Tools</a><a href="trade-journal.html">Journal</a><a href="support.html">Support</a></div></nav></header>
+    <main class="shell" id="main-content">
+      <section aria-labelledby="title">
+        <p class="eyebrow">GCA AI Quant Access · Browser-Local Member Area</p>
+        <h1 id="title">Member Workspace <span lang="zh-CN">会员工作区</span></h1>
+        <p class="lead">Review the non-sensitive status saved on this device, open GCA risk tools, inspect your local journal sample, and prepare a manual service request without exposing an admin token or deducting credits.</p>
+        <p class="lead" lang="zh-CN">查看本设备保存的非敏感会员状态、进入 GCA 风险工具、检查本地交易日志样本，并生成需要人工审核的服务申请。页面不会暴露管理员 token，也不会自动扣除积分。</p>
+        <div class="actions" style="margin-top:18px"><a class="button primary" href="#requestBuilder">Build Service Request / 生成服务申请</a><a class="button" href="gca/member-access/">Refresh Member Status / 刷新会员状态</a><a class="button" href="tools.html">Open Risk Tools / 打开风险工具</a></div>
+      </section>
+
+      <section class="section panel" aria-labelledby="statusTitle">
+        <p class="eyebrow">Device Snapshot</p>
+        <h2 id="statusTitle">Member and Credit Status <span lang="zh-CN">会员与积分状态</span></h2>
+        <div id="workspaceState" class="status-message" aria-live="polite">Checking this device / 正在检查本设备状态</div>
+        <div class="metrics">
+          <div class="metric"><span>Wallet / 钱包</span><strong id="workspaceWallet">-</strong></div>
+          <div class="metric"><span>GCA Balance / 余额</span><strong id="workspaceBalance">-</strong></div>
+          <div class="metric"><span>Credits / 积分</span><strong id="workspaceCredits">-</strong></div>
+          <div class="metric"><span>Member Status / 会员状态</span><strong id="workspaceMember">-</strong></div>
+        </div>
+        <p class="note" id="workspaceSavedAt" style="margin-top:14px">No current device snapshot / 本设备暂无状态快照</p>
+        <div class="actions" style="margin-top:14px"><a class="button" href="gca/member-access/">Run Read-Only Verification / 运行只读验证</a><a class="button" href="member-ledger.html">Ledger Rules / 账本规则</a><a class="button" href="credits.html">Credits Catalog / 积分目录</a></div>
+      </section>
+
+      <section class="section workspace-grid" aria-label="Journal and operating boundaries">
+        <div class="panel">
+          <p class="eyebrow">Local Process Evidence</p>
+          <h2>Trade Journal Summary <span lang="zh-CN">交易日志摘要</span></h2>
+          <p class="note">This summary reads only the GCA Trade Journal stored in this browser.</p>
+          <div class="journal-grid">
+            <div class="metric"><span>Trades / 笔数</span><strong id="journalTradeCount">0</strong></div>
+            <div class="metric"><span>Win rate / 胜率</span><strong id="journalWinRate">0.00%</strong></div>
+            <div class="metric"><span>Average / 平均收益</span><strong id="journalAverage">0.00%</strong></div>
+            <div class="metric"><span>Sample / 样本</span><strong id="journalQuality">INSUFFICIENT_SAMPLE</strong></div>
+          </div>
+          <div class="actions" style="margin-top:16px"><a class="button primary" href="trade-journal.html">Open Journal / 打开日志</a><a class="button" href="backtest-lab.html#source=journal">Analyze Journal / 分析日志</a></div>
+        </div>
+        <div class="panel">
+          <p class="eyebrow">Operating Boundary</p>
+          <h2>Manual Review Only <span lang="zh-CN">仅人工审核</span></h2>
+          <p class="boundary">The workspace reads browser-local status only. It does not read protected D1 ledgers, submit to admin-only service routes, reserve credits, deduct credits, connect an exchange, place orders, request signatures, or transfer tokens.</p>
+          <p class="note" lang="zh-CN" style="margin-top:13px">工作区只读取本浏览器状态，不读取受保护的 D1 账本，不调用管理员服务队列，不预扣或扣除积分，不连接交易所、不下单、不请求签名，也不转移代币。</p>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="catalogTitle">
+        <p class="eyebrow">Utility Catalog</p>
+        <h2 id="catalogTitle">Tools and Review Services <span lang="zh-CN">工具与审核服务</span></h2>
+        <p class="note" style="margin-bottom:14px">Public previews can be opened without credit deduction. Catalog units apply only after a separate operator review and recorded service delivery.</p>
+        <div class="catalog" id="serviceGrid"></div>
+      </section>
+
+      <section class="section workspace-grid" id="requestBuilder" aria-label="Manual service request builder">
+        <form class="panel" id="serviceRequestForm">
+          <p class="eyebrow">Request Builder</p>
+          <h2>Prepare a Service Request <span lang="zh-CN">准备服务申请</span></h2>
+          <p class="note">The form stays in this page until you copy it or open your email client. It is not posted to the protected Worker route.</p>
+          <div class="field"><label for="serviceId">Service / 服务</label><select id="serviceId" required></select></div>
+          <div class="selected-service" id="selectedService" aria-live="polite"></div>
+          <div class="field"><label for="contactEmail">Contact Email / 联系邮箱</label><input id="contactEmail" type="email" autocomplete="email" placeholder="name@example.com" required></div>
+          <div class="field"><label for="requestTitle">Request Title / 申请标题</label><input id="requestTitle" type="text" maxlength="120" placeholder="Review my completed trade sample" required></div>
+          <div class="field"><label for="requestSummary">What should be reviewed? / 需要审核什么？</label><textarea id="requestSummary" maxlength="1200" placeholder="Describe the completed-trade sample, question, and expected review output. Do not include secrets. / 说明样本、问题和希望获得的审核结果，不要填写敏感信息。" required></textarea></div>
+          <div class="field"><label for="marketContext">Market Context / 市场背景（可选）</label><textarea id="marketContext" maxlength="600" placeholder="Market, timeframe, completed-trade context, or public transaction reference."></textarea></div>
+          <div class="field"><label for="preferredLanguage">Preferred Language / 首选语言</label><select id="preferredLanguage"><option value="en">English</option><option value="zh-CN">中文</option></select></div>
+          <div class="actions"><button class="button primary" type="submit" id="buildServicePacket">Build Request Packet / 生成申请资料包</button><a class="button" id="selectedPreview" href="tools.html">Open Public Preview / 打开公开预览</a></div>
+        </form>
+        <div class="panel">
+          <p class="eyebrow">Review Packet</p>
+          <h2>Copy or Email <span lang="zh-CN">复制或发送邮件</span></h2>
+          <div id="requestStatus" class="status-message" aria-live="polite">Complete the form to build a manual review packet. / 填写表单后生成供人工审核的资料包。</div>
+          <div class="field"><label for="requestPacket">Service Request Packet / 服务申请资料包</label><textarea id="requestPacket" readonly placeholder="Your request packet will appear here. / 申请资料包会显示在这里。"></textarea></div>
+          <div class="actions"><button class="button" id="copyServicePacket" type="button" disabled>Copy Packet / 复制资料包</button><a class="button primary" id="emailServicePacket" href="mailto:support@gcagochina.com?subject=GCA%20Member%20Service%20Request" hidden>Email Support / 发送支持邮件</a></div>
+          <p class="note" style="margin-top:13px">Contact email is used only in the generated packet and is not stored in localStorage by this workspace.</p>
+        </div>
+      </section>
+    </main>
+    <footer><div class="shell">GCA Member Workspace · Browser-local status and manual review packets. No automatic credit deduction or token transfer.</div></footer>
+    <script src="assets/trade-journal.js"></script>
+    <script src="assets/member-workspace.js"></script>
+    <script>
+      (() => {
+        "use strict";
+        const engine = window.GcaMemberWorkspace;
+        const journalEngine = window.GcaTradeJournal;
+        const serviceId = document.getElementById("serviceId");
+        const selectedService = document.getElementById("selectedService");
+        const selectedPreview = document.getElementById("selectedPreview");
+        const requestStatus = document.getElementById("requestStatus");
+        const requestPacket = document.getElementById("requestPacket");
+        const copyServicePacket = document.getElementById("copyServicePacket");
+        const emailServicePacket = document.getElementById("emailServicePacket");
+        let snapshot = null;
+
+        function readLocal(key) {
+          try { return window.localStorage.getItem(key); } catch (error) { return null; }
+        }
+
+        function signedPercent(value) {
+          const number = Number(value || 0);
+          return `${number > 0 ? "+" : ""}${number.toFixed(2)}%`;
+        }
+
+        function renderDeviceStatus() {
+          snapshot = engine.parseMemberSnapshot(readLocal(engine.SNAPSHOT_KEY), Date.now());
+          const state = document.getElementById("workspaceState");
+          if (!snapshot) {
+            state.className = "status-message";
+            state.textContent = "No current member snapshot on this device. Run read-only verification in Member Access. / 本设备没有有效会员快照，请在会员入口运行只读验证。";
+            document.getElementById("workspaceWallet").textContent = "Not verified / 未验证";
+            document.getElementById("workspaceBalance").textContent = "-";
+            document.getElementById("workspaceCredits").textContent = "Not active / 未激活";
+            document.getElementById("workspaceMember").textContent = "Not active / 未激活";
+            return;
+          }
+          state.className = "status-message good";
+          state.textContent = "Device snapshot loaded. Refresh Member Access for a current on-chain balance. / 已读取本设备快照，请在会员入口刷新当前链上余额。";
+          document.getElementById("workspaceWallet").textContent = engine.maskWallet(snapshot.walletAddress);
+          document.getElementById("workspaceBalance").textContent = `${snapshot.gcaBalance} GCA`;
+          document.getElementById("workspaceCredits").textContent = snapshot.creditStatus === "not_created" ? "Not active / 未激活" : `${snapshot.remainingCredits} / ${snapshot.creditAmount}`;
+          document.getElementById("workspaceMember").textContent = snapshot.memberStatus === "not_created" ? "Not active / 未激活" : `${snapshot.memberStatus} · ${snapshot.memberBenefitClaimStatus}`;
+          document.getElementById("workspaceSavedAt").textContent = `Saved ${new Date(snapshot.savedAt).toLocaleString()} · Holding days verified: ${snapshot.holdingPeriodDaysVerified}. / 保存时间 ${new Date(snapshot.savedAt).toLocaleString()}。`;
+        }
+
+        function renderJournalSummary() {
+          const summary = engine.summarizeJournal(readLocal(engine.JOURNAL_KEY), journalEngine);
+          document.getElementById("journalTradeCount").textContent = String(summary.count);
+          document.getElementById("journalWinRate").textContent = `${summary.winRatePercent.toFixed(2)}%`;
+          document.getElementById("journalAverage").textContent = signedPercent(summary.averageReturnPercent);
+          document.getElementById("journalQuality").textContent = summary.sampleQuality.code;
+        }
+
+        function renderCatalog() {
+          const grid = document.getElementById("serviceGrid");
+          engine.SERVICE_CATALOG.forEach((service) => {
+            const option = document.createElement("option");
+            option.value = service.id;
+            option.textContent = `${service.name} · ${service.creditUnit} credits`;
+            serviceId.append(option);
+            const card = document.createElement("article");
+            card.className = "service";
+            const stage = document.createElement("span");
+            stage.className = "service-stage";
+            stage.textContent = service.stage.replaceAll("-", " ");
+            const title = document.createElement("h3");
+            title.textContent = service.name;
+            const note = document.createElement("p");
+            note.className = "note";
+            note.textContent = service.stage === "public-preview" ? "Browser-only public preview available now; opening it does not deduct credits." : "Manual review workflow; availability depends on account status and operator review.";
+            const meta = document.createElement("div");
+            meta.className = "service-meta";
+            meta.innerHTML = `<span>Catalog unit</span><strong>${service.creditUnit} credits</strong>`;
+            const link = document.createElement("a");
+            link.href = service.previewUrl;
+            link.textContent = service.stage === "public-preview" ? "Open Public Preview" : "Open Reference";
+            card.append(stage, title, note, meta, link);
+            grid.append(card);
+          });
+        }
+
+        function updateSelectedService() {
+          const service = engine.serviceById(serviceId.value);
+          if (!service) return;
+          const available = snapshot && snapshot.creditStatus !== "not_created" ? snapshot.remainingCredits : 0;
+          selectedService.textContent = `${service.name} · catalog unit ${service.creditUnit} credits · device snapshot available ${available}. Building a request does not deduct credits. / 生成申请不会扣除积分。`;
+          selectedPreview.href = service.previewUrl;
+        }
+
+        function errorMessage(code) {
+          return ({
+            "invalid-service": "Choose a valid service. / 请选择有效服务。",
+            "invalid-email": "Enter a valid contact email. / 请填写有效联系邮箱。",
+            "title-required": "Add a request title. / 请填写申请标题。",
+            "summary-too-short": "Describe the review request in at least 20 characters. / 请至少用 20 个字符说明审核需求。",
+            "sensitive-content": "Remove secrets or sensitive access information before building the packet. / 请删除敏感信息后再生成资料包。"
+          })[code] || "Check the request fields. / 请检查申请内容。";
+        }
+
+        document.getElementById("serviceRequestForm").addEventListener("submit", (event) => {
+          event.preventDefault();
+          const result = engine.buildServiceRequest({
+            serviceId: serviceId.value,
+            email: document.getElementById("contactEmail").value,
+            title: document.getElementById("requestTitle").value,
+            summary: document.getElementById("requestSummary").value,
+            marketContext: document.getElementById("marketContext").value,
+            preferredLanguage: document.getElementById("preferredLanguage").value
+          }, snapshot, new Date().toISOString());
+          if (!result.ok) {
+            requestStatus.className = "status-message";
+            requestStatus.textContent = errorMessage(result.error);
+            return;
+          }
+          requestPacket.value = result.packet;
+          copyServicePacket.disabled = false;
+          emailServicePacket.hidden = false;
+          emailServicePacket.href = `mailto:support@gcagochina.com?subject=${encodeURIComponent(`GCA Member Service Request · ${result.service.name}`)}&body=${encodeURIComponent(result.packet)}`;
+          requestStatus.className = result.creditCheck.status === "credits-available" || result.creditCheck.status === "no-credit-hold" ? "status-message good" : "status-message";
+          requestStatus.textContent = `Packet ready · ${result.creditCheck.status}. No credits were deducted. / 资料包已生成，未扣除任何积分。`;
+        });
+
+        copyServicePacket.addEventListener("click", async () => {
+          if (!requestPacket.value) return;
+          try {
+            await navigator.clipboard.writeText(requestPacket.value);
+            requestStatus.className = "status-message good";
+            requestStatus.textContent = "Service request copied. / 服务申请已复制。";
+          } catch (error) {
+            requestPacket.focus();
+            requestPacket.select();
+            requestStatus.className = "status-message";
+            requestStatus.textContent = "Clipboard unavailable; copy the selected packet manually. / 无法使用剪贴板，请手动复制已选内容。";
+          }
+        });
+
+        serviceId.addEventListener("change", updateSelectedService);
+        renderCatalog();
+        renderDeviceStatus();
+        renderJournalSummary();
+        updateSelectedService();
+      })();
+    </script>
+  </body>
+</html>
