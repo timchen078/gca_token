@@ -60,9 +60,19 @@
       textarea { min-height:128px; resize:vertical; } textarea[readonly] { min-height:390px; background:var(--soft); font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:12px; }
       .selected-service { margin-top:15px; border-left:3px solid var(--blue); background:#eef4ff; padding:12px 14px; }
       .boundary { border-left:3px solid var(--blue); background:#eef4ff; padding:14px; }
+      .activity-head { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; }
+      .activity-count { min-width:150px; text-align:right; }
+      .activity-count strong { display:block; font-size:24px; }
+      .activity-list { margin-top:16px; border-top:1px solid var(--line); }
+      .activity-row { padding:16px 0; border-bottom:1px solid var(--line); }
+      .activity-row-head { display:flex; align-items:flex-start; justify-content:space-between; gap:14px; }
+      .activity-row h3 { margin:0; }
+      .activity-status { color:var(--green); font-size:12px; font-weight:850; text-align:right; text-transform:uppercase; }
+      .activity-meta { display:flex; flex-wrap:wrap; gap:8px 16px; margin-top:9px; color:var(--muted); font-size:13px; }
+      .activity-empty { margin:0; padding:18px 0; color:var(--muted); }
       footer { border-top:1px solid var(--line); padding:24px 0; color:var(--muted); font-size:14px; }
       @media (max-width:980px) { .catalog{grid-template-columns:repeat(2,minmax(0,1fr))}.metrics,.journal-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.workspace-grid{grid-template-columns:1fr} }
-      @media (max-width:680px) { h1{font-size:40px}.catalog,.metrics,.journal-grid{grid-template-columns:1fr}.service{min-height:0}nav{align-items:flex-start;flex-direction:column;padding:13px 0}.nav-links{gap:12px} }
+      @media (max-width:680px) { h1{font-size:40px}.catalog,.metrics,.journal-grid{grid-template-columns:1fr}.service{min-height:0}nav{align-items:flex-start;flex-direction:column;padding:13px 0}.nav-links{gap:12px}.activity-head,.activity-row-head{display:grid}.activity-count{text-align:left}.activity-status{text-align:left} }
     </style>
     <link rel="stylesheet" href="assets/gca-site.css?v=20260711">
     <script src="assets/gca-site.js?v=20260711" defer></script>
@@ -139,9 +149,23 @@
           <h2>Copy or Email <span lang="zh-CN">复制或发送邮件</span></h2>
           <div id="requestStatus" class="status-message" aria-live="polite">Complete the form to build a manual review packet. / 填写表单后生成供人工审核的资料包。</div>
           <div class="field"><label for="requestPacket">Service Request Packet / 服务申请资料包</label><textarea id="requestPacket" readonly placeholder="Your request packet will appear here. / 申请资料包会显示在这里。"></textarea></div>
-          <div class="actions"><button class="button" id="copyServicePacket" type="button" disabled>Copy Packet / 复制资料包</button><a class="button primary" id="emailServicePacket" href="mailto:support@gcagochina.com?subject=GCA%20Member%20Service%20Request" hidden>Email Support / 发送支持邮件</a></div>
+          <div class="actions"><button class="button" id="copyServicePacket" type="button" disabled>Copy Packet / 复制资料包</button><button class="button" id="downloadServicePacket" type="button" disabled>Download Packet / 下载资料包</button><a class="button primary" id="emailServicePacket" href="mailto:support@gcagochina.com?subject=GCA%20Member%20Service%20Request" hidden>Email Support / 发送支持邮件</a></div>
           <p class="note" style="margin-top:13px">Contact email is used only in the generated packet and is not stored in localStorage by this workspace.</p>
         </div>
+      </section>
+
+      <section class="section panel" id="requestActivity" aria-labelledby="requestActivityTitle">
+        <div class="activity-head">
+          <div>
+            <p class="eyebrow">Device Activity</p>
+            <h2 id="requestActivityTitle">Local Request Receipts <span lang="zh-CN">本地申请回执</span></h2>
+            <p class="note">This device keeps privacy-minimized activity receipts only. Contact email, wallet address, request title, request summary, market context, and packet text are not stored in this history.</p>
+          </div>
+          <div class="activity-count"><span class="note">Saved on this device / 本设备记录</span><strong id="requestHistoryCount">0</strong></div>
+        </div>
+        <div id="requestHistoryList" class="activity-list" aria-live="polite"></div>
+        <div class="actions" style="margin-top:16px"><button class="button" id="clearRequestHistory" type="button" disabled>Clear Local History / 清除本地记录</button></div>
+        <p class="boundary" style="margin:16px 0 0">A local receipt records only what this browser did: packet created, copied, downloaded, or email client opened. It does not prove that support received, accepted, approved, or delivered the request. / 本地回执只记录浏览器操作，不代表支持团队已经收到、受理、批准或交付服务。</p>
       </section>
     </main>
     <footer><div class="shell">GCA Member Workspace · Browser-local status and manual review packets. No automatic credit deduction or token transfer.</div></footer>
@@ -158,11 +182,33 @@
         const requestStatus = document.getElementById("requestStatus");
         const requestPacket = document.getElementById("requestPacket");
         const copyServicePacket = document.getElementById("copyServicePacket");
+        const downloadServicePacket = document.getElementById("downloadServicePacket");
         const emailServicePacket = document.getElementById("emailServicePacket");
+        const requestHistoryCount = document.getElementById("requestHistoryCount");
+        const requestHistoryList = document.getElementById("requestHistoryList");
+        const clearRequestHistory = document.getElementById("clearRequestHistory");
         let snapshot = null;
+        let currentRequestResult = null;
+        let requestHistory = [];
 
         function readLocal(key) {
           try { return window.localStorage.getItem(key); } catch (error) { return null; }
+        }
+
+        function writeLocal(key, value) {
+          try {
+            window.localStorage.setItem(key, JSON.stringify(value));
+            return true;
+          } catch (error) {
+            return false;
+          }
+        }
+
+        function createLocalRequestId() {
+          if (window.crypto && typeof window.crypto.randomUUID === "function") {
+            return `gca_local_req_${window.crypto.randomUUID().replaceAll("-", "")}`;
+          }
+          return `gca_local_req_${Date.now().toString(36)}-browser`;
         }
 
         function signedPercent(value) {
@@ -197,6 +243,100 @@
           document.getElementById("journalWinRate").textContent = `${summary.winRatePercent.toFixed(2)}%`;
           document.getElementById("journalAverage").textContent = signedPercent(summary.averageReturnPercent);
           document.getElementById("journalQuality").textContent = summary.sampleQuality.code;
+        }
+
+        function requestActionLabel(action) {
+          return ({
+            packet_created: "Packet created / 已生成",
+            packet_copied: "Packet copied / 已复制",
+            packet_downloaded: "Packet downloaded / 已下载",
+            email_client_opened: "Email client opened / 已打开邮件客户端"
+          })[action] || "Local activity / 本地操作";
+        }
+
+        function renderRequestHistory() {
+          requestHistoryCount.textContent = String(requestHistory.length);
+          clearRequestHistory.disabled = requestHistory.length === 0;
+          requestHistoryList.textContent = "";
+          if (requestHistory.length === 0) {
+            const empty = document.createElement("p");
+            empty.className = "activity-empty";
+            empty.textContent = "No local request receipts on this device. / 本设备暂无申请回执。";
+            requestHistoryList.append(empty);
+            return;
+          }
+          requestHistory.forEach((receipt) => {
+            const row = document.createElement("div");
+            row.className = "activity-row";
+            const head = document.createElement("div");
+            head.className = "activity-row-head";
+            const heading = document.createElement("div");
+            const title = document.createElement("h3");
+            title.textContent = receipt.serviceName;
+            const service = document.createElement("p");
+            service.className = "note";
+            service.textContent = "Local request receipt / 本地申请回执";
+            heading.append(title, service);
+            const status = document.createElement("span");
+            status.className = "activity-status";
+            status.textContent = requestActionLabel(receipt.localAction);
+            head.append(heading, status);
+            const meta = document.createElement("div");
+            meta.className = "activity-meta";
+            [
+              receipt.requestId,
+              new Date(receipt.updatedAt).toLocaleString(),
+              `${receipt.creditUnit} credits`,
+              receipt.deviceCreditCheck
+            ].forEach((value) => {
+              const item = document.createElement("span");
+              item.textContent = value;
+              meta.append(item);
+            });
+            const actions = document.createElement("div");
+            actions.className = "actions";
+            actions.style.marginTop = "12px";
+            const reuse = document.createElement("button");
+            reuse.type = "button";
+            reuse.className = "button";
+            reuse.dataset.serviceId = receipt.serviceId;
+            reuse.textContent = "Use Service / 再次选择";
+            const remove = document.createElement("button");
+            remove.type = "button";
+            remove.className = "button";
+            remove.dataset.removeRequestId = receipt.requestId;
+            remove.textContent = "Delete Receipt / 删除回执";
+            actions.append(reuse, remove);
+            row.append(head, meta, actions);
+            requestHistoryList.append(row);
+          });
+        }
+
+        function saveRequestReceipt(result, input) {
+          const receipt = engine.createRequestReceipt(result, input, new Date().toISOString());
+          requestHistory = engine.upsertRequestHistory(requestHistory, receipt);
+          writeLocal(engine.REQUEST_HISTORY_KEY, requestHistory);
+          renderRequestHistory();
+        }
+
+        function recordRequestAction(action) {
+          if (!currentRequestResult) return;
+          requestHistory = engine.markRequestAction(requestHistory, currentRequestResult.requestId, action, new Date().toISOString());
+          writeLocal(engine.REQUEST_HISTORY_KEY, requestHistory);
+          renderRequestHistory();
+        }
+
+        function confirmInline(button, confirmationLabel) {
+          if (button.dataset.confirmReady === "true") return true;
+          const originalLabel = button.textContent;
+          button.dataset.confirmReady = "true";
+          button.textContent = confirmationLabel;
+          window.setTimeout(() => {
+            if (!button.isConnected || button.dataset.confirmReady !== "true") return;
+            button.dataset.confirmReady = "false";
+            button.textContent = originalLabel;
+          }, 5000);
+          return false;
         }
 
         function renderCatalog() {
@@ -247,31 +387,36 @@
 
         document.getElementById("serviceRequestForm").addEventListener("submit", (event) => {
           event.preventDefault();
-          const result = engine.buildServiceRequest({
+          const requestInput = {
             serviceId: serviceId.value,
             email: document.getElementById("contactEmail").value,
             title: document.getElementById("requestTitle").value,
             summary: document.getElementById("requestSummary").value,
             marketContext: document.getElementById("marketContext").value,
             preferredLanguage: document.getElementById("preferredLanguage").value
-          }, snapshot, new Date().toISOString());
+          };
+          const result = engine.buildServiceRequest(requestInput, snapshot, new Date().toISOString(), createLocalRequestId());
           if (!result.ok) {
             requestStatus.className = "status-message";
             requestStatus.textContent = errorMessage(result.error);
             return;
           }
+          currentRequestResult = result;
           requestPacket.value = result.packet;
           copyServicePacket.disabled = false;
+          downloadServicePacket.disabled = false;
           emailServicePacket.hidden = false;
           emailServicePacket.href = `mailto:support@gcagochina.com?subject=${encodeURIComponent(`GCA Member Service Request · ${result.service.name}`)}&body=${encodeURIComponent(result.packet)}`;
           requestStatus.className = result.creditCheck.status === "credits-available" || result.creditCheck.status === "no-credit-hold" ? "status-message good" : "status-message";
-          requestStatus.textContent = `Packet ready · ${result.creditCheck.status}. No credits were deducted. / 资料包已生成，未扣除任何积分。`;
+          requestStatus.textContent = `Packet ready · ${result.requestId} · ${result.creditCheck.status}. No credits were deducted. / 资料包已生成，未扣除任何积分。`;
+          saveRequestReceipt(result, requestInput);
         });
 
         copyServicePacket.addEventListener("click", async () => {
           if (!requestPacket.value) return;
           try {
             await navigator.clipboard.writeText(requestPacket.value);
+            recordRequestAction("packet_copied");
             requestStatus.className = "status-message good";
             requestStatus.textContent = "Service request copied. / 服务申请已复制。";
           } catch (error) {
@@ -282,10 +427,56 @@
           }
         });
 
+        downloadServicePacket.addEventListener("click", () => {
+          if (!requestPacket.value || !currentRequestResult) return;
+          const blob = new Blob([requestPacket.value], { type: "text/plain;charset=utf-8" });
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = `${currentRequestResult.requestId}.txt`;
+          document.body.append(link);
+          link.click();
+          link.remove();
+          URL.revokeObjectURL(url);
+          recordRequestAction("packet_downloaded");
+          requestStatus.className = "status-message good";
+          requestStatus.textContent = "Service request downloaded. / 服务申请已下载。";
+        });
+
+        emailServicePacket.addEventListener("click", () => {
+          recordRequestAction("email_client_opened");
+        });
+
+        requestHistoryList.addEventListener("click", (event) => {
+          const button = event.target.closest("button");
+          if (!button) return;
+          if (button.dataset.serviceId) {
+            serviceId.value = button.dataset.serviceId;
+            updateSelectedService();
+            document.getElementById("requestBuilder").scrollIntoView({ behavior: "smooth", block: "start" });
+            return;
+          }
+          if (button.dataset.removeRequestId) {
+            if (!confirmInline(button, "Confirm Delete / 确认删除")) return;
+            requestHistory = engine.removeRequestReceipt(requestHistory, button.dataset.removeRequestId);
+            writeLocal(engine.REQUEST_HISTORY_KEY, requestHistory);
+            renderRequestHistory();
+          }
+        });
+
+        clearRequestHistory.addEventListener("click", () => {
+          if (!confirmInline(clearRequestHistory, "Confirm Clear All / 确认全部清除")) return;
+          requestHistory = [];
+          writeLocal(engine.REQUEST_HISTORY_KEY, requestHistory);
+          renderRequestHistory();
+        });
+
         serviceId.addEventListener("change", updateSelectedService);
         renderCatalog();
         renderDeviceStatus();
         renderJournalSummary();
+        requestHistory = engine.parseRequestHistory(readLocal(engine.REQUEST_HISTORY_KEY));
+        renderRequestHistory();
         updateSelectedService();
       })();
     </script>

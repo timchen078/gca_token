@@ -8,9 +8,14 @@
   const SNAPSHOT_KEY = "gca_member_access_snapshot_v1";
   const SNAPSHOT_MAX_AGE_MS = 30 * 24 * 60 * 60 * 1000;
   const JOURNAL_KEY = "gca_trade_journal_v1";
+  const REQUEST_HISTORY_KEY = "gca_member_service_request_history_v1";
+  const REQUEST_HISTORY_LIMIT = 25;
   const ADDRESS_RE = /^0x[a-fA-F0-9]{40}$/;
   const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
   const SENSITIVE_RE = /private\s*key|seed\s*phrase|mnemonic|api\s*secret|wallet\s*password|one[-\s]*time\s*code|withdrawal\s*permission|remote\s*control|\b(?:otp|2fa)\b|\u79c1\u94a5|\u52a9\u8bb0\u8bcd|\u5bc6\u7801|\u9a8c\u8bc1\u7801|\u63d0\u73b0\u6743\u9650|\u8fdc\u7a0b\u63a7\u5236/i;
+  const REQUEST_ID_RE = /^gca_local_req_[a-z0-9-]{8,64}$/;
+  const REQUEST_ACTIONS = Object.freeze(["packet_created", "packet_copied", "packet_downloaded", "email_client_opened"]);
+  const CREDIT_CHECK_STATUSES = Object.freeze(["status-refresh-required", "no-credit-hold", "credit-ledger-not-active", "insufficient-credits", "credits-available"]);
 
   const SERVICE_CATALOG = Object.freeze([
     { id: "position-size-calculator", name: "Position Size Calculator", creditUnit: 5, previewUrl: "risk-calculator.html", stage: "public-preview" },
@@ -106,7 +111,20 @@
     return { status: "credits-available", available: snapshot.remainingCredits };
   }
 
-  function buildServiceRequest(input, snapshot, generatedAt) {
+  function normalizedIso(value, fallback) {
+    const parsed = Date.parse(value);
+    if (Number.isFinite(parsed)) return new Date(parsed).toISOString();
+    const fallbackParsed = Date.parse(fallback);
+    return Number.isFinite(fallbackParsed) ? new Date(fallbackParsed).toISOString() : new Date().toISOString();
+  }
+
+  function normalizeRequestId(value, generatedTime) {
+    const requestedId = cleanText(value, 96).toLowerCase();
+    if (REQUEST_ID_RE.test(requestedId)) return requestedId;
+    return `gca_local_req_${Date.parse(generatedTime).toString(36)}`;
+  }
+
+  function buildServiceRequest(input, snapshot, generatedAt, requestId) {
     const requested = input && typeof input === "object" ? input : {};
     const service = serviceById(requested.serviceId);
     const email = cleanText(requested.email, 160).toLowerCase();
@@ -119,11 +137,13 @@
     if (title.length < 3) return { ok: false, error: "title-required" };
     if (summary.length < 20) return { ok: false, error: "summary-too-short" };
     if (SENSITIVE_RE.test(`${title} ${summary} ${marketContext}`)) return { ok: false, error: "sensitive-content" };
-    const generatedTime = Number.isFinite(Date.parse(generatedAt)) ? new Date(generatedAt).toISOString() : new Date().toISOString();
+    const generatedTime = normalizedIso(generatedAt, new Date().toISOString());
+    const localRequestId = normalizeRequestId(requestId, generatedTime);
     const status = creditCheck(snapshot, service);
     const wallet = snapshot ? snapshot.walletAddress : "Not verified / \u672a\u9a8c\u8bc1";
     const packet = [
       "GCA Member Service Request / GCA \u4f1a\u5458\u670d\u52a1\u7533\u8bf7",
+      `Local request ID / \u672c\u5730\u7533\u8bf7\u7f16\u53f7: ${localRequestId}`,
       `Generated at / \u751f\u6210\u65f6\u95f4: ${generatedTime}`,
       "Request mode / \u7533\u8bf7\u6a21\u5f0f: manual operator review only / \u4ec5\u4eba\u5de5\u5ba1\u6838",
       "Credit effect / \u79ef\u5206\u5f71\u54cd: request creation does not deduct credits / \u751f\u6210\u7533\u8bf7\u4e0d\u6263\u9664\u79ef\u5206",
@@ -146,18 +166,104 @@
       "Do not add private keys, seed phrases, passwords, exchange API secrets, withdrawal permission, one-time codes, or remote-control access.",
       "\u4e0d\u8981\u6dfb\u52a0\u79c1\u94a5\u3001\u52a9\u8bb0\u8bcd\u3001\u5bc6\u7801\u3001\u4ea4\u6613\u6240 API Secret\u3001\u63d0\u73b0\u6743\u9650\u3001\u9a8c\u8bc1\u7801\u6216\u8fdc\u7a0b\u63a7\u5236\u6743\u9650\u3002"
     ].join("\n");
-    return { ok: true, service, creditCheck: status, packet };
+    return { ok: true, requestId: localRequestId, generatedAt: generatedTime, service, creditCheck: status, packet };
+  }
+
+  function sanitizeRequestReceipt(value) {
+    if (!value || typeof value !== "object" || value.version !== 1) return null;
+    const service = serviceById(value.serviceId);
+    const requestId = cleanText(value.requestId, 96).toLowerCase();
+    const createdAt = normalizedIso(value.createdAt, "");
+    const updatedAt = normalizedIso(value.updatedAt, createdAt);
+    const localAction = cleanText(value.localAction, 40);
+    const creditCheckStatus = cleanText(value.deviceCreditCheck, 60);
+    const creditsAvailable = Number(value.deviceCreditsAvailable || 0);
+    if (!service || !REQUEST_ID_RE.test(requestId)) return null;
+    if (!Number.isFinite(Date.parse(value.createdAt)) || !Number.isFinite(Date.parse(value.updatedAt))) return null;
+    if (!REQUEST_ACTIONS.includes(localAction) || !CREDIT_CHECK_STATUSES.includes(creditCheckStatus)) return null;
+    if (!Number.isInteger(creditsAvailable) || creditsAvailable < 0) return null;
+    return {
+      version: 1,
+      requestId,
+      createdAt,
+      updatedAt,
+      serviceId: service.id,
+      serviceName: service.name,
+      creditUnit: service.creditUnit,
+      preferredLanguage: value.preferredLanguage === "zh-CN" ? "zh-CN" : "en",
+      deviceCreditCheck: creditCheckStatus,
+      deviceCreditsAvailable: creditsAvailable,
+      localAction
+    };
+  }
+
+  function parseRequestHistory(value) {
+    const rows = parseJson(value);
+    if (!Array.isArray(rows)) return [];
+    const seen = new Set();
+    return rows
+      .map(sanitizeRequestReceipt)
+      .filter((receipt) => {
+        if (!receipt || seen.has(receipt.requestId)) return false;
+        seen.add(receipt.requestId);
+        return true;
+      })
+      .sort((left, right) => Date.parse(right.updatedAt) - Date.parse(left.updatedAt))
+      .slice(0, REQUEST_HISTORY_LIMIT);
+  }
+
+  function createRequestReceipt(result, input, actionAt) {
+    if (!result || result.ok !== true || !result.service || !result.creditCheck) return null;
+    const requested = input && typeof input === "object" ? input : {};
+    return sanitizeRequestReceipt({
+      version: 1,
+      requestId: result.requestId,
+      createdAt: result.generatedAt,
+      updatedAt: normalizedIso(actionAt, result.generatedAt),
+      serviceId: result.service.id,
+      preferredLanguage: requested.preferredLanguage,
+      deviceCreditCheck: result.creditCheck.status,
+      deviceCreditsAvailable: result.creditCheck.available,
+      localAction: "packet_created"
+    });
+  }
+
+  function upsertRequestHistory(value, receipt) {
+    const current = parseRequestHistory(value);
+    const sanitized = sanitizeRequestReceipt(receipt);
+    if (!sanitized) return current;
+    return parseRequestHistory([sanitized, ...current.filter((item) => item.requestId !== sanitized.requestId)]);
+  }
+
+  function markRequestAction(value, requestId, action, actionAt) {
+    const current = parseRequestHistory(value);
+    if (!REQUEST_ACTIONS.includes(action)) return current;
+    const updatedTime = normalizedIso(actionAt, new Date().toISOString());
+    return parseRequestHistory(current.map((receipt) => receipt.requestId === requestId
+      ? { ...receipt, localAction: action, updatedAt: updatedTime }
+      : receipt));
+  }
+
+  function removeRequestReceipt(value, requestId) {
+    return parseRequestHistory(value).filter((receipt) => receipt.requestId !== requestId);
   }
 
   return {
     SNAPSHOT_KEY,
     SNAPSHOT_MAX_AGE_MS,
     JOURNAL_KEY,
+    REQUEST_HISTORY_KEY,
+    REQUEST_HISTORY_LIMIT,
     SERVICE_CATALOG,
     serviceById,
     maskWallet,
     parseMemberSnapshot,
     summarizeJournal,
-    buildServiceRequest
+    buildServiceRequest,
+    parseRequestHistory,
+    createRequestReceipt,
+    upsertRequestHistory,
+    markRequestAction,
+    removeRequestReceipt
   };
 });

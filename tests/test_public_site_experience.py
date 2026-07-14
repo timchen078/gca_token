@@ -113,7 +113,13 @@ class PublicSiteExperienceTests(unittest.TestCase):
             "requestStatus",
             "requestPacket",
             "copyServicePacket",
+            "downloadServicePacket",
             "emailServicePacket",
+            "requestActivity",
+            "requestActivityTitle",
+            "requestHistoryCount",
+            "requestHistoryList",
+            "clearRequestHistory",
         ):
             self.assertIn(f'id="{element_id}"', page)
 
@@ -122,15 +128,21 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn("engine.parseMemberSnapshot", page)
         self.assertIn("engine.summarizeJournal", page)
         self.assertIn("engine.buildServiceRequest", page)
+        self.assertIn("engine.createRequestReceipt", page)
+        self.assertIn("engine.markRequestAction", page)
+        self.assertIn("engine.removeRequestReceipt", page)
         self.assertIn("navigator.clipboard.writeText", page)
+        self.assertIn("URL.createObjectURL", page)
         self.assertIn("mailto:support@gcagochina.com", page)
         self.assertIn("does not deduct credits", page)
         self.assertIn("does not read protected D1 ledgers", page)
+        self.assertIn("does not prove that support received", page)
         self.assertNotIn("fetch(", page)
         self.assertNotIn("window.ethereum", page)
         self.assertNotIn("WebSocket", page)
         self.assertIn('const SNAPSHOT_KEY = "gca_member_access_snapshot_v1"', engine)
         self.assertIn('const JOURNAL_KEY = "gca_trade_journal_v1"', engine)
+        self.assertIn('const REQUEST_HISTORY_KEY = "gca_member_service_request_history_v1"', engine)
         self.assertIn("SENSITIVE_RE", engine)
         workspace = next(item for item in product["productModules"] if item["id"] == "gca-member-workspace")
         self.assertEqual(workspace["status"], "public-browser-local-workspace-live-account-ledger-intake-live")
@@ -162,11 +174,16 @@ class PublicSiteExperienceTests(unittest.TestCase):
             "const w=require(process.argv[1]);const j=require(process.argv[2]);"
             "const raw=JSON.stringify({version:1,savedAt:'2026-07-14T00:00:00Z',walletAddress:'0x1111111111111111111111111111111111111111',gcaBalance:'1000000',holderBonusEligible:true,gcaMemberEligible:true,holdingPeriodDaysVerified:31,creditAmount:100,remainingCredits:75,creditStatus:'ledger_recorded',memberStatus:'active',memberBenefitClaimStatus:'pending_manual_reserve_transfer'});"
             "const snapshot=w.parseMemberSnapshot(raw,Date.parse('2026-07-14T12:00:00Z'));"
-            "const request=w.buildServiceRequest({serviceId:'backtest-lab-run',email:'Member@Example.com',title:'Review completed sample',summary:'Review this completed trade sample for drawdown and execution discipline.',marketContext:'BTC/USDT 4h completed trades',preferredLanguage:'zh-CN'},snapshot,'2026-07-14T12:30:00Z');"
+            "const requestInput={serviceId:'backtest-lab-run',email:'Member@Example.com',title:'Review completed sample',summary:'Review this completed trade sample for drawdown and execution discipline.',marketContext:'BTC/USDT 4h completed trades',preferredLanguage:'zh-CN'};"
+            "const request=w.buildServiceRequest(requestInput,snapshot,'2026-07-14T12:30:00Z','gca_local_req_test1234');"
+            "const receipt=w.createRequestReceipt(request,requestInput,'2026-07-14T12:31:00Z');"
+            "const history=w.upsertRequestHistory('[]',receipt);"
+            "const copied=w.markRequestAction(history,request.requestId,'packet_copied','2026-07-14T12:32:00Z');"
+            "const removed=w.removeRequestReceipt(copied,request.requestId);"
             "const sensitive=w.buildServiceRequest({serviceId:'backtest-lab-run',email:'member@example.com',title:'Review sample',summary:'My private key should never be included here.',marketContext:''},snapshot,'2026-07-14T12:30:00Z');"
             "const expired=w.parseMemberSnapshot(raw,Date.parse('2026-08-14T00:00:01Z'));"
             "const journal=w.summarizeJournal(JSON.stringify([{id:'a',date:'2026-07-01',market:'BTC/USDT',direction:'long',returnPercent:2,setup:'breakout',notes:'plan',createdAt:'2026-07-01T00:00:00Z'},{id:'b',date:'2026-07-02',market:'ETH/USDT',direction:'short',returnPercent:-1,setup:'retest',notes:'stop',createdAt:'2026-07-02T00:00:00Z'}]),j);"
-            "process.stdout.write(JSON.stringify({snapshot,request,sensitive,expired,journal,masked:w.maskWallet(snapshot.walletAddress),services:w.SERVICE_CATALOG}));"
+            "process.stdout.write(JSON.stringify({snapshot,request,receipt,history,copied,removed,stored:JSON.stringify(copied),sensitive,expired,journal,masked:w.maskWallet(snapshot.walletAddress),services:w.SERVICE_CATALOG}));"
         )
         completed = subprocess.run(
             [node, "-e", script, str(module_path), str(journal_path)],
@@ -182,7 +199,19 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertTrue(result["request"]["ok"])
         self.assertEqual(result["request"]["service"]["creditUnit"], 20)
         self.assertEqual(result["request"]["creditCheck"]["status"], "credits-available")
+        self.assertEqual(result["request"]["requestId"], "gca_local_req_test1234")
+        self.assertIn("gca_local_req_test1234", result["request"]["packet"])
         self.assertIn("request creation does not deduct credits", result["request"]["packet"])
+        self.assertEqual(result["receipt"]["localAction"], "packet_created")
+        self.assertEqual(result["receipt"]["deviceCreditsAvailable"], 75)
+        self.assertEqual(len(result["history"]), 1)
+        self.assertEqual(result["copied"][0]["localAction"], "packet_copied")
+        self.assertEqual(result["removed"], [])
+        self.assertNotIn("member@example.com", result["stored"].lower())
+        self.assertNotIn("Review completed sample", result["stored"])
+        self.assertNotIn("drawdown and execution discipline", result["stored"])
+        self.assertNotIn("BTC/USDT", result["stored"])
+        self.assertNotIn("0x1111111111111111111111111111111111111111", result["stored"])
         self.assertEqual(result["sensitive"], {"ok": False, "error": "sensitive-content"})
         self.assertIsNone(result["expired"])
         self.assertEqual(result["journal"]["count"], 2)
