@@ -84,6 +84,113 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn("restoreSnapshot();", page)
         self.assertNotIn("email: email.value", page[page.index("function snapshotFromResponse"):page.index("function latestResponseLines")])
 
+    def test_member_workspace_is_local_and_builds_manual_request_packets(self):
+        page = (SITE / "member-workspace.html").read_text()
+        engine = (SITE / "assets" / "member-workspace.js").read_text()
+        product = json.loads((SITE / "product.json").read_text())
+        credits = json.loads((SITE / "credits.json").read_text())
+        sitemap = (SITE / "sitemap.xml").read_text()
+
+        for element_id in (
+            "workspaceState",
+            "workspaceWallet",
+            "workspaceBalance",
+            "workspaceCredits",
+            "workspaceMember",
+            "journalTradeCount",
+            "journalWinRate",
+            "journalAverage",
+            "journalQuality",
+            "serviceGrid",
+            "serviceRequestForm",
+            "serviceId",
+            "contactEmail",
+            "requestTitle",
+            "requestSummary",
+            "marketContext",
+            "preferredLanguage",
+            "buildServicePacket",
+            "requestStatus",
+            "requestPacket",
+            "copyServicePacket",
+            "emailServicePacket",
+        ):
+            self.assertIn(f'id="{element_id}"', page)
+
+        self.assertIn('src="assets/member-workspace.js"', page)
+        self.assertIn('src="assets/trade-journal.js"', page)
+        self.assertIn("engine.parseMemberSnapshot", page)
+        self.assertIn("engine.summarizeJournal", page)
+        self.assertIn("engine.buildServiceRequest", page)
+        self.assertIn("navigator.clipboard.writeText", page)
+        self.assertIn("mailto:support@gcagochina.com", page)
+        self.assertIn("does not deduct credits", page)
+        self.assertIn("does not read protected D1 ledgers", page)
+        self.assertNotIn("fetch(", page)
+        self.assertNotIn("window.ethereum", page)
+        self.assertNotIn("WebSocket", page)
+        self.assertIn('const SNAPSHOT_KEY = "gca_member_access_snapshot_v1"', engine)
+        self.assertIn('const JOURNAL_KEY = "gca_trade_journal_v1"', engine)
+        self.assertIn("SENSITIVE_RE", engine)
+        workspace = next(item for item in product["productModules"] if item["id"] == "gca-member-workspace")
+        self.assertEqual(workspace["status"], "public-browser-local-workspace-live-account-ledger-intake-live")
+        self.assertEqual(workspace["publicUrl"], "https://gcagochina.com/member-workspace.html")
+        self.assertEqual(product["officialLinks"]["memberWorkspace"], "https://gcagochina.com/member-workspace.html")
+        catalog_units = {item["id"]: item["creditUnit"] for item in credits["serviceCatalog"]}
+        for service_id, credit_unit in (
+            ("position-size-calculator", 5),
+            ("risk-warning-review", 10),
+            ("entry-ready-review", 15),
+            ("backtest-lab-run", 20),
+            ("liquidation-replay-report", 30),
+            ("risk-control-training", 10),
+            ("member-research-notes", 20),
+            ("support-review-queue", 0),
+        ):
+            self.assertEqual(catalog_units[service_id], credit_unit)
+        self.assertIn("https://gcagochina.com/member-workspace.html", sitemap)
+
+    def test_member_workspace_engine_validates_snapshot_journal_and_request(self):
+        bundled_node = Path("/Users/abc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node")
+        node = shutil.which("node") or (str(bundled_node) if bundled_node.exists() else "")
+        if not node:
+            self.skipTest("Node.js is unavailable")
+
+        module_path = SITE / "assets" / "member-workspace.js"
+        journal_path = SITE / "assets" / "trade-journal.js"
+        script = (
+            "const w=require(process.argv[1]);const j=require(process.argv[2]);"
+            "const raw=JSON.stringify({version:1,savedAt:'2026-07-14T00:00:00Z',walletAddress:'0x1111111111111111111111111111111111111111',gcaBalance:'1000000',holderBonusEligible:true,gcaMemberEligible:true,holdingPeriodDaysVerified:31,creditAmount:100,remainingCredits:75,creditStatus:'ledger_recorded',memberStatus:'active',memberBenefitClaimStatus:'pending_manual_reserve_transfer'});"
+            "const snapshot=w.parseMemberSnapshot(raw,Date.parse('2026-07-14T12:00:00Z'));"
+            "const request=w.buildServiceRequest({serviceId:'backtest-lab-run',email:'Member@Example.com',title:'Review completed sample',summary:'Review this completed trade sample for drawdown and execution discipline.',marketContext:'BTC/USDT 4h completed trades',preferredLanguage:'zh-CN'},snapshot,'2026-07-14T12:30:00Z');"
+            "const sensitive=w.buildServiceRequest({serviceId:'backtest-lab-run',email:'member@example.com',title:'Review sample',summary:'My private key should never be included here.',marketContext:''},snapshot,'2026-07-14T12:30:00Z');"
+            "const expired=w.parseMemberSnapshot(raw,Date.parse('2026-08-14T00:00:01Z'));"
+            "const journal=w.summarizeJournal(JSON.stringify([{id:'a',date:'2026-07-01',market:'BTC/USDT',direction:'long',returnPercent:2,setup:'breakout',notes:'plan',createdAt:'2026-07-01T00:00:00Z'},{id:'b',date:'2026-07-02',market:'ETH/USDT',direction:'short',returnPercent:-1,setup:'retest',notes:'stop',createdAt:'2026-07-02T00:00:00Z'}]),j);"
+            "process.stdout.write(JSON.stringify({snapshot,request,sensitive,expired,journal,masked:w.maskWallet(snapshot.walletAddress),services:w.SERVICE_CATALOG}));"
+        )
+        completed = subprocess.run(
+            [node, "-e", script, str(module_path), str(journal_path)],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        result = json.loads(completed.stdout)
+
+        self.assertEqual(result["snapshot"]["remainingCredits"], 75)
+        self.assertEqual(result["snapshot"]["memberStatus"], "active")
+        self.assertEqual(result["masked"], "0x111111...111111")
+        self.assertTrue(result["request"]["ok"])
+        self.assertEqual(result["request"]["service"]["creditUnit"], 20)
+        self.assertEqual(result["request"]["creditCheck"]["status"], "credits-available")
+        self.assertIn("request creation does not deduct credits", result["request"]["packet"])
+        self.assertEqual(result["sensitive"], {"ok": False, "error": "sensitive-content"})
+        self.assertIsNone(result["expired"])
+        self.assertEqual(result["journal"]["count"], 2)
+        self.assertAlmostEqual(result["journal"]["winRatePercent"], 50)
+        self.assertAlmostEqual(result["journal"]["averageReturnPercent"], 0.5)
+        self.assertEqual(len(result["services"]), 8)
+        self.assertEqual({item["id"]: item["creditUnit"] for item in result["services"]}["support-review-queue"], 0)
+
     def test_risk_calculator_is_client_side_and_has_no_execution_path(self):
         page = (SITE / "risk-calculator.html").read_text()
         product = (SITE / "product.json").read_text()

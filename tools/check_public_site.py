@@ -4307,6 +4307,7 @@ def validate_zh_data_page(text: str) -> None:
 
 def validate_zh_site_map_page(text: str) -> None:
     label = "/zh-site-map.html"
+    assert_contains(text, "member-workspace.html", label)
     assert_social_preview_meta(text, label, ZH_SITE_MAP_PAGE_URL)
     for expected in (
         "GCA 中文站点地图",
@@ -4631,6 +4632,7 @@ def validate_data_page(text: str) -> None:
 
 def validate_site_map_page(text: str) -> None:
     label = "/site-map.html"
+    assert_contains(text, "member-workspace.html", label)
     assert_social_preview_meta(text, label, SITE_MAP_PAGE_URL)
     for expected in (
         "GCA Site Map",
@@ -5423,6 +5425,46 @@ def validate_member_access_page(text: str) -> None:
     assert_not_contains(text, "Platform-Only Evidence Path", label)
     assert_not_contains(text, "Data Room", label)
     assert_not_contains(text, "../../data.html", label)
+
+
+def validate_member_workspace_page(text: str) -> None:
+    label = "/member-workspace.html"
+    assert_contains(text, "GCA Member Workspace", label)
+    assert_contains(text, "Member Workspace", label)
+    assert_contains(text, "会员工作区", label)
+    assert_contains(text, 'id="workspaceState"', label)
+    assert_contains(text, 'id="workspaceWallet"', label)
+    assert_contains(text, 'id="workspaceBalance"', label)
+    assert_contains(text, 'id="workspaceCredits"', label)
+    assert_contains(text, 'id="workspaceMember"', label)
+    assert_contains(text, 'id="journalTradeCount"', label)
+    assert_contains(text, 'id="journalWinRate"', label)
+    assert_contains(text, 'id="journalAverage"', label)
+    assert_contains(text, 'id="journalQuality"', label)
+    assert_contains(text, 'id="serviceGrid"', label)
+    assert_contains(text, 'id="serviceRequestForm"', label)
+    assert_contains(text, 'id="serviceId"', label)
+    assert_contains(text, 'id="contactEmail"', label)
+    assert_contains(text, 'id="requestTitle"', label)
+    assert_contains(text, 'id="requestSummary"', label)
+    assert_contains(text, 'id="marketContext"', label)
+    assert_contains(text, 'id="requestPacket"', label)
+    assert_contains(text, 'id="copyServicePacket"', label)
+    assert_contains(text, 'id="emailServicePacket"', label)
+    assert_contains(text, 'src="assets/member-workspace.js"', label)
+    assert_contains(text, 'src="assets/trade-journal.js"', label)
+    assert_contains(text, "engine.parseMemberSnapshot", label)
+    assert_contains(text, "engine.summarizeJournal", label)
+    assert_contains(text, "engine.buildServiceRequest", label)
+    assert_contains(text, "Manual Review Only", label)
+    assert_contains(text, "does not deduct credits", label)
+    assert_contains(text, "does not read protected D1 ledgers", label)
+    assert_contains(text, "mailto:support@gcagochina.com", label)
+    assert_contains(text, "navigator.clipboard.writeText", label)
+    assert_not_contains(text, "fetch(", label)
+    assert_not_contains(text, "window.ethereum", label)
+    assert_not_contains(text, "WebSocket", label)
+    assert_no_forbidden_public_claims(text, label)
 
 
 def validate_operator_page(text: str) -> None:
@@ -7673,6 +7715,8 @@ def validate_product_page(text: str) -> None:
     assert_contains(text, "ENTRY_READY Review", label)
     assert_contains(text, "Position Size Calculator", label)
     assert_contains(text, "GCA Member Workspace", label)
+    assert_contains(text, "Browser-Local Workspace Live", label)
+    assert_contains(text, 'href="member-workspace.html"', label)
     assert_contains(text, "simulation or testnet first", label)
     assert_contains(text, "No custody", label)
     assert_contains(text, "no withdrawal permission", label)
@@ -7831,6 +7875,7 @@ def validate_product_json(text: str) -> None:
     positioning = payload.get("positioning", {})
     modules = payload.get("productModules", [])
     module_names = {item.get("name") for item in modules}
+    module_map = {item.get("id"): item for item in modules if isinstance(item, dict)}
     release_gate_ids = {item.get("id") for item in payload.get("releaseGates", [])}
     access = payload.get("gcaAccessRules", {})
     safety = payload.get("safetyArchitecture", {})
@@ -7868,6 +7913,13 @@ def validate_product_json(text: str) -> None:
     ):
         if name not in module_names:
             raise SiteCheckError(f"{label}: missing module {name}")
+    member_workspace = module_map.get("gca-member-workspace", {})
+    if member_workspace.get("status") != "public-browser-local-workspace-live-account-ledger-intake-live":
+        raise SiteCheckError(f"{label}: wrong member workspace status")
+    if member_workspace.get("publicUrl") != "https://gcagochina.com/member-workspace.html":
+        raise SiteCheckError(f"{label}: wrong member workspace URL")
+    if links.get("memberWorkspace") != "https://gcagochina.com/member-workspace.html":
+        raise SiteCheckError(f"{label}: wrong memberWorkspace link")
     for gate in ("controlled-https-account-ui", "read-only-wallet-verification", "credit-ledger-activation", "member-ledger-activation", "risk-control-review", "simulation-first"):
         if gate not in release_gate_ids:
             raise SiteCheckError(f"{label}: missing release gate {gate}")
@@ -14528,6 +14580,7 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/worker-routes-handoff.html",
         "https://gcagochina.com/worker-routes-handoff.json",
         "https://gcagochina.com/gca/member-access/",
+        "https://gcagochina.com/member-workspace.html",
         "https://gcagochina.com/member-program.html",
         "https://gcagochina.com/member-program.json",
         "https://gcagochina.com/member-ledger.html",
@@ -14767,6 +14820,7 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /member-program.html", label)
     assert_contains(text, "Allow: /member-program.json", label)
     assert_contains(text, "Allow: /gca/member-access/", label)
+    assert_contains(text, "Allow: /member-workspace.html", label)
     assert_contains(text, "Allow: /support.html", label)
     assert_contains(text, "Allow: /support.json", label)
     assert_contains(text, "Allow: /privacy.html", label)
@@ -14906,6 +14960,7 @@ CHECKS: list[EndpointCheck] = [
     ("/supply.json", validate_supply_json),
     ("/members.html", validate_members),
     ("/gca/member-access/", validate_member_access_page),
+    ("/member-workspace.html", validate_member_workspace_page),
     ("/member-program.html", validate_member_program_page),
     ("/member-program.json", validate_member_program_json),
     ("/member-ledger.html", validate_member_ledger_page),

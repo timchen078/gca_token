@@ -138,6 +138,7 @@ Disallow: /operator.html
 Allow: /members.html
 Allow: /member-program.json
 Allow: /gca/member-access/
+Allow: /member-workspace.html
 Allow: /support.html
 Allow: /support.json
 Allow: /privacy.html
