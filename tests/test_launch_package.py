@@ -5179,6 +5179,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Liquidation Replay", page)
         self.assertIn("ENTRY_READY Review", page)
         self.assertIn("Position Size Calculator", page)
+        self.assertIn("Risk Discipline Training", page)
+        self.assertIn('href="risk-training.html"', page)
         self.assertIn("GCA Member Workspace", page)
         self.assertIn("simulation or testnet first", page)
         self.assertIn("No custody", page)
@@ -5208,9 +5210,16 @@ class LaunchPackageTests(unittest.TestCase):
             "Backtest Lab",
             "ENTRY_READY Review",
             "Position Size Calculator",
+            "Risk Discipline Training",
             "GCA Member Workspace",
         }:
             self.assertIn(name, module_names)
+        risk_training = next(item for item in product["productModules"] if item["id"] == "risk-control-training")
+        self.assertEqual(risk_training["status"], "public-client-side-preview-live")
+        self.assertEqual(risk_training["publicUrl"], "https://gcagochina.com/risk-training.html")
+        self.assertFalse(risk_training["connectsWallet"])
+        self.assertFalse(risk_training["connectsExchange"])
+        self.assertFalse(risk_training["issuesCertification"])
         gate_ids = {item["id"] for item in product["releaseGates"]}
         self.assertIn("controlled-https-account-ui", gate_ids)
         self.assertIn("simulation-first", gate_ids)

@@ -219,6 +219,9 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertAlmostEqual(result["journal"]["averageReturnPercent"], 0.5)
         self.assertEqual(len(result["services"]), 8)
         self.assertEqual({item["id"]: item["creditUnit"] for item in result["services"]}["support-review-queue"], 0)
+        training_service = next(item for item in result["services"] if item["id"] == "risk-control-training")
+        self.assertEqual(training_service["previewUrl"], "risk-training.html")
+        self.assertEqual(training_service["stage"], "public-preview")
 
     def test_risk_calculator_is_client_side_and_has_no_execution_path(self):
         page = (SITE / "risk-calculator.html").read_text()
@@ -410,6 +413,91 @@ class PublicSiteExperienceTests(unittest.TestCase):
         wrong_result = json.loads(wrong.stdout)
         self.assertEqual(wrong_result["status"], "NOT_READY")
         self.assertFalse(wrong_result["priceStructureValid"])
+
+    def test_risk_training_is_bilingual_transparent_and_client_side(self):
+        page = (SITE / "risk-training.html").read_text()
+        engine = (SITE / "assets" / "risk-training.js").read_text()
+        product = json.loads((SITE / "product.json").read_text())
+        credits = json.loads((SITE / "credits.json").read_text())
+
+        for element_id in (
+            "trainingForm",
+            "questionList",
+            "answeredCount",
+            "scorePercent",
+            "trainingStatus",
+            "checkTraining",
+            "resetTraining",
+            "trainingResult",
+            "statusBadge",
+            "categoryResults",
+            "reviewPlan",
+        ):
+            self.assertIn(f'id="{element_id}"', page)
+
+        self.assertIn("Risk Discipline Training", page)
+        self.assertIn("风控纪律训练", page)
+        self.assertIn('src="assets/risk-training.js"', page)
+        self.assertIn("engine.evaluateAnswers", page)
+        self.assertIn("engine.buildReviewPlan", page)
+        self.assertIn('percent >= 75', engine)
+        self.assertIn('"NOT_COMPLETE"', engine)
+        self.assertIn('"REVIEW_REQUIRED"', engine)
+        self.assertIn('"FOUNDATION_READY"', engine)
+        self.assertIn("does not fetch prices", page)
+        self.assertIn("does not", page)
+        self.assertIn("certification", page)
+        self.assertNotIn("window.ethereum", page)
+        self.assertNotIn("fetch(", page)
+        self.assertNotIn("WebSocket", page)
+
+        module = next(item for item in product["productModules"] if item["id"] == "risk-control-training")
+        self.assertEqual(module["status"], "public-client-side-preview-live")
+        self.assertEqual(module["publicUrl"], "https://gcagochina.com/risk-training.html")
+        self.assertFalse(module["issuesCertification"])
+        service = next(item for item in credits["serviceCatalog"] if item["id"] == "risk-control-training")
+        self.assertEqual(service["publicPreview"]["url"], "https://gcagochina.com/risk-training.html")
+        self.assertFalse(service["publicPreview"]["deductsCredits"])
+        self.assertFalse(service["publicPreview"]["issuesCertification"])
+
+    def test_risk_training_engine_scores_threshold_and_builds_review_plan(self):
+        bundled_node = Path("/Users/abc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node")
+        node = shutil.which("node") or (str(bundled_node) if bundled_node.exists() else "")
+        if not node:
+            self.skipTest("Node.js is unavailable")
+
+        module_path = SITE / "assets" / "risk-training.js"
+        script = (
+            "const e=require(process.argv[1]);"
+            "const correct=Object.fromEntries(e.questions.map(q=>[q.id,q.correctOptionId]));"
+            "const wrongFor=q=>q.options.find(o=>o.id!==q.correctOptionId).id;"
+            "const partial={[e.questions[0].id]:e.questions[0].correctOptionId};"
+            "const five=Object.fromEntries(e.questions.map((q,i)=>[q.id,i<5?q.correctOptionId:wrongFor(q)]));"
+            "const six=Object.fromEntries(e.questions.map((q,i)=>[q.id,i<6?q.correctOptionId:wrongFor(q)]));"
+            "const results={partial:e.evaluateAnswers(partial),review:e.evaluateAnswers(five),threshold:e.evaluateAnswers(six),perfect:e.evaluateAnswers(correct)};"
+            "results.plans=Object.fromEntries(Object.entries(results).map(([k,v])=>[k,e.buildReviewPlan(v)]));"
+            "process.stdout.write(JSON.stringify(results));"
+        )
+        completed = subprocess.run(
+            [node, "-e", script, str(module_path)],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        result = json.loads(completed.stdout)
+
+        self.assertEqual(result["partial"]["status"], "NOT_COMPLETE")
+        self.assertEqual(result["partial"]["answeredCount"], 1)
+        self.assertEqual(len(result["plans"]["partial"]), 7)
+        self.assertEqual(result["review"]["status"], "REVIEW_REQUIRED")
+        self.assertEqual(result["review"]["correctCount"], 5)
+        self.assertEqual(result["review"]["percent"], 63)
+        self.assertEqual(len(result["plans"]["review"]), 3)
+        self.assertEqual(result["threshold"]["status"], "FOUNDATION_READY")
+        self.assertEqual(result["threshold"]["percent"], 75)
+        self.assertEqual(result["perfect"]["status"], "FOUNDATION_READY")
+        self.assertEqual(result["perfect"]["percent"], 100)
+        self.assertEqual(result["plans"]["perfect"], [])
 
     def test_liquidation_replay_is_transparent_and_client_side(self):
         page = (SITE / "liquidation-replay.html").read_text()
@@ -781,7 +869,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
         product = (SITE / "product.json").read_text()
         credits = (SITE / "credits.json").read_text()
 
-        for mode in ("prepare", "research", "review", "all"):
+        for mode in ("learn", "prepare", "research", "review", "all"):
             self.assertIn(f'data-mode="{mode}"', page)
         for tool_id, url in (
             ("risk-calculator", "risk-calculator.html"),
@@ -789,6 +877,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
             ("entry-ready", "entry-ready.html"),
             ("backtest-lab", "backtest-lab.html"),
             ("liquidation-replay", "liquidation-replay.html"),
+            ("risk-training", "risk-training.html"),
         ):
             self.assertIn(f'data-tool="{tool_id}"', page)
             self.assertIn(f'href="{url}"', page)
@@ -827,7 +916,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn("Plan data stays in the URL fragment", page)
         self.assertIn("The workspace does not save these plan values", page)
         self.assertIn("five plan-aware", page)
-        self.assertIn("Six Risk Tools", page)
+        self.assertIn("Seven Risk Tools", page)
         self.assertIn('data-tool="trade-journal"', page)
         self.assertIn('"riskToolsWorkspace": "https://gcagochina.com/tools.html"', product)
         self.assertIn('"riskToolsWorkspace": "https://gcagochina.com/tools.html"', credits)
@@ -837,6 +926,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn("prepare:", engine)
         self.assertIn("research:", engine)
         self.assertIn("review:", engine)
+        self.assertIn("learn:", engine)
 
     def test_risk_tools_workflow_engine_returns_expected_order(self):
         bundled_node = Path("/Users/abc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node")
@@ -850,10 +940,11 @@ class PublicSiteExperienceTests(unittest.TestCase):
             "process.stdout.write(JSON.stringify(w.getWorkflow(process.argv[2])));"
         )
         expectations = {
+            "learn": ["risk-training", "risk-calculator", "risk-warning", "entry-ready", "trade-journal"],
             "prepare": ["risk-calculator", "risk-warning", "entry-ready"],
             "research": ["trade-journal", "backtest-lab", "risk-warning", "entry-ready"],
             "review": ["liquidation-replay", "trade-journal", "risk-calculator", "risk-warning", "entry-ready"],
-            "all": ["risk-calculator", "risk-warning", "entry-ready", "backtest-lab", "liquidation-replay", "trade-journal"],
+            "all": ["risk-training", "risk-calculator", "risk-warning", "entry-ready", "backtest-lab", "liquidation-replay", "trade-journal"],
         }
         for mode, expected in expectations.items():
             completed = subprocess.run(
@@ -1035,7 +1126,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertNotIn("fetch(", page)
         self.assertNotIn("WebSocket", page)
         self.assertIn('const STORAGE_KEY = "gca_trade_journal_v1"', engine)
-        self.assertEqual(product["positioning"]["publicRiskToolPreviewsLive"], 6)
+        self.assertEqual(product["positioning"]["publicRiskToolPreviewsLive"], 7)
         self.assertEqual(product["officialLinks"]["tradeJournal"], "https://gcagochina.com/trade-journal.html")
         self.assertEqual(credits["officialLinks"]["tradeJournal"], "https://gcagochina.com/trade-journal.html")
 

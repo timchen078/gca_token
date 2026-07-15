@@ -2,6 +2,7 @@ User-agent: *
 Allow: /
 Allow: /risk-calculator.html
 Allow: /entry-ready.html
+Allow: /risk-training.html
 Allow: /data-viewer.html
 Allow: /start.html
 Allow: /register.html

@@ -124,6 +124,7 @@ LIQUIDATION_REPLAY_PAGE_URL = "https://gcagochina.com/liquidation-replay.html"
 BACKTEST_LAB_PAGE_URL = "https://gcagochina.com/backtest-lab.html"
 RISK_WARNING_PAGE_URL = "https://gcagochina.com/risk-warning.html"
 RISK_TOOLS_PAGE_URL = "https://gcagochina.com/tools.html"
+RISK_TRAINING_PAGE_URL = "https://gcagochina.com/risk-training.html"
 SERVICE_DELIVERY_PLAYBOOK_PAGE_URL = "https://gcagochina.com/service-delivery-playbook.html"
 SERVICE_DELIVERY_PLAYBOOK_URL = "https://gcagochina.com/service-delivery-playbook.json"
 WORKER_ROUTES_HANDOFF_PAGE_URL = "https://gcagochina.com/worker-routes-handoff.html"
@@ -7725,6 +7726,8 @@ def validate_product_page(text: str) -> None:
     assert_contains(text, "Backtest Lab", label)
     assert_contains(text, "ENTRY_READY Review", label)
     assert_contains(text, "Position Size Calculator", label)
+    assert_contains(text, "Risk Discipline Training", label)
+    assert_contains(text, 'href="risk-training.html"', label)
     assert_contains(text, "GCA Member Workspace", label)
     assert_contains(text, "Browser-Local Workspace Live", label)
     assert_contains(text, 'href="member-workspace.html"', label)
@@ -7854,6 +7857,7 @@ def validate_risk_tools_page(text: str) -> None:
     label = "/tools.html"
     assert_contains(text, "GCA Risk Tools", label)
     assert_contains(text, 'data-mode="prepare"', label)
+    assert_contains(text, 'data-mode="learn"', label)
     assert_contains(text, 'data-mode="research"', label)
     assert_contains(text, 'data-mode="review"', label)
     assert_contains(text, 'id="workflowSteps"', label)
@@ -7871,9 +7875,33 @@ def validate_risk_tools_page(text: str) -> None:
     assert_contains(text, 'data-tool="backtest-lab"', label)
     assert_contains(text, 'data-tool="liquidation-replay"', label)
     assert_contains(text, 'data-tool="trade-journal"', label)
+    assert_contains(text, 'data-tool="risk-training"', label)
     assert_contains(text, 'src="assets/risk-tools.js"', label)
     assert_contains(text, "Plan data stays in the URL fragment", label)
     assert_contains(text, "does not fetch live market data", label)
+    assert_not_contains(text, "window.ethereum", label)
+    assert_not_contains(text, "fetch(", label)
+    assert_not_contains(text, "WebSocket", label)
+    assert_no_forbidden_public_claims(text, label)
+
+
+def validate_risk_training_page(text: str) -> None:
+    label = "/risk-training.html"
+    assert_contains(text, "GCA Risk Discipline Training", label)
+    assert_contains(text, 'id="trainingForm"', label)
+    assert_contains(text, 'id="questionList"', label)
+    assert_contains(text, 'id="answeredCount"', label)
+    assert_contains(text, 'id="scorePercent"', label)
+    assert_contains(text, 'id="trainingStatus"', label)
+    assert_contains(text, 'id="checkTraining"', label)
+    assert_contains(text, 'id="resetTraining"', label)
+    assert_contains(text, 'id="trainingResult"', label)
+    assert_contains(text, 'id="reviewPlan"', label)
+    assert_contains(text, 'src="assets/risk-training.js"', label)
+    assert_contains(text, "engine.evaluateAnswers", label)
+    assert_contains(text, "does not fetch prices", label)
+    assert_contains(text, "does not", label)
+    assert_contains(text, "certification", label)
     assert_not_contains(text, "window.ethereum", label)
     assert_not_contains(text, "fetch(", label)
     assert_not_contains(text, "WebSocket", label)
@@ -7908,6 +7936,8 @@ def validate_product_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong productName")
     if positioning.get("currentStage") != "account-ledger-path-live-product-tools-planned":
         raise SiteCheckError(f"{label}: wrong currentStage")
+    if positioning.get("publicRiskToolPreviewsLive") != 7:
+        raise SiteCheckError(f"{label}: expected seven public risk tool previews")
     if positioning.get("publicAccountUiLive") is not True:
         raise SiteCheckError(f"{label}: publicAccountUiLive must be true")
     if positioning.get("liveTradingEnabled") is not False:
@@ -7920,17 +7950,28 @@ def validate_product_json(text: str) -> None:
         "Backtest Lab",
         "ENTRY_READY Review",
         "Position Size Calculator",
+        "Risk Discipline Training",
         "GCA Member Workspace",
     ):
         if name not in module_names:
             raise SiteCheckError(f"{label}: missing module {name}")
     member_workspace = module_map.get("gca-member-workspace", {})
+    risk_training = module_map.get("risk-control-training", {})
+    if risk_training.get("status") != "public-client-side-preview-live":
+        raise SiteCheckError(f"{label}: wrong risk training status")
+    if risk_training.get("publicUrl") != RISK_TRAINING_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong risk training URL")
+    for key in ("storesOnServer", "connectsWallet", "connectsExchange", "fetchesMarketData", "placesOrders", "deductsCredits", "issuesCertification"):
+        if risk_training.get(key) is not False:
+            raise SiteCheckError(f"{label}: risk training {key} must be false")
     if member_workspace.get("status") != "public-browser-local-workspace-live-account-ledger-intake-live":
         raise SiteCheckError(f"{label}: wrong member workspace status")
     if member_workspace.get("publicUrl") != "https://gcagochina.com/member-workspace.html":
         raise SiteCheckError(f"{label}: wrong member workspace URL")
     if links.get("memberWorkspace") != "https://gcagochina.com/member-workspace.html":
         raise SiteCheckError(f"{label}: wrong memberWorkspace link")
+    if links.get("riskDisciplineTraining") != RISK_TRAINING_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong riskDisciplineTraining link")
     for gate in ("controlled-https-account-ui", "read-only-wallet-verification", "credit-ledger-activation", "member-ledger-activation", "risk-control-review", "simulation-first"):
         if gate not in release_gate_ids:
             raise SiteCheckError(f"{label}: missing release gate {gate}")
@@ -9964,6 +10005,7 @@ def validate_credits_page(text: str) -> None:
     assert_contains(text, "ENTRY_READY Review", label)
     assert_contains(text, "Position Size Calculator", label)
     assert_contains(text, "Risk-Control Training", label)
+    assert_contains(text, 'href="risk-training.html"', label)
     assert_contains(text, "Member Research Notes", label)
     assert_contains(text, "Support Review Queue", label)
     assert_contains(text, "controlled HTTPS account UI", label)
@@ -9993,6 +10035,7 @@ def validate_credits_json(text: str) -> None:
     member = payload.get("gcaMember", {})
     service_ids = {item.get("id") for item in payload.get("serviceCatalog", [])}
     service_names = {item.get("name") for item in payload.get("serviceCatalog", [])}
+    service_map = {item.get("id"): item for item in payload.get("serviceCatalog", []) if isinstance(item, dict)}
     redemption = payload.get("redemptionBoundaries", {})
     safety = payload.get("safetyArchitecture", {})
     release_gates = payload.get("releaseGates", {})
@@ -10075,6 +10118,16 @@ def validate_credits_json(text: str) -> None:
             raise SiteCheckError(f"{label}: wrong service status for {item.get('id')}")
         if item.get("unitType") not in {"draft service credit unit", "draft member credit unit", "member workflow priority"}:
             raise SiteCheckError(f"{label}: wrong unitType for {item.get('id')}")
+    training_preview = service_map.get("risk-control-training", {}).get("publicPreview", {})
+    if training_preview.get("status") != "live-client-side-preview":
+        raise SiteCheckError(f"{label}: risk training preview must be live")
+    if training_preview.get("url") != RISK_TRAINING_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong risk training preview URL")
+    for key in ("deductsCredits", "connectsWallet", "connectsExchange", "fetchesMarketData", "placesOrders", "issuesCertification"):
+        if training_preview.get(key) is not False:
+            raise SiteCheckError(f"{label}: risk training preview {key} must be false")
+    if links.get("riskDisciplineTraining") != RISK_TRAINING_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong risk training official link")
     for key in (
         "accountLevelOnly",
         "requiresSupportReview",
@@ -14586,6 +14639,7 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/backtest-lab.html",
         "https://gcagochina.com/risk-warning.html",
         "https://gcagochina.com/tools.html",
+        "https://gcagochina.com/risk-training.html",
         "https://gcagochina.com/service-delivery-playbook.html",
         "https://gcagochina.com/service-delivery-playbook.json",
         "https://gcagochina.com/worker-routes-handoff.html",
@@ -14687,6 +14741,7 @@ def validate_sitemap(text: str) -> None:
         "zh-release-gates.html",
     ):
         assert_sitemap_lastmod(path, "2026-06-15")
+    assert_sitemap_lastmod("risk-training.html", "2026-07-15")
     for path in (
         "basescan-handoff.html",
         "basescan-handoff.json",
@@ -14753,6 +14808,7 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /markets.html", label)
     assert_contains(text, "Allow: /security.html", label)
     assert_contains(text, "Allow: /risk.html", label)
+    assert_contains(text, "Allow: /risk-training.html", label)
     assert_contains(text, "Allow: /faq.html", label)
     assert_contains(text, "Allow: /wallet-warning.html", label)
     assert_contains(text, "Allow: /brand-kit.html", label)
@@ -15010,6 +15066,7 @@ CHECKS: list[EndpointCheck] = [
     ("/trade-journal.html", validate_trade_journal_page),
     ("/risk-warning.html", validate_risk_warning_page),
     ("/tools.html", validate_risk_tools_page),
+    ("/risk-training.html", validate_risk_training_page),
     ("/service-delivery-playbook.html", validate_service_delivery_playbook_page),
     ("/service-delivery-playbook.json", validate_service_delivery_playbook_json),
     ("/worker-routes-handoff.html", validate_worker_routes_handoff_page),
