@@ -5,6 +5,12 @@
 })(typeof globalThis !== "undefined" ? globalThis : this, function createRiskTraining() {
   "use strict";
 
+  const DRAFT_KEY = "gca_risk_training_draft_v1";
+  const HISTORY_KEY = "gca_risk_training_history_v1";
+  const HISTORY_LIMIT = 20;
+  const ATTEMPT_ID_RE = /^gca_training_[a-z0-9-]{8,64}$/;
+  const RESULT_STATUSES = Object.freeze(["REVIEW_REQUIRED", "FOUNDATION_READY"]);
+
   const questions = [
     {
       id: "position-size",
@@ -133,6 +139,44 @@
     return Object.fromEntries(questions.map((question) => [question.id, String(value[question.id] || "")]));
   }
 
+  function parseJson(value) {
+    try {
+      return typeof value === "string" ? JSON.parse(value) : value;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function normalizedIso(value) {
+    const parsed = Date.parse(value);
+    return Number.isFinite(parsed) ? new Date(parsed).toISOString() : null;
+  }
+
+  function validAnswerMap(input) {
+    const normalized = normalizeAnswers(input);
+    return Object.fromEntries(questions.flatMap((question) => {
+      const selected = normalized[question.id];
+      return question.options.some((option) => option.id === selected) ? [[question.id, selected]] : [];
+    }));
+  }
+
+  function createTrainingDraft(input, savedAt) {
+    const answers = validAnswerMap(input);
+    const timestamp = normalizedIso(savedAt);
+    if (!timestamp || Object.keys(answers).length === 0) return null;
+    return Object.freeze({
+      version: 1,
+      savedAt: timestamp,
+      answers: Object.freeze(answers)
+    });
+  }
+
+  function parseTrainingDraft(value) {
+    const draft = parseJson(value);
+    if (!draft || draft.version !== 1 || !draft.answers || typeof draft.answers !== "object") return null;
+    return createTrainingDraft(draft.answers, draft.savedAt);
+  }
+
   function evaluateAnswers(input) {
     const answers = normalizeAnswers(input);
     const questionResults = questions.map((question) => {
@@ -198,12 +242,111 @@
     return Object.freeze(items);
   }
 
+  function sanitizeAttemptReceipt(value) {
+    if (!value || typeof value !== "object" || value.version !== 1) return null;
+    const attemptId = String(value.attemptId || "").trim().toLowerCase();
+    const completedAt = normalizedIso(value.completedAt);
+    const status = String(value.status || "");
+    const total = Number(value.total);
+    const answeredCount = Number(value.answeredCount);
+    const correctCount = Number(value.correctCount);
+    const percent = Number(value.percent);
+    if (!ATTEMPT_ID_RE.test(attemptId) || !completedAt || !RESULT_STATUSES.includes(status)) return null;
+    if (!Number.isInteger(total) || total !== questions.length || answeredCount !== total) return null;
+    if (!Number.isInteger(correctCount) || correctCount < 0 || correctCount > total) return null;
+    if (!Number.isInteger(percent) || percent !== Math.round((correctCount / total) * 100)) return null;
+    if ((status === "FOUNDATION_READY") !== (percent >= 75)) return null;
+    const knownIds = new Set(questions.map((question) => question.id));
+    const missedQuestionIds = [...new Set(Array.isArray(value.missedQuestionIds) ? value.missedQuestionIds.map(String) : [])]
+      .filter((id) => knownIds.has(id));
+    if (missedQuestionIds.length !== total - correctCount) return null;
+    return Object.freeze({
+      version: 1,
+      attemptId,
+      completedAt,
+      status,
+      total,
+      answeredCount,
+      correctCount,
+      percent,
+      missedQuestionIds: Object.freeze(missedQuestionIds)
+    });
+  }
+
+  function normalizeAttemptId(value, completedAt) {
+    const requested = String(value || "").trim().toLowerCase();
+    if (ATTEMPT_ID_RE.test(requested)) return requested;
+    return `gca_training_${Date.parse(completedAt).toString(36)}-local`;
+  }
+
+  function createAttemptReceipt(result, completedAt, attemptId) {
+    const timestamp = normalizedIso(completedAt);
+    if (!timestamp || !result || result.answeredCount !== questions.length || !Array.isArray(result.questionResults)) return null;
+    return sanitizeAttemptReceipt({
+      version: 1,
+      attemptId: normalizeAttemptId(attemptId, timestamp),
+      completedAt: timestamp,
+      status: result.status,
+      total: result.total,
+      answeredCount: result.answeredCount,
+      correctCount: result.correctCount,
+      percent: result.percent,
+      missedQuestionIds: result.questionResults.filter((item) => !item.correct).map((item) => item.id)
+    });
+  }
+
+  function parseAttemptHistory(value) {
+    const rows = parseJson(value);
+    if (!Array.isArray(rows)) return Object.freeze([]);
+    const seen = new Set();
+    const history = rows
+      .map(sanitizeAttemptReceipt)
+      .filter((receipt) => {
+        if (!receipt || seen.has(receipt.attemptId)) return false;
+        seen.add(receipt.attemptId);
+        return true;
+      })
+      .sort((left, right) => Date.parse(right.completedAt) - Date.parse(left.completedAt))
+      .slice(0, HISTORY_LIMIT);
+    return Object.freeze(history);
+  }
+
+  function upsertAttemptHistory(value, receipt) {
+    const current = parseAttemptHistory(value);
+    const sanitized = sanitizeAttemptReceipt(receipt);
+    if (!sanitized) return current;
+    return parseAttemptHistory([sanitized, ...current.filter((item) => item.attemptId !== sanitized.attemptId)]);
+  }
+
+  function summarizeAttemptHistory(value) {
+    const history = parseAttemptHistory(value);
+    const latest = history[0] || null;
+    return Object.freeze({
+      count: history.length,
+      latestStatus: latest ? latest.status : "NO_ATTEMPTS",
+      latestPercent: latest ? latest.percent : 0,
+      latestCompletedAt: latest ? latest.completedAt : null,
+      bestPercent: history.reduce((best, item) => Math.max(best, item.percent), 0),
+      foundationReadyCount: history.filter((item) => item.status === "FOUNDATION_READY").length,
+      latestMissedQuestionIds: Object.freeze(latest ? [...latest.missedQuestionIds] : [])
+    });
+  }
+
   return Object.freeze({
+    DRAFT_KEY,
+    HISTORY_KEY,
+    HISTORY_LIMIT,
     questions: Object.freeze(questions.map((question) => Object.freeze({
       ...question,
       options: Object.freeze(question.options.map((option) => Object.freeze({ ...option })))
     }))),
     evaluateAnswers,
-    buildReviewPlan
+    buildReviewPlan,
+    createTrainingDraft,
+    parseTrainingDraft,
+    createAttemptReceipt,
+    parseAttemptHistory,
+    upsertAttemptHistory,
+    summarizeAttemptHistory
   });
 });

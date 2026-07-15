@@ -101,6 +101,12 @@ class PublicSiteExperienceTests(unittest.TestCase):
             "journalWinRate",
             "journalAverage",
             "journalQuality",
+            "trainingSummaryTitle",
+            "trainingAttemptCount",
+            "trainingLatest",
+            "trainingBest",
+            "trainingReadyCount",
+            "trainingSavedAt",
             "serviceGrid",
             "serviceRequestForm",
             "serviceId",
@@ -125,8 +131,11 @@ class PublicSiteExperienceTests(unittest.TestCase):
 
         self.assertIn('src="assets/member-workspace.js"', page)
         self.assertIn('src="assets/trade-journal.js"', page)
+        self.assertIn('src="assets/risk-training.js"', page)
         self.assertIn("engine.parseMemberSnapshot", page)
         self.assertIn("engine.summarizeJournal", page)
+        self.assertIn("engine.summarizeTraining", page)
+        self.assertIn("trainingStatusLabel", page)
         self.assertIn("engine.buildServiceRequest", page)
         self.assertIn("engine.createRequestReceipt", page)
         self.assertIn("engine.markRequestAction", page)
@@ -142,6 +151,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertNotIn("WebSocket", page)
         self.assertIn('const SNAPSHOT_KEY = "gca_member_access_snapshot_v1"', engine)
         self.assertIn('const JOURNAL_KEY = "gca_trade_journal_v1"', engine)
+        self.assertIn('const TRAINING_HISTORY_KEY = "gca_risk_training_history_v1"', engine)
         self.assertIn('const REQUEST_HISTORY_KEY = "gca_member_service_request_history_v1"', engine)
         self.assertIn("SENSITIVE_RE", engine)
         workspace = next(item for item in product["productModules"] if item["id"] == "gca-member-workspace")
@@ -170,8 +180,9 @@ class PublicSiteExperienceTests(unittest.TestCase):
 
         module_path = SITE / "assets" / "member-workspace.js"
         journal_path = SITE / "assets" / "trade-journal.js"
+        training_path = SITE / "assets" / "risk-training.js"
         script = (
-            "const w=require(process.argv[1]);const j=require(process.argv[2]);"
+            "const w=require(process.argv[1]);const j=require(process.argv[2]);const t=require(process.argv[3]);"
             "const raw=JSON.stringify({version:1,savedAt:'2026-07-14T00:00:00Z',walletAddress:'0x1111111111111111111111111111111111111111',gcaBalance:'1000000',holderBonusEligible:true,gcaMemberEligible:true,holdingPeriodDaysVerified:31,creditAmount:100,remainingCredits:75,creditStatus:'ledger_recorded',memberStatus:'active',memberBenefitClaimStatus:'pending_manual_reserve_transfer'});"
             "const snapshot=w.parseMemberSnapshot(raw,Date.parse('2026-07-14T12:00:00Z'));"
             "const requestInput={serviceId:'backtest-lab-run',email:'Member@Example.com',title:'Review completed sample',summary:'Review this completed trade sample for drawdown and execution discipline.',marketContext:'BTC/USDT 4h completed trades',preferredLanguage:'zh-CN'};"
@@ -183,10 +194,14 @@ class PublicSiteExperienceTests(unittest.TestCase):
             "const sensitive=w.buildServiceRequest({serviceId:'backtest-lab-run',email:'member@example.com',title:'Review sample',summary:'My private key should never be included here.',marketContext:''},snapshot,'2026-07-14T12:30:00Z');"
             "const expired=w.parseMemberSnapshot(raw,Date.parse('2026-08-14T00:00:01Z'));"
             "const journal=w.summarizeJournal(JSON.stringify([{id:'a',date:'2026-07-01',market:'BTC/USDT',direction:'long',returnPercent:2,setup:'breakout',notes:'plan',createdAt:'2026-07-01T00:00:00Z'},{id:'b',date:'2026-07-02',market:'ETH/USDT',direction:'short',returnPercent:-1,setup:'retest',notes:'stop',createdAt:'2026-07-02T00:00:00Z'}]),j);"
-            "process.stdout.write(JSON.stringify({snapshot,request,receipt,history,copied,removed,stored:JSON.stringify(copied),sensitive,expired,journal,masked:w.maskWallet(snapshot.walletAddress),services:w.SERVICE_CATALOG}));"
+            "const trainingAnswers=Object.fromEntries(t.questions.map(q=>[q.id,q.correctOptionId]));"
+            "const trainingResult=t.evaluateAnswers(trainingAnswers);"
+            "const trainingReceipt=t.createAttemptReceipt(trainingResult,'2026-07-14T12:40:00Z','gca_training_member123');"
+            "const training=w.summarizeTraining(JSON.stringify([trainingReceipt]),t);"
+            "process.stdout.write(JSON.stringify({snapshot,request,receipt,history,copied,removed,stored:JSON.stringify(copied),sensitive,expired,journal,training,masked:w.maskWallet(snapshot.walletAddress),services:w.SERVICE_CATALOG}));"
         )
         completed = subprocess.run(
-            [node, "-e", script, str(module_path), str(journal_path)],
+            [node, "-e", script, str(module_path), str(journal_path), str(training_path)],
             check=True,
             capture_output=True,
             text=True,
@@ -217,6 +232,11 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertEqual(result["journal"]["count"], 2)
         self.assertAlmostEqual(result["journal"]["winRatePercent"], 50)
         self.assertAlmostEqual(result["journal"]["averageReturnPercent"], 0.5)
+        self.assertEqual(result["training"]["count"], 1)
+        self.assertEqual(result["training"]["latestPercent"], 100)
+        self.assertEqual(result["training"]["bestPercent"], 100)
+        self.assertEqual(result["training"]["foundationReadyCount"], 1)
+        self.assertEqual(result["training"]["latestMissedQuestionIds"], [])
         self.assertEqual(len(result["services"]), 8)
         self.assertEqual({item["id"]: item["creditUnit"] for item in result["services"]}["support-review-queue"], 0)
         training_service = next(item for item in result["services"] if item["id"] == "risk-control-training")
@@ -432,6 +452,15 @@ class PublicSiteExperienceTests(unittest.TestCase):
             "statusBadge",
             "categoryResults",
             "reviewPlan",
+            "draftStatus",
+            "attemptHistory",
+            "attemptHistoryTitle",
+            "attemptHistoryCount",
+            "latestAttemptScore",
+            "bestAttemptScore",
+            "foundationReadyCount",
+            "attemptHistoryList",
+            "clearAttemptHistory",
         ):
             self.assertIn(f'id="{element_id}"', page)
 
@@ -440,6 +469,12 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn('src="assets/risk-training.js"', page)
         self.assertIn("engine.evaluateAnswers", page)
         self.assertIn("engine.buildReviewPlan", page)
+        self.assertIn("engine.createTrainingDraft", page)
+        self.assertIn("engine.createAttemptReceipt", page)
+        self.assertIn("engine.summarizeAttemptHistory", page)
+        self.assertIn('const DRAFT_KEY = "gca_risk_training_draft_v1"', engine)
+        self.assertIn('const HISTORY_KEY = "gca_risk_training_history_v1"', engine)
+        self.assertIn("const HISTORY_LIMIT = 20", engine)
         self.assertIn('percent >= 75', engine)
         self.assertIn('"NOT_COMPLETE"', engine)
         self.assertIn('"REVIEW_REQUIRED"', engine)
@@ -455,10 +490,18 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertEqual(module["status"], "public-client-side-preview-live")
         self.assertEqual(module["publicUrl"], "https://gcagochina.com/risk-training.html")
         self.assertFalse(module["issuesCertification"])
+        self.assertTrue(module["browserLocalDraft"])
+        self.assertTrue(module["browserLocalAttemptHistory"])
+        self.assertFalse(module["storesSelectedAnswersInHistory"])
+        self.assertFalse(module["storesOnServer"])
         service = next(item for item in credits["serviceCatalog"] if item["id"] == "risk-control-training")
         self.assertEqual(service["publicPreview"]["url"], "https://gcagochina.com/risk-training.html")
         self.assertFalse(service["publicPreview"]["deductsCredits"])
         self.assertFalse(service["publicPreview"]["issuesCertification"])
+        self.assertTrue(service["publicPreview"]["browserLocalDraft"])
+        self.assertTrue(service["publicPreview"]["browserLocalAttemptHistory"])
+        self.assertFalse(service["publicPreview"]["storesSelectedAnswersInHistory"])
+        self.assertFalse(service["publicPreview"]["storesOnServer"])
 
     def test_risk_training_engine_scores_threshold_and_builds_review_plan(self):
         bundled_node = Path("/Users/abc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node")
@@ -476,6 +519,15 @@ class PublicSiteExperienceTests(unittest.TestCase):
             "const six=Object.fromEntries(e.questions.map((q,i)=>[q.id,i<6?q.correctOptionId:wrongFor(q)]));"
             "const results={partial:e.evaluateAnswers(partial),review:e.evaluateAnswers(five),threshold:e.evaluateAnswers(six),perfect:e.evaluateAnswers(correct)};"
             "results.plans=Object.fromEntries(Object.entries(results).map(([k,v])=>[k,e.buildReviewPlan(v)]));"
+            "const draft=e.createTrainingDraft({...partial,unknown:'ignored'},'2026-07-15T00:00:00Z');"
+            "const parsedDraft=e.parseTrainingDraft(JSON.stringify(draft));"
+            "const receipt=e.createAttemptReceipt(results.review,'2026-07-15T01:00:00Z','gca_training_review123');"
+            "const perfectReceipt=e.createAttemptReceipt(results.perfect,'2026-07-15T02:00:00Z','gca_training_perfect1');"
+            "const history=e.upsertAttemptHistory([receipt],perfectReceipt);"
+            "const duplicate=e.upsertAttemptHistory(history,{...receipt,completedAt:'2026-07-15T03:00:00Z'});"
+            "const capped=e.parseAttemptHistory(Array.from({length:22},(_,i)=>({...perfectReceipt,attemptId:`gca_training_attempt${String(i).padStart(3,'0')}`,completedAt:new Date(Date.parse('2026-07-01T00:00:00Z')+i*1000).toISOString()})));"
+            "const invalid=e.parseAttemptHistory([{...receipt,missedQuestionIds:['unknown']}]);"
+            "results.persistence={draft,parsedDraft,receipt,history,duplicate,capped,invalid,summary:e.summarizeAttemptHistory(history),stored:JSON.stringify(history),keys:[e.DRAFT_KEY,e.HISTORY_KEY,e.HISTORY_LIMIT]};"
             "process.stdout.write(JSON.stringify(results));"
         )
         completed = subprocess.run(
@@ -498,6 +550,24 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertEqual(result["perfect"]["status"], "FOUNDATION_READY")
         self.assertEqual(result["perfect"]["percent"], 100)
         self.assertEqual(result["plans"]["perfect"], [])
+        persistence = result["persistence"]
+        self.assertEqual(persistence["keys"], ["gca_risk_training_draft_v1", "gca_risk_training_history_v1", 20])
+        self.assertEqual(persistence["draft"]["answers"], {"position-size": "risk-budget"})
+        self.assertEqual(persistence["parsedDraft"], persistence["draft"])
+        self.assertEqual(persistence["receipt"]["status"], "REVIEW_REQUIRED")
+        self.assertEqual(persistence["receipt"]["missedQuestionIds"], ["journal-review", "api-security", "simulation-first"])
+        self.assertEqual(len(persistence["history"]), 2)
+        self.assertEqual(persistence["history"][0]["attemptId"], "gca_training_perfect1")
+        self.assertEqual(len(persistence["duplicate"]), 2)
+        self.assertEqual(persistence["duplicate"][0]["attemptId"], "gca_training_review123")
+        self.assertEqual(len(persistence["capped"]), 20)
+        self.assertEqual(persistence["invalid"], [])
+        self.assertEqual(persistence["summary"]["count"], 2)
+        self.assertEqual(persistence["summary"]["latestPercent"], 100)
+        self.assertEqual(persistence["summary"]["bestPercent"], 100)
+        self.assertEqual(persistence["summary"]["foundationReadyCount"], 1)
+        for forbidden in ("selectedOptionId", "correctOptionId", '"answers"', "wallet", "email"):
+            self.assertNotIn(forbidden, persistence["stored"])
 
     def test_liquidation_replay_is_transparent_and_client_side(self):
         page = (SITE / "liquidation-replay.html").read_text()

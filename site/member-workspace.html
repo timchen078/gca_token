@@ -4,21 +4,21 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>GCA Member Workspace | Credits, Tools, and Service Requests</title>
-    <meta name="description" content="Browser-local GCA member workspace for device status, utility credits, risk tools, trade-journal summary, and manual service request packets.">
+    <meta name="description" content="Browser-local GCA member workspace for device status, utility credits, risk tools, trade-journal and training summaries, and manual service request packets.">
     <link rel="canonical" href="https://gcagochina.com/member-workspace.html">
     <link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">
     <link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="GCA | Go China Access">
     <meta property="og:title" content="GCA Member Workspace | Credits, Tools, and Service Requests">
-    <meta property="og:description" content="One browser-local workspace for GCA member status, credits, public risk tools, journal summary, and manual service requests.">
+    <meta property="og:description" content="One browser-local workspace for GCA member status, credits, public risk tools, journal and training summaries, and manual service requests.">
     <meta property="og:url" content="https://gcagochina.com/member-workspace.html">
     <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="GCA Member Workspace | Credits, Tools, and Service Requests">
-    <meta name="twitter:description" content="GCA member status, credits, public tools, journal summary, and manual service requests in one browser-local workspace.">
+    <meta name="twitter:description" content="GCA member status, credits, public tools, journal and training summaries, and manual service requests in one browser-local workspace.">
     <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
     <style>
       :root { color-scheme:light; --bg:#f7f8f5; --ink:#151817; --muted:#5e6763; --line:#dfe4dd; --panel:#fff; --soft:#eef3ef; --red:#d71920; --blue:#1557d7; --green:#087f5b; --gold:#8a6500; }
@@ -47,7 +47,7 @@
       .metric span { display:block; color:var(--muted); font-size:12px; font-weight:760; text-transform:uppercase; }
       .metric strong { display:block; margin-top:6px; font-size:18px; overflow-wrap:anywhere; }
       .workspace-grid { display:grid; grid-template-columns:minmax(0,1.15fr) minmax(300px,.85fr); gap:16px; }
-      .journal-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; margin-top:15px; }
+      .journal-grid,.training-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; margin-top:15px; }
       .catalog { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; }
       .service { min-height:218px; display:flex; flex-direction:column; padding:17px; }
       .service-stage { color:var(--red); font-size:12px; font-weight:830; text-transform:uppercase; }
@@ -71,8 +71,8 @@
       .activity-meta { display:flex; flex-wrap:wrap; gap:8px 16px; margin-top:9px; color:var(--muted); font-size:13px; }
       .activity-empty { margin:0; padding:18px 0; color:var(--muted); }
       footer { border-top:1px solid var(--line); padding:24px 0; color:var(--muted); font-size:14px; }
-      @media (max-width:980px) { .catalog{grid-template-columns:repeat(2,minmax(0,1fr))}.metrics,.journal-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.workspace-grid{grid-template-columns:1fr} }
-      @media (max-width:680px) { h1{font-size:40px}.catalog,.metrics,.journal-grid{grid-template-columns:1fr}.service{min-height:0}nav{align-items:flex-start;flex-direction:column;padding:13px 0}.nav-links{gap:12px}.activity-head,.activity-row-head{display:grid}.activity-count{text-align:left}.activity-status{text-align:left} }
+      @media (max-width:980px) { .catalog{grid-template-columns:repeat(2,minmax(0,1fr))}.metrics,.journal-grid,.training-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.workspace-grid{grid-template-columns:1fr} }
+      @media (max-width:680px) { h1{font-size:40px}.catalog,.metrics,.journal-grid,.training-grid{grid-template-columns:1fr}.service{min-height:0}nav{align-items:flex-start;flex-direction:column;padding:13px 0}.nav-links{gap:12px}.activity-head,.activity-row-head{display:grid}.activity-count{text-align:left}.activity-status{text-align:left} }
     </style>
     <link rel="stylesheet" href="assets/gca-site.css?v=20260711">
     <script src="assets/gca-site.js?v=20260711" defer></script>
@@ -83,8 +83,8 @@
       <section aria-labelledby="title">
         <p class="eyebrow">GCA AI Quant Access · Browser-Local Member Area</p>
         <h1 id="title">Member Workspace <span lang="zh-CN">会员工作区</span></h1>
-        <p class="lead">Review the non-sensitive status saved on this device, open GCA risk tools, inspect your local journal sample, and prepare a manual service request without exposing an admin token or deducting credits.</p>
-        <p class="lead" lang="zh-CN">查看本设备保存的非敏感会员状态、进入 GCA 风险工具、检查本地交易日志样本，并生成需要人工审核的服务申请。页面不会暴露管理员 token，也不会自动扣除积分。</p>
+        <p class="lead">Review the non-sensitive status saved on this device, open GCA risk tools, inspect local journal and training summaries, and prepare a manual service request without exposing an admin token or deducting credits.</p>
+        <p class="lead" lang="zh-CN">查看本设备保存的非敏感会员状态、进入 GCA 风险工具、检查本地交易日志与训练摘要，并生成需要人工审核的服务申请。页面不会暴露管理员 token，也不会自动扣除积分。</p>
         <div class="actions" style="margin-top:18px"><a class="button primary" href="#requestBuilder">Build Service Request / 生成服务申请</a><a class="button" href="gca/member-access/">Refresh Member Status / 刷新会员状态</a><a class="button" href="tools.html">Open Risk Tools / 打开风险工具</a></div>
       </section>
 
@@ -121,6 +121,20 @@
           <p class="boundary">The workspace reads browser-local status only. It does not read protected D1 ledgers, submit to admin-only service routes, reserve credits, deduct credits, connect an exchange, place orders, request signatures, or transfer tokens.</p>
           <p class="note" lang="zh-CN" style="margin-top:13px">工作区只读取本浏览器状态，不读取受保护的 D1 账本，不调用管理员服务队列，不预扣或扣除积分，不连接交易所、不下单、不请求签名，也不转移代币。</p>
         </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="trainingSummaryTitle">
+        <p class="eyebrow">Local Training Evidence</p>
+        <h2 id="trainingSummaryTitle">Risk Training Summary <span lang="zh-CN">风控训练摘要</span></h2>
+        <p class="note">This summary reads privacy-minimized completed-attempt receipts saved by Risk Discipline Training in this browser. It does not read unfinished answers.</p>
+        <div class="training-grid">
+          <div class="metric"><span>Attempts / 次数</span><strong id="trainingAttemptCount">0</strong></div>
+          <div class="metric"><span>Latest / 最近</span><strong id="trainingLatest">No attempt</strong></div>
+          <div class="metric"><span>Best / 最好</span><strong id="trainingBest">0%</strong></div>
+          <div class="metric"><span>Foundation ready / 基础通过</span><strong id="trainingReadyCount">0</strong></div>
+        </div>
+        <p class="note" id="trainingSavedAt" style="margin-top:14px">No completed training history on this device. / 本设备暂无已完成训练。</p>
+        <div class="actions" style="margin-top:16px"><a class="button primary" href="risk-training.html">Open Training / 打开训练</a></div>
       </section>
 
       <section class="section" aria-labelledby="catalogTitle">
@@ -170,12 +184,14 @@
     </main>
     <footer><div class="shell">GCA Member Workspace · Browser-local status and manual review packets. No automatic credit deduction or token transfer.</div></footer>
     <script src="assets/trade-journal.js"></script>
+    <script src="assets/risk-training.js"></script>
     <script src="assets/member-workspace.js"></script>
     <script>
       (() => {
         "use strict";
         const engine = window.GcaMemberWorkspace;
         const journalEngine = window.GcaTradeJournal;
+        const trainingEngine = window.GcaRiskTraining;
         const serviceId = document.getElementById("serviceId");
         const selectedService = document.getElementById("selectedService");
         const selectedPreview = document.getElementById("selectedPreview");
@@ -243,6 +259,23 @@
           document.getElementById("journalWinRate").textContent = `${summary.winRatePercent.toFixed(2)}%`;
           document.getElementById("journalAverage").textContent = signedPercent(summary.averageReturnPercent);
           document.getElementById("journalQuality").textContent = summary.sampleQuality.code;
+        }
+
+        function trainingStatusLabel(code) {
+          if (code === "FOUNDATION_READY") return "Foundation ready / 基础通过";
+          if (code === "REVIEW_REQUIRED") return "Review required / 需要复习";
+          return "No attempt / 暂无";
+        }
+
+        function renderTrainingSummary() {
+          const summary = engine.summarizeTraining(readLocal(engine.TRAINING_HISTORY_KEY), trainingEngine);
+          document.getElementById("trainingAttemptCount").textContent = String(summary.count);
+          document.getElementById("trainingLatest").textContent = summary.count ? `${summary.latestPercent}% · ${trainingStatusLabel(summary.latestStatus)}` : "No attempt / 暂无";
+          document.getElementById("trainingBest").textContent = `${summary.bestPercent}%`;
+          document.getElementById("trainingReadyCount").textContent = String(summary.foundationReadyCount);
+          document.getElementById("trainingSavedAt").textContent = summary.latestCompletedAt
+            ? `Latest completed attempt: ${new Date(summary.latestCompletedAt).toLocaleString()} · Review areas: ${summary.latestMissedQuestionIds.length}. / 最近训练及复习项来自本设备。`
+            : "No completed training history on this device. / 本设备暂无已完成训练。";
         }
 
         function requestActionLabel(action) {
@@ -475,6 +508,7 @@
         renderCatalog();
         renderDeviceStatus();
         renderJournalSummary();
+        renderTrainingSummary();
         requestHistory = engine.parseRequestHistory(readLocal(engine.REQUEST_HISTORY_KEY));
         renderRequestHistory();
         updateSelectedService();

@@ -5442,6 +5442,12 @@ def validate_member_workspace_page(text: str) -> None:
     assert_contains(text, 'id="journalWinRate"', label)
     assert_contains(text, 'id="journalAverage"', label)
     assert_contains(text, 'id="journalQuality"', label)
+    assert_contains(text, 'id="trainingSummaryTitle"', label)
+    assert_contains(text, 'id="trainingAttemptCount"', label)
+    assert_contains(text, 'id="trainingLatest"', label)
+    assert_contains(text, 'id="trainingBest"', label)
+    assert_contains(text, 'id="trainingReadyCount"', label)
+    assert_contains(text, 'id="trainingSavedAt"', label)
     assert_contains(text, 'id="serviceGrid"', label)
     assert_contains(text, 'id="serviceRequestForm"', label)
     assert_contains(text, 'id="serviceId"', label)
@@ -5460,8 +5466,11 @@ def validate_member_workspace_page(text: str) -> None:
     assert_contains(text, 'id="clearRequestHistory"', label)
     assert_contains(text, 'src="assets/member-workspace.js"', label)
     assert_contains(text, 'src="assets/trade-journal.js"', label)
+    assert_contains(text, 'src="assets/risk-training.js"', label)
     assert_contains(text, "engine.parseMemberSnapshot", label)
     assert_contains(text, "engine.summarizeJournal", label)
+    assert_contains(text, "engine.summarizeTraining", label)
+    assert_contains(text, "trainingStatusLabel", label)
     assert_contains(text, "engine.buildServiceRequest", label)
     assert_contains(text, "engine.createRequestReceipt", label)
     assert_contains(text, "engine.markRequestAction", label)
@@ -7897,8 +7906,20 @@ def validate_risk_training_page(text: str) -> None:
     assert_contains(text, 'id="resetTraining"', label)
     assert_contains(text, 'id="trainingResult"', label)
     assert_contains(text, 'id="reviewPlan"', label)
+    assert_contains(text, 'id="draftStatus"', label)
+    assert_contains(text, 'id="attemptHistory"', label)
+    assert_contains(text, 'id="attemptHistoryCount"', label)
+    assert_contains(text, 'id="latestAttemptScore"', label)
+    assert_contains(text, 'id="bestAttemptScore"', label)
+    assert_contains(text, 'id="foundationReadyCount"', label)
+    assert_contains(text, 'id="attemptHistoryList"', label)
+    assert_contains(text, 'id="clearAttemptHistory"', label)
     assert_contains(text, 'src="assets/risk-training.js"', label)
     assert_contains(text, "engine.evaluateAnswers", label)
+    assert_contains(text, "engine.createTrainingDraft", label)
+    assert_contains(text, "engine.createAttemptReceipt", label)
+    assert_contains(text, "engine.summarizeAttemptHistory", label)
+    assert_contains(text, "Selected answers are not kept in completed history", label)
     assert_contains(text, "does not fetch prices", label)
     assert_contains(text, "does not", label)
     assert_contains(text, "certification", label)
@@ -7964,6 +7985,11 @@ def validate_product_json(text: str) -> None:
     for key in ("storesOnServer", "connectsWallet", "connectsExchange", "fetchesMarketData", "placesOrders", "deductsCredits", "issuesCertification"):
         if risk_training.get(key) is not False:
             raise SiteCheckError(f"{label}: risk training {key} must be false")
+    for key in ("browserLocalDraft", "browserLocalAttemptHistory"):
+        if risk_training.get(key) is not True:
+            raise SiteCheckError(f"{label}: risk training {key} must be true")
+    if risk_training.get("storesSelectedAnswersInHistory") is not False:
+        raise SiteCheckError(f"{label}: risk training history must exclude selected answers")
     if member_workspace.get("status") != "public-browser-local-workspace-live-account-ledger-intake-live":
         raise SiteCheckError(f"{label}: wrong member workspace status")
     if member_workspace.get("publicUrl") != "https://gcagochina.com/member-workspace.html":
@@ -10123,9 +10149,12 @@ def validate_credits_json(text: str) -> None:
         raise SiteCheckError(f"{label}: risk training preview must be live")
     if training_preview.get("url") != RISK_TRAINING_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong risk training preview URL")
-    for key in ("deductsCredits", "connectsWallet", "connectsExchange", "fetchesMarketData", "placesOrders", "issuesCertification"):
+    for key in ("storesOnServer", "storesSelectedAnswersInHistory", "deductsCredits", "connectsWallet", "connectsExchange", "fetchesMarketData", "placesOrders", "issuesCertification"):
         if training_preview.get(key) is not False:
             raise SiteCheckError(f"{label}: risk training preview {key} must be false")
+    for key in ("browserLocalDraft", "browserLocalAttemptHistory"):
+        if training_preview.get(key) is not True:
+            raise SiteCheckError(f"{label}: risk training preview {key} must be true")
     if links.get("riskDisciplineTraining") != RISK_TRAINING_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong risk training official link")
     for key in (

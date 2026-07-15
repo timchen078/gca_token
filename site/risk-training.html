@@ -61,9 +61,16 @@
       .review-item strong,.review-item span,.review-item a { display:block; } .review-item span { margin-top:4px; color:#65521c; font-size:13px; } .review-item a { margin-top:7px; font-size:13px; font-weight:800; }
       .empty { border-left:3px solid var(--green); background:#eaf7f1; color:#086447; padding:12px; }
       .boundary { margin-top:18px; border-left:3px solid var(--blue); background:#eef4ff; padding:14px; }
+      .history { margin-top:18px; }
+      .history-head { display:flex; align-items:flex-start; justify-content:space-between; gap:18px; }
+      .history-count { min-width:150px; text-align:right; } .history-count strong { display:block; font-size:28px; }
+      .history-metrics { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; margin-top:18px; }
+      .history-list { margin-top:18px; border-top:1px solid var(--line); }
+      .history-row { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:14px; border-bottom:1px solid var(--line); padding:14px 0; }
+      .history-row strong,.history-row span { display:block; } .history-row span { margin-top:3px; color:var(--muted); font-size:13px; } .history-row time { color:var(--muted); font-size:13px; text-align:right; }
       footer { border-top:1px solid var(--line); padding:24px 0; color:var(--muted); font-size:14px; }
       [hidden] { display:none !important; }
-      @media (max-width:860px) { h1{font-size:40px}h1 span{font-size:32px}.layout{grid-template-columns:1fr}.result{position:static}.metrics{grid-template-columns:1fr}.nav-links{gap:10px;font-size:13px} }
+      @media (max-width:860px) { h1{font-size:40px}h1 span{font-size:32px}.layout{grid-template-columns:1fr}.result{position:static}.metrics,.history-metrics{grid-template-columns:1fr}.nav-links{gap:10px;font-size:13px}.history-head,.history-row{display:grid}.history-count{text-align:left}.history-row time{text-align:left} }
     </style>
     <link rel="stylesheet" href="assets/gca-site.css?v=20260711">
     <script src="assets/gca-site.js?v=20260711" defer></script>
@@ -91,6 +98,7 @@
             <button class="button primary" id="checkTraining" type="submit">Check Answers / 检查答案</button>
             <button class="button" id="resetTraining" type="reset">Reset Drill / 重新训练</button>
           </div>
+          <p class="note" id="draftStatus" style="margin-top:12px" aria-live="polite">Unfinished answers are saved only on this device. / 未完成答案只保存在本设备。</p>
         </form>
 
         <aside class="panel result" id="trainingResult" aria-live="polite">
@@ -106,17 +114,293 @@
           <p class="boundary">This public practice does not fetch prices, connect a wallet or exchange, place orders, deduct credits, or issue a certification. It is education and process review, not a signal or promise of trading results.</p>
         </aside>
       </section>
+
+      <section class="panel history" id="attemptHistory" aria-labelledby="attemptHistoryTitle">
+        <div class="history-head">
+          <div>
+            <p class="eyebrow">Device Training History</p>
+            <h2 id="attemptHistoryTitle">Completed Attempts <span lang="zh-CN">已完成训练</span></h2>
+            <p class="note">Completed attempts keep only score, status, time, and missed scenario IDs in this browser. Selected answers are not kept in completed history.</p>
+          </div>
+          <div class="history-count"><span class="note">Attempts / 次数</span><strong id="attemptHistoryCount">0</strong></div>
+        </div>
+        <div class="history-metrics">
+          <div class="metric"><span>Latest / 最近</span><strong id="latestAttemptScore">No attempt</strong></div>
+          <div class="metric"><span>Best / 最好</span><strong id="bestAttemptScore">0%</strong></div>
+          <div class="metric"><span>Foundation ready / 基础通过</span><strong id="foundationReadyCount">0</strong></div>
+        </div>
+        <div class="history-list" id="attemptHistoryList" aria-live="polite"></div>
+        <div class="actions"><button class="button" id="clearAttemptHistory" type="button" disabled>Clear Completed History / 清除训练历史</button><a class="button" href="member-workspace.html">Open Member Workspace / 打开会员工作区</a></div>
+        <p class="boundary">An unfinished draft stores only selected scenario option IDs. Completed history excludes selected answers and stores no email, wallet, market, order, or exchange data. Everything stays in this browser and disappears when local site data is cleared. / 草稿与历史只保存在本浏览器，不同步账户或链上。</p>
+      </section>
     </main>
     <footer><div class="shell">GCA Risk First Trading · Learn, size, review, gate, test, and replay.</div></footer>
     <script src="assets/risk-training.js"></script>
     <script>
-      (()=>{"use strict";const engine=window.GcaRiskTraining;const form=document.getElementById("trainingForm");const list=document.getElementById("questionList");const answered=document.getElementById("answeredCount");const score=document.getElementById("scorePercent");const status=document.getElementById("trainingStatus");const badge=document.getElementById("statusBadge");const summary=document.getElementById("resultSummary");const categoryResults=document.getElementById("categoryResults");const reviewSection=document.getElementById("reviewSection");const reviewPlan=document.getElementById("reviewPlan");
-      engine.questions.forEach((question,index)=>{const section=document.createElement("fieldset");section.className="question";section.id=`question-${question.id}`;const legend=document.createElement("legend");legend.className="question-number";legend.textContent=`Scenario ${index+1} · ${question.category}`;const title=document.createElement("h3");title.textContent=question.prompt;const zh=document.createElement("p");zh.className="zh";zh.lang="zh-CN";zh.textContent=question.promptZh;section.append(legend,title,zh);const options=document.createElement("div");options.className="options";question.options.forEach((option)=>{const label=document.createElement("label");label.className="option";const input=document.createElement("input");input.type="radio";input.name=question.id;input.value=option.id;const copy=document.createElement("span");const en=document.createElement("strong");en.textContent=option.label;const cn=document.createElement("small");cn.lang="zh-CN";cn.textContent=option.labelZh;copy.append(en,cn);label.append(input,copy);options.append(label);});section.append(options);list.append(section);});
-      function answers(){return Object.fromEntries(engine.questions.map((question)=>[question.id,form.elements[question.id]?.value||""]));}
-      function statusCopy(code){if(code==="FOUNDATION_READY")return["Foundation ready / 基础通过","ready"];if(code==="REVIEW_REQUIRED")return["Review required / 需要复习","review"];return["Not complete / 尚未完成","incomplete"];}
-      function render(result){const [label,className]=statusCopy(result.status);answered.textContent=`${result.answeredCount} / ${result.total}`;score.textContent=`${result.percent}%`;status.textContent=label;badge.textContent=label;badge.className=`status ${className}`;categoryResults.replaceChildren();result.categories.forEach((item)=>{const row=document.createElement("li");row.className="category-row";const name=document.createElement("span");name.textContent=item.category;const value=document.createElement("strong");value.textContent=`${item.correct}/${item.total}`;row.append(name,value);categoryResults.append(row);});const plan=engine.buildReviewPlan(result);reviewPlan.replaceChildren();reviewSection.hidden=false;if(result.status==="FOUNDATION_READY"){summary.textContent=`${result.correctCount} of ${result.total} correct. This shows a working foundation, not certification or proof that a trade is safe. / 基础通过不等于认证，也不代表任何交易安全。`;}else if(result.status==="REVIEW_REQUIRED"){summary.textContent=`${result.correctCount} of ${result.total} correct. Review the missed areas before repeating the drill. / 请先复习薄弱项，再重新训练。`;}else{summary.textContent=`Answer the remaining ${result.total-result.answeredCount} scenario(s). Unanswered items are included in the review plan. / 请完成剩余场景。`;}
-      if(plan.length===0){const item=document.createElement("li");item.className="empty";item.textContent="No missed areas in this attempt. Keep using the same discipline in planning and review. / 本次没有错题，请继续在计划和复盘中执行同样纪律。";reviewPlan.append(item);}else{plan.forEach((item)=>{const row=document.createElement("li");row.className="review-item";const title=document.createElement("strong");title.textContent=item.category;const text=document.createElement("span");text.textContent=`${item.explanation} ${item.explanationZh}`;const link=document.createElement("a");link.href=item.reviewUrl;link.textContent="Open related GCA tool / 打开相关工具";row.append(title,text,link);reviewPlan.append(row);});}}
-      form.addEventListener("submit",(event)=>{event.preventDefault();render(engine.evaluateAnswers(answers()));});form.addEventListener("change",()=>{const result=engine.evaluateAnswers(answers());answered.textContent=`${result.answeredCount} / ${result.total}`;});form.addEventListener("reset",()=>{window.setTimeout(()=>{answered.textContent=`0 / ${engine.questions.length}`;score.textContent="0%";status.textContent="Not checked";badge.className="status";badge.textContent="Complete the scenarios";summary.textContent="Answer all eight scenarios, then check the result. Scoring is transparent and stays in this browser tab.";categoryResults.replaceChildren();reviewPlan.replaceChildren();reviewSection.hidden=true;},0);});})();
+      (() => {
+        "use strict";
+        const engine = window.GcaRiskTraining;
+        const form = document.getElementById("trainingForm");
+        const list = document.getElementById("questionList");
+        const answered = document.getElementById("answeredCount");
+        const score = document.getElementById("scorePercent");
+        const status = document.getElementById("trainingStatus");
+        const badge = document.getElementById("statusBadge");
+        const summary = document.getElementById("resultSummary");
+        const categoryResults = document.getElementById("categoryResults");
+        const reviewSection = document.getElementById("reviewSection");
+        const reviewPlan = document.getElementById("reviewPlan");
+        const draftStatus = document.getElementById("draftStatus");
+        const historyCount = document.getElementById("attemptHistoryCount");
+        const historyList = document.getElementById("attemptHistoryList");
+        const clearHistory = document.getElementById("clearAttemptHistory");
+        let attemptHistory = [];
+
+        function readLocal(key) {
+          try { return window.localStorage.getItem(key); } catch (error) { return null; }
+        }
+
+        function writeLocal(key, value) {
+          try {
+            window.localStorage.setItem(key, JSON.stringify(value));
+            return true;
+          } catch (error) {
+            return false;
+          }
+        }
+
+        function removeLocal(key) {
+          try { window.localStorage.removeItem(key); return true; } catch (error) { return false; }
+        }
+
+        function createLocalAttemptId() {
+          if (window.crypto && typeof window.crypto.randomUUID === "function") {
+            return `gca_training_${window.crypto.randomUUID().replaceAll("-", "")}`;
+          }
+          return `gca_training_${Date.now().toString(36)}-browser`;
+        }
+
+        engine.questions.forEach((question, index) => {
+          const section = document.createElement("fieldset");
+          section.className = "question";
+          section.id = `question-${question.id}`;
+          const legend = document.createElement("legend");
+          legend.className = "question-number";
+          legend.textContent = `Scenario ${index + 1} · ${question.category}`;
+          const title = document.createElement("h3");
+          title.textContent = question.prompt;
+          const zh = document.createElement("p");
+          zh.className = "zh";
+          zh.lang = "zh-CN";
+          zh.textContent = question.promptZh;
+          section.append(legend, title, zh);
+          const options = document.createElement("div");
+          options.className = "options";
+          question.options.forEach((option) => {
+            const label = document.createElement("label");
+            label.className = "option";
+            const input = document.createElement("input");
+            input.type = "radio";
+            input.name = question.id;
+            input.value = option.id;
+            const copy = document.createElement("span");
+            const en = document.createElement("strong");
+            en.textContent = option.label;
+            const cn = document.createElement("small");
+            cn.lang = "zh-CN";
+            cn.textContent = option.labelZh;
+            copy.append(en, cn);
+            label.append(input, copy);
+            options.append(label);
+          });
+          section.append(options);
+          list.append(section);
+        });
+
+        function answers() {
+          return Object.fromEntries(engine.questions.map((question) => [question.id, form.elements[question.id]?.value || ""]));
+        }
+
+        function statusCopy(code) {
+          if (code === "FOUNDATION_READY") return ["Foundation ready / 基础通过", "ready"];
+          if (code === "REVIEW_REQUIRED") return ["Review required / 需要复习", "review"];
+          return ["Not complete / 尚未完成", "incomplete"];
+        }
+
+        function render(result) {
+          const [label, className] = statusCopy(result.status);
+          answered.textContent = `${result.answeredCount} / ${result.total}`;
+          score.textContent = `${result.percent}%`;
+          status.textContent = label;
+          badge.textContent = label;
+          badge.className = `status ${className}`;
+          categoryResults.replaceChildren();
+          result.categories.forEach((item) => {
+            const row = document.createElement("li");
+            row.className = "category-row";
+            const name = document.createElement("span");
+            name.textContent = item.category;
+            const value = document.createElement("strong");
+            value.textContent = `${item.correct}/${item.total}`;
+            row.append(name, value);
+            categoryResults.append(row);
+          });
+          const plan = engine.buildReviewPlan(result);
+          reviewPlan.replaceChildren();
+          reviewSection.hidden = false;
+          if (result.status === "FOUNDATION_READY") {
+            summary.textContent = `${result.correctCount} of ${result.total} correct. This shows a working foundation, not certification or proof that a trade is safe. / 基础通过不等于认证，也不代表任何交易安全。`;
+          } else if (result.status === "REVIEW_REQUIRED") {
+            summary.textContent = `${result.correctCount} of ${result.total} correct. Review the missed areas before repeating the drill. / 请先复习薄弱项，再重新训练。`;
+          } else {
+            summary.textContent = `Answer the remaining ${result.total - result.answeredCount} scenario(s). Unanswered items are included in the review plan. / 请完成剩余场景。`;
+          }
+          if (plan.length === 0) {
+            const item = document.createElement("li");
+            item.className = "empty";
+            item.textContent = "No missed areas in this attempt. Keep using the same discipline in planning and review. / 本次没有错题，请继续在计划和复盘中执行同样纪律。";
+            reviewPlan.append(item);
+          } else {
+            plan.forEach((item) => {
+              const row = document.createElement("li");
+              row.className = "review-item";
+              const title = document.createElement("strong");
+              title.textContent = item.category;
+              const text = document.createElement("span");
+              text.textContent = `${item.explanation} ${item.explanationZh}`;
+              const link = document.createElement("a");
+              link.href = item.reviewUrl;
+              link.textContent = "Open related GCA tool / 打开相关工具";
+              row.append(title, text, link);
+              reviewPlan.append(row);
+            });
+          }
+        }
+
+        function renderHistory() {
+          const historySummary = engine.summarizeAttemptHistory(attemptHistory);
+          historyCount.textContent = String(historySummary.count);
+          document.getElementById("latestAttemptScore").textContent = historySummary.count
+            ? `${historySummary.latestPercent}% · ${statusCopy(historySummary.latestStatus)[0]}`
+            : "No attempt / 暂无";
+          document.getElementById("bestAttemptScore").textContent = `${historySummary.bestPercent}%`;
+          document.getElementById("foundationReadyCount").textContent = String(historySummary.foundationReadyCount);
+          clearHistory.disabled = historySummary.count === 0;
+          historyList.replaceChildren();
+          if (historySummary.count === 0) {
+            const empty = document.createElement("p");
+            empty.className = "note";
+            empty.style.padding = "16px 0";
+            empty.textContent = "No completed training attempts on this device. / 本设备暂无已完成训练。";
+            historyList.append(empty);
+            return;
+          }
+          attemptHistory.forEach((attempt) => {
+            const row = document.createElement("div");
+            row.className = "history-row";
+            const details = document.createElement("div");
+            const title = document.createElement("strong");
+            title.textContent = `${attempt.percent}% · ${statusCopy(attempt.status)[0]}`;
+            const meta = document.createElement("span");
+            meta.textContent = `${attempt.correctCount}/${attempt.total} correct · ${attempt.missedQuestionIds.length} review area(s)`;
+            details.append(title, meta);
+            const time = document.createElement("time");
+            time.dateTime = attempt.completedAt;
+            time.textContent = new Date(attempt.completedAt).toLocaleString();
+            row.append(details, time);
+            historyList.append(row);
+          });
+        }
+
+        function saveDraft() {
+          const draft = engine.createTrainingDraft(answers(), new Date().toISOString());
+          if (!draft) {
+            removeLocal(engine.DRAFT_KEY);
+            return;
+          }
+          const saved = writeLocal(engine.DRAFT_KEY, draft);
+          draftStatus.textContent = saved
+            ? `Draft saved on this device at ${new Date(draft.savedAt).toLocaleTimeString()}. / 草稿已保存在本设备。`
+            : "Browser storage is unavailable; this draft cannot be restored after reload. / 浏览器存储不可用。";
+        }
+
+        function restoreDraft() {
+          const draft = engine.parseTrainingDraft(readLocal(engine.DRAFT_KEY));
+          if (!draft) return;
+          Object.entries(draft.answers).forEach(([questionId, optionId]) => {
+            const controls = Array.from(form.elements[questionId] || []);
+            const control = controls.find((item) => item.value === optionId);
+            if (control) control.checked = true;
+          });
+          const result = engine.evaluateAnswers(answers());
+          answered.textContent = `${result.answeredCount} / ${result.total}`;
+          draftStatus.textContent = `Restored ${result.answeredCount} answer(s) saved ${new Date(draft.savedAt).toLocaleString()}. / 已恢复本设备草稿。`;
+        }
+
+        function confirmInline(button, confirmationLabel) {
+          if (button.dataset.confirmReady === "true") return true;
+          const originalLabel = button.textContent;
+          button.dataset.confirmReady = "true";
+          button.textContent = confirmationLabel;
+          window.setTimeout(() => {
+            if (!button.isConnected || button.dataset.confirmReady !== "true") return;
+            button.dataset.confirmReady = "false";
+            button.textContent = originalLabel;
+          }, 5000);
+          return false;
+        }
+
+        form.addEventListener("submit", (event) => {
+          event.preventDefault();
+          const result = engine.evaluateAnswers(answers());
+          render(result);
+          if (result.answeredCount !== result.total) {
+            saveDraft();
+            return;
+          }
+          const receipt = engine.createAttemptReceipt(result, new Date().toISOString(), createLocalAttemptId());
+          attemptHistory = engine.upsertAttemptHistory(attemptHistory, receipt);
+          const saved = writeLocal(engine.HISTORY_KEY, attemptHistory);
+          removeLocal(engine.DRAFT_KEY);
+          draftStatus.textContent = saved
+            ? "Completed attempt saved without selected answers. / 已保存训练结果，不保存具体选择。"
+            : "Result checked, but browser storage is unavailable. / 已检查结果，但浏览器存储不可用。";
+          renderHistory();
+        });
+
+        form.addEventListener("change", () => {
+          const result = engine.evaluateAnswers(answers());
+          answered.textContent = `${result.answeredCount} / ${result.total}`;
+          saveDraft();
+        });
+
+        form.addEventListener("reset", () => {
+          removeLocal(engine.DRAFT_KEY);
+          window.setTimeout(() => {
+            answered.textContent = `0 / ${engine.questions.length}`;
+            score.textContent = "0%";
+            status.textContent = "Not checked";
+            badge.className = "status";
+            badge.textContent = "Complete the scenarios";
+            summary.textContent = "Answer all eight scenarios, then check the result. Scoring is transparent and stays in this browser tab.";
+            categoryResults.replaceChildren();
+            reviewPlan.replaceChildren();
+            reviewSection.hidden = true;
+            draftStatus.textContent = "Draft cleared. Completed history is unchanged. / 草稿已清除，训练历史保留。";
+          }, 0);
+        });
+
+        clearHistory.addEventListener("click", () => {
+          if (!confirmInline(clearHistory, "Confirm Clear History / 确认清除历史")) return;
+          attemptHistory = [];
+          removeLocal(engine.HISTORY_KEY);
+          renderHistory();
+        });
+
+        attemptHistory = engine.parseAttemptHistory(readLocal(engine.HISTORY_KEY));
+        renderHistory();
+        restoreDraft();
+      })();
     </script>
   </body>
 </html>
