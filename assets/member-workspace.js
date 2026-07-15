@@ -8,6 +8,7 @@
   const SNAPSHOT_KEY = "gca_member_access_snapshot_v1";
   const SNAPSHOT_MAX_AGE_MS = 30 * 24 * 60 * 60 * 1000;
   const JOURNAL_KEY = "gca_trade_journal_v1";
+  const TRAINING_HISTORY_KEY = "gca_risk_training_history_v1";
   const REQUEST_HISTORY_KEY = "gca_member_service_request_history_v1";
   const REQUEST_HISTORY_LIMIT = 25;
   const ADDRESS_RE = /^0x[a-fA-F0-9]{40}$/;
@@ -100,6 +101,32 @@
       averageReturnPercent: summary.averageReturnPercent,
       maxConsecutiveLosses: summary.maxConsecutiveLosses,
       sampleQuality: summary.sampleQuality
+    };
+  }
+
+  function emptyTrainingSummary() {
+    return {
+      count: 0,
+      latestStatus: "NO_ATTEMPTS",
+      latestPercent: 0,
+      latestCompletedAt: null,
+      bestPercent: 0,
+      foundationReadyCount: 0,
+      latestMissedQuestionIds: []
+    };
+  }
+
+  function summarizeTraining(value, trainingEngine) {
+    if (!trainingEngine || typeof trainingEngine.summarizeAttemptHistory !== "function") return emptyTrainingSummary();
+    const summary = trainingEngine.summarizeAttemptHistory(value);
+    return {
+      count: summary.count,
+      latestStatus: summary.latestStatus,
+      latestPercent: summary.latestPercent,
+      latestCompletedAt: summary.latestCompletedAt,
+      bestPercent: summary.bestPercent,
+      foundationReadyCount: summary.foundationReadyCount,
+      latestMissedQuestionIds: [...summary.latestMissedQuestionIds]
     };
   }
 
@@ -252,6 +279,7 @@
     SNAPSHOT_KEY,
     SNAPSHOT_MAX_AGE_MS,
     JOURNAL_KEY,
+    TRAINING_HISTORY_KEY,
     REQUEST_HISTORY_KEY,
     REQUEST_HISTORY_LIMIT,
     SERVICE_CATALOG,
@@ -259,6 +287,7 @@
     maskWallet,
     parseMemberSnapshot,
     summarizeJournal,
+    summarizeTraining,
     buildServiceRequest,
     parseRequestHistory,
     createRequestReceipt,

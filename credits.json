@@ -148,6 +148,10 @@
       "publicPreview": {
         "status": "live-client-side-preview",
         "url": "https://gcagochina.com/risk-training.html",
+        "storesOnServer": false,
+        "browserLocalDraft": true,
+        "browserLocalAttemptHistory": true,
+        "storesSelectedAnswersInHistory": false,
         "deductsCredits": false,
         "connectsWallet": false,
         "connectsExchange": false,
