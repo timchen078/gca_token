@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GCA Risk Discipline Training | Browser-Only Practice</title>
+    <meta name="description" content="Bilingual browser-only GCA risk discipline training for position sizing, invalidation, execution, journaling, API safety, and simulation-first release controls.">
+    <link rel="canonical" href="https://gcagochina.com/risk-training.html">
+    <link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">
+    <link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="GCA | Go China Access">
+    <meta property="og:title" content="GCA Risk Discipline Training | Browser-Only Practice">
+    <meta property="og:description" content="Practice eight risk-first decisions with transparent scoring and a focused review plan.">
+    <meta property="og:url" content="https://gcagochina.com/risk-training.html">
+    <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="GCA Risk Discipline Training">
+    <meta name="twitter:description" content="Eight bilingual risk-control scenarios with transparent browser-only scoring.">
+    <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <style>
+      :root { color-scheme:light; --bg:#f7f8f5; --ink:#151817; --muted:#5e6763; --line:#dfe4dd; --panel:#fff; --soft:#eef3ef; --red:#d71920; --blue:#1557d7; --green:#087f5b; --gold:#8a6710; }
+      * { box-sizing:border-box; }
+      body { margin:0; color:var(--ink); background:var(--bg); font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; line-height:1.5; }
+      a { color:var(--blue); text-decoration:none; } a:hover { text-decoration:underline; }
+      .shell { width:min(1120px,calc(100% - 32px)); margin:0 auto; }
+      header { position:sticky; top:0; z-index:3; border-bottom:1px solid var(--line); background:rgba(247,248,245,.96); backdrop-filter:blur(16px); }
+      nav { min-height:68px; display:flex; align-items:center; justify-content:space-between; gap:18px; }
+      .brand { display:inline-flex; align-items:center; gap:10px; color:var(--ink); font-weight:850; } .brand img { width:34px; height:34px; }
+      .nav-links { display:flex; align-items:center; gap:16px; font-size:14px; }
+      main { padding:34px 0 64px; }
+      h1,h2,h3,p { margin-top:0; } h1 { max-width:880px; margin-bottom:14px; font-size:54px; line-height:1; letter-spacing:0; } h1 span { display:block; margin-top:8px; font-size:36px; line-height:1.1; } h2 { margin-bottom:12px; font-size:25px; } h3 { margin-bottom:8px; font-size:17px; }
+      .eyebrow { margin:0 0 10px; color:var(--red); font-size:13px; font-weight:850; text-transform:uppercase; }
+      .lead,.note { color:var(--muted); } .lead { max-width:900px; margin-bottom:0; font-size:17px; } .note { margin:0; }
+      .metrics { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin-top:24px; }
+      .metric { border-top:2px solid var(--red); background:var(--panel); padding:14px; }
+      .metric span { display:block; color:var(--muted); font-size:12px; font-weight:800; text-transform:uppercase; }
+      .metric strong { display:block; margin-top:4px; font-size:27px; overflow-wrap:anywhere; }
+      .layout { display:grid; grid-template-columns:minmax(0,1.35fr) minmax(300px,.65fr); gap:18px; margin-top:24px; align-items:start; }
+      .panel { border:1px solid var(--line); border-radius:8px; background:var(--panel); padding:22px; }
+      .questions { display:grid; gap:0; }
+      .question { min-width:0; margin:0; border:0; border-top:1px solid var(--line); padding:22px 0; } .question:first-child { border-top:0; padding-top:4px; }
+      .question-number { color:var(--red); font-size:12px; font-weight:850; text-transform:uppercase; }
+      .question h3 { margin:7px 0 2px; }
+      .question .zh { margin:0 0 13px; color:var(--muted); }
+      .options { display:grid; gap:8px; }
+      .option { min-height:46px; display:grid; grid-template-columns:20px minmax(0,1fr); gap:10px; align-items:start; border:1px solid var(--line); border-radius:6px; padding:10px 12px; cursor:pointer; }
+      .option:hover { border-color:#c6ccc5; background:#fafbf9; } .option input { width:16px; height:16px; margin:4px 0 0; accent-color:var(--red); }
+      .option strong,.option small { display:block; } .option strong { font-size:14px; } .option small { margin-top:2px; color:var(--muted); font-size:13px; }
+      .actions { display:flex; flex-wrap:wrap; gap:10px; margin-top:18px; }
+      .button { min-height:42px; display:inline-flex; align-items:center; justify-content:center; border:1px solid var(--line); border-radius:6px; background:#fff; color:var(--ink); padding:10px 14px; font:inherit; font-weight:800; cursor:pointer; }
+      .button.primary { border-color:var(--red); background:var(--red); color:#fff; }
+      .result { position:sticky; top:88px; }
+      .status { display:inline-flex; min-height:38px; align-items:center; border-radius:6px; background:var(--soft); color:var(--ink); padding:8px 12px; font-weight:850; }
+      .status.review { background:#fff6dc; color:#6f5210; } .status.ready { background:#eaf7f1; color:#086447; } .status.incomplete { background:#fff0f0; color:#8d171c; }
+      .category-list,.review-list { display:grid; gap:9px; margin:16px 0 0; padding:0; list-style:none; }
+      .category-row { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:12px; border-top:1px solid var(--line); padding-top:9px; font-size:13px; }
+      .review-item { border-left:3px solid var(--gold); background:#fff9e9; padding:11px 12px; }
+      .review-item strong,.review-item span,.review-item a { display:block; } .review-item span { margin-top:4px; color:#65521c; font-size:13px; } .review-item a { margin-top:7px; font-size:13px; font-weight:800; }
+      .empty { border-left:3px solid var(--green); background:#eaf7f1; color:#086447; padding:12px; }
+      .boundary { margin-top:18px; border-left:3px solid var(--blue); background:#eef4ff; padding:14px; }
+      footer { border-top:1px solid var(--line); padding:24px 0; color:var(--muted); font-size:14px; }
+      [hidden] { display:none !important; }
+      @media (max-width:860px) { h1{font-size:40px}h1 span{font-size:32px}.layout{grid-template-columns:1fr}.result{position:static}.metrics{grid-template-columns:1fr}.nav-links{gap:10px;font-size:13px} }
+    </style>
+    <link rel="stylesheet" href="assets/gca-site.css?v=20260711">
+    <script src="assets/gca-site.js?v=20260711" defer></script>
+  </head>
+  <body>
+    <header><nav class="shell" aria-label="Primary"><a class="brand" href="index.html"><img src="assets/gca-logo.svg" alt="GCA logo"><span>GCA</span></a><div class="nav-links"><a href="tools.html">Tools</a><a href="product.html">Product</a><a href="gca/member-access/">Members</a></div></nav></header>
+    <main class="shell" id="main-content">
+      <section aria-labelledby="title">
+        <p class="eyebrow">GCA Risk First Trading · Public Practice</p>
+        <h1 id="title">Risk Discipline Training <span lang="zh-CN">风控纪律训练</span></h1>
+        <p class="lead">Work through eight practical decisions covering risk budget, invalidation, leverage, execution, review, API safety, and simulation-first release controls. 完成 8 个双语场景，检查风险基础和复盘重点。</p>
+        <div class="metrics" aria-label="Training progress">
+          <div class="metric"><span>Answered / 已回答</span><strong id="answeredCount">0 / 8</strong></div>
+          <div class="metric"><span>Score / 得分</span><strong id="scorePercent">0%</strong></div>
+          <div class="metric"><span>Status / 状态</span><strong id="trainingStatus">Not checked</strong></div>
+        </div>
+      </section>
+
+      <section class="layout" aria-label="Risk discipline practice">
+        <form class="panel" id="trainingForm">
+          <p class="eyebrow">Eight Scenarios</p>
+          <h2>Choose the risk-first response <span lang="zh-CN">选择风险优先的做法</span></h2>
+          <div class="questions" id="questionList"></div>
+          <div class="actions">
+            <button class="button primary" id="checkTraining" type="submit">Check Answers / 检查答案</button>
+            <button class="button" id="resetTraining" type="reset">Reset Drill / 重新训练</button>
+          </div>
+        </form>
+
+        <aside class="panel result" id="trainingResult" aria-live="polite">
+          <p class="eyebrow">Training Result</p>
+          <h2>Your review plan <span lang="zh-CN">你的复习计划</span></h2>
+          <p class="status" id="statusBadge">Complete the scenarios</p>
+          <p class="note" id="resultSummary" style="margin-top:12px">Answer all eight scenarios, then check the result. Scoring is transparent and stays in this browser tab.</p>
+          <ul class="category-list" id="categoryResults"></ul>
+          <div id="reviewSection" hidden>
+            <h3 style="margin-top:20px">Review next / 下一步复习</h3>
+            <ul class="review-list" id="reviewPlan"></ul>
+          </div>
+          <p class="boundary">This public practice does not fetch prices, connect a wallet or exchange, place orders, deduct credits, or issue a certification. It is education and process review, not a signal or promise of trading results.</p>
+        </aside>
+      </section>
+    </main>
+    <footer><div class="shell">GCA Risk First Trading · Learn, size, review, gate, test, and replay.</div></footer>
+    <script src="assets/risk-training.js"></script>
+    <script>
+      (()=>{"use strict";const engine=window.GcaRiskTraining;const form=document.getElementById("trainingForm");const list=document.getElementById("questionList");const answered=document.getElementById("answeredCount");const score=document.getElementById("scorePercent");const status=document.getElementById("trainingStatus");const badge=document.getElementById("statusBadge");const summary=document.getElementById("resultSummary");const categoryResults=document.getElementById("categoryResults");const reviewSection=document.getElementById("reviewSection");const reviewPlan=document.getElementById("reviewPlan");
+      engine.questions.forEach((question,index)=>{const section=document.createElement("fieldset");section.className="question";section.id=`question-${question.id}`;const legend=document.createElement("legend");legend.className="question-number";legend.textContent=`Scenario ${index+1} · ${question.category}`;const title=document.createElement("h3");title.textContent=question.prompt;const zh=document.createElement("p");zh.className="zh";zh.lang="zh-CN";zh.textContent=question.promptZh;section.append(legend,title,zh);const options=document.createElement("div");options.className="options";question.options.forEach((option)=>{const label=document.createElement("label");label.className="option";const input=document.createElement("input");input.type="radio";input.name=question.id;input.value=option.id;const copy=document.createElement("span");const en=document.createElement("strong");en.textContent=option.label;const cn=document.createElement("small");cn.lang="zh-CN";cn.textContent=option.labelZh;copy.append(en,cn);label.append(input,copy);options.append(label);});section.append(options);list.append(section);});
+      function answers(){return Object.fromEntries(engine.questions.map((question)=>[question.id,form.elements[question.id]?.value||""]));}
+      function statusCopy(code){if(code==="FOUNDATION_READY")return["Foundation ready / 基础通过","ready"];if(code==="REVIEW_REQUIRED")return["Review required / 需要复习","review"];return["Not complete / 尚未完成","incomplete"];}
+      function render(result){const [label,className]=statusCopy(result.status);answered.textContent=`${result.answeredCount} / ${result.total}`;score.textContent=`${result.percent}%`;status.textContent=label;badge.textContent=label;badge.className=`status ${className}`;categoryResults.replaceChildren();result.categories.forEach((item)=>{const row=document.createElement("li");row.className="category-row";const name=document.createElement("span");name.textContent=item.category;const value=document.createElement("strong");value.textContent=`${item.correct}/${item.total}`;row.append(name,value);categoryResults.append(row);});const plan=engine.buildReviewPlan(result);reviewPlan.replaceChildren();reviewSection.hidden=false;if(result.status==="FOUNDATION_READY"){summary.textContent=`${result.correctCount} of ${result.total} correct. This shows a working foundation, not certification or proof that a trade is safe. / 基础通过不等于认证，也不代表任何交易安全。`;}else if(result.status==="REVIEW_REQUIRED"){summary.textContent=`${result.correctCount} of ${result.total} correct. Review the missed areas before repeating the drill. / 请先复习薄弱项，再重新训练。`;}else{summary.textContent=`Answer the remaining ${result.total-result.answeredCount} scenario(s). Unanswered items are included in the review plan. / 请完成剩余场景。`;}
+      if(plan.length===0){const item=document.createElement("li");item.className="empty";item.textContent="No missed areas in this attempt. Keep using the same discipline in planning and review. / 本次没有错题，请继续在计划和复盘中执行同样纪律。";reviewPlan.append(item);}else{plan.forEach((item)=>{const row=document.createElement("li");row.className="review-item";const title=document.createElement("strong");title.textContent=item.category;const text=document.createElement("span");text.textContent=`${item.explanation} ${item.explanationZh}`;const link=document.createElement("a");link.href=item.reviewUrl;link.textContent="Open related GCA tool / 打开相关工具";row.append(title,text,link);reviewPlan.append(row);});}}
+      form.addEventListener("submit",(event)=>{event.preventDefault();render(engine.evaluateAnswers(answers()));});form.addEventListener("change",()=>{const result=engine.evaluateAnswers(answers());answered.textContent=`${result.answeredCount} / ${result.total}`;});form.addEventListener("reset",()=>{window.setTimeout(()=>{answered.textContent=`0 / ${engine.questions.length}`;score.textContent="0%";status.textContent="Not checked";badge.className="status";badge.textContent="Complete the scenarios";summary.textContent="Answer all eight scenarios, then check the result. Scoring is transparent and stays in this browser tab.";categoryResults.replaceChildren();reviewPlan.replaceChildren();reviewSection.hidden=true;},0);});})();
+    </script>
+  </body>
+</html>

@@ -6,6 +6,13 @@
   "use strict";
 
   const tools = {
+    "risk-training": {
+      name: "Risk Discipline Training",
+      shortName: "Train",
+      url: "risk-training.html",
+      stage: "Learn the workflow",
+      purpose: "Practice eight risk-first decisions and build a focused review plan."
+    },
     "risk-calculator": {
       name: "Position Size Calculator",
       shortName: "Size",
@@ -51,6 +58,11 @@
   };
 
   const workflows = {
+    learn: {
+      name: "Learn Risk Discipline",
+      description: "Practice the foundations, then apply them in sizing, warning, readiness, and journal tools.",
+      toolIds: ["risk-training", "risk-calculator", "risk-warning", "entry-ready", "trade-journal"]
+    },
     prepare: {
       name: "Prepare a Trade",
       description: "Size first, review risk second, then run the final readiness gate.",
@@ -69,7 +81,7 @@
     all: {
       name: "All Risk Tools",
       description: "Open any public browser-only GCA tool directly.",
-      toolIds: ["risk-calculator", "risk-warning", "entry-ready", "backtest-lab", "liquidation-replay", "trade-journal"]
+      toolIds: ["risk-training", "risk-calculator", "risk-warning", "entry-ready", "backtest-lab", "liquidation-replay", "trade-journal"]
     }
   };
 

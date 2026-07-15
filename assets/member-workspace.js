@@ -23,7 +23,7 @@
     { id: "entry-ready-review", name: "ENTRY_READY Review", creditUnit: 15, previewUrl: "entry-ready.html", stage: "public-preview" },
     { id: "backtest-lab-run", name: "Backtest Lab", creditUnit: 20, previewUrl: "backtest-lab.html", stage: "public-preview" },
     { id: "liquidation-replay-report", name: "Liquidation Replay", creditUnit: 30, previewUrl: "liquidation-replay.html", stage: "public-preview" },
-    { id: "risk-control-training", name: "Risk-Control Training", creditUnit: 10, previewUrl: "tools.html", stage: "manual-review" },
+    { id: "risk-control-training", name: "Risk-Control Training", creditUnit: 10, previewUrl: "risk-training.html", stage: "public-preview" },
     { id: "member-research-notes", name: "Member Research Notes", creditUnit: 20, previewUrl: "radar.html", stage: "member-review" },
     { id: "support-review-queue", name: "Support Review Queue", creditUnit: 0, previewUrl: "support.html", stage: "manual-review" }
   ]);
