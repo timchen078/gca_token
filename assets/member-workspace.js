@@ -10,6 +10,7 @@
   const JOURNAL_KEY = "gca_trade_journal_v1";
   const TRAINING_HISTORY_KEY = "gca_risk_training_history_v1";
   const RESEARCH_NOTES_KEY = "gca_research_notes_v1";
+  const PORTFOLIO_RISK_KEY = "gca_portfolio_risk_v1";
   const REQUEST_HISTORY_KEY = "gca_member_service_request_history_v1";
   const REQUEST_BACKUP_SCHEMA = "gca-member-request-history-backup-v1";
   const REQUEST_HISTORY_LIMIT = 25;
@@ -35,6 +36,7 @@
 
   const SERVICE_CATALOG = Object.freeze([
     { id: "position-size-calculator", name: "Position Size Calculator", creditUnit: 5, previewUrl: "risk-calculator.html", stage: "public-preview" },
+    { id: "portfolio-risk-map", name: "Portfolio Risk Map", creditUnit: 15, previewUrl: "portfolio-risk.html", stage: "public-preview" },
     { id: "risk-warning-review", name: "Risk Warning Review", creditUnit: 10, previewUrl: "risk-warning.html", stage: "public-preview" },
     { id: "entry-ready-review", name: "ENTRY_READY Review", creditUnit: 15, previewUrl: "entry-ready.html", stage: "public-preview" },
     { id: "backtest-lab-run", name: "Backtest Lab", creditUnit: 20, previewUrl: "backtest-lab.html", stage: "public-preview" },
@@ -172,6 +174,35 @@
       sourcedCount: summary.sourcedCount,
       dueReviewCount: summary.dueReviewCount,
       latestUpdatedAt: summary.latestUpdatedAt
+    };
+  }
+
+  function emptyPortfolioSummary() {
+    return {
+      positionCount: 0,
+      status: "NO_POSITIONS",
+      totalRiskPercent: 0,
+      grossExposurePercent: 0,
+      marginUtilizationPercent: 0,
+      savedAt: null
+    };
+  }
+
+  function summarizePortfolioRisk(value, portfolioEngine) {
+    if (!portfolioEngine || typeof portfolioEngine.parseBackup !== "function" || typeof portfolioEngine.analyzePortfolio !== "function") {
+      return emptyPortfolioSummary();
+    }
+    const backup = portfolioEngine.parseBackup(value);
+    if (!backup) return emptyPortfolioSummary();
+    const analysis = portfolioEngine.analyzePortfolio(backup.config, backup.positions);
+    if (!analysis) return emptyPortfolioSummary();
+    return {
+      positionCount: analysis.positionCount,
+      status: analysis.status,
+      totalRiskPercent: analysis.totalRiskPercent,
+      grossExposurePercent: analysis.grossExposurePercent,
+      marginUtilizationPercent: analysis.marginUtilizationPercent,
+      savedAt: backup.savedAt
     };
   }
 
@@ -395,6 +426,7 @@
     JOURNAL_KEY,
     TRAINING_HISTORY_KEY,
     RESEARCH_NOTES_KEY,
+    PORTFOLIO_RISK_KEY,
     REQUEST_HISTORY_KEY,
     REQUEST_BACKUP_SCHEMA,
     REQUEST_HISTORY_LIMIT,
@@ -405,6 +437,7 @@
     summarizeJournal,
     summarizeTraining,
     summarizeResearchNotes,
+    summarizePortfolioRisk,
     buildServiceRequest,
     parseRequestHistory,
     createRequestReceipt,

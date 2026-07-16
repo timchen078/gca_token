@@ -139,6 +139,28 @@
       "notPurpose": "Not leverage encouragement or a replacement for user judgment."
     },
     {
+      "id": "portfolio-risk-map",
+      "name": "Portfolio Risk Map",
+      "status": "ledger-eligible-service-unit-staged",
+      "creditUnit": 15,
+      "unitType": "draft service credit unit",
+      "description": "Multi-position review for combined planned stop risk, gross and net exposure, margin use, concentration, and transparent symmetric stress scenarios.",
+      "publicPreview": {
+        "status": "live-client-side-preview",
+        "url": "https://gcagochina.com/portfolio-risk.html",
+        "storesOnServer": false,
+        "browserLocalPortfolio": true,
+        "portableJsonBackup": true,
+        "backupContainsUserEnteredPositionDetails": true,
+        "deductsCredits": false,
+        "connectsWallet": false,
+        "connectsExchange": false,
+        "fetchesMarketData": false,
+        "placesOrders": false
+      },
+      "notPurpose": "Not live portfolio monitoring, price forecasting, correlation analysis, liquidation-price calculation, or order execution."
+    },
+    {
       "id": "risk-control-training",
       "name": "Risk-Control Training",
       "status": "ledger-eligible-service-unit-staged",
@@ -373,7 +395,8 @@
     "tradeJournal": "https://gcagochina.com/trade-journal.html",
     "riskWarningReview": "https://gcagochina.com/risk-warning.html",
     "riskDisciplineTraining": "https://gcagochina.com/risk-training.html",
-    "researchNotes": "https://gcagochina.com/research-notes.html"
+    "researchNotes": "https://gcagochina.com/research-notes.html",
+    "portfolioRiskMap": "https://gcagochina.com/portfolio-risk.html"
   },
   "publicClaimBoundaries": {
     "safeClaims": [
@@ -383,6 +406,7 @@
       "Operators can queue requested service scope in the local service request ledger before delivery; queued requests do not deduct credits.",
       "The 1,000,000 GCA Member threshold requires 30 consecutive days of holding before a one-time 10,000 GCA member benefit review.",
       "The Member Research Notes browser-only preview is live and does not deduct credits; the separate 20-unit member service tier remains subject to operator review and recorded delivery.",
+      "The Portfolio Risk Map browser-only preview is live and does not deduct credits; its separate 15-unit service tier remains subject to operator review and recorded delivery.",
       "Credits and member status are account-level service records; the 10,000 GCA member benefit is manual review only.",
       "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool."
     ],
