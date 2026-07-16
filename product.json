@@ -136,7 +136,11 @@
       "name": "GCA Member Workspace",
       "status": "public-browser-local-workspace-live-account-ledger-intake-live",
       "publicUrl": "https://gcagochina.com/member-workspace.html",
-      "purpose": "Read the non-sensitive member snapshot, trade journal, and privacy-minimized training history saved on the current device, show utility limits and public tools, build a manual service request packet, and keep local activity receipts without calling protected admin routes or deducting credits.",
+      "purpose": "Read the non-sensitive member snapshot, trade journal, and privacy-minimized training history saved on the current device, show utility limits and public tools, build a manual service request packet, and keep local activity receipts with validated portable JSON backup without calling protected admin routes or deducting credits.",
+      "browserLocalRequestReceipts": true,
+      "portableRequestReceiptBackup": true,
+      "requestReceiptBackupContainsIdentityData": false,
+      "requestReceiptBackupContainsRequestContent": false,
       "notPurpose": "Not custody, voting control, lifetime access, exchange listing priority, or special trading permission."
     }
   ],
@@ -228,7 +232,7 @@
       "GCA has published a public product specification for GCA AI Quant Access.",
       "The current product page is a public spec and account-ledger release map.",
       "GCA has a live account and membership intake path for non-custodial quant risk tools.",
-      "GCA has a public browser-local member workspace for device status, risk-tool entry, journal and training summaries, manual service request packets, and privacy-minimized local activity receipts; it does not deduct credits or call protected admin routes.",
+      "GCA has a public browser-local member workspace for device status, risk-tool entry, journal and training summaries, manual service request packets, and privacy-minimized local activity receipts with validated portable JSON backup; the backup excludes identity and request content, and the workspace does not deduct credits or call protected admin routes.",
       "GCA has a public client-side Position Size Calculator preview that does not connect to wallets or exchanges, place orders, or deduct credits.",
       "GCA has a public client-side ENTRY_READY Review preview with transparent readiness gates and no order execution.",
       "GCA has a public client-side Liquidation & Loss Replay preview for structured post-trade review without account connections or order execution.",
