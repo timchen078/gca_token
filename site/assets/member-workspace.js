@@ -10,6 +10,7 @@
   const JOURNAL_KEY = "gca_trade_journal_v1";
   const TRAINING_HISTORY_KEY = "gca_risk_training_history_v1";
   const REQUEST_HISTORY_KEY = "gca_member_service_request_history_v1";
+  const REQUEST_BACKUP_SCHEMA = "gca-member-request-history-backup-v1";
   const REQUEST_HISTORY_LIMIT = 25;
   const ADDRESS_RE = /^0x[a-fA-F0-9]{40}$/;
   const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
@@ -17,6 +18,19 @@
   const REQUEST_ID_RE = /^gca_local_req_[a-z0-9-]{8,64}$/;
   const REQUEST_ACTIONS = Object.freeze(["packet_created", "packet_copied", "packet_downloaded", "email_client_opened"]);
   const CREDIT_CHECK_STATUSES = Object.freeze(["status-refresh-required", "no-credit-hold", "credit-ledger-not-active", "insufficient-credits", "credits-available"]);
+  const REQUEST_RECEIPT_FIELDS = Object.freeze([
+    "version",
+    "requestId",
+    "createdAt",
+    "updatedAt",
+    "serviceId",
+    "serviceName",
+    "creditUnit",
+    "preferredLanguage",
+    "deviceCreditCheck",
+    "deviceCreditsAvailable",
+    "localAction"
+  ]);
 
   const SERVICE_CATALOG = Object.freeze([
     { id: "position-size-calculator", name: "Position Size Calculator", creditUnit: 5, previewUrl: "risk-calculator.html", stage: "public-preview" },
@@ -275,12 +289,82 @@
     return parseRequestHistory(value).filter((receipt) => receipt.requestId !== requestId);
   }
 
+  function exactRequestReceipt(value, sanitized) {
+    if (!value || typeof value !== "object" || !sanitized) return false;
+    const keys = Object.keys(value);
+    if (keys.length !== REQUEST_RECEIPT_FIELDS.length || keys.some((key) => !REQUEST_RECEIPT_FIELDS.includes(key))) return false;
+    return REQUEST_RECEIPT_FIELDS.every((key) => value[key] === sanitized[key]);
+  }
+
+  function buildRequestHistoryBackup(value, exportedAt) {
+    const parsedTime = Date.parse(exportedAt);
+    return Object.freeze({
+      schema: REQUEST_BACKUP_SCHEMA,
+      version: 1,
+      exportedAt: Number.isFinite(parsedTime) ? new Date(parsedTime).toISOString() : new Date().toISOString(),
+      receipts: parseRequestHistory(value)
+    });
+  }
+
+  function parseRequestHistoryBackup(value) {
+    const payload = parseJson(value);
+    if (!payload || typeof payload !== "object") return null;
+    const keys = Object.keys(payload);
+    if (
+      keys.length !== 4 ||
+      keys.some((key) => !["schema", "version", "exportedAt", "receipts"].includes(key)) ||
+      payload.schema !== REQUEST_BACKUP_SCHEMA ||
+      payload.version !== 1 ||
+      !Number.isFinite(Date.parse(payload.exportedAt)) ||
+      !Array.isArray(payload.receipts) ||
+      payload.receipts.length === 0 ||
+      payload.receipts.length > REQUEST_HISTORY_LIMIT
+    ) return null;
+    const sanitized = payload.receipts.map(sanitizeRequestReceipt);
+    if (sanitized.some((receipt, index) => !exactRequestReceipt(payload.receipts[index], receipt))) return null;
+    const receipts = parseRequestHistory(sanitized);
+    if (receipts.length !== payload.receipts.length) return null;
+    return Object.freeze({
+      schema: REQUEST_BACKUP_SCHEMA,
+      version: 1,
+      exportedAt: new Date(payload.exportedAt).toISOString(),
+      receipts
+    });
+  }
+
+  function mergeRequestHistoryBackup(currentValue, backupValue) {
+    const backup = parseRequestHistoryBackup(backupValue);
+    if (!backup) return null;
+    const current = parseRequestHistory(currentValue);
+    const currentById = new Map(current.map((receipt) => [receipt.requestId, receipt]));
+    const mergedById = new Map(currentById);
+    const updatedIds = new Set();
+    backup.receipts.forEach((receipt) => {
+      const existing = mergedById.get(receipt.requestId);
+      if (!existing || Date.parse(receipt.updatedAt) > Date.parse(existing.updatedAt)) {
+        mergedById.set(receipt.requestId, receipt);
+        if (existing) updatedIds.add(receipt.requestId);
+      }
+    });
+    const receipts = parseRequestHistory([...mergedById.values()]);
+    const retainedIds = new Set(receipts.map((receipt) => receipt.requestId));
+    return Object.freeze({
+      receipts,
+      importedReceiptCount: backup.receipts.length,
+      addedReceiptCount: backup.receipts.filter(
+        (receipt) => !currentById.has(receipt.requestId) && retainedIds.has(receipt.requestId)
+      ).length,
+      updatedReceiptCount: [...updatedIds].filter((requestId) => retainedIds.has(requestId)).length
+    });
+  }
+
   return {
     SNAPSHOT_KEY,
     SNAPSHOT_MAX_AGE_MS,
     JOURNAL_KEY,
     TRAINING_HISTORY_KEY,
     REQUEST_HISTORY_KEY,
+    REQUEST_BACKUP_SCHEMA,
     REQUEST_HISTORY_LIMIT,
     SERVICE_CATALOG,
     serviceById,
@@ -293,6 +377,9 @@
     createRequestReceipt,
     upsertRequestHistory,
     markRequestAction,
-    removeRequestReceipt
+    removeRequestReceipt,
+    buildRequestHistoryBackup,
+    parseRequestHistoryBackup,
+    mergeRequestHistoryBackup
   };
 });

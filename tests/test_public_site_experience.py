@@ -125,6 +125,9 @@ class PublicSiteExperienceTests(unittest.TestCase):
             "requestActivityTitle",
             "requestHistoryCount",
             "requestHistoryList",
+            "exportRequestHistory",
+            "importRequestHistory",
+            "requestBackupStatus",
             "clearRequestHistory",
         ):
             self.assertIn(f'id="{element_id}"', page)
@@ -140,12 +143,17 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn("engine.createRequestReceipt", page)
         self.assertIn("engine.markRequestAction", page)
         self.assertIn("engine.removeRequestReceipt", page)
+        self.assertIn("engine.buildRequestHistoryBackup", page)
+        self.assertIn("engine.parseRequestHistoryBackup", page)
+        self.assertIn("engine.mergeRequestHistoryBackup", page)
+        self.assertIn("await file.text()", page)
         self.assertIn("navigator.clipboard.writeText", page)
         self.assertIn("URL.createObjectURL", page)
         self.assertIn("mailto:support@gcagochina.com", page)
         self.assertIn("does not deduct credits", page)
         self.assertIn("does not read protected D1 ledgers", page)
         self.assertIn("does not prove that support received", page)
+        self.assertIn("it is not uploaded by this page", page)
         self.assertNotIn("fetch(", page)
         self.assertNotIn("window.ethereum", page)
         self.assertNotIn("WebSocket", page)
@@ -153,10 +161,15 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn('const JOURNAL_KEY = "gca_trade_journal_v1"', engine)
         self.assertIn('const TRAINING_HISTORY_KEY = "gca_risk_training_history_v1"', engine)
         self.assertIn('const REQUEST_HISTORY_KEY = "gca_member_service_request_history_v1"', engine)
+        self.assertIn('const REQUEST_BACKUP_SCHEMA = "gca-member-request-history-backup-v1"', engine)
         self.assertIn("SENSITIVE_RE", engine)
         workspace = next(item for item in product["productModules"] if item["id"] == "gca-member-workspace")
         self.assertEqual(workspace["status"], "public-browser-local-workspace-live-account-ledger-intake-live")
         self.assertEqual(workspace["publicUrl"], "https://gcagochina.com/member-workspace.html")
+        self.assertTrue(workspace["browserLocalRequestReceipts"])
+        self.assertTrue(workspace["portableRequestReceiptBackup"])
+        self.assertFalse(workspace["requestReceiptBackupContainsIdentityData"])
+        self.assertFalse(workspace["requestReceiptBackupContainsRequestContent"])
         self.assertEqual(product["officialLinks"]["memberWorkspace"], "https://gcagochina.com/member-workspace.html")
         catalog_units = {item["id"]: item["creditUnit"] for item in credits["serviceCatalog"]}
         for service_id, credit_unit in (
@@ -190,6 +203,19 @@ class PublicSiteExperienceTests(unittest.TestCase):
             "const receipt=w.createRequestReceipt(request,requestInput,'2026-07-14T12:31:00Z');"
             "const history=w.upsertRequestHistory('[]',receipt);"
             "const copied=w.markRequestAction(history,request.requestId,'packet_copied','2026-07-14T12:32:00Z');"
+            "const backup=w.buildRequestHistoryBackup(copied,'2026-07-14T12:33:00Z');"
+            "const parsedBackup=w.parseRequestHistoryBackup(JSON.stringify(backup));"
+            "const invalidBackup=w.parseRequestHistoryBackup({...backup,receipts:[{...backup.receipts[0],contactEmail:'private@example.com'}]});"
+            "const duplicateBackup=w.parseRequestHistoryBackup({...backup,receipts:[...backup.receipts,backup.receipts[0]]});"
+            "const currentNewer=w.markRequestAction(copied,request.requestId,'packet_downloaded','2026-07-14T12:35:00Z');"
+            "const olderMerge=w.mergeRequestHistoryBackup(currentNewer,backup);"
+            "const importedNewer=w.markRequestAction(copied,request.requestId,'email_client_opened','2026-07-14T12:36:00Z');"
+            "const secondRequest=w.buildServiceRequest({...requestInput,serviceId:'risk-control-training'},snapshot,'2026-07-14T12:37:00Z','gca_local_req_second123');"
+            "const secondReceipt=w.createRequestReceipt(secondRequest,requestInput,'2026-07-14T12:38:00Z');"
+            "const newerBackup=w.buildRequestHistoryBackup([secondReceipt,...importedNewer],'2026-07-14T12:39:00Z');"
+            "const newerMerge=w.mergeRequestHistoryBackup(currentNewer,newerBackup);"
+            "const fullHistory=w.parseRequestHistory(Array.from({length:25},(_,i)=>({...receipt,requestId:`gca_local_req_current${String(i).padStart(3,'0')}`,createdAt:new Date(Date.parse('2026-07-15T00:00:00Z')+i*1000).toISOString(),updatedAt:new Date(Date.parse('2026-07-15T00:00:00Z')+i*1000).toISOString()})));"
+            "const cappedMerge=w.mergeRequestHistoryBackup(fullHistory,backup);"
             "const removed=w.removeRequestReceipt(copied,request.requestId);"
             "const sensitive=w.buildServiceRequest({serviceId:'backtest-lab-run',email:'member@example.com',title:'Review sample',summary:'My private key should never be included here.',marketContext:''},snapshot,'2026-07-14T12:30:00Z');"
             "const expired=w.parseMemberSnapshot(raw,Date.parse('2026-08-14T00:00:01Z'));"
@@ -198,7 +224,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
             "const trainingResult=t.evaluateAnswers(trainingAnswers);"
             "const trainingReceipt=t.createAttemptReceipt(trainingResult,'2026-07-14T12:40:00Z','gca_training_member123');"
             "const training=w.summarizeTraining(JSON.stringify([trainingReceipt]),t);"
-            "process.stdout.write(JSON.stringify({snapshot,request,receipt,history,copied,removed,stored:JSON.stringify(copied),sensitive,expired,journal,training,masked:w.maskWallet(snapshot.walletAddress),services:w.SERVICE_CATALOG}));"
+            "process.stdout.write(JSON.stringify({snapshot,request,receipt,history,copied,backup,parsedBackup,invalidBackup,duplicateBackup,olderMerge,newerMerge,cappedMerge,backupStored:JSON.stringify(backup),removed,stored:JSON.stringify(copied),sensitive,expired,journal,training,masked:w.maskWallet(snapshot.walletAddress),services:w.SERVICE_CATALOG,backupSchema:w.REQUEST_BACKUP_SCHEMA}));"
         )
         completed = subprocess.run(
             [node, "-e", script, str(module_path), str(journal_path), str(training_path)],
@@ -221,6 +247,32 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertEqual(result["receipt"]["deviceCreditsAvailable"], 75)
         self.assertEqual(len(result["history"]), 1)
         self.assertEqual(result["copied"][0]["localAction"], "packet_copied")
+        self.assertEqual(result["backupSchema"], "gca-member-request-history-backup-v1")
+        self.assertEqual(result["backup"]["schema"], "gca-member-request-history-backup-v1")
+        self.assertEqual(result["parsedBackup"], result["backup"])
+        self.assertIsNone(result["invalidBackup"])
+        self.assertIsNone(result["duplicateBackup"])
+        self.assertEqual(result["olderMerge"]["updatedReceiptCount"], 0)
+        self.assertEqual(result["olderMerge"]["receipts"][0]["localAction"], "packet_downloaded")
+        self.assertEqual(result["newerMerge"]["addedReceiptCount"], 1)
+        self.assertEqual(result["newerMerge"]["updatedReceiptCount"], 1)
+        self.assertEqual(len(result["newerMerge"]["receipts"]), 2)
+        self.assertEqual(result["cappedMerge"]["addedReceiptCount"], 0)
+        self.assertEqual(len(result["cappedMerge"]["receipts"]), 25)
+        for forbidden in (
+            "contactEmail",
+            "walletAddress",
+            "requestTitle",
+            "requestSummary",
+            "marketContext",
+            "requestPacket",
+            "private@example.com",
+            "0x1111111111111111111111111111111111111111",
+            "Review completed sample",
+            "drawdown and execution discipline",
+            "BTC/USDT",
+        ):
+            self.assertNotIn(forbidden, result["backupStored"])
         self.assertEqual(result["removed"], [])
         self.assertNotIn("member@example.com", result["stored"].lower())
         self.assertNotIn("Review completed sample", result["stored"])

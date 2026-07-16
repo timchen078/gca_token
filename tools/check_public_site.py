@@ -5463,6 +5463,9 @@ def validate_member_workspace_page(text: str) -> None:
     assert_contains(text, 'id="requestActivityTitle"', label)
     assert_contains(text, 'id="requestHistoryCount"', label)
     assert_contains(text, 'id="requestHistoryList"', label)
+    assert_contains(text, 'id="exportRequestHistory"', label)
+    assert_contains(text, 'id="importRequestHistory"', label)
+    assert_contains(text, 'id="requestBackupStatus"', label)
     assert_contains(text, 'id="clearRequestHistory"', label)
     assert_contains(text, 'src="assets/member-workspace.js"', label)
     assert_contains(text, 'src="assets/trade-journal.js"', label)
@@ -5475,6 +5478,10 @@ def validate_member_workspace_page(text: str) -> None:
     assert_contains(text, "engine.createRequestReceipt", label)
     assert_contains(text, "engine.markRequestAction", label)
     assert_contains(text, "engine.removeRequestReceipt", label)
+    assert_contains(text, "engine.buildRequestHistoryBackup", label)
+    assert_contains(text, "engine.parseRequestHistoryBackup", label)
+    assert_contains(text, "engine.mergeRequestHistoryBackup", label)
+    assert_contains(text, "await file.text()", label)
     assert_contains(text, "Manual Review Only", label)
     assert_contains(text, "does not deduct credits", label)
     assert_contains(text, "does not read protected D1 ledgers", label)
@@ -5482,6 +5489,7 @@ def validate_member_workspace_page(text: str) -> None:
     assert_contains(text, "navigator.clipboard.writeText", label)
     assert_contains(text, "URL.createObjectURL", label)
     assert_contains(text, "does not prove that support received", label)
+    assert_contains(text, "it is not uploaded by this page", label)
     assert_not_contains(text, "fetch(", label)
     assert_not_contains(text, "window.ethereum", label)
     assert_not_contains(text, "WebSocket", label)
@@ -8009,6 +8017,14 @@ def validate_product_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong member workspace status")
     if member_workspace.get("publicUrl") != "https://gcagochina.com/member-workspace.html":
         raise SiteCheckError(f"{label}: wrong member workspace URL")
+    if member_workspace.get("browserLocalRequestReceipts") is not True:
+        raise SiteCheckError(f"{label}: member workspace browserLocalRequestReceipts must be true")
+    if member_workspace.get("portableRequestReceiptBackup") is not True:
+        raise SiteCheckError(f"{label}: member workspace portableRequestReceiptBackup must be true")
+    if member_workspace.get("requestReceiptBackupContainsIdentityData") is not False:
+        raise SiteCheckError(f"{label}: member workspace receipt backup must exclude identity data")
+    if member_workspace.get("requestReceiptBackupContainsRequestContent") is not False:
+        raise SiteCheckError(f"{label}: member workspace receipt backup must exclude request content")
     if links.get("memberWorkspace") != "https://gcagochina.com/member-workspace.html":
         raise SiteCheckError(f"{label}: wrong memberWorkspace link")
     if links.get("riskDisciplineTraining") != RISK_TRAINING_PAGE_URL:

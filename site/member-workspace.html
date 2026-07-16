@@ -178,8 +178,9 @@
           <div class="activity-count"><span class="note">Saved on this device / 本设备记录</span><strong id="requestHistoryCount">0</strong></div>
         </div>
         <div id="requestHistoryList" class="activity-list" aria-live="polite"></div>
-        <div class="actions" style="margin-top:16px"><button class="button" id="clearRequestHistory" type="button" disabled>Clear Local History / 清除本地记录</button></div>
-        <p class="boundary" style="margin:16px 0 0">A local receipt records only what this browser did: packet created, copied, downloaded, or email client opened. It does not prove that support received, accepted, approved, or delivered the request. / 本地回执只记录浏览器操作，不代表支持团队已经收到、受理、批准或交付服务。</p>
+        <div class="actions" style="margin-top:16px"><button class="button" id="exportRequestHistory" type="button" disabled>Export Receipt Backup / 导出回执备份</button><label class="button" for="importRequestHistory">Restore Receipt Backup / 恢复回执备份</label><input id="importRequestHistory" type="file" accept="application/json,.json" hidden><button class="button" id="clearRequestHistory" type="button" disabled>Clear Local History / 清除本地记录</button></div>
+        <p class="note" id="requestBackupStatus" style="margin-top:13px" aria-live="polite">Export a validated JSON backup before clearing browser data or moving devices. / 清除浏览器数据或更换设备前，请导出校验过的 JSON 备份。</p>
+        <p class="boundary" style="margin:16px 0 0">A local receipt records only what this browser did: packet created, copied, downloaded, or email client opened. Its portable backup excludes contact email, wallet address, request title, request summary, market context, packet text, and member snapshot data. The file is created and restored locally; it is not uploaded by this page and does not prove that support received, accepted, approved, or delivered the request. / 回执备份仅在本地生成和恢复，不包含联系邮箱、钱包、申请正文或会员快照，也不代表支持团队已经收到、受理、批准或交付服务。</p>
       </section>
     </main>
     <footer><div class="shell">GCA Member Workspace · Browser-local status and manual review packets. No automatic credit deduction or token transfer.</div></footer>
@@ -202,6 +203,9 @@
         const emailServicePacket = document.getElementById("emailServicePacket");
         const requestHistoryCount = document.getElementById("requestHistoryCount");
         const requestHistoryList = document.getElementById("requestHistoryList");
+        const exportRequestHistory = document.getElementById("exportRequestHistory");
+        const importRequestHistory = document.getElementById("importRequestHistory");
+        const requestBackupStatus = document.getElementById("requestBackupStatus");
         const clearRequestHistory = document.getElementById("clearRequestHistory");
         let snapshot = null;
         let currentRequestResult = null;
@@ -225,6 +229,17 @@
             return `gca_local_req_${window.crypto.randomUUID().replaceAll("-", "")}`;
           }
           return `gca_local_req_${Date.now().toString(36)}-browser`;
+        }
+
+        function download(name, type, content) {
+          const url = URL.createObjectURL(new Blob([content], { type }));
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = name;
+          document.body.append(link);
+          link.click();
+          link.remove();
+          window.setTimeout(() => URL.revokeObjectURL(url), 0);
         }
 
         function signedPercent(value) {
@@ -290,6 +305,7 @@
         function renderRequestHistory() {
           requestHistoryCount.textContent = String(requestHistory.length);
           clearRequestHistory.disabled = requestHistory.length === 0;
+          exportRequestHistory.disabled = requestHistory.length === 0;
           requestHistoryList.textContent = "";
           if (requestHistory.length === 0) {
             const empty = document.createElement("p");
@@ -462,15 +478,7 @@
 
         downloadServicePacket.addEventListener("click", () => {
           if (!requestPacket.value || !currentRequestResult) return;
-          const blob = new Blob([requestPacket.value], { type: "text/plain;charset=utf-8" });
-          const url = URL.createObjectURL(blob);
-          const link = document.createElement("a");
-          link.href = url;
-          link.download = `${currentRequestResult.requestId}.txt`;
-          document.body.append(link);
-          link.click();
-          link.remove();
-          URL.revokeObjectURL(url);
+          download(`${currentRequestResult.requestId}.txt`, "text/plain;charset=utf-8", requestPacket.value);
           recordRequestAction("packet_downloaded");
           requestStatus.className = "status-message good";
           requestStatus.textContent = "Service request downloaded. / 服务申请已下载。";
@@ -495,6 +503,50 @@
             writeLocal(engine.REQUEST_HISTORY_KEY, requestHistory);
             renderRequestHistory();
           }
+        });
+
+        exportRequestHistory.addEventListener("click", () => {
+          const backup = engine.buildRequestHistoryBackup(requestHistory, new Date().toISOString());
+          if (backup.receipts.length === 0) {
+            requestBackupStatus.textContent = "No local request receipts to export. / 暂无可导出的本地申请回执。";
+            return;
+          }
+          download(
+            `gca-member-request-receipts-${backup.exportedAt.slice(0, 10)}.json`,
+            "application/json",
+            JSON.stringify(backup, null, 2)
+          );
+          requestBackupStatus.textContent = `Receipt backup exported: ${backup.receipts.length} record(s). / 回执备份已导出。`;
+        });
+
+        importRequestHistory.addEventListener("change", async (event) => {
+          const file = event.target.files?.[0];
+          if (!file) return;
+          try {
+            const parsed = engine.parseRequestHistoryBackup(await file.text());
+            if (!parsed) {
+              requestBackupStatus.textContent = "Invalid GCA request receipt backup. Use a JSON file exported by this workspace. / 回执备份无效，请使用本工作区导出的 JSON 文件。";
+              event.target.value = "";
+              return;
+            }
+            const merged = engine.mergeRequestHistoryBackup(requestHistory, parsed);
+            if (!merged) {
+              requestBackupStatus.textContent = "The receipt backup could not be merged. / 无法合并该回执备份。";
+              event.target.value = "";
+              return;
+            }
+            if (!writeLocal(engine.REQUEST_HISTORY_KEY, merged.receipts)) {
+              requestBackupStatus.textContent = "Backup validated, but browser storage is unavailable. / 备份已通过校验，但浏览器存储不可用。";
+              event.target.value = "";
+              return;
+            }
+            requestHistory = merged.receipts;
+            renderRequestHistory();
+            requestBackupStatus.textContent = `Receipt backup restored: ${merged.addedReceiptCount} added, ${merged.updatedReceiptCount} updated. / 回执备份已恢复并完成去重。`;
+          } catch (error) {
+            requestBackupStatus.textContent = "Unable to read this receipt backup. / 无法读取该回执备份。";
+          }
+          event.target.value = "";
         });
 
         clearRequestHistory.addEventListener("click", () => {
