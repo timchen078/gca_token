@@ -5181,6 +5181,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Position Size Calculator", page)
         self.assertIn("Risk Discipline Training", page)
         self.assertIn('href="risk-training.html"', page)
+        self.assertIn("Member Research Notes", page)
+        self.assertIn('href="research-notes.html"', page)
         self.assertIn("GCA Member Workspace", page)
         self.assertIn("simulation or testnet first", page)
         self.assertIn("No custody", page)
@@ -5199,6 +5201,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(product["contractAddress"], MAINNET_ADDRESS)
         self.assertEqual(product["positioning"]["productName"], "GCA AI Quant Access")
         self.assertEqual(product["positioning"]["currentStage"], "account-ledger-path-live-product-tools-planned")
+        self.assertEqual(product["positioning"]["publicRiskToolPreviewsLive"], 8)
         self.assertTrue(product["positioning"]["publicAccountUiLive"])
         self.assertFalse(product["positioning"]["liveTradingEnabled"])
         module_names = {item["name"] for item in product["productModules"]}
@@ -5211,6 +5214,7 @@ class LaunchPackageTests(unittest.TestCase):
             "ENTRY_READY Review",
             "Position Size Calculator",
             "Risk Discipline Training",
+            "Member Research Notes",
             "GCA Member Workspace",
         }:
             self.assertIn(name, module_names)
@@ -5220,6 +5224,14 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertFalse(risk_training["connectsWallet"])
         self.assertFalse(risk_training["connectsExchange"])
         self.assertFalse(risk_training["issuesCertification"])
+        research_notes = next(item for item in product["productModules"] if item["id"] == "member-research-notes")
+        self.assertEqual(research_notes["status"], "public-client-side-preview-live")
+        self.assertEqual(research_notes["publicUrl"], "https://gcagochina.com/research-notes.html")
+        self.assertTrue(research_notes["browserLocalNotes"])
+        self.assertTrue(research_notes["portableJsonBackup"])
+        self.assertTrue(research_notes["backupContainsUserEnteredResearchContent"])
+        self.assertFalse(research_notes["storesOnServer"])
+        self.assertFalse(research_notes["collectsIdentityFields"])
         gate_ids = {item["id"] for item in product["releaseGates"]}
         self.assertIn("controlled-https-account-ui", gate_ids)
         self.assertIn("simulation-first", gate_ids)
@@ -5244,6 +5256,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(product["officialLinks"]["releaseGates"], RELEASE_GATES_URL)
         self.assertEqual(product["officialLinks"]["utilityJson"], UTILITY_URL)
         self.assertEqual(product["officialLinks"]["memberLedger"], MEMBER_LEDGER_URL)
+        self.assertEqual(product["officialLinks"]["researchNotes"], "https://gcagochina.com/research-notes.html")
         self.assertIn("GCA has published a public product specification for GCA AI Quant Access.", product["publicClaimBoundaries"]["safeClaims"])
         self.assertTrue(any("full GCA AI Quant Access trading or research product is live" in item for item in product["publicClaimBoundaries"]["doNotClaim"]))
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, json.dumps(product))
@@ -5290,6 +5303,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Position Size Calculator", page)
         self.assertIn("Risk-Control Training", page)
         self.assertIn("Member Research Notes", page)
+        self.assertIn('href="research-notes.html"', page)
         self.assertIn("Support Review Queue", page)
         self.assertIn("No custody", page)
         self.assertIn("No withdrawal permission", page)
@@ -6079,6 +6093,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Position Size Calculator", page)
         self.assertIn("Risk-Control Training", page)
         self.assertIn("Member Research Notes", page)
+        self.assertIn('href="research-notes.html"', page)
         self.assertIn("Support Review Queue", page)
         self.assertIn("controlled HTTPS account UI", page)
         self.assertIn("credit ledger record live for eligible holders", page)
@@ -6135,6 +6150,13 @@ class LaunchPackageTests(unittest.TestCase):
         for item in credits["serviceCatalog"]:
             self.assertIn(item["status"], {"ledger-eligible-service-unit-staged", "member-ledger-eligible-service-unit-staged", "member-ledger-eligible-service-workflow-staged"})
             self.assertIn(item["unitType"], {"draft service credit unit", "draft member credit unit", "member workflow priority"})
+        research_notes = next(item for item in credits["serviceCatalog"] if item["id"] == "member-research-notes")
+        self.assertEqual(research_notes["publicPreview"]["status"], "live-client-side-preview")
+        self.assertEqual(research_notes["publicPreview"]["url"], "https://gcagochina.com/research-notes.html")
+        self.assertTrue(research_notes["publicPreview"]["browserLocalNotes"])
+        self.assertTrue(research_notes["publicPreview"]["portableJsonBackup"])
+        self.assertFalse(research_notes["publicPreview"]["storesOnServer"])
+        self.assertFalse(research_notes["publicPreview"]["deductsCredits"])
         self.assertEqual(credits["usageLedger"]["status"], "local-operator-credit-usage-ledger-ready-worker-auth-d1-deploy-gate-pending")
         self.assertTrue(credits["usageLedger"]["workerDeployReadinessCommand"].endswith("--require-deploy-auth"))
         self.assertEqual(credits["usageLedger"]["workerDeployReadinessAuthSessionCheck"], "cloudflare-auth-session")
@@ -6179,6 +6201,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(credits["officialMarket"]["quoteAssetAddress"], BASE_USDT_ADDRESS)
         self.assertEqual(credits["officialLinks"]["creditsCatalogPage"], CREDITS_PAGE_URL)
         self.assertEqual(credits["officialLinks"]["creditsCatalog"], CREDITS_URL)
+        self.assertEqual(credits["officialLinks"]["researchNotes"], "https://gcagochina.com/research-notes.html")
         self.assertIn("GCA has published a service catalog for GCA AI Quant Access credits.", credits["publicClaimBoundaries"]["safeClaims"])
         self.assertIn("Operator-reviewed service delivery can be recorded through the local GCA credit usage ledger with before/after remaining credits; the Cloudflare Worker route is prepared, Worker dry-run and D1 visibility passed on 2026-06-18, and production remains non-live until Cloudflare auth, Worker deploy permission, remote deploy, and pending-route smoke gates pass.", credits["publicClaimBoundaries"]["safeClaims"])
         self.assertTrue(any("automatic or self-service transferred" in item for item in credits["publicClaimBoundaries"]["doNotClaim"]))
@@ -7040,7 +7063,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(project["wellKnownTokenIdentityUrl"], WELL_KNOWN_TOKEN_URL)
         self.assertEqual(project["walletSecurityProfileUrl"], WALLET_SECURITY_PROFILE_URL)
         self.assertEqual(project["securityContactUrl"], SECURITY_CONTACT_URL)
-        self.assertEqual(project["lastUpdated"], "2026-06-14")
+        self.assertEqual(project["lastUpdated"], "2026-07-16")
         self.assertEqual(project["marketPageUrl"], MARKET_PAGE_URL)
         self.assertEqual(project["supplyPageUrl"], SUPPLY_PAGE_URL)
         self.assertEqual(project["securityPageUrl"], SECURITY_PAGE_URL)

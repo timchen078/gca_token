@@ -54,6 +54,13 @@
       url: "trade-journal.html",
       stage: "After exit",
       purpose: "Keep a browser-local completed-trade log and send the return sequence to Backtest Lab."
+    },
+    "research-notes": {
+      name: "Member Research Notes",
+      shortName: "Notes",
+      url: "research-notes.html",
+      stage: "Narrative research",
+      purpose: "Structure a thesis, evidence, catalysts, invalidation conditions, risks, sources, and review dates."
     }
   };
 
@@ -70,8 +77,8 @@
     },
     research: {
       name: "Research a Strategy",
-      description: "Analyze the sample, stress the current risk conditions, then validate the setup process.",
-      toolIds: ["trade-journal", "backtest-lab", "risk-warning", "entry-ready"]
+      description: "Structure the thesis first, review completed evidence, analyze the sample, then validate risk and readiness.",
+      toolIds: ["research-notes", "trade-journal", "backtest-lab", "risk-warning", "entry-ready"]
     },
     review: {
       name: "Review a Loss",
@@ -81,7 +88,7 @@
     all: {
       name: "All Risk Tools",
       description: "Open any public browser-only GCA tool directly.",
-      toolIds: ["risk-training", "risk-calculator", "risk-warning", "entry-ready", "backtest-lab", "liquidation-replay", "trade-journal"]
+      toolIds: ["risk-training", "research-notes", "risk-calculator", "risk-warning", "entry-ready", "backtest-lab", "liquidation-replay", "trade-journal"]
     }
   };
 

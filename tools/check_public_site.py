@@ -125,6 +125,7 @@ BACKTEST_LAB_PAGE_URL = "https://gcagochina.com/backtest-lab.html"
 RISK_WARNING_PAGE_URL = "https://gcagochina.com/risk-warning.html"
 RISK_TOOLS_PAGE_URL = "https://gcagochina.com/tools.html"
 RISK_TRAINING_PAGE_URL = "https://gcagochina.com/risk-training.html"
+RESEARCH_NOTES_PAGE_URL = "https://gcagochina.com/research-notes.html"
 SERVICE_DELIVERY_PLAYBOOK_PAGE_URL = "https://gcagochina.com/service-delivery-playbook.html"
 SERVICE_DELIVERY_PLAYBOOK_URL = "https://gcagochina.com/service-delivery-playbook.json"
 WORKER_ROUTES_HANDOFF_PAGE_URL = "https://gcagochina.com/worker-routes-handoff.html"
@@ -5448,6 +5449,12 @@ def validate_member_workspace_page(text: str) -> None:
     assert_contains(text, 'id="trainingBest"', label)
     assert_contains(text, 'id="trainingReadyCount"', label)
     assert_contains(text, 'id="trainingSavedAt"', label)
+    assert_contains(text, 'id="researchSummaryTitle"', label)
+    assert_contains(text, 'id="researchNoteCount"', label)
+    assert_contains(text, 'id="researchActiveCount"', label)
+    assert_contains(text, 'id="researchSourcedCount"', label)
+    assert_contains(text, 'id="researchDueCount"', label)
+    assert_contains(text, 'id="researchSavedAt"', label)
     assert_contains(text, 'id="serviceGrid"', label)
     assert_contains(text, 'id="serviceRequestForm"', label)
     assert_contains(text, 'id="serviceId"', label)
@@ -5470,9 +5477,11 @@ def validate_member_workspace_page(text: str) -> None:
     assert_contains(text, 'src="assets/member-workspace.js"', label)
     assert_contains(text, 'src="assets/trade-journal.js"', label)
     assert_contains(text, 'src="assets/risk-training.js"', label)
+    assert_contains(text, 'src="assets/research-notes.js"', label)
     assert_contains(text, "engine.parseMemberSnapshot", label)
     assert_contains(text, "engine.summarizeJournal", label)
     assert_contains(text, "engine.summarizeTraining", label)
+    assert_contains(text, "engine.summarizeResearchNotes", label)
     assert_contains(text, "trainingStatusLabel", label)
     assert_contains(text, "engine.buildServiceRequest", label)
     assert_contains(text, "engine.createRequestReceipt", label)
@@ -7745,6 +7754,8 @@ def validate_product_page(text: str) -> None:
     assert_contains(text, "Position Size Calculator", label)
     assert_contains(text, "Risk Discipline Training", label)
     assert_contains(text, 'href="risk-training.html"', label)
+    assert_contains(text, "Member Research Notes", label)
+    assert_contains(text, 'href="research-notes.html"', label)
     assert_contains(text, "GCA Member Workspace", label)
     assert_contains(text, "Browser-Local Workspace Live", label)
     assert_contains(text, 'href="member-workspace.html"', label)
@@ -7853,6 +7864,72 @@ def validate_trade_journal_page(text: str) -> None:
     assert_no_forbidden_public_claims(text, label)
 
 
+def validate_research_notes_page(text: str) -> None:
+    label = "/research-notes.html"
+    assert_contains(text, "GCA Research Notes", label)
+    assert_contains(text, "Member Research Notes", label)
+    for element_id in (
+        "researchForm",
+        "observedOn",
+        "reviewOn",
+        "noteTitle",
+        "noteTheme",
+        "noteStatus",
+        "noteHorizon",
+        "evidenceState",
+        "noteTags",
+        "noteThesis",
+        "noteEvidence",
+        "noteCatalyst",
+        "noteInvalidation",
+        "noteRisks",
+        "sourceUrl",
+        "saveNote",
+        "resetNote",
+        "cancelEdit",
+        "researchStatus",
+        "researchFilters",
+        "filterQuery",
+        "filterStatus",
+        "filterHorizon",
+        "filterEvidence",
+        "filterTag",
+        "filterDueOnly",
+        "resetResearchFilters",
+        "filterResearchStatus",
+        "researchNoteCount",
+        "researchActiveCount",
+        "researchSourcedCount",
+        "researchDueCount",
+        "exportResearchJson",
+        "importResearchJson",
+        "clearResearchNotes",
+        "researchRows",
+        "emptyResearch",
+    ):
+        assert_contains(text, f'id="{element_id}"', label)
+    assert_contains(text, 'src="assets/research-notes.js"', label)
+    assert_contains(text, "window.localStorage.setItem(engine.STORAGE_KEY", label)
+    assert_contains(text, "window.localStorage.removeItem(engine.STORAGE_KEY)", label)
+    assert_contains(text, "engine.normalizeNote", label)
+    assert_contains(text, "engine.filterNotes", label)
+    assert_contains(text, "engine.summarizeNotes", label)
+    assert_contains(text, "engine.buildBackup", label)
+    assert_contains(text, "engine.parseBackup", label)
+    assert_contains(text, "engine.mergeBackup", label)
+    assert_contains(text, "URL.createObjectURL", label)
+    assert_contains(text, "await file.text()", label)
+    assert_contains(text, "browser localStorage only", label)
+    assert_contains(text, "does not upload research", label)
+    assert_contains(text, "Do not enter private keys", label)
+    assert_contains(text, 'source.target = "_blank"', label)
+    assert_contains(text, 'source.rel = "noopener noreferrer"', label)
+    assert_not_contains(text, "window.ethereum", label)
+    assert_not_contains(text, "fetch(", label)
+    assert_not_contains(text, "WebSocket", label)
+    assert_no_forbidden_public_claims(text, label)
+
+
 def validate_risk_warning_page(text: str) -> None:
     label = "/risk-warning.html"
     assert_contains(text, "GCA Risk Warning Review", label)
@@ -7893,6 +7970,8 @@ def validate_risk_tools_page(text: str) -> None:
     assert_contains(text, 'data-tool="liquidation-replay"', label)
     assert_contains(text, 'data-tool="trade-journal"', label)
     assert_contains(text, 'data-tool="risk-training"', label)
+    assert_contains(text, 'data-tool="research-notes"', label)
+    assert_contains(text, "Eight Risk and Research Tools", label)
     assert_contains(text, 'src="assets/risk-tools.js"', label)
     assert_contains(text, "Plan data stays in the URL fragment", label)
     assert_contains(text, "does not fetch live market data", label)
@@ -7974,8 +8053,8 @@ def validate_product_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong productName")
     if positioning.get("currentStage") != "account-ledger-path-live-product-tools-planned":
         raise SiteCheckError(f"{label}: wrong currentStage")
-    if positioning.get("publicRiskToolPreviewsLive") != 7:
-        raise SiteCheckError(f"{label}: expected seven public risk tool previews")
+    if positioning.get("publicRiskToolPreviewsLive") != 8:
+        raise SiteCheckError(f"{label}: expected eight public risk and research tool previews")
     if positioning.get("publicAccountUiLive") is not True:
         raise SiteCheckError(f"{label}: publicAccountUiLive must be true")
     if positioning.get("liveTradingEnabled") is not False:
@@ -7989,12 +8068,14 @@ def validate_product_json(text: str) -> None:
         "ENTRY_READY Review",
         "Position Size Calculator",
         "Risk Discipline Training",
+        "Member Research Notes",
         "GCA Member Workspace",
     ):
         if name not in module_names:
             raise SiteCheckError(f"{label}: missing module {name}")
     member_workspace = module_map.get("gca-member-workspace", {})
     risk_training = module_map.get("risk-control-training", {})
+    research_notes = module_map.get("member-research-notes", {})
     if risk_training.get("status") != "public-client-side-preview-live":
         raise SiteCheckError(f"{label}: wrong risk training status")
     if risk_training.get("publicUrl") != RISK_TRAINING_PAGE_URL:
@@ -8013,6 +8094,16 @@ def validate_product_json(text: str) -> None:
         raise SiteCheckError(f"{label}: risk training backup must exclude identity data")
     if risk_training.get("backupMayContainUnfinishedOptionIds") is not True:
         raise SiteCheckError(f"{label}: risk training backup draft boundary missing")
+    if research_notes.get("status") != "public-client-side-preview-live":
+        raise SiteCheckError(f"{label}: wrong research notes status")
+    if research_notes.get("publicUrl") != RESEARCH_NOTES_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong research notes URL")
+    for key in ("storesOnServer", "collectsIdentityFields", "connectsWallet", "connectsExchange", "fetchesMarketData", "placesOrders", "deductsCredits"):
+        if research_notes.get(key) is not False:
+            raise SiteCheckError(f"{label}: research notes {key} must be false")
+    for key in ("browserLocalNotes", "portableJsonBackup", "backupContainsUserEnteredResearchContent"):
+        if research_notes.get(key) is not True:
+            raise SiteCheckError(f"{label}: research notes {key} must be true")
     if member_workspace.get("status") != "public-browser-local-workspace-live-account-ledger-intake-live":
         raise SiteCheckError(f"{label}: wrong member workspace status")
     if member_workspace.get("publicUrl") != "https://gcagochina.com/member-workspace.html":
@@ -8029,6 +8120,8 @@ def validate_product_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong memberWorkspace link")
     if links.get("riskDisciplineTraining") != RISK_TRAINING_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong riskDisciplineTraining link")
+    if links.get("researchNotes") != RESEARCH_NOTES_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong researchNotes link")
     for gate in ("controlled-https-account-ui", "read-only-wallet-verification", "credit-ledger-activation", "member-ledger-activation", "risk-control-review", "simulation-first"):
         if gate not in release_gate_ids:
             raise SiteCheckError(f"{label}: missing release gate {gate}")
@@ -10064,6 +10157,7 @@ def validate_credits_page(text: str) -> None:
     assert_contains(text, "Risk-Control Training", label)
     assert_contains(text, 'href="risk-training.html"', label)
     assert_contains(text, "Member Research Notes", label)
+    assert_contains(text, 'href="research-notes.html"', label)
     assert_contains(text, "Support Review Queue", label)
     assert_contains(text, "controlled HTTPS account UI", label)
     assert_contains(text, "read-only GCA balance verification", label)
@@ -10194,6 +10288,19 @@ def validate_credits_json(text: str) -> None:
         raise SiteCheckError(f"{label}: risk training preview backup draft boundary missing")
     if links.get("riskDisciplineTraining") != RISK_TRAINING_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong risk training official link")
+    research_preview = service_map.get("member-research-notes", {}).get("publicPreview", {})
+    if research_preview.get("status") != "live-client-side-preview":
+        raise SiteCheckError(f"{label}: research notes preview must be live")
+    if research_preview.get("url") != RESEARCH_NOTES_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong research notes preview URL")
+    for key in ("storesOnServer", "collectsIdentityFields", "deductsCredits", "connectsWallet", "connectsExchange", "fetchesMarketData", "placesOrders"):
+        if research_preview.get(key) is not False:
+            raise SiteCheckError(f"{label}: research notes preview {key} must be false")
+    for key in ("browserLocalNotes", "portableJsonBackup", "backupContainsUserEnteredResearchContent"):
+        if research_preview.get(key) is not True:
+            raise SiteCheckError(f"{label}: research notes preview {key} must be true")
+    if links.get("researchNotes") != RESEARCH_NOTES_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong research notes official link")
     for key in (
         "accountLevelOnly",
         "requiresSupportReview",
@@ -10982,7 +11089,7 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong contractAddress")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
-    if payload.get("lastUpdated") != "2026-06-14":
+    if payload.get("lastUpdated") != "2026-07-16":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("memberProgramRulesUrl") != MEMBER_PROGRAM_URL:
         raise SiteCheckError(f"{label}: wrong memberProgramRulesUrl")
@@ -14706,6 +14813,7 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/risk-warning.html",
         "https://gcagochina.com/tools.html",
         "https://gcagochina.com/risk-training.html",
+        "https://gcagochina.com/research-notes.html",
         "https://gcagochina.com/service-delivery-playbook.html",
         "https://gcagochina.com/service-delivery-playbook.json",
         "https://gcagochina.com/worker-routes-handoff.html",
@@ -14793,7 +14901,6 @@ def validate_sitemap(text: str) -> None:
         "external-reviews.json",
         "listing-readiness.html",
         "listing-readiness.json",
-        "project.json",
         "reviewer-kit.html",
         "reviewer-kit.json",
         "release-gates.html",
@@ -14808,6 +14915,8 @@ def validate_sitemap(text: str) -> None:
     ):
         assert_sitemap_lastmod(path, "2026-06-15")
     assert_sitemap_lastmod("risk-training.html", "2026-07-15")
+    assert_sitemap_lastmod("research-notes.html", "2026-07-16")
+    assert_sitemap_lastmod("project.json", "2026-07-16")
     for path in (
         "basescan-handoff.html",
         "basescan-handoff.json",
@@ -14875,6 +14984,7 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /security.html", label)
     assert_contains(text, "Allow: /risk.html", label)
     assert_contains(text, "Allow: /risk-training.html", label)
+    assert_contains(text, "Allow: /research-notes.html", label)
     assert_contains(text, "Allow: /faq.html", label)
     assert_contains(text, "Allow: /wallet-warning.html", label)
     assert_contains(text, "Allow: /brand-kit.html", label)
@@ -15130,6 +15240,7 @@ CHECKS: list[EndpointCheck] = [
     ("/liquidation-replay.html", validate_liquidation_replay_page),
     ("/backtest-lab.html", validate_backtest_lab_page),
     ("/trade-journal.html", validate_trade_journal_page),
+    ("/research-notes.html", validate_research_notes_page),
     ("/risk-warning.html", validate_risk_warning_page),
     ("/tools.html", validate_risk_tools_page),
     ("/risk-training.html", validate_risk_training_page),

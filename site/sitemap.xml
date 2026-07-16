@@ -654,7 +654,7 @@
   </url>
   <url>
     <loc>https://gcagochina.com/project.json</loc>
-    <lastmod>2026-06-15</lastmod>
+    <lastmod>2026-07-16</lastmod>
   </url>
   <url>
     <loc>https://gcagochina.com/tokenlist.html</loc>
@@ -699,5 +699,9 @@
   <url>
     <loc>https://gcagochina.com/trade-journal.html</loc>
     <lastmod>2026-07-11</lastmod>
+  </url>
+  <url>
+    <loc>https://gcagochina.com/research-notes.html</loc>
+    <lastmod>2026-07-16</lastmod>
   </url>
 </urlset>

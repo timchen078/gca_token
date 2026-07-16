@@ -107,6 +107,12 @@ class PublicSiteExperienceTests(unittest.TestCase):
             "trainingBest",
             "trainingReadyCount",
             "trainingSavedAt",
+            "researchSummaryTitle",
+            "researchNoteCount",
+            "researchActiveCount",
+            "researchSourcedCount",
+            "researchDueCount",
+            "researchSavedAt",
             "serviceGrid",
             "serviceRequestForm",
             "serviceId",
@@ -135,9 +141,11 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn('src="assets/member-workspace.js"', page)
         self.assertIn('src="assets/trade-journal.js"', page)
         self.assertIn('src="assets/risk-training.js"', page)
+        self.assertIn('src="assets/research-notes.js"', page)
         self.assertIn("engine.parseMemberSnapshot", page)
         self.assertIn("engine.summarizeJournal", page)
         self.assertIn("engine.summarizeTraining", page)
+        self.assertIn("engine.summarizeResearchNotes", page)
         self.assertIn("trainingStatusLabel", page)
         self.assertIn("engine.buildServiceRequest", page)
         self.assertIn("engine.createRequestReceipt", page)
@@ -160,6 +168,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn('const SNAPSHOT_KEY = "gca_member_access_snapshot_v1"', engine)
         self.assertIn('const JOURNAL_KEY = "gca_trade_journal_v1"', engine)
         self.assertIn('const TRAINING_HISTORY_KEY = "gca_risk_training_history_v1"', engine)
+        self.assertIn('const RESEARCH_NOTES_KEY = "gca_research_notes_v1"', engine)
         self.assertIn('const REQUEST_HISTORY_KEY = "gca_member_service_request_history_v1"', engine)
         self.assertIn('const REQUEST_BACKUP_SCHEMA = "gca-member-request-history-backup-v1"', engine)
         self.assertIn("SENSITIVE_RE", engine)
@@ -171,6 +180,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertFalse(workspace["requestReceiptBackupContainsIdentityData"])
         self.assertFalse(workspace["requestReceiptBackupContainsRequestContent"])
         self.assertEqual(product["officialLinks"]["memberWorkspace"], "https://gcagochina.com/member-workspace.html")
+        self.assertEqual(product["officialLinks"]["researchNotes"], "https://gcagochina.com/research-notes.html")
         catalog_units = {item["id"]: item["creditUnit"] for item in credits["serviceCatalog"]}
         for service_id, credit_unit in (
             ("position-size-calculator", 5),
@@ -184,6 +194,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
         ):
             self.assertEqual(catalog_units[service_id], credit_unit)
         self.assertIn("https://gcagochina.com/member-workspace.html", sitemap)
+        self.assertIn("https://gcagochina.com/research-notes.html", sitemap)
 
     def test_member_workspace_engine_validates_snapshot_journal_and_request(self):
         bundled_node = Path("/Users/abc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node")
@@ -194,8 +205,9 @@ class PublicSiteExperienceTests(unittest.TestCase):
         module_path = SITE / "assets" / "member-workspace.js"
         journal_path = SITE / "assets" / "trade-journal.js"
         training_path = SITE / "assets" / "risk-training.js"
+        research_path = SITE / "assets" / "research-notes.js"
         script = (
-            "const w=require(process.argv[1]);const j=require(process.argv[2]);const t=require(process.argv[3]);"
+            "const w=require(process.argv[1]);const j=require(process.argv[2]);const t=require(process.argv[3]);const r=require(process.argv[4]);"
             "const raw=JSON.stringify({version:1,savedAt:'2026-07-14T00:00:00Z',walletAddress:'0x1111111111111111111111111111111111111111',gcaBalance:'1000000',holderBonusEligible:true,gcaMemberEligible:true,holdingPeriodDaysVerified:31,creditAmount:100,remainingCredits:75,creditStatus:'ledger_recorded',memberStatus:'active',memberBenefitClaimStatus:'pending_manual_reserve_transfer'});"
             "const snapshot=w.parseMemberSnapshot(raw,Date.parse('2026-07-14T12:00:00Z'));"
             "const requestInput={serviceId:'backtest-lab-run',email:'Member@Example.com',title:'Review completed sample',summary:'Review this completed trade sample for drawdown and execution discipline.',marketContext:'BTC/USDT 4h completed trades',preferredLanguage:'zh-CN'};"
@@ -219,15 +231,19 @@ class PublicSiteExperienceTests(unittest.TestCase):
             "const removed=w.removeRequestReceipt(copied,request.requestId);"
             "const sensitive=w.buildServiceRequest({serviceId:'backtest-lab-run',email:'member@example.com',title:'Review sample',summary:'My private key should never be included here.',marketContext:''},snapshot,'2026-07-14T12:30:00Z');"
             "const expired=w.parseMemberSnapshot(raw,Date.parse('2026-08-14T00:00:01Z'));"
-            "const journal=w.summarizeJournal(JSON.stringify([{id:'a',date:'2026-07-01',market:'BTC/USDT',direction:'long',returnPercent:2,setup:'breakout',notes:'plan',createdAt:'2026-07-01T00:00:00Z'},{id:'b',date:'2026-07-02',market:'ETH/USDT',direction:'short',returnPercent:-1,setup:'retest',notes:'stop',createdAt:'2026-07-02T00:00:00Z'}]),j);"
+            "const journalRows=[{id:'a',date:'2026-07-01',market:'BTC/USDT',direction:'long',returnPercent:2,setup:'breakout',notes:'plan',createdAt:'2026-07-01T00:00:00Z'},{id:'b',date:'2026-07-02',market:'ETH/USDT',direction:'short',returnPercent:-1,setup:'retest',notes:'stop',createdAt:'2026-07-02T00:00:00Z'}];"
+            "const journal=w.summarizeJournal(JSON.stringify(j.buildBackup(journalRows,'2026-07-14T12:39:00Z')),j);"
             "const trainingAnswers=Object.fromEntries(t.questions.map(q=>[q.id,q.correctOptionId]));"
             "const trainingResult=t.evaluateAnswers(trainingAnswers);"
             "const trainingReceipt=t.createAttemptReceipt(trainingResult,'2026-07-14T12:40:00Z','gca_training_member123');"
             "const training=w.summarizeTraining(JSON.stringify([trainingReceipt]),t);"
-            "process.stdout.write(JSON.stringify({snapshot,request,receipt,history,copied,backup,parsedBackup,invalidBackup,duplicateBackup,olderMerge,newerMerge,cappedMerge,backupStored:JSON.stringify(backup),removed,stored:JSON.stringify(copied),sensitive,expired,journal,training,masked:w.maskWallet(snapshot.walletAddress),services:w.SERVICE_CATALOG,backupSchema:w.REQUEST_BACKUP_SCHEMA}));"
+            "const researchNote=r.normalizeNote({version:1,id:'gca_note_member1234',observedOn:'2026-07-13',reviewOn:'2026-07-14',title:'China infrastructure research',theme:'Infrastructure',status:'active-research',horizon:'medium-term',evidenceState:'developing',tags:['China','Base'],thesis:'A sufficiently detailed thesis for the local member workspace summary.',evidence:'Public evidence remains under review.',catalyst:'A measurable adoption milestone.',invalidation:'Adoption evidence weakens for two review cycles.',riskNotes:'Liquidity and execution conditions remain uncertain.',sourceUrl:'https://example.com/research',createdAt:'2026-07-13T10:00:00Z',updatedAt:'2026-07-14T10:00:00Z'});"
+            "const researchBackup=r.buildBackup([researchNote],'2026-07-14T12:41:00Z');"
+            "const research=w.summarizeResearchNotes(JSON.stringify(researchBackup),r,Date.parse('2026-07-14T12:42:00Z'));"
+            "process.stdout.write(JSON.stringify({snapshot,request,receipt,history,copied,backup,parsedBackup,invalidBackup,duplicateBackup,olderMerge,newerMerge,cappedMerge,backupStored:JSON.stringify(backup),removed,stored:JSON.stringify(copied),sensitive,expired,journal,training,research,masked:w.maskWallet(snapshot.walletAddress),services:w.SERVICE_CATALOG,backupSchema:w.REQUEST_BACKUP_SCHEMA,researchKey:w.RESEARCH_NOTES_KEY}));"
         )
         completed = subprocess.run(
-            [node, "-e", script, str(module_path), str(journal_path), str(training_path)],
+            [node, "-e", script, str(module_path), str(journal_path), str(training_path), str(research_path)],
             check=True,
             capture_output=True,
             text=True,
@@ -289,11 +305,19 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertEqual(result["training"]["bestPercent"], 100)
         self.assertEqual(result["training"]["foundationReadyCount"], 1)
         self.assertEqual(result["training"]["latestMissedQuestionIds"], [])
+        self.assertEqual(result["researchKey"], "gca_research_notes_v1")
+        self.assertEqual(result["research"]["count"], 1)
+        self.assertEqual(result["research"]["activeCount"], 1)
+        self.assertEqual(result["research"]["sourcedCount"], 1)
+        self.assertEqual(result["research"]["dueReviewCount"], 1)
         self.assertEqual(len(result["services"]), 8)
         self.assertEqual({item["id"]: item["creditUnit"] for item in result["services"]}["support-review-queue"], 0)
         training_service = next(item for item in result["services"] if item["id"] == "risk-control-training")
         self.assertEqual(training_service["previewUrl"], "risk-training.html")
         self.assertEqual(training_service["stage"], "public-preview")
+        research_service = next(item for item in result["services"] if item["id"] == "member-research-notes")
+        self.assertEqual(research_service["previewUrl"], "research-notes.html")
+        self.assertEqual(research_service["stage"], "public-preview")
 
     def test_risk_calculator_is_client_side_and_has_no_execution_path(self):
         page = (SITE / "risk-calculator.html").read_text()
@@ -1046,6 +1070,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
             ("backtest-lab", "backtest-lab.html"),
             ("liquidation-replay", "liquidation-replay.html"),
             ("risk-training", "risk-training.html"),
+            ("research-notes", "research-notes.html"),
         ):
             self.assertIn(f'data-tool="{tool_id}"', page)
             self.assertIn(f'href="{url}"', page)
@@ -1084,7 +1109,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn("Plan data stays in the URL fragment", page)
         self.assertIn("The workspace does not save these plan values", page)
         self.assertIn("five plan-aware", page)
-        self.assertIn("Seven Risk Tools", page)
+        self.assertIn("Eight Risk and Research Tools", page)
         self.assertIn('data-tool="trade-journal"', page)
         self.assertIn('"riskToolsWorkspace": "https://gcagochina.com/tools.html"', product)
         self.assertIn('"riskToolsWorkspace": "https://gcagochina.com/tools.html"', credits)
@@ -1110,9 +1135,9 @@ class PublicSiteExperienceTests(unittest.TestCase):
         expectations = {
             "learn": ["risk-training", "risk-calculator", "risk-warning", "entry-ready", "trade-journal"],
             "prepare": ["risk-calculator", "risk-warning", "entry-ready"],
-            "research": ["trade-journal", "backtest-lab", "risk-warning", "entry-ready"],
+            "research": ["research-notes", "trade-journal", "backtest-lab", "risk-warning", "entry-ready"],
             "review": ["liquidation-replay", "trade-journal", "risk-calculator", "risk-warning", "entry-ready"],
-            "all": ["risk-training", "risk-calculator", "risk-warning", "entry-ready", "backtest-lab", "liquidation-replay", "trade-journal"],
+            "all": ["risk-training", "research-notes", "risk-calculator", "risk-warning", "entry-ready", "backtest-lab", "liquidation-replay", "trade-journal"],
         }
         for mode, expected in expectations.items():
             completed = subprocess.run(
@@ -1213,6 +1238,146 @@ class PublicSiteExperienceTests(unittest.TestCase):
         )
         self.assertEqual(invalid_fees.stdout, "null")
 
+    def test_research_notes_is_local_structured_and_portable(self):
+        page = (SITE / "research-notes.html").read_text()
+        engine = (SITE / "assets" / "research-notes.js").read_text()
+        product = json.loads((SITE / "product.json").read_text())
+        credits = json.loads((SITE / "credits.json").read_text())
+
+        for element_id in (
+            "researchForm",
+            "observedOn",
+            "reviewOn",
+            "noteTitle",
+            "noteTheme",
+            "noteStatus",
+            "noteHorizon",
+            "evidenceState",
+            "noteTags",
+            "noteThesis",
+            "noteEvidence",
+            "noteCatalyst",
+            "noteInvalidation",
+            "noteRisks",
+            "sourceUrl",
+            "saveNote",
+            "resetNote",
+            "cancelEdit",
+            "researchStatus",
+            "researchFilters",
+            "filterQuery",
+            "filterStatus",
+            "filterHorizon",
+            "filterEvidence",
+            "filterTag",
+            "filterDueOnly",
+            "resetResearchFilters",
+            "filterResearchStatus",
+            "researchNoteCount",
+            "researchActiveCount",
+            "researchSourcedCount",
+            "researchDueCount",
+            "exportResearchJson",
+            "importResearchJson",
+            "clearResearchNotes",
+            "researchRows",
+            "emptyResearch",
+        ):
+            self.assertIn(f'id="{element_id}"', page)
+
+        self.assertIn('src="assets/research-notes.js"', page)
+        self.assertIn("window.localStorage.setItem(engine.STORAGE_KEY", page)
+        self.assertIn("window.localStorage.removeItem(engine.STORAGE_KEY)", page)
+        self.assertIn("engine.normalizeNote", page)
+        self.assertIn("engine.filterNotes", page)
+        self.assertIn("engine.summarizeNotes", page)
+        self.assertIn("engine.buildBackup", page)
+        self.assertIn("engine.parseBackup", page)
+        self.assertIn("engine.mergeBackup", page)
+        self.assertIn("URL.createObjectURL", page)
+        self.assertIn("await file.text()", page)
+        self.assertIn('source.target = "_blank"', page)
+        self.assertIn('source.rel = "noopener noreferrer"', page)
+        self.assertIn("textContent = note.title", page)
+        self.assertIn("browser localStorage only", page)
+        self.assertIn("does not upload research", page)
+        self.assertIn("Do not enter private keys", page)
+        self.assertNotIn("innerHTML", page)
+        self.assertNotIn("window.ethereum", page)
+        self.assertNotIn("fetch(", page)
+        self.assertNotIn("WebSocket", page)
+        self.assertIn('const STORAGE_KEY = "gca_research_notes_v1"', engine)
+        self.assertIn('const SCHEMA = "gca-research-notes-v1"', engine)
+        self.assertIn("const MAX_NOTES = 200", engine)
+
+        module = next(item for item in product["productModules"] if item["id"] == "member-research-notes")
+        self.assertEqual(module["status"], "public-client-side-preview-live")
+        self.assertEqual(module["publicUrl"], "https://gcagochina.com/research-notes.html")
+        self.assertTrue(module["browserLocalNotes"])
+        self.assertTrue(module["portableJsonBackup"])
+        self.assertTrue(module["backupContainsUserEnteredResearchContent"])
+        self.assertFalse(module["storesOnServer"])
+        self.assertFalse(module["collectsIdentityFields"])
+        service = next(item for item in credits["serviceCatalog"] if item["id"] == "member-research-notes")
+        self.assertEqual(service["publicPreview"]["url"], "https://gcagochina.com/research-notes.html")
+        self.assertFalse(service["publicPreview"]["deductsCredits"])
+        self.assertEqual(product["officialLinks"]["researchNotes"], "https://gcagochina.com/research-notes.html")
+        self.assertEqual(credits["officialLinks"]["researchNotes"], "https://gcagochina.com/research-notes.html")
+
+    def test_research_notes_engine_validates_filters_and_merges_backups(self):
+        bundled_node = Path("/Users/abc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node")
+        node = shutil.which("node") or (str(bundled_node) if bundled_node.exists() else "")
+        if not node:
+            self.skipTest("Node.js is unavailable")
+
+        module_path = SITE / "assets" / "research-notes.js"
+        script = (
+            "const r=require(process.argv[1]);"
+            "const base={version:1,id:'gca_note_alpha1234',observedOn:'2026-07-10',reviewOn:'2026-07-15',title:'China infrastructure thesis',theme:'Infrastructure',status:'active-research',horizon:'medium-term',evidenceState:'developing',tags:['China','Base'],thesis:'A sufficiently detailed thesis for validation and scheduled review.',evidence:'Public adoption evidence is developing.',catalyst:'A measurable product adoption milestone.',invalidation:'Adoption evidence weakens across two review cycles.',riskNotes:'Liquidity, execution, and policy uncertainty remain material.',sourceUrl:'https://example.com/source#section',createdAt:'2026-07-10T10:00:00Z',updatedAt:'2026-07-10T10:00:00Z'};"
+            "const first=r.normalizeNote(base);"
+            "const second=r.normalizeNote({...base,id:'gca_note_beta12345',reviewOn:'',title:'Education access thesis',theme:'Education',status:'watching',horizon:'long-term',evidenceState:'unverified',tags:['China','Education'],sourceUrl:'',createdAt:'2026-07-11T10:00:00Z',updatedAt:'2026-07-11T10:00:00Z'});"
+            "const notes=r.orderNotes([first,second]);"
+            "const summary=r.summarizeNotes(notes,Date.parse('2026-07-16T00:00:00Z'));"
+            "const backup=r.buildBackup(notes,'2026-07-16T01:00:00Z');"
+            "const parsed=r.parseBackup(JSON.stringify(backup));"
+            "const newer={...first,evidenceState:'supported',updatedAt:'2026-07-17T10:00:00.000Z'};"
+            "const imported=r.buildBackup([newer,r.normalizeNote({...base,id:'gca_note_gamma1234',title:'Base adoption evidence',theme:'Adoption',status:'needs-review',horizon:'short-term',evidenceState:'conflicting',tags:['Base'],createdAt:'2026-07-12T10:00:00Z',updatedAt:'2026-07-12T10:00:00Z'})],'2026-07-17T11:00:00Z');"
+            "const merged=r.mergeBackup(notes,imported);"
+            "const invalidSecret=r.normalizeNote({...base,thesis:'Store my private key here for later use.'});"
+            "const invalidSource=r.normalizeNote({...base,sourceUrl:'http://example.com/private'});"
+            "const invalidExtra=r.parseBackup({...backup,unexpected:true});"
+            "const duplicate=r.parseBackup({...backup,notes:[backup.notes[0],backup.notes[0]]});"
+            "process.stdout.write(JSON.stringify({first,notes,summary,backup,parsed,merged,invalidSecret,invalidSource,invalidExtra,duplicate,query:r.filterNotes(notes,{query:'education'}),tag:r.filterNotes(notes,{tag:'base'}),due:r.filterNotes(notes,{dueOnly:true},Date.parse('2026-07-16T00:00:00Z'))}));"
+        )
+        completed = subprocess.run(
+            [node, "-e", script, str(module_path)],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        result = json.loads(completed.stdout)
+
+        self.assertEqual(result["first"]["sourceUrl"], "https://example.com/source")
+        self.assertEqual(len(result["notes"]), 2)
+        self.assertEqual(result["summary"]["count"], 2)
+        self.assertEqual(result["summary"]["activeCount"], 2)
+        self.assertEqual(result["summary"]["sourcedCount"], 1)
+        self.assertEqual(result["summary"]["dueReviewCount"], 1)
+        self.assertEqual(result["backup"]["schema"], "gca-research-notes-v1")
+        self.assertEqual(result["parsed"], result["backup"])
+        self.assertEqual(result["merged"]["addedNoteCount"], 1)
+        self.assertEqual(result["merged"]["updatedNoteCount"], 1)
+        self.assertEqual(result["merged"]["droppedNewNoteCount"], 0)
+        self.assertEqual(len(result["merged"]["notes"]), 3)
+        self.assertEqual(result["merged"]["notes"][0]["evidenceState"], "supported")
+        self.assertIsNone(result["invalidSecret"])
+        self.assertIsNone(result["invalidSource"])
+        self.assertIsNone(result["invalidExtra"])
+        self.assertIsNone(result["duplicate"])
+        self.assertEqual(len(result["query"]), 1)
+        self.assertEqual(len(result["tag"]), 1)
+        self.assertEqual(len(result["due"]), 1)
+
     def test_trade_journal_is_local_and_connected_to_backtest(self):
         page = (SITE / "trade-journal.html").read_text()
         engine = (SITE / "assets" / "trade-journal.js").read_text()
@@ -1294,7 +1459,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertNotIn("fetch(", page)
         self.assertNotIn("WebSocket", page)
         self.assertIn('const STORAGE_KEY = "gca_trade_journal_v1"', engine)
-        self.assertEqual(product["positioning"]["publicRiskToolPreviewsLive"], 7)
+        self.assertEqual(product["positioning"]["publicRiskToolPreviewsLive"], 8)
         self.assertEqual(product["officialLinks"]["tradeJournal"], "https://gcagochina.com/trade-journal.html")
         self.assertEqual(credits["officialLinks"]["tradeJournal"], "https://gcagochina.com/trade-journal.html")
 

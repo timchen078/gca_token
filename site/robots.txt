@@ -172,6 +172,7 @@ Allow: /backtest-lab.html
 Allow: /risk-warning.html
 Allow: /tools.html
 Allow: /trade-journal.html
+Allow: /research-notes.html
 Allow: /project.json
 Allow: /tokenlist.json
 Allow: /.well-known/gca-token.json
