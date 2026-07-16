@@ -460,6 +460,9 @@ class PublicSiteExperienceTests(unittest.TestCase):
             "bestAttemptScore",
             "foundationReadyCount",
             "attemptHistoryList",
+            "exportTrainingBackup",
+            "importTrainingBackup",
+            "trainingBackupStatus",
             "clearAttemptHistory",
         ):
             self.assertIn(f'id="{element_id}"', page)
@@ -472,8 +475,14 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn("engine.createTrainingDraft", page)
         self.assertIn("engine.createAttemptReceipt", page)
         self.assertIn("engine.summarizeAttemptHistory", page)
+        self.assertIn("engine.buildTrainingBackup", page)
+        self.assertIn("engine.parseTrainingBackup", page)
+        self.assertIn("engine.mergeTrainingBackup", page)
+        self.assertIn("URL.createObjectURL", page)
+        self.assertIn("await file.text()", page)
         self.assertIn('const DRAFT_KEY = "gca_risk_training_draft_v1"', engine)
         self.assertIn('const HISTORY_KEY = "gca_risk_training_history_v1"', engine)
+        self.assertIn('const BACKUP_SCHEMA = "gca-risk-training-backup-v1"', engine)
         self.assertIn("const HISTORY_LIMIT = 20", engine)
         self.assertIn('percent >= 75', engine)
         self.assertIn('"NOT_COMPLETE"', engine)
@@ -494,6 +503,9 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertTrue(module["browserLocalAttemptHistory"])
         self.assertFalse(module["storesSelectedAnswersInHistory"])
         self.assertFalse(module["storesOnServer"])
+        self.assertTrue(module["portableJsonBackup"])
+        self.assertFalse(module["backupContainsIdentityData"])
+        self.assertTrue(module["backupMayContainUnfinishedOptionIds"])
         service = next(item for item in credits["serviceCatalog"] if item["id"] == "risk-control-training")
         self.assertEqual(service["publicPreview"]["url"], "https://gcagochina.com/risk-training.html")
         self.assertFalse(service["publicPreview"]["deductsCredits"])
@@ -502,6 +514,9 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertTrue(service["publicPreview"]["browserLocalAttemptHistory"])
         self.assertFalse(service["publicPreview"]["storesSelectedAnswersInHistory"])
         self.assertFalse(service["publicPreview"]["storesOnServer"])
+        self.assertTrue(service["publicPreview"]["portableJsonBackup"])
+        self.assertFalse(service["publicPreview"]["backupContainsIdentityData"])
+        self.assertTrue(service["publicPreview"]["backupMayContainUnfinishedOptionIds"])
 
     def test_risk_training_engine_scores_threshold_and_builds_review_plan(self):
         bundled_node = Path("/Users/abc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node")
@@ -527,7 +542,19 @@ class PublicSiteExperienceTests(unittest.TestCase):
             "const duplicate=e.upsertAttemptHistory(history,{...receipt,completedAt:'2026-07-15T03:00:00Z'});"
             "const capped=e.parseAttemptHistory(Array.from({length:22},(_,i)=>({...perfectReceipt,attemptId:`gca_training_attempt${String(i).padStart(3,'0')}`,completedAt:new Date(Date.parse('2026-07-01T00:00:00Z')+i*1000).toISOString()})));"
             "const invalid=e.parseAttemptHistory([{...receipt,missedQuestionIds:['unknown']}]);"
-            "results.persistence={draft,parsedDraft,receipt,history,duplicate,capped,invalid,summary:e.summarizeAttemptHistory(history),stored:JSON.stringify(history),keys:[e.DRAFT_KEY,e.HISTORY_KEY,e.HISTORY_LIMIT]};"
+            "const backup=e.buildTrainingBackup(history,draft,'2026-07-15T04:00:00Z');"
+            "const parsedBackup=e.parseTrainingBackup(JSON.stringify(backup));"
+            "const invalidBackup=e.parseTrainingBackup({...backup,draft:{...draft,answers:{...draft.answers,unknown:'invalid'}}});"
+            "const duplicateBackup=e.parseTrainingBackup({...backup,history:[...backup.history,backup.history[0]]});"
+            "const currentDraft=e.createTrainingDraft({[e.questions[0].id]:wrongFor(e.questions[0])},'2026-07-15T00:30:00Z');"
+            "const olderMerge=e.mergeTrainingBackup([perfectReceipt],currentDraft,backup);"
+            "const newerDraft=e.createTrainingDraft({[e.questions[1].id]:e.questions[1].correctOptionId},'2026-07-15T05:00:00Z');"
+            "const newerBackup=e.buildTrainingBackup([receipt],newerDraft,'2026-07-15T06:00:00Z');"
+            "const newerMerge=e.mergeTrainingBackup([perfectReceipt],currentDraft,newerBackup);"
+            "const fullCurrent=e.parseAttemptHistory(Array.from({length:20},(_,i)=>({...perfectReceipt,attemptId:`gca_training_current${String(i).padStart(3,'0')}`,completedAt:new Date(Date.parse('2026-07-15T10:00:00Z')+i*1000).toISOString()})));"
+            "const droppedBackup=e.buildTrainingBackup([receipt],null,'2026-07-15T12:00:00Z');"
+            "const cappedMerge=e.mergeTrainingBackup(fullCurrent,null,droppedBackup);"
+            "results.persistence={draft,parsedDraft,receipt,history,duplicate,capped,invalid,summary:e.summarizeAttemptHistory(history),stored:JSON.stringify(history),keys:[e.DRAFT_KEY,e.HISTORY_KEY,e.BACKUP_SCHEMA,e.HISTORY_LIMIT],backup,parsedBackup,invalidBackup,duplicateBackup,olderMerge,newerMerge,cappedMerge,backupStored:JSON.stringify(backup)};"
             "process.stdout.write(JSON.stringify(results));"
         )
         completed = subprocess.run(
@@ -551,7 +578,10 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertEqual(result["perfect"]["percent"], 100)
         self.assertEqual(result["plans"]["perfect"], [])
         persistence = result["persistence"]
-        self.assertEqual(persistence["keys"], ["gca_risk_training_draft_v1", "gca_risk_training_history_v1", 20])
+        self.assertEqual(
+            persistence["keys"],
+            ["gca_risk_training_draft_v1", "gca_risk_training_history_v1", "gca-risk-training-backup-v1", 20],
+        )
         self.assertEqual(persistence["draft"]["answers"], {"position-size": "risk-budget"})
         self.assertEqual(persistence["parsedDraft"], persistence["draft"])
         self.assertEqual(persistence["receipt"]["status"], "REVIEW_REQUIRED")
@@ -568,6 +598,22 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertEqual(persistence["summary"]["foundationReadyCount"], 1)
         for forbidden in ("selectedOptionId", "correctOptionId", '"answers"', "wallet", "email"):
             self.assertNotIn(forbidden, persistence["stored"])
+        self.assertEqual(persistence["backup"]["schema"], "gca-risk-training-backup-v1")
+        self.assertEqual(persistence["backup"]["version"], 1)
+        self.assertEqual(persistence["parsedBackup"], persistence["backup"])
+        self.assertIsNone(persistence["invalidBackup"])
+        self.assertIsNone(persistence["duplicateBackup"])
+        self.assertFalse(persistence["olderMerge"]["importedDraftApplied"])
+        self.assertEqual(persistence["olderMerge"]["draft"]["savedAt"], "2026-07-15T00:30:00.000Z")
+        self.assertTrue(persistence["newerMerge"]["importedDraftApplied"])
+        self.assertEqual(persistence["newerMerge"]["draft"]["savedAt"], "2026-07-15T05:00:00.000Z")
+        self.assertEqual(persistence["newerMerge"]["addedHistoryCount"], 1)
+        self.assertEqual(len(persistence["newerMerge"]["history"]), 2)
+        self.assertEqual(persistence["cappedMerge"]["addedHistoryCount"], 0)
+        self.assertEqual(len(persistence["cappedMerge"]["history"]), 20)
+        self.assertIn('"answers"', persistence["backupStored"])
+        for forbidden in ("wallet", "email", "market", "order", "selectedOptionId", "correctOptionId"):
+            self.assertNotIn(forbidden, persistence["backupStored"])
 
     def test_liquidation_replay_is_transparent_and_client_side(self):
         page = (SITE / "liquidation-replay.html").read_text()

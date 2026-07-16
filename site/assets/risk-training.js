@@ -7,6 +7,7 @@
 
   const DRAFT_KEY = "gca_risk_training_draft_v1";
   const HISTORY_KEY = "gca_risk_training_history_v1";
+  const BACKUP_SCHEMA = "gca-risk-training-backup-v1";
   const HISTORY_LIMIT = 20;
   const ATTEMPT_ID_RE = /^gca_training_[a-z0-9-]{8,64}$/;
   const RESULT_STATUSES = Object.freeze(["REVIEW_REQUIRED", "FOUNDATION_READY"]);
@@ -332,9 +333,71 @@
     });
   }
 
+  function buildTrainingBackup(historyValue, draftValue, exportedAt) {
+    const history = parseAttemptHistory(historyValue);
+    const draft = parseTrainingDraft(draftValue);
+    const timestamp = normalizedIso(exportedAt) || new Date().toISOString();
+    return Object.freeze({
+      schema: BACKUP_SCHEMA,
+      version: 1,
+      exportedAt: timestamp,
+      history,
+      draft
+    });
+  }
+
+  function parseTrainingBackup(value) {
+    const payload = parseJson(value);
+    if (!payload || payload.schema !== BACKUP_SCHEMA || payload.version !== 1 || !normalizedIso(payload.exportedAt)) return null;
+    if (!Array.isArray(payload.history) || payload.history.length > HISTORY_LIMIT) return null;
+    const history = parseAttemptHistory(payload.history);
+    if (history.length !== payload.history.length) return null;
+    let draft = null;
+    if (payload.draft !== null) {
+      if (!payload.draft || typeof payload.draft !== "object" || !payload.draft.answers || typeof payload.draft.answers !== "object") return null;
+      draft = parseTrainingDraft(payload.draft);
+      if (!draft) return null;
+      const rawAnswerKeys = Object.keys(payload.draft.answers);
+      if (Object.keys(draft.answers).length !== rawAnswerKeys.length) return null;
+      if (rawAnswerKeys.some((questionId) => draft.answers[questionId] !== String(payload.draft.answers[questionId]))) return null;
+    }
+    if (history.length === 0 && !draft) return null;
+    return Object.freeze({
+      schema: BACKUP_SCHEMA,
+      version: 1,
+      exportedAt: normalizedIso(payload.exportedAt),
+      history,
+      draft
+    });
+  }
+
+  function mergeTrainingBackup(currentHistoryValue, currentDraftValue, backupValue) {
+    const backup = parseTrainingBackup(backupValue);
+    if (!backup) return null;
+    const currentHistory = parseAttemptHistory(currentHistoryValue);
+    const currentDraft = parseTrainingDraft(currentDraftValue);
+    const currentIds = new Set(currentHistory.map((item) => item.attemptId));
+    const history = parseAttemptHistory([...backup.history, ...currentHistory]);
+    const retainedIds = new Set(history.map((item) => item.attemptId));
+    const importedDraftApplied = Boolean(
+      backup.draft &&
+      (!currentDraft || Date.parse(backup.draft.savedAt) > Date.parse(currentDraft.savedAt))
+    );
+    return Object.freeze({
+      history,
+      draft: importedDraftApplied ? backup.draft : currentDraft,
+      importedHistoryCount: backup.history.length,
+      addedHistoryCount: backup.history.filter(
+        (item) => !currentIds.has(item.attemptId) && retainedIds.has(item.attemptId)
+      ).length,
+      importedDraftApplied
+    });
+  }
+
   return Object.freeze({
     DRAFT_KEY,
     HISTORY_KEY,
+    BACKUP_SCHEMA,
     HISTORY_LIMIT,
     questions: Object.freeze(questions.map((question) => Object.freeze({
       ...question,
@@ -347,6 +410,9 @@
     createAttemptReceipt,
     parseAttemptHistory,
     upsertAttemptHistory,
-    summarizeAttemptHistory
+    summarizeAttemptHistory,
+    buildTrainingBackup,
+    parseTrainingBackup,
+    mergeTrainingBackup
   });
 });

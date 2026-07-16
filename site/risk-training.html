@@ -130,8 +130,9 @@
           <div class="metric"><span>Foundation ready / 基础通过</span><strong id="foundationReadyCount">0</strong></div>
         </div>
         <div class="history-list" id="attemptHistoryList" aria-live="polite"></div>
-        <div class="actions"><button class="button" id="clearAttemptHistory" type="button" disabled>Clear Completed History / 清除训练历史</button><a class="button" href="member-workspace.html">Open Member Workspace / 打开会员工作区</a></div>
-        <p class="boundary">An unfinished draft stores only selected scenario option IDs. Completed history excludes selected answers and stores no email, wallet, market, order, or exchange data. Everything stays in this browser and disappears when local site data is cleared. / 草稿与历史只保存在本浏览器，不同步账户或链上。</p>
+        <div class="actions"><button class="button" id="exportTrainingBackup" type="button" disabled>Export JSON Backup / 导出备份</button><label class="button" for="importTrainingBackup">Restore JSON Backup / 恢复备份</label><input id="importTrainingBackup" type="file" accept="application/json,.json" hidden><button class="button" id="clearAttemptHistory" type="button" disabled>Clear Completed History / 清除训练历史</button><a class="button" href="member-workspace.html">Open Member Workspace / 打开会员工作区</a></div>
+        <p class="note" id="trainingBackupStatus" style="margin-top:12px" aria-live="polite">Export a validated JSON backup before clearing browser data or moving devices. / 清除浏览器数据或更换设备前，请导出校验过的 JSON 备份。</p>
+        <p class="boundary">An unfinished draft stores selected scenario option IDs. Completed history excludes selected answers. A JSON backup may contain the unfinished option IDs plus completed scores, statuses, times, and missed scenario IDs, but no email, wallet, market, order, or exchange data. The file is created and restored locally; it is not uploaded by this page. / 备份文件仅在本地生成和恢复，不会由本页面上传。</p>
       </section>
     </main>
     <footer><div class="shell">GCA Risk First Trading · Learn, size, review, gate, test, and replay.</div></footer>
@@ -154,6 +155,9 @@
         const historyCount = document.getElementById("attemptHistoryCount");
         const historyList = document.getElementById("attemptHistoryList");
         const clearHistory = document.getElementById("clearAttemptHistory");
+        const exportBackup = document.getElementById("exportTrainingBackup");
+        const importBackup = document.getElementById("importTrainingBackup");
+        const backupStatus = document.getElementById("trainingBackupStatus");
         let attemptHistory = [];
 
         function readLocal(key) {
@@ -178,6 +182,17 @@
             return `gca_training_${window.crypto.randomUUID().replaceAll("-", "")}`;
           }
           return `gca_training_${Date.now().toString(36)}-browser`;
+        }
+
+        function download(name, type, content) {
+          const url = URL.createObjectURL(new Blob([content], { type }));
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = name;
+          document.body.append(link);
+          link.click();
+          link.remove();
+          window.setTimeout(() => URL.revokeObjectURL(url), 0);
         }
 
         engine.questions.forEach((question, index) => {
@@ -286,6 +301,7 @@
           document.getElementById("bestAttemptScore").textContent = `${historySummary.bestPercent}%`;
           document.getElementById("foundationReadyCount").textContent = String(historySummary.foundationReadyCount);
           clearHistory.disabled = historySummary.count === 0;
+          updateBackupControls();
           historyList.replaceChildren();
           if (historySummary.count === 0) {
             const empty = document.createElement("p");
@@ -312,21 +328,43 @@
           });
         }
 
+        function updateBackupControls() {
+          const draft = engine.parseTrainingDraft(readLocal(engine.DRAFT_KEY));
+          exportBackup.disabled = attemptHistory.length === 0 && !draft;
+        }
+
         function saveDraft() {
           const draft = engine.createTrainingDraft(answers(), new Date().toISOString());
           if (!draft) {
             removeLocal(engine.DRAFT_KEY);
+            updateBackupControls();
             return;
           }
           const saved = writeLocal(engine.DRAFT_KEY, draft);
+          updateBackupControls();
           draftStatus.textContent = saved
             ? `Draft saved on this device at ${new Date(draft.savedAt).toLocaleTimeString()}. / 草稿已保存在本设备。`
             : "Browser storage is unavailable; this draft cannot be restored after reload. / 浏览器存储不可用。";
         }
 
-        function restoreDraft() {
-          const draft = engine.parseTrainingDraft(readLocal(engine.DRAFT_KEY));
-          if (!draft) return;
+        function resetResultDisplay() {
+          score.textContent = "0%";
+          status.textContent = "Not checked";
+          badge.className = "status";
+          badge.textContent = "Complete the scenarios";
+          summary.textContent = "Answer all eight scenarios, then check the result. Scoring is transparent and stays in this browser tab.";
+          categoryResults.replaceChildren();
+          reviewPlan.replaceChildren();
+          reviewSection.hidden = true;
+        }
+
+        function applyDraft(draft) {
+          form.querySelectorAll('input[type="radio"]').forEach((input) => { input.checked = false; });
+          resetResultDisplay();
+          if (!draft) {
+            answered.textContent = `0 / ${engine.questions.length}`;
+            return;
+          }
           Object.entries(draft.answers).forEach(([questionId, optionId]) => {
             const controls = Array.from(form.elements[questionId] || []);
             const control = controls.find((item) => item.value === optionId);
@@ -335,6 +373,13 @@
           const result = engine.evaluateAnswers(answers());
           answered.textContent = `${result.answeredCount} / ${result.total}`;
           draftStatus.textContent = `Restored ${result.answeredCount} answer(s) saved ${new Date(draft.savedAt).toLocaleString()}. / 已恢复本设备草稿。`;
+        }
+
+        function restoreDraft() {
+          const draft = engine.parseTrainingDraft(readLocal(engine.DRAFT_KEY));
+          if (!draft) return;
+          applyDraft(draft);
+          updateBackupControls();
         }
 
         function confirmInline(button, confirmationLabel) {
@@ -378,16 +423,59 @@
           removeLocal(engine.DRAFT_KEY);
           window.setTimeout(() => {
             answered.textContent = `0 / ${engine.questions.length}`;
-            score.textContent = "0%";
-            status.textContent = "Not checked";
-            badge.className = "status";
-            badge.textContent = "Complete the scenarios";
-            summary.textContent = "Answer all eight scenarios, then check the result. Scoring is transparent and stays in this browser tab.";
-            categoryResults.replaceChildren();
-            reviewPlan.replaceChildren();
-            reviewSection.hidden = true;
+            resetResultDisplay();
             draftStatus.textContent = "Draft cleared. Completed history is unchanged. / 草稿已清除，训练历史保留。";
+            updateBackupControls();
           }, 0);
+        });
+
+        exportBackup.addEventListener("click", () => {
+          const backup = engine.buildTrainingBackup(attemptHistory, readLocal(engine.DRAFT_KEY), new Date().toISOString());
+          if (backup.history.length === 0 && !backup.draft) {
+            backupStatus.textContent = "Nothing to export yet. Complete a scenario or a training attempt first. / 暂无可导出的训练数据。";
+            return;
+          }
+          const date = backup.exportedAt.slice(0, 10);
+          download(`gca-risk-training-backup-${date}.json`, "application/json", JSON.stringify(backup, null, 2));
+          backupStatus.textContent = `Backup exported: ${backup.history.length} completed attempt(s)${backup.draft ? " plus one unfinished draft" : ""}. / 备份已导出。`;
+        });
+
+        importBackup.addEventListener("change", async (event) => {
+          const file = event.target.files?.[0];
+          if (!file) return;
+          try {
+            const parsed = engine.parseTrainingBackup(await file.text());
+            if (!parsed) {
+              backupStatus.textContent = "Invalid GCA training backup. Use a JSON file exported by this page. / 训练备份无效，请使用本页面导出的 JSON 文件。";
+              event.target.value = "";
+              return;
+            }
+            const merged = engine.mergeTrainingBackup(attemptHistory, readLocal(engine.DRAFT_KEY), parsed);
+            if (!merged) {
+              backupStatus.textContent = "The backup could not be merged. / 无法合并该备份。";
+              event.target.value = "";
+              return;
+            }
+            attemptHistory = merged.history;
+            const historySaved = attemptHistory.length ? writeLocal(engine.HISTORY_KEY, attemptHistory) : removeLocal(engine.HISTORY_KEY);
+            const draftSaved = merged.draft ? writeLocal(engine.DRAFT_KEY, merged.draft) : removeLocal(engine.DRAFT_KEY);
+            if (!historySaved || !draftSaved) {
+              backupStatus.textContent = "Backup validated, but browser storage is unavailable. / 备份已通过校验，但浏览器存储不可用。";
+              event.target.value = "";
+              return;
+            }
+            if (merged.importedDraftApplied) applyDraft(merged.draft);
+            renderHistory();
+            const draftOutcome = merged.importedDraftApplied
+              ? "newer draft restored"
+              : merged.draft
+                ? "current draft retained"
+                : "no unfinished draft";
+            backupStatus.textContent = `Backup restored: ${merged.addedHistoryCount} new completed attempt(s); ${draftOutcome}. / 备份已恢复并完成去重。`;
+          } catch (error) {
+            backupStatus.textContent = "Unable to read this backup file. / 无法读取该备份文件。";
+          }
+          event.target.value = "";
         });
 
         clearHistory.addEventListener("click", () => {

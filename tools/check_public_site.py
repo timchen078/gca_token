@@ -7913,13 +7913,22 @@ def validate_risk_training_page(text: str) -> None:
     assert_contains(text, 'id="bestAttemptScore"', label)
     assert_contains(text, 'id="foundationReadyCount"', label)
     assert_contains(text, 'id="attemptHistoryList"', label)
+    assert_contains(text, 'id="exportTrainingBackup"', label)
+    assert_contains(text, 'id="importTrainingBackup"', label)
+    assert_contains(text, 'id="trainingBackupStatus"', label)
     assert_contains(text, 'id="clearAttemptHistory"', label)
     assert_contains(text, 'src="assets/risk-training.js"', label)
     assert_contains(text, "engine.evaluateAnswers", label)
     assert_contains(text, "engine.createTrainingDraft", label)
     assert_contains(text, "engine.createAttemptReceipt", label)
     assert_contains(text, "engine.summarizeAttemptHistory", label)
+    assert_contains(text, "engine.buildTrainingBackup", label)
+    assert_contains(text, "engine.parseTrainingBackup", label)
+    assert_contains(text, "engine.mergeTrainingBackup", label)
+    assert_contains(text, "URL.createObjectURL", label)
+    assert_contains(text, "await file.text()", label)
     assert_contains(text, "Selected answers are not kept in completed history", label)
+    assert_contains(text, "it is not uploaded by this page", label)
     assert_contains(text, "does not fetch prices", label)
     assert_contains(text, "does not", label)
     assert_contains(text, "certification", label)
@@ -7990,6 +7999,12 @@ def validate_product_json(text: str) -> None:
             raise SiteCheckError(f"{label}: risk training {key} must be true")
     if risk_training.get("storesSelectedAnswersInHistory") is not False:
         raise SiteCheckError(f"{label}: risk training history must exclude selected answers")
+    if risk_training.get("portableJsonBackup") is not True:
+        raise SiteCheckError(f"{label}: risk training portableJsonBackup must be true")
+    if risk_training.get("backupContainsIdentityData") is not False:
+        raise SiteCheckError(f"{label}: risk training backup must exclude identity data")
+    if risk_training.get("backupMayContainUnfinishedOptionIds") is not True:
+        raise SiteCheckError(f"{label}: risk training backup draft boundary missing")
     if member_workspace.get("status") != "public-browser-local-workspace-live-account-ledger-intake-live":
         raise SiteCheckError(f"{label}: wrong member workspace status")
     if member_workspace.get("publicUrl") != "https://gcagochina.com/member-workspace.html":
@@ -10155,6 +10170,12 @@ def validate_credits_json(text: str) -> None:
     for key in ("browserLocalDraft", "browserLocalAttemptHistory"):
         if training_preview.get(key) is not True:
             raise SiteCheckError(f"{label}: risk training preview {key} must be true")
+    if training_preview.get("portableJsonBackup") is not True:
+        raise SiteCheckError(f"{label}: risk training preview portableJsonBackup must be true")
+    if training_preview.get("backupContainsIdentityData") is not False:
+        raise SiteCheckError(f"{label}: risk training preview backup must exclude identity data")
+    if training_preview.get("backupMayContainUnfinishedOptionIds") is not True:
+        raise SiteCheckError(f"{label}: risk training preview backup draft boundary missing")
     if links.get("riskDisciplineTraining") != RISK_TRAINING_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong risk training official link")
     for key in (
