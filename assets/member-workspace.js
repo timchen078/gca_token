@@ -9,6 +9,7 @@
   const SNAPSHOT_MAX_AGE_MS = 30 * 24 * 60 * 60 * 1000;
   const JOURNAL_KEY = "gca_trade_journal_v1";
   const TRAINING_HISTORY_KEY = "gca_risk_training_history_v1";
+  const RESEARCH_NOTES_KEY = "gca_research_notes_v1";
   const REQUEST_HISTORY_KEY = "gca_member_service_request_history_v1";
   const REQUEST_BACKUP_SCHEMA = "gca-member-request-history-backup-v1";
   const REQUEST_HISTORY_LIMIT = 25;
@@ -39,7 +40,7 @@
     { id: "backtest-lab-run", name: "Backtest Lab", creditUnit: 20, previewUrl: "backtest-lab.html", stage: "public-preview" },
     { id: "liquidation-replay-report", name: "Liquidation Replay", creditUnit: 30, previewUrl: "liquidation-replay.html", stage: "public-preview" },
     { id: "risk-control-training", name: "Risk-Control Training", creditUnit: 10, previewUrl: "risk-training.html", stage: "public-preview" },
-    { id: "member-research-notes", name: "Member Research Notes", creditUnit: 20, previewUrl: "radar.html", stage: "member-review" },
+    { id: "member-research-notes", name: "Member Research Notes", creditUnit: 20, previewUrl: "research-notes.html", stage: "public-preview" },
     { id: "support-review-queue", name: "Support Review Queue", creditUnit: 0, previewUrl: "support.html", stage: "manual-review" }
   ]);
 
@@ -106,7 +107,11 @@
   }
 
   function summarizeJournal(value, journalEngine) {
-    const rows = parseJson(value);
+    const parsed = parseJson(value);
+    const backup = journalEngine && typeof journalEngine.parseBackup === "function"
+      ? journalEngine.parseBackup(value)
+      : null;
+    const rows = backup ? backup.trades : parsed;
     if (!Array.isArray(rows) || !journalEngine || typeof journalEngine.summarizeTrades !== "function") return emptyJournalSummary();
     const summary = journalEngine.summarizeTrades(rows);
     return {
@@ -141,6 +146,32 @@
       bestPercent: summary.bestPercent,
       foundationReadyCount: summary.foundationReadyCount,
       latestMissedQuestionIds: [...summary.latestMissedQuestionIds]
+    };
+  }
+
+  function emptyResearchSummary() {
+    return {
+      count: 0,
+      activeCount: 0,
+      sourcedCount: 0,
+      dueReviewCount: 0,
+      latestUpdatedAt: null
+    };
+  }
+
+  function summarizeResearchNotes(value, researchEngine, nowMs) {
+    if (!researchEngine || typeof researchEngine.parseBackup !== "function" || typeof researchEngine.summarizeNotes !== "function") {
+      return emptyResearchSummary();
+    }
+    const backup = researchEngine.parseBackup(value);
+    if (!backup) return emptyResearchSummary();
+    const summary = researchEngine.summarizeNotes(backup.notes, nowMs);
+    return {
+      count: summary.count,
+      activeCount: summary.activeCount,
+      sourcedCount: summary.sourcedCount,
+      dueReviewCount: summary.dueReviewCount,
+      latestUpdatedAt: summary.latestUpdatedAt
     };
   }
 
@@ -363,6 +394,7 @@
     SNAPSHOT_MAX_AGE_MS,
     JOURNAL_KEY,
     TRAINING_HISTORY_KEY,
+    RESEARCH_NOTES_KEY,
     REQUEST_HISTORY_KEY,
     REQUEST_BACKUP_SCHEMA,
     REQUEST_HISTORY_LIMIT,
@@ -372,6 +404,7 @@
     parseMemberSnapshot,
     summarizeJournal,
     summarizeTraining,
+    summarizeResearchNotes,
     buildServiceRequest,
     parseRequestHistory,
     createRequestReceipt,

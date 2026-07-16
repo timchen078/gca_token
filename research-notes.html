@@ -1,0 +1,551 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GCA Research Notes | China Narrative Research Workspace</title>
+    <meta name="description" content="Browser-local GCA research workspace for structured narratives, evidence, catalysts, invalidation conditions, risks, review dates, filters, and portable JSON backups.">
+    <link rel="canonical" href="https://gcagochina.com/research-notes.html">
+    <link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">
+    <link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="GCA | Go China Access">
+    <meta property="og:title" content="GCA Research Notes | China Narrative Research Workspace">
+    <meta property="og:description" content="Structure a thesis, public evidence, catalysts, invalidation conditions, risks, and review dates in a browser-local workspace.">
+    <meta property="og:url" content="https://gcagochina.com/research-notes.html">
+    <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="GCA Research Notes | China Narrative Research Workspace">
+    <meta name="twitter:description" content="A browser-local research workspace for thesis discipline, evidence, risks, and scheduled review.">
+    <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <style>
+      :root { color-scheme:light; --bg:#f7f8f5; --ink:#151817; --muted:#5e6763; --line:#dfe4dd; --panel:#fff; --soft:#f1f4f0; --red:#d71920; --blue:#1557d7; --green:#087f5b; --gold:#8a6500; }
+      * { box-sizing:border-box; }
+      [hidden] { display:none !important; }
+      body { margin:0; color:var(--ink); background:var(--bg); font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; line-height:1.5; }
+      a { color:var(--blue); text-decoration:none; } a:hover { text-decoration:underline; }
+      .shell { width:min(1180px,calc(100% - 32px)); margin:0 auto; }
+      header { position:sticky; top:0; z-index:3; border-bottom:1px solid var(--line); background:rgba(247,248,245,.95); backdrop-filter:blur(16px); }
+      nav { min-height:68px; display:flex; align-items:center; justify-content:space-between; gap:18px; }
+      .brand { display:inline-flex; align-items:center; gap:10px; color:var(--ink); font-weight:850; }
+      .brand img { width:34px; height:34px; }
+      .nav-links { display:flex; align-items:center; gap:16px; font-size:14px; }
+      main { padding:34px 0 64px; }
+      h1,h2,h3,p { margin-top:0; }
+      h1 { max-width:900px; margin-bottom:14px; font-size:54px; line-height:1; letter-spacing:0; }
+      h2 { margin-bottom:14px; font-size:24px; }
+      h3 { margin-bottom:9px; font-size:18px; }
+      .eyebrow { margin:0 0 10px; color:var(--red); font-size:13px; font-weight:850; text-transform:uppercase; }
+      .lead,.note { color:var(--muted); }
+      .lead { max-width:940px; margin-bottom:0; font-size:17px; }
+      .note { margin:0; }
+      .layout { display:grid; grid-template-columns:minmax(320px,.78fr) minmax(0,1.22fr); gap:18px; margin-top:26px; align-items:start; }
+      .layout > * { min-width:0; }
+      .panel { border:1px solid var(--line); border-radius:8px; background:var(--panel); padding:22px; }
+      .form-grid,.filter-grid,.metrics { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:13px; }
+      .field { display:grid; gap:6px; min-width:0; }
+      .field.full { grid-column:1/-1; }
+      label { font-size:13px; font-weight:800; }
+      input,select,textarea { width:100%; min-height:42px; border:1px solid var(--line); border-radius:6px; background:#fff; color:var(--ink); padding:9px 11px; font:inherit; }
+      textarea { min-height:96px; resize:vertical; }
+      input[type="checkbox"] { width:18px; min-height:18px; }
+      .check { display:flex; align-items:center; gap:8px; min-height:42px; }
+      .actions { display:flex; flex-wrap:wrap; gap:9px; margin-top:16px; }
+      .button { min-height:42px; display:inline-flex; align-items:center; justify-content:center; border:1px solid var(--line); border-radius:6px; background:#fff; color:var(--ink); padding:9px 13px; font:inherit; font-weight:790; cursor:pointer; }
+      .button:hover { text-decoration:none; }
+      .button.primary { border-color:var(--red); background:var(--red); color:#fff; }
+      .button.danger { color:#9e151b; }
+      .button.pending { border-color:var(--red); background:#fff0f0; color:#8d171c; }
+      .status { margin-top:14px; border-left:3px solid var(--green); background:#edf8f3; color:#086447; padding:10px 12px; }
+      .status.error { border-left-color:var(--red); background:#fff0f0; color:#8d171c; }
+      .boundary { margin-top:18px; border-left:3px solid var(--blue); background:#eef4ff; padding:14px; }
+      .filters { border-bottom:1px solid var(--line); padding-bottom:18px; }
+      .metrics { margin-top:18px; }
+      .metric { min-height:90px; border:1px solid var(--line); border-radius:6px; background:#fbfcfa; padding:13px; }
+      .metric span { display:block; color:var(--muted); font-size:12px; font-weight:780; }
+      .metric strong { display:block; margin-top:7px; font-size:24px; overflow-wrap:anywhere; }
+      .notes-list { display:grid; gap:12px; margin-top:18px; }
+      .research-card { border:1px solid var(--line); border-radius:7px; background:#fbfcfa; padding:16px; }
+      .research-card.due { border-color:#d9ba63; box-shadow:inset 3px 0 0 #c18b00; }
+      .card-head { display:flex; align-items:start; justify-content:space-between; gap:14px; }
+      .card-title { min-width:0; }
+      .card-title h3 { margin-bottom:4px; overflow-wrap:anywhere; }
+      .meta { color:var(--muted); font-size:12px; overflow-wrap:anywhere; }
+      .badges { display:flex; flex-wrap:wrap; gap:6px; margin:12px 0; }
+      .badge { border:1px solid var(--line); border-radius:999px; background:#fff; padding:4px 8px; color:#39403d; font-size:11px; font-weight:800; }
+      .badge.alert { border-color:#d9ba63; color:var(--gold); }
+      .note-block { border-top:1px solid var(--line); padding-top:10px; margin-top:10px; }
+      .note-block strong { display:block; margin-bottom:4px; font-size:12px; text-transform:uppercase; }
+      .note-block p { margin:0; white-space:pre-wrap; overflow-wrap:anywhere; }
+      .source { display:inline-flex; margin-top:10px; font-weight:800; overflow-wrap:anywhere; word-break:break-all; }
+      .row-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:14px; }
+      .row-action { border:0; background:transparent; padding:0; color:var(--blue); font:inherit; font-size:13px; font-weight:800; cursor:pointer; }
+      .row-action.delete { color:var(--red); }
+      .empty { margin-top:18px; border:1px dashed var(--line); border-radius:6px; color:var(--muted); padding:24px; text-align:center; }
+      footer { border-top:1px solid var(--line); padding:24px 0; color:var(--muted); font-size:14px; }
+      @media (max-width:920px) { h1{font-size:40px}.layout,.form-grid,.filter-grid,.metrics{grid-template-columns:1fr}.field.full{grid-column:auto}.card-head{display:block} }
+    </style>
+    <link rel="stylesheet" href="assets/gca-site.css?v=20260711">
+    <script src="assets/gca-site.js?v=20260711" defer></script>
+  </head>
+  <body>
+    <header><nav class="shell" aria-label="Primary"><a class="brand" href="index.html"><img src="assets/gca-logo.svg" alt="GCA logo"><span>GCA</span></a><div class="nav-links"><a href="tools.html">Tools</a><a href="member-workspace.html">Workspace</a><a href="product.html">Product</a></div></nav></header>
+    <main class="shell" id="main-content">
+      <section aria-labelledby="title">
+        <p class="eyebrow">GCA AI Quant Access · Browser-Local Research</p>
+        <h1 id="title">Member Research Notes</h1>
+        <p class="lead">Structure a China or Web3 narrative before acting: record the thesis, public evidence, catalyst, invalidation condition, risks, and the next review date. 在当前浏览器中记录叙事、证据、催化剂、失效条件、风险和复核日期。</p>
+      </section>
+      <section class="layout" aria-label="Browser-local research notes workspace">
+        <form class="panel" id="researchForm">
+          <h2>Research Record <span lang="zh-CN">研究记录</span></h2>
+          <div class="form-grid">
+            <div class="field"><label for="observedOn">Observed date / 观察日期</label><input id="observedOn" type="date" required></div>
+            <div class="field"><label for="reviewOn">Next review / 下次复核</label><input id="reviewOn" type="date"></div>
+            <div class="field full"><label for="noteTitle">Research title / 研究标题</label><input id="noteTitle" type="text" maxlength="120" placeholder="China-facing Web3 access thesis" required></div>
+            <div class="field"><label for="noteTheme">Theme / 主题</label><input id="noteTheme" type="text" maxlength="80" placeholder="Infrastructure, policy, adoption" required></div>
+            <div class="field"><label for="noteStatus">Status / 状态</label><select id="noteStatus"><option value="watching">Watching / 观察</option><option value="active-research">Active research / 研究中</option><option value="needs-review">Needs review / 待复核</option><option value="invalidated">Invalidated / 已失效</option><option value="archived">Archived / 已归档</option></select></div>
+            <div class="field"><label for="noteHorizon">Horizon / 周期</label><select id="noteHorizon"><option value="event-driven">Event-driven / 事件驱动</option><option value="short-term">Short term / 短期</option><option value="medium-term" selected>Medium term / 中期</option><option value="long-term">Long term / 长期</option><option value="structural">Structural / 结构性</option></select></div>
+            <div class="field"><label for="evidenceState">Evidence state / 证据状态</label><select id="evidenceState"><option value="unverified">Unverified / 未验证</option><option value="developing">Developing / 形成中</option><option value="supported">Supported / 有支持</option><option value="conflicting">Conflicting / 有冲突</option></select></div>
+            <div class="field full"><label for="noteTags">Tags / 标签</label><input id="noteTags" type="text" maxlength="240" placeholder="China, Base, education (up to 8, comma separated)"></div>
+            <div class="field full"><label for="noteThesis">Thesis / 核心论点</label><textarea id="noteThesis" maxlength="1200" placeholder="State the claim and why it may matter. Minimum 20 characters. / 写明核心判断和重要性，至少 20 个字符。" required></textarea></div>
+            <div class="field full"><label for="noteEvidence">Public evidence / 公开证据</label><textarea id="noteEvidence" maxlength="1600" placeholder="Separate observed facts from interpretation. / 区分已观察事实与个人解释。"></textarea></div>
+            <div class="field full"><label for="noteCatalyst">Catalyst / 催化剂</label><textarea id="noteCatalyst" maxlength="800" placeholder="What event or measurable change would advance the thesis?"></textarea></div>
+            <div class="field full"><label for="noteInvalidation">Invalidation condition / 失效条件</label><textarea id="noteInvalidation" maxlength="800" placeholder="What evidence would prove the thesis wrong? Minimum 10 characters. / 什么证据会证明判断错误？" required></textarea></div>
+            <div class="field full"><label for="noteRisks">Risk notes / 风险说明</label><textarea id="noteRisks" maxlength="800" placeholder="List uncertainty, concentration, liquidity, execution, and regulatory risks. Minimum 10 characters. / 写明不确定性和主要风险。" required></textarea></div>
+            <div class="field full"><label for="sourceUrl">Public HTTPS source / 公开 HTTPS 来源</label><input id="sourceUrl" type="url" maxlength="500" placeholder="https://example.com/public-source"></div>
+          </div>
+          <div class="actions"><button class="button primary" id="saveNote" type="submit">Add Note / 添加记录</button><button class="button" id="resetNote" type="button">Reset / 重置</button><button class="button" id="cancelEdit" type="button" hidden>Cancel Edit / 取消编辑</button></div>
+          <p class="status" id="researchStatus" aria-live="polite">Ready. Research records remain on this device. / 已就绪，研究记录仅保存在当前设备。</p>
+          <p class="boundary">This preview uses browser localStorage only. It does not upload research, fetch market data, generate trade signals, connect wallets or exchanges, place orders, or deduct credits. JSON backups include all text and public URLs you enter. Do not enter private keys, passwords, private links, API secrets, one-time codes, or withdrawal permissions.</p>
+        </form>
+        <section class="panel" aria-labelledby="libraryTitle">
+          <h2 id="libraryTitle">Research Library <span lang="zh-CN">研究资料库</span></h2>
+          <div class="filters" id="researchFilters">
+            <div class="filter-grid">
+              <div class="field full"><label for="filterQuery">Search / 搜索</label><input id="filterQuery" type="search" maxlength="120" placeholder="Search titles, themes, evidence, risks, or tags"></div>
+              <div class="field"><label for="filterStatus">Status / 状态</label><select id="filterStatus"><option value="">All statuses</option><option value="watching">Watching</option><option value="active-research">Active research</option><option value="needs-review">Needs review</option><option value="invalidated">Invalidated</option><option value="archived">Archived</option></select></div>
+              <div class="field"><label for="filterHorizon">Horizon / 周期</label><select id="filterHorizon"><option value="">All horizons</option><option value="event-driven">Event-driven</option><option value="short-term">Short term</option><option value="medium-term">Medium term</option><option value="long-term">Long term</option><option value="structural">Structural</option></select></div>
+              <div class="field"><label for="filterEvidence">Evidence / 证据</label><select id="filterEvidence"><option value="">All evidence states</option><option value="unverified">Unverified</option><option value="developing">Developing</option><option value="supported">Supported</option><option value="conflicting">Conflicting</option></select></div>
+              <div class="field"><label for="filterTag">Tag / 标签</label><select id="filterTag"><option value="">All tags</option></select></div>
+              <label class="check" for="filterDueOnly"><input id="filterDueOnly" type="checkbox"> Due for review only / 仅显示到期复核</label>
+            </div>
+            <div class="actions"><button class="button" id="resetResearchFilters" type="button">Reset Filters / 重置筛选</button></div>
+            <p class="note" id="filterResearchStatus" aria-live="polite">Showing 0 of 0 notes. / 当前显示 0 / 0 条。</p>
+          </div>
+          <div class="metrics">
+            <div class="metric"><span>Total notes / 全部记录</span><strong id="researchNoteCount">0</strong></div>
+            <div class="metric"><span>Active research / 活跃研究</span><strong id="researchActiveCount">0</strong></div>
+            <div class="metric"><span>Public sources / 公开来源</span><strong id="researchSourcedCount">0</strong></div>
+            <div class="metric"><span>Due for review / 到期复核</span><strong id="researchDueCount">0</strong></div>
+          </div>
+          <div class="actions"><button class="button primary" id="exportResearchJson" type="button">Backup JSON / 导出备份</button><label class="button" for="importResearchJson">Restore JSON / 恢复备份</label><input id="importResearchJson" type="file" accept="application/json,.json" hidden><button class="button danger" id="clearResearchNotes" type="button">Clear All / 清空全部</button></div>
+          <div class="notes-list" id="researchRows"></div>
+          <p class="empty" id="emptyResearch">No research notes recorded. / 暂无研究记录。</p>
+        </section>
+      </section>
+    </main>
+    <footer><div class="shell">GCA Risk First Trading · Separate evidence from narrative, and define invalidation before conviction.</div></footer>
+    <script src="assets/research-notes.js"></script>
+    <script>
+      (() => {
+        "use strict";
+        const engine = window.GcaResearchNotes;
+        const form = document.getElementById("researchForm");
+        const status = document.getElementById("researchStatus");
+        const rows = document.getElementById("researchRows");
+        const saveButton = document.getElementById("saveNote");
+        const cancelEditButton = document.getElementById("cancelEdit");
+        const clearButton = document.getElementById("clearResearchNotes");
+        const fields = {
+          observedOn: document.getElementById("observedOn"),
+          reviewOn: document.getElementById("reviewOn"),
+          title: document.getElementById("noteTitle"),
+          theme: document.getElementById("noteTheme"),
+          status: document.getElementById("noteStatus"),
+          horizon: document.getElementById("noteHorizon"),
+          evidenceState: document.getElementById("evidenceState"),
+          tags: document.getElementById("noteTags"),
+          thesis: document.getElementById("noteThesis"),
+          evidence: document.getElementById("noteEvidence"),
+          catalyst: document.getElementById("noteCatalyst"),
+          invalidation: document.getElementById("noteInvalidation"),
+          riskNotes: document.getElementById("noteRisks"),
+          sourceUrl: document.getElementById("sourceUrl")
+        };
+        const filterFields = {
+          query: document.getElementById("filterQuery"),
+          status: document.getElementById("filterStatus"),
+          horizon: document.getElementById("filterHorizon"),
+          evidenceState: document.getElementById("filterEvidence"),
+          tag: document.getElementById("filterTag"),
+          dueOnly: document.getElementById("filterDueOnly")
+        };
+        const labelMaps = {
+          status: { watching:"Watching", "active-research":"Active research", "needs-review":"Needs review", invalidated:"Invalidated", archived:"Archived" },
+          horizon: { "event-driven":"Event-driven", "short-term":"Short term", "medium-term":"Medium term", "long-term":"Long term", structural:"Structural" },
+          evidence: { unverified:"Unverified", developing:"Developing", supported:"Supported", conflicting:"Conflicting" }
+        };
+        let notes = [];
+        let editingId = null;
+        let pendingDeleteId = null;
+        let pendingClear = false;
+
+        function localDate() {
+          const now = new Date();
+          return new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().slice(0, 10);
+        }
+        function createId() {
+          const seed = globalThis.crypto?.randomUUID?.() || `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
+          return `gca_note_${seed.toLowerCase().replace(/[^a-z0-9-]/g, "-")}`;
+        }
+        function setStatus(message, error) {
+          status.textContent = message;
+          status.className = `status${error ? " error" : ""}`;
+        }
+        function resetPendingActions() {
+          pendingDeleteId = null;
+          pendingClear = false;
+          clearButton.textContent = "Clear All / 清空全部";
+          clearButton.classList.remove("pending");
+        }
+        function resetEditor() {
+          editingId = null;
+          form.reset();
+          fields.observedOn.value = localDate();
+          fields.horizon.value = "medium-term";
+          saveButton.textContent = "Add Note / 添加记录";
+          cancelEditButton.hidden = true;
+        }
+        function save() {
+          try {
+            if (!notes.length) {
+              window.localStorage.removeItem(engine.STORAGE_KEY);
+              return true;
+            }
+            const backup = engine.buildBackup(notes, new Date().toISOString());
+            notes = backup.notes;
+            window.localStorage.setItem(engine.STORAGE_KEY, JSON.stringify(backup));
+            return true;
+          } catch (error) {
+            setStatus("Browser storage is unavailable. Export a JSON backup before leaving. / 浏览器存储不可用，请先导出 JSON 备份。", true);
+            return false;
+          }
+        }
+        function load() {
+          try {
+            const raw = window.localStorage.getItem(engine.STORAGE_KEY);
+            if (!raw) return;
+            const backup = engine.parseBackup(raw);
+            if (!backup) {
+              setStatus("Stored research data failed validation and was not loaded. Keep the original browser data until you have checked any backup. / 已保存的数据未通过校验，当前未加载。", true);
+              return;
+            }
+            notes = backup.notes;
+          } catch (error) {
+            setStatus("Stored research data could not be read. / 无法读取已保存的研究数据。", true);
+          }
+        }
+        function download(name, type, content) {
+          const url = URL.createObjectURL(new Blob([content], { type }));
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = name;
+          link.click();
+          URL.revokeObjectURL(url);
+        }
+        function filters() {
+          return {
+            query: filterFields.query.value,
+            status: filterFields.status.value,
+            horizon: filterFields.horizon.value,
+            evidenceState: filterFields.evidenceState.value,
+            tag: filterFields.tag.value,
+            dueOnly: filterFields.dueOnly.checked
+          };
+        }
+        function updateTagFilter(summary) {
+          const current = filterFields.tag.value;
+          filterFields.tag.replaceChildren();
+          const all = document.createElement("option");
+          all.value = "";
+          all.textContent = "All tags";
+          filterFields.tag.append(all);
+          summary.tags.forEach((tag) => {
+            const option = document.createElement("option");
+            option.value = tag;
+            option.textContent = tag;
+            filterFields.tag.append(option);
+          });
+          filterFields.tag.value = summary.tags.includes(current) ? current : "";
+        }
+        function addTextBlock(card, title, value) {
+          if (!value) return;
+          const block = document.createElement("div");
+          block.className = "note-block";
+          const heading = document.createElement("strong");
+          heading.textContent = title;
+          const text = document.createElement("p");
+          text.textContent = value;
+          block.append(heading, text);
+          card.append(block);
+        }
+        function startEdit(note) {
+          editingId = note.id;
+          fields.observedOn.value = note.observedOn;
+          fields.reviewOn.value = note.reviewOn;
+          fields.title.value = note.title;
+          fields.theme.value = note.theme;
+          fields.status.value = note.status;
+          fields.horizon.value = note.horizon;
+          fields.evidenceState.value = note.evidenceState;
+          fields.tags.value = note.tags.join(", ");
+          fields.thesis.value = note.thesis;
+          fields.evidence.value = note.evidence;
+          fields.catalyst.value = note.catalyst;
+          fields.invalidation.value = note.invalidation;
+          fields.riskNotes.value = note.riskNotes;
+          fields.sourceUrl.value = note.sourceUrl;
+          saveButton.textContent = "Update Note / 更新记录";
+          cancelEditButton.hidden = false;
+          resetPendingActions();
+          setStatus(`Editing "${note.title}". / 正在编辑“${note.title}”。`, false);
+          form.scrollIntoView({ behavior:"smooth", block:"start" });
+        }
+        function render() {
+          notes = engine.orderNotes(notes);
+          const summary = engine.summarizeNotes(notes);
+          updateTagFilter(summary);
+          const visible = engine.filterNotes(notes, filters());
+          document.getElementById("researchNoteCount").textContent = String(summary.count);
+          document.getElementById("researchActiveCount").textContent = String(summary.activeCount);
+          document.getElementById("researchSourcedCount").textContent = String(summary.sourcedCount);
+          document.getElementById("researchDueCount").textContent = String(summary.dueReviewCount);
+          document.getElementById("filterResearchStatus").textContent = `Showing ${visible.length} of ${notes.length} note(s). / 当前显示 ${visible.length} / ${notes.length} 条。`;
+          rows.replaceChildren();
+          const today = localDate();
+          visible.forEach((note) => {
+            const due = Boolean(note.reviewOn && note.reviewOn <= today && ["watching","active-research","needs-review"].includes(note.status));
+            const card = document.createElement("article");
+            card.className = `research-card${due ? " due" : ""}`;
+            const head = document.createElement("div");
+            head.className = "card-head";
+            const titleWrap = document.createElement("div");
+            titleWrap.className = "card-title";
+            const title = document.createElement("h3");
+            title.textContent = note.title;
+            const meta = document.createElement("p");
+            meta.className = "meta";
+            meta.textContent = `${note.theme} · observed ${note.observedOn}${note.reviewOn ? ` · review ${note.reviewOn}` : ""}`;
+            titleWrap.append(title, meta);
+            const updated = document.createElement("span");
+            updated.className = "meta";
+            updated.textContent = `Updated ${note.updatedAt.slice(0, 10)}`;
+            head.append(titleWrap, updated);
+            card.append(head);
+            const badges = document.createElement("div");
+            badges.className = "badges";
+            [labelMaps.status[note.status], labelMaps.horizon[note.horizon], labelMaps.evidence[note.evidenceState], ...note.tags].forEach((value) => {
+              const badge = document.createElement("span");
+              badge.className = "badge";
+              badge.textContent = value;
+              badges.append(badge);
+            });
+            if (due) {
+              const badge = document.createElement("span");
+              badge.className = "badge alert";
+              badge.textContent = "Due for review";
+              badges.append(badge);
+            }
+            card.append(badges);
+            addTextBlock(card, "Thesis", note.thesis);
+            addTextBlock(card, "Evidence", note.evidence);
+            addTextBlock(card, "Catalyst", note.catalyst);
+            addTextBlock(card, "Invalidation", note.invalidation);
+            addTextBlock(card, "Risks", note.riskNotes);
+            if (note.sourceUrl) {
+              const source = document.createElement("a");
+              source.className = "source";
+              source.href = note.sourceUrl;
+              source.target = "_blank";
+              source.rel = "noopener noreferrer";
+              source.textContent = "Open public source / 打开公开来源";
+              card.append(source);
+            }
+            const actions = document.createElement("div");
+            actions.className = "row-actions";
+            const edit = document.createElement("button");
+            edit.type = "button";
+            edit.className = "row-action";
+            edit.dataset.editId = note.id;
+            edit.textContent = "Edit / 编辑";
+            const remove = document.createElement("button");
+            remove.type = "button";
+            remove.className = "row-action delete";
+            remove.dataset.deleteId = note.id;
+            remove.textContent = pendingDeleteId === note.id ? "Confirm delete / 确认删除" : "Delete / 删除";
+            actions.append(edit, remove);
+            card.append(actions);
+            rows.append(card);
+          });
+          const empty = document.getElementById("emptyResearch");
+          empty.hidden = visible.length > 0;
+          empty.textContent = notes.length ? "No notes match the current filters. / 当前筛选条件没有匹配记录。" : "No research notes recorded. / 暂无研究记录。";
+        }
+
+        resetEditor();
+        load();
+        render();
+
+        form.addEventListener("submit", (event) => {
+          event.preventDefault();
+          const existing = editingId ? notes.find((note) => note.id === editingId) : null;
+          if (editingId && !existing) {
+            resetEditor();
+            setStatus("The note being edited no longer exists. / 正在编辑的记录已不存在。", true);
+            return;
+          }
+          if (!existing && notes.length >= engine.MAX_NOTES) {
+            setStatus(`The local limit is ${engine.MAX_NOTES} notes. Export a backup and remove older notes before adding another. / 本地上限为 ${engine.MAX_NOTES} 条，请先备份并清理旧记录。`, true);
+            return;
+          }
+          const now = new Date().toISOString();
+          const note = engine.normalizeNote({
+            version: 1,
+            id: existing?.id || createId(),
+            observedOn: fields.observedOn.value,
+            reviewOn: fields.reviewOn.value,
+            title: fields.title.value,
+            theme: fields.theme.value,
+            status: fields.status.value,
+            horizon: fields.horizon.value,
+            evidenceState: fields.evidenceState.value,
+            tags: fields.tags.value,
+            thesis: fields.thesis.value,
+            evidence: fields.evidence.value,
+            catalyst: fields.catalyst.value,
+            invalidation: fields.invalidation.value,
+            riskNotes: fields.riskNotes.value,
+            sourceUrl: fields.sourceUrl.value,
+            createdAt: existing?.createdAt || now,
+            updatedAt: now
+          });
+          if (!note) {
+            setStatus("Check the dates and required fields. Use a public HTTPS source only, and do not enter secrets or private access information. / 请检查日期和必填项，仅使用公开 HTTPS 来源，不要输入密钥或私密访问信息。", true);
+            return;
+          }
+          notes = engine.upsertNote(notes, note);
+          const updated = Boolean(existing);
+          resetEditor();
+          resetPendingActions();
+          const saved = save();
+          render();
+          if (saved) setStatus(updated ? "Research note updated on this device. / 研究记录已在当前设备更新。" : "Research note added on this device. / 研究记录已保存到当前设备。", false);
+        });
+        rows.addEventListener("click", (event) => {
+          const editButton = event.target.closest("[data-edit-id]");
+          if (editButton) {
+            const note = notes.find((item) => item.id === editButton.dataset.editId);
+            if (note) startEdit(note);
+            return;
+          }
+          const deleteButton = event.target.closest("[data-delete-id]");
+          if (!deleteButton) return;
+          const note = notes.find((item) => item.id === deleteButton.dataset.deleteId);
+          if (!note) return;
+          if (pendingDeleteId !== note.id) {
+            pendingDeleteId = note.id;
+            pendingClear = false;
+            clearButton.textContent = "Clear All / 清空全部";
+            clearButton.classList.remove("pending");
+            render();
+            setStatus(`Press confirm delete to remove "${note.title}". / 再次点击确认删除“${note.title}”。`, false);
+            return;
+          }
+          notes = engine.removeNote(notes, note.id);
+          if (editingId === note.id) resetEditor();
+          resetPendingActions();
+          save();
+          render();
+          setStatus(`"${note.title}" removed from this device. / 已从当前设备删除“${note.title}”。`, false);
+        });
+        document.getElementById("resetNote").addEventListener("click", () => {
+          resetEditor();
+          resetPendingActions();
+          render();
+          setStatus("Research form reset. / 研究表单已重置。", false);
+        });
+        cancelEditButton.addEventListener("click", () => {
+          resetEditor();
+          setStatus("Edit cancelled. / 已取消编辑。", false);
+        });
+        Object.values(filterFields).forEach((field) => {
+          field.addEventListener("input", render);
+          field.addEventListener("change", render);
+        });
+        document.getElementById("resetResearchFilters").addEventListener("click", () => {
+          Object.entries(filterFields).forEach(([key, field]) => {
+            if (key === "dueOnly") field.checked = false;
+            else field.value = "";
+          });
+          render();
+        });
+        document.getElementById("exportResearchJson").addEventListener("click", () => {
+          if (!notes.length) {
+            setStatus("Add or restore at least one note before exporting. / 请先添加或恢复至少一条记录。", true);
+            return;
+          }
+          download("gca-research-notes.json", "application/json", JSON.stringify(engine.buildBackup(notes, new Date().toISOString()), null, 2));
+          setStatus("Portable JSON backup created. It contains all entered research content. / 已生成 JSON 备份，其中包含全部录入内容。", false);
+        });
+        document.getElementById("importResearchJson").addEventListener("change", async (event) => {
+          const file = event.target.files?.[0];
+          if (!file) return;
+          const backup = engine.parseBackup(await file.text());
+          if (!backup) {
+            setStatus("Invalid GCA research backup. Use an unmodified JSON file exported by this page. / 研究备份无效，请使用本页面导出的未修改 JSON 文件。", true);
+            event.target.value = "";
+            return;
+          }
+          const merged = engine.mergeBackup(notes, backup);
+          if (!merged) {
+            setStatus("The research backup could not be merged. / 无法合并研究备份。", true);
+            event.target.value = "";
+            return;
+          }
+          notes = merged.notes;
+          resetEditor();
+          resetPendingActions();
+          save();
+          render();
+          const dropped = merged.droppedNewNoteCount ? ` ${merged.droppedNewNoteCount} new note(s) exceeded the ${engine.MAX_NOTES}-note limit and were not retained.` : "";
+          setStatus(`Backup restored: ${merged.addedNoteCount} added, ${merged.updatedNoteCount} updated.${dropped} / 备份已恢复：新增 ${merged.addedNoteCount} 条，更新 ${merged.updatedNoteCount} 条。`, Boolean(merged.droppedNewNoteCount));
+          event.target.value = "";
+        });
+        clearButton.addEventListener("click", () => {
+          if (!notes.length) {
+            setStatus("There are no local research notes to clear. / 当前没有可清空的本地研究记录。", false);
+            return;
+          }
+          if (!pendingClear) {
+            pendingClear = true;
+            pendingDeleteId = null;
+            clearButton.textContent = "Confirm Clear All / 确认清空";
+            clearButton.classList.add("pending");
+            render();
+            setStatus("Press Confirm Clear All to remove every local research note. Export a backup first if needed. / 再次点击确认清空全部记录，如需保留请先导出备份。", true);
+            return;
+          }
+          notes = [];
+          resetEditor();
+          resetPendingActions();
+          save();
+          render();
+          setStatus("All local research notes cleared. / 本地研究记录已全部清空。", false);
+        });
+      })();
+    </script>
+  </body>
+</html>

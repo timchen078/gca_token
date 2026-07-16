@@ -2,7 +2,7 @@
   "schema": "https://gcagochina.com/credits.json",
   "pageUrl": "https://gcagochina.com/credits.html",
   "status": "public-credits-catalog-ledger-path-live",
-  "lastUpdated": "2026-07-15",
+  "lastUpdated": "2026-07-16",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "title": "GCA Utility Credits Catalog",
@@ -170,7 +170,21 @@
       "status": "member-ledger-eligible-service-unit-staged",
       "creditUnit": 20,
       "unitType": "draft member credit unit",
-      "description": "Member-only China Narrative Radar notes, weekly research extensions, and risk-context summaries.",
+      "description": "Structured China Narrative Radar research records with thesis, public evidence, catalysts, invalidation conditions, risks, review dates, filters, and portable backup.",
+      "publicPreview": {
+        "status": "live-client-side-preview",
+        "url": "https://gcagochina.com/research-notes.html",
+        "storesOnServer": false,
+        "browserLocalNotes": true,
+        "portableJsonBackup": true,
+        "collectsIdentityFields": false,
+        "backupContainsUserEnteredResearchContent": true,
+        "deductsCredits": false,
+        "connectsWallet": false,
+        "connectsExchange": false,
+        "fetchesMarketData": false,
+        "placesOrders": false
+      },
       "notPurpose": "Not private investment advice, price forecasts, or listing information."
     },
     {
@@ -358,7 +372,8 @@
     "backtestLab": "https://gcagochina.com/backtest-lab.html",
     "tradeJournal": "https://gcagochina.com/trade-journal.html",
     "riskWarningReview": "https://gcagochina.com/risk-warning.html",
-    "riskDisciplineTraining": "https://gcagochina.com/risk-training.html"
+    "riskDisciplineTraining": "https://gcagochina.com/risk-training.html",
+    "researchNotes": "https://gcagochina.com/research-notes.html"
   },
   "publicClaimBoundaries": {
     "safeClaims": [
@@ -367,6 +382,7 @@
       "Operator-reviewed service delivery can be recorded through the local GCA credit usage ledger with before/after remaining credits; the Cloudflare Worker route is prepared, Worker dry-run and D1 visibility passed on 2026-06-18, and production remains non-live until Cloudflare auth, Worker deploy permission, remote deploy, and pending-route smoke gates pass.",
       "Operators can queue requested service scope in the local service request ledger before delivery; queued requests do not deduct credits.",
       "The 1,000,000 GCA Member threshold requires 30 consecutive days of holding before a one-time 10,000 GCA member benefit review.",
+      "The Member Research Notes browser-only preview is live and does not deduct credits; the separate 20-unit member service tier remains subject to operator review and recorded delivery.",
       "Credits and member status are account-level service records; the 10,000 GCA member benefit is manual review only.",
       "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool."
     ],
