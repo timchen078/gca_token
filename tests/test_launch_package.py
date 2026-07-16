@@ -5183,6 +5183,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn('href="risk-training.html"', page)
         self.assertIn("Member Research Notes", page)
         self.assertIn('href="research-notes.html"', page)
+        self.assertIn("Portfolio Risk Map", page)
+        self.assertIn('href="portfolio-risk.html"', page)
         self.assertIn("GCA Member Workspace", page)
         self.assertIn("simulation or testnet first", page)
         self.assertIn("No custody", page)
@@ -5201,7 +5203,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(product["contractAddress"], MAINNET_ADDRESS)
         self.assertEqual(product["positioning"]["productName"], "GCA AI Quant Access")
         self.assertEqual(product["positioning"]["currentStage"], "account-ledger-path-live-product-tools-planned")
-        self.assertEqual(product["positioning"]["publicRiskToolPreviewsLive"], 8)
+        self.assertEqual(product["positioning"]["publicRiskToolPreviewsLive"], 9)
         self.assertTrue(product["positioning"]["publicAccountUiLive"])
         self.assertFalse(product["positioning"]["liveTradingEnabled"])
         module_names = {item["name"] for item in product["productModules"]}
@@ -5213,6 +5215,7 @@ class LaunchPackageTests(unittest.TestCase):
             "Backtest Lab",
             "ENTRY_READY Review",
             "Position Size Calculator",
+            "Portfolio Risk Map",
             "Risk Discipline Training",
             "Member Research Notes",
             "GCA Member Workspace",
@@ -5232,6 +5235,14 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertTrue(research_notes["backupContainsUserEnteredResearchContent"])
         self.assertFalse(research_notes["storesOnServer"])
         self.assertFalse(research_notes["collectsIdentityFields"])
+        portfolio_risk = next(item for item in product["productModules"] if item["id"] == "portfolio-risk-map")
+        self.assertEqual(portfolio_risk["status"], "public-client-side-preview-live")
+        self.assertEqual(portfolio_risk["publicUrl"], "https://gcagochina.com/portfolio-risk.html")
+        self.assertTrue(portfolio_risk["browserLocalPortfolio"])
+        self.assertTrue(portfolio_risk["portableJsonBackup"])
+        self.assertTrue(portfolio_risk["backupContainsUserEnteredPositionDetails"])
+        for field in ("storesOnServer", "connectsWallet", "connectsExchange", "fetchesMarketData", "placesOrders", "deductsCredits"):
+            self.assertFalse(portfolio_risk[field])
         gate_ids = {item["id"] for item in product["releaseGates"]}
         self.assertIn("controlled-https-account-ui", gate_ids)
         self.assertIn("simulation-first", gate_ids)
@@ -5257,6 +5268,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(product["officialLinks"]["utilityJson"], UTILITY_URL)
         self.assertEqual(product["officialLinks"]["memberLedger"], MEMBER_LEDGER_URL)
         self.assertEqual(product["officialLinks"]["researchNotes"], "https://gcagochina.com/research-notes.html")
+        self.assertEqual(product["officialLinks"]["portfolioRiskMap"], "https://gcagochina.com/portfolio-risk.html")
         self.assertIn("GCA has published a public product specification for GCA AI Quant Access.", product["publicClaimBoundaries"]["safeClaims"])
         self.assertTrue(any("full GCA AI Quant Access trading or research product is live" in item for item in product["publicClaimBoundaries"]["doNotClaim"]))
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, json.dumps(product))
@@ -5301,6 +5313,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Backtest Lab", page)
         self.assertIn("ENTRY_READY Review", page)
         self.assertIn("Position Size Calculator", page)
+        self.assertIn("Portfolio Risk Map", page)
+        self.assertIn('href="portfolio-risk.html"', page)
         self.assertIn("Risk-Control Training", page)
         self.assertIn("Member Research Notes", page)
         self.assertIn('href="research-notes.html"', page)
@@ -5359,6 +5373,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertFalse(access["securityBoundaries"]["withdrawalPermission"])
         self.assertFalse(access["securityBoundaries"]["exchangeApiSecretCollection"])
         self.assertIn("Liquidation Replay", access["serviceModules"])
+        self.assertIn("Portfolio Risk Map", access["serviceModules"])
         self.assertIn("Support Review Queue", access["serviceModules"])
         self.assertEqual(access["officialMarket"]["pair"], "GCA/USDT")
         self.assertEqual(access["officialMarket"]["poolAddress"], OFFICIAL_POOL_ADDRESS)
@@ -6091,6 +6106,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Backtest Lab", page)
         self.assertIn("ENTRY_READY Review", page)
         self.assertIn("Position Size Calculator", page)
+        self.assertIn("Portfolio Risk Map", page)
+        self.assertIn('href="portfolio-risk.html"', page)
         self.assertIn("Risk-Control Training", page)
         self.assertIn("Member Research Notes", page)
         self.assertIn('href="research-notes.html"', page)
@@ -6142,6 +6159,7 @@ class LaunchPackageTests(unittest.TestCase):
             "backtest-lab-run",
             "entry-ready-review",
             "position-size-calculator",
+            "portfolio-risk-map",
             "risk-control-training",
             "member-research-notes",
             "support-review-queue",
@@ -6157,6 +6175,14 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertTrue(research_notes["publicPreview"]["portableJsonBackup"])
         self.assertFalse(research_notes["publicPreview"]["storesOnServer"])
         self.assertFalse(research_notes["publicPreview"]["deductsCredits"])
+        portfolio_risk = next(item for item in credits["serviceCatalog"] if item["id"] == "portfolio-risk-map")
+        self.assertEqual(portfolio_risk["creditUnit"], 15)
+        self.assertEqual(portfolio_risk["publicPreview"]["status"], "live-client-side-preview")
+        self.assertEqual(portfolio_risk["publicPreview"]["url"], "https://gcagochina.com/portfolio-risk.html")
+        self.assertTrue(portfolio_risk["publicPreview"]["browserLocalPortfolio"])
+        self.assertTrue(portfolio_risk["publicPreview"]["portableJsonBackup"])
+        for field in ("storesOnServer", "deductsCredits", "connectsWallet", "connectsExchange", "fetchesMarketData", "placesOrders"):
+            self.assertFalse(portfolio_risk["publicPreview"][field])
         self.assertEqual(credits["usageLedger"]["status"], "local-operator-credit-usage-ledger-ready-worker-auth-d1-deploy-gate-pending")
         self.assertTrue(credits["usageLedger"]["workerDeployReadinessCommand"].endswith("--require-deploy-auth"))
         self.assertEqual(credits["usageLedger"]["workerDeployReadinessAuthSessionCheck"], "cloudflare-auth-session")
@@ -6202,6 +6228,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(credits["officialLinks"]["creditsCatalogPage"], CREDITS_PAGE_URL)
         self.assertEqual(credits["officialLinks"]["creditsCatalog"], CREDITS_URL)
         self.assertEqual(credits["officialLinks"]["researchNotes"], "https://gcagochina.com/research-notes.html")
+        self.assertEqual(credits["officialLinks"]["portfolioRiskMap"], "https://gcagochina.com/portfolio-risk.html")
         self.assertIn("GCA has published a service catalog for GCA AI Quant Access credits.", credits["publicClaimBoundaries"]["safeClaims"])
         self.assertIn("Operator-reviewed service delivery can be recorded through the local GCA credit usage ledger with before/after remaining credits; the Cloudflare Worker route is prepared, Worker dry-run and D1 visibility passed on 2026-06-18, and production remains non-live until Cloudflare auth, Worker deploy permission, remote deploy, and pending-route smoke gates pass.", credits["publicClaimBoundaries"]["safeClaims"])
         self.assertTrue(any("automatic or self-service transferred" in item for item in credits["publicClaimBoundaries"]["doNotClaim"]))

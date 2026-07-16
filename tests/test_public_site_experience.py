@@ -113,6 +113,12 @@ class PublicSiteExperienceTests(unittest.TestCase):
             "researchSourcedCount",
             "researchDueCount",
             "researchSavedAt",
+            "portfolioSummaryTitle",
+            "portfolioSummaryCount",
+            "portfolioSummaryStatus",
+            "portfolioSummaryRisk",
+            "portfolioSummaryExposure",
+            "portfolioSummarySavedAt",
             "serviceGrid",
             "serviceRequestForm",
             "serviceId",
@@ -142,10 +148,12 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn('src="assets/trade-journal.js"', page)
         self.assertIn('src="assets/risk-training.js"', page)
         self.assertIn('src="assets/research-notes.js"', page)
+        self.assertIn('src="assets/portfolio-risk.js"', page)
         self.assertIn("engine.parseMemberSnapshot", page)
         self.assertIn("engine.summarizeJournal", page)
         self.assertIn("engine.summarizeTraining", page)
         self.assertIn("engine.summarizeResearchNotes", page)
+        self.assertIn("engine.summarizePortfolioRisk", page)
         self.assertIn("trainingStatusLabel", page)
         self.assertIn("engine.buildServiceRequest", page)
         self.assertIn("engine.createRequestReceipt", page)
@@ -169,6 +177,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn('const JOURNAL_KEY = "gca_trade_journal_v1"', engine)
         self.assertIn('const TRAINING_HISTORY_KEY = "gca_risk_training_history_v1"', engine)
         self.assertIn('const RESEARCH_NOTES_KEY = "gca_research_notes_v1"', engine)
+        self.assertIn('const PORTFOLIO_RISK_KEY = "gca_portfolio_risk_v1"', engine)
         self.assertIn('const REQUEST_HISTORY_KEY = "gca_member_service_request_history_v1"', engine)
         self.assertIn('const REQUEST_BACKUP_SCHEMA = "gca-member-request-history-backup-v1"', engine)
         self.assertIn("SENSITIVE_RE", engine)
@@ -181,9 +190,11 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertFalse(workspace["requestReceiptBackupContainsRequestContent"])
         self.assertEqual(product["officialLinks"]["memberWorkspace"], "https://gcagochina.com/member-workspace.html")
         self.assertEqual(product["officialLinks"]["researchNotes"], "https://gcagochina.com/research-notes.html")
+        self.assertEqual(product["officialLinks"]["portfolioRiskMap"], "https://gcagochina.com/portfolio-risk.html")
         catalog_units = {item["id"]: item["creditUnit"] for item in credits["serviceCatalog"]}
         for service_id, credit_unit in (
             ("position-size-calculator", 5),
+            ("portfolio-risk-map", 15),
             ("risk-warning-review", 10),
             ("entry-ready-review", 15),
             ("backtest-lab-run", 20),
@@ -195,6 +206,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
             self.assertEqual(catalog_units[service_id], credit_unit)
         self.assertIn("https://gcagochina.com/member-workspace.html", sitemap)
         self.assertIn("https://gcagochina.com/research-notes.html", sitemap)
+        self.assertIn("https://gcagochina.com/portfolio-risk.html", sitemap)
 
     def test_member_workspace_engine_validates_snapshot_journal_and_request(self):
         bundled_node = Path("/Users/abc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node")
@@ -310,7 +322,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertEqual(result["research"]["activeCount"], 1)
         self.assertEqual(result["research"]["sourcedCount"], 1)
         self.assertEqual(result["research"]["dueReviewCount"], 1)
-        self.assertEqual(len(result["services"]), 8)
+        self.assertEqual(len(result["services"]), 9)
         self.assertEqual({item["id"]: item["creditUnit"] for item in result["services"]}["support-review-queue"], 0)
         training_service = next(item for item in result["services"] if item["id"] == "risk-control-training")
         self.assertEqual(training_service["previewUrl"], "risk-training.html")
@@ -318,6 +330,10 @@ class PublicSiteExperienceTests(unittest.TestCase):
         research_service = next(item for item in result["services"] if item["id"] == "member-research-notes")
         self.assertEqual(research_service["previewUrl"], "research-notes.html")
         self.assertEqual(research_service["stage"], "public-preview")
+        portfolio_service = next(item for item in result["services"] if item["id"] == "portfolio-risk-map")
+        self.assertEqual(portfolio_service["creditUnit"], 15)
+        self.assertEqual(portfolio_service["previewUrl"], "portfolio-risk.html")
+        self.assertEqual(portfolio_service["stage"], "public-preview")
 
     def test_risk_calculator_is_client_side_and_has_no_execution_path(self):
         page = (SITE / "risk-calculator.html").read_text()
@@ -1071,6 +1087,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
             ("liquidation-replay", "liquidation-replay.html"),
             ("risk-training", "risk-training.html"),
             ("research-notes", "research-notes.html"),
+            ("portfolio-risk", "portfolio-risk.html"),
         ):
             self.assertIn(f'data-tool="{tool_id}"', page)
             self.assertIn(f'href="{url}"', page)
@@ -1109,7 +1126,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn("Plan data stays in the URL fragment", page)
         self.assertIn("The workspace does not save these plan values", page)
         self.assertIn("five plan-aware", page)
-        self.assertIn("Eight Risk and Research Tools", page)
+        self.assertIn("Nine Risk and Research Tools", page)
         self.assertIn('data-tool="trade-journal"', page)
         self.assertIn('"riskToolsWorkspace": "https://gcagochina.com/tools.html"', product)
         self.assertIn('"riskToolsWorkspace": "https://gcagochina.com/tools.html"', credits)
@@ -1134,10 +1151,10 @@ class PublicSiteExperienceTests(unittest.TestCase):
         )
         expectations = {
             "learn": ["risk-training", "risk-calculator", "risk-warning", "entry-ready", "trade-journal"],
-            "prepare": ["risk-calculator", "risk-warning", "entry-ready"],
-            "research": ["research-notes", "trade-journal", "backtest-lab", "risk-warning", "entry-ready"],
-            "review": ["liquidation-replay", "trade-journal", "risk-calculator", "risk-warning", "entry-ready"],
-            "all": ["risk-training", "research-notes", "risk-calculator", "risk-warning", "entry-ready", "backtest-lab", "liquidation-replay", "trade-journal"],
+            "prepare": ["risk-calculator", "portfolio-risk", "risk-warning", "entry-ready"],
+            "research": ["research-notes", "trade-journal", "backtest-lab", "portfolio-risk", "risk-warning", "entry-ready"],
+            "review": ["liquidation-replay", "trade-journal", "risk-calculator", "portfolio-risk", "risk-warning", "entry-ready"],
+            "all": ["risk-training", "research-notes", "risk-calculator", "portfolio-risk", "risk-warning", "entry-ready", "backtest-lab", "liquidation-replay", "trade-journal"],
         }
         for mode, expected in expectations.items():
             completed = subprocess.run(
@@ -1378,6 +1395,160 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertEqual(len(result["tag"]), 1)
         self.assertEqual(len(result["due"]), 1)
 
+    def test_portfolio_risk_map_is_local_structured_and_portable(self):
+        page = (SITE / "portfolio-risk.html").read_text()
+        engine = (SITE / "assets" / "portfolio-risk.js").read_text()
+        product = json.loads((SITE / "product.json").read_text())
+        credits = json.loads((SITE / "credits.json").read_text())
+        access = json.loads((SITE / "access.json").read_text())
+
+        for element_id in (
+            "portfolioControls",
+            "accountEquity",
+            "portfolioRiskBudget",
+            "grossExposureLimit",
+            "marginLimit",
+            "scenarioShock",
+            "portfolioCostBps",
+            "resetPortfolioLimits",
+            "positionForm",
+            "positionSymbol",
+            "positionSide",
+            "positionQuantity",
+            "positionEntry",
+            "positionStop",
+            "positionLeverage",
+            "positionLabel",
+            "savePosition",
+            "resetPosition",
+            "cancelPositionEdit",
+            "portfolioStatus",
+            "portfolioState",
+            "portfolioPositionCount",
+            "portfolioPlannedRisk",
+            "portfolioGrossExposure",
+            "portfolioMarginUse",
+            "portfolioWorstStress",
+            "portfolioRiskBudgetUsed",
+            "portfolioNetExposure",
+            "portfolioDirectionConcentration",
+            "portfolioLargestAsset",
+            "portfolioStressDown",
+            "portfolioStressUp",
+            "portfolioFindings",
+            "exportPortfolio",
+            "importPortfolio",
+            "clearPortfolio",
+            "portfolioRows",
+            "emptyPortfolio",
+        ):
+            self.assertIn(f'id="{element_id}"', page)
+
+        self.assertIn('src="assets/portfolio-risk.js"', page)
+        self.assertIn("window.localStorage.setItem(engine.STORAGE_KEY", page)
+        self.assertIn("window.localStorage.removeItem(engine.STORAGE_KEY)", page)
+        self.assertIn("engine.normalizeConfig", page)
+        self.assertIn("engine.normalizePosition", page)
+        self.assertIn("engine.analyzePortfolio", page)
+        self.assertIn("engine.buildBackup", page)
+        self.assertIn("engine.parseBackup", page)
+        self.assertIn("URL.createObjectURL", page)
+        self.assertIn("await file.text()", page)
+        self.assertIn("same percentage at the same time", page)
+        self.assertIn("Do not enter private keys", page)
+        self.assertNotIn("innerHTML", page)
+        self.assertNotIn("window.ethereum", page)
+        self.assertNotIn("fetch(", page)
+        self.assertNotIn("WebSocket", page)
+        self.assertIn('const STORAGE_KEY = "gca_portfolio_risk_v1"', engine)
+        self.assertIn('const SCHEMA = "gca-portfolio-risk-v1"', engine)
+        self.assertIn("const MAX_POSITIONS = 20", engine)
+
+        module = next(item for item in product["productModules"] if item["id"] == "portfolio-risk-map")
+        self.assertEqual(module["status"], "public-client-side-preview-live")
+        self.assertEqual(module["publicUrl"], "https://gcagochina.com/portfolio-risk.html")
+        self.assertTrue(module["browserLocalPortfolio"])
+        self.assertTrue(module["portableJsonBackup"])
+        self.assertTrue(module["backupContainsUserEnteredPositionDetails"])
+        for field in ("storesOnServer", "connectsWallet", "connectsExchange", "fetchesMarketData", "placesOrders", "deductsCredits"):
+            self.assertFalse(module[field])
+
+        service = next(item for item in credits["serviceCatalog"] if item["id"] == "portfolio-risk-map")
+        self.assertEqual(service["creditUnit"], 15)
+        self.assertEqual(service["publicPreview"]["status"], "live-client-side-preview")
+        self.assertEqual(service["publicPreview"]["url"], "https://gcagochina.com/portfolio-risk.html")
+        self.assertTrue(service["publicPreview"]["browserLocalPortfolio"])
+        self.assertTrue(service["publicPreview"]["portableJsonBackup"])
+        for field in ("storesOnServer", "deductsCredits", "connectsWallet", "connectsExchange", "fetchesMarketData", "placesOrders"):
+            self.assertFalse(service["publicPreview"][field])
+
+        self.assertEqual(product["officialLinks"]["portfolioRiskMap"], "https://gcagochina.com/portfolio-risk.html")
+        self.assertEqual(credits["officialLinks"]["portfolioRiskMap"], "https://gcagochina.com/portfolio-risk.html")
+        self.assertIn("Portfolio Risk Map", access["serviceModules"])
+
+    def test_portfolio_risk_engine_calculates_limits_and_validates_backups(self):
+        bundled_node = Path("/Users/abc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node")
+        node = shutil.which("node") or (str(bundled_node) if bundled_node.exists() else "")
+        if not node:
+            self.skipTest("Node.js is unavailable")
+
+        module_path = SITE / "assets" / "portfolio-risk.js"
+        workspace_path = SITE / "assets" / "member-workspace.js"
+        script = (
+            "const p=require(process.argv[1]);const w=require(process.argv[2]);"
+            "const config=p.normalizeConfig({accountEquity:10000,riskBudgetPercent:2,grossExposureLimitPercent:200,marginLimitPercent:50,scenarioShockPercent:5,costBps:20});"
+            "const base={version:1,createdAt:'2026-07-16T00:00:00Z',updatedAt:'2026-07-16T00:00:00Z'};"
+            "const long=p.normalizePosition({...base,id:'gca_position_alpha1234',symbol:'btc/usdt',side:'long',quantity:.1,entry:30000,stop:29000,leverage:2,label:'Core setup'});"
+            "const short=p.normalizePosition({...base,id:'gca_position_beta12345',symbol:'ETH/USDT',side:'short',quantity:1,entry:2000,stop:2100,leverage:4,label:'Risk hedge'});"
+            "const positions=p.orderPositions([long,short]);"
+            "const analysis=p.analyzePortfolio(config,positions);"
+            "const backup=p.buildBackup(config,positions,'2026-07-16T01:00:00Z');"
+            "const parsed=p.parseBackup(JSON.stringify(backup));"
+            "const workspace=w.summarizePortfolioRisk(JSON.stringify(backup),p);"
+            "const invalidExtra=p.parseBackup({...backup,unexpected:true});"
+            "const duplicate=p.parseBackup({...backup,positions:[backup.positions[0],backup.positions[0]]});"
+            "const invalidLongStop=p.normalizePosition({...base,id:'gca_position_badstop123',symbol:'BTC/USDT',side:'long',quantity:1,entry:100,stop:101,leverage:1,label:''});"
+            "const sensitive=p.normalizePosition({...base,id:'gca_position_secret123',symbol:'BTC/USDT',side:'long',quantity:1,entry:100,stop:99,leverage:1,label:'save seed phrase'});"
+            "const removed=p.removePosition(positions,long.id);"
+            "process.stdout.write(JSON.stringify({config,long,short,analysis,backup,parsed,workspace,invalidExtra,duplicate,invalidLongStop,sensitive,removed,emptyWorkspace:w.summarizePortfolioRisk('{}',p)}));"
+        )
+        completed = subprocess.run(
+            [node, "-e", script, str(module_path), str(workspace_path)],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        result = json.loads(completed.stdout)
+
+        self.assertEqual(result["long"]["symbol"], "BTC/USDT")
+        self.assertEqual(result["analysis"]["positionCount"], 2)
+        self.assertEqual(result["analysis"]["status"], "BLOCKED")
+        self.assertEqual(result["analysis"]["blockerCount"], 1)
+        self.assertGreaterEqual(result["analysis"]["warningCount"], 2)
+        self.assertAlmostEqual(result["analysis"]["grossNotional"], 5000)
+        self.assertAlmostEqual(result["analysis"]["netNotional"], 1000)
+        self.assertAlmostEqual(result["analysis"]["totalPlannedLoss"], 210)
+        self.assertAlmostEqual(result["analysis"]["totalRiskPercent"], 2.1)
+        self.assertAlmostEqual(result["analysis"]["riskBudgetUsedPercent"], 105)
+        self.assertAlmostEqual(result["analysis"]["marginUtilizationPercent"], 20)
+        self.assertAlmostEqual(result["analysis"]["stressDownPnl"], -60)
+        self.assertAlmostEqual(result["analysis"]["stressUpPnl"], 40)
+        self.assertEqual(result["analysis"]["largestAssetSymbol"], "BTC/USDT")
+        self.assertIn("RISK_BUDGET_EXCEEDED", {item["code"] for item in result["analysis"]["findings"]})
+        self.assertEqual(result["backup"]["schema"], "gca-portfolio-risk-v1")
+        self.assertEqual(result["parsed"], result["backup"])
+        self.assertEqual(result["workspace"]["positionCount"], 2)
+        self.assertEqual(result["workspace"]["status"], "BLOCKED")
+        self.assertAlmostEqual(result["workspace"]["totalRiskPercent"], 2.1)
+        self.assertEqual(result["workspace"]["savedAt"], "2026-07-16T01:00:00.000Z")
+        self.assertIsNone(result["invalidExtra"])
+        self.assertIsNone(result["duplicate"])
+        self.assertIsNone(result["invalidLongStop"])
+        self.assertIsNone(result["sensitive"])
+        self.assertEqual(len(result["removed"]), 1)
+        self.assertEqual(result["removed"][0]["symbol"], "ETH/USDT")
+        self.assertEqual(result["emptyWorkspace"]["status"], "NO_POSITIONS")
+
     def test_trade_journal_is_local_and_connected_to_backtest(self):
         page = (SITE / "trade-journal.html").read_text()
         engine = (SITE / "assets" / "trade-journal.js").read_text()
@@ -1459,7 +1630,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertNotIn("fetch(", page)
         self.assertNotIn("WebSocket", page)
         self.assertIn('const STORAGE_KEY = "gca_trade_journal_v1"', engine)
-        self.assertEqual(product["positioning"]["publicRiskToolPreviewsLive"], 8)
+        self.assertEqual(product["positioning"]["publicRiskToolPreviewsLive"], 9)
         self.assertEqual(product["officialLinks"]["tradeJournal"], "https://gcagochina.com/trade-journal.html")
         self.assertEqual(credits["officialLinks"]["tradeJournal"], "https://gcagochina.com/trade-journal.html")
 
