@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://gcagochina.com/</loc>
-    <lastmod>2026-07-18</lastmod>
+    <lastmod>2026-07-19</lastmod>
   </url>
   <url>
     <loc>https://gcagochina.com/risk-calculator.html</loc>
@@ -122,7 +122,7 @@
   </url>
   <url>
     <loc>https://gcagochina.com/zh-site-map.html</loc>
-    <lastmod>2026-05-20</lastmod>
+    <lastmod>2026-07-19</lastmod>
   </url>
   <url>
     <loc>https://gcagochina.com/zh-api-status.html</loc>
@@ -202,7 +202,7 @@
   </url>
   <url>
     <loc>https://gcagochina.com/site-map.html</loc>
-    <lastmod>2026-05-18</lastmod>
+    <lastmod>2026-07-19</lastmod>
   </url>
   <url>
     <loc>https://gcagochina.com/verify.html</loc>
@@ -238,11 +238,11 @@
   </url>
   <url>
     <loc>https://gcagochina.com/roadmap.html</loc>
-    <lastmod>2026-07-18</lastmod>
+    <lastmod>2026-07-19</lastmod>
   </url>
   <url>
     <loc>https://gcagochina.com/roadmap.json</loc>
-    <lastmod>2026-07-18</lastmod>
+    <lastmod>2026-07-19</lastmod>
   </url>
   <url>
     <loc>https://gcagochina.com/community.html</loc>
@@ -510,7 +510,11 @@
   </url>
   <url>
     <loc>https://gcagochina.com/member-workspace.html</loc>
-    <lastmod>2026-07-18</lastmod>
+    <lastmod>2026-07-19</lastmod>
+  </url>
+  <url>
+    <loc>https://gcagochina.com/risk-passport.html</loc>
+    <lastmod>2026-07-19</lastmod>
   </url>
   <url>
     <loc>https://gcagochina.com/member-program.json</loc>
@@ -574,11 +578,11 @@
   </url>
   <url>
     <loc>https://gcagochina.com/product.html</loc>
-    <lastmod>2026-07-18</lastmod>
+    <lastmod>2026-07-19</lastmod>
   </url>
   <url>
     <loc>https://gcagochina.com/product.json</loc>
-    <lastmod>2026-07-18</lastmod>
+    <lastmod>2026-07-19</lastmod>
   </url>
   <url>
     <loc>https://gcagochina.com/access.html</loc>
@@ -654,7 +658,7 @@
   </url>
   <url>
     <loc>https://gcagochina.com/project.json</loc>
-    <lastmod>2026-07-18</lastmod>
+    <lastmod>2026-07-19</lastmod>
   </url>
   <url>
     <loc>https://gcagochina.com/tokenlist.html</loc>
@@ -694,7 +698,7 @@
   </url>
   <url>
     <loc>https://gcagochina.com/tools.html</loc>
-    <lastmod>2026-07-18</lastmod>
+    <lastmod>2026-07-19</lastmod>
   </url>
   <url>
     <loc>https://gcagochina.com/trade-journal.html</loc>

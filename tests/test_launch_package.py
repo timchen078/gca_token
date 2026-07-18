@@ -1114,6 +1114,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Allow: /members.html", robots)
         self.assertIn("Allow: /member-program.json", robots)
         self.assertIn("Allow: /gca/member-access/", robots)
+        self.assertIn("Allow: /member-workspace.html", robots)
+        self.assertIn("Allow: /risk-passport.html", robots)
         self.assertIn("Allow: /member-ledger.html", robots)
         self.assertIn("Allow: /member-ledger.json", robots)
         self.assertIn("Allow: /member-benefit.html", robots)
@@ -1278,6 +1280,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("https://gcagochina.com/risk.html", sitemap)
         self.assertIn("https://gcagochina.com/faq.html", sitemap)
         self.assertIn(MEMBER_ACCESS_PAGE_URL, sitemap)
+        self.assertIn("https://gcagochina.com/member-workspace.html", sitemap)
+        self.assertIn("https://gcagochina.com/risk-passport.html", sitemap)
         self.assertIn(MEMBER_PROGRAM_URL, sitemap)
         self.assertIn(MEMBER_LEDGER_PAGE_URL, sitemap)
         self.assertIn(MEMBER_LEDGER_URL, sitemap)
@@ -3640,7 +3644,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertNotIn('href="data.html"', page)
         self.assertIn("Account, ledger, and browser tools live; connected services staged", page)
         self.assertIn("Phase 3: Browser-Local Product Suite", page)
-        self.assertIn("ten GCA risk and research tools plus the Member Workspace priority queue", page)
+        self.assertIn("ten GCA risk and research tools, the Member Workspace priority queue", page)
+        self.assertIn("privacy-minimized Risk Passport workflow report", page)
+        self.assertIn('href="risk-passport.html"', page)
         self.assertIn("Controlled HTTPS member account UI", page)
         self.assertIn("Live at", page)
         self.assertIn("Read-only GCA balance verification", page)
@@ -3670,7 +3676,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(roadmap["schema"], ROADMAP_URL)
         self.assertEqual(roadmap["pageUrl"], ROADMAP_PAGE_URL)
         self.assertEqual(roadmap["status"], "public-roadmap-published")
-        self.assertEqual(roadmap["lastUpdated"], "2026-07-18")
+        self.assertEqual(roadmap["lastUpdated"], "2026-07-19")
         self.assertEqual(roadmap["currentStage"], PRODUCT_STAGE)
         self.assertEqual(roadmap["chainId"], 8453)
         self.assertEqual(roadmap["contractAddress"], MAINNET_ADDRESS)
@@ -3688,6 +3694,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("weekly-go-china-radar-issue-003", [entry["id"] for entry in roadmap["completedMilestones"]])
         self.assertIn("account-ledger-path-live", [entry["id"] for entry in roadmap["completedMilestones"]])
         self.assertIn("public-browser-tool-suite-live", [entry["id"] for entry in roadmap["completedMilestones"]])
+        self.assertIn("member-risk-passport-live", [entry["id"] for entry in roadmap["completedMilestones"]])
         self.assertIn(
             "GCA remains concept-stage with live account intake, read-only wallet verification, eligible ledger records, ten browser-only risk and research tools, and a local Member Workspace; connected market-data and trading modules remain staged.",
             roadmap["publicClaimBoundaries"]["safeClaims"],
@@ -3702,6 +3709,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(roadmap["publicLinks"]["weeklyRadar"], RADAR_URL)
         self.assertEqual(roadmap["publicLinks"]["support"], SUPPORT_PAGE_URL)
         self.assertEqual(roadmap["publicLinks"]["listingReadiness"], LISTING_READINESS_URL)
+        self.assertEqual(roadmap["publicLinks"]["riskPassport"], "https://gcagochina.com/risk-passport.html")
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, json.dumps(roadmap))
         self.assertNotIn("GCA/WETH", json.dumps(roadmap))
 
@@ -5201,6 +5209,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Portfolio Risk Map", page)
         self.assertIn('href="portfolio-risk.html"', page)
         self.assertIn("GCA Member Workspace", page)
+        self.assertIn("GCA Risk Passport", page)
+        self.assertIn('href="risk-passport.html"', page)
         self.assertIn("simulation or testnet first", page)
         self.assertIn("No custody", page)
         self.assertIn("no withdrawal permission", page)
@@ -5235,6 +5245,7 @@ class LaunchPackageTests(unittest.TestCase):
             "Risk Discipline Training",
             "Member Research Notes",
             "GCA Member Workspace",
+            "GCA Risk Passport",
         }:
             self.assertIn(name, module_names)
         risk_training = next(item for item in product["productModules"] if item["id"] == "risk-control-training")
@@ -5267,6 +5278,26 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertTrue(portfolio_risk["backupContainsUserEnteredPositionDetails"])
         for field in ("storesOnServer", "connectsWallet", "connectsExchange", "fetchesMarketData", "placesOrders", "deductsCredits"):
             self.assertFalse(portfolio_risk[field])
+        risk_passport = next(item for item in product["productModules"] if item["id"] == "gca-risk-passport")
+        self.assertEqual(risk_passport["status"], "public-browser-local-workflow-report-live")
+        self.assertEqual(risk_passport["publicUrl"], "https://gcagochina.com/risk-passport.html")
+        self.assertTrue(risk_passport["readsValidatedSummariesOnly"])
+        self.assertTrue(risk_passport["portableJsonReport"])
+        for field in (
+            "storesOnServer",
+            "reportContainsIdentityData",
+            "reportContainsWalletAddress",
+            "reportContainsBalanceData",
+            "reportContainsResearchOrPlanText",
+            "reportContainsPositionOrJournalDetails",
+            "connectsWallet",
+            "connectsExchange",
+            "fetchesMarketData",
+            "placesOrders",
+            "issuesCertification",
+            "createsTradingSignal",
+        ):
+            self.assertFalse(risk_passport[field])
         gate_ids = {item["id"] for item in product["releaseGates"]}
         self.assertIn("controlled-https-account-ui", gate_ids)
         self.assertIn("simulation-first", gate_ids)
@@ -5294,6 +5325,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(product["officialLinks"]["researchNotes"], "https://gcagochina.com/research-notes.html")
         self.assertEqual(product["officialLinks"]["tradePlanLedger"], "https://gcagochina.com/trade-plans.html")
         self.assertEqual(product["officialLinks"]["portfolioRiskMap"], "https://gcagochina.com/portfolio-risk.html")
+        self.assertEqual(product["officialLinks"]["riskPassport"], "https://gcagochina.com/risk-passport.html")
         self.assertIn("GCA has published a public product specification for GCA AI Quant Access.", product["publicClaimBoundaries"]["safeClaims"])
         self.assertTrue(any("full GCA AI Quant Access trading or research product is live" in item for item in product["publicClaimBoundaries"]["doNotClaim"]))
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, json.dumps(product))
@@ -7155,7 +7187,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(project["wellKnownTokenIdentityUrl"], WELL_KNOWN_TOKEN_URL)
         self.assertEqual(project["walletSecurityProfileUrl"], WALLET_SECURITY_PROFILE_URL)
         self.assertEqual(project["securityContactUrl"], SECURITY_CONTACT_URL)
-        self.assertEqual(project["lastUpdated"], "2026-07-18")
+        self.assertEqual(project["lastUpdated"], "2026-07-19")
         self.assertEqual(project["marketPageUrl"], MARKET_PAGE_URL)
         self.assertEqual(project["supplyPageUrl"], SUPPLY_PAGE_URL)
         self.assertEqual(project["securityPageUrl"], SECURITY_PAGE_URL)
@@ -7370,6 +7402,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertTrue(project["productSpec"]["publicAccountUiLive"])
         self.assertFalse(project["productSpec"]["liveTradingEnabled"])
         self.assertIn("ENTRY_READY Review", project["productSpec"]["moduleNames"])
+        self.assertIn("GCA Risk Passport", project["productSpec"]["moduleNames"])
+        self.assertEqual(project["productSpec"]["riskPassportPage"], "https://gcagochina.com/risk-passport.html")
         self.assertIn("exchange API secret collection", project["productSpec"]["notProduct"])
         self.assertEqual(project["creditsCatalog"]["status"], "public-credits-catalog-published")
         self.assertEqual(project["creditsCatalog"]["pageUrl"], CREDITS_PAGE_URL)

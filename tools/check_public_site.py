@@ -128,6 +128,7 @@ RISK_TRAINING_PAGE_URL = "https://gcagochina.com/risk-training.html"
 RESEARCH_NOTES_PAGE_URL = "https://gcagochina.com/research-notes.html"
 TRADE_PLANS_PAGE_URL = "https://gcagochina.com/trade-plans.html"
 PORTFOLIO_RISK_PAGE_URL = "https://gcagochina.com/portfolio-risk.html"
+RISK_PASSPORT_PAGE_URL = "https://gcagochina.com/risk-passport.html"
 SERVICE_DELIVERY_PLAYBOOK_PAGE_URL = "https://gcagochina.com/service-delivery-playbook.html"
 SERVICE_DELIVERY_PLAYBOOK_URL = "https://gcagochina.com/service-delivery-playbook.json"
 WORKER_ROUTES_HANDOFF_PAGE_URL = "https://gcagochina.com/worker-routes-handoff.html"
@@ -363,6 +364,8 @@ def load_json(text: str, label: str) -> dict:
 def validate_root(text: str) -> None:
     label = "/"
     assert_contains(text, "GCA", label)
+    assert_contains(text, "Risk Passport", label)
+    assert_contains(text, "risk-passport.html", label)
     assert_contains(text, "Start Here", label)
     assert_contains(text, "start.html", label)
     assert_contains(text, "Verify GCA", label)
@@ -4320,6 +4323,7 @@ def validate_zh_data_page(text: str) -> None:
 def validate_zh_site_map_page(text: str) -> None:
     label = "/zh-site-map.html"
     assert_contains(text, "member-workspace.html", label)
+    assert_contains(text, "risk-passport.html", label)
     assert_contains(text, "portfolio-risk.html", label)
     assert_contains(text, "trade-plans.html", label)
     assert_social_preview_meta(text, label, ZH_SITE_MAP_PAGE_URL)
@@ -4647,6 +4651,7 @@ def validate_data_page(text: str) -> None:
 def validate_site_map_page(text: str) -> None:
     label = "/site-map.html"
     assert_contains(text, "member-workspace.html", label)
+    assert_contains(text, "risk-passport.html", label)
     assert_contains(text, "portfolio-risk.html", label)
     assert_contains(text, "trade-plans.html", label)
     assert_social_preview_meta(text, label, SITE_MAP_PAGE_URL)
@@ -5446,6 +5451,7 @@ def validate_member_access_page(text: str) -> None:
 def validate_member_workspace_page(text: str) -> None:
     label = "/member-workspace.html"
     assert_contains(text, "GCA Member Workspace", label)
+    assert_contains(text, 'href="risk-passport.html"', label)
     assert_contains(text, "Member Workspace", label)
     assert_contains(text, "会员工作区", label)
     assert_contains(text, 'id="workspaceState"', label)
@@ -5537,6 +5543,59 @@ def validate_member_workspace_page(text: str) -> None:
     assert_contains(text, "URL.createObjectURL", label)
     assert_contains(text, "does not prove that support received", label)
     assert_contains(text, "it is not uploaded by this page", label)
+    assert_not_contains(text, "fetch(", label)
+    assert_not_contains(text, "window.ethereum", label)
+    assert_not_contains(text, "WebSocket", label)
+    assert_no_forbidden_public_claims(text, label)
+
+
+def validate_risk_passport_page(text: str) -> None:
+    label = "/risk-passport.html"
+    assert_social_preview_meta(text, label, RISK_PASSPORT_PAGE_URL)
+    assert_contains(text, "GCA Risk Passport", label)
+    assert_contains(text, "Risk Passport", label)
+    assert_contains(text, "风控流程报告", label)
+    for element_id in (
+        "refreshPassport",
+        "copyPassport",
+        "downloadPassport",
+        "passportStatus",
+        "coverageFact",
+        "workflowFact",
+        "memberFact",
+        "coverageProgress",
+        "coverageNumber",
+        "passportQueue",
+        "passportText",
+        "verifyPassportFile",
+        "restoreDevicePassport",
+        "fileStatus",
+    ):
+        assert_contains(text, f'id="{element_id}"', label)
+    for script in (
+        "trade-journal.js",
+        "risk-training.js",
+        "research-notes.js",
+        "trade-plans.js",
+        "portfolio-risk.js",
+        "member-workspace.js",
+        "risk-passport.js",
+    ):
+        assert_contains(text, f'src="assets/{script}"', label)
+    for expected in (
+        "Six Workflow Pillars",
+        "What the Export Excludes",
+        "passportEngine.buildPassport",
+        "passportEngine.parsePassport",
+        "passportEngine.formatPassport",
+        "workspace.parseMemberSnapshot",
+        "workspace.buildWorkflowQueue",
+        "No email, full wallet address, GCA balance, credit balance",
+        "No certification, market signal, exchange connection, or order execution",
+        "never writes back to member, research, plan, portfolio, training, or journal storage",
+    ):
+        assert_contains(text, expected, label)
+    assert_not_contains(text, "innerHTML", label)
     assert_not_contains(text, "fetch(", label)
     assert_not_contains(text, "window.ethereum", label)
     assert_not_contains(text, "WebSocket", label)
@@ -5827,7 +5886,9 @@ def validate_roadmap_page(text: str) -> None:
     assert_no_public_data_room_terms(text, label)
     assert_contains(text, "Account, ledger, and browser tools live; connected services staged", label)
     assert_contains(text, "Phase 3: Browser-Local Product Suite", label)
-    assert_contains(text, "ten GCA risk and research tools plus the Member Workspace priority queue", label)
+    assert_contains(text, "ten GCA risk and research tools, the Member Workspace priority queue", label)
+    assert_contains(text, "privacy-minimized Risk Passport workflow report", label)
+    assert_contains(text, 'href="risk-passport.html"', label)
     assert_contains(text, "Controlled HTTPS member account UI", label)
     assert_contains(text, "Live at", label)
     assert_contains(text, "Read-only GCA balance verification", label)
@@ -5863,7 +5924,7 @@ def validate_roadmap_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong status")
     if payload.get("currentStage") != PRODUCT_STAGE:
         raise SiteCheckError(f"{label}: wrong currentStage")
-    if payload.get("lastUpdated") != "2026-07-18":
+    if payload.get("lastUpdated") != "2026-07-19":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
@@ -5897,6 +5958,8 @@ def validate_roadmap_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing account ledger live milestone")
     if not any(milestone.get("id") == "public-browser-tool-suite-live" for milestone in payload.get("completedMilestones", [])):
         raise SiteCheckError(f"{label}: missing browser tool suite live milestone")
+    if not any(milestone.get("id") == "member-risk-passport-live" for milestone in payload.get("completedMilestones", [])):
+        raise SiteCheckError(f"{label}: missing Risk Passport live milestone")
     if "GCA remains concept-stage with live account intake, read-only wallet verification, eligible ledger records, ten browser-only risk and research tools, and a local Member Workspace; connected market-data and trading modules remain staged." not in payload.get("publicClaimBoundaries", {}).get("safeClaims", []):
         raise SiteCheckError(f"{label}: missing concept-stage safe claim")
     if "the 10,000 GCA member benefit is automatic or self-service transferred before holding-period verification, support approval, and manual reserve-wallet processing" not in payload.get("publicClaimBoundaries", {}).get("doNotClaim", []):
@@ -5917,6 +5980,8 @@ def validate_roadmap_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong support")
     if links.get("listingReadiness") != LISTING_READINESS_URL:
         raise SiteCheckError(f"{label}: wrong listingReadiness")
+    if links.get("riskPassport") != RISK_PASSPORT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong riskPassport")
     if any(priority.get("id") == "weekly-go-china-radar" for priority in payload.get("nextBuildPriorities", [])):
         raise SiteCheckError(f"{label}: weekly radar should not remain a next priority")
     if not any(milestone.get("id") == "weekly-go-china-radar-issue-003" for milestone in payload.get("completedMilestones", [])):
@@ -7805,6 +7870,9 @@ def validate_product_page(text: str) -> None:
     assert_contains(text, "GCA Member Workspace", label)
     assert_contains(text, "Browser-Local Workspace Live", label)
     assert_contains(text, 'href="member-workspace.html"', label)
+    assert_contains(text, "GCA Risk Passport", label)
+    assert_contains(text, "Browser-Local Report Live", label)
+    assert_contains(text, 'href="risk-passport.html"', label)
     assert_contains(text, "simulation or testnet first", label)
     assert_contains(text, "No custody", label)
     assert_contains(text, "no withdrawal permission", label)
@@ -8169,6 +8237,7 @@ def validate_risk_warning_page(text: str) -> None:
 def validate_risk_tools_page(text: str) -> None:
     label = "/tools.html"
     assert_contains(text, "GCA Risk Tools", label)
+    assert_contains(text, 'href="risk-passport.html"', label)
     assert_contains(text, 'data-mode="prepare"', label)
     assert_contains(text, 'data-mode="learn"', label)
     assert_contains(text, 'data-mode="research"', label)
@@ -8293,10 +8362,12 @@ def validate_product_json(text: str) -> None:
         "Risk Discipline Training",
         "Member Research Notes",
         "GCA Member Workspace",
+        "GCA Risk Passport",
     ):
         if name not in module_names:
             raise SiteCheckError(f"{label}: missing module {name}")
     member_workspace = module_map.get("gca-member-workspace", {})
+    risk_passport = module_map.get("gca-risk-passport", {})
     risk_training = module_map.get("risk-control-training", {})
     research_notes = module_map.get("member-research-notes", {})
     trade_plans = module_map.get("trade-plan-ledger", {})
@@ -8384,8 +8455,33 @@ def validate_product_json(text: str) -> None:
         raise SiteCheckError(f"{label}: member workspace receipt backup must exclude identity data")
     if member_workspace.get("requestReceiptBackupContainsRequestContent") is not False:
         raise SiteCheckError(f"{label}: member workspace receipt backup must exclude request content")
+    if risk_passport.get("status") != "public-browser-local-workflow-report-live":
+        raise SiteCheckError(f"{label}: wrong Risk Passport status")
+    if risk_passport.get("publicUrl") != RISK_PASSPORT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong Risk Passport URL")
+    for key in ("readsValidatedSummariesOnly", "portableJsonReport"):
+        if risk_passport.get(key) is not True:
+            raise SiteCheckError(f"{label}: Risk Passport {key} must be true")
+    for key in (
+        "storesOnServer",
+        "reportContainsIdentityData",
+        "reportContainsWalletAddress",
+        "reportContainsBalanceData",
+        "reportContainsResearchOrPlanText",
+        "reportContainsPositionOrJournalDetails",
+        "connectsWallet",
+        "connectsExchange",
+        "fetchesMarketData",
+        "placesOrders",
+        "issuesCertification",
+        "createsTradingSignal",
+    ):
+        if risk_passport.get(key) is not False:
+            raise SiteCheckError(f"{label}: Risk Passport {key} must be false")
     if links.get("memberWorkspace") != "https://gcagochina.com/member-workspace.html":
         raise SiteCheckError(f"{label}: wrong memberWorkspace link")
+    if links.get("riskPassport") != RISK_PASSPORT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong riskPassport link")
     if links.get("riskDisciplineTraining") != RISK_TRAINING_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong riskDisciplineTraining link")
     if links.get("researchNotes") != RESEARCH_NOTES_PAGE_URL:
@@ -11385,7 +11481,7 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong contractAddress")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
-    if payload.get("lastUpdated") != "2026-07-18":
+    if payload.get("lastUpdated") != "2026-07-19":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("memberProgramRulesUrl") != MEMBER_PROGRAM_URL:
         raise SiteCheckError(f"{label}: wrong memberProgramRulesUrl")
@@ -11873,6 +11969,10 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: product live trading must be false")
     if "ENTRY_READY Review" not in payload.get("productSpec", {}).get("moduleNames", []):
         raise SiteCheckError(f"{label}: missing product module")
+    if "GCA Risk Passport" not in payload.get("productSpec", {}).get("moduleNames", []):
+        raise SiteCheckError(f"{label}: missing Risk Passport module")
+    if payload.get("productSpec", {}).get("riskPassportPage") != RISK_PASSPORT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong Risk Passport page")
     credits = payload.get("creditsCatalog", {})
     if credits.get("status") != "public-credits-catalog-published":
         raise SiteCheckError(f"{label}: unexpected credits catalog object status")
@@ -15118,6 +15218,7 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/worker-routes-handoff.json",
         "https://gcagochina.com/gca/member-access/",
         "https://gcagochina.com/member-workspace.html",
+        "https://gcagochina.com/risk-passport.html",
         "https://gcagochina.com/member-program.html",
         "https://gcagochina.com/member-program.json",
         "https://gcagochina.com/member-ledger.html",
@@ -15207,21 +15308,14 @@ def validate_sitemap(text: str) -> None:
         "external-reviews.json",
         "listing-readiness.html",
         "listing-readiness.json",
-        "member-workspace.html",
         "portfolio-risk.html",
-        "product.html",
-        "product.json",
-        "project.json",
         "release-gates.html",
         "release-gates.json",
         "research-notes.html",
         "reviewer-kit.html",
         "reviewer-kit.json",
-        "roadmap.html",
-        "roadmap.json",
         "terms.html",
         "token-safety.html",
-        "tools.html",
         "trade-journal.html",
         "trade-plans.html",
         "trust.html",
@@ -15233,6 +15327,20 @@ def validate_sitemap(text: str) -> None:
         "zh-release-gates.html",
     ):
         assert_sitemap_lastmod(path, "2026-07-18")
+    for path in (
+        "",
+        "member-workspace.html",
+        "product.html",
+        "product.json",
+        "project.json",
+        "risk-passport.html",
+        "roadmap.html",
+        "roadmap.json",
+        "site-map.html",
+        "tools.html",
+        "zh-site-map.html",
+    ):
+        assert_sitemap_lastmod(path, "2026-07-19")
 
 
 def validate_robots(text: str) -> None:
@@ -15376,6 +15484,7 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /member-program.json", label)
     assert_contains(text, "Allow: /gca/member-access/", label)
     assert_contains(text, "Allow: /member-workspace.html", label)
+    assert_contains(text, "Allow: /risk-passport.html", label)
     assert_contains(text, "Allow: /support.html", label)
     assert_contains(text, "Allow: /support.json", label)
     assert_contains(text, "Allow: /privacy.html", label)
@@ -15516,6 +15625,7 @@ CHECKS: list[EndpointCheck] = [
     ("/members.html", validate_members),
     ("/gca/member-access/", validate_member_access_page),
     ("/member-workspace.html", validate_member_workspace_page),
+    ("/risk-passport.html", validate_risk_passport_page),
     ("/member-program.html", validate_member_program_page),
     ("/member-program.json", validate_member_program_json),
     ("/member-ledger.html", validate_member_ledger_page),

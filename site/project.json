@@ -665,7 +665,7 @@
   },
   "shortDescription": "GCA, short for Go China Access, is a fixed-supply ERC-20 token on Base Mainnet with live account intake, read-only wallet verification, eligible member/credit ledger records, and ten live browser-only risk and research tools; connected services remain staged.",
   "longDescription": "GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stands for Go China Access, a concept-stage community and access-token direction focused on the Go China narrative, China Narrative Radar, bilingual Web3 education, public market research, live account intake, read-only wallet verification, eligible member/credit ledger records, and ten live browser-only risk and research tools. The published GCA AI Quant Access specification connects those previews to an access and membership direction for Liquidation Replay reports, risk-warning credits, backtests, ENTRY_READY Review, position-size calculators, member research notes, risk-control training, and a reserve-funded 10,000 GCA member benefit review for verified users who bought and continuously held at least 1,000,000 GCA for 30 days. The browser tools do not fetch live market data, connect exchanges, or place orders; connected market-data and trading modules remain staged behind release gates. The contract created 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls. The official public pool is the Base Mainnet Uniswap v4 GCA/USDT pool, and the project has a disclosed owner-held reserve wallet. The project is early-stage, has no completed third-party audit, and should not be described as externally audited, price-backed, yield-bearing, or backed by guaranteed liquidity.",
-  "lastUpdated": "2026-07-18",
+  "lastUpdated": "2026-07-19",
   "productSpecPageUrl": "https://gcagochina.com/product.html",
   "productSpecUrl": "https://gcagochina.com/product.json",
   "releaseGatesPageUrl": "https://gcagochina.com/release-gates.html",
@@ -692,7 +692,8 @@
       "Portfolio Risk Map",
       "Risk Discipline Training",
       "Member Research Notes",
-      "GCA Member Workspace"
+      "GCA Member Workspace",
+      "GCA Risk Passport"
     ],
     "notProduct": [
       "custody",
@@ -713,7 +714,8 @@
     "accessApiPage": "https://gcagochina.com/access-api.html",
     "accessApi": "https://gcagochina.com/access-api.json",
     "operationsRunbookPage": "https://gcagochina.com/operations.html",
-    "operationsRunbook": "https://gcagochina.com/operations.json"
+    "operationsRunbook": "https://gcagochina.com/operations.json",
+    "riskPassportPage": "https://gcagochina.com/risk-passport.html"
   },
   "releaseGates": {
     "status": "public-release-gates-published",

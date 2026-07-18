@@ -423,6 +423,145 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertTrue(all(item["href"] in allowed_hrefs for item in result["urgent"] + result["empty"] + result["current"]))
         self.assertNotIn("private key", json.dumps(result).lower())
 
+    def test_risk_passport_page_publishes_privacy_minimized_workflow_report(self):
+        page = (SITE / "risk-passport.html").read_text()
+        product = json.loads((SITE / "product.json").read_text())
+        project = json.loads((SITE / "project.json").read_text())
+        roadmap = json.loads((SITE / "roadmap.json").read_text())
+        sitemap = (SITE / "sitemap.xml").read_text()
+        robots = (SITE / "robots.txt").read_text()
+        site_map = (SITE / "site-map.html").read_text()
+        zh_site_map = (SITE / "zh-site-map.html").read_text()
+
+        for element_id in (
+            "refreshPassport",
+            "copyPassport",
+            "downloadPassport",
+            "passportStatus",
+            "coverageFact",
+            "workflowFact",
+            "memberFact",
+            "coverageProgress",
+            "coverageNumber",
+            "passportQueue",
+            "passportText",
+            "verifyPassportFile",
+            "restoreDevicePassport",
+            "fileStatus",
+        ):
+            self.assertIn(f'id="{element_id}"', page)
+        for script_name in (
+            "trade-journal.js",
+            "risk-training.js",
+            "research-notes.js",
+            "trade-plans.js",
+            "portfolio-risk.js",
+            "member-workspace.js",
+            "risk-passport.js",
+        ):
+            self.assertIn(f'src="assets/{script_name}"', page)
+        self.assertIn("Six Workflow Pillars", page)
+        self.assertIn("What the Export Excludes", page)
+        self.assertIn("passportEngine.buildPassport", page)
+        self.assertIn("passportEngine.parsePassport", page)
+        self.assertIn("passportEngine.formatPassport", page)
+        self.assertIn("No email, full wallet address, GCA balance, credit balance", page)
+        self.assertNotIn("innerHTML", page)
+        self.assertNotIn("fetch(", page)
+        self.assertNotIn("window.ethereum", page)
+        self.assertNotIn("WebSocket", page)
+
+        module = next(item for item in product["productModules"] if item["id"] == "gca-risk-passport")
+        self.assertEqual(module["status"], "public-browser-local-workflow-report-live")
+        self.assertEqual(module["publicUrl"], "https://gcagochina.com/risk-passport.html")
+        self.assertTrue(module["readsValidatedSummariesOnly"])
+        self.assertTrue(module["portableJsonReport"])
+        for key in (
+            "storesOnServer",
+            "reportContainsIdentityData",
+            "reportContainsWalletAddress",
+            "reportContainsBalanceData",
+            "reportContainsResearchOrPlanText",
+            "reportContainsPositionOrJournalDetails",
+            "connectsWallet",
+            "connectsExchange",
+            "fetchesMarketData",
+            "placesOrders",
+            "issuesCertification",
+            "createsTradingSignal",
+        ):
+            self.assertFalse(module[key])
+        self.assertEqual(product["officialLinks"]["riskPassport"], "https://gcagochina.com/risk-passport.html")
+        self.assertIn("GCA Risk Passport", project["productSpec"]["moduleNames"])
+        self.assertEqual(project["productSpec"]["riskPassportPage"], "https://gcagochina.com/risk-passport.html")
+        self.assertIn("member-risk-passport-live", [item["id"] for item in roadmap["completedMilestones"]])
+        self.assertEqual(roadmap["publicLinks"]["riskPassport"], "https://gcagochina.com/risk-passport.html")
+        self.assertIn("https://gcagochina.com/risk-passport.html", sitemap)
+        self.assertIn("Allow: /risk-passport.html", robots)
+        self.assertIn('href="risk-passport.html"', site_map)
+        self.assertIn('href="risk-passport.html"', zh_site_map)
+
+    def test_risk_passport_engine_rejects_tampered_or_private_fields(self):
+        bundled_node = Path("/Users/abc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node")
+        node = shutil.which("node") or (str(bundled_node) if bundled_node.exists() else "")
+        if not node:
+            self.skipTest("Node.js is unavailable")
+
+        module_path = SITE / "assets" / "risk-passport.js"
+        script = (
+            "const p=require(process.argv[1]);"
+            "const input={"
+            "snapshot:{walletAddress:'0x1111111111111111111111111111111111111111',gcaBalance:'1000000',remainingCredits:75,memberStatus:'active',creditStatus:'ledger_recorded',email:'private@example.com'},"
+            "training:{count:2,latestStatus:'FOUNDATION_READY',foundationReadyCount:1,selectedAnswers:['private-answer']},"
+            "research:{count:3,activeCount:2,sourcedCount:3,dueReviewCount:1,thesis:'private research text'},"
+            "tradePlans:{count:2,readyForReviewCount:1,blockedCount:0,reviewCount:1,completedCount:0,dueCount:1,thesis:'private plan text'},"
+            "portfolio:{positionCount:2,status:'REVIEW',positions:[{symbol:'PRIVATE'}]},"
+            "journal:{count:5,sampleQuality:{code:'EARLY_SAMPLE'},trades:[{notes:'private journal text'}]},"
+            "queue:[{id:'review-due-research',priority:'high'},{id:'complete-plan-review',priority:'normal'}]};"
+            "const report=p.buildPassport(input,'2026-07-19T12:00:00.000Z');"
+            "const clone=()=>JSON.parse(JSON.stringify(report));"
+            "const extra=clone();extra.email='private@example.com';"
+            "const nested=clone();nested.account.walletAddress=input.snapshot.walletAddress;"
+            "const coverage=clone();coverage.coverage.completed=5;coverage.coverage.state='established';"
+            "const boundary=clone();boundary.boundaries.uploadsData=true;"
+            "const duplicate=clone();duplicate.workflow.actionIds[1]=duplicate.workflow.actionIds[0];"
+            "const actionCount=clone();actionCount.workflow.normalCount=2;"
+            "const badAction=clone();badAction.workflow.actionIds[0]='NOT VALID';"
+            "const training=clone();training.training.foundationReadyCount=3;"
+            "const research=clone();research.research.activeCount=4;"
+            "const portfolio=clone();portfolio.portfolio.status='NO_POSITIONS';"
+            "process.stdout.write(JSON.stringify({schema:p.SCHEMA,total:p.COVERAGE_TOTAL,report,serialized:JSON.stringify(report),valid:Boolean(p.parsePassport(JSON.stringify(report))),extra:p.parsePassport(extra),nested:p.parsePassport(nested),coverage:p.parsePassport(coverage),boundary:p.parsePassport(boundary),duplicate:p.parsePassport(duplicate),actionCount:p.parsePassport(actionCount),badAction:p.parsePassport(badAction),training:p.parsePassport(training),research:p.parsePassport(research),portfolio:p.parsePassport(portfolio),formatted:p.formatPassport(report)}));"
+        )
+        completed = subprocess.run(
+            [node, "-e", script, str(module_path)],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        result = json.loads(completed.stdout)
+
+        self.assertEqual(result["schema"], "gca-risk-passport-v1")
+        self.assertEqual(result["total"], 6)
+        self.assertEqual(result["report"]["coverage"], {"completed": 6, "total": 6, "state": "all-pillars-covered"})
+        self.assertEqual(result["report"]["workflow"]["state"], "review-required")
+        self.assertEqual(result["report"]["workflow"]["actionIds"], ["review-due-research", "complete-plan-review"])
+        self.assertTrue(result["valid"])
+        for invalid_name in ("extra", "nested", "coverage", "boundary", "duplicate", "actionCount", "badAction", "training", "research", "portfolio"):
+            self.assertIsNone(result[invalid_name])
+        for private_value in (
+            "private@example.com",
+            "0x1111111111111111111111111111111111111111",
+            "1000000",
+            "private-answer",
+            "private research text",
+            "private plan text",
+            "PRIVATE",
+            "private journal text",
+        ):
+            self.assertNotIn(private_value, result["serialized"])
+        self.assertIn("Coverage: 6/6", result["formatted"])
+        self.assertIn("Boundary: no identity", result["formatted"])
+
     def test_risk_calculator_is_client_side_and_has_no_execution_path(self):
         page = (SITE / "risk-calculator.html").read_text()
         product = (SITE / "product.json").read_text()
