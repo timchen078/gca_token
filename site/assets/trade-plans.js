@@ -15,6 +15,7 @@
   const TIMEFRAMES = Object.freeze(["15m", "1h", "4h", "1d", "1w", "other"]);
   const WORKFLOW_STATUSES = Object.freeze(["draft", "under-review", "completed", "invalidated", "cancelled"]);
   const ORDER_TYPES = Object.freeze(["market", "limit", "stop", "other"]);
+  const RESEARCH_HANDOFF_FIELDS = Object.freeze(["source", "title", "theme", "thesis", "invalidation", "riskNotes"]);
   const BOOLEAN_FIELDS = Object.freeze([
     "positionSized",
     "maxLossAccepted",
@@ -80,6 +81,39 @@
     } catch (error) {
       return null;
     }
+  }
+
+  function strictHandoffText(params, key, maxLength, minLength) {
+    const values = params.getAll(key);
+    if (values.length !== 1) return null;
+    const value = String(values[0] || "").trim().replace(/\s+/g, " ");
+    if (value.length < minLength || value.length > maxLength) return null;
+    return value;
+  }
+
+  function parseResearchHandoff(value) {
+    const raw = String(value || "").replace(/^#/, "");
+    if (!raw || raw.length > 12000) return null;
+    const params = new URLSearchParams(raw);
+    const keys = [...params.keys()];
+    if (keys.length !== RESEARCH_HANDOFF_FIELDS.length || keys.some((key) => !RESEARCH_HANDOFF_FIELDS.includes(key))) return null;
+    const source = strictHandoffText(params, "source", 20, 1);
+    const title = strictHandoffText(params, "title", 100, 3);
+    const theme = strictHandoffText(params, "theme", 60, 2);
+    const thesis = strictHandoffText(params, "thesis", 400, 20);
+    const invalidation = strictHandoffText(params, "invalidation", 250, 10);
+    const riskNotes = strictHandoffText(params, "riskNotes", 200, 10);
+    if (!source || source !== "research-note" || !title || !theme || !thesis || !invalidation || !riskNotes) return null;
+    if (SENSITIVE_RE.test(`${title} ${theme} ${thesis} ${invalidation} ${riskNotes}`)) return null;
+    return Object.freeze({
+      source,
+      title,
+      theme,
+      timeframe: "other",
+      workflowStatus: "draft",
+      thesis: cleanText(`${title} [${theme}]. ${thesis} Risk context: ${riskNotes}`, 800),
+      invalidation
+    });
   }
 
   function normalizePlan(input) {
@@ -321,12 +355,16 @@
       noFomo: plan.noFomo ? 1 : 0,
       exitPlanDefined: plan.exitPlanDefined ? 1 : 0
     };
+    const journalNotes = cleanText(`Plan thesis: ${plan.thesis} Invalidation: ${plan.invalidation}`, 500);
     return Object.freeze({
       calculator: `risk-calculator.html#${fragment({ source: "trade-plan", equity: plan.equity, entry: plan.entry, stop: plan.stop, target: plan.target, risk: plan.riskPercent, leverage: plan.leverage, feeBps: plan.feeBps, slippageBps: plan.slippageBps })}`,
       portfolio: `portfolio-risk.html#${fragment({ source: "trade-plan", symbol: plan.symbol, side: plan.direction, quantity: analysis.positionQuantity, entry: plan.entry, stop: plan.stop, leverage: plan.leverage, label: `${plan.timeframe} trade plan` })}`,
       warning: `risk-warning.html#${fragment({ source: "trade-plan", exposure: analysis.exposurePercent, leverage: plan.leverage, risk: plan.riskPercent, stopDistance: analysis.stopPercent, slippage: plan.slippageBps / 100, volatility: plan.volatilityPercent, liquidity: plan.liquidityCoverage })}`,
       entryReady: `entry-ready.html#${fragment({ source: "trade-plan", direction: plan.direction, timeframe: plan.timeframe, entry: plan.entry, stop: plan.stop, target: plan.target, risk: plan.riskPercent, leverage: plan.leverage, orderType: plan.orderType === "stop" ? "stop-limit" : plan.orderType, thesis: plan.thesis.slice(0, 300), ...checklist })}`,
-      replay: `liquidation-replay.html#${fragment({ source: "trade-plan", direction: plan.direction, accountEquity: plan.equity, quantity: analysis.positionQuantity, entry: plan.entry, exit: scenarioExit, plannedStop: plan.stop, leverage: plan.leverage, fees: analysis.estimatedCosts, funding: 0 })}`
+      replay: `liquidation-replay.html#${fragment({ source: "trade-plan", direction: plan.direction, accountEquity: plan.equity, quantity: analysis.positionQuantity, entry: plan.entry, exit: scenarioExit, plannedStop: plan.stop, leverage: plan.leverage, fees: analysis.estimatedCosts, funding: 0 })}`,
+      journal: plan.workflowStatus === "completed"
+        ? `trade-journal.html#${fragment({ source: "trade-plan", symbol: plan.symbol, direction: plan.direction, setup: `${plan.timeframe} ${plan.orderType} plan`, notes: journalNotes })}`
+        : null
     });
   }
 
@@ -405,6 +443,7 @@
     analyzePlan,
     summarizePlans,
     filterPlans,
+    parseResearchHandoff,
     buildHandoffLinks,
     buildBackup,
     parseBackup,

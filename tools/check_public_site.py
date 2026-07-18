@@ -7884,6 +7884,10 @@ def validate_trade_journal_page(text: str) -> None:
     assert_contains(text, "let lastDeletedTrade = null", label)
     assert_contains(text, "function clearUndo()", label)
     assert_contains(text, "does not upload trades", label)
+    assert_contains(text, "engine.parseTradePlanHandoff", label)
+    assert_contains(text, "applyTradePlanHandoff", label)
+    assert_contains(text, "no journal entry was saved automatically", label)
+    assert_contains(text, "never the date or realized return", label)
     assert_not_contains(text, "window.ethereum", label)
     assert_not_contains(text, "fetch(", label)
     assert_not_contains(text, "WebSocket", label)
@@ -7943,6 +7947,8 @@ def validate_research_notes_page(text: str) -> None:
     assert_contains(text, "engine.buildBackup", label)
     assert_contains(text, "engine.parseBackup", label)
     assert_contains(text, "engine.mergeBackup", label)
+    assert_contains(text, "engine.buildTradePlanHandoff(note)", label)
+    assert_contains(text, "it never saves a plan automatically", label)
     assert_contains(text, "URL.createObjectURL", label)
     assert_contains(text, "await file.text()", label)
     assert_contains(text, "browser localStorage only", label)
@@ -8076,6 +8082,7 @@ def validate_trade_plans_page(text: str) -> None:
         "handoffWarning",
         "handoffEntryReady",
         "handoffReplay",
+        "handoffJournal",
         "tradePlanCount",
         "activePlanCount",
         "readyPlanCount",
@@ -8103,6 +8110,10 @@ def validate_trade_plans_page(text: str) -> None:
     assert_contains(text, "engine.summarizePlans", label)
     assert_contains(text, "engine.filterPlans", label)
     assert_contains(text, "engine.buildHandoffLinks", label)
+    assert_contains(text, "engine.parseResearchHandoff", label)
+    assert_contains(text, "applyResearchHandoff", label)
+    assert_contains(text, "no plan was saved automatically", label)
+    assert_contains(text, "never supplies realized return", label)
     assert_contains(text, "engine.buildBackup", label)
     assert_contains(text, "engine.parseBackup", label)
     assert_contains(text, "engine.mergeBackup", label)
@@ -8298,6 +8309,12 @@ def validate_product_json(text: str) -> None:
     for key in ("browserLocalNotes", "portableJsonBackup", "backupContainsUserEnteredResearchContent"):
         if research_notes.get(key) is not True:
             raise SiteCheckError(f"{label}: research notes {key} must be true")
+    for key in ("tradePlanHandoff", "handoffUsesUrlFragment"):
+        if research_notes.get(key) is not True:
+            raise SiteCheckError(f"{label}: research notes {key} must be true")
+    for key in ("handoffAutoSavesPlan", "handoffIncludesSourceUrl"):
+        if research_notes.get(key) is not False:
+            raise SiteCheckError(f"{label}: research notes {key} must be false")
     if trade_plans.get("status") != "public-client-side-preview-live":
         raise SiteCheckError(f"{label}: wrong trade plan status")
     if trade_plans.get("publicUrl") != TRADE_PLANS_PAGE_URL:
@@ -8308,6 +8325,17 @@ def validate_product_json(text: str) -> None:
     for key in ("browserLocalPlans", "portableJsonBackup", "backupContainsUserEnteredPlanDetails"):
         if trade_plans.get(key) is not True:
             raise SiteCheckError(f"{label}: trade plan {key} must be true")
+    for key in ("researchHandoff", "completedPlanJournalHandoff", "handoffUsesUrlFragment"):
+        if trade_plans.get(key) is not True:
+            raise SiteCheckError(f"{label}: trade plan {key} must be true")
+    if trade_plans.get("handoffAutoSavesData") is not False:
+        raise SiteCheckError(f"{label}: trade plan handoffAutoSavesData must be false")
+    trade_journal = module_map.get("trade-journal", {})
+    if trade_journal.get("completedPlanHandoff") is not True:
+        raise SiteCheckError(f"{label}: trade journal completedPlanHandoff must be true")
+    for key in ("handoffAutoSavesTrade", "handoffImportsRealizedReturn"):
+        if trade_journal.get(key) is not False:
+            raise SiteCheckError(f"{label}: trade journal {key} must be false")
     if portfolio_risk.get("status") != "public-client-side-preview-live":
         raise SiteCheckError(f"{label}: wrong portfolio risk status")
     if portfolio_risk.get("publicUrl") != PORTFOLIO_RISK_PAGE_URL:
@@ -15159,7 +15187,10 @@ def validate_sitemap(text: str) -> None:
     ):
         assert_sitemap_lastmod(path, "2026-06-15")
     assert_sitemap_lastmod("risk-training.html", "2026-07-15")
-    assert_sitemap_lastmod("research-notes.html", "2026-07-16")
+    assert_sitemap_lastmod("product.html", "2026-07-18")
+    assert_sitemap_lastmod("tools.html", "2026-07-18")
+    assert_sitemap_lastmod("trade-journal.html", "2026-07-18")
+    assert_sitemap_lastmod("research-notes.html", "2026-07-18")
     assert_sitemap_lastmod("trade-plans.html", "2026-07-18")
     assert_sitemap_lastmod("portfolio-risk.html", "2026-07-18")
     assert_sitemap_lastmod("project.json", "2026-07-18")

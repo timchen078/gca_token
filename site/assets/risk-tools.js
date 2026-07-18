@@ -25,7 +25,7 @@
       shortName: "Plan",
       url: "trade-plans.html",
       stage: "Before risk review",
-      purpose: "Save a structured thesis, invalidation, risk math, process checks, lifecycle status, and browser-local backup."
+      purpose: "Review a research handoff, then save thesis, invalidation, risk math, process checks, lifecycle status, and a browser-local backup."
     },
     "portfolio-risk": {
       name: "Portfolio Risk Map",
@@ -67,14 +67,14 @@
       shortName: "Journal",
       url: "trade-journal.html",
       stage: "After exit",
-      purpose: "Keep a browser-local completed-trade log and send the return sequence to Backtest Lab."
+      purpose: "Review completed-plan context, enter realized returns manually, and send the browser-local sequence to Backtest Lab."
     },
     "research-notes": {
       name: "Member Research Notes",
       shortName: "Notes",
       url: "research-notes.html",
       stage: "Narrative research",
-      purpose: "Structure a thesis, evidence, catalysts, invalidation conditions, risks, sources, and review dates."
+      purpose: "Structure a thesis, evidence, invalidation, and risks, then open a bounded draft in Trade Plan Ledger."
     }
   };
 
@@ -91,8 +91,8 @@
     },
     research: {
       name: "Research a Strategy",
-      description: "Structure the thesis, analyze completed evidence, convert the idea into a plan, then validate portfolio heat, setup risk, and readiness.",
-      toolIds: ["research-notes", "trade-journal", "backtest-lab", "trade-plans", "portfolio-risk", "risk-warning", "entry-ready"]
+      description: "Move from structured research to a reviewed plan, size and risk gates, then record the completed outcome and analyze the realized sequence.",
+      toolIds: ["research-notes", "trade-plans", "risk-calculator", "portfolio-risk", "risk-warning", "entry-ready", "trade-journal", "backtest-lab"]
     },
     review: {
       name: "Review a Loss",

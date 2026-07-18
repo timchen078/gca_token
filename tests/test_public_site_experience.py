@@ -1164,7 +1164,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
         expectations = {
             "learn": ["risk-training", "risk-calculator", "risk-warning", "entry-ready", "trade-journal"],
             "prepare": ["trade-plans", "risk-calculator", "portfolio-risk", "risk-warning", "entry-ready"],
-            "research": ["research-notes", "trade-journal", "backtest-lab", "trade-plans", "portfolio-risk", "risk-warning", "entry-ready"],
+            "research": ["research-notes", "trade-plans", "risk-calculator", "portfolio-risk", "risk-warning", "entry-ready", "trade-journal", "backtest-lab"],
             "review": ["liquidation-replay", "trade-journal", "trade-plans", "risk-calculator", "portfolio-risk", "risk-warning", "entry-ready"],
             "all": ["risk-training", "research-notes", "trade-plans", "risk-calculator", "portfolio-risk", "risk-warning", "entry-ready", "backtest-lab", "liquidation-replay", "trade-journal"],
         }
@@ -1323,6 +1323,8 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn("engine.buildBackup", page)
         self.assertIn("engine.parseBackup", page)
         self.assertIn("engine.mergeBackup", page)
+        self.assertIn("engine.buildTradePlanHandoff(note)", page)
+        self.assertIn("it never saves a plan automatically", page)
         self.assertIn("URL.createObjectURL", page)
         self.assertIn("await file.text()", page)
         self.assertIn('source.target = "_blank"', page)
@@ -1345,6 +1347,10 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertTrue(module["browserLocalNotes"])
         self.assertTrue(module["portableJsonBackup"])
         self.assertTrue(module["backupContainsUserEnteredResearchContent"])
+        self.assertTrue(module["tradePlanHandoff"])
+        self.assertTrue(module["handoffUsesUrlFragment"])
+        self.assertFalse(module["handoffAutoSavesPlan"])
+        self.assertFalse(module["handoffIncludesSourceUrl"])
         self.assertFalse(module["storesOnServer"])
         self.assertFalse(module["collectsIdentityFields"])
         service = next(item for item in credits["serviceCatalog"] if item["id"] == "member-research-notes")
@@ -1460,6 +1466,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
             "handoffWarning",
             "handoffEntryReady",
             "handoffReplay",
+            "handoffJournal",
             "tradePlanCount",
             "activePlanCount",
             "readyPlanCount",
@@ -1488,6 +1495,10 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn("engine.summarizePlans", page)
         self.assertIn("engine.filterPlans", page)
         self.assertIn("engine.buildHandoffLinks", page)
+        self.assertIn("engine.parseResearchHandoff", page)
+        self.assertIn("applyResearchHandoff", page)
+        self.assertIn("no plan was saved automatically", page)
+        self.assertIn("never supplies realized return", page)
         self.assertIn("engine.buildBackup", page)
         self.assertIn("engine.parseBackup", page)
         self.assertIn("engine.mergeBackup", page)
@@ -1510,6 +1521,10 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertTrue(module["browserLocalPlans"])
         self.assertTrue(module["portableJsonBackup"])
         self.assertTrue(module["backupContainsUserEnteredPlanDetails"])
+        self.assertTrue(module["researchHandoff"])
+        self.assertTrue(module["completedPlanJournalHandoff"])
+        self.assertTrue(module["handoffUsesUrlFragment"])
+        self.assertFalse(module["handoffAutoSavesData"])
         for field in ("storesOnServer", "connectsWallet", "connectsExchange", "fetchesMarketData", "placesOrders", "deductsCredits"):
             self.assertFalse(module[field])
 
@@ -1597,6 +1612,65 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertEqual(result["workspace"]["blockedCount"], 1)
         self.assertEqual(result["emptyWorkspace"]["count"], 0)
         self.assertEqual(len(result["removed"]), 2)
+
+    def test_research_plan_journal_handoffs_are_bounded_and_manual(self):
+        bundled_node = Path("/Users/abc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node")
+        node = shutil.which("node") or (str(bundled_node) if bundled_node.exists() else "")
+        if not node:
+            self.skipTest("Node.js is unavailable")
+
+        script = (
+            "const r=require(process.argv[1]);const p=require(process.argv[2]);const j=require(process.argv[3]);"
+            "const note=r.normalizeNote({version:1,id:'gca_note_flow12345',observedOn:'2026-07-18',reviewOn:'',title:'China infrastructure thesis',theme:'Infrastructure',status:'active-research',horizon:'medium-term',evidenceState:'developing',tags:['China'],thesis:'A sufficiently detailed thesis for a structured research to plan handoff.',evidence:'Public evidence remains under review.',catalyst:'A measurable adoption milestone.',invalidation:'Adoption evidence weakens across two review cycles.',riskNotes:'Liquidity and execution uncertainty remain material.',sourceUrl:'https://example.com/source',createdAt:'2026-07-18T00:00:00Z',updatedAt:'2026-07-18T00:00:00Z'});"
+            "const noteLink=r.buildTradePlanHandoff(note);const noteFragment=noteLink.split('#')[1];const draft=p.parseResearchHandoff(noteFragment);"
+            "const planBase={version:1,id:'gca_plan_flow12345',createdAt:'2026-07-18T00:00:00Z',updatedAt:'2026-07-18T00:00:00Z',plannedFor:'2026-07-18',symbol:'btc/usdt',direction:'long',timeframe:'4h',workflowStatus:'completed',thesis:draft.thesis,invalidation:draft.invalidation,entry:100,stop:95,target:112,equity:10000,riskPercent:1,leverage:2,feeBps:20,slippageBps:10,exposureLimitPercent:50,volatilityPercent:3,liquidityCoverage:15,orderType:'limit',positionSized:true,maxLossAccepted:true,liquidityChecked:true,volatilityReviewed:true,noRevengeTrade:true,noFomo:true,exitPlanDefined:true,simulationReviewed:true};"
+            "const completed=p.normalizePlan(planBase);const completedLinks=p.buildHandoffLinks(completed);const activeLinks=p.buildHandoffLinks({...completed,workflowStatus:'under-review'});const journalFragment=completedLinks.journal.split('#')[1];"
+            "const journalDraft=j.parseTradePlanHandoff(journalFragment);const secretResearch=new URLSearchParams({source:'research-note',title:'Valid title',theme:'Theme',thesis:'A sufficiently detailed private key research thesis.',invalidation:'A valid invalidation condition.',riskNotes:'A sufficiently detailed risk statement.'}).toString();"
+            "const unicodeNote=r.normalizeNote({...note,id:'gca_note_unicode123',title:'中国基础设施研究计划',theme:'基础设施',thesis:'这是一个用于验证中文研究内容交接是否完整有效的详细核心论点。'.repeat(12),invalidation:'连续两次公开数据复核均显示采用趋势明显减弱。'.repeat(6),riskNotes:'流动性、执行条件和政策变化仍然存在不确定性。'.repeat(6)});const unicodeDraft=p.parseResearchHandoff(r.buildTradePlanHandoff(unicodeNote).split('#')[1]);"
+            "const unicodePlan=p.normalizePlan({...completed,id:'gca_plan_unicode123',thesis:'这是一个用于验证中文计划日志交接的详细交易逻辑。'.repeat(24),invalidation:'价格结构和公开证据同时失效时取消计划。'.repeat(10)});const unicodeJournalDraft=j.parseTradePlanHandoff(p.buildHandoffLinks(unicodePlan).journal.split('#')[1]);"
+            "const longResearch=new URLSearchParams({source:'research-note',title:'Valid title',theme:'Theme',thesis:'x'.repeat(401),invalidation:'A valid invalidation condition.',riskNotes:'A sufficiently detailed risk statement.'}).toString();const longJournal=new URLSearchParams({source:'trade-plan',symbol:'BTC/USDT',direction:'long',setup:'4h plan',notes:'x'.repeat(501)}).toString();"
+            "process.stdout.write(JSON.stringify({noteLink,draft,completedLinks,activeLinks,journalDraft,unicodeDraft,unicodeJournalDraft,invalidResearchExtra:p.parseResearchHandoff(noteFragment+'&extra=x'),invalidResearchDuplicate:p.parseResearchHandoff(noteFragment+'&title=duplicate'),invalidResearchSecret:p.parseResearchHandoff(secretResearch),invalidResearchLong:p.parseResearchHandoff(longResearch),invalidJournalExtra:j.parseTradePlanHandoff(journalFragment+'&returnPercent=4'),invalidJournalDuplicate:j.parseTradePlanHandoff(journalFragment+'&symbol=ETH%2FUSDT'),invalidJournalSecret:j.parseTradePlanHandoff(new URLSearchParams({source:'trade-plan',symbol:'BTC/USDT',direction:'long',setup:'4h plan',notes:'Store a private key in these completed plan notes.'}).toString()),invalidJournalLong:j.parseTradePlanHandoff(longJournal)}));"
+        )
+        completed = subprocess.run(
+            [
+                node,
+                "-e",
+                script,
+                str(SITE / "assets" / "research-notes.js"),
+                str(SITE / "assets" / "trade-plans.js"),
+                str(SITE / "assets" / "trade-journal.js"),
+            ],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        result = json.loads(completed.stdout)
+
+        self.assertTrue(result["noteLink"].startswith("trade-plans.html#source=research-note"))
+        self.assertNotIn("sourceUrl", result["noteLink"])
+        self.assertEqual(result["draft"]["timeframe"], "other")
+        self.assertEqual(result["draft"]["workflowStatus"], "draft")
+        self.assertIn("Risk context:", result["draft"]["thesis"])
+        self.assertIsNone(result["activeLinks"]["journal"])
+        self.assertTrue(result["completedLinks"]["journal"].startswith("trade-journal.html#source=trade-plan"))
+        self.assertNotIn("return", result["completedLinks"]["journal"].lower())
+        self.assertNotIn("date=", result["completedLinks"]["journal"])
+        self.assertEqual(result["journalDraft"]["market"], "BTC/USDT")
+        self.assertEqual(result["journalDraft"]["direction"], "long")
+        self.assertIn("中国基础设施研究计划", result["unicodeDraft"]["thesis"])
+        self.assertEqual(result["unicodeJournalDraft"]["market"], "BTC/USDT")
+        self.assertIn("中文计划日志交接", result["unicodeJournalDraft"]["notes"])
+        for key in (
+            "invalidResearchExtra",
+            "invalidResearchDuplicate",
+            "invalidResearchSecret",
+            "invalidResearchLong",
+            "invalidJournalExtra",
+            "invalidJournalDuplicate",
+            "invalidJournalSecret",
+            "invalidJournalLong",
+        ):
+            self.assertIsNone(result[key])
 
     def test_portfolio_risk_map_is_local_structured_and_portable(self):
         page = (SITE / "portfolio-risk.html").read_text()
@@ -1829,12 +1903,20 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn("createdAt:existing?.createdAt||new Date().toISOString()", page)
         self.assertIn("Simple total adds account returns without compounding", page)
         self.assertIn("does not upload trades", page)
+        self.assertIn("engine.parseTradePlanHandoff", page)
+        self.assertIn("applyTradePlanHandoff", page)
+        self.assertIn("no journal entry was saved automatically", page)
+        self.assertIn("never the date or realized return", page)
         self.assertNotIn("window.ethereum", page)
         self.assertNotIn("fetch(", page)
         self.assertNotIn("WebSocket", page)
         self.assertIn('const STORAGE_KEY = "gca_trade_journal_v1"', engine)
         self.assertEqual(product["positioning"]["publicRiskToolPreviewsLive"], 10)
         self.assertEqual(product["officialLinks"]["tradeJournal"], "https://gcagochina.com/trade-journal.html")
+        module = next(item for item in product["productModules"] if item["id"] == "trade-journal")
+        self.assertTrue(module["completedPlanHandoff"])
+        self.assertFalse(module["handoffAutoSavesTrade"])
+        self.assertFalse(module["handoffImportsRealizedReturn"])
         self.assertEqual(credits["officialLinks"]["tradeJournal"], "https://gcagochina.com/trade-journal.html")
 
     def test_trade_journal_engine_normalizes_summarizes_and_backs_up(self):
