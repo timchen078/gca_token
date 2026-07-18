@@ -230,6 +230,20 @@
     return orderNotes(values).filter((note) => note.id !== noteId);
   }
 
+  function buildTradePlanHandoff(value) {
+    const note = normalizeNote(value);
+    if (!note) return null;
+    const fragment = new URLSearchParams({
+      source: "research-note",
+      title: note.title.slice(0, 100),
+      theme: note.theme.slice(0, 60),
+      thesis: note.thesis.slice(0, 400),
+      invalidation: note.invalidation.slice(0, 250),
+      riskNotes: note.riskNotes.slice(0, 200)
+    });
+    return `trade-plans.html#${fragment.toString()}`;
+  }
+
   function buildBackup(values, exportedAt) {
     const timestamp = normalizedIso(exportedAt) || new Date().toISOString();
     return Object.freeze({
@@ -311,6 +325,7 @@
     summarizeNotes,
     upsertNote,
     removeNote,
+    buildTradePlanHandoff,
     buildBackup,
     parseBackup,
     mergeBackup

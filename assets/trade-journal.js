@@ -8,6 +8,9 @@
   const STORAGE_KEY = "gca_trade_journal_v1";
   const SCHEMA = "gca-trade-journal-v1";
   const MAX_TRADES = 500;
+  const MARKET_RE = /^[A-Z0-9][A-Z0-9._/-]{1,39}$/;
+  const SENSITIVE_RE = /private\s*key|seed\s*phrase|mnemonic|api\s*secret|wallet\s*password|one[-\s]*time\s*code|withdrawal\s*permission|remote\s*control|\b(?:otp|2fa)\b|\u79c1\u94a5|\u52a9\u8bb0\u8bcd|\u5bc6\u7801|\u9a8c\u8bc1\u7801|\u63d0\u73b0\u6743\u9650|\u8fdc\u7a0b\u63a7\u5236/i;
+  const TRADE_PLAN_HANDOFF_FIELDS = Object.freeze(["source", "symbol", "direction", "setup", "notes"]);
 
   function cleanText(value, maxLength) {
     return String(value || "").trim().replace(/\s+/g, " ").slice(0, maxLength);
@@ -26,7 +29,10 @@
     const market = cleanText(input.market, 40).toUpperCase();
     const direction = input.direction === "short" ? "short" : input.direction === "long" ? "long" : "";
     const returnPercent = Number(input.returnPercent);
-    if (!validDate(date) || !market || !direction || !Number.isFinite(returnPercent) ||
+    const setup = cleanText(input.setup, 80);
+    const notes = cleanText(input.notes, 500);
+    if (!validDate(date) || !MARKET_RE.test(market) || !direction || !Number.isFinite(returnPercent) ||
+        SENSITIVE_RE.test(`${setup} ${notes}`) ||
         returnPercent <= -100 || returnPercent > 1000) return null;
     const id = cleanText(input.id, 80) || `${date}-${market}-${returnPercent}`;
     const createdAt = Number.isFinite(Date.parse(input.createdAt))
@@ -38,10 +44,34 @@
       market,
       direction,
       returnPercent,
-      setup: cleanText(input.setup, 80),
-      notes: cleanText(input.notes, 500),
+      setup,
+      notes,
       createdAt
     };
+  }
+
+  function strictHandoffText(params, key, maxLength, minLength) {
+    const values = params.getAll(key);
+    if (values.length !== 1) return null;
+    const value = String(values[0] || "").trim().replace(/\s+/g, " ");
+    if (value.length < minLength || value.length > maxLength) return null;
+    return value;
+  }
+
+  function parseTradePlanHandoff(value) {
+    const raw = String(value || "").replace(/^#/, "");
+    if (!raw || raw.length > 8000) return null;
+    const params = new URLSearchParams(raw);
+    const keys = [...params.keys()];
+    if (keys.length !== TRADE_PLAN_HANDOFF_FIELDS.length || keys.some((key) => !TRADE_PLAN_HANDOFF_FIELDS.includes(key))) return null;
+    const source = strictHandoffText(params, "source", 20, 1);
+    const market = strictHandoffText(params, "symbol", 40, 2)?.toUpperCase() || "";
+    const direction = strictHandoffText(params, "direction", 5, 4);
+    const setup = strictHandoffText(params, "setup", 80, 3);
+    const notes = strictHandoffText(params, "notes", 500, 20);
+    if (source !== "trade-plan" || !MARKET_RE.test(market) || !["long", "short"].includes(direction) || !setup || !notes) return null;
+    if (SENSITIVE_RE.test(`${setup} ${notes}`)) return null;
+    return Object.freeze({ source, market, direction, setup, notes });
   }
 
   function orderTrades(values) {
@@ -272,5 +302,5 @@
     return [header.join(","), ...rows].join("\n");
   }
 
-  return { STORAGE_KEY, SCHEMA, MAX_TRADES, normalizeTrade, orderTrades, filterTrades, sampleQuality, summarizeTrades, groupPerformance, buildBackup, parseBackup, parseCsv, toCsv };
+  return { STORAGE_KEY, SCHEMA, MAX_TRADES, normalizeTrade, parseTradePlanHandoff, orderTrades, filterTrades, sampleQuality, summarizeTrades, groupPerformance, buildBackup, parseBackup, parseCsv, toCsv };
 });

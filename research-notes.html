@@ -4,21 +4,21 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>GCA Research Notes | China Narrative Research Workspace</title>
-    <meta name="description" content="Browser-local GCA research workspace for structured narratives, evidence, catalysts, invalidation conditions, risks, review dates, filters, and portable JSON backups.">
+    <meta name="description" content="Browser-local GCA research workspace for structured narratives, evidence, invalidation, review dates, portable backups, and bounded handoff into Trade Plan Ledger.">
     <link rel="canonical" href="https://gcagochina.com/research-notes.html">
     <link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">
     <link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="GCA | Go China Access">
     <meta property="og:title" content="GCA Research Notes | China Narrative Research Workspace">
-    <meta property="og:description" content="Structure a thesis, public evidence, catalysts, invalidation conditions, risks, and review dates in a browser-local workspace.">
+    <meta property="og:description" content="Structure a thesis, evidence, invalidation, and risks locally, then review a bounded draft in Trade Plan Ledger.">
     <meta property="og:url" content="https://gcagochina.com/research-notes.html">
     <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="GCA Research Notes | China Narrative Research Workspace">
-    <meta name="twitter:description" content="A browser-local research workspace for thesis discipline, evidence, risks, and scheduled review.">
+    <meta name="twitter:description" content="A browser-local research workspace with a reviewed handoff into GCA Trade Plan Ledger.">
     <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
     <style>
       :root { color-scheme:light; --bg:#f7f8f5; --ink:#151817; --muted:#5e6763; --line:#dfe4dd; --panel:#fff; --soft:#f1f4f0; --red:#d71920; --blue:#1557d7; --green:#087f5b; --gold:#8a6500; }
@@ -96,7 +96,7 @@
       <section aria-labelledby="title">
         <p class="eyebrow">GCA AI Quant Access · Browser-Local Research</p>
         <h1 id="title">Member Research Notes</h1>
-        <p class="lead">Structure a China or Web3 narrative before acting: record the thesis, public evidence, catalyst, invalidation condition, risks, and the next review date. 在当前浏览器中记录叙事、证据、催化剂、失效条件、风险和复核日期。</p>
+        <p class="lead">Structure a China or Web3 narrative before acting: record the thesis, public evidence, catalyst, invalidation condition, risks, and review date, then open a bounded draft in Trade Plan Ledger. 在当前浏览器中记录研究并手动转入交易计划审核。</p>
       </section>
       <section class="layout" aria-label="Browser-local research notes workspace">
         <form class="panel" id="researchForm">
@@ -119,7 +119,7 @@
           </div>
           <div class="actions"><button class="button primary" id="saveNote" type="submit">Add Note / 添加记录</button><button class="button" id="resetNote" type="button">Reset / 重置</button><button class="button" id="cancelEdit" type="button" hidden>Cancel Edit / 取消编辑</button></div>
           <p class="status" id="researchStatus" aria-live="polite">Ready. Research records remain on this device. / 已就绪，研究记录仅保存在当前设备。</p>
-          <p class="boundary">This preview uses browser localStorage only. It does not upload research, fetch market data, generate trade signals, connect wallets or exchanges, place orders, or deduct credits. JSON backups include all text and public URLs you enter. Do not enter private keys, passwords, private links, API secrets, one-time codes, or withdrawal permissions.</p>
+          <p class="boundary">This preview uses browser localStorage only. It does not upload research, fetch market data, generate trade signals, connect wallets or exchanges, place orders, or deduct credits. Build Trade Plan sends only bounded title, theme, thesis, invalidation, and risk text through a URL fragment; it never saves a plan automatically. JSON backups include all text and public URLs you enter. Do not enter private keys, passwords, private links, API secrets, one-time codes, or withdrawal permissions.</p>
         </form>
         <section class="panel" aria-labelledby="libraryTitle">
           <h2 id="libraryTitle">Research Library <span lang="zh-CN">研究资料库</span></h2>
@@ -376,6 +376,10 @@
             }
             const actions = document.createElement("div");
             actions.className = "row-actions";
+            const plan = document.createElement("a");
+            plan.className = "row-action";
+            plan.href = engine.buildTradePlanHandoff(note);
+            plan.textContent = "Build Trade Plan / 转为计划";
             const edit = document.createElement("button");
             edit.type = "button";
             edit.className = "row-action";
@@ -386,7 +390,7 @@
             remove.className = "row-action delete";
             remove.dataset.deleteId = note.id;
             remove.textContent = pendingDeleteId === note.id ? "Confirm delete / 确认删除" : "Delete / 删除";
-            actions.append(edit, remove);
+            actions.append(plan, edit, remove);
             card.append(actions);
             rows.append(card);
           });
