@@ -396,6 +396,7 @@
     "riskWarningReview": "https://gcagochina.com/risk-warning.html",
     "riskDisciplineTraining": "https://gcagochina.com/risk-training.html",
     "researchNotes": "https://gcagochina.com/research-notes.html",
+    "tradePlanLedger": "https://gcagochina.com/trade-plans.html",
     "portfolioRiskMap": "https://gcagochina.com/portfolio-risk.html"
   },
   "publicClaimBoundaries": {
@@ -406,6 +407,7 @@
       "Operators can queue requested service scope in the local service request ledger before delivery; queued requests do not deduct credits.",
       "The 1,000,000 GCA Member threshold requires 30 consecutive days of holding before a one-time 10,000 GCA member benefit review.",
       "The Member Research Notes browser-only preview is live and does not deduct credits; the separate 20-unit member service tier remains subject to operator review and recorded delivery.",
+      "The Trade Plan Ledger browser-only preview is live and does not deduct credits; no separate trade-plan service unit is claimed in the current catalog.",
       "The Portfolio Risk Map browser-only preview is live and does not deduct credits; its separate 15-unit service tier remains subject to operator review and recorded delivery.",
       "Credits and member status are account-level service records; the 10,000 GCA member benefit is manual review only.",
       "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool."

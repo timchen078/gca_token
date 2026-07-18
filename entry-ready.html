@@ -153,6 +153,15 @@
           mappings.forEach(([key,field])=>{const value=Number(read(key));if(Number.isFinite(value)&&value>0)field.value=String(value);});
           const direction = read("direction");
           if (direction === "long" || direction === "short") fields.direction.value = direction;
+          const timeframe = read("timeframe");
+          if ([...fields.timeframe.options].some((option)=>option.value===timeframe)) fields.timeframe.value = timeframe;
+          const orderType = read("orderType");
+          if ([...fields.orderType.options].some((option)=>option.value===orderType)) fields.orderType.value = orderType;
+          const thesis = String(read("thesis") || "").trim();
+          if (thesis) fields.thesis.value = thesis.slice(0, 300);
+          ["positionSized","maxLossAccepted","invalidationDefined","liquidityChecked","costsIncluded","volatilityReviewed","noRevengeTrade","noFomo","exitPlanDefined"].forEach((key)=>{
+            if (read(key) === "1") fields[key].checked = true;
+          });
         }
         form.addEventListener("submit", (event) => { event.preventDefault(); evaluate(); });
         form.addEventListener("input", evaluate); form.addEventListener("change", evaluate);

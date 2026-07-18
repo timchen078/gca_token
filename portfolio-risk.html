@@ -298,6 +298,29 @@
           setStatus(`Editing ${position.symbol}. / 正在编辑 ${position.symbol}。`, false);
           form.scrollIntoView({ behavior:"smooth", block:"start" });
         }
+        function applyTradePlanHandoff() {
+          const fragment = new URLSearchParams(window.location.hash.replace(/^#/, ""));
+          if (fragment.get("source") !== "trade-plan") return false;
+          const now = new Date().toISOString();
+          const position = engine.normalizePosition({
+            version: 1,
+            id: "gca_position_handoff123",
+            symbol: fragment.get("symbol"),
+            side: fragment.get("side"),
+            quantity: fragment.get("quantity"),
+            entry: fragment.get("entry"),
+            stop: fragment.get("stop"),
+            leverage: fragment.get("leverage"),
+            label: fragment.get("label"),
+            createdAt: now,
+            updatedAt: now
+          });
+          if (!position) return false;
+          Object.entries(positionFields).forEach(([key, field]) => {
+            if (key in position) field.value = String(position[key]);
+          });
+          return true;
+        }
         function render() {
           positions = engine.orderPositions(positions);
           const config = readConfig();
@@ -372,7 +395,9 @@
 
         resetEditor();
         load();
+        const tradePlanHandoffLoaded = applyTradePlanHandoff();
         render();
+        if (tradePlanHandoffLoaded) setStatus("Trade plan loaded into the position form. Review it before saving; no position was added automatically. / 交易计划已预填，请审核后再保存，当前未自动添加仓位。", false);
 
         form.addEventListener("submit", (event) => {
           event.preventDefault();

@@ -47,7 +47,7 @@
       .metric span { display:block; color:var(--muted); font-size:12px; font-weight:760; text-transform:uppercase; }
       .metric strong { display:block; margin-top:6px; font-size:18px; overflow-wrap:anywhere; }
       .workspace-grid { display:grid; grid-template-columns:minmax(0,1.15fr) minmax(300px,.85fr); gap:16px; }
-      .journal-grid,.training-grid,.research-grid,.portfolio-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; margin-top:15px; }
+      .journal-grid,.training-grid,.research-grid,.trade-plan-grid,.portfolio-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; margin-top:15px; }
       .catalog { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; }
       .service { min-height:218px; display:flex; flex-direction:column; padding:17px; }
       .service-stage { color:var(--red); font-size:12px; font-weight:830; text-transform:uppercase; }
@@ -71,14 +71,14 @@
       .activity-meta { display:flex; flex-wrap:wrap; gap:8px 16px; margin-top:9px; color:var(--muted); font-size:13px; }
       .activity-empty { margin:0; padding:18px 0; color:var(--muted); }
       footer { border-top:1px solid var(--line); padding:24px 0; color:var(--muted); font-size:14px; }
-      @media (max-width:980px) { .catalog{grid-template-columns:repeat(2,minmax(0,1fr))}.metrics,.journal-grid,.training-grid,.research-grid,.portfolio-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.workspace-grid{grid-template-columns:1fr} }
-      @media (max-width:680px) { h1{font-size:40px}.catalog,.metrics,.journal-grid,.training-grid,.research-grid,.portfolio-grid{grid-template-columns:1fr}.service{min-height:0}nav{align-items:flex-start;flex-direction:column;padding:13px 0}.nav-links{gap:12px}.activity-head,.activity-row-head{display:grid}.activity-count{text-align:left}.activity-status{text-align:left} }
+      @media (max-width:980px) { .catalog{grid-template-columns:repeat(2,minmax(0,1fr))}.metrics,.journal-grid,.training-grid,.research-grid,.trade-plan-grid,.portfolio-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.workspace-grid{grid-template-columns:1fr} }
+      @media (max-width:680px) { h1{font-size:40px}.catalog,.metrics,.journal-grid,.training-grid,.research-grid,.trade-plan-grid,.portfolio-grid{grid-template-columns:1fr}.service{min-height:0}nav{align-items:flex-start;flex-direction:column;padding:13px 0}.nav-links{gap:12px}.activity-head,.activity-row-head{display:grid}.activity-count{text-align:left}.activity-status{text-align:left} }
     </style>
     <link rel="stylesheet" href="assets/gca-site.css?v=20260711">
     <script src="assets/gca-site.js?v=20260711" defer></script>
   </head>
   <body>
-    <header><nav class="shell" aria-label="Primary"><a class="brand" href="index.html"><img src="assets/gca-logo.svg" alt="GCA logo"><span>GCA</span></a><div class="nav-links"><a href="gca/member-access/">Member Access</a><a href="tools.html">Risk Tools</a><a href="portfolio-risk.html">Portfolio</a><a href="trade-journal.html">Journal</a><a href="research-notes.html">Research</a><a href="support.html">Support</a></div></nav></header>
+    <header><nav class="shell" aria-label="Primary"><a class="brand" href="index.html"><img src="assets/gca-logo.svg" alt="GCA logo"><span>GCA</span></a><div class="nav-links"><a href="gca/member-access/">Member Access</a><a href="tools.html">Risk Tools</a><a href="trade-plans.html">Plans</a><a href="portfolio-risk.html">Portfolio</a><a href="trade-journal.html">Journal</a><a href="research-notes.html">Research</a><a href="support.html">Support</a></div></nav></header>
     <main class="shell" id="main-content">
       <section aria-labelledby="title">
         <p class="eyebrow">GCA AI Quant Access · Browser-Local Member Area</p>
@@ -165,6 +165,20 @@
         <div class="actions" style="margin-top:16px"><a class="button primary" href="portfolio-risk.html">Open Portfolio Risk Map / 打开组合风险图</a></div>
       </section>
 
+      <section class="section panel" aria-labelledby="tradePlanSummaryTitle">
+        <p class="eyebrow">Local Trade Planning</p>
+        <h2 id="tradePlanSummaryTitle">Trade Plan Summary <span lang="zh-CN">交易计划摘要</span></h2>
+        <p class="note">This summary reads only a validated GCA Trade Plan Ledger backup saved in this browser. It does not upload plans, fetch prices, connect accounts, or place orders.</p>
+        <div class="trade-plan-grid">
+          <div class="metric"><span>Plans / 计划</span><strong id="tradePlanSummaryCount">0</strong></div>
+          <div class="metric"><span>Active / 活跃</span><strong id="tradePlanSummaryActive">0</strong></div>
+          <div class="metric"><span>Ready for review / 可审核</span><strong id="tradePlanSummaryReady">0</strong></div>
+          <div class="metric"><span>Blocked / 阻塞</span><strong id="tradePlanSummaryBlocked">0</strong></div>
+        </div>
+        <p class="note" id="tradePlanSummarySavedAt" style="margin-top:14px">No validated trade plan ledger on this device. / 本设备暂无通过校验的交易计划台账。</p>
+        <div class="actions" style="margin-top:16px"><a class="button primary" href="trade-plans.html">Open Trade Plan Ledger / 打开交易计划台账</a></div>
+      </section>
+
       <section class="section" aria-labelledby="catalogTitle">
         <p class="eyebrow">Utility Catalog</p>
         <h2 id="catalogTitle">Tools and Review Services <span lang="zh-CN">工具与审核服务</span></h2>
@@ -215,6 +229,7 @@
     <script src="assets/trade-journal.js"></script>
     <script src="assets/risk-training.js"></script>
     <script src="assets/research-notes.js"></script>
+    <script src="assets/trade-plans.js"></script>
     <script src="assets/portfolio-risk.js"></script>
     <script src="assets/member-workspace.js"></script>
     <script>
@@ -224,6 +239,7 @@
         const journalEngine = window.GcaTradeJournal;
         const trainingEngine = window.GcaRiskTraining;
         const researchEngine = window.GcaResearchNotes;
+        const tradePlanEngine = window.GcaTradePlans;
         const portfolioEngine = window.GcaPortfolioRisk;
         const serviceId = document.getElementById("serviceId");
         const selectedService = document.getElementById("selectedService");
@@ -345,6 +361,17 @@
           document.getElementById("portfolioSummarySavedAt").textContent = summary.savedAt
             ? `Saved portfolio map: ${new Date(summary.savedAt).toLocaleString()} · Margin use ${summary.marginUtilizationPercent.toFixed(2)}%. / 组合风险图保存在当前设备。`
             : "No validated portfolio risk map on this device. / 本设备暂无通过校验的组合风险图。";
+        }
+
+        function renderTradePlanSummary() {
+          const summary = engine.summarizeTradePlans(readLocal(engine.TRADE_PLANS_KEY), tradePlanEngine, Date.now());
+          document.getElementById("tradePlanSummaryCount").textContent = String(summary.count);
+          document.getElementById("tradePlanSummaryActive").textContent = String(summary.activeCount);
+          document.getElementById("tradePlanSummaryReady").textContent = String(summary.readyForReviewCount);
+          document.getElementById("tradePlanSummaryBlocked").textContent = String(summary.blockedCount);
+          document.getElementById("tradePlanSummarySavedAt").textContent = summary.latestUpdatedAt
+            ? `Latest plan update: ${new Date(summary.latestUpdatedAt).toLocaleString()} · Due plans: ${summary.dueCount}. / 最近计划更新时间如上。`
+            : "No validated trade plan ledger on this device. / 本设备暂无通过校验的交易计划台账。";
         }
 
         function requestActionLabel(action) {
@@ -616,6 +643,7 @@
         renderJournalSummary();
         renderTrainingSummary();
         renderResearchSummary();
+        renderTradePlanSummary();
         renderPortfolioSummary();
         requestHistory = engine.parseRequestHistory(readLocal(engine.REQUEST_HISTORY_KEY));
         renderRequestHistory();
