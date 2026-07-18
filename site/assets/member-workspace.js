@@ -15,6 +15,8 @@
   const REQUEST_HISTORY_KEY = "gca_member_service_request_history_v1";
   const REQUEST_BACKUP_SCHEMA = "gca-member-request-history-backup-v1";
   const REQUEST_HISTORY_LIMIT = 25;
+  const WORKFLOW_QUEUE_LIMIT = 8;
+  const WORKFLOW_PRIORITY_ORDER = Object.freeze({ critical: 0, high: 1, normal: 2, complete: 3 });
   const ADDRESS_RE = /^0x[a-fA-F0-9]{40}$/;
   const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
   const SENSITIVE_RE = /private\s*key|seed\s*phrase|mnemonic|api\s*secret|wallet\s*password|one[-\s]*time\s*code|withdrawal\s*permission|remote\s*control|\b(?:otp|2fa)\b|\u79c1\u94a5|\u52a9\u8bb0\u8bcd|\u5bc6\u7801|\u9a8c\u8bc1\u7801|\u63d0\u73b0\u6743\u9650|\u8fdc\u7a0b\u63a7\u5236/i;
@@ -196,6 +198,7 @@
       readyForReviewCount: 0,
       blockedCount: 0,
       reviewCount: 0,
+      completedCount: 0,
       dueCount: 0,
       latestUpdatedAt: null
     };
@@ -214,6 +217,7 @@
       readyForReviewCount: summary.readyForReviewCount,
       blockedCount: summary.blockedCount,
       reviewCount: summary.reviewCount,
+      completedCount: summary.completedCount,
       dueCount: summary.dueCount,
       latestUpdatedAt: summary.latestUpdatedAt
     };
@@ -235,6 +239,195 @@
       marginUtilizationPercent: analysis.marginUtilizationPercent,
       savedAt: backup.savedAt
     };
+  }
+
+  function safeCount(value) {
+    const parsed = Number(value);
+    return Number.isInteger(parsed) && parsed >= 0 ? parsed : 0;
+  }
+
+  function buildWorkflowQueue(value) {
+    const state = value && typeof value === "object" ? value : {};
+    const training = state.training && typeof state.training === "object" ? state.training : {};
+    const research = state.research && typeof state.research === "object" ? state.research : {};
+    const tradePlans = state.tradePlans && typeof state.tradePlans === "object" ? state.tradePlans : {};
+    const portfolio = state.portfolio && typeof state.portfolio === "object" ? state.portfolio : {};
+    const journal = state.journal && typeof state.journal === "object" ? state.journal : {};
+    const hasSnapshot = Boolean(
+      state.snapshot &&
+      typeof state.snapshot === "object" &&
+      ADDRESS_RE.test(String(state.snapshot.walletAddress || "")) &&
+      Number.isFinite(Date.parse(state.snapshot.savedAt))
+    );
+    const actions = [];
+    let order = 0;
+    const add = (id, priority, title, detail, href, count) => {
+      if (!Object.hasOwn(WORKFLOW_PRIORITY_ORDER, priority) || actions.some((action) => action.id === id)) return;
+      actions.push(Object.freeze({ id, priority, title, detail, href, count: safeCount(count), order: order++ }));
+    };
+
+    const blockedPlans = safeCount(tradePlans.blockedCount);
+    const duePlans = safeCount(tradePlans.dueCount);
+    const readyPlans = safeCount(tradePlans.readyForReviewCount);
+    const reviewPlans = safeCount(tradePlans.reviewCount);
+    const completedPlans = safeCount(tradePlans.completedCount);
+    const totalPlans = safeCount(tradePlans.count);
+    const dueResearch = safeCount(research.dueReviewCount);
+    const activeResearch = safeCount(research.activeCount);
+    const totalResearch = safeCount(research.count);
+    const trainingCount = safeCount(training.count);
+    const journalCount = safeCount(journal.count);
+    const portfolioStatus = ["BLOCKED", "REVIEW", "WITHIN_LIMITS", "NO_POSITIONS"].includes(portfolio.status)
+      ? portfolio.status
+      : "NO_POSITIONS";
+
+    if (blockedPlans) {
+      add(
+        "resolve-blocked-trade-plans",
+        "critical",
+        "Resolve blocked trade plans / 处理阻塞计划",
+        `${blockedPlans} active plan(s) contain deterministic risk blockers. Review the findings before advancing any plan. / ${blockedPlans} 条活跃计划存在风控阻塞项。`,
+        "trade-plans.html",
+        blockedPlans
+      );
+    }
+    if (portfolioStatus === "BLOCKED") {
+      add(
+        "resolve-blocked-portfolio-risk",
+        "critical",
+        "Resolve portfolio risk blockers / 处理组合风险阻塞",
+        "The saved Portfolio Risk Map exceeds at least one configured limit. Review the local findings before adding risk. / 当前组合风险图至少超出一项自定义限制。",
+        "portfolio-risk.html",
+        safeCount(portfolio.positionCount)
+      );
+    }
+    if (!hasSnapshot) {
+      add(
+        "refresh-member-status",
+        "high",
+        "Refresh member status / 刷新会员状态",
+        "No current validated member snapshot is available on this device. Run the read-only account check. / 本设备没有有效会员快照，请运行只读账户检查。",
+        "gca/member-access/",
+        1
+      );
+    }
+    if (dueResearch) {
+      add(
+        "review-due-research",
+        "high",
+        "Review due research / 复核到期研究",
+        `${dueResearch} research note(s) reached their review date. Recheck evidence and invalidation before using them in a plan. / ${dueResearch} 条研究记录已到复核日期。`,
+        "research-notes.html",
+        dueResearch
+      );
+    }
+    if (duePlans) {
+      add(
+        "review-due-trade-plans",
+        "high",
+        "Review due trade plans / 复核到期计划",
+        `${duePlans} active plan(s) reached their planned date. Revalidate prices, assumptions, and risk inputs manually. / ${duePlans} 条活跃计划已到计划日期。`,
+        "trade-plans.html",
+        duePlans
+      );
+    }
+    if (readyPlans) {
+      add(
+        "complete-plan-review",
+        "high",
+        "Complete manual plan review / 完成人工计划审核",
+        `${readyPlans} plan(s) passed the published checks and still require human review; this is not execution approval. / ${readyPlans} 条计划已通过公开检查，仍需人工审核。`,
+        "trade-plans.html",
+        readyPlans
+      );
+    }
+    if (trainingCount > 0 && training.latestStatus === "REVIEW_REQUIRED") {
+      add(
+        "repeat-risk-training",
+        "high",
+        "Review missed risk topics / 复习风控薄弱项",
+        "The latest completed training attempt requires review. Revisit the missed topics before progressing a plan. / 最近一次训练仍有需要复习的风控主题。",
+        "risk-training.html",
+        safeCount(training.latestMissedQuestionIds?.length)
+      );
+    }
+    if (trainingCount === 0) {
+      add(
+        "complete-risk-training",
+        "normal",
+        "Complete risk training / 完成风控训练",
+        "No completed risk-discipline attempt is stored on this device. / 本设备尚无已完成的风控训练记录。",
+        "risk-training.html",
+        1
+      );
+    }
+    if (totalResearch === 0) {
+      add(
+        "create-research-note",
+        "normal",
+        "Create a structured research note / 建立结构化研究记录",
+        "Start with a thesis, public evidence, invalidation condition, and review date before creating a plan. / 建立计划前先记录论点、公开证据、失效条件和复核日期。",
+        "research-notes.html",
+        1
+      );
+    } else if (activeResearch > 0 && totalPlans === 0) {
+      add(
+        "build-first-trade-plan",
+        "normal",
+        "Turn reviewed research into a plan / 将研究转为计划",
+        "Active research exists but no validated trade plan is stored. Use the bounded handoff, then add prices and risk inputs manually. / 已有活跃研究但尚无有效交易计划。",
+        "research-notes.html",
+        activeResearch
+      );
+    }
+    if (reviewPlans) {
+      add(
+        "review-plan-warnings",
+        "normal",
+        "Review plan warnings / 复核计划警告",
+        `${reviewPlans} active plan(s) have warnings without hard blockers. Recheck each warning before changing workflow status. / ${reviewPlans} 条活跃计划存在警告项。`,
+        "trade-plans.html",
+        reviewPlans
+      );
+    }
+    if (portfolioStatus === "REVIEW") {
+      add(
+        "review-portfolio-warnings",
+        "normal",
+        "Review portfolio warnings / 复核组合风险警告",
+        "The saved portfolio is within hard limits but contains concentration, leverage, or stress warnings that require review. / 当前组合未触发硬性限制，但仍有集中度、杠杆或压力警告。",
+        "portfolio-risk.html",
+        safeCount(portfolio.positionCount)
+      );
+    }
+    if (completedPlans > 0 && journalCount === 0) {
+      add(
+        "record-completed-outcomes",
+        "normal",
+        "Record completed outcomes / 记录已完成结果",
+        "Completed plans exist while the local journal is empty. If a plan was executed, enter its actual date and realized return manually. / 已有完成状态计划；如实际执行过，请手动记录日期和实际收益。",
+        "trade-plans.html",
+        completedPlans
+      );
+    }
+
+    if (!actions.length) {
+      add(
+        "workflow-up-to-date",
+        "complete",
+        "Local workflow is up to date / 本地流程暂无待办",
+        "No blocker, due-review, or missing-foundation action was found in the validated local summaries. Continue periodic manual review. / 已校验的本地摘要中没有发现阻塞、到期复核或基础缺口。",
+        "tools.html",
+        0
+      );
+    }
+
+    return Object.freeze(
+      actions
+        .sort((left, right) => WORKFLOW_PRIORITY_ORDER[left.priority] - WORKFLOW_PRIORITY_ORDER[right.priority] || left.order - right.order)
+        .slice(0, WORKFLOW_QUEUE_LIMIT)
+        .map(({ order: _order, ...action }) => Object.freeze(action))
+    );
   }
 
   function creditCheck(snapshot, service) {
@@ -462,6 +655,7 @@
     REQUEST_HISTORY_KEY,
     REQUEST_BACKUP_SCHEMA,
     REQUEST_HISTORY_LIMIT,
+    WORKFLOW_QUEUE_LIMIT,
     SERVICE_CATALOG,
     serviceById,
     maskWallet,
@@ -471,6 +665,7 @@
     summarizeResearchNotes,
     summarizeTradePlans,
     summarizePortfolioRisk,
+    buildWorkflowQueue,
     buildServiceRequest,
     parseRequestHistory,
     createRequestReceipt,

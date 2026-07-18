@@ -4,21 +4,21 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>GCA Member Workspace | Credits, Tools, and Service Requests</title>
-    <meta name="description" content="Browser-local GCA member workspace for device status, utility credits, risk tools, journal, training, research and portfolio-risk summaries, and manual service request packets.">
+    <meta name="description" content="Browser-local GCA member workspace with a deterministic action queue built from validated device status, training, research, trade-plan, portfolio-risk, and journal summaries.">
     <link rel="canonical" href="https://gcagochina.com/member-workspace.html">
     <link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">
     <link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="GCA | Go China Access">
     <meta property="og:title" content="GCA Member Workspace | Credits, Tools, and Service Requests">
-    <meta property="og:description" content="One browser-local workspace for GCA member status, credits, public risk tools, journal, training, research and portfolio-risk summaries, and manual service requests.">
+    <meta property="og:description" content="One browser-local workspace with a prioritized action queue, GCA member status, credits, public risk tools, and manual service requests.">
     <meta property="og:url" content="https://gcagochina.com/member-workspace.html">
     <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="GCA Member Workspace | Credits, Tools, and Service Requests">
-    <meta name="twitter:description" content="GCA member status, credits, public tools, journal, training, research and portfolio-risk summaries in one browser-local workspace.">
+    <meta name="twitter:description" content="GCA member status and validated local workflow summaries organized into a deterministic action queue.">
     <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
     <style>
       :root { color-scheme:light; --bg:#f7f8f5; --ink:#151817; --muted:#5e6763; --line:#dfe4dd; --panel:#fff; --soft:#eef3ef; --red:#d71920; --blue:#1557d7; --green:#087f5b; --gold:#8a6500; }
@@ -70,9 +70,19 @@
       .activity-status { color:var(--green); font-size:12px; font-weight:850; text-align:right; text-transform:uppercase; }
       .activity-meta { display:flex; flex-wrap:wrap; gap:8px 16px; margin-top:9px; color:var(--muted); font-size:13px; }
       .activity-empty { margin:0; padding:18px 0; color:var(--muted); }
+      .workflow-queue { margin:18px 0 0; padding:0; list-style:none; border-bottom:1px solid var(--line); }
+      .workflow-item { display:grid; grid-template-columns:minmax(92px,.28fr) minmax(0,1fr) auto; align-items:center; gap:16px; border-top:1px solid var(--line); padding:16px 0; }
+      .workflow-item.critical { border-left:3px solid var(--red); padding-left:13px; }
+      .workflow-priority { color:var(--muted); font-size:12px; font-weight:850; text-transform:uppercase; }
+      .workflow-item.critical .workflow-priority { color:var(--red); }
+      .workflow-item.high .workflow-priority { color:var(--gold); }
+      .workflow-item.complete .workflow-priority { color:var(--green); }
+      .workflow-copy { min-width:0; }
+      .workflow-copy h3 { margin:0 0 4px; overflow-wrap:anywhere; }
+      .workflow-copy p { margin:0; }
       footer { border-top:1px solid var(--line); padding:24px 0; color:var(--muted); font-size:14px; }
       @media (max-width:980px) { .catalog{grid-template-columns:repeat(2,minmax(0,1fr))}.metrics,.journal-grid,.training-grid,.research-grid,.trade-plan-grid,.portfolio-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.workspace-grid{grid-template-columns:1fr} }
-      @media (max-width:680px) { h1{font-size:40px}.catalog,.metrics,.journal-grid,.training-grid,.research-grid,.trade-plan-grid,.portfolio-grid{grid-template-columns:1fr}.service{min-height:0}nav{align-items:flex-start;flex-direction:column;padding:13px 0}.nav-links{gap:12px}.activity-head,.activity-row-head{display:grid}.activity-count{text-align:left}.activity-status{text-align:left} }
+      @media (max-width:680px) { h1{font-size:40px}.catalog,.metrics,.journal-grid,.training-grid,.research-grid,.trade-plan-grid,.portfolio-grid{grid-template-columns:1fr}.service{min-height:0}nav{align-items:flex-start;flex-direction:column;padding:13px 0}.nav-links{gap:12px}.activity-head,.activity-row-head{display:grid}.activity-count{text-align:left}.activity-status{text-align:left}.workflow-item{grid-template-columns:1fr}.workflow-item .button{width:100%} }
     </style>
     <link rel="stylesheet" href="assets/gca-site.css?v=20260711">
     <script src="assets/gca-site.js?v=20260711" defer></script>
@@ -83,8 +93,8 @@
       <section aria-labelledby="title">
         <p class="eyebrow">GCA AI Quant Access · Browser-Local Member Area</p>
         <h1 id="title">Member Workspace <span lang="zh-CN">会员工作区</span></h1>
-        <p class="lead">Review the non-sensitive status saved on this device, open GCA risk tools, inspect local journal, training and research summaries, and prepare a manual service request without exposing an admin token or deducting credits.</p>
-        <p class="lead" lang="zh-CN">查看本设备保存的非敏感会员状态、进入 GCA 风险工具、检查本地交易日志、训练与研究摘要，并生成需要人工审核的服务申请。页面不会暴露管理员 token，也不会自动扣除积分。</p>
+        <p class="lead">Review the non-sensitive status saved on this device, use a prioritized local workflow queue, open GCA risk tools, and prepare a manual service request without exposing an admin token or deducting credits.</p>
+        <p class="lead" lang="zh-CN">查看本设备保存的非敏感会员状态和优先工作队列、进入 GCA 风险工具，并生成需要人工审核的服务申请。页面不会暴露管理员 token，也不会自动扣除积分。</p>
         <div class="actions" style="margin-top:18px"><a class="button primary" href="#requestBuilder">Build Service Request / 生成服务申请</a><a class="button" href="gca/member-access/">Refresh Member Status / 刷新会员状态</a><a class="button" href="tools.html">Open Risk Tools / 打开风险工具</a></div>
       </section>
 
@@ -100,6 +110,21 @@
         </div>
         <p class="note" id="workspaceSavedAt" style="margin-top:14px">No current device snapshot / 本设备暂无状态快照</p>
         <div class="actions" style="margin-top:14px"><a class="button" href="gca/member-access/">Run Read-Only Verification / 运行只读验证</a><a class="button" href="member-ledger.html">Ledger Rules / 账本规则</a><a class="button" href="credits.html">Credits Catalog / 积分目录</a></div>
+      </section>
+
+      <section class="section panel" aria-labelledby="workflowQueueTitle">
+        <div class="activity-head">
+          <div>
+            <p class="eyebrow">Local Workflow Inbox</p>
+            <h2 id="workflowQueueTitle">Priority Action Queue <span lang="zh-CN">优先行动队列</span></h2>
+            <p class="note">Deterministic next steps derived only from validated summaries stored in this browser.</p>
+          </div>
+          <div class="activity-count"><span>Open actions / 待办</span><strong id="workflowActionCount">0</strong></div>
+        </div>
+        <div id="workflowQueueState" class="status-message" aria-live="polite">Reading validated local summaries / 正在读取已校验的本地摘要</div>
+        <ol class="workflow-queue" id="workflowQueue" aria-label="Prioritized local workflow actions"></ol>
+        <div class="actions"><button class="button" id="refreshWorkflowQueue" type="button">Refresh Local Summary / 刷新本地摘要</button></div>
+        <p class="boundary">The queue reads summary counts and statuses only. It does not read note, plan, position, or journal text; write to any tool; upload data; call protected routes; fetch market data; score trading ability; approve execution; or place orders. Priority describes workflow attention, not market opportunity.</p>
       </section>
 
       <section class="section workspace-grid" aria-label="Journal and operating boundaries">
@@ -305,7 +330,8 @@
             document.getElementById("workspaceBalance").textContent = "-";
             document.getElementById("workspaceCredits").textContent = "Not active / 未激活";
             document.getElementById("workspaceMember").textContent = "Not active / 未激活";
-            return;
+            document.getElementById("workspaceSavedAt").textContent = "No current device snapshot / 本设备暂无状态快照";
+            return null;
           }
           state.className = "status-message good";
           state.textContent = "Device snapshot loaded. Refresh Member Access for a current on-chain balance. / 已读取本设备快照，请在会员入口刷新当前链上余额。";
@@ -314,6 +340,7 @@
           document.getElementById("workspaceCredits").textContent = snapshot.creditStatus === "not_created" ? "Not active / 未激活" : `${snapshot.remainingCredits} / ${snapshot.creditAmount}`;
           document.getElementById("workspaceMember").textContent = snapshot.memberStatus === "not_created" ? "Not active / 未激活" : `${snapshot.memberStatus} · ${snapshot.memberBenefitClaimStatus}`;
           document.getElementById("workspaceSavedAt").textContent = `Saved ${new Date(snapshot.savedAt).toLocaleString()} · Holding days verified: ${snapshot.holdingPeriodDaysVerified}. / 保存时间 ${new Date(snapshot.savedAt).toLocaleString()}。`;
+          return snapshot;
         }
 
         function renderJournalSummary() {
@@ -322,6 +349,7 @@
           document.getElementById("journalWinRate").textContent = `${summary.winRatePercent.toFixed(2)}%`;
           document.getElementById("journalAverage").textContent = signedPercent(summary.averageReturnPercent);
           document.getElementById("journalQuality").textContent = summary.sampleQuality.code;
+          return summary;
         }
 
         function trainingStatusLabel(code) {
@@ -339,6 +367,7 @@
           document.getElementById("trainingSavedAt").textContent = summary.latestCompletedAt
             ? `Latest completed attempt: ${new Date(summary.latestCompletedAt).toLocaleString()} · Review areas: ${summary.latestMissedQuestionIds.length}. / 最近训练及复习项来自本设备。`
             : "No completed training history on this device. / 本设备暂无已完成训练。";
+          return summary;
         }
 
         function renderResearchSummary() {
@@ -350,6 +379,7 @@
           document.getElementById("researchSavedAt").textContent = summary.latestUpdatedAt
             ? `Latest note update: ${new Date(summary.latestUpdatedAt).toLocaleString()}. Content remains in this browser. / 最近研究记录更新时间来自本设备。`
             : "No validated research notes on this device. / 本设备暂无通过校验的研究记录。";
+          return summary;
         }
 
         function renderPortfolioSummary() {
@@ -361,6 +391,7 @@
           document.getElementById("portfolioSummarySavedAt").textContent = summary.savedAt
             ? `Saved portfolio map: ${new Date(summary.savedAt).toLocaleString()} · Margin use ${summary.marginUtilizationPercent.toFixed(2)}%. / 组合风险图保存在当前设备。`
             : "No validated portfolio risk map on this device. / 本设备暂无通过校验的组合风险图。";
+          return summary;
         }
 
         function renderTradePlanSummary() {
@@ -372,6 +403,63 @@
           document.getElementById("tradePlanSummarySavedAt").textContent = summary.latestUpdatedAt
             ? `Latest plan update: ${new Date(summary.latestUpdatedAt).toLocaleString()} · Due plans: ${summary.dueCount}. / 最近计划更新时间如上。`
             : "No validated trade plan ledger on this device. / 本设备暂无通过校验的交易计划台账。";
+          return summary;
+        }
+
+        function workflowPriorityLabel(priority) {
+          return ({
+            critical: "Blocker / 阻塞",
+            high: "Review now / 优先复核",
+            normal: "Next step / 下一步",
+            complete: "Current / 当前正常"
+          })[priority] || "Next step / 下一步";
+        }
+
+        function renderWorkflowQueue(summaries) {
+          const actions = engine.buildWorkflowQueue(summaries);
+          const openCount = actions.filter((action) => action.priority !== "complete").length;
+          document.getElementById("workflowActionCount").textContent = String(openCount);
+          const state = document.getElementById("workflowQueueState");
+          state.className = openCount ? "status-message" : "status-message good";
+          state.textContent = openCount
+            ? `${openCount} prioritized local action(s). Resolve blockers first; queue order is not a market signal. / 当前有 ${openCount} 项本地待办，请先处理阻塞项。`
+            : "No blocker, due-review, or missing-foundation action was found. / 当前没有发现阻塞、到期复核或基础缺口。";
+          const list = document.getElementById("workflowQueue");
+          list.replaceChildren();
+          actions.forEach((action) => {
+            const item = document.createElement("li");
+            item.className = `workflow-item ${action.priority}`;
+            const priority = document.createElement("span");
+            priority.className = "workflow-priority";
+            priority.textContent = workflowPriorityLabel(action.priority);
+            const copy = document.createElement("div");
+            copy.className = "workflow-copy";
+            const title = document.createElement("h3");
+            title.textContent = action.title;
+            const detail = document.createElement("p");
+            detail.className = "note";
+            detail.textContent = action.detail;
+            copy.append(title, detail);
+            const link = document.createElement("a");
+            link.className = "button";
+            link.href = action.href;
+            link.textContent = "Open / 打开";
+            item.append(priority, copy, link);
+            list.append(item);
+          });
+          return actions;
+        }
+
+        function renderLocalWorkflow() {
+          const summaries = {
+            snapshot: renderDeviceStatus(),
+            journal: renderJournalSummary(),
+            training: renderTrainingSummary(),
+            research: renderResearchSummary(),
+            tradePlans: renderTradePlanSummary(),
+            portfolio: renderPortfolioSummary()
+          };
+          return renderWorkflowQueue(summaries);
         }
 
         function requestActionLabel(action) {
@@ -638,13 +726,9 @@
         });
 
         serviceId.addEventListener("change", updateSelectedService);
+        document.getElementById("refreshWorkflowQueue").addEventListener("click", renderLocalWorkflow);
         renderCatalog();
-        renderDeviceStatus();
-        renderJournalSummary();
-        renderTrainingSummary();
-        renderResearchSummary();
-        renderTradePlanSummary();
-        renderPortfolioSummary();
+        renderLocalWorkflow();
         requestHistory = engine.parseRequestHistory(readLocal(engine.REQUEST_HISTORY_KEY));
         renderRequestHistory();
         updateSelectedService();

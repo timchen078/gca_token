@@ -97,6 +97,11 @@ class PublicSiteExperienceTests(unittest.TestCase):
             "workspaceBalance",
             "workspaceCredits",
             "workspaceMember",
+            "workflowQueueTitle",
+            "workflowActionCount",
+            "workflowQueueState",
+            "workflowQueue",
+            "refreshWorkflowQueue",
             "journalTradeCount",
             "journalWinRate",
             "journalAverage",
@@ -162,6 +167,9 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn("engine.summarizeResearchNotes", page)
         self.assertIn("engine.summarizeTradePlans", page)
         self.assertIn("engine.summarizePortfolioRisk", page)
+        self.assertIn("engine.buildWorkflowQueue", page)
+        self.assertIn("renderLocalWorkflow", page)
+        self.assertIn("Priority describes workflow attention, not market opportunity", page)
         self.assertIn("trainingStatusLabel", page)
         self.assertIn("engine.buildServiceRequest", page)
         self.assertIn("engine.createRequestReceipt", page)
@@ -189,12 +197,18 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn('const PORTFOLIO_RISK_KEY = "gca_portfolio_risk_v1"', engine)
         self.assertIn('const REQUEST_HISTORY_KEY = "gca_member_service_request_history_v1"', engine)
         self.assertIn('const REQUEST_BACKUP_SCHEMA = "gca-member-request-history-backup-v1"', engine)
+        self.assertIn("const WORKFLOW_QUEUE_LIMIT = 8", engine)
         self.assertIn("SENSITIVE_RE", engine)
         workspace = next(item for item in product["productModules"] if item["id"] == "gca-member-workspace")
         self.assertEqual(workspace["status"], "public-browser-local-workspace-live-account-ledger-intake-live")
         self.assertEqual(workspace["publicUrl"], "https://gcagochina.com/member-workspace.html")
         self.assertTrue(workspace["browserLocalRequestReceipts"])
         self.assertTrue(workspace["portableRequestReceiptBackup"])
+        self.assertTrue(workspace["localWorkflowQueue"])
+        self.assertTrue(workspace["workflowQueueReadsSummaryOnly"])
+        self.assertFalse(workspace["workflowQueueWritesToolData"])
+        self.assertFalse(workspace["workflowQueueCallsProtectedRoutes"])
+        self.assertFalse(workspace["workflowQueueApprovesExecution"])
         self.assertFalse(workspace["requestReceiptBackupContainsIdentityData"])
         self.assertFalse(workspace["requestReceiptBackupContainsRequestContent"])
         self.assertEqual(product["officialLinks"]["memberWorkspace"], "https://gcagochina.com/member-workspace.html")
@@ -345,6 +359,69 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertEqual(portfolio_service["creditUnit"], 15)
         self.assertEqual(portfolio_service["previewUrl"], "portfolio-risk.html")
         self.assertEqual(portfolio_service["stage"], "public-preview")
+
+    def test_member_workspace_builds_bounded_priority_workflow_queue(self):
+        bundled_node = Path("/Users/abc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node")
+        node = shutil.which("node") or (str(bundled_node) if bundled_node.exists() else "")
+        if not node:
+            self.skipTest("Node.js is unavailable")
+
+        module_path = SITE / "assets" / "member-workspace.js"
+        script = (
+            "const w=require(process.argv[1]);"
+            "const snapshot={walletAddress:'0x1111111111111111111111111111111111111111',savedAt:'2026-07-18T00:00:00Z'};"
+            "const empty=w.buildWorkflowQueue({});"
+            "const urgent=w.buildWorkflowQueue({snapshot,training:{count:1,latestStatus:'REVIEW_REQUIRED',latestMissedQuestionIds:['risk-budget','simulation']},research:{count:3,activeCount:2,dueReviewCount:1,title:'private key should be ignored'},tradePlans:{count:4,blockedCount:1,dueCount:2,readyForReviewCount:1,reviewCount:1,completedCount:0},portfolio:{status:'BLOCKED',positionCount:2},journal:{count:0}});"
+            "const current=w.buildWorkflowQueue({snapshot,training:{count:1,latestStatus:'FOUNDATION_READY'},research:{count:2,activeCount:0,dueReviewCount:0},tradePlans:{count:2,blockedCount:0,dueCount:0,readyForReviewCount:0,reviewCount:0,completedCount:2},portfolio:{status:'WITHIN_LIMITS',positionCount:2},journal:{count:2}});"
+            "const researchOnly=w.buildWorkflowQueue({snapshot,training:{count:1,latestStatus:'FOUNDATION_READY'},research:{count:2,activeCount:2,dueReviewCount:0},tradePlans:{count:0},portfolio:{status:'NO_POSITIONS'},journal:{count:0}});"
+            "const completedWithoutJournal=w.buildWorkflowQueue({snapshot,training:{count:1,latestStatus:'FOUNDATION_READY'},research:{count:1,activeCount:0,dueReviewCount:0},tradePlans:{count:2,completedCount:2},portfolio:{status:'NO_POSITIONS'},journal:{count:0}});"
+            "process.stdout.write(JSON.stringify({empty,urgent,current,researchOnly,completedWithoutJournal,limit:w.WORKFLOW_QUEUE_LIMIT}));"
+        )
+        completed = subprocess.run(
+            [node, "-e", script, str(module_path)],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        result = json.loads(completed.stdout)
+
+        self.assertEqual(result["limit"], 8)
+        self.assertEqual(
+            [item["id"] for item in result["empty"]],
+            ["refresh-member-status", "complete-risk-training", "create-research-note"],
+        )
+        self.assertEqual(
+            [item["id"] for item in result["urgent"]],
+            [
+                "resolve-blocked-trade-plans",
+                "resolve-blocked-portfolio-risk",
+                "review-due-research",
+                "review-due-trade-plans",
+                "complete-plan-review",
+                "repeat-risk-training",
+                "review-plan-warnings",
+            ],
+        )
+        priorities = {"critical": 0, "high": 1, "normal": 2, "complete": 3}
+        self.assertEqual(
+            [priorities[item["priority"]] for item in result["urgent"]],
+            sorted(priorities[item["priority"]] for item in result["urgent"]),
+        )
+        self.assertLessEqual(len(result["urgent"]), result["limit"])
+        self.assertEqual([item["id"] for item in result["current"]], ["workflow-up-to-date"])
+        self.assertEqual(result["current"][0]["priority"], "complete")
+        self.assertEqual([item["id"] for item in result["researchOnly"]], ["build-first-trade-plan"])
+        self.assertEqual([item["id"] for item in result["completedWithoutJournal"]], ["record-completed-outcomes"])
+        allowed_hrefs = {
+            "gca/member-access/",
+            "risk-training.html",
+            "research-notes.html",
+            "trade-plans.html",
+            "portfolio-risk.html",
+            "tools.html",
+        }
+        self.assertTrue(all(item["href"] in allowed_hrefs for item in result["urgent"] + result["empty"] + result["current"]))
+        self.assertNotIn("private key", json.dumps(result).lower())
 
     def test_risk_calculator_is_client_side_and_has_no_execution_path(self):
         page = (SITE / "risk-calculator.html").read_text()

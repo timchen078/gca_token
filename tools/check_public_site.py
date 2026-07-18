@@ -5445,6 +5445,11 @@ def validate_member_workspace_page(text: str) -> None:
     assert_contains(text, 'id="workspaceBalance"', label)
     assert_contains(text, 'id="workspaceCredits"', label)
     assert_contains(text, 'id="workspaceMember"', label)
+    assert_contains(text, 'id="workflowQueueTitle"', label)
+    assert_contains(text, 'id="workflowActionCount"', label)
+    assert_contains(text, 'id="workflowQueueState"', label)
+    assert_contains(text, 'id="workflowQueue"', label)
+    assert_contains(text, 'id="refreshWorkflowQueue"', label)
     assert_contains(text, 'id="journalTradeCount"', label)
     assert_contains(text, 'id="journalWinRate"', label)
     assert_contains(text, 'id="journalAverage"', label)
@@ -5504,6 +5509,9 @@ def validate_member_workspace_page(text: str) -> None:
     assert_contains(text, "engine.summarizeResearchNotes", label)
     assert_contains(text, "engine.summarizeTradePlans", label)
     assert_contains(text, "engine.summarizePortfolioRisk", label)
+    assert_contains(text, "engine.buildWorkflowQueue", label)
+    assert_contains(text, "renderLocalWorkflow", label)
+    assert_contains(text, "Priority describes workflow attention, not market opportunity", label)
     assert_contains(text, "trainingStatusLabel", label)
     assert_contains(text, "engine.buildServiceRequest", label)
     assert_contains(text, "engine.createRequestReceipt", label)
@@ -8354,6 +8362,12 @@ def validate_product_json(text: str) -> None:
         raise SiteCheckError(f"{label}: member workspace browserLocalRequestReceipts must be true")
     if member_workspace.get("portableRequestReceiptBackup") is not True:
         raise SiteCheckError(f"{label}: member workspace portableRequestReceiptBackup must be true")
+    for key in ("localWorkflowQueue", "workflowQueueReadsSummaryOnly"):
+        if member_workspace.get(key) is not True:
+            raise SiteCheckError(f"{label}: member workspace {key} must be true")
+    for key in ("workflowQueueWritesToolData", "workflowQueueCallsProtectedRoutes", "workflowQueueApprovesExecution"):
+        if member_workspace.get(key) is not False:
+            raise SiteCheckError(f"{label}: member workspace {key} must be false")
     if member_workspace.get("requestReceiptBackupContainsIdentityData") is not False:
         raise SiteCheckError(f"{label}: member workspace receipt backup must exclude identity data")
     if member_workspace.get("requestReceiptBackupContainsRequestContent") is not False:
@@ -15193,6 +15207,7 @@ def validate_sitemap(text: str) -> None:
     assert_sitemap_lastmod("research-notes.html", "2026-07-18")
     assert_sitemap_lastmod("trade-plans.html", "2026-07-18")
     assert_sitemap_lastmod("portfolio-risk.html", "2026-07-18")
+    assert_sitemap_lastmod("member-workspace.html", "2026-07-18")
     assert_sitemap_lastmod("project.json", "2026-07-18")
     for path in (
         "basescan-handoff.html",
