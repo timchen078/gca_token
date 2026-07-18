@@ -11,7 +11,7 @@
     "productName": "GCA AI Quant Access",
     "tagline": "Narrative meets risk control.",
     "summary": "A non-custodial product direction for China-facing Web3 narrative research, structured research notes, browser-local trade planning, portfolio risk mapping, risk-discipline training, local trade journaling, post-trade loss review, sample backtests, risk warnings, ENTRY_READY reviews, position sizing, education, and member workflows. Account intake, eligible ledger records, and a browser-local member workspace are live; ten browser-only risk and research tools are public previews while connected trading and market-data modules remain staged behind product release gates.",
-    "currentStage": "account-ledger-path-live-product-tools-planned",
+    "currentStage": "account-ledger-and-browser-tools-live-connected-services-staged",
     "publicRiskToolPreviewsLive": 10,
     "publicAccountUiLive": true,
     "liveTradingEnabled": false,

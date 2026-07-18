@@ -1,7 +1,7 @@
 {
   "schema": "https://gcagochina.com/basescan-remediation.json",
   "pageUrl": "https://gcagochina.com/basescan-remediation.html",
-  "lastUpdated": "2026-06-07",
+  "lastUpdated": "2026-07-18",
   "projectName": "GCA",
   "tokenSymbol": "GCA",
   "network": "Base Mainnet",
@@ -126,7 +126,7 @@
     "ready": true,
     "finalSubmissionPackage": {
       "status": "ready-for-owner-submission",
-      "generatedAt": "2026-06-06T11:10:54Z",
+      "generatedAt": "2026-07-18T12:03:57Z",
       "markdown": "launch/basescan_final_submission_package.md",
       "json": "launch/basescan_final_submission_package.json",
       "preflightPage": "https://gcagochina.com/basescan-preflight.html",
@@ -183,7 +183,7 @@
         "launch/basescan_reviewer_checklist.json",
         "launch/basescan_reviewer_checklist.md"
       ],
-      "baseScanFinalSubmissionPackageGeneratedAt": "2026-06-06T11:10:54Z",
+      "baseScanFinalSubmissionPackageGeneratedAt": "2026-07-18T12:03:57Z",
       "dailyStatusGeneratedAt": "2026-06-18T08:31:47Z",
       "currentBlockedItems": [],
       "regenerateAfter": [
