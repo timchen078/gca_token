@@ -88,14 +88,14 @@
     <script src="assets/gca-site.js?v=20260711" defer></script>
   </head>
   <body>
-    <header><nav class="shell" aria-label="Primary"><a class="brand" href="index.html"><img src="assets/gca-logo.svg" alt="GCA logo"><span>GCA</span></a><div class="nav-links"><a href="gca/member-access/">Member Access</a><a href="tools.html">Risk Tools</a><a href="trade-plans.html">Plans</a><a href="portfolio-risk.html">Portfolio</a><a href="trade-journal.html">Journal</a><a href="research-notes.html">Research</a><a href="support.html">Support</a></div></nav></header>
+    <header><nav class="shell" aria-label="Primary"><a class="brand" href="index.html"><img src="assets/gca-logo.svg" alt="GCA logo"><span>GCA</span></a><div class="nav-links"><a href="gca/member-access/">Member Access</a><a href="risk-passport.html">Risk Passport</a><a href="tools.html">Risk Tools</a><a href="trade-plans.html">Plans</a><a href="portfolio-risk.html">Portfolio</a><a href="trade-journal.html">Journal</a><a href="research-notes.html">Research</a><a href="support.html">Support</a></div></nav></header>
     <main class="shell" id="main-content">
       <section aria-labelledby="title">
         <p class="eyebrow">GCA AI Quant Access · Browser-Local Member Area</p>
         <h1 id="title">Member Workspace <span lang="zh-CN">会员工作区</span></h1>
         <p class="lead">Review the non-sensitive status saved on this device, use a prioritized local workflow queue, open GCA risk tools, and prepare a manual service request without exposing an admin token or deducting credits.</p>
         <p class="lead" lang="zh-CN">查看本设备保存的非敏感会员状态和优先工作队列、进入 GCA 风险工具，并生成需要人工审核的服务申请。页面不会暴露管理员 token，也不会自动扣除积分。</p>
-        <div class="actions" style="margin-top:18px"><a class="button primary" href="#requestBuilder">Build Service Request / 生成服务申请</a><a class="button" href="gca/member-access/">Refresh Member Status / 刷新会员状态</a><a class="button" href="tools.html">Open Risk Tools / 打开风险工具</a></div>
+        <div class="actions" style="margin-top:18px"><a class="button primary" href="#requestBuilder">Build Service Request / 生成服务申请</a><a class="button" href="gca/member-access/">Refresh Member Status / 刷新会员状态</a><a class="button" href="risk-passport.html">Open Risk Passport / 打开风控流程报告</a><a class="button" href="tools.html">Open Risk Tools / 打开风险工具</a></div>
       </section>
 
       <section class="section panel" aria-labelledby="statusTitle">
@@ -123,7 +123,7 @@
         </div>
         <div id="workflowQueueState" class="status-message" aria-live="polite">Reading validated local summaries / 正在读取已校验的本地摘要</div>
         <ol class="workflow-queue" id="workflowQueue" aria-label="Prioritized local workflow actions"></ol>
-        <div class="actions"><button class="button" id="refreshWorkflowQueue" type="button">Refresh Local Summary / 刷新本地摘要</button></div>
+        <div class="actions"><button class="button" id="refreshWorkflowQueue" type="button">Refresh Local Summary / 刷新本地摘要</button><a class="button" href="risk-passport.html">Export Risk Passport / 导出风控流程报告</a></div>
         <p class="boundary">The queue reads summary counts and statuses only. It does not read note, plan, position, or journal text; write to any tool; upload data; call protected routes; fetch market data; score trading ability; approve execution; or place orders. Priority describes workflow attention, not market opportunity.</p>
       </section>
 
