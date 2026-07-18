@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GCA Trade Plan Ledger | Browser-Local Pre-Trade Review</title>
+    <meta name="description" content="Browser-local GCA trade plan ledger for structured thesis, invalidation, position risk, readiness checks, workflow status, and validated JSON backup.">
+    <link rel="canonical" href="https://gcagochina.com/trade-plans.html">
+    <link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">
+    <link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="GCA | Go China Access">
+    <meta property="og:title" content="GCA Trade Plan Ledger | Browser-Local Pre-Trade Review">
+    <meta property="og:description" content="Structure, calculate, review, archive, and back up manually entered trade plans on the current device.">
+    <meta property="og:url" content="https://gcagochina.com/trade-plans.html">
+    <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="GCA Trade Plan Ledger | Browser-Local Pre-Trade Review">
+    <meta name="twitter:description" content="A browser-local ledger for trade structure, risk math, readiness review, and tool handoffs.">
+    <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <style>
+      :root { color-scheme:light; --bg:#f7f8f5; --ink:#151817; --muted:#5e6763; --line:#dfe4dd; --panel:#fff; --soft:#f1f4f0; --red:#d71920; --blue:#1557d7; --green:#087f5b; --gold:#8a6500; }
+      * { box-sizing:border-box; }
+      [hidden] { display:none !important; }
+      body { margin:0; color:var(--ink); background:var(--bg); font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; line-height:1.5; }
+      a { color:var(--blue); text-decoration:none; } a:hover { text-decoration:underline; }
+      .shell { width:min(1220px,calc(100% - 32px)); margin:0 auto; }
+      header { position:sticky; top:0; z-index:3; border-bottom:1px solid var(--line); background:rgba(247,248,245,.95); backdrop-filter:blur(16px); }
+      nav { min-height:68px; display:flex; align-items:center; justify-content:space-between; gap:18px; }
+      .brand { display:inline-flex; align-items:center; gap:10px; color:var(--ink); font-weight:850; } .brand img { width:34px; height:34px; }
+      .nav-links { display:flex; align-items:center; gap:16px; font-size:14px; }
+      main { padding:34px 0 64px; }
+      h1,h2,h3,p { margin-top:0; }
+      h1 { max-width:920px; margin-bottom:14px; font-size:54px; line-height:1; letter-spacing:0; }
+      h2 { margin-bottom:14px; font-size:24px; } h3 { margin-bottom:8px; font-size:17px; }
+      .eyebrow { margin:0 0 10px; color:var(--red); font-size:13px; font-weight:850; text-transform:uppercase; }
+      .lead,.note { color:var(--muted); } .lead { max-width:980px; margin-bottom:0; font-size:17px; } .note { margin:0; }
+      .section { margin-top:22px; }
+      .layout { display:grid; grid-template-columns:minmax(360px,.92fr) minmax(0,1.08fr); gap:18px; align-items:start; }
+      .layout > * { min-width:0; }
+      .panel { border:1px solid var(--line); border-radius:8px; background:var(--panel); padding:22px; }
+      .form-grid,.metrics,.filters { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:13px; }
+      .field { display:grid; gap:6px; min-width:0; } .field.full { grid-column:1/-1; }
+      label { font-size:13px; font-weight:800; }
+      input,select,textarea { width:100%; min-height:42px; border:1px solid var(--line); border-radius:6px; background:#fff; color:var(--ink); padding:9px 11px; font:inherit; }
+      textarea { min-height:100px; resize:vertical; }
+      .checks { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:9px; margin-top:16px; }
+      .check { min-height:44px; display:flex; align-items:flex-start; gap:9px; border:1px solid var(--line); border-radius:6px; padding:10px; font-weight:650; }
+      .check input { width:17px; min-height:17px; margin:2px 0 0; }
+      .actions,.handoffs { display:flex; flex-wrap:wrap; gap:9px; margin-top:16px; }
+      .button { min-height:42px; display:inline-flex; align-items:center; justify-content:center; border:1px solid var(--line); border-radius:6px; background:#fff; color:var(--ink); padding:9px 13px; font:inherit; font-weight:790; cursor:pointer; }
+      .button:hover { text-decoration:none; } .button.primary { border-color:var(--red); background:var(--red); color:#fff; } .button.danger { color:#9e151b; } .button.pending { border-color:var(--red); background:#fff0f0; color:#8d171c; }
+      .status { margin-top:14px; border-left:3px solid var(--green); background:#edf8f3; color:#086447; padding:10px 12px; }
+      .status.error { border-left-color:var(--red); background:#fff0f0; color:#8d171c; }
+      .metric { min-height:92px; border-top:2px solid var(--line); padding-top:12px; }
+      .metric.primary { border-top-color:var(--red); } .metric.good { border-top-color:var(--green); } .metric.warning { border-top-color:#c18b00; }
+      .metric span { display:block; color:var(--muted); font-size:12px; font-weight:780; text-transform:uppercase; }
+      .metric strong { display:block; margin-top:7px; font-size:20px; overflow-wrap:anywhere; }
+      .findings { display:grid; gap:8px; margin:18px 0 0; padding:0; list-style:none; }
+      .finding { border-left:3px solid var(--gold); background:#fff8e6; color:#665019; padding:10px 12px; }
+      .finding.blocker { border-left-color:var(--red); background:#fff0f0; color:#8d171c; } .finding.good { border-left-color:var(--green); background:#edf8f3; color:#086447; }
+      .handoff { min-height:40px; display:inline-flex; align-items:center; border-bottom:2px solid var(--line); padding:8px 2px; font-size:13px; font-weight:800; }
+      .boundary { margin-top:18px; border-left:3px solid var(--blue); background:#eef4ff; padding:14px; }
+      .summary-bar { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:12px; margin-top:16px; }
+      .summary-item { border-top:2px solid var(--line); padding-top:10px; } .summary-item span { display:block; color:var(--muted); font-size:12px; } .summary-item strong { font-size:20px; }
+      .table-wrap { width:100%; max-width:100%; margin-top:18px; overflow:auto; border:1px solid var(--line); border-radius:6px; }
+      table { width:100%; border-collapse:collapse; font-size:13px; }
+      th,td { border-bottom:1px solid var(--line); padding:9px 10px; text-align:left; white-space:nowrap; }
+      th { background:#f4f6f3; } td.thesis { min-width:210px; max-width:300px; white-space:normal; overflow-wrap:anywhere; }
+      .row-actions { display:flex; gap:9px; }
+      .row-action { border:0; background:transparent; padding:0; color:var(--blue); font:inherit; font-size:13px; font-weight:800; cursor:pointer; } .row-action.delete { color:var(--red); }
+      .empty { margin:0; color:var(--muted); padding:24px; text-align:center; }
+      footer { border-top:1px solid var(--line); padding:24px 0; color:var(--muted); font-size:14px; }
+      @media (max-width:980px) { h1{font-size:42px}.layout{grid-template-columns:1fr}.summary-bar{grid-template-columns:repeat(3,minmax(0,1fr))} }
+      @media (max-width:680px) { nav{align-items:flex-start;flex-direction:column;padding:13px 0}.nav-links{flex-wrap:wrap}.form-grid,.metrics,.filters,.checks,.summary-bar{grid-template-columns:1fr}.field.full{grid-column:auto} }
+    </style>
+    <link rel="stylesheet" href="assets/gca-site.css?v=20260711">
+    <script src="assets/gca-site.js?v=20260711" defer></script>
+  </head>
+  <body>
+    <header><nav class="shell" aria-label="Primary"><a class="brand" href="index.html"><img src="assets/gca-logo.svg" alt="GCA logo"><span>GCA</span></a><div class="nav-links"><a href="tools.html">Tools</a><a href="research-notes.html">Research</a><a href="portfolio-risk.html">Portfolio</a><a href="trade-journal.html">Journal</a><a href="member-workspace.html">Workspace</a></div></nav></header>
+    <main class="shell" id="main-content">
+      <section aria-labelledby="title"><p class="eyebrow">GCA AI Quant Access · Browser-Local Planning</p><h1 id="title">Trade Plan Ledger</h1><p class="lead">Turn a research idea into a structured, reviewable plan before any execution: thesis, invalidation, risk math, process checks, lifecycle status, and direct handoffs to GCA risk tools. 在当前浏览器保存交易计划、风控参数、审核状态和工具传递。</p></section>
+      <section class="section layout" aria-label="Trade plan editor and analysis">
+        <form class="panel" id="tradePlanForm">
+          <p class="eyebrow">Plan Editor</p><h2>Create or Update a Plan <span lang="zh-CN">创建或更新计划</span></h2>
+          <div class="form-grid">
+            <div class="field"><label for="planSymbol">Symbol / 交易标的</label><input id="planSymbol" type="text" maxlength="24" placeholder="BTC/USDT" required></div>
+            <div class="field"><label for="planDirection">Direction / 方向</label><select id="planDirection"><option value="long">Long / 做多</option><option value="short">Short / 做空</option></select></div>
+            <div class="field"><label for="planTimeframe">Timeframe / 周期</label><select id="planTimeframe"><option value="15m">15m</option><option value="1h">1h</option><option value="4h" selected>4h</option><option value="1d">1d</option><option value="1w">1w</option><option value="other">Other</option></select></div>
+            <div class="field"><label for="planWorkflowStatus">Workflow status / 流程状态</label><select id="planWorkflowStatus"><option value="draft">Draft / 草稿</option><option value="under-review">Under review / 审核中</option><option value="completed">Completed / 已完成</option><option value="invalidated">Invalidated / 已失效</option><option value="cancelled">Cancelled / 已取消</option></select></div>
+            <div class="field"><label for="planPlannedFor">Planned date / 计划日期</label><input id="planPlannedFor" type="date"></div>
+            <div class="field"><label for="planOrderType">Order type / 订单类型</label><select id="planOrderType"><option value="limit">Limit / 限价</option><option value="market">Market / 市价</option><option value="stop">Stop / 止损触发</option><option value="other">Other / 其他</option></select></div>
+            <div class="field full"><label for="planThesis">Setup thesis / 交易逻辑</label><textarea id="planThesis" maxlength="800" placeholder="Explain why the setup exists and what confirms it. 至少 20 个字符。" required></textarea></div>
+            <div class="field full"><label for="planInvalidation">Invalidation / 失效条件</label><textarea id="planInvalidation" maxlength="500" placeholder="Define the condition that cancels the plan. 至少 10 个字符。" required></textarea></div>
+            <div class="field"><label for="planEntry">Entry / 入场价</label><input id="planEntry" type="number" min="0.00000001" step="any" required></div>
+            <div class="field"><label for="planStop">Stop / 止损价</label><input id="planStop" type="number" min="0.00000001" step="any" required></div>
+            <div class="field"><label for="planTarget">Target / 目标价</label><input id="planTarget" type="number" min="0.00000001" step="any" required></div>
+            <div class="field"><label for="planEquity">Account equity / 账户权益</label><input id="planEquity" type="number" min="1" step="any" value="10000" required></div>
+            <div class="field"><label for="planRiskPercent">Risk % / 单笔风险</label><input id="planRiskPercent" type="number" min="0.1" max="5" step="0.1" value="1" required></div>
+            <div class="field"><label for="planLeverage">Leverage / 杠杆</label><input id="planLeverage" type="number" min="1" max="100" step="1" value="1" required></div>
+            <div class="field"><label for="planFeeBps">Round-trip fees (bps) / 双边费用</label><input id="planFeeBps" type="number" min="0" max="2000" step="1" value="20" required></div>
+            <div class="field"><label for="planSlippageBps">Slippage (bps) / 预计滑点</label><input id="planSlippageBps" type="number" min="0" max="2000" step="1" value="10" required></div>
+            <div class="field"><label for="planExposureLimit">Exposure limit % / 敞口上限</label><input id="planExposureLimit" type="number" min="1" max="2000" step="1" value="100" required></div>
+            <div class="field"><label for="planVolatility">Observed volatility % / 观察波动</label><input id="planVolatility" type="number" min="0" max="1000" step="0.1" value="3" required></div>
+            <div class="field full"><label for="planLiquidityCoverage">Declared liquidity coverage (x planned notional) / 流动性覆盖倍数</label><input id="planLiquidityCoverage" type="number" min="0" step="0.1" value="15" required></div>
+          </div>
+          <div class="checks" aria-label="Plan review checklist">
+            <label class="check"><input id="positionSized" type="checkbox"><span>Position size reviewed / 已审核仓位</span></label>
+            <label class="check"><input id="maxLossAccepted" type="checkbox"><span>Maximum loss accepted / 已接受最大损失</span></label>
+            <label class="check"><input id="liquidityChecked" type="checkbox"><span>Liquidity reviewed / 已检查流动性</span></label>
+            <label class="check"><input id="volatilityReviewed" type="checkbox"><span>Event and volatility reviewed / 已检查事件风险</span></label>
+            <label class="check"><input id="noRevengeTrade" type="checkbox"><span>Not a revenge trade / 不是报复性交易</span></label>
+            <label class="check"><input id="noFomo" type="checkbox"><span>Not driven by FOMO / 不是追涨杀跌</span></label>
+            <label class="check"><input id="exitPlanDefined" type="checkbox"><span>Exit process defined / 已定义退出流程</span></label>
+            <label class="check"><input id="simulationReviewed" type="checkbox"><span>Simulation or testnet reviewed / 已完成模拟审核</span></label>
+          </div>
+          <div class="actions"><button class="button primary" id="saveTradePlan" type="submit">Save Plan / 保存计划</button><button class="button" id="resetTradePlan" type="button">Reset / 重置</button><button class="button" id="cancelTradePlanEdit" type="button" hidden>Cancel Edit / 取消编辑</button></div>
+          <p class="status" id="tradePlanStatus" aria-live="polite">Ready. Plans remain on this device. / 已就绪，计划仅保存在当前设备。</p>
+        </form>
+        <section class="panel" aria-labelledby="analysisTitle">
+          <p class="eyebrow">Selected Plan</p><h2 id="analysisTitle">Risk and Readiness <span lang="zh-CN">风险与准备度</span></h2>
+          <div class="metrics">
+            <div class="metric primary"><span>Readiness / 准备度</span><strong id="planReadiness">NO_PLAN</strong></div>
+            <div class="metric"><span>Risk budget / 风险预算</span><strong id="planRiskBudget">-</strong></div>
+            <div class="metric"><span>Quantity / 计划数量</span><strong id="planQuantity">-</strong></div>
+            <div class="metric"><span>Notional / 名义价值</span><strong id="planNotional">-</strong></div>
+            <div class="metric warning"><span>Planned loss / 计划损失</span><strong id="planPlannedLoss">-</strong></div>
+            <div class="metric"><span>Required margin / 所需保证金</span><strong id="planMargin">-</strong></div>
+            <div class="metric"><span>Exposure / 账户敞口</span><strong id="planExposure">-</strong></div>
+            <div class="metric good"><span>Reward / risk / 盈亏比</span><strong id="planRewardRisk">-</strong></div>
+          </div>
+          <ul class="findings" id="planFindings"></ul>
+          <div class="handoffs" id="planHandoffs"><a class="handoff" id="handoffCalculator" href="risk-calculator.html">Position Calculator</a><a class="handoff" id="handoffPortfolio" href="portfolio-risk.html">Portfolio Map</a><a class="handoff" id="handoffWarning" href="risk-warning.html">Risk Warning</a><a class="handoff" id="handoffEntryReady" href="entry-ready.html">ENTRY_READY</a><a class="handoff" id="handoffReplay" href="liquidation-replay.html">Planned-stop Replay</a></div>
+          <p class="boundary">Readiness is a deterministic review of the values and confirmations entered here. It is not a trading signal, market forecast, approval, or proof that execution is safe. Tool handoffs use URL fragments, which are not sent in the HTTP request but may remain in browser history or copied URLs.</p>
+        </section>
+      </section>
+      <section class="section panel" aria-labelledby="ledgerTitle">
+        <p class="eyebrow">Local Ledger</p><h2 id="ledgerTitle">Saved Trade Plans <span lang="zh-CN">已保存交易计划</span></h2>
+        <div class="summary-bar"><div class="summary-item"><span>Total</span><strong id="tradePlanCount">0</strong></div><div class="summary-item"><span>Active</span><strong id="activePlanCount">0</strong></div><div class="summary-item"><span>Ready for review</span><strong id="readyPlanCount">0</strong></div><div class="summary-item"><span>Blocked</span><strong id="blockedPlanCount">0</strong></div><div class="summary-item"><span>Due</span><strong id="duePlanCount">0</strong></div></div>
+        <div class="filters" id="tradePlanFilters" style="margin-top:18px">
+          <div class="field"><label for="filterPlanQuery">Search / 搜索</label><input id="filterPlanQuery" type="search" placeholder="Symbol, thesis, invalidation"></div>
+          <div class="field"><label for="filterPlanStatus">Workflow status / 流程状态</label><select id="filterPlanStatus"><option value="">All</option><option value="draft">Draft</option><option value="under-review">Under review</option><option value="completed">Completed</option><option value="invalidated">Invalidated</option><option value="cancelled">Cancelled</option></select></div>
+          <div class="field"><label for="filterPlanReadiness">Readiness / 准备度</label><select id="filterPlanReadiness"><option value="">All</option><option value="NOT_READY">Not ready</option><option value="REVIEW">Review</option><option value="READY_FOR_REVIEW">Ready for review</option></select></div>
+          <label class="check"><input id="filterPlanDue" type="checkbox"><span>Due plans only / 仅到期计划</span></label>
+        </div>
+        <div class="actions"><button class="button" id="resetPlanFilters" type="button">Reset Filters / 重置筛选</button><button class="button primary" id="exportTradePlans" type="button">Backup JSON / 导出备份</button><label class="button" for="importTradePlans">Restore JSON / 恢复备份</label><input id="importTradePlans" type="file" accept="application/json,.json" hidden><button class="button danger" id="clearTradePlans" type="button">Clear Plans / 清空计划</button></div>
+        <p class="note" id="filterPlanStatusText" style="margin-top:12px" aria-live="polite">Showing 0 of 0 plans.</p>
+        <div class="table-wrap"><table><thead><tr><th>Symbol</th><th>Workflow</th><th>Readiness</th><th>Planned</th><th>Risk</th><th>Exposure</th><th>R:R</th><th>Thesis</th><th>Action</th></tr></thead><tbody id="tradePlanRows"></tbody></table><p class="empty" id="emptyTradePlans">No saved plans on this device. / 当前设备暂无交易计划。</p></div>
+        <p class="boundary">Plans and JSON backups can contain strategy details, prices, account equity assumptions, and process confirmations. They remain browser-local unless you export or share the backup. Do not enter private keys, seed phrases, passwords, exchange API secrets, one-time codes, withdrawal permissions, or remote-control access.</p>
+      </section>
+    </main>
+    <footer><div class="shell">GCA Risk First Trading · Research, plan, size, review, and record.</div></footer>
+    <script src="assets/trade-plans.js"></script>
+    <script>
+      (() => {
+        "use strict";
+        const engine = window.GcaTradePlans;
+        const form = document.getElementById("tradePlanForm");
+        const status = document.getElementById("tradePlanStatus");
+        const rows = document.getElementById("tradePlanRows");
+        const saveButton = document.getElementById("saveTradePlan");
+        const cancelEditButton = document.getElementById("cancelTradePlanEdit");
+        const clearButton = document.getElementById("clearTradePlans");
+        const textFields = {
+          plannedFor: document.getElementById("planPlannedFor"), symbol: document.getElementById("planSymbol"), direction: document.getElementById("planDirection"),
+          timeframe: document.getElementById("planTimeframe"), workflowStatus: document.getElementById("planWorkflowStatus"), thesis: document.getElementById("planThesis"),
+          invalidation: document.getElementById("planInvalidation"), entry: document.getElementById("planEntry"), stop: document.getElementById("planStop"),
+          target: document.getElementById("planTarget"), equity: document.getElementById("planEquity"), riskPercent: document.getElementById("planRiskPercent"),
+          leverage: document.getElementById("planLeverage"), feeBps: document.getElementById("planFeeBps"), slippageBps: document.getElementById("planSlippageBps"),
+          exposureLimitPercent: document.getElementById("planExposureLimit"), volatilityPercent: document.getElementById("planVolatility"),
+          liquidityCoverage: document.getElementById("planLiquidityCoverage"), orderType: document.getElementById("planOrderType")
+        };
+        const checkFields = Object.fromEntries(["positionSized","maxLossAccepted","liquidityChecked","volatilityReviewed","noRevengeTrade","noFomo","exitPlanDefined","simulationReviewed"].map((id) => [id, document.getElementById(id)]));
+        const filters = { query: document.getElementById("filterPlanQuery"), workflowStatus: document.getElementById("filterPlanStatus"), readiness: document.getElementById("filterPlanReadiness"), dueOnly: document.getElementById("filterPlanDue") };
+        let plans = [];
+        let editingId = null;
+        let selectedId = null;
+        let pendingDeleteId = null;
+        let pendingClear = false;
+
+        function createId() { const randomId=globalThis.crypto?.randomUUID?.(); const seed=randomId?randomId.replaceAll("-",""):`${Date.now().toString(36)}${Math.random().toString(36).slice(2)}`; return `gca_plan_${seed.toLowerCase().replace(/[^a-z0-9-]/g,"-")}`; }
+        function number(value) { return new Intl.NumberFormat(undefined,{maximumFractionDigits:6}).format(value); }
+        function percent(value) { return `${Number(value).toFixed(2)}%`; }
+        function setStatus(message,error=false) { status.textContent=message; status.className=`status${error?" error":""}`; }
+        function download(name,content) { const url=URL.createObjectURL(new Blob([content],{type:"application/json"})); const link=document.createElement("a"); link.href=url; link.download=name; document.body.append(link); link.click(); link.remove(); window.setTimeout(()=>URL.revokeObjectURL(url),0); }
+        function resetPending() { pendingDeleteId=null; pendingClear=false; clearButton.textContent="Clear Plans / 清空计划"; clearButton.classList.remove("pending"); }
+        function persist() { try { if(!plans.length){window.localStorage.removeItem(engine.STORAGE_KEY);return true;} const backup=engine.buildBackup(plans,new Date().toISOString()); if(!backup)return false; plans=backup.plans; window.localStorage.setItem(engine.STORAGE_KEY,JSON.stringify(backup)); return true; } catch(error){setStatus("Browser storage is unavailable. Export a backup before leaving. / 浏览器存储不可用，请先导出备份。",true);return false;} }
+        function load() { try { const raw=window.localStorage.getItem(engine.STORAGE_KEY); if(!raw)return; const backup=engine.parseBackup(raw); if(!backup){setStatus("Stored trade plans failed validation and were not loaded. / 已保存计划未通过校验。",true);return;} plans=backup.plans; } catch(error){setStatus("Stored trade plans could not be read. / 无法读取已保存计划。",true);} }
+        function resetEditor() { editingId=null; form.reset(); textFields.direction.value="long"; textFields.timeframe.value="4h"; textFields.workflowStatus.value="draft"; textFields.orderType.value="limit"; textFields.equity.value="10000"; textFields.riskPercent.value="1"; textFields.leverage.value="1"; textFields.feeBps.value="20"; textFields.slippageBps.value="10"; textFields.exposureLimitPercent.value="100"; textFields.volatilityPercent.value="3"; textFields.liquidityCoverage.value="15"; saveButton.textContent="Save Plan / 保存计划"; cancelEditButton.hidden=true; }
+        function inputPlan(existing) { const now=new Date().toISOString(); return engine.normalizePlan({version:1,id:existing?.id||createId(),createdAt:existing?.createdAt||now,updatedAt:now,...Object.fromEntries(Object.entries(textFields).map(([key,field])=>[key,field.value])),...Object.fromEntries(Object.entries(checkFields).map(([key,field])=>[key,field.checked]))}); }
+        function writeEditor(plan) { Object.entries(textFields).forEach(([key,field])=>{field.value=String(plan[key]);}); Object.entries(checkFields).forEach(([key,field])=>{field.checked=plan[key]===true;}); }
+        function currentFilters() { return {query:filters.query.value,workflowStatus:filters.workflowStatus.value,readiness:filters.readiness.value,dueOnly:filters.dueOnly.checked}; }
+        function clearAnalysis() { document.getElementById("planReadiness").textContent="NO_PLAN"; ["planRiskBudget","planQuantity","planNotional","planPlannedLoss","planMargin","planExposure","planRewardRisk"].forEach((id)=>{document.getElementById(id).textContent="-";}); document.getElementById("planFindings").replaceChildren(); [["handoffCalculator","risk-calculator.html"],["handoffPortfolio","portfolio-risk.html"],["handoffWarning","risk-warning.html"],["handoffEntryReady","entry-ready.html"],["handoffReplay","liquidation-replay.html"]].forEach(([id,href])=>{document.getElementById(id).href=href;}); }
+        function renderAnalysis() { const plan=plans.find((item)=>item.id===selectedId)||null; if(!plan){clearAnalysis();return;} const analysis=engine.analyzePlan(plan); const links=engine.buildHandoffLinks(plan); document.getElementById("planReadiness").textContent=analysis.status; document.getElementById("planRiskBudget").textContent=number(analysis.riskBudget); document.getElementById("planQuantity").textContent=number(analysis.positionQuantity); document.getElementById("planNotional").textContent=number(analysis.positionNotional); document.getElementById("planPlannedLoss").textContent=number(analysis.plannedLoss); document.getElementById("planMargin").textContent=number(analysis.requiredMargin); document.getElementById("planExposure").textContent=percent(analysis.exposurePercent); document.getElementById("planRewardRisk").textContent=analysis.rewardRisk.toFixed(2); const findings=document.getElementById("planFindings"); findings.replaceChildren(); analysis.findings.forEach((finding)=>{const item=document.createElement("li");item.className=`finding ${finding.level}`;item.textContent=`${finding.code}: ${finding.message}`;findings.append(item);}); document.getElementById("handoffCalculator").href=links.calculator; document.getElementById("handoffPortfolio").href=links.portfolio; document.getElementById("handoffWarning").href=links.warning; document.getElementById("handoffEntryReady").href=links.entryReady; document.getElementById("handoffReplay").href=links.replay; }
+        function render() { plans=engine.orderPlans(plans); if(selectedId&&!plans.some((plan)=>plan.id===selectedId))selectedId=null; if(!selectedId&&plans.length)selectedId=plans[0].id; const summary=engine.summarizePlans(plans); document.getElementById("tradePlanCount").textContent=String(summary.count); document.getElementById("activePlanCount").textContent=String(summary.activeCount); document.getElementById("readyPlanCount").textContent=String(summary.readyForReviewCount); document.getElementById("blockedPlanCount").textContent=String(summary.blockedCount); document.getElementById("duePlanCount").textContent=String(summary.dueCount); const visible=engine.filterPlans(plans,currentFilters()); rows.replaceChildren(); visible.forEach((plan)=>{const analysis=engine.analyzePlan(plan);const row=document.createElement("tr"); const values=[plan.symbol,plan.workflowStatus,analysis.status,plan.plannedFor||"-",percent(plan.riskPercent),percent(analysis.exposurePercent),analysis.rewardRisk.toFixed(2),plan.thesis]; values.forEach((value,index)=>{const cell=document.createElement("td");cell.textContent=String(value);if(index===7)cell.className="thesis";row.append(cell);}); const actionCell=document.createElement("td");const actions=document.createElement("div");actions.className="row-actions"; [["Review","selectId",plan.id,""],["Edit","editId",plan.id,""],[pendingDeleteId===plan.id?"Confirm":"Delete","deleteId",plan.id,"delete"]].forEach(([label,key,id,extra])=>{const button=document.createElement("button");button.type="button";button.className=`row-action ${extra}`.trim();button.dataset[key]=id;button.textContent=label;actions.append(button);});actionCell.append(actions);row.append(actionCell);if(plan.id===selectedId)row.setAttribute("aria-current","true");rows.append(row);}); document.getElementById("emptyTradePlans").hidden=visible.length>0;document.getElementById("filterPlanStatusText").textContent=`Showing ${visible.length} of ${plans.length} plans. / 显示 ${visible.length} / ${plans.length} 条计划。`;renderAnalysis(); }
+        function startEdit(plan) { editingId=plan.id;selectedId=plan.id;writeEditor(plan);saveButton.textContent="Update Plan / 更新计划";cancelEditButton.hidden=false;resetPending();render();setStatus(`Editing ${plan.symbol}. / 正在编辑 ${plan.symbol}。`);form.scrollIntoView({behavior:"smooth",block:"start"}); }
+
+        resetEditor();load();render();
+        form.addEventListener("submit",(event)=>{event.preventDefault();const existing=editingId?plans.find((item)=>item.id===editingId):null;if(editingId&&!existing){resetEditor();setStatus("The plan being edited no longer exists. / 正在编辑的计划已不存在。",true);return;}if(!existing&&plans.length>=engine.MAX_PLANS){setStatus(`The local limit is ${engine.MAX_PLANS} plans. Export a backup and remove a plan first. / 本地计划已达上限。`,true);return;}const plan=inputPlan(existing);if(!plan){setStatus("Check required text, price structure, numbers, dates, and sensitive-content restrictions. Long plans require stop below entry and target above; short plans require the reverse. / 请检查文字、价格结构和参数。",true);return;}plans=engine.upsertPlan(plans,plan);selectedId=plan.id;const updated=Boolean(existing);resetEditor();resetPending();const saved=persist();render();if(saved)setStatus(updated?"Plan updated on this device. / 计划已更新。":"Plan saved on this device. / 计划已保存。");});
+        rows.addEventListener("click",(event)=>{const select=event.target.closest("[data-select-id]");if(select){selectedId=select.dataset.selectId;resetPending();render();setStatus("Selected plan loaded into the risk review. / 已载入所选计划。" );return;}const edit=event.target.closest("[data-edit-id]");if(edit){const plan=plans.find((item)=>item.id===edit.dataset.editId);if(plan)startEdit(plan);return;}const remove=event.target.closest("[data-delete-id]");if(!remove)return;const plan=plans.find((item)=>item.id===remove.dataset.deleteId);if(!plan)return;if(pendingDeleteId!==plan.id){pendingDeleteId=plan.id;pendingClear=false;clearButton.textContent="Clear Plans / 清空计划";clearButton.classList.remove("pending");render();setStatus(`Press Confirm to delete ${plan.symbol}. / 再次点击确认删除。`);return;}plans=engine.removePlan(plans,plan.id);if(editingId===plan.id)resetEditor();resetPending();persist();render();setStatus(`${plan.symbol} removed from this device. / 已删除 ${plan.symbol}。`);});
+        Object.values(filters).forEach((field)=>{field.addEventListener("input",render);field.addEventListener("change",render);});
+        document.getElementById("resetPlanFilters").addEventListener("click",()=>{Object.values(filters).forEach((field)=>{if(field.type==="checkbox")field.checked=false;else field.value="";});render();});
+        document.getElementById("resetTradePlan").addEventListener("click",()=>{resetEditor();resetPending();render();setStatus("Plan editor reset. / 计划表单已重置。");});
+        cancelEditButton.addEventListener("click",()=>{resetEditor();render();setStatus("Edit cancelled. / 已取消编辑。");});
+        document.getElementById("exportTradePlans").addEventListener("click",()=>{const backup=engine.buildBackup(plans,new Date().toISOString());if(!backup){setStatus("Save at least one valid plan before exporting. / 请先保存至少一条有效计划。",true);return;}download(`gca-trade-plans-${backup.exportedAt.slice(0,10)}.json`,JSON.stringify(backup,null,2));setStatus(`Backup exported with ${backup.plans.length} plan(s). It contains all plan details. / 已导出计划备份。`);});
+        document.getElementById("importTradePlans").addEventListener("change",async(event)=>{const file=event.target.files?.[0];if(!file)return;try{const backup=engine.parseBackup(await file.text());const merged=backup?engine.mergeBackup(plans,backup):null;if(!merged){setStatus("Invalid GCA trade plan backup. Use an unmodified JSON file exported by this page. / 备份无效。",true);event.target.value="";return;}plans=merged.plans;selectedId=plans[0]?.id||null;resetEditor();resetPending();persist();render();setStatus(`Backup restored: ${merged.addedPlanCount} added, ${merged.updatedPlanCount} updated. / 备份已恢复。`);}catch(error){setStatus("Unable to read this backup. / 无法读取备份。",true);}event.target.value="";});
+        clearButton.addEventListener("click",()=>{if(!plans.length){setStatus("There are no local plans to clear. / 当前没有可清空计划。");return;}if(!pendingClear){pendingClear=true;pendingDeleteId=null;clearButton.textContent="Confirm Clear / 确认清空";clearButton.classList.add("pending");render();setStatus("Press Confirm Clear to remove every local plan. Export a backup first if needed. / 再次点击确认清空。",true);return;}plans=[];selectedId=null;resetEditor();resetPending();persist();render();setStatus("All local trade plans cleared. / 本地计划已全部清空。");});
+      })();
+    </script>
+  </body>
+</html>

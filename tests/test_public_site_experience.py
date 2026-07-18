@@ -113,6 +113,12 @@ class PublicSiteExperienceTests(unittest.TestCase):
             "researchSourcedCount",
             "researchDueCount",
             "researchSavedAt",
+            "tradePlanSummaryTitle",
+            "tradePlanSummaryCount",
+            "tradePlanSummaryActive",
+            "tradePlanSummaryReady",
+            "tradePlanSummaryBlocked",
+            "tradePlanSummarySavedAt",
             "portfolioSummaryTitle",
             "portfolioSummaryCount",
             "portfolioSummaryStatus",
@@ -148,11 +154,13 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn('src="assets/trade-journal.js"', page)
         self.assertIn('src="assets/risk-training.js"', page)
         self.assertIn('src="assets/research-notes.js"', page)
+        self.assertIn('src="assets/trade-plans.js"', page)
         self.assertIn('src="assets/portfolio-risk.js"', page)
         self.assertIn("engine.parseMemberSnapshot", page)
         self.assertIn("engine.summarizeJournal", page)
         self.assertIn("engine.summarizeTraining", page)
         self.assertIn("engine.summarizeResearchNotes", page)
+        self.assertIn("engine.summarizeTradePlans", page)
         self.assertIn("engine.summarizePortfolioRisk", page)
         self.assertIn("trainingStatusLabel", page)
         self.assertIn("engine.buildServiceRequest", page)
@@ -177,6 +185,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn('const JOURNAL_KEY = "gca_trade_journal_v1"', engine)
         self.assertIn('const TRAINING_HISTORY_KEY = "gca_risk_training_history_v1"', engine)
         self.assertIn('const RESEARCH_NOTES_KEY = "gca_research_notes_v1"', engine)
+        self.assertIn('const TRADE_PLANS_KEY = "gca_trade_plans_v1"', engine)
         self.assertIn('const PORTFOLIO_RISK_KEY = "gca_portfolio_risk_v1"', engine)
         self.assertIn('const REQUEST_HISTORY_KEY = "gca_member_service_request_history_v1"', engine)
         self.assertIn('const REQUEST_BACKUP_SCHEMA = "gca-member-request-history-backup-v1"', engine)
@@ -190,6 +199,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertFalse(workspace["requestReceiptBackupContainsRequestContent"])
         self.assertEqual(product["officialLinks"]["memberWorkspace"], "https://gcagochina.com/member-workspace.html")
         self.assertEqual(product["officialLinks"]["researchNotes"], "https://gcagochina.com/research-notes.html")
+        self.assertEqual(product["officialLinks"]["tradePlanLedger"], "https://gcagochina.com/trade-plans.html")
         self.assertEqual(product["officialLinks"]["portfolioRiskMap"], "https://gcagochina.com/portfolio-risk.html")
         catalog_units = {item["id"]: item["creditUnit"] for item in credits["serviceCatalog"]}
         for service_id, credit_unit in (
@@ -206,6 +216,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
             self.assertEqual(catalog_units[service_id], credit_unit)
         self.assertIn("https://gcagochina.com/member-workspace.html", sitemap)
         self.assertIn("https://gcagochina.com/research-notes.html", sitemap)
+        self.assertIn("https://gcagochina.com/trade-plans.html", sitemap)
         self.assertIn("https://gcagochina.com/portfolio-risk.html", sitemap)
 
     def test_member_workspace_engine_validates_snapshot_journal_and_request(self):
@@ -1087,6 +1098,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
             ("liquidation-replay", "liquidation-replay.html"),
             ("risk-training", "risk-training.html"),
             ("research-notes", "research-notes.html"),
+            ("trade-plans", "trade-plans.html"),
             ("portfolio-risk", "portfolio-risk.html"),
         ):
             self.assertIn(f'data-tool="{tool_id}"', page)
@@ -1126,7 +1138,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn("Plan data stays in the URL fragment", page)
         self.assertIn("The workspace does not save these plan values", page)
         self.assertIn("five plan-aware", page)
-        self.assertIn("Nine Risk and Research Tools", page)
+        self.assertIn("Ten Risk and Research Tools", page)
         self.assertIn('data-tool="trade-journal"', page)
         self.assertIn('"riskToolsWorkspace": "https://gcagochina.com/tools.html"', product)
         self.assertIn('"riskToolsWorkspace": "https://gcagochina.com/tools.html"', credits)
@@ -1151,10 +1163,10 @@ class PublicSiteExperienceTests(unittest.TestCase):
         )
         expectations = {
             "learn": ["risk-training", "risk-calculator", "risk-warning", "entry-ready", "trade-journal"],
-            "prepare": ["risk-calculator", "portfolio-risk", "risk-warning", "entry-ready"],
-            "research": ["research-notes", "trade-journal", "backtest-lab", "portfolio-risk", "risk-warning", "entry-ready"],
-            "review": ["liquidation-replay", "trade-journal", "risk-calculator", "portfolio-risk", "risk-warning", "entry-ready"],
-            "all": ["risk-training", "research-notes", "risk-calculator", "portfolio-risk", "risk-warning", "entry-ready", "backtest-lab", "liquidation-replay", "trade-journal"],
+            "prepare": ["trade-plans", "risk-calculator", "portfolio-risk", "risk-warning", "entry-ready"],
+            "research": ["research-notes", "trade-journal", "backtest-lab", "trade-plans", "portfolio-risk", "risk-warning", "entry-ready"],
+            "review": ["liquidation-replay", "trade-journal", "trade-plans", "risk-calculator", "portfolio-risk", "risk-warning", "entry-ready"],
+            "all": ["risk-training", "research-notes", "trade-plans", "risk-calculator", "portfolio-risk", "risk-warning", "entry-ready", "backtest-lab", "liquidation-replay", "trade-journal"],
         }
         for mode, expected in expectations.items():
             completed = subprocess.run(
@@ -1395,6 +1407,197 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertEqual(len(result["tag"]), 1)
         self.assertEqual(len(result["due"]), 1)
 
+    def test_trade_plan_ledger_is_local_structured_and_portable(self):
+        page = (SITE / "trade-plans.html").read_text()
+        engine = (SITE / "assets" / "trade-plans.js").read_text()
+        product = json.loads((SITE / "product.json").read_text())
+        credits = json.loads((SITE / "credits.json").read_text())
+
+        for element_id in (
+            "tradePlanForm",
+            "planSymbol",
+            "planDirection",
+            "planTimeframe",
+            "planWorkflowStatus",
+            "planPlannedFor",
+            "planOrderType",
+            "planThesis",
+            "planInvalidation",
+            "planEntry",
+            "planStop",
+            "planTarget",
+            "planEquity",
+            "planRiskPercent",
+            "planLeverage",
+            "planFeeBps",
+            "planSlippageBps",
+            "planExposureLimit",
+            "planVolatility",
+            "planLiquidityCoverage",
+            "positionSized",
+            "maxLossAccepted",
+            "liquidityChecked",
+            "volatilityReviewed",
+            "noRevengeTrade",
+            "noFomo",
+            "exitPlanDefined",
+            "simulationReviewed",
+            "saveTradePlan",
+            "resetTradePlan",
+            "cancelTradePlanEdit",
+            "tradePlanStatus",
+            "planReadiness",
+            "planRiskBudget",
+            "planQuantity",
+            "planNotional",
+            "planPlannedLoss",
+            "planMargin",
+            "planExposure",
+            "planRewardRisk",
+            "planFindings",
+            "handoffCalculator",
+            "handoffPortfolio",
+            "handoffWarning",
+            "handoffEntryReady",
+            "handoffReplay",
+            "tradePlanCount",
+            "activePlanCount",
+            "readyPlanCount",
+            "blockedPlanCount",
+            "duePlanCount",
+            "tradePlanFilters",
+            "filterPlanQuery",
+            "filterPlanStatus",
+            "filterPlanReadiness",
+            "filterPlanDue",
+            "resetPlanFilters",
+            "exportTradePlans",
+            "importTradePlans",
+            "clearTradePlans",
+            "filterPlanStatusText",
+            "tradePlanRows",
+            "emptyTradePlans",
+        ):
+            self.assertIn(f'id="{element_id}"', page)
+
+        self.assertIn('src="assets/trade-plans.js"', page)
+        self.assertIn("window.localStorage.setItem(engine.STORAGE_KEY", page)
+        self.assertIn("window.localStorage.removeItem(engine.STORAGE_KEY)", page)
+        self.assertIn("engine.normalizePlan", page)
+        self.assertIn("engine.analyzePlan", page)
+        self.assertIn("engine.summarizePlans", page)
+        self.assertIn("engine.filterPlans", page)
+        self.assertIn("engine.buildHandoffLinks", page)
+        self.assertIn("engine.buildBackup", page)
+        self.assertIn("engine.parseBackup", page)
+        self.assertIn("engine.mergeBackup", page)
+        self.assertIn("URL.createObjectURL", page)
+        self.assertIn("await file.text()", page)
+        self.assertIn("not a trading signal", page)
+        self.assertIn("may remain in browser history", page)
+        self.assertIn("Do not enter private keys", page)
+        self.assertNotIn("innerHTML", page)
+        self.assertNotIn("window.ethereum", page)
+        self.assertNotIn("fetch(", page)
+        self.assertNotIn("WebSocket", page)
+        self.assertIn('const STORAGE_KEY = "gca_trade_plans_v1"', engine)
+        self.assertIn('const SCHEMA = "gca-trade-plans-v1"', engine)
+        self.assertIn("const MAX_PLANS = 100", engine)
+
+        module = next(item for item in product["productModules"] if item["id"] == "trade-plan-ledger")
+        self.assertEqual(module["status"], "public-client-side-preview-live")
+        self.assertEqual(module["publicUrl"], "https://gcagochina.com/trade-plans.html")
+        self.assertTrue(module["browserLocalPlans"])
+        self.assertTrue(module["portableJsonBackup"])
+        self.assertTrue(module["backupContainsUserEnteredPlanDetails"])
+        for field in ("storesOnServer", "connectsWallet", "connectsExchange", "fetchesMarketData", "placesOrders", "deductsCredits"):
+            self.assertFalse(module[field])
+
+        self.assertEqual(product["officialLinks"]["tradePlanLedger"], "https://gcagochina.com/trade-plans.html")
+        self.assertEqual(credits["officialLinks"]["tradePlanLedger"], "https://gcagochina.com/trade-plans.html")
+        self.assertNotIn("trade-plan-ledger", {item["id"] for item in credits["serviceCatalog"]})
+
+    def test_trade_plan_engine_calculates_readiness_handoffs_and_backups(self):
+        bundled_node = Path("/Users/abc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node")
+        node = shutil.which("node") or (str(bundled_node) if bundled_node.exists() else "")
+        if not node:
+            self.skipTest("Node.js is unavailable")
+
+        module_path = SITE / "assets" / "trade-plans.js"
+        workspace_path = SITE / "assets" / "member-workspace.js"
+        script = (
+            "const t=require(process.argv[1]);const w=require(process.argv[2]);"
+            "const base={version:1,id:'gca_plan_ready1234',createdAt:'2026-07-18T00:00:00Z',updatedAt:'2026-07-18T00:00:00Z',plannedFor:'2026-07-18',symbol:'btc/usdt',direction:'long',timeframe:'4h',workflowStatus:'under-review',thesis:'A sufficiently detailed manual trade thesis for risk review.',invalidation:'Close below the defined structural level.',entry:100,stop:95,target:112,equity:10000,riskPercent:1,leverage:2,feeBps:20,slippageBps:10,exposureLimitPercent:50,volatilityPercent:3,liquidityCoverage:15,orderType:'limit',positionSized:true,maxLossAccepted:true,liquidityChecked:true,volatilityReviewed:true,noRevengeTrade:true,noFomo:true,exitPlanDefined:true,simulationReviewed:true};"
+            "const ready=t.normalizePlan(base);"
+            "const blocked=t.normalizePlan({...base,id:'gca_plan_blocked1234',updatedAt:'2026-07-18T00:01:00Z',workflowStatus:'draft',thesis:'A distinct blocked setup retained for deterministic risk review.',riskPercent:4,leverage:25,exposureLimitPercent:10,positionSized:false,maxLossAccepted:false,liquidityChecked:false,volatilityReviewed:false,noRevengeTrade:false,noFomo:false,exitPlanDefined:false,simulationReviewed:false});"
+            "const archived=t.normalizePlan({...base,id:'gca_plan_archive1234',updatedAt:'2026-07-18T00:02:00Z',plannedFor:'2026-07-17',symbol:'eth/usdt',workflowStatus:'completed'});"
+            "const plans=t.orderPlans([ready,blocked,archived]);"
+            "const readyAnalysis=t.analyzePlan(ready);const blockedAnalysis=t.analyzePlan(blocked);const archivedAnalysis=t.analyzePlan(archived);"
+            "const summary=t.summarizePlans(plans,Date.parse('2026-07-19T00:00:00Z'));"
+            "const backup=t.buildBackup(plans,'2026-07-18T01:00:00Z');const parsed=t.parseBackup(JSON.stringify(backup));"
+            "const invalidExtra=t.parseBackup({...backup,unexpected:true});const duplicate=t.parseBackup({...backup,plans:[backup.plans[0],backup.plans[0]]});"
+            "const sensitive=t.normalizePlan({...base,id:'gca_plan_secret1234',thesis:'Store the private key inside this detailed trade thesis.'});"
+            "const invalidStop=t.normalizePlan({...base,id:'gca_plan_badstop1234',stop:101});"
+            "const newerReady=t.normalizePlan({...ready,updatedAt:'2026-07-18T02:00:00Z',thesis:'An updated and sufficiently detailed manual trade thesis for review.'});"
+            "const added=t.normalizePlan({...ready,id:'gca_plan_added12345',createdAt:'2026-07-18T02:01:00Z',updatedAt:'2026-07-18T02:01:00Z',plannedFor:'2026-07-20',symbol:'sol/usdt'});"
+            "const imported=t.buildBackup([newerReady,added],'2026-07-18T03:00:00Z');const merged=t.mergeBackup(plans,imported);"
+            "const links=t.buildHandoffLinks(ready);"
+            "const filters={ready:t.filterPlans(plans,{readiness:'READY_FOR_REVIEW'},Date.parse('2026-07-19T00:00:00Z')),completed:t.filterPlans(plans,{workflowStatus:'completed'},Date.parse('2026-07-19T00:00:00Z')),due:t.filterPlans(plans,{dueOnly:true},Date.parse('2026-07-19T00:00:00Z')),search:t.filterPlans(plans,{query:'eth'},Date.parse('2026-07-19T00:00:00Z'))};"
+            "const workspace=w.summarizeTradePlans(JSON.stringify(backup),t,Date.parse('2026-07-19T00:00:00Z'));"
+            "process.stdout.write(JSON.stringify({ready,readyAnalysis,blockedAnalysis,archivedAnalysis,summary,backup,parsed,invalidExtra,duplicate,sensitive,invalidStop,merged,links,filters,workspace,emptyWorkspace:w.summarizeTradePlans('{}',t,Date.parse('2026-07-19T00:00:00Z')),removed:t.removePlan(plans,ready.id)}));"
+        )
+        completed = subprocess.run(
+            [node, "-e", script, str(module_path), str(workspace_path)],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        result = json.loads(completed.stdout)
+
+        self.assertEqual(result["ready"]["symbol"], "BTC/USDT")
+        self.assertEqual(result["readyAnalysis"]["status"], "READY_FOR_REVIEW")
+        self.assertEqual(result["readyAnalysis"]["blockerCount"], 0)
+        self.assertEqual(result["readyAnalysis"]["warningCount"], 0)
+        self.assertAlmostEqual(result["readyAnalysis"]["riskBudget"], 100)
+        self.assertAlmostEqual(result["readyAnalysis"]["positionQuantity"], 18.8679245283)
+        self.assertAlmostEqual(result["readyAnalysis"]["plannedLoss"], 100)
+        self.assertAlmostEqual(result["readyAnalysis"]["exposurePercent"], 18.8679245283)
+        self.assertAlmostEqual(result["readyAnalysis"]["rewardRisk"], 2.2641509434)
+        self.assertEqual(result["blockedAnalysis"]["status"], "NOT_READY")
+        self.assertGreaterEqual(result["blockedAnalysis"]["blockerCount"], 8)
+        self.assertIn("RISK_ABOVE_HARD_LIMIT", {item["code"] for item in result["blockedAnalysis"]["findings"]})
+        self.assertIn("EXPOSURE_LIMIT_EXCEEDED", {item["code"] for item in result["blockedAnalysis"]["findings"]})
+        self.assertEqual(result["archivedAnalysis"]["status"], "COMPLETED")
+        self.assertEqual(result["summary"]["count"], 3)
+        self.assertEqual(result["summary"]["activeCount"], 2)
+        self.assertEqual(result["summary"]["readyForReviewCount"], 1)
+        self.assertEqual(result["summary"]["blockedCount"], 1)
+        self.assertEqual(result["summary"]["archivedCount"], 1)
+        self.assertEqual(result["summary"]["dueCount"], 2)
+        self.assertEqual(result["backup"]["schema"], "gca-trade-plans-v1")
+        self.assertEqual(result["parsed"], result["backup"])
+        self.assertIsNone(result["invalidExtra"])
+        self.assertIsNone(result["duplicate"])
+        self.assertIsNone(result["sensitive"])
+        self.assertIsNone(result["invalidStop"])
+        self.assertEqual(result["merged"]["addedPlanCount"], 1)
+        self.assertEqual(result["merged"]["updatedPlanCount"], 1)
+        self.assertEqual(len(result["merged"]["plans"]), 4)
+        self.assertIn("source=trade-plan", result["links"]["calculator"])
+        self.assertIn("source=trade-plan", result["links"]["portfolio"])
+        self.assertIn("source=trade-plan", result["links"]["warning"])
+        self.assertIn("source=trade-plan", result["links"]["entryReady"])
+        self.assertIn("source=trade-plan", result["links"]["replay"])
+        self.assertEqual(len(result["filters"]["ready"]), 1)
+        self.assertEqual(len(result["filters"]["completed"]), 1)
+        self.assertEqual(len(result["filters"]["due"]), 2)
+        self.assertEqual(len(result["filters"]["search"]), 1)
+        self.assertEqual(result["workspace"]["count"], 3)
+        self.assertEqual(result["workspace"]["readyForReviewCount"], 1)
+        self.assertEqual(result["workspace"]["blockedCount"], 1)
+        self.assertEqual(result["emptyWorkspace"]["count"], 0)
+        self.assertEqual(len(result["removed"]), 2)
+
     def test_portfolio_risk_map_is_local_structured_and_portable(self):
         page = (SITE / "portfolio-risk.html").read_text()
         engine = (SITE / "assets" / "portfolio-risk.js").read_text()
@@ -1630,7 +1833,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertNotIn("fetch(", page)
         self.assertNotIn("WebSocket", page)
         self.assertIn('const STORAGE_KEY = "gca_trade_journal_v1"', engine)
-        self.assertEqual(product["positioning"]["publicRiskToolPreviewsLive"], 9)
+        self.assertEqual(product["positioning"]["publicRiskToolPreviewsLive"], 10)
         self.assertEqual(product["officialLinks"]["tradeJournal"], "https://gcagochina.com/trade-journal.html")
         self.assertEqual(credits["officialLinks"]["tradeJournal"], "https://gcagochina.com/trade-journal.html")
 

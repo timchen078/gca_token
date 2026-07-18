@@ -10,6 +10,7 @@
   const JOURNAL_KEY = "gca_trade_journal_v1";
   const TRAINING_HISTORY_KEY = "gca_risk_training_history_v1";
   const RESEARCH_NOTES_KEY = "gca_research_notes_v1";
+  const TRADE_PLANS_KEY = "gca_trade_plans_v1";
   const PORTFOLIO_RISK_KEY = "gca_portfolio_risk_v1";
   const REQUEST_HISTORY_KEY = "gca_member_service_request_history_v1";
   const REQUEST_BACKUP_SCHEMA = "gca-member-request-history-backup-v1";
@@ -185,6 +186,36 @@
       grossExposurePercent: 0,
       marginUtilizationPercent: 0,
       savedAt: null
+    };
+  }
+
+  function emptyTradePlanSummary() {
+    return {
+      count: 0,
+      activeCount: 0,
+      readyForReviewCount: 0,
+      blockedCount: 0,
+      reviewCount: 0,
+      dueCount: 0,
+      latestUpdatedAt: null
+    };
+  }
+
+  function summarizeTradePlans(value, tradePlanEngine, nowMs) {
+    if (!tradePlanEngine || typeof tradePlanEngine.parseBackup !== "function" || typeof tradePlanEngine.summarizePlans !== "function") {
+      return emptyTradePlanSummary();
+    }
+    const backup = tradePlanEngine.parseBackup(value);
+    if (!backup) return emptyTradePlanSummary();
+    const summary = tradePlanEngine.summarizePlans(backup.plans, nowMs);
+    return {
+      count: summary.count,
+      activeCount: summary.activeCount,
+      readyForReviewCount: summary.readyForReviewCount,
+      blockedCount: summary.blockedCount,
+      reviewCount: summary.reviewCount,
+      dueCount: summary.dueCount,
+      latestUpdatedAt: summary.latestUpdatedAt
     };
   }
 
@@ -426,6 +457,7 @@
     JOURNAL_KEY,
     TRAINING_HISTORY_KEY,
     RESEARCH_NOTES_KEY,
+    TRADE_PLANS_KEY,
     PORTFOLIO_RISK_KEY,
     REQUEST_HISTORY_KEY,
     REQUEST_BACKUP_SCHEMA,
@@ -437,6 +469,7 @@
     summarizeJournal,
     summarizeTraining,
     summarizeResearchNotes,
+    summarizeTradePlans,
     summarizePortfolioRisk,
     buildServiceRequest,
     parseRequestHistory,

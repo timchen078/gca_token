@@ -126,6 +126,7 @@ RISK_WARNING_PAGE_URL = "https://gcagochina.com/risk-warning.html"
 RISK_TOOLS_PAGE_URL = "https://gcagochina.com/tools.html"
 RISK_TRAINING_PAGE_URL = "https://gcagochina.com/risk-training.html"
 RESEARCH_NOTES_PAGE_URL = "https://gcagochina.com/research-notes.html"
+TRADE_PLANS_PAGE_URL = "https://gcagochina.com/trade-plans.html"
 PORTFOLIO_RISK_PAGE_URL = "https://gcagochina.com/portfolio-risk.html"
 SERVICE_DELIVERY_PLAYBOOK_PAGE_URL = "https://gcagochina.com/service-delivery-playbook.html"
 SERVICE_DELIVERY_PLAYBOOK_URL = "https://gcagochina.com/service-delivery-playbook.json"
@@ -4312,6 +4313,7 @@ def validate_zh_site_map_page(text: str) -> None:
     label = "/zh-site-map.html"
     assert_contains(text, "member-workspace.html", label)
     assert_contains(text, "portfolio-risk.html", label)
+    assert_contains(text, "trade-plans.html", label)
     assert_social_preview_meta(text, label, ZH_SITE_MAP_PAGE_URL)
     for expected in (
         "GCA 中文站点地图",
@@ -4638,6 +4640,7 @@ def validate_site_map_page(text: str) -> None:
     label = "/site-map.html"
     assert_contains(text, "member-workspace.html", label)
     assert_contains(text, "portfolio-risk.html", label)
+    assert_contains(text, "trade-plans.html", label)
     assert_social_preview_meta(text, label, SITE_MAP_PAGE_URL)
     for expected in (
         "GCA Site Map",
@@ -5458,6 +5461,12 @@ def validate_member_workspace_page(text: str) -> None:
     assert_contains(text, 'id="researchSourcedCount"', label)
     assert_contains(text, 'id="researchDueCount"', label)
     assert_contains(text, 'id="researchSavedAt"', label)
+    assert_contains(text, 'id="tradePlanSummaryTitle"', label)
+    assert_contains(text, 'id="tradePlanSummaryCount"', label)
+    assert_contains(text, 'id="tradePlanSummaryActive"', label)
+    assert_contains(text, 'id="tradePlanSummaryReady"', label)
+    assert_contains(text, 'id="tradePlanSummaryBlocked"', label)
+    assert_contains(text, 'id="tradePlanSummarySavedAt"', label)
     assert_contains(text, 'id="portfolioSummaryTitle"', label)
     assert_contains(text, 'id="portfolioSummaryCount"', label)
     assert_contains(text, 'id="portfolioSummaryStatus"', label)
@@ -5487,11 +5496,13 @@ def validate_member_workspace_page(text: str) -> None:
     assert_contains(text, 'src="assets/trade-journal.js"', label)
     assert_contains(text, 'src="assets/risk-training.js"', label)
     assert_contains(text, 'src="assets/research-notes.js"', label)
+    assert_contains(text, 'src="assets/trade-plans.js"', label)
     assert_contains(text, 'src="assets/portfolio-risk.js"', label)
     assert_contains(text, "engine.parseMemberSnapshot", label)
     assert_contains(text, "engine.summarizeJournal", label)
     assert_contains(text, "engine.summarizeTraining", label)
     assert_contains(text, "engine.summarizeResearchNotes", label)
+    assert_contains(text, "engine.summarizeTradePlans", label)
     assert_contains(text, "engine.summarizePortfolioRisk", label)
     assert_contains(text, "trainingStatusLabel", label)
     assert_contains(text, "engine.buildServiceRequest", label)
@@ -7767,6 +7778,8 @@ def validate_product_page(text: str) -> None:
     assert_contains(text, 'href="risk-training.html"', label)
     assert_contains(text, "Member Research Notes", label)
     assert_contains(text, 'href="research-notes.html"', label)
+    assert_contains(text, "Trade Plan Ledger", label)
+    assert_contains(text, 'href="trade-plans.html"', label)
     assert_contains(text, "Portfolio Risk Map", label)
     assert_contains(text, 'href="portfolio-risk.html"', label)
     assert_contains(text, "GCA Member Workspace", label)
@@ -7996,11 +8009,107 @@ def validate_portfolio_risk_page(text: str) -> None:
     assert_contains(text, "engine.analyzePortfolio", label)
     assert_contains(text, "engine.buildBackup", label)
     assert_contains(text, "engine.parseBackup", label)
+    assert_contains(text, "applyTradePlanHandoff", label)
+    assert_contains(text, 'fragment.get("source") !== "trade-plan"', label)
+    assert_contains(text, "no position was added automatically", label)
     assert_contains(text, "URL.createObjectURL", label)
     assert_contains(text, "await file.text()", label)
     assert_contains(text, "browser localStorage only", label)
     assert_contains(text, "does not upload positions", label)
     assert_contains(text, "same percentage at the same time", label)
+    assert_contains(text, "Do not enter private keys", label)
+    assert_not_contains(text, "innerHTML", label)
+    assert_not_contains(text, "window.ethereum", label)
+    assert_not_contains(text, "fetch(", label)
+    assert_not_contains(text, "WebSocket", label)
+    assert_no_forbidden_public_claims(text, label)
+
+
+def validate_trade_plans_page(text: str) -> None:
+    label = "/trade-plans.html"
+    assert_contains(text, "GCA Trade Plan Ledger", label)
+    assert_contains(text, "Trade Plan Ledger", label)
+    for element_id in (
+        "tradePlanForm",
+        "planSymbol",
+        "planDirection",
+        "planTimeframe",
+        "planWorkflowStatus",
+        "planPlannedFor",
+        "planOrderType",
+        "planThesis",
+        "planInvalidation",
+        "planEntry",
+        "planStop",
+        "planTarget",
+        "planEquity",
+        "planRiskPercent",
+        "planLeverage",
+        "planFeeBps",
+        "planSlippageBps",
+        "planExposureLimit",
+        "planVolatility",
+        "planLiquidityCoverage",
+        "positionSized",
+        "maxLossAccepted",
+        "liquidityChecked",
+        "volatilityReviewed",
+        "noRevengeTrade",
+        "noFomo",
+        "exitPlanDefined",
+        "simulationReviewed",
+        "saveTradePlan",
+        "resetTradePlan",
+        "cancelTradePlanEdit",
+        "tradePlanStatus",
+        "planReadiness",
+        "planRiskBudget",
+        "planQuantity",
+        "planNotional",
+        "planPlannedLoss",
+        "planMargin",
+        "planExposure",
+        "planRewardRisk",
+        "planFindings",
+        "handoffCalculator",
+        "handoffPortfolio",
+        "handoffWarning",
+        "handoffEntryReady",
+        "handoffReplay",
+        "tradePlanCount",
+        "activePlanCount",
+        "readyPlanCount",
+        "blockedPlanCount",
+        "duePlanCount",
+        "tradePlanFilters",
+        "filterPlanQuery",
+        "filterPlanStatus",
+        "filterPlanReadiness",
+        "filterPlanDue",
+        "resetPlanFilters",
+        "exportTradePlans",
+        "importTradePlans",
+        "clearTradePlans",
+        "filterPlanStatusText",
+        "tradePlanRows",
+        "emptyTradePlans",
+    ):
+        assert_contains(text, f'id="{element_id}"', label)
+    assert_contains(text, 'src="assets/trade-plans.js"', label)
+    assert_contains(text, "window.localStorage.setItem(engine.STORAGE_KEY", label)
+    assert_contains(text, "window.localStorage.removeItem(engine.STORAGE_KEY)", label)
+    assert_contains(text, "engine.normalizePlan", label)
+    assert_contains(text, "engine.analyzePlan", label)
+    assert_contains(text, "engine.summarizePlans", label)
+    assert_contains(text, "engine.filterPlans", label)
+    assert_contains(text, "engine.buildHandoffLinks", label)
+    assert_contains(text, "engine.buildBackup", label)
+    assert_contains(text, "engine.parseBackup", label)
+    assert_contains(text, "engine.mergeBackup", label)
+    assert_contains(text, "URL.createObjectURL", label)
+    assert_contains(text, "await file.text()", label)
+    assert_contains(text, "not a trading signal", label)
+    assert_contains(text, "may remain in browser history", label)
     assert_contains(text, "Do not enter private keys", label)
     assert_not_contains(text, "innerHTML", label)
     assert_not_contains(text, "window.ethereum", label)
@@ -8050,8 +8159,9 @@ def validate_risk_tools_page(text: str) -> None:
     assert_contains(text, 'data-tool="trade-journal"', label)
     assert_contains(text, 'data-tool="risk-training"', label)
     assert_contains(text, 'data-tool="research-notes"', label)
+    assert_contains(text, 'data-tool="trade-plans"', label)
     assert_contains(text, 'data-tool="portfolio-risk"', label)
-    assert_contains(text, "Nine Risk and Research Tools", label)
+    assert_contains(text, "Ten Risk and Research Tools", label)
     assert_contains(text, 'src="assets/risk-tools.js"', label)
     assert_contains(text, "Plan data stays in the URL fragment", label)
     assert_contains(text, "does not fetch live market data", label)
@@ -8133,8 +8243,8 @@ def validate_product_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong productName")
     if positioning.get("currentStage") != "account-ledger-path-live-product-tools-planned":
         raise SiteCheckError(f"{label}: wrong currentStage")
-    if positioning.get("publicRiskToolPreviewsLive") != 9:
-        raise SiteCheckError(f"{label}: expected nine public risk and research tool previews")
+    if positioning.get("publicRiskToolPreviewsLive") != 10:
+        raise SiteCheckError(f"{label}: expected ten public risk and research tool previews")
     if positioning.get("publicAccountUiLive") is not True:
         raise SiteCheckError(f"{label}: publicAccountUiLive must be true")
     if positioning.get("liveTradingEnabled") is not False:
@@ -8147,6 +8257,7 @@ def validate_product_json(text: str) -> None:
         "Backtest Lab",
         "ENTRY_READY Review",
         "Position Size Calculator",
+        "Trade Plan Ledger",
         "Portfolio Risk Map",
         "Risk Discipline Training",
         "Member Research Notes",
@@ -8157,6 +8268,7 @@ def validate_product_json(text: str) -> None:
     member_workspace = module_map.get("gca-member-workspace", {})
     risk_training = module_map.get("risk-control-training", {})
     research_notes = module_map.get("member-research-notes", {})
+    trade_plans = module_map.get("trade-plan-ledger", {})
     portfolio_risk = module_map.get("portfolio-risk-map", {})
     if risk_training.get("status") != "public-client-side-preview-live":
         raise SiteCheckError(f"{label}: wrong risk training status")
@@ -8186,6 +8298,16 @@ def validate_product_json(text: str) -> None:
     for key in ("browserLocalNotes", "portableJsonBackup", "backupContainsUserEnteredResearchContent"):
         if research_notes.get(key) is not True:
             raise SiteCheckError(f"{label}: research notes {key} must be true")
+    if trade_plans.get("status") != "public-client-side-preview-live":
+        raise SiteCheckError(f"{label}: wrong trade plan status")
+    if trade_plans.get("publicUrl") != TRADE_PLANS_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong trade plan URL")
+    for key in ("storesOnServer", "connectsWallet", "connectsExchange", "fetchesMarketData", "placesOrders", "deductsCredits"):
+        if trade_plans.get(key) is not False:
+            raise SiteCheckError(f"{label}: trade plan {key} must be false")
+    for key in ("browserLocalPlans", "portableJsonBackup", "backupContainsUserEnteredPlanDetails"):
+        if trade_plans.get(key) is not True:
+            raise SiteCheckError(f"{label}: trade plan {key} must be true")
     if portfolio_risk.get("status") != "public-client-side-preview-live":
         raise SiteCheckError(f"{label}: wrong portfolio risk status")
     if portfolio_risk.get("publicUrl") != PORTFOLIO_RISK_PAGE_URL:
@@ -8214,6 +8336,8 @@ def validate_product_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong riskDisciplineTraining link")
     if links.get("researchNotes") != RESEARCH_NOTES_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong researchNotes link")
+    if links.get("tradePlanLedger") != TRADE_PLANS_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong tradePlanLedger link")
     if links.get("portfolioRiskMap") != PORTFOLIO_RISK_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong portfolioRiskMap link")
     for gate in ("controlled-https-account-ui", "read-only-wallet-verification", "credit-ledger-activation", "member-ledger-activation", "risk-control-review", "simulation-first"):
@@ -10255,6 +10379,8 @@ def validate_credits_page(text: str) -> None:
     assert_contains(text, 'href="risk-training.html"', label)
     assert_contains(text, "Member Research Notes", label)
     assert_contains(text, 'href="research-notes.html"', label)
+    assert_contains(text, "Trade Plan Ledger", label)
+    assert_contains(text, 'href="trade-plans.html"', label)
     assert_contains(text, "Portfolio Risk Map", label)
     assert_contains(text, 'href="portfolio-risk.html"', label)
     assert_contains(text, "Support Review Queue", label)
@@ -10402,6 +10528,8 @@ def validate_credits_json(text: str) -> None:
             raise SiteCheckError(f"{label}: research notes preview {key} must be true")
     if links.get("researchNotes") != RESEARCH_NOTES_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong research notes official link")
+    if links.get("tradePlanLedger") != TRADE_PLANS_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong trade plan official link")
     portfolio_preview = service_map.get("portfolio-risk-map", {}).get("publicPreview", {})
     if portfolio_preview.get("status") != "live-client-side-preview":
         raise SiteCheckError(f"{label}: portfolio risk preview must be live")
@@ -14928,6 +15056,7 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/tools.html",
         "https://gcagochina.com/risk-training.html",
         "https://gcagochina.com/research-notes.html",
+        "https://gcagochina.com/trade-plans.html",
         "https://gcagochina.com/portfolio-risk.html",
         "https://gcagochina.com/service-delivery-playbook.html",
         "https://gcagochina.com/service-delivery-playbook.json",
@@ -15031,8 +15160,9 @@ def validate_sitemap(text: str) -> None:
         assert_sitemap_lastmod(path, "2026-06-15")
     assert_sitemap_lastmod("risk-training.html", "2026-07-15")
     assert_sitemap_lastmod("research-notes.html", "2026-07-16")
-    assert_sitemap_lastmod("portfolio-risk.html", "2026-07-16")
-    assert_sitemap_lastmod("project.json", "2026-07-16")
+    assert_sitemap_lastmod("trade-plans.html", "2026-07-18")
+    assert_sitemap_lastmod("portfolio-risk.html", "2026-07-18")
+    assert_sitemap_lastmod("project.json", "2026-07-18")
     for path in (
         "basescan-handoff.html",
         "basescan-handoff.json",
@@ -15101,6 +15231,7 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /risk.html", label)
     assert_contains(text, "Allow: /risk-training.html", label)
     assert_contains(text, "Allow: /research-notes.html", label)
+    assert_contains(text, "Allow: /trade-plans.html", label)
     assert_contains(text, "Allow: /portfolio-risk.html", label)
     assert_contains(text, "Allow: /faq.html", label)
     assert_contains(text, "Allow: /wallet-warning.html", label)
@@ -15358,6 +15489,7 @@ CHECKS: list[EndpointCheck] = [
     ("/backtest-lab.html", validate_backtest_lab_page),
     ("/trade-journal.html", validate_trade_journal_page),
     ("/research-notes.html", validate_research_notes_page),
+    ("/trade-plans.html", validate_trade_plans_page),
     ("/portfolio-risk.html", validate_portfolio_risk_page),
     ("/risk-warning.html", validate_risk_warning_page),
     ("/tools.html", validate_risk_tools_page),

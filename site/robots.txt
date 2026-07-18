@@ -173,6 +173,7 @@ Allow: /risk-warning.html
 Allow: /tools.html
 Allow: /trade-journal.html
 Allow: /research-notes.html
+Allow: /trade-plans.html
 Allow: /portfolio-risk.html
 Allow: /project.json
 Allow: /tokenlist.json

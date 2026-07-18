@@ -20,6 +20,13 @@
       stage: "Before entry",
       purpose: "Turn equity, stop distance, costs, and risk budget into a planned position size."
     },
+    "trade-plans": {
+      name: "Trade Plan Ledger",
+      shortName: "Plan",
+      url: "trade-plans.html",
+      stage: "Before risk review",
+      purpose: "Save a structured thesis, invalidation, risk math, process checks, lifecycle status, and browser-local backup."
+    },
     "portfolio-risk": {
       name: "Portfolio Risk Map",
       shortName: "Portfolio",
@@ -79,23 +86,23 @@
     },
     prepare: {
       name: "Prepare a Trade",
-      description: "Size the position, check combined portfolio heat, review setup risk, then run the final readiness gate.",
-      toolIds: ["risk-calculator", "portfolio-risk", "risk-warning", "entry-ready"]
+      description: "Structure the plan, size the position, check combined portfolio heat, review setup risk, then run the final readiness gate.",
+      toolIds: ["trade-plans", "risk-calculator", "portfolio-risk", "risk-warning", "entry-ready"]
     },
     research: {
       name: "Research a Strategy",
-      description: "Structure the thesis, review completed evidence, analyze the sample, then validate portfolio heat, setup risk, and readiness.",
-      toolIds: ["research-notes", "trade-journal", "backtest-lab", "portfolio-risk", "risk-warning", "entry-ready"]
+      description: "Structure the thesis, analyze completed evidence, convert the idea into a plan, then validate portfolio heat, setup risk, and readiness.",
+      toolIds: ["research-notes", "trade-journal", "backtest-lab", "trade-plans", "portfolio-risk", "risk-warning", "entry-ready"]
     },
     review: {
       name: "Review a Loss",
       description: "Replay the loss, correct position sizing, reassess combined portfolio heat, then rebuild the entry gate.",
-      toolIds: ["liquidation-replay", "trade-journal", "risk-calculator", "portfolio-risk", "risk-warning", "entry-ready"]
+      toolIds: ["liquidation-replay", "trade-journal", "trade-plans", "risk-calculator", "portfolio-risk", "risk-warning", "entry-ready"]
     },
     all: {
       name: "All Risk Tools",
       description: "Open any public browser-only GCA tool directly.",
-      toolIds: ["risk-training", "research-notes", "risk-calculator", "portfolio-risk", "risk-warning", "entry-ready", "backtest-lab", "liquidation-replay", "trade-journal"]
+      toolIds: ["risk-training", "research-notes", "trade-plans", "risk-calculator", "portfolio-risk", "risk-warning", "entry-ready", "backtest-lab", "liquidation-replay", "trade-journal"]
     }
   };
 
