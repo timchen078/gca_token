@@ -11,7 +11,7 @@
 - Review status: ready-for-owner-resubmission
 - Return notice date: 2026-05-13
 - Latest return notice date: 2026-05-23
-- Last checked: 2026-06-15; BaseScan return remains open, the final owner package was generated at `2026-06-06T11:10:54Z`, the reviewer checklist references the `2026-06-18T08:31:47Z` public status package, and the live daily public status snapshot was refreshed at `2026-06-18T08:31:47Z`
+- Last checked: 2026-06-15; BaseScan return remains open, the final owner package was generated at `2026-07-18T12:03:57Z`, the reviewer checklist references the `2026-06-18T08:31:47Z` public status package, and the live daily public status snapshot was refreshed at `2026-06-18T08:31:47Z`
 - Reply inbox: `support@gcagochina.com`
 - Historical prior inbox: redacted non-domain legacy inbox
 
@@ -130,7 +130,7 @@ Thank you.
 
 Use this until approval:
 
-`BaseScan source verification and deployer-wallet ownership verification are complete. The public BaseScan token profile update was returned again as information-insufficient on 2026-05-23. The profile is not approved or published. Tim Chen public professional profile evidence is now published at https://gcagochina.com/tim-chen.html with team, GitHub, X, Telegram, and structured profile-data links for reviewer due diligence; the latest 2026-05-30 DNS snapshot at https://gcagochina.com/domain-email.html#snapshotTitle shows MX/SPF/DKIM/DMARC present, so readyForBaseScanEmailEvidence is true; the BaseScan Handoff was generated at 2026-06-06T11:10:54Z, and the live daily public status snapshot was refreshed at 2026-06-18T08:31:47Z. The owner may send one concise status-check follow-up from support@gcagochina.com if the request is already submitted, and should avoid duplicate token-profile submissions while BaseScan reviews it.`
+`BaseScan source verification and deployer-wallet ownership verification are complete. The public BaseScan token profile update was returned again as information-insufficient on 2026-05-23. The profile is not approved or published. Tim Chen public professional profile evidence is now published at https://gcagochina.com/tim-chen.html with team, GitHub, X, Telegram, and structured profile-data links for reviewer due diligence; the latest 2026-05-30 DNS snapshot at https://gcagochina.com/domain-email.html#snapshotTitle shows MX/SPF/DKIM/DMARC present, so readyForBaseScanEmailEvidence is true; the BaseScan Handoff was generated at 2026-07-18T12:03:57Z, and the live daily public status snapshot was refreshed at 2026-06-18T08:31:47Z. The owner may send one concise status-check follow-up from support@gcagochina.com if the request is already submitted, and should avoid duplicate token-profile submissions while BaseScan reviews it.`
 
 Public follow-up pack: `https://gcagochina.com/basescan-followup.html`
 
@@ -183,5 +183,5 @@ Official Telegram: https://t.me/gcagochinaofficial
 Official X: https://x.com/GCAAIGoChina
 Official contact email: support@gcagochina.com
 
-The official website now centralizes the verify page, project status, product spec, release gates, listing kit, brand kit, community kit, support page, token list, BaseScan Handoff, daily public status, and machine-readable project JSON. The latest 2026-05-30 DNS snapshot shows MX/SPF/DKIM/DMARC present, support@gcagochina.com is active with private evidence retained, the final owner package was generated at 2026-06-06T11:10:54Z, and the live daily public status snapshot was refreshed at 2026-06-18T08:31:47Z. Please let us know if any additional field correction or owner-wallet signature is required.
+The official website now centralizes the verify page, project status, product spec, release gates, listing kit, brand kit, community kit, support page, token list, BaseScan Handoff, daily public status, and machine-readable project JSON. The latest 2026-05-30 DNS snapshot shows MX/SPF/DKIM/DMARC present, support@gcagochina.com is active with private evidence retained, the final owner package was generated at 2026-07-18T12:03:57Z, and the live daily public status snapshot was refreshed at 2026-06-18T08:31:47Z. Please let us know if any additional field correction or owner-wallet signature is required.
 ```

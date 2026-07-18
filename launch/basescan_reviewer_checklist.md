@@ -3,7 +3,7 @@
 - Status: `ready-for-owner-review`
 - Ready for clean resubmission: `true`
 - Latest return notice: `2026-05-23`
-- Final submission package: `2026-06-06T11:10:54Z`
+- Final submission package: `2026-07-18T12:03:57Z`
 - Daily public status: `2026-06-18T08:31:47Z`
 - Current official email: `support@gcagochina.com`
 - Target domain email: `support@gcagochina.com`

@@ -150,7 +150,7 @@
       "status": "public-roadmap-published",
       "pageUrl": "https://gcagochina.com/roadmap.html",
       "url": "https://gcagochina.com/roadmap.json",
-      "currentStage": "concept-stage-utility-buildout",
+      "currentStage": "account-ledger-and-browser-tools-live-connected-services-staged",
       "publicEligibilitySubmissionLive": true
     },
     "communityKit": {
@@ -297,7 +297,7 @@
   "productSpecPositioning": {
     "status": "public-product-spec-published",
     "productName": "GCA AI Quant Access",
-    "currentStage": "account-ledger-path-live-product-tools-planned",
+    "currentStage": "account-ledger-and-browser-tools-live-connected-services-staged",
     "publicAccountUiLive": true,
     "liveTradingEnabled": false,
     "modules": [

@@ -2,10 +2,10 @@
   "schema": "https://gcagochina.com/roadmap.json",
   "pageUrl": "https://gcagochina.com/roadmap.html",
   "status": "public-roadmap-published",
-  "lastUpdated": "2026-05-27",
+  "lastUpdated": "2026-07-18",
   "projectName": "GCA",
   "conceptExpansion": "Go China Access",
-  "currentStage": "concept-stage-utility-buildout",
+  "currentStage": "account-ledger-and-browser-tools-live-connected-services-staged",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "officialMarket": {
@@ -60,6 +60,11 @@
       "id": "account-ledger-path-live",
       "label": "Controlled account intake, read-only wallet verification, 100-credit ledger records, and GCA Member ledger records live through Workers + D1",
       "status": "completed"
+    },
+    {
+      "id": "public-browser-tool-suite-live",
+      "label": "Ten browser-only GCA risk and research tools plus the local Member Workspace are live as public previews",
+      "status": "completed"
     }
   ],
   "nextBuildPriorities": [
@@ -111,7 +116,7 @@
     "safeClaims": [
       "GCA is a fixed-supply ERC-20 token on Base Mainnet.",
       "Narrative meets risk control.",
-      "GCA is concept-stage and has live account intake, read-only wallet verification, eligible ledger records, and staged non-custodial quant research access.",
+      "GCA remains concept-stage with live account intake, read-only wallet verification, eligible ledger records, ten browser-only risk and research tools, and a local Member Workspace; connected market-data and trading modules remain staged.",
       "The public member access page can create account intake, wallet verification, 100 credits ledger, and GCA Member ledger records for eligible users.",
       "The GCA Member benefit requires 1,000,000 GCA held for 30 consecutive days before one-time 10,000 GCA review.",
       "The official market route is GCA/USDT on Base Mainnet.",

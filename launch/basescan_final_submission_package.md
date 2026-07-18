@@ -1,6 +1,6 @@
 # GCA BaseScan Submission Package
 
-- Generated: `2026-06-06T11:10:54Z`
+- Generated: `2026-07-18T12:03:57Z`
 - Status: `ready-for-owner-submission`
 - Ready for owner submission: `true`
 - Next action: Owner may copy this package into one clean BaseScan token profile update.
@@ -77,7 +77,7 @@ Project Name: GCA
 Project Website: https://gcagochina.com/
 Project Email Address: support@gcagochina.com
 32x32 SVG Logo: https://gcagochina.com/assets/gca-logo.svg
-Project Description: GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stands for Go China Access, a concept-stage community direction focused on the Go China macro narrative, bilingual Web3 education, public market research, and planned access to non-custodial quant risk tools. The planned access and membership layer is intended for research reports, risk-warning credits, backtests, ENTRY_READY signal review, position-size calculators, subscription discounts, and risk-control training. The contract created 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls.
+Project Description: GCA is a fixed-supply ERC-20 token deployed on Base Mainnet and a concept-stage Go China Access community focused on the Go China macro narrative, bilingual Web3 education, public market research, and non-custodial risk tooling. The project publishes live account and member intake plus ten browser-only public risk and research tools. These previews do not fetch live market data, connect exchanges, or place orders; connected services remain staged behind release gates. The contract created 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls.
 Project Sector: Web3 education and non-custodial trading risk tools
 Network: Base Mainnet / chainId 8453
 Token Symbol: GCA
@@ -141,7 +141,7 @@ Not automatic: No automatic token claim, no self-service member-benefit transfer
 3. Project Website: `https://gcagochina.com/`
 4. Project Email Address: `support@gcagochina.com`
 5. Link to download a 32x32 SVG icon logo: `https://gcagochina.com/assets/gca-logo.svg`
-6. Project Description: GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stands for Go China Access, a concept-stage community direction focused on the Go China macro narrative, bilingual Web3 education, public market research, and planned access to non-custodial quant risk tools. The planned access and membership layer is intended for research reports, risk-warning credits, backtests, ENTRY_READY signal review, position-size calculators, subscription discounts, and risk-control training. The contract created 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls.
+6. Project Description: GCA is a fixed-supply ERC-20 token deployed on Base Mainnet and a concept-stage Go China Access community focused on the Go China macro narrative, bilingual Web3 education, public market research, and non-custodial risk tooling. The project publishes live account and member intake plus ten browser-only public risk and research tools. These previews do not fetch live market data, connect exchanges, or place orders; connected services remain staged behind release gates. The contract created 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls.
 7. Project Sector: Web3 education and non-custodial trading risk tools
 
 ## Social Profiles
