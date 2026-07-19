@@ -19,6 +19,7 @@ import hashlib
 import json
 import re
 import sys
+import threading
 import time
 from dataclasses import dataclass
 from datetime import UTC, date, datetime, timedelta
@@ -92,6 +93,18 @@ LOCAL_CLIENTS = {"127.0.0.1", "::1", "localhost"}
 REDACTED_EXTERNAL_VALUE = "[redacted-for-external-sharing]"
 REDACTED_EXTERNAL_KEYS = {"email", "telegram", "reviewerNote", "supportNote", "evidenceNote"}
 PACKAGE_DIGEST_ALGORITHM = "sha256-json-sort-keys-excluding-packageDigestSha256"
+SUPPORT_REVIEW_AUDIT_VERSION = "gca_support_review_audit_v1"
+SUPPORT_REVIEW_AUDIT_ALGORITHM = "sha256-canonical-json-chain"
+SUPPORT_REVIEW_AUDIT_GENESIS_HASH = "0" * 64
+SUPPORT_REVIEW_AUDIT_FIELDS = (
+    "auditChainVersion",
+    "auditHashAlgorithm",
+    "auditSequence",
+    "auditPreviousHash",
+    "auditRecordHash",
+    "auditLegacyPrefixCount",
+    "auditLegacyPrefixSha256",
+)
 OPERATOR_DIGEST_VERSION = "gca_operator_digest_v1"
 OPERATOR_DIGEST_FILE = "gca_operator_digest.json"
 OPERATOR_ACTION_PLAN_VERSION = "gca_operator_action_plan_v1"
@@ -496,7 +509,130 @@ def verify_package_digest(package: dict[str, Any]) -> dict[str, Any]:
         "expectedDigest": expected,
         "computedDigest": computed,
         "recordManifest": package.get("recordManifest", {}),
+        "supportReviewAudit": package.get("recordManifest", {}).get("supportReviewAudit", {}),
     }
+
+
+def canonical_sha256(value: Any) -> str:
+    canonical = json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+
+
+def support_review_legacy_prefix_digest(records: list[dict[str, Any]]) -> str:
+    return canonical_sha256(records)
+
+
+def compute_support_review_audit_hash(record: dict[str, Any]) -> str:
+    digest_source = dict(record)
+    digest_source.pop("auditRecordHash", None)
+    return canonical_sha256(digest_source)
+
+
+def verify_support_review_audit(records: list[dict[str, Any]]) -> dict[str, Any]:
+    """Verify the local continuity chain attached to support review records.
+
+    Existing pre-chain records remain in place. The first chained record commits
+    their count and canonical SHA-256 digest. Record mutation, reordering, or an
+    interior deletion is detectable while a later chained record remains. Without
+    an independently retained head, tail truncation or full-ledger replacement is
+    outside this verifier's proof scope.
+    """
+
+    result: dict[str, Any] = {
+        "ok": False,
+        "status": "invalid",
+        "auditChainVersion": SUPPORT_REVIEW_AUDIT_VERSION,
+        "auditHashAlgorithm": SUPPORT_REVIEW_AUDIT_ALGORITHM,
+        "recordCount": len(records),
+        "legacyPrefixRecordCount": 0,
+        "chainedRecordCount": 0,
+        "chainHeadHash": "",
+        "coversAllRecords": False,
+        "tamperEvident": False,
+        "tailTruncationDetectableWithoutExternalHead": False,
+        "fullLedgerReplacementDetectableWithoutExternalHead": False,
+        "independentAuthenticityProof": False,
+        "firstInvalidRecordIndex": None,
+        "firstInvalidReviewId": "",
+        "failureReason": "",
+        "sourceScope": "complete-local-support-reviews-ledger",
+        "packageSliceRecomputationSupported": False,
+    }
+    if not records:
+        result.update({
+            "ok": True,
+            "status": "empty",
+            "coversAllRecords": True,
+        })
+        return result
+
+    first_chained_index = next(
+        (
+            index
+            for index, record in enumerate(records)
+            if any(field in record for field in SUPPORT_REVIEW_AUDIT_FIELDS)
+        ),
+        None,
+    )
+    if first_chained_index is None:
+        result.update({
+            "status": "legacy-prefix-awaiting-anchor",
+            "legacyPrefixRecordCount": len(records),
+            "failureReason": "No chained support review record has anchored the legacy JSONL prefix yet.",
+        })
+        return result
+
+    legacy_prefix = records[:first_chained_index]
+    chained_records = records[first_chained_index:]
+    legacy_prefix_digest = support_review_legacy_prefix_digest(legacy_prefix)
+    result.update({
+        "legacyPrefixRecordCount": len(legacy_prefix),
+        "chainedRecordCount": len(chained_records),
+    })
+
+    def fail(index: int, record: dict[str, Any], reason: str) -> dict[str, Any]:
+        result.update({
+            "status": "invalid",
+            "firstInvalidRecordIndex": index,
+            "firstInvalidReviewId": str(record.get("reviewId") or ""),
+            "failureReason": reason,
+        })
+        return result
+
+    previous_hash = SUPPORT_REVIEW_AUDIT_GENESIS_HASH
+    for sequence, record in enumerate(chained_records, start=1):
+        absolute_index = first_chained_index + sequence - 1
+        missing_fields = [field for field in SUPPORT_REVIEW_AUDIT_FIELDS if field not in record]
+        if missing_fields:
+            return fail(absolute_index, record, f"Missing audit field(s): {', '.join(missing_fields)}")
+        if record.get("auditChainVersion") != SUPPORT_REVIEW_AUDIT_VERSION:
+            return fail(absolute_index, record, "Unsupported support review audit chain version.")
+        if record.get("auditHashAlgorithm") != SUPPORT_REVIEW_AUDIT_ALGORITHM:
+            return fail(absolute_index, record, "Unsupported support review audit hash algorithm.")
+        if type(record.get("auditSequence")) is not int or record.get("auditSequence") != sequence:
+            return fail(absolute_index, record, "Audit sequence is missing, duplicated, or out of order.")
+        if record.get("auditPreviousHash") != previous_hash:
+            return fail(absolute_index, record, "Audit previous hash does not match the verified chain head.")
+        if record.get("auditLegacyPrefixCount") != len(legacy_prefix):
+            return fail(absolute_index, record, "Legacy prefix record count does not match the anchored count.")
+        if record.get("auditLegacyPrefixSha256") != legacy_prefix_digest:
+            return fail(absolute_index, record, "Legacy prefix digest does not match the current JSONL prefix.")
+        record_hash = str(record.get("auditRecordHash") or "").lower()
+        if not re.fullmatch(r"[a-f0-9]{64}", record_hash):
+            return fail(absolute_index, record, "Audit record hash format is invalid.")
+        if compute_support_review_audit_hash(record) != record_hash:
+            return fail(absolute_index, record, "Audit record hash does not match the canonical record content.")
+        previous_hash = record_hash
+
+    result.update({
+        "ok": True,
+        "status": "verified-with-legacy-prefix" if legacy_prefix else "verified",
+        "chainHeadHash": previous_hash,
+        "coversAllRecords": True,
+        "tamperEvident": True,
+        "failureReason": "",
+    })
+    return result
 
 
 @dataclass
@@ -606,26 +742,64 @@ class JsonlLedgerStore:
     def __init__(self, data_dir: Path):
         self.data_dir = data_dir
         self.data_dir.mkdir(parents=True, exist_ok=True)
+        self._ledger_lock = threading.RLock()
 
     def path(self, name: str) -> Path:
         return self.data_dir / f"{name}.jsonl"
 
     def append(self, name: str, record: dict[str, Any]) -> dict[str, Any]:
-        path = self.path(name)
-        with path.open("a", encoding="utf-8") as handle:
-            handle.write(json.dumps(record, ensure_ascii=False, sort_keys=True))
-            handle.write("\n")
+        with self._ledger_lock:
+            if name == "support_reviews":
+                existing_records = self.read_all(name)
+                audit = verify_support_review_audit(existing_records)
+                if audit["status"] not in {"empty", "legacy-prefix-awaiting-anchor"} and not audit["ok"]:
+                    raise BackendError(
+                        "support review audit chain integrity check failed; refusing to append",
+                        HTTPStatus.CONFLICT,
+                    )
+
+                for field in SUPPORT_REVIEW_AUDIT_FIELDS:
+                    record.pop(field, None)
+                if audit["ok"] and audit["status"] != "empty":
+                    sequence = int(audit["chainedRecordCount"]) + 1
+                    previous_hash = str(audit["chainHeadHash"])
+                    legacy_prefix_count = int(audit["legacyPrefixRecordCount"])
+                    first_chained_index = legacy_prefix_count
+                    first_chained = existing_records[first_chained_index]
+                    legacy_prefix_digest = str(first_chained["auditLegacyPrefixSha256"])
+                else:
+                    sequence = 1
+                    previous_hash = SUPPORT_REVIEW_AUDIT_GENESIS_HASH
+                    legacy_prefix_count = len(existing_records)
+                    legacy_prefix_digest = support_review_legacy_prefix_digest(existing_records)
+
+                record.update({
+                    "auditChainVersion": SUPPORT_REVIEW_AUDIT_VERSION,
+                    "auditHashAlgorithm": SUPPORT_REVIEW_AUDIT_ALGORITHM,
+                    "auditSequence": sequence,
+                    "auditPreviousHash": previous_hash,
+                    "auditLegacyPrefixCount": legacy_prefix_count,
+                    "auditLegacyPrefixSha256": legacy_prefix_digest,
+                })
+                record["auditRecordHash"] = compute_support_review_audit_hash(record)
+
+            path = self.path(name)
+            with path.open("a", encoding="utf-8") as handle:
+                handle.write(json.dumps(record, ensure_ascii=False, sort_keys=True))
+                handle.write("\n")
+                handle.flush()
         return record
 
     def read_all(self, name: str) -> list[dict[str, Any]]:
-        path = self.path(name)
-        if not path.exists():
-            return []
-        records: list[dict[str, Any]] = []
-        for line in path.read_text(encoding="utf-8").splitlines():
-            if line.strip():
-                records.append(json.loads(line))
-        return records
+        with self._ledger_lock:
+            path = self.path(name)
+            if not path.exists():
+                return []
+            records: list[dict[str, Any]] = []
+            for line in path.read_text(encoding="utf-8").splitlines():
+                if line.strip():
+                    records.append(json.loads(line))
+            return records
 
     def find(self, name: str, **filters: str) -> list[dict[str, Any]]:
         records = self.read_all(name)
@@ -643,6 +817,18 @@ class GcaMemberBackend:
     def __init__(self, store: JsonlLedgerStore, balance_reader: Any):
         self.store = store
         self.balance_reader = balance_reader
+
+    def support_review_audit(self) -> dict[str, Any]:
+        return verify_support_review_audit(self.store.read_all("support_reviews"))
+
+    def require_writable_support_review_audit(self) -> dict[str, Any]:
+        audit = self.support_review_audit()
+        if audit["status"] not in {"empty", "legacy-prefix-awaiting-anchor"} and not audit["ok"]:
+            raise BackendError(
+                "support review audit chain integrity check failed; repair or restore the local ledger before writing",
+                HTTPStatus.CONFLICT,
+            )
+        return audit
 
     def submit_email_registration(self, packet: dict[str, Any]) -> dict[str, Any]:
         registration_input = extract_email_registration(packet)
@@ -691,6 +877,7 @@ class GcaMemberBackend:
         }
 
     def submit_pre_registration(self, packet: dict[str, Any]) -> dict[str, Any]:
+        self.require_writable_support_review_audit()
         if packet.get("packetVersion") not in (None, PACKET_VERSION):
             raise BackendError(f"packetVersion must be {PACKET_VERSION}")
         user = extract_user(packet)
@@ -821,6 +1008,7 @@ class GcaMemberBackend:
         return self.store.append("credit_ledger", record)
 
     def record_service_request(self, payload: dict[str, Any]) -> dict[str, Any]:
+        self.require_writable_support_review_audit()
         request_input = extract_service_request(payload)
         credit = None
         remaining_credits = ""
@@ -937,6 +1125,7 @@ class GcaMemberBackend:
         }
 
     def record_credit_usage(self, payload: dict[str, Any]) -> dict[str, Any]:
+        self.require_writable_support_review_audit()
         usage_input = extract_credit_usage(payload)
         credit_versions = self.store.find("credit_ledger", creditLedgerId=usage_input["creditLedgerId"])
         if not credit_versions:
@@ -1134,6 +1323,7 @@ class GcaMemberBackend:
         return self.store.append("support_reviews", record)
 
     def record_member_benefit_transfer(self, payload: dict[str, Any]) -> dict[str, Any]:
+        self.require_writable_support_review_audit()
         member_id = str(payload.get("memberLedgerId") or "").strip()
         transfer_tx = str(payload.get("memberBenefitTransferTx") or "").strip()
         source_wallet = str(payload.get("sourceWallet") or "").strip()
@@ -1258,6 +1448,7 @@ class GcaMemberBackend:
         }
 
     def record_support_review_update(self, payload: dict[str, Any]) -> dict[str, Any]:
+        self.require_writable_support_review_audit()
         status = str(payload.get("status") or "").strip()
         if status not in SUPPORT_REVIEW_UPDATE_STATUSES:
             raise BackendError("status is not supported for a support review update")
@@ -1412,6 +1603,7 @@ class GcaMemberBackend:
         member_records = latest_records_by(ledgers["member_ledger"], "memberLedgerId")
         transfer_records = latest_records_by(ledgers["member_benefit_transfers"], "transferRecordId")
         review_records = ledgers["support_reviews"]
+        support_review_audit = verify_support_review_audit(review_records)
         summary = {
             "ok": True,
             "service": "gca-member-backend",
@@ -1421,6 +1613,7 @@ class GcaMemberBackend:
             "publicSelfServiceClaim": False,
             "automaticTokenTransfer": False,
             "localJsonlDataOnly": True,
+            "supportReviewAudit": support_review_audit,
             "dataLedgers": {
                 name: {
                     "count": len(records),
@@ -1472,6 +1665,10 @@ class GcaMemberBackend:
                 "recordsManualTransfersOnly": True,
                 "recordsServiceRequestsOnly": True,
                 "recordsCreditUsageOnly": True,
+                "supportReviewContinuityChainLocalOnly": True,
+                "supportReviewContinuityChainSigned": False,
+                "supportReviewContinuityChainExternallyAnchored": False,
+                "supportReviewContinuityChainImmutable": False,
             },
         }
         return summary
@@ -1986,6 +2183,12 @@ class GcaMemberBackend:
 
     def review_package(self, limit: int = 100, redacted: bool = False) -> dict[str, Any]:
         summary = self.operator_summary(limit=limit)
+        support_review_audit = summary.get("supportReviewAudit", {})
+        if redacted and support_review_audit.get("ok") is not True:
+            raise BackendError(
+                "public redacted review package export requires a verified support review chain",
+                HTTPStatus.CONFLICT,
+            )
         ledgers = summary.get("dataLedgers", {})
         package = {
             "ok": True,
@@ -2013,6 +2216,7 @@ class GcaMemberBackend:
                     name: len(ledgers.get(name, {}).get("latest") or [])
                     for name in LEDGER_NAMES
                 },
+                "supportReviewAudit": support_review_audit,
             },
             "redactionPolicy": {
                 "mode": "full-local",
@@ -2072,6 +2276,7 @@ class GcaMemberBackend:
                 "Confirm any credit usage record has a creditUsageId, serviceId, creditAmountUsed, and remainingCreditsAfter value.",
                 "Confirm GCA Member records require at least 1,000,000 GCA and 30 consecutive holding days before benefit review.",
                 "Confirm any 10,000 GCA member benefit transfer has a successful Base Mainnet GCA Transfer log to the verified member wallet.",
+                "Confirm supportReviewAudit is verified before relying on local review history or sharing a redacted review package.",
                 "Confirm no user secret, private key, seed phrase, exchange API secret, withdrawal permission, or custody request appears in notes.",
             ],
         }

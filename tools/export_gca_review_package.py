@@ -19,7 +19,12 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from tools.gca_member_backend import GcaMemberBackend, JsonlLedgerStore, verify_package_digest  # noqa: E402
+from tools.gca_member_backend import (  # noqa: E402
+    BackendError,
+    GcaMemberBackend,
+    JsonlLedgerStore,
+    verify_package_digest,
+)
 
 
 class OfflineOnlyBalanceReader:
@@ -74,7 +79,10 @@ def export_package(data_dir: Path, limit: int, redacted: bool) -> dict[str, Any]
         store=JsonlLedgerStore(data_dir),
         balance_reader=OfflineOnlyBalanceReader(),
     )
-    package = backend.review_package(limit=limit, redacted=redacted)
+    try:
+        package = backend.review_package(limit=limit, redacted=redacted)
+    except BackendError as exc:
+        raise SystemExit(str(exc)) from exc
     verification = verify_package_digest(package)
     if not verification["ok"]:
         raise SystemExit(f"Generated package digest verification failed: {verification['status']}")

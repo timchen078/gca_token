@@ -18,6 +18,9 @@ from tools.gca_member_backend import (
     MEMBER_BENEFIT_UNITS,
     MEMBER_THRESHOLD_UNITS,
     REDACTED_EXTERNAL_VALUE,
+    SUPPORT_REVIEW_AUDIT_ALGORITHM,
+    SUPPORT_REVIEW_AUDIT_GENESIS_HASH,
+    SUPPORT_REVIEW_AUDIT_VERSION,
     TRANSFER_TOPIC,
     GcaMemberBackend,
     JsonlLedgerStore,
@@ -28,6 +31,7 @@ from tools.gca_member_backend import (
     read_json_request,
     units_to_gca,
     verify_package_digest,
+    verify_support_review_audit,
 )
 
 
@@ -184,6 +188,12 @@ class GcaMemberBackendTests(unittest.TestCase):
         self.assertEqual(len(store.read_all("member_benefit_transfers")), 0)
 
         self.assertEqual(len(store.read_all("support_reviews")), 1)
+        first_review = store.read_all("support_reviews")[0]
+        self.assertEqual(first_review["auditChainVersion"], SUPPORT_REVIEW_AUDIT_VERSION)
+        self.assertEqual(first_review["auditHashAlgorithm"], SUPPORT_REVIEW_AUDIT_ALGORITHM)
+        self.assertEqual(first_review["auditSequence"], 1)
+        self.assertEqual(first_review["auditPreviousHash"], SUPPORT_REVIEW_AUDIT_GENESIS_HASH)
+        self.assertRegex(first_review["auditRecordHash"], r"^[a-f0-9]{64}$")
 
         summary = backend.operator_summary()
         self.assertTrue(summary["ok"])
@@ -196,6 +206,13 @@ class GcaMemberBackendTests(unittest.TestCase):
         self.assertEqual(summary["totals"]["pendingManualReserveTransfers"], 1)
         self.assertEqual(summary["totals"]["memberBenefitTransfers"], 0)
         self.assertEqual(summary["dataLedgers"]["support_reviews"]["count"], 1)
+        self.assertTrue(summary["supportReviewAudit"]["ok"])
+        self.assertEqual(summary["supportReviewAudit"]["status"], "verified")
+        self.assertEqual(summary["supportReviewAudit"]["chainedRecordCount"], 1)
+        self.assertEqual(summary["supportReviewAudit"]["chainHeadHash"], first_review["auditRecordHash"])
+        self.assertFalse(summary["supportReviewAudit"]["tailTruncationDetectableWithoutExternalHead"])
+        self.assertFalse(summary["supportReviewAudit"]["fullLedgerReplacementDetectableWithoutExternalHead"])
+        self.assertFalse(summary["supportReviewAudit"]["independentAuthenticityProof"])
         self.assertTrue(summary["operatorBoundaries"]["readOnlyWalletVerification"])
 
         transfer = backend.record_member_benefit_transfer({
@@ -243,6 +260,12 @@ class GcaMemberBackendTests(unittest.TestCase):
         self.assertRegex(review_package["packageDigestSha256"], r"^[a-f0-9]{64}$")
         self.assertEqual(review_package["recordManifest"]["ledgerCounts"]["member_benefit_transfers"], 1)
         self.assertEqual(review_package["recordManifest"]["latestRecordCounts"]["support_reviews"], 2)
+        self.assertTrue(review_package["recordManifest"]["supportReviewAudit"]["ok"])
+        self.assertEqual(review_package["recordManifest"]["supportReviewAudit"]["status"], "verified")
+        self.assertEqual(
+            review_package["recordManifest"]["supportReviewAudit"]["chainHeadHash"],
+            store.read_all("support_reviews")[-1]["auditRecordHash"],
+        )
         self.assertTrue(review_package["fullLocalExportWarning"]["internalOnly"])
         self.assertFalse(review_package["fullLocalExportWarning"]["externalSharingAllowed"])
         self.assertTrue(review_package["fullLocalExportWarning"]["operatorConfirmationRequired"])
@@ -701,6 +724,10 @@ class GcaMemberBackendTests(unittest.TestCase):
         self.assertFalse(review["writesProductionData"])
         self.assertEqual(len(store.read_all("support_reviews")), 2)
         self.assertEqual(backend.query("support_reviews", {"parentReviewId": [parent_review["reviewId"]]})[0]["status"], "waiting_for_user_evidence")
+        records = store.read_all("support_reviews")
+        self.assertEqual([record["auditSequence"] for record in records], [1, 2])
+        self.assertEqual(records[1]["auditPreviousHash"], records[0]["auditRecordHash"])
+        self.assertTrue(verify_support_review_audit(records)["ok"])
 
         summary = backend.operator_summary()
         self.assertEqual(summary["dataLedgers"]["support_reviews"]["latest"][0]["status"], "waiting_for_user_evidence")
@@ -711,6 +738,149 @@ class GcaMemberBackendTests(unittest.TestCase):
                 "status": "unknown_status",
                 "nextStep": "Unsupported status should fail.",
             })
+
+    def test_support_review_audit_chain_anchors_legacy_prefix(self):
+        backend, store = self.make_backend(MEMBER_THRESHOLD_UNITS)
+        legacy_record = {
+            "reviewId": "gca_review_legacy",
+            "status": "received",
+            "updatedAt": "2026-01-01T00:00:00Z",
+        }
+        store.path("support_reviews").write_text(
+            json.dumps(legacy_record, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
+
+        before_anchor = verify_support_review_audit(store.read_all("support_reviews"))
+        self.assertFalse(before_anchor["ok"])
+        self.assertEqual(before_anchor["status"], "legacy-prefix-awaiting-anchor")
+        self.assertEqual(backend.review_package()["recordManifest"]["supportReviewAudit"]["status"], "legacy-prefix-awaiting-anchor")
+        with self.assertRaisesRegex(BackendError, "requires a verified support review chain"):
+            backend.review_package(redacted=True)
+        blocked_export = subprocess.run(
+            [
+                sys.executable,
+                "tools/export_gca_review_package.py",
+                "--data-dir",
+                str(store.data_dir),
+                "--redact",
+                "public",
+            ],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertNotEqual(blocked_export.returncode, 0)
+        self.assertIn("requires a verified support review chain", blocked_export.stderr)
+        self.assertNotIn("Traceback", blocked_export.stderr)
+
+        appended = store.append("support_reviews", {
+            "reviewId": "gca_review_after_legacy",
+            "status": "waiting_for_operator_review",
+            "updatedAt": "2026-01-02T00:00:00Z",
+        })
+        self.assertEqual(appended["auditSequence"], 1)
+        self.assertEqual(appended["auditLegacyPrefixCount"], 1)
+
+        anchored_records = store.read_all("support_reviews")
+        verification = verify_support_review_audit(anchored_records)
+        self.assertTrue(verification["ok"])
+        self.assertEqual(verification["status"], "verified-with-legacy-prefix")
+        self.assertEqual(verification["legacyPrefixRecordCount"], 1)
+        self.assertTrue(verification["coversAllRecords"])
+
+        anchored_records[0]["status"] = "rejected"
+        store.path("support_reviews").write_text(
+            "\n".join(json.dumps(record, sort_keys=True) for record in anchored_records) + "\n",
+            encoding="utf-8",
+        )
+        tampered = verify_support_review_audit(store.read_all("support_reviews"))
+        self.assertFalse(tampered["ok"])
+        self.assertEqual(tampered["status"], "invalid")
+        self.assertIn("Legacy prefix digest", tampered["failureReason"])
+        with self.assertRaisesRegex(BackendError, "integrity check failed"):
+            store.append("support_reviews", {
+                "reviewId": "gca_review_refused",
+                "status": "received",
+                "updatedAt": "2026-01-03T00:00:00Z",
+            })
+
+    def test_support_review_audit_chain_detects_chained_record_tampering(self):
+        backend, store = self.make_backend(MEMBER_THRESHOLD_UNITS)
+        response = backend.submit_pre_registration(sample_packet())
+        backend.record_support_review_update({
+            "reviewId": response["memberReview"]["reviewId"],
+            "status": "waiting_for_operator_review",
+            "nextStep": "Complete the local operator review.",
+        })
+        records = store.read_all("support_reviews")
+        records[0]["nextStep"] = "Tampered next step"
+        store.path("support_reviews").write_text(
+            "\n".join(json.dumps(record, sort_keys=True) for record in records) + "\n",
+            encoding="utf-8",
+        )
+
+        verification = verify_support_review_audit(store.read_all("support_reviews"))
+        self.assertFalse(verification["ok"])
+        self.assertEqual(verification["firstInvalidRecordIndex"], 0)
+        self.assertEqual(verification["firstInvalidReviewId"], response["memberReview"]["reviewId"])
+        self.assertIn("canonical record content", verification["failureReason"])
+        self.assertFalse(backend.operator_summary()["supportReviewAudit"]["ok"])
+        self.assertEqual(backend.review_package()["recordManifest"]["supportReviewAudit"]["status"], "invalid")
+        with self.assertRaisesRegex(BackendError, "requires a verified support review chain"):
+            backend.review_package(redacted=True)
+        before_counts = {
+            name: len(store.read_all(name))
+            for name in ("pre_registrations", "wallet_verifications", "credit_ledger", "member_ledger")
+        }
+        with self.assertRaisesRegex(BackendError, "repair or restore"):
+            backend.submit_pre_registration(sample_packet())
+        self.assertEqual(
+            before_counts,
+            {
+                name: len(store.read_all(name))
+                for name in ("pre_registrations", "wallet_verifications", "credit_ledger", "member_ledger")
+            },
+        )
+
+    def test_empty_support_review_audit_discloses_proof_scope(self):
+        verification = verify_support_review_audit([])
+        self.assertTrue(verification["ok"])
+        self.assertEqual(verification["status"], "empty")
+        self.assertFalse(verification["tamperEvident"])
+        self.assertFalse(verification["tailTruncationDetectableWithoutExternalHead"])
+        self.assertFalse(verification["fullLedgerReplacementDetectableWithoutExternalHead"])
+        self.assertFalse(verification["independentAuthenticityProof"])
+
+    def test_support_review_audit_cli_verifies_chain_and_rejects_tampering(self):
+        with tempfile.TemporaryDirectory() as temp:
+            data_dir = Path(temp)
+            store = JsonlLedgerStore(data_dir)
+            store.append("support_reviews", {
+                "reviewId": "gca_review_cli",
+                "status": "received",
+                "updatedAt": "2026-01-01T00:00:00Z",
+            })
+            command = [
+                sys.executable,
+                "tools/verify_gca_support_review_audit.py",
+                "--data-dir",
+                str(data_dir),
+            ]
+            verified = subprocess.run(command, cwd=ROOT, capture_output=True, text=True, check=False)
+            self.assertEqual(verified.returncode, 0, verified.stderr)
+            self.assertEqual(json.loads(verified.stdout)["status"], "verified")
+
+            records = store.read_all("support_reviews")
+            records[0]["status"] = "tampered"
+            store.path("support_reviews").write_text(
+                json.dumps(records[0], sort_keys=True) + "\n",
+                encoding="utf-8",
+            )
+            rejected = subprocess.run(command, cwd=ROOT, capture_output=True, text=True, check=False)
+            self.assertEqual(rejected.returncode, 1)
+            self.assertEqual(json.loads(rejected.stdout)["status"], "invalid")
 
     def test_submit_email_registration_records_email_only_user(self):
         backend, store = self.make_backend(0)

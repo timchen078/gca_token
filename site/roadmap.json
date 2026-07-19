@@ -111,7 +111,11 @@
     {
       "id": "support-review-queue",
       "label": "Support review queue and audit trail",
-      "status": "manual-intake-currently"
+      "status": "local-operator-review-and-sha256-continuity-live",
+      "localOperatorPath": "http://127.0.0.1:8787/operator.html",
+      "preparedPath": "/gca/member-review",
+      "verificationCommand": ".venv/bin/python tools/verify_gca_support_review_audit.py",
+      "productionApprovalWorkflowLive": false
     }
   ],
   "externalDependencies": {

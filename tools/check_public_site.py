@@ -5761,6 +5761,17 @@ def validate_operator_page(text: str) -> None:
     assert_contains(text, "Active GCA Members", label)
     assert_contains(text, "Pending reserve transfers", label)
     assert_contains(text, "Recorded transfers", label)
+    assert_contains(text, "Support review records", label)
+    assert_contains(text, "Review trail integrity", label)
+    assert_contains(text, "Chained review events", label)
+    assert_contains(text, "Review chain head", label)
+    assert_contains(text, "tools/verify_gca_support_review_audit.py", label)
+    assert_contains(text, "not a digital signature, external timestamp, immutable database", label)
+    assert_contains(text, "cannot prove that the tail was not truncated", label)
+    assert_contains(text, "Audit Seq", label)
+    assert_contains(text, "Audit Hash", label)
+    assert_contains(text, 'data-review-id="', label)
+    assert_not_contains(text, "data-review-index", label)
     assert_contains(text, "Record Service Request", label)
     assert_contains(text, 'id="serviceRequestForm"', label)
     assert_contains(text, 'const SERVICE_REQUEST_ENDPOINT_PATH = "/gca/service-requests";', label)
@@ -5966,6 +5977,7 @@ def validate_roadmap_page(text: str) -> None:
     assert_contains(text, "Live for eligible wallet records", label)
     assert_contains(text, "GCA Member records", label)
     assert_contains(text, "benefit remains manual review", label)
+    assert_contains(text, "Local SHA-256 continuity live; production approvals still gated", label)
     assert_contains(text, "External Dependencies", label)
     assert_contains(text, "Returned 2026-05-23; final package refreshed 2026-07-18; Handoff and Chinese owner flow ready for one support@gcagochina.com submission", label)
     assert_contains(text, "Latest reviewer package", label)
@@ -6023,6 +6035,16 @@ def validate_roadmap_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing controlled account UI priority")
     if not any(priority.get("id") == "utility-credit-ledger" for priority in payload.get("nextBuildPriorities", [])):
         raise SiteCheckError(f"{label}: missing utility credit ledger priority")
+    support_priority = next(
+        (priority for priority in payload.get("nextBuildPriorities", []) if priority.get("id") == "support-review-queue"),
+        {},
+    )
+    if support_priority.get("status") != "local-operator-review-and-sha256-continuity-live":
+        raise SiteCheckError(f"{label}: wrong support review queue priority status")
+    if "verify_gca_support_review_audit.py" not in support_priority.get("verificationCommand", ""):
+        raise SiteCheckError(f"{label}: missing support review continuity verify command")
+    if support_priority.get("productionApprovalWorkflowLive") is not False:
+        raise SiteCheckError(f"{label}: production approval workflow must remain false")
     if not any(milestone.get("id") == "account-ledger-path-live" for milestone in payload.get("completedMilestones", [])):
         raise SiteCheckError(f"{label}: missing account ledger live milestone")
     if not any(milestone.get("id") == "public-browser-tool-suite-live" for milestone in payload.get("completedMilestones", [])):
@@ -8967,6 +8989,9 @@ def validate_operations_page(text: str) -> None:
     assert_contains(text, "packageDigestSha256", label)
     assert_contains(text, "tools/export_gca_review_package.py", label)
     assert_contains(text, "tools/verify_gca_review_package.py", label)
+    assert_contains(text, "tools/verify_gca_support_review_audit.py", label)
+    assert_contains(text, "Local Continuity Only", label)
+    assert_contains(text, "not signed, externally anchored, immutable", label)
     assert_contains(text, "No Replies From Redacted Exports", label)
     assert_contains(text, "Manual support cannot override on-chain wallet-balance verification", label)
     assert_contains(text, "Private key or seed phrase", label)
@@ -9021,11 +9046,16 @@ def validate_operations_json(text: str) -> None:
         "creditsEligibilitySubmissionLive",
         "gcaMemberEligibilitySubmissionLive",
         "ledgerWritesLive",
+        "localSupportReviewContinuityChainLive",
     ):
         if state.get(key) is not True:
             raise SiteCheckError(f"{label}: {key} must be true")
     for key in (
         "liveTradingEnabled",
+        "localSupportReviewContinuitySigned",
+        "localSupportReviewContinuityExternallyAnchored",
+        "localSupportReviewContinuityImmutable",
+        "productionSupportApprovalWorkflowLive",
     ):
         if state.get(key) is not False:
             raise SiteCheckError(f"{label}: {key} must be false")
@@ -9181,6 +9211,13 @@ def validate_operations_json(text: str) -> None:
         "publicEvidenceReference",
         "reviewPackageRedactionMode",
         "reviewPackageDigestSha256",
+        "auditChainVersion",
+        "auditHashAlgorithm",
+        "auditSequence",
+        "auditPreviousHash",
+        "auditRecordHash",
+        "auditLegacyPrefixCount",
+        "auditLegacyPrefixSha256",
     ):
         if field not in payload.get("requiredReviewRecord", []):
             raise SiteCheckError(f"{label}: missing review record {field}")
@@ -9249,6 +9286,8 @@ def validate_operations_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong handoff template page")
     if "confirm package redactionMode is redacted-public" not in handoff.get("requiredBeforeSharing", []):
         raise SiteCheckError(f"{label}: missing handoff pre-share check")
+    if "verify the complete local support-review chain with tools/verify_gca_support_review_audit.py" not in handoff.get("requiredBeforeSharing", []):
+        raise SiteCheckError(f"{label}: missing support review continuity pre-share check")
     for field in (
         "memberBenefitReviewEvidence.holdingStartDate",
         "memberBenefitReviewEvidence.daysSinceHoldingStartPreview",
@@ -10446,6 +10485,11 @@ def validate_review_queue_page(text: str) -> None:
     assert_contains(text, "evidenceTxHash", label)
     assert_contains(text, "evidenceTxHashFormatOk", label)
     assert_contains(text, "Member evidence note", label)
+    assert_contains(text, "SHA-256 chain verified before write", label)
+    assert_contains(text, "auditSequence", label)
+    assert_contains(text, "auditPreviousHash", label)
+    assert_contains(text, "auditRecordHash", label)
+    assert_contains(text, "not digitally signed, externally timestamped, immutable", label)
     assert_contains(text, "Manual support cannot override on-chain wallet-balance verification", label)
     assert_contains(text, "Private key or seed phrase", label)
     assert_contains(text, "Exchange API secret", label)
@@ -10470,6 +10514,7 @@ def validate_review_queue_json(text: str) -> None:
     market = payload.get("officialMarket", {})
     links = payload.get("officialLinks", {})
     boundaries = payload.get("publicClaimBoundaries", {})
+    continuity = payload.get("localAuditContinuity", {})
 
     if payload.get("schema") != REVIEW_QUEUE_URL:
         raise SiteCheckError(f"{label}: wrong schema")
@@ -10491,6 +10536,9 @@ def validate_review_queue_json(text: str) -> None:
         "creditLedgerRecordCreationLive",
         "memberLedgerRecordCreationLive",
         "manualReviewRequired",
+        "localOperatorReviewQueueLive",
+        "localSupportReviewContinuityChainLive",
+        "localSupportReviewContinuityVerifiedBeforeWrite",
     ):
         if state.get(key) is not True:
             raise SiteCheckError(f"{label}: {key} must be true")
@@ -10500,6 +10548,9 @@ def validate_review_queue_json(text: str) -> None:
         "memberBenefitSelfServiceClaimable",
         "memberBenefitAutomaticTransfer",
         "liveTradingEnabled",
+        "localSupportReviewContinuitySigned",
+        "localSupportReviewContinuityExternallyAnchored",
+        "localSupportReviewContinuityImmutable",
     ):
         if state.get(key) is not False:
             raise SiteCheckError(f"{label}: {key} must be false")
@@ -10546,11 +10597,37 @@ def validate_review_queue_json(text: str) -> None:
         "memberBenefitReviewEvidenceStatus",
         "reviewerNote",
         "publicEvidenceReference",
+        "auditChainVersion",
+        "auditHashAlgorithm",
+        "auditSequence",
+        "auditPreviousHash",
+        "auditRecordHash",
+        "auditLegacyPrefixCount",
+        "auditLegacyPrefixSha256",
     ):
         if field not in controls.get("requiredAuditFields", []):
             raise SiteCheckError(f"{label}: missing audit field {field}")
     if controls.get("memberPacketVersionMustEqual") != "gca_member_preregistration_v2":
         raise SiteCheckError(f"{label}: wrong packet version control")
+    if continuity.get("status") != "live-local-operator-only":
+        raise SiteCheckError(f"{label}: wrong local audit continuity status")
+    if continuity.get("chainVersion") != "gca_support_review_audit_v1":
+        raise SiteCheckError(f"{label}: wrong local audit chain version")
+    if continuity.get("hashAlgorithm") != "sha256-canonical-json-chain":
+        raise SiteCheckError(f"{label}: wrong local audit hash algorithm")
+    if "verify_gca_support_review_audit.py" not in continuity.get("verificationCommand", ""):
+        raise SiteCheckError(f"{label}: missing local audit verify command")
+    for key in (
+        "signed",
+        "externallyAnchored",
+        "immutable",
+        "tailTruncationDetectableWithoutExternalHead",
+        "fullLedgerReplacementDetectableWithoutExternalHead",
+        "thirdPartyAudit",
+        "publicRecordsExposed",
+    ):
+        if continuity.get(key) is not False:
+            raise SiteCheckError(f"{label}: local audit boundary {key} must be false")
     for evidence in (
         "public purchase or transfer transaction hash used for 30-day holding-period review",
         "member holding start date from gca_member_preregistration_v2 packet",
@@ -10970,6 +11047,9 @@ def validate_release_gates_page(text: str) -> None:
     assert_contains(text, "member ledger activation", label)
     assert_contains(text, "risk-control review", label)
     assert_contains(text, "support review queue", label)
+    assert_contains(text, "Local support review trail", label)
+    assert_contains(text, "SHA-256 continuity checked before review writes", label)
+    assert_contains(text, "production approval workflow still gated", label)
     assert_contains(text, "simulation or testnet first", label)
     assert_contains(text, "BaseScan token profile publication", label)
     assert_contains(text, "Returned 2026-05-23; final package refreshed 2026-07-18; Handoff and Chinese owner flow ready for one support@gcagochina.com submission", label)
@@ -11001,7 +11081,7 @@ def validate_release_gates_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong pageUrl")
     if payload.get("status") != "public-release-gates-account-ledger-path-live":
         raise SiteCheckError(f"{label}: wrong status")
-    if payload.get("lastUpdated") != "2026-07-18":
+    if payload.get("lastUpdated") != "2026-07-19":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
@@ -11016,6 +11096,10 @@ def validate_release_gates_json(text: str) -> None:
             raise SiteCheckError(f"{label}: {key} must be true")
     if state.get("liveTradingEnabled") is not False:
         raise SiteCheckError(f"{label}: liveTradingEnabled must be false")
+    if state.get("localSupportReviewQueue") != "live-with-sha256-continuity-check":
+        raise SiteCheckError(f"{label}: wrong local support review queue state")
+    if state.get("productionSupportApprovalWorkflowLive") is not False:
+        raise SiteCheckError(f"{label}: production support approval workflow must remain false")
     if state.get("baseScanTokenProfile") != "ready-for-owner-resubmission":
         raise SiteCheckError(f"{label}: wrong BaseScan state")
     if state.get("baseScanTokenProfileLastCheckedDate") != "2026-06-10":
@@ -11045,6 +11129,11 @@ def validate_release_gates_json(text: str) -> None:
         if gate not in gate_ids:
             raise SiteCheckError(f"{label}: missing gate {gate}")
     base_scan_gate = next((item for item in payload.get("releaseGates", []) if item.get("id") == "basescan-token-profile"), {})
+    support_gate = next((item for item in payload.get("releaseGates", []) if item.get("id") == "support-review-queue"), {})
+    if support_gate.get("status") != "local-operator-queue-live-production-approval-still-gated":
+        raise SiteCheckError(f"{label}: wrong support review release gate status")
+    if "verify_gca_support_review_audit.py" not in support_gate.get("localVerificationCommand", ""):
+        raise SiteCheckError(f"{label}: missing support review release gate verify command")
     if base_scan_gate.get("status") != "ready-for-owner-resubmission":
         raise SiteCheckError(f"{label}: wrong BaseScan release gate status")
     if base_scan_gate.get("finalSubmissionPackageGeneratedAt") != "2026-07-18T12:03:57Z":

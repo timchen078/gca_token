@@ -411,7 +411,7 @@
           </div>
           <div>
             <h3>5. Eligibility Decision</h3>
-            <p class="note">Mark 10,000 GCA holder credit eligibility, 1,000,000 GCA plus 30-day GCA Member eligibility, and one-time 10,000 GCA member benefit eligibility without writing live ledger records yet.</p>
+            <p class="note">Mark 10,000 GCA holder credit eligibility, 1,000,000 GCA plus 30-day GCA Member eligibility, and one-time 10,000 GCA member benefit eligibility. Eligible credit and member records use the reviewed backend path; any member-benefit token transfer remains manual.</p>
           </div>
           <div>
             <h3>6. Support Reply</h3>
@@ -435,7 +435,7 @@
           </div>
           <div>
             <h3>11. Closure</h3>
-            <p class="note">Close the record only after status, evidence reference, reviewer note, and next public link are recorded without secrets.</p>
+            <p class="note">Before closing, run <code>.venv/bin/python tools/verify_gca_support_review_audit.py</code>. Close the record only after continuity passes and status, evidence reference, reviewer note, and next public link are recorded without secrets.</p>
           </div>
         </div>
       </section>
@@ -527,6 +527,7 @@
         <h2 id="reviewPackageTitle">Local Review Package Handoff</h2>
         <p class="note">Use this only when a platform or reviewer asks for local member-ledger evidence. The external package must be <code>redacted-public</code>, verified locally, and sent with the <a href="platform-replies.html">Platform Replies</a> handoff text. The package is support evidence only, not a third-party audit or approval claim.</p>
         <div class="list">
+          <div class="row"><span>Review trail</span><strong><code>.venv/bin/python tools/verify_gca_support_review_audit.py</code></strong></div>
           <div class="row"><span>External mode</span><strong><code>redacted-public</code></strong></div>
           <div class="row"><span>Export</span><strong><code>.venv/bin/python tools/export_gca_review_package.py --redact public --output gca-public-redacted-review-package.json</code></strong></div>
           <div class="row"><span>Verify</span><strong><code>.venv/bin/python tools/verify_gca_review_package.py gca-public-redacted-review-package.json</code></strong></div>
@@ -583,6 +584,10 @@
           <div>
             <h3>No Replies From Redacted Exports</h3>
             <p class="note">Public-redacted exports are evidence handoff artifacts only. Run the internal operator export before sending account-specific support replies.</p>
+          </div>
+          <div>
+            <h3>Local Continuity Only</h3>
+            <p class="note">The support-review SHA-256 chain detects edits, reordering, and interior deletion while a later chained record remains. Without an independently retained head, it cannot prove that the tail was not truncated or the complete ledger was not replaced. It is not signed, externally anchored, immutable, a production approval system, or a third-party audit.</p>
           </div>
         </div>
       </section>
