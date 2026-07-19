@@ -455,6 +455,7 @@
           <div>
             <h3>Continuity Boundary</h3>
             <p class="note">The first chained event anchors any older JSONL prefix by count and canonical digest. Without an independently retained head, the local chain cannot prove that its tail was not truncated or the complete ledger was not replaced. It is not digitally signed, externally timestamped, immutable, a production approval system, or a third-party audit.</p>
+            <p class="note">The local operator can export an unsigned <code>gca_support_review_checkpoint_v1</code> receipt with <code>tools/create_gca_support_review_checkpoint.py</code>, store it outside <code>.gca_access_data/</code>, and later compare it with <code>tools/verify_gca_support_review_audit.py --checkpoint</code>. This only detects truncation below or a different lineage before the separately retained unchanged chain head; no public checkpoint or external timestamp is currently claimed.</p>
           </div>
         </div>
       </section>

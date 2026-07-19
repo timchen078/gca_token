@@ -33,6 +33,10 @@
     "ledgerWritesLive": true,
     "localSupportReviewContinuityChainLive": true,
     "localSupportReviewContinuityVerificationCommand": ".venv/bin/python tools/verify_gca_support_review_audit.py",
+    "localSupportReviewCheckpointToolLive": true,
+    "localSupportReviewCheckpointCreateCommand": ".venv/bin/python tools/create_gca_support_review_checkpoint.py --output ~/Documents/gca-support-review-checkpoint.json",
+    "localSupportReviewCheckpointVerifyCommand": ".venv/bin/python tools/verify_gca_support_review_audit.py --checkpoint ~/Documents/gca-support-review-checkpoint.json",
+    "localSupportReviewCheckpointPublishedExternally": false,
     "localSupportReviewContinuitySigned": false,
     "localSupportReviewContinuityExternallyAnchored": false,
     "localSupportReviewContinuityImmutable": false,
@@ -210,6 +214,12 @@
       "outputStatus": "platform_follow_up"
     },
     {
+      "id": "review-chain-checkpoint",
+      "label": "Review Chain Checkpoint",
+      "operatorAction": "After continuity verification and a meaningful review batch, export an unsigned chain-head checkpoint outside .gca_access_data/. Retain the unchanged receipt separately and compare it before relying on later ledger history.",
+      "outputStatus": "retained-local-checkpoint"
+    },
+    {
       "id": "closure",
       "label": "Closure",
       "operatorAction": "Run tools/verify_gca_support_review_audit.py, then close the record only after continuity passes and status, evidence reference, reviewer note, and next public link are recorded without secrets.",
@@ -366,6 +376,20 @@
       "confirm no private key, seed phrase, exchange API secret, withdrawal permission, one-time code, user email, Telegram handle, reviewer note, support note, or evidence note is present"
     ],
     "publicClaimBoundary": "support evidence only; not a third-party audit, security-vendor approval, listing approval, or liquidity-depth claim"
+  },
+  "supportReviewCheckpoint": {
+    "status": "local-tool-live-no-public-checkpoint",
+    "checkpointVersion": "gca_support_review_checkpoint_v1",
+    "checkpointDigestAlgorithm": "sha256-canonical-json-excluding-checkpointDigestSha256",
+    "localEndpoint": "/gca/support-review-checkpoint",
+    "createCommand": ".venv/bin/python tools/create_gca_support_review_checkpoint.py --output ~/Documents/gca-support-review-checkpoint.json",
+    "verifyCommand": ".venv/bin/python tools/verify_gca_support_review_audit.py --checkpoint ~/Documents/gca-support-review-checkpoint.json",
+    "storeOutsideLedgerDirectory": true,
+    "publishedExternally": false,
+    "signed": false,
+    "externallyTimestamped": false,
+    "independentAuthenticityProof": false,
+    "claimBoundary": "Comparison can detect truncation below, or a different lineage before, a separately retained unchanged checkpoint. The receipt is not a signature, external timestamp, immutable record, third-party audit, or independent proof of authenticity."
   },
   "doNotCollect": [
     "private key",

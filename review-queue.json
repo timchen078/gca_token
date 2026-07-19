@@ -21,6 +21,9 @@
     "localSupportReviewContinuityChainVersion": "gca_support_review_audit_v1",
     "localSupportReviewContinuityHashAlgorithm": "sha256-canonical-json-chain",
     "localSupportReviewContinuityVerifiedBeforeWrite": true,
+    "localSupportReviewCheckpointToolLive": true,
+    "localSupportReviewCheckpointVersion": "gca_support_review_checkpoint_v1",
+    "localSupportReviewCheckpointPublishedExternally": false,
     "localSupportReviewContinuitySigned": false,
     "localSupportReviewContinuityExternallyAnchored": false,
     "localSupportReviewContinuityImmutable": false,
@@ -158,6 +161,17 @@
     "legacyPrefixAnchoring": "The first chained review event commits the count and canonical SHA-256 digest of any older unchained JSONL prefix.",
     "writeGate": "New support-review writes are refused when the existing chain fails verification.",
     "verificationCommand": ".venv/bin/python tools/verify_gca_support_review_audit.py",
+    "checkpointVersion": "gca_support_review_checkpoint_v1",
+    "checkpointDigestAlgorithm": "sha256-canonical-json-excluding-checkpointDigestSha256",
+    "checkpointLocalEndpoint": "/gca/support-review-checkpoint",
+    "checkpointExportCommand": ".venv/bin/python tools/create_gca_support_review_checkpoint.py --output ~/Documents/gca-support-review-checkpoint.json",
+    "checkpointVerificationCommand": ".venv/bin/python tools/verify_gca_support_review_audit.py --checkpoint ~/Documents/gca-support-review-checkpoint.json",
+    "checkpointIndependentRetentionRequired": true,
+    "checkpointToolAvailable": true,
+    "checkpointPublishedExternally": false,
+    "checkpointSigned": false,
+    "checkpointExternallyTimestamped": false,
+    "checkpointIndependentAuthenticityProof": false,
     "signed": false,
     "externallyAnchored": false,
     "immutable": false,
@@ -241,6 +255,7 @@
       "GCA Member review requires 1,000,000 GCA held for 30 consecutive days before the one-time 10,000 GCA member benefit can be approved.",
       "Manual support cannot override on-chain wallet-balance verification.",
       "The local operator support-review ledger uses a SHA-256 continuity chain and refuses new review writes when continuity verification fails.",
+      "The local operator can export an unsigned chain-head checkpoint and later compare an independently retained unchanged copy with the current complete ledger.",
       "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool."
     ],
     "doNotClaim": [
@@ -250,7 +265,7 @@
       "the 10,000 GCA member benefit is automatic or self-service transferred before holding-period verification, support approval, and manual reserve-wallet processing",
       "support can override wallet-balance verification, release gates, or public safety boundaries",
       "review status provides trading permission, live order execution, custody, withdrawals, price support, listing approval, or completed third-party audit",
-      "the local support-review continuity chain is digitally signed, externally timestamped, immutable, able to independently detect tail truncation or full-ledger replacement, a production approval system, or a third-party audit"
+      "the local support-review continuity chain is digitally signed, externally timestamped, immutable, able to detect tail truncation or lineage replacement without an independently retained unchanged checkpoint, a production approval system, or a third-party audit"
     ]
   }
 }
