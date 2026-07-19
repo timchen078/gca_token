@@ -598,6 +598,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
             "portfolio-risk.js",
             "member-workspace.js",
             "workspace-vault.js",
+            "workspace-vault-restore.js",
         ):
             self.assertIn(f'src="assets/{script_name}"', page)
         for expected in (
@@ -606,12 +607,16 @@ class PublicSiteExperienceTests(unittest.TestCase):
             "vault.parseEnvelope",
             "vault.encryptBundle",
             "vault.decryptBundle",
-            "prepareRestore",
-            "applyWrites",
+            "restoreEngine.buildRestorePlan",
+            "restoreEngine.applyRestorePlan",
+            "atomic local write(s)",
+            "No write is needed",
             "No local data changes until you review the preview and confirm restore",
             "excludes the member-access wallet snapshot and full service-request packet",
         ):
             self.assertIn(expected, page)
+        self.assertNotIn("function prepareRestore", page)
+        self.assertNotIn("function applyWrites", page)
         self.assertNotIn("innerHTML", page)
         self.assertNotIn("fetch(", page)
         self.assertNotIn("window.ethereum", page)
@@ -623,8 +628,15 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertEqual(module["kdf"], "PBKDF2-SHA-256")
         self.assertEqual(module["pbkdf2Iterations"], 210000)
         self.assertEqual(module["cipher"], "AES-256-GCM")
-        self.assertTrue(module["portableEncryptedJson"])
-        self.assertTrue(module["mayContainUserEnteredToolContent"])
+        for key in (
+            "portableEncryptedJson",
+            "mayContainUserEnteredToolContent",
+            "restoreImpactPreview",
+            "noOpRestoreDetection",
+            "atomicLocalRollback",
+            "rejectsInvalidCurrentModuleData",
+        ):
+            self.assertTrue(module[key])
         for key in (
             "storesPassphrase",
             "uploadsData",
@@ -695,6 +707,100 @@ class PublicSiteExperienceTests(unittest.TestCase):
             self.assertNotIn(plaintext, result["serialized"])
         self.assertFalse(result["bundle"]["boundaries"]["includesMemberSnapshot"])
         self.assertFalse(result["bundle"]["boundaries"]["uploadedByPage"])
+
+    def test_workspace_vault_restore_engine_plans_noops_and_rolls_back(self):
+        bundled_node = Path("/Users/abc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node")
+        node = shutil.which("node") or (str(bundled_node) if bundled_node.exists() else "")
+        if not node:
+            self.skipTest("Node.js is unavailable")
+
+        paths = [
+            SITE / "assets" / name
+            for name in (
+                "workspace-vault-restore.js",
+                "trade-journal.js",
+                "risk-training.js",
+                "research-notes.js",
+                "trade-plans.js",
+                "portfolio-risk.js",
+                "member-workspace.js",
+            )
+        ]
+        script = (
+            "const restore=require(process.argv[1]);const journal=require(process.argv[2]);const training=require(process.argv[3]);"
+            "const research=require(process.argv[4]);const plans=require(process.argv[5]);const portfolio=require(process.argv[6]);const workspace=require(process.argv[7]);"
+            "const engines={journal,training,research,tradePlans:plans,portfolio,workspace};"
+            "const journalCurrent=journal.normalizeTrade({id:'vault-journal-current',date:'2026-07-17',market:'GCA/USDT',direction:'long',returnPercent:1,setup:'manual review',notes:'Current local record.',createdAt:'2026-07-17T10:00:00Z'});"
+            "const journalAdded=journal.normalizeTrade({id:'vault-journal-added',date:'2026-07-18',market:'BTC/USDT',direction:'short',returnPercent:-0.5,setup:'risk review',notes:'Imported encrypted record.',createdAt:'2026-07-18T10:00:00Z'});"
+            "const answers=Object.fromEntries(training.questions.map(q=>[q.id,q.correctOptionId]));const trainingResult=training.evaluateAnswers(answers);"
+            "const trainingCurrent=training.createAttemptReceipt(trainingResult,'2026-07-17T11:00:00Z','gca_training_restorecurrent');"
+            "const trainingAdded=training.createAttemptReceipt(trainingResult,'2026-07-18T11:00:00Z','gca_training_restoreadded1');"
+            "const draftCurrent=training.createTrainingDraft({[training.questions[0].id]:training.questions[0].correctOptionId},'2026-07-17T12:00:00Z');"
+            "const draftIncoming=training.createTrainingDraft({[training.questions[1].id]:training.questions[1].correctOptionId},'2026-07-18T12:00:00Z');"
+            "const noteBase={version:1,id:'gca_note_restore1234',observedOn:'2026-07-15',reviewOn:'2026-07-20',title:'GCA public research checkpoint',theme:'Market structure',status:'active-research',horizon:'medium-term',evidenceState:'developing',tags:['GCA','Base'],thesis:'A sufficiently detailed public research thesis for encrypted restore testing.',evidence:'Public evidence remains under structured review.',catalyst:'A measurable public product adoption checkpoint.',invalidation:'Published evidence weakens across two review cycles.',riskNotes:'Liquidity and execution uncertainty remain material.',sourceUrl:'https://example.com/research',createdAt:'2026-07-15T10:00:00Z',updatedAt:'2026-07-15T10:00:00Z'};"
+            "const noteCurrent=research.normalizeNote(noteBase);const noteUpdated=research.normalizeNote({...noteBase,evidenceState:'supported',updatedAt:'2026-07-18T10:00:00Z'});"
+            "const noteAdded=research.normalizeNote({...noteBase,id:'gca_note_restore5678',title:'Bilingual access research checkpoint',theme:'Education',tags:['GCA','Education'],createdAt:'2026-07-18T10:05:00Z',updatedAt:'2026-07-18T10:05:00Z'});"
+            "const planBase={version:1,id:'gca_plan_restore1234',createdAt:'2026-07-15T00:00:00Z',updatedAt:'2026-07-15T00:00:00Z',plannedFor:'2026-07-20',symbol:'gca/usdt',direction:'long',timeframe:'4h',workflowStatus:'under-review',thesis:'A sufficiently detailed manual trade thesis for encrypted restore testing.',invalidation:'Close below the predefined structural level.',entry:1,stop:.95,target:1.12,equity:10000,riskPercent:1,leverage:2,feeBps:20,slippageBps:10,exposureLimitPercent:50,volatilityPercent:3,liquidityCoverage:15,orderType:'limit',positionSized:true,maxLossAccepted:true,liquidityChecked:true,volatilityReviewed:true,noRevengeTrade:true,noFomo:true,exitPlanDefined:true,simulationReviewed:true};"
+            "const planCurrent=plans.normalizePlan(planBase);const planUpdated=plans.normalizePlan({...planBase,updatedAt:'2026-07-18T00:00:00Z',thesis:'An updated and sufficiently detailed manual thesis for restore testing.'});"
+            "const planAdded=plans.normalizePlan({...planBase,id:'gca_plan_restore5678',createdAt:'2026-07-18T00:05:00Z',updatedAt:'2026-07-18T00:05:00Z',symbol:'btc/usdt'});"
+            "const config=portfolio.normalizeConfig({accountEquity:10000,riskBudgetPercent:2,grossExposureLimitPercent:200,marginLimitPercent:50,scenarioShockPercent:5,costBps:20});"
+            "const positionBase={version:1,createdAt:'2026-07-17T00:00:00Z',updatedAt:'2026-07-17T00:00:00Z'};"
+            "const positionCurrent=portfolio.normalizePosition({...positionBase,id:'gca_position_restore1234',symbol:'GCA/USDT',side:'long',quantity:1000,entry:1,stop:.9,leverage:1,label:'Current local setup'});"
+            "const positionIncoming=portfolio.normalizePosition({...positionBase,id:'gca_position_restore5678',symbol:'BTC/USDT',side:'short',quantity:.01,entry:30000,stop:31000,leverage:2,label:'Newer encrypted setup',createdAt:'2026-07-18T00:00:00Z',updatedAt:'2026-07-18T00:00:00Z'});"
+            "const snapshot=workspace.parseMemberSnapshot(JSON.stringify({version:1,savedAt:'2026-07-18T00:00:00Z',walletAddress:'0x1111111111111111111111111111111111111111',gcaBalance:'1000000',holderBonusEligible:true,gcaMemberEligible:true,holdingPeriodDaysVerified:31,creditAmount:100,remainingCredits:75,creditStatus:'ledger_recorded',memberStatus:'active',memberBenefitClaimStatus:'pending_manual_reserve_transfer'}),Date.parse('2026-07-18T12:00:00Z'));"
+            "const requestInput={serviceId:'backtest-lab-run',email:'member@example.com',title:'Review completed sample',summary:'Review this completed trade sample for drawdown and execution discipline.',marketContext:'GCA/USDT public sample',preferredLanguage:'en'};"
+            "const requestCurrent=workspace.buildServiceRequest(requestInput,snapshot,'2026-07-18T12:01:00Z','gca_local_req_restorecurrent');"
+            "const receiptCurrent=workspace.createRequestReceipt(requestCurrent,requestInput,'2026-07-18T12:02:00Z');"
+            "const receiptUpdated=workspace.markRequestAction([receiptCurrent],receiptCurrent.requestId,'packet_copied','2026-07-18T12:03:00Z')[0];"
+            "const requestAdded=workspace.buildServiceRequest({...requestInput,serviceId:'risk-control-training'},snapshot,'2026-07-18T12:04:00Z','gca_local_req_restoreadded1');"
+            "const receiptAdded=workspace.createRequestReceipt(requestAdded,requestInput,'2026-07-18T12:05:00Z');"
+            "const modules={journal:journal.buildBackup([journalCurrent,journalAdded],'2026-07-19T10:00:00Z'),training:training.buildTrainingBackup([trainingCurrent,trainingAdded],draftIncoming,'2026-07-19T10:00:00Z'),research:research.buildBackup([noteUpdated,noteAdded],'2026-07-19T10:00:00Z'),tradePlans:plans.buildBackup([planUpdated,planAdded],'2026-07-19T10:00:00Z'),portfolio:portfolio.buildBackup(config,[positionIncoming],'2026-07-19T10:00:00Z'),requestReceipts:workspace.buildRequestHistoryBackup([receiptUpdated,receiptAdded],'2026-07-19T10:00:00Z')};"
+            "const boundaries={includesMemberSnapshot:false,includesServiceRequestPacket:false,mayContainUserEnteredToolContent:true,uploadedByPage:false,connectsWallet:false,connectsExchange:false,placesOrders:false};"
+            "const bundle={schema:'gca-workspace-bundle-v1',version:1,exportedAt:'2026-07-19T10:00:00.000Z',modules,boundaries};"
+            "const state={journal:JSON.stringify(journal.buildBackup([journalCurrent],'2026-07-17T13:00:00Z')),trainingHistory:JSON.stringify([trainingCurrent]),trainingDraft:JSON.stringify(draftCurrent),research:JSON.stringify(research.buildBackup([noteCurrent],'2026-07-17T13:00:00Z')),tradePlans:JSON.stringify(plans.buildBackup([planCurrent],'2026-07-17T13:00:00Z')),portfolio:JSON.stringify(portfolio.buildBackup(config,[positionCurrent],'2026-07-17T13:00:00Z')),requestReceipts:JSON.stringify([receiptCurrent])};"
+            "const plan=restore.buildRestorePlan(bundle,state,engines,'2026-07-19T11:00:00.000Z');const parsed=restore.parseRestorePlan(JSON.stringify(plan));"
+            "const values=new Map(Object.entries(restore.STORAGE_KEYS).map(([field,key])=>[key,state[field]]));const storage={getItem:key=>values.has(key)?values.get(key):null,setItem:(key,value)=>values.set(key,value),removeItem:key=>values.delete(key)};"
+            "const applied=restore.applyRestorePlan(plan,storage);const restoredState=Object.fromEntries(Object.entries(restore.STORAGE_KEYS).map(([field,key])=>[field,storage.getItem(key)]));"
+            "const noOp=restore.buildRestorePlan(bundle,restoredState,engines,'2026-07-19T12:00:00.000Z');const noOpApplied=restore.applyRestorePlan(noOp,storage);"
+            "const rollbackValues=new Map(Object.entries(restore.STORAGE_KEYS).map(([field,key])=>[key,state[field]]));const rollbackBefore=JSON.stringify([...rollbackValues.entries()].sort());let calls=0;"
+            "const failingStorage={getItem:key=>rollbackValues.has(key)?rollbackValues.get(key):null,setItem:(key,value)=>{calls+=1;if(calls===2)throw new Error('quota');rollbackValues.set(key,value);},removeItem:key=>rollbackValues.delete(key)};"
+            "const failed=restore.applyRestorePlan(plan,failingStorage);const rollbackAfter=JSON.stringify([...rollbackValues.entries()].sort());"
+            "const duplicatePlan={...plan,writes:[plan.writes[0],plan.writes[0]],writeCount:2};const extraPlan={...plan,unexpected:true};const corruptState={...state,research:'{bad'};"
+            "process.stdout.write(JSON.stringify({plan,parsed,applied,noOp,noOpApplied,failed,rollbackSame:rollbackBefore===rollbackAfter,duplicate:restore.parseRestorePlan(duplicatePlan),extra:restore.parseRestorePlan(extraPlan),corrupt:restore.buildRestorePlan(bundle,corruptState,engines,'2026-07-19T13:00:00.000Z')}));"
+        )
+        completed = subprocess.run(
+            [node, "-e", script, *(str(path) for path in paths)],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        result = json.loads(completed.stdout)
+
+        self.assertEqual(result["plan"]["schema"], "gca-workspace-restore-plan-v1")
+        self.assertEqual(result["plan"]["changedModuleCount"], 6)
+        self.assertEqual(result["plan"]["writeCount"], 7)
+        self.assertTrue(result["plan"]["hasChanges"])
+        self.assertEqual(result["parsed"], result["plan"])
+        impacts = {item["id"]: item for item in result["plan"]["impacts"]}
+        self.assertEqual((impacts["journal"]["added"], impacts["journal"]["retained"]), (1, 1))
+        self.assertEqual((impacts["training"]["added"], impacts["training"]["updated"]), (1, 1))
+        self.assertEqual((impacts["research"]["added"], impacts["research"]["updated"]), (1, 1))
+        self.assertEqual((impacts["tradePlans"]["added"], impacts["tradePlans"]["updated"]), (1, 1))
+        self.assertEqual((impacts["portfolio"]["added"], impacts["portfolio"]["localRemoved"]), (1, 1))
+        self.assertEqual((impacts["requestReceipts"]["added"], impacts["requestReceipts"]["updated"]), (1, 1))
+        self.assertEqual(result["applied"]["stage"], "complete")
+        self.assertEqual(result["applied"]["appliedWriteCount"], 7)
+        self.assertTrue(result["noOp"] is not None and not result["noOp"]["hasChanges"])
+        self.assertEqual(result["noOp"]["writeCount"], 0)
+        self.assertTrue(result["noOpApplied"]["ok"])
+        self.assertEqual(result["noOpApplied"]["appliedWriteCount"], 0)
+        self.assertFalse(result["failed"]["ok"])
+        self.assertEqual(result["failed"]["stage"], "write-failed")
+        self.assertEqual(result["failed"]["appliedWriteCount"], 1)
+        self.assertTrue(result["failed"]["rollbackComplete"])
+        self.assertTrue(result["rollbackSame"])
+        for invalid_name in ("duplicate", "extra", "corrupt"):
+            self.assertIsNone(result[invalid_name])
 
     def test_risk_calculator_is_client_side_and_has_no_execution_path(self):
         page = (SITE / "risk-calculator.html").read_text()

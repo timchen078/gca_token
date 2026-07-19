@@ -5641,6 +5641,7 @@ def validate_workspace_vault_page(text: str) -> None:
         "portfolio-risk.js",
         "member-workspace.js",
         "workspace-vault.js",
+        "workspace-vault-restore.js",
     ):
         assert_contains(text, f'src="assets/{script}"', label)
     for expected in (
@@ -5649,14 +5650,18 @@ def validate_workspace_vault_page(text: str) -> None:
         "vault.parseEnvelope",
         "vault.encryptBundle",
         "vault.decryptBundle",
-        "prepareRestore",
-        "applyWrites",
+        "restoreEngine.buildRestorePlan",
+        "restoreEngine.applyRestorePlan",
+        "atomic local write(s)",
+        "No write is needed",
         "never stored and cannot be recovered",
         "No local data changes until you review the preview and confirm restore",
         "excludes the member-access wallet snapshot and full service-request packet",
         "does not upload data",
     ):
         assert_contains(text, expected, label)
+    assert_not_contains(text, "function prepareRestore", label)
+    assert_not_contains(text, "function applyWrites", label)
     assert_not_contains(text, "innerHTML", label)
     assert_not_contains(text, "fetch(", label)
     assert_not_contains(text, "window.ethereum", label)
@@ -8559,7 +8564,14 @@ def validate_product_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong Workspace Vault KDF")
     if workspace_vault.get("cipher") != "AES-256-GCM":
         raise SiteCheckError(f"{label}: wrong Workspace Vault cipher")
-    for key in ("portableEncryptedJson", "mayContainUserEnteredToolContent"):
+    for key in (
+        "portableEncryptedJson",
+        "mayContainUserEnteredToolContent",
+        "restoreImpactPreview",
+        "noOpRestoreDetection",
+        "atomicLocalRollback",
+        "rejectsInvalidCurrentModuleData",
+    ):
         if workspace_vault.get(key) is not True:
             raise SiteCheckError(f"{label}: Workspace Vault {key} must be true")
     for key in (
