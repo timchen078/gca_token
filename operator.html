@@ -139,6 +139,7 @@
 
       .panel {
         padding: 24px;
+        min-width: 0;
       }
 
       .grid {
@@ -190,6 +191,7 @@
       .note,
       li {
         color: var(--muted);
+        overflow-wrap: anywhere;
       }
 
       .note {
@@ -308,6 +310,8 @@
       }
 
       pre {
+        width: 100%;
+        max-width: 100%;
         margin: 0;
         max-height: 340px;
         overflow: auto;
@@ -353,7 +357,7 @@
         .two,
         .handoff-grid,
         .filter-grid {
-          grid-template-columns: 1fr;
+          grid-template-columns: minmax(0, 1fr);
         }
 
         nav {
@@ -456,7 +460,24 @@
           <span class="label">Recorded transfers</span>
           <span class="value" id="recordedTransferCount">0</span>
         </div>
+        <div class="fact">
+          <span class="label">Support review records</span>
+          <span class="value" id="supportReviewCount">0</span>
+        </div>
+        <div class="fact">
+          <span class="label">Review trail integrity</span>
+          <span class="value" id="supportReviewAuditStatus">Not checked</span>
+        </div>
+        <div class="fact">
+          <span class="label">Chained review events</span>
+          <span class="value" id="supportReviewAuditCount">0</span>
+        </div>
+        <div class="fact">
+          <span class="label">Review chain head</span>
+          <span class="value" id="supportReviewAuditHead">-</span>
+        </div>
       </section>
+      <p class="note">The support review trail uses a local SHA-256 continuity chain. The first chained event also anchors any older JSONL prefix by count and digest. It detects edits, reordering, and an interior deletion while a later chained record remains. Without an independently retained chain head, it cannot prove that the tail was not truncated or the complete ledger was not replaced. It is not a digital signature, external timestamp, immutable database, third-party audit, or production approval system. Run <code>.venv/bin/python tools/verify_gca_support_review_audit.py</code> before relying on local review history.</p>
 
       <section class="section panel" aria-labelledby="actionPlanTitle">
         <h2 id="actionPlanTitle">Today Action Plan</h2>
@@ -929,12 +950,14 @@
                 <th>Member Ledger</th>
                 <th>Transfer Tx</th>
                 <th>Next Step</th>
+                <th>Audit Seq</th>
+                <th>Audit Hash</th>
                 <th>Updated</th>
                 <th>Action</th>
               </tr>
             </thead>
             <tbody id="reviewRows">
-              <tr><td colspan="9">No local records loaded.</td></tr>
+              <tr><td colspan="11">No local records loaded.</td></tr>
             </tbody>
           </table>
         </div>
@@ -1030,8 +1053,13 @@
         activeMemberCount: document.getElementById("activeMemberCount"),
         pendingTransferCount: document.getElementById("pendingTransferCount"),
         recordedTransferCount: document.getElementById("recordedTransferCount"),
+        supportReviewCount: document.getElementById("supportReviewCount"),
+        supportReviewAuditStatus: document.getElementById("supportReviewAuditStatus"),
+        supportReviewAuditCount: document.getElementById("supportReviewAuditCount"),
+        supportReviewAuditHead: document.getElementById("supportReviewAuditHead"),
       };
       let backendConnected = false;
+      let reviewAuditExportable = false;
       let latestSupportReviews = [];
 
       function configureOperatorVisibility() {
@@ -1087,10 +1115,13 @@
 
       function setBackendControlsEnabled(enabled) {
         backendConnected = Boolean(enabled);
+        if (!backendConnected) {
+          reviewAuditExportable = false;
+        }
         loadActionPlanButton.disabled = !backendConnected;
         loadDigestButton.disabled = !backendConnected;
         exportButton.disabled = !backendConnected;
-        exportPublicButton.disabled = !backendConnected;
+        exportPublicButton.disabled = !backendConnected || !reviewAuditExportable;
         recordServiceRequestButton.disabled = !backendConnected;
         recordCreditUsageButton.disabled = !backendConnected;
         recordTransferButton.disabled = !backendConnected;
@@ -1106,6 +1137,15 @@
           .replaceAll("<", "&lt;")
           .replaceAll(">", "&gt;")
           .replaceAll('"', "&quot;");
+      }
+
+      function renderSupportReviewAudit(audit = {}) {
+        const status = String(audit.status || "not-available");
+        const chainHead = String(audit.chainHeadHash || "");
+        statNodes.supportReviewAuditStatus.textContent = status;
+        statNodes.supportReviewAuditCount.textContent = audit.chainedRecordCount ?? 0;
+        statNodes.supportReviewAuditHead.textContent = chainHead ? `${chainHead.slice(0, 12)}...` : "-";
+        statNodes.supportReviewAuditHead.title = chainHead;
       }
 
       function digestStatusLabel(available, ok) {
@@ -1237,6 +1277,8 @@
           record.memberBenefitTransferTx,
           record.nextStep,
           record.updatedAt,
+          record.auditSequence,
+          record.auditRecordHash,
         ].map((value) => String(value || "").toLowerCase()).join(" ");
       }
 
@@ -1256,10 +1298,10 @@
 
       function renderReviewTable(records) {
         if (!records.length) {
-          reviewRows.innerHTML = '<tr><td colspan="9">No local support review records yet.</td></tr>';
+          reviewRows.innerHTML = '<tr><td colspan="11">No local support review records yet.</td></tr>';
           return;
         }
-        reviewRows.innerHTML = records.map((record, index) => `
+        reviewRows.innerHTML = records.map((record) => `
           <tr>
             <td>${escapeHtml(record.reviewId || "none")}</td>
             <td>${escapeHtml(record.status)}</td>
@@ -1268,8 +1310,10 @@
             <td>${escapeHtml(record.memberLedgerId || "none")}</td>
             <td>${escapeHtml(record.memberBenefitTransferTx || "none")}</td>
             <td>${escapeHtml(record.nextStep)}</td>
+            <td>${escapeHtml(record.auditSequence || "legacy")}</td>
+            <td title="${escapeHtml(record.auditRecordHash || "legacy-unanchored")}">${escapeHtml(record.auditRecordHash ? `${record.auditRecordHash.slice(0, 10)}...` : "legacy")}</td>
             <td>${escapeHtml(record.updatedAt)}</td>
-            <td><button class="button" type="button" data-review-index="${index}">Use for Update</button></td>
+            <td><button class="button" type="button" data-review-id="${escapeHtml(record.reviewId || "")}">Use for Update</button></td>
           </tr>
         `).join("");
       }
@@ -1398,16 +1442,38 @@
           statNodes.activeMemberCount.textContent = totals.activeMembers ?? 0;
           statNodes.pendingTransferCount.textContent = totals.pendingManualReserveTransfers ?? 0;
           statNodes.recordedTransferCount.textContent = totals.memberBenefitTransfers ?? 0;
+          statNodes.supportReviewCount.textContent = totals.supportReviews ?? 0;
+          renderSupportReviewAudit(payload.supportReviewAudit || {});
           summaryJson.textContent = JSON.stringify(payload, null, 2);
           renderEmailRegistrations(payload.dataLedgers?.email_registrations?.latest || []);
           renderServiceRequests(payload.dataLedgers?.service_requests?.latest || []);
           renderReviews(payload.dataLedgers?.support_reviews?.latest || []);
+          const reviewAuditOk = payload.supportReviewAudit?.ok === true;
+          const reviewAuditStatus = String(payload.supportReviewAudit?.status || "unknown");
+          const reviewAuditWritable = reviewAuditOk || reviewAuditStatus === "legacy-prefix-awaiting-anchor";
+          reviewAuditExportable = reviewAuditOk;
           setBackendControlsEnabled(true);
-          setStatus("Local operator backend connected", "good");
-          setServiceRequestStatus("Ready to record service requests", "good");
-          setCreditUsageStatus("Ready to record credit usage", "good");
-          setTransferStatus("Ready to record manual transfer", "good");
-          setReviewUpdateStatus("Ready to record support review update", "good");
+          if (!reviewAuditWritable) {
+            recordServiceRequestButton.disabled = true;
+            recordCreditUsageButton.disabled = true;
+            recordTransferButton.disabled = true;
+            recordReviewUpdateButton.disabled = true;
+          }
+          if (reviewAuditOk) {
+            setStatus("Local operator backend connected; support review trail verified", "good");
+          } else if (reviewAuditWritable) {
+            setStatus("Local operator backend connected; the next review event will anchor the legacy JSONL prefix", "warn");
+          } else {
+            setStatus(`Local operator backend connected; review writes blocked (${reviewAuditStatus})`, "warn");
+          }
+          const writeStatusText = reviewAuditWritable
+            ? "Ready; support review continuity will be verified on write"
+            : "Blocked by support review trail integrity check";
+          const writeStatusKind = reviewAuditWritable ? "good" : "warn";
+          setServiceRequestStatus(writeStatusText, writeStatusKind);
+          setCreditUsageStatus(writeStatusText, writeStatusKind);
+          setTransferStatus(writeStatusText, writeStatusKind);
+          setReviewUpdateStatus(writeStatusText, writeStatusKind);
           await loadOperatorDigest({ silent: true });
           await loadActionPlan({ silent: true });
         } catch (error) {
@@ -1562,6 +1628,11 @@
           setHandoffStatus("Export disabled until local backend is connected", "warn");
           return;
         }
+        if (redacted && !reviewAuditExportable) {
+          setStatus("Public export blocked until the complete support review chain verifies", "warn");
+          setHandoffStatus("Anchor or repair the local support review chain before external handoff", "warn");
+          return;
+        }
         if (!redacted && !confirmFullLocalExport()) {
           setStatus("Full local review package export cancelled", "warn");
           setHandoffStatus("Use public redacted export for external handoff", "warn");
@@ -1586,10 +1657,13 @@
           summaryJson.textContent = JSON.stringify(payload, null, 2);
           setStatus(redacted ? "Public redacted review package exported" : "Full local review package exported", "good");
         } catch (error) {
+          if (redacted) {
+            reviewAuditExportable = false;
+          }
           setStatus(error.message, "warn");
         } finally {
           exportButton.disabled = !backendConnected;
-          exportPublicButton.disabled = !backendConnected;
+          exportPublicButton.disabled = !backendConnected || !reviewAuditExportable;
         }
       }
 
@@ -1825,12 +1899,12 @@
         applyReviewFilters();
       });
       reviewRows.addEventListener("click", (event) => {
-        const button = event.target.closest("[data-review-index]");
+        const button = event.target.closest("[data-review-id]");
         if (!button) {
           return;
         }
-        const index = Number(button.getAttribute("data-review-index"));
-        prefillReviewUpdate(latestSupportReviews[index]);
+        const reviewId = button.getAttribute("data-review-id");
+        prefillReviewUpdate(latestSupportReviews.find((record) => record.reviewId === reviewId));
       });
       configureOperatorVisibility();
       syncServiceRequestCreditHold();

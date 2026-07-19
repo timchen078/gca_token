@@ -2,7 +2,7 @@
   "schema": "https://gcagochina.com/review-queue.json",
   "pageUrl": "https://gcagochina.com/review-queue.html",
   "status": "public-review-queue-contract-published",
-  "lastUpdated": "2026-06-06",
+  "lastUpdated": "2026-07-19",
   "title": "GCA Review Queue Contract",
   "scope": "Public manual-review contract for live GCA account intake, read-only wallet verification, 100 GCA AI Quant Access credits, GCA Member review, support review, and platform profile follow-up. Eligibility submission and ledger-record creation are live; this file does not create a public ledger browser, automatic token-transfer claim, custody request, or public reserve-wallet instruction.",
   "currentState": {
@@ -16,6 +16,14 @@
     "ledgerWritesLive": true,
     "creditLedgerRecordCreationLive": true,
     "memberLedgerRecordCreationLive": true,
+    "localOperatorReviewQueueLive": true,
+    "localSupportReviewContinuityChainLive": true,
+    "localSupportReviewContinuityChainVersion": "gca_support_review_audit_v1",
+    "localSupportReviewContinuityHashAlgorithm": "sha256-canonical-json-chain",
+    "localSupportReviewContinuityVerifiedBeforeWrite": true,
+    "localSupportReviewContinuitySigned": false,
+    "localSupportReviewContinuityExternallyAnchored": false,
+    "localSupportReviewContinuityImmutable": false,
     "manualReviewRequired": true,
     "memberBenefitSelfServiceClaimable": false,
     "memberBenefitAutomaticTransfer": false,
@@ -132,8 +140,31 @@
       "evidenceTxHashFormatOk",
       "memberBenefitReviewEvidenceStatus",
       "reviewerNote",
-      "publicEvidenceReference"
+      "publicEvidenceReference",
+      "auditChainVersion",
+      "auditHashAlgorithm",
+      "auditSequence",
+      "auditPreviousHash",
+      "auditRecordHash",
+      "auditLegacyPrefixCount",
+      "auditLegacyPrefixSha256"
     ]
+  },
+  "localAuditContinuity": {
+    "status": "live-local-operator-only",
+    "ledger": "support_reviews.jsonl",
+    "chainVersion": "gca_support_review_audit_v1",
+    "hashAlgorithm": "sha256-canonical-json-chain",
+    "legacyPrefixAnchoring": "The first chained review event commits the count and canonical SHA-256 digest of any older unchained JSONL prefix.",
+    "writeGate": "New support-review writes are refused when the existing chain fails verification.",
+    "verificationCommand": ".venv/bin/python tools/verify_gca_support_review_audit.py",
+    "signed": false,
+    "externallyAnchored": false,
+    "immutable": false,
+    "tailTruncationDetectableWithoutExternalHead": false,
+    "fullLedgerReplacementDetectableWithoutExternalHead": false,
+    "thirdPartyAudit": false,
+    "publicRecordsExposed": false
   },
   "eligibilityThresholds": {
     "holderBonusMinimum": "10000 GCA",
@@ -209,6 +240,7 @@
       "Wallet review must use read-only eth_call and ERC-20 balanceOf.",
       "GCA Member review requires 1,000,000 GCA held for 30 consecutive days before the one-time 10,000 GCA member benefit can be approved.",
       "Manual support cannot override on-chain wallet-balance verification.",
+      "The local operator support-review ledger uses a SHA-256 continuity chain and refuses new review writes when continuity verification fails.",
       "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool."
     ],
     "doNotClaim": [
@@ -217,7 +249,8 @@
       "GCA Member status bypasses wallet verification, holding-period evidence, or support review",
       "the 10,000 GCA member benefit is automatic or self-service transferred before holding-period verification, support approval, and manual reserve-wallet processing",
       "support can override wallet-balance verification, release gates, or public safety boundaries",
-      "review status provides trading permission, live order execution, custody, withdrawals, price support, listing approval, or completed third-party audit"
+      "review status provides trading permission, live order execution, custody, withdrawals, price support, listing approval, or completed third-party audit",
+      "the local support-review continuity chain is digitally signed, externally timestamped, immutable, able to independently detect tail truncation or full-ledger replacement, a production approval system, or a third-party audit"
     ]
   }
 }

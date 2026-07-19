@@ -2,7 +2,7 @@
   "schema": "https://gcagochina.com/release-gates.json",
   "pageUrl": "https://gcagochina.com/release-gates.html",
   "status": "public-release-gates-account-ledger-path-live",
-  "lastUpdated": "2026-07-18",
+  "lastUpdated": "2026-07-19",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "title": "GCA Product Release Gates",
@@ -27,6 +27,8 @@
     "walletVerificationLive": true,
     "creditLedgerWritesLive": true,
     "memberLedgerWritesLive": true,
+    "localSupportReviewQueue": "live-with-sha256-continuity-check",
+    "productionSupportApprovalWorkflowLive": false,
     "memberBenefitManualReviewOnly": true
   },
   "releaseGates": [
@@ -105,11 +107,12 @@
     {
       "id": "support-review-queue",
       "label": "Support review queue",
-      "status": "required-before-manual-approval-workflows",
+      "status": "local-operator-queue-live-production-approval-still-gated",
+      "localVerificationCommand": ".venv/bin/python tools/verify_gca_support_review_audit.py",
       "blocks": [
-        "operator-reviewed eligibility approvals",
-        "member support status updates",
-        "audit trail for rejected or approved requests"
+        "production operator-reviewed eligibility approvals",
+        "production member support status updates",
+        "claims that the local continuity chain is signed, externally anchored, immutable, independently detects tail truncation or full-ledger replacement, or is a third-party audit"
       ]
     },
     {
@@ -179,12 +182,14 @@
       "The 10,000 GCA member benefit requires 1,000,000 GCA, 30-day holding evidence, member ledger review, and manual reserve-wallet processing.",
       "Any future trading-related feature must pass risk-control review and simulation or testnet first.",
       "GCA has published a public access operations runbook for manual review handling.",
+      "The local operator support-review ledger uses a SHA-256 continuity chain and blocks new review writes when continuity verification fails.",
       "The latest BaseScan owner submission package was generated on 2026-07-18T12:03:57Z, and the daily public status snapshot was refreshed on 2026-06-18T08:31:47Z."
     ],
     "doNotClaim": [
       "credits are cash, income, reimbursement, trading permission, or transferable value",
       "GCA Member approval is automatic without 1,000,000 GCA balance and 30-day evidence review",
       "the 10,000 GCA member benefit is automatic or self-service transferred",
+      "the local support-review continuity chain is digitally signed, externally timestamped, immutable, able to independently detect tail truncation or full-ledger replacement, a production approval system, or a third-party audit",
       "live trading execution is enabled before risk-control review and simulation or testnet validation",
       "custody, withdrawal permission, private key access, exchange API secret collection, platform revenue distribution, trading permission, or risk-control bypass",
       "BaseScan token profile approval, external audit completion, deep liquidity, or tracked listing approval before publication"

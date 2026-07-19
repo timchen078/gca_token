@@ -417,7 +417,7 @@
       "100 GCA AI Quant Access credits service delivery workflow",
       "GCA Member support workflow",
       "10,000 GCA member benefit status",
-      "support review queue and audit trail"
+      "local support review queue with SHA-256 continuity checks"
     ],
     "publicEligibilitySubmissionLive": true
   },
@@ -847,6 +847,13 @@
     "ledgerWritesLive": true,
     "creditLedgerRecordCreationLive": true,
     "memberLedgerRecordCreationLive": true,
+    "localOperatorReviewQueueLive": true,
+    "localSupportReviewContinuityChainLive": true,
+    "localSupportReviewContinuityChainVersion": "gca_support_review_audit_v1",
+    "localSupportReviewContinuityVerificationCommand": ".venv/bin/python tools/verify_gca_support_review_audit.py",
+    "localSupportReviewContinuitySigned": false,
+    "localSupportReviewContinuityExternallyAnchored": false,
+    "localSupportReviewContinuityImmutable": false,
     "manualReviewRequired": true,
     "memberBenefitSelfServiceClaimable": false,
     "memberBenefitAutomaticTransfer": false,
@@ -879,6 +886,9 @@
     "creditsEligibilitySubmissionLive": true,
     "gcaMemberEligibilitySubmissionLive": true,
     "ledgerWritesLive": true,
+    "localSupportReviewContinuityChainLive": true,
+    "localSupportReviewContinuityVerificationCommand": ".venv/bin/python tools/verify_gca_support_review_audit.py",
+    "productionSupportApprovalWorkflowLive": false,
     "liveTradingEnabled": false
   }
 }
