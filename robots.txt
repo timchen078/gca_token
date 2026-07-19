@@ -141,6 +141,7 @@ Allow: /member-program.json
 Allow: /gca/member-access/
 Allow: /member-workspace.html
 Allow: /risk-passport.html
+Allow: /workspace-vault.html
 Allow: /support.html
 Allow: /support.json
 Allow: /privacy.html

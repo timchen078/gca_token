@@ -1,0 +1,487 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GCA Workspace Vault | Encrypted Local Backup</title>
+    <meta name="description" content="Create and restore one encrypted browser-local backup for GCA journal, training, research, trade-plan, portfolio-risk, and service-request receipt data.">
+    <link rel="canonical" href="https://gcagochina.com/workspace-vault.html">
+    <link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">
+    <link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="GCA | Go China Access">
+    <meta property="og:title" content="GCA Workspace Vault | Encrypted Local Backup">
+    <meta property="og:description" content="AES-256-GCM encrypted, browser-local backup and validated restore for GCA member workflow data.">
+    <meta property="og:url" content="https://gcagochina.com/workspace-vault.html">
+    <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="GCA Workspace Vault | Encrypted Local Backup">
+    <meta name="twitter:description" content="AES-256-GCM encrypted, browser-local backup and validated restore for GCA member workflow data.">
+    <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <style>
+      :root { color-scheme:light; --bg:#f6f7f5; --ink:#151817; --muted:#5e6763; --line:#dce2dc; --panel:#fff; --soft:#eef2ef; --red:#d71920; --blue:#1557d7; --green:#087f5b; --gold:#8a6500; }
+      * { box-sizing:border-box; }
+      [hidden] { display:none !important; }
+      body { margin:0; background:var(--bg); color:var(--ink); font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; line-height:1.55; }
+      a { color:var(--blue); text-decoration:none; }
+      a:hover { text-decoration:underline; }
+      button,input { font:inherit; }
+      .shell { width:min(1120px,calc(100% - 32px)); margin:0 auto; }
+      header { position:sticky; top:0; z-index:4; border-bottom:1px solid var(--line); background:rgba(255,255,255,.96); }
+      nav { min-height:64px; display:flex; align-items:center; justify-content:space-between; gap:18px; }
+      .brand { display:flex; align-items:center; gap:10px; color:var(--ink); font-weight:850; }
+      .brand img { width:32px; height:32px; }
+      .nav-links,.actions { display:flex; flex-wrap:wrap; align-items:center; gap:10px; }
+      .nav-links { font-size:14px; font-weight:700; }
+      main { padding:38px 0 58px; }
+      .eyebrow { margin:0 0 10px; color:var(--red); font-size:13px; font-weight:850; text-transform:uppercase; }
+      h1 { margin:0; max-width:880px; font-size:48px; line-height:1.05; letter-spacing:0; }
+      h2 { margin:0 0 14px; font-size:25px; letter-spacing:0; }
+      h3 { margin:0; font-size:17px; letter-spacing:0; }
+      .lead { max-width:880px; margin:14px 0 0; color:var(--muted); font-size:18px; }
+      .section { margin-top:28px; }
+      .panel { border:1px solid var(--line); border-radius:8px; background:var(--panel); padding:22px; }
+      .facts { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin-top:20px; }
+      .fact { min-width:0; border-top:3px solid var(--line); background:#fff; padding:15px 14px; }
+      .fact span { display:block; color:var(--muted); font-size:12px; font-weight:800; text-transform:uppercase; }
+      .fact strong { display:block; margin-top:8px; font-size:18px; overflow-wrap:anywhere; }
+      .status { margin-top:18px; border-left:4px solid var(--gold); background:#fff9e8; padding:13px 15px; color:#725400; font-weight:750; }
+      .status.good { border-color:var(--green); background:#e9f6ef; color:#075c43; }
+      .status.error { border-color:var(--red); background:#fff0f0; color:#8c171b; }
+      .inventory { margin:16px 0 0; padding:0; list-style:none; border-bottom:1px solid var(--line); }
+      .inventory li { display:grid; grid-template-columns:minmax(0,1fr) auto auto; align-items:center; gap:14px; border-top:1px solid var(--line); padding:14px 0; }
+      .inventory-copy p { margin:4px 0 0; color:var(--muted); }
+      .module-count { color:var(--muted); font-size:13px; font-weight:750; }
+      .module-state { color:var(--muted); font-size:12px; font-weight:850; text-transform:uppercase; }
+      .module-state.ready { color:var(--green); }
+      .two { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; }
+      .field { display:grid; gap:7px; margin-top:14px; }
+      .field label { font-size:13px; font-weight:800; }
+      input[type="password"] { width:100%; min-height:44px; border:1px solid var(--line); border-radius:7px; background:#fff; color:var(--ink); padding:10px 12px; }
+      .button { display:inline-flex; min-height:42px; align-items:center; justify-content:center; border:1px solid var(--line); border-radius:7px; background:#fff; color:var(--ink); padding:9px 14px; font-weight:800; cursor:pointer; }
+      .button.primary { border-color:var(--red); background:var(--red); color:#fff; }
+      .button:disabled { cursor:not-allowed; opacity:.55; }
+      .actions { margin-top:18px; }
+      .note { margin:0; color:var(--muted); }
+      .preview { margin:16px 0 0; padding:0; list-style:none; }
+      .preview li { display:flex; justify-content:space-between; gap:14px; border-top:1px solid var(--line); padding:10px 0 0; margin-top:10px; }
+      .preview li:first-child { margin-top:0; }
+      .preview strong { text-align:right; overflow-wrap:anywhere; }
+      .boundary { margin:0; border-left:4px solid var(--blue); background:#eef4ff; padding:15px 17px; color:#2f4a71; }
+      .boundary + .boundary { margin-top:10px; }
+      footer { border-top:1px solid var(--line); padding:23px 0; color:var(--muted); font-size:14px; }
+      @media (max-width:850px) { .facts,.two{grid-template-columns:repeat(2,minmax(0,1fr))} }
+      @media (max-width:640px) { h1{font-size:36px}.facts,.two{grid-template-columns:1fr}nav{align-items:flex-start;flex-direction:column;padding:13px 0}.nav-links{gap:12px}.inventory li{grid-template-columns:1fr;gap:3px}.actions .button{flex:1 1 150px}.preview li{display:grid}.preview strong{text-align:left} }
+    </style>
+    <link rel="stylesheet" href="assets/gca-site.css?v=20260711">
+    <script src="assets/gca-site.js?v=20260711" defer></script>
+  </head>
+  <body>
+    <header><nav class="shell" aria-label="Primary"><a class="brand" href="index.html"><img src="assets/gca-logo.svg" alt="GCA logo"><span>GCA</span></a><div class="nav-links"><a href="member-workspace.html">Member Workspace</a><a href="risk-passport.html">Risk Passport</a><a href="tools.html">Risk Tools</a><a href="support.html">Support</a></div></nav></header>
+
+    <main class="shell" id="main-content">
+      <section aria-labelledby="title">
+        <p class="eyebrow">GCA AI Quant Access · Encrypted Device Backup</p>
+        <h1 id="title">Workspace Vault <span lang="zh-CN">加密工作区备份</span></h1>
+        <p class="lead">Protect and move validated browser-local workflow data in one AES-256-GCM encrypted file.</p>
+        <p class="lead" lang="zh-CN">将本浏览器中通过校验的日志、训练、研究、计划、组合与申请回执整合成一个 AES-256-GCM 加密文件，恢复前逐模块校验。</p>
+        <div class="actions"><button class="button primary" id="refreshInventory" type="button">Refresh Inventory / 刷新数据清单</button><a class="button" href="member-workspace.html">Member Workspace / 会员工作区</a><a class="button" href="risk-passport.html">Risk Passport / 风控流程报告</a></div>
+        <div class="status" id="vaultStatus" aria-live="polite">Reading validated browser-local data / 正在读取通过校验的本地数据</div>
+        <div class="facts" aria-label="Workspace Vault status">
+          <div class="fact"><span>Modules / 模块</span><strong id="moduleFact">0 / 6</strong></div>
+          <div class="fact"><span>Records / 记录</span><strong id="recordFact">0</strong></div>
+          <div class="fact"><span>Encryption / 加密</span><strong>AES-256-GCM</strong></div>
+          <div class="fact"><span>Upload / 上传</span><strong>Never / 不上传</strong></div>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="inventoryTitle">
+        <p class="eyebrow">Validated Local Inventory</p>
+        <h2 id="inventoryTitle">Backup Modules <span lang="zh-CN">备份模块</span></h2>
+        <p class="note">Only modules that pass their existing GCA backup parser are included. Empty or invalid local data is excluded.</p>
+        <ul class="inventory" id="moduleInventory" aria-live="polite"></ul>
+      </section>
+
+      <section class="section two" aria-label="Encrypted export and restore">
+        <div class="panel">
+          <p class="eyebrow">Encrypted Export</p>
+          <h2>Create Vault File <span lang="zh-CN">创建加密文件</span></h2>
+          <p class="note">Use at least 12 characters. The passphrase is never stored and cannot be recovered by GCA.</p>
+          <div class="field"><label for="exportPassphrase">Passphrase / 加密口令</label><input id="exportPassphrase" type="password" minlength="12" maxlength="256" autocomplete="new-password"></div>
+          <div class="field"><label for="confirmPassphrase">Confirm passphrase / 确认口令</label><input id="confirmPassphrase" type="password" minlength="12" maxlength="256" autocomplete="new-password"></div>
+          <div class="actions"><button class="button primary" id="createVault" type="button" disabled>Encrypt and Download / 加密并下载</button></div>
+          <div class="status" id="exportStatus" aria-live="polite">Add validated local records before creating a vault file. / 请先创建通过校验的本地记录。</div>
+        </div>
+
+        <div class="panel">
+          <p class="eyebrow">Validated Restore</p>
+          <h2>Open Vault File <span lang="zh-CN">打开加密文件</span></h2>
+          <p class="note">Decryption happens on this device. No local data changes until you review the preview and confirm restore.</p>
+          <div class="actions"><label class="button" for="vaultFile">Choose Vault JSON / 选择加密文件</label><input id="vaultFile" type="file" accept="application/json,.json" hidden></div>
+          <div class="field"><label for="importPassphrase">Passphrase / 解密口令</label><input id="importPassphrase" type="password" minlength="12" maxlength="256" autocomplete="current-password"></div>
+          <div class="actions"><button class="button" id="decryptVault" type="button" disabled>Decrypt and Preview / 解密并预览</button><button class="button primary" id="restoreVault" type="button" disabled>Confirm Restore / 确认恢复</button></div>
+          <div class="status" id="importStatus" aria-live="polite">Choose an encrypted GCA Workspace Vault file. / 请选择 GCA 加密工作区文件。</div>
+          <ul class="preview" id="restorePreview" aria-label="Restore preview"></ul>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="boundaryTitle">
+        <p class="eyebrow">Data Boundary</p>
+        <h2 id="boundaryTitle">What This Vault Does <span lang="zh-CN">数据边界</span></h2>
+        <p class="boundary">The encrypted file may contain all user-entered journal, training, research, plan, portfolio, and local request-receipt content included by the validated modules. Keep the file and passphrase separate.</p>
+        <p class="boundary">The vault excludes the member-access wallet snapshot and full service-request packet. This page does not upload data, connect a wallet or exchange, fetch market data, place orders, deduct credits, request signatures, or transfer tokens.</p>
+        <p class="boundary" lang="zh-CN">加密文件可能包含工具中的完整用户输入，请将文件与口令分开保管。本页面不上传数据，不连接钱包或交易所，不获取行情、不下单、不扣积分、不请求签名，也不转移代币。</p>
+      </section>
+    </main>
+
+    <footer><div class="shell">GCA Workspace Vault · Browser-native encryption and validated local restore. Lost passphrases cannot be recovered.</div></footer>
+    <script src="assets/trade-journal.js"></script>
+    <script src="assets/risk-training.js"></script>
+    <script src="assets/research-notes.js"></script>
+    <script src="assets/trade-plans.js"></script>
+    <script src="assets/portfolio-risk.js"></script>
+    <script src="assets/member-workspace.js"></script>
+    <script src="assets/workspace-vault.js"></script>
+    <script>
+      (() => {
+        "use strict";
+        const journal = window.GcaTradeJournal;
+        const training = window.GcaRiskTraining;
+        const research = window.GcaResearchNotes;
+        const tradePlans = window.GcaTradePlans;
+        const portfolio = window.GcaPortfolioRisk;
+        const workspace = window.GcaMemberWorkspace;
+        const vault = window.GcaWorkspaceVault;
+        const MAX_FILE_SIZE = 8 * 1024 * 1024;
+        const moduleMeta = Object.freeze([
+          { id:"journal", label:"Trade Journal / 交易日志", count:(value)=>value.trades.length },
+          { id:"training", label:"Risk Training / 风控训练", count:(value)=>value.history.length + (value.draft ? 1 : 0) },
+          { id:"research", label:"Research Notes / 研究记录", count:(value)=>value.notes.length },
+          { id:"tradePlans", label:"Trade Plans / 交易计划", count:(value)=>value.plans.length },
+          { id:"portfolio", label:"Portfolio Risk / 组合风险", count:(value)=>value.positions.length },
+          { id:"requestReceipts", label:"Request Receipts / 申请回执", count:(value)=>value.receipts.length }
+        ]);
+        const validators = Object.freeze({
+          journal:(value)=>journal.parseBackup(value),
+          training:(value)=>training.parseTrainingBackup(value),
+          research:(value)=>research.parseBackup(value),
+          tradePlans:(value)=>tradePlans.parseBackup(value),
+          portfolio:(value)=>portfolio.parseBackup(value),
+          requestReceipts:(value)=>workspace.parseRequestHistoryBackup(value)
+        });
+        let currentBundle = null;
+        let pendingEnvelopeText = "";
+        let pendingBundle = null;
+
+        function parseJson(value) {
+          try { return typeof value === "string" ? JSON.parse(value) : value; } catch (error) { return null; }
+        }
+
+        function readLocal(key) {
+          try { return window.localStorage.getItem(key); } catch (error) { return null; }
+        }
+
+        function currentJournalBackup(timestamp) {
+          const raw = readLocal(journal.STORAGE_KEY);
+          const direct = journal.parseBackup(raw);
+          if (direct && direct.trades.length) return direct;
+          const rows = parseJson(raw);
+          if (!Array.isArray(rows) || !rows.length) return null;
+          return journal.parseBackup(journal.buildBackup(rows, timestamp));
+        }
+
+        function collectModules(timestamp) {
+          const receipts = workspace.parseRequestHistory(readLocal(workspace.REQUEST_HISTORY_KEY));
+          const trainingBackup = training.buildTrainingBackup(
+            readLocal(training.HISTORY_KEY),
+            readLocal(training.DRAFT_KEY),
+            timestamp
+          );
+          return {
+            journal:currentJournalBackup(timestamp),
+            training:training.parseTrainingBackup(trainingBackup),
+            research:research.parseBackup(readLocal(research.STORAGE_KEY)),
+            tradePlans:tradePlans.parseBackup(readLocal(tradePlans.STORAGE_KEY)),
+            portfolio:portfolio.parseBackup(readLocal(portfolio.STORAGE_KEY)),
+            requestReceipts:receipts.length
+              ? workspace.parseRequestHistoryBackup(workspace.buildRequestHistoryBackup(receipts, timestamp))
+              : null
+          };
+        }
+
+        function countRecords(modules) {
+          return moduleMeta.reduce((total, item) => total + (modules[item.id] ? item.count(modules[item.id]) : 0), 0);
+        }
+
+        function renderInventory(modules) {
+          const list = document.getElementById("moduleInventory");
+          list.textContent = "";
+          moduleMeta.forEach((item) => {
+            const value = modules[item.id];
+            const row = document.createElement("li");
+            const copy = document.createElement("div");
+            copy.className = "inventory-copy";
+            const title = document.createElement("h3");
+            title.textContent = item.label;
+            const description = document.createElement("p");
+            description.textContent = value ? "Validated and ready for encrypted backup / 已校验，可加密备份" : "No validated local data / 暂无通过校验的数据";
+            copy.append(title, description);
+            const count = document.createElement("span");
+            count.className = "module-count";
+            count.textContent = value ? `${item.count(value)} record(s)` : "0 records";
+            const state = document.createElement("span");
+            state.className = value ? "module-state ready" : "module-state";
+            state.textContent = value ? "included" : "empty";
+            row.append(copy, count, state);
+            list.appendChild(row);
+          });
+        }
+
+        function setStatus(elementId, message, state) {
+          const element = document.getElementById(elementId);
+          element.className = state ? `status ${state}` : "status";
+          element.textContent = message;
+        }
+
+        function refreshInventory() {
+          const timestamp = new Date().toISOString();
+          const modules = collectModules(timestamp);
+          currentBundle = vault.buildBundle(modules, validators, timestamp);
+          const included = moduleMeta.filter((item) => modules[item.id]).length;
+          const records = countRecords(modules);
+          renderInventory(modules);
+          document.getElementById("moduleFact").textContent = `${included} / ${moduleMeta.length}`;
+          document.getElementById("recordFact").textContent = String(records);
+          document.getElementById("createVault").disabled = !currentBundle;
+          setStatus(
+            "vaultStatus",
+            currentBundle
+              ? `${included} validated module(s), ${records} record(s) ready for encrypted backup. / 已有 ${included} 个模块可加密备份。`
+              : "No validated local workflow records found on this device. / 本设备暂无通过校验的工作区记录。",
+            currentBundle ? "good" : ""
+          );
+          setStatus(
+            "exportStatus",
+            currentBundle
+              ? "Choose a unique passphrase with at least 12 characters. / 请设置至少 12 个字符的独立口令。"
+              : "Add validated local records before creating a vault file. / 请先创建通过校验的本地记录。",
+            ""
+          );
+        }
+
+        function download(filename, value) {
+          const blob = new Blob([`${JSON.stringify(value, null, 2)}\n`], { type:"application/json" });
+          const link = document.createElement("a");
+          link.href = URL.createObjectURL(blob);
+          link.download = filename;
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+          URL.revokeObjectURL(link.href);
+        }
+
+        function renderRestorePreview(bundle) {
+          const list = document.getElementById("restorePreview");
+          list.textContent = "";
+          moduleMeta.forEach((item) => {
+            const value = bundle.modules[item.id];
+            if (!value) return;
+            const row = document.createElement("li");
+            const label = document.createElement("span");
+            label.textContent = item.label;
+            const count = document.createElement("strong");
+            count.textContent = `${item.count(value)} record(s)`;
+            row.append(label, count);
+            list.appendChild(row);
+          });
+        }
+
+        function prepareRestore(bundle) {
+          const timestamp = new Date().toISOString();
+          const writes = [];
+          const details = [];
+          const incomingJournal = bundle.modules.journal;
+          if (incomingJournal) {
+            const current = currentJournalBackup(timestamp);
+            const currentTrades = current ? current.trades : [];
+            const currentIds = new Set(currentTrades.map((trade) => trade.id));
+            const added = incomingJournal.trades.filter((trade) => !currentIds.has(trade.id));
+            const combined = journal.orderTrades([...currentTrades, ...added]);
+            if (combined.length > journal.MAX_TRADES) throw new Error("journal-limit");
+            const backup = journal.parseBackup(journal.buildBackup(combined, timestamp));
+            if (!backup) throw new Error("journal-invalid");
+            writes.push({ key:journal.STORAGE_KEY, value:JSON.stringify(backup) });
+            details.push(`Journal: ${added.length} added, ${incomingJournal.trades.length - added.length} existing`);
+          }
+
+          const incomingTraining = bundle.modules.training;
+          if (incomingTraining) {
+            const merged = training.mergeTrainingBackup(
+              readLocal(training.HISTORY_KEY),
+              readLocal(training.DRAFT_KEY),
+              incomingTraining
+            );
+            if (!merged) throw new Error("training-invalid");
+            writes.push({ key:training.HISTORY_KEY, value:merged.history.length ? JSON.stringify(merged.history) : null });
+            writes.push({ key:training.DRAFT_KEY, value:merged.draft ? JSON.stringify(merged.draft) : null });
+            details.push(`Training: ${merged.addedHistoryCount} attempt(s) added${merged.importedDraftApplied ? ", newer draft restored" : ""}`);
+          }
+
+          const incomingResearch = bundle.modules.research;
+          if (incomingResearch) {
+            const current = research.parseBackup(readLocal(research.STORAGE_KEY));
+            const merged = research.mergeBackup(current ? current.notes : [], incomingResearch);
+            const backup = merged && research.parseBackup(research.buildBackup(merged.notes, timestamp));
+            if (!merged || !backup) throw new Error("research-invalid");
+            writes.push({ key:research.STORAGE_KEY, value:JSON.stringify(backup) });
+            details.push(`Research: ${merged.addedNoteCount} added, ${merged.updatedNoteCount} updated`);
+          }
+
+          const incomingPlans = bundle.modules.tradePlans;
+          if (incomingPlans) {
+            const current = tradePlans.parseBackup(readLocal(tradePlans.STORAGE_KEY));
+            const merged = tradePlans.mergeBackup(current ? current.plans : [], incomingPlans);
+            const backup = merged && tradePlans.parseBackup(tradePlans.buildBackup(merged.plans, timestamp));
+            if (!merged || !backup) throw new Error("plans-invalid");
+            writes.push({ key:tradePlans.STORAGE_KEY, value:JSON.stringify(backup) });
+            details.push(`Trade plans: ${merged.addedPlanCount} added, ${merged.updatedPlanCount} updated`);
+          }
+
+          const incomingPortfolio = bundle.modules.portfolio;
+          if (incomingPortfolio) {
+            const current = portfolio.parseBackup(readLocal(portfolio.STORAGE_KEY));
+            const useIncoming = !current || Date.parse(incomingPortfolio.savedAt) > Date.parse(current.savedAt);
+            if (useIncoming) writes.push({ key:portfolio.STORAGE_KEY, value:JSON.stringify(incomingPortfolio) });
+            details.push(`Portfolio: ${useIncoming ? "newer encrypted copy restored" : "current device copy retained"}`);
+          }
+
+          const incomingReceipts = bundle.modules.requestReceipts;
+          if (incomingReceipts) {
+            const merged = workspace.mergeRequestHistoryBackup(readLocal(workspace.REQUEST_HISTORY_KEY), incomingReceipts);
+            if (!merged) throw new Error("receipts-invalid");
+            writes.push({ key:workspace.REQUEST_HISTORY_KEY, value:JSON.stringify(merged.receipts) });
+            details.push(`Request receipts: ${merged.addedReceiptCount} added, ${merged.updatedReceiptCount} updated`);
+          }
+          return { writes, details };
+        }
+
+        function applyWrites(writes) {
+          const previous = new Map(writes.map((entry) => [entry.key, readLocal(entry.key)]));
+          try {
+            writes.forEach((entry) => {
+              if (entry.value === null) window.localStorage.removeItem(entry.key);
+              else window.localStorage.setItem(entry.key, entry.value);
+            });
+            return true;
+          } catch (error) {
+            previous.forEach((value, key) => {
+              try {
+                if (value === null) window.localStorage.removeItem(key);
+                else window.localStorage.setItem(key, value);
+              } catch (rollbackError) {}
+            });
+            return false;
+          }
+        }
+
+        document.getElementById("refreshInventory").addEventListener("click", refreshInventory);
+        document.getElementById("createVault").addEventListener("click", async () => {
+          const passphrase = document.getElementById("exportPassphrase").value;
+          const confirmation = document.getElementById("confirmPassphrase").value;
+          if (!currentBundle) return;
+          if (!vault.validPassphrase(passphrase)) {
+            setStatus("exportStatus", "Use a passphrase between 12 and 256 characters. / 口令需为 12 至 256 个字符。", "error");
+            return;
+          }
+          if (passphrase !== confirmation) {
+            setStatus("exportStatus", "Passphrases do not match. / 两次输入的口令不一致。", "error");
+            return;
+          }
+          const button = document.getElementById("createVault");
+          button.disabled = true;
+          setStatus("exportStatus", "Encrypting locally / 正在本地加密", "");
+          const envelope = await vault.encryptBundle(currentBundle, passphrase, validators, window.crypto);
+          button.disabled = false;
+          document.getElementById("exportPassphrase").value = "";
+          document.getElementById("confirmPassphrase").value = "";
+          if (!envelope) {
+            setStatus("exportStatus", "Encryption failed on this browser. No file was created. / 当前浏览器加密失败，未创建文件。", "error");
+            return;
+          }
+          download(`gca-workspace-vault-${envelope.createdAt.slice(0,10)}.json`, envelope);
+          setStatus("exportStatus", "Encrypted vault downloaded. Store the file and passphrase separately. / 加密文件已下载，请将文件与口令分开保存。", "good");
+        });
+
+        document.getElementById("vaultFile").addEventListener("change", async (event) => {
+          const file = event.target.files && event.target.files[0];
+          pendingEnvelopeText = "";
+          pendingBundle = null;
+          document.getElementById("restoreVault").disabled = true;
+          document.getElementById("restorePreview").textContent = "";
+          if (!file || file.size > MAX_FILE_SIZE) {
+            setStatus("importStatus", "Invalid or oversized vault file. / 加密文件无效或过大。", "error");
+            document.getElementById("decryptVault").disabled = true;
+            return;
+          }
+          try {
+            const text = await file.text();
+            const parsed = vault.parseEnvelope(text);
+            if (!parsed) throw new Error("invalid-envelope");
+            pendingEnvelopeText = text;
+            document.getElementById("decryptVault").disabled = false;
+            setStatus("importStatus", `Encrypted vault recognized · ${parsed.envelope.createdAt}. Enter its passphrase. / 已识别加密文件，请输入口令。`, "good");
+          } catch (error) {
+            document.getElementById("decryptVault").disabled = true;
+            setStatus("importStatus", "This is not a valid GCA Workspace Vault file. / 这不是有效的 GCA 加密工作区文件。", "error");
+          }
+        });
+
+        document.getElementById("decryptVault").addEventListener("click", async () => {
+          const passphrase = document.getElementById("importPassphrase").value;
+          if (!pendingEnvelopeText || !vault.validPassphrase(passphrase)) {
+            setStatus("importStatus", "Choose a vault and enter its 12+ character passphrase. / 请选择文件并输入至少 12 个字符的口令。", "error");
+            return;
+          }
+          const button = document.getElementById("decryptVault");
+          button.disabled = true;
+          setStatus("importStatus", "Decrypting and validating locally / 正在本地解密并校验", "");
+          pendingBundle = await vault.decryptBundle(pendingEnvelopeText, passphrase, validators, window.crypto);
+          button.disabled = false;
+          document.getElementById("importPassphrase").value = "";
+          if (!pendingBundle) {
+            document.getElementById("restoreVault").disabled = true;
+            document.getElementById("restorePreview").textContent = "";
+            setStatus("importStatus", "Decryption or module validation failed. Check the passphrase and file. / 解密或模块校验失败，请检查口令与文件。", "error");
+            return;
+          }
+          renderRestorePreview(pendingBundle);
+          document.getElementById("restoreVault").disabled = false;
+          setStatus("importStatus", "Vault decrypted and all included modules validated. Review the preview before restore. / 已解密且模块全部通过校验，请确认后恢复。", "good");
+        });
+
+        document.getElementById("restoreVault").addEventListener("click", () => {
+          if (!pendingBundle) return;
+          if (!window.confirm("Restore the validated vault into this browser? Existing records are retained or merged when supported. / 确认将备份恢复到本浏览器？")) return;
+          try {
+            const plan = prepareRestore(pendingBundle);
+            if (!plan.writes.length || !applyWrites(plan.writes)) throw new Error("storage-failed");
+            pendingBundle = null;
+            pendingEnvelopeText = "";
+            document.getElementById("restoreVault").disabled = true;
+            document.getElementById("decryptVault").disabled = true;
+            document.getElementById("vaultFile").value = "";
+            document.getElementById("restorePreview").textContent = "";
+            setStatus("importStatus", `Restore complete. ${plan.details.join(" · ")} / 恢复完成。`, "good");
+            refreshInventory();
+          } catch (error) {
+            setStatus("importStatus", "Restore did not complete. Check current local data before retrying. / 恢复未完成，请检查当前本地数据后再重试。", "error");
+          }
+        });
+
+        refreshInventory();
+      })();
+    </script>
+  </body>
+</html>
