@@ -68,6 +68,7 @@
       .preview { margin:16px 0 0; padding:0; list-style:none; }
       .preview li { display:flex; justify-content:space-between; gap:14px; border-top:1px solid var(--line); padding:10px 0 0; margin-top:10px; }
       .preview li:first-child { margin-top:0; }
+      .preview-copy p { margin:3px 0 0; color:var(--muted); font-size:13px; }
       .preview strong { text-align:right; overflow-wrap:anywhere; }
       .boundary { margin:0; border-left:4px solid var(--blue); background:#eef4ff; padding:15px 17px; color:#2f4a71; }
       .boundary + .boundary { margin-top:10px; }
@@ -144,6 +145,7 @@
     <script src="assets/portfolio-risk.js"></script>
     <script src="assets/member-workspace.js"></script>
     <script src="assets/workspace-vault.js"></script>
+    <script src="assets/workspace-vault-restore.js"></script>
     <script>
       (() => {
         "use strict";
@@ -154,6 +156,8 @@
         const portfolio = window.GcaPortfolioRisk;
         const workspace = window.GcaMemberWorkspace;
         const vault = window.GcaWorkspaceVault;
+        const restoreEngine = window.GcaWorkspaceVaultRestore;
+        const restoreEngines = Object.freeze({ journal, training, research, tradePlans, portfolio, workspace });
         const MAX_FILE_SIZE = 8 * 1024 * 1024;
         const moduleMeta = Object.freeze([
           { id:"journal", label:"Trade Journal / 交易日志", count:(value)=>value.trades.length },
@@ -174,6 +178,7 @@
         let currentBundle = null;
         let pendingEnvelopeText = "";
         let pendingBundle = null;
+        let pendingPlan = null;
 
         function parseJson(value) {
           try { return typeof value === "string" ? JSON.parse(value) : value; } catch (error) { return null; }
@@ -181,6 +186,18 @@
 
         function readLocal(key) {
           try { return window.localStorage.getItem(key); } catch (error) { return null; }
+        }
+
+        function currentRestoreState() {
+          return {
+            journal:readLocal(journal.STORAGE_KEY),
+            trainingHistory:readLocal(training.HISTORY_KEY),
+            trainingDraft:readLocal(training.DRAFT_KEY),
+            research:readLocal(research.STORAGE_KEY),
+            tradePlans:readLocal(tradePlans.STORAGE_KEY),
+            portfolio:readLocal(portfolio.STORAGE_KEY),
+            requestReceipts:readLocal(workspace.REQUEST_HISTORY_KEY)
+          };
         }
 
         function currentJournalBackup(timestamp) {
@@ -282,108 +299,32 @@
           URL.revokeObjectURL(link.href);
         }
 
-        function renderRestorePreview(bundle) {
+        function renderRestorePreview(plan) {
           const list = document.getElementById("restorePreview");
           list.textContent = "";
-          moduleMeta.forEach((item) => {
-            const value = bundle.modules[item.id];
-            if (!value) return;
+          plan.impacts.forEach((impact) => {
+            const item = moduleMeta.find((candidate) => candidate.id === impact.id);
             const row = document.createElement("li");
+            const copy = document.createElement("div");
+            copy.className = "preview-copy";
             const label = document.createElement("span");
-            label.textContent = item.label;
-            const count = document.createElement("strong");
-            count.textContent = `${item.count(value)} record(s)`;
-            row.append(label, count);
+            label.textContent = item ? item.label : impact.id;
+            const action = document.createElement("p");
+            action.textContent = impact.action;
+            copy.append(label, action);
+            const summary = document.createElement("strong");
+            const parts = [
+              `${impact.incoming} incoming`,
+              `${impact.added} add`,
+              `${impact.updated} update`,
+              `${impact.retained} retain`
+            ];
+            if (impact.dropped) parts.push(`${impact.dropped} skip`);
+            if (impact.localRemoved) parts.push(`${impact.localRemoved} local replace`);
+            summary.textContent = parts.join(" · ");
+            row.append(copy, summary);
             list.appendChild(row);
           });
-        }
-
-        function prepareRestore(bundle) {
-          const timestamp = new Date().toISOString();
-          const writes = [];
-          const details = [];
-          const incomingJournal = bundle.modules.journal;
-          if (incomingJournal) {
-            const current = currentJournalBackup(timestamp);
-            const currentTrades = current ? current.trades : [];
-            const currentIds = new Set(currentTrades.map((trade) => trade.id));
-            const added = incomingJournal.trades.filter((trade) => !currentIds.has(trade.id));
-            const combined = journal.orderTrades([...currentTrades, ...added]);
-            if (combined.length > journal.MAX_TRADES) throw new Error("journal-limit");
-            const backup = journal.parseBackup(journal.buildBackup(combined, timestamp));
-            if (!backup) throw new Error("journal-invalid");
-            writes.push({ key:journal.STORAGE_KEY, value:JSON.stringify(backup) });
-            details.push(`Journal: ${added.length} added, ${incomingJournal.trades.length - added.length} existing`);
-          }
-
-          const incomingTraining = bundle.modules.training;
-          if (incomingTraining) {
-            const merged = training.mergeTrainingBackup(
-              readLocal(training.HISTORY_KEY),
-              readLocal(training.DRAFT_KEY),
-              incomingTraining
-            );
-            if (!merged) throw new Error("training-invalid");
-            writes.push({ key:training.HISTORY_KEY, value:merged.history.length ? JSON.stringify(merged.history) : null });
-            writes.push({ key:training.DRAFT_KEY, value:merged.draft ? JSON.stringify(merged.draft) : null });
-            details.push(`Training: ${merged.addedHistoryCount} attempt(s) added${merged.importedDraftApplied ? ", newer draft restored" : ""}`);
-          }
-
-          const incomingResearch = bundle.modules.research;
-          if (incomingResearch) {
-            const current = research.parseBackup(readLocal(research.STORAGE_KEY));
-            const merged = research.mergeBackup(current ? current.notes : [], incomingResearch);
-            const backup = merged && research.parseBackup(research.buildBackup(merged.notes, timestamp));
-            if (!merged || !backup) throw new Error("research-invalid");
-            writes.push({ key:research.STORAGE_KEY, value:JSON.stringify(backup) });
-            details.push(`Research: ${merged.addedNoteCount} added, ${merged.updatedNoteCount} updated`);
-          }
-
-          const incomingPlans = bundle.modules.tradePlans;
-          if (incomingPlans) {
-            const current = tradePlans.parseBackup(readLocal(tradePlans.STORAGE_KEY));
-            const merged = tradePlans.mergeBackup(current ? current.plans : [], incomingPlans);
-            const backup = merged && tradePlans.parseBackup(tradePlans.buildBackup(merged.plans, timestamp));
-            if (!merged || !backup) throw new Error("plans-invalid");
-            writes.push({ key:tradePlans.STORAGE_KEY, value:JSON.stringify(backup) });
-            details.push(`Trade plans: ${merged.addedPlanCount} added, ${merged.updatedPlanCount} updated`);
-          }
-
-          const incomingPortfolio = bundle.modules.portfolio;
-          if (incomingPortfolio) {
-            const current = portfolio.parseBackup(readLocal(portfolio.STORAGE_KEY));
-            const useIncoming = !current || Date.parse(incomingPortfolio.savedAt) > Date.parse(current.savedAt);
-            if (useIncoming) writes.push({ key:portfolio.STORAGE_KEY, value:JSON.stringify(incomingPortfolio) });
-            details.push(`Portfolio: ${useIncoming ? "newer encrypted copy restored" : "current device copy retained"}`);
-          }
-
-          const incomingReceipts = bundle.modules.requestReceipts;
-          if (incomingReceipts) {
-            const merged = workspace.mergeRequestHistoryBackup(readLocal(workspace.REQUEST_HISTORY_KEY), incomingReceipts);
-            if (!merged) throw new Error("receipts-invalid");
-            writes.push({ key:workspace.REQUEST_HISTORY_KEY, value:JSON.stringify(merged.receipts) });
-            details.push(`Request receipts: ${merged.addedReceiptCount} added, ${merged.updatedReceiptCount} updated`);
-          }
-          return { writes, details };
-        }
-
-        function applyWrites(writes) {
-          const previous = new Map(writes.map((entry) => [entry.key, readLocal(entry.key)]));
-          try {
-            writes.forEach((entry) => {
-              if (entry.value === null) window.localStorage.removeItem(entry.key);
-              else window.localStorage.setItem(entry.key, entry.value);
-            });
-            return true;
-          } catch (error) {
-            previous.forEach((value, key) => {
-              try {
-                if (value === null) window.localStorage.removeItem(key);
-                else window.localStorage.setItem(key, value);
-              } catch (rollbackError) {}
-            });
-            return false;
-          }
         }
 
         document.getElementById("refreshInventory").addEventListener("click", refreshInventory);
@@ -418,6 +359,7 @@
           const file = event.target.files && event.target.files[0];
           pendingEnvelopeText = "";
           pendingBundle = null;
+          pendingPlan = null;
           document.getElementById("restoreVault").disabled = true;
           document.getElementById("restorePreview").textContent = "";
           if (!file || file.size > MAX_FILE_SIZE) {
@@ -448,6 +390,7 @@
           button.disabled = true;
           setStatus("importStatus", "Decrypting and validating locally / 正在本地解密并校验", "");
           pendingBundle = await vault.decryptBundle(pendingEnvelopeText, passphrase, validators, window.crypto);
+          pendingPlan = null;
           button.disabled = false;
           document.getElementById("importPassphrase").value = "";
           if (!pendingBundle) {
@@ -456,28 +399,53 @@
             setStatus("importStatus", "Decryption or module validation failed. Check the passphrase and file. / 解密或模块校验失败，请检查口令与文件。", "error");
             return;
           }
-          renderRestorePreview(pendingBundle);
-          document.getElementById("restoreVault").disabled = false;
-          setStatus("importStatus", "Vault decrypted and all included modules validated. Review the preview before restore. / 已解密且模块全部通过校验，请确认后恢复。", "good");
+          pendingPlan = restoreEngine.buildRestorePlan(
+            pendingBundle,
+            currentRestoreState(),
+            restoreEngines,
+            new Date().toISOString()
+          );
+          if (!pendingPlan) {
+            pendingBundle = null;
+            document.getElementById("restoreVault").disabled = true;
+            document.getElementById("restorePreview").textContent = "";
+            setStatus("importStatus", "A non-destructive restore preview could not be created. Export or repair current local module data before retrying. / 无法生成非破坏性恢复预览，请先导出或修复当前本地模块数据。", "error");
+            return;
+          }
+          renderRestorePreview(pendingPlan);
+          document.getElementById("restoreVault").disabled = !pendingPlan.hasChanges;
+          setStatus(
+            "importStatus",
+            pendingPlan.hasChanges
+              ? `Validated restore plan: ${pendingPlan.changedModuleCount} module(s), ${pendingPlan.writeCount} atomic local write(s). Review before confirming. / 恢复计划已校验，请确认影响后恢复。`
+              : "All vault records are already represented by current local data. No write is needed. / 当前本地数据已包含此备份，无需写入。",
+            "good"
+          );
         });
 
         document.getElementById("restoreVault").addEventListener("click", () => {
-          if (!pendingBundle) return;
-          if (!window.confirm("Restore the validated vault into this browser? Existing records are retained or merged when supported. / 确认将备份恢复到本浏览器？")) return;
-          try {
-            const plan = prepareRestore(pendingBundle);
-            if (!plan.writes.length || !applyWrites(plan.writes)) throw new Error("storage-failed");
-            pendingBundle = null;
-            pendingEnvelopeText = "";
-            document.getElementById("restoreVault").disabled = true;
-            document.getElementById("decryptVault").disabled = true;
-            document.getElementById("vaultFile").value = "";
-            document.getElementById("restorePreview").textContent = "";
-            setStatus("importStatus", `Restore complete. ${plan.details.join(" · ")} / 恢复完成。`, "good");
-            refreshInventory();
-          } catch (error) {
-            setStatus("importStatus", "Restore did not complete. Check current local data before retrying. / 恢复未完成，请检查当前本地数据后再重试。", "error");
+          if (!pendingBundle || !pendingPlan || !pendingPlan.hasChanges) return;
+          if (!window.confirm(`Apply ${pendingPlan.writeCount} validated local write(s)? The restore engine will roll back original values if a write fails. / 确认执行恢复？写入失败时将尝试回滚原值。`)) return;
+          const outcome = restoreEngine.applyRestorePlan(pendingPlan, window.localStorage);
+          if (!outcome.ok) {
+            setStatus(
+              "importStatus",
+              outcome.rollbackComplete
+                ? "Restore failed and original local values were restored. No partial restore was retained. / 恢复失败，原本地数据已回滚，未保留部分写入。"
+                : "Restore failed and rollback was incomplete. Inspect affected local modules before retrying. / 恢复失败且回滚不完整，请检查相关本地模块。",
+              "error"
+            );
+            return;
           }
+          pendingBundle = null;
+          pendingPlan = null;
+          pendingEnvelopeText = "";
+          document.getElementById("restoreVault").disabled = true;
+          document.getElementById("decryptVault").disabled = true;
+          document.getElementById("vaultFile").value = "";
+          document.getElementById("restorePreview").textContent = "";
+          setStatus("importStatus", `Restore complete with ${outcome.appliedWriteCount} validated local write(s). / 恢复完成。`, "good");
+          refreshInventory();
         });
 
         refreshInventory();
