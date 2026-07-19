@@ -395,6 +395,7 @@
           <button class="button" id="loadDigestButton" type="button" disabled>Load Operator Digest</button>
           <button class="button" id="exportButton" type="button" disabled>Export Full Review Package (Internal Only)</button>
           <button class="button" id="exportPublicButton" type="button" disabled>Export Public Redacted Package</button>
+          <button class="button" id="exportCheckpointButton" type="button" disabled>Export Review Chain Checkpoint</button>
           <button class="button" id="copyHandoffButton" type="button" disabled>Copy Handoff Reply</button>
           <button class="button" id="copyContactExportCommandsButton" type="button">Copy Contact Export Commands</button>
           <a class="button" href="members.html">Open Pre-Registration</a>
@@ -478,6 +479,8 @@
         </div>
       </section>
       <p class="note">The support review trail uses a local SHA-256 continuity chain. The first chained event also anchors any older JSONL prefix by count and digest. It detects edits, reordering, and an interior deletion while a later chained record remains. Without an independently retained chain head, it cannot prove that the tail was not truncated or the complete ledger was not replaced. It is not a digital signature, external timestamp, immutable database, third-party audit, or production approval system. Run <code>.venv/bin/python tools/verify_gca_support_review_audit.py</code> before relying on local review history.</p>
+      <p class="status warn" id="checkpointStatus">No independently retained checkpoint exported in this browser session</p>
+      <p class="note">Store the downloaded checkpoint outside <code>.gca_access_data/</code>. Offline export is also available with <code>.venv/bin/python tools/create_gca_support_review_checkpoint.py --output ~/Documents/gca-support-review-checkpoint.json</code>. Compare it later with <code>.venv/bin/python tools/verify_gca_support_review_audit.py --checkpoint PATH_TO_RETAINED_CHECKPOINT.json</code>. The receipt is unsigned and has no external timestamp; its comparison value depends on retaining an unchanged copy separately from the ledger.</p>
 
       <section class="section panel" aria-labelledby="actionPlanTitle">
         <h2 id="actionPlanTitle">Today Action Plan</h2>
@@ -975,6 +978,7 @@
       const OPERATOR_DIGEST_ENDPOINT_PATH = "/gca/operator-digest";
       const OPERATOR_ACTION_PLAN_ENDPOINT_PATH = "/gca/operator-action-plan";
       const REVIEW_PACKAGE_ENDPOINT_PATH = "/gca/review-package";
+      const REVIEW_CHECKPOINT_ENDPOINT_PATH = "/gca/support-review-checkpoint";
       const MEMBER_REVIEW_ENDPOINT_PATH = "/gca/member-review";
       const MEMBER_BENEFIT_TRANSFER_ENDPOINT_PATH = "/gca/member-benefit-transfers";
       const SERVICE_REQUEST_ENDPOINT_PATH = "/gca/service-requests";
@@ -989,6 +993,7 @@
       const loadDigestButton = document.getElementById("loadDigestButton");
       const exportButton = document.getElementById("exportButton");
       const exportPublicButton = document.getElementById("exportPublicButton");
+      const exportCheckpointButton = document.getElementById("exportCheckpointButton");
       const copyHandoffButton = document.getElementById("copyHandoffButton");
       const copyContactExportCommandsButton = document.getElementById("copyContactExportCommandsButton");
       const copyDigestCommandButton = document.getElementById("copyDigestCommandButton");
@@ -1021,6 +1026,7 @@
       const handoffStatus = document.getElementById("handoffStatus");
       const contactExportCommandText = document.getElementById("contactExportCommandText");
       const contactExportStatus = document.getElementById("contactExportStatus");
+      const checkpointStatus = document.getElementById("checkpointStatus");
       const digestStatus = document.getElementById("digestStatus");
       const digestGeneratedAt = document.getElementById("digestGeneratedAt");
       const digestPublicStatus = document.getElementById("digestPublicStatus");
@@ -1060,6 +1066,7 @@
       };
       let backendConnected = false;
       let reviewAuditExportable = false;
+      let reviewCheckpointExportable = false;
       let latestSupportReviews = [];
 
       function configureOperatorVisibility() {
@@ -1113,15 +1120,22 @@
         digestCommandStatus.className = `status ${kind}`.trim();
       }
 
+      function setCheckpointStatus(text, kind = "") {
+        checkpointStatus.textContent = text;
+        checkpointStatus.className = `status ${kind}`.trim();
+      }
+
       function setBackendControlsEnabled(enabled) {
         backendConnected = Boolean(enabled);
         if (!backendConnected) {
           reviewAuditExportable = false;
+          reviewCheckpointExportable = false;
         }
         loadActionPlanButton.disabled = !backendConnected;
         loadDigestButton.disabled = !backendConnected;
         exportButton.disabled = !backendConnected;
         exportPublicButton.disabled = !backendConnected || !reviewAuditExportable;
+        exportCheckpointButton.disabled = !backendConnected || !reviewCheckpointExportable;
         recordServiceRequestButton.disabled = !backendConnected;
         recordCreditUsageButton.disabled = !backendConnected;
         recordTransferButton.disabled = !backendConnected;
@@ -1414,6 +1428,7 @@
           setTransferStatus("Public website view only", "warn");
           setReviewUpdateStatus("Public website view only", "warn");
           setHandoffStatus("Public website view only; export disabled", "warn");
+          setCheckpointStatus("Public website view only; checkpoint export disabled", "warn");
           summaryJson.textContent = "Open http://127.0.0.1:8787/operator.html after running tools/gca_member_backend.py to view local ledgers.";
           renderEmailRegistrations([]);
           renderServiceRequests([]);
@@ -1452,6 +1467,10 @@
           const reviewAuditStatus = String(payload.supportReviewAudit?.status || "unknown");
           const reviewAuditWritable = reviewAuditOk || reviewAuditStatus === "legacy-prefix-awaiting-anchor";
           reviewAuditExportable = reviewAuditOk;
+          reviewCheckpointExportable = (
+            reviewAuditOk
+            && Number(payload.supportReviewAudit?.chainedRecordCount || 0) > 0
+          );
           setBackendControlsEnabled(true);
           if (!reviewAuditWritable) {
             recordServiceRequestButton.disabled = true;
@@ -1461,10 +1480,18 @@
           }
           if (reviewAuditOk) {
             setStatus("Local operator backend connected; support review trail verified", "good");
+            setCheckpointStatus(
+              reviewCheckpointExportable
+                ? "Verified chain head is ready for independent checkpoint export"
+                : "Add the first chained review event before exporting a checkpoint",
+              reviewCheckpointExportable ? "good" : "warn",
+            );
           } else if (reviewAuditWritable) {
             setStatus("Local operator backend connected; the next review event will anchor the legacy JSONL prefix", "warn");
+            setCheckpointStatus("Checkpoint export waits for the next event to anchor the legacy prefix", "warn");
           } else {
             setStatus(`Local operator backend connected; review writes blocked (${reviewAuditStatus})`, "warn");
+            setCheckpointStatus("Checkpoint export blocked until the complete review chain verifies", "warn");
           }
           const writeStatusText = reviewAuditWritable
             ? "Ready; support review continuity will be verified on write"
@@ -1490,6 +1517,7 @@
           setTransferStatus("Local backend unavailable", "warn");
           setReviewUpdateStatus("Local backend unavailable", "warn");
           setHandoffStatus("Local backend unavailable; export disabled", "warn");
+          setCheckpointStatus("Local backend unavailable; checkpoint export disabled", "warn");
         } finally {
           refreshButton.disabled = false;
         }
@@ -1565,6 +1593,38 @@
         link.click();
         link.remove();
         URL.revokeObjectURL(url);
+      }
+
+      async function exportReviewCheckpoint() {
+        if (!isLocalOperatorHost || !backendConnected || !reviewCheckpointExportable) {
+          setCheckpointStatus("Checkpoint export requires a connected local backend and verified chained review record", "warn");
+          return;
+        }
+        exportCheckpointButton.disabled = true;
+        setCheckpointStatus("Generating checkpoint from the complete verified review ledger");
+        try {
+          const response = await fetch(REVIEW_CHECKPOINT_ENDPOINT_PATH, { cache: "no-store" });
+          const payload = await response.json();
+          if (!response.ok || !payload.ok) {
+            throw new Error(payload.error || `HTTP ${response.status}`);
+          }
+          const stamp = new Date().toISOString().replaceAll(":", "-").replace(/\..+$/, "Z");
+          const fileName = `gca-support-review-checkpoint-${stamp}.json`;
+          downloadJson(payload, fileName);
+          summaryJson.textContent = JSON.stringify(payload, null, 2);
+          const digest = String(payload.checkpointDigestSha256 || "");
+          setCheckpointStatus(
+            `Checkpoint exported (${digest ? `${digest.slice(0, 12)}...` : "digest missing"}); retain this file outside the ledger directory`,
+            digest ? "good" : "warn",
+          );
+          setStatus("Support review chain checkpoint exported", "good");
+        } catch (error) {
+          reviewCheckpointExportable = false;
+          setCheckpointStatus(error.message, "warn");
+          setStatus("Support review checkpoint export failed", "warn");
+        } finally {
+          exportCheckpointButton.disabled = !backendConnected || !reviewCheckpointExportable;
+        }
       }
 
       function buildHandoffReply(payload, fileName) {
@@ -1883,6 +1943,7 @@
       loadDigestButton.addEventListener("click", () => loadOperatorDigest());
       exportButton.addEventListener("click", () => exportReviewPackage(false));
       exportPublicButton.addEventListener("click", () => exportReviewPackage(true));
+      exportCheckpointButton.addEventListener("click", exportReviewCheckpoint);
       copyHandoffButton.addEventListener("click", copyHandoffReply);
       copyContactExportCommandsButton.addEventListener("click", copyContactExportCommands);
       copyDigestCommandButton.addEventListener("click", copyDigestCommand);

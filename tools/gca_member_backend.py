@@ -105,6 +105,11 @@ SUPPORT_REVIEW_AUDIT_FIELDS = (
     "auditLegacyPrefixCount",
     "auditLegacyPrefixSha256",
 )
+SUPPORT_REVIEW_CHECKPOINT_VERSION = "gca_support_review_checkpoint_v1"
+SUPPORT_REVIEW_CHECKPOINT_DIGEST_ALGORITHM = (
+    "sha256-canonical-json-excluding-checkpointDigestSha256"
+)
+SUPPORT_REVIEW_CHECKPOINT_SOURCE_SCOPE = "complete-local-support-reviews-ledger"
 OPERATOR_DIGEST_VERSION = "gca_operator_digest_v1"
 OPERATOR_DIGEST_FILE = "gca_operator_digest.json"
 OPERATOR_ACTION_PLAN_VERSION = "gca_operator_action_plan_v1"
@@ -528,6 +533,12 @@ def compute_support_review_audit_hash(record: dict[str, Any]) -> str:
     return canonical_sha256(digest_source)
 
 
+def compute_support_review_checkpoint_digest(checkpoint: dict[str, Any]) -> str:
+    digest_source = dict(checkpoint)
+    digest_source.pop("checkpointDigestSha256", None)
+    return canonical_sha256(digest_source)
+
+
 def verify_support_review_audit(records: list[dict[str, Any]]) -> dict[str, Any]:
     """Verify the local continuity chain attached to support review records.
 
@@ -545,6 +556,7 @@ def verify_support_review_audit(records: list[dict[str, Any]]) -> dict[str, Any]
         "auditHashAlgorithm": SUPPORT_REVIEW_AUDIT_ALGORITHM,
         "recordCount": len(records),
         "legacyPrefixRecordCount": 0,
+        "legacyPrefixSha256": "",
         "chainedRecordCount": 0,
         "chainHeadHash": "",
         "coversAllRecords": False,
@@ -587,6 +599,7 @@ def verify_support_review_audit(records: list[dict[str, Any]]) -> dict[str, Any]
     legacy_prefix_digest = support_review_legacy_prefix_digest(legacy_prefix)
     result.update({
         "legacyPrefixRecordCount": len(legacy_prefix),
+        "legacyPrefixSha256": legacy_prefix_digest,
         "chainedRecordCount": len(chained_records),
     })
 
@@ -631,6 +644,179 @@ def verify_support_review_audit(records: list[dict[str, Any]]) -> dict[str, Any]
         "coversAllRecords": True,
         "tamperEvident": True,
         "failureReason": "",
+    })
+    return result
+
+
+def create_support_review_checkpoint(
+    records: list[dict[str, Any]],
+    generated_at: str | None = None,
+) -> dict[str, Any]:
+    """Create an unsigned chain-head receipt for independent retention."""
+
+    audit = verify_support_review_audit(records)
+    if audit.get("ok") is not True or int(audit.get("chainedRecordCount") or 0) < 1:
+        raise BackendError(
+            "support review checkpoint requires at least one verified chained review record",
+            HTTPStatus.CONFLICT,
+        )
+    checkpoint = {
+        "ok": True,
+        "receiptType": "gca-support-review-chain-head-checkpoint",
+        "checkpointVersion": SUPPORT_REVIEW_CHECKPOINT_VERSION,
+        "generatedAt": generated_at or iso_now(),
+        "sourceScope": SUPPORT_REVIEW_CHECKPOINT_SOURCE_SCOPE,
+        "auditChainVersion": audit["auditChainVersion"],
+        "auditHashAlgorithm": audit["auditHashAlgorithm"],
+        "recordCount": int(audit["recordCount"]),
+        "legacyPrefixRecordCount": int(audit["legacyPrefixRecordCount"]),
+        "legacyPrefixSha256": str(audit["legacyPrefixSha256"]),
+        "chainedRecordCount": int(audit["chainedRecordCount"]),
+        "chainHeadHash": str(audit["chainHeadHash"]),
+        "checkpointDigestAlgorithm": SUPPORT_REVIEW_CHECKPOINT_DIGEST_ALGORITHM,
+        "checkpointDigestSha256": "",
+        "independentRetentionRequired": True,
+        "signed": False,
+        "externallyTimestamped": False,
+        "immutable": False,
+        "independentAuthenticityProof": False,
+        "verificationCommand": (
+            ".venv/bin/python tools/verify_gca_support_review_audit.py "
+            "--checkpoint PATH_TO_RETAINED_CHECKPOINT.json"
+        ),
+        "claimBoundary": (
+            "This unsigned receipt can detect truncation below, or a different lineage before, "
+            "the retained chain head only when an unchanged copy is stored independently from "
+            "the ledger. It is not a digital signature, external timestamp, immutable record, "
+            "third-party audit, or independent authenticity proof."
+        ),
+    }
+    checkpoint["checkpointDigestSha256"] = compute_support_review_checkpoint_digest(checkpoint)
+    return checkpoint
+
+
+def verify_support_review_checkpoint(
+    records: list[dict[str, Any]],
+    checkpoint: Any,
+) -> dict[str, Any]:
+    """Compare a retained chain-head receipt with the complete current ledger."""
+
+    current_audit = verify_support_review_audit(records)
+    result: dict[str, Any] = {
+        "ok": False,
+        "status": "invalid-checkpoint",
+        "failureReason": "",
+        "checkpointVersion": "",
+        "checkpointGeneratedAt": "",
+        "checkpointDigestVerified": False,
+        "checkpointChainHeadHash": "",
+        "checkpointChainedRecordCount": 0,
+        "currentChainHeadHash": str(current_audit.get("chainHeadHash") or ""),
+        "currentChainedRecordCount": int(current_audit.get("chainedRecordCount") or 0),
+        "recordsAfterCheckpoint": 0,
+        "retainedCheckpointComparisonPerformed": False,
+        "tailTruncationDetectableRelativeToRetainedCheckpoint": False,
+        "lineageMismatchDetectableRelativeToRetainedCheckpoint": False,
+        "signed": False,
+        "externallyTimestamped": False,
+        "independentAuthenticityProof": False,
+        "currentAudit": current_audit,
+    }
+
+    def fail(status: str, reason: str) -> dict[str, Any]:
+        result.update({"status": status, "failureReason": reason})
+        return result
+
+    if not isinstance(checkpoint, dict):
+        return fail("invalid-checkpoint", "Checkpoint must be a JSON object.")
+
+    result.update({
+        "checkpointVersion": str(checkpoint.get("checkpointVersion") or ""),
+        "checkpointGeneratedAt": str(checkpoint.get("generatedAt") or ""),
+        "checkpointChainHeadHash": str(checkpoint.get("chainHeadHash") or "").lower(),
+    })
+    if checkpoint.get("checkpointVersion") != SUPPORT_REVIEW_CHECKPOINT_VERSION:
+        return fail("unsupported-checkpoint-version", "Unsupported support review checkpoint version.")
+    if checkpoint.get("receiptType") != "gca-support-review-chain-head-checkpoint" or checkpoint.get("ok") is not True:
+        return fail("invalid-checkpoint-type", "Checkpoint receipt type or generation status is invalid.")
+    if not str(checkpoint.get("generatedAt") or "").strip():
+        return fail("invalid-checkpoint-time", "Checkpoint generatedAt is required.")
+    if checkpoint.get("checkpointDigestAlgorithm") != SUPPORT_REVIEW_CHECKPOINT_DIGEST_ALGORITHM:
+        return fail("unsupported-checkpoint-digest-algorithm", "Unsupported checkpoint digest algorithm.")
+
+    expected_digest = str(checkpoint.get("checkpointDigestSha256") or "").strip().lower()
+    if not re.fullmatch(r"[a-f0-9]{64}", expected_digest):
+        return fail("invalid-checkpoint-digest", "Checkpoint digest format is invalid.")
+    if compute_support_review_checkpoint_digest(checkpoint) != expected_digest:
+        return fail("checkpoint-digest-mismatch", "Checkpoint digest does not match its canonical content.")
+    result["checkpointDigestVerified"] = True
+
+    if checkpoint.get("sourceScope") != SUPPORT_REVIEW_CHECKPOINT_SOURCE_SCOPE:
+        return fail("invalid-checkpoint-scope", "Checkpoint source scope is not the complete local support review ledger.")
+    if checkpoint.get("auditChainVersion") != SUPPORT_REVIEW_AUDIT_VERSION:
+        return fail("unsupported-audit-chain-version", "Checkpoint audit chain version is unsupported.")
+    if checkpoint.get("auditHashAlgorithm") != SUPPORT_REVIEW_AUDIT_ALGORITHM:
+        return fail("unsupported-audit-hash-algorithm", "Checkpoint audit hash algorithm is unsupported.")
+    if checkpoint.get("independentRetentionRequired") is not True:
+        return fail("invalid-checkpoint-boundaries", "Checkpoint must require independent retention.")
+    for field in ("signed", "externallyTimestamped", "immutable", "independentAuthenticityProof"):
+        if checkpoint.get(field) is not False:
+            return fail("invalid-checkpoint-boundaries", f"Checkpoint boundary {field} must be false.")
+
+    count_fields = ("recordCount", "legacyPrefixRecordCount", "chainedRecordCount")
+    if any(type(checkpoint.get(field)) is not int or checkpoint[field] < 0 for field in count_fields):
+        return fail("invalid-checkpoint-counts", "Checkpoint record counts must be non-negative integers.")
+    legacy_count = int(checkpoint["legacyPrefixRecordCount"])
+    checkpoint_chained_count = int(checkpoint["chainedRecordCount"])
+    result["checkpointChainedRecordCount"] = checkpoint_chained_count
+    if checkpoint_chained_count < 1 or checkpoint["recordCount"] != legacy_count + checkpoint_chained_count:
+        return fail("invalid-checkpoint-counts", "Checkpoint record counts are inconsistent.")
+
+    checkpoint_head = result["checkpointChainHeadHash"]
+    checkpoint_legacy_digest = str(checkpoint.get("legacyPrefixSha256") or "").lower()
+    if not re.fullmatch(r"[a-f0-9]{64}", checkpoint_head):
+        return fail("invalid-checkpoint-head", "Checkpoint chain head hash format is invalid.")
+    if not re.fullmatch(r"[a-f0-9]{64}", checkpoint_legacy_digest):
+        return fail("invalid-checkpoint-legacy-prefix", "Checkpoint legacy prefix digest format is invalid.")
+
+    result.update({
+        "retainedCheckpointComparisonPerformed": True,
+        "tailTruncationDetectableRelativeToRetainedCheckpoint": True,
+        "lineageMismatchDetectableRelativeToRetainedCheckpoint": True,
+    })
+    if len(records) < int(checkpoint["recordCount"]):
+        return fail(
+            "ledger-truncated-before-checkpoint",
+            "Current ledger has fewer total records than the retained checkpoint.",
+        )
+    if current_audit.get("ok") is not True:
+        return fail("current-ledger-invalid", "Current support review ledger continuity verification failed.")
+    if int(current_audit.get("legacyPrefixRecordCount") or 0) != legacy_count:
+        return fail("checkpoint-lineage-mismatch", "Current ledger legacy prefix count differs from the retained checkpoint.")
+    if str(current_audit.get("legacyPrefixSha256") or "") != checkpoint_legacy_digest:
+        return fail("checkpoint-lineage-mismatch", "Current ledger legacy prefix digest differs from the retained checkpoint.")
+
+    current_chained_count = int(current_audit.get("chainedRecordCount") or 0)
+    if current_chained_count < checkpoint_chained_count:
+        return fail(
+            "ledger-truncated-before-checkpoint",
+            "Current ledger has fewer chained records than the retained checkpoint.",
+        )
+
+    checkpoint_record_index = legacy_count + checkpoint_chained_count - 1
+    current_checkpoint_head = str(records[checkpoint_record_index].get("auditRecordHash") or "").lower()
+    if current_checkpoint_head != checkpoint_head:
+        return fail(
+            "checkpoint-lineage-mismatch",
+            "Current ledger does not contain the retained checkpoint chain head at the expected sequence.",
+        )
+
+    records_after_checkpoint = current_chained_count - checkpoint_chained_count
+    result.update({
+        "ok": True,
+        "status": "verified-descendant" if records_after_checkpoint else "verified-at-checkpoint",
+        "failureReason": "",
+        "recordsAfterCheckpoint": records_after_checkpoint,
     })
     return result
 
@@ -820,6 +1006,9 @@ class GcaMemberBackend:
 
     def support_review_audit(self) -> dict[str, Any]:
         return verify_support_review_audit(self.store.read_all("support_reviews"))
+
+    def support_review_checkpoint(self) -> dict[str, Any]:
+        return create_support_review_checkpoint(self.store.read_all("support_reviews"))
 
     def require_writable_support_review_audit(self) -> dict[str, Any]:
         audit = self.support_review_audit()
@@ -1614,6 +1803,17 @@ class GcaMemberBackend:
             "automaticTokenTransfer": False,
             "localJsonlDataOnly": True,
             "supportReviewAudit": support_review_audit,
+            "supportReviewCheckpoint": {
+                "available": (
+                    support_review_audit.get("ok") is True
+                    and int(support_review_audit.get("chainedRecordCount") or 0) > 0
+                ),
+                "localEndpoint": "/gca/support-review-checkpoint",
+                "independentRetentionRequired": True,
+                "signed": False,
+                "externallyTimestamped": False,
+                "independentAuthenticityProof": False,
+            },
             "dataLedgers": {
                 name: {
                     "count": len(records),
@@ -2347,6 +2547,10 @@ def build_handler(site_dir: Path, backend: GcaMemberBackend) -> type[SimpleHTTPR
                     except ValueError as exc:
                         raise BackendError("limit must be an integer") from exc
                     self.send_json(backend.operator_action_plan(limit=limit))
+                    return
+                if parsed.path == "/gca/support-review-checkpoint":
+                    self.assert_local_api_client()
+                    self.send_json(backend.support_review_checkpoint())
                     return
                 if parsed.path == "/gca/review-package":
                     self.assert_local_api_client()

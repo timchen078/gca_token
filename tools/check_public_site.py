@@ -5978,6 +5978,8 @@ def validate_roadmap_page(text: str) -> None:
     assert_contains(text, "GCA Member records", label)
     assert_contains(text, "benefit remains manual review", label)
     assert_contains(text, "Local SHA-256 continuity live; production approvals still gated", label)
+    assert_contains(text, "Review chain checkpoint receipt", label)
+    assert_contains(text, "Local unsigned export and retained-head comparison live", label)
     assert_contains(text, "External Dependencies", label)
     assert_contains(text, "Returned 2026-05-23; final package refreshed 2026-07-18; Handoff and Chinese owner flow ready for one support@gcagochina.com submission", label)
     assert_contains(text, "Latest reviewer package", label)
@@ -6043,6 +6045,14 @@ def validate_roadmap_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong support review queue priority status")
     if "verify_gca_support_review_audit.py" not in support_priority.get("verificationCommand", ""):
         raise SiteCheckError(f"{label}: missing support review continuity verify command")
+    if "create_gca_support_review_checkpoint.py" not in support_priority.get("checkpointCreateCommand", ""):
+        raise SiteCheckError(f"{label}: missing support review checkpoint create command")
+    if "--checkpoint" not in support_priority.get("checkpointVerifyCommand", ""):
+        raise SiteCheckError(f"{label}: missing support review checkpoint verify command")
+    if support_priority.get("checkpointToolLive") is not True:
+        raise SiteCheckError(f"{label}: support review checkpoint tool must be live")
+    if support_priority.get("checkpointPublishedExternally") is not False:
+        raise SiteCheckError(f"{label}: support review checkpoint must not be claimed public")
     if support_priority.get("productionApprovalWorkflowLive") is not False:
         raise SiteCheckError(f"{label}: production approval workflow must remain false")
     if not any(milestone.get("id") == "account-ledger-path-live" for milestone in payload.get("completedMilestones", [])):
@@ -8968,6 +8978,7 @@ def validate_operations_page(text: str) -> None:
         "Service Request Triage",
         "Platform Follow-Up",
         "Review Package Handoff",
+        "Review Chain Checkpoint",
         "Closure",
     ):
         assert_contains(text, step, label)
@@ -8990,6 +9001,9 @@ def validate_operations_page(text: str) -> None:
     assert_contains(text, "tools/export_gca_review_package.py", label)
     assert_contains(text, "tools/verify_gca_review_package.py", label)
     assert_contains(text, "tools/verify_gca_support_review_audit.py", label)
+    assert_contains(text, "tools/create_gca_support_review_checkpoint.py", label)
+    assert_contains(text, "tools/verify_gca_support_review_audit.py --checkpoint", label)
+    assert_contains(text, "No public checkpoint, digital signature", label)
     assert_contains(text, "Local Continuity Only", label)
     assert_contains(text, "not signed, externally anchored, immutable", label)
     assert_contains(text, "No Replies From Redacted Exports", label)
@@ -9013,6 +9027,7 @@ def validate_operations_json(text: str) -> None:
     workflow_ids = {item.get("id") for item in workflow}
     controls = payload.get("operatorControls", {})
     handoff = payload.get("reviewPackageHandoff", {})
+    checkpoint = payload.get("supportReviewCheckpoint", {})
     rules = payload.get("decisionRules", {})
     thresholds = payload.get("eligibilityThresholds", {})
     market = payload.get("officialMarket", {})
@@ -9047,6 +9062,7 @@ def validate_operations_json(text: str) -> None:
         "gcaMemberEligibilitySubmissionLive",
         "ledgerWritesLive",
         "localSupportReviewContinuityChainLive",
+        "localSupportReviewCheckpointToolLive",
     ):
         if state.get(key) is not True:
             raise SiteCheckError(f"{label}: {key} must be true")
@@ -9055,12 +9071,17 @@ def validate_operations_json(text: str) -> None:
         "localSupportReviewContinuitySigned",
         "localSupportReviewContinuityExternallyAnchored",
         "localSupportReviewContinuityImmutable",
+        "localSupportReviewCheckpointPublishedExternally",
         "productionSupportApprovalWorkflowLive",
     ):
         if state.get(key) is not False:
             raise SiteCheckError(f"{label}: {key} must be false")
     if state.get("serviceRequestQueueLocalLive") is not True:
         raise SiteCheckError(f"{label}: serviceRequestQueueLocalLive must be true")
+    if "create_gca_support_review_checkpoint.py" not in state.get("localSupportReviewCheckpointCreateCommand", ""):
+        raise SiteCheckError(f"{label}: missing support review checkpoint create command")
+    if "--checkpoint" not in state.get("localSupportReviewCheckpointVerifyCommand", ""):
+        raise SiteCheckError(f"{label}: missing support review checkpoint verify command")
     for key in (
         "serviceRequestQueueWorkerPrepared",
         "serviceRequestQueueWorkerDryRunPassed",
@@ -9187,6 +9208,7 @@ def validate_operations_json(text: str) -> None:
         "service-request-triage",
         "platform-follow-up",
         "review-package-handoff",
+        "review-chain-checkpoint",
         "closure",
     ):
         if workflow_id not in workflow_ids:
@@ -9288,6 +9310,21 @@ def validate_operations_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing handoff pre-share check")
     if "verify the complete local support-review chain with tools/verify_gca_support_review_audit.py" not in handoff.get("requiredBeforeSharing", []):
         raise SiteCheckError(f"{label}: missing support review continuity pre-share check")
+    if checkpoint.get("status") != "local-tool-live-no-public-checkpoint":
+        raise SiteCheckError(f"{label}: wrong support review checkpoint status")
+    if checkpoint.get("checkpointVersion") != "gca_support_review_checkpoint_v1":
+        raise SiteCheckError(f"{label}: wrong support review checkpoint version")
+    if checkpoint.get("checkpointDigestAlgorithm") != "sha256-canonical-json-excluding-checkpointDigestSha256":
+        raise SiteCheckError(f"{label}: wrong support review checkpoint digest algorithm")
+    if "create_gca_support_review_checkpoint.py" not in checkpoint.get("createCommand", ""):
+        raise SiteCheckError(f"{label}: missing checkpoint create command")
+    if "--checkpoint" not in checkpoint.get("verifyCommand", ""):
+        raise SiteCheckError(f"{label}: missing checkpoint verify command")
+    if checkpoint.get("storeOutsideLedgerDirectory") is not True:
+        raise SiteCheckError(f"{label}: checkpoint must require separate retention")
+    for key in ("publishedExternally", "signed", "externallyTimestamped", "independentAuthenticityProof"):
+        if checkpoint.get(key) is not False:
+            raise SiteCheckError(f"{label}: checkpoint boundary {key} must be false")
     for field in (
         "memberBenefitReviewEvidence.holdingStartDate",
         "memberBenefitReviewEvidence.daysSinceHoldingStartPreview",
@@ -10490,6 +10527,10 @@ def validate_review_queue_page(text: str) -> None:
     assert_contains(text, "auditPreviousHash", label)
     assert_contains(text, "auditRecordHash", label)
     assert_contains(text, "not digitally signed, externally timestamped, immutable", label)
+    assert_contains(text, "gca_support_review_checkpoint_v1", label)
+    assert_contains(text, "tools/create_gca_support_review_checkpoint.py", label)
+    assert_contains(text, "tools/verify_gca_support_review_audit.py --checkpoint", label)
+    assert_contains(text, "no public checkpoint or external timestamp is currently claimed", label)
     assert_contains(text, "Manual support cannot override on-chain wallet-balance verification", label)
     assert_contains(text, "Private key or seed phrase", label)
     assert_contains(text, "Exchange API secret", label)
@@ -10539,6 +10580,7 @@ def validate_review_queue_json(text: str) -> None:
         "localOperatorReviewQueueLive",
         "localSupportReviewContinuityChainLive",
         "localSupportReviewContinuityVerifiedBeforeWrite",
+        "localSupportReviewCheckpointToolLive",
     ):
         if state.get(key) is not True:
             raise SiteCheckError(f"{label}: {key} must be true")
@@ -10551,6 +10593,7 @@ def validate_review_queue_json(text: str) -> None:
         "localSupportReviewContinuitySigned",
         "localSupportReviewContinuityExternallyAnchored",
         "localSupportReviewContinuityImmutable",
+        "localSupportReviewCheckpointPublishedExternally",
     ):
         if state.get(key) is not False:
             raise SiteCheckError(f"{label}: {key} must be false")
@@ -10617,6 +10660,25 @@ def validate_review_queue_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong local audit hash algorithm")
     if "verify_gca_support_review_audit.py" not in continuity.get("verificationCommand", ""):
         raise SiteCheckError(f"{label}: missing local audit verify command")
+    if continuity.get("checkpointVersion") != "gca_support_review_checkpoint_v1":
+        raise SiteCheckError(f"{label}: wrong local checkpoint version")
+    if continuity.get("checkpointDigestAlgorithm") != "sha256-canonical-json-excluding-checkpointDigestSha256":
+        raise SiteCheckError(f"{label}: wrong local checkpoint digest algorithm")
+    if "create_gca_support_review_checkpoint.py" not in continuity.get("checkpointExportCommand", ""):
+        raise SiteCheckError(f"{label}: missing checkpoint export command")
+    if "--checkpoint" not in continuity.get("checkpointVerificationCommand", ""):
+        raise SiteCheckError(f"{label}: missing checkpoint comparison command")
+    for key in ("checkpointIndependentRetentionRequired", "checkpointToolAvailable"):
+        if continuity.get(key) is not True:
+            raise SiteCheckError(f"{label}: local checkpoint {key} must be true")
+    for key in (
+        "checkpointPublishedExternally",
+        "checkpointSigned",
+        "checkpointExternallyTimestamped",
+        "checkpointIndependentAuthenticityProof",
+    ):
+        if continuity.get(key) is not False:
+            raise SiteCheckError(f"{label}: local checkpoint boundary {key} must be false")
     for key in (
         "signed",
         "externallyAnchored",
@@ -11049,6 +11111,8 @@ def validate_release_gates_page(text: str) -> None:
     assert_contains(text, "support review queue", label)
     assert_contains(text, "Local support review trail", label)
     assert_contains(text, "SHA-256 continuity checked before review writes", label)
+    assert_contains(text, "Review chain checkpoint", label)
+    assert_contains(text, "Unsigned local export live; separate retention required", label)
     assert_contains(text, "production approval workflow still gated", label)
     assert_contains(text, "simulation or testnet first", label)
     assert_contains(text, "BaseScan token profile publication", label)
@@ -11098,6 +11162,10 @@ def validate_release_gates_json(text: str) -> None:
         raise SiteCheckError(f"{label}: liveTradingEnabled must be false")
     if state.get("localSupportReviewQueue") != "live-with-sha256-continuity-check":
         raise SiteCheckError(f"{label}: wrong local support review queue state")
+    if state.get("localSupportReviewCheckpointTool") != "live-unsigned-independent-retention-required":
+        raise SiteCheckError(f"{label}: wrong local support review checkpoint state")
+    if state.get("localSupportReviewCheckpointPublishedExternally") is not False:
+        raise SiteCheckError(f"{label}: public support review checkpoint must remain false")
     if state.get("productionSupportApprovalWorkflowLive") is not False:
         raise SiteCheckError(f"{label}: production support approval workflow must remain false")
     if state.get("baseScanTokenProfile") != "ready-for-owner-resubmission":
@@ -11134,6 +11202,10 @@ def validate_release_gates_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong support review release gate status")
     if "verify_gca_support_review_audit.py" not in support_gate.get("localVerificationCommand", ""):
         raise SiteCheckError(f"{label}: missing support review release gate verify command")
+    if "create_gca_support_review_checkpoint.py" not in support_gate.get("localCheckpointCreateCommand", ""):
+        raise SiteCheckError(f"{label}: missing support review checkpoint create command")
+    if "--checkpoint" not in support_gate.get("localCheckpointVerifyCommand", ""):
+        raise SiteCheckError(f"{label}: missing support review checkpoint compare command")
     if base_scan_gate.get("status") != "ready-for-owner-resubmission":
         raise SiteCheckError(f"{label}: wrong BaseScan release gate status")
     if base_scan_gate.get("finalSubmissionPackageGeneratedAt") != "2026-07-18T12:03:57Z":

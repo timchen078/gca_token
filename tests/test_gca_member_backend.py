@@ -21,17 +21,21 @@ from tools.gca_member_backend import (
     SUPPORT_REVIEW_AUDIT_ALGORITHM,
     SUPPORT_REVIEW_AUDIT_GENESIS_HASH,
     SUPPORT_REVIEW_AUDIT_VERSION,
+    SUPPORT_REVIEW_CHECKPOINT_DIGEST_ALGORITHM,
+    SUPPORT_REVIEW_CHECKPOINT_VERSION,
     TRANSFER_TOPIC,
     GcaMemberBackend,
     JsonlLedgerStore,
     BackendError,
     balance_of_calldata,
     build_handler,
+    create_support_review_checkpoint,
     holding_days_from_date,
     read_json_request,
     units_to_gca,
     verify_package_digest,
     verify_support_review_audit,
+    verify_support_review_checkpoint,
 )
 
 
@@ -213,6 +217,10 @@ class GcaMemberBackendTests(unittest.TestCase):
         self.assertFalse(summary["supportReviewAudit"]["tailTruncationDetectableWithoutExternalHead"])
         self.assertFalse(summary["supportReviewAudit"]["fullLedgerReplacementDetectableWithoutExternalHead"])
         self.assertFalse(summary["supportReviewAudit"]["independentAuthenticityProof"])
+        self.assertTrue(summary["supportReviewCheckpoint"]["available"])
+        self.assertEqual(summary["supportReviewCheckpoint"]["localEndpoint"], "/gca/support-review-checkpoint")
+        self.assertTrue(summary["supportReviewCheckpoint"]["independentRetentionRequired"])
+        self.assertFalse(summary["supportReviewCheckpoint"]["signed"])
         self.assertTrue(summary["operatorBoundaries"]["readOnlyWalletVerification"])
 
         transfer = backend.record_member_benefit_transfer({
@@ -789,6 +797,16 @@ class GcaMemberBackendTests(unittest.TestCase):
         self.assertEqual(verification["status"], "verified-with-legacy-prefix")
         self.assertEqual(verification["legacyPrefixRecordCount"], 1)
         self.assertTrue(verification["coversAllRecords"])
+        legacy_checkpoint = create_support_review_checkpoint(
+            anchored_records,
+            generated_at="2026-01-02T00:01:00Z",
+        )
+        self.assertEqual(legacy_checkpoint["legacyPrefixRecordCount"], 1)
+        self.assertEqual(
+            legacy_checkpoint["legacyPrefixSha256"],
+            anchored_records[1]["auditLegacyPrefixSha256"],
+        )
+        self.assertTrue(verify_support_review_checkpoint(anchored_records, legacy_checkpoint)["ok"])
 
         anchored_records[0]["status"] = "rejected"
         store.path("support_reviews").write_text(
@@ -852,6 +870,163 @@ class GcaMemberBackendTests(unittest.TestCase):
         self.assertFalse(verification["tailTruncationDetectableWithoutExternalHead"])
         self.assertFalse(verification["fullLedgerReplacementDetectableWithoutExternalHead"])
         self.assertFalse(verification["independentAuthenticityProof"])
+
+    def test_support_review_checkpoint_verifies_same_descendant_and_detects_truncation(self):
+        _backend, store = self.make_backend(MEMBER_THRESHOLD_UNITS)
+        store.append("support_reviews", {
+            "reviewId": "gca_review_checkpoint_1",
+            "status": "received",
+            "updatedAt": "2026-01-01T00:00:00Z",
+        })
+        store.append("support_reviews", {
+            "reviewId": "gca_review_checkpoint_2",
+            "status": "waiting_for_operator_review",
+            "updatedAt": "2026-01-02T00:00:00Z",
+        })
+        checkpoint_records = store.read_all("support_reviews")
+        checkpoint = create_support_review_checkpoint(
+            checkpoint_records,
+            generated_at="2026-01-03T00:00:00Z",
+        )
+
+        self.assertEqual(checkpoint["checkpointVersion"], SUPPORT_REVIEW_CHECKPOINT_VERSION)
+        self.assertEqual(
+            checkpoint["checkpointDigestAlgorithm"],
+            SUPPORT_REVIEW_CHECKPOINT_DIGEST_ALGORITHM,
+        )
+        self.assertEqual(checkpoint["chainedRecordCount"], 2)
+        self.assertRegex(checkpoint["checkpointDigestSha256"], r"^[a-f0-9]{64}$")
+        self.assertFalse(checkpoint["signed"])
+        self.assertFalse(checkpoint["externallyTimestamped"])
+
+        same = verify_support_review_checkpoint(checkpoint_records, checkpoint)
+        self.assertTrue(same["ok"])
+        self.assertEqual(same["status"], "verified-at-checkpoint")
+        self.assertTrue(same["checkpointDigestVerified"])
+        self.assertEqual(same["recordsAfterCheckpoint"], 0)
+
+        store.append("support_reviews", {
+            "reviewId": "gca_review_checkpoint_3",
+            "status": "closed_resolved",
+            "updatedAt": "2026-01-04T00:00:00Z",
+        })
+        descendant = verify_support_review_checkpoint(store.read_all("support_reviews"), checkpoint)
+        self.assertTrue(descendant["ok"])
+        self.assertEqual(descendant["status"], "verified-descendant")
+        self.assertEqual(descendant["recordsAfterCheckpoint"], 1)
+
+        store.path("support_reviews").write_text(
+            json.dumps(checkpoint_records[0], sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
+        truncated = verify_support_review_checkpoint(store.read_all("support_reviews"), checkpoint)
+        self.assertFalse(truncated["ok"])
+        self.assertEqual(truncated["status"], "ledger-truncated-before-checkpoint")
+        self.assertTrue(truncated["tailTruncationDetectableRelativeToRetainedCheckpoint"])
+
+    def test_support_review_checkpoint_rejects_modified_receipt_and_different_lineage(self):
+        _backend, store = self.make_backend(MEMBER_THRESHOLD_UNITS)
+        for index in range(2):
+            store.append("support_reviews", {
+                "reviewId": f"gca_review_original_{index}",
+                "status": "received",
+                "updatedAt": f"2026-01-0{index + 1}T00:00:00Z",
+            })
+        checkpoint = create_support_review_checkpoint(store.read_all("support_reviews"))
+
+        changed_checkpoint = dict(checkpoint)
+        changed_checkpoint["chainedRecordCount"] = 1
+        changed = verify_support_review_checkpoint(store.read_all("support_reviews"), changed_checkpoint)
+        self.assertFalse(changed["ok"])
+        self.assertEqual(changed["status"], "checkpoint-digest-mismatch")
+
+        with tempfile.TemporaryDirectory() as alternate_temp:
+            alternate_store = JsonlLedgerStore(Path(alternate_temp))
+            for index in range(2):
+                alternate_store.append("support_reviews", {
+                    "reviewId": f"gca_review_alternate_{index}",
+                    "status": "received",
+                    "updatedAt": f"2026-01-0{index + 1}T00:00:00Z",
+                })
+            different = verify_support_review_checkpoint(
+                alternate_store.read_all("support_reviews"),
+                checkpoint,
+            )
+        self.assertFalse(different["ok"])
+        self.assertEqual(different["status"], "checkpoint-lineage-mismatch")
+        self.assertTrue(different["lineageMismatchDetectableRelativeToRetainedCheckpoint"])
+
+    def test_support_review_checkpoint_cli_exports_and_verifies_retained_receipt(self):
+        with tempfile.TemporaryDirectory() as temp:
+            temp_root = Path(temp)
+            data_dir = temp_root / "ledger"
+            receipt_path = temp_root / "retained" / "gca-support-review-checkpoint.json"
+            store = JsonlLedgerStore(data_dir)
+            store.append("support_reviews", {
+                "reviewId": "gca_review_checkpoint_cli_1",
+                "status": "received",
+                "updatedAt": "2026-01-01T00:00:00Z",
+            })
+            store.append("support_reviews", {
+                "reviewId": "gca_review_checkpoint_cli_2",
+                "status": "waiting_for_operator_review",
+                "updatedAt": "2026-01-02T00:00:00Z",
+            })
+            create_result = subprocess.run(
+                [
+                    sys.executable,
+                    "tools/create_gca_support_review_checkpoint.py",
+                    "--data-dir",
+                    str(data_dir),
+                    "--output",
+                    str(receipt_path),
+                ],
+                cwd=ROOT,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            self.assertEqual(create_result.returncode, 0, create_result.stderr)
+            self.assertTrue(receipt_path.exists())
+            self.assertEqual(json.loads(create_result.stdout)["checkpointVersion"], SUPPORT_REVIEW_CHECKPOINT_VERSION)
+
+            verify_command = [
+                sys.executable,
+                "tools/verify_gca_support_review_audit.py",
+                "--data-dir",
+                str(data_dir),
+                "--checkpoint",
+                str(receipt_path),
+            ]
+            verified = subprocess.run(verify_command, cwd=ROOT, capture_output=True, text=True, check=False)
+            self.assertEqual(verified.returncode, 0, verified.stderr)
+            self.assertEqual(json.loads(verified.stdout)["status"], "verified-at-checkpoint")
+
+            records = store.read_all("support_reviews")
+            store.path("support_reviews").write_text(
+                json.dumps(records[0], sort_keys=True) + "\n",
+                encoding="utf-8",
+            )
+            rejected = subprocess.run(verify_command, cwd=ROOT, capture_output=True, text=True, check=False)
+            self.assertEqual(rejected.returncode, 1)
+            self.assertEqual(json.loads(rejected.stdout)["status"], "ledger-truncated-before-checkpoint")
+
+            inside_result = subprocess.run(
+                [
+                    sys.executable,
+                    "tools/create_gca_support_review_checkpoint.py",
+                    "--data-dir",
+                    str(data_dir),
+                    "--output",
+                    str(data_dir / "bad-checkpoint.json"),
+                ],
+                cwd=ROOT,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            self.assertNotEqual(inside_result.returncode, 0)
+            self.assertIn("outside the ledger data directory", inside_result.stderr)
 
     def test_support_review_audit_cli_verifies_chain_and_rejects_tampering(self):
         with tempfile.TemporaryDirectory() as temp:
@@ -1141,6 +1316,13 @@ class GcaMemberBackendTests(unittest.TestCase):
             self.assertEqual(summary["dataLedgers"]["email_registrations"]["count"], 1)
             self.assertFalse(summary["publicSelfServiceClaim"])
             self.assertFalse(summary["automaticTokenTransfer"])
+            self.assertTrue(summary["supportReviewCheckpoint"]["available"])
+
+            with urlopen(f"{base_url}/gca/support-review-checkpoint", timeout=10) as response:
+                checkpoint = json.loads(response.read().decode())
+            self.assertTrue(checkpoint["ok"])
+            self.assertEqual(checkpoint["checkpointVersion"], SUPPORT_REVIEW_CHECKPOINT_VERSION)
+            self.assertEqual(checkpoint["chainHeadHash"], summary["supportReviewAudit"]["chainHeadHash"])
 
             (store.data_dir / "gca_operator_digest.json").write_text(json.dumps({
                 "ok": True,

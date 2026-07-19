@@ -24,7 +24,7 @@ Run the local-only member backend for operator testing:
 .venv/bin/python tools/gca_member_backend.py --host 127.0.0.1 --port 8787
 ```
 
-Then open `http://127.0.0.1:8787/members.html` for intake or `http://127.0.0.1:8787/operator.html` for the local operator console. The backend serves `site/`, accepts `POST /gca/pre-registrations`, verifies GCA with read-only Base Mainnet `eth_call`, exposes `GET /gca/operator-summary`, exposes the latest local redacted daily digest at `GET /gca/operator-digest`, ranks manual next actions at `GET /gca/operator-action-plan`, exports a localhost-only reviewer evidence package at `GET /gca/review-package` with `recordManifest` and `packageDigestSha256`, supports `GET /gca/review-package?redact=public` for external-sharing redaction, and writes append-only JSONL records under `.gca_access_data/`. The operator console displays the last exported package mode, digest, local verify command, daily operator digest, action plan, a local support review update form, and a copyable handoff reply for public-redacted reviewer packages; full-local packages remain internal only and require an explicit browser confirmation before download. Operators can append manual support status updates with `POST /gca/member-review` and record a manually completed 10,000 GCA member benefit transfer with `POST /gca/member-benefit-transfers`; before recording a transfer, the backend verifies the public transaction hash with read-only Base Mainnet `eth_getTransactionReceipt` and confirms a matching GCA `Transfer` log to the member wallet. It does not send tokens or ask for private keys, seed phrases, signatures, withdrawal permission, custody, or exchange API secrets.
+Then open `http://127.0.0.1:8787/members.html` for intake or `http://127.0.0.1:8787/operator.html` for the local operator console. The backend serves `site/`, accepts `POST /gca/pre-registrations`, verifies GCA with read-only Base Mainnet `eth_call`, exposes `GET /gca/operator-summary`, exposes the latest local redacted daily digest at `GET /gca/operator-digest`, ranks manual next actions at `GET /gca/operator-action-plan`, exports a localhost-only reviewer evidence package at `GET /gca/review-package` with `recordManifest` and `packageDigestSha256`, supports `GET /gca/review-package?redact=public` for external-sharing redaction, exports an unsigned review-chain checkpoint at `GET /gca/support-review-checkpoint`, and writes append-only JSONL records under `.gca_access_data/`. The operator console displays the last exported package mode, digest, local verify command, daily operator digest, action plan, a local support review update form, and a copyable handoff reply for public-redacted reviewer packages; full-local packages remain internal only and require an explicit browser confirmation before download. Operators can append manual support status updates with `POST /gca/member-review` and record a manually completed 10,000 GCA member benefit transfer with `POST /gca/member-benefit-transfers`; before recording a transfer, the backend verifies the public transaction hash with read-only Base Mainnet `eth_getTransactionReceipt` and confirms a matching GCA `Transfer` log to the member wallet. It does not send tokens or ask for private keys, seed phrases, signatures, withdrawal permission, custody, or exchange API secrets.
 
 Verify an exported review package digest locally:
 
@@ -39,6 +39,15 @@ Export the same review package directly from local JSONL data without starting t
 .venv/bin/python tools/export_gca_review_package.py --redact public --output gca-public-redacted-review-package.json
 .venv/bin/python tools/verify_gca_review_package.py gca-public-redacted-review-package.json
 ```
+
+Export a review-chain checkpoint outside the ledger directory and compare the retained receipt later:
+
+```bash
+.venv/bin/python tools/create_gca_support_review_checkpoint.py --output ~/Documents/gca-support-review-checkpoint.json
+.venv/bin/python tools/verify_gca_support_review_audit.py --checkpoint ~/Documents/gca-support-review-checkpoint.json
+```
+
+The checkpoint is unsigned and not externally timestamped. It can detect truncation below or a different lineage before the saved head only when an unchanged copy is retained separately from `.gca_access_data/`.
 
 ## Mainnet Launch Package
 
@@ -168,5 +177,6 @@ Export the same review package directly from local JSONL data without starting t
 - Social preview card: `brand/gca-social-card.svg`
 - Static website: `site/index.html`
 - Local review package exporter: `tools/export_gca_review_package.py`
+- Local support-review checkpoint exporter: `tools/create_gca_support_review_checkpoint.py`
 - Live public site check, including market identity, member program rules, access operations runbook, product release gates, listing readiness, and high-risk public-claim guardrails: `.venv/bin/python tools/check_public_site.py`
 - GitHub Actions public site check: `.github/workflows/check-public-site.yml`
