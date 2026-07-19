@@ -693,7 +693,8 @@
       "Risk Discipline Training",
       "Member Research Notes",
       "GCA Member Workspace",
-      "GCA Risk Passport"
+      "GCA Risk Passport",
+      "GCA Workspace Vault"
     ],
     "notProduct": [
       "custody",
@@ -715,7 +716,8 @@
     "accessApi": "https://gcagochina.com/access-api.json",
     "operationsRunbookPage": "https://gcagochina.com/operations.html",
     "operationsRunbook": "https://gcagochina.com/operations.json",
-    "riskPassportPage": "https://gcagochina.com/risk-passport.html"
+    "riskPassportPage": "https://gcagochina.com/risk-passport.html",
+    "workspaceVaultPage": "https://gcagochina.com/workspace-vault.html"
   },
   "releaseGates": {
     "status": "public-release-gates-published",

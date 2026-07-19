@@ -562,6 +562,140 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn("Coverage: 6/6", result["formatted"])
         self.assertIn("Boundary: no identity", result["formatted"])
 
+    def test_workspace_vault_page_publishes_encrypted_validated_restore(self):
+        page = (SITE / "workspace-vault.html").read_text()
+        member_workspace = (SITE / "member-workspace.html").read_text()
+        risk_passport = (SITE / "risk-passport.html").read_text()
+        product = json.loads((SITE / "product.json").read_text())
+        project = json.loads((SITE / "project.json").read_text())
+        roadmap = json.loads((SITE / "roadmap.json").read_text())
+        sitemap = (SITE / "sitemap.xml").read_text()
+        robots = (SITE / "robots.txt").read_text()
+
+        for element_id in (
+            "refreshInventory",
+            "vaultStatus",
+            "moduleFact",
+            "recordFact",
+            "moduleInventory",
+            "exportPassphrase",
+            "confirmPassphrase",
+            "createVault",
+            "exportStatus",
+            "vaultFile",
+            "importPassphrase",
+            "decryptVault",
+            "restoreVault",
+            "importStatus",
+            "restorePreview",
+        ):
+            self.assertIn(f'id="{element_id}"', page)
+        for script_name in (
+            "trade-journal.js",
+            "risk-training.js",
+            "research-notes.js",
+            "trade-plans.js",
+            "portfolio-risk.js",
+            "member-workspace.js",
+            "workspace-vault.js",
+        ):
+            self.assertIn(f'src="assets/{script_name}"', page)
+        for expected in (
+            "AES-256-GCM",
+            "vault.buildBundle",
+            "vault.parseEnvelope",
+            "vault.encryptBundle",
+            "vault.decryptBundle",
+            "prepareRestore",
+            "applyWrites",
+            "No local data changes until you review the preview and confirm restore",
+            "excludes the member-access wallet snapshot and full service-request packet",
+        ):
+            self.assertIn(expected, page)
+        self.assertNotIn("innerHTML", page)
+        self.assertNotIn("fetch(", page)
+        self.assertNotIn("window.ethereum", page)
+        self.assertNotIn("WebSocket", page)
+
+        module = next(item for item in product["productModules"] if item["id"] == "gca-workspace-vault")
+        self.assertEqual(module["status"], "public-browser-local-encrypted-backup-live")
+        self.assertEqual(module["publicUrl"], "https://gcagochina.com/workspace-vault.html")
+        self.assertEqual(module["kdf"], "PBKDF2-SHA-256")
+        self.assertEqual(module["pbkdf2Iterations"], 210000)
+        self.assertEqual(module["cipher"], "AES-256-GCM")
+        self.assertTrue(module["portableEncryptedJson"])
+        self.assertTrue(module["mayContainUserEnteredToolContent"])
+        for key in (
+            "storesPassphrase",
+            "uploadsData",
+            "includesMemberSnapshot",
+            "includesServiceRequestPacket",
+            "connectsWallet",
+            "connectsExchange",
+            "fetchesMarketData",
+            "placesOrders",
+            "deductsCredits",
+            "automaticTokenTransfer",
+        ):
+            self.assertFalse(module[key])
+        self.assertEqual(product["officialLinks"]["workspaceVault"], "https://gcagochina.com/workspace-vault.html")
+        self.assertIn("GCA Workspace Vault", project["productSpec"]["moduleNames"])
+        self.assertEqual(project["productSpec"]["workspaceVaultPage"], "https://gcagochina.com/workspace-vault.html")
+        self.assertIn("encrypted-workspace-vault-live", [item["id"] for item in roadmap["completedMilestones"]])
+        self.assertEqual(roadmap["publicLinks"]["workspaceVault"], "https://gcagochina.com/workspace-vault.html")
+        self.assertIn("https://gcagochina.com/workspace-vault.html", sitemap)
+        self.assertIn("Allow: /workspace-vault.html", robots)
+        self.assertIn('href="workspace-vault.html"', member_workspace)
+        self.assertIn('href="workspace-vault.html"', risk_passport)
+
+    def test_workspace_vault_engine_encrypts_and_rejects_tampering(self):
+        bundled_node = Path("/Users/abc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node")
+        node = shutil.which("node") or (str(bundled_node) if bundled_node.exists() else "")
+        if not node:
+            self.skipTest("Node.js is unavailable")
+
+        module_path = SITE / "assets" / "workspace-vault.js"
+        script = (
+            "const v=require(process.argv[1]);"
+            "const api=require('crypto').webcrypto;"
+            "const validators=Object.fromEntries(v.MODULE_IDS.map(id=>[id,value=>value&&value.schema===id+'-fixture'?value:null]));"
+            "const modules=Object.fromEntries(v.MODULE_IDS.map(id=>[id,null]));"
+            "modules.journal={schema:'journal-fixture',records:[{id:'one',notes:'private journal text'}]};"
+            "modules.research={schema:'research-fixture',records:[{id:'two',thesis:'private research text'}]};"
+            "const bundle=v.buildBundle(modules,validators,'2026-07-19T12:00:00.000Z');"
+            "const extraBundle=JSON.parse(JSON.stringify(bundle));extraBundle.email='private@example.com';"
+            "const missingModules={journal:modules.journal};"
+            "(async()=>{"
+            "const envelope=await v.encryptBundle(bundle,'correct horse battery',validators,api);"
+            "const decrypted=await v.decryptBundle(envelope,'correct horse battery',validators,api);"
+            "const wrong=await v.decryptBundle(envelope,'wrong password value',validators,api);"
+            "const tampered=JSON.parse(JSON.stringify(envelope));tampered.payload=(tampered.payload[0]==='A'?'B':'A')+tampered.payload.slice(1);"
+            "const changed=await v.decryptBundle(tampered,'correct horse battery',validators,api);"
+            "const extraEnvelope=JSON.parse(JSON.stringify(envelope));extraEnvelope.walletAddress='0x1111111111111111111111111111111111111111';"
+            "const short=await v.encryptBundle(bundle,'too-short',validators,api);"
+            "process.stdout.write(JSON.stringify({bundle,envelope,decrypted,wrong,changed,short,extraBundle:v.parseBundle(extraBundle,validators),missing:v.buildBundle(missingModules,validators,'2026-07-19T12:00:00.000Z'),extraEnvelope:v.parseEnvelope(extraEnvelope),serialized:JSON.stringify(envelope)}));"
+            "})();"
+        )
+        completed = subprocess.run(
+            [node, "-e", script, str(module_path)],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        result = json.loads(completed.stdout)
+
+        self.assertEqual(result["bundle"]["schema"], "gca-workspace-bundle-v1")
+        self.assertEqual(result["envelope"]["schema"], "gca-encrypted-workspace-vault-v1")
+        self.assertEqual(result["envelope"]["kdf"]["iterations"], 210000)
+        self.assertEqual(result["envelope"]["cipher"]["name"], "AES-GCM")
+        self.assertEqual(result["decrypted"], result["bundle"])
+        for invalid_name in ("wrong", "changed", "short", "extraBundle", "missing", "extraEnvelope"):
+            self.assertIsNone(result[invalid_name])
+        for plaintext in ("private journal text", "private research text", "private@example.com"):
+            self.assertNotIn(plaintext, result["serialized"])
+        self.assertFalse(result["bundle"]["boundaries"]["includesMemberSnapshot"])
+        self.assertFalse(result["bundle"]["boundaries"]["uploadedByPage"])
+
     def test_risk_calculator_is_client_side_and_has_no_execution_path(self):
         page = (SITE / "risk-calculator.html").read_text()
         product = (SITE / "product.json").read_text()

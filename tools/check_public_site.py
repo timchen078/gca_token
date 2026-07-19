@@ -129,6 +129,7 @@ RESEARCH_NOTES_PAGE_URL = "https://gcagochina.com/research-notes.html"
 TRADE_PLANS_PAGE_URL = "https://gcagochina.com/trade-plans.html"
 PORTFOLIO_RISK_PAGE_URL = "https://gcagochina.com/portfolio-risk.html"
 RISK_PASSPORT_PAGE_URL = "https://gcagochina.com/risk-passport.html"
+WORKSPACE_VAULT_PAGE_URL = "https://gcagochina.com/workspace-vault.html"
 SERVICE_DELIVERY_PLAYBOOK_PAGE_URL = "https://gcagochina.com/service-delivery-playbook.html"
 SERVICE_DELIVERY_PLAYBOOK_URL = "https://gcagochina.com/service-delivery-playbook.json"
 WORKER_ROUTES_HANDOFF_PAGE_URL = "https://gcagochina.com/worker-routes-handoff.html"
@@ -366,6 +367,8 @@ def validate_root(text: str) -> None:
     assert_contains(text, "GCA", label)
     assert_contains(text, "Risk Passport", label)
     assert_contains(text, "risk-passport.html", label)
+    assert_contains(text, "Workspace Vault", label)
+    assert_contains(text, "workspace-vault.html", label)
     assert_contains(text, "Start Here", label)
     assert_contains(text, "start.html", label)
     assert_contains(text, "Verify GCA", label)
@@ -4324,6 +4327,7 @@ def validate_zh_site_map_page(text: str) -> None:
     label = "/zh-site-map.html"
     assert_contains(text, "member-workspace.html", label)
     assert_contains(text, "risk-passport.html", label)
+    assert_contains(text, "workspace-vault.html", label)
     assert_contains(text, "portfolio-risk.html", label)
     assert_contains(text, "trade-plans.html", label)
     assert_social_preview_meta(text, label, ZH_SITE_MAP_PAGE_URL)
@@ -4652,6 +4656,7 @@ def validate_site_map_page(text: str) -> None:
     label = "/site-map.html"
     assert_contains(text, "member-workspace.html", label)
     assert_contains(text, "risk-passport.html", label)
+    assert_contains(text, "workspace-vault.html", label)
     assert_contains(text, "portfolio-risk.html", label)
     assert_contains(text, "trade-plans.html", label)
     assert_social_preview_meta(text, label, SITE_MAP_PAGE_URL)
@@ -5452,6 +5457,7 @@ def validate_member_workspace_page(text: str) -> None:
     label = "/member-workspace.html"
     assert_contains(text, "GCA Member Workspace", label)
     assert_contains(text, 'href="risk-passport.html"', label)
+    assert_contains(text, 'href="workspace-vault.html"', label)
     assert_contains(text, "Member Workspace", label)
     assert_contains(text, "会员工作区", label)
     assert_contains(text, 'id="workspaceState"', label)
@@ -5553,6 +5559,7 @@ def validate_risk_passport_page(text: str) -> None:
     label = "/risk-passport.html"
     assert_social_preview_meta(text, label, RISK_PASSPORT_PAGE_URL)
     assert_contains(text, "GCA Risk Passport", label)
+    assert_contains(text, 'href="workspace-vault.html"', label)
     assert_contains(text, "Risk Passport", label)
     assert_contains(text, "风控流程报告", label)
     for element_id in (
@@ -5593,6 +5600,61 @@ def validate_risk_passport_page(text: str) -> None:
         "No email, full wallet address, GCA balance, credit balance",
         "No certification, market signal, exchange connection, or order execution",
         "never writes back to member, research, plan, portfolio, training, or journal storage",
+    ):
+        assert_contains(text, expected, label)
+    assert_not_contains(text, "innerHTML", label)
+    assert_not_contains(text, "fetch(", label)
+    assert_not_contains(text, "window.ethereum", label)
+    assert_not_contains(text, "WebSocket", label)
+    assert_no_forbidden_public_claims(text, label)
+
+
+def validate_workspace_vault_page(text: str) -> None:
+    label = "/workspace-vault.html"
+    assert_social_preview_meta(text, label, WORKSPACE_VAULT_PAGE_URL)
+    assert_contains(text, "GCA Workspace Vault", label)
+    assert_contains(text, "Workspace Vault", label)
+    assert_contains(text, "加密工作区备份", label)
+    for element_id in (
+        "refreshInventory",
+        "vaultStatus",
+        "moduleFact",
+        "recordFact",
+        "moduleInventory",
+        "exportPassphrase",
+        "confirmPassphrase",
+        "createVault",
+        "exportStatus",
+        "vaultFile",
+        "importPassphrase",
+        "decryptVault",
+        "restoreVault",
+        "importStatus",
+        "restorePreview",
+    ):
+        assert_contains(text, f'id="{element_id}"', label)
+    for script in (
+        "trade-journal.js",
+        "risk-training.js",
+        "research-notes.js",
+        "trade-plans.js",
+        "portfolio-risk.js",
+        "member-workspace.js",
+        "workspace-vault.js",
+    ):
+        assert_contains(text, f'src="assets/{script}"', label)
+    for expected in (
+        "AES-256-GCM",
+        "vault.buildBundle",
+        "vault.parseEnvelope",
+        "vault.encryptBundle",
+        "vault.decryptBundle",
+        "prepareRestore",
+        "applyWrites",
+        "never stored and cannot be recovered",
+        "No local data changes until you review the preview and confirm restore",
+        "excludes the member-access wallet snapshot and full service-request packet",
+        "does not upload data",
     ):
         assert_contains(text, expected, label)
     assert_not_contains(text, "innerHTML", label)
@@ -5889,6 +5951,8 @@ def validate_roadmap_page(text: str) -> None:
     assert_contains(text, "ten GCA risk and research tools, the Member Workspace priority queue", label)
     assert_contains(text, "privacy-minimized Risk Passport workflow report", label)
     assert_contains(text, 'href="risk-passport.html"', label)
+    assert_contains(text, "encrypted Workspace Vault", label)
+    assert_contains(text, 'href="workspace-vault.html"', label)
     assert_contains(text, "Controlled HTTPS member account UI", label)
     assert_contains(text, "Live at", label)
     assert_contains(text, "Read-only GCA balance verification", label)
@@ -5960,6 +6024,8 @@ def validate_roadmap_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing browser tool suite live milestone")
     if not any(milestone.get("id") == "member-risk-passport-live" for milestone in payload.get("completedMilestones", [])):
         raise SiteCheckError(f"{label}: missing Risk Passport live milestone")
+    if not any(milestone.get("id") == "encrypted-workspace-vault-live" for milestone in payload.get("completedMilestones", [])):
+        raise SiteCheckError(f"{label}: missing Workspace Vault live milestone")
     if "GCA remains concept-stage with live account intake, read-only wallet verification, eligible ledger records, ten browser-only risk and research tools, and a local Member Workspace; connected market-data and trading modules remain staged." not in payload.get("publicClaimBoundaries", {}).get("safeClaims", []):
         raise SiteCheckError(f"{label}: missing concept-stage safe claim")
     if "the 10,000 GCA member benefit is automatic or self-service transferred before holding-period verification, support approval, and manual reserve-wallet processing" not in payload.get("publicClaimBoundaries", {}).get("doNotClaim", []):
@@ -5982,6 +6048,8 @@ def validate_roadmap_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong listingReadiness")
     if links.get("riskPassport") != RISK_PASSPORT_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong riskPassport")
+    if links.get("workspaceVault") != WORKSPACE_VAULT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong workspaceVault")
     if any(priority.get("id") == "weekly-go-china-radar" for priority in payload.get("nextBuildPriorities", [])):
         raise SiteCheckError(f"{label}: weekly radar should not remain a next priority")
     if not any(milestone.get("id") == "weekly-go-china-radar-issue-003" for milestone in payload.get("completedMilestones", [])):
@@ -7873,6 +7941,9 @@ def validate_product_page(text: str) -> None:
     assert_contains(text, "GCA Risk Passport", label)
     assert_contains(text, "Browser-Local Report Live", label)
     assert_contains(text, 'href="risk-passport.html"', label)
+    assert_contains(text, "GCA Workspace Vault", label)
+    assert_contains(text, "Encrypted Local Backup Live", label)
+    assert_contains(text, 'href="workspace-vault.html"', label)
     assert_contains(text, "simulation or testnet first", label)
     assert_contains(text, "No custody", label)
     assert_contains(text, "no withdrawal permission", label)
@@ -8363,11 +8434,13 @@ def validate_product_json(text: str) -> None:
         "Member Research Notes",
         "GCA Member Workspace",
         "GCA Risk Passport",
+        "GCA Workspace Vault",
     ):
         if name not in module_names:
             raise SiteCheckError(f"{label}: missing module {name}")
     member_workspace = module_map.get("gca-member-workspace", {})
     risk_passport = module_map.get("gca-risk-passport", {})
+    workspace_vault = module_map.get("gca-workspace-vault", {})
     risk_training = module_map.get("risk-control-training", {})
     research_notes = module_map.get("member-research-notes", {})
     trade_plans = module_map.get("trade-plan-ledger", {})
@@ -8478,10 +8551,37 @@ def validate_product_json(text: str) -> None:
     ):
         if risk_passport.get(key) is not False:
             raise SiteCheckError(f"{label}: Risk Passport {key} must be false")
+    if workspace_vault.get("status") != "public-browser-local-encrypted-backup-live":
+        raise SiteCheckError(f"{label}: wrong Workspace Vault status")
+    if workspace_vault.get("publicUrl") != WORKSPACE_VAULT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong Workspace Vault URL")
+    if workspace_vault.get("kdf") != "PBKDF2-SHA-256" or workspace_vault.get("pbkdf2Iterations") != 210000:
+        raise SiteCheckError(f"{label}: wrong Workspace Vault KDF")
+    if workspace_vault.get("cipher") != "AES-256-GCM":
+        raise SiteCheckError(f"{label}: wrong Workspace Vault cipher")
+    for key in ("portableEncryptedJson", "mayContainUserEnteredToolContent"):
+        if workspace_vault.get(key) is not True:
+            raise SiteCheckError(f"{label}: Workspace Vault {key} must be true")
+    for key in (
+        "storesPassphrase",
+        "uploadsData",
+        "includesMemberSnapshot",
+        "includesServiceRequestPacket",
+        "connectsWallet",
+        "connectsExchange",
+        "fetchesMarketData",
+        "placesOrders",
+        "deductsCredits",
+        "automaticTokenTransfer",
+    ):
+        if workspace_vault.get(key) is not False:
+            raise SiteCheckError(f"{label}: Workspace Vault {key} must be false")
     if links.get("memberWorkspace") != "https://gcagochina.com/member-workspace.html":
         raise SiteCheckError(f"{label}: wrong memberWorkspace link")
     if links.get("riskPassport") != RISK_PASSPORT_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong riskPassport link")
+    if links.get("workspaceVault") != WORKSPACE_VAULT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong workspaceVault link")
     if links.get("riskDisciplineTraining") != RISK_TRAINING_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong riskDisciplineTraining link")
     if links.get("researchNotes") != RESEARCH_NOTES_PAGE_URL:
@@ -11973,6 +12073,10 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing Risk Passport module")
     if payload.get("productSpec", {}).get("riskPassportPage") != RISK_PASSPORT_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong Risk Passport page")
+    if "GCA Workspace Vault" not in payload.get("productSpec", {}).get("moduleNames", []):
+        raise SiteCheckError(f"{label}: missing Workspace Vault module")
+    if payload.get("productSpec", {}).get("workspaceVaultPage") != WORKSPACE_VAULT_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong Workspace Vault page")
     credits = payload.get("creditsCatalog", {})
     if credits.get("status") != "public-credits-catalog-published":
         raise SiteCheckError(f"{label}: unexpected credits catalog object status")
@@ -15219,6 +15323,7 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/gca/member-access/",
         "https://gcagochina.com/member-workspace.html",
         "https://gcagochina.com/risk-passport.html",
+        "https://gcagochina.com/workspace-vault.html",
         "https://gcagochina.com/member-program.html",
         "https://gcagochina.com/member-program.json",
         "https://gcagochina.com/member-ledger.html",
@@ -15334,6 +15439,7 @@ def validate_sitemap(text: str) -> None:
         "product.json",
         "project.json",
         "risk-passport.html",
+        "workspace-vault.html",
         "roadmap.html",
         "roadmap.json",
         "site-map.html",
@@ -15485,6 +15591,7 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /gca/member-access/", label)
     assert_contains(text, "Allow: /member-workspace.html", label)
     assert_contains(text, "Allow: /risk-passport.html", label)
+    assert_contains(text, "Allow: /workspace-vault.html", label)
     assert_contains(text, "Allow: /support.html", label)
     assert_contains(text, "Allow: /support.json", label)
     assert_contains(text, "Allow: /privacy.html", label)
@@ -15626,6 +15733,7 @@ CHECKS: list[EndpointCheck] = [
     ("/gca/member-access/", validate_member_access_page),
     ("/member-workspace.html", validate_member_workspace_page),
     ("/risk-passport.html", validate_risk_passport_page),
+    ("/workspace-vault.html", validate_workspace_vault_page),
     ("/member-program.html", validate_member_program_page),
     ("/member-program.json", validate_member_program_json),
     ("/member-ledger.html", validate_member_ledger_page),

@@ -70,6 +70,11 @@
       "id": "member-risk-passport-live",
       "label": "Privacy-minimized browser-local Risk Passport workflow report and validated portable JSON export are live",
       "status": "completed"
+    },
+    {
+      "id": "encrypted-workspace-vault-live",
+      "label": "PBKDF2-SHA-256 and AES-256-GCM encrypted browser-local workspace backup and validated restore are live",
+      "status": "completed"
     }
   ],
   "nextBuildPriorities": [
@@ -123,6 +128,7 @@
       "Narrative meets risk control.",
       "GCA remains concept-stage with live account intake, read-only wallet verification, eligible ledger records, ten browser-only risk and research tools, and a local Member Workspace; connected market-data and trading modules remain staged.",
       "The GCA Risk Passport reports validated browser-local workflow counts and statuses only; it excludes identity, wallet address, balances, and tool content and is not a certification or trading signal.",
+      "The GCA Workspace Vault encrypts validated tool backups locally, validates every module before restore, excludes the member-access wallet snapshot and full service-request packet, and never uploads the file or passphrase.",
       "The public member access page can create account intake, wallet verification, 100 credits ledger, and GCA Member ledger records for eligible users.",
       "The GCA Member benefit requires 1,000,000 GCA held for 30 consecutive days before one-time 10,000 GCA review.",
       "The official market route is GCA/USDT on Base Mainnet.",
@@ -148,6 +154,7 @@
     "memberPreRegistration": "https://gcagochina.com/members.html",
     "memberAccess": "https://gcagochina.com/gca/member-access/",
     "riskPassport": "https://gcagochina.com/risk-passport.html",
+    "workspaceVault": "https://gcagochina.com/workspace-vault.html",
     "memberLedgerSchema": "https://gcagochina.com/member-ledger.json",
     "support": "https://gcagochina.com/support.html",
     "supportJson": "https://gcagochina.com/support.json",
