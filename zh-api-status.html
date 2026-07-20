@@ -289,7 +289,9 @@
       }
     </style>
       <link rel="stylesheet" href="assets/gca-site.css?v=20260711">
+    <link rel="stylesheet" href="assets/api-health.css?v=20260720">
     <script src="assets/gca-site.js?v=20260711" defer></script>
+    <script src="assets/api-health.js?v=20260720" defer></script>
   </head>
   <body>
     <header>
@@ -312,12 +314,12 @@
 
     <main class="shell">
       <section aria-labelledby="title">
-        <p class="eyebrow">中文 API 状态 / 2026-06-18</p>
+        <p class="eyebrow">中文 API 状态 / 浏览器实时只读检查</p>
         <h1 id="title">GCA 中文 API 状态</h1>
         <p class="lead">这一页用中文说明 GCA 邮箱注册和邮箱退订接口的当前状态。公网邮箱注册已经接到 Cloudflare Workers + D1，普通用户可以通过官网表单提交邮箱；管理员读取接口仍需要本地管理 token。</p>
-        <p class="lead">最新公网只读检查已在 <code>2026-06-18T08:41:31Z</code> 通过，检查范围包括健康接口、CORS、access config 和未授权管理员读取拦截，不写入测试注册记录。</p>
-        <p class="lead">最新部署权限检查在 <code>2026-06-18T08:37:28Z</code> 通过了 Worker dry-run 和 D1 可见性，但 <code>cloudflare-auth-session</code> 和 Worker 发布权限因为 Cloudflare error <code>10000</code> 失败。解决这两个权限问题前，不能执行远端 migration 或 deploy。</p>
-        <p class="lead">这个 API 只处理邮箱注册和不再联系请求，不需要钱包、不需要签名、不需要付款，也不会激活 100 credits、GCA Member 或 10,000 GCA 会员权益。</p>
+        <p class="lead">公网只读 smoke check 已在 <code>2026-07-20T10:33:02Z</code> 通过。下方实时面板可以在当前浏览器重复安全的只读部分：核对公开身份并确认管理员读取会拒绝匿名访问，全程不写入记录。</p>
+        <p class="lead">本地部署权限检查已在 <code>2026-07-20T10:34:06Z</code> 刷新。Worker 打包仍然通过，但 Wrangler 当前未登录且 <code>cloudflare-auth-session</code> 失败，因此 Cloudflare 账号权限、D1 可见性和 Worker 发布权限都没有通过门槛。全部权限检查通过前，不能执行远端 migration 或 deploy。</p>
+        <p class="lead">公开 API 支持邮箱、退订、会员账户提交和只读余额验证；它不要求私钥或钱包签名，也不会自动转移 GCA 或自动发放 10,000 GCA 会员权益。</p>
         <div class="actions">
           <a class="button primary" href="register.html">打开邮箱注册</a>
           <a class="button primary" href="unsubscribe.html">打开邮箱退订</a>
@@ -345,11 +347,54 @@
         </div>
         <div class="fact">
           <span class="label">最新检查</span>
-          <span class="value good">2026-06-18 通过</span>
+          <span class="value pending" data-api-live-fact>正在本浏览器检查</span>
         </div>
         <div class="fact">
           <span class="label">管理员读取</span>
           <span class="value">token 保护</span>
+        </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="liveHealthTitle" data-gca-api-health data-locale="zh">
+        <div class="live-health-header">
+          <div>
+            <h2 id="liveHealthTitle">实时只读检查</h2>
+            <p class="note">当前浏览器对官方 Worker 的即时结果。本检查不会提交注册、钱包验证、服务请求或 Credit 使用记录，不会转币，也不会请求管理员 token。</p>
+          </div>
+          <div class="actions">
+            <button class="button primary" type="button" data-api-health-action>立即检查</button>
+          </div>
+        </div>
+        <p class="live-health-summary" role="status" aria-live="polite" data-api-health-summary>本浏览器尚未检查</p>
+        <div class="live-health-list" aria-label="实时 API 检查结果">
+          <div class="live-health-row" data-api-check="health">
+            <div class="live-health-copy">
+              <strong>Worker 健康和身份</strong>
+              <span class="note">GET /health</span>
+            </div>
+            <span class="live-health-result" data-check-status>等待检查</span>
+          </div>
+          <div class="live-health-row" data-api-check="config">
+            <div class="live-health-copy">
+              <strong>访问配置</strong>
+              <span class="note">GET /gca/access-config</span>
+            </div>
+            <span class="live-health-result" data-check-status>等待检查</span>
+          </div>
+          <div class="live-health-row" data-api-check="admin">
+            <div class="live-health-copy">
+              <strong>现有管理员读取保护</strong>
+              <span class="note">6 个 GET 路由必须用 HTTP 401 拒绝匿名访问</span>
+            </div>
+            <span class="live-health-result" data-check-status>等待检查</span>
+          </div>
+          <div class="live-health-row" data-api-check="pending">
+            <div class="live-health-copy">
+              <strong>准备中的运营路由</strong>
+              <span class="note">服务请求和 Credit 使用：HTTP 404 表示未部署；HTTP 401 表示已部署并受保护</span>
+            </div>
+            <span class="live-health-result" data-check-status>等待检查</span>
+          </div>
         </div>
       </section>
 
@@ -394,11 +439,11 @@
           </article>
           <article class="card">
             <h3>服务请求队列</h3>
-            <p class="note"><code>GET/POST /gca/service-requests</code> 已完成源码、D1 迁移和 Worker dry-run。2026-06-18 检查显示 D1 可见性已通过；正式发布仍被 <code>cloudflare-auth-session</code> 和 Worker 发布权限的 Cloudflare error <code>10000</code> 阻塞，远端 D1 migration、<code>wrangler deploy</code> 和待发布接口 smoke 检查仍不能执行。</p>
+            <p class="note"><code>GET/POST /gca/service-requests</code> 已完成源码、D1 迁移和 Worker dry-run。2026-07-20 的只读生产检查返回 HTTP 404，确认尚未部署；Wrangler 当前未登录，远端 D1 migration、<code>wrangler deploy</code> 和部署后 smoke 检查仍被阻塞。</p>
           </article>
           <article class="card">
             <h3>Credit 使用记录</h3>
-            <p class="note"><code>GET/POST /gca/credit-usage</code> 已完成源码、D1 迁移和 Worker dry-run。2026-06-18 检查显示 D1 可见性已通过；正式发布仍被 Cloudflare 账号认证和 Worker 发布权限的 Cloudflare error <code>10000</code> 阻塞，远端 D1 migration、<code>wrangler deploy</code> 和待发布接口 smoke 检查仍不能执行。</p>
+            <p class="note"><code>GET/POST /gca/credit-usage</code> 已完成源码、D1 迁移和 Worker dry-run。2026-07-20 的只读生产检查返回 HTTP 404，确认尚未部署；Wrangler 当前未登录，远端 D1 migration、<code>wrangler deploy</code> 和部署后 smoke 检查仍被阻塞。</p>
           </article>
           <article class="card">
             <h3>未来域名</h3>
@@ -420,12 +465,12 @@
         </div>
         <div class="panel">
           <h2>部署权限检查</h2>
-          <p class="note">发布新的 Worker 版本前先运行这个命令，确认打包、Cloudflare 账号认证、D1 可见性和 Workers 发布权限。最新结果是 dry-run 通过、D1 可见性通过、<code>cloudflare-auth-session</code> 失败、Worker 发布权限失败并返回 error <code>10000</code>。如果报告出现 <code>authRecovery.status</code>，先按 <code>authRecovery.safeNextActions</code> 处理，不能直接迁移或部署。</p>
+          <p class="note">发布新的 Worker 版本前先运行这个命令，确认打包、Cloudflare 账号认证、D1 可见性和 Workers 发布权限。2026-07-20 的结果是 dry-run 通过，但 Wrangler 未登录，因此 D1 可见性和发布权限都没有通过门槛。如果报告出现 <code>authRecovery.status</code>，先按 <code>authRecovery.safeNextActions</code> 处理，不能直接迁移或部署。</p>
           <pre>python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth</pre>
         </div>
         <div class="panel">
           <h2>待发布接口验收</h2>
-          <p class="note"><code>/gca/service-requests</code> 和 <code>/gca/credit-usage</code> 不能只因为 dry-run 通过就说已上线。D1 可见性已经在 2026-06-18 检查中通过，但 Cloudflare 账号认证和 Worker 发布权限仍失败；必须先解决 error <code>10000</code>，再完成远端 D1 migration、<code>wrangler deploy</code>、公开 smoke check 和管理员 smoke check，并且两个 smoke check 都要带 <code>--include-pending-routes</code>。</p>
+          <p class="note"><code>/gca/service-requests</code> 和 <code>/gca/credit-usage</code> 不能只因为 dry-run 通过就说已上线。2026-07-20 检查仍返回 HTTP 404，并且 Wrangler 未登录；必须先恢复 Cloudflare 认证，再完成权限门槛、远端 D1 migration、<code>wrangler deploy</code>、公开 smoke check 和管理员 smoke check，两个 smoke check 都要带 <code>--include-pending-routes</code>。</p>
           <pre>python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes</pre>
           <pre>python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes</pre>
         </div>

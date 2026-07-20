@@ -2,16 +2,17 @@
   "schema": "https://gcagochina.com/api-status.json",
   "pageUrl": "https://gcagochina.com/api-status.html",
   "status": "public-member-access-api-status-published",
-  "lastUpdated": "2026-06-18",
-  "latestPublicCheckAt": "2026-06-18T08:41:31Z",
+  "lastUpdated": "2026-07-20",
+  "latestPublicCheckAt": "2026-07-20T10:33:02Z",
   "latestPublicCheckStatus": "passed",
-  "latestDeployReadinessCheckAt": "2026-06-18T08:37:28Z",
-  "latestDeployReadinessStatus": "blocked-cloudflare-auth-or-worker-deploy-permission-code-10000",
+  "latestDeployReadinessCheckAt": "2026-07-20T10:34:06Z",
+  "latestDeployReadinessStatus": "blocked-wrangler-not-logged-in",
   "latestDeployReadinessSummary": {
     "wranglerDeployDryRun": "passed",
-    "cloudflareD1Visibility": "passed",
-    "cloudflareAuthSession": "failed",
-    "cloudflareWorkerDeployPermission": "failed",
+    "cloudflareD1Visibility": "not-verified-auth-required",
+    "cloudflareAuthSession": "failed-not-logged-in",
+    "cloudflareWorkerDeployPermission": "not-verified-auth-required",
+    "code10000Seen": false,
     "writesD1Records": false,
     "deploysWorker": false,
     "readsUserLedgers": false,
@@ -31,6 +32,49 @@
     "expectedService": "gca-registration-api",
     "public": true,
     "requiresSecret": false
+  },
+  "browserLiveCheck": {
+    "status": "live-read-only-browser-check-available",
+    "englishPage": "https://gcagochina.com/api-status.html",
+    "chinesePage": "https://gcagochina.com/zh-api-status.html",
+    "asset": "https://gcagochina.com/assets/api-health.js",
+    "runsAutomaticallyOnPageLoad": true,
+    "manualRerunAvailable": true,
+    "requestTimeoutMs": 8000,
+    "publicJsonMaximumBytes": 32768,
+    "identityChecks": [
+      "GET /health",
+      "GET /gca/access-config",
+      "Base Mainnet chainId 8453",
+      "official GCA contract address",
+      "gca_member_access_v1",
+      "read-only wallet and no-automatic-transfer boundaries"
+    ],
+    "anonymousAdminReadChecks": [
+      "/gca/email-registrations",
+      "/gca/contact-suppressions",
+      "/gca/wallet-verifications",
+      "/gca/member-access",
+      "/gca/credit-ledger",
+      "/gca/member-ledger"
+    ],
+    "preparedRouteChecks": [
+      "/gca/service-requests",
+      "/gca/credit-usage"
+    ],
+    "expectedExistingAdminStatus": 401,
+    "preparedRouteStatusMeaning": {
+      "404": "not deployed",
+      "401": "deployed and rejecting anonymous reads"
+    },
+    "writesProductionData": false,
+    "readsAdminResponseBodies": false,
+    "sendsAdminToken": false,
+    "requiresWallet": false,
+    "requiresSignature": false,
+    "requiresTransaction": false,
+    "storesResult": false,
+    "claimBoundary": "The result is a browser-time availability and anonymous-read boundary check, not an uptime guarantee, security audit, external timestamp, or proof that authenticated operator writes work."
   },
   "publicEndpoints": [
     {
@@ -166,7 +210,9 @@
       "requiresAdminReadToken": true,
       "publicLedgerReadable": false,
       "workerDryRunPassed": true,
-      "blockedBy": "Latest 2026-06-18 readiness check passed Worker dry-run and D1 visibility; blocked by Cloudflare account authentication and Worker deploy permission error [code: 10000]"
+      "lastObservedAnonymousGetStatus": 404,
+      "lastObservedAt": "2026-07-20T10:33:02Z",
+      "blockedBy": "Latest 2026-07-20 readiness check passed Worker dry-run but found Wrangler not logged in; Cloudflare account authentication, D1 visibility, remote migration, deploy permission, and post-deploy smoke checks remain blocked"
     },
     {
       "id": "credit-usage-read-write",
@@ -177,7 +223,9 @@
       "requiresAdminReadToken": true,
       "publicLedgerReadable": false,
       "workerDryRunPassed": true,
-      "blockedBy": "Latest 2026-06-18 readiness check passed Worker dry-run and D1 visibility; blocked by Cloudflare account authentication and Worker deploy permission error [code: 10000]"
+      "lastObservedAnonymousGetStatus": 404,
+      "lastObservedAt": "2026-07-20T10:33:02Z",
+      "blockedBy": "Latest 2026-07-20 readiness check passed Worker dry-run but found Wrangler not logged in; Cloudflare account authentication, D1 visibility, remote migration, deploy permission, and post-deploy smoke checks remain blocked"
     }
   ],
   "checks": {
@@ -191,6 +239,9 @@
     "publicOnlyWorkflow": ".github/workflows/check-gca-registration-api.yml",
     "publicOnlyWorkflowRequiresSecrets": false,
     "adminCheckRequiresLocalTokenFile": true,
+    "browserLiveCheckAsset": "site/assets/api-health.js",
+    "browserLiveCheckWritesRecords": false,
+    "browserLiveCheckReadsAdminBodies": false,
     "writesTestRecords": false,
     "readOnly": true
   },
@@ -199,7 +250,7 @@
     "pageUrl": "https://gcagochina.com/worker-routes-handoff.html",
     "dataUrl": "https://gcagochina.com/worker-routes-handoff.json",
     "status": "prepared-not-production-live",
-    "blockedBy": "Latest 2026-06-18 readiness check passed Worker dry-run and D1 visibility; blocked by Cloudflare account authentication and Worker deploy permission error [code: 10000]",
+    "blockedBy": "Latest 2026-07-20 readiness check passed Worker dry-run but found Wrangler not logged in; Cloudflare account authentication, D1 visibility, remote migration, deploy permission, and post-deploy smoke checks remain blocked",
     "routes": [
       "/gca/service-requests",
       "/gca/credit-usage"
