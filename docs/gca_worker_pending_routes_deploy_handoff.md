@@ -34,13 +34,9 @@ The prepared routes are operator routes only. They are not public user claim end
 
 ## Blocker
 
-The local source, migrations, package install, and Wrangler dry-run are prepared, but the active Cloudflare authorization currently fails the Worker deployment-permission gate with:
+The latest read-only readiness check ran at `2026-07-20T10:34:06Z`. Local source, migrations, package install, and Wrangler dry-run passed, but Wrangler was not logged in. Cloudflare account access, D1 visibility, and Worker deploy permission were therefore not verified. A separate public-only check at `2026-07-20T10:33:02Z` returned HTTP `404` for both prepared routes, confirming they are not deployed.
 
-```text
-Authentication error [code: 10000]
-```
-
-Do not run `wrangler deploy` until the read-only deploy permission gate passes.
+Do not apply remote migrations or run `wrangler deploy` until `cloudflare-auth-session`, `cloudflare-d1-visible`, and `cloudflare-worker-deploy-permission` all pass. If `Authentication error [code: 10000]` reappears after login, treat it as an account or permission blocker and follow `authRecovery.safeNextActions`.
 
 ## Preconditions
 
@@ -152,7 +148,7 @@ python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include
 
 Stop and do not claim the routes are live if:
 
-- the readiness gate still returns `Authentication error [code: 10000]`;
+- Wrangler is not logged in, or the readiness gate returns `Authentication error [code: 10000]`;
 - D1 remote migration fails;
 - Worker deploy fails;
 - `/health` does not expose `gca_credit_usage_v1` and `gca_service_request_v1`;

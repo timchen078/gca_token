@@ -447,7 +447,7 @@
       <section class="section panel" aria-labelledby="memberOpsTitle">
         <h2 id="memberOpsTitle">Member Access Ops Pipeline</h2>
         <p class="note">Use this local operator pipeline after live account, wallet verification, credit ledger, member ledger, or member-benefit review records exist. It requires the ignored local <code>cloudflare/gca-registration-worker/.env.admin.local</code> file with <code>ADMIN_READ_TOKEN</code>. The output stays in <code>.gca_access_data/</code> and is not committed.</p>
-        <p class="note">For the prepared service-request and credit-usage Worker routes, run <code>python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth</code> before publishing. The 2026-06-10 check passed Worker bundling and D1 visibility, but failed <code>cloudflare-auth-session</code> and Worker deployment permission with Cloudflare error <code>10000</code>. These routes remain non-live until <code>authRecovery</code> is clear, remote D1 migrations apply, <code>wrangler deploy</code> succeeds, and public/admin smoke checks pass with <code>--include-pending-routes</code>.</p>
+        <p class="note">For the prepared service-request and credit-usage Worker routes, run <code>python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth</code> before publishing. The 2026-07-20 check passed Worker bundling but found Wrangler logged out, so Cloudflare account access, D1 visibility, and Worker deployment permission remain unverified. Public read-only checks returned HTTP 404 for both routes. They remain non-live until the <code>cloudflare-auth-session</code> gate passes, <code>authRecovery</code> is clear, remote D1 migrations apply, <code>wrangler deploy</code> succeeds, and public/admin smoke checks pass with <code>--include-pending-routes</code>.</p>
         <div class="grid">
           <div>
             <h3>1. Token-Protected Export</h3>
@@ -471,11 +471,11 @@
           </div>
           <div>
             <h3>6. Credit Usage Ledger</h3>
-            <p class="note">For reviewed service delivery, record <code>creditUsageId</code>, <code>serviceId</code>, <code>creditAmountUsed</code>, and remaining credits before/after through the local operator-only credit usage ledger. The Cloudflare Worker route is prepared and D1 visibility passed, but it remains non-live until Cloudflare account auth, Worker deploy permission, remote deploy, and pending-route smoke gates pass.</p>
+            <p class="note">For reviewed service delivery, record <code>creditUsageId</code>, <code>serviceId</code>, <code>creditAmountUsed</code>, and remaining credits before/after through the local operator-only credit usage ledger. The Cloudflare Worker route is prepared, but the latest logged-out readiness check could not verify D1 visibility or deploy permission; it remains non-live until Cloudflare account auth, remote migration, deploy, and pending-route smoke gates pass.</p>
           </div>
           <div>
             <h3>7. Service Request Queue</h3>
-            <p class="note">Before delivery, record requested service scope through the operator <code>service_requests</code> queue. Local backend support is ready and the Cloudflare Worker route is prepared; D1 visibility passed, but production remains non-live until Cloudflare account auth, Worker deploy permission, remote deploy, and pending-route smoke gates pass. It stores <code>serviceRequestId</code>, <code>serviceId</code>, optional <code>creditLedgerId</code>, requested credit hold, and status. It does not deduct credits; credit usage is recorded only after reviewed delivery.</p>
+            <p class="note">Before delivery, record requested service scope through the operator <code>service_requests</code> queue. Local backend support is ready and the Cloudflare Worker route is prepared; the latest logged-out readiness check could not verify D1 visibility or deploy permission, and production remains non-live until Cloudflare account auth, remote migration, deploy, and pending-route smoke gates pass. It stores <code>serviceRequestId</code>, <code>serviceId</code>, optional <code>creditLedgerId</code>, requested credit hold, and status. It does not deduct credits; credit usage is recorded only after reviewed delivery.</p>
           </div>
           <div>
             <h3>8. No Automatic Transfer</h3>

@@ -97,7 +97,7 @@ Public registration, contact-suppression, wallet-verification, and member-access
 - Local Cloudflare contact suppression sync tool: `tools/sync_cloudflare_contact_suppressions.py`
 - Contact suppression D1 migration: `cloudflare/gca-registration-worker/migrations/0002_contact_suppressions.sql`
 
-The future custom domain `api.gcagochina.com` still requires Wrangler to be logged into a Cloudflare account that can see the `gcagochina.com` zone. DNS currently uses Cloudflare nameservers, but the currently authorized account does not contain that zone, so Cloudflare rejects the custom-domain deployment with `The zone "gcagochina.com" does not exist on your account`.
+The future custom domain `api.gcagochina.com` still requires Wrangler to be logged into a Cloudflare account that can see the `gcagochina.com` zone. The latest 2026-07-20 readiness check found Wrangler logged out, so current zone access is unverified. A prior authorized session returned `The zone "gcagochina.com" does not exist on your account`; re-check zone visibility after login before changing the active custom-domain configuration.
 
 The current `wrangler.toml` includes the Cloudflare `account_id` so Wrangler does not need to auto-discover the account before deploy. If `wrangler whoami --json --account <account_id>`, `wrangler d1 list`, `wrangler deployments list --json`, or `wrangler deploy` returns `Authentication error [code: 10000]`, the active Cloudflare token/session is missing access to the configured account, D1 database, or Worker service. Re-authorize Wrangler or use an API token with access to the target account before publishing the Worker.
 

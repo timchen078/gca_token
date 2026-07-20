@@ -12,7 +12,7 @@ class GcaWorkerPendingRoutesHandoffTests(unittest.TestCase):
 
         expected_fragments = [
             "Authentication error [code: 10000]",
-            "Do not run `wrangler deploy` until the read-only deploy permission gate passes.",
+            "Do not apply remote migrations or run `wrangler deploy` until `cloudflare-auth-session`, `cloudflare-d1-visible`, and `cloudflare-worker-deploy-permission` all pass.",
             "cloudflare-auth-session",
             "authRecovery.status: cloudflare-auth-or-permission-blocked",
             "python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth",

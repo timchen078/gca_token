@@ -360,12 +360,12 @@
         <div class="fact">
           <span class="label">Current Status</span>
           <span class="value pending">Prepared, not production-live</span>
-          <p class="note">Worker dry-run and D1 visibility passed on 2026-06-18.</p>
+          <p class="note">Worker dry-run passed on 2026-07-20; Wrangler is logged out and D1 visibility is unverified. A read-only production check at <code>2026-07-20T10:33:02Z</code> returned HTTP 404 for both prepared routes.</p>
         </div>
         <div class="fact">
           <span class="label">Current Blocker</span>
-          <span class="value blocked">Cloudflare error 10000</span>
-          <p class="note">Cloudflare auth session and Worker deploy permission must pass first.</p>
+          <span class="value blocked">Wrangler not logged in</span>
+          <p class="note">Cloudflare auth, D1 visibility, and Worker deploy permission must pass first.</p>
         </div>
         <div class="fact">
           <span class="label">Prepared Routes</span>
@@ -482,7 +482,7 @@ python3 tools/export_cloudflare_member_access.py --token-file cloudflare/gca-reg
       <section class="section panel" aria-labelledby="stopTitle">
         <h2 id="stopTitle">Stop Conditions</h2>
         <div class="list">
-          <div class="row"><span>Cloudflare auth error</span><strong>Stop if readiness still returns <code>Authentication error [code: 10000]</code>.</strong></div>
+          <div class="row"><span>Cloudflare auth error</span><strong>Stop if Wrangler is not logged in or readiness returns <code>Authentication error [code: 10000]</code>.</strong></div>
           <div class="row"><span>Migration failure</span><strong>Stop if remote D1 migrations fail or if the expected migration IDs are not applied.</strong></div>
           <div class="row"><span>Deploy failure</span><strong>Stop if <code>wrangler deploy</code> fails or deploy history cannot be read.</strong></div>
           <div class="row"><span>Health mismatch</span><strong>Stop if <code>/health</code> does not expose <code>gca_credit_usage_v1</code> and <code>gca_service_request_v1</code>.</strong></div>
