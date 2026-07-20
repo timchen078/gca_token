@@ -3,17 +3,24 @@
   "pageUrl": "https://gcagochina.com/worker-routes-handoff.html",
   "status": "worker-routes-handoff-v1-published",
   "handoffId": "worker-routes-handoff-v1",
-  "lastUpdated": "2026-06-18",
+  "lastUpdated": "2026-07-20",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "workerBaseUrl": "https://gca-registration-api.gcagochina.workers.dev",
   "sourceDocument": "docs/gca_worker_pending_routes_deploy_handoff.md",
   "scope": "Public handoff for prepared operator-only Cloudflare Worker routes. The service-request and credit-usage routes are prepared in source and D1 migrations, but remain non-live until Cloudflare authentication, Worker deploy permission, remote D1 migrations, Worker deploy, and post-deploy public/admin smoke checks pass.",
   "currentStatus": {
-    "workerDryRun": "passed-2026-06-18",
-    "d1Visibility": "passed-2026-06-18",
-    "cloudflareAuthSession": "blocked-error-10000",
-    "workerDeployPermission": "blocked-error-10000",
+    "latestReadinessCheckAt": "2026-07-20T10:34:06Z",
+    "latestPublicRouteCheckAt": "2026-07-20T10:33:02Z",
+    "workerDryRun": "passed-2026-07-20",
+    "d1Visibility": "not-verified-auth-required",
+    "cloudflareAuthSession": "failed-not-logged-in",
+    "workerDeployPermission": "not-verified-auth-required",
+    "code10000Seen": false,
+    "pendingRouteAnonymousGetStatus": {
+      "/gca/service-requests": 404,
+      "/gca/credit-usage": 404
+    },
     "remoteMigrations": "not-applied-for-pending-routes",
     "workerDeploy": "not-run-for-pending-routes",
     "postDeployPublicSmoke": "not-run-for-pending-routes",
@@ -112,7 +119,7 @@
     "admin smoke check passes with --include-pending-routes"
   ],
   "stopConditions": [
-    "readiness returns Authentication error [code: 10000]",
+    "Wrangler is not logged in or readiness returns Authentication error [code: 10000]",
     "remote D1 migration fails",
     "wrangler deploy fails",
     "/health does not expose gca_credit_usage_v1 and gca_service_request_v1",
