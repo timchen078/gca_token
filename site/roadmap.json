@@ -2,7 +2,7 @@
   "schema": "https://gcagochina.com/roadmap.json",
   "pageUrl": "https://gcagochina.com/roadmap.html",
   "status": "public-roadmap-published",
-  "lastUpdated": "2026-07-19",
+  "lastUpdated": "2026-07-20",
   "projectName": "GCA",
   "conceptExpansion": "Go China Access",
   "currentStage": "account-ledger-and-browser-tools-live-connected-services-staged",
@@ -75,6 +75,11 @@
       "id": "encrypted-workspace-vault-live",
       "label": "PBKDF2-SHA-256 and AES-256-GCM encrypted browser-local workspace backup and validated restore are live",
       "status": "completed"
+    },
+    {
+      "id": "bilingual-live-api-health-panel",
+      "label": "English and Chinese browser-time read-only API identity and anonymous-access checks are live",
+      "status": "completed"
     }
   ],
   "nextBuildPriorities": [
@@ -137,6 +142,7 @@
       "GCA remains concept-stage with live account intake, read-only wallet verification, eligible ledger records, ten browser-only risk and research tools, and a local Member Workspace; connected market-data and trading modules remain staged.",
       "The GCA Risk Passport reports validated browser-local workflow counts and statuses only; it excludes identity, wallet address, balances, and tool content and is not a certification or trading signal.",
       "The GCA Workspace Vault encrypts validated tool backups locally, validates every module before restore, excludes the member-access wallet snapshot and full service-request packet, and never uploads the file or passphrase.",
+      "The English and Chinese API status pages can run browser-time read-only identity and anonymous-access checks without writing records, reading admin response bodies, or sending an admin token.",
       "The public member access page can create account intake, wallet verification, 100 credits ledger, and GCA Member ledger records for eligible users.",
       "The GCA Member benefit requires 1,000,000 GCA held for 30 consecutive days before one-time 10,000 GCA review.",
       "The official market route is GCA/USDT on Base Mainnet.",
@@ -161,6 +167,7 @@
     "listingKit": "https://gcagochina.com/listing-kit.html",
     "memberPreRegistration": "https://gcagochina.com/members.html",
     "memberAccess": "https://gcagochina.com/gca/member-access/",
+    "apiStatus": "https://gcagochina.com/api-status.html",
     "riskPassport": "https://gcagochina.com/risk-passport.html",
     "workspaceVault": "https://gcagochina.com/workspace-vault.html",
     "memberLedgerSchema": "https://gcagochina.com/member-ledger.json",

@@ -3627,15 +3627,15 @@ def validate_zh_api_status_page(text: str) -> None:
     assert_social_preview_meta(text, label, ZH_API_STATUS_PAGE_URL)
     for expected in (
         "GCA 中文 API 状态",
-        "中文 API 状态 / 2026-06-18",
-        "2026-06-18T08:41:31Z",
-        "2026-06-18T08:37:28Z",
+        "中文 API 状态 / 浏览器实时只读检查",
+        "2026-07-20T10:33:02Z",
+        "2026-07-20T10:34:06Z",
         "最新检查",
-        "2026-06-18 通过",
+        "正在本浏览器检查",
         "邮箱注册和邮箱退订接口",
         "Cloudflare Workers + D1",
         "管理员读取接口仍需要本地管理 token",
-        "不会激活 100 credits、GCA Member 或 10,000 GCA 会员权益",
+        "不会自动转移 GCA 或自动发放 10,000 GCA 会员权益",
         "gca-registration-api.gcagochina.workers.dev",
         "公开检查",
         "只读 / 不需要 secrets",
@@ -3657,14 +3657,13 @@ def validate_zh_api_status_page(text: str) -> None:
         "GET /gca/credit-ledger",
         "GET /gca/member-ledger",
         "GET/POST /gca/service-requests",
-        "cloudflare-auth-session",
         "GET/POST /gca/credit-usage",
+        "2026-07-20 的只读生产检查返回 HTTP 404",
         "部署权限检查",
         "Cloudflare 账号认证",
         "D1 可见性",
         "Worker 发布权限",
-        "D1 可见性已通过",
-        "error <code>10000</code>",
+        "Wrangler 当前未登录",
         "authRecovery.status",
         "authRecovery.safeNextActions",
         "不能直接迁移或部署",
@@ -3701,6 +3700,15 @@ def validate_zh_api_status_page(text: str) -> None:
         "unsubscribe.html",
         "zh-support.html",
         "zh-site-map.html",
+        "实时只读检查",
+        "data-gca-api-health",
+        "data-locale=\"zh\"",
+        "data-api-live-fact",
+        "6 个 GET 路由必须用 HTTP 401 拒绝匿名访问",
+        "HTTP 404 表示未部署；HTTP 401 表示已部署并受保护",
+        "全程不写入记录",
+        "assets/api-health.css?v=20260720",
+        "assets/api-health.js?v=20260720",
     ):
         assert_contains(text, expected, label)
     assert_no_public_data_room_terms(text, label)
@@ -5980,6 +5988,10 @@ def validate_roadmap_page(text: str) -> None:
     assert_contains(text, "Local SHA-256 continuity live; production approvals still gated", label)
     assert_contains(text, "Review chain checkpoint receipt", label)
     assert_contains(text, "Local unsigned export and retained-head comparison live", label)
+    assert_contains(text, "Bilingual live API health panel", label)
+    assert_contains(text, "Read-only identity and anonymous-access checks live", label)
+    assert_contains(text, 'href="api-status.html"', label)
+    assert_contains(text, "browser-time read-only identity and anonymous-access checks without writing records or sending an admin token", label)
     assert_contains(text, "External Dependencies", label)
     assert_contains(text, "Returned 2026-05-23; final package refreshed 2026-07-18; Handoff and Chinese owner flow ready for one support@gcagochina.com submission", label)
     assert_contains(text, "Latest reviewer package", label)
@@ -6007,7 +6019,7 @@ def validate_roadmap_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong status")
     if payload.get("currentStage") != PRODUCT_STAGE:
         raise SiteCheckError(f"{label}: wrong currentStage")
-    if payload.get("lastUpdated") != "2026-07-19":
+    if payload.get("lastUpdated") != "2026-07-20":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
@@ -6063,8 +6075,12 @@ def validate_roadmap_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing Risk Passport live milestone")
     if not any(milestone.get("id") == "encrypted-workspace-vault-live" for milestone in payload.get("completedMilestones", [])):
         raise SiteCheckError(f"{label}: missing Workspace Vault live milestone")
+    if not any(milestone.get("id") == "bilingual-live-api-health-panel" for milestone in payload.get("completedMilestones", [])):
+        raise SiteCheckError(f"{label}: missing bilingual live API health panel milestone")
     if "GCA remains concept-stage with live account intake, read-only wallet verification, eligible ledger records, ten browser-only risk and research tools, and a local Member Workspace; connected market-data and trading modules remain staged." not in payload.get("publicClaimBoundaries", {}).get("safeClaims", []):
         raise SiteCheckError(f"{label}: missing concept-stage safe claim")
+    if "The English and Chinese API status pages can run browser-time read-only identity and anonymous-access checks without writing records, reading admin response bodies, or sending an admin token." not in payload.get("publicClaimBoundaries", {}).get("safeClaims", []):
+        raise SiteCheckError(f"{label}: missing live API health panel safe claim")
     if "the 10,000 GCA member benefit is automatic or self-service transferred before holding-period verification, support approval, and manual reserve-wallet processing" not in payload.get("publicClaimBoundaries", {}).get("doNotClaim", []):
         raise SiteCheckError(f"{label}: missing self-service do-not-claim")
     if links.get("roadmapPage") != ROADMAP_PAGE_URL:
@@ -6087,6 +6103,8 @@ def validate_roadmap_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong riskPassport")
     if links.get("workspaceVault") != WORKSPACE_VAULT_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong workspaceVault")
+    if links.get("apiStatus") != API_STATUS_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong apiStatus")
     if any(priority.get("id") == "weekly-go-china-radar" for priority in payload.get("nextBuildPriorities", [])):
         raise SiteCheckError(f"{label}: weekly radar should not remain a next priority")
     if not any(milestone.get("id") == "weekly-go-china-radar-issue-003" for milestone in payload.get("completedMilestones", [])):
@@ -10029,19 +10047,18 @@ def validate_api_status_page(text: str) -> None:
     assert_no_public_data_room_terms(text, label)
     for expected in (
         "GCA Registration API Status",
-        "Registration API Status / 2026-06-18",
-        "2026-06-18T08:41:31Z",
-        "2026-06-18T08:37:28Z",
+        "Registration API Status / Live Read-Only Check",
+        "2026-07-20T10:33:02Z",
+        "2026-07-20T10:34:06Z",
         "Cloudflare Workers + D1",
         "https://gca-registration-api.gcagochina.workers.dev",
         "Public Check",
         "Live / no secrets",
         "Latest Check",
-        "2026-06-18 passed",
+        "Running in this browser",
         "Worker Routes Handoff",
         "worker-routes-handoff.html",
-        "D1 visibility passed",
-        "error <code>10000</code>",
+        "Wrangler is not logged in",
         "Admin Read",
         "Token protected",
         "api.gcagochina.com pending zone access",
@@ -10064,7 +10081,6 @@ def validate_api_status_page(text: str) -> None:
         "cloudflare-auth-session",
         "D1 visibility",
         "Worker deploy permission",
-        "Worker publish permission",
         "python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth",
         "Public visitors should receive an authorization error",
         "Public visitors cannot read the suppression ledger",
@@ -10085,6 +10101,15 @@ def validate_api_status_page(text: str) -> None:
         "Operations Runbook",
         "Operator Console",
         "Privacy Notice",
+        "Live Read-Only Check",
+        "data-gca-api-health",
+        "data-locale=\"en\"",
+        "data-api-live-fact",
+        "Six GET routes must reject anonymous access with HTTP 401",
+        "HTTP 404 means not deployed; HTTP 401 means deployed and protected",
+        "No registration, wallet verification, service request, credit usage, token transfer, or admin-token request is sent",
+        "assets/api-health.css?v=20260720",
+        "assets/api-health.js?v=20260720",
     ):
         assert_contains(text, expected, label)
     assert_no_forbidden_public_claims(text, label)
@@ -10097,6 +10122,7 @@ def validate_api_status_json(text: str) -> None:
     admin_endpoints = {item.get("id"): item for item in payload.get("adminEndpoints", [])}
     checks = payload.get("checks", {})
     handoff = payload.get("pendingRoutesDeployHandoff", {})
+    browser_check = payload.get("browserLiveCheck", {})
     boundaries = payload.get("publicBoundaries", {})
     links = payload.get("officialLinks", {})
 
@@ -10106,23 +10132,27 @@ def validate_api_status_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong pageUrl")
     if payload.get("status") != "public-member-access-api-status-published":
         raise SiteCheckError(f"{label}: wrong status")
-    if payload.get("lastUpdated") != "2026-06-18":
+    if payload.get("lastUpdated") != "2026-07-20":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
-    if payload.get("latestPublicCheckAt") != "2026-06-18T08:41:31Z":
+    if payload.get("latestPublicCheckAt") != "2026-07-20T10:33:02Z":
         raise SiteCheckError(f"{label}: wrong latest public check timestamp")
     if payload.get("latestPublicCheckStatus") != "passed":
         raise SiteCheckError(f"{label}: wrong latest public check status")
-    if payload.get("latestDeployReadinessCheckAt") != "2026-06-18T08:37:28Z":
+    if payload.get("latestDeployReadinessCheckAt") != "2026-07-20T10:34:06Z":
         raise SiteCheckError(f"{label}: wrong latest deploy readiness timestamp")
-    if payload.get("latestDeployReadinessStatus") != "blocked-cloudflare-auth-or-worker-deploy-permission-code-10000":
+    if payload.get("latestDeployReadinessStatus") != "blocked-wrangler-not-logged-in":
         raise SiteCheckError(f"{label}: wrong latest deploy readiness status")
     readiness = payload.get("latestDeployReadinessSummary", {})
-    for key in ("wranglerDeployDryRun", "cloudflareD1Visibility"):
-        if readiness.get(key) != "passed":
-            raise SiteCheckError(f"{label}: readiness {key} should be passed")
-    for key in ("cloudflareAuthSession", "cloudflareWorkerDeployPermission"):
-        if readiness.get(key) != "failed":
-            raise SiteCheckError(f"{label}: readiness {key} should be failed")
+    if readiness.get("wranglerDeployDryRun") != "passed":
+        raise SiteCheckError(f"{label}: Worker dry run should be passed")
+    if readiness.get("cloudflareD1Visibility") != "not-verified-auth-required":
+        raise SiteCheckError(f"{label}: D1 visibility should remain unverified while logged out")
+    if readiness.get("cloudflareAuthSession") != "failed-not-logged-in":
+        raise SiteCheckError(f"{label}: auth session should record not logged in")
+    if readiness.get("cloudflareWorkerDeployPermission") != "not-verified-auth-required":
+        raise SiteCheckError(f"{label}: deploy permission should remain unverified while logged out")
+    if readiness.get("code10000Seen") is not False:
+        raise SiteCheckError(f"{label}: current readiness check should not claim code 10000")
     for key in ("writesD1Records", "deploysWorker", "readsUserLedgers", "printsAdminReadToken"):
         if readiness.get(key) is not False:
             raise SiteCheckError(f"{label}: readiness {key} should be false")
@@ -10147,6 +10177,52 @@ def validate_api_status_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong expected service")
     if health.get("public") is not True or health.get("requiresSecret") is not False:
         raise SiteCheckError(f"{label}: wrong health endpoint public boundary")
+
+    if browser_check.get("status") != "live-read-only-browser-check-available":
+        raise SiteCheckError(f"{label}: wrong browser live-check status")
+    if browser_check.get("englishPage") != API_STATUS_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong browser live-check English page")
+    if browser_check.get("chinesePage") != ZH_API_STATUS_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong browser live-check Chinese page")
+    if browser_check.get("asset") != "https://gcagochina.com/assets/api-health.js":
+        raise SiteCheckError(f"{label}: wrong browser live-check asset")
+    for key in ("runsAutomaticallyOnPageLoad", "manualRerunAvailable"):
+        if browser_check.get(key) is not True:
+            raise SiteCheckError(f"{label}: browser live-check {key} must be true")
+    if browser_check.get("requestTimeoutMs") != 8000:
+        raise SiteCheckError(f"{label}: wrong browser live-check timeout")
+    if browser_check.get("publicJsonMaximumBytes") != 32768:
+        raise SiteCheckError(f"{label}: wrong browser live-check JSON limit")
+    if set(browser_check.get("anonymousAdminReadChecks", [])) != {
+        "/gca/email-registrations",
+        "/gca/contact-suppressions",
+        "/gca/wallet-verifications",
+        "/gca/member-access",
+        "/gca/credit-ledger",
+        "/gca/member-ledger",
+    }:
+        raise SiteCheckError(f"{label}: wrong browser anonymous admin-read checks")
+    if set(browser_check.get("preparedRouteChecks", [])) != {"/gca/service-requests", "/gca/credit-usage"}:
+        raise SiteCheckError(f"{label}: wrong browser prepared-route checks")
+    if browser_check.get("expectedExistingAdminStatus") != 401:
+        raise SiteCheckError(f"{label}: browser admin-read expectation must be HTTP 401")
+    if browser_check.get("preparedRouteStatusMeaning", {}).get("404") != "not deployed":
+        raise SiteCheckError(f"{label}: browser HTTP 404 meaning is missing")
+    if browser_check.get("preparedRouteStatusMeaning", {}).get("401") != "deployed and rejecting anonymous reads":
+        raise SiteCheckError(f"{label}: browser HTTP 401 meaning is missing")
+    for key in (
+        "writesProductionData",
+        "readsAdminResponseBodies",
+        "sendsAdminToken",
+        "requiresWallet",
+        "requiresSignature",
+        "requiresTransaction",
+        "storesResult",
+    ):
+        if browser_check.get(key) is not False:
+            raise SiteCheckError(f"{label}: browser live-check boundary {key} must be false")
+    if "not an uptime guarantee, security audit" not in browser_check.get("claimBoundary", ""):
+        raise SiteCheckError(f"{label}: browser live-check claim boundary is incomplete")
 
     expected_public = {
         "email-registration-create": ("POST", "/gca/email-registrations", "gca_email_registration_v1"),
@@ -10211,6 +10287,10 @@ def validate_api_status_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong credit usage admin boundary")
     if credit_usage.get("workerDryRunPassed") is not True:
         raise SiteCheckError(f"{label}: credit usage Worker dry run should be recorded as passed")
+    if credit_usage.get("lastObservedAnonymousGetStatus") != 404:
+        raise SiteCheckError(f"{label}: credit usage should record current HTTP 404")
+    if credit_usage.get("lastObservedAt") != "2026-07-20T10:33:02Z":
+        raise SiteCheckError(f"{label}: credit usage observation timestamp is wrong")
     if "Cloudflare account authentication" not in credit_usage.get("blockedBy", ""):
         raise SiteCheckError(f"{label}: credit usage blockedBy should mention Cloudflare account authentication")
     if "D1 visibility" not in credit_usage.get("blockedBy", ""):
@@ -10227,6 +10307,10 @@ def validate_api_status_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong service request admin boundary")
     if service_requests.get("workerDryRunPassed") is not True:
         raise SiteCheckError(f"{label}: service request Worker dry run should be recorded as passed")
+    if service_requests.get("lastObservedAnonymousGetStatus") != 404:
+        raise SiteCheckError(f"{label}: service request should record current HTTP 404")
+    if service_requests.get("lastObservedAt") != "2026-07-20T10:33:02Z":
+        raise SiteCheckError(f"{label}: service request observation timestamp is wrong")
     if "Cloudflare account authentication" not in service_requests.get("blockedBy", ""):
         raise SiteCheckError(f"{label}: service request blockedBy should mention Cloudflare account authentication")
     if "D1 visibility" not in service_requests.get("blockedBy", ""):
@@ -10252,6 +10336,12 @@ def validate_api_status_json(text: str) -> None:
         raise SiteCheckError(f"{label}: public workflow should not require secrets")
     if checks.get("adminCheckRequiresLocalTokenFile") is not True:
         raise SiteCheckError(f"{label}: admin check should require local token file")
+    if checks.get("browserLiveCheckAsset") != "site/assets/api-health.js":
+        raise SiteCheckError(f"{label}: wrong browser live-check source asset")
+    if checks.get("browserLiveCheckWritesRecords") is not False:
+        raise SiteCheckError(f"{label}: browser live check must not write records")
+    if checks.get("browserLiveCheckReadsAdminBodies") is not False:
+        raise SiteCheckError(f"{label}: browser live check must not read admin bodies")
     if checks.get("writesTestRecords") is not False or checks.get("readOnly") is not True:
         raise SiteCheckError(f"{label}: checks should be read-only")
     if handoff.get("document") != "docs/gca_worker_pending_routes_deploy_handoff.md":
@@ -10322,6 +10412,64 @@ def validate_api_status_json(text: str) -> None:
     if links.get("workerRoutesHandoff") != WORKER_ROUTES_HANDOFF_URL:
         raise SiteCheckError(f"{label}: wrong workerRoutesHandoff")
     assert_no_forbidden_public_claims(json.dumps(payload), label)
+
+
+def validate_api_health_script(text: str) -> None:
+    label = "/assets/api-health.js"
+    for expected in (
+        'const API_BASE_URL = "https://gca-registration-api.gcagochina.workers.dev"',
+        "const CHAIN_ID = 8453",
+        'const CONTRACT_ADDRESS = "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6"',
+        "const REQUEST_TIMEOUT_MS = 8000",
+        "const MAX_PUBLIC_JSON_BYTES = 32768",
+        '"/gca/email-registrations"',
+        '"/gca/contact-suppressions"',
+        '"/gca/wallet-verifications"',
+        '"/gca/member-access"',
+        '"/gca/credit-ledger"',
+        '"/gca/member-ledger"',
+        '"/gca/service-requests"',
+        '"/gca/credit-usage"',
+        'method: "GET"',
+        'credentials: "omit"',
+        'cache: "no-store"',
+        'redirect: "error"',
+        "if (!parseJson)",
+        'request("/health", { parseJson: true })',
+        'request("/gca/access-config", { parseJson: true })',
+        "result.status === 401",
+        "result.status === 404",
+        "core-healthy-pending-routes-undeployed",
+        "all-checked-routes-protected",
+        "No records were written",
+        "本次检查没有写入记录",
+    ):
+        assert_contains(text, expected, label)
+    for forbidden in (
+        'method: "POST"',
+        "authorization:",
+        "localStorage",
+        "sessionStorage",
+        "document.cookie",
+        "ethereum.request",
+        "eth_sendTransaction",
+    ):
+        assert_not_contains(text, forbidden, label)
+
+
+def validate_api_health_styles(text: str) -> None:
+    label = "/assets/api-health.css"
+    for expected in (
+        ".live-health-header",
+        ".live-health-summary.good",
+        ".live-health-summary.pending",
+        ".live-health-summary.bad",
+        ".live-health-row",
+        "grid-template-columns: minmax(0, 1fr) minmax(150px, auto)",
+        "@media (max-width: 640px)",
+        "grid-template-columns: minmax(0, 1fr)",
+    ):
+        assert_contains(text, expected, label)
 
 
 def validate_daily_status_page(text: str) -> None:
@@ -15549,9 +15697,11 @@ def validate_sitemap(text: str) -> None:
     for path in (
         "api-status.html",
         "api-status.json",
+        "roadmap.html",
+        "roadmap.json",
         "zh-api-status.html",
     ):
-        assert_sitemap_lastmod(path, "2026-06-10")
+        assert_sitemap_lastmod(path, "2026-07-20")
     for path in (
         "action-plan.html",
         "liquidation-replay-001.html",
@@ -15613,8 +15763,6 @@ def validate_sitemap(text: str) -> None:
         "project.json",
         "risk-passport.html",
         "workspace-vault.html",
-        "roadmap.html",
-        "roadmap.json",
         "site-map.html",
         "tools.html",
         "zh-site-map.html",
@@ -15967,6 +16115,8 @@ CHECKS: list[EndpointCheck] = [
     ("/access-api.json", validate_access_api_json),
     ("/api-status.html", validate_api_status_page),
     ("/api-status.json", validate_api_status_json),
+    ("/assets/api-health.js", validate_api_health_script),
+    ("/assets/api-health.css", validate_api_health_styles),
     ("/daily-status.html", validate_daily_status_page),
     ("/daily-status.json", validate_daily_status_json),
     ("/review-queue.html", validate_review_queue_page),

@@ -49,6 +49,8 @@ Export a review-chain checkpoint outside the ledger directory and compare the re
 
 The checkpoint is unsigned and not externally timestamped. It can detect truncation below or a different lineage before the saved head only when an unchanged copy is retained separately from `.gca_access_data/`.
 
+The public English and Chinese API status pages include a browser-time read-only health panel. It checks the official Worker identity, Base Mainnet contract configuration, anonymous-read protection on existing admin routes, and deployment state of prepared operator routes without writing records, reading admin response bodies, sending an admin token, connecting a wallet, or requesting a signature.
+
 ## Mainnet Launch Package
 
 - Canonical public facts: `docs/mainnet_public_profile.md`

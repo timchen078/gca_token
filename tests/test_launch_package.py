@@ -728,6 +728,8 @@ class LaunchPackageTests(unittest.TestCase):
         module.validate_access_api_json((ROOT / "site" / "access-api.json").read_text())
         module.validate_api_status_page((ROOT / "site" / "api-status.html").read_text())
         module.validate_api_status_json((ROOT / "site" / "api-status.json").read_text())
+        module.validate_api_health_script((ROOT / "site" / "assets" / "api-health.js").read_text())
+        module.validate_api_health_styles((ROOT / "site" / "assets" / "api-health.css").read_text())
         module.validate_daily_status_page((ROOT / "site" / "daily-status.html").read_text())
         module.validate_daily_status_json((ROOT / "site" / "daily-status.json").read_text())
         module.validate_review_queue_page((ROOT / "site" / "review-queue.html").read_text())
@@ -3677,6 +3679,10 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Live for eligible wallet records", page)
         self.assertIn("GCA Member records", page)
         self.assertIn("benefit remains manual review", page)
+        self.assertIn("Bilingual live API health panel", page)
+        self.assertIn("Read-only identity and anonymous-access checks live", page)
+        self.assertIn('href="api-status.html"', page)
+        self.assertIn("browser-time read-only identity and anonymous-access checks without writing records or sending an admin token", page)
         self.assertIn("Narrative System", page)
         self.assertIn("Weekly Go China Radar", page)
         self.assertIn("Issue 003 live", page)
@@ -3698,7 +3704,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(roadmap["schema"], ROADMAP_URL)
         self.assertEqual(roadmap["pageUrl"], ROADMAP_PAGE_URL)
         self.assertEqual(roadmap["status"], "public-roadmap-published")
-        self.assertEqual(roadmap["lastUpdated"], "2026-07-19")
+        self.assertEqual(roadmap["lastUpdated"], "2026-07-20")
         self.assertEqual(roadmap["currentStage"], PRODUCT_STAGE)
         self.assertEqual(roadmap["chainId"], 8453)
         self.assertEqual(roadmap["contractAddress"], MAINNET_ADDRESS)
@@ -3721,11 +3727,16 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("account-ledger-path-live", [entry["id"] for entry in roadmap["completedMilestones"]])
         self.assertIn("public-browser-tool-suite-live", [entry["id"] for entry in roadmap["completedMilestones"]])
         self.assertIn("member-risk-passport-live", [entry["id"] for entry in roadmap["completedMilestones"]])
+        self.assertIn("bilingual-live-api-health-panel", [entry["id"] for entry in roadmap["completedMilestones"]])
         self.assertIn(
             "GCA remains concept-stage with live account intake, read-only wallet verification, eligible ledger records, ten browser-only risk and research tools, and a local Member Workspace; connected market-data and trading modules remain staged.",
             roadmap["publicClaimBoundaries"]["safeClaims"],
         )
         self.assertIn("Narrative meets risk control.", roadmap["publicClaimBoundaries"]["safeClaims"])
+        self.assertIn(
+            "The English and Chinese API status pages can run browser-time read-only identity and anonymous-access checks without writing records, reading admin response bodies, or sending an admin token.",
+            roadmap["publicClaimBoundaries"]["safeClaims"],
+        )
         self.assertIn("the 10,000 GCA member benefit is automatic or self-service transferred before holding-period verification, support approval, and manual reserve-wallet processing", roadmap["publicClaimBoundaries"]["doNotClaim"])
         self.assertEqual(roadmap["publicLinks"]["roadmapPage"], ROADMAP_PAGE_URL)
         self.assertEqual(roadmap["publicLinks"]["roadmapJson"], ROADMAP_URL)
@@ -3735,6 +3746,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(roadmap["publicLinks"]["weeklyRadar"], RADAR_URL)
         self.assertEqual(roadmap["publicLinks"]["support"], SUPPORT_PAGE_URL)
         self.assertEqual(roadmap["publicLinks"]["listingReadiness"], LISTING_READINESS_URL)
+        self.assertEqual(roadmap["publicLinks"]["apiStatus"], API_STATUS_PAGE_URL)
         self.assertEqual(roadmap["publicLinks"]["riskPassport"], "https://gcagochina.com/risk-passport.html")
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, json.dumps(roadmap))
         self.assertNotIn("GCA/WETH", json.dumps(roadmap))
