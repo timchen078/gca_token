@@ -317,8 +317,8 @@
         <p class="eyebrow">中文 API 状态 / 浏览器实时只读检查</p>
         <h1 id="title">GCA 中文 API 状态</h1>
         <p class="lead">这一页用中文说明 GCA 邮箱注册和邮箱退订接口的当前状态。公网邮箱注册已经接到 Cloudflare Workers + D1，普通用户可以通过官网表单提交邮箱；管理员读取接口仍需要本地管理 token。</p>
-        <p class="lead">公网只读 smoke check 已在 <code>2026-07-23T17:53:42Z</code> 通过。下方实时面板可以在当前浏览器重复安全的只读部分：核对公开身份并确认管理员读取会拒绝匿名访问，全程不写入记录。</p>
-        <p class="lead">部署权限检查已在 <code>2026-07-23T17:55:52Z</code> 通过。Cloudflare 账号权限、D1 可见性和 Worker 发布权限均已验证；服务请求和 Credit 使用路由已经正式上线并受管理员 token 保护。</p>
+        <p class="lead">公网只读 smoke check 已在 <code>2026-07-23T19:29:39Z</code> 通过，管理员 token 只读检查已在 <code>2026-07-23T19:29:49Z</code> 通过。下方实时面板可以在当前浏览器重复安全的只读部分，全程不写入记录。</p>
+        <p class="lead">服务请求、Credit 使用和会员人工审核路由都已经正式上线并受管理员 token 保护。用户填写的持有日期和交易哈希只生成审核预览，不能自动激活 GCA Member。</p>
         <p class="lead">公开 API 支持邮箱、退订、会员账户提交和只读余额验证；它不要求私钥或钱包签名，也不会自动转移 GCA 或自动发放 10,000 GCA 会员权益。</p>
         <div class="actions">
           <a class="button primary" href="register.html">打开邮箱注册</a>
@@ -384,7 +384,7 @@
           <div class="live-health-row" data-api-check="admin">
             <div class="live-health-copy">
               <strong>现有管理员读取保护</strong>
-              <span class="note">6 个 GET 路由必须用 HTTP 401 拒绝匿名访问</span>
+              <span class="note">7 个 GET 路由必须用 HTTP 401 拒绝匿名访问</span>
             </div>
             <span class="live-health-result" data-check-status>等待检查</span>
           </div>
@@ -438,6 +438,10 @@
             <p class="note"><code>GET /gca/credit-ledger</code> 和 <code>GET /gca/member-ledger</code> 都是管理员 token 保护接口，公网不能直接读用户账本。</p>
           </article>
           <article class="card">
+            <h3>会员人工审核</h3>
+            <p class="note"><code>GET/POST /gca/member-reviews</code> 已正式上线并受管理员 token 保护。批准前会重新只读检查当前 GCA 余额，并记录不可覆盖的审核决定；该接口不会自动证明连续持有、不会转币，也不会批准 10,000 GCA 会员权益转账。</p>
+          </article>
+          <article class="card">
             <h3>服务请求队列</h3>
             <p class="note"><code>GET/POST /gca/service-requests</code> 已正式上线并受管理员 token 保护。远端 D1 migration、Worker 部署、公网 smoke 和管理员只读 smoke 检查已在 2026-07-23 UTC 通过；匿名读取返回 HTTP 401。</p>
           </article>
@@ -470,7 +474,7 @@
         </div>
         <div class="panel">
           <h2>生产接口验收</h2>
-          <p class="note"><code>/gca/service-requests</code> 和 <code>/gca/credit-usage</code> 已完成权限门槛、远端 D1 migration、<code>wrangler deploy</code>、公开 smoke check 和管理员 smoke check。匿名读取返回 HTTP 401，管理员 token 读取返回 HTTP 200。</p>
+          <p class="note"><code>/gca/service-requests</code>、<code>/gca/credit-usage</code> 和 <code>/gca/member-reviews</code> 已完成权限门槛、远端 D1 migration、<code>wrangler deploy</code>、公开 smoke check 和管理员 smoke check。匿名读取返回 HTTP 401，管理员 token 读取返回 HTTP 200。</p>
           <pre>python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes</pre>
           <pre>python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes</pre>
         </div>
@@ -482,7 +486,7 @@
           <ul>
             <li>邮箱注册不需要钱包地址，不读取钱包余额。</li>
             <li>邮箱注册不需要私钥、助记词、钱包签名、验证码、付款或交易所 API Secret。</li>
-            <li>会员账户入口可以写入符合条件的 100 credits / GCA Member 账本记录，但 10,000 GCA 会员权益仍需人工审核。</li>
+            <li>会员账户入口可以写入符合条件的 100 credits 记录，并把 GCA Member 材料排入人工审核队列；10,000 GCA 会员权益仍需单独人工审核。</li>
             <li>邮箱退订只影响后续联系导出，不改变 GCA 持仓、池子、链上资产或会员处理状态。</li>
           </ul>
         </div>

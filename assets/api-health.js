@@ -13,6 +13,7 @@
     "/gca/member-access",
     "/gca/credit-ledger",
     "/gca/member-ledger",
+    "/gca/member-reviews",
   ];
   const PENDING_PATHS = [
     "/gca/service-requests",
@@ -136,6 +137,7 @@
       && Number(payload.chainId) === CHAIN_ID
       && String(payload.contractAddress || "").toLowerCase() === CONTRACT_ADDRESS
       && payload.memberAccessVersion === "gca_member_access_v1"
+      && payload.memberReviewVersion === "gca_member_review_v1"
     );
   }
 
@@ -150,11 +152,13 @@
       && Number(payload.chainId) === CHAIN_ID
       && String(payload.contractAddress || "").toLowerCase() === CONTRACT_ADDRESS
       && payload.memberAccessVersion === "gca_member_access_v1"
+      && payload.memberReviewVersion === "gca_member_review_v1"
       && boundaries
       && boundaries.readOnlyWalletVerification === true
       && boundaries.requiresSignature === false
       && boundaries.requiresTransaction === false
       && boundaries.automaticTokenTransfer === false
+      && boundaries.automaticMemberActivationFromSubmittedDate === false
     );
   }
 

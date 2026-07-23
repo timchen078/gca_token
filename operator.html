@@ -657,6 +657,10 @@
               <label for="memberHoldingCommandText">Optional 30-day holding report</label>
               <textarea id="memberHoldingCommandText" class="copy" readonly>.venv/bin/python tools/run_gca_member_access_ops.py --base-url https://gca-registration-api.gcagochina.workers.dev --limit 100 --redact none --include-holding-report --holding-no-live-read --summary-output .gca_access_data/gca_member_access_ops_summary.json</textarea>
             </div>
+            <div class="field">
+              <label for="memberReviewCommandText">Manual member review command</label>
+              <textarea id="memberReviewCommandText" class="copy" readonly>.venv/bin/python tools/review_cloudflare_member.py --member-ledger-id gca_member_REPLACE_WITH_20_HEX --decision needs_more_information --reason-code evidence_incomplete --reviewer-id gca-operator --confirm-production-write</textarea>
+            </div>
           </div>
           <div>
             <div class="list">
@@ -665,6 +669,7 @@
               <div class="row"><span>Report summary</span><strong><code>.gca_access_data/member_access_report/gca_member_access_summary.json</code></strong></div>
               <div class="row"><span>Support queue</span><strong><code>.gca_access_data/member_access_report/gca_member_support_queue.csv</code></strong></div>
               <div class="row"><span>Holding summary</span><strong><code>.gca_access_data/member_access_report/gca_holding_period_summary.json</code></strong></div>
+              <div class="row"><span>Member review API</span><strong><code>/gca/member-reviews</code></strong></div>
               <div class="row"><span>Boundary</span><strong>No automatic member-benefit transfer</strong></div>
             </div>
           </div>

@@ -1,13 +1,13 @@
 {
   "schema": "https://gcagochina.com/access-api.json",
   "pageUrl": "https://gcagochina.com/access-api.html",
-  "status": "public-access-api-member-access-live",
+  "status": "public-access-api-member-review-live",
   "lastUpdated": "2026-07-24",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "title": "GCA Access API Contract",
   "currentState": {
-    "currentStage": "member-access-api-live",
+    "currentStage": "member-access-and-review-api-live",
     "contractOnly": false,
     "backendLive": true,
     "publicEndpointLive": true,
@@ -25,6 +25,7 @@
     "emailRegistrationPacketVersion": "gca_email_registration_v1",
     "contactSuppressionPacketVersion": "gca_contact_suppression_v1",
     "memberAccessPacketVersion": "gca_member_access_v1",
+    "memberReviewPacketVersion": "gca_member_review_v1",
     "walletVerificationLive": true,
     "creditLedgerWritesLive": true,
     "creditUsageLedgerPrepared": true,
@@ -39,7 +40,10 @@
     "serviceRequestQueueWorkerDeployBlockedBy": null,
     "serviceRequestQueueProductionLive": true,
     "memberLedgerWritesLive": true,
-    "serviceRoutesProductionVerifiedAt": "2026-07-23T17:53:54Z"
+    "memberReviewWorkflowProductionLive": true,
+    "automaticMemberActivationFromSubmittedDate": false,
+    "memberReviewProductionVerifiedAt": "2026-07-23T19:29:49Z",
+    "serviceRoutesProductionVerifiedAt": "2026-07-23T19:29:49Z"
   },
   "localDevelopmentBackend": {
     "status": "local-only-backend-available",
@@ -112,7 +116,7 @@
       "writesD1Records": false,
       "deploysWorker": false
     },
-    "pendingRoutesLastObservedAt": "2026-07-23T17:53:42Z",
+    "pendingRoutesLastObservedAt": "2026-07-23T19:29:39Z",
     "pendingRouteAnonymousGetStatus": {
       "/gca/service-requests": 401,
       "/gca/credit-usage": 401
@@ -155,6 +159,7 @@
     "memberAccessMigration": "cloudflare/gca-registration-worker/migrations/0003_member_access_ledgers.sql",
     "creditUsageMigration": "cloudflare/gca-registration-worker/migrations/0004_credit_usage_ledger.sql",
     "serviceRequestMigration": "cloudflare/gca-registration-worker/migrations/0005_service_requests.sql",
+    "memberReviewMigration": "cloudflare/gca-registration-worker/migrations/0006_member_reviews.sql",
     "memberAccessEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/member-access",
     "walletVerificationEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/wallet-verifications",
     "accessConfigEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/access-config",
@@ -162,13 +167,17 @@
     "adminServiceRequestsEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/service-requests",
     "adminCreditUsageEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/credit-usage",
     "adminMemberLedgerEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/member-ledger",
+    "adminMemberReviewsEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/member-reviews",
+    "memberReviewOperatorTool": "tools/review_cloudflare_member.py",
     "antiSpamHoneypotFields": [
       "website",
       "company",
       "homepage"
     ],
-    "workerVersionId": "8988fc75-bbe0-403e-960a-832bf83da20f",
-    "productionRoutesVerifiedAt": "2026-07-23T17:53:54Z"
+    "workerVersionId": "fa923065-dd72-472e-9c28-04ef4a08c34e",
+    "workerRelease": "gca-registration-worker-2026-07-24-member-review-v1",
+    "memberReviewVersion": "gca_member_review_v1",
+    "productionRoutesVerifiedAt": "2026-07-23T19:29:49Z"
   },
   "securityModel": {
     "controlledHttpsOriginRequired": true,
@@ -180,6 +189,9 @@
     "serverSideChainValidationRequired": true,
     "serverSideContractValidationRequired": true,
     "walletVerificationReadOnly": true,
+    "submittedHoldingDateActivatesMembership": false,
+    "adminReviewRequiredForMemberActivation": true,
+    "memberReviewWritesUseD1BatchTransaction": true,
     "usesEthCall": true,
     "usesEthGetTransactionReceipt": true,
     "usesErc20BalanceOf": true,
@@ -197,6 +209,7 @@
   "emailRegistrationPacketVersion": "gca_email_registration_v1",
   "contactSuppressionPacketVersion": "gca_contact_suppression_v1",
   "serviceRequestPacketVersion": "gca_service_request_v1",
+  "memberReviewPacketVersion": "gca_member_review_v1",
   "memberEvidenceFields": [
     "memberBenefitReviewEvidence.holdingStartDate",
     "memberBenefitReviewEvidence.daysSinceHoldingStartPreview",
@@ -363,7 +376,7 @@
       "method": "POST",
       "path": "/gca/member-access",
       "status": "production-workers-dev-live",
-      "purpose": "Receive live controlled account intake through the Workers + D1 backend, verify the Base wallet with read-only balanceOf, and write eligible credit/member ledger records.",
+      "purpose": "Receive live controlled account intake through the Workers + D1 backend, verify the Base wallet with read-only balanceOf, write eligible credit records, and queue qualifying member evidence for manual review.",
       "requiredRequestFields": [
         "email",
         "walletAddress",
@@ -381,6 +394,8 @@
         "email and wallet address are normalized",
         "website/company/homepage honeypot fields must be empty",
         "read-only wallet verification runs before ledger writes",
+        "a submitted holding date and transaction hash only create a holding-period preview",
+        "GCA Member activation requires a separate ADMIN_READ_TOKEN protected manual review",
         "no wallet signature, transaction, private key, seed phrase, exchange API secret, or withdrawal permission is requested"
       ],
       "responseFields": [
@@ -415,7 +430,8 @@
         "contractAddress must be 0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
         "walletAddress must be a valid EVM address",
         "website/company/homepage honeypot fields must be empty",
-        "balance source must be read-only eth_call balanceOf"
+        "balance source must be read-only eth_call balanceOf",
+        "holding-period information remains a preview until a separate manual review is recorded"
       ],
       "responseFields": [
         "walletVerification",
@@ -650,7 +666,63 @@
         "needs_refresh",
         "below_threshold",
         "paused",
+        "review_rejected",
         "revoked"
+      ]
+    },
+    {
+      "id": "member-reviews-read",
+      "method": "GET",
+      "path": "/gca/member-reviews",
+      "status": "token-protected-admin-live",
+      "purpose": "Read append-only production member review decisions through ADMIN_READ_TOKEN protected operator access.",
+      "requiredRequestFields": [
+        "authorization bearer token"
+      ],
+      "responseFields": [
+        "memberReviewId",
+        "memberLedgerId",
+        "decision",
+        "reasonCode",
+        "reviewerId",
+        "reviewedAt",
+        "balanceAtReview",
+        "previousMemberStatus",
+        "resultingMemberStatus",
+        "previousClaimStatus",
+        "resultingClaimStatus"
+      ],
+      "allowedStatuses": [
+        "approved",
+        "rejected",
+        "needs_more_information"
+      ]
+    },
+    {
+      "id": "member-reviews-create",
+      "method": "POST",
+      "path": "/gca/member-reviews",
+      "status": "token-protected-admin-live",
+      "purpose": "Record a manual member eligibility decision after refreshing the current GCA balance and reviewing the submitted 30-day holding evidence.",
+      "requiredRequestFields": [
+        "authorization bearer token",
+        "memberLedgerId",
+        "decision",
+        "reasonCode",
+        "reviewerId",
+        "acknowledgements.manualEvidenceReviewCompleted",
+        "acknowledgements.noAutomaticTokenTransfer"
+      ],
+      "serverChecks": [
+        "approved decisions require a current balance of at least 1,000,000 GCA",
+        "approved decisions require at least a 30-day holding preview and a valid evidence transaction hash format",
+        "the ledger and account update use one D1 batch transaction",
+        "the endpoint does not connect a wallet, request a signature, send a transaction, transfer GCA, or authorize the 10,000 GCA member benefit transfer"
+      ],
+      "allowedStatuses": [
+        "approved",
+        "rejected",
+        "needs_more_information"
       ]
     },
     {
@@ -1011,6 +1083,8 @@
       "GCA operators can record reviewed service-level credit usage against an existing credit ledger through the live token-protected Worker route; anonymous reads are rejected.",
       "GCA operators can queue service scope requests through the live token-protected Worker route before delivery; queued requests do not deduct credits or create trading permission.",
       "Eligible 1,000,000 GCA / 30-day holders can create a GCA Member review ledger record.",
+      "Submitted holding dates and transaction hashes are preview evidence only; member activation requires a token-protected manual operator review.",
+      "Production member review decisions are stored as append-only D1 records, while member and account status updates run in one D1 batch transaction.",
       "The API contract forbids private keys, seed phrases, exchange API secrets, withdrawal permission, custody, and risk-control bypass.",
       "The 10,000 GCA member benefit remains manual review and reserve-wallet processing only.",
       "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool."

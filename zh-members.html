@@ -365,7 +365,7 @@
         <p class="eyebrow">中文会员规则</p>
         <h1 id="title">GCA 中文会员规则</h1>
         <p class="lead">这一页把 GCA 会员相关规则用中文讲清楚：10,000 GCA 持有者对应未来 100 GCA AI Quant Access credits 审核，1,000,000 GCA 连续持有 30 天对应 GCA Member 审核，以及 10,000 GCA 会员权益审核。</p>
-        <p class="lead">当前规则已经接入受控 HTTPS 账户入口：用户可以提交邮箱和 Base 钱包，后端只读验证 GCA 余额，并写入符合条件的 100 credits / GCA Member 账本记录。10,000 GCA 会员权益转账仍需人工审核和储备钱包处理，不是自动领取页面。</p>
+        <p class="lead">当前规则已经接入受控 HTTPS 账户入口：后端只读验证当前 GCA 余额，符合 10,000 GCA 条件时写入 100 credits 记录，符合 1,000,000 GCA 条件时只把会员材料排入人工审核。用户填写的持有日期和交易哈希不能自动激活 GCA Member；10,000 GCA 会员权益转账仍是单独的人工流程。</p>
         <div class="actions">
           <a class="button primary" href="members.html">会员预登记</a>
           <a class="button primary" href="zh-cn.html">中文入口</a>
@@ -413,7 +413,7 @@
 
         <article class="card">
           <h2>GCA Member</h2>
-          <p class="note">计划规则：用户需要购买并连续持有至少 1,000,000 GCA 满 30 天，才可以进入 GCA Member 状态审核。审核需要钱包地址、公开交易哈希、持有开始日期和只读余额复核。</p>
+          <p class="note">计划规则：用户需要购买并连续持有至少 1,000,000 GCA 满 30 天，才可以进入 GCA Member 状态审核。钱包地址、公开交易哈希和持有开始日期只是审核材料；运营人员必须审核公开链上证据并重新只读检查当前余额后，才能激活会员状态。</p>
           <p class="note">GCA Member 不是自动身份，也不是永久身份。后续仍需要按公开规则复核余额和支持状态。</p>
         </article>
 
@@ -425,7 +425,7 @@
 
         <article class="card">
           <h2>当前不能做什么</h2>
-          <p class="note">当前公开网站已经可以通过 <a href="gca/member-access/">会员账户入口</a> 提交账户、只读验证余额，并写入符合条件的 100 credits / GCA Member 账本记录；但不能自动发放 10,000 GCA 会员权益。</p>
+          <p class="note">当前公开网站已经可以通过 <a href="gca/member-access/">会员账户入口</a> 提交账户、只读验证余额、写入符合条件的 100 credits 记录并排队会员审核；但不能自动激活 GCA Member，也不能自动发放 10,000 GCA 会员权益。</p>
           <p class="note">如果有人声称可以在浏览器里直接领取、要求你提供私钥或要求你支付额外担保费用，请不要操作，先通过官方支持入口核实。</p>
         </article>
       </section>
@@ -442,8 +442,9 @@
           <div class="row"><span>1. 验证身份</span><strong>确认 Base Mainnet、GCA 合约、官方 GCA/USDT 池和官方联系渠道。</strong></div>
           <div class="row"><span>2. 账户提交</span><strong>使用 <a href="gca/member-access/">/gca/member-access/</a> 提交邮箱和 Base 钱包；不要提交敏感信息。</strong></div>
           <div class="row"><span>3. 钱包复核</span><strong>后端通过只读 ERC-20 balanceOf 验证 GCA 余额，不需要签出资金或给出私钥。</strong></div>
-          <div class="row"><span>4. 账本记录</span><strong>符合条件后写入 100 credits 账本或 GCA Member 账本记录。</strong></div>
-          <div class="row"><span>5. 会员权益审核</span><strong>1,000,000 GCA 连续持有 30 天后，才进入 10,000 GCA 会员权益审核。</strong></div>
+          <div class="row"><span>4. 审核排队</span><strong>符合条件后写入 100 credits 记录；GCA Member 材料只进入人工审核队列。</strong></div>
+          <div class="row"><span>5. 会员激活</span><strong>运营人员审核 30 天公开链上证据并重新只读检查当前余额后，才可激活 GCA Member。</strong></div>
+          <div class="row"><span>6. 会员权益审核</span><strong>GCA Member 通过后，10,000 GCA 会员权益仍进入单独人工审核和储备钱包流程。</strong></div>
         </div>
       </section>
 
@@ -489,13 +490,14 @@
             <p class="eyebrow">会员功能状态</p>
             <h2 id="statusTitle">账户和账本进度</h2>
           </div>
-          <p class="note">账户提交、只读余额验证和会员账本记录已经上线；会员权益转账仍按人工审核和储备钱包流程处理。</p>
+          <p class="note">账户提交、只读余额验证、会员审核排队和受管理员 token 保护的人工审核已经上线；会员权益转账仍按单独的人工审核和储备钱包流程处理。</p>
         </div>
         <div class="list">
           <div class="row"><span>公开账户提交</span><strong class="good">已上线</strong></div>
           <div class="row"><span>受控 HTTPS 账户 UI</span><strong class="good">已上线</strong></div>
           <div class="row"><span>100 credits 公开账本记录</span><strong class="good">已上线</strong></div>
-          <div class="row"><span>GCA Member 公开账本记录</span><strong class="good">已上线</strong></div>
+          <div class="row"><span>GCA Member 审核排队</span><strong class="good">已上线</strong></div>
+          <div class="row"><span>GCA Member 人工激活</span><strong class="good">受管理员 token 保护的审核接口已上线</strong></div>
           <div class="row"><span>10,000 GCA 会员权益转账</span><strong class="pending">人工审核和储备钱包处理</strong></div>
           <div class="row"><span>支持跟进</span><strong>通过中文支持页提交公开交易哈希、持有开始日期和只读余额验证结果。</strong></div>
         </div>
