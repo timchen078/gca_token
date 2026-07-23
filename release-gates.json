@@ -14,9 +14,9 @@
     "gcaMemberEligibilitySubmissionLive": true,
     "liveTradingEnabled": false,
     "baseScanTokenProfile": "ready-for-owner-resubmission",
-    "baseScanTokenProfileLastCheckedDate": "2026-06-10",
+    "baseScanTokenProfileLastCheckedDate": "2026-07-23",
     "baseScanFinalSubmissionPackageGeneratedAt": "2026-07-18T12:03:57Z",
-    "dailyStatusGeneratedAt": "2026-06-18T08:31:47Z",
+    "dailyStatusGeneratedAt": "2026-07-23T16:08:40Z",
     "baseScanResubmissionReady": true,
     "thirdPartyAudit": "not-completed",
     "liquidityDepth": "starter-depth-only",
@@ -157,7 +157,7 @@
       "requiredBefore": "BaseScan token profile publication claim",
       "publicReference": "https://gcagochina.com/basescan-handoff.html",
       "finalSubmissionPackageGeneratedAt": "2026-07-18T12:03:57Z",
-      "dailyStatusGeneratedAt": "2026-06-18T08:31:47Z",
+      "dailyStatusGeneratedAt": "2026-07-23T16:08:40Z",
       "blocks": [
         "BaseScan token profile approval claim",
         "explorer profile publication claim"
@@ -199,7 +199,7 @@
       "GCA has published a public access operations runbook for manual review handling.",
       "The local operator support-review ledger uses a SHA-256 continuity chain and blocks new review writes when continuity verification fails.",
       "The local operator can export an unsigned chain-head checkpoint for separate retention and later ledger-lineage comparison.",
-      "The latest BaseScan owner submission package was generated on 2026-07-18T12:03:57Z, and the daily public status snapshot was refreshed on 2026-06-18T08:31:47Z."
+      "The latest BaseScan owner submission package was generated on 2026-07-18T12:03:57Z, and the daily public status snapshot was refreshed on 2026-07-23T16:08:40Z."
     ],
     "doNotClaim": [
       "credits are cash, income, reimbursement, trading permission, or transferable value",

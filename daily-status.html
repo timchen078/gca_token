@@ -266,10 +266,10 @@
 
     <main class="shell">
       <section aria-labelledby="title">
-        <p class="eyebrow">Daily Ops Snapshot / 2026-06-18</p>
+        <p class="eyebrow">Daily Ops Snapshot / 2026-07-23</p>
         <h1 id="title">GCA Daily Status Snapshot</h1>
-        <p class="lead">This page publishes the safe public result of the latest GCA daily operations snapshot. It summarizes public website health, live registration API status, and the current BaseScan preflight blocker without exposing admin tokens, user records, private mailbox evidence, wallet actions, or production write data.</p>
-        <p class="lead">Latest snapshot source: <code>tools/run_gca_daily_ops.py</code>, generated at <code>2026-06-18T08:31:47Z</code>.</p>
+        <p class="lead">This page publishes the safe public result of the latest GCA daily operations snapshot. It summarizes public website health, live registration API status, the read-only BaseScan public profile observation, and owner-side preflight readiness without exposing admin tokens, user records, private mailbox evidence, wallet actions, or production write data.</p>
+        <p class="lead">Latest snapshot source: <code>tools/run_gca_daily_ops.py</code>, generated at <code>2026-07-23T16:08:40Z</code>.</p>
         <div class="actions">
           <a class="button primary" href="status.html">Project Status</a>
           <a class="button" href="api-status.html">API Status</a>
@@ -297,6 +297,10 @@
           <span class="value good">Ready for owner resubmission</span>
         </div>
         <div class="fact">
+          <span class="label">Public BaseScan Profile</span>
+          <span class="value pending">Not published</span>
+        </div>
+        <div class="fact">
           <span class="label">Old Email Files</span>
           <span class="value good">0</span>
         </div>
@@ -312,6 +316,7 @@
           <div class="list">
             <div class="row"><span><code>public-site</code></span><strong><code>tools/check_public_site.py --base-url https://gcagochina.com/ --timeout 20</code> passed for the latest snapshot.</strong></div>
             <div class="row"><span><code>registration-api-public</code></span><strong><code>tools/check_gca_registration_api.py --base-url https://gca-registration-api.gcagochina.workers.dev --public-only --timeout 20</code> passed without secrets and without writing test records.</strong></div>
+            <div class="row"><span><code>basescan-public-profile-status</code></span><strong><code>python3 tools/check_basescan_public_profile.py --json --timeout 20</code> completed as a read-only public-page check.</strong></div>
             <div class="row"><span>API base</span><strong><code>https://gca-registration-api.gcagochina.workers.dev</code></strong></div>
             <div class="row"><span>Admin reads</span><strong>Token-protected; unauthenticated public reads are rejected.</strong></div>
           </div>
@@ -321,6 +326,11 @@
           <h2>BaseScan Ready For Owner Submission</h2>
           <p class="note">BaseScan source and deployer-wallet ownership verification are complete, and the owner-side public/domain-email preflight is ready for one clean submission from <code>support@gcagochina.com</code>. Public token-profile publication is still pending BaseScan review.</p>
           <div class="list">
+            <div class="row"><span>Public profile observation</span><strong><code>token-profile-not-published</code> observed at <code>2026-07-23T16:08:40Z</code>.</strong></div>
+            <div class="row"><span>Public Token Rep</span><strong><code>Unknown</code></strong></div>
+            <div class="row"><span>Official website metadata</span><strong>Not observed on the public BaseScan token page.</strong></div>
+            <div class="row"><span>Custom preview image</span><strong>Not observed on the public BaseScan token page.</strong></div>
+            <div class="row"><span>Source verification</span><strong>Observed separately on the public contract code page; this does not imply profile approval or contract safety.</strong></div>
             <div class="row"><span><code>basescan-resubmission-preflight-status</code></span><strong><code>readyForBaseScanResubmission</code> is true.</strong></div>
             <div class="row"><span>Current email</span><strong><code>support@gcagochina.com</code></strong></div>
             <div class="row"><span>Target domain email</span><strong><code>support@gcagochina.com</code></strong></div>
@@ -376,7 +386,7 @@
           <li>It does not print admin tokens, user emails, wallet records, or private evidence files.</li>
           <li>It does not write production data, send email, write DNS records, sign messages, submit BaseScan forms, or touch wallets/contracts.</li>
           <li>It does not claim BaseScan token profile approval, external audit completion, tracked listing approval, deep liquidity, or price support.</li>
-          <li>It only records a public health snapshot and the current non-blocking BaseScan preflight status.</li>
+          <li>It only records a public health snapshot, a read-only BaseScan profile observation, and the current non-blocking BaseScan preflight status.</li>
         </ul>
       </section>
     </main>
