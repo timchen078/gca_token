@@ -306,7 +306,7 @@
 
     <main class="shell">
       <section aria-labelledby="title">
-        <p class="eyebrow">中文上线门槛 / 2026-06-05</p>
+        <p class="eyebrow">中文上线门槛 / 2026-07-23</p>
         <h1 id="title">GCA 中文上线门槛</h1>
         <p class="lead">这一页定义 GCA 用户中心和 GCA AI Quant Access 相关功能哪些已经上线、哪些仍需要人工审核或后续产品门槛。</p>
         <p class="lead">邮箱注册 API、受控 HTTPS 账户入口、只读钱包余额验证、100 credits 账本记录和 GCA Member 账本记录已经上线；10,000 GCA 会员权益转账仍需人工审核，交易相关产品仍未正式上线。</p>
@@ -362,7 +362,7 @@
         <div class="grid">
           <article class="card">
             <h3>受控 HTTPS 账户 UI</h3>
-            <p class="note">账户资料提交已经接入 Workers + D1。后续仍要补充更完整的登录态、用户状态页和支持处理后台。</p>
+            <p class="note">账户资料提交、设备状态快照和符合条件账本记录已经接入 Workers + D1。后续仍要补充服务端用户状态查询和正式支持处理后台。</p>
           </article>
           <article class="card">
             <h3>只读 GCA 余额验证</h3>
@@ -446,11 +446,11 @@
         <div class="list">
           <div class="row"><span>1. 邮箱注册</span><strong>继续使用 <a href="register.html">register.html</a> 和 Cloudflare Workers + D1 收集用户邮箱。</strong></div>
           <div class="row"><span>2. 运营同步</span><strong>按 <a href="zh-operations.html">中文运营流程</a> 同步 D1 注册记录、应用退订名单并导出 public-redacted 联系 CSV。</strong></div>
-          <div class="row"><span>3. 账户 UI</span><strong>继续完善受控 HTTPS 用户中心，用于查看注册状态、提交公开链上资料和查看审核结果。</strong></div>
-          <div class="row"><span>4. 钱包验证</span><strong>接入只读 GCA 余额验证，不发起交易、不要求签名授权转移资产。</strong></div>
+          <div class="row"><span>3. 账户 UI</span><strong>继续运营已上线的受控 HTTPS 用户中心，并补充服务端状态查询和正式支持处理能力。</strong></div>
+          <div class="row"><span>4. 钱包验证</span><strong>维护已上线的只读 GCA 余额验证；不发起交易、不要求签名或授权转移资产。</strong></div>
           <div class="row"><span>5. 账本维护</span><strong>持续维护 100 credits 账本和 GCA Member 账本，并保留可审计记录。</strong></div>
           <div class="row"><span>6. 支持审核</span><strong>继续使用支持审核队列处理 30 天持有证明、资料补充和会员权益审核。</strong></div>
-          <div class="row"><span>7. 服务请求路由</span><strong>发布 <code>/gca/service-requests</code> 和 <code>/gca/credit-usage</code> 前，先解决 Cloudflare auth 和 Worker deploy permission 的 error <code>10000</code>；D1 可见性已在 2026-06-10 检查中通过，后续仍要完成 deploy 和 <code>--include-pending-routes</code> smoke 检查。</strong></div>
+          <div class="row"><span>7. 服务请求路由</span><strong>2026-07-20 检查已通过 Worker dry-run，但 Wrangler 未登录；Cloudflare 账号认证、D1 可见性和 Worker 发布权限均未验证，两个公开路由均返回 HTTP 404。先完成认证，再执行远端 D1 migration、<code>wrangler deploy</code> 和 <code>--include-pending-routes</code> smoke 检查。</strong></div>
           <div class="row"><span>8. 量化产品</span><strong>先发布模拟盘、回测、风险提醒和复盘工具，再评估任何真实执行功能。</strong></div>
         </div>
       </section>

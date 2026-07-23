@@ -3946,7 +3946,7 @@ def validate_zh_release_gates_page(text: str) -> None:
     assert_social_preview_meta(text, label, ZH_RELEASE_GATES_PAGE_URL)
     for expected in (
         "GCA 中文上线门槛",
-        "中文上线门槛 / 2026-06-05",
+        "中文上线门槛 / 2026-07-23",
         "邮箱注册 API 已上线",
         "Cloudflare Workers + D1 已上线",
         "服务请求队列和 Credit 使用记录已经完成本地运营后端准备",
@@ -3993,6 +3993,8 @@ def validate_zh_release_gates_page(text: str) -> None:
         "不把 Credit 使用记录说成自助扣减",
         "账本维护",
         "服务请求路由",
+        "Wrangler 未登录",
+        "两个公开路由均返回 HTTP 404",
         "上线资料",
         "继续查看上线门槛",
         "register.html",
@@ -4026,6 +4028,12 @@ def validate_zh_release_gates_page(text: str) -> None:
         OFFICIAL_POOL_ADDRESS,
     ):
         assert_contains(text, expected, label)
+    for forbidden in (
+        "D1 可见性已在 2026-06-10 检查中通过",
+        'error <code>10000</code>',
+        "接入只读 GCA 余额验证",
+    ):
+        assert_not_contains(text, forbidden, label)
     assert_not_contains(text, "不能说已经上线完整余额验证 UI", label)
     assert_not_contains(text, "只能说计划使用", label)
     for forbidden in ("Platform-Only Evidence Path", "Reviewer Data Room", "平台审核资料", 'href="data.html"'):
@@ -11354,6 +11362,7 @@ def validate_credits_json(text: str) -> None:
 def validate_release_gates_page(text: str) -> None:
     label = "/release-gates.html"
     assert_contains(text, "GCA Product Release Gates", label)
+    assert_contains(text, "Release Gates / 2026-07-23", label)
     assert_contains(text, "Release References", label)
     assert_contains(text, "gca/member-access/", label)
     for forbidden in ("Platform-Only Evidence Path", "Data Room", 'href="data.html"'):
@@ -11376,6 +11385,7 @@ def validate_release_gates_page(text: str) -> None:
     assert_contains(text, "SHA-256 continuity checked before review writes", label)
     assert_contains(text, "Review chain checkpoint", label)
     assert_contains(text, "Unsigned local export live; separate retention required", label)
+    assert_contains(text, "Worker dry-run passed; Wrangler not logged in; D1 visibility and deploy permission unverified; both routes returned HTTP 404 on 2026-07-20", label)
     assert_contains(text, "production approval workflow still gated", label)
     assert_contains(text, "simulation or testnet first", label)
     assert_contains(text, "BaseScan token profile publication", label)
@@ -11408,7 +11418,7 @@ def validate_release_gates_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong pageUrl")
     if payload.get("status") != "public-release-gates-account-ledger-path-live":
         raise SiteCheckError(f"{label}: wrong status")
-    if payload.get("lastUpdated") != "2026-07-19":
+    if payload.get("lastUpdated") != "2026-07-23":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
@@ -11431,6 +11441,22 @@ def validate_release_gates_json(text: str) -> None:
         raise SiteCheckError(f"{label}: public support review checkpoint must remain false")
     if state.get("productionSupportApprovalWorkflowLive") is not False:
         raise SiteCheckError(f"{label}: production support approval workflow must remain false")
+    if state.get("pendingServiceRoutesProductionLive") is not False:
+        raise SiteCheckError(f"{label}: pending service routes must remain non-live")
+    if state.get("latestPendingRouteReadinessCheckAt") != PENDING_WORKER_READINESS_AT:
+        raise SiteCheckError(f"{label}: wrong pending route readiness timestamp")
+    if state.get("latestPendingRoutePublicCheckAt") != PENDING_WORKER_PUBLIC_ROUTE_AT:
+        raise SiteCheckError(f"{label}: wrong pending route public check timestamp")
+    if state.get("cloudflareAuthSession") != "failed-not-logged-in":
+        raise SiteCheckError(f"{label}: wrong Cloudflare auth state")
+    if state.get("cloudflareD1Visibility") != "not-verified-auth-required":
+        raise SiteCheckError(f"{label}: wrong D1 visibility state")
+    if state.get("cloudflareWorkerDeployPermission") != "not-verified-auth-required":
+        raise SiteCheckError(f"{label}: wrong Worker deploy permission state")
+    if state.get("cloudflareCode10000Seen") is not False:
+        raise SiteCheckError(f"{label}: code 10000 must not be reported by the latest logged-out check")
+    if state.get("pendingRouteAnonymousGetStatus") != PENDING_WORKER_ROUTE_OBSERVATIONS:
+        raise SiteCheckError(f"{label}: wrong pending route observations")
     if state.get("baseScanTokenProfile") != "ready-for-owner-resubmission":
         raise SiteCheckError(f"{label}: wrong BaseScan state")
     if state.get("baseScanTokenProfileLastCheckedDate") != "2026-06-10":
@@ -13846,6 +13872,8 @@ def validate_market_quality_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong pageUrl")
     if payload.get("status") != "early-stage-market-quality-plan":
         raise SiteCheckError(f"{label}: wrong status")
+    if payload.get("lastUpdated") != "2026-07-23":
+        raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
     if payload.get("contractAddress") != MAINNET_ADDRESS:
@@ -13862,6 +13890,16 @@ def validate_market_quality_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong CoinGecko status")
     if current.get("coinMarketCapTrackedListing") != "defer":
         raise SiteCheckError(f"{label}: wrong CoinMarketCap status")
+    if current.get("memberUtilityAccess") != "live-account-and-ledger-workflows-service-delivery-staged":
+        raise SiteCheckError(f"{label}: wrong member utility access status")
+    utility_delivery = next(
+        (item for item in payload.get("legitimateActions", []) if item.get("id") == "utility-delivery"),
+        {},
+    )
+    if utility_delivery.get("status") != "live-and-iterating":
+        raise SiteCheckError(f"{label}: wrong utility delivery status")
+    if "Operate the live GCA member and 100-credit account path while improving reviewed service delivery." not in utility_delivery.get("actions", []):
+        raise SiteCheckError(f"{label}: missing current utility delivery action")
     if "artificial activity" not in payload.get("doNotUse", []):
         raise SiteCheckError(f"{label}: missing artificial activity boundary")
     if "wash trading" not in payload.get("doNotUse", []):
@@ -13882,6 +13920,11 @@ def validate_market_quality_page(text: str) -> None:
     assert_contains(text, "Self-trading or wash trading", label)
     assert_contains(text, "Misleading volume", label)
     assert_contains(text, "CoinGecko or CoinMarketCap submission", label)
+    assert_contains(text, "Account and eligible ledger path live; reviewed service delivery staged", label)
+    assert_contains(text, "Live and iterating", label)
+    assert_contains(text, "Track live account intake, read-only wallet verification, eligible ledger records", label)
+    assert_not_contains(text, "Controlled account UI in progress", label)
+    assert_not_contains(text, "Connect the GCA member and 100-credit workflows to controlled HTTPS account UI", label)
     assert_contains(text, OFFICIAL_DEXSCREENER_URL, label)
     assert_contains(text, OFFICIAL_GECKOTERMINAL_URL, label)
     assert_current_pool_text(text, label)

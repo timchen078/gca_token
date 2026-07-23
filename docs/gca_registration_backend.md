@@ -12,7 +12,7 @@ https://gca-registration-api.gcagochina.workers.dev/gca/wallet-verifications
 https://gca-registration-api.gcagochina.workers.dev/gca/access-config
 ```
 
-The service request queue and credit usage routes are implemented in source, but the updated Worker has not been published yet because the current Cloudflare authorization can see D1 but cannot publish Workers services. Treat `/gca/service-requests` and `/gca/credit-usage` as deploy-ready, not production-live, until `tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth` passes, remote D1 migrations are applied, and `wrangler deploy` succeeds. The exact deployment handoff is in `docs/gca_worker_pending_routes_deploy_handoff.md`.
+The service request queue and credit usage routes are implemented in source, but the updated Worker has not been published. The latest 2026-07-20 readiness check passed Worker dry-run but found Wrangler not logged in, so Cloudflare account authentication, D1 visibility, and Worker deploy permission remain unverified; read-only public checks returned HTTP 404 for both routes. Treat `/gca/service-requests` and `/gca/credit-usage` as deploy-ready, not production-live, until `tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth` passes, remote D1 migrations are applied, `wrangler deploy` succeeds, and public/admin smoke checks pass with `--include-pending-routes`. The exact deployment handoff is in `docs/gca_worker_pending_routes_deploy_handoff.md`.
 
 ## What It Stores
 

@@ -6457,7 +6457,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(gates["schema"], RELEASE_GATES_URL)
         self.assertEqual(gates["pageUrl"], RELEASE_GATES_PAGE_URL)
         self.assertEqual(gates["status"], "public-release-gates-account-ledger-path-live")
-        self.assertEqual(gates["lastUpdated"], "2026-07-19")
+        self.assertEqual(gates["lastUpdated"], "2026-07-23")
         self.assertEqual(gates["chainId"], 8453)
         self.assertEqual(gates["contractAddress"], MAINNET_ADDRESS)
         self.assertEqual(gates["currentState"]["currentStage"], "account-ledger-path-live")
@@ -6471,6 +6471,17 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(gates["currentState"]["localSupportReviewQueue"], "live-with-sha256-continuity-check")
         self.assertFalse(gates["currentState"]["productionSupportApprovalWorkflowLive"])
         self.assertTrue(gates["currentState"]["memberBenefitManualReviewOnly"])
+        self.assertFalse(gates["currentState"]["pendingServiceRoutesProductionLive"])
+        self.assertEqual(gates["currentState"]["latestPendingRouteReadinessCheckAt"], "2026-07-20T10:34:06Z")
+        self.assertEqual(gates["currentState"]["latestPendingRoutePublicCheckAt"], "2026-07-20T10:33:02Z")
+        self.assertEqual(gates["currentState"]["cloudflareAuthSession"], "failed-not-logged-in")
+        self.assertEqual(gates["currentState"]["cloudflareD1Visibility"], "not-verified-auth-required")
+        self.assertEqual(gates["currentState"]["cloudflareWorkerDeployPermission"], "not-verified-auth-required")
+        self.assertFalse(gates["currentState"]["cloudflareCode10000Seen"])
+        self.assertEqual(
+            gates["currentState"]["pendingRouteAnonymousGetStatus"],
+            {"/gca/service-requests": 404, "/gca/credit-usage": 404},
+        )
         self.assertFalse(gates["currentState"]["liveTradingEnabled"])
         self.assertEqual(gates["currentState"]["baseScanTokenProfile"], "ready-for-owner-resubmission")
         self.assertEqual(gates["currentState"]["baseScanTokenProfileLastCheckedDate"], "2026-06-10")
@@ -8641,6 +8652,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Self-trading or wash trading", page)
         self.assertIn("Misleading volume", page)
         self.assertIn("CoinGecko or CoinMarketCap submission", page)
+        self.assertIn("Account and eligible ledger path live; reviewed service delivery staged", page)
+        self.assertIn("Live and iterating", page)
+        self.assertNotIn("Controlled account UI in progress", page)
         self.assertIn(MAINNET_ADDRESS, page)
         self.assertIn(OFFICIAL_POOL_ADDRESS, page)
         self.assertIn(BASE_USDT_ADDRESS, page)
@@ -8651,6 +8665,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(quality["schema"], MARKET_QUALITY_URL)
         self.assertEqual(quality["pageUrl"], MARKET_QUALITY_PAGE_URL)
         self.assertEqual(quality["status"], "early-stage-market-quality-plan")
+        self.assertEqual(quality["lastUpdated"], "2026-07-23")
         self.assertEqual(quality["chainId"], 8453)
         self.assertEqual(quality["contractAddress"], MAINNET_ADDRESS)
         self.assertEqual(quality["officialMarket"]["pair"], "GCA/USDT")
@@ -8661,6 +8676,18 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(quality["currentState"]["liquidityDepth"], "starter-depth-only")
         self.assertEqual(quality["currentState"]["coinGeckoTrackedListing"], "defer")
         self.assertEqual(quality["currentState"]["coinMarketCapTrackedListing"], "defer")
+        self.assertEqual(
+            quality["currentState"]["memberUtilityAccess"],
+            "live-account-and-ledger-workflows-service-delivery-staged",
+        )
+        utility_delivery = next(
+            action for action in quality["legitimateActions"] if action["id"] == "utility-delivery"
+        )
+        self.assertEqual(utility_delivery["status"], "live-and-iterating")
+        self.assertIn(
+            "Operate the live GCA member and 100-credit account path while improving reviewed service delivery.",
+            utility_delivery["actions"],
+        )
         self.assertIn("metadata-consistency", {action["id"] for action in quality["legitimateActions"]})
         self.assertIn("transparent-liquidity", {action["id"] for action in quality["legitimateActions"]})
         self.assertIn("utility-delivery", {action["id"] for action in quality["legitimateActions"]})

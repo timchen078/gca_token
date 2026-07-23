@@ -120,6 +120,9 @@ class GcaWorkerStatusConsistencyTests(unittest.TestCase):
             "credits.html": ("Wrangler logged out", "production HTTP 404"),
             "service-delivery-playbook.html": ("Wrangler is logged out", "Both prepared Worker routes returned HTTP 404"),
             "worker-routes-handoff.html": ("Wrangler not logged in", "HTTP 404 for both prepared routes"),
+            "release-gates.html": ("Wrangler not logged in", "both routes returned HTTP 404 on 2026-07-20"),
+            "zh-release-gates.html": ("Wrangler 未登录", "两个公开路由均返回 HTTP 404"),
+            "market-quality.html": ("Account and eligible ledger path live", "Live and iterating"),
         }
         for name, expected_fragments in public_pages.items():
             text = (ROOT / "site" / name).read_text(encoding="utf-8")
@@ -129,6 +132,7 @@ class GcaWorkerStatusConsistencyTests(unittest.TestCase):
         checked_paths = [
             ROOT / "docs" / "gca_registration_backend.md",
             ROOT / "docs" / "gca_worker_pending_routes_deploy_handoff.md",
+            ROOT / "launch" / "launch_status.md",
             *[ROOT / "site" / name for name in public_pages],
             *[
                 ROOT / "site" / name
@@ -138,6 +142,8 @@ class GcaWorkerStatusConsistencyTests(unittest.TestCase):
                     "credits.json",
                     "service-delivery-playbook.json",
                     "worker-routes-handoff.json",
+                    "release-gates.json",
+                    "market-quality.json",
                 )
             ],
         ]
@@ -148,6 +154,13 @@ class GcaWorkerStatusConsistencyTests(unittest.TestCase):
             "passed-2026-06-18",
             "blocked-error-10000",
             "Cloudflare error 10000",
+            "current Cloudflare authorization can see D1",
+            "D1 可见性已在 2026-06-10 检查中通过",
+            "Controlled account UI in progress",
+            "Connect the GCA member and 100-credit workflows to controlled HTTPS account UI",
+            "contract only until controlled HTTPS backend and account UI are live",
+            "draft service catalog only until controlled account UI and ledgers are live",
+            "public product spec only until controlled account UI is released",
         )
         for path in checked_paths:
             text = path.read_text(encoding="utf-8")
