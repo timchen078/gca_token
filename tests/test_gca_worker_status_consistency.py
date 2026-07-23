@@ -6,9 +6,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 LAST_UPDATED = "2026-07-24"
 READINESS_AT = "2026-07-23T17:55:52Z"
-PUBLIC_ROUTE_AT = "2026-07-23T17:53:42Z"
-ADMIN_ROUTE_AT = "2026-07-23T17:53:54Z"
-WORKER_VERSION_ID = "8988fc75-bbe0-403e-960a-832bf83da20f"
+PUBLIC_ROUTE_AT = "2026-07-23T19:29:39Z"
+ADMIN_ROUTE_AT = "2026-07-23T19:29:49Z"
+WORKER_VERSION_ID = "fa923065-dd72-472e-9c28-04ef4a08c34e"
 ROUTE_OBSERVATIONS = {
     "/gca/service-requests": 401,
     "/gca/credit-usage": 401,
@@ -45,6 +45,7 @@ class GcaWorkerStatusConsistencyTests(unittest.TestCase):
             self.assertEqual(payload["lastUpdated"], LAST_UPDATED)
 
         self.assertEqual(api_status["latestDeployReadinessCheckAt"], READINESS_AT)
+        self.assertEqual(api_status["latestPublicCheckAt"], PUBLIC_ROUTE_AT)
         self.assertEqual(api_status["latestDeployReadinessStatus"], "passed-cloudflare-permissions")
         self.assert_readiness_summary(api_status["latestDeployReadinessSummary"])
         self.assertEqual(api_status["pendingRoutesDeployHandoff"]["status"], "production-live-verified")
@@ -56,12 +57,16 @@ class GcaWorkerStatusConsistencyTests(unittest.TestCase):
         self.assert_readiness_summary(access_backend["latestDeployReadinessSummary"])
         self.assertEqual(access_backend["pendingRoutesLastObservedAt"], PUBLIC_ROUTE_AT)
         self.assertEqual(access_backend["pendingRouteAnonymousGetStatus"], ROUTE_OBSERVATIONS)
+        self.assertEqual(access_backend["workerVersionId"], WORKER_VERSION_ID)
+        self.assertEqual(access_backend["memberReviewVersion"], "gca_member_review_v1")
 
         operations_pipeline = operations["memberAccessOpsPipeline"]
         self.assertEqual(operations_pipeline["latestDeployReadinessCheckAt"], READINESS_AT)
         self.assert_readiness_summary(operations_pipeline["latestDeployReadinessSummary"])
         self.assertEqual(operations_pipeline["pendingRoutesLastObservedAt"], PUBLIC_ROUTE_AT)
         self.assertEqual(operations_pipeline["pendingRouteAnonymousGetStatus"], ROUTE_OBSERVATIONS)
+        self.assertEqual(operations_pipeline["workerVersionId"], WORKER_VERSION_ID)
+        self.assertEqual(operations_pipeline["memberReviewOperatorTool"], "tools/review_cloudflare_member.py")
 
         for ledger_key in ("usageLedger", "serviceRequestQueue"):
             ledger = credits[ledger_key]
@@ -107,6 +112,11 @@ class GcaWorkerStatusConsistencyTests(unittest.TestCase):
             self.assertTrue(state["serviceRequestQueueProductionLive"])
             self.assertFalse(state["serviceRequestQueueWorkerDeployBlocked"])
             self.assertIsNone(state["serviceRequestQueueWorkerDeployBlockedBy"])
+
+        self.assertTrue(access_api["currentState"]["memberReviewWorkflowProductionLive"])
+        self.assertFalse(access_api["currentState"]["automaticMemberActivationFromSubmittedDate"])
+        self.assertTrue(operations["currentState"]["memberReviewWorkflowProductionLive"])
+        self.assertFalse(operations["currentState"]["automaticMemberActivationFromSubmittedDate"])
 
         live_endpoints = {
             endpoint["path"]: endpoint

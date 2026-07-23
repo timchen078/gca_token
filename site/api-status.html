@@ -346,8 +346,8 @@
         <p class="eyebrow">Registration API Status / Live Read-Only Check</p>
         <h1 id="title">GCA Registration API Status</h1>
         <p class="lead">This is the public status page for the live GCA email registration and contact suppression backend. The current production API runs on Cloudflare Workers + D1 at <code>https://gca-registration-api.gcagochina.workers.dev</code>.</p>
-        <p class="lead">A public-only smoke check passed at <code>2026-07-23T17:53:42Z</code>. The browser panel below can repeat the safe read-only portion now: it verifies public identity and confirms that anonymous admin reads are rejected without writing records.</p>
-        <p class="lead">The deploy-readiness check passed at <code>2026-07-23T17:55:52Z</code>. Cloudflare account access, D1 visibility, and Worker deploy permission are verified. The service-request and credit-usage routes are production-live and token-protected.</p>
+        <p class="lead">A public-only smoke check passed at <code>2026-07-23T19:29:39Z</code>, followed by a token-protected admin read check at <code>2026-07-23T19:29:49Z</code>. The browser panel below can repeat the safe read-only portion now without writing records.</p>
+        <p class="lead">The service-request, credit-usage, and append-only member-review routes are production-live and token-protected. GCA Member activation now requires a separate operator review; a user-submitted holding date or transaction-hash format check cannot activate membership.</p>
         <p class="lead">The public checks verify health and read protections without writing test registrations. Admin reads remain token protected and should only be run locally by an operator with the local admin token file.</p>
         <div class="actions">
           <a class="button primary" href="register.html">Email Registration</a>
@@ -380,6 +380,14 @@
         <div class="fact">
           <span class="label">Admin Read</span>
           <span class="value">Token protected</span>
+        </div>
+        <div class="fact">
+          <span class="label">Member Review</span>
+          <span class="value good">Production-live / manual</span>
+        </div>
+        <div class="fact">
+          <span class="label">Worker Version</span>
+          <span class="value">fa923065-dd72-472e-9c28-04ef4a08c34e</span>
         </div>
         <div class="fact">
           <span class="label">Custom Domain</span>
@@ -428,7 +436,7 @@
           <div class="live-health-row" data-api-check="admin">
             <div class="live-health-copy">
               <strong>Existing admin-read protection</strong>
-              <span class="note">Six GET routes must reject anonymous access with HTTP 401</span>
+              <span class="note">Seven GET routes, including member reviews, must reject anonymous access with HTTP 401</span>
             </div>
             <span class="live-health-result" data-check-status>Waiting</span>
           </div>
@@ -473,7 +481,7 @@
           <div class="fact">
             <span class="label">POST</span>
             <span class="value">/gca/member-access</span>
-            <p class="note">Live public account intake for email, Base wallet, holder-credit review, GCA Member review, and D1 ledger writes for eligible records.</p>
+            <p class="note">Live public account intake for email, Base wallet, holder-credit records, and a queued GCA Member review record. Submitted holding dates and transaction hashes are evidence previews only.</p>
           </div>
           <div class="fact">
             <span class="label">GET</span>
@@ -494,6 +502,11 @@
             <span class="label">GET</span>
             <span class="value">/gca/member-ledger</span>
             <p class="note">Live token-protected admin read for GCA Member ledger records and member-benefit review status.</p>
+          </div>
+          <div class="fact">
+            <span class="label">GET/POST</span>
+            <span class="value">/gca/member-reviews</span>
+            <p class="note">Production-live <code>gca_member_review_v1</code> operator route. Approval refreshes the current balance with a read-only Base call and records an append-only decision before changing member status. It does not prove continuous holding automatically, send tokens, or authorize the 10,000 GCA member-benefit transfer.</p>
           </div>
           <div class="fact">
             <span class="label">GET/POST</span>
@@ -540,6 +553,12 @@
             <div class="row"><span>Admin smoke</span><strong>python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes</strong></div>
           </div>
         </div>
+        <div class="panel">
+          <h2>Member Review Deployment</h2>
+          <p class="note"><code>/gca/member-reviews</code> is production-live and protected by <code>ADMIN_READ_TOKEN</code>. Remote migration <code>0006_member_reviews.sql</code>, Worker deployment, public HTTP 401 verification, and admin HTTP 200 verification passed on 2026-07-23 UTC.</p>
+          <p class="note">The operator command requires explicit production-write and evidence-review confirmations. It changes account and member status only; the 10,000 GCA benefit remains a separate reserve-wallet process.</p>
+          <pre>.venv/bin/python tools/review_cloudflare_member.py --help</pre>
+        </div>
       </section>
 
       <section class="section two" aria-label="Operator tooling">
@@ -550,6 +569,7 @@
             <div class="row"><span>Sync registrations</span><strong>tools/sync_cloudflare_email_registrations.py</strong></div>
             <div class="row"><span>Contact CSV</span><strong>tools/export_gca_email_contacts.py</strong></div>
             <div class="row"><span>Suppression sync</span><strong>tools/sync_cloudflare_contact_suppressions.py</strong></div>
+            <div class="row"><span>Member review</span><strong>tools/review_cloudflare_member.py</strong></div>
             <div class="row"><span>Ops summary</span><strong>tools/run_gca_registration_ops.py</strong></div>
           </div>
         </div>
@@ -559,7 +579,7 @@
             <li>Email registration does not require a wallet, wallet signature, payment, private key, seed phrase, exchange API secret, or withdrawal permission.</li>
             <li>Contact suppression does not change GCA balances, pool state, credits, member status, or on-chain assets.</li>
             <li>Public visitors cannot read the registration ledger or suppression ledger.</li>
-            <li>100 credits and GCA Member ledger records are live for eligible wallet submissions; the 10,000 GCA member benefit remains manual review and reserve-wallet processing only.</li>
+            <li>100-credit records and queued GCA Member review records are live for eligible wallet submissions; member activation requires manual review, and the 10,000 GCA member benefit remains separate reserve-wallet processing.</li>
           </ul>
         </div>
       </section>

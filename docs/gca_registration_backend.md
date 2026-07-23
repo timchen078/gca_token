@@ -10,9 +10,10 @@ https://gca-registration-api.gcagochina.workers.dev/gca/contact-suppressions
 https://gca-registration-api.gcagochina.workers.dev/gca/member-access
 https://gca-registration-api.gcagochina.workers.dev/gca/wallet-verifications
 https://gca-registration-api.gcagochina.workers.dev/gca/access-config
+https://gca-registration-api.gcagochina.workers.dev/gca/member-reviews
 ```
 
-The token-protected service request queue and credit usage routes are production-live. Cloudflare account authentication, D1 visibility, Worker deploy permission, remote D1 migration, Worker deployment, public smoke, and admin read-only smoke checks all passed on 2026-07-23 UTC. Anonymous reads return HTTP 401 and token-protected admin reads return HTTP 200. The deployment record and repeatable gate order are in `docs/gca_worker_pending_routes_deploy_handoff.md`.
+The token-protected service request, credit usage, and member review routes are production-live. Cloudflare account authentication, D1 visibility, Worker deploy permission, remote D1 migrations, Worker deployment, public smoke, and admin read-only smoke checks passed on 2026-07-23 UTC. Anonymous reads return HTTP 401 and token-protected admin reads return HTTP 200.
 
 ## What It Stores
 
@@ -43,13 +44,15 @@ Member-access requests store:
 - generated `accountId`
 - read-only wallet verification result from Base Mainnet ERC-20 `balanceOf`
 - 100 GCA AI Quant Access credit ledger record when the verified wallet holds at least 10,000 GCA
-- GCA Member ledger record when the verified wallet holds at least 1,000,000 GCA
-- holding start date and public evidence transaction hash for 30-day member review
+- queued GCA Member ledger record when the verified wallet holds at least 1,000,000 GCA
+- user-submitted holding start date and public evidence transaction hash as a 30-day review preview
 - member benefit status
 - timestamps
 - optional salted IP hash if `PRIVACY_HASH_SALT` is configured
 
-It does not collect wallet private keys, seed phrases, wallet passwords, exchange API secrets, withdrawal permissions, one-time codes, or remote-control access. It does not request wallet signatures or transactions for wallet verification. It does not automatically transfer GCA. The 10,000 GCA member benefit remains a manual reserve-wallet transfer review after eligibility is recorded.
+The submitted holding date and transaction hash do not prove continuous holding or activate GCA Member automatically. An operator must review the public evidence and record a decision through the token-protected member review route. Approval refreshes the current GCA balance using read-only Base RPC.
+
+It does not collect wallet private keys, seed phrases, wallet passwords, exchange API secrets, withdrawal permissions, one-time codes, or remote-control access. It does not request wallet signatures or transactions for wallet verification. It does not automatically transfer GCA. A member approval does not authorize the 10,000 GCA member benefit; that benefit remains a separate manual reserve-wallet transfer review.
 
 Public registration, contact-suppression, wallet-verification, and member-access submissions also include empty `website`, `company`, and `homepage` honeypot fields. Normal users never fill these fields; the Worker rejects any request where one of them contains content. This is a light anti-spam control and does not replace Cloudflare rate limits or future account-session CSRF controls.
 
@@ -74,9 +77,12 @@ Public registration, contact-suppression, wallet-verification, and member-access
 - Admin service request endpoint: `GET/POST /gca/service-requests` live and token-protected
 - Admin credit usage endpoint: `GET/POST /gca/credit-usage` live and token-protected
 - Admin member ledger endpoint: `GET /gca/member-ledger`
+- Admin member review endpoint: `GET/POST /gca/member-reviews` live and token-protected
 - Member D1 migration: `cloudflare/gca-registration-worker/migrations/0003_member_access_ledgers.sql`
 - Credit usage D1 migration: `cloudflare/gca-registration-worker/migrations/0004_credit_usage_ledger.sql`
 - Service request D1 migration: `cloudflare/gca-registration-worker/migrations/0005_service_requests.sql`
+- Member review D1 migration: `cloudflare/gca-registration-worker/migrations/0006_member_reviews.sql`
+- Production member review operator tool: `tools/review_cloudflare_member.py`
 - Worker deploy readiness tool: `tools/check_gca_worker_deploy_readiness.py`
 - Worker routes deployment record: `docs/gca_worker_pending_routes_deploy_handoff.md`
 - Admin read secret: configured in Cloudflare as `ADMIN_READ_TOKEN`
@@ -203,7 +209,34 @@ curl -fsS 'https://gca-registration-api.gcagochina.workers.dev/gca/credit-ledger
 
 curl -fsS 'https://gca-registration-api.gcagochina.workers.dev/gca/member-ledger?limit=20' \
   -H "authorization: Bearer $ADMIN_READ_TOKEN"
+
+curl -fsS 'https://gca-registration-api.gcagochina.workers.dev/gca/member-reviews?limit=20' \
+  -H "authorization: Bearer $ADMIN_READ_TOKEN"
 ```
+
+## Production Member Review
+
+The public member-access route can queue a GCA Member record, but it cannot activate membership from a submitted date. After manually checking the public holding evidence, an operator records one of `approved`, `rejected`, or `needs_more_information` through the production route.
+
+Inspect the command first:
+
+```bash
+.venv/bin/python tools/review_cloudflare_member.py --help
+```
+
+An approval requires both explicit confirmations:
+
+```bash
+.venv/bin/python tools/review_cloudflare_member.py \
+  --member-ledger-id gca_member_00000000000000000000 \
+  --decision approved \
+  --reason-code holding_evidence_reviewed \
+  --reviewer-id gca-operator \
+  --confirm-evidence-reviewed \
+  --confirm-production-write
+```
+
+Replace the sample ledger ID with the real token-protected `memberLedgerId`. The command refreshes the current balance with read-only Base RPC and writes an append-only review decision plus the resulting account/member status in one D1 batch transaction. It does not connect a wallet, request a signature, send a transaction, transfer GCA, or authorize the 10,000 GCA member benefit.
 
 To export recent registrations into the ignored local data directory:
 

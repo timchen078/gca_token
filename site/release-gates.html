@@ -331,10 +331,10 @@
 
     <main class="shell">
       <section aria-labelledby="title">
-        <p class="eyebrow">Release Gates / 2026-07-23</p>
+        <p class="eyebrow">Release Gates / 2026-07-24</p>
         <h1 id="title">GCA Product Release Gates</h1>
         <p class="lead">This page defines what is live and what remains gated before GCA AI Quant Access is described as a broader public product. The current state includes live account intake, read-only wallet verification, and ledger records, but not a live trading terminal, not live market data, and not financial advice.</p>
-        <p class="lead">Public account UI, wallet verification, and eligible 100 credits / GCA Member ledger records are live. The 10,000 GCA member benefit is still manual reserve-wallet review only, and any trading-related product claim must stay inside the gates below until implementation, support review, and disclosures are live.</p>
+        <p class="lead">Public account UI, wallet verification, eligible 100-credit records, and queued GCA Member evidence are live. GCA Member activation requires a separate token-protected manual operator review; the 10,000 GCA member benefit is still a separate manual reserve-wallet process.</p>
         <div class="actions">
           <a class="button primary" href="access.html">Access Portal</a>
           <a class="button primary" href="operations.html">Operations Runbook</a>
@@ -352,7 +352,7 @@
       <section class="facts" aria-label="Current state">
         <div class="fact">
           <span class="label">Current Stage</span>
-          <span class="value good">account ledger path live</span>
+          <span class="value good">account + member review path live</span>
         </div>
         <div class="fact">
           <span class="label">Public Account UI</span>
@@ -364,7 +364,7 @@
         </div>
         <div class="fact">
           <span class="label">GCA Member</span>
-          <span class="value good">Eligible review records live</span>
+          <span class="value good">Queue + manual review live</span>
         </div>
       </section>
 
@@ -389,7 +389,7 @@
           <div class="fact">
             <span class="label">Members</span>
             <span class="value">member ledger activation</span>
-            <p class="note">Required before GCA Member status or the 10,000 GCA member benefit becomes an account-level workflow.</p>
+            <p class="note">Member evidence is queued first. A token-protected operator review is required before GCA Member status becomes active; the benefit transfer remains separate.</p>
           </div>
           <div class="fact">
             <span class="label">Controls</span>
@@ -411,7 +411,8 @@
             <div class="row"><span>Public account UI</span><strong class="good">Live at /gca/member-access/</strong></div>
             <div class="row"><span>100 utility credits ledger record</span><strong class="good">Live for eligible holders</strong></div>
             <div class="row"><span>Credits catalog</span><strong class="good">Published service catalog</strong></div>
-            <div class="row"><span>GCA Member ledger record</span><strong class="good">Live for eligible holders</strong></div>
+            <div class="row"><span>GCA Member review record</span><strong class="good">Queue live; activation requires manual operator review</strong></div>
+            <div class="row"><span>Production member review route</span><strong class="good">/gca/member-reviews live and token-protected; public/admin smoke passed 2026-07-23 UTC</strong></div>
             <div class="row"><span>Local support review trail</span><strong class="good">SHA-256 continuity checked before review writes</strong></div>
             <div class="row"><span>Review chain checkpoint</span><strong class="good">Unsigned local export live; separate retention required</strong></div>
             <div class="row"><span>Service request and credit usage Worker routes</span><strong class="good">Production-live and token-protected; migration, deploy, public smoke, and admin smoke passed on 2026-07-23 UTC</strong></div>
@@ -429,7 +430,7 @@
             <div class="row"><span>Custody model</span><strong>No custody</strong></div>
             <div class="row"><span>Wallet permissions</span><strong>no withdrawal permission</strong></div>
             <div class="row"><span>Secrets</span><strong>no exchange API secret collection</strong></div>
-            <div class="row"><span>Support</span><strong>local review queue live; production approval workflow still gated</strong></div>
+            <div class="row"><span>Support</span><strong>local support queue live; production member eligibility review live</strong></div>
             <div class="row"><span>Risk</span><strong>risk-control review required</strong></div>
             <div class="row"><span>Validation</span><strong>simulation or testnet first</strong></div>
           </div>
@@ -457,6 +458,7 @@
           <ul>
             <li>GCA has published product release gates for GCA AI Quant Access.</li>
             <li>GCA has a live controlled account UI, read-only wallet verification, and eligible D1 ledger records for 100 credits / GCA Member review.</li>
+            <li>Submitted holding dates and transaction hashes are preview evidence only; GCA Member activation requires a separate token-protected manual review.</li>
             <li>The 10,000 GCA member benefit requires 1,000,000 GCA, 30-day holding evidence, member ledger review, and manual reserve-wallet processing.</li>
             <li>Any future trading-related feature must pass risk-control review and simulation or testnet first.</li>
           </ul>
@@ -466,6 +468,7 @@
           <ul>
             <li>Do not claim credits are cash, transferable token claims, income, or trading permission.</li>
             <li>Do not claim GCA Member approval is automatic without 1,000,000 GCA balance and 30-day evidence review.</li>
+            <li>Do not claim the public form independently proves continuous 30-day holding.</li>
             <li>Do not claim the 10,000 GCA member benefit is automatic or self-service before manual reserve-wallet review.</li>
             <li>Do not claim the product gives custody, withdrawal permission, exchange API secret collection, platform revenue distribution, trading permission, or risk-control bypass.</li>
             <li>Do not claim BaseScan token profile approval, external audit completion, deep liquidity, or tracked listing approval before publication.</li>

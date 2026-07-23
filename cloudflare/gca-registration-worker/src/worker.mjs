@@ -3,7 +3,8 @@ const CONTACT_SUPPRESSION_VERSION = "gca_contact_suppression_v1";
 const MEMBER_ACCESS_VERSION = "gca_member_access_v1";
 const CREDIT_USAGE_VERSION = "gca_credit_usage_v1";
 const SERVICE_REQUEST_VERSION = "gca_service_request_v1";
-const WORKER_RELEASE = "gca-registration-worker-2026-07-23-service-routes-v1";
+const MEMBER_REVIEW_VERSION = "gca_member_review_v1";
+const WORKER_RELEASE = "gca-registration-worker-2026-07-24-member-review-v1";
 const OFFICIAL_CONTACT_EMAIL = "support@gcagochina.com";
 const OFFICIAL_SITE_URL = "https://gcagochina.com/";
 const CHAIN_ID = 8453;
@@ -40,6 +41,10 @@ const DEFAULT_ALLOWED_ORIGINS = [
 const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 const ADDRESS_RE = /^0x[a-fA-F0-9]{40}$/;
 const TX_HASH_RE = /^0x[a-fA-F0-9]{64}$/;
+const MEMBER_LEDGER_ID_RE = /^gca_member_[a-f0-9]{20}$/;
+const OPERATOR_ID_RE = /^[a-z0-9][a-z0-9_-]{2,63}$/;
+const REASON_CODE_RE = /^[a-z0-9][a-z0-9_-]{1,63}$/;
+const MEMBER_REVIEW_DECISIONS = new Set(["approved", "rejected", "needs_more_information"]);
 const HONEYPOT_FIELDS = ["website", "company", "homepage"];
 const FORBIDDEN_KEY_PATTERNS = [
   "privatekey",
@@ -408,6 +413,54 @@ function extractServiceRequest(packet) {
   };
 }
 
+function extractMemberReview(packet) {
+  if (packet.packetVersion && packet.packetVersion !== MEMBER_REVIEW_VERSION) {
+    throw new ApiError(`packetVersion must be ${MEMBER_REVIEW_VERSION}`);
+  }
+  const acknowledgements = packet.acknowledgements && typeof packet.acknowledgements === "object"
+    ? packet.acknowledgements
+    : {};
+  const memberLedgerId = String(packet.memberLedgerId || "").trim().toLowerCase();
+  const decision = String(packet.decision || "").trim().toLowerCase();
+  const reasonCode = String(packet.reasonCode || "").trim().toLowerCase();
+  const reviewerId = String(packet.reviewerId || "gca-operator").trim().toLowerCase();
+  const manualReviewAccepted = (
+    packet.manualReviewAccepted === true ||
+    acknowledgements.manualEvidenceReviewCompleted === true
+  );
+  const noAutomaticTransferAccepted = (
+    packet.noAutomaticTransferAccepted === true ||
+    acknowledgements.noAutomaticTokenTransfer === true
+  );
+  if (!MEMBER_LEDGER_ID_RE.test(memberLedgerId)) {
+    throw new ApiError("memberLedgerId must be a valid GCA member ledger id");
+  }
+  if (!MEMBER_REVIEW_DECISIONS.has(decision)) {
+    throw new ApiError("decision must be approved, rejected, or needs_more_information");
+  }
+  if (!REASON_CODE_RE.test(reasonCode)) {
+    throw new ApiError("reasonCode must be a short lowercase identifier");
+  }
+  if (!OPERATOR_ID_RE.test(reviewerId)) {
+    throw new ApiError("reviewerId must be a short lowercase operator identifier");
+  }
+  if (!manualReviewAccepted) {
+    throw new ApiError("manual evidence review acknowledgement is required");
+  }
+  if (!noAutomaticTransferAccepted) {
+    throw new ApiError("no automatic token transfer acknowledgement is required");
+  }
+  return {
+    memberLedgerId,
+    decision,
+    reasonCode,
+    reviewerId,
+    operatorNote: String(packet.operatorNote || "").trim().slice(0, 500),
+    source: String(packet.source || "gca-member-review-operator").trim().slice(0, 120)
+      || "gca-member-review-operator"
+  };
+}
+
 async function sha256Hex(value) {
   const data = new TextEncoder().encode(value);
   const digest = await crypto.subtle.digest("SHA-256", data);
@@ -570,6 +623,7 @@ function rowToWalletVerification(row) {
     holderBonusEligible: Boolean(row.holder_bonus_eligible),
     gcaMemberEligible: Boolean(row.gca_member_eligible),
     gcaMemberHoldingPeriodEligible: Boolean(row.gca_member_holding_period_eligible),
+    holdingPeriodPreviewEligible: Boolean(row.holding_period_preview_eligible),
     holdingPeriodDaysVerified: Number(row.holding_period_days_verified || 0),
     evidenceTxHash: row.evidence_tx_hash || "",
     evidenceTxHashFormatOk: Boolean(row.evidence_tx_hash_format_ok),
@@ -687,6 +741,38 @@ function rowToMemberLedger(row) {
     automaticTransfer: Boolean(row.automatic_transfer),
     status: row.status,
     updatedAt: row.updated_at
+  };
+}
+
+function rowToMemberReview(row) {
+  if (!row) {
+    return null;
+  }
+  return {
+    memberReviewId: row.member_review_id,
+    packetVersion: MEMBER_REVIEW_VERSION,
+    memberLedgerId: row.member_ledger_id,
+    accountId: row.account_id,
+    walletAddress: row.wallet_address,
+    decision: row.decision,
+    reasonCode: row.reason_code,
+    operatorNote: row.operator_note || "",
+    reviewerId: row.reviewer_id,
+    reviewedAt: row.reviewed_at,
+    source: row.source,
+    balanceAtReview: row.balance_at_review,
+    memberThresholdMet: Boolean(row.member_threshold_met),
+    holdingPeriodPreviewDays: Number(row.holding_period_preview_days || 0),
+    evidenceTxHash: row.evidence_tx_hash || "",
+    evidenceTxHashFormatOk: Boolean(row.evidence_tx_hash_format_ok),
+    previousMemberStatus: row.previous_member_status,
+    resultingMemberStatus: row.resulting_member_status,
+    previousClaimStatus: row.previous_claim_status,
+    resultingClaimStatus: row.resulting_claim_status,
+    requiresSignature: Boolean(row.requires_signature),
+    requiresTransaction: Boolean(row.requires_transaction),
+    automaticTokenTransfer: Boolean(row.automatic_token_transfer),
+    writesWallet: Boolean(row.writes_wallet)
   };
 }
 
@@ -867,14 +953,14 @@ async function submitContactSuppression(request, env, origin) {
 function classifyWalletBalance(rawBalance, evidence) {
   const holderBonusEligible = rawBalance >= HOLDER_THRESHOLD_UNITS;
   const gcaMemberEligible = rawBalance >= MEMBER_THRESHOLD_UNITS;
-  const gcaMemberHoldingPeriodEligible = Boolean(
+  const holdingPeriodPreviewEligible = Boolean(
     gcaMemberEligible &&
     evidence.holdingPeriodDaysVerified >= MEMBER_HOLD_DAYS &&
     evidence.evidenceTxHashFormatOk
   );
   const status = holderBonusEligible ? "verified" : "below_threshold";
-  const accountStatus = gcaMemberHoldingPeriodEligible
-    ? "member_active"
+  const accountStatus = holdingPeriodPreviewEligible
+    ? "member_review_ready"
     : gcaMemberEligible
       ? "member_queued"
       : holderBonusEligible
@@ -883,7 +969,8 @@ function classifyWalletBalance(rawBalance, evidence) {
   return {
     holderBonusEligible,
     gcaMemberEligible,
-    gcaMemberHoldingPeriodEligible,
+    gcaMemberHoldingPeriodEligible: false,
+    holdingPeriodPreviewEligible,
     status,
     accountStatus
   };
@@ -908,6 +995,7 @@ async function writeWalletVerification(db, accountId, emailHash, walletAddress, 
         holder_bonus_eligible,
         gca_member_eligible,
         gca_member_holding_period_eligible,
+        holding_period_preview_eligible,
         holding_period_days_verified,
         evidence_tx_hash,
         evidence_tx_hash_format_ok,
@@ -915,7 +1003,7 @@ async function writeWalletVerification(db, accountId, emailHash, walletAddress, 
         status,
         requires_signature,
         requires_transaction
-      ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, 0, 0)`
+      ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, 0, 0)`
     )
     .bind(
       walletVerificationId,
@@ -930,6 +1018,7 @@ async function writeWalletVerification(db, accountId, emailHash, walletAddress, 
       classification.holderBonusEligible ? 1 : 0,
       classification.gcaMemberEligible ? 1 : 0,
       classification.gcaMemberHoldingPeriodEligible ? 1 : 0,
+      classification.holdingPeriodPreviewEligible ? 1 : 0,
       evidence.holdingPeriodDaysVerified,
       evidence.evidenceTxHash,
       evidence.evidenceTxHashFormatOk ? 1 : 0,
@@ -950,6 +1039,7 @@ async function writeWalletVerification(db, accountId, emailHash, walletAddress, 
     holderBonusEligible: classification.holderBonusEligible,
     gcaMemberEligible: classification.gcaMemberEligible,
     gcaMemberHoldingPeriodEligible: classification.gcaMemberHoldingPeriodEligible,
+    holdingPeriodPreviewEligible: classification.holdingPeriodPreviewEligible,
     holdingPeriodDaysVerified: evidence.holdingPeriodDaysVerified,
     evidenceTxHash: evidence.evidenceTxHash,
     evidenceTxHashFormatOk: evidence.evidenceTxHashFormatOk,
@@ -1221,11 +1311,15 @@ async function maybeWriteMemberLedger(db, account, verification, evidence, now) 
     return null;
   }
   const memberLedgerId = await stableId("gca_member", account.email, account.walletAddress);
-  const evidenceStatus = verification.gcaMemberHoldingPeriodEligible ? "eligible" : "needs_more_information";
-  const status = evidenceStatus === "eligible" ? "active" : "queued";
-  const activatedAt = status === "active" ? now : "";
-  const nextRefreshDueAt = status === "active" ? addDaysIso(now, MEMBER_REFRESH_DAYS) : "";
-  const claimStatus = status === "active" ? "pending_manual_reserve_transfer" : "needs_holding_period_review";
+  const evidenceStatus = verification.holdingPeriodPreviewEligible
+    ? "pending_manual_review"
+    : "needs_more_information";
+  const status = "queued";
+  const activatedAt = "";
+  const nextRefreshDueAt = "";
+  const claimStatus = verification.holdingPeriodPreviewEligible
+    ? "pending_manual_review"
+    : "needs_holding_period_review";
   await db
     .prepare(
       `INSERT INTO gca_member_ledger (
@@ -1256,14 +1350,26 @@ async function maybeWriteMemberLedger(db, account, verification, evidence, now) 
         holding_period_days_verified = excluded.holding_period_days_verified,
         evidence_tx_hash = excluded.evidence_tx_hash,
         evidence_tx_hash_format_ok = excluded.evidence_tx_hash_format_ok,
-        member_benefit_review_evidence_status = excluded.member_benefit_review_evidence_status,
-        member_benefit_claim_status = excluded.member_benefit_claim_status,
+        member_benefit_review_evidence_status = CASE
+          WHEN gca_member_ledger.status = 'active' THEN gca_member_ledger.member_benefit_review_evidence_status
+          ELSE excluded.member_benefit_review_evidence_status
+        END,
+        member_benefit_claim_status = CASE
+          WHEN gca_member_ledger.status = 'active' THEN gca_member_ledger.member_benefit_claim_status
+          ELSE excluded.member_benefit_claim_status
+        END,
         activated_at = CASE
           WHEN gca_member_ledger.activated_at IS NOT NULL AND gca_member_ledger.activated_at != '' THEN gca_member_ledger.activated_at
           ELSE excluded.activated_at
         END,
-        next_refresh_due_at = excluded.next_refresh_due_at,
-        status = excluded.status,
+        next_refresh_due_at = CASE
+          WHEN gca_member_ledger.status = 'active' THEN gca_member_ledger.next_refresh_due_at
+          ELSE excluded.next_refresh_due_at
+        END,
+        status = CASE
+          WHEN gca_member_ledger.status = 'active' THEN gca_member_ledger.status
+          ELSE excluded.status
+        END,
         updated_at = excluded.updated_at`
     )
     .bind(
@@ -1290,6 +1396,176 @@ async function maybeWriteMemberLedger(db, account, verification, evidence, now) 
     .bind(memberLedgerId)
     .first();
   return rowToMemberLedger(row);
+}
+
+async function recordMemberReview(request, env, origin) {
+  if (!isAdminAuthorized(request, env)) {
+    return jsonResponse({ ok: false, error: "admin authorization is required" }, 401, origin, env);
+  }
+  const db = requireDatabase(env);
+  const packet = await readJsonRequest(request);
+  const reviewInput = extractMemberReview(packet);
+  const memberRow = await db
+    .prepare("SELECT * FROM gca_member_ledger WHERE member_ledger_id = ?1 LIMIT 1")
+    .bind(reviewInput.memberLedgerId)
+    .first();
+  if (!memberRow) {
+    throw new ApiError("memberLedgerId was not found", 404);
+  }
+
+  const rawBalance = await readGcaBalanceUnits(memberRow.wallet_address, env);
+  const balanceAtReview = unitsToGca(rawBalance);
+  const memberThresholdMet = rawBalance >= MEMBER_THRESHOLD_UNITS;
+  const holdingPeriodPreviewDays = Number(memberRow.holding_period_days_verified || 0);
+  const evidenceTxHashFormatOk = Boolean(memberRow.evidence_tx_hash_format_ok);
+  if (
+    reviewInput.decision === "approved" &&
+    (!memberThresholdMet || holdingPeriodPreviewDays < MEMBER_HOLD_DAYS || !evidenceTxHashFormatOk)
+  ) {
+    throw new ApiError(
+      "approved review requires a current 1,000,000 GCA balance, a 30-day holding preview, and a valid evidence transaction hash",
+      409
+    );
+  }
+
+  const previousMemberStatus = memberRow.status;
+  const previousClaimStatus = memberRow.member_benefit_claim_status;
+  const approved = reviewInput.decision === "approved";
+  const rejected = reviewInput.decision === "rejected";
+  const resultingMemberStatus = approved ? "active" : rejected ? "review_rejected" : "queued";
+  const resultingAccountStatus = approved ? "member_active" : rejected ? "member_review_rejected" : "member_queued";
+  const resultingClaimStatus = approved
+    ? "pending_manual_reserve_transfer"
+    : rejected
+      ? "not_eligible"
+      : "needs_holding_period_review";
+  const evidenceStatus = approved
+    ? "approved_manual_review"
+    : rejected
+      ? "rejected_manual_review"
+      : "needs_more_information";
+  const now = nowIso();
+  const activatedAt = approved ? (memberRow.activated_at || now) : "";
+  const nextRefreshDueAt = approved ? addDaysIso(now, MEMBER_REFRESH_DAYS) : "";
+  const memberReviewId = await stableId(
+    "gca_member_review",
+    reviewInput.memberLedgerId,
+    reviewInput.decision,
+    reviewInput.reasonCode,
+    reviewInput.reviewerId,
+    now
+  );
+
+  const insertReview = db
+    .prepare(
+      `INSERT OR IGNORE INTO gca_member_reviews (
+        member_review_id,
+        member_ledger_id,
+        account_id,
+        wallet_address,
+        decision,
+        reason_code,
+        operator_note,
+        reviewer_id,
+        reviewed_at,
+        source,
+        balance_at_review,
+        member_threshold_met,
+        holding_period_preview_days,
+        evidence_tx_hash,
+        evidence_tx_hash_format_ok,
+        previous_member_status,
+        resulting_member_status,
+        previous_claim_status,
+        resulting_claim_status,
+        requires_signature,
+        requires_transaction,
+        automatic_token_transfer,
+        writes_wallet
+      ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, 0, 0, 0, 0)`
+    )
+    .bind(
+      memberReviewId,
+      memberRow.member_ledger_id,
+      memberRow.account_id,
+      memberRow.wallet_address,
+      reviewInput.decision,
+      reviewInput.reasonCode,
+      reviewInput.operatorNote,
+      reviewInput.reviewerId,
+      now,
+      reviewInput.source,
+      balanceAtReview,
+      memberThresholdMet ? 1 : 0,
+      holdingPeriodPreviewDays,
+      memberRow.evidence_tx_hash || "",
+      evidenceTxHashFormatOk ? 1 : 0,
+      previousMemberStatus,
+      resultingMemberStatus,
+      previousClaimStatus,
+      resultingClaimStatus
+    );
+  const updateMemberLedger = db
+    .prepare(
+      `UPDATE gca_member_ledger
+       SET
+         verified_balance = ?1,
+         member_benefit_review_evidence_status = ?2,
+         member_benefit_claim_status = ?3,
+         activated_at = ?4,
+         next_refresh_due_at = ?5,
+         status = ?6,
+         updated_at = ?7
+       WHERE member_ledger_id = ?8`
+    )
+    .bind(
+      balanceAtReview,
+      evidenceStatus,
+      resultingClaimStatus,
+      activatedAt,
+      nextRefreshDueAt,
+      resultingMemberStatus,
+      now,
+      memberRow.member_ledger_id
+    );
+  const updateMemberAccount = db
+    .prepare(
+      "UPDATE gca_member_accounts SET status = ?1, updated_at = ?2 WHERE account_id = ?3"
+    )
+    .bind(resultingAccountStatus, now, memberRow.account_id);
+
+  await db.batch([insertReview, updateMemberLedger, updateMemberAccount]);
+
+  const reviewRow = await db
+    .prepare("SELECT * FROM gca_member_reviews WHERE member_review_id = ?1 LIMIT 1")
+    .bind(memberReviewId)
+    .first();
+  const updatedMemberRow = await db
+    .prepare("SELECT * FROM gca_member_ledger WHERE member_ledger_id = ?1 LIMIT 1")
+    .bind(memberRow.member_ledger_id)
+    .first();
+  return jsonResponse({
+    ok: true,
+    packetVersion: MEMBER_REVIEW_VERSION,
+    memberReview: rowToMemberReview(reviewRow),
+    memberLedger: rowToMemberLedger(updatedMemberRow),
+    nextStep: approved
+      ? "Membership is active. Any 10,000 GCA member benefit still requires a separate manual reserve-wallet transfer review and public transaction evidence."
+      : rejected
+        ? "Membership is not active. No member benefit transfer is authorized."
+        : "Membership remains queued until the missing holding evidence is reviewed.",
+    boundaries: {
+      adminOnly: true,
+      manualEvidenceReviewRequired: true,
+      readOnlyBalanceRefresh: true,
+      requiresSignature: false,
+      requiresTransaction: false,
+      automaticTokenTransfer: false,
+      writesWallet: false,
+      authorizesMemberBenefitTransfer: false,
+      createsTradingPermission: false
+    }
+  }, 201, origin, env);
 }
 
 async function submitWalletVerification(request, env, origin) {
@@ -1398,7 +1674,10 @@ async function submitMemberAccess(request, env, origin) {
         program_intent = excluded.program_intent,
         holding_start_date = excluded.holding_start_date,
         evidence_tx_hash = excluded.evidence_tx_hash,
-        status = excluded.status,
+        status = CASE
+          WHEN gca_member_accounts.status = 'member_active' THEN gca_member_accounts.status
+          ELSE excluded.status
+        END,
         updated_at = excluded.updated_at,
         user_agent = excluded.user_agent,
         ip_hash = excluded.ip_hash`
@@ -1453,6 +1732,8 @@ async function submitMemberAccess(request, env, origin) {
     boundaries: accessBoundaries(),
     nextStep: memberLedger && memberLedger.status === "active"
       ? "100 credits and GCA Member ledger records are active. The 10,000 GCA member benefit remains pending manual reserve-wallet transfer review."
+      : memberLedger && verification.holdingPeriodPreviewEligible
+        ? "GCA Member evidence is queued for manual operator review. The submitted holding date and transaction hash format do not activate membership automatically."
       : creditLedger
         ? "100 credits ledger is active. GCA Member needs 1,000,000 GCA and valid 30-day holding evidence."
         : "Wallet balance is below 10,000 GCA. No credit or member ledger record was created."
@@ -1482,6 +1763,8 @@ function accessBoundaries() {
     asksForExchangeApiSecret: false,
     asksForWithdrawalPermission: false,
     automaticTokenTransfer: false,
+    automaticMemberActivationFromSubmittedDate: false,
+    memberActivationMode: "admin-token-protected-manual-review",
     memberBenefitTransferMode: "manual-reserve-wallet-review-only",
     memberBenefitSelfServiceTransfer: false
   };
@@ -1497,6 +1780,7 @@ function accessConfig(origin, env) {
     memberAccessVersion: MEMBER_ACCESS_VERSION,
     creditUsageVersion: CREDIT_USAGE_VERSION,
     serviceRequestVersion: SERVICE_REQUEST_VERSION,
+    memberReviewVersion: MEMBER_REVIEW_VERSION,
     chainId: CHAIN_ID,
     contractAddress: CONTRACT_ADDRESS,
     apiBaseUrl: "https://gca-registration-api.gcagochina.workers.dev",
@@ -1507,7 +1791,8 @@ function accessConfig(origin, env) {
       creditLedgerAdmin: "/gca/credit-ledger",
       serviceRequestsAdmin: "/gca/service-requests",
       creditUsageAdmin: "/gca/credit-usage",
-      memberLedgerAdmin: "/gca/member-ledger"
+      memberLedgerAdmin: "/gca/member-ledger",
+      memberReviewsAdmin: "/gca/member-reviews"
     },
     antiSpam: {
       honeypotFields: HONEYPOT_FIELDS,
@@ -1596,6 +1881,8 @@ async function listMemberTable(request, env, origin, table, mapper, allowedFilte
         ? "used_at"
       : table === "gca_service_requests"
         ? "created_at"
+      : table === "gca_member_reviews"
+        ? "reviewed_at"
       : table === "gca_member_ledger"
         ? "updated_at"
         : "updated_at";
@@ -1620,6 +1907,7 @@ function health(origin, env) {
     memberAccessVersion: MEMBER_ACCESS_VERSION,
     creditUsageVersion: CREDIT_USAGE_VERSION,
     serviceRequestVersion: SERVICE_REQUEST_VERSION,
+    memberReviewVersion: MEMBER_REVIEW_VERSION,
     chainId: CHAIN_ID,
     contractAddress: CONTRACT_ADDRESS,
     memberAccessLedger: "cloudflare-d1",
@@ -1641,7 +1929,7 @@ export default {
 
     try {
       const url = new URL(request.url);
-      if (request.method === "GET" && url.pathname === "/") {
+      if ((request.method === "GET" || request.method === "HEAD") && url.pathname === "/") {
         return Response.redirect(OFFICIAL_SITE_URL, 302);
       }
       if (request.method === "GET" && url.pathname === "/health") {
@@ -1747,6 +2035,25 @@ export default {
           rowToMemberLedger,
           [["walletAddress", "wallet_address", normalizeWallet]]
         );
+      }
+      if (url.pathname === "/gca/member-reviews") {
+        if (request.method === "POST") {
+          return await recordMemberReview(request, env, origin);
+        }
+        if (request.method === "GET") {
+          return await listMemberTable(
+            request,
+            env,
+            origin,
+            "gca_member_reviews",
+            rowToMemberReview,
+            [
+              ["walletAddress", "wallet_address", normalizeWallet],
+              ["memberLedgerId", "member_ledger_id", null],
+              ["decision", "decision", null]
+            ]
+          );
+        }
       }
       if (url.pathname === "/gca/contact-suppressions") {
         if (request.method === "POST") {

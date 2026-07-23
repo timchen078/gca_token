@@ -347,19 +347,24 @@
           <span class="label">GCA Member</span>
           <span class="value">1,000,000 GCA / 30-day hold</span>
         </div>
+        <div class="fact">
+          <span class="label">Member Activation</span>
+          <span class="value good">Token-protected manual review live</span>
+        </div>
       </section>
 
       <section class="section two" aria-label="Prepared paths">
         <div class="panel">
           <h2>Live HTTPS Paths</h2>
-          <p class="note">The public account page uses the Workers + D1 backend for member access intake, read-only wallet verification, and eligible ledger writes. Protected ledger reads remain operator-only.</p>
+          <p class="note">The public account page uses the Workers + D1 backend for member access intake, read-only wallet verification, eligible credit writes, and queued member evidence. Protected ledger reads and member decisions remain operator-only.</p>
           <div class="list">
             <div class="row"><span>Member access page</span><strong><a href="gca/member-access/"><code>/gca/member-access</code></a></strong></div>
             <div class="row"><span>Pre-registration intake</span><strong><code>/gca/pre-registrations</code></strong></div>
             <div class="row"><span>Wallet verification</span><strong><code>/gca/wallet-verifications</code></strong></div>
             <div class="row"><span>100 credits ledger</span><strong><code>/gca/credit-ledger</code></strong></div>
             <div class="row"><span>GCA Member ledger</span><strong><code>/gca/member-ledger</code></strong></div>
-            <div class="row"><span>Support review queue</span><strong><code>/gca/member-review</code></strong></div>
+            <div class="row"><span>Production member review</span><strong><code>/gca/member-reviews</code></strong></div>
+            <div class="row"><span>Local support review</span><strong><code>/gca/member-review</code></strong></div>
             <div class="row"><span>Public member benefit rules</span><strong><a href="member-benefit.html">member-benefit.html</a></strong></div>
             <div class="row"><span>Member benefit transfer runbook</span><strong><a href="member-benefit-transfer.html">member-benefit-transfer.html</a></strong></div>
             <div class="row"><span>Member packet version</span><strong><code>gca_member_preregistration_v2</code></strong></div>
@@ -395,6 +400,10 @@
           <h3>Support Review Record</h3>
           <p class="note">Fields: reviewId, registrationId, status, updatedAt, publicEvidenceReference, and supportNote. Statuses: received, wallet_pending, eligible, needs_more_information, rejected, and ledger_recorded.</p>
         </div>
+        <div class="panel">
+          <h3>Production Member Review Record</h3>
+          <p class="note">The <code>gca_member_review_v1</code> record stores an append-only operator decision, reason, reviewer, current read-only balance, submitted evidence preview, and before/after member status. The route is admin-token protected and never sends GCA.</p>
+        </div>
       </section>
 
       <section class="section two" aria-label="Credit and member ledgers">
@@ -414,13 +423,14 @@
           <div class="list">
             <div class="row"><span>Minimum holding</span><strong>1,000,000 GCA</strong></div>
             <div class="row"><span>Minimum holding period</span><strong>30 consecutive days</strong></div>
+            <div class="row"><span>Activation rule</span><strong>Manual operator evidence review required</strong></div>
             <div class="row"><span>Member benefit</span><strong>10,000 GCA after approval</strong></div>
             <div class="row"><span>Evidence tx hash</span><strong><code>evidenceTxHash</code> with <code>0x</code> format check</strong></div>
             <div class="row"><span>Evidence status</span><strong><code>memberBenefitReviewEvidenceStatus</code></strong></div>
             <div class="row"><span>Benefit transfer</span><strong><code>memberBenefitTransferTx</code> after approval</strong></div>
             <div class="row"><span>Tier name</span><strong>GCA Member</strong></div>
             <div class="row"><span>Balance refresh cadence</span><strong>30 days</strong></div>
-            <div class="row"><span>Allowed statuses</span><strong>queued / active / needs_refresh / paused</strong></div>
+            <div class="row"><span>Allowed statuses</span><strong>queued / active / review_rejected / needs_refresh / paused</strong></div>
             <div class="row"><span>Scope</span><strong>Service access only</strong></div>
           </div>
         </div>
@@ -446,6 +456,8 @@
           <li>Safe to say: the controlled HTTPS integration verifies GCA balance with an ERC-20 balanceOf read before writing eligible ledger records.</li>
           <li>Safe to say: eligible 10,000 GCA holders can create one account-level 100 GCA AI Quant Access credits ledger record.</li>
           <li>Safe to say: eligible 1,000,000 GCA / 30-day holders can create a GCA Member review ledger record.</li>
+          <li>Safe to say: GCA Member activation requires a separate token-protected operator review; the submitted date and transaction hash are preview evidence only.</li>
+          <li>Do not say the public form automatically proves 30 consecutive days of holding or activates GCA Member status.</li>
           <li>Do not describe credits or membership as cash, income, reimbursement, voting control, live trading permission, leverage, custody, withdrawals, or risk-control bypass.</li>
           <li>Do not say the 10,000 GCA member benefit is automatic or self-service transferred before holding-period verification, support approval, and manual reserve-wallet processing.</li>
           <li>Do not say membership guarantees lifetime access, listings, price support, liquidity, or third-party audit completion.</li>

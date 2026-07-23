@@ -21,6 +21,7 @@ class GcaWorkerDeployReadinessTests(unittest.TestCase):
         (worker_dir / "src" / "worker.mjs").write_text("export default {};\n", encoding="utf-8")
         (worker_dir / "migrations" / "0004_credit_usage_ledger.sql").write_text("CREATE TABLE gca_credit_usage(id TEXT);\n", encoding="utf-8")
         (worker_dir / "migrations" / "0005_service_requests.sql").write_text("CREATE TABLE gca_service_requests(id TEXT);\n", encoding="utf-8")
+        (worker_dir / "migrations" / "0006_member_reviews.sql").write_text("CREATE TABLE gca_member_reviews(id TEXT);\n", encoding="utf-8")
         (worker_dir / "package-lock.json").write_text("{}\n", encoding="utf-8")
         (worker_dir / "node_modules" / ".bin" / "wrangler").write_text("#!/bin/sh\n", encoding="utf-8")
         self.worker_dir = worker_dir
@@ -66,6 +67,10 @@ migrations_dir = "migrations"
         self.assertIn("cloudflare-auth-session", {item["id"] for item in report["checks"] if item["status"] == "skipped"})
         self.assertEqual(report["authRecovery"]["status"], "not-checked")
         self.assertFalse(report["authRecovery"]["boundaries"]["deploysWorker"])
+        self.assertIn(
+            "member-reviews-migration",
+            {item["id"] for item in report["checks"] if item["status"] == "passed"},
+        )
 
     def test_missing_account_id_blocks_static_readiness(self):
         self.write_config(account_id="")

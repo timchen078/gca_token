@@ -11,7 +11,10 @@ class GcaWorkerRootRedirectTests(unittest.TestCase):
         source = WORKER_SOURCE.read_text(encoding="utf-8")
 
         self.assertIn('const OFFICIAL_SITE_URL = "https://gcagochina.com/";', source)
-        self.assertIn('request.method === "GET" && url.pathname === "/"', source)
+        self.assertIn(
+            '(request.method === "GET" || request.method === "HEAD") && url.pathname === "/"',
+            source,
+        )
         self.assertIn("return Response.redirect(OFFICIAL_SITE_URL, 302);", source)
 
 

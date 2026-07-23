@@ -31,6 +31,9 @@
     "serviceRequestQueueWorkerDeployBlockedBy": null,
     "serviceRequestQueueProductionLive": true,
     "ledgerWritesLive": true,
+    "memberReviewWorkflowProductionLive": true,
+    "memberReviewPacketVersion": "gca_member_review_v1",
+    "automaticMemberActivationFromSubmittedDate": false,
     "localSupportReviewContinuityChainLive": true,
     "localSupportReviewContinuityVerificationCommand": ".venv/bin/python tools/verify_gca_support_review_audit.py",
     "localSupportReviewCheckpointToolLive": true,
@@ -42,7 +45,8 @@
     "localSupportReviewContinuityImmutable": false,
     "productionSupportApprovalWorkflowLive": false,
     "liveTradingEnabled": false,
-    "serviceRoutesProductionVerifiedAt": "2026-07-23T17:53:54Z"
+    "serviceRoutesProductionVerifiedAt": "2026-07-23T19:29:49Z",
+    "memberReviewProductionVerifiedAt": "2026-07-23T19:29:49Z"
   },
   "emailRegistrationOpsPipeline": {
     "status": "production-email-registration-api-live-operator-sync-ready",
@@ -98,7 +102,7 @@
       "writesD1Records": false,
       "deploysWorker": false
     },
-    "pendingRoutesLastObservedAt": "2026-07-23T17:53:42Z",
+    "pendingRoutesLastObservedAt": "2026-07-23T19:29:39Z",
     "pendingRouteAnonymousGetStatus": {
       "/gca/service-requests": 401,
       "/gca/credit-usage": 401
@@ -115,6 +119,9 @@
       "admin smoke check passes with --include-pending-routes"
     ],
     "serviceRequestQueueWorkerEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/service-requests",
+    "memberReviewEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/member-reviews",
+    "memberReviewOperatorTool": "tools/review_cloudflare_member.py",
+    "memberReviewMigration": "cloudflare/gca-registration-worker/migrations/0006_member_reviews.sql",
     "localExportJson": ".gca_access_data/cloudflare_member_access_export.json",
     "reportSummaryOutput": ".gca_access_data/member_access_report/gca_member_access_summary.json",
     "serviceRequestQueueLocalLedger": ".gca_access_data/service_requests.jsonl",
@@ -133,12 +140,14 @@
       "requiresTransaction": false,
       "automaticTokenTransfer": false,
       "memberBenefitTransferAutomatic": false,
+      "automaticMemberActivationFromSubmittedDate": false,
+      "manualEvidenceReviewRequiredForMemberActivation": true,
       "holdingReportLiveReadOptional": true,
       "holdingNoLiveReadUsesExistingSnapshots": true
     },
     "workerDeployPermissionStatus": "passed",
-    "workerVersionId": "8988fc75-bbe0-403e-960a-832bf83da20f",
-    "productionRoutesVerifiedAt": "2026-07-23T17:53:54Z"
+    "workerVersionId": "fa923065-dd72-472e-9c28-04ef4a08c34e",
+    "productionRoutesVerifiedAt": "2026-07-23T19:29:49Z"
   },
   "identity": {
     "network": "Base Mainnet",
@@ -178,14 +187,14 @@
     {
       "id": "holding-period-review",
       "label": "Holding Period Review",
-      "operatorAction": "For GCA Member benefit review, verify the gca_member_preregistration_v2 holdingStartDate, evidenceTxHash, evidenceTxHashFormatOk, and public purchase or transfer evidence showing at least 1,000,000 GCA held continuously for 30 days.",
-      "outputStatus": "eligible, below_threshold, or needs_more_information"
+      "operatorAction": "Treat holdingStartDate and evidenceTxHash as preview evidence only. Review the public purchase or transfer history for at least 30 days, then use tools/review_cloudflare_member.py; an approved write refreshes the current 1,000,000 GCA balance through read-only Base RPC.",
+      "outputStatus": "approved, rejected, or needs_more_information"
     },
     {
       "id": "eligibility-decision",
       "label": "Eligibility Decision",
-      "operatorAction": "Mark 10,000 GCA holder credit eligibility, 1,000,000 GCA plus 30-day GCA Member eligibility, and one-time 10,000 GCA member benefit eligibility; eligible credit/member records are written through the reviewed backend path while token-benefit handling remains manual.",
-      "outputStatus": "eligible, below_threshold, or needs_more_information"
+      "operatorAction": "Record the GCA Member decision through the ADMIN_READ_TOKEN-protected /gca/member-reviews route only after manual evidence review. This activates member status only and never authorizes or sends the one-time 10,000 GCA member benefit.",
+      "outputStatus": "approved, rejected, or needs_more_information"
     },
     {
       "id": "support-reply",
@@ -249,6 +258,10 @@
     "evidenceTxHash",
     "evidenceTxHashFormatOk",
     "memberBenefitReviewEvidenceStatus",
+    "memberReviewId",
+    "memberReviewDecision",
+    "memberReviewReasonCode",
+    "memberReviewReviewerId",
     "serviceRequestId",
     "requestedCreditHold",
     "remainingCreditsAtRequest",
@@ -300,6 +313,10 @@
     "reviewPackageDigestRequiredBeforeSharing": true,
     "serviceRequestQueueWorkerPrepared": true,
     "serviceRequestQueueProductionLive": true,
+    "memberReviewWorkflowProductionLive": true,
+    "memberReviewPacketVersionMustEqual": "gca_member_review_v1",
+    "automaticMemberActivationFromSubmittedDate": false,
+    "memberReviewDoesNotAuthorizeBenefitTransfer": true,
     "serviceRequestDoesNotDeductCredits": true,
     "creditUsageLedgerPrepared": true,
     "creditUsageLedgerWritesLive": true,
@@ -318,6 +335,10 @@
       "evidenceTxHash",
       "evidenceTxHashFormatOk",
       "memberBenefitReviewEvidenceStatus",
+      "memberReviewId",
+      "memberReviewDecision",
+      "memberReviewReasonCode",
+      "memberReviewReviewerId",
       "serviceRequestId",
       "requestedCreditHold",
       "remainingCreditsAtRequest",
@@ -467,6 +488,8 @@
       "GCA operators can export a redacted-public local review package for reviewer evidence handoff when local ledger records exist.",
       "GCA operators can record reviewed service-level credit usage with before/after balances through the live token-protected Worker route; anonymous reads are rejected.",
       "GCA operators can queue service scope requests through the live token-protected Worker route before delivery; queued requests do not deduct credits or create trading permission.",
+      "GCA operators can record append-only GCA Member decisions through the live token-protected /gca/member-reviews route after manual evidence review and a current read-only balance refresh.",
+      "Submitted holding dates and transaction hashes are preview evidence only and cannot activate GCA Member automatically.",
       "GCA email registration and unsubscribe APIs are live on Cloudflare Workers + D1.",
       "GCA operators can sync email registration records into an ignored local JSONL ledger and export public-redacted contact CSVs.",
       "Public-redacted exports are for reviewer evidence handoff only and cannot be used as contactable user support queues.",
@@ -477,6 +500,7 @@
       "the operations runbook is a private-data dropbox, custody system, withdrawal system, or trading terminal",
       "100 GCA AI Quant Access credits are cash, income, reimbursement, trading permission, or transferable value",
       "GCA Member status bypasses wallet verification, holding-period evidence, or support review",
+      "the public member form automatically proves continuous 30-day holding or activates GCA Member status",
       "the 10,000 GCA member benefit is automatic or self-service transferred before holding-period verification, support approval, and manual reserve-wallet processing",
       "support can override wallet-balance verification, release gates, or ledger activation",
       "credit usage is automatic self-service redemption, cash settlement, wallet settlement, or trading permission",

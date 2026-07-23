@@ -37,7 +37,7 @@ from tools.export_cloudflare_email_registrations import (  # noqa: E402
 
 DEFAULT_ORIGIN = "https://gcagochina.com"
 DEFAULT_USER_AGENT = "GCA-Operator-Registration-API-Check/1.0"
-SERVICE_ROUTES_RELEASE = "gca-registration-worker-2026-07-23-service-routes-v1"
+WORKER_RELEASE = "gca-registration-worker-2026-07-24-member-review-v1"
 OFFICIAL_CONTACT_EMAIL = "support@gcagochina.com"
 
 
@@ -150,12 +150,13 @@ def check_health(*, base_url: str, timeout: float, cafile: str, opener: Callable
     require(payload.get("contactSuppressionVersion") == "gca_contact_suppression_v1", "health endpoint returned wrong suppression packet version")
     require(payload.get("memberAccessVersion") == "gca_member_access_v1", "health endpoint returned wrong member access packet version")
     if include_pending_routes or "workerRelease" in payload:
-        require(payload.get("workerRelease") == SERVICE_ROUTES_RELEASE, "health endpoint returned wrong Worker release")
+        require(payload.get("workerRelease") == WORKER_RELEASE, "health endpoint returned wrong Worker release")
         require(payload.get("contactEmail") == OFFICIAL_CONTACT_EMAIL, "health endpoint returned wrong official contact email")
     if include_pending_routes or "creditUsageVersion" in payload:
         require(payload.get("creditUsageVersion") == "gca_credit_usage_v1", "health endpoint returned wrong credit usage packet version")
     if include_pending_routes or "serviceRequestVersion" in payload:
         require(payload.get("serviceRequestVersion") == "gca_service_request_v1", "health endpoint returned wrong service request packet version")
+    require(payload.get("memberReviewVersion") == "gca_member_review_v1", "health endpoint returned wrong member review packet version")
     require(payload.get("chainId") == 8453, "health endpoint returned wrong chainId")
     require(payload.get("contractAddress") == "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6", "health endpoint returned wrong GCA contract")
     require_honeypot_config(payload, "health endpoint")
@@ -172,6 +173,7 @@ def check_health(*, base_url: str, timeout: float, cafile: str, opener: Callable
         "memberAccessVersion": payload.get("memberAccessVersion"),
         "creditUsageVersion": payload.get("creditUsageVersion"),
         "serviceRequestVersion": payload.get("serviceRequestVersion"),
+        "memberReviewVersion": payload.get("memberReviewVersion"),
         "chainId": payload.get("chainId"),
         "contractAddress": payload.get("contractAddress"),
         "antiSpamHoneypotFields": payload.get("antiSpam", {}).get("honeypotFields", []),
@@ -248,14 +250,23 @@ def check_access_config(*, base_url: str, timeout: float, cafile: str, opener: C
     require(payload.get("ok") is True, "access config endpoint must return ok=true")
     require(payload.get("memberAccessVersion") == "gca_member_access_v1", "access config returned wrong version")
     if include_pending_routes or "workerRelease" in payload:
-        require(payload.get("workerRelease") == SERVICE_ROUTES_RELEASE, "access config returned wrong Worker release")
+        require(payload.get("workerRelease") == WORKER_RELEASE, "access config returned wrong Worker release")
         require(payload.get("contactEmail") == OFFICIAL_CONTACT_EMAIL, "access config returned wrong official contact email")
     if include_pending_routes or "creditUsageVersion" in payload:
         require(payload.get("creditUsageVersion") == "gca_credit_usage_v1", "access config returned wrong credit usage version")
     if include_pending_routes or "serviceRequestVersion" in payload:
         require(payload.get("serviceRequestVersion") == "gca_service_request_v1", "access config returned wrong service request version")
+    require(payload.get("memberReviewVersion") == "gca_member_review_v1", "access config returned wrong member review version")
+    require(
+        payload.get("endpoints", {}).get("memberReviewsAdmin") == "/gca/member-reviews",
+        "access config returned wrong member review endpoint",
+    )
     require(payload.get("boundaries", {}).get("readOnlyWalletVerification") is True, "access config must keep read-only wallet verification")
     require(payload.get("boundaries", {}).get("automaticTokenTransfer") is False, "access config must not auto-transfer tokens")
+    require(
+        payload.get("boundaries", {}).get("automaticMemberActivationFromSubmittedDate") is False,
+        "access config must not activate members from a submitted date",
+    )
     require(payload.get("thresholds", {}).get("holderBonusMinimumGca") == "10000", "access config holder threshold mismatch")
     require(payload.get("thresholds", {}).get("gcaMemberMinimumGca") == "1000000", "access config member threshold mismatch")
     require_honeypot_config(payload, "access config")
@@ -268,6 +279,7 @@ def check_access_config(*, base_url: str, timeout: float, cafile: str, opener: C
         "contactEmail": payload.get("contactEmail"),
         "creditUsageVersion": payload.get("creditUsageVersion"),
         "serviceRequestVersion": payload.get("serviceRequestVersion"),
+        "memberReviewVersion": payload.get("memberReviewVersion"),
         "readOnlyWalletVerification": True,
         "automaticTokenTransfer": False,
         "antiSpamHoneypotFields": payload.get("antiSpam", {}).get("honeypotFields", []),
@@ -367,6 +379,15 @@ def run_checks(
             cafile=cafile,
             opener=opener,
         ),
+        check_cors_preflight(
+            base_url=base_url,
+            path="/gca/member-reviews",
+            check_id="cors-member-reviews",
+            origin=origin,
+            timeout=timeout,
+            cafile=cafile,
+            opener=opener,
+        ),
         check_unauthorized_admin_read(
             base_url=base_url,
             path="/gca/email-registrations",
@@ -411,6 +432,14 @@ def run_checks(
             base_url=base_url,
             path="/gca/member-ledger",
             check_id="unauth-member-ledger-read",
+            timeout=timeout,
+            cafile=cafile,
+            opener=opener,
+        ),
+        check_unauthorized_admin_read(
+            base_url=base_url,
+            path="/gca/member-reviews",
+            check_id="unauth-member-reviews-read",
             timeout=timeout,
             cafile=cafile,
             opener=opener,
@@ -515,6 +544,16 @@ def run_checks(
                 cafile=cafile,
                 opener=opener,
             ),
+            check_authorized_admin_read(
+                base_url=base_url,
+                path="/gca/member-reviews",
+                check_id="admin-member-reviews-read",
+                token=clean_token,
+                limit=limit,
+                timeout=timeout,
+                cafile=cafile,
+                opener=opener,
+            ),
         ])
         if include_pending_routes:
             checks.extend([
@@ -553,6 +592,7 @@ def run_checks(
             "submitsWalletVerification": False,
             "submitsMemberAccess": False,
             "submitsServiceRequest": False,
+            "submitsMemberReview": False,
             "adminTokenPrinted": False,
             "userEmailsPrinted": False,
             "walletConnectionRequired": False,

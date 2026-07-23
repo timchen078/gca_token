@@ -127,8 +127,8 @@ def build_auth_recovery(checks: list[dict[str, Any]], *, run_cloudflare: bool) -
         "blockedUntilReadinessPasses": [
             "npx wrangler d1 migrations apply gca_registration --remote",
             "npx wrangler deploy",
-            "mark /gca/service-requests or /gca/credit-usage as production-live",
-            "export pending-route ledgers from production",
+            "mark new or changed Worker routes as production-live",
+            "run token-protected admin smoke checks against changed routes",
         ],
         "boundaries": {
             "writesD1Records": False,
@@ -229,6 +229,12 @@ def build_report(
         "service-requests-migration",
         (worker_dir / "migrations" / "0005_service_requests.sql").exists(),
         "Service request queue D1 migration exists.",
+    )
+    check(
+        checks,
+        "member-reviews-migration",
+        (worker_dir / "migrations" / "0006_member_reviews.sql").exists(),
+        "Member review D1 migration exists.",
     )
     check(
         checks,

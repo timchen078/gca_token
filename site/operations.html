@@ -350,7 +350,11 @@
           </div>
           <div class="fact">
             <span class="label">Member ledger writes</span>
-            <span class="value good">Live for eligible records</span>
+            <span class="value good">Review queue live</span>
+          </div>
+          <div class="fact">
+            <span class="label">Member activation</span>
+            <span class="value good">Token-protected manual review</span>
           </div>
           <div class="fact">
             <span class="label">Wallet check</span>
@@ -407,11 +411,11 @@
           </div>
           <div>
             <h3>4. Holding Period Review</h3>
-            <p class="note">For GCA Member benefit review, verify <code>holdingStartDate</code>, <code>evidenceTxHash</code>, <code>evidenceTxHashFormatOk</code>, and public purchase or transfer evidence showing at least 1,000,000 GCA held continuously for 30 days.</p>
+            <p class="note">Treat <code>holdingStartDate</code> and <code>evidenceTxHash</code> as preview evidence only. Review public purchase or transfer history for at least 30 days; the form and hash-format check do not prove continuous holding automatically.</p>
           </div>
           <div>
             <h3>5. Eligibility Decision</h3>
-            <p class="note">Mark 10,000 GCA holder credit eligibility, 1,000,000 GCA plus 30-day GCA Member eligibility, and one-time 10,000 GCA member benefit eligibility. Eligible credit and member records use the reviewed backend path; any member-benefit token transfer remains manual.</p>
+            <p class="note">Use <code>tools/review_cloudflare_member.py</code> to record an approved, rejected, or needs-more-information decision through <code>/gca/member-reviews</code>. Approval refreshes the current balance with a read-only Base call and activates member status only; it does not authorize or send the 10,000 GCA benefit.</p>
           </div>
           <div>
             <h3>6. Support Reply</h3>
@@ -447,7 +451,7 @@
       <section class="section panel" aria-labelledby="memberOpsTitle">
         <h2 id="memberOpsTitle">Member Access Ops Pipeline</h2>
         <p class="note">Use this local operator pipeline after live account, wallet verification, credit ledger, member ledger, or member-benefit review records exist. It requires the ignored local <code>cloudflare/gca-registration-worker/.env.admin.local</code> file with <code>ADMIN_READ_TOKEN</code>. The output stays in <code>.gca_access_data/</code> and is not committed.</p>
-        <p class="note">The token-protected service-request and credit-usage Worker routes are production-live. Cloudflare account access, D1 visibility, Worker deployment permission, remote migration, deploy, and public/admin smoke checks passed on 2026-07-23 UTC. Anonymous reads return HTTP 401. Run <code>python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth</code> again before any future release.</p>
+        <p class="note">The token-protected service-request, credit-usage, and member-review Worker routes are production-live. Remote migrations, deploy, and public/admin smoke checks passed on 2026-07-23 UTC. Anonymous reads return HTTP 401. Run <code>python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth</code> again before any future release.</p>
         <div class="grid">
           <div>
             <h3>1. Token-Protected Export</h3>
@@ -478,7 +482,11 @@
             <p class="note">Before delivery, record requested service scope through the token-protected operator <code>service_requests</code> queue. The production Worker route is live and rejects anonymous reads. It stores <code>serviceRequestId</code>, <code>serviceId</code>, optional <code>creditLedgerId</code>, requested credit hold, and status. It does not deduct credits; credit usage is recorded only after reviewed delivery.</p>
           </div>
           <div>
-            <h3>8. No Automatic Transfer</h3>
+            <h3>8. Member Review Decision</h3>
+            <p class="note">After reviewing public evidence, run <code>.venv/bin/python tools/review_cloudflare_member.py --help</code> and use the required production-write confirmation. Approval also requires the explicit evidence-reviewed confirmation. The command never prints the admin token or sends a wallet transaction.</p>
+          </div>
+          <div>
+            <h3>9. No Automatic Transfer</h3>
             <p class="note">The member ops pipeline never sends GCA. Any 10,000 GCA member benefit remains manual reserve-wallet processing after review.</p>
           </div>
         </div>

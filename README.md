@@ -51,6 +51,16 @@ The checkpoint is unsigned and not externally timestamped. It can detect truncat
 
 The public English and Chinese API status pages include a browser-time read-only health panel. It checks the official Worker identity, Base Mainnet contract configuration, anonymous-read protection on existing admin routes, and deployment state of prepared operator routes without writing records, reading admin response bodies, sending an admin token, connecting a wallet, or requesting a signature.
 
+## Production Member Review
+
+The public member-access route writes eligible 100-credit records and queues GCA Member evidence. It does not activate GCA Member from a user-submitted holding date or transaction-hash format check. After manually reviewing public 30-day holding evidence, an operator uses the ignored local admin token with:
+
+```bash
+.venv/bin/python tools/review_cloudflare_member.py --help
+```
+
+The production `GET/POST /gca/member-reviews` route stores append-only review decisions in D1. Approval also refreshes the current GCA balance with read-only Base RPC. The route does not connect a wallet, request a signature, send a transaction, transfer GCA, or authorize the separate 10,000 GCA member benefit.
+
 ## Mainnet Launch Package
 
 - Canonical public facts: `docs/mainnet_public_profile.md`
@@ -112,6 +122,7 @@ The public English and Chinese API status pages include a browser-time read-only
 - Local member access report builder: `tools/build_gca_member_access_report.py`
 - Local member support reply queue builder: `tools/build_gca_member_support_queue.py`
 - Local GCA Member 30-day holding evidence report: `tools/build_gca_holding_period_report.py`
+- Production GCA Member review operator tool: `tools/review_cloudflare_member.py`
 - One-command member access ops pipeline: `tools/run_gca_member_access_ops.py`
 - Daily public health, optional member ops check, optional digest build, and `--update-public-status` snapshot refresh: `tools/run_gca_daily_ops.py`
 - Public daily status snapshot builder for `site/daily-status.html` and `site/daily-status.json`: `tools/build_gca_daily_status_snapshot.py`

@@ -337,7 +337,8 @@
         <p class="eyebrow">Access API Contract / 2026-05-20</p>
         <h1 id="title">GCA Access API Contract</h1>
         <p class="lead">This page defines the controlled HTTPS API contract for the GCA account path. It covers email-only user registration, member account intake, read-only wallet verification, credit ledger records, GCA Member records, and support review statuses.</p>
-        <p class="lead">The Workers + D1 backend now exposes live public routes for member access and wallet verification. The 10,000 GCA member benefit is still manual review only, and no route sends tokens, requests wallet signatures, or creates live trading permission.</p>
+        <p class="lead">The Workers + D1 backend now exposes live public routes for member access and wallet verification, plus a token-protected operator route for GCA Member decisions. A submitted holding date and transaction hash create review evidence only; they do not activate membership automatically.</p>
+        <p class="lead">The 10,000 GCA member benefit remains a separate manual reserve-wallet process. No API route sends tokens, requests wallet signatures, authorizes that transfer, or creates live trading permission.</p>
         <p class="lead">The backend is deployed on Cloudflare Workers + D1 at <code>https://gca-registration-api.gcagochina.workers.dev</code>, so the public registration and member access pages can write directly to D1. Source remains in <code>cloudflare/gca-registration-worker/</code>. A future <code>api.gcagochina.com</code> custom domain still requires Cloudflare access to the account that owns the <code>gcagochina.com</code> zone.</p>
         <p class="lead">A local operator backend is also available for localhost testing, evidence export, read-only GCA balance checks, and operator review workflows. Implementation details are listed below in the endpoint contract and technical evidence sections.</p>
         <div class="actions">
@@ -356,7 +357,7 @@
       <section class="facts" aria-label="Current state">
         <div class="fact">
           <span class="label">Current Stage</span>
-          <span class="value">member access API live</span>
+          <span class="value">member access + review API live</span>
         </div>
         <div class="fact">
           <span class="label">Public Endpoint</span>
@@ -447,6 +448,26 @@
           <span class="value">gca_member_access_v1</span>
         </div>
         <div class="fact">
+          <span class="label">Member Review Version</span>
+          <span class="value">gca_member_review_v1</span>
+        </div>
+        <div class="fact">
+          <span class="label">Member Review</span>
+          <span class="value good">Token-protected operator route live</span>
+        </div>
+        <div class="fact">
+          <span class="label">Automatic Member Activation</span>
+          <span class="value">Disabled</span>
+        </div>
+        <div class="fact">
+          <span class="label">Member Review Migration</span>
+          <span class="value">cloudflare/gca-registration-worker/migrations/0006_member_reviews.sql</span>
+        </div>
+        <div class="fact">
+          <span class="label">Member Review Tool</span>
+          <span class="value">tools/review_cloudflare_member.py</span>
+        </div>
+        <div class="fact">
           <span class="label">Service Request Version</span>
           <span class="value">gca_service_request_v1</span>
         </div>
@@ -487,7 +508,7 @@
           <div class="fact">
             <span class="label">POST</span>
             <span class="value">/gca/member-access</span>
-            <p class="note">Live account intake for <code>gca_member_access_v1</code>. It stores email/account fields, verifies the Base wallet, and writes eligible credit/member ledger records.</p>
+            <p class="note">Live account intake for <code>gca_member_access_v1</code>. It stores email/account fields, verifies the current Base wallet balance, writes eligible credit records, and queues qualifying GCA Member evidence. A user-submitted date or transaction hash never activates membership automatically.</p>
           </div>
           <div class="fact">
             <span class="label">POST</span>
@@ -513,6 +534,11 @@
             <span class="label">GET</span>
             <span class="value">/gca/member-ledger</span>
             <p class="note">Token-protected admin read for GCA Member ledger state, holding-period review, 10,000 GCA member benefit status, next refresh due date, and status.</p>
+          </div>
+          <div class="fact">
+            <span class="label">POST / GET</span>
+            <span class="value">/gca/member-reviews</span>
+            <p class="note">Production-live, <code>ADMIN_READ_TOKEN</code>-protected operator route for append-only member review decisions. Approval refreshes the current read-only GCA balance and requires a 1,000,000 GCA balance, a 30-day evidence preview, a valid public transaction-hash format, and explicit operator acknowledgements. It does not prove continuous holding by itself, send GCA, or authorize the 10,000 GCA benefit transfer.</p>
           </div>
           <div class="fact">
             <span class="label">POST</span>
@@ -568,6 +594,7 @@
             <div class="row"><span>Wallet verification</span><strong>registrationId, walletAddress, chainId, contractAddress</strong></div>
             <div class="row"><span>Service request</span><strong>email, serviceId, no-secrets acknowledgement, manual-review acknowledgement</strong></div>
             <div class="row"><span>Credit usage</span><strong>creditLedgerId, serviceId, creditAmountUsed, admin token</strong></div>
+            <div class="row"><span>Member review</span><strong>memberLedgerId, decision, reasonCode, reviewerId, manual-evidence acknowledgement, no-transfer acknowledgement, admin token</strong></div>
             <div class="row"><span>Support review</span><strong>status, nextStep, reviewId or memberLedgerId / walletAddress</strong></div>
             <div class="row"><span>Ledger reads</span><strong>ADMIN_READ_TOKEN protected operator read</strong></div>
           </div>
@@ -582,7 +609,8 @@
             <div class="row"><span>Credit ledger</span><strong>queued, ledger_recorded, partially_used, used, expired, revoked</strong></div>
             <div class="row"><span>Service request</span><strong>queued_operator_review, queued_missing_credit_ledger, queued_insufficient_credits</strong></div>
             <div class="row"><span>Credit usage</span><strong>usage_recorded, exhausted</strong></div>
-            <div class="row"><span>Member ledger</span><strong>active, needs_refresh, below_threshold, paused, revoked</strong></div>
+            <div class="row"><span>Member ledger</span><strong>queued, active, review_rejected, needs_refresh, below_threshold, paused, revoked</strong></div>
+            <div class="row"><span>Member review decision</span><strong>approved, rejected, needs_more_information</strong></div>
             <div class="row"><span>Member benefit</span><strong>10,000 GCA after 30-day hold review</strong></div>
             <div class="row"><span>Evidence review</span><strong>user_supplied_pending_review, needs_more_information, eligible, transferred, contacted, waiting_for_user_evidence, closed</strong></div>
           </div>
@@ -597,6 +625,8 @@
             <li>public email registration and unsubscribe routes require only form acknowledgements</li>
             <li>token-protected admin reads for Cloudflare registration and suppression records</li>
             <li>token-protected admin reads for account-level ledger routes</li>
+            <li>token-protected POST and GET for append-only production member review decisions</li>
+            <li>no GCA Member activation from a user-submitted holding date or transaction-hash format check alone</li>
             <li>CSRF protection for state-changing routes</li>
             <li>website / company / homepage honeypot bot-trap fields on public forms</li>
             <li>rate limits on pre-registration and wallet verification</li>
@@ -644,7 +674,7 @@
     </main>
 
     <footer>
-      <div class="shell">GCA email registration, unsubscribe, wallet verification, and member access are live on Cloudflare Workers + D1. The 10,000 GCA member benefit remains manual review only.</div>
+      <div class="shell">GCA email registration, unsubscribe, wallet verification, member access, and token-protected member review are live on Cloudflare Workers + D1. Membership requires manual evidence review; the 10,000 GCA member benefit remains a separate manual process.</div>
     </footer>
   </body>
 </html>

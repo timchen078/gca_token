@@ -440,8 +440,8 @@
       <section aria-labelledby="title">
         <p class="eyebrow">Bilingual live account entry / 中英双语会员入口</p>
         <h1 id="title">GCA Member Access <span class="zh">GCA 会员账户入口</span></h1>
-        <p class="lead">This controlled HTTPS account UI submits a GCA member account request, verifies a Base wallet with read-only ERC-20 balanceOf, and writes D1 ledger records for 100 GCA AI Quant Access credits and GCA Member review.</p>
-        <p class="lead zh-note">中文用户可以在这里提交邮箱、Base 钱包地址、持有开始日期和公开交易哈希。后台只读取 GCA 余额，不会要求私钥、助记词、授权转账或钱包签名。</p>
+        <p class="lead">This controlled HTTPS account UI submits a GCA member account request, verifies a Base wallet with read-only ERC-20 balanceOf, writes eligible 100-credit records, and queues GCA Member evidence for manual review.</p>
+        <p class="lead zh-note">中文用户可以在这里提交邮箱、Base 钱包地址、持有开始日期和公开交易哈希。后台只读取当前 GCA 余额；持有日期和交易哈希只作为人工审核材料，不会自动激活会员，也不会要求私钥、助记词、授权转账或钱包签名。</p>
         <p class="lead">The 10,000 GCA member benefit is not automatic. If a member ledger becomes active, the benefit remains pending manual reserve-wallet transfer review.</p>
         <p class="lead zh-note">10,000 GCA 会员权益不是自动领取。通过 GCA Member 记录后，仍需要支持团队人工审核和储备钱包处理。</p>
         <div class="actions">
@@ -492,8 +492,8 @@
           <div class="fact">
             <span class="label">Step 2</span>
             <span class="value">Keep review evidence <span class="zh">保留审核资料</span></span>
-            <p class="note">Save the wallet address, purchase transaction hash, holding start date, and read-only balance verification result for any 10,000 GCA or 1,000,000 GCA / 30-day review path.</p>
-            <p class="note zh-note">请保留钱包地址、购买交易哈希、持有开始日期和只读余额验证结果。</p>
+            <p class="note">Save the wallet address, purchase transaction hash, holding start date, and read-only balance result. The submitted date creates a preview only; an operator must review public evidence before GCA Member activation.</p>
+            <p class="note zh-note">请保留钱包地址、购买交易哈希、持有开始日期和只读余额结果。用户填写的日期只生成预览，GCA Member 激活前必须由运营人员审核公开证据。</p>
             <div class="actions"><a class="button" href="../../zh-member-checklist.html">中文资料清单</a></div>
           </div>
           <div class="fact">
@@ -543,7 +543,7 @@
           <div class="actions">
             <button class="button" type="button" id="connectWallet">Use Wallet Address / 读取钱包地址</button>
             <button class="button" type="button" id="checkBalance">Verify Wallet Only / 只验证钱包</button>
-            <button class="button primary" type="button" id="submitAccess">Submit Account + Write Ledgers / 提交账户并写入账本</button>
+            <button class="button primary" type="button" id="submitAccess">Submit Account + Queue Review / 提交账户并排队审核</button>
           </div>
         </div>
 
@@ -794,7 +794,8 @@
           `10,000 GCA holder bonus eligible / 10,000 GCA 条件: ${verification.holderBonusEligible ? "Yes / 是" : "No / 否"}`,
           `100 credits ledger / 100 credits 账本: ${credit.creditLedgerId ? `${credit.creditAmount} credits, ${credit.status}` : "Not created / 未创建"}`,
           `1,000,000 GCA member eligible / 100 万 GCA 会员条件: ${verification.gcaMemberEligible ? "Yes / 是" : "No / 否"}`,
-          `Holding days verified / 已验证持有天数: ${String(verification.holdingPeriodDaysVerified || 0)}`,
+          `Holding-day preview / 持有天数预览: ${String(verification.holdingPeriodDaysVerified || 0)}`,
+          `Manual member review required / 需要人工会员审核: ${verification.gcaMemberEligible ? "Yes / 是" : "Not applicable / 不适用"}`,
           `GCA Member ledger / GCA Member 账本: ${member.memberLedgerId ? `${member.tierName}, ${member.status}` : "Not created / 未创建"}`,
           `Member benefit status / 会员权益状态: ${member.memberBenefitClaimStatus || "Not applicable / 不适用"}`,
           `Next step / 下一步: ${latestAccessResponse.nextStep || "Support review if needed / 如需人工处理请联系支持"}`
@@ -888,6 +889,8 @@
         const member = payload.memberLedger || {};
         const title = member.status === "active"
           ? "GCA Member active / 会员记录已激活"
+          : member.status === "queued"
+            ? "GCA Member review queued / 会员审核已排队"
           : credit.status === "ledger_recorded"
             ? "100 credits active / 100 credits 已记录"
             : verification.status === "below_threshold"
@@ -901,7 +904,8 @@
           ["Holder bonus eligible / 10,000 GCA 条件", verification.holderBonusEligible ? "Yes / 是" : "No / 否"],
           ["Credit ledger / credits 账本", credit.creditLedgerId ? `${credit.creditAmount} credits / ${credit.status}` : "Not created / 未创建"],
           ["GCA Member eligible / 会员条件", verification.gcaMemberEligible ? "Yes / 是" : "No / 否"],
-          ["Holding days verified / 已验证持有天数", String(verification.holdingPeriodDaysVerified || 0)],
+          ["Holding-day preview / 持有天数预览", String(verification.holdingPeriodDaysVerified || 0)],
+          ["Manual review / 人工审核", verification.gcaMemberEligible ? "Required / 必须" : "Not applicable / 不适用"],
           ["Member ledger / 会员账本", member.memberLedgerId ? `${member.tierName} / ${member.status}` : "Not created / 未创建"],
           ["Member benefit status / 会员权益状态", member.memberBenefitClaimStatus || "Not applicable / 不适用"],
           ["Automatic transfer / 自动转账", payload.boundaries && payload.boundaries.automaticTokenTransfer ? "Yes / 是" : "No / 否"]
@@ -946,7 +950,7 @@
 
       submitAccess.addEventListener("click", async () => {
         submitAccess.disabled = true;
-        renderResult(balanceResult, "", "Submitting account / 正在提交账户", "Writing the access request, wallet verification, and eligible ledger records to Cloudflare D1. 正在写入账户请求、钱包验证和符合条件的账本记录。");
+        renderResult(balanceResult, "", "Submitting account / 正在提交账户", "Writing the access request, read-only wallet result, eligible credit record, and member-review queue record to Cloudflare D1. 正在写入账户请求、只读钱包结果、符合条件的 credits 记录和会员审核排队记录。");
         try {
           const payload = await postJson("/gca/member-access", accessPayload());
           renderAccessResponse(payload);
