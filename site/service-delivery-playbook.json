@@ -3,7 +3,7 @@
   "pageUrl": "https://gcagochina.com/service-delivery-playbook.html",
   "status": "service-delivery-playbook-v1-published",
   "playbookId": "service-delivery-playbook-v1",
-  "lastUpdated": "2026-07-20",
+  "lastUpdated": "2026-07-24",
   "projectName": "GCA",
   "conceptExpansion": "Go China Access",
   "module": "GCA AI Quant Access service delivery",
@@ -115,20 +115,20 @@
     "creditUsageLocalEndpoint": "http://127.0.0.1:8787/gca/credit-usage",
     "serviceRequestWorkerEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/service-requests",
     "creditUsageWorkerEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/credit-usage",
-    "productionRoutesLive": false,
+    "productionRoutesLive": true,
     "workerDryRunPassed": true,
-    "d1VisibilityPassed": false,
-    "d1VisibilityStatus": "not-verified-auth-required",
-    "cloudflareAuthSession": "failed-not-logged-in",
-    "workerDeployPermission": "not-verified-auth-required",
+    "d1VisibilityPassed": true,
+    "d1VisibilityStatus": "passed",
+    "cloudflareAuthSession": "passed",
+    "workerDeployPermission": "passed",
     "code10000Seen": false,
-    "latestReadinessCheckAt": "2026-07-20T10:34:06Z",
-    "latestPublicRouteCheckAt": "2026-07-20T10:33:02Z",
+    "latestReadinessCheckAt": "2026-07-23T17:55:52Z",
+    "latestPublicRouteCheckAt": "2026-07-23T17:53:42Z",
     "pendingRouteAnonymousGetStatus": {
-      "/gca/service-requests": 404,
-      "/gca/credit-usage": 404
+      "/gca/service-requests": 401,
+      "/gca/credit-usage": 401
     },
-    "blockedBy": "Latest 2026-07-20 readiness check passed Worker dry-run but found Wrangler not logged in; Cloudflare account authentication, D1 visibility, remote migration, deploy permission, and post-deploy smoke checks remain blocked",
+    "blockedBy": null,
     "releaseGates": [
       "cloudflare-auth-session passes",
       "D1 visibility passes",
@@ -137,11 +137,17 @@
       "wrangler deploy succeeds",
       "public smoke check passes with --include-pending-routes",
       "admin smoke check passes with --include-pending-routes"
-    ]
+    ],
+    "remoteMigrations": "applied",
+    "workerDeploy": "passed",
+    "workerVersionId": "8988fc75-bbe0-403e-960a-832bf83da20f",
+    "postDeployPublicSmoke": "passed",
+    "postDeployAdminSmoke": "passed",
+    "productionRoutesVerifiedAt": "2026-07-23T17:53:54Z"
   },
   "releaseBoundaries": [
     "The playbook is public and local operator recording is ready.",
-    "Production service-request and credit-usage Worker routes are not live until all release gates pass.",
+    "Production service-request and credit-usage Worker routes are live and token-protected after all release gates passed.",
     "Service requests do not deduct credits by themselves.",
     "Credit usage is recorded only after reviewed delivery or accepted delivery.",
     "Member status does not create automatic transfers or trading permission.",
@@ -152,7 +158,7 @@
       "GCA has published an operator-reviewed service delivery playbook for GCA AI Quant Access workflows.",
       "The workflow covers account intake, read-only wallet verification, service request queueing, manual report delivery, and credit usage records.",
       "Local operator recording is ready for service requests and credit usage records.",
-      "Production service-request and credit-usage Worker routes remain non-live until Cloudflare auth, deploy, migration, and smoke-check gates pass.",
+      "Production service-request and credit-usage Worker routes are live, token-protected, and verified by public and admin read-only smoke checks.",
       "The workflow is no-custody, does not request wallet signatures, and does not create automatic trading access."
     ],
     "doNotClaim": [

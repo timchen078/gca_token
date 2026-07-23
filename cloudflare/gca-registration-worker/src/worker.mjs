@@ -5,6 +5,7 @@ const CREDIT_USAGE_VERSION = "gca_credit_usage_v1";
 const SERVICE_REQUEST_VERSION = "gca_service_request_v1";
 const WORKER_RELEASE = "gca-registration-worker-2026-07-23-service-routes-v1";
 const OFFICIAL_CONTACT_EMAIL = "support@gcagochina.com";
+const OFFICIAL_SITE_URL = "https://gcagochina.com/";
 const CHAIN_ID = 8453;
 const CONTRACT_ADDRESS = "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6";
 const BASE_RPC_URL = "https://mainnet.base.org";
@@ -1640,6 +1641,9 @@ export default {
 
     try {
       const url = new URL(request.url);
+      if (request.method === "GET" && url.pathname === "/") {
+        return Response.redirect(OFFICIAL_SITE_URL, 302);
+      }
       if (request.method === "GET" && url.pathname === "/health") {
         return health(origin, env);
       }

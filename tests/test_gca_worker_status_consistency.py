@@ -4,22 +4,20 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-READINESS_AT = "2026-07-20T10:34:06Z"
-PUBLIC_ROUTE_AT = "2026-07-20T10:33:02Z"
-BLOCKED_BY = (
-    "Latest 2026-07-20 readiness check passed Worker dry-run but found Wrangler not logged in; "
-    "Cloudflare account authentication, D1 visibility, remote migration, deploy permission, and "
-    "post-deploy smoke checks remain blocked"
-)
+LAST_UPDATED = "2026-07-24"
+READINESS_AT = "2026-07-23T17:55:52Z"
+PUBLIC_ROUTE_AT = "2026-07-23T17:53:42Z"
+ADMIN_ROUTE_AT = "2026-07-23T17:53:54Z"
+WORKER_VERSION_ID = "8988fc75-bbe0-403e-960a-832bf83da20f"
 ROUTE_OBSERVATIONS = {
-    "/gca/service-requests": 404,
-    "/gca/credit-usage": 404,
+    "/gca/service-requests": 401,
+    "/gca/credit-usage": 401,
 }
 READINESS_SUMMARY = {
     "wranglerDeployDryRun": "passed",
-    "cloudflareD1Visibility": "not-verified-auth-required",
-    "cloudflareAuthSession": "failed-not-logged-in",
-    "cloudflareWorkerDeployPermission": "not-verified-auth-required",
+    "cloudflareD1Visibility": "passed",
+    "cloudflareAuthSession": "passed",
+    "cloudflareWorkerDeployPermission": "passed",
     "code10000Seen": False,
     "writesD1Records": False,
     "deploysWorker": False,
@@ -44,11 +42,14 @@ class GcaWorkerStatusConsistencyTests(unittest.TestCase):
         handoff = load_site_json("worker-routes-handoff.json")
 
         for payload in (api_status, access_api, operations, credits, playbook, handoff):
-            self.assertEqual(payload["lastUpdated"], "2026-07-20")
+            self.assertEqual(payload["lastUpdated"], LAST_UPDATED)
 
         self.assertEqual(api_status["latestDeployReadinessCheckAt"], READINESS_AT)
+        self.assertEqual(api_status["latestDeployReadinessStatus"], "passed-cloudflare-permissions")
         self.assert_readiness_summary(api_status["latestDeployReadinessSummary"])
-        self.assertEqual(api_status["pendingRoutesDeployHandoff"]["blockedBy"], BLOCKED_BY)
+        self.assertEqual(api_status["pendingRoutesDeployHandoff"]["status"], "production-live-verified")
+        self.assertIsNone(api_status["pendingRoutesDeployHandoff"]["blockedBy"])
+        self.assertEqual(api_status["pendingRoutesDeployHandoff"]["workerVersionId"], WORKER_VERSION_ID)
 
         access_backend = access_api["productionEmailRegistrationBackend"]
         self.assertEqual(access_backend["latestDeployReadinessCheckAt"], READINESS_AT)
@@ -67,61 +68,67 @@ class GcaWorkerStatusConsistencyTests(unittest.TestCase):
             self.assertEqual(ledger["latestDeployReadinessCheckAt"], READINESS_AT)
             self.assert_readiness_summary(ledger["latestDeployReadinessSummary"])
             self.assertEqual(ledger["lastObservedAt"], PUBLIC_ROUTE_AT)
-            self.assertEqual(ledger["lastObservedAnonymousGetStatus"], 404)
+            self.assertEqual(ledger["lastObservedAnonymousGetStatus"], 401)
+            self.assertTrue(ledger["productionWorkerEndpointLive"])
+            self.assertEqual(ledger["adminSmokePassedAt"], ADMIN_ROUTE_AT)
 
         route_status = playbook["routeStatus"]
+        self.assertTrue(route_status["productionRoutesLive"])
         self.assertTrue(route_status["workerDryRunPassed"])
-        self.assertFalse(route_status["d1VisibilityPassed"])
-        self.assertEqual(route_status["d1VisibilityStatus"], "not-verified-auth-required")
-        self.assertEqual(route_status["cloudflareAuthSession"], "failed-not-logged-in")
-        self.assertEqual(route_status["workerDeployPermission"], "not-verified-auth-required")
-        self.assertFalse(route_status["code10000Seen"])
-        self.assertEqual(route_status["latestReadinessCheckAt"], READINESS_AT)
-        self.assertEqual(route_status["latestPublicRouteCheckAt"], PUBLIC_ROUTE_AT)
+        self.assertTrue(route_status["d1VisibilityPassed"])
+        self.assertEqual(route_status["d1VisibilityStatus"], "passed")
+        self.assertEqual(route_status["cloudflareAuthSession"], "passed")
+        self.assertEqual(route_status["workerDeployPermission"], "passed")
         self.assertEqual(route_status["pendingRouteAnonymousGetStatus"], ROUTE_OBSERVATIONS)
-        self.assertEqual(route_status["blockedBy"], BLOCKED_BY)
+        self.assertIsNone(route_status["blockedBy"])
+        self.assertEqual(route_status["workerVersionId"], WORKER_VERSION_ID)
 
         current = handoff["currentStatus"]
         self.assertEqual(current["latestReadinessCheckAt"], READINESS_AT)
         self.assertEqual(current["latestPublicRouteCheckAt"], PUBLIC_ROUTE_AT)
-        self.assertEqual(current["workerDryRun"], "passed-2026-07-20")
-        self.assertEqual(current["d1Visibility"], "not-verified-auth-required")
-        self.assertEqual(current["cloudflareAuthSession"], "failed-not-logged-in")
-        self.assertEqual(current["workerDeployPermission"], "not-verified-auth-required")
-        self.assertFalse(current["code10000Seen"])
+        self.assertEqual(current["latestAdminRouteCheckAt"], ADMIN_ROUTE_AT)
+        self.assertEqual(current["workerDryRun"], "passed-2026-07-23")
+        self.assertEqual(current["d1Visibility"], "passed")
+        self.assertEqual(current["cloudflareAuthSession"], "passed")
+        self.assertEqual(current["workerDeployPermission"], "passed")
         self.assertEqual(current["pendingRouteAnonymousGetStatus"], ROUTE_OBSERVATIONS)
+        self.assertEqual(current["productionRouteStatus"], "live-token-protected")
 
-    def test_blocker_sentence_is_consistent_across_public_contracts(self):
+    def test_live_route_and_safety_claims_are_consistent(self):
         api_status = load_site_json("api-status.json")
         access_api = load_site_json("access-api.json")
         operations = load_site_json("operations.json")
         credits = load_site_json("credits.json")
 
-        self.assertEqual(access_api["currentState"]["creditUsageWorkerDeployBlockedBy"], BLOCKED_BY)
-        self.assertEqual(access_api["currentState"]["serviceRequestQueueWorkerDeployBlockedBy"], BLOCKED_BY)
-        self.assertEqual(operations["currentState"]["creditUsageWorkerDeployBlockedBy"], BLOCKED_BY)
-        self.assertEqual(operations["currentState"]["serviceRequestQueueWorkerDeployBlockedBy"], BLOCKED_BY)
-        self.assertEqual(credits["currentState"]["creditUsageWorkerDeployBlockedBy"], BLOCKED_BY)
-        self.assertEqual(credits["currentState"]["serviceRequestQueueWorkerDeployBlockedBy"], BLOCKED_BY)
+        for state in (access_api["currentState"], operations["currentState"], credits["currentState"]):
+            self.assertTrue(state["creditUsageLedgerWritesLive"])
+            self.assertFalse(state["creditUsageWorkerDeployBlocked"])
+            self.assertIsNone(state["creditUsageWorkerDeployBlockedBy"])
+            self.assertTrue(state["serviceRequestQueueProductionLive"])
+            self.assertFalse(state["serviceRequestQueueWorkerDeployBlocked"])
+            self.assertIsNone(state["serviceRequestQueueWorkerDeployBlockedBy"])
 
-        pending_endpoints = {
+        live_endpoints = {
             endpoint["path"]: endpoint
             for endpoint in api_status["adminEndpoints"]
             if endpoint["path"] in ROUTE_OBSERVATIONS
         }
-        self.assertEqual(set(pending_endpoints), set(ROUTE_OBSERVATIONS))
-        for endpoint in pending_endpoints.values():
-            self.assertEqual(endpoint["blockedBy"], BLOCKED_BY)
+        self.assertEqual(set(live_endpoints), set(ROUTE_OBSERVATIONS))
+        for endpoint in live_endpoints.values():
+            self.assertEqual(endpoint["status"], "live-token-protected")
+            self.assertEqual(endpoint["lastObservedAnonymousGetStatus"], 401)
+            self.assertTrue(endpoint["productionLive"])
+            self.assertNotIn("blockedBy", endpoint)
 
-    def test_public_pages_show_current_status_and_remove_stale_claims(self):
+    def test_public_pages_show_live_protected_status_and_remove_stale_claims(self):
         public_pages = {
-            "access-api.html": ("2026-07-20 readiness check found Wrangler logged out", "HTTP 404"),
-            "operations.html": ("2026-07-20 check passed Worker bundling but found Wrangler logged out", "HTTP 404 for both routes"),
-            "credits.html": ("Wrangler logged out", "production HTTP 404"),
-            "service-delivery-playbook.html": ("Wrangler is logged out", "Both prepared Worker routes returned HTTP 404"),
-            "worker-routes-handoff.html": ("Wrangler not logged in", "HTTP 404 for both prepared routes"),
-            "release-gates.html": ("Wrangler not logged in", "both routes returned HTTP 404 on 2026-07-20"),
-            "zh-release-gates.html": ("Wrangler 未登录", "两个公开路由均返回 HTTP 404"),
+            "access-api.html": ("Live token-protected operator queue", "HTTP 401"),
+            "operations.html": ("production-live", "Anonymous reads return HTTP 401"),
+            "credits.html": ("production Worker route live", "token-protected"),
+            "service-delivery-playbook.html": ("routes are live and token-protected", "HTTP 401"),
+            "worker-routes-handoff.html": ("Production-live and protected", "HTTP 401"),
+            "release-gates.html": ("Production-live and token-protected", "2026-07-23"),
+            "zh-release-gates.html": ("已经正式上线", "HTTP 401"),
             "market-quality.html": ("Account and eligible ledger path live", "Live and iterating"),
         }
         for name, expected_fragments in public_pages.items():
@@ -132,7 +139,6 @@ class GcaWorkerStatusConsistencyTests(unittest.TestCase):
         checked_paths = [
             ROOT / "docs" / "gca_registration_backend.md",
             ROOT / "docs" / "gca_worker_pending_routes_deploy_handoff.md",
-            ROOT / "launch" / "launch_status.md",
             *[ROOT / "site" / name for name in public_pages],
             *[
                 ROOT / "site" / name
@@ -143,24 +149,20 @@ class GcaWorkerStatusConsistencyTests(unittest.TestCase):
                     "service-delivery-playbook.json",
                     "worker-routes-handoff.json",
                     "release-gates.json",
-                    "market-quality.json",
                 )
             ],
         ]
         stale_claims = (
-            "D1 visibility passed on 2026-06-18",
-            "Worker dry-run and D1 visibility passed",
-            "Latest 2026-06-18 readiness",
-            "passed-2026-06-18",
-            "blocked-error-10000",
-            "Cloudflare error 10000",
-            "current Cloudflare authorization can see D1",
-            "D1 可见性已在 2026-06-10 检查中通过",
-            "Controlled account UI in progress",
-            "Connect the GCA member and 100-credit workflows to controlled HTTPS account UI",
-            "contract only until controlled HTTPS backend and account UI are live",
-            "draft service catalog only until controlled account UI and ledgers are live",
-            "public product spec only until controlled account UI is released",
+            "production returned HTTP 404",
+            "Prepared, not production-live",
+            "Worker routes remain non-live",
+            "Wrangler logged out",
+            "Wrangler is logged out",
+            "Wrangler not logged in",
+            "Wrangler 未登录",
+            "prepared-worker-deploy-permission-pending",
+            "prepared-worker-deploy-pending",
+            "准备中路由尚未部署",
         )
         for path in checked_paths:
             text = path.read_text(encoding="utf-8")

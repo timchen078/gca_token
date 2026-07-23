@@ -2,7 +2,7 @@
   "schema": "https://gcagochina.com/access-api.json",
   "pageUrl": "https://gcagochina.com/access-api.html",
   "status": "public-access-api-member-access-live",
-  "lastUpdated": "2026-07-20",
+  "lastUpdated": "2026-07-24",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "title": "GCA Access API Contract",
@@ -28,17 +28,18 @@
     "walletVerificationLive": true,
     "creditLedgerWritesLive": true,
     "creditUsageLedgerPrepared": true,
-    "creditUsageLedgerWritesLive": false,
-    "creditUsageWorkerDeployBlocked": true,
+    "creditUsageLedgerWritesLive": true,
+    "creditUsageWorkerDeployBlocked": false,
     "creditUsageWorkerDryRunPassed": true,
-    "creditUsageWorkerDeployBlockedBy": "Latest 2026-07-20 readiness check passed Worker dry-run but found Wrangler not logged in; Cloudflare account authentication, D1 visibility, remote migration, deploy permission, and post-deploy smoke checks remain blocked",
+    "creditUsageWorkerDeployBlockedBy": null,
     "serviceRequestQueueLocalLive": true,
     "serviceRequestQueueWorkerPrepared": true,
     "serviceRequestQueueWorkerDryRunPassed": true,
-    "serviceRequestQueueWorkerDeployBlocked": true,
-    "serviceRequestQueueWorkerDeployBlockedBy": "Latest 2026-07-20 readiness check passed Worker dry-run but found Wrangler not logged in; Cloudflare account authentication, D1 visibility, remote migration, deploy permission, and post-deploy smoke checks remain blocked",
-    "serviceRequestQueueProductionLive": false,
-    "memberLedgerWritesLive": true
+    "serviceRequestQueueWorkerDeployBlocked": false,
+    "serviceRequestQueueWorkerDeployBlockedBy": null,
+    "serviceRequestQueueProductionLive": true,
+    "memberLedgerWritesLive": true,
+    "serviceRoutesProductionVerifiedAt": "2026-07-23T17:53:54Z"
   },
   "localDevelopmentBackend": {
     "status": "local-only-backend-available",
@@ -101,20 +102,20 @@
     "workerDeployReadinessCommand": "python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth",
     "workerDeployReadinessAuthSessionCheck": "cloudflare-auth-session",
     "workerDeployReadinessAuthRecoveryField": "authRecovery",
-    "latestDeployReadinessCheckAt": "2026-07-20T10:34:06Z",
+    "latestDeployReadinessCheckAt": "2026-07-23T17:55:52Z",
     "latestDeployReadinessSummary": {
       "wranglerDeployDryRun": "passed",
-      "cloudflareD1Visibility": "not-verified-auth-required",
-      "cloudflareAuthSession": "failed-not-logged-in",
-      "cloudflareWorkerDeployPermission": "not-verified-auth-required",
+      "cloudflareD1Visibility": "passed",
+      "cloudflareAuthSession": "passed",
+      "cloudflareWorkerDeployPermission": "passed",
       "code10000Seen": false,
       "writesD1Records": false,
       "deploysWorker": false
     },
-    "pendingRoutesLastObservedAt": "2026-07-20T10:33:02Z",
+    "pendingRoutesLastObservedAt": "2026-07-23T17:53:42Z",
     "pendingRouteAnonymousGetStatus": {
-      "/gca/service-requests": 404,
-      "/gca/credit-usage": 404
+      "/gca/service-requests": 401,
+      "/gca/credit-usage": 401
     },
     "pendingRoutePostDeployPublicSmokeCommand": "python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes",
     "pendingRoutePostDeployAdminSmokeCommand": "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes",
@@ -128,7 +129,7 @@
       "admin smoke check passes with --include-pending-routes"
     ],
     "workerDryRunPassed": true,
-    "workerDeployPermissionStatus": "not-verified-wrangler-not-logged-in",
+    "workerDeployPermissionStatus": "passed",
     "publicOnlyApiCheckWorkflow": ".github/workflows/check-gca-registration-api.yml",
     "publicOnlyApiCheckRequiresSecrets": false,
     "contactCsvExportTool": "tools/export_gca_email_contacts.py",
@@ -148,7 +149,7 @@
     "requiresD1DatabaseId": false,
     "requiresAdminReadTokenSecret": false,
     "futureCustomDomain": "https://api.gcagochina.com",
-    "futureCustomDomainBlockedBy": "Wrangler is not logged in; current gcagochina.com zone access is unverified",
+    "futureCustomDomainBlockedBy": "The Worker account does not currently manage the gcagochina.com DNS zone; workers.dev remains the production API host",
     "customDomainExampleConfig": "cloudflare/gca-registration-worker/wrangler.custom-domain.example.toml",
     "publicWebsiteFallback": "official-email-fallback",
     "memberAccessMigration": "cloudflare/gca-registration-worker/migrations/0003_member_access_ledgers.sql",
@@ -165,7 +166,9 @@
       "website",
       "company",
       "homepage"
-    ]
+    ],
+    "workerVersionId": "8988fc75-bbe0-403e-960a-832bf83da20f",
+    "productionRoutesVerifiedAt": "2026-07-23T17:53:54Z"
   },
   "securityModel": {
     "controlledHttpsOriginRequired": true,
@@ -462,8 +465,8 @@
       "id": "service-requests-read",
       "method": "GET",
       "path": "/gca/service-requests",
-      "status": "prepared-worker-deploy-pending",
-      "purpose": "Read operator-only GCA AI Quant Access service request queue records before reviewed service delivery through ADMIN_READ_TOKEN protected access after the Worker route passes Cloudflare auth, D1 visibility, Worker deploy permission, remote deploy, and pending-route smoke gates; local operator backend support is implemented, but the 2026-07-20 logged-out readiness check could not verify D1 visibility or deploy permission and production returned HTTP 404.",
+      "status": "live-token-protected",
+      "purpose": "Read operator-only GCA AI Quant Access service request queue records through ADMIN_READ_TOKEN protected access. The production route is live; anonymous reads are rejected and public visitors cannot read the ledger.",
       "requiredRequestFields": [
         "authorization bearer token"
       ],
@@ -497,8 +500,8 @@
       "id": "service-requests-create",
       "method": "POST",
       "path": "/gca/service-requests",
-      "status": "prepared-worker-deploy-pending",
-      "purpose": "Queue an operator-reviewed service scope request without deducting credits after the Worker route passes Cloudflare auth, D1 visibility, Worker deploy permission, remote deploy, and pending-route smoke gates; local operator backend support is implemented, but the 2026-07-20 logged-out readiness check could not verify D1 visibility or deploy permission and production returned HTTP 404. Actual service delivery and credit usage remain separate operator actions.",
+      "status": "live-token-protected",
+      "purpose": "Queue an operator-reviewed service scope request without deducting credits. The production route is live and token-protected; actual delivery and credit usage remain separate operator actions.",
       "requiredRequestFields": [
         "authorization bearer token",
         "email",
@@ -542,8 +545,8 @@
       "id": "credit-usage-read",
       "method": "GET",
       "path": "/gca/credit-usage",
-      "status": "prepared-worker-deploy-pending",
-      "purpose": "Read account-level GCA AI Quant Access credit usage records through ADMIN_READ_TOKEN protected operator access after the Worker route passes Cloudflare auth, D1 visibility, Worker deploy permission, remote deploy, and pending-route smoke gates; local operator backend support is implemented, but the 2026-07-20 logged-out readiness check could not verify D1 visibility or deploy permission and production returned HTTP 404.",
+      "status": "live-token-protected",
+      "purpose": "Read account-level GCA AI Quant Access credit usage records through ADMIN_READ_TOKEN protected operator access. The production route is live; anonymous reads are rejected.",
       "requiredRequestFields": [
         "authorization bearer token"
       ],
@@ -577,8 +580,8 @@
       "id": "credit-usage-create",
       "method": "POST",
       "path": "/gca/credit-usage",
-      "status": "prepared-worker-deploy-pending",
-      "purpose": "Record operator-reviewed utility credit usage against an existing credit ledger entry and update remaining credits after the Worker route passes Cloudflare auth, D1 visibility, Worker deploy permission, remote deploy, and pending-route smoke gates; local operator backend support is implemented, but the 2026-07-20 logged-out readiness check could not verify D1 visibility or deploy permission and production returned HTTP 404.",
+      "status": "live-token-protected",
+      "purpose": "Record operator-reviewed utility credit usage against an existing credit ledger entry and update remaining credits. The production route is live and token-protected; it does not connect wallets, transfer GCA, or create trading permission.",
       "requiredRequestFields": [
         "authorization bearer token",
         "creditLedgerId",
@@ -1005,8 +1008,8 @@
       "The member access API is live on Cloudflare Workers + D1 and uses gca_member_access_v1.",
       "The Worker verifies Base Mainnet GCA balances with read-only eth_call and ERC-20 balanceOf.",
       "Eligible 10,000 GCA holders can create one 100 GCA AI Quant Access credits ledger record.",
-      "GCA operators can record service-level credit usage against an existing credit ledger in the local operator backend; the Cloudflare Worker route is prepared, Worker dry-run passed on 2026-07-20, Wrangler is not logged in, D1 visibility and deploy permission remain unverified, and production returned HTTP 404.",
-      "GCA operators can queue service scope requests in the local operator backend before delivery; the queue does not deduct credits or create trading permission.",
+      "GCA operators can record reviewed service-level credit usage against an existing credit ledger through the live token-protected Worker route; anonymous reads are rejected.",
+      "GCA operators can queue service scope requests through the live token-protected Worker route before delivery; queued requests do not deduct credits or create trading permission.",
       "Eligible 1,000,000 GCA / 30-day holders can create a GCA Member review ledger record.",
       "The API contract forbids private keys, seed phrases, exchange API secrets, withdrawal permission, custody, and risk-control bypass.",
       "The 10,000 GCA member benefit remains manual review and reserve-wallet processing only.",

@@ -217,16 +217,14 @@ FORBIDDEN_PUBLIC_CLAIM_PATTERNS = [
     "对倒",
 ]
 LEGACY_PERSONAL_GMAIL = "cxy070800@gmail.com"
-PENDING_WORKER_READINESS_AT = "2026-07-20T10:34:06Z"
-PENDING_WORKER_PUBLIC_ROUTE_AT = "2026-07-20T10:33:02Z"
-PENDING_WORKER_BLOCKED_BY = (
-    "Latest 2026-07-20 readiness check passed Worker dry-run but found Wrangler not logged in; "
-    "Cloudflare account authentication, D1 visibility, remote migration, deploy permission, and "
-    "post-deploy smoke checks remain blocked"
-)
+PENDING_WORKER_READINESS_AT = "2026-07-23T17:55:52Z"
+PENDING_WORKER_PUBLIC_ROUTE_AT = "2026-07-23T17:53:42Z"
+PENDING_WORKER_ADMIN_ROUTE_AT = "2026-07-23T17:53:54Z"
+PENDING_WORKER_VERSION_ID = "8988fc75-bbe0-403e-960a-832bf83da20f"
+PENDING_WORKER_BLOCKED_BY = None
 PENDING_WORKER_ROUTE_OBSERVATIONS = {
-    "/gca/service-requests": 404,
-    "/gca/credit-usage": 404,
+    "/gca/service-requests": 401,
+    "/gca/credit-usage": 401,
 }
 
 
@@ -314,9 +312,9 @@ def assert_current_pool_text(text: str, label: str) -> None:
 def assert_pending_worker_readiness(summary: dict, label: str) -> None:
     expected = {
         "wranglerDeployDryRun": "passed",
-        "cloudflareD1Visibility": "not-verified-auth-required",
-        "cloudflareAuthSession": "failed-not-logged-in",
-        "cloudflareWorkerDeployPermission": "not-verified-auth-required",
+        "cloudflareD1Visibility": "passed",
+        "cloudflareAuthSession": "passed",
+        "cloudflareWorkerDeployPermission": "passed",
         "code10000Seen": False,
         "writesD1Records": False,
         "deploysWorker": False,
@@ -3654,8 +3652,8 @@ def validate_zh_api_status_page(text: str) -> None:
     for expected in (
         "GCA 中文 API 状态",
         "中文 API 状态 / 浏览器实时只读检查",
-        "2026-07-20T10:33:02Z",
-        "2026-07-20T10:34:06Z",
+        "2026-07-23T17:53:42Z",
+        "2026-07-23T17:55:52Z",
         "最新检查",
         "正在本浏览器检查",
         "邮箱注册和邮箱退订接口",
@@ -3684,18 +3682,17 @@ def validate_zh_api_status_page(text: str) -> None:
         "GET /gca/member-ledger",
         "GET/POST /gca/service-requests",
         "GET/POST /gca/credit-usage",
-        "2026-07-20 的只读生产检查返回 HTTP 404",
+        "匿名读取返回 HTTP 401",
         "部署权限检查",
         "Cloudflare 账号认证",
         "D1 可见性",
         "Worker 发布权限",
-        "Wrangler 当前未登录",
+        "Cloudflare 账号权限、D1 可见性和 Worker 发布权限均已验证",
         "authRecovery.status",
         "authRecovery.safeNextActions",
         "不能直接迁移或部署",
         "python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth",
-        "待发布接口验收",
-        "不能只因为 dry-run 通过就说已上线",
+        "生产接口验收",
         "远端 D1 migration",
         "wrangler deploy",
         "--include-pending-routes",
@@ -3731,7 +3728,7 @@ def validate_zh_api_status_page(text: str) -> None:
         "data-locale=\"zh\"",
         "data-api-live-fact",
         "6 个 GET 路由必须用 HTTP 401 拒绝匿名访问",
-        "HTTP 404 表示未部署；HTTP 401 表示已部署并受保护",
+        "服务请求和 Credit 使用已经上线；HTTP 401 表示匿名读取被拒绝",
         "全程不写入记录",
         "assets/api-health.css?v=20260720",
         "assets/api-health.js?v=20260720",
@@ -3755,8 +3752,8 @@ def validate_zh_operations_page(text: str) -> None:
         "处理退订",
         "保留本地账本",
         "当前邮箱注册、邮箱退订、账户入口、只读钱包验证、符合条件的 100 credits / GCA Member 账本记录已经上线",
-        "服务请求队列和 Credit 使用记录已经在本地运营后端准备好",
-        "Cloudflare Worker 路由仍需通过账号认证、D1、发布和待发布接口 smoke 检查后才能说正式上线",
+        "服务请求队列和 Credit 使用记录的 Cloudflare Worker 路由已经正式上线",
+        "权限、D1 migration、部署和公开/管理员只读 smoke 检查均已通过",
         "Cloudflare Workers + D1 已上线",
         "gca-registration-api.gcagochina.workers.dev",
         "需要本地 ADMIN_READ_TOKEN",
@@ -3779,8 +3776,7 @@ def validate_zh_operations_page(text: str) -> None:
         "cloudflare-auth-session",
         "D1 可见性",
         "Worker 发布权限",
-        "远端 D1 migration",
-        "wrangler deploy",
+        "D1 migration",
         "--include-pending-routes",
         ".gca_access_data/cloudflare_member_access_export.json",
         ".gca_access_data/member_access_report/gca_member_access_summary.json",
@@ -3821,7 +3817,7 @@ def validate_zh_operations_page(text: str) -> None:
         "不能把完整用户邮箱、管理员 token、完整 D1 导出文件或本地账本发给外部平台",
         "不能用运营导出绕过钱包余额验证",
         "不能把本地运营汇总、public-redacted CSV 或人工审核记录说成第三方审计或平台批准",
-        "不能把 <code>/gca/service-requests</code> 或 <code>/gca/credit-usage</code> 说成已正式发布",
+        "可以说明 <code>/gca/service-requests</code> 和 <code>/gca/credit-usage</code> 已正式上线",
         "和会员审核怎么连接",
         "只读 GCA 余额验证",
         "30 天持有资料",
@@ -3854,12 +3850,12 @@ def validate_zh_access_page(text: str) -> None:
         "中英双语会员入口",
         "可复制的会员审核资料包",
         "support@gcagochina.com",
-        "服务请求队列和 Credit 使用记录目前是本地运营后端已准备",
+        "服务请求队列和 Credit 使用记录的 Cloudflare Worker 路由已经正式上线",
         "用户提交服务意向不会自动扣减 credits",
         "Cloudflare Workers + D1 已上线",
         "受控 HTTPS 账户 UI 已上线",
         "服务请求 / Credit 使用",
-        "Worker 路由待发布",
+        "生产 Worker 路由已上线并受保护",
         "公开账户提交",
         "100 credits 公开账本记录",
         "GCA Member 公开账本记录",
@@ -3917,10 +3913,7 @@ def validate_zh_access_page(text: str) -> None:
         "不会自动激活 100 credits、GCA Member 或 10,000 GCA 会员权益",
         "服务请求不会自动扣减 credits",
         "Credit 使用记录只在人工审核交付后写入",
-        "Cloudflare 账号认证",
-        "D1 可见性",
-        "Worker 发布权限",
-        "--include-pending-routes",
+        "2026-07-23 已通过 Cloudflare 权限、远端 D1 migration、Worker 部署以及公开和管理员只读 smoke 检查",
         "未来交易相关功能必须先经过风控、模拟盘或测试环境",
         "用户资料入口",
         "继续查看账户资料",
@@ -3949,15 +3942,14 @@ def validate_zh_release_gates_page(text: str) -> None:
         "中文上线门槛 / 2026-07-23",
         "邮箱注册 API 已上线",
         "Cloudflare Workers + D1 已上线",
-        "服务请求队列和 Credit 使用记录已经完成本地运营后端准备",
+        "服务请求队列和 Credit 使用记录已经正式上线",
         "/gca/service-requests",
         "/gca/credit-usage",
         "Cloudflare 账号认证",
         "D1 可见性",
         "Worker 发布权限",
-        "远端 D1 migration",
-        "wrangler deploy",
-        "--include-pending-routes",
+        "D1 migration",
+        "Worker 部署",
         "受控 HTTPS 账户 UI",
         "只读钱包余额验证",
         "eth_call",
@@ -3966,14 +3958,14 @@ def validate_zh_release_gates_page(text: str) -> None:
         "GCA Member",
         "10,000 GCA 会员权益",
         "符合条件写入账本，会员权益仍需人工审核",
-        "本地运营已准备，Worker 路由待发布",
+        "生产 Worker 路由已上线并受管理员 token 保护",
         "服务请求队列",
         "Credit 使用记录",
-        "正式发布仍需要 Cloudflare 账号认证",
+        "已通过 Cloudflare 账号认证",
         "人工审核交付后的服务使用记录",
-        "不能说公开 Worker 路由已上线",
+        "可以说受保护的运营路由已上线",
         "不能说用户可自助消耗 credits",
-        "本地运营后端可排队处理服务意向",
+        "生产 Worker 路由可排队处理服务意向",
         "人工审核交付后记录使用数量和扣减前后余额",
         "不会自动扣减或转账",
         "BaseScan 证据包",
@@ -3993,8 +3985,7 @@ def validate_zh_release_gates_page(text: str) -> None:
         "不把 Credit 使用记录说成自助扣减",
         "账本维护",
         "服务请求路由",
-        "Wrangler 未登录",
-        "两个公开路由均返回 HTTP 404",
+        "两个运营路由已上线，匿名读取返回 HTTP 401",
         "上线资料",
         "继续查看上线门槛",
         "register.html",
@@ -6875,12 +6866,12 @@ def validate_narrative_page(text: str) -> None:
     assert_contains(text, "100 credits ledger", label)
     assert_contains(text, "GCA Member ledger", label)
     assert_contains(text, "Service request / credit usage routes", label)
-    assert_contains(text, "Worker deploy permission still required", label)
+    assert_contains(text, "Production-live and token-protected", label)
     assert_contains(text, "Published sample report", label)
     assert_contains(text, "Service Delivery Playbook", label)
     assert_contains(text, "Published operator-reviewed workflow", label)
-    assert_contains(text, "Worker Routes Handoff", label)
-    assert_contains(text, "Published deploy gate handoff", label)
+    assert_contains(text, "Worker Routes Deployment", label)
+    assert_contains(text, "Published production deployment record", label)
     assert_contains(text, "liquidation-replay-001.html", label)
     assert_contains(text, "service-delivery-playbook.html", label)
     assert_contains(text, "worker-routes-handoff.html", label)
@@ -6973,7 +6964,7 @@ def validate_narrative_json(text: str) -> None:
         raise SiteCheckError(f"{label}: Service Delivery Playbook should be published")
     if live_workflows.get("service-delivery-playbook", {}).get("publicUrl") != SERVICE_DELIVERY_PLAYBOOK_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong Service Delivery Playbook public URL")
-    if "production service-request and credit-usage Worker routes remain non-live" not in live_workflows.get("service-delivery-playbook", {}).get("claimBoundary", ""):
+    if "production service-request and credit-usage Worker routes are live and token-protected" not in live_workflows.get("service-delivery-playbook", {}).get("claimBoundary", ""):
         raise SiteCheckError(f"{label}: missing Service Delivery route boundary")
     if product_proofs.get("service-delivery-playbook", {}).get("status") != "published-operator-reviewed-workflow":
         raise SiteCheckError(f"{label}: missing Service Delivery published proof")
@@ -6985,9 +6976,9 @@ def validate_narrative_json(text: str) -> None:
         raise SiteCheckError(f"{label}: Worker Routes Handoff should be published")
     if live_workflows.get("worker-routes-handoff", {}).get("publicUrl") != WORKER_ROUTES_HANDOFF_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong Worker Routes Handoff public URL")
-    if "remain non-live until Cloudflare auth" not in live_workflows.get("worker-routes-handoff", {}).get("claimBoundary", ""):
+    if "live, token-protected, and verified" not in live_workflows.get("worker-routes-handoff", {}).get("claimBoundary", ""):
         raise SiteCheckError(f"{label}: missing Worker Routes Handoff boundary")
-    if product_proofs.get("worker-routes-handoff", {}).get("status") != "published-deploy-gate-handoff":
+    if product_proofs.get("worker-routes-handoff", {}).get("status") != "production-live-verified":
         raise SiteCheckError(f"{label}: missing Worker Routes Handoff published proof")
     if product_proofs.get("worker-routes-handoff", {}).get("pageUrl") != WORKER_ROUTES_HANDOFF_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong Worker Routes Handoff proof page")
@@ -6997,10 +6988,10 @@ def validate_narrative_json(text: str) -> None:
         raise SiteCheckError(f"{label}: Liquidation Replay should no longer be in buildNext")
     if "operator-reviewed service delivery playbook" in payload.get("buildNext", []):
         raise SiteCheckError(f"{label}: Service Delivery Playbook should no longer be in buildNext")
-    if "service request Worker route publish after Cloudflare deploy permission is restored" not in payload.get("buildNext", []):
-        raise SiteCheckError(f"{label}: missing service request deploy blocker")
-    if "credit usage Worker route publish after Cloudflare deploy permission is restored" not in payload.get("buildNext", []):
-        raise SiteCheckError(f"{label}: missing credit usage deploy blocker")
+    if "operate and monitor the live token-protected service request Worker route" not in payload.get("buildNext", []):
+        raise SiteCheckError(f"{label}: missing service request operations priority")
+    if "operate and monitor the live token-protected credit usage Worker route" not in payload.get("buildNext", []):
+        raise SiteCheckError(f"{label}: missing credit usage operations priority")
     if market.get("pair") != "GCA/USDT":
         raise SiteCheckError(f"{label}: wrong pair")
     if market.get("poolAddress") != OFFICIAL_POOL_ADDRESS:
@@ -7600,15 +7591,12 @@ def validate_service_delivery_playbook_page(text: str) -> None:
         "Worker Routes Handoff",
         "worker-routes-handoff.html",
         "Production Worker routes",
-        "Cloudflare auth",
-        "dry-run passed on 2026-07-20",
-        "Wrangler is logged out",
-        "D1 visibility remains unverified",
-        "Both prepared Worker routes returned HTTP 404",
-        "2026-07-20T10:33:02Z",
+        "Cloudflare permissions",
+        "deploy passed on 2026-07-23",
+        "Both Worker routes return HTTP 401",
         "Copy-Ready Public Summary",
         "Service Delivery References",
-        "production service-request and credit-usage Worker routes remain non-live",
+        "production service-request and credit-usage Worker routes are live and token-protected",
         "not automated trading",
         "no-custody",
         "no automatic trading access",
@@ -7635,7 +7623,7 @@ def validate_service_delivery_playbook_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong status")
     if payload.get("playbookId") != "service-delivery-playbook-v1":
         raise SiteCheckError(f"{label}: wrong playbookId")
-    if payload.get("lastUpdated") != "2026-07-20":
+    if payload.get("lastUpdated") != "2026-07-24":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
@@ -7671,33 +7659,34 @@ def validate_service_delivery_playbook_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong service request worker endpoint")
     if route_status.get("creditUsageWorkerEndpoint") != "https://gca-registration-api.gcagochina.workers.dev/gca/credit-usage":
         raise SiteCheckError(f"{label}: wrong credit usage worker endpoint")
-    if route_status.get("productionRoutesLive") is not False:
-        raise SiteCheckError(f"{label}: production routes must remain non-live")
+    if route_status.get("productionRoutesLive") is not True:
+        raise SiteCheckError(f"{label}: production routes must be live")
     if route_status.get("workerDryRunPassed") is not True:
         raise SiteCheckError(f"{label}: Worker dry run should be recorded as passed")
-    if route_status.get("d1VisibilityPassed") is not False:
-        raise SiteCheckError(f"{label}: D1 visibility must remain unverified while Wrangler is logged out")
-    if route_status.get("d1VisibilityStatus") != "not-verified-auth-required":
+    if route_status.get("d1VisibilityPassed") is not True:
+        raise SiteCheckError(f"{label}: D1 visibility must be verified")
+    if route_status.get("d1VisibilityStatus") != "passed":
         raise SiteCheckError(f"{label}: wrong D1 visibility status")
-    if route_status.get("cloudflareAuthSession") != "failed-not-logged-in":
+    if route_status.get("cloudflareAuthSession") != "passed":
         raise SiteCheckError(f"{label}: wrong Cloudflare auth status")
-    if route_status.get("workerDeployPermission") != "not-verified-auth-required":
+    if route_status.get("workerDeployPermission") != "passed":
         raise SiteCheckError(f"{label}: wrong Worker deploy permission status")
     if route_status.get("code10000Seen") is not False:
         raise SiteCheckError(f"{label}: current readiness check must not claim code 10000")
-    if route_status.get("latestReadinessCheckAt") != "2026-07-20T10:34:06Z":
+    if route_status.get("latestReadinessCheckAt") != PENDING_WORKER_READINESS_AT:
         raise SiteCheckError(f"{label}: wrong readiness timestamp")
-    if route_status.get("latestPublicRouteCheckAt") != "2026-07-20T10:33:02Z":
+    if route_status.get("latestPublicRouteCheckAt") != PENDING_WORKER_PUBLIC_ROUTE_AT:
         raise SiteCheckError(f"{label}: wrong public route timestamp")
-    if route_status.get("pendingRouteAnonymousGetStatus") != {
-        "/gca/service-requests": 404,
-        "/gca/credit-usage": 404,
-    }:
+    if route_status.get("pendingRouteAnonymousGetStatus") != PENDING_WORKER_ROUTE_OBSERVATIONS:
         raise SiteCheckError(f"{label}: wrong pending route observations")
-    blocked_by = route_status.get("blockedBy", "")
-    for expected in ("Wrangler not logged in", "D1 visibility", "deploy permission"):
-        if expected not in blocked_by:
-            raise SiteCheckError(f"{label}: blockedBy missing {expected}")
+    if route_status.get("blockedBy") is not None:
+        raise SiteCheckError(f"{label}: blockedBy must be null after deployment")
+    if route_status.get("workerVersionId") != PENDING_WORKER_VERSION_ID:
+        raise SiteCheckError(f"{label}: wrong Worker version")
+    if route_status.get("postDeployPublicSmoke") != "passed":
+        raise SiteCheckError(f"{label}: public smoke should pass")
+    if route_status.get("postDeployAdminSmoke") != "passed":
+        raise SiteCheckError(f"{label}: admin smoke should pass")
     for gate in (
         "cloudflare-auth-session passes",
         "D1 visibility passes",
@@ -7709,7 +7698,7 @@ def validate_service_delivery_playbook_json(text: str) -> None:
     ):
         if gate not in route_status.get("releaseGates", []):
             raise SiteCheckError(f"{label}: missing release gate {gate}")
-    if "Production service-request and credit-usage Worker routes are not live until all release gates pass." not in payload.get("releaseBoundaries", []):
+    if "Production service-request and credit-usage Worker routes are live and token-protected after all release gates passed." not in payload.get("releaseBoundaries", []):
         raise SiteCheckError(f"{label}: missing production-route boundary")
     if "GCA has published an operator-reviewed service delivery playbook for GCA AI Quant Access workflows." not in boundaries.get("safeClaims", []):
         raise SiteCheckError(f"{label}: missing safe claim")
@@ -7748,17 +7737,14 @@ def validate_worker_routes_handoff_page(text: str) -> None:
     label = "/worker-routes-handoff.html"
     assert_social_preview_meta(text, label, WORKER_ROUTES_HANDOFF_PAGE_URL)
     for expected in (
-        "GCA Worker Routes Handoff",
-        "Cloudflare Worker Deployment Handoff",
-        "Prepared, not production-live",
-        "Wrangler not logged in",
-        "Worker dry-run passed on 2026-07-20",
-        "D1 visibility is unverified",
-        "2026-07-20T10:33:02Z",
-        "HTTP 404 for both prepared routes",
+        "GCA Worker Routes Deployment",
+        "Cloudflare Worker Deployment Record",
+        "Production-live and protected",
+        "All required gates passed",
+        "HTTP 401",
         "docs/gca_worker_pending_routes_deploy_handoff.md",
         "Already Live Routes",
-        "Prepared But Non-Live",
+        "Newly Released Routes",
         "/gca/service-requests",
         "/gca/credit-usage",
         "Required Gate Order",
@@ -7798,11 +7784,11 @@ def validate_worker_routes_handoff_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != WORKER_ROUTES_HANDOFF_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
-    if payload.get("status") != "worker-routes-handoff-v1-published":
+    if payload.get("status") != "worker-routes-v1-production-live":
         raise SiteCheckError(f"{label}: wrong status")
     if payload.get("handoffId") != "worker-routes-handoff-v1":
         raise SiteCheckError(f"{label}: wrong handoffId")
-    if payload.get("lastUpdated") != "2026-07-20":
+    if payload.get("lastUpdated") != "2026-07-24":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
@@ -7812,26 +7798,25 @@ def validate_worker_routes_handoff_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong workerBaseUrl")
     if payload.get("sourceDocument") != "docs/gca_worker_pending_routes_deploy_handoff.md":
         raise SiteCheckError(f"{label}: wrong sourceDocument")
-    if "remain non-live" not in payload.get("scope", ""):
-        raise SiteCheckError(f"{label}: missing non-live scope boundary")
+    if "production-live" not in payload.get("scope", ""):
+        raise SiteCheckError(f"{label}: missing production-live scope")
 
     expected_status = {
-        "latestReadinessCheckAt": "2026-07-20T10:34:06Z",
-        "latestPublicRouteCheckAt": "2026-07-20T10:33:02Z",
-        "workerDryRun": "passed-2026-07-20",
-        "d1Visibility": "not-verified-auth-required",
-        "cloudflareAuthSession": "failed-not-logged-in",
-        "workerDeployPermission": "not-verified-auth-required",
+        "latestReadinessCheckAt": PENDING_WORKER_READINESS_AT,
+        "latestPublicRouteCheckAt": PENDING_WORKER_PUBLIC_ROUTE_AT,
+        "latestAdminRouteCheckAt": PENDING_WORKER_ADMIN_ROUTE_AT,
+        "workerDryRun": "passed-2026-07-23",
+        "d1Visibility": "passed",
+        "cloudflareAuthSession": "passed",
+        "workerDeployPermission": "passed",
         "code10000Seen": False,
-        "pendingRouteAnonymousGetStatus": {
-            "/gca/service-requests": 404,
-            "/gca/credit-usage": 404,
-        },
-        "remoteMigrations": "not-applied-for-pending-routes",
-        "workerDeploy": "not-run-for-pending-routes",
-        "postDeployPublicSmoke": "not-run-for-pending-routes",
-        "postDeployAdminSmoke": "not-run-for-pending-routes",
-        "productionRouteStatus": "prepared-not-production-live",
+        "pendingRouteAnonymousGetStatus": PENDING_WORKER_ROUTE_OBSERVATIONS,
+        "remoteMigrations": "applied",
+        "workerDeploy": "passed",
+        "workerVersionId": PENDING_WORKER_VERSION_ID,
+        "postDeployPublicSmoke": "passed",
+        "postDeployAdminSmoke": "passed",
+        "productionRouteStatus": "live-token-protected",
     }
     for key, expected in expected_status.items():
         if current.get(key) != expected:
@@ -7847,18 +7832,18 @@ def validate_worker_routes_handoff_json(text: str) -> None:
 
     service_requests = prepared_routes.get("/gca/service-requests", {})
     credit_usage = prepared_routes.get("/gca/credit-usage", {})
-    if service_requests.get("status") != "prepared-worker-deploy-permission-pending":
+    if service_requests.get("status") != "live-token-protected":
         raise SiteCheckError(f"{label}: wrong service request status")
-    if service_requests.get("productionLive") is not False:
-        raise SiteCheckError(f"{label}: service request must not be production-live")
+    if service_requests.get("productionLive") is not True:
+        raise SiteCheckError(f"{label}: service request must be production-live")
     if service_requests.get("createsTradingPermission") is not False:
         raise SiteCheckError(f"{label}: service request must not create trading permission")
-    if credit_usage.get("status") != "prepared-worker-deploy-permission-pending":
+    if credit_usage.get("status") != "live-token-protected":
         raise SiteCheckError(f"{label}: wrong credit usage status")
     if credit_usage.get("writtenOnlyAfterReviewedDelivery") is not True:
         raise SiteCheckError(f"{label}: credit usage must be written after reviewed delivery")
-    if credit_usage.get("productionLive") is not False:
-        raise SiteCheckError(f"{label}: credit usage must not be production-live")
+    if credit_usage.get("productionLive") is not True:
+        raise SiteCheckError(f"{label}: credit usage must be production-live")
 
     if [item.get("id") for item in gates] != [
         "read-only-readiness",
@@ -7913,7 +7898,7 @@ def validate_worker_routes_handoff_json(text: str) -> None:
         if boundaries.get(key) is not False:
             raise SiteCheckError(f"{label}: boundary {key} should be false")
 
-    if "GCA has published a Worker Routes Handoff for the prepared service-request and credit-usage routes." not in payload.get("safeClaims", []):
+    if "The GCA service-request and credit-usage Worker routes are production-live and token-protected." not in payload.get("safeClaims", []):
         raise SiteCheckError(f"{label}: missing safe claim")
     if "production self-service service delivery is live" not in payload.get("doNotClaim", []):
         raise SiteCheckError(f"{label}: missing production self-service boundary")
@@ -9052,13 +9037,11 @@ def validate_operations_page(text: str) -> None:
     assert_contains(text, "Service Request Queue", label)
     assert_contains(text, "service_requests", label)
     assert_contains(text, "does not deduct credits", label)
-    assert_contains(text, "cloudflare-auth-session", label)
-    assert_contains(text, "authRecovery", label)
-    assert_contains(text, "--include-pending-routes", label)
-    assert_contains(text, "2026-07-20 check passed Worker bundling but found Wrangler logged out", label)
+    assert_contains(text, "Cloudflare account access", label)
+    assert_contains(text, "passed on 2026-07-23 UTC", label)
     assert_contains(text, "D1 visibility", label)
     assert_contains(text, "Worker deployment permission", label)
-    assert_contains(text, "HTTP 404 for both routes", label)
+    assert_contains(text, "HTTP 401", label)
     assert_contains(text, "--include-holding-report --holding-no-live-read", label)
     assert_contains(text, "No Automatic Transfer", label)
     for step in (
@@ -9134,7 +9117,7 @@ def validate_operations_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong pageUrl")
     if payload.get("status") != "public-access-operations-runbook-published":
         raise SiteCheckError(f"{label}: wrong status")
-    if payload.get("lastUpdated") != "2026-07-20":
+    if payload.get("lastUpdated") != "2026-07-24":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
@@ -9181,12 +9164,19 @@ def validate_operations_json(text: str) -> None:
     for key in (
         "serviceRequestQueueWorkerPrepared",
         "serviceRequestQueueWorkerDryRunPassed",
-        "serviceRequestQueueWorkerDeployBlocked",
     ):
         if state.get(key) is not True:
             raise SiteCheckError(f"{label}: {key} must be true")
-    if state.get("serviceRequestQueueProductionLive") is not False:
-        raise SiteCheckError(f"{label}: serviceRequestQueueProductionLive must be false")
+    for key in (
+        "serviceRequestQueueWorkerDeployBlocked",
+        "creditUsageWorkerDeployBlocked",
+    ):
+        if state.get(key) is not False:
+            raise SiteCheckError(f"{label}: {key} must be false")
+    if state.get("serviceRequestQueueProductionLive") is not True:
+        raise SiteCheckError(f"{label}: serviceRequestQueueProductionLive must be true")
+    if state.get("creditUsageLedgerWritesLive") is not True:
+        raise SiteCheckError(f"{label}: creditUsageLedgerWritesLive must be true")
     if state.get("creditUsageWorkerDeployBlockedBy") != PENDING_WORKER_BLOCKED_BY:
         raise SiteCheckError(f"{label}: wrong credit usage blockedBy")
     if state.get("serviceRequestQueueWorkerDeployBlockedBy") != PENDING_WORKER_BLOCKED_BY:
@@ -9256,6 +9246,12 @@ def validate_operations_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong pending route observation timestamp")
     if member_ops.get("pendingRouteAnonymousGetStatus") != PENDING_WORKER_ROUTE_OBSERVATIONS:
         raise SiteCheckError(f"{label}: wrong pending route observations")
+    if member_ops.get("workerDeployPermissionStatus") != "passed":
+        raise SiteCheckError(f"{label}: Worker deploy permission should be passed")
+    if member_ops.get("workerVersionId") != PENDING_WORKER_VERSION_ID:
+        raise SiteCheckError(f"{label}: wrong Worker version")
+    if member_ops.get("productionRoutesVerifiedAt") != PENDING_WORKER_ADMIN_ROUTE_AT:
+        raise SiteCheckError(f"{label}: wrong production route verification timestamp")
     if member_ops.get("pendingRoutePostDeployPublicSmokeCommand") != "python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes":
         raise SiteCheckError(f"{label}: wrong pending public smoke command")
     if member_ops.get("pendingRoutePostDeployAdminSmokeCommand") != "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes":
@@ -9375,7 +9371,9 @@ def validate_operations_json(text: str) -> None:
         "externalReviewPackageMustBeRedacted",
         "reviewPackageDigestRequiredBeforeSharing",
         "serviceRequestQueueWorkerPrepared",
+        "serviceRequestQueueProductionLive",
         "serviceRequestDoesNotDeductCredits",
+        "creditUsageLedgerWritesLive",
         "publicRedactedExportForReviewerHandoffOnly",
     ):
         if controls.get(key) is not True:
@@ -9387,7 +9385,6 @@ def validate_operations_json(text: str) -> None:
         "manualSupportCanBypassReleaseGates",
         "fullLocalPackageExternalSharingAllowed",
         "redactedExportCanGenerateUserReplies",
-        "serviceRequestQueueProductionLive",
     ):
         if controls.get(key) is not False:
             raise SiteCheckError(f"{label}: {key} must be false")
@@ -9505,8 +9502,10 @@ def validate_operations_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing operations safe claim")
     if "GCA operators can export a redacted-public local review package for reviewer evidence handoff when local ledger records exist." not in boundaries.get("safeClaims", []):
         raise SiteCheckError(f"{label}: missing review package safe claim")
-    if "GCA operators can record service-level credit usage with before/after remaining credits in the local operator backend; the Cloudflare Worker route is prepared, Worker dry-run passed on 2026-07-20, Wrangler is not logged in, D1 visibility and deploy permission remain unverified, and production returned HTTP 404." not in boundaries.get("safeClaims", []):
-        raise SiteCheckError(f"{label}: missing pending route gated safe claim")
+    if "GCA operators can record reviewed service-level credit usage with before/after balances through the live token-protected Worker route; anonymous reads are rejected." not in boundaries.get("safeClaims", []):
+        raise SiteCheckError(f"{label}: missing live credit usage route safe claim")
+    if "GCA operators can queue service scope requests through the live token-protected Worker route before delivery; queued requests do not deduct credits or create trading permission." not in boundaries.get("safeClaims", []):
+        raise SiteCheckError(f"{label}: missing live service request route safe claim")
     if "GCA email registration and unsubscribe APIs are live on Cloudflare Workers + D1." not in boundaries.get("safeClaims", []):
         raise SiteCheckError(f"{label}: missing email API safe claim")
     if "GCA operators can sync email registration records into an ignored local JSONL ledger and export public-redacted contact CSVs." not in boundaries.get("safeClaims", []):
@@ -9575,11 +9574,10 @@ def validate_access_api_page(text: str) -> None:
     assert_contains(text, "/gca/member-review", label)
     assert_contains(text, "/gca/member-benefit-transfers", label)
     assert_contains(text, "eth_call", label)
-    assert_contains(text, "cloudflare-auth-session", label)
-    assert_contains(text, "--include-pending-routes", label)
-    assert_contains(text, "2026-07-20 readiness check found Wrangler logged out", label)
-    assert_contains(text, "D1 visibility and Worker deploy permission remain unverified", label)
-    assert_contains(text, "HTTP 404", label)
+    assert_contains(text, "Remote D1 migration", label)
+    assert_contains(text, "passed on 2026-07-23 UTC", label)
+    assert_contains(text, "Worker deploy", label)
+    assert_contains(text, "HTTP 401", label)
     assert_contains(text, "/gca/review-package", label)
     assert_contains(text, "?redact=public", label)
     assert_contains(text, "packageDigestSha256", label)
@@ -9639,7 +9637,7 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong pageUrl")
     if payload.get("status") != "public-access-api-member-access-live":
         raise SiteCheckError(f"{label}: wrong status")
-    if payload.get("lastUpdated") != "2026-07-20":
+    if payload.get("lastUpdated") != "2026-07-24":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
@@ -9676,12 +9674,19 @@ def validate_access_api_json(text: str) -> None:
     for key in (
         "serviceRequestQueueWorkerPrepared",
         "serviceRequestQueueWorkerDryRunPassed",
-        "serviceRequestQueueWorkerDeployBlocked",
     ):
         if state.get(key) is not True:
             raise SiteCheckError(f"{label}: {key} must be true")
-    if state.get("serviceRequestQueueProductionLive") is not False:
-        raise SiteCheckError(f"{label}: serviceRequestQueueProductionLive must be false")
+    for key in (
+        "serviceRequestQueueWorkerDeployBlocked",
+        "creditUsageWorkerDeployBlocked",
+    ):
+        if state.get(key) is not False:
+            raise SiteCheckError(f"{label}: {key} must be false")
+    if state.get("serviceRequestQueueProductionLive") is not True:
+        raise SiteCheckError(f"{label}: serviceRequestQueueProductionLive must be true")
+    if state.get("creditUsageLedgerWritesLive") is not True:
+        raise SiteCheckError(f"{label}: creditUsageLedgerWritesLive must be true")
     if state.get("creditUsageWorkerDeployBlockedBy") != PENDING_WORKER_BLOCKED_BY:
         raise SiteCheckError(f"{label}: wrong credit usage blockedBy")
     if state.get("serviceRequestQueueWorkerDeployBlockedBy") != PENDING_WORKER_BLOCKED_BY:
@@ -9791,8 +9796,12 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong pending route observation timestamp")
     if production_email_backend.get("pendingRouteAnonymousGetStatus") != PENDING_WORKER_ROUTE_OBSERVATIONS:
         raise SiteCheckError(f"{label}: wrong pending route observations")
-    if production_email_backend.get("workerDeployPermissionStatus") != "not-verified-wrangler-not-logged-in":
+    if production_email_backend.get("workerDeployPermissionStatus") != "passed":
         raise SiteCheckError(f"{label}: wrong Worker deploy permission status")
+    if production_email_backend.get("workerVersionId") != PENDING_WORKER_VERSION_ID:
+        raise SiteCheckError(f"{label}: wrong Worker version")
+    if production_email_backend.get("productionRoutesVerifiedAt") != PENDING_WORKER_ADMIN_ROUTE_AT:
+        raise SiteCheckError(f"{label}: wrong production route verification timestamp")
     if production_email_backend.get("pendingRoutePostDeployPublicSmokeCommand") != "python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes":
         raise SiteCheckError(f"{label}: wrong pending route public smoke command")
     if production_email_backend.get("pendingRoutePostDeployAdminSmokeCommand") != "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes":
@@ -9890,8 +9899,8 @@ def validate_access_api_json(text: str) -> None:
         if endpoint.get("status") != expected_status:
             raise SiteCheckError(f"{label}: endpoint {endpoint_key} should be {expected_status}")
     expected_local_service_request_statuses = {
-        "GET /gca/service-requests": "prepared-worker-deploy-pending",
-        "POST /gca/service-requests": "prepared-worker-deploy-pending",
+        "GET /gca/service-requests": "live-token-protected",
+        "POST /gca/service-requests": "live-token-protected",
     }
     for endpoint_key, expected_status in expected_local_service_request_statuses.items():
         endpoint = endpoint_map.get(endpoint_key)
@@ -10130,8 +10139,10 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong operationsRunbook")
     if "GCA has a live public access API for email registration, contact suppression, access config, member access, and read-only wallet verification." not in boundaries.get("safeClaims", []):
         raise SiteCheckError(f"{label}: missing API safe claim")
-    if "GCA operators can record service-level credit usage against an existing credit ledger in the local operator backend; the Cloudflare Worker route is prepared, Worker dry-run passed on 2026-07-20, Wrangler is not logged in, D1 visibility and deploy permission remain unverified, and production returned HTTP 404." not in boundaries.get("safeClaims", []):
-        raise SiteCheckError(f"{label}: missing pending route API safe claim")
+    if "GCA operators can record reviewed service-level credit usage against an existing credit ledger through the live token-protected Worker route; anonymous reads are rejected." not in boundaries.get("safeClaims", []):
+        raise SiteCheckError(f"{label}: missing live credit usage route safe claim")
+    if "GCA operators can queue service scope requests through the live token-protected Worker route before delivery; queued requests do not deduct credits or create trading permission." not in boundaries.get("safeClaims", []):
+        raise SiteCheckError(f"{label}: missing live service request route safe claim")
     if not any("automatic or self-service transferred" in item for item in boundaries.get("doNotClaim", [])):
         raise SiteCheckError(f"{label}: missing member benefit boundary")
     if not any("private keys, seed phrases" in item for item in boundaries.get("doNotClaim", [])):
@@ -10149,8 +10160,8 @@ def validate_api_status_page(text: str) -> None:
     for expected in (
         "GCA Registration API Status",
         "Registration API Status / Live Read-Only Check",
-        "2026-07-20T10:33:02Z",
-        "2026-07-20T10:34:06Z",
+        "2026-07-23T17:53:42Z",
+        "2026-07-23T17:55:52Z",
         "Cloudflare Workers + D1",
         "https://gca-registration-api.gcagochina.workers.dev",
         "Public Check",
@@ -10159,7 +10170,7 @@ def validate_api_status_page(text: str) -> None:
         "Running in this browser",
         "Worker Routes Handoff",
         "worker-routes-handoff.html",
-        "Wrangler is not logged in",
+        "Cloudflare account access",
         "Admin Read",
         "Token protected",
         "api.gcagochina.com pending zone access",
@@ -10179,7 +10190,7 @@ def validate_api_status_page(text: str) -> None:
         "/gca/member-ledger",
         "/gca/credit-usage",
         "Deploy Readiness",
-        "cloudflare-auth-session",
+        "Cloudflare account authentication",
         "D1 visibility",
         "Worker deploy permission",
         "python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth",
@@ -10207,7 +10218,7 @@ def validate_api_status_page(text: str) -> None:
         "data-locale=\"en\"",
         "data-api-live-fact",
         "Six GET routes must reject anonymous access with HTTP 401",
-        "HTTP 404 means not deployed; HTTP 401 means deployed and protected",
+        "Service requests and credit usage are live; HTTP 401 confirms anonymous reads are rejected",
         "No registration, wallet verification, service request, credit usage, token transfer, or admin-token request is sent",
         "assets/api-health.css?v=20260720",
         "assets/api-health.js?v=20260720",
@@ -10231,29 +10242,20 @@ def validate_api_status_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != API_STATUS_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
-    if payload.get("status") != "public-member-access-api-status-published":
+    if payload.get("status") != "public-member-access-service-routes-live":
         raise SiteCheckError(f"{label}: wrong status")
-    if payload.get("lastUpdated") != "2026-07-20":
+    if payload.get("lastUpdated") != "2026-07-24":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
-    if payload.get("latestPublicCheckAt") != "2026-07-20T10:33:02Z":
+    if payload.get("latestPublicCheckAt") != PENDING_WORKER_PUBLIC_ROUTE_AT:
         raise SiteCheckError(f"{label}: wrong latest public check timestamp")
-    if payload.get("latestPublicCheckStatus") != "passed":
+    if payload.get("latestPublicCheckStatus") != "passed-service-routes-live-protected":
         raise SiteCheckError(f"{label}: wrong latest public check status")
-    if payload.get("latestDeployReadinessCheckAt") != "2026-07-20T10:34:06Z":
+    if payload.get("latestDeployReadinessCheckAt") != PENDING_WORKER_READINESS_AT:
         raise SiteCheckError(f"{label}: wrong latest deploy readiness timestamp")
-    if payload.get("latestDeployReadinessStatus") != "blocked-wrangler-not-logged-in":
+    if payload.get("latestDeployReadinessStatus") != "passed-cloudflare-permissions":
         raise SiteCheckError(f"{label}: wrong latest deploy readiness status")
     readiness = payload.get("latestDeployReadinessSummary", {})
-    if readiness.get("wranglerDeployDryRun") != "passed":
-        raise SiteCheckError(f"{label}: Worker dry run should be passed")
-    if readiness.get("cloudflareD1Visibility") != "not-verified-auth-required":
-        raise SiteCheckError(f"{label}: D1 visibility should remain unverified while logged out")
-    if readiness.get("cloudflareAuthSession") != "failed-not-logged-in":
-        raise SiteCheckError(f"{label}: auth session should record not logged in")
-    if readiness.get("cloudflareWorkerDeployPermission") != "not-verified-auth-required":
-        raise SiteCheckError(f"{label}: deploy permission should remain unverified while logged out")
-    if readiness.get("code10000Seen") is not False:
-        raise SiteCheckError(f"{label}: current readiness check should not claim code 10000")
+    assert_pending_worker_readiness(readiness, label)
     for key in ("writesD1Records", "deploysWorker", "readsUserLedgers", "printsAdminReadToken"):
         if readiness.get(key) is not False:
             raise SiteCheckError(f"{label}: readiness {key} should be false")
@@ -10379,43 +10381,43 @@ def validate_api_status_json(text: str) -> None:
 
     credit_usage = admin_endpoints.get("credit-usage-read-write")
     if credit_usage is None:
-        raise SiteCheckError(f"{label}: missing credit usage deploy-pending endpoint")
+        raise SiteCheckError(f"{label}: missing credit usage endpoint")
     if credit_usage.get("method") != "GET/POST" or credit_usage.get("path") != "/gca/credit-usage":
         raise SiteCheckError(f"{label}: wrong credit usage endpoint route")
-    if credit_usage.get("status") != "prepared-worker-deploy-permission-pending":
+    if credit_usage.get("status") != "live-token-protected":
         raise SiteCheckError(f"{label}: wrong credit usage endpoint status")
     if credit_usage.get("requiresAdminReadToken") is not True or credit_usage.get("publicLedgerReadable") is not False:
         raise SiteCheckError(f"{label}: wrong credit usage admin boundary")
     if credit_usage.get("workerDryRunPassed") is not True:
         raise SiteCheckError(f"{label}: credit usage Worker dry run should be recorded as passed")
-    if credit_usage.get("lastObservedAnonymousGetStatus") != 404:
-        raise SiteCheckError(f"{label}: credit usage should record current HTTP 404")
-    if credit_usage.get("lastObservedAt") != "2026-07-20T10:33:02Z":
+    if credit_usage.get("lastObservedAnonymousGetStatus") != 401:
+        raise SiteCheckError(f"{label}: credit usage should reject anonymous reads")
+    if credit_usage.get("lastObservedAt") != PENDING_WORKER_PUBLIC_ROUTE_AT:
         raise SiteCheckError(f"{label}: credit usage observation timestamp is wrong")
-    if "Cloudflare account authentication" not in credit_usage.get("blockedBy", ""):
-        raise SiteCheckError(f"{label}: credit usage blockedBy should mention Cloudflare account authentication")
-    if "D1 visibility" not in credit_usage.get("blockedBy", ""):
-        raise SiteCheckError(f"{label}: credit usage blockedBy should mention D1 visibility")
+    if credit_usage.get("productionLive") is not True:
+        raise SiteCheckError(f"{label}: credit usage must be production-live")
+    if credit_usage.get("workerVersionId") != PENDING_WORKER_VERSION_ID:
+        raise SiteCheckError(f"{label}: wrong credit usage Worker version")
 
     service_requests = admin_endpoints.get("service-requests-read-write")
     if service_requests is None:
-        raise SiteCheckError(f"{label}: missing service request deploy-pending endpoint")
+        raise SiteCheckError(f"{label}: missing service request endpoint")
     if service_requests.get("method") != "GET/POST" or service_requests.get("path") != "/gca/service-requests":
         raise SiteCheckError(f"{label}: wrong service request endpoint route")
-    if service_requests.get("status") != "prepared-worker-deploy-permission-pending":
+    if service_requests.get("status") != "live-token-protected":
         raise SiteCheckError(f"{label}: wrong service request endpoint status")
     if service_requests.get("requiresAdminReadToken") is not True or service_requests.get("publicLedgerReadable") is not False:
         raise SiteCheckError(f"{label}: wrong service request admin boundary")
     if service_requests.get("workerDryRunPassed") is not True:
         raise SiteCheckError(f"{label}: service request Worker dry run should be recorded as passed")
-    if service_requests.get("lastObservedAnonymousGetStatus") != 404:
-        raise SiteCheckError(f"{label}: service request should record current HTTP 404")
-    if service_requests.get("lastObservedAt") != "2026-07-20T10:33:02Z":
+    if service_requests.get("lastObservedAnonymousGetStatus") != 401:
+        raise SiteCheckError(f"{label}: service request should reject anonymous reads")
+    if service_requests.get("lastObservedAt") != PENDING_WORKER_PUBLIC_ROUTE_AT:
         raise SiteCheckError(f"{label}: service request observation timestamp is wrong")
-    if "Cloudflare account authentication" not in service_requests.get("blockedBy", ""):
-        raise SiteCheckError(f"{label}: service request blockedBy should mention Cloudflare account authentication")
-    if "D1 visibility" not in service_requests.get("blockedBy", ""):
-        raise SiteCheckError(f"{label}: service request blockedBy should mention D1 visibility")
+    if service_requests.get("productionLive") is not True:
+        raise SiteCheckError(f"{label}: service request must be production-live")
+    if service_requests.get("workerVersionId") != PENDING_WORKER_VERSION_ID:
+        raise SiteCheckError(f"{label}: wrong service request Worker version")
 
     if checks.get("tool") != "tools/check_gca_registration_api.py":
         raise SiteCheckError(f"{label}: wrong check tool")
@@ -10451,12 +10453,16 @@ def validate_api_status_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong pending routes handoff page")
     if handoff.get("dataUrl") != WORKER_ROUTES_HANDOFF_URL:
         raise SiteCheckError(f"{label}: wrong pending routes handoff json")
-    if handoff.get("status") != "prepared-not-production-live":
+    if handoff.get("status") != "production-live-verified":
         raise SiteCheckError(f"{label}: wrong pending routes handoff status")
-    if "Cloudflare account authentication" not in handoff.get("blockedBy", ""):
-        raise SiteCheckError(f"{label}: handoff blockedBy should mention Cloudflare account authentication")
-    if "D1 visibility" not in handoff.get("blockedBy", ""):
-        raise SiteCheckError(f"{label}: handoff blockedBy should mention D1 visibility")
+    if handoff.get("blockedBy") is not None:
+        raise SiteCheckError(f"{label}: handoff blockedBy must be null")
+    if handoff.get("workerVersionId") != PENDING_WORKER_VERSION_ID:
+        raise SiteCheckError(f"{label}: wrong handoff Worker version")
+    if handoff.get("publicSmokePassedAt") != PENDING_WORKER_PUBLIC_ROUTE_AT:
+        raise SiteCheckError(f"{label}: wrong handoff public smoke timestamp")
+    if handoff.get("adminSmokePassedAt") != PENDING_WORKER_ADMIN_ROUTE_AT:
+        raise SiteCheckError(f"{label}: wrong handoff admin smoke timestamp")
     if set(handoff.get("routes", [])) != {"/gca/service-requests", "/gca/credit-usage"}:
         raise SiteCheckError(f"{label}: wrong pending routes handoff routes")
     if handoff.get("readOnlyGateCommand") != "python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth":
@@ -11093,11 +11099,9 @@ def validate_credits_page(text: str) -> None:
     assert_contains(text, "read-only GCA balance verification", label)
     assert_contains(text, "credit ledger record live for eligible holders", label)
     assert_contains(text, "Service requests", label)
-    assert_contains(text, "operator queue ready", label)
-    assert_contains(text, "Worker dry-run passed", label)
-    assert_contains(text, "Wrangler logged out", label)
-    assert_contains(text, "D1/deploy permission unverified", label)
-    assert_contains(text, "production HTTP 404", label)
+    assert_contains(text, "operator usage ledger live", label)
+    assert_contains(text, "production Worker route live and token-protected", label)
+    assert_contains(text, "production Worker ledger route live and token-protected", label)
     assert_contains(text, "does not deduct credits", label)
     assert_contains(text, "member ledger record live for eligible holders", label)
     assert_contains(text, "support review queue", label)
@@ -11134,7 +11138,7 @@ def validate_credits_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong pageUrl")
     if payload.get("status") != "public-credits-catalog-ledger-path-live":
         raise SiteCheckError(f"{label}: wrong status")
-    if payload.get("lastUpdated") != "2026-07-20":
+    if payload.get("lastUpdated") != "2026-07-24":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
@@ -11154,12 +11158,19 @@ def validate_credits_json(text: str) -> None:
     for key in (
         "serviceRequestQueueWorkerPrepared",
         "serviceRequestQueueWorkerDryRunPassed",
-        "serviceRequestQueueWorkerDeployBlocked",
     ):
         if state.get(key) is not True:
             raise SiteCheckError(f"{label}: {key} must be true")
-    if state.get("serviceRequestQueueProductionLive") is not False:
-        raise SiteCheckError(f"{label}: serviceRequestQueueProductionLive must be false")
+    for key in (
+        "serviceRequestQueueWorkerDeployBlocked",
+        "creditUsageWorkerDeployBlocked",
+    ):
+        if state.get(key) is not False:
+            raise SiteCheckError(f"{label}: {key} must be false")
+    if state.get("serviceRequestQueueProductionLive") is not True:
+        raise SiteCheckError(f"{label}: serviceRequestQueueProductionLive must be true")
+    if state.get("creditUsageLedgerWritesLive") is not True:
+        raise SiteCheckError(f"{label}: creditUsageLedgerWritesLive must be true")
     if state.get("creditUsageWorkerDeployBlockedBy") != PENDING_WORKER_BLOCKED_BY:
         raise SiteCheckError(f"{label}: wrong credit usage blockedBy")
     if state.get("serviceRequestQueueWorkerDeployBlockedBy") != PENDING_WORKER_BLOCKED_BY:
@@ -11293,7 +11304,7 @@ def validate_credits_json(text: str) -> None:
             raise SiteCheckError(f"{label}: {key} must be false")
     if safety.get("simulationFirstRequiredBeforeFutureExecution") is not True:
         raise SiteCheckError(f"{label}: simulation-first requirement must be true")
-    if usage_ledger.get("status") != "local-operator-credit-usage-ledger-ready-worker-auth-d1-deploy-gate-pending":
+    if usage_ledger.get("status") != "live-token-protected-operator-credit-usage-ledger":
         raise SiteCheckError(f"{label}: wrong usage ledger status")
     if usage_ledger.get("endpoint") != "https://gca-registration-api.gcagochina.workers.dev/gca/credit-usage":
         raise SiteCheckError(f"{label}: wrong usage ledger endpoint")
@@ -11306,8 +11317,16 @@ def validate_credits_json(text: str) -> None:
     assert_pending_worker_readiness(usage_ledger.get("latestDeployReadinessSummary", {}), label)
     if usage_ledger.get("lastObservedAt") != PENDING_WORKER_PUBLIC_ROUTE_AT:
         raise SiteCheckError(f"{label}: wrong usage ledger observation timestamp")
-    if usage_ledger.get("lastObservedAnonymousGetStatus") != 404:
+    if usage_ledger.get("lastObservedAnonymousGetStatus") != 401:
         raise SiteCheckError(f"{label}: wrong usage ledger route observation")
+    if usage_ledger.get("productionWorkerEndpointLive") is not True:
+        raise SiteCheckError(f"{label}: usage ledger production endpoint must be live")
+    if usage_ledger.get("workerVersionId") != PENDING_WORKER_VERSION_ID:
+        raise SiteCheckError(f"{label}: wrong usage ledger Worker version")
+    if usage_ledger.get("publicSmokePassedAt") != PENDING_WORKER_PUBLIC_ROUTE_AT:
+        raise SiteCheckError(f"{label}: wrong usage ledger public smoke timestamp")
+    if usage_ledger.get("adminSmokePassedAt") != PENDING_WORKER_ADMIN_ROUTE_AT:
+        raise SiteCheckError(f"{label}: wrong usage ledger admin smoke timestamp")
     if usage_ledger.get("postDeployPublicSmokeCommand") != "python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes":
         raise SiteCheckError(f"{label}: wrong usage ledger public smoke command")
     if usage_ledger.get("postDeployAdminSmokeCommand") != "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes":
@@ -11321,7 +11340,7 @@ def validate_credits_json(text: str) -> None:
     ):
         if gate not in usage_ledger.get("releaseGatesBeforeLive", []):
             raise SiteCheckError(f"{label}: missing usage ledger release gate {gate}")
-    if service_request_queue.get("status") != "local-operator-service-request-queue-ready-worker-auth-d1-deploy-gate-pending":
+    if service_request_queue.get("status") != "live-token-protected-operator-service-request-queue":
         raise SiteCheckError(f"{label}: wrong service request queue status")
     if service_request_queue.get("endpoint") != "https://gca-registration-api.gcagochina.workers.dev/gca/service-requests":
         raise SiteCheckError(f"{label}: wrong service request worker endpoint")
@@ -11329,8 +11348,8 @@ def validate_credits_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong service request local endpoint")
     if service_request_queue.get("packetVersion") != "gca_service_request_v1":
         raise SiteCheckError(f"{label}: wrong service request packet version")
-    if service_request_queue.get("productionWorkerEndpointLive") is not False:
-        raise SiteCheckError(f"{label}: service request production endpoint must be false")
+    if service_request_queue.get("productionWorkerEndpointLive") is not True:
+        raise SiteCheckError(f"{label}: service request production endpoint must be live")
     if service_request_queue.get("deductsCredits") is not False:
         raise SiteCheckError(f"{label}: service request must not deduct credits")
     if service_request_queue.get("createsTradingPermission") is not False:
@@ -11344,8 +11363,14 @@ def validate_credits_json(text: str) -> None:
     assert_pending_worker_readiness(service_request_queue.get("latestDeployReadinessSummary", {}), label)
     if service_request_queue.get("lastObservedAt") != PENDING_WORKER_PUBLIC_ROUTE_AT:
         raise SiteCheckError(f"{label}: wrong service request observation timestamp")
-    if service_request_queue.get("lastObservedAnonymousGetStatus") != 404:
+    if service_request_queue.get("lastObservedAnonymousGetStatus") != 401:
         raise SiteCheckError(f"{label}: wrong service request route observation")
+    if service_request_queue.get("workerVersionId") != PENDING_WORKER_VERSION_ID:
+        raise SiteCheckError(f"{label}: wrong service request Worker version")
+    if service_request_queue.get("publicSmokePassedAt") != PENDING_WORKER_PUBLIC_ROUTE_AT:
+        raise SiteCheckError(f"{label}: wrong service request public smoke timestamp")
+    if service_request_queue.get("adminSmokePassedAt") != PENDING_WORKER_ADMIN_ROUTE_AT:
+        raise SiteCheckError(f"{label}: wrong service request admin smoke timestamp")
     if service_request_queue.get("postDeployPublicSmokeCommand") != "python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes":
         raise SiteCheckError(f"{label}: wrong service request public smoke command")
     if service_request_queue.get("postDeployAdminSmokeCommand") != "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes":
@@ -11403,8 +11428,10 @@ def validate_credits_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong memberLedger")
     if "GCA has published a service catalog for GCA AI Quant Access credits." not in boundaries.get("safeClaims", []):
         raise SiteCheckError(f"{label}: missing credits safe claim")
-    if "Operator-reviewed service delivery can be recorded through the local GCA credit usage ledger with before/after remaining credits; the Cloudflare Worker route is prepared, Worker dry-run passed on 2026-07-20, Wrangler is not logged in, D1 visibility and deploy permission remain unverified, and production returned HTTP 404." not in boundaries.get("safeClaims", []):
-        raise SiteCheckError(f"{label}: missing pending route credits safe claim")
+    if "Operator-reviewed service delivery can be recorded through the live token-protected GCA credit usage Worker route with before/after remaining credits; anonymous reads are rejected." not in boundaries.get("safeClaims", []):
+        raise SiteCheckError(f"{label}: missing live credit usage route safe claim")
+    if "Operators can queue requested service scope through the live token-protected service request Worker route before delivery; queued requests do not deduct credits." not in boundaries.get("safeClaims", []):
+        raise SiteCheckError(f"{label}: missing live service request route safe claim")
     if not any("automatic or self-service transferred" in item for item in boundaries.get("doNotClaim", [])):
         raise SiteCheckError(f"{label}: missing member benefit boundary")
     if not any("cash, income" in item for item in boundaries.get("doNotClaim", [])):
@@ -11440,7 +11467,7 @@ def validate_release_gates_page(text: str) -> None:
     assert_contains(text, "SHA-256 continuity checked before review writes", label)
     assert_contains(text, "Review chain checkpoint", label)
     assert_contains(text, "Unsigned local export live; separate retention required", label)
-    assert_contains(text, "Worker dry-run passed; Wrangler not logged in; D1 visibility and deploy permission unverified; both routes returned HTTP 404 on 2026-07-20", label)
+    assert_contains(text, "Production-live and token-protected; migration, deploy, public smoke, and admin smoke passed on 2026-07-23 UTC", label)
     assert_contains(text, "production approval workflow still gated", label)
     assert_contains(text, "simulation or testnet first", label)
     assert_contains(text, "BaseScan token profile publication", label)
@@ -11473,7 +11500,7 @@ def validate_release_gates_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong pageUrl")
     if payload.get("status") != "public-release-gates-account-ledger-path-live":
         raise SiteCheckError(f"{label}: wrong status")
-    if payload.get("lastUpdated") != "2026-07-23":
+    if payload.get("lastUpdated") != "2026-07-24":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
@@ -11496,22 +11523,26 @@ def validate_release_gates_json(text: str) -> None:
         raise SiteCheckError(f"{label}: public support review checkpoint must remain false")
     if state.get("productionSupportApprovalWorkflowLive") is not False:
         raise SiteCheckError(f"{label}: production support approval workflow must remain false")
-    if state.get("pendingServiceRoutesProductionLive") is not False:
-        raise SiteCheckError(f"{label}: pending service routes must remain non-live")
+    if state.get("pendingServiceRoutesProductionLive") is not True:
+        raise SiteCheckError(f"{label}: service routes must be production-live")
     if state.get("latestPendingRouteReadinessCheckAt") != PENDING_WORKER_READINESS_AT:
         raise SiteCheckError(f"{label}: wrong pending route readiness timestamp")
     if state.get("latestPendingRoutePublicCheckAt") != PENDING_WORKER_PUBLIC_ROUTE_AT:
         raise SiteCheckError(f"{label}: wrong pending route public check timestamp")
-    if state.get("cloudflareAuthSession") != "failed-not-logged-in":
+    if state.get("latestPendingRouteAdminCheckAt") != PENDING_WORKER_ADMIN_ROUTE_AT:
+        raise SiteCheckError(f"{label}: wrong pending route admin check timestamp")
+    if state.get("cloudflareAuthSession") != "passed":
         raise SiteCheckError(f"{label}: wrong Cloudflare auth state")
-    if state.get("cloudflareD1Visibility") != "not-verified-auth-required":
+    if state.get("cloudflareD1Visibility") != "passed":
         raise SiteCheckError(f"{label}: wrong D1 visibility state")
-    if state.get("cloudflareWorkerDeployPermission") != "not-verified-auth-required":
+    if state.get("cloudflareWorkerDeployPermission") != "passed":
         raise SiteCheckError(f"{label}: wrong Worker deploy permission state")
     if state.get("cloudflareCode10000Seen") is not False:
         raise SiteCheckError(f"{label}: code 10000 must not be reported by the latest logged-out check")
     if state.get("pendingRouteAnonymousGetStatus") != PENDING_WORKER_ROUTE_OBSERVATIONS:
         raise SiteCheckError(f"{label}: wrong pending route observations")
+    if state.get("workerVersionId") != PENDING_WORKER_VERSION_ID:
+        raise SiteCheckError(f"{label}: wrong Worker version")
     if state.get("baseScanTokenProfile") != "ready-for-owner-resubmission":
         raise SiteCheckError(f"{label}: wrong BaseScan state")
     if state.get("baseScanTokenProfileLastCheckedDate") != "2026-07-23":
@@ -15919,23 +15950,33 @@ def validate_sitemap(text: str) -> None:
     assert_not_contains(text, "https://gcagochina.com/data.html", label)
     assert_not_contains(text, "https://gcagochina.com/operator.html", label)
     for path in (
-        "api-status.html",
-        "api-status.json",
         "roadmap.html",
         "roadmap.json",
-        "zh-api-status.html",
+    ):
+        assert_sitemap_lastmod(path, "2026-07-20")
+    for path in (
+        "access-api.html",
+        "access-api.json",
+        "api-status.html",
+        "api-status.json",
+        "credits.html",
+        "credits.json",
+        "narrative.html",
+        "narrative.json",
+        "operations.html",
+        "operations.json",
+        "release-gates.html",
+        "release-gates.json",
         "service-delivery-playbook.html",
         "service-delivery-playbook.json",
         "worker-routes-handoff.html",
         "worker-routes-handoff.json",
-        "operations.html",
-        "operations.json",
-        "access-api.html",
-        "access-api.json",
-        "credits.html",
-        "credits.json",
+        "zh-access.html",
+        "zh-api-status.html",
+        "zh-operations.html",
+        "zh-release-gates.html",
     ):
-        assert_sitemap_lastmod(path, "2026-07-20")
+        assert_sitemap_lastmod(path, "2026-07-24")
     for path in (
         "action-plan.html",
         "liquidation-replay-001.html",
@@ -15967,8 +16008,6 @@ def validate_sitemap(text: str) -> None:
         "listing-readiness.html",
         "listing-readiness.json",
         "portfolio-risk.html",
-        "release-gates.html",
-        "release-gates.json",
         "research-notes.html",
         "reviewer-kit.html",
         "reviewer-kit.json",
@@ -15982,7 +16021,6 @@ def validate_sitemap(text: str) -> None:
         "zh-basescan-handoff.html",
         "zh-basescan-preflight.html",
         "zh-faq.html",
-        "zh-release-gates.html",
     ):
         assert_sitemap_lastmod(path, "2026-07-18")
     for path in (

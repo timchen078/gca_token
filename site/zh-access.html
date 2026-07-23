@@ -309,7 +309,7 @@
         <p class="lead">这一页把 GCA 用户入口讲清楚：邮箱注册 API、受控 HTTPS 账户 UI、只读钱包余额验证、100 credits 账本记录、GCA Member 账本记录和 30 天持有审核流程已经接到 Cloudflare Workers + D1。</p>
         <p class="lead">用户现在可以通过中英双语会员入口提交邮箱和 Base 钱包，后端用只读 ERC-20 balanceOf 验证 GCA 余额并写入符合条件的账本记录。页面也可以生成一份可复制的会员审核资料包，方便后续发给 support@gcagochina.com 人工跟进。</p>
         <p class="lead">10,000 GCA 会员权益仍是人工审核后的储备钱包转账流程，不是自动发放。</p>
-        <p class="lead">服务请求队列和 Credit 使用记录目前是本地运营后端已准备、Cloudflare Worker 路由待发布；用户提交服务意向不会自动扣减 credits，也不会获得交易权限或自动转账。</p>
+        <p class="lead">服务请求队列和 Credit 使用记录的 Cloudflare Worker 路由已经正式上线并受管理员 token 保护；用户提交服务意向不会自动扣减 credits，也不会获得交易权限或自动转账。</p>
         <div class="actions">
           <a class="button primary" href="register.html">邮箱注册</a>
           <a class="button primary" href="zh-api-status.html">中文 API 状态</a>
@@ -344,7 +344,7 @@
         </div>
         <div class="fact">
           <span class="label">服务请求 / Credit 使用</span>
-          <span class="value pending">本地运营准备好，Worker 路由待发布</span>
+          <span class="value good">生产 Worker 路由已上线并受保护</span>
         </div>
       </section>
 
@@ -412,8 +412,8 @@
             <div class="row"><span>100 credits 公开账本记录</span><strong class="good">符合 10,000 GCA 即可记录</strong></div>
             <div class="row"><span>GCA Member 公开账本记录</span><strong class="good">符合 1,000,000 GCA / 30 天即可记录</strong></div>
             <div class="row"><span>10,000 GCA 会员权益转账</span><strong class="pending">人工审核和储备钱包处理</strong></div>
-            <div class="row"><span>服务请求队列</span><strong class="pending">本地运营后端准备好；<code>/gca/service-requests</code> Worker 路由待发布</strong></div>
-            <div class="row"><span>Credit 使用记录</span><strong class="pending">人工审核交付后记录；<code>/gca/credit-usage</code> Worker 路由待发布</strong></div>
+            <div class="row"><span>服务请求队列</span><strong class="good"><code>/gca/service-requests</code> 生产路由已上线并受管理员 token 保护</strong></div>
+            <div class="row"><span>Credit 使用记录</span><strong class="good">人工审核交付后记录；<code>/gca/credit-usage</code> 生产路由已上线并受保护</strong></div>
             <div class="row"><span>支持跟进</span><strong>通过中文支持入口补充审核资料包、公开交易哈希、持有开始日期和验证结果。</strong></div>
           </div>
         </div>
@@ -440,7 +440,7 @@
           <div class="row"><span>钱包验证</span><strong>Base Mainnet GCA 只读余额验证和持有记录复核</strong></div>
           <div class="row"><span>100 credits</span><strong>信用账本、支持审核流程和用户通知继续完善</strong></div>
           <div class="row"><span>GCA Member</span><strong>会员账本、30 天持有审核和支持审核流程继续完善</strong></div>
-          <div class="row"><span>服务请求 / Credit 使用</span><strong>等待 Cloudflare 账号认证、D1 可见性、Worker 发布权限、远端 D1 migration、<code>wrangler deploy</code> 和 <code>--include-pending-routes</code> smoke 检查通过后再公开为正式 Worker 路由</strong></div>
+          <div class="row"><span>服务请求 / Credit 使用</span><strong>2026-07-23 已通过 Cloudflare 权限、远端 D1 migration、Worker 部署以及公开和管理员只读 smoke 检查；匿名读取返回 HTTP 401</strong></div>
           <div class="row"><span>用户资料</span><strong>隐私说明和参与条款持续公开</strong></div>
           <div class="row"><span>量化产品</span><strong>未来交易相关功能必须先经过风控、模拟盘或测试环境</strong></div>
         </div>

@@ -317,8 +317,8 @@
         <p class="eyebrow">中文 API 状态 / 浏览器实时只读检查</p>
         <h1 id="title">GCA 中文 API 状态</h1>
         <p class="lead">这一页用中文说明 GCA 邮箱注册和邮箱退订接口的当前状态。公网邮箱注册已经接到 Cloudflare Workers + D1，普通用户可以通过官网表单提交邮箱；管理员读取接口仍需要本地管理 token。</p>
-        <p class="lead">公网只读 smoke check 已在 <code>2026-07-20T10:33:02Z</code> 通过。下方实时面板可以在当前浏览器重复安全的只读部分：核对公开身份并确认管理员读取会拒绝匿名访问，全程不写入记录。</p>
-        <p class="lead">本地部署权限检查已在 <code>2026-07-20T10:34:06Z</code> 刷新。Worker 打包仍然通过，但 Wrangler 当前未登录且 <code>cloudflare-auth-session</code> 失败，因此 Cloudflare 账号权限、D1 可见性和 Worker 发布权限都没有通过门槛。全部权限检查通过前，不能执行远端 migration 或 deploy。</p>
+        <p class="lead">公网只读 smoke check 已在 <code>2026-07-23T17:53:42Z</code> 通过。下方实时面板可以在当前浏览器重复安全的只读部分：核对公开身份并确认管理员读取会拒绝匿名访问，全程不写入记录。</p>
+        <p class="lead">部署权限检查已在 <code>2026-07-23T17:55:52Z</code> 通过。Cloudflare 账号权限、D1 可见性和 Worker 发布权限均已验证；服务请求和 Credit 使用路由已经正式上线并受管理员 token 保护。</p>
         <p class="lead">公开 API 支持邮箱、退订、会员账户提交和只读余额验证；它不要求私钥或钱包签名，也不会自动转移 GCA 或自动发放 10,000 GCA 会员权益。</p>
         <div class="actions">
           <a class="button primary" href="register.html">打开邮箱注册</a>
@@ -390,8 +390,8 @@
           </div>
           <div class="live-health-row" data-api-check="pending">
             <div class="live-health-copy">
-              <strong>准备中的运营路由</strong>
-              <span class="note">服务请求和 Credit 使用：HTTP 404 表示未部署；HTTP 401 表示已部署并受保护</span>
+              <strong>受保护的运营路由</strong>
+              <span class="note">服务请求和 Credit 使用已经上线；HTTP 401 表示匿名读取被拒绝</span>
             </div>
             <span class="live-health-result" data-check-status>等待检查</span>
           </div>
@@ -439,11 +439,11 @@
           </article>
           <article class="card">
             <h3>服务请求队列</h3>
-            <p class="note"><code>GET/POST /gca/service-requests</code> 已完成源码、D1 迁移和 Worker dry-run。2026-07-20 的只读生产检查返回 HTTP 404，确认尚未部署；Wrangler 当前未登录，远端 D1 migration、<code>wrangler deploy</code> 和部署后 smoke 检查仍被阻塞。</p>
+            <p class="note"><code>GET/POST /gca/service-requests</code> 已正式上线并受管理员 token 保护。远端 D1 migration、Worker 部署、公网 smoke 和管理员只读 smoke 检查已在 2026-07-23 UTC 通过；匿名读取返回 HTTP 401。</p>
           </article>
           <article class="card">
             <h3>Credit 使用记录</h3>
-            <p class="note"><code>GET/POST /gca/credit-usage</code> 已完成源码、D1 迁移和 Worker dry-run。2026-07-20 的只读生产检查返回 HTTP 404，确认尚未部署；Wrangler 当前未登录，远端 D1 migration、<code>wrangler deploy</code> 和部署后 smoke 检查仍被阻塞。</p>
+            <p class="note"><code>GET/POST /gca/credit-usage</code> 已正式上线并受管理员 token 保护。远端 D1 migration、Worker 部署、公网 smoke 和管理员只读 smoke 检查已在 2026-07-23 UTC 通过；匿名读取返回 HTTP 401。</p>
           </article>
           <article class="card">
             <h3>未来域名</h3>
@@ -465,12 +465,12 @@
         </div>
         <div class="panel">
           <h2>部署权限检查</h2>
-          <p class="note">发布新的 Worker 版本前先运行这个命令，确认打包、Cloudflare 账号认证、D1 可见性和 Workers 发布权限。2026-07-20 的结果是 dry-run 通过，但 Wrangler 未登录，因此 D1 可见性和发布权限都没有通过门槛。如果报告出现 <code>authRecovery.status</code>，先按 <code>authRecovery.safeNextActions</code> 处理，不能直接迁移或部署。</p>
+          <p class="note">发布新的 Worker 版本前先运行这个命令，确认打包、Cloudflare 账号认证、D1 可见性和 Workers 发布权限。2026-07-23 的全部门槛已经通过。如果未来报告出现阻塞的 <code>authRecovery.status</code>，先按 <code>authRecovery.safeNextActions</code> 处理，不能直接迁移或部署。</p>
           <pre>python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth</pre>
         </div>
         <div class="panel">
-          <h2>待发布接口验收</h2>
-          <p class="note"><code>/gca/service-requests</code> 和 <code>/gca/credit-usage</code> 不能只因为 dry-run 通过就说已上线。2026-07-20 检查仍返回 HTTP 404，并且 Wrangler 未登录；必须先恢复 Cloudflare 认证，再完成权限门槛、远端 D1 migration、<code>wrangler deploy</code>、公开 smoke check 和管理员 smoke check，两个 smoke check 都要带 <code>--include-pending-routes</code>。</p>
+          <h2>生产接口验收</h2>
+          <p class="note"><code>/gca/service-requests</code> 和 <code>/gca/credit-usage</code> 已完成权限门槛、远端 D1 migration、<code>wrangler deploy</code>、公开 smoke check 和管理员 smoke check。匿名读取返回 HTTP 401，管理员 token 读取返回 HTTP 200。</p>
           <pre>python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes</pre>
           <pre>python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes</pre>
         </div>

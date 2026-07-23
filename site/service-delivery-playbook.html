@@ -308,7 +308,7 @@
         <p class="eyebrow">Operator-Reviewed Service Delivery</p>
         <h1 id="title">GCA Service Delivery Playbook</h1>
         <p class="lead">This playbook explains how GCA AI Quant Access services should move from account intake to manual review, report delivery, and credit usage records without custody, wallet signatures, exchange API secrets, or automatic trading access. It is not automated trading and not a self-service trading product.</p>
-        <p class="lead">The public website can show the service workflow today; production service-request and credit-usage Worker routes remain non-live until Cloudflare auth, Worker deploy permission, remote migrations, and pending-route smoke checks pass.</p>
+        <p class="lead">The public website shows the service workflow, and the production service-request and credit-usage Worker routes are live and token-protected. Cloudflare permissions, remote migration, deploy, and public/admin read-only smoke checks passed on 2026-07-23 UTC.</p>
         <div class="actions">
           <a class="button primary" href="access.html">Access Portal</a>
           <a class="button" href="credits.html">Credits Catalog</a>
@@ -393,9 +393,9 @@
         <h2 id="routeTitle">Route Status</h2>
         <div class="list">
           <div class="row"><span>Local operator backend</span><strong class="good">Ready for service_requests and credit_usage ledger records.</strong></div>
-          <div class="row"><span>Worker source and D1 migrations</span><strong class="pending">Prepared; dry-run passed on 2026-07-20, but Wrangler is logged out and D1 visibility remains unverified.</strong></div>
-          <div class="row"><span>Public route check</span><strong class="pending">Both prepared Worker routes returned HTTP 404 at 2026-07-20T10:33:02Z and remain non-live.</strong></div>
-          <div class="row"><span>Production Worker routes</span><strong class="pending">Non-live until Cloudflare auth, Worker deploy permission, remote migration, deploy, and smoke checks pass.</strong></div>
+          <div class="row"><span>Worker source and D1 migrations</span><strong class="good">Production migration and Worker deploy passed on 2026-07-23 UTC.</strong></div>
+          <div class="row"><span>Public route check</span><strong class="good">Both Worker routes return HTTP 401 to anonymous reads and are token-protected.</strong></div>
+          <div class="row"><span>Production Worker routes</span><strong class="good">Live and token-protected after Cloudflare auth, remote migration, deploy, and public/admin smoke checks passed.</strong></div>
           <div class="row"><span>Deploy handoff</span><strong><a href="worker-routes-handoff.html">Worker Routes Handoff</a> publishes the exact gate order for service-request and credit-usage route release.</strong></div>
           <div class="row"><span>Public claim</span><strong>Say the playbook is published and local operator recording is ready; do not say production self-service service delivery is live.</strong></div>
         </div>
@@ -403,7 +403,7 @@
 
       <section class="section panel" aria-labelledby="copyTitle">
         <h2 id="copyTitle">Copy-Ready Public Summary</h2>
-        <p class="note">GCA Service Delivery Playbook is now published. It explains how GCA AI Quant Access requests move through account intake, read-only wallet checks, operator review, report delivery, and credit usage records. The workflow is no-custody and operator-reviewed; production service-request and credit-usage Worker routes remain non-live until Cloudflare deploy gates pass.</p>
+        <p class="note">GCA Service Delivery Playbook is published. It explains how GCA AI Quant Access requests move through account intake, read-only wallet checks, operator review, report delivery, and credit usage records. The production service-request and credit-usage Worker routes are live and token-protected; the workflow remains no-custody and operator-reviewed.</p>
       </section>
 
       <section class="section panel" aria-labelledby="refsTitle">

@@ -1,6 +1,6 @@
-# GCA Pending Worker Routes Deploy Handoff
+# GCA Worker Routes Deployment Record
 
-This handoff is for publishing the prepared operator-only Worker routes after Cloudflare Workers service permission is restored.
+This record documents the production release and repeatable deployment gates for the operator-only Worker routes.
 
 ## Current State
 
@@ -12,6 +12,7 @@ https://gca-registration-api.gcagochina.workers.dev
 
 Already live routes:
 
+- `GET /` redirects to `https://gcagochina.com/`
 - `GET /health`
 - `GET /gca/access-config`
 - `POST /gca/email-registrations`
@@ -24,19 +25,24 @@ Already live routes:
 - token-protected `GET /gca/member-access`
 - token-protected `GET /gca/credit-ledger`
 - token-protected `GET /gca/member-ledger`
-
-Prepared but not production-live until a new Worker is deployed:
-
 - token-protected `GET/POST /gca/service-requests`
 - token-protected `GET/POST /gca/credit-usage`
 
-The prepared routes are operator routes only. They are not public user claim endpoints, they do not connect wallets, they do not request wallet signatures, they do not send transactions, they do not transfer GCA, and they do not create live trading permission.
+The two service routes are production-live and token-protected. They are operator routes only. They are not public user claim endpoints, they do not connect wallets, they do not request wallet signatures, they do not send transactions, they do not transfer GCA, and they do not create live trading permission.
 
-## Blocker
+## Production Verification
 
-The latest read-only readiness check ran at `2026-07-20T10:34:06Z`. Local source, migrations, package install, and Wrangler dry-run passed, but Wrangler was not logged in. Cloudflare account access, D1 visibility, and Worker deploy permission were therefore not verified. A separate public-only check at `2026-07-20T10:33:02Z` returned HTTP `404` for both prepared routes, confirming they are not deployed.
+The deployment was completed on `2026-07-23` UTC.
 
-Do not apply remote migrations or run `wrangler deploy` until `cloudflare-auth-session`, `cloudflare-d1-visible`, and `cloudflare-worker-deploy-permission` all pass. If `Authentication error [code: 10000]` reappears after login, treat it as an account or permission blocker and follow `authRecovery.safeNextActions`.
+- Readiness passed at `2026-07-23T17:55:52Z`.
+- Remote migration `0005_service_requests.sql` applied successfully.
+- Worker version `8988fc75-bbe0-403e-960a-832bf83da20f` deployed successfully.
+- Public smoke passed at `2026-07-23T17:53:42Z`.
+- Admin read-only smoke passed at `2026-07-23T17:53:54Z`.
+- Anonymous reads for both operator routes return HTTP `401`.
+- Token-protected admin reads return HTTP `200`.
+
+The deployment blocker is cleared. For future releases, do not apply remote migrations or run `wrangler deploy` until `cloudflare-auth-session`, `cloudflare-d1-visible`, and `cloudflare-worker-deploy-permission` all pass. If `Authentication error [code: 10000]` reappears after login, treat it as an account or permission blocker and follow `authRecovery.safeNextActions`.
 
 ## Preconditions
 
@@ -72,7 +78,7 @@ cd /Users/abc/Desktop/gca_token/cloudflare/gca-registration-worker
 npx wrangler d1 migrations apply gca_registration --remote
 ```
 
-This applies pending remote D1 migrations, including:
+This applies pending remote D1 migrations. The production database already includes:
 
 - `0004_credit_usage_ledger.sql`
 - `0005_service_requests.sql`
@@ -88,7 +94,7 @@ cd /Users/abc/Desktop/gca_token/cloudflare/gca-registration-worker
 npx wrangler deploy
 ```
 
-Do not change public site status to live until the post-deploy checks pass.
+Do not change public site status for a future release until the post-deploy checks pass.
 
 ## Gate 4: Post-Deploy Public Smoke
 
@@ -99,7 +105,7 @@ cd /Users/abc/Desktop/gca_token
 python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes
 ```
 
-This verifies public health/config version fields, CORS, and unauthenticated admin-read rejection for the pending routes. It does not need `ADMIN_READ_TOKEN` and does not write test records.
+This verifies public health/config version fields, CORS, and unauthenticated admin-read rejection for the service routes. It does not need `ADMIN_READ_TOKEN` and does not write test records.
 
 ## Gate 5: Post-Deploy Admin Smoke
 
@@ -129,9 +135,9 @@ The export is an internal operator artifact. Do not publish full user records.
 
 ## Status Update After Success
 
-After Gates 1 through 5 pass:
+Gates 1 through 5 passed for the 2026-07-23 deployment. For future deployments:
 
-1. Change `site/access-api.json` and `site/api-status.json` route statuses from `prepared-worker-deploy-permission-pending` or `prepared-worker-deploy-pending` to live token-protected status.
+1. Change `site/access-api.json` and `site/api-status.json` route statuses from the previous release state to live token-protected status.
 2. Update the matching HTML pages to say the routes are live.
 3. Run:
 

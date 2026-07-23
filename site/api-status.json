@@ -1,17 +1,17 @@
 {
   "schema": "https://gcagochina.com/api-status.json",
   "pageUrl": "https://gcagochina.com/api-status.html",
-  "status": "public-member-access-api-status-published",
-  "lastUpdated": "2026-07-20",
-  "latestPublicCheckAt": "2026-07-20T10:33:02Z",
-  "latestPublicCheckStatus": "passed",
-  "latestDeployReadinessCheckAt": "2026-07-20T10:34:06Z",
-  "latestDeployReadinessStatus": "blocked-wrangler-not-logged-in",
+  "status": "public-member-access-service-routes-live",
+  "lastUpdated": "2026-07-24",
+  "latestPublicCheckAt": "2026-07-23T17:53:42Z",
+  "latestPublicCheckStatus": "passed-service-routes-live-protected",
+  "latestDeployReadinessCheckAt": "2026-07-23T17:55:52Z",
+  "latestDeployReadinessStatus": "passed-cloudflare-permissions",
   "latestDeployReadinessSummary": {
     "wranglerDeployDryRun": "passed",
-    "cloudflareD1Visibility": "not-verified-auth-required",
-    "cloudflareAuthSession": "failed-not-logged-in",
-    "cloudflareWorkerDeployPermission": "not-verified-auth-required",
+    "cloudflareD1Visibility": "passed",
+    "cloudflareAuthSession": "passed",
+    "cloudflareWorkerDeployPermission": "passed",
     "code10000Seen": false,
     "writesD1Records": false,
     "deploysWorker": false,
@@ -64,8 +64,8 @@
     ],
     "expectedExistingAdminStatus": 401,
     "preparedRouteStatusMeaning": {
-      "404": "not deployed",
-      "401": "deployed and rejecting anonymous reads"
+      "401": "deployed and rejecting anonymous reads",
+      "404": "not deployed"
     },
     "writesProductionData": false,
     "readsAdminResponseBodies": false,
@@ -206,26 +206,28 @@
       "method": "GET/POST",
       "path": "/gca/service-requests",
       "url": "https://gca-registration-api.gcagochina.workers.dev/gca/service-requests",
-      "status": "prepared-worker-deploy-permission-pending",
+      "status": "live-token-protected",
       "requiresAdminReadToken": true,
       "publicLedgerReadable": false,
       "workerDryRunPassed": true,
-      "lastObservedAnonymousGetStatus": 404,
-      "lastObservedAt": "2026-07-20T10:33:02Z",
-      "blockedBy": "Latest 2026-07-20 readiness check passed Worker dry-run but found Wrangler not logged in; Cloudflare account authentication, D1 visibility, remote migration, deploy permission, and post-deploy smoke checks remain blocked"
+      "lastObservedAnonymousGetStatus": 401,
+      "lastObservedAt": "2026-07-23T17:53:42Z",
+      "productionLive": true,
+      "workerVersionId": "8988fc75-bbe0-403e-960a-832bf83da20f"
     },
     {
       "id": "credit-usage-read-write",
       "method": "GET/POST",
       "path": "/gca/credit-usage",
       "url": "https://gca-registration-api.gcagochina.workers.dev/gca/credit-usage",
-      "status": "prepared-worker-deploy-permission-pending",
+      "status": "live-token-protected",
       "requiresAdminReadToken": true,
       "publicLedgerReadable": false,
       "workerDryRunPassed": true,
-      "lastObservedAnonymousGetStatus": 404,
-      "lastObservedAt": "2026-07-20T10:33:02Z",
-      "blockedBy": "Latest 2026-07-20 readiness check passed Worker dry-run but found Wrangler not logged in; Cloudflare account authentication, D1 visibility, remote migration, deploy permission, and post-deploy smoke checks remain blocked"
+      "lastObservedAnonymousGetStatus": 401,
+      "lastObservedAt": "2026-07-23T17:53:42Z",
+      "productionLive": true,
+      "workerVersionId": "8988fc75-bbe0-403e-960a-832bf83da20f"
     }
   ],
   "checks": {
@@ -249,8 +251,8 @@
     "document": "docs/gca_worker_pending_routes_deploy_handoff.md",
     "pageUrl": "https://gcagochina.com/worker-routes-handoff.html",
     "dataUrl": "https://gcagochina.com/worker-routes-handoff.json",
-    "status": "prepared-not-production-live",
-    "blockedBy": "Latest 2026-07-20 readiness check passed Worker dry-run but found Wrangler not logged in; Cloudflare account authentication, D1 visibility, remote migration, deploy permission, and post-deploy smoke checks remain blocked",
+    "status": "production-live-verified",
+    "blockedBy": null,
     "routes": [
       "/gca/service-requests",
       "/gca/credit-usage"
@@ -280,7 +282,10 @@
       "noAutomaticTokenTransfer": true,
       "noTradingPermission": true,
       "doNotClaimLiveBeforeSmokeChecks": true
-    }
+    },
+    "workerVersionId": "8988fc75-bbe0-403e-960a-832bf83da20f",
+    "publicSmokePassedAt": "2026-07-23T17:53:42Z",
+    "adminSmokePassedAt": "2026-07-23T17:53:54Z"
   },
   "operatorTools": {
     "adminExport": "tools/export_cloudflare_email_registrations.py",

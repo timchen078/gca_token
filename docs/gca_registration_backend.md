@@ -12,7 +12,7 @@ https://gca-registration-api.gcagochina.workers.dev/gca/wallet-verifications
 https://gca-registration-api.gcagochina.workers.dev/gca/access-config
 ```
 
-The service request queue and credit usage routes are implemented in source, but the updated Worker has not been published. The latest 2026-07-20 readiness check passed Worker dry-run but found Wrangler not logged in, so Cloudflare account authentication, D1 visibility, and Worker deploy permission remain unverified; read-only public checks returned HTTP 404 for both routes. Treat `/gca/service-requests` and `/gca/credit-usage` as deploy-ready, not production-live, until `tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth` passes, remote D1 migrations are applied, `wrangler deploy` succeeds, and public/admin smoke checks pass with `--include-pending-routes`. The exact deployment handoff is in `docs/gca_worker_pending_routes_deploy_handoff.md`.
+The token-protected service request queue and credit usage routes are production-live. Cloudflare account authentication, D1 visibility, Worker deploy permission, remote D1 migration, Worker deployment, public smoke, and admin read-only smoke checks all passed on 2026-07-23 UTC. Anonymous reads return HTTP 401 and token-protected admin reads return HTTP 200. The deployment record and repeatable gate order are in `docs/gca_worker_pending_routes_deploy_handoff.md`.
 
 ## What It Stores
 
@@ -71,14 +71,14 @@ Public registration, contact-suppression, wallet-verification, and member-access
 - Public access config endpoint: `GET /gca/access-config`
 - Admin wallet verification endpoint: `GET /gca/wallet-verifications`
 - Admin credit ledger endpoint: `GET /gca/credit-ledger`
-- Admin service request endpoint: `GET/POST /gca/service-requests` prepared in source; pending Worker publish permission
-- Admin credit usage endpoint: `GET/POST /gca/credit-usage` prepared in source; pending Worker publish permission
+- Admin service request endpoint: `GET/POST /gca/service-requests` live and token-protected
+- Admin credit usage endpoint: `GET/POST /gca/credit-usage` live and token-protected
 - Admin member ledger endpoint: `GET /gca/member-ledger`
 - Member D1 migration: `cloudflare/gca-registration-worker/migrations/0003_member_access_ledgers.sql`
 - Credit usage D1 migration: `cloudflare/gca-registration-worker/migrations/0004_credit_usage_ledger.sql`
 - Service request D1 migration: `cloudflare/gca-registration-worker/migrations/0005_service_requests.sql`
 - Worker deploy readiness tool: `tools/check_gca_worker_deploy_readiness.py`
-- Pending routes deploy handoff: `docs/gca_worker_pending_routes_deploy_handoff.md`
+- Worker routes deployment record: `docs/gca_worker_pending_routes_deploy_handoff.md`
 - Admin read secret: configured in Cloudflare as `ADMIN_READ_TOKEN`
 - Privacy hash salt: configured in Cloudflare as `PRIVACY_HASH_SALT`
 - Read-only live API check tool: `tools/check_gca_registration_api.py`
@@ -97,11 +97,17 @@ Public registration, contact-suppression, wallet-verification, and member-access
 - Local Cloudflare contact suppression sync tool: `tools/sync_cloudflare_contact_suppressions.py`
 - Contact suppression D1 migration: `cloudflare/gca-registration-worker/migrations/0002_contact_suppressions.sql`
 
-The future custom domain `api.gcagochina.com` still requires Wrangler to be logged into a Cloudflare account that can see the `gcagochina.com` zone. The latest 2026-07-20 readiness check found Wrangler logged out, so current zone access is unverified. A prior authorized session returned `The zone "gcagochina.com" does not exist on your account`; re-check zone visibility after login before changing the active custom-domain configuration.
+The future custom domain `api.gcagochina.com` still requires the GCA Worker account to manage the `gcagochina.com` DNS zone. The current Worker account does not contain that zone, so the production API continues to use the workers.dev address. Do not change the active custom-domain configuration until zone access is confirmed.
 
 The current `wrangler.toml` includes the Cloudflare `account_id` so Wrangler does not need to auto-discover the account before deploy. If `wrangler whoami --json --account <account_id>`, `wrangler d1 list`, `wrangler deployments list --json`, or `wrangler deploy` returns `Authentication error [code: 10000]`, the active Cloudflare token/session is missing access to the configured account, D1 database, or Worker service. Re-authorize Wrangler or use an API token with access to the target account before publishing the Worker.
 
 The deploy readiness report includes a `cloudflare-auth-session` check and an `authRecovery` section. Use that section to confirm whether the blocker is account authentication, D1 visibility, or Worker deployment permission. It does not write D1 records, deploy the Worker, read user ledgers, or print secrets.
+
+From the repository root, the full readiness command is:
+
+```bash
+python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth
+```
 
 ## Deployment Commands
 

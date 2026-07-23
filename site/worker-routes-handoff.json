@@ -1,31 +1,33 @@
 {
   "schema": "https://gcagochina.com/worker-routes-handoff.json",
   "pageUrl": "https://gcagochina.com/worker-routes-handoff.html",
-  "status": "worker-routes-handoff-v1-published",
+  "status": "worker-routes-v1-production-live",
   "handoffId": "worker-routes-handoff-v1",
-  "lastUpdated": "2026-07-20",
+  "lastUpdated": "2026-07-24",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "workerBaseUrl": "https://gca-registration-api.gcagochina.workers.dev",
   "sourceDocument": "docs/gca_worker_pending_routes_deploy_handoff.md",
-  "scope": "Public handoff for prepared operator-only Cloudflare Worker routes. The service-request and credit-usage routes are prepared in source and D1 migrations, but remain non-live until Cloudflare authentication, Worker deploy permission, remote D1 migrations, Worker deploy, and post-deploy public/admin smoke checks pass.",
+  "scope": "Public deployment record and repeatable release runbook for the production-live, operator-only service-request and credit-usage Cloudflare Worker routes.",
   "currentStatus": {
-    "latestReadinessCheckAt": "2026-07-20T10:34:06Z",
-    "latestPublicRouteCheckAt": "2026-07-20T10:33:02Z",
-    "workerDryRun": "passed-2026-07-20",
-    "d1Visibility": "not-verified-auth-required",
-    "cloudflareAuthSession": "failed-not-logged-in",
-    "workerDeployPermission": "not-verified-auth-required",
+    "latestReadinessCheckAt": "2026-07-23T17:55:52Z",
+    "latestPublicRouteCheckAt": "2026-07-23T17:53:42Z",
+    "latestAdminRouteCheckAt": "2026-07-23T17:53:54Z",
+    "workerDryRun": "passed-2026-07-23",
+    "d1Visibility": "passed",
+    "cloudflareAuthSession": "passed",
+    "workerDeployPermission": "passed",
     "code10000Seen": false,
     "pendingRouteAnonymousGetStatus": {
-      "/gca/service-requests": 404,
-      "/gca/credit-usage": 404
+      "/gca/service-requests": 401,
+      "/gca/credit-usage": 401
     },
-    "remoteMigrations": "not-applied-for-pending-routes",
-    "workerDeploy": "not-run-for-pending-routes",
-    "postDeployPublicSmoke": "not-run-for-pending-routes",
-    "postDeployAdminSmoke": "not-run-for-pending-routes",
-    "productionRouteStatus": "prepared-not-production-live"
+    "remoteMigrations": "applied",
+    "workerDeploy": "passed",
+    "workerVersionId": "8988fc75-bbe0-403e-960a-832bf83da20f",
+    "postDeployPublicSmoke": "passed",
+    "postDeployAdminSmoke": "passed",
+    "productionRouteStatus": "live-token-protected"
   },
   "alreadyLiveRoutes": [
     "GET /health",
@@ -39,25 +41,29 @@
     "token-protected GET /gca/wallet-verifications",
     "token-protected GET /gca/member-access",
     "token-protected GET /gca/credit-ledger",
-    "token-protected GET /gca/member-ledger"
+    "token-protected GET /gca/member-ledger",
+    "token-protected GET/POST /gca/service-requests",
+    "token-protected GET/POST /gca/credit-usage"
   ],
   "preparedRoutes": [
     {
       "path": "/gca/service-requests",
       "method": "GET/POST",
       "access": "token-protected-admin",
-      "status": "prepared-worker-deploy-permission-pending",
+      "status": "live-token-protected",
       "writesCredits": false,
       "createsTradingPermission": false,
-      "productionLive": false
+      "productionLive": true,
+      "workerVersionId": "8988fc75-bbe0-403e-960a-832bf83da20f"
     },
     {
       "path": "/gca/credit-usage",
       "method": "GET/POST",
       "access": "token-protected-admin",
-      "status": "prepared-worker-deploy-permission-pending",
+      "status": "live-token-protected",
       "writtenOnlyAfterReviewedDelivery": true,
-      "productionLive": false
+      "productionLive": true,
+      "workerVersionId": "8988fc75-bbe0-403e-960a-832bf83da20f"
     }
   ],
   "deployGates": [
@@ -142,10 +148,10 @@
     "productionLiveBeforeSmokeChecks": false
   },
   "safeClaims": [
-    "GCA has published a Worker Routes Handoff for the prepared service-request and credit-usage routes.",
-    "The service-request and credit-usage routes are prepared in source and D1 migrations.",
-    "The routes remain non-live until Cloudflare authentication, Worker deploy permission, remote D1 migrations, deploy, and public/admin smoke checks pass.",
-    "The routes are operator-only and token-protected; public visitors must not be able to read ledgers."
+    "The GCA service-request and credit-usage Worker routes are production-live and token-protected.",
+    "Remote D1 migrations, Worker deploy, public smoke, and admin read-only smoke checks passed on 2026-07-23 UTC.",
+    "Anonymous ledger reads return HTTP 401; public visitors cannot read operator ledgers.",
+    "The routes do not connect wallets, request signatures, transfer GCA, or create trading permission."
   ],
   "doNotClaim": [
     "production self-service service delivery is live",
