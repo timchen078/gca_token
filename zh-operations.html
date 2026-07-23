@@ -315,7 +315,7 @@
         <h1 id="title">GCA 中文运营流程</h1>
         <p class="lead">这一页说明用户在官网提交邮箱和会员账户资料以后，GCA 运营者应该怎样同步 Cloudflare D1 记录、导出联系名单、处理退订、保留本地账本，并把会员权益审核接到支持流程里。</p>
         <p class="lead">当前邮箱注册、邮箱退订、账户入口、只读钱包验证、符合条件的 100 credits / GCA Member 账本记录已经上线；10,000 GCA 会员权益仍需人工审核。</p>
-        <p class="lead">服务请求队列和 Credit 使用记录已经在本地运营后端准备好，Cloudflare Worker 路由仍需通过账号认证、D1、发布和待发布接口 smoke 检查后才能说正式上线。</p>
+        <p class="lead">服务请求队列和 Credit 使用记录的 Cloudflare Worker 路由已经正式上线并受管理员 token 保护；权限、D1 migration、部署和公开/管理员只读 smoke 检查均已通过。</p>
         <div class="actions">
           <a class="button primary" href="register.html">邮箱注册</a>
           <a class="button primary" href="zh-api-status.html">中文 API 状态</a>
@@ -394,7 +394,7 @@
         <p class="eyebrow">Member Access Ops</p>
         <h2 id="memberOpsTitle">会员后台运营流程</h2>
         <p class="note">当 live Worker 已经有账户、钱包验证、100 credits、GCA Member 或会员权益审核记录后，运营者在本地运行这个流程。它需要 ignored 的 <code>cloudflare/gca-registration-worker/.env.admin.local</code> 文件和 <code>ADMIN_READ_TOKEN</code>。输出只写到 <code>.gca_access_data/</code>，不提交到公开仓库。</p>
-        <p class="note">准备发布 <code>/gca/service-requests</code> 和 <code>/gca/credit-usage</code> 前，先运行 <code>python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth</code>。检查必须覆盖 <code>cloudflare-auth-session</code>、D1 可见性、Worker 发布权限、远端 D1 migration、<code>wrangler deploy</code>，并在发布后分别通过 public/admin smoke：<code>--include-pending-routes</code>。</p>
+        <p class="note"><code>/gca/service-requests</code> 和 <code>/gca/credit-usage</code> 已正式上线并受管理员 token 保护。后续每次发布新版本前仍要运行 <code>python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth</code>，检查 <code>cloudflare-auth-session</code>、D1 可见性和 Worker 发布权限，并在发布后分别通过 public/admin smoke：<code>--include-pending-routes</code>。</p>
         <div class="grid">
           <article class="card">
             <h3>1. 受保护导出</h3>
@@ -418,7 +418,7 @@
           </article>
           <article class="card">
             <h3>6. Credit 使用记录</h3>
-            <p class="note">完成一次人工审核交付后，才在本地 operator-only <code>credit_usage</code> 账本记录 <code>creditUsageId</code>、<code>serviceId</code>、使用数量和扣减前后余额。Cloudflare Worker 路由仍是待发布状态。</p>
+            <p class="note">完成一次人工审核交付后，才通过受管理员 token 保护的 <code>credit_usage</code> 生产路由记录 <code>creditUsageId</code>、<code>serviceId</code>、使用数量和扣减前后余额。该路由不是用户自助扣减入口。</p>
           </article>
           <article class="card">
             <h3>7. 服务请求队列</h3>
@@ -467,7 +467,7 @@
           <li>不能把完整用户邮箱、管理员 token、完整 D1 导出文件或本地账本发给外部平台。</li>
           <li>不能用运营导出绕过钱包余额验证、30 天持有审核、支持审核队列或上线门槛。</li>
           <li>不能把本地运营汇总、public-redacted CSV 或人工审核记录说成第三方审计或平台批准。</li>
-          <li>不能把 <code>/gca/service-requests</code> 或 <code>/gca/credit-usage</code> 说成已正式发布；它们仍需通过 Cloudflare 账号认证、D1 可见性、Worker 发布权限、远端 D1 migration、<code>wrangler deploy</code> 和 <code>--include-pending-routes</code> 验收。</li>
+          <li>可以说明 <code>/gca/service-requests</code> 和 <code>/gca/credit-usage</code> 已正式上线并受管理员 token 保护，但不能把它们说成公开自助交付、自动扣减 credits、链上转账或交易权限。</li>
         </ul>
       </section>
 

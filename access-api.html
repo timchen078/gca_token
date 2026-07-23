@@ -502,12 +502,12 @@
           <div class="fact">
             <span class="label">POST / GET</span>
             <span class="value">/gca/service-requests</span>
-            <p class="note">Prepared token-protected operator queue for requested GCA AI Quant Access service scope before delivery. Local backend support and the D1 migration are prepared, and <code>wrangler deploy --dry-run</code> passes. The 2026-07-20 readiness check found Wrangler logged out, so D1 visibility and Worker deploy permission remain unverified; a public read-only check returned HTTP 404, confirming the route is not deployed. The <code>cloudflare-auth-session</code> gate must pass before release, and post-deploy validation must run with <code>--include-pending-routes</code>. It records service ID, optional credit ledger ID, requested credit hold, and review status; it does not deduct credits, connect wallets, request signatures, send tokens, or create trading permission.</p>
+            <p class="note">Live token-protected operator queue for requested GCA AI Quant Access service scope before delivery. Remote D1 migration, Worker deploy, public smoke, and admin read-only smoke checks passed on 2026-07-23 UTC. Anonymous reads return HTTP 401. It records service ID, optional credit ledger ID, requested credit hold, and review status; it does not deduct credits, connect wallets, request signatures, send tokens, or create trading permission.</p>
           </div>
           <div class="fact">
             <span class="label">POST / GET</span>
             <span class="value">/gca/credit-usage</span>
-            <p class="note">Prepared token-protected operator ledger for reviewed service-level credit usage. Local backend support and the D1 migration are prepared, and <code>wrangler deploy --dry-run</code> passes. The 2026-07-20 readiness check found Wrangler logged out, so D1 visibility and Worker deploy permission remain unverified; a public read-only check returned HTTP 404, confirming the route is not deployed. Post-deploy validation must run with <code>--include-pending-routes</code>. It records service ID, credits used, before/after balance, and status; it never connects wallets, requests signatures, sends tokens, or creates trading permission.</p>
+            <p class="note">Live token-protected operator ledger for reviewed service-level credit usage. Remote D1 migration, Worker deploy, public smoke, and admin read-only smoke checks passed on 2026-07-23 UTC. Anonymous reads return HTTP 401. It records service ID, credits used, before/after balance, and status; it never connects wallets, requests signatures, sends tokens, or creates trading permission.</p>
           </div>
           <div class="fact">
             <span class="label">GET</span>

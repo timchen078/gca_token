@@ -310,7 +310,7 @@
         <h1 id="title">GCA 中文上线门槛</h1>
         <p class="lead">这一页定义 GCA 用户中心和 GCA AI Quant Access 相关功能哪些已经上线、哪些仍需要人工审核或后续产品门槛。</p>
         <p class="lead">邮箱注册 API、受控 HTTPS 账户入口、只读钱包余额验证、100 credits 账本记录和 GCA Member 账本记录已经上线；10,000 GCA 会员权益转账仍需人工审核，交易相关产品仍未正式上线。</p>
-        <p class="lead">服务请求队列和 Credit 使用记录已经完成本地运营后端准备；<code>/gca/service-requests</code> 和 <code>/gca/credit-usage</code> 仍需通过 Cloudflare 账号认证、D1 可见性、Worker 发布权限、远端 D1 migration、部署和待发布接口 smoke 检查后才能说正式上线。</p>
+        <p class="lead">服务请求队列和 Credit 使用记录已经正式上线；<code>/gca/service-requests</code> 和 <code>/gca/credit-usage</code> 已通过 Cloudflare 账号认证、D1 可见性、Worker 发布权限、远端 D1 migration、部署以及公开和管理员只读 smoke 检查。</p>
         <div class="actions">
           <a class="button primary" href="zh-access.html">中文用户中心</a>
           <a class="button primary" href="register.html">邮箱注册</a>
@@ -348,7 +348,7 @@
         </div>
         <div class="fact">
           <span class="label">服务请求 / Credit 使用</span>
-          <span class="value pending">本地运营已准备，Worker 路由待发布</span>
+          <span class="value good">生产 Worker 路由已上线并受管理员 token 保护</span>
         </div>
         <div class="fact">
           <span class="label">交易相关产品</span>
@@ -382,11 +382,11 @@
           </article>
           <article class="card">
             <h3>服务请求队列</h3>
-            <p class="note"><code>/gca/service-requests</code> 已完成源码、D1 migration 和 Worker dry-run；正式发布仍需要 Cloudflare 账号认证、D1 可见性、Worker 发布权限、远端 D1 migration、<code>wrangler deploy</code> 和 <code>--include-pending-routes</code> smoke 检查。</p>
+            <p class="note"><code>/gca/service-requests</code> 已正式上线并受管理员 token 保护。远端 migration、Worker 部署、公网 smoke 和管理员只读 smoke 检查已于 2026-07-23 UTC 通过；匿名读取返回 HTTP 401。</p>
           </article>
           <article class="card">
             <h3>Credit 使用记录</h3>
-            <p class="note"><code>/gca/credit-usage</code> 只用于人工审核交付后的服务使用记录，不是自助扣减、提现、交易权限或链上转账；Worker 正式路由仍待发布验收。</p>
+            <p class="note"><code>/gca/credit-usage</code> 已正式上线并受管理员 token 保护，只用于人工审核交付后的服务使用记录，不是自助扣减、提现、交易权限或链上转账。</p>
           </article>
           <article class="card">
             <h3>风控和模拟环境</h3>
@@ -403,7 +403,7 @@
             <div class="row"><span>100 credits</span><strong class="pending">可以说符合条件写入账本；不能说立即交付所有服务</strong></div>
             <div class="row"><span>GCA Member</span><strong class="pending">不能说持有后自动成为会员</strong></div>
             <div class="row"><span>10,000 GCA 会员权益</span><strong class="pending">不能说自动发放或自助领取</strong></div>
-            <div class="row"><span>服务请求</span><strong class="pending">不能说公开 Worker 路由已上线；当前只能说本地运营队列已准备</strong></div>
+            <div class="row"><span>服务请求</span><strong class="pending">可以说受保护的运营路由已上线；不能说成公开自助交付</strong></div>
             <div class="row"><span>Credit 使用</span><strong class="pending">不能说用户可自助消耗 credits；只能说人工审核交付后记录</strong></div>
             <div class="row"><span>第三方审计</span><strong class="pending">不能说已完成独立审计</strong></div>
             <div class="row"><span>BaseScan Token Profile</span><strong class="pending">不能说已通过；可以说 2026-07-18 final package 已刷新，owner 可用 support@gcagochina.com 提交一次干净更新</strong></div>
@@ -418,7 +418,7 @@
             <div class="row"><span>用户中心</span><strong>中文用户中心已发布</strong></div>
             <div class="row"><span>会员规则</span><strong>10,000 GCA / 100 credits 和 1,000,000 GCA / 30 天规则已公开</strong></div>
             <div class="row"><span>会员权益</span><strong>10,000 GCA 会员权益仍需人工审核和储备钱包处理</strong></div>
-            <div class="row"><span>服务请求</span><strong>本地运营后端可排队处理服务意向；Worker 正式路由待发布</strong></div>
+            <div class="row"><span>服务请求</span><strong>生产 Worker 路由可排队处理服务意向；仍需人工审核，不是公开自助交付</strong></div>
             <div class="row"><span>Credit 使用</span><strong>人工审核交付后记录使用数量和扣减前后余额；不会自动扣减或转账</strong></div>
             <div class="row"><span>市场入口</span><strong>官方交易路线是 Base Mainnet GCA/USDT 池 0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0</strong></div>
             <div class="row"><span>BaseScan 证据包</span><strong>Final package 2026-07-18T12:03:57Z；daily status 2026-07-23T16:08:40Z；仍不代表已通过</strong></div>
@@ -450,7 +450,7 @@
           <div class="row"><span>4. 钱包验证</span><strong>维护已上线的只读 GCA 余额验证；不发起交易、不要求签名或授权转移资产。</strong></div>
           <div class="row"><span>5. 账本维护</span><strong>持续维护 100 credits 账本和 GCA Member 账本，并保留可审计记录。</strong></div>
           <div class="row"><span>6. 支持审核</span><strong>继续使用支持审核队列处理 30 天持有证明、资料补充和会员权益审核。</strong></div>
-          <div class="row"><span>7. 服务请求路由</span><strong>2026-07-20 检查已通过 Worker dry-run，但 Wrangler 未登录；Cloudflare 账号认证、D1 可见性和 Worker 发布权限均未验证，两个公开路由均返回 HTTP 404。先完成认证，再执行远端 D1 migration、<code>wrangler deploy</code> 和 <code>--include-pending-routes</code> smoke 检查。</strong></div>
+          <div class="row"><span>7. 服务请求路由</span><strong>2026-07-23 已完成 Cloudflare 权限检查、远端 D1 migration、Worker 部署以及公开和管理员只读 smoke 检查。两个运营路由已上线，匿名读取返回 HTTP 401。</strong></div>
           <div class="row"><span>8. 量化产品</span><strong>先发布模拟盘、回测、风险提醒和复盘工具，再评估任何真实执行功能。</strong></div>
         </div>
       </section>

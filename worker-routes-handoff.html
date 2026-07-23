@@ -3,22 +3,22 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>GCA Worker Routes Handoff | Service Request Deployment</title>
-    <meta name="description" content="Public GCA handoff for the prepared Cloudflare Worker service-request and credit-usage routes, deploy gates, smoke checks, and no-custody boundaries.">
+    <title>GCA Worker Routes Deployment Record</title>
+    <meta name="description" content="Verified deployment record for GCA's live token-protected Cloudflare Worker service-request and credit-usage routes.">
     <link rel="canonical" href="https://gcagochina.com/worker-routes-handoff.html">
     <link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">
     <link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="GCA | Go China Access">
-    <meta property="og:title" content="GCA Worker Routes Handoff | Service Request Deployment">
-    <meta property="og:description" content="Public GCA handoff for prepared operator-only service-request and credit-usage routes, deploy gates, smoke checks, and no-custody boundaries.">
+    <meta property="og:title" content="GCA Worker Routes Deployment Record">
+    <meta property="og:description" content="Verified deployment record for GCA's live token-protected service-request and credit-usage routes.">
     <meta property="og:url" content="https://gcagochina.com/worker-routes-handoff.html">
     <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="GCA Worker Routes Handoff | Service Request Deployment">
-    <meta name="twitter:description" content="Public GCA handoff for prepared operator-only service-request and credit-usage routes, deploy gates, smoke checks, and no-custody boundaries.">
+    <meta name="twitter:title" content="GCA Worker Routes Deployment Record">
+    <meta name="twitter:description" content="Verified deployment record for GCA's live token-protected service-request and credit-usage routes.">
     <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
     <style>
       :root {
@@ -338,10 +338,10 @@
 
     <main class="shell">
       <section aria-labelledby="title">
-        <p class="eyebrow">Cloudflare Worker Deployment Handoff</p>
-        <h1 id="title">GCA Worker Routes Handoff</h1>
-        <p class="lead">This page publishes the operator deployment sequence for the prepared <code>/gca/service-requests</code> and <code>/gca/credit-usage</code> routes. The source, D1 migrations, and local dry-run are ready, but the production routes are still non-live until Cloudflare authentication, Worker deploy permission, remote D1 migrations, deploy, and smoke checks all pass.</p>
-        <p class="lead">The handoff is intentionally read-only until the deploy gates pass. It does not expose user records, does not print admin tokens, does not connect wallets, does not request wallet signatures, and does not create trading permission.</p>
+        <p class="eyebrow">Cloudflare Worker Deployment Record</p>
+        <h1 id="title">GCA Worker Routes Deployment</h1>
+        <p class="lead">The token-protected <code>/gca/service-requests</code> and <code>/gca/credit-usage</code> routes are production-live. Remote D1 migration, Worker deploy, public smoke, and admin read-only smoke checks passed on 2026-07-23 UTC.</p>
+        <p class="lead">This page keeps the verified release result and repeatable operator gate sequence public. It does not expose user records, print admin tokens, connect wallets, request wallet signatures, or create trading permission.</p>
         <div class="actions">
           <a class="button primary" href="api-status.html">API Status</a>
           <a class="button" href="service-delivery-playbook.html">Service Delivery Playbook</a>
@@ -355,20 +355,20 @@
         <div class="fact">
           <span class="label">Handoff ID</span>
           <span class="value">worker-routes-handoff-v1</span>
-          <p class="note">Public deployment handoff for prepared operator routes.</p>
+          <p class="note">Public deployment record and repeatable release runbook.</p>
         </div>
         <div class="fact">
           <span class="label">Current Status</span>
-          <span class="value pending">Prepared, not production-live</span>
-          <p class="note">Worker dry-run passed on 2026-07-20; Wrangler is logged out and D1 visibility is unverified. A read-only production check at <code>2026-07-20T10:33:02Z</code> returned HTTP 404 for both prepared routes.</p>
+          <span class="value good">Production-live and protected</span>
+          <p class="note">Public smoke passed at <code>2026-07-23T17:53:42Z</code>; anonymous reads return HTTP 401. Admin read-only smoke passed at <code>2026-07-23T17:53:54Z</code>.</p>
         </div>
         <div class="fact">
-          <span class="label">Current Blocker</span>
-          <span class="value blocked">Wrangler not logged in</span>
-          <p class="note">Cloudflare auth, D1 visibility, and Worker deploy permission must pass first.</p>
+          <span class="label">Deployment Gate</span>
+          <span class="value good">All required gates passed</span>
+          <p class="note">Worker version <code>8988fc75-bbe0-403e-960a-832bf83da20f</code>.</p>
         </div>
         <div class="fact">
-          <span class="label">Prepared Routes</span>
+          <span class="label">Released Routes</span>
           <span class="value">2 operator routes</span>
           <p class="note"><code>/gca/service-requests</code> and <code>/gca/credit-usage</code>.</p>
         </div>
@@ -384,7 +384,7 @@
         </div>
       </section>
 
-      <section class="section two" aria-label="Live and prepared routes">
+      <section class="section two" aria-label="Live routes">
         <div class="panel">
           <h2>Already Live Routes</h2>
           <div class="list">
@@ -396,12 +396,12 @@
             <div class="row"><span>Member access</span><strong><code>POST /gca/member-access</code> for eligible ledger records.</strong></div>
           </div>
         </div>
-        <div class="panel warning">
-          <h2>Prepared But Non-Live</h2>
+        <div class="panel">
+          <h2>Newly Released Routes</h2>
           <div class="list">
-            <div class="row"><span>Service request queue</span><strong><code>GET/POST /gca/service-requests</code>; prepared in source, pending Worker deploy.</strong></div>
-            <div class="row"><span>Credit usage ledger</span><strong><code>GET/POST /gca/credit-usage</code>; prepared in source, pending Worker deploy.</strong></div>
-            <div class="row"><span>Claim boundary</span><strong>Do not say these routes are production-live until both public and admin smoke checks pass with <code>--include-pending-routes</code>.</strong></div>
+            <div class="row"><span>Service request queue</span><strong><code>GET/POST /gca/service-requests</code>; production-live and token-protected.</strong></div>
+            <div class="row"><span>Credit usage ledger</span><strong><code>GET/POST /gca/credit-usage</code>; production-live and token-protected.</strong></div>
+            <div class="row"><span>Access boundary</span><strong>Anonymous reads return HTTP 401; operator reads require <code>ADMIN_READ_TOKEN</code>.</strong></div>
           </div>
         </div>
       </section>
@@ -461,10 +461,11 @@ python3 tools/export_cloudflare_member_access.py --token-file cloudflare/gca-reg
         <div class="panel">
           <h2>Safe To Say</h2>
           <ul>
-            <li>The service-request and credit-usage routes are prepared in source.</li>
-            <li>The deploy handoff is published for the owner/operator workflow.</li>
-            <li>The routes remain non-live until deploy gates and smoke checks pass.</li>
+            <li>The service-request and credit-usage routes are production-live.</li>
+            <li>The deployment record and repeatable gate sequence are published.</li>
+            <li>Remote migration, deploy, public smoke, and admin read-only smoke checks passed.</li>
             <li>The routes are operator-only and token-protected, not public user ledgers.</li>
+            <li>The workflow does not request wallet signatures and does not create trading permission.</li>
           </ul>
         </div>
         <div class="panel warning">
@@ -493,12 +494,12 @@ python3 tools/export_cloudflare_member_access.py --token-file cloudflare/gca-reg
 
       <section class="section panel" aria-labelledby="copyTitle">
         <h2 id="copyTitle">Copy-Ready Status Summary</h2>
-        <p class="note">GCA has published the Worker Routes Handoff for the prepared service-request and credit-usage routes. The code and D1 migrations are ready, but production remains non-live until Cloudflare authentication, Worker deploy permission, remote D1 migrations, deploy, and public/admin smoke checks pass. The routes are operator-only, token-protected, no-custody, and do not request wallet signatures or create trading permission.</p>
+        <p class="note">GCA has released the service-request and credit-usage Worker routes. Remote migration, deploy, public smoke, and admin read-only smoke checks passed on 2026-07-23 UTC. Anonymous reads return HTTP 401. The routes are operator-only, token-protected, no-custody, and do not request wallet signatures or create trading permission.</p>
       </section>
     </main>
 
     <footer>
-      <div class="shell">GCA Worker Routes Handoff. Keep deployment gates, admin tokens, user ledgers, and public route claims separate.</div>
+      <div class="shell">GCA Worker Routes Deployment Record. Keep deployment gates, admin tokens, user ledgers, and public route claims separate.</div>
     </footer>
   </body>
 </html>
