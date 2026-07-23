@@ -37,6 +37,8 @@ from tools.export_cloudflare_email_registrations import (  # noqa: E402
 
 DEFAULT_ORIGIN = "https://gcagochina.com"
 DEFAULT_USER_AGENT = "GCA-Operator-Registration-API-Check/1.0"
+SERVICE_ROUTES_RELEASE = "gca-registration-worker-2026-07-23-service-routes-v1"
+OFFICIAL_CONTACT_EMAIL = "support@gcagochina.com"
 
 
 class ApiCheckError(RuntimeError):
@@ -147,6 +149,9 @@ def check_health(*, base_url: str, timeout: float, cafile: str, opener: Callable
     require(payload.get("packetVersion") == "gca_email_registration_v1", "health endpoint returned wrong email packet version")
     require(payload.get("contactSuppressionVersion") == "gca_contact_suppression_v1", "health endpoint returned wrong suppression packet version")
     require(payload.get("memberAccessVersion") == "gca_member_access_v1", "health endpoint returned wrong member access packet version")
+    if include_pending_routes or "workerRelease" in payload:
+        require(payload.get("workerRelease") == SERVICE_ROUTES_RELEASE, "health endpoint returned wrong Worker release")
+        require(payload.get("contactEmail") == OFFICIAL_CONTACT_EMAIL, "health endpoint returned wrong official contact email")
     if include_pending_routes or "creditUsageVersion" in payload:
         require(payload.get("creditUsageVersion") == "gca_credit_usage_v1", "health endpoint returned wrong credit usage packet version")
     if include_pending_routes or "serviceRequestVersion" in payload:
@@ -159,6 +164,8 @@ def check_health(*, base_url: str, timeout: float, cafile: str, opener: Callable
         "ok": True,
         "status": status,
         "service": payload.get("service"),
+        "workerRelease": payload.get("workerRelease"),
+        "contactEmail": payload.get("contactEmail"),
         "storage": payload.get("storage"),
         "packetVersion": payload.get("packetVersion"),
         "contactSuppressionVersion": payload.get("contactSuppressionVersion"),
@@ -240,6 +247,9 @@ def check_access_config(*, base_url: str, timeout: float, cafile: str, opener: C
     require(status == 200, "access config endpoint must return HTTP 200")
     require(payload.get("ok") is True, "access config endpoint must return ok=true")
     require(payload.get("memberAccessVersion") == "gca_member_access_v1", "access config returned wrong version")
+    if include_pending_routes or "workerRelease" in payload:
+        require(payload.get("workerRelease") == SERVICE_ROUTES_RELEASE, "access config returned wrong Worker release")
+        require(payload.get("contactEmail") == OFFICIAL_CONTACT_EMAIL, "access config returned wrong official contact email")
     if include_pending_routes or "creditUsageVersion" in payload:
         require(payload.get("creditUsageVersion") == "gca_credit_usage_v1", "access config returned wrong credit usage version")
     if include_pending_routes or "serviceRequestVersion" in payload:
@@ -254,6 +264,8 @@ def check_access_config(*, base_url: str, timeout: float, cafile: str, opener: C
         "ok": True,
         "status": status,
         "memberAccessVersion": payload.get("memberAccessVersion"),
+        "workerRelease": payload.get("workerRelease"),
+        "contactEmail": payload.get("contactEmail"),
         "creditUsageVersion": payload.get("creditUsageVersion"),
         "serviceRequestVersion": payload.get("serviceRequestVersion"),
         "readOnlyWalletVerification": True,

@@ -3,6 +3,8 @@ const CONTACT_SUPPRESSION_VERSION = "gca_contact_suppression_v1";
 const MEMBER_ACCESS_VERSION = "gca_member_access_v1";
 const CREDIT_USAGE_VERSION = "gca_credit_usage_v1";
 const SERVICE_REQUEST_VERSION = "gca_service_request_v1";
+const WORKER_RELEASE = "gca-registration-worker-2026-07-23-service-routes-v1";
+const OFFICIAL_CONTACT_EMAIL = "support@gcagochina.com";
 const CHAIN_ID = 8453;
 const CONTRACT_ADDRESS = "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6";
 const BASE_RPC_URL = "https://mainnet.base.org";
@@ -1485,9 +1487,12 @@ function accessBoundaries() {
 }
 
 function accessConfig(origin, env) {
+  const contactEmail = String(env.CONTACT_EMAIL || OFFICIAL_CONTACT_EMAIL).trim() || OFFICIAL_CONTACT_EMAIL;
   return jsonResponse({
     ok: true,
     service: "gca-registration-api",
+    workerRelease: WORKER_RELEASE,
+    contactEmail,
     memberAccessVersion: MEMBER_ACCESS_VERSION,
     creditUsageVersion: CREDIT_USAGE_VERSION,
     serviceRequestVersion: SERVICE_REQUEST_VERSION,
@@ -1603,9 +1608,12 @@ async function listMemberTable(request, env, origin, table, mapper, allowedFilte
 }
 
 function health(origin, env) {
+  const contactEmail = String(env.CONTACT_EMAIL || OFFICIAL_CONTACT_EMAIL).trim() || OFFICIAL_CONTACT_EMAIL;
   return jsonResponse({
     ok: true,
     service: "gca-registration-api",
+    workerRelease: WORKER_RELEASE,
+    contactEmail,
     packetVersion: EMAIL_REGISTRATION_VERSION,
     contactSuppressionVersion: CONTACT_SUPPRESSION_VERSION,
     memberAccessVersion: MEMBER_ACCESS_VERSION,

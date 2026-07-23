@@ -28,13 +28,22 @@ class GcaWorkerDeployReadinessTests(unittest.TestCase):
     def tearDown(self):
         shutil.rmtree(self.tmp)
 
-    def write_config(self, *, account_id=ACCOUNT_ID, database_id=DATABASE_ID):
+    def write_config(
+        self,
+        *,
+        account_id=ACCOUNT_ID,
+        database_id=DATABASE_ID,
+        contact_email="support@gcagochina.com",
+    ):
         account_line = f'account_id = "{account_id}"\n' if account_id else ""
         (self.worker_dir / "wrangler.toml").write_text(
             f"""name = "gca-registration-api"
 main = "src/worker.mjs"
 compatibility_date = "2026-05-19"
 {account_line}workers_dev = true
+
+[vars]
+CONTACT_EMAIL = "{contact_email}"
 
 [[d1_databases]]
 binding = "REGISTRATION_DB"
@@ -63,6 +72,12 @@ migrations_dir = "migrations"
         report = readiness.build_report(self.tmp)
         self.assertFalse(report["readyToAttemptDeploy"])
         self.assertIn("wrangler-account-id", report["failedChecks"])
+
+    def test_legacy_contact_email_blocks_static_readiness(self):
+        self.write_config(contact_email="GCAgochina@outlook.com")
+        report = readiness.build_report(self.tmp)
+        self.assertFalse(report["readyToAttemptDeploy"])
+        self.assertIn("worker-contact-email", report["failedChecks"])
 
     def test_command_summary_filters_local_log_paths_and_secrets(self):
         result = subprocess.CompletedProcess(

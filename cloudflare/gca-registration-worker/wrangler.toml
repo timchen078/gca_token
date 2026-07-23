@@ -7,7 +7,7 @@ preview_urls = false
 
 [vars]
 ALLOWED_ORIGINS = "https://gcagochina.com,https://www.gcagochina.com,http://127.0.0.1:8787,http://localhost:8787,http://127.0.0.1:8799,http://localhost:8799"
-CONTACT_EMAIL = "GCAgochina@outlook.com"
+CONTACT_EMAIL = "support@gcagochina.com"
 
 [[d1_databases]]
 binding = "REGISTRATION_DB"

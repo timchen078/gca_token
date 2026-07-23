@@ -32,6 +32,7 @@ BUNDLED_NODE_BIN = Path.home() / ".cache" / "codex-runtimes" / "codex-primary-ru
 ACCOUNT_ID_RE = re.compile(r"^[a-f0-9]{32}$")
 UUID_RE = re.compile(r"^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$")
 SECRET_LINE_RE = re.compile(r"\b(ADMIN_READ_TOKEN|PRIVACY_HASH_SALT|CLOUDFLARE_API_TOKEN)\s*=\s*[^ \n\r\t]+")
+OFFICIAL_CONTACT_EMAIL = "support@gcagochina.com"
 
 
 class ReadinessError(RuntimeError):
@@ -199,6 +200,16 @@ def build_report(
         bool(UUID_RE.fullmatch(database_id)),
         "wrangler.toml includes the GCA D1 database_id.",
         configured=bool(database_id),
+    )
+
+    worker_vars = config.get("vars") or {}
+    contact_email = str(worker_vars.get("CONTACT_EMAIL", "")).strip().lower()
+    check(
+        checks,
+        "worker-contact-email",
+        contact_email == OFFICIAL_CONTACT_EMAIL,
+        "Worker contact email matches the official gcagochina.com support mailbox.",
+        configured=bool(contact_email),
     )
 
     check(

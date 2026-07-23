@@ -8,6 +8,8 @@ from tools.check_gca_registration_api import ApiCheckError, run_checks
 HEALTH_PAYLOAD = {
     "ok": True,
     "service": "gca-registration-api",
+    "workerRelease": "gca-registration-worker-2026-07-23-service-routes-v1",
+    "contactEmail": "support@gcagochina.com",
     "packetVersion": "gca_email_registration_v1",
     "contactSuppressionVersion": "gca_contact_suppression_v1",
     "memberAccessVersion": "gca_member_access_v1",
@@ -26,6 +28,8 @@ HEALTH_PAYLOAD = {
 ACCESS_CONFIG_PAYLOAD = {
     "ok": True,
     "service": "gca-registration-api",
+    "workerRelease": "gca-registration-worker-2026-07-23-service-routes-v1",
+    "contactEmail": "support@gcagochina.com",
     "memberAccessVersion": "gca_member_access_v1",
     "creditUsageVersion": "gca_credit_usage_v1",
     "serviceRequestVersion": "gca_service_request_v1",
@@ -226,6 +230,9 @@ class GcaRegistrationApiCheckTests(unittest.TestCase):
 
         self.assertTrue(result["ok"])
         self.assertTrue(result["boundaries"]["pendingWorkerRoutesIncluded"])
+        health = next(item for item in result["checks"] if item["id"] == "health")
+        self.assertEqual(health["workerRelease"], "gca-registration-worker-2026-07-23-service-routes-v1")
+        self.assertEqual(health["contactEmail"], "support@gcagochina.com")
         self.assertEqual(len(result["checks"]), 24)
         self.assertTrue(any(item["id"] == "admin-service-requests-read" for item in result["checks"]))
         self.assertTrue(any(item["id"] == "admin-credit-usage-read" for item in result["checks"]))
