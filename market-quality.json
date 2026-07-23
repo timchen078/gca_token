@@ -1,7 +1,7 @@
 {
   "schema": "https://gcagochina.com/market-quality.json",
   "pageUrl": "https://gcagochina.com/market-quality.html",
-  "lastUpdated": "2026-05-14",
+  "lastUpdated": "2026-07-23",
   "projectName": "GCA",
   "tokenSymbol": "GCA",
   "network": "Base Mainnet",
@@ -31,7 +31,7 @@
     "coinGeckoTrackedListing": "defer",
     "coinMarketCapTrackedListing": "defer",
     "thirdPartyAudit": "not-completed",
-    "memberUtilityAccess": "rules-published-public-claim-not-connected"
+    "memberUtilityAccess": "live-account-and-ledger-workflows-service-delivery-staged"
   },
   "legitimateActions": [
     {
@@ -57,9 +57,9 @@
     {
       "id": "utility-delivery",
       "label": "Deliver usable utility",
-      "status": "in-progress",
+      "status": "live-and-iterating",
       "actions": [
-        "Connect the GCA member and 100-credit workflows to controlled HTTPS account UI.",
+        "Operate the live GCA member and 100-credit account path while improving reviewed service delivery.",
         "Keep holder credits scoped to reports, backtests, risk warnings, ENTRY_READY review, calculators, or education access.",
         "Do not describe credits, member status, or the planned 10,000 GCA member benefit as cash, income, reimbursement, or trading permission."
       ]
@@ -97,7 +97,7 @@
   "watchMetrics": [
     "official GCA/USDT pool depth",
     "unique holder growth",
-    "public utility registrations",
+    "verified member access and eligible ledger activity",
     "Telegram activity quality",
     "website and metadata uptime",
     "BaseScan, Blockaid, wallet, and data platform review status",
@@ -106,7 +106,7 @@
   "nextActions": [
     "Keep current public metadata synchronized.",
     "Publish any future liquidity changes with exact pool and transaction references.",
-    "Connect controlled HTTPS account UI for member and credit workflows.",
+    "Operate the controlled HTTPS member and credit account path and keep reviewed service delivery boundaries current.",
     "Wait for stronger legitimate activity before CoinGecko or CoinMarketCap submission.",
     "Revisit third-party audit only when trust, partner, listing, or liquidity requirements justify it."
   ]
