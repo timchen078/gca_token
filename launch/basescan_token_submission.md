@@ -32,7 +32,7 @@ BaseScan token updates must be submitted through the official BaseScan token upd
 - BaseScan Handoff page: `https://gcagochina.com/basescan-handoff.html`
 - Daily public status page: `https://gcagochina.com/daily-status.html`
 - Final owner package generated: `2026-07-18T12:03:57Z`
-- Daily public status refreshed: `2026-06-18T08:31:47Z`
+- Daily public status refreshed: `2026-07-23T16:08:40Z`
 
 ## Neutral Project Description
 
@@ -71,6 +71,6 @@ GCA is a fixed-supply ERC-20 token deployed on Base Mainnet and a concept-stage 
 
 ## Current Submission Status
 
-Submitted from the owner's browser session on 2026-05-09 with the earlier owner email, returned as information-insufficient on 2026-05-13, resubmitted on 2026-05-13, and returned again as information-insufficient on 2026-05-23. The current next submission should use `support@gcagochina.com`, Tim Chen public professional profile evidence, the Project Profile BaseScan reviewer map, the public domain-email evidence checklist, BaseScan Handoff copy blocks generated at `2026-07-18T12:03:57Z`, the daily public status snapshot refreshed at `2026-06-18T08:31:47Z`, Telegram, X, GitHub, and the official GCA/USDT route. The public token profile is not complete until BaseScan accepts and publishes the submitted update.
+Submitted from the owner's browser session on 2026-05-09 with the earlier owner email, returned as information-insufficient on 2026-05-13, resubmitted on 2026-05-13, and returned again as information-insufficient on 2026-05-23. The current next submission should use `support@gcagochina.com`, Tim Chen public professional profile evidence, the Project Profile BaseScan reviewer map, the public domain-email evidence checklist, BaseScan Handoff copy blocks generated at `2026-07-18T12:03:57Z`, the daily public status snapshot refreshed at `2026-07-23T16:08:40Z`, Telegram, X, GitHub, and the official GCA/USDT route. The public token profile is not complete until BaseScan accepts and publishes the submitted update.
 
 Copyable form values are stored in `launch/basescan_final_submission_package.md` and published for owner review at `https://gcagochina.com/basescan-handoff.html`; the Chinese owner flow is published at `https://gcagochina.com/zh-basescan-submit.html`.

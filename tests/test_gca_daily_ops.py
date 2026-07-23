@@ -80,6 +80,25 @@ BASESCAN_STALE_SNAPSHOT_OUTPUT = json.dumps({
     "nextAction": "Do not reuse platform packets yet. Fix stale or missing domain-email DNS snapshot references first.",
 })
 
+BASESCAN_PUBLIC_PROFILE_OUTPUT = json.dumps({
+    "ok": True,
+    "packetVersion": "gca_basescan_public_profile_check_v1",
+    "checkedAt": "2026-07-23T12:00:00Z",
+    "status": "token-profile-not-published",
+    "profilePublished": False,
+    "tokenRep": "Unknown",
+    "holders": 10,
+    "sourceVerificationObserved": True,
+    "tokenUrl": "https://basescan.org/token/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+    "addressUrl": "https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6#code",
+    "signals": {
+        "officialDomainPresent": False,
+        "genericAddressTitle": True,
+        "defaultPreviewImage": True,
+    },
+    "nextAction": "Submit one owner-controlled BaseScan update after final preflight.",
+})
+
 
 class GcaDailyOpsTests(unittest.TestCase):
     def test_daily_ops_public_only_runs_site_and_api_checks(self):
@@ -87,6 +106,8 @@ class GcaDailyOpsTests(unittest.TestCase):
 
         def runner(command, cwd, timeout):
             seen.append({"command": list(command), "cwd": cwd, "timeout": timeout})
+            if any("check_basescan_public_profile.py" in part for part in command):
+                return subprocess.CompletedProcess(command, 0, stdout=BASESCAN_PUBLIC_PROFILE_OUTPUT, stderr="")
             if any("check_basescan_resubmission_readiness.py" in part for part in command):
                 return subprocess.CompletedProcess(command, 0, stdout=BASESCAN_BLOCKED_OUTPUT, stderr="")
             return subprocess.CompletedProcess(command, 0, stdout='{"ok": true}', stderr="")
@@ -104,16 +125,30 @@ class GcaDailyOpsTests(unittest.TestCase):
         self.assertFalse(summary["includeMemberOps"])
         self.assertEqual(
             [step["id"] for step in summary["steps"]],
-            ["public-site", "registration-api-public", "basescan-resubmission-preflight-status"],
+            [
+                "public-site",
+                "registration-api-public",
+                "basescan-public-profile-status",
+                "basescan-resubmission-preflight-status",
+            ],
         )
         self.assertTrue(summary["boundaries"]["publicOnlyByDefault"])
         self.assertFalse(summary["boundaries"]["writesProductionData"])
         self.assertFalse(summary["boundaries"]["automaticTokenTransfer"])
+        self.assertTrue(summary["includeBaseScanPublicProfileStatus"])
         self.assertTrue(summary["includeBaseScanPreflightStatus"])
+        self.assertTrue(summary["boundaries"]["baseScanPublicProfileReadOnly"])
+        self.assertFalse(summary["boundaries"]["baseScanPublicProfileBlocksDailyOps"])
         self.assertTrue(summary["boundaries"]["baseScanPreflightStatusOnly"])
         self.assertFalse(summary["boundaries"]["baseScanPreflightBlocksDailyOps"])
         self.assertFalse(summary["boundaries"]["submitsBaseScanRequest"])
         self.assertFalse(summary["baseScanPreflight"]["readyForBaseScanResubmission"])
+        self.assertEqual(summary["baseScanPublicProfile"]["status"], "token-profile-not-published")
+        self.assertFalse(summary["baseScanPublicProfile"]["profilePublished"])
+        self.assertEqual(summary["baseScanPublicProfile"]["tokenRep"], "Unknown")
+        self.assertEqual(summary["baseScanPublicProfile"]["holders"], 10)
+        self.assertTrue(summary["baseScanPublicProfile"]["sourceVerificationObserved"])
+        self.assertFalse(summary["baseScanPublicProfile"]["officialDomainPresent"])
         self.assertEqual(summary["baseScanPreflight"]["status"], "blocked-before-basescan-resubmission")
         self.assertEqual(summary["baseScanPreflight"]["publicEmailSwitchStatus"], "public-email-switch-pending")
         self.assertEqual(summary["baseScanPreflight"]["filesStillUsingOldEmail"], 3)
@@ -137,6 +172,7 @@ class GcaDailyOpsTests(unittest.TestCase):
         commands = [" ".join(item["command"]) for item in seen]
         self.assertTrue(any("tools/check_public_site.py" in command for command in commands))
         self.assertTrue(any("tools/check_gca_registration_api.py" in command and "--public-only" in command for command in commands))
+        self.assertTrue(any("tools/check_basescan_public_profile.py" in command and "--json" in command for command in commands))
         self.assertTrue(any("tools/check_basescan_resubmission_readiness.py" in command and "--skip-url-checks" in command for command in commands))
 
     def test_daily_ops_can_skip_basescan_status_explicitly(self):
@@ -152,7 +188,11 @@ class GcaDailyOpsTests(unittest.TestCase):
 
         self.assertTrue(summary["ok"])
         self.assertFalse(summary["includeBaseScanPreflightStatus"])
-        self.assertEqual([step["id"] for step in summary["steps"]], ["public-site", "registration-api-public"])
+        self.assertTrue(summary["includeBaseScanPublicProfileStatus"])
+        self.assertEqual(
+            [step["id"] for step in summary["steps"]],
+            ["public-site", "registration-api-public", "basescan-public-profile-status"],
+        )
         self.assertFalse(summary["baseScanPreflight"]["available"])
         self.assertEqual(summary["baseScanPreflight"]["status"], "not-run")
         self.assertEqual(summary["baseScanPreflight"]["snapshotAlignmentStatus"], "")
@@ -322,6 +362,8 @@ class GcaDailyOpsTests(unittest.TestCase):
 
     def test_daily_ops_can_refresh_public_status_snapshot(self):
         def runner(command, cwd, timeout):
+            if any("check_basescan_public_profile.py" in part for part in command):
+                return subprocess.CompletedProcess(command, 0, stdout=BASESCAN_PUBLIC_PROFILE_OUTPUT, stderr="")
             if any("check_basescan_resubmission_readiness.py" in part for part in command):
                 return subprocess.CompletedProcess(command, 0, stdout=BASESCAN_BLOCKED_OUTPUT, stderr="")
             return subprocess.CompletedProcess(command, 0, stdout='{"ok": true}', stderr="")
@@ -352,6 +394,9 @@ class GcaDailyOpsTests(unittest.TestCase):
             page = html_output.read_text(encoding="utf-8")
             self.assertEqual(payload["snapshotGeneratedAt"], summary["generatedAt"])
             self.assertEqual(payload["dailyOps"]["steps"][0]["command"], "python3 tools/check_public_site.py --base-url https://gcagochina.com/ --timeout 20")
+            self.assertEqual(payload["baseScanPublicProfile"]["status"], "token-profile-not-published")
+            self.assertFalse(payload["baseScanPublicProfile"]["profilePublished"])
+            self.assertTrue(payload["baseScanPublicProfile"]["sourceVerificationObserved"])
             self.assertEqual(payload["baseScanPreflight"]["oldEmailFilePaths"], ["site/support.html", "site/project.json"])
             self.assertEqual(payload["baseScanPreflight"]["forbiddenLegacyEmailFilePaths"], ["site/support.html", "site/project.json"])
             self.assertEqual(payload["baseScanPreflight"]["missingTargetEmailFilePaths"], ["site/external-reviews.json"])
@@ -370,6 +415,7 @@ class GcaDailyOpsTests(unittest.TestCase):
             "siteBaseUrl": "https://gcagochina.com/",
             "apiBaseUrl": "https://gca-registration-api.gcagochina.workers.dev",
             "boundaries": {"publicOnlyByDefault": True},
+            "baseScanPublicProfile": json.loads(BASESCAN_PUBLIC_PROFILE_OUTPUT),
             "baseScanPreflight": {
                 "status": "blocked-before-basescan-resubmission",
                 "readyForBaseScanResubmission": False,
@@ -410,6 +456,12 @@ class GcaDailyOpsTests(unittest.TestCase):
                     "command": "/Users/abc/Desktop/gca_token/.venv/bin/python tools/check_gca_registration_api.py --base-url https://gca-registration-api.gcagochina.workers.dev --public-only --timeout 20",
                 },
                 {
+                    "id": "basescan-public-profile-status",
+                    "ok": True,
+                    "blocksSummaryOk": False,
+                    "command": "/Users/abc/Desktop/gca_token/.venv/bin/python tools/check_basescan_public_profile.py --json --timeout 20",
+                },
+                {
                     "id": "basescan-resubmission-preflight-status",
                     "ok": True,
                     "blocksSummaryOk": False,
@@ -431,7 +483,11 @@ class GcaDailyOpsTests(unittest.TestCase):
             self.assertEqual(payload["snapshotGeneratedAt"], "2026-05-30T10:11:12Z")
             self.assertEqual(payload["dailyOps"]["steps"][0]["id"], "public-site")
             self.assertEqual(payload["dailyOps"]["steps"][0]["command"], "python3 tools/check_public_site.py --base-url https://gcagochina.com/ --timeout 20")
+            self.assertEqual(payload["dailyOps"]["steps"][2]["id"], "basescan-public-profile-status")
             self.assertEqual(payload["dailyOps"]["steps"][2]["blocksSummaryOk"], False)
+            self.assertEqual(payload["dailyOps"]["steps"][3]["blocksSummaryOk"], False)
+            self.assertEqual(payload["baseScanPublicProfile"]["status"], "token-profile-not-published")
+            self.assertFalse(payload["baseScanPublicProfile"]["profilePublished"])
             self.assertEqual(payload["baseScanPreflight"]["filesStillUsingOldEmail"], 3)
             self.assertEqual(payload["baseScanPreflight"]["oldEmailFilePaths"], ["site/support.html", "site/project.json"])
             self.assertEqual(payload["baseScanPreflight"]["filesPublishingForbiddenLegacyEmail"], 3)

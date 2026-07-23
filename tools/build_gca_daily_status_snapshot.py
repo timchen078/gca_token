@@ -23,6 +23,8 @@ DAILY_STATUS_PAGE_URL = "https://gcagochina.com/daily-status.html"
 DAILY_STATUS_URL = "https://gcagochina.com/daily-status.json"
 PROJECT_PROFILE_BASESCAN_MAP_URL = "https://gcagochina.com/project-profile.html#basescanMapTitle"
 MAINNET_ADDRESS = "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6"
+BASESCAN_TOKEN_URL = f"https://basescan.org/token/{MAINNET_ADDRESS}"
+BASESCAN_ADDRESS_URL = f"https://basescan.org/address/{MAINNET_ADDRESS}#code"
 TARGET_DOMAIN_EMAIL = "support@gcagochina.com"
 CURRENT_PUBLIC_EMAIL = TARGET_DOMAIN_EMAIL
 
@@ -139,7 +141,13 @@ def build_daily_status_payload(summary: dict[str, Any]) -> dict[str, Any]:
     steps = step_by_id(summary)
     public_site_step = public_step(steps.get("public-site"))
     registration_step = public_step(steps.get("registration-api-public"))
+    basescan_profile_step = public_step(steps.get("basescan-public-profile-status"))
     basescan_step = public_step(steps.get("basescan-resubmission-preflight-status"))
+    basescan_profile = (
+        summary.get("baseScanPublicProfile")
+        if isinstance(summary.get("baseScanPublicProfile"), dict)
+        else {}
+    )
     basescan = summary.get("baseScanPreflight") if isinstance(summary.get("baseScanPreflight"), dict) else {}
     missing_requirements = [
         str(item) for item in basescan.get("missingOrBlockedRequirements", []) if str(item)
@@ -148,7 +156,25 @@ def build_daily_status_payload(summary: dict[str, Any]) -> dict[str, Any]:
     forbidden_legacy_email_paths = public_relative_paths(basescan.get("forbiddenLegacyEmailFilePaths"))
     missing_target_paths = public_relative_paths(basescan.get("missingTargetEmailFilePaths"))
     ready_for_basescan = basescan.get("readyForBaseScanResubmission") is True
-    if ready_for_basescan:
+    profile_published = basescan_profile.get("profilePublished") is True
+    profile_status = str(basescan_profile.get("status") or "not-run")
+    if profile_published:
+        owner_action_queue = [
+            {
+                "id": "monitor-basescan-profile",
+                "status": "published-monitor",
+                "action": "Keep the official website, logo, team profile, and domain mailbox live and monitor the public BaseScan profile for regressions.",
+                "publicEvidenceUrl": str(basescan_profile.get("tokenUrl") or BASESCAN_TOKEN_URL),
+            },
+            {
+                "id": "retain-domain-email-evidence",
+                "status": "ready-private-evidence-retained",
+                "action": "Keep provider, DNS, inbound, outbound, and support-page evidence archived privately for reviewer follow-up.",
+                "publicEvidenceUrl": "https://gcagochina.com/domain-email-evidence.html",
+            },
+        ]
+        basescan_summary = "The read-only BaseScan check observes the official token profile as published."
+    elif ready_for_basescan:
         owner_action_queue = [
             {
                 "id": "maintain-domain-mailbox",
@@ -205,6 +231,27 @@ def build_daily_status_payload(summary: dict[str, Any]) -> dict[str, Any]:
         ]
         basescan_summary = "BaseScan token profile resubmission remains blocked until the project-domain email evidence path is complete."
 
+    if profile_status == "token-profile-not-published":
+        public_profile_summary = (
+            "The read-only BaseScan check still observes Token Rep as Unknown and does not "
+            "observe the official website or custom token preview metadata."
+        )
+    elif profile_published:
+        public_profile_summary = (
+            "The read-only BaseScan check observes the official website and custom token "
+            "profile metadata as published."
+        )
+    elif profile_status == "partial-or-ambiguous":
+        public_profile_summary = (
+            "The read-only BaseScan check observes partial or ambiguous profile signals; "
+            "no publication claim should be made without manual confirmation."
+        )
+    else:
+        public_profile_summary = (
+            "The latest read-only BaseScan token-profile result is unavailable; no approval "
+            "or publication claim is made."
+        )
+
     return {
         "schema": DAILY_STATUS_URL,
         "pageUrl": DAILY_STATUS_PAGE_URL,
@@ -223,6 +270,11 @@ def build_daily_status_payload(summary: dict[str, Any]) -> dict[str, Any]:
             "steps": [
                 {"id": "public-site", **public_site_step},
                 {"id": "registration-api-public", **registration_step},
+                {
+                    "id": "basescan-public-profile-status",
+                    **basescan_profile_step,
+                    "blocksSummaryOk": basescan_profile_step["blocksSummaryOk"],
+                },
                 {
                     "id": "basescan-resubmission-preflight-status",
                     **basescan_step,
@@ -251,6 +303,27 @@ def build_daily_status_payload(summary: dict[str, Any]) -> dict[str, Any]:
             "adminReads": "token-protected",
             "writesTestRecords": False,
         },
+        "baseScanPublicProfile": {
+            "status": profile_status,
+            "profilePublished": profile_published,
+            "checkedAt": str(basescan_profile.get("checkedAt") or ""),
+            "tokenRep": str(basescan_profile.get("tokenRep") or "not-observed"),
+            "holders": (
+                basescan_profile.get("holders")
+                if isinstance(basescan_profile.get("holders"), int)
+                else None
+            ),
+            "sourceVerificationObserved": (
+                basescan_profile.get("sourceVerificationObserved") is True
+            ),
+            "officialDomainPresent": basescan_profile.get("officialDomainPresent") is True,
+            "genericAddressTitle": basescan_profile.get("genericAddressTitle") is True,
+            "defaultPreviewImage": basescan_profile.get("defaultPreviewImage") is True,
+            "tokenUrl": str(basescan_profile.get("tokenUrl") or BASESCAN_TOKEN_URL),
+            "addressUrl": str(basescan_profile.get("addressUrl") or BASESCAN_ADDRESS_URL),
+            "nextAction": str(basescan_profile.get("nextAction") or ""),
+            "readOnly": True,
+        },
         "baseScanPreflight": {
             "status": str(basescan.get("status") or "not-run"),
             "readyForBaseScanResubmission": basescan.get("readyForBaseScanResubmission") is True,
@@ -272,6 +345,7 @@ def build_daily_status_payload(summary: dict[str, Any]) -> dict[str, Any]:
         "safePublicSummary": [
             "The public GCA website check passed on the latest daily ops snapshot.",
             "The public registration API check passed without secrets and without writing test records.",
+            public_profile_summary,
             basescan_summary,
             f"The Project Profile BaseScan reviewer map is published at {PROJECT_PROFILE_BASESCAN_MAP_URL}.",
             "Admin reads, user records, private evidence files, wallet actions, and token transfers are not exposed by this public snapshot.",
@@ -287,11 +361,14 @@ def build_daily_status_payload(summary: dict[str, Any]) -> dict[str, Any]:
             "requiresSignature": False,
             "requiresTransaction": False,
             "touchesWalletsOrContracts": False,
+            "readsBaseScanPublicPagesOnly": True,
         },
         "links": {
             "dailyStatusPage": DAILY_STATUS_PAGE_URL,
             "apiStatusPage": "https://gcagochina.com/api-status.html",
             "baseScanPreflightPage": "https://gcagochina.com/basescan-preflight.html",
+            "baseScanTokenPage": str(basescan_profile.get("tokenUrl") or BASESCAN_TOKEN_URL),
+            "baseScanAddressPage": str(basescan_profile.get("addressUrl") or BASESCAN_ADDRESS_URL),
             "projectProfileBaseScanMap": PROJECT_PROFILE_BASESCAN_MAP_URL,
             "domainEmailPage": "https://gcagochina.com/domain-email.html",
             "domainEmailEvidencePage": "https://gcagochina.com/domain-email-evidence.html",
@@ -310,7 +387,48 @@ def replace_once(text: str, pattern: str, replacement: str, label: str) -> str:
 def update_daily_status_html(template: str, payload: dict[str, Any]) -> str:
     generated_at = str(payload["snapshotGeneratedAt"])
     last_updated = str(payload["lastUpdated"])
+    basescan_profile = payload["baseScanPublicProfile"]
     basescan = payload["baseScanPreflight"]
+    profile_status = str(basescan_profile.get("status") or "not-run")
+    profile_checked_at = str(basescan_profile.get("checkedAt") or "not-observed")
+    profile_token_rep = str(basescan_profile.get("tokenRep") or "not-observed")
+    if basescan_profile.get("profilePublished") is True:
+        profile_fact_class = "good"
+        profile_fact_text = "Published"
+    elif profile_status == "token-profile-not-published":
+        profile_fact_class = "pending"
+        profile_fact_text = "Not published"
+    else:
+        profile_fact_class = "pending"
+        profile_fact_text = "Needs review"
+    official_domain_text = (
+        "Observed on the public BaseScan token page."
+        if basescan_profile.get("officialDomainPresent") is True
+        else "Not observed on the public BaseScan token page."
+    )
+    custom_preview_observed = (
+        profile_status not in {"not-run", "check-failed"}
+        and basescan_profile.get("defaultPreviewImage") is False
+    )
+    custom_preview_text = (
+        "A non-default preview image was observed on the public BaseScan token page."
+        if custom_preview_observed
+        else "Not observed on the public BaseScan token page."
+    )
+    source_verification_text = (
+        "Observed separately on the public contract code page; this does not imply profile approval or contract safety."
+        if basescan_profile.get("sourceVerificationObserved") is True
+        else "Not observed by the latest read-only check; no source-verification claim is made from this snapshot."
+    )
+    daily_steps = {
+        str(item.get("id")): item
+        for item in payload.get("dailyOps", {}).get("steps", [])
+        if isinstance(item, dict)
+    }
+    profile_command = str(
+        daily_steps.get("basescan-public-profile-status", {}).get("command")
+        or "python3 tools/check_basescan_public_profile.py --json --timeout 20"
+    )
     old_email_count = int(basescan["filesStillUsingOldEmail"])
     forbidden_legacy_email_count = int(basescan["filesPublishingForbiddenLegacyEmail"])
     old_email_queue = format_path_queue(list(basescan.get("oldEmailFilePaths", [])))
@@ -327,6 +445,70 @@ def update_daily_status_html(template: str, payload: dict[str, Any]) -> str:
         r"generated at <code>[^<]+</code>",
         f"generated at <code>{generated_at}</code>",
         "generated timestamp",
+    )
+    text = replace_once(
+        text,
+        r"<span class=\"label\">Public BaseScan Profile</span>\s*<span class=\"value [^\"]+\">[^<]+</span>",
+        (
+            '<span class="label">Public BaseScan Profile</span>\n'
+            f'          <span class="value {profile_fact_class}">{escape(profile_fact_text)}</span>'
+        ),
+        "BaseScan public profile fact",
+    )
+    text = replace_once(
+        text,
+        r"<div class=\"row\"><span><code>basescan-public-profile-status</code></span><strong>[\s\S]*?</strong></div>",
+        (
+            '<div class="row"><span><code>basescan-public-profile-status</code></span>'
+            f"<strong><code>{escape(profile_command)}</code> completed as a read-only public-page check.</strong></div>"
+        ),
+        "BaseScan public profile command",
+    )
+    text = replace_once(
+        text,
+        r"<div class=\"row\"><span>Public profile observation</span><strong>[\s\S]*?</strong></div>",
+        (
+            '<div class="row"><span>Public profile observation</span>'
+            f"<strong><code>{escape(profile_status)}</code> observed at "
+            f"<code>{escape(profile_checked_at)}</code>.</strong></div>"
+        ),
+        "BaseScan public profile observation",
+    )
+    text = replace_once(
+        text,
+        r"<div class=\"row\"><span>Public Token Rep</span><strong>[\s\S]*?</strong></div>",
+        (
+            '<div class="row"><span>Public Token Rep</span>'
+            f"<strong><code>{escape(profile_token_rep)}</code></strong></div>"
+        ),
+        "BaseScan public token representative",
+    )
+    text = replace_once(
+        text,
+        r"<div class=\"row\"><span>Official website metadata</span><strong>[\s\S]*?</strong></div>",
+        (
+            '<div class="row"><span>Official website metadata</span>'
+            f"<strong>{escape(official_domain_text)}</strong></div>"
+        ),
+        "BaseScan official website metadata",
+    )
+    text = replace_once(
+        text,
+        r"<div class=\"row\"><span>Custom preview image</span><strong>[\s\S]*?</strong></div>",
+        (
+            '<div class="row"><span>Custom preview image</span>'
+            f"<strong>{escape(custom_preview_text)}</strong></div>"
+        ),
+        "BaseScan custom preview image",
+    )
+    text = replace_once(
+        text,
+        r"<div class=\"row\"><span>Source verification</span><strong>[\s\S]*?</strong></div>",
+        (
+            '<div class="row"><span>Source verification</span>'
+            f"<strong>{escape(source_verification_text)}</strong></div>"
+        ),
+        "BaseScan source verification",
     )
     text = replace_once(
         text,

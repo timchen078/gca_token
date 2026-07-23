@@ -53,6 +53,7 @@ DEFAULT_API_BASE_URL = "https://gca-registration-api.gcagochina.workers.dev"
 
 
 CommandRunner = Callable[[Sequence[str], Path, float], subprocess.CompletedProcess[str]]
+BASESCAN_PUBLIC_PROFILE_STEP_ID = "basescan-public-profile-status"
 BASESCAN_PREFLIGHT_STEP_ID = "basescan-resubmission-preflight-status"
 
 
@@ -166,6 +167,59 @@ def summarize_basescan_preflight(stdout: str) -> dict[str, Any]:
     }
 
 
+def default_basescan_public_profile_summary(status: str = "not-run", error: str = "") -> dict[str, Any]:
+    summary = {
+        "available": False,
+        "status": status,
+        "profilePublished": False,
+        "checkedAt": "",
+        "tokenRep": "",
+        "holders": None,
+        "sourceVerificationObserved": False,
+        "officialDomainPresent": False,
+        "genericAddressTitle": False,
+        "defaultPreviewImage": False,
+        "tokenUrl": "",
+        "addressUrl": "",
+        "nextAction": "",
+    }
+    if error:
+        summary["error"] = error
+    return summary
+
+
+def summarize_basescan_public_profile(stdout: str) -> dict[str, Any]:
+    try:
+        payload = json.loads(stdout or "{}")
+    except json.JSONDecodeError as exc:
+        return default_basescan_public_profile_summary(
+            "unreadable-profile-output",
+            f"invalid JSON: {exc}",
+        )
+    if not isinstance(payload, dict):
+        return default_basescan_public_profile_summary(
+            "unreadable-profile-output",
+            "profile output must be a JSON object",
+        )
+    signals = payload.get("signals") if isinstance(payload.get("signals"), dict) else {}
+    return {
+        "available": payload.get("ok") is True,
+        "status": str(payload.get("status") or "unreadable-profile-output"),
+        "profilePublished": payload.get("profilePublished") is True,
+        "checkedAt": str(payload.get("checkedAt") or ""),
+        "tokenRep": str(payload.get("tokenRep") or ""),
+        "holders": payload.get("holders") if isinstance(payload.get("holders"), int) else None,
+        "sourceVerificationObserved": payload.get("sourceVerificationObserved") is True,
+        "officialDomainPresent": signals.get("officialDomainPresent") is True,
+        "genericAddressTitle": signals.get("genericAddressTitle") is True,
+        "defaultPreviewImage": signals.get("defaultPreviewImage") is True,
+        "tokenUrl": str(payload.get("tokenUrl") or ""),
+        "addressUrl": str(payload.get("addressUrl") or ""),
+        "nextAction": str(payload.get("nextAction") or ""),
+        **({"error": str(payload.get("error"))} if payload.get("error") else {}),
+    }
+
+
 def run_step(
     *,
     step_id: str,
@@ -188,6 +242,8 @@ def run_step(
         }
         if step_id == BASESCAN_PREFLIGHT_STEP_ID:
             result["statusSummary"] = summarize_basescan_preflight(completed.stdout or "")
+        elif step_id == BASESCAN_PUBLIC_PROFILE_STEP_ID:
+            result["statusSummary"] = summarize_basescan_public_profile(completed.stdout or "")
         return result
     except subprocess.TimeoutExpired as exc:
         return {
@@ -218,7 +274,16 @@ def run_step(
                     }
                 }
                 if step_id == BASESCAN_PREFLIGHT_STEP_ID
-                else {}
+                else (
+                    {
+                        "statusSummary": default_basescan_public_profile_summary(
+                            "profile-check-timeout",
+                            f"timeout after {timeout} seconds",
+                        )
+                    }
+                    if step_id == BASESCAN_PUBLIC_PROFILE_STEP_ID
+                    else {}
+                )
             ),
         }
 
@@ -233,6 +298,7 @@ def build_steps(
     include_holding_report: bool,
     holding_no_live_read: bool,
     holding_force_same_day: bool,
+    include_basescan_public_profile_status: bool,
     include_basescan_preflight_status: bool,
 ) -> list[tuple[str, list[str], float, bool]]:
     if include_holding_report and not include_member_ops:
@@ -267,6 +333,21 @@ def build_steps(
             True,
         ),
     ]
+    if include_basescan_public_profile_status:
+        steps.append(
+            (
+                BASESCAN_PUBLIC_PROFILE_STEP_ID,
+                [
+                    python,
+                    "tools/check_basescan_public_profile.py",
+                    "--json",
+                    "--timeout",
+                    str(timeout),
+                ],
+                max(timeout * 3, 60),
+                False,
+            )
+        )
     if include_basescan_preflight_status:
         steps.append(
             (
@@ -319,6 +400,7 @@ def run_daily_ops(
     include_holding_report: bool = False,
     holding_no_live_read: bool = False,
     holding_force_same_day: bool = False,
+    include_basescan_public_profile_status: bool = True,
     include_basescan_preflight_status: bool = True,
     summary_output: Path = DEFAULT_SUMMARY_OUTPUT,
     build_digest: bool = False,
@@ -347,9 +429,21 @@ def run_daily_ops(
             include_holding_report=include_holding_report,
             holding_no_live_read=holding_no_live_read,
             holding_force_same_day=holding_force_same_day,
+            include_basescan_public_profile_status=include_basescan_public_profile_status,
             include_basescan_preflight_status=include_basescan_preflight_status,
         )
     ]
+    basescan_public_profile = next(
+        (
+            step.get("statusSummary")
+            for step in steps
+            if (
+                step.get("id") == BASESCAN_PUBLIC_PROFILE_STEP_ID
+                and isinstance(step.get("statusSummary"), dict)
+            )
+        ),
+        default_basescan_public_profile_summary(),
+    )
     basescan_preflight = next(
         (
             step.get("statusSummary")
@@ -382,7 +476,9 @@ def run_daily_ops(
         "includeHoldingReport": include_holding_report,
         "holdingNoLiveRead": holding_no_live_read,
         "holdingForceSameDay": holding_force_same_day,
+        "includeBaseScanPublicProfileStatus": include_basescan_public_profile_status,
         "includeBaseScanPreflightStatus": include_basescan_preflight_status,
+        "baseScanPublicProfile": basescan_public_profile,
         "baseScanPreflight": basescan_preflight,
         "buildDigest": build_digest,
         "steps": steps,
@@ -413,6 +509,8 @@ def run_daily_ops(
             "requiresTransaction": False,
             "automaticTokenTransfer": False,
             "memberBenefitTransferAutomatic": False,
+            "baseScanPublicProfileReadOnly": True,
+            "baseScanPublicProfileBlocksDailyOps": False,
             "baseScanPreflightStatusOnly": True,
             "baseScanPreflightBlocksDailyOps": False,
             "submitsBaseScanRequest": False,
@@ -477,6 +575,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--include-holding-report", action="store_true", help="Also refresh the local GCA Member 30-day holding report.")
     parser.add_argument("--holding-no-live-read", action="store_true", help="Build holding report from existing snapshots without RPC reads.")
     parser.add_argument("--holding-force-same-day", action="store_true", help="Append a fresh holding snapshot even if today already exists.")
+    parser.add_argument("--skip-basescan-public-profile-status", action="store_true", help="Skip the non-blocking read-only BaseScan public profile check.")
     parser.add_argument("--skip-basescan-preflight-status", action="store_true", help="Skip the non-blocking BaseScan resubmission preflight status step.")
     parser.add_argument("--summary-output", type=Path, default=DEFAULT_SUMMARY_OUTPUT, help="Daily summary JSON output.")
     parser.add_argument("--build-digest", action="store_true", help="Also build the redacted local operator digest from summary files.")
@@ -502,6 +601,7 @@ def main(argv: list[str] | None = None) -> int:
         include_holding_report=args.include_holding_report,
         holding_no_live_read=args.holding_no_live_read,
         holding_force_same_day=args.holding_force_same_day,
+        include_basescan_public_profile_status=not args.skip_basescan_public_profile_status,
         include_basescan_preflight_status=not args.skip_basescan_preflight_status,
         summary_output=args.summary_output,
         build_digest=args.build_digest,
