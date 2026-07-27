@@ -41,12 +41,12 @@
     "memberBenefitTransferPacketVersion": "gca_member_benefit_transfer_v1",
     "holdingHistoryVerificationProductionLive": true,
     "memberBenefitTransferEvidenceProductionLive": true,
-    "memberBenefitTransferProductionVerifiedAt": "2026-07-27T10:54:00Z",
+    "memberBenefitTransferProductionVerifiedAt": "2026-07-27T11:10:08Z",
     "memberBenefitTransferOfficialSourceWallet": "0x5e8F84748612B913aAcC937492AC25dc5630E246",
     "memberBenefitTransferExactAmount": "10000 GCA",
     "onchainHoldingHistoryRequiredForApproval": true,
     "automaticMemberActivationFromSubmittedDate": false,
-    "memberReviewProductionVerifiedAt": "2026-07-27T10:54:00Z",
+    "memberReviewProductionVerifiedAt": "2026-07-27T11:10:08Z",
     "localSupportReviewQueue": "live-with-sha256-continuity-check",
     "localSupportReviewCheckpointTool": "live-unsigned-independent-retention-required",
     "localSupportReviewCheckpointPublishedExternally": false,
@@ -55,7 +55,7 @@
     "memberBenefitAutomaticTransfer": false,
     "pendingServiceRoutesProductionLive": true,
     "latestPendingRouteReadinessCheckAt": "2026-07-23T17:55:52Z",
-    "latestPendingRoutePublicCheckAt": "2026-07-27T10:53:44Z",
+    "latestPendingRoutePublicCheckAt": "2026-07-27T11:10:01Z",
     "cloudflareAuthSession": "passed",
     "cloudflareD1Visibility": "passed",
     "cloudflareWorkerDeployPermission": "passed",
@@ -64,8 +64,13 @@
       "/gca/service-requests": 401,
       "/gca/credit-usage": 401
     },
-    "latestPendingRouteAdminCheckAt": "2026-07-27T10:54:00Z",
-    "workerVersionId": "f4606d97-0427-4b04-bebf-20d23b64ae75"
+    "latestPendingRouteAdminCheckAt": "2026-07-27T11:10:08Z",
+    "workerVersionId": "089c615f-0639-4adb-995b-10b006d8fedb",
+    "accountStatusRotationPacketVersion": "gca_account_status_rotation_v1",
+    "accountStatusRotationProductionLive": true,
+    "accountStatusRotationGraceMinutes": 15,
+    "accountStatusRotationReturnsAccessToken": false,
+    "accountStatusRotationChangesAccountOrLedgers": false
   },
   "releaseGates": [
     {

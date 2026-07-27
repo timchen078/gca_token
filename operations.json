@@ -61,10 +61,15 @@
     "localSupportReviewContinuityImmutable": false,
     "productionSupportApprovalWorkflowLive": false,
     "liveTradingEnabled": false,
-    "serviceRoutesProductionVerifiedAt": "2026-07-27T10:54:00Z",
-    "memberReviewProductionVerifiedAt": "2026-07-27T10:54:00Z",
-    "memberBenefitTransferProductionVerifiedAt": "2026-07-27T10:54:00Z",
-    "accountStatusProductionVerifiedAt": "2026-07-27T10:53:44Z"
+    "serviceRoutesProductionVerifiedAt": "2026-07-27T11:10:08Z",
+    "memberReviewProductionVerifiedAt": "2026-07-27T11:10:08Z",
+    "memberBenefitTransferProductionVerifiedAt": "2026-07-27T11:10:08Z",
+    "accountStatusProductionVerifiedAt": "2026-07-27T11:10:01Z",
+    "accountStatusRotationPacketVersion": "gca_account_status_rotation_v1",
+    "accountStatusRotationProductionLive": true,
+    "accountStatusRotationGraceMinutes": 15,
+    "accountStatusRotationChangesAccountOrLedgers": false,
+    "accountStatusRotationProductionVerifiedAt": "2026-07-27T11:10:01Z"
   },
   "emailRegistrationOpsPipeline": {
     "status": "production-email-registration-api-live-operator-sync-ready",
@@ -124,7 +129,7 @@
       "writesD1Records": false,
       "deploysWorker": false
     },
-    "pendingRoutesLastObservedAt": "2026-07-27T10:53:44Z",
+    "pendingRoutesLastObservedAt": "2026-07-27T11:10:01Z",
     "pendingRouteAnonymousGetStatus": {
       "/gca/service-requests": 401,
       "/gca/credit-usage": 401
@@ -181,8 +186,8 @@
       "holdingNoLiveReadUsesExistingSnapshots": true
     },
     "workerDeployPermissionStatus": "passed",
-    "workerVersionId": "f4606d97-0427-4b04-bebf-20d23b64ae75",
-    "productionRoutesVerifiedAt": "2026-07-27T10:54:00Z"
+    "workerVersionId": "089c615f-0639-4adb-995b-10b006d8fedb",
+    "productionRoutesVerifiedAt": "2026-07-27T11:10:08Z"
   },
   "identity": {
     "network": "Base Mainnet",

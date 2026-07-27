@@ -54,9 +54,14 @@
     "memberBenefitTransferStillManual": true,
     "onchainHoldingHistoryRequiredForApproval": true,
     "automaticMemberActivationFromSubmittedDate": false,
-    "memberReviewProductionVerifiedAt": "2026-07-27T10:54:00Z",
-    "memberBenefitTransferProductionVerifiedAt": "2026-07-27T10:54:00Z",
-    "serviceRoutesProductionVerifiedAt": "2026-07-27T10:54:00Z"
+    "memberReviewProductionVerifiedAt": "2026-07-27T11:10:08Z",
+    "memberBenefitTransferProductionVerifiedAt": "2026-07-27T11:10:08Z",
+    "serviceRoutesProductionVerifiedAt": "2026-07-27T11:10:08Z",
+    "accountStatusRotationPacketVersion": "gca_account_status_rotation_v1",
+    "accountStatusRotationProductionLive": true,
+    "accountStatusRotationGraceMinutes": 15,
+    "accountStatusRotationReturnsAccessToken": false,
+    "accountStatusRotationChangesAccountOrLedgers": false
   },
   "localDevelopmentBackend": {
     "status": "local-only-backend-available",
@@ -129,7 +134,7 @@
       "writesD1Records": false,
       "deploysWorker": false
     },
-    "pendingRoutesLastObservedAt": "2026-07-27T10:53:44Z",
+    "pendingRoutesLastObservedAt": "2026-07-27T11:10:01Z",
     "pendingRouteAnonymousGetStatus": {
       "/gca/service-requests": 401,
       "/gca/credit-usage": 401
@@ -194,16 +199,22 @@
       "company",
       "homepage"
     ],
-    "workerVersionId": "f4606d97-0427-4b04-bebf-20d23b64ae75",
-    "workerRelease": "gca-registration-worker-2026-07-27-account-status-v1",
+    "workerVersionId": "089c615f-0639-4adb-995b-10b006d8fedb",
+    "workerRelease": "gca-registration-worker-2026-07-27-account-status-rotation-v1",
     "memberReviewVersion": "gca_member_review_v1",
     "holdingVerificationVersion": "gca_holding_verification_v1",
     "memberBenefitTransferVersion": "gca_member_benefit_transfer_v1",
     "memberBenefitTransferOfficialSourceWallet": "0x5e8F84748612B913aAcC937492AC25dc5630E246",
     "memberBenefitTransferExactAmount": "10000 GCA",
-    "memberBenefitTransferPublicSmokePassedAt": "2026-07-27T10:53:44Z",
-    "memberBenefitTransferAdminSmokePassedAt": "2026-07-27T10:54:00Z",
-    "productionRoutesVerifiedAt": "2026-07-27T10:54:00Z"
+    "memberBenefitTransferPublicSmokePassedAt": "2026-07-27T11:10:01Z",
+    "memberBenefitTransferAdminSmokePassedAt": "2026-07-27T11:10:08Z",
+    "productionRoutesVerifiedAt": "2026-07-27T11:10:08Z",
+    "accountStatusRotationMigration": "cloudflare/gca-registration-worker/migrations/0010_account_status_rotation.sql",
+    "accountStatusRotationEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/account-status/rotate",
+    "accountStatusRotationVersion": "gca_account_status_rotation_v1",
+    "accountStatusRotationGraceMinutes": 15,
+    "accountStatusRotationPublicSmokePassedAt": "2026-07-27T11:10:01Z",
+    "accountStatusRotationAdminSmokePassedAt": "2026-07-27T11:10:08Z"
   },
   "securityModel": {
     "controlledHttpsOriginRequired": true,
@@ -507,6 +518,43 @@
         "queued",
         "active",
         "transferred"
+      ]
+    },
+    {
+      "id": "account-status-rotation",
+      "method": "POST",
+      "path": "/gca/account-status/rotate",
+      "status": "production-workers-dev-live",
+      "purpose": "Replace a valid browser device status key with a new browser-generated key while returning the same redacted account status. This changes only the status credential.",
+      "requiredRequestFields": [
+        "packetVersion",
+        "currentStatusAccessToken",
+        "newStatusAccessToken"
+      ],
+      "serverChecks": [
+        "packetVersion must be gca_account_status_rotation_v1",
+        "both keys must be high-entropy gca_status_ device keys and must differ",
+        "the current key must own an active, unexpired, non-revoked account access record",
+        "the new key must not be assigned or previously used",
+        "only SHA-256 key hashes are stored",
+        "the old key cannot read account status after rotation",
+        "the old key can retry only the same completed rotation for 15 minutes",
+        "account, wallet verification, credits, member, and token records are not changed",
+        "no wallet connection, signature, transaction, custody, or automatic token transfer is requested"
+      ],
+      "responseFields": [
+        "packetVersion",
+        "statusPacketVersion",
+        "statusAccessExpiresAt",
+        "account",
+        "walletVerification",
+        "creditLedger",
+        "memberLedger",
+        "rotation",
+        "boundaries"
+      ],
+      "allowedStatuses": [
+        "completed"
       ]
     },
     {
@@ -1263,5 +1311,6 @@
       "the API collects private keys, seed phrases, exchange API secrets, withdrawal permission, custody, or one-time codes",
       "API access provides live order execution or risk-control bypass"
     ]
-  }
+  },
+  "accountStatusRotationPacketVersion": "gca_account_status_rotation_v1"
 }

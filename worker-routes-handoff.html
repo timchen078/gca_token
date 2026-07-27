@@ -360,12 +360,12 @@
         <div class="fact">
           <span class="label">Current Status</span>
           <span class="value good">Production-live and protected</span>
-          <p class="note">Public smoke passed at <code>2026-07-27T10:53:44Z</code>; anonymous reads return HTTP 401. Admin read-only smoke passed at <code>2026-07-27T10:54:00Z</code>.</p>
+          <p class="note">Public smoke passed at <code>2026-07-27T11:10:01Z</code>; anonymous reads return HTTP 401. Admin read-only smoke passed at <code>2026-07-27T11:10:08Z</code>.</p>
         </div>
         <div class="fact">
           <span class="label">Deployment Gate</span>
           <span class="value good">All required gates passed</span>
-          <p class="note">Worker version <code>f4606d97-0427-4b04-bebf-20d23b64ae75</code>.</p>
+          <p class="note">Worker version <code>089c615f-0639-4adb-995b-10b006d8fedb</code>.</p>
         </div>
         <div class="fact">
           <span class="label">Released Routes</span>
@@ -394,6 +394,8 @@
             <div class="row"><span>Contact suppression</span><strong><code>POST /gca/contact-suppressions</code></strong></div>
             <div class="row"><span>Wallet verification</span><strong><code>POST /gca/wallet-verifications</code> with read-only <code>balanceOf</code></strong></div>
             <div class="row"><span>Member access</span><strong><code>POST /gca/member-access</code> for eligible ledger records.</strong></div>
+            <div class="row"><span>Account status</span><strong><code>POST /gca/account-status</code> for device-key protected redacted reads.</strong></div>
+            <div class="row"><span>Device key rotation</span><strong><code>POST /gca/account-status/rotate</code> for credential-only rotation with a 15-minute same-rotation retry window.</strong></div>
           </div>
         </div>
         <div class="panel">
@@ -410,7 +412,7 @@
         <h2 id="gatesTitle">Required Gate Order</h2>
         <div class="list">
           <div class="row"><span>1. Read-only readiness</span><strong>Run the deploy-readiness checker and require <code>cloudflare-auth-session</code>, D1 visibility, and Worker deploy permission to pass.</strong></div>
-          <div class="row"><span>2. Remote D1 migrations</span><strong>Apply <code>0004_credit_usage_ledger.sql</code> and <code>0005_service_requests.sql</code> only after Gate 1 passes.</strong></div>
+          <div class="row"><span>2. Remote D1 migrations</span><strong>Apply pending migrations, including <code>0010_account_status_rotation.sql</code>, only after Gate 1 passes.</strong></div>
           <div class="row"><span>3. Worker deploy</span><strong>Deploy the updated Worker only after remote migrations complete successfully.</strong></div>
           <div class="row"><span>4. Post-Deploy Public Smoke</span><strong>Confirm health/config versions, CORS, and unauthenticated admin-read rejection with <code>--include-pending-routes</code>.</strong></div>
           <div class="row"><span>5. Post-Deploy Admin Smoke</span><strong>Use the local admin token file to check token-protected response shape without printing tokens or user records.</strong></div>

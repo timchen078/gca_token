@@ -328,7 +328,7 @@
         <p class="eyebrow">Access Operations Runbook / 2026-07-27</p>
         <h1 id="title">GCA Access Operations Runbook</h1>
         <p class="lead">This runbook defines how GCA operators handle registration, account intake, read-only wallet review, redacted device-key status access, protected member decisions, manual member-benefit execution, and production verification of the resulting public transfer evidence.</p>
-        <p class="lead">The email registration, unsubscribe, account intake, wallet verification, redacted status, and eligible ledger paths are live on Cloudflare Workers + D1. The redacted account status is private to the matching device key and is not a public ledger browser. Operators must never request a user's device status key by email or support ticket. Lost, expired, or revoked keys require identity verification from the registered email before a future recovery process.</p>
+        <p class="lead">The email registration, unsubscribe, account intake, wallet verification, redacted status, safe device-key rotation, and eligible ledger paths are live on Cloudflare Workers + D1. The redacted account status is private to the matching device key and is not a public ledger browser. Users who still hold a valid key can rotate it on the member-access page; operators must never request either key by email or support ticket. Lost, expired, or revoked keys still require identity verification from the registered email.</p>
         <div class="actions">
           <a class="button primary" href="review-queue.html">Review Queue Contract</a>
           <a class="button" href="access-api.html">Access API Contract</a>
@@ -363,6 +363,10 @@
           <div class="fact">
             <span class="label">Account status</span>
             <span class="value good">redacted read-only / SHA-256 device key</span>
+          </div>
+          <div class="fact">
+            <span class="label">Device key rotation</span>
+            <span class="value good">credential-only / 15-minute retry recovery</span>
           </div>
         </div>
       </section>

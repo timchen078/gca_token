@@ -321,7 +321,7 @@
       <link rel="stylesheet" href="assets/gca-site.css?v=20260711">
     <link rel="stylesheet" href="assets/api-health.css?v=20260727">
     <script src="assets/gca-site.js?v=20260711" defer></script>
-    <script src="assets/api-health.js?v=20260727b" defer></script>
+    <script src="assets/api-health.js?v=20260727c" defer></script>
   </head>
   <body>
     <header>
@@ -345,9 +345,10 @@
       <section aria-labelledby="title">
         <p class="eyebrow">Registration API Status / Live Read-Only Check</p>
         <h1 id="title">GCA Registration API Status</h1>
-        <p class="lead">This is the public status page for the live GCA email registration, member access, device-key account status, and contact suppression backend. The current production API runs on Cloudflare Workers + D1 at <code>https://gca-registration-api.gcagochina.workers.dev</code>.</p>
-        <p class="lead">The account-status release public smoke check passed at <code>2026-07-27T10:53:44Z</code>, followed by a token-protected admin read check at <code>2026-07-27T10:54:00Z</code>. The browser panel below can repeat the safe read-only portion now without writing records.</p>
+        <p class="lead">This is the public status page for the live GCA email registration, member access, device-key account status and rotation, and contact suppression backend. The current production API runs on Cloudflare Workers + D1 at <code>https://gca-registration-api.gcagochina.workers.dev</code>.</p>
+        <p class="lead">The account-status release public smoke check passed at <code>2026-07-27T11:10:01Z</code>, followed by a token-protected admin read check at <code>2026-07-27T11:10:08Z</code>. The browser panel below can repeat the safe read-only portion now without writing records.</p>
         <p class="lead"><code>gca_member_access_v2</code> creates a random device key in the browser. D1 stores only its SHA-256 hash, and <code>gca_account_status_v1</code> returns a redacted read-only snapshot without email, full wallet address, the key, administrator data, or operator notes.</p>
+        <p class="lead"><code>gca_account_status_rotation_v1</code> lets a browser holding the current valid key replace it safely. The old key immediately loses status-read access and can only retry the same completed rotation for 15 minutes; account, credit, member, wallet, and token records are unchanged.</p>
         <p class="lead">Service requests, credit usage, append-only member review, holding verification, and member-benefit transfer evidence are production-live and token-protected. The new evidence route only verifies an existing manual transfer from the official reserve wallet and never signs or broadcasts one.</p>
         <p class="lead">The public checks verify health and read protections without writing test registrations. Admin reads remain token protected and should only be run locally by an operator with the local admin token file.</p>
         <div class="actions">
@@ -395,8 +396,12 @@
           <span class="value good">Device-key protected / redacted read-only</span>
         </div>
         <div class="fact">
+          <span class="label">Device Key Rotation</span>
+          <span class="value good">Live / 15-minute retry recovery</span>
+        </div>
+        <div class="fact">
           <span class="label">Worker Version</span>
-          <span class="value">f4606d97-0427-4b04-bebf-20d23b64ae75</span>
+          <span class="value">089c615f-0639-4adb-995b-10b006d8fedb</span>
         </div>
         <div class="fact">
           <span class="label">Custom Domain</span>
@@ -496,6 +501,11 @@
             <span class="label">POST</span>
             <span class="value">/gca/account-status</span>
             <p class="note">Live <code>gca_account_status_v1</code> read-only lookup using the matching unexpired device key. It returns redacted account, wallet-verification, credits, member-review, and benefit-transfer state without email, full wallet, the key, admin data, or operator notes.</p>
+          </div>
+          <div class="fact">
+            <span class="label">POST</span>
+            <span class="value">/gca/account-status/rotate</span>
+            <p class="note">Live <code>gca_account_status_rotation_v1</code> key replacement. The old key loses status-read access immediately and can retry only the same rotation for 15 minutes; no account, wallet, credit, member, or token records change.</p>
           </div>
           <div class="fact">
             <span class="label">GET</span>

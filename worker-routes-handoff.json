@@ -11,8 +11,8 @@
   "scope": "Public deployment record and repeatable release runbook for the production-live, operator-only service-request and credit-usage Cloudflare Worker routes.",
   "currentStatus": {
     "latestReadinessCheckAt": "2026-07-23T17:55:52Z",
-    "latestPublicRouteCheckAt": "2026-07-27T10:53:44Z",
-    "latestAdminRouteCheckAt": "2026-07-27T10:54:00Z",
+    "latestPublicRouteCheckAt": "2026-07-27T11:10:01Z",
+    "latestAdminRouteCheckAt": "2026-07-27T11:10:08Z",
     "workerDryRun": "passed-2026-07-23",
     "d1Visibility": "passed",
     "cloudflareAuthSession": "passed",
@@ -24,10 +24,13 @@
     },
     "remoteMigrations": "applied",
     "workerDeploy": "passed",
-    "workerVersionId": "f4606d97-0427-4b04-bebf-20d23b64ae75",
+    "workerVersionId": "089c615f-0639-4adb-995b-10b006d8fedb",
     "postDeployPublicSmoke": "passed",
     "postDeployAdminSmoke": "passed",
-    "productionRouteStatus": "live-token-protected"
+    "productionRouteStatus": "live-token-protected",
+    "accountStatusRotation": "live-device-key-protected",
+    "accountStatusRotationVersion": "gca_account_status_rotation_v1",
+    "accountStatusRotationGraceMinutes": 15
   },
   "alreadyLiveRoutes": [
     "GET /health",
@@ -37,6 +40,7 @@
     "POST /gca/wallet-verifications",
     "POST /gca/member-access",
     "POST /gca/account-status",
+    "POST /gca/account-status/rotate",
     "token-protected GET /gca/email-registrations",
     "token-protected GET /gca/contact-suppressions",
     "token-protected GET /gca/wallet-verifications",
@@ -55,7 +59,7 @@
       "writesCredits": false,
       "createsTradingPermission": false,
       "productionLive": true,
-      "workerVersionId": "f4606d97-0427-4b04-bebf-20d23b64ae75"
+      "workerVersionId": "089c615f-0639-4adb-995b-10b006d8fedb"
     },
     {
       "path": "/gca/credit-usage",
@@ -64,7 +68,7 @@
       "status": "live-token-protected",
       "writtenOnlyAfterReviewedDelivery": true,
       "productionLive": true,
-      "workerVersionId": "f4606d97-0427-4b04-bebf-20d23b64ae75"
+      "workerVersionId": "089c615f-0639-4adb-995b-10b006d8fedb"
     }
   ],
   "deployGates": [
@@ -153,7 +157,8 @@
     "The GCA service-request and credit-usage Worker routes are production-live and token-protected.",
     "Remote D1 migrations, Worker deploy, public smoke, and admin read-only smoke checks passed on 2026-07-23 UTC.",
     "Anonymous ledger reads return HTTP 401; public visitors cannot read operator ledgers.",
-    "The routes do not connect wallets, request signatures, transfer GCA, or create trading permission."
+    "The routes do not connect wallets, request signatures, transfer GCA, or create trading permission.",
+    "The public device-key rotation route changes only the hashed account-status credential; it does not change account, credit, member, wallet, or token records."
   ],
   "doNotClaim": [
     "production self-service service delivery is live",
