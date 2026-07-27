@@ -594,6 +594,7 @@
           </div>
           <div class="actions snapshot-controls">
             <button class="button primary" type="button" id="refreshStatus" hidden>Refresh Account Status / 刷新账户状态</button>
+            <button class="button" type="button" id="rotateStatusKey" hidden>Rotate Device Key / 更换设备密钥</button>
             <button class="button" type="button" id="forgetDevice" hidden>Forget This Device / 忘记此设备</button>
           </div>
           <p class="note" id="statusAccessNote">Device status access is created only after a successful account submission. If the device key is lost, contact official support from the registered email.</p>
@@ -644,6 +645,7 @@
           <div class="row"><span>Access config</span><strong><a href="https://gca-registration-api.gcagochina.workers.dev/gca/access-config">/gca/access-config</a></strong></div>
           <div class="row"><span>Member account endpoint</span><strong>POST /gca/member-access</strong></div>
           <div class="row"><span>Redacted account status endpoint</span><strong>POST /gca/account-status</strong></div>
+          <div class="row"><span>Device key rotation endpoint</span><strong>POST /gca/account-status/rotate</strong></div>
           <div class="row"><span>Wallet verification endpoint</span><strong>POST /gca/wallet-verifications</strong></div>
           <div class="row"><span>Ledger schema page</span><strong><a href="../../member-ledger.html">member-ledger.html</a></strong></div>
           <div class="row"><span>Support page</span><strong><a href="../../support.html">support.html</a></strong></div>
@@ -652,7 +654,7 @@
     </main>
 
     <footer>
-      <div class="shell">GCA member access is live for account intake, read-only wallet verification, redacted device-key status refresh, credits ledger, and GCA Member ledger records. Token transfers remain manual review only. 中文用户可在本页提交邮箱、Base 钱包和公开交易资料，并刷新脱敏账户状态。</div>
+      <div class="shell">GCA member access is live for account intake, read-only wallet verification, redacted device-key status refresh and safe device-key rotation, credits ledger, and GCA Member ledger records. Token transfers remain manual review only. 中文用户可在本页提交邮箱、Base 钱包和公开交易资料，并刷新脱敏账户状态或安全更换设备密钥。</div>
     </footer>
 
     <script>
@@ -684,6 +686,7 @@
       const savedAt = document.getElementById("savedAt");
       const clearSnapshot = document.getElementById("clearSnapshot");
       const refreshStatus = document.getElementById("refreshStatus");
+      const rotateStatusKey = document.getElementById("rotateStatusKey");
       const forgetDevice = document.getElementById("forgetDevice");
       const statusAccessNote = document.getElementById("statusAccessNote");
       const SNAPSHOT_KEY = "gca_member_access_snapshot_v1";
@@ -712,6 +715,23 @@
         return `gca_status_${encoded}`;
       }
 
+      function pendingStatusAccessRotation(record) {
+        const pending = record && record.pendingRotation;
+        if (!pending || !isStatusAccessToken(pending.newToken)) {
+          return null;
+        }
+        const requestedAt = new Date(pending.requestedAt).getTime();
+        const age = Date.now() - requestedAt;
+        if (
+          !Number.isFinite(age) ||
+          age < 0 ||
+          age > PENDING_STATUS_ACCESS_MAX_AGE_MS
+        ) {
+          return null;
+        }
+        return pending;
+      }
+
       function statusAccessIsCurrent(record) {
         if (!record || !isStatusAccessToken(record.token) || !isWalletAddress(record.walletAddress)) {
           return false;
@@ -719,7 +739,10 @@
         const expiry = record.expiresAt
           ? new Date(record.expiresAt).getTime()
           : new Date(record.createdAt).getTime() + PENDING_STATUS_ACCESS_MAX_AGE_MS;
-        return Number.isFinite(expiry) && expiry > Date.now();
+        return (
+          (Number.isFinite(expiry) && expiry > Date.now()) ||
+          Boolean(pendingStatusAccessRotation(record))
+        );
       }
 
       function loadStatusAccess() {
@@ -733,6 +756,16 @@
           if (!statusAccessIsCurrent(record)) {
             window.localStorage.removeItem(STATUS_ACCESS_KEY);
             return null;
+          }
+          if (
+            record.pendingRotation &&
+            !pendingStatusAccessRotation(record)
+          ) {
+            delete record.pendingRotation;
+            window.localStorage.setItem(
+              STATUS_ACCESS_KEY,
+              JSON.stringify(record)
+            );
           }
           sessionStatusAccess = record;
           return record;
@@ -777,9 +810,16 @@
       function updateStatusAccessControls() {
         const record = loadStatusAccess();
         const available = Boolean(record);
+        const pendingRotation = pendingStatusAccessRotation(record);
         refreshStatus.hidden = !available;
+        rotateStatusKey.hidden = !available;
         forgetDevice.hidden = !available;
-        statusAccessNote.textContent = available
+        rotateStatusKey.textContent = pendingRotation
+          ? "Retry Key Rotation / 重试密钥轮换"
+          : "Rotate Device Key / 更换设备密钥";
+        statusAccessNote.textContent = pendingRotation
+          ? "A new device key is saved locally and waiting for rotation recovery. Retry uses the same new key; neither key is included in review packets or API responses."
+          : available
           ? `Device status access is ready${record.expiresAt ? ` until ${record.expiresAt}` : ""}. The key is not included in review packets or API responses.`
           : "Device status access is created only after a successful account submission. If the device key is lost, contact official support from the registered email.";
       }
@@ -1000,6 +1040,60 @@
         return body;
       }
 
+      function accountStatusPayload(statusAccessToken) {
+        return {
+          packetVersion: "gca_account_status_v1",
+          statusAccessToken
+        };
+      }
+
+      async function readAccountStatus(statusAccessToken) {
+        return postJson(
+          "/gca/account-status",
+          accountStatusPayload(statusAccessToken)
+        );
+      }
+
+      function promotePendingStatusAccess(statusAccess, payload) {
+        const pendingRotation = pendingStatusAccessRotation(statusAccess);
+        if (!pendingRotation) return statusAccess;
+        const promoted = {
+          ...statusAccess,
+          token: pendingRotation.newToken,
+          accountId: payload.account && payload.account.accountId
+            ? payload.account.accountId
+            : statusAccess.accountId,
+          createdAt: payload.rotation && payload.rotation.rotatedAt
+            ? payload.rotation.rotatedAt
+            : new Date().toISOString(),
+          expiresAt: payload.statusAccessExpiresAt || statusAccess.expiresAt
+        };
+        delete promoted.pendingRotation;
+        saveStatusAccess(promoted);
+        return promoted;
+      }
+
+      async function readAccountStatusWithRecovery(statusAccess) {
+        const pendingRotation = pendingStatusAccessRotation(statusAccess);
+        if (pendingRotation) {
+          try {
+            const pendingPayload = await readAccountStatus(
+              pendingRotation.newToken
+            );
+            const promoted = promotePendingStatusAccess(
+              statusAccess,
+              pendingPayload
+            );
+            return { payload: pendingPayload, statusAccess: promoted };
+          } catch (pendingError) {
+            // The rotation may not have reached the server. The current key
+            // remains the only safe fallback for a read-only status request.
+          }
+        }
+        const payload = await readAccountStatus(statusAccess.token);
+        return { payload, statusAccess };
+      }
+
       function renderAccessResponse(payload) {
         latestAccessResponse = payload;
         const verification = payload.walletVerification || {};
@@ -1118,21 +1212,70 @@
         refreshStatus.disabled = true;
         renderResult(balanceResult, "", "Refreshing account status / 正在刷新账户状态", "Reading the redacted account, credits, member review, and member-benefit state. This does not write records or request a wallet action. 正在只读获取脱敏账户、积分、会员审核和会员权益状态，不会写入记录或请求钱包操作。");
         try {
-          const payload = await postJson("/gca/account-status", {
-            packetVersion: "gca_account_status_v1",
-            statusAccessToken: statusAccess.token
-          });
+          const resolved = await readAccountStatusWithRecovery(statusAccess);
+          const payload = resolved.payload;
+          const activeStatusAccess = resolved.statusAccess;
           saveStatusAccess({
-            ...statusAccess,
-            accountId: payload.account && payload.account.accountId ? payload.account.accountId : statusAccess.accountId,
-            expiresAt: payload.statusAccessExpiresAt || statusAccess.expiresAt
+            ...activeStatusAccess,
+            accountId: payload.account && payload.account.accountId ? payload.account.accountId : activeStatusAccess.accountId,
+            expiresAt: payload.statusAccessExpiresAt || activeStatusAccess.expiresAt
           });
-          renderStatusResponse(payload, statusAccess);
+          renderStatusResponse(payload, activeStatusAccess);
         } catch (error) {
           const message = error && error.message ? error.message : "Account status refresh failed.";
           renderResult(balanceResult, "warn", "Status refresh failed / 状态刷新失败", `${message} If the device key is invalid or expired, contact ${SUPPORT_EMAIL} from the registered email. 如果设备密钥无效或已过期，请使用注册邮箱联系 ${SUPPORT_EMAIL}。`);
         } finally {
           refreshStatus.disabled = false;
+        }
+      });
+
+      rotateStatusKey.addEventListener("click", async () => {
+        let statusAccess = loadStatusAccess();
+        if (!statusAccess) {
+          updateStatusAccessControls();
+          renderResult(balanceResult, "warn", "Device key unavailable / 设备密钥不可用", `A valid current device key is required. Contact ${SUPPORT_EMAIL} from the registered email if it was lost. 需要有效的当前设备密钥；如已丢失，请使用注册邮箱联系 ${SUPPORT_EMAIL}。`);
+          return;
+        }
+
+        let pendingRotation = pendingStatusAccessRotation(statusAccess);
+        if (!pendingRotation) {
+          const confirmed = window.confirm("Replace this browser's device status key? This changes only the status credential. It does not request a wallet action or change GCA, credits, membership, or account data. 是否更换本浏览器的设备状态密钥？只更换状态凭据，不会请求钱包操作，也不会改变 GCA、积分、会员或账户资料。");
+          if (!confirmed) return;
+          pendingRotation = {
+            newToken: newStatusAccessToken(),
+            requestedAt: new Date().toISOString()
+          };
+          statusAccess = {
+            ...statusAccess,
+            pendingRotation
+          };
+          saveStatusAccess(statusAccess);
+        }
+
+        rotateStatusKey.disabled = true;
+        refreshStatus.disabled = true;
+        renderResult(balanceResult, "", "Rotating device key / 正在更换设备密钥", "The new key is already saved locally for recovery. The server stores only SHA-256 hashes and will not return either key. 新密钥已先保存在本设备用于恢复；服务器仅保存 SHA-256 摘要，不会返回任何密钥。");
+        try {
+          let payload;
+          try {
+            payload = await readAccountStatus(pendingRotation.newToken);
+          } catch (pendingReadError) {
+            payload = await postJson("/gca/account-status/rotate", {
+              packetVersion: "gca_account_status_rotation_v1",
+              currentStatusAccessToken: statusAccess.token,
+              newStatusAccessToken: pendingRotation.newToken
+            });
+          }
+          const promoted = promotePendingStatusAccess(statusAccess, payload);
+          renderStatusResponse(payload, promoted);
+          renderResult(balanceResult, "good", "Device key rotated / 设备密钥已更换", "The new key is active on this device. The old key cannot read account status; it can only retry this same rotation during the 15-minute recovery window. 新密钥已在本设备启用；旧密钥不能再读取账户状态，只能在 15 分钟恢复窗口内重试同一次轮换。");
+        } catch (error) {
+          const message = error && error.message ? error.message : "Device key rotation failed.";
+          renderResult(balanceResult, "warn", "Key rotation needs retry / 密钥轮换需要重试", `${message} The same new key remains saved locally; use Retry Key Rotation. Do not forget this device until recovery succeeds. 同一个新密钥仍保存在本设备；请点击重试密钥轮换，恢复成功前不要忘记此设备。`);
+        } finally {
+          rotateStatusKey.disabled = false;
+          refreshStatus.disabled = false;
+          updateStatusAccessControls();
         }
       });
 

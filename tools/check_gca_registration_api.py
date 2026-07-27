@@ -37,7 +37,7 @@ from tools.export_cloudflare_email_registrations import (  # noqa: E402
 
 DEFAULT_ORIGIN = "https://gcagochina.com"
 DEFAULT_USER_AGENT = "GCA-Operator-Registration-API-Check/1.0"
-WORKER_RELEASE = "gca-registration-worker-2026-07-27-account-status-v1"
+WORKER_RELEASE = "gca-registration-worker-2026-07-27-account-status-rotation-v1"
 OFFICIAL_CONTACT_EMAIL = "support@gcagochina.com"
 OFFICIAL_MEMBER_BENEFIT_SOURCE_WALLET = "0x5e8f84748612b913aacc937492ac25dc5630e246"
 
@@ -152,6 +152,10 @@ def check_health(*, base_url: str, timeout: float, cafile: str, opener: Callable
     require(payload.get("memberAccessVersion") == "gca_member_access_v2", "health endpoint returned wrong member access packet version")
     require(payload.get("legacyMemberAccessVersion") == "gca_member_access_v1", "health endpoint returned wrong legacy member access packet version")
     require(payload.get("accountStatusVersion") == "gca_account_status_v1", "health endpoint returned wrong account status packet version")
+    require(
+        payload.get("accountStatusRotationVersion") == "gca_account_status_rotation_v1",
+        "health endpoint returned wrong account status rotation packet version",
+    )
     if include_pending_routes or "workerRelease" in payload:
         require(payload.get("workerRelease") == WORKER_RELEASE, "health endpoint returned wrong Worker release")
         require(payload.get("contactEmail") == OFFICIAL_CONTACT_EMAIL, "health endpoint returned wrong official contact email")
@@ -188,6 +192,7 @@ def check_health(*, base_url: str, timeout: float, cafile: str, opener: Callable
         "memberAccessVersion": payload.get("memberAccessVersion"),
         "legacyMemberAccessVersion": payload.get("legacyMemberAccessVersion"),
         "accountStatusVersion": payload.get("accountStatusVersion"),
+        "accountStatusRotationVersion": payload.get("accountStatusRotationVersion"),
         "creditUsageVersion": payload.get("creditUsageVersion"),
         "serviceRequestVersion": payload.get("serviceRequestVersion"),
         "memberReviewVersion": payload.get("memberReviewVersion"),
@@ -299,6 +304,10 @@ def check_access_config(*, base_url: str, timeout: float, cafile: str, opener: C
     require(payload.get("memberAccessVersion") == "gca_member_access_v2", "access config returned wrong version")
     require(payload.get("legacyMemberAccessVersion") == "gca_member_access_v1", "access config returned wrong legacy version")
     require(payload.get("accountStatusVersion") == "gca_account_status_v1", "access config returned wrong account status version")
+    require(
+        payload.get("accountStatusRotationVersion") == "gca_account_status_rotation_v1",
+        "access config returned wrong account status rotation version",
+    )
     if include_pending_routes or "workerRelease" in payload:
         require(payload.get("workerRelease") == WORKER_RELEASE, "access config returned wrong Worker release")
         require(payload.get("contactEmail") == OFFICIAL_CONTACT_EMAIL, "access config returned wrong official contact email")
@@ -331,11 +340,28 @@ def check_access_config(*, base_url: str, timeout: float, cafile: str, opener: C
         payload.get("endpoints", {}).get("accountStatus") == "/gca/account-status",
         "access config returned wrong account status endpoint",
     )
+    require(
+        payload.get("endpoints", {}).get("accountStatusRotation") == "/gca/account-status/rotate",
+        "access config returned wrong account status rotation endpoint",
+    )
     require(payload.get("boundaries", {}).get("readOnlyWalletVerification") is True, "access config must keep read-only wallet verification")
     require(payload.get("boundaries", {}).get("readOnlyAccountStatus") is True, "access config must keep account status read-only")
     require(payload.get("boundaries", {}).get("accountStatusTokenStoredAsSha256") is True, "access config must hash account status keys")
     require(payload.get("boundaries", {}).get("accountStatusReturnsEmail") is False, "access config must not return account email")
     require(payload.get("boundaries", {}).get("accountStatusReturnsAccessToken") is False, "access config must not return account status keys")
+    require(payload.get("boundaries", {}).get("accountStatusKeyRotationEnabled") is True, "access config must enable device key rotation")
+    require(
+        payload.get("boundaries", {}).get("accountStatusRotationGraceMinutes") == 15,
+        "access config returned wrong account status rotation grace window",
+    )
+    require(
+        payload.get("boundaries", {}).get("accountStatusRotationReturnsAccessToken") is False,
+        "access config must not return rotated account status keys",
+    )
+    require(
+        payload.get("boundaries", {}).get("accountStatusRotationChangesAccountOrLedgers") is False,
+        "access config rotation must not change account or ledger records",
+    )
     require(payload.get("boundaries", {}).get("automaticTokenTransfer") is False, "access config must not auto-transfer tokens")
     require(
         payload.get("boundaries", {}).get("automaticMemberActivationFromSubmittedDate") is False,
@@ -367,6 +393,7 @@ def check_access_config(*, base_url: str, timeout: float, cafile: str, opener: C
         "memberAccessVersion": payload.get("memberAccessVersion"),
         "legacyMemberAccessVersion": payload.get("legacyMemberAccessVersion"),
         "accountStatusVersion": payload.get("accountStatusVersion"),
+        "accountStatusRotationVersion": payload.get("accountStatusRotationVersion"),
         "workerRelease": payload.get("workerRelease"),
         "contactEmail": payload.get("contactEmail"),
         "creditUsageVersion": payload.get("creditUsageVersion"),
@@ -485,6 +512,15 @@ def run_checks(
         ),
         check_cors_preflight(
             base_url=base_url,
+            path="/gca/account-status/rotate",
+            check_id="cors-account-status-rotation",
+            origin=origin,
+            timeout=timeout,
+            cafile=cafile,
+            opener=opener,
+        ),
+        check_cors_preflight(
+            base_url=base_url,
             path="/gca/member-reviews",
             check_id="cors-member-reviews",
             origin=origin,
@@ -577,6 +613,14 @@ def run_checks(
             base_url=base_url,
             path="/gca/account-status",
             check_id="account-status-get-rejected",
+            timeout=timeout,
+            cafile=cafile,
+            opener=opener,
+        ),
+        check_public_post_only_get(
+            base_url=base_url,
+            path="/gca/account-status/rotate",
+            check_id="account-status-rotation-get-rejected",
             timeout=timeout,
             cafile=cafile,
             opener=opener,
@@ -749,6 +793,7 @@ def run_checks(
             "submitsWalletVerification": False,
             "submitsMemberAccess": False,
             "submitsAccountStatus": False,
+            "submitsAccountStatusRotation": False,
             "submitsServiceRequest": False,
             "submitsMemberReview": False,
             "submitsHoldingVerification": False,

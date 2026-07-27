@@ -17,12 +17,13 @@ const CONTACT_SUPPRESSION_VERSION = "gca_contact_suppression_v1";
 const MEMBER_ACCESS_VERSION = "gca_member_access_v2";
 const LEGACY_MEMBER_ACCESS_VERSION = "gca_member_access_v1";
 const ACCOUNT_STATUS_VERSION = "gca_account_status_v1";
+const ACCOUNT_STATUS_ROTATION_VERSION = "gca_account_status_rotation_v1";
 const CREDIT_USAGE_VERSION = "gca_credit_usage_v1";
 const SERVICE_REQUEST_VERSION = "gca_service_request_v1";
 const MEMBER_REVIEW_VERSION = "gca_member_review_v1";
 const HOLDING_VERIFICATION_VERSION = "gca_holding_verification_v1";
 const MEMBER_BENEFIT_TRANSFER_VERSION = "gca_member_benefit_transfer_v1";
-const WORKER_RELEASE = "gca-registration-worker-2026-07-27-account-status-v1";
+const WORKER_RELEASE = "gca-registration-worker-2026-07-27-account-status-rotation-v1";
 const OFFICIAL_CONTACT_EMAIL = "support@gcagochina.com";
 const OFFICIAL_SITE_URL = "https://gcagochina.com/";
 const CHAIN_ID = 8453;
@@ -39,6 +40,7 @@ const MEMBER_BENEFIT_UNITS = 10_000n * TOKEN_UNIT;
 const CREDIT_AMOUNT = 100;
 const CREDIT_EXPIRY_DAYS = 180;
 const ACCOUNT_STATUS_ACCESS_DAYS = 365;
+const ACCOUNT_STATUS_ROTATION_GRACE_MINUTES = 15;
 const MEMBER_REFRESH_DAYS = 30;
 const MEMBER_HOLD_DAYS = 30;
 const HOLDING_WINDOW_MS = MEMBER_HOLD_DAYS * 86_400_000;
@@ -156,6 +158,12 @@ function nowIso() {
 function addDaysIso(isoValue, days) {
   const date = new Date(isoValue);
   date.setUTCDate(date.getUTCDate() + days);
+  return date.toISOString().replace(/\.\d{3}Z$/, "Z");
+}
+
+function addMinutesIso(isoValue, minutes) {
+  const date = new Date(isoValue);
+  date.setUTCMinutes(date.getUTCMinutes() + minutes);
   return date.toISOString().replace(/\.\d{3}Z$/, "Z");
 }
 
@@ -376,6 +384,34 @@ function extractAccountStatus(packet) {
     throw new ApiError("statusAccessToken must be a valid device status access key", 401);
   }
   return { statusAccessToken };
+}
+
+function extractAccountStatusRotation(packet) {
+  if (
+    packet.packetVersion &&
+    packet.packetVersion !== ACCOUNT_STATUS_ROTATION_VERSION
+  ) {
+    throw new ApiError(`packetVersion must be ${ACCOUNT_STATUS_ROTATION_VERSION}`);
+  }
+  const currentStatusAccessToken = String(
+    packet.currentStatusAccessToken || ""
+  ).trim();
+  const newStatusAccessToken = String(packet.newStatusAccessToken || "").trim();
+  if (!isStatusAccessToken(currentStatusAccessToken)) {
+    throw new ApiError(
+      "currentStatusAccessToken must be a valid device status access key",
+      401
+    );
+  }
+  if (!isStatusAccessToken(newStatusAccessToken)) {
+    throw new ApiError(
+      "newStatusAccessToken must be a valid device status access key"
+    );
+  }
+  if (currentStatusAccessToken === newStatusAccessToken) {
+    throw new ApiError("newStatusAccessToken must differ from the current key");
+  }
+  return { currentStatusAccessToken, newStatusAccessToken };
 }
 
 function extractCreditUsage(packet) {
@@ -2671,6 +2707,45 @@ function accountStatusNextStep(walletVerification, creditLedger, memberLedger) {
   return "No eligible credit or member ledger record is available yet.";
 }
 
+async function buildAccountStatusPayload(db, accountRow, checkedAt) {
+  const accountId = accountRow.account_id;
+  const walletRow = await db
+    .prepare(
+      "SELECT * FROM gca_wallet_verifications WHERE account_id = ?1 ORDER BY checked_at DESC LIMIT 1"
+    )
+    .bind(accountId)
+    .first();
+  const creditRow = await db
+    .prepare(
+      "SELECT * FROM gca_credit_ledger WHERE account_id = ?1 ORDER BY activated_at DESC LIMIT 1"
+    )
+    .bind(accountId)
+    .first();
+  const memberRow = await db
+    .prepare(
+      "SELECT * FROM gca_member_ledger WHERE account_id = ?1 ORDER BY updated_at DESC LIMIT 1"
+    )
+    .bind(accountId)
+    .first();
+
+  const account = rowToMemberAccount(accountRow, false);
+  const walletVerification = rowToWalletVerification(walletRow);
+  const creditLedger = rowToCreditLedger(creditRow);
+  const memberLedger = rowToMemberLedger(memberRow);
+  return buildPublicAccountStatus({
+    account,
+    walletVerification,
+    creditLedger,
+    memberLedger,
+    checkedAt,
+    nextStep: accountStatusNextStep(
+      walletVerification,
+      creditLedger,
+      memberLedger
+    )
+  });
+}
+
 async function submitAccountStatus(request, env, origin) {
   const db = requireDatabase(env);
   const packet = await readJsonRequest(request);
@@ -2700,44 +2775,167 @@ async function submitAccountStatus(request, env, origin) {
     throw new ApiError("device status access key is invalid or expired", 401);
   }
 
-  const accountId = accountRow.account_id;
-  const walletRow = await db
-    .prepare(
-      "SELECT * FROM gca_wallet_verifications WHERE account_id = ?1 ORDER BY checked_at DESC LIMIT 1"
-    )
-    .bind(accountId)
-    .first();
-  const creditRow = await db
-    .prepare(
-      "SELECT * FROM gca_credit_ledger WHERE account_id = ?1 ORDER BY activated_at DESC LIMIT 1"
-    )
-    .bind(accountId)
-    .first();
-  const memberRow = await db
-    .prepare(
-      "SELECT * FROM gca_member_ledger WHERE account_id = ?1 ORDER BY updated_at DESC LIMIT 1"
-    )
-    .bind(accountId)
-    .first();
-
-  const account = rowToMemberAccount(accountRow, false);
-  const walletVerification = rowToWalletVerification(walletRow);
-  const creditLedger = rowToCreditLedger(creditRow);
-  const memberLedger = rowToMemberLedger(memberRow);
-  const nextStep = accountStatusNextStep(walletVerification, creditLedger, memberLedger);
+  const publicStatus = await buildAccountStatusPayload(db, accountRow, now);
 
   return jsonResponse({
     ok: true,
     packetVersion: ACCOUNT_STATUS_VERSION,
     statusAccessExpiresAt: accountRow.status_access_expires_at,
-    ...buildPublicAccountStatus({
-      account,
-      walletVerification,
-      creditLedger,
-      memberLedger,
-      checkedAt: now,
-      nextStep
-    })
+    ...publicStatus
+  }, 200, origin, env);
+}
+
+async function submitAccountStatusRotation(request, env, origin) {
+  const db = requireDatabase(env);
+  const packet = await readJsonRequest(request);
+  const rotationInput = extractAccountStatusRotation(packet);
+  const currentTokenHash = await sha256Hex(
+    rotationInput.currentStatusAccessToken
+  );
+  const newTokenHash = await sha256Hex(rotationInput.newStatusAccessToken);
+  const now = nowIso();
+  let usedPreviousToken = false;
+  let alreadyRotated = false;
+  let accessRow = await db
+    .prepare(
+      "SELECT * FROM gca_account_status_access WHERE token_hash = ?1 LIMIT 1"
+    )
+    .bind(currentTokenHash)
+    .first();
+
+  if (!accessRow) {
+    accessRow = await db
+      .prepare(
+        `SELECT *
+        FROM gca_account_status_access
+        WHERE previous_token_hash = ?1
+          AND previous_token_expires_at > ?2
+        LIMIT 1`
+      )
+      .bind(currentTokenHash, now)
+      .first();
+    usedPreviousToken = Boolean(accessRow);
+  }
+
+  if (
+    !accessRow ||
+    String(accessRow.revoked_at || "").trim() ||
+    String(accessRow.expires_at || "") <= now
+  ) {
+    throw new ApiError("device status access key is invalid or expired", 401);
+  }
+
+  if (usedPreviousToken) {
+    if (accessRow.token_hash !== newTokenHash) {
+      throw new ApiError(
+        "the previous device key can only retry its completed rotation",
+        409
+      );
+    }
+    alreadyRotated = true;
+  } else {
+    const newTokenOwner = await db
+      .prepare(
+        `SELECT account_id
+        FROM gca_account_status_access
+        WHERE token_hash = ?1 OR previous_token_hash = ?1
+        LIMIT 1`
+      )
+      .bind(newTokenHash)
+      .first();
+    if (newTokenOwner) {
+      throw new ApiError(
+        "new device status access key is already assigned or was previously used",
+        409
+      );
+    }
+
+    const previousTokenExpiresAt = addMinutesIso(
+      now,
+      ACCOUNT_STATUS_ROTATION_GRACE_MINUTES
+    );
+    const statusAccessExpiresAt = addDaysIso(
+      now,
+      ACCOUNT_STATUS_ACCESS_DAYS
+    );
+    const updateResult = await db
+      .prepare(
+        `UPDATE gca_account_status_access
+        SET previous_token_hash = token_hash,
+            previous_token_expires_at = ?1,
+            token_hash = ?2,
+            expires_at = ?3,
+            rotated_at = ?4
+        WHERE account_id = ?5
+          AND token_hash = ?6
+          AND revoked_at = ''
+          AND expires_at > ?4`
+      )
+      .bind(
+        previousTokenExpiresAt,
+        newTokenHash,
+        statusAccessExpiresAt,
+        now,
+        accessRow.account_id,
+        currentTokenHash
+      )
+      .run();
+
+    const storedAccess = await db
+      .prepare(
+        "SELECT * FROM gca_account_status_access WHERE account_id = ?1 LIMIT 1"
+      )
+      .bind(accessRow.account_id)
+      .first();
+    if (
+      !storedAccess ||
+      storedAccess.token_hash !== newTokenHash ||
+      storedAccess.previous_token_hash !== currentTokenHash ||
+      String(storedAccess.previous_token_expires_at || "") <= now
+    ) {
+      throw new ApiError(
+        "device status key rotation conflict; retry the same rotation",
+        409
+      );
+    }
+    const changedRows = Number(updateResult?.meta?.changes);
+    alreadyRotated = Number.isFinite(changedRows) && changedRows === 0;
+    accessRow = storedAccess;
+  }
+
+  const accountRow = await db
+    .prepare("SELECT * FROM gca_member_accounts WHERE account_id = ?1 LIMIT 1")
+    .bind(accessRow.account_id)
+    .first();
+  if (!accountRow) {
+    throw new ApiError("device status account is unavailable", 409);
+  }
+
+  const publicStatus = await buildAccountStatusPayload(db, accountRow, now);
+  return jsonResponse({
+    ok: true,
+    packetVersion: ACCOUNT_STATUS_ROTATION_VERSION,
+    statusPacketVersion: ACCOUNT_STATUS_VERSION,
+    statusAccessExpiresAt: accessRow.expires_at,
+    ...publicStatus,
+    rotation: {
+      completed: true,
+      alreadyRotated,
+      rotatedAt: accessRow.rotated_at,
+      previousKeyRetryExpiresAt: accessRow.previous_token_expires_at,
+      gracePeriodMinutes: ACCOUNT_STATUS_ROTATION_GRACE_MINUTES,
+      currentTokenReturned: false,
+      newTokenReturned: false
+    },
+    boundaries: {
+      ...publicStatus.boundaries,
+      keyRotationOnly: true,
+      accountOrLedgerRecordsChanged: false,
+      walletActionRequired: false,
+      requiresSignature: false,
+      requiresTransaction: false,
+      automaticTokenTransfer: false
+    }
   }, 200, origin, env);
 }
 
@@ -2764,6 +2962,10 @@ function accessBoundaries() {
     accountStatusReturnsEmail: false,
     accountStatusReturnsAccessToken: false,
     accountStatusAccessDays: ACCOUNT_STATUS_ACCESS_DAYS,
+    accountStatusKeyRotationEnabled: true,
+    accountStatusRotationGraceMinutes: ACCOUNT_STATUS_ROTATION_GRACE_MINUTES,
+    accountStatusRotationReturnsAccessToken: false,
+    accountStatusRotationChangesAccountOrLedgers: false,
     requiresSignature: false,
     requiresTransaction: false,
     asksForPrivateKey: false,
@@ -2794,6 +2996,7 @@ function accessConfig(origin, env) {
     memberAccessVersion: MEMBER_ACCESS_VERSION,
     legacyMemberAccessVersion: LEGACY_MEMBER_ACCESS_VERSION,
     accountStatusVersion: ACCOUNT_STATUS_VERSION,
+    accountStatusRotationVersion: ACCOUNT_STATUS_ROTATION_VERSION,
     creditUsageVersion: CREDIT_USAGE_VERSION,
     serviceRequestVersion: SERVICE_REQUEST_VERSION,
     memberReviewVersion: MEMBER_REVIEW_VERSION,
@@ -2806,6 +3009,7 @@ function accessConfig(origin, env) {
     endpoints: {
       memberAccess: "/gca/member-access",
       accountStatus: "/gca/account-status",
+      accountStatusRotation: "/gca/account-status/rotate",
       walletVerifications: "/gca/wallet-verifications",
       creditLedgerAdmin: "/gca/credit-ledger",
       serviceRequestsAdmin: "/gca/service-requests",
@@ -2932,6 +3136,7 @@ function health(origin, env) {
     memberAccessVersion: MEMBER_ACCESS_VERSION,
     legacyMemberAccessVersion: LEGACY_MEMBER_ACCESS_VERSION,
     accountStatusVersion: ACCOUNT_STATUS_VERSION,
+    accountStatusRotationVersion: ACCOUNT_STATUS_ROTATION_VERSION,
     creditUsageVersion: CREDIT_USAGE_VERSION,
     serviceRequestVersion: SERVICE_REQUEST_VERSION,
     memberReviewVersion: MEMBER_REVIEW_VERSION,
@@ -3012,6 +3217,12 @@ export default {
       if (url.pathname === "/gca/account-status") {
         if (request.method === "POST") {
           return await submitAccountStatus(request, env, origin);
+        }
+        return jsonResponse({ ok: false, error: "method not allowed" }, 405, origin, env);
+      }
+      if (url.pathname === "/gca/account-status/rotate") {
+        if (request.method === "POST") {
+          return await submitAccountStatusRotation(request, env, origin);
         }
         return jsonResponse({ ok: false, error: "method not allowed" }, 405, origin, env);
       }

@@ -33,7 +33,12 @@
     "statusAccessMaxAgeDays": 365,
     "deviceLocalStatusSnapshot": true,
     "deviceLocalStatusSnapshotMaxAgeDays": 30,
-    "deviceLocalStatusSnapshotStoresEmail": false
+    "deviceLocalStatusSnapshotStoresEmail": false,
+    "accountStatusRotationPacketVersion": "gca_account_status_rotation_v1",
+    "serverAccountStatusRotationLive": true,
+    "serverAccountStatusRotationGraceMinutes": 15,
+    "serverAccountStatusRotationReturnsDeviceKey": false,
+    "serverAccountStatusRotationChangesAccountOrLedgers": false
   },
   "preparedRoutes": {
     "futureAccountPortal": "/gca/member-access",
@@ -44,7 +49,8 @@
     "supportReview": "/gca/support-review",
     "memberAccess": "/gca/member-access",
     "accessConfig": "/gca/access-config",
-    "accountStatus": "/gca/account-status"
+    "accountStatus": "/gca/account-status",
+    "accountStatusRotation": "/gca/account-status/rotate"
   },
   "publicPreview": {
     "memberAccessPreview": "https://gcagochina.com/gca/member-access/",

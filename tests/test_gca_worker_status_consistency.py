@@ -6,9 +6,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 LAST_UPDATED = "2026-07-27"
 READINESS_AT = "2026-07-23T17:55:52Z"
-PUBLIC_ROUTE_AT = "2026-07-27T10:53:44Z"
-ADMIN_ROUTE_AT = "2026-07-27T10:54:00Z"
-WORKER_VERSION_ID = "f4606d97-0427-4b04-bebf-20d23b64ae75"
+PUBLIC_ROUTE_AT = "2026-07-27T11:10:01Z"
+ADMIN_ROUTE_AT = "2026-07-27T11:10:08Z"
+WORKER_VERSION_ID = "089c615f-0639-4adb-995b-10b006d8fedb"
 ROUTE_OBSERVATIONS = {
     "/gca/service-requests": 401,
     "/gca/credit-usage": 401,
@@ -58,7 +58,7 @@ class GcaWorkerStatusConsistencyTests(unittest.TestCase):
         self.assertEqual(access_backend["pendingRoutesLastObservedAt"], PUBLIC_ROUTE_AT)
         self.assertEqual(access_backend["pendingRouteAnonymousGetStatus"], ROUTE_OBSERVATIONS)
         self.assertEqual(access_backend["workerVersionId"], WORKER_VERSION_ID)
-        self.assertEqual(access_backend["workerRelease"], "gca-registration-worker-2026-07-27-account-status-v1")
+        self.assertEqual(access_backend["workerRelease"], "gca-registration-worker-2026-07-27-account-status-rotation-v1")
         self.assertEqual(access_backend["accountStatusAccessMigration"], "cloudflare/gca-registration-worker/migrations/0009_account_status_access.sql")
         self.assertEqual(access_backend["accountStatusEndpoint"], "https://gca-registration-api.gcagochina.workers.dev/gca/account-status")
         self.assertEqual(access_backend["memberReviewVersion"], "gca_member_review_v1")

@@ -337,7 +337,7 @@
         <p class="eyebrow">Access API Contract / 2026-07-27</p>
         <h1 id="title">GCA Access API Contract</h1>
         <p class="lead">This page defines the controlled HTTPS API contract for the GCA account path. It covers email-only user registration, member account intake, read-only wallet verification, credit ledger records, GCA Member records, and support review statuses.</p>
-        <p class="lead">The Workers + D1 backend exposes live public routes for member access, redacted device-key account status, and wallet verification, plus token-protected operator routes for GCA Member decisions, append-only holding evidence, and verified evidence for already-completed member-benefit transfers. Approval requires a complete observed 30-day GCA transfer-history reconstruction with a minimum balance of at least 1,000,000 GCA.</p>
+        <p class="lead">The Workers + D1 backend exposes live public routes for member access, redacted device-key account status, safe device-key rotation, and wallet verification, plus token-protected operator routes for GCA Member decisions, append-only holding evidence, and verified evidence for already-completed member-benefit transfers. Approval requires a complete observed 30-day GCA transfer-history reconstruction with a minimum balance of at least 1,000,000 GCA.</p>
         <p class="lead">The 10,000 GCA member benefit remains a manual reserve-wallet process. The production evidence route verifies a successful safe-block receipt from the official reserve to the approved member wallet and records it; no API route signs, authorizes, or broadcasts a token transfer.</p>
         <p class="lead">The backend is deployed on Cloudflare Workers + D1 at <code>https://gca-registration-api.gcagochina.workers.dev</code>, so the public registration and member access pages can write directly to D1. Source remains in <code>cloudflare/gca-registration-worker/</code>. A future <code>api.gcagochina.com</code> custom domain still requires Cloudflare access to the account that owns the <code>gcagochina.com</code> zone.</p>
         <p class="lead">A local operator backend is also available for localhost testing, evidence export, read-only GCA balance checks, and operator review workflows. Implementation details are listed below in the endpoint contract and technical evidence sections.</p>
@@ -464,6 +464,14 @@
           <span class="value">cloudflare/gca-registration-worker/migrations/0009_account_status_access.sql</span>
         </div>
         <div class="fact">
+          <span class="label">Device Key Rotation</span>
+          <span class="value good">gca_account_status_rotation_v1 / 15-minute same-rotation retry</span>
+        </div>
+        <div class="fact">
+          <span class="label">Rotation Migration</span>
+          <span class="value">cloudflare/gca-registration-worker/migrations/0010_account_status_rotation.sql</span>
+        </div>
+        <div class="fact">
           <span class="label">Member Review Version</span>
           <span class="value">gca_member_review_v1</span>
         </div>
@@ -538,6 +546,11 @@
             <span class="label">POST</span>
             <span class="value">/gca/account-status</span>
             <p class="note">Live read-only lookup for <code>gca_account_status_v1</code>. A matching unexpired device key returns a redacted account, wallet-verification, credits, member-review, and member-benefit snapshot. The response excludes email, email hash, full wallet address, device key, administrator data, operator notes, IP data, and user-agent data.</p>
+          </div>
+          <div class="fact">
+            <span class="label">POST</span>
+            <span class="value">/gca/account-status/rotate</span>
+            <p class="note">Live credential-only rotation for <code>gca_account_status_rotation_v1</code>. The current valid key is replaced by a new browser-generated key; only SHA-256 hashes are stored. The old key cannot read status and can only retry the same completed rotation for 15 minutes. No account, ledger, wallet, or token record changes.</p>
           </div>
           <div class="fact">
             <span class="label">POST</span>

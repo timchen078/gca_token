@@ -29,7 +29,7 @@
     "serviceRequestQueueWorkerDeployBlockedBy": null,
     "serviceRequestQueueProductionLive": true,
     "memberLedgerWritesLive": true,
-    "serviceRoutesProductionVerifiedAt": "2026-07-27T10:54:00Z"
+    "serviceRoutesProductionVerifiedAt": "2026-07-27T11:10:08Z"
   },
   "holderBonus": {
     "minimumHolding": "10000 GCA",
@@ -238,7 +238,7 @@
       "deploysWorker": false
     },
     "lastObservedAnonymousGetStatus": 401,
-    "lastObservedAt": "2026-07-27T10:53:44Z",
+    "lastObservedAt": "2026-07-27T11:10:01Z",
     "postDeployPublicSmokeCommand": "python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes",
     "postDeployAdminSmokeCommand": "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes",
     "releaseGatesBeforeLive": [
@@ -266,9 +266,9 @@
     "selfServiceRedemption": false,
     "automaticWalletAction": false,
     "productionWorkerEndpointLive": true,
-    "workerVersionId": "f4606d97-0427-4b04-bebf-20d23b64ae75",
-    "publicSmokePassedAt": "2026-07-27T10:53:44Z",
-    "adminSmokePassedAt": "2026-07-27T10:54:00Z"
+    "workerVersionId": "089c615f-0639-4adb-995b-10b006d8fedb",
+    "publicSmokePassedAt": "2026-07-27T11:10:01Z",
+    "adminSmokePassedAt": "2026-07-27T11:10:08Z"
   },
   "serviceRequestQueue": {
     "status": "live-token-protected-operator-service-request-queue",
@@ -288,7 +288,7 @@
       "deploysWorker": false
     },
     "lastObservedAnonymousGetStatus": 401,
-    "lastObservedAt": "2026-07-27T10:53:44Z",
+    "lastObservedAt": "2026-07-27T11:10:01Z",
     "postDeployPublicSmokeCommand": "python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes",
     "postDeployAdminSmokeCommand": "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes",
     "releaseGatesBeforeLive": [
@@ -317,9 +317,9 @@
     "requiresSupportReview": true,
     "automaticWalletAction": false,
     "createsTradingPermission": false,
-    "workerVersionId": "f4606d97-0427-4b04-bebf-20d23b64ae75",
-    "publicSmokePassedAt": "2026-07-27T10:53:44Z",
-    "adminSmokePassedAt": "2026-07-27T10:54:00Z"
+    "workerVersionId": "089c615f-0639-4adb-995b-10b006d8fedb",
+    "publicSmokePassedAt": "2026-07-27T11:10:01Z",
+    "adminSmokePassedAt": "2026-07-27T11:10:08Z"
   },
   "redemptionBoundaries": {
     "accountLevelOnly": true,

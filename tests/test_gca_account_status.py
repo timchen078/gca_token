@@ -10,12 +10,14 @@ ROOT = Path(__file__).resolve().parents[1]
 WORKER_DIR = ROOT / "cloudflare" / "gca-registration-worker"
 WORKER_SOURCE = WORKER_DIR / "src" / "worker.mjs"
 STATUS_MODULE = WORKER_DIR / "src" / "account-status.mjs"
+MEMBER_ACCESS_PAGE = ROOT / "site" / "gca" / "member-access" / "index.html"
 MIGRATIONS = [
     WORKER_DIR / "migrations" / "0003_member_access_ledgers.sql",
     WORKER_DIR / "migrations" / "0006_member_reviews.sql",
     WORKER_DIR / "migrations" / "0007_holding_history_verifications.sql",
     WORKER_DIR / "migrations" / "0008_member_benefit_transfer_evidence.sql",
     WORKER_DIR / "migrations" / "0009_account_status_access.sql",
+    WORKER_DIR / "migrations" / "0010_account_status_rotation.sql",
 ]
 BUNDLED_NODE = (
     Path.home()
@@ -58,7 +60,13 @@ class GcaAccountStatusTests(unittest.TestCase):
             self.assertIn("requires_signature", columns)
             self.assertIn("requires_transaction", columns)
             self.assertIn("automatic_token_transfer", columns)
+            self.assertIn("previous_token_hash", columns)
+            self.assertIn("previous_token_expires_at", columns)
+            self.assertIn("rotated_at", columns)
             self.assertTrue(any(indexes.values()))
+            migration_source = MIGRATIONS[-1].read_text(encoding="utf-8")
+            self.assertNotIn("currentStatusAccessToken", migration_source)
+            self.assertNotIn("newStatusAccessToken", migration_source)
         finally:
             database.close()
 
@@ -161,10 +169,15 @@ console.log(JSON.stringify({
         self.assertIn('const MEMBER_ACCESS_VERSION = "gca_member_access_v2";', source)
         self.assertIn('const ACCOUNT_STATUS_VERSION = "gca_account_status_v1";', source)
         self.assertIn(
-            'const WORKER_RELEASE = "gca-registration-worker-2026-07-27-account-status-v1";',
+            'const ACCOUNT_STATUS_ROTATION_VERSION = "gca_account_status_rotation_v1";',
+            source,
+        )
+        self.assertIn(
+            'const WORKER_RELEASE = "gca-registration-worker-2026-07-27-account-status-rotation-v1";',
             source,
         )
         self.assertIn('url.pathname === "/gca/account-status"', source)
+        self.assertIn('url.pathname === "/gca/account-status/rotate"', source)
         self.assertIn("device status access key is invalid or expired", source)
         self.assertIn(
             "device status access key is already assigned to another account",
@@ -178,8 +191,41 @@ console.log(JSON.stringify({
         self.assertIn("accountStatusTokenStoredAsSha256: true", source)
         self.assertIn("accountStatusReturnsEmail: false", source)
         self.assertIn("accountStatusReturnsAccessToken: false", source)
+        self.assertIn("accountStatusKeyRotationEnabled: true", source)
+        self.assertIn("accountStatusRotationReturnsAccessToken: false", source)
+        self.assertIn("accountStatusRotationChangesAccountOrLedgers: false", source)
+        self.assertIn("previous_token_hash = token_hash", source)
+        self.assertIn("previous_token_expires_at > ?2", source)
+        self.assertIn("the previous device key can only retry its completed rotation", source)
+        self.assertIn("currentTokenReturned: false", source)
+        self.assertIn("newTokenReturned: false", source)
         self.assertNotIn("eth_sendTransaction", source)
         self.assertNotIn("personal_sign", source)
+
+    def test_member_page_supports_recoverable_device_key_rotation(self):
+        page = MEMBER_ACCESS_PAGE.read_text(encoding="utf-8")
+
+        self.assertIn('id="rotateStatusKey"', page)
+        self.assertIn('"/gca/account-status/rotate"', page)
+        self.assertIn('"gca_account_status_rotation_v1"', page)
+        self.assertIn("pendingRotation", page)
+        self.assertIn("pendingStatusAccessRotation", page)
+        self.assertIn("PENDING_STATUS_ACCESS_MAX_AGE_MS", page)
+        self.assertIn("promotePendingStatusAccess", page)
+        self.assertIn("readAccountStatusWithRecovery", page)
+        self.assertIn("currentStatusAccessToken: statusAccess.token", page)
+        self.assertIn(
+            "newStatusAccessToken: pendingRotation.newToken",
+            page,
+        )
+        self.assertIn(
+            "The key is not included in review packets or API responses.",
+            page,
+        )
+        self.assertNotIn(
+            "reviewPacket.value = JSON.stringify(sessionStatusAccess",
+            page,
+        )
 
 
 if __name__ == "__main__":

@@ -291,7 +291,7 @@
       <link rel="stylesheet" href="assets/gca-site.css?v=20260711">
     <link rel="stylesheet" href="assets/api-health.css?v=20260727">
     <script src="assets/gca-site.js?v=20260711" defer></script>
-    <script src="assets/api-health.js?v=20260727b" defer></script>
+    <script src="assets/api-health.js?v=20260727c" defer></script>
   </head>
   <body>
     <header>
@@ -316,9 +316,10 @@
       <section aria-labelledby="title">
         <p class="eyebrow">中文 API 状态 / 浏览器实时只读检查</p>
         <h1 id="title">GCA 中文 API 状态</h1>
-        <p class="lead">这一页用中文说明 GCA 邮箱注册和邮箱退订接口、会员账户、设备密钥账户状态的当前状态。公网接口已经接到 Cloudflare Workers + D1；管理员读取接口仍需要本地管理 token。</p>
-        <p class="lead">账户状态版本的公网只读 smoke check 已在 <code>2026-07-27T10:53:44Z</code> 通过，管理员 token 只读检查已在 <code>2026-07-27T10:54:00Z</code> 通过。下方实时面板可以在当前浏览器重复安全的只读部分，全程不写入记录。</p>
+        <p class="lead">这一页用中文说明 GCA 邮箱注册和邮箱退订接口、会员账户、设备密钥账户状态及密钥轮换的当前状态。公网接口已经接到 Cloudflare Workers + D1；管理员读取接口仍需要本地管理 token。</p>
+        <p class="lead">账户状态版本的公网只读 smoke check 已在 <code>2026-07-27T11:10:01Z</code> 通过，管理员 token 只读检查已在 <code>2026-07-27T11:10:08Z</code> 通过。下方实时面板可以在当前浏览器重复安全的只读部分，全程不写入记录。</p>
         <p class="lead"><code>gca_member_access_v2</code> 在浏览器生成随机设备密钥，D1 只保存 SHA-256。<code>gca_account_status_v1</code> 只返回脱敏只读状态，不返回邮箱、完整钱包地址、密钥、管理员数据或运营备注。</p>
+        <p class="lead"><code>gca_account_status_rotation_v1</code> 允许持有当前有效密钥的浏览器安全更换密钥。旧密钥会立即失去状态读取权限，只能在 15 分钟内重试同一次轮换；账户、积分、会员、钱包和代币记录都不会改变。</p>
         <p class="lead">服务请求、Credit 使用、会员人工审核、持有验证和会员权益转账证据路由都已经正式上线并受管理员 token 保护。会员权益证据接口只验证已经完成的手动储备钱包转账。</p>
         <p class="lead">公开 API 支持邮箱、退订、会员账户提交和只读余额验证；它不要求私钥或钱包签名。10,000 GCA 转账仍需人工完成，系统不会自动发放。</p>
         <div class="actions">
@@ -357,6 +358,10 @@
         <div class="fact">
           <span class="label">账户状态</span>
           <span class="value good">设备密钥保护 / 脱敏只读</span>
+        </div>
+        <div class="fact">
+          <span class="label">设备密钥轮换</span>
+          <span class="value good">已上线 / 15 分钟重试恢复</span>
         </div>
       </section>
 
@@ -433,6 +438,10 @@
           <article class="card">
             <h3>脱敏账户状态</h3>
             <p class="note"><code>POST /gca/account-status</code> 使用 <code>gca_account_status_v1</code> 和未过期设备密钥，返回账户、钱包验证、credits、会员审核和权益转账状态。不会返回邮箱、完整钱包、密钥、管理员数据或运营备注。</p>
+          </article>
+          <article class="card">
+            <h3>更换设备密钥</h3>
+            <p class="note"><code>POST /gca/account-status/rotate</code> 使用 <code>gca_account_status_rotation_v1</code> 更换当前有效密钥。旧密钥立即失去状态读取权限，只能在 15 分钟内重试同一次更换；账户、钱包、credits、会员和代币记录不变。</p>
           </article>
           <article class="card">
             <h3>注册记录读取</h3>

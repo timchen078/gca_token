@@ -67,7 +67,7 @@
       "status": "completed",
       "packetVersion": "gca_account_status_v1",
       "endpoint": "/gca/account-status",
-      "workerVersionId": "f4606d97-0427-4b04-bebf-20d23b64ae75"
+      "workerVersionId": "089c615f-0639-4adb-995b-10b006d8fedb"
     },
     {
       "id": "public-browser-tool-suite-live",

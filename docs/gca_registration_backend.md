@@ -9,6 +9,7 @@ https://gca-registration-api.gcagochina.workers.dev/gca/email-registrations
 https://gca-registration-api.gcagochina.workers.dev/gca/contact-suppressions
 https://gca-registration-api.gcagochina.workers.dev/gca/member-access
 https://gca-registration-api.gcagochina.workers.dev/gca/account-status
+https://gca-registration-api.gcagochina.workers.dev/gca/account-status/rotate
 https://gca-registration-api.gcagochina.workers.dev/gca/wallet-verifications
 https://gca-registration-api.gcagochina.workers.dev/gca/access-config
 https://gca-registration-api.gcagochina.workers.dev/gca/member-reviews
@@ -55,6 +56,8 @@ Member-access requests store:
 
 `gca_member_access_v2` also accepts a browser-generated 256-bit device status key. The Worker stores only its SHA-256 hash in `gca_account_status_access` through migration `0009_account_status_access.sql`; the plaintext key remains on the user's device. `POST /gca/account-status` accepts `gca_account_status_v1` and the matching unexpired device key, then returns a redacted read-only account, wallet-verification, credit, member-review, and member-benefit snapshot.
 
+`POST /gca/account-status/rotate` accepts `gca_account_status_rotation_v1`, the current valid device key, and a new browser-generated key. Migration `0010_account_status_rotation.sql` stores only current and previous SHA-256 hashes. The old key immediately loses status-read access and can retry only the same completed rotation for 15 minutes. Rotation does not change the account, wallet verification, credit ledger, member ledger, or any on-chain asset.
+
 The status response excludes email, email hash, full wallet address, the device key, administrator data, operator notes, IP data, and user-agent data. It does not connect a wallet, request a signature, write an account or ledger record, or transfer GCA. If the key is lost, expired, or revoked, recovery requires official support verification from the registered email.
 
 The submitted holding date and transaction hash do not prove continuous holding or activate GCA Member automatically. An operator must review the submitted evidence and record a decision through the token-protected member review route. Approval refreshes the current GCA balance at a safe Base block, combines Base Blockscout v2 transfer history with recent Base public RPC logs, reconstructs the observed minimum GCA balance over the prior 30 days, and fails closed unless the history is complete, internally consistent, and stays at or above 1,000,000 GCA.
@@ -82,6 +85,7 @@ Public registration, contact-suppression, wallet-verification, and member-access
 - Admin contact suppression endpoint: `GET /gca/contact-suppressions`
 - Public member access endpoint: `POST /gca/member-access`
 - Public redacted account status endpoint: `POST /gca/account-status`
+- Public device-key rotation endpoint: `POST /gca/account-status/rotate`
 - Public wallet verification endpoint: `POST /gca/wallet-verifications`
 - Public access config endpoint: `GET /gca/access-config`
 - Admin wallet verification endpoint: `GET /gca/wallet-verifications`
@@ -94,6 +98,7 @@ Public registration, contact-suppression, wallet-verification, and member-access
 - Admin member-benefit evidence endpoint: `GET/POST /gca/member-benefit-transfers` live and token-protected
 - Member D1 migration: `cloudflare/gca-registration-worker/migrations/0003_member_access_ledgers.sql`
 - Account status access migration: `cloudflare/gca-registration-worker/migrations/0009_account_status_access.sql`
+- Account status rotation migration: `cloudflare/gca-registration-worker/migrations/0010_account_status_rotation.sql`
 - Credit usage D1 migration: `cloudflare/gca-registration-worker/migrations/0004_credit_usage_ledger.sql`
 - Service request D1 migration: `cloudflare/gca-registration-worker/migrations/0005_service_requests.sql`
 - Member review D1 migration: `cloudflare/gca-registration-worker/migrations/0006_member_reviews.sql`
@@ -612,4 +617,4 @@ curl -fsS 'https://gca-registration-api.gcagochina.workers.dev/gca/contact-suppr
 
 `site/gca/member-access/index.html` posts account intake and wallet-verification requests to the same Workers API. The wallet check is a read-only Base Mainnet `eth_call`; it writes eligible D1 ledger records but does not request wallet signatures, transactions, custody, or automatic token transfers.
 
-After a successful v2 account submission, the same page stores the plaintext device key only in that browser and can call `POST /gca/account-status` for a redacted server snapshot. The browser keeps the latest redacted snapshot for up to 30 days; the server-side hashed access record expires after 365 days.
+After a successful v2 account submission, the same page stores the plaintext device key only in that browser and can call `POST /gca/account-status` for a redacted server snapshot. The browser keeps the latest redacted snapshot for up to 30 days; the server-side hashed access record expires after 365 days. A user who still has a valid key can rotate it from the same page. The pending new key is retained locally for up to 30 days so an interrupted request can be recovered without exposing either key.

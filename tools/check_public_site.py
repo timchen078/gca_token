@@ -218,9 +218,9 @@ FORBIDDEN_PUBLIC_CLAIM_PATTERNS = [
 ]
 LEGACY_PERSONAL_GMAIL = "cxy070800@gmail.com"
 PENDING_WORKER_READINESS_AT = "2026-07-23T17:55:52Z"
-PENDING_WORKER_PUBLIC_ROUTE_AT = "2026-07-27T10:53:44Z"
-PENDING_WORKER_ADMIN_ROUTE_AT = "2026-07-27T10:54:00Z"
-PENDING_WORKER_VERSION_ID = "f4606d97-0427-4b04-bebf-20d23b64ae75"
+PENDING_WORKER_PUBLIC_ROUTE_AT = "2026-07-27T11:10:01Z"
+PENDING_WORKER_ADMIN_ROUTE_AT = "2026-07-27T11:10:08Z"
+PENDING_WORKER_VERSION_ID = "089c615f-0639-4adb-995b-10b006d8fedb"
 PENDING_WORKER_BLOCKED_BY = None
 MEMBER_BENEFIT_EVIDENCE_WORKER_VERSION_ID = "510315f5-8db3-4e08-b574-6e14b618aed5"
 MEMBER_BENEFIT_EVIDENCE_PUBLIC_SMOKE_AT = "2026-07-27T09:37:54Z"
@@ -3655,8 +3655,8 @@ def validate_zh_api_status_page(text: str) -> None:
     for expected in (
         "GCA 中文 API 状态",
         "中文 API 状态 / 浏览器实时只读检查",
-        "2026-07-27T10:53:44Z",
-        "2026-07-27T10:54:00Z",
+        "2026-07-27T11:10:01Z",
+        "2026-07-27T11:10:08Z",
         "最新检查",
         "正在本浏览器检查",
         "邮箱注册和邮箱退订接口",
@@ -3736,8 +3736,11 @@ def validate_zh_api_status_page(text: str) -> None:
         "9 个 GET 路由（含会员审核、持有证据和转账证据）必须用 HTTP 401 拒绝匿名访问",
         "服务请求和 Credit 使用已经上线；HTTP 401 表示匿名读取被拒绝",
         "全程不写入记录",
+        "gca_account_status_rotation_v1",
+        "设备密钥轮换",
+        "15 分钟",
         "assets/api-health.css?v=20260727",
-        "assets/api-health.js?v=20260727b",
+        "assets/api-health.js?v=20260727c",
     ):
         assert_contains(text, expected, label)
     assert_no_public_data_room_terms(text, label)
@@ -9678,7 +9681,7 @@ def validate_access_api_page(text: str) -> None:
     assert_contains(text, "Operations Runbook", label)
     assert_contains(text, "device-key account status API live", label)
     assert_contains(text, "Email + member access + redacted status live", label)
-    assert_contains(text, "member access, redacted device-key account status, and wallet verification", label)
+    assert_contains(text, "member access, redacted device-key account status, safe device-key rotation, and wallet verification", label)
     assert_contains(text, "tools/gca_member_backend.py", label)
     assert_contains(text, "tools/export_gca_review_package.py", label)
     assert_contains(text, "operator.html", label)
@@ -9712,6 +9715,7 @@ def validate_access_api_page(text: str) -> None:
     assert_contains(text, "/gca/access-config", label)
     assert_contains(text, "/gca/member-access", label)
     assert_contains(text, "/gca/account-status", label)
+    assert_contains(text, "/gca/account-status/rotate", label)
     assert_contains(text, "/gca/wallet-verifications", label)
     assert_contains(text, "/gca/credit-ledger", label)
     assert_contains(text, "/gca/service-requests", label)
@@ -9741,6 +9745,9 @@ def validate_access_api_page(text: str) -> None:
     assert_contains(text, "GCA Member", label)
     assert_contains(text, "gca_member_access_v2", label)
     assert_contains(text, "gca_account_status_v1", label)
+    assert_contains(text, "gca_account_status_rotation_v1", label)
+    assert_contains(text, "0010_account_status_rotation.sql", label)
+    assert_contains(text, "15-minute same-rotation retry", label)
     assert_contains(text, "SHA-256", label)
     assert_contains(text, "memberBenefitReviewEvidence", label)
     assert_contains(text, "holdingStartDate", label)
@@ -9811,6 +9818,18 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong legacy member access packet version")
     if state.get("accountStatusPacketVersion") != "gca_account_status_v1":
         raise SiteCheckError(f"{label}: wrong account status packet version")
+    if state.get("accountStatusRotationPacketVersion") != "gca_account_status_rotation_v1":
+        raise SiteCheckError(f"{label}: wrong account status rotation packet version")
+    if state.get("accountStatusRotationGraceMinutes") != 15:
+        raise SiteCheckError(f"{label}: wrong account status rotation grace window")
+    if state.get("accountStatusRotationProductionLive") is not True:
+        raise SiteCheckError(f"{label}: account status rotation should be production-live")
+    for key in (
+        "accountStatusRotationReturnsAccessToken",
+        "accountStatusRotationChangesAccountOrLedgers",
+    ):
+        if state.get(key) is not False:
+            raise SiteCheckError(f"{label}: account status rotation boundary {key} must be false")
     if state.get("localDevelopmentBackendAvailable") is not True:
         raise SiteCheckError(f"{label}: local development backend should be available")
     for key in (
@@ -9939,13 +9958,21 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong member review migration")
     if production_email_backend.get("accountStatusAccessMigration") != "cloudflare/gca-registration-worker/migrations/0009_account_status_access.sql":
         raise SiteCheckError(f"{label}: wrong account status migration")
+    if production_email_backend.get("accountStatusRotationMigration") != "cloudflare/gca-registration-worker/migrations/0010_account_status_rotation.sql":
+        raise SiteCheckError(f"{label}: wrong account status rotation migration")
     if production_email_backend.get("memberReviewOperatorTool") != "tools/review_cloudflare_member.py":
         raise SiteCheckError(f"{label}: wrong member review operator tool")
     if production_email_backend.get("adminMemberReviewsEndpoint") != "https://gca-registration-api.gcagochina.workers.dev/gca/member-reviews":
         raise SiteCheckError(f"{label}: wrong admin member review endpoint")
     if production_email_backend.get("accountStatusEndpoint") != "https://gca-registration-api.gcagochina.workers.dev/gca/account-status":
         raise SiteCheckError(f"{label}: wrong account status endpoint")
-    if production_email_backend.get("workerRelease") != "gca-registration-worker-2026-07-27-account-status-v1":
+    if production_email_backend.get("accountStatusRotationEndpoint") != "https://gca-registration-api.gcagochina.workers.dev/gca/account-status/rotate":
+        raise SiteCheckError(f"{label}: wrong account status rotation endpoint")
+    if production_email_backend.get("accountStatusRotationVersion") != "gca_account_status_rotation_v1":
+        raise SiteCheckError(f"{label}: wrong account status rotation version")
+    if production_email_backend.get("accountStatusRotationGraceMinutes") != 15:
+        raise SiteCheckError(f"{label}: wrong account status rotation grace window")
+    if production_email_backend.get("workerRelease") != "gca-registration-worker-2026-07-27-account-status-rotation-v1":
         raise SiteCheckError(f"{label}: wrong Worker release")
     if production_email_backend.get("contactSuppressionEndpoint") != "https://gca-registration-api.gcagochina.workers.dev/gca/contact-suppressions":
         raise SiteCheckError(f"{label}: wrong contact suppression endpoint")
@@ -10064,6 +10091,7 @@ def validate_access_api_json(text: str) -> None:
         "GET /gca/access-config": "production-workers-dev-live",
         "POST /gca/member-access": "production-workers-dev-live",
         "POST /gca/account-status": "production-workers-dev-live",
+        "POST /gca/account-status/rotate": "production-workers-dev-live",
         "POST /gca/wallet-verifications": "production-workers-dev-live",
         "GET /gca/credit-ledger": "token-protected-admin-live",
         "GET /gca/member-ledger": "token-protected-admin-live",
@@ -10322,6 +10350,23 @@ def validate_access_api_json(text: str) -> None:
     ):
         if expected_check not in account_status.get("serverChecks", []):
             raise SiteCheckError(f"{label}: missing account status check {expected_check}")
+    account_status_rotation = endpoint_map["POST /gca/account-status/rotate"]
+    for field in (
+        "packetVersion",
+        "currentStatusAccessToken",
+        "newStatusAccessToken",
+    ):
+        if field not in account_status_rotation.get("requiredRequestFields", []):
+            raise SiteCheckError(f"{label}: missing account status rotation request field {field}")
+    for expected_check in (
+        "packetVersion must be gca_account_status_rotation_v1",
+        "only SHA-256 key hashes are stored",
+        "the old key cannot read account status after rotation",
+        "the old key can retry only the same completed rotation for 15 minutes",
+        "account, wallet verification, credits, member, and token records are not changed",
+    ):
+        if expected_check not in account_status_rotation.get("serverChecks", []):
+            raise SiteCheckError(f"{label}: missing account status rotation check {expected_check}")
     member_ledger = endpoint_map["GET /gca/member-ledger"]
     for field in (
         "holdingStartDate",
@@ -10435,8 +10480,8 @@ def validate_api_status_page(text: str) -> None:
     for expected in (
         "GCA Registration API Status",
         "Registration API Status / Live Read-Only Check",
-        "2026-07-27T10:53:44Z",
-        "2026-07-27T10:54:00Z",
+        "2026-07-27T11:10:01Z",
+        "2026-07-27T11:10:08Z",
         "2026-07-23T17:55:52Z",
         "Cloudflare Workers + D1",
         "https://gca-registration-api.gcagochina.workers.dev",
@@ -10502,7 +10547,10 @@ def validate_api_status_page(text: str) -> None:
         "Service requests and credit usage are live; HTTP 401 confirms anonymous reads are rejected",
         "No registration, wallet verification, service request, credit usage, token transfer, or admin-token request is sent",
         "assets/api-health.css?v=20260727",
-        "assets/api-health.js?v=20260727b",
+        "gca_account_status_rotation_v1",
+        "/gca/account-status/rotate",
+        "15-minute retry recovery",
+        "assets/api-health.js?v=20260727c",
     ):
         assert_contains(text, expected, label)
     assert_no_forbidden_public_claims(text, label)
@@ -10535,7 +10583,7 @@ def validate_api_status_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong latest admin check timestamp")
     if payload.get("workerVersionId") != PENDING_WORKER_VERSION_ID:
         raise SiteCheckError(f"{label}: wrong top-level Worker version")
-    if payload.get("workerRelease") != "gca-registration-worker-2026-07-27-account-status-v1":
+    if payload.get("workerRelease") != "gca-registration-worker-2026-07-27-account-status-rotation-v1":
         raise SiteCheckError(f"{label}: wrong top-level Worker release")
     if payload.get("latestDeployReadinessCheckAt") != PENDING_WORKER_READINESS_AT:
         raise SiteCheckError(f"{label}: wrong latest deploy readiness timestamp")
@@ -10673,6 +10721,43 @@ def validate_api_status_json(text: str) -> None:
             raise SiteCheckError(f"{label}: wrong account status boundary {key}")
     if account_status.get("statusAccessDays") != 365:
         raise SiteCheckError(f"{label}: wrong account status access lifetime")
+    account_status_rotation = public_endpoints.get("account-status-rotation")
+    if account_status_rotation is None:
+        raise SiteCheckError(f"{label}: missing public account status rotation endpoint")
+    if (
+        account_status_rotation.get("method") != "POST"
+        or account_status_rotation.get("path") != "/gca/account-status/rotate"
+    ):
+        raise SiteCheckError(f"{label}: wrong account status rotation route")
+    if account_status_rotation.get("status") != "live-device-key-protected":
+        raise SiteCheckError(f"{label}: wrong account status rotation route status")
+    if account_status_rotation.get("packetVersion") != "gca_account_status_rotation_v1":
+        raise SiteCheckError(f"{label}: wrong account status rotation packet version")
+    for key, expected in (
+        ("requiresCurrentDeviceStatusKey", True),
+        ("storesDeviceStatusKeyHashesOnly", True),
+        ("changesAccountOrLedgers", False),
+        ("returnsCurrentDeviceStatusKey", False),
+        ("returnsNewDeviceStatusKey", False),
+        ("requiresSignature", False),
+        ("requiresTransaction", False),
+        ("automaticTokenTransfer", False),
+    ):
+        if account_status_rotation.get(key) is not expected:
+            raise SiteCheckError(f"{label}: wrong account status rotation boundary {key}")
+    if account_status_rotation.get("previousKeyRetryMinutes") != 15:
+        raise SiteCheckError(f"{label}: wrong account status rotation retry window")
+    for key, expected in (
+        ("deviceKeyRotationLive", True),
+        ("deviceKeyRotationReturnsKey", False),
+        ("deviceKeyRotationChangesAccountOrLedgers", False),
+    ):
+        if boundaries.get(key) is not expected:
+            raise SiteCheckError(f"{label}: wrong public rotation boundary {key}")
+    if boundaries.get("deviceKeyRotationGraceMinutes") != 15:
+        raise SiteCheckError(f"{label}: wrong public rotation grace window")
+    if "gca_account_status_rotation_v1" not in browser_check.get("identityChecks", []):
+        raise SiteCheckError(f"{label}: browser identity checks must include account status rotation")
 
     expected_admin = {
         "email-registration-read": "/gca/email-registrations",

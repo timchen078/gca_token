@@ -141,6 +141,7 @@
       && payload.memberAccessVersion === "gca_member_access_v2"
       && payload.legacyMemberAccessVersion === "gca_member_access_v1"
       && payload.accountStatusVersion === "gca_account_status_v1"
+      && payload.accountStatusRotationVersion === "gca_account_status_rotation_v1"
       && payload.memberReviewVersion === "gca_member_review_v1"
       && payload.holdingVerificationVersion === "gca_holding_verification_v1"
       && payload.memberBenefitTransferVersion === "gca_member_benefit_transfer_v1"
@@ -161,8 +162,10 @@
       && payload.memberAccessVersion === "gca_member_access_v2"
       && payload.legacyMemberAccessVersion === "gca_member_access_v1"
       && payload.accountStatusVersion === "gca_account_status_v1"
+      && payload.accountStatusRotationVersion === "gca_account_status_rotation_v1"
       && payload.endpoints
       && payload.endpoints.accountStatus === "/gca/account-status"
+      && payload.endpoints.accountStatusRotation === "/gca/account-status/rotate"
       && payload.memberReviewVersion === "gca_member_review_v1"
       && payload.holdingVerificationVersion === "gca_holding_verification_v1"
       && payload.memberBenefitTransferVersion === "gca_member_benefit_transfer_v1"
@@ -172,6 +175,10 @@
       && boundaries.accountStatusTokenStoredAsSha256 === true
       && boundaries.accountStatusReturnsEmail === false
       && boundaries.accountStatusReturnsAccessToken === false
+      && boundaries.accountStatusKeyRotationEnabled === true
+      && boundaries.accountStatusRotationGraceMinutes === 15
+      && boundaries.accountStatusRotationReturnsAccessToken === false
+      && boundaries.accountStatusRotationChangesAccountOrLedgers === false
       && boundaries.requiresSignature === false
       && boundaries.requiresTransaction === false
       && boundaries.automaticTokenTransfer === false
