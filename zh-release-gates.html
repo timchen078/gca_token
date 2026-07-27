@@ -374,7 +374,7 @@
           </article>
           <article class="card">
             <h3>GCA Member 账本</h3>
-            <p class="note">1,000,000 GCA 连续持有 30 天的审核结果必须写入会员账本，不能只凭截图或口头确认。</p>
+            <p class="note">1,000,000 GCA 连续持有 30 天的审核结果必须写入会员账本。生产审批还会重建观察到的 30 天链上转账历史，不能只凭截图或口头确认。</p>
           </article>
           <article class="card">
             <h3>支持审核队列</h3>
@@ -382,7 +382,7 @@
           </article>
           <article class="card">
             <h3>服务请求队列</h3>
-            <p class="note"><code>/gca/service-requests</code> 已正式上线并受管理员 token 保护。远端 migration、Worker 部署、公网 smoke 和管理员只读 smoke 检查已于 2026-07-23 UTC 通过；匿名读取返回 HTTP 401。</p>
+            <p class="note"><code>/gca/service-requests</code> 已正式上线并受管理员 token 保护。初次远端 migration 和 Worker 部署于 2026-07-23 UTC 通过，最新公网和管理员只读 smoke 检查于 2026-07-27 UTC 通过；匿名读取返回 HTTP 401。</p>
           </article>
           <article class="card">
             <h3>Credit 使用记录</h3>
@@ -390,7 +390,11 @@
           </article>
           <article class="card">
             <h3>GCA Member 人工审核</h3>
-            <p class="note"><code>/gca/member-reviews</code> 已正式上线并受管理员 token 保护。用户填写的持有日期和交易哈希只生成预览；批准前必须重新只读检查当前余额并人工审核公开证据。该接口不自动转币，也不批准 10,000 GCA 会员权益转账。</p>
+            <p class="note"><code>/gca/member-reviews</code> 已正式上线并受管理员 token 保护。用户填写的日期和交易哈希是辅助资料；批准前必须在 Base 安全区块读取余额，并完成观察到的 30 天转账历史重建。该接口不要求签名、不转币，也不批准 10,000 GCA 会员权益转账。</p>
+          </article>
+          <article class="card">
+            <h3>持有验证证据</h3>
+            <p class="note"><code>/gca/holding-verifications</code> 已正式上线并受管理员 token 保护。成功批准会保存安全快照区块、观察到的最低余额、事件数量和完整性状态；这不是第三方审计或未来保证。</p>
           </article>
           <article class="card">
             <h3>风控和模拟环境</h3>
@@ -421,6 +425,7 @@
             <div class="row"><span>邮箱注册</span><strong>邮箱注册 API 已上线</strong></div>
             <div class="row"><span>用户中心</span><strong>中文用户中心已发布</strong></div>
             <div class="row"><span>会员规则</span><strong>10,000 GCA / 100 credits 和 1,000,000 GCA / 30 天规则已公开</strong></div>
+            <div class="row"><span>30 天持有验证</span><strong>生产审批必须完成观察到的链上转账历史重建，并确认最低余额不少于 1,000,000 GCA</strong></div>
             <div class="row"><span>会员权益</span><strong>10,000 GCA 会员权益仍需人工审核和储备钱包处理</strong></div>
             <div class="row"><span>服务请求</span><strong>生产 Worker 路由可排队处理服务意向；仍需人工审核，不是公开自助交付</strong></div>
             <div class="row"><span>Credit 使用</span><strong>人工审核交付后记录使用数量和扣减前后余额；不会自动扣减或转账</strong></div>
@@ -440,7 +445,8 @@
           <li>不允许绕过风控直接进行真实交易执行。</li>
           <li>不把 credits、会员身份或会员权益描述成现金、收入、报销、交易权限或风控豁免。</li>
           <li>不把服务请求说成自动交付，不把 Credit 使用记录说成自助扣减、链上转账或交易权限。</li>
-          <li>不把用户填写的持有日期或交易哈希格式检查说成连续持有证明，也不据此自动激活 GCA Member。</li>
+          <li>不把用户填写的持有日期或交易哈希格式检查单独说成连续持有证明；生产审批还必须重建并保存观察到的 30 天链上持有证据。</li>
+          <li>不把观察到的持有历史重建说成第三方审计、永久保证，或公共索引永远不会延迟的证明。</li>
           <li>不把产品计划、原始数据文件或本地测试说成正式公开产品功能；账户入口和账本记录可以按当前事实说明为已上线。</li>
         </ul>
       </section>
@@ -454,7 +460,7 @@
           <div class="row"><span>3. 账户 UI</span><strong>继续运营已上线的受控 HTTPS 用户中心，并补充服务端状态查询和正式支持处理能力。</strong></div>
           <div class="row"><span>4. 钱包验证</span><strong>维护已上线的只读 GCA 余额验证；不发起交易、不要求签名或授权转移资产。</strong></div>
           <div class="row"><span>5. 账本维护</span><strong>持续维护 100 credits 账本和 GCA Member 账本，并保留可审计记录。</strong></div>
-          <div class="row"><span>6. 支持审核</span><strong>继续使用支持审核队列处理 30 天持有证明、资料补充和会员权益审核。</strong></div>
+          <div class="row"><span>6. 支持审核</span><strong>继续使用支持审核队列处理资料补充；批准时由生产接口执行 30 天链上历史重建并保存持有证据。</strong></div>
           <div class="row"><span>7. 服务请求路由</span><strong>2026-07-23 已完成 Cloudflare 权限检查、远端 D1 migration、Worker 部署以及公开和管理员只读 smoke 检查。两个运营路由已上线，匿名读取返回 HTTP 401。</strong></div>
           <div class="row"><span>8. 量化产品</span><strong>先发布模拟盘、回测、风险提醒和复盘工具，再评估任何真实执行功能。</strong></div>
         </div>

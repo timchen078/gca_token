@@ -334,10 +334,10 @@
 
     <main class="shell">
       <section aria-labelledby="title">
-        <p class="eyebrow">Access API Contract / 2026-05-20</p>
+        <p class="eyebrow">Access API Contract / 2026-07-27</p>
         <h1 id="title">GCA Access API Contract</h1>
         <p class="lead">This page defines the controlled HTTPS API contract for the GCA account path. It covers email-only user registration, member account intake, read-only wallet verification, credit ledger records, GCA Member records, and support review statuses.</p>
-        <p class="lead">The Workers + D1 backend now exposes live public routes for member access and wallet verification, plus a token-protected operator route for GCA Member decisions. A submitted holding date and transaction hash create review evidence only; they do not activate membership automatically.</p>
+        <p class="lead">The Workers + D1 backend exposes live public routes for member access and wallet verification, plus token-protected operator routes for GCA Member decisions and append-only holding evidence. Approval requires a complete observed 30-day GCA transfer-history reconstruction with a minimum balance of at least 1,000,000 GCA. A submitted holding date and transaction hash remain supporting evidence only.</p>
         <p class="lead">The 10,000 GCA member benefit remains a separate manual reserve-wallet process. No API route sends tokens, requests wallet signatures, authorizes that transfer, or creates live trading permission.</p>
         <p class="lead">The backend is deployed on Cloudflare Workers + D1 at <code>https://gca-registration-api.gcagochina.workers.dev</code>, so the public registration and member access pages can write directly to D1. Source remains in <code>cloudflare/gca-registration-worker/</code>. A future <code>api.gcagochina.com</code> custom domain still requires Cloudflare access to the account that owns the <code>gcagochina.com</code> zone.</p>
         <p class="lead">A local operator backend is also available for localhost testing, evidence export, read-only GCA balance checks, and operator review workflows. Implementation details are listed below in the endpoint contract and technical evidence sections.</p>
@@ -452,6 +452,10 @@
           <span class="value">gca_member_review_v1</span>
         </div>
         <div class="fact">
+          <span class="label">Holding Verification Version</span>
+          <span class="value">gca_holding_verification_v1</span>
+        </div>
+        <div class="fact">
           <span class="label">Member Review</span>
           <span class="value good">Token-protected operator route live</span>
         </div>
@@ -462,6 +466,10 @@
         <div class="fact">
           <span class="label">Member Review Migration</span>
           <span class="value">cloudflare/gca-registration-worker/migrations/0006_member_reviews.sql</span>
+        </div>
+        <div class="fact">
+          <span class="label">Holding Verification Migration</span>
+          <span class="value">cloudflare/gca-registration-worker/migrations/0007_holding_history_verifications.sql</span>
         </div>
         <div class="fact">
           <span class="label">Member Review Tool</span>
@@ -523,12 +531,12 @@
           <div class="fact">
             <span class="label">POST / GET</span>
             <span class="value">/gca/service-requests</span>
-            <p class="note">Live token-protected operator queue for requested GCA AI Quant Access service scope before delivery. Remote D1 migration, Worker deploy, public smoke, and admin read-only smoke checks passed on 2026-07-23 UTC. Anonymous reads return HTTP 401. It records service ID, optional credit ledger ID, requested credit hold, and review status; it does not deduct credits, connect wallets, request signatures, send tokens, or create trading permission.</p>
+            <p class="note">Live token-protected operator queue for requested GCA AI Quant Access service scope before delivery. Initial migration and deploy passed on 2026-07-23 UTC; the latest public and admin read-only smoke checks passed on 2026-07-27 UTC. Anonymous reads return HTTP 401. It records service ID, optional credit ledger ID, requested credit hold, and review status; it does not deduct credits, connect wallets, request signatures, send tokens, or create trading permission.</p>
           </div>
           <div class="fact">
             <span class="label">POST / GET</span>
             <span class="value">/gca/credit-usage</span>
-            <p class="note">Live token-protected operator ledger for reviewed service-level credit usage. Remote D1 migration, Worker deploy, public smoke, and admin read-only smoke checks passed on 2026-07-23 UTC. Anonymous reads return HTTP 401. It records service ID, credits used, before/after balance, and status; it never connects wallets, requests signatures, sends tokens, or creates trading permission.</p>
+            <p class="note">Live token-protected operator ledger for reviewed service-level credit usage. Initial migration and deploy passed on 2026-07-23 UTC; the latest public and admin read-only smoke checks passed on 2026-07-27 UTC. Anonymous reads return HTTP 401. It records service ID, credits used, before/after balance, and status; it never connects wallets, requests signatures, sends tokens, or creates trading permission.</p>
           </div>
           <div class="fact">
             <span class="label">GET</span>
@@ -538,7 +546,12 @@
           <div class="fact">
             <span class="label">POST / GET</span>
             <span class="value">/gca/member-reviews</span>
-            <p class="note">Production-live, <code>ADMIN_READ_TOKEN</code>-protected operator route for append-only member review decisions. Approval refreshes the current read-only GCA balance and requires a 1,000,000 GCA balance, a 30-day evidence preview, a valid public transaction-hash format, and explicit operator acknowledgements. It does not prove continuous holding by itself, send GCA, or authorize the 10,000 GCA benefit transfer.</p>
+            <p class="note">Production-live, <code>ADMIN_READ_TOKEN</code>-protected operator route for append-only member review decisions. Approval refreshes the balance at a safe Base block and requires a 1,000,000 GCA balance, supporting 30-day evidence, explicit operator acknowledgements, and a complete observed 30-day transfer-history reconstruction whose minimum balance is at least 1,000,000 GCA. It never signs, sends GCA, or authorizes the 10,000 GCA benefit transfer.</p>
+          </div>
+          <div class="fact">
+            <span class="label">GET</span>
+            <span class="value">/gca/holding-verifications</span>
+            <p class="note">Production-live, <code>ADMIN_READ_TOKEN</code>-protected read for append-only observed holding evidence written during successful member approval. It includes the safe snapshot block, current and minimum balances, event counts, history completeness, reconstruction consistency, and provider. It is not a third-party audit or a future holding guarantee.</p>
           </div>
           <div class="fact">
             <span class="label">POST</span>
@@ -595,6 +608,7 @@
             <div class="row"><span>Service request</span><strong>email, serviceId, no-secrets acknowledgement, manual-review acknowledgement</strong></div>
             <div class="row"><span>Credit usage</span><strong>creditLedgerId, serviceId, creditAmountUsed, admin token</strong></div>
             <div class="row"><span>Member review</span><strong>memberLedgerId, decision, reasonCode, reviewerId, manual-evidence acknowledgement, no-transfer acknowledgement, admin token</strong></div>
+            <div class="row"><span>Holding evidence read</span><strong>ADMIN_READ_TOKEN; optional walletAddress, memberLedgerId, or status filter</strong></div>
             <div class="row"><span>Support review</span><strong>status, nextStep, reviewId or memberLedgerId / walletAddress</strong></div>
             <div class="row"><span>Ledger reads</span><strong>ADMIN_READ_TOKEN protected operator read</strong></div>
           </div>
@@ -611,6 +625,7 @@
             <div class="row"><span>Credit usage</span><strong>usage_recorded, exhausted</strong></div>
             <div class="row"><span>Member ledger</span><strong>queued, active, review_rejected, needs_refresh, below_threshold, paused, revoked</strong></div>
             <div class="row"><span>Member review decision</span><strong>approved, rejected, needs_more_information</strong></div>
+            <div class="row"><span>Holding verification</span><strong>observed_eligible, observed_below_threshold</strong></div>
             <div class="row"><span>Member benefit</span><strong>10,000 GCA after 30-day hold review</strong></div>
             <div class="row"><span>Evidence review</span><strong>user_supplied_pending_review, needs_more_information, eligible, transferred, contacted, waiting_for_user_evidence, closed</strong></div>
           </div>
@@ -626,6 +641,8 @@
             <li>token-protected admin reads for Cloudflare registration and suppression records</li>
             <li>token-protected admin reads for account-level ledger routes</li>
             <li>token-protected POST and GET for append-only production member review decisions</li>
+            <li>successful approval requires and stores a complete observed 30-day GCA transfer-history reconstruction</li>
+            <li>token-protected GET for append-only holding verification evidence</li>
             <li>no GCA Member activation from a user-submitted holding date or transaction-hash format check alone</li>
             <li>CSRF protection for state-changing routes</li>
             <li>website / company / homepage honeypot bot-trap fields on public forms</li>

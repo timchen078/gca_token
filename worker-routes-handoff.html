@@ -340,7 +340,7 @@
       <section aria-labelledby="title">
         <p class="eyebrow">Cloudflare Worker Deployment Record</p>
         <h1 id="title">GCA Worker Routes Deployment</h1>
-        <p class="lead">The token-protected <code>/gca/service-requests</code> and <code>/gca/credit-usage</code> routes are production-live. Remote D1 migration, Worker deploy, public smoke, and admin read-only smoke checks passed on 2026-07-23 UTC.</p>
+        <p class="lead">The token-protected <code>/gca/service-requests</code> and <code>/gca/credit-usage</code> routes are production-live. Initial remote D1 migration and Worker deploy passed on 2026-07-23 UTC; the latest public and admin read-only smoke checks passed on 2026-07-27 UTC.</p>
         <p class="lead">This page keeps the verified release result and repeatable operator gate sequence public. It does not expose user records, print admin tokens, connect wallets, request wallet signatures, or create trading permission.</p>
         <div class="actions">
           <a class="button primary" href="api-status.html">API Status</a>
@@ -360,12 +360,12 @@
         <div class="fact">
           <span class="label">Current Status</span>
           <span class="value good">Production-live and protected</span>
-          <p class="note">Public smoke passed at <code>2026-07-23T19:29:39Z</code>; anonymous reads return HTTP 401. Admin read-only smoke passed at <code>2026-07-23T19:29:49Z</code>.</p>
+          <p class="note">Public smoke passed at <code>2026-07-27T09:00:02Z</code>; anonymous reads return HTTP 401. Admin read-only smoke passed at <code>2026-07-27T09:00:16Z</code>.</p>
         </div>
         <div class="fact">
           <span class="label">Deployment Gate</span>
           <span class="value good">All required gates passed</span>
-          <p class="note">Worker version <code>fa923065-dd72-472e-9c28-04ef4a08c34e</code>.</p>
+          <p class="note">Worker version <code>fdef5365-1dc1-4165-8de0-d8d9e7cde679</code>.</p>
         </div>
         <div class="fact">
           <span class="label">Released Routes</span>
@@ -494,7 +494,7 @@ python3 tools/export_cloudflare_member_access.py --token-file cloudflare/gca-reg
 
       <section class="section panel" aria-labelledby="copyTitle">
         <h2 id="copyTitle">Copy-Ready Status Summary</h2>
-        <p class="note">GCA has released the service-request and credit-usage Worker routes. Remote migration, deploy, public smoke, and admin read-only smoke checks passed on 2026-07-23 UTC. Anonymous reads return HTTP 401. The routes are operator-only, token-protected, no-custody, and do not request wallet signatures or create trading permission.</p>
+        <p class="note">GCA has released the service-request and credit-usage Worker routes. Initial migration and deploy passed on 2026-07-23 UTC; the latest public and admin read-only smoke checks passed on 2026-07-27 UTC. Anonymous reads return HTTP 401. The routes are operator-only, token-protected, no-custody, and do not request wallet signatures or create trading permission.</p>
       </section>
     </main>
 

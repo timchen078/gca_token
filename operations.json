@@ -2,7 +2,7 @@
   "schema": "https://gcagochina.com/operations.json",
   "pageUrl": "https://gcagochina.com/operations.html",
   "status": "public-access-operations-runbook-published",
-  "lastUpdated": "2026-07-24",
+  "lastUpdated": "2026-07-27",
   "title": "GCA Access Operations Runbook",
   "scope": "Public SOP for live GCA email registration, member account intake, read-only wallet verification, eligible credit/member ledger records, review queue statuses, support responses, redacted review package handoff, and manual member-benefit boundaries.",
   "chainId": 8453,
@@ -33,6 +33,10 @@
     "ledgerWritesLive": true,
     "memberReviewWorkflowProductionLive": true,
     "memberReviewPacketVersion": "gca_member_review_v1",
+    "holdingHistoryVerificationProductionLive": true,
+    "holdingVerificationPacketVersion": "gca_holding_verification_v1",
+    "holdingVerificationAdminPath": "/gca/holding-verifications",
+    "onchainHoldingHistoryRequiredForApproval": true,
     "automaticMemberActivationFromSubmittedDate": false,
     "localSupportReviewContinuityChainLive": true,
     "localSupportReviewContinuityVerificationCommand": ".venv/bin/python tools/verify_gca_support_review_audit.py",
@@ -45,8 +49,8 @@
     "localSupportReviewContinuityImmutable": false,
     "productionSupportApprovalWorkflowLive": false,
     "liveTradingEnabled": false,
-    "serviceRoutesProductionVerifiedAt": "2026-07-23T19:29:49Z",
-    "memberReviewProductionVerifiedAt": "2026-07-23T19:29:49Z"
+    "serviceRoutesProductionVerifiedAt": "2026-07-27T09:00:16Z",
+    "memberReviewProductionVerifiedAt": "2026-07-27T09:00:16Z"
   },
   "emailRegistrationOpsPipeline": {
     "status": "production-email-registration-api-live-operator-sync-ready",
@@ -102,7 +106,7 @@
       "writesD1Records": false,
       "deploysWorker": false
     },
-    "pendingRoutesLastObservedAt": "2026-07-23T19:29:39Z",
+    "pendingRoutesLastObservedAt": "2026-07-27T09:00:02Z",
     "pendingRouteAnonymousGetStatus": {
       "/gca/service-requests": 401,
       "/gca/credit-usage": 401
@@ -142,12 +146,15 @@
       "memberBenefitTransferAutomatic": false,
       "automaticMemberActivationFromSubmittedDate": false,
       "manualEvidenceReviewRequiredForMemberActivation": true,
+      "observedHoldingHistoryRequiredForApproval": true,
+      "holdingVerificationReadOnly": true,
+      "holdingVerificationIsExternalAudit": false,
       "holdingReportLiveReadOptional": true,
       "holdingNoLiveReadUsesExistingSnapshots": true
     },
     "workerDeployPermissionStatus": "passed",
-    "workerVersionId": "fa923065-dd72-472e-9c28-04ef4a08c34e",
-    "productionRoutesVerifiedAt": "2026-07-23T19:29:49Z"
+    "workerVersionId": "fdef5365-1dc1-4165-8de0-d8d9e7cde679",
+    "productionRoutesVerifiedAt": "2026-07-27T09:00:16Z"
   },
   "identity": {
     "network": "Base Mainnet",
@@ -187,7 +194,7 @@
     {
       "id": "holding-period-review",
       "label": "Holding Period Review",
-      "operatorAction": "Treat holdingStartDate and evidenceTxHash as preview evidence only. Review the public purchase or transfer history for at least 30 days, then use tools/review_cloudflare_member.py; an approved write refreshes the current 1,000,000 GCA balance through read-only Base RPC.",
+      "operatorAction": "Treat holdingStartDate and evidenceTxHash as supporting preview evidence. After the operator confirms the submitted evidence, use tools/review_cloudflare_member.py; approval reads a safe Base balance, reconstructs the observed 30-day GCA transfer history from Base Blockscout plus recent wallet-specific Base RPC logs, and fails closed unless the history is complete, consistent, and never falls below 1,000,000 GCA.",
       "outputStatus": "approved, rejected, or needs_more_information"
     },
     {
@@ -315,6 +322,9 @@
     "serviceRequestQueueProductionLive": true,
     "memberReviewWorkflowProductionLive": true,
     "memberReviewPacketVersionMustEqual": "gca_member_review_v1",
+    "holdingVerificationPacketVersionMustEqual": "gca_holding_verification_v1",
+    "holdingHistoryVerificationProductionLive": true,
+    "onchainHoldingHistoryRequiredForApproval": true,
     "automaticMemberActivationFromSubmittedDate": false,
     "memberReviewDoesNotAuthorizeBenefitTransfer": true,
     "serviceRequestDoesNotDeductCredits": true,
@@ -489,7 +499,8 @@
       "GCA operators can record reviewed service-level credit usage with before/after balances through the live token-protected Worker route; anonymous reads are rejected.",
       "GCA operators can queue service scope requests through the live token-protected Worker route before delivery; queued requests do not deduct credits or create trading permission.",
       "GCA operators can record append-only GCA Member decisions through the live token-protected /gca/member-reviews route after manual evidence review and a current read-only balance refresh.",
-      "Submitted holding dates and transaction hashes are preview evidence only and cannot activate GCA Member automatically.",
+      "Successful GCA Member approval requires and stores a complete observed 30-day GCA transfer-history reconstruction with a minimum balance of at least 1,000,000 GCA.",
+      "Submitted holding dates and transaction hashes are supporting preview evidence only and cannot activate GCA Member automatically.",
       "GCA email registration and unsubscribe APIs are live on Cloudflare Workers + D1.",
       "GCA operators can sync email registration records into an ignored local JSONL ledger and export public-redacted contact CSVs.",
       "Public-redacted exports are for reviewer evidence handoff only and cannot be used as contactable user support queues.",
@@ -501,6 +512,7 @@
       "100 GCA AI Quant Access credits are cash, income, reimbursement, trading permission, or transferable value",
       "GCA Member status bypasses wallet verification, holding-period evidence, or support review",
       "the public member form automatically proves continuous 30-day holding or activates GCA Member status",
+      "observed holding-history reconstruction is a third-party audit, permanent guarantee, or proof that a public index can never be delayed",
       "the 10,000 GCA member benefit is automatic or self-service transferred before holding-period verification, support approval, and manual reserve-wallet processing",
       "support can override wallet-balance verification, release gates, or ledger activation",
       "credit usage is automatic self-service redemption, cash settlement, wallet settlement, or trading permission",

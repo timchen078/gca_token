@@ -1,8 +1,8 @@
 {
   "schema": "https://gcagochina.com/access-api.json",
   "pageUrl": "https://gcagochina.com/access-api.html",
-  "status": "public-access-api-member-review-live",
-  "lastUpdated": "2026-07-24",
+  "status": "public-access-api-holding-history-verification-live",
+  "lastUpdated": "2026-07-27",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "title": "GCA Access API Contract",
@@ -26,6 +26,7 @@
     "contactSuppressionPacketVersion": "gca_contact_suppression_v1",
     "memberAccessPacketVersion": "gca_member_access_v1",
     "memberReviewPacketVersion": "gca_member_review_v1",
+    "holdingVerificationPacketVersion": "gca_holding_verification_v1",
     "walletVerificationLive": true,
     "creditLedgerWritesLive": true,
     "creditUsageLedgerPrepared": true,
@@ -41,9 +42,11 @@
     "serviceRequestQueueProductionLive": true,
     "memberLedgerWritesLive": true,
     "memberReviewWorkflowProductionLive": true,
+    "holdingHistoryVerificationProductionLive": true,
+    "onchainHoldingHistoryRequiredForApproval": true,
     "automaticMemberActivationFromSubmittedDate": false,
-    "memberReviewProductionVerifiedAt": "2026-07-23T19:29:49Z",
-    "serviceRoutesProductionVerifiedAt": "2026-07-23T19:29:49Z"
+    "memberReviewProductionVerifiedAt": "2026-07-27T09:00:16Z",
+    "serviceRoutesProductionVerifiedAt": "2026-07-27T09:00:16Z"
   },
   "localDevelopmentBackend": {
     "status": "local-only-backend-available",
@@ -116,7 +119,7 @@
       "writesD1Records": false,
       "deploysWorker": false
     },
-    "pendingRoutesLastObservedAt": "2026-07-23T19:29:39Z",
+    "pendingRoutesLastObservedAt": "2026-07-27T09:00:02Z",
     "pendingRouteAnonymousGetStatus": {
       "/gca/service-requests": 401,
       "/gca/credit-usage": 401
@@ -160,6 +163,7 @@
     "creditUsageMigration": "cloudflare/gca-registration-worker/migrations/0004_credit_usage_ledger.sql",
     "serviceRequestMigration": "cloudflare/gca-registration-worker/migrations/0005_service_requests.sql",
     "memberReviewMigration": "cloudflare/gca-registration-worker/migrations/0006_member_reviews.sql",
+    "holdingHistoryMigration": "cloudflare/gca-registration-worker/migrations/0007_holding_history_verifications.sql",
     "memberAccessEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/member-access",
     "walletVerificationEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/wallet-verifications",
     "accessConfigEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/access-config",
@@ -168,16 +172,18 @@
     "adminCreditUsageEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/credit-usage",
     "adminMemberLedgerEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/member-ledger",
     "adminMemberReviewsEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/member-reviews",
+    "adminHoldingVerificationsEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/holding-verifications",
     "memberReviewOperatorTool": "tools/review_cloudflare_member.py",
     "antiSpamHoneypotFields": [
       "website",
       "company",
       "homepage"
     ],
-    "workerVersionId": "fa923065-dd72-472e-9c28-04ef4a08c34e",
-    "workerRelease": "gca-registration-worker-2026-07-24-member-review-v1",
+    "workerVersionId": "fdef5365-1dc1-4165-8de0-d8d9e7cde679",
+    "workerRelease": "gca-registration-worker-2026-07-27-holding-history-v1",
     "memberReviewVersion": "gca_member_review_v1",
-    "productionRoutesVerifiedAt": "2026-07-23T19:29:49Z"
+    "holdingVerificationVersion": "gca_holding_verification_v1",
+    "productionRoutesVerifiedAt": "2026-07-27T09:00:16Z"
   },
   "securityModel": {
     "controlledHttpsOriginRequired": true,
@@ -191,6 +197,10 @@
     "walletVerificationReadOnly": true,
     "submittedHoldingDateActivatesMembership": false,
     "adminReviewRequiredForMemberActivation": true,
+    "onchainHoldingHistoryRequiredForApproval": true,
+    "holdingHistoryVerificationReadOnly": true,
+    "holdingHistoryVerificationProvider": "Base Blockscout v2 plus Base public RPC",
+    "holdingHistoryVerificationClaimBoundary": "Observed transfer-history reconstruction, not an external audit or future guarantee",
     "memberReviewWritesUseD1BatchTransaction": true,
     "usesEthCall": true,
     "usesEthGetTransactionReceipt": true,
@@ -657,6 +667,9 @@
         "activatedAt",
         "memberBenefitClaimedAt",
         "nextRefreshDueAt",
+        "latestHoldingVerificationId",
+        "onchainHoldingVerified",
+        "onchainHoldingVerifiedAt",
         "status"
       ],
       "allowedStatuses": [
@@ -687,6 +700,10 @@
         "reviewerId",
         "reviewedAt",
         "balanceAtReview",
+        "holdingVerificationId",
+        "onchainHoldingEligible",
+        "onchainHistoryComplete",
+        "onchainMinimumBalance",
         "previousMemberStatus",
         "resultingMemberStatus",
         "previousClaimStatus",
@@ -703,7 +720,7 @@
       "method": "POST",
       "path": "/gca/member-reviews",
       "status": "token-protected-admin-live",
-      "purpose": "Record a manual member eligibility decision after refreshing the current GCA balance and reviewing the submitted 30-day holding evidence.",
+      "purpose": "Record a manual member eligibility decision after refreshing the current GCA balance, reviewing the submitted evidence, and reconstructing the observed 30-day on-chain GCA balance history.",
       "requiredRequestFields": [
         "authorization bearer token",
         "memberLedgerId",
@@ -716,6 +733,8 @@
       "serverChecks": [
         "approved decisions require a current balance of at least 1,000,000 GCA",
         "approved decisions require at least a 30-day holding preview and a valid evidence transaction hash format",
+        "approved decisions require a complete and internally consistent observed 30-day GCA transfer-history reconstruction with a minimum balance of at least 1,000,000 GCA",
+        "successful approval stores an append-only gca_holding_verification_v1 evidence row and links it to the review and member ledger",
         "the ledger and account update use one D1 batch transaction",
         "the endpoint does not connect a wallet, request a signature, send a transaction, transfer GCA, or authorize the 10,000 GCA member benefit transfer"
       ],
@@ -723,6 +742,39 @@
         "approved",
         "rejected",
         "needs_more_information"
+      ]
+    },
+    {
+      "id": "holding-verifications-read",
+      "method": "GET",
+      "path": "/gca/holding-verifications",
+      "status": "token-protected-admin-live",
+      "purpose": "Read append-only observed 30-day GCA holding-history evidence created during successful member approval.",
+      "requiredRequestFields": [
+        "authorization bearer token"
+      ],
+      "responseFields": [
+        "holdingVerificationId",
+        "memberLedgerId",
+        "walletAddress",
+        "windowStartAt",
+        "windowEndAt",
+        "snapshotBlockNumber",
+        "currentGcaBalance",
+        "windowStartGcaBalance",
+        "minimumGcaBalance",
+        "thresholdGcaBalance",
+        "observedContinuousEligible",
+        "historyComplete",
+        "reconstructionConsistent",
+        "eventCount",
+        "historyProvider",
+        "status"
+      ],
+      "claimBoundary": "This is read-only observed transfer-history reconstruction using a public index plus recent Base RPC logs. It is not a third-party audit, permanent guarantee, wallet authorization, or token transfer.",
+      "allowedStatuses": [
+        "observed_eligible",
+        "observed_below_threshold"
       ]
     },
     {
@@ -1084,6 +1136,8 @@
       "GCA operators can queue service scope requests through the live token-protected Worker route before delivery; queued requests do not deduct credits or create trading permission.",
       "Eligible 1,000,000 GCA / 30-day holders can create a GCA Member review ledger record.",
       "Submitted holding dates and transaction hashes are preview evidence only; member activation requires a token-protected manual operator review.",
+      "Successful GCA Member approval now also requires an observed complete 30-day GCA transfer-history reconstruction using Base Blockscout v2 plus recent Base public RPC logs and a snapshot balanceOf read.",
+      "Successful approval stores append-only gca_holding_verification_v1 evidence with the observed minimum balance and links it to the review and member ledger.",
       "Production member review decisions are stored as append-only D1 records, while member and account status updates run in one D1 batch transaction.",
       "The API contract forbids private keys, seed phrases, exchange API secrets, withdrawal permission, custody, and risk-control bypass.",
       "The 10,000 GCA member benefit remains manual review and reserve-wallet processing only.",
@@ -1094,6 +1148,7 @@
       "credit usage is public self-service redemption, cash settlement, or automatic wallet action",
       "a service request queue record means service delivery, credit deduction, trading permission, or wallet action has already happened",
       "GCA Member approval is automatic without wallet balance and 30-day holding-period review",
+      "the observed holding-history reconstruction is a third-party security audit, permanent guarantee, or proof that public index data can never be delayed",
       "the 10,000 GCA member benefit is automatic or self-service transferred",
       "the API collects private keys, seed phrases, exchange API secrets, withdrawal permission, custody, or one-time codes",
       "API access provides live order execution or risk-control bypass"
