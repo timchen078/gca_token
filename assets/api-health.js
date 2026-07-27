@@ -16,6 +16,7 @@
     "/gca/member-reviews",
     "/gca/holding-verifications",
     "/gca/member-benefit-transfers",
+    "/gca/account-status/recovery-requests",
   ];
   const PENDING_PATHS = [
     "/gca/service-requests",
@@ -142,6 +143,9 @@
       && payload.legacyMemberAccessVersion === "gca_member_access_v1"
       && payload.accountStatusVersion === "gca_account_status_v1"
       && payload.accountStatusRotationVersion === "gca_account_status_rotation_v1"
+      && payload.accountStatusRecoveryRequestVersion === "gca_account_status_recovery_request_v1"
+      && payload.accountStatusRecoveryApprovalVersion === "gca_account_status_recovery_approval_v1"
+      && payload.accountStatusRecoveryVersion === "gca_account_status_recovery_v1"
       && payload.memberReviewVersion === "gca_member_review_v1"
       && payload.holdingVerificationVersion === "gca_holding_verification_v1"
       && payload.memberBenefitTransferVersion === "gca_member_benefit_transfer_v1"
@@ -163,9 +167,15 @@
       && payload.legacyMemberAccessVersion === "gca_member_access_v1"
       && payload.accountStatusVersion === "gca_account_status_v1"
       && payload.accountStatusRotationVersion === "gca_account_status_rotation_v1"
+      && payload.accountStatusRecoveryRequestVersion === "gca_account_status_recovery_request_v1"
+      && payload.accountStatusRecoveryApprovalVersion === "gca_account_status_recovery_approval_v1"
+      && payload.accountStatusRecoveryVersion === "gca_account_status_recovery_v1"
       && payload.endpoints
       && payload.endpoints.accountStatus === "/gca/account-status"
       && payload.endpoints.accountStatusRotation === "/gca/account-status/rotate"
+      && payload.endpoints.accountStatusRecoveryRequests === "/gca/account-status/recovery-requests"
+      && payload.endpoints.accountStatusRecoveryApprovals === "/gca/account-status/recovery-approvals"
+      && payload.endpoints.accountStatusRecovery === "/gca/account-status/recover"
       && payload.memberReviewVersion === "gca_member_review_v1"
       && payload.holdingVerificationVersion === "gca_holding_verification_v1"
       && payload.memberBenefitTransferVersion === "gca_member_benefit_transfer_v1"
@@ -179,6 +189,12 @@
       && boundaries.accountStatusRotationGraceMinutes === 15
       && boundaries.accountStatusRotationReturnsAccessToken === false
       && boundaries.accountStatusRotationChangesAccountOrLedgers === false
+      && boundaries.accountStatusRecoveryEnabled === true
+      && boundaries.accountStatusRecoveryMode === "registered-email-manual-review"
+      && boundaries.accountStatusRecoveryStoresCredentialAsSha256 === true
+      && boundaries.accountStatusRecoveryReturnsAccountMatch === false
+      && boundaries.accountStatusRecoveryInvalidatesOldDeviceKey === true
+      && boundaries.accountStatusRecoveryChangesAccountOrLedgers === false
       && boundaries.requiresSignature === false
       && boundaries.requiresTransaction === false
       && boundaries.automaticTokenTransfer === false

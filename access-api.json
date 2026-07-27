@@ -54,14 +54,23 @@
     "memberBenefitTransferStillManual": true,
     "onchainHoldingHistoryRequiredForApproval": true,
     "automaticMemberActivationFromSubmittedDate": false,
-    "memberReviewProductionVerifiedAt": "2026-07-27T11:10:08Z",
-    "memberBenefitTransferProductionVerifiedAt": "2026-07-27T11:10:08Z",
-    "serviceRoutesProductionVerifiedAt": "2026-07-27T11:10:08Z",
+    "memberReviewProductionVerifiedAt": "2026-07-27T15:15:12Z",
+    "memberBenefitTransferProductionVerifiedAt": "2026-07-27T15:15:12Z",
+    "serviceRoutesProductionVerifiedAt": "2026-07-27T15:15:12Z",
     "accountStatusRotationPacketVersion": "gca_account_status_rotation_v1",
     "accountStatusRotationProductionLive": true,
     "accountStatusRotationGraceMinutes": 15,
     "accountStatusRotationReturnsAccessToken": false,
-    "accountStatusRotationChangesAccountOrLedgers": false
+    "accountStatusRotationChangesAccountOrLedgers": false,
+    "accountStatusRecoveryRequestPacketVersion": "gca_account_status_recovery_request_v1",
+    "accountStatusRecoveryApprovalPacketVersion": "gca_account_status_recovery_approval_v1",
+    "accountStatusRecoveryPacketVersion": "gca_account_status_recovery_v1",
+    "accountStatusRecoveryProductionLive": true,
+    "accountStatusRecoveryMode": "registered-email-manual-review",
+    "accountStatusRecoveryRequestDays": 7,
+    "accountStatusRecoveryCredentialHours": 24,
+    "accountStatusRecoveryReturnsAccountMatch": false,
+    "accountStatusRecoveryChangesAccountOrLedgers": false
   },
   "localDevelopmentBackend": {
     "status": "local-only-backend-available",
@@ -134,7 +143,7 @@
       "writesD1Records": false,
       "deploysWorker": false
     },
-    "pendingRoutesLastObservedAt": "2026-07-27T11:10:01Z",
+    "pendingRoutesLastObservedAt": "2026-07-27T15:15:02Z",
     "pendingRouteAnonymousGetStatus": {
       "/gca/service-requests": 401,
       "/gca/credit-usage": 401
@@ -181,8 +190,12 @@
     "holdingHistoryMigration": "cloudflare/gca-registration-worker/migrations/0007_holding_history_verifications.sql",
     "memberBenefitTransferMigration": "cloudflare/gca-registration-worker/migrations/0008_member_benefit_transfer_evidence.sql",
     "accountStatusAccessMigration": "cloudflare/gca-registration-worker/migrations/0009_account_status_access.sql",
+    "accountStatusRecoveryMigration": "cloudflare/gca-registration-worker/migrations/0011_account_status_recovery.sql",
     "memberAccessEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/member-access",
     "accountStatusEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/account-status",
+    "accountStatusRecoveryRequestsEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/account-status/recovery-requests",
+    "accountStatusRecoveryApprovalsEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/account-status/recovery-approvals",
+    "accountStatusRecoveryEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/account-status/recover",
     "walletVerificationEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/wallet-verifications",
     "accessConfigEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/access-config",
     "adminCreditLedgerEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/credit-ledger",
@@ -193,28 +206,31 @@
     "adminHoldingVerificationsEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/holding-verifications",
     "adminMemberBenefitTransfersEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/member-benefit-transfers",
     "memberReviewOperatorTool": "tools/review_cloudflare_member.py",
+    "accountStatusRecoveryOperatorTool": "tools/approve_cloudflare_account_recovery.py",
     "memberBenefitTransferOperatorTool": "tools/record_cloudflare_member_benefit_transfer.py",
     "antiSpamHoneypotFields": [
       "website",
       "company",
       "homepage"
     ],
-    "workerVersionId": "089c615f-0639-4adb-995b-10b006d8fedb",
-    "workerRelease": "gca-registration-worker-2026-07-27-account-status-rotation-v1",
+    "workerVersionId": "860fd70d-290a-467f-b70b-ed2d1fe7ca76",
+    "workerRelease": "gca-registration-worker-2026-07-27-account-status-recovery-v1",
     "memberReviewVersion": "gca_member_review_v1",
     "holdingVerificationVersion": "gca_holding_verification_v1",
     "memberBenefitTransferVersion": "gca_member_benefit_transfer_v1",
     "memberBenefitTransferOfficialSourceWallet": "0x5e8F84748612B913aAcC937492AC25dc5630E246",
     "memberBenefitTransferExactAmount": "10000 GCA",
-    "memberBenefitTransferPublicSmokePassedAt": "2026-07-27T11:10:01Z",
-    "memberBenefitTransferAdminSmokePassedAt": "2026-07-27T11:10:08Z",
-    "productionRoutesVerifiedAt": "2026-07-27T11:10:08Z",
+    "memberBenefitTransferPublicSmokePassedAt": "2026-07-27T15:15:02Z",
+    "memberBenefitTransferAdminSmokePassedAt": "2026-07-27T15:15:12Z",
+    "productionRoutesVerifiedAt": "2026-07-27T15:15:12Z",
     "accountStatusRotationMigration": "cloudflare/gca-registration-worker/migrations/0010_account_status_rotation.sql",
     "accountStatusRotationEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/account-status/rotate",
     "accountStatusRotationVersion": "gca_account_status_rotation_v1",
     "accountStatusRotationGraceMinutes": 15,
-    "accountStatusRotationPublicSmokePassedAt": "2026-07-27T11:10:01Z",
-    "accountStatusRotationAdminSmokePassedAt": "2026-07-27T11:10:08Z"
+    "accountStatusRotationPublicSmokePassedAt": "2026-07-27T15:15:02Z",
+    "accountStatusRotationAdminSmokePassedAt": "2026-07-27T15:15:12Z",
+    "accountStatusRecoveryPublicSmokePassedAt": "2026-07-27T15:15:02Z",
+    "accountStatusRecoveryAdminSmokePassedAt": "2026-07-27T15:15:12Z"
   },
   "securityModel": {
     "controlledHttpsOriginRequired": true,
@@ -245,6 +261,11 @@
     "accountStatusStoresTokenHashOnly": true,
     "accountStatusReturnsEmail": false,
     "accountStatusReturnsToken": false,
+    "accountStatusRecoveryRequiresRegisteredEmailReview": true,
+    "accountStatusRecoveryStoresCredentialHashOnly": true,
+    "accountStatusRecoveryCredentialSingleUse": true,
+    "accountStatusRecoveryInvalidatesOldDeviceKey": true,
+    "accountStatusRecoveryChangesAccountOrLedgers": false,
     "usesEthCall": true,
     "usesEthGetTransactionReceipt": true,
     "usesErc20BalanceOf": true,
@@ -551,6 +572,140 @@
         "creditLedger",
         "memberLedger",
         "rotation",
+        "boundaries"
+      ],
+      "allowedStatuses": [
+        "completed"
+      ]
+    },
+    {
+      "id": "account-status-recovery-request",
+      "method": "POST",
+      "path": "/gca/account-status/recovery-requests",
+      "status": "production-workers-dev-live",
+      "purpose": "Accept a registered-email device recovery request without revealing whether the supplied account exists.",
+      "requiredRequestFields": [
+        "packetVersion",
+        "email",
+        "walletAddress",
+        "newStatusAccessToken",
+        "acknowledgements.officialEmailReviewAccepted",
+        "acknowledgements.noSecretsNoCustody"
+      ],
+      "serverChecks": [
+        "packetVersion must be gca_account_status_recovery_request_v1",
+        "email and Base wallet must be valid",
+        "the new key must be a high-entropy gca_status_ device key",
+        "the response always uses pending_if_account_matches and never returns whether the account matched",
+        "only SHA-256 hashes of the email and new device key are stored in the recovery queue",
+        "public requests do not cancel or replace another pending or approved request",
+        "no wallet connection, signature, transaction, custody, or automatic token transfer is requested"
+      ],
+      "responseFields": [
+        "packetVersion",
+        "recoveryRequestId",
+        "status",
+        "requestAccepted",
+        "accountMatchReturned",
+        "requestReviewWindowDays",
+        "nextStep"
+      ],
+      "allowedStatuses": [
+        "pending_if_account_matches"
+      ]
+    },
+    {
+      "id": "account-status-recovery-queue",
+      "method": "GET",
+      "path": "/gca/account-status/recovery-requests",
+      "status": "token-protected-admin-live",
+      "purpose": "Read matched recovery requests for registered-email support review. This route is protected by ADMIN_READ_TOKEN.",
+      "requiredRequestFields": [
+        "authorization bearer token"
+      ],
+      "optionalRequestFields": [
+        "recoveryRequestId",
+        "email",
+        "status",
+        "limit"
+      ],
+      "serverChecks": [
+        "anonymous reads return HTTP 401",
+        "stored device-key and recovery-credential hashes are never returned",
+        "no plaintext device key or recovery credential is stored",
+        "no account, credit, member, wallet, or token record is changed"
+      ],
+      "allowedStatuses": [
+        "pending",
+        "approved",
+        "consumed",
+        "superseded"
+      ]
+    },
+    {
+      "id": "account-status-recovery-approval",
+      "method": "POST",
+      "path": "/gca/account-status/recovery-approvals",
+      "status": "token-protected-admin-live",
+      "purpose": "Issue a one-time 24-hour recovery credential after an operator verifies control of the registered mailbox.",
+      "requiredRequestFields": [
+        "authorization bearer token",
+        "packetVersion",
+        "recoveryRequestId",
+        "registeredEmail",
+        "operatorId",
+        "reasonCode",
+        "acknowledgements.registeredEmailOwnershipVerified",
+        "acknowledgements.manualIdentityReviewCompleted",
+        "acknowledgements.noSecretsRequested",
+        "acknowledgements.noWalletAction"
+      ],
+      "serverChecks": [
+        "packetVersion must be gca_account_status_recovery_approval_v1",
+        "ADMIN_READ_TOKEN is required",
+        "the supplied registered email must match the request and member account",
+        "the request must still be pending or approved and unexpired",
+        "approving the exact request from the verified mailbox supersedes other pending or approved requests for the same account in the same D1 batch",
+        "the random recovery credential is returned once and only its SHA-256 hash is stored",
+        "reissuing immediately invalidates the previously issued credential",
+        "no account, credit, member, wallet, or token record is changed"
+      ],
+      "allowedStatuses": [
+        "approved"
+      ]
+    },
+    {
+      "id": "account-status-recovery-completion",
+      "method": "POST",
+      "path": "/gca/account-status/recover",
+      "status": "production-workers-dev-live",
+      "purpose": "Consume the approved one-time credential and activate the pre-committed new browser device key.",
+      "requiredRequestFields": [
+        "packetVersion",
+        "recoveryRequestId",
+        "recoveryCredential",
+        "newStatusAccessToken",
+        "acknowledgements.credentialOnlyRecovery"
+      ],
+      "serverChecks": [
+        "packetVersion must be gca_account_status_recovery_v1",
+        "request, credential hash, and pre-committed new device-key hash must match",
+        "both the recovery request and 24-hour credential must be unexpired",
+        "the one-time credential is marked consumed in the same D1 batch as the device-key update",
+        "the prior device key and prior-key retry hash are invalidated immediately",
+        "the new key receives 365 days of status access",
+        "account, wallet verification, credit, member, GCA balance, and on-chain assets are not changed",
+        "no wallet connection, signature, transaction, custody, or automatic token transfer is requested"
+      ],
+      "responseFields": [
+        "packetVersion",
+        "statusPacketVersion",
+        "statusAccessExpiresAt",
+        "account",
+        "walletVerification",
+        "creditLedger",
+        "memberLedger",
+        "recovery",
         "boundaries"
       ],
       "allowedStatuses": [
@@ -1312,5 +1467,8 @@
       "API access provides live order execution or risk-control bypass"
     ]
   },
-  "accountStatusRotationPacketVersion": "gca_account_status_rotation_v1"
+  "accountStatusRotationPacketVersion": "gca_account_status_rotation_v1",
+  "accountStatusRecoveryRequestPacketVersion": "gca_account_status_recovery_request_v1",
+  "accountStatusRecoveryApprovalPacketVersion": "gca_account_status_recovery_approval_v1",
+  "accountStatusRecoveryPacketVersion": "gca_account_status_recovery_v1"
 }

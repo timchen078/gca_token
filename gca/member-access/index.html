@@ -351,6 +351,21 @@
         font-size: 12px;
       }
 
+      .recovery-block {
+        margin-top: 18px;
+        border-top: 1px solid var(--line);
+        padding-top: 18px;
+      }
+
+      .recovery-id {
+        margin-top: 10px;
+        color: var(--green);
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+        font-size: 12px;
+        font-weight: 800;
+        overflow-wrap: anywhere;
+      }
+
       .list {
         display: grid;
         gap: 10px;
@@ -596,9 +611,34 @@
             <button class="button primary" type="button" id="refreshStatus" hidden>Refresh Account Status / 刷新账户状态</button>
             <button class="button" type="button" id="rotateStatusKey" hidden>Rotate Device Key / 更换设备密钥</button>
             <button class="button" type="button" id="forgetDevice" hidden>Forget This Device / 忘记此设备</button>
+            <button class="button" type="button" id="openRecovery">Recover Device Access / 恢复设备访问</button>
           </div>
           <p class="note" id="statusAccessNote">Device status access is created only after a successful account submission. If the device key is lost, contact official support from the registered email.</p>
           <p class="note zh-note">设备状态访问仅在账户提交成功后启用。如果设备密钥丢失，请使用注册邮箱联系官方支持。</p>
+          <div class="recovery-block" id="recoveryBlock" hidden>
+            <h3>Registered-Email Recovery <span class="zh">注册邮箱人工恢复</span></h3>
+            <p class="note">Use the email and Base wallet fields on this page. The request response never confirms whether an account exists. Support verifies the registered mailbox before issuing a 24-hour, one-time recovery credential.</p>
+            <p class="note zh-note">请使用本页上方的邮箱和 Base 钱包字段。公开响应不会确认账户是否存在；支持团队核对注册邮箱后，才会签发有效期 24 小时且只能使用一次的恢复凭证。</p>
+            <div class="field">
+              <label><input id="recoveryEmailAck" type="checkbox"> I will contact support from the registered email and provide only the recovery request ID. <span class="zh">我会使用注册邮箱联系支持，只提供恢复请求编号。</span></label>
+              <label><input id="recoverySecurityAck" type="checkbox"> I will not send a device key, private key, seed phrase, wallet password, signature, approval, or transaction. <span class="zh">我不会发送设备密钥、私钥、助记词、钱包密码，也不会签名、授权或发交易。</span></label>
+            </div>
+            <div class="actions">
+              <button class="button primary" type="button" id="requestRecovery">Request Recovery / 提交恢复请求</button>
+              <a class="button" id="emailRecoveryRequest" href="mailto:support@gcagochina.com?subject=GCA%20Device%20Access%20Recovery">Email Registered Support / 从注册邮箱联系支持</a>
+            </div>
+            <p class="recovery-id" id="recoveryRequestStatus">No recovery request saved on this device. / 本设备尚未保存恢复请求。</p>
+            <div class="field">
+              <label for="recoveryCredential">One-Time Recovery Credential <span class="zh">一次性恢复凭证</span></label>
+              <input id="recoveryCredential" type="password" autocomplete="off" placeholder="gca_recovery_...">
+            </div>
+            <div class="actions">
+              <button class="button primary" type="button" id="completeRecovery" disabled>Complete Recovery / 完成恢复</button>
+              <button class="button" type="button" id="clearRecoveryDraft">Clear Recovery Draft / 清除恢复草稿</button>
+            </div>
+            <p class="note">Completion changes only the hashed device credential. The prior device key becomes invalid immediately; account, credits, member records, GCA balance, and on-chain assets do not change.</p>
+            <p class="note zh-note">完成后只会更换哈希设备凭据，旧设备密钥立即失效；账户、积分、会员记录、GCA 余额和链上资产都不会改变。</p>
+          </div>
           <div class="field">
             <label for="reviewPacket">Review Packet <span class="zh">审核资料包</span></label>
             <textarea id="reviewPacket" readonly placeholder="Build a review packet after filling email, wallet, holding start date, and transaction hash. 填写邮箱、钱包、持有开始日期和交易哈希后生成审核资料包。"></textarea>
@@ -646,6 +686,8 @@
           <div class="row"><span>Member account endpoint</span><strong>POST /gca/member-access</strong></div>
           <div class="row"><span>Redacted account status endpoint</span><strong>POST /gca/account-status</strong></div>
           <div class="row"><span>Device key rotation endpoint</span><strong>POST /gca/account-status/rotate</strong></div>
+          <div class="row"><span>Device recovery request endpoint</span><strong>POST /gca/account-status/recovery-requests</strong></div>
+          <div class="row"><span>Device recovery completion endpoint</span><strong>POST /gca/account-status/recover</strong></div>
           <div class="row"><span>Wallet verification endpoint</span><strong>POST /gca/wallet-verifications</strong></div>
           <div class="row"><span>Ledger schema page</span><strong><a href="../../member-ledger.html">member-ledger.html</a></strong></div>
           <div class="row"><span>Support page</span><strong><a href="../../support.html">support.html</a></strong></div>
@@ -654,7 +696,7 @@
     </main>
 
     <footer>
-      <div class="shell">GCA member access is live for account intake, read-only wallet verification, redacted device-key status refresh and safe device-key rotation, credits ledger, and GCA Member ledger records. Token transfers remain manual review only. 中文用户可在本页提交邮箱、Base 钱包和公开交易资料，并刷新脱敏账户状态或安全更换设备密钥。</div>
+      <div class="shell">GCA member access is live for account intake, read-only wallet verification, redacted device-key status refresh, safe key rotation, registered-email recovery, credits ledger, and GCA Member ledger records. Token transfers remain manual review only. 中文用户可在本页提交邮箱、Base 钱包和公开交易资料，并刷新、轮换或人工恢复设备访问。</div>
     </footer>
 
     <script>
@@ -688,11 +730,23 @@
       const refreshStatus = document.getElementById("refreshStatus");
       const rotateStatusKey = document.getElementById("rotateStatusKey");
       const forgetDevice = document.getElementById("forgetDevice");
+      const openRecovery = document.getElementById("openRecovery");
       const statusAccessNote = document.getElementById("statusAccessNote");
+      const recoveryBlock = document.getElementById("recoveryBlock");
+      const recoveryEmailAck = document.getElementById("recoveryEmailAck");
+      const recoverySecurityAck = document.getElementById("recoverySecurityAck");
+      const requestRecovery = document.getElementById("requestRecovery");
+      const emailRecoveryRequest = document.getElementById("emailRecoveryRequest");
+      const recoveryRequestStatus = document.getElementById("recoveryRequestStatus");
+      const recoveryCredential = document.getElementById("recoveryCredential");
+      const completeRecovery = document.getElementById("completeRecovery");
+      const clearRecoveryDraft = document.getElementById("clearRecoveryDraft");
       const SNAPSHOT_KEY = "gca_member_access_snapshot_v1";
       const STATUS_ACCESS_KEY = "gca_member_status_access_v1";
+      const RECOVERY_DRAFT_KEY = "gca_account_status_recovery_v1";
       const SNAPSHOT_MAX_AGE_MS = 30 * 24 * 60 * 60 * 1000;
       const PENDING_STATUS_ACCESS_MAX_AGE_MS = 30 * 24 * 60 * 60 * 1000;
+      const RECOVERY_DRAFT_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;
       let latestAccessResponse = null;
       let sessionStatusAccess = null;
 
@@ -713,6 +767,103 @@
           .replace(/\//g, "_")
           .replace(/=+$/g, "");
         return `gca_status_${encoded}`;
+      }
+
+      function isRecoveryCredential(value) {
+        return /^gca_recovery_[A-Za-z0-9_-]{43}$/.test(
+          String(value || "").trim()
+        );
+      }
+
+      function recoveryDraftIsCurrent(record) {
+        if (
+          !record ||
+          !isStatusAccessToken(record.newToken) ||
+          !isWalletAddress(record.walletAddress) ||
+          !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(
+            String(record.email || "").trim()
+          )
+        ) {
+          return false;
+        }
+        const requestedAt = new Date(record.requestedAt).getTime();
+        const age = Date.now() - requestedAt;
+        return (
+          Number.isFinite(age) &&
+          age >= 0 &&
+          age <= RECOVERY_DRAFT_MAX_AGE_MS
+        );
+      }
+
+      function loadRecoveryDraft() {
+        try {
+          const raw = window.localStorage.getItem(RECOVERY_DRAFT_KEY);
+          if (!raw) return null;
+          const record = JSON.parse(raw);
+          if (!recoveryDraftIsCurrent(record)) {
+            window.localStorage.removeItem(RECOVERY_DRAFT_KEY);
+            return null;
+          }
+          return record;
+        } catch (error) {
+          return null;
+        }
+      }
+
+      function saveRecoveryDraft(record) {
+        try {
+          window.localStorage.setItem(
+            RECOVERY_DRAFT_KEY,
+            JSON.stringify(record)
+          );
+        } catch (error) {
+          throw new Error(
+            "Browser storage is required before starting recovery. 恢复前必须允许浏览器本地存储。"
+          );
+        }
+        renderRecoveryDraft();
+      }
+
+      function removeRecoveryDraft() {
+        try {
+          window.localStorage.removeItem(RECOVERY_DRAFT_KEY);
+        } catch (error) {
+          // Continue with the current page state when storage removal is blocked.
+        }
+        recoveryCredential.value = "";
+        renderRecoveryDraft();
+      }
+
+      function renderRecoveryDraft() {
+        const record = loadRecoveryDraft();
+        const requestId = record && record.recoveryRequestId
+          ? record.recoveryRequestId
+          : "";
+        if (record && !email.value) email.value = record.email;
+        if (record && !walletAddress.value) {
+          walletAddress.value = record.walletAddress;
+        }
+        recoveryRequestStatus.textContent = requestId
+          ? `Recovery request / 恢复请求: ${requestId}`
+          : record
+            ? "Recovery draft saved; submit or retry the request to receive its request ID. / 恢复草稿已保存，请提交或重试以获取请求编号。"
+            : "No recovery request saved on this device. / 本设备尚未保存恢复请求。";
+        const subject = encodeURIComponent("GCA Device Access Recovery");
+        const body = encodeURIComponent(
+          requestId
+            ? `GCA device access recovery request\n\nRecovery request ID: ${requestId}\n\nI am contacting you from the registered email. I will not send any device key, wallet secret, signature, approval, or transaction.`
+            : "GCA device access recovery request\n\nPlease verify this message against my registered email. I will provide the recovery request ID after submitting it on the official member-access page."
+        );
+        emailRecoveryRequest.href =
+          `mailto:${SUPPORT_EMAIL}?subject=${subject}&body=${body}`;
+        completeRecovery.disabled = !(
+          requestId &&
+          isRecoveryCredential(recoveryCredential.value)
+        );
+        openRecovery.textContent = requestId
+          ? "Continue Device Recovery / 继续设备恢复"
+          : "Recover Device Access / 恢复设备访问";
+        if (record) recoveryBlock.hidden = false;
       }
 
       function pendingStatusAccessRotation(record) {
@@ -822,6 +973,7 @@
           : available
           ? `Device status access is ready${record.expiresAt ? ` until ${record.expiresAt}` : ""}. The key is not included in review packets or API responses.`
           : "Device status access is created only after a successful account submission. If the device key is lost, contact official support from the registered email.";
+        renderRecoveryDraft();
       }
 
       function renderResult(target, className, title, message) {
@@ -1047,6 +1199,27 @@
         };
       }
 
+      function validateRecoveryIdentity() {
+        const cleanEmail = email.value.trim().toLowerCase();
+        const cleanWallet = walletAddress.value.trim().toLowerCase();
+        if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(cleanEmail)) {
+          throw new Error(
+            "Enter the account's registered email. 请输入账户注册邮箱。"
+          );
+        }
+        if (!isWalletAddress(cleanWallet)) {
+          throw new Error(
+            "Enter the account's Base wallet address. 请输入账户的 Base 钱包地址。"
+          );
+        }
+        if (!recoveryEmailAck.checked || !recoverySecurityAck.checked) {
+          throw new Error(
+            "Both recovery acknowledgements are required. 请勾选两项恢复确认。"
+          );
+        }
+        return { email: cleanEmail, walletAddress: cleanWallet };
+      }
+
       async function readAccountStatus(statusAccessToken) {
         return postJson(
           "/gca/account-status",
@@ -1223,6 +1396,8 @@
           renderStatusResponse(payload, activeStatusAccess);
         } catch (error) {
           const message = error && error.message ? error.message : "Account status refresh failed.";
+          recoveryBlock.hidden = false;
+          renderRecoveryDraft();
           renderResult(balanceResult, "warn", "Status refresh failed / 状态刷新失败", `${message} If the device key is invalid or expired, contact ${SUPPORT_EMAIL} from the registered email. 如果设备密钥无效或已过期，请使用注册邮箱联系 ${SUPPORT_EMAIL}。`);
         } finally {
           refreshStatus.disabled = false;
@@ -1279,6 +1454,180 @@
         }
       });
 
+      openRecovery.addEventListener("click", () => {
+        recoveryBlock.hidden = !recoveryBlock.hidden;
+        if (!recoveryBlock.hidden) renderRecoveryDraft();
+      });
+
+      recoveryCredential.addEventListener("input", renderRecoveryDraft);
+
+      requestRecovery.addEventListener("click", async () => {
+        requestRecovery.disabled = true;
+        renderResult(
+          balanceResult,
+          "",
+          "Submitting recovery request / 正在提交恢复请求",
+          "A new device key is saved locally before the request is sent. The public response does not confirm whether an account exists. 新设备密钥会先保存在本地；公开响应不会确认账户是否存在。"
+        );
+        try {
+          const identity = validateRecoveryIdentity();
+          let recoveryDraft = loadRecoveryDraft();
+          if (
+            recoveryDraft &&
+            (
+              recoveryDraft.email !== identity.email ||
+              recoveryDraft.walletAddress !== identity.walletAddress
+            )
+          ) {
+            throw new Error(
+              "The saved recovery draft belongs to different account fields. Clear the draft before starting another request. 已保存的恢复草稿对应其他账户字段，请先清除草稿。"
+            );
+          }
+          if (!recoveryDraft) {
+            recoveryDraft = {
+              version: 1,
+              email: identity.email,
+              walletAddress: identity.walletAddress,
+              newToken: newStatusAccessToken(),
+              requestedAt: new Date().toISOString(),
+              recoveryRequestId: ""
+            };
+            saveRecoveryDraft(recoveryDraft);
+          }
+          const payload = await postJson(
+            "/gca/account-status/recovery-requests",
+            {
+              packetVersion: "gca_account_status_recovery_request_v1",
+              email: identity.email,
+              walletAddress: identity.walletAddress,
+              newStatusAccessToken: recoveryDraft.newToken,
+              source: "gca-member-access-device-recovery",
+              acknowledgements: {
+                officialEmailReviewAccepted: true,
+                noSecretsNoCustody: true
+              }
+            }
+          );
+          recoveryDraft = {
+            ...recoveryDraft,
+            recoveryRequestId: payload.recoveryRequestId || ""
+          };
+          saveRecoveryDraft(recoveryDraft);
+          renderResult(
+            balanceResult,
+            "good",
+            "Recovery request saved / 恢复请求已保存",
+            `Request ${recoveryDraft.recoveryRequestId} is saved on this device. Contact ${SUPPORT_EMAIL} from the registered email and include only this request ID. 请求已保存在本设备，请从注册邮箱联系 ${SUPPORT_EMAIL}，只提供该请求编号。`
+          );
+        } catch (error) {
+          const message = error && error.message
+            ? error.message
+            : "Recovery request failed.";
+          renderResult(
+            balanceResult,
+            "warn",
+            "Recovery request needs attention / 恢复请求需要处理",
+            message
+          );
+        } finally {
+          requestRecovery.disabled = false;
+          renderRecoveryDraft();
+        }
+      });
+
+      completeRecovery.addEventListener("click", async () => {
+        const recoveryDraft = loadRecoveryDraft();
+        const credential = recoveryCredential.value.trim();
+        if (
+          !recoveryDraft ||
+          !recoveryDraft.recoveryRequestId ||
+          !isRecoveryCredential(credential)
+        ) {
+          renderResult(
+            balanceResult,
+            "warn",
+            "Recovery details incomplete / 恢复资料不完整",
+            "A saved request ID and valid recovery credential are required. 需要已保存的请求编号和有效恢复凭证。"
+          );
+          return;
+        }
+        completeRecovery.disabled = true;
+        requestRecovery.disabled = true;
+        renderResult(
+          balanceResult,
+          "",
+          "Completing device recovery / 正在完成设备恢复",
+          "Only the hashed device credential will change. No wallet action, ledger change, or token transfer is requested. 只会更换哈希设备凭据，不会请求钱包操作、修改业务账本或转币。"
+        );
+        try {
+          let payload;
+          try {
+            payload = await readAccountStatus(recoveryDraft.newToken);
+          } catch (statusError) {
+            payload = await postJson("/gca/account-status/recover", {
+              packetVersion: "gca_account_status_recovery_v1",
+              recoveryRequestId: recoveryDraft.recoveryRequestId,
+              recoveryCredential: credential,
+              newStatusAccessToken: recoveryDraft.newToken,
+              acknowledgements: {
+                credentialOnlyRecovery: true
+              }
+            });
+          }
+          const activeStatusAccess = {
+            version: 1,
+            walletAddress: recoveryDraft.walletAddress,
+            token: recoveryDraft.newToken,
+            accountId:
+              payload.account && payload.account.accountId
+                ? payload.account.accountId
+                : "",
+            createdAt:
+              payload.recovery && payload.recovery.recoveredAt
+                ? payload.recovery.recoveredAt
+                : new Date().toISOString(),
+            expiresAt: payload.statusAccessExpiresAt || ""
+          };
+          saveStatusAccess(activeStatusAccess);
+          removeRecoveryDraft();
+          recoveryBlock.hidden = true;
+          renderStatusResponse(payload, activeStatusAccess);
+          renderResult(
+            balanceResult,
+            "good",
+            "Device access recovered / 设备访问已恢复",
+            "The new device key is active and the prior key is invalid. Account, credits, membership, GCA balance, and on-chain assets were not changed. 新设备密钥已启用，旧密钥已失效；账户、积分、会员、GCA 余额和链上资产均未改变。"
+          );
+        } catch (error) {
+          const message = error && error.message
+            ? error.message
+            : "Device recovery failed.";
+          renderResult(
+            balanceResult,
+            "warn",
+            "Recovery not completed / 恢复尚未完成",
+            `${message} The same new key remains saved locally; do not clear the recovery draft before support resolves the issue. 同一个新密钥仍保存在本地，支持处理完成前不要清除恢复草稿。`
+          );
+        } finally {
+          requestRecovery.disabled = false;
+          renderRecoveryDraft();
+        }
+      });
+
+      clearRecoveryDraft.addEventListener("click", () => {
+        const confirmed = window.confirm(
+          "Clear the saved recovery draft? Any issued recovery credential for this draft will no longer work on this device; a new request will be required. 是否清除恢复草稿？已签发的恢复凭证将无法在本设备继续使用，需要重新提交请求。"
+        );
+        if (!confirmed) return;
+        removeRecoveryDraft();
+        renderResult(
+          balanceResult,
+          "",
+          "Recovery draft cleared / 恢复草稿已清除",
+          "No account, ledger, wallet, or on-chain record was changed. 未修改账户、账本、钱包或任何链上记录。"
+        );
+      });
+
       buildReviewPacket.addEventListener("click", () => {
         updateReviewPacket();
         renderResult(balanceResult, "", "Review packet ready / 审核资料包已生成", "Copy the packet or email it to support@gcagochina.com if manual review is needed. 如需人工审核，可复制资料包或通过邮件发送给 support@gcagochina.com。");
@@ -1317,6 +1666,7 @@
         }
         sessionStatusAccess = null;
         savedSnapshot.hidden = true;
+        recoveryBlock.hidden = false;
         updateStatusAccessControls();
         renderResult(balanceResult, "warn", "Device forgotten / 已忘记此设备", `The browser key was removed. Contact ${SUPPORT_EMAIL} from the registered email before trying to update this account. 浏览器密钥已删除；再次更新账户前，请使用注册邮箱联系 ${SUPPORT_EMAIL}。`);
       });

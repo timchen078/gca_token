@@ -123,7 +123,7 @@
     "workerDeployPermission": "passed",
     "code10000Seen": false,
     "latestReadinessCheckAt": "2026-07-23T17:55:52Z",
-    "latestPublicRouteCheckAt": "2026-07-27T11:10:01Z",
+    "latestPublicRouteCheckAt": "2026-07-27T15:15:02Z",
     "pendingRouteAnonymousGetStatus": {
       "/gca/service-requests": 401,
       "/gca/credit-usage": 401
@@ -140,10 +140,10 @@
     ],
     "remoteMigrations": "applied",
     "workerDeploy": "passed",
-    "workerVersionId": "089c615f-0639-4adb-995b-10b006d8fedb",
+    "workerVersionId": "860fd70d-290a-467f-b70b-ed2d1fe7ca76",
     "postDeployPublicSmoke": "passed",
     "postDeployAdminSmoke": "passed",
-    "productionRoutesVerifiedAt": "2026-07-27T11:10:08Z",
+    "productionRoutesVerifiedAt": "2026-07-27T15:15:12Z",
     "accountStatusRotationWorkerEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/account-status/rotate",
     "accountStatusRotationVersion": "gca_account_status_rotation_v1",
     "accountStatusRotationLive": true,

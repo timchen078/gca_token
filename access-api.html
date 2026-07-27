@@ -337,7 +337,7 @@
         <p class="eyebrow">Access API Contract / 2026-07-27</p>
         <h1 id="title">GCA Access API Contract</h1>
         <p class="lead">This page defines the controlled HTTPS API contract for the GCA account path. It covers email-only user registration, member account intake, read-only wallet verification, credit ledger records, GCA Member records, and support review statuses.</p>
-        <p class="lead">The Workers + D1 backend exposes live public routes for member access, redacted device-key account status, safe device-key rotation, and wallet verification, plus token-protected operator routes for GCA Member decisions, append-only holding evidence, and verified evidence for already-completed member-benefit transfers. Approval requires a complete observed 30-day GCA transfer-history reconstruction with a minimum balance of at least 1,000,000 GCA.</p>
+        <p class="lead">The Workers + D1 backend exposes live public routes for member access, redacted device-key account status, safe device-key rotation, and wallet verification, plus registered-email device recovery and token-protected operator routes for GCA Member decisions, append-only holding evidence, and verified evidence for already-completed member-benefit transfers. Approval requires a complete observed 30-day GCA transfer-history reconstruction with a minimum balance of at least 1,000,000 GCA.</p>
         <p class="lead">The 10,000 GCA member benefit remains a manual reserve-wallet process. The production evidence route verifies a successful safe-block receipt from the official reserve to the approved member wallet and records it; no API route signs, authorizes, or broadcasts a token transfer.</p>
         <p class="lead">The backend is deployed on Cloudflare Workers + D1 at <code>https://gca-registration-api.gcagochina.workers.dev</code>, so the public registration and member access pages can write directly to D1. Source remains in <code>cloudflare/gca-registration-worker/</code>. A future <code>api.gcagochina.com</code> custom domain still requires Cloudflare access to the account that owns the <code>gcagochina.com</code> zone.</p>
         <p class="lead">A local operator backend is also available for localhost testing, evidence export, read-only GCA balance checks, and operator review workflows. Implementation details are listed below in the endpoint contract and technical evidence sections.</p>
@@ -472,6 +472,18 @@
           <span class="value">cloudflare/gca-registration-worker/migrations/0010_account_status_rotation.sql</span>
         </div>
         <div class="fact">
+          <span class="label">Device Key Recovery</span>
+          <span class="value good">registered-email review + single-use credential live</span>
+        </div>
+        <div class="fact">
+          <span class="label">Recovery Migration</span>
+          <span class="value">cloudflare/gca-registration-worker/migrations/0011_account_status_recovery.sql</span>
+        </div>
+        <div class="fact">
+          <span class="label">Recovery Operator Tool</span>
+          <span class="value">tools/approve_cloudflare_account_recovery.py</span>
+        </div>
+        <div class="fact">
           <span class="label">Member Review Version</span>
           <span class="value">gca_member_review_v1</span>
         </div>
@@ -551,6 +563,21 @@
             <span class="label">POST</span>
             <span class="value">/gca/account-status/rotate</span>
             <p class="note">Live credential-only rotation for <code>gca_account_status_rotation_v1</code>. The current valid key is replaced by a new browser-generated key; only SHA-256 hashes are stored. The old key cannot read status and can only retry the same completed rotation for 15 minutes. No account, ledger, wallet, or token record changes.</p>
+          </div>
+          <div class="fact">
+            <span class="label">POST</span>
+            <span class="value">/gca/account-status/recovery-requests</span>
+            <p class="note">Live public request for <code>gca_account_status_recovery_request_v1</code>. The browser pre-commits a new random device key and the API always returns the same pending response without revealing whether the email and Base wallet match an account.</p>
+          </div>
+          <div class="fact">
+            <span class="label">GET / POST</span>
+            <span class="value">/gca/account-status/recovery-requests + /recovery-approvals</span>
+            <p class="note">Live <code>ADMIN_READ_TOKEN</code>-protected review and approval routes. An operator must verify control of the registered mailbox before issuing a 24-hour credential. D1 stores only hashes; the credential is returned once.</p>
+          </div>
+          <div class="fact">
+            <span class="label">POST</span>
+            <span class="value">/gca/account-status/recover</span>
+            <p class="note">Live completion for <code>gca_account_status_recovery_v1</code>. A matching single-use credential activates the pre-committed new key and immediately invalidates the old key. Account, wallet, credits, member records, GCA balances, and on-chain assets are unchanged.</p>
           </div>
           <div class="fact">
             <span class="label">POST</span>
@@ -636,6 +663,8 @@
           <div class="list">
             <div class="row"><span>Member access</span><strong>packetVersion, email, walletAddress, statusAccessToken, termsAccepted, no-secrets acknowledgement</strong></div>
             <div class="row"><span>Account status</span><strong><code>gca_account_status_v1</code> and an unexpired device status key</strong></div>
+            <div class="row"><span>Recovery request</span><strong>registered email, Base wallet, browser-generated new device key, recovery acknowledgements</strong></div>
+            <div class="row"><span>Recovery completion</span><strong>request ID, one-time credential, and the exact pre-committed new device key</strong></div>
             <div class="row"><span>Email registration</span><strong>email, contact consent, no-secrets acknowledgement</strong></div>
             <div class="row"><span>Contact suppression</span><strong>email, contactSuppressionRequested, no-secrets acknowledgement</strong></div>
             <div class="row"><span>Member evidence</span><strong><code>memberBenefitReviewEvidence</code>, <code>holdingStartDate</code>, <code>evidenceTxHash</code>, <code>evidenceTxHashFormatOk</code></strong></div>
@@ -677,7 +706,8 @@
             <li>public email registration and unsubscribe routes require only form acknowledgements</li>
             <li>member intake v2 generates a 256-bit browser device key and stores only its SHA-256 hash in D1</li>
             <li>account-status reads require the matching unexpired device key and return a redacted record only</li>
-            <li>lost, expired, or revoked device access requires official support verification from the registered email</li>
+            <li>lost, expired, or revoked access uses a generic public request, registered-email support review, and a single-use 24-hour recovery credential</li>
+            <li>recovery invalidates the old device key but does not modify account, credit, member, wallet, token, or on-chain records</li>
             <li>token-protected admin reads for Cloudflare registration and suppression records</li>
             <li>token-protected admin reads for account-level ledger routes</li>
             <li>token-protected POST and GET for append-only production member review decisions</li>

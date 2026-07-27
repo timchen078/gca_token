@@ -67,7 +67,17 @@
       "status": "completed",
       "packetVersion": "gca_account_status_v1",
       "endpoint": "/gca/account-status",
-      "workerVersionId": "089c615f-0639-4adb-995b-10b006d8fedb"
+      "workerVersionId": "860fd70d-290a-467f-b70b-ed2d1fe7ca76"
+    },
+    {
+      "id": "registered-email-device-recovery-live",
+      "label": "Privacy-preserving lost-device-key recovery live with generic public intake, registered-email review, and a single-use credential",
+      "status": "completed",
+      "requestPacketVersion": "gca_account_status_recovery_request_v1",
+      "completionPacketVersion": "gca_account_status_recovery_v1",
+      "requestEndpoint": "/gca/account-status/recovery-requests",
+      "completionEndpoint": "/gca/account-status/recover",
+      "workerVersionId": "860fd70d-290a-467f-b70b-ed2d1fe7ca76"
     },
     {
       "id": "public-browser-tool-suite-live",
