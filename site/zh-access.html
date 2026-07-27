@@ -306,8 +306,8 @@
       <section aria-labelledby="title">
         <p class="eyebrow">中文用户中心</p>
         <h1 id="title">GCA 中文用户中心</h1>
-        <p class="lead">这一页把 GCA 用户入口讲清楚：邮箱注册 API、受控 HTTPS 账户 UI、只读钱包余额验证、100 credits 账本记录、GCA Member 账本记录和 30 天持有审核流程已经接到 Cloudflare Workers + D1。</p>
-        <p class="lead">用户现在可以通过中英双语会员入口提交邮箱和 Base 钱包，后端用只读 ERC-20 balanceOf 验证 GCA 余额并写入符合条件的账本记录。页面也可以生成一份可复制的会员审核资料包，方便后续发给 support@gcagochina.com 人工跟进。</p>
+        <p class="lead">这一页把 GCA 用户入口讲清楚：邮箱注册 API、受控 HTTPS 账户 UI、只读钱包余额验证、设备密钥脱敏状态刷新、100 credits 账本记录、GCA Member 账本记录和 30 天持有审核流程已经接到 Cloudflare Workers + D1。</p>
+        <p class="lead">用户现在可以通过中英双语会员入口提交邮箱和 Base 钱包，后端用只读 ERC-20 balanceOf 验证 GCA 余额并写入符合条件的账本记录。提交成功后，本浏览器可用随机设备密钥刷新脱敏账户状态；D1 只保存密钥哈希，响应不会返回邮箱、完整钱包地址或密钥。</p>
         <p class="lead">10,000 GCA 会员权益仍是人工审核后的储备钱包转账流程，不是自动发放。</p>
         <p class="lead">服务请求队列和 Credit 使用记录的 Cloudflare Worker 路由已经正式上线并受管理员 token 保护；用户提交服务意向不会自动扣减 credits，也不会获得交易权限或自动转账。</p>
         <div class="actions">
@@ -333,6 +333,10 @@
         <div class="fact">
           <span class="label">账户 UI</span>
           <span class="value good">受控 HTTPS 账户 UI 已上线</span>
+        </div>
+        <div class="fact">
+          <span class="label">账户状态</span>
+          <span class="value good">设备密钥脱敏只读查询已上线</span>
         </div>
         <div class="fact">
           <span class="label">GCA 合约</span>
@@ -409,6 +413,7 @@
           <div class="list">
             <div class="row"><span>公开账户提交</span><strong class="good">已上线</strong></div>
             <div class="row"><span>受控 HTTPS 账户 UI</span><strong class="good">已上线</strong></div>
+            <div class="row"><span>账户状态刷新</span><strong class="good"><code>POST /gca/account-status</code> 已上线；仅返回脱敏只读状态</strong></div>
             <div class="row"><span>100 credits 公开账本记录</span><strong class="good">符合 10,000 GCA 即可记录</strong></div>
             <div class="row"><span>GCA Member 公开账本记录</span><strong class="good">符合 1,000,000 GCA / 30 天即可记录</strong></div>
             <div class="row"><span>10,000 GCA 会员权益转账</span><strong class="pending">人工审核和储备钱包处理</strong></div>
@@ -427,6 +432,7 @@
           <li>钱包验证只能是只读余额检查，不需要签出资金，不需要授权转移资产。</li>
           <li>邮箱注册不会自动激活 100 credits、GCA Member 或 10,000 GCA 会员权益。</li>
           <li>服务请求不会自动扣减 credits，Credit 使用记录只在人工审核交付后写入。</li>
+          <li>设备状态密钥不会通过邮箱发送，服务端只保存 SHA-256；密钥丢失、过期或撤销后需要注册邮箱联系官方支持核验。</li>
           <li>会员权益不是现金、收入、报销、交易权限或风控豁免，也不是自动发放。</li>
           <li>任何后续交易、添加流动性或链上转账都必须由用户在自己的钱包里确认。</li>
         </ul>

@@ -51,6 +51,12 @@ The checkpoint is unsigned and not externally timestamped. It can detect truncat
 
 The public English and Chinese API status pages include a browser-time read-only health panel. It checks the official Worker identity, Base Mainnet contract configuration, anonymous-read protection on existing admin routes, and deployment state of prepared operator routes without writing records, reading admin response bodies, sending an admin token, connecting a wallet, or requesting a signature.
 
+## Production Account Status
+
+The public member page submits `gca_member_access_v2` with a browser-generated 256-bit device key. D1 stores only the key's SHA-256 hash through `0009_account_status_access.sql`; the plaintext key remains on the user's device. `POST /gca/account-status` accepts `gca_account_status_v1` and returns a redacted read-only account, wallet-verification, credit, member-review, and member-benefit snapshot.
+
+The response excludes email, email hash, full wallet address, the device key, administrator data, operator notes, IP data, and user-agent data. The route does not connect wallets, request signatures, write account or ledger state, or transfer tokens. Lost, expired, or revoked device-key access requires official support verification from the registered email.
+
 ## Production Member Review
 
 The public member-access route writes eligible 100-credit records and queues GCA Member evidence. It does not activate GCA Member from a user-submitted holding date or transaction-hash format check. After manually reviewing the submitted evidence, an operator uses the ignored local admin token with:

@@ -6,9 +6,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 LAST_UPDATED = "2026-07-27"
 READINESS_AT = "2026-07-23T17:55:52Z"
-PUBLIC_ROUTE_AT = "2026-07-27T09:37:54Z"
-ADMIN_ROUTE_AT = "2026-07-27T09:38:07Z"
-WORKER_VERSION_ID = "510315f5-8db3-4e08-b574-6e14b618aed5"
+PUBLIC_ROUTE_AT = "2026-07-27T10:53:44Z"
+ADMIN_ROUTE_AT = "2026-07-27T10:54:00Z"
+WORKER_VERSION_ID = "f4606d97-0427-4b04-bebf-20d23b64ae75"
 ROUTE_OBSERVATIONS = {
     "/gca/service-requests": 401,
     "/gca/credit-usage": 401,
@@ -58,6 +58,9 @@ class GcaWorkerStatusConsistencyTests(unittest.TestCase):
         self.assertEqual(access_backend["pendingRoutesLastObservedAt"], PUBLIC_ROUTE_AT)
         self.assertEqual(access_backend["pendingRouteAnonymousGetStatus"], ROUTE_OBSERVATIONS)
         self.assertEqual(access_backend["workerVersionId"], WORKER_VERSION_ID)
+        self.assertEqual(access_backend["workerRelease"], "gca-registration-worker-2026-07-27-account-status-v1")
+        self.assertEqual(access_backend["accountStatusAccessMigration"], "cloudflare/gca-registration-worker/migrations/0009_account_status_access.sql")
+        self.assertEqual(access_backend["accountStatusEndpoint"], "https://gca-registration-api.gcagochina.workers.dev/gca/account-status")
         self.assertEqual(access_backend["memberReviewVersion"], "gca_member_review_v1")
         self.assertEqual(access_backend["holdingVerificationVersion"], "gca_holding_verification_v1")
 
@@ -115,6 +118,10 @@ class GcaWorkerStatusConsistencyTests(unittest.TestCase):
             self.assertIsNone(state["serviceRequestQueueWorkerDeployBlockedBy"])
 
         self.assertTrue(access_api["currentState"]["memberReviewWorkflowProductionLive"])
+        self.assertTrue(access_api["currentState"]["accountStatusProductionLive"])
+        self.assertTrue(access_api["currentState"]["accountStatusReadOnly"])
+        self.assertFalse(access_api["currentState"]["accountStatusReturnsEmail"])
+        self.assertFalse(access_api["currentState"]["accountStatusReturnsAccessToken"])
         self.assertTrue(access_api["currentState"]["holdingHistoryVerificationProductionLive"])
         self.assertTrue(access_api["currentState"]["onchainHoldingHistoryRequiredForApproval"])
         self.assertFalse(access_api["currentState"]["automaticMemberActivationFromSubmittedDate"])

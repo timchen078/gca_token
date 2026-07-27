@@ -37,7 +37,7 @@ from tools.export_cloudflare_email_registrations import (  # noqa: E402
 
 DEFAULT_ORIGIN = "https://gcagochina.com"
 DEFAULT_USER_AGENT = "GCA-Operator-Registration-API-Check/1.0"
-WORKER_RELEASE = "gca-registration-worker-2026-07-27-member-benefit-evidence-v1"
+WORKER_RELEASE = "gca-registration-worker-2026-07-27-account-status-v1"
 OFFICIAL_CONTACT_EMAIL = "support@gcagochina.com"
 OFFICIAL_MEMBER_BENEFIT_SOURCE_WALLET = "0x5e8f84748612b913aacc937492ac25dc5630e246"
 
@@ -149,7 +149,9 @@ def check_health(*, base_url: str, timeout: float, cafile: str, opener: Callable
     require(payload.get("storage") == "cloudflare-d1", "health endpoint returned wrong storage")
     require(payload.get("packetVersion") == "gca_email_registration_v1", "health endpoint returned wrong email packet version")
     require(payload.get("contactSuppressionVersion") == "gca_contact_suppression_v1", "health endpoint returned wrong suppression packet version")
-    require(payload.get("memberAccessVersion") == "gca_member_access_v1", "health endpoint returned wrong member access packet version")
+    require(payload.get("memberAccessVersion") == "gca_member_access_v2", "health endpoint returned wrong member access packet version")
+    require(payload.get("legacyMemberAccessVersion") == "gca_member_access_v1", "health endpoint returned wrong legacy member access packet version")
+    require(payload.get("accountStatusVersion") == "gca_account_status_v1", "health endpoint returned wrong account status packet version")
     if include_pending_routes or "workerRelease" in payload:
         require(payload.get("workerRelease") == WORKER_RELEASE, "health endpoint returned wrong Worker release")
         require(payload.get("contactEmail") == OFFICIAL_CONTACT_EMAIL, "health endpoint returned wrong official contact email")
@@ -184,6 +186,8 @@ def check_health(*, base_url: str, timeout: float, cafile: str, opener: Callable
         "packetVersion": payload.get("packetVersion"),
         "contactSuppressionVersion": payload.get("contactSuppressionVersion"),
         "memberAccessVersion": payload.get("memberAccessVersion"),
+        "legacyMemberAccessVersion": payload.get("legacyMemberAccessVersion"),
+        "accountStatusVersion": payload.get("accountStatusVersion"),
         "creditUsageVersion": payload.get("creditUsageVersion"),
         "serviceRequestVersion": payload.get("serviceRequestVersion"),
         "memberReviewVersion": payload.get("memberReviewVersion"),
@@ -259,12 +263,42 @@ def check_unauthorized_admin_read(
     }
 
 
+def check_public_post_only_get(
+    *,
+    base_url: str,
+    path: str,
+    check_id: str,
+    timeout: float,
+    cafile: str,
+    opener: Callable[..., Any],
+) -> dict[str, Any]:
+    url = build_url(base_url, path)
+    status, _, payload = http_json_request(
+        url=url,
+        timeout=timeout,
+        cafile=cafile,
+        opener=opener,
+        allow_error_status=True,
+    )
+    require(status == 405, f"{path} GET must return HTTP 405")
+    require(payload.get("ok") is False, f"{path} GET response must return ok=false")
+    return {
+        "id": check_id,
+        "ok": True,
+        "status": status,
+        "postOnly": True,
+        "submittedStatusToken": False,
+    }
+
+
 def check_access_config(*, base_url: str, timeout: float, cafile: str, opener: Callable[..., Any], include_pending_routes: bool = False) -> dict[str, Any]:
     url = build_url(base_url, "/gca/access-config")
     status, _, payload = http_json_request(url=url, timeout=timeout, cafile=cafile, opener=opener)
     require(status == 200, "access config endpoint must return HTTP 200")
     require(payload.get("ok") is True, "access config endpoint must return ok=true")
-    require(payload.get("memberAccessVersion") == "gca_member_access_v1", "access config returned wrong version")
+    require(payload.get("memberAccessVersion") == "gca_member_access_v2", "access config returned wrong version")
+    require(payload.get("legacyMemberAccessVersion") == "gca_member_access_v1", "access config returned wrong legacy version")
+    require(payload.get("accountStatusVersion") == "gca_account_status_v1", "access config returned wrong account status version")
     if include_pending_routes or "workerRelease" in payload:
         require(payload.get("workerRelease") == WORKER_RELEASE, "access config returned wrong Worker release")
         require(payload.get("contactEmail") == OFFICIAL_CONTACT_EMAIL, "access config returned wrong official contact email")
@@ -293,7 +327,15 @@ def check_access_config(*, base_url: str, timeout: float, cafile: str, opener: C
         payload.get("endpoints", {}).get("memberBenefitTransfersAdmin") == "/gca/member-benefit-transfers",
         "access config returned wrong member benefit transfer endpoint",
     )
+    require(
+        payload.get("endpoints", {}).get("accountStatus") == "/gca/account-status",
+        "access config returned wrong account status endpoint",
+    )
     require(payload.get("boundaries", {}).get("readOnlyWalletVerification") is True, "access config must keep read-only wallet verification")
+    require(payload.get("boundaries", {}).get("readOnlyAccountStatus") is True, "access config must keep account status read-only")
+    require(payload.get("boundaries", {}).get("accountStatusTokenStoredAsSha256") is True, "access config must hash account status keys")
+    require(payload.get("boundaries", {}).get("accountStatusReturnsEmail") is False, "access config must not return account email")
+    require(payload.get("boundaries", {}).get("accountStatusReturnsAccessToken") is False, "access config must not return account status keys")
     require(payload.get("boundaries", {}).get("automaticTokenTransfer") is False, "access config must not auto-transfer tokens")
     require(
         payload.get("boundaries", {}).get("automaticMemberActivationFromSubmittedDate") is False,
@@ -323,6 +365,8 @@ def check_access_config(*, base_url: str, timeout: float, cafile: str, opener: C
         "ok": True,
         "status": status,
         "memberAccessVersion": payload.get("memberAccessVersion"),
+        "legacyMemberAccessVersion": payload.get("legacyMemberAccessVersion"),
+        "accountStatusVersion": payload.get("accountStatusVersion"),
         "workerRelease": payload.get("workerRelease"),
         "contactEmail": payload.get("contactEmail"),
         "creditUsageVersion": payload.get("creditUsageVersion"),
@@ -331,6 +375,7 @@ def check_access_config(*, base_url: str, timeout: float, cafile: str, opener: C
         "holdingVerificationVersion": payload.get("holdingVerificationVersion"),
         "memberBenefitTransferVersion": payload.get("memberBenefitTransferVersion"),
         "readOnlyWalletVerification": True,
+        "readOnlyAccountStatus": True,
         "automaticTokenTransfer": False,
         "antiSpamHoneypotFields": payload.get("antiSpam", {}).get("honeypotFields", []),
     }
@@ -431,6 +476,15 @@ def run_checks(
         ),
         check_cors_preflight(
             base_url=base_url,
+            path="/gca/account-status",
+            check_id="cors-account-status",
+            origin=origin,
+            timeout=timeout,
+            cafile=cafile,
+            opener=opener,
+        ),
+        check_cors_preflight(
+            base_url=base_url,
             path="/gca/member-reviews",
             check_id="cors-member-reviews",
             origin=origin,
@@ -515,6 +569,14 @@ def run_checks(
             base_url=base_url,
             path="/gca/member-benefit-transfers",
             check_id="unauth-member-benefit-transfers-read",
+            timeout=timeout,
+            cafile=cafile,
+            opener=opener,
+        ),
+        check_public_post_only_get(
+            base_url=base_url,
+            path="/gca/account-status",
+            check_id="account-status-get-rejected",
             timeout=timeout,
             cafile=cafile,
             opener=opener,
@@ -686,6 +748,7 @@ def run_checks(
             "submitsContactSuppression": False,
             "submitsWalletVerification": False,
             "submitsMemberAccess": False,
+            "submitsAccountStatus": False,
             "submitsServiceRequest": False,
             "submitsMemberReview": False,
             "submitsHoldingVerification": False,

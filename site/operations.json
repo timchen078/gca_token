@@ -1,14 +1,14 @@
 {
   "schema": "https://gcagochina.com/operations.json",
   "pageUrl": "https://gcagochina.com/operations.html",
-  "status": "public-access-operations-member-benefit-evidence-live",
+  "status": "public-access-operations-device-status-live",
   "lastUpdated": "2026-07-27",
   "title": "GCA Access Operations Runbook",
-  "scope": "Public SOP for live GCA email registration, member account intake, read-only wallet verification, eligible credit/member ledger records, review queue statuses, support responses, redacted review package handoff, manual member-benefit execution, and production transfer-evidence verification.",
+  "scope": "Public SOP for live GCA email registration, member account intake, read-only wallet verification, redacted device-key account status, eligible credit/member ledger records, review queue statuses, support responses, redacted review package handoff, manual member-benefit execution, and production transfer-evidence verification.",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "currentState": {
-    "currentStage": "member-benefit-transfer-evidence-operations-live",
+    "currentStage": "device-key-account-status-operations-live",
     "publicRunbookOnly": false,
     "runbookOnlyForManualReviewHandling": true,
     "backendLive": true,
@@ -17,6 +17,14 @@
     "accountAndMemberBackendLive": true,
     "publicSubmissionQueueLive": true,
     "controlledHttpsAccountUiLive": true,
+    "memberAccessPacketVersion": "gca_member_access_v2",
+    "accountStatusPacketVersion": "gca_account_status_v1",
+    "accountStatusProductionLive": true,
+    "accountStatusReadOnly": true,
+    "accountStatusTokenStoredAsSha256": true,
+    "accountStatusReturnsEmail": false,
+    "accountStatusReturnsFullWallet": false,
+    "accountStatusReturnsAccessToken": false,
     "creditsEligibilitySubmissionLive": true,
     "gcaMemberEligibilitySubmissionLive": true,
     "creditUsageLedgerPrepared": true,
@@ -53,14 +61,19 @@
     "localSupportReviewContinuityImmutable": false,
     "productionSupportApprovalWorkflowLive": false,
     "liveTradingEnabled": false,
-    "serviceRoutesProductionVerifiedAt": "2026-07-27T09:38:07Z",
-    "memberReviewProductionVerifiedAt": "2026-07-27T09:38:07Z",
-    "memberBenefitTransferProductionVerifiedAt": "2026-07-27T09:38:07Z"
+    "serviceRoutesProductionVerifiedAt": "2026-07-27T10:54:00Z",
+    "memberReviewProductionVerifiedAt": "2026-07-27T10:54:00Z",
+    "memberBenefitTransferProductionVerifiedAt": "2026-07-27T10:54:00Z",
+    "accountStatusProductionVerifiedAt": "2026-07-27T10:53:44Z"
   },
   "emailRegistrationOpsPipeline": {
     "status": "production-email-registration-api-live-operator-sync-ready",
     "provider": "Cloudflare Workers + D1",
     "workerBaseUrl": "https://gca-registration-api.gcagochina.workers.dev",
+    "publicAccountStatusEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/account-status",
+    "accountStatusAccessMigration": "cloudflare/gca-registration-worker/migrations/0009_account_status_access.sql",
+    "accountStatusLostKeyRecovery": "official support verification from the registered email",
+    "accountStatusKeyMustNotBeRequestedInEmail": true,
     "publicHealthEndpoint": "https://gca-registration-api.gcagochina.workers.dev/health",
     "publicSubmissionEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/email-registrations",
     "publicSuppressionEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/contact-suppressions",
@@ -111,7 +124,7 @@
       "writesD1Records": false,
       "deploysWorker": false
     },
-    "pendingRoutesLastObservedAt": "2026-07-27T09:37:54Z",
+    "pendingRoutesLastObservedAt": "2026-07-27T10:53:44Z",
     "pendingRouteAnonymousGetStatus": {
       "/gca/service-requests": 401,
       "/gca/credit-usage": 401
@@ -168,8 +181,8 @@
       "holdingNoLiveReadUsesExistingSnapshots": true
     },
     "workerDeployPermissionStatus": "passed",
-    "workerVersionId": "510315f5-8db3-4e08-b574-6e14b618aed5",
-    "productionRoutesVerifiedAt": "2026-07-27T09:38:07Z"
+    "workerVersionId": "f4606d97-0427-4b04-bebf-20d23b64ae75",
+    "productionRoutesVerifiedAt": "2026-07-27T10:54:00Z"
   },
   "identity": {
     "network": "Base Mainnet",

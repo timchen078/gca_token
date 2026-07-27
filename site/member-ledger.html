@@ -319,7 +319,7 @@
     <main class="shell">
       <section aria-labelledby="title">
         <h1 id="title">GCA Member Ledger Schema</h1>
-        <p class="lead">Public data contract for the live GCA AI Quant Access account layer: wallet verification, one-time 100 GCA AI Quant Access credits, GCA Member status, observed 30-day holding evidence, and verified evidence for already-completed manual 10,000 GCA reserve transfers.</p>
+        <p class="lead">Public data contract for the live GCA AI Quant Access account layer: wallet verification, redacted device-key status, one-time 100 GCA AI Quant Access credits, GCA Member status, observed 30-day holding evidence, and verified evidence for already-completed manual 10,000 GCA reserve transfers.</p>
         <div class="actions">
           <a class="button" href="members.html">Pre-Registration</a>
           <a class="button" href="member-benefit.html">Member Benefit Review</a>
@@ -360,9 +360,10 @@
       <section class="section two" aria-label="Prepared paths">
         <div class="panel">
           <h2>Live HTTPS Paths</h2>
-          <p class="note">The public account page uses the Workers + D1 backend for member access intake, read-only wallet verification, eligible credit writes, and queued member evidence. Protected ledger reads and member decisions remain operator-only.</p>
+          <p class="note">The public account page uses the Workers + D1 backend for member access intake, read-only wallet verification, eligible credit writes, queued member evidence, and redacted device-key status refresh. Protected full ledger reads and member decisions remain operator-only.</p>
           <div class="list">
             <div class="row"><span>Member access page</span><strong><a href="gca/member-access/"><code>/gca/member-access</code></a></strong></div>
+            <div class="row"><span>Redacted account status</span><strong><code>POST /gca/account-status</code></strong></div>
             <div class="row"><span>Pre-registration intake</span><strong><code>/gca/pre-registrations</code></strong></div>
             <div class="row"><span>Wallet verification</span><strong><code>/gca/wallet-verifications</code></strong></div>
             <div class="row"><span>100 credits ledger</span><strong><code>/gca/credit-ledger</code></strong></div>
@@ -374,6 +375,7 @@
             <div class="row"><span>Public member benefit rules</span><strong><a href="member-benefit.html">member-benefit.html</a></strong></div>
             <div class="row"><span>Member benefit transfer runbook</span><strong><a href="member-benefit-transfer.html">member-benefit-transfer.html</a></strong></div>
             <div class="row"><span>Member packet version</span><strong><code>gca_member_preregistration_v2</code></strong></div>
+            <div class="row"><span>Account status version</span><strong><code>gca_account_status_v1</code></strong></div>
           </div>
         </div>
 
@@ -390,6 +392,10 @@
       </section>
 
       <section class="section grid" aria-label="Record schemas">
+        <div class="panel">
+          <h3>Redacted Account Status</h3>
+          <p class="note"><code>gca_member_access_v2</code> creates a random browser device key and D1 stores only its SHA-256. <code>gca_account_status_v1</code> returns account, verification, credits, member-review, and benefit state without email, full wallet, the key, administrator data, or operator notes.</p>
+        </div>
         <div class="panel">
           <h3>Pre-Registration Record</h3>
           <p class="note">Fields: registrationId, createdAt, email, Telegram, walletAddress, declaredGcaBalance, programIntent, memberBenefitReviewEvidence, termsAccepted, securityBoundaryAccepted, and source.</p>

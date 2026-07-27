@@ -1,6 +1,6 @@
 # GCA Registration and Member Access Backend
 
-This is the deployed backend package for the public GCA email registration form, contact suppression, live member access UI, read-only wallet verification, 100-credit ledger records, and GCA Member ledger records.
+This is the deployed backend package for the public GCA email registration form, contact suppression, live member access UI, redacted device-key account status, read-only wallet verification, 100-credit ledger records, and GCA Member ledger records.
 
 The public website remains hosted on GitHub Pages. The write API is deployed on Cloudflare Workers + D1 and currently exposed as:
 
@@ -8,6 +8,7 @@ The public website remains hosted on GitHub Pages. The write API is deployed on 
 https://gca-registration-api.gcagochina.workers.dev/gca/email-registrations
 https://gca-registration-api.gcagochina.workers.dev/gca/contact-suppressions
 https://gca-registration-api.gcagochina.workers.dev/gca/member-access
+https://gca-registration-api.gcagochina.workers.dev/gca/account-status
 https://gca-registration-api.gcagochina.workers.dev/gca/wallet-verifications
 https://gca-registration-api.gcagochina.workers.dev/gca/access-config
 https://gca-registration-api.gcagochina.workers.dev/gca/member-reviews
@@ -52,6 +53,10 @@ Member-access requests store:
 - timestamps
 - optional salted IP hash if `PRIVACY_HASH_SALT` is configured
 
+`gca_member_access_v2` also accepts a browser-generated 256-bit device status key. The Worker stores only its SHA-256 hash in `gca_account_status_access` through migration `0009_account_status_access.sql`; the plaintext key remains on the user's device. `POST /gca/account-status` accepts `gca_account_status_v1` and the matching unexpired device key, then returns a redacted read-only account, wallet-verification, credit, member-review, and member-benefit snapshot.
+
+The status response excludes email, email hash, full wallet address, the device key, administrator data, operator notes, IP data, and user-agent data. It does not connect a wallet, request a signature, write an account or ledger record, or transfer GCA. If the key is lost, expired, or revoked, recovery requires official support verification from the registered email.
+
 The submitted holding date and transaction hash do not prove continuous holding or activate GCA Member automatically. An operator must review the submitted evidence and record a decision through the token-protected member review route. Approval refreshes the current GCA balance at a safe Base block, combines Base Blockscout v2 transfer history with recent Base public RPC logs, reconstructs the observed minimum GCA balance over the prior 30 days, and fails closed unless the history is complete, internally consistent, and stays at or above 1,000,000 GCA.
 
 Successful approval writes an append-only `gca_holding_verification_v1` evidence row through migration `0007_holding_history_verifications.sql`, links the evidence ID to the member review and member ledger, and exposes protected operator reads at `GET /gca/holding-verifications`. This is an observed public-history reconstruction, not a third-party audit, permanent guarantee, or claim that a public index can never be delayed. The flow remains read-only with respect to the wallet and never signs, sends a transaction, transfers GCA, or authorizes the separate 10,000 GCA member-benefit transfer.
@@ -76,6 +81,7 @@ Public registration, contact-suppression, wallet-verification, and member-access
 - Public contact suppression endpoint: `POST /gca/contact-suppressions`
 - Admin contact suppression endpoint: `GET /gca/contact-suppressions`
 - Public member access endpoint: `POST /gca/member-access`
+- Public redacted account status endpoint: `POST /gca/account-status`
 - Public wallet verification endpoint: `POST /gca/wallet-verifications`
 - Public access config endpoint: `GET /gca/access-config`
 - Admin wallet verification endpoint: `GET /gca/wallet-verifications`
@@ -87,6 +93,7 @@ Public registration, contact-suppression, wallet-verification, and member-access
 - Admin holding verification endpoint: `GET /gca/holding-verifications` live and token-protected
 - Admin member-benefit evidence endpoint: `GET/POST /gca/member-benefit-transfers` live and token-protected
 - Member D1 migration: `cloudflare/gca-registration-worker/migrations/0003_member_access_ledgers.sql`
+- Account status access migration: `cloudflare/gca-registration-worker/migrations/0009_account_status_access.sql`
 - Credit usage D1 migration: `cloudflare/gca-registration-worker/migrations/0004_credit_usage_ledger.sql`
 - Service request D1 migration: `cloudflare/gca-registration-worker/migrations/0005_service_requests.sql`
 - Member review D1 migration: `cloudflare/gca-registration-worker/migrations/0006_member_reviews.sql`
@@ -572,7 +579,8 @@ curl -fsS https://gca-registration-api.gcagochina.workers.dev/gca/member-access 
   -H 'content-type: application/json' \
   -X POST \
   --data '{
-    "packetVersion": "gca_member_access_v1",
+    "packetVersion": "gca_member_access_v2",
+    "statusAccessToken": "gca_status_<43_random_base64url_characters>",
     "user": {
       "email": "user@example.com",
       "displayName": "GCA User",
@@ -603,3 +611,5 @@ curl -fsS 'https://gca-registration-api.gcagochina.workers.dev/gca/contact-suppr
 `site/unsubscribe.html` posts contact-suppression requests to the same Workers API when loaded from `gcagochina.com`. If the API temporarily fails, it exposes the official email fallback so a user can still request removal from future contact exports.
 
 `site/gca/member-access/index.html` posts account intake and wallet-verification requests to the same Workers API. The wallet check is a read-only Base Mainnet `eth_call`; it writes eligible D1 ledger records but does not request wallet signatures, transactions, custody, or automatic token transfers.
+
+After a successful v2 account submission, the same page stores the plaintext device key only in that browser and can call `POST /gca/account-status` for a redacted server snapshot. The browser keeps the latest redacted snapshot for up to 30 days; the server-side hashed access record expires after 365 days.

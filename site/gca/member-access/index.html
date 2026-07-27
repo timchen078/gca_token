@@ -318,6 +318,12 @@
         gap: 16px;
       }
 
+      .snapshot-controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
       .snapshot-grid {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -444,6 +450,8 @@
         <p class="lead zh-note">中文用户可以在这里提交邮箱、Base 钱包地址、持有开始日期和公开交易哈希。后台只读取当前 GCA 余额；持有日期和交易哈希只作为人工审核材料，不会自动激活会员，也不会要求私钥、助记词、授权转账或钱包签名。</p>
         <p class="lead">The 10,000 GCA member benefit is not automatic. If a member ledger becomes active, the benefit remains pending manual reserve-wallet transfer review.</p>
         <p class="lead zh-note">10,000 GCA 会员权益不是自动领取。通过 GCA Member 记录后，仍需要支持团队人工审核和储备钱包处理。</p>
+        <p class="lead">After account creation, this browser can use a high-entropy device key to refresh redacted account, credits, member-review, and benefit-transfer status. The API stores only the key hash and never returns email or the key.</p>
+        <p class="lead zh-note">账户创建后，本浏览器可使用高强度设备密钥刷新脱敏的账户、积分、会员审核和权益转账状态。后台只保存密钥哈希，不会返回邮箱或密钥明文。</p>
         <div class="actions">
           <a class="button primary" href="#accountForm">Open Account Form / 打开表单</a>
           <a class="button" href="../../buy.html">Buy GCA First</a>
@@ -559,10 +567,10 @@
             <div class="snapshot-head">
               <div>
                 <h3>Saved On This Device <span class="zh">本设备保存状态</span></h3>
-                <p class="note">A non-sensitive status snapshot is kept in this browser for up to 30 days.</p>
-                <p class="note zh-note">本浏览器最多保存 30 天非敏感状态，不保存邮箱、私钥或钱包权限。</p>
+                <p class="note">A redacted status snapshot is kept for up to 30 days. Clearing this snapshot does not remove the separate device access key.</p>
+                <p class="note zh-note">脱敏状态快照最多保存 30 天。清除快照不会删除单独保存的设备访问密钥。</p>
               </div>
-              <button class="button" type="button" id="clearSnapshot">Clear / 清除</button>
+              <button class="button" type="button" id="clearSnapshot">Clear Snapshot / 清除快照</button>
             </div>
             <div class="snapshot-grid">
               <div class="snapshot-item">
@@ -584,6 +592,12 @@
             </div>
             <p class="snapshot-meta" id="savedAt"></p>
           </div>
+          <div class="actions snapshot-controls">
+            <button class="button primary" type="button" id="refreshStatus" hidden>Refresh Account Status / 刷新账户状态</button>
+            <button class="button" type="button" id="forgetDevice" hidden>Forget This Device / 忘记此设备</button>
+          </div>
+          <p class="note" id="statusAccessNote">Device status access is created only after a successful account submission. If the device key is lost, contact official support from the registered email.</p>
+          <p class="note zh-note">设备状态访问仅在账户提交成功后启用。如果设备密钥丢失，请使用注册邮箱联系官方支持。</p>
           <div class="field">
             <label for="reviewPacket">Review Packet <span class="zh">审核资料包</span></label>
             <textarea id="reviewPacket" readonly placeholder="Build a review packet after filling email, wallet, holding start date, and transaction hash. 填写邮箱、钱包、持有开始日期和交易哈希后生成审核资料包。"></textarea>
@@ -629,6 +643,7 @@
         <div class="list">
           <div class="row"><span>Access config</span><strong><a href="https://gca-registration-api.gcagochina.workers.dev/gca/access-config">/gca/access-config</a></strong></div>
           <div class="row"><span>Member account endpoint</span><strong>POST /gca/member-access</strong></div>
+          <div class="row"><span>Redacted account status endpoint</span><strong>POST /gca/account-status</strong></div>
           <div class="row"><span>Wallet verification endpoint</span><strong>POST /gca/wallet-verifications</strong></div>
           <div class="row"><span>Ledger schema page</span><strong><a href="../../member-ledger.html">member-ledger.html</a></strong></div>
           <div class="row"><span>Support page</span><strong><a href="../../support.html">support.html</a></strong></div>
@@ -637,7 +652,7 @@
     </main>
 
     <footer>
-      <div class="shell">GCA member access is live for account intake, read-only wallet verification, credits ledger, and GCA Member ledger records. Token transfers remain manual review only. 中文用户可在本页提交邮箱、Base 钱包和公开交易资料。</div>
+      <div class="shell">GCA member access is live for account intake, read-only wallet verification, redacted device-key status refresh, credits ledger, and GCA Member ledger records. Token transfers remain manual review only. 中文用户可在本页提交邮箱、Base 钱包和公开交易资料，并刷新脱敏账户状态。</div>
     </footer>
 
     <script>
@@ -668,12 +683,105 @@
       const savedMemberStatus = document.getElementById("savedMemberStatus");
       const savedAt = document.getElementById("savedAt");
       const clearSnapshot = document.getElementById("clearSnapshot");
+      const refreshStatus = document.getElementById("refreshStatus");
+      const forgetDevice = document.getElementById("forgetDevice");
+      const statusAccessNote = document.getElementById("statusAccessNote");
       const SNAPSHOT_KEY = "gca_member_access_snapshot_v1";
+      const STATUS_ACCESS_KEY = "gca_member_status_access_v1";
       const SNAPSHOT_MAX_AGE_MS = 30 * 24 * 60 * 60 * 1000;
+      const PENDING_STATUS_ACCESS_MAX_AGE_MS = 30 * 24 * 60 * 60 * 1000;
       let latestAccessResponse = null;
+      let sessionStatusAccess = null;
 
       function isWalletAddress(value) {
         return /^0x[a-fA-F0-9]{40}$/.test(String(value || "").trim());
+      }
+
+      function isStatusAccessToken(value) {
+        return /^gca_status_[A-Za-z0-9_-]{43}$/.test(String(value || "").trim());
+      }
+
+      function newStatusAccessToken() {
+        const bytes = new Uint8Array(32);
+        window.crypto.getRandomValues(bytes);
+        const binary = Array.from(bytes, (byte) => String.fromCharCode(byte)).join("");
+        const encoded = window.btoa(binary)
+          .replace(/\+/g, "-")
+          .replace(/\//g, "_")
+          .replace(/=+$/g, "");
+        return `gca_status_${encoded}`;
+      }
+
+      function statusAccessIsCurrent(record) {
+        if (!record || !isStatusAccessToken(record.token) || !isWalletAddress(record.walletAddress)) {
+          return false;
+        }
+        const expiry = record.expiresAt
+          ? new Date(record.expiresAt).getTime()
+          : new Date(record.createdAt).getTime() + PENDING_STATUS_ACCESS_MAX_AGE_MS;
+        return Number.isFinite(expiry) && expiry > Date.now();
+      }
+
+      function loadStatusAccess() {
+        if (statusAccessIsCurrent(sessionStatusAccess)) {
+          return sessionStatusAccess;
+        }
+        try {
+          const raw = window.localStorage.getItem(STATUS_ACCESS_KEY);
+          if (!raw) return null;
+          const record = JSON.parse(raw);
+          if (!statusAccessIsCurrent(record)) {
+            window.localStorage.removeItem(STATUS_ACCESS_KEY);
+            return null;
+          }
+          sessionStatusAccess = record;
+          return record;
+        } catch (error) {
+          return null;
+        }
+      }
+
+      function saveStatusAccess(record) {
+        sessionStatusAccess = record;
+        try {
+          window.localStorage.setItem(STATUS_ACCESS_KEY, JSON.stringify(record));
+        } catch (error) {
+          // Keep the key for this page session when browser storage is unavailable.
+        }
+        updateStatusAccessControls();
+      }
+
+      function statusAccessForWallet(wallet) {
+        const record = loadStatusAccess();
+        if (!record || record.walletAddress.toLowerCase() !== String(wallet || "").trim().toLowerCase()) {
+          return null;
+        }
+        return record;
+      }
+
+      function prepareStatusAccess(wallet) {
+        const existing = statusAccessForWallet(wallet);
+        if (existing) return existing;
+        const record = {
+          version: 1,
+          walletAddress: String(wallet || "").trim().toLowerCase(),
+          token: newStatusAccessToken(),
+          accountId: "",
+          createdAt: new Date().toISOString(),
+          expiresAt: ""
+        };
+        saveStatusAccess(record);
+        return record;
+      }
+
+      function updateStatusAccessControls() {
+        const record = loadStatusAccess();
+        const available = Boolean(record);
+        refreshStatus.hidden = !available;
+        forgetDevice.hidden = !available;
+        statusAccessNote.textContent = available
+          ? `Device status access is ready${record.expiresAt ? ` until ${record.expiresAt}` : ""}. The key is not included in review packets or API responses.`
+          : "Device status access is created only after a successful account submission. If the device key is lost, contact official support from the registered email.";
       }
 
       function renderResult(target, className, title, message) {
@@ -742,9 +850,10 @@
         const savedDate = new Date(snapshot.savedAt);
         savedAt.textContent = Number.isNaN(savedDate.getTime())
           ? "Saved status / 已保存状态"
-          : `Saved ${savedDate.toLocaleString()} · Refresh wallet verification for current balance. / 保存于 ${savedDate.toLocaleString()}，请重新验证钱包以获取当前余额。`;
+          : `Saved ${savedDate.toLocaleString()} · Use account-status refresh for the latest review and benefit state; run wallet verification for a fresh balance. / 保存于 ${savedDate.toLocaleString()}，刷新账户状态可查看最新审核和权益进度；重新验证钱包可读取最新余额。`;
         savedSnapshot.hidden = false;
         if (!walletAddress.value) walletAddress.value = snapshot.walletAddress;
+        updateStatusAccessControls();
       }
 
       function saveSnapshot(payload) {
@@ -761,7 +870,10 @@
       function restoreSnapshot() {
         try {
           const raw = window.localStorage.getItem(SNAPSHOT_KEY);
-          if (!raw) return;
+          if (!raw) {
+            updateStatusAccessControls();
+            return;
+          }
           const snapshot = JSON.parse(raw);
           const age = Date.now() - new Date(snapshot.savedAt).getTime();
           if (!Number.isFinite(age) || age < 0 || age > SNAPSHOT_MAX_AGE_MS) {
@@ -775,6 +887,7 @@
           } catch (storageError) {
             // Browser storage is unavailable; continue without a restored snapshot.
           }
+          updateStatusAccessControls();
         }
       }
 
@@ -823,8 +936,8 @@
           ...latestResponseLines(),
           "",
           "Boundaries / 安全边界",
-          "This packet contains public account and chain evidence only. It must not include private keys, seed phrases, wallet passwords, exchange API secrets, withdrawal permission, one-time codes, remote-control access, wallet approvals, wallet signatures, or requests for automatic token transfers.",
-          "本资料包只包含公开账户资料和链上证据。不要加入私钥、助记词、钱包密码、交易所 API Secret、提现权限、验证码、远程控制权限、钱包授权、钱包签名或自动转币请求。"
+          "This packet contains public account and chain evidence only. It must not include the device status access key, private keys, seed phrases, wallet passwords, exchange API secrets, withdrawal permission, one-time codes, remote-control access, wallet approvals, wallet signatures, or requests for automatic token transfers.",
+          "本资料包只包含公开账户资料和链上证据。不要加入设备状态访问密钥、私钥、助记词、钱包密码、交易所 API Secret、提现权限、验证码、远程控制权限、钱包授权、钱包签名或自动转币请求。"
         ];
         return lines.join("\n");
       }
@@ -836,7 +949,7 @@
         emailReviewPacket.href = `mailto:${SUPPORT_EMAIL}?subject=${subject}&body=${body}`;
       }
 
-      function accessPayload() {
+      function validateAccessForm() {
         if (!isWalletAddress(walletAddress.value)) {
           throw new Error("Paste a valid Base wallet address. 请填写有效的 Base 钱包地址。");
         }
@@ -846,8 +959,13 @@
         if (!contactConsent.checked || !securityBoundary.checked || !memberTerms.checked) {
           throw new Error("All acknowledgements are required. 请勾选全部确认项。");
         }
+      }
+
+      function accessPayload(statusAccessToken) {
+        validateAccessForm();
         return {
-          packetVersion: "gca_member_access_v1",
+          packetVersion: "gca_member_access_v2",
+          statusAccessToken,
           source: "gca/member-access",
           language: "en",
           programIntent: "gca_member",
@@ -887,7 +1005,9 @@
         const verification = payload.walletVerification || {};
         const credit = payload.creditLedger || {};
         const member = payload.memberLedger || {};
-        const title = member.status === "active"
+        const title = member.memberBenefitClaimStatus === "transferred"
+          ? "Member benefit verified / 会员权益转账已验证"
+          : member.status === "active"
           ? "GCA Member active / 会员记录已激活"
           : member.status === "queued"
             ? "GCA Member review queued / 会员审核已排队"
@@ -908,10 +1028,26 @@
           ["Manual review / 人工审核", verification.gcaMemberEligible ? "Required / 必须" : "Not applicable / 不适用"],
           ["Member ledger / 会员账本", member.memberLedgerId ? `${member.tierName} / ${member.status}` : "Not created / 未创建"],
           ["Member benefit status / 会员权益状态", member.memberBenefitClaimStatus || "Not applicable / 不适用"],
+          ["Member benefit transaction / 会员权益交易", member.memberBenefitTransferTx || "Not recorded / 未记录"],
           ["Automatic transfer / 自动转账", payload.boundaries && payload.boundaries.automaticTokenTransfer ? "Yes / 是" : "No / 否"]
         ]);
         saveSnapshot(payload);
         updateReviewPacket();
+      }
+
+      function renderStatusResponse(payload, statusAccess) {
+        const verification = {
+          ...(payload.walletVerification || {}),
+          walletAddress: statusAccess.walletAddress
+        };
+        renderAccessResponse({
+          account: payload.account || null,
+          walletVerification: verification,
+          creditLedger: payload.creditLedger || null,
+          memberLedger: payload.memberLedger || null,
+          boundaries: payload.boundaries || {},
+          nextStep: payload.nextStep || ""
+        });
       }
 
       connectWallet.addEventListener("click", async () => {
@@ -952,7 +1088,16 @@
         submitAccess.disabled = true;
         renderResult(balanceResult, "", "Submitting account / 正在提交账户", "Writing the access request, read-only wallet result, eligible credit record, and member-review queue record to Cloudflare D1. 正在写入账户请求、只读钱包结果、符合条件的 credits 记录和会员审核排队记录。");
         try {
-          const payload = await postJson("/gca/member-access", accessPayload());
+          validateAccessForm();
+          const statusAccess = prepareStatusAccess(walletAddress.value);
+          const payload = await postJson("/gca/member-access", accessPayload(statusAccess.token));
+          if (payload.statusAccess && payload.statusAccess.enabled) {
+            saveStatusAccess({
+              ...statusAccess,
+              accountId: payload.account && payload.account.accountId ? payload.account.accountId : "",
+              expiresAt: payload.statusAccess.expiresAt || statusAccess.expiresAt
+            });
+          }
           renderAccessResponse(payload);
         } catch (error) {
           const message = error && error.message ? error.message : "Account submission failed.";
@@ -960,6 +1105,34 @@
           updateReviewPacket();
         } finally {
           submitAccess.disabled = false;
+        }
+      });
+
+      refreshStatus.addEventListener("click", async () => {
+        const statusAccess = loadStatusAccess();
+        if (!statusAccess) {
+          updateStatusAccessControls();
+          renderResult(balanceResult, "warn", "Device key unavailable / 设备密钥不可用", "Submit a new account from this device or contact official support from the registered email. 请在本设备提交新账户，或使用注册邮箱联系官方支持。");
+          return;
+        }
+        refreshStatus.disabled = true;
+        renderResult(balanceResult, "", "Refreshing account status / 正在刷新账户状态", "Reading the redacted account, credits, member review, and member-benefit state. This does not write records or request a wallet action. 正在只读获取脱敏账户、积分、会员审核和会员权益状态，不会写入记录或请求钱包操作。");
+        try {
+          const payload = await postJson("/gca/account-status", {
+            packetVersion: "gca_account_status_v1",
+            statusAccessToken: statusAccess.token
+          });
+          saveStatusAccess({
+            ...statusAccess,
+            accountId: payload.account && payload.account.accountId ? payload.account.accountId : statusAccess.accountId,
+            expiresAt: payload.statusAccessExpiresAt || statusAccess.expiresAt
+          });
+          renderStatusResponse(payload, statusAccess);
+        } catch (error) {
+          const message = error && error.message ? error.message : "Account status refresh failed.";
+          renderResult(balanceResult, "warn", "Status refresh failed / 状态刷新失败", `${message} If the device key is invalid or expired, contact ${SUPPORT_EMAIL} from the registered email. 如果设备密钥无效或已过期，请使用注册邮箱联系 ${SUPPORT_EMAIL}。`);
+        } finally {
+          refreshStatus.disabled = false;
         }
       });
 
@@ -987,7 +1160,22 @@
           // Ignore storage restrictions; hide the local snapshot in this page session.
         }
         savedSnapshot.hidden = true;
-        renderResult(balanceResult, "", "Device status cleared / 本设备状态已清除", "No on-chain token, D1 account record, credit ledger, or member record was changed. 链上代币、D1 账户、积分和会员记录均未改变。");
+        renderResult(balanceResult, "", "Snapshot cleared / 快照已清除", "The device access key remains available for status refresh. No on-chain token, D1 account record, credit ledger, or member record was changed. 设备访问密钥仍可用于刷新状态；链上代币、D1 账户、积分和会员记录均未改变。");
+      });
+
+      forgetDevice.addEventListener("click", () => {
+        const confirmed = window.confirm("Forget this device status key? Account updates and status refresh will require official support recovery. 是否删除本设备状态密钥？之后更新账户或刷新状态将需要官方支持恢复。");
+        if (!confirmed) return;
+        try {
+          window.localStorage.removeItem(SNAPSHOT_KEY);
+          window.localStorage.removeItem(STATUS_ACCESS_KEY);
+        } catch (error) {
+          // Clear the in-memory key even when browser storage is restricted.
+        }
+        sessionStatusAccess = null;
+        savedSnapshot.hidden = true;
+        updateStatusAccessControls();
+        renderResult(balanceResult, "warn", "Device forgotten / 已忘记此设备", `The browser key was removed. Contact ${SUPPORT_EMAIL} from the registered email before trying to update this account. 浏览器密钥已删除；再次更新账户前，请使用注册邮箱联系 ${SUPPORT_EMAIL}。`);
       });
 
       [displayName, email, walletAddress, holdingStartDate, evidenceTxHash].forEach((field) => {

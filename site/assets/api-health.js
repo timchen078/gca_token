@@ -138,7 +138,9 @@
       && payload.service === "gca-registration-api"
       && Number(payload.chainId) === CHAIN_ID
       && String(payload.contractAddress || "").toLowerCase() === CONTRACT_ADDRESS
-      && payload.memberAccessVersion === "gca_member_access_v1"
+      && payload.memberAccessVersion === "gca_member_access_v2"
+      && payload.legacyMemberAccessVersion === "gca_member_access_v1"
+      && payload.accountStatusVersion === "gca_account_status_v1"
       && payload.memberReviewVersion === "gca_member_review_v1"
       && payload.holdingVerificationVersion === "gca_holding_verification_v1"
       && payload.memberBenefitTransferVersion === "gca_member_benefit_transfer_v1"
@@ -156,12 +158,20 @@
       && payload.ok === true
       && Number(payload.chainId) === CHAIN_ID
       && String(payload.contractAddress || "").toLowerCase() === CONTRACT_ADDRESS
-      && payload.memberAccessVersion === "gca_member_access_v1"
+      && payload.memberAccessVersion === "gca_member_access_v2"
+      && payload.legacyMemberAccessVersion === "gca_member_access_v1"
+      && payload.accountStatusVersion === "gca_account_status_v1"
+      && payload.endpoints
+      && payload.endpoints.accountStatus === "/gca/account-status"
       && payload.memberReviewVersion === "gca_member_review_v1"
       && payload.holdingVerificationVersion === "gca_holding_verification_v1"
       && payload.memberBenefitTransferVersion === "gca_member_benefit_transfer_v1"
       && boundaries
       && boundaries.readOnlyWalletVerification === true
+      && boundaries.readOnlyAccountStatus === true
+      && boundaries.accountStatusTokenStoredAsSha256 === true
+      && boundaries.accountStatusReturnsEmail === false
+      && boundaries.accountStatusReturnsAccessToken === false
       && boundaries.requiresSignature === false
       && boundaries.requiresTransaction === false
       && boundaries.automaticTokenTransfer === false
