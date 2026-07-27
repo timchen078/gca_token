@@ -319,9 +319,9 @@
       }
     </style>
       <link rel="stylesheet" href="assets/gca-site.css?v=20260711">
-    <link rel="stylesheet" href="assets/api-health.css?v=20260720">
+    <link rel="stylesheet" href="assets/api-health.css?v=20260727">
     <script src="assets/gca-site.js?v=20260711" defer></script>
-    <script src="assets/api-health.js?v=20260720" defer></script>
+    <script src="assets/api-health.js?v=20260727" defer></script>
   </head>
   <body>
     <header>
@@ -346,8 +346,8 @@
         <p class="eyebrow">Registration API Status / Live Read-Only Check</p>
         <h1 id="title">GCA Registration API Status</h1>
         <p class="lead">This is the public status page for the live GCA email registration and contact suppression backend. The current production API runs on Cloudflare Workers + D1 at <code>https://gca-registration-api.gcagochina.workers.dev</code>.</p>
-        <p class="lead">A public-only smoke check passed at <code>2026-07-23T19:29:39Z</code>, followed by a token-protected admin read check at <code>2026-07-23T19:29:49Z</code>. The browser panel below can repeat the safe read-only portion now without writing records.</p>
-        <p class="lead">The service-request, credit-usage, and append-only member-review routes are production-live and token-protected. GCA Member activation now requires a separate operator review; a user-submitted holding date or transaction-hash format check cannot activate membership.</p>
+        <p class="lead">A public-only smoke check passed at <code>2026-07-27T09:00:02Z</code>, followed by a token-protected admin read check at <code>2026-07-27T09:00:16Z</code>. The browser panel below can repeat the safe read-only portion now without writing records.</p>
+        <p class="lead">The service-request, credit-usage, append-only member-review, and holding-verification routes are production-live and token-protected. Approval requires a complete observed 30-day GCA transfer-history reconstruction with a minimum balance of at least 1,000,000 GCA; a user-submitted date or transaction hash remains supporting preview evidence only.</p>
         <p class="lead">The public checks verify health and read protections without writing test registrations. Admin reads remain token protected and should only be run locally by an operator with the local admin token file.</p>
         <div class="actions">
           <a class="button primary" href="register.html">Email Registration</a>
@@ -387,7 +387,7 @@
         </div>
         <div class="fact">
           <span class="label">Worker Version</span>
-          <span class="value">fa923065-dd72-472e-9c28-04ef4a08c34e</span>
+          <span class="value">fdef5365-1dc1-4165-8de0-d8d9e7cde679</span>
         </div>
         <div class="fact">
           <span class="label">Custom Domain</span>
@@ -436,7 +436,7 @@
           <div class="live-health-row" data-api-check="admin">
             <div class="live-health-copy">
               <strong>Existing admin-read protection</strong>
-              <span class="note">Seven GET routes, including member reviews, must reject anonymous access with HTTP 401</span>
+              <span class="note">Eight GET routes, including member reviews and holding evidence, must reject anonymous access with HTTP 401</span>
             </div>
             <span class="live-health-result" data-check-status>Waiting</span>
           </div>
@@ -506,17 +506,22 @@
           <div class="fact">
             <span class="label">GET/POST</span>
             <span class="value">/gca/member-reviews</span>
-            <p class="note">Production-live <code>gca_member_review_v1</code> operator route. Approval refreshes the current balance with a read-only Base call and records an append-only decision before changing member status. It does not prove continuous holding automatically, send tokens, or authorize the 10,000 GCA member-benefit transfer.</p>
+            <p class="note">Production-live <code>gca_member_review_v1</code> operator route. Approval refreshes the balance at a safe Base block, reconstructs the observed 30-day transfer history, and records an append-only decision before changing member status. It does not request a signature, send tokens, or authorize the 10,000 GCA member-benefit transfer.</p>
+          </div>
+          <div class="fact">
+            <span class="label">GET</span>
+            <span class="value">/gca/holding-verifications</span>
+            <p class="note">Production-live, token-protected read for append-only <code>gca_holding_verification_v1</code> evidence. It records the safe snapshot block, observed minimum balance, event counts, completeness, and reconstruction status. This is observed chain-history evidence, not a third-party audit or future guarantee.</p>
           </div>
           <div class="fact">
             <span class="label">GET/POST</span>
             <span class="value">/gca/service-requests</span>
-            <p class="note">Production-live token-protected service request queue. Remote migration, deploy, public smoke, and admin read-only smoke checks passed on 2026-07-23 UTC. Anonymous reads return HTTP 401.</p>
+            <p class="note">Production-live token-protected service request queue. Initial migration and deploy passed on 2026-07-23 UTC; the latest public and admin read-only smoke checks passed on 2026-07-27 UTC. Anonymous reads return HTTP 401.</p>
           </div>
           <div class="fact">
             <span class="label">GET/POST</span>
             <span class="value">/gca/credit-usage</span>
-            <p class="note">Production-live token-protected credit usage ledger. Remote migration, deploy, public smoke, and admin read-only smoke checks passed on 2026-07-23 UTC. Anonymous reads return HTTP 401.</p>
+            <p class="note">Production-live token-protected credit usage ledger. Initial migration and deploy passed on 2026-07-23 UTC; the latest public and admin read-only smoke checks passed on 2026-07-27 UTC. Anonymous reads return HTTP 401.</p>
           </div>
           <div class="fact">
             <span class="label">Future Domain</span>
@@ -555,7 +560,7 @@
         </div>
         <div class="panel">
           <h2>Member Review Deployment</h2>
-          <p class="note"><code>/gca/member-reviews</code> is production-live and protected by <code>ADMIN_READ_TOKEN</code>. Remote migration <code>0006_member_reviews.sql</code>, Worker deployment, public HTTP 401 verification, and admin HTTP 200 verification passed on 2026-07-23 UTC.</p>
+          <p class="note"><code>/gca/member-reviews</code> and <code>/gca/holding-verifications</code> are production-live and protected by <code>ADMIN_READ_TOKEN</code>. Remote migrations <code>0006_member_reviews.sql</code> and <code>0007_holding_history_verifications.sql</code>, Worker deployment, public HTTP 401 verification, and admin HTTP 200 verification passed; the latest read-only smoke checks completed on 2026-07-27 UTC.</p>
           <p class="note">The operator command requires explicit production-write and evidence-review confirmations. It changes account and member status only; the 10,000 GCA benefit remains a separate reserve-wallet process.</p>
           <pre>.venv/bin/python tools/review_cloudflare_member.py --help</pre>
         </div>

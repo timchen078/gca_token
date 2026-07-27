@@ -4,11 +4,11 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-LAST_UPDATED = "2026-07-24"
+LAST_UPDATED = "2026-07-27"
 READINESS_AT = "2026-07-23T17:55:52Z"
-PUBLIC_ROUTE_AT = "2026-07-23T19:29:39Z"
-ADMIN_ROUTE_AT = "2026-07-23T19:29:49Z"
-WORKER_VERSION_ID = "fa923065-dd72-472e-9c28-04ef4a08c34e"
+PUBLIC_ROUTE_AT = "2026-07-27T09:00:02Z"
+ADMIN_ROUTE_AT = "2026-07-27T09:00:16Z"
+WORKER_VERSION_ID = "fdef5365-1dc1-4165-8de0-d8d9e7cde679"
 ROUTE_OBSERVATIONS = {
     "/gca/service-requests": 401,
     "/gca/credit-usage": 401,
@@ -59,6 +59,7 @@ class GcaWorkerStatusConsistencyTests(unittest.TestCase):
         self.assertEqual(access_backend["pendingRouteAnonymousGetStatus"], ROUTE_OBSERVATIONS)
         self.assertEqual(access_backend["workerVersionId"], WORKER_VERSION_ID)
         self.assertEqual(access_backend["memberReviewVersion"], "gca_member_review_v1")
+        self.assertEqual(access_backend["holdingVerificationVersion"], "gca_holding_verification_v1")
 
         operations_pipeline = operations["memberAccessOpsPipeline"]
         self.assertEqual(operations_pipeline["latestDeployReadinessCheckAt"], READINESS_AT)
@@ -114,8 +115,12 @@ class GcaWorkerStatusConsistencyTests(unittest.TestCase):
             self.assertIsNone(state["serviceRequestQueueWorkerDeployBlockedBy"])
 
         self.assertTrue(access_api["currentState"]["memberReviewWorkflowProductionLive"])
+        self.assertTrue(access_api["currentState"]["holdingHistoryVerificationProductionLive"])
+        self.assertTrue(access_api["currentState"]["onchainHoldingHistoryRequiredForApproval"])
         self.assertFalse(access_api["currentState"]["automaticMemberActivationFromSubmittedDate"])
         self.assertTrue(operations["currentState"]["memberReviewWorkflowProductionLive"])
+        self.assertTrue(operations["currentState"]["holdingHistoryVerificationProductionLive"])
+        self.assertTrue(operations["currentState"]["onchainHoldingHistoryRequiredForApproval"])
         self.assertFalse(operations["currentState"]["automaticMemberActivationFromSubmittedDate"])
 
         live_endpoints = {

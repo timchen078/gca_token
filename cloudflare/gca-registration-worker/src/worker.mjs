@@ -1,15 +1,26 @@
+import {
+  TRANSFER_EVENT_TOPIC,
+  dedupeTransferEvents,
+  normalizeBlockscoutTransfer,
+  normalizeRpcTransferLog,
+  parseRpcQuantity,
+  reconstructHoldingWindow
+} from "./holding-history.mjs";
+
 const EMAIL_REGISTRATION_VERSION = "gca_email_registration_v1";
 const CONTACT_SUPPRESSION_VERSION = "gca_contact_suppression_v1";
 const MEMBER_ACCESS_VERSION = "gca_member_access_v1";
 const CREDIT_USAGE_VERSION = "gca_credit_usage_v1";
 const SERVICE_REQUEST_VERSION = "gca_service_request_v1";
 const MEMBER_REVIEW_VERSION = "gca_member_review_v1";
-const WORKER_RELEASE = "gca-registration-worker-2026-07-24-member-review-v1";
+const HOLDING_VERIFICATION_VERSION = "gca_holding_verification_v1";
+const WORKER_RELEASE = "gca-registration-worker-2026-07-27-holding-history-v1";
 const OFFICIAL_CONTACT_EMAIL = "support@gcagochina.com";
 const OFFICIAL_SITE_URL = "https://gcagochina.com/";
 const CHAIN_ID = 8453;
 const CONTRACT_ADDRESS = "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6";
 const BASE_RPC_URL = "https://mainnet.base.org";
+const BASE_BLOCKSCOUT_URL = "https://base.blockscout.com";
 const BALANCE_OF_SELECTOR = "0x70a08231";
 const TOKEN_DECIMALS = 18n;
 const TOKEN_UNIT = 10n ** TOKEN_DECIMALS;
@@ -19,6 +30,10 @@ const CREDIT_AMOUNT = 100;
 const CREDIT_EXPIRY_DAYS = 180;
 const MEMBER_REFRESH_DAYS = 30;
 const MEMBER_HOLD_DAYS = 30;
+const HOLDING_WINDOW_MS = MEMBER_HOLD_DAYS * 86_400_000;
+const RECENT_RPC_BLOCK_RANGE = 10_000;
+const BLOCKSCOUT_MAX_PAGES = 20;
+const BLOCKSCOUT_MAX_EVENTS = 1_000;
 const MEMBER_BENEFIT_AMOUNT = "10000 GCA";
 const CREDIT_SERVICE_CATALOG = {
   "liquidation-replay-report": { name: "Liquidation Replay", creditUnit: 30 },
@@ -483,19 +498,21 @@ async function optionalIpHash(request, env) {
   return sha256Hex(`${salt}|${ip}`);
 }
 
-async function readGcaBalanceUnits(walletAddress, env) {
+function blockTagFromNumber(blockNumber) {
+  return `0x${Number(blockNumber).toString(16)}`;
+}
+
+function addressTopic(walletAddress) {
+  return `0x${normalizeWallet(walletAddress).slice(2).padStart(64, "0")}`;
+}
+
+async function baseRpcRequest(method, params, env) {
   const rpcUrl = String(env.BASE_RPC_URL || BASE_RPC_URL).trim() || BASE_RPC_URL;
   const payload = {
     jsonrpc: "2.0",
     id: Date.now(),
-    method: "eth_call",
-    params: [
-      {
-        to: CONTRACT_ADDRESS,
-        data: balanceOfCalldata(walletAddress)
-      },
-      "latest"
-    ]
+    method,
+    params
   };
   let response;
   try {
@@ -522,11 +539,270 @@ async function readGcaBalanceUnits(walletAddress, env) {
   if (body && body.error) {
     throw new ApiError("Base RPC returned an error", 502);
   }
-  const result = String((body && body.result) || "0x0");
+  if (!body || !Object.prototype.hasOwnProperty.call(body, "result")) {
+    throw new ApiError("Base RPC response is missing result", 502);
+  }
+  return body.result;
+}
+
+async function readGcaBalanceUnits(walletAddress, env, blockTag = "latest") {
+  const result = String(await baseRpcRequest(
+    "eth_call",
+    [
+      {
+        to: CONTRACT_ADDRESS,
+        data: balanceOfCalldata(walletAddress)
+      },
+      blockTag
+    ],
+    env
+  ) || "0x0");
   if (!/^0x[0-9a-fA-F]*$/.test(result)) {
     throw new ApiError("Base RPC returned an invalid balance result", 502);
   }
   return BigInt(result || "0x0");
+}
+
+async function readBlockSnapshot(blockTag, env) {
+  const block = await baseRpcRequest("eth_getBlockByNumber", [blockTag, false], env);
+  if (!block || typeof block !== "object" || Array.isArray(block)) {
+    throw new ApiError("Base RPC returned an invalid block snapshot", 502);
+  }
+  let blockNumber;
+  let timestampSeconds;
+  try {
+    blockNumber = parseRpcQuantity(block.number, "Base block number");
+    timestampSeconds = parseRpcQuantity(block.timestamp, "Base block timestamp");
+  } catch (error) {
+    throw new ApiError("Base RPC returned invalid block metadata", 502);
+  }
+  const blockHash = String(block.hash || "").trim().toLowerCase();
+  if (!TX_HASH_RE.test(blockHash)) {
+    throw new ApiError("Base RPC returned an invalid block hash", 502);
+  }
+  return {
+    blockNumber,
+    blockTag: blockTagFromNumber(blockNumber),
+    blockHash,
+    timestampMs: timestampSeconds * 1_000
+  };
+}
+
+async function readRecentGcaTransferEvents(walletAddress, snapshot, env) {
+  const fromBlockNumber = Math.max(0, snapshot.blockNumber - (RECENT_RPC_BLOCK_RANGE - 1));
+  const fromBlockTag = blockTagFromNumber(fromBlockNumber);
+  const walletTopic = addressTopic(walletAddress);
+  const [outgoingLogs, incomingLogs] = await Promise.all([
+    baseRpcRequest(
+      "eth_getLogs",
+      [{
+        address: CONTRACT_ADDRESS,
+        fromBlock: fromBlockTag,
+        toBlock: snapshot.blockTag,
+        topics: [TRANSFER_EVENT_TOPIC, walletTopic]
+      }],
+      env
+    ),
+    baseRpcRequest(
+      "eth_getLogs",
+      [{
+        address: CONTRACT_ADDRESS,
+        fromBlock: fromBlockTag,
+        toBlock: snapshot.blockTag,
+        topics: [TRANSFER_EVENT_TOPIC, null, walletTopic]
+      }],
+      env
+    )
+  ]);
+  if (!Array.isArray(outgoingLogs) || !Array.isArray(incomingLogs)) {
+    throw new ApiError("Base RPC returned invalid transfer logs", 502);
+  }
+  const wallet = normalizeWallet(walletAddress);
+  const events = [];
+  try {
+    for (const rawLog of [...outgoingLogs, ...incomingLogs]) {
+      const event = normalizeRpcTransferLog(rawLog, CONTRACT_ADDRESS);
+      if (event.fromAddress === wallet || event.toAddress === wallet) {
+        events.push(event);
+      }
+    }
+  } catch (error) {
+    throw new ApiError("Base RPC returned malformed GCA transfer history", 502);
+  }
+  return dedupeTransferEvents(events);
+}
+
+function blockscoutHistoryUrl(walletAddress, env, cursor = null) {
+  let baseUrl;
+  try {
+    baseUrl = new URL(String(env.BASE_BLOCKSCOUT_URL || BASE_BLOCKSCOUT_URL).trim() || BASE_BLOCKSCOUT_URL);
+  } catch (error) {
+    throw new ApiError("Base Blockscout URL is invalid", 503);
+  }
+  if (baseUrl.protocol !== "https:") {
+    throw new ApiError("Base Blockscout URL must use HTTPS", 503);
+  }
+  const url = new URL(
+    `/api/v2/addresses/${normalizeWallet(walletAddress)}/token-transfers`,
+    baseUrl
+  );
+  url.searchParams.set("type", "ERC-20");
+  url.searchParams.set("token", CONTRACT_ADDRESS);
+  if (cursor && typeof cursor === "object" && !Array.isArray(cursor)) {
+    for (const [key, value] of Object.entries(cursor)) {
+      if (
+        /^[a-z0-9_]+$/i.test(key) &&
+        (typeof value === "string" || typeof value === "number")
+      ) {
+        url.searchParams.set(key, String(value));
+      }
+    }
+  }
+  return url.toString();
+}
+
+async function readBlockscoutGcaTransferEvents(walletAddress, windowStartMs, snapshot, env) {
+  const events = [];
+  const seenCursors = new Set();
+  let cursor = null;
+  let historyComplete = false;
+  let previousBlockNumber = Number.MAX_SAFE_INTEGER;
+
+  for (let page = 0; page < BLOCKSCOUT_MAX_PAGES; page += 1) {
+    let response;
+    try {
+      response = await fetch(blockscoutHistoryUrl(walletAddress, env, cursor), {
+        method: "GET",
+        headers: {
+          accept: "application/json",
+          "user-agent": "gca-registration-worker/1.0"
+        }
+      });
+    } catch (error) {
+      throw new ApiError("Base Blockscout history read failed", 502);
+    }
+    if (!response.ok) {
+      throw new ApiError("Base Blockscout returned an error status", 502);
+    }
+    let body;
+    try {
+      body = await response.json();
+    } catch (error) {
+      throw new ApiError("Base Blockscout returned invalid JSON", 502);
+    }
+    if (!body || !Array.isArray(body.items)) {
+      throw new ApiError("Base Blockscout returned an invalid transfer page", 502);
+    }
+
+    let reachedWindowStart = false;
+    try {
+      for (const item of body.items) {
+        const event = normalizeBlockscoutTransfer(item, CONTRACT_ADDRESS);
+        if (event.blockNumber > previousBlockNumber) {
+          throw new Error("Blockscout transfer order is not newest-first");
+        }
+        previousBlockNumber = event.blockNumber;
+        if (event.timestampMs <= windowStartMs) {
+          reachedWindowStart = true;
+        }
+        if (
+          event.timestampMs >= windowStartMs &&
+          event.timestampMs <= snapshot.timestampMs &&
+          event.blockNumber <= snapshot.blockNumber
+        ) {
+          events.push(event);
+        }
+      }
+    } catch (error) {
+      throw new ApiError("Base Blockscout returned malformed GCA transfer history", 502);
+    }
+    if (events.length > BLOCKSCOUT_MAX_EVENTS) {
+      throw new ApiError("GCA holding history exceeds the verification event limit", 409);
+    }
+
+    const nextCursor = body.next_page_params;
+    if (reachedWindowStart || !nextCursor) {
+      historyComplete = true;
+      break;
+    }
+    if (typeof nextCursor !== "object" || Array.isArray(nextCursor)) {
+      throw new ApiError("Base Blockscout returned an invalid pagination cursor", 502);
+    }
+    const cursorKey = JSON.stringify(
+      Object.entries(nextCursor).sort(([left], [right]) => left.localeCompare(right))
+    );
+    if (seenCursors.has(cursorKey)) {
+      throw new ApiError("Base Blockscout returned a repeated pagination cursor", 502);
+    }
+    seenCursors.add(cursorKey);
+    cursor = nextCursor;
+  }
+
+  if (!historyComplete) {
+    throw new ApiError("GCA holding history exceeds the verification page limit", 409);
+  }
+  return {
+    events,
+    historyComplete
+  };
+}
+
+async function verifyGcaHoldingWindow(memberRow, env) {
+  const snapshot = await readBlockSnapshot("safe", env);
+  const windowStartMs = snapshot.timestampMs - HOLDING_WINDOW_MS;
+  const [currentBalance, rpcEvents, blockscoutHistory] = await Promise.all([
+    readGcaBalanceUnits(memberRow.wallet_address, env, snapshot.blockTag),
+    readRecentGcaTransferEvents(memberRow.wallet_address, snapshot, env),
+    readBlockscoutGcaTransferEvents(memberRow.wallet_address, windowStartMs, snapshot, env)
+  ]);
+  let allEvents;
+  let reconstruction;
+  try {
+    allEvents = dedupeTransferEvents([...blockscoutHistory.events, ...rpcEvents]);
+    reconstruction = reconstructHoldingWindow({
+      walletAddress: memberRow.wallet_address,
+      currentBalanceUnits: currentBalance.toString(),
+      thresholdUnits: MEMBER_THRESHOLD_UNITS.toString(),
+      events: allEvents
+    });
+  } catch (error) {
+    throw new ApiError("GCA holding history could not be reconstructed", 502);
+  }
+  const observedContinuousEligible = Boolean(
+    blockscoutHistory.historyComplete &&
+    reconstruction.reconstructionConsistent &&
+    reconstruction.observedContinuousEligible
+  );
+  return {
+    checkedAt: nowIso(),
+    windowStartAt: new Date(windowStartMs).toISOString().replace(/\.\d{3}Z$/, "Z"),
+    windowEndAt: new Date(snapshot.timestampMs).toISOString().replace(/\.\d{3}Z$/, "Z"),
+    snapshotBlockNumber: snapshot.blockNumber,
+    snapshotBlockHash: snapshot.blockHash,
+    currentRawBalance: reconstruction.currentRawBalance,
+    currentGcaBalance: unitsToGca(reconstruction.currentRawBalance),
+    windowStartRawBalance: reconstruction.windowStartRawBalance,
+    windowStartGcaBalance: reconstruction.windowStartRawBalance
+      ? unitsToGca(reconstruction.windowStartRawBalance)
+      : "",
+    minimumRawBalance: reconstruction.minimumRawBalance,
+    minimumGcaBalance: reconstruction.minimumRawBalance
+      ? unitsToGca(reconstruction.minimumRawBalance)
+      : "",
+    thresholdRawBalance: MEMBER_THRESHOLD_UNITS.toString(),
+    thresholdGcaBalance: unitsToGca(MEMBER_THRESHOLD_UNITS),
+    observedContinuousEligible,
+    historyComplete: blockscoutHistory.historyComplete,
+    reconstructionConsistent: reconstruction.reconstructionConsistent,
+    eventCount: allEvents.length,
+    blockscoutEventCount: blockscoutHistory.events.length,
+    rpcEventCount: rpcEvents.length,
+    historyProvider: "Base Blockscout v2 token-transfer index plus Base public RPC recent logs and snapshot balanceOf",
+    status: observedContinuousEligible ? "observed_eligible" : "observed_below_threshold",
+    failureReason: reconstruction.failureReason || (
+      observedContinuousEligible ? "" : "minimum_balance_below_member_threshold"
+    )
+  };
 }
 
 function requireDatabase(env) {
@@ -737,10 +1013,54 @@ function rowToMemberLedger(row) {
     memberBenefitTransferTx: row.member_benefit_transfer_tx || "",
     activatedAt: row.activated_at || "",
     nextRefreshDueAt: row.next_refresh_due_at || "",
+    latestHoldingVerificationId: row.latest_holding_verification_id || "",
+    onchainHoldingVerified: Boolean(row.onchain_holding_verified),
+    onchainHoldingVerifiedAt: row.onchain_holding_verified_at || "",
     requiresManualReserveTransferReview: Boolean(row.requires_manual_reserve_transfer_review),
     automaticTransfer: Boolean(row.automatic_transfer),
     status: row.status,
     updatedAt: row.updated_at
+  };
+}
+
+function rowToHoldingVerification(row) {
+  if (!row) {
+    return null;
+  }
+  return {
+    holdingVerificationId: row.holding_verification_id,
+    packetVersion: HOLDING_VERIFICATION_VERSION,
+    memberLedgerId: row.member_ledger_id,
+    accountId: row.account_id,
+    walletAddress: row.wallet_address,
+    chainId: Number(row.chain_id),
+    contractAddress: row.contract_address,
+    checkedAt: row.checked_at,
+    windowStartAt: row.window_start_at,
+    windowEndAt: row.window_end_at,
+    snapshotBlockNumber: Number(row.snapshot_block_number),
+    snapshotBlockHash: row.snapshot_block_hash,
+    currentRawBalance: row.current_raw_balance,
+    currentGcaBalance: row.current_gca_balance,
+    windowStartRawBalance: row.window_start_raw_balance,
+    windowStartGcaBalance: row.window_start_gca_balance,
+    minimumRawBalance: row.minimum_raw_balance,
+    minimumGcaBalance: row.minimum_gca_balance,
+    thresholdRawBalance: row.threshold_raw_balance,
+    thresholdGcaBalance: row.threshold_gca_balance,
+    observedContinuousEligible: Boolean(row.observed_continuous_eligible),
+    historyComplete: Boolean(row.history_complete),
+    reconstructionConsistent: Boolean(row.reconstruction_consistent),
+    eventCount: Number(row.event_count || 0),
+    blockscoutEventCount: Number(row.blockscout_event_count || 0),
+    rpcEventCount: Number(row.rpc_event_count || 0),
+    historyProvider: row.history_provider,
+    status: row.status,
+    failureReason: row.failure_reason || "",
+    requiresSignature: Boolean(row.requires_signature),
+    requiresTransaction: Boolean(row.requires_transaction),
+    automaticTokenTransfer: Boolean(row.automatic_token_transfer),
+    writesWallet: Boolean(row.writes_wallet)
   };
 }
 
@@ -765,6 +1085,10 @@ function rowToMemberReview(row) {
     holdingPeriodPreviewDays: Number(row.holding_period_preview_days || 0),
     evidenceTxHash: row.evidence_tx_hash || "",
     evidenceTxHashFormatOk: Boolean(row.evidence_tx_hash_format_ok),
+    holdingVerificationId: row.holding_verification_id || "",
+    onchainHoldingEligible: Boolean(row.onchain_holding_eligible),
+    onchainHistoryComplete: Boolean(row.onchain_history_complete),
+    onchainMinimumBalance: row.onchain_minimum_balance || "",
     previousMemberStatus: row.previous_member_status,
     resultingMemberStatus: row.resulting_member_status,
     previousClaimStatus: row.previous_claim_status,
@@ -1398,6 +1722,89 @@ async function maybeWriteMemberLedger(db, account, verification, evidence, now) 
   return rowToMemberLedger(row);
 }
 
+async function prepareHoldingVerificationInsert(db, memberRow, verification) {
+  const holdingVerificationId = await stableId(
+    "gca_holding",
+    memberRow.member_ledger_id,
+    verification.snapshotBlockNumber,
+    verification.snapshotBlockHash
+  );
+  const statement = db
+    .prepare(
+      `INSERT OR IGNORE INTO gca_holding_verifications (
+        holding_verification_id,
+        member_ledger_id,
+        account_id,
+        wallet_address,
+        chain_id,
+        contract_address,
+        checked_at,
+        window_start_at,
+        window_end_at,
+        snapshot_block_number,
+        snapshot_block_hash,
+        current_raw_balance,
+        current_gca_balance,
+        window_start_raw_balance,
+        window_start_gca_balance,
+        minimum_raw_balance,
+        minimum_gca_balance,
+        threshold_raw_balance,
+        threshold_gca_balance,
+        observed_continuous_eligible,
+        history_complete,
+        reconstruction_consistent,
+        event_count,
+        blockscout_event_count,
+        rpc_event_count,
+        history_provider,
+        status,
+        failure_reason,
+        requires_signature,
+        requires_transaction,
+        automatic_token_transfer,
+        writes_wallet
+      ) VALUES (
+        ?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16,
+        ?17, ?18, ?19, ?20, ?21, ?22, ?23, ?24, ?25, ?26, ?27, ?28, 0, 0, 0, 0
+      )`
+    )
+    .bind(
+      holdingVerificationId,
+      memberRow.member_ledger_id,
+      memberRow.account_id,
+      memberRow.wallet_address,
+      CHAIN_ID,
+      CONTRACT_ADDRESS,
+      verification.checkedAt,
+      verification.windowStartAt,
+      verification.windowEndAt,
+      verification.snapshotBlockNumber,
+      verification.snapshotBlockHash,
+      verification.currentRawBalance,
+      verification.currentGcaBalance,
+      verification.windowStartRawBalance,
+      verification.windowStartGcaBalance,
+      verification.minimumRawBalance,
+      verification.minimumGcaBalance,
+      verification.thresholdRawBalance,
+      verification.thresholdGcaBalance,
+      verification.observedContinuousEligible ? 1 : 0,
+      verification.historyComplete ? 1 : 0,
+      verification.reconstructionConsistent ? 1 : 0,
+      verification.eventCount,
+      verification.blockscoutEventCount,
+      verification.rpcEventCount,
+      verification.historyProvider,
+      verification.status,
+      verification.failureReason
+    );
+  return {
+    holdingVerificationId,
+    statement
+  };
+}
+
 async function recordMemberReview(request, env, origin) {
   if (!isAdminAuthorized(request, env)) {
     return jsonResponse({ ok: false, error: "admin authorization is required" }, 401, origin, env);
@@ -1413,25 +1820,41 @@ async function recordMemberReview(request, env, origin) {
     throw new ApiError("memberLedgerId was not found", 404);
   }
 
-  const rawBalance = await readGcaBalanceUnits(memberRow.wallet_address, env);
+  const approved = reviewInput.decision === "approved";
+  const rejected = reviewInput.decision === "rejected";
+  const holdingVerification = approved
+    ? await verifyGcaHoldingWindow(memberRow, env)
+    : null;
+  const rawBalance = holdingVerification
+    ? BigInt(holdingVerification.currentRawBalance)
+    : await readGcaBalanceUnits(memberRow.wallet_address, env);
   const balanceAtReview = unitsToGca(rawBalance);
   const memberThresholdMet = rawBalance >= MEMBER_THRESHOLD_UNITS;
-  const holdingPeriodPreviewDays = Number(memberRow.holding_period_days_verified || 0);
+  const holdingPeriodPreviewDays = Math.max(
+    Number(memberRow.holding_period_days_verified || 0),
+    holdingDaysFromDate(memberRow.holding_start_date || "")
+  );
   const evidenceTxHashFormatOk = Boolean(memberRow.evidence_tx_hash_format_ok);
   if (
-    reviewInput.decision === "approved" &&
-    (!memberThresholdMet || holdingPeriodPreviewDays < MEMBER_HOLD_DAYS || !evidenceTxHashFormatOk)
+    approved &&
+    (
+      !memberThresholdMet ||
+      holdingPeriodPreviewDays < MEMBER_HOLD_DAYS ||
+      !evidenceTxHashFormatOk ||
+      !holdingVerification ||
+      !holdingVerification.historyComplete ||
+      !holdingVerification.reconstructionConsistent ||
+      !holdingVerification.observedContinuousEligible
+    )
   ) {
     throw new ApiError(
-      "approved review requires a current 1,000,000 GCA balance, a 30-day holding preview, and a valid evidence transaction hash",
+      "approved review requires a current 1,000,000 GCA balance, valid submitted evidence, and an observed complete 30-day on-chain holding history",
       409
     );
   }
 
   const previousMemberStatus = memberRow.status;
   const previousClaimStatus = memberRow.member_benefit_claim_status;
-  const approved = reviewInput.decision === "approved";
-  const rejected = reviewInput.decision === "rejected";
   const resultingMemberStatus = approved ? "active" : rejected ? "review_rejected" : "queued";
   const resultingAccountStatus = approved ? "member_active" : rejected ? "member_review_rejected" : "member_queued";
   const resultingClaimStatus = approved
@@ -1447,6 +1870,12 @@ async function recordMemberReview(request, env, origin) {
   const now = nowIso();
   const activatedAt = approved ? (memberRow.activated_at || now) : "";
   const nextRefreshDueAt = approved ? addDaysIso(now, MEMBER_REFRESH_DAYS) : "";
+  const preparedHoldingVerification = approved
+    ? await prepareHoldingVerificationInsert(db, memberRow, holdingVerification)
+    : null;
+  const holdingVerificationId = preparedHoldingVerification
+    ? preparedHoldingVerification.holdingVerificationId
+    : "";
   const memberReviewId = await stableId(
     "gca_member_review",
     reviewInput.memberLedgerId,
@@ -1474,6 +1903,10 @@ async function recordMemberReview(request, env, origin) {
         holding_period_preview_days,
         evidence_tx_hash,
         evidence_tx_hash_format_ok,
+        holding_verification_id,
+        onchain_holding_eligible,
+        onchain_history_complete,
+        onchain_minimum_balance,
         previous_member_status,
         resulting_member_status,
         previous_claim_status,
@@ -1482,7 +1915,10 @@ async function recordMemberReview(request, env, origin) {
         requires_transaction,
         automatic_token_transfer,
         writes_wallet
-      ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, 0, 0, 0, 0)`
+      ) VALUES (
+        ?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16,
+        ?17, ?18, ?19, ?20, ?21, ?22, ?23, 0, 0, 0, 0
+      )`
     )
     .bind(
       memberReviewId,
@@ -1500,6 +1936,10 @@ async function recordMemberReview(request, env, origin) {
       holdingPeriodPreviewDays,
       memberRow.evidence_tx_hash || "",
       evidenceTxHashFormatOk ? 1 : 0,
+      holdingVerificationId,
+      holdingVerification && holdingVerification.observedContinuousEligible ? 1 : 0,
+      holdingVerification && holdingVerification.historyComplete ? 1 : 0,
+      holdingVerification ? holdingVerification.minimumGcaBalance : "",
       previousMemberStatus,
       resultingMemberStatus,
       previousClaimStatus,
@@ -1510,20 +1950,28 @@ async function recordMemberReview(request, env, origin) {
       `UPDATE gca_member_ledger
        SET
          verified_balance = ?1,
-         member_benefit_review_evidence_status = ?2,
-         member_benefit_claim_status = ?3,
-         activated_at = ?4,
-         next_refresh_due_at = ?5,
-         status = ?6,
-         updated_at = ?7
-       WHERE member_ledger_id = ?8`
+         holding_period_days_verified = ?2,
+         member_benefit_review_evidence_status = ?3,
+         member_benefit_claim_status = ?4,
+         activated_at = ?5,
+         next_refresh_due_at = ?6,
+         latest_holding_verification_id = ?7,
+         onchain_holding_verified = ?8,
+         onchain_holding_verified_at = ?9,
+         status = ?10,
+         updated_at = ?11
+       WHERE member_ledger_id = ?12`
     )
     .bind(
       balanceAtReview,
+      approved ? Math.max(holdingPeriodPreviewDays, MEMBER_HOLD_DAYS) : holdingPeriodPreviewDays,
       evidenceStatus,
       resultingClaimStatus,
       activatedAt,
       nextRefreshDueAt,
+      approved ? holdingVerificationId : (memberRow.latest_holding_verification_id || ""),
+      approved ? 1 : Number(memberRow.onchain_holding_verified || 0),
+      approved ? holdingVerification.checkedAt : (memberRow.onchain_holding_verified_at || ""),
       resultingMemberStatus,
       now,
       memberRow.member_ledger_id
@@ -1534,7 +1982,11 @@ async function recordMemberReview(request, env, origin) {
     )
     .bind(resultingAccountStatus, now, memberRow.account_id);
 
-  await db.batch([insertReview, updateMemberLedger, updateMemberAccount]);
+  const reviewBatch = [insertReview, updateMemberLedger, updateMemberAccount];
+  if (preparedHoldingVerification) {
+    reviewBatch.unshift(preparedHoldingVerification.statement);
+  }
+  await db.batch(reviewBatch);
 
   const reviewRow = await db
     .prepare("SELECT * FROM gca_member_reviews WHERE member_review_id = ?1 LIMIT 1")
@@ -1544,13 +1996,20 @@ async function recordMemberReview(request, env, origin) {
     .prepare("SELECT * FROM gca_member_ledger WHERE member_ledger_id = ?1 LIMIT 1")
     .bind(memberRow.member_ledger_id)
     .first();
+  const holdingVerificationRow = holdingVerificationId
+    ? await db
+        .prepare("SELECT * FROM gca_holding_verifications WHERE holding_verification_id = ?1 LIMIT 1")
+        .bind(holdingVerificationId)
+        .first()
+    : null;
   return jsonResponse({
     ok: true,
     packetVersion: MEMBER_REVIEW_VERSION,
     memberReview: rowToMemberReview(reviewRow),
     memberLedger: rowToMemberLedger(updatedMemberRow),
+    holdingVerification: rowToHoldingVerification(holdingVerificationRow),
     nextStep: approved
-      ? "Membership is active. Any 10,000 GCA member benefit still requires a separate manual reserve-wallet transfer review and public transaction evidence."
+      ? "Membership is active after the observed 30-day on-chain holding history check. Any 10,000 GCA member benefit still requires a separate manual reserve-wallet transfer review and public transaction evidence."
       : rejected
         ? "Membership is not active. No member benefit transfer is authorized."
         : "Membership remains queued until the missing holding evidence is reviewed.",
@@ -1558,6 +2017,9 @@ async function recordMemberReview(request, env, origin) {
       adminOnly: true,
       manualEvidenceReviewRequired: true,
       readOnlyBalanceRefresh: true,
+      readOnlyHoldingHistoryVerification: true,
+      holdingHistorySource: "Base Blockscout v2 plus Base public RPC",
+      holdingHistoryClaim: "observed transfer-history reconstruction, not a third-party audit or guarantee",
       requiresSignature: false,
       requiresTransaction: false,
       automaticTokenTransfer: false,
@@ -1764,6 +2226,9 @@ function accessBoundaries() {
     asksForWithdrawalPermission: false,
     automaticTokenTransfer: false,
     automaticMemberActivationFromSubmittedDate: false,
+    onchainHoldingHistoryRequiredForApproval: true,
+    holdingHistoryVerificationMode: "read-only-transfer-history-reconstruction",
+    holdingHistorySources: ["Base Blockscout v2", "Base public RPC"],
     memberActivationMode: "admin-token-protected-manual-review",
     memberBenefitTransferMode: "manual-reserve-wallet-review-only",
     memberBenefitSelfServiceTransfer: false
@@ -1781,6 +2246,7 @@ function accessConfig(origin, env) {
     creditUsageVersion: CREDIT_USAGE_VERSION,
     serviceRequestVersion: SERVICE_REQUEST_VERSION,
     memberReviewVersion: MEMBER_REVIEW_VERSION,
+    holdingVerificationVersion: HOLDING_VERIFICATION_VERSION,
     chainId: CHAIN_ID,
     contractAddress: CONTRACT_ADDRESS,
     apiBaseUrl: "https://gca-registration-api.gcagochina.workers.dev",
@@ -1792,7 +2258,8 @@ function accessConfig(origin, env) {
       serviceRequestsAdmin: "/gca/service-requests",
       creditUsageAdmin: "/gca/credit-usage",
       memberLedgerAdmin: "/gca/member-ledger",
-      memberReviewsAdmin: "/gca/member-reviews"
+      memberReviewsAdmin: "/gca/member-reviews",
+      holdingVerificationsAdmin: "/gca/holding-verifications"
     },
     antiSpam: {
       honeypotFields: HONEYPOT_FIELDS,
@@ -1883,6 +2350,8 @@ async function listMemberTable(request, env, origin, table, mapper, allowedFilte
         ? "created_at"
       : table === "gca_member_reviews"
         ? "reviewed_at"
+      : table === "gca_holding_verifications"
+        ? "checked_at"
       : table === "gca_member_ledger"
         ? "updated_at"
         : "updated_at";
@@ -1908,6 +2377,7 @@ function health(origin, env) {
     creditUsageVersion: CREDIT_USAGE_VERSION,
     serviceRequestVersion: SERVICE_REQUEST_VERSION,
     memberReviewVersion: MEMBER_REVIEW_VERSION,
+    holdingVerificationVersion: HOLDING_VERIFICATION_VERSION,
     chainId: CHAIN_ID,
     contractAddress: CONTRACT_ADDRESS,
     memberAccessLedger: "cloudflare-d1",
@@ -2054,6 +2524,20 @@ export default {
             ]
           );
         }
+      }
+      if (url.pathname === "/gca/holding-verifications" && request.method === "GET") {
+        return await listMemberTable(
+          request,
+          env,
+          origin,
+          "gca_holding_verifications",
+          rowToHoldingVerification,
+          [
+            ["walletAddress", "wallet_address", normalizeWallet],
+            ["memberLedgerId", "member_ledger_id", null],
+            ["status", "status", null]
+          ]
+        );
       }
       if (url.pathname === "/gca/contact-suppressions") {
         if (request.method === "POST") {

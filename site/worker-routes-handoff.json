@@ -3,7 +3,7 @@
   "pageUrl": "https://gcagochina.com/worker-routes-handoff.html",
   "status": "worker-routes-v1-production-live",
   "handoffId": "worker-routes-handoff-v1",
-  "lastUpdated": "2026-07-24",
+  "lastUpdated": "2026-07-27",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "workerBaseUrl": "https://gca-registration-api.gcagochina.workers.dev",
@@ -11,8 +11,8 @@
   "scope": "Public deployment record and repeatable release runbook for the production-live, operator-only service-request and credit-usage Cloudflare Worker routes.",
   "currentStatus": {
     "latestReadinessCheckAt": "2026-07-23T17:55:52Z",
-    "latestPublicRouteCheckAt": "2026-07-23T19:29:39Z",
-    "latestAdminRouteCheckAt": "2026-07-23T19:29:49Z",
+    "latestPublicRouteCheckAt": "2026-07-27T09:00:02Z",
+    "latestAdminRouteCheckAt": "2026-07-27T09:00:16Z",
     "workerDryRun": "passed-2026-07-23",
     "d1Visibility": "passed",
     "cloudflareAuthSession": "passed",
@@ -24,7 +24,7 @@
     },
     "remoteMigrations": "applied",
     "workerDeploy": "passed",
-    "workerVersionId": "fa923065-dd72-472e-9c28-04ef4a08c34e",
+    "workerVersionId": "fdef5365-1dc1-4165-8de0-d8d9e7cde679",
     "postDeployPublicSmoke": "passed",
     "postDeployAdminSmoke": "passed",
     "productionRouteStatus": "live-token-protected"
@@ -54,7 +54,7 @@
       "writesCredits": false,
       "createsTradingPermission": false,
       "productionLive": true,
-      "workerVersionId": "fa923065-dd72-472e-9c28-04ef4a08c34e"
+      "workerVersionId": "fdef5365-1dc1-4165-8de0-d8d9e7cde679"
     },
     {
       "path": "/gca/credit-usage",
@@ -63,7 +63,7 @@
       "status": "live-token-protected",
       "writtenOnlyAfterReviewedDelivery": true,
       "productionLive": true,
-      "workerVersionId": "fa923065-dd72-472e-9c28-04ef4a08c34e"
+      "workerVersionId": "fdef5365-1dc1-4165-8de0-d8d9e7cde679"
     }
   ],
   "deployGates": [

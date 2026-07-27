@@ -394,7 +394,7 @@
         <p class="eyebrow">Member Access Ops</p>
         <h2 id="memberOpsTitle">会员后台运营流程</h2>
         <p class="note">当 live Worker 已经有账户、钱包验证、100 credits、GCA Member 或会员权益审核记录后，运营者在本地运行这个流程。它需要 ignored 的 <code>cloudflare/gca-registration-worker/.env.admin.local</code> 文件和 <code>ADMIN_READ_TOKEN</code>。输出只写到 <code>.gca_access_data/</code>，不提交到公开仓库。</p>
-        <p class="note"><code>/gca/service-requests</code>、<code>/gca/credit-usage</code> 和 <code>/gca/member-reviews</code> 已正式上线并受管理员 token 保护。后续每次发布新版本前仍要运行 <code>python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth</code>，并在发布后分别通过 public/admin smoke。</p>
+        <p class="note"><code>/gca/service-requests</code>、<code>/gca/credit-usage</code>、<code>/gca/member-reviews</code> 和 <code>/gca/holding-verifications</code> 已正式上线并受管理员 token 保护。后续每次发布新版本前仍要运行 <code>python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth</code>，并在发布后分别通过 public/admin smoke。</p>
         <div class="grid">
           <article class="card">
             <h3>1. 受保护导出</h3>
@@ -426,7 +426,11 @@
           </article>
           <article class="card">
             <h3>8. GCA Member 人工决定</h3>
-            <p class="note">用户提交的持有日期和交易哈希只作为预览材料。运营人员审核公开链上证据后，使用 <code>tools/review_cloudflare_member.py</code> 通过受管理员 token 保护的接口记录批准、拒绝或补资料决定。批准前会重新只读检查当前余额。</p>
+            <p class="note">用户提交的持有日期和交易哈希只作为辅助材料。运营人员确认资料后，使用 <code>tools/review_cloudflare_member.py</code> 通过受管理员 token 保护的接口记录批准、拒绝或补资料决定。批准时系统会在 Base 安全区块读取余额，并结合 Base Blockscout 与最近的钱包定向 RPC 日志重建观察到的 30 天持有历史；历史不完整、重建不一致或最低余额不足 1,000,000 GCA 时会拒绝批准。</p>
+          </article>
+          <article class="card">
+            <h3>9. 持有证据读取</h3>
+            <p class="note">成功批准后会写入不可覆盖的 <code>gca_holding_verification_v1</code> 记录，管理员可通过 <code>GET /gca/holding-verifications</code> 读取。该记录是只读链上历史重建结果，不是第三方审计，也不会发起签名、交易或会员权益转账。</p>
           </article>
           <article class="card">
             <h3>9. 不自动转账</h3>

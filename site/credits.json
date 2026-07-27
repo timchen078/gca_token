@@ -2,7 +2,7 @@
   "schema": "https://gcagochina.com/credits.json",
   "pageUrl": "https://gcagochina.com/credits.html",
   "status": "public-credits-catalog-ledger-path-live",
-  "lastUpdated": "2026-07-24",
+  "lastUpdated": "2026-07-27",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "title": "GCA Utility Credits Catalog",
@@ -29,7 +29,7 @@
     "serviceRequestQueueWorkerDeployBlockedBy": null,
     "serviceRequestQueueProductionLive": true,
     "memberLedgerWritesLive": true,
-    "serviceRoutesProductionVerifiedAt": "2026-07-23T19:29:49Z"
+    "serviceRoutesProductionVerifiedAt": "2026-07-27T09:00:16Z"
   },
   "holderBonus": {
     "minimumHolding": "10000 GCA",
@@ -238,7 +238,7 @@
       "deploysWorker": false
     },
     "lastObservedAnonymousGetStatus": 401,
-    "lastObservedAt": "2026-07-23T19:29:39Z",
+    "lastObservedAt": "2026-07-27T09:00:02Z",
     "postDeployPublicSmokeCommand": "python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes",
     "postDeployAdminSmokeCommand": "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes",
     "releaseGatesBeforeLive": [
@@ -266,9 +266,9 @@
     "selfServiceRedemption": false,
     "automaticWalletAction": false,
     "productionWorkerEndpointLive": true,
-    "workerVersionId": "fa923065-dd72-472e-9c28-04ef4a08c34e",
-    "publicSmokePassedAt": "2026-07-23T19:29:39Z",
-    "adminSmokePassedAt": "2026-07-23T19:29:49Z"
+    "workerVersionId": "fdef5365-1dc1-4165-8de0-d8d9e7cde679",
+    "publicSmokePassedAt": "2026-07-27T09:00:02Z",
+    "adminSmokePassedAt": "2026-07-27T09:00:16Z"
   },
   "serviceRequestQueue": {
     "status": "live-token-protected-operator-service-request-queue",
@@ -288,7 +288,7 @@
       "deploysWorker": false
     },
     "lastObservedAnonymousGetStatus": 401,
-    "lastObservedAt": "2026-07-23T19:29:39Z",
+    "lastObservedAt": "2026-07-27T09:00:02Z",
     "postDeployPublicSmokeCommand": "python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes",
     "postDeployAdminSmokeCommand": "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes",
     "releaseGatesBeforeLive": [
@@ -317,9 +317,9 @@
     "requiresSupportReview": true,
     "automaticWalletAction": false,
     "createsTradingPermission": false,
-    "workerVersionId": "fa923065-dd72-472e-9c28-04ef4a08c34e",
-    "publicSmokePassedAt": "2026-07-23T19:29:39Z",
-    "adminSmokePassedAt": "2026-07-23T19:29:49Z"
+    "workerVersionId": "fdef5365-1dc1-4165-8de0-d8d9e7cde679",
+    "publicSmokePassedAt": "2026-07-27T09:00:02Z",
+    "adminSmokePassedAt": "2026-07-27T09:00:16Z"
   },
   "redemptionBoundaries": {
     "accountLevelOnly": true,

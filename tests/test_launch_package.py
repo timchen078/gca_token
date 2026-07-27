@@ -3722,7 +3722,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(roadmap["schema"], ROADMAP_URL)
         self.assertEqual(roadmap["pageUrl"], ROADMAP_PAGE_URL)
         self.assertEqual(roadmap["status"], "public-roadmap-published")
-        self.assertEqual(roadmap["lastUpdated"], "2026-07-20")
+        self.assertEqual(roadmap["lastUpdated"], "2026-07-27")
         self.assertEqual(roadmap["currentStage"], PRODUCT_STAGE)
         self.assertEqual(roadmap["chainId"], 8453)
         self.assertEqual(roadmap["contractAddress"], MAINNET_ADDRESS)
@@ -3736,9 +3736,10 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("controlled-account-ui", [entry["id"] for entry in roadmap["nextBuildPriorities"]])
         self.assertIn("utility-credit-ledger", [entry["id"] for entry in roadmap["nextBuildPriorities"]])
         support_priority = next(entry for entry in roadmap["nextBuildPriorities"] if entry["id"] == "support-review-queue")
-        self.assertEqual(support_priority["status"], "local-operator-review-and-sha256-continuity-live")
+        self.assertEqual(support_priority["status"], "local-continuity-and-production-member-approval-live")
         self.assertIn("verify_gca_support_review_audit.py", support_priority["verificationCommand"])
-        self.assertFalse(support_priority["productionApprovalWorkflowLive"])
+        self.assertTrue(support_priority["productionApprovalWorkflowLive"])
+        self.assertEqual(support_priority["productionHoldingEvidencePath"], "/gca/holding-verifications")
         self.assertNotIn("weekly-go-china-radar", [entry["id"] for entry in roadmap["nextBuildPriorities"]])
         self.assertIn("narrative-system", [entry["id"] for entry in roadmap["completedMilestones"]])
         self.assertIn("weekly-go-china-radar-issue-003", [entry["id"] for entry in roadmap["completedMilestones"]])
@@ -4685,7 +4686,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(playbook["pageUrl"], SERVICE_DELIVERY_PLAYBOOK_PAGE_URL)
         self.assertEqual(playbook["status"], "service-delivery-playbook-v1-published")
         self.assertEqual(playbook["playbookId"], "service-delivery-playbook-v1")
-        self.assertEqual(playbook["lastUpdated"], "2026-07-24")
+        self.assertEqual(playbook["lastUpdated"], "2026-07-27")
         self.assertEqual(playbook["chainId"], 8453)
         self.assertEqual(playbook["contractAddress"], MAINNET_ADDRESS)
         self.assertIn("not automated trading", playbook["scope"])
@@ -4712,13 +4713,13 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(playbook["routeStatus"]["workerDeployPermission"], "passed")
         self.assertFalse(playbook["routeStatus"]["code10000Seen"])
         self.assertEqual(playbook["routeStatus"]["latestReadinessCheckAt"], "2026-07-23T17:55:52Z")
-        self.assertEqual(playbook["routeStatus"]["latestPublicRouteCheckAt"], "2026-07-23T19:29:39Z")
+        self.assertEqual(playbook["routeStatus"]["latestPublicRouteCheckAt"], "2026-07-27T09:00:02Z")
         self.assertEqual(playbook["routeStatus"]["pendingRouteAnonymousGetStatus"], {
             "/gca/service-requests": 401,
             "/gca/credit-usage": 401,
         })
         self.assertIsNone(playbook["routeStatus"]["blockedBy"])
-        self.assertEqual(playbook["routeStatus"]["workerVersionId"], "fa923065-dd72-472e-9c28-04ef4a08c34e")
+        self.assertEqual(playbook["routeStatus"]["workerVersionId"], "fdef5365-1dc1-4165-8de0-d8d9e7cde679")
         self.assertEqual(playbook["routeStatus"]["postDeployPublicSmoke"], "passed")
         self.assertEqual(playbook["routeStatus"]["postDeployAdminSmoke"], "passed")
         self.assertIn("wrangler deploy succeeds", playbook["routeStatus"]["releaseGates"])
@@ -4780,15 +4781,15 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(handoff["pageUrl"], WORKER_ROUTES_HANDOFF_PAGE_URL)
         self.assertEqual(handoff["status"], "worker-routes-v1-production-live")
         self.assertEqual(handoff["handoffId"], "worker-routes-handoff-v1")
-        self.assertEqual(handoff["lastUpdated"], "2026-07-24")
+        self.assertEqual(handoff["lastUpdated"], "2026-07-27")
         self.assertEqual(handoff["chainId"], 8453)
         self.assertEqual(handoff["contractAddress"], MAINNET_ADDRESS)
         self.assertEqual(handoff["workerBaseUrl"], "https://gca-registration-api.gcagochina.workers.dev")
         self.assertEqual(handoff["sourceDocument"], "docs/gca_worker_pending_routes_deploy_handoff.md")
         self.assertIn("production-live", handoff["scope"])
         self.assertEqual(handoff["currentStatus"]["latestReadinessCheckAt"], "2026-07-23T17:55:52Z")
-        self.assertEqual(handoff["currentStatus"]["latestPublicRouteCheckAt"], "2026-07-23T19:29:39Z")
-        self.assertEqual(handoff["currentStatus"]["latestAdminRouteCheckAt"], "2026-07-23T19:29:49Z")
+        self.assertEqual(handoff["currentStatus"]["latestPublicRouteCheckAt"], "2026-07-27T09:00:02Z")
+        self.assertEqual(handoff["currentStatus"]["latestAdminRouteCheckAt"], "2026-07-27T09:00:16Z")
         self.assertEqual(handoff["currentStatus"]["workerDryRun"], "passed-2026-07-23")
         self.assertEqual(handoff["currentStatus"]["d1Visibility"], "passed")
         self.assertEqual(handoff["currentStatus"]["cloudflareAuthSession"], "passed")
@@ -5649,7 +5650,7 @@ class LaunchPackageTests(unittest.TestCase):
 
         self.assertEqual(api["schema"], ACCESS_API_URL)
         self.assertEqual(api["pageUrl"], ACCESS_API_PAGE_URL)
-        self.assertEqual(api["status"], "public-access-api-member-review-live")
+        self.assertEqual(api["status"], "public-access-api-holding-history-verification-live")
         self.assertEqual(api["chainId"], 8453)
         self.assertEqual(api["contractAddress"], MAINNET_ADDRESS)
         self.assertEqual(api["currentState"]["currentStage"], "member-access-and-review-api-live")
@@ -5678,6 +5679,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertTrue(api["currentState"]["memberLedgerWritesLive"])
         self.assertTrue(api["currentState"]["memberReviewWorkflowProductionLive"])
         self.assertEqual(api["currentState"]["memberReviewPacketVersion"], "gca_member_review_v1")
+        self.assertTrue(api["currentState"]["holdingHistoryVerificationProductionLive"])
+        self.assertTrue(api["currentState"]["onchainHoldingHistoryRequiredForApproval"])
+        self.assertEqual(api["currentState"]["holdingVerificationPacketVersion"], "gca_holding_verification_v1")
         self.assertFalse(api["currentState"]["automaticMemberActivationFromSubmittedDate"])
         self.assertEqual(api["localDevelopmentBackend"]["status"], "local-only-backend-available")
         self.assertEqual(api["localDevelopmentBackend"]["script"], "tools/gca_member_backend.py")
@@ -5787,6 +5791,7 @@ class LaunchPackageTests(unittest.TestCase):
             "GET /gca/member-ledger",
             "GET /gca/member-reviews",
             "POST /gca/member-reviews",
+            "GET /gca/holding-verifications",
             "POST /gca/support-review",
             "GET /gca/member-review",
             "POST /gca/member-review",
@@ -5803,7 +5808,7 @@ class LaunchPackageTests(unittest.TestCase):
                 self.assertEqual(endpoint["status"], "local-only-not-public-production")
             elif endpoint["id"] in {"email-registrations-create", "contact-suppressions-create", "access-config-read", "member-access-create", "wallet-verifications"}:
                 self.assertEqual(endpoint["status"], "production-workers-dev-live")
-            elif endpoint["id"] in {"email-registrations-read", "contact-suppressions-read", "credit-ledger", "member-ledger", "member-reviews-read", "member-reviews-create"}:
+            elif endpoint["id"] in {"email-registrations-read", "contact-suppressions-read", "credit-ledger", "member-ledger", "member-reviews-read", "member-reviews-create", "holding-verifications-read"}:
                 self.assertEqual(endpoint["status"], "token-protected-admin-live")
             elif endpoint["id"] in {"service-requests-read", "service-requests-create", "credit-usage-read", "credit-usage-create"}:
                 self.assertEqual(endpoint["status"], "live-token-protected")
@@ -6155,7 +6160,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertTrue(ops["currentState"]["memberReviewWorkflowProductionLive"])
         self.assertEqual(ops["currentState"]["memberReviewPacketVersion"], "gca_member_review_v1")
         self.assertFalse(ops["currentState"]["automaticMemberActivationFromSubmittedDate"])
-        self.assertEqual(ops["currentState"]["memberReviewProductionVerifiedAt"], "2026-07-23T19:29:49Z")
+        self.assertEqual(ops["currentState"]["memberReviewProductionVerifiedAt"], "2026-07-27T09:00:16Z")
         self.assertTrue(ops["currentState"]["localSupportReviewContinuityChainLive"])
         self.assertFalse(ops["currentState"]["localSupportReviewContinuitySigned"])
         self.assertFalse(ops["currentState"]["localSupportReviewContinuityExternallyAnchored"])
@@ -6293,7 +6298,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("GCA operators can export a redacted-public local review package for reviewer evidence handoff when local ledger records exist.", ops["publicClaimBoundaries"]["safeClaims"])
         self.assertIn("GCA operators can record reviewed service-level credit usage with before/after balances through the live token-protected Worker route; anonymous reads are rejected.", ops["publicClaimBoundaries"]["safeClaims"])
         self.assertIn("GCA operators can record append-only GCA Member decisions through the live token-protected /gca/member-reviews route after manual evidence review and a current read-only balance refresh.", ops["publicClaimBoundaries"]["safeClaims"])
-        self.assertIn("Submitted holding dates and transaction hashes are preview evidence only and cannot activate GCA Member automatically.", ops["publicClaimBoundaries"]["safeClaims"])
+        self.assertIn("Submitted holding dates and transaction hashes are supporting preview evidence only and cannot activate GCA Member automatically.", ops["publicClaimBoundaries"]["safeClaims"])
         self.assertIn("GCA email registration and unsubscribe APIs are live on Cloudflare Workers + D1.", ops["publicClaimBoundaries"]["safeClaims"])
         self.assertIn("GCA operators can sync email registration records into an ignored local JSONL ledger and export public-redacted contact CSVs.", ops["publicClaimBoundaries"]["safeClaims"])
         self.assertIn("Public-redacted exports are for reviewer evidence handoff only and cannot be used as contactable user support queues.", ops["publicClaimBoundaries"]["safeClaims"])
@@ -6490,10 +6495,10 @@ class LaunchPackageTests(unittest.TestCase):
         ):
             self.assertNotIn(forbidden, page)
         self.assertIn("account + member review path live", page)
-        self.assertIn("Public account UI, wallet verification, eligible 100-credit records, and queued GCA Member evidence are live", page)
+        self.assertIn("Public account UI, wallet verification, eligible 100-credit records, queued GCA Member evidence, protected manual decisions, and observed 30-day holding-history verification are live", page)
         self.assertIn("Live at /gca/member-access/", page)
         self.assertIn("Eligible ledger records live", page)
-        self.assertIn("10,000 GCA member benefit is still a separate manual reserve-wallet process", page)
+        self.assertIn("the 10,000 GCA member benefit remains a separate manual reserve-wallet process", page)
         self.assertIn("controlled HTTPS account UI", page)
         self.assertIn("read-only GCA balance verification", page)
         self.assertIn("30-day holding-period review", page)
@@ -6522,11 +6527,11 @@ class LaunchPackageTests(unittest.TestCase):
 
         self.assertEqual(gates["schema"], RELEASE_GATES_URL)
         self.assertEqual(gates["pageUrl"], RELEASE_GATES_PAGE_URL)
-        self.assertEqual(gates["status"], "public-release-gates-account-member-review-path-live")
-        self.assertEqual(gates["lastUpdated"], "2026-07-24")
+        self.assertEqual(gates["status"], "public-release-gates-account-holding-history-path-live")
+        self.assertEqual(gates["lastUpdated"], "2026-07-27")
         self.assertEqual(gates["chainId"], 8453)
         self.assertEqual(gates["contractAddress"], MAINNET_ADDRESS)
-        self.assertEqual(gates["currentState"]["currentStage"], "account-member-review-path-live")
+        self.assertEqual(gates["currentState"]["currentStage"], "account-member-review-and-holding-history-path-live")
         self.assertFalse(gates["currentState"]["publicProductSpecOnly"])
         self.assertTrue(gates["currentState"]["publicAccountUiLive"])
         self.assertTrue(gates["currentState"]["creditsEligibilitySubmissionLive"])
@@ -6536,14 +6541,17 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertTrue(gates["currentState"]["memberLedgerWritesLive"])
         self.assertTrue(gates["currentState"]["memberReviewWorkflowProductionLive"])
         self.assertEqual(gates["currentState"]["memberReviewPacketVersion"], "gca_member_review_v1")
+        self.assertTrue(gates["currentState"]["holdingHistoryVerificationProductionLive"])
+        self.assertTrue(gates["currentState"]["onchainHoldingHistoryRequiredForApproval"])
+        self.assertEqual(gates["currentState"]["holdingVerificationPacketVersion"], "gca_holding_verification_v1")
         self.assertFalse(gates["currentState"]["automaticMemberActivationFromSubmittedDate"])
         self.assertEqual(gates["currentState"]["localSupportReviewQueue"], "live-with-sha256-continuity-check")
         self.assertFalse(gates["currentState"]["productionSupportApprovalWorkflowLive"])
         self.assertTrue(gates["currentState"]["memberBenefitManualReviewOnly"])
         self.assertTrue(gates["currentState"]["pendingServiceRoutesProductionLive"])
         self.assertEqual(gates["currentState"]["latestPendingRouteReadinessCheckAt"], "2026-07-23T17:55:52Z")
-        self.assertEqual(gates["currentState"]["latestPendingRoutePublicCheckAt"], "2026-07-23T19:29:39Z")
-        self.assertEqual(gates["currentState"]["latestPendingRouteAdminCheckAt"], "2026-07-23T19:29:49Z")
+        self.assertEqual(gates["currentState"]["latestPendingRoutePublicCheckAt"], "2026-07-27T09:00:02Z")
+        self.assertEqual(gates["currentState"]["latestPendingRouteAdminCheckAt"], "2026-07-27T09:00:16Z")
         self.assertEqual(gates["currentState"]["cloudflareAuthSession"], "passed")
         self.assertEqual(gates["currentState"]["cloudflareD1Visibility"], "passed")
         self.assertEqual(gates["currentState"]["cloudflareWorkerDeployPermission"], "passed")
@@ -6552,7 +6560,7 @@ class LaunchPackageTests(unittest.TestCase):
             gates["currentState"]["pendingRouteAnonymousGetStatus"],
             {"/gca/service-requests": 401, "/gca/credit-usage": 401},
         )
-        self.assertEqual(gates["currentState"]["workerVersionId"], "fa923065-dd72-472e-9c28-04ef4a08c34e")
+        self.assertEqual(gates["currentState"]["workerVersionId"], "fdef5365-1dc1-4165-8de0-d8d9e7cde679")
         self.assertFalse(gates["currentState"]["liveTradingEnabled"])
         self.assertEqual(gates["currentState"]["baseScanTokenProfile"], "ready-for-owner-resubmission")
         self.assertEqual(gates["currentState"]["baseScanTokenProfileLastCheckedDate"], "2026-07-23")
@@ -6568,6 +6576,7 @@ class LaunchPackageTests(unittest.TestCase):
             "credit-ledger-activation",
             "member-ledger-activation",
             "production-member-review",
+            "onchain-holding-history-verification",
             "support-review-queue",
             "risk-control-review",
             "simulation-first",

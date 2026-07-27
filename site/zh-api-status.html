@@ -289,9 +289,9 @@
       }
     </style>
       <link rel="stylesheet" href="assets/gca-site.css?v=20260711">
-    <link rel="stylesheet" href="assets/api-health.css?v=20260720">
+    <link rel="stylesheet" href="assets/api-health.css?v=20260727">
     <script src="assets/gca-site.js?v=20260711" defer></script>
-    <script src="assets/api-health.js?v=20260720" defer></script>
+    <script src="assets/api-health.js?v=20260727" defer></script>
   </head>
   <body>
     <header>
@@ -317,8 +317,8 @@
         <p class="eyebrow">中文 API 状态 / 浏览器实时只读检查</p>
         <h1 id="title">GCA 中文 API 状态</h1>
         <p class="lead">这一页用中文说明 GCA 邮箱注册和邮箱退订接口的当前状态。公网邮箱注册已经接到 Cloudflare Workers + D1，普通用户可以通过官网表单提交邮箱；管理员读取接口仍需要本地管理 token。</p>
-        <p class="lead">公网只读 smoke check 已在 <code>2026-07-23T19:29:39Z</code> 通过，管理员 token 只读检查已在 <code>2026-07-23T19:29:49Z</code> 通过。下方实时面板可以在当前浏览器重复安全的只读部分，全程不写入记录。</p>
-        <p class="lead">服务请求、Credit 使用和会员人工审核路由都已经正式上线并受管理员 token 保护。用户填写的持有日期和交易哈希只生成审核预览，不能自动激活 GCA Member。</p>
+        <p class="lead">公网只读 smoke check 已在 <code>2026-07-27T09:00:02Z</code> 通过，管理员 token 只读检查已在 <code>2026-07-27T09:00:16Z</code> 通过。下方实时面板可以在当前浏览器重复安全的只读部分，全程不写入记录。</p>
+        <p class="lead">服务请求、Credit 使用、会员人工审核和持有验证路由都已经正式上线并受管理员 token 保护。批准 GCA Member 前，系统必须完成 30 天 GCA 转账历史重建，并确认观察到的最低余额不少于 1,000,000 GCA；用户填写的日期和交易哈希仍只是辅助审核资料。</p>
         <p class="lead">公开 API 支持邮箱、退订、会员账户提交和只读余额验证；它不要求私钥或钱包签名，也不会自动转移 GCA 或自动发放 10,000 GCA 会员权益。</p>
         <div class="actions">
           <a class="button primary" href="register.html">打开邮箱注册</a>
@@ -384,7 +384,7 @@
           <div class="live-health-row" data-api-check="admin">
             <div class="live-health-copy">
               <strong>现有管理员读取保护</strong>
-              <span class="note">7 个 GET 路由必须用 HTTP 401 拒绝匿名访问</span>
+              <span class="note">8 个 GET 路由（含会员审核和持有证据）必须用 HTTP 401 拒绝匿名访问</span>
             </div>
             <span class="live-health-result" data-check-status>等待检查</span>
           </div>
@@ -439,15 +439,19 @@
           </article>
           <article class="card">
             <h3>会员人工审核</h3>
-            <p class="note"><code>GET/POST /gca/member-reviews</code> 已正式上线并受管理员 token 保护。批准前会重新只读检查当前 GCA 余额，并记录不可覆盖的审核决定；该接口不会自动证明连续持有、不会转币，也不会批准 10,000 GCA 会员权益转账。</p>
+            <p class="note"><code>GET/POST /gca/member-reviews</code> 已正式上线并受管理员 token 保护。批准前会在 Base 安全区块读取余额、重建观察到的 30 天转账历史，并记录不可覆盖的审核决定；该接口不会要求签名、不会转币，也不会批准 10,000 GCA 会员权益转账。</p>
+          </article>
+          <article class="card">
+            <h3>持有验证证据</h3>
+            <p class="note"><code>GET /gca/holding-verifications</code> 用于管理员读取不可覆盖的 <code>gca_holding_verification_v1</code> 证据，包括安全快照区块、观察到的最低余额、事件数量、完整性和重建状态。它不是第三方审计，也不保证未来继续持有。</p>
           </article>
           <article class="card">
             <h3>服务请求队列</h3>
-            <p class="note"><code>GET/POST /gca/service-requests</code> 已正式上线并受管理员 token 保护。远端 D1 migration、Worker 部署、公网 smoke 和管理员只读 smoke 检查已在 2026-07-23 UTC 通过；匿名读取返回 HTTP 401。</p>
+            <p class="note"><code>GET/POST /gca/service-requests</code> 已正式上线并受管理员 token 保护。初次远端 D1 migration 和 Worker 部署于 2026-07-23 UTC 通过，最新公网和管理员只读 smoke 检查于 2026-07-27 UTC 通过；匿名读取返回 HTTP 401。</p>
           </article>
           <article class="card">
             <h3>Credit 使用记录</h3>
-            <p class="note"><code>GET/POST /gca/credit-usage</code> 已正式上线并受管理员 token 保护。远端 D1 migration、Worker 部署、公网 smoke 和管理员只读 smoke 检查已在 2026-07-23 UTC 通过；匿名读取返回 HTTP 401。</p>
+            <p class="note"><code>GET/POST /gca/credit-usage</code> 已正式上线并受管理员 token 保护。初次远端 D1 migration 和 Worker 部署于 2026-07-23 UTC 通过，最新公网和管理员只读 smoke 检查于 2026-07-27 UTC 通过；匿名读取返回 HTTP 401。</p>
           </article>
           <article class="card">
             <h3>未来域名</h3>

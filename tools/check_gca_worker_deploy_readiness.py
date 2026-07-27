@@ -220,6 +220,12 @@ def build_report(
     )
     check(
         checks,
+        "holding-history-source",
+        (worker_dir / "src" / "holding-history.mjs").exists(),
+        "Read-only GCA holding-history reconstruction module exists.",
+    )
+    check(
+        checks,
         "credit-usage-migration",
         (worker_dir / "migrations" / "0004_credit_usage_ledger.sql").exists(),
         "Credit usage D1 migration exists.",
@@ -235,6 +241,12 @@ def build_report(
         "member-reviews-migration",
         (worker_dir / "migrations" / "0006_member_reviews.sql").exists(),
         "Member review D1 migration exists.",
+    )
+    check(
+        checks,
+        "holding-history-migration",
+        (worker_dir / "migrations" / "0007_holding_history_verifications.sql").exists(),
+        "Holding-history verification D1 migration exists.",
     )
     check(
         checks,

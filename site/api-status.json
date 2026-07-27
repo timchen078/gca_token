@@ -1,10 +1,10 @@
 {
   "schema": "https://gcagochina.com/api-status.json",
   "pageUrl": "https://gcagochina.com/api-status.html",
-  "status": "public-member-access-member-review-live",
-  "lastUpdated": "2026-07-24",
-  "latestPublicCheckAt": "2026-07-23T19:29:39Z",
-  "latestPublicCheckStatus": "passed-member-review-live-protected",
+  "status": "public-member-access-holding-history-verification-live",
+  "lastUpdated": "2026-07-27",
+  "latestPublicCheckAt": "2026-07-27T09:00:02Z",
+  "latestPublicCheckStatus": "passed-holding-history-live-protected",
   "latestDeployReadinessCheckAt": "2026-07-23T17:55:52Z",
   "latestDeployReadinessStatus": "passed-cloudflare-permissions",
   "latestDeployReadinessSummary": {
@@ -49,7 +49,9 @@
       "official GCA contract address",
       "gca_member_access_v1",
       "gca_member_review_v1",
+      "gca_holding_verification_v1",
       "no automatic member activation from a submitted holding date",
+      "observed 30-day on-chain holding history is required for approval",
       "read-only wallet and no-automatic-transfer boundaries"
     ],
     "anonymousAdminReadChecks": [
@@ -59,7 +61,8 @@
       "/gca/member-access",
       "/gca/credit-ledger",
       "/gca/member-ledger",
-      "/gca/member-reviews"
+      "/gca/member-reviews",
+      "/gca/holding-verifications"
     ],
     "preparedRouteChecks": [
       "/gca/service-requests",
@@ -221,9 +224,29 @@
       "authorizesMemberBenefitTransfer": false,
       "lastObservedAnonymousGetStatus": 401,
       "lastObservedAdminGetStatus": 200,
-      "lastObservedAt": "2026-07-23T19:29:49Z",
+      "lastObservedAt": "2026-07-27T09:00:16Z",
       "productionLive": true,
-      "workerVersionId": "fa923065-dd72-472e-9c28-04ef4a08c34e"
+      "workerVersionId": "fdef5365-1dc1-4165-8de0-d8d9e7cde679"
+    },
+    {
+      "id": "holding-verifications-read",
+      "method": "GET",
+      "path": "/gca/holding-verifications",
+      "url": "https://gca-registration-api.gcagochina.workers.dev/gca/holding-verifications",
+      "status": "live-token-protected",
+      "packetVersion": "gca_holding_verification_v1",
+      "requiresAdminReadToken": true,
+      "publicLedgerReadable": false,
+      "verificationMethod": "Base Blockscout v2 GCA transfer history plus Base public RPC recent logs and snapshot balanceOf",
+      "claimBoundary": "Observed 30-day transfer-history reconstruction; not a third-party audit, future guarantee, or automatic member-benefit authorization",
+      "requiresSignature": false,
+      "requiresTransaction": false,
+      "automaticTokenTransfer": false,
+      "lastObservedAnonymousGetStatus": 401,
+      "lastObservedAdminGetStatus": 200,
+      "lastObservedAt": "2026-07-27T09:00:16Z",
+      "productionLive": true,
+      "workerVersionId": "fdef5365-1dc1-4165-8de0-d8d9e7cde679"
     },
     {
       "id": "service-requests-read-write",
@@ -235,9 +258,9 @@
       "publicLedgerReadable": false,
       "workerDryRunPassed": true,
       "lastObservedAnonymousGetStatus": 401,
-      "lastObservedAt": "2026-07-23T19:29:39Z",
+      "lastObservedAt": "2026-07-27T09:00:02Z",
       "productionLive": true,
-      "workerVersionId": "fa923065-dd72-472e-9c28-04ef4a08c34e"
+      "workerVersionId": "fdef5365-1dc1-4165-8de0-d8d9e7cde679"
     },
     {
       "id": "credit-usage-read-write",
@@ -249,9 +272,9 @@
       "publicLedgerReadable": false,
       "workerDryRunPassed": true,
       "lastObservedAnonymousGetStatus": 401,
-      "lastObservedAt": "2026-07-23T19:29:39Z",
+      "lastObservedAt": "2026-07-27T09:00:02Z",
       "productionLive": true,
-      "workerVersionId": "fa923065-dd72-472e-9c28-04ef4a08c34e"
+      "workerVersionId": "fdef5365-1dc1-4165-8de0-d8d9e7cde679"
     }
   ],
   "checks": {
@@ -307,9 +330,9 @@
       "noTradingPermission": true,
       "doNotClaimLiveBeforeSmokeChecks": true
     },
-    "workerVersionId": "fa923065-dd72-472e-9c28-04ef4a08c34e",
-    "publicSmokePassedAt": "2026-07-23T19:29:39Z",
-    "adminSmokePassedAt": "2026-07-23T19:29:49Z"
+    "workerVersionId": "fdef5365-1dc1-4165-8de0-d8d9e7cde679",
+    "publicSmokePassedAt": "2026-07-27T09:00:02Z",
+    "adminSmokePassedAt": "2026-07-27T09:00:16Z"
   },
   "operatorTools": {
     "adminExport": "tools/export_cloudflare_email_registrations.py",
@@ -334,6 +357,8 @@
     "memberAccessWritesEligibleLedgers": true,
     "memberAccessQueuesMemberReview": true,
     "automaticMemberActivationFromSubmittedDate": false,
+    "onchainHoldingHistoryRequiredForApproval": true,
+    "holdingHistoryIsObservedReconstructionNotAudit": true,
     "noAutomaticTokenTransfer": true,
     "memberBenefitManualReviewOnly": true
   },

@@ -11,9 +11,10 @@ https://gca-registration-api.gcagochina.workers.dev/gca/member-access
 https://gca-registration-api.gcagochina.workers.dev/gca/wallet-verifications
 https://gca-registration-api.gcagochina.workers.dev/gca/access-config
 https://gca-registration-api.gcagochina.workers.dev/gca/member-reviews
+https://gca-registration-api.gcagochina.workers.dev/gca/holding-verifications
 ```
 
-The token-protected service request, credit usage, and member review routes are production-live. Cloudflare account authentication, D1 visibility, Worker deploy permission, remote D1 migrations, Worker deployment, public smoke, and admin read-only smoke checks passed on 2026-07-23 UTC. Anonymous reads return HTTP 401 and token-protected admin reads return HTTP 200.
+The token-protected service request, credit usage, member review, and holding-verification routes are production-live. Cloudflare account authentication, D1 visibility, Worker deploy permission, remote D1 migrations, Worker deployment, public smoke, and admin read-only smoke checks passed for the latest Worker on 2026-07-27 UTC. Anonymous reads return HTTP 401 and token-protected admin reads return HTTP 200.
 
 ## What It Stores
 
@@ -50,7 +51,9 @@ Member-access requests store:
 - timestamps
 - optional salted IP hash if `PRIVACY_HASH_SALT` is configured
 
-The submitted holding date and transaction hash do not prove continuous holding or activate GCA Member automatically. An operator must review the public evidence and record a decision through the token-protected member review route. Approval refreshes the current GCA balance using read-only Base RPC.
+The submitted holding date and transaction hash do not prove continuous holding or activate GCA Member automatically. An operator must review the submitted evidence and record a decision through the token-protected member review route. Approval refreshes the current GCA balance at a safe Base block, combines Base Blockscout v2 transfer history with recent Base public RPC logs, reconstructs the observed minimum GCA balance over the prior 30 days, and fails closed unless the history is complete, internally consistent, and stays at or above 1,000,000 GCA.
+
+Successful approval writes an append-only `gca_holding_verification_v1` evidence row through migration `0007_holding_history_verifications.sql`, links the evidence ID to the member review and member ledger, and exposes protected operator reads at `GET /gca/holding-verifications`. This is an observed public-history reconstruction, not a third-party audit, permanent guarantee, or claim that a public index can never be delayed. The flow remains read-only with respect to the wallet and never signs, sends a transaction, transfers GCA, or authorizes the separate 10,000 GCA member-benefit transfer.
 
 It does not collect wallet private keys, seed phrases, wallet passwords, exchange API secrets, withdrawal permissions, one-time codes, or remote-control access. It does not request wallet signatures or transactions for wallet verification. It does not automatically transfer GCA. A member approval does not authorize the 10,000 GCA member benefit; that benefit remains a separate manual reserve-wallet transfer review.
 

@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Record a manual GCA Member eligibility review in the production Worker.
 
-This operator tool writes a review decision to D1. It never connects a wallet,
-signs a message, sends a transaction, or transfers GCA.
+Approval also runs a read-only 30-day GCA transfer-history reconstruction and
+writes its evidence to D1. This tool never connects a wallet, signs a message,
+sends a transaction, or transfers GCA.
 """
 
 from __future__ import annotations
@@ -130,6 +131,7 @@ def submit_member_review(
 def safe_result(payload: dict[str, Any]) -> dict[str, Any]:
     review = payload.get("memberReview", {})
     ledger = payload.get("memberLedger", {})
+    holding = payload.get("holdingVerification") or {}
     boundaries = payload.get("boundaries", {})
     return {
         "ok": True,
@@ -138,6 +140,10 @@ def safe_result(payload: dict[str, Any]) -> dict[str, Any]:
         "decision": review.get("decision", ""),
         "resultingMemberStatus": review.get("resultingMemberStatus", ""),
         "memberBenefitClaimStatus": ledger.get("memberBenefitClaimStatus", ""),
+        "holdingVerificationId": holding.get("holdingVerificationId", ""),
+        "observedContinuousEligible": bool(holding.get("observedContinuousEligible", False)),
+        "historyComplete": bool(holding.get("historyComplete", False)),
+        "minimumGcaBalance": holding.get("minimumGcaBalance", ""),
         "automaticTokenTransfer": bool(boundaries.get("automaticTokenTransfer", False)),
         "authorizesMemberBenefitTransfer": bool(boundaries.get("authorizesMemberBenefitTransfer", False)),
         "adminTokenPrinted": False,
@@ -148,7 +154,7 @@ def safe_result(payload: dict[str, Any]) -> dict[str, Any]:
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Record a token-protected manual GCA Member review in Cloudflare D1.",
+        description="Record a token-protected GCA Member review with read-only 30-day holding verification.",
     )
     parser.add_argument("--member-ledger-id", required=True, help="Target gca_member_* ledger id.")
     parser.add_argument("--decision", required=True, choices=DECISIONS, help="Manual review decision.")
@@ -158,7 +164,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument(
         "--confirm-evidence-reviewed",
         action="store_true",
-        help="Required for approval after manually checking the holding evidence.",
+        help="Required for approval after manually checking the submitted evidence; the Worker also verifies 30-day chain history.",
     )
     parser.add_argument(
         "--confirm-production-write",

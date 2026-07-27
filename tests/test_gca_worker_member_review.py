@@ -100,7 +100,7 @@ class GcaWorkerMemberReviewTests(unittest.TestCase):
 
         self.assertIn('const MEMBER_REVIEW_VERSION = "gca_member_review_v1";', source)
         self.assertIn(
-            'const WORKER_RELEASE = "gca-registration-worker-2026-07-24-member-review-v1";',
+            'const WORKER_RELEASE = "gca-registration-worker-2026-07-27-holding-history-v1";',
             source,
         )
         self.assertIn("gcaMemberHoldingPeriodEligible: false", source)
@@ -110,7 +110,7 @@ class GcaWorkerMemberReviewTests(unittest.TestCase):
         self.assertIn("acknowledgements.manualEvidenceReviewCompleted === true", source)
         self.assertIn("acknowledgements.noAutomaticTokenTransfer === true", source)
         self.assertIn('url.pathname === "/gca/member-reviews"', source)
-        self.assertIn("await db.batch([insertReview, updateMemberLedger, updateMemberAccount]);", source)
+        self.assertIn("await db.batch(reviewBatch);", source)
         self.assertIn("rawBalance >= MEMBER_THRESHOLD_UNITS", source)
         self.assertIn("holdingPeriodPreviewDays < MEMBER_HOLD_DAYS", source)
         self.assertIn("!evidenceTxHashFormatOk", source)

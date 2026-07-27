@@ -37,7 +37,7 @@ from tools.export_cloudflare_email_registrations import (  # noqa: E402
 
 DEFAULT_ORIGIN = "https://gcagochina.com"
 DEFAULT_USER_AGENT = "GCA-Operator-Registration-API-Check/1.0"
-WORKER_RELEASE = "gca-registration-worker-2026-07-24-member-review-v1"
+WORKER_RELEASE = "gca-registration-worker-2026-07-27-holding-history-v1"
 OFFICIAL_CONTACT_EMAIL = "support@gcagochina.com"
 
 
@@ -157,6 +157,10 @@ def check_health(*, base_url: str, timeout: float, cafile: str, opener: Callable
     if include_pending_routes or "serviceRequestVersion" in payload:
         require(payload.get("serviceRequestVersion") == "gca_service_request_v1", "health endpoint returned wrong service request packet version")
     require(payload.get("memberReviewVersion") == "gca_member_review_v1", "health endpoint returned wrong member review packet version")
+    require(
+        payload.get("holdingVerificationVersion") == "gca_holding_verification_v1",
+        "health endpoint returned wrong holding verification packet version",
+    )
     require(payload.get("chainId") == 8453, "health endpoint returned wrong chainId")
     require(payload.get("contractAddress") == "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6", "health endpoint returned wrong GCA contract")
     require_honeypot_config(payload, "health endpoint")
@@ -174,6 +178,7 @@ def check_health(*, base_url: str, timeout: float, cafile: str, opener: Callable
         "creditUsageVersion": payload.get("creditUsageVersion"),
         "serviceRequestVersion": payload.get("serviceRequestVersion"),
         "memberReviewVersion": payload.get("memberReviewVersion"),
+        "holdingVerificationVersion": payload.get("holdingVerificationVersion"),
         "chainId": payload.get("chainId"),
         "contractAddress": payload.get("contractAddress"),
         "antiSpamHoneypotFields": payload.get("antiSpam", {}).get("honeypotFields", []),
@@ -258,14 +263,26 @@ def check_access_config(*, base_url: str, timeout: float, cafile: str, opener: C
         require(payload.get("serviceRequestVersion") == "gca_service_request_v1", "access config returned wrong service request version")
     require(payload.get("memberReviewVersion") == "gca_member_review_v1", "access config returned wrong member review version")
     require(
+        payload.get("holdingVerificationVersion") == "gca_holding_verification_v1",
+        "access config returned wrong holding verification version",
+    )
+    require(
         payload.get("endpoints", {}).get("memberReviewsAdmin") == "/gca/member-reviews",
         "access config returned wrong member review endpoint",
+    )
+    require(
+        payload.get("endpoints", {}).get("holdingVerificationsAdmin") == "/gca/holding-verifications",
+        "access config returned wrong holding verification endpoint",
     )
     require(payload.get("boundaries", {}).get("readOnlyWalletVerification") is True, "access config must keep read-only wallet verification")
     require(payload.get("boundaries", {}).get("automaticTokenTransfer") is False, "access config must not auto-transfer tokens")
     require(
         payload.get("boundaries", {}).get("automaticMemberActivationFromSubmittedDate") is False,
         "access config must not activate members from a submitted date",
+    )
+    require(
+        payload.get("boundaries", {}).get("onchainHoldingHistoryRequiredForApproval") is True,
+        "access config must require on-chain holding history for approval",
     )
     require(payload.get("thresholds", {}).get("holderBonusMinimumGca") == "10000", "access config holder threshold mismatch")
     require(payload.get("thresholds", {}).get("gcaMemberMinimumGca") == "1000000", "access config member threshold mismatch")
@@ -280,6 +297,7 @@ def check_access_config(*, base_url: str, timeout: float, cafile: str, opener: C
         "creditUsageVersion": payload.get("creditUsageVersion"),
         "serviceRequestVersion": payload.get("serviceRequestVersion"),
         "memberReviewVersion": payload.get("memberReviewVersion"),
+        "holdingVerificationVersion": payload.get("holdingVerificationVersion"),
         "readOnlyWalletVerification": True,
         "automaticTokenTransfer": False,
         "antiSpamHoneypotFields": payload.get("antiSpam", {}).get("honeypotFields", []),
@@ -444,6 +462,14 @@ def run_checks(
             cafile=cafile,
             opener=opener,
         ),
+        check_unauthorized_admin_read(
+            base_url=base_url,
+            path="/gca/holding-verifications",
+            check_id="unauth-holding-verifications-read",
+            timeout=timeout,
+            cafile=cafile,
+            opener=opener,
+        ),
     ]
     if include_pending_routes:
         checks.extend([
@@ -554,6 +580,16 @@ def run_checks(
                 cafile=cafile,
                 opener=opener,
             ),
+            check_authorized_admin_read(
+                base_url=base_url,
+                path="/gca/holding-verifications",
+                check_id="admin-holding-verifications-read",
+                token=clean_token,
+                limit=limit,
+                timeout=timeout,
+                cafile=cafile,
+                opener=opener,
+            ),
         ])
         if include_pending_routes:
             checks.extend([
@@ -593,6 +629,7 @@ def run_checks(
             "submitsMemberAccess": False,
             "submitsServiceRequest": False,
             "submitsMemberReview": False,
+            "submitsHoldingVerification": False,
             "adminTokenPrinted": False,
             "userEmailsPrinted": False,
             "walletConnectionRequired": False,

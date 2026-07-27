@@ -2,7 +2,7 @@
   "schema": "https://gcagochina.com/roadmap.json",
   "pageUrl": "https://gcagochina.com/roadmap.html",
   "status": "public-roadmap-published",
-  "lastUpdated": "2026-07-20",
+  "lastUpdated": "2026-07-27",
   "projectName": "GCA",
   "conceptExpansion": "Go China Access",
   "currentStage": "account-ledger-and-browser-tools-live-connected-services-staged",
@@ -98,8 +98,10 @@
     {
       "id": "gca-member-holding-review",
       "label": "30-day GCA Member holding-period review",
-      "status": "live-for-review-records",
-      "preparedPath": "/gca/member-review"
+      "status": "live-observed-chain-history-required-for-approval",
+      "preparedPath": "/gca/holding-verifications",
+      "packetVersion": "gca_holding_verification_v1",
+      "verificationMethod": "Base Blockscout v2 GCA transfer history plus Base public RPC recent logs and snapshot balanceOf"
     },
     {
       "id": "utility-credit-ledger",
@@ -116,7 +118,7 @@
     {
       "id": "support-review-queue",
       "label": "Support review queue and audit trail",
-      "status": "local-operator-review-and-sha256-continuity-live",
+      "status": "local-continuity-and-production-member-approval-live",
       "localOperatorPath": "http://127.0.0.1:8787/operator.html",
       "preparedPath": "/gca/member-review",
       "verificationCommand": ".venv/bin/python tools/verify_gca_support_review_audit.py",
@@ -124,7 +126,9 @@
       "checkpointVerifyCommand": ".venv/bin/python tools/verify_gca_support_review_audit.py --checkpoint ~/Documents/gca-support-review-checkpoint.json",
       "checkpointToolLive": true,
       "checkpointPublishedExternally": false,
-      "productionApprovalWorkflowLive": false
+      "productionApprovalWorkflowLive": true,
+      "productionMemberReviewPath": "/gca/member-reviews",
+      "productionHoldingEvidencePath": "/gca/holding-verifications"
     }
   ],
   "externalDependencies": {
@@ -144,12 +148,14 @@
       "The GCA Workspace Vault encrypts validated tool backups locally, validates every module before restore, excludes the member-access wallet snapshot and full service-request packet, and never uploads the file or passphrase.",
       "The English and Chinese API status pages can run browser-time read-only identity and anonymous-access checks without writing records, reading admin response bodies, or sending an admin token.",
       "The public member access page can create account intake, wallet verification, 100 credits ledger, and GCA Member ledger records for eligible users.",
+      "Successful GCA Member approval requires a complete observed 30-day GCA transfer-history reconstruction and stores append-only holding evidence.",
       "The GCA Member benefit requires 1,000,000 GCA held for 30 consecutive days before one-time 10,000 GCA review.",
       "The official market route is GCA/USDT on Base Mainnet.",
       "Owner reported on 2026-05-14 that no wallet risk warning was visible in the tested wallet/DEX flow."
     ],
     "doNotClaim": [
       "the 10,000 GCA member benefit is automatic or self-service transferred before holding-period verification, support approval, and manual reserve-wallet processing",
+      "the observed holding-history reconstruction is a third-party audit, permanent guarantee, or proof that public index data can never be delayed",
       "BaseScan token profile approval before BaseScan publishes it",
       "security-vendor approval, permanent warning-free status, or cross-wallet warning removal before vendor/current wallet UI confirms it",
       "third-party audit completion before an independent report is published",

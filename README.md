@@ -53,13 +53,13 @@ The public English and Chinese API status pages include a browser-time read-only
 
 ## Production Member Review
 
-The public member-access route writes eligible 100-credit records and queues GCA Member evidence. It does not activate GCA Member from a user-submitted holding date or transaction-hash format check. After manually reviewing public 30-day holding evidence, an operator uses the ignored local admin token with:
+The public member-access route writes eligible 100-credit records and queues GCA Member evidence. It does not activate GCA Member from a user-submitted holding date or transaction-hash format check. After manually reviewing the submitted evidence, an operator uses the ignored local admin token with:
 
 ```bash
 .venv/bin/python tools/review_cloudflare_member.py --help
 ```
 
-The production `GET/POST /gca/member-reviews` route stores append-only review decisions in D1. Approval also refreshes the current GCA balance with read-only Base RPC. The route does not connect a wallet, request a signature, send a transaction, transfer GCA, or authorize the separate 10,000 GCA member benefit.
+The production `GET/POST /gca/member-reviews` route stores append-only review decisions in D1. Approval refreshes the current GCA balance at a safe Base block, combines Base Blockscout v2 GCA transfer history with recent Base public RPC logs, and reconstructs the observed minimum balance across the prior 30 days. Approval fails unless the complete observed history stays at or above 1,000,000 GCA. A successful decision writes append-only holding evidence that operators can read at `GET /gca/holding-verifications`. The route does not connect a wallet, request a signature, send a transaction, transfer GCA, or authorize the separate 10,000 GCA member benefit.
 
 ## Mainnet Launch Package
 

@@ -218,9 +218,9 @@ FORBIDDEN_PUBLIC_CLAIM_PATTERNS = [
 ]
 LEGACY_PERSONAL_GMAIL = "cxy070800@gmail.com"
 PENDING_WORKER_READINESS_AT = "2026-07-23T17:55:52Z"
-PENDING_WORKER_PUBLIC_ROUTE_AT = "2026-07-23T19:29:39Z"
-PENDING_WORKER_ADMIN_ROUTE_AT = "2026-07-23T19:29:49Z"
-PENDING_WORKER_VERSION_ID = "fa923065-dd72-472e-9c28-04ef4a08c34e"
+PENDING_WORKER_PUBLIC_ROUTE_AT = "2026-07-27T09:00:02Z"
+PENDING_WORKER_ADMIN_ROUTE_AT = "2026-07-27T09:00:16Z"
+PENDING_WORKER_VERSION_ID = "fdef5365-1dc1-4165-8de0-d8d9e7cde679"
 PENDING_WORKER_BLOCKED_BY = None
 PENDING_WORKER_ROUTE_OBSERVATIONS = {
     "/gca/service-requests": 401,
@@ -3652,8 +3652,8 @@ def validate_zh_api_status_page(text: str) -> None:
     for expected in (
         "GCA 中文 API 状态",
         "中文 API 状态 / 浏览器实时只读检查",
-        "2026-07-23T19:29:39Z",
-        "2026-07-23T19:29:49Z",
+        "2026-07-27T09:00:02Z",
+        "2026-07-27T09:00:16Z",
         "最新检查",
         "正在本浏览器检查",
         "邮箱注册和邮箱退订接口",
@@ -3683,9 +3683,11 @@ def validate_zh_api_status_page(text: str) -> None:
         "GET/POST /gca/service-requests",
         "GET/POST /gca/credit-usage",
         "GET/POST /gca/member-reviews",
+        "GET /gca/holding-verifications",
+        "gca_holding_verification_v1",
         "匿名读取返回 HTTP 401",
         "部署权限检查",
-        "远端 D1 migration、Worker 部署、公网 smoke 和管理员只读 smoke 检查",
+        "最新公网和管理员只读 smoke 检查于 2026-07-27 UTC 通过",
         "Cloudflare 账号认证、D1 可见性和 Workers 发布权限",
         "authRecovery.status",
         "authRecovery.safeNextActions",
@@ -3726,11 +3728,11 @@ def validate_zh_api_status_page(text: str) -> None:
         "data-gca-api-health",
         "data-locale=\"zh\"",
         "data-api-live-fact",
-        "7 个 GET 路由必须用 HTTP 401 拒绝匿名访问",
+        "8 个 GET 路由（含会员审核和持有证据）必须用 HTTP 401 拒绝匿名访问",
         "服务请求和 Credit 使用已经上线；HTTP 401 表示匿名读取被拒绝",
         "全程不写入记录",
-        "assets/api-health.css?v=20260720",
-        "assets/api-health.js?v=20260720",
+        "assets/api-health.css?v=20260727",
+        "assets/api-health.js?v=20260727",
     ):
         assert_contains(text, expected, label)
     assert_no_public_data_room_terms(text, label)
@@ -3943,7 +3945,8 @@ def validate_zh_release_gates_page(text: str) -> None:
         "/gca/service-requests",
         "/gca/credit-usage",
         "/gca/member-reviews",
-        "远端 migration、Worker 部署、公网 smoke 和管理员只读 smoke 检查",
+        "/gca/holding-verifications",
+        "最新公网和管理员只读 smoke 检查于 2026-07-27 UTC 通过",
         "D1 migration",
         "Worker 部署",
         "受控 HTTPS 账户 UI",
@@ -3955,7 +3958,7 @@ def validate_zh_release_gates_page(text: str) -> None:
         "10,000 GCA 会员权益",
         "符合条件写入账本，会员权益仍需人工审核",
         "生产 Worker 路由已上线并受管理员 token 保护",
-        "批准前必须重新只读检查当前余额并人工审核公开证据",
+        "批准前必须在 Base 安全区块读取余额，并完成观察到的 30 天转账历史重建",
         "服务请求队列",
         "Credit 使用记录",
         "人工审核交付后的服务使用记录",
@@ -6015,7 +6018,9 @@ def validate_roadmap_page(text: str) -> None:
     assert_contains(text, "Live for eligible wallet records", label)
     assert_contains(text, "GCA Member records", label)
     assert_contains(text, "benefit remains manual review", label)
-    assert_contains(text, "Local SHA-256 continuity live; production approvals still gated", label)
+    assert_contains(text, "Local SHA-256 continuity and protected production member approvals live", label)
+    assert_contains(text, "Observed 30-day holding-history gate", label)
+    assert_contains(text, "complete Base transfer-history reconstruction", label)
     assert_contains(text, "Review chain checkpoint receipt", label)
     assert_contains(text, "Local unsigned export and retained-head comparison live", label)
     assert_contains(text, "Bilingual live API health panel", label)
@@ -6049,7 +6054,7 @@ def validate_roadmap_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong status")
     if payload.get("currentStage") != PRODUCT_STAGE:
         raise SiteCheckError(f"{label}: wrong currentStage")
-    if payload.get("lastUpdated") != "2026-07-20":
+    if payload.get("lastUpdated") != "2026-07-27":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
@@ -6083,7 +6088,7 @@ def validate_roadmap_json(text: str) -> None:
         (priority for priority in payload.get("nextBuildPriorities", []) if priority.get("id") == "support-review-queue"),
         {},
     )
-    if support_priority.get("status") != "local-operator-review-and-sha256-continuity-live":
+    if support_priority.get("status") != "local-continuity-and-production-member-approval-live":
         raise SiteCheckError(f"{label}: wrong support review queue priority status")
     if "verify_gca_support_review_audit.py" not in support_priority.get("verificationCommand", ""):
         raise SiteCheckError(f"{label}: missing support review continuity verify command")
@@ -6095,8 +6100,18 @@ def validate_roadmap_json(text: str) -> None:
         raise SiteCheckError(f"{label}: support review checkpoint tool must be live")
     if support_priority.get("checkpointPublishedExternally") is not False:
         raise SiteCheckError(f"{label}: support review checkpoint must not be claimed public")
-    if support_priority.get("productionApprovalWorkflowLive") is not False:
-        raise SiteCheckError(f"{label}: production approval workflow must remain false")
+    if support_priority.get("productionApprovalWorkflowLive") is not True:
+        raise SiteCheckError(f"{label}: production approval workflow must be live")
+    if support_priority.get("productionHoldingEvidencePath") != "/gca/holding-verifications":
+        raise SiteCheckError(f"{label}: wrong production holding evidence path")
+    holding_priority = next(
+        (priority for priority in payload.get("nextBuildPriorities", []) if priority.get("id") == "gca-member-holding-review"),
+        {},
+    )
+    if holding_priority.get("status") != "live-observed-chain-history-required-for-approval":
+        raise SiteCheckError(f"{label}: wrong holding-history priority status")
+    if holding_priority.get("packetVersion") != "gca_holding_verification_v1":
+        raise SiteCheckError(f"{label}: wrong holding-history packet version")
     if not any(milestone.get("id") == "account-ledger-path-live" for milestone in payload.get("completedMilestones", [])):
         raise SiteCheckError(f"{label}: missing account ledger live milestone")
     if not any(milestone.get("id") == "public-browser-tool-suite-live" for milestone in payload.get("completedMilestones", [])):
@@ -7628,7 +7643,7 @@ def validate_service_delivery_playbook_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong status")
     if payload.get("playbookId") != "service-delivery-playbook-v1":
         raise SiteCheckError(f"{label}: wrong playbookId")
-    if payload.get("lastUpdated") != "2026-07-24":
+    if payload.get("lastUpdated") != "2026-07-27":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
@@ -7793,7 +7808,7 @@ def validate_worker_routes_handoff_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong status")
     if payload.get("handoffId") != "worker-routes-handoff-v1":
         raise SiteCheckError(f"{label}: wrong handoffId")
-    if payload.get("lastUpdated") != "2026-07-24":
+    if payload.get("lastUpdated") != "2026-07-27":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
@@ -9120,7 +9135,7 @@ def validate_operations_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong pageUrl")
     if payload.get("status") != "public-access-operations-runbook-published":
         raise SiteCheckError(f"{label}: wrong status")
-    if payload.get("lastUpdated") != "2026-07-24":
+    if payload.get("lastUpdated") != "2026-07-27":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
@@ -9144,6 +9159,8 @@ def validate_operations_json(text: str) -> None:
         "gcaMemberEligibilitySubmissionLive",
         "ledgerWritesLive",
         "memberReviewWorkflowProductionLive",
+        "holdingHistoryVerificationProductionLive",
+        "onchainHoldingHistoryRequiredForApproval",
         "localSupportReviewContinuityChainLive",
         "localSupportReviewCheckpointToolLive",
     ):
@@ -9181,6 +9198,10 @@ def validate_operations_json(text: str) -> None:
         raise SiteCheckError(f"{label}: serviceRequestQueueProductionLive must be true")
     if state.get("memberReviewPacketVersion") != "gca_member_review_v1":
         raise SiteCheckError(f"{label}: wrong member review packet version")
+    if state.get("holdingVerificationPacketVersion") != "gca_holding_verification_v1":
+        raise SiteCheckError(f"{label}: wrong holding verification packet version")
+    if state.get("holdingVerificationAdminPath") != "/gca/holding-verifications":
+        raise SiteCheckError(f"{label}: wrong holding verification admin path")
     if state.get("automaticMemberActivationFromSubmittedDate") is not False:
         raise SiteCheckError(f"{label}: submitted dates must not activate members")
     if state.get("memberReviewProductionVerifiedAt") != PENDING_WORKER_ADMIN_ROUTE_AT:
@@ -9535,7 +9556,9 @@ def validate_operations_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing live service request route safe claim")
     if "GCA operators can record append-only GCA Member decisions through the live token-protected /gca/member-reviews route after manual evidence review and a current read-only balance refresh." not in boundaries.get("safeClaims", []):
         raise SiteCheckError(f"{label}: missing member review route safe claim")
-    if "Submitted holding dates and transaction hashes are preview evidence only and cannot activate GCA Member automatically." not in boundaries.get("safeClaims", []):
+    if "Successful GCA Member approval requires and stores a complete observed 30-day GCA transfer-history reconstruction with a minimum balance of at least 1,000,000 GCA." not in boundaries.get("safeClaims", []):
+        raise SiteCheckError(f"{label}: missing observed holding-history safe claim")
+    if "Submitted holding dates and transaction hashes are supporting preview evidence only and cannot activate GCA Member automatically." not in boundaries.get("safeClaims", []):
         raise SiteCheckError(f"{label}: missing holding evidence boundary")
     if "GCA email registration and unsubscribe APIs are live on Cloudflare Workers + D1." not in boundaries.get("safeClaims", []):
         raise SiteCheckError(f"{label}: missing email API safe claim")
@@ -9603,13 +9626,14 @@ def validate_access_api_page(text: str) -> None:
     assert_contains(text, "/gca/service-requests", label)
     assert_contains(text, "/gca/member-ledger", label)
     assert_contains(text, "/gca/member-reviews", label)
+    assert_contains(text, "/gca/holding-verifications", label)
     assert_contains(text, "/gca/support-review", label)
     assert_contains(text, "/gca/member-review", label)
     assert_contains(text, "/gca/member-benefit-transfers", label)
     assert_contains(text, "eth_call", label)
-    assert_contains(text, "Remote D1 migration", label)
-    assert_contains(text, "passed on 2026-07-23 UTC", label)
-    assert_contains(text, "Worker deploy", label)
+    assert_contains(text, "Initial migration and deploy passed on 2026-07-23 UTC", label)
+    assert_contains(text, "latest public and admin read-only smoke checks passed on 2026-07-27 UTC", label)
+    assert_contains(text, "Holding Verification Migration", label)
     assert_contains(text, "HTTP 401", label)
     assert_contains(text, "/gca/review-package", label)
     assert_contains(text, "?redact=public", label)
@@ -9668,9 +9692,9 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != ACCESS_API_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
-    if payload.get("status") != "public-access-api-member-review-live":
+    if payload.get("status") != "public-access-api-holding-history-verification-live":
         raise SiteCheckError(f"{label}: wrong status")
-    if payload.get("lastUpdated") != "2026-07-24":
+    if payload.get("lastUpdated") != "2026-07-27":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
@@ -9698,6 +9722,8 @@ def validate_access_api_json(text: str) -> None:
         "creditLedgerWritesLive",
         "memberLedgerWritesLive",
         "memberReviewWorkflowProductionLive",
+        "holdingHistoryVerificationProductionLive",
+        "onchainHoldingHistoryRequiredForApproval",
     ):
         if state.get(key) is not True:
             raise SiteCheckError(f"{label}: {key} must be true")
@@ -9705,6 +9731,8 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: liveTradingEnabled must be false")
     if state.get("memberReviewPacketVersion") != "gca_member_review_v1":
         raise SiteCheckError(f"{label}: wrong member review packet version")
+    if state.get("holdingVerificationPacketVersion") != "gca_holding_verification_v1":
+        raise SiteCheckError(f"{label}: wrong holding verification packet version")
     if state.get("automaticMemberActivationFromSubmittedDate") is not False:
         raise SiteCheckError(f"{label}: submitted dates must not activate membership")
     if state.get("serviceRequestQueueLocalLive") is not True:
@@ -10158,6 +10186,8 @@ def validate_access_api_json(text: str) -> None:
     for expected_check in (
         "approved decisions require a current balance of at least 1,000,000 GCA",
         "approved decisions require at least a 30-day holding preview and a valid evidence transaction hash format",
+        "approved decisions require a complete and internally consistent observed 30-day GCA transfer-history reconstruction with a minimum balance of at least 1,000,000 GCA",
+        "successful approval stores an append-only gca_holding_verification_v1 evidence row and links it to the review and member ledger",
         "the ledger and account update use one D1 batch transaction",
         "the endpoint does not connect a wallet, request a signature, send a transaction, transfer GCA, or authorize the 10,000 GCA member benefit transfer",
     ):
@@ -10168,6 +10198,12 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: member review read must require admin token")
     if "memberReviewId" not in member_reviews_read.get("responseFields", []):
         raise SiteCheckError(f"{label}: member review read is missing memberReviewId")
+    holding_verifications_read = endpoint_map["GET /gca/holding-verifications"]
+    if "authorization bearer token" not in holding_verifications_read.get("requiredRequestFields", []):
+        raise SiteCheckError(f"{label}: holding verification read must require admin token")
+    for field in ("holdingVerificationId", "minimumGcaBalance", "historyComplete", "reconstructionConsistent"):
+        if field not in holding_verifications_read.get("responseFields", []):
+            raise SiteCheckError(f"{label}: holding verification read is missing {field}")
     member_review = endpoint_map["GET /gca/member-review"]
     for field in ("holdingStartDate", "evidenceTxHashFormatOk", "memberBenefitClaimStatus"):
         if field not in member_review.get("responseFields", []):
@@ -10238,8 +10274,8 @@ def validate_api_status_page(text: str) -> None:
     for expected in (
         "GCA Registration API Status",
         "Registration API Status / Live Read-Only Check",
-        "2026-07-23T19:29:39Z",
-        "2026-07-23T19:29:49Z",
+        "2026-07-27T09:00:02Z",
+        "2026-07-27T09:00:16Z",
         "2026-07-23T17:55:52Z",
         "Cloudflare Workers + D1",
         "https://gca-registration-api.gcagochina.workers.dev",
@@ -10267,6 +10303,7 @@ def validate_api_status_page(text: str) -> None:
         "/gca/credit-ledger",
         "/gca/member-ledger",
         "/gca/member-reviews",
+        "/gca/holding-verifications",
         "/gca/credit-usage",
         "Deploy Readiness",
         "Cloudflare account authentication",
@@ -10297,11 +10334,11 @@ def validate_api_status_page(text: str) -> None:
         "data-gca-api-health",
         "data-locale=\"en\"",
         "data-api-live-fact",
-        "Seven GET routes, including member reviews, must reject anonymous access with HTTP 401",
+        "Eight GET routes, including member reviews and holding evidence, must reject anonymous access with HTTP 401",
         "Service requests and credit usage are live; HTTP 401 confirms anonymous reads are rejected",
         "No registration, wallet verification, service request, credit usage, token transfer, or admin-token request is sent",
-        "assets/api-health.css?v=20260720",
-        "assets/api-health.js?v=20260720",
+        "assets/api-health.css?v=20260727",
+        "assets/api-health.js?v=20260727",
     ):
         assert_contains(text, expected, label)
     assert_no_forbidden_public_claims(text, label)
@@ -10322,13 +10359,13 @@ def validate_api_status_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != API_STATUS_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
-    if payload.get("status") != "public-member-access-member-review-live":
+    if payload.get("status") != "public-member-access-holding-history-verification-live":
         raise SiteCheckError(f"{label}: wrong status")
-    if payload.get("lastUpdated") != "2026-07-24":
+    if payload.get("lastUpdated") != "2026-07-27":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("latestPublicCheckAt") != PENDING_WORKER_PUBLIC_ROUTE_AT:
         raise SiteCheckError(f"{label}: wrong latest public check timestamp")
-    if payload.get("latestPublicCheckStatus") != "passed-member-review-live-protected":
+    if payload.get("latestPublicCheckStatus") != "passed-holding-history-live-protected":
         raise SiteCheckError(f"{label}: wrong latest public check status")
     if payload.get("latestDeployReadinessCheckAt") != PENDING_WORKER_READINESS_AT:
         raise SiteCheckError(f"{label}: wrong latest deploy readiness timestamp")
@@ -10384,6 +10421,7 @@ def validate_api_status_json(text: str) -> None:
         "/gca/credit-ledger",
         "/gca/member-ledger",
         "/gca/member-reviews",
+        "/gca/holding-verifications",
     }:
         raise SiteCheckError(f"{label}: wrong browser anonymous admin-read checks")
     if set(browser_check.get("preparedRouteChecks", [])) != {"/gca/service-requests", "/gca/credit-usage"}:
@@ -10486,6 +10524,32 @@ def validate_api_status_json(text: str) -> None:
         raise SiteCheckError(f"{label}: member review admin read must return HTTP 200")
     if member_reviews.get("workerVersionId") != PENDING_WORKER_VERSION_ID:
         raise SiteCheckError(f"{label}: wrong member review Worker version")
+
+    holding_verifications = admin_endpoints.get("holding-verifications-read")
+    if holding_verifications is None:
+        raise SiteCheckError(f"{label}: missing holding verification endpoint")
+    if holding_verifications.get("method") != "GET" or holding_verifications.get("path") != "/gca/holding-verifications":
+        raise SiteCheckError(f"{label}: wrong holding verification endpoint route")
+    if holding_verifications.get("status") != "live-token-protected":
+        raise SiteCheckError(f"{label}: wrong holding verification endpoint status")
+    if holding_verifications.get("packetVersion") != "gca_holding_verification_v1":
+        raise SiteCheckError(f"{label}: wrong holding verification endpoint version")
+    for key, expected in (
+        ("requiresAdminReadToken", True),
+        ("publicLedgerReadable", False),
+        ("requiresSignature", False),
+        ("requiresTransaction", False),
+        ("automaticTokenTransfer", False),
+        ("productionLive", True),
+    ):
+        if holding_verifications.get(key) is not expected:
+            raise SiteCheckError(f"{label}: wrong holding verification boundary {key}")
+    if holding_verifications.get("lastObservedAnonymousGetStatus") != 401:
+        raise SiteCheckError(f"{label}: holding verification must reject anonymous reads")
+    if holding_verifications.get("lastObservedAdminGetStatus") != 200:
+        raise SiteCheckError(f"{label}: holding verification admin read must return HTTP 200")
+    if holding_verifications.get("workerVersionId") != PENDING_WORKER_VERSION_ID:
+        raise SiteCheckError(f"{label}: wrong holding verification Worker version")
 
     credit_usage = admin_endpoints.get("credit-usage-read-write")
     if credit_usage is None:
@@ -11253,7 +11317,7 @@ def validate_credits_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong pageUrl")
     if payload.get("status") != "public-credits-catalog-ledger-path-live":
         raise SiteCheckError(f"{label}: wrong status")
-    if payload.get("lastUpdated") != "2026-07-24":
+    if payload.get("lastUpdated") != "2026-07-27":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
@@ -11559,7 +11623,7 @@ def validate_credits_json(text: str) -> None:
 def validate_release_gates_page(text: str) -> None:
     label = "/release-gates.html"
     assert_contains(text, "GCA Product Release Gates", label)
-    assert_contains(text, "Release Gates / 2026-07-24", label)
+    assert_contains(text, "Release Gates / 2026-07-27", label)
     assert_contains(text, "Release References", label)
     assert_contains(text, "gca/member-access/", label)
     for forbidden in ("Platform-Only Evidence Path", "Data Room", 'href="data.html"'):
@@ -11569,7 +11633,7 @@ def validate_release_gates_page(text: str) -> None:
     assert_contains(text, "Operations Runbook", label)
     assert_contains(text, "Access API", label)
     assert_contains(text, "account + member review path live", label)
-    assert_contains(text, "Public account UI, wallet verification, eligible 100-credit records, and queued GCA Member evidence are live", label)
+    assert_contains(text, "observed 30-day holding-history verification are live", label)
     assert_contains(text, "Live at /gca/member-access/", label)
     assert_contains(text, "Eligible ledger records live", label)
     assert_contains(text, "controlled HTTPS account UI", label)
@@ -11577,13 +11641,14 @@ def validate_release_gates_page(text: str) -> None:
     assert_contains(text, "credit ledger activation", label)
     assert_contains(text, "member ledger activation", label)
     assert_contains(text, "/gca/member-reviews live and token-protected", label)
+    assert_contains(text, "/gca/holding-verifications live", label)
     assert_contains(text, "risk-control review", label)
     assert_contains(text, "support review queue", label)
     assert_contains(text, "Local support review trail", label)
     assert_contains(text, "SHA-256 continuity checked before review writes", label)
     assert_contains(text, "Review chain checkpoint", label)
     assert_contains(text, "Unsigned local export live; separate retention required", label)
-    assert_contains(text, "Production-live and token-protected; migration, deploy, public smoke, and admin smoke passed on 2026-07-23 UTC", label)
+    assert_contains(text, "initial migration/deploy passed 2026-07-23 UTC and latest read-only smoke passed 2026-07-27 UTC", label)
     assert_contains(text, "production member eligibility review live", label)
     assert_contains(text, "simulation or testnet first", label)
     assert_contains(text, "BaseScan token profile publication", label)
@@ -11614,19 +11679,19 @@ def validate_release_gates_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != RELEASE_GATES_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
-    if payload.get("status") != "public-release-gates-account-member-review-path-live":
+    if payload.get("status") != "public-release-gates-account-holding-history-path-live":
         raise SiteCheckError(f"{label}: wrong status")
-    if payload.get("lastUpdated") != "2026-07-24":
+    if payload.get("lastUpdated") != "2026-07-27":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
     if payload.get("contractAddress") != MAINNET_ADDRESS:
         raise SiteCheckError(f"{label}: wrong contractAddress")
-    if state.get("currentStage") != "account-member-review-path-live":
+    if state.get("currentStage") != "account-member-review-and-holding-history-path-live":
         raise SiteCheckError(f"{label}: wrong currentStage")
     if state.get("publicProductSpecOnly") is not False:
         raise SiteCheckError(f"{label}: publicProductSpecOnly must be false")
-    for key in ("publicAccountUiLive", "creditsEligibilitySubmissionLive", "gcaMemberEligibilitySubmissionLive", "walletVerificationLive", "creditLedgerWritesLive", "memberLedgerWritesLive", "memberReviewWorkflowProductionLive", "memberBenefitManualReviewOnly"):
+    for key in ("publicAccountUiLive", "creditsEligibilitySubmissionLive", "gcaMemberEligibilitySubmissionLive", "walletVerificationLive", "creditLedgerWritesLive", "memberLedgerWritesLive", "memberReviewWorkflowProductionLive", "holdingHistoryVerificationProductionLive", "onchainHoldingHistoryRequiredForApproval", "memberBenefitManualReviewOnly"):
         if state.get(key) is not True:
             raise SiteCheckError(f"{label}: {key} must be true")
     if state.get("liveTradingEnabled") is not False:
@@ -11641,6 +11706,8 @@ def validate_release_gates_json(text: str) -> None:
         raise SiteCheckError(f"{label}: production support approval workflow must remain false")
     if state.get("memberReviewPacketVersion") != "gca_member_review_v1":
         raise SiteCheckError(f"{label}: wrong member review packet version")
+    if state.get("holdingVerificationPacketVersion") != "gca_holding_verification_v1":
+        raise SiteCheckError(f"{label}: wrong holding verification packet version")
     if state.get("automaticMemberActivationFromSubmittedDate") is not False:
         raise SiteCheckError(f"{label}: submitted dates must not activate membership")
     if state.get("memberReviewProductionVerifiedAt") != PENDING_WORKER_ADMIN_ROUTE_AT:
@@ -11687,6 +11754,7 @@ def validate_release_gates_json(text: str) -> None:
         "credit-ledger-activation",
         "member-ledger-activation",
         "production-member-review",
+        "onchain-holding-history-verification",
         "support-review-queue",
         "risk-control-review",
         "simulation-first",
@@ -11705,12 +11773,17 @@ def validate_release_gates_json(text: str) -> None:
     if "--checkpoint" not in support_gate.get("localCheckpointVerifyCommand", ""):
         raise SiteCheckError(f"{label}: missing support review checkpoint compare command")
     member_review_gate = next((item for item in payload.get("releaseGates", []) if item.get("id") == "production-member-review"), {})
+    holding_history_gate = next((item for item in payload.get("releaseGates", []) if item.get("id") == "onchain-holding-history-verification"), {})
     if member_review_gate.get("status") != "live-token-protected":
         raise SiteCheckError(f"{label}: wrong production member review gate status")
     if member_review_gate.get("packetVersion") != "gca_member_review_v1":
         raise SiteCheckError(f"{label}: wrong production member review gate version")
     if member_review_gate.get("operatorTool") != "tools/review_cloudflare_member.py":
         raise SiteCheckError(f"{label}: wrong production member review operator tool")
+    if holding_history_gate.get("status") != "live-token-protected-approval-gate":
+        raise SiteCheckError(f"{label}: wrong holding-history gate status")
+    if holding_history_gate.get("packetVersion") != "gca_holding_verification_v1":
+        raise SiteCheckError(f"{label}: wrong holding-history gate version")
     if base_scan_gate.get("status") != "ready-for-owner-resubmission":
         raise SiteCheckError(f"{label}: wrong BaseScan release gate status")
     if base_scan_gate.get("finalSubmissionPackageGeneratedAt") != "2026-07-18T12:03:57Z":
@@ -13862,7 +13935,7 @@ def validate_member_ledger_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong pageUrl")
     if payload.get("status") != "public-member-ledger-workers-d1-live":
         raise SiteCheckError(f"{label}: wrong status")
-    if payload.get("lastUpdated") != "2026-07-24":
+    if payload.get("lastUpdated") != "2026-07-27":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
@@ -13886,6 +13959,8 @@ def validate_member_ledger_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong member ledger path")
     if paths.get("memberReviews") != "/gca/member-reviews":
         raise SiteCheckError(f"{label}: wrong production member review path")
+    if paths.get("holdingVerifications") != "/gca/holding-verifications":
+        raise SiteCheckError(f"{label}: wrong holding verification path")
     if paths.get("localSupportReview") != "/gca/member-review":
         raise SiteCheckError(f"{label}: wrong local support review path")
     if preview.get("status") != "browser-read-only-preview-live":
@@ -13926,6 +14001,8 @@ def validate_member_ledger_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing support review schema")
     if "memberReviewRecord" not in schemas:
         raise SiteCheckError(f"{label}: missing production member review schema")
+    if "holdingVerificationRecord" not in schemas:
+        raise SiteCheckError(f"{label}: missing holding verification schema")
     prereg_fields = schemas.get("preRegistrationRecord", {}).get("requiredFields", [])
     if "memberBenefitReviewEvidence" not in prereg_fields:
         raise SiteCheckError(f"{label}: missing pre-registration evidence field")
@@ -13937,6 +14014,9 @@ def validate_member_ledger_json(text: str) -> None:
         "evidenceTxHashFormatOk",
         "memberBenefitReviewEvidenceStatus",
         "memberBenefitTransferTx",
+        "latestHoldingVerificationId",
+        "onchainHoldingVerified",
+        "onchainHoldingVerifiedAt",
     ):
         if field not in member_fields:
             raise SiteCheckError(f"{label}: missing member ledger field {field}")
@@ -13972,6 +14052,20 @@ def validate_member_ledger_json(text: str) -> None:
     ):
         if production_review.get(key) is not expected:
             raise SiteCheckError(f"{label}: wrong production member review boundary {key}")
+    holding_verification = schemas.get("holdingVerificationRecord", {})
+    if holding_verification.get("packetVersion") != "gca_holding_verification_v1":
+        raise SiteCheckError(f"{label}: wrong holding verification version")
+    if holding_verification.get("endpoint") != "/gca/holding-verifications":
+        raise SiteCheckError(f"{label}: wrong holding verification endpoint")
+    for key, expected in (
+        ("adminTokenProtected", True),
+        ("appendOnlyEvidenceRecord", True),
+        ("requiresSignature", False),
+        ("requiresTransaction", False),
+        ("automaticTokenTransfer", False),
+    ):
+        if holding_verification.get(key) is not expected:
+            raise SiteCheckError(f"{label}: wrong holding verification boundary {key}")
     if not any("public member access page can submit account intake" in claim for claim in boundaries.get("safeClaims", [])):
         raise SiteCheckError(f"{label}: missing live member access safe claim")
     if not any("browser-only read-only GCA balance preview" in claim for claim in boundaries.get("safeClaims", [])):
@@ -14012,13 +14106,16 @@ def validate_member_ledger_page(text: str) -> None:
     assert_contains(text, "/gca/credit-ledger", label)
     assert_contains(text, "/gca/member-ledger", label)
     assert_contains(text, "/gca/member-reviews", label)
+    assert_contains(text, "/gca/holding-verifications", label)
     assert_contains(text, "10,000 GCA", label)
     assert_contains(text, "1,000,000 GCA", label)
     assert_contains(text, "10,000 GCA after approval", label)
     assert_contains(text, "180 days", label)
     assert_contains(text, "30 days", label)
-    assert_contains(text, "Manual operator evidence review required", label)
-    assert_contains(text, "submitted date and transaction hash are preview evidence only", label)
+    assert_contains(text, "Manual review + complete observed 30-day chain history", label)
+    assert_contains(text, "Holding Verification Record", label)
+    assert_contains(text, "gca_holding_verification_v1", label)
+    assert_contains(text, "complete observed 30-day transfer-history reconstruction", label)
     assert_contains(text, "eligible 10,000 GCA holders can create one account-level 100 GCA AI Quant Access credits ledger record", label)
     assert_not_contains(text, OLD_WETH_POOL_ADDRESS, label)
 
@@ -16113,7 +16210,7 @@ def validate_sitemap(text: str) -> None:
         "roadmap.html",
         "roadmap.json",
     ):
-        assert_sitemap_lastmod(path, "2026-07-20")
+        assert_sitemap_lastmod(path, "2026-07-27")
     for path in (
         "access-api.html",
         "access-api.json",
@@ -16121,8 +16218,8 @@ def validate_sitemap(text: str) -> None:
         "api-status.json",
         "credits.html",
         "credits.json",
-        "narrative.html",
-        "narrative.json",
+        "member-ledger.html",
+        "member-ledger.json",
         "operations.html",
         "operations.json",
         "release-gates.html",
@@ -16131,10 +16228,16 @@ def validate_sitemap(text: str) -> None:
         "service-delivery-playbook.json",
         "worker-routes-handoff.html",
         "worker-routes-handoff.json",
-        "zh-access.html",
+        "whitepaper.html",
         "zh-api-status.html",
         "zh-operations.html",
         "zh-release-gates.html",
+    ):
+        assert_sitemap_lastmod(path, "2026-07-27")
+    for path in (
+        "narrative.html",
+        "narrative.json",
+        "zh-access.html",
     ):
         assert_sitemap_lastmod(path, "2026-07-24")
     for path in (

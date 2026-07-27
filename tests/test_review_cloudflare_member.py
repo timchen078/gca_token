@@ -74,6 +74,13 @@ class ReviewCloudflareMemberTests(unittest.TestCase):
                 "memberBenefitClaimStatus": "pending_manual_reserve_transfer",
                 "email": "private@example.com",
             },
+            "holdingVerification": {
+                "holdingVerificationId": "gca_holding_33333333333333333333",
+                "observedContinuousEligible": True,
+                "historyComplete": True,
+                "minimumGcaBalance": "1000000",
+                "walletAddress": "0x18d0007bc6be029f8ccd7cb13e324aa21891092d",
+            },
             "boundaries": {
                 "automaticTokenTransfer": False,
                 "authorizesMemberBenefitTransfer": False,
@@ -112,6 +119,13 @@ class ReviewCloudflareMemberTests(unittest.TestCase):
         self.assertEqual(public_result["resultingMemberStatus"], "active")
         self.assertFalse(public_result["automaticTokenTransfer"])
         self.assertFalse(public_result["authorizesMemberBenefitTransfer"])
+        self.assertEqual(
+            public_result["holdingVerificationId"],
+            "gca_holding_33333333333333333333",
+        )
+        self.assertTrue(public_result["observedContinuousEligible"])
+        self.assertTrue(public_result["historyComplete"])
+        self.assertEqual(public_result["minimumGcaBalance"], "1000000")
         self.assertNotIn("secret-admin-token", serialized)
         self.assertNotIn("private@example.com", serialized)
         self.assertNotIn("0x18d0007bc6be029f8ccd7cb13e324aa21891092d", serialized)
