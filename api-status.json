@@ -1,10 +1,10 @@
 {
   "schema": "https://gcagochina.com/api-status.json",
   "pageUrl": "https://gcagochina.com/api-status.html",
-  "status": "public-member-access-holding-history-verification-live",
+  "status": "public-member-benefit-transfer-evidence-live",
   "lastUpdated": "2026-07-27",
-  "latestPublicCheckAt": "2026-07-27T09:00:02Z",
-  "latestPublicCheckStatus": "passed-holding-history-live-protected",
+  "latestPublicCheckAt": "2026-07-27T09:37:54Z",
+  "latestPublicCheckStatus": "passed-member-benefit-evidence-live-protected",
   "latestDeployReadinessCheckAt": "2026-07-23T17:55:52Z",
   "latestDeployReadinessStatus": "passed-cloudflare-permissions",
   "latestDeployReadinessSummary": {
@@ -50,6 +50,9 @@
       "gca_member_access_v1",
       "gca_member_review_v1",
       "gca_holding_verification_v1",
+      "gca_member_benefit_transfer_v1",
+      "official member-benefit source wallet",
+      "exact 10,000 GCA member-benefit evidence rule",
       "no automatic member activation from a submitted holding date",
       "observed 30-day on-chain holding history is required for approval",
       "read-only wallet and no-automatic-transfer boundaries"
@@ -62,7 +65,8 @@
       "/gca/credit-ledger",
       "/gca/member-ledger",
       "/gca/member-reviews",
-      "/gca/holding-verifications"
+      "/gca/holding-verifications",
+      "/gca/member-benefit-transfers"
     ],
     "preparedRouteChecks": [
       "/gca/service-requests",
@@ -224,9 +228,9 @@
       "authorizesMemberBenefitTransfer": false,
       "lastObservedAnonymousGetStatus": 401,
       "lastObservedAdminGetStatus": 200,
-      "lastObservedAt": "2026-07-27T09:00:16Z",
+      "lastObservedAt": "2026-07-27T09:38:07Z",
       "productionLive": true,
-      "workerVersionId": "fdef5365-1dc1-4165-8de0-d8d9e7cde679"
+      "workerVersionId": "510315f5-8db3-4e08-b574-6e14b618aed5"
     },
     {
       "id": "holding-verifications-read",
@@ -244,9 +248,9 @@
       "automaticTokenTransfer": false,
       "lastObservedAnonymousGetStatus": 401,
       "lastObservedAdminGetStatus": 200,
-      "lastObservedAt": "2026-07-27T09:00:16Z",
+      "lastObservedAt": "2026-07-27T09:38:07Z",
       "productionLive": true,
-      "workerVersionId": "fdef5365-1dc1-4165-8de0-d8d9e7cde679"
+      "workerVersionId": "510315f5-8db3-4e08-b574-6e14b618aed5"
     },
     {
       "id": "service-requests-read-write",
@@ -258,9 +262,9 @@
       "publicLedgerReadable": false,
       "workerDryRunPassed": true,
       "lastObservedAnonymousGetStatus": 401,
-      "lastObservedAt": "2026-07-27T09:00:02Z",
+      "lastObservedAt": "2026-07-27T09:37:54Z",
       "productionLive": true,
-      "workerVersionId": "fdef5365-1dc1-4165-8de0-d8d9e7cde679"
+      "workerVersionId": "510315f5-8db3-4e08-b574-6e14b618aed5"
     },
     {
       "id": "credit-usage-read-write",
@@ -272,9 +276,32 @@
       "publicLedgerReadable": false,
       "workerDryRunPassed": true,
       "lastObservedAnonymousGetStatus": 401,
-      "lastObservedAt": "2026-07-27T09:00:02Z",
+      "lastObservedAt": "2026-07-27T09:37:54Z",
       "productionLive": true,
-      "workerVersionId": "fdef5365-1dc1-4165-8de0-d8d9e7cde679"
+      "workerVersionId": "510315f5-8db3-4e08-b574-6e14b618aed5"
+    },
+    {
+      "id": "member-benefit-transfers-read-write",
+      "method": "GET/POST",
+      "path": "/gca/member-benefit-transfers",
+      "url": "https://gca-registration-api.gcagochina.workers.dev/gca/member-benefit-transfers",
+      "status": "live-token-protected",
+      "packetVersion": "gca_member_benefit_transfer_v1",
+      "requiresAdminReadToken": true,
+      "publicLedgerReadable": false,
+      "officialSourceWallet": "0x5e8F84748612B913aAcC937492AC25dc5630E246",
+      "exactTransferAmount": "10000 GCA",
+      "verifiesExistingTransactionOnly": true,
+      "requiresSuccessfulReceiptAtOrBelowSafeBlock": true,
+      "requiresApprovedMemberWalletRecipient": true,
+      "automaticTokenTransfer": false,
+      "requiresSignature": false,
+      "writesWallet": false,
+      "lastObservedAnonymousGetStatus": 401,
+      "lastObservedAdminGetStatus": 200,
+      "lastObservedAt": "2026-07-27T09:38:07Z",
+      "productionLive": true,
+      "workerVersionId": "510315f5-8db3-4e08-b574-6e14b618aed5"
     }
   ],
   "checks": {
@@ -330,9 +357,9 @@
       "noTradingPermission": true,
       "doNotClaimLiveBeforeSmokeChecks": true
     },
-    "workerVersionId": "fdef5365-1dc1-4165-8de0-d8d9e7cde679",
-    "publicSmokePassedAt": "2026-07-27T09:00:02Z",
-    "adminSmokePassedAt": "2026-07-27T09:00:16Z"
+    "workerVersionId": "510315f5-8db3-4e08-b574-6e14b618aed5",
+    "publicSmokePassedAt": "2026-07-27T09:37:54Z",
+    "adminSmokePassedAt": "2026-07-27T09:38:07Z"
   },
   "operatorTools": {
     "adminExport": "tools/export_cloudflare_email_registrations.py",
@@ -340,7 +367,8 @@
     "contactCsvExport": "tools/export_gca_email_contacts.py",
     "registrationOps": "tools/run_gca_registration_ops.py",
     "contactSuppressionSync": "tools/sync_cloudflare_contact_suppressions.py",
-    "memberReview": "tools/review_cloudflare_member.py"
+    "memberReview": "tools/review_cloudflare_member.py",
+    "memberBenefitTransferEvidence": "tools/record_cloudflare_member_benefit_transfer.py"
   },
   "publicBoundaries": {
     "noPrivateKeyCollection": true,
@@ -360,7 +388,9 @@
     "onchainHoldingHistoryRequiredForApproval": true,
     "holdingHistoryIsObservedReconstructionNotAudit": true,
     "noAutomaticTokenTransfer": true,
-    "memberBenefitManualReviewOnly": true
+    "memberBenefitManualTransferRequired": true,
+    "memberBenefitEvidenceProductionLive": true,
+    "memberBenefitEvidenceVerifiesExistingTransactionOnly": true
   },
   "officialLinks": {
     "registrationPage": "https://gcagochina.com/register.html",

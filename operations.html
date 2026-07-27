@@ -325,9 +325,9 @@
 
     <main class="shell">
       <section aria-labelledby="title">
-        <p class="eyebrow">Access Operations Runbook / 2026-05-20</p>
+        <p class="eyebrow">Access Operations Runbook / 2026-07-27</p>
         <h1 id="title">GCA Access Operations Runbook</h1>
-        <p class="lead">This runbook defines how GCA operators should handle live email-registration records, account intake live records, read-only wallet review, support responses, eligible ledger handoff, and manual member-benefit boundaries.</p>
+        <p class="lead">This runbook defines how GCA operators handle registration, account intake, read-only wallet review, protected member decisions, manual member-benefit execution, and production verification of the resulting public transfer evidence.</p>
         <p class="lead">The email registration, unsubscribe, account intake, wallet verification, and eligible ledger paths are live on Cloudflare Workers + D1. The operations runbook only describes review handling; it is not a public ledger browser, not a public support ticket system, and not a way to request custody, withdrawals, live trading, or balance-verification overrides.</p>
         <div class="actions">
           <a class="button primary" href="review-queue.html">Review Queue Contract</a>
@@ -342,7 +342,7 @@
         <div class="facts" aria-label="Operational state">
           <div class="fact">
             <span class="label">Current stage</span>
-            <span class="value good">account intake live / operations runbook only</span>
+            <span class="value good">member-benefit evidence operations live</span>
           </div>
           <div class="fact">
             <span class="label">Email API</span>
@@ -423,14 +423,18 @@
           </div>
           <div>
             <h3>7. Ledger Handoff</h3>
-            <p class="note">Use the reviewed backend path to inspect and reconcile credit or member records, then keep manual-review notes for any 10,000 GCA member benefit handling.</p>
+            <p class="note">Inspect the active member and linked holding evidence before any manual 10,000 GCA reserve-wallet transfer.</p>
           </div>
           <div>
-            <h3>8. Service Request Triage</h3>
+            <h3>8. Transfer Evidence</h3>
+            <p class="note">After the manual transfer confirms, use <code>tools/record_cloudflare_member_benefit_transfer.py</code> with the protected <code>/gca/member-benefit-transfers</code> route and <code>gca_member_benefit_transfer_v1</code> packet. The Worker requires a successful safe-block receipt, the official reserve sender, approved recipient, GCA contract, and exact 10,000 GCA amount. It never initiates or signs a transfer.</p>
+          </div>
+          <div>
+            <h3>9. Service Request Triage</h3>
             <p class="note">Queue requested GCA AI Quant Access service scope in the local <code>service_requests</code> ledger before delivery. This does not deduct credits; the credit usage ledger is written only after reviewed delivery.</p>
           </div>
           <div>
-            <h3>9. Platform Follow-Up</h3>
+            <h3>10. Platform Follow-Up</h3>
             <p class="note">When a reviewer asks for more information, send public URLs only and keep pool, contract, status, and claim boundaries consistent.</p>
           </div>
           <div>

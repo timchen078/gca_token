@@ -334,7 +334,7 @@
         <p class="eyebrow">Release Gates / 2026-07-27</p>
         <h1 id="title">GCA Product Release Gates</h1>
         <p class="lead">This page defines what is live and what remains gated before GCA AI Quant Access is described as a broader public product. The current state includes live account intake, read-only wallet verification, and ledger records, but not a live trading terminal, not live market data, and not financial advice.</p>
-        <p class="lead">Public account UI, wallet verification, eligible 100-credit records, queued GCA Member evidence, protected manual decisions, and observed 30-day holding-history verification are live. GCA Member activation requires a separate token-protected operator review and a complete observed chain-history reconstruction; the 10,000 GCA member benefit remains a separate manual reserve-wallet process.</p>
+        <p class="lead">Public account UI, wallet verification, eligible 100-credit records, protected member decisions, observed 30-day holding-history verification, and production evidence for already-completed manual member-benefit transfers are live. The 10,000 GCA transfer itself remains a separate reserve-wallet action.</p>
         <div class="actions">
           <a class="button primary" href="access.html">Access Portal</a>
           <a class="button primary" href="operations.html">Operations Runbook</a>
@@ -417,7 +417,7 @@
             <div class="row"><span>Local support review trail</span><strong class="good">SHA-256 continuity checked before review writes</strong></div>
             <div class="row"><span>Review chain checkpoint</span><strong class="good">Unsigned local export live; separate retention required</strong></div>
             <div class="row"><span>Service request and credit usage Worker routes</span><strong class="good">Production-live and token-protected; initial migration/deploy passed 2026-07-23 UTC and latest read-only smoke passed 2026-07-27 UTC</strong></div>
-            <div class="row"><span>10,000 GCA member benefit transfer</span><strong class="pending">Manual review only</strong></div>
+            <div class="row"><span>10,000 GCA member benefit transfer</span><strong class="good">Manual transfer; protected production evidence verification live</strong></div>
             <div class="row"><span>Live trading execution</span><strong class="pending">Not enabled</strong></div>
             <div class="row"><span>BaseScan token profile publication</span><strong class="pending">Returned 2026-05-23; final package refreshed 2026-07-18; Handoff and Chinese owner flow ready for one support@gcagochina.com submission</strong></div>
             <div class="row"><span>Latest reviewer package</span><strong class="good">Final package 2026-07-18T12:03:57Z; daily status 2026-07-23T16:08:40Z</strong></div>
@@ -461,6 +461,7 @@
             <li>GCA has a live controlled account UI, read-only wallet verification, and eligible D1 ledger records for 100 credits / GCA Member review.</li>
             <li>Submitted holding dates and transaction hashes are supporting preview evidence; successful GCA Member approval also requires a complete observed 30-day GCA transfer-history reconstruction.</li>
             <li>The 10,000 GCA member benefit requires 1,000,000 GCA, 30-day holding evidence, member ledger review, and manual reserve-wallet processing.</li>
+            <li>After a manual transfer, production records require a successful receipt at or below the Base safe block, the official reserve sender, the approved member recipient, and exactly 10,000 GCA.</li>
             <li>Any future trading-related feature must pass risk-control review and simulation or testnet first.</li>
           </ul>
         </div>
@@ -472,6 +473,7 @@
             <li>Do not claim the public form independently proves continuous 30-day holding; the protected approval route must reconstruct and store observed chain-history evidence.</li>
             <li>Do not describe observed holding-history reconstruction as a third-party audit, permanent guarantee, or proof that a public index can never be delayed.</li>
             <li>Do not claim the 10,000 GCA member benefit is automatic or self-service before manual reserve-wallet review.</li>
+            <li>Do not claim the member-benefit evidence route signs, authorizes, or broadcasts a transfer.</li>
             <li>Do not claim the product gives custody, withdrawal permission, exchange API secret collection, platform revenue distribution, trading permission, or risk-control bypass.</li>
             <li>Do not claim BaseScan token profile approval, external audit completion, deep liquidity, or tracked listing approval before publication.</li>
           </ul>

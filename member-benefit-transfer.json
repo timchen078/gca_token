@@ -1,9 +1,9 @@
 {
   "schema": "https://gcagochina.com/member-benefit-transfer.json",
   "pageUrl": "https://gcagochina.com/member-benefit-transfer.html",
-  "lastUpdated": "2026-05-14",
-  "status": "public-member-benefit-transfer-runbook-published-transfer-not-automatic",
-  "scope": "Manual operator runbook for the planned one-time 10,000 GCA member benefit transfer after support review and member ledger approval. This file does not make the benefit self-service claimable.",
+  "lastUpdated": "2026-07-27",
+  "status": "public-member-benefit-transfer-evidence-workflow-live",
+  "scope": "Manual operator runbook plus production read-only evidence verification for the one-time 10,000 GCA member benefit after support review and member ledger approval. The operator still signs and submits the transfer outside this system; this workflow never makes the benefit self-service claimable.",
   "network": "Base Mainnet",
   "chainId": 8453,
   "token": {
@@ -20,6 +20,8 @@
     "mintingAllowed": false,
     "automaticTransferAllowed": false,
     "selfServiceClaimable": false,
+    "productionEvidenceVerificationLive": true,
+    "productionEvidencePacketVersion": "gca_member_benefit_transfer_v1",
     "recipientMustEqualVerifiedMemberWallet": true,
     "registeredUserLimit": "one member benefit transfer per approved registered user",
     "walletLimit": "one verified Base wallet per registered user"
@@ -31,9 +33,11 @@
     "read-only ERC-20 balanceOf verifies at least 1,000,000 GCA at review time",
     "holdingPeriodDaysVerified is at least 30",
     "memberBenefitReviewEvidenceStatus is eligible",
-    "member ledger record is approved",
+    "member ledger record is active and links to a successful gca_holding_verification_v1 record",
+    "memberBenefitClaimStatus is pending_manual_reserve_transfer",
     "recipient wallet is the same verified Base wallet from the approved review",
-    "no prior memberBenefitTransferTx exists for the same registered user"
+    "no prior member-benefit transfer evidence exists for the same member ledger",
+    "the transaction hash has not been recorded for another member"
   ],
   "manualTransferSteps": [
     {
@@ -58,27 +62,58 @@
     },
     {
       "id": "record-transfer",
-      "label": "Record transfer",
-      "operatorAction": "After confirmation, record memberBenefitTransferTx, transferredAt, transferredAmount, sourceWallet, recipientWallet, and reviewerNote."
+      "label": "Verify and record transfer evidence",
+      "operatorAction": "After the wallet transaction confirms, run tools/record_cloudflare_member_benefit_transfer.py with the memberLedgerId, public transaction hash, reviewerId, reasonCode, and all three explicit acknowledgements. The production Worker reads the Base receipt and safe block, verifies the exact Transfer log, and writes the evidence record to D1."
     },
     {
       "id": "close-review",
       "label": "Close review",
-      "operatorAction": "Set memberBenefitClaimStatus to transferred or closed only after the public transaction hash is recorded."
+      "operatorAction": "The production evidence write sets memberBenefitClaimStatus to transferred only after receipt verification succeeds. Do not close or mark transferred from a screenshot or user-supplied statement alone."
     }
   ],
+  "productionEvidenceWorkflow": {
+    "status": "live-token-protected",
+    "packetVersion": "gca_member_benefit_transfer_v1",
+    "apiBaseUrl": "https://gca-registration-api.gcagochina.workers.dev",
+    "endpoint": "/gca/member-benefit-transfers",
+    "migration": "cloudflare/gca-registration-worker/migrations/0008_member_benefit_transfer_evidence.sql",
+    "operatorTool": "tools/record_cloudflare_member_benefit_transfer.py",
+    "officialSourceWallet": "0x5e8F84748612B913aAcC937492AC25dc5630E246",
+    "exactTransferAmount": "10000 GCA",
+    "requiresAdminReadToken": true,
+    "requiresSuccessfulReceipt": true,
+    "requiresReceiptAtOrBelowSafeBlock": true,
+    "requiresReceiptSenderToEqualOfficialSourceWallet": true,
+    "requiresReceiptTargetToEqualGcaContract": true,
+    "requiresExactlyOneMatchingTransferLog": true,
+    "requiresRecipientToEqualApprovedMemberWallet": true,
+    "automaticTokenTransfer": false,
+    "walletConnection": false,
+    "signatureRequest": false,
+    "workerRelease": "gca-registration-worker-2026-07-27-member-benefit-evidence-v1",
+    "workerVersionId": "510315f5-8db3-4e08-b574-6e14b618aed5",
+    "publicSmokePassedAt": "2026-07-27T09:37:54Z",
+    "adminReadOnlySmokePassedAt": "2026-07-27T09:38:07Z",
+    "recordsObservedDuringDeploymentSmoke": 0
+  },
   "requiredLedgerFieldsAfterTransfer": [
+    "transferRecordId",
     "memberLedgerId",
-    "registrationId",
-    "walletAddress",
-    "memberBenefitAmount",
-    "memberBenefitSource",
-    "memberBenefitClaimStatus",
-    "memberBenefitTransferTx",
-    "transferredAt",
     "sourceWallet",
     "recipientWallet",
-    "reviewerNote"
+    "transactionHash",
+    "baseScanTransactionUrl",
+    "amountGca",
+    "safeSnapshotBlockNumber",
+    "safeSnapshotBlockHash",
+    "receiptBlockNumber",
+    "receiptBlockHash",
+    "transferLogIndex",
+    "verificationStatus",
+    "verifiedAt",
+    "reviewerId",
+    "reasonCode",
+    "operatorNote"
   ],
   "doNotCollect": [
     "private key",
@@ -92,14 +127,16 @@
   ],
   "publicClaimBoundaries": {
     "safeClaims": [
-      "GCA has published a manual transfer runbook for the planned one-time 10,000 GCA member benefit.",
-      "The planned transfer requires support review, member ledger approval, 30-day holding-period verification, and a fresh read-only balance check.",
-      "If approved, the member benefit must come from project or owner-held reserve transfer only, not new minting.",
-      "The public runbook defines manual operator controls and does not make the benefit self-service claimable."
+      "GCA has published a manual transfer runbook for the one-time 10,000 GCA member benefit.",
+      "The transfer requires support review, an active member ledger, verified observed 30-day holding history, and manual reserve-wallet execution.",
+      "After a manual transfer, the production Worker verifies the successful Base receipt, safe block, official reserve sender, approved recipient, official token contract, and exact 10,000 GCA amount before storing evidence.",
+      "The benefit comes from the published project or owner-held reserve wallet only, not new minting.",
+      "The production route records verified public evidence and never signs, authorizes, or broadcasts a token transfer."
     ],
     "doNotClaim": [
       "the 10,000 GCA member benefit is self-service claimable today",
       "holding 1,000,000 GCA automatically triggers a transfer",
+      "the production evidence endpoint can initiate, authorize, or sign the transfer",
       "the member benefit is newly minted",
       "the member benefit is cash, income, reimbursement, trading permission, voting control, lifetime access, price support, or a way to bypass risk controls",
       "approval timing or transfer timing is promised before support and ledger review"

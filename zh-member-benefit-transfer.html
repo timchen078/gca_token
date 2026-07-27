@@ -299,10 +299,10 @@
 
     <main class="shell">
       <section aria-labelledby="title">
-        <p class="eyebrow">中文会员权益转账流程 / 2026-06-05</p>
+        <p class="eyebrow">中文会员权益转账流程 / 2026-07-27</p>
         <h1 id="title">GCA 中文会员权益转账流程</h1>
         <p class="lead">这一页说明 1,000,000 GCA 连续持有 30 天后的 10,000 GCA 会员权益如何进入人工审核、如何由储备钱包手动处理、以及需要记录哪些公开链上证据。</p>
-        <p class="lead">这不是自动领取页面，也不是新铸币。GCA 合约没有后续增发函数；如果审核通过，转账只能来自项目或 owner-held reserve，并且必须由 owner 在钱包里单独确认。</p>
+        <p class="lead">这不是自动领取页面，也不是新铸币。GCA 合约没有后续增发函数；转账必须由 owner 使用已公开的储备钱包单独确认。转账完成后，生产 Worker 会读取 Base 安全区块和交易回执，验证证据后写入 D1。</p>
         <div class="actions">
           <a class="button primary" href="gca/member-access/">会员账户入口</a>
           <a class="button secondary" href="zh-members.html">中文会员规则</a>
@@ -327,8 +327,8 @@
           <span class="value pending">人工审核和手动转账</span>
         </div>
         <div class="fact">
-          <span class="label">账本字段</span>
-          <span class="value"><code>memberBenefitTransferTx</code></span>
+          <span class="label">证据接口</span>
+          <span class="value good"><code>/gca/member-benefit-transfers</code></span>
         </div>
       </section>
 
@@ -348,7 +348,8 @@
           <h2>审核资料状态</h2>
           <div class="list">
             <div class="row"><span>资料版本</span><strong><code>gca_member_preregistration_v2</code></strong></div>
-            <div class="row"><span>审核状态</span><strong><code>memberBenefitReviewEvidenceStatus</code> = eligible</strong></div>
+            <div class="row"><span>证据版本</span><strong><code>gca_member_benefit_transfer_v1</code></strong></div>
+            <div class="row"><span>会员状态</span><strong><code>active</code>，且已有 30 天持有验证记录</strong></div>
             <div class="row"><span>交易哈希</span><strong><code>evidenceTxHashFormatOk</code> = true</strong></div>
             <div class="row"><span>持有周期</span><strong>连续持有至少 30 天</strong></div>
             <div class="row"><span>余额复核</span><strong>只读 balanceOf 复核至少 1,000,000 GCA</strong></div>
@@ -377,12 +378,12 @@
             <p class="note">由 owner 在钱包里确认转账，数量为 10,000 GCA，接收方必须是审核通过的钱包地址。</p>
           </article>
           <article class="card">
-            <h3>5. 记录公开交易哈希</h3>
-            <p class="note">链上确认后记录 <code>memberBenefitTransferTx</code>、transferredAt、transferredAmount、sourceWallet、recipientWallet 和 reviewerNote。</p>
+            <h3>5. 验证并记录链上证据</h3>
+            <p class="note">链上确认后运行 <code>tools/record_cloudflare_member_benefit_transfer.py</code>。受保护的 Worker 会检查成功回执、Base 安全区块、官方储备发送方、GCA 合约、已批准接收钱包和精确数量。</p>
           </article>
           <article class="card">
             <h3>6. 关闭审核记录</h3>
-            <p class="note">只有公开交易哈希已经保存后，才能把 memberBenefitClaimStatus 更新为 transferred 或 closed。</p>
+            <p class="note">只有生产证据写入验证成功后，系统才把 <code>memberBenefitClaimStatus</code> 更新为 <code>transferred</code>。截图或口头说明不能作为完成依据。</p>
           </article>
         </div>
       </section>
@@ -392,11 +393,11 @@
           <h2>转账后账本字段</h2>
           <div class="list">
             <div class="row"><span>memberLedgerId</span><strong>已通过审核的会员记录</strong></div>
-            <div class="row"><span>registrationId</span><strong>对应用户记录</strong></div>
-            <div class="row"><span>walletAddress</span><strong>已验证的接收钱包</strong></div>
-            <div class="row"><span>memberBenefitAmount</span><strong>10,000 GCA</strong></div>
-            <div class="row"><span>memberBenefitTransferTx</span><strong>Base Mainnet 公开交易哈希</strong></div>
-            <div class="row"><span>reviewerNote</span><strong>只写审核说明，不写敏感信息</strong></div>
+            <div class="row"><span>transferRecordId</span><strong>D1 追加式证据记录</strong></div>
+            <div class="row"><span>transactionHash</span><strong>Base Mainnet 公开交易哈希</strong></div>
+            <div class="row"><span>safeSnapshotBlockNumber</span><strong>Base 安全区块快照</strong></div>
+            <div class="row"><span>amountGca</span><strong>必须精确为 10,000 GCA</strong></div>
+            <div class="row"><span>verificationStatus</span><strong><code>verified</code></strong></div>
           </div>
         </div>
         <div class="panel notice">
@@ -415,10 +416,11 @@
         <p class="eyebrow">Public Claim Boundaries</p>
         <h2 id="claimTitle">对外描述边界</h2>
         <ul>
-          <li>可以说：GCA 已发布一次性 10,000 GCA 会员权益的人工转账流程。</li>
-          <li>可以说：审核需要支持记录、会员账本批准、30 天持有验证和新的只读余额复核。</li>
+          <li>可以说：GCA 已上线一次性 10,000 GCA 会员权益的人工转账流程和生产证据验证接口。</li>
+          <li>可以说：Worker 只在确认交易成功、区块已达到 safe、发送方是官方储备、接收方是已批准会员钱包且数量精确后写入证据。</li>
           <li>不能说：持有 1,000,000 GCA 会自动触发转账。</li>
           <li>不能说：10,000 GCA 会员权益今天可以自助领取。</li>
+          <li>不能说：证据接口会发起、签名、授权或广播代币转账。</li>
           <li>不能把会员权益描述成现金、收入、报销、交易权限、投票控制、永久访问、价格支持或风控豁免。</li>
         </ul>
       </section>
