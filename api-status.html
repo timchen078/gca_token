@@ -345,8 +345,9 @@
       <section aria-labelledby="title">
         <p class="eyebrow">Registration API Status / Live Read-Only Check</p>
         <h1 id="title">GCA Registration API Status</h1>
-        <p class="lead">This is the public status page for the live GCA email registration and contact suppression backend. The current production API runs on Cloudflare Workers + D1 at <code>https://gca-registration-api.gcagochina.workers.dev</code>.</p>
-        <p class="lead">A public-only smoke check passed at <code>2026-07-27T09:37:54Z</code>, followed by a token-protected admin read check at <code>2026-07-27T09:38:07Z</code>. The browser panel below can repeat the safe read-only portion now without writing records.</p>
+        <p class="lead">This is the public status page for the live GCA email registration, member access, device-key account status, and contact suppression backend. The current production API runs on Cloudflare Workers + D1 at <code>https://gca-registration-api.gcagochina.workers.dev</code>.</p>
+        <p class="lead">The account-status release public smoke check passed at <code>2026-07-27T10:53:44Z</code>, followed by a token-protected admin read check at <code>2026-07-27T10:54:00Z</code>. The browser panel below can repeat the safe read-only portion now without writing records.</p>
+        <p class="lead"><code>gca_member_access_v2</code> creates a random device key in the browser. D1 stores only its SHA-256 hash, and <code>gca_account_status_v1</code> returns a redacted read-only snapshot without email, full wallet address, the key, administrator data, or operator notes.</p>
         <p class="lead">Service requests, credit usage, append-only member review, holding verification, and member-benefit transfer evidence are production-live and token-protected. The new evidence route only verifies an existing manual transfer from the official reserve wallet and never signs or broadcasts one.</p>
         <p class="lead">The public checks verify health and read protections without writing test registrations. Admin reads remain token protected and should only be run locally by an operator with the local admin token file.</p>
         <div class="actions">
@@ -390,8 +391,12 @@
           <span class="value good">Production-live / read-only chain verification</span>
         </div>
         <div class="fact">
+          <span class="label">Account Status</span>
+          <span class="value good">Device-key protected / redacted read-only</span>
+        </div>
+        <div class="fact">
           <span class="label">Worker Version</span>
-          <span class="value">510315f5-8db3-4e08-b574-6e14b618aed5</span>
+          <span class="value">f4606d97-0427-4b04-bebf-20d23b64ae75</span>
         </div>
         <div class="fact">
           <span class="label">Custom Domain</span>
@@ -485,7 +490,12 @@
           <div class="fact">
             <span class="label">POST</span>
             <span class="value">/gca/member-access</span>
-            <p class="note">Live public account intake for email, Base wallet, holder-credit records, and a queued GCA Member review record. Submitted holding dates and transaction hashes are evidence previews only.</p>
+            <p class="note">Live <code>gca_member_access_v2</code> account intake for email, Base wallet, holder-credit records, a queued GCA Member review record, and a browser-generated device status key. D1 stores only the key hash.</p>
+          </div>
+          <div class="fact">
+            <span class="label">POST</span>
+            <span class="value">/gca/account-status</span>
+            <p class="note">Live <code>gca_account_status_v1</code> read-only lookup using the matching unexpired device key. It returns redacted account, wallet-verification, credits, member-review, and benefit-transfer state without email, full wallet, the key, admin data, or operator notes.</p>
           </div>
           <div class="fact">
             <span class="label">GET</span>
@@ -619,7 +629,7 @@
     </main>
 
     <footer>
-      <div class="shell">GCA API status. Public email registration, unsubscribe, member access, and read-only wallet verification are live on Workers + D1; admin reads remain token protected.</div>
+      <div class="shell">GCA API status. Public email registration, unsubscribe, member access, redacted device-key account status, and read-only wallet verification are live on Workers + D1; admin reads remain token protected.</div>
     </footer>
   </body>
 </html>

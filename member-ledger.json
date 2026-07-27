@@ -2,8 +2,8 @@
   "schema": "https://gcagochina.com/member-ledger.json",
   "pageUrl": "https://gcagochina.com/member-ledger.html",
   "lastUpdated": "2026-07-27",
-  "status": "public-member-ledger-benefit-evidence-live",
-  "scope": "Public data contract for live controlled HTTPS GCA member access integration. Eligible holder credits, protected member decisions, observed 30-day holding evidence, and verified evidence for already-completed manual 10,000 GCA reserve transfers are stored through Workers + D1.",
+  "status": "public-member-ledger-and-device-status-live",
+  "scope": "Public data contract for live controlled HTTPS GCA member access integration. Redacted device-key status, eligible holder credits, protected member decisions, observed 30-day holding evidence, and verified evidence for already-completed manual 10,000 GCA reserve transfers are served or stored through Workers + D1.",
   "network": "Base Mainnet",
   "chainId": 8453,
   "token": {
@@ -37,6 +37,7 @@
   },
   "preparedPaths": {
     "memberAccessPage": "/gca/member-access",
+    "accountStatus": "/gca/account-status",
     "preRegistrations": "/gca/pre-registrations",
     "walletVerifications": "/gca/wallet-verifications",
     "creditLedger": "/gca/credit-ledger",
@@ -45,7 +46,25 @@
     "holdingVerifications": "/gca/holding-verifications",
     "memberBenefitTransfers": "/gca/member-benefit-transfers",
     "localSupportReview": "/gca/member-review",
-    "accountPortal": "/gca/account"
+    "accountPortal": "/gca/member-access"
+  },
+  "accountStatusRead": {
+    "status": "production-live-device-key-protected",
+    "packetVersion": "gca_account_status_v1",
+    "endpoint": "/gca/account-status",
+    "memberAccessPacketVersion": "gca_member_access_v2",
+    "deviceKeyLifetimeDays": 365,
+    "storesDeviceKeyHashOnly": true,
+    "readOnly": true,
+    "returnsEmail": false,
+    "returnsFullWalletAddress": false,
+    "returnsDeviceKey": false,
+    "returnsAdministratorData": false,
+    "returnsOperatorNotes": false,
+    "requiresSignature": false,
+    "requiresTransaction": false,
+    "automaticTokenTransfer": false,
+    "lostKeyRecovery": "official support verification from the registered email"
   },
   "browserBalancePreview": {
     "status": "browser-read-only-preview-live",
@@ -332,6 +351,7 @@
       "The GCA Member data contract requires 1,000,000 GCA held for 30 consecutive days before a one-time 10,000 GCA member benefit review.",
       "The member ledger schema includes memberBenefitReviewEvidence fields for support and ledger review.",
       "The public member access page can submit account intake, read the current GCA balance through the backend, write eligible credit records, and queue qualifying member evidence.",
+      "The same browser can use a high-entropy device key to refresh a redacted read-only account and ledger status; D1 stores only the key hash.",
       "GCA Member activation requires a separate ADMIN_READ_TOKEN-protected operator review recorded in the append-only member review table.",
     "Successful member approval also requires and stores an observed complete 30-day GCA transfer-history reconstruction with a minimum balance of at least 1,000,000 GCA.",
     "The protected production API can verify and store evidence for an already-completed manual 10,000 GCA transfer from the official reserve wallet to the approved member wallet.",
@@ -342,6 +362,7 @@
     "doNotClaim": [
       "manual support can override wallet-balance verification",
       "a submitted holding date or transaction-hash format check automatically activates GCA Member status",
+      "the account-status route returns email, the full wallet address, the device key, administrator data, or operator notes",
       "the observed holding-history record is a third-party audit, permanent guarantee, or proof that a public index can never be delayed",
       "credits or membership are cash, income, reimbursement, voting control, live trading permission, leverage, custody, withdrawals, or risk-control bypass",
     "the 10,000 GCA member benefit is automatic or self-service transferred before holding-period verification, support approval, and manual reserve-wallet processing",

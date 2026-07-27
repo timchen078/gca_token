@@ -1,10 +1,13 @@
 {
   "schema": "https://gcagochina.com/api-status.json",
   "pageUrl": "https://gcagochina.com/api-status.html",
-  "status": "public-member-benefit-transfer-evidence-live",
+  "status": "public-device-key-account-status-live",
   "lastUpdated": "2026-07-27",
-  "latestPublicCheckAt": "2026-07-27T09:37:54Z",
-  "latestPublicCheckStatus": "passed-member-benefit-evidence-live-protected",
+  "latestPublicCheckAt": "2026-07-27T10:53:44Z",
+  "latestAdminCheckAt": "2026-07-27T10:54:00Z",
+  "latestPublicCheckStatus": "passed-account-status-live-redacted",
+  "workerRelease": "gca-registration-worker-2026-07-27-account-status-v1",
+  "workerVersionId": "f4606d97-0427-4b04-bebf-20d23b64ae75",
   "latestDeployReadinessCheckAt": "2026-07-23T17:55:52Z",
   "latestDeployReadinessStatus": "passed-cloudflare-permissions",
   "latestDeployReadinessSummary": {
@@ -47,7 +50,9 @@
       "GET /gca/access-config",
       "Base Mainnet chainId 8453",
       "official GCA contract address",
-      "gca_member_access_v1",
+      "gca_member_access_v2",
+      "gca_member_access_v1 legacy compatibility",
+      "gca_account_status_v1",
       "gca_member_review_v1",
       "gca_holding_verification_v1",
       "gca_member_benefit_transfer_v1",
@@ -145,7 +150,8 @@
       "path": "/gca/member-access",
       "url": "https://gca-registration-api.gcagochina.workers.dev/gca/member-access",
       "status": "live",
-      "packetVersion": "gca_member_access_v1",
+      "packetVersion": "gca_member_access_v2",
+      "legacyPacketVersion": "gca_member_access_v1",
       "public": true,
       "requiresWallet": true,
       "requiresSignature": false,
@@ -155,6 +161,26 @@
       "writesEligibleMemberLedger": true,
       "queuesMemberEvidenceForManualReview": true,
       "automaticMemberActivationFromSubmittedDate": false,
+      "automaticTokenTransfer": false
+    },
+    {
+      "id": "account-status-read",
+      "method": "POST",
+      "path": "/gca/account-status",
+      "url": "https://gca-registration-api.gcagochina.workers.dev/gca/account-status",
+      "status": "live-device-key-protected",
+      "packetVersion": "gca_account_status_v1",
+      "public": true,
+      "requiresDeviceStatusKey": true,
+      "storesDeviceStatusKeyHashOnly": true,
+      "statusAccessDays": 365,
+      "readOnly": true,
+      "returnsEmail": false,
+      "returnsFullWalletAddress": false,
+      "returnsDeviceStatusKey": false,
+      "returnsAdminData": false,
+      "requiresSignature": false,
+      "requiresTransaction": false,
       "automaticTokenTransfer": false
     }
   ],
@@ -228,9 +254,9 @@
       "authorizesMemberBenefitTransfer": false,
       "lastObservedAnonymousGetStatus": 401,
       "lastObservedAdminGetStatus": 200,
-      "lastObservedAt": "2026-07-27T09:38:07Z",
+      "lastObservedAt": "2026-07-27T10:54:00Z",
       "productionLive": true,
-      "workerVersionId": "510315f5-8db3-4e08-b574-6e14b618aed5"
+      "workerVersionId": "f4606d97-0427-4b04-bebf-20d23b64ae75"
     },
     {
       "id": "holding-verifications-read",
@@ -248,9 +274,9 @@
       "automaticTokenTransfer": false,
       "lastObservedAnonymousGetStatus": 401,
       "lastObservedAdminGetStatus": 200,
-      "lastObservedAt": "2026-07-27T09:38:07Z",
+      "lastObservedAt": "2026-07-27T10:54:00Z",
       "productionLive": true,
-      "workerVersionId": "510315f5-8db3-4e08-b574-6e14b618aed5"
+      "workerVersionId": "f4606d97-0427-4b04-bebf-20d23b64ae75"
     },
     {
       "id": "service-requests-read-write",
@@ -262,9 +288,9 @@
       "publicLedgerReadable": false,
       "workerDryRunPassed": true,
       "lastObservedAnonymousGetStatus": 401,
-      "lastObservedAt": "2026-07-27T09:37:54Z",
+      "lastObservedAt": "2026-07-27T10:53:44Z",
       "productionLive": true,
-      "workerVersionId": "510315f5-8db3-4e08-b574-6e14b618aed5"
+      "workerVersionId": "f4606d97-0427-4b04-bebf-20d23b64ae75"
     },
     {
       "id": "credit-usage-read-write",
@@ -276,9 +302,9 @@
       "publicLedgerReadable": false,
       "workerDryRunPassed": true,
       "lastObservedAnonymousGetStatus": 401,
-      "lastObservedAt": "2026-07-27T09:37:54Z",
+      "lastObservedAt": "2026-07-27T10:53:44Z",
       "productionLive": true,
-      "workerVersionId": "510315f5-8db3-4e08-b574-6e14b618aed5"
+      "workerVersionId": "f4606d97-0427-4b04-bebf-20d23b64ae75"
     },
     {
       "id": "member-benefit-transfers-read-write",
@@ -299,9 +325,9 @@
       "writesWallet": false,
       "lastObservedAnonymousGetStatus": 401,
       "lastObservedAdminGetStatus": 200,
-      "lastObservedAt": "2026-07-27T09:38:07Z",
+      "lastObservedAt": "2026-07-27T10:54:00Z",
       "productionLive": true,
-      "workerVersionId": "510315f5-8db3-4e08-b574-6e14b618aed5"
+      "workerVersionId": "f4606d97-0427-4b04-bebf-20d23b64ae75"
     }
   ],
   "checks": {
@@ -357,9 +383,9 @@
       "noTradingPermission": true,
       "doNotClaimLiveBeforeSmokeChecks": true
     },
-    "workerVersionId": "510315f5-8db3-4e08-b574-6e14b618aed5",
-    "publicSmokePassedAt": "2026-07-27T09:37:54Z",
-    "adminSmokePassedAt": "2026-07-27T09:38:07Z"
+    "workerVersionId": "f4606d97-0427-4b04-bebf-20d23b64ae75",
+    "publicSmokePassedAt": "2026-07-27T10:53:44Z",
+    "adminSmokePassedAt": "2026-07-27T10:54:00Z"
   },
   "operatorTools": {
     "adminExport": "tools/export_cloudflare_email_registrations.py",
@@ -378,6 +404,12 @@
     "noWalletSignatureForEmailRegistration": true,
     "noPaymentForEmailRegistration": true,
     "noPublicLedgerRead": true,
+    "deviceKeyAccountStatusLive": true,
+    "accountStatusReadOnly": true,
+    "accountStatusTokenStoredAsSha256": true,
+    "accountStatusReturnsEmail": false,
+    "accountStatusReturnsFullWallet": false,
+    "accountStatusReturnsDeviceKey": false,
     "noSelfServiceCreditsActivation": false,
     "noSelfServiceMemberActivation": true,
     "noWalletSignatureForWalletVerification": true,

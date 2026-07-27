@@ -123,7 +123,7 @@
     "workerDeployPermission": "passed",
     "code10000Seen": false,
     "latestReadinessCheckAt": "2026-07-23T17:55:52Z",
-    "latestPublicRouteCheckAt": "2026-07-27T09:37:54Z",
+    "latestPublicRouteCheckAt": "2026-07-27T10:53:44Z",
     "pendingRouteAnonymousGetStatus": {
       "/gca/service-requests": 401,
       "/gca/credit-usage": 401
@@ -140,10 +140,10 @@
     ],
     "remoteMigrations": "applied",
     "workerDeploy": "passed",
-    "workerVersionId": "510315f5-8db3-4e08-b574-6e14b618aed5",
+    "workerVersionId": "f4606d97-0427-4b04-bebf-20d23b64ae75",
     "postDeployPublicSmoke": "passed",
     "postDeployAdminSmoke": "passed",
-    "productionRoutesVerifiedAt": "2026-07-27T09:38:07Z"
+    "productionRoutesVerifiedAt": "2026-07-27T10:54:00Z"
   },
   "releaseBoundaries": [
     "The playbook is public and local operator recording is ready.",

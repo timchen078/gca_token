@@ -1,13 +1,13 @@
 {
   "schema": "https://gcagochina.com/release-gates.json",
   "pageUrl": "https://gcagochina.com/release-gates.html",
-  "status": "public-release-gates-member-benefit-evidence-live",
+  "status": "public-release-gates-device-account-status-live",
   "lastUpdated": "2026-07-27",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "title": "GCA Product Release Gates",
   "currentState": {
-    "currentStage": "member-benefit-transfer-evidence-path-live",
+    "currentStage": "device-key-account-status-path-live",
     "publicProductSpecOnly": false,
     "publicAccountUiLive": true,
     "creditsEligibilitySubmissionLive": true,
@@ -25,6 +25,14 @@
     "reviewQueueContract": "public-review-queue-contract-published",
     "operationsRunbook": "public-access-operations-runbook-published",
     "walletVerificationLive": true,
+    "memberAccessPacketVersion": "gca_member_access_v2",
+    "accountStatusPacketVersion": "gca_account_status_v1",
+    "accountStatusProductionLive": true,
+    "accountStatusReadOnly": true,
+    "accountStatusTokenStoredAsSha256": true,
+    "accountStatusReturnsEmail": false,
+    "accountStatusReturnsFullWallet": false,
+    "accountStatusReturnsAccessToken": false,
     "creditLedgerWritesLive": true,
     "memberLedgerWritesLive": true,
     "memberReviewWorkflowProductionLive": true,
@@ -33,12 +41,12 @@
     "memberBenefitTransferPacketVersion": "gca_member_benefit_transfer_v1",
     "holdingHistoryVerificationProductionLive": true,
     "memberBenefitTransferEvidenceProductionLive": true,
-    "memberBenefitTransferProductionVerifiedAt": "2026-07-27T09:38:07Z",
+    "memberBenefitTransferProductionVerifiedAt": "2026-07-27T10:54:00Z",
     "memberBenefitTransferOfficialSourceWallet": "0x5e8F84748612B913aAcC937492AC25dc5630E246",
     "memberBenefitTransferExactAmount": "10000 GCA",
     "onchainHoldingHistoryRequiredForApproval": true,
     "automaticMemberActivationFromSubmittedDate": false,
-    "memberReviewProductionVerifiedAt": "2026-07-27T09:38:07Z",
+    "memberReviewProductionVerifiedAt": "2026-07-27T10:54:00Z",
     "localSupportReviewQueue": "live-with-sha256-continuity-check",
     "localSupportReviewCheckpointTool": "live-unsigned-independent-retention-required",
     "localSupportReviewCheckpointPublishedExternally": false,
@@ -47,7 +55,7 @@
     "memberBenefitAutomaticTransfer": false,
     "pendingServiceRoutesProductionLive": true,
     "latestPendingRouteReadinessCheckAt": "2026-07-23T17:55:52Z",
-    "latestPendingRoutePublicCheckAt": "2026-07-27T09:37:54Z",
+    "latestPendingRoutePublicCheckAt": "2026-07-27T10:53:44Z",
     "cloudflareAuthSession": "passed",
     "cloudflareD1Visibility": "passed",
     "cloudflareWorkerDeployPermission": "passed",
@@ -56,8 +64,8 @@
       "/gca/service-requests": 401,
       "/gca/credit-usage": 401
     },
-    "latestPendingRouteAdminCheckAt": "2026-07-27T09:38:07Z",
-    "workerVersionId": "510315f5-8db3-4e08-b574-6e14b618aed5"
+    "latestPendingRouteAdminCheckAt": "2026-07-27T10:54:00Z",
+    "workerVersionId": "f4606d97-0427-4b04-bebf-20d23b64ae75"
   },
   "releaseGates": [
     {
@@ -68,6 +76,18 @@
         "unreviewed account activation",
         "automatic credit-token claiming",
         "automatic GCA Member activation"
+      ]
+    },
+    {
+      "id": "device-key-account-status",
+      "label": "Redacted device-key account status",
+      "status": "live-read-only-redacted",
+      "packetVersion": "gca_account_status_v1",
+      "endpoint": "/gca/account-status",
+      "blocks": [
+        "returning email, full wallet address, device key, administrator data, or operator notes",
+        "status access without a matching unexpired browser device key",
+        "lost-key recovery without official support verification from the registered email"
       ]
     },
     {

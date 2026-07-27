@@ -11,8 +11,8 @@
   "scope": "Public deployment record and repeatable release runbook for the production-live, operator-only service-request and credit-usage Cloudflare Worker routes.",
   "currentStatus": {
     "latestReadinessCheckAt": "2026-07-23T17:55:52Z",
-    "latestPublicRouteCheckAt": "2026-07-27T09:37:54Z",
-    "latestAdminRouteCheckAt": "2026-07-27T09:38:07Z",
+    "latestPublicRouteCheckAt": "2026-07-27T10:53:44Z",
+    "latestAdminRouteCheckAt": "2026-07-27T10:54:00Z",
     "workerDryRun": "passed-2026-07-23",
     "d1Visibility": "passed",
     "cloudflareAuthSession": "passed",
@@ -24,7 +24,7 @@
     },
     "remoteMigrations": "applied",
     "workerDeploy": "passed",
-    "workerVersionId": "510315f5-8db3-4e08-b574-6e14b618aed5",
+    "workerVersionId": "f4606d97-0427-4b04-bebf-20d23b64ae75",
     "postDeployPublicSmoke": "passed",
     "postDeployAdminSmoke": "passed",
     "productionRouteStatus": "live-token-protected"
@@ -36,6 +36,7 @@
     "POST /gca/contact-suppressions",
     "POST /gca/wallet-verifications",
     "POST /gca/member-access",
+    "POST /gca/account-status",
     "token-protected GET /gca/email-registrations",
     "token-protected GET /gca/contact-suppressions",
     "token-protected GET /gca/wallet-verifications",
@@ -54,7 +55,7 @@
       "writesCredits": false,
       "createsTradingPermission": false,
       "productionLive": true,
-      "workerVersionId": "510315f5-8db3-4e08-b574-6e14b618aed5"
+      "workerVersionId": "f4606d97-0427-4b04-bebf-20d23b64ae75"
     },
     {
       "path": "/gca/credit-usage",
@@ -63,7 +64,7 @@
       "status": "live-token-protected",
       "writtenOnlyAfterReviewedDelivery": true,
       "productionLive": true,
-      "workerVersionId": "510315f5-8db3-4e08-b574-6e14b618aed5"
+      "workerVersionId": "f4606d97-0427-4b04-bebf-20d23b64ae75"
     }
   ],
   "deployGates": [
@@ -88,7 +89,8 @@
       "requiredAfter": "read-only-readiness",
       "expectedMigrations": [
         "0004_credit_usage_ledger.sql",
-        "0005_service_requests.sql"
+        "0005_service_requests.sql",
+        "0009_account_status_access.sql"
       ]
     },
     {

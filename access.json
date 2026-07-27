@@ -2,19 +2,19 @@
   "schema": "https://gcagochina.com/access.json",
   "pageUrl": "https://gcagochina.com/access.html",
   "status": "public-access-portal-live",
-  "lastUpdated": "2026-07-11",
+  "lastUpdated": "2026-07-27",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "title": "GCA Access Portal",
   "currentState": {
-    "currentStage": "controlled-account-ui-live",
+    "currentStage": "controlled-account-ui-and-device-status-live",
     "blueprintOnly": false,
     "controlledHttpsAccountUiLive": true,
     "directSubmissionEndpointConfigured": true,
     "creditsEligibilitySubmissionLive": true,
     "gcaMemberEligibilitySubmissionLive": true,
     "liveTradingEnabled": false,
-    "accessApiContract": "published-contract-only",
+    "accessApiContract": "workers-d1-live",
     "reviewQueueContract": "published-manual-review-contract",
     "operationsRunbook": "public-access-operations-runbook-published",
     "walletVerificationLive": true,
@@ -22,6 +22,15 @@
     "memberLedgerWritesLive": true,
     "memberBenefitAutomaticTransfer": false,
     "memberBenefitManualReviewOnly": true,
+    "memberAccessPacketVersion": "gca_member_access_v2",
+    "accountStatusPacketVersion": "gca_account_status_v1",
+    "serverAccountStatusLive": true,
+    "serverAccountStatusReadOnly": true,
+    "serverAccountStatusReturnsEmail": false,
+    "serverAccountStatusReturnsFullWallet": false,
+    "serverAccountStatusReturnsDeviceKey": false,
+    "statusAccessTokenStoredAsSha256": true,
+    "statusAccessMaxAgeDays": 365,
     "deviceLocalStatusSnapshot": true,
     "deviceLocalStatusSnapshotMaxAgeDays": 30,
     "deviceLocalStatusSnapshotStoresEmail": false
@@ -34,7 +43,8 @@
     "memberLedger": "/gca/member-ledger",
     "supportReview": "/gca/support-review",
     "memberAccess": "/gca/member-access",
-    "accessConfig": "/gca/access-config"
+    "accessConfig": "/gca/access-config",
+    "accountStatus": "/gca/account-status"
   },
   "publicPreview": {
     "memberAccessPreview": "https://gcagochina.com/gca/member-access/",
@@ -92,9 +102,9 @@
     },
     {
       "id": "device-local-status",
-      "label": "Return to the latest device-local account status",
+      "label": "Refresh a redacted account status",
       "status": "live",
-      "description": "After a successful read-only verification or account submission, the member access page keeps a non-sensitive wallet, balance, credits, and member-status snapshot in that browser for up to 30 days. It does not store email, private keys, seed phrases, approvals, signatures, or wallet permissions."
+      "description": "After a successful account submission, the browser keeps a high-entropy device key and can refresh a redacted account, wallet-verification, credits, member-review, and benefit-transfer snapshot through POST /gca/account-status. D1 stores only the key hash; the response omits email, full wallet address, the key, administrator data, and operator notes. The browser keeps the latest redacted snapshot for up to 30 days."
     }
   ],
   "eligibilityThresholds": {
@@ -135,6 +145,12 @@
   ],
   "securityBoundaries": {
     "readOnlyWalletVerification": true,
+    "readOnlyAccountStatus": true,
+    "accountStatusUsesBrowserDeviceKey": true,
+    "accountStatusTokenStoredAsSha256": true,
+    "accountStatusReturnsEmail": false,
+    "accountStatusReturnsFullWallet": false,
+    "accountStatusReturnsAccessToken": false,
     "usesEthCall": true,
     "usesErc20BalanceOf": true,
     "requiresSignatureForBalanceRead": false,
@@ -197,6 +213,8 @@
   "publicClaimBoundaries": {
     "safeClaims": [
       "GCA has a live public access portal at https://gcagochina.com/gca/member-access/.",
+      "The live member access v2 path creates a browser device key whose SHA-256 hash is stored in D1.",
+      "The device-key account-status route returns a redacted read-only snapshot without email, full wallet address, the device key, administrator data, or operator notes.",
       "The Worker verifies Base Mainnet GCA balance with read-only eth_call and ERC-20 balanceOf.",
       "Eligible 10,000 GCA holders can create one 100 GCA AI Quant Access credits ledger record.",
       "Eligible 1,000,000 GCA / 30-day holders can create a GCA Member review ledger record.",
@@ -207,6 +225,7 @@
       "credits are cash, income, reimbursement, trading permission, or transferable value",
       "GCA Member approval is automatic without wallet balance and holding-period review",
       "the 10,000 GCA member benefit is automatic or self-service transferred",
+      "a lost, expired, or revoked device key can be recovered without official support verification from the registered email",
       "wallet verification requires private keys, seed phrases, exchange API secrets, custody, withdrawal permission, or risk-control bypass",
       "live trading execution is enabled before risk-control review and simulation or testnet validation"
     ]

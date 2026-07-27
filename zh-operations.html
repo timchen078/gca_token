@@ -314,7 +314,8 @@
         <p class="eyebrow">中文运营流程 / 2026-07-27</p>
         <h1 id="title">GCA 中文运营流程</h1>
         <p class="lead">这一页说明用户在官网提交邮箱和会员账户资料以后，GCA 运营者应该怎样同步 Cloudflare D1 记录、导出联系名单、处理退订、保留本地账本，并把会员权益审核接到支持流程里。</p>
-        <p class="lead">邮箱注册、账户入口、只读钱包验证、100 credits、会员人工审核、30 天持有证据和已完成会员权益转账的生产证据验证已经上线。10,000 GCA 转账本身仍由储备钱包人工确认。</p>
+        <p class="lead">邮箱注册、账户入口、只读钱包验证、设备密钥脱敏账户状态、100 credits、会员人工审核、30 天持有证据和已完成会员权益转账的生产证据验证已经上线。10,000 GCA 转账本身仍由储备钱包人工确认。</p>
+        <p class="lead">运营人员不能通过邮箱或工单索要用户的设备状态密钥。密钥丢失、过期或撤销后，必须先由注册邮箱联系官方支持并经过人工核验。</p>
         <p class="lead">服务请求队列、Credit 使用记录和 GCA Member 人工审核的 Cloudflare Worker 路由已经正式上线并受管理员 token 保护；权限、D1 migration、部署和公开/管理员只读 smoke 检查均已通过。</p>
         <div class="actions">
           <a class="button primary" href="register.html">邮箱注册</a>
@@ -343,6 +344,10 @@
         <div class="fact">
           <span class="label">会员账本</span>
           <span class="value good">符合条件写入 D1 账本记录</span>
+        </div>
+        <div class="fact">
+          <span class="label">账户状态</span>
+          <span class="value good">设备密钥保护 / 脱敏只读</span>
         </div>
       </section>
 

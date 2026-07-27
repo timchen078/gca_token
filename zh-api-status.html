@@ -316,8 +316,9 @@
       <section aria-labelledby="title">
         <p class="eyebrow">中文 API 状态 / 浏览器实时只读检查</p>
         <h1 id="title">GCA 中文 API 状态</h1>
-        <p class="lead">这一页用中文说明 GCA 邮箱注册和邮箱退订接口的当前状态。公网邮箱注册已经接到 Cloudflare Workers + D1，普通用户可以通过官网表单提交邮箱；管理员读取接口仍需要本地管理 token。</p>
-        <p class="lead">公网只读 smoke check 已在 <code>2026-07-27T09:37:54Z</code> 通过，管理员 token 只读检查已在 <code>2026-07-27T09:38:07Z</code> 通过。下方实时面板可以在当前浏览器重复安全的只读部分，全程不写入记录。</p>
+        <p class="lead">这一页用中文说明 GCA 邮箱注册和邮箱退订接口、会员账户、设备密钥账户状态的当前状态。公网接口已经接到 Cloudflare Workers + D1；管理员读取接口仍需要本地管理 token。</p>
+        <p class="lead">账户状态版本的公网只读 smoke check 已在 <code>2026-07-27T10:53:44Z</code> 通过，管理员 token 只读检查已在 <code>2026-07-27T10:54:00Z</code> 通过。下方实时面板可以在当前浏览器重复安全的只读部分，全程不写入记录。</p>
+        <p class="lead"><code>gca_member_access_v2</code> 在浏览器生成随机设备密钥，D1 只保存 SHA-256。<code>gca_account_status_v1</code> 只返回脱敏只读状态，不返回邮箱、完整钱包地址、密钥、管理员数据或运营备注。</p>
         <p class="lead">服务请求、Credit 使用、会员人工审核、持有验证和会员权益转账证据路由都已经正式上线并受管理员 token 保护。会员权益证据接口只验证已经完成的手动储备钱包转账。</p>
         <p class="lead">公开 API 支持邮箱、退订、会员账户提交和只读余额验证；它不要求私钥或钱包签名。10,000 GCA 转账仍需人工完成，系统不会自动发放。</p>
         <div class="actions">
@@ -352,6 +353,10 @@
         <div class="fact">
           <span class="label">管理员读取</span>
           <span class="value">token 保护</span>
+        </div>
+        <div class="fact">
+          <span class="label">账户状态</span>
+          <span class="value good">设备密钥保护 / 脱敏只读</span>
         </div>
       </section>
 
@@ -423,7 +428,11 @@
           </article>
           <article class="card">
             <h3>会员账户提交</h3>
-            <p class="note"><code>POST /gca/member-access</code> 接收邮箱和 Base 钱包，写入钱包验证记录、100 credits 记录和 GCA Member 审核记录。</p>
+            <p class="note"><code>POST /gca/member-access</code> 使用 <code>gca_member_access_v2</code> 接收邮箱和 Base 钱包，写入符合条件的记录，并为本浏览器建立只保存哈希的设备状态访问。</p>
+          </article>
+          <article class="card">
+            <h3>脱敏账户状态</h3>
+            <p class="note"><code>POST /gca/account-status</code> 使用 <code>gca_account_status_v1</code> 和未过期设备密钥，返回账户、钱包验证、credits、会员审核和权益转账状态。不会返回邮箱、完整钱包、密钥、管理员数据或运营备注。</p>
           </article>
           <article class="card">
             <h3>注册记录读取</h3>
@@ -495,6 +504,7 @@
             <li>邮箱注册不需要钱包地址，不读取钱包余额。</li>
             <li>邮箱注册不需要私钥、助记词、钱包签名、验证码、付款或交易所 API Secret。</li>
             <li>会员账户入口可以写入符合条件的 100 credits 记录并排入会员审核；10,000 GCA 仍由储备钱包手动处理，完成后才进入生产证据验证。</li>
+            <li>设备状态密钥只保存在浏览器，服务端只保存 SHA-256；丢失、过期或撤销后需要通过注册邮箱联系官方支持核验。</li>
             <li>邮箱退订只影响后续联系导出，不改变 GCA 持仓、池子、链上资产或会员处理状态。</li>
           </ul>
         </div>
@@ -526,7 +536,7 @@
     </main>
 
     <footer>
-      <div class="shell">GCA 中文 API 状态。账户、会员审核、持有证据和会员权益转账证据已接入 Cloudflare Workers + D1；代币转账本身仍由储备钱包手动完成。</div>
+      <div class="shell">GCA 中文 API 状态。账户、设备密钥脱敏状态、会员审核、持有证据和会员权益转账证据已接入 Cloudflare Workers + D1；代币转账本身仍由储备钱包手动完成。</div>
     </footer>
   </body>
 </html>

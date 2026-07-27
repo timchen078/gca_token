@@ -327,8 +327,8 @@
       <section aria-labelledby="title">
         <p class="eyebrow">Access Operations Runbook / 2026-07-27</p>
         <h1 id="title">GCA Access Operations Runbook</h1>
-        <p class="lead">This runbook defines how GCA operators handle registration, account intake, read-only wallet review, protected member decisions, manual member-benefit execution, and production verification of the resulting public transfer evidence.</p>
-        <p class="lead">The email registration, unsubscribe, account intake, wallet verification, and eligible ledger paths are live on Cloudflare Workers + D1. The operations runbook only describes review handling; it is not a public ledger browser, not a public support ticket system, and not a way to request custody, withdrawals, live trading, or balance-verification overrides.</p>
+        <p class="lead">This runbook defines how GCA operators handle registration, account intake, read-only wallet review, redacted device-key status access, protected member decisions, manual member-benefit execution, and production verification of the resulting public transfer evidence.</p>
+        <p class="lead">The email registration, unsubscribe, account intake, wallet verification, redacted status, and eligible ledger paths are live on Cloudflare Workers + D1. The redacted account status is private to the matching device key and is not a public ledger browser. Operators must never request a user's device status key by email or support ticket. Lost, expired, or revoked keys require identity verification from the registered email before a future recovery process.</p>
         <div class="actions">
           <a class="button primary" href="review-queue.html">Review Queue Contract</a>
           <a class="button" href="access-api.html">Access API Contract</a>
@@ -342,7 +342,7 @@
         <div class="facts" aria-label="Operational state">
           <div class="fact">
             <span class="label">Current stage</span>
-            <span class="value good">member-benefit evidence operations live</span>
+            <span class="value good">device-key account status operations live</span>
           </div>
           <div class="fact">
             <span class="label">Email API</span>
@@ -359,6 +359,10 @@
           <div class="fact">
             <span class="label">Wallet check</span>
             <span class="value">read-only balanceOf</span>
+          </div>
+          <div class="fact">
+            <span class="label">Account status</span>
+            <span class="value good">redacted read-only / SHA-256 device key</span>
           </div>
         </div>
       </section>
@@ -404,6 +408,10 @@
           <div>
             <h3>2. Identity Check</h3>
             <p class="note">Confirm Base Mainnet chain ID 8453 and official contract <code>0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6</code>.</p>
+          </div>
+          <div>
+            <h3>Device Status Recovery</h3>
+            <p class="note">Never ask the user to send a device status key. If it is lost, expired, or revoked, require contact from the registered email and handle recovery as a separate reviewed support action. The public status route cannot reveal or reset the key.</p>
           </div>
           <div>
             <h3>3. Wallet Balance Check</h3>

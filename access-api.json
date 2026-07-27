@@ -1,13 +1,13 @@
 {
   "schema": "https://gcagochina.com/access-api.json",
   "pageUrl": "https://gcagochina.com/access-api.html",
-  "status": "public-access-api-member-benefit-evidence-live",
+  "status": "public-access-api-account-status-live",
   "lastUpdated": "2026-07-27",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "title": "GCA Access API Contract",
   "currentState": {
-    "currentStage": "member-benefit-transfer-evidence-api-live",
+    "currentStage": "device-key-account-status-api-live",
     "contractOnly": false,
     "backendLive": true,
     "publicEndpointLive": true,
@@ -24,7 +24,13 @@
     "memberPacketVersion": "gca_member_preregistration_v2",
     "emailRegistrationPacketVersion": "gca_email_registration_v1",
     "contactSuppressionPacketVersion": "gca_contact_suppression_v1",
-    "memberAccessPacketVersion": "gca_member_access_v1",
+    "memberAccessPacketVersion": "gca_member_access_v2",
+    "legacyMemberAccessPacketVersion": "gca_member_access_v1",
+    "accountStatusPacketVersion": "gca_account_status_v1",
+    "accountStatusProductionLive": true,
+    "accountStatusReadOnly": true,
+    "accountStatusReturnsEmail": false,
+    "accountStatusReturnsAccessToken": false,
     "memberReviewPacketVersion": "gca_member_review_v1",
     "holdingVerificationPacketVersion": "gca_holding_verification_v1",
     "memberBenefitTransferPacketVersion": "gca_member_benefit_transfer_v1",
@@ -48,9 +54,9 @@
     "memberBenefitTransferStillManual": true,
     "onchainHoldingHistoryRequiredForApproval": true,
     "automaticMemberActivationFromSubmittedDate": false,
-    "memberReviewProductionVerifiedAt": "2026-07-27T09:38:07Z",
-    "memberBenefitTransferProductionVerifiedAt": "2026-07-27T09:38:07Z",
-    "serviceRoutesProductionVerifiedAt": "2026-07-27T09:38:07Z"
+    "memberReviewProductionVerifiedAt": "2026-07-27T10:54:00Z",
+    "memberBenefitTransferProductionVerifiedAt": "2026-07-27T10:54:00Z",
+    "serviceRoutesProductionVerifiedAt": "2026-07-27T10:54:00Z"
   },
   "localDevelopmentBackend": {
     "status": "local-only-backend-available",
@@ -123,7 +129,7 @@
       "writesD1Records": false,
       "deploysWorker": false
     },
-    "pendingRoutesLastObservedAt": "2026-07-27T09:37:54Z",
+    "pendingRoutesLastObservedAt": "2026-07-27T10:53:44Z",
     "pendingRouteAnonymousGetStatus": {
       "/gca/service-requests": 401,
       "/gca/credit-usage": 401
@@ -169,7 +175,9 @@
     "memberReviewMigration": "cloudflare/gca-registration-worker/migrations/0006_member_reviews.sql",
     "holdingHistoryMigration": "cloudflare/gca-registration-worker/migrations/0007_holding_history_verifications.sql",
     "memberBenefitTransferMigration": "cloudflare/gca-registration-worker/migrations/0008_member_benefit_transfer_evidence.sql",
+    "accountStatusAccessMigration": "cloudflare/gca-registration-worker/migrations/0009_account_status_access.sql",
     "memberAccessEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/member-access",
+    "accountStatusEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/account-status",
     "walletVerificationEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/wallet-verifications",
     "accessConfigEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/access-config",
     "adminCreditLedgerEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/credit-ledger",
@@ -186,16 +194,16 @@
       "company",
       "homepage"
     ],
-    "workerVersionId": "510315f5-8db3-4e08-b574-6e14b618aed5",
-    "workerRelease": "gca-registration-worker-2026-07-27-member-benefit-evidence-v1",
+    "workerVersionId": "f4606d97-0427-4b04-bebf-20d23b64ae75",
+    "workerRelease": "gca-registration-worker-2026-07-27-account-status-v1",
     "memberReviewVersion": "gca_member_review_v1",
     "holdingVerificationVersion": "gca_holding_verification_v1",
     "memberBenefitTransferVersion": "gca_member_benefit_transfer_v1",
     "memberBenefitTransferOfficialSourceWallet": "0x5e8F84748612B913aAcC937492AC25dc5630E246",
     "memberBenefitTransferExactAmount": "10000 GCA",
-    "memberBenefitTransferPublicSmokePassedAt": "2026-07-27T09:37:54Z",
-    "memberBenefitTransferAdminSmokePassedAt": "2026-07-27T09:38:07Z",
-    "productionRoutesVerifiedAt": "2026-07-27T09:38:07Z"
+    "memberBenefitTransferPublicSmokePassedAt": "2026-07-27T10:53:44Z",
+    "memberBenefitTransferAdminSmokePassedAt": "2026-07-27T10:54:00Z",
+    "productionRoutesVerifiedAt": "2026-07-27T10:54:00Z"
   },
   "securityModel": {
     "controlledHttpsOriginRequired": true,
@@ -221,6 +229,11 @@
     "memberBenefitTransferEvidenceRequiresExactAmount": "10000 GCA",
     "memberBenefitTransferEvidencePacketVersion": "gca_member_benefit_transfer_v1",
     "memberBenefitTransferSendsTokens": false,
+    "accountStatusReadOnly": true,
+    "accountStatusUsesDeviceKey": true,
+    "accountStatusStoresTokenHashOnly": true,
+    "accountStatusReturnsEmail": false,
+    "accountStatusReturnsToken": false,
     "usesEthCall": true,
     "usesEthGetTransactionReceipt": true,
     "usesErc20BalanceOf": true,
@@ -235,6 +248,9 @@
     "riskControlBypassAllowed": false
   },
   "memberPacketVersion": "gca_member_preregistration_v2",
+  "memberAccessPacketVersion": "gca_member_access_v2",
+  "legacyMemberAccessPacketVersion": "gca_member_access_v1",
+  "accountStatusPacketVersion": "gca_account_status_v1",
   "emailRegistrationPacketVersion": "gca_email_registration_v1",
   "contactSuppressionPacketVersion": "gca_contact_suppression_v1",
   "serviceRequestPacketVersion": "gca_service_request_v1",
@@ -407,8 +423,10 @@
       "status": "production-workers-dev-live",
       "purpose": "Receive live controlled account intake through the Workers + D1 backend, verify the Base wallet with read-only balanceOf, write eligible credit records, and queue qualifying member evidence for manual review.",
       "requiredRequestFields": [
+        "packetVersion",
         "email",
         "walletAddress",
+        "statusAccessToken",
         "acknowledgements.emailContactConsent",
         "acknowledgements.noSecretsNoCustody",
         "acknowledgements.termsAccepted"
@@ -421,6 +439,10 @@
       ],
       "serverChecks": [
         "email and wallet address are normalized",
+        "gca_member_access_v2 requires a browser-generated 256-bit status access key",
+        "only the SHA-256 status access key hash is stored",
+        "an existing protected account update requires the matching device key",
+        "an existing account without a device key requires official support recovery",
         "website/company/homepage honeypot fields must be empty",
         "read-only wallet verification runs before ledger writes",
         "a submitted holding date and transaction hash only create a holding-period preview",
@@ -432,6 +454,7 @@
         "walletVerification",
         "creditLedger",
         "memberLedger",
+        "statusAccess",
         "thresholds",
         "boundaries"
       ],
@@ -443,6 +466,47 @@
         "active",
         "needs_more_information",
         "rejected"
+      ]
+    },
+    {
+      "id": "account-status-read",
+      "method": "POST",
+      "path": "/gca/account-status",
+      "status": "production-workers-dev-live",
+      "purpose": "Return a redacted read-only account, wallet-verification, credits, member-review, and member-benefit status snapshot for a browser that holds the account device key.",
+      "requiredRequestFields": [
+        "packetVersion",
+        "statusAccessToken"
+      ],
+      "serverChecks": [
+        "packetVersion must be gca_account_status_v1",
+        "statusAccessToken must be a high-entropy gca_status_ device key",
+        "the Worker hashes the supplied key with SHA-256 before lookup",
+        "the stored access record must be active and unexpired",
+        "the response omits email, email hash, full wallet address, access key, IP hash, user agent, and operator notes",
+        "the route performs D1 reads only and does not update account, ledger, wallet, or token records",
+        "no ADMIN_READ_TOKEN, wallet connection, signature, transaction, custody, or automatic token transfer is requested"
+      ],
+      "responseFields": [
+        "packetVersion",
+        "checkedAt",
+        "statusAccessExpiresAt",
+        "account.accountId",
+        "account.status",
+        "account.walletAddressMasked",
+        "walletVerification",
+        "creditLedger",
+        "memberLedger",
+        "nextStep",
+        "boundaries"
+      ],
+      "allowedStatuses": [
+        "received",
+        "below_threshold",
+        "ledger_recorded",
+        "queued",
+        "active",
+        "transferred"
       ]
     },
     {
@@ -1168,8 +1232,9 @@
   },
   "publicClaimBoundaries": {
     "safeClaims": [
-      "GCA has a live public access API for email registration, contact suppression, access config, member access, and read-only wallet verification.",
-      "The member access API is live on Cloudflare Workers + D1 and uses gca_member_access_v1.",
+      "GCA has a live public access API for email registration, contact suppression, access config, member access, device-key account status, and read-only wallet verification.",
+      "The member access API is live on Cloudflare Workers + D1 and uses gca_member_access_v2 with a browser-generated device status key.",
+      "POST /gca/account-status returns a read-only redacted status snapshot after matching the SHA-256 hash of the device key; it does not return email, the full wallet address, or the key.",
       "The Worker verifies Base Mainnet GCA balances with read-only eth_call and ERC-20 balanceOf.",
       "Eligible 10,000 GCA holders can create one 100 GCA AI Quant Access credits ledger record.",
       "GCA operators can record reviewed service-level credit usage against an existing credit ledger through the live token-protected Worker route; anonymous reads are rejected.",
@@ -1193,6 +1258,8 @@
       "the observed holding-history reconstruction is a third-party security audit, permanent guarantee, or proof that public index data can never be delayed",
       "the 10,000 GCA member benefit is automatic or self-service transferred",
       "the production member-benefit evidence route signs, authorizes, or broadcasts a token transfer",
+      "the account-status endpoint returns email, the full wallet address, the device key, administrator data, or operator notes",
+      "a lost or expired device key can be recovered without official support verification",
       "the API collects private keys, seed phrases, exchange API secrets, withdrawal permission, custody, or one-time codes",
       "API access provides live order execution or risk-control bypass"
     ]
