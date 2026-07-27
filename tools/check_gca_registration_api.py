@@ -37,7 +37,7 @@ from tools.export_cloudflare_email_registrations import (  # noqa: E402
 
 DEFAULT_ORIGIN = "https://gcagochina.com"
 DEFAULT_USER_AGENT = "GCA-Operator-Registration-API-Check/1.0"
-WORKER_RELEASE = "gca-registration-worker-2026-07-27-account-status-rotation-v1"
+WORKER_RELEASE = "gca-registration-worker-2026-07-27-account-status-recovery-v1"
 OFFICIAL_CONTACT_EMAIL = "support@gcagochina.com"
 OFFICIAL_MEMBER_BENEFIT_SOURCE_WALLET = "0x5e8f84748612b913aacc937492ac25dc5630e246"
 
@@ -156,6 +156,21 @@ def check_health(*, base_url: str, timeout: float, cafile: str, opener: Callable
         payload.get("accountStatusRotationVersion") == "gca_account_status_rotation_v1",
         "health endpoint returned wrong account status rotation packet version",
     )
+    require(
+        payload.get("accountStatusRecoveryRequestVersion")
+        == "gca_account_status_recovery_request_v1",
+        "health endpoint returned wrong recovery request packet version",
+    )
+    require(
+        payload.get("accountStatusRecoveryApprovalVersion")
+        == "gca_account_status_recovery_approval_v1",
+        "health endpoint returned wrong recovery approval packet version",
+    )
+    require(
+        payload.get("accountStatusRecoveryVersion")
+        == "gca_account_status_recovery_v1",
+        "health endpoint returned wrong recovery packet version",
+    )
     if include_pending_routes or "workerRelease" in payload:
         require(payload.get("workerRelease") == WORKER_RELEASE, "health endpoint returned wrong Worker release")
         require(payload.get("contactEmail") == OFFICIAL_CONTACT_EMAIL, "health endpoint returned wrong official contact email")
@@ -193,6 +208,15 @@ def check_health(*, base_url: str, timeout: float, cafile: str, opener: Callable
         "legacyMemberAccessVersion": payload.get("legacyMemberAccessVersion"),
         "accountStatusVersion": payload.get("accountStatusVersion"),
         "accountStatusRotationVersion": payload.get("accountStatusRotationVersion"),
+        "accountStatusRecoveryRequestVersion": payload.get(
+            "accountStatusRecoveryRequestVersion"
+        ),
+        "accountStatusRecoveryApprovalVersion": payload.get(
+            "accountStatusRecoveryApprovalVersion"
+        ),
+        "accountStatusRecoveryVersion": payload.get(
+            "accountStatusRecoveryVersion"
+        ),
         "creditUsageVersion": payload.get("creditUsageVersion"),
         "serviceRequestVersion": payload.get("serviceRequestVersion"),
         "memberReviewVersion": payload.get("memberReviewVersion"),
@@ -308,6 +332,21 @@ def check_access_config(*, base_url: str, timeout: float, cafile: str, opener: C
         payload.get("accountStatusRotationVersion") == "gca_account_status_rotation_v1",
         "access config returned wrong account status rotation version",
     )
+    require(
+        payload.get("accountStatusRecoveryRequestVersion")
+        == "gca_account_status_recovery_request_v1",
+        "access config returned wrong recovery request version",
+    )
+    require(
+        payload.get("accountStatusRecoveryApprovalVersion")
+        == "gca_account_status_recovery_approval_v1",
+        "access config returned wrong recovery approval version",
+    )
+    require(
+        payload.get("accountStatusRecoveryVersion")
+        == "gca_account_status_recovery_v1",
+        "access config returned wrong recovery completion version",
+    )
     if include_pending_routes or "workerRelease" in payload:
         require(payload.get("workerRelease") == WORKER_RELEASE, "access config returned wrong Worker release")
         require(payload.get("contactEmail") == OFFICIAL_CONTACT_EMAIL, "access config returned wrong official contact email")
@@ -344,6 +383,21 @@ def check_access_config(*, base_url: str, timeout: float, cafile: str, opener: C
         payload.get("endpoints", {}).get("accountStatusRotation") == "/gca/account-status/rotate",
         "access config returned wrong account status rotation endpoint",
     )
+    require(
+        payload.get("endpoints", {}).get("accountStatusRecoveryRequests")
+        == "/gca/account-status/recovery-requests",
+        "access config returned wrong account status recovery request endpoint",
+    )
+    require(
+        payload.get("endpoints", {}).get("accountStatusRecoveryApprovals")
+        == "/gca/account-status/recovery-approvals",
+        "access config returned wrong account status recovery approval endpoint",
+    )
+    require(
+        payload.get("endpoints", {}).get("accountStatusRecovery")
+        == "/gca/account-status/recover",
+        "access config returned wrong account status recovery endpoint",
+    )
     require(payload.get("boundaries", {}).get("readOnlyWalletVerification") is True, "access config must keep read-only wallet verification")
     require(payload.get("boundaries", {}).get("readOnlyAccountStatus") is True, "access config must keep account status read-only")
     require(payload.get("boundaries", {}).get("accountStatusTokenStoredAsSha256") is True, "access config must hash account status keys")
@@ -361,6 +415,44 @@ def check_access_config(*, base_url: str, timeout: float, cafile: str, opener: C
     require(
         payload.get("boundaries", {}).get("accountStatusRotationChangesAccountOrLedgers") is False,
         "access config rotation must not change account or ledger records",
+    )
+    require(
+        payload.get("boundaries", {}).get("accountStatusRecoveryEnabled")
+        is True,
+        "access config must enable registered-email account recovery",
+    )
+    require(
+        payload.get("boundaries", {}).get("accountStatusRecoveryMode")
+        == "registered-email-manual-review",
+        "access config returned wrong account recovery mode",
+    )
+    require(
+        payload.get("boundaries", {}).get(
+            "accountStatusRecoveryStoresCredentialAsSha256"
+        )
+        is True,
+        "access config must hash recovery credentials",
+    )
+    require(
+        payload.get("boundaries", {}).get(
+            "accountStatusRecoveryReturnsAccountMatch"
+        )
+        is False,
+        "access config recovery must not reveal account matches",
+    )
+    require(
+        payload.get("boundaries", {}).get(
+            "accountStatusRecoveryInvalidatesOldDeviceKey"
+        )
+        is True,
+        "access config recovery must invalidate the old device key",
+    )
+    require(
+        payload.get("boundaries", {}).get(
+            "accountStatusRecoveryChangesAccountOrLedgers"
+        )
+        is False,
+        "access config recovery must not change account or ledger records",
     )
     require(payload.get("boundaries", {}).get("automaticTokenTransfer") is False, "access config must not auto-transfer tokens")
     require(
@@ -394,6 +486,15 @@ def check_access_config(*, base_url: str, timeout: float, cafile: str, opener: C
         "legacyMemberAccessVersion": payload.get("legacyMemberAccessVersion"),
         "accountStatusVersion": payload.get("accountStatusVersion"),
         "accountStatusRotationVersion": payload.get("accountStatusRotationVersion"),
+        "accountStatusRecoveryRequestVersion": payload.get(
+            "accountStatusRecoveryRequestVersion"
+        ),
+        "accountStatusRecoveryApprovalVersion": payload.get(
+            "accountStatusRecoveryApprovalVersion"
+        ),
+        "accountStatusRecoveryVersion": payload.get(
+            "accountStatusRecoveryVersion"
+        ),
         "workerRelease": payload.get("workerRelease"),
         "contactEmail": payload.get("contactEmail"),
         "creditUsageVersion": payload.get("creditUsageVersion"),
@@ -521,6 +622,33 @@ def run_checks(
         ),
         check_cors_preflight(
             base_url=base_url,
+            path="/gca/account-status/recovery-requests",
+            check_id="cors-account-status-recovery-requests",
+            origin=origin,
+            timeout=timeout,
+            cafile=cafile,
+            opener=opener,
+        ),
+        check_cors_preflight(
+            base_url=base_url,
+            path="/gca/account-status/recovery-approvals",
+            check_id="cors-account-status-recovery-approvals",
+            origin=origin,
+            timeout=timeout,
+            cafile=cafile,
+            opener=opener,
+        ),
+        check_cors_preflight(
+            base_url=base_url,
+            path="/gca/account-status/recover",
+            check_id="cors-account-status-recovery",
+            origin=origin,
+            timeout=timeout,
+            cafile=cafile,
+            opener=opener,
+        ),
+        check_cors_preflight(
+            base_url=base_url,
             path="/gca/member-reviews",
             check_id="cors-member-reviews",
             origin=origin,
@@ -609,6 +737,14 @@ def run_checks(
             cafile=cafile,
             opener=opener,
         ),
+        check_unauthorized_admin_read(
+            base_url=base_url,
+            path="/gca/account-status/recovery-requests",
+            check_id="unauth-account-status-recovery-requests-read",
+            timeout=timeout,
+            cafile=cafile,
+            opener=opener,
+        ),
         check_public_post_only_get(
             base_url=base_url,
             path="/gca/account-status",
@@ -621,6 +757,22 @@ def run_checks(
             base_url=base_url,
             path="/gca/account-status/rotate",
             check_id="account-status-rotation-get-rejected",
+            timeout=timeout,
+            cafile=cafile,
+            opener=opener,
+        ),
+        check_public_post_only_get(
+            base_url=base_url,
+            path="/gca/account-status/recovery-approvals",
+            check_id="account-status-recovery-approvals-get-rejected",
+            timeout=timeout,
+            cafile=cafile,
+            opener=opener,
+        ),
+        check_public_post_only_get(
+            base_url=base_url,
+            path="/gca/account-status/recover",
+            check_id="account-status-recovery-get-rejected",
             timeout=timeout,
             cafile=cafile,
             opener=opener,
@@ -755,6 +907,16 @@ def run_checks(
                 cafile=cafile,
                 opener=opener,
             ),
+            check_authorized_admin_read(
+                base_url=base_url,
+                path="/gca/account-status/recovery-requests",
+                check_id="admin-account-status-recovery-requests-read",
+                token=clean_token,
+                limit=limit,
+                timeout=timeout,
+                cafile=cafile,
+                opener=opener,
+            ),
         ])
         if include_pending_routes:
             checks.extend([
@@ -794,6 +956,9 @@ def run_checks(
             "submitsMemberAccess": False,
             "submitsAccountStatus": False,
             "submitsAccountStatusRotation": False,
+            "submitsAccountStatusRecoveryRequest": False,
+            "submitsAccountStatusRecoveryApproval": False,
+            "submitsAccountStatusRecoveryCompletion": False,
             "submitsServiceRequest": False,
             "submitsMemberReview": False,
             "submitsHoldingVerification": False,

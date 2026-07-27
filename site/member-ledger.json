@@ -47,7 +47,10 @@
     "memberBenefitTransfers": "/gca/member-benefit-transfers",
     "localSupportReview": "/gca/member-review",
     "accountPortal": "/gca/member-access",
-    "accountStatusRotation": "/gca/account-status/rotate"
+    "accountStatusRotation": "/gca/account-status/rotate",
+    "accountStatusRecoveryRequest": "/gca/account-status/recovery-requests",
+    "accountStatusRecoveryApproval": "/gca/account-status/recovery-approvals",
+    "accountStatusRecoveryCompletion": "/gca/account-status/recover"
   },
   "accountStatusRead": {
     "status": "production-live-device-key-protected",
@@ -65,7 +68,7 @@
     "requiresSignature": false,
     "requiresTransaction": false,
     "automaticTokenTransfer": false,
-    "lostKeyRecovery": "official support verification from the registered email"
+    "lostKeyRecovery": "generic request, registered-email review, and single-use recovery credential"
   },
   "browserBalancePreview": {
     "status": "browser-read-only-preview-live",
@@ -353,6 +356,7 @@
       "The member ledger schema includes memberBenefitReviewEvidence fields for support and ledger review.",
       "The public member access page can submit account intake, read the current GCA balance through the backend, write eligible credit records, and queue qualifying member evidence.",
       "The same browser can use a high-entropy device key to refresh a redacted read-only account and ledger status; D1 stores only the key hash.",
+      "A lost device key can be replaced only through a generic public request, registered-email manual review, and a single-use recovery credential; recovery does not alter ledger or on-chain records.",
       "GCA Member activation requires a separate ADMIN_READ_TOKEN-protected operator review recorded in the append-only member review table.",
       "Successful member approval also requires and stores an observed complete 30-day GCA transfer-history reconstruction with a minimum balance of at least 1,000,000 GCA.",
       "The protected production API can verify and store evidence for an already-completed manual 10,000 GCA transfer from the official reserve wallet to the approved member wallet.",
@@ -381,6 +385,23 @@
     "oldKeyCanReadStatusAfterRotation": false,
     "oldKeyCanRetryDifferentRotation": false,
     "returnsDeviceKeys": false,
+    "changesAccountOrLedgers": false,
+    "requiresSignature": false,
+    "requiresTransaction": false,
+    "automaticTokenTransfer": false
+  },
+  "accountStatusRecovery": {
+    "status": "production-live-registered-email-review",
+    "requestPacketVersion": "gca_account_status_recovery_request_v1",
+    "approvalPacketVersion": "gca_account_status_recovery_approval_v1",
+    "completionPacketVersion": "gca_account_status_recovery_v1",
+    "requestEndpoint": "/gca/account-status/recovery-requests",
+    "approvalEndpoint": "/gca/account-status/recovery-approvals",
+    "completionEndpoint": "/gca/account-status/recover",
+    "returnsAccountMatch": false,
+    "storesDeviceKeyAndCredentialHashesOnly": true,
+    "credentialSingleUse": true,
+    "invalidatesOldDeviceKey": true,
     "changesAccountOrLedgers": false,
     "requiresSignature": false,
     "requiresTransaction": false,

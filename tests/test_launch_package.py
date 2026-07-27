@@ -4729,13 +4729,13 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(playbook["routeStatus"]["workerDeployPermission"], "passed")
         self.assertFalse(playbook["routeStatus"]["code10000Seen"])
         self.assertEqual(playbook["routeStatus"]["latestReadinessCheckAt"], "2026-07-23T17:55:52Z")
-        self.assertEqual(playbook["routeStatus"]["latestPublicRouteCheckAt"], "2026-07-27T11:10:01Z")
+        self.assertEqual(playbook["routeStatus"]["latestPublicRouteCheckAt"], "2026-07-27T15:15:02Z")
         self.assertEqual(playbook["routeStatus"]["pendingRouteAnonymousGetStatus"], {
             "/gca/service-requests": 401,
             "/gca/credit-usage": 401,
         })
         self.assertIsNone(playbook["routeStatus"]["blockedBy"])
-        self.assertEqual(playbook["routeStatus"]["workerVersionId"], "089c615f-0639-4adb-995b-10b006d8fedb")
+        self.assertEqual(playbook["routeStatus"]["workerVersionId"], "860fd70d-290a-467f-b70b-ed2d1fe7ca76")
         self.assertEqual(playbook["routeStatus"]["postDeployPublicSmoke"], "passed")
         self.assertEqual(playbook["routeStatus"]["postDeployAdminSmoke"], "passed")
         self.assertIn("wrangler deploy succeeds", playbook["routeStatus"]["releaseGates"])
@@ -4804,8 +4804,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(handoff["sourceDocument"], "docs/gca_worker_pending_routes_deploy_handoff.md")
         self.assertIn("production-live", handoff["scope"])
         self.assertEqual(handoff["currentStatus"]["latestReadinessCheckAt"], "2026-07-23T17:55:52Z")
-        self.assertEqual(handoff["currentStatus"]["latestPublicRouteCheckAt"], "2026-07-27T11:10:01Z")
-        self.assertEqual(handoff["currentStatus"]["latestAdminRouteCheckAt"], "2026-07-27T11:10:08Z")
+        self.assertEqual(handoff["currentStatus"]["latestPublicRouteCheckAt"], "2026-07-27T15:15:02Z")
+        self.assertEqual(handoff["currentStatus"]["latestAdminRouteCheckAt"], "2026-07-27T15:15:12Z")
         self.assertEqual(handoff["currentStatus"]["workerDryRun"], "passed-2026-07-23")
         self.assertEqual(handoff["currentStatus"]["d1Visibility"], "passed")
         self.assertEqual(handoff["currentStatus"]["cloudflareAuthSession"], "passed")
@@ -5884,6 +5884,10 @@ class LaunchPackageTests(unittest.TestCase):
             "POST /gca/member-access",
             "POST /gca/account-status",
             "POST /gca/account-status/rotate",
+            "POST /gca/account-status/recovery-requests",
+            "GET /gca/account-status/recovery-requests",
+            "POST /gca/account-status/recovery-approvals",
+            "POST /gca/account-status/recover",
             "POST /gca/wallet-verifications",
             "GET /gca/credit-ledger",
             "GET /gca/service-requests",
@@ -5908,9 +5912,9 @@ class LaunchPackageTests(unittest.TestCase):
         for endpoint in api["endpoints"]:
             if endpoint["id"] in {"operator-summary", "operator-digest", "operator-action-plan", "review-package", "member-review-update"}:
                 self.assertEqual(endpoint["status"], "local-only-not-public-production")
-            elif endpoint["id"] in {"email-registrations-create", "contact-suppressions-create", "access-config-read", "member-access-create", "account-status-read", "account-status-rotation", "wallet-verifications"}:
+            elif endpoint["id"] in {"email-registrations-create", "contact-suppressions-create", "access-config-read", "member-access-create", "account-status-read", "account-status-rotation", "account-status-recovery-request", "account-status-recovery-completion", "wallet-verifications"}:
                 self.assertEqual(endpoint["status"], "production-workers-dev-live")
-            elif endpoint["id"] in {"email-registrations-read", "contact-suppressions-read", "credit-ledger", "member-ledger", "member-reviews-read", "member-reviews-create", "holding-verifications-read", "member-benefit-transfers-read", "member-benefit-transfers-create"}:
+            elif endpoint["id"] in {"email-registrations-read", "contact-suppressions-read", "credit-ledger", "member-ledger", "member-reviews-read", "member-reviews-create", "holding-verifications-read", "member-benefit-transfers-read", "member-benefit-transfers-create", "account-status-recovery-queue", "account-status-recovery-approval"}:
                 self.assertEqual(endpoint["status"], "token-protected-admin-live")
             elif endpoint["id"] in {"service-requests-read", "service-requests-create", "credit-usage-read", "credit-usage-create"}:
                 self.assertEqual(endpoint["status"], "live-token-protected")
@@ -5923,6 +5927,10 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(api["legacyMemberAccessPacketVersion"], "gca_member_access_v1")
         self.assertEqual(api["accountStatusPacketVersion"], "gca_account_status_v1")
         self.assertEqual(api["accountStatusRotationPacketVersion"], "gca_account_status_rotation_v1")
+        self.assertEqual(api["accountStatusRecoveryRequestPacketVersion"], "gca_account_status_recovery_request_v1")
+        self.assertEqual(api["accountStatusRecoveryApprovalPacketVersion"], "gca_account_status_recovery_approval_v1")
+        self.assertEqual(api["accountStatusRecoveryPacketVersion"], "gca_account_status_recovery_v1")
+        self.assertTrue(api["currentState"]["accountStatusRecoveryProductionLive"])
         self.assertEqual(api["serviceRequestPacketVersion"], "gca_service_request_v1")
         self.assertEqual(api["memberReviewPacketVersion"], "gca_member_review_v1")
         self.assertIn("memberBenefitReviewEvidence.holdingStartDate", api["memberEvidenceFields"])
@@ -6290,10 +6298,10 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertTrue(ops["currentState"]["memberBenefitTransferEvidenceProductionLive"])
         self.assertEqual(ops["currentState"]["memberBenefitTransferPacketVersion"], "gca_member_benefit_transfer_v1")
         self.assertEqual(ops["currentState"]["memberBenefitTransferAdminPath"], "/gca/member-benefit-transfers")
-        self.assertEqual(ops["currentState"]["memberBenefitTransferProductionVerifiedAt"], "2026-07-27T11:10:08Z")
+        self.assertEqual(ops["currentState"]["memberBenefitTransferProductionVerifiedAt"], "2026-07-27T15:15:12Z")
         self.assertTrue(ops["currentState"]["memberBenefitTransferStillManual"])
         self.assertFalse(ops["currentState"]["automaticMemberActivationFromSubmittedDate"])
-        self.assertEqual(ops["currentState"]["memberReviewProductionVerifiedAt"], "2026-07-27T11:10:08Z")
+        self.assertEqual(ops["currentState"]["memberReviewProductionVerifiedAt"], "2026-07-27T15:15:12Z")
         self.assertTrue(ops["currentState"]["localSupportReviewContinuityChainLive"])
         self.assertFalse(ops["currentState"]["localSupportReviewContinuitySigned"])
         self.assertFalse(ops["currentState"]["localSupportReviewContinuityExternallyAnchored"])
@@ -6699,7 +6707,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(gates["currentState"]["holdingVerificationPacketVersion"], "gca_holding_verification_v1")
         self.assertTrue(gates["currentState"]["memberBenefitTransferEvidenceProductionLive"])
         self.assertEqual(gates["currentState"]["memberBenefitTransferPacketVersion"], "gca_member_benefit_transfer_v1")
-        self.assertEqual(gates["currentState"]["memberBenefitTransferProductionVerifiedAt"], "2026-07-27T11:10:08Z")
+        self.assertEqual(gates["currentState"]["memberBenefitTransferProductionVerifiedAt"], "2026-07-27T15:15:12Z")
         self.assertEqual(gates["currentState"]["memberBenefitTransferOfficialSourceWallet"], "0x5e8F84748612B913aAcC937492AC25dc5630E246")
         self.assertEqual(gates["currentState"]["memberBenefitTransferExactAmount"], "10000 GCA")
         self.assertFalse(gates["currentState"]["automaticMemberActivationFromSubmittedDate"])
@@ -6709,8 +6717,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertFalse(gates["currentState"]["memberBenefitAutomaticTransfer"])
         self.assertTrue(gates["currentState"]["pendingServiceRoutesProductionLive"])
         self.assertEqual(gates["currentState"]["latestPendingRouteReadinessCheckAt"], "2026-07-23T17:55:52Z")
-        self.assertEqual(gates["currentState"]["latestPendingRoutePublicCheckAt"], "2026-07-27T11:10:01Z")
-        self.assertEqual(gates["currentState"]["latestPendingRouteAdminCheckAt"], "2026-07-27T11:10:08Z")
+        self.assertEqual(gates["currentState"]["latestPendingRoutePublicCheckAt"], "2026-07-27T15:15:02Z")
+        self.assertEqual(gates["currentState"]["latestPendingRouteAdminCheckAt"], "2026-07-27T15:15:12Z")
         self.assertEqual(gates["currentState"]["cloudflareAuthSession"], "passed")
         self.assertEqual(gates["currentState"]["cloudflareD1Visibility"], "passed")
         self.assertEqual(gates["currentState"]["cloudflareWorkerDeployPermission"], "passed")
@@ -6719,7 +6727,7 @@ class LaunchPackageTests(unittest.TestCase):
             gates["currentState"]["pendingRouteAnonymousGetStatus"],
             {"/gca/service-requests": 401, "/gca/credit-usage": 401},
         )
-        self.assertEqual(gates["currentState"]["workerVersionId"], "089c615f-0639-4adb-995b-10b006d8fedb")
+        self.assertEqual(gates["currentState"]["workerVersionId"], "860fd70d-290a-467f-b70b-ed2d1fe7ca76")
         self.assertFalse(gates["currentState"]["liveTradingEnabled"])
         self.assertEqual(gates["currentState"]["baseScanTokenProfile"], "ready-for-owner-resubmission")
         self.assertEqual(gates["currentState"]["baseScanTokenProfileLastCheckedDate"], "2026-07-23")

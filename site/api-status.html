@@ -321,7 +321,7 @@
       <link rel="stylesheet" href="assets/gca-site.css?v=20260711">
     <link rel="stylesheet" href="assets/api-health.css?v=20260727">
     <script src="assets/gca-site.js?v=20260711" defer></script>
-    <script src="assets/api-health.js?v=20260727c" defer></script>
+    <script src="assets/api-health.js?v=20260727d" defer></script>
   </head>
   <body>
     <header>
@@ -345,10 +345,11 @@
       <section aria-labelledby="title">
         <p class="eyebrow">Registration API Status / Live Read-Only Check</p>
         <h1 id="title">GCA Registration API Status</h1>
-        <p class="lead">This is the public status page for the live GCA email registration, member access, device-key account status and rotation, and contact suppression backend. The current production API runs on Cloudflare Workers + D1 at <code>https://gca-registration-api.gcagochina.workers.dev</code>.</p>
-        <p class="lead">The account-status release public smoke check passed at <code>2026-07-27T11:10:01Z</code>, followed by a token-protected admin read check at <code>2026-07-27T11:10:08Z</code>. The browser panel below can repeat the safe read-only portion now without writing records.</p>
+        <p class="lead">This is the public status page for the live GCA email registration, member access, device-key account status, rotation and registered-email recovery, and contact suppression backend. The current production API runs on Cloudflare Workers + D1 at <code>https://gca-registration-api.gcagochina.workers.dev</code>.</p>
+        <p class="lead">The account-status release public smoke check passed at <code>2026-07-27T15:15:02Z</code>, followed by a token-protected admin read check at <code>2026-07-27T15:15:12Z</code>. The browser panel below can repeat the safe read-only portion now without writing records.</p>
         <p class="lead"><code>gca_member_access_v2</code> creates a random device key in the browser. D1 stores only its SHA-256 hash, and <code>gca_account_status_v1</code> returns a redacted read-only snapshot without email, full wallet address, the key, administrator data, or operator notes.</p>
         <p class="lead"><code>gca_account_status_rotation_v1</code> lets a browser holding the current valid key replace it safely. The old key immediately loses status-read access and can only retry the same completed rotation for 15 minutes; account, credit, member, wallet, and token records are unchanged.</p>
+        <p class="lead">Lost-key recovery uses <code>gca_account_status_recovery_request_v1</code>, registered-email manual review, and a single-use 24-hour credential. Public requests never reveal whether an account matched. Completion activates the pre-committed new key and changes no account, credit, member, wallet, GCA balance, or on-chain asset.</p>
         <p class="lead">Service requests, credit usage, append-only member review, holding verification, and member-benefit transfer evidence are production-live and token-protected. The new evidence route only verifies an existing manual transfer from the official reserve wallet and never signs or broadcasts one.</p>
         <p class="lead">The public checks verify health and read protections without writing test registrations. Admin reads remain token protected and should only be run locally by an operator with the local admin token file.</p>
         <div class="actions">
@@ -397,11 +398,15 @@
         </div>
         <div class="fact">
           <span class="label">Device Key Rotation</span>
-          <span class="value good">Live / 15-minute retry recovery</span>
+          <span class="value good">Live / 15-minute same-rotation retry</span>
+        </div>
+        <div class="fact">
+          <span class="label">Lost-Key Recovery</span>
+          <span class="value good">Live / registered-email review</span>
         </div>
         <div class="fact">
           <span class="label">Worker Version</span>
-          <span class="value">089c615f-0639-4adb-995b-10b006d8fedb</span>
+          <span class="value">860fd70d-290a-467f-b70b-ed2d1fe7ca76</span>
         </div>
         <div class="fact">
           <span class="label">Custom Domain</span>
@@ -450,7 +455,7 @@
           <div class="live-health-row" data-api-check="admin">
             <div class="live-health-copy">
               <strong>Existing admin-read protection</strong>
-              <span class="note">Nine GET routes, including member reviews, holding evidence, and benefit-transfer evidence, must reject anonymous access with HTTP 401</span>
+              <span class="note">Ten GET routes, including member reviews, holding evidence, benefit-transfer evidence, and recovery requests, must reject anonymous access with HTTP 401</span>
             </div>
             <span class="live-health-result" data-check-status>Waiting</span>
           </div>
@@ -506,6 +511,21 @@
             <span class="label">POST</span>
             <span class="value">/gca/account-status/rotate</span>
             <p class="note">Live <code>gca_account_status_rotation_v1</code> key replacement. The old key loses status-read access immediately and can retry only the same rotation for 15 minutes; no account, wallet, credit, member, or token records change.</p>
+          </div>
+          <div class="fact">
+            <span class="label">POST</span>
+            <span class="value">/gca/account-status/recovery-requests</span>
+            <p class="note">Live generic recovery intake. The browser pre-commits a new random device key; the response never reveals whether the registered email and Base wallet matched an account.</p>
+          </div>
+          <div class="fact">
+            <span class="label">GET / POST</span>
+            <span class="value">/gca/account-status/recovery-requests + /recovery-approvals</span>
+            <p class="note">Live token-protected operator review. A 24-hour credential is returned once only after registered-mailbox ownership is manually verified; D1 stores its SHA-256 hash.</p>
+          </div>
+          <div class="fact">
+            <span class="label">POST</span>
+            <span class="value">/gca/account-status/recover</span>
+            <p class="note">Live single-use completion. It activates the pre-committed new key and invalidates the old key without changing the account, wallet, credits, member records, GCA balance, or on-chain assets.</p>
           </div>
           <div class="fact">
             <span class="label">GET</span>

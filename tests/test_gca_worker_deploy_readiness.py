@@ -35,6 +35,18 @@ class GcaWorkerDeployReadinessTests(unittest.TestCase):
             "CREATE TABLE gca_member_benefit_transfers(id TEXT);\n",
             encoding="utf-8",
         )
+        (worker_dir / "migrations" / "0009_account_status_access.sql").write_text(
+            "CREATE TABLE gca_account_status_access(id TEXT);\n",
+            encoding="utf-8",
+        )
+        (worker_dir / "migrations" / "0010_account_status_rotation.sql").write_text(
+            "ALTER TABLE gca_account_status_access ADD COLUMN rotated_at TEXT;\n",
+            encoding="utf-8",
+        )
+        (worker_dir / "migrations" / "0011_account_status_recovery.sql").write_text(
+            "CREATE TABLE gca_account_status_recovery_requests(id TEXT);\n",
+            encoding="utf-8",
+        )
         (worker_dir / "package-lock.json").write_text("{}\n", encoding="utf-8")
         (worker_dir / "node_modules" / ".bin" / "wrangler").write_text("#!/bin/sh\n", encoding="utf-8")
         self.worker_dir = worker_dir
@@ -94,6 +106,10 @@ migrations_dir = "migrations"
         )
         self.assertIn(
             "member-benefit-transfer-migration",
+            {item["id"] for item in report["checks"] if item["status"] == "passed"},
+        )
+        self.assertIn(
+            "account-status-recovery-migration",
             {item["id"] for item in report["checks"] if item["status"] == "passed"},
         )
 

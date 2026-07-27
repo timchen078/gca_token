@@ -3,11 +3,11 @@
   "pageUrl": "https://gcagochina.com/api-status.html",
   "status": "public-device-key-account-status-live",
   "lastUpdated": "2026-07-27",
-  "latestPublicCheckAt": "2026-07-27T11:10:01Z",
-  "latestAdminCheckAt": "2026-07-27T11:10:08Z",
-  "latestPublicCheckStatus": "passed-account-status-live-redacted",
-  "workerRelease": "gca-registration-worker-2026-07-27-account-status-rotation-v1",
-  "workerVersionId": "089c615f-0639-4adb-995b-10b006d8fedb",
+  "latestPublicCheckAt": "2026-07-27T15:15:02Z",
+  "latestAdminCheckAt": "2026-07-27T15:15:12Z",
+  "latestPublicCheckStatus": "passed-account-status-recovery-live-redacted",
+  "workerRelease": "gca-registration-worker-2026-07-27-account-status-recovery-v1",
+  "workerVersionId": "860fd70d-290a-467f-b70b-ed2d1fe7ca76",
   "latestDeployReadinessCheckAt": "2026-07-23T17:55:52Z",
   "latestDeployReadinessStatus": "passed-cloudflare-permissions",
   "latestDeployReadinessSummary": {
@@ -54,6 +54,9 @@
       "gca_member_access_v1 legacy compatibility",
       "gca_account_status_v1",
       "gca_account_status_rotation_v1",
+      "gca_account_status_recovery_request_v1",
+      "gca_account_status_recovery_approval_v1",
+      "gca_account_status_recovery_v1",
       "gca_member_review_v1",
       "gca_holding_verification_v1",
       "gca_member_benefit_transfer_v1",
@@ -72,7 +75,8 @@
       "/gca/member-ledger",
       "/gca/member-reviews",
       "/gca/holding-verifications",
-      "/gca/member-benefit-transfers"
+      "/gca/member-benefit-transfers",
+      "/gca/account-status/recovery-requests"
     ],
     "preparedRouteChecks": [
       "/gca/service-requests",
@@ -201,6 +205,38 @@
       "requiresSignature": false,
       "requiresTransaction": false,
       "automaticTokenTransfer": false
+    },
+    {
+      "id": "account-status-recovery-request",
+      "method": "POST",
+      "path": "/gca/account-status/recovery-requests",
+      "url": "https://gca-registration-api.gcagochina.workers.dev/gca/account-status/recovery-requests",
+      "status": "live-generic-response",
+      "packetVersion": "gca_account_status_recovery_request_v1",
+      "public": true,
+      "precommitsNewDeviceStatusKey": true,
+      "storesDeviceStatusKeyHashOnly": true,
+      "returnsAccountMatch": false,
+      "requiresRegisteredEmailReview": true,
+      "requiresSignature": false,
+      "requiresTransaction": false,
+      "automaticTokenTransfer": false
+    },
+    {
+      "id": "account-status-recovery-completion",
+      "method": "POST",
+      "path": "/gca/account-status/recover",
+      "url": "https://gca-registration-api.gcagochina.workers.dev/gca/account-status/recover",
+      "status": "live-one-time-credential",
+      "packetVersion": "gca_account_status_recovery_v1",
+      "public": true,
+      "requiresApprovedRecoveryCredential": true,
+      "recoveryCredentialSingleUse": true,
+      "invalidatesOldDeviceStatusKey": true,
+      "changesAccountOrLedgers": false,
+      "requiresSignature": false,
+      "requiresTransaction": false,
+      "automaticTokenTransfer": false
     }
   ],
   "adminEndpoints": [
@@ -273,9 +309,9 @@
       "authorizesMemberBenefitTransfer": false,
       "lastObservedAnonymousGetStatus": 401,
       "lastObservedAdminGetStatus": 200,
-      "lastObservedAt": "2026-07-27T11:10:08Z",
+      "lastObservedAt": "2026-07-27T15:15:12Z",
       "productionLive": true,
-      "workerVersionId": "089c615f-0639-4adb-995b-10b006d8fedb"
+      "workerVersionId": "860fd70d-290a-467f-b70b-ed2d1fe7ca76"
     },
     {
       "id": "holding-verifications-read",
@@ -293,9 +329,9 @@
       "automaticTokenTransfer": false,
       "lastObservedAnonymousGetStatus": 401,
       "lastObservedAdminGetStatus": 200,
-      "lastObservedAt": "2026-07-27T11:10:08Z",
+      "lastObservedAt": "2026-07-27T15:15:12Z",
       "productionLive": true,
-      "workerVersionId": "089c615f-0639-4adb-995b-10b006d8fedb"
+      "workerVersionId": "860fd70d-290a-467f-b70b-ed2d1fe7ca76"
     },
     {
       "id": "service-requests-read-write",
@@ -307,9 +343,9 @@
       "publicLedgerReadable": false,
       "workerDryRunPassed": true,
       "lastObservedAnonymousGetStatus": 401,
-      "lastObservedAt": "2026-07-27T11:10:01Z",
+      "lastObservedAt": "2026-07-27T15:15:02Z",
       "productionLive": true,
-      "workerVersionId": "089c615f-0639-4adb-995b-10b006d8fedb"
+      "workerVersionId": "860fd70d-290a-467f-b70b-ed2d1fe7ca76"
     },
     {
       "id": "credit-usage-read-write",
@@ -321,9 +357,9 @@
       "publicLedgerReadable": false,
       "workerDryRunPassed": true,
       "lastObservedAnonymousGetStatus": 401,
-      "lastObservedAt": "2026-07-27T11:10:01Z",
+      "lastObservedAt": "2026-07-27T15:15:02Z",
       "productionLive": true,
-      "workerVersionId": "089c615f-0639-4adb-995b-10b006d8fedb"
+      "workerVersionId": "860fd70d-290a-467f-b70b-ed2d1fe7ca76"
     },
     {
       "id": "member-benefit-transfers-read-write",
@@ -344,9 +380,40 @@
       "writesWallet": false,
       "lastObservedAnonymousGetStatus": 401,
       "lastObservedAdminGetStatus": 200,
-      "lastObservedAt": "2026-07-27T11:10:08Z",
+      "lastObservedAt": "2026-07-27T15:15:12Z",
       "productionLive": true,
-      "workerVersionId": "089c615f-0639-4adb-995b-10b006d8fedb"
+      "workerVersionId": "860fd70d-290a-467f-b70b-ed2d1fe7ca76"
+    },
+    {
+      "id": "account-status-recovery-requests-read",
+      "method": "GET",
+      "path": "/gca/account-status/recovery-requests",
+      "url": "https://gca-registration-api.gcagochina.workers.dev/gca/account-status/recovery-requests",
+      "status": "live-token-protected",
+      "packetVersion": "gca_account_status_recovery_request_v1",
+      "requiresAdminReadToken": true,
+      "publicLedgerReadable": false,
+      "returnsStoredKeyOrCredentialHashes": false,
+      "lastObservedAnonymousGetStatus": 401,
+      "lastObservedAdminGetStatus": 200,
+      "lastObservedAt": "2026-07-27T15:15:12Z",
+      "productionLive": true,
+      "workerVersionId": "860fd70d-290a-467f-b70b-ed2d1fe7ca76"
+    },
+    {
+      "id": "account-status-recovery-approval",
+      "method": "POST",
+      "path": "/gca/account-status/recovery-approvals",
+      "url": "https://gca-registration-api.gcagochina.workers.dev/gca/account-status/recovery-approvals",
+      "status": "live-token-protected",
+      "packetVersion": "gca_account_status_recovery_approval_v1",
+      "requiresAdminReadToken": true,
+      "requiresRegisteredEmailOwnershipReview": true,
+      "returnsCredentialOnce": true,
+      "storesCredentialHashOnly": true,
+      "changesAccountOrLedgers": false,
+      "productionLive": true,
+      "workerVersionId": "860fd70d-290a-467f-b70b-ed2d1fe7ca76"
     }
   ],
   "checks": {
@@ -402,9 +469,9 @@
       "noTradingPermission": true,
       "doNotClaimLiveBeforeSmokeChecks": true
     },
-    "workerVersionId": "089c615f-0639-4adb-995b-10b006d8fedb",
-    "publicSmokePassedAt": "2026-07-27T11:10:01Z",
-    "adminSmokePassedAt": "2026-07-27T11:10:08Z"
+    "workerVersionId": "860fd70d-290a-467f-b70b-ed2d1fe7ca76",
+    "publicSmokePassedAt": "2026-07-27T15:15:02Z",
+    "adminSmokePassedAt": "2026-07-27T15:15:12Z"
   },
   "operatorTools": {
     "adminExport": "tools/export_cloudflare_email_registrations.py",
@@ -413,7 +480,8 @@
     "registrationOps": "tools/run_gca_registration_ops.py",
     "contactSuppressionSync": "tools/sync_cloudflare_contact_suppressions.py",
     "memberReview": "tools/review_cloudflare_member.py",
-    "memberBenefitTransferEvidence": "tools/record_cloudflare_member_benefit_transfer.py"
+    "memberBenefitTransferEvidence": "tools/record_cloudflare_member_benefit_transfer.py",
+    "accountStatusRecoveryApproval": "tools/approve_cloudflare_account_recovery.py"
   },
   "publicBoundaries": {
     "noPrivateKeyCollection": true,
@@ -445,7 +513,14 @@
     "deviceKeyRotationLive": true,
     "deviceKeyRotationGraceMinutes": 15,
     "deviceKeyRotationReturnsKey": false,
-    "deviceKeyRotationChangesAccountOrLedgers": false
+    "deviceKeyRotationChangesAccountOrLedgers": false,
+    "deviceKeyRecoveryLive": true,
+    "deviceKeyRecoveryRequiresRegisteredEmailReview": true,
+    "deviceKeyRecoveryReturnsAccountMatch": false,
+    "deviceKeyRecoveryStoresCredentialHashOnly": true,
+    "deviceKeyRecoveryCredentialSingleUse": true,
+    "deviceKeyRecoveryInvalidatesOldKey": true,
+    "deviceKeyRecoveryChangesAccountOrLedgers": false
   },
   "officialLinks": {
     "registrationPage": "https://gcagochina.com/register.html",

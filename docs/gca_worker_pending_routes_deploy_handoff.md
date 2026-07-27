@@ -36,9 +36,9 @@ The deployment was completed on `2026-07-23` UTC.
 
 - Readiness passed at `2026-07-23T17:55:52Z`.
 - Remote migration `0005_service_requests.sql` applied successfully.
-- Current Worker version `089c615f-0639-4adb-995b-10b006d8fedb` retains both protected routes and also includes the read-only `POST /gca/account-status` device-key status route plus credential-only `POST /gca/account-status/rotate`.
-- Latest public smoke passed at `2026-07-27T11:10:01Z`.
-- Latest admin read-only smoke passed at `2026-07-27T11:10:08Z`.
+- Current Worker version `860fd70d-290a-467f-b70b-ed2d1fe7ca76` retains both protected routes and also includes the read-only `POST /gca/account-status` device-key status route plus credential-only `POST /gca/account-status/rotate`.
+- Latest public smoke passed at `2026-07-27T15:15:02Z`.
+- Latest admin read-only smoke passed at `2026-07-27T15:15:12Z`.
 - Anonymous reads for both operator routes return HTTP `401`.
 - Token-protected admin reads return HTTP `200`.
 

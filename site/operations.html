@@ -328,7 +328,7 @@
         <p class="eyebrow">Access Operations Runbook / 2026-07-27</p>
         <h1 id="title">GCA Access Operations Runbook</h1>
         <p class="lead">This runbook defines how GCA operators handle registration, account intake, read-only wallet review, redacted device-key status access, protected member decisions, manual member-benefit execution, and production verification of the resulting public transfer evidence.</p>
-        <p class="lead">The email registration, unsubscribe, account intake, wallet verification, redacted status, safe device-key rotation, and eligible ledger paths are live on Cloudflare Workers + D1. The redacted account status is private to the matching device key and is not a public ledger browser. Users who still hold a valid key can rotate it on the member-access page; operators must never request either key by email or support ticket. Lost, expired, or revoked keys still require identity verification from the registered email.</p>
+        <p class="lead">The email registration, unsubscribe, account intake, wallet verification, redacted status, safe device-key rotation, registered-email recovery, and eligible ledger paths are live on Cloudflare Workers + D1. The redacted account status is private to the matching device key and is not a public ledger browser. Users who still hold a valid key can rotate it on the member-access page; users who lost it can open a generic recovery request. Operators must never request either device key by email or support ticket.</p>
         <div class="actions">
           <a class="button primary" href="review-queue.html">Review Queue Contract</a>
           <a class="button" href="access-api.html">Access API Contract</a>
@@ -367,6 +367,10 @@
           <div class="fact">
             <span class="label">Device key rotation</span>
             <span class="value good">credential-only / 15-minute retry recovery</span>
+          </div>
+          <div class="fact">
+            <span class="label">Lost-key recovery</span>
+            <span class="value good">registered-email review / one-time 24-hour credential</span>
           </div>
         </div>
       </section>
@@ -415,7 +419,7 @@
           </div>
           <div>
             <h3>Device Status Recovery</h3>
-            <p class="note">Never ask the user to send a device status key. If it is lost, expired, or revoked, require contact from the registered email and handle recovery as a separate reviewed support action. The public status route cannot reveal or reset the key.</p>
+            <p class="note">Never ask the user to send a device status key. The member first opens a recovery request on the member-access page, which pre-commits a new browser key and returns the same response whether or not the account matches. Verify control of the exact registered mailbox, then run <code>tools/approve_cloudflare_account_recovery.py</code> with all required acknowledgements. Send the generated mode-0600 recovery packet only to that registered mailbox. The one-time credential expires after 24 hours; completion invalidates the old key without changing the account, credits, member records, wallet balance, or on-chain assets.</p>
           </div>
           <div>
             <h3>3. Wallet Balance Check</h3>

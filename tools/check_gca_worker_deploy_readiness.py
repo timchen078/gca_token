@@ -262,6 +262,24 @@ def build_report(
     )
     check(
         checks,
+        "account-status-access-migration",
+        (worker_dir / "migrations" / "0009_account_status_access.sql").exists(),
+        "Device-key account status D1 migration exists.",
+    )
+    check(
+        checks,
+        "account-status-rotation-migration",
+        (worker_dir / "migrations" / "0010_account_status_rotation.sql").exists(),
+        "Device-key rotation D1 migration exists.",
+    )
+    check(
+        checks,
+        "account-status-recovery-migration",
+        (worker_dir / "migrations" / "0011_account_status_recovery.sql").exists(),
+        "Registered-email device recovery D1 migration exists.",
+    )
+    check(
+        checks,
         "wrangler-package",
         (worker_dir / "package-lock.json").exists() and (worker_dir / "node_modules" / ".bin" / "wrangler").exists(),
         "Worker package dependencies and local Wrangler binary are installed.",

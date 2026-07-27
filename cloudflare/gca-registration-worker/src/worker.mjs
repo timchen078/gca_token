@@ -18,12 +18,15 @@ const MEMBER_ACCESS_VERSION = "gca_member_access_v2";
 const LEGACY_MEMBER_ACCESS_VERSION = "gca_member_access_v1";
 const ACCOUNT_STATUS_VERSION = "gca_account_status_v1";
 const ACCOUNT_STATUS_ROTATION_VERSION = "gca_account_status_rotation_v1";
+const ACCOUNT_STATUS_RECOVERY_REQUEST_VERSION = "gca_account_status_recovery_request_v1";
+const ACCOUNT_STATUS_RECOVERY_APPROVAL_VERSION = "gca_account_status_recovery_approval_v1";
+const ACCOUNT_STATUS_RECOVERY_VERSION = "gca_account_status_recovery_v1";
 const CREDIT_USAGE_VERSION = "gca_credit_usage_v1";
 const SERVICE_REQUEST_VERSION = "gca_service_request_v1";
 const MEMBER_REVIEW_VERSION = "gca_member_review_v1";
 const HOLDING_VERIFICATION_VERSION = "gca_holding_verification_v1";
 const MEMBER_BENEFIT_TRANSFER_VERSION = "gca_member_benefit_transfer_v1";
-const WORKER_RELEASE = "gca-registration-worker-2026-07-27-account-status-rotation-v1";
+const WORKER_RELEASE = "gca-registration-worker-2026-07-27-account-status-recovery-v1";
 const OFFICIAL_CONTACT_EMAIL = "support@gcagochina.com";
 const OFFICIAL_SITE_URL = "https://gcagochina.com/";
 const CHAIN_ID = 8453;
@@ -41,6 +44,8 @@ const CREDIT_AMOUNT = 100;
 const CREDIT_EXPIRY_DAYS = 180;
 const ACCOUNT_STATUS_ACCESS_DAYS = 365;
 const ACCOUNT_STATUS_ROTATION_GRACE_MINUTES = 15;
+const ACCOUNT_STATUS_RECOVERY_REQUEST_DAYS = 7;
+const ACCOUNT_STATUS_RECOVERY_CREDENTIAL_MINUTES = 24 * 60;
 const MEMBER_REFRESH_DAYS = 30;
 const MEMBER_HOLD_DAYS = 30;
 const HOLDING_WINDOW_MS = MEMBER_HOLD_DAYS * 86_400_000;
@@ -70,6 +75,8 @@ const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 const ADDRESS_RE = /^0x[a-fA-F0-9]{40}$/;
 const TX_HASH_RE = /^0x[a-fA-F0-9]{64}$/;
 const MEMBER_LEDGER_ID_RE = /^gca_member_[a-f0-9]{20}$/;
+const RECOVERY_REQUEST_ID_RE = /^gca_recovery_request_[a-f0-9]{20}$/;
+const RECOVERY_CREDENTIAL_RE = /^gca_recovery_[A-Za-z0-9_-]{43}$/;
 const OPERATOR_ID_RE = /^[a-z0-9][a-z0-9_-]{2,63}$/;
 const REASON_CODE_RE = /^[a-z0-9][a-z0-9_-]{1,63}$/;
 const MEMBER_REVIEW_DECISIONS = new Set(["approved", "rejected", "needs_more_information"]);
@@ -414,6 +421,175 @@ function extractAccountStatusRotation(packet) {
   return { currentStatusAccessToken, newStatusAccessToken };
 }
 
+function extractAccountStatusRecoveryRequest(packet) {
+  if (
+    packet.packetVersion &&
+    packet.packetVersion !== ACCOUNT_STATUS_RECOVERY_REQUEST_VERSION
+  ) {
+    throw new ApiError(
+      `packetVersion must be ${ACCOUNT_STATUS_RECOVERY_REQUEST_VERSION}`
+    );
+  }
+  const acknowledgements =
+    packet.acknowledgements && typeof packet.acknowledgements === "object"
+      ? packet.acknowledgements
+      : {};
+  const email = normalizeEmail(packet.email || "");
+  const walletAddress = normalizeWallet(packet.walletAddress || "");
+  const newStatusAccessToken = String(
+    packet.newStatusAccessToken || ""
+  ).trim();
+  const officialEmailReviewAccepted = Boolean(
+    acknowledgements.officialEmailReviewAccepted
+  );
+  const securityBoundaryAccepted = Boolean(
+    acknowledgements.noSecretsNoCustody
+  );
+  if (!isStatusAccessToken(newStatusAccessToken)) {
+    throw new ApiError(
+      "newStatusAccessToken must be a valid device status access key"
+    );
+  }
+  if (!officialEmailReviewAccepted) {
+    throw new ApiError(
+      "registered-email support review acknowledgement is required"
+    );
+  }
+  if (!securityBoundaryAccepted) {
+    throw new ApiError("security boundary acknowledgement is required");
+  }
+  return {
+    email,
+    walletAddress,
+    newStatusAccessToken,
+    source:
+      String(
+        packet.source || "gca-account-status-recovery-request"
+      )
+        .trim()
+        .slice(0, 120) || "gca-account-status-recovery-request"
+  };
+}
+
+function extractAccountStatusRecoveryApproval(packet) {
+  if (
+    packet.packetVersion &&
+    packet.packetVersion !== ACCOUNT_STATUS_RECOVERY_APPROVAL_VERSION
+  ) {
+    throw new ApiError(
+      `packetVersion must be ${ACCOUNT_STATUS_RECOVERY_APPROVAL_VERSION}`
+    );
+  }
+  const acknowledgements =
+    packet.acknowledgements && typeof packet.acknowledgements === "object"
+      ? packet.acknowledgements
+      : {};
+  const recoveryRequestId = String(
+    packet.recoveryRequestId || ""
+  )
+    .trim()
+    .toLowerCase();
+  const registeredEmail = normalizeEmail(packet.registeredEmail || "");
+  const operatorId = String(packet.operatorId || "")
+    .trim()
+    .toLowerCase();
+  const reasonCode = String(packet.reasonCode || "")
+    .trim()
+    .toLowerCase();
+  const registeredEmailOwnershipVerified = Boolean(
+    acknowledgements.registeredEmailOwnershipVerified
+  );
+  const manualIdentityReviewCompleted = Boolean(
+    acknowledgements.manualIdentityReviewCompleted
+  );
+  const noSecretsRequested = Boolean(
+    acknowledgements.noSecretsRequested
+  );
+  const noWalletAction = Boolean(acknowledgements.noWalletAction);
+  if (!RECOVERY_REQUEST_ID_RE.test(recoveryRequestId)) {
+    throw new ApiError("recoveryRequestId must be a valid GCA recovery request id");
+  }
+  if (!OPERATOR_ID_RE.test(operatorId)) {
+    throw new ApiError(
+      "operatorId must be a short lowercase operator identifier"
+    );
+  }
+  if (!REASON_CODE_RE.test(reasonCode)) {
+    throw new ApiError("reasonCode must be a short lowercase identifier");
+  }
+  if (!registeredEmailOwnershipVerified) {
+    throw new ApiError(
+      "registered email ownership verification acknowledgement is required"
+    );
+  }
+  if (!manualIdentityReviewCompleted) {
+    throw new ApiError("manual identity review acknowledgement is required");
+  }
+  if (!noSecretsRequested) {
+    throw new ApiError("no-secrets acknowledgement is required");
+  }
+  if (!noWalletAction) {
+    throw new ApiError("no-wallet-action acknowledgement is required");
+  }
+  return {
+    recoveryRequestId,
+    registeredEmail,
+    operatorId,
+    reasonCode,
+    source:
+      String(
+        packet.source || "gca-account-status-recovery-operator"
+      )
+        .trim()
+        .slice(0, 120) || "gca-account-status-recovery-operator"
+  };
+}
+
+function extractAccountStatusRecovery(packet) {
+  if (
+    packet.packetVersion &&
+    packet.packetVersion !== ACCOUNT_STATUS_RECOVERY_VERSION
+  ) {
+    throw new ApiError(
+      `packetVersion must be ${ACCOUNT_STATUS_RECOVERY_VERSION}`
+    );
+  }
+  const acknowledgements =
+    packet.acknowledgements && typeof packet.acknowledgements === "object"
+      ? packet.acknowledgements
+      : {};
+  const recoveryRequestId = String(
+    packet.recoveryRequestId || ""
+  )
+    .trim()
+    .toLowerCase();
+  const recoveryCredential = String(
+    packet.recoveryCredential || ""
+  ).trim();
+  const newStatusAccessToken = String(
+    packet.newStatusAccessToken || ""
+  ).trim();
+  if (!RECOVERY_REQUEST_ID_RE.test(recoveryRequestId)) {
+    throw new ApiError("recoveryRequestId must be a valid GCA recovery request id");
+  }
+  if (!RECOVERY_CREDENTIAL_RE.test(recoveryCredential)) {
+    throw new ApiError("recoveryCredential is invalid", 401);
+  }
+  if (!isStatusAccessToken(newStatusAccessToken)) {
+    throw new ApiError(
+      "newStatusAccessToken must be a valid device status access key"
+    );
+  }
+  if (!Boolean(acknowledgements.credentialOnlyRecovery)) {
+    throw new ApiError("credential-only recovery acknowledgement is required");
+  }
+  return {
+    recoveryRequestId,
+    recoveryCredential,
+    newStatusAccessToken
+  };
+}
+
 function extractCreditUsage(packet) {
   if (packet.packetVersion && packet.packetVersion !== CREDIT_USAGE_VERSION) {
     throw new ApiError(`packetVersion must be ${CREDIT_USAGE_VERSION}`);
@@ -618,6 +794,20 @@ async function sha256Hex(value) {
 async function stableId(prefix, ...parts) {
   const digest = await sha256Hex(parts.map((part) => String(part).trim().toLowerCase()).join("|"));
   return `${prefix}_${digest.slice(0, 20)}`;
+}
+
+function randomCredential(prefix) {
+  const bytes = new Uint8Array(32);
+  crypto.getRandomValues(bytes);
+  const binary = Array.from(
+    bytes,
+    (byte) => String.fromCharCode(byte)
+  ).join("");
+  const encoded = btoa(binary)
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/g, "");
+  return `${prefix}${encoded}`;
 }
 
 async function optionalIpHash(request, env) {
@@ -1045,6 +1235,45 @@ function rowToMemberAccount(row, includeEmail = true) {
     requiresSignature: Boolean(row.requires_signature),
     requiresTransaction: Boolean(row.requires_transaction),
     automaticTokenTransfer: Boolean(row.automatic_token_transfer)
+  };
+}
+
+function rowToAccountStatusRecoveryRequest(row, includeEmail = true) {
+  if (!row) {
+    return null;
+  }
+  return {
+    recoveryRequestId: row.recovery_request_id,
+    packetVersion: row.packet_version,
+    accountId: row.account_id,
+    email: includeEmail ? row.email : undefined,
+    emailSha256: row.email_hash,
+    walletAddress: row.wallet_address,
+    status: row.status,
+    requestedAt: row.requested_at,
+    expiresAt: row.expires_at,
+    recoveryCredentialIssued: Boolean(
+      String(row.recovery_credential_hash || "").trim()
+    ),
+    recoveryCredentialExpiresAt:
+      row.recovery_credential_expires_at || "",
+    approvedAt: row.approved_at || "",
+    consumedAt: row.consumed_at || "",
+    cancelledAt: row.cancelled_at || "",
+    operatorId: row.operator_id || "",
+    reasonCode: row.reason_code || "",
+    source: row.source,
+    registeredEmailVerified: Boolean(row.registered_email_verified),
+    manualIdentityReviewCompleted: Boolean(
+      row.manual_identity_review_completed
+    ),
+    noSecretsRequested: Boolean(row.no_secrets_requested),
+    changesAccountOrLedgers: Boolean(row.changes_account_or_ledgers),
+    requiresSignature: Boolean(row.requires_signature),
+    requiresTransaction: Boolean(row.requires_transaction),
+    automaticTokenTransfer: Boolean(row.automatic_token_transfer),
+    tokenHashesReturned: false,
+    recoveryCredentialReturned: false
   };
 }
 
@@ -2939,6 +3168,533 @@ async function submitAccountStatusRotation(request, env, origin) {
   }, 200, origin, env);
 }
 
+function accountRecoveryPublicResponse(recoveryRequestId, origin, env) {
+  return jsonResponse({
+    ok: true,
+    packetVersion: ACCOUNT_STATUS_RECOVERY_REQUEST_VERSION,
+    recoveryRequestId,
+    status: "pending_if_account_matches",
+    requestAccepted: true,
+    accountMatchReturned: false,
+    requestReviewWindowDays: ACCOUNT_STATUS_RECOVERY_REQUEST_DAYS,
+    recoveryCredentialReturned: false,
+    newDeviceKeyReturned: false,
+    nextStep:
+      `Contact ${OFFICIAL_CONTACT_EMAIL} from the registered email and include only the recovery request id. GCA support will never ask for the device key, wallet secrets, a signature, or a transaction.`
+  }, 202, origin, env);
+}
+
+async function submitAccountStatusRecoveryRequest(request, env, origin) {
+  const db = requireDatabase(env);
+  const packet = await readJsonRequest(request);
+  const recoveryInput = extractAccountStatusRecoveryRequest(packet);
+  const now = nowIso();
+  const emailHash = await sha256Hex(recoveryInput.email);
+  const newTokenHash = await sha256Hex(
+    recoveryInput.newStatusAccessToken
+  );
+  const recoveryRequestId = await stableId(
+    "gca_recovery_request",
+    recoveryInput.email,
+    recoveryInput.walletAddress,
+    newTokenHash
+  );
+  const genericResponse = () =>
+    accountRecoveryPublicResponse(recoveryRequestId, origin, env);
+  const accountRow = await db
+    .prepare(
+      `SELECT account.*
+      FROM gca_member_accounts AS account
+      INNER JOIN gca_account_status_access AS access
+        ON access.account_id = account.account_id
+      WHERE account.email_hash = ?1
+        AND account.wallet_address = ?2
+      LIMIT 1`
+    )
+    .bind(emailHash, recoveryInput.walletAddress)
+    .first();
+
+  if (!accountRow) {
+    return genericResponse();
+  }
+
+  const existingRequest = await db
+    .prepare(
+      `SELECT recovery_request_id
+      FROM gca_account_status_recovery_requests
+      WHERE recovery_request_id = ?1
+      LIMIT 1`
+    )
+    .bind(recoveryRequestId)
+    .first();
+  if (existingRequest) {
+    return genericResponse();
+  }
+
+  const usedToken = await db
+    .prepare(
+      `SELECT account_id
+      FROM gca_account_status_access
+      WHERE token_hash = ?1 OR previous_token_hash = ?1
+      LIMIT 1`
+    )
+    .bind(newTokenHash)
+    .first();
+  const requestedToken = await db
+    .prepare(
+      `SELECT recovery_request_id
+      FROM gca_account_status_recovery_requests
+      WHERE new_token_hash = ?1
+      LIMIT 1`
+    )
+    .bind(newTokenHash)
+    .first();
+  if (usedToken || requestedToken) {
+    throw new ApiError(
+      "new device status access key is already assigned or was previously used",
+      409
+    );
+  }
+
+  const expiresAt = addDaysIso(
+    now,
+    ACCOUNT_STATUS_RECOVERY_REQUEST_DAYS
+  );
+  const userAgent = String(
+    request.headers.get("user-agent") || ""
+  ).slice(0, 300);
+  const ipHash = await optionalIpHash(request, env);
+  const insertRequest = db
+    .prepare(
+      `INSERT INTO gca_account_status_recovery_requests (
+        recovery_request_id,
+        packet_version,
+        account_id,
+        email_hash,
+        wallet_address,
+        new_token_hash,
+        status,
+        requested_at,
+        expires_at,
+        source,
+        user_agent,
+        ip_hash,
+        registered_email_verified,
+        manual_identity_review_completed,
+        no_secrets_requested,
+        changes_account_or_ledgers,
+        requires_signature,
+        requires_transaction,
+        automatic_token_transfer
+      ) VALUES (
+        ?1, ?2, ?3, ?4, ?5, ?6, 'pending', ?7, ?8, ?9, ?10, ?11,
+        0, 0, 1, 0, 0, 0, 0
+      )`
+    )
+    .bind(
+      recoveryRequestId,
+      ACCOUNT_STATUS_RECOVERY_REQUEST_VERSION,
+      accountRow.account_id,
+      emailHash,
+      recoveryInput.walletAddress,
+      newTokenHash,
+      now,
+      expiresAt,
+      recoveryInput.source,
+      userAgent,
+      ipHash
+    );
+  await insertRequest.run();
+  return genericResponse();
+}
+
+async function listAccountStatusRecoveryRequests(request, env, origin) {
+  if (!isAdminAuthorized(request, env)) {
+    return jsonResponse(
+      { ok: false, error: "admin authorization is required" },
+      401,
+      origin,
+      env
+    );
+  }
+  const db = requireDatabase(env);
+  const url = new URL(request.url);
+  const limit = Math.max(
+    1,
+    Math.min(100, Number(url.searchParams.get("limit") || "50"))
+  );
+  const filters = [];
+  const values = [];
+  const recoveryRequestId = String(
+    url.searchParams.get("recoveryRequestId") || ""
+  )
+    .trim()
+    .toLowerCase();
+  const email = String(url.searchParams.get("email") || "").trim();
+  const status = String(url.searchParams.get("status") || "")
+    .trim()
+    .toLowerCase();
+  if (recoveryRequestId) {
+    if (!RECOVERY_REQUEST_ID_RE.test(recoveryRequestId)) {
+      throw new ApiError(
+        "recoveryRequestId must be a valid GCA recovery request id"
+      );
+    }
+    filters.push(`recovery.recovery_request_id = ?${values.length + 1}`);
+    values.push(recoveryRequestId);
+  }
+  if (email) {
+    filters.push(`account.email = ?${values.length + 1}`);
+    values.push(normalizeEmail(email));
+  }
+  if (status) {
+    filters.push(`recovery.status = ?${values.length + 1}`);
+    values.push(status);
+  }
+  const where = filters.length
+    ? `WHERE ${filters.join(" AND ")}`
+    : "";
+  const query = db.prepare(
+    `SELECT recovery.*, account.email
+    FROM gca_account_status_recovery_requests AS recovery
+    INNER JOIN gca_member_accounts AS account
+      ON account.account_id = recovery.account_id
+    ${where}
+    ORDER BY recovery.requested_at DESC
+    LIMIT ?${values.length + 1}`
+  );
+  const { results } = await query.bind(...values, limit).all();
+  return jsonResponse({
+    ok: true,
+    count: results.length,
+    records: results.map((row) =>
+      rowToAccountStatusRecoveryRequest(row)
+    ),
+    boundaries: {
+      adminTokenRequired: true,
+      tokenHashesReturned: false,
+      recoveryCredentialReturned: false,
+      requiresSignature: false,
+      requiresTransaction: false,
+      automaticTokenTransfer: false
+    }
+  }, 200, origin, env);
+}
+
+async function approveAccountStatusRecovery(request, env, origin) {
+  if (!isAdminAuthorized(request, env)) {
+    return jsonResponse(
+      { ok: false, error: "admin authorization is required" },
+      401,
+      origin,
+      env
+    );
+  }
+  const db = requireDatabase(env);
+  const packet = await readJsonRequest(request);
+  const approvalInput = extractAccountStatusRecoveryApproval(packet);
+  const now = nowIso();
+  const registeredEmailHash = await sha256Hex(
+    approvalInput.registeredEmail
+  );
+  const recoveryRow = await db
+    .prepare(
+      `SELECT recovery.*, account.email
+      FROM gca_account_status_recovery_requests AS recovery
+      INNER JOIN gca_member_accounts AS account
+        ON account.account_id = recovery.account_id
+      WHERE recovery.recovery_request_id = ?1
+      LIMIT 1`
+    )
+    .bind(approvalInput.recoveryRequestId)
+    .first();
+
+  if (
+    !recoveryRow ||
+    recoveryRow.email_hash !== registeredEmailHash ||
+    normalizeEmail(recoveryRow.email) !== approvalInput.registeredEmail
+  ) {
+    throw new ApiError(
+      "recovery request and registered email do not match",
+      409
+    );
+  }
+  if (
+    !["pending", "approved"].includes(recoveryRow.status) ||
+    String(recoveryRow.expires_at || "") <= now
+  ) {
+    throw new ApiError(
+      "recovery request is not pending or has expired",
+      409
+    );
+  }
+
+  const reissued = recoveryRow.status === "approved";
+  const recoveryCredential = randomCredential("gca_recovery_");
+  const recoveryCredentialHash = await sha256Hex(
+    recoveryCredential
+  );
+  const recoveryCredentialExpiresAt = addMinutesIso(
+    now,
+    ACCOUNT_STATUS_RECOVERY_CREDENTIAL_MINUTES
+  );
+  const supersedeOtherRequests = db
+    .prepare(
+      `UPDATE gca_account_status_recovery_requests
+      SET status = 'superseded',
+          cancelled_at = ?1
+      WHERE account_id = ?2
+        AND recovery_request_id <> ?3
+        AND status IN ('pending', 'approved')`
+    )
+    .bind(
+      now,
+      recoveryRow.account_id,
+      approvalInput.recoveryRequestId
+    );
+  const approveRequest = db
+    .prepare(
+      `UPDATE gca_account_status_recovery_requests
+      SET status = 'approved',
+          recovery_credential_hash = ?1,
+          recovery_credential_expires_at = ?2,
+          approved_at = ?3,
+          operator_id = ?4,
+          reason_code = ?5,
+          source = ?6,
+          registered_email_verified = 1,
+          manual_identity_review_completed = 1,
+          no_secrets_requested = 1
+      WHERE recovery_request_id = ?7
+        AND status IN ('pending', 'approved')
+        AND expires_at > ?3`
+    )
+    .bind(
+      recoveryCredentialHash,
+      recoveryCredentialExpiresAt,
+      now,
+      approvalInput.operatorId,
+      approvalInput.reasonCode,
+      approvalInput.source,
+      approvalInput.recoveryRequestId
+    );
+  const approvalResults = await db.batch([
+    supersedeOtherRequests,
+    approveRequest
+  ]);
+  if (Number(approvalResults?.[1]?.meta?.changes || 0) !== 1) {
+    throw new ApiError(
+      "recovery request approval conflict; reload the request",
+      409
+    );
+  }
+
+  return jsonResponse({
+    ok: true,
+    packetVersion: ACCOUNT_STATUS_RECOVERY_APPROVAL_VERSION,
+    recoveryRequestId: approvalInput.recoveryRequestId,
+    status: "approved",
+    approvedAt: now,
+    recoveryCredentialExpiresAt,
+    recoveryCredential,
+    recoveryCredentialReturnedOnce: true,
+    reissued,
+    delivery: {
+      registeredEmailOnly: true,
+      emailReturned: false,
+      includeDeviceKey: false,
+      includeWalletSecrets: false
+    },
+    boundaries: {
+      adminTokenRequired: true,
+      manualIdentityReviewRequired: true,
+      changesAccountOrLedgers: false,
+      walletActionRequired: false,
+      requiresSignature: false,
+      requiresTransaction: false,
+      automaticTokenTransfer: false
+    }
+  }, 200, origin, env);
+}
+
+async function submitAccountStatusRecovery(request, env, origin) {
+  const db = requireDatabase(env);
+  const packet = await readJsonRequest(request);
+  const recoveryInput = extractAccountStatusRecovery(packet);
+  const now = nowIso();
+  const recoveryCredentialHash = await sha256Hex(
+    recoveryInput.recoveryCredential
+  );
+  const newTokenHash = await sha256Hex(
+    recoveryInput.newStatusAccessToken
+  );
+  const recoveryRow = await db
+    .prepare(
+      `SELECT *
+      FROM gca_account_status_recovery_requests
+      WHERE recovery_request_id = ?1
+      LIMIT 1`
+    )
+    .bind(recoveryInput.recoveryRequestId)
+    .first();
+  const invalidRecovery =
+    !recoveryRow ||
+    recoveryRow.status !== "approved" ||
+    recoveryRow.recovery_credential_hash !== recoveryCredentialHash ||
+    recoveryRow.new_token_hash !== newTokenHash ||
+    String(recoveryRow.expires_at || "") <= now ||
+    String(recoveryRow.recovery_credential_expires_at || "") <= now;
+  if (invalidRecovery) {
+    throw new ApiError(
+      "recovery request or credential is invalid or expired",
+      401
+    );
+  }
+
+  const conflictingTokenOwner = await db
+    .prepare(
+      `SELECT account_id
+      FROM gca_account_status_access
+      WHERE (token_hash = ?1 OR previous_token_hash = ?1)
+        AND account_id <> ?2
+      LIMIT 1`
+    )
+    .bind(newTokenHash, recoveryRow.account_id)
+    .first();
+  if (conflictingTokenOwner) {
+    throw new ApiError(
+      "new device status access key is already assigned or was previously used",
+      409
+    );
+  }
+  const accessRow = await db
+    .prepare(
+      `SELECT account_id
+      FROM gca_account_status_access
+      WHERE account_id = ?1
+      LIMIT 1`
+    )
+    .bind(recoveryRow.account_id)
+    .first();
+  if (!accessRow) {
+    throw new ApiError(
+      "device status access is unavailable for this account",
+      409
+    );
+  }
+
+  const statusAccessExpiresAt = addDaysIso(
+    now,
+    ACCOUNT_STATUS_ACCESS_DAYS
+  );
+  const updateAccess = db
+    .prepare(
+      `UPDATE gca_account_status_access
+      SET token_hash = ?1,
+          previous_token_hash = '',
+          previous_token_expires_at = '',
+          expires_at = ?2,
+          revoked_at = '',
+          recovered_at = ?3,
+          recovery_request_id = ?4
+      WHERE account_id = ?5
+        AND EXISTS (
+          SELECT 1
+          FROM gca_account_status_recovery_requests
+          WHERE recovery_request_id = ?4
+            AND account_id = ?5
+            AND status = 'approved'
+            AND recovery_credential_hash = ?6
+            AND new_token_hash = ?1
+            AND expires_at > ?3
+            AND recovery_credential_expires_at > ?3
+        )`
+    )
+    .bind(
+      newTokenHash,
+      statusAccessExpiresAt,
+      now,
+      recoveryInput.recoveryRequestId,
+      recoveryRow.account_id,
+      recoveryCredentialHash
+    );
+  const consumeRequest = db
+    .prepare(
+      `UPDATE gca_account_status_recovery_requests
+      SET status = 'consumed',
+          consumed_at = ?1
+      WHERE recovery_request_id = ?2
+        AND account_id = ?3
+        AND status = 'approved'
+        AND recovery_credential_hash = ?4
+        AND new_token_hash = ?5
+        AND expires_at > ?1
+        AND recovery_credential_expires_at > ?1`
+    )
+    .bind(
+      now,
+      recoveryInput.recoveryRequestId,
+      recoveryRow.account_id,
+      recoveryCredentialHash,
+      newTokenHash
+    );
+  const batchResults = await db.batch([updateAccess, consumeRequest]);
+  const accessChanges = Number(
+    batchResults?.[0]?.meta?.changes || 0
+  );
+  const requestChanges = Number(
+    batchResults?.[1]?.meta?.changes || 0
+  );
+  if (accessChanges !== 1 || requestChanges !== 1) {
+    throw new ApiError(
+      "recovery completion conflict; refresh with the new device key before retrying",
+      409
+    );
+  }
+
+  const accountRow = await db
+    .prepare(
+      "SELECT * FROM gca_member_accounts WHERE account_id = ?1 LIMIT 1"
+    )
+    .bind(recoveryRow.account_id)
+    .first();
+  if (!accountRow) {
+    throw new ApiError("device status account is unavailable", 409);
+  }
+  const publicStatus = await buildAccountStatusPayload(
+    db,
+    accountRow,
+    now
+  );
+  return jsonResponse({
+    ok: true,
+    packetVersion: ACCOUNT_STATUS_RECOVERY_VERSION,
+    statusPacketVersion: ACCOUNT_STATUS_VERSION,
+    statusAccessExpiresAt,
+    ...publicStatus,
+    recovery: {
+      completed: true,
+      recoveryRequestId: recoveryInput.recoveryRequestId,
+      recoveredAt: now,
+      oldDeviceKeyInvalidated: true,
+      previousKeyRetryAllowed: false,
+      recoveryCredentialConsumed: true,
+      recoveryCredentialReturned: false,
+      newDeviceKeyReturned: false
+    },
+    boundaries: {
+      ...publicStatus.boundaries,
+      credentialRecoveryOnly: true,
+      manualIdentityReviewRequired: true,
+      accountOrLedgerRecordsChanged: false,
+      walletActionRequired: false,
+      requiresSignature: false,
+      requiresTransaction: false,
+      automaticTokenTransfer: false
+    }
+  }, 200, origin, env);
+}
+
 function accessThresholds() {
   return {
     holderBonusMinimumGca: "10000",
@@ -2966,6 +3722,15 @@ function accessBoundaries() {
     accountStatusRotationGraceMinutes: ACCOUNT_STATUS_ROTATION_GRACE_MINUTES,
     accountStatusRotationReturnsAccessToken: false,
     accountStatusRotationChangesAccountOrLedgers: false,
+    accountStatusRecoveryEnabled: true,
+    accountStatusRecoveryMode: "registered-email-manual-review",
+    accountStatusRecoveryRequestDays: ACCOUNT_STATUS_RECOVERY_REQUEST_DAYS,
+    accountStatusRecoveryCredentialMinutes:
+      ACCOUNT_STATUS_RECOVERY_CREDENTIAL_MINUTES,
+    accountStatusRecoveryStoresCredentialAsSha256: true,
+    accountStatusRecoveryReturnsAccountMatch: false,
+    accountStatusRecoveryInvalidatesOldDeviceKey: true,
+    accountStatusRecoveryChangesAccountOrLedgers: false,
     requiresSignature: false,
     requiresTransaction: false,
     asksForPrivateKey: false,
@@ -2997,6 +3762,11 @@ function accessConfig(origin, env) {
     legacyMemberAccessVersion: LEGACY_MEMBER_ACCESS_VERSION,
     accountStatusVersion: ACCOUNT_STATUS_VERSION,
     accountStatusRotationVersion: ACCOUNT_STATUS_ROTATION_VERSION,
+    accountStatusRecoveryRequestVersion:
+      ACCOUNT_STATUS_RECOVERY_REQUEST_VERSION,
+    accountStatusRecoveryApprovalVersion:
+      ACCOUNT_STATUS_RECOVERY_APPROVAL_VERSION,
+    accountStatusRecoveryVersion: ACCOUNT_STATUS_RECOVERY_VERSION,
     creditUsageVersion: CREDIT_USAGE_VERSION,
     serviceRequestVersion: SERVICE_REQUEST_VERSION,
     memberReviewVersion: MEMBER_REVIEW_VERSION,
@@ -3010,6 +3780,11 @@ function accessConfig(origin, env) {
       memberAccess: "/gca/member-access",
       accountStatus: "/gca/account-status",
       accountStatusRotation: "/gca/account-status/rotate",
+      accountStatusRecoveryRequests:
+        "/gca/account-status/recovery-requests",
+      accountStatusRecoveryApprovals:
+        "/gca/account-status/recovery-approvals",
+      accountStatusRecovery: "/gca/account-status/recover",
       walletVerifications: "/gca/wallet-verifications",
       creditLedgerAdmin: "/gca/credit-ledger",
       serviceRequestsAdmin: "/gca/service-requests",
@@ -3137,6 +3912,11 @@ function health(origin, env) {
     legacyMemberAccessVersion: LEGACY_MEMBER_ACCESS_VERSION,
     accountStatusVersion: ACCOUNT_STATUS_VERSION,
     accountStatusRotationVersion: ACCOUNT_STATUS_ROTATION_VERSION,
+    accountStatusRecoveryRequestVersion:
+      ACCOUNT_STATUS_RECOVERY_REQUEST_VERSION,
+    accountStatusRecoveryApprovalVersion:
+      ACCOUNT_STATUS_RECOVERY_APPROVAL_VERSION,
+    accountStatusRecoveryVersion: ACCOUNT_STATUS_RECOVERY_VERSION,
     creditUsageVersion: CREDIT_USAGE_VERSION,
     serviceRequestVersion: SERVICE_REQUEST_VERSION,
     memberReviewVersion: MEMBER_REVIEW_VERSION,
@@ -3223,6 +4003,31 @@ export default {
       if (url.pathname === "/gca/account-status/rotate") {
         if (request.method === "POST") {
           return await submitAccountStatusRotation(request, env, origin);
+        }
+        return jsonResponse({ ok: false, error: "method not allowed" }, 405, origin, env);
+      }
+      if (url.pathname === "/gca/account-status/recovery-requests") {
+        if (request.method === "POST") {
+          return await submitAccountStatusRecoveryRequest(request, env, origin);
+        }
+        if (request.method === "GET") {
+          return await listAccountStatusRecoveryRequests(
+            request,
+            env,
+            origin
+          );
+        }
+        return jsonResponse({ ok: false, error: "method not allowed" }, 405, origin, env);
+      }
+      if (url.pathname === "/gca/account-status/recovery-approvals") {
+        if (request.method === "POST") {
+          return await approveAccountStatusRecovery(request, env, origin);
+        }
+        return jsonResponse({ ok: false, error: "method not allowed" }, 405, origin, env);
+      }
+      if (url.pathname === "/gca/account-status/recover") {
+        if (request.method === "POST") {
+          return await submitAccountStatusRecovery(request, env, origin);
         }
         return jsonResponse({ ok: false, error: "method not allowed" }, 405, origin, env);
       }

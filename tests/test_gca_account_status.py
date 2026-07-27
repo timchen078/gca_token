@@ -18,6 +18,7 @@ MIGRATIONS = [
     WORKER_DIR / "migrations" / "0008_member_benefit_transfer_evidence.sql",
     WORKER_DIR / "migrations" / "0009_account_status_access.sql",
     WORKER_DIR / "migrations" / "0010_account_status_rotation.sql",
+    WORKER_DIR / "migrations" / "0011_account_status_recovery.sql",
 ]
 BUNDLED_NODE = (
     Path.home()
@@ -63,10 +64,27 @@ class GcaAccountStatusTests(unittest.TestCase):
             self.assertIn("previous_token_hash", columns)
             self.assertIn("previous_token_expires_at", columns)
             self.assertIn("rotated_at", columns)
+            self.assertIn("recovered_at", columns)
+            self.assertIn("recovery_request_id", columns)
             self.assertTrue(any(indexes.values()))
             migration_source = MIGRATIONS[-1].read_text(encoding="utf-8")
             self.assertNotIn("currentStatusAccessToken", migration_source)
             self.assertNotIn("newStatusAccessToken", migration_source)
+            self.assertNotIn("recoveryCredential TEXT", migration_source)
+            recovery_columns = {
+                row[1]
+                for row in database.execute(
+                    "PRAGMA table_info(gca_account_status_recovery_requests)"
+                ).fetchall()
+            }
+            self.assertIn("new_token_hash", recovery_columns)
+            self.assertIn("recovery_credential_hash", recovery_columns)
+            self.assertNotIn("new_status_access_token", recovery_columns)
+            self.assertNotIn("recovery_credential", recovery_columns)
+            self.assertNotIn("email", recovery_columns)
+            self.assertIn("registered_email_verified", recovery_columns)
+            self.assertIn("manual_identity_review_completed", recovery_columns)
+            self.assertIn("changes_account_or_ledgers", recovery_columns)
         finally:
             database.close()
 
@@ -173,7 +191,7 @@ console.log(JSON.stringify({
             source,
         )
         self.assertIn(
-            'const WORKER_RELEASE = "gca-registration-worker-2026-07-27-account-status-rotation-v1";',
+            'const WORKER_RELEASE = "gca-registration-worker-2026-07-27-account-status-recovery-v1";',
             source,
         )
         self.assertIn('url.pathname === "/gca/account-status"', source)
@@ -199,6 +217,32 @@ console.log(JSON.stringify({
         self.assertIn("the previous device key can only retry its completed rotation", source)
         self.assertIn("currentTokenReturned: false", source)
         self.assertIn("newTokenReturned: false", source)
+        self.assertIn(
+            'url.pathname === "/gca/account-status/recovery-requests"',
+            source,
+        )
+        self.assertIn(
+            'url.pathname === "/gca/account-status/recovery-approvals"',
+            source,
+        )
+        self.assertIn(
+            'url.pathname === "/gca/account-status/recover"',
+            source,
+        )
+        self.assertIn(
+            "accountStatusRecoveryMode: \"registered-email-manual-review\"",
+            source,
+        )
+        self.assertIn("accountStatusRecoveryReturnsAccountMatch: false", source)
+        self.assertIn(
+            "accountStatusRecoveryStoresCredentialAsSha256: true",
+            source,
+        )
+        self.assertIn("oldDeviceKeyInvalidated: true", source)
+        self.assertIn("previousKeyRetryAllowed: false", source)
+        self.assertIn("recoveryCredentialConsumed: true", source)
+        self.assertIn("previous_token_hash = ''", source)
+        self.assertIn("manualIdentityReviewRequired: true", source)
         self.assertNotIn("eth_sendTransaction", source)
         self.assertNotIn("personal_sign", source)
 
@@ -222,8 +266,27 @@ console.log(JSON.stringify({
             "The key is not included in review packets or API responses.",
             page,
         )
+        self.assertIn('id="openRecovery"', page)
+        self.assertIn('id="recoveryBlock"', page)
+        self.assertIn('id="recoveryCredential"', page)
+        self.assertIn('"/gca/account-status/recovery-requests"', page)
+        self.assertIn('"/gca/account-status/recover"', page)
+        self.assertIn('"gca_account_status_recovery_request_v1"', page)
+        self.assertIn('"gca_account_status_recovery_v1"', page)
+        self.assertIn("RECOVERY_DRAFT_KEY", page)
+        self.assertIn("newToken: newStatusAccessToken()", page)
+        self.assertIn("recoveryCredential: credential", page)
+        self.assertIn("removeRecoveryDraft()", page)
+        self.assertIn(
+            "The public response does not confirm whether an account exists.",
+            page,
+        )
         self.assertNotIn(
             "reviewPacket.value = JSON.stringify(sessionStatusAccess",
+            page,
+        )
+        self.assertNotIn(
+            "reviewPacket.value = JSON.stringify(loadRecoveryDraft",
             page,
         )
 

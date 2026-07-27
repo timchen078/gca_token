@@ -218,9 +218,9 @@ FORBIDDEN_PUBLIC_CLAIM_PATTERNS = [
 ]
 LEGACY_PERSONAL_GMAIL = "cxy070800@gmail.com"
 PENDING_WORKER_READINESS_AT = "2026-07-23T17:55:52Z"
-PENDING_WORKER_PUBLIC_ROUTE_AT = "2026-07-27T11:10:01Z"
-PENDING_WORKER_ADMIN_ROUTE_AT = "2026-07-27T11:10:08Z"
-PENDING_WORKER_VERSION_ID = "089c615f-0639-4adb-995b-10b006d8fedb"
+PENDING_WORKER_PUBLIC_ROUTE_AT = "2026-07-27T15:15:02Z"
+PENDING_WORKER_ADMIN_ROUTE_AT = "2026-07-27T15:15:12Z"
+PENDING_WORKER_VERSION_ID = "860fd70d-290a-467f-b70b-ed2d1fe7ca76"
 PENDING_WORKER_BLOCKED_BY = None
 MEMBER_BENEFIT_EVIDENCE_WORKER_VERSION_ID = "510315f5-8db3-4e08-b574-6e14b618aed5"
 MEMBER_BENEFIT_EVIDENCE_PUBLIC_SMOKE_AT = "2026-07-27T09:37:54Z"
@@ -3655,8 +3655,8 @@ def validate_zh_api_status_page(text: str) -> None:
     for expected in (
         "GCA 中文 API 状态",
         "中文 API 状态 / 浏览器实时只读检查",
-        "2026-07-27T11:10:01Z",
-        "2026-07-27T11:10:08Z",
+        "2026-07-27T15:15:02Z",
+        "2026-07-27T15:15:12Z",
         "最新检查",
         "正在本浏览器检查",
         "邮箱注册和邮箱退订接口",
@@ -3733,14 +3733,14 @@ def validate_zh_api_status_page(text: str) -> None:
         "data-gca-api-health",
         "data-locale=\"zh\"",
         "data-api-live-fact",
-        "9 个 GET 路由（含会员审核、持有证据和转账证据）必须用 HTTP 401 拒绝匿名访问",
+        "10 个 GET 路由（含会员审核、持有证据、转账证据和恢复申请）必须用 HTTP 401 拒绝匿名访问",
         "服务请求和 Credit 使用已经上线；HTTP 401 表示匿名读取被拒绝",
         "全程不写入记录",
         "gca_account_status_rotation_v1",
         "设备密钥轮换",
         "15 分钟",
         "assets/api-health.css?v=20260727",
-        "assets/api-health.js?v=20260727c",
+        "assets/api-health.js?v=20260727d",
     ):
         assert_contains(text, expected, label)
     assert_no_public_data_room_terms(text, label)
@@ -9972,7 +9972,7 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong account status rotation version")
     if production_email_backend.get("accountStatusRotationGraceMinutes") != 15:
         raise SiteCheckError(f"{label}: wrong account status rotation grace window")
-    if production_email_backend.get("workerRelease") != "gca-registration-worker-2026-07-27-account-status-rotation-v1":
+    if production_email_backend.get("workerRelease") != "gca-registration-worker-2026-07-27-account-status-recovery-v1":
         raise SiteCheckError(f"{label}: wrong Worker release")
     if production_email_backend.get("contactSuppressionEndpoint") != "https://gca-registration-api.gcagochina.workers.dev/gca/contact-suppressions":
         raise SiteCheckError(f"{label}: wrong contact suppression endpoint")
@@ -10480,8 +10480,8 @@ def validate_api_status_page(text: str) -> None:
     for expected in (
         "GCA Registration API Status",
         "Registration API Status / Live Read-Only Check",
-        "2026-07-27T11:10:01Z",
-        "2026-07-27T11:10:08Z",
+        "2026-07-27T15:15:02Z",
+        "2026-07-27T15:15:12Z",
         "2026-07-23T17:55:52Z",
         "Cloudflare Workers + D1",
         "https://gca-registration-api.gcagochina.workers.dev",
@@ -10543,14 +10543,14 @@ def validate_api_status_page(text: str) -> None:
         "data-gca-api-health",
         "data-locale=\"en\"",
         "data-api-live-fact",
-        "Nine GET routes, including member reviews, holding evidence, and benefit-transfer evidence, must reject anonymous access with HTTP 401",
+        "Ten GET routes, including member reviews, holding evidence, benefit-transfer evidence, and recovery requests, must reject anonymous access with HTTP 401",
         "Service requests and credit usage are live; HTTP 401 confirms anonymous reads are rejected",
         "No registration, wallet verification, service request, credit usage, token transfer, or admin-token request is sent",
         "assets/api-health.css?v=20260727",
         "gca_account_status_rotation_v1",
         "/gca/account-status/rotate",
-        "15-minute retry recovery",
-        "assets/api-health.js?v=20260727c",
+        "15-minute same-rotation retry",
+        "assets/api-health.js?v=20260727d",
     ):
         assert_contains(text, expected, label)
     assert_no_forbidden_public_claims(text, label)
@@ -10577,13 +10577,13 @@ def validate_api_status_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("latestPublicCheckAt") != PENDING_WORKER_PUBLIC_ROUTE_AT:
         raise SiteCheckError(f"{label}: wrong latest public check timestamp")
-    if payload.get("latestPublicCheckStatus") != "passed-account-status-live-redacted":
+    if payload.get("latestPublicCheckStatus") != "passed-account-status-recovery-live-redacted":
         raise SiteCheckError(f"{label}: wrong latest public check status")
     if payload.get("latestAdminCheckAt") != PENDING_WORKER_ADMIN_ROUTE_AT:
         raise SiteCheckError(f"{label}: wrong latest admin check timestamp")
     if payload.get("workerVersionId") != PENDING_WORKER_VERSION_ID:
         raise SiteCheckError(f"{label}: wrong top-level Worker version")
-    if payload.get("workerRelease") != "gca-registration-worker-2026-07-27-account-status-rotation-v1":
+    if payload.get("workerRelease") != "gca-registration-worker-2026-07-27-account-status-recovery-v1":
         raise SiteCheckError(f"{label}: wrong top-level Worker release")
     if payload.get("latestDeployReadinessCheckAt") != PENDING_WORKER_READINESS_AT:
         raise SiteCheckError(f"{label}: wrong latest deploy readiness timestamp")
@@ -10641,6 +10641,7 @@ def validate_api_status_json(text: str) -> None:
         "/gca/member-reviews",
         "/gca/holding-verifications",
         "/gca/member-benefit-transfers",
+        "/gca/account-status/recovery-requests",
     }:
         raise SiteCheckError(f"{label}: wrong browser anonymous admin-read checks")
     if set(browser_check.get("preparedRouteChecks", [])) != {"/gca/service-requests", "/gca/credit-usage"}:
@@ -10758,6 +10759,62 @@ def validate_api_status_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong public rotation grace window")
     if "gca_account_status_rotation_v1" not in browser_check.get("identityChecks", []):
         raise SiteCheckError(f"{label}: browser identity checks must include account status rotation")
+    for version in (
+        "gca_account_status_recovery_request_v1",
+        "gca_account_status_recovery_approval_v1",
+        "gca_account_status_recovery_v1",
+    ):
+        if version not in browser_check.get("identityChecks", []):
+            raise SiteCheckError(f"{label}: browser identity checks must include {version}")
+
+    recovery_request = public_endpoints.get("account-status-recovery-request")
+    if recovery_request is None:
+        raise SiteCheckError(f"{label}: missing public account status recovery request endpoint")
+    if recovery_request.get("method") != "POST" or recovery_request.get("path") != "/gca/account-status/recovery-requests":
+        raise SiteCheckError(f"{label}: wrong account status recovery request route")
+    if recovery_request.get("status") != "live-generic-response":
+        raise SiteCheckError(f"{label}: wrong account status recovery request status")
+    for key, expected in (
+        ("precommitsNewDeviceStatusKey", True),
+        ("storesDeviceStatusKeyHashOnly", True),
+        ("returnsAccountMatch", False),
+        ("requiresRegisteredEmailReview", True),
+        ("requiresSignature", False),
+        ("requiresTransaction", False),
+        ("automaticTokenTransfer", False),
+    ):
+        if recovery_request.get(key) is not expected:
+            raise SiteCheckError(f"{label}: wrong account status recovery request boundary {key}")
+
+    recovery_completion = public_endpoints.get("account-status-recovery-completion")
+    if recovery_completion is None:
+        raise SiteCheckError(f"{label}: missing public account status recovery completion endpoint")
+    if recovery_completion.get("method") != "POST" or recovery_completion.get("path") != "/gca/account-status/recover":
+        raise SiteCheckError(f"{label}: wrong account status recovery completion route")
+    if recovery_completion.get("status") != "live-one-time-credential":
+        raise SiteCheckError(f"{label}: wrong account status recovery completion status")
+    for key, expected in (
+        ("requiresApprovedRecoveryCredential", True),
+        ("recoveryCredentialSingleUse", True),
+        ("invalidatesOldDeviceStatusKey", True),
+        ("changesAccountOrLedgers", False),
+        ("requiresSignature", False),
+        ("requiresTransaction", False),
+        ("automaticTokenTransfer", False),
+    ):
+        if recovery_completion.get(key) is not expected:
+            raise SiteCheckError(f"{label}: wrong account status recovery completion boundary {key}")
+    for key, expected in (
+        ("deviceKeyRecoveryLive", True),
+        ("deviceKeyRecoveryRequiresRegisteredEmailReview", True),
+        ("deviceKeyRecoveryReturnsAccountMatch", False),
+        ("deviceKeyRecoveryStoresCredentialHashOnly", True),
+        ("deviceKeyRecoveryCredentialSingleUse", True),
+        ("deviceKeyRecoveryInvalidatesOldKey", True),
+        ("deviceKeyRecoveryChangesAccountOrLedgers", False),
+    ):
+        if boundaries.get(key) is not expected:
+            raise SiteCheckError(f"{label}: wrong public recovery boundary {key}")
 
     expected_admin = {
         "email-registration-read": "/gca/email-registrations",
@@ -10766,6 +10823,7 @@ def validate_api_status_json(text: str) -> None:
         "member-access-read": "/gca/member-access",
         "credit-ledger-read": "/gca/credit-ledger",
         "member-ledger-read": "/gca/member-ledger",
+        "account-status-recovery-requests-read": "/gca/account-status/recovery-requests",
     }
     for endpoint_id, path in expected_admin.items():
         endpoint = admin_endpoints.get(endpoint_id)
@@ -10779,6 +10837,25 @@ def validate_api_status_json(text: str) -> None:
             raise SiteCheckError(f"{label}: admin endpoint should require token {endpoint_id}")
         if endpoint.get("publicLedgerReadable") is not False:
             raise SiteCheckError(f"{label}: admin endpoint ledger must not be public {endpoint_id}")
+
+    recovery_approval = admin_endpoints.get("account-status-recovery-approval")
+    if recovery_approval is None:
+        raise SiteCheckError(f"{label}: missing account status recovery approval endpoint")
+    if (
+        recovery_approval.get("method") != "POST"
+        or recovery_approval.get("path") != "/gca/account-status/recovery-approvals"
+    ):
+        raise SiteCheckError(f"{label}: wrong account status recovery approval route")
+    for key, expected in (
+        ("requiresAdminReadToken", True),
+        ("requiresRegisteredEmailOwnershipReview", True),
+        ("returnsCredentialOnce", True),
+        ("storesCredentialHashOnly", True),
+        ("changesAccountOrLedgers", False),
+        ("productionLive", True),
+    ):
+        if recovery_approval.get(key) is not expected:
+            raise SiteCheckError(f"{label}: wrong account status recovery approval boundary {key}")
 
     member_reviews = admin_endpoints.get("member-reviews-read-write")
     if member_reviews is None:

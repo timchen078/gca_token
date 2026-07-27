@@ -4,7 +4,7 @@
   "status": "public-access-operations-device-status-live",
   "lastUpdated": "2026-07-27",
   "title": "GCA Access Operations Runbook",
-  "scope": "Public SOP for live GCA email registration, member account intake, read-only wallet verification, redacted device-key account status, eligible credit/member ledger records, review queue statuses, support responses, redacted review package handoff, manual member-benefit execution, and production transfer-evidence verification.",
+  "scope": "Public SOP for live GCA email registration, member account intake, read-only wallet verification, redacted device-key account status and registered-email recovery, eligible credit/member ledger records, review queue statuses, support responses, redacted review package handoff, manual member-benefit execution, and production transfer-evidence verification.",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "currentState": {
@@ -61,15 +61,23 @@
     "localSupportReviewContinuityImmutable": false,
     "productionSupportApprovalWorkflowLive": false,
     "liveTradingEnabled": false,
-    "serviceRoutesProductionVerifiedAt": "2026-07-27T11:10:08Z",
-    "memberReviewProductionVerifiedAt": "2026-07-27T11:10:08Z",
-    "memberBenefitTransferProductionVerifiedAt": "2026-07-27T11:10:08Z",
-    "accountStatusProductionVerifiedAt": "2026-07-27T11:10:01Z",
+    "serviceRoutesProductionVerifiedAt": "2026-07-27T15:15:12Z",
+    "memberReviewProductionVerifiedAt": "2026-07-27T15:15:12Z",
+    "memberBenefitTransferProductionVerifiedAt": "2026-07-27T15:15:12Z",
+    "accountStatusProductionVerifiedAt": "2026-07-27T15:15:02Z",
     "accountStatusRotationPacketVersion": "gca_account_status_rotation_v1",
     "accountStatusRotationProductionLive": true,
     "accountStatusRotationGraceMinutes": 15,
     "accountStatusRotationChangesAccountOrLedgers": false,
-    "accountStatusRotationProductionVerifiedAt": "2026-07-27T11:10:01Z"
+    "accountStatusRotationProductionVerifiedAt": "2026-07-27T15:15:02Z",
+    "accountStatusRecoveryRequestPacketVersion": "gca_account_status_recovery_request_v1",
+    "accountStatusRecoveryApprovalPacketVersion": "gca_account_status_recovery_approval_v1",
+    "accountStatusRecoveryPacketVersion": "gca_account_status_recovery_v1",
+    "accountStatusRecoveryProductionLive": true,
+    "accountStatusRecoveryMode": "registered-email-manual-review",
+    "accountStatusRecoveryPublicVerifiedAt": "2026-07-27T15:15:02Z",
+    "accountStatusRecoveryAdminVerifiedAt": "2026-07-27T15:15:12Z",
+    "accountStatusRecoveryChangesAccountOrLedgers": false
   },
   "emailRegistrationOpsPipeline": {
     "status": "production-email-registration-api-live-operator-sync-ready",
@@ -77,7 +85,12 @@
     "workerBaseUrl": "https://gca-registration-api.gcagochina.workers.dev",
     "publicAccountStatusEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/account-status",
     "accountStatusAccessMigration": "cloudflare/gca-registration-worker/migrations/0009_account_status_access.sql",
-    "accountStatusLostKeyRecovery": "official support verification from the registered email",
+    "accountStatusLostKeyRecovery": "generic public request, registered-email manual review, one-time 24-hour recovery credential",
+    "accountStatusRecoveryRequestEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/account-status/recovery-requests",
+    "accountStatusRecoveryApprovalEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/account-status/recovery-approvals",
+    "accountStatusRecoveryCompletionEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/account-status/recover",
+    "accountStatusRecoveryMigration": "cloudflare/gca-registration-worker/migrations/0011_account_status_recovery.sql",
+    "accountStatusRecoveryOperatorTool": "tools/approve_cloudflare_account_recovery.py",
     "accountStatusKeyMustNotBeRequestedInEmail": true,
     "publicHealthEndpoint": "https://gca-registration-api.gcagochina.workers.dev/health",
     "publicSubmissionEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/email-registrations",
@@ -129,7 +142,7 @@
       "writesD1Records": false,
       "deploysWorker": false
     },
-    "pendingRoutesLastObservedAt": "2026-07-27T11:10:01Z",
+    "pendingRoutesLastObservedAt": "2026-07-27T15:15:02Z",
     "pendingRouteAnonymousGetStatus": {
       "/gca/service-requests": 401,
       "/gca/credit-usage": 401
@@ -186,8 +199,8 @@
       "holdingNoLiveReadUsesExistingSnapshots": true
     },
     "workerDeployPermissionStatus": "passed",
-    "workerVersionId": "089c615f-0639-4adb-995b-10b006d8fedb",
-    "productionRoutesVerifiedAt": "2026-07-27T11:10:08Z"
+    "workerVersionId": "860fd70d-290a-467f-b70b-ed2d1fe7ca76",
+    "productionRoutesVerifiedAt": "2026-07-27T15:15:12Z"
   },
   "identity": {
     "network": "Base Mainnet",
@@ -217,6 +230,12 @@
       "label": "Identity Check",
       "operatorAction": "Confirm Base Mainnet chain ID 8453 and the official GCA contract address before any review note is made.",
       "outputStatus": "wallet_pending"
+    },
+    {
+      "id": "device-key-recovery",
+      "label": "Device Key Recovery",
+      "operatorAction": "Review only a queued recovery request initiated by the member browser. Confirm control of the exact registered mailbox, then run tools/approve_cloudflare_account_recovery.py with every explicit acknowledgement. Deliver the generated 0600 recovery packet only through that registered mailbox. Never request the old or new device key, wallet signature, private key, seed phrase, or transaction.",
+      "outputStatus": "approved, consumed, expired, or superseded"
     },
     {
       "id": "wallet-balance-check",

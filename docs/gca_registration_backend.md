@@ -10,6 +10,9 @@ https://gca-registration-api.gcagochina.workers.dev/gca/contact-suppressions
 https://gca-registration-api.gcagochina.workers.dev/gca/member-access
 https://gca-registration-api.gcagochina.workers.dev/gca/account-status
 https://gca-registration-api.gcagochina.workers.dev/gca/account-status/rotate
+https://gca-registration-api.gcagochina.workers.dev/gca/account-status/recovery-requests
+https://gca-registration-api.gcagochina.workers.dev/gca/account-status/recovery-approvals
+https://gca-registration-api.gcagochina.workers.dev/gca/account-status/recover
 https://gca-registration-api.gcagochina.workers.dev/gca/wallet-verifications
 https://gca-registration-api.gcagochina.workers.dev/gca/access-config
 https://gca-registration-api.gcagochina.workers.dev/gca/member-reviews
@@ -58,7 +61,9 @@ Member-access requests store:
 
 `POST /gca/account-status/rotate` accepts `gca_account_status_rotation_v1`, the current valid device key, and a new browser-generated key. Migration `0010_account_status_rotation.sql` stores only current and previous SHA-256 hashes. The old key immediately loses status-read access and can retry only the same completed rotation for 15 minutes. Rotation does not change the account, wallet verification, credit ledger, member ledger, or any on-chain asset.
 
-The status response excludes email, email hash, full wallet address, the device key, administrator data, operator notes, IP data, and user-agent data. It does not connect a wallet, request a signature, write an account or ledger record, or transfer GCA. If the key is lost, expired, or revoked, recovery requires official support verification from the registered email.
+Migration `0011_account_status_recovery.sql` adds a registered-email, manual-review recovery queue. `POST /gca/account-status/recovery-requests` accepts the registered email, Base wallet, and a new browser-generated device key, but stores only the email hash and key hash and always returns the same `pending_if_account_matches` response shape. It never confirms whether an account exists, and a public request cannot cancel another request or issued credential. `GET /gca/account-status/recovery-requests` and `POST /gca/account-status/recovery-approvals` require `ADMIN_READ_TOKEN`. After the operator verifies control of the registered mailbox, approval of that exact request atomically supersedes the account's other pending or approved requests, returns a random recovery credential once, and stores only its SHA-256 hash; the credential expires after 24 hours. `POST /gca/account-status/recover` consumes that credential, activates the pre-committed new device key, immediately invalidates the old key, and renews status access for 365 days. It does not change the member account, wallet verification, credit ledger, member ledger, GCA balance, or any on-chain asset.
+
+The status response excludes email, email hash, full wallet address, the device key, administrator data, operator notes, IP data, and user-agent data. It does not connect a wallet, request a signature, write an account or business-ledger record, or transfer GCA. If the key is lost, expired, or revoked, the member page can now submit the controlled recovery request; support still must verify the registered email before issuing the one-time credential.
 
 The submitted holding date and transaction hash do not prove continuous holding or activate GCA Member automatically. An operator must review the submitted evidence and record a decision through the token-protected member review route. Approval refreshes the current GCA balance at a safe Base block, combines Base Blockscout v2 transfer history with recent Base public RPC logs, reconstructs the observed minimum GCA balance over the prior 30 days, and fails closed unless the history is complete, internally consistent, and stays at or above 1,000,000 GCA.
 
@@ -86,6 +91,10 @@ Public registration, contact-suppression, wallet-verification, and member-access
 - Public member access endpoint: `POST /gca/member-access`
 - Public redacted account status endpoint: `POST /gca/account-status`
 - Public device-key rotation endpoint: `POST /gca/account-status/rotate`
+- Public device recovery request endpoint: `POST /gca/account-status/recovery-requests`
+- Admin device recovery queue endpoint: `GET /gca/account-status/recovery-requests`
+- Admin device recovery approval endpoint: `POST /gca/account-status/recovery-approvals`
+- Public device recovery completion endpoint: `POST /gca/account-status/recover`
 - Public wallet verification endpoint: `POST /gca/wallet-verifications`
 - Public access config endpoint: `GET /gca/access-config`
 - Admin wallet verification endpoint: `GET /gca/wallet-verifications`
@@ -99,12 +108,14 @@ Public registration, contact-suppression, wallet-verification, and member-access
 - Member D1 migration: `cloudflare/gca-registration-worker/migrations/0003_member_access_ledgers.sql`
 - Account status access migration: `cloudflare/gca-registration-worker/migrations/0009_account_status_access.sql`
 - Account status rotation migration: `cloudflare/gca-registration-worker/migrations/0010_account_status_rotation.sql`
+- Account status recovery migration: `cloudflare/gca-registration-worker/migrations/0011_account_status_recovery.sql`
 - Credit usage D1 migration: `cloudflare/gca-registration-worker/migrations/0004_credit_usage_ledger.sql`
 - Service request D1 migration: `cloudflare/gca-registration-worker/migrations/0005_service_requests.sql`
 - Member review D1 migration: `cloudflare/gca-registration-worker/migrations/0006_member_reviews.sql`
 - Holding-history D1 migration: `cloudflare/gca-registration-worker/migrations/0007_holding_history_verifications.sql`
 - Member-benefit evidence D1 migration: `cloudflare/gca-registration-worker/migrations/0008_member_benefit_transfer_evidence.sql`
 - Production member review operator tool: `tools/review_cloudflare_member.py`
+- Production account recovery approval tool: `tools/approve_cloudflare_account_recovery.py`
 - Production member-benefit evidence operator tool: `tools/record_cloudflare_member_benefit_transfer.py`
 - Worker deploy readiness tool: `tools/check_gca_worker_deploy_readiness.py`
 - Worker routes deployment record: `docs/gca_worker_pending_routes_deploy_handoff.md`
@@ -235,7 +246,33 @@ curl -fsS 'https://gca-registration-api.gcagochina.workers.dev/gca/member-ledger
 
 curl -fsS 'https://gca-registration-api.gcagochina.workers.dev/gca/member-reviews?limit=20' \
   -H "authorization: Bearer $ADMIN_READ_TOKEN"
+
+curl -fsS 'https://gca-registration-api.gcagochina.workers.dev/gca/account-status/recovery-requests?status=pending&limit=20' \
+  -H "authorization: Bearer $ADMIN_READ_TOKEN"
 ```
+
+## Production Device Recovery Approval
+
+The operator may approve a recovery request only after receiving the request ID from the account's registered mailbox and completing the manual identity review. Inspect the command first:
+
+```bash
+.venv/bin/python tools/approve_cloudflare_account_recovery.py --help
+```
+
+Issue the one-time credential only with all explicit confirmations:
+
+```bash
+.venv/bin/python tools/approve_cloudflare_account_recovery.py \
+  --recovery-request-id gca_recovery_request_00000000000000000000 \
+  --registered-email member@example.com \
+  --operator-id gca-operator \
+  --reason-code registered_email_verified \
+  --confirm-registered-email-ownership \
+  --confirm-manual-identity-review \
+  --confirm-production-write
+```
+
+The command writes the one-time credential to an ignored local file under `.gca_access_data/account_recovery/` with mode `0600`; it does not print the credential or `ADMIN_READ_TOKEN`. Deliver that file's credential only to the verified registered email. Never ask the user for the browser-generated new device key, private key, seed phrase, wallet password, wallet signature, approval, or transaction. Reissuing a credential invalidates the prior credential, and successful completion consumes it permanently.
 
 ## Production Member Review
 
