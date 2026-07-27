@@ -337,8 +337,8 @@
         <p class="eyebrow">Access API Contract / 2026-07-27</p>
         <h1 id="title">GCA Access API Contract</h1>
         <p class="lead">This page defines the controlled HTTPS API contract for the GCA account path. It covers email-only user registration, member account intake, read-only wallet verification, credit ledger records, GCA Member records, and support review statuses.</p>
-        <p class="lead">The Workers + D1 backend exposes live public routes for member access and wallet verification, plus token-protected operator routes for GCA Member decisions and append-only holding evidence. Approval requires a complete observed 30-day GCA transfer-history reconstruction with a minimum balance of at least 1,000,000 GCA. A submitted holding date and transaction hash remain supporting evidence only.</p>
-        <p class="lead">The 10,000 GCA member benefit remains a separate manual reserve-wallet process. No API route sends tokens, requests wallet signatures, authorizes that transfer, or creates live trading permission.</p>
+        <p class="lead">The Workers + D1 backend exposes live public routes for member access and wallet verification, plus token-protected operator routes for GCA Member decisions, append-only holding evidence, and verified evidence for already-completed member-benefit transfers. Approval requires a complete observed 30-day GCA transfer-history reconstruction with a minimum balance of at least 1,000,000 GCA.</p>
+        <p class="lead">The 10,000 GCA member benefit remains a manual reserve-wallet process. The production evidence route verifies a successful safe-block receipt from the official reserve to the approved member wallet and records it; no API route signs, authorizes, or broadcasts a token transfer.</p>
         <p class="lead">The backend is deployed on Cloudflare Workers + D1 at <code>https://gca-registration-api.gcagochina.workers.dev</code>, so the public registration and member access pages can write directly to D1. Source remains in <code>cloudflare/gca-registration-worker/</code>. A future <code>api.gcagochina.com</code> custom domain still requires Cloudflare access to the account that owns the <code>gcagochina.com</code> zone.</p>
         <p class="lead">A local operator backend is also available for localhost testing, evidence export, read-only GCA balance checks, and operator review workflows. Implementation details are listed below in the endpoint contract and technical evidence sections.</p>
         <div class="actions">
@@ -357,7 +357,7 @@
       <section class="facts" aria-label="Current state">
         <div class="fact">
           <span class="label">Current Stage</span>
-          <span class="value">member access + review API live</span>
+          <span class="value good">member benefit evidence API live</span>
         </div>
         <div class="fact">
           <span class="label">Public Endpoint</span>
@@ -571,7 +571,7 @@
           <div class="fact">
             <span class="label">POST / GET</span>
             <span class="value">/gca/member-benefit-transfers</span>
-            <p class="note">Local-only record path for manually completed reserve-wallet transfers. It verifies the public transaction hash with read-only Base receipt data, records matching GCA Transfer evidence, and never sends tokens.</p>
+            <p class="note">Production-live and <code>ADMIN_READ_TOKEN</code>-protected. After a manual reserve-wallet transfer exists, operators use <code>tools/record_cloudflare_member_benefit_transfer.py</code> to submit its public hash. The route verifies a successful receipt at or below the Base safe block, the official reserve sender, the approved member recipient, the GCA contract, and exactly 10,000 GCA. It records <code>gca_member_benefit_transfer_v1</code> evidence and never signs or sends tokens.</p>
           </div>
           <div class="fact">
             <span class="label">GET</span>
@@ -609,6 +609,7 @@
             <div class="row"><span>Credit usage</span><strong>creditLedgerId, serviceId, creditAmountUsed, admin token</strong></div>
             <div class="row"><span>Member review</span><strong>memberLedgerId, decision, reasonCode, reviewerId, manual-evidence acknowledgement, no-transfer acknowledgement, admin token</strong></div>
             <div class="row"><span>Holding evidence read</span><strong>ADMIN_READ_TOKEN; optional walletAddress, memberLedgerId, or status filter</strong></div>
+            <div class="row"><span>Member benefit evidence</span><strong>packetVersion, memberLedgerId, transactionHash, reviewerId, reasonCode, three explicit acknowledgements, admin token</strong></div>
             <div class="row"><span>Support review</span><strong>status, nextStep, reviewId or memberLedgerId / walletAddress</strong></div>
             <div class="row"><span>Ledger reads</span><strong>ADMIN_READ_TOKEN protected operator read</strong></div>
           </div>
@@ -643,6 +644,8 @@
             <li>token-protected POST and GET for append-only production member review decisions</li>
             <li>successful approval requires and stores a complete observed 30-day GCA transfer-history reconstruction</li>
             <li>token-protected GET for append-only holding verification evidence</li>
+            <li>token-protected POST and GET for verified <code>gca_member_benefit_transfer_v1</code> evidence</li>
+            <li>member-benefit evidence requires an existing successful receipt at or below the Base safe block, the official reserve sender, approved recipient, and exactly 10,000 GCA</li>
             <li>no GCA Member activation from a user-submitted holding date or transaction-hash format check alone</li>
             <li>CSRF protection for state-changing routes</li>
             <li>website / company / homepage honeypot bot-trap fields on public forms</li>
@@ -691,7 +694,7 @@
     </main>
 
     <footer>
-      <div class="shell">GCA email registration, unsubscribe, wallet verification, member access, and token-protected member review are live on Cloudflare Workers + D1. Membership requires manual evidence review; the 10,000 GCA member benefit remains a separate manual process.</div>
+      <div class="shell">GCA account, review, holding-evidence, and member-benefit evidence routes are live on Cloudflare Workers + D1. Benefit execution remains a manual reserve-wallet action; the API verifies and records the existing public transaction only.</div>
     </footer>
   </body>
 </html>

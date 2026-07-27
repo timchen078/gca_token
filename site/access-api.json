@@ -1,13 +1,13 @@
 {
   "schema": "https://gcagochina.com/access-api.json",
   "pageUrl": "https://gcagochina.com/access-api.html",
-  "status": "public-access-api-holding-history-verification-live",
+  "status": "public-access-api-member-benefit-evidence-live",
   "lastUpdated": "2026-07-27",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "title": "GCA Access API Contract",
   "currentState": {
-    "currentStage": "member-access-and-review-api-live",
+    "currentStage": "member-benefit-transfer-evidence-api-live",
     "contractOnly": false,
     "backendLive": true,
     "publicEndpointLive": true,
@@ -27,6 +27,7 @@
     "memberAccessPacketVersion": "gca_member_access_v1",
     "memberReviewPacketVersion": "gca_member_review_v1",
     "holdingVerificationPacketVersion": "gca_holding_verification_v1",
+    "memberBenefitTransferPacketVersion": "gca_member_benefit_transfer_v1",
     "walletVerificationLive": true,
     "creditLedgerWritesLive": true,
     "creditUsageLedgerPrepared": true,
@@ -43,10 +44,13 @@
     "memberLedgerWritesLive": true,
     "memberReviewWorkflowProductionLive": true,
     "holdingHistoryVerificationProductionLive": true,
+    "memberBenefitTransferEvidenceProductionLive": true,
+    "memberBenefitTransferStillManual": true,
     "onchainHoldingHistoryRequiredForApproval": true,
     "automaticMemberActivationFromSubmittedDate": false,
-    "memberReviewProductionVerifiedAt": "2026-07-27T09:00:16Z",
-    "serviceRoutesProductionVerifiedAt": "2026-07-27T09:00:16Z"
+    "memberReviewProductionVerifiedAt": "2026-07-27T09:38:07Z",
+    "memberBenefitTransferProductionVerifiedAt": "2026-07-27T09:38:07Z",
+    "serviceRoutesProductionVerifiedAt": "2026-07-27T09:38:07Z"
   },
   "localDevelopmentBackend": {
     "status": "local-only-backend-available",
@@ -119,7 +123,7 @@
       "writesD1Records": false,
       "deploysWorker": false
     },
-    "pendingRoutesLastObservedAt": "2026-07-27T09:00:02Z",
+    "pendingRoutesLastObservedAt": "2026-07-27T09:37:54Z",
     "pendingRouteAnonymousGetStatus": {
       "/gca/service-requests": 401,
       "/gca/credit-usage": 401
@@ -164,6 +168,7 @@
     "serviceRequestMigration": "cloudflare/gca-registration-worker/migrations/0005_service_requests.sql",
     "memberReviewMigration": "cloudflare/gca-registration-worker/migrations/0006_member_reviews.sql",
     "holdingHistoryMigration": "cloudflare/gca-registration-worker/migrations/0007_holding_history_verifications.sql",
+    "memberBenefitTransferMigration": "cloudflare/gca-registration-worker/migrations/0008_member_benefit_transfer_evidence.sql",
     "memberAccessEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/member-access",
     "walletVerificationEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/wallet-verifications",
     "accessConfigEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/access-config",
@@ -173,17 +178,24 @@
     "adminMemberLedgerEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/member-ledger",
     "adminMemberReviewsEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/member-reviews",
     "adminHoldingVerificationsEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/holding-verifications",
+    "adminMemberBenefitTransfersEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/member-benefit-transfers",
     "memberReviewOperatorTool": "tools/review_cloudflare_member.py",
+    "memberBenefitTransferOperatorTool": "tools/record_cloudflare_member_benefit_transfer.py",
     "antiSpamHoneypotFields": [
       "website",
       "company",
       "homepage"
     ],
-    "workerVersionId": "fdef5365-1dc1-4165-8de0-d8d9e7cde679",
-    "workerRelease": "gca-registration-worker-2026-07-27-holding-history-v1",
+    "workerVersionId": "510315f5-8db3-4e08-b574-6e14b618aed5",
+    "workerRelease": "gca-registration-worker-2026-07-27-member-benefit-evidence-v1",
     "memberReviewVersion": "gca_member_review_v1",
     "holdingVerificationVersion": "gca_holding_verification_v1",
-    "productionRoutesVerifiedAt": "2026-07-27T09:00:16Z"
+    "memberBenefitTransferVersion": "gca_member_benefit_transfer_v1",
+    "memberBenefitTransferOfficialSourceWallet": "0x5e8F84748612B913aAcC937492AC25dc5630E246",
+    "memberBenefitTransferExactAmount": "10000 GCA",
+    "memberBenefitTransferPublicSmokePassedAt": "2026-07-27T09:37:54Z",
+    "memberBenefitTransferAdminSmokePassedAt": "2026-07-27T09:38:07Z",
+    "productionRoutesVerifiedAt": "2026-07-27T09:38:07Z"
   },
   "securityModel": {
     "controlledHttpsOriginRequired": true,
@@ -202,6 +214,13 @@
     "holdingHistoryVerificationProvider": "Base Blockscout v2 plus Base public RPC",
     "holdingHistoryVerificationClaimBoundary": "Observed transfer-history reconstruction, not an external audit or future guarantee",
     "memberReviewWritesUseD1BatchTransaction": true,
+    "memberBenefitTransferEvidenceUsesD1BatchTransaction": true,
+    "memberBenefitTransferEvidenceRequiresSuccessfulReceipt": true,
+    "memberBenefitTransferEvidenceRequiresSafeBlock": true,
+    "memberBenefitTransferEvidenceRequiresOfficialReserveSender": true,
+    "memberBenefitTransferEvidenceRequiresExactAmount": "10000 GCA",
+    "memberBenefitTransferEvidencePacketVersion": "gca_member_benefit_transfer_v1",
+    "memberBenefitTransferSendsTokens": false,
     "usesEthCall": true,
     "usesEthGetTransactionReceipt": true,
     "usesErc20BalanceOf": true,
@@ -885,21 +904,34 @@
       "id": "member-benefit-transfers-read",
       "method": "GET",
       "path": "/gca/member-benefit-transfers",
-      "status": "local-only-not-public-production",
-      "purpose": "Read local JSONL records for manually completed reserve-wallet GCA Member benefit transfers.",
+      "status": "token-protected-admin-live",
+      "purpose": "Read append-only D1 evidence records for manually completed reserve-wallet GCA Member benefit transfers.",
       "requiredRequestFields": [
-        "localhostClient"
+        "authorization bearer token"
+      ],
+      "optionalRequestFields": [
+        "limit",
+        "memberLedgerId",
+        "walletAddress",
+        "transactionHash"
       ],
       "responseFields": [
         "transferRecordId",
         "memberLedgerId",
+        "accountId",
+        "walletAddress",
         "recipientWallet",
-        "memberBenefitAmount",
-        "memberBenefitTransferTx",
-        "memberBenefitTransferUrl",
-        "transferVerificationStatus",
-        "transferVerification",
-        "transferredAt",
+        "sourceWallet",
+        "transactionHash",
+        "baseScanTransactionUrl",
+        "amountGca",
+        "safeSnapshotBlockNumber",
+        "safeSnapshotBlockHash",
+        "receiptBlockNumber",
+        "receiptBlockHash",
+        "transferLogIndex",
+        "verificationStatus",
+        "verifiedAt",
         "status"
       ],
       "allowedStatuses": [
@@ -910,33 +942,41 @@
       "id": "member-benefit-transfers-create",
       "method": "POST",
       "path": "/gca/member-benefit-transfers",
-      "status": "local-only-not-public-production",
-      "purpose": "Record a manually completed 10,000 GCA reserve-wallet transfer after the operator signs it outside this app and the local backend verifies the transaction receipt with read-only Base Mainnet data.",
+      "status": "token-protected-admin-live",
+      "purpose": "Record an already-completed manual 10,000 GCA reserve-wallet transfer after the production Worker verifies its receipt and exact ERC-20 Transfer evidence at a safe Base block.",
       "requiredRequestFields": [
+        "authorization bearer token",
+        "packetVersion",
         "memberLedgerId",
-        "memberBenefitTransferTx",
-        "recipientWallet",
-        "reviewerNote"
+        "transactionHash",
+        "reviewerId",
+        "reasonCode",
+        "acknowledgements.manualReserveTransferCompleted",
+        "acknowledgements.transactionEvidencePublic",
+        "acknowledgements.noAutomaticTokenTransfer"
       ],
       "optionalRequestFields": [
-        "sourceWallet"
+        "reviewerNote"
       ],
       "responseFields": [
-        "transferRecord",
+        "memberBenefitTransfer",
         "memberLedger",
-        "supportReview",
-        "alreadyRecorded"
+        "alreadyRecorded",
+        "boundaries"
       ],
       "serverChecks": [
-        "localhost client only",
+        "ADMIN_READ_TOKEN protected",
+        "packetVersion must be gca_member_benefit_transfer_v1",
         "memberLedgerId must reference an active GCA Member ledger entry",
+        "the member ledger must link to a successful observed 30-day holding verification",
         "memberBenefitClaimStatus must be pending_manual_reserve_transfer",
-        "memberBenefitTransferTx must be a valid transaction hash",
-        "eth_getTransactionReceipt is read-only",
-        "receipt must contain a successful GCA Transfer log to recipientWallet",
-        "matched transfer amount must be at least 10000 GCA",
-        "sourceWallet must match the Transfer sender when provided",
-        "no wallet connection, signature, private key, or token transfer is requested"
+        "transactionHash must be a valid Base transaction hash and unique in D1",
+        "eth_getTransactionReceipt and safe-block reads are read-only",
+        "receipt status must be successful and receipt block must not exceed the current safe block",
+        "receipt sender must be the published official reserve wallet",
+        "receipt target and Transfer log contract must be the official GCA token contract",
+        "exactly one matching Transfer log must send exactly 10000 GCA from the official reserve to the approved member wallet",
+        "the endpoint records evidence only and never connects a wallet, requests a signature, holds a private key, or sends tokens"
       ],
       "allowedStatuses": [
         "transferred"
@@ -1139,8 +1179,10 @@
       "Successful GCA Member approval now also requires an observed complete 30-day GCA transfer-history reconstruction using Base Blockscout v2 plus recent Base public RPC logs and a snapshot balanceOf read.",
       "Successful approval stores append-only gca_holding_verification_v1 evidence with the observed minimum balance and links it to the review and member ledger.",
       "Production member review decisions are stored as append-only D1 records, while member and account status updates run in one D1 batch transaction.",
+      "After an operator manually completes an approved transfer, the protected production route verifies and stores gca_member_benefit_transfer_v1 evidence from the official reserve wallet to the approved member wallet.",
+      "Member-benefit transfer evidence requires a successful receipt at or below the Base safe block and exactly 10,000 GCA in one matching Transfer log.",
       "The API contract forbids private keys, seed phrases, exchange API secrets, withdrawal permission, custody, and risk-control bypass.",
-      "The 10,000 GCA member benefit remains manual review and reserve-wallet processing only.",
+      "The 10,000 GCA member benefit remains manual reserve-wallet processing; the production API records verified evidence after the transfer and does not send tokens.",
       "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool."
     ],
     "doNotClaim": [
@@ -1150,6 +1192,7 @@
       "GCA Member approval is automatic without wallet balance and 30-day holding-period review",
       "the observed holding-history reconstruction is a third-party security audit, permanent guarantee, or proof that public index data can never be delayed",
       "the 10,000 GCA member benefit is automatic or self-service transferred",
+      "the production member-benefit evidence route signs, authorizes, or broadcasts a token transfer",
       "the API collects private keys, seed phrases, exchange API secrets, withdrawal permission, custody, or one-time codes",
       "API access provides live order execution or risk-control bypass"
     ]

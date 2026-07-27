@@ -218,9 +218,9 @@ FORBIDDEN_PUBLIC_CLAIM_PATTERNS = [
 ]
 LEGACY_PERSONAL_GMAIL = "cxy070800@gmail.com"
 PENDING_WORKER_READINESS_AT = "2026-07-23T17:55:52Z"
-PENDING_WORKER_PUBLIC_ROUTE_AT = "2026-07-27T09:00:02Z"
-PENDING_WORKER_ADMIN_ROUTE_AT = "2026-07-27T09:00:16Z"
-PENDING_WORKER_VERSION_ID = "fdef5365-1dc1-4165-8de0-d8d9e7cde679"
+PENDING_WORKER_PUBLIC_ROUTE_AT = "2026-07-27T09:37:54Z"
+PENDING_WORKER_ADMIN_ROUTE_AT = "2026-07-27T09:38:07Z"
+PENDING_WORKER_VERSION_ID = "510315f5-8db3-4e08-b574-6e14b618aed5"
 PENDING_WORKER_BLOCKED_BY = None
 PENDING_WORKER_ROUTE_OBSERVATIONS = {
     "/gca/service-requests": 401,
@@ -3652,14 +3652,14 @@ def validate_zh_api_status_page(text: str) -> None:
     for expected in (
         "GCA 中文 API 状态",
         "中文 API 状态 / 浏览器实时只读检查",
-        "2026-07-27T09:00:02Z",
-        "2026-07-27T09:00:16Z",
+        "2026-07-27T09:37:54Z",
+        "2026-07-27T09:38:07Z",
         "最新检查",
         "正在本浏览器检查",
         "邮箱注册和邮箱退订接口",
         "Cloudflare Workers + D1",
         "管理员读取接口仍需要本地管理 token",
-        "不会自动转移 GCA 或自动发放 10,000 GCA 会员权益",
+        "10,000 GCA 转账仍需人工完成，系统不会自动发放",
         "gca-registration-api.gcagochina.workers.dev",
         "公开检查",
         "只读 / 不需要 secrets",
@@ -3685,6 +3685,9 @@ def validate_zh_api_status_page(text: str) -> None:
         "GET/POST /gca/member-reviews",
         "GET /gca/holding-verifications",
         "gca_holding_verification_v1",
+        "GET/POST /gca/member-benefit-transfers",
+        "gca_member_benefit_transfer_v1",
+        "tools/record_cloudflare_member_benefit_transfer.py",
         "匿名读取返回 HTTP 401",
         "部署权限检查",
         "最新公网和管理员只读 smoke 检查于 2026-07-27 UTC 通过",
@@ -3695,7 +3698,6 @@ def validate_zh_api_status_page(text: str) -> None:
         "python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth",
         "生产接口验收",
         "远端 D1 migration",
-        "wrangler deploy",
         "--include-pending-routes",
         "python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes",
         "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes",
@@ -3704,7 +3706,7 @@ def validate_zh_api_status_page(text: str) -> None:
         "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5",
         "邮箱注册不需要钱包地址，不读取钱包余额",
         "邮箱注册不需要私钥、助记词、钱包签名、验证码、付款或交易所 API Secret",
-        "会员账户入口可以写入符合条件的 100 credits 记录，并把 GCA Member 材料排入人工审核队列",
+        "会员账户入口可以写入符合条件的 100 credits 记录并排入会员审核",
         "邮箱退订只影响后续联系导出",
         "tools/export_cloudflare_email_registrations.py",
         "tools/sync_cloudflare_email_registrations.py",
@@ -3728,11 +3730,11 @@ def validate_zh_api_status_page(text: str) -> None:
         "data-gca-api-health",
         "data-locale=\"zh\"",
         "data-api-live-fact",
-        "8 个 GET 路由（含会员审核和持有证据）必须用 HTTP 401 拒绝匿名访问",
+        "9 个 GET 路由（含会员审核、持有证据和转账证据）必须用 HTTP 401 拒绝匿名访问",
         "服务请求和 Credit 使用已经上线；HTTP 401 表示匿名读取被拒绝",
         "全程不写入记录",
         "assets/api-health.css?v=20260727",
-        "assets/api-health.js?v=20260727",
+        "assets/api-health.js?v=20260727b",
     ):
         assert_contains(text, expected, label)
     assert_no_public_data_room_terms(text, label)
@@ -3746,13 +3748,13 @@ def validate_zh_operations_page(text: str) -> None:
     assert_social_preview_meta(text, label, ZH_OPERATIONS_PAGE_URL)
     for expected in (
         "GCA 中文运营流程",
-        "中文运营流程 / 2026-06-09",
+        "中文运营流程 / 2026-07-27",
         "用户在官网提交邮箱和会员账户资料以后",
         "同步 Cloudflare D1 记录",
         "导出联系名单",
         "处理退订",
         "保留本地账本",
-        "当前邮箱注册、邮箱退订、账户入口、只读钱包验证、符合条件的 100 credits 记录和 GCA Member 审核排队已经上线",
+        "邮箱注册、账户入口、只读钱包验证、100 credits、会员人工审核、30 天持有证据和已完成会员权益转账的生产证据验证已经上线",
         "服务请求队列、Credit 使用记录和 GCA Member 人工审核的 Cloudflare Worker 路由已经正式上线",
         "权限、D1 migration、部署和公开/管理员只读 smoke 检查均已通过",
         "Cloudflare Workers + D1 已上线",
@@ -3774,7 +3776,10 @@ def validate_zh_operations_page(text: str) -> None:
         "/gca/service-requests",
         "/gca/credit-usage",
         "/gca/member-reviews",
+        "/gca/holding-verifications",
+        "/gca/member-benefit-transfers",
         "tools/review_cloudflare_member.py",
+        "tools/record_cloudflare_member_benefit_transfer.py",
         "python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth",
         "D1 migration",
         ".gca_access_data/cloudflare_member_access_export.json",
@@ -3791,8 +3796,8 @@ def validate_zh_operations_page(text: str) -> None:
         "Credit 使用记录只在人工审核交付后写入",
         "--include-holding-report --holding-no-live-read",
         "tools/run_gca_daily_ops.py --build-digest --update-public-status",
-        "不会自动转账 GCA",
-        "不会请求签名、交易或钱包授权",
+        "不会发起、签名或广播转账",
+        "不会发起签名、交易或会员权益转账",
         ".gca_access_data/cloudflare_email_registrations_export.json",
         ".gca_access_data/email_registrations.jsonl",
         ".gca_access_data/gca_contact_suppressions.jsonl",
@@ -3816,7 +3821,7 @@ def validate_zh_operations_page(text: str) -> None:
         "不能把完整用户邮箱、管理员 token、完整 D1 导出文件或本地账本发给外部平台",
         "不能用运营导出绕过钱包余额验证",
         "不能把本地运营汇总、public-redacted CSV 或人工审核记录说成第三方审计或平台批准",
-        "可以说明 <code>/gca/service-requests</code>、<code>/gca/credit-usage</code> 和 <code>/gca/member-reviews</code> 已正式上线",
+        "可以说明 <code>/gca/service-requests</code>、<code>/gca/credit-usage</code>、<code>/gca/member-reviews</code>、<code>/gca/holding-verifications</code> 和 <code>/gca/member-benefit-transfers</code> 已正式上线",
         "和会员审核怎么连接",
         "只读 GCA 余额验证",
         "30 天持有资料",
@@ -3938,7 +3943,10 @@ def validate_zh_release_gates_page(text: str) -> None:
     assert_social_preview_meta(text, label, ZH_RELEASE_GATES_PAGE_URL)
     for expected in (
         "GCA 中文上线门槛",
-        "中文上线门槛 / 2026-07-23",
+        "中文上线门槛 / 2026-07-27",
+        "/gca/member-benefit-transfers",
+        "生产证据验证都已上线",
+        "它只验证已经存在的手动转账",
         "邮箱注册 API 已上线",
         "Cloudflare Workers + D1 已上线",
         "服务请求队列、Credit 使用记录和会员人工审核已经正式上线",
@@ -3950,7 +3958,7 @@ def validate_zh_release_gates_page(text: str) -> None:
         "D1 migration",
         "Worker 部署",
         "受控 HTTPS 账户 UI",
-        "只读钱包余额验证",
+        "只读 GCA 余额验证",
         "eth_call",
         "balanceOf",
         "100 credits",
@@ -4175,7 +4183,7 @@ def validate_zh_member_benefit_transfer_page(text: str) -> None:
     assert_social_preview_meta(text, label, ZH_MEMBER_BENEFIT_TRANSFER_PAGE_URL)
     for expected in (
         "GCA 中文会员权益转账流程",
-        "中文会员权益转账流程 / 2026-06-05",
+        "中文会员权益转账流程 / 2026-07-27",
         "1,000,000 GCA 连续持有 30 天",
         "10,000 GCA 会员权益",
         "人工审核和手动转账",
@@ -4188,9 +4196,14 @@ def validate_zh_member_benefit_transfer_page(text: str) -> None:
         "GCA/USDT",
         OFFICIAL_POOL_ADDRESS,
         RESERVE_WALLET,
-        "memberBenefitTransferTx",
         "gca_member_preregistration_v2",
-        "memberBenefitReviewEvidenceStatus",
+        "gca_member_benefit_transfer_v1",
+        "/gca/member-benefit-transfers",
+        "tools/record_cloudflare_member_benefit_transfer.py",
+        "memberBenefitClaimStatus",
+        "transferRecordId",
+        "safeSnapshotBlockNumber",
+        "verificationStatus",
         "evidenceTxHashFormatOk",
         "只读",
         "balanceOf",
@@ -4201,7 +4214,7 @@ def validate_zh_member_benefit_transfer_page(text: str) -> None:
         "复核当前余额",
         "准备储备钱包",
         "手动发送 10,000 GCA",
-        "记录公开交易哈希",
+        "验证并记录链上证据",
         "关闭审核记录",
         "私钥",
         "助记词",
@@ -4974,7 +4987,8 @@ def validate_whitepaper_page(text: str) -> None:
     assert_contains(text, "GCA Whitepaper", label)
     assert_contains(text, "Narrative meets risk control", label)
     assert_contains(text, "not live market data, financial advice, a buy/sell recommendation, or a price forecast", label)
-    assert_contains(text, "The account UI, read-only GCA balance verification, credit ledger activation, and member ledger activation are live through Workers + D1", label)
+    assert_contains(text, "The account UI, read-only GCA balance verification, credit ledger activation, member review, holding verification, and evidence verification for already-completed member-benefit transfers are live through Workers + D1", label)
+    assert_contains(text, "The 10,000 GCA transfer itself remains manual reserve-wallet processing after approval", label)
     assert_contains(text, "not as a yield product", label)
     assert_contains(text, "not automatic and not newly minted", label)
     assert_contains(text, "This is not a substitute for a third-party audit", label)
@@ -6014,7 +6028,7 @@ def validate_roadmap_page(text: str) -> None:
     assert_contains(text, "Live at", label)
     assert_contains(text, "Read-only GCA balance verification", label)
     assert_contains(text, "Live via Worker eth_call", label)
-    assert_contains(text, "100 GCA AI Quant Access credit records", label)
+    assert_contains(text, "100 utility credits ledger activation", label)
     assert_contains(text, "Live for eligible wallet records", label)
     assert_contains(text, "GCA Member records", label)
     assert_contains(text, "benefit remains manual review", label)
@@ -6025,6 +6039,8 @@ def validate_roadmap_page(text: str) -> None:
     assert_contains(text, "Local unsigned export and retained-head comparison live", label)
     assert_contains(text, "Bilingual live API health panel", label)
     assert_contains(text, "Read-only identity and anonymous-access checks live", label)
+    assert_contains(text, "Member-benefit transfer evidence", label)
+    assert_contains(text, "Live and token-protected; verifies existing exact 10,000 GCA reserve transfers only", label)
     assert_contains(text, 'href="api-status.html"', label)
     assert_contains(text, "browser-time read-only identity and anonymous-access checks without writing records or sending an admin token", label)
     assert_contains(text, "External Dependencies", label)
@@ -6084,6 +6100,18 @@ def validate_roadmap_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing controlled account UI priority")
     if not any(priority.get("id") == "utility-credit-ledger" for priority in payload.get("nextBuildPriorities", [])):
         raise SiteCheckError(f"{label}: missing utility credit ledger priority")
+    transfer_priority = next(
+        (priority for priority in payload.get("nextBuildPriorities", []) if priority.get("id") == "member-benefit-transfer-evidence"),
+        {},
+    )
+    if transfer_priority.get("status") != "live-token-protected-evidence-only":
+        raise SiteCheckError(f"{label}: wrong member benefit transfer evidence priority")
+    if transfer_priority.get("preparedPath") != "/gca/member-benefit-transfers":
+        raise SiteCheckError(f"{label}: wrong member benefit transfer evidence path")
+    if transfer_priority.get("packetVersion") != "gca_member_benefit_transfer_v1":
+        raise SiteCheckError(f"{label}: wrong member benefit transfer packet version")
+    if transfer_priority.get("automaticTokenTransfer") is not False:
+        raise SiteCheckError(f"{label}: transfer evidence must not automate transfers")
     support_priority = next(
         (priority for priority in payload.get("nextBuildPriorities", []) if priority.get("id") == "support-review-queue"),
         {},
@@ -6094,6 +6122,8 @@ def validate_roadmap_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing support review continuity verify command")
     if "create_gca_support_review_checkpoint.py" not in support_priority.get("checkpointCreateCommand", ""):
         raise SiteCheckError(f"{label}: missing support review checkpoint create command")
+    if not any(item.get("id") == "member-benefit-transfer-evidence-live" for item in payload.get("completedMilestones", [])):
+        raise SiteCheckError(f"{label}: missing member benefit evidence milestone")
     if "--checkpoint" not in support_priority.get("checkpointVerifyCommand", ""):
         raise SiteCheckError(f"{label}: missing support review checkpoint verify command")
     if support_priority.get("checkpointToolLive") is not True:
@@ -9035,8 +9065,8 @@ def validate_operations_page(text: str) -> None:
     assert_contains(text, "gca/member-access/", label)
     for forbidden in ("Platform-Only Evidence Path", "Data Room", 'href="data.html"'):
         assert_not_contains(text, forbidden, label)
-    assert_contains(text, "account intake live / operations runbook only", label)
-    assert_contains(text, "account intake live", label)
+    assert_contains(text, "member-benefit evidence operations live", label)
+    assert_contains(text, "account intake", label)
     assert_contains(text, "not a public ledger browser", label)
     assert_contains(text, "Email Registration Ops Pipeline", label)
     assert_contains(text, "Email API", label)
@@ -9045,6 +9075,9 @@ def validate_operations_page(text: str) -> None:
     assert_contains(text, "tools/check_gca_registration_api.py", label)
     assert_contains(text, "tools/export_cloudflare_email_registrations.py", label)
     assert_contains(text, "tools/run_gca_registration_ops.py", label)
+    assert_contains(text, "tools/record_cloudflare_member_benefit_transfer.py", label)
+    assert_contains(text, "/gca/member-benefit-transfers", label)
+    assert_contains(text, "gca_member_benefit_transfer_v1", label)
     assert_contains(text, ".gca_access_data/email_registrations.jsonl", label)
     assert_contains(text, ".gca_access_data/gca_email_contacts_public_redacted.csv", label)
     assert_contains(text, ".gca_access_data/gca_registration_ops_summary.json", label)
@@ -9070,6 +9103,7 @@ def validate_operations_page(text: str) -> None:
         "Member Review Decision",
         "Support Reply",
         "Ledger Handoff",
+        "Transfer Evidence",
         "Service Request Triage",
         "Platform Follow-Up",
         "Review Package Handoff",
@@ -9133,7 +9167,7 @@ def validate_operations_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != OPERATIONS_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
-    if payload.get("status") != "public-access-operations-runbook-published":
+    if payload.get("status") != "public-access-operations-member-benefit-evidence-live":
         raise SiteCheckError(f"{label}: wrong status")
     if payload.get("lastUpdated") != "2026-07-27":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
@@ -9141,7 +9175,7 @@ def validate_operations_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong chainId")
     if payload.get("contractAddress") != MAINNET_ADDRESS:
         raise SiteCheckError(f"{label}: wrong contractAddress")
-    if state.get("currentStage") != "account-ledger-operations-live":
+    if state.get("currentStage") != "member-benefit-transfer-evidence-operations-live":
         raise SiteCheckError(f"{label}: wrong currentStage")
     if state.get("publicRunbookOnly") is not False:
         raise SiteCheckError(f"{label}: publicRunbookOnly must be false")
@@ -9160,6 +9194,8 @@ def validate_operations_json(text: str) -> None:
         "ledgerWritesLive",
         "memberReviewWorkflowProductionLive",
         "holdingHistoryVerificationProductionLive",
+        "memberBenefitTransferEvidenceProductionLive",
+        "memberBenefitTransferStillManual",
         "onchainHoldingHistoryRequiredForApproval",
         "localSupportReviewContinuityChainLive",
         "localSupportReviewCheckpointToolLive",
@@ -9202,6 +9238,12 @@ def validate_operations_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong holding verification packet version")
     if state.get("holdingVerificationAdminPath") != "/gca/holding-verifications":
         raise SiteCheckError(f"{label}: wrong holding verification admin path")
+    if state.get("memberBenefitTransferPacketVersion") != "gca_member_benefit_transfer_v1":
+        raise SiteCheckError(f"{label}: wrong member benefit transfer packet version")
+    if state.get("memberBenefitTransferAdminPath") != "/gca/member-benefit-transfers":
+        raise SiteCheckError(f"{label}: wrong member benefit transfer admin path")
+    if state.get("memberBenefitTransferProductionVerifiedAt") != PENDING_WORKER_ADMIN_ROUTE_AT:
+        raise SiteCheckError(f"{label}: wrong member benefit transfer verification timestamp")
     if state.get("automaticMemberActivationFromSubmittedDate") is not False:
         raise SiteCheckError(f"{label}: submitted dates must not activate members")
     if state.get("memberReviewProductionVerifiedAt") != PENDING_WORKER_ADMIN_ROUTE_AT:
@@ -9310,6 +9352,16 @@ def validate_operations_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong member review operator tool")
     if member_ops.get("memberReviewMigration") != "cloudflare/gca-registration-worker/migrations/0006_member_reviews.sql":
         raise SiteCheckError(f"{label}: wrong member review migration")
+    if member_ops.get("memberBenefitTransferEndpoint") != "https://gca-registration-api.gcagochina.workers.dev/gca/member-benefit-transfers":
+        raise SiteCheckError(f"{label}: wrong member benefit transfer endpoint")
+    if member_ops.get("memberBenefitTransferOperatorTool") != "tools/record_cloudflare_member_benefit_transfer.py":
+        raise SiteCheckError(f"{label}: wrong member benefit transfer operator tool")
+    if member_ops.get("memberBenefitTransferMigration") != "cloudflare/gca-registration-worker/migrations/0008_member_benefit_transfer_evidence.sql":
+        raise SiteCheckError(f"{label}: wrong member benefit transfer migration")
+    if member_ops.get("memberBenefitTransferOfficialSourceWallet") != RESERVE_WALLET:
+        raise SiteCheckError(f"{label}: wrong member benefit source wallet")
+    if member_ops.get("memberBenefitTransferExactAmount") != "10000 GCA":
+        raise SiteCheckError(f"{label}: wrong member benefit exact amount")
     if member_ops.get("serviceRequestCsv") != ".gca_access_data/member_access_report/gca_service_requests.csv":
         raise SiteCheckError(f"{label}: wrong service request csv")
     if member_ops.get("holdingPeriodSummaryOutput") != ".gca_access_data/member_access_report/gca_holding_period_summary.json":
@@ -9321,6 +9373,11 @@ def validate_operations_json(text: str) -> None:
         "holdingReportLiveReadOptional",
         "holdingNoLiveReadUsesExistingSnapshots",
         "manualEvidenceReviewRequiredForMemberActivation",
+        "memberBenefitEvidenceWritesProductionData",
+        "memberBenefitEvidenceVerifiesExistingTransactionOnly",
+        "memberBenefitEvidenceRequiresSafeBlock",
+        "memberBenefitEvidenceRequiresExactAmount",
+        "memberBenefitEvidenceDoesNotSendTokens",
     ):
         if member_boundaries.get(key) is not True:
             raise SiteCheckError(f"{label}: missing member ops boundary {key}")
@@ -9343,6 +9400,7 @@ def validate_operations_json(text: str) -> None:
         "eligibility-decision",
         "support-reply",
         "ledger-handoff",
+        "member-benefit-transfer-evidence",
         "service-request-triage",
         "platform-follow-up",
         "review-package-handoff",
@@ -9420,6 +9478,10 @@ def validate_operations_json(text: str) -> None:
         "publicRedactedExportForReviewerHandoffOnly",
         "memberReviewWorkflowProductionLive",
         "memberReviewDoesNotAuthorizeBenefitTransfer",
+        "memberBenefitTransferEvidenceProductionLive",
+        "memberBenefitTransferEvidenceRequiresSafeBlock",
+        "memberBenefitTransferEvidenceRequiresSuccessfulReceipt",
+        "memberBenefitTransferEvidenceDoesNotSendTokens",
     ):
         if controls.get(key) is not True:
             raise SiteCheckError(f"{label}: {key} must be true")
@@ -9485,6 +9547,12 @@ def validate_operations_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong packet version control")
     if controls.get("memberReviewPacketVersionMustEqual") != "gca_member_review_v1":
         raise SiteCheckError(f"{label}: wrong member review packet version control")
+    if controls.get("memberBenefitTransferPacketVersionMustEqual") != "gca_member_benefit_transfer_v1":
+        raise SiteCheckError(f"{label}: wrong member benefit packet version control")
+    if controls.get("memberBenefitTransferSourceWalletMustEqual") != RESERVE_WALLET:
+        raise SiteCheckError(f"{label}: wrong member benefit source wallet control")
+    if controls.get("memberBenefitTransferAmountMustEqual") != "10000 GCA":
+        raise SiteCheckError(f"{label}: wrong member benefit amount control")
     if rules.get("holderBonusMinimum") != "10000 GCA":
         raise SiteCheckError(f"{label}: wrong holder bonus minimum")
     if rules.get("holderBonusCreditAmount") != "100 GCA AI Quant Access credits":
@@ -9587,7 +9655,7 @@ def validate_access_api_page(text: str) -> None:
         assert_not_contains(text, forbidden, label)
     assert_contains(text, "Review Queue", label)
     assert_contains(text, "Operations Runbook", label)
-    assert_contains(text, "member access + review API live", label)
+    assert_contains(text, "member benefit evidence API live", label)
     assert_contains(text, "Email + member access live", label)
     assert_contains(text, "member access and wallet verification", label)
     assert_contains(text, "tools/gca_member_backend.py", label)
@@ -9609,6 +9677,7 @@ def validate_access_api_page(text: str) -> None:
     assert_contains(text, "tools/export_gca_email_contacts.py", label)
     assert_contains(text, "tools/run_gca_registration_ops.py", label)
     assert_contains(text, "tools/review_cloudflare_member.py", label)
+    assert_contains(text, "tools/record_cloudflare_member_benefit_transfer.py", label)
     assert_contains(text, "tools/suppress_gca_contact.py", label)
     assert_contains(text, "Contact Suppression API", label)
     assert_contains(text, "gca_contact_suppression_v1", label)
@@ -9642,7 +9711,7 @@ def validate_access_api_page(text: str) -> None:
     assert_contains(text, "tools/verify_gca_review_package.py", label)
     assert_contains(text, "tools/export_gca_review_package.py", label)
     assert_contains(text, "reviewer evidence", label)
-    assert_contains(text, "read-only Base receipt data", label)
+    assert_contains(text, "successful receipt at or below the Base safe block", label)
     assert_contains(text, "balanceOf", label)
     assert_contains(text, "100 GCA AI Quant Access credits", label)
     assert_contains(text, "requested GCA AI Quant Access service scope", label)
@@ -9692,7 +9761,7 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != ACCESS_API_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
-    if payload.get("status") != "public-access-api-holding-history-verification-live":
+    if payload.get("status") != "public-access-api-member-benefit-evidence-live":
         raise SiteCheckError(f"{label}: wrong status")
     if payload.get("lastUpdated") != "2026-07-27":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
@@ -9700,7 +9769,7 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong chainId")
     if payload.get("contractAddress") != MAINNET_ADDRESS:
         raise SiteCheckError(f"{label}: wrong contractAddress")
-    if state.get("currentStage") != "member-access-and-review-api-live":
+    if state.get("currentStage") != "member-benefit-transfer-evidence-api-live":
         raise SiteCheckError(f"{label}: wrong currentStage")
     if state.get("contractOnly") is not False:
         raise SiteCheckError(f"{label}: contractOnly must be false")
@@ -9723,6 +9792,8 @@ def validate_access_api_json(text: str) -> None:
         "memberLedgerWritesLive",
         "memberReviewWorkflowProductionLive",
         "holdingHistoryVerificationProductionLive",
+        "memberBenefitTransferEvidenceProductionLive",
+        "memberBenefitTransferStillManual",
         "onchainHoldingHistoryRequiredForApproval",
     ):
         if state.get(key) is not True:
@@ -9733,6 +9804,10 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong member review packet version")
     if state.get("holdingVerificationPacketVersion") != "gca_holding_verification_v1":
         raise SiteCheckError(f"{label}: wrong holding verification packet version")
+    if state.get("memberBenefitTransferPacketVersion") != "gca_member_benefit_transfer_v1":
+        raise SiteCheckError(f"{label}: wrong member benefit transfer packet version")
+    if state.get("memberBenefitTransferProductionVerifiedAt") != PENDING_WORKER_ADMIN_ROUTE_AT:
+        raise SiteCheckError(f"{label}: wrong member benefit transfer verification timestamp")
     if state.get("automaticMemberActivationFromSubmittedDate") is not False:
         raise SiteCheckError(f"{label}: submitted dates must not activate membership")
     if state.get("serviceRequestQueueLocalLive") is not True:
@@ -9917,6 +9992,10 @@ def validate_access_api_json(text: str) -> None:
         "usesErc20BalanceOf",
         "adminReviewRequiredForMemberActivation",
         "memberReviewWritesUseD1BatchTransaction",
+        "memberBenefitTransferEvidenceUsesD1BatchTransaction",
+        "memberBenefitTransferEvidenceRequiresSuccessfulReceipt",
+        "memberBenefitTransferEvidenceRequiresSafeBlock",
+        "memberBenefitTransferEvidenceRequiresOfficialReserveSender",
     ):
         if security.get(key) is not True:
             raise SiteCheckError(f"{label}: {key} must be true")
@@ -9931,6 +10010,7 @@ def validate_access_api_json(text: str) -> None:
         "automaticLiveTradingEnabled",
         "riskControlBypassAllowed",
         "submittedHoldingDateActivatesMembership",
+        "memberBenefitTransferSendsTokens",
     ):
         if security.get(key) is not False:
             raise SiteCheckError(f"{label}: {key} must be false")
@@ -10095,25 +10175,39 @@ def validate_access_api_json(text: str) -> None:
         endpoint = endpoint_map.get(endpoint_key)
         if endpoint is None:
             raise SiteCheckError(f"{label}: missing endpoint {endpoint_key}")
-        if endpoint.get("status") != "local-only-not-public-production":
-            raise SiteCheckError(f"{label}: endpoint {endpoint_key} should be local-only")
+        if endpoint.get("status") != "token-protected-admin-live":
+            raise SiteCheckError(f"{label}: endpoint {endpoint_key} should be token-protected-admin-live")
     transfer_create = endpoint_map["POST /gca/member-benefit-transfers"]
-    if "memberBenefitTransferTx" not in transfer_create.get("requiredRequestFields", []):
-        raise SiteCheckError(f"{label}: missing transfer tx field")
+    for field in (
+        "authorization bearer token",
+        "packetVersion",
+        "memberLedgerId",
+        "transactionHash",
+        "reviewerId",
+        "reasonCode",
+        "acknowledgements.manualReserveTransferCompleted",
+        "acknowledgements.transactionEvidencePublic",
+        "acknowledgements.noAutomaticTokenTransfer",
+    ):
+        if field not in transfer_create.get("requiredRequestFields", []):
+            raise SiteCheckError(f"{label}: missing transfer field {field}")
     for expected_check in (
-        "eth_getTransactionReceipt is read-only",
-        "receipt must contain a successful GCA Transfer log to recipientWallet",
-        "matched transfer amount must be at least 10000 GCA",
+        "packetVersion must be gca_member_benefit_transfer_v1",
+        "receipt status must be successful and receipt block must not exceed the current safe block",
+        "receipt sender must be the published official reserve wallet",
+        "exactly one matching Transfer log must send exactly 10000 GCA from the official reserve to the approved member wallet",
+        "the endpoint records evidence only and never connects a wallet, requests a signature, holds a private key, or sends tokens",
     ):
         if expected_check not in transfer_create.get("serverChecks", []):
             raise SiteCheckError(f"{label}: missing transfer receipt check {expected_check}")
     if "alreadyRecorded" not in transfer_create.get("responseFields", []):
         raise SiteCheckError(f"{label}: missing transfer idempotency field")
     transfer_read = endpoint_map["GET /gca/member-benefit-transfers"]
-    if "transferVerificationStatus" not in transfer_read.get("responseFields", []):
+    if "verificationStatus" not in transfer_read.get("responseFields", []):
         raise SiteCheckError(f"{label}: missing transfer verification status field")
-    if "transferVerification" not in transfer_read.get("responseFields", []):
-        raise SiteCheckError(f"{label}: missing transfer verification evidence field")
+    for field in ("transferRecordId", "sourceWallet", "recipientWallet", "baseScanTransactionUrl", "safeSnapshotBlockNumber", "amountGca"):
+        if field not in transfer_read.get("responseFields", []):
+            raise SiteCheckError(f"{label}: missing transfer evidence field {field}")
     wallet = endpoint_map["POST /gca/wallet-verifications"]
     if "chainId must be 8453" not in wallet.get("serverChecks", []):
         raise SiteCheckError(f"{label}: missing chain check")
@@ -10274,8 +10368,8 @@ def validate_api_status_page(text: str) -> None:
     for expected in (
         "GCA Registration API Status",
         "Registration API Status / Live Read-Only Check",
-        "2026-07-27T09:00:02Z",
-        "2026-07-27T09:00:16Z",
+        "2026-07-27T09:37:54Z",
+        "2026-07-27T09:38:07Z",
         "2026-07-23T17:55:52Z",
         "Cloudflare Workers + D1",
         "https://gca-registration-api.gcagochina.workers.dev",
@@ -10304,6 +10398,8 @@ def validate_api_status_page(text: str) -> None:
         "/gca/member-ledger",
         "/gca/member-reviews",
         "/gca/holding-verifications",
+        "/gca/member-benefit-transfers",
+        "gca_member_benefit_transfer_v1",
         "/gca/credit-usage",
         "Deploy Readiness",
         "Cloudflare account authentication",
@@ -10319,12 +10415,13 @@ def validate_api_status_page(text: str) -> None:
         "tools/export_gca_email_contacts.py",
         "tools/sync_cloudflare_contact_suppressions.py",
         "tools/review_cloudflare_member.py",
+        "tools/record_cloudflare_member_benefit_transfer.py",
         "tools/run_gca_registration_ops.py",
         "Email registration does not require a wallet, wallet signature, payment, private key, seed phrase, exchange API secret, or withdrawal permission",
         "Contact suppression does not change GCA balances, pool state, credits, member status, or on-chain assets",
         "Public visitors cannot read the registration ledger or suppression ledger",
-        "100-credit records and queued GCA Member review records are live for eligible wallet submissions",
-        "member activation requires manual review",
+        "Live public account intake for email, Base wallet, holder-credit records, and a queued GCA Member review record",
+        "Approval refreshes the balance at a safe Base block",
         "Daily Status Snapshot",
         "Access API Contract",
         "Operations Runbook",
@@ -10334,11 +10431,11 @@ def validate_api_status_page(text: str) -> None:
         "data-gca-api-health",
         "data-locale=\"en\"",
         "data-api-live-fact",
-        "Eight GET routes, including member reviews and holding evidence, must reject anonymous access with HTTP 401",
+        "Nine GET routes, including member reviews, holding evidence, and benefit-transfer evidence, must reject anonymous access with HTTP 401",
         "Service requests and credit usage are live; HTTP 401 confirms anonymous reads are rejected",
         "No registration, wallet verification, service request, credit usage, token transfer, or admin-token request is sent",
         "assets/api-health.css?v=20260727",
-        "assets/api-health.js?v=20260727",
+        "assets/api-health.js?v=20260727b",
     ):
         assert_contains(text, expected, label)
     assert_no_forbidden_public_claims(text, label)
@@ -10359,13 +10456,13 @@ def validate_api_status_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != API_STATUS_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
-    if payload.get("status") != "public-member-access-holding-history-verification-live":
+    if payload.get("status") != "public-member-benefit-transfer-evidence-live":
         raise SiteCheckError(f"{label}: wrong status")
     if payload.get("lastUpdated") != "2026-07-27":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("latestPublicCheckAt") != PENDING_WORKER_PUBLIC_ROUTE_AT:
         raise SiteCheckError(f"{label}: wrong latest public check timestamp")
-    if payload.get("latestPublicCheckStatus") != "passed-holding-history-live-protected":
+    if payload.get("latestPublicCheckStatus") != "passed-member-benefit-evidence-live-protected":
         raise SiteCheckError(f"{label}: wrong latest public check status")
     if payload.get("latestDeployReadinessCheckAt") != PENDING_WORKER_READINESS_AT:
         raise SiteCheckError(f"{label}: wrong latest deploy readiness timestamp")
@@ -10422,6 +10519,7 @@ def validate_api_status_json(text: str) -> None:
         "/gca/member-ledger",
         "/gca/member-reviews",
         "/gca/holding-verifications",
+        "/gca/member-benefit-transfers",
     }:
         raise SiteCheckError(f"{label}: wrong browser anonymous admin-read checks")
     if set(browser_check.get("preparedRouteChecks", [])) != {"/gca/service-requests", "/gca/credit-usage"}:
@@ -10551,6 +10649,39 @@ def validate_api_status_json(text: str) -> None:
     if holding_verifications.get("workerVersionId") != PENDING_WORKER_VERSION_ID:
         raise SiteCheckError(f"{label}: wrong holding verification Worker version")
 
+    benefit_transfers = admin_endpoints.get("member-benefit-transfers-read-write")
+    if benefit_transfers is None:
+        raise SiteCheckError(f"{label}: missing member benefit transfer endpoint")
+    if benefit_transfers.get("method") != "GET/POST" or benefit_transfers.get("path") != "/gca/member-benefit-transfers":
+        raise SiteCheckError(f"{label}: wrong member benefit transfer endpoint route")
+    if benefit_transfers.get("status") != "live-token-protected":
+        raise SiteCheckError(f"{label}: wrong member benefit transfer endpoint status")
+    if benefit_transfers.get("packetVersion") != "gca_member_benefit_transfer_v1":
+        raise SiteCheckError(f"{label}: wrong member benefit transfer endpoint version")
+    if benefit_transfers.get("officialSourceWallet") != RESERVE_WALLET:
+        raise SiteCheckError(f"{label}: wrong member benefit source wallet")
+    if benefit_transfers.get("exactTransferAmount") != "10000 GCA":
+        raise SiteCheckError(f"{label}: wrong member benefit transfer amount")
+    for key, expected in (
+        ("requiresAdminReadToken", True),
+        ("publicLedgerReadable", False),
+        ("verifiesExistingTransactionOnly", True),
+        ("requiresSuccessfulReceiptAtOrBelowSafeBlock", True),
+        ("requiresApprovedMemberWalletRecipient", True),
+        ("automaticTokenTransfer", False),
+        ("requiresSignature", False),
+        ("writesWallet", False),
+        ("productionLive", True),
+    ):
+        if benefit_transfers.get(key) is not expected:
+            raise SiteCheckError(f"{label}: wrong member benefit transfer boundary {key}")
+    if benefit_transfers.get("lastObservedAnonymousGetStatus") != 401:
+        raise SiteCheckError(f"{label}: member benefit transfer route must reject anonymous reads")
+    if benefit_transfers.get("lastObservedAdminGetStatus") != 200:
+        raise SiteCheckError(f"{label}: member benefit transfer admin read must return HTTP 200")
+    if benefit_transfers.get("workerVersionId") != PENDING_WORKER_VERSION_ID:
+        raise SiteCheckError(f"{label}: wrong member benefit transfer Worker version")
+
     credit_usage = admin_endpoints.get("credit-usage-read-write")
     if credit_usage is None:
         raise SiteCheckError(f"{label}: missing credit usage endpoint")
@@ -10668,7 +10799,9 @@ def validate_api_status_json(text: str) -> None:
         "memberAccessWritesEligibleLedgers",
         "memberAccessQueuesMemberReview",
         "noAutomaticTokenTransfer",
-        "memberBenefitManualReviewOnly",
+        "memberBenefitManualTransferRequired",
+        "memberBenefitEvidenceProductionLive",
+        "memberBenefitEvidenceVerifiesExistingTransactionOnly",
     ):
         if boundaries.get(key) is not True:
             raise SiteCheckError(f"{label}: missing boundary {key}")
@@ -10712,6 +10845,7 @@ def validate_api_health_script(text: str) -> None:
         '"/gca/credit-ledger"',
         '"/gca/member-ledger"',
         '"/gca/member-reviews"',
+        '"/gca/member-benefit-transfers"',
         '"/gca/service-requests"',
         '"/gca/credit-usage"',
         'method: "GET"',
@@ -10722,6 +10856,9 @@ def validate_api_health_script(text: str) -> None:
         'request("/health", { parseJson: true })',
         'request("/gca/access-config", { parseJson: true })',
         'payload.memberReviewVersion === "gca_member_review_v1"',
+        'payload.memberBenefitTransferVersion === "gca_member_benefit_transfer_v1"',
+        'boundaries.memberBenefitTransferMode === "manual-reserve-wallet-transfer-with-read-only-production-evidence"',
+        "boundaries.memberBenefitSelfServiceTransfer === false",
         "boundaries.automaticMemberActivationFromSubmittedDate === false",
         "result.status === 401",
         "result.status === 404",
@@ -11633,7 +11770,8 @@ def validate_release_gates_page(text: str) -> None:
     assert_contains(text, "Operations Runbook", label)
     assert_contains(text, "Access API", label)
     assert_contains(text, "account + member review path live", label)
-    assert_contains(text, "observed 30-day holding-history verification are live", label)
+    assert_contains(text, "production evidence for already-completed manual member-benefit transfers are live", label)
+    assert_contains(text, "The 10,000 GCA transfer itself remains a separate reserve-wallet action", label)
     assert_contains(text, "Live at /gca/member-access/", label)
     assert_contains(text, "Eligible ledger records live", label)
     assert_contains(text, "controlled HTTPS account UI", label)
@@ -11642,6 +11780,7 @@ def validate_release_gates_page(text: str) -> None:
     assert_contains(text, "member ledger activation", label)
     assert_contains(text, "/gca/member-reviews live and token-protected", label)
     assert_contains(text, "/gca/holding-verifications live", label)
+    assert_contains(text, "Manual transfer; protected production evidence verification live", label)
     assert_contains(text, "risk-control review", label)
     assert_contains(text, "support review queue", label)
     assert_contains(text, "Local support review trail", label)
@@ -11679,7 +11818,7 @@ def validate_release_gates_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != RELEASE_GATES_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
-    if payload.get("status") != "public-release-gates-account-holding-history-path-live":
+    if payload.get("status") != "public-release-gates-member-benefit-evidence-live":
         raise SiteCheckError(f"{label}: wrong status")
     if payload.get("lastUpdated") != "2026-07-27":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
@@ -11687,11 +11826,11 @@ def validate_release_gates_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong chainId")
     if payload.get("contractAddress") != MAINNET_ADDRESS:
         raise SiteCheckError(f"{label}: wrong contractAddress")
-    if state.get("currentStage") != "account-member-review-and-holding-history-path-live":
+    if state.get("currentStage") != "member-benefit-transfer-evidence-path-live":
         raise SiteCheckError(f"{label}: wrong currentStage")
     if state.get("publicProductSpecOnly") is not False:
         raise SiteCheckError(f"{label}: publicProductSpecOnly must be false")
-    for key in ("publicAccountUiLive", "creditsEligibilitySubmissionLive", "gcaMemberEligibilitySubmissionLive", "walletVerificationLive", "creditLedgerWritesLive", "memberLedgerWritesLive", "memberReviewWorkflowProductionLive", "holdingHistoryVerificationProductionLive", "onchainHoldingHistoryRequiredForApproval", "memberBenefitManualReviewOnly"):
+    for key in ("publicAccountUiLive", "creditsEligibilitySubmissionLive", "gcaMemberEligibilitySubmissionLive", "walletVerificationLive", "creditLedgerWritesLive", "memberLedgerWritesLive", "memberReviewWorkflowProductionLive", "holdingHistoryVerificationProductionLive", "memberBenefitTransferEvidenceProductionLive", "onchainHoldingHistoryRequiredForApproval", "memberBenefitManualTransferRequired"):
         if state.get(key) is not True:
             raise SiteCheckError(f"{label}: {key} must be true")
     if state.get("liveTradingEnabled") is not False:
@@ -11708,6 +11847,16 @@ def validate_release_gates_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong member review packet version")
     if state.get("holdingVerificationPacketVersion") != "gca_holding_verification_v1":
         raise SiteCheckError(f"{label}: wrong holding verification packet version")
+    if state.get("memberBenefitTransferPacketVersion") != "gca_member_benefit_transfer_v1":
+        raise SiteCheckError(f"{label}: wrong member benefit transfer packet version")
+    if state.get("memberBenefitTransferProductionVerifiedAt") != PENDING_WORKER_ADMIN_ROUTE_AT:
+        raise SiteCheckError(f"{label}: wrong member benefit transfer verification timestamp")
+    if state.get("memberBenefitTransferOfficialSourceWallet") != RESERVE_WALLET:
+        raise SiteCheckError(f"{label}: wrong member benefit transfer source wallet")
+    if state.get("memberBenefitTransferExactAmount") != "10000 GCA":
+        raise SiteCheckError(f"{label}: wrong member benefit transfer amount")
+    if state.get("memberBenefitAutomaticTransfer") is not False:
+        raise SiteCheckError(f"{label}: member benefit transfer must remain manual")
     if state.get("automaticMemberActivationFromSubmittedDate") is not False:
         raise SiteCheckError(f"{label}: submitted dates must not activate membership")
     if state.get("memberReviewProductionVerifiedAt") != PENDING_WORKER_ADMIN_ROUTE_AT:
@@ -11755,6 +11904,7 @@ def validate_release_gates_json(text: str) -> None:
         "member-ledger-activation",
         "production-member-review",
         "onchain-holding-history-verification",
+        "member-benefit-transfer-evidence",
         "support-review-queue",
         "risk-control-review",
         "simulation-first",
@@ -11774,6 +11924,7 @@ def validate_release_gates_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing support review checkpoint compare command")
     member_review_gate = next((item for item in payload.get("releaseGates", []) if item.get("id") == "production-member-review"), {})
     holding_history_gate = next((item for item in payload.get("releaseGates", []) if item.get("id") == "onchain-holding-history-verification"), {})
+    transfer_gate = next((item for item in payload.get("releaseGates", []) if item.get("id") == "member-benefit-transfer-evidence"), {})
     if member_review_gate.get("status") != "live-token-protected":
         raise SiteCheckError(f"{label}: wrong production member review gate status")
     if member_review_gate.get("packetVersion") != "gca_member_review_v1":
@@ -11784,6 +11935,18 @@ def validate_release_gates_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong holding-history gate status")
     if holding_history_gate.get("packetVersion") != "gca_holding_verification_v1":
         raise SiteCheckError(f"{label}: wrong holding-history gate version")
+    if transfer_gate.get("status") != "live-token-protected-evidence-only":
+        raise SiteCheckError(f"{label}: wrong member benefit transfer gate status")
+    if transfer_gate.get("packetVersion") != "gca_member_benefit_transfer_v1":
+        raise SiteCheckError(f"{label}: wrong member benefit transfer gate version")
+    if transfer_gate.get("endpoint") != "/gca/member-benefit-transfers":
+        raise SiteCheckError(f"{label}: wrong member benefit transfer gate endpoint")
+    if transfer_gate.get("operatorTool") != "tools/record_cloudflare_member_benefit_transfer.py":
+        raise SiteCheckError(f"{label}: wrong member benefit transfer operator tool")
+    if transfer_gate.get("officialSourceWallet") != RESERVE_WALLET:
+        raise SiteCheckError(f"{label}: wrong member benefit transfer gate source wallet")
+    if transfer_gate.get("exactTransferAmount") != "10000 GCA":
+        raise SiteCheckError(f"{label}: wrong member benefit transfer gate amount")
     if base_scan_gate.get("status") != "ready-for-owner-resubmission":
         raise SiteCheckError(f"{label}: wrong BaseScan release gate status")
     if base_scan_gate.get("finalSubmissionPackageGeneratedAt") != "2026-07-18T12:03:57Z":
@@ -13817,6 +13980,7 @@ def validate_member_benefit_transfer_json(text: str) -> None:
     payload = load_json(text, label)
     token = payload.get("token", {})
     policy = payload.get("transferPolicy", {})
+    evidence_workflow = payload.get("productionEvidenceWorkflow", {})
     links = payload.get("publicLinks", {})
     boundaries = payload.get("publicClaimBoundaries", {})
 
@@ -13824,7 +13988,7 @@ def validate_member_benefit_transfer_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != MEMBER_BENEFIT_TRANSFER_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
-    if payload.get("status") != "public-member-benefit-transfer-runbook-published-transfer-not-automatic":
+    if payload.get("status") != "public-member-benefit-transfer-evidence-workflow-live":
         raise SiteCheckError(f"{label}: wrong status")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
@@ -13841,11 +14005,16 @@ def validate_member_benefit_transfer_json(text: str) -> None:
             raise SiteCheckError(f"{label}: {key} must be false")
     if policy.get("recipientMustEqualVerifiedMemberWallet") is not True:
         raise SiteCheckError(f"{label}: recipient rule must be true")
+    if policy.get("productionEvidenceVerificationLive") is not True:
+        raise SiteCheckError(f"{label}: production evidence verification must be live")
+    if policy.get("productionEvidencePacketVersion") != "gca_member_benefit_transfer_v1":
+        raise SiteCheckError(f"{label}: wrong production evidence packet version")
     for prerequisite in (
         "memberBenefitReviewEvidence packet version is gca_member_preregistration_v2",
         "evidenceTxHashFormatOk is true",
-        "memberBenefitReviewEvidenceStatus is eligible",
-        "no prior memberBenefitTransferTx exists for the same registered user",
+        "member ledger record is active and links to a successful gca_holding_verification_v1 record",
+        "memberBenefitClaimStatus is pending_manual_reserve_transfer",
+        "no prior member-benefit transfer evidence exists for the same member ledger",
     ):
         if prerequisite not in payload.get("approvalPrerequisites", []):
             raise SiteCheckError(f"{label}: missing prerequisite {prerequisite}")
@@ -13860,17 +14029,62 @@ def validate_member_benefit_transfer_json(text: str) -> None:
         if step not in [item.get("id") for item in payload.get("manualTransferSteps", [])]:
             raise SiteCheckError(f"{label}: missing transfer step {step}")
     for field in (
+        "transferRecordId",
         "memberLedgerId",
-        "registrationId",
-        "walletAddress",
-        "memberBenefitAmount",
-        "memberBenefitTransferTx",
         "sourceWallet",
         "recipientWallet",
-        "reviewerNote",
+        "transactionHash",
+        "baseScanTransactionUrl",
+        "amountGca",
+        "safeSnapshotBlockNumber",
+        "safeSnapshotBlockHash",
+        "receiptBlockNumber",
+        "receiptBlockHash",
+        "transferLogIndex",
+        "verificationStatus",
+        "verifiedAt",
+        "reviewerId",
+        "reasonCode",
+        "operatorNote",
     ):
         if field not in payload.get("requiredLedgerFieldsAfterTransfer", []):
             raise SiteCheckError(f"{label}: missing ledger field {field}")
+    if evidence_workflow.get("status") != "live-token-protected":
+        raise SiteCheckError(f"{label}: wrong production evidence status")
+    if evidence_workflow.get("packetVersion") != "gca_member_benefit_transfer_v1":
+        raise SiteCheckError(f"{label}: wrong production evidence version")
+    if evidence_workflow.get("endpoint") != "/gca/member-benefit-transfers":
+        raise SiteCheckError(f"{label}: wrong production evidence endpoint")
+    if evidence_workflow.get("migration") != "cloudflare/gca-registration-worker/migrations/0008_member_benefit_transfer_evidence.sql":
+        raise SiteCheckError(f"{label}: wrong production evidence migration")
+    if evidence_workflow.get("operatorTool") != "tools/record_cloudflare_member_benefit_transfer.py":
+        raise SiteCheckError(f"{label}: wrong production evidence operator tool")
+    if evidence_workflow.get("officialSourceWallet") != RESERVE_WALLET:
+        raise SiteCheckError(f"{label}: wrong production evidence source wallet")
+    if evidence_workflow.get("exactTransferAmount") != "10000 GCA":
+        raise SiteCheckError(f"{label}: wrong production evidence amount")
+    for key in (
+        "requiresAdminReadToken",
+        "requiresSuccessfulReceipt",
+        "requiresReceiptAtOrBelowSafeBlock",
+        "requiresReceiptSenderToEqualOfficialSourceWallet",
+        "requiresReceiptTargetToEqualGcaContract",
+        "requiresExactlyOneMatchingTransferLog",
+        "requiresRecipientToEqualApprovedMemberWallet",
+    ):
+        if evidence_workflow.get(key) is not True:
+            raise SiteCheckError(f"{label}: missing production evidence requirement {key}")
+    for key in ("automaticTokenTransfer", "walletConnection", "signatureRequest"):
+        if evidence_workflow.get(key) is not False:
+            raise SiteCheckError(f"{label}: unsafe production evidence boundary {key}")
+    if evidence_workflow.get("workerVersionId") != PENDING_WORKER_VERSION_ID:
+        raise SiteCheckError(f"{label}: wrong production evidence Worker version")
+    if evidence_workflow.get("publicSmokePassedAt") != PENDING_WORKER_PUBLIC_ROUTE_AT:
+        raise SiteCheckError(f"{label}: wrong production evidence public smoke timestamp")
+    if evidence_workflow.get("adminReadOnlySmokePassedAt") != PENDING_WORKER_ADMIN_ROUTE_AT:
+        raise SiteCheckError(f"{label}: wrong production evidence admin smoke timestamp")
+    if evidence_workflow.get("recordsObservedDuringDeploymentSmoke") != 0:
+        raise SiteCheckError(f"{label}: deployment smoke must remain read-only")
     for forbidden in ("private key", "seed phrase", "exchange API secret", "withdrawal permission", "custody request"):
         if forbidden not in payload.get("doNotCollect", []):
             raise SiteCheckError(f"{label}: missing doNotCollect {forbidden}")
@@ -13903,9 +14117,12 @@ def validate_member_benefit_transfer_page(text: str) -> None:
     assert_contains(text, "10,000 GCA", label)
     assert_contains(text, "Owner reserve", label)
     assert_contains(text, "Manual only", label)
-    assert_contains(text, "memberBenefitTransferTx", label)
+    assert_contains(text, "/gca/member-benefit-transfers", label)
     assert_contains(text, "gca_member_preregistration_v2", label)
-    assert_contains(text, "memberBenefitReviewEvidenceStatus", label)
+    assert_contains(text, "gca_member_benefit_transfer_v1", label)
+    assert_contains(text, "tools/record_cloudflare_member_benefit_transfer.py", label)
+    assert_contains(text, "safeSnapshotBlockNumber", label)
+    assert_contains(text, "transferRecordId", label)
     assert_contains(text, "evidenceTxHashFormatOk", label)
     assert_contains(text, "Base Mainnet / chainId 8453", label)
     assert_contains(text, MAINNET_ADDRESS, label)
@@ -13933,7 +14150,7 @@ def validate_member_ledger_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != MEMBER_LEDGER_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
-    if payload.get("status") != "public-member-ledger-workers-d1-live":
+    if payload.get("status") != "public-member-ledger-benefit-evidence-live":
         raise SiteCheckError(f"{label}: wrong status")
     if payload.get("lastUpdated") != "2026-07-27":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
@@ -13961,6 +14178,8 @@ def validate_member_ledger_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong production member review path")
     if paths.get("holdingVerifications") != "/gca/holding-verifications":
         raise SiteCheckError(f"{label}: wrong holding verification path")
+    if paths.get("memberBenefitTransfers") != "/gca/member-benefit-transfers":
+        raise SiteCheckError(f"{label}: wrong member benefit transfer path")
     if paths.get("localSupportReview") != "/gca/member-review":
         raise SiteCheckError(f"{label}: wrong local support review path")
     if preview.get("status") != "browser-read-only-preview-live":
@@ -14003,6 +14222,8 @@ def validate_member_ledger_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing production member review schema")
     if "holdingVerificationRecord" not in schemas:
         raise SiteCheckError(f"{label}: missing holding verification schema")
+    if "memberBenefitTransferRecord" not in schemas:
+        raise SiteCheckError(f"{label}: missing member benefit transfer schema")
     prereg_fields = schemas.get("preRegistrationRecord", {}).get("requiredFields", [])
     if "memberBenefitReviewEvidence" not in prereg_fields:
         raise SiteCheckError(f"{label}: missing pre-registration evidence field")
@@ -14014,6 +14235,9 @@ def validate_member_ledger_json(text: str) -> None:
         "evidenceTxHashFormatOk",
         "memberBenefitReviewEvidenceStatus",
         "memberBenefitTransferTx",
+        "memberBenefitTransferRecordId",
+        "memberBenefitTransferVerifiedAt",
+        "memberBenefitTransferVerificationStatus",
         "latestHoldingVerificationId",
         "onchainHoldingVerified",
         "onchainHoldingVerifiedAt",
@@ -14066,6 +14290,27 @@ def validate_member_ledger_json(text: str) -> None:
     ):
         if holding_verification.get(key) is not expected:
             raise SiteCheckError(f"{label}: wrong holding verification boundary {key}")
+    transfer_evidence = schemas.get("memberBenefitTransferRecord", {})
+    if transfer_evidence.get("packetVersion") != "gca_member_benefit_transfer_v1":
+        raise SiteCheckError(f"{label}: wrong member benefit transfer version")
+    if transfer_evidence.get("endpoint") != "/gca/member-benefit-transfers":
+        raise SiteCheckError(f"{label}: wrong member benefit transfer endpoint")
+    if transfer_evidence.get("officialSourceWallet") != RESERVE_WALLET:
+        raise SiteCheckError(f"{label}: wrong member benefit transfer source wallet")
+    if transfer_evidence.get("exactTransferAmount") != "10000 GCA":
+        raise SiteCheckError(f"{label}: wrong member benefit transfer amount")
+    for key, expected in (
+        ("adminTokenProtected", True),
+        ("appendOnlyEvidenceRecord", True),
+        ("manualReserveTransferMustAlreadyExist", True),
+        ("requiresSuccessfulReceiptAtOrBelowSafeBlock", True),
+        ("requiresApprovedMemberWalletRecipient", True),
+        ("automaticTokenTransfer", False),
+        ("requiresSignature", False),
+        ("writesWallet", False),
+    ):
+        if transfer_evidence.get(key) is not expected:
+            raise SiteCheckError(f"{label}: wrong member benefit transfer boundary {key}")
     if not any("public member access page can submit account intake" in claim for claim in boundaries.get("safeClaims", [])):
         raise SiteCheckError(f"{label}: missing live member access safe claim")
     if not any("browser-only read-only GCA balance preview" in claim for claim in boundaries.get("safeClaims", [])):
@@ -14107,6 +14352,7 @@ def validate_member_ledger_page(text: str) -> None:
     assert_contains(text, "/gca/member-ledger", label)
     assert_contains(text, "/gca/member-reviews", label)
     assert_contains(text, "/gca/holding-verifications", label)
+    assert_contains(text, "/gca/member-benefit-transfers", label)
     assert_contains(text, "10,000 GCA", label)
     assert_contains(text, "1,000,000 GCA", label)
     assert_contains(text, "10,000 GCA after approval", label)
@@ -14115,6 +14361,8 @@ def validate_member_ledger_page(text: str) -> None:
     assert_contains(text, "Manual review + complete observed 30-day chain history", label)
     assert_contains(text, "Holding Verification Record", label)
     assert_contains(text, "gca_holding_verification_v1", label)
+    assert_contains(text, "gca_member_benefit_transfer_v1", label)
+    assert_contains(text, "successful safe-block receipt", label)
     assert_contains(text, "complete observed 30-day transfer-history reconstruction", label)
     assert_contains(text, "eligible 10,000 GCA holders can create one account-level 100 GCA AI Quant Access credits ledger record", label)
     assert_not_contains(text, OLD_WETH_POOL_ADDRESS, label)

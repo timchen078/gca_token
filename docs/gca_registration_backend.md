@@ -12,9 +12,10 @@ https://gca-registration-api.gcagochina.workers.dev/gca/wallet-verifications
 https://gca-registration-api.gcagochina.workers.dev/gca/access-config
 https://gca-registration-api.gcagochina.workers.dev/gca/member-reviews
 https://gca-registration-api.gcagochina.workers.dev/gca/holding-verifications
+https://gca-registration-api.gcagochina.workers.dev/gca/member-benefit-transfers
 ```
 
-The token-protected service request, credit usage, member review, and holding-verification routes are production-live. Cloudflare account authentication, D1 visibility, Worker deploy permission, remote D1 migrations, Worker deployment, public smoke, and admin read-only smoke checks passed for the latest Worker on 2026-07-27 UTC. Anonymous reads return HTTP 401 and token-protected admin reads return HTTP 200.
+The token-protected service request, credit usage, member review, holding-verification, and member-benefit transfer evidence routes are production-live. Cloudflare account authentication, D1 visibility, Worker deploy permission, remote D1 migrations, Worker deployment, public smoke, and admin read-only smoke checks passed for the latest Worker on 2026-07-27 UTC. Anonymous reads return HTTP 401 and token-protected admin reads return HTTP 200.
 
 ## What It Stores
 
@@ -55,7 +56,9 @@ The submitted holding date and transaction hash do not prove continuous holding 
 
 Successful approval writes an append-only `gca_holding_verification_v1` evidence row through migration `0007_holding_history_verifications.sql`, links the evidence ID to the member review and member ledger, and exposes protected operator reads at `GET /gca/holding-verifications`. This is an observed public-history reconstruction, not a third-party audit, permanent guarantee, or claim that a public index can never be delayed. The flow remains read-only with respect to the wallet and never signs, sends a transaction, transfers GCA, or authorizes the separate 10,000 GCA member-benefit transfer.
 
-It does not collect wallet private keys, seed phrases, wallet passwords, exchange API secrets, withdrawal permissions, one-time codes, or remote-control access. It does not request wallet signatures or transactions for wallet verification. It does not automatically transfer GCA. A member approval does not authorize the 10,000 GCA member benefit; that benefit remains a separate manual reserve-wallet transfer review.
+After a manually completed reserve-wallet transfer, `GET/POST /gca/member-benefit-transfers` verifies and stores append-only `gca_member_benefit_transfer_v1` evidence through migration `0008_member_benefit_transfer_evidence.sql`. It requires an active member with linked holding evidence, a successful receipt at or below the Base safe block, the published reserve sender, the approved member recipient, the official GCA contract, and exactly 10,000 GCA in one matching Transfer log. It updates the member claim status in the same D1 batch as the evidence insert.
+
+It does not collect wallet private keys, seed phrases, wallet passwords, exchange API secrets, withdrawal permissions, one-time codes, or remote-control access. It does not request wallet signatures or transactions for wallet verification. It does not automatically transfer GCA. A member approval does not authorize the 10,000 GCA member benefit; the transfer remains a separate manual reserve-wallet action, while the production route verifies only the transaction that already exists.
 
 Public registration, contact-suppression, wallet-verification, and member-access submissions also include empty `website`, `company`, and `homepage` honeypot fields. Normal users never fill these fields; the Worker rejects any request where one of them contains content. This is a light anti-spam control and does not replace Cloudflare rate limits or future account-session CSRF controls.
 
@@ -81,11 +84,16 @@ Public registration, contact-suppression, wallet-verification, and member-access
 - Admin credit usage endpoint: `GET/POST /gca/credit-usage` live and token-protected
 - Admin member ledger endpoint: `GET /gca/member-ledger`
 - Admin member review endpoint: `GET/POST /gca/member-reviews` live and token-protected
+- Admin holding verification endpoint: `GET /gca/holding-verifications` live and token-protected
+- Admin member-benefit evidence endpoint: `GET/POST /gca/member-benefit-transfers` live and token-protected
 - Member D1 migration: `cloudflare/gca-registration-worker/migrations/0003_member_access_ledgers.sql`
 - Credit usage D1 migration: `cloudflare/gca-registration-worker/migrations/0004_credit_usage_ledger.sql`
 - Service request D1 migration: `cloudflare/gca-registration-worker/migrations/0005_service_requests.sql`
 - Member review D1 migration: `cloudflare/gca-registration-worker/migrations/0006_member_reviews.sql`
+- Holding-history D1 migration: `cloudflare/gca-registration-worker/migrations/0007_holding_history_verifications.sql`
+- Member-benefit evidence D1 migration: `cloudflare/gca-registration-worker/migrations/0008_member_benefit_transfer_evidence.sql`
 - Production member review operator tool: `tools/review_cloudflare_member.py`
+- Production member-benefit evidence operator tool: `tools/record_cloudflare_member_benefit_transfer.py`
 - Worker deploy readiness tool: `tools/check_gca_worker_deploy_readiness.py`
 - Worker routes deployment record: `docs/gca_worker_pending_routes_deploy_handoff.md`
 - Admin read secret: configured in Cloudflare as `ADMIN_READ_TOKEN`
@@ -240,6 +248,23 @@ An approval requires both explicit confirmations:
 ```
 
 Replace the sample ledger ID with the real token-protected `memberLedgerId`. The command refreshes the current balance with read-only Base RPC and writes an append-only review decision plus the resulting account/member status in one D1 batch transaction. It does not connect a wallet, request a signature, send a transaction, transfer GCA, or authorize the 10,000 GCA member benefit.
+
+## Production Member Benefit Transfer Evidence
+
+The operator must first complete the approved transfer manually from the published reserve wallet. Only after the Base transaction exists should the evidence command be used:
+
+```bash
+.venv/bin/python tools/record_cloudflare_member_benefit_transfer.py \
+  --member-ledger-id gca_member_00000000000000000000 \
+  --transaction-hash 0x0000000000000000000000000000000000000000000000000000000000000000 \
+  --reviewer-id gca-operator \
+  --reason-code approved_member_benefit \
+  --confirm-manual-transfer-completed \
+  --confirm-public-transaction-evidence \
+  --confirm-production-write
+```
+
+Replace both sample identifiers with the real approved member ledger ID and public transaction hash. The Worker reads the Base safe block and transaction receipt, then fails closed unless the transaction succeeded and proves exactly one 10,000 GCA transfer from `0x5e8F84748612B913aAcC937492AC25dc5630E246` to the approved member wallet through the official GCA contract. The command never initiates, signs, authorizes, or broadcasts a transaction.
 
 To export recent registrations into the ignored local data directory:
 

@@ -319,7 +319,7 @@
     <main class="shell">
       <section aria-labelledby="title">
         <h1 id="title">GCA Member Ledger Schema</h1>
-        <p class="lead">Public data contract for the live GCA AI Quant Access account layer: wallet verification, one-time 100 GCA AI Quant Access credits, GCA Member status, 30-day holding-period review, one-time 10,000 GCA member benefit status, support review states, and strict no-custody boundaries.</p>
+        <p class="lead">Public data contract for the live GCA AI Quant Access account layer: wallet verification, one-time 100 GCA AI Quant Access credits, GCA Member status, observed 30-day holding evidence, and verified evidence for already-completed manual 10,000 GCA reserve transfers.</p>
         <div class="actions">
           <a class="button" href="members.html">Pre-Registration</a>
           <a class="button" href="member-benefit.html">Member Benefit Review</a>
@@ -351,6 +351,10 @@
           <span class="label">Member Activation</span>
           <span class="value good">Token-protected manual review live</span>
         </div>
+        <div class="fact">
+          <span class="label">Benefit Evidence</span>
+          <span class="value good">Protected production verification live</span>
+        </div>
       </section>
 
       <section class="section two" aria-label="Prepared paths">
@@ -365,6 +369,7 @@
             <div class="row"><span>GCA Member ledger</span><strong><code>/gca/member-ledger</code></strong></div>
             <div class="row"><span>Production member review</span><strong><code>/gca/member-reviews</code></strong></div>
             <div class="row"><span>Holding verification evidence</span><strong><code>/gca/holding-verifications</code></strong></div>
+            <div class="row"><span>Member benefit transfer evidence</span><strong><code>/gca/member-benefit-transfers</code></strong></div>
             <div class="row"><span>Local support review</span><strong><code>/gca/member-review</code></strong></div>
             <div class="row"><span>Public member benefit rules</span><strong><a href="member-benefit.html">member-benefit.html</a></strong></div>
             <div class="row"><span>Member benefit transfer runbook</span><strong><a href="member-benefit-transfer.html">member-benefit-transfer.html</a></strong></div>
@@ -409,6 +414,10 @@
           <h3>Holding Verification Record</h3>
           <p class="note">The <code>gca_holding_verification_v1</code> record stores the safe Base snapshot block, 30-day window, current/start/minimum balances, event counts, provider, history completeness, and reconstruction consistency. It is written only during successful approval and is observed chain-history evidence, not a third-party audit or future guarantee.</p>
         </div>
+        <div class="panel">
+          <h3>Member Benefit Transfer Evidence</h3>
+          <p class="note">The <code>gca_member_benefit_transfer_v1</code> record stores the public transaction hash, official reserve and approved recipient, exact 10,000 GCA amount, receipt block, Base safe-block snapshot, Transfer log index, verification status, and reviewer reason. It verifies an existing manual transfer and never signs or broadcasts one.</p>
+        </div>
       </section>
 
       <section class="section two" aria-label="Credit and member ledgers">
@@ -434,6 +443,7 @@
             <div class="row"><span>Evidence status</span><strong><code>memberBenefitReviewEvidenceStatus</code></strong></div>
             <div class="row"><span>Holding evidence</span><strong><code>latestHoldingVerificationId</code> + observed minimum balance</strong></div>
             <div class="row"><span>Benefit transfer</span><strong><code>memberBenefitTransferTx</code> after approval</strong></div>
+            <div class="row"><span>Transfer evidence</span><strong><code>memberBenefitTransferRecordId</code> + <code>verified</code> status</strong></div>
             <div class="row"><span>Tier name</span><strong>GCA Member</strong></div>
             <div class="row"><span>Balance refresh cadence</span><strong>30 days</strong></div>
             <div class="row"><span>Allowed statuses</span><strong>queued / active / review_rejected / needs_refresh / paused</strong></div>
@@ -464,10 +474,12 @@
           <li>Safe to say: eligible 1,000,000 GCA / 30-day holders can create a GCA Member review ledger record.</li>
           <li>Safe to say: GCA Member activation requires a token-protected operator review plus a complete observed 30-day transfer-history reconstruction whose minimum balance is at least 1,000,000 GCA.</li>
           <li>Safe to say: successful approval stores append-only <code>gca_holding_verification_v1</code> evidence without requesting a wallet signature or transaction.</li>
+          <li>Safe to say: after a manual transfer, the protected production API verifies a successful safe-block receipt from the official reserve to the approved member wallet for exactly 10,000 GCA.</li>
           <li>Do not say the public form automatically proves 30 consecutive days of holding or activates GCA Member status.</li>
           <li>Do not describe observed holding-history reconstruction as a third-party audit, permanent guarantee, or proof that public index data can never be delayed.</li>
           <li>Do not describe credits or membership as cash, income, reimbursement, voting control, live trading permission, leverage, custody, withdrawals, or risk-control bypass.</li>
           <li>Do not say the 10,000 GCA member benefit is automatic or self-service transferred before holding-period verification, support approval, and manual reserve-wallet processing.</li>
+          <li>Do not say the transfer-evidence route initiates, signs, authorizes, or broadcasts a token transfer.</li>
           <li>Do not say membership guarantees lifetime access, listings, price support, liquidity, or third-party audit completion.</li>
         </ul>
       </section>

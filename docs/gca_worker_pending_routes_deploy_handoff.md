@@ -36,9 +36,9 @@ The deployment was completed on `2026-07-23` UTC.
 
 - Readiness passed at `2026-07-23T17:55:52Z`.
 - Remote migration `0005_service_requests.sql` applied successfully.
-- Current Worker version `fdef5365-1dc1-4165-8de0-d8d9e7cde679` retains both routes and is deployed successfully.
-- Latest public smoke passed at `2026-07-27T09:00:02Z`.
-- Latest admin read-only smoke passed at `2026-07-27T09:00:16Z`.
+- Current Worker version `510315f5-8db3-4e08-b574-6e14b618aed5` retains both routes and is deployed successfully.
+- Latest public smoke passed at `2026-07-27T09:37:54Z`.
+- Latest admin read-only smoke passed at `2026-07-27T09:38:07Z`.
 - Anonymous reads for both operator routes return HTTP `401`.
 - Token-protected admin reads return HTTP `200`.
 

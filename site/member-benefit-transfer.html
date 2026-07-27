@@ -244,6 +244,10 @@
         padding-top: 10px;
       }
 
+      .row > * {
+        min-width: 0;
+      }
+
       .row:first-child {
         border-top: 0;
         padding-top: 0;
@@ -256,6 +260,8 @@
         padding: 2px 5px;
         font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
         font-size: 0.92em;
+        overflow-wrap: anywhere;
+        white-space: normal;
       }
 
       footer {
@@ -280,6 +286,20 @@
         .two,
         .facts {
           grid-template-columns: 1fr;
+        }
+
+        .panel {
+          min-width: 0;
+        }
+
+        .row {
+          align-items: flex-start;
+          flex-direction: column;
+          gap: 4px;
+        }
+
+        .row strong {
+          width: 100%;
         }
 
         h1 {
@@ -308,10 +328,10 @@
 
     <main class="shell">
       <section aria-labelledby="title">
-        <p class="eyebrow">Member Benefit Transfer Runbook / 2026-05-14</p>
+        <p class="eyebrow">Member Benefit Transfer Runbook / 2026-07-27</p>
         <h1 id="title">GCA Member Benefit Transfer Runbook</h1>
         <p class="lead">This page defines the manual operator controls for the one-time 10,000 GCA member benefit transfer after support review, 30-day holding-period verification, and member ledger approval.</p>
-        <p class="lead">The transfer is not automatic. If approved, it must come from project or owner-held reserve on Base Mainnet; the GCA token contract has no mint function.</p>
+        <p class="lead">The transfer is not automatic. If approved, it must come from the published reserve wallet on Base Mainnet; the GCA token contract has no mint function. After the operator sends it, the production Worker verifies the receipt and stores append-only evidence.</p>
         <div class="actions">
           <a class="button" href="member-benefit.html">Member Benefit Rules</a>
           <a class="button" href="member-ledger.html">Member Ledger Schema</a>
@@ -333,8 +353,8 @@
             <span class="value pending">Manual only</span>
           </div>
           <div class="fact">
-            <span class="label">Ledger field</span>
-            <span class="value"><code>memberBenefitTransferTx</code></span>
+            <span class="label">Evidence API</span>
+            <span class="value good"><code>/gca/member-benefit-transfers</code></span>
           </div>
         </div>
       </section>
@@ -354,7 +374,7 @@
           <h2>Before Transfer</h2>
           <div class="list">
             <div class="row"><span>Packet version</span><strong><code>gca_member_preregistration_v2</code></strong></div>
-            <div class="row"><span>Evidence status</span><strong><code>memberBenefitReviewEvidenceStatus</code> = eligible</strong></div>
+            <div class="row"><span>Member status</span><strong><code>active</code> with verified holding evidence</strong></div>
             <div class="row"><span>Tx hash check</span><strong><code>evidenceTxHashFormatOk</code> = true</strong></div>
             <div class="row"><span>Holding period</span><strong>At least 30 days verified</strong></div>
             <div class="row"><span>Fresh balance check</span><strong>Read-only <code>balanceOf</code></strong></div>
@@ -382,12 +402,12 @@
             <p class="note">Send exactly 10,000 GCA to the approved verified Base wallet. Confirm token contract and recipient before signing.</p>
           </div>
           <div>
-            <h3>5. Record Transfer Hash</h3>
-            <p class="note">After confirmation, record <code>memberBenefitTransferTx</code>, transferredAt, transferredAmount, sourceWallet, recipientWallet, and reviewerNote.</p>
+            <h3>5. Verify and Record Evidence</h3>
+            <p class="note">After confirmation, run <code>tools/record_cloudflare_member_benefit_transfer.py</code>. The protected Worker checks the successful receipt, Base safe block, official reserve sender, GCA contract, approved recipient, and exact amount.</p>
           </div>
           <div>
             <h3>6. Close Review</h3>
-            <p class="note">Set memberBenefitClaimStatus to transferred or closed only after the public transaction hash is recorded.</p>
+            <p class="note">The verified D1 write sets <code>memberBenefitClaimStatus</code> to <code>transferred</code>. Do not close a record from a screenshot or statement alone.</p>
           </div>
         </div>
       </section>
@@ -397,11 +417,11 @@
           <h2>Required Ledger Fields</h2>
           <div class="list">
             <div class="row"><span>memberLedgerId</span><strong>Approved member record</strong></div>
-            <div class="row"><span>registrationId</span><strong>Reviewed user record</strong></div>
-            <div class="row"><span>walletAddress</span><strong>Verified recipient</strong></div>
-            <div class="row"><span>memberBenefitAmount</span><strong>10,000 GCA</strong></div>
-            <div class="row"><span>memberBenefitTransferTx</span><strong>Public Base transaction hash</strong></div>
-            <div class="row"><span>reviewerNote</span><strong>No secrets</strong></div>
+            <div class="row"><span>transferRecordId</span><strong>Append-only D1 evidence record</strong></div>
+            <div class="row"><span>transactionHash</span><strong>Public Base transaction hash</strong></div>
+            <div class="row"><span>safeSnapshotBlockNumber</span><strong>Base safe-block snapshot</strong></div>
+            <div class="row"><span>amountGca</span><strong>Exactly 10,000 GCA</strong></div>
+            <div class="row"><span>verificationStatus</span><strong><code>verified</code></strong></div>
           </div>
         </div>
         <div class="panel">
@@ -417,12 +437,14 @@
 
       <section class="section panel" id="memberTransferReferences" aria-labelledby="memberTransferReferencesTitle">
         <h2 id="memberTransferReferencesTitle">Member Transfer References</h2>
-        <p class="note">Use the readable runbook, reserve disclosures, and support pages first. Member benefit transfers remain manual and separate from the primary account workflow.</p>
+        <p class="note">Use the readable runbook, reserve disclosures, and support pages first. Transfer execution remains manual; production evidence verification is live and token-protected.</p>
         <div class="list">
           <div class="row"><span>Live member account</span><strong><a href="gca/member-access/">/gca/member-access</a></strong></div>
           <div class="row"><span>Member benefit page</span><strong><a href="member-benefit.html">member-benefit.html</a></strong></div>
           <div class="row"><span>Member ledger page</span><strong><a href="member-ledger.html">member-ledger.html</a></strong></div>
           <div class="row"><span>Operations page</span><strong><a href="operations.html">operations.html</a></strong></div>
+          <div class="row"><span>Production evidence packet</span><strong><code>gca_member_benefit_transfer_v1</code></strong></div>
+          <div class="row"><span>Verification rule</span><strong>Successful safe receipt + one exact Transfer log</strong></div>
           <div class="row"><span>Supply and reserve pages</span><strong><a href="supply.html">supply.html</a> / <a href="reserve-statement.html">reserve-statement.html</a></strong></div>
         </div>
       </section>
@@ -430,17 +452,18 @@
       <section class="section panel" aria-labelledby="claimTitle">
         <h2 id="claimTitle">Public Claim Boundaries</h2>
         <ul>
-          <li>Safe to say: GCA has published a manual transfer runbook for the one-time 10,000 GCA member benefit.</li>
-          <li>Safe to say: approval requires support review, member ledger approval, 30-day holding-period verification, and a fresh read-only balance check.</li>
+          <li>Safe to say: GCA has a manual transfer runbook and a production evidence-verification route for the one-time 10,000 GCA member benefit.</li>
+          <li>Safe to say: evidence is stored only after the Worker verifies a successful transaction at or below the Base safe block from the official reserve to the approved member wallet.</li>
           <li>Do not say the 10,000 GCA member benefit is self-service claimable today.</li>
           <li>Do not say holding 1,000,000 GCA automatically triggers a transfer.</li>
+          <li>Do not say the evidence route signs, authorizes, or broadcasts the transfer.</li>
           <li>Do not describe the member benefit as newly minted, cash, income, reimbursement, trading permission, voting control, lifetime access, price support, or risk-control bypass.</li>
         </ul>
       </section>
     </main>
 
     <footer>
-      <div class="shell">GCA Member Benefit Transfer Runbook is a public manual-operations document only. It does not create automatic token transfer, custody, withdrawals, or live trading.</div>
+      <div class="shell">GCA member-benefit transfer execution remains manual. The production API verifies an existing public transaction and never creates an automatic token transfer, custody, withdrawal, or live-trading permission.</div>
     </footer>
   </body>
 </html>

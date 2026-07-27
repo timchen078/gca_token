@@ -13,7 +13,7 @@ class GcaWorkerRoutesDeploymentTests(unittest.TestCase):
         expected_fragments = [
             "Production Verification",
             "2026-07-23T17:55:52Z",
-            "fdef5365-1dc1-4165-8de0-d8d9e7cde679",
+            "510315f5-8db3-4e08-b574-6e14b618aed5",
             "Anonymous reads for both operator routes return HTTP `401`",
             "Authentication error [code: 10000]",
             "cloudflare-auth-session",
@@ -57,7 +57,7 @@ class GcaWorkerRoutesDeploymentTests(unittest.TestCase):
         self.assertEqual(handoff["document"], "docs/gca_worker_pending_routes_deploy_handoff.md")
         self.assertEqual(handoff["status"], "production-live-verified")
         self.assertIsNone(handoff["blockedBy"])
-        self.assertEqual(handoff["workerVersionId"], "fdef5365-1dc1-4165-8de0-d8d9e7cde679")
+        self.assertEqual(handoff["workerVersionId"], "510315f5-8db3-4e08-b574-6e14b618aed5")
         self.assertCountEqual(handoff["routes"], ["/gca/service-requests", "/gca/credit-usage"])
 
         boundaries = handoff["boundaries"]

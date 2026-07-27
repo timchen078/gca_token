@@ -61,6 +61,16 @@ The public member-access route writes eligible 100-credit records and queues GCA
 
 The production `GET/POST /gca/member-reviews` route stores append-only review decisions in D1. Approval refreshes the current GCA balance at a safe Base block, combines Base Blockscout v2 GCA transfer history with recent Base public RPC logs, and reconstructs the observed minimum balance across the prior 30 days. Approval fails unless the complete observed history stays at or above 1,000,000 GCA. A successful decision writes append-only holding evidence that operators can read at `GET /gca/holding-verifications`. The route does not connect a wallet, request a signature, send a transaction, transfer GCA, or authorize the separate 10,000 GCA member benefit.
 
+## Production Member Benefit Evidence
+
+The one-time 10,000 GCA member benefit remains a manual reserve-wallet transfer. After an operator completes that transfer outside this application, `GET/POST /gca/member-benefit-transfers` verifies and stores `gca_member_benefit_transfer_v1` evidence in D1. The Worker requires an active approved member, linked 30-day holding evidence, a successful receipt at or below the Base safe block, the published reserve sender, the approved member recipient, the official GCA contract, and exactly 10,000 GCA in one matching Transfer log.
+
+```bash
+.venv/bin/python tools/record_cloudflare_member_benefit_transfer.py --help
+```
+
+The command requires explicit confirmations that the manual transfer is complete, the transaction evidence is public, and a production write is intended. It does not connect a wallet, request a signature, hold a private key, authorize a transfer, or broadcast a transaction.
+
 ## Mainnet Launch Package
 
 - Canonical public facts: `docs/mainnet_public_profile.md`
@@ -123,6 +133,7 @@ The production `GET/POST /gca/member-reviews` route stores append-only review de
 - Local member support reply queue builder: `tools/build_gca_member_support_queue.py`
 - Local GCA Member 30-day holding evidence report: `tools/build_gca_holding_period_report.py`
 - Production GCA Member review operator tool: `tools/review_cloudflare_member.py`
+- Production member-benefit transfer evidence tool: `tools/record_cloudflare_member_benefit_transfer.py`
 - One-command member access ops pipeline: `tools/run_gca_member_access_ops.py`
 - Daily public health, optional member ops check, optional digest build, and `--update-public-status` snapshot refresh: `tools/run_gca_daily_ops.py`
 - Public daily status snapshot builder for `site/daily-status.html` and `site/daily-status.json`: `tools/build_gca_daily_status_snapshot.py`

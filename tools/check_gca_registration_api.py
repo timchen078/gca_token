@@ -37,8 +37,9 @@ from tools.export_cloudflare_email_registrations import (  # noqa: E402
 
 DEFAULT_ORIGIN = "https://gcagochina.com"
 DEFAULT_USER_AGENT = "GCA-Operator-Registration-API-Check/1.0"
-WORKER_RELEASE = "gca-registration-worker-2026-07-27-holding-history-v1"
+WORKER_RELEASE = "gca-registration-worker-2026-07-27-member-benefit-evidence-v1"
 OFFICIAL_CONTACT_EMAIL = "support@gcagochina.com"
+OFFICIAL_MEMBER_BENEFIT_SOURCE_WALLET = "0x5e8f84748612b913aacc937492ac25dc5630e246"
 
 
 class ApiCheckError(RuntimeError):
@@ -161,6 +162,14 @@ def check_health(*, base_url: str, timeout: float, cafile: str, opener: Callable
         payload.get("holdingVerificationVersion") == "gca_holding_verification_v1",
         "health endpoint returned wrong holding verification packet version",
     )
+    require(
+        payload.get("memberBenefitTransferVersion") == "gca_member_benefit_transfer_v1",
+        "health endpoint returned wrong member benefit transfer packet version",
+    )
+    require(
+        payload.get("memberBenefitSourceWallet") == OFFICIAL_MEMBER_BENEFIT_SOURCE_WALLET,
+        "health endpoint returned wrong member benefit source wallet",
+    )
     require(payload.get("chainId") == 8453, "health endpoint returned wrong chainId")
     require(payload.get("contractAddress") == "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6", "health endpoint returned wrong GCA contract")
     require_honeypot_config(payload, "health endpoint")
@@ -179,6 +188,8 @@ def check_health(*, base_url: str, timeout: float, cafile: str, opener: Callable
         "serviceRequestVersion": payload.get("serviceRequestVersion"),
         "memberReviewVersion": payload.get("memberReviewVersion"),
         "holdingVerificationVersion": payload.get("holdingVerificationVersion"),
+        "memberBenefitTransferVersion": payload.get("memberBenefitTransferVersion"),
+        "memberBenefitSourceWallet": payload.get("memberBenefitSourceWallet"),
         "chainId": payload.get("chainId"),
         "contractAddress": payload.get("contractAddress"),
         "antiSpamHoneypotFields": payload.get("antiSpam", {}).get("honeypotFields", []),
@@ -267,12 +278,20 @@ def check_access_config(*, base_url: str, timeout: float, cafile: str, opener: C
         "access config returned wrong holding verification version",
     )
     require(
+        payload.get("memberBenefitTransferVersion") == "gca_member_benefit_transfer_v1",
+        "access config returned wrong member benefit transfer version",
+    )
+    require(
         payload.get("endpoints", {}).get("memberReviewsAdmin") == "/gca/member-reviews",
         "access config returned wrong member review endpoint",
     )
     require(
         payload.get("endpoints", {}).get("holdingVerificationsAdmin") == "/gca/holding-verifications",
         "access config returned wrong holding verification endpoint",
+    )
+    require(
+        payload.get("endpoints", {}).get("memberBenefitTransfersAdmin") == "/gca/member-benefit-transfers",
+        "access config returned wrong member benefit transfer endpoint",
     )
     require(payload.get("boundaries", {}).get("readOnlyWalletVerification") is True, "access config must keep read-only wallet verification")
     require(payload.get("boundaries", {}).get("automaticTokenTransfer") is False, "access config must not auto-transfer tokens")
@@ -286,6 +305,18 @@ def check_access_config(*, base_url: str, timeout: float, cafile: str, opener: C
     )
     require(payload.get("thresholds", {}).get("holderBonusMinimumGca") == "10000", "access config holder threshold mismatch")
     require(payload.get("thresholds", {}).get("gcaMemberMinimumGca") == "1000000", "access config member threshold mismatch")
+    require(
+        payload.get("thresholds", {}).get("memberBenefitSourceWallet") == OFFICIAL_MEMBER_BENEFIT_SOURCE_WALLET,
+        "access config member benefit source wallet mismatch",
+    )
+    require(
+        payload.get("boundaries", {}).get("memberBenefitExactTransferRequired") is True,
+        "access config must require an exact member benefit transfer",
+    )
+    require(
+        payload.get("boundaries", {}).get("memberBenefitSafeBlockRequired") is True,
+        "access config must require safe-block confirmation",
+    )
     require_honeypot_config(payload, "access config")
     return {
         "id": "access-config",
@@ -298,6 +329,7 @@ def check_access_config(*, base_url: str, timeout: float, cafile: str, opener: C
         "serviceRequestVersion": payload.get("serviceRequestVersion"),
         "memberReviewVersion": payload.get("memberReviewVersion"),
         "holdingVerificationVersion": payload.get("holdingVerificationVersion"),
+        "memberBenefitTransferVersion": payload.get("memberBenefitTransferVersion"),
         "readOnlyWalletVerification": True,
         "automaticTokenTransfer": False,
         "antiSpamHoneypotFields": payload.get("antiSpam", {}).get("honeypotFields", []),
@@ -406,6 +438,15 @@ def run_checks(
             cafile=cafile,
             opener=opener,
         ),
+        check_cors_preflight(
+            base_url=base_url,
+            path="/gca/member-benefit-transfers",
+            check_id="cors-member-benefit-transfers",
+            origin=origin,
+            timeout=timeout,
+            cafile=cafile,
+            opener=opener,
+        ),
         check_unauthorized_admin_read(
             base_url=base_url,
             path="/gca/email-registrations",
@@ -466,6 +507,14 @@ def run_checks(
             base_url=base_url,
             path="/gca/holding-verifications",
             check_id="unauth-holding-verifications-read",
+            timeout=timeout,
+            cafile=cafile,
+            opener=opener,
+        ),
+        check_unauthorized_admin_read(
+            base_url=base_url,
+            path="/gca/member-benefit-transfers",
+            check_id="unauth-member-benefit-transfers-read",
             timeout=timeout,
             cafile=cafile,
             opener=opener,
@@ -590,6 +639,16 @@ def run_checks(
                 cafile=cafile,
                 opener=opener,
             ),
+            check_authorized_admin_read(
+                base_url=base_url,
+                path="/gca/member-benefit-transfers",
+                check_id="admin-member-benefit-transfers-read",
+                token=clean_token,
+                limit=limit,
+                timeout=timeout,
+                cafile=cafile,
+                opener=opener,
+            ),
         ])
         if include_pending_routes:
             checks.extend([
@@ -630,6 +689,7 @@ def run_checks(
             "submitsServiceRequest": False,
             "submitsMemberReview": False,
             "submitsHoldingVerification": False,
+            "submitsMemberBenefitTransfer": False,
             "adminTokenPrinted": False,
             "userEmailsPrinted": False,
             "walletConnectionRequired": False,

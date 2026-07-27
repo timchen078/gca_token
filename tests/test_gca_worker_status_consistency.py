@@ -6,9 +6,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 LAST_UPDATED = "2026-07-27"
 READINESS_AT = "2026-07-23T17:55:52Z"
-PUBLIC_ROUTE_AT = "2026-07-27T09:00:02Z"
-ADMIN_ROUTE_AT = "2026-07-27T09:00:16Z"
-WORKER_VERSION_ID = "fdef5365-1dc1-4165-8de0-d8d9e7cde679"
+PUBLIC_ROUTE_AT = "2026-07-27T09:37:54Z"
+ADMIN_ROUTE_AT = "2026-07-27T09:38:07Z"
+WORKER_VERSION_ID = "510315f5-8db3-4e08-b574-6e14b618aed5"
 ROUTE_OBSERVATIONS = {
     "/gca/service-requests": 401,
     "/gca/credit-usage": 401,

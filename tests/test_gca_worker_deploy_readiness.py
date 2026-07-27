@@ -20,11 +20,19 @@ class GcaWorkerDeployReadinessTests(unittest.TestCase):
         (worker_dir / "node_modules" / ".bin").mkdir(parents=True)
         (worker_dir / "src" / "worker.mjs").write_text("export default {};\n", encoding="utf-8")
         (worker_dir / "src" / "holding-history.mjs").write_text("export {};\n", encoding="utf-8")
+        (worker_dir / "src" / "member-benefit-evidence.mjs").write_text(
+            "export {};\n",
+            encoding="utf-8",
+        )
         (worker_dir / "migrations" / "0004_credit_usage_ledger.sql").write_text("CREATE TABLE gca_credit_usage(id TEXT);\n", encoding="utf-8")
         (worker_dir / "migrations" / "0005_service_requests.sql").write_text("CREATE TABLE gca_service_requests(id TEXT);\n", encoding="utf-8")
         (worker_dir / "migrations" / "0006_member_reviews.sql").write_text("CREATE TABLE gca_member_reviews(id TEXT);\n", encoding="utf-8")
         (worker_dir / "migrations" / "0007_holding_history_verifications.sql").write_text(
             "CREATE TABLE gca_holding_verifications(id TEXT);\n",
+            encoding="utf-8",
+        )
+        (worker_dir / "migrations" / "0008_member_benefit_transfer_evidence.sql").write_text(
+            "CREATE TABLE gca_member_benefit_transfers(id TEXT);\n",
             encoding="utf-8",
         )
         (worker_dir / "package-lock.json").write_text("{}\n", encoding="utf-8")
@@ -78,6 +86,14 @@ migrations_dir = "migrations"
         )
         self.assertIn(
             "holding-history-migration",
+            {item["id"] for item in report["checks"] if item["status"] == "passed"},
+        )
+        self.assertIn(
+            "member-benefit-evidence-source",
+            {item["id"] for item in report["checks"] if item["status"] == "passed"},
+        )
+        self.assertIn(
+            "member-benefit-transfer-migration",
             {item["id"] for item in report["checks"] if item["status"] == "passed"},
         )
 

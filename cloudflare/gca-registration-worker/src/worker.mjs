@@ -6,6 +6,7 @@ import {
   parseRpcQuantity,
   reconstructHoldingWindow
 } from "./holding-history.mjs";
+import { verifyMemberBenefitTransferReceipt } from "./member-benefit-evidence.mjs";
 
 const EMAIL_REGISTRATION_VERSION = "gca_email_registration_v1";
 const CONTACT_SUPPRESSION_VERSION = "gca_contact_suppression_v1";
@@ -14,11 +15,13 @@ const CREDIT_USAGE_VERSION = "gca_credit_usage_v1";
 const SERVICE_REQUEST_VERSION = "gca_service_request_v1";
 const MEMBER_REVIEW_VERSION = "gca_member_review_v1";
 const HOLDING_VERIFICATION_VERSION = "gca_holding_verification_v1";
-const WORKER_RELEASE = "gca-registration-worker-2026-07-27-holding-history-v1";
+const MEMBER_BENEFIT_TRANSFER_VERSION = "gca_member_benefit_transfer_v1";
+const WORKER_RELEASE = "gca-registration-worker-2026-07-27-member-benefit-evidence-v1";
 const OFFICIAL_CONTACT_EMAIL = "support@gcagochina.com";
 const OFFICIAL_SITE_URL = "https://gcagochina.com/";
 const CHAIN_ID = 8453;
 const CONTRACT_ADDRESS = "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6";
+const MEMBER_BENEFIT_SOURCE_WALLET = "0x5e8f84748612b913aacc937492ac25dc5630e246";
 const BASE_RPC_URL = "https://mainnet.base.org";
 const BASE_BLOCKSCOUT_URL = "https://base.blockscout.com";
 const BALANCE_OF_SELECTOR = "0x70a08231";
@@ -26,6 +29,7 @@ const TOKEN_DECIMALS = 18n;
 const TOKEN_UNIT = 10n ** TOKEN_DECIMALS;
 const HOLDER_THRESHOLD_UNITS = 10_000n * TOKEN_UNIT;
 const MEMBER_THRESHOLD_UNITS = 1_000_000n * TOKEN_UNIT;
+const MEMBER_BENEFIT_UNITS = 10_000n * TOKEN_UNIT;
 const CREDIT_AMOUNT = 100;
 const CREDIT_EXPIRY_DAYS = 180;
 const MEMBER_REFRESH_DAYS = 30;
@@ -128,6 +132,14 @@ function normalizeWallet(value) {
 
 function isTxHash(value) {
   return TX_HASH_RE.test(String(value || "").trim());
+}
+
+function normalizeTxHash(value) {
+  const transactionHash = String(value || "").trim().toLowerCase();
+  if (!isTxHash(transactionHash)) {
+    throw new ApiError("transactionHash must be a valid Base transaction hash");
+  }
+  return transactionHash;
 }
 
 function nowIso() {
@@ -476,6 +488,62 @@ function extractMemberReview(packet) {
   };
 }
 
+function extractMemberBenefitTransfer(packet) {
+  if (packet.packetVersion && packet.packetVersion !== MEMBER_BENEFIT_TRANSFER_VERSION) {
+    throw new ApiError(`packetVersion must be ${MEMBER_BENEFIT_TRANSFER_VERSION}`);
+  }
+  const acknowledgements = packet.acknowledgements && typeof packet.acknowledgements === "object"
+    ? packet.acknowledgements
+    : {};
+  const memberLedgerId = String(packet.memberLedgerId || "").trim().toLowerCase();
+  const transactionHash = normalizeTxHash(
+    packet.transactionHash || packet.memberBenefitTransferTx || ""
+  );
+  const reviewerId = String(packet.reviewerId || "gca-operator").trim().toLowerCase();
+  const reasonCode = String(
+    packet.reasonCode || "manual_reserve_transfer_verified"
+  ).trim().toLowerCase();
+  const manualTransferCompleted = (
+    packet.manualTransferCompleted === true ||
+    acknowledgements.manualReserveTransferCompleted === true
+  );
+  const publicEvidenceAccepted = (
+    packet.publicEvidenceAccepted === true ||
+    acknowledgements.transactionEvidencePublic === true
+  );
+  const noAutomaticTransferAccepted = (
+    packet.noAutomaticTransferAccepted === true ||
+    acknowledgements.noAutomaticTokenTransfer === true
+  );
+  if (!MEMBER_LEDGER_ID_RE.test(memberLedgerId)) {
+    throw new ApiError("memberLedgerId must be a valid GCA member ledger id");
+  }
+  if (!OPERATOR_ID_RE.test(reviewerId)) {
+    throw new ApiError("reviewerId must be a short lowercase operator identifier");
+  }
+  if (!REASON_CODE_RE.test(reasonCode)) {
+    throw new ApiError("reasonCode must be a short lowercase identifier");
+  }
+  if (!manualTransferCompleted) {
+    throw new ApiError("manual reserve transfer completion acknowledgement is required");
+  }
+  if (!publicEvidenceAccepted) {
+    throw new ApiError("public transaction evidence acknowledgement is required");
+  }
+  if (!noAutomaticTransferAccepted) {
+    throw new ApiError("no automatic token transfer acknowledgement is required");
+  }
+  return {
+    memberLedgerId,
+    transactionHash,
+    reviewerId,
+    reasonCode,
+    operatorNote: String(packet.operatorNote || "").trim().slice(0, 500),
+    source: String(packet.source || "gca-member-benefit-transfer-operator").trim().slice(0, 120)
+      || "gca-member-benefit-transfer-operator"
+  };
+}
+
 async function sha256Hex(value) {
   const data = new TextEncoder().encode(value);
   const digest = await crypto.subtle.digest("SHA-256", data);
@@ -805,6 +873,41 @@ async function verifyGcaHoldingWindow(memberRow, env) {
   };
 }
 
+async function verifyMemberBenefitTransfer(memberRow, transactionHash, env) {
+  const [snapshot, receipt] = await Promise.all([
+    readBlockSnapshot("safe", env),
+    baseRpcRequest("eth_getTransactionReceipt", [transactionHash], env)
+  ]);
+  let evidence;
+  try {
+    evidence = verifyMemberBenefitTransferReceipt({
+      receipt,
+      transactionHash,
+      expectedContractAddress: CONTRACT_ADDRESS,
+      expectedSourceWallet: MEMBER_BENEFIT_SOURCE_WALLET,
+      expectedRecipientWallet: memberRow.wallet_address,
+      expectedAmountUnits: MEMBER_BENEFIT_UNITS.toString(),
+      safeBlockNumber: snapshot.blockNumber
+    });
+  } catch (error) {
+    throw new ApiError("Base RPC returned malformed member benefit transfer evidence", 502);
+  }
+  if (!evidence.matchedTransfer) {
+    throw new ApiError(
+      `transactionHash does not prove a safe, exact 10,000 GCA transfer from the official reserve wallet (${evidence.status})`,
+      409
+    );
+  }
+  return {
+    ...evidence,
+    checkedAt: nowIso(),
+    safeSnapshotBlockNumber: snapshot.blockNumber,
+    safeSnapshotBlockHash: snapshot.blockHash,
+    amountGca: unitsToGca(evidence.amountUnits),
+    verificationProvider: "Base public RPC safe block and eth_getTransactionReceipt"
+  };
+}
+
 function requireDatabase(env) {
   if (!env.REGISTRATION_DB) {
     throw new ApiError("REGISTRATION_DB binding is not configured", 503);
@@ -1011,6 +1114,9 @@ function rowToMemberLedger(row) {
     memberBenefitAmount: row.member_benefit_amount,
     memberBenefitClaimStatus: row.member_benefit_claim_status,
     memberBenefitTransferTx: row.member_benefit_transfer_tx || "",
+    memberBenefitTransferRecordId: row.member_benefit_transfer_record_id || "",
+    memberBenefitTransferVerifiedAt: row.member_benefit_transfer_verified_at || "",
+    memberBenefitTransferVerificationStatus: row.member_benefit_transfer_verification_status || "",
     activatedAt: row.activated_at || "",
     nextRefreshDueAt: row.next_refresh_due_at || "",
     latestHoldingVerificationId: row.latest_holding_verification_id || "",
@@ -1020,6 +1126,44 @@ function rowToMemberLedger(row) {
     automaticTransfer: Boolean(row.automatic_transfer),
     status: row.status,
     updatedAt: row.updated_at
+  };
+}
+
+function rowToMemberBenefitTransfer(row) {
+  if (!row) {
+    return null;
+  }
+  return {
+    transferRecordId: row.transfer_record_id,
+    packetVersion: row.packet_version,
+    memberLedgerId: row.member_ledger_id,
+    accountId: row.account_id,
+    walletAddress: row.wallet_address,
+    sourceWallet: row.source_wallet,
+    recipientWallet: row.recipient_wallet,
+    chainId: Number(row.chain_id),
+    contractAddress: row.contract_address,
+    transactionHash: row.transaction_hash,
+    baseScanTransactionUrl: `https://basescan.org/tx/${row.transaction_hash}`,
+    receiptBlockNumber: Number(row.receipt_block_number),
+    receiptBlockHash: row.receipt_block_hash,
+    safeSnapshotBlockNumber: Number(row.safe_snapshot_block_number),
+    safeSnapshotBlockHash: row.safe_snapshot_block_hash,
+    transferLogIndex: Number(row.transfer_log_index),
+    amountRaw: row.amount_raw,
+    amountGca: row.amount_gca,
+    verificationProvider: row.verification_provider,
+    verificationStatus: row.verification_status,
+    verifiedAt: row.verified_at,
+    reviewerId: row.reviewer_id,
+    reasonCode: row.reason_code,
+    operatorNote: row.operator_note || "",
+    source: row.source,
+    requiresSignature: Boolean(row.requires_signature),
+    requiresTransaction: Boolean(row.requires_transaction),
+    automaticTokenTransfer: Boolean(row.automatic_token_transfer),
+    writesWallet: Boolean(row.writes_wallet),
+    observedOnchainTransaction: true
   };
 }
 
@@ -2030,6 +2174,191 @@ async function recordMemberReview(request, env, origin) {
   }, 201, origin, env);
 }
 
+async function recordMemberBenefitTransfer(request, env, origin) {
+  if (!isAdminAuthorized(request, env)) {
+    return jsonResponse({ ok: false, error: "admin authorization is required" }, 401, origin, env);
+  }
+  const db = requireDatabase(env);
+  const packet = await readJsonRequest(request);
+  const transferInput = extractMemberBenefitTransfer(packet);
+  const memberRow = await db
+    .prepare("SELECT * FROM gca_member_ledger WHERE member_ledger_id = ?1 LIMIT 1")
+    .bind(transferInput.memberLedgerId)
+    .first();
+  if (!memberRow) {
+    throw new ApiError("memberLedgerId was not found", 404);
+  }
+
+  const existingForMember = await db
+    .prepare("SELECT * FROM gca_member_benefit_transfers WHERE member_ledger_id = ?1 LIMIT 1")
+    .bind(memberRow.member_ledger_id)
+    .first();
+  if (existingForMember) {
+    if (existingForMember.transaction_hash !== transferInput.transactionHash) {
+      throw new ApiError("member benefit transfer is already recorded with a different transaction", 409);
+    }
+    return jsonResponse({
+      ok: true,
+      alreadyRecorded: true,
+      memberBenefitTransfer: rowToMemberBenefitTransfer(existingForMember),
+      memberLedger: rowToMemberLedger(memberRow),
+      boundaries: {
+        adminOnly: true,
+        verifiesExistingTransactionOnly: true,
+        requiresSignature: false,
+        requiresTransaction: false,
+        automaticTokenTransfer: false,
+        writesWallet: false
+      }
+    }, 200, origin, env);
+  }
+
+  if (memberRow.status !== "active") {
+    throw new ApiError("member ledger must be active before transfer evidence can be recorded", 409);
+  }
+  if (!Number(memberRow.onchain_holding_verified || 0) || !memberRow.latest_holding_verification_id) {
+    throw new ApiError("member ledger must have verified 30-day on-chain holding evidence", 409);
+  }
+  if (memberRow.member_benefit_claim_status !== "pending_manual_reserve_transfer") {
+    throw new ApiError("member benefit is not pending manual reserve transfer", 409);
+  }
+  if (memberRow.member_benefit_amount !== MEMBER_BENEFIT_AMOUNT) {
+    throw new ApiError("member benefit amount does not match the 10,000 GCA program rule", 409);
+  }
+
+  const existingTransaction = await db
+    .prepare("SELECT * FROM gca_member_benefit_transfers WHERE transaction_hash = ?1 LIMIT 1")
+    .bind(transferInput.transactionHash)
+    .first();
+  if (existingTransaction) {
+    throw new ApiError("transactionHash is already assigned to another member benefit record", 409);
+  }
+
+  const evidence = await verifyMemberBenefitTransfer(
+    memberRow,
+    transferInput.transactionHash,
+    env
+  );
+  const transferRecordId = await stableId(
+    "gca_benefit_transfer",
+    memberRow.member_ledger_id,
+    transferInput.transactionHash
+  );
+  const insertTransfer = db
+    .prepare(
+      `INSERT INTO gca_member_benefit_transfers (
+        transfer_record_id,
+        packet_version,
+        member_ledger_id,
+        account_id,
+        wallet_address,
+        source_wallet,
+        recipient_wallet,
+        chain_id,
+        contract_address,
+        transaction_hash,
+        receipt_block_number,
+        receipt_block_hash,
+        safe_snapshot_block_number,
+        safe_snapshot_block_hash,
+        transfer_log_index,
+        amount_raw,
+        amount_gca,
+        verification_provider,
+        verification_status,
+        verified_at,
+        reviewer_id,
+        reason_code,
+        operator_note,
+        source,
+        requires_signature,
+        requires_transaction,
+        automatic_token_transfer,
+        writes_wallet
+      ) VALUES (
+        ?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16,
+        ?17, ?18, ?19, ?20, ?21, ?22, ?23, ?24, 0, 0, 0, 0
+      )`
+    )
+    .bind(
+      transferRecordId,
+      MEMBER_BENEFIT_TRANSFER_VERSION,
+      memberRow.member_ledger_id,
+      memberRow.account_id,
+      memberRow.wallet_address,
+      MEMBER_BENEFIT_SOURCE_WALLET,
+      memberRow.wallet_address,
+      CHAIN_ID,
+      CONTRACT_ADDRESS,
+      transferInput.transactionHash,
+      evidence.receiptBlockNumber,
+      evidence.receiptBlockHash,
+      evidence.safeSnapshotBlockNumber,
+      evidence.safeSnapshotBlockHash,
+      evidence.transferLogIndex,
+      evidence.amountUnits,
+      evidence.amountGca,
+      evidence.verificationProvider,
+      evidence.status,
+      evidence.checkedAt,
+      transferInput.reviewerId,
+      transferInput.reasonCode,
+      transferInput.operatorNote,
+      transferInput.source
+    );
+  const updateMember = db
+    .prepare(
+      `UPDATE gca_member_ledger
+       SET
+         member_benefit_claim_status = 'transferred',
+         member_benefit_transfer_tx = ?1,
+         member_benefit_transfer_record_id = ?2,
+         member_benefit_transfer_verified_at = ?3,
+         member_benefit_transfer_verification_status = ?4,
+         requires_manual_reserve_transfer_review = 0,
+         automatic_transfer = 0,
+         updated_at = ?3
+       WHERE member_ledger_id = ?5`
+    )
+    .bind(
+      transferInput.transactionHash,
+      transferRecordId,
+      evidence.checkedAt,
+      evidence.status,
+      memberRow.member_ledger_id
+    );
+  await db.batch([insertTransfer, updateMember]);
+
+  const transferRow = await db
+    .prepare("SELECT * FROM gca_member_benefit_transfers WHERE transfer_record_id = ?1 LIMIT 1")
+    .bind(transferRecordId)
+    .first();
+  const updatedMemberRow = await db
+    .prepare("SELECT * FROM gca_member_ledger WHERE member_ledger_id = ?1 LIMIT 1")
+    .bind(memberRow.member_ledger_id)
+    .first();
+  return jsonResponse({
+    ok: true,
+    alreadyRecorded: false,
+    packetVersion: MEMBER_BENEFIT_TRANSFER_VERSION,
+    memberBenefitTransfer: rowToMemberBenefitTransfer(transferRow),
+    memberLedger: rowToMemberLedger(updatedMemberRow),
+    nextStep: "The already-completed manual reserve-wallet transfer is recorded with safe Base transaction evidence. No additional GCA transfer is authorized.",
+    boundaries: {
+      adminOnly: true,
+      officialSourceWalletRequired: MEMBER_BENEFIT_SOURCE_WALLET,
+      exactTransferAmountRequired: MEMBER_BENEFIT_AMOUNT,
+      safeBlockConfirmationRequired: true,
+      verifiesExistingTransactionOnly: true,
+      requiresSignature: false,
+      requiresTransaction: false,
+      automaticTokenTransfer: false,
+      writesWallet: false,
+      authorizesAdditionalTransfer: false
+    }
+  }, 201, origin, env);
+}
+
 async function submitWalletVerification(request, env, origin) {
   const db = requireDatabase(env);
   const packet = await readJsonRequest(request);
@@ -2210,6 +2539,7 @@ function accessThresholds() {
     gcaMemberMinimumGca: "1000000",
     gcaMemberHoldingDays: MEMBER_HOLD_DAYS,
     memberBenefitAmount: MEMBER_BENEFIT_AMOUNT,
+    memberBenefitSourceWallet: MEMBER_BENEFIT_SOURCE_WALLET,
     creditExpiryDays: CREDIT_EXPIRY_DAYS,
     memberRefreshDays: MEMBER_REFRESH_DAYS
   };
@@ -2230,7 +2560,10 @@ function accessBoundaries() {
     holdingHistoryVerificationMode: "read-only-transfer-history-reconstruction",
     holdingHistorySources: ["Base Blockscout v2", "Base public RPC"],
     memberActivationMode: "admin-token-protected-manual-review",
-    memberBenefitTransferMode: "manual-reserve-wallet-review-only",
+    memberBenefitTransferMode: "manual-reserve-wallet-transfer-with-read-only-production-evidence",
+    memberBenefitSourceWallet: MEMBER_BENEFIT_SOURCE_WALLET,
+    memberBenefitExactTransferRequired: true,
+    memberBenefitSafeBlockRequired: true,
     memberBenefitSelfServiceTransfer: false
   };
 }
@@ -2247,6 +2580,7 @@ function accessConfig(origin, env) {
     serviceRequestVersion: SERVICE_REQUEST_VERSION,
     memberReviewVersion: MEMBER_REVIEW_VERSION,
     holdingVerificationVersion: HOLDING_VERIFICATION_VERSION,
+    memberBenefitTransferVersion: MEMBER_BENEFIT_TRANSFER_VERSION,
     chainId: CHAIN_ID,
     contractAddress: CONTRACT_ADDRESS,
     apiBaseUrl: "https://gca-registration-api.gcagochina.workers.dev",
@@ -2259,7 +2593,8 @@ function accessConfig(origin, env) {
       creditUsageAdmin: "/gca/credit-usage",
       memberLedgerAdmin: "/gca/member-ledger",
       memberReviewsAdmin: "/gca/member-reviews",
-      holdingVerificationsAdmin: "/gca/holding-verifications"
+      holdingVerificationsAdmin: "/gca/holding-verifications",
+      memberBenefitTransfersAdmin: "/gca/member-benefit-transfers"
     },
     antiSpam: {
       honeypotFields: HONEYPOT_FIELDS,
@@ -2352,6 +2687,8 @@ async function listMemberTable(request, env, origin, table, mapper, allowedFilte
         ? "reviewed_at"
       : table === "gca_holding_verifications"
         ? "checked_at"
+      : table === "gca_member_benefit_transfers"
+        ? "verified_at"
       : table === "gca_member_ledger"
         ? "updated_at"
         : "updated_at";
@@ -2378,6 +2715,8 @@ function health(origin, env) {
     serviceRequestVersion: SERVICE_REQUEST_VERSION,
     memberReviewVersion: MEMBER_REVIEW_VERSION,
     holdingVerificationVersion: HOLDING_VERIFICATION_VERSION,
+    memberBenefitTransferVersion: MEMBER_BENEFIT_TRANSFER_VERSION,
+    memberBenefitSourceWallet: MEMBER_BENEFIT_SOURCE_WALLET,
     chainId: CHAIN_ID,
     contractAddress: CONTRACT_ADDRESS,
     memberAccessLedger: "cloudflare-d1",
@@ -2538,6 +2877,25 @@ export default {
             ["status", "status", null]
           ]
         );
+      }
+      if (url.pathname === "/gca/member-benefit-transfers") {
+        if (request.method === "POST") {
+          return await recordMemberBenefitTransfer(request, env, origin);
+        }
+        if (request.method === "GET") {
+          return await listMemberTable(
+            request,
+            env,
+            origin,
+            "gca_member_benefit_transfers",
+            rowToMemberBenefitTransfer,
+            [
+              ["walletAddress", "wallet_address", normalizeWallet],
+              ["memberLedgerId", "member_ledger_id", null],
+              ["transactionHash", "transaction_hash", normalizeTxHash]
+            ]
+          );
+        }
       }
       if (url.pathname === "/gca/contact-suppressions") {
         if (request.method === "POST") {

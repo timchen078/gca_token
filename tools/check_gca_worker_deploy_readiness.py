@@ -226,6 +226,12 @@ def build_report(
     )
     check(
         checks,
+        "member-benefit-evidence-source",
+        (worker_dir / "src" / "member-benefit-evidence.mjs").exists(),
+        "Read-only GCA member benefit transfer evidence module exists.",
+    )
+    check(
+        checks,
         "credit-usage-migration",
         (worker_dir / "migrations" / "0004_credit_usage_ledger.sql").exists(),
         "Credit usage D1 migration exists.",
@@ -247,6 +253,12 @@ def build_report(
         "holding-history-migration",
         (worker_dir / "migrations" / "0007_holding_history_verifications.sql").exists(),
         "Holding-history verification D1 migration exists.",
+    )
+    check(
+        checks,
+        "member-benefit-transfer-migration",
+        (worker_dir / "migrations" / "0008_member_benefit_transfer_evidence.sql").exists(),
+        "Member benefit transfer evidence D1 migration exists.",
     )
     check(
         checks,

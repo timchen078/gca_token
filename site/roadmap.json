@@ -80,6 +80,11 @@
       "id": "bilingual-live-api-health-panel",
       "label": "English and Chinese browser-time read-only API identity and anonymous-access checks are live",
       "status": "completed"
+    },
+    {
+      "id": "member-benefit-transfer-evidence-live",
+      "label": "Protected production evidence verification for already-completed manual 10,000 GCA member-benefit transfers is live",
+      "status": "completed"
     }
   ],
   "nextBuildPriorities": [
@@ -116,6 +121,15 @@
       "preparedPath": "/gca/member-ledger"
     },
     {
+      "id": "member-benefit-transfer-evidence",
+      "label": "Manual member-benefit transfer with production chain-evidence verification",
+      "status": "live-token-protected-evidence-only",
+      "preparedPath": "/gca/member-benefit-transfers",
+      "packetVersion": "gca_member_benefit_transfer_v1",
+      "operatorTool": "tools/record_cloudflare_member_benefit_transfer.py",
+      "automaticTokenTransfer": false
+    },
+    {
       "id": "support-review-queue",
       "label": "Support review queue and audit trail",
       "status": "local-continuity-and-production-member-approval-live",
@@ -150,11 +164,13 @@
       "The public member access page can create account intake, wallet verification, 100 credits ledger, and GCA Member ledger records for eligible users.",
       "Successful GCA Member approval requires a complete observed 30-day GCA transfer-history reconstruction and stores append-only holding evidence.",
       "The GCA Member benefit requires 1,000,000 GCA held for 30 consecutive days before one-time 10,000 GCA review.",
+      "After a manual reserve-wallet transfer, the protected production API verifies and stores successful safe-block evidence for exactly 10,000 GCA from the official reserve to the approved member wallet.",
       "The official market route is GCA/USDT on Base Mainnet.",
       "Owner reported on 2026-05-14 that no wallet risk warning was visible in the tested wallet/DEX flow."
     ],
     "doNotClaim": [
       "the 10,000 GCA member benefit is automatic or self-service transferred before holding-period verification, support approval, and manual reserve-wallet processing",
+      "the member-benefit evidence route initiates, signs, authorizes, or broadcasts the transfer",
       "the observed holding-history reconstruction is a third-party audit, permanent guarantee, or proof that public index data can never be delayed",
       "BaseScan token profile approval before BaseScan publishes it",
       "security-vendor approval, permanent warning-free status, or cross-wallet warning removal before vendor/current wallet UI confirms it",

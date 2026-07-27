@@ -15,6 +15,7 @@
     "/gca/member-ledger",
     "/gca/member-reviews",
     "/gca/holding-verifications",
+    "/gca/member-benefit-transfers",
   ];
   const PENDING_PATHS = [
     "/gca/service-requests",
@@ -140,6 +141,8 @@
       && payload.memberAccessVersion === "gca_member_access_v1"
       && payload.memberReviewVersion === "gca_member_review_v1"
       && payload.holdingVerificationVersion === "gca_holding_verification_v1"
+      && payload.memberBenefitTransferVersion === "gca_member_benefit_transfer_v1"
+      && String(payload.memberBenefitSourceWallet || "").toLowerCase() === "0x5e8f84748612b913aacc937492ac25dc5630e246"
     );
   }
 
@@ -156,6 +159,7 @@
       && payload.memberAccessVersion === "gca_member_access_v1"
       && payload.memberReviewVersion === "gca_member_review_v1"
       && payload.holdingVerificationVersion === "gca_holding_verification_v1"
+      && payload.memberBenefitTransferVersion === "gca_member_benefit_transfer_v1"
       && boundaries
       && boundaries.readOnlyWalletVerification === true
       && boundaries.requiresSignature === false
@@ -163,6 +167,11 @@
       && boundaries.automaticTokenTransfer === false
       && boundaries.automaticMemberActivationFromSubmittedDate === false
       && boundaries.onchainHoldingHistoryRequiredForApproval === true
+      && boundaries.memberBenefitTransferMode === "manual-reserve-wallet-transfer-with-read-only-production-evidence"
+      && String(boundaries.memberBenefitSourceWallet || "").toLowerCase() === "0x5e8f84748612b913aacc937492ac25dc5630e246"
+      && boundaries.memberBenefitExactTransferRequired === true
+      && boundaries.memberBenefitSafeBlockRequired === true
+      && boundaries.memberBenefitSelfServiceTransfer === false
     );
   }
 

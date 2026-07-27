@@ -8,7 +8,7 @@ from tools.check_gca_registration_api import ApiCheckError, run_checks
 HEALTH_PAYLOAD = {
     "ok": True,
     "service": "gca-registration-api",
-    "workerRelease": "gca-registration-worker-2026-07-27-holding-history-v1",
+    "workerRelease": "gca-registration-worker-2026-07-27-member-benefit-evidence-v1",
     "contactEmail": "support@gcagochina.com",
     "packetVersion": "gca_email_registration_v1",
     "contactSuppressionVersion": "gca_contact_suppression_v1",
@@ -17,6 +17,8 @@ HEALTH_PAYLOAD = {
     "serviceRequestVersion": "gca_service_request_v1",
     "memberReviewVersion": "gca_member_review_v1",
     "holdingVerificationVersion": "gca_holding_verification_v1",
+    "memberBenefitTransferVersion": "gca_member_benefit_transfer_v1",
+    "memberBenefitSourceWallet": "0x5e8f84748612b913aacc937492ac25dc5630e246",
     "chainId": 8453,
     "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
     "storage": "cloudflare-d1",
@@ -30,26 +32,31 @@ HEALTH_PAYLOAD = {
 ACCESS_CONFIG_PAYLOAD = {
     "ok": True,
     "service": "gca-registration-api",
-    "workerRelease": "gca-registration-worker-2026-07-27-holding-history-v1",
+    "workerRelease": "gca-registration-worker-2026-07-27-member-benefit-evidence-v1",
     "contactEmail": "support@gcagochina.com",
     "memberAccessVersion": "gca_member_access_v1",
     "creditUsageVersion": "gca_credit_usage_v1",
     "serviceRequestVersion": "gca_service_request_v1",
     "memberReviewVersion": "gca_member_review_v1",
     "holdingVerificationVersion": "gca_holding_verification_v1",
+    "memberBenefitTransferVersion": "gca_member_benefit_transfer_v1",
     "endpoints": {
         "memberReviewsAdmin": "/gca/member-reviews",
         "holdingVerificationsAdmin": "/gca/holding-verifications",
+        "memberBenefitTransfersAdmin": "/gca/member-benefit-transfers",
     },
     "thresholds": {
         "holderBonusMinimumGca": "10000",
         "gcaMemberMinimumGca": "1000000",
+        "memberBenefitSourceWallet": "0x5e8f84748612b913aacc937492ac25dc5630e246",
     },
     "boundaries": {
         "readOnlyWalletVerification": True,
         "automaticTokenTransfer": False,
         "automaticMemberActivationFromSubmittedDate": False,
         "onchainHoldingHistoryRequiredForApproval": True,
+        "memberBenefitExactTransferRequired": True,
+        "memberBenefitSafeBlockRequired": True,
     },
     "antiSpam": {
         "honeypotFields": ["website", "company", "homepage"],
@@ -117,6 +124,7 @@ class GcaRegistrationApiCheckTests(unittest.TestCase):
                 "/gca/member-ledger",
                 "/gca/member-reviews",
                 "/gca/holding-verifications",
+                "/gca/member-benefit-transfers",
             }:
                 if not request.headers.get("Authorization"):
                     return FakeResponse({"ok": False, "error": "admin authorization is required"}, status=401)
@@ -156,6 +164,7 @@ class GcaRegistrationApiCheckTests(unittest.TestCase):
         self.assertFalse(result["boundaries"]["submitsServiceRequest"])
         self.assertFalse(result["boundaries"]["submitsMemberReview"])
         self.assertFalse(result["boundaries"]["submitsHoldingVerification"])
+        self.assertFalse(result["boundaries"]["submitsMemberBenefitTransfer"])
         self.assertFalse(result["boundaries"]["automaticTokenTransfer"])
         self.assertFalse(result["boundaries"]["adminTokenPrinted"])
         self.assertFalse(result["boundaries"]["userEmailsPrinted"])
@@ -163,11 +172,12 @@ class GcaRegistrationApiCheckTests(unittest.TestCase):
         self.assertTrue(result["boundaries"]["adminReadTokenRequired"])
         self.assertTrue(result["boundaries"]["tokenProtectedAdminReadChecked"])
         self.assertEqual({item["method"] for item in seen}, {"GET", "OPTIONS"})
-        self.assertEqual(len(result["checks"]), 23)
+        self.assertEqual(len(result["checks"]), 26)
         self.assertTrue(any(item["id"] == "admin-email-registrations-read" for item in result["checks"]))
         self.assertTrue(any(item["id"] == "admin-member-ledger-read" for item in result["checks"]))
         self.assertTrue(any(item["id"] == "admin-member-reviews-read" for item in result["checks"]))
         self.assertTrue(any(item["id"] == "admin-holding-verifications-read" for item in result["checks"]))
+        self.assertTrue(any(item["id"] == "admin-member-benefit-transfers-read" for item in result["checks"]))
         self.assertFalse(any(item["id"] == "admin-credit-usage-read" for item in result["checks"]))
         self.assertTrue(any(item.get("antiSpamHoneypotFields") == ["website", "company", "homepage"] for item in result["checks"]))
         serialized = json.dumps(result)
@@ -208,7 +218,7 @@ class GcaRegistrationApiCheckTests(unittest.TestCase):
         self.assertTrue(result["boundaries"]["publicOnly"])
         self.assertFalse(result["boundaries"]["adminReadTokenRequired"])
         self.assertFalse(result["boundaries"]["tokenProtectedAdminReadChecked"])
-        self.assertEqual(len(result["checks"]), 15)
+        self.assertEqual(len(result["checks"]), 17)
         self.assertNotIn("admin-email-registrations-read", {item["id"] for item in result["checks"]})
         self.assertTrue(all(item["authorization"] == "" for item in seen))
 
@@ -247,9 +257,9 @@ class GcaRegistrationApiCheckTests(unittest.TestCase):
         self.assertTrue(result["ok"])
         self.assertTrue(result["boundaries"]["pendingWorkerRoutesIncluded"])
         health = next(item for item in result["checks"] if item["id"] == "health")
-        self.assertEqual(health["workerRelease"], "gca-registration-worker-2026-07-27-holding-history-v1")
+        self.assertEqual(health["workerRelease"], "gca-registration-worker-2026-07-27-member-benefit-evidence-v1")
         self.assertEqual(health["contactEmail"], "support@gcagochina.com")
-        self.assertEqual(len(result["checks"]), 29)
+        self.assertEqual(len(result["checks"]), 32)
         self.assertTrue(any(item["id"] == "admin-service-requests-read" for item in result["checks"]))
         self.assertTrue(any(item["id"] == "admin-credit-usage-read" for item in result["checks"]))
         self.assertIn(("GET", "/gca/service-requests"), {(item["method"], item["path"]) for item in seen})
