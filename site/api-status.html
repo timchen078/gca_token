@@ -345,11 +345,12 @@
       <section aria-labelledby="title">
         <p class="eyebrow">Registration API Status / Live Read-Only Check</p>
         <h1 id="title">GCA Registration API Status</h1>
-        <p class="lead">This is the public status page for the live GCA email registration, member access, device-key account status, rotation and registered-email recovery, and contact suppression backend. The current production API runs on Cloudflare Workers + D1 at <code>https://gca-registration-api.gcagochina.workers.dev</code>.</p>
-        <p class="lead">The account-status release public smoke check passed at <code>2026-07-27T15:15:02Z</code>, followed by a token-protected admin read check at <code>2026-07-27T15:15:12Z</code>. The browser panel below can repeat the safe read-only portion now without writing records.</p>
+        <p class="lead">This is the public status page for the live GCA email registration, member access, device-key account status, account service requests and redacted history, key rotation, registered-email recovery, and contact suppression backend. The current production API runs on Cloudflare Workers + D1 at <code>https://gca-registration-api.gcagochina.workers.dev</code>.</p>
+        <p class="lead">The account-status release public smoke check passed at <code>2026-07-28T06:07:02Z</code>, followed by a token-protected admin read check at <code>2026-07-28T06:07:11Z</code>. The browser panel below can repeat the safe read-only portion now without writing records.</p>
         <p class="lead"><code>gca_member_access_v2</code> creates a random device key in the browser. D1 stores only its SHA-256 hash, and <code>gca_account_status_v1</code> returns a redacted read-only snapshot without email, full wallet address, the key, administrator data, or operator notes.</p>
         <p class="lead"><code>gca_account_status_rotation_v1</code> lets a browser holding the current valid key replace it safely. The old key immediately loses status-read access and can only retry the same completed rotation for 15 minutes; account, credit, member, wallet, and token records are unchanged.</p>
         <p class="lead">Lost-key recovery uses <code>gca_account_status_recovery_request_v1</code>, registered-email manual review, and a single-use 24-hour credential. Public requests never reveal whether an account matched. Completion activates the pre-committed new key and changes no account, credit, member, wallet, GCA balance, or on-chain asset.</p>
+        <p class="lead"><code>gca_account_service_request_v1</code> lets the device-key account submit a server-priced catalog service to manual review, while <code>gca_account_service_request_status_v1</code> returns that account's redacted history. Submission does not reserve or deduct credits.</p>
         <p class="lead">Service requests, credit usage, append-only member review, holding verification, and member-benefit transfer evidence are production-live and token-protected. The new evidence route only verifies an existing manual transfer from the official reserve wallet and never signs or broadcasts one.</p>
         <p class="lead">The public checks verify health and read protections without writing test registrations. Admin reads remain token protected and should only be run locally by an operator with the local admin token file.</p>
         <div class="actions">
@@ -405,8 +406,12 @@
           <span class="value good">Live / registered-email review</span>
         </div>
         <div class="fact">
+          <span class="label">Account Service Requests</span>
+          <span class="value good">Live / device-key protected / manual review</span>
+        </div>
+        <div class="fact">
           <span class="label">Worker Version</span>
-          <span class="value">860fd70d-290a-467f-b70b-ed2d1fe7ca76</span>
+          <span class="value">e0d6f82e-9b6c-4a43-bec6-8447793da8ec</span>
         </div>
         <div class="fact">
           <span class="label">Custom Domain</span>
@@ -528,6 +533,16 @@
             <p class="note">Live single-use completion. It activates the pre-committed new key and invalidates the old key without changing the account, wallet, credits, member records, GCA balance, or on-chain assets.</p>
           </div>
           <div class="fact">
+            <span class="label">POST</span>
+            <span class="value">/gca/account-service-requests</span>
+            <p class="note">Live device-key protected <code>gca_account_service_request_v1</code> intake. The server selects the catalog unit, enforces account-scoped idempotency and a five-request daily limit, and queues manual review without reserving or deducting credits.</p>
+          </div>
+          <div class="fact">
+            <span class="label">POST</span>
+            <span class="value">/gca/account-service-requests/status</span>
+            <p class="note">Live read-only <code>gca_account_service_request_status_v1</code> history. It returns only the matched account's redacted queue records and omits email, full wallet, device key, and full request body.</p>
+          </div>
+          <div class="fact">
             <span class="label">GET</span>
             <span class="value">/gca/email-registrations</span>
             <p class="note">Live token-protected admin read. Public visitors should receive an authorization error, not registration records.</p>
@@ -565,12 +580,12 @@
           <div class="fact">
             <span class="label">GET/POST</span>
             <span class="value">/gca/service-requests</span>
-            <p class="note">Production-live token-protected service request queue. Initial migration and deploy passed on 2026-07-23 UTC; the latest public and admin read-only smoke checks passed on 2026-07-27 UTC. Anonymous reads return HTTP 401.</p>
+            <p class="note">Production-live token-protected service request queue. The latest Worker deploy and public/admin read-only smoke checks passed on 2026-07-28 UTC. Anonymous reads return HTTP 401.</p>
           </div>
           <div class="fact">
             <span class="label">GET/POST</span>
             <span class="value">/gca/credit-usage</span>
-            <p class="note">Production-live token-protected credit usage ledger. Initial migration and deploy passed on 2026-07-23 UTC; the latest public and admin read-only smoke checks passed on 2026-07-27 UTC. Anonymous reads return HTTP 401.</p>
+            <p class="note">Production-live token-protected credit usage ledger. The latest Worker deploy and public/admin read-only smoke checks passed on 2026-07-28 UTC. Anonymous reads return HTTP 401.</p>
           </div>
           <div class="fact">
             <span class="label">Future Domain</span>
@@ -593,7 +608,7 @@
         </div>
         <div class="panel">
           <h2>Deploy Readiness</h2>
-          <p class="note">This checks Worker bundling, Cloudflare account authentication, D1 visibility, and read-only Worker deployment permission before publishing a new Worker version. All required checks passed at <code>2026-07-23T17:55:52Z</code>. If a future report includes a blocked <code>authRecovery.status</code>, use its safe next actions before migrations or deploy.</p>
+          <p class="note">This checks Worker bundling, Cloudflare account authentication, D1 visibility, and read-only Worker deployment permission before publishing a new Worker version. All required checks passed at <code>2026-07-28T06:07:54Z</code>. If a future report includes a blocked <code>authRecovery.status</code>, use its safe next actions before migrations or deploy.</p>
           <pre>python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth</pre>
         </div>
         <div class="panel">
@@ -609,13 +624,13 @@
         </div>
         <div class="panel">
           <h2>Member Review Deployment</h2>
-          <p class="note"><code>/gca/member-reviews</code> and <code>/gca/holding-verifications</code> are production-live and protected by <code>ADMIN_READ_TOKEN</code>. Remote migrations <code>0006_member_reviews.sql</code> and <code>0007_holding_history_verifications.sql</code>, Worker deployment, public HTTP 401 verification, and admin HTTP 200 verification passed; the latest read-only smoke checks completed on 2026-07-27 UTC.</p>
+          <p class="note"><code>/gca/member-reviews</code> and <code>/gca/holding-verifications</code> are production-live and protected by <code>ADMIN_READ_TOKEN</code>. Remote migrations, Worker deployment, public HTTP 401 verification, and admin HTTP 200 verification passed; the latest read-only smoke checks completed on 2026-07-28 UTC.</p>
           <p class="note">The operator command requires explicit production-write and evidence-review confirmations. It changes account and member status only; the 10,000 GCA benefit remains a separate reserve-wallet process.</p>
           <pre>.venv/bin/python tools/review_cloudflare_member.py --help</pre>
         </div>
         <div class="panel">
           <h2>Member Benefit Evidence Deployment</h2>
-          <p class="note">Remote migration <code>0008_member_benefit_transfer_evidence.sql</code>, Worker deploy, anonymous HTTP 401 check, and admin HTTP 200 read check passed on 2026-07-27 UTC. Deployment smoke observed zero records and did not submit a transfer.</p>
+          <p class="note">Remote migration <code>0008_member_benefit_transfer_evidence.sql</code>, Worker deploy, anonymous HTTP 401 check, and admin HTTP 200 read check passed; the latest read-only smoke completed on 2026-07-28 UTC. Deployment smoke observed zero records and did not submit a transfer.</p>
           <p class="note">Use this command only after the official reserve-wallet transfer is complete. All three safety acknowledgements are required.</p>
           <pre>.venv/bin/python tools/record_cloudflare_member_benefit_transfer.py --help</pre>
         </div>

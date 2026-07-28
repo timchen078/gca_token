@@ -37,7 +37,7 @@ from tools.export_cloudflare_email_registrations import (  # noqa: E402
 
 DEFAULT_ORIGIN = "https://gcagochina.com"
 DEFAULT_USER_AGENT = "GCA-Operator-Registration-API-Check/1.0"
-WORKER_RELEASE = "gca-registration-worker-2026-07-27-account-status-recovery-v1"
+WORKER_RELEASE = "gca-registration-worker-2026-07-28-account-service-requests-v1"
 OFFICIAL_CONTACT_EMAIL = "support@gcagochina.com"
 OFFICIAL_MEMBER_BENEFIT_SOURCE_WALLET = "0x5e8f84748612b913aacc937492ac25dc5630e246"
 
@@ -178,6 +178,16 @@ def check_health(*, base_url: str, timeout: float, cafile: str, opener: Callable
         require(payload.get("creditUsageVersion") == "gca_credit_usage_v1", "health endpoint returned wrong credit usage packet version")
     if include_pending_routes or "serviceRequestVersion" in payload:
         require(payload.get("serviceRequestVersion") == "gca_service_request_v1", "health endpoint returned wrong service request packet version")
+    require(
+        payload.get("accountServiceRequestVersion")
+        == "gca_account_service_request_v1",
+        "health endpoint returned wrong account service request packet version",
+    )
+    require(
+        payload.get("accountServiceRequestStatusVersion")
+        == "gca_account_service_request_status_v1",
+        "health endpoint returned wrong account service request status version",
+    )
     require(payload.get("memberReviewVersion") == "gca_member_review_v1", "health endpoint returned wrong member review packet version")
     require(
         payload.get("holdingVerificationVersion") == "gca_holding_verification_v1",
@@ -219,6 +229,12 @@ def check_health(*, base_url: str, timeout: float, cafile: str, opener: Callable
         ),
         "creditUsageVersion": payload.get("creditUsageVersion"),
         "serviceRequestVersion": payload.get("serviceRequestVersion"),
+        "accountServiceRequestVersion": payload.get(
+            "accountServiceRequestVersion"
+        ),
+        "accountServiceRequestStatusVersion": payload.get(
+            "accountServiceRequestStatusVersion"
+        ),
         "memberReviewVersion": payload.get("memberReviewVersion"),
         "holdingVerificationVersion": payload.get("holdingVerificationVersion"),
         "memberBenefitTransferVersion": payload.get("memberBenefitTransferVersion"),
@@ -354,6 +370,16 @@ def check_access_config(*, base_url: str, timeout: float, cafile: str, opener: C
         require(payload.get("creditUsageVersion") == "gca_credit_usage_v1", "access config returned wrong credit usage version")
     if include_pending_routes or "serviceRequestVersion" in payload:
         require(payload.get("serviceRequestVersion") == "gca_service_request_v1", "access config returned wrong service request version")
+    require(
+        payload.get("accountServiceRequestVersion")
+        == "gca_account_service_request_v1",
+        "access config returned wrong account service request version",
+    )
+    require(
+        payload.get("accountServiceRequestStatusVersion")
+        == "gca_account_service_request_status_v1",
+        "access config returned wrong account service request status version",
+    )
     require(payload.get("memberReviewVersion") == "gca_member_review_v1", "access config returned wrong member review version")
     require(
         payload.get("holdingVerificationVersion") == "gca_holding_verification_v1",
@@ -397,6 +423,16 @@ def check_access_config(*, base_url: str, timeout: float, cafile: str, opener: C
         payload.get("endpoints", {}).get("accountStatusRecovery")
         == "/gca/account-status/recover",
         "access config returned wrong account status recovery endpoint",
+    )
+    require(
+        payload.get("endpoints", {}).get("accountServiceRequests")
+        == "/gca/account-service-requests",
+        "access config returned wrong account service request endpoint",
+    )
+    require(
+        payload.get("endpoints", {}).get("accountServiceRequestStatus")
+        == "/gca/account-service-requests/status",
+        "access config returned wrong account service request status endpoint",
     )
     require(payload.get("boundaries", {}).get("readOnlyWalletVerification") is True, "access config must keep read-only wallet verification")
     require(payload.get("boundaries", {}).get("readOnlyAccountStatus") is True, "access config must keep account status read-only")
@@ -453,6 +489,58 @@ def check_access_config(*, base_url: str, timeout: float, cafile: str, opener: C
         )
         is False,
         "access config recovery must not change account or ledger records",
+    )
+    require(
+        payload.get("boundaries", {}).get("accountServiceRequestsEnabled")
+        is True,
+        "access config must enable account service requests",
+    )
+    require(
+        payload.get("boundaries", {}).get("accountServiceRequestDailyLimit")
+        == 5,
+        "access config returned wrong account service request daily limit",
+    )
+    require(
+        payload.get("boundaries", {}).get(
+            "accountServiceRequestCreditsReserved"
+        )
+        is False,
+        "account service requests must not reserve credits",
+    )
+    require(
+        payload.get("boundaries", {}).get(
+            "accountServiceRequestCreditsDeductedOnRequest"
+        )
+        is False,
+        "account service requests must not deduct credits",
+    )
+    require(
+        payload.get("boundaries", {}).get(
+            "accountServiceRequestReturnsEmail"
+        )
+        is False,
+        "account service request status must not return email",
+    )
+    require(
+        payload.get("boundaries", {}).get(
+            "accountServiceRequestCreatesTradingPermission"
+        )
+        is False,
+        "account service requests must not create trading permission",
+    )
+    service_catalog = payload.get("serviceCatalog", [])
+    require(
+        isinstance(service_catalog, list) and len(service_catalog) == 9,
+        "access config returned incomplete service catalog",
+    )
+    require(
+        any(
+            item.get("id") == "portfolio-risk-map"
+            and item.get("creditUnit") == 15
+            for item in service_catalog
+            if isinstance(item, dict)
+        ),
+        "access config returned wrong portfolio risk service unit",
     )
     require(payload.get("boundaries", {}).get("automaticTokenTransfer") is False, "access config must not auto-transfer tokens")
     require(
@@ -649,6 +737,24 @@ def run_checks(
         ),
         check_cors_preflight(
             base_url=base_url,
+            path="/gca/account-service-requests",
+            check_id="cors-account-service-requests",
+            origin=origin,
+            timeout=timeout,
+            cafile=cafile,
+            opener=opener,
+        ),
+        check_cors_preflight(
+            base_url=base_url,
+            path="/gca/account-service-requests/status",
+            check_id="cors-account-service-request-status",
+            origin=origin,
+            timeout=timeout,
+            cafile=cafile,
+            opener=opener,
+        ),
+        check_cors_preflight(
+            base_url=base_url,
             path="/gca/member-reviews",
             check_id="cors-member-reviews",
             origin=origin,
@@ -773,6 +879,22 @@ def run_checks(
             base_url=base_url,
             path="/gca/account-status/recover",
             check_id="account-status-recovery-get-rejected",
+            timeout=timeout,
+            cafile=cafile,
+            opener=opener,
+        ),
+        check_public_post_only_get(
+            base_url=base_url,
+            path="/gca/account-service-requests",
+            check_id="account-service-requests-get-rejected",
+            timeout=timeout,
+            cafile=cafile,
+            opener=opener,
+        ),
+        check_public_post_only_get(
+            base_url=base_url,
+            path="/gca/account-service-requests/status",
+            check_id="account-service-request-status-get-rejected",
             timeout=timeout,
             cafile=cafile,
             opener=opener,
@@ -959,6 +1081,7 @@ def run_checks(
             "submitsAccountStatusRecoveryRequest": False,
             "submitsAccountStatusRecoveryApproval": False,
             "submitsAccountStatusRecoveryCompletion": False,
+            "submitsAccountServiceRequest": False,
             "submitsServiceRequest": False,
             "submitsMemberReview": False,
             "submitsHoldingVerification": False,

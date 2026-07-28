@@ -1,13 +1,13 @@
 {
   "schema": "https://gcagochina.com/access-api.json",
   "pageUrl": "https://gcagochina.com/access-api.html",
-  "status": "public-access-api-account-status-live",
-  "lastUpdated": "2026-07-27",
+  "status": "public-access-api-account-service-requests-live",
+  "lastUpdated": "2026-07-28",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "title": "GCA Access API Contract",
   "currentState": {
-    "currentStage": "device-key-account-status-api-live",
+    "currentStage": "device-key-account-service-request-api-live",
     "contractOnly": false,
     "backendLive": true,
     "publicEndpointLive": true,
@@ -54,9 +54,9 @@
     "memberBenefitTransferStillManual": true,
     "onchainHoldingHistoryRequiredForApproval": true,
     "automaticMemberActivationFromSubmittedDate": false,
-    "memberReviewProductionVerifiedAt": "2026-07-27T15:15:12Z",
-    "memberBenefitTransferProductionVerifiedAt": "2026-07-27T15:15:12Z",
-    "serviceRoutesProductionVerifiedAt": "2026-07-27T15:15:12Z",
+    "memberReviewProductionVerifiedAt": "2026-07-28T06:07:11Z",
+    "memberBenefitTransferProductionVerifiedAt": "2026-07-28T06:07:11Z",
+    "serviceRoutesProductionVerifiedAt": "2026-07-28T06:07:11Z",
     "accountStatusRotationPacketVersion": "gca_account_status_rotation_v1",
     "accountStatusRotationProductionLive": true,
     "accountStatusRotationGraceMinutes": 15,
@@ -70,7 +70,17 @@
     "accountStatusRecoveryRequestDays": 7,
     "accountStatusRecoveryCredentialHours": 24,
     "accountStatusRecoveryReturnsAccountMatch": false,
-    "accountStatusRecoveryChangesAccountOrLedgers": false
+    "accountStatusRecoveryChangesAccountOrLedgers": false,
+    "accountServiceRequestPacketVersion": "gca_account_service_request_v1",
+    "accountServiceRequestStatusPacketVersion": "gca_account_service_request_status_v1",
+    "accountServiceRequestProductionLive": true,
+    "accountServiceRequestDeviceKeyProtected": true,
+    "accountServiceRequestDailyLimit": 5,
+    "accountServiceRequestProductionVerifiedAt": "2026-07-28T06:07:02Z",
+    "accountServiceRequestCreditsReserved": false,
+    "accountServiceRequestCreditsDeductedOnRequest": false,
+    "accountServiceRequestReturnsEmail": false,
+    "accountServiceRequestCreatesTradingPermission": false
   },
   "localDevelopmentBackend": {
     "status": "local-only-backend-available",
@@ -133,7 +143,7 @@
     "workerDeployReadinessCommand": "python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth",
     "workerDeployReadinessAuthSessionCheck": "cloudflare-auth-session",
     "workerDeployReadinessAuthRecoveryField": "authRecovery",
-    "latestDeployReadinessCheckAt": "2026-07-23T17:55:52Z",
+    "latestDeployReadinessCheckAt": "2026-07-28T06:07:54Z",
     "latestDeployReadinessSummary": {
       "wranglerDeployDryRun": "passed",
       "cloudflareD1Visibility": "passed",
@@ -143,7 +153,7 @@
       "writesD1Records": false,
       "deploysWorker": false
     },
-    "pendingRoutesLastObservedAt": "2026-07-27T15:15:02Z",
+    "pendingRoutesLastObservedAt": "2026-07-28T06:07:02Z",
     "pendingRouteAnonymousGetStatus": {
       "/gca/service-requests": 401,
       "/gca/credit-usage": 401
@@ -196,6 +206,8 @@
     "accountStatusRecoveryRequestsEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/account-status/recovery-requests",
     "accountStatusRecoveryApprovalsEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/account-status/recovery-approvals",
     "accountStatusRecoveryEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/account-status/recover",
+    "accountServiceRequestEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/account-service-requests",
+    "accountServiceRequestStatusEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/account-service-requests/status",
     "walletVerificationEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/wallet-verifications",
     "accessConfigEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/access-config",
     "adminCreditLedgerEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/credit-ledger",
@@ -213,24 +225,26 @@
       "company",
       "homepage"
     ],
-    "workerVersionId": "860fd70d-290a-467f-b70b-ed2d1fe7ca76",
-    "workerRelease": "gca-registration-worker-2026-07-27-account-status-recovery-v1",
+    "workerVersionId": "e0d6f82e-9b6c-4a43-bec6-8447793da8ec",
+    "workerRelease": "gca-registration-worker-2026-07-28-account-service-requests-v1",
     "memberReviewVersion": "gca_member_review_v1",
     "holdingVerificationVersion": "gca_holding_verification_v1",
     "memberBenefitTransferVersion": "gca_member_benefit_transfer_v1",
     "memberBenefitTransferOfficialSourceWallet": "0x5e8F84748612B913aAcC937492AC25dc5630E246",
     "memberBenefitTransferExactAmount": "10000 GCA",
-    "memberBenefitTransferPublicSmokePassedAt": "2026-07-27T15:15:02Z",
-    "memberBenefitTransferAdminSmokePassedAt": "2026-07-27T15:15:12Z",
-    "productionRoutesVerifiedAt": "2026-07-27T15:15:12Z",
+    "memberBenefitTransferPublicSmokePassedAt": "2026-07-28T06:07:02Z",
+    "memberBenefitTransferAdminSmokePassedAt": "2026-07-28T06:07:11Z",
+    "productionRoutesVerifiedAt": "2026-07-28T06:07:11Z",
     "accountStatusRotationMigration": "cloudflare/gca-registration-worker/migrations/0010_account_status_rotation.sql",
     "accountStatusRotationEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/account-status/rotate",
     "accountStatusRotationVersion": "gca_account_status_rotation_v1",
     "accountStatusRotationGraceMinutes": 15,
-    "accountStatusRotationPublicSmokePassedAt": "2026-07-27T15:15:02Z",
-    "accountStatusRotationAdminSmokePassedAt": "2026-07-27T15:15:12Z",
-    "accountStatusRecoveryPublicSmokePassedAt": "2026-07-27T15:15:02Z",
-    "accountStatusRecoveryAdminSmokePassedAt": "2026-07-27T15:15:12Z"
+    "accountStatusRotationPublicSmokePassedAt": "2026-07-28T06:07:02Z",
+    "accountStatusRotationAdminSmokePassedAt": "2026-07-28T06:07:11Z",
+    "accountStatusRecoveryPublicSmokePassedAt": "2026-07-28T06:07:02Z",
+    "accountStatusRecoveryAdminSmokePassedAt": "2026-07-28T06:07:11Z",
+    "accountServiceRequestPublicSmokePassedAt": "2026-07-28T06:07:02Z",
+    "accountServiceRequestAdminQueueSmokePassedAt": "2026-07-28T06:07:11Z"
   },
   "securityModel": {
     "controlledHttpsOriginRequired": true,
@@ -266,6 +280,12 @@
     "accountStatusRecoveryCredentialSingleUse": true,
     "accountStatusRecoveryInvalidatesOldDeviceKey": true,
     "accountStatusRecoveryChangesAccountOrLedgers": false,
+    "accountServiceRequestsUseDeviceKey": true,
+    "accountServiceRequestsReturnEmail": false,
+    "accountServiceRequestsReturnFullRequestBodyInHistory": false,
+    "accountServiceRequestsReserveCredits": false,
+    "accountServiceRequestsDeductCreditsOnSubmission": false,
+    "accountServiceRequestsCreateTradingPermission": false,
     "usesEthCall": true,
     "usesEthGetTransactionReceipt": true,
     "usesErc20BalanceOf": true,
@@ -286,6 +306,8 @@
   "emailRegistrationPacketVersion": "gca_email_registration_v1",
   "contactSuppressionPacketVersion": "gca_contact_suppression_v1",
   "serviceRequestPacketVersion": "gca_service_request_v1",
+  "accountServiceRequestPacketVersion": "gca_account_service_request_v1",
+  "accountServiceRequestStatusPacketVersion": "gca_account_service_request_status_v1",
   "memberReviewPacketVersion": "gca_member_review_v1",
   "memberEvidenceFields": [
     "memberBenefitReviewEvidence.holdingStartDate",
@@ -710,6 +732,81 @@
       ],
       "allowedStatuses": [
         "completed"
+      ]
+    },
+    {
+      "id": "account-service-requests-create",
+      "method": "POST",
+      "path": "/gca/account-service-requests",
+      "status": "production-workers-dev-live",
+      "purpose": "Create a device-key protected service request for the authenticated account and place it in the existing manual operator queue without reserving or deducting credits.",
+      "requiredRequestFields": [
+        "packetVersion",
+        "statusAccessToken",
+        "clientRequestId",
+        "serviceId",
+        "requestTitle",
+        "requestSummary",
+        "preferredLanguage",
+        "acknowledgements.noSecretsNoCustody",
+        "acknowledgements.manualReviewOnly",
+        "acknowledgements.noTradingPermission"
+      ],
+      "serverChecks": [
+        "packetVersion must be gca_account_service_request_v1",
+        "the SHA-256 device-key hash must match an active and unexpired account status access record",
+        "serviceId and requested credit unit come from the server catalog",
+        "clientRequestId creates an account-scoped idempotent request ID",
+        "a maximum of five new requests per account is accepted in 24 hours",
+        "email, wallet, and credit ledger identity are loaded from the authenticated account rather than request fields",
+        "submission does not reserve or deduct credits and does not create trading permission",
+        "no wallet connection, signature, transaction, custody, or automatic token transfer is requested"
+      ],
+      "responseFields": [
+        "created",
+        "idempotentReplay",
+        "serviceRequest",
+        "creditLedger",
+        "serviceCatalog",
+        "boundaries"
+      ],
+      "allowedStatuses": [
+        "queued_operator_review",
+        "queued_missing_credit_ledger",
+        "queued_insufficient_credits",
+        "queued_expired_credit_ledger"
+      ]
+    },
+    {
+      "id": "account-service-requests-status",
+      "method": "POST",
+      "path": "/gca/account-service-requests/status",
+      "status": "production-workers-dev-live",
+      "purpose": "Return up to 25 redacted service request records belonging only to the device-key authenticated account.",
+      "requiredRequestFields": [
+        "packetVersion",
+        "statusAccessToken"
+      ],
+      "serverChecks": [
+        "packetVersion must be gca_account_service_request_status_v1",
+        "the SHA-256 device-key hash must match an active and unexpired account status access record",
+        "records are filtered by the matched account ID",
+        "email, email hash, full wallet address, device key, and full request body are omitted",
+        "the route does not change credits, account, member, wallet, or token records"
+      ],
+      "responseFields": [
+        "checkedAt",
+        "count",
+        "serviceRequests",
+        "creditLedger",
+        "serviceCatalog",
+        "boundaries"
+      ],
+      "allowedStatuses": [
+        "queued_operator_review",
+        "queued_missing_credit_ledger",
+        "queued_insufficient_credits",
+        "queued_expired_credit_ledger"
       ]
     },
     {
@@ -1438,6 +1535,8 @@
       "GCA has a live public access API for email registration, contact suppression, access config, member access, device-key account status, and read-only wallet verification.",
       "The member access API is live on Cloudflare Workers + D1 and uses gca_member_access_v2 with a browser-generated device status key.",
       "POST /gca/account-status returns a read-only redacted status snapshot after matching the SHA-256 hash of the device key; it does not return email, the full wallet address, or the key.",
+      "POST /gca/account-service-requests lets the device-key authenticated account queue one catalog service for manual review; the server selects the catalog unit and submission does not reserve or deduct credits.",
+      "POST /gca/account-service-requests/status returns only that account's redacted service, title, status, time, and credit-check history without returning email, the device key, or the full request body.",
       "The Worker verifies Base Mainnet GCA balances with read-only eth_call and ERC-20 balanceOf.",
       "Eligible 10,000 GCA holders can create one 100 GCA AI Quant Access credits ledger record.",
       "GCA operators can record reviewed service-level credit usage against an existing credit ledger through the live token-protected Worker route; anonymous reads are rejected.",
@@ -1463,6 +1562,7 @@
       "the production member-benefit evidence route signs, authorizes, or broadcasts a token transfer",
       "the account-status endpoint returns email, the full wallet address, the device key, administrator data, or operator notes",
       "a lost or expired device key can be recovered without official support verification",
+      "an account service request means delivery is approved, credits are reserved or deducted, a wallet action occurred, or trading permission was created",
       "the API collects private keys, seed phrases, exchange API secrets, withdrawal permission, custody, or one-time codes",
       "API access provides live order execution or risk-control bypass"
     ]

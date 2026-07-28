@@ -8,7 +8,7 @@ from tools.check_gca_registration_api import ApiCheckError, run_checks
 HEALTH_PAYLOAD = {
     "ok": True,
     "service": "gca-registration-api",
-    "workerRelease": "gca-registration-worker-2026-07-27-account-status-recovery-v1",
+    "workerRelease": "gca-registration-worker-2026-07-28-account-service-requests-v1",
     "contactEmail": "support@gcagochina.com",
     "packetVersion": "gca_email_registration_v1",
     "contactSuppressionVersion": "gca_contact_suppression_v1",
@@ -21,6 +21,8 @@ HEALTH_PAYLOAD = {
     "accountStatusRecoveryVersion": "gca_account_status_recovery_v1",
     "creditUsageVersion": "gca_credit_usage_v1",
     "serviceRequestVersion": "gca_service_request_v1",
+    "accountServiceRequestVersion": "gca_account_service_request_v1",
+    "accountServiceRequestStatusVersion": "gca_account_service_request_status_v1",
     "memberReviewVersion": "gca_member_review_v1",
     "holdingVerificationVersion": "gca_holding_verification_v1",
     "memberBenefitTransferVersion": "gca_member_benefit_transfer_v1",
@@ -38,7 +40,7 @@ HEALTH_PAYLOAD = {
 ACCESS_CONFIG_PAYLOAD = {
     "ok": True,
     "service": "gca-registration-api",
-    "workerRelease": "gca-registration-worker-2026-07-27-account-status-recovery-v1",
+    "workerRelease": "gca-registration-worker-2026-07-28-account-service-requests-v1",
     "contactEmail": "support@gcagochina.com",
     "memberAccessVersion": "gca_member_access_v2",
     "legacyMemberAccessVersion": "gca_member_access_v1",
@@ -49,6 +51,8 @@ ACCESS_CONFIG_PAYLOAD = {
     "accountStatusRecoveryVersion": "gca_account_status_recovery_v1",
     "creditUsageVersion": "gca_credit_usage_v1",
     "serviceRequestVersion": "gca_service_request_v1",
+    "accountServiceRequestVersion": "gca_account_service_request_v1",
+    "accountServiceRequestStatusVersion": "gca_account_service_request_status_v1",
     "memberReviewVersion": "gca_member_review_v1",
     "holdingVerificationVersion": "gca_holding_verification_v1",
     "memberBenefitTransferVersion": "gca_member_benefit_transfer_v1",
@@ -58,6 +62,8 @@ ACCESS_CONFIG_PAYLOAD = {
         "accountStatusRecoveryRequests": "/gca/account-status/recovery-requests",
         "accountStatusRecoveryApprovals": "/gca/account-status/recovery-approvals",
         "accountStatusRecovery": "/gca/account-status/recover",
+        "accountServiceRequests": "/gca/account-service-requests",
+        "accountServiceRequestStatus": "/gca/account-service-requests/status",
         "memberReviewsAdmin": "/gca/member-reviews",
         "holdingVerificationsAdmin": "/gca/holding-verifications",
         "memberBenefitTransfersAdmin": "/gca/member-benefit-transfers",
@@ -83,12 +89,29 @@ ACCESS_CONFIG_PAYLOAD = {
         "accountStatusRecoveryReturnsAccountMatch": False,
         "accountStatusRecoveryInvalidatesOldDeviceKey": True,
         "accountStatusRecoveryChangesAccountOrLedgers": False,
+        "accountServiceRequestsEnabled": True,
+        "accountServiceRequestDailyLimit": 5,
+        "accountServiceRequestCreditsReserved": False,
+        "accountServiceRequestCreditsDeductedOnRequest": False,
+        "accountServiceRequestReturnsEmail": False,
+        "accountServiceRequestCreatesTradingPermission": False,
         "automaticTokenTransfer": False,
         "automaticMemberActivationFromSubmittedDate": False,
         "onchainHoldingHistoryRequiredForApproval": True,
         "memberBenefitExactTransferRequired": True,
         "memberBenefitSafeBlockRequired": True,
     },
+    "serviceCatalog": [
+        {"id": "liquidation-replay-report", "name": "Liquidation Replay", "creditUnit": 30},
+        {"id": "risk-warning-review", "name": "Risk Warning Review", "creditUnit": 10},
+        {"id": "backtest-lab-run", "name": "Backtest Lab", "creditUnit": 20},
+        {"id": "entry-ready-review", "name": "ENTRY_READY Review", "creditUnit": 15},
+        {"id": "position-size-calculator", "name": "Position Size Calculator", "creditUnit": 5},
+        {"id": "portfolio-risk-map", "name": "Portfolio Risk Map", "creditUnit": 15},
+        {"id": "risk-control-training", "name": "Risk-Control Training", "creditUnit": 10},
+        {"id": "member-research-notes", "name": "Member Research Notes", "creditUnit": 20},
+        {"id": "support-review-queue", "name": "Support Review Queue", "creditUnit": 0},
+    ],
     "antiSpam": {
         "honeypotFields": ["website", "company", "homepage"],
         "rejectsFilledHoneypotFields": True,
@@ -149,6 +172,8 @@ class GcaRegistrationApiCheckTests(unittest.TestCase):
                 "/gca/account-status/rotate",
                 "/gca/account-status/recovery-approvals",
                 "/gca/account-status/recover",
+                "/gca/account-service-requests",
+                "/gca/account-service-requests/status",
             }:
                 return FakeResponse({"ok": False, "error": "method not allowed"}, status=405)
             if parsed.path in {
@@ -205,6 +230,7 @@ class GcaRegistrationApiCheckTests(unittest.TestCase):
         self.assertFalse(result["boundaries"]["submitsAccountStatusRecoveryRequest"])
         self.assertFalse(result["boundaries"]["submitsAccountStatusRecoveryApproval"])
         self.assertFalse(result["boundaries"]["submitsAccountStatusRecoveryCompletion"])
+        self.assertFalse(result["boundaries"]["submitsAccountServiceRequest"])
         self.assertFalse(result["boundaries"]["submitsServiceRequest"])
         self.assertFalse(result["boundaries"]["submitsMemberReview"])
         self.assertFalse(result["boundaries"]["submitsHoldingVerification"])
@@ -216,7 +242,7 @@ class GcaRegistrationApiCheckTests(unittest.TestCase):
         self.assertTrue(result["boundaries"]["adminReadTokenRequired"])
         self.assertTrue(result["boundaries"]["tokenProtectedAdminReadChecked"])
         self.assertEqual({item["method"] for item in seen}, {"GET", "OPTIONS"})
-        self.assertEqual(len(result["checks"]), 37)
+        self.assertEqual(len(result["checks"]), 41)
         self.assertTrue(any(item["id"] == "admin-email-registrations-read" for item in result["checks"]))
         self.assertTrue(any(item["id"] == "admin-member-ledger-read" for item in result["checks"]))
         self.assertTrue(any(item["id"] == "admin-member-reviews-read" for item in result["checks"]))
@@ -261,6 +287,8 @@ class GcaRegistrationApiCheckTests(unittest.TestCase):
                 "/gca/account-status/rotate",
                 "/gca/account-status/recovery-approvals",
                 "/gca/account-status/recover",
+                "/gca/account-service-requests",
+                "/gca/account-service-requests/status",
             }:
                 return FakeResponse({"ok": False, "error": "method not allowed"}, status=405)
             return FakeResponse({"ok": False, "error": "admin authorization is required"}, status=401)
@@ -270,7 +298,7 @@ class GcaRegistrationApiCheckTests(unittest.TestCase):
         self.assertTrue(result["boundaries"]["publicOnly"])
         self.assertFalse(result["boundaries"]["adminReadTokenRequired"])
         self.assertFalse(result["boundaries"]["tokenProtectedAdminReadChecked"])
-        self.assertEqual(len(result["checks"]), 27)
+        self.assertEqual(len(result["checks"]), 31)
         self.assertNotIn("admin-email-registrations-read", {item["id"] for item in result["checks"]})
         self.assertTrue(all(item["authorization"] == "" for item in seen))
 
@@ -299,6 +327,8 @@ class GcaRegistrationApiCheckTests(unittest.TestCase):
                 "/gca/account-status/rotate",
                 "/gca/account-status/recovery-approvals",
                 "/gca/account-status/recover",
+                "/gca/account-service-requests",
+                "/gca/account-service-requests/status",
             }:
                 return FakeResponse({"ok": False, "error": "method not allowed"}, status=405)
             if not request.headers.get("Authorization"):
@@ -316,9 +346,9 @@ class GcaRegistrationApiCheckTests(unittest.TestCase):
         self.assertTrue(result["ok"])
         self.assertTrue(result["boundaries"]["pendingWorkerRoutesIncluded"])
         health = next(item for item in result["checks"] if item["id"] == "health")
-        self.assertEqual(health["workerRelease"], "gca-registration-worker-2026-07-27-account-status-recovery-v1")
+        self.assertEqual(health["workerRelease"], "gca-registration-worker-2026-07-28-account-service-requests-v1")
         self.assertEqual(health["contactEmail"], "support@gcagochina.com")
-        self.assertEqual(len(result["checks"]), 43)
+        self.assertEqual(len(result["checks"]), 47)
         self.assertTrue(any(item["id"] == "admin-service-requests-read" for item in result["checks"]))
         self.assertTrue(any(item["id"] == "admin-credit-usage-read" for item in result["checks"]))
         self.assertIn(("GET", "/gca/service-requests"), {(item["method"], item["path"]) for item in seen})

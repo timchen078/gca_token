@@ -4,11 +4,11 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-LAST_UPDATED = "2026-07-27"
-READINESS_AT = "2026-07-23T17:55:52Z"
-PUBLIC_ROUTE_AT = "2026-07-27T15:15:02Z"
-ADMIN_ROUTE_AT = "2026-07-27T15:15:12Z"
-WORKER_VERSION_ID = "860fd70d-290a-467f-b70b-ed2d1fe7ca76"
+LAST_UPDATED = "2026-07-28"
+READINESS_AT = "2026-07-28T06:07:54Z"
+PUBLIC_ROUTE_AT = "2026-07-28T06:07:02Z"
+ADMIN_ROUTE_AT = "2026-07-28T06:07:11Z"
+WORKER_VERSION_ID = "e0d6f82e-9b6c-4a43-bec6-8447793da8ec"
 ROUTE_OBSERVATIONS = {
     "/gca/service-requests": 401,
     "/gca/credit-usage": 401,
@@ -58,7 +58,7 @@ class GcaWorkerStatusConsistencyTests(unittest.TestCase):
         self.assertEqual(access_backend["pendingRoutesLastObservedAt"], PUBLIC_ROUTE_AT)
         self.assertEqual(access_backend["pendingRouteAnonymousGetStatus"], ROUTE_OBSERVATIONS)
         self.assertEqual(access_backend["workerVersionId"], WORKER_VERSION_ID)
-        self.assertEqual(access_backend["workerRelease"], "gca-registration-worker-2026-07-27-account-status-recovery-v1")
+        self.assertEqual(access_backend["workerRelease"], "gca-registration-worker-2026-07-28-account-service-requests-v1")
         self.assertEqual(access_backend["accountStatusAccessMigration"], "cloudflare/gca-registration-worker/migrations/0009_account_status_access.sql")
         self.assertEqual(access_backend["accountStatusEndpoint"], "https://gca-registration-api.gcagochina.workers.dev/gca/account-status")
         self.assertEqual(access_backend["memberReviewVersion"], "gca_member_review_v1")
@@ -129,6 +129,17 @@ class GcaWorkerStatusConsistencyTests(unittest.TestCase):
         self.assertTrue(operations["currentState"]["holdingHistoryVerificationProductionLive"])
         self.assertTrue(operations["currentState"]["onchainHoldingHistoryRequiredForApproval"])
         self.assertFalse(operations["currentState"]["automaticMemberActivationFromSubmittedDate"])
+        self.assertTrue(access_api["currentState"]["accountServiceRequestProductionLive"])
+        self.assertTrue(access_api["currentState"]["accountServiceRequestDeviceKeyProtected"])
+        self.assertFalse(access_api["currentState"]["accountServiceRequestCreditsReserved"])
+        self.assertFalse(access_api["currentState"]["accountServiceRequestCreditsDeductedOnRequest"])
+        self.assertFalse(access_api["currentState"]["accountServiceRequestCreatesTradingPermission"])
+        self.assertTrue(operations["currentState"]["accountServiceRequestProductionLive"])
+        self.assertFalse(operations["currentState"]["accountServiceRequestCreditsReserved"])
+        self.assertFalse(operations["currentState"]["accountServiceRequestCreditsDeductedOnSubmission"])
+        self.assertTrue(credits["currentState"]["accountServiceRequestProductionLive"])
+        self.assertFalse(credits["currentState"]["accountServiceRequestCreditsReserved"])
+        self.assertFalse(credits["currentState"]["accountServiceRequestCreditsDeductedOnSubmission"])
 
         live_endpoints = {
             endpoint["path"]: endpoint
@@ -146,10 +157,10 @@ class GcaWorkerStatusConsistencyTests(unittest.TestCase):
         public_pages = {
             "access-api.html": ("Live token-protected operator queue", "HTTP 401"),
             "operations.html": ("production-live", "Anonymous reads return HTTP 401"),
-            "credits.html": ("production Worker route live", "token-protected"),
-            "service-delivery-playbook.html": ("routes are live and token-protected", "HTTP 401"),
+            "credits.html": ("device-key create and redacted history routes live", "token-protected"),
+            "service-delivery-playbook.html": ("Live and token-protected", "HTTP 401"),
             "worker-routes-handoff.html": ("Production-live and protected", "HTTP 401"),
-            "release-gates.html": ("Production-live and token-protected", "2026-07-23"),
+            "release-gates.html": ("Production-live with device-key or admin-token protection", "2026-07-28"),
             "zh-release-gates.html": ("已经正式上线", "HTTP 401"),
             "market-quality.html": ("Account and eligible ledger path live", "Live and iterating"),
         }

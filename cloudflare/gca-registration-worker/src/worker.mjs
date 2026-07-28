@@ -23,10 +23,14 @@ const ACCOUNT_STATUS_RECOVERY_APPROVAL_VERSION = "gca_account_status_recovery_ap
 const ACCOUNT_STATUS_RECOVERY_VERSION = "gca_account_status_recovery_v1";
 const CREDIT_USAGE_VERSION = "gca_credit_usage_v1";
 const SERVICE_REQUEST_VERSION = "gca_service_request_v1";
+const ACCOUNT_SERVICE_REQUEST_VERSION = "gca_account_service_request_v1";
+const ACCOUNT_SERVICE_REQUEST_STATUS_VERSION =
+  "gca_account_service_request_status_v1";
 const MEMBER_REVIEW_VERSION = "gca_member_review_v1";
 const HOLDING_VERIFICATION_VERSION = "gca_holding_verification_v1";
 const MEMBER_BENEFIT_TRANSFER_VERSION = "gca_member_benefit_transfer_v1";
-const WORKER_RELEASE = "gca-registration-worker-2026-07-27-account-status-recovery-v1";
+const WORKER_RELEASE =
+  "gca-registration-worker-2026-07-28-account-service-requests-v1";
 const OFFICIAL_CONTACT_EMAIL = "support@gcagochina.com";
 const OFFICIAL_SITE_URL = "https://gcagochina.com/";
 const CHAIN_ID = 8453;
@@ -46,6 +50,8 @@ const ACCOUNT_STATUS_ACCESS_DAYS = 365;
 const ACCOUNT_STATUS_ROTATION_GRACE_MINUTES = 15;
 const ACCOUNT_STATUS_RECOVERY_REQUEST_DAYS = 7;
 const ACCOUNT_STATUS_RECOVERY_CREDENTIAL_MINUTES = 24 * 60;
+const ACCOUNT_SERVICE_REQUEST_DAILY_LIMIT = 5;
+const ACCOUNT_SERVICE_REQUEST_HISTORY_LIMIT = 25;
 const MEMBER_REFRESH_DAYS = 30;
 const MEMBER_HOLD_DAYS = 30;
 const HOLDING_WINDOW_MS = MEMBER_HOLD_DAYS * 86_400_000;
@@ -59,6 +65,7 @@ const CREDIT_SERVICE_CATALOG = {
   "backtest-lab-run": { name: "Backtest Lab", creditUnit: 20 },
   "entry-ready-review": { name: "ENTRY_READY Review", creditUnit: 15 },
   "position-size-calculator": { name: "Position Size Calculator", creditUnit: 5 },
+  "portfolio-risk-map": { name: "Portfolio Risk Map", creditUnit: 15 },
   "risk-control-training": { name: "Risk-Control Training", creditUnit: 10 },
   "member-research-notes": { name: "Member Research Notes", creditUnit: 20 },
   "support-review-queue": { name: "Support Review Queue", creditUnit: 0 }
@@ -77,6 +84,8 @@ const TX_HASH_RE = /^0x[a-fA-F0-9]{64}$/;
 const MEMBER_LEDGER_ID_RE = /^gca_member_[a-f0-9]{20}$/;
 const RECOVERY_REQUEST_ID_RE = /^gca_recovery_request_[a-f0-9]{20}$/;
 const RECOVERY_CREDENTIAL_RE = /^gca_recovery_[A-Za-z0-9_-]{43}$/;
+const CLIENT_SERVICE_REQUEST_ID_RE =
+  /^gca_client_req_[A-Za-z0-9_-]{22,64}$/;
 const OPERATOR_ID_RE = /^[a-z0-9][a-z0-9_-]{2,63}$/;
 const REASON_CODE_RE = /^[a-z0-9][a-z0-9_-]{1,63}$/;
 const MEMBER_REVIEW_DECISIONS = new Set(["approved", "rejected", "needs_more_information"]);
@@ -677,6 +686,96 @@ function extractServiceRequest(packet) {
     preferredLanguage: String(packet.preferredLanguage || "zh-CN").trim().slice(0, 32) || "zh-CN",
     source: String(packet.source || "gca-service-request-operator").trim().slice(0, 120) || "gca-service-request-operator"
   };
+}
+
+function extractAccountServiceRequest(packet) {
+  if (
+    packet.packetVersion &&
+    packet.packetVersion !== ACCOUNT_SERVICE_REQUEST_VERSION
+  ) {
+    throw new ApiError(
+      `packetVersion must be ${ACCOUNT_SERVICE_REQUEST_VERSION}`
+    );
+  }
+  const acknowledgements =
+    packet.acknowledgements && typeof packet.acknowledgements === "object"
+      ? packet.acknowledgements
+      : {};
+  const statusAccessToken = String(packet.statusAccessToken || "").trim();
+  const clientRequestId = String(packet.clientRequestId || "").trim();
+  const serviceId = String(packet.serviceId || "").trim();
+  const service = CREDIT_SERVICE_CATALOG[serviceId];
+  const requestTitle = String(packet.requestTitle || "").trim().slice(0, 140);
+  const requestSummary = String(packet.requestSummary || "")
+    .trim()
+    .slice(0, 1200);
+  const marketContext = String(packet.marketContext || "").trim().slice(0, 500);
+  const preferredLanguage = String(
+    packet.preferredLanguage || "zh-CN"
+  ).trim();
+
+  if (!isStatusAccessToken(statusAccessToken)) {
+    throw new ApiError(
+      "statusAccessToken must be a valid device status access key",
+      401
+    );
+  }
+  if (!CLIENT_SERVICE_REQUEST_ID_RE.test(clientRequestId)) {
+    throw new ApiError("clientRequestId must be a valid service request id");
+  }
+  if (!service) {
+    throw new ApiError("serviceId is not supported");
+  }
+  if (requestTitle.length < 3) {
+    throw new ApiError("requestTitle must contain at least 3 characters");
+  }
+  if (requestSummary.length < 20) {
+    throw new ApiError("requestSummary must contain at least 20 characters");
+  }
+  if (!["en", "zh-CN"].includes(preferredLanguage)) {
+    throw new ApiError("preferredLanguage must be en or zh-CN");
+  }
+  if (!Boolean(acknowledgements.noSecretsNoCustody)) {
+    throw new ApiError("security boundary acknowledgement is required");
+  }
+  if (!Boolean(acknowledgements.manualReviewOnly)) {
+    throw new ApiError("manual review acknowledgement is required");
+  }
+  if (!Boolean(acknowledgements.noTradingPermission)) {
+    throw new ApiError("no trading permission acknowledgement is required");
+  }
+
+  return {
+    statusAccessToken,
+    clientRequestId,
+    serviceId,
+    serviceName: service.name,
+    requestedCreditHold: service.creditUnit,
+    requestTitle,
+    requestSummary,
+    marketContext,
+    preferredLanguage,
+    source: "gca-member-access-account-service-request"
+  };
+}
+
+function extractAccountServiceRequestStatus(packet) {
+  if (
+    packet.packetVersion &&
+    packet.packetVersion !== ACCOUNT_SERVICE_REQUEST_STATUS_VERSION
+  ) {
+    throw new ApiError(
+      `packetVersion must be ${ACCOUNT_SERVICE_REQUEST_STATUS_VERSION}`
+    );
+  }
+  const statusAccessToken = String(packet.statusAccessToken || "").trim();
+  if (!isStatusAccessToken(statusAccessToken)) {
+    throw new ApiError(
+      "statusAccessToken must be a valid device status access key",
+      401
+    );
+  }
+  return { statusAccessToken };
 }
 
 function extractMemberReview(packet) {
@@ -1384,6 +1483,48 @@ function rowToServiceRequest(row, includeEmail = true) {
     automaticTokenTransfer: Boolean(row.automatic_token_transfer),
     writesWallet: Boolean(row.writes_wallet),
     createsTradingPermission: Boolean(row.creates_trading_permission)
+  };
+}
+
+function serviceRequestNextStep(status) {
+  if (status === "queued_operator_review") {
+    return "The request is queued for manual operator review.";
+  }
+  if (status === "queued_insufficient_credits") {
+    return "The request is queued, but the available credit balance was below the catalog unit at submission.";
+  }
+  if (status === "queued_expired_credit_ledger") {
+    return "The request is queued, but the credit ledger was expired at submission.";
+  }
+  if (status === "queued_missing_credit_ledger") {
+    return "The request is queued, but no account credit ledger was available at submission.";
+  }
+  return "Check this account history for the latest operator-reviewed status.";
+}
+
+function rowToAccountServiceRequest(row) {
+  if (!row) {
+    return null;
+  }
+  return {
+    serviceRequestId: row.service_request_id,
+    packetVersion: ACCOUNT_SERVICE_REQUEST_VERSION,
+    createdAt: row.created_at,
+    status: row.status,
+    serviceId: row.service_id,
+    serviceName: row.service_name,
+    requestedCreditHold: Number(row.requested_credit_hold),
+    remainingCreditsAtRequest:
+      row.remaining_credits_at_request === null ||
+      row.remaining_credits_at_request === undefined
+        ? null
+        : Number(row.remaining_credits_at_request),
+    requestTitle: row.request_title || "",
+    preferredLanguage: row.preferred_language || "zh-CN",
+    operatorReviewRequired: Boolean(row.operator_review_required),
+    creditsReserved: false,
+    creditsDeducted: !Boolean(row.does_not_deduct_credits),
+    nextStep: serviceRequestNextStep(row.status)
   };
 }
 
@@ -2975,12 +3116,12 @@ async function buildAccountStatusPayload(db, accountRow, checkedAt) {
   });
 }
 
-async function submitAccountStatus(request, env, origin) {
-  const db = requireDatabase(env);
-  const packet = await readJsonRequest(request);
-  const statusInput = extractAccountStatus(packet);
-  const tokenHash = await sha256Hex(statusInput.statusAccessToken);
-  const now = nowIso();
+async function authenticateAccountStatusAccess(
+  db,
+  statusAccessToken,
+  checkedAt
+) {
+  const tokenHash = await sha256Hex(statusAccessToken);
   const accountRow = await db
     .prepare(
       `SELECT
@@ -2999,10 +3140,23 @@ async function submitAccountStatus(request, env, origin) {
   if (
     !accountRow ||
     String(accountRow.status_access_revoked_at || "").trim() ||
-    String(accountRow.status_access_expires_at || "") <= now
+    String(accountRow.status_access_expires_at || "") <= checkedAt
   ) {
     throw new ApiError("device status access key is invalid or expired", 401);
   }
+  return accountRow;
+}
+
+async function submitAccountStatus(request, env, origin) {
+  const db = requireDatabase(env);
+  const packet = await readJsonRequest(request);
+  const statusInput = extractAccountStatus(packet);
+  const now = nowIso();
+  const accountRow = await authenticateAccountStatusAccess(
+    db,
+    statusInput.statusAccessToken,
+    now
+  );
 
   const publicStatus = await buildAccountStatusPayload(db, accountRow, now);
 
@@ -3011,6 +3165,247 @@ async function submitAccountStatus(request, env, origin) {
     packetVersion: ACCOUNT_STATUS_VERSION,
     statusAccessExpiresAt: accountRow.status_access_expires_at,
     ...publicStatus
+  }, 200, origin, env);
+}
+
+async function latestAccountCreditLedger(db, accountId) {
+  return db
+    .prepare(
+      "SELECT * FROM gca_credit_ledger WHERE account_id = ?1 ORDER BY activated_at DESC LIMIT 1"
+    )
+    .bind(accountId)
+    .first();
+}
+
+function accountCreditSummary(creditRow) {
+  if (!creditRow) {
+    return null;
+  }
+  return {
+    creditLedgerId: creditRow.credit_ledger_id,
+    remainingCredits: Number(creditRow.remaining_credits || 0),
+    expiresAt: creditRow.expires_at,
+    status: creditRow.status
+  };
+}
+
+function publicCreditServiceCatalog() {
+  return Object.entries(CREDIT_SERVICE_CATALOG).map(
+    ([id, service]) => ({
+      id,
+      name: service.name,
+      creditUnit: service.creditUnit
+    })
+  );
+}
+
+function accountServiceRequestBoundaries() {
+  return {
+    deviceKeyProtected: true,
+    emailReturned: false,
+    accessTokenReturned: false,
+    operatorReviewOnly: true,
+    creditsReserved: false,
+    creditsDeductedOnRequest: false,
+    requiresSignature: false,
+    requiresTransaction: false,
+    automaticTokenTransfer: false,
+    writesWallet: false,
+    createsTradingPermission: false
+  };
+}
+
+async function submitAccountServiceRequest(request, env, origin) {
+  const db = requireDatabase(env);
+  const packet = await readJsonRequest(request);
+  const requestInput = extractAccountServiceRequest(packet);
+  const now = nowIso();
+  const accountRow = await authenticateAccountStatusAccess(
+    db,
+    requestInput.statusAccessToken,
+    now
+  );
+  const serviceRequestId = await stableId(
+    "gca_service_req",
+    accountRow.account_id,
+    requestInput.clientRequestId
+  );
+  const existingRow = await db
+    .prepare(
+      "SELECT * FROM gca_service_requests WHERE service_request_id = ?1 LIMIT 1"
+    )
+    .bind(serviceRequestId)
+    .first();
+
+  if (existingRow) {
+    if (
+      existingRow.account_id !== accountRow.account_id ||
+      existingRow.service_id !== requestInput.serviceId ||
+      String(existingRow.request_title || "") !== requestInput.requestTitle ||
+      String(existingRow.request_summary || "") !== requestInput.requestSummary ||
+      String(existingRow.market_context || "") !== requestInput.marketContext
+    ) {
+      throw new ApiError(
+        "clientRequestId is already assigned to a different request",
+        409
+      );
+    }
+    return jsonResponse({
+      ok: true,
+      packetVersion: ACCOUNT_SERVICE_REQUEST_VERSION,
+      created: false,
+      idempotentReplay: true,
+      serviceRequest: rowToAccountServiceRequest(existingRow),
+      serviceCatalog: publicCreditServiceCatalog(),
+      boundaries: accountServiceRequestBoundaries()
+    }, 200, origin, env);
+  }
+
+  const oneDayAgo = addDaysIso(now, -1);
+  const recentCountRow = await db
+    .prepare(
+      `SELECT COUNT(*) AS request_count
+      FROM gca_service_requests
+      WHERE account_id = ?1 AND created_at >= ?2`
+    )
+    .bind(accountRow.account_id, oneDayAgo)
+    .first();
+  if (
+    Number(recentCountRow && recentCountRow.request_count
+      ? recentCountRow.request_count
+      : 0) >= ACCOUNT_SERVICE_REQUEST_DAILY_LIMIT
+  ) {
+    throw new ApiError(
+      "daily service request limit reached; retry after 24 hours",
+      429
+    );
+  }
+
+  const creditRow = await latestAccountCreditLedger(
+    db,
+    accountRow.account_id
+  );
+  const requestedCreditHold = requestInput.requestedCreditHold;
+  const remainingCreditsAtRequest = creditRow
+    ? Number(creditRow.remaining_credits || 0)
+    : null;
+  let status = "queued_missing_credit_ledger";
+  if (requestedCreditHold === 0) {
+    status = "queued_operator_review";
+  } else if (creditRow && String(creditRow.expires_at || "") <= now) {
+    status = "queued_expired_credit_ledger";
+  } else if (
+    creditRow &&
+    Number.isInteger(remainingCreditsAtRequest) &&
+    remainingCreditsAtRequest >= requestedCreditHold
+  ) {
+    status = "queued_operator_review";
+  } else if (creditRow) {
+    status = "queued_insufficient_credits";
+  }
+
+  await db
+    .prepare(
+      `INSERT OR IGNORE INTO gca_service_requests (
+        service_request_id,
+        account_id,
+        email,
+        email_hash,
+        wallet_address,
+        credit_ledger_id,
+        service_id,
+        service_name,
+        requested_credit_hold,
+        remaining_credits_at_request,
+        request_title,
+        request_summary,
+        market_context,
+        preferred_language,
+        source,
+        status,
+        created_at,
+        operator_review_required,
+        does_not_deduct_credits,
+        requires_signature,
+        requires_transaction,
+        automatic_token_transfer,
+        writes_wallet,
+        creates_trading_permission
+      ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, 1, 1, 0, 0, 0, 0, 0)`
+    )
+    .bind(
+      serviceRequestId,
+      accountRow.account_id,
+      accountRow.email,
+      accountRow.email_hash,
+      accountRow.wallet_address,
+      creditRow ? creditRow.credit_ledger_id : "",
+      requestInput.serviceId,
+      requestInput.serviceName,
+      requestedCreditHold,
+      remainingCreditsAtRequest,
+      requestInput.requestTitle,
+      requestInput.requestSummary,
+      requestInput.marketContext,
+      requestInput.preferredLanguage,
+      requestInput.source,
+      status,
+      now
+    )
+    .run();
+  const serviceRequestRow = await db
+    .prepare(
+      "SELECT * FROM gca_service_requests WHERE service_request_id = ?1 LIMIT 1"
+    )
+    .bind(serviceRequestId)
+    .first();
+
+  return jsonResponse({
+    ok: true,
+    packetVersion: ACCOUNT_SERVICE_REQUEST_VERSION,
+    created: true,
+    idempotentReplay: false,
+    serviceRequest: rowToAccountServiceRequest(serviceRequestRow),
+    creditLedger: accountCreditSummary(creditRow),
+    serviceCatalog: publicCreditServiceCatalog(),
+    boundaries: accountServiceRequestBoundaries()
+  }, 201, origin, env);
+}
+
+async function readAccountServiceRequests(request, env, origin) {
+  const db = requireDatabase(env);
+  const packet = await readJsonRequest(request);
+  const statusInput = extractAccountServiceRequestStatus(packet);
+  const now = nowIso();
+  const accountRow = await authenticateAccountStatusAccess(
+    db,
+    statusInput.statusAccessToken,
+    now
+  );
+  const creditRow = await latestAccountCreditLedger(
+    db,
+    accountRow.account_id
+  );
+  const { results } = await db
+    .prepare(
+      `SELECT *
+      FROM gca_service_requests
+      WHERE account_id = ?1
+      ORDER BY created_at DESC
+      LIMIT ?2`
+    )
+    .bind(accountRow.account_id, ACCOUNT_SERVICE_REQUEST_HISTORY_LIMIT)
+    .all();
+
+  return jsonResponse({
+    ok: true,
+    packetVersion: ACCOUNT_SERVICE_REQUEST_STATUS_VERSION,
+    checkedAt: now,
+    count: results.length,
+    serviceRequests: results.map((row) => rowToAccountServiceRequest(row)),
+    creditLedger: accountCreditSummary(creditRow),
+    serviceCatalog: publicCreditServiceCatalog(),
+    boundaries: accountServiceRequestBoundaries()
   }, 200, origin, env);
 }
 
@@ -3731,6 +4126,13 @@ function accessBoundaries() {
     accountStatusRecoveryReturnsAccountMatch: false,
     accountStatusRecoveryInvalidatesOldDeviceKey: true,
     accountStatusRecoveryChangesAccountOrLedgers: false,
+    accountServiceRequestsEnabled: true,
+    accountServiceRequestMode: "device-key-protected-manual-review",
+    accountServiceRequestDailyLimit: ACCOUNT_SERVICE_REQUEST_DAILY_LIMIT,
+    accountServiceRequestCreditsReserved: false,
+    accountServiceRequestCreditsDeductedOnRequest: false,
+    accountServiceRequestReturnsEmail: false,
+    accountServiceRequestCreatesTradingPermission: false,
     requiresSignature: false,
     requiresTransaction: false,
     asksForPrivateKey: false,
@@ -3769,6 +4171,9 @@ function accessConfig(origin, env) {
     accountStatusRecoveryVersion: ACCOUNT_STATUS_RECOVERY_VERSION,
     creditUsageVersion: CREDIT_USAGE_VERSION,
     serviceRequestVersion: SERVICE_REQUEST_VERSION,
+    accountServiceRequestVersion: ACCOUNT_SERVICE_REQUEST_VERSION,
+    accountServiceRequestStatusVersion:
+      ACCOUNT_SERVICE_REQUEST_STATUS_VERSION,
     memberReviewVersion: MEMBER_REVIEW_VERSION,
     holdingVerificationVersion: HOLDING_VERIFICATION_VERSION,
     memberBenefitTransferVersion: MEMBER_BENEFIT_TRANSFER_VERSION,
@@ -3785,6 +4190,9 @@ function accessConfig(origin, env) {
       accountStatusRecoveryApprovals:
         "/gca/account-status/recovery-approvals",
       accountStatusRecovery: "/gca/account-status/recover",
+      accountServiceRequests: "/gca/account-service-requests",
+      accountServiceRequestStatus:
+        "/gca/account-service-requests/status",
       walletVerifications: "/gca/wallet-verifications",
       creditLedgerAdmin: "/gca/credit-ledger",
       serviceRequestsAdmin: "/gca/service-requests",
@@ -3800,6 +4208,7 @@ function accessConfig(origin, env) {
       rateLimitsStillRequired: true
     },
     thresholds: accessThresholds(),
+    serviceCatalog: publicCreditServiceCatalog(),
     boundaries: accessBoundaries()
   }, 200, origin, env);
 }
@@ -3919,6 +4328,9 @@ function health(origin, env) {
     accountStatusRecoveryVersion: ACCOUNT_STATUS_RECOVERY_VERSION,
     creditUsageVersion: CREDIT_USAGE_VERSION,
     serviceRequestVersion: SERVICE_REQUEST_VERSION,
+    accountServiceRequestVersion: ACCOUNT_SERVICE_REQUEST_VERSION,
+    accountServiceRequestStatusVersion:
+      ACCOUNT_SERVICE_REQUEST_STATUS_VERSION,
     memberReviewVersion: MEMBER_REVIEW_VERSION,
     holdingVerificationVersion: HOLDING_VERIFICATION_VERSION,
     memberBenefitTransferVersion: MEMBER_BENEFIT_TRANSFER_VERSION,
@@ -4028,6 +4440,18 @@ export default {
       if (url.pathname === "/gca/account-status/recover") {
         if (request.method === "POST") {
           return await submitAccountStatusRecovery(request, env, origin);
+        }
+        return jsonResponse({ ok: false, error: "method not allowed" }, 405, origin, env);
+      }
+      if (url.pathname === "/gca/account-service-requests") {
+        if (request.method === "POST") {
+          return await submitAccountServiceRequest(request, env, origin);
+        }
+        return jsonResponse({ ok: false, error: "method not allowed" }, 405, origin, env);
+      }
+      if (url.pathname === "/gca/account-service-requests/status") {
+        if (request.method === "POST") {
+          return await readAccountServiceRequests(request, env, origin);
         }
         return jsonResponse({ ok: false, error: "method not allowed" }, 405, origin, env);
       }

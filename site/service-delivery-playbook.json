@@ -1,9 +1,9 @@
 {
   "schema": "https://gcagochina.com/service-delivery-playbook.json",
   "pageUrl": "https://gcagochina.com/service-delivery-playbook.html",
-  "status": "service-delivery-playbook-v1-published",
+  "status": "service-delivery-playbook-v1-account-request-path-live",
   "playbookId": "service-delivery-playbook-v1",
-  "lastUpdated": "2026-07-27",
+  "lastUpdated": "2026-07-28",
   "projectName": "GCA",
   "conceptExpansion": "Go China Access",
   "module": "GCA AI Quant Access service delivery",
@@ -24,8 +24,8 @@
     },
     {
       "step": "service-request",
-      "status": "local-operator-ready-worker-deploy-pending",
-      "description": "Operator records requested service scope, requested credit hold, service type, and review status in the service request queue."
+      "status": "live-device-key-protected-manual-review",
+      "description": "An authenticated account can submit one catalog service, a non-sensitive scope, and a client request ID through the controlled account UI. The Worker applies the server catalog unit and queues the request for operator review."
     },
     {
       "step": "human-review",
@@ -39,7 +39,7 @@
     },
     {
       "step": "credit-usage-record",
-      "status": "local-operator-ready-worker-deploy-pending",
+      "status": "live-token-protected-operator-only",
       "description": "Credit usage is recorded only after reviewed delivery or accepted delivery, with before/after credit balance and operator notes."
     }
   ],
@@ -54,36 +54,54 @@
       "id": "risk-warning-review",
       "name": "Risk Warning Review",
       "deliveryType": "risk checklist",
-      "defaultCreditUnit": 20
+      "defaultCreditUnit": 10
     },
     {
-      "id": "backtest-lab-summary",
+      "id": "backtest-lab-run",
       "name": "Backtest Lab",
       "deliveryType": "research summary",
-      "defaultCreditUnit": 40
+      "defaultCreditUnit": 20
     },
     {
       "id": "entry-ready-review",
       "name": "ENTRY_READY Review",
       "deliveryType": "signal-readiness review",
-      "defaultCreditUnit": 25
+      "defaultCreditUnit": 15
     },
     {
       "id": "position-size-calculator",
       "name": "Position Size Calculator",
       "deliveryType": "sizing note",
+      "defaultCreditUnit": 5
+    },
+    {
+      "id": "portfolio-risk-map",
+      "name": "Portfolio Risk Map",
+      "deliveryType": "portfolio risk review",
       "defaultCreditUnit": 15
     },
     {
       "id": "risk-control-training",
       "name": "Risk-Control Training",
       "deliveryType": "education session",
-      "defaultCreditUnit": 50
+      "defaultCreditUnit": 10
+    },
+    {
+      "id": "member-research-notes",
+      "name": "Member Research Notes",
+      "deliveryType": "member research review",
+      "defaultCreditUnit": 20
+    },
+    {
+      "id": "support-review-queue",
+      "name": "Support Review Queue",
+      "deliveryType": "member support workflow",
+      "defaultCreditUnit": 0
     }
   ],
   "ledgerBehavior": {
     "serviceRequestLedger": {
-      "status": "local-operator-ready-worker-deploy-pending",
+      "status": "production-live-device-key-create-admin-review",
       "records": [
         "serviceRequestId",
         "serviceId",
@@ -91,11 +109,18 @@
         "status",
         "non-sensitive service scope"
       ],
+      "publicCreatePath": "/gca/account-service-requests",
+      "publicStatusPath": "/gca/account-service-requests/status",
+      "dailyRequestLimit": 5,
+      "serverCatalogAuthoritative": true,
+      "idempotentClientRequestId": true,
       "deductsCredits": false,
+      "reservesCredits": false,
+      "returnsEmailToAccountUi": false,
       "createsTradingPermission": false
     },
     "creditUsageLedger": {
-      "status": "local-operator-ready-worker-deploy-pending",
+      "status": "production-live-token-protected-operator-only",
       "records": [
         "creditUsageId",
         "creditLedgerId",
@@ -115,6 +140,13 @@
     "creditUsageLocalEndpoint": "http://127.0.0.1:8787/gca/credit-usage",
     "serviceRequestWorkerEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/service-requests",
     "creditUsageWorkerEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/credit-usage",
+    "accountServiceRequestWorkerEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/account-service-requests",
+    "accountServiceRequestStatusWorkerEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/account-service-requests/status",
+    "accountServiceRequestVersion": "gca_account_service_request_v1",
+    "accountServiceRequestStatusVersion": "gca_account_service_request_status_v1",
+    "accountServiceRequestDeviceKeyProtected": true,
+    "accountServiceRequestCreditsReserved": false,
+    "accountServiceRequestCreditsDeductedOnSubmission": false,
     "productionRoutesLive": true,
     "workerDryRunPassed": true,
     "d1VisibilityPassed": true,
@@ -122,8 +154,8 @@
     "cloudflareAuthSession": "passed",
     "workerDeployPermission": "passed",
     "code10000Seen": false,
-    "latestReadinessCheckAt": "2026-07-23T17:55:52Z",
-    "latestPublicRouteCheckAt": "2026-07-27T15:15:02Z",
+    "latestReadinessCheckAt": "2026-07-28T06:07:54Z",
+    "latestPublicRouteCheckAt": "2026-07-28T06:07:02Z",
     "pendingRouteAnonymousGetStatus": {
       "/gca/service-requests": 401,
       "/gca/credit-usage": 401
@@ -140,10 +172,10 @@
     ],
     "remoteMigrations": "applied",
     "workerDeploy": "passed",
-    "workerVersionId": "860fd70d-290a-467f-b70b-ed2d1fe7ca76",
+    "workerVersionId": "e0d6f82e-9b6c-4a43-bec6-8447793da8ec",
     "postDeployPublicSmoke": "passed",
     "postDeployAdminSmoke": "passed",
-    "productionRoutesVerifiedAt": "2026-07-27T15:15:12Z",
+    "productionRoutesVerifiedAt": "2026-07-28T06:07:11Z",
     "accountStatusRotationWorkerEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/account-status/rotate",
     "accountStatusRotationVersion": "gca_account_status_rotation_v1",
     "accountStatusRotationLive": true,
@@ -152,6 +184,7 @@
   "releaseBoundaries": [
     "The playbook is public and local operator recording is ready.",
     "Production service-request and credit-usage Worker routes are live and token-protected after all release gates passed.",
+    "Authenticated accounts can submit device-key protected service requests and read a redacted account-scoped history.",
     "Service requests do not deduct credits by themselves.",
     "Credit usage is recorded only after reviewed delivery or accepted delivery.",
     "Member status does not create automatic transfers or trading permission.",
@@ -161,8 +194,9 @@
     "safeClaims": [
       "GCA has published an operator-reviewed service delivery playbook for GCA AI Quant Access workflows.",
       "The workflow covers account intake, read-only wallet verification, service request queueing, manual report delivery, and credit usage records.",
-      "Local operator recording is ready for service requests and credit usage records.",
+      "The controlled account UI can create a device-key protected request and read its redacted account-scoped history.",
       "Production service-request and credit-usage Worker routes are live, token-protected, and verified by public and admin read-only smoke checks.",
+      "The server catalog determines the service credit unit; submission neither reserves nor deducts credits.",
       "The workflow is no-custody, does not request wallet signatures, and does not create automatic trading access."
     ],
     "doNotClaim": [

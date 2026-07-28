@@ -4,21 +4,21 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>GCA Member Access | Go China Access</title>
-    <meta name="description" content="Live bilingual GCA member access UI for email account intake, read-only Base Mainnet GCA balance verification, 100 credits, and GCA Member ledger review.">
+    <meta name="description" content="Live bilingual GCA member access UI for account intake, read-only Base Mainnet balance checks, credits, member review, and device-key protected service requests.">
     <link rel="canonical" href="https://gcagochina.com/gca/member-access/">
     <link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">
     <link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="GCA | Go China Access">
     <meta property="og:title" content="GCA Member Access | Go China Access">
-    <meta property="og:description" content="Live bilingual GCA member access UI for email account intake, read-only Base Mainnet GCA balance verification, 100 credits, and GCA Member ledger review.">
+    <meta property="og:description" content="Live bilingual GCA member access UI for read-only wallet checks, credits, member review, and device-key protected service requests.">
     <meta property="og:url" content="https://gcagochina.com/gca/member-access/">
     <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="GCA Member Access | Go China Access">
-    <meta name="twitter:description" content="Live bilingual GCA member access UI for email account intake, read-only Base Mainnet GCA balance verification, 100 credits, and GCA Member ledger review.">
+    <meta name="twitter:description" content="Live bilingual GCA member access UI for read-only wallet checks, credits, member review, and device-key protected service requests.">
     <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
     <style>
       :root {
@@ -237,6 +237,7 @@
       }
 
       input,
+      select,
       textarea {
         width: 100%;
         border: 1px solid var(--line);
@@ -257,6 +258,51 @@
 
       textarea[readonly] {
         background: var(--soft);
+      }
+
+      .service-form textarea {
+        min-height: 112px;
+        font-family: inherit;
+        font-size: 14px;
+      }
+
+      .request-list {
+        display: grid;
+        gap: 0;
+        margin-top: 14px;
+      }
+
+      .request-item {
+        display: grid;
+        gap: 5px;
+        border-top: 1px solid var(--line);
+        padding: 14px 0;
+      }
+
+      .request-item:first-child {
+        border-top: 0;
+        padding-top: 0;
+      }
+
+      .request-item-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 14px;
+      }
+
+      .request-status {
+        color: var(--green);
+        font-size: 12px;
+        font-weight: 850;
+        overflow-wrap: anywhere;
+        text-align: right;
+      }
+
+      .request-meta {
+        color: var(--muted);
+        font-size: 12px;
+        overflow-wrap: anywhere;
       }
 
       input[type="checkbox"] {
@@ -411,6 +457,14 @@
           flex-direction: column;
         }
 
+        .request-item-head {
+          display: grid;
+        }
+
+        .request-status {
+          text-align: left;
+        }
+
         nav {
           align-items: flex-start;
           flex-direction: column;
@@ -467,8 +521,11 @@
         <p class="lead zh-note">10,000 GCA 会员权益不是自动领取。通过 GCA Member 记录后，仍需要支持团队人工审核和储备钱包处理。</p>
         <p class="lead">After account creation, this browser can use a high-entropy device key to refresh redacted account, credits, member-review, and benefit-transfer status. The API stores only the key hash and never returns email or the key.</p>
         <p class="lead zh-note">账户创建后，本浏览器可使用高强度设备密钥刷新脱敏的账户、积分、会员审核和权益转账状态。后台只保存密钥哈希，不会返回邮箱或密钥明文。</p>
+        <p class="lead">The same device key can submit a service request to the manual review queue and read that account's request history. Submission checks the catalog unit but does not reserve or deduct credits.</p>
+        <p class="lead zh-note">同一设备密钥可提交服务申请并查看本账户申请历史。提交时会核对目录积分，但不会预占或自动扣除 credits。</p>
         <div class="actions">
           <a class="button primary" href="#accountForm">Open Account Form / 打开表单</a>
+          <a class="button" href="#accountServiceRequests">Request a Service / 提交服务申请</a>
           <a class="button" href="../../buy.html">Buy GCA First</a>
           <a class="button" href="../../zh-buy.html">中文购买说明</a>
           <a class="button" href="../../register.html">Email Registration</a>
@@ -652,6 +709,63 @@
         </div>
       </section>
 
+      <section class="section two" id="accountServiceRequests" aria-label="Account service requests">
+        <div class="panel service-form">
+          <h2>Request a Service <span class="zh">提交服务申请</span></h2>
+          <p class="note">Use the device key created with this account. The server sets the catalog unit, checks the current credit ledger, and queues manual review without reserving or deducting credits.</p>
+          <p class="note zh-note">请使用本账户的设备密钥。服务器会确定目录积分并核对当前账本，只加入人工审核队列，不预占也不自动扣除 credits。</p>
+          <div class="field">
+            <label for="accountServiceId">Service <span class="zh">服务类型</span></label>
+            <select id="accountServiceId"></select>
+          </div>
+          <div class="field">
+            <label for="accountServiceTitle">Request Title <span class="zh">申请标题</span></label>
+            <input id="accountServiceTitle" type="text" maxlength="140" placeholder="Review my completed trade sample">
+          </div>
+          <div class="field">
+            <label for="accountServiceSummary">Review Scope <span class="zh">需要审核的内容</span></label>
+            <textarea id="accountServiceSummary" maxlength="1200" placeholder="Describe the completed sample, question, and expected review output. Do not include secrets. / 说明样本、问题和希望获得的审核结果，不要填写敏感信息。"></textarea>
+          </div>
+          <div class="field">
+            <label for="accountServiceContext">Market Context <span class="zh">市场背景（可选）</span></label>
+            <textarea id="accountServiceContext" maxlength="500" placeholder="Market, timeframe, completed-trade context, or public transaction reference."></textarea>
+          </div>
+          <div class="field">
+            <label for="accountServiceLanguage">Preferred Language <span class="zh">首选语言</span></label>
+            <select id="accountServiceLanguage">
+              <option value="zh-CN">中文</option>
+              <option value="en">English</option>
+            </select>
+          </div>
+          <div class="field bot-field" aria-hidden="true">
+            <label for="accountServiceWebsite">Website</label>
+            <input id="accountServiceWebsite" type="text" autocomplete="off" tabindex="-1">
+          </div>
+          <div class="field">
+            <label><input id="accountServiceBoundary" type="checkbox"> I understand this is a manual review request, will not submit secrets, and am not granting custody, wallet access, trading permission, or withdrawal permission. <span class="zh">我理解这是人工审核申请，不会提交敏感信息，也不会授予托管、钱包访问、交易权限或提现权限。</span></label>
+          </div>
+          <div class="actions">
+            <button class="button primary" type="button" id="submitServiceRequest" disabled>Submit to Review Queue / 提交审核队列</button>
+            <a class="button" href="../../credits.html">Open Service Catalog / 查看服务目录</a>
+          </div>
+          <p class="note" id="serviceCatalogNote">Create or recover device access before submitting a service request. / 请先创建或恢复设备访问。</p>
+        </div>
+
+        <div class="panel">
+          <h2>Request History <span class="zh">申请历史</span></h2>
+          <p class="note">This read returns only this account's service, title, status, time, and credit check. It does not return email, device keys, wallet secrets, or the full request body.</p>
+          <p class="note zh-note">这里只返回本账户的服务、标题、状态、时间和积分核对结果，不返回邮箱、设备密钥、钱包敏感信息或完整申请正文。</p>
+          <div class="actions">
+            <button class="button" type="button" id="refreshServiceRequests" disabled>Refresh History / 刷新历史</button>
+          </div>
+          <div id="serviceRequestResult" class="result" style="margin-top:14px">
+            <strong>Device access required / 需要设备访问</strong>
+            <p class="note">Create an account or recover this device key before reading request history.</p>
+          </div>
+          <div class="request-list" id="serviceRequestList" aria-live="polite"></div>
+        </div>
+      </section>
+
       <section class="section two" aria-label="Access boundaries">
         <div class="panel">
           <h2>Thresholds <span class="zh">门槛</span></h2>
@@ -671,6 +785,7 @@
             <li>This UI does not request custody, approvals, signatures, private keys, seed phrases, exchange API secrets, or withdrawal permission.</li>
             <li>Wallet verification is a backend read-only <code>eth_call</code> against the official GCA contract on Base Mainnet.</li>
             <li>100 credits and GCA Member status are utility ledger records, not cash, income, reimbursement, trading permission, or risk-control bypass.</li>
+            <li>Account service requests require the device key, enter a manual review queue, and do not reserve or deduct credits at submission.</li>
             <li>The 10,000 GCA member benefit remains pending manual reserve-wallet transfer review after eligibility is recorded.</li>
             <li>中文用户只需要提交公开资料：邮箱、Base 钱包地址、公开交易哈希和持有开始日期；不要提交任何敏感资料。</li>
           </ul>
@@ -688,6 +803,8 @@
           <div class="row"><span>Device key rotation endpoint</span><strong>POST /gca/account-status/rotate</strong></div>
           <div class="row"><span>Device recovery request endpoint</span><strong>POST /gca/account-status/recovery-requests</strong></div>
           <div class="row"><span>Device recovery completion endpoint</span><strong>POST /gca/account-status/recover</strong></div>
+          <div class="row"><span>Account service request endpoint</span><strong>POST /gca/account-service-requests</strong></div>
+          <div class="row"><span>Account service history endpoint</span><strong>POST /gca/account-service-requests/status</strong></div>
           <div class="row"><span>Wallet verification endpoint</span><strong>POST /gca/wallet-verifications</strong></div>
           <div class="row"><span>Ledger schema page</span><strong><a href="../../member-ledger.html">member-ledger.html</a></strong></div>
           <div class="row"><span>Support page</span><strong><a href="../../support.html">support.html</a></strong></div>
@@ -696,7 +813,7 @@
     </main>
 
     <footer>
-      <div class="shell">GCA member access is live for account intake, read-only wallet verification, redacted device-key status refresh, safe key rotation, registered-email recovery, credits ledger, and GCA Member ledger records. Token transfers remain manual review only. 中文用户可在本页提交邮箱、Base 钱包和公开交易资料，并刷新、轮换或人工恢复设备访问。</div>
+      <div class="shell">GCA member access is live for account intake, read-only wallet verification, redacted device-key status, recovery, credits, membership, and manual service-request queues. Service submission does not reserve or deduct credits; token transfers remain manual review only. 中文用户可在本页管理账户、刷新状态并提交人工服务申请。</div>
     </footer>
 
     <script>
@@ -741,14 +858,40 @@
       const recoveryCredential = document.getElementById("recoveryCredential");
       const completeRecovery = document.getElementById("completeRecovery");
       const clearRecoveryDraft = document.getElementById("clearRecoveryDraft");
+      const accountServiceId = document.getElementById("accountServiceId");
+      const accountServiceTitle = document.getElementById("accountServiceTitle");
+      const accountServiceSummary = document.getElementById("accountServiceSummary");
+      const accountServiceContext = document.getElementById("accountServiceContext");
+      const accountServiceLanguage = document.getElementById("accountServiceLanguage");
+      const accountServiceWebsite = document.getElementById("accountServiceWebsite");
+      const accountServiceBoundary = document.getElementById("accountServiceBoundary");
+      const submitServiceRequest = document.getElementById("submitServiceRequest");
+      const refreshServiceRequests = document.getElementById("refreshServiceRequests");
+      const serviceCatalogNote = document.getElementById("serviceCatalogNote");
+      const serviceRequestResult = document.getElementById("serviceRequestResult");
+      const serviceRequestList = document.getElementById("serviceRequestList");
       const SNAPSHOT_KEY = "gca_member_access_snapshot_v1";
       const STATUS_ACCESS_KEY = "gca_member_status_access_v1";
       const RECOVERY_DRAFT_KEY = "gca_account_status_recovery_v1";
       const SNAPSHOT_MAX_AGE_MS = 30 * 24 * 60 * 60 * 1000;
       const PENDING_STATUS_ACCESS_MAX_AGE_MS = 30 * 24 * 60 * 60 * 1000;
       const RECOVERY_DRAFT_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;
+      const FALLBACK_SERVICE_CATALOG = [
+        { id: "liquidation-replay-report", name: "Liquidation Replay", creditUnit: 30 },
+        { id: "risk-warning-review", name: "Risk Warning Review", creditUnit: 10 },
+        { id: "backtest-lab-run", name: "Backtest Lab", creditUnit: 20 },
+        { id: "entry-ready-review", name: "ENTRY_READY Review", creditUnit: 15 },
+        { id: "position-size-calculator", name: "Position Size Calculator", creditUnit: 5 },
+        { id: "portfolio-risk-map", name: "Portfolio Risk Map", creditUnit: 15 },
+        { id: "risk-control-training", name: "Risk-Control Training", creditUnit: 10 },
+        { id: "member-research-notes", name: "Member Research Notes", creditUnit: 20 },
+        { id: "support-review-queue", name: "Support Review Queue", creditUnit: 0 }
+      ];
       let latestAccessResponse = null;
       let sessionStatusAccess = null;
+      let serviceCatalog = FALLBACK_SERVICE_CATALOG;
+      let pendingServiceClientId = "";
+      let pendingServiceDraftSignature = "";
 
       function isWalletAddress(value) {
         return /^0x[a-fA-F0-9]{40}$/.test(String(value || "").trim());
@@ -767,6 +910,19 @@
           .replace(/\//g, "_")
           .replace(/=+$/g, "");
         return `gca_status_${encoded}`;
+      }
+
+      function newServiceClientRequestId() {
+        const bytes = new Uint8Array(16);
+        window.crypto.getRandomValues(bytes);
+        const binary = Array.from(bytes, (byte) =>
+          String.fromCharCode(byte)
+        ).join("");
+        const encoded = window.btoa(binary)
+          .replace(/\+/g, "-")
+          .replace(/\//g, "_")
+          .replace(/=+$/g, "");
+        return `gca_client_req_${encoded}`;
       }
 
       function isRecoveryCredential(value) {
@@ -962,9 +1118,12 @@
         const record = loadStatusAccess();
         const available = Boolean(record);
         const pendingRotation = pendingStatusAccessRotation(record);
+        const serviceAccessReady = available && !pendingRotation;
         refreshStatus.hidden = !available;
         rotateStatusKey.hidden = !available;
         forgetDevice.hidden = !available;
+        submitServiceRequest.disabled = !serviceAccessReady;
+        refreshServiceRequests.disabled = !serviceAccessReady;
         rotateStatusKey.textContent = pendingRotation
           ? "Retry Key Rotation / 重试密钥轮换"
           : "Rotate Device Key / 更换设备密钥";
@@ -973,6 +1132,11 @@
           : available
           ? `Device status access is ready${record.expiresAt ? ` until ${record.expiresAt}` : ""}. The key is not included in review packets or API responses.`
           : "Device status access is created only after a successful account submission. If the device key is lost, contact official support from the registered email.";
+        serviceCatalogNote.textContent = pendingRotation
+          ? "Complete or retry device-key rotation before submitting or reading service requests. / 请先完成或重试设备密钥轮换。"
+          : serviceAccessReady
+            ? selectedServiceSummary()
+            : "Create or recover device access before submitting a service request. / 请先创建或恢复设备访问。";
         renderRecoveryDraft();
       }
 
@@ -985,6 +1149,121 @@
         body.className = "note";
         body.textContent = message;
         target.append(heading, body);
+      }
+
+      function serviceById(serviceId) {
+        return serviceCatalog.find((service) => service.id === serviceId) || null;
+      }
+
+      function renderServiceCatalog(nextCatalog) {
+        const normalized = Array.isArray(nextCatalog)
+          ? nextCatalog.filter((service) =>
+              service &&
+              /^[a-z0-9-]{3,64}$/.test(String(service.id || "")) &&
+              String(service.name || "").trim() &&
+              Number.isInteger(Number(service.creditUnit)) &&
+              Number(service.creditUnit) >= 0 &&
+              Number(service.creditUnit) <= 100
+            ).map((service) => ({
+              id: String(service.id),
+              name: String(service.name).trim(),
+              creditUnit: Number(service.creditUnit)
+            }))
+          : [];
+        if (normalized.length) serviceCatalog = normalized;
+        const previous = accountServiceId.value;
+        accountServiceId.textContent = "";
+        for (const service of serviceCatalog) {
+          const option = document.createElement("option");
+          option.value = service.id;
+          option.textContent = `${service.name} · ${service.creditUnit} credits`;
+          accountServiceId.append(option);
+        }
+        if (serviceById(previous)) accountServiceId.value = previous;
+        const statusAccess = loadStatusAccess();
+        if (statusAccess && !pendingStatusAccessRotation(statusAccess)) {
+          serviceCatalogNote.textContent = selectedServiceSummary();
+        }
+      }
+
+      function currentCreditsRemaining() {
+        const credit = latestAccessResponse && latestAccessResponse.creditLedger
+          ? latestAccessResponse.creditLedger
+          : null;
+        if (credit && Number.isInteger(Number(credit.remainingCredits))) {
+          return Number(credit.remainingCredits);
+        }
+        try {
+          const snapshot = JSON.parse(
+            window.localStorage.getItem(SNAPSHOT_KEY) || "null"
+          );
+          return snapshot && Number.isInteger(Number(snapshot.remainingCredits))
+            ? Number(snapshot.remainingCredits)
+            : null;
+        } catch (error) {
+          return null;
+        }
+      }
+
+      function selectedServiceSummary() {
+        const service = serviceById(accountServiceId.value);
+        if (!service) {
+          return "Service catalog unavailable. / 服务目录暂不可用。";
+        }
+        const remaining = currentCreditsRemaining();
+        const balanceText = remaining === null
+          ? "refresh account status to check credits / 刷新账户状态以核对积分"
+          : `${remaining} credits currently recorded / 当前记录 ${remaining} credits`;
+        return `${service.name}: ${service.creditUnit} credits · ${balanceText}. Submission does not reserve or deduct credits. / 提交不会预占或扣除积分。`;
+      }
+
+      function renderServiceRequestHistory(payload) {
+        if (payload && Array.isArray(payload.serviceCatalog)) {
+          renderServiceCatalog(payload.serviceCatalog);
+        }
+        const requests = payload && Array.isArray(payload.serviceRequests)
+          ? payload.serviceRequests
+          : [];
+        serviceRequestList.textContent = "";
+        if (!requests.length) {
+          renderResult(
+            serviceRequestResult,
+            "",
+            "No requests yet / 暂无申请",
+            "This account has no service request history. Submitting a request will create a manual-review queue record. / 本账户暂无服务申请；提交后会创建人工审核排队记录。"
+          );
+          return;
+        }
+        renderResult(
+          serviceRequestResult,
+          "good",
+          `${requests.length} request${requests.length === 1 ? "" : "s"} found / 找到 ${requests.length} 条申请`,
+          "History is limited to this device-key account and does not return email or the full request body. / 历史仅限本设备密钥对应账户，不返回邮箱或完整申请正文。"
+        );
+        for (const request of requests) {
+          const item = document.createElement("article");
+          item.className = "request-item";
+          const head = document.createElement("div");
+          head.className = "request-item-head";
+          const title = document.createElement("strong");
+          title.textContent = request.requestTitle || request.serviceName || "Service request";
+          const status = document.createElement("span");
+          status.className = "request-status";
+          status.textContent = String(request.status || "queued");
+          head.append(title, status);
+          const service = document.createElement("span");
+          service.className = "request-meta";
+          service.textContent = `${request.serviceName || request.serviceId} · ${Number(request.requestedCreditHold || 0)} credits · available at submission: ${request.remainingCreditsAtRequest === null || request.remainingCreditsAtRequest === undefined ? "not recorded" : request.remainingCreditsAtRequest}`;
+          const created = document.createElement("span");
+          created.className = "request-meta";
+          const createdDate = new Date(request.createdAt);
+          created.textContent = `${request.serviceRequestId || ""} · ${Number.isNaN(createdDate.getTime()) ? request.createdAt || "" : createdDate.toLocaleString()}`;
+          const next = document.createElement("span");
+          next.className = "request-meta";
+          next.textContent = request.nextStep || "Manual review pending.";
+          item.append(head, service, created, next);
+          serviceRequestList.append(item);
+        }
       }
 
       function renderLedgerFacts(rows) {
@@ -1199,6 +1478,83 @@
         };
       }
 
+      function accountServiceRequestPayload(statusAccessToken) {
+        if (!isStatusAccessToken(statusAccessToken)) {
+          throw new Error(
+            "A valid device key is required. 需要有效的设备密钥。"
+          );
+        }
+        if (!serviceById(accountServiceId.value)) {
+          throw new Error("Choose a valid service. 请选择有效服务。");
+        }
+        if (accountServiceTitle.value.trim().length < 3) {
+          throw new Error(
+            "Add a request title with at least 3 characters. 申请标题至少需要 3 个字符。"
+          );
+        }
+        if (accountServiceSummary.value.trim().length < 20) {
+          throw new Error(
+            "Describe the review scope in at least 20 characters. 请至少用 20 个字符说明审核需求。"
+          );
+        }
+        if (!accountServiceBoundary.checked) {
+          throw new Error(
+            "Accept the manual-review and security boundary. 请确认人工审核和安全边界。"
+          );
+        }
+        const draftSignature = JSON.stringify([
+          accountServiceId.value,
+          accountServiceTitle.value.trim(),
+          accountServiceSummary.value.trim(),
+          accountServiceContext.value.trim(),
+          accountServiceLanguage.value
+        ]);
+        if (
+          !pendingServiceClientId ||
+          pendingServiceDraftSignature !== draftSignature
+        ) {
+          pendingServiceClientId = newServiceClientRequestId();
+          pendingServiceDraftSignature = draftSignature;
+        }
+        return {
+          packetVersion: "gca_account_service_request_v1",
+          statusAccessToken,
+          clientRequestId: pendingServiceClientId,
+          serviceId: accountServiceId.value,
+          requestTitle: accountServiceTitle.value.trim(),
+          requestSummary: accountServiceSummary.value.trim(),
+          marketContext: accountServiceContext.value.trim(),
+          preferredLanguage: accountServiceLanguage.value,
+          website: accountServiceWebsite.value.trim(),
+          acknowledgements: {
+            noSecretsNoCustody: true,
+            manualReviewOnly: true,
+            noTradingPermission: true
+          }
+        };
+      }
+
+      async function readAccountServiceRequestHistory(statusAccessToken) {
+        return postJson("/gca/account-service-requests/status", {
+          packetVersion: "gca_account_service_request_status_v1",
+          statusAccessToken
+        });
+      }
+
+      async function loadServiceCatalogConfig() {
+        try {
+          const response = await fetch(`${API_BASE}/gca/access-config`, {
+            headers: { accept: "application/json" }
+          });
+          const payload = await response.json();
+          if (response.ok && payload.ok && Array.isArray(payload.serviceCatalog)) {
+            renderServiceCatalog(payload.serviceCatalog);
+          }
+        } catch (error) {
+          // The embedded catalog keeps the form usable when config is unavailable.
+        }
+      }
+
       function validateRecoveryIdentity() {
         const cleanEmail = email.value.trim().toLowerCase();
         const cleanWallet = walletAddress.value.trim().toLowerCase();
@@ -1401,6 +1757,124 @@
           renderResult(balanceResult, "warn", "Status refresh failed / 状态刷新失败", `${message} If the device key is invalid or expired, contact ${SUPPORT_EMAIL} from the registered email. 如果设备密钥无效或已过期，请使用注册邮箱联系 ${SUPPORT_EMAIL}。`);
         } finally {
           refreshStatus.disabled = false;
+        }
+      });
+
+      submitServiceRequest.addEventListener("click", async () => {
+        const statusAccess = loadStatusAccess();
+        if (
+          !statusAccess ||
+          pendingStatusAccessRotation(statusAccess)
+        ) {
+          updateStatusAccessControls();
+          renderResult(
+            serviceRequestResult,
+            "warn",
+            "Device access unavailable / 设备访问不可用",
+            "Create or recover device access, and finish any pending key rotation before submitting. / 请先创建或恢复设备访问，并完成待处理的密钥轮换。"
+          );
+          return;
+        }
+        submitServiceRequest.disabled = true;
+        refreshServiceRequests.disabled = true;
+        renderResult(
+          serviceRequestResult,
+          "",
+          "Submitting service request / 正在提交服务申请",
+          "The server is checking this account and credit ledger, then writing a manual-review queue record. No credits are reserved or deducted. / 服务器正在核对账户和积分账本并写入人工审核队列，不会预占或扣除积分。"
+        );
+        try {
+          const payload = await postJson(
+            "/gca/account-service-requests",
+            accountServiceRequestPayload(statusAccess.token)
+          );
+          pendingServiceClientId = "";
+          pendingServiceDraftSignature = "";
+          if (Array.isArray(payload.serviceCatalog)) {
+            renderServiceCatalog(payload.serviceCatalog);
+          }
+          const request = payload.serviceRequest || {};
+          const className = request.status === "queued_operator_review"
+            ? "good"
+            : "warn";
+          renderResult(
+            serviceRequestResult,
+            className,
+            payload.idempotentReplay
+              ? "Existing request restored / 已恢复原申请"
+              : "Request queued / 申请已排队",
+            `${request.serviceRequestId || ""} · ${request.nextStep || "Manual review pending."} No credits were reserved or deducted. / 未预占或扣除积分。`
+          );
+          accountServiceTitle.value = "";
+          accountServiceSummary.value = "";
+          accountServiceContext.value = "";
+          accountServiceBoundary.checked = false;
+          try {
+            const history = await readAccountServiceRequestHistory(
+              statusAccess.token
+            );
+            renderServiceRequestHistory(history);
+          } catch (historyError) {
+            renderServiceRequestHistory({
+              serviceRequests: [request],
+              serviceCatalog: payload.serviceCatalog || serviceCatalog
+            });
+          }
+        } catch (error) {
+          const message = error && error.message
+            ? error.message
+            : "Service request submission failed.";
+          renderResult(
+            serviceRequestResult,
+            "warn",
+            "Request needs attention / 申请需要处理",
+            `${message} Retry without changing the form to reuse the same request ID. / 如需重试，请不要修改表单，以复用同一请求编号。`
+          );
+        } finally {
+          updateStatusAccessControls();
+        }
+      });
+
+      refreshServiceRequests.addEventListener("click", async () => {
+        const statusAccess = loadStatusAccess();
+        if (
+          !statusAccess ||
+          pendingStatusAccessRotation(statusAccess)
+        ) {
+          updateStatusAccessControls();
+          renderResult(
+            serviceRequestResult,
+            "warn",
+            "Device access unavailable / 设备访问不可用",
+            "Create or recover device access, and finish any pending key rotation before reading history. / 请先创建或恢复设备访问，并完成待处理的密钥轮换。"
+          );
+          return;
+        }
+        submitServiceRequest.disabled = true;
+        refreshServiceRequests.disabled = true;
+        renderResult(
+          serviceRequestResult,
+          "",
+          "Refreshing request history / 正在刷新申请历史",
+          "Reading only this device-key account's redacted queue records. / 正在读取本设备密钥账户的脱敏队列记录。"
+        );
+        try {
+          const payload = await readAccountServiceRequestHistory(
+            statusAccess.token
+          );
+          renderServiceRequestHistory(payload);
+        } catch (error) {
+          const message = error && error.message
+            ? error.message
+            : "Service request history failed.";
+          renderResult(
+            serviceRequestResult,
+            "warn",
+            "History refresh failed / 历史刷新失败",
+            message
+          );
+        } finally {
+          updateStatusAccessControls();
         }
       });
 
@@ -1666,9 +2140,18 @@
         }
         sessionStatusAccess = null;
         savedSnapshot.hidden = true;
+        serviceRequestList.textContent = "";
         recoveryBlock.hidden = false;
         updateStatusAccessControls();
         renderResult(balanceResult, "warn", "Device forgotten / 已忘记此设备", `The browser key was removed. Contact ${SUPPORT_EMAIL} from the registered email before trying to update this account. 浏览器密钥已删除；再次更新账户前，请使用注册邮箱联系 ${SUPPORT_EMAIL}。`);
+        renderResult(serviceRequestResult, "warn", "Device forgotten / 已忘记此设备", "Service request history now requires device access recovery. / 服务申请历史现在需要恢复设备访问后才能读取。");
+      });
+
+      accountServiceId.addEventListener("change", () => {
+        const statusAccess = loadStatusAccess();
+        if (statusAccess && !pendingStatusAccessRotation(statusAccess)) {
+          serviceCatalogNote.textContent = selectedServiceSummary();
+        }
       });
 
       [displayName, email, walletAddress, holdingStartDate, evidenceTxHash].forEach((field) => {
@@ -1676,8 +2159,10 @@
         field.addEventListener("change", updateReviewPacket);
       });
 
+      renderServiceCatalog(FALLBACK_SERVICE_CATALOG);
       restoreSnapshot();
       updateReviewPacket();
+      loadServiceCatalogConfig();
     </script>
   </body>
 </html>

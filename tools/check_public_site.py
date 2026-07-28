@@ -217,10 +217,10 @@ FORBIDDEN_PUBLIC_CLAIM_PATTERNS = [
     "对倒",
 ]
 LEGACY_PERSONAL_GMAIL = "cxy070800@gmail.com"
-PENDING_WORKER_READINESS_AT = "2026-07-23T17:55:52Z"
-PENDING_WORKER_PUBLIC_ROUTE_AT = "2026-07-27T15:15:02Z"
-PENDING_WORKER_ADMIN_ROUTE_AT = "2026-07-27T15:15:12Z"
-PENDING_WORKER_VERSION_ID = "860fd70d-290a-467f-b70b-ed2d1fe7ca76"
+PENDING_WORKER_READINESS_AT = "2026-07-28T06:07:54Z"
+PENDING_WORKER_PUBLIC_ROUTE_AT = "2026-07-28T06:07:02Z"
+PENDING_WORKER_ADMIN_ROUTE_AT = "2026-07-28T06:07:11Z"
+PENDING_WORKER_VERSION_ID = "e0d6f82e-9b6c-4a43-bec6-8447793da8ec"
 PENDING_WORKER_BLOCKED_BY = None
 MEMBER_BENEFIT_EVIDENCE_WORKER_VERSION_ID = "510315f5-8db3-4e08-b574-6e14b618aed5"
 MEMBER_BENEFIT_EVIDENCE_PUBLIC_SMOKE_AT = "2026-07-27T09:37:54Z"
@@ -3655,8 +3655,8 @@ def validate_zh_api_status_page(text: str) -> None:
     for expected in (
         "GCA 中文 API 状态",
         "中文 API 状态 / 浏览器实时只读检查",
-        "2026-07-27T15:15:02Z",
-        "2026-07-27T15:15:12Z",
+        "2026-07-28T06:07:02Z",
+        "2026-07-28T06:07:11Z",
         "最新检查",
         "正在本浏览器检查",
         "邮箱注册和邮箱退订接口",
@@ -3693,7 +3693,7 @@ def validate_zh_api_status_page(text: str) -> None:
         "tools/record_cloudflare_member_benefit_transfer.py",
         "匿名读取返回 HTTP 401",
         "部署权限检查",
-        "最新公网和管理员只读 smoke 检查于 2026-07-27 UTC 通过",
+        "最新 Worker 部署及公网和管理员只读 smoke 检查于 2026-07-28 UTC 通过",
         "Cloudflare 账号认证、D1 可见性和 Workers 发布权限",
         "authRecovery.status",
         "authRecovery.safeNextActions",
@@ -6080,7 +6080,7 @@ def validate_roadmap_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong status")
     if payload.get("currentStage") != PRODUCT_STAGE:
         raise SiteCheckError(f"{label}: wrong currentStage")
-    if payload.get("lastUpdated") != "2026-07-27":
+    if payload.get("lastUpdated") != "2026-07-28":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
@@ -7651,12 +7651,13 @@ def validate_service_delivery_playbook_page(text: str) -> None:
         "Worker Routes Handoff",
         "worker-routes-handoff.html",
         "Production Worker routes",
-        "Cloudflare permissions",
-        "deploy passed on 2026-07-23",
+        "device-key protected catalog requests",
+        "device-key protected catalog requests",
+        "does not reserve or deduct credits",
         "Both Worker routes return HTTP 401",
         "Copy-Ready Public Summary",
         "Service Delivery References",
-        "production service-request and credit-usage Worker routes are live and token-protected",
+        "Authenticated accounts can submit catalog requests and read redacted history",
         "not automated trading",
         "no-custody",
         "no automatic trading access",
@@ -7679,11 +7680,11 @@ def validate_service_delivery_playbook_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != SERVICE_DELIVERY_PLAYBOOK_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
-    if payload.get("status") != "service-delivery-playbook-v1-published":
+    if payload.get("status") != "service-delivery-playbook-v1-account-request-path-live":
         raise SiteCheckError(f"{label}: wrong status")
     if payload.get("playbookId") != "service-delivery-playbook-v1":
         raise SiteCheckError(f"{label}: wrong playbookId")
-    if payload.get("lastUpdated") != "2026-07-27":
+    if payload.get("lastUpdated") != "2026-07-28":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
@@ -7820,7 +7821,8 @@ def validate_worker_routes_handoff_page(text: str) -> None:
         "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes",
         "Stop Conditions",
         "Copy-Ready Status Summary",
-        "operator-only, token-protected",
+        "device-key protected manual-review queueing",
+        "Anonymous operator-ledger reads return HTTP 401",
         "does not request wallet signatures",
         "does not create trading permission",
         WORKER_ROUTES_HANDOFF_PAGE_URL,
@@ -7848,7 +7850,7 @@ def validate_worker_routes_handoff_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong status")
     if payload.get("handoffId") != "worker-routes-handoff-v1":
         raise SiteCheckError(f"{label}: wrong handoffId")
-    if payload.get("lastUpdated") != "2026-07-27":
+    if payload.get("lastUpdated") != "2026-07-28":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
@@ -9089,7 +9091,7 @@ def validate_operations_page(text: str) -> None:
     assert_contains(text, "gca/member-access/", label)
     for forbidden in ("Platform-Only Evidence Path", "Data Room", 'href="data.html"'):
         assert_not_contains(text, forbidden, label)
-    assert_contains(text, "device-key account status operations live", label)
+    assert_contains(text, "device-key account service request operations live", label)
     assert_contains(text, "account intake", label)
     assert_contains(text, "not a public ledger browser", label)
     assert_contains(text, "Email Registration Ops Pipeline", label)
@@ -9191,15 +9193,15 @@ def validate_operations_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != OPERATIONS_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
-    if payload.get("status") != "public-access-operations-device-status-live":
+    if payload.get("status") != "public-access-operations-account-service-requests-live":
         raise SiteCheckError(f"{label}: wrong status")
-    if payload.get("lastUpdated") != "2026-07-27":
+    if payload.get("lastUpdated") != "2026-07-28":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
     if payload.get("contractAddress") != MAINNET_ADDRESS:
         raise SiteCheckError(f"{label}: wrong contractAddress")
-    if state.get("currentStage") != "device-key-account-status-operations-live":
+    if state.get("currentStage") != "device-key-account-service-request-operations-live":
         raise SiteCheckError(f"{label}: wrong currentStage")
     if state.get("publicRunbookOnly") is not False:
         raise SiteCheckError(f"{label}: publicRunbookOnly must be false")
@@ -9679,9 +9681,9 @@ def validate_access_api_page(text: str) -> None:
         assert_not_contains(text, forbidden, label)
     assert_contains(text, "Review Queue", label)
     assert_contains(text, "Operations Runbook", label)
-    assert_contains(text, "device-key account status API live", label)
-    assert_contains(text, "Email + member access + redacted status live", label)
-    assert_contains(text, "member access, redacted device-key account status, safe device-key rotation, and wallet verification", label)
+    assert_contains(text, "device-key account service requests live", label)
+    assert_contains(text, "Account + status + service request routes live", label)
+    assert_contains(text, "device-key protected service requests and history", label)
     assert_contains(text, "tools/gca_member_backend.py", label)
     assert_contains(text, "tools/export_gca_review_package.py", label)
     assert_contains(text, "operator.html", label)
@@ -9792,15 +9794,15 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != ACCESS_API_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
-    if payload.get("status") != "public-access-api-account-status-live":
+    if payload.get("status") != "public-access-api-account-service-requests-live":
         raise SiteCheckError(f"{label}: wrong status")
-    if payload.get("lastUpdated") != "2026-07-27":
+    if payload.get("lastUpdated") != "2026-07-28":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
     if payload.get("contractAddress") != MAINNET_ADDRESS:
         raise SiteCheckError(f"{label}: wrong contractAddress")
-    if state.get("currentStage") != "device-key-account-status-api-live":
+    if state.get("currentStage") != "device-key-account-service-request-api-live":
         raise SiteCheckError(f"{label}: wrong currentStage")
     if state.get("contractOnly") is not False:
         raise SiteCheckError(f"{label}: contractOnly must be false")
@@ -9972,7 +9974,7 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong account status rotation version")
     if production_email_backend.get("accountStatusRotationGraceMinutes") != 15:
         raise SiteCheckError(f"{label}: wrong account status rotation grace window")
-    if production_email_backend.get("workerRelease") != "gca-registration-worker-2026-07-27-account-status-recovery-v1":
+    if production_email_backend.get("workerRelease") != "gca-registration-worker-2026-07-28-account-service-requests-v1":
         raise SiteCheckError(f"{label}: wrong Worker release")
     if production_email_backend.get("contactSuppressionEndpoint") != "https://gca-registration-api.gcagochina.workers.dev/gca/contact-suppressions":
         raise SiteCheckError(f"{label}: wrong contact suppression endpoint")
@@ -10092,6 +10094,8 @@ def validate_access_api_json(text: str) -> None:
         "POST /gca/member-access": "production-workers-dev-live",
         "POST /gca/account-status": "production-workers-dev-live",
         "POST /gca/account-status/rotate": "production-workers-dev-live",
+        "POST /gca/account-service-requests": "production-workers-dev-live",
+        "POST /gca/account-service-requests/status": "production-workers-dev-live",
         "POST /gca/wallet-verifications": "production-workers-dev-live",
         "GET /gca/credit-ledger": "token-protected-admin-live",
         "GET /gca/member-ledger": "token-protected-admin-live",
@@ -10480,9 +10484,9 @@ def validate_api_status_page(text: str) -> None:
     for expected in (
         "GCA Registration API Status",
         "Registration API Status / Live Read-Only Check",
-        "2026-07-27T15:15:02Z",
-        "2026-07-27T15:15:12Z",
-        "2026-07-23T17:55:52Z",
+        "2026-07-28T06:07:02Z",
+        "2026-07-28T06:07:11Z",
+        "2026-07-28T06:07:54Z",
         "Cloudflare Workers + D1",
         "https://gca-registration-api.gcagochina.workers.dev",
         "Public Check",
@@ -10571,19 +10575,19 @@ def validate_api_status_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != API_STATUS_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
-    if payload.get("status") != "public-device-key-account-status-live":
+    if payload.get("status") != "public-device-key-account-service-requests-live":
         raise SiteCheckError(f"{label}: wrong status")
-    if payload.get("lastUpdated") != "2026-07-27":
+    if payload.get("lastUpdated") != "2026-07-28":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("latestPublicCheckAt") != PENDING_WORKER_PUBLIC_ROUTE_AT:
         raise SiteCheckError(f"{label}: wrong latest public check timestamp")
-    if payload.get("latestPublicCheckStatus") != "passed-account-status-recovery-live-redacted":
+    if payload.get("latestPublicCheckStatus") != "passed-account-service-requests-live-redacted":
         raise SiteCheckError(f"{label}: wrong latest public check status")
     if payload.get("latestAdminCheckAt") != PENDING_WORKER_ADMIN_ROUTE_AT:
         raise SiteCheckError(f"{label}: wrong latest admin check timestamp")
     if payload.get("workerVersionId") != PENDING_WORKER_VERSION_ID:
         raise SiteCheckError(f"{label}: wrong top-level Worker version")
-    if payload.get("workerRelease") != "gca-registration-worker-2026-07-27-account-status-recovery-v1":
+    if payload.get("workerRelease") != "gca-registration-worker-2026-07-28-account-service-requests-v1":
         raise SiteCheckError(f"{label}: wrong top-level Worker release")
     if payload.get("latestDeployReadinessCheckAt") != PENDING_WORKER_READINESS_AT:
         raise SiteCheckError(f"{label}: wrong latest deploy readiness timestamp")
@@ -11670,7 +11674,7 @@ def validate_credits_page(text: str) -> None:
         assert_not_contains(text, forbidden, label)
     assert_contains(text, "Access Portal", label)
     assert_contains(text, "Access API", label)
-    assert_contains(text, "account ledger path live", label)
+    assert_contains(text, "account service request path live", label)
     assert_contains(text, "eligible ledger record live", label)
     assert_contains(text, "100 GCA AI Quant Access credits", label)
     assert_contains(text, "10,000 GCA", label)
@@ -11692,9 +11696,10 @@ def validate_credits_page(text: str) -> None:
     assert_contains(text, "controlled HTTPS account UI", label)
     assert_contains(text, "read-only GCA balance verification", label)
     assert_contains(text, "credit ledger record live for eligible holders", label)
-    assert_contains(text, "Service requests", label)
+    assert_contains(text, "Account service requests", label)
     assert_contains(text, "operator usage ledger live", label)
-    assert_contains(text, "production Worker route live and token-protected", label)
+    assert_contains(text, "device-key create and redacted history routes live", label)
+    assert_contains(text, "production admin route live and token-protected", label)
     assert_contains(text, "production Worker ledger route live and token-protected", label)
     assert_contains(text, "does not deduct credits", label)
     assert_contains(text, "member ledger record live for eligible holders", label)
@@ -11732,13 +11737,13 @@ def validate_credits_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong pageUrl")
     if payload.get("status") != "public-credits-catalog-ledger-path-live":
         raise SiteCheckError(f"{label}: wrong status")
-    if payload.get("lastUpdated") != "2026-07-27":
+    if payload.get("lastUpdated") != "2026-07-28":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
     if payload.get("contractAddress") != MAINNET_ADDRESS:
         raise SiteCheckError(f"{label}: wrong contractAddress")
-    if state.get("currentStage") != "account-ledger-path-live":
+    if state.get("currentStage") != "account-service-request-path-live":
         raise SiteCheckError(f"{label}: wrong currentStage")
     if state.get("draftServiceCatalogOnly") is not False:
         raise SiteCheckError(f"{label}: draftServiceCatalogOnly must be false")
@@ -12038,7 +12043,7 @@ def validate_credits_json(text: str) -> None:
 def validate_release_gates_page(text: str) -> None:
     label = "/release-gates.html"
     assert_contains(text, "GCA Product Release Gates", label)
-    assert_contains(text, "Release Gates / 2026-07-27", label)
+    assert_contains(text, "Release Gates / 2026-07-28", label)
     assert_contains(text, "Release References", label)
     assert_contains(text, "gca/member-access/", label)
     for forbidden in ("Platform-Only Evidence Path", "Data Room", 'href="data.html"'):
@@ -12047,7 +12052,9 @@ def validate_release_gates_page(text: str) -> None:
     assert_contains(text, "Access Portal", label)
     assert_contains(text, "Operations Runbook", label)
     assert_contains(text, "Access API", label)
-    assert_contains(text, "account + redacted status + review live", label)
+    assert_contains(text, "account + request + redacted status + review live", label)
+    assert_contains(text, "device-key protected service requests and history", label)
+    assert_contains(text, "Request submission does not reserve or deduct credits", label)
     assert_contains(text, "production evidence for already-completed manual member-benefit transfers are live", label)
     assert_contains(text, "The 10,000 GCA transfer itself remains a separate reserve-wallet action", label)
     assert_contains(text, "Live at /gca/member-access/", label)
@@ -12065,7 +12072,7 @@ def validate_release_gates_page(text: str) -> None:
     assert_contains(text, "SHA-256 continuity checked before review writes", label)
     assert_contains(text, "Review chain checkpoint", label)
     assert_contains(text, "Unsigned local export live; separate retention required", label)
-    assert_contains(text, "initial migration/deploy passed 2026-07-23 UTC and latest read-only smoke passed 2026-07-27 UTC", label)
+    assert_contains(text, "latest deploy and read-only smoke passed 2026-07-28 UTC", label)
     assert_contains(text, "production member eligibility review live", label)
     assert_contains(text, "simulation or testnet first", label)
     assert_contains(text, "BaseScan token profile publication", label)
@@ -12098,13 +12105,13 @@ def validate_release_gates_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong pageUrl")
     if payload.get("status") != "public-release-gates-device-account-status-live":
         raise SiteCheckError(f"{label}: wrong status")
-    if payload.get("lastUpdated") != "2026-07-27":
+    if payload.get("lastUpdated") != "2026-07-28":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
     if payload.get("contractAddress") != MAINNET_ADDRESS:
         raise SiteCheckError(f"{label}: wrong contractAddress")
-    if state.get("currentStage") != "device-key-account-status-path-live":
+    if state.get("currentStage") != "device-key-account-service-request-path-live":
         raise SiteCheckError(f"{label}: wrong currentStage")
     if state.get("publicProductSpecOnly") is not False:
         raise SiteCheckError(f"{label}: publicProductSpecOnly must be false")
