@@ -317,7 +317,7 @@
         <p class="eyebrow">中文 API 状态 / 浏览器实时只读检查</p>
         <h1 id="title">GCA 中文 API 状态</h1>
         <p class="lead">这一页用中文说明 GCA 邮箱注册和邮箱退订接口、会员账户、设备密钥账户状态、密钥轮换及注册邮箱恢复的当前状态。公网接口已经接到 Cloudflare Workers + D1；管理员读取接口仍需要本地管理 token。</p>
-        <p class="lead">账户状态版本的公网只读 smoke check 已在 <code>2026-07-27T15:15:02Z</code> 通过，管理员 token 只读检查已在 <code>2026-07-27T15:15:12Z</code> 通过。下方实时面板可以在当前浏览器重复安全的只读部分，全程不写入记录。</p>
+        <p class="lead">账户状态版本的公网只读 smoke check 已在 <code>2026-07-28T06:07:02Z</code> 通过，管理员 token 只读检查已在 <code>2026-07-28T06:07:11Z</code> 通过。下方实时面板可以在当前浏览器重复安全的只读部分，全程不写入记录。</p>
         <p class="lead"><code>gca_member_access_v2</code> 在浏览器生成随机设备密钥，D1 只保存 SHA-256。<code>gca_account_status_v1</code> 只返回脱敏只读状态，不返回邮箱、完整钱包地址、密钥、管理员数据或运营备注。</p>
         <p class="lead"><code>gca_account_status_rotation_v1</code> 允许持有当前有效密钥的浏览器安全更换密钥。旧密钥会立即失去状态读取权限，只能在 15 分钟内重试同一次轮换；账户、积分、会员、钱包和代币记录都不会改变。</p>
         <p class="lead">密钥丢失恢复使用 <code>gca_account_status_recovery_request_v1</code>、注册邮箱人工核验和 24 小时一次性凭据。公开申请不会透露账户是否匹配；完成后只启用预先提交的新密钥，不改变账户、credits、会员、钱包、GCA 余额或链上资产。</p>
@@ -482,11 +482,11 @@
           </article>
           <article class="card">
             <h3>服务请求队列</h3>
-            <p class="note"><code>GET/POST /gca/service-requests</code> 已正式上线并受管理员 token 保护。初次远端 D1 migration 和 Worker 部署于 2026-07-23 UTC 通过，最新公网和管理员只读 smoke 检查于 2026-07-27 UTC 通过；匿名读取返回 HTTP 401。</p>
+            <p class="note"><code>GET/POST /gca/service-requests</code> 已正式上线并受管理员 token 保护。最新 Worker 部署及公网和管理员只读 smoke 检查于 2026-07-28 UTC 通过；匿名读取返回 HTTP 401。</p>
           </article>
           <article class="card">
             <h3>Credit 使用记录</h3>
-            <p class="note"><code>GET/POST /gca/credit-usage</code> 已正式上线并受管理员 token 保护。初次远端 D1 migration 和 Worker 部署于 2026-07-23 UTC 通过，最新公网和管理员只读 smoke 检查于 2026-07-27 UTC 通过；匿名读取返回 HTTP 401。</p>
+            <p class="note"><code>GET/POST /gca/credit-usage</code> 已正式上线并受管理员 token 保护。最新 Worker 部署及公网和管理员只读 smoke 检查于 2026-07-28 UTC 通过；匿名读取返回 HTTP 401。</p>
           </article>
           <article class="card">
             <h3>未来域名</h3>
@@ -508,7 +508,7 @@
         </div>
         <div class="panel">
           <h2>部署权限检查</h2>
-          <p class="note">发布新的 Worker 版本前先运行这个命令，确认打包、Cloudflare 账号认证、D1 可见性和 Workers 发布权限。2026-07-23 的全部门槛已经通过。如果未来报告出现阻塞的 <code>authRecovery.status</code>，先按 <code>authRecovery.safeNextActions</code> 处理，不能直接迁移或部署。</p>
+          <p class="note">发布新的 Worker 版本前先运行这个命令，确认打包、Cloudflare 账号认证、D1 可见性和 Workers 发布权限。2026-07-28 的全部门槛已经通过。如果未来报告出现阻塞的 <code>authRecovery.status</code>，先按 <code>authRecovery.safeNextActions</code> 处理，不能直接迁移或部署。</p>
           <pre>python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth</pre>
         </div>
         <div class="panel">

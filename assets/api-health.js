@@ -146,6 +146,8 @@
       && payload.accountStatusRecoveryRequestVersion === "gca_account_status_recovery_request_v1"
       && payload.accountStatusRecoveryApprovalVersion === "gca_account_status_recovery_approval_v1"
       && payload.accountStatusRecoveryVersion === "gca_account_status_recovery_v1"
+      && payload.accountServiceRequestVersion === "gca_account_service_request_v1"
+      && payload.accountServiceRequestStatusVersion === "gca_account_service_request_status_v1"
       && payload.memberReviewVersion === "gca_member_review_v1"
       && payload.holdingVerificationVersion === "gca_holding_verification_v1"
       && payload.memberBenefitTransferVersion === "gca_member_benefit_transfer_v1"
@@ -170,12 +172,16 @@
       && payload.accountStatusRecoveryRequestVersion === "gca_account_status_recovery_request_v1"
       && payload.accountStatusRecoveryApprovalVersion === "gca_account_status_recovery_approval_v1"
       && payload.accountStatusRecoveryVersion === "gca_account_status_recovery_v1"
+      && payload.accountServiceRequestVersion === "gca_account_service_request_v1"
+      && payload.accountServiceRequestStatusVersion === "gca_account_service_request_status_v1"
       && payload.endpoints
       && payload.endpoints.accountStatus === "/gca/account-status"
       && payload.endpoints.accountStatusRotation === "/gca/account-status/rotate"
       && payload.endpoints.accountStatusRecoveryRequests === "/gca/account-status/recovery-requests"
       && payload.endpoints.accountStatusRecoveryApprovals === "/gca/account-status/recovery-approvals"
       && payload.endpoints.accountStatusRecovery === "/gca/account-status/recover"
+      && payload.endpoints.accountServiceRequests === "/gca/account-service-requests"
+      && payload.endpoints.accountServiceRequestStatus === "/gca/account-service-requests/status"
       && payload.memberReviewVersion === "gca_member_review_v1"
       && payload.holdingVerificationVersion === "gca_holding_verification_v1"
       && payload.memberBenefitTransferVersion === "gca_member_benefit_transfer_v1"
@@ -195,6 +201,12 @@
       && boundaries.accountStatusRecoveryReturnsAccountMatch === false
       && boundaries.accountStatusRecoveryInvalidatesOldDeviceKey === true
       && boundaries.accountStatusRecoveryChangesAccountOrLedgers === false
+      && boundaries.accountServiceRequestsEnabled === true
+      && boundaries.accountServiceRequestDailyLimit === 5
+      && boundaries.accountServiceRequestCreditsReserved === false
+      && boundaries.accountServiceRequestCreditsDeductedOnRequest === false
+      && boundaries.accountServiceRequestReturnsEmail === false
+      && boundaries.accountServiceRequestCreatesTradingPermission === false
       && boundaries.requiresSignature === false
       && boundaries.requiresTransaction === false
       && boundaries.automaticTokenTransfer === false
