@@ -305,6 +305,11 @@
         overflow-wrap: anywhere;
       }
 
+      .request-delivery {
+        color: var(--green);
+        font-weight: 800;
+      }
+
       input[type="checkbox"] {
         width: auto;
         min-height: 0;
@@ -521,7 +526,7 @@
         <p class="lead zh-note">10,000 GCA 会员权益不是自动领取。通过 GCA Member 记录后，仍需要支持团队人工审核和储备钱包处理。</p>
         <p class="lead">After account creation, this browser can use a high-entropy device key to refresh redacted account, credits, member-review, and benefit-transfer status. The API stores only the key hash and never returns email or the key.</p>
         <p class="lead zh-note">账户创建后，本浏览器可使用高强度设备密钥刷新脱敏的账户、积分、会员审核和权益转账状态。后台只保存密钥哈希，不会返回邮箱或密钥明文。</p>
-        <p class="lead">The same device key can submit a service request to the manual review queue and read that account's request history. Submission checks the catalog unit but does not reserve or deduct credits.</p>
+        <p class="lead">The same device key can submit a service request to the manual review queue and read that account's request history. Submission checks the catalog unit but does not reserve or deduct credits. Completed delivery records return the operator's non-sensitive delivery reference to that account.</p>
         <p class="lead zh-note">同一设备密钥可提交服务申请并查看本账户申请历史。提交时会核对目录积分，但不会预占或自动扣除 credits。</p>
         <div class="actions">
           <a class="button primary" href="#accountForm">Open Account Form / 打开表单</a>
@@ -1252,7 +1257,7 @@
           serviceRequestResult,
           "good",
           `${requests.length} request${requests.length === 1 ? "" : "s"} found / 找到 ${requests.length} 条申请`,
-          "History is limited to this device-key account and does not return email or the full request body. / 历史仅限本设备密钥对应账户，不返回邮箱或完整申请正文。"
+          "History is limited to this device-key account. A completed delivery can include its non-sensitive delivery reference; email and the full request body are never returned. / 历史仅限本设备密钥对应账户；完成交付后可显示非敏感交付引用，且不会返回邮箱或完整申请正文。"
         );
         for (const request of requests) {
           const item = document.createElement("article");
@@ -1290,6 +1295,15 @@
               : "no credits deducted";
             review.textContent = `Manual review: ${request.latestReview.decision || request.status} · ${request.latestReview.reasonCode || "reason recorded"} · ${reviewedAt} · ${creditText}`;
             item.append(review);
+            if (
+              request.latestReview.deliveryCompleted &&
+              request.latestReview.deliveryReference
+            ) {
+              const delivery = document.createElement("span");
+              delivery.className = "request-meta request-delivery";
+              delivery.textContent = `Delivery reference / 交付引用: ${request.latestReview.deliveryReference}`;
+              item.append(delivery);
+            }
           }
           serviceRequestList.append(item);
         }

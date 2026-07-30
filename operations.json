@@ -43,7 +43,7 @@
     "accountServiceRequestPacketVersion": "gca_account_service_request_v1",
     "accountServiceRequestStatusPacketVersion": "gca_account_service_request_status_v1",
     "accountServiceRequestDailyLimit": 5,
-    "accountServiceRequestProductionVerifiedAt": "2026-07-30T06:42:28Z",
+    "accountServiceRequestProductionVerifiedAt": "2026-07-30T07:12:00Z",
     "accountServiceRequestCreditsReserved": false,
     "accountServiceRequestCreditsDeductedOnSubmission": false,
     "ledgerWritesLive": true,
@@ -69,7 +69,7 @@
     "localSupportReviewContinuityImmutable": false,
     "productionSupportApprovalWorkflowLive": false,
     "liveTradingEnabled": false,
-    "serviceRoutesProductionVerifiedAt": "2026-07-30T06:42:38Z",
+    "serviceRoutesProductionVerifiedAt": "2026-07-30T07:12:12Z",
     "serviceRequestReviewProductionLive": true,
     "serviceRequestReviewPacketVersion": "gca_service_request_review_v1",
     "serviceRequestReviewAdminPath": "/gca/service-request-reviews",
@@ -146,7 +146,7 @@
     "workerDeployReadinessCommand": "python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth",
     "workerDeployReadinessAuthSessionCheck": "cloudflare-auth-session",
     "workerDeployReadinessAuthRecoveryField": "authRecovery",
-    "latestDeployReadinessCheckAt": "2026-07-30T06:42:17Z",
+    "latestDeployReadinessCheckAt": "2026-07-30T07:10:13Z",
     "latestDeployReadinessSummary": {
       "wranglerDeployDryRun": "passed",
       "cloudflareD1Visibility": "passed",
@@ -156,7 +156,7 @@
       "writesD1Records": false,
       "deploysWorker": false
     },
-    "pendingRoutesLastObservedAt": "2026-07-30T06:42:28Z",
+    "pendingRoutesLastObservedAt": "2026-07-30T07:12:00Z",
     "pendingRouteAnonymousGetStatus": {
       "/gca/service-requests": 401,
       "/gca/credit-usage": 401,
@@ -218,8 +218,8 @@
       "holdingNoLiveReadUsesExistingSnapshots": true
     },
     "workerDeployPermissionStatus": "passed",
-    "workerVersionId": "c8d57eb4-9614-4d3e-8b8b-04fd63b65210",
-    "productionRoutesVerifiedAt": "2026-07-30T06:42:38Z"
+    "workerVersionId": "670a3698-dc20-4215-a9b1-35711a4d1513",
+    "productionRoutesVerifiedAt": "2026-07-30T07:12:12Z"
   },
   "identity": {
     "network": "Base Mainnet",

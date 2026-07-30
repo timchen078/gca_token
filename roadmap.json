@@ -67,7 +67,7 @@
       "status": "completed",
       "packetVersion": "gca_account_status_v1",
       "endpoint": "/gca/account-status",
-      "workerVersionId": "c8d57eb4-9614-4d3e-8b8b-04fd63b65210"
+      "workerVersionId": "670a3698-dc20-4215-a9b1-35711a4d1513"
     },
     {
       "id": "registered-email-device-recovery-live",
@@ -77,7 +77,7 @@
       "completionPacketVersion": "gca_account_status_recovery_v1",
       "requestEndpoint": "/gca/account-status/recovery-requests",
       "completionEndpoint": "/gca/account-status/recover",
-      "workerVersionId": "c8d57eb4-9614-4d3e-8b8b-04fd63b65210"
+      "workerVersionId": "670a3698-dc20-4215-a9b1-35711a4d1513"
     },
     {
       "id": "device-key-account-service-requests-live",
@@ -87,8 +87,8 @@
       "historyPacketVersion": "gca_account_service_request_status_v1",
       "createEndpoint": "/gca/account-service-requests",
       "historyEndpoint": "/gca/account-service-requests/status",
-      "productionVerifiedAt": "2026-07-28T06:07:02Z",
-      "workerVersionId": "c8d57eb4-9614-4d3e-8b8b-04fd63b65210",
+      "productionVerifiedAt": "2026-07-30T07:12:00Z",
+      "workerVersionId": "670a3698-dc20-4215-a9b1-35711a4d1513",
       "creditsReserved": false,
       "creditsDeductedOnSubmission": false
     },
@@ -99,8 +99,8 @@
       "packetVersion": "gca_service_request_review_v1",
       "reviewEndpoint": "/gca/service-request-reviews",
       "operatorTool": "tools/review_cloudflare_service_request.py",
-      "productionVerifiedAt": "2026-07-30T06:42:38Z",
-      "workerVersionId": "c8d57eb4-9614-4d3e-8b8b-04fd63b65210",
+      "productionVerifiedAt": "2026-07-30T07:12:12Z",
+      "workerVersionId": "670a3698-dc20-4215-a9b1-35711a4d1513",
       "approvedBeforeDeliveryRequired": true,
       "creditSettlementAtMostOnce": true,
       "automaticTokenTransfer": false,
@@ -185,7 +185,8 @@
       "reviewPacketVersion": "gca_service_request_review_v1",
       "deliveryRequiresApprovedReview": true,
       "creditSettlementAtMostOnce": true,
-      "historyReturnsLatestRedactedReview": true
+      "historyReturnsLatestRedactedReview": true,
+      "historyReturnsNonSensitiveDeliveryReferenceAfterDelivered": true
     },
     {
       "id": "gca-member-ledger",

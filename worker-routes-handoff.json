@@ -10,9 +10,9 @@
   "sourceDocument": "docs/gca_worker_pending_routes_deploy_handoff.md",
   "scope": "Public deployment record and repeatable release runbook for production-live service-request queueing, append-only manual review, reviewed delivery, and idempotent credit settlement routes.",
   "currentStatus": {
-    "latestReadinessCheckAt": "2026-07-30T06:42:17Z",
-    "latestPublicRouteCheckAt": "2026-07-30T06:42:28Z",
-    "latestAdminRouteCheckAt": "2026-07-30T06:42:38Z",
+    "latestReadinessCheckAt": "2026-07-30T07:10:13Z",
+    "latestPublicRouteCheckAt": "2026-07-30T07:12:00Z",
+    "latestAdminRouteCheckAt": "2026-07-30T07:12:12Z",
     "workerDryRun": "passed-2026-07-23",
     "d1Visibility": "passed",
     "cloudflareAuthSession": "passed",
@@ -25,7 +25,7 @@
     },
     "remoteMigrations": "applied",
     "workerDeploy": "passed",
-    "workerVersionId": "c8d57eb4-9614-4d3e-8b8b-04fd63b65210",
+    "workerVersionId": "670a3698-dc20-4215-a9b1-35711a4d1513",
     "postDeployPublicSmoke": "passed",
     "postDeployAdminSmoke": "passed",
     "productionRouteStatus": "live-token-protected",
@@ -66,7 +66,7 @@
       "writesCredits": false,
       "createsTradingPermission": false,
       "productionLive": true,
-      "workerVersionId": "c8d57eb4-9614-4d3e-8b8b-04fd63b65210"
+      "workerVersionId": "670a3698-dc20-4215-a9b1-35711a4d1513"
     },
     {
       "path": "/gca/service-request-reviews",
@@ -81,7 +81,7 @@
       "writesWithD1Batch": true,
       "createsTradingPermission": false,
       "productionLive": true,
-      "workerVersionId": "c8d57eb4-9614-4d3e-8b8b-04fd63b65210"
+      "workerVersionId": "670a3698-dc20-4215-a9b1-35711a4d1513"
     },
     {
       "path": "/gca/credit-usage",
@@ -90,7 +90,7 @@
       "status": "live-token-protected",
       "writtenOnlyAfterReviewedDelivery": true,
       "productionLive": true,
-      "workerVersionId": "c8d57eb4-9614-4d3e-8b8b-04fd63b65210"
+      "workerVersionId": "670a3698-dc20-4215-a9b1-35711a4d1513"
     }
   ],
   "deployGates": [
