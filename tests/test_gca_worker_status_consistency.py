@@ -4,14 +4,15 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-LAST_UPDATED = "2026-07-28"
-READINESS_AT = "2026-07-28T06:07:54Z"
-PUBLIC_ROUTE_AT = "2026-07-28T06:07:02Z"
-ADMIN_ROUTE_AT = "2026-07-28T06:07:11Z"
-WORKER_VERSION_ID = "e0d6f82e-9b6c-4a43-bec6-8447793da8ec"
+LAST_UPDATED = "2026-07-30"
+READINESS_AT = "2026-07-30T06:42:17Z"
+PUBLIC_ROUTE_AT = "2026-07-30T06:42:28Z"
+ADMIN_ROUTE_AT = "2026-07-30T06:42:38Z"
+WORKER_VERSION_ID = "c8d57eb4-9614-4d3e-8b8b-04fd63b65210"
 ROUTE_OBSERVATIONS = {
     "/gca/service-requests": 401,
     "/gca/credit-usage": 401,
+    "/gca/service-request-reviews": 401,
 }
 READINESS_SUMMARY = {
     "wranglerDeployDryRun": "passed",
@@ -58,11 +59,16 @@ class GcaWorkerStatusConsistencyTests(unittest.TestCase):
         self.assertEqual(access_backend["pendingRoutesLastObservedAt"], PUBLIC_ROUTE_AT)
         self.assertEqual(access_backend["pendingRouteAnonymousGetStatus"], ROUTE_OBSERVATIONS)
         self.assertEqual(access_backend["workerVersionId"], WORKER_VERSION_ID)
-        self.assertEqual(access_backend["workerRelease"], "gca-registration-worker-2026-07-28-account-service-requests-v1")
+        self.assertEqual(access_backend["workerRelease"], "gca-registration-worker-2026-07-30-service-request-delivery-v1")
         self.assertEqual(access_backend["accountStatusAccessMigration"], "cloudflare/gca-registration-worker/migrations/0009_account_status_access.sql")
         self.assertEqual(access_backend["accountStatusEndpoint"], "https://gca-registration-api.gcagochina.workers.dev/gca/account-status")
         self.assertEqual(access_backend["memberReviewVersion"], "gca_member_review_v1")
         self.assertEqual(access_backend["holdingVerificationVersion"], "gca_holding_verification_v1")
+        self.assertEqual(access_backend["serviceRequestReviewVersion"], "gca_service_request_review_v1")
+        self.assertEqual(
+            access_backend["serviceRequestReviewMigration"],
+            "cloudflare/gca-registration-worker/migrations/0012_service_request_reviews.sql",
+        )
 
         operations_pipeline = operations["memberAccessOpsPipeline"]
         self.assertEqual(operations_pipeline["latestDeployReadinessCheckAt"], READINESS_AT)
@@ -140,6 +146,19 @@ class GcaWorkerStatusConsistencyTests(unittest.TestCase):
         self.assertTrue(credits["currentState"]["accountServiceRequestProductionLive"])
         self.assertFalse(credits["currentState"]["accountServiceRequestCreditsReserved"])
         self.assertFalse(credits["currentState"]["accountServiceRequestCreditsDeductedOnSubmission"])
+        self.assertTrue(access_api["currentState"]["serviceRequestReviewProductionLive"])
+        self.assertEqual(
+            access_api["currentState"]["serviceRequestReviewPacketVersion"],
+            "gca_service_request_review_v1",
+        )
+        self.assertTrue(access_api["currentState"]["serviceRequestReviewApprovedBeforeDeliveryRequired"])
+        self.assertTrue(access_api["currentState"]["serviceRequestReviewCreditsDeductedAtMostOnce"])
+        self.assertTrue(operations["currentState"]["serviceRequestReviewProductionLive"])
+        self.assertTrue(operations["currentState"]["serviceRequestDeliveryRequiresApprovedReview"])
+        self.assertTrue(operations["currentState"]["serviceRequestCreditSettlementAtMostOnce"])
+        self.assertTrue(credits["currentState"]["serviceRequestReviewProductionLive"])
+        self.assertTrue(credits["currentState"]["serviceRequestDeliveryRequiresApproval"])
+        self.assertTrue(credits["currentState"]["serviceRequestCreditSettlementAtMostOnce"])
 
         live_endpoints = {
             endpoint["path"]: endpoint
@@ -155,12 +174,12 @@ class GcaWorkerStatusConsistencyTests(unittest.TestCase):
 
     def test_public_pages_show_live_protected_status_and_remove_stale_claims(self):
         public_pages = {
-            "access-api.html": ("Live token-protected operator queue", "HTTP 401"),
-            "operations.html": ("production-live", "Anonymous reads return HTTP 401"),
-            "credits.html": ("device-key create and redacted history routes live", "token-protected"),
+            "access-api.html": ("reviewed service delivery and settlement live", "HTTP 401"),
+            "operations.html": ("manual service review and settlement live", "Anonymous reads return HTTP 401"),
+            "credits.html": ("reviewed delivery and settlement live", "token-protected"),
             "service-delivery-playbook.html": ("Live and token-protected", "HTTP 401"),
             "worker-routes-handoff.html": ("Production-live and protected", "HTTP 401"),
-            "release-gates.html": ("Production-live with device-key or admin-token protection", "2026-07-28"),
+            "release-gates.html": ("reviewed delivery + idempotent settlement live", "2026-07-30"),
             "zh-release-gates.html": ("已经正式上线", "HTTP 401"),
             "market-quality.html": ("Account and eligible ledger path live", "Live and iterating"),
         }

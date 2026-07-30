@@ -26,11 +26,13 @@ const SERVICE_REQUEST_VERSION = "gca_service_request_v1";
 const ACCOUNT_SERVICE_REQUEST_VERSION = "gca_account_service_request_v1";
 const ACCOUNT_SERVICE_REQUEST_STATUS_VERSION =
   "gca_account_service_request_status_v1";
+const SERVICE_REQUEST_REVIEW_VERSION =
+  "gca_service_request_review_v1";
 const MEMBER_REVIEW_VERSION = "gca_member_review_v1";
 const HOLDING_VERIFICATION_VERSION = "gca_holding_verification_v1";
 const MEMBER_BENEFIT_TRANSFER_VERSION = "gca_member_benefit_transfer_v1";
 const WORKER_RELEASE =
-  "gca-registration-worker-2026-07-28-account-service-requests-v1";
+  "gca-registration-worker-2026-07-30-service-request-delivery-v1";
 const OFFICIAL_CONTACT_EMAIL = "support@gcagochina.com";
 const OFFICIAL_SITE_URL = "https://gcagochina.com/";
 const CHAIN_ID = 8453;
@@ -86,9 +88,18 @@ const RECOVERY_REQUEST_ID_RE = /^gca_recovery_request_[a-f0-9]{20}$/;
 const RECOVERY_CREDENTIAL_RE = /^gca_recovery_[A-Za-z0-9_-]{43}$/;
 const CLIENT_SERVICE_REQUEST_ID_RE =
   /^gca_client_req_[A-Za-z0-9_-]{22,64}$/;
+const SERVICE_REQUEST_ID_RE = /^gca_service_req_[a-f0-9]{20}$/;
+const CLIENT_SERVICE_REVIEW_ID_RE =
+  /^gca_client_review_[A-Za-z0-9_-]{22,64}$/;
 const OPERATOR_ID_RE = /^[a-z0-9][a-z0-9_-]{2,63}$/;
 const REASON_CODE_RE = /^[a-z0-9][a-z0-9_-]{1,63}$/;
 const MEMBER_REVIEW_DECISIONS = new Set(["approved", "rejected", "needs_more_information"]);
+const SERVICE_REQUEST_REVIEW_DECISIONS = new Set([
+  "approved",
+  "rejected",
+  "needs_more_information",
+  "delivered"
+]);
 const HONEYPOT_FIELDS = ["website", "company", "homepage"];
 const FORBIDDEN_KEY_PATTERNS = [
   "privatekey",
@@ -778,6 +789,128 @@ function extractAccountServiceRequestStatus(packet) {
   return { statusAccessToken };
 }
 
+function extractServiceRequestReview(packet) {
+  if (
+    packet.packetVersion &&
+    packet.packetVersion !== SERVICE_REQUEST_REVIEW_VERSION
+  ) {
+    throw new ApiError(
+      `packetVersion must be ${SERVICE_REQUEST_REVIEW_VERSION}`
+    );
+  }
+  const acknowledgements =
+    packet.acknowledgements && typeof packet.acknowledgements === "object"
+      ? packet.acknowledgements
+      : {};
+  const serviceRequestId = String(packet.serviceRequestId || "")
+    .trim()
+    .toLowerCase();
+  const clientReviewId = String(packet.clientReviewId || "").trim();
+  const decision = String(packet.decision || "").trim().toLowerCase();
+  const reasonCode = String(packet.reasonCode || "")
+    .trim()
+    .toLowerCase();
+  const reviewerId = String(packet.reviewerId || "gca-operator")
+    .trim()
+    .toLowerCase();
+  const operatorNote = String(packet.operatorNote || "")
+    .trim()
+    .slice(0, 500);
+  const deliveryReference = String(packet.deliveryReference || "")
+    .trim()
+    .slice(0, 300);
+  const manualReviewCompleted = Boolean(
+    acknowledgements.manualReviewCompleted
+  );
+  const noSecretsNoCustody = Boolean(
+    acknowledgements.noSecretsNoCustody
+  );
+  const noTradingPermission = Boolean(
+    acknowledgements.noTradingPermission
+  );
+  const deliveryCompleted = Boolean(
+    acknowledgements.deliveryCompleted
+  );
+  const creditSettlementAccepted = Boolean(
+    acknowledgements.creditSettlementAccepted
+  );
+
+  if (!SERVICE_REQUEST_ID_RE.test(serviceRequestId)) {
+    throw new ApiError(
+      "serviceRequestId must be a valid GCA service request id"
+    );
+  }
+  if (!CLIENT_SERVICE_REVIEW_ID_RE.test(clientReviewId)) {
+    throw new ApiError(
+      "clientReviewId must be a valid service review id"
+    );
+  }
+  if (!SERVICE_REQUEST_REVIEW_DECISIONS.has(decision)) {
+    throw new ApiError(
+      "decision must be approved, rejected, needs_more_information, or delivered"
+    );
+  }
+  if (!REASON_CODE_RE.test(reasonCode)) {
+    throw new ApiError(
+      "reasonCode must be a short lowercase identifier"
+    );
+  }
+  if (!OPERATOR_ID_RE.test(reviewerId)) {
+    throw new ApiError(
+      "reviewerId must be a short lowercase operator identifier"
+    );
+  }
+  if (!manualReviewCompleted) {
+    throw new ApiError(
+      "manual review completion acknowledgement is required"
+    );
+  }
+  if (!noSecretsNoCustody) {
+    throw new ApiError(
+      "no-secrets and no-custody acknowledgement is required"
+    );
+  }
+  if (!noTradingPermission) {
+    throw new ApiError(
+      "no trading permission acknowledgement is required"
+    );
+  }
+  if (decision === "delivered" && !deliveryCompleted) {
+    throw new ApiError(
+      "delivery completion acknowledgement is required"
+    );
+  }
+  if (decision === "delivered" && !creditSettlementAccepted) {
+    throw new ApiError(
+      "credit settlement acknowledgement is required"
+    );
+  }
+  if (decision === "delivered" && !deliveryReference) {
+    throw new ApiError(
+      "deliveryReference is required when delivery is recorded"
+    );
+  }
+
+  return {
+    serviceRequestId,
+    clientReviewId,
+    decision,
+    reasonCode,
+    reviewerId,
+    operatorNote,
+    deliveryReference,
+    deliveryCompleted,
+    creditSettlementAccepted,
+    source:
+      String(
+        packet.source || "gca-service-request-review-operator"
+      )
+        .trim()
+        .slice(0, 120) ||
+      "gca-service-request-review-operator"
+  };
+}
+
 function extractMemberReview(packet) {
   if (packet.packetVersion && packet.packetVersion !== MEMBER_REVIEW_VERSION) {
     throw new ApiError(`packetVersion must be ${MEMBER_REVIEW_VERSION}`);
@@ -1431,6 +1564,7 @@ function rowToCreditUsage(row) {
   }
   return {
     creditUsageId: row.credit_usage_id,
+    serviceRequestId: row.service_request_id || "",
     creditLedgerId: row.credit_ledger_id,
     accountId: row.account_id,
     emailSha256: row.email_hash,
@@ -1459,6 +1593,9 @@ function rowToServiceRequest(row, includeEmail = true) {
     serviceRequestId: row.service_request_id,
     packetVersion: SERVICE_REQUEST_VERSION,
     createdAt: row.created_at,
+    updatedAt: row.updated_at || "",
+    reviewedAt: row.reviewed_at || "",
+    completedAt: row.completed_at || "",
     status: row.status,
     email: includeEmail ? row.email : undefined,
     emailSha256: row.email_hash,
@@ -1476,8 +1613,48 @@ function rowToServiceRequest(row, includeEmail = true) {
     marketContext: row.market_context || "",
     preferredLanguage: row.preferred_language || "zh-CN",
     source: row.source,
+    latestReviewId: row.latest_review_id || "",
+    creditUsageId: row.credit_usage_id || "",
     operatorReviewRequired: Boolean(row.operator_review_required),
     doesNotDeductCredits: Boolean(row.does_not_deduct_credits),
+    requiresSignature: Boolean(row.requires_signature),
+    requiresTransaction: Boolean(row.requires_transaction),
+    automaticTokenTransfer: Boolean(row.automatic_token_transfer),
+    writesWallet: Boolean(row.writes_wallet),
+    createsTradingPermission: Boolean(row.creates_trading_permission)
+  };
+}
+
+function rowToServiceRequestReview(row) {
+  if (!row) {
+    return null;
+  }
+  return {
+    serviceRequestReviewId: row.service_request_review_id,
+    serviceRequestId: row.service_request_id,
+    packetVersion: row.packet_version,
+    decision: row.decision,
+    reasonCode: row.reason_code,
+    reviewerId: row.reviewer_id,
+    operatorNote: row.operator_note || "",
+    deliveryReference: row.delivery_reference || "",
+    creditUsageId: row.credit_usage_id || "",
+    creditAmountUsed: Number(row.credit_amount_used || 0),
+    remainingCreditsBefore:
+      row.remaining_credits_before === null ||
+      row.remaining_credits_before === undefined
+        ? null
+        : Number(row.remaining_credits_before),
+    remainingCreditsAfter:
+      row.remaining_credits_after === null ||
+      row.remaining_credits_after === undefined
+        ? null
+        : Number(row.remaining_credits_after),
+    reviewedAt: row.reviewed_at,
+    source: row.source,
+    manualReviewCompleted: Boolean(row.manual_review_completed),
+    deliveryCompleted: Boolean(row.delivery_completed),
+    creditsDeducted: Boolean(row.credits_deducted),
     requiresSignature: Boolean(row.requires_signature),
     requiresTransaction: Boolean(row.requires_transaction),
     automaticTokenTransfer: Boolean(row.automatic_token_transfer),
@@ -1498,6 +1675,18 @@ function serviceRequestNextStep(status) {
   }
   if (status === "queued_missing_credit_ledger") {
     return "The request is queued, but no account credit ledger was available at submission.";
+  }
+  if (status === "approved_operator_review") {
+    return "Manual review approved the scope. Delivery is still pending.";
+  }
+  if (status === "needs_more_information") {
+    return "Manual review needs more information before the request can proceed.";
+  }
+  if (status === "rejected_operator_review") {
+    return "Manual review rejected the request. No credits were deducted.";
+  }
+  if (status === "delivered") {
+    return "Manual delivery was recorded. Review the credit settlement shown with this request.";
   }
   return "Check this account history for the latest operator-reviewed status.";
 }
@@ -1523,7 +1712,31 @@ function rowToAccountServiceRequest(row) {
     preferredLanguage: row.preferred_language || "zh-CN",
     operatorReviewRequired: Boolean(row.operator_review_required),
     creditsReserved: false,
-    creditsDeducted: !Boolean(row.does_not_deduct_credits),
+    creditsDeducted: Boolean(
+      row.review_credits_deducted ??
+        !Boolean(row.does_not_deduct_credits)
+    ),
+    reviewedAt: row.reviewed_at || "",
+    completedAt: row.completed_at || "",
+    latestReview: row.latest_review_id
+      ? {
+          decision: row.review_decision || "",
+          reasonCode: row.review_reason_code || "",
+          reviewedAt:
+            row.review_reviewed_at || row.reviewed_at || "",
+          deliveryCompleted: Boolean(
+            row.review_delivery_completed
+          ),
+          creditAmountUsed: Number(
+            row.review_credit_amount_used || 0
+          ),
+          remainingCreditsAfter:
+            row.review_remaining_credits_after === null ||
+            row.review_remaining_credits_after === undefined
+              ? null
+              : Number(row.review_remaining_credits_after)
+        }
+      : null,
     nextStep: serviceRequestNextStep(row.status)
   };
 }
@@ -2205,6 +2418,623 @@ async function recordServiceRequest(request, env, origin) {
       createsTradingPermission: false
     }
   }, 201, origin, env);
+}
+
+function serviceRequestReviewBoundaries() {
+  return {
+    adminTokenRequired: true,
+    manualReviewRequired: true,
+    approvedBeforeDeliveryRequired: true,
+    serverCatalogCreditUnitRequired: true,
+    creditsDeductedOnlyOnDelivered: true,
+    creditsDeductedAtMostOncePerRequest: true,
+    requiresSignature: false,
+    requiresTransaction: false,
+    automaticTokenTransfer: false,
+    writesWallet: false,
+    createsTradingPermission: false
+  };
+}
+
+function reviewDecisionStatus(decision) {
+  if (decision === "approved") {
+    return "approved_operator_review";
+  }
+  if (decision === "rejected") {
+    return "rejected_operator_review";
+  }
+  if (decision === "needs_more_information") {
+    return "needs_more_information";
+  }
+  return "delivered";
+}
+
+function serviceReviewTransitionAllowed(currentStatus, decision) {
+  const queuedStatuses = new Set([
+    "queued_operator_review",
+    "queued_insufficient_credits",
+    "queued_expired_credit_ledger",
+    "queued_missing_credit_ledger"
+  ]);
+  if (decision === "approved") {
+    return (
+      queuedStatuses.has(currentStatus) ||
+      currentStatus === "needs_more_information"
+    );
+  }
+  if (decision === "needs_more_information") {
+    return (
+      queuedStatuses.has(currentStatus) ||
+      currentStatus === "approved_operator_review"
+    );
+  }
+  if (decision === "rejected") {
+    return (
+      queuedStatuses.has(currentStatus) ||
+      currentStatus === "approved_operator_review" ||
+      currentStatus === "needs_more_information"
+    );
+  }
+  return currentStatus === "approved_operator_review";
+}
+
+async function buildServiceRequestReviewResponse(
+  db,
+  reviewRow,
+  origin,
+  env,
+  status,
+  idempotentReplay
+) {
+  const serviceRequestRow = await db
+    .prepare(
+      "SELECT * FROM gca_service_requests WHERE service_request_id = ?1 LIMIT 1"
+    )
+    .bind(reviewRow.service_request_id)
+    .first();
+  const creditUsageRow = reviewRow.credit_usage_id
+    ? await db
+        .prepare(
+          "SELECT * FROM gca_credit_usage WHERE credit_usage_id = ?1 LIMIT 1"
+        )
+        .bind(reviewRow.credit_usage_id)
+        .first()
+    : null;
+  const creditLedgerRow =
+    serviceRequestRow && serviceRequestRow.credit_ledger_id
+      ? await db
+          .prepare(
+            "SELECT * FROM gca_credit_ledger WHERE credit_ledger_id = ?1 LIMIT 1"
+          )
+          .bind(serviceRequestRow.credit_ledger_id)
+          .first()
+      : null;
+  return jsonResponse({
+    ok: true,
+    packetVersion: SERVICE_REQUEST_REVIEW_VERSION,
+    idempotentReplay,
+    serviceRequestReview: rowToServiceRequestReview(reviewRow),
+    serviceRequest: rowToServiceRequest(serviceRequestRow),
+    creditUsage: rowToCreditUsage(creditUsageRow),
+    creditLedger: rowToCreditLedger(creditLedgerRow),
+    boundaries: serviceRequestReviewBoundaries()
+  }, status, origin, env);
+}
+
+async function reviewServiceRequest(request, env, origin) {
+  if (!isAdminAuthorized(request, env)) {
+    return jsonResponse(
+      { ok: false, error: "admin authorization is required" },
+      401,
+      origin,
+      env
+    );
+  }
+  const db = requireDatabase(env);
+  const packet = await readJsonRequest(request);
+  const reviewInput = extractServiceRequestReview(packet);
+  const reviewId = await stableId(
+    "gca_service_review",
+    reviewInput.serviceRequestId,
+    reviewInput.clientReviewId
+  );
+  const existingReview = await db
+    .prepare(
+      `SELECT *
+      FROM gca_service_request_reviews
+      WHERE service_request_review_id = ?1
+      LIMIT 1`
+    )
+    .bind(reviewId)
+    .first();
+  if (existingReview) {
+    if (
+      existingReview.service_request_id !==
+        reviewInput.serviceRequestId ||
+      existingReview.decision !== reviewInput.decision ||
+      existingReview.reason_code !== reviewInput.reasonCode ||
+      existingReview.reviewer_id !== reviewInput.reviewerId ||
+      String(existingReview.operator_note || "") !==
+        reviewInput.operatorNote ||
+      String(existingReview.delivery_reference || "") !==
+        reviewInput.deliveryReference ||
+      existingReview.source !== reviewInput.source
+    ) {
+      throw new ApiError(
+        "clientReviewId is already assigned to a different review",
+        409
+      );
+    }
+    return buildServiceRequestReviewResponse(
+      db,
+      existingReview,
+      origin,
+      env,
+      200,
+      true
+    );
+  }
+
+  const serviceRequestRow = await db
+    .prepare(
+      `SELECT *
+      FROM gca_service_requests
+      WHERE service_request_id = ?1
+      LIMIT 1`
+    )
+    .bind(reviewInput.serviceRequestId)
+    .first();
+  if (!serviceRequestRow) {
+    throw new ApiError("serviceRequestId was not found", 404);
+  }
+  const service = CREDIT_SERVICE_CATALOG[
+    serviceRequestRow.service_id
+  ];
+  if (!service) {
+    throw new ApiError(
+      "service request uses an unsupported catalog item",
+      409
+    );
+  }
+  const currentStatus = String(serviceRequestRow.status || "");
+  const currentLatestReviewId = String(
+    serviceRequestRow.latest_review_id || ""
+  );
+  if (
+    !serviceReviewTransitionAllowed(
+      currentStatus,
+      reviewInput.decision
+    )
+  ) {
+    throw new ApiError(
+      `service request cannot move from ${currentStatus} to ${reviewInput.decision}`,
+      409
+    );
+  }
+
+  const now = nowIso();
+  const nextStatus = reviewDecisionStatus(reviewInput.decision);
+  const creditAmountUsed =
+    reviewInput.decision === "delivered"
+      ? service.creditUnit
+      : 0;
+  const terminalCompletedAt = [
+    "rejected",
+    "delivered"
+  ].includes(reviewInput.decision)
+    ? now
+    : "";
+  let creditLedgerRow = null;
+  let creditUsageId = "";
+  let remainingBefore = null;
+  let remainingAfter = null;
+
+  if (reviewInput.decision === "delivered" && creditAmountUsed > 0) {
+    if (!serviceRequestRow.credit_ledger_id) {
+      throw new ApiError(
+        "approved service request has no credit ledger",
+        409
+      );
+    }
+    creditLedgerRow = await db
+      .prepare(
+        "SELECT * FROM gca_credit_ledger WHERE credit_ledger_id = ?1 LIMIT 1"
+      )
+      .bind(serviceRequestRow.credit_ledger_id)
+      .first();
+    if (
+      !creditLedgerRow ||
+      creditLedgerRow.account_id !== serviceRequestRow.account_id ||
+      creditLedgerRow.email_hash !== serviceRequestRow.email_hash ||
+      creditLedgerRow.wallet_address !==
+        serviceRequestRow.wallet_address
+    ) {
+      throw new ApiError(
+        "service request and credit ledger do not match",
+        409
+      );
+    }
+    if (String(creditLedgerRow.expires_at || "") <= now) {
+      throw new ApiError("credit ledger is expired", 409);
+    }
+    remainingBefore = Number(
+      creditLedgerRow.remaining_credits || 0
+    );
+    if (
+      !Number.isInteger(remainingBefore) ||
+      remainingBefore < creditAmountUsed
+    ) {
+      throw new ApiError(
+        "available credits are below the server catalog unit",
+        409
+      );
+    }
+    remainingAfter = remainingBefore - creditAmountUsed;
+    creditUsageId = await stableId(
+      "gca_credit_use",
+      reviewInput.serviceRequestId
+    );
+    const existingUsage = await db
+      .prepare(
+        `SELECT *
+        FROM gca_credit_usage
+        WHERE service_request_id = ?1
+        LIMIT 1`
+      )
+      .bind(reviewInput.serviceRequestId)
+      .first();
+    if (existingUsage) {
+      throw new ApiError(
+        "service request credit settlement is already recorded",
+        409
+      );
+    }
+  }
+
+  let batchResults;
+  if (
+    reviewInput.decision === "delivered" &&
+    creditAmountUsed > 0
+  ) {
+    const creditUsageStatus =
+      remainingAfter === 0 ? "exhausted" : "usage_recorded";
+    const creditLedgerStatus =
+      remainingAfter === 0 ? "exhausted" : "ledger_recorded";
+    const insertUsage = db
+      .prepare(
+        `INSERT INTO gca_credit_usage (
+          credit_usage_id,
+          credit_ledger_id,
+          account_id,
+          email_hash,
+          wallet_address,
+          service_id,
+          service_name,
+          credit_amount_used,
+          remaining_credits_before,
+          remaining_credits_after,
+          used_at,
+          source,
+          operator_note,
+          status,
+          requires_signature,
+          requires_transaction,
+          automatic_token_transfer,
+          writes_wallet,
+          service_request_id
+        )
+        SELECT
+          ?1,
+          credit.credit_ledger_id,
+          credit.account_id,
+          credit.email_hash,
+          credit.wallet_address,
+          service.service_id,
+          service.service_name,
+          ?2,
+          ?3,
+          ?4,
+          ?5,
+          'gca-service-request-reviewed-delivery',
+          ?6,
+          ?7,
+          0,
+          0,
+          0,
+          0,
+          service.service_request_id
+        FROM gca_service_requests AS service
+        INNER JOIN gca_credit_ledger AS credit
+          ON credit.credit_ledger_id = service.credit_ledger_id
+        WHERE service.service_request_id = ?8
+          AND service.status = ?9
+          AND service.latest_review_id = ?10
+          AND credit.remaining_credits = ?3
+          AND credit.expires_at > ?5
+          AND NOT EXISTS (
+            SELECT 1
+            FROM gca_credit_usage
+            WHERE service_request_id = ?8
+          )`
+      )
+      .bind(
+        creditUsageId,
+        creditAmountUsed,
+        remainingBefore,
+        remainingAfter,
+        now,
+        reviewInput.operatorNote,
+        creditUsageStatus,
+        reviewInput.serviceRequestId,
+        currentStatus,
+        currentLatestReviewId
+      );
+    const updateCreditLedger = db
+      .prepare(
+        `UPDATE gca_credit_ledger
+        SET remaining_credits = ?1,
+            status = ?2
+        WHERE credit_ledger_id = ?3
+          AND remaining_credits = ?4
+          AND EXISTS (
+            SELECT 1
+            FROM gca_credit_usage
+            WHERE credit_usage_id = ?5
+              AND service_request_id = ?6
+          )`
+      )
+      .bind(
+        remainingAfter,
+        creditLedgerStatus,
+        serviceRequestRow.credit_ledger_id,
+        remainingBefore,
+        creditUsageId,
+        reviewInput.serviceRequestId
+      );
+    const insertReview = db
+      .prepare(
+        `INSERT INTO gca_service_request_reviews (
+          service_request_review_id,
+          service_request_id,
+          packet_version,
+          decision,
+          reason_code,
+          reviewer_id,
+          operator_note,
+          delivery_reference,
+          credit_usage_id,
+          credit_amount_used,
+          remaining_credits_before,
+          remaining_credits_after,
+          reviewed_at,
+          source,
+          manual_review_completed,
+          delivery_completed,
+          credits_deducted,
+          requires_signature,
+          requires_transaction,
+          automatic_token_transfer,
+          writes_wallet,
+          creates_trading_permission
+        )
+        SELECT
+          ?1, service_request_id, ?2, ?3, ?4, ?5, ?6, ?7,
+          ?8, ?9, ?10, ?11, ?12, ?13, 1, 1, 1, 0, 0, 0, 0, 0
+        FROM gca_service_requests
+        WHERE service_request_id = ?14
+          AND status = ?15
+          AND latest_review_id = ?16
+          AND EXISTS (
+            SELECT 1
+            FROM gca_credit_usage
+            WHERE credit_usage_id = ?8
+              AND service_request_id = ?14
+          )`
+      )
+      .bind(
+        reviewId,
+        SERVICE_REQUEST_REVIEW_VERSION,
+        reviewInput.decision,
+        reviewInput.reasonCode,
+        reviewInput.reviewerId,
+        reviewInput.operatorNote,
+        reviewInput.deliveryReference,
+        creditUsageId,
+        creditAmountUsed,
+        remainingBefore,
+        remainingAfter,
+        now,
+        reviewInput.source,
+        reviewInput.serviceRequestId,
+        currentStatus,
+        currentLatestReviewId
+      );
+    const updateServiceRequest = db
+      .prepare(
+        `UPDATE gca_service_requests
+        SET status = ?1,
+            latest_review_id = ?2,
+            reviewed_at = ?3,
+            completed_at = ?3,
+            updated_at = ?3,
+            credit_usage_id = ?4,
+            does_not_deduct_credits = 0
+        WHERE service_request_id = ?5
+          AND status = ?6
+          AND latest_review_id = ?7
+          AND EXISTS (
+            SELECT 1
+            FROM gca_service_request_reviews
+            WHERE service_request_review_id = ?2
+              AND credit_usage_id = ?4
+          )`
+      )
+      .bind(
+        nextStatus,
+        reviewId,
+        now,
+        creditUsageId,
+        reviewInput.serviceRequestId,
+        currentStatus,
+        currentLatestReviewId
+      );
+    try {
+      batchResults = await db.batch([
+        insertUsage,
+        updateCreditLedger,
+        insertReview,
+        updateServiceRequest
+      ]);
+    } catch (error) {
+      const concurrentUsage = await db
+        .prepare(
+          `SELECT credit_usage_id
+          FROM gca_credit_usage
+          WHERE service_request_id = ?1
+          LIMIT 1`
+        )
+        .bind(reviewInput.serviceRequestId)
+        .first();
+      if (concurrentUsage) {
+        throw new ApiError(
+          "service request credit settlement changed; reload before retrying",
+          409
+        );
+      }
+      throw error;
+    }
+    if (
+      batchResults.some(
+        (result) => Number(result?.meta?.changes || 0) !== 1
+      )
+    ) {
+      throw new ApiError(
+        "service request delivery changed; reload before retrying",
+        409
+      );
+    }
+  } else {
+    const deliveryCompleted =
+      reviewInput.decision === "delivered" ? 1 : 0;
+    const insertReview = db
+      .prepare(
+        `INSERT INTO gca_service_request_reviews (
+          service_request_review_id,
+          service_request_id,
+          packet_version,
+          decision,
+          reason_code,
+          reviewer_id,
+          operator_note,
+          delivery_reference,
+          credit_usage_id,
+          credit_amount_used,
+          remaining_credits_before,
+          remaining_credits_after,
+          reviewed_at,
+          source,
+          manual_review_completed,
+          delivery_completed,
+          credits_deducted,
+          requires_signature,
+          requires_transaction,
+          automatic_token_transfer,
+          writes_wallet,
+          creates_trading_permission
+        )
+        SELECT
+          ?1, service_request_id, ?2, ?3, ?4, ?5, ?6, ?7,
+          '', 0, NULL, NULL, ?8, ?9, 1, ?10, 0, 0, 0, 0, 0, 0
+        FROM gca_service_requests
+        WHERE service_request_id = ?11
+          AND status = ?12
+          AND latest_review_id = ?13`
+      )
+      .bind(
+        reviewId,
+        SERVICE_REQUEST_REVIEW_VERSION,
+        reviewInput.decision,
+        reviewInput.reasonCode,
+        reviewInput.reviewerId,
+        reviewInput.operatorNote,
+        reviewInput.deliveryReference,
+        now,
+        reviewInput.source,
+        deliveryCompleted,
+        reviewInput.serviceRequestId,
+        currentStatus,
+        currentLatestReviewId
+      );
+    const updateServiceRequest = db
+      .prepare(
+        `UPDATE gca_service_requests
+        SET status = ?1,
+            latest_review_id = ?2,
+            reviewed_at = ?3,
+            completed_at = CASE
+              WHEN ?4 <> '' THEN ?4
+              ELSE completed_at
+            END,
+            updated_at = ?3,
+            credit_usage_id = '',
+            does_not_deduct_credits = 1
+        WHERE service_request_id = ?5
+          AND status = ?6
+          AND latest_review_id = ?7
+          AND EXISTS (
+            SELECT 1
+            FROM gca_service_request_reviews
+            WHERE service_request_review_id = ?2
+          )`
+      )
+      .bind(
+        nextStatus,
+        reviewId,
+        now,
+        terminalCompletedAt,
+        reviewInput.serviceRequestId,
+        currentStatus,
+        currentLatestReviewId
+      );
+    batchResults = await db.batch([
+      insertReview,
+      updateServiceRequest
+    ]);
+    if (
+      batchResults.some(
+        (result) => Number(result?.meta?.changes || 0) !== 1
+      )
+    ) {
+      throw new ApiError(
+        "service request review changed; reload before retrying",
+        409
+      );
+    }
+  }
+
+  const reviewRow = await db
+    .prepare(
+      `SELECT *
+      FROM gca_service_request_reviews
+      WHERE service_request_review_id = ?1
+      LIMIT 1`
+    )
+    .bind(reviewId)
+    .first();
+  if (!reviewRow) {
+    throw new ApiError(
+      "service request review was not recorded",
+      409
+    );
+  }
+  return buildServiceRequestReviewResponse(
+    db,
+    reviewRow,
+    origin,
+    env,
+    201,
+    false
+  );
 }
 
 async function maybeWriteMemberLedger(db, account, verification, evidence, now) {
@@ -3232,7 +4062,21 @@ async function submitAccountServiceRequest(request, env, origin) {
   );
   const existingRow = await db
     .prepare(
-      "SELECT * FROM gca_service_requests WHERE service_request_id = ?1 LIMIT 1"
+      `SELECT
+        service.*,
+        review.decision AS review_decision,
+        review.reason_code AS review_reason_code,
+        review.reviewed_at AS review_reviewed_at,
+        review.delivery_completed AS review_delivery_completed,
+        review.credits_deducted AS review_credits_deducted,
+        review.credit_amount_used AS review_credit_amount_used,
+        review.remaining_credits_after AS review_remaining_credits_after
+      FROM gca_service_requests AS service
+      LEFT JOIN gca_service_request_reviews AS review
+        ON review.service_request_review_id =
+          service.latest_review_id
+      WHERE service.service_request_id = ?1
+      LIMIT 1`
     )
     .bind(serviceRequestId)
     .first();
@@ -3388,10 +4232,21 @@ async function readAccountServiceRequests(request, env, origin) {
   );
   const { results } = await db
     .prepare(
-      `SELECT *
-      FROM gca_service_requests
-      WHERE account_id = ?1
-      ORDER BY created_at DESC
+      `SELECT
+        service.*,
+        review.decision AS review_decision,
+        review.reason_code AS review_reason_code,
+        review.reviewed_at AS review_reviewed_at,
+        review.delivery_completed AS review_delivery_completed,
+        review.credits_deducted AS review_credits_deducted,
+        review.credit_amount_used AS review_credit_amount_used,
+        review.remaining_credits_after AS review_remaining_credits_after
+      FROM gca_service_requests AS service
+      LEFT JOIN gca_service_request_reviews AS review
+        ON review.service_request_review_id =
+          service.latest_review_id
+      WHERE service.account_id = ?1
+      ORDER BY service.created_at DESC
       LIMIT ?2`
     )
     .bind(accountRow.account_id, ACCOUNT_SERVICE_REQUEST_HISTORY_LIMIT)
@@ -4133,6 +4988,14 @@ function accessBoundaries() {
     accountServiceRequestCreditsDeductedOnRequest: false,
     accountServiceRequestReturnsEmail: false,
     accountServiceRequestCreatesTradingPermission: false,
+    serviceRequestReviewEnabled: true,
+    serviceRequestReviewMode:
+      "admin-token-protected-manual-review-and-delivery",
+    serviceRequestReviewApprovedBeforeDeliveryRequired: true,
+    serviceRequestReviewServerCatalogAuthoritative: true,
+    serviceRequestReviewCreditsDeductedOnlyOnDelivered: true,
+    serviceRequestReviewCreditsDeductedAtMostOnce: true,
+    serviceRequestReviewReturnsToAccountHistory: true,
     requiresSignature: false,
     requiresTransaction: false,
     asksForPrivateKey: false,
@@ -4174,6 +5037,8 @@ function accessConfig(origin, env) {
     accountServiceRequestVersion: ACCOUNT_SERVICE_REQUEST_VERSION,
     accountServiceRequestStatusVersion:
       ACCOUNT_SERVICE_REQUEST_STATUS_VERSION,
+    serviceRequestReviewVersion:
+      SERVICE_REQUEST_REVIEW_VERSION,
     memberReviewVersion: MEMBER_REVIEW_VERSION,
     holdingVerificationVersion: HOLDING_VERIFICATION_VERSION,
     memberBenefitTransferVersion: MEMBER_BENEFIT_TRANSFER_VERSION,
@@ -4193,6 +5058,8 @@ function accessConfig(origin, env) {
       accountServiceRequests: "/gca/account-service-requests",
       accountServiceRequestStatus:
         "/gca/account-service-requests/status",
+      serviceRequestReviewsAdmin:
+        "/gca/service-request-reviews",
       walletVerifications: "/gca/wallet-verifications",
       creditLedgerAdmin: "/gca/credit-ledger",
       serviceRequestsAdmin: "/gca/service-requests",
@@ -4290,6 +5157,8 @@ async function listMemberTable(request, env, origin, table, mapper, allowedFilte
         ? "used_at"
       : table === "gca_service_requests"
         ? "created_at"
+      : table === "gca_service_request_reviews"
+        ? "reviewed_at"
       : table === "gca_member_reviews"
         ? "reviewed_at"
       : table === "gca_holding_verifications"
@@ -4331,6 +5200,8 @@ function health(origin, env) {
     accountServiceRequestVersion: ACCOUNT_SERVICE_REQUEST_VERSION,
     accountServiceRequestStatusVersion:
       ACCOUNT_SERVICE_REQUEST_STATUS_VERSION,
+    serviceRequestReviewVersion:
+      SERVICE_REQUEST_REVIEW_VERSION,
     memberReviewVersion: MEMBER_REVIEW_VERSION,
     holdingVerificationVersion: HOLDING_VERIFICATION_VERSION,
     memberBenefitTransferVersion: MEMBER_BENEFIT_TRANSFER_VERSION,
@@ -4498,6 +5369,39 @@ export default {
               ["walletAddress", "wallet_address", normalizeWallet],
               ["creditLedgerId", "credit_ledger_id", null],
               ["serviceRequestId", "service_request_id", null]
+            ]
+          );
+        }
+      }
+      if (url.pathname === "/gca/service-request-reviews") {
+        if (request.method === "POST") {
+          return await reviewServiceRequest(request, env, origin);
+        }
+        if (request.method === "GET") {
+          return await listMemberTable(
+            request,
+            env,
+            origin,
+            "gca_service_request_reviews",
+            rowToServiceRequestReview,
+            [
+              [
+                "serviceRequestId",
+                "service_request_id",
+                (value) => {
+                  const normalized = String(value || "")
+                    .trim()
+                    .toLowerCase();
+                  if (!SERVICE_REQUEST_ID_RE.test(normalized)) {
+                    throw new ApiError(
+                      "serviceRequestId must be a valid GCA service request id"
+                    );
+                  }
+                  return normalized;
+                }
+              ],
+              ["decision", "decision", null],
+              ["reviewerId", "reviewer_id", null]
             ]
           );
         }

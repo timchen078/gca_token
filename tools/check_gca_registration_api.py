@@ -37,7 +37,7 @@ from tools.export_cloudflare_email_registrations import (  # noqa: E402
 
 DEFAULT_ORIGIN = "https://gcagochina.com"
 DEFAULT_USER_AGENT = "GCA-Operator-Registration-API-Check/1.0"
-WORKER_RELEASE = "gca-registration-worker-2026-07-28-account-service-requests-v1"
+WORKER_RELEASE = "gca-registration-worker-2026-07-30-service-request-delivery-v1"
 OFFICIAL_CONTACT_EMAIL = "support@gcagochina.com"
 OFFICIAL_MEMBER_BENEFIT_SOURCE_WALLET = "0x5e8f84748612b913aacc937492ac25dc5630e246"
 
@@ -188,6 +188,11 @@ def check_health(*, base_url: str, timeout: float, cafile: str, opener: Callable
         == "gca_account_service_request_status_v1",
         "health endpoint returned wrong account service request status version",
     )
+    require(
+        payload.get("serviceRequestReviewVersion")
+        == "gca_service_request_review_v1",
+        "health endpoint returned wrong service request review version",
+    )
     require(payload.get("memberReviewVersion") == "gca_member_review_v1", "health endpoint returned wrong member review packet version")
     require(
         payload.get("holdingVerificationVersion") == "gca_holding_verification_v1",
@@ -234,6 +239,9 @@ def check_health(*, base_url: str, timeout: float, cafile: str, opener: Callable
         ),
         "accountServiceRequestStatusVersion": payload.get(
             "accountServiceRequestStatusVersion"
+        ),
+        "serviceRequestReviewVersion": payload.get(
+            "serviceRequestReviewVersion"
         ),
         "memberReviewVersion": payload.get("memberReviewVersion"),
         "holdingVerificationVersion": payload.get("holdingVerificationVersion"),
@@ -380,6 +388,11 @@ def check_access_config(*, base_url: str, timeout: float, cafile: str, opener: C
         == "gca_account_service_request_status_v1",
         "access config returned wrong account service request status version",
     )
+    require(
+        payload.get("serviceRequestReviewVersion")
+        == "gca_service_request_review_v1",
+        "access config returned wrong service request review version",
+    )
     require(payload.get("memberReviewVersion") == "gca_member_review_v1", "access config returned wrong member review version")
     require(
         payload.get("holdingVerificationVersion") == "gca_holding_verification_v1",
@@ -433,6 +446,13 @@ def check_access_config(*, base_url: str, timeout: float, cafile: str, opener: C
         payload.get("endpoints", {}).get("accountServiceRequestStatus")
         == "/gca/account-service-requests/status",
         "access config returned wrong account service request status endpoint",
+    )
+    require(
+        payload.get("endpoints", {}).get(
+            "serviceRequestReviewsAdmin"
+        )
+        == "/gca/service-request-reviews",
+        "access config returned wrong service request review endpoint",
     )
     require(payload.get("boundaries", {}).get("readOnlyWalletVerification") is True, "access config must keep read-only wallet verification")
     require(payload.get("boundaries", {}).get("readOnlyAccountStatus") is True, "access config must keep account status read-only")
@@ -528,6 +548,41 @@ def check_access_config(*, base_url: str, timeout: float, cafile: str, opener: C
         is False,
         "account service requests must not create trading permission",
     )
+    require(
+        payload.get("boundaries", {}).get(
+            "serviceRequestReviewEnabled"
+        )
+        is True,
+        "access config must enable service request review",
+    )
+    require(
+        payload.get("boundaries", {}).get(
+            "serviceRequestReviewApprovedBeforeDeliveryRequired"
+        )
+        is True,
+        "service request delivery must require prior approval",
+    )
+    require(
+        payload.get("boundaries", {}).get(
+            "serviceRequestReviewServerCatalogAuthoritative"
+        )
+        is True,
+        "service request review must use the server catalog",
+    )
+    require(
+        payload.get("boundaries", {}).get(
+            "serviceRequestReviewCreditsDeductedOnlyOnDelivered"
+        )
+        is True,
+        "service request review must deduct credits only on delivery",
+    )
+    require(
+        payload.get("boundaries", {}).get(
+            "serviceRequestReviewCreditsDeductedAtMostOnce"
+        )
+        is True,
+        "service request review must deduct credits at most once",
+    )
     service_catalog = payload.get("serviceCatalog", [])
     require(
         isinstance(service_catalog, list) and len(service_catalog) == 9,
@@ -587,6 +642,9 @@ def check_access_config(*, base_url: str, timeout: float, cafile: str, opener: C
         "contactEmail": payload.get("contactEmail"),
         "creditUsageVersion": payload.get("creditUsageVersion"),
         "serviceRequestVersion": payload.get("serviceRequestVersion"),
+        "serviceRequestReviewVersion": payload.get(
+            "serviceRequestReviewVersion"
+        ),
         "memberReviewVersion": payload.get("memberReviewVersion"),
         "holdingVerificationVersion": payload.get("holdingVerificationVersion"),
         "memberBenefitTransferVersion": payload.get("memberBenefitTransferVersion"),
@@ -920,6 +978,15 @@ def run_checks(
                 cafile=cafile,
                 opener=opener,
             ),
+            check_cors_preflight(
+                base_url=base_url,
+                path="/gca/service-request-reviews",
+                check_id="cors-service-request-reviews",
+                origin=origin,
+                timeout=timeout,
+                cafile=cafile,
+                opener=opener,
+            ),
             check_unauthorized_admin_read(
                 base_url=base_url,
                 path="/gca/credit-usage",
@@ -932,6 +999,14 @@ def run_checks(
                 base_url=base_url,
                 path="/gca/service-requests",
                 check_id="unauth-service-requests-read",
+                timeout=timeout,
+                cafile=cafile,
+                opener=opener,
+            ),
+            check_unauthorized_admin_read(
+                base_url=base_url,
+                path="/gca/service-request-reviews",
+                check_id="unauth-service-request-reviews-read",
                 timeout=timeout,
                 cafile=cafile,
                 opener=opener,
@@ -1061,7 +1136,17 @@ def run_checks(
                     timeout=timeout,
                     cafile=cafile,
                     opener=opener,
-                )
+                ),
+                check_authorized_admin_read(
+                    base_url=base_url,
+                    path="/gca/service-request-reviews",
+                    check_id="admin-service-request-reviews-read",
+                    token=clean_token,
+                    limit=limit,
+                    timeout=timeout,
+                    cafile=cafile,
+                    opener=opener,
+                ),
             ])
     return {
         "ok": all(item["ok"] for item in checks),
@@ -1083,6 +1168,7 @@ def run_checks(
             "submitsAccountStatusRecoveryCompletion": False,
             "submitsAccountServiceRequest": False,
             "submitsServiceRequest": False,
+            "submitsServiceRequestReview": False,
             "submitsMemberReview": False,
             "submitsHoldingVerification": False,
             "submitsMemberBenefitTransfer": False,

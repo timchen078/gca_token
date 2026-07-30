@@ -1,13 +1,13 @@
 {
   "schema": "https://gcagochina.com/release-gates.json",
   "pageUrl": "https://gcagochina.com/release-gates.html",
-  "status": "public-release-gates-device-account-status-live",
-  "lastUpdated": "2026-07-28",
+  "status": "public-release-gates-reviewed-service-delivery-live",
+  "lastUpdated": "2026-07-30",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "title": "GCA Product Release Gates",
   "currentState": {
-    "currentStage": "device-key-account-service-request-path-live",
+    "currentStage": "reviewed-service-delivery-and-idempotent-settlement-live",
     "publicProductSpecOnly": false,
     "publicAccountUiLive": true,
     "creditsEligibilitySubmissionLive": true,
@@ -54,18 +54,19 @@
     "memberBenefitManualTransferRequired": true,
     "memberBenefitAutomaticTransfer": false,
     "pendingServiceRoutesProductionLive": true,
-    "latestPendingRouteReadinessCheckAt": "2026-07-28T06:07:54Z",
-    "latestPendingRoutePublicCheckAt": "2026-07-28T06:07:02Z",
+    "latestPendingRouteReadinessCheckAt": "2026-07-30T06:42:17Z",
+    "latestPendingRoutePublicCheckAt": "2026-07-30T06:42:28Z",
     "cloudflareAuthSession": "passed",
     "cloudflareD1Visibility": "passed",
     "cloudflareWorkerDeployPermission": "passed",
     "cloudflareCode10000Seen": false,
     "pendingRouteAnonymousGetStatus": {
       "/gca/service-requests": 401,
-      "/gca/credit-usage": 401
+      "/gca/credit-usage": 401,
+      "/gca/service-request-reviews": 401
     },
-    "latestPendingRouteAdminCheckAt": "2026-07-28T06:07:11Z",
-    "workerVersionId": "e0d6f82e-9b6c-4a43-bec6-8447793da8ec",
+    "latestPendingRouteAdminCheckAt": "2026-07-30T06:42:38Z",
+    "workerVersionId": "c8d57eb4-9614-4d3e-8b8b-04fd63b65210",
     "accountStatusRotationPacketVersion": "gca_account_status_rotation_v1",
     "accountStatusRotationProductionLive": true,
     "accountStatusRotationGraceMinutes": 15,
@@ -82,10 +83,15 @@
     "accountServiceRequestUiLive": true,
     "accountServiceRequestDeviceKeyProtected": true,
     "accountServiceRequestDailyLimit": 5,
-    "accountServiceRequestProductionVerifiedAt": "2026-07-28T06:07:02Z",
+    "accountServiceRequestProductionVerifiedAt": "2026-07-30T06:42:28Z",
     "accountServiceRequestCreditsReserved": false,
     "accountServiceRequestCreditsDeductedOnSubmission": false,
-    "accountServiceRequestCreatesTradingPermission": false
+    "accountServiceRequestCreatesTradingPermission": false,
+    "serviceRequestReviewProductionLive": true,
+    "serviceRequestReviewPacketVersion": "gca_service_request_review_v1",
+    "serviceRequestReviewProductionVerifiedAt": "2026-07-30T06:42:38Z",
+    "serviceRequestDeliveryRequiresApprovedReview": true,
+    "serviceRequestCreditSettlementAtMostOnce": true
   },
   "releaseGates": [
     {
@@ -190,6 +196,21 @@
       ]
     },
     {
+      "id": "service-request-reviewed-delivery",
+      "label": "Manual service review and idempotent credit settlement",
+      "status": "live-token-protected",
+      "packetVersion": "gca_service_request_review_v1",
+      "endpoint": "/gca/service-request-reviews",
+      "operatorTool": "tools/review_cloudflare_service_request.py",
+      "blocks": [
+        "delivery without a prior approved review",
+        "credit amount supplied by the client instead of the server catalog",
+        "more than one credit usage record for the same service request",
+        "returning reviewer identity or operator notes to account history",
+        "wallet connection, signature, transaction, token transfer, or trading permission"
+      ]
+    },
+    {
       "id": "member-ledger-activation",
       "label": "GCA Member ledger activation",
       "status": "live-queued-manual-review-required",
@@ -286,6 +307,8 @@
   "noGoLiveWithout": [
     "read-only GCA balance verification",
     "credit ledger record",
+    "manual approved service review before delivery",
+    "completed delivery confirmation before one-time credit settlement",
     "member ledger record",
     "support review queue for member-benefit approval",
     "risk-control review",
@@ -314,12 +337,16 @@
       "After a manual reserve-wallet transfer, the production evidence route verifies a successful safe-block receipt and exactly one 10,000 GCA Transfer from the official reserve to the approved member wallet before storing the record.",
       "Any future trading-related feature must pass risk-control review and simulation or testnet first.",
       "GCA has published a public access operations runbook for manual review handling.",
+      "Service review decisions are append-only; delivery requires prior approval and one request can settle its server-catalog credit unit at most once.",
+      "The device-key account history returns only the latest redacted service decision and settlement, not reviewer identity or operator notes.",
       "The local operator support-review ledger uses a SHA-256 continuity chain and blocks new review writes when continuity verification fails.",
       "The local operator can export an unsigned chain-head checkpoint for separate retention and later ledger-lineage comparison.",
       "The latest BaseScan owner submission package was generated on 2026-07-18T12:03:57Z, and the daily public status snapshot was refreshed on 2026-07-23T16:08:40Z."
     ],
     "doNotClaim": [
       "credits are cash, income, reimbursement, trading permission, or transferable value",
+      "service approval automatically completes delivery or deducts credits",
+      "a service request can deduct credits multiple times",
       "GCA Member approval is automatic without 1,000,000 GCA balance and 30-day evidence review",
       "the public account form independently proves continuous 30-day holding",
       "the observed holding-history verifier is a third-party audit, permanent guarantee, or proof that public index data can never be delayed",

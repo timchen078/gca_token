@@ -27,19 +27,20 @@ Already live routes:
 - token-protected `GET /gca/member-ledger`
 - token-protected `GET/POST /gca/service-requests`
 - token-protected `GET/POST /gca/credit-usage`
+- token-protected `GET/POST /gca/service-request-reviews`
 
-The two service routes are production-live and token-protected. They are operator routes only. They are not public user claim endpoints, they do not connect wallets, they do not request wallet signatures, they do not send transactions, they do not transfer GCA, and they do not create live trading permission.
+The three service routes are production-live and token-protected. The review route stores append-only manual decisions, requires approval before delivery, uses the server catalog credit unit, and settles at most once for each request. They do not connect wallets, request signatures, send transactions, transfer GCA, or create live trading permission.
 
 ## Production Verification
 
-The deployment was completed on `2026-07-23` UTC.
+The latest service review and delivery deployment was completed on `2026-07-30` UTC.
 
-- Readiness passed at `2026-07-23T17:55:52Z`.
-- Remote migration `0005_service_requests.sql` applied successfully.
-- Current Worker version `e0d6f82e-9b6c-4a43-bec6-8447793da8ec` retains both protected routes and also includes the device-key-protected account status, credential rotation, and account service request routes.
-- Latest public smoke passed at `2026-07-28T06:07:02Z`.
-- Latest admin read-only smoke passed at `2026-07-28T06:07:11Z`.
-- Anonymous reads for both operator routes return HTTP `401`.
+- Readiness passed at `2026-07-30T06:42:17Z`.
+- Remote migration `0012_service_request_reviews.sql` applied successfully.
+- Current Worker version `c8d57eb4-9614-4d3e-8b8b-04fd63b65210` includes append-only service review, approved delivery, idempotent settlement, and redacted account history.
+- Latest public smoke passed at `2026-07-30T06:42:28Z`.
+- Latest admin read-only smoke passed at `2026-07-30T06:42:38Z`.
+- Anonymous reads for all three operator service routes return HTTP `401`.
 - Token-protected admin reads return HTTP `200`.
 
 The deployment blocker is cleared. For future releases, do not apply remote migrations or run `wrangler deploy` until `cloudflare-auth-session`, `cloudflare-d1-visible`, and `cloudflare-worker-deploy-permission` all pass. If `Authentication error [code: 10000]` reappears after login, treat it as an account or permission blocker and follow `authRecovery.safeNextActions`.
@@ -82,6 +83,7 @@ This applies pending remote D1 migrations. The production database already inclu
 
 - `0004_credit_usage_ledger.sql`
 - `0005_service_requests.sql`
+- `0012_service_request_reviews.sql`
 
 Stop if Wrangler reports a remote D1 migration error.
 
@@ -105,7 +107,7 @@ cd /Users/abc/Desktop/gca_token
 python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes
 ```
 
-This verifies public health/config version fields, CORS, and unauthenticated admin-read rejection for the service routes. It does not need `ADMIN_READ_TOKEN` and does not write test records.
+This verifies public health/config version fields, CORS, and unauthenticated admin-read rejection for the service queue, service review, and credit usage routes. It does not need `ADMIN_READ_TOKEN` and does not write test records.
 
 ## Gate 5: Post-Deploy Admin Smoke
 
@@ -135,7 +137,7 @@ The export is an internal operator artifact. Do not publish full user records.
 
 ## Status Update After Success
 
-Gates 1 through 5 passed for the 2026-07-23 deployment. For future deployments:
+Gates 1 through 5 passed for the 2026-07-30 deployment. For future deployments:
 
 1. Change `site/access-api.json` and `site/api-status.json` route statuses from the previous release state to live token-protected status.
 2. Update the matching HTML pages to say the routes are live.
@@ -157,7 +159,7 @@ Stop and do not claim the routes are live if:
 - Wrangler is not logged in, or the readiness gate returns `Authentication error [code: 10000]`;
 - D1 remote migration fails;
 - Worker deploy fails;
-- `/health` does not expose `gca_credit_usage_v1` and `gca_service_request_v1`;
+- `/health` does not expose `gca_credit_usage_v1`, `gca_service_request_v1`, and `gca_service_request_review_v1`;
 - unauthenticated reads do not return authorization errors;
 - admin smoke checks cannot read the new route response shapes;
 - any command prints secrets or user record contents.

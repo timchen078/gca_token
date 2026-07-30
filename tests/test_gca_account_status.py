@@ -191,7 +191,7 @@ console.log(JSON.stringify({
             source,
         )
         self.assertIn(
-            'const WORKER_RELEASE =\n  "gca-registration-worker-2026-07-28-account-service-requests-v1";',
+            'const WORKER_RELEASE =\n  "gca-registration-worker-2026-07-30-service-request-delivery-v1";',
             source,
         )
         self.assertIn('url.pathname === "/gca/account-status"', source)

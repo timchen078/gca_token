@@ -8,7 +8,7 @@ from tools.check_gca_registration_api import ApiCheckError, run_checks
 HEALTH_PAYLOAD = {
     "ok": True,
     "service": "gca-registration-api",
-    "workerRelease": "gca-registration-worker-2026-07-28-account-service-requests-v1",
+    "workerRelease": "gca-registration-worker-2026-07-30-service-request-delivery-v1",
     "contactEmail": "support@gcagochina.com",
     "packetVersion": "gca_email_registration_v1",
     "contactSuppressionVersion": "gca_contact_suppression_v1",
@@ -23,6 +23,7 @@ HEALTH_PAYLOAD = {
     "serviceRequestVersion": "gca_service_request_v1",
     "accountServiceRequestVersion": "gca_account_service_request_v1",
     "accountServiceRequestStatusVersion": "gca_account_service_request_status_v1",
+    "serviceRequestReviewVersion": "gca_service_request_review_v1",
     "memberReviewVersion": "gca_member_review_v1",
     "holdingVerificationVersion": "gca_holding_verification_v1",
     "memberBenefitTransferVersion": "gca_member_benefit_transfer_v1",
@@ -40,7 +41,7 @@ HEALTH_PAYLOAD = {
 ACCESS_CONFIG_PAYLOAD = {
     "ok": True,
     "service": "gca-registration-api",
-    "workerRelease": "gca-registration-worker-2026-07-28-account-service-requests-v1",
+    "workerRelease": "gca-registration-worker-2026-07-30-service-request-delivery-v1",
     "contactEmail": "support@gcagochina.com",
     "memberAccessVersion": "gca_member_access_v2",
     "legacyMemberAccessVersion": "gca_member_access_v1",
@@ -53,6 +54,7 @@ ACCESS_CONFIG_PAYLOAD = {
     "serviceRequestVersion": "gca_service_request_v1",
     "accountServiceRequestVersion": "gca_account_service_request_v1",
     "accountServiceRequestStatusVersion": "gca_account_service_request_status_v1",
+    "serviceRequestReviewVersion": "gca_service_request_review_v1",
     "memberReviewVersion": "gca_member_review_v1",
     "holdingVerificationVersion": "gca_holding_verification_v1",
     "memberBenefitTransferVersion": "gca_member_benefit_transfer_v1",
@@ -64,6 +66,7 @@ ACCESS_CONFIG_PAYLOAD = {
         "accountStatusRecovery": "/gca/account-status/recover",
         "accountServiceRequests": "/gca/account-service-requests",
         "accountServiceRequestStatus": "/gca/account-service-requests/status",
+        "serviceRequestReviewsAdmin": "/gca/service-request-reviews",
         "memberReviewsAdmin": "/gca/member-reviews",
         "holdingVerificationsAdmin": "/gca/holding-verifications",
         "memberBenefitTransfersAdmin": "/gca/member-benefit-transfers",
@@ -95,6 +98,11 @@ ACCESS_CONFIG_PAYLOAD = {
         "accountServiceRequestCreditsDeductedOnRequest": False,
         "accountServiceRequestReturnsEmail": False,
         "accountServiceRequestCreatesTradingPermission": False,
+        "serviceRequestReviewEnabled": True,
+        "serviceRequestReviewApprovedBeforeDeliveryRequired": True,
+        "serviceRequestReviewServerCatalogAuthoritative": True,
+        "serviceRequestReviewCreditsDeductedOnlyOnDelivered": True,
+        "serviceRequestReviewCreditsDeductedAtMostOnce": True,
         "automaticTokenTransfer": False,
         "automaticMemberActivationFromSubmittedDate": False,
         "onchainHoldingHistoryRequiredForApproval": True,
@@ -184,6 +192,7 @@ class GcaRegistrationApiCheckTests(unittest.TestCase):
                 "/gca/credit-ledger",
                 "/gca/service-requests",
                 "/gca/credit-usage",
+                "/gca/service-request-reviews",
                 "/gca/member-ledger",
                 "/gca/member-reviews",
                 "/gca/holding-verifications",
@@ -232,6 +241,7 @@ class GcaRegistrationApiCheckTests(unittest.TestCase):
         self.assertFalse(result["boundaries"]["submitsAccountStatusRecoveryCompletion"])
         self.assertFalse(result["boundaries"]["submitsAccountServiceRequest"])
         self.assertFalse(result["boundaries"]["submitsServiceRequest"])
+        self.assertFalse(result["boundaries"]["submitsServiceRequestReview"])
         self.assertFalse(result["boundaries"]["submitsMemberReview"])
         self.assertFalse(result["boundaries"]["submitsHoldingVerification"])
         self.assertFalse(result["boundaries"]["submitsMemberBenefitTransfer"])
@@ -346,12 +356,14 @@ class GcaRegistrationApiCheckTests(unittest.TestCase):
         self.assertTrue(result["ok"])
         self.assertTrue(result["boundaries"]["pendingWorkerRoutesIncluded"])
         health = next(item for item in result["checks"] if item["id"] == "health")
-        self.assertEqual(health["workerRelease"], "gca-registration-worker-2026-07-28-account-service-requests-v1")
+        self.assertEqual(health["workerRelease"], "gca-registration-worker-2026-07-30-service-request-delivery-v1")
         self.assertEqual(health["contactEmail"], "support@gcagochina.com")
-        self.assertEqual(len(result["checks"]), 47)
+        self.assertEqual(len(result["checks"]), 50)
         self.assertTrue(any(item["id"] == "admin-service-requests-read" for item in result["checks"]))
         self.assertTrue(any(item["id"] == "admin-credit-usage-read" for item in result["checks"]))
+        self.assertTrue(any(item["id"] == "admin-service-request-reviews-read" for item in result["checks"]))
         self.assertIn(("GET", "/gca/service-requests"), {(item["method"], item["path"]) for item in seen})
+        self.assertIn(("GET", "/gca/service-request-reviews"), {(item["method"], item["path"]) for item in seen})
 
     def test_admin_mode_requires_token(self):
         with self.assertRaises(ApiCheckError):

@@ -3,16 +3,16 @@
   "pageUrl": "https://gcagochina.com/worker-routes-handoff.html",
   "status": "worker-routes-v1-production-live",
   "handoffId": "worker-routes-handoff-v1",
-  "lastUpdated": "2026-07-28",
+  "lastUpdated": "2026-07-30",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "workerBaseUrl": "https://gca-registration-api.gcagochina.workers.dev",
   "sourceDocument": "docs/gca_worker_pending_routes_deploy_handoff.md",
-  "scope": "Public deployment record and repeatable release runbook for the production-live, operator-only service-request and credit-usage Cloudflare Worker routes.",
+  "scope": "Public deployment record and repeatable release runbook for production-live service-request queueing, append-only manual review, reviewed delivery, and idempotent credit settlement routes.",
   "currentStatus": {
-    "latestReadinessCheckAt": "2026-07-28T06:07:54Z",
-    "latestPublicRouteCheckAt": "2026-07-28T06:07:02Z",
-    "latestAdminRouteCheckAt": "2026-07-28T06:07:11Z",
+    "latestReadinessCheckAt": "2026-07-30T06:42:17Z",
+    "latestPublicRouteCheckAt": "2026-07-30T06:42:28Z",
+    "latestAdminRouteCheckAt": "2026-07-30T06:42:38Z",
     "workerDryRun": "passed-2026-07-23",
     "d1Visibility": "passed",
     "cloudflareAuthSession": "passed",
@@ -20,17 +20,21 @@
     "code10000Seen": false,
     "pendingRouteAnonymousGetStatus": {
       "/gca/service-requests": 401,
-      "/gca/credit-usage": 401
+      "/gca/credit-usage": 401,
+      "/gca/service-request-reviews": 401
     },
     "remoteMigrations": "applied",
     "workerDeploy": "passed",
-    "workerVersionId": "e0d6f82e-9b6c-4a43-bec6-8447793da8ec",
+    "workerVersionId": "c8d57eb4-9614-4d3e-8b8b-04fd63b65210",
     "postDeployPublicSmoke": "passed",
     "postDeployAdminSmoke": "passed",
     "productionRouteStatus": "live-token-protected",
     "accountStatusRotation": "live-device-key-protected",
     "accountStatusRotationVersion": "gca_account_status_rotation_v1",
-    "accountStatusRotationGraceMinutes": 15
+    "accountStatusRotationGraceMinutes": 15,
+    "serviceRequestReview": "live-token-protected",
+    "serviceRequestReviewVersion": "gca_service_request_review_v1",
+    "serviceRequestReviewAdminReadStatus": 200
   },
   "alreadyLiveRoutes": [
     "GET /health",
@@ -50,7 +54,8 @@
     "token-protected GET /gca/credit-ledger",
     "token-protected GET /gca/member-ledger",
     "token-protected GET/POST /gca/service-requests",
-    "token-protected GET/POST /gca/credit-usage"
+    "token-protected GET/POST /gca/credit-usage",
+    "token-protected GET/POST /gca/service-request-reviews"
   ],
   "preparedRoutes": [
     {
@@ -61,7 +66,22 @@
       "writesCredits": false,
       "createsTradingPermission": false,
       "productionLive": true,
-      "workerVersionId": "e0d6f82e-9b6c-4a43-bec6-8447793da8ec"
+      "workerVersionId": "c8d57eb4-9614-4d3e-8b8b-04fd63b65210"
+    },
+    {
+      "path": "/gca/service-request-reviews",
+      "method": "GET/POST",
+      "access": "token-protected-admin",
+      "status": "live-token-protected",
+      "packetVersion": "gca_service_request_review_v1",
+      "appendOnlyReviews": true,
+      "approvedBeforeDeliveryRequired": true,
+      "serverCatalogCreditUnitAuthoritative": true,
+      "atMostOneCreditUsagePerRequest": true,
+      "writesWithD1Batch": true,
+      "createsTradingPermission": false,
+      "productionLive": true,
+      "workerVersionId": "c8d57eb4-9614-4d3e-8b8b-04fd63b65210"
     },
     {
       "path": "/gca/credit-usage",
@@ -70,7 +90,7 @@
       "status": "live-token-protected",
       "writtenOnlyAfterReviewedDelivery": true,
       "productionLive": true,
-      "workerVersionId": "e0d6f82e-9b6c-4a43-bec6-8447793da8ec"
+      "workerVersionId": "c8d57eb4-9614-4d3e-8b8b-04fd63b65210"
     }
   ],
   "deployGates": [
@@ -96,7 +116,8 @@
       "expectedMigrations": [
         "0004_credit_usage_ledger.sql",
         "0005_service_requests.sql",
-        "0009_account_status_access.sql"
+        "0009_account_status_access.sql",
+        "0012_service_request_reviews.sql"
       ]
     },
     {
@@ -136,7 +157,7 @@
     "Wrangler is not logged in or readiness returns Authentication error [code: 10000]",
     "remote D1 migration fails",
     "wrangler deploy fails",
-    "/health does not expose gca_credit_usage_v1 and gca_service_request_v1",
+    "/health does not expose gca_credit_usage_v1, gca_service_request_v1, and gca_service_request_review_v1",
     "unauthenticated reads do not return authorization errors",
     "admin smoke checks cannot read the new route response shapes",
     "any command prints secrets or user record contents"
@@ -153,18 +174,22 @@
     "transfersGca": false,
     "createsTradingPermission": false,
     "automaticCreditDeductionBeforeReview": false,
+    "deliveryRequiresApprovedReview": true,
+    "creditDeductionAtMostOncePerServiceRequest": true,
     "productionLiveBeforeSmokeChecks": false
   },
   "safeClaims": [
-    "The GCA service-request and credit-usage Worker routes are production-live and token-protected.",
-    "Remote D1 migrations, Worker deploy, public smoke, and admin read-only smoke checks passed on 2026-07-23 UTC.",
+    "The GCA service-request, manual review, and credit settlement Worker routes are production-live and token-protected.",
+    "Remote D1 migrations, Worker deploy, public smoke, and admin read-only smoke checks passed on 2026-07-30 UTC.",
+    "Manual reviews are append-only, delivery requires prior approval, and one service request can deduct its server-catalog credit unit at most once.",
     "Anonymous ledger reads return HTTP 401; public visitors cannot read operator ledgers.",
     "The routes do not connect wallets, request signatures, transfer GCA, or create trading permission.",
     "The public device-key rotation route changes only the hashed account-status credential; it does not change account, credit, member, wallet, or token records."
   ],
   "doNotClaim": [
-    "production self-service service delivery is live",
+    "service delivery is automatic or bypasses manual approval",
     "credits are automatically deducted before operator review",
+    "one service request can deduct credits multiple times",
     "the routes connect wallets or request wallet signatures",
     "the routes send transactions, transfer GCA, or create trading permission",
     "full user records, admin tokens, private evidence, or local export files are public"

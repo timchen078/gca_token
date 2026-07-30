@@ -13,14 +13,17 @@ https://gca-registration-api.gcagochina.workers.dev/gca/account-status/rotate
 https://gca-registration-api.gcagochina.workers.dev/gca/account-status/recovery-requests
 https://gca-registration-api.gcagochina.workers.dev/gca/account-status/recovery-approvals
 https://gca-registration-api.gcagochina.workers.dev/gca/account-status/recover
+https://gca-registration-api.gcagochina.workers.dev/gca/account-service-requests
+https://gca-registration-api.gcagochina.workers.dev/gca/account-service-requests/status
 https://gca-registration-api.gcagochina.workers.dev/gca/wallet-verifications
 https://gca-registration-api.gcagochina.workers.dev/gca/access-config
+https://gca-registration-api.gcagochina.workers.dev/gca/service-request-reviews
 https://gca-registration-api.gcagochina.workers.dev/gca/member-reviews
 https://gca-registration-api.gcagochina.workers.dev/gca/holding-verifications
 https://gca-registration-api.gcagochina.workers.dev/gca/member-benefit-transfers
 ```
 
-The token-protected service request, credit usage, member review, holding-verification, and member-benefit transfer evidence routes are production-live. Cloudflare account authentication, D1 visibility, Worker deploy permission, remote D1 migrations, Worker deployment, public smoke, and admin read-only smoke checks passed for the latest Worker on 2026-07-27 UTC. Anonymous reads return HTTP 401 and token-protected admin reads return HTTP 200.
+The token-protected service request, append-only service review, reviewed delivery, credit usage, member review, holding-verification, and member-benefit transfer evidence routes are production-live. Cloudflare account authentication, D1 visibility, Worker deploy permission, remote D1 migrations, Worker deployment, public smoke, and admin read-only smoke checks passed for the latest Worker on 2026-07-30 UTC. Anonymous reads return HTTP 401 and token-protected admin reads return HTTP 200.
 
 ## What It Stores
 
@@ -65,6 +68,10 @@ Migration `0011_account_status_recovery.sql` adds a registered-email, manual-rev
 
 The status response excludes email, email hash, full wallet address, the device key, administrator data, operator notes, IP data, and user-agent data. It does not connect a wallet, request a signature, write an account or business-ledger record, or transfer GCA. If the key is lost, expired, or revoked, the member page can now submit the controlled recovery request; support still must verify the registered email before issuing the one-time credential.
 
+`POST /gca/account-service-requests` accepts a device-key authenticated catalog request and queues it without reserving or deducting credits. `POST /gca/account-service-requests/status` returns the account's latest 25 redacted request records. Migration `0012_service_request_reviews.sql` adds append-only `gca_service_request_review_v1` decisions and links a request to at most one credit usage record. `GET/POST /gca/service-request-reviews` requires `ADMIN_READ_TOKEN`; delivery is valid only after an approved review and requires a non-sensitive `deliveryReference`. The delivered action takes the credit amount from the server catalog and commits the credit usage, ledger deduction, review, and delivered request status in one D1 batch. The deterministic client review ID makes exact retries idempotent, and the unique service-request link prevents a second deduction.
+
+Account history returns only the latest redacted decision, reason code, review time, delivery state, credits used, and remaining balance. It excludes reviewer identity, operator notes, email, full wallet address, device key, and full request body. The review and delivery flow never connects a wallet, requests a signature, sends a transaction, transfers GCA, or creates trading permission.
+
 The submitted holding date and transaction hash do not prove continuous holding or activate GCA Member automatically. An operator must review the submitted evidence and record a decision through the token-protected member review route. Approval refreshes the current GCA balance at a safe Base block, combines Base Blockscout v2 transfer history with recent Base public RPC logs, reconstructs the observed minimum GCA balance over the prior 30 days, and fails closed unless the history is complete, internally consistent, and stays at or above 1,000,000 GCA.
 
 Successful approval writes an append-only `gca_holding_verification_v1` evidence row through migration `0007_holding_history_verifications.sql`, links the evidence ID to the member review and member ledger, and exposes protected operator reads at `GET /gca/holding-verifications`. This is an observed public-history reconstruction, not a third-party audit, permanent guarantee, or claim that a public index can never be delayed. The flow remains read-only with respect to the wallet and never signs, sends a transaction, transfers GCA, or authorizes the separate 10,000 GCA member-benefit transfer.
@@ -95,11 +102,14 @@ Public registration, contact-suppression, wallet-verification, and member-access
 - Admin device recovery queue endpoint: `GET /gca/account-status/recovery-requests`
 - Admin device recovery approval endpoint: `POST /gca/account-status/recovery-approvals`
 - Public device recovery completion endpoint: `POST /gca/account-status/recover`
+- Public account service request endpoint: `POST /gca/account-service-requests`
+- Public redacted account service history endpoint: `POST /gca/account-service-requests/status`
 - Public wallet verification endpoint: `POST /gca/wallet-verifications`
 - Public access config endpoint: `GET /gca/access-config`
 - Admin wallet verification endpoint: `GET /gca/wallet-verifications`
 - Admin credit ledger endpoint: `GET /gca/credit-ledger`
 - Admin service request endpoint: `GET/POST /gca/service-requests` live and token-protected
+- Admin service request review endpoint: `GET/POST /gca/service-request-reviews` live and token-protected
 - Admin credit usage endpoint: `GET/POST /gca/credit-usage` live and token-protected
 - Admin member ledger endpoint: `GET /gca/member-ledger`
 - Admin member review endpoint: `GET/POST /gca/member-reviews` live and token-protected
@@ -109,6 +119,7 @@ Public registration, contact-suppression, wallet-verification, and member-access
 - Account status access migration: `cloudflare/gca-registration-worker/migrations/0009_account_status_access.sql`
 - Account status rotation migration: `cloudflare/gca-registration-worker/migrations/0010_account_status_rotation.sql`
 - Account status recovery migration: `cloudflare/gca-registration-worker/migrations/0011_account_status_recovery.sql`
+- Service request review migration: `cloudflare/gca-registration-worker/migrations/0012_service_request_reviews.sql`
 - Credit usage D1 migration: `cloudflare/gca-registration-worker/migrations/0004_credit_usage_ledger.sql`
 - Service request D1 migration: `cloudflare/gca-registration-worker/migrations/0005_service_requests.sql`
 - Member review D1 migration: `cloudflare/gca-registration-worker/migrations/0006_member_reviews.sql`
@@ -117,6 +128,7 @@ Public registration, contact-suppression, wallet-verification, and member-access
 - Production member review operator tool: `tools/review_cloudflare_member.py`
 - Production account recovery approval tool: `tools/approve_cloudflare_account_recovery.py`
 - Production member-benefit evidence operator tool: `tools/record_cloudflare_member_benefit_transfer.py`
+- Production service request review and delivery tool: `tools/review_cloudflare_service_request.py`
 - Worker deploy readiness tool: `tools/check_gca_worker_deploy_readiness.py`
 - Worker routes deployment record: `docs/gca_worker_pending_routes_deploy_handoff.md`
 - Admin read secret: configured in Cloudflare as `ADMIN_READ_TOKEN`

@@ -2,12 +2,12 @@
   "schema": "https://gcagochina.com/credits.json",
   "pageUrl": "https://gcagochina.com/credits.html",
   "status": "public-credits-catalog-ledger-path-live",
-  "lastUpdated": "2026-07-28",
+  "lastUpdated": "2026-07-30",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "title": "GCA Utility Credits Catalog",
   "currentState": {
-    "currentStage": "account-service-request-path-live",
+    "currentStage": "reviewed-service-delivery-and-idempotent-settlement-live",
     "draftServiceCatalogOnly": false,
     "publicAccountUiLive": true,
     "creditsEligibilitySubmissionLive": true,
@@ -32,11 +32,15 @@
     "accountServiceRequestProductionLive": true,
     "accountServiceRequestDeviceKeyProtected": true,
     "accountServiceRequestDailyLimit": 5,
-    "accountServiceRequestProductionVerifiedAt": "2026-07-28T06:07:02Z",
+    "accountServiceRequestProductionVerifiedAt": "2026-07-30T06:42:28Z",
     "accountServiceRequestCreditsReserved": false,
     "accountServiceRequestCreditsDeductedOnSubmission": false,
     "memberLedgerWritesLive": true,
-    "serviceRoutesProductionVerifiedAt": "2026-07-28T06:07:11Z"
+    "serviceRoutesProductionVerifiedAt": "2026-07-30T06:42:38Z",
+    "serviceRequestReviewProductionLive": true,
+    "serviceRequestReviewPacketVersion": "gca_service_request_review_v1",
+    "serviceRequestDeliveryRequiresApproval": true,
+    "serviceRequestCreditSettlementAtMostOnce": true
   },
   "holderBonus": {
     "minimumHolding": "10000 GCA",
@@ -234,7 +238,7 @@
     "workerDeployReadinessCommand": "python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth",
     "workerDeployReadinessAuthSessionCheck": "cloudflare-auth-session",
     "workerDeployReadinessAuthRecoveryField": "authRecovery",
-    "latestDeployReadinessCheckAt": "2026-07-28T06:07:54Z",
+    "latestDeployReadinessCheckAt": "2026-07-30T06:42:17Z",
     "latestDeployReadinessSummary": {
       "wranglerDeployDryRun": "passed",
       "cloudflareD1Visibility": "passed",
@@ -245,7 +249,7 @@
       "deploysWorker": false
     },
     "lastObservedAnonymousGetStatus": 401,
-    "lastObservedAt": "2026-07-28T06:07:02Z",
+    "lastObservedAt": "2026-07-30T06:42:28Z",
     "postDeployPublicSmokeCommand": "python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes",
     "postDeployAdminSmokeCommand": "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes",
     "releaseGatesBeforeLive": [
@@ -273,9 +277,11 @@
     "selfServiceRedemption": false,
     "automaticWalletAction": false,
     "productionWorkerEndpointLive": true,
-    "workerVersionId": "e0d6f82e-9b6c-4a43-bec6-8447793da8ec",
-    "publicSmokePassedAt": "2026-07-28T06:07:02Z",
-    "adminSmokePassedAt": "2026-07-28T06:07:11Z"
+    "workerVersionId": "c8d57eb4-9614-4d3e-8b8b-04fd63b65210",
+    "publicSmokePassedAt": "2026-07-30T06:42:28Z",
+    "adminSmokePassedAt": "2026-07-30T06:42:38Z",
+    "linkedServiceRequestRequired": true,
+    "atMostOneUsagePerServiceRequest": true
   },
   "serviceRequestQueue": {
     "status": "live-token-protected-operator-service-request-queue",
@@ -284,7 +290,7 @@
     "workerDeployReadinessCommand": "python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth",
     "workerDeployReadinessAuthSessionCheck": "cloudflare-auth-session",
     "workerDeployReadinessAuthRecoveryField": "authRecovery",
-    "latestDeployReadinessCheckAt": "2026-07-28T06:07:54Z",
+    "latestDeployReadinessCheckAt": "2026-07-30T06:42:17Z",
     "latestDeployReadinessSummary": {
       "wranglerDeployDryRun": "passed",
       "cloudflareD1Visibility": "passed",
@@ -295,7 +301,7 @@
       "deploysWorker": false
     },
     "lastObservedAnonymousGetStatus": 401,
-    "lastObservedAt": "2026-07-28T06:07:02Z",
+    "lastObservedAt": "2026-07-30T06:42:28Z",
     "postDeployPublicSmokeCommand": "python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes",
     "postDeployAdminSmokeCommand": "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes",
     "releaseGatesBeforeLive": [
@@ -324,9 +330,9 @@
     "requiresSupportReview": true,
     "automaticWalletAction": false,
     "createsTradingPermission": false,
-    "workerVersionId": "e0d6f82e-9b6c-4a43-bec6-8447793da8ec",
-    "publicSmokePassedAt": "2026-07-28T06:07:02Z",
-    "adminSmokePassedAt": "2026-07-28T06:07:11Z"
+    "workerVersionId": "c8d57eb4-9614-4d3e-8b8b-04fd63b65210",
+    "publicSmokePassedAt": "2026-07-30T06:42:28Z",
+    "adminSmokePassedAt": "2026-07-30T06:42:38Z"
   },
   "accountServiceRequestAccess": {
     "status": "live-device-key-protected-manual-review-queue",
@@ -343,11 +349,34 @@
     "historyReturnsEmail": false,
     "historyReturnsFullWallet": false,
     "historyReturnsFullRequestBody": false,
+    "historyReturnsLatestRedactedReview": true,
+    "historyReturnsCreditSettlement": true,
+    "historyReturnsReviewerIdentity": false,
+    "historyReturnsOperatorNote": false,
     "creditsReserved": false,
     "creditsDeductedOnSubmission": false,
     "requiresOperatorReview": true,
     "automaticWalletAction": false,
     "createsTradingPermission": false
+  },
+  "serviceRequestReview": {
+    "status": "live-token-protected-append-only-reviewed-delivery",
+    "endpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/service-request-reviews",
+    "packetVersion": "gca_service_request_review_v1",
+    "operatorTool": "tools/review_cloudflare_service_request.py",
+    "requiresAdminReadToken": true,
+    "approvedBeforeDeliveryRequired": true,
+    "serverCatalogCreditUnitAuthoritative": true,
+    "creditsDeductedOnlyOnDelivered": true,
+    "creditsDeductedAtMostOncePerServiceRequest": true,
+    "usesD1BatchTransaction": true,
+    "automaticWalletAction": false,
+    "automaticTokenTransfer": false,
+    "createsTradingPermission": false,
+    "lastObservedAnonymousGetStatus": 401,
+    "lastObservedAdminGetStatus": 200,
+    "productionVerifiedAt": "2026-07-30T06:42:38Z",
+    "workerVersionId": "c8d57eb4-9614-4d3e-8b8b-04fd63b65210"
   },
   "redemptionBoundaries": {
     "accountLevelOnly": true,
@@ -362,6 +391,8 @@
     "serviceRequestDeductsCredits": false,
     "accountServiceRequestReservesCredits": false,
     "accountServiceRequestDeductsCredits": false,
+    "serviceRequestDeliveryRequiresApprovedReview": true,
+    "serviceRequestCreditDeductionAtMostOnce": true,
     "operatorUsageReviewRequired": true,
     "selfServiceRedemption": false,
     "requiresControlledAccountUi": false,
@@ -385,7 +416,8 @@
       "eligible account record",
       "read-only GCA balance verification",
       "credit ledger record",
-      "support/product review before service delivery"
+      "support/product review before service delivery",
+      "completed delivery confirmation before credit settlement"
     ],
     "requiredBeforeMemberUse": [
       "eligible account record",
@@ -450,6 +482,8 @@
       "Operator-reviewed service delivery can be recorded through the live token-protected GCA credit usage Worker route with before/after remaining credits; anonymous reads are rejected.",
       "Operators can queue requested service scope through the live token-protected service request Worker route before delivery; queued requests do not deduct credits.",
       "A registered account with a valid device key can submit one catalog service to the manual queue and read its own redacted request history; submission does not reserve or deduct credits.",
+      "Manual decisions are append-only; delivery requires prior approval and settles the server-catalog credit unit at most once.",
+      "Account request history shows the latest redacted review and credit settlement without exposing reviewer identity or operator notes.",
       "The 1,000,000 GCA Member threshold requires 30 consecutive days of holding before a one-time 10,000 GCA member benefit review.",
       "The Member Research Notes browser-only preview is live and does not deduct credits; the separate 20-unit member service tier remains subject to operator review and recorded delivery.",
       "The Trade Plan Ledger browser-only preview is live and does not deduct credits; no separate trade-plan service unit is claimed in the current catalog.",
@@ -461,6 +495,8 @@
       "credits or member status are cash, income, reimbursement, trading permission, or transferable value",
       "credit usage is automatic, public self-service, cash settlement, or wallet settlement",
       "service request queue records are automatic service delivery, credit deduction, cash settlement, wallet settlement, or trading permission",
+      "approval alone deducts credits or means delivery is complete",
+      "one service request can deduct credits more than once",
       "the 10,000 GCA member benefit is automatic or self-service transferred",
       "token ownership bypasses risk controls, support review, or simulation-first requirements",
       "service units are final commercial pricing before public terms are published"

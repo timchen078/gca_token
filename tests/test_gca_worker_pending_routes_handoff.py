@@ -12,15 +12,17 @@ class GcaWorkerRoutesDeploymentTests(unittest.TestCase):
 
         expected_fragments = [
             "Production Verification",
-            "2026-07-23T17:55:52Z",
-            "e0d6f82e-9b6c-4a43-bec6-8447793da8ec",
-            "Anonymous reads for both operator routes return HTTP `401`",
+            "2026-07-30T06:42:17Z",
+            "c8d57eb4-9614-4d3e-8b8b-04fd63b65210",
+            "Anonymous reads for all three operator service routes return HTTP `401`",
             "Authentication error [code: 10000]",
             "cloudflare-auth-session",
             "authRecovery.status: cloudflare-auth-or-permission-blocked",
             "python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth",
             "npx wrangler d1 migrations apply gca_registration --remote",
             "0005_service_requests.sql",
+            "0012_service_request_reviews.sql",
+            "gca_service_request_review_v1",
             "npx wrangler deploy",
             "python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes",
             "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes",
@@ -41,11 +43,13 @@ class GcaWorkerRoutesDeploymentTests(unittest.TestCase):
         self.assertLess(public_smoke_index, admin_smoke_index)
 
         for boundary in (
-            "they do not connect wallets",
-            "they do not request wallet signatures",
-            "they do not send transactions",
-            "they do not transfer GCA",
-            "they do not create live trading permission",
+            "They do not connect wallets",
+            "request signatures",
+            "send transactions",
+            "transfer GCA",
+            "create live trading permission",
+            "requires approval before delivery",
+            "settles at most once for each request",
         ):
             self.assertIn(boundary, record)
         self.assertNotIn("ADMIN_READ_TOKEN=", record)
@@ -57,14 +61,23 @@ class GcaWorkerRoutesDeploymentTests(unittest.TestCase):
         self.assertEqual(handoff["document"], "docs/gca_worker_pending_routes_deploy_handoff.md")
         self.assertEqual(handoff["status"], "production-live-verified")
         self.assertIsNone(handoff["blockedBy"])
-        self.assertEqual(handoff["workerVersionId"], "e0d6f82e-9b6c-4a43-bec6-8447793da8ec")
-        self.assertCountEqual(handoff["routes"], ["/gca/service-requests", "/gca/credit-usage"])
+        self.assertEqual(handoff["workerVersionId"], "c8d57eb4-9614-4d3e-8b8b-04fd63b65210")
+        self.assertCountEqual(
+            handoff["routes"],
+            [
+                "/gca/service-requests",
+                "/gca/service-request-reviews",
+                "/gca/credit-usage",
+            ],
+        )
 
         boundaries = handoff["boundaries"]
         for key in (
             "operatorOnly",
             "requiresAdminReadToken",
             "serviceRequestsDoNotDeductCredits",
+            "serviceRequestReviewRequiresPriorApprovalForDelivery",
+            "serviceRequestReviewDeductsCreditsAtMostOnce",
             "noWalletConnection",
             "noWalletSignature",
             "noTransaction",
@@ -78,8 +91,14 @@ class GcaWorkerRoutesDeploymentTests(unittest.TestCase):
         routes = {
             endpoint["path"]: endpoint
             for endpoint in api["adminEndpoints"]
-            if endpoint["path"] in {"/gca/service-requests", "/gca/credit-usage"}
+            if endpoint["path"]
+            in {
+                "/gca/service-requests",
+                "/gca/service-request-reviews",
+                "/gca/credit-usage",
+            }
         }
+        self.assertEqual(len(routes), 3)
         for route in routes.values():
             self.assertEqual(route["status"], "live-token-protected")
             self.assertEqual(route["lastObservedAnonymousGetStatus"], 401)
@@ -97,13 +116,16 @@ class GcaWorkerRoutesDeploymentTests(unittest.TestCase):
             "HTTP 401",
             "--include-pending-routes",
             "/gca/service-requests",
+            "/gca/service-request-reviews",
             "/gca/credit-usage",
         ):
             self.assertIn(expected, page)
 
         self.assertIn("docs/gca_worker_pending_routes_deploy_handoff.md", backend_doc)
         self.assertIn("Admin service request endpoint: `GET/POST /gca/service-requests` live and token-protected", backend_doc)
+        self.assertIn("Admin service request review endpoint: `GET/POST /gca/service-request-reviews` live and token-protected", backend_doc)
         self.assertIn("Service request D1 migration: `cloudflare/gca-registration-worker/migrations/0005_service_requests.sql`", backend_doc)
+        self.assertIn("Service request review migration: `cloudflare/gca-registration-worker/migrations/0012_service_request_reviews.sql`", backend_doc)
         self.assertIn("Anonymous reads return HTTP 401", backend_doc)
 
 

@@ -2,7 +2,7 @@
   "schema": "https://gcagochina.com/roadmap.json",
   "pageUrl": "https://gcagochina.com/roadmap.html",
   "status": "public-roadmap-published",
-  "lastUpdated": "2026-07-28",
+  "lastUpdated": "2026-07-30",
   "projectName": "GCA",
   "conceptExpansion": "Go China Access",
   "currentStage": "account-ledger-and-browser-tools-live-connected-services-staged",
@@ -67,7 +67,7 @@
       "status": "completed",
       "packetVersion": "gca_account_status_v1",
       "endpoint": "/gca/account-status",
-      "workerVersionId": "e0d6f82e-9b6c-4a43-bec6-8447793da8ec"
+      "workerVersionId": "c8d57eb4-9614-4d3e-8b8b-04fd63b65210"
     },
     {
       "id": "registered-email-device-recovery-live",
@@ -77,7 +77,7 @@
       "completionPacketVersion": "gca_account_status_recovery_v1",
       "requestEndpoint": "/gca/account-status/recovery-requests",
       "completionEndpoint": "/gca/account-status/recover",
-      "workerVersionId": "e0d6f82e-9b6c-4a43-bec6-8447793da8ec"
+      "workerVersionId": "c8d57eb4-9614-4d3e-8b8b-04fd63b65210"
     },
     {
       "id": "device-key-account-service-requests-live",
@@ -88,9 +88,23 @@
       "createEndpoint": "/gca/account-service-requests",
       "historyEndpoint": "/gca/account-service-requests/status",
       "productionVerifiedAt": "2026-07-28T06:07:02Z",
-      "workerVersionId": "e0d6f82e-9b6c-4a43-bec6-8447793da8ec",
+      "workerVersionId": "c8d57eb4-9614-4d3e-8b8b-04fd63b65210",
       "creditsReserved": false,
       "creditsDeductedOnSubmission": false
+    },
+    {
+      "id": "service-request-review-and-credit-settlement-live",
+      "label": "Append-only manual service review, approved-before-delivery workflow, idempotent credit settlement, and redacted member history are live",
+      "status": "completed",
+      "packetVersion": "gca_service_request_review_v1",
+      "reviewEndpoint": "/gca/service-request-reviews",
+      "operatorTool": "tools/review_cloudflare_service_request.py",
+      "productionVerifiedAt": "2026-07-30T06:42:38Z",
+      "workerVersionId": "c8d57eb4-9614-4d3e-8b8b-04fd63b65210",
+      "approvedBeforeDeliveryRequired": true,
+      "creditSettlementAtMostOnce": true,
+      "automaticTokenTransfer": false,
+      "createsTradingPermission": false
     },
     {
       "id": "public-browser-tool-suite-live",
@@ -165,7 +179,13 @@
       "dailyRequestLimit": 5,
       "creditsReserved": false,
       "creditsDeductedOnSubmission": false,
-      "createsTradingPermission": false
+      "createsTradingPermission": false,
+      "reviewStatus": "live-token-protected-append-only",
+      "reviewPath": "/gca/service-request-reviews",
+      "reviewPacketVersion": "gca_service_request_review_v1",
+      "deliveryRequiresApprovedReview": true,
+      "creditSettlementAtMostOnce": true,
+      "historyReturnsLatestRedactedReview": true
     },
     {
       "id": "gca-member-ledger",
@@ -216,6 +236,8 @@
       "The English and Chinese API status pages can run browser-time read-only identity and anonymous-access checks without writing records, reading admin response bodies, or sending an admin token.",
       "The public member access page can create account intake, wallet verification, 100 credits ledger, and GCA Member ledger records for eligible users.",
       "The account-status route is live and returns a redacted read-only snapshot after matching the SHA-256 hash of a browser device key.",
+      "Device-key accounts can submit catalog service requests, receive redacted manual review status, and see one-time credit settlement after approved delivery.",
+      "Service review decisions are append-only; delivery requires prior approval and one service request cannot deduct credits twice.",
       "Successful GCA Member approval requires a complete observed 30-day GCA transfer-history reconstruction and stores append-only holding evidence.",
       "The GCA Member benefit requires 1,000,000 GCA held for 30 consecutive days before one-time 10,000 GCA review.",
       "After a manual reserve-wallet transfer, the protected production API verifies and stores successful safe-block evidence for exactly 10,000 GCA from the official reserve to the approved member wallet.",
@@ -227,6 +249,8 @@
       "the member-benefit evidence route initiates, signs, authorizes, or broadcasts the transfer",
       "the observed holding-history reconstruction is a third-party audit, permanent guarantee, or proof that public index data can never be delayed",
       "the account-status route returns email, the full wallet address, the device key, administrator data, or operator notes",
+      "service request approval automatically means delivery is complete or creates trading permission",
+      "the same service request can deduct credits more than once",
       "BaseScan token profile approval before BaseScan publishes it",
       "security-vendor approval, permanent warning-free status, or cross-wallet warning removal before vendor/current wallet UI confirms it",
       "third-party audit completion before an independent report is published",

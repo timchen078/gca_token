@@ -325,9 +325,9 @@
 
     <main class="shell">
       <section aria-labelledby="title">
-        <p class="eyebrow">Access Operations Runbook / 2026-07-28</p>
+        <p class="eyebrow">Access Operations Runbook / 2026-07-30</p>
         <h1 id="title">GCA Access Operations Runbook</h1>
-        <p class="lead">This runbook defines how GCA operators handle registration, account intake, read-only wallet review, redacted device-key status access, account service requests, protected member decisions, manual member-benefit execution, and production verification of the resulting public transfer evidence.</p>
+        <p class="lead">This runbook defines how GCA operators handle registration, account intake, read-only wallet review, redacted device-key status access, append-only service review, approved manual delivery, one-time credit settlement, protected member decisions, and member-benefit evidence.</p>
         <p class="lead">The email registration, unsubscribe, account intake, wallet verification, redacted status, safe device-key rotation, registered-email recovery, and eligible ledger paths are live on Cloudflare Workers + D1. The redacted account status is private to the matching device key and is not a public ledger browser. Users who still hold a valid key can rotate it on the member-access page; users who lost it can open a generic recovery request. Operators must never request either device key by email or support ticket.</p>
         <div class="actions">
           <a class="button primary" href="review-queue.html">Review Queue Contract</a>
@@ -342,7 +342,7 @@
         <div class="facts" aria-label="Operational state">
           <div class="fact">
             <span class="label">Current stage</span>
-            <span class="value good">device-key account service request operations live</span>
+            <span class="value good">manual service review and settlement live</span>
           </div>
           <div class="fact">
             <span class="label">Email API</span>
@@ -375,6 +375,10 @@
           <div class="fact">
             <span class="label">Account service requests</span>
             <span class="value good">device-key queue + redacted history live</span>
+          </div>
+          <div class="fact">
+            <span class="label">Reviewed delivery</span>
+            <span class="value good">approved first + at-most-once credits</span>
           </div>
         </div>
       </section>
@@ -451,22 +455,26 @@
           </div>
           <div>
             <h3>9. Service Request Triage</h3>
-            <p class="note">Users with a valid device key can now submit through <code>/gca/account-service-requests</code>. Verify the server-selected catalog unit, account-linked credit state, request scope, and daily-limit status in the existing service queue. Submission does not reserve or deduct credits; write credit usage only after reviewed delivery.</p>
+            <p class="note">Users with a valid device key submit through <code>/gca/account-service-requests</code>. Review the protected queue, then use <code>tools/review_cloudflare_service_request.py</code> to append approved, needs-more-information, or rejected. Never collect credentials or create trading permission.</p>
           </div>
           <div>
-            <h3>10. Platform Follow-Up</h3>
+            <h3>10. Reviewed Delivery</h3>
+            <p class="note">Only an approved request can be marked delivered. Confirm manual completion and credit settlement in the same operator tool, and supply a non-sensitive delivery reference. The Worker uses the server catalog unit and atomically records one linked usage, deduction, review, and delivered status; retries cannot deduct twice.</p>
+          </div>
+          <div>
+            <h3>11. Platform Follow-Up</h3>
             <p class="note">When a reviewer asks for more information, send public URLs only and keep pool, contract, status, and claim boundaries consistent.</p>
           </div>
           <div>
-            <h3>10. Review Package Handoff</h3>
+            <h3>12. Review Package Handoff</h3>
             <p class="note">When a reviewer asks for local member-ledger evidence, export only the <code>redacted-public</code> package, verify <code>packageDigestSha256</code>, and use the <a href="platform-replies.html">Platform Replies</a> local review package template. Never send a full-local package externally.</p>
           </div>
           <div>
-            <h3>11. Review Chain Checkpoint</h3>
+            <h3>13. Review Chain Checkpoint</h3>
             <p class="note">After continuity verification and a meaningful review batch, export a chain-head receipt with <code>.venv/bin/python tools/create_gca_support_review_checkpoint.py --output ~/Documents/gca-support-review-checkpoint.json</code> and retain it outside the ledger directory.</p>
           </div>
           <div>
-            <h3>12. Closure</h3>
+            <h3>14. Closure</h3>
             <p class="note">Before closing, run <code>.venv/bin/python tools/verify_gca_support_review_audit.py</code>. Close the record only after continuity passes and status, evidence reference, reviewer note, and next public link are recorded without secrets.</p>
           </div>
         </div>
@@ -475,7 +483,7 @@
       <section class="section panel" aria-labelledby="memberOpsTitle">
         <h2 id="memberOpsTitle">Member Access Ops Pipeline</h2>
         <p class="note">Use this local operator pipeline after live account, wallet verification, credit ledger, member ledger, or member-benefit review records exist. It requires the ignored local <code>cloudflare/gca-registration-worker/.env.admin.local</code> file with <code>ADMIN_READ_TOKEN</code>. The output stays in <code>.gca_access_data/</code> and is not committed.</p>
-        <p class="note">The token-protected service-request, credit-usage, member-review, and holding-verification Worker routes are production-live. Initial service-route migration and deploy passed on 2026-07-23 UTC; the latest holding-history release and public/admin read-only smoke checks passed on 2026-07-27 UTC. Anonymous reads return HTTP 401. Run <code>python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth</code> again before any future release.</p>
+        <p class="note">The token-protected service-request, service-review, credit-usage, member-review, and holding-verification Worker routes are production-live. Migration <code>0012_service_request_reviews.sql</code>, the Worker deploy, and public/admin read-only smoke checks passed on 2026-07-30 UTC. Anonymous reads return HTTP 401.</p>
         <div class="grid">
           <div>
             <h3>1. Token-Protected Export</h3>
@@ -499,11 +507,11 @@
           </div>
           <div>
             <h3>6. Credit Usage Ledger</h3>
-            <p class="note">For reviewed service delivery, record <code>creditUsageId</code>, <code>serviceId</code>, <code>creditAmountUsed</code>, and remaining credits before/after through the token-protected operator credit usage ledger. The production Worker route is live; anonymous reads return HTTP 401, and records are written only after human-reviewed delivery.</p>
+            <p class="note">Do not write credit usage directly for account requests. Mark the approved request delivered through <code>/gca/service-request-reviews</code>; the Worker creates the linked credit usage and before/after balance exactly once.</p>
           </div>
           <div>
             <h3>7. Service Request Queue</h3>
-            <p class="note">Before delivery, record requested service scope through the token-protected operator <code>service_requests</code> queue. The production Worker route is live and rejects anonymous reads. It stores <code>serviceRequestId</code>, <code>serviceId</code>, optional <code>creditLedgerId</code>, requested credit hold, and status. It does not deduct credits; credit usage is recorded only after reviewed delivery.</p>
+            <p class="note">The protected <code>service_requests</code> queue stores request scope without deduction. The protected <code>service-request-reviews</code> route appends manual decisions, requires approval before delivery, and returns only a redacted decision and settlement to the member history.</p>
           </div>
           <div>
             <h3>8. Member Review Decision</h3>
