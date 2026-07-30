@@ -753,8 +753,8 @@
 
         <div class="panel">
           <h2>Request History <span class="zh">申请历史</span></h2>
-          <p class="note">This read returns only this account's service, title, status, time, and credit check. It does not return email, device keys, wallet secrets, or the full request body.</p>
-          <p class="note zh-note">这里只返回本账户的服务、标题、状态、时间和积分核对结果，不返回邮箱、设备密钥、钱包敏感信息或完整申请正文。</p>
+          <p class="note">This read returns only this account's service, title, manual-review status, time, and credit settlement. It does not return email, device keys, wallet secrets, operator notes, or the full request body.</p>
+          <p class="note zh-note">这里只返回本账户的服务、标题、人工审核状态、时间和积分结算，不返回邮箱、设备密钥、钱包敏感信息、运营备注或完整申请正文。</p>
           <div class="actions">
             <button class="button" type="button" id="refreshServiceRequests" disabled>Refresh History / 刷新历史</button>
           </div>
@@ -1217,6 +1217,20 @@
         return `${service.name}: ${service.creditUnit} credits · ${balanceText}. Submission does not reserve or deduct credits. / 提交不会预占或扣除积分。`;
       }
 
+      function serviceRequestStatusLabel(value) {
+        const labels = {
+          queued_operator_review: "Queued for review / 等待审核",
+          queued_insufficient_credits: "Queued · insufficient credits / 已排队 · 积分不足",
+          queued_expired_credit_ledger: "Queued · credits expired / 已排队 · 积分已过期",
+          queued_missing_credit_ledger: "Queued · no credit ledger / 已排队 · 无积分账本",
+          approved_operator_review: "Approved · delivery pending / 已批准 · 等待交付",
+          needs_more_information: "More information required / 需要补充信息",
+          rejected_operator_review: "Rejected / 已拒绝",
+          delivered: "Delivered / 已交付"
+        };
+        return labels[String(value || "")] || String(value || "queued");
+      }
+
       function renderServiceRequestHistory(payload) {
         if (payload && Array.isArray(payload.serviceCatalog)) {
           renderServiceCatalog(payload.serviceCatalog);
@@ -1249,7 +1263,7 @@
           title.textContent = request.requestTitle || request.serviceName || "Service request";
           const status = document.createElement("span");
           status.className = "request-status";
-          status.textContent = String(request.status || "queued");
+          status.textContent = serviceRequestStatusLabel(request.status);
           head.append(title, status);
           const service = document.createElement("span");
           service.className = "request-meta";
@@ -1262,6 +1276,21 @@
           next.className = "request-meta";
           next.textContent = request.nextStep || "Manual review pending.";
           item.append(head, service, created, next);
+          if (request.latestReview) {
+            const review = document.createElement("span");
+            review.className = "request-meta";
+            const reviewedDate = new Date(request.latestReview.reviewedAt);
+            const reviewedAt = Number.isNaN(reviewedDate.getTime())
+              ? request.latestReview.reviewedAt || "time not recorded"
+              : reviewedDate.toLocaleString();
+            const creditText = request.latestReview.deliveryCompleted
+              ? request.latestReview.creditAmountUsed > 0
+                ? `${request.latestReview.creditAmountUsed} credits used · ${request.latestReview.remainingCreditsAfter ?? "not recorded"} remaining`
+                : "delivered with 0 credits used"
+              : "no credits deducted";
+            review.textContent = `Manual review: ${request.latestReview.decision || request.status} · ${request.latestReview.reasonCode || "reason recorded"} · ${reviewedAt} · ${creditText}`;
+            item.append(review);
+          }
           serviceRequestList.append(item);
         }
       }

@@ -334,10 +334,10 @@
 
     <main class="shell">
       <section aria-labelledby="title">
-        <p class="eyebrow">Access API Contract / 2026-07-28</p>
+        <p class="eyebrow">Access API Contract / 2026-07-30</p>
         <h1 id="title">GCA Access API Contract</h1>
         <p class="lead">This page defines the controlled HTTPS API contract for the GCA account path. It covers email-only user registration, member account intake, read-only wallet verification, credit ledger records, GCA Member records, and support review statuses.</p>
-        <p class="lead">The Workers + D1 backend exposes live public routes for member access, redacted device-key account status, device-key protected service requests and history, safe key rotation, wallet verification, and registered-email recovery. Token-protected operator routes continue to handle GCA Member decisions, append-only holding evidence, reviewed credit use, and verified evidence for already-completed member-benefit transfers.</p>
+        <p class="lead">The Workers + D1 backend exposes live public routes for member access, redacted device-key account status, device-key protected service requests and history, safe key rotation, wallet verification, and registered-email recovery. Token-protected operator routes handle append-only service decisions, approved manual delivery, one-time credit settlement, GCA Member decisions, holding evidence, and verified evidence for already-completed member-benefit transfers.</p>
         <p class="lead">The 10,000 GCA member benefit remains a manual reserve-wallet process. The production evidence route verifies a successful safe-block receipt from the official reserve to the approved member wallet and records it; no API route signs, authorizes, or broadcasts a token transfer.</p>
         <p class="lead">The backend is deployed on Cloudflare Workers + D1 at <code>https://gca-registration-api.gcagochina.workers.dev</code>, so the public registration and member access pages can write directly to D1. Source remains in <code>cloudflare/gca-registration-worker/</code>. A future <code>api.gcagochina.com</code> custom domain still requires Cloudflare access to the account that owns the <code>gcagochina.com</code> zone.</p>
         <p class="lead">A local operator backend is also available for localhost testing, evidence export, read-only GCA balance checks, and operator review workflows. Implementation details are listed below in the endpoint contract and technical evidence sections.</p>
@@ -357,11 +357,11 @@
       <section class="facts" aria-label="Current state">
         <div class="fact">
           <span class="label">Current Stage</span>
-          <span class="value good">device-key account service requests live</span>
+          <span class="value good">reviewed service delivery and settlement live</span>
         </div>
         <div class="fact">
           <span class="label">Public Endpoint</span>
-          <span class="value">Account + status + service request routes live</span>
+          <span class="value">Account + redacted review history live</span>
         </div>
         <div class="fact">
           <span class="label">Local Backend</span>
@@ -527,6 +527,18 @@
           <span class="label">Service Request Migration</span>
           <span class="value">cloudflare/gca-registration-worker/migrations/0005_service_requests.sql</span>
         </div>
+        <div class="fact">
+          <span class="label">Service Review Version</span>
+          <span class="value good">gca_service_request_review_v1 live</span>
+        </div>
+        <div class="fact">
+          <span class="label">Service Review Migration</span>
+          <span class="value">cloudflare/gca-registration-worker/migrations/0012_service_request_reviews.sql</span>
+        </div>
+        <div class="fact">
+          <span class="label">Service Review Operator</span>
+          <span class="value">tools/review_cloudflare_service_request.py</span>
+        </div>
       </section>
 
       <section class="section panel" aria-labelledby="endpointsTitle">
@@ -595,7 +607,7 @@
           <div class="fact">
             <span class="label">POST</span>
             <span class="value">/gca/account-service-requests/status</span>
-            <p class="note">Live redacted history for <code>gca_account_service_request_status_v1</code>. It returns only the matched account's latest 25 service, title, status, time, and credit-check records; email, full wallet, device key, and full request body are omitted.</p>
+            <p class="note">Live redacted history for <code>gca_account_service_request_status_v1</code>. It returns the matched account's latest 25 requests, latest redacted decision, delivery state, credits used, and remaining balance. Email, full wallet, device key, full request body, reviewer identity, and operator notes are omitted.</p>
           </div>
           <div class="fact">
             <span class="label">POST</span>
@@ -610,7 +622,12 @@
           <div class="fact">
             <span class="label">POST / GET</span>
             <span class="value">/gca/service-requests</span>
-            <p class="note">Live token-protected operator queue for requested GCA AI Quant Access service scope before delivery. Initial migration and deploy passed on 2026-07-23 UTC; the latest public and admin read-only smoke checks passed on 2026-07-27 UTC. Anonymous reads return HTTP 401. It records service ID, optional credit ledger ID, requested credit hold, and review status; it does not deduct credits, connect wallets, request signatures, send tokens, or create trading permission.</p>
+            <p class="note">Live token-protected operator queue for requested GCA AI Quant Access service scope before delivery. The latest public and admin read-only smoke checks passed on 2026-07-30 UTC. Anonymous reads return HTTP 401. Queueing does not deduct credits, connect wallets, request signatures, send tokens, or create trading permission.</p>
+          </div>
+          <div class="fact">
+            <span class="label">POST / GET</span>
+            <span class="value">/gca/service-request-reviews</span>
+            <p class="note">Live <code>ADMIN_READ_TOKEN</code>-protected append-only review and delivery route for <code>gca_service_request_review_v1</code>. Delivery requires prior approval and a non-sensitive <code>deliveryReference</code>. The Worker takes the credit unit from the server catalog and commits one linked usage record, ledger deduction, review, and delivered status in one D1 batch; retries cannot deduct twice.</p>
           </div>
           <div class="fact">
             <span class="label">POST / GET</span>
@@ -690,6 +707,7 @@
             <div class="row"><span>Member evidence</span><strong><code>memberBenefitReviewEvidence</code>, <code>holdingStartDate</code>, <code>evidenceTxHash</code>, <code>evidenceTxHashFormatOk</code></strong></div>
             <div class="row"><span>Wallet verification</span><strong>registrationId, walletAddress, chainId, contractAddress</strong></div>
             <div class="row"><span>Service request</span><strong>email, serviceId, no-secrets acknowledgement, manual-review acknowledgement</strong></div>
+            <div class="row"><span>Service review</span><strong>serviceRequestId, clientReviewId, decision, reasonCode, reviewerId, manual-review acknowledgements, admin token; delivery also confirms completion and credit settlement</strong></div>
             <div class="row"><span>Credit usage</span><strong>creditLedgerId, serviceId, creditAmountUsed, admin token</strong></div>
             <div class="row"><span>Member review</span><strong>memberLedgerId, decision, reasonCode, reviewerId, manual-evidence acknowledgement, no-transfer acknowledgement, admin token</strong></div>
             <div class="row"><span>Holding evidence read</span><strong>ADMIN_READ_TOKEN; optional walletAddress, memberLedgerId, or status filter</strong></div>
@@ -707,7 +725,8 @@
             <div class="row"><span>Account status access</span><strong>active device key, expired, revoked, or support recovery required</strong></div>
             <div class="row"><span>Wallet check</span><strong>verified, below_threshold, failed, expired</strong></div>
             <div class="row"><span>Credit ledger</span><strong>queued, ledger_recorded, partially_used, used, expired, revoked</strong></div>
-            <div class="row"><span>Service request</span><strong>queued_operator_review, queued_missing_credit_ledger, queued_insufficient_credits, queued_expired_credit_ledger</strong></div>
+            <div class="row"><span>Service request</span><strong>queued_operator_review, queued_missing_credit_ledger, queued_insufficient_credits, queued_expired_credit_ledger, approved_operator_review, needs_more_information, rejected_operator_review, delivered</strong></div>
+            <div class="row"><span>Service review decision</span><strong>approved, needs_more_information, rejected, delivered</strong></div>
             <div class="row"><span>Credit usage</span><strong>usage_recorded, exhausted</strong></div>
             <div class="row"><span>Member ledger</span><strong>queued, active, review_rejected, needs_refresh, below_threshold, paused, revoked</strong></div>
             <div class="row"><span>Member review decision</span><strong>approved, rejected, needs_more_information</strong></div>
@@ -729,6 +748,9 @@
             <li>lost, expired, or revoked access uses a generic public request, registered-email support review, and a single-use 24-hour recovery credential</li>
             <li>recovery invalidates the old device key but does not modify account, credit, member, wallet, token, or on-chain records</li>
             <li>account service requests require the device key, take service units from the server catalog, and do not reserve or deduct credits on submission</li>
+            <li>service reviews are append-only, require administrator authorization, and require approval before delivery</li>
+            <li>completed delivery settles the server catalog credit unit at most once in a D1 batch</li>
+            <li>account history omits reviewer identity and operator notes</li>
             <li>token-protected admin reads for Cloudflare registration and suppression records</li>
             <li>token-protected admin reads for account-level ledger routes</li>
             <li>token-protected POST and GET for append-only production member review decisions</li>

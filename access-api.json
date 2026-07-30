@@ -1,13 +1,13 @@
 {
   "schema": "https://gcagochina.com/access-api.json",
   "pageUrl": "https://gcagochina.com/access-api.html",
-  "status": "public-access-api-account-service-requests-live",
-  "lastUpdated": "2026-07-28",
+  "status": "public-access-api-service-request-delivery-live",
+  "lastUpdated": "2026-07-30",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "title": "GCA Access API Contract",
   "currentState": {
-    "currentStage": "device-key-account-service-request-api-live",
+    "currentStage": "service-request-review-and-delivery-api-live",
     "contractOnly": false,
     "backendLive": true,
     "publicEndpointLive": true,
@@ -56,7 +56,7 @@
     "automaticMemberActivationFromSubmittedDate": false,
     "memberReviewProductionVerifiedAt": "2026-07-28T06:07:11Z",
     "memberBenefitTransferProductionVerifiedAt": "2026-07-28T06:07:11Z",
-    "serviceRoutesProductionVerifiedAt": "2026-07-28T06:07:11Z",
+    "serviceRoutesProductionVerifiedAt": "2026-07-30T06:42:38Z",
     "accountStatusRotationPacketVersion": "gca_account_status_rotation_v1",
     "accountStatusRotationProductionLive": true,
     "accountStatusRotationGraceMinutes": 15,
@@ -76,11 +76,20 @@
     "accountServiceRequestProductionLive": true,
     "accountServiceRequestDeviceKeyProtected": true,
     "accountServiceRequestDailyLimit": 5,
-    "accountServiceRequestProductionVerifiedAt": "2026-07-28T06:07:02Z",
+    "accountServiceRequestProductionVerifiedAt": "2026-07-30T06:42:28Z",
     "accountServiceRequestCreditsReserved": false,
     "accountServiceRequestCreditsDeductedOnRequest": false,
     "accountServiceRequestReturnsEmail": false,
-    "accountServiceRequestCreatesTradingPermission": false
+    "accountServiceRequestCreatesTradingPermission": false,
+    "serviceRequestReviewPacketVersion": "gca_service_request_review_v1",
+    "serviceRequestReviewProductionLive": true,
+    "serviceRequestReviewAppendOnly": true,
+    "serviceRequestReviewApprovedBeforeDeliveryRequired": true,
+    "serviceRequestReviewServerCatalogAuthoritative": true,
+    "serviceRequestReviewCreditsDeductedOnlyOnDelivered": true,
+    "serviceRequestReviewCreditsDeductedAtMostOnce": true,
+    "serviceRequestReviewReturnedRedactedToAccount": true,
+    "serviceRequestReviewProductionVerifiedAt": "2026-07-30T06:42:38Z"
   },
   "localDevelopmentBackend": {
     "status": "local-only-backend-available",
@@ -143,7 +152,7 @@
     "workerDeployReadinessCommand": "python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth",
     "workerDeployReadinessAuthSessionCheck": "cloudflare-auth-session",
     "workerDeployReadinessAuthRecoveryField": "authRecovery",
-    "latestDeployReadinessCheckAt": "2026-07-28T06:07:54Z",
+    "latestDeployReadinessCheckAt": "2026-07-30T06:42:17Z",
     "latestDeployReadinessSummary": {
       "wranglerDeployDryRun": "passed",
       "cloudflareD1Visibility": "passed",
@@ -153,10 +162,11 @@
       "writesD1Records": false,
       "deploysWorker": false
     },
-    "pendingRoutesLastObservedAt": "2026-07-28T06:07:02Z",
+    "pendingRoutesLastObservedAt": "2026-07-30T06:42:28Z",
     "pendingRouteAnonymousGetStatus": {
       "/gca/service-requests": 401,
-      "/gca/credit-usage": 401
+      "/gca/credit-usage": 401,
+      "/gca/service-request-reviews": 401
     },
     "pendingRoutePostDeployPublicSmokeCommand": "python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes",
     "pendingRoutePostDeployAdminSmokeCommand": "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes",
@@ -201,6 +211,7 @@
     "memberBenefitTransferMigration": "cloudflare/gca-registration-worker/migrations/0008_member_benefit_transfer_evidence.sql",
     "accountStatusAccessMigration": "cloudflare/gca-registration-worker/migrations/0009_account_status_access.sql",
     "accountStatusRecoveryMigration": "cloudflare/gca-registration-worker/migrations/0011_account_status_recovery.sql",
+    "serviceRequestReviewMigration": "cloudflare/gca-registration-worker/migrations/0012_service_request_reviews.sql",
     "memberAccessEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/member-access",
     "accountStatusEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/account-status",
     "accountStatusRecoveryRequestsEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/account-status/recovery-requests",
@@ -212,6 +223,7 @@
     "accessConfigEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/access-config",
     "adminCreditLedgerEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/credit-ledger",
     "adminServiceRequestsEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/service-requests",
+    "adminServiceRequestReviewsEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/service-request-reviews",
     "adminCreditUsageEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/credit-usage",
     "adminMemberLedgerEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/member-ledger",
     "adminMemberReviewsEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/member-reviews",
@@ -220,13 +232,15 @@
     "memberReviewOperatorTool": "tools/review_cloudflare_member.py",
     "accountStatusRecoveryOperatorTool": "tools/approve_cloudflare_account_recovery.py",
     "memberBenefitTransferOperatorTool": "tools/record_cloudflare_member_benefit_transfer.py",
+    "serviceRequestReviewOperatorTool": "tools/review_cloudflare_service_request.py",
     "antiSpamHoneypotFields": [
       "website",
       "company",
       "homepage"
     ],
-    "workerVersionId": "e0d6f82e-9b6c-4a43-bec6-8447793da8ec",
-    "workerRelease": "gca-registration-worker-2026-07-28-account-service-requests-v1",
+    "workerVersionId": "c8d57eb4-9614-4d3e-8b8b-04fd63b65210",
+    "workerRelease": "gca-registration-worker-2026-07-30-service-request-delivery-v1",
+    "serviceRequestReviewVersion": "gca_service_request_review_v1",
     "memberReviewVersion": "gca_member_review_v1",
     "holdingVerificationVersion": "gca_holding_verification_v1",
     "memberBenefitTransferVersion": "gca_member_benefit_transfer_v1",
@@ -234,7 +248,7 @@
     "memberBenefitTransferExactAmount": "10000 GCA",
     "memberBenefitTransferPublicSmokePassedAt": "2026-07-28T06:07:02Z",
     "memberBenefitTransferAdminSmokePassedAt": "2026-07-28T06:07:11Z",
-    "productionRoutesVerifiedAt": "2026-07-28T06:07:11Z",
+    "productionRoutesVerifiedAt": "2026-07-30T06:42:38Z",
     "accountStatusRotationMigration": "cloudflare/gca-registration-worker/migrations/0010_account_status_rotation.sql",
     "accountStatusRotationEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/account-status/rotate",
     "accountStatusRotationVersion": "gca_account_status_rotation_v1",
@@ -243,8 +257,10 @@
     "accountStatusRotationAdminSmokePassedAt": "2026-07-28T06:07:11Z",
     "accountStatusRecoveryPublicSmokePassedAt": "2026-07-28T06:07:02Z",
     "accountStatusRecoveryAdminSmokePassedAt": "2026-07-28T06:07:11Z",
-    "accountServiceRequestPublicSmokePassedAt": "2026-07-28T06:07:02Z",
-    "accountServiceRequestAdminQueueSmokePassedAt": "2026-07-28T06:07:11Z"
+    "accountServiceRequestPublicSmokePassedAt": "2026-07-30T06:42:28Z",
+    "accountServiceRequestAdminQueueSmokePassedAt": "2026-07-30T06:42:38Z",
+    "serviceRequestReviewPublicSmokePassedAt": "2026-07-30T06:42:28Z",
+    "serviceRequestReviewAdminSmokePassedAt": "2026-07-30T06:42:38Z"
   },
   "securityModel": {
     "controlledHttpsOriginRequired": true,
@@ -286,6 +302,16 @@
     "accountServiceRequestsReserveCredits": false,
     "accountServiceRequestsDeductCreditsOnSubmission": false,
     "accountServiceRequestsCreateTradingPermission": false,
+    "serviceRequestReviewsRequireAdminToken": true,
+    "serviceRequestReviewsAreAppendOnly": true,
+    "serviceRequestDeliveryRequiresApprovedStatus": true,
+    "serviceRequestDeliveryUsesServerCatalogCreditUnit": true,
+    "serviceRequestDeliveryDeductsCreditsAtMostOnce": true,
+    "serviceRequestDeliveryUsesD1BatchTransaction": true,
+    "serviceRequestHistoryReturnsOperatorNote": false,
+    "serviceRequestHistoryReturnsReviewerIdentity": false,
+    "serviceRequestDeliveryConnectsWallet": false,
+    "serviceRequestDeliveryCreatesTradingPermission": false,
     "usesEthCall": true,
     "usesEthGetTransactionReceipt": true,
     "usesErc20BalanceOf": true,
@@ -308,6 +334,7 @@
   "serviceRequestPacketVersion": "gca_service_request_v1",
   "accountServiceRequestPacketVersion": "gca_account_service_request_v1",
   "accountServiceRequestStatusPacketVersion": "gca_account_service_request_status_v1",
+  "serviceRequestReviewPacketVersion": "gca_service_request_review_v1",
   "memberReviewPacketVersion": "gca_member_review_v1",
   "memberEvidenceFields": [
     "memberBenefitReviewEvidence.holdingStartDate",
@@ -791,7 +818,8 @@
         "packetVersion must be gca_account_service_request_status_v1",
         "the SHA-256 device-key hash must match an active and unexpired account status access record",
         "records are filtered by the matched account ID",
-        "email, email hash, full wallet address, device key, and full request body are omitted",
+        "email, email hash, full wallet address, device key, full request body, reviewer identity, and operator note are omitted",
+        "the latest redacted decision, reason code, review time, delivery state, credit amount used, and remaining credits are returned when available",
         "the route does not change credits, account, member, wallet, or token records"
       ],
       "responseFields": [
@@ -806,7 +834,11 @@
         "queued_operator_review",
         "queued_missing_credit_ledger",
         "queued_insufficient_credits",
-        "queued_expired_credit_ledger"
+        "queued_expired_credit_ledger",
+        "approved_operator_review",
+        "needs_more_information",
+        "rejected_operator_review",
+        "delivered"
       ]
     },
     {
@@ -902,7 +934,60 @@
       "allowedStatuses": [
         "queued_operator_review",
         "queued_missing_credit_ledger",
-        "queued_insufficient_credits"
+        "queued_insufficient_credits",
+        "queued_expired_credit_ledger",
+        "approved_operator_review",
+        "needs_more_information",
+        "rejected_operator_review",
+        "delivered"
+      ]
+    },
+    {
+      "id": "service-request-reviews-read-write",
+      "method": "GET/POST",
+      "path": "/gca/service-request-reviews",
+      "status": "live-token-protected",
+      "purpose": "Append a manual operator review, require approval before delivery, and settle the server-catalog credit unit at most once when completed delivery is recorded.",
+      "requiredRequestFields": [
+        "authorization bearer token",
+        "packetVersion",
+        "serviceRequestId",
+        "clientReviewId",
+        "decision",
+        "reasonCode",
+        "reviewerId",
+        "acknowledgements.manualReviewCompleted",
+        "acknowledgements.noSecretsNoCustody",
+        "acknowledgements.noTradingPermission"
+      ],
+      "deliveryRequestFields": [
+        "deliveryReference",
+        "acknowledgements.deliveryCompleted",
+        "acknowledgements.creditSettlementAccepted"
+      ],
+      "serverChecks": [
+        "packetVersion must be gca_service_request_review_v1",
+        "clientReviewId produces an idempotent append-only review ID",
+        "delivered is allowed only after approved_operator_review",
+        "deliveryReference is required when delivered is recorded",
+        "the credit amount comes from the server service catalog rather than the request",
+        "one serviceRequestId can create at most one credit usage record",
+        "review, ledger deduction, credit usage, and delivered status are committed in one D1 batch",
+        "the route does not connect wallets, sign messages, send transactions, transfer GCA, or create trading permission"
+      ],
+      "responseFields": [
+        "idempotentReplay",
+        "serviceRequestReview",
+        "serviceRequest",
+        "creditUsage",
+        "creditLedger",
+        "boundaries"
+      ],
+      "allowedDecisions": [
+        "approved",
+        "needs_more_information",
+        "rejected",
+        "delivered"
       ]
     },
     {
@@ -1537,6 +1622,9 @@
       "POST /gca/account-status returns a read-only redacted status snapshot after matching the SHA-256 hash of the device key; it does not return email, the full wallet address, or the key.",
       "POST /gca/account-service-requests lets the device-key authenticated account queue one catalog service for manual review; the server selects the catalog unit and submission does not reserve or deduct credits.",
       "POST /gca/account-service-requests/status returns only that account's redacted service, title, status, time, and credit-check history without returning email, the device key, or the full request body.",
+      "Manual service decisions are stored as append-only gca_service_request_review_v1 records; delivery requires prior approval.",
+      "A delivered request uses the server catalog credit unit and can create at most one linked credit usage record.",
+      "The account history returns the latest redacted review and credit settlement without reviewer identity or operator notes.",
       "The Worker verifies Base Mainnet GCA balances with read-only eth_call and ERC-20 balanceOf.",
       "Eligible 10,000 GCA holders can create one 100 GCA AI Quant Access credits ledger record.",
       "GCA operators can record reviewed service-level credit usage against an existing credit ledger through the live token-protected Worker route; anonymous reads are rejected.",
@@ -1556,6 +1644,8 @@
       "credits or member status are cash, income, reimbursement, trading permission, or transferable value",
       "credit usage is public self-service redemption, cash settlement, or automatic wallet action",
       "a service request queue record means service delivery, credit deduction, trading permission, or wallet action has already happened",
+      "an approved service request means delivery has happened or credits have already been deducted",
+      "the service review route can deduct credits more than once for the same service request",
       "GCA Member approval is automatic without wallet balance and 30-day holding-period review",
       "the observed holding-history reconstruction is a third-party security audit, permanent guarantee, or proof that public index data can never be delayed",
       "the 10,000 GCA member benefit is automatic or self-service transferred",

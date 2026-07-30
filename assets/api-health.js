@@ -4,6 +4,7 @@
   const API_BASE_URL = "https://gca-registration-api.gcagochina.workers.dev";
   const CHAIN_ID = 8453;
   const CONTRACT_ADDRESS = "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6";
+  const WORKER_RELEASE = "gca-registration-worker-2026-07-30-service-request-delivery-v1";
   const REQUEST_TIMEOUT_MS = 8000;
   const MAX_PUBLIC_JSON_BYTES = 32768;
   const ADMIN_PATHS = [
@@ -21,6 +22,7 @@
   const PENDING_PATHS = [
     "/gca/service-requests",
     "/gca/credit-usage",
+    "/gca/service-request-reviews",
   ];
 
   const COPY = {
@@ -31,8 +33,8 @@
       healthOk: "Service, chain and contract match",
       configOk: "Identity and no-custody boundaries match",
       protectedOk: (count) => `${count}/${ADMIN_PATHS.length} anonymous reads rejected`,
-      pendingNotDeployed: "2/2 prepared routes are not deployed",
-      pendingProtected: "2/2 routes are deployed and token protected",
+      pendingNotDeployed: `${PENDING_PATHS.length}/${PENDING_PATHS.length} prepared routes are not deployed`,
+      pendingProtected: `${PENDING_PATHS.length}/${PENDING_PATHS.length} routes are deployed and token protected`,
       pendingMixed: "Prepared-route state needs operator review",
       unavailable: "Live response unavailable",
       healthInvalid: "Service identity does not match",
@@ -50,8 +52,8 @@
       healthOk: "服务、链和合约一致",
       configOk: "身份与非托管边界一致",
       protectedOk: (count) => `${count}/${ADMIN_PATHS.length} 个匿名读取已拦截`,
-      pendingNotDeployed: "2/2 个准备中路由尚未部署",
-      pendingProtected: "2/2 个路由已部署并受 token 保护",
+      pendingNotDeployed: `${PENDING_PATHS.length}/${PENDING_PATHS.length} 个准备中路由尚未部署`,
+      pendingProtected: `${PENDING_PATHS.length}/${PENDING_PATHS.length} 个路由已部署并受 token 保护`,
       pendingMixed: "准备中路由状态需要运营复核",
       unavailable: "无法取得实时响应",
       healthInvalid: "服务身份不一致",
@@ -137,6 +139,7 @@
       && payload
       && payload.ok === true
       && payload.service === "gca-registration-api"
+      && payload.workerRelease === WORKER_RELEASE
       && Number(payload.chainId) === CHAIN_ID
       && String(payload.contractAddress || "").toLowerCase() === CONTRACT_ADDRESS
       && payload.memberAccessVersion === "gca_member_access_v2"
@@ -148,6 +151,7 @@
       && payload.accountStatusRecoveryVersion === "gca_account_status_recovery_v1"
       && payload.accountServiceRequestVersion === "gca_account_service_request_v1"
       && payload.accountServiceRequestStatusVersion === "gca_account_service_request_status_v1"
+      && payload.serviceRequestReviewVersion === "gca_service_request_review_v1"
       && payload.memberReviewVersion === "gca_member_review_v1"
       && payload.holdingVerificationVersion === "gca_holding_verification_v1"
       && payload.memberBenefitTransferVersion === "gca_member_benefit_transfer_v1"
@@ -163,6 +167,7 @@
       && result.status === 200
       && payload
       && payload.ok === true
+      && payload.workerRelease === WORKER_RELEASE
       && Number(payload.chainId) === CHAIN_ID
       && String(payload.contractAddress || "").toLowerCase() === CONTRACT_ADDRESS
       && payload.memberAccessVersion === "gca_member_access_v2"
@@ -174,6 +179,7 @@
       && payload.accountStatusRecoveryVersion === "gca_account_status_recovery_v1"
       && payload.accountServiceRequestVersion === "gca_account_service_request_v1"
       && payload.accountServiceRequestStatusVersion === "gca_account_service_request_status_v1"
+      && payload.serviceRequestReviewVersion === "gca_service_request_review_v1"
       && payload.endpoints
       && payload.endpoints.accountStatus === "/gca/account-status"
       && payload.endpoints.accountStatusRotation === "/gca/account-status/rotate"
@@ -182,6 +188,7 @@
       && payload.endpoints.accountStatusRecovery === "/gca/account-status/recover"
       && payload.endpoints.accountServiceRequests === "/gca/account-service-requests"
       && payload.endpoints.accountServiceRequestStatus === "/gca/account-service-requests/status"
+      && payload.endpoints.serviceRequestReviewsAdmin === "/gca/service-request-reviews"
       && payload.memberReviewVersion === "gca_member_review_v1"
       && payload.holdingVerificationVersion === "gca_holding_verification_v1"
       && payload.memberBenefitTransferVersion === "gca_member_benefit_transfer_v1"
@@ -207,6 +214,12 @@
       && boundaries.accountServiceRequestCreditsDeductedOnRequest === false
       && boundaries.accountServiceRequestReturnsEmail === false
       && boundaries.accountServiceRequestCreatesTradingPermission === false
+      && boundaries.serviceRequestReviewEnabled === true
+      && boundaries.serviceRequestReviewApprovedBeforeDeliveryRequired === true
+      && boundaries.serviceRequestReviewServerCatalogAuthoritative === true
+      && boundaries.serviceRequestReviewCreditsDeductedOnlyOnDelivered === true
+      && boundaries.serviceRequestReviewCreditsDeductedAtMostOnce === true
+      && boundaries.serviceRequestReviewReturnsToAccountHistory === true
       && boundaries.requiresSignature === false
       && boundaries.requiresTransaction === false
       && boundaries.automaticTokenTransfer === false

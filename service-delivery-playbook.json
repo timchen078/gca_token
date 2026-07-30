@@ -1,9 +1,9 @@
 {
   "schema": "https://gcagochina.com/service-delivery-playbook.json",
   "pageUrl": "https://gcagochina.com/service-delivery-playbook.html",
-  "status": "service-delivery-playbook-v1-account-request-path-live",
+  "status": "service-delivery-playbook-v1-reviewed-delivery-live",
   "playbookId": "service-delivery-playbook-v1",
-  "lastUpdated": "2026-07-28",
+  "lastUpdated": "2026-07-30",
   "projectName": "GCA",
   "conceptExpansion": "Go China Access",
   "module": "GCA AI Quant Access service delivery",
@@ -29,18 +29,18 @@
     },
     {
       "step": "human-review",
-      "status": "operator-reviewed",
-      "description": "Operator reviews scope, risk boundaries, user evidence, and whether the request can be answered without trading advice or custody."
+      "status": "live-token-protected-append-only",
+      "description": "Operator records an append-only approved, needs-more-information, or rejected decision after reviewing scope and safety boundaries."
     },
     {
       "step": "delivery",
-      "status": "manual-delivery",
-      "description": "Approved work is delivered as a report, checklist, replay, backtest summary, risk warning, ENTRY_READY review, sizing note, or education session."
+      "status": "live-manual-delivery-record",
+      "description": "Only an approved request can be marked delivered. The operator confirms completion and supplies a non-sensitive delivery reference; no wallet action or trading permission is created."
     },
     {
       "step": "credit-usage-record",
       "status": "live-token-protected-operator-only",
-      "description": "Credit usage is recorded only after reviewed delivery or accepted delivery, with before/after credit balance and operator notes."
+      "description": "The delivered review uses the server catalog unit and commits one linked credit usage record, ledger deduction, append-only review, and delivered status in one D1 batch. Replays cannot deduct twice."
     }
   ],
   "serviceCatalog": [
@@ -117,7 +117,17 @@
       "deductsCredits": false,
       "reservesCredits": false,
       "returnsEmailToAccountUi": false,
-      "createsTradingPermission": false
+      "createsTradingPermission": false,
+      "allowedLifecycleStatuses": [
+        "queued_operator_review",
+        "approved_operator_review",
+        "needs_more_information",
+        "rejected_operator_review",
+        "delivered"
+      ],
+      "returnsRedactedLatestReview": true,
+      "returnsOperatorNote": false,
+      "returnsReviewerIdentity": false
     },
     "creditUsageLedger": {
       "status": "production-live-token-protected-operator-only",
@@ -131,7 +141,11 @@
         "deliveryStatus"
       ],
       "writtenOnlyAfterReviewedDelivery": true,
-      "deductsBeforeReview": false
+      "deductsBeforeReview": false,
+      "linkedToServiceRequest": true,
+      "atMostOneUsagePerServiceRequest": true,
+      "serverCatalogUnitAuthoritative": true,
+      "d1BatchSettlement": true
     }
   },
   "routeStatus": {
@@ -142,8 +156,10 @@
     "creditUsageWorkerEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/credit-usage",
     "accountServiceRequestWorkerEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/account-service-requests",
     "accountServiceRequestStatusWorkerEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/account-service-requests/status",
+    "serviceRequestReviewWorkerEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/service-request-reviews",
     "accountServiceRequestVersion": "gca_account_service_request_v1",
     "accountServiceRequestStatusVersion": "gca_account_service_request_status_v1",
+    "serviceRequestReviewVersion": "gca_service_request_review_v1",
     "accountServiceRequestDeviceKeyProtected": true,
     "accountServiceRequestCreditsReserved": false,
     "accountServiceRequestCreditsDeductedOnSubmission": false,
@@ -154,11 +170,12 @@
     "cloudflareAuthSession": "passed",
     "workerDeployPermission": "passed",
     "code10000Seen": false,
-    "latestReadinessCheckAt": "2026-07-28T06:07:54Z",
-    "latestPublicRouteCheckAt": "2026-07-28T06:07:02Z",
+    "latestReadinessCheckAt": "2026-07-30T06:42:17Z",
+    "latestPublicRouteCheckAt": "2026-07-30T06:42:28Z",
     "pendingRouteAnonymousGetStatus": {
       "/gca/service-requests": 401,
-      "/gca/credit-usage": 401
+      "/gca/credit-usage": 401,
+      "/gca/service-request-reviews": 401
     },
     "blockedBy": null,
     "releaseGates": [
@@ -172,10 +189,10 @@
     ],
     "remoteMigrations": "applied",
     "workerDeploy": "passed",
-    "workerVersionId": "e0d6f82e-9b6c-4a43-bec6-8447793da8ec",
+    "workerVersionId": "c8d57eb4-9614-4d3e-8b8b-04fd63b65210",
     "postDeployPublicSmoke": "passed",
     "postDeployAdminSmoke": "passed",
-    "productionRoutesVerifiedAt": "2026-07-28T06:07:11Z",
+    "productionRoutesVerifiedAt": "2026-07-30T06:42:38Z",
     "accountStatusRotationWorkerEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/account-status/rotate",
     "accountStatusRotationVersion": "gca_account_status_rotation_v1",
     "accountStatusRotationLive": true,
@@ -183,10 +200,11 @@
   },
   "releaseBoundaries": [
     "The playbook is public and local operator recording is ready.",
-    "Production service-request and credit-usage Worker routes are live and token-protected after all release gates passed.",
+    "Production service-request, service-review, and credit-usage Worker routes are live and token-protected after all release gates passed.",
     "Authenticated accounts can submit device-key protected service requests and read a redacted account-scoped history.",
     "Service requests do not deduct credits by themselves.",
-    "Credit usage is recorded only after reviewed delivery or accepted delivery.",
+    "Manual decisions are append-only, delivery requires prior approval, and the account history returns a redacted latest review.",
+    "Credit usage is recorded only with completed delivery and at most once for each service request.",
     "Member status does not create automatic transfers or trading permission.",
     "The workflow does not collect private keys, seed phrases, wallet signatures, custody permissions, withdrawal permissions, or exchange API secrets."
   ],
@@ -195,13 +213,16 @@
       "GCA has published an operator-reviewed service delivery playbook for GCA AI Quant Access workflows.",
       "The workflow covers account intake, read-only wallet verification, service request queueing, manual report delivery, and credit usage records.",
       "The controlled account UI can create a device-key protected request and read its redacted account-scoped history.",
-      "Production service-request and credit-usage Worker routes are live, token-protected, and verified by public and admin read-only smoke checks.",
+      "Production service-request, service-review, and credit-usage Worker routes are live, token-protected, and verified by public and admin read-only smoke checks.",
       "The server catalog determines the service credit unit; submission neither reserves nor deducts credits.",
+      "The operator review route stores append-only decisions, requires approval before delivery, and settles the catalog credit unit at most once.",
+      "The user history shows the latest redacted decision and settlement without returning operator notes or reviewer identity.",
       "The workflow is no-custody, does not request wallet signatures, and does not create automatic trading access."
     ],
     "doNotClaim": [
-      "production self-service service delivery is live",
+      "service delivery is automatic or does not require manual approval",
       "credits are automatically deducted before operator review",
+      "the same service request can deduct credits more than once",
       "service delivery creates trading permission",
       "GCA AI Quant Access executes trades for users",
       "member status automatically transfers tokens",
