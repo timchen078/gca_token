@@ -41,6 +41,11 @@
       "step": "credit-usage-record",
       "status": "live-token-protected-operator-only",
       "description": "The delivered review uses the server catalog unit and commits one linked credit usage record, ledger deduction, append-only review, and delivered status in one D1 batch. Replays cannot deduct twice."
+    },
+    {
+      "step": "account-delivery-receipt",
+      "status": "live-device-key-protected-completed-delivery-only",
+      "description": "After completed delivery, the matching account can acknowledge receipt once. The deterministic receipt is idempotent and does not refund or deduct credits, write a wallet, transfer tokens, or create trading permission."
     }
   ],
   "serviceCatalog": [
@@ -156,13 +161,19 @@
     "creditUsageWorkerEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/credit-usage",
     "accountServiceRequestWorkerEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/account-service-requests",
     "accountServiceRequestStatusWorkerEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/account-service-requests/status",
+    "accountServiceDeliveryReceiptWorkerEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/account-service-requests/delivery-receipts",
     "serviceRequestReviewWorkerEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/service-request-reviews",
     "accountServiceRequestVersion": "gca_account_service_request_v1",
     "accountServiceRequestStatusVersion": "gca_account_service_request_status_v1",
+    "accountServiceDeliveryReceiptVersion": "gca_account_service_delivery_receipt_v1",
     "serviceRequestReviewVersion": "gca_service_request_review_v1",
     "accountServiceRequestDeviceKeyProtected": true,
     "accountServiceRequestCreditsReserved": false,
     "accountServiceRequestCreditsDeductedOnSubmission": false,
+    "accountServiceDeliveryReceiptRequiresCompletedDelivery": true,
+    "accountServiceDeliveryReceiptIdempotent": true,
+    "accountServiceDeliveryReceiptChangesCredits": false,
+    "accountServiceDeliveryReceiptWritesWallet": false,
     "productionRoutesLive": true,
     "workerDryRunPassed": true,
     "d1VisibilityPassed": true,
@@ -170,8 +181,8 @@
     "cloudflareAuthSession": "passed",
     "workerDeployPermission": "passed",
     "code10000Seen": false,
-    "latestReadinessCheckAt": "2026-07-30T07:10:13Z",
-    "latestPublicRouteCheckAt": "2026-07-30T07:12:00Z",
+    "latestReadinessCheckAt": "2026-07-30T08:20:35Z",
+    "latestPublicRouteCheckAt": "2026-07-30T08:20:13Z",
     "pendingRouteAnonymousGetStatus": {
       "/gca/service-requests": 401,
       "/gca/credit-usage": 401,
@@ -189,10 +200,10 @@
     ],
     "remoteMigrations": "applied",
     "workerDeploy": "passed",
-    "workerVersionId": "670a3698-dc20-4215-a9b1-35711a4d1513",
+    "workerVersionId": "7952f4a1-b287-4ca9-a1ed-d92d75b8fd1f",
     "postDeployPublicSmoke": "passed",
     "postDeployAdminSmoke": "passed",
-    "productionRoutesVerifiedAt": "2026-07-30T07:12:12Z",
+    "productionRoutesVerifiedAt": "2026-07-30T08:20:21Z",
     "accountStatusRotationWorkerEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/account-status/rotate",
     "accountStatusRotationVersion": "gca_account_status_rotation_v1",
     "accountStatusRotationLive": true,
@@ -205,6 +216,7 @@
     "Service requests do not deduct credits by themselves.",
     "Manual decisions are append-only, delivery requires prior approval, and the account history returns a redacted latest review.",
     "Credit usage is recorded only with completed delivery and at most once for each service request.",
+    "The matching device-key account can acknowledge completed delivery once without changing credits, wallet state, tokens, or trading permission.",
     "Member status does not create automatic transfers or trading permission.",
     "The workflow does not collect private keys, seed phrases, wallet signatures, custody permissions, withdrawal permissions, or exchange API secrets."
   ],
@@ -217,12 +229,14 @@
       "The server catalog determines the service credit unit; submission neither reserves nor deducts credits.",
       "The operator review route stores append-only decisions, requires approval before delivery, and settles the catalog credit unit at most once.",
       "The user history shows the latest redacted decision and settlement without returning operator notes or reviewer identity.",
+      "After completed delivery, the matching device-key account can write one idempotent receipt marker without any credit or wallet effect.",
       "The workflow is no-custody, does not request wallet signatures, and does not create automatic trading access."
     ],
     "doNotClaim": [
       "service delivery is automatic or does not require manual approval",
       "credits are automatically deducted before operator review",
       "the same service request can deduct credits more than once",
+      "a delivery receipt is a refund, a second deduction, wallet settlement, token transfer, or dispute decision",
       "service delivery creates trading permission",
       "GCA AI Quant Access executes trades for users",
       "member status automatically transfers tokens",

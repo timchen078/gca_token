@@ -1,13 +1,13 @@
 {
   "schema": "https://gcagochina.com/access-api.json",
   "pageUrl": "https://gcagochina.com/access-api.html",
-  "status": "public-access-api-service-request-delivery-live",
+  "status": "public-access-api-delivery-receipt-live",
   "lastUpdated": "2026-07-30",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "title": "GCA Access API Contract",
   "currentState": {
-    "currentStage": "service-request-review-and-delivery-api-live",
+    "currentStage": "account-service-delivery-receipt-api-live",
     "contractOnly": false,
     "backendLive": true,
     "publicEndpointLive": true,
@@ -56,7 +56,7 @@
     "automaticMemberActivationFromSubmittedDate": false,
     "memberReviewProductionVerifiedAt": "2026-07-28T06:07:11Z",
     "memberBenefitTransferProductionVerifiedAt": "2026-07-28T06:07:11Z",
-    "serviceRoutesProductionVerifiedAt": "2026-07-30T07:12:12Z",
+    "serviceRoutesProductionVerifiedAt": "2026-07-30T08:20:21Z",
     "accountStatusRotationPacketVersion": "gca_account_status_rotation_v1",
     "accountStatusRotationProductionLive": true,
     "accountStatusRotationGraceMinutes": 15,
@@ -76,12 +76,20 @@
     "accountServiceRequestProductionLive": true,
     "accountServiceRequestDeviceKeyProtected": true,
     "accountServiceRequestDailyLimit": 5,
-    "accountServiceRequestProductionVerifiedAt": "2026-07-30T07:12:00Z",
+    "accountServiceRequestProductionVerifiedAt": "2026-07-30T08:20:13Z",
     "accountServiceRequestCreditsReserved": false,
     "accountServiceRequestCreditsDeductedOnRequest": false,
     "accountServiceRequestReturnsEmail": false,
     "accountServiceRequestReturnsDeliveryReferenceAfterDelivered": true,
     "accountServiceRequestCreatesTradingPermission": false,
+    "accountServiceDeliveryReceiptPacketVersion": "gca_account_service_delivery_receipt_v1",
+    "accountServiceDeliveryReceiptProductionLive": true,
+    "accountServiceDeliveryReceiptProductionVerifiedAt": "2026-07-30T08:20:13Z",
+    "accountServiceDeliveryReceiptDeviceKeyProtected": true,
+    "accountServiceDeliveryReceiptRequiresCompletedDelivery": true,
+    "accountServiceDeliveryReceiptIdempotent": true,
+    "accountServiceDeliveryReceiptChangesCredits": false,
+    "accountServiceDeliveryReceiptWritesWallet": false,
     "serviceRequestReviewPacketVersion": "gca_service_request_review_v1",
     "serviceRequestReviewProductionLive": true,
     "serviceRequestReviewAppendOnly": true,
@@ -90,7 +98,7 @@
     "serviceRequestReviewCreditsDeductedOnlyOnDelivered": true,
     "serviceRequestReviewCreditsDeductedAtMostOnce": true,
     "serviceRequestReviewReturnedRedactedToAccount": true,
-    "serviceRequestReviewProductionVerifiedAt": "2026-07-30T07:12:12Z"
+    "serviceRequestReviewProductionVerifiedAt": "2026-07-30T08:20:21Z"
   },
   "localDevelopmentBackend": {
     "status": "local-only-backend-available",
@@ -153,7 +161,7 @@
     "workerDeployReadinessCommand": "python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth",
     "workerDeployReadinessAuthSessionCheck": "cloudflare-auth-session",
     "workerDeployReadinessAuthRecoveryField": "authRecovery",
-    "latestDeployReadinessCheckAt": "2026-07-30T07:10:13Z",
+    "latestDeployReadinessCheckAt": "2026-07-30T08:20:35Z",
     "latestDeployReadinessSummary": {
       "wranglerDeployDryRun": "passed",
       "cloudflareD1Visibility": "passed",
@@ -163,7 +171,7 @@
       "writesD1Records": false,
       "deploysWorker": false
     },
-    "pendingRoutesLastObservedAt": "2026-07-30T07:12:00Z",
+    "pendingRoutesLastObservedAt": "2026-07-30T08:20:13Z",
     "pendingRouteAnonymousGetStatus": {
       "/gca/service-requests": 401,
       "/gca/credit-usage": 401,
@@ -213,6 +221,7 @@
     "accountStatusAccessMigration": "cloudflare/gca-registration-worker/migrations/0009_account_status_access.sql",
     "accountStatusRecoveryMigration": "cloudflare/gca-registration-worker/migrations/0011_account_status_recovery.sql",
     "serviceRequestReviewMigration": "cloudflare/gca-registration-worker/migrations/0012_service_request_reviews.sql",
+    "serviceDeliveryReceiptMigration": "cloudflare/gca-registration-worker/migrations/0013_service_delivery_receipts.sql",
     "memberAccessEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/member-access",
     "accountStatusEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/account-status",
     "accountStatusRecoveryRequestsEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/account-status/recovery-requests",
@@ -220,6 +229,7 @@
     "accountStatusRecoveryEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/account-status/recover",
     "accountServiceRequestEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/account-service-requests",
     "accountServiceRequestStatusEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/account-service-requests/status",
+    "accountServiceDeliveryReceiptEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/account-service-requests/delivery-receipts",
     "walletVerificationEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/wallet-verifications",
     "accessConfigEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/access-config",
     "adminCreditLedgerEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/credit-ledger",
@@ -239,8 +249,8 @@
       "company",
       "homepage"
     ],
-    "workerVersionId": "670a3698-dc20-4215-a9b1-35711a4d1513",
-    "workerRelease": "gca-registration-worker-2026-07-30-service-request-delivery-v1",
+    "workerVersionId": "7952f4a1-b287-4ca9-a1ed-d92d75b8fd1f",
+    "workerRelease": "gca-registration-worker-2026-07-30-delivery-receipt-v1",
     "serviceRequestReviewVersion": "gca_service_request_review_v1",
     "memberReviewVersion": "gca_member_review_v1",
     "holdingVerificationVersion": "gca_holding_verification_v1",
@@ -249,7 +259,7 @@
     "memberBenefitTransferExactAmount": "10000 GCA",
     "memberBenefitTransferPublicSmokePassedAt": "2026-07-28T06:07:02Z",
     "memberBenefitTransferAdminSmokePassedAt": "2026-07-28T06:07:11Z",
-    "productionRoutesVerifiedAt": "2026-07-30T07:12:12Z",
+    "productionRoutesVerifiedAt": "2026-07-30T08:20:21Z",
     "accountStatusRotationMigration": "cloudflare/gca-registration-worker/migrations/0010_account_status_rotation.sql",
     "accountStatusRotationEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/account-status/rotate",
     "accountStatusRotationVersion": "gca_account_status_rotation_v1",
@@ -258,10 +268,10 @@
     "accountStatusRotationAdminSmokePassedAt": "2026-07-28T06:07:11Z",
     "accountStatusRecoveryPublicSmokePassedAt": "2026-07-28T06:07:02Z",
     "accountStatusRecoveryAdminSmokePassedAt": "2026-07-28T06:07:11Z",
-    "accountServiceRequestPublicSmokePassedAt": "2026-07-30T07:12:00Z",
-    "accountServiceRequestAdminQueueSmokePassedAt": "2026-07-30T07:12:12Z",
-    "serviceRequestReviewPublicSmokePassedAt": "2026-07-30T07:12:00Z",
-    "serviceRequestReviewAdminSmokePassedAt": "2026-07-30T07:12:12Z"
+    "accountServiceRequestPublicSmokePassedAt": "2026-07-30T08:20:13Z",
+    "accountServiceRequestAdminQueueSmokePassedAt": "2026-07-30T08:20:21Z",
+    "serviceRequestReviewPublicSmokePassedAt": "2026-07-30T08:20:13Z",
+    "serviceRequestReviewAdminSmokePassedAt": "2026-07-30T08:20:21Z"
   },
   "securityModel": {
     "controlledHttpsOriginRequired": true,
@@ -304,6 +314,11 @@
     "accountServiceRequestsReserveCredits": false,
     "accountServiceRequestsDeductCreditsOnSubmission": false,
     "accountServiceRequestsCreateTradingPermission": false,
+    "accountServiceDeliveryReceiptsUseDeviceKey": true,
+    "accountServiceDeliveryReceiptsRequireCompletedDelivery": true,
+    "accountServiceDeliveryReceiptsAreIdempotent": true,
+    "accountServiceDeliveryReceiptsChangeCredits": false,
+    "accountServiceDeliveryReceiptsWriteWallet": false,
     "serviceRequestReviewsRequireAdminToken": true,
     "serviceRequestReviewsAreAppendOnly": true,
     "serviceRequestDeliveryRequiresApprovedStatus": true,
@@ -336,6 +351,7 @@
   "serviceRequestPacketVersion": "gca_service_request_v1",
   "accountServiceRequestPacketVersion": "gca_account_service_request_v1",
   "accountServiceRequestStatusPacketVersion": "gca_account_service_request_status_v1",
+  "accountServiceDeliveryReceiptPacketVersion": "gca_account_service_delivery_receipt_v1",
   "serviceRequestReviewPacketVersion": "gca_service_request_review_v1",
   "memberReviewPacketVersion": "gca_member_review_v1",
   "memberEvidenceFields": [
@@ -821,10 +837,11 @@
         "the SHA-256 device-key hash must match an active and unexpired account status access record",
         "records are filtered by the matched account ID",
         "email, email hash, full wallet address, device key, full request body, reviewer identity, and operator note are omitted",
-        "the latest redacted decision, reason code, review time, delivery state, non-sensitive delivery reference, credit amount used, and remaining credits are returned when available",
+        "the latest redacted decision, reason code, review time, delivery state, non-sensitive delivery reference, delivery acknowledgement state and time, credit amount used, and remaining credits are returned when available",
         "the route does not change credits, account, member, wallet, or token records"
       ],
       "returnsDeliveryReferenceAfterDelivered": true,
+      "returnsDeliveryAcknowledgement": true,
       "responseFields": [
         "checkedAt",
         "count",
@@ -843,6 +860,43 @@
         "rejected_operator_review",
         "delivered"
       ]
+    },
+    {
+      "id": "account-service-delivery-receipts-create",
+      "method": "POST",
+      "path": "/gca/account-service-requests/delivery-receipts",
+      "status": "production-workers-dev-live",
+      "purpose": "Let the device-key authenticated account acknowledge receipt once after an operator has recorded completed delivery, without refunding or deducting credits and without any wallet action.",
+      "requiredRequestFields": [
+        "packetVersion",
+        "statusAccessToken",
+        "serviceRequestId",
+        "acknowledgements.deliveryReceived",
+        "acknowledgements.noCreditOrWalletEffect"
+      ],
+      "serverChecks": [
+        "packetVersion must be gca_account_service_delivery_receipt_v1",
+        "the SHA-256 device-key hash must match an active and unexpired account status access record",
+        "the service request must belong to the matched account",
+        "the request status and latest operator review must both show completed delivery",
+        "one deterministic delivery receipt ID is stored for each service request",
+        "an exact retry returns the existing receipt without writing a second marker",
+        "the route does not refund, reserve, or deduct credits and does not change account or member status",
+        "the route does not connect a wallet, request a signature, send a transaction, transfer tokens, or create trading permission"
+      ],
+      "responseFields": [
+        "created",
+        "idempotentReplay",
+        "deliveryReceipt",
+        "boundaries"
+      ],
+      "allowedStatuses": [
+        "delivery_received"
+      ],
+      "changesCredits": false,
+      "writesWallet": false,
+      "automaticTokenTransfer": false,
+      "createsTradingPermission": false
     },
     {
       "id": "wallet-verifications",
@@ -1625,6 +1679,7 @@
       "POST /gca/account-status returns a read-only redacted status snapshot after matching the SHA-256 hash of the device key; it does not return email, the full wallet address, or the key.",
       "POST /gca/account-service-requests lets the device-key authenticated account queue one catalog service for manual review; the server selects the catalog unit and submission does not reserve or deduct credits.",
       "POST /gca/account-service-requests/status returns only that account's redacted service, title, status, time, credit-check history, and the non-sensitive delivery reference after completed delivery, without returning email, the device key, or the full request body.",
+      "POST /gca/account-service-requests/delivery-receipts lets that device-key authenticated account acknowledge completed delivery once; retries are idempotent and the receipt changes no credits, wallet, token, member, or trading-permission state.",
       "Manual service decisions are stored as append-only gca_service_request_review_v1 records; delivery requires prior approval.",
       "A delivered request uses the server catalog credit unit and can create at most one linked credit usage record.",
       "The account history returns the latest redacted review, credit settlement, and non-sensitive delivery reference after completed delivery without reviewer identity or operator notes.",
@@ -1649,6 +1704,7 @@
       "a service request queue record means service delivery, credit deduction, trading permission, or wallet action has already happened",
       "an approved service request means delivery has happened or credits have already been deducted",
       "the service review route can deduct credits more than once for the same service request",
+      "a delivery receipt is a refund, a new credit deduction, a wallet action, a token transfer, a delivery dispute resolution, or trading permission",
       "GCA Member approval is automatic without wallet balance and 30-day holding-period review",
       "the observed holding-history reconstruction is a third-party security audit, permanent guarantee, or proof that public index data can never be delayed",
       "the 10,000 GCA member benefit is automatic or self-service transferred",

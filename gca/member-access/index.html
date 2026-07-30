@@ -310,6 +310,24 @@
         font-weight: 800;
       }
 
+      .request-receipt {
+        color: var(--green);
+        font-weight: 800;
+      }
+
+      .request-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 5px;
+      }
+
+      .receipt-button {
+        min-height: 36px;
+        padding: 8px 12px;
+        font-size: 12px;
+      }
+
       input[type="checkbox"] {
         width: auto;
         min-height: 0;
@@ -526,8 +544,8 @@
         <p class="lead zh-note">10,000 GCA 会员权益不是自动领取。通过 GCA Member 记录后，仍需要支持团队人工审核和储备钱包处理。</p>
         <p class="lead">After account creation, this browser can use a high-entropy device key to refresh redacted account, credits, member-review, and benefit-transfer status. The API stores only the key hash and never returns email or the key.</p>
         <p class="lead zh-note">账户创建后，本浏览器可使用高强度设备密钥刷新脱敏的账户、积分、会员审核和权益转账状态。后台只保存密钥哈希，不会返回邮箱或密钥明文。</p>
-        <p class="lead">The same device key can submit a service request to the manual review queue and read that account's request history. Submission checks the catalog unit but does not reserve or deduct credits. Completed delivery records return the operator's non-sensitive delivery reference to that account.</p>
-        <p class="lead zh-note">同一设备密钥可提交服务申请并查看本账户申请历史。提交时会核对目录积分，但不会预占或自动扣除 credits。</p>
+        <p class="lead">The same device key can submit a service request to the manual review queue and read that account's request history. Submission checks the catalog unit but does not reserve or deduct credits. Completed delivery records return the operator's non-sensitive delivery reference and let that account acknowledge receipt once.</p>
+        <p class="lead zh-note">同一设备密钥可提交服务申请并查看本账户申请历史。提交时会核对目录积分，但不会预占或自动扣除 credits；完成交付后，本账户可查看非敏感交付引用并进行一次收件确认。</p>
         <div class="actions">
           <a class="button primary" href="#accountForm">Open Account Form / 打开表单</a>
           <a class="button" href="#accountServiceRequests">Request a Service / 提交服务申请</a>
@@ -758,8 +776,8 @@
 
         <div class="panel">
           <h2>Request History <span class="zh">申请历史</span></h2>
-          <p class="note">This read returns only this account's service, title, manual-review status, time, and credit settlement. It does not return email, device keys, wallet secrets, operator notes, or the full request body.</p>
-          <p class="note zh-note">这里只返回本账户的服务、标题、人工审核状态、时间和积分结算，不返回邮箱、设备密钥、钱包敏感信息、运营备注或完整申请正文。</p>
+          <p class="note">This read returns only this account's service, title, manual-review status, time, credit settlement, and completed-delivery receipt status. It does not return email, device keys, wallet secrets, operator notes, or the full request body.</p>
+          <p class="note zh-note">这里只返回本账户的服务、标题、人工审核状态、时间、积分结算和已完成交付的收件状态，不返回邮箱、设备密钥、钱包敏感信息、运营备注或完整申请正文。</p>
           <div class="actions">
             <button class="button" type="button" id="refreshServiceRequests" disabled>Refresh History / 刷新历史</button>
           </div>
@@ -1304,6 +1322,38 @@
               delivery.textContent = `Delivery reference / 交付引用: ${request.latestReview.deliveryReference}`;
               item.append(delivery);
             }
+            if (request.latestReview.deliveryCompleted) {
+              if (request.deliveryAcknowledged) {
+                const receipt = document.createElement("span");
+                receipt.className = "request-meta request-receipt";
+                const acknowledgedDate = new Date(
+                  request.deliveryAcknowledgedAt
+                );
+                const acknowledgedAt = Number.isNaN(
+                  acknowledgedDate.getTime()
+                )
+                  ? request.deliveryAcknowledgedAt || "time not recorded"
+                  : acknowledgedDate.toLocaleString();
+                receipt.textContent = `Delivery received / 已确认收件 · ${acknowledgedAt}`;
+                item.append(receipt);
+              } else if (request.serviceRequestId) {
+                const actions = document.createElement("div");
+                actions.className = "request-actions";
+                const receiptButton = document.createElement("button");
+                receiptButton.className = "button receipt-button";
+                receiptButton.type = "button";
+                receiptButton.dataset.serviceRequestId =
+                  request.serviceRequestId;
+                receiptButton.textContent =
+                  "Confirm Delivery Received / 确认已收到";
+                receiptButton.setAttribute(
+                  "aria-label",
+                  `Confirm delivery received for ${request.requestTitle || request.serviceName || request.serviceRequestId}`
+                );
+                actions.append(receiptButton);
+                item.append(actions);
+              }
+            }
           }
           serviceRequestList.append(item);
         }
@@ -1582,6 +1632,31 @@
           packetVersion: "gca_account_service_request_status_v1",
           statusAccessToken
         });
+      }
+
+      function accountServiceDeliveryReceiptPayload(
+        statusAccessToken,
+        serviceRequestId
+      ) {
+        if (!isStatusAccessToken(statusAccessToken)) {
+          throw new Error(
+            "A valid device key is required. 需要有效的设备密钥。"
+          );
+        }
+        if (!/^gca_service_req_[a-f0-9]{20}$/.test(serviceRequestId)) {
+          throw new Error(
+            "The service request ID is invalid. 服务申请编号无效。"
+          );
+        }
+        return {
+          packetVersion: "gca_account_service_delivery_receipt_v1",
+          statusAccessToken,
+          serviceRequestId,
+          acknowledgements: {
+            deliveryReceived: true,
+            noCreditOrWalletEffect: true
+          }
+        };
       }
 
       async function loadServiceCatalogConfig() {
@@ -1874,6 +1949,9 @@
             `${message} Retry without changing the form to reuse the same request ID. / 如需重试，请不要修改表单，以复用同一请求编号。`
           );
         } finally {
+          if (receiptButton.isConnected) {
+            receiptButton.disabled = false;
+          }
           updateStatusAccessControls();
         }
       });
@@ -1914,6 +1992,82 @@
             serviceRequestResult,
             "warn",
             "History refresh failed / 历史刷新失败",
+            message
+          );
+        } finally {
+          updateStatusAccessControls();
+        }
+      });
+
+      serviceRequestList.addEventListener("click", async (event) => {
+        const target = event.target;
+        if (!(target instanceof Element)) return;
+        const receiptButton = target.closest("button.receipt-button");
+        if (
+          !receiptButton ||
+          !serviceRequestList.contains(receiptButton)
+        ) {
+          return;
+        }
+        const serviceRequestId =
+          receiptButton.dataset.serviceRequestId || "";
+        const statusAccess = loadStatusAccess();
+        if (
+          !statusAccess ||
+          pendingStatusAccessRotation(statusAccess)
+        ) {
+          updateStatusAccessControls();
+          renderResult(
+            serviceRequestResult,
+            "warn",
+            "Device access unavailable / 设备访问不可用",
+            "Create or recover device access before confirming delivery. / 请先创建或恢复设备访问，再确认收件。"
+          );
+          return;
+        }
+        const confirmed = window.confirm(
+          "Confirm that this account received the completed delivery? This writes one permanent receipt marker and does not refund or deduct credits, connect a wallet, or send a transaction. 是否确认本账户已收到交付？这会写入一次永久收件标记，不会退回或再次扣除积分，也不会连接钱包或发送交易。"
+        );
+        if (!confirmed) return;
+
+        receiptButton.disabled = true;
+        submitServiceRequest.disabled = true;
+        refreshServiceRequests.disabled = true;
+        renderResult(
+          serviceRequestResult,
+          "",
+          "Confirming delivery receipt / 正在确认收件",
+          "Recording one account-scoped receipt marker. Credits, wallets, tokens, and trading permissions are unchanged. / 正在记录一次本账户收件标记；积分、钱包、代币和交易权限均不会改变。"
+        );
+        try {
+          const payload = await postJson(
+            "/gca/account-service-requests/delivery-receipts",
+            accountServiceDeliveryReceiptPayload(
+              statusAccess.token,
+              serviceRequestId
+            )
+          );
+          const receipt = payload.deliveryReceipt || {};
+          renderResult(
+            serviceRequestResult,
+            "good",
+            payload.idempotentReplay
+              ? "Delivery receipt already recorded / 已记录收件"
+              : "Delivery receipt confirmed / 已确认收件",
+            `${receipt.serviceRequestId || serviceRequestId} · ${receipt.acknowledgedAt || "time recorded by server"}. No credits or wallet state changed. / 未改变积分或钱包状态。`
+          );
+          const history = await readAccountServiceRequestHistory(
+            statusAccess.token
+          );
+          renderServiceRequestHistory(history);
+        } catch (error) {
+          const message = error && error.message
+            ? error.message
+            : "Delivery receipt confirmation failed.";
+          renderResult(
+            serviceRequestResult,
+            "warn",
+            "Receipt needs attention / 收件确认需要处理",
             message
           );
         } finally {

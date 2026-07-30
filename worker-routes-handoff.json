@@ -8,11 +8,11 @@
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "workerBaseUrl": "https://gca-registration-api.gcagochina.workers.dev",
   "sourceDocument": "docs/gca_worker_pending_routes_deploy_handoff.md",
-  "scope": "Public deployment record and repeatable release runbook for production-live service-request queueing, append-only manual review, reviewed delivery, and idempotent credit settlement routes.",
+  "scope": "Public deployment record and repeatable release runbook for production-live service-request queueing, append-only manual review, reviewed delivery, idempotent credit settlement, and account-scoped delivery receipts.",
   "currentStatus": {
-    "latestReadinessCheckAt": "2026-07-30T07:10:13Z",
-    "latestPublicRouteCheckAt": "2026-07-30T07:12:00Z",
-    "latestAdminRouteCheckAt": "2026-07-30T07:12:12Z",
+    "latestReadinessCheckAt": "2026-07-30T08:20:35Z",
+    "latestPublicRouteCheckAt": "2026-07-30T08:20:13Z",
+    "latestAdminRouteCheckAt": "2026-07-30T08:20:21Z",
     "workerDryRun": "passed-2026-07-23",
     "d1Visibility": "passed",
     "cloudflareAuthSession": "passed",
@@ -25,7 +25,7 @@
     },
     "remoteMigrations": "applied",
     "workerDeploy": "passed",
-    "workerVersionId": "670a3698-dc20-4215-a9b1-35711a4d1513",
+    "workerVersionId": "7952f4a1-b287-4ca9-a1ed-d92d75b8fd1f",
     "postDeployPublicSmoke": "passed",
     "postDeployAdminSmoke": "passed",
     "productionRouteStatus": "live-token-protected",
@@ -34,7 +34,9 @@
     "accountStatusRotationGraceMinutes": 15,
     "serviceRequestReview": "live-token-protected",
     "serviceRequestReviewVersion": "gca_service_request_review_v1",
-    "serviceRequestReviewAdminReadStatus": 200
+    "serviceRequestReviewAdminReadStatus": 200,
+    "accountServiceDeliveryReceipt": "live-device-key-protected-completed-delivery-only",
+    "accountServiceDeliveryReceiptVersion": "gca_account_service_delivery_receipt_v1"
   },
   "alreadyLiveRoutes": [
     "GET /health",
@@ -47,6 +49,7 @@
     "POST /gca/account-status/rotate",
     "POST /gca/account-service-requests",
     "POST /gca/account-service-requests/status",
+    "POST /gca/account-service-requests/delivery-receipts",
     "token-protected GET /gca/email-registrations",
     "token-protected GET /gca/contact-suppressions",
     "token-protected GET /gca/wallet-verifications",
@@ -66,7 +69,7 @@
       "writesCredits": false,
       "createsTradingPermission": false,
       "productionLive": true,
-      "workerVersionId": "670a3698-dc20-4215-a9b1-35711a4d1513"
+      "workerVersionId": "7952f4a1-b287-4ca9-a1ed-d92d75b8fd1f"
     },
     {
       "path": "/gca/service-request-reviews",
@@ -81,7 +84,7 @@
       "writesWithD1Batch": true,
       "createsTradingPermission": false,
       "productionLive": true,
-      "workerVersionId": "670a3698-dc20-4215-a9b1-35711a4d1513"
+      "workerVersionId": "7952f4a1-b287-4ca9-a1ed-d92d75b8fd1f"
     },
     {
       "path": "/gca/credit-usage",
@@ -90,7 +93,7 @@
       "status": "live-token-protected",
       "writtenOnlyAfterReviewedDelivery": true,
       "productionLive": true,
-      "workerVersionId": "670a3698-dc20-4215-a9b1-35711a4d1513"
+      "workerVersionId": "7952f4a1-b287-4ca9-a1ed-d92d75b8fd1f"
     }
   ],
   "deployGates": [
@@ -117,7 +120,8 @@
         "0004_credit_usage_ledger.sql",
         "0005_service_requests.sql",
         "0009_account_status_access.sql",
-        "0012_service_request_reviews.sql"
+        "0012_service_request_reviews.sql",
+        "0013_service_delivery_receipts.sql"
       ]
     },
     {
@@ -176,12 +180,18 @@
     "automaticCreditDeductionBeforeReview": false,
     "deliveryRequiresApprovedReview": true,
     "creditDeductionAtMostOncePerServiceRequest": true,
+    "deliveryReceiptRequiresCompletedDelivery": true,
+    "deliveryReceiptAccountScoped": true,
+    "deliveryReceiptIdempotent": true,
+    "deliveryReceiptChangesCredits": false,
+    "deliveryReceiptWritesWallet": false,
     "productionLiveBeforeSmokeChecks": false
   },
   "safeClaims": [
     "The GCA service-request, manual review, and credit settlement Worker routes are production-live and token-protected.",
     "Remote D1 migrations, Worker deploy, public smoke, and admin read-only smoke checks passed on 2026-07-30 UTC.",
     "Manual reviews are append-only, delivery requires prior approval, and one service request can deduct its server-catalog credit unit at most once.",
+    "After completed delivery, the matching device-key account can record one idempotent receipt without changing credits or wallet state.",
     "Anonymous ledger reads return HTTP 401; public visitors cannot read operator ledgers.",
     "The routes do not connect wallets, request signatures, transfer GCA, or create trading permission.",
     "The public device-key rotation route changes only the hashed account-status credential; it does not change account, credit, member, wallet, or token records."
@@ -190,6 +200,7 @@
     "service delivery is automatic or bypasses manual approval",
     "credits are automatically deducted before operator review",
     "one service request can deduct credits multiple times",
+    "a delivery receipt is a refund, another deduction, wallet settlement, token transfer, or dispute decision",
     "the routes connect wallets or request wallet signatures",
     "the routes send transactions, transfer GCA, or create trading permission",
     "full user records, admin tokens, private evidence, or local export files are public"
