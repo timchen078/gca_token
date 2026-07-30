@@ -4758,15 +4758,15 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(playbook["routeStatus"]["cloudflareAuthSession"], "passed")
         self.assertEqual(playbook["routeStatus"]["workerDeployPermission"], "passed")
         self.assertFalse(playbook["routeStatus"]["code10000Seen"])
-        self.assertEqual(playbook["routeStatus"]["latestReadinessCheckAt"], "2026-07-30T06:42:17Z")
-        self.assertEqual(playbook["routeStatus"]["latestPublicRouteCheckAt"], "2026-07-30T06:42:28Z")
+        self.assertEqual(playbook["routeStatus"]["latestReadinessCheckAt"], "2026-07-30T07:10:13Z")
+        self.assertEqual(playbook["routeStatus"]["latestPublicRouteCheckAt"], "2026-07-30T07:12:00Z")
         self.assertEqual(playbook["routeStatus"]["pendingRouteAnonymousGetStatus"], {
             "/gca/service-requests": 401,
             "/gca/credit-usage": 401,
             "/gca/service-request-reviews": 401,
         })
         self.assertIsNone(playbook["routeStatus"]["blockedBy"])
-        self.assertEqual(playbook["routeStatus"]["workerVersionId"], "c8d57eb4-9614-4d3e-8b8b-04fd63b65210")
+        self.assertEqual(playbook["routeStatus"]["workerVersionId"], "670a3698-dc20-4215-a9b1-35711a4d1513")
         self.assertEqual(playbook["routeStatus"]["postDeployPublicSmoke"], "passed")
         self.assertEqual(playbook["routeStatus"]["postDeployAdminSmoke"], "passed")
         self.assertIn("wrangler deploy succeeds", playbook["routeStatus"]["releaseGates"])
@@ -4840,9 +4840,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(handoff["workerBaseUrl"], "https://gca-registration-api.gcagochina.workers.dev")
         self.assertEqual(handoff["sourceDocument"], "docs/gca_worker_pending_routes_deploy_handoff.md")
         self.assertIn("production-live", handoff["scope"])
-        self.assertEqual(handoff["currentStatus"]["latestReadinessCheckAt"], "2026-07-30T06:42:17Z")
-        self.assertEqual(handoff["currentStatus"]["latestPublicRouteCheckAt"], "2026-07-30T06:42:28Z")
-        self.assertEqual(handoff["currentStatus"]["latestAdminRouteCheckAt"], "2026-07-30T06:42:38Z")
+        self.assertEqual(handoff["currentStatus"]["latestReadinessCheckAt"], "2026-07-30T07:10:13Z")
+        self.assertEqual(handoff["currentStatus"]["latestPublicRouteCheckAt"], "2026-07-30T07:12:00Z")
+        self.assertEqual(handoff["currentStatus"]["latestAdminRouteCheckAt"], "2026-07-30T07:12:12Z")
         self.assertEqual(handoff["currentStatus"]["workerDryRun"], "passed-2026-07-23")
         self.assertEqual(handoff["currentStatus"]["d1Visibility"], "passed")
         self.assertEqual(handoff["currentStatus"]["cloudflareAuthSession"], "passed")
@@ -5819,6 +5819,11 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertTrue(api["currentState"]["serviceRequestReviewCreditsDeductedOnlyOnDelivered"])
         self.assertTrue(api["currentState"]["serviceRequestReviewCreditsDeductedAtMostOnce"])
         self.assertTrue(api["currentState"]["serviceRequestReviewReturnedRedactedToAccount"])
+        self.assertTrue(
+            api["currentState"][
+                "accountServiceRequestReturnsDeliveryReferenceAfterDelivered"
+            ]
+        )
         self.assertTrue(api["currentState"]["memberLedgerWritesLive"])
         self.assertTrue(api["currentState"]["memberReviewWorkflowProductionLive"])
         self.assertEqual(api["currentState"]["memberReviewPacketVersion"], "gca_member_review_v1")
@@ -6907,9 +6912,9 @@ class LaunchPackageTests(unittest.TestCase):
         )
         self.assertTrue(gates["currentState"]["serviceRequestDeliveryRequiresApprovedReview"])
         self.assertTrue(gates["currentState"]["serviceRequestCreditSettlementAtMostOnce"])
-        self.assertEqual(gates["currentState"]["latestPendingRouteReadinessCheckAt"], "2026-07-30T06:42:17Z")
-        self.assertEqual(gates["currentState"]["latestPendingRoutePublicCheckAt"], "2026-07-30T06:42:28Z")
-        self.assertEqual(gates["currentState"]["latestPendingRouteAdminCheckAt"], "2026-07-30T06:42:38Z")
+        self.assertEqual(gates["currentState"]["latestPendingRouteReadinessCheckAt"], "2026-07-30T07:10:13Z")
+        self.assertEqual(gates["currentState"]["latestPendingRoutePublicCheckAt"], "2026-07-30T07:12:00Z")
+        self.assertEqual(gates["currentState"]["latestPendingRouteAdminCheckAt"], "2026-07-30T07:12:12Z")
         self.assertEqual(gates["currentState"]["cloudflareAuthSession"], "passed")
         self.assertEqual(gates["currentState"]["cloudflareD1Visibility"], "passed")
         self.assertEqual(gates["currentState"]["cloudflareWorkerDeployPermission"], "passed")
@@ -6922,7 +6927,7 @@ class LaunchPackageTests(unittest.TestCase):
                 "/gca/service-request-reviews": 401,
             },
         )
-        self.assertEqual(gates["currentState"]["workerVersionId"], "c8d57eb4-9614-4d3e-8b8b-04fd63b65210")
+        self.assertEqual(gates["currentState"]["workerVersionId"], "670a3698-dc20-4215-a9b1-35711a4d1513")
         self.assertFalse(gates["currentState"]["liveTradingEnabled"])
         self.assertEqual(gates["currentState"]["baseScanTokenProfile"], "ready-for-owner-resubmission")
         self.assertEqual(gates["currentState"]["baseScanTokenProfileLastCheckedDate"], "2026-07-23")

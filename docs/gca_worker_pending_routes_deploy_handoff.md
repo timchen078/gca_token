@@ -35,11 +35,11 @@ The three service routes are production-live and token-protected. The review rou
 
 The latest service review and delivery deployment was completed on `2026-07-30` UTC.
 
-- Readiness passed at `2026-07-30T06:42:17Z`.
+- Readiness passed at `2026-07-30T07:10:13Z`.
 - Remote migration `0012_service_request_reviews.sql` applied successfully.
-- Current Worker version `c8d57eb4-9614-4d3e-8b8b-04fd63b65210` includes append-only service review, approved delivery, idempotent settlement, and redacted account history.
-- Latest public smoke passed at `2026-07-30T06:42:28Z`.
-- Latest admin read-only smoke passed at `2026-07-30T06:42:38Z`.
+- Current Worker version `670a3698-dc20-4215-a9b1-35711a4d1513` includes append-only service review, approved delivery, idempotent settlement, and redacted account history.
+- Latest public smoke passed at `2026-07-30T07:12:00Z`.
+- Latest admin read-only smoke passed at `2026-07-30T07:12:12Z`.
 - Anonymous reads for all three operator service routes return HTTP `401`.
 - Token-protected admin reads return HTTP `200`.
 

@@ -1727,6 +1727,10 @@ function rowToAccountServiceRequest(row) {
           deliveryCompleted: Boolean(
             row.review_delivery_completed
           ),
+          deliveryReference:
+            row.review_delivery_completed
+              ? row.review_delivery_reference || ""
+              : "",
           creditAmountUsed: Number(
             row.review_credit_amount_used || 0
           ),
@@ -4034,6 +4038,7 @@ function accountServiceRequestBoundaries() {
     deviceKeyProtected: true,
     emailReturned: false,
     accessTokenReturned: false,
+    nonSensitiveDeliveryReferenceReturnedAfterDelivered: true,
     operatorReviewOnly: true,
     creditsReserved: false,
     creditsDeductedOnRequest: false,
@@ -4068,6 +4073,7 @@ async function submitAccountServiceRequest(request, env, origin) {
         review.reason_code AS review_reason_code,
         review.reviewed_at AS review_reviewed_at,
         review.delivery_completed AS review_delivery_completed,
+        review.delivery_reference AS review_delivery_reference,
         review.credits_deducted AS review_credits_deducted,
         review.credit_amount_used AS review_credit_amount_used,
         review.remaining_credits_after AS review_remaining_credits_after
@@ -4238,6 +4244,7 @@ async function readAccountServiceRequests(request, env, origin) {
         review.reason_code AS review_reason_code,
         review.reviewed_at AS review_reviewed_at,
         review.delivery_completed AS review_delivery_completed,
+        review.delivery_reference AS review_delivery_reference,
         review.credits_deducted AS review_credits_deducted,
         review.credit_amount_used AS review_credit_amount_used,
         review.remaining_credits_after AS review_remaining_credits_after
@@ -4996,6 +5003,7 @@ function accessBoundaries() {
     serviceRequestReviewCreditsDeductedOnlyOnDelivered: true,
     serviceRequestReviewCreditsDeductedAtMostOnce: true,
     serviceRequestReviewReturnsToAccountHistory: true,
+    serviceRequestReviewReturnsNonSensitiveDeliveryReference: true,
     requiresSignature: false,
     requiresTransaction: false,
     asksForPrivateKey: false,

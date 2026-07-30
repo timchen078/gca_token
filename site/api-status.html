@@ -346,7 +346,7 @@
         <p class="eyebrow">Registration API Status / Live Read-Only Check</p>
         <h1 id="title">GCA Registration API Status</h1>
         <p class="lead">This is the public status page for the live GCA email registration, member access, device-key account status, account service requests and redacted history, key rotation, registered-email recovery, and contact suppression backend. The current production API runs on Cloudflare Workers + D1 at <code>https://gca-registration-api.gcagochina.workers.dev</code>.</p>
-        <p class="lead">The latest release public smoke check passed at <code>2026-07-30T06:42:28Z</code>, followed by a token-protected admin read check at <code>2026-07-30T06:42:38Z</code>. The browser panel below can repeat the safe read-only portion now without writing records.</p>
+        <p class="lead">The latest release public smoke check passed at <code>2026-07-30T07:12:00Z</code>, followed by a token-protected admin read check at <code>2026-07-30T07:12:12Z</code>. The browser panel below can repeat the safe read-only portion now without writing records.</p>
         <p class="lead"><code>gca_member_access_v2</code> creates a random device key in the browser. D1 stores only its SHA-256 hash, and <code>gca_account_status_v1</code> returns a redacted read-only snapshot without email, full wallet address, the key, administrator data, or operator notes.</p>
         <p class="lead"><code>gca_account_status_rotation_v1</code> lets a browser holding the current valid key replace it safely. The old key immediately loses status-read access and can only retry the same completed rotation for 15 minutes; account, credit, member, wallet, and token records are unchanged.</p>
         <p class="lead">Lost-key recovery uses <code>gca_account_status_recovery_request_v1</code>, registered-email manual review, and a single-use 24-hour credential. Public requests never reveal whether an account matched. Completion activates the pre-committed new key and changes no account, credit, member, wallet, GCA balance, or on-chain asset.</p>
@@ -415,7 +415,7 @@
         </div>
         <div class="fact">
           <span class="label">Worker Version</span>
-          <span class="value">c8d57eb4-9614-4d3e-8b8b-04fd63b65210</span>
+          <span class="value">670a3698-dc20-4215-a9b1-35711a4d1513</span>
         </div>
         <div class="fact">
           <span class="label">Custom Domain</span>

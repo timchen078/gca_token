@@ -5,10 +5,10 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 LAST_UPDATED = "2026-07-30"
-READINESS_AT = "2026-07-30T06:42:17Z"
-PUBLIC_ROUTE_AT = "2026-07-30T06:42:28Z"
-ADMIN_ROUTE_AT = "2026-07-30T06:42:38Z"
-WORKER_VERSION_ID = "c8d57eb4-9614-4d3e-8b8b-04fd63b65210"
+READINESS_AT = "2026-07-30T07:10:13Z"
+PUBLIC_ROUTE_AT = "2026-07-30T07:12:00Z"
+ADMIN_ROUTE_AT = "2026-07-30T07:12:12Z"
+WORKER_VERSION_ID = "670a3698-dc20-4215-a9b1-35711a4d1513"
 ROUTE_OBSERVATIONS = {
     "/gca/service-requests": 401,
     "/gca/credit-usage": 401,
@@ -139,6 +139,11 @@ class GcaWorkerStatusConsistencyTests(unittest.TestCase):
         self.assertTrue(access_api["currentState"]["accountServiceRequestDeviceKeyProtected"])
         self.assertFalse(access_api["currentState"]["accountServiceRequestCreditsReserved"])
         self.assertFalse(access_api["currentState"]["accountServiceRequestCreditsDeductedOnRequest"])
+        self.assertTrue(
+            access_api["currentState"][
+                "accountServiceRequestReturnsDeliveryReferenceAfterDelivered"
+            ]
+        )
         self.assertFalse(access_api["currentState"]["accountServiceRequestCreatesTradingPermission"])
         self.assertTrue(operations["currentState"]["accountServiceRequestProductionLive"])
         self.assertFalse(operations["currentState"]["accountServiceRequestCreditsReserved"])

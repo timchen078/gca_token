@@ -3,13 +3,13 @@
   "pageUrl": "https://gcagochina.com/api-status.html",
   "status": "public-service-request-review-and-delivery-live",
   "lastUpdated": "2026-07-30",
-  "latestPublicCheckAt": "2026-07-30T06:42:28Z",
-  "latestAdminCheckAt": "2026-07-30T06:42:38Z",
+  "latestPublicCheckAt": "2026-07-30T07:12:00Z",
+  "latestAdminCheckAt": "2026-07-30T07:12:12Z",
   "latestPublicCheckStatus": "passed-service-request-review-route-and-redacted-history",
   "workerRelease": "gca-registration-worker-2026-07-30-service-request-delivery-v1",
-  "workerVersionId": "c8d57eb4-9614-4d3e-8b8b-04fd63b65210",
+  "workerVersionId": "670a3698-dc20-4215-a9b1-35711a4d1513",
   "serviceRequestReviewVersion": "gca_service_request_review_v1",
-  "latestDeployReadinessCheckAt": "2026-07-30T06:42:17Z",
+  "latestDeployReadinessCheckAt": "2026-07-30T07:10:13Z",
   "latestDeployReadinessStatus": "passed-cloudflare-permissions",
   "latestDeployReadinessSummary": {
     "wranglerDeployDryRun": "passed",
@@ -260,8 +260,8 @@
       "returnsEmail": false,
       "createsTradingPermission": false,
       "productionLive": true,
-      "lastObservedAt": "2026-07-30T06:42:28Z",
-      "workerVersionId": "c8d57eb4-9614-4d3e-8b8b-04fd63b65210",
+      "lastObservedAt": "2026-07-30T07:12:00Z",
+      "workerVersionId": "670a3698-dc20-4215-a9b1-35711a4d1513",
       "requiresSignature": false,
       "requiresTransaction": false,
       "automaticTokenTransfer": false
@@ -281,6 +281,7 @@
       "returnsFullWalletAddress": false,
       "returnsFullRequestBody": false,
       "returnsLatestRedactedReview": true,
+      "returnsDeliveryReferenceAfterDelivered": true,
       "returnsCreditSettlement": true,
       "returnsReviewerIdentity": false,
       "returnsOperatorNote": false,
@@ -296,8 +297,8 @@
       ],
       "readOnly": true,
       "productionLive": true,
-      "lastObservedAt": "2026-07-30T06:42:28Z",
-      "workerVersionId": "c8d57eb4-9614-4d3e-8b8b-04fd63b65210",
+      "lastObservedAt": "2026-07-30T07:12:00Z",
+      "workerVersionId": "670a3698-dc20-4215-a9b1-35711a4d1513",
       "requiresSignature": false,
       "requiresTransaction": false,
       "automaticTokenTransfer": false
@@ -375,7 +376,7 @@
       "lastObservedAdminGetStatus": 200,
       "lastObservedAt": "2026-07-28T06:07:11Z",
       "productionLive": true,
-      "workerVersionId": "c8d57eb4-9614-4d3e-8b8b-04fd63b65210"
+      "workerVersionId": "670a3698-dc20-4215-a9b1-35711a4d1513"
     },
     {
       "id": "holding-verifications-read",
@@ -395,7 +396,7 @@
       "lastObservedAdminGetStatus": 200,
       "lastObservedAt": "2026-07-28T06:07:11Z",
       "productionLive": true,
-      "workerVersionId": "c8d57eb4-9614-4d3e-8b8b-04fd63b65210"
+      "workerVersionId": "670a3698-dc20-4215-a9b1-35711a4d1513"
     },
     {
       "id": "service-requests-read-write",
@@ -407,9 +408,9 @@
       "publicLedgerReadable": false,
       "workerDryRunPassed": true,
       "lastObservedAnonymousGetStatus": 401,
-      "lastObservedAt": "2026-07-30T06:42:28Z",
+      "lastObservedAt": "2026-07-30T07:12:00Z",
       "productionLive": true,
-      "workerVersionId": "c8d57eb4-9614-4d3e-8b8b-04fd63b65210"
+      "workerVersionId": "670a3698-dc20-4215-a9b1-35711a4d1513"
     },
     {
       "id": "service-request-reviews-read-write",
@@ -433,9 +434,9 @@
       "createsTradingPermission": false,
       "lastObservedAnonymousGetStatus": 401,
       "lastObservedAdminGetStatus": 200,
-      "lastObservedAt": "2026-07-30T06:42:38Z",
+      "lastObservedAt": "2026-07-30T07:12:12Z",
       "productionLive": true,
-      "workerVersionId": "c8d57eb4-9614-4d3e-8b8b-04fd63b65210"
+      "workerVersionId": "670a3698-dc20-4215-a9b1-35711a4d1513"
     },
     {
       "id": "credit-usage-read-write",
@@ -447,9 +448,9 @@
       "publicLedgerReadable": false,
       "workerDryRunPassed": true,
       "lastObservedAnonymousGetStatus": 401,
-      "lastObservedAt": "2026-07-30T06:42:28Z",
+      "lastObservedAt": "2026-07-30T07:12:00Z",
       "productionLive": true,
-      "workerVersionId": "c8d57eb4-9614-4d3e-8b8b-04fd63b65210"
+      "workerVersionId": "670a3698-dc20-4215-a9b1-35711a4d1513"
     },
     {
       "id": "member-benefit-transfers-read-write",
@@ -472,7 +473,7 @@
       "lastObservedAdminGetStatus": 200,
       "lastObservedAt": "2026-07-28T06:07:11Z",
       "productionLive": true,
-      "workerVersionId": "c8d57eb4-9614-4d3e-8b8b-04fd63b65210"
+      "workerVersionId": "670a3698-dc20-4215-a9b1-35711a4d1513"
     },
     {
       "id": "account-status-recovery-requests-read",
@@ -488,7 +489,7 @@
       "lastObservedAdminGetStatus": 200,
       "lastObservedAt": "2026-07-28T06:07:11Z",
       "productionLive": true,
-      "workerVersionId": "c8d57eb4-9614-4d3e-8b8b-04fd63b65210"
+      "workerVersionId": "670a3698-dc20-4215-a9b1-35711a4d1513"
     },
     {
       "id": "account-status-recovery-approval",
@@ -503,7 +504,7 @@
       "storesCredentialHashOnly": true,
       "changesAccountOrLedgers": false,
       "productionLive": true,
-      "workerVersionId": "c8d57eb4-9614-4d3e-8b8b-04fd63b65210"
+      "workerVersionId": "670a3698-dc20-4215-a9b1-35711a4d1513"
     }
   ],
   "checks": {
@@ -562,9 +563,9 @@
       "noTradingPermission": true,
       "doNotClaimLiveBeforeSmokeChecks": true
     },
-    "workerVersionId": "c8d57eb4-9614-4d3e-8b8b-04fd63b65210",
-    "publicSmokePassedAt": "2026-07-30T06:42:28Z",
-    "adminSmokePassedAt": "2026-07-30T06:42:38Z"
+    "workerVersionId": "670a3698-dc20-4215-a9b1-35711a4d1513",
+    "publicSmokePassedAt": "2026-07-30T07:12:00Z",
+    "adminSmokePassedAt": "2026-07-30T07:12:12Z"
   },
   "operatorTools": {
     "adminExport": "tools/export_cloudflare_email_registrations.py",
@@ -619,6 +620,7 @@
     "accountServiceRequestDailyLimit": 5,
     "accountServiceRequestReturnsEmail": false,
     "accountServiceRequestReturnsFullRequestBodyInHistory": false,
+    "accountServiceRequestReturnsDeliveryReferenceAfterDelivered": true,
     "accountServiceRequestReservesCredits": false,
     "accountServiceRequestDeductsCreditsOnSubmission": false,
     "accountServiceRequestCreatesTradingPermission": false,

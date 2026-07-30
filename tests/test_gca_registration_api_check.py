@@ -103,6 +103,7 @@ ACCESS_CONFIG_PAYLOAD = {
         "serviceRequestReviewServerCatalogAuthoritative": True,
         "serviceRequestReviewCreditsDeductedOnlyOnDelivered": True,
         "serviceRequestReviewCreditsDeductedAtMostOnce": True,
+        "serviceRequestReviewReturnsNonSensitiveDeliveryReference": True,
         "automaticTokenTransfer": False,
         "automaticMemberActivationFromSubmittedDate": False,
         "onchainHoldingHistoryRequiredForApproval": True,

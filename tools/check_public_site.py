@@ -217,11 +217,11 @@ FORBIDDEN_PUBLIC_CLAIM_PATTERNS = [
     "对倒",
 ]
 LEGACY_PERSONAL_GMAIL = "cxy070800@gmail.com"
-PENDING_WORKER_READINESS_AT = "2026-07-30T06:42:17Z"
-PENDING_WORKER_PUBLIC_ROUTE_AT = "2026-07-30T06:42:28Z"
-PENDING_WORKER_ADMIN_ROUTE_AT = "2026-07-30T06:42:38Z"
+PENDING_WORKER_READINESS_AT = "2026-07-30T07:10:13Z"
+PENDING_WORKER_PUBLIC_ROUTE_AT = "2026-07-30T07:12:00Z"
+PENDING_WORKER_ADMIN_ROUTE_AT = "2026-07-30T07:12:12Z"
 MEMBER_WORKFLOW_ADMIN_ROUTE_AT = "2026-07-28T06:07:11Z"
-PENDING_WORKER_VERSION_ID = "c8d57eb4-9614-4d3e-8b8b-04fd63b65210"
+PENDING_WORKER_VERSION_ID = "670a3698-dc20-4215-a9b1-35711a4d1513"
 PENDING_WORKER_BLOCKED_BY = None
 MEMBER_BENEFIT_EVIDENCE_WORKER_VERSION_ID = "510315f5-8db3-4e08-b574-6e14b618aed5"
 MEMBER_BENEFIT_EVIDENCE_PUBLIC_SMOKE_AT = "2026-07-27T09:37:54Z"
@@ -3657,8 +3657,8 @@ def validate_zh_api_status_page(text: str) -> None:
     for expected in (
         "GCA 中文 API 状态",
         "中文 API 状态 / 浏览器实时只读检查",
-        "2026-07-30T06:42:28Z",
-        "2026-07-30T06:42:38Z",
+        "2026-07-30T07:12:00Z",
+        "2026-07-30T07:12:12Z",
         "最新检查",
         "正在本浏览器检查",
         "邮箱注册和邮箱退订接口",
@@ -10500,8 +10500,8 @@ def validate_api_status_page(text: str) -> None:
     for expected in (
         "GCA Registration API Status",
         "Registration API Status / Live Read-Only Check",
-        "2026-07-30T06:42:28Z",
-        "2026-07-30T06:42:38Z",
+        "2026-07-30T07:12:00Z",
+        "2026-07-30T07:12:12Z",
         "2026-07-30 UTC",
         "Cloudflare Workers + D1",
         "https://gca-registration-api.gcagochina.workers.dev",

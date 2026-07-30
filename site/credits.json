@@ -32,11 +32,11 @@
     "accountServiceRequestProductionLive": true,
     "accountServiceRequestDeviceKeyProtected": true,
     "accountServiceRequestDailyLimit": 5,
-    "accountServiceRequestProductionVerifiedAt": "2026-07-30T06:42:28Z",
+    "accountServiceRequestProductionVerifiedAt": "2026-07-30T07:12:00Z",
     "accountServiceRequestCreditsReserved": false,
     "accountServiceRequestCreditsDeductedOnSubmission": false,
     "memberLedgerWritesLive": true,
-    "serviceRoutesProductionVerifiedAt": "2026-07-30T06:42:38Z",
+    "serviceRoutesProductionVerifiedAt": "2026-07-30T07:12:12Z",
     "serviceRequestReviewProductionLive": true,
     "serviceRequestReviewPacketVersion": "gca_service_request_review_v1",
     "serviceRequestDeliveryRequiresApproval": true,
@@ -238,7 +238,7 @@
     "workerDeployReadinessCommand": "python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth",
     "workerDeployReadinessAuthSessionCheck": "cloudflare-auth-session",
     "workerDeployReadinessAuthRecoveryField": "authRecovery",
-    "latestDeployReadinessCheckAt": "2026-07-30T06:42:17Z",
+    "latestDeployReadinessCheckAt": "2026-07-30T07:10:13Z",
     "latestDeployReadinessSummary": {
       "wranglerDeployDryRun": "passed",
       "cloudflareD1Visibility": "passed",
@@ -249,7 +249,7 @@
       "deploysWorker": false
     },
     "lastObservedAnonymousGetStatus": 401,
-    "lastObservedAt": "2026-07-30T06:42:28Z",
+    "lastObservedAt": "2026-07-30T07:12:00Z",
     "postDeployPublicSmokeCommand": "python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes",
     "postDeployAdminSmokeCommand": "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes",
     "releaseGatesBeforeLive": [
@@ -277,9 +277,9 @@
     "selfServiceRedemption": false,
     "automaticWalletAction": false,
     "productionWorkerEndpointLive": true,
-    "workerVersionId": "c8d57eb4-9614-4d3e-8b8b-04fd63b65210",
-    "publicSmokePassedAt": "2026-07-30T06:42:28Z",
-    "adminSmokePassedAt": "2026-07-30T06:42:38Z",
+    "workerVersionId": "670a3698-dc20-4215-a9b1-35711a4d1513",
+    "publicSmokePassedAt": "2026-07-30T07:12:00Z",
+    "adminSmokePassedAt": "2026-07-30T07:12:12Z",
     "linkedServiceRequestRequired": true,
     "atMostOneUsagePerServiceRequest": true
   },
@@ -290,7 +290,7 @@
     "workerDeployReadinessCommand": "python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth",
     "workerDeployReadinessAuthSessionCheck": "cloudflare-auth-session",
     "workerDeployReadinessAuthRecoveryField": "authRecovery",
-    "latestDeployReadinessCheckAt": "2026-07-30T06:42:17Z",
+    "latestDeployReadinessCheckAt": "2026-07-30T07:10:13Z",
     "latestDeployReadinessSummary": {
       "wranglerDeployDryRun": "passed",
       "cloudflareD1Visibility": "passed",
@@ -301,7 +301,7 @@
       "deploysWorker": false
     },
     "lastObservedAnonymousGetStatus": 401,
-    "lastObservedAt": "2026-07-30T06:42:28Z",
+    "lastObservedAt": "2026-07-30T07:12:00Z",
     "postDeployPublicSmokeCommand": "python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes",
     "postDeployAdminSmokeCommand": "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes",
     "releaseGatesBeforeLive": [
@@ -330,9 +330,9 @@
     "requiresSupportReview": true,
     "automaticWalletAction": false,
     "createsTradingPermission": false,
-    "workerVersionId": "c8d57eb4-9614-4d3e-8b8b-04fd63b65210",
-    "publicSmokePassedAt": "2026-07-30T06:42:28Z",
-    "adminSmokePassedAt": "2026-07-30T06:42:38Z"
+    "workerVersionId": "670a3698-dc20-4215-a9b1-35711a4d1513",
+    "publicSmokePassedAt": "2026-07-30T07:12:00Z",
+    "adminSmokePassedAt": "2026-07-30T07:12:12Z"
   },
   "accountServiceRequestAccess": {
     "status": "live-device-key-protected-manual-review-queue",
@@ -375,8 +375,8 @@
     "createsTradingPermission": false,
     "lastObservedAnonymousGetStatus": 401,
     "lastObservedAdminGetStatus": 200,
-    "productionVerifiedAt": "2026-07-30T06:42:38Z",
-    "workerVersionId": "c8d57eb4-9614-4d3e-8b8b-04fd63b65210"
+    "productionVerifiedAt": "2026-07-30T07:12:12Z",
+    "workerVersionId": "670a3698-dc20-4215-a9b1-35711a4d1513"
   },
   "redemptionBoundaries": {
     "accountLevelOnly": true,

@@ -583,6 +583,13 @@ def check_access_config(*, base_url: str, timeout: float, cafile: str, opener: C
         is True,
         "service request review must deduct credits at most once",
     )
+    require(
+        payload.get("boundaries", {}).get(
+            "serviceRequestReviewReturnsNonSensitiveDeliveryReference"
+        )
+        is True,
+        "delivered account history must return the non-sensitive delivery reference",
+    )
     service_catalog = payload.get("serviceCatalog", [])
     require(
         isinstance(service_catalog, list) and len(service_catalog) == 9,

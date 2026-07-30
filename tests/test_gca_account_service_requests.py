@@ -182,6 +182,14 @@ class GcaAccountServiceRequestTests(unittest.TestCase):
             source,
         )
         self.assertIn(
+            "review.delivery_reference AS review_delivery_reference",
+            source,
+        )
+        self.assertIn(
+            "nonSensitiveDeliveryReferenceReturnedAfterDelivered: true",
+            source,
+        )
+        self.assertIn(
             "serviceReviewTransitionAllowed",
             source,
         )
@@ -249,6 +257,7 @@ class GcaAccountServiceRequestTests(unittest.TestCase):
         self.assertFalse(history["returnsEmail"])
         self.assertFalse(history["returnsFullWalletAddress"])
         self.assertFalse(history["returnsFullRequestBody"])
+        self.assertTrue(history["returnsDeliveryReferenceAfterDelivered"])
 
         review = next(
             endpoint
@@ -297,6 +306,9 @@ class GcaAccountServiceRequestTests(unittest.TestCase):
         self.assertIn("rejected_operator_review", page)
         self.assertIn("Delivered / 已交付", page)
         self.assertIn("creditAmountUsed", page)
+        self.assertIn("latestReview.deliveryReference", page)
+        self.assertIn("Delivery reference / 交付引用", page)
+        self.assertIn("delivery.textContent", page)
         self.assertNotIn(
             "serviceRequestList.textContent = statusAccess.token",
             page,
