@@ -26,13 +26,15 @@ const SERVICE_REQUEST_VERSION = "gca_service_request_v1";
 const ACCOUNT_SERVICE_REQUEST_VERSION = "gca_account_service_request_v1";
 const ACCOUNT_SERVICE_REQUEST_STATUS_VERSION =
   "gca_account_service_request_status_v1";
+const ACCOUNT_SERVICE_DELIVERY_RECEIPT_VERSION =
+  "gca_account_service_delivery_receipt_v1";
 const SERVICE_REQUEST_REVIEW_VERSION =
   "gca_service_request_review_v1";
 const MEMBER_REVIEW_VERSION = "gca_member_review_v1";
 const HOLDING_VERIFICATION_VERSION = "gca_holding_verification_v1";
 const MEMBER_BENEFIT_TRANSFER_VERSION = "gca_member_benefit_transfer_v1";
 const WORKER_RELEASE =
-  "gca-registration-worker-2026-07-30-service-request-delivery-v1";
+  "gca-registration-worker-2026-07-30-delivery-receipt-v1";
 const OFFICIAL_CONTACT_EMAIL = "support@gcagochina.com";
 const OFFICIAL_SITE_URL = "https://gcagochina.com/";
 const CHAIN_ID = 8453;
@@ -787,6 +789,45 @@ function extractAccountServiceRequestStatus(packet) {
     );
   }
   return { statusAccessToken };
+}
+
+function extractAccountServiceDeliveryReceipt(packet) {
+  if (
+    packet.packetVersion &&
+    packet.packetVersion !== ACCOUNT_SERVICE_DELIVERY_RECEIPT_VERSION
+  ) {
+    throw new ApiError(
+      `packetVersion must be ${ACCOUNT_SERVICE_DELIVERY_RECEIPT_VERSION}`
+    );
+  }
+  const statusAccessToken = String(packet.statusAccessToken || "").trim();
+  const serviceRequestId = String(packet.serviceRequestId || "")
+    .trim()
+    .toLowerCase();
+  const acknowledgements =
+    packet.acknowledgements && typeof packet.acknowledgements === "object"
+      ? packet.acknowledgements
+      : {};
+  if (!isStatusAccessToken(statusAccessToken)) {
+    throw new ApiError(
+      "statusAccessToken must be a valid device status access key",
+      401
+    );
+  }
+  if (!SERVICE_REQUEST_ID_RE.test(serviceRequestId)) {
+    throw new ApiError(
+      "serviceRequestId must be a valid GCA service request id"
+    );
+  }
+  if (!Boolean(acknowledgements.deliveryReceived)) {
+    throw new ApiError("delivery received acknowledgement is required");
+  }
+  if (!Boolean(acknowledgements.noCreditOrWalletEffect)) {
+    throw new ApiError(
+      "no credit or wallet effect acknowledgement is required"
+    );
+  }
+  return { statusAccessToken, serviceRequestId };
 }
 
 function extractServiceRequestReview(packet) {
@@ -1596,6 +1637,12 @@ function rowToServiceRequest(row, includeEmail = true) {
     updatedAt: row.updated_at || "",
     reviewedAt: row.reviewed_at || "",
     completedAt: row.completed_at || "",
+    deliveryReceiptId: row.delivery_receipt_id || "",
+    deliveryAcknowledgedAt: row.delivery_acknowledged_at || "",
+    deliveryAcknowledgementVersion:
+      row.delivery_acknowledgement_version || "",
+    deliveryAcknowledgementSource:
+      row.delivery_acknowledgement_source || "",
     status: row.status,
     email: includeEmail ? row.email : undefined,
     emailSha256: row.email_hash,
@@ -1663,7 +1710,7 @@ function rowToServiceRequestReview(row) {
   };
 }
 
-function serviceRequestNextStep(status) {
+function serviceRequestNextStep(status, deliveryAcknowledged = false) {
   if (status === "queued_operator_review") {
     return "The request is queued for manual operator review.";
   }
@@ -1686,6 +1733,9 @@ function serviceRequestNextStep(status) {
     return "Manual review rejected the request. No credits were deducted.";
   }
   if (status === "delivered") {
+    if (deliveryAcknowledged) {
+      return "Delivery receipt was acknowledged by this account.";
+    }
     return "Manual delivery was recorded. Review the credit settlement shown with this request.";
   }
   return "Check this account history for the latest operator-reviewed status.";
@@ -1718,6 +1768,8 @@ function rowToAccountServiceRequest(row) {
     ),
     reviewedAt: row.reviewed_at || "",
     completedAt: row.completed_at || "",
+    deliveryAcknowledged: Boolean(row.delivery_receipt_id),
+    deliveryAcknowledgedAt: row.delivery_acknowledged_at || "",
     latestReview: row.latest_review_id
       ? {
           decision: row.review_decision || "",
@@ -1741,7 +1793,10 @@ function rowToAccountServiceRequest(row) {
               : Number(row.review_remaining_credits_after)
         }
       : null,
-    nextStep: serviceRequestNextStep(row.status)
+    nextStep: serviceRequestNextStep(
+      row.status,
+      Boolean(row.delivery_receipt_id)
+    )
   };
 }
 
@@ -4039,6 +4094,11 @@ function accountServiceRequestBoundaries() {
     emailReturned: false,
     accessTokenReturned: false,
     nonSensitiveDeliveryReferenceReturnedAfterDelivered: true,
+    deliveryAcknowledgementEnabled: true,
+    deliveryAcknowledgementRequiresCompletedDelivery: true,
+    deliveryAcknowledgementIdempotent: true,
+    deliveryAcknowledgementChangesCredits: false,
+    deliveryAcknowledgementWritesWallet: false,
     operatorReviewOnly: true,
     creditsReserved: false,
     creditsDeductedOnRequest: false,
@@ -4048,6 +4108,146 @@ function accountServiceRequestBoundaries() {
     writesWallet: false,
     createsTradingPermission: false
   };
+}
+
+function accountServiceDeliveryReceipt(row) {
+  return {
+    packetVersion: ACCOUNT_SERVICE_DELIVERY_RECEIPT_VERSION,
+    serviceRequestId: row.service_request_id,
+    status: "delivery_received",
+    acknowledgedAt: row.delivery_acknowledged_at,
+    creditsChanged: false,
+    walletAction: false,
+    tokenTransfer: false,
+    tradingPermissionCreated: false
+  };
+}
+
+async function submitAccountServiceDeliveryReceipt(request, env, origin) {
+  const db = requireDatabase(env);
+  const packet = await readJsonRequest(request);
+  const receiptInput = extractAccountServiceDeliveryReceipt(packet);
+  const now = nowIso();
+  const accountRow = await authenticateAccountStatusAccess(
+    db,
+    receiptInput.statusAccessToken,
+    now
+  );
+  let serviceRequestRow = await db
+    .prepare(
+      `SELECT
+        service.*,
+        review.delivery_completed AS review_delivery_completed
+      FROM gca_service_requests AS service
+      LEFT JOIN gca_service_request_reviews AS review
+        ON review.service_request_review_id =
+          service.latest_review_id
+      WHERE service.service_request_id = ?1
+        AND service.account_id = ?2
+      LIMIT 1`
+    )
+    .bind(receiptInput.serviceRequestId, accountRow.account_id)
+    .first();
+
+  if (!serviceRequestRow) {
+    throw new ApiError(
+      "service request was not found for this account",
+      404
+    );
+  }
+  if (
+    serviceRequestRow.status !== "delivered" ||
+    !Boolean(serviceRequestRow.review_delivery_completed)
+  ) {
+    throw new ApiError(
+      "delivery can only be acknowledged after completed delivery",
+      409
+    );
+  }
+
+  const deliveryReceiptId = await stableId(
+    "gca_delivery_receipt",
+    accountRow.account_id,
+    receiptInput.serviceRequestId
+  );
+  if (serviceRequestRow.delivery_receipt_id) {
+    if (serviceRequestRow.delivery_receipt_id !== deliveryReceiptId) {
+      throw new ApiError(
+        "service request already has a different delivery receipt",
+        409
+      );
+    }
+    return jsonResponse({
+      ok: true,
+      packetVersion: ACCOUNT_SERVICE_DELIVERY_RECEIPT_VERSION,
+      created: false,
+      idempotentReplay: true,
+      deliveryReceipt: accountServiceDeliveryReceipt(serviceRequestRow),
+      boundaries: accountServiceRequestBoundaries()
+    }, 200, origin, env);
+  }
+
+  const updateResult = await db
+    .prepare(
+      `UPDATE gca_service_requests
+      SET delivery_receipt_id = ?1,
+        delivery_acknowledged_at = ?2,
+        delivery_acknowledgement_version = ?3,
+        delivery_acknowledgement_source = ?4,
+        updated_at = ?2
+      WHERE service_request_id = ?5
+        AND account_id = ?6
+        AND status = 'delivered'
+        AND EXISTS (
+          SELECT 1
+          FROM gca_service_request_reviews AS review
+          WHERE review.service_request_review_id =
+            gca_service_requests.latest_review_id
+            AND review.delivery_completed = 1
+        )
+        AND delivery_receipt_id = ''`
+    )
+    .bind(
+      deliveryReceiptId,
+      now,
+      ACCOUNT_SERVICE_DELIVERY_RECEIPT_VERSION,
+      "gca-member-access-delivery-receipt",
+      receiptInput.serviceRequestId,
+      accountRow.account_id
+    )
+    .run();
+  const created = Number(
+    updateResult &&
+      updateResult.meta &&
+      updateResult.meta.changes
+      ? updateResult.meta.changes
+      : 0
+  ) > 0;
+  serviceRequestRow = await db
+    .prepare(
+      `SELECT *
+      FROM gca_service_requests
+      WHERE service_request_id = ?1
+        AND account_id = ?2
+      LIMIT 1`
+    )
+    .bind(receiptInput.serviceRequestId, accountRow.account_id)
+    .first();
+  if (
+    !serviceRequestRow ||
+    serviceRequestRow.delivery_receipt_id !== deliveryReceiptId
+  ) {
+    throw new ApiError("delivery receipt could not be recorded", 409);
+  }
+
+  return jsonResponse({
+    ok: true,
+    packetVersion: ACCOUNT_SERVICE_DELIVERY_RECEIPT_VERSION,
+    created,
+    idempotentReplay: !created,
+    deliveryReceipt: accountServiceDeliveryReceipt(serviceRequestRow),
+    boundaries: accountServiceRequestBoundaries()
+  }, created ? 201 : 200, origin, env);
 }
 
 async function submitAccountServiceRequest(request, env, origin) {
@@ -4995,6 +5195,11 @@ function accessBoundaries() {
     accountServiceRequestCreditsDeductedOnRequest: false,
     accountServiceRequestReturnsEmail: false,
     accountServiceRequestCreatesTradingPermission: false,
+    accountServiceDeliveryReceiptEnabled: true,
+    accountServiceDeliveryReceiptRequiresCompletedDelivery: true,
+    accountServiceDeliveryReceiptIdempotent: true,
+    accountServiceDeliveryReceiptChangesCredits: false,
+    accountServiceDeliveryReceiptWritesWallet: false,
     serviceRequestReviewEnabled: true,
     serviceRequestReviewMode:
       "admin-token-protected-manual-review-and-delivery",
@@ -5045,6 +5250,8 @@ function accessConfig(origin, env) {
     accountServiceRequestVersion: ACCOUNT_SERVICE_REQUEST_VERSION,
     accountServiceRequestStatusVersion:
       ACCOUNT_SERVICE_REQUEST_STATUS_VERSION,
+    accountServiceDeliveryReceiptVersion:
+      ACCOUNT_SERVICE_DELIVERY_RECEIPT_VERSION,
     serviceRequestReviewVersion:
       SERVICE_REQUEST_REVIEW_VERSION,
     memberReviewVersion: MEMBER_REVIEW_VERSION,
@@ -5066,6 +5273,8 @@ function accessConfig(origin, env) {
       accountServiceRequests: "/gca/account-service-requests",
       accountServiceRequestStatus:
         "/gca/account-service-requests/status",
+      accountServiceDeliveryReceipts:
+        "/gca/account-service-requests/delivery-receipts",
       serviceRequestReviewsAdmin:
         "/gca/service-request-reviews",
       walletVerifications: "/gca/wallet-verifications",
@@ -5208,6 +5417,8 @@ function health(origin, env) {
     accountServiceRequestVersion: ACCOUNT_SERVICE_REQUEST_VERSION,
     accountServiceRequestStatusVersion:
       ACCOUNT_SERVICE_REQUEST_STATUS_VERSION,
+    accountServiceDeliveryReceiptVersion:
+      ACCOUNT_SERVICE_DELIVERY_RECEIPT_VERSION,
     serviceRequestReviewVersion:
       SERVICE_REQUEST_REVIEW_VERSION,
     memberReviewVersion: MEMBER_REVIEW_VERSION,
@@ -5331,6 +5542,19 @@ export default {
       if (url.pathname === "/gca/account-service-requests/status") {
         if (request.method === "POST") {
           return await readAccountServiceRequests(request, env, origin);
+        }
+        return jsonResponse({ ok: false, error: "method not allowed" }, 405, origin, env);
+      }
+      if (
+        url.pathname ===
+        "/gca/account-service-requests/delivery-receipts"
+      ) {
+        if (request.method === "POST") {
+          return await submitAccountServiceDeliveryReceipt(
+            request,
+            env,
+            origin
+          );
         }
         return jsonResponse({ ok: false, error: "method not allowed" }, 405, origin, env);
       }

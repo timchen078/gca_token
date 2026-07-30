@@ -100,7 +100,7 @@ class GcaWorkerMemberReviewTests(unittest.TestCase):
 
         self.assertIn('const MEMBER_REVIEW_VERSION = "gca_member_review_v1";', source)
         self.assertIn(
-            'const WORKER_RELEASE =\n  "gca-registration-worker-2026-07-30-service-request-delivery-v1";',
+            'const WORKER_RELEASE =\n  "gca-registration-worker-2026-07-30-delivery-receipt-v1";',
             source,
         )
         self.assertIn("gcaMemberHoldingPeriodEligible: false", source)

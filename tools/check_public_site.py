@@ -217,11 +217,11 @@ FORBIDDEN_PUBLIC_CLAIM_PATTERNS = [
     "对倒",
 ]
 LEGACY_PERSONAL_GMAIL = "cxy070800@gmail.com"
-PENDING_WORKER_READINESS_AT = "2026-07-30T07:10:13Z"
-PENDING_WORKER_PUBLIC_ROUTE_AT = "2026-07-30T07:12:00Z"
-PENDING_WORKER_ADMIN_ROUTE_AT = "2026-07-30T07:12:12Z"
+PENDING_WORKER_READINESS_AT = "2026-07-30T08:20:35Z"
+PENDING_WORKER_PUBLIC_ROUTE_AT = "2026-07-30T08:20:13Z"
+PENDING_WORKER_ADMIN_ROUTE_AT = "2026-07-30T08:20:21Z"
 MEMBER_WORKFLOW_ADMIN_ROUTE_AT = "2026-07-28T06:07:11Z"
-PENDING_WORKER_VERSION_ID = "670a3698-dc20-4215-a9b1-35711a4d1513"
+PENDING_WORKER_VERSION_ID = "7952f4a1-b287-4ca9-a1ed-d92d75b8fd1f"
 PENDING_WORKER_BLOCKED_BY = None
 MEMBER_BENEFIT_EVIDENCE_WORKER_VERSION_ID = "510315f5-8db3-4e08-b574-6e14b618aed5"
 MEMBER_BENEFIT_EVIDENCE_PUBLIC_SMOKE_AT = "2026-07-27T09:37:54Z"
@@ -3657,8 +3657,8 @@ def validate_zh_api_status_page(text: str) -> None:
     for expected in (
         "GCA 中文 API 状态",
         "中文 API 状态 / 浏览器实时只读检查",
-        "2026-07-30T07:12:00Z",
-        "2026-07-30T07:12:12Z",
+        "2026-07-30T08:20:13Z",
+        "2026-07-30T08:20:21Z",
         "最新检查",
         "正在本浏览器检查",
         "邮箱注册和邮箱退订接口",
@@ -9732,9 +9732,12 @@ def validate_access_api_page(text: str) -> None:
     assert_contains(text, "/gca/service-requests", label)
     assert_contains(text, "/gca/account-service-requests", label)
     assert_contains(text, "/gca/account-service-requests/status", label)
+    assert_contains(text, "/gca/account-service-requests/delivery-receipts", label)
+    assert_contains(text, "gca_account_service_delivery_receipt_v1", label)
     assert_contains(text, "/gca/service-request-reviews", label)
     assert_contains(text, "gca_service_request_review_v1", label)
     assert_contains(text, "0012_service_request_reviews.sql", label)
+    assert_contains(text, "0013_service_delivery_receipts.sql", label)
     assert_contains(text, "Delivery requires prior approval", label)
     assert_contains(text, "retries cannot deduct twice", label)
     assert_contains(text, "/gca/member-ledger", label)
@@ -9810,7 +9813,7 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != ACCESS_API_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
-    if payload.get("status") != "public-access-api-service-request-delivery-live":
+    if payload.get("status") != "public-access-api-delivery-receipt-live":
         raise SiteCheckError(f"{label}: wrong status")
     if payload.get("lastUpdated") != "2026-07-30":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
@@ -9818,7 +9821,7 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong chainId")
     if payload.get("contractAddress") != MAINNET_ADDRESS:
         raise SiteCheckError(f"{label}: wrong contractAddress")
-    if state.get("currentStage") != "service-request-review-and-delivery-api-live":
+    if state.get("currentStage") != "account-service-delivery-receipt-api-live":
         raise SiteCheckError(f"{label}: wrong currentStage")
     if state.get("contractOnly") is not False:
         raise SiteCheckError(f"{label}: contractOnly must be false")
@@ -9898,6 +9901,24 @@ def validate_access_api_json(text: str) -> None:
             raise SiteCheckError(f"{label}: {key} must be false")
     if state.get("serviceRequestQueueProductionLive") is not True:
         raise SiteCheckError(f"{label}: serviceRequestQueueProductionLive must be true")
+    for key in (
+        "accountServiceDeliveryReceiptProductionLive",
+        "accountServiceDeliveryReceiptDeviceKeyProtected",
+        "accountServiceDeliveryReceiptRequiresCompletedDelivery",
+        "accountServiceDeliveryReceiptIdempotent",
+    ):
+        if state.get(key) is not True:
+            raise SiteCheckError(f"{label}: {key} must be true")
+    for key in (
+        "accountServiceDeliveryReceiptChangesCredits",
+        "accountServiceDeliveryReceiptWritesWallet",
+    ):
+        if state.get(key) is not False:
+            raise SiteCheckError(f"{label}: {key} must be false")
+    if state.get("accountServiceDeliveryReceiptPacketVersion") != "gca_account_service_delivery_receipt_v1":
+        raise SiteCheckError(f"{label}: wrong delivery receipt packet version")
+    if state.get("accountServiceDeliveryReceiptProductionVerifiedAt") != PENDING_WORKER_PUBLIC_ROUTE_AT:
+        raise SiteCheckError(f"{label}: wrong delivery receipt verification timestamp")
     if state.get("creditUsageLedgerWritesLive") is not True:
         raise SiteCheckError(f"{label}: creditUsageLedgerWritesLive must be true")
     if state.get("creditUsageWorkerDeployBlockedBy") != PENDING_WORKER_BLOCKED_BY:
@@ -9972,6 +9993,8 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong contact suppression migration")
     if production_email_backend.get("serviceRequestMigration") != "cloudflare/gca-registration-worker/migrations/0005_service_requests.sql":
         raise SiteCheckError(f"{label}: wrong service request migration")
+    if production_email_backend.get("serviceDeliveryReceiptMigration") != "cloudflare/gca-registration-worker/migrations/0013_service_delivery_receipts.sql":
+        raise SiteCheckError(f"{label}: wrong delivery receipt migration")
     if production_email_backend.get("memberReviewMigration") != "cloudflare/gca-registration-worker/migrations/0006_member_reviews.sql":
         raise SiteCheckError(f"{label}: wrong member review migration")
     if production_email_backend.get("accountStatusAccessMigration") != "cloudflare/gca-registration-worker/migrations/0009_account_status_access.sql":
@@ -9990,7 +10013,7 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong account status rotation version")
     if production_email_backend.get("accountStatusRotationGraceMinutes") != 15:
         raise SiteCheckError(f"{label}: wrong account status rotation grace window")
-    if production_email_backend.get("workerRelease") != "gca-registration-worker-2026-07-30-service-request-delivery-v1":
+    if production_email_backend.get("workerRelease") != "gca-registration-worker-2026-07-30-delivery-receipt-v1":
         raise SiteCheckError(f"{label}: wrong Worker release")
     if production_email_backend.get("contactSuppressionEndpoint") != "https://gca-registration-api.gcagochina.workers.dev/gca/contact-suppressions":
         raise SiteCheckError(f"{label}: wrong contact suppression endpoint")
@@ -10000,6 +10023,8 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong contact suppression sync tool")
     if production_email_backend.get("adminServiceRequestsEndpoint") != "https://gca-registration-api.gcagochina.workers.dev/gca/service-requests":
         raise SiteCheckError(f"{label}: wrong admin service requests endpoint")
+    if production_email_backend.get("accountServiceDeliveryReceiptEndpoint") != "https://gca-registration-api.gcagochina.workers.dev/gca/account-service-requests/delivery-receipts":
+        raise SiteCheckError(f"{label}: wrong account delivery receipt endpoint")
     if production_email_backend.get("defaultAdminExportOutput") != ".gca_access_data/cloudflare_email_registrations_export.json":
         raise SiteCheckError(f"{label}: wrong default admin export output")
     if production_email_backend.get("publicRedactedAdminExportOutput") != ".gca_access_data/cloudflare_email_registrations_public_redacted.json":
@@ -10085,6 +10110,9 @@ def validate_access_api_json(text: str) -> None:
         "accountStatusReadOnly",
         "accountStatusUsesDeviceKey",
         "accountStatusStoresTokenHashOnly",
+        "accountServiceDeliveryReceiptsUseDeviceKey",
+        "accountServiceDeliveryReceiptsRequireCompletedDelivery",
+        "accountServiceDeliveryReceiptsAreIdempotent",
     ):
         if security.get(key) is not True:
             raise SiteCheckError(f"{label}: {key} must be true")
@@ -10102,6 +10130,8 @@ def validate_access_api_json(text: str) -> None:
         "memberBenefitTransferSendsTokens",
         "accountStatusReturnsEmail",
         "accountStatusReturnsToken",
+        "accountServiceDeliveryReceiptsChangeCredits",
+        "accountServiceDeliveryReceiptsWriteWallet",
     ):
         if security.get(key) is not False:
             raise SiteCheckError(f"{label}: {key} must be false")
@@ -10112,6 +10142,7 @@ def validate_access_api_json(text: str) -> None:
         "POST /gca/account-status/rotate": "production-workers-dev-live",
         "POST /gca/account-service-requests": "production-workers-dev-live",
         "POST /gca/account-service-requests/status": "production-workers-dev-live",
+        "POST /gca/account-service-requests/delivery-receipts": "production-workers-dev-live",
         "POST /gca/wallet-verifications": "production-workers-dev-live",
         "GET /gca/credit-ledger": "token-protected-admin-live",
         "GET /gca/member-ledger": "token-protected-admin-live",
@@ -10500,8 +10531,8 @@ def validate_api_status_page(text: str) -> None:
     for expected in (
         "GCA Registration API Status",
         "Registration API Status / Live Read-Only Check",
-        "2026-07-30T07:12:00Z",
-        "2026-07-30T07:12:12Z",
+        "2026-07-30T08:20:13Z",
+        "2026-07-30T08:20:21Z",
         "2026-07-30 UTC",
         "Cloudflare Workers + D1",
         "https://gca-registration-api.gcagochina.workers.dev",
@@ -10534,6 +10565,8 @@ def validate_api_status_page(text: str) -> None:
         "gca_member_benefit_transfer_v1",
         "/gca/account-service-requests",
         "/gca/account-service-requests/status",
+        "/gca/account-service-requests/delivery-receipts",
+        "gca_account_service_delivery_receipt_v1",
         "/gca/service-requests",
         "/gca/service-request-reviews",
         "gca_service_request_review_v1",
@@ -10600,19 +10633,19 @@ def validate_api_status_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != API_STATUS_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
-    if payload.get("status") != "public-service-request-review-and-delivery-live":
+    if payload.get("status") != "public-account-service-delivery-receipt-live":
         raise SiteCheckError(f"{label}: wrong status")
     if payload.get("lastUpdated") != "2026-07-30":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("latestPublicCheckAt") != PENDING_WORKER_PUBLIC_ROUTE_AT:
         raise SiteCheckError(f"{label}: wrong latest public check timestamp")
-    if payload.get("latestPublicCheckStatus") != "passed-service-request-review-route-and-redacted-history":
+    if payload.get("latestPublicCheckStatus") != "passed-delivery-receipt-route-and-redacted-history":
         raise SiteCheckError(f"{label}: wrong latest public check status")
     if payload.get("latestAdminCheckAt") != PENDING_WORKER_ADMIN_ROUTE_AT:
         raise SiteCheckError(f"{label}: wrong latest admin check timestamp")
     if payload.get("workerVersionId") != PENDING_WORKER_VERSION_ID:
         raise SiteCheckError(f"{label}: wrong top-level Worker version")
-    if payload.get("workerRelease") != "gca-registration-worker-2026-07-30-service-request-delivery-v1":
+    if payload.get("workerRelease") != "gca-registration-worker-2026-07-30-delivery-receipt-v1":
         raise SiteCheckError(f"{label}: wrong top-level Worker release")
     if payload.get("latestDeployReadinessCheckAt") != PENDING_WORKER_READINESS_AT:
         raise SiteCheckError(f"{label}: wrong latest deploy readiness timestamp")
@@ -10796,6 +10829,7 @@ def validate_api_status_json(text: str) -> None:
         "gca_account_status_recovery_request_v1",
         "gca_account_status_recovery_approval_v1",
         "gca_account_status_recovery_v1",
+        "gca_account_service_delivery_receipt_v1",
     ):
         if version not in browser_check.get("identityChecks", []):
             raise SiteCheckError(f"{label}: browser identity checks must include {version}")
@@ -10848,6 +10882,48 @@ def validate_api_status_json(text: str) -> None:
     ):
         if boundaries.get(key) is not expected:
             raise SiteCheckError(f"{label}: wrong public recovery boundary {key}")
+
+    delivery_receipt = public_endpoints.get(
+        "account-service-delivery-receipt-create"
+    )
+    if delivery_receipt is None:
+        raise SiteCheckError(f"{label}: missing account delivery receipt endpoint")
+    if (
+        delivery_receipt.get("method") != "POST"
+        or delivery_receipt.get("path")
+        != "/gca/account-service-requests/delivery-receipts"
+    ):
+        raise SiteCheckError(f"{label}: wrong account delivery receipt route")
+    if (
+        delivery_receipt.get("status")
+        != "live-device-key-protected-completed-delivery-only"
+    ):
+        raise SiteCheckError(f"{label}: wrong account delivery receipt status")
+    if (
+        delivery_receipt.get("packetVersion")
+        != "gca_account_service_delivery_receipt_v1"
+    ):
+        raise SiteCheckError(f"{label}: wrong account delivery receipt version")
+    for key, expected in (
+        ("requiresDeviceStatusKey", True),
+        ("accountScoped", True),
+        ("requiresCompletedDelivery", True),
+        ("idempotent", True),
+        ("changesCredits", False),
+        ("changesAccountOrMemberStatus", False),
+        ("writesWallet", False),
+        ("requiresSignature", False),
+        ("requiresTransaction", False),
+        ("automaticTokenTransfer", False),
+        ("createsTradingPermission", False),
+        ("productionLive", True),
+    ):
+        if delivery_receipt.get(key) is not expected:
+            raise SiteCheckError(
+                f"{label}: wrong account delivery receipt boundary {key}"
+            )
+    if delivery_receipt.get("workerVersionId") != PENDING_WORKER_VERSION_ID:
+        raise SiteCheckError(f"{label}: wrong delivery receipt Worker version")
 
     expected_admin = {
         "email-registration-read": "/gca/email-registrations",
@@ -11143,6 +11219,11 @@ def validate_api_status_json(text: str) -> None:
         "memberBenefitManualTransferRequired",
         "memberBenefitEvidenceProductionLive",
         "memberBenefitEvidenceVerifiesExistingTransactionOnly",
+        "accountServiceDeliveryReceiptLive",
+        "accountServiceDeliveryReceiptRequiresDeviceKey",
+        "accountServiceDeliveryReceiptAccountScoped",
+        "accountServiceDeliveryReceiptRequiresCompletedDelivery",
+        "accountServiceDeliveryReceiptIdempotent",
     ):
         if boundaries.get(key) is not True:
             raise SiteCheckError(f"{label}: missing boundary {key}")
@@ -11150,6 +11231,8 @@ def validate_api_status_json(text: str) -> None:
         "accountStatusReturnsEmail",
         "accountStatusReturnsFullWallet",
         "accountStatusReturnsDeviceKey",
+        "accountServiceDeliveryReceiptChangesCredits",
+        "accountServiceDeliveryReceiptWritesWallet",
     ):
         if boundaries.get(key) is not False:
             raise SiteCheckError(f"{label}: account status boundary {key} must be false")
@@ -11206,10 +11289,16 @@ def validate_api_health_script(text: str) -> None:
         'payload.memberAccessVersion === "gca_member_access_v2"',
         'payload.accountStatusVersion === "gca_account_status_v1"',
         'payload.endpoints.accountStatus === "/gca/account-status"',
+        'payload.accountServiceDeliveryReceiptVersion === "gca_account_service_delivery_receipt_v1"',
+        'payload.endpoints.accountServiceDeliveryReceipts === "/gca/account-service-requests/delivery-receipts"',
         "boundaries.readOnlyAccountStatus === true",
         "boundaries.accountStatusTokenStoredAsSha256 === true",
         "boundaries.accountStatusReturnsEmail === false",
         "boundaries.accountStatusReturnsAccessToken === false",
+        "boundaries.accountServiceDeliveryReceiptRequiresCompletedDelivery === true",
+        "boundaries.accountServiceDeliveryReceiptIdempotent === true",
+        "boundaries.accountServiceDeliveryReceiptChangesCredits === false",
+        "boundaries.accountServiceDeliveryReceiptWritesWallet === false",
         'payload.memberReviewVersion === "gca_member_review_v1"',
         'payload.memberBenefitTransferVersion === "gca_member_benefit_transfer_v1"',
         'boundaries.memberBenefitTransferMode === "manual-reserve-wallet-transfer-with-read-only-production-evidence"',

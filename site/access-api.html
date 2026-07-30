@@ -536,6 +536,14 @@
           <span class="value">cloudflare/gca-registration-worker/migrations/0012_service_request_reviews.sql</span>
         </div>
         <div class="fact">
+          <span class="label">Delivery Receipt</span>
+          <span class="value good">gca_account_service_delivery_receipt_v1 live</span>
+        </div>
+        <div class="fact">
+          <span class="label">Delivery Receipt Migration</span>
+          <span class="value">cloudflare/gca-registration-worker/migrations/0013_service_delivery_receipts.sql</span>
+        </div>
+        <div class="fact">
           <span class="label">Service Review Operator</span>
           <span class="value">tools/review_cloudflare_service_request.py</span>
         </div>
@@ -607,7 +615,12 @@
           <div class="fact">
             <span class="label">POST</span>
             <span class="value">/gca/account-service-requests/status</span>
-            <p class="note">Live redacted history for <code>gca_account_service_request_status_v1</code>. It returns the matched account's latest 25 requests, latest redacted decision, delivery state, credits used, and remaining balance. Email, full wallet, device key, full request body, reviewer identity, and operator notes are omitted.</p>
+            <p class="note">Live redacted history for <code>gca_account_service_request_status_v1</code>. It returns the matched account's latest 25 requests, latest redacted decision, delivery state, delivery acknowledgement, credits used, and remaining balance. Email, full wallet, device key, full request body, reviewer identity, and operator notes are omitted.</p>
+          </div>
+          <div class="fact">
+            <span class="label">POST</span>
+            <span class="value">/gca/account-service-requests/delivery-receipts</span>
+            <p class="note">Live <code>gca_account_service_delivery_receipt_v1</code> confirmation for the matching device-key account after completed delivery. It writes one idempotent receipt marker and does not refund or deduct credits, connect a wallet, request a signature, send a transaction, transfer tokens, or create trading permission.</p>
           </div>
           <div class="fact">
             <span class="label">POST</span>

@@ -134,7 +134,7 @@ console.log(JSON.stringify({eligible, below, inconsistent, deduped}));
             source,
         )
         self.assertIn(
-            'const WORKER_RELEASE =\n  "gca-registration-worker-2026-07-30-service-request-delivery-v1";',
+            'const WORKER_RELEASE =\n  "gca-registration-worker-2026-07-30-delivery-receipt-v1";',
             source,
         )
         self.assertIn("verifyGcaHoldingWindow(memberRow, env)", source)

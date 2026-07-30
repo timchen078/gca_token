@@ -23,6 +23,13 @@ SERVICE_REQUEST_REVIEW_MIGRATION = (
     / "migrations"
     / "0012_service_request_reviews.sql"
 )
+SERVICE_DELIVERY_RECEIPT_MIGRATION = (
+    ROOT
+    / "cloudflare"
+    / "gca-registration-worker"
+    / "migrations"
+    / "0013_service_delivery_receipts.sql"
+)
 CREDIT_USAGE_MIGRATION = (
     ROOT
     / "cloudflare"
@@ -204,6 +211,91 @@ class GcaAccountServiceRequestTests(unittest.TestCase):
         self.assertNotIn("eth_sendTransaction", source)
         self.assertNotIn("personal_sign", source)
 
+    def test_delivery_receipt_migration_adds_single_use_account_marker(self):
+        database = sqlite3.connect(":memory:")
+        try:
+            database.executescript(
+                CREDIT_USAGE_MIGRATION.read_text(encoding="utf-8")
+            )
+            database.executescript(
+                SERVICE_REQUEST_MIGRATION.read_text(encoding="utf-8")
+            )
+            database.executescript(
+                SERVICE_REQUEST_REVIEW_MIGRATION.read_text(
+                    encoding="utf-8"
+                )
+            )
+            database.executescript(
+                SERVICE_DELIVERY_RECEIPT_MIGRATION.read_text(
+                    encoding="utf-8"
+                )
+            )
+            columns = {
+                row[1]
+                for row in database.execute(
+                    "PRAGMA table_info(gca_service_requests)"
+                ).fetchall()
+            }
+            self.assertIn("delivery_receipt_id", columns)
+            self.assertIn("delivery_acknowledged_at", columns)
+            self.assertIn("delivery_acknowledgement_version", columns)
+            self.assertIn("delivery_acknowledgement_source", columns)
+            indexes = database.execute(
+                "PRAGMA index_list(gca_service_requests)"
+            ).fetchall()
+            receipt_index = next(
+                row
+                for row in indexes
+                if row[1] == "idx_gca_service_requests_delivery_receipt"
+            )
+            self.assertEqual(receipt_index[2], 1)
+        finally:
+            database.close()
+
+    def test_worker_exposes_device_key_delivery_receipt_without_wallet_effect(self):
+        source = WORKER_SOURCE.read_text(encoding="utf-8")
+
+        self.assertIn(
+            '"gca_account_service_delivery_receipt_v1"',
+            source,
+        )
+        self.assertIn(
+            '"/gca/account-service-requests/delivery-receipts"',
+            source,
+        )
+        self.assertIn(
+            "submitAccountServiceDeliveryReceipt",
+            source,
+        )
+        self.assertIn(
+            "delivery can only be acknowledged after completed delivery",
+            source,
+        )
+        self.assertIn(
+            "service_request_id = ?1\n        AND account_id = ?2",
+            source,
+        )
+        self.assertIn(
+            "AND delivery_receipt_id = ''",
+            source,
+        )
+        self.assertIn(
+            "review.service_request_review_id =\n"
+            "            gca_service_requests.latest_review_id\n"
+            "            AND review.delivery_completed = 1",
+            source,
+        )
+        self.assertIn(
+            "deliveryAcknowledgementChangesCredits: false",
+            source,
+        )
+        self.assertIn(
+            "deliveryAcknowledgementWritesWallet: false",
+            source,
+        )
+        self.assertNotIn("eth_sendTransaction", source)
+        self.assertNotIn("personal_sign", source)
+
     def test_worker_catalog_matches_public_credits_catalog(self):
         source = WORKER_SOURCE.read_text(encoding="utf-8")
         credits = json.loads(CREDITS_JSON.read_text(encoding="utf-8"))
@@ -258,6 +350,23 @@ class GcaAccountServiceRequestTests(unittest.TestCase):
         self.assertFalse(history["returnsFullWalletAddress"])
         self.assertFalse(history["returnsFullRequestBody"])
         self.assertTrue(history["returnsDeliveryReferenceAfterDelivered"])
+        self.assertTrue(history["returnsDeliveryAcknowledgement"])
+
+        receipt = public_endpoints[
+            "/gca/account-service-requests/delivery-receipts"
+        ]
+        self.assertEqual(
+            receipt["packetVersion"],
+            "gca_account_service_delivery_receipt_v1",
+        )
+        self.assertTrue(receipt["requiresDeviceStatusKey"])
+        self.assertTrue(receipt["accountScoped"])
+        self.assertTrue(receipt["requiresCompletedDelivery"])
+        self.assertTrue(receipt["idempotent"])
+        self.assertFalse(receipt["changesCredits"])
+        self.assertFalse(receipt["writesWallet"])
+        self.assertFalse(receipt["automaticTokenTransfer"])
+        self.assertFalse(receipt["createsTradingPermission"])
 
         review = next(
             endpoint
@@ -275,6 +384,28 @@ class GcaAccountServiceRequestTests(unittest.TestCase):
         self.assertFalse(state["accountServiceRequestCreditsReserved"])
         self.assertFalse(state["accountServiceRequestCreditsDeductedOnRequest"])
         self.assertFalse(state["accountServiceRequestCreatesTradingPermission"])
+        self.assertTrue(state["accountServiceDeliveryReceiptProductionLive"])
+        self.assertTrue(
+            state["accountServiceDeliveryReceiptRequiresCompletedDelivery"]
+        )
+        self.assertTrue(state["accountServiceDeliveryReceiptIdempotent"])
+        self.assertFalse(state["accountServiceDeliveryReceiptChangesCredits"])
+        self.assertFalse(state["accountServiceDeliveryReceiptWritesWallet"])
+
+        receipt_contract = next(
+            endpoint
+            for endpoint in access_api["endpoints"]
+            if endpoint["path"]
+            == "/gca/account-service-requests/delivery-receipts"
+        )
+        self.assertIn(
+            "the service request must belong to the matched account",
+            receipt_contract["serverChecks"],
+        )
+        self.assertIn(
+            "the request status and latest operator review must both show completed delivery",
+            receipt_contract["serverChecks"],
+        )
 
     def test_member_access_page_submits_and_reads_redacted_request_history(self):
         page = MEMBER_ACCESS_PAGE.read_text(encoding="utf-8")
@@ -292,8 +423,16 @@ class GcaAccountServiceRequestTests(unittest.TestCase):
             self.assertIn(f'id="{element_id}"', page)
         self.assertIn('"/gca/account-service-requests"', page)
         self.assertIn('"/gca/account-service-requests/status"', page)
+        self.assertIn(
+            '"/gca/account-service-requests/delivery-receipts"',
+            page,
+        )
         self.assertIn('"gca_account_service_request_v1"', page)
         self.assertIn('"gca_account_service_request_status_v1"', page)
+        self.assertIn(
+            '"gca_account_service_delivery_receipt_v1"',
+            page,
+        )
         self.assertIn("newServiceClientRequestId", page)
         self.assertIn("pendingServiceDraftSignature", page)
         self.assertIn("Submission does not reserve or deduct credits", page)
@@ -309,6 +448,11 @@ class GcaAccountServiceRequestTests(unittest.TestCase):
         self.assertIn("latestReview.deliveryReference", page)
         self.assertIn("Delivery reference / 交付引用", page)
         self.assertIn("delivery.textContent", page)
+        self.assertIn("accountServiceDeliveryReceiptPayload", page)
+        self.assertIn("deliveryAcknowledged", page)
+        self.assertIn("Confirm Delivery Received / 确认已收到", page)
+        self.assertIn("noCreditOrWalletEffect", page)
+        self.assertIn("receiptButton.isConnected", page)
         self.assertNotIn(
             "serviceRequestList.textContent = statusAccess.token",
             page,

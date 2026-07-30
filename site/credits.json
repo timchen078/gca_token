@@ -32,11 +32,17 @@
     "accountServiceRequestProductionLive": true,
     "accountServiceRequestDeviceKeyProtected": true,
     "accountServiceRequestDailyLimit": 5,
-    "accountServiceRequestProductionVerifiedAt": "2026-07-30T07:12:00Z",
+    "accountServiceRequestProductionVerifiedAt": "2026-07-30T08:20:13Z",
     "accountServiceRequestCreditsReserved": false,
     "accountServiceRequestCreditsDeductedOnSubmission": false,
+    "accountServiceDeliveryReceiptProductionLive": true,
+    "accountServiceDeliveryReceiptPacketVersion": "gca_account_service_delivery_receipt_v1",
+    "accountServiceDeliveryReceiptRequiresCompletedDelivery": true,
+    "accountServiceDeliveryReceiptIdempotent": true,
+    "accountServiceDeliveryReceiptChangesCredits": false,
+    "accountServiceDeliveryReceiptWritesWallet": false,
     "memberLedgerWritesLive": true,
-    "serviceRoutesProductionVerifiedAt": "2026-07-30T07:12:12Z",
+    "serviceRoutesProductionVerifiedAt": "2026-07-30T08:20:21Z",
     "serviceRequestReviewProductionLive": true,
     "serviceRequestReviewPacketVersion": "gca_service_request_review_v1",
     "serviceRequestDeliveryRequiresApproval": true,
@@ -238,7 +244,7 @@
     "workerDeployReadinessCommand": "python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth",
     "workerDeployReadinessAuthSessionCheck": "cloudflare-auth-session",
     "workerDeployReadinessAuthRecoveryField": "authRecovery",
-    "latestDeployReadinessCheckAt": "2026-07-30T07:10:13Z",
+    "latestDeployReadinessCheckAt": "2026-07-30T08:20:35Z",
     "latestDeployReadinessSummary": {
       "wranglerDeployDryRun": "passed",
       "cloudflareD1Visibility": "passed",
@@ -249,7 +255,7 @@
       "deploysWorker": false
     },
     "lastObservedAnonymousGetStatus": 401,
-    "lastObservedAt": "2026-07-30T07:12:00Z",
+    "lastObservedAt": "2026-07-30T08:20:13Z",
     "postDeployPublicSmokeCommand": "python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes",
     "postDeployAdminSmokeCommand": "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes",
     "releaseGatesBeforeLive": [
@@ -277,9 +283,9 @@
     "selfServiceRedemption": false,
     "automaticWalletAction": false,
     "productionWorkerEndpointLive": true,
-    "workerVersionId": "670a3698-dc20-4215-a9b1-35711a4d1513",
-    "publicSmokePassedAt": "2026-07-30T07:12:00Z",
-    "adminSmokePassedAt": "2026-07-30T07:12:12Z",
+    "workerVersionId": "7952f4a1-b287-4ca9-a1ed-d92d75b8fd1f",
+    "publicSmokePassedAt": "2026-07-30T08:20:13Z",
+    "adminSmokePassedAt": "2026-07-30T08:20:21Z",
     "linkedServiceRequestRequired": true,
     "atMostOneUsagePerServiceRequest": true
   },
@@ -290,7 +296,7 @@
     "workerDeployReadinessCommand": "python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth",
     "workerDeployReadinessAuthSessionCheck": "cloudflare-auth-session",
     "workerDeployReadinessAuthRecoveryField": "authRecovery",
-    "latestDeployReadinessCheckAt": "2026-07-30T07:10:13Z",
+    "latestDeployReadinessCheckAt": "2026-07-30T08:20:35Z",
     "latestDeployReadinessSummary": {
       "wranglerDeployDryRun": "passed",
       "cloudflareD1Visibility": "passed",
@@ -301,7 +307,7 @@
       "deploysWorker": false
     },
     "lastObservedAnonymousGetStatus": 401,
-    "lastObservedAt": "2026-07-30T07:12:00Z",
+    "lastObservedAt": "2026-07-30T08:20:13Z",
     "postDeployPublicSmokeCommand": "python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes",
     "postDeployAdminSmokeCommand": "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes",
     "releaseGatesBeforeLive": [
@@ -330,9 +336,9 @@
     "requiresSupportReview": true,
     "automaticWalletAction": false,
     "createsTradingPermission": false,
-    "workerVersionId": "670a3698-dc20-4215-a9b1-35711a4d1513",
-    "publicSmokePassedAt": "2026-07-30T07:12:00Z",
-    "adminSmokePassedAt": "2026-07-30T07:12:12Z"
+    "workerVersionId": "7952f4a1-b287-4ca9-a1ed-d92d75b8fd1f",
+    "publicSmokePassedAt": "2026-07-30T08:20:13Z",
+    "adminSmokePassedAt": "2026-07-30T08:20:21Z"
   },
   "accountServiceRequestAccess": {
     "status": "live-device-key-protected-manual-review-queue",
@@ -351,13 +357,20 @@
     "historyReturnsFullRequestBody": false,
     "historyReturnsLatestRedactedReview": true,
     "historyReturnsCreditSettlement": true,
+    "historyReturnsDeliveryAcknowledgement": true,
     "historyReturnsReviewerIdentity": false,
     "historyReturnsOperatorNote": false,
     "creditsReserved": false,
     "creditsDeductedOnSubmission": false,
     "requiresOperatorReview": true,
     "automaticWalletAction": false,
-    "createsTradingPermission": false
+    "createsTradingPermission": false,
+    "deliveryReceiptEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/account-service-requests/delivery-receipts",
+    "deliveryReceiptPacketVersion": "gca_account_service_delivery_receipt_v1",
+    "deliveryReceiptRequiresCompletedDelivery": true,
+    "deliveryReceiptIdempotent": true,
+    "deliveryReceiptChangesCredits": false,
+    "deliveryReceiptWritesWallet": false
   },
   "serviceRequestReview": {
     "status": "live-token-protected-append-only-reviewed-delivery",
@@ -375,8 +388,8 @@
     "createsTradingPermission": false,
     "lastObservedAnonymousGetStatus": 401,
     "lastObservedAdminGetStatus": 200,
-    "productionVerifiedAt": "2026-07-30T07:12:12Z",
-    "workerVersionId": "670a3698-dc20-4215-a9b1-35711a4d1513"
+    "productionVerifiedAt": "2026-07-30T08:20:21Z",
+    "workerVersionId": "7952f4a1-b287-4ca9-a1ed-d92d75b8fd1f"
   },
   "redemptionBoundaries": {
     "accountLevelOnly": true,
@@ -393,6 +406,9 @@
     "accountServiceRequestDeductsCredits": false,
     "serviceRequestDeliveryRequiresApprovedReview": true,
     "serviceRequestCreditDeductionAtMostOnce": true,
+    "serviceDeliveryReceiptRequiresCompletedDelivery": true,
+    "serviceDeliveryReceiptChangesCredits": false,
+    "serviceDeliveryReceiptWritesWallet": false,
     "operatorUsageReviewRequired": true,
     "selfServiceRedemption": false,
     "requiresControlledAccountUi": false,
@@ -484,6 +500,7 @@
       "A registered account with a valid device key can submit one catalog service to the manual queue and read its own redacted request history; submission does not reserve or deduct credits.",
       "Manual decisions are append-only; delivery requires prior approval and settles the server-catalog credit unit at most once.",
       "Account request history shows the latest redacted review and credit settlement without exposing reviewer identity or operator notes.",
+      "A device-key account can acknowledge completed delivery once; retries are idempotent and no credits, wallet state, tokens, or trading permissions change.",
       "The 1,000,000 GCA Member threshold requires 30 consecutive days of holding before a one-time 10,000 GCA member benefit review.",
       "The Member Research Notes browser-only preview is live and does not deduct credits; the separate 20-unit member service tier remains subject to operator review and recorded delivery.",
       "The Trade Plan Ledger browser-only preview is live and does not deduct credits; no separate trade-plan service unit is claimed in the current catalog.",
@@ -497,6 +514,7 @@
       "service request queue records are automatic service delivery, credit deduction, cash settlement, wallet settlement, or trading permission",
       "approval alone deducts credits or means delivery is complete",
       "one service request can deduct credits more than once",
+      "a service delivery receipt is a credit refund, another deduction, wallet settlement, token transfer, or dispute decision",
       "the 10,000 GCA member benefit is automatic or self-service transferred",
       "token ownership bypasses risk controls, support review, or simulation-first requirements",
       "service units are final commercial pricing before public terms are published"

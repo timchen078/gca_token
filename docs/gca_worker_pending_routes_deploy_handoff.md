@@ -19,6 +19,9 @@ Already live routes:
 - `POST /gca/contact-suppressions`
 - `POST /gca/wallet-verifications`
 - `POST /gca/member-access`
+- `POST /gca/account-service-requests`
+- `POST /gca/account-service-requests/status`
+- `POST /gca/account-service-requests/delivery-receipts`
 - token-protected `GET /gca/email-registrations`
 - token-protected `GET /gca/contact-suppressions`
 - token-protected `GET /gca/wallet-verifications`
@@ -29,17 +32,17 @@ Already live routes:
 - token-protected `GET/POST /gca/credit-usage`
 - token-protected `GET/POST /gca/service-request-reviews`
 
-The three service routes are production-live and token-protected. The review route stores append-only manual decisions, requires approval before delivery, uses the server catalog credit unit, and settles at most once for each request. They do not connect wallets, request signatures, send transactions, transfer GCA, or create live trading permission.
+The three operator service routes are production-live and token-protected. The review route stores append-only manual decisions, requires approval before delivery, uses the server catalog credit unit, and settles at most once for each request. The public delivery-receipt route is device-key protected, account-scoped, available only after completed delivery, and idempotent. They do not connect wallets, request signatures, send transactions, transfer GCA, or create live trading permission.
 
 ## Production Verification
 
 The latest service review and delivery deployment was completed on `2026-07-30` UTC.
 
-- Readiness passed at `2026-07-30T07:10:13Z`.
-- Remote migration `0012_service_request_reviews.sql` applied successfully.
-- Current Worker version `670a3698-dc20-4215-a9b1-35711a4d1513` includes append-only service review, approved delivery, idempotent settlement, and redacted account history.
-- Latest public smoke passed at `2026-07-30T07:12:00Z`.
-- Latest admin read-only smoke passed at `2026-07-30T07:12:12Z`.
+- Readiness passed at `2026-07-30T08:20:35Z`.
+- Remote migrations `0012_service_request_reviews.sql` and `0013_service_delivery_receipts.sql` applied successfully.
+- Current Worker version `7952f4a1-b287-4ca9-a1ed-d92d75b8fd1f` includes append-only service review, approved delivery, idempotent settlement, redacted account history, and account-scoped delivery receipts.
+- Latest public smoke passed at `2026-07-30T08:20:13Z`.
+- Latest admin read-only smoke passed at `2026-07-30T08:20:21Z`.
 - Anonymous reads for all three operator service routes return HTTP `401`.
 - Token-protected admin reads return HTTP `200`.
 
@@ -84,6 +87,7 @@ This applies pending remote D1 migrations. The production database already inclu
 - `0004_credit_usage_ledger.sql`
 - `0005_service_requests.sql`
 - `0012_service_request_reviews.sql`
+- `0013_service_delivery_receipts.sql`
 
 Stop if Wrangler reports a remote D1 migration error.
 
@@ -159,7 +163,7 @@ Stop and do not claim the routes are live if:
 - Wrangler is not logged in, or the readiness gate returns `Authentication error [code: 10000]`;
 - D1 remote migration fails;
 - Worker deploy fails;
-- `/health` does not expose `gca_credit_usage_v1`, `gca_service_request_v1`, and `gca_service_request_review_v1`;
+- `/health` does not expose `gca_credit_usage_v1`, `gca_service_request_v1`, `gca_service_request_review_v1`, and `gca_account_service_delivery_receipt_v1`;
 - unauthenticated reads do not return authorization errors;
 - admin smoke checks cannot read the new route response shapes;
 - any command prints secrets or user record contents.

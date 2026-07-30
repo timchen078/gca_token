@@ -5,10 +5,10 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 LAST_UPDATED = "2026-07-30"
-READINESS_AT = "2026-07-30T07:10:13Z"
-PUBLIC_ROUTE_AT = "2026-07-30T07:12:00Z"
-ADMIN_ROUTE_AT = "2026-07-30T07:12:12Z"
-WORKER_VERSION_ID = "670a3698-dc20-4215-a9b1-35711a4d1513"
+READINESS_AT = "2026-07-30T08:20:35Z"
+PUBLIC_ROUTE_AT = "2026-07-30T08:20:13Z"
+ADMIN_ROUTE_AT = "2026-07-30T08:20:21Z"
+WORKER_VERSION_ID = "7952f4a1-b287-4ca9-a1ed-d92d75b8fd1f"
 ROUTE_OBSERVATIONS = {
     "/gca/service-requests": 401,
     "/gca/credit-usage": 401,
@@ -59,7 +59,7 @@ class GcaWorkerStatusConsistencyTests(unittest.TestCase):
         self.assertEqual(access_backend["pendingRoutesLastObservedAt"], PUBLIC_ROUTE_AT)
         self.assertEqual(access_backend["pendingRouteAnonymousGetStatus"], ROUTE_OBSERVATIONS)
         self.assertEqual(access_backend["workerVersionId"], WORKER_VERSION_ID)
-        self.assertEqual(access_backend["workerRelease"], "gca-registration-worker-2026-07-30-service-request-delivery-v1")
+        self.assertEqual(access_backend["workerRelease"], "gca-registration-worker-2026-07-30-delivery-receipt-v1")
         self.assertEqual(access_backend["accountStatusAccessMigration"], "cloudflare/gca-registration-worker/migrations/0009_account_status_access.sql")
         self.assertEqual(access_backend["accountStatusEndpoint"], "https://gca-registration-api.gcagochina.workers.dev/gca/account-status")
         self.assertEqual(access_backend["memberReviewVersion"], "gca_member_review_v1")
@@ -68,6 +68,30 @@ class GcaWorkerStatusConsistencyTests(unittest.TestCase):
         self.assertEqual(
             access_backend["serviceRequestReviewMigration"],
             "cloudflare/gca-registration-worker/migrations/0012_service_request_reviews.sql",
+        )
+        self.assertEqual(
+            access_backend["serviceDeliveryReceiptMigration"],
+            "cloudflare/gca-registration-worker/migrations/0013_service_delivery_receipts.sql",
+        )
+        self.assertEqual(
+            access_backend["accountServiceDeliveryReceiptEndpoint"],
+            "https://gca-registration-api.gcagochina.workers.dev/gca/account-service-requests/delivery-receipts",
+        )
+        self.assertTrue(
+            access_api["currentState"][
+                "accountServiceDeliveryReceiptRequiresCompletedDelivery"
+            ]
+        )
+        self.assertTrue(
+            access_api["currentState"]["accountServiceDeliveryReceiptIdempotent"]
+        )
+        self.assertFalse(
+            access_api["currentState"][
+                "accountServiceDeliveryReceiptChangesCredits"
+            ]
+        )
+        self.assertFalse(
+            access_api["currentState"]["accountServiceDeliveryReceiptWritesWallet"]
         )
 
         operations_pipeline = operations["memberAccessOpsPipeline"]

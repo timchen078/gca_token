@@ -286,6 +286,12 @@ def build_report(
     )
     check(
         checks,
+        "service-delivery-receipts-migration",
+        (worker_dir / "migrations" / "0013_service_delivery_receipts.sql").exists(),
+        "Account-scoped completed-delivery receipt D1 migration exists.",
+    )
+    check(
+        checks,
         "wrangler-package",
         (worker_dir / "package-lock.json").exists() and (worker_dir / "node_modules" / ".bin" / "wrangler").exists(),
         "Worker package dependencies and local Wrangler binary are installed.",
