@@ -321,7 +321,7 @@
       <link rel="stylesheet" href="assets/gca-site.css?v=20260711">
     <link rel="stylesheet" href="assets/api-health.css?v=20260727">
     <script src="assets/gca-site.js?v=20260711" defer></script>
-    <script src="assets/api-health.js?v=20260727d" defer></script>
+    <script src="assets/api-health.js?v=20260810" defer></script>
   </head>
   <body>
     <header>
@@ -345,12 +345,12 @@
       <section aria-labelledby="title">
         <p class="eyebrow">Registration API Status / Live Read-Only Check</p>
         <h1 id="title">GCA Registration API Status</h1>
-        <p class="lead">This is the public status page for the live GCA email registration, member access, device-key account status, account service requests and redacted history, key rotation, registered-email recovery, and contact suppression backend. The current production API runs on Cloudflare Workers + D1 at <code>https://gca-registration-api.gcagochina.workers.dev</code>.</p>
-        <p class="lead">The latest release public smoke check passed at <code>2026-07-30T08:20:13Z</code>, followed by a token-protected admin read check at <code>2026-07-30T08:20:21Z</code>. The browser panel below can repeat the safe read-only portion now without writing records.</p>
+        <p class="lead">This is the public status page for the live GCA email registration, member access, device-key account status, account service requests, queued-request cancellation, redacted history, key rotation, registered-email recovery, and contact suppression backend. The current production API runs on Cloudflare Workers + D1 at <code>https://gca-registration-api.gcagochina.workers.dev</code>.</p>
+        <p class="lead">The latest release public smoke check passed at <code>2026-08-10T09:14:18Z</code>, followed by a token-protected admin read check at <code>2026-08-10T09:14:34Z</code>. The browser panel below can repeat the safe read-only portion now without writing records.</p>
         <p class="lead"><code>gca_member_access_v2</code> creates a random device key in the browser. D1 stores only its SHA-256 hash, and <code>gca_account_status_v1</code> returns a redacted read-only snapshot without email, full wallet address, the key, administrator data, or operator notes.</p>
         <p class="lead"><code>gca_account_status_rotation_v1</code> lets a browser holding the current valid key replace it safely. The old key immediately loses status-read access and can only retry the same completed rotation for 15 minutes; account, credit, member, wallet, and token records are unchanged.</p>
         <p class="lead">Lost-key recovery uses <code>gca_account_status_recovery_request_v1</code>, registered-email manual review, and a single-use 24-hour credential. Public requests never reveal whether an account matched. Completion activates the pre-committed new key and changes no account, credit, member, wallet, GCA balance, or on-chain asset.</p>
-        <p class="lead"><code>gca_account_service_request_v1</code> lets the device-key account submit a server-priced catalog service to manual review. <code>gca_service_request_review_v1</code> stores append-only decisions, requires approval before delivery, and settles the server catalog credit unit at most once. The redacted history excludes reviewer identity and operator notes.</p>
+        <p class="lead"><code>gca_account_service_request_v1</code> lets the device-key account submit a server-priced catalog service to manual review. Before review starts, <code>gca_account_service_request_cancellation_v1</code> lets that account permanently cancel its queued request without changing credits or wallet state. <code>gca_service_request_review_v1</code> stores append-only decisions, requires approval before delivery, and settles the server catalog credit unit at most once. The redacted history excludes reviewer identity and operator notes.</p>
         <p class="lead">Service requests, service reviews, credit usage, append-only member review, holding verification, and member-benefit transfer evidence are production-live and token-protected. None of these routes connects a wallet, signs a message, sends a transaction, or creates trading permission.</p>
         <p class="lead">The public checks verify health and read protections without writing test registrations. Admin reads remain token protected and should only be run locally by an operator with the local admin token file.</p>
         <div class="actions">
@@ -419,7 +419,7 @@
         </div>
         <div class="fact">
           <span class="label">Worker Version</span>
-          <span class="value">7952f4a1-b287-4ca9-a1ed-d92d75b8fd1f</span>
+          <span class="value">f6064d99-ea1a-49f8-861e-2743fc6ebf58</span>
         </div>
         <div class="fact">
           <span class="label">Custom Domain</span>
@@ -556,6 +556,11 @@
             <p class="note">Live device-key protected <code>gca_account_service_delivery_receipt_v1</code> confirmation after completed delivery. It is account-scoped and idempotent and does not change credits, wallets, tokens, member state, or trading permission.</p>
           </div>
           <div class="fact">
+            <span class="label">POST</span>
+            <span class="value">/gca/account-service-requests/cancellations</span>
+            <p class="note">Live device-key protected <code>gca_account_service_request_cancellation_v1</code> cancellation before manual review. It is account-scoped, permanent, and idempotent; it changes no credits, wallets, tokens, member state, or trading permission and does not delete audit history.</p>
+          </div>
+          <div class="fact">
             <span class="label">GET</span>
             <span class="value">/gca/email-registrations</span>
             <p class="note">Live token-protected admin read. Public visitors should receive an authorization error, not registration records.</p>
@@ -593,7 +598,7 @@
           <div class="fact">
             <span class="label">GET/POST</span>
             <span class="value">/gca/service-requests</span>
-            <p class="note">Production-live token-protected service request queue. The latest Worker deploy and public/admin read-only smoke checks passed on 2026-07-30 UTC. Anonymous reads return HTTP 401.</p>
+            <p class="note">Production-live token-protected service request queue. The latest Worker deploy and public/admin read-only smoke checks passed on 2026-08-10 UTC. Anonymous reads return HTTP 401.</p>
           </div>
           <div class="fact">
             <span class="label">GET/POST</span>
@@ -603,7 +608,7 @@
           <div class="fact">
             <span class="label">GET/POST</span>
             <span class="value">/gca/credit-usage</span>
-            <p class="note">Production-live token-protected credit usage ledger. The latest Worker deploy and public/admin read-only smoke checks passed on 2026-07-30 UTC. Anonymous reads return HTTP 401.</p>
+            <p class="note">Production-live token-protected credit usage ledger. The latest Worker deploy and public/admin read-only smoke checks passed on 2026-08-10 UTC. Anonymous reads return HTTP 401.</p>
           </div>
           <div class="fact">
             <span class="label">Future Domain</span>
@@ -626,7 +631,7 @@
         </div>
         <div class="panel">
           <h2>Deploy Readiness</h2>
-          <p class="note">This checks Worker bundling, every required migration including <code>0012_service_request_reviews.sql</code>, Cloudflare account authentication, D1 visibility, and read-only Worker deployment permission before publishing a new Worker version. All required checks passed on 2026-07-30 UTC.</p>
+          <p class="note">This checks Worker bundling, every required migration through <code>0014_service_request_cancellations.sql</code>, Cloudflare account authentication, D1 visibility, and read-only Worker deployment permission before publishing a new Worker version. All required checks passed on 2026-08-10 UTC.</p>
           <pre>python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth</pre>
         </div>
         <div class="panel">

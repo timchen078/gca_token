@@ -37,7 +37,7 @@ from tools.export_cloudflare_email_registrations import (  # noqa: E402
 
 DEFAULT_ORIGIN = "https://gcagochina.com"
 DEFAULT_USER_AGENT = "GCA-Operator-Registration-API-Check/1.0"
-WORKER_RELEASE = "gca-registration-worker-2026-07-30-delivery-receipt-v1"
+WORKER_RELEASE = "gca-registration-worker-2026-08-10-request-cancellation-v1"
 OFFICIAL_CONTACT_EMAIL = "support@gcagochina.com"
 OFFICIAL_MEMBER_BENEFIT_SOURCE_WALLET = "0x5e8f84748612b913aacc937492ac25dc5630e246"
 
@@ -189,6 +189,11 @@ def check_health(*, base_url: str, timeout: float, cafile: str, opener: Callable
         "health endpoint returned wrong account service request status version",
     )
     require(
+        payload.get("accountServiceRequestCancellationVersion")
+        == "gca_account_service_request_cancellation_v1",
+        "health endpoint returned wrong account service request cancellation version",
+    )
+    require(
         payload.get("accountServiceDeliveryReceiptVersion")
         == "gca_account_service_delivery_receipt_v1",
         "health endpoint returned wrong account service delivery receipt version",
@@ -244,6 +249,9 @@ def check_health(*, base_url: str, timeout: float, cafile: str, opener: Callable
         ),
         "accountServiceRequestStatusVersion": payload.get(
             "accountServiceRequestStatusVersion"
+        ),
+        "accountServiceRequestCancellationVersion": payload.get(
+            "accountServiceRequestCancellationVersion"
         ),
         "accountServiceDeliveryReceiptVersion": payload.get(
             "accountServiceDeliveryReceiptVersion"
@@ -397,6 +405,11 @@ def check_access_config(*, base_url: str, timeout: float, cafile: str, opener: C
         "access config returned wrong account service request status version",
     )
     require(
+        payload.get("accountServiceRequestCancellationVersion")
+        == "gca_account_service_request_cancellation_v1",
+        "access config returned wrong account service request cancellation version",
+    )
+    require(
         payload.get("accountServiceDeliveryReceiptVersion")
         == "gca_account_service_delivery_receipt_v1",
         "access config returned wrong account service delivery receipt version",
@@ -459,6 +472,13 @@ def check_access_config(*, base_url: str, timeout: float, cafile: str, opener: C
         payload.get("endpoints", {}).get("accountServiceRequestStatus")
         == "/gca/account-service-requests/status",
         "access config returned wrong account service request status endpoint",
+    )
+    require(
+        payload.get("endpoints", {}).get(
+            "accountServiceRequestCancellations"
+        )
+        == "/gca/account-service-requests/cancellations",
+        "access config returned wrong account service request cancellation endpoint",
     )
     require(
         payload.get("endpoints", {}).get(
@@ -567,6 +587,41 @@ def check_access_config(*, base_url: str, timeout: float, cafile: str, opener: C
         )
         is False,
         "account service requests must not create trading permission",
+    )
+    require(
+        payload.get("boundaries", {}).get(
+            "accountServiceRequestCancellationEnabled"
+        )
+        is True,
+        "access config must enable account service request cancellation",
+    )
+    require(
+        payload.get("boundaries", {}).get(
+            "accountServiceRequestCancellationQueuedOnly"
+        )
+        is True,
+        "account service request cancellation must be queued-only",
+    )
+    require(
+        payload.get("boundaries", {}).get(
+            "accountServiceRequestCancellationIdempotent"
+        )
+        is True,
+        "account service request cancellation must be idempotent",
+    )
+    require(
+        payload.get("boundaries", {}).get(
+            "accountServiceRequestCancellationChangesCredits"
+        )
+        is False,
+        "account service request cancellation must not change credits",
+    )
+    require(
+        payload.get("boundaries", {}).get(
+            "accountServiceRequestCancellationWritesWallet"
+        )
+        is False,
+        "account service request cancellation must not write wallet state",
     )
     require(
         payload.get("boundaries", {}).get(
@@ -699,6 +754,9 @@ def check_access_config(*, base_url: str, timeout: float, cafile: str, opener: C
         ),
         "accountStatusRecoveryVersion": payload.get(
             "accountStatusRecoveryVersion"
+        ),
+        "accountServiceRequestCancellationVersion": payload.get(
+            "accountServiceRequestCancellationVersion"
         ),
         "accountServiceDeliveryReceiptVersion": payload.get(
             "accountServiceDeliveryReceiptVersion"
@@ -878,6 +936,15 @@ def run_checks(
         ),
         check_cors_preflight(
             base_url=base_url,
+            path="/gca/account-service-requests/cancellations",
+            check_id="cors-account-service-request-cancellations",
+            origin=origin,
+            timeout=timeout,
+            cafile=cafile,
+            opener=opener,
+        ),
+        check_cors_preflight(
+            base_url=base_url,
             path="/gca/account-service-requests/delivery-receipts",
             check_id="cors-account-service-delivery-receipts",
             origin=origin,
@@ -1027,6 +1094,14 @@ def run_checks(
             base_url=base_url,
             path="/gca/account-service-requests/status",
             check_id="account-service-request-status-get-rejected",
+            timeout=timeout,
+            cafile=cafile,
+            opener=opener,
+        ),
+        check_public_post_only_get(
+            base_url=base_url,
+            path="/gca/account-service-requests/cancellations",
+            check_id="account-service-request-cancellations-get-rejected",
             timeout=timeout,
             cafile=cafile,
             opener=opener,
@@ -1249,6 +1324,7 @@ def run_checks(
             "submitsAccountStatusRecoveryApproval": False,
             "submitsAccountStatusRecoveryCompletion": False,
             "submitsAccountServiceRequest": False,
+            "submitsAccountServiceRequestCancellation": False,
             "submitsAccountServiceDeliveryReceipt": False,
             "submitsServiceRequest": False,
             "submitsServiceRequestReview": False,

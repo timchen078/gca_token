@@ -328,6 +328,15 @@
         font-size: 12px;
       }
 
+      .cancel-request-button {
+        min-height: 36px;
+        padding: 8px 12px;
+        border-color: var(--red);
+        color: var(--red);
+        background: #fff;
+        font-size: 12px;
+      }
+
       input[type="checkbox"] {
         width: auto;
         min-height: 0;
@@ -735,8 +744,8 @@
       <section class="section two" id="accountServiceRequests" aria-label="Account service requests">
         <div class="panel service-form">
           <h2>Request a Service <span class="zh">提交服务申请</span></h2>
-          <p class="note">Use the device key created with this account. The server sets the catalog unit, checks the current credit ledger, and queues manual review without reserving or deducting credits.</p>
-          <p class="note zh-note">请使用本账户的设备密钥。服务器会确定目录积分并核对当前账本，只加入人工审核队列，不预占也不自动扣除 credits。</p>
+          <p class="note">Use the device key created with this account. The server sets the catalog unit, checks the current credit ledger, and queues manual review without reserving or deducting credits. You may permanently cancel your own queued request until manual review starts.</p>
+          <p class="note zh-note">请使用本账户的设备密钥。服务器会确定目录积分并核对当前账本，只加入人工审核队列，不预占也不自动扣除 credits。人工审核开始前，你可以永久取消自己的排队申请。</p>
           <div class="field">
             <label for="accountServiceId">Service <span class="zh">服务类型</span></label>
             <select id="accountServiceId"></select>
@@ -776,8 +785,8 @@
 
         <div class="panel">
           <h2>Request History <span class="zh">申请历史</span></h2>
-          <p class="note">This read returns only this account's service, title, manual-review status, time, credit settlement, and completed-delivery receipt status. It does not return email, device keys, wallet secrets, operator notes, or the full request body.</p>
-          <p class="note zh-note">这里只返回本账户的服务、标题、人工审核状态、时间、积分结算和已完成交付的收件状态，不返回邮箱、设备密钥、钱包敏感信息、运营备注或完整申请正文。</p>
+          <p class="note">This read returns only this account's service, title, manual-review or cancellation status, time, credit settlement, and completed-delivery receipt status. It does not return email, device keys, wallet secrets, operator notes, or the full request body.</p>
+          <p class="note zh-note">这里只返回本账户的服务、标题、人工审核或取消状态、时间、积分结算和已完成交付的收件状态，不返回邮箱、设备密钥、钱包敏感信息、运营备注或完整申请正文。</p>
           <div class="actions">
             <button class="button" type="button" id="refreshServiceRequests" disabled>Refresh History / 刷新历史</button>
           </div>
@@ -809,6 +818,7 @@
             <li>Wallet verification is a backend read-only <code>eth_call</code> against the official GCA contract on Base Mainnet.</li>
             <li>100 credits and GCA Member status are utility ledger records, not cash, income, reimbursement, trading permission, or risk-control bypass.</li>
             <li>Account service requests require the device key, enter a manual review queue, and do not reserve or deduct credits at submission.</li>
+            <li>The same account may permanently cancel only while its request is queued and has no manual review; cancellation is idempotent and does not change credits, wallets, tokens, member state, or audit history.</li>
             <li>The 10,000 GCA member benefit remains pending manual reserve-wallet transfer review after eligibility is recorded.</li>
             <li>中文用户只需要提交公开资料：邮箱、Base 钱包地址、公开交易哈希和持有开始日期；不要提交任何敏感资料。</li>
           </ul>
@@ -1246,6 +1256,7 @@
           queued_insufficient_credits: "Queued · insufficient credits / 已排队 · 积分不足",
           queued_expired_credit_ledger: "Queued · credits expired / 已排队 · 积分已过期",
           queued_missing_credit_ledger: "Queued · no credit ledger / 已排队 · 无积分账本",
+          cancelled_by_account: "Cancelled by account / 账户已取消",
           approved_operator_review: "Approved · delivery pending / 已批准 · 等待交付",
           needs_more_information: "More information required / 需要补充信息",
           rejected_operator_review: "Rejected / 已拒绝",
@@ -1299,6 +1310,39 @@
           next.className = "request-meta";
           next.textContent = request.nextStep || "Manual review pending.";
           item.append(head, service, created, next);
+          if (request.cancelledByAccount) {
+            const cancelled = document.createElement("span");
+            cancelled.className = "request-meta";
+            const cancelledDate = new Date(request.cancelledAt);
+            const cancelledAt = Number.isNaN(cancelledDate.getTime())
+              ? request.cancelledAt || "time not recorded"
+              : cancelledDate.toLocaleString();
+            cancelled.textContent = `Cancelled before manual review / 人工审核前已取消 · ${cancelledAt}`;
+            item.append(cancelled);
+          } else if (
+            [
+              "queued_operator_review",
+              "queued_insufficient_credits",
+              "queued_expired_credit_ledger",
+              "queued_missing_credit_ledger"
+            ].includes(request.status) &&
+            !request.latestReview &&
+            request.serviceRequestId
+          ) {
+            const actions = document.createElement("div");
+            actions.className = "request-actions";
+            const cancelButton = document.createElement("button");
+            cancelButton.className = "button cancel-request-button";
+            cancelButton.type = "button";
+            cancelButton.dataset.serviceRequestId = request.serviceRequestId;
+            cancelButton.textContent = "Cancel Request / 取消申请";
+            cancelButton.setAttribute(
+              "aria-label",
+              `Cancel ${request.requestTitle || request.serviceName || request.serviceRequestId}`
+            );
+            actions.append(cancelButton);
+            item.append(actions);
+          }
           if (request.latestReview) {
             const review = document.createElement("span");
             review.className = "request-meta";
@@ -1659,6 +1703,31 @@
         };
       }
 
+      function accountServiceRequestCancellationPayload(
+        statusAccessToken,
+        serviceRequestId
+      ) {
+        if (!isStatusAccessToken(statusAccessToken)) {
+          throw new Error(
+            "A valid device key is required. 需要有效的设备密钥。"
+          );
+        }
+        if (!/^gca_service_req_[a-f0-9]{20}$/.test(serviceRequestId)) {
+          throw new Error(
+            "The service request ID is invalid. 服务申请编号无效。"
+          );
+        }
+        return {
+          packetVersion: "gca_account_service_request_cancellation_v1",
+          statusAccessToken,
+          serviceRequestId,
+          acknowledgements: {
+            cancelQueuedRequest: true,
+            noCreditOrWalletEffect: true
+          }
+        };
+      }
+
       async function loadServiceCatalogConfig() {
         try {
           const response = await fetch(`${API_BASE}/gca/access-config`, {
@@ -1949,9 +2018,6 @@
             `${message} Retry without changing the form to reuse the same request ID. / 如需重试，请不要修改表单，以复用同一请求编号。`
           );
         } finally {
-          if (receiptButton.isConnected) {
-            receiptButton.disabled = false;
-          }
           updateStatusAccessControls();
         }
       });
@@ -1995,6 +2061,79 @@
             message
           );
         } finally {
+          updateStatusAccessControls();
+        }
+      });
+
+      serviceRequestList.addEventListener("click", async (event) => {
+        const target = event.target;
+        if (!(target instanceof Element)) return;
+        const cancelButton = target.closest("button.cancel-request-button");
+        if (!cancelButton || !serviceRequestList.contains(cancelButton)) {
+          return;
+        }
+        const serviceRequestId =
+          cancelButton.dataset.serviceRequestId || "";
+        const statusAccess = loadStatusAccess();
+        if (!statusAccess || pendingStatusAccessRotation(statusAccess)) {
+          updateStatusAccessControls();
+          renderResult(
+            serviceRequestResult,
+            "warn",
+            "Device access unavailable / 设备访问不可用",
+            "Create or recover device access before cancelling a request. / 请先创建或恢复设备访问，再取消申请。"
+          );
+          return;
+        }
+        const confirmed = window.confirm(
+          "Cancel this queued request before manual review? This action is permanent and does not refund or deduct credits, connect a wallet, or send a transaction. 是否在人工审核前取消此申请？取消后不可恢复，不会退回或扣除积分，也不会连接钱包或发送交易。"
+        );
+        if (!confirmed) return;
+
+        cancelButton.disabled = true;
+        submitServiceRequest.disabled = true;
+        refreshServiceRequests.disabled = true;
+        renderResult(
+          serviceRequestResult,
+          "",
+          "Cancelling queued request / 正在取消申请",
+          "Recording one account-scoped cancellation marker. Credits, wallets, tokens, and trading permissions are unchanged. / 正在记录本账户取消标记；积分、钱包、代币和交易权限均不会改变。"
+        );
+        try {
+          const payload = await postJson(
+            "/gca/account-service-requests/cancellations",
+            accountServiceRequestCancellationPayload(
+              statusAccess.token,
+              serviceRequestId
+            )
+          );
+          const cancellation = payload.cancellation || {};
+          renderResult(
+            serviceRequestResult,
+            "good",
+            payload.idempotentReplay
+              ? "Request already cancelled / 申请已取消"
+              : "Request cancelled / 已取消申请",
+            `${cancellation.serviceRequestId || serviceRequestId} · ${cancellation.cancelledAt || "time recorded by server"}. No credits or wallet state changed. / 未改变积分或钱包状态。`
+          );
+          const history = await readAccountServiceRequestHistory(
+            statusAccess.token
+          );
+          renderServiceRequestHistory(history);
+        } catch (error) {
+          const message = error && error.message
+            ? error.message
+            : "Service request cancellation failed.";
+          renderResult(
+            serviceRequestResult,
+            "warn",
+            "Cancellation needs attention / 取消申请需要处理",
+            message
+          );
+        } finally {
+          if (cancelButton.isConnected) {
+            cancelButton.disabled = false;
+          }
           updateStatusAccessControls();
         }
       });
@@ -2071,6 +2210,9 @@
             message
           );
         } finally {
+          if (receiptButton.isConnected) {
+            receiptButton.disabled = false;
+          }
           updateStatusAccessControls();
         }
       });

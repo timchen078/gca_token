@@ -12,8 +12,8 @@ class GcaWorkerRoutesDeploymentTests(unittest.TestCase):
 
         expected_fragments = [
             "Production Verification",
-            "2026-07-30T08:20:35Z",
-            "7952f4a1-b287-4ca9-a1ed-d92d75b8fd1f",
+            "2026-08-10T09:14:56Z",
+            "f6064d99-ea1a-49f8-861e-2743fc6ebf58",
             "Anonymous reads for all three operator service routes return HTTP `401`",
             "Authentication error [code: 10000]",
             "cloudflare-auth-session",
@@ -23,8 +23,10 @@ class GcaWorkerRoutesDeploymentTests(unittest.TestCase):
             "0005_service_requests.sql",
             "0012_service_request_reviews.sql",
             "0013_service_delivery_receipts.sql",
+            "0014_service_request_cancellations.sql",
             "gca_service_request_review_v1",
             "gca_account_service_delivery_receipt_v1",
+            "gca_account_service_request_cancellation_v1",
             "npx wrangler deploy",
             "python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes",
             "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes",
@@ -53,6 +55,9 @@ class GcaWorkerRoutesDeploymentTests(unittest.TestCase):
             "requires approval before delivery",
             "settles at most once for each request",
             "available only after completed delivery",
+            "available only while the request remains queued",
+            "has no operator review",
+            "delete audit history",
             "account-scoped",
             "idempotent",
         ):
@@ -66,7 +71,7 @@ class GcaWorkerRoutesDeploymentTests(unittest.TestCase):
         self.assertEqual(handoff["document"], "docs/gca_worker_pending_routes_deploy_handoff.md")
         self.assertEqual(handoff["status"], "production-live-verified")
         self.assertIsNone(handoff["blockedBy"])
-        self.assertEqual(handoff["workerVersionId"], "7952f4a1-b287-4ca9-a1ed-d92d75b8fd1f")
+        self.assertEqual(handoff["workerVersionId"], "f6064d99-ea1a-49f8-861e-2743fc6ebf58")
         self.assertCountEqual(
             handoff["routes"],
             [
@@ -133,6 +138,8 @@ class GcaWorkerRoutesDeploymentTests(unittest.TestCase):
         self.assertIn("Service request review migration: `cloudflare/gca-registration-worker/migrations/0012_service_request_reviews.sql`", backend_doc)
         self.assertIn("Service delivery receipt migration: `cloudflare/gca-registration-worker/migrations/0013_service_delivery_receipts.sql`", backend_doc)
         self.assertIn("Public completed-delivery receipt endpoint: `POST /gca/account-service-requests/delivery-receipts`", backend_doc)
+        self.assertIn("Service request cancellation migration: `cloudflare/gca-registration-worker/migrations/0014_service_request_cancellations.sql`", backend_doc)
+        self.assertIn("Public queued-request cancellation endpoint: `POST /gca/account-service-requests/cancellations`", backend_doc)
         self.assertIn("Anonymous reads return HTTP 401", backend_doc)
 
 

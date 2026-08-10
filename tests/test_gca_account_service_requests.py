@@ -30,6 +30,13 @@ SERVICE_DELIVERY_RECEIPT_MIGRATION = (
     / "migrations"
     / "0013_service_delivery_receipts.sql"
 )
+SERVICE_REQUEST_CANCELLATION_MIGRATION = (
+    ROOT
+    / "cloudflare"
+    / "gca-registration-worker"
+    / "migrations"
+    / "0014_service_request_cancellations.sql"
+)
 CREDIT_USAGE_MIGRATION = (
     ROOT
     / "cloudflare"
@@ -296,6 +303,73 @@ class GcaAccountServiceRequestTests(unittest.TestCase):
         self.assertNotIn("eth_sendTransaction", source)
         self.assertNotIn("personal_sign", source)
 
+    def test_cancellation_migration_adds_single_use_account_marker(self):
+        database = sqlite3.connect(":memory:")
+        try:
+            database.executescript(
+                CREDIT_USAGE_MIGRATION.read_text(encoding="utf-8")
+            )
+            database.executescript(
+                SERVICE_REQUEST_MIGRATION.read_text(encoding="utf-8")
+            )
+            database.executescript(
+                SERVICE_REQUEST_REVIEW_MIGRATION.read_text(encoding="utf-8")
+            )
+            database.executescript(
+                SERVICE_DELIVERY_RECEIPT_MIGRATION.read_text(encoding="utf-8")
+            )
+            database.executescript(
+                SERVICE_REQUEST_CANCELLATION_MIGRATION.read_text(
+                    encoding="utf-8"
+                )
+            )
+            columns = {
+                row[1]
+                for row in database.execute(
+                    "PRAGMA table_info(gca_service_requests)"
+                ).fetchall()
+            }
+            self.assertIn("cancellation_id", columns)
+            self.assertIn("cancelled_at", columns)
+            self.assertIn("cancellation_version", columns)
+            self.assertIn("cancellation_source", columns)
+            indexes = database.execute(
+                "PRAGMA index_list(gca_service_requests)"
+            ).fetchall()
+            cancellation_index = next(
+                row
+                for row in indexes
+                if row[1] == "idx_gca_service_requests_cancellation"
+            )
+            self.assertEqual(cancellation_index[2], 1)
+        finally:
+            database.close()
+
+    def test_worker_exposes_account_scoped_queued_request_cancellation(self):
+        source = WORKER_SOURCE.read_text(encoding="utf-8")
+
+        self.assertIn(
+            '"gca_account_service_request_cancellation_v1"',
+            source,
+        )
+        self.assertIn(
+            '"/gca/account-service-requests/cancellations"',
+            source,
+        )
+        self.assertIn("submitAccountServiceRequestCancellation", source)
+        self.assertIn(
+            "service request can only be cancelled before manual review",
+            source,
+        )
+        self.assertIn("SERVICE_REQUEST_QUEUED_STATUSES", source)
+        self.assertIn("AND latest_review_id = ''", source)
+        self.assertIn("AND credit_usage_id = ''", source)
+        self.assertIn("AND delivery_receipt_id = ''", source)
+        self.assertIn("cancellationChangesCredits: false", source)
+        self.assertIn("cancellationWritesWallet: false", source)
+        self.assertNotIn("eth_sendTransaction", source)
+        self.assertNotIn("personal_sign", source)
+
     def test_worker_catalog_matches_public_credits_catalog(self):
         source = WORKER_SOURCE.read_text(encoding="utf-8")
         credits = json.loads(CREDITS_JSON.read_text(encoding="utf-8"))
@@ -368,6 +442,22 @@ class GcaAccountServiceRequestTests(unittest.TestCase):
         self.assertFalse(receipt["automaticTokenTransfer"])
         self.assertFalse(receipt["createsTradingPermission"])
 
+        cancellation = public_endpoints[
+            "/gca/account-service-requests/cancellations"
+        ]
+        self.assertEqual(
+            cancellation["packetVersion"],
+            "gca_account_service_request_cancellation_v1",
+        )
+        self.assertTrue(cancellation["requiresDeviceStatusKey"])
+        self.assertTrue(cancellation["accountScoped"])
+        self.assertTrue(cancellation["queuedOnly"])
+        self.assertTrue(cancellation["idempotent"])
+        self.assertFalse(cancellation["changesCredits"])
+        self.assertFalse(cancellation["writesWallet"])
+        self.assertFalse(cancellation["automaticTokenTransfer"])
+        self.assertFalse(cancellation["createsTradingPermission"])
+
         review = next(
             endpoint
             for endpoint in access_api["endpoints"]
@@ -385,6 +475,11 @@ class GcaAccountServiceRequestTests(unittest.TestCase):
         self.assertFalse(state["accountServiceRequestCreditsDeductedOnRequest"])
         self.assertFalse(state["accountServiceRequestCreatesTradingPermission"])
         self.assertTrue(state["accountServiceDeliveryReceiptProductionLive"])
+        self.assertTrue(state["accountServiceRequestCancellationProductionLive"])
+        self.assertTrue(state["accountServiceRequestCancellationQueuedOnly"])
+        self.assertTrue(state["accountServiceRequestCancellationIdempotent"])
+        self.assertFalse(state["accountServiceRequestCancellationChangesCredits"])
+        self.assertFalse(state["accountServiceRequestCancellationWritesWallet"])
         self.assertTrue(
             state["accountServiceDeliveryReceiptRequiresCompletedDelivery"]
         )
@@ -433,6 +528,10 @@ class GcaAccountServiceRequestTests(unittest.TestCase):
             '"gca_account_service_delivery_receipt_v1"',
             page,
         )
+        self.assertIn(
+            '"gca_account_service_request_cancellation_v1"',
+            page,
+        )
         self.assertIn("newServiceClientRequestId", page)
         self.assertIn("pendingServiceDraftSignature", page)
         self.assertIn("Submission does not reserve or deduct credits", page)
@@ -451,8 +550,20 @@ class GcaAccountServiceRequestTests(unittest.TestCase):
         self.assertIn("accountServiceDeliveryReceiptPayload", page)
         self.assertIn("deliveryAcknowledged", page)
         self.assertIn("Confirm Delivery Received / 确认已收到", page)
+        self.assertIn("Cancel Request / 取消申请", page)
+        self.assertIn("cancelQueuedRequest", page)
         self.assertIn("noCreditOrWalletEffect", page)
         self.assertIn("receiptButton.isConnected", page)
+        self.assertIn("cancelButton.isConnected", page)
+        submit_start = page.index(
+            'submitServiceRequest.addEventListener("click", async () => {'
+        )
+        submit_end = page.index(
+            'refreshServiceRequests.addEventListener("click", async () => {',
+            submit_start,
+        )
+        self.assertNotIn("receiptButton", page[submit_start:submit_end])
+        self.assertNotIn("cancelButton", page[submit_start:submit_end])
         self.assertNotIn(
             "serviceRequestList.textContent = statusAccess.token",
             page,

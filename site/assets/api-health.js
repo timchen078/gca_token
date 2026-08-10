@@ -4,7 +4,7 @@
   const API_BASE_URL = "https://gca-registration-api.gcagochina.workers.dev";
   const CHAIN_ID = 8453;
   const CONTRACT_ADDRESS = "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6";
-  const WORKER_RELEASE = "gca-registration-worker-2026-07-30-delivery-receipt-v1";
+  const WORKER_RELEASE = "gca-registration-worker-2026-08-10-request-cancellation-v1";
   const REQUEST_TIMEOUT_MS = 8000;
   const MAX_PUBLIC_JSON_BYTES = 32768;
   const ADMIN_PATHS = [
@@ -151,6 +151,7 @@
       && payload.accountStatusRecoveryVersion === "gca_account_status_recovery_v1"
       && payload.accountServiceRequestVersion === "gca_account_service_request_v1"
       && payload.accountServiceRequestStatusVersion === "gca_account_service_request_status_v1"
+      && payload.accountServiceRequestCancellationVersion === "gca_account_service_request_cancellation_v1"
       && payload.accountServiceDeliveryReceiptVersion === "gca_account_service_delivery_receipt_v1"
       && payload.serviceRequestReviewVersion === "gca_service_request_review_v1"
       && payload.memberReviewVersion === "gca_member_review_v1"
@@ -180,6 +181,7 @@
       && payload.accountStatusRecoveryVersion === "gca_account_status_recovery_v1"
       && payload.accountServiceRequestVersion === "gca_account_service_request_v1"
       && payload.accountServiceRequestStatusVersion === "gca_account_service_request_status_v1"
+      && payload.accountServiceRequestCancellationVersion === "gca_account_service_request_cancellation_v1"
       && payload.accountServiceDeliveryReceiptVersion === "gca_account_service_delivery_receipt_v1"
       && payload.serviceRequestReviewVersion === "gca_service_request_review_v1"
       && payload.endpoints
@@ -190,6 +192,7 @@
       && payload.endpoints.accountStatusRecovery === "/gca/account-status/recover"
       && payload.endpoints.accountServiceRequests === "/gca/account-service-requests"
       && payload.endpoints.accountServiceRequestStatus === "/gca/account-service-requests/status"
+      && payload.endpoints.accountServiceRequestCancellations === "/gca/account-service-requests/cancellations"
       && payload.endpoints.accountServiceDeliveryReceipts === "/gca/account-service-requests/delivery-receipts"
       && payload.endpoints.serviceRequestReviewsAdmin === "/gca/service-request-reviews"
       && payload.memberReviewVersion === "gca_member_review_v1"
@@ -217,6 +220,11 @@
       && boundaries.accountServiceRequestCreditsDeductedOnRequest === false
       && boundaries.accountServiceRequestReturnsEmail === false
       && boundaries.accountServiceRequestCreatesTradingPermission === false
+      && boundaries.accountServiceRequestCancellationEnabled === true
+      && boundaries.accountServiceRequestCancellationQueuedOnly === true
+      && boundaries.accountServiceRequestCancellationIdempotent === true
+      && boundaries.accountServiceRequestCancellationChangesCredits === false
+      && boundaries.accountServiceRequestCancellationWritesWallet === false
       && boundaries.accountServiceDeliveryReceiptEnabled === true
       && boundaries.accountServiceDeliveryReceiptRequiresCompletedDelivery === true
       && boundaries.accountServiceDeliveryReceiptIdempotent === true

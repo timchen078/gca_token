@@ -292,6 +292,12 @@ def build_report(
     )
     check(
         checks,
+        "service-request-cancellations-migration",
+        (worker_dir / "migrations" / "0014_service_request_cancellations.sql").exists(),
+        "Account-scoped queued service-request cancellation D1 migration exists.",
+    )
+    check(
+        checks,
         "wrangler-package",
         (worker_dir / "package-lock.json").exists() and (worker_dir / "node_modules" / ".bin" / "wrangler").exists(),
         "Worker package dependencies and local Wrangler binary are installed.",

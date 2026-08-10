@@ -217,11 +217,11 @@ FORBIDDEN_PUBLIC_CLAIM_PATTERNS = [
     "对倒",
 ]
 LEGACY_PERSONAL_GMAIL = "cxy070800@gmail.com"
-PENDING_WORKER_READINESS_AT = "2026-07-30T08:20:35Z"
-PENDING_WORKER_PUBLIC_ROUTE_AT = "2026-07-30T08:20:13Z"
-PENDING_WORKER_ADMIN_ROUTE_AT = "2026-07-30T08:20:21Z"
+PENDING_WORKER_READINESS_AT = "2026-08-10T09:14:56Z"
+PENDING_WORKER_PUBLIC_ROUTE_AT = "2026-08-10T09:14:18Z"
+PENDING_WORKER_ADMIN_ROUTE_AT = "2026-08-10T09:14:34Z"
 MEMBER_WORKFLOW_ADMIN_ROUTE_AT = "2026-07-28T06:07:11Z"
-PENDING_WORKER_VERSION_ID = "7952f4a1-b287-4ca9-a1ed-d92d75b8fd1f"
+PENDING_WORKER_VERSION_ID = "f6064d99-ea1a-49f8-861e-2743fc6ebf58"
 PENDING_WORKER_BLOCKED_BY = None
 MEMBER_BENEFIT_EVIDENCE_WORKER_VERSION_ID = "510315f5-8db3-4e08-b574-6e14b618aed5"
 MEMBER_BENEFIT_EVIDENCE_PUBLIC_SMOKE_AT = "2026-07-27T09:37:54Z"
@@ -3657,8 +3657,8 @@ def validate_zh_api_status_page(text: str) -> None:
     for expected in (
         "GCA 中文 API 状态",
         "中文 API 状态 / 浏览器实时只读检查",
-        "2026-07-30T08:20:13Z",
-        "2026-07-30T08:20:21Z",
+        "2026-08-10T09:14:18Z",
+        "2026-08-10T09:14:34Z",
         "最新检查",
         "正在本浏览器检查",
         "邮箱注册和邮箱退订接口",
@@ -3688,6 +3688,8 @@ def validate_zh_api_status_page(text: str) -> None:
         "GET/POST /gca/service-requests",
         "GET/POST /gca/service-request-reviews",
         "gca_service_request_review_v1",
+        "POST /gca/account-service-requests/cancellations",
+        "gca_account_service_request_cancellation_v1",
         "GET/POST /gca/credit-usage",
         "GET/POST /gca/member-reviews",
         "GET /gca/holding-verifications",
@@ -3697,7 +3699,7 @@ def validate_zh_api_status_page(text: str) -> None:
         "tools/record_cloudflare_member_benefit_transfer.py",
         "匿名读取返回 HTTP 401",
         "部署权限检查",
-        "最新 Worker 部署及公网和管理员只读 smoke 检查于 2026-07-30 UTC 通过",
+        "最新 Worker 部署及公网和管理员只读 smoke 检查于 2026-08-10 UTC 通过",
         "Cloudflare 账号认证、D1 可见性和 Workers 发布权限",
         "authRecovery.status",
         "authRecovery.safeNextActions",
@@ -3744,7 +3746,7 @@ def validate_zh_api_status_page(text: str) -> None:
         "设备密钥轮换",
         "15 分钟",
         "assets/api-health.css?v=20260727",
-        "assets/api-health.js?v=20260727d",
+        "assets/api-health.js?v=20260810",
     ):
         assert_contains(text, expected, label)
     assert_no_public_data_room_terms(text, label)
@@ -6031,7 +6033,7 @@ def validate_roadmap_page(text: str) -> None:
     assert_contains(text, "GCA Roadmap", label)
     assert_contains(text, "Roadmap References", label)
     assert_no_public_data_room_terms(text, label)
-    assert_contains(text, "Reviewed service delivery live; connected market modules staged", label)
+    assert_contains(text, "Queued cancellation and reviewed delivery live; connected market modules staged", label)
     assert_contains(text, "Phase 3: Browser-Local Product Suite", label)
     assert_contains(text, "ten GCA risk and research tools, the Member Workspace priority queue", label)
     assert_contains(text, "privacy-minimized Risk Passport workflow report", label)
@@ -6044,6 +6046,8 @@ def validate_roadmap_page(text: str) -> None:
     assert_contains(text, "Live via Worker eth_call", label)
     assert_contains(text, "100 utility credits ledger activation", label)
     assert_contains(text, "Live for eligible wallet records", label)
+    assert_contains(text, "Queued service request cancellation", label)
+    assert_contains(text, "Live before manual review; account-scoped, permanent, idempotent, and no credit or wallet effect", label)
     assert_contains(text, "GCA Member records", label)
     assert_contains(text, "benefit remains manual review", label)
     assert_contains(text, "Local SHA-256 continuity and protected production member approvals live", label)
@@ -6084,7 +6088,7 @@ def validate_roadmap_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong status")
     if payload.get("currentStage") != PRODUCT_STAGE:
         raise SiteCheckError(f"{label}: wrong currentStage")
-    if payload.get("lastUpdated") != "2026-07-30":
+    if payload.get("lastUpdated") != "2026-08-10":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
@@ -6126,6 +6130,20 @@ def validate_roadmap_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong member benefit transfer packet version")
     if transfer_priority.get("automaticTokenTransfer") is not False:
         raise SiteCheckError(f"{label}: transfer evidence must not automate transfers")
+    request_priority = next(
+        (priority for priority in payload.get("nextBuildPriorities", []) if priority.get("id") == "account-service-request-queue"),
+        {},
+    )
+    if request_priority.get("cancellationPath") != "/gca/account-service-requests/cancellations":
+        raise SiteCheckError(f"{label}: wrong request cancellation path")
+    if request_priority.get("cancellationPacketVersion") != "gca_account_service_request_cancellation_v1":
+        raise SiteCheckError(f"{label}: wrong request cancellation packet version")
+    for key in ("cancellationQueuedOnly", "cancellationRequiresNoPriorReview", "cancellationIdempotent"):
+        if request_priority.get(key) is not True:
+            raise SiteCheckError(f"{label}: {key} must be true")
+    for key in ("cancellationChangesCredits", "cancellationWritesWallet", "cancellationDeletesAuditHistory"):
+        if request_priority.get(key) is not False:
+            raise SiteCheckError(f"{label}: {key} must be false")
     support_priority = next(
         (priority for priority in payload.get("nextBuildPriorities", []) if priority.get("id") == "support-review-queue"),
         {},
@@ -6138,6 +6156,20 @@ def validate_roadmap_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing support review checkpoint create command")
     if not any(item.get("id") == "member-benefit-transfer-evidence-live" for item in payload.get("completedMilestones", [])):
         raise SiteCheckError(f"{label}: missing member benefit evidence milestone")
+    cancellation = next(
+        (item for item in payload.get("completedMilestones", []) if item.get("id") == "account-service-request-cancellation-live"),
+        {},
+    )
+    if cancellation.get("packetVersion") != "gca_account_service_request_cancellation_v1":
+        raise SiteCheckError(f"{label}: missing request cancellation milestone version")
+    if cancellation.get("endpoint") != "/gca/account-service-requests/cancellations":
+        raise SiteCheckError(f"{label}: wrong request cancellation milestone endpoint")
+    for key in ("queuedOnly", "requiresNoPriorReview", "idempotent"):
+        if cancellation.get(key) is not True:
+            raise SiteCheckError(f"{label}: cancellation milestone {key} must be true")
+    for key in ("changesCredits", "writesWallet", "deletesAuditHistory"):
+        if cancellation.get(key) is not False:
+            raise SiteCheckError(f"{label}: cancellation milestone {key} must be false")
     if "--checkpoint" not in support_priority.get("checkpointVerifyCommand", ""):
         raise SiteCheckError(f"{label}: missing support review checkpoint verify command")
     if support_priority.get("checkpointToolLive") is not True:
@@ -7644,6 +7676,7 @@ def validate_service_delivery_playbook_page(text: str) -> None:
         "Account intake",
         "Eligibility check",
         "Service request",
+        "Optional queued cancellation",
         "Human review",
         "Credit settlement",
         "Risk Reports",
@@ -7661,7 +7694,9 @@ def validate_service_delivery_playbook_page(text: str) -> None:
         "Service queue, review, and credit routes return HTTP 401",
         "Copy-Ready Public Summary",
         "Service Delivery References",
-        "Authenticated accounts can submit catalog requests and read redacted review and settlement history",
+        "Authenticated accounts can submit catalog requests, cancel their own queued request before review, and read redacted review and settlement history",
+        "/gca/account-service-requests/cancellations",
+        "0014_service_request_cancellations.sql",
         "not automated trading",
         "no-custody",
         "no automatic trading access",
@@ -7684,11 +7719,11 @@ def validate_service_delivery_playbook_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != SERVICE_DELIVERY_PLAYBOOK_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
-    if payload.get("status") != "service-delivery-playbook-v1-reviewed-delivery-live":
+    if payload.get("status") != "service-delivery-playbook-v1-request-cancellation-live":
         raise SiteCheckError(f"{label}: wrong status")
     if payload.get("playbookId") != "service-delivery-playbook-v1":
         raise SiteCheckError(f"{label}: wrong playbookId")
-    if payload.get("lastUpdated") != "2026-07-30":
+    if payload.get("lastUpdated") != "2026-08-10":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
@@ -7696,7 +7731,7 @@ def validate_service_delivery_playbook_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong contractAddress")
     if "not automated trading" not in payload.get("scope", ""):
         raise SiteCheckError(f"{label}: missing automated-trading boundary")
-    for step in ("account-intake", "eligibility-check", "service-request", "human-review", "delivery", "credit-usage-record"):
+    for step in ("account-intake", "eligibility-check", "service-request", "queued-request-cancellation", "human-review", "delivery", "credit-usage-record"):
         if step not in {item.get("step") for item in payload.get("deliveryFlow", [])}:
             raise SiteCheckError(f"{label}: missing delivery flow step {step}")
     service_catalog = {item.get("id"): item for item in payload.get("serviceCatalog", []) if isinstance(item, dict)}
@@ -7724,6 +7759,24 @@ def validate_service_delivery_playbook_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong service request worker endpoint")
     if route_status.get("creditUsageWorkerEndpoint") != "https://gca-registration-api.gcagochina.workers.dev/gca/credit-usage":
         raise SiteCheckError(f"{label}: wrong credit usage worker endpoint")
+    if route_status.get("accountServiceRequestCancellationWorkerEndpoint") != "https://gca-registration-api.gcagochina.workers.dev/gca/account-service-requests/cancellations":
+        raise SiteCheckError(f"{label}: wrong account request cancellation endpoint")
+    if route_status.get("accountServiceRequestCancellationVersion") != "gca_account_service_request_cancellation_v1":
+        raise SiteCheckError(f"{label}: wrong account request cancellation version")
+    for key in (
+        "accountServiceRequestCancellationQueuedOnly",
+        "accountServiceRequestCancellationRequiresNoPriorReview",
+        "accountServiceRequestCancellationIdempotent",
+    ):
+        if route_status.get(key) is not True:
+            raise SiteCheckError(f"{label}: {key} must be true")
+    for key in (
+        "accountServiceRequestCancellationChangesCredits",
+        "accountServiceRequestCancellationWritesWallet",
+        "accountServiceRequestCancellationDeletesAuditHistory",
+    ):
+        if route_status.get(key) is not False:
+            raise SiteCheckError(f"{label}: {key} must be false")
     if route_status.get("productionRoutesLive") is not True:
         raise SiteCheckError(f"{label}: production routes must be live")
     if route_status.get("workerDryRunPassed") is not True:
@@ -7811,7 +7864,9 @@ def validate_worker_routes_handoff_page(text: str) -> None:
         "Already Live Routes",
         "Newly Released Routes",
         "/gca/service-requests",
+        "/gca/account-service-requests/cancellations",
         "/gca/credit-usage",
+        "0014_service_request_cancellations.sql",
         "Required Gate Order",
         "Read-only readiness",
         "Remote D1 migrations",
@@ -7829,6 +7884,7 @@ def validate_worker_routes_handoff_page(text: str) -> None:
         "Anonymous reads return HTTP 401",
         "does not request wallet signatures",
         "does not create trading permission",
+        "neither cancellation nor receipt creates a wallet action or trading permission",
         WORKER_ROUTES_HANDOFF_PAGE_URL,
     ):
         assert_contains(text, expected, label)
@@ -7850,11 +7906,11 @@ def validate_worker_routes_handoff_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != WORKER_ROUTES_HANDOFF_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
-    if payload.get("status") != "worker-routes-v1-production-live":
+    if payload.get("status") != "worker-routes-v1-request-cancellation-production-live":
         raise SiteCheckError(f"{label}: wrong status")
     if payload.get("handoffId") != "worker-routes-handoff-v1":
         raise SiteCheckError(f"{label}: wrong handoffId")
-    if payload.get("lastUpdated") != "2026-07-30":
+    if payload.get("lastUpdated") != "2026-08-10":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
@@ -7883,6 +7939,8 @@ def validate_worker_routes_handoff_json(text: str) -> None:
         "postDeployPublicSmoke": "passed",
         "postDeployAdminSmoke": "passed",
         "productionRouteStatus": "live-token-protected",
+        "accountServiceRequestCancellation": "live-device-key-protected-queued-before-review-only",
+        "accountServiceRequestCancellationVersion": "gca_account_service_request_cancellation_v1",
     }
     for key, expected in expected_status.items():
         if current.get(key) != expected:
@@ -7926,7 +7984,13 @@ def validate_worker_routes_handoff_json(text: str) -> None:
         if readiness.get(key) is not False:
             raise SiteCheckError(f"{label}: readiness gate should not {key}")
     expected_migrations = gate_map.get("remote-d1-migrations", {}).get("expectedMigrations", [])
-    for migration in ("0004_credit_usage_ledger.sql", "0005_service_requests.sql"):
+    for migration in (
+        "0004_credit_usage_ledger.sql",
+        "0005_service_requests.sql",
+        "0012_service_request_reviews.sql",
+        "0013_service_delivery_receipts.sql",
+        "0014_service_request_cancellations.sql",
+    ):
         if migration not in expected_migrations:
             raise SiteCheckError(f"{label}: missing migration {migration}")
     if "--include-pending-routes" not in gate_map.get("post-deploy-public-smoke", {}).get("command", ""):
@@ -7950,6 +8014,14 @@ def validate_worker_routes_handoff_json(text: str) -> None:
         if boundaries.get(key) is not True:
             raise SiteCheckError(f"{label}: boundary {key} should be true")
     for key in (
+        "requestCancellationQueuedOnly",
+        "requestCancellationRequiresNoPriorReview",
+        "requestCancellationAccountScoped",
+        "requestCancellationIdempotent",
+    ):
+        if boundaries.get(key) is not True:
+            raise SiteCheckError(f"{label}: boundary {key} should be true")
+    for key in (
         "publicLedgerReadable",
         "writesD1BeforeGate1",
         "deploysWorkerBeforeGate1",
@@ -7959,6 +8031,9 @@ def validate_worker_routes_handoff_json(text: str) -> None:
         "transfersGca",
         "createsTradingPermission",
         "automaticCreditDeductionBeforeReview",
+        "requestCancellationChangesCredits",
+        "requestCancellationWritesWallet",
+        "requestCancellationDeletesAuditHistory",
         "productionLiveBeforeSmokeChecks",
     ):
         if boundaries.get(key) is not False:
@@ -9095,7 +9170,7 @@ def validate_operations_page(text: str) -> None:
     assert_contains(text, "gca/member-access/", label)
     for forbidden in ("Platform-Only Evidence Path", "Data Room", 'href="data.html"'):
         assert_not_contains(text, forbidden, label)
-    assert_contains(text, "manual service review and settlement live", label)
+    assert_contains(text, "queued cancellation and manual settlement live", label)
     assert_contains(text, "account intake", label)
     assert_contains(text, "not a public ledger browser", label)
     assert_contains(text, "Email Registration Ops Pipeline", label)
@@ -9121,10 +9196,12 @@ def validate_operations_page(text: str) -> None:
     assert_contains(text, "service_requests", label)
     assert_contains(text, "stores request scope without deduction", label)
     assert_contains(text, "/gca/service-request-reviews", label)
+    assert_contains(text, "/gca/account-service-requests/cancellations", label)
+    assert_contains(text, "0014_service_request_cancellations.sql", label)
     assert_contains(text, "tools/review_cloudflare_service_request.py", label)
     assert_contains(text, "requires approval before delivery", label)
     assert_contains(text, "retries cannot deduct twice", label)
-    assert_contains(text, "passed on 2026-07-30 UTC", label)
+    assert_contains(text, "passed on 2026-08-10 UTC", label)
     assert_contains(text, "HTTP 401", label)
     assert_contains(text, "--include-holding-report --holding-no-live-read", label)
     assert_contains(text, "No Automatic Transfer", label)
@@ -9201,15 +9278,15 @@ def validate_operations_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != OPERATIONS_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
-    if payload.get("status") != "public-access-operations-reviewed-service-delivery-live":
+    if payload.get("status") != "public-access-operations-request-cancellation-live":
         raise SiteCheckError(f"{label}: wrong status")
-    if payload.get("lastUpdated") != "2026-07-30":
+    if payload.get("lastUpdated") != "2026-08-10":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
     if payload.get("contractAddress") != MAINNET_ADDRESS:
         raise SiteCheckError(f"{label}: wrong contractAddress")
-    if state.get("currentStage") != "manual-service-review-delivery-and-settlement-live":
+    if state.get("currentStage") != "account-request-cancellation-and-manual-settlement-live":
         raise SiteCheckError(f"{label}: wrong currentStage")
     if state.get("publicRunbookOnly") is not False:
         raise SiteCheckError(f"{label}: publicRunbookOnly must be false")
@@ -9233,6 +9310,10 @@ def validate_operations_json(text: str) -> None:
         "onchainHoldingHistoryRequiredForApproval",
         "localSupportReviewContinuityChainLive",
         "localSupportReviewCheckpointToolLive",
+        "accountServiceRequestCancellationProductionLive",
+        "accountServiceRequestCancellationQueuedOnly",
+        "accountServiceRequestCancellationRequiresNoPriorReview",
+        "accountServiceRequestCancellationIdempotent",
     ):
         if state.get(key) is not True:
             raise SiteCheckError(f"{label}: {key} must be true")
@@ -9243,6 +9324,9 @@ def validate_operations_json(text: str) -> None:
         "localSupportReviewContinuityImmutable",
         "localSupportReviewCheckpointPublishedExternally",
         "productionSupportApprovalWorkflowLive",
+        "accountServiceRequestCancellationChangesCredits",
+        "accountServiceRequestCancellationWritesWallet",
+        "accountServiceRequestCancellationDeletesAuditHistory",
     ):
         if state.get(key) is not False:
             raise SiteCheckError(f"{label}: {key} must be false")
@@ -9266,6 +9350,8 @@ def validate_operations_json(text: str) -> None:
             raise SiteCheckError(f"{label}: {key} must be false")
     if state.get("serviceRequestQueueProductionLive") is not True:
         raise SiteCheckError(f"{label}: serviceRequestQueueProductionLive must be true")
+    if state.get("accountServiceRequestCancellationPacketVersion") != "gca_account_service_request_cancellation_v1":
+        raise SiteCheckError(f"{label}: wrong account request cancellation packet version")
     if state.get("memberReviewPacketVersion") != "gca_member_review_v1":
         raise SiteCheckError(f"{label}: wrong member review packet version")
     if state.get("holdingVerificationPacketVersion") != "gca_holding_verification_v1":
@@ -9380,6 +9466,12 @@ def validate_operations_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong service request queue ledger")
     if member_ops.get("serviceRequestQueueWorkerEndpoint") != "https://gca-registration-api.gcagochina.workers.dev/gca/service-requests":
         raise SiteCheckError(f"{label}: wrong service request worker endpoint")
+    if member_ops.get("serviceRequestCancellationEndpoint") != "https://gca-registration-api.gcagochina.workers.dev/gca/account-service-requests/cancellations":
+        raise SiteCheckError(f"{label}: wrong service request cancellation endpoint")
+    if member_ops.get("serviceRequestCancellationVersion") != "gca_account_service_request_cancellation_v1":
+        raise SiteCheckError(f"{label}: wrong service request cancellation version")
+    if member_ops.get("serviceRequestCancellationMigration") != "cloudflare/gca-registration-worker/migrations/0014_service_request_cancellations.sql":
+        raise SiteCheckError(f"{label}: wrong service request cancellation migration")
     if member_ops.get("memberReviewEndpoint") != "https://gca-registration-api.gcagochina.workers.dev/gca/member-reviews":
         raise SiteCheckError(f"{label}: wrong member review endpoint")
     if member_ops.get("memberReviewOperatorTool") != "tools/review_cloudflare_member.py":
@@ -9656,6 +9748,8 @@ def validate_operations_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing live credit usage route safe claim")
     if "GCA operators can queue service scope requests through the live token-protected Worker route before delivery; queued requests do not deduct credits or create trading permission." not in boundaries.get("safeClaims", []):
         raise SiteCheckError(f"{label}: missing live service request route safe claim")
+    if "Before manual review starts, the matching device-key account can permanently cancel its own queued service request without changing credits, wallet state, tokens, or trading permission." not in boundaries.get("safeClaims", []):
+        raise SiteCheckError(f"{label}: missing request cancellation safe claim")
     if "GCA operators can record append-only GCA Member decisions through the live token-protected /gca/member-reviews route after manual evidence review and a current read-only balance refresh." not in boundaries.get("safeClaims", []):
         raise SiteCheckError(f"{label}: missing member review route safe claim")
     if "Successful GCA Member approval requires and stores a complete observed 30-day GCA transfer-history reconstruction with a minimum balance of at least 1,000,000 GCA." not in boundaries.get("safeClaims", []):
@@ -9689,9 +9783,9 @@ def validate_access_api_page(text: str) -> None:
         assert_not_contains(text, forbidden, label)
     assert_contains(text, "Review Queue", label)
     assert_contains(text, "Operations Runbook", label)
-    assert_contains(text, "reviewed service delivery and settlement live", label)
+    assert_contains(text, "queued cancellation and reviewed settlement live", label)
     assert_contains(text, "Account + redacted review history live", label)
-    assert_contains(text, "device-key protected service requests and history", label)
+    assert_contains(text, "device-key protected service requests, queued-request cancellation, request history", label)
     assert_contains(text, "tools/gca_member_backend.py", label)
     assert_contains(text, "tools/export_gca_review_package.py", label)
     assert_contains(text, "operator.html", label)
@@ -9733,11 +9827,14 @@ def validate_access_api_page(text: str) -> None:
     assert_contains(text, "/gca/account-service-requests", label)
     assert_contains(text, "/gca/account-service-requests/status", label)
     assert_contains(text, "/gca/account-service-requests/delivery-receipts", label)
+    assert_contains(text, "/gca/account-service-requests/cancellations", label)
     assert_contains(text, "gca_account_service_delivery_receipt_v1", label)
+    assert_contains(text, "gca_account_service_request_cancellation_v1", label)
     assert_contains(text, "/gca/service-request-reviews", label)
     assert_contains(text, "gca_service_request_review_v1", label)
     assert_contains(text, "0012_service_request_reviews.sql", label)
     assert_contains(text, "0013_service_delivery_receipts.sql", label)
+    assert_contains(text, "0014_service_request_cancellations.sql", label)
     assert_contains(text, "Delivery requires prior approval", label)
     assert_contains(text, "retries cannot deduct twice", label)
     assert_contains(text, "/gca/member-ledger", label)
@@ -9813,15 +9910,15 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != ACCESS_API_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
-    if payload.get("status") != "public-access-api-delivery-receipt-live":
+    if payload.get("status") != "public-access-api-request-cancellation-live":
         raise SiteCheckError(f"{label}: wrong status")
-    if payload.get("lastUpdated") != "2026-07-30":
+    if payload.get("lastUpdated") != "2026-08-10":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
     if payload.get("contractAddress") != MAINNET_ADDRESS:
         raise SiteCheckError(f"{label}: wrong contractAddress")
-    if state.get("currentStage") != "account-service-delivery-receipt-api-live":
+    if state.get("currentStage") != "account-service-request-cancellation-api-live":
         raise SiteCheckError(f"{label}: wrong currentStage")
     if state.get("contractOnly") is not False:
         raise SiteCheckError(f"{label}: contractOnly must be false")
@@ -9919,6 +10016,25 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong delivery receipt packet version")
     if state.get("accountServiceDeliveryReceiptProductionVerifiedAt") != PENDING_WORKER_PUBLIC_ROUTE_AT:
         raise SiteCheckError(f"{label}: wrong delivery receipt verification timestamp")
+    for key in (
+        "accountServiceRequestCancellationProductionLive",
+        "accountServiceRequestCancellationDeviceKeyProtected",
+        "accountServiceRequestCancellationQueuedOnly",
+        "accountServiceRequestCancellationIdempotent",
+    ):
+        if state.get(key) is not True:
+            raise SiteCheckError(f"{label}: {key} must be true")
+    for key in (
+        "accountServiceRequestCancellationChangesCredits",
+        "accountServiceRequestCancellationWritesWallet",
+        "accountServiceRequestCancellationDeletesAuditHistory",
+    ):
+        if state.get(key) is not False:
+            raise SiteCheckError(f"{label}: {key} must be false")
+    if state.get("accountServiceRequestCancellationPacketVersion") != "gca_account_service_request_cancellation_v1":
+        raise SiteCheckError(f"{label}: wrong request cancellation packet version")
+    if state.get("accountServiceRequestCancellationProductionVerifiedAt") != PENDING_WORKER_PUBLIC_ROUTE_AT:
+        raise SiteCheckError(f"{label}: wrong request cancellation verification timestamp")
     if state.get("creditUsageLedgerWritesLive") is not True:
         raise SiteCheckError(f"{label}: creditUsageLedgerWritesLive must be true")
     if state.get("creditUsageWorkerDeployBlockedBy") != PENDING_WORKER_BLOCKED_BY:
@@ -9995,6 +10111,8 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong service request migration")
     if production_email_backend.get("serviceDeliveryReceiptMigration") != "cloudflare/gca-registration-worker/migrations/0013_service_delivery_receipts.sql":
         raise SiteCheckError(f"{label}: wrong delivery receipt migration")
+    if production_email_backend.get("serviceRequestCancellationMigration") != "cloudflare/gca-registration-worker/migrations/0014_service_request_cancellations.sql":
+        raise SiteCheckError(f"{label}: wrong request cancellation migration")
     if production_email_backend.get("memberReviewMigration") != "cloudflare/gca-registration-worker/migrations/0006_member_reviews.sql":
         raise SiteCheckError(f"{label}: wrong member review migration")
     if production_email_backend.get("accountStatusAccessMigration") != "cloudflare/gca-registration-worker/migrations/0009_account_status_access.sql":
@@ -10013,7 +10131,7 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong account status rotation version")
     if production_email_backend.get("accountStatusRotationGraceMinutes") != 15:
         raise SiteCheckError(f"{label}: wrong account status rotation grace window")
-    if production_email_backend.get("workerRelease") != "gca-registration-worker-2026-07-30-delivery-receipt-v1":
+    if production_email_backend.get("workerRelease") != "gca-registration-worker-2026-08-10-request-cancellation-v1":
         raise SiteCheckError(f"{label}: wrong Worker release")
     if production_email_backend.get("contactSuppressionEndpoint") != "https://gca-registration-api.gcagochina.workers.dev/gca/contact-suppressions":
         raise SiteCheckError(f"{label}: wrong contact suppression endpoint")
@@ -10025,6 +10143,10 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong admin service requests endpoint")
     if production_email_backend.get("accountServiceDeliveryReceiptEndpoint") != "https://gca-registration-api.gcagochina.workers.dev/gca/account-service-requests/delivery-receipts":
         raise SiteCheckError(f"{label}: wrong account delivery receipt endpoint")
+    if production_email_backend.get("accountServiceRequestCancellationEndpoint") != "https://gca-registration-api.gcagochina.workers.dev/gca/account-service-requests/cancellations":
+        raise SiteCheckError(f"{label}: wrong account request cancellation endpoint")
+    if production_email_backend.get("accountServiceRequestCancellationVersion") != "gca_account_service_request_cancellation_v1":
+        raise SiteCheckError(f"{label}: wrong account request cancellation version")
     if production_email_backend.get("defaultAdminExportOutput") != ".gca_access_data/cloudflare_email_registrations_export.json":
         raise SiteCheckError(f"{label}: wrong default admin export output")
     if production_email_backend.get("publicRedactedAdminExportOutput") != ".gca_access_data/cloudflare_email_registrations_public_redacted.json":
@@ -10113,6 +10235,10 @@ def validate_access_api_json(text: str) -> None:
         "accountServiceDeliveryReceiptsUseDeviceKey",
         "accountServiceDeliveryReceiptsRequireCompletedDelivery",
         "accountServiceDeliveryReceiptsAreIdempotent",
+        "accountServiceRequestCancellationsUseDeviceKey",
+        "accountServiceRequestCancellationsRequireQueuedStatus",
+        "accountServiceRequestCancellationsRequireNoReview",
+        "accountServiceRequestCancellationsAreIdempotent",
     ):
         if security.get(key) is not True:
             raise SiteCheckError(f"{label}: {key} must be true")
@@ -10132,6 +10258,9 @@ def validate_access_api_json(text: str) -> None:
         "accountStatusReturnsToken",
         "accountServiceDeliveryReceiptsChangeCredits",
         "accountServiceDeliveryReceiptsWriteWallet",
+        "accountServiceRequestCancellationsChangeCredits",
+        "accountServiceRequestCancellationsWriteWallet",
+        "accountServiceRequestCancellationsDeleteAuditHistory",
     ):
         if security.get(key) is not False:
             raise SiteCheckError(f"{label}: {key} must be false")
@@ -10143,6 +10272,7 @@ def validate_access_api_json(text: str) -> None:
         "POST /gca/account-service-requests": "production-workers-dev-live",
         "POST /gca/account-service-requests/status": "production-workers-dev-live",
         "POST /gca/account-service-requests/delivery-receipts": "production-workers-dev-live",
+        "POST /gca/account-service-requests/cancellations": "production-workers-dev-live",
         "POST /gca/wallet-verifications": "production-workers-dev-live",
         "GET /gca/credit-ledger": "token-protected-admin-live",
         "GET /gca/member-ledger": "token-protected-admin-live",
@@ -10155,6 +10285,27 @@ def validate_access_api_json(text: str) -> None:
             raise SiteCheckError(f"{label}: missing endpoint {endpoint_key}")
         if endpoint.get("status") != expected_status:
             raise SiteCheckError(f"{label}: endpoint {endpoint_key} should be {expected_status}")
+    cancellation = endpoint_map["POST /gca/account-service-requests/cancellations"]
+    for field in (
+        "packetVersion",
+        "statusAccessToken",
+        "serviceRequestId",
+        "acknowledgements.cancelQueuedRequest",
+        "acknowledgements.noCreditOrWalletEffect",
+    ):
+        if field not in cancellation.get("requiredRequestFields", []):
+            raise SiteCheckError(f"{label}: missing request cancellation field {field}")
+    for expected_check in (
+        "the service request must belong to the matched account",
+        "the request must still have a queued status and no operator review, credit usage, delivery receipt, or previous cancellation",
+        "an exact retry returns the existing cancellation without writing a second marker",
+        "the atomic update prevents cancellation after a concurrent operator review begins",
+    ):
+        if expected_check not in cancellation.get("serverChecks", []):
+            raise SiteCheckError(f"{label}: missing request cancellation check {expected_check}")
+    for key in ("changesCredits", "writesWallet", "automaticTokenTransfer", "createsTradingPermission"):
+        if cancellation.get(key) is not False:
+            raise SiteCheckError(f"{label}: cancellation endpoint {key} must be false")
     for endpoint_key in ("POST /gca/support-review", "GET /gca/member-review"):
         endpoint = endpoint_map.get(endpoint_key)
         if endpoint is None:
@@ -10531,9 +10682,9 @@ def validate_api_status_page(text: str) -> None:
     for expected in (
         "GCA Registration API Status",
         "Registration API Status / Live Read-Only Check",
-        "2026-07-30T08:20:13Z",
-        "2026-07-30T08:20:21Z",
-        "2026-07-30 UTC",
+        "2026-08-10T09:14:18Z",
+        "2026-08-10T09:14:34Z",
+        "2026-08-10 UTC",
         "Cloudflare Workers + D1",
         "https://gca-registration-api.gcagochina.workers.dev",
         "Public Check",
@@ -10567,6 +10718,9 @@ def validate_api_status_page(text: str) -> None:
         "/gca/account-service-requests/status",
         "/gca/account-service-requests/delivery-receipts",
         "gca_account_service_delivery_receipt_v1",
+        "/gca/account-service-requests/cancellations",
+        "gca_account_service_request_cancellation_v1",
+        "0014_service_request_cancellations.sql",
         "/gca/service-requests",
         "/gca/service-request-reviews",
         "gca_service_request_review_v1",
@@ -10604,7 +10758,6 @@ def validate_api_status_page(text: str) -> None:
         "data-api-live-fact",
         "Ten GET routes, including member reviews, holding evidence, benefit-transfer evidence, and recovery requests, must reject anonymous access with HTTP 401",
         "Service requests, service reviews, and credit usage are live; HTTP 401 confirms anonymous reads are rejected",
-        "0012_service_request_reviews.sql",
         "delivery requires prior approval",
         "at most one linked credit usage record",
         "No registration, wallet verification, service request, credit usage, token transfer, or admin-token request is sent",
@@ -10612,7 +10765,7 @@ def validate_api_status_page(text: str) -> None:
         "gca_account_status_rotation_v1",
         "/gca/account-status/rotate",
         "15-minute same-rotation retry",
-        "assets/api-health.js?v=20260727d",
+        "assets/api-health.js?v=20260810",
     ):
         assert_contains(text, expected, label)
     assert_no_forbidden_public_claims(text, label)
@@ -10633,19 +10786,19 @@ def validate_api_status_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != API_STATUS_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
-    if payload.get("status") != "public-account-service-delivery-receipt-live":
+    if payload.get("status") != "public-account-service-request-cancellation-live":
         raise SiteCheckError(f"{label}: wrong status")
-    if payload.get("lastUpdated") != "2026-07-30":
+    if payload.get("lastUpdated") != "2026-08-10":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("latestPublicCheckAt") != PENDING_WORKER_PUBLIC_ROUTE_AT:
         raise SiteCheckError(f"{label}: wrong latest public check timestamp")
-    if payload.get("latestPublicCheckStatus") != "passed-delivery-receipt-route-and-redacted-history":
+    if payload.get("latestPublicCheckStatus") != "passed-request-cancellation-route-and-redacted-history":
         raise SiteCheckError(f"{label}: wrong latest public check status")
     if payload.get("latestAdminCheckAt") != PENDING_WORKER_ADMIN_ROUTE_AT:
         raise SiteCheckError(f"{label}: wrong latest admin check timestamp")
     if payload.get("workerVersionId") != PENDING_WORKER_VERSION_ID:
         raise SiteCheckError(f"{label}: wrong top-level Worker version")
-    if payload.get("workerRelease") != "gca-registration-worker-2026-07-30-delivery-receipt-v1":
+    if payload.get("workerRelease") != "gca-registration-worker-2026-08-10-request-cancellation-v1":
         raise SiteCheckError(f"{label}: wrong top-level Worker release")
     if payload.get("latestDeployReadinessCheckAt") != PENDING_WORKER_READINESS_AT:
         raise SiteCheckError(f"{label}: wrong latest deploy readiness timestamp")
@@ -10829,6 +10982,7 @@ def validate_api_status_json(text: str) -> None:
         "gca_account_status_recovery_request_v1",
         "gca_account_status_recovery_approval_v1",
         "gca_account_status_recovery_v1",
+        "gca_account_service_request_cancellation_v1",
         "gca_account_service_delivery_receipt_v1",
     ):
         if version not in browser_check.get("identityChecks", []):
@@ -10924,6 +11078,38 @@ def validate_api_status_json(text: str) -> None:
             )
     if delivery_receipt.get("workerVersionId") != PENDING_WORKER_VERSION_ID:
         raise SiteCheckError(f"{label}: wrong delivery receipt Worker version")
+
+    cancellation = public_endpoints.get("account-service-request-cancellation-create")
+    if cancellation is None:
+        raise SiteCheckError(f"{label}: missing account request cancellation endpoint")
+    if (
+        cancellation.get("method") != "POST"
+        or cancellation.get("path") != "/gca/account-service-requests/cancellations"
+    ):
+        raise SiteCheckError(f"{label}: wrong account request cancellation route")
+    if cancellation.get("status") != "live-device-key-protected-queued-only":
+        raise SiteCheckError(f"{label}: wrong account request cancellation status")
+    if cancellation.get("packetVersion") != "gca_account_service_request_cancellation_v1":
+        raise SiteCheckError(f"{label}: wrong account request cancellation version")
+    for key, expected in (
+        ("requiresDeviceStatusKey", True),
+        ("accountScoped", True),
+        ("queuedOnly", True),
+        ("requiresNoOperatorReview", True),
+        ("idempotent", True),
+        ("changesCredits", False),
+        ("changesAccountOrMemberStatus", False),
+        ("writesWallet", False),
+        ("requiresSignature", False),
+        ("requiresTransaction", False),
+        ("automaticTokenTransfer", False),
+        ("createsTradingPermission", False),
+        ("productionLive", True),
+    ):
+        if cancellation.get(key) is not expected:
+            raise SiteCheckError(f"{label}: wrong account request cancellation boundary {key}")
+    if cancellation.get("workerVersionId") != PENDING_WORKER_VERSION_ID:
+        raise SiteCheckError(f"{label}: wrong request cancellation Worker version")
 
     expected_admin = {
         "email-registration-read": "/gca/email-registrations",
@@ -11224,6 +11410,12 @@ def validate_api_status_json(text: str) -> None:
         "accountServiceDeliveryReceiptAccountScoped",
         "accountServiceDeliveryReceiptRequiresCompletedDelivery",
         "accountServiceDeliveryReceiptIdempotent",
+        "accountServiceRequestCancellationLive",
+        "accountServiceRequestCancellationRequiresDeviceKey",
+        "accountServiceRequestCancellationAccountScoped",
+        "accountServiceRequestCancellationQueuedOnly",
+        "accountServiceRequestCancellationRequiresNoOperatorReview",
+        "accountServiceRequestCancellationIdempotent",
     ):
         if boundaries.get(key) is not True:
             raise SiteCheckError(f"{label}: missing boundary {key}")
@@ -11233,6 +11425,9 @@ def validate_api_status_json(text: str) -> None:
         "accountStatusReturnsDeviceKey",
         "accountServiceDeliveryReceiptChangesCredits",
         "accountServiceDeliveryReceiptWritesWallet",
+        "accountServiceRequestCancellationChangesCredits",
+        "accountServiceRequestCancellationWritesWallet",
+        "accountServiceRequestCancellationDeletesAuditHistory",
     ):
         if boundaries.get(key) is not False:
             raise SiteCheckError(f"{label}: account status boundary {key} must be false")
@@ -11291,6 +11486,8 @@ def validate_api_health_script(text: str) -> None:
         'payload.endpoints.accountStatus === "/gca/account-status"',
         'payload.accountServiceDeliveryReceiptVersion === "gca_account_service_delivery_receipt_v1"',
         'payload.endpoints.accountServiceDeliveryReceipts === "/gca/account-service-requests/delivery-receipts"',
+        'payload.accountServiceRequestCancellationVersion === "gca_account_service_request_cancellation_v1"',
+        'payload.endpoints.accountServiceRequestCancellations === "/gca/account-service-requests/cancellations"',
         "boundaries.readOnlyAccountStatus === true",
         "boundaries.accountStatusTokenStoredAsSha256 === true",
         "boundaries.accountStatusReturnsEmail === false",
@@ -11299,6 +11496,11 @@ def validate_api_health_script(text: str) -> None:
         "boundaries.accountServiceDeliveryReceiptIdempotent === true",
         "boundaries.accountServiceDeliveryReceiptChangesCredits === false",
         "boundaries.accountServiceDeliveryReceiptWritesWallet === false",
+        "boundaries.accountServiceRequestCancellationEnabled === true",
+        "boundaries.accountServiceRequestCancellationQueuedOnly === true",
+        "boundaries.accountServiceRequestCancellationIdempotent === true",
+        "boundaries.accountServiceRequestCancellationChangesCredits === false",
+        "boundaries.accountServiceRequestCancellationWritesWallet === false",
         'payload.memberReviewVersion === "gca_member_review_v1"',
         'payload.memberBenefitTransferVersion === "gca_member_benefit_transfer_v1"',
         'boundaries.memberBenefitTransferMode === "manual-reserve-wallet-transfer-with-read-only-production-evidence"',
@@ -11836,7 +12038,7 @@ def validate_credits_page(text: str) -> None:
         assert_not_contains(text, forbidden, label)
     assert_contains(text, "Access Portal", label)
     assert_contains(text, "Access API", label)
-    assert_contains(text, "reviewed delivery and settlement live", label)
+    assert_contains(text, "queued cancellation and reviewed settlement live", label)
     assert_contains(text, "eligible ledger record live", label)
     assert_contains(text, "100 GCA AI Quant Access credits", label)
     assert_contains(text, "10,000 GCA", label)
@@ -11892,6 +12094,7 @@ def validate_credits_json(text: str) -> None:
     release_gates = payload.get("releaseGates", {})
     usage_ledger = payload.get("usageLedger", {})
     service_request_queue = payload.get("serviceRequestQueue", {})
+    request_access = payload.get("accountServiceRequestAccess", {})
     market = payload.get("officialMarket", {})
     links = payload.get("officialLinks", {})
     boundaries = payload.get("publicClaimBoundaries", {})
@@ -11900,15 +12103,15 @@ def validate_credits_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != CREDITS_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
-    if payload.get("status") != "public-credits-catalog-ledger-path-live":
+    if payload.get("status") != "public-credits-catalog-request-cancellation-live":
         raise SiteCheckError(f"{label}: wrong status")
-    if payload.get("lastUpdated") != "2026-07-30":
+    if payload.get("lastUpdated") != "2026-08-10":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
     if payload.get("contractAddress") != MAINNET_ADDRESS:
         raise SiteCheckError(f"{label}: wrong contractAddress")
-    if state.get("currentStage") != "reviewed-service-delivery-and-idempotent-settlement-live":
+    if state.get("currentStage") != "queued-request-cancellation-and-reviewed-settlement-live":
         raise SiteCheckError(f"{label}: wrong currentStage")
     if state.get("draftServiceCatalogOnly") is not False:
         raise SiteCheckError(f"{label}: draftServiceCatalogOnly must be false")
@@ -11933,6 +12136,35 @@ def validate_credits_json(text: str) -> None:
             raise SiteCheckError(f"{label}: {key} must be false")
     if state.get("serviceRequestQueueProductionLive") is not True:
         raise SiteCheckError(f"{label}: serviceRequestQueueProductionLive must be true")
+    for key in (
+        "accountServiceRequestCancellationProductionLive",
+        "accountServiceRequestCancellationQueuedOnly",
+        "accountServiceRequestCancellationRequiresNoPriorReview",
+        "accountServiceRequestCancellationIdempotent",
+    ):
+        if state.get(key) is not True:
+            raise SiteCheckError(f"{label}: {key} must be true")
+    for key in (
+        "accountServiceRequestCancellationChangesCredits",
+        "accountServiceRequestCancellationWritesWallet",
+        "accountServiceRequestCancellationDeletesAuditHistory",
+    ):
+        if state.get(key) is not False:
+            raise SiteCheckError(f"{label}: {key} must be false")
+    if state.get("accountServiceRequestCancellationPacketVersion") != "gca_account_service_request_cancellation_v1":
+        raise SiteCheckError(f"{label}: wrong request cancellation packet version")
+    if request_access.get("cancellationEndpoint") != "https://gca-registration-api.gcagochina.workers.dev/gca/account-service-requests/cancellations":
+        raise SiteCheckError(f"{label}: wrong account cancellation endpoint")
+    if request_access.get("cancellationPacketVersion") != "gca_account_service_request_cancellation_v1":
+        raise SiteCheckError(f"{label}: wrong account cancellation version")
+    if request_access.get("historyReturnsCancellationState") is not True:
+        raise SiteCheckError(f"{label}: history must return cancellation state")
+    for key in ("cancellationQueuedOnly", "cancellationRequiresNoPriorReview", "cancellationIdempotent"):
+        if request_access.get(key) is not True:
+            raise SiteCheckError(f"{label}: {key} must be true")
+    for key in ("cancellationChangesCredits", "cancellationWritesWallet", "cancellationDeletesAuditHistory"):
+        if request_access.get(key) is not False:
+            raise SiteCheckError(f"{label}: {key} must be false")
     if state.get("creditUsageLedgerWritesLive") is not True:
         raise SiteCheckError(f"{label}: creditUsageLedgerWritesLive must be true")
     if state.get("creditUsageWorkerDeployBlockedBy") != PENDING_WORKER_BLOCKED_BY:
@@ -12208,7 +12440,7 @@ def validate_credits_json(text: str) -> None:
 def validate_release_gates_page(text: str) -> None:
     label = "/release-gates.html"
     assert_contains(text, "GCA Product Release Gates", label)
-    assert_contains(text, "Release Gates / 2026-07-30", label)
+    assert_contains(text, "Release Gates / 2026-08-10", label)
     assert_contains(text, "Release References", label)
     assert_contains(text, "gca/member-access/", label)
     for forbidden in ("Platform-Only Evidence Path", "Data Room", 'href="data.html"'):
@@ -12217,10 +12449,11 @@ def validate_release_gates_page(text: str) -> None:
     assert_contains(text, "Access Portal", label)
     assert_contains(text, "Operations Runbook", label)
     assert_contains(text, "Access API", label)
-    assert_contains(text, "reviewed delivery + idempotent settlement live", label)
+    assert_contains(text, "queued cancellation + idempotent settlement live", label)
     assert_contains(text, "device-key protected service requests", label)
     assert_contains(text, "redacted review history live", label)
-    assert_contains(text, "Request submission and approval alone do not deduct credits", label)
+    assert_contains(text, "Request submission, cancellation, and approval alone do not deduct credits", label)
+    assert_contains(text, "Same-account cancellation is live before manual review only", label)
     assert_contains(text, "member-benefit evidence are live", label)
     assert_contains(text, "the benefit transfer remains separate", label)
     assert_contains(text, "/gca/service-request-reviews", label)
@@ -12240,7 +12473,7 @@ def validate_release_gates_page(text: str) -> None:
     assert_contains(text, "SHA-256 continuity checked before review writes", label)
     assert_contains(text, "Review chain checkpoint", label)
     assert_contains(text, "Unsigned local export live; separate retention required", label)
-    assert_contains(text, "Worker deploy and public/admin read-only smoke passed 2026-07-30 UTC", label)
+    assert_contains(text, "Worker deploy and public/admin read-only smoke passed 2026-08-10 UTC", label)
     assert_contains(text, "production member eligibility review live", label)
     assert_contains(text, "simulation or testnet first", label)
     assert_contains(text, "BaseScan token profile publication", label)
@@ -12271,15 +12504,15 @@ def validate_release_gates_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != RELEASE_GATES_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
-    if payload.get("status") != "public-release-gates-reviewed-service-delivery-live":
+    if payload.get("status") != "public-release-gates-request-cancellation-live":
         raise SiteCheckError(f"{label}: wrong status")
-    if payload.get("lastUpdated") != "2026-07-30":
+    if payload.get("lastUpdated") != "2026-08-10":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
     if payload.get("contractAddress") != MAINNET_ADDRESS:
         raise SiteCheckError(f"{label}: wrong contractAddress")
-    if state.get("currentStage") != "reviewed-service-delivery-and-idempotent-settlement-live":
+    if state.get("currentStage") != "queued-request-cancellation-and-reviewed-settlement-live":
         raise SiteCheckError(f"{label}: wrong currentStage")
     if state.get("publicProductSpecOnly") is not False:
         raise SiteCheckError(f"{label}: publicProductSpecOnly must be false")
@@ -12316,6 +12549,25 @@ def validate_release_gates_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong member review verification timestamp")
     if state.get("pendingServiceRoutesProductionLive") is not True:
         raise SiteCheckError(f"{label}: service routes must be production-live")
+    for key in (
+        "accountServiceRequestCancellationProductionLive",
+        "accountServiceRequestCancellationQueuedOnly",
+        "accountServiceRequestCancellationRequiresNoPriorReview",
+        "accountServiceRequestCancellationIdempotent",
+    ):
+        if state.get(key) is not True:
+            raise SiteCheckError(f"{label}: {key} must be true")
+    for key in (
+        "accountServiceRequestCancellationChangesCredits",
+        "accountServiceRequestCancellationWritesWallet",
+        "accountServiceRequestCancellationDeletesAuditHistory",
+    ):
+        if state.get(key) is not False:
+            raise SiteCheckError(f"{label}: {key} must be false")
+    if state.get("accountServiceRequestCancellationPacketVersion") != "gca_account_service_request_cancellation_v1":
+        raise SiteCheckError(f"{label}: wrong request cancellation packet version")
+    if state.get("accountServiceRequestCancellationProductionVerifiedAt") != PENDING_WORKER_PUBLIC_ROUTE_AT:
+        raise SiteCheckError(f"{label}: wrong request cancellation verification timestamp")
     if state.get("latestPendingRouteReadinessCheckAt") != PENDING_WORKER_READINESS_AT:
         raise SiteCheckError(f"{label}: wrong pending route readiness timestamp")
     if state.get("latestPendingRoutePublicCheckAt") != PENDING_WORKER_PUBLIC_ROUTE_AT:

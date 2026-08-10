@@ -4,11 +4,11 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-LAST_UPDATED = "2026-07-30"
-READINESS_AT = "2026-07-30T08:20:35Z"
-PUBLIC_ROUTE_AT = "2026-07-30T08:20:13Z"
-ADMIN_ROUTE_AT = "2026-07-30T08:20:21Z"
-WORKER_VERSION_ID = "7952f4a1-b287-4ca9-a1ed-d92d75b8fd1f"
+LAST_UPDATED = "2026-08-10"
+READINESS_AT = "2026-08-10T09:14:56Z"
+PUBLIC_ROUTE_AT = "2026-08-10T09:14:18Z"
+ADMIN_ROUTE_AT = "2026-08-10T09:14:34Z"
+WORKER_VERSION_ID = "f6064d99-ea1a-49f8-861e-2743fc6ebf58"
 ROUTE_OBSERVATIONS = {
     "/gca/service-requests": 401,
     "/gca/credit-usage": 401,
@@ -59,7 +59,7 @@ class GcaWorkerStatusConsistencyTests(unittest.TestCase):
         self.assertEqual(access_backend["pendingRoutesLastObservedAt"], PUBLIC_ROUTE_AT)
         self.assertEqual(access_backend["pendingRouteAnonymousGetStatus"], ROUTE_OBSERVATIONS)
         self.assertEqual(access_backend["workerVersionId"], WORKER_VERSION_ID)
-        self.assertEqual(access_backend["workerRelease"], "gca-registration-worker-2026-07-30-delivery-receipt-v1")
+        self.assertEqual(access_backend["workerRelease"], "gca-registration-worker-2026-08-10-request-cancellation-v1")
         self.assertEqual(access_backend["accountStatusAccessMigration"], "cloudflare/gca-registration-worker/migrations/0009_account_status_access.sql")
         self.assertEqual(access_backend["accountStatusEndpoint"], "https://gca-registration-api.gcagochina.workers.dev/gca/account-status")
         self.assertEqual(access_backend["memberReviewVersion"], "gca_member_review_v1")
@@ -92,6 +92,33 @@ class GcaWorkerStatusConsistencyTests(unittest.TestCase):
         )
         self.assertFalse(
             access_api["currentState"]["accountServiceDeliveryReceiptWritesWallet"]
+        )
+        self.assertEqual(
+            access_backend["serviceRequestCancellationMigration"],
+            "cloudflare/gca-registration-worker/migrations/0014_service_request_cancellations.sql",
+        )
+        self.assertEqual(
+            access_backend["accountServiceRequestCancellationEndpoint"],
+            "https://gca-registration-api.gcagochina.workers.dev/gca/account-service-requests/cancellations",
+        )
+        self.assertEqual(
+            access_backend["accountServiceRequestCancellationVersion"],
+            "gca_account_service_request_cancellation_v1",
+        )
+        self.assertTrue(
+            access_api["currentState"]["accountServiceRequestCancellationProductionLive"]
+        )
+        self.assertTrue(
+            access_api["currentState"]["accountServiceRequestCancellationQueuedOnly"]
+        )
+        self.assertTrue(
+            access_api["currentState"]["accountServiceRequestCancellationIdempotent"]
+        )
+        self.assertFalse(
+            access_api["currentState"]["accountServiceRequestCancellationChangesCredits"]
+        )
+        self.assertFalse(
+            access_api["currentState"]["accountServiceRequestCancellationWritesWallet"]
         )
 
         operations_pipeline = operations["memberAccessOpsPipeline"]
@@ -175,6 +202,16 @@ class GcaWorkerStatusConsistencyTests(unittest.TestCase):
         self.assertTrue(credits["currentState"]["accountServiceRequestProductionLive"])
         self.assertFalse(credits["currentState"]["accountServiceRequestCreditsReserved"])
         self.assertFalse(credits["currentState"]["accountServiceRequestCreditsDeductedOnSubmission"])
+        for state in (
+            access_api["currentState"],
+            operations["currentState"],
+            credits["currentState"],
+        ):
+            self.assertTrue(state["accountServiceRequestCancellationProductionLive"])
+            self.assertTrue(state["accountServiceRequestCancellationQueuedOnly"])
+            self.assertTrue(state["accountServiceRequestCancellationIdempotent"])
+            self.assertFalse(state["accountServiceRequestCancellationChangesCredits"])
+            self.assertFalse(state["accountServiceRequestCancellationWritesWallet"])
         self.assertTrue(access_api["currentState"]["serviceRequestReviewProductionLive"])
         self.assertEqual(
             access_api["currentState"]["serviceRequestReviewPacketVersion"],
@@ -203,12 +240,12 @@ class GcaWorkerStatusConsistencyTests(unittest.TestCase):
 
     def test_public_pages_show_live_protected_status_and_remove_stale_claims(self):
         public_pages = {
-            "access-api.html": ("reviewed service delivery and settlement live", "HTTP 401"),
-            "operations.html": ("manual service review and settlement live", "Anonymous reads return HTTP 401"),
-            "credits.html": ("reviewed delivery and settlement live", "token-protected"),
+            "access-api.html": ("queued cancellation and reviewed settlement live", "HTTP 401"),
+            "operations.html": ("queued cancellation and manual settlement live", "Anonymous operator reads return HTTP 401"),
+            "credits.html": ("queued cancellation and reviewed settlement live", "token-protected"),
             "service-delivery-playbook.html": ("Live and token-protected", "HTTP 401"),
             "worker-routes-handoff.html": ("Production-live and protected", "HTTP 401"),
-            "release-gates.html": ("reviewed delivery + idempotent settlement live", "2026-07-30"),
+            "release-gates.html": ("queued cancellation + idempotent settlement live", "2026-08-10"),
             "zh-release-gates.html": ("已经正式上线", "HTTP 401"),
             "market-quality.html": ("Account and eligible ledger path live", "Live and iterating"),
         }

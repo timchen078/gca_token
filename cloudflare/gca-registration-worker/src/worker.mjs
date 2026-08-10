@@ -26,6 +26,8 @@ const SERVICE_REQUEST_VERSION = "gca_service_request_v1";
 const ACCOUNT_SERVICE_REQUEST_VERSION = "gca_account_service_request_v1";
 const ACCOUNT_SERVICE_REQUEST_STATUS_VERSION =
   "gca_account_service_request_status_v1";
+const ACCOUNT_SERVICE_REQUEST_CANCELLATION_VERSION =
+  "gca_account_service_request_cancellation_v1";
 const ACCOUNT_SERVICE_DELIVERY_RECEIPT_VERSION =
   "gca_account_service_delivery_receipt_v1";
 const SERVICE_REQUEST_REVIEW_VERSION =
@@ -34,7 +36,7 @@ const MEMBER_REVIEW_VERSION = "gca_member_review_v1";
 const HOLDING_VERIFICATION_VERSION = "gca_holding_verification_v1";
 const MEMBER_BENEFIT_TRANSFER_VERSION = "gca_member_benefit_transfer_v1";
 const WORKER_RELEASE =
-  "gca-registration-worker-2026-07-30-delivery-receipt-v1";
+  "gca-registration-worker-2026-08-10-request-cancellation-v1";
 const OFFICIAL_CONTACT_EMAIL = "support@gcagochina.com";
 const OFFICIAL_SITE_URL = "https://gcagochina.com/";
 const CHAIN_ID = 8453;
@@ -101,6 +103,12 @@ const SERVICE_REQUEST_REVIEW_DECISIONS = new Set([
   "rejected",
   "needs_more_information",
   "delivered"
+]);
+const SERVICE_REQUEST_QUEUED_STATUSES = new Set([
+  "queued_operator_review",
+  "queued_insufficient_credits",
+  "queued_expired_credit_ledger",
+  "queued_missing_credit_ledger"
 ]);
 const HONEYPOT_FIELDS = ["website", "company", "homepage"];
 const FORBIDDEN_KEY_PATTERNS = [
@@ -789,6 +797,45 @@ function extractAccountServiceRequestStatus(packet) {
     );
   }
   return { statusAccessToken };
+}
+
+function extractAccountServiceRequestCancellation(packet) {
+  if (
+    packet.packetVersion &&
+    packet.packetVersion !== ACCOUNT_SERVICE_REQUEST_CANCELLATION_VERSION
+  ) {
+    throw new ApiError(
+      `packetVersion must be ${ACCOUNT_SERVICE_REQUEST_CANCELLATION_VERSION}`
+    );
+  }
+  const statusAccessToken = String(packet.statusAccessToken || "").trim();
+  const serviceRequestId = String(packet.serviceRequestId || "")
+    .trim()
+    .toLowerCase();
+  const acknowledgements =
+    packet.acknowledgements && typeof packet.acknowledgements === "object"
+      ? packet.acknowledgements
+      : {};
+  if (!isStatusAccessToken(statusAccessToken)) {
+    throw new ApiError(
+      "statusAccessToken must be a valid device status access key",
+      401
+    );
+  }
+  if (!SERVICE_REQUEST_ID_RE.test(serviceRequestId)) {
+    throw new ApiError(
+      "serviceRequestId must be a valid GCA service request id"
+    );
+  }
+  if (!Boolean(acknowledgements.cancelQueuedRequest)) {
+    throw new ApiError("queued request cancellation acknowledgement is required");
+  }
+  if (!Boolean(acknowledgements.noCreditOrWalletEffect)) {
+    throw new ApiError(
+      "no credit or wallet effect acknowledgement is required"
+    );
+  }
+  return { statusAccessToken, serviceRequestId };
 }
 
 function extractAccountServiceDeliveryReceipt(packet) {
@@ -1637,6 +1684,10 @@ function rowToServiceRequest(row, includeEmail = true) {
     updatedAt: row.updated_at || "",
     reviewedAt: row.reviewed_at || "",
     completedAt: row.completed_at || "",
+    cancellationId: row.cancellation_id || "",
+    cancelledAt: row.cancelled_at || "",
+    cancellationVersion: row.cancellation_version || "",
+    cancellationSource: row.cancellation_source || "",
     deliveryReceiptId: row.delivery_receipt_id || "",
     deliveryAcknowledgedAt: row.delivery_acknowledged_at || "",
     deliveryAcknowledgementVersion:
@@ -1711,6 +1762,9 @@ function rowToServiceRequestReview(row) {
 }
 
 function serviceRequestNextStep(status, deliveryAcknowledged = false) {
+  if (status === "cancelled_by_account") {
+    return "This account cancelled the request before manual review. No credits were deducted.";
+  }
   if (status === "queued_operator_review") {
     return "The request is queued for manual operator review.";
   }
@@ -1768,6 +1822,8 @@ function rowToAccountServiceRequest(row) {
     ),
     reviewedAt: row.reviewed_at || "",
     completedAt: row.completed_at || "",
+    cancelledByAccount: Boolean(row.cancellation_id),
+    cancelledAt: row.cancelled_at || "",
     deliveryAcknowledged: Boolean(row.delivery_receipt_id),
     deliveryAcknowledgedAt: row.delivery_acknowledged_at || "",
     latestReview: row.latest_review_id
@@ -2509,27 +2565,21 @@ function reviewDecisionStatus(decision) {
 }
 
 function serviceReviewTransitionAllowed(currentStatus, decision) {
-  const queuedStatuses = new Set([
-    "queued_operator_review",
-    "queued_insufficient_credits",
-    "queued_expired_credit_ledger",
-    "queued_missing_credit_ledger"
-  ]);
   if (decision === "approved") {
     return (
-      queuedStatuses.has(currentStatus) ||
+      SERVICE_REQUEST_QUEUED_STATUSES.has(currentStatus) ||
       currentStatus === "needs_more_information"
     );
   }
   if (decision === "needs_more_information") {
     return (
-      queuedStatuses.has(currentStatus) ||
+      SERVICE_REQUEST_QUEUED_STATUSES.has(currentStatus) ||
       currentStatus === "approved_operator_review"
     );
   }
   if (decision === "rejected") {
     return (
-      queuedStatuses.has(currentStatus) ||
+      SERVICE_REQUEST_QUEUED_STATUSES.has(currentStatus) ||
       currentStatus === "approved_operator_review" ||
       currentStatus === "needs_more_information"
     );
@@ -4093,6 +4143,11 @@ function accountServiceRequestBoundaries() {
     deviceKeyProtected: true,
     emailReturned: false,
     accessTokenReturned: false,
+    cancellationEnabled: true,
+    cancellationQueuedOnly: true,
+    cancellationIdempotent: true,
+    cancellationChangesCredits: false,
+    cancellationWritesWallet: false,
     nonSensitiveDeliveryReferenceReturnedAfterDelivered: true,
     deliveryAcknowledgementEnabled: true,
     deliveryAcknowledgementRequiresCompletedDelivery: true,
@@ -4108,6 +4163,144 @@ function accountServiceRequestBoundaries() {
     writesWallet: false,
     createsTradingPermission: false
   };
+}
+
+function accountServiceRequestCancellation(row) {
+  return {
+    packetVersion: ACCOUNT_SERVICE_REQUEST_CANCELLATION_VERSION,
+    serviceRequestId: row.service_request_id,
+    status: "cancelled_by_account",
+    cancelledAt: row.cancelled_at,
+    creditsChanged: false,
+    walletAction: false,
+    tokenTransfer: false,
+    tradingPermissionCreated: false
+  };
+}
+
+async function submitAccountServiceRequestCancellation(request, env, origin) {
+  const db = requireDatabase(env);
+  const packet = await readJsonRequest(request);
+  const cancellationInput = extractAccountServiceRequestCancellation(packet);
+  const now = nowIso();
+  const accountRow = await authenticateAccountStatusAccess(
+    db,
+    cancellationInput.statusAccessToken,
+    now
+  );
+  let serviceRequestRow = await db
+    .prepare(
+      `SELECT *
+      FROM gca_service_requests
+      WHERE service_request_id = ?1
+        AND account_id = ?2
+      LIMIT 1`
+    )
+    .bind(cancellationInput.serviceRequestId, accountRow.account_id)
+    .first();
+
+  if (!serviceRequestRow) {
+    throw new ApiError(
+      "service request was not found for this account",
+      404
+    );
+  }
+  const cancellationId = await stableId(
+    "gca_service_cancel",
+    accountRow.account_id,
+    cancellationInput.serviceRequestId
+  );
+  if (serviceRequestRow.cancellation_id) {
+    if (serviceRequestRow.cancellation_id !== cancellationId) {
+      throw new ApiError(
+        "service request already has a different cancellation record",
+        409
+      );
+    }
+    return jsonResponse({
+      ok: true,
+      packetVersion: ACCOUNT_SERVICE_REQUEST_CANCELLATION_VERSION,
+      created: false,
+      idempotentReplay: true,
+      cancellation: accountServiceRequestCancellation(serviceRequestRow),
+      boundaries: accountServiceRequestBoundaries()
+    }, 200, origin, env);
+  }
+  if (
+    !SERVICE_REQUEST_QUEUED_STATUSES.has(serviceRequestRow.status) ||
+    Boolean(serviceRequestRow.latest_review_id)
+  ) {
+    throw new ApiError(
+      "service request can only be cancelled before manual review",
+      409
+    );
+  }
+
+  const updateResult = await db
+    .prepare(
+      `UPDATE gca_service_requests
+      SET status = 'cancelled_by_account',
+        cancellation_id = ?1,
+        cancelled_at = ?2,
+        cancellation_version = ?3,
+        cancellation_source = ?4,
+        completed_at = ?2,
+        updated_at = ?2
+      WHERE service_request_id = ?5
+        AND account_id = ?6
+        AND status IN (
+          'queued_operator_review',
+          'queued_insufficient_credits',
+          'queued_expired_credit_ledger',
+          'queued_missing_credit_ledger'
+        )
+        AND latest_review_id = ''
+        AND credit_usage_id = ''
+        AND delivery_receipt_id = ''
+        AND cancellation_id = ''`
+    )
+    .bind(
+      cancellationId,
+      now,
+      ACCOUNT_SERVICE_REQUEST_CANCELLATION_VERSION,
+      "gca-member-access-request-cancellation",
+      cancellationInput.serviceRequestId,
+      accountRow.account_id
+    )
+    .run();
+  const created = Number(
+    updateResult && updateResult.meta && updateResult.meta.changes
+      ? updateResult.meta.changes
+      : 0
+  ) > 0;
+  serviceRequestRow = await db
+    .prepare(
+      `SELECT *
+      FROM gca_service_requests
+      WHERE service_request_id = ?1
+        AND account_id = ?2
+      LIMIT 1`
+    )
+    .bind(cancellationInput.serviceRequestId, accountRow.account_id)
+    .first();
+  if (
+    !serviceRequestRow ||
+    serviceRequestRow.cancellation_id !== cancellationId
+  ) {
+    throw new ApiError(
+      "service request changed before cancellation; refresh and retry",
+      409
+    );
+  }
+
+  return jsonResponse({
+    ok: true,
+    packetVersion: ACCOUNT_SERVICE_REQUEST_CANCELLATION_VERSION,
+    created,
+    idempotentReplay: !created,
+    cancellation: accountServiceRequestCancellation(serviceRequestRow),
+    boundaries: accountServiceRequestBoundaries()
+  }, created ? 201 : 200, origin, env);
 }
 
 function accountServiceDeliveryReceipt(row) {
@@ -5195,6 +5388,11 @@ function accessBoundaries() {
     accountServiceRequestCreditsDeductedOnRequest: false,
     accountServiceRequestReturnsEmail: false,
     accountServiceRequestCreatesTradingPermission: false,
+    accountServiceRequestCancellationEnabled: true,
+    accountServiceRequestCancellationQueuedOnly: true,
+    accountServiceRequestCancellationIdempotent: true,
+    accountServiceRequestCancellationChangesCredits: false,
+    accountServiceRequestCancellationWritesWallet: false,
     accountServiceDeliveryReceiptEnabled: true,
     accountServiceDeliveryReceiptRequiresCompletedDelivery: true,
     accountServiceDeliveryReceiptIdempotent: true,
@@ -5250,6 +5448,8 @@ function accessConfig(origin, env) {
     accountServiceRequestVersion: ACCOUNT_SERVICE_REQUEST_VERSION,
     accountServiceRequestStatusVersion:
       ACCOUNT_SERVICE_REQUEST_STATUS_VERSION,
+    accountServiceRequestCancellationVersion:
+      ACCOUNT_SERVICE_REQUEST_CANCELLATION_VERSION,
     accountServiceDeliveryReceiptVersion:
       ACCOUNT_SERVICE_DELIVERY_RECEIPT_VERSION,
     serviceRequestReviewVersion:
@@ -5273,6 +5473,8 @@ function accessConfig(origin, env) {
       accountServiceRequests: "/gca/account-service-requests",
       accountServiceRequestStatus:
         "/gca/account-service-requests/status",
+      accountServiceRequestCancellations:
+        "/gca/account-service-requests/cancellations",
       accountServiceDeliveryReceipts:
         "/gca/account-service-requests/delivery-receipts",
       serviceRequestReviewsAdmin:
@@ -5417,6 +5619,8 @@ function health(origin, env) {
     accountServiceRequestVersion: ACCOUNT_SERVICE_REQUEST_VERSION,
     accountServiceRequestStatusVersion:
       ACCOUNT_SERVICE_REQUEST_STATUS_VERSION,
+    accountServiceRequestCancellationVersion:
+      ACCOUNT_SERVICE_REQUEST_CANCELLATION_VERSION,
     accountServiceDeliveryReceiptVersion:
       ACCOUNT_SERVICE_DELIVERY_RECEIPT_VERSION,
     serviceRequestReviewVersion:
@@ -5542,6 +5746,19 @@ export default {
       if (url.pathname === "/gca/account-service-requests/status") {
         if (request.method === "POST") {
           return await readAccountServiceRequests(request, env, origin);
+        }
+        return jsonResponse({ ok: false, error: "method not allowed" }, 405, origin, env);
+      }
+      if (
+        url.pathname ===
+        "/gca/account-service-requests/cancellations"
+      ) {
+        if (request.method === "POST") {
+          return await submitAccountServiceRequestCancellation(
+            request,
+            env,
+            origin
+          );
         }
         return jsonResponse({ ok: false, error: "method not allowed" }, 405, origin, env);
       }
