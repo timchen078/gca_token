@@ -334,7 +334,7 @@
         <p class="eyebrow">Release Gates / 2026-08-10</p>
         <h1 id="title">GCA Product Release Gates</h1>
         <p class="lead">This page defines what is live and what remains gated before GCA AI Quant Access is described as a broader public product. The current state includes live account intake, read-only wallet verification, redacted device-key account status, and ledger records, but not a live trading terminal or live market data.</p>
-        <p class="lead">Public account UI, wallet verification, redacted status refresh, device-key protected service requests and queued-request cancellation, append-only manual review, approved delivery recording, at-most-once credit settlement, member decisions, holding-history verification, and member-benefit evidence are live. Request submission, cancellation, and approval alone do not deduct credits; settlement occurs only with completed delivery.</p>
+        <p class="lead">Public account UI, wallet verification, redacted status refresh, device-key protected service requests, more-information follow-ups and queued-request cancellation, append-only manual review, approved delivery recording, at-most-once credit settlement, member decisions, holding-history verification, and member-benefit evidence are live. Request submission, follow-up, cancellation, and approval alone do not deduct credits; settlement occurs only with completed delivery.</p>
         <div class="actions">
           <a class="button primary" href="access.html">Access Portal</a>
           <a class="button primary" href="operations.html">Operations Runbook</a>
@@ -352,7 +352,7 @@
       <section class="facts" aria-label="Current state">
         <div class="fact">
           <span class="label">Current Stage</span>
-          <span class="value good">queued cancellation + idempotent settlement live</span>
+          <span class="value good">review follow-up + idempotent settlement live</span>
         </div>
         <div class="fact">
           <span class="label">Public Account UI</span>
@@ -425,6 +425,7 @@
             <div class="row"><span>Local support review trail</span><strong class="good">SHA-256 continuity checked before review writes</strong></div>
             <div class="row"><span>Review chain checkpoint</span><strong class="good">Unsigned local export live; separate retention required</strong></div>
             <div class="row"><span>Account service requests</span><strong class="good">Device-key create and redacted review history live; submission does not reserve or deduct credits</strong></div>
+            <div class="row"><span>More-information follow-up</span><strong class="good">Public non-sensitive prompt and bounded account response live; response text stays operator-only and no credits change</strong></div>
             <div class="row"><span>Queued-request cancellation</span><strong class="good">Same-account cancellation is live before manual review only; permanent, idempotent, and no credit, wallet, token, or audit-deletion effect</strong></div>
             <div class="row"><span>Service review and delivery</span><strong class="good"><code>/gca/service-request-reviews</code> live; append-only, approved first, server catalog priced, and at-most-once settlement</strong></div>
             <div class="row"><span>Latest service-route verification</span><strong class="good">Worker deploy and public/admin read-only smoke passed 2026-08-10 UTC</strong></div>

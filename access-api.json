@@ -1,13 +1,13 @@
 {
   "schema": "https://gcagochina.com/access-api.json",
   "pageUrl": "https://gcagochina.com/access-api.html",
-  "status": "public-access-api-request-cancellation-live",
+  "status": "public-access-api-request-followup-live",
   "lastUpdated": "2026-08-10",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "title": "GCA Access API Contract",
   "currentState": {
-    "currentStage": "account-service-request-cancellation-api-live",
+    "currentStage": "account-service-request-followup-api-live",
     "contractOnly": false,
     "backendLive": true,
     "publicEndpointLive": true,
@@ -56,7 +56,7 @@
     "automaticMemberActivationFromSubmittedDate": false,
     "memberReviewProductionVerifiedAt": "2026-07-28T06:07:11Z",
     "memberBenefitTransferProductionVerifiedAt": "2026-07-28T06:07:11Z",
-    "serviceRoutesProductionVerifiedAt": "2026-08-10T09:14:34Z",
+    "serviceRoutesProductionVerifiedAt": "2026-08-10T13:23:40Z",
     "accountStatusRotationPacketVersion": "gca_account_status_rotation_v1",
     "accountStatusRotationProductionLive": true,
     "accountStatusRotationGraceMinutes": 15,
@@ -76,15 +76,26 @@
     "accountServiceRequestProductionLive": true,
     "accountServiceRequestDeviceKeyProtected": true,
     "accountServiceRequestDailyLimit": 5,
-    "accountServiceRequestProductionVerifiedAt": "2026-08-10T09:14:18Z",
+    "accountServiceRequestProductionVerifiedAt": "2026-08-10T13:23:22Z",
     "accountServiceRequestCreditsReserved": false,
     "accountServiceRequestCreditsDeductedOnRequest": false,
     "accountServiceRequestReturnsEmail": false,
     "accountServiceRequestReturnsDeliveryReferenceAfterDelivered": true,
     "accountServiceRequestCreatesTradingPermission": false,
+    "accountServiceRequestFollowupPacketVersion": "gca_account_service_request_followup_v1",
+    "accountServiceRequestFollowupProductionLive": true,
+    "accountServiceRequestFollowupProductionVerifiedAt": "2026-08-10T13:23:40Z",
+    "accountServiceRequestFollowupDeviceKeyProtected": true,
+    "accountServiceRequestFollowupRequiresMoreInformationReview": true,
+    "accountServiceRequestFollowupLimitPerRequest": 5,
+    "accountServiceRequestFollowupIdempotent": true,
+    "accountServiceRequestFollowupReturnsMemberPrompt": true,
+    "accountServiceRequestFollowupReturnsResponseText": false,
+    "accountServiceRequestFollowupChangesCredits": false,
+    "accountServiceRequestFollowupWritesWallet": false,
     "accountServiceRequestCancellationPacketVersion": "gca_account_service_request_cancellation_v1",
     "accountServiceRequestCancellationProductionLive": true,
-    "accountServiceRequestCancellationProductionVerifiedAt": "2026-08-10T09:14:18Z",
+    "accountServiceRequestCancellationProductionVerifiedAt": "2026-08-10T13:23:22Z",
     "accountServiceRequestCancellationDeviceKeyProtected": true,
     "accountServiceRequestCancellationQueuedOnly": true,
     "accountServiceRequestCancellationIdempotent": true,
@@ -93,7 +104,7 @@
     "accountServiceRequestCancellationDeletesAuditHistory": false,
     "accountServiceDeliveryReceiptPacketVersion": "gca_account_service_delivery_receipt_v1",
     "accountServiceDeliveryReceiptProductionLive": true,
-    "accountServiceDeliveryReceiptProductionVerifiedAt": "2026-08-10T09:14:18Z",
+    "accountServiceDeliveryReceiptProductionVerifiedAt": "2026-08-10T13:23:22Z",
     "accountServiceDeliveryReceiptDeviceKeyProtected": true,
     "accountServiceDeliveryReceiptRequiresCompletedDelivery": true,
     "accountServiceDeliveryReceiptIdempotent": true,
@@ -107,7 +118,10 @@
     "serviceRequestReviewCreditsDeductedOnlyOnDelivered": true,
     "serviceRequestReviewCreditsDeductedAtMostOnce": true,
     "serviceRequestReviewReturnedRedactedToAccount": true,
-    "serviceRequestReviewProductionVerifiedAt": "2026-08-10T09:14:34Z"
+    "serviceRequestReviewMemberPromptRequiredForMoreInformation": true,
+    "serviceRequestReviewMemberPromptReturnedToMatchedAccount": true,
+    "serviceRequestReviewOperatorNoteReturnedToAccount": false,
+    "serviceRequestReviewProductionVerifiedAt": "2026-08-10T13:23:40Z"
   },
   "localDevelopmentBackend": {
     "status": "local-only-backend-available",
@@ -170,7 +184,7 @@
     "workerDeployReadinessCommand": "python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth",
     "workerDeployReadinessAuthSessionCheck": "cloudflare-auth-session",
     "workerDeployReadinessAuthRecoveryField": "authRecovery",
-    "latestDeployReadinessCheckAt": "2026-08-10T09:14:56Z",
+    "latestDeployReadinessCheckAt": "2026-08-10T13:21:00Z",
     "latestDeployReadinessSummary": {
       "wranglerDeployDryRun": "passed",
       "cloudflareD1Visibility": "passed",
@@ -180,11 +194,12 @@
       "writesD1Records": false,
       "deploysWorker": false
     },
-    "pendingRoutesLastObservedAt": "2026-08-10T09:14:18Z",
+    "pendingRoutesLastObservedAt": "2026-08-10T13:23:22Z",
     "pendingRouteAnonymousGetStatus": {
       "/gca/service-requests": 401,
       "/gca/credit-usage": 401,
-      "/gca/service-request-reviews": 401
+      "/gca/service-request-reviews": 401,
+      "/gca/service-request-followups": 401
     },
     "pendingRoutePostDeployPublicSmokeCommand": "python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes",
     "pendingRoutePostDeployAdminSmokeCommand": "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes",
@@ -232,6 +247,7 @@
     "serviceRequestReviewMigration": "cloudflare/gca-registration-worker/migrations/0012_service_request_reviews.sql",
     "serviceDeliveryReceiptMigration": "cloudflare/gca-registration-worker/migrations/0013_service_delivery_receipts.sql",
     "serviceRequestCancellationMigration": "cloudflare/gca-registration-worker/migrations/0014_service_request_cancellations.sql",
+    "serviceRequestFollowupMigration": "cloudflare/gca-registration-worker/migrations/0015_service_request_followups.sql",
     "memberAccessEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/member-access",
     "accountStatusEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/account-status",
     "accountStatusRecoveryRequestsEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/account-status/recovery-requests",
@@ -239,6 +255,7 @@
     "accountStatusRecoveryEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/account-status/recover",
     "accountServiceRequestEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/account-service-requests",
     "accountServiceRequestStatusEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/account-service-requests/status",
+    "accountServiceRequestFollowupEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/account-service-requests/follow-ups",
     "accountServiceRequestCancellationEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/account-service-requests/cancellations",
     "accountServiceDeliveryReceiptEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/account-service-requests/delivery-receipts",
     "walletVerificationEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/wallet-verifications",
@@ -246,6 +263,7 @@
     "adminCreditLedgerEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/credit-ledger",
     "adminServiceRequestsEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/service-requests",
     "adminServiceRequestReviewsEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/service-request-reviews",
+    "adminServiceRequestFollowupsEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/service-request-followups",
     "adminCreditUsageEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/credit-usage",
     "adminMemberLedgerEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/member-ledger",
     "adminMemberReviewsEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/member-reviews",
@@ -260,8 +278,8 @@
       "company",
       "homepage"
     ],
-    "workerVersionId": "f6064d99-ea1a-49f8-861e-2743fc6ebf58",
-    "workerRelease": "gca-registration-worker-2026-08-10-request-cancellation-v1",
+    "workerVersionId": "def4a0ea-fcbb-4d0e-a380-ba9656d7dc05",
+    "workerRelease": "gca-registration-worker-2026-08-10-request-followup-v1",
     "serviceRequestReviewVersion": "gca_service_request_review_v1",
     "accountServiceRequestCancellationVersion": "gca_account_service_request_cancellation_v1",
     "memberReviewVersion": "gca_member_review_v1",
@@ -271,7 +289,7 @@
     "memberBenefitTransferExactAmount": "10000 GCA",
     "memberBenefitTransferPublicSmokePassedAt": "2026-07-28T06:07:02Z",
     "memberBenefitTransferAdminSmokePassedAt": "2026-07-28T06:07:11Z",
-    "productionRoutesVerifiedAt": "2026-08-10T09:14:34Z",
+    "productionRoutesVerifiedAt": "2026-08-10T13:23:40Z",
     "accountStatusRotationMigration": "cloudflare/gca-registration-worker/migrations/0010_account_status_rotation.sql",
     "accountStatusRotationEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/account-status/rotate",
     "accountStatusRotationVersion": "gca_account_status_rotation_v1",
@@ -280,12 +298,12 @@
     "accountStatusRotationAdminSmokePassedAt": "2026-07-28T06:07:11Z",
     "accountStatusRecoveryPublicSmokePassedAt": "2026-07-28T06:07:02Z",
     "accountStatusRecoveryAdminSmokePassedAt": "2026-07-28T06:07:11Z",
-    "accountServiceRequestPublicSmokePassedAt": "2026-08-10T09:14:18Z",
-    "accountServiceRequestAdminQueueSmokePassedAt": "2026-08-10T09:14:34Z",
-    "accountServiceRequestCancellationPublicSmokePassedAt": "2026-08-10T09:14:18Z",
-    "accountServiceRequestCancellationAdminSmokePassedAt": "2026-08-10T09:14:34Z",
-    "serviceRequestReviewPublicSmokePassedAt": "2026-08-10T09:14:18Z",
-    "serviceRequestReviewAdminSmokePassedAt": "2026-08-10T09:14:34Z"
+    "accountServiceRequestPublicSmokePassedAt": "2026-08-10T13:23:22Z",
+    "accountServiceRequestAdminQueueSmokePassedAt": "2026-08-10T13:23:40Z",
+    "accountServiceRequestCancellationPublicSmokePassedAt": "2026-08-10T13:23:22Z",
+    "accountServiceRequestCancellationAdminSmokePassedAt": "2026-08-10T13:23:40Z",
+    "serviceRequestReviewPublicSmokePassedAt": "2026-08-10T13:23:22Z",
+    "serviceRequestReviewAdminSmokePassedAt": "2026-08-10T13:23:40Z"
   },
   "securityModel": {
     "controlledHttpsOriginRequired": true,
@@ -885,6 +903,55 @@
       ]
     },
     {
+      "id": "account-service-request-followups-create",
+      "method": "POST",
+      "path": "/gca/account-service-requests/follow-ups",
+      "status": "production-workers-dev-live",
+      "purpose": "Let the device-key authenticated account append a non-sensitive response after the latest operator review requests more information, then return the request to manual review without changing credits or wallet state.",
+      "requiredRequestFields": [
+        "packetVersion",
+        "statusAccessToken",
+        "serviceRequestId",
+        "clientFollowupId",
+        "responseText",
+        "acknowledgements.noSecretsNoCustody",
+        "acknowledgements.manualReviewOnly",
+        "acknowledgements.noCreditOrWalletEffect"
+      ],
+      "serverChecks": [
+        "packetVersion must be gca_account_service_request_followup_v1",
+        "the SHA-256 device-key hash must match an active and unexpired account status access record",
+        "the service request must belong to the matched account",
+        "the request status and latest operator review must both be needs_more_information",
+        "responseText must contain 20 to 1200 characters and pass sensitive-content rejection",
+        "a maximum of five append-only follow-ups is accepted for one service request",
+        "clientFollowupId creates an account-scoped idempotent follow-up ID",
+        "an exact retry returns the existing follow-up without writing a second record",
+        "the response text is not returned by account request history",
+        "the route returns the request to queued_operator_review without changing credits, account, member, wallet, token, or trading-permission state"
+      ],
+      "responseFields": [
+        "created",
+        "idempotentReplay",
+        "followup.serviceRequestFollowupId",
+        "followup.serviceRequestId",
+        "followup.status",
+        "followup.submittedAt",
+        "followup.responseLength",
+        "followup.responseTextReturned",
+        "boundaries"
+      ],
+      "allowedStatuses": [
+        "queued_operator_review"
+      ],
+      "limitPerRequest": 5,
+      "returnsResponseText": false,
+      "changesCredits": false,
+      "writesWallet": false,
+      "automaticTokenTransfer": false,
+      "createsTradingPermission": false
+    },
+    {
       "id": "account-service-request-cancellations-create",
       "method": "POST",
       "path": "/gca/account-service-requests/cancellations",
@@ -1086,6 +1153,9 @@
       "serverChecks": [
         "packetVersion must be gca_service_request_review_v1",
         "clientReviewId produces an idempotent append-only review ID",
+        "memberPrompt is required when the decision requests more information",
+        "memberPrompt is forbidden for other decisions and is the only operator-authored prompt returned to the matched account",
+        "private operatorNote is never returned by account history",
         "delivered is allowed only after approved_operator_review",
         "deliveryReference is required when delivered is recorded",
         "the credit amount comes from the server service catalog rather than the request",
@@ -1107,6 +1177,36 @@
         "rejected",
         "delivered"
       ]
+    },
+    {
+      "id": "service-request-followups-read",
+      "method": "GET",
+      "path": "/gca/service-request-followups",
+      "status": "live-token-protected",
+      "purpose": "Let an authorized GCA operator read append-only service request follow-up responses for manual review. This route is not public and never accepts account writes.",
+      "requiredRequestFields": [
+        "authorization bearer token"
+      ],
+      "optionalQueryFields": [
+        "serviceRequestId",
+        "accountId",
+        "limit"
+      ],
+      "serverChecks": [
+        "ADMIN_READ_TOKEN is required",
+        "records can be filtered by serviceRequestId or accountId",
+        "response text is available only to the authorized operator route",
+        "the route is read-only and does not change credits, wallets, tokens, membership, or trading permissions"
+      ],
+      "responseFields": [
+        "count",
+        "records"
+      ],
+      "publicLedgerReadable": false,
+      "requiresSignature": false,
+      "requiresTransaction": false,
+      "automaticTokenTransfer": false,
+      "createsTradingPermission": false
     },
     {
       "id": "service-requests-create",
@@ -1739,7 +1839,8 @@
       "The member access API is live on Cloudflare Workers + D1 and uses gca_member_access_v2 with a browser-generated device status key.",
       "POST /gca/account-status returns a read-only redacted status snapshot after matching the SHA-256 hash of the device key; it does not return email, the full wallet address, or the key.",
       "POST /gca/account-service-requests lets the device-key authenticated account queue one catalog service for manual review; the server selects the catalog unit and submission does not reserve or deduct credits.",
-      "POST /gca/account-service-requests/status returns only that account's redacted service, title, status, time, credit-check history, and the non-sensitive delivery reference after completed delivery, without returning email, the device key, or the full request body.",
+      "POST /gca/account-service-requests/status returns only that account's redacted service, title, status, time, public more-information prompt, follow-up timestamp and count, credit-check history, and the non-sensitive delivery reference after completed delivery, without returning email, the device key, the full request body, private operator note, or follow-up response text.",
+      "POST /gca/account-service-requests/follow-ups lets the matched device-key account answer a public more-information prompt with one bounded append-only response; exact retries are idempotent, each request is limited to five responses, and submission only returns the request to manual review.",
       "POST /gca/account-service-requests/cancellations lets that device-key authenticated account permanently cancel its own queued request before manual review; retries are idempotent and cancellation changes no credits, wallet, token, member, or trading-permission state.",
       "POST /gca/account-service-requests/delivery-receipts lets that device-key authenticated account acknowledge completed delivery once; retries are idempotent and the receipt changes no credits, wallet, token, member, or trading-permission state.",
       "Manual service decisions are stored as append-only gca_service_request_review_v1 records; delivery requires prior approval.",

@@ -310,7 +310,7 @@
         <h1 id="title">GCA 中文上线门槛</h1>
         <p class="lead">这一页定义 GCA 用户中心和 GCA AI Quant Access 相关功能哪些已经上线、哪些仍需要人工审核或后续产品门槛。</p>
         <p class="lead">邮箱注册、账户入口、只读钱包验证、100 credits、会员人工审核、30 天持有证据，以及“已经手动完成的 10,000 GCA 转账”的生产证据验证都已上线。代币转账本身仍必须由储备钱包手动确认。</p>
-        <p class="lead">服务请求队列、Credit 使用记录和会员人工审核已经正式上线；<code>/gca/service-requests</code>、<code>/gca/credit-usage</code> 和 <code>/gca/member-reviews</code> 已通过远端 D1 migration、部署以及公开和管理员只读 smoke 检查。</p>
+        <p class="lead">服务请求、补交审核资料、Credit 使用记录和会员人工审核已经正式上线；<code>/gca/service-requests</code>、<code>/gca/service-request-reviews</code>、<code>/gca/service-request-followups</code>、<code>/gca/credit-usage</code> 和 <code>/gca/member-reviews</code> 已通过远端 D1 migration、部署以及公开和管理员只读 smoke 检查。</p>
         <div class="actions">
           <a class="button primary" href="zh-access.html">中文用户中心</a>
           <a class="button primary" href="register.html">邮箱注册</a>
@@ -382,7 +382,11 @@
           </article>
           <article class="card">
             <h3>服务请求队列</h3>
-            <p class="note"><code>/gca/service-requests</code> 已正式上线并受管理员 token 保护。初次远端 migration 和 Worker 部署于 2026-07-23 UTC 通过，最新公网和管理员只读 smoke 检查于 2026-07-27 UTC 通过；匿名读取返回 HTTP 401。</p>
+            <p class="note"><code>/gca/service-requests</code> 已正式上线并受管理员 token 保护。最新服务生命周期 Worker 部署、公网和管理员只读 smoke 检查于 2026-08-10 UTC 通过；匿名读取返回 HTTP 401。</p>
+          </article>
+          <article class="card">
+            <h3>补交审核资料</h3>
+            <p class="note">运营人员要求补充资料时必须发布非敏感公开提示。匹配设备密钥的账户可通过 <code>/gca/account-service-requests/follow-ups</code> 提交受限说明并重新进入人工审核；补交正文仅授权运营人员可读，不改 credits、钱包或代币。</p>
           </article>
           <article class="card">
             <h3>Credit 使用记录</h3>

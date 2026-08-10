@@ -349,9 +349,10 @@
           <div class="row"><span>2. Eligibility check</span><strong>The backend or operator verifies the wallet with read-only ERC-20 balanceOf data; no signature or transaction is required.</strong></div>
           <div class="row"><span>3. Service request</span><strong>An authenticated account submits a catalog service and non-sensitive scope. The Worker applies the server catalog unit, enforces idempotency and a daily limit, and queues manual review without reserving or deducting credits.</strong></div>
           <div class="row"><span>4. Optional queued cancellation</span><strong>Before any manual review, the matching device-key account may permanently cancel its own queued request. Retries are idempotent; no credits, wallet, token, member, or audit history are changed.</strong></div>
-          <div class="row"><span>5. Human review</span><strong>The operator appends approved, needs-more-information, or rejected through the protected review route. Canceled requests cannot enter review and delivery cannot bypass approval.</strong></div>
-          <div class="row"><span>6. Delivery</span><strong>Approved work is delivered manually, then the operator confirms completion with a non-sensitive delivery reference. No wallet action or trading permission is created.</strong></div>
-          <div class="row"><span>7. Credit settlement</span><strong>The Worker uses the server catalog unit and atomically writes one linked usage record, ledger deduction, delivered review, and request status. Replays cannot deduct twice.</strong></div>
+          <div class="row"><span>5. Human review</span><strong>The operator appends approved, needs-more-information, or rejected. A more-information decision requires a non-sensitive public prompt; private operator notes remain hidden.</strong></div>
+          <div class="row"><span>6. Optional account follow-up</span><strong>The matched device-key account may append a bounded response after a more-information review. It returns the request to manual review; public history shows only prompt, time, and count.</strong></div>
+          <div class="row"><span>7. Delivery</span><strong>Approved work is delivered manually, then the operator confirms completion with a non-sensitive delivery reference. No wallet action or trading permission is created.</strong></div>
+          <div class="row"><span>8. Credit settlement</span><strong>The Worker uses the server catalog unit and atomically writes one linked usage record, ledger deduction, delivered review, and request status. Replays cannot deduct twice.</strong></div>
         </div>
       </section>
 
@@ -376,6 +377,7 @@
           <div class="list">
             <div class="row"><span>Service request</span><strong>serviceRequestId, serviceId, server catalog unit, lifecycle status, and non-sensitive scope.</strong></div>
             <div class="row"><span>Service review</span><strong>Append-only decision, reason code, review time, delivery reference, and linked settlement. Account history omits reviewer identity and operator notes.</strong></div>
+            <div class="row"><span>Service follow-up</span><strong>Append-only account response for operator review; public history exposes only the member prompt, follow-up time, and count.</strong></div>
             <div class="row"><span>Credit usage</span><strong>One linked creditUsageId per service request, credits used, before/after remaining credits, and delivery status.</strong></div>
             <div class="row"><span>Review evidence</span><strong>Public wallet address, public transaction hash when relevant, review status, and operator decision category.</strong></div>
           </div>
@@ -397,10 +399,11 @@
           <div class="row"><span>Local operator backend</span><strong class="good">Ready for service_requests and credit_usage ledger records.</strong></div>
           <div class="row"><span>Account request create</span><strong class="good"><code>POST /gca/account-service-requests</code> is device-key protected, account-scoped, rate-limited, and idempotent.</strong></div>
           <div class="row"><span>Account request history</span><strong class="good"><code>POST /gca/account-service-requests/status</code> returns at most 25 redacted account records.</strong></div>
+          <div class="row"><span>Account follow-up</span><strong class="good"><code>POST /gca/account-service-requests/follow-ups</code> is device-key protected, more-information only, bounded, and idempotent.</strong></div>
           <div class="row"><span>Account request cancellation</span><strong class="good"><code>POST /gca/account-service-requests/cancellations</code> is account-scoped, limited to queued requests before review, permanent, and idempotent.</strong></div>
           <div class="row"><span>Service review and delivery</span><strong class="good"><code>GET/POST /gca/service-request-reviews</code> is live and token-protected with <code>gca_service_request_review_v1</code>.</strong></div>
-          <div class="row"><span>Worker source and D1 migrations</span><strong class="good">Migrations through <code>0014_service_request_cancellations.sql</code>, the Worker deploy, and latest public/admin read-only smoke passed on 2026-08-10 UTC.</strong></div>
-          <div class="row"><span>Public route check</span><strong class="good">Service queue, review, and credit routes return HTTP 401 to anonymous reads and are token-protected.</strong></div>
+          <div class="row"><span>Worker source and D1 migrations</span><strong class="good"><code>0014_service_request_cancellations.sql</code> and <code>0015_service_request_followups.sql</code>, the Worker deploy, and latest public/admin read-only smoke passed on 2026-08-10 UTC.</strong></div>
+          <div class="row"><span>Public route check</span><strong class="good">Service queue, review, follow-up, and credit routes return HTTP 401 to anonymous reads and are token-protected.</strong></div>
           <div class="row"><span>Production Worker routes</span><strong class="good">Live and token-protected after Cloudflare auth, remote migration, deploy, and public/admin smoke checks passed.</strong></div>
           <div class="row"><span>Deploy handoff</span><strong><a href="worker-routes-handoff.html">Worker Routes Handoff</a> publishes the exact gate order for service-request and credit-usage route release.</strong></div>
           <div class="row"><span>Public claim</span><strong>Say manual reviewed delivery and one-time credit settlement are live; do not describe delivery as automatic or trading execution.</strong></div>
@@ -409,7 +412,7 @@
 
       <section class="section panel" aria-labelledby="copyTitle">
         <h2 id="copyTitle">Copy-Ready Public Summary</h2>
-        <p class="note">GCA Service Delivery Playbook is live. Authenticated accounts can submit catalog requests, cancel their own queued request before review, and read redacted review and settlement history. Manual delivery requires prior approval, and one service request can settle its server-catalog credit unit at most once. No route connects an exchange or creates trading permission.</p>
+        <p class="note">GCA Service Delivery Playbook is live. Authenticated accounts can submit catalog requests, answer a public more-information prompt, cancel their own queued request before review, and read redacted lifecycle history. Manual delivery requires prior approval, and one service request can settle its server-catalog credit unit at most once. No route connects an exchange or creates trading permission.</p>
       </section>
 
       <section class="section panel" aria-labelledby="refsTitle">

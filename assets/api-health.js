@@ -4,7 +4,7 @@
   const API_BASE_URL = "https://gca-registration-api.gcagochina.workers.dev";
   const CHAIN_ID = 8453;
   const CONTRACT_ADDRESS = "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6";
-  const WORKER_RELEASE = "gca-registration-worker-2026-08-10-request-cancellation-v1";
+  const WORKER_RELEASE = "gca-registration-worker-2026-08-10-request-followup-v1";
   const REQUEST_TIMEOUT_MS = 8000;
   const MAX_PUBLIC_JSON_BYTES = 32768;
   const ADMIN_PATHS = [
@@ -23,6 +23,7 @@
     "/gca/service-requests",
     "/gca/credit-usage",
     "/gca/service-request-reviews",
+    "/gca/service-request-followups",
   ];
 
   const COPY = {
@@ -40,7 +41,7 @@
       healthInvalid: "Service identity does not match",
       configInvalid: "Access configuration does not match",
       protectionInvalid: "Anonymous read protection failed",
-      summaryHealthyPending: "Core API healthy; two prepared routes remain undeployed",
+      summaryHealthyPending: "Core API healthy; prepared routes remain undeployed",
       summaryAllLive: "Core API healthy; all checked admin routes reject anonymous reads",
       summaryDegraded: "One or more core API checks need operator review",
       checkedAt: (value) => `Checked in this browser at ${value}. No records were written.`,
@@ -59,7 +60,7 @@
       healthInvalid: "服务身份不一致",
       configInvalid: "访问配置不一致",
       protectionInvalid: "匿名读取保护检查失败",
-      summaryHealthyPending: "核心 API 正常；两个准备中路由仍未部署",
+      summaryHealthyPending: "核心 API 正常；准备中路由仍未部署",
       summaryAllLive: "核心 API 正常；已检查的管理员路由都拒绝匿名读取",
       summaryDegraded: "一个或多个核心 API 检查需要运营复核",
       checkedAt: (value) => `本浏览器检查时间：${value}。本次检查没有写入记录。`,
@@ -151,6 +152,7 @@
       && payload.accountStatusRecoveryVersion === "gca_account_status_recovery_v1"
       && payload.accountServiceRequestVersion === "gca_account_service_request_v1"
       && payload.accountServiceRequestStatusVersion === "gca_account_service_request_status_v1"
+      && payload.accountServiceRequestFollowupVersion === "gca_account_service_request_followup_v1"
       && payload.accountServiceRequestCancellationVersion === "gca_account_service_request_cancellation_v1"
       && payload.accountServiceDeliveryReceiptVersion === "gca_account_service_delivery_receipt_v1"
       && payload.serviceRequestReviewVersion === "gca_service_request_review_v1"
@@ -181,6 +183,7 @@
       && payload.accountStatusRecoveryVersion === "gca_account_status_recovery_v1"
       && payload.accountServiceRequestVersion === "gca_account_service_request_v1"
       && payload.accountServiceRequestStatusVersion === "gca_account_service_request_status_v1"
+      && payload.accountServiceRequestFollowupVersion === "gca_account_service_request_followup_v1"
       && payload.accountServiceRequestCancellationVersion === "gca_account_service_request_cancellation_v1"
       && payload.accountServiceDeliveryReceiptVersion === "gca_account_service_delivery_receipt_v1"
       && payload.serviceRequestReviewVersion === "gca_service_request_review_v1"
@@ -192,9 +195,11 @@
       && payload.endpoints.accountStatusRecovery === "/gca/account-status/recover"
       && payload.endpoints.accountServiceRequests === "/gca/account-service-requests"
       && payload.endpoints.accountServiceRequestStatus === "/gca/account-service-requests/status"
+      && payload.endpoints.accountServiceRequestFollowups === "/gca/account-service-requests/follow-ups"
       && payload.endpoints.accountServiceRequestCancellations === "/gca/account-service-requests/cancellations"
       && payload.endpoints.accountServiceDeliveryReceipts === "/gca/account-service-requests/delivery-receipts"
       && payload.endpoints.serviceRequestReviewsAdmin === "/gca/service-request-reviews"
+      && payload.endpoints.serviceRequestFollowupsAdmin === "/gca/service-request-followups"
       && payload.memberReviewVersion === "gca_member_review_v1"
       && payload.holdingVerificationVersion === "gca_holding_verification_v1"
       && payload.memberBenefitTransferVersion === "gca_member_benefit_transfer_v1"
@@ -220,6 +225,13 @@
       && boundaries.accountServiceRequestCreditsDeductedOnRequest === false
       && boundaries.accountServiceRequestReturnsEmail === false
       && boundaries.accountServiceRequestCreatesTradingPermission === false
+      && boundaries.accountServiceRequestFollowupEnabled === true
+      && boundaries.accountServiceRequestFollowupRequiresMoreInformationReview === true
+      && boundaries.accountServiceRequestFollowupLimitPerRequest === 5
+      && boundaries.accountServiceRequestFollowupIdempotent === true
+      && boundaries.accountServiceRequestFollowupReturnsResponseText === false
+      && boundaries.accountServiceRequestFollowupChangesCredits === false
+      && boundaries.accountServiceRequestFollowupWritesWallet === false
       && boundaries.accountServiceRequestCancellationEnabled === true
       && boundaries.accountServiceRequestCancellationQueuedOnly === true
       && boundaries.accountServiceRequestCancellationIdempotent === true
@@ -236,6 +248,9 @@
       && boundaries.serviceRequestReviewCreditsDeductedOnlyOnDelivered === true
       && boundaries.serviceRequestReviewCreditsDeductedAtMostOnce === true
       && boundaries.serviceRequestReviewReturnsToAccountHistory === true
+      && boundaries.serviceRequestReviewMemberPromptRequiredForMoreInformation === true
+      && boundaries.serviceRequestReviewMemberPromptReturnedToMatchedAccount === true
+      && boundaries.serviceRequestReviewOperatorNoteReturnedToAccount === false
       && boundaries.requiresSignature === false
       && boundaries.requiresTransaction === false
       && boundaries.automaticTokenTransfer === false
