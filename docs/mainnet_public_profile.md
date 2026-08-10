@@ -17,7 +17,7 @@
 
 ## Public Contract Description
 
-GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stands for Go China Access, a concept-stage community direction focused on China-facing Web3 culture, bilingual education, public market narrative research, live account intake, read-only wallet verification, eligible member/credit ledger records, and staged access to non-custodial quant risk tools. The practical product direction is still being developed publicly.
+GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stands for Go China Access, a concept-stage community direction focused on China-facing Web3 culture, bilingual education, public market narrative research, live account intake, read-only wallet verification, eligible member/credit ledger records, manually reviewed service delivery, and browser-only non-custodial risk tools. Connected market-data and trading modules remain staged behind published release gates.
 
 The contract creates 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls.
 
@@ -70,16 +70,16 @@ The full fixed supply was minted to the deployer wallet at deployment. The 40/60
 - Release gates JSON: `https://gcagochina.com/release-gates.json`
 - Member benefit transfer runbook: `https://gcagochina.com/member-benefit-transfer.html`
 - Member benefit transfer runbook JSON: `https://gcagochina.com/member-benefit-transfer.json`
-- Planned GCA AI Quant Access layer: liquidation replay reports, risk-warning credits, realistic backtest usage, ENTRY_READY signal review, position-size calculators, subscription discounts, and risk-control training
+- Live GCA AI Quant Access layer: account and member intake, browser-only risk tools, and manually reviewed liquidation replay, risk-warning, backtest, ENTRY_READY, position-size, research, training, and support services; connected market-data and trading modules remain staged
 - First campaign path: each registered user may verify one wallet holding at least 10,000 GCA and create a one-time 100 GCA AI Quant Access credits ledger record through the live account path
 - GCA Member tier: each registered user may verify one wallet buying and continuously holding at least 1,000,000 GCA for 30 days, then qualify for GCA Member review and one-time 10,000 GCA member benefit review; token transfer remains manual reserve-wallet processing only
 - Public access portal: controlled HTTPS account UI, read-only `eth_call` / `balanceOf` GCA balance verification, 30-day holding-period review, support review record, 100 credits ledger activation, GCA Member ledger activation, and 10,000 GCA member benefit status
-- Public access API contract: live controlled HTTPS routes for access config, wallet verification, member access, credit ledger admin read, member ledger admin read, support review planning, and member review planning
-- Public review queue contract: manual-review lanes for account intake, wallet balance review, holder credit review, GCA Member review, support case review, and platform profile follow-up; operator-review only, not a public private-data dropbox
+- Public access API contract: live controlled HTTPS routes for access config, wallet verification, member access, device-key account status, service request creation/status/follow-up/cancellation/delivery receipt, and token-protected manual review and delivery
+- Public review queue contract: manual-review lanes for account intake, wallet balance review, holder credit review, GCA Member review, account service requests, support case review, and platform profile follow-up; operator decisions remain protected
 - Public access operations runbook: operator SOP for non-sensitive intake, Base Mainnet identity checks, read-only `eth_call` / `balanceOf` wallet-balance review, support replies, ledger handoff, platform follow-up, and closure; not a custody system or automatic token-transfer claim page
 - Public member benefit transfer runbook: manual operator controls for any approved 10,000 GCA member benefit transfer from project or owner-held reserve; not automatic and not newly minted
-- Draft credits catalog: Liquidation Replay, Risk Warning Review, Backtest Lab, ENTRY_READY Review, Position Size Calculator, Risk-Control Training, Member Research Notes, and Support Review Queue
-- Product release gates: controlled HTTPS account UI, read-only GCA balance verification, credit ledger activation, member ledger activation, support review queue, risk-control review, and simulation or testnet first
+- Reviewed service catalog: Liquidation Replay, Risk Warning Review, Backtest Lab, ENTRY_READY Review, Position Size Calculator, Portfolio Risk Map, Risk-Control Training, Member Research Notes, and Support Review Queue; credits settle only after approval and completed delivery, at most once per request
+- Product release gates: controlled HTTPS account UI, read-only GCA balance verification, credit/member ledger activation, and manually reviewed service delivery are live; connected market data, member-benefit execution, and any trading workflow retain separate release gates
 
 Do not describe the current project as having a finished product, guaranteed utility, guaranteed market demand, return promise, or revenue distribution model.
 Do not describe holder credits, GCA Member status, or the 10,000 GCA member benefit as cash, income, reimbursement, voting control, guaranteed lifetime access, trading permission, or a way to bypass GCA AI Quant Access risk controls.

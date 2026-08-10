@@ -51,6 +51,10 @@
         text-decoration: underline;
       }
 
+      article a {
+        overflow-wrap: anywhere;
+      }
+
       .shell {
         width: min(880px, calc(100% - 32px));
         margin: 0 auto;
@@ -59,6 +63,8 @@
       header {
         border-bottom: 1px solid var(--line);
         background: #fff;
+        position: sticky;
+        top: 0;
       }
 
       nav {
@@ -79,6 +85,13 @@
       .brand img {
         width: 32px;
         height: 32px;
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        font-size: 14px;
       }
 
       main {
@@ -145,49 +158,33 @@
   </head>
   <body>
     <header>
-      <nav class="shell">
-        <a class="brand" href="index.html">
+      <nav class="shell" aria-label="Primary">
+        <a class="brand" href="index.html" aria-label="GCA home">
           <img src="assets/gca-logo.svg" alt="GCA logo">
           <span>GCA</span>
         </a>
-        <span>
+        <div class="nav-links">
+          <a href="index.html">Home</a>
           <a href="verify.html">Verify</a>
-          &nbsp;|&nbsp;
           <a href="buy.html">Buy Guide</a>
-          &nbsp;|&nbsp;
           <a href="markets.html">Markets</a>
-          &nbsp;|&nbsp;
           <a href="supply.html">Supply</a>
-          &nbsp;|&nbsp;
           <a href="security.html">Security</a>
-          &nbsp;|&nbsp;
           <a href="risk.html">Risk</a>
-          &nbsp;|&nbsp;
           <a href="faq.html">FAQ</a>
-          &nbsp;|&nbsp;
           <a href="status.html">Status</a>
-          &nbsp;|&nbsp;
           <a href="listing-kit.html">Listing Kit</a>
-          &nbsp;|&nbsp;
-          <a href="members.html">Members</a>
-          &nbsp;|&nbsp;
-          <a href="utility.html">Utility Thesis</a>
-          &nbsp;|&nbsp;
           <a href="product.html">Product Spec</a>
-          &nbsp;|&nbsp;
-          <a href="credits.html">Credits Catalog</a>
-          &nbsp;|&nbsp;
-          <a href="release-gates.html">Release Gates</a>
-          &nbsp;|&nbsp;
-          <a href="https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6" target="_blank" rel="noreferrer">BaseScan</a>
-        </span>
+          <a href="members.html">Members</a>
+          <a href="trust.html">Trust</a>
+        </div>
       </nav>
     </header>
 
     <main class="shell">
       <article>
         <h1>GCA Whitepaper</h1>
-        <p>Version 0.5</p>
+        <p>Version 0.6</p>
         <p>Official buy guide: <a href="buy.html">https://gcagochina.com/buy.html</a>.</p>
         <p>Verify official links: <a href="verify.html">https://gcagochina.com/verify.html</a>.</p>
         <p>Official market page: <a href="markets.html">https://gcagochina.com/markets.html</a>.</p>
@@ -205,7 +202,7 @@
         <p>Weekly Go China Radar: <a href="radar.html">https://gcagochina.com/radar.html</a>.</p>
 
         <h2>Summary</h2>
-        <p>GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stands for Go China Access, a concept-stage community direction focused on China-facing Web3 culture, bilingual education, public market narrative research, live account intake, read-only wallet verification, eligible member/credit ledger records, and staged access to non-custodial quant risk tools.</p>
+        <p>GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stands for Go China Access, a concept-stage community direction focused on China-facing Web3 culture, bilingual education, public market narrative research, live account intake, read-only wallet verification, eligible member/credit ledger records, manually reviewed service delivery, and browser-only non-custodial risk tools. Connected market-data and trading modules remain staged behind published release gates.</p>
         <p>The contract creates the entire supply at deployment and does not include post-deployment minting, burning, taxes, blacklist logic, or privileged admin controls. The product roadmap is still being developed publicly, so GCA should not be described as a finished platform or as having guaranteed utility.</p>
 
         <h2>Token Parameters</h2>
@@ -231,12 +228,12 @@
         <p>The current public concept is Go China Access. The intended direction is to build a public community around China-facing Web3 activity, bilingual crypto education, creator/community access, curated research about market narratives, and practical trading-risk education. The public positioning line is: Narrative meets risk control.</p>
         <p>The GCA narrative system uses repeatable names so the project can be memorable without implying price support or trading outcomes: China Narrative Radar, Weekly Go China Radar, Liquidation Replay, ENTRY_READY Review, GCA Member Club, Go China Watchlist, and Risk First Trading.</p>
         <p>The current public content format is Weekly Go China Radar. Issue 003, Public Activity Without Artificial Volume, is a reusable update for verification links, public activity cadence, market-quality boundaries, member utility readiness, risk notes, and community talking points. It is not live market data, financial advice, a buy/sell recommendation, or a price forecast.</p>
-        <p>The product layer is to connect GCA with GCA AI Quant Access non-custodial quant tooling. Suitable utility includes liquidation replay reports, risk-warning credits, backtest usage, ENTRY_READY signal review, position-size calculators, subscription discounts, and risk-control training.</p>
+        <p>The product layer connects GCA with GCA AI Quant Access through live account and member intake, browser-only risk tools, and manually reviewed service delivery. Suitable utility includes liquidation replay reports, risk-warning reviews, backtest review, ENTRY_READY review, position-size calculations, member research, and risk-control training. Connected market-data and trading modules are not live.</p>
         <p>Verified first campaign backend: each registered user may verify one wallet holding at least 10,000 GCA and receive a one-time 100 GCA AI Quant Access credits ledger record.</p>
         <p>Verified GCA Member backend: each registered user may verify one wallet buying and continuously holding at least 1,000,000 GCA for 30 days. Production approval reads a safe Base snapshot and requires a complete, internally consistent observed 30-day transfer-history reconstruction whose minimum balance is at least 1,000,000 GCA before GCA Member activation. Successful approval stores append-only holding evidence; the one-time 10,000 GCA member benefit remains a separate manual reserve-wallet review.</p>
         <p>The holding-history check combines Base Blockscout token-transfer history with recent wallet-specific Base public RPC logs and a snapshot <code>balanceOf</code> read. It does not request a wallet signature, send a transaction, transfer GCA, authorize the member benefit, or constitute a third-party audit or future holding guarantee.</p>
-        <p>The public product spec is published at <a href="product.html">product.html</a>, the utility credits catalog is published at <a href="credits.html">credits.html</a>, the manual member benefit transfer runbook is published at <a href="member-benefit-transfer.html">member-benefit-transfer.html</a>, and the product release gates are published at <a href="release-gates.html">release-gates.html</a>. The account UI, read-only GCA balance verification, redacted device-key account status, credit ledger activation, member review, holding verification, and evidence verification for already-completed member-benefit transfers are live through Workers + D1. D1 stores only the device-key SHA-256, and the status response excludes email, full wallet address, the key, administrator data, and operator notes. The 10,000 GCA transfer itself remains manual reserve-wallet processing after approval, and any trading-related workflow still requires risk-control review plus simulation or testnet first.</p>
-        <p>Near-term work should focus on creating official community channels, publishing a clearer community thesis, collecting feedback, defining the GCA AI Quant Access account path, and keeping public disclosures accurate as the project evolves.</p>
+        <p>The public product spec is published at <a href="product.html">product.html</a>, the utility credits catalog is published at <a href="credits.html">credits.html</a>, the manual member benefit transfer runbook is published at <a href="member-benefit-transfer.html">member-benefit-transfer.html</a>, and the product release gates are published at <a href="release-gates.html">release-gates.html</a>. The account UI, read-only GCA balance verification, redacted device-key account status, credit ledger activation, member review, holding verification, account service requests, follow-ups, queued-request cancellation, delivery acknowledgement, reviewed service delivery, and at-most-once credit settlement are live through Workers + D1. D1 stores only the device-key SHA-256, and public account responses exclude email, full wallet address, the key, private follow-up text, reviewer identity, administrator data, and operator notes. The 10,000 GCA transfer itself remains manual reserve-wallet processing after approval, while connected market-data and trading workflows remain staged behind risk-control review and simulation or testnet gates.</p>
+        <p>Near-term work should focus on operating the reviewed-service workflow with measurable response and delivery records, publishing a consistent Weekly Go China Radar cadence, adding read-only connected market data only after privacy and reliability review, testing any exchange integration on simulation or testnet first, and keeping public disclosures accurate as the project evolves.</p>
         <p>This concept does not imply a price target, return promise, revenue share, or completed application.</p>
 
         <h2>Verified Utility Boundaries</h2>

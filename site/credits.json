@@ -88,9 +88,9 @@
     {
       "id": "liquidation-replay-report",
       "name": "Liquidation Replay",
-      "status": "ledger-eligible-service-unit-staged",
+      "status": "live-manual-review-service-unit",
       "creditUnit": 30,
-      "unitType": "draft service credit unit",
+      "unitType": "reviewed service credit unit",
       "description": "Structured post-trade review of account impact, effective exposure, margin use, planned-stop deviation, costs, and execution discipline.",
       "publicPreview": {
         "status": "live-client-side-preview",
@@ -105,9 +105,9 @@
     {
       "id": "risk-warning-review",
       "name": "Risk Warning Review",
-      "status": "ledger-eligible-service-unit-staged",
+      "status": "live-manual-review-service-unit",
       "creditUnit": 10,
-      "unitType": "draft service credit unit",
+      "unitType": "reviewed service credit unit",
       "description": "Risk warning review for volatility, crowding, exposure, stop placement, and trade-process discipline.",
       "publicPreview": {
         "status": "live-client-side-preview",
@@ -123,9 +123,9 @@
     {
       "id": "backtest-lab-run",
       "name": "Backtest Lab",
-      "status": "ledger-eligible-service-unit-staged",
+      "status": "live-manual-review-service-unit",
       "creditUnit": 20,
-      "unitType": "draft service credit unit",
+      "unitType": "reviewed service credit unit",
       "description": "Trade-return sample review with costs, compounding, expectancy, profit factor, drawdown, and streak statistics.",
       "publicPreview": {
         "status": "live-client-side-preview",
@@ -141,9 +141,9 @@
     {
       "id": "entry-ready-review",
       "name": "ENTRY_READY Review",
-      "status": "ledger-eligible-service-unit-staged",
+      "status": "live-manual-review-service-unit",
       "creditUnit": 15,
-      "unitType": "draft service credit unit",
+      "unitType": "reviewed service credit unit",
       "description": "Setup, invalidation, risk budget, execution-condition, and readiness review for a trade idea.",
       "publicPreview": {
         "status": "live-client-side-preview",
@@ -158,9 +158,9 @@
     {
       "id": "position-size-calculator",
       "name": "Position Size Calculator",
-      "status": "ledger-eligible-service-unit-staged",
+      "status": "live-manual-review-service-unit",
       "creditUnit": 5,
-      "unitType": "draft service credit unit",
+      "unitType": "reviewed service credit unit",
       "description": "Risk budget, stop-distance, leverage-bound, exposure-limit, and maximum-loss calculation workflow.",
       "publicPreview": {
         "status": "live-client-side-preview",
@@ -175,9 +175,9 @@
     {
       "id": "portfolio-risk-map",
       "name": "Portfolio Risk Map",
-      "status": "ledger-eligible-service-unit-staged",
+      "status": "live-manual-review-service-unit",
       "creditUnit": 15,
-      "unitType": "draft service credit unit",
+      "unitType": "reviewed service credit unit",
       "description": "Multi-position review for combined planned stop risk, gross and net exposure, margin use, concentration, and transparent symmetric stress scenarios.",
       "publicPreview": {
         "status": "live-client-side-preview",
@@ -197,9 +197,9 @@
     {
       "id": "risk-control-training",
       "name": "Risk-Control Training",
-      "status": "ledger-eligible-service-unit-staged",
+      "status": "live-manual-review-service-unit",
       "creditUnit": 10,
-      "unitType": "draft service credit unit",
+      "unitType": "reviewed service credit unit",
       "description": "Training content for liquidation prevention, trade journaling, execution discipline, and risk-first workflow.",
       "publicPreview": {
         "status": "live-client-side-preview",
@@ -223,9 +223,9 @@
     {
       "id": "member-research-notes",
       "name": "Member Research Notes",
-      "status": "member-ledger-eligible-service-unit-staged",
+      "status": "live-member-manual-review-service-unit",
       "creditUnit": 20,
-      "unitType": "draft member credit unit",
+      "unitType": "reviewed member service credit unit",
       "description": "Structured China Narrative Radar research records with thesis, public evidence, catalysts, invalidation conditions, risks, review dates, filters, and portable backup.",
       "publicPreview": {
         "status": "live-client-side-preview",
@@ -246,10 +246,10 @@
     {
       "id": "support-review-queue",
       "name": "Support Review Queue",
-      "status": "member-ledger-eligible-service-workflow-staged",
+      "status": "live-member-priority-review-workflow",
       "creditUnit": 0,
       "unitType": "member workflow priority",
-      "description": "Priority support routing for account, verification, report, and member-workflow review after account UI is live.",
+      "description": "Priority support routing for account, verification, report, and member-workflow review through the live controlled account and support paths.",
       "notPurpose": "Not an emergency trading desk, exchange support channel, or transaction recovery service."
     }
   ],

@@ -72,6 +72,14 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn('navLinks.replaceChildren()', script)
         self.assertIn('aria-current", "page"', script)
 
+    def test_whitepaper_uses_shared_mobile_navigation_and_wraps_long_links(self):
+        page = (SITE / "whitepaper.html").read_text()
+
+        self.assertIn('<div class="nav-links">', page)
+        self.assertIn('aria-label="Primary"', page)
+        self.assertIn("article a {", page)
+        self.assertIn("overflow-wrap: anywhere;", page)
+
     def test_member_access_restores_non_sensitive_device_snapshot(self):
         page = (SITE / "gca" / "member-access" / "index.html").read_text()
 

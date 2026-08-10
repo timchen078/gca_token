@@ -29,6 +29,9 @@ class PublicStatusConsistencyTests(unittest.TestCase):
         project = self.load_json("site/project.json")
         product = self.load_json("site/product.json")
         roadmap = self.load_json("site/roadmap.json")
+        credits = self.load_json("site/credits.json")
+        utility = self.load_json("site/utility.json")
+        narrative = self.load_json("site/narrative.json")
         data_platform = self.load_json("launch/data_platform_form_values.json")
 
         self.assertEqual(
@@ -73,6 +76,53 @@ class PublicStatusConsistencyTests(unittest.TestCase):
         self.assertEqual(data_platform["productSpecPositioning"]["currentStage"], PRODUCT_STAGE)
         self.assertEqual(data_platform["utilityPositioning"]["supportIntake"]["status"], SUPPORT_STATUS)
 
+        service_catalog = {item["id"]: item for item in credits["serviceCatalog"]}
+        for service_id in (
+            "liquidation-replay-report",
+            "risk-warning-review",
+            "backtest-lab-run",
+            "entry-ready-review",
+            "position-size-calculator",
+            "portfolio-risk-map",
+            "risk-control-training",
+        ):
+            self.assertEqual(service_catalog[service_id]["status"], "live-manual-review-service-unit")
+            self.assertEqual(service_catalog[service_id]["unitType"], "reviewed service credit unit")
+        self.assertEqual(
+            service_catalog["member-research-notes"]["status"],
+            "live-member-manual-review-service-unit",
+        )
+        self.assertEqual(
+            service_catalog["member-research-notes"]["unitType"],
+            "reviewed member service credit unit",
+        )
+        self.assertEqual(
+            service_catalog["support-review-queue"]["status"],
+            "live-member-priority-review-workflow",
+        )
+
+        self.assertEqual(
+            utility["positioning"]["publicStatus"],
+            "account-ledger-and-reviewed-services-live-connected-market-data-and-trading-staged",
+        )
+        utility_flow = {item["step"]: item for item in utility["accessFlow"]}
+        self.assertEqual(utility_flow["product_access"]["status"], "live-manual-review-service-access")
+        self.assertEqual(utility["ledgerContracts"]["serviceRequestEndpoint"], SERVICE_REQUEST_ENDPOINT)
+        self.assertEqual(
+            utility["ledgerContracts"]["serviceRequestFollowupEndpoint"],
+            "/gca/account-service-requests/follow-ups",
+        )
+
+        narrative_workflows = {item["id"]: item for item in narrative["liveWorkflows"]}
+        self.assertEqual(
+            narrative_workflows["account-service-requests"]["status"],
+            "live-manual-review-and-delivery",
+        )
+        self.assertIn(
+            "at most once per request",
+            narrative_workflows["account-service-requests"]["claimBoundary"],
+        )
+
     def test_stale_public_status_markers_do_not_return(self):
         paths = (
             "site/index.html",
@@ -95,6 +145,21 @@ class PublicStatusConsistencyTests(unittest.TestCase):
             "site/product.json",
             "site/roadmap.html",
             "site/roadmap.json",
+            "site/credits.html",
+            "site/credits.json",
+            "site/utility.html",
+            "site/utility.json",
+            "site/narrative.html",
+            "site/narrative.json",
+            "site/listing-kit.html",
+            "site/team.html",
+            "site/tim-chen.html",
+            "site/tim-chen.json",
+            "site/whitepaper.html",
+            "docs/whitepaper.md",
+            "docs/mainnet_public_profile.md",
+            "launch/basescan_token_submission.md",
+            "launch/data_platform_package.md",
             "launch/data_platform_form_values.json",
         )
         stale_markers = (
@@ -111,6 +176,14 @@ class PublicStatusConsistencyTests(unittest.TestCase):
             "planned 100 credits",
             "planned GCA Member status",
             "staged non-custodial quant risk tools",
+            "staged access to non-custodial quant risk tools",
+            "ledger-eligible-service-unit-staged",
+            "member-ledger-eligible-service-unit-staged",
+            "member-ledger-eligible-service-workflow-staged",
+            "Draft Service Units",
+            "service tier planned",
+            "Draft credits catalog",
+            "It is not a live public submission queue",
         )
 
         for path in paths:
@@ -130,6 +203,10 @@ class PublicStatusConsistencyTests(unittest.TestCase):
             "project.json",
             "product.json",
             "roadmap.json",
+            "credits.json",
+            "utility.json",
+            "narrative.json",
+            "tim-chen.json",
         )
         for path in json_paths:
             payload = json.loads((SITE / path).read_text())
@@ -160,6 +237,17 @@ class PublicStatusConsistencyTests(unittest.TestCase):
             "project.json",
             "roadmap.html",
             "roadmap.json",
+            "credits.html",
+            "credits.json",
+            "listing-kit.html",
+            "narrative.html",
+            "narrative.json",
+            "team.html",
+            "tim-chen.html",
+            "tim-chen.json",
+            "utility.html",
+            "utility.json",
+            "whitepaper.html",
             "support.html",
             "support.json",
             "terms.html",
