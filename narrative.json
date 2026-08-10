@@ -2,12 +2,12 @@
   "schema": "https://gcagochina.com/narrative.json",
   "pageUrl": "https://gcagochina.com/narrative.html",
   "status": "public-narrative-system-published",
-  "lastUpdated": "2026-06-11",
+  "lastUpdated": "2026-08-10",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "conceptExpansion": "Go China Access",
   "positioning": {
-    "oneSentence": "GCA is the access token for the Go China narrative: a China-facing Web3 intelligence community with live account intake, read-only wallet verification, and a staged non-custodial quant research access layer.",
+    "oneSentence": "GCA is the access token for the Go China narrative: a China-facing Web3 intelligence community with live account intake, read-only wallet verification, manually reviewed services, and staged connected market-data and trading modules.",
     "chineseOneSentence": "GCA 是 Go China Access 的访问代币，连接中文 Web3 叙事、市场情报、风险教育和非托管量化研究工具。",
     "tagline": "Narrative meets risk control.",
     "publicThesis": "China-facing Web3 narrative plus risk-first access to reports, backtests, warnings, signal review, position sizing, education, and member workflows."
@@ -21,12 +21,12 @@
     {
       "layer": "tokenIdentity",
       "name": "Go China Access",
-      "description": "GCA as the access token for the public story and planned service workflows."
+      "description": "GCA as the access token for the public story, eligible account ledgers, and manually reviewed service workflows."
     },
     {
       "layer": "productLayer",
       "name": "AI Quant Access",
-      "description": "A staged product layer for non-custodial market research, backtests, account-level credits, and risk tools."
+      "description": "A live account and manually reviewed service layer with browser-only research and risk tools; connected market-data and trading modules remain staged."
     },
     {
       "layer": "operatingRule",
@@ -81,6 +81,12 @@
       "status": "eligible-records-live-manual-benefit-review",
       "publicUrl": "https://gcagochina.com/member-ledger.html",
       "claimBoundary": "GCA Member status and the 10,000 GCA benefit remain operator-reviewed and manual"
+    },
+    {
+      "id": "account-service-requests",
+      "status": "live-manual-review-and-delivery",
+      "publicUrl": "https://gcagochina.com/gca/member-access/#accountServiceRequests",
+      "claimBoundary": "device-key requests enter manual review; credits settle only after prior approval and completed delivery, at most once per request"
     },
     {
       "id": "liquidation-replay-001",
@@ -150,9 +156,9 @@
   "publicClaimBoundaries": {
     "safeClaims": [
       "Narrative meets risk control.",
-      "GCA is building a concept-stage access layer around Go China Access, China Narrative Radar, and planned non-custodial quant research utility.",
+      "GCA is building a concept-stage access layer around Go China Access, China Narrative Radar, live manually reviewed services, and browser-only non-custodial research tools.",
       "GCA can be described as an access and membership token for reports, credits, education, and research workflows.",
-      "The controlled account UI, read-only GCA balance verification, eligible credit records, and member ledger records are live or ledger-ready.",
+      "The controlled account UI, read-only GCA balance verification, eligible ledgers, and manually reviewed service workflow are live.",
       "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool.",
       "No third-party audit has been completed."
     ],
@@ -163,8 +169,8 @@
       "external audit completion before an independent report is published",
       "BaseScan token profile approval before BaseScan publishes it",
       "security-vendor approval, permanent warning-free status, or cross-wallet warning removal before vendor/current wallet UI confirms it",
-      "finished trading or research platform utility before service modules are released",
-      "cash, income, reimbursement, trading permission, or risk-control bypass from credits, member status, or the planned 10,000 GCA member benefit"
+      "finished connected market-data or trading utility before those modules are released",
+      "cash, income, reimbursement, trading permission, or risk-control bypass from credits, member status, or the manually reviewed 10,000 GCA member benefit"
     ]
   },
   "officialLinks": {

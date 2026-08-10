@@ -2,7 +2,7 @@
   "schema": "https://gcagochina.com/utility.json",
   "pageUrl": "https://gcagochina.com/utility.html",
   "status": "public-utility-bridge-spec-published",
-  "lastUpdated": "2026-05-20",
+  "lastUpdated": "2026-08-10",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "title": "GCA AI Quant Access",
@@ -10,8 +10,8 @@
     "tagline": "Narrative meets risk control.",
     "concept": "Go China Access",
     "connectedProduct": "GCA AI Quant Access non-custodial quant risk toolkit",
-    "publicStatus": "account-ledger-path-live-utility-bridge-spec-published",
-    "summary": "GCA has live account intake, read-only wallet verification, and eligible ledger records for staged access and membership workflows; reports, backtests, risk warnings, ENTRY_READY reviews, position sizing, education, member research, and support services remain controlled service modules."
+    "publicStatus": "account-ledger-and-reviewed-services-live-connected-market-data-and-trading-staged",
+    "summary": "GCA has live account intake, read-only wallet verification, eligible ledger records, and device-key service requests with manual review, delivery status, and at-most-once credit settlement. Browser-only tools are public; connected market-data and trading modules remain staged."
   },
   "bridgePrinciples": [
     "Users keep funds in their own wallets or exchange accounts.",
@@ -43,8 +43,8 @@
     },
     {
       "step": "product_access",
-      "status": "staged-service-access",
-      "description": "Credits and member status can map to reports, backtests, risk warnings, ENTRY_READY reviews, calculators, education, member notes, and support workflows."
+      "status": "live-manual-review-service-access",
+      "description": "Device-key accounts can request catalog services for manual review. Credits are deducted only after prior approval and completed delivery, at most once per request."
     }
   ],
   "eligibleUtility": [
@@ -96,7 +96,11 @@
     "accessApiPage": "https://gcagochina.com/access-api.html",
     "accessApi": "https://gcagochina.com/access-api.json",
     "operationsRunbookPage": "https://gcagochina.com/operations.html",
-    "operationsRunbook": "https://gcagochina.com/operations.json"
+    "operationsRunbook": "https://gcagochina.com/operations.json",
+    "memberAccessUi": "https://gcagochina.com/gca/member-access/",
+    "serviceRequestEndpoint": "/gca/account-service-requests",
+    "serviceRequestStatusEndpoint": "/gca/account-service-requests/status",
+    "serviceRequestFollowupEndpoint": "/gca/account-service-requests/follow-ups"
   },
   "officialMarket": {
     "pair": "GCA/USDT",
@@ -126,6 +130,8 @@
       "The 100 GCA AI Quant Access credits and GCA Member status require controlled wallet verification before ledger activation.",
       "The GCA Member benefit requires 1,000,000 GCA held for 30 consecutive days before one-time 10,000 GCA review.",
       "The public member account page can submit account intake, read-only wallet verification, and eligible credit/member ledger records.",
+      "Device-key accounts can submit catalog service requests for manual review and read redacted delivery status.",
+      "Credits are deducted only after prior approval and completed delivery, at most once per service request.",
       "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool."
     ],
     "doNotClaim": [
@@ -134,7 +140,7 @@
       "the 10,000 GCA member benefit is automatic or self-service transferred before holding-period verification, support approval, and manual reserve-wallet processing",
       "credits or member status are cash, income, reimbursement, trading permission, leverage, custody, withdrawal access, or risk-control bypass",
       "GCA utility includes custody, withdrawal permission, private key access, exchange API secret collection, platform revenue distribution, return promises, or price targets",
-      "finished trading or research platform utility before service modules are released"
+      "finished connected market-data or trading utility before those modules are released"
     ]
   },
   "officialLinks": {
@@ -160,6 +166,7 @@
     "reviewQueuePage": "https://gcagochina.com/review-queue.html",
     "reviewQueue": "https://gcagochina.com/review-queue.json",
     "operationsRunbookPage": "https://gcagochina.com/operations.html",
-    "operationsRunbook": "https://gcagochina.com/operations.json"
+    "operationsRunbook": "https://gcagochina.com/operations.json",
+    "memberAccessUi": "https://gcagochina.com/gca/member-access/"
   }
 }
