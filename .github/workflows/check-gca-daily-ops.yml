@@ -2,6 +2,13 @@ name: Check GCA Daily Ops
 
 on:
   workflow_dispatch:
+  workflow_run:
+    workflows:
+      - "Publish GCA Site"
+    types:
+      - completed
+    branches:
+      - main
   schedule:
     - cron: "29 4 * * *"
   push:
@@ -29,6 +36,7 @@ concurrency:
 
 jobs:
   check:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     name: Check public GCA daily ops
     runs-on: ubuntu-latest
     timeout-minutes: 12

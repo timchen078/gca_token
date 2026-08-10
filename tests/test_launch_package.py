@@ -864,6 +864,9 @@ class LaunchPackageTests(unittest.TestCase):
 
         self.assertIn("name: Check GCA Daily Ops", workflow)
         self.assertIn("workflow_dispatch:", workflow)
+        self.assertIn("workflow_run:", workflow)
+        self.assertIn('      - "Publish GCA Site"', workflow)
+        self.assertIn("      - completed", workflow)
         self.assertIn("schedule:", workflow)
         self.assertIn('cron: "29 4 * * *"', workflow)
         self.assertIn("branches:", workflow)
@@ -881,6 +884,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn('".github/workflows/check-gca-daily-ops.yml"', workflow)
         self.assertIn("contents: read", workflow)
         self.assertIn("concurrency:", workflow)
+        self.assertIn("if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'", workflow)
         self.assertIn("timeout-minutes: 12", workflow)
         self.assertIn("actions/checkout@v4", workflow)
         self.assertIn("actions/setup-python@v5", workflow)
