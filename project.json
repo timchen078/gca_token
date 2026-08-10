@@ -409,7 +409,7 @@
     "status": "public-roadmap-published",
     "pageUrl": "https://gcagochina.com/roadmap.html",
     "url": "https://gcagochina.com/roadmap.json",
-    "currentStage": "account-ledger-and-browser-tools-live-connected-services-staged",
+    "currentStage": "account-ledger-browser-tools-and-reviewed-services-live-connected-market-data-and-trading-staged",
     "nextBuildPriorities": [
       "member account UI refinements",
       "operator review dashboard for wallet and ledger records",
@@ -611,11 +611,14 @@
   "memberProgram": {
     "status": "account-ledger-path-live-manual-benefit-review",
     "supportIntake": {
-      "status": "public-support-intake-published",
+      "status": "live-structured-account-service-intake-and-manual-email-support",
       "pageUrl": "https://gcagochina.com/support.html",
       "url": "https://gcagochina.com/support.json",
       "officialEmail": "support@gcagochina.com",
-      "directSubmissionEndpointConfigured": false
+      "directSubmissionEndpointConfigured": true,
+      "accountServiceRequestEndpoint": "/gca/account-service-requests",
+      "accountServiceRequestStatusEndpoint": "/gca/account-service-requests/status",
+      "genericSupportEmailManual": true
     },
     "privacyAndTerms": {
       "status": "public-privacy-and-terms-published",
@@ -655,6 +658,9 @@
     "supportWorkflow": {
       "targetFirstResponse": "5-10 business days after account intake; not a guarantee",
       "contactEmail": "support@gcagochina.com",
+      "accountServiceRequestStatus": "live-manual-review-and-delivery",
+      "creditsDeductedOnlyAfterDeliveredReview": true,
+      "createsTradingPermission": false,
       "reviewQueuePage": "https://gcagochina.com/review-queue.html",
       "reviewQueue": "https://gcagochina.com/review-queue.json",
       "operationsRunbookPage": "https://gcagochina.com/operations.html",
@@ -663,9 +669,9 @@
     "operationsRunbookPage": "https://gcagochina.com/operations.html",
     "operationsRunbook": "https://gcagochina.com/operations.json"
   },
-  "shortDescription": "GCA, short for Go China Access, is a fixed-supply ERC-20 token on Base Mainnet with live account intake, read-only wallet verification, eligible member/credit ledger records, and ten live browser-only risk and research tools; connected services remain staged.",
+  "shortDescription": "GCA, short for Go China Access, is a fixed-supply ERC-20 token on Base Mainnet with live account intake, read-only wallet verification, eligible member/credit ledgers, manually reviewed service requests, and ten live browser-only risk and research tools; connected market-data and trading modules remain staged.",
   "longDescription": "GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stands for Go China Access, a concept-stage community and access-token direction focused on the Go China narrative, China Narrative Radar, bilingual Web3 education, public market research, live account intake, read-only wallet verification, eligible member/credit ledger records, and ten live browser-only risk and research tools. The published GCA AI Quant Access specification connects those previews to an access and membership direction for Liquidation Replay reports, risk-warning credits, backtests, ENTRY_READY Review, position-size calculators, member research notes, risk-control training, and a reserve-funded 10,000 GCA member benefit review for verified users who bought and continuously held at least 1,000,000 GCA for 30 days. The browser tools do not fetch live market data, connect exchanges, or place orders; connected market-data and trading modules remain staged behind release gates. The contract created 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls. The official public pool is the Base Mainnet Uniswap v4 GCA/USDT pool, and the project has a disclosed owner-held reserve wallet. The project is early-stage, has no completed third-party audit, and should not be described as externally audited, price-backed, yield-bearing, or backed by guaranteed liquidity.",
-  "lastUpdated": "2026-07-19",
+  "lastUpdated": "2026-08-10",
   "productSpecPageUrl": "https://gcagochina.com/product.html",
   "productSpecUrl": "https://gcagochina.com/product.json",
   "releaseGatesPageUrl": "https://gcagochina.com/release-gates.html",
@@ -675,7 +681,7 @@
     "pageUrl": "https://gcagochina.com/product.html",
     "url": "https://gcagochina.com/product.json",
     "productName": "GCA AI Quant Access",
-    "currentStage": "account-ledger-and-browser-tools-live-connected-services-staged",
+    "currentStage": "account-ledger-browser-tools-and-reviewed-services-live-connected-market-data-and-trading-staged",
     "publicAccountUiLive": true,
     "liveTradingEnabled": false,
     "releaseGate": "account UI, read-only wallet verification, credit ledger writes, and member ledger writes are live; risk-control review and simulation or testnet first are still required before trading-related workflows",

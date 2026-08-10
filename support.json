@@ -1,17 +1,22 @@
 {
   "schema": "https://gcagochina.com/support.json",
   "pageUrl": "https://gcagochina.com/support.html",
-  "lastUpdated": "2026-05-16",
+  "lastUpdated": "2026-08-10",
   "status": "public-support-intake-published",
   "network": "Base Mainnet",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "officialEmail": "support@gcagochina.com",
   "currentSubmissionMode": {
-    "memberPage": "https://gcagochina.com/members.html",
-    "mode": "copy-download-email",
-    "directSubmissionEndpointConfigured": false,
-    "controlledHttpsAccountUiLive": false
+    "memberPage": "https://gcagochina.com/gca/member-access/",
+    "legacyMemberPacketPage": "https://gcagochina.com/members.html",
+    "mode": "live-structured-account-service-intake-plus-manual-email-support",
+    "directSubmissionEndpointConfigured": true,
+    "controlledHttpsAccountUiLive": true,
+    "genericSupportEmailManual": true,
+    "accountServiceRequestEndpoint": "/gca/account-service-requests",
+    "accountServiceRequestStatusEndpoint": "/gca/account-service-requests/status",
+    "accountServiceRequestFollowupEndpoint": "/gca/account-service-requests/follow-ups"
   },
   "supportedRequestTypes": [
     "member pre-registration packet review",
@@ -22,7 +27,8 @@
     "data platform correction context",
     "official link verification",
     "redacted local review package request",
-    "security boundary question"
+    "security boundary question",
+    "reviewed catalog service request and delivery follow-up"
   ],
   "safeIntakeFields": [
     "request type",
@@ -37,7 +43,8 @@
     "pool link",
     "wallet-warning screenshot",
     "generated member packet JSON",
-    "public redacted local review package digest"
+    "public redacted local review package digest",
+    "service request ID, catalog service, non-sensitive request summary, and public follow-up response"
   ],
   "doNotSend": [
     "private key",
@@ -50,7 +57,7 @@
     "recovery phrase"
   ],
   "supportWorkflow": {
-    "publicIntakeStatus": "manual-only",
+    "publicIntakeStatus": "live-structured-account-service-intake-and-manual-email-support",
     "memberPacketVersion": "gca_member_preregistration_v2",
     "memberBenefitReviewEvidenceFields": [
       "holdingStartDate",
@@ -60,7 +67,7 @@
       "evidenceTxHashFormatOk",
       "evidenceNote"
     ],
-    "targetFirstResponse": "5-10 business days after controlled intake is live; not a promise",
+    "targetFirstResponse": "5-10 business days after account intake; not a promise",
     "reviewStatuses": [
       "received",
       "wallet_pending",
@@ -69,12 +76,26 @@
       "rejected",
       "ledger_recorded"
     ],
-    "preparedAccessPage": "/gca/member-access",
-    "preparedIntakeEndpoint": "/gca/pre-registrations",
-    "preparedWalletVerificationEndpoint": "/gca/wallet-verifications",
-    "preparedCreditLedgerEndpoint": "/gca/credit-ledger",
-    "preparedMemberLedgerEndpoint": "/gca/member-ledger",
-    "preparedReviewEndpoint": "/gca/member-review",
+    "liveAccessPage": "/gca/member-access/",
+    "liveIntakeEndpoint": "/gca/member-access",
+    "liveWalletVerificationEndpoint": "/gca/wallet-verifications",
+    "liveCreditLedgerEndpoint": "/gca/credit-ledger",
+    "liveMemberLedgerEndpoint": "/gca/member-ledger",
+    "liveMemberReviewEndpoint": "/gca/member-reviews",
+    "liveAccountServiceRequestEndpoint": "/gca/account-service-requests",
+    "liveAccountServiceRequestStatusEndpoint": "/gca/account-service-requests/status",
+    "liveAccountServiceRequestFollowupEndpoint": "/gca/account-service-requests/follow-ups",
+    "accountServiceRequestStatuses": [
+      "queued_operator_review",
+      "approved_operator_review",
+      "needs_more_information",
+      "rejected_operator_review",
+      "cancelled_by_account",
+      "delivered"
+    ],
+    "accountServiceRequestResponseTextPublic": false,
+    "accountServiceRequestOperatorNotesPublic": false,
+    "accountServiceRequestCreatesTradingPermission": false,
     "platformReviewPackageHandoff": {
       "trigger": "platform or reviewer asks for local member-ledger evidence",
       "externalSharingMode": "redacted-public",

@@ -3,7 +3,7 @@
   "pageUrl": "https://gcagochina.com/liquidation-replay-001.html",
   "status": "liquidation-replay-001-published-sample",
   "reportId": "liquidation-replay-001",
-  "lastUpdated": "2026-06-11",
+  "lastUpdated": "2026-08-10",
   "projectName": "GCA",
   "conceptExpansion": "Go China Access",
   "module": "Liquidation Replay",
@@ -50,7 +50,7 @@
   "accountCreditUse": {
     "holderBonus": "100 credits can be recorded for report requests, backtests, risk warnings, ENTRY_READY review, position sizing, or education access.",
     "gcaMember": "GCA Member accounts may receive priority queue handling after 1,000,000 GCA / 30-day eligibility and manual review.",
-    "serviceRouteStatus": "service request and credit usage Worker routes are prepared but require Cloudflare deploy permission before public write operations."
+    "serviceRouteStatus": "device-key service requests, redacted review status, bounded follow-up, approved delivery, and one-time server-catalog credit settlement are live through Workers + D1; report production remains manual."
   },
   "releaseBoundaries": [
     "This sample does not collect private keys, seed phrases, wallet signatures, custody permissions, withdrawal permissions, or exchange withdrawal access.",

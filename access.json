@@ -2,12 +2,12 @@
   "schema": "https://gcagochina.com/access.json",
   "pageUrl": "https://gcagochina.com/access.html",
   "status": "public-access-portal-live",
-  "lastUpdated": "2026-07-27",
+  "lastUpdated": "2026-08-10",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "title": "GCA Access Portal",
   "currentState": {
-    "currentStage": "controlled-account-ui-and-device-status-live",
+    "currentStage": "controlled-account-ui-device-status-and-reviewed-services-live",
     "blueprintOnly": false,
     "controlledHttpsAccountUiLive": true,
     "directSubmissionEndpointConfigured": true,
@@ -38,10 +38,20 @@
     "serverAccountStatusRotationLive": true,
     "serverAccountStatusRotationGraceMinutes": 15,
     "serverAccountStatusRotationReturnsDeviceKey": false,
-    "serverAccountStatusRotationChangesAccountOrLedgers": false
+    "serverAccountStatusRotationChangesAccountOrLedgers": false,
+    "accountServiceRequestProductionLive": true,
+    "accountServiceRequestPacketVersion": "gca_account_service_request_v1",
+    "accountServiceRequestStatusPacketVersion": "gca_account_service_request_status_v1",
+    "accountServiceRequestFollowupPacketVersion": "gca_account_service_request_followup_v1",
+    "accountServiceRequestCancellationPacketVersion": "gca_account_service_request_cancellation_v1",
+    "accountServiceDeliveryReceiptPacketVersion": "gca_account_service_delivery_receipt_v1",
+    "serviceRequestReviewPacketVersion": "gca_service_request_review_v1",
+    "serviceRequestCreditsDeductedOnlyAfterDeliveredReview": true,
+    "serviceRequestFollowupReturnsResponseText": false,
+    "serviceRequestCreatesTradingPermission": false
   },
   "preparedRoutes": {
-    "futureAccountPortal": "/gca/member-access",
+    "accountPortal": "/gca/member-access",
     "preRegistrations": "/gca/pre-registrations",
     "walletVerifications": "/gca/wallet-verifications",
     "creditLedger": "/gca/credit-ledger",
@@ -50,7 +60,13 @@
     "memberAccess": "/gca/member-access",
     "accessConfig": "/gca/access-config",
     "accountStatus": "/gca/account-status",
-    "accountStatusRotation": "/gca/account-status/rotate"
+    "accountStatusRotation": "/gca/account-status/rotate",
+    "accountServiceRequests": "/gca/account-service-requests",
+    "accountServiceRequestStatus": "/gca/account-service-requests/status",
+    "accountServiceRequestFollowups": "/gca/account-service-requests/follow-ups",
+    "accountServiceRequestCancellations": "/gca/account-service-requests/cancellations",
+    "accountServiceDeliveryReceipts": "/gca/account-service-requests/delivery-receipts",
+    "serviceRequestReviews": "/gca/service-request-reviews"
   },
   "publicPreview": {
     "memberAccessPreview": "https://gcagochina.com/gca/member-access/",
@@ -103,8 +119,8 @@
     {
       "id": "service-access",
       "label": "Use approved service access",
-      "status": "planned-after-ledger",
-      "description": "Credits and member status can map to reports, backtests, risk warnings, ENTRY_READY reviews, calculators, education, member notes, and support workflows."
+      "status": "live-manual-review-and-delivery",
+      "description": "Device-key accounts can submit catalog service requests, read redacted review status, answer a published more-information prompt, cancel before review, and acknowledge completed delivery. Credits are deducted only after approved manual delivery and at most once per request."
     },
     {
       "id": "device-local-status",
@@ -225,12 +241,16 @@
       "The Worker verifies Base Mainnet GCA balance with read-only eth_call and ERC-20 balanceOf.",
       "Eligible 10,000 GCA holders can create one 100 GCA AI Quant Access credits ledger record.",
       "Eligible 1,000,000 GCA / 30-day holders can create a GCA Member review ledger record.",
+      "Device-key accounts can submit catalog service requests and read redacted manual review, follow-up, delivery, cancellation, receipt, and one-time credit-settlement status.",
+      "Service delivery requires prior manual approval, and the server catalog controls the credit unit deducted after completed delivery.",
       "The 10,000 GCA member benefit remains manual review and reserve-wallet processing only.",
       "The official public market route is the Base Mainnet Uniswap v4 GCA/USDT pool."
     ],
     "doNotClaim": [
       "credits are cash, income, reimbursement, trading permission, or transferable value",
       "GCA Member approval is automatic without wallet balance and holding-period review",
+      "service request approval automatically means delivery is complete or creates trading permission",
+      "a service request can deduct credits more than once",
       "the 10,000 GCA member benefit is automatic or self-service transferred",
       "a lost, expired, or revoked device key can be recovered without official support verification from the registered email",
       "wallet verification requires private keys, seed phrases, exchange API secrets, custody, withdrawal permission, or risk-control bypass",

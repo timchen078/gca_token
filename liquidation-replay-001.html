@@ -192,6 +192,7 @@
 
       .fact {
         min-height: 110px;
+        min-width: 0;
         padding: 16px;
       }
 
@@ -201,6 +202,12 @@
         font-size: 12px;
         font-weight: 750;
         text-transform: uppercase;
+      }
+
+      .value,
+      .note {
+        overflow-wrap: anywhere;
+        word-break: break-word;
       }
 
       .value {
@@ -271,7 +278,7 @@
         .grid,
         .two,
         .facts {
-          grid-template-columns: 1fr;
+          grid-template-columns: minmax(0, 1fr);
         }
 
         .row {
@@ -385,7 +392,7 @@
       <section class="section two" aria-label="GCA access use">
         <div class="panel">
           <h2>How GCA Fits</h2>
-          <p class="note">Liquidation Replay is one of the planned GCA utility formats. A registered user can submit a case for operator review, and account-level credits can be used to organize report requests once the service route is deployed.</p>
+          <p class="note">Liquidation Replay is a live catalog request format with manual production. A device-key account can submit a case, track redacted review status, answer a published follow-up prompt, and acknowledge completed delivery. Credits are deducted only after prior approval and completed delivery, at most once per request.</p>
           <div class="list">
             <div class="row"><span>100 credits</span><strong>Can be used as a service record for reports, backtests, risk warnings, and review requests.</strong></div>
             <div class="row"><span>GCA Member</span><strong>May receive priority queue handling after 1,000,000 GCA / 30-day eligibility and manual review.</strong></div>

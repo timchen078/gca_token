@@ -1,8 +1,8 @@
 {
   "schema": "https://gcagochina.com/member-program.json",
   "pageUrl": "https://gcagochina.com/member-program.html",
-  "lastUpdated": "2026-05-14",
-  "status": "rules-published-public-claim-not-connected",
+  "lastUpdated": "2026-08-10",
+  "status": "member-account-and-reviewed-service-workflow-live",
   "network": "Base Mainnet",
   "chainId": 8453,
   "token": {
@@ -36,12 +36,12 @@
     "accessApi": "https://gcagochina.com/access-api.json"
   },
   "holderBonus": {
-    "status": "backend-ledger-ready-public-claim-not-connected",
+    "status": "live-for-eligible-credit-ledger-records",
     "minimumHolding": "10000 GCA",
     "registeredUserLimit": "one bonus per registered user",
     "walletLimit": "one verified wallet per registered user",
     "creditAmount": "100 GCA AI Quant Access credits",
-    "creditActivation": "after controlled HTTPS account UI is live and wallet balance verification succeeds",
+    "creditActivation": "through the live controlled HTTPS account UI after read-only wallet balance verification succeeds",
     "creditExpiry": "180 days after ledger activation unless a later published policy extends it",
     "spendScope": [
       "reports",
@@ -56,11 +56,11 @@
       "credits are not transferable",
       "credits are not GCA token claims and cannot be redeemed for cash, income, reimbursement, or trading permission",
       "credits cannot bypass GCA AI Quant Access risk controls",
-      "credits are consumed only after a requested service is delivered or queued according to the account UI"
+      "credits are consumed only after a requested service receives prior manual approval and completed delivery is recorded"
     ]
   },
   "memberTier": {
-    "status": "backend-ledger-ready-public-claim-not-connected",
+    "status": "live-manual-review-with-observed-holding-history",
     "tierName": "GCA Member",
     "minimumHolding": "1000000 GCA",
     "minimumHoldingPeriod": "30 consecutive days",
@@ -82,7 +82,7 @@
     "accessRules": [
       "member status is service access only",
       "member benefit review requires 1,000,000 GCA balance verification and 30 consecutive days of holding evidence",
-      "the 10,000 GCA member benefit is a planned reserve-funded transfer after approval, not minting",
+      "the 10,000 GCA member benefit is a manually processed reserve-funded transfer after approval, not minting",
       "member status and member benefit are not cash, income, reimbursement, voting control, or lifetime access",
       "member status does not activate live trading, leverage, custody, withdrawals, or risk-control bypass",
       "member status can be paused or removed if wallet verification fails, abuse is detected, or support cannot verify account ownership"
@@ -99,15 +99,18 @@
       "requiresTransaction": false,
       "finalEligibilityStillRequiresControlledAccountUi": false
     },
-    "preparedAccessPage": "/gca/member-access",
-    "preparedIntakeEndpoint": "/gca/pre-registrations",
-    "preparedWalletVerificationEndpoint": "/gca/wallet-verifications",
-    "preparedCreditLedgerEndpoint": "/gca/credit-ledger",
-    "preparedMemberLedgerEndpoint": "/gca/member-ledger",
-    "preparedMemberBenefitTransferEndpoint": "/gca/member-benefit-transfers",
-    "preparedReviewEndpoint": "/gca/member-review",
+    "liveAccessPage": "/gca/member-access/",
+    "liveIntakeEndpoint": "/gca/member-access",
+    "liveWalletVerificationEndpoint": "/gca/wallet-verifications",
+    "liveCreditLedgerEndpoint": "/gca/credit-ledger",
+    "liveMemberLedgerEndpoint": "/gca/member-ledger",
+    "liveMemberBenefitTransferEndpoint": "/gca/member-benefit-transfers",
+    "liveMemberReviewEndpoint": "/gca/member-reviews",
+    "liveAccountServiceRequestEndpoint": "/gca/account-service-requests",
+    "liveAccountServiceRequestStatusEndpoint": "/gca/account-service-requests/status",
+    "liveAccountServiceRequestFollowupEndpoint": "/gca/account-service-requests/follow-ups",
     "publicLedgerSchemaUrl": "https://gcagochina.com/member-ledger.json",
-    "currentPublicSubmissionMode": "copy, download, or email local packet",
+    "currentPublicSubmissionMode": "live controlled account and reviewed service request UI; legacy local packet export remains optional",
     "localOperatorBackend": {
       "status": "local-only-backend-available",
       "script": "tools/gca_member_backend.py",
@@ -138,7 +141,7 @@
       ],
       "publicProductionEndpointLive": false
     },
-    "directSubmissionEndpointConfigured": false,
+    "directSubmissionEndpointConfigured": true,
     "accessPortal": "https://gcagochina.com/access.html",
     "accessApiContract": "https://gcagochina.com/access-api.html"
   },
@@ -150,15 +153,18 @@
     "status": "public-privacy-and-terms-published"
   },
   "supportIntake": {
-    "status": "public-support-intake-published",
+    "status": "live-structured-account-service-intake-and-manual-email-support",
     "pageUrl": "https://gcagochina.com/support.html",
     "url": "https://gcagochina.com/support.json",
-    "directSubmissionEndpointConfigured": false,
-    "manualSubmissionMode": "copy, download, or email local packet"
+    "directSubmissionEndpointConfigured": true,
+    "accountServiceRequestEndpoint": "/gca/account-service-requests",
+    "accountServiceRequestStatusEndpoint": "/gca/account-service-requests/status",
+    "genericSupportEmailManual": true,
+    "manualSubmissionMode": "official email for unstructured support; legacy local packet export remains optional"
   },
   "supportWorkflow": {
     "contactEmail": "support@gcagochina.com",
-    "targetFirstResponse": "5-10 business days after controlled intake is live; not a guarantee",
+    "targetFirstResponse": "5-10 business days after account intake; not a guarantee",
     "reviewStatuses": [
       "received",
       "wallet_pending",
@@ -179,6 +185,8 @@
       "The GCA Member rule requires 1,000,000 GCA held for 30 consecutive days before a one-time 10,000 GCA member benefit review.",
       "GCA has published a manual transfer runbook for the one-time 10,000 GCA member benefit.",
       "The public member access page can submit account intake, run backend read-only wallet verification, and write eligible ledger records.",
+      "Device-key accounts can submit catalog service requests, read redacted manual review status, answer a published more-information prompt, cancel before review, and acknowledge completed delivery.",
+      "Credits are deducted only after prior manual approval and completed delivery, at most once per service request.",
       "The legacy public member page can generate a local pre-registration packet and run a browser-only read-only GCA balance preview with MetaMask eth_call.",
       "The GCA AI Quant Access account path has live account and eligible ledger intake; the 10,000 GCA member benefit remains manual review only."
     ],
@@ -186,6 +194,8 @@
       "credits are cash, income, reimbursement, trading permission, or transferable value",
       "GCA Member status bypasses wallet verification, holding-period evidence, or support review",
       "credits or membership are cash, income, reimbursement, or trading permission",
+      "service request approval automatically means delivery is complete or creates trading permission",
+      "the same service request can deduct credits more than once",
       "the 10,000 GCA member benefit is automatic or self-service transferred before holding-period verification, support approval, and manual reserve-wallet processing",
       "the 10,000 GCA member benefit is newly minted, guaranteed income, reimbursement, or trading permission",
       "token holding bypasses risk controls",

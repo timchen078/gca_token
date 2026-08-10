@@ -1,27 +1,36 @@
 {
   "schema": "https://gcagochina.com/privacy.json",
   "pageUrl": "https://gcagochina.com/privacy.html",
-  "lastUpdated": "2026-05-20",
+  "lastUpdated": "2026-08-10",
   "status": "public-privacy-notice-published",
-  "scope": "GCA public website, live email registration, live contact suppression, local member pre-registration packets, wallet balance verification, controlled HTTPS account intake",
+  "scope": "GCA public website, live email registration and contact suppression, legacy local member packets, controlled HTTPS account intake, read-only wallet verification, account status, reviewed service requests, and member/credit ledgers",
   "contactEmail": "support@gcagochina.com",
   "currentStaticSiteBehavior": {
-    "mode": "live-email-registration-and-contact-suppression-api-with-local-member-pre-registration",
+    "mode": "live-workers-d1-email-account-wallet-ledger-and-reviewed-service-workflows",
     "automaticServerStorage": true,
     "directSubmissionEndpointConfigured": true,
     "emailRegistrationDirectSubmissionEndpointConfigured": true,
     "contactSuppressionDirectSubmissionEndpointConfigured": true,
     "memberPreRegistrationDirectSubmissionEndpointConfigured": false,
+    "controlledAccountDirectSubmissionEndpointConfigured": true,
+    "accountServiceRequestDirectSubmissionEndpointConfigured": true,
     "productionApiBase": "https://gca-registration-api.gcagochina.workers.dev",
     "emailRegistrationEndpoint": "/gca/email-registrations",
     "contactSuppressionEndpoint": "/gca/contact-suppressions",
+    "controlledAccountEndpoint": "/gca/member-access",
+    "accountStatusEndpoint": "/gca/account-status",
+    "accountServiceRequestEndpoint": "/gca/account-service-requests",
+    "accountServiceRequestStatusEndpoint": "/gca/account-service-requests/status",
+    "accountServiceRequestFollowupEndpoint": "/gca/account-service-requests/follow-ups",
     "packetLeavesBrowserWhen": [
       "user submits email registration through register.html",
       "user submits email unsubscribe through unsubscribe.html",
       "user copies member pre-registration packet",
       "user downloads member pre-registration packet",
       "user emails member pre-registration packet",
-      "the user submits through the controlled HTTPS account UI"
+      "the user submits through the controlled HTTPS account UI",
+      "the device-key account creates or reads a reviewed service request",
+      "the device-key account submits additional information or acknowledges delivery"
     ]
   },
   "dataFields": [
@@ -38,21 +47,28 @@
     "consent flags",
     "generated registration ID",
     "timestamp",
-    "future wallet verification result",
-    "future GCA Member 30-day holding-period evidence",
-    "future 100 credits ledger record",
-    "future GCA Member ledger status",
-    "future 10,000 GCA member benefit status",
-    "future support review status"
+    "read-only wallet verification result",
+    "device status key SHA-256 hash and expiry metadata",
+    "GCA Member 30-day holding-period evidence",
+    "100 credits ledger record and credit usage",
+    "GCA Member ledger and member benefit status",
+    "service request title, summary, market context, status, and timestamps",
+    "public manual-review prompt and redacted review status",
+    "account follow-up response text stored for authorized operator review",
+    "service delivery reference and delivery receipt timestamp",
+    "support review status and private operator notes"
   ],
-  "futureControlledIntake": {
-    "status": "prepared-not-publicly-connected",
-    "preparedAccessPage": "/gca/member-access",
-    "preparedIntakeEndpoint": "/gca/pre-registrations",
-    "preparedWalletVerificationEndpoint": "/gca/wallet-verifications",
-    "preparedCreditLedgerEndpoint": "/gca/credit-ledger",
-    "preparedMemberLedgerEndpoint": "/gca/member-ledger",
-    "preparedReviewEndpoint": "/gca/member-review",
+  "controlledAccountIntake": {
+    "status": "live-workers-d1-manual-review",
+    "accessPage": "/gca/member-access/",
+    "intakeEndpoint": "/gca/member-access",
+    "walletVerificationEndpoint": "/gca/wallet-verifications",
+    "creditLedgerEndpoint": "/gca/credit-ledger",
+    "memberLedgerEndpoint": "/gca/member-ledger",
+    "memberReviewEndpoint": "/gca/member-reviews",
+    "serviceRequestEndpoint": "/gca/account-service-requests",
+    "serviceRequestStatusEndpoint": "/gca/account-service-requests/status",
+    "serviceRequestFollowupEndpoint": "/gca/account-service-requests/follow-ups",
     "storagePurpose": [
       "support review",
       "wallet balance eligibility checks",
@@ -60,6 +76,7 @@
       "100 credits ledger records",
       "GCA Member ledger records",
       "10,000 GCA member benefit review records",
+      "manual service request review, delivery, follow-up, cancellation, receipt, and credit settlement",
       "fraud and abuse prevention",
       "operational logs"
     ]
@@ -84,13 +101,19 @@
       "withdrawal permission",
       "custody of funds"
     ],
-    "notCreatedByPreRegistration": [
+    "notCreatedByLegacyPreRegistration": [
       "live GCA AI Quant Access account",
       "self-service credit claim",
       "automatic GCA Member activation",
       "trading permission",
       "risk-control bypass"
-    ]
+    ],
+    "accountStatusReturnsEmail": false,
+    "accountStatusReturnsFullWalletAddress": false,
+    "accountStatusReturnsDeviceKey": false,
+    "accountStatusReturnsOperatorNotes": false,
+    "accountServiceHistoryReturnsFollowupResponseText": false,
+    "serviceRequestsCreateTradingPermission": false
   },
   "userRequests": {
     "contactEmail": "support@gcagochina.com",
@@ -112,6 +135,7 @@
     "emailRegistration": "https://gcagochina.com/register.html",
     "emailUnsubscribe": "https://gcagochina.com/unsubscribe.html",
     "memberPreRegistration": "https://gcagochina.com/members.html",
+    "controlledMemberAccess": "https://gcagochina.com/gca/member-access/",
     "memberProgramRules": "https://gcagochina.com/member-program.json",
     "memberLedgerPage": "https://gcagochina.com/member-ledger.html",
     "memberLedgerSchema": "https://gcagochina.com/member-ledger.json",
