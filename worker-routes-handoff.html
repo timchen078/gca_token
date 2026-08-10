@@ -340,7 +340,7 @@
       <section aria-labelledby="title">
         <p class="eyebrow">Cloudflare Worker Deployment Record</p>
         <h1 id="title">GCA Worker Routes Deployment</h1>
-        <p class="lead">The token-protected <code>/gca/service-requests</code>, <code>/gca/service-request-reviews</code>, and <code>/gca/credit-usage</code> routes are production-live. The device-key protected <code>/gca/account-service-requests/delivery-receipts</code> route records one account-scoped receipt after completed delivery. Migrations <code>0012_service_request_reviews.sql</code> and <code>0013_service_delivery_receipts.sql</code>, the Worker deploy, and public and admin read-only smoke checks passed on 2026-07-30 UTC.</p>
+        <p class="lead">The token-protected <code>/gca/service-requests</code>, <code>/gca/service-request-reviews</code>, and <code>/gca/credit-usage</code> routes are production-live. Device-key protected routes record one account-scoped receipt after completed delivery and allow permanent cancellation only while a request remains queued with no operator review. Migrations through <code>0014_service_request_cancellations.sql</code>, the Worker deploy, and public and admin read-only smoke checks passed on 2026-08-10 UTC.</p>
         <p class="lead">This page keeps the verified release result and repeatable operator gate sequence public. It does not expose user records, print admin tokens, connect wallets, request wallet signatures, or create trading permission.</p>
         <div class="actions">
           <a class="button primary" href="api-status.html">API Status</a>
@@ -360,12 +360,12 @@
         <div class="fact">
           <span class="label">Current Status</span>
           <span class="value good">Production-live and protected</span>
-          <p class="note">Public smoke passed at <code>2026-07-30T08:20:13Z</code>; anonymous reads return HTTP 401. Admin read-only smoke passed at <code>2026-07-30T08:20:21Z</code>.</p>
+          <p class="note">Public smoke passed at <code>2026-08-10T09:14:18Z</code>; anonymous reads return HTTP 401. Admin read-only smoke passed at <code>2026-08-10T09:14:34Z</code>.</p>
         </div>
         <div class="fact">
           <span class="label">Deployment Gate</span>
           <span class="value good">All required gates passed</span>
-          <p class="note">Worker version <code>7952f4a1-b287-4ca9-a1ed-d92d75b8fd1f</code>.</p>
+          <p class="note">Worker version <code>f6064d99-ea1a-49f8-861e-2743fc6ebf58</code>.</p>
         </div>
         <div class="fact">
           <span class="label">Released Routes</span>
@@ -406,6 +406,7 @@
             <div class="row"><span>Service request queue</span><strong><code>GET/POST /gca/service-requests</code>; production-live and token-protected.</strong></div>
             <div class="row"><span>Service review and delivery</span><strong><code>GET/POST /gca/service-request-reviews</code>; append-only, approval required before delivery, and at-most-once settlement.</strong></div>
             <div class="row"><span>Account delivery receipt</span><strong><code>POST /gca/account-service-requests/delivery-receipts</code>; completed delivery only, account-scoped, idempotent, and no credit or wallet effect.</strong></div>
+            <div class="row"><span>Account request cancellation</span><strong><code>POST /gca/account-service-requests/cancellations</code>; queued before review only, account-scoped, permanent, idempotent, and no credit, wallet, token, or audit-deletion effect.</strong></div>
             <div class="row"><span>Credit usage ledger</span><strong><code>GET/POST /gca/credit-usage</code>; production-live and token-protected.</strong></div>
             <div class="row"><span>Access boundary</span><strong>Anonymous reads return HTTP 401; operator reads require <code>ADMIN_READ_TOKEN</code>.</strong></div>
           </div>
@@ -416,7 +417,7 @@
         <h2 id="gatesTitle">Required Gate Order</h2>
         <div class="list">
           <div class="row"><span>1. Read-only readiness</span><strong>Run the deploy-readiness checker and require <code>cloudflare-auth-session</code>, D1 visibility, and Worker deploy permission to pass.</strong></div>
-          <div class="row"><span>2. Remote D1 migrations</span><strong>Apply pending migrations, including <code>0012_service_request_reviews.sql</code> and <code>0013_service_delivery_receipts.sql</code>, only after Gate 1 passes.</strong></div>
+          <div class="row"><span>2. Remote D1 migrations</span><strong>Apply pending migrations through <code>0014_service_request_cancellations.sql</code> only after Gate 1 passes.</strong></div>
           <div class="row"><span>3. Worker deploy</span><strong>Deploy the updated Worker only after remote migrations complete successfully.</strong></div>
           <div class="row"><span>4. Post-Deploy Public Smoke</span><strong>Confirm health/config versions, CORS, and unauthenticated admin-read rejection with <code>--include-pending-routes</code>.</strong></div>
           <div class="row"><span>5. Post-Deploy Admin Smoke</span><strong>Use the local admin token file to check token-protected response shape without printing tokens or user records.</strong></div>
@@ -492,7 +493,7 @@ python3 tools/export_cloudflare_member_access.py --token-file cloudflare/gca-reg
           <div class="row"><span>Cloudflare auth error</span><strong>Stop if Wrangler is not logged in or readiness returns <code>Authentication error [code: 10000]</code>.</strong></div>
           <div class="row"><span>Migration failure</span><strong>Stop if remote D1 migrations fail or if the expected migration IDs are not applied.</strong></div>
           <div class="row"><span>Deploy failure</span><strong>Stop if <code>wrangler deploy</code> fails or deploy history cannot be read.</strong></div>
-          <div class="row"><span>Health mismatch</span><strong>Stop if <code>/health</code> does not expose <code>gca_credit_usage_v1</code>, <code>gca_service_request_v1</code>, and <code>gca_service_request_review_v1</code>.</strong></div>
+          <div class="row"><span>Health mismatch</span><strong>Stop if <code>/health</code> does not expose the service, review, delivery-receipt, and request-cancellation packet versions.</strong></div>
           <div class="row"><span>Auth boundary failure</span><strong>Stop if unauthenticated reads do not return authorization errors.</strong></div>
           <div class="row"><span>Secret exposure</span><strong>Stop if any command prints secrets or user record contents.</strong></div>
         </div>
@@ -500,7 +501,7 @@ python3 tools/export_cloudflare_member_access.py --token-file cloudflare/gca-reg
 
       <section class="section panel" aria-labelledby="copyTitle">
         <h2 id="copyTitle">Copy-Ready Status Summary</h2>
-        <p class="note">GCA has released the account request, manual service review, approved delivery, credit settlement, and completed-delivery receipt routes. The latest Worker deploy and public/admin read-only smoke checks passed on 2026-07-30 UTC. Reviews are append-only, one request can settle credits at most once, and the account receipt is idempotent and creates no wallet action or trading permission.</p>
+        <p class="note">GCA has released the account request, queued-request cancellation, manual service review, approved delivery, credit settlement, and completed-delivery receipt routes. The latest Worker deploy and public/admin read-only smoke checks passed on 2026-08-10 UTC. Cancellation is limited to queued requests before review; reviews are append-only, one request can settle credits at most once, and neither cancellation nor receipt creates a wallet action or trading permission.</p>
       </section>
     </main>
 

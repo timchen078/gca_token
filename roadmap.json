@@ -2,7 +2,7 @@
   "schema": "https://gcagochina.com/roadmap.json",
   "pageUrl": "https://gcagochina.com/roadmap.html",
   "status": "public-roadmap-published",
-  "lastUpdated": "2026-07-30",
+  "lastUpdated": "2026-08-10",
   "projectName": "GCA",
   "conceptExpansion": "Go China Access",
   "currentStage": "account-ledger-and-browser-tools-live-connected-services-staged",
@@ -67,7 +67,7 @@
       "status": "completed",
       "packetVersion": "gca_account_status_v1",
       "endpoint": "/gca/account-status",
-      "workerVersionId": "7952f4a1-b287-4ca9-a1ed-d92d75b8fd1f"
+      "workerVersionId": "f6064d99-ea1a-49f8-861e-2743fc6ebf58"
     },
     {
       "id": "registered-email-device-recovery-live",
@@ -77,7 +77,7 @@
       "completionPacketVersion": "gca_account_status_recovery_v1",
       "requestEndpoint": "/gca/account-status/recovery-requests",
       "completionEndpoint": "/gca/account-status/recover",
-      "workerVersionId": "7952f4a1-b287-4ca9-a1ed-d92d75b8fd1f"
+      "workerVersionId": "f6064d99-ea1a-49f8-861e-2743fc6ebf58"
     },
     {
       "id": "device-key-account-service-requests-live",
@@ -87,8 +87,8 @@
       "historyPacketVersion": "gca_account_service_request_status_v1",
       "createEndpoint": "/gca/account-service-requests",
       "historyEndpoint": "/gca/account-service-requests/status",
-      "productionVerifiedAt": "2026-07-30T08:20:13Z",
-      "workerVersionId": "7952f4a1-b287-4ca9-a1ed-d92d75b8fd1f",
+      "productionVerifiedAt": "2026-08-10T09:14:18Z",
+      "workerVersionId": "f6064d99-ea1a-49f8-861e-2743fc6ebf58",
       "creditsReserved": false,
       "creditsDeductedOnSubmission": false
     },
@@ -99,8 +99,8 @@
       "packetVersion": "gca_service_request_review_v1",
       "reviewEndpoint": "/gca/service-request-reviews",
       "operatorTool": "tools/review_cloudflare_service_request.py",
-      "productionVerifiedAt": "2026-07-30T08:20:21Z",
-      "workerVersionId": "7952f4a1-b287-4ca9-a1ed-d92d75b8fd1f",
+      "productionVerifiedAt": "2026-08-10T09:14:34Z",
+      "workerVersionId": "f6064d99-ea1a-49f8-861e-2743fc6ebf58",
       "approvedBeforeDeliveryRequired": true,
       "creditSettlementAtMostOnce": true,
       "automaticTokenTransfer": false,
@@ -112,12 +112,27 @@
       "status": "completed",
       "packetVersion": "gca_account_service_delivery_receipt_v1",
       "endpoint": "/gca/account-service-requests/delivery-receipts",
-      "productionVerifiedAt": "2026-07-30T08:20:13Z",
-      "workerVersionId": "7952f4a1-b287-4ca9-a1ed-d92d75b8fd1f",
+      "productionVerifiedAt": "2026-08-10T09:14:18Z",
+      "workerVersionId": "f6064d99-ea1a-49f8-861e-2743fc6ebf58",
       "requiresCompletedDelivery": true,
       "idempotent": true,
       "changesCredits": false,
       "writesWallet": false
+    },
+    {
+      "id": "account-service-request-cancellation-live",
+      "label": "Device-key authenticated accounts can permanently cancel their own queued service request before manual review without changing credits or wallet state",
+      "status": "completed",
+      "packetVersion": "gca_account_service_request_cancellation_v1",
+      "endpoint": "/gca/account-service-requests/cancellations",
+      "productionVerifiedAt": "2026-08-10T09:14:18Z",
+      "workerVersionId": "f6064d99-ea1a-49f8-861e-2743fc6ebf58",
+      "queuedOnly": true,
+      "requiresNoPriorReview": true,
+      "idempotent": true,
+      "changesCredits": false,
+      "writesWallet": false,
+      "deletesAuditHistory": false
     },
     {
       "id": "public-browser-tool-suite-live",
@@ -205,7 +220,15 @@
       "deliveryReceiptRequiresCompletedDelivery": true,
       "deliveryReceiptIdempotent": true,
       "deliveryReceiptChangesCredits": false,
-      "deliveryReceiptWritesWallet": false
+      "deliveryReceiptWritesWallet": false,
+      "cancellationPath": "/gca/account-service-requests/cancellations",
+      "cancellationPacketVersion": "gca_account_service_request_cancellation_v1",
+      "cancellationQueuedOnly": true,
+      "cancellationRequiresNoPriorReview": true,
+      "cancellationIdempotent": true,
+      "cancellationChangesCredits": false,
+      "cancellationWritesWallet": false,
+      "cancellationDeletesAuditHistory": false
     },
     {
       "id": "gca-member-ledger",
@@ -259,6 +282,7 @@
       "Device-key accounts can submit catalog service requests, receive redacted manual review status, and see one-time credit settlement after approved delivery.",
       "Service review decisions are append-only; delivery requires prior approval and one service request cannot deduct credits twice.",
       "After completed delivery, the device-key account can write one idempotent receipt marker; it does not refund or deduct credits and does not touch a wallet.",
+      "Before any manual review, the same device-key account can permanently cancel its own queued service request; repeated cancellation is idempotent and does not change credits or wallet state.",
       "Successful GCA Member approval requires a complete observed 30-day GCA transfer-history reconstruction and stores append-only holding evidence.",
       "The GCA Member benefit requires 1,000,000 GCA held for 30 consecutive days before one-time 10,000 GCA review.",
       "After a manual reserve-wallet transfer, the protected production API verifies and stores successful safe-block evidence for exactly 10,000 GCA from the official reserve to the approved member wallet.",
@@ -273,6 +297,7 @@
       "service request approval automatically means delivery is complete or creates trading permission",
       "the same service request can deduct credits more than once",
       "a service delivery receipt is a refund, credit deduction, wallet action, token transfer, or dispute decision",
+      "a service request cancellation is a refund, credit restoration, wallet action, token transfer, deletion of audit history, or a way to cancel after manual review has started",
       "BaseScan token profile approval before BaseScan publishes it",
       "security-vendor approval, permanent warning-free status, or cross-wallet warning removal before vendor/current wallet UI confirms it",
       "third-party audit completion before an independent report is published",

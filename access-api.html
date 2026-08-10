@@ -334,10 +334,10 @@
 
     <main class="shell">
       <section aria-labelledby="title">
-        <p class="eyebrow">Access API Contract / 2026-07-30</p>
+        <p class="eyebrow">Access API Contract / 2026-08-10</p>
         <h1 id="title">GCA Access API Contract</h1>
         <p class="lead">This page defines the controlled HTTPS API contract for the GCA account path. It covers email-only user registration, member account intake, read-only wallet verification, credit ledger records, GCA Member records, and support review statuses.</p>
-        <p class="lead">The Workers + D1 backend exposes live public routes for member access, redacted device-key account status, device-key protected service requests and history, safe key rotation, wallet verification, and registered-email recovery. Token-protected operator routes handle append-only service decisions, approved manual delivery, one-time credit settlement, GCA Member decisions, holding evidence, and verified evidence for already-completed member-benefit transfers.</p>
+        <p class="lead">The Workers + D1 backend exposes live public routes for member access, redacted device-key account status, device-key protected service requests, queued-request cancellation, request history, safe key rotation, wallet verification, and registered-email recovery. Token-protected operator routes handle append-only service decisions, approved manual delivery, one-time credit settlement, GCA Member decisions, holding evidence, and verified evidence for already-completed member-benefit transfers.</p>
         <p class="lead">The 10,000 GCA member benefit remains a manual reserve-wallet process. The production evidence route verifies a successful safe-block receipt from the official reserve to the approved member wallet and records it; no API route signs, authorizes, or broadcasts a token transfer.</p>
         <p class="lead">The backend is deployed on Cloudflare Workers + D1 at <code>https://gca-registration-api.gcagochina.workers.dev</code>, so the public registration and member access pages can write directly to D1. Source remains in <code>cloudflare/gca-registration-worker/</code>. A future <code>api.gcagochina.com</code> custom domain still requires Cloudflare access to the account that owns the <code>gcagochina.com</code> zone.</p>
         <p class="lead">A local operator backend is also available for localhost testing, evidence export, read-only GCA balance checks, and operator review workflows. Implementation details are listed below in the endpoint contract and technical evidence sections.</p>
@@ -357,7 +357,7 @@
       <section class="facts" aria-label="Current state">
         <div class="fact">
           <span class="label">Current Stage</span>
-          <span class="value good">reviewed service delivery and settlement live</span>
+          <span class="value good">queued cancellation and reviewed settlement live</span>
         </div>
         <div class="fact">
           <span class="label">Public Endpoint</span>
@@ -544,6 +544,14 @@
           <span class="value">cloudflare/gca-registration-worker/migrations/0013_service_delivery_receipts.sql</span>
         </div>
         <div class="fact">
+          <span class="label">Account Request Cancellation</span>
+          <span class="value good">gca_account_service_request_cancellation_v1 live</span>
+        </div>
+        <div class="fact">
+          <span class="label">Request Cancellation Migration</span>
+          <span class="value">cloudflare/gca-registration-worker/migrations/0014_service_request_cancellations.sql</span>
+        </div>
+        <div class="fact">
           <span class="label">Service Review Operator</span>
           <span class="value">tools/review_cloudflare_service_request.py</span>
         </div>
@@ -624,6 +632,11 @@
           </div>
           <div class="fact">
             <span class="label">POST</span>
+            <span class="value">/gca/account-service-requests/cancellations</span>
+            <p class="note">Live <code>gca_account_service_request_cancellation_v1</code> cancellation for the matching device-key account. It is permanent, account-scoped, idempotent, and accepted only while the request remains queued with no operator review. It changes no credits, wallet, token, member, or trading-permission state and keeps the audit record.</p>
+          </div>
+          <div class="fact">
+            <span class="label">POST</span>
             <span class="value">/gca/wallet-verifications</span>
             <p class="note">Live read-only GCA balance checks using Base Mainnet <code>eth_call</code> and ERC-20 <code>balanceOf</code>.</p>
           </div>
@@ -635,7 +648,7 @@
           <div class="fact">
             <span class="label">POST / GET</span>
             <span class="value">/gca/service-requests</span>
-            <p class="note">Live token-protected operator queue for requested GCA AI Quant Access service scope before delivery. The latest public and admin read-only smoke checks passed on 2026-07-30 UTC. Anonymous reads return HTTP 401. Queueing does not deduct credits, connect wallets, request signatures, send tokens, or create trading permission.</p>
+            <p class="note">Live token-protected operator queue for requested GCA AI Quant Access service scope before delivery. The latest public and admin read-only smoke checks passed on 2026-08-10 UTC. Anonymous reads return HTTP 401. Queueing does not deduct credits, connect wallets, request signatures, send tokens, or create trading permission.</p>
           </div>
           <div class="fact">
             <span class="label">POST / GET</span>

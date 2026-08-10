@@ -1,15 +1,15 @@
 {
   "schema": "https://gcagochina.com/api-status.json",
   "pageUrl": "https://gcagochina.com/api-status.html",
-  "status": "public-account-service-delivery-receipt-live",
-  "lastUpdated": "2026-07-30",
-  "latestPublicCheckAt": "2026-07-30T08:20:13Z",
-  "latestAdminCheckAt": "2026-07-30T08:20:21Z",
-  "latestPublicCheckStatus": "passed-delivery-receipt-route-and-redacted-history",
-  "workerRelease": "gca-registration-worker-2026-07-30-delivery-receipt-v1",
-  "workerVersionId": "7952f4a1-b287-4ca9-a1ed-d92d75b8fd1f",
+  "status": "public-account-service-request-cancellation-live",
+  "lastUpdated": "2026-08-10",
+  "latestPublicCheckAt": "2026-08-10T09:14:18Z",
+  "latestAdminCheckAt": "2026-08-10T09:14:34Z",
+  "latestPublicCheckStatus": "passed-request-cancellation-route-and-redacted-history",
+  "workerRelease": "gca-registration-worker-2026-08-10-request-cancellation-v1",
+  "workerVersionId": "f6064d99-ea1a-49f8-861e-2743fc6ebf58",
   "serviceRequestReviewVersion": "gca_service_request_review_v1",
-  "latestDeployReadinessCheckAt": "2026-07-30T08:20:35Z",
+  "latestDeployReadinessCheckAt": "2026-08-10T09:14:56Z",
   "latestDeployReadinessStatus": "passed-cloudflare-permissions",
   "latestDeployReadinessSummary": {
     "wranglerDeployDryRun": "passed",
@@ -60,6 +60,7 @@
       "gca_account_status_recovery_v1",
       "gca_account_service_request_v1",
       "gca_account_service_request_status_v1",
+      "gca_account_service_request_cancellation_v1",
       "gca_account_service_delivery_receipt_v1",
       "gca_service_request_review_v1",
       "gca_member_review_v1",
@@ -261,8 +262,8 @@
       "returnsEmail": false,
       "createsTradingPermission": false,
       "productionLive": true,
-      "lastObservedAt": "2026-07-30T08:20:13Z",
-      "workerVersionId": "7952f4a1-b287-4ca9-a1ed-d92d75b8fd1f",
+      "lastObservedAt": "2026-08-10T09:14:18Z",
+      "workerVersionId": "f6064d99-ea1a-49f8-861e-2743fc6ebf58",
       "requiresSignature": false,
       "requiresTransaction": false,
       "automaticTokenTransfer": false
@@ -284,6 +285,7 @@
       "returnsLatestRedactedReview": true,
       "returnsDeliveryReferenceAfterDelivered": true,
       "returnsDeliveryAcknowledgement": true,
+      "returnsCancellationState": true,
       "returnsCreditSettlement": true,
       "returnsReviewerIdentity": false,
       "returnsOperatorNote": false,
@@ -292,6 +294,7 @@
         "queued_missing_credit_ledger",
         "queued_insufficient_credits",
         "queued_expired_credit_ledger",
+        "cancelled_by_account",
         "approved_operator_review",
         "needs_more_information",
         "rejected_operator_review",
@@ -299,11 +302,35 @@
       ],
       "readOnly": true,
       "productionLive": true,
-      "lastObservedAt": "2026-07-30T08:20:13Z",
-      "workerVersionId": "7952f4a1-b287-4ca9-a1ed-d92d75b8fd1f",
+      "lastObservedAt": "2026-08-10T09:14:18Z",
+      "workerVersionId": "f6064d99-ea1a-49f8-861e-2743fc6ebf58",
       "requiresSignature": false,
       "requiresTransaction": false,
       "automaticTokenTransfer": false
+    },
+    {
+      "id": "account-service-request-cancellation-create",
+      "method": "POST",
+      "path": "/gca/account-service-requests/cancellations",
+      "url": "https://gca-registration-api.gcagochina.workers.dev/gca/account-service-requests/cancellations",
+      "status": "live-device-key-protected-queued-only",
+      "packetVersion": "gca_account_service_request_cancellation_v1",
+      "public": true,
+      "requiresDeviceStatusKey": true,
+      "accountScoped": true,
+      "queuedOnly": true,
+      "requiresNoOperatorReview": true,
+      "idempotent": true,
+      "changesCredits": false,
+      "changesAccountOrMemberStatus": false,
+      "writesWallet": false,
+      "requiresSignature": false,
+      "requiresTransaction": false,
+      "automaticTokenTransfer": false,
+      "createsTradingPermission": false,
+      "productionLive": true,
+      "lastObservedAt": "2026-08-10T09:14:18Z",
+      "workerVersionId": "f6064d99-ea1a-49f8-861e-2743fc6ebf58"
     },
     {
       "id": "account-service-delivery-receipt-create",
@@ -325,8 +352,8 @@
       "automaticTokenTransfer": false,
       "createsTradingPermission": false,
       "productionLive": true,
-      "lastObservedAt": "2026-07-30T08:20:13Z",
-      "workerVersionId": "7952f4a1-b287-4ca9-a1ed-d92d75b8fd1f"
+      "lastObservedAt": "2026-08-10T09:14:18Z",
+      "workerVersionId": "f6064d99-ea1a-49f8-861e-2743fc6ebf58"
     }
   ],
   "adminEndpoints": [
@@ -401,7 +428,7 @@
       "lastObservedAdminGetStatus": 200,
       "lastObservedAt": "2026-07-28T06:07:11Z",
       "productionLive": true,
-      "workerVersionId": "7952f4a1-b287-4ca9-a1ed-d92d75b8fd1f"
+      "workerVersionId": "f6064d99-ea1a-49f8-861e-2743fc6ebf58"
     },
     {
       "id": "holding-verifications-read",
@@ -421,7 +448,7 @@
       "lastObservedAdminGetStatus": 200,
       "lastObservedAt": "2026-07-28T06:07:11Z",
       "productionLive": true,
-      "workerVersionId": "7952f4a1-b287-4ca9-a1ed-d92d75b8fd1f"
+      "workerVersionId": "f6064d99-ea1a-49f8-861e-2743fc6ebf58"
     },
     {
       "id": "service-requests-read-write",
@@ -433,9 +460,9 @@
       "publicLedgerReadable": false,
       "workerDryRunPassed": true,
       "lastObservedAnonymousGetStatus": 401,
-      "lastObservedAt": "2026-07-30T08:20:13Z",
+      "lastObservedAt": "2026-08-10T09:14:18Z",
       "productionLive": true,
-      "workerVersionId": "7952f4a1-b287-4ca9-a1ed-d92d75b8fd1f"
+      "workerVersionId": "f6064d99-ea1a-49f8-861e-2743fc6ebf58"
     },
     {
       "id": "service-request-reviews-read-write",
@@ -459,9 +486,9 @@
       "createsTradingPermission": false,
       "lastObservedAnonymousGetStatus": 401,
       "lastObservedAdminGetStatus": 200,
-      "lastObservedAt": "2026-07-30T08:20:21Z",
+      "lastObservedAt": "2026-08-10T09:14:34Z",
       "productionLive": true,
-      "workerVersionId": "7952f4a1-b287-4ca9-a1ed-d92d75b8fd1f"
+      "workerVersionId": "f6064d99-ea1a-49f8-861e-2743fc6ebf58"
     },
     {
       "id": "credit-usage-read-write",
@@ -473,9 +500,9 @@
       "publicLedgerReadable": false,
       "workerDryRunPassed": true,
       "lastObservedAnonymousGetStatus": 401,
-      "lastObservedAt": "2026-07-30T08:20:13Z",
+      "lastObservedAt": "2026-08-10T09:14:18Z",
       "productionLive": true,
-      "workerVersionId": "7952f4a1-b287-4ca9-a1ed-d92d75b8fd1f"
+      "workerVersionId": "f6064d99-ea1a-49f8-861e-2743fc6ebf58"
     },
     {
       "id": "member-benefit-transfers-read-write",
@@ -498,7 +525,7 @@
       "lastObservedAdminGetStatus": 200,
       "lastObservedAt": "2026-07-28T06:07:11Z",
       "productionLive": true,
-      "workerVersionId": "7952f4a1-b287-4ca9-a1ed-d92d75b8fd1f"
+      "workerVersionId": "f6064d99-ea1a-49f8-861e-2743fc6ebf58"
     },
     {
       "id": "account-status-recovery-requests-read",
@@ -514,7 +541,7 @@
       "lastObservedAdminGetStatus": 200,
       "lastObservedAt": "2026-07-28T06:07:11Z",
       "productionLive": true,
-      "workerVersionId": "7952f4a1-b287-4ca9-a1ed-d92d75b8fd1f"
+      "workerVersionId": "f6064d99-ea1a-49f8-861e-2743fc6ebf58"
     },
     {
       "id": "account-status-recovery-approval",
@@ -529,7 +556,7 @@
       "storesCredentialHashOnly": true,
       "changesAccountOrLedgers": false,
       "productionLive": true,
-      "workerVersionId": "7952f4a1-b287-4ca9-a1ed-d92d75b8fd1f"
+      "workerVersionId": "f6064d99-ea1a-49f8-861e-2743fc6ebf58"
     }
   ],
   "checks": {
@@ -588,9 +615,9 @@
       "noTradingPermission": true,
       "doNotClaimLiveBeforeSmokeChecks": true
     },
-    "workerVersionId": "7952f4a1-b287-4ca9-a1ed-d92d75b8fd1f",
-    "publicSmokePassedAt": "2026-07-30T08:20:13Z",
-    "adminSmokePassedAt": "2026-07-30T08:20:21Z"
+    "workerVersionId": "f6064d99-ea1a-49f8-861e-2743fc6ebf58",
+    "publicSmokePassedAt": "2026-08-10T09:14:18Z",
+    "adminSmokePassedAt": "2026-08-10T09:14:34Z"
   },
   "operatorTools": {
     "adminExport": "tools/export_cloudflare_email_registrations.py",
@@ -649,6 +676,15 @@
     "accountServiceRequestReservesCredits": false,
     "accountServiceRequestDeductsCreditsOnSubmission": false,
     "accountServiceRequestCreatesTradingPermission": false,
+    "accountServiceRequestCancellationLive": true,
+    "accountServiceRequestCancellationRequiresDeviceKey": true,
+    "accountServiceRequestCancellationAccountScoped": true,
+    "accountServiceRequestCancellationQueuedOnly": true,
+    "accountServiceRequestCancellationRequiresNoOperatorReview": true,
+    "accountServiceRequestCancellationIdempotent": true,
+    "accountServiceRequestCancellationChangesCredits": false,
+    "accountServiceRequestCancellationWritesWallet": false,
+    "accountServiceRequestCancellationDeletesAuditHistory": false,
     "accountServiceDeliveryReceiptLive": true,
     "accountServiceDeliveryReceiptRequiresDeviceKey": true,
     "accountServiceDeliveryReceiptAccountScoped": true,
