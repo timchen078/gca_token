@@ -315,6 +315,33 @@
         font-weight: 800;
       }
 
+      .request-prompt {
+        border-left: 3px solid var(--green);
+        padding-left: 10px;
+        color: var(--ink);
+        font-weight: 750;
+      }
+
+      .followup-form {
+        display: grid;
+        gap: 8px;
+        margin-top: 8px;
+      }
+
+      .followup-form textarea {
+        min-height: 88px;
+        font-family: inherit;
+        font-size: 14px;
+      }
+
+      .followup-boundary {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
       .request-actions {
         display: flex;
         flex-wrap: wrap;
@@ -334,6 +361,12 @@
         border-color: var(--red);
         color: var(--red);
         background: #fff;
+        font-size: 12px;
+      }
+
+      .followup-button {
+        min-height: 36px;
+        padding: 8px 12px;
         font-size: 12px;
       }
 
@@ -744,8 +777,8 @@
       <section class="section two" id="accountServiceRequests" aria-label="Account service requests">
         <div class="panel service-form">
           <h2>Request a Service <span class="zh">提交服务申请</span></h2>
-          <p class="note">Use the device key created with this account. The server sets the catalog unit, checks the current credit ledger, and queues manual review without reserving or deducting credits. You may permanently cancel your own queued request until manual review starts.</p>
-          <p class="note zh-note">请使用本账户的设备密钥。服务器会确定目录积分并核对当前账本，只加入人工审核队列，不预占也不自动扣除 credits。人工审核开始前，你可以永久取消自己的排队申请。</p>
+          <p class="note">Use the device key created with this account. The server sets the catalog unit, checks the current credit ledger, and queues manual review without reserving or deducting credits. You may cancel before review, or submit one bounded follow-up when the latest review asks for more information.</p>
+          <p class="note zh-note">请使用本账户的设备密钥。服务器会确定目录积分并核对当前账本，只加入人工审核队列，不预占也不自动扣除 credits。人工审核开始前可以取消；最新审核要求补充资料时，可以提交一份受限补交说明。</p>
           <div class="field">
             <label for="accountServiceId">Service <span class="zh">服务类型</span></label>
             <select id="accountServiceId"></select>
@@ -785,8 +818,8 @@
 
         <div class="panel">
           <h2>Request History <span class="zh">申请历史</span></h2>
-          <p class="note">This read returns only this account's service, title, manual-review or cancellation status, time, credit settlement, and completed-delivery receipt status. It does not return email, device keys, wallet secrets, operator notes, or the full request body.</p>
-          <p class="note zh-note">这里只返回本账户的服务、标题、人工审核或取消状态、时间、积分结算和已完成交付的收件状态，不返回邮箱、设备密钥、钱包敏感信息、运营备注或完整申请正文。</p>
+          <p class="note">This read returns only this account's service, title, review or cancellation status, the operator's non-sensitive follow-up prompt, follow-up timestamps, credit settlement, and delivery receipt status. It does not return email, device keys, wallet secrets, private operator notes, the full request body, or follow-up response text.</p>
+          <p class="note zh-note">这里只返回本账户的服务、标题、审核或取消状态、运营人员公开的补充提示、补交时间、积分结算和收件状态；不返回邮箱、设备密钥、钱包敏感信息、私人运营备注、完整申请正文或补交正文。</p>
           <div class="actions">
             <button class="button" type="button" id="refreshServiceRequests" disabled>Refresh History / 刷新历史</button>
           </div>
@@ -818,6 +851,7 @@
             <li>Wallet verification is a backend read-only <code>eth_call</code> against the official GCA contract on Base Mainnet.</li>
             <li>100 credits and GCA Member status are utility ledger records, not cash, income, reimbursement, trading permission, or risk-control bypass.</li>
             <li>Account service requests require the device key, enter a manual review queue, and do not reserve or deduct credits at submission.</li>
+            <li>When the latest review asks for more information, the matched account may submit one bounded follow-up that returns the request to manual review; only its timestamp is returned in later account history.</li>
             <li>The same account may permanently cancel only while its request is queued and has no manual review; cancellation is idempotent and does not change credits, wallets, tokens, member state, or audit history.</li>
             <li>The 10,000 GCA member benefit remains pending manual reserve-wallet transfer review after eligibility is recorded.</li>
             <li>中文用户只需要提交公开资料：邮箱、Base 钱包地址、公开交易哈希和持有开始日期；不要提交任何敏感资料。</li>
@@ -838,6 +872,7 @@
           <div class="row"><span>Device recovery completion endpoint</span><strong>POST /gca/account-status/recover</strong></div>
           <div class="row"><span>Account service request endpoint</span><strong>POST /gca/account-service-requests</strong></div>
           <div class="row"><span>Account service history endpoint</span><strong>POST /gca/account-service-requests/status</strong></div>
+          <div class="row"><span>Account service follow-up endpoint</span><strong>POST /gca/account-service-requests/follow-ups</strong></div>
           <div class="row"><span>Wallet verification endpoint</span><strong>POST /gca/wallet-verifications</strong></div>
           <div class="row"><span>Ledger schema page</span><strong><a href="../../member-ledger.html">member-ledger.html</a></strong></div>
           <div class="row"><span>Support page</span><strong><a href="../../support.html">support.html</a></strong></div>
@@ -925,6 +960,7 @@
       let serviceCatalog = FALLBACK_SERVICE_CATALOG;
       let pendingServiceClientId = "";
       let pendingServiceDraftSignature = "";
+      const pendingServiceFollowups = new Map();
 
       function isWalletAddress(value) {
         return /^0x[a-fA-F0-9]{40}$/.test(String(value || "").trim());
@@ -956,6 +992,19 @@
           .replace(/\//g, "_")
           .replace(/=+$/g, "");
         return `gca_client_req_${encoded}`;
+      }
+
+      function newServiceClientFollowupId() {
+        const bytes = new Uint8Array(16);
+        window.crypto.getRandomValues(bytes);
+        const binary = Array.from(bytes, (byte) =>
+          String.fromCharCode(byte)
+        ).join("");
+        const encoded = window.btoa(binary)
+          .replace(/\+/g, "-")
+          .replace(/\//g, "_")
+          .replace(/=+$/g, "");
+        return `gca_client_followup_${encoded}`;
       }
 
       function isRecoveryCredential(value) {
@@ -1357,6 +1406,59 @@
               : "no credits deducted";
             review.textContent = `Manual review: ${request.latestReview.decision || request.status} · ${request.latestReview.reasonCode || "reason recorded"} · ${reviewedAt} · ${creditText}`;
             item.append(review);
+            if (request.latestReview.memberPrompt) {
+              const prompt = document.createElement("span");
+              prompt.className = "request-meta request-prompt";
+              prompt.textContent = `Information requested / 需要补充：${request.latestReview.memberPrompt}`;
+              item.append(prompt);
+            }
+            if (
+              request.status === "needs_more_information" &&
+              request.serviceRequestId
+            ) {
+              const followupForm = document.createElement("div");
+              followupForm.className = "followup-form";
+              followupForm.dataset.serviceRequestId = request.serviceRequestId;
+              const followupLabel = document.createElement("label");
+              followupLabel.className = "request-meta";
+              followupLabel.textContent =
+                "Additional information / 补交说明（20–1200 characters）";
+              const followupResponse = document.createElement("textarea");
+              followupResponse.className = "followup-response";
+              followupResponse.maxLength = 1200;
+              followupResponse.placeholder =
+                "Answer only the public review question. Do not include private keys, device keys, passwords, codes, API secrets, or custody instructions. / 只回答公开审核问题，不要填写任何敏感信息。";
+              followupResponse.setAttribute(
+                "aria-label",
+                `Additional information for ${request.requestTitle || request.serviceRequestId}`
+              );
+              const boundaryLabel = document.createElement("label");
+              boundaryLabel.className = "followup-boundary";
+              const boundaryCheck = document.createElement("input");
+              boundaryCheck.type = "checkbox";
+              boundaryCheck.className = "followup-boundary-check";
+              const boundaryText = document.createElement("span");
+              boundaryText.textContent =
+                "I confirm this response contains no secrets or custody instructions and only returns the request to manual review. / 我确认内容不含敏感信息或托管指令，只会重新进入人工审核。";
+              boundaryLabel.append(boundaryCheck, boundaryText);
+              const followupActions = document.createElement("div");
+              followupActions.className = "request-actions";
+              const followupButton = document.createElement("button");
+              followupButton.className = "button followup-button";
+              followupButton.type = "button";
+              followupButton.dataset.serviceRequestId =
+                request.serviceRequestId;
+              followupButton.textContent =
+                "Submit Additional Information / 提交补充资料";
+              followupActions.append(followupButton);
+              followupForm.append(
+                followupLabel,
+                followupResponse,
+                boundaryLabel,
+                followupActions
+              );
+              item.append(followupForm);
+            }
             if (
               request.latestReview.deliveryCompleted &&
               request.latestReview.deliveryReference
@@ -1398,6 +1500,16 @@
                 item.append(actions);
               }
             }
+          }
+          if (request.latestFollowup) {
+            const followup = document.createElement("span");
+            followup.className = "request-meta request-receipt";
+            const submittedDate = new Date(request.latestFollowup.submittedAt);
+            const submittedAt = Number.isNaN(submittedDate.getTime())
+              ? request.latestFollowup.submittedAt || "time not recorded"
+              : submittedDate.toLocaleString();
+            followup.textContent = `Additional information submitted / 已补交资料 · ${submittedAt} · ${Number(request.followupCount || 1)}/5`;
+            item.append(followup);
           }
           serviceRequestList.append(item);
         }
@@ -1723,6 +1835,53 @@
           serviceRequestId,
           acknowledgements: {
             cancelQueuedRequest: true,
+            noCreditOrWalletEffect: true
+          }
+        };
+      }
+
+      function accountServiceRequestFollowupPayload(
+        statusAccessToken,
+        serviceRequestId,
+        responseText
+      ) {
+        if (!isStatusAccessToken(statusAccessToken)) {
+          throw new Error(
+            "A valid device key is required. 需要有效的设备密钥。"
+          );
+        }
+        if (!/^gca_service_req_[a-f0-9]{20}$/.test(serviceRequestId)) {
+          throw new Error(
+            "The service request ID is invalid. 服务申请编号无效。"
+          );
+        }
+        const cleanResponse = responseText.trim();
+        if (cleanResponse.length < 20 || cleanResponse.length > 1200) {
+          throw new Error(
+            "Additional information must contain 20–1200 characters. 补交资料需为 20–1200 个字符。"
+          );
+        }
+        const responseSignature = JSON.stringify([
+          serviceRequestId,
+          cleanResponse
+        ]);
+        const pending = pendingServiceFollowups.get(serviceRequestId);
+        if (!pending || pending.responseSignature !== responseSignature) {
+          pendingServiceFollowups.set(serviceRequestId, {
+            clientFollowupId: newServiceClientFollowupId(),
+            responseSignature
+          });
+        }
+        return {
+          packetVersion: "gca_account_service_request_followup_v1",
+          statusAccessToken,
+          serviceRequestId,
+          clientFollowupId: pendingServiceFollowups.get(serviceRequestId)
+            .clientFollowupId,
+          responseText: cleanResponse,
+          acknowledgements: {
+            noSecretsNoCustody: true,
+            manualReviewOnly: true,
             noCreditOrWalletEffect: true
           }
         };
@@ -2061,6 +2220,108 @@
             message
           );
         } finally {
+          updateStatusAccessControls();
+        }
+      });
+
+      serviceRequestList.addEventListener("click", async (event) => {
+        const target = event.target;
+        if (!(target instanceof Element)) return;
+        const followupButton = target.closest("button.followup-button");
+        if (
+          !followupButton ||
+          !serviceRequestList.contains(followupButton)
+        ) {
+          return;
+        }
+        const serviceRequestId =
+          followupButton.dataset.serviceRequestId || "";
+        const followupForm = followupButton.closest(".followup-form");
+        const followupResponse = followupForm
+          ? followupForm.querySelector(".followup-response")
+          : null;
+        const boundaryCheck = followupForm
+          ? followupForm.querySelector(".followup-boundary-check")
+          : null;
+        const statusAccess = loadStatusAccess();
+        if (!statusAccess || pendingStatusAccessRotation(statusAccess)) {
+          updateStatusAccessControls();
+          renderResult(
+            serviceRequestResult,
+            "warn",
+            "Device access unavailable / 设备访问不可用",
+            "Create or recover device access before submitting additional information. / 请先创建或恢复设备访问，再补交资料。"
+          );
+          return;
+        }
+        if (!(followupResponse instanceof HTMLTextAreaElement)) {
+          renderResult(
+            serviceRequestResult,
+            "warn",
+            "Follow-up form unavailable / 补交表单不可用",
+            "Refresh the request history and try again. / 请刷新申请历史后重试。"
+          );
+          return;
+        }
+        if (
+          !(boundaryCheck instanceof HTMLInputElement) ||
+          !boundaryCheck.checked
+        ) {
+          renderResult(
+            serviceRequestResult,
+            "warn",
+            "Confirmation required / 需要确认",
+            "Confirm that the response contains no secrets or custody instructions. / 请确认补交内容不含敏感信息或托管指令。"
+          );
+          return;
+        }
+
+        followupButton.disabled = true;
+        submitServiceRequest.disabled = true;
+        refreshServiceRequests.disabled = true;
+        renderResult(
+          serviceRequestResult,
+          "",
+          "Submitting additional information / 正在补交资料",
+          "The response is being appended to this request and will only return it to manual review. Credits, wallets, tokens, and trading permissions are unchanged. / 内容将追加到本申请并仅重新进入人工审核；积分、钱包、代币和交易权限均不会改变。"
+        );
+        try {
+          const payload = await postJson(
+            "/gca/account-service-requests/follow-ups",
+            accountServiceRequestFollowupPayload(
+              statusAccess.token,
+              serviceRequestId,
+              followupResponse.value
+            )
+          );
+          pendingServiceFollowups.delete(serviceRequestId);
+          const followup = payload.followup || {};
+          renderResult(
+            serviceRequestResult,
+            "good",
+            payload.idempotentReplay
+              ? "Additional information already recorded / 补交资料已记录"
+              : "Additional information submitted / 已补交资料",
+            `${followup.serviceRequestId || serviceRequestId} · ${followup.submittedAt || "time recorded by server"}. The request has returned to manual review; no credits or wallet state changed. / 申请已重新进入人工审核，积分和钱包状态未改变。`
+          );
+          const history = await readAccountServiceRequestHistory(
+            statusAccess.token
+          );
+          renderServiceRequestHistory(history);
+        } catch (error) {
+          const message = error && error.message
+            ? error.message
+            : "Additional information submission failed.";
+          renderResult(
+            serviceRequestResult,
+            "warn",
+            "Follow-up needs attention / 补交资料需要处理",
+            `${message} Retry without changing the response to reuse the same follow-up ID. / 如需重试，请不要修改内容，以复用同一补交编号。`
+          );
+        } finally {
+          if (followupButton.isConnected) {
+            followupButton.disabled = false;
+          }
           updateStatusAccessControls();
         }
       });

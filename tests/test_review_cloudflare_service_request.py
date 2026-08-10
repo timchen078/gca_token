@@ -74,6 +74,44 @@ class ReviewCloudflareServiceRequestTests(unittest.TestCase):
                 credit_settlement_accepted=True,
             )
 
+    def test_more_information_requires_public_member_prompt(self):
+        common = {
+            "service_request_id": (
+                "gca_service_req_11111111111111111111"
+            ),
+            "decision": "needs_more_information",
+            "reason_code": "missing_context",
+            "reviewer_id": "gca-operator",
+            "manual_review_confirmed": True,
+            "no_secrets_no_custody_confirmed": True,
+            "no_trading_permission_confirmed": True,
+        }
+        with self.assertRaises(ServiceRequestReviewError):
+            build_review_payload(**common)
+
+        payload = build_review_payload(
+            **common,
+            member_prompt=(
+                "Please provide the non-sensitive market and timeframe context."
+            ),
+        )
+        self.assertEqual(
+            payload["memberPrompt"],
+            "Please provide the non-sensitive market and timeframe context.",
+        )
+
+        with self.assertRaises(ServiceRequestReviewError):
+            build_review_payload(
+                service_request_id=common["service_request_id"],
+                decision="approved",
+                reason_code="scope_reviewed",
+                reviewer_id="gca-operator",
+                member_prompt="This prompt must not be accepted.",
+                manual_review_confirmed=True,
+                no_secrets_no_custody_confirmed=True,
+                no_trading_permission_confirmed=True,
+            )
+
     def test_payload_uses_deterministic_idempotency_and_boundaries(self):
         kwargs = {
             "service_request_id": (
@@ -149,6 +187,7 @@ class ReviewCloudflareServiceRequestTests(unittest.TestCase):
                 ),
                 "decision": "delivered",
                 "operatorNote": "private note",
+                "memberPrompt": "public prompt not printed by safe result",
             },
             "serviceRequest": {
                 "status": "delivered",
@@ -234,9 +273,11 @@ class ReviewCloudflareServiceRequestTests(unittest.TestCase):
         self.assertFalse(
             public_result["createsTradingPermission"]
         )
+        self.assertTrue(public_result["memberPromptPublished"])
         self.assertNotIn("secret-admin-token", serialized)
         self.assertNotIn("private@example.com", serialized)
         self.assertNotIn("private note", serialized)
+        self.assertNotIn("public prompt not printed", serialized)
         self.assertNotIn(
             "0x18d0007bc6be029f8ccd7cb13e324aa21891092d",
             serialized,

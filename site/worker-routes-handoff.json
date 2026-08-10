@@ -1,18 +1,18 @@
 {
   "schema": "https://gcagochina.com/worker-routes-handoff.json",
   "pageUrl": "https://gcagochina.com/worker-routes-handoff.html",
-  "status": "worker-routes-v1-request-cancellation-production-live",
+  "status": "worker-routes-v1-request-followup-production-live",
   "handoffId": "worker-routes-handoff-v1",
   "lastUpdated": "2026-08-10",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "workerBaseUrl": "https://gca-registration-api.gcagochina.workers.dev",
   "sourceDocument": "docs/gca_worker_pending_routes_deploy_handoff.md",
-  "scope": "Public deployment record and repeatable release runbook for production-live service-request queueing, account-scoped pre-review cancellation, append-only manual review, reviewed delivery, idempotent credit settlement, and account-scoped delivery receipts.",
+  "scope": "Public deployment record and repeatable release runbook for production-live service-request queueing, public more-information prompts, account-scoped follow-ups, pre-review cancellation, append-only manual review, reviewed delivery, idempotent credit settlement, and account-scoped delivery receipts.",
   "currentStatus": {
-    "latestReadinessCheckAt": "2026-08-10T09:14:56Z",
-    "latestPublicRouteCheckAt": "2026-08-10T09:14:18Z",
-    "latestAdminRouteCheckAt": "2026-08-10T09:14:34Z",
+    "latestReadinessCheckAt": "2026-08-10T13:21:00Z",
+    "latestPublicRouteCheckAt": "2026-08-10T13:23:22Z",
+    "latestAdminRouteCheckAt": "2026-08-10T13:23:40Z",
     "workerDryRun": "passed-2026-07-23",
     "d1Visibility": "passed",
     "cloudflareAuthSession": "passed",
@@ -21,11 +21,12 @@
     "pendingRouteAnonymousGetStatus": {
       "/gca/service-requests": 401,
       "/gca/credit-usage": 401,
-      "/gca/service-request-reviews": 401
+      "/gca/service-request-reviews": 401,
+      "/gca/service-request-followups": 401
     },
     "remoteMigrations": "applied",
     "workerDeploy": "passed",
-    "workerVersionId": "f6064d99-ea1a-49f8-861e-2743fc6ebf58",
+    "workerVersionId": "def4a0ea-fcbb-4d0e-a380-ba9656d7dc05",
     "postDeployPublicSmoke": "passed",
     "postDeployAdminSmoke": "passed",
     "productionRouteStatus": "live-token-protected",
@@ -35,6 +36,9 @@
     "serviceRequestReview": "live-token-protected",
     "serviceRequestReviewVersion": "gca_service_request_review_v1",
     "serviceRequestReviewAdminReadStatus": 200,
+    "accountServiceRequestFollowup": "live-device-key-protected-more-information-only",
+    "accountServiceRequestFollowupVersion": "gca_account_service_request_followup_v1",
+    "serviceRequestFollowupAdminReadStatus": 200,
     "accountServiceDeliveryReceipt": "live-device-key-protected-completed-delivery-only",
     "accountServiceDeliveryReceiptVersion": "gca_account_service_delivery_receipt_v1",
     "accountServiceRequestCancellation": "live-device-key-protected-queued-before-review-only",
@@ -51,6 +55,7 @@
     "POST /gca/account-status/rotate",
     "POST /gca/account-service-requests",
     "POST /gca/account-service-requests/status",
+    "POST /gca/account-service-requests/follow-ups",
     "POST /gca/account-service-requests/delivery-receipts",
     "POST /gca/account-service-requests/cancellations",
     "token-protected GET /gca/email-registrations",
@@ -61,7 +66,8 @@
     "token-protected GET /gca/member-ledger",
     "token-protected GET/POST /gca/service-requests",
     "token-protected GET/POST /gca/credit-usage",
-    "token-protected GET/POST /gca/service-request-reviews"
+    "token-protected GET/POST /gca/service-request-reviews",
+    "token-protected GET /gca/service-request-followups"
   ],
   "preparedRoutes": [
     {
@@ -72,7 +78,7 @@
       "writesCredits": false,
       "createsTradingPermission": false,
       "productionLive": true,
-      "workerVersionId": "f6064d99-ea1a-49f8-861e-2743fc6ebf58"
+      "workerVersionId": "def4a0ea-fcbb-4d0e-a380-ba9656d7dc05"
     },
     {
       "path": "/gca/service-request-reviews",
@@ -85,9 +91,24 @@
       "serverCatalogCreditUnitAuthoritative": true,
       "atMostOneCreditUsagePerRequest": true,
       "writesWithD1Batch": true,
+      "memberPromptRequiredForMoreInformation": true,
+      "memberPromptReturnedToMatchedAccount": true,
+      "operatorNoteReturnedToAccount": false,
       "createsTradingPermission": false,
       "productionLive": true,
-      "workerVersionId": "f6064d99-ea1a-49f8-861e-2743fc6ebf58"
+      "workerVersionId": "def4a0ea-fcbb-4d0e-a380-ba9656d7dc05"
+    },
+    {
+      "path": "/gca/service-request-followups",
+      "method": "GET",
+      "access": "token-protected-admin",
+      "status": "live-token-protected",
+      "appendOnlyResponses": true,
+      "publicResponseTextReadable": false,
+      "writesCredits": false,
+      "writesWallet": false,
+      "productionLive": true,
+      "workerVersionId": "def4a0ea-fcbb-4d0e-a380-ba9656d7dc05"
     },
     {
       "path": "/gca/credit-usage",
@@ -96,7 +117,7 @@
       "status": "live-token-protected",
       "writtenOnlyAfterReviewedDelivery": true,
       "productionLive": true,
-      "workerVersionId": "f6064d99-ea1a-49f8-861e-2743fc6ebf58"
+      "workerVersionId": "def4a0ea-fcbb-4d0e-a380-ba9656d7dc05"
     }
   ],
   "deployGates": [
@@ -125,7 +146,8 @@
         "0009_account_status_access.sql",
         "0012_service_request_reviews.sql",
         "0013_service_delivery_receipts.sql",
-        "0014_service_request_cancellations.sql"
+        "0014_service_request_cancellations.sql",
+        "0015_service_request_followups.sql"
       ]
     },
     {

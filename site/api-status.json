@@ -1,15 +1,15 @@
 {
   "schema": "https://gcagochina.com/api-status.json",
   "pageUrl": "https://gcagochina.com/api-status.html",
-  "status": "public-account-service-request-cancellation-live",
+  "status": "public-account-service-request-followup-live",
   "lastUpdated": "2026-08-10",
-  "latestPublicCheckAt": "2026-08-10T09:14:18Z",
-  "latestAdminCheckAt": "2026-08-10T09:14:34Z",
-  "latestPublicCheckStatus": "passed-request-cancellation-route-and-redacted-history",
-  "workerRelease": "gca-registration-worker-2026-08-10-request-cancellation-v1",
-  "workerVersionId": "f6064d99-ea1a-49f8-861e-2743fc6ebf58",
+  "latestPublicCheckAt": "2026-08-10T13:23:22Z",
+  "latestAdminCheckAt": "2026-08-10T13:23:40Z",
+  "latestPublicCheckStatus": "passed-request-followup-routes-and-redacted-history",
+  "workerRelease": "gca-registration-worker-2026-08-10-request-followup-v1",
+  "workerVersionId": "def4a0ea-fcbb-4d0e-a380-ba9656d7dc05",
   "serviceRequestReviewVersion": "gca_service_request_review_v1",
-  "latestDeployReadinessCheckAt": "2026-08-10T09:14:56Z",
+  "latestDeployReadinessCheckAt": "2026-08-10T13:21:00Z",
   "latestDeployReadinessStatus": "passed-cloudflare-permissions",
   "latestDeployReadinessSummary": {
     "wranglerDeployDryRun": "passed",
@@ -60,6 +60,7 @@
       "gca_account_status_recovery_v1",
       "gca_account_service_request_v1",
       "gca_account_service_request_status_v1",
+      "gca_account_service_request_followup_v1",
       "gca_account_service_request_cancellation_v1",
       "gca_account_service_delivery_receipt_v1",
       "gca_service_request_review_v1",
@@ -87,7 +88,8 @@
     "preparedRouteChecks": [
       "/gca/service-requests",
       "/gca/credit-usage",
-      "/gca/service-request-reviews"
+      "/gca/service-request-reviews",
+      "/gca/service-request-followups"
     ],
     "expectedExistingAdminStatus": 401,
     "preparedRouteStatusMeaning": {
@@ -262,8 +264,8 @@
       "returnsEmail": false,
       "createsTradingPermission": false,
       "productionLive": true,
-      "lastObservedAt": "2026-08-10T09:14:18Z",
-      "workerVersionId": "f6064d99-ea1a-49f8-861e-2743fc6ebf58",
+      "lastObservedAt": "2026-08-10T13:23:22Z",
+      "workerVersionId": "def4a0ea-fcbb-4d0e-a380-ba9656d7dc05",
       "requiresSignature": false,
       "requiresTransaction": false,
       "automaticTokenTransfer": false
@@ -283,6 +285,9 @@
       "returnsFullWalletAddress": false,
       "returnsFullRequestBody": false,
       "returnsLatestRedactedReview": true,
+      "returnsMemberPromptAfterMoreInformationReview": true,
+      "returnsFollowupTimestampAndCount": true,
+      "returnsFollowupResponseText": false,
       "returnsDeliveryReferenceAfterDelivered": true,
       "returnsDeliveryAcknowledgement": true,
       "returnsCancellationState": true,
@@ -302,11 +307,37 @@
       ],
       "readOnly": true,
       "productionLive": true,
-      "lastObservedAt": "2026-08-10T09:14:18Z",
-      "workerVersionId": "f6064d99-ea1a-49f8-861e-2743fc6ebf58",
+      "lastObservedAt": "2026-08-10T13:23:22Z",
+      "workerVersionId": "def4a0ea-fcbb-4d0e-a380-ba9656d7dc05",
       "requiresSignature": false,
       "requiresTransaction": false,
       "automaticTokenTransfer": false
+    },
+    {
+      "id": "account-service-request-followup-create",
+      "method": "POST",
+      "path": "/gca/account-service-requests/follow-ups",
+      "url": "https://gca-registration-api.gcagochina.workers.dev/gca/account-service-requests/follow-ups",
+      "status": "live-device-key-protected-more-information-only",
+      "packetVersion": "gca_account_service_request_followup_v1",
+      "public": true,
+      "requiresDeviceStatusKey": true,
+      "accountScoped": true,
+      "requiresMoreInformationReview": true,
+      "limitPerRequest": 5,
+      "idempotent": true,
+      "returnsResponseText": false,
+      "returnsRequestToManualReview": true,
+      "changesCredits": false,
+      "changesAccountOrMemberStatus": false,
+      "writesWallet": false,
+      "requiresSignature": false,
+      "requiresTransaction": false,
+      "automaticTokenTransfer": false,
+      "createsTradingPermission": false,
+      "productionLive": true,
+      "lastObservedAt": "2026-08-10T13:23:40Z",
+      "workerVersionId": "def4a0ea-fcbb-4d0e-a380-ba9656d7dc05"
     },
     {
       "id": "account-service-request-cancellation-create",
@@ -329,8 +360,8 @@
       "automaticTokenTransfer": false,
       "createsTradingPermission": false,
       "productionLive": true,
-      "lastObservedAt": "2026-08-10T09:14:18Z",
-      "workerVersionId": "f6064d99-ea1a-49f8-861e-2743fc6ebf58"
+      "lastObservedAt": "2026-08-10T13:23:22Z",
+      "workerVersionId": "def4a0ea-fcbb-4d0e-a380-ba9656d7dc05"
     },
     {
       "id": "account-service-delivery-receipt-create",
@@ -352,8 +383,8 @@
       "automaticTokenTransfer": false,
       "createsTradingPermission": false,
       "productionLive": true,
-      "lastObservedAt": "2026-08-10T09:14:18Z",
-      "workerVersionId": "f6064d99-ea1a-49f8-861e-2743fc6ebf58"
+      "lastObservedAt": "2026-08-10T13:23:22Z",
+      "workerVersionId": "def4a0ea-fcbb-4d0e-a380-ba9656d7dc05"
     }
   ],
   "adminEndpoints": [
@@ -428,7 +459,7 @@
       "lastObservedAdminGetStatus": 200,
       "lastObservedAt": "2026-07-28T06:07:11Z",
       "productionLive": true,
-      "workerVersionId": "f6064d99-ea1a-49f8-861e-2743fc6ebf58"
+      "workerVersionId": "def4a0ea-fcbb-4d0e-a380-ba9656d7dc05"
     },
     {
       "id": "holding-verifications-read",
@@ -448,7 +479,7 @@
       "lastObservedAdminGetStatus": 200,
       "lastObservedAt": "2026-07-28T06:07:11Z",
       "productionLive": true,
-      "workerVersionId": "f6064d99-ea1a-49f8-861e-2743fc6ebf58"
+      "workerVersionId": "def4a0ea-fcbb-4d0e-a380-ba9656d7dc05"
     },
     {
       "id": "service-requests-read-write",
@@ -460,9 +491,9 @@
       "publicLedgerReadable": false,
       "workerDryRunPassed": true,
       "lastObservedAnonymousGetStatus": 401,
-      "lastObservedAt": "2026-08-10T09:14:18Z",
+      "lastObservedAt": "2026-08-10T13:23:22Z",
       "productionLive": true,
-      "workerVersionId": "f6064d99-ea1a-49f8-861e-2743fc6ebf58"
+      "workerVersionId": "def4a0ea-fcbb-4d0e-a380-ba9656d7dc05"
     },
     {
       "id": "service-request-reviews-read-write",
@@ -480,15 +511,41 @@
       "creditsDeductedAtMostOncePerRequest": true,
       "usesD1BatchTransaction": true,
       "returnsRedactedReviewToAccountHistory": true,
+      "memberPromptRequiredForMoreInformation": true,
+      "memberPromptReturnedToMatchedAccount": true,
+      "operatorNoteReturnedToAccount": false,
       "requiresSignature": false,
       "requiresTransaction": false,
       "automaticTokenTransfer": false,
       "createsTradingPermission": false,
       "lastObservedAnonymousGetStatus": 401,
       "lastObservedAdminGetStatus": 200,
-      "lastObservedAt": "2026-08-10T09:14:34Z",
+      "lastObservedAt": "2026-08-10T13:23:40Z",
       "productionLive": true,
-      "workerVersionId": "f6064d99-ea1a-49f8-861e-2743fc6ebf58"
+      "workerVersionId": "def4a0ea-fcbb-4d0e-a380-ba9656d7dc05"
+    },
+    {
+      "id": "service-request-followups-read",
+      "method": "GET",
+      "path": "/gca/service-request-followups",
+      "url": "https://gca-registration-api.gcagochina.workers.dev/gca/service-request-followups",
+      "status": "live-token-protected",
+      "requiresAdminReadToken": true,
+      "publicLedgerReadable": false,
+      "appendOnlyRecords": true,
+      "returnsFullResponseTextToAuthorizedOperator": true,
+      "writesProductionData": false,
+      "changesCredits": false,
+      "writesWallet": false,
+      "requiresSignature": false,
+      "requiresTransaction": false,
+      "automaticTokenTransfer": false,
+      "createsTradingPermission": false,
+      "lastObservedAnonymousGetStatus": 401,
+      "lastObservedAdminGetStatus": 200,
+      "lastObservedAt": "2026-08-10T13:23:40Z",
+      "productionLive": true,
+      "workerVersionId": "def4a0ea-fcbb-4d0e-a380-ba9656d7dc05"
     },
     {
       "id": "credit-usage-read-write",
@@ -500,9 +557,9 @@
       "publicLedgerReadable": false,
       "workerDryRunPassed": true,
       "lastObservedAnonymousGetStatus": 401,
-      "lastObservedAt": "2026-08-10T09:14:18Z",
+      "lastObservedAt": "2026-08-10T13:23:22Z",
       "productionLive": true,
-      "workerVersionId": "f6064d99-ea1a-49f8-861e-2743fc6ebf58"
+      "workerVersionId": "def4a0ea-fcbb-4d0e-a380-ba9656d7dc05"
     },
     {
       "id": "member-benefit-transfers-read-write",
@@ -525,7 +582,7 @@
       "lastObservedAdminGetStatus": 200,
       "lastObservedAt": "2026-07-28T06:07:11Z",
       "productionLive": true,
-      "workerVersionId": "f6064d99-ea1a-49f8-861e-2743fc6ebf58"
+      "workerVersionId": "def4a0ea-fcbb-4d0e-a380-ba9656d7dc05"
     },
     {
       "id": "account-status-recovery-requests-read",
@@ -541,7 +598,7 @@
       "lastObservedAdminGetStatus": 200,
       "lastObservedAt": "2026-07-28T06:07:11Z",
       "productionLive": true,
-      "workerVersionId": "f6064d99-ea1a-49f8-861e-2743fc6ebf58"
+      "workerVersionId": "def4a0ea-fcbb-4d0e-a380-ba9656d7dc05"
     },
     {
       "id": "account-status-recovery-approval",
@@ -556,7 +613,7 @@
       "storesCredentialHashOnly": true,
       "changesAccountOrLedgers": false,
       "productionLive": true,
-      "workerVersionId": "f6064d99-ea1a-49f8-861e-2743fc6ebf58"
+      "workerVersionId": "def4a0ea-fcbb-4d0e-a380-ba9656d7dc05"
     }
   ],
   "checks": {
@@ -585,7 +642,8 @@
     "routes": [
       "/gca/service-requests",
       "/gca/credit-usage",
-      "/gca/service-request-reviews"
+      "/gca/service-request-reviews",
+      "/gca/service-request-followups"
     ],
     "readOnlyGateCommand": "python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth",
     "remoteMigrationCommand": "cd cloudflare/gca-registration-worker && npx wrangler d1 migrations apply gca_registration --remote",
@@ -608,6 +666,9 @@
       "serviceRequestsDoNotDeductCredits": true,
       "serviceRequestReviewRequiresPriorApprovalForDelivery": true,
       "serviceRequestReviewDeductsCreditsAtMostOnce": true,
+      "serviceRequestMoreInformationRequiresMemberPrompt": true,
+      "accountServiceFollowupRequiresMoreInformationReview": true,
+      "accountServiceFollowupResponseTextNotPublic": true,
       "noWalletConnection": true,
       "noWalletSignature": true,
       "noTransaction": true,
@@ -615,9 +676,9 @@
       "noTradingPermission": true,
       "doNotClaimLiveBeforeSmokeChecks": true
     },
-    "workerVersionId": "f6064d99-ea1a-49f8-861e-2743fc6ebf58",
-    "publicSmokePassedAt": "2026-08-10T09:14:18Z",
-    "adminSmokePassedAt": "2026-08-10T09:14:34Z"
+    "workerVersionId": "def4a0ea-fcbb-4d0e-a380-ba9656d7dc05",
+    "publicSmokePassedAt": "2026-08-10T13:23:22Z",
+    "adminSmokePassedAt": "2026-08-10T13:23:40Z"
   },
   "operatorTools": {
     "adminExport": "tools/export_cloudflare_email_registrations.py",

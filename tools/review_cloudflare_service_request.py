@@ -60,6 +60,7 @@ def build_client_review_id(
     service_request_id: str,
     decision: str,
     reason_code: str,
+    member_prompt: str = "",
     delivery_reference: str = "",
 ) -> str:
     material = "|".join(
@@ -67,6 +68,7 @@ def build_client_review_id(
             service_request_id.strip().lower(),
             decision.strip().lower(),
             reason_code.strip().lower(),
+            member_prompt.strip(),
             delivery_reference.strip(),
         )
     ).encode("utf-8")
@@ -83,6 +85,7 @@ def build_review_payload(
     reviewer_id: str,
     client_review_id: str = "",
     operator_note: str = "",
+    member_prompt: str = "",
     delivery_reference: str = "",
     manual_review_confirmed: bool = False,
     no_secrets_no_custody_confirmed: bool = False,
@@ -95,10 +98,12 @@ def build_review_payload(
     clean_reason = reason_code.strip().lower()
     clean_reviewer = reviewer_id.strip().lower()
     clean_delivery_reference = delivery_reference.strip()[:300]
+    clean_member_prompt = member_prompt.strip()[:500]
     clean_client_review_id = client_review_id.strip() or build_client_review_id(
         service_request_id=clean_request_id,
         decision=clean_decision,
         reason_code=clean_reason,
+        member_prompt=clean_member_prompt,
         delivery_reference=clean_delivery_reference,
     )
 
@@ -146,6 +151,17 @@ def build_review_payload(
         raise ServiceRequestReviewError(
             "delivered reviews require --delivery-reference"
         )
+    if (
+        clean_decision == "needs_more_information"
+        and len(clean_member_prompt) < 10
+    ):
+        raise ServiceRequestReviewError(
+            "needs_more_information reviews require --member-prompt with at least 10 characters"
+        )
+    if clean_decision != "needs_more_information" and clean_member_prompt:
+        raise ServiceRequestReviewError(
+            "--member-prompt is only accepted for needs_more_information"
+        )
 
     return {
         "packetVersion": SERVICE_REQUEST_REVIEW_VERSION,
@@ -155,6 +171,7 @@ def build_review_payload(
         "reasonCode": clean_reason,
         "reviewerId": clean_reviewer,
         "operatorNote": operator_note.strip()[:500],
+        "memberPrompt": clean_member_prompt,
         "deliveryReference": clean_delivery_reference,
         "source": "gca-service-request-review-operator-cli",
         "acknowledgements": {
@@ -257,6 +274,7 @@ def safe_result(payload: dict[str, Any]) -> dict[str, Any]:
         "emailPrinted": False,
         "walletPrinted": False,
         "operatorNotePrinted": False,
+        "memberPromptPublished": bool(review.get("memberPrompt", "")),
         "requiresSignature": bool(
             boundaries.get("requiresSignature", False)
         ),
@@ -314,6 +332,14 @@ def parse_args(
         "--note",
         default="",
         help="Optional private operator note, maximum 500 characters.",
+    )
+    parser.add_argument(
+        "--member-prompt",
+        default="",
+        help=(
+            "Public, non-sensitive prompt shown to the matched account; "
+            "required only for needs_more_information, maximum 500 characters."
+        ),
     )
     parser.add_argument(
         "--delivery-reference",
@@ -392,6 +418,7 @@ def main(argv: list[str] | None = None) -> int:
             reviewer_id=args.reviewer_id,
             client_review_id=args.client_review_id,
             operator_note=args.note,
+            member_prompt=args.member_prompt,
             delivery_reference=args.delivery_reference,
             manual_review_confirmed=args.confirm_manual_review,
             no_secrets_no_custody_confirmed=(

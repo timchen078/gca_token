@@ -15,17 +15,19 @@ https://gca-registration-api.gcagochina.workers.dev/gca/account-status/recovery-
 https://gca-registration-api.gcagochina.workers.dev/gca/account-status/recover
 https://gca-registration-api.gcagochina.workers.dev/gca/account-service-requests
 https://gca-registration-api.gcagochina.workers.dev/gca/account-service-requests/status
+https://gca-registration-api.gcagochina.workers.dev/gca/account-service-requests/follow-ups
 https://gca-registration-api.gcagochina.workers.dev/gca/account-service-requests/delivery-receipts
 https://gca-registration-api.gcagochina.workers.dev/gca/account-service-requests/cancellations
 https://gca-registration-api.gcagochina.workers.dev/gca/wallet-verifications
 https://gca-registration-api.gcagochina.workers.dev/gca/access-config
 https://gca-registration-api.gcagochina.workers.dev/gca/service-request-reviews
+https://gca-registration-api.gcagochina.workers.dev/gca/service-request-followups
 https://gca-registration-api.gcagochina.workers.dev/gca/member-reviews
 https://gca-registration-api.gcagochina.workers.dev/gca/holding-verifications
 https://gca-registration-api.gcagochina.workers.dev/gca/member-benefit-transfers
 ```
 
-The account-scoped service request, queued-request cancellation, completed-delivery receipt, token-protected append-only service review, reviewed delivery, credit usage, member review, holding-verification, and member-benefit transfer evidence routes are production-live. Cloudflare account authentication, D1 visibility, Worker deploy permission, remote D1 migrations, Worker deployment, public smoke, and admin read-only smoke checks passed for the latest Worker on 2026-08-10 UTC. Anonymous reads return HTTP 401 and token-protected admin reads return HTTP 200.
+The account-scoped service request, more-information follow-up, queued-request cancellation, completed-delivery receipt, token-protected append-only service review, reviewed delivery, credit usage, member review, holding-verification, and member-benefit transfer evidence routes are production-live. Cloudflare account authentication, D1 visibility, Worker deploy permission, remote D1 migrations, Worker deployment, public smoke, and admin read-only smoke checks passed for the latest Worker on 2026-08-10 UTC. Anonymous reads return HTTP 401 and token-protected admin reads return HTTP 200.
 
 ## What It Stores
 
@@ -72,11 +74,13 @@ The status response excludes email, email hash, full wallet address, the device 
 
 `POST /gca/account-service-requests` accepts a device-key authenticated catalog request and queues it without reserving or deducting credits. `POST /gca/account-service-requests/status` returns the account's latest 25 redacted request records. Migration `0012_service_request_reviews.sql` adds append-only `gca_service_request_review_v1` decisions and links a request to at most one credit usage record. `GET/POST /gca/service-request-reviews` requires `ADMIN_READ_TOKEN`; delivery is valid only after an approved review and requires a non-sensitive `deliveryReference`. The delivered action takes the credit amount from the server catalog and commits the credit usage, ledger deduction, review, and delivered request status in one D1 batch. The deterministic client review ID makes exact retries idempotent, and the unique service-request link prevents a second deduction.
 
+Migration `0015_service_request_followups.sql` adds a public `member_prompt` field to operator reviews and an append-only `gca_service_request_followups` table. A `needs_more_information` review must include a 10-500 character non-sensitive prompt; other decisions cannot include it, and the private `operatorNote` remains hidden. `POST /gca/account-service-requests/follow-ups` accepts `gca_account_service_request_followup_v1`, authenticates the account device key, verifies ownership plus a latest `needs_more_information` review, accepts 20-1200 characters, limits each request to five responses, and uses `clientFollowupId` for exact-retry idempotency. Submission returns the request to `queued_operator_review` without changing credits, wallets, tokens, membership, or trading permission. Account history returns only the public prompt, latest follow-up time, and count, never the follow-up response text. Authorized operators can read responses through token-protected `GET /gca/service-request-followups`.
+
 Migration `0013_service_delivery_receipts.sql` adds a unique account receipt marker to completed service requests. `POST /gca/account-service-requests/delivery-receipts` accepts `gca_account_service_delivery_receipt_v1`, authenticates the browser device key, verifies that the request belongs to the matched account, and requires both a delivered request status and a completed latest operator review. The deterministic receipt ID makes retries idempotent. A receipt records only that the account confirmed receipt; it does not refund, reserve, or deduct credits, change account or member status, connect a wallet, request a signature, send a transaction, transfer tokens, or create trading permission.
 
 Migration `0014_service_request_cancellations.sql` adds a unique account cancellation marker. `POST /gca/account-service-requests/cancellations` accepts `gca_account_service_request_cancellation_v1`, authenticates the browser device key, and verifies that the request belongs to the matched account. Cancellation is allowed only while the request remains queued and before any operator review exists. The deterministic cancellation ID makes retries idempotent. Cancellation is permanent and retains the audit row; it does not refund or restore credits, change account or member status, connect a wallet, request a signature, send a transaction, transfer tokens, or create trading permission.
 
-Account history returns only the latest redacted decision, reason code, review time, delivery state, non-sensitive delivery reference after completed delivery, credits used, and remaining balance. It excludes reviewer identity, operator notes, email, full wallet address, device key, and full request body. The review and delivery flow never connects a wallet, requests a signature, sends a transaction, transfers GCA, or creates trading permission.
+Account history returns only the latest redacted decision, reason code, review time, public more-information prompt, latest follow-up time and count, delivery state, non-sensitive delivery reference after completed delivery, credits used, and remaining balance. It excludes reviewer identity, private operator notes, follow-up response text, email, full wallet address, device key, and full request body. The review and delivery flow never connects a wallet, requests a signature, sends a transaction, transfers GCA, or creates trading permission.
 
 The submitted holding date and transaction hash do not prove continuous holding or activate GCA Member automatically. An operator must review the submitted evidence and record a decision through the token-protected member review route. Approval refreshes the current GCA balance at a safe Base block, combines Base Blockscout v2 transfer history with recent Base public RPC logs, reconstructs the observed minimum GCA balance over the prior 30 days, and fails closed unless the history is complete, internally consistent, and stays at or above 1,000,000 GCA.
 
@@ -110,6 +114,7 @@ Public registration, contact-suppression, wallet-verification, and member-access
 - Public device recovery completion endpoint: `POST /gca/account-status/recover`
 - Public account service request endpoint: `POST /gca/account-service-requests`
 - Public redacted account service history endpoint: `POST /gca/account-service-requests/status`
+- Public more-information follow-up endpoint: `POST /gca/account-service-requests/follow-ups`
 - Public completed-delivery receipt endpoint: `POST /gca/account-service-requests/delivery-receipts`
 - Public queued-request cancellation endpoint: `POST /gca/account-service-requests/cancellations`
 - Public wallet verification endpoint: `POST /gca/wallet-verifications`
@@ -118,6 +123,7 @@ Public registration, contact-suppression, wallet-verification, and member-access
 - Admin credit ledger endpoint: `GET /gca/credit-ledger`
 - Admin service request endpoint: `GET/POST /gca/service-requests` live and token-protected
 - Admin service request review endpoint: `GET/POST /gca/service-request-reviews` live and token-protected
+- Admin service request follow-up endpoint: `GET /gca/service-request-followups` live and token-protected
 - Admin credit usage endpoint: `GET/POST /gca/credit-usage` live and token-protected
 - Admin member ledger endpoint: `GET /gca/member-ledger`
 - Admin member review endpoint: `GET/POST /gca/member-reviews` live and token-protected
@@ -130,6 +136,7 @@ Public registration, contact-suppression, wallet-verification, and member-access
 - Service request review migration: `cloudflare/gca-registration-worker/migrations/0012_service_request_reviews.sql`
 - Service delivery receipt migration: `cloudflare/gca-registration-worker/migrations/0013_service_delivery_receipts.sql`
 - Service request cancellation migration: `cloudflare/gca-registration-worker/migrations/0014_service_request_cancellations.sql`
+- Service request follow-up migration: `cloudflare/gca-registration-worker/migrations/0015_service_request_followups.sql`
 - Credit usage D1 migration: `cloudflare/gca-registration-worker/migrations/0004_credit_usage_ledger.sql`
 - Service request D1 migration: `cloudflare/gca-registration-worker/migrations/0005_service_requests.sql`
 - Member review D1 migration: `cloudflare/gca-registration-worker/migrations/0006_member_reviews.sql`

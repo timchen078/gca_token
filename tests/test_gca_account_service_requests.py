@@ -37,6 +37,13 @@ SERVICE_REQUEST_CANCELLATION_MIGRATION = (
     / "migrations"
     / "0014_service_request_cancellations.sql"
 )
+SERVICE_REQUEST_FOLLOWUP_MIGRATION = (
+    ROOT
+    / "cloudflare"
+    / "gca-registration-worker"
+    / "migrations"
+    / "0015_service_request_followups.sql"
+)
 CREDIT_USAGE_MIGRATION = (
     ROOT
     / "cloudflare"
@@ -370,6 +377,82 @@ class GcaAccountServiceRequestTests(unittest.TestCase):
         self.assertNotIn("eth_sendTransaction", source)
         self.assertNotIn("personal_sign", source)
 
+    def test_followup_migration_adds_public_prompt_and_append_only_responses(self):
+        database = sqlite3.connect(":memory:")
+        try:
+            for migration in (
+                CREDIT_USAGE_MIGRATION,
+                SERVICE_REQUEST_MIGRATION,
+                SERVICE_REQUEST_REVIEW_MIGRATION,
+                SERVICE_DELIVERY_RECEIPT_MIGRATION,
+                SERVICE_REQUEST_CANCELLATION_MIGRATION,
+                SERVICE_REQUEST_FOLLOWUP_MIGRATION,
+            ):
+                database.executescript(
+                    migration.read_text(encoding="utf-8")
+                )
+            review_columns = {
+                row[1]
+                for row in database.execute(
+                    "PRAGMA table_info(gca_service_request_reviews)"
+                ).fetchall()
+            }
+            followup_columns = {
+                row[1]
+                for row in database.execute(
+                    "PRAGMA table_info(gca_service_request_followups)"
+                ).fetchall()
+            }
+            self.assertIn("member_prompt", review_columns)
+            self.assertIn("service_request_id", followup_columns)
+            self.assertIn("account_id", followup_columns)
+            self.assertIn("client_followup_id", followup_columns)
+            self.assertIn("response_text", followup_columns)
+            self.assertNotIn("status_access_token", followup_columns)
+            self.assertNotIn("device_key", followup_columns)
+            indexes = database.execute(
+                "PRAGMA index_list(gca_service_request_followups)"
+            ).fetchall()
+            client_index = next(
+                row
+                for row in indexes
+                if row[1] == "idx_gca_service_request_followups_client"
+            )
+            self.assertEqual(client_index[2], 1)
+        finally:
+            database.close()
+
+    def test_worker_exposes_account_scoped_followup_without_wallet_effect(self):
+        source = WORKER_SOURCE.read_text(encoding="utf-8")
+
+        self.assertIn(
+            '"gca_account_service_request_followup_v1"',
+            source,
+        )
+        self.assertIn(
+            '"/gca/account-service-requests/follow-ups"',
+            source,
+        )
+        self.assertIn(
+            '"/gca/service-request-followups"',
+            source,
+        )
+        self.assertIn("submitAccountServiceRequestFollowup", source)
+        self.assertIn(
+            "follow-up information is only accepted after the latest "
+            "manual review requests more information",
+            source,
+        )
+        self.assertIn("ACCOUNT_SERVICE_REQUEST_FOLLOWUP_LIMIT = 5", source)
+        self.assertIn("memberPromptRequiredForMoreInformation: true", source)
+        self.assertIn("memberPromptReturnedToMatchedAccount: true", source)
+        self.assertIn("operatorNoteReturnedToAccount: false", source)
+        self.assertIn("followupReturnsResponseText: false", source)
+        self.assertIn("followupChangesCredits: false", source)
+        self.assertIn("followupWritesWallet: false", source)
+        self.assertNotIn("eth_sendTransaction", source)
+        self.assertNotIn("personal_sign", source)
+
     def test_worker_catalog_matches_public_credits_catalog(self):
         source = WORKER_SOURCE.read_text(encoding="utf-8")
         credits = json.loads(CREDITS_JSON.read_text(encoding="utf-8"))
@@ -458,6 +541,24 @@ class GcaAccountServiceRequestTests(unittest.TestCase):
         self.assertFalse(cancellation["automaticTokenTransfer"])
         self.assertFalse(cancellation["createsTradingPermission"])
 
+        followup = public_endpoints[
+            "/gca/account-service-requests/follow-ups"
+        ]
+        self.assertEqual(
+            followup["packetVersion"],
+            "gca_account_service_request_followup_v1",
+        )
+        self.assertTrue(followup["requiresDeviceStatusKey"])
+        self.assertTrue(followup["accountScoped"])
+        self.assertTrue(followup["requiresMoreInformationReview"])
+        self.assertEqual(followup["limitPerRequest"], 5)
+        self.assertTrue(followup["idempotent"])
+        self.assertFalse(followup["returnsResponseText"])
+        self.assertFalse(followup["changesCredits"])
+        self.assertFalse(followup["writesWallet"])
+        self.assertFalse(followup["automaticTokenTransfer"])
+        self.assertFalse(followup["createsTradingPermission"])
+
         review = next(
             endpoint
             for endpoint in access_api["endpoints"]
@@ -465,6 +566,10 @@ class GcaAccountServiceRequestTests(unittest.TestCase):
         )
         self.assertIn(
             "deliveryReference is required when delivered is recorded",
+            review["serverChecks"],
+        )
+        self.assertIn(
+            "memberPrompt is required when the decision requests more information",
             review["serverChecks"],
         )
 
@@ -480,6 +585,15 @@ class GcaAccountServiceRequestTests(unittest.TestCase):
         self.assertTrue(state["accountServiceRequestCancellationIdempotent"])
         self.assertFalse(state["accountServiceRequestCancellationChangesCredits"])
         self.assertFalse(state["accountServiceRequestCancellationWritesWallet"])
+        self.assertTrue(state["accountServiceRequestFollowupProductionLive"])
+        self.assertTrue(
+            state["accountServiceRequestFollowupRequiresMoreInformationReview"]
+        )
+        self.assertEqual(state["accountServiceRequestFollowupLimitPerRequest"], 5)
+        self.assertTrue(state["accountServiceRequestFollowupIdempotent"])
+        self.assertFalse(state["accountServiceRequestFollowupReturnsResponseText"])
+        self.assertFalse(state["accountServiceRequestFollowupChangesCredits"])
+        self.assertFalse(state["accountServiceRequestFollowupWritesWallet"])
         self.assertTrue(
             state["accountServiceDeliveryReceiptRequiresCompletedDelivery"]
         )
@@ -532,11 +646,21 @@ class GcaAccountServiceRequestTests(unittest.TestCase):
             '"gca_account_service_request_cancellation_v1"',
             page,
         )
+        self.assertIn(
+            '"/gca/account-service-requests/follow-ups"',
+            page,
+        )
+        self.assertIn(
+            '"gca_account_service_request_followup_v1"',
+            page,
+        )
         self.assertIn("newServiceClientRequestId", page)
+        self.assertIn("newServiceClientFollowupId", page)
         self.assertIn("pendingServiceDraftSignature", page)
+        self.assertIn("pendingServiceFollowups", page)
         self.assertIn("Submission does not reserve or deduct credits", page)
         self.assertIn(
-            "does not return email, device keys, wallet secrets, operator notes, or the full request body",
+            "does not return email, device keys, wallet secrets, private operator notes, the full request body, or follow-up response text",
             page,
         )
         self.assertIn("approved_operator_review", page)
@@ -552,6 +676,11 @@ class GcaAccountServiceRequestTests(unittest.TestCase):
         self.assertIn("Confirm Delivery Received / 确认已收到", page)
         self.assertIn("Cancel Request / 取消申请", page)
         self.assertIn("cancelQueuedRequest", page)
+        self.assertIn("Information requested / 需要补充", page)
+        self.assertIn("Submit Additional Information / 提交补充资料", page)
+        self.assertIn("accountServiceRequestFollowupPayload", page)
+        self.assertIn("followupButton.isConnected", page)
+        self.assertIn("responseText: cleanResponse", page)
         self.assertIn("noCreditOrWalletEffect", page)
         self.assertIn("receiptButton.isConnected", page)
         self.assertIn("cancelButton.isConnected", page)

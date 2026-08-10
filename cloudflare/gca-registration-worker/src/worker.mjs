@@ -26,6 +26,8 @@ const SERVICE_REQUEST_VERSION = "gca_service_request_v1";
 const ACCOUNT_SERVICE_REQUEST_VERSION = "gca_account_service_request_v1";
 const ACCOUNT_SERVICE_REQUEST_STATUS_VERSION =
   "gca_account_service_request_status_v1";
+const ACCOUNT_SERVICE_REQUEST_FOLLOWUP_VERSION =
+  "gca_account_service_request_followup_v1";
 const ACCOUNT_SERVICE_REQUEST_CANCELLATION_VERSION =
   "gca_account_service_request_cancellation_v1";
 const ACCOUNT_SERVICE_DELIVERY_RECEIPT_VERSION =
@@ -36,7 +38,7 @@ const MEMBER_REVIEW_VERSION = "gca_member_review_v1";
 const HOLDING_VERIFICATION_VERSION = "gca_holding_verification_v1";
 const MEMBER_BENEFIT_TRANSFER_VERSION = "gca_member_benefit_transfer_v1";
 const WORKER_RELEASE =
-  "gca-registration-worker-2026-08-10-request-cancellation-v1";
+  "gca-registration-worker-2026-08-10-request-followup-v1";
 const OFFICIAL_CONTACT_EMAIL = "support@gcagochina.com";
 const OFFICIAL_SITE_URL = "https://gcagochina.com/";
 const CHAIN_ID = 8453;
@@ -58,6 +60,7 @@ const ACCOUNT_STATUS_RECOVERY_REQUEST_DAYS = 7;
 const ACCOUNT_STATUS_RECOVERY_CREDENTIAL_MINUTES = 24 * 60;
 const ACCOUNT_SERVICE_REQUEST_DAILY_LIMIT = 5;
 const ACCOUNT_SERVICE_REQUEST_HISTORY_LIMIT = 25;
+const ACCOUNT_SERVICE_REQUEST_FOLLOWUP_LIMIT = 5;
 const MEMBER_REFRESH_DAYS = 30;
 const MEMBER_HOLD_DAYS = 30;
 const HOLDING_WINDOW_MS = MEMBER_HOLD_DAYS * 86_400_000;
@@ -93,6 +96,8 @@ const RECOVERY_CREDENTIAL_RE = /^gca_recovery_[A-Za-z0-9_-]{43}$/;
 const CLIENT_SERVICE_REQUEST_ID_RE =
   /^gca_client_req_[A-Za-z0-9_-]{22,64}$/;
 const SERVICE_REQUEST_ID_RE = /^gca_service_req_[a-f0-9]{20}$/;
+const CLIENT_SERVICE_FOLLOWUP_ID_RE =
+  /^gca_client_followup_[A-Za-z0-9_-]{22,64}$/;
 const CLIENT_SERVICE_REVIEW_ID_RE =
   /^gca_client_review_[A-Za-z0-9_-]{22,64}$/;
 const OPERATOR_ID_RE = /^[a-z0-9][a-z0-9_-]{2,63}$/;
@@ -799,6 +804,68 @@ function extractAccountServiceRequestStatus(packet) {
   return { statusAccessToken };
 }
 
+function extractAccountServiceRequestFollowup(packet) {
+  if (
+    packet.packetVersion &&
+    packet.packetVersion !== ACCOUNT_SERVICE_REQUEST_FOLLOWUP_VERSION
+  ) {
+    throw new ApiError(
+      `packetVersion must be ${ACCOUNT_SERVICE_REQUEST_FOLLOWUP_VERSION}`
+    );
+  }
+  const statusAccessToken = String(packet.statusAccessToken || "").trim();
+  const serviceRequestId = String(packet.serviceRequestId || "")
+    .trim()
+    .toLowerCase();
+  const clientFollowupId = String(packet.clientFollowupId || "").trim();
+  const responseText = String(packet.responseText || "")
+    .trim()
+    .slice(0, 1200);
+  const acknowledgements =
+    packet.acknowledgements && typeof packet.acknowledgements === "object"
+      ? packet.acknowledgements
+      : {};
+  if (!isStatusAccessToken(statusAccessToken)) {
+    throw new ApiError(
+      "statusAccessToken must be a valid device status access key",
+      401
+    );
+  }
+  if (!SERVICE_REQUEST_ID_RE.test(serviceRequestId)) {
+    throw new ApiError(
+      "serviceRequestId must be a valid GCA service request id"
+    );
+  }
+  if (!CLIENT_SERVICE_FOLLOWUP_ID_RE.test(clientFollowupId)) {
+    throw new ApiError(
+      "clientFollowupId must be a valid service follow-up id"
+    );
+  }
+  if (responseText.length < 20) {
+    throw new ApiError("responseText must contain at least 20 characters");
+  }
+  if (!Boolean(acknowledgements.noSecretsNoCustody)) {
+    throw new ApiError(
+      "no-secrets and no-custody acknowledgement is required"
+    );
+  }
+  if (!Boolean(acknowledgements.manualReviewOnly)) {
+    throw new ApiError("manual review acknowledgement is required");
+  }
+  if (!Boolean(acknowledgements.noCreditOrWalletEffect)) {
+    throw new ApiError(
+      "no credit or wallet effect acknowledgement is required"
+    );
+  }
+  return {
+    statusAccessToken,
+    serviceRequestId,
+    clientFollowupId,
+    responseText,
+    source: "gca-member-access-service-request-followup"
+  };
+}
+
 function extractAccountServiceRequestCancellation(packet) {
   if (
     packet.packetVersion &&
@@ -904,6 +971,9 @@ function extractServiceRequestReview(packet) {
   const operatorNote = String(packet.operatorNote || "")
     .trim()
     .slice(0, 500);
+  const memberPrompt = String(packet.memberPrompt || "")
+    .trim()
+    .slice(0, 500);
   const deliveryReference = String(packet.deliveryReference || "")
     .trim()
     .slice(0, 300);
@@ -978,6 +1048,16 @@ function extractServiceRequestReview(packet) {
       "deliveryReference is required when delivery is recorded"
     );
   }
+  if (decision === "needs_more_information" && memberPrompt.length < 10) {
+    throw new ApiError(
+      "memberPrompt with at least 10 characters is required when more information is requested"
+    );
+  }
+  if (decision !== "needs_more_information" && memberPrompt) {
+    throw new ApiError(
+      "memberPrompt is only accepted when decision is needs_more_information"
+    );
+  }
 
   return {
     serviceRequestId,
@@ -986,6 +1066,7 @@ function extractServiceRequestReview(packet) {
     reasonCode,
     reviewerId,
     operatorNote,
+    memberPrompt,
     deliveryReference,
     deliveryCompleted,
     creditSettlementAccepted,
@@ -1723,6 +1804,30 @@ function rowToServiceRequest(row, includeEmail = true) {
   };
 }
 
+function rowToServiceRequestFollowup(row) {
+  if (!row) {
+    return null;
+  }
+  return {
+    serviceRequestFollowupId: row.service_request_followup_id,
+    serviceRequestId: row.service_request_id,
+    accountId: row.account_id,
+    clientFollowupId: row.client_followup_id,
+    packetVersion: row.packet_version,
+    responseText: row.response_text,
+    submittedAt: row.submitted_at,
+    source: row.source,
+    noSecretsNoCustody: Boolean(row.no_secrets_no_custody),
+    manualReviewOnly: Boolean(row.manual_review_only),
+    changesCredits: Boolean(row.changes_credits),
+    requiresSignature: Boolean(row.requires_signature),
+    requiresTransaction: Boolean(row.requires_transaction),
+    automaticTokenTransfer: Boolean(row.automatic_token_transfer),
+    writesWallet: Boolean(row.writes_wallet),
+    createsTradingPermission: Boolean(row.creates_trading_permission)
+  };
+}
+
 function rowToServiceRequestReview(row) {
   if (!row) {
     return null;
@@ -1735,6 +1840,7 @@ function rowToServiceRequestReview(row) {
     reasonCode: row.reason_code,
     reviewerId: row.reviewer_id,
     operatorNote: row.operator_note || "",
+    memberPrompt: row.member_prompt || "",
     deliveryReference: row.delivery_reference || "",
     creditUsageId: row.credit_usage_id || "",
     creditAmountUsed: Number(row.credit_amount_used || 0),
@@ -1761,11 +1867,18 @@ function rowToServiceRequestReview(row) {
   };
 }
 
-function serviceRequestNextStep(status, deliveryAcknowledged = false) {
+function serviceRequestNextStep(
+  status,
+  deliveryAcknowledged = false,
+  followupCount = 0
+) {
   if (status === "cancelled_by_account") {
     return "This account cancelled the request before manual review. No credits were deducted.";
   }
   if (status === "queued_operator_review") {
+    if (Number(followupCount || 0) > 0) {
+      return "Additional information was submitted and the request returned to the manual review queue.";
+    }
     return "The request is queued for manual operator review.";
   }
   if (status === "queued_insufficient_credits") {
@@ -1824,12 +1937,23 @@ function rowToAccountServiceRequest(row) {
     completedAt: row.completed_at || "",
     cancelledByAccount: Boolean(row.cancellation_id),
     cancelledAt: row.cancelled_at || "",
+    followupCount: Number(row.followup_count || 0),
+    latestFollowup: row.followup_id
+      ? {
+          serviceRequestFollowupId: row.followup_id,
+          submittedAt: row.followup_submitted_at || ""
+        }
+      : null,
     deliveryAcknowledged: Boolean(row.delivery_receipt_id),
     deliveryAcknowledgedAt: row.delivery_acknowledged_at || "",
     latestReview: row.latest_review_id
       ? {
           decision: row.review_decision || "",
           reasonCode: row.review_reason_code || "",
+          memberPrompt:
+            row.review_decision === "needs_more_information"
+              ? row.review_member_prompt || ""
+              : "",
           reviewedAt:
             row.review_reviewed_at || row.reviewed_at || "",
           deliveryCompleted: Boolean(
@@ -1851,7 +1975,8 @@ function rowToAccountServiceRequest(row) {
       : null,
     nextStep: serviceRequestNextStep(
       row.status,
-      Boolean(row.delivery_receipt_id)
+      Boolean(row.delivery_receipt_id),
+      Number(row.followup_count || 0)
     )
   };
 }
@@ -2543,6 +2668,9 @@ function serviceRequestReviewBoundaries() {
     serverCatalogCreditUnitRequired: true,
     creditsDeductedOnlyOnDelivered: true,
     creditsDeductedAtMostOncePerRequest: true,
+    memberPromptRequiredForMoreInformation: true,
+    memberPromptReturnedToMatchedAccount: true,
+    operatorNoteReturnedToAccount: false,
     requiresSignature: false,
     requiresTransaction: false,
     automaticTokenTransfer: false,
@@ -2665,6 +2793,8 @@ async function reviewServiceRequest(request, env, origin) {
       existingReview.reviewer_id !== reviewInput.reviewerId ||
       String(existingReview.operator_note || "") !==
         reviewInput.operatorNote ||
+      String(existingReview.member_prompt || "") !==
+        reviewInput.memberPrompt ||
       String(existingReview.delivery_reference || "") !==
         reviewInput.deliveryReference ||
       existingReview.source !== reviewInput.source
@@ -2910,6 +3040,7 @@ async function reviewServiceRequest(request, env, origin) {
           reason_code,
           reviewer_id,
           operator_note,
+          member_prompt,
           delivery_reference,
           credit_usage_id,
           credit_amount_used,
@@ -2927,17 +3058,17 @@ async function reviewServiceRequest(request, env, origin) {
           creates_trading_permission
         )
         SELECT
-          ?1, service_request_id, ?2, ?3, ?4, ?5, ?6, ?7,
-          ?8, ?9, ?10, ?11, ?12, ?13, 1, 1, 1, 0, 0, 0, 0, 0
+          ?1, service_request_id, ?2, ?3, ?4, ?5, ?6, ?7, ?8,
+          ?9, ?10, ?11, ?12, ?13, ?14, 1, 1, 1, 0, 0, 0, 0, 0
         FROM gca_service_requests
-        WHERE service_request_id = ?14
-          AND status = ?15
-          AND latest_review_id = ?16
+        WHERE service_request_id = ?15
+          AND status = ?16
+          AND latest_review_id = ?17
           AND EXISTS (
             SELECT 1
             FROM gca_credit_usage
-            WHERE credit_usage_id = ?8
-              AND service_request_id = ?14
+            WHERE credit_usage_id = ?9
+              AND service_request_id = ?15
           )`
       )
       .bind(
@@ -2947,6 +3078,7 @@ async function reviewServiceRequest(request, env, origin) {
         reviewInput.reasonCode,
         reviewInput.reviewerId,
         reviewInput.operatorNote,
+        reviewInput.memberPrompt,
         reviewInput.deliveryReference,
         creditUsageId,
         creditAmountUsed,
@@ -3035,6 +3167,7 @@ async function reviewServiceRequest(request, env, origin) {
           reason_code,
           reviewer_id,
           operator_note,
+          member_prompt,
           delivery_reference,
           credit_usage_id,
           credit_amount_used,
@@ -3052,12 +3185,12 @@ async function reviewServiceRequest(request, env, origin) {
           creates_trading_permission
         )
         SELECT
-          ?1, service_request_id, ?2, ?3, ?4, ?5, ?6, ?7,
-          '', 0, NULL, NULL, ?8, ?9, 1, ?10, 0, 0, 0, 0, 0, 0
+          ?1, service_request_id, ?2, ?3, ?4, ?5, ?6, ?7, ?8,
+          '', 0, NULL, NULL, ?9, ?10, 1, ?11, 0, 0, 0, 0, 0, 0
         FROM gca_service_requests
-        WHERE service_request_id = ?11
-          AND status = ?12
-          AND latest_review_id = ?13`
+        WHERE service_request_id = ?12
+          AND status = ?13
+          AND latest_review_id = ?14`
       )
       .bind(
         reviewId,
@@ -3066,6 +3199,7 @@ async function reviewServiceRequest(request, env, origin) {
         reviewInput.reasonCode,
         reviewInput.reviewerId,
         reviewInput.operatorNote,
+        reviewInput.memberPrompt,
         reviewInput.deliveryReference,
         now,
         reviewInput.source,
@@ -4143,6 +4277,13 @@ function accountServiceRequestBoundaries() {
     deviceKeyProtected: true,
     emailReturned: false,
     accessTokenReturned: false,
+    followupEnabled: true,
+    followupRequiresMoreInformationReview: true,
+    followupLimitPerRequest: ACCOUNT_SERVICE_REQUEST_FOLLOWUP_LIMIT,
+    followupIdempotent: true,
+    followupReturnsResponseText: false,
+    followupChangesCredits: false,
+    followupWritesWallet: false,
     cancellationEnabled: true,
     cancellationQueuedOnly: true,
     cancellationIdempotent: true,
@@ -4163,6 +4304,265 @@ function accountServiceRequestBoundaries() {
     writesWallet: false,
     createsTradingPermission: false
   };
+}
+
+function accountServiceRequestFollowup(row) {
+  return {
+    packetVersion: ACCOUNT_SERVICE_REQUEST_FOLLOWUP_VERSION,
+    serviceRequestFollowupId: row.service_request_followup_id,
+    serviceRequestId: row.service_request_id,
+    status: "queued_operator_review",
+    submittedAt: row.submitted_at,
+    responseLength: String(row.response_text || "").length,
+    responseTextReturned: false,
+    creditsChanged: false,
+    walletAction: false,
+    tokenTransfer: false,
+    tradingPermissionCreated: false
+  };
+}
+
+async function submitAccountServiceRequestFollowup(request, env, origin) {
+  const db = requireDatabase(env);
+  const packet = await readJsonRequest(request);
+  const followupInput = extractAccountServiceRequestFollowup(packet);
+  const now = nowIso();
+  const accountRow = await authenticateAccountStatusAccess(
+    db,
+    followupInput.statusAccessToken,
+    now
+  );
+  const followupId = await stableId(
+    "gca_service_followup",
+    accountRow.account_id,
+    followupInput.serviceRequestId,
+    followupInput.clientFollowupId
+  );
+  const existingFollowup = await db
+    .prepare(
+      `SELECT *
+      FROM gca_service_request_followups
+      WHERE service_request_followup_id = ?1
+      LIMIT 1`
+    )
+    .bind(followupId)
+    .first();
+
+  if (existingFollowup) {
+    if (
+      existingFollowup.service_request_id !==
+        followupInput.serviceRequestId ||
+      existingFollowup.account_id !== accountRow.account_id ||
+      existingFollowup.client_followup_id !==
+        followupInput.clientFollowupId ||
+      existingFollowup.response_text !== followupInput.responseText ||
+      existingFollowup.source !== followupInput.source
+    ) {
+      throw new ApiError(
+        "clientFollowupId is already assigned to different follow-up information",
+        409
+      );
+    }
+    return jsonResponse({
+      ok: true,
+      packetVersion: ACCOUNT_SERVICE_REQUEST_FOLLOWUP_VERSION,
+      created: false,
+      idempotentReplay: true,
+      followup: accountServiceRequestFollowup(existingFollowup),
+      boundaries: accountServiceRequestBoundaries()
+    }, 200, origin, env);
+  }
+
+  const serviceRequestRow = await db
+    .prepare(
+      `SELECT
+        service.*,
+        review.decision AS review_decision
+      FROM gca_service_requests AS service
+      LEFT JOIN gca_service_request_reviews AS review
+        ON review.service_request_review_id = service.latest_review_id
+      WHERE service.service_request_id = ?1
+        AND service.account_id = ?2
+      LIMIT 1`
+    )
+    .bind(followupInput.serviceRequestId, accountRow.account_id)
+    .first();
+  if (!serviceRequestRow) {
+    throw new ApiError(
+      "service request was not found for this account",
+      404
+    );
+  }
+  if (
+    serviceRequestRow.status !== "needs_more_information" ||
+    serviceRequestRow.review_decision !== "needs_more_information" ||
+    !serviceRequestRow.latest_review_id
+  ) {
+    throw new ApiError(
+      "follow-up information is only accepted after the latest manual review requests more information",
+      409
+    );
+  }
+
+  const countRow = await db
+    .prepare(
+      `SELECT COUNT(*) AS followup_count
+      FROM gca_service_request_followups
+      WHERE service_request_id = ?1`
+    )
+    .bind(followupInput.serviceRequestId)
+    .first();
+  if (Number(countRow?.followup_count || 0) >= ACCOUNT_SERVICE_REQUEST_FOLLOWUP_LIMIT) {
+    throw new ApiError(
+      "service request follow-up limit reached; contact official support",
+      429
+    );
+  }
+
+  const insertFollowup = db
+    .prepare(
+      `INSERT INTO gca_service_request_followups (
+        service_request_followup_id,
+        service_request_id,
+        account_id,
+        client_followup_id,
+        packet_version,
+        response_text,
+        submitted_at,
+        source,
+        no_secrets_no_custody,
+        manual_review_only,
+        changes_credits,
+        requires_signature,
+        requires_transaction,
+        automatic_token_transfer,
+        writes_wallet,
+        creates_trading_permission
+      )
+      SELECT
+        ?1, service.service_request_id, service.account_id, ?2, ?3, ?4,
+        ?5, ?6, 1, 1, 0, 0, 0, 0, 0, 0
+      FROM gca_service_requests AS service
+      INNER JOIN gca_service_request_reviews AS review
+        ON review.service_request_review_id = service.latest_review_id
+      WHERE service.service_request_id = ?7
+        AND service.account_id = ?8
+        AND service.status = 'needs_more_information'
+        AND service.latest_review_id = ?9
+        AND review.decision = 'needs_more_information'
+        AND (
+          SELECT COUNT(*)
+          FROM gca_service_request_followups AS existing
+          WHERE existing.service_request_id = service.service_request_id
+        ) < ?10
+        AND NOT EXISTS (
+          SELECT 1
+          FROM gca_service_request_followups AS existing
+          WHERE existing.service_request_followup_id = ?1
+        )`
+    )
+    .bind(
+      followupId,
+      followupInput.clientFollowupId,
+      ACCOUNT_SERVICE_REQUEST_FOLLOWUP_VERSION,
+      followupInput.responseText,
+      now,
+      followupInput.source,
+      followupInput.serviceRequestId,
+      accountRow.account_id,
+      serviceRequestRow.latest_review_id,
+      ACCOUNT_SERVICE_REQUEST_FOLLOWUP_LIMIT
+    );
+  const updateServiceRequest = db
+    .prepare(
+      `UPDATE gca_service_requests
+      SET status = 'queued_operator_review',
+        updated_at = ?1
+      WHERE service_request_id = ?2
+        AND account_id = ?3
+        AND status = 'needs_more_information'
+        AND latest_review_id = ?4
+        AND EXISTS (
+          SELECT 1
+          FROM gca_service_request_followups
+          WHERE service_request_followup_id = ?5
+            AND service_request_id = ?2
+            AND account_id = ?3
+        )`
+    )
+    .bind(
+      now,
+      followupInput.serviceRequestId,
+      accountRow.account_id,
+      serviceRequestRow.latest_review_id,
+      followupId
+    );
+
+  let batchResults;
+  try {
+    batchResults = await db.batch([insertFollowup, updateServiceRequest]);
+  } catch (error) {
+    const concurrentFollowup = await db
+      .prepare(
+        `SELECT *
+        FROM gca_service_request_followups
+        WHERE service_request_followup_id = ?1
+        LIMIT 1`
+      )
+      .bind(followupId)
+      .first();
+    if (
+      concurrentFollowup &&
+      concurrentFollowup.account_id === accountRow.account_id &&
+      concurrentFollowup.service_request_id === followupInput.serviceRequestId &&
+      concurrentFollowup.client_followup_id === followupInput.clientFollowupId &&
+      concurrentFollowup.response_text === followupInput.responseText
+    ) {
+      return jsonResponse({
+        ok: true,
+        packetVersion: ACCOUNT_SERVICE_REQUEST_FOLLOWUP_VERSION,
+        created: false,
+        idempotentReplay: true,
+        followup: accountServiceRequestFollowup(concurrentFollowup),
+        boundaries: accountServiceRequestBoundaries()
+      }, 200, origin, env);
+    }
+    throw error;
+  }
+  if (
+    batchResults.some(
+      (result) => Number(result?.meta?.changes || 0) !== 1
+    )
+  ) {
+    throw new ApiError(
+      "service request changed before follow-up submission; refresh and retry",
+      409
+    );
+  }
+
+  const followupRow = await db
+    .prepare(
+      `SELECT *
+      FROM gca_service_request_followups
+      WHERE service_request_followup_id = ?1
+      LIMIT 1`
+    )
+    .bind(followupId)
+    .first();
+  if (!followupRow) {
+    throw new ApiError(
+      "service request follow-up was not recorded",
+      409
+    );
+  }
+  return jsonResponse({
+    ok: true,
+    packetVersion: ACCOUNT_SERVICE_REQUEST_FOLLOWUP_VERSION,
+    created: true,
+    idempotentReplay: false,
+    followup: accountServiceRequestFollowup(followupRow),
+    boundaries: accountServiceRequestBoundaries()
+  }, 201, origin, env);
 }
 
 function accountServiceRequestCancellation(row) {
@@ -4464,6 +4864,7 @@ async function submitAccountServiceRequest(request, env, origin) {
         service.*,
         review.decision AS review_decision,
         review.reason_code AS review_reason_code,
+        review.member_prompt AS review_member_prompt,
         review.reviewed_at AS review_reviewed_at,
         review.delivery_completed AS review_delivery_completed,
         review.delivery_reference AS review_delivery_reference,
@@ -4635,16 +5036,33 @@ async function readAccountServiceRequests(request, env, origin) {
         service.*,
         review.decision AS review_decision,
         review.reason_code AS review_reason_code,
+        review.member_prompt AS review_member_prompt,
         review.reviewed_at AS review_reviewed_at,
         review.delivery_completed AS review_delivery_completed,
         review.delivery_reference AS review_delivery_reference,
         review.credits_deducted AS review_credits_deducted,
         review.credit_amount_used AS review_credit_amount_used,
-        review.remaining_credits_after AS review_remaining_credits_after
+        review.remaining_credits_after AS review_remaining_credits_after,
+        followup.service_request_followup_id AS followup_id,
+        followup.submitted_at AS followup_submitted_at,
+        (
+          SELECT COUNT(*)
+          FROM gca_service_request_followups AS counted_followup
+          WHERE counted_followup.service_request_id = service.service_request_id
+        ) AS followup_count
       FROM gca_service_requests AS service
       LEFT JOIN gca_service_request_reviews AS review
         ON review.service_request_review_id =
           service.latest_review_id
+      LEFT JOIN gca_service_request_followups AS followup
+        ON followup.service_request_followup_id = (
+          SELECT latest_followup.service_request_followup_id
+          FROM gca_service_request_followups AS latest_followup
+          WHERE latest_followup.service_request_id = service.service_request_id
+          ORDER BY latest_followup.submitted_at DESC,
+            latest_followup.service_request_followup_id DESC
+          LIMIT 1
+        )
       WHERE service.account_id = ?1
       ORDER BY service.created_at DESC
       LIMIT ?2`
@@ -5388,6 +5806,14 @@ function accessBoundaries() {
     accountServiceRequestCreditsDeductedOnRequest: false,
     accountServiceRequestReturnsEmail: false,
     accountServiceRequestCreatesTradingPermission: false,
+    accountServiceRequestFollowupEnabled: true,
+    accountServiceRequestFollowupRequiresMoreInformationReview: true,
+    accountServiceRequestFollowupLimitPerRequest:
+      ACCOUNT_SERVICE_REQUEST_FOLLOWUP_LIMIT,
+    accountServiceRequestFollowupIdempotent: true,
+    accountServiceRequestFollowupReturnsResponseText: false,
+    accountServiceRequestFollowupChangesCredits: false,
+    accountServiceRequestFollowupWritesWallet: false,
     accountServiceRequestCancellationEnabled: true,
     accountServiceRequestCancellationQueuedOnly: true,
     accountServiceRequestCancellationIdempotent: true,
@@ -5406,6 +5832,9 @@ function accessBoundaries() {
     serviceRequestReviewCreditsDeductedOnlyOnDelivered: true,
     serviceRequestReviewCreditsDeductedAtMostOnce: true,
     serviceRequestReviewReturnsToAccountHistory: true,
+    serviceRequestReviewMemberPromptRequiredForMoreInformation: true,
+    serviceRequestReviewMemberPromptReturnedToMatchedAccount: true,
+    serviceRequestReviewOperatorNoteReturnedToAccount: false,
     serviceRequestReviewReturnsNonSensitiveDeliveryReference: true,
     requiresSignature: false,
     requiresTransaction: false,
@@ -5448,6 +5877,8 @@ function accessConfig(origin, env) {
     accountServiceRequestVersion: ACCOUNT_SERVICE_REQUEST_VERSION,
     accountServiceRequestStatusVersion:
       ACCOUNT_SERVICE_REQUEST_STATUS_VERSION,
+    accountServiceRequestFollowupVersion:
+      ACCOUNT_SERVICE_REQUEST_FOLLOWUP_VERSION,
     accountServiceRequestCancellationVersion:
       ACCOUNT_SERVICE_REQUEST_CANCELLATION_VERSION,
     accountServiceDeliveryReceiptVersion:
@@ -5473,12 +5904,16 @@ function accessConfig(origin, env) {
       accountServiceRequests: "/gca/account-service-requests",
       accountServiceRequestStatus:
         "/gca/account-service-requests/status",
+      accountServiceRequestFollowups:
+        "/gca/account-service-requests/follow-ups",
       accountServiceRequestCancellations:
         "/gca/account-service-requests/cancellations",
       accountServiceDeliveryReceipts:
         "/gca/account-service-requests/delivery-receipts",
       serviceRequestReviewsAdmin:
         "/gca/service-request-reviews",
+      serviceRequestFollowupsAdmin:
+        "/gca/service-request-followups",
       walletVerifications: "/gca/wallet-verifications",
       creditLedgerAdmin: "/gca/credit-ledger",
       serviceRequestsAdmin: "/gca/service-requests",
@@ -5578,6 +6013,8 @@ async function listMemberTable(request, env, origin, table, mapper, allowedFilte
         ? "created_at"
       : table === "gca_service_request_reviews"
         ? "reviewed_at"
+      : table === "gca_service_request_followups"
+        ? "submitted_at"
       : table === "gca_member_reviews"
         ? "reviewed_at"
       : table === "gca_holding_verifications"
@@ -5619,6 +6056,8 @@ function health(origin, env) {
     accountServiceRequestVersion: ACCOUNT_SERVICE_REQUEST_VERSION,
     accountServiceRequestStatusVersion:
       ACCOUNT_SERVICE_REQUEST_STATUS_VERSION,
+    accountServiceRequestFollowupVersion:
+      ACCOUNT_SERVICE_REQUEST_FOLLOWUP_VERSION,
     accountServiceRequestCancellationVersion:
       ACCOUNT_SERVICE_REQUEST_CANCELLATION_VERSION,
     accountServiceDeliveryReceiptVersion:
@@ -5751,6 +6190,19 @@ export default {
       }
       if (
         url.pathname ===
+        "/gca/account-service-requests/follow-ups"
+      ) {
+        if (request.method === "POST") {
+          return await submitAccountServiceRequestFollowup(
+            request,
+            env,
+            origin
+          );
+        }
+        return jsonResponse({ ok: false, error: "method not allowed" }, 405, origin, env);
+      }
+      if (
+        url.pathname ===
         "/gca/account-service-requests/cancellations"
       ) {
         if (request.method === "POST") {
@@ -5854,6 +6306,36 @@ export default {
             ]
           );
         }
+      }
+      if (
+        url.pathname === "/gca/service-request-followups" &&
+        request.method === "GET"
+      ) {
+        return await listMemberTable(
+          request,
+          env,
+          origin,
+          "gca_service_request_followups",
+          rowToServiceRequestFollowup,
+          [
+            [
+              "serviceRequestId",
+              "service_request_id",
+              (value) => {
+                const normalized = String(value || "")
+                  .trim()
+                  .toLowerCase();
+                if (!SERVICE_REQUEST_ID_RE.test(normalized)) {
+                  throw new ApiError(
+                    "serviceRequestId must be a valid GCA service request id"
+                  );
+                }
+                return normalized;
+              }
+            ],
+            ["accountId", "account_id", null]
+          ]
+        );
       }
       if (url.pathname === "/gca/member-ledger" && request.method === "GET") {
         return await listMemberTable(

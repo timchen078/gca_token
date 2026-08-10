@@ -59,6 +59,10 @@ class GcaWorkerDeployReadinessTests(unittest.TestCase):
             "ALTER TABLE gca_service_requests ADD COLUMN cancellation_id TEXT;\n",
             encoding="utf-8",
         )
+        (worker_dir / "migrations" / "0015_service_request_followups.sql").write_text(
+            "ALTER TABLE gca_service_request_reviews ADD COLUMN member_prompt TEXT;\n",
+            encoding="utf-8",
+        )
         (worker_dir / "package-lock.json").write_text("{}\n", encoding="utf-8")
         (worker_dir / "node_modules" / ".bin" / "wrangler").write_text("#!/bin/sh\n", encoding="utf-8")
         self.worker_dir = worker_dir
@@ -134,6 +138,10 @@ migrations_dir = "migrations"
         )
         self.assertIn(
             "service-request-cancellations-migration",
+            {item["id"] for item in report["checks"] if item["status"] == "passed"},
+        )
+        self.assertIn(
+            "service-request-followups-migration",
             {item["id"] for item in report["checks"] if item["status"] == "passed"},
         )
 

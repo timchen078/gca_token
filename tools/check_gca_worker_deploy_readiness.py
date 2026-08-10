@@ -298,6 +298,12 @@ def build_report(
     )
     check(
         checks,
+        "service-request-followups-migration",
+        (worker_dir / "migrations" / "0015_service_request_followups.sql").exists(),
+        "Account-scoped service-request follow-up and public review prompt D1 migration exists.",
+    )
+    check(
+        checks,
         "wrangler-package",
         (worker_dir / "package-lock.json").exists() and (worker_dir / "node_modules" / ".bin" / "wrangler").exists(),
         "Worker package dependencies and local Wrangler binary are installed.",

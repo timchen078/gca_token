@@ -21,6 +21,7 @@ Already live routes:
 - `POST /gca/member-access`
 - `POST /gca/account-service-requests`
 - `POST /gca/account-service-requests/status`
+- `POST /gca/account-service-requests/follow-ups`
 - `POST /gca/account-service-requests/delivery-receipts`
 - `POST /gca/account-service-requests/cancellations`
 - token-protected `GET /gca/email-registrations`
@@ -32,19 +33,20 @@ Already live routes:
 - token-protected `GET/POST /gca/service-requests`
 - token-protected `GET/POST /gca/credit-usage`
 - token-protected `GET/POST /gca/service-request-reviews`
+- token-protected `GET /gca/service-request-followups`
 
-The three operator service routes are production-live and token-protected. The review route stores append-only manual decisions, requires approval before delivery, uses the server catalog credit unit, and settles at most once for each request. The public delivery-receipt route is device-key protected, account-scoped, available only after completed delivery, and idempotent. The public cancellation route is device-key protected, account-scoped, and available only while the request remains queued and has no operator review. They do not connect wallets, request signatures, send transactions, transfer GCA, change credits during cancellation, delete audit history, or create live trading permission.
+The four operator service routes are production-live and token-protected. The review route stores append-only manual decisions, requires a public non-sensitive prompt when more information is requested, requires approval before delivery, uses the server catalog credit unit, and settles at most once for each request. The public follow-up route is device-key protected, account-scoped, available only after a more-information review, limited to five append-only responses, and idempotent; account history never returns response text. The public delivery-receipt route is available only after completed delivery. The public cancellation route is available only while the request remains queued and has no operator review. They do not connect wallets, request signatures, send transactions, transfer GCA, change credits during cancellation or follow-up, delete audit history, or create live trading permission.
 
 ## Production Verification
 
 The latest service request lifecycle deployment was completed on `2026-08-10` UTC.
 
-- Readiness passed at `2026-08-10T09:14:56Z`.
-- Remote migrations `0012_service_request_reviews.sql`, `0013_service_delivery_receipts.sql`, and `0014_service_request_cancellations.sql` applied successfully.
-- Current Worker version `f6064d99-ea1a-49f8-861e-2743fc6ebf58` includes append-only service review, approved delivery, idempotent settlement, redacted account history, account-scoped delivery receipts, and queued-request cancellation.
-- Latest public smoke passed at `2026-08-10T09:14:18Z`.
-- Latest admin read-only smoke passed at `2026-08-10T09:14:34Z`.
-- Anonymous reads for all three operator service routes return HTTP `401`.
+- Readiness passed at `2026-08-10T13:21:00Z`.
+- Remote migrations `0012_service_request_reviews.sql`, `0013_service_delivery_receipts.sql`, `0014_service_request_cancellations.sql`, and `0015_service_request_followups.sql` applied successfully.
+- Current Worker version `def4a0ea-fcbb-4d0e-a380-ba9656d7dc05` includes append-only service review, public more-information prompts, bounded account follow-ups, approved delivery, idempotent settlement, redacted account history, account-scoped delivery receipts, and queued-request cancellation.
+- Latest public smoke passed at `2026-08-10T13:23:22Z`.
+- Latest admin read-only smoke passed at `2026-08-10T13:23:40Z`.
+- Anonymous reads for all four operator service routes return HTTP `401`.
 - Token-protected admin reads return HTTP `200`.
 
 The deployment blocker is cleared. For future releases, do not apply remote migrations or run `wrangler deploy` until `cloudflare-auth-session`, `cloudflare-d1-visible`, and `cloudflare-worker-deploy-permission` all pass. If `Authentication error [code: 10000]` reappears after login, treat it as an account or permission blocker and follow `authRecovery.safeNextActions`.
@@ -90,6 +92,7 @@ This applies pending remote D1 migrations. The production database already inclu
 - `0012_service_request_reviews.sql`
 - `0013_service_delivery_receipts.sql`
 - `0014_service_request_cancellations.sql`
+- `0015_service_request_followups.sql`
 
 Stop if Wrangler reports a remote D1 migration error.
 
@@ -113,7 +116,7 @@ cd /Users/abc/Desktop/gca_token
 python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes
 ```
 
-This verifies public health/config version fields, CORS, and unauthenticated admin-read rejection for the service queue, service review, and credit usage routes. It does not need `ADMIN_READ_TOKEN` and does not write test records.
+This verifies public health/config version fields, CORS, and unauthenticated admin-read rejection for the service queue, service review, service follow-up, and credit usage routes. It does not need `ADMIN_READ_TOKEN` and does not write test records.
 
 ## Gate 5: Post-Deploy Admin Smoke
 
@@ -165,7 +168,7 @@ Stop and do not claim the routes are live if:
 - Wrangler is not logged in, or the readiness gate returns `Authentication error [code: 10000]`;
 - D1 remote migration fails;
 - Worker deploy fails;
-- `/health` does not expose `gca_credit_usage_v1`, `gca_service_request_v1`, `gca_service_request_review_v1`, `gca_account_service_delivery_receipt_v1`, and `gca_account_service_request_cancellation_v1`;
+- `/health` does not expose `gca_credit_usage_v1`, `gca_service_request_v1`, `gca_service_request_review_v1`, `gca_account_service_request_followup_v1`, `gca_account_service_delivery_receipt_v1`, and `gca_account_service_request_cancellation_v1`;
 - unauthenticated reads do not return authorization errors;
 - admin smoke checks cannot read the new route response shapes;
 - any command prints secrets or user record contents.

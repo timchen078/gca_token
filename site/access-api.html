@@ -337,7 +337,7 @@
         <p class="eyebrow">Access API Contract / 2026-08-10</p>
         <h1 id="title">GCA Access API Contract</h1>
         <p class="lead">This page defines the controlled HTTPS API contract for the GCA account path. It covers email-only user registration, member account intake, read-only wallet verification, credit ledger records, GCA Member records, and support review statuses.</p>
-        <p class="lead">The Workers + D1 backend exposes live public routes for member access, redacted device-key account status, device-key protected service requests, queued-request cancellation, request history, safe key rotation, wallet verification, and registered-email recovery. Token-protected operator routes handle append-only service decisions, approved manual delivery, one-time credit settlement, GCA Member decisions, holding evidence, and verified evidence for already-completed member-benefit transfers.</p>
+        <p class="lead">The Workers + D1 backend exposes live public routes for member access, redacted device-key account status, device-key protected service requests and follow-ups, queued-request cancellation, request history, safe key rotation, wallet verification, and registered-email recovery. Token-protected operator routes handle append-only service decisions, private follow-up response reads, approved manual delivery, one-time credit settlement, GCA Member decisions, holding evidence, and verified evidence for already-completed member-benefit transfers.</p>
         <p class="lead">The 10,000 GCA member benefit remains a manual reserve-wallet process. The production evidence route verifies a successful safe-block receipt from the official reserve to the approved member wallet and records it; no API route signs, authorizes, or broadcasts a token transfer.</p>
         <p class="lead">The backend is deployed on Cloudflare Workers + D1 at <code>https://gca-registration-api.gcagochina.workers.dev</code>, so the public registration and member access pages can write directly to D1. Source remains in <code>cloudflare/gca-registration-worker/</code>. A future <code>api.gcagochina.com</code> custom domain still requires Cloudflare access to the account that owns the <code>gcagochina.com</code> zone.</p>
         <p class="lead">A local operator backend is also available for localhost testing, evidence export, read-only GCA balance checks, and operator review workflows. Implementation details are listed below in the endpoint contract and technical evidence sections.</p>
@@ -357,7 +357,7 @@
       <section class="facts" aria-label="Current state">
         <div class="fact">
           <span class="label">Current Stage</span>
-          <span class="value good">queued cancellation and reviewed settlement live</span>
+          <span class="value good">public follow-up and reviewed settlement live</span>
         </div>
         <div class="fact">
           <span class="label">Public Endpoint</span>
@@ -536,6 +536,14 @@
           <span class="value">cloudflare/gca-registration-worker/migrations/0012_service_request_reviews.sql</span>
         </div>
         <div class="fact">
+          <span class="label">Account Service Follow-Up</span>
+          <span class="value good">gca_account_service_request_followup_v1 live</span>
+        </div>
+        <div class="fact">
+          <span class="label">Service Follow-Up Migration</span>
+          <span class="value">cloudflare/gca-registration-worker/migrations/0015_service_request_followups.sql</span>
+        </div>
+        <div class="fact">
           <span class="label">Delivery Receipt</span>
           <span class="value good">gca_account_service_delivery_receipt_v1 live</span>
         </div>
@@ -623,7 +631,12 @@
           <div class="fact">
             <span class="label">POST</span>
             <span class="value">/gca/account-service-requests/status</span>
-            <p class="note">Live redacted history for <code>gca_account_service_request_status_v1</code>. It returns the matched account's latest 25 requests, latest redacted decision, delivery state, delivery acknowledgement, credits used, and remaining balance. Email, full wallet, device key, full request body, reviewer identity, and operator notes are omitted.</p>
+            <p class="note">Live redacted history for <code>gca_account_service_request_status_v1</code>. It returns the matched account's latest 25 requests, latest public prompt, follow-up time and count, delivery state, credits used, and remaining balance. Email, full wallet, keys, full request and response bodies, reviewer identity, and operator notes are omitted.</p>
+          </div>
+          <div class="fact">
+            <span class="label">POST</span>
+            <span class="value">/gca/account-service-requests/follow-ups</span>
+            <p class="note">Live <code>gca_account_service_request_followup_v1</code> response for the matching device-key account after a more-information review. Responses are append-only, account-scoped, limited to five per request, and idempotent; submission returns the request to manual review without changing credits, wallets, tokens, or trading permission.</p>
           </div>
           <div class="fact">
             <span class="label">POST</span>
@@ -653,7 +666,12 @@
           <div class="fact">
             <span class="label">POST / GET</span>
             <span class="value">/gca/service-request-reviews</span>
-            <p class="note">Live <code>ADMIN_READ_TOKEN</code>-protected append-only review and delivery route for <code>gca_service_request_review_v1</code>. Delivery requires prior approval and a non-sensitive <code>deliveryReference</code>. The Worker takes the credit unit from the server catalog and commits one linked usage record, ledger deduction, review, and delivered status in one D1 batch; retries cannot deduct twice.</p>
+            <p class="note">Live <code>ADMIN_READ_TOKEN</code>-protected append-only review and delivery route for <code>gca_service_request_review_v1</code>. More-information decisions require a public non-sensitive <code>memberPrompt</code>. Delivery requires prior approval and a non-sensitive <code>deliveryReference</code>; retries cannot deduct twice.</p>
+          </div>
+          <div class="fact">
+            <span class="label">GET</span>
+            <span class="value">/gca/service-request-followups</span>
+            <p class="note">Live token-protected operator read for append-only follow-up responses. Authorized operators can read the response for manual review; public account history exposes only the prompt, submission time, and count.</p>
           </div>
           <div class="fact">
             <span class="label">POST / GET</span>

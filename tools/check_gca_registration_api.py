@@ -37,7 +37,7 @@ from tools.export_cloudflare_email_registrations import (  # noqa: E402
 
 DEFAULT_ORIGIN = "https://gcagochina.com"
 DEFAULT_USER_AGENT = "GCA-Operator-Registration-API-Check/1.0"
-WORKER_RELEASE = "gca-registration-worker-2026-08-10-request-cancellation-v1"
+WORKER_RELEASE = "gca-registration-worker-2026-08-10-request-followup-v1"
 OFFICIAL_CONTACT_EMAIL = "support@gcagochina.com"
 OFFICIAL_MEMBER_BENEFIT_SOURCE_WALLET = "0x5e8f84748612b913aacc937492ac25dc5630e246"
 
@@ -187,6 +187,11 @@ def check_health(*, base_url: str, timeout: float, cafile: str, opener: Callable
         payload.get("accountServiceRequestStatusVersion")
         == "gca_account_service_request_status_v1",
         "health endpoint returned wrong account service request status version",
+    )
+    require(
+        payload.get("accountServiceRequestFollowupVersion")
+        == "gca_account_service_request_followup_v1",
+        "health endpoint returned wrong account service request follow-up version",
     )
     require(
         payload.get("accountServiceRequestCancellationVersion")
@@ -405,6 +410,11 @@ def check_access_config(*, base_url: str, timeout: float, cafile: str, opener: C
         "access config returned wrong account service request status version",
     )
     require(
+        payload.get("accountServiceRequestFollowupVersion")
+        == "gca_account_service_request_followup_v1",
+        "access config returned wrong account service request follow-up version",
+    )
+    require(
         payload.get("accountServiceRequestCancellationVersion")
         == "gca_account_service_request_cancellation_v1",
         "access config returned wrong account service request cancellation version",
@@ -474,6 +484,11 @@ def check_access_config(*, base_url: str, timeout: float, cafile: str, opener: C
         "access config returned wrong account service request status endpoint",
     )
     require(
+        payload.get("endpoints", {}).get("accountServiceRequestFollowups")
+        == "/gca/account-service-requests/follow-ups",
+        "access config returned wrong account service request follow-up endpoint",
+    )
+    require(
         payload.get("endpoints", {}).get(
             "accountServiceRequestCancellations"
         )
@@ -493,6 +508,13 @@ def check_access_config(*, base_url: str, timeout: float, cafile: str, opener: C
         )
         == "/gca/service-request-reviews",
         "access config returned wrong service request review endpoint",
+    )
+    require(
+        payload.get("endpoints", {}).get(
+            "serviceRequestFollowupsAdmin"
+        )
+        == "/gca/service-request-followups",
+        "access config returned wrong service request follow-up admin endpoint",
     )
     require(payload.get("boundaries", {}).get("readOnlyWalletVerification") is True, "access config must keep read-only wallet verification")
     require(payload.get("boundaries", {}).get("readOnlyAccountStatus") is True, "access config must keep account status read-only")
@@ -587,6 +609,55 @@ def check_access_config(*, base_url: str, timeout: float, cafile: str, opener: C
         )
         is False,
         "account service requests must not create trading permission",
+    )
+    require(
+        payload.get("boundaries", {}).get(
+            "accountServiceRequestFollowupEnabled"
+        )
+        is True,
+        "access config must enable account service request follow-ups",
+    )
+    require(
+        payload.get("boundaries", {}).get(
+            "accountServiceRequestFollowupRequiresMoreInformationReview"
+        )
+        is True,
+        "account service request follow-ups must require a more-information review",
+    )
+    require(
+        payload.get("boundaries", {}).get(
+            "accountServiceRequestFollowupLimitPerRequest"
+        )
+        == 5,
+        "access config returned wrong follow-up limit",
+    )
+    require(
+        payload.get("boundaries", {}).get(
+            "accountServiceRequestFollowupIdempotent"
+        )
+        is True,
+        "account service request follow-ups must be idempotent",
+    )
+    require(
+        payload.get("boundaries", {}).get(
+            "accountServiceRequestFollowupReturnsResponseText"
+        )
+        is False,
+        "account service request history must not return follow-up response text",
+    )
+    require(
+        payload.get("boundaries", {}).get(
+            "accountServiceRequestFollowupChangesCredits"
+        )
+        is False,
+        "account service request follow-ups must not change credits",
+    )
+    require(
+        payload.get("boundaries", {}).get(
+            "accountServiceRequestFollowupWritesWallet"
+        )
+        is False,
+        "account service request follow-ups must not write wallet state",
     )
     require(
         payload.get("boundaries", {}).get(
@@ -936,6 +1007,15 @@ def run_checks(
         ),
         check_cors_preflight(
             base_url=base_url,
+            path="/gca/account-service-requests/follow-ups",
+            check_id="cors-account-service-request-followups",
+            origin=origin,
+            timeout=timeout,
+            cafile=cafile,
+            opener=opener,
+        ),
+        check_cors_preflight(
+            base_url=base_url,
             path="/gca/account-service-requests/cancellations",
             check_id="cors-account-service-request-cancellations",
             origin=origin,
@@ -1100,6 +1180,14 @@ def run_checks(
         ),
         check_public_post_only_get(
             base_url=base_url,
+            path="/gca/account-service-requests/follow-ups",
+            check_id="account-service-request-followups-get-rejected",
+            timeout=timeout,
+            cafile=cafile,
+            opener=opener,
+        ),
+        check_public_post_only_get(
+            base_url=base_url,
             path="/gca/account-service-requests/cancellations",
             check_id="account-service-request-cancellations-get-rejected",
             timeout=timeout,
@@ -1144,6 +1232,15 @@ def run_checks(
                 cafile=cafile,
                 opener=opener,
             ),
+            check_cors_preflight(
+                base_url=base_url,
+                path="/gca/service-request-followups",
+                check_id="cors-service-request-followups",
+                origin=origin,
+                timeout=timeout,
+                cafile=cafile,
+                opener=opener,
+            ),
             check_unauthorized_admin_read(
                 base_url=base_url,
                 path="/gca/credit-usage",
@@ -1164,6 +1261,14 @@ def run_checks(
                 base_url=base_url,
                 path="/gca/service-request-reviews",
                 check_id="unauth-service-request-reviews-read",
+                timeout=timeout,
+                cafile=cafile,
+                opener=opener,
+            ),
+            check_unauthorized_admin_read(
+                base_url=base_url,
+                path="/gca/service-request-followups",
+                check_id="unauth-service-request-followups-read",
                 timeout=timeout,
                 cafile=cafile,
                 opener=opener,
@@ -1304,6 +1409,16 @@ def run_checks(
                     cafile=cafile,
                     opener=opener,
                 ),
+                check_authorized_admin_read(
+                    base_url=base_url,
+                    path="/gca/service-request-followups",
+                    check_id="admin-service-request-followups-read",
+                    token=clean_token,
+                    limit=limit,
+                    timeout=timeout,
+                    cafile=cafile,
+                    opener=opener,
+                ),
             ])
     return {
         "ok": all(item["ok"] for item in checks),
@@ -1324,6 +1439,7 @@ def run_checks(
             "submitsAccountStatusRecoveryApproval": False,
             "submitsAccountStatusRecoveryCompletion": False,
             "submitsAccountServiceRequest": False,
+            "submitsAccountServiceRequestFollowup": False,
             "submitsAccountServiceRequestCancellation": False,
             "submitsAccountServiceDeliveryReceipt": False,
             "submitsServiceRequest": False,

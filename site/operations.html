@@ -327,7 +327,7 @@
       <section aria-labelledby="title">
         <p class="eyebrow">Access Operations Runbook / 2026-08-10</p>
         <h1 id="title">GCA Access Operations Runbook</h1>
-        <p class="lead">This runbook defines how GCA operators handle registration, account intake, read-only wallet review, redacted device-key status access, queued-request cancellation, append-only service review, approved manual delivery, one-time credit settlement, protected member decisions, and member-benefit evidence.</p>
+        <p class="lead">This runbook defines how GCA operators handle registration, account intake, read-only wallet review, redacted device-key status access, public more-information prompts, private follow-up review, queued-request cancellation, append-only service review, approved manual delivery, one-time credit settlement, protected member decisions, and member-benefit evidence.</p>
         <p class="lead">The email registration, unsubscribe, account intake, wallet verification, redacted status, safe device-key rotation, registered-email recovery, and eligible ledger paths are live on Cloudflare Workers + D1. The redacted account status is private to the matching device key and is not a public ledger browser. Users who still hold a valid key can rotate it on the member-access page; users who lost it can open a generic recovery request. Operators must never request either device key by email or support ticket.</p>
         <div class="actions">
           <a class="button primary" href="review-queue.html">Review Queue Contract</a>
@@ -342,7 +342,7 @@
         <div class="facts" aria-label="Operational state">
           <div class="fact">
             <span class="label">Current stage</span>
-            <span class="value good">queued cancellation and manual settlement live</span>
+            <span class="value good">account follow-up and manual settlement live</span>
           </div>
           <div class="fact">
             <span class="label">Email API</span>
@@ -455,7 +455,7 @@
           </div>
           <div>
             <h3>9. Service Request Triage</h3>
-            <p class="note">Users with a valid device key submit through <code>/gca/account-service-requests</code>. Before review, the same account may permanently cancel a queued request through <code>/gca/account-service-requests/cancellations</code>; canceled records stay in the audit history and cannot be reviewed. Review the remaining protected queue, then use <code>tools/review_cloudflare_service_request.py</code> to append approved, needs-more-information, or rejected. Never collect credentials or create trading permission.</p>
+            <p class="note">Users with a valid device key submit through <code>/gca/account-service-requests</code>. Before review, the same account may cancel a queued request through <code>/gca/account-service-requests/cancellations</code>. Use <code>tools/review_cloudflare_service_request.py</code> for append-only decisions. For <code>needs_more_information</code>, publish one non-sensitive <code>memberPrompt</code>; the account can append a bounded response through <code>/gca/account-service-requests/follow-ups</code>, then the request returns to manual review. Read full responses only through the protected <code>/gca/service-request-followups</code> route. Never collect credentials or create trading permission.</p>
           </div>
           <div>
             <h3>10. Reviewed Delivery</h3>
@@ -483,7 +483,7 @@
       <section class="section panel" aria-labelledby="memberOpsTitle">
         <h2 id="memberOpsTitle">Member Access Ops Pipeline</h2>
         <p class="note">Use this local operator pipeline after live account, wallet verification, credit ledger, member ledger, or member-benefit review records exist. It requires the ignored local <code>cloudflare/gca-registration-worker/.env.admin.local</code> file with <code>ADMIN_READ_TOKEN</code>. The output stays in <code>.gca_access_data/</code> and is not committed.</p>
-        <p class="note">The account request cancellation and token-protected service-request, service-review, credit-usage, member-review, and holding-verification Worker routes are production-live. Migrations through <code>0014_service_request_cancellations.sql</code>, the Worker deploy, and public/admin read-only smoke checks passed on 2026-08-10 UTC. Anonymous operator reads return HTTP 401.</p>
+        <p class="note">Account follow-up and cancellation plus token-protected service-request, service-review, service-follow-up, credit-usage, member-review, and holding-verification Worker routes are production-live. <code>0014_service_request_cancellations.sql</code> and <code>0015_service_request_followups.sql</code>, the Worker deploy, and public/admin read-only smoke checks passed on 2026-08-10 UTC. Anonymous operator reads return HTTP 401.</p>
         <div class="grid">
           <div>
             <h3>1. Token-Protected Export</h3>
@@ -511,7 +511,7 @@
           </div>
           <div>
             <h3>7. Service Request Queue</h3>
-            <p class="note">The protected <code>service_requests</code> queue stores request scope without deduction. The protected <code>service-request-reviews</code> route appends manual decisions, requires approval before delivery, and returns only a redacted decision and settlement to the member history.</p>
+            <p class="note">The protected <code>service_requests</code> queue stores request scope without deduction. A more-information review must publish a safe member prompt; use the protected <code>service-request-followups</code> read to inspect the account response. Public history returns only prompt, time, and count. The workflow requires approval before delivery.</p>
           </div>
           <div>
             <h3>8. Member Review Decision</h3>
@@ -597,7 +597,7 @@
           <h2>Response Rules</h2>
           <div class="list">
             <div class="row"><span>Received</span><strong>Confirm queue receipt only</strong></div>
-            <div class="row"><span>Needs more information</span><strong>Ask only for non-sensitive correction</strong></div>
+            <div class="row"><span>Needs more information</span><strong>Publish a non-sensitive memberPrompt; keep operatorNote private</strong></div>
             <div class="row"><span>Eligible</span><strong>Say pending ledger activation</strong></div>
             <div class="row"><span>Below threshold</span><strong>State read-only balance result</strong></div>
             <div class="row"><span>Platform follow-up</span><strong>Send public URLs and status only</strong></div>

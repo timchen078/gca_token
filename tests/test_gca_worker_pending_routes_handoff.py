@@ -12,9 +12,9 @@ class GcaWorkerRoutesDeploymentTests(unittest.TestCase):
 
         expected_fragments = [
             "Production Verification",
-            "2026-08-10T09:14:56Z",
-            "f6064d99-ea1a-49f8-861e-2743fc6ebf58",
-            "Anonymous reads for all three operator service routes return HTTP `401`",
+            "2026-08-10T13:21:00Z",
+            "def4a0ea-fcbb-4d0e-a380-ba9656d7dc05",
+            "Anonymous reads for all four operator service routes return HTTP `401`",
             "Authentication error [code: 10000]",
             "cloudflare-auth-session",
             "authRecovery.status: cloudflare-auth-or-permission-blocked",
@@ -24,9 +24,11 @@ class GcaWorkerRoutesDeploymentTests(unittest.TestCase):
             "0012_service_request_reviews.sql",
             "0013_service_delivery_receipts.sql",
             "0014_service_request_cancellations.sql",
+            "0015_service_request_followups.sql",
             "gca_service_request_review_v1",
             "gca_account_service_delivery_receipt_v1",
             "gca_account_service_request_cancellation_v1",
+            "gca_account_service_request_followup_v1",
             "npx wrangler deploy",
             "python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes",
             "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes",
@@ -60,6 +62,8 @@ class GcaWorkerRoutesDeploymentTests(unittest.TestCase):
             "delete audit history",
             "account-scoped",
             "idempotent",
+            "more-information review",
+            "account history never returns response text",
         ):
             self.assertIn(boundary, record)
         self.assertNotIn("ADMIN_READ_TOKEN=", record)
@@ -71,13 +75,14 @@ class GcaWorkerRoutesDeploymentTests(unittest.TestCase):
         self.assertEqual(handoff["document"], "docs/gca_worker_pending_routes_deploy_handoff.md")
         self.assertEqual(handoff["status"], "production-live-verified")
         self.assertIsNone(handoff["blockedBy"])
-        self.assertEqual(handoff["workerVersionId"], "f6064d99-ea1a-49f8-861e-2743fc6ebf58")
+        self.assertEqual(handoff["workerVersionId"], "def4a0ea-fcbb-4d0e-a380-ba9656d7dc05")
         self.assertCountEqual(
             handoff["routes"],
             [
                 "/gca/service-requests",
                 "/gca/service-request-reviews",
                 "/gca/credit-usage",
+                "/gca/service-request-followups",
             ],
         )
 
@@ -106,9 +111,10 @@ class GcaWorkerRoutesDeploymentTests(unittest.TestCase):
                 "/gca/service-requests",
                 "/gca/service-request-reviews",
                 "/gca/credit-usage",
+                "/gca/service-request-followups",
             }
         }
-        self.assertEqual(len(routes), 3)
+        self.assertEqual(len(routes), 4)
         for route in routes.values():
             self.assertEqual(route["status"], "live-token-protected")
             self.assertEqual(route["lastObservedAnonymousGetStatus"], 401)
@@ -128,6 +134,7 @@ class GcaWorkerRoutesDeploymentTests(unittest.TestCase):
             "/gca/service-requests",
             "/gca/service-request-reviews",
             "/gca/credit-usage",
+            "/gca/service-request-followups",
         ):
             self.assertIn(expected, page)
 
@@ -140,6 +147,9 @@ class GcaWorkerRoutesDeploymentTests(unittest.TestCase):
         self.assertIn("Public completed-delivery receipt endpoint: `POST /gca/account-service-requests/delivery-receipts`", backend_doc)
         self.assertIn("Service request cancellation migration: `cloudflare/gca-registration-worker/migrations/0014_service_request_cancellations.sql`", backend_doc)
         self.assertIn("Public queued-request cancellation endpoint: `POST /gca/account-service-requests/cancellations`", backend_doc)
+        self.assertIn("Service request follow-up migration: `cloudflare/gca-registration-worker/migrations/0015_service_request_followups.sql`", backend_doc)
+        self.assertIn("Public more-information follow-up endpoint: `POST /gca/account-service-requests/follow-ups`", backend_doc)
+        self.assertIn("Admin service request follow-up endpoint: `GET /gca/service-request-followups` live and token-protected", backend_doc)
         self.assertIn("Anonymous reads return HTTP 401", backend_doc)
 
 
