@@ -337,7 +337,7 @@
 
     <main class="shell">
       <section aria-labelledby="title">
-        <p class="eyebrow">Access Portal / 2026-05-20</p>
+        <p class="eyebrow">Access Portal / 2026-08-10</p>
         <h1 id="title">GCA Access Portal</h1>
         <p class="lead">This page defines the controlled account path for GCA AI Quant Access: email account intake, read-only wallet verification, redacted device-key status refresh, 100 GCA AI Quant Access credits ledger records, GCA Member ledger records, 30-day holding-period review, 10,000 GCA member benefit review, and support workflow.</p>
         <p class="lead">The live member access page now submits to the Cloudflare Workers + D1 backend. It verifies a Base wallet with a read-only ERC-20 balanceOf call and writes eligible credit/member ledger records. The 10,000 GCA member benefit remains manual review only and is not an automatic transfer.</p>
@@ -404,6 +404,11 @@
             <span class="value">Refresh redacted status</span>
             <p class="note">This browser keeps a random device key and can refresh account, credits, member-review, and benefit-transfer status. D1 stores only the key hash; the response excludes email, full wallet, the key, admin data, and operator notes.</p>
           </div>
+          <div class="fact">
+            <span class="label">Step 5</span>
+            <span class="value">Request reviewed services</span>
+            <p class="note">Device-key accounts can submit catalog requests, read redacted review status, answer a published follow-up prompt, cancel before review, and acknowledge completed delivery. Credits are deducted only after approved manual delivery.</p>
+          </div>
         </div>
       </section>
 
@@ -412,7 +417,7 @@
           <h2>100 Credits Path</h2>
           <div class="list">
             <div class="row"><span>Minimum verified holding</span><strong>10,000 GCA</strong></div>
-            <div class="row"><span>Planned ledger record</span><strong>100 GCA AI Quant Access credits</strong></div>
+            <div class="row"><span>Ledger record</span><strong>100 GCA AI Quant Access credits</strong></div>
             <div class="row"><span>Credit ledger activation</span><strong class="good">Live for eligible records</strong></div>
             <div class="row"><span>Registered user limit</span><strong>one holder bonus</strong></div>
           </div>
@@ -423,7 +428,7 @@
             <div class="row"><span>Minimum verified holding</span><strong>1,000,000 GCA</strong></div>
             <div class="row"><span>Minimum holding period</span><strong>30 consecutive days</strong></div>
             <div class="row"><span>Member benefit</span><strong>10,000 GCA after approval</strong></div>
-            <div class="row"><span>Planned status</span><strong>GCA Member</strong></div>
+            <div class="row"><span>Review status</span><strong>GCA Member</strong></div>
             <div class="row"><span>Member ledger activation</span><strong class="good">Live for eligible records</strong></div>
             <div class="row"><span>Support review queue</span><strong class="pending">Required before member-benefit approval</strong></div>
           </div>
@@ -432,7 +437,7 @@
 
       <section class="section panel" aria-labelledby="modulesTitle">
         <h2 id="modulesTitle">Access Modules</h2>
-        <p class="note">Credits, member status, and the planned 10,000 GCA member benefit are account-level records only. They are not cash, income, reimbursement, trading permission, or transferable value, and they cannot bypass risk controls.</p>
+        <p class="note">Credits, member status, and the manually reviewed 10,000 GCA member benefit are account-level records only. They are not cash, income, reimbursement, trading permission, or transferable value, and they cannot bypass risk controls.</p>
         <div class="grid" style="margin-top: 16px;">
           <div class="fact">
             <span class="label">Report</span>
@@ -518,7 +523,8 @@
           <div class="row"><span><a href="access-api.html">Access API Contract</a></span><strong>Workers + D1 contract</strong></div>
           <div class="row"><span><a href="review-queue.html">Review Queue Contract</a></span><strong>manual review contract</strong></div>
           <div class="row"><span><a href="members.html">Member Pre-Registration</a></span><strong>local packet generator</strong></div>
-          <div class="row"><span><a href="credits.html">Credits Catalog</a></span><strong>draft service catalog</strong></div>
+          <div class="row"><span><a href="credits.html">Credits Catalog</a></span><strong>live reviewed service catalog</strong></div>
+          <div class="row"><span><a href="gca/member-access/">Reviewed Service Requests</a></span><strong>live manual queue</strong></div>
           <div class="row"><span><a href="member-ledger.html">Member Ledger</a></span><strong>data contract</strong></div>
           <div class="row"><span><a href="support.html">Support & Intake</a></span><strong>manual support route</strong></div>
           <div class="row"><span><a href="release-gates.html">Release Gates</a></span><strong>go-live boundaries</strong></div>

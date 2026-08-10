@@ -241,6 +241,17 @@
         padding-top: 0;
       }
 
+      .row > * {
+        min-width: 0;
+        max-width: 100%;
+      }
+
+      .row strong {
+        overflow-wrap: anywhere;
+        word-break: break-word;
+        text-align: right;
+      }
+
       code {
         border: 1px solid var(--line);
         border-radius: 6px;
@@ -248,6 +259,8 @@
         padding: 2px 5px;
         font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
         font-size: 0.92em;
+        overflow-wrap: anywhere;
+        word-break: break-word;
       }
 
       footer {
@@ -262,6 +275,11 @@
         .row {
           align-items: flex-start;
           flex-direction: column;
+        }
+
+        .row strong {
+          text-align: left;
+          width: 100%;
         }
 
         .nav-links {
@@ -312,6 +330,7 @@
         <p class="lead">Use this page for official GCA support routing, member pre-registration packet handling, wallet-verification questions, wallet-warning evidence, and data-platform correction context.</p>
         <div class="actions">
           <a class="button primary" href="mailto:support@gcagochina.com?subject=GCA%20Support%20Request">Email GCA Support</a>
+          <a class="button primary" href="gca/member-access/">Member Access & Service Requests</a>
           <a class="button primary" href="register.html">Email Registration</a>
           <a class="button" href="zh-support.html">中文支持和资料提交</a>
           <a class="button" href="team.html">Team Profile</a>
@@ -344,7 +363,7 @@
         </div>
         <div class="fact">
           <span class="label">Current Intake</span>
-          <span class="value">Copy, download, or email</span>
+          <span class="value good">Member Access + official email</span>
         </div>
         <div class="fact">
           <span class="label">Sensitive Data</span>
@@ -355,11 +374,11 @@
       <section class="section three" aria-label="Request types">
         <div class="panel">
           <h2>Member Packet</h2>
-          <p class="note">Use <a href="members.html">members.html</a> to generate a local <code>gca_member_preregistration_v2</code> packet with <code>memberBenefitReviewEvidence</code>. The public page still does not create a live GCA AI Quant Access account or automatic credit redemption. The GCA Member 10,000 GCA benefit review rules are published at <a href="member-benefit.html">member-benefit.html</a>.</p>
+          <p class="note">Use live <a href="gca/member-access/">Member Access</a> for controlled account intake, read-only wallet verification, ledger eligibility, and reviewed service requests. The legacy <a href="members.html">members.html</a> page only generates a local <code>gca_member_preregistration_v2</code> packet and does not approve an account or transfer tokens.</p>
         </div>
         <div class="panel">
           <h2>Wallet Questions</h2>
-          <p class="note">Support can review public Base wallet addresses, declared GCA balances, and transaction hashes. Wallet verification remains a read-only ERC-20 <code>balanceOf</code> check after controlled account UI is live.</p>
+          <p class="note">Support can review public Base wallet addresses and transaction hashes. Wallet verification is live as a read-only ERC-20 <code>balanceOf</code> check and never requires a signature, private key, custody, or transaction.</p>
         </div>
         <div class="panel">
           <h2>Platform Corrections</h2>
@@ -397,7 +416,7 @@
       <section class="section two" aria-label="Current review boundaries">
         <div class="panel">
           <h2>Support Workflow</h2>
-          <p class="note">Current public intake is manual: users can copy, download, or email a packet. After controlled HTTPS intake is live, support can use statuses such as <code>received</code>, <code>wallet_pending</code>, <code>eligible</code>, <code>needs_more_information</code>, <code>rejected</code>, and <code>ledger_recorded</code>. A 5-10 business day first-response target applies only after controlled intake is live and is not a promise.</p>
+          <p class="note">Structured account and catalog service intake is live in Member Access. Device-key accounts can read redacted review status, answer a published more-information prompt, cancel before review, and acknowledge completed delivery. Generic support remains manual through <a href="mailto:support@gcagochina.com">support@gcagochina.com</a>; the 5-10 business day first-response target is not a promise.</p>
         </div>
         <div class="panel">
           <h2>What Support Cannot Do</h2>
@@ -446,7 +465,7 @@
     </main>
 
     <footer>
-      <div class="shell">GCA support intake is manual until controlled HTTPS account UI is live.</div>
+      <div class="shell">GCA structured account and service intake is live; generic support remains manual through the official project-domain email.</div>
     </footer>
   </body>
 </html>

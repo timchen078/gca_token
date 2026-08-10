@@ -138,7 +138,7 @@ UTILITY_PAGE_URL = "https://gcagochina.com/utility.html"
 UTILITY_URL = "https://gcagochina.com/utility.json"
 PRODUCT_PAGE_URL = "https://gcagochina.com/product.html"
 PRODUCT_URL = "https://gcagochina.com/product.json"
-PRODUCT_STAGE = "account-ledger-and-browser-tools-live-connected-services-staged"
+PRODUCT_STAGE = "account-ledger-browser-tools-and-reviewed-services-live-connected-market-data-and-trading-staged"
 ACCESS_PAGE_URL = "https://gcagochina.com/access.html"
 ACCESS_URL = "https://gcagochina.com/access.json"
 OPERATIONS_PAGE_URL = "https://gcagochina.com/operations.html"
@@ -4935,7 +4935,7 @@ def validate_listing_kit_page(text: str) -> None:
     assert_contains(text, "Approved", label)
     assert_contains(text, "no completed third-party audit", label)
     assert_contains(text, "Do not claim BaseScan profile approval", label)
-    assert_contains(text, "GCAgochina@outlook.com", label)
+    assert_contains(text, "support@gcagochina.com", label)
     assert_contains(text, X_URL, label)
     assert_contains(text, MAINNET_ADDRESS, label)
     assert_contains(text, BASE_USDT_ADDRESS, label)
@@ -5890,7 +5890,7 @@ def validate_support_page(text: str) -> None:
     assert_contains(text, "Operations Runbook", label)
     assert_contains(text, "GCAgochina@outlook.com", label)
     assert_contains(text, "Domain Email", label)
-    assert_contains(text, "Owner action required before BaseScan resubmission", label)
+    assert_contains(text, "Domain email ready for BaseScan resubmission", label)
     assert_contains(text, "Private key or seed phrase", label)
     assert_contains(text, "Exchange API secret or withdrawal permission", label)
     assert_contains(text, "Support Workflow", label)
@@ -5931,10 +5931,14 @@ def validate_support_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong contractAddress")
     if payload.get("officialEmail") != "support@gcagochina.com":
         raise SiteCheckError(f"{label}: wrong officialEmail")
-    if submission.get("directSubmissionEndpointConfigured") is not False:
-        raise SiteCheckError(f"{label}: direct submission must remain false")
-    if submission.get("controlledHttpsAccountUiLive") is not False:
-        raise SiteCheckError(f"{label}: account UI must remain false")
+    if submission.get("directSubmissionEndpointConfigured") is not True:
+        raise SiteCheckError(f"{label}: structured account service submission must be live")
+    if submission.get("controlledHttpsAccountUiLive") is not True:
+        raise SiteCheckError(f"{label}: controlled account UI must be live")
+    if submission.get("genericSupportEmailManual") is not True:
+        raise SiteCheckError(f"{label}: generic support email must remain manual")
+    if submission.get("accountServiceRequestEndpoint") != "/gca/account-service-requests":
+        raise SiteCheckError(f"{label}: wrong account service request endpoint")
     if "private key" not in payload.get("doNotSend", []):
         raise SiteCheckError(f"{label}: missing private key boundary")
     if "seed phrase" not in payload.get("doNotSend", []):
@@ -5943,8 +5947,10 @@ def validate_support_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing API secret boundary")
     if "withdrawal permission" not in payload.get("doNotSend", []):
         raise SiteCheckError(f"{label}: missing withdrawal permission boundary")
-    if workflow.get("preparedIntakeEndpoint") != "/gca/pre-registrations":
-        raise SiteCheckError(f"{label}: wrong prepared intake endpoint")
+    if workflow.get("liveIntakeEndpoint") != "/gca/member-access":
+        raise SiteCheckError(f"{label}: wrong live intake endpoint")
+    if workflow.get("liveAccountServiceRequestEndpoint") != "/gca/account-service-requests":
+        raise SiteCheckError(f"{label}: wrong live service request endpoint")
     if "ledger_recorded" not in workflow.get("reviewStatuses", []):
         raise SiteCheckError(f"{label}: missing ledger status")
     if workflow.get("memberPacketVersion") != "gca_member_preregistration_v2":
@@ -6036,8 +6042,8 @@ def validate_roadmap_page(text: str) -> None:
     assert_no_public_data_room_terms(text, label)
     assert_contains(text, "Review follow-up and reviewed delivery live; connected market modules staged", label)
     assert_contains(text, "Phase 3: Browser-Local Product Suite", label)
-    assert_contains(text, "ten GCA risk and research tools, the Member Workspace priority queue", label)
-    assert_contains(text, "privacy-minimized Risk Passport workflow report", label)
+    assert_contains(text, "ten browser-only GCA risk and research tools, the Member Workspace", label)
+    assert_contains(text, "Risk Passport, encrypted Workspace Vault", label)
     assert_contains(text, 'href="risk-passport.html"', label)
     assert_contains(text, "encrypted Workspace Vault", label)
     assert_contains(text, 'href="workspace-vault.html"', label)
@@ -7604,7 +7610,7 @@ def validate_liquidation_replay_001_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong status")
     if payload.get("reportId") != "liquidation-replay-001":
         raise SiteCheckError(f"{label}: wrong reportId")
-    if payload.get("lastUpdated") != "2026-06-11":
+    if payload.get("lastUpdated") != "2026-08-10":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
@@ -7633,8 +7639,10 @@ def validate_liquidation_replay_001_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing holder credit use")
     if "1,000,000 GCA / 30-day eligibility" not in account_credit_use.get("gcaMember", ""):
         raise SiteCheckError(f"{label}: missing member queue use")
-    if "Cloudflare deploy permission" not in account_credit_use.get("serviceRouteStatus", ""):
-        raise SiteCheckError(f"{label}: missing service route deploy boundary")
+    if "are live through Workers + D1" not in account_credit_use.get("serviceRouteStatus", ""):
+        raise SiteCheckError(f"{label}: missing live service route status")
+    if "report production remains manual" not in account_credit_use.get("serviceRouteStatus", ""):
+        raise SiteCheckError(f"{label}: missing manual report production boundary")
     if not any("private keys" in item for item in payload.get("releaseBoundaries", [])):
         raise SiteCheckError(f"{label}: missing private-key boundary")
     if "GCA has published Liquidation Replay Sample 001 as an education and product-proof report format." not in boundaries.get("safeClaims", []):
@@ -8198,7 +8206,7 @@ def validate_product_page(text: str) -> None:
     assert_contains(text, "not financial advice", label)
     assert_contains(text, "Public Account UI", label)
     assert_contains(text, "Live at /gca/member-access/", label)
-    assert_contains(text, "Account, ledger, and ten browser tools live", label)
+    assert_contains(text, "Accounts, ledgers, reviewed services, and ten browser tools live", label)
     assert_contains(text, "China Narrative Radar", label)
     assert_contains(text, "Weekly Go China Radar", label)
     assert_contains(text, "Liquidation Replay", label)
@@ -9037,7 +9045,7 @@ def validate_access_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong chainId")
     if payload.get("contractAddress") != MAINNET_ADDRESS:
         raise SiteCheckError(f"{label}: wrong contractAddress")
-    if state.get("currentStage") != "controlled-account-ui-and-device-status-live":
+    if state.get("currentStage") != "controlled-account-ui-device-status-and-reviewed-services-live":
         raise SiteCheckError(f"{label}: wrong currentStage")
     if state.get("blueprintOnly") is not False:
         raise SiteCheckError(f"{label}: blueprintOnly must be false")
@@ -12777,7 +12785,7 @@ def validate_privacy_page(text: str) -> None:
     assert_no_public_data_room_terms(text, label)
     assert_contains(text, "live email registration", label)
     assert_contains(text, "contact suppression", label)
-    assert_contains(text, "Email API live / member packet local", label)
+    assert_contains(text, "Workers + D1 account services live", label)
     assert_contains(text, "Email Registration", label)
     assert_contains(text, "Email Unsubscribe", label)
     assert_contains(text, "register.html", label)
@@ -12787,7 +12795,7 @@ def validate_privacy_page(text: str) -> None:
     assert_contains(text, "local pre-registration packet", label)
     assert_contains(text, "No private key, seed phrase, exchange API secret, withdrawal permission, or custody request", label)
     assert_contains(text, "read-only ERC-20", label)
-    assert_contains(text, "GCAgochina@outlook.com", label)
+    assert_contains(text, "support@gcagochina.com", label)
     assert_contains(text, "Participation Terms", label)
     assert_not_contains(text, OLD_WETH_POOL_ADDRESS, label)
     assert_not_contains(text, "GCA/WETH", label)
@@ -12798,7 +12806,7 @@ def validate_privacy_json(text: str) -> None:
     payload = load_json(text, label)
     static = payload.get("currentStaticSiteBehavior", {})
     verification = payload.get("walletVerification", {})
-    future = payload.get("futureControlledIntake", {})
+    controlled = payload.get("controlledAccountIntake", {})
     boundary = payload.get("securityBoundary", {})
     links = payload.get("publicLinks", {})
 
@@ -12820,6 +12828,10 @@ def validate_privacy_json(text: str) -> None:
         raise SiteCheckError(f"{label}: contact suppression endpoint should be live")
     if static.get("memberPreRegistrationDirectSubmissionEndpointConfigured") is not False:
         raise SiteCheckError(f"{label}: member pre-registration direct submission must remain false")
+    if static.get("controlledAccountDirectSubmissionEndpointConfigured") is not True:
+        raise SiteCheckError(f"{label}: controlled account submission must be live")
+    if static.get("accountServiceRequestDirectSubmissionEndpointConfigured") is not True:
+        raise SiteCheckError(f"{label}: account service request submission must be live")
     if static.get("emailRegistrationEndpoint") != "/gca/email-registrations":
         raise SiteCheckError(f"{label}: wrong email registration endpoint")
     if static.get("contactSuppressionEndpoint") != "/gca/contact-suppressions":
@@ -12834,8 +12846,12 @@ def validate_privacy_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wallet verification must not require seed phrase")
     if verification.get("requiresWithdrawalPermission") is not False:
         raise SiteCheckError(f"{label}: wallet verification must not require withdrawal permission")
-    if future.get("preparedIntakeEndpoint") != "/gca/pre-registrations":
-        raise SiteCheckError(f"{label}: wrong prepared intake endpoint")
+    if controlled.get("intakeEndpoint") != "/gca/member-access":
+        raise SiteCheckError(f"{label}: wrong controlled account intake endpoint")
+    if controlled.get("serviceRequestEndpoint") != "/gca/account-service-requests":
+        raise SiteCheckError(f"{label}: wrong controlled service request endpoint")
+    if boundary.get("accountServiceHistoryReturnsFollowupResponseText") is not False:
+        raise SiteCheckError(f"{label}: account history must not return follow-up response text")
     if "private key" not in boundary.get("neverAskFor", []):
         raise SiteCheckError(f"{label}: missing private key boundary")
     if links.get("support") != SUPPORT_PAGE_URL:
@@ -12864,7 +12880,9 @@ def validate_terms_page(text: str) -> None:
     assert_contains(text, "GCA Participation Terms", label)
     assert_contains(text, "Participation References", label)
     assert_no_public_data_room_terms(text, label)
-    assert_contains(text, "Pre-Registration Only", label)
+    assert_contains(text, "Legacy Pre-Registration", label)
+    assert_contains(text, "Live with manual review", label)
+    assert_contains(text, "Eligible ledger records live", label)
     assert_contains(text, "Email Registration", label)
     assert_contains(text, "Email Unsubscribe", label)
     assert_contains(text, "register.html", label)
@@ -12904,6 +12922,10 @@ def validate_terms_json(text: str) -> None:
         raise SiteCheckError(f"{label}: email registration should be live")
     if boundaries.get("emailContactSuppressionLive") is not True:
         raise SiteCheckError(f"{label}: email contact suppression should be live")
+    if boundaries.get("controlledAccountUiLive") is not True:
+        raise SiteCheckError(f"{label}: controlled account UI should be live")
+    if boundaries.get("reviewedServiceRequestsLive") is not True:
+        raise SiteCheckError(f"{label}: reviewed service requests should be live")
     if boundaries.get("publicSelfServiceClaimConnected") is not False:
         raise SiteCheckError(f"{label}: self-service claim must remain false")
     if boundaries.get("emailRegistrationTransfersTokens") is not False:
@@ -12920,6 +12942,15 @@ def validate_terms_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong member holding period")
     if programs.get("gcaMember", {}).get("memberBenefitAmount") != "10000 GCA":
         raise SiteCheckError(f"{label}: wrong member benefit")
+    if programs.get("holderBonus", {}).get("currentPublicClaimStatus") != "live-for-eligible-account-ledger-records":
+        raise SiteCheckError(f"{label}: wrong holder bonus live status")
+    if programs.get("gcaMember", {}).get("currentPublicClaimStatus") != "live-eligible-member-ledger-with-manual-benefit-review":
+        raise SiteCheckError(f"{label}: wrong GCA Member live status")
+    reviewed_services = payload.get("reviewedServiceTerms", {})
+    if reviewed_services.get("status") != "live-manual-review-and-delivery":
+        raise SiteCheckError(f"{label}: wrong reviewed service status")
+    if reviewed_services.get("requestEndpoint") != "/gca/account-service-requests":
+        raise SiteCheckError(f"{label}: wrong reviewed service request endpoint")
     email_registration = payload.get("emailRegistrationTerms", {})
     if email_registration.get("endpoint") != "https://gca-registration-api.gcagochina.workers.dev/gca/email-registrations":
         raise SiteCheckError(f"{label}: wrong email registration endpoint")
@@ -13232,7 +13263,7 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong contractAddress")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
-    if payload.get("lastUpdated") != "2026-07-19":
+    if payload.get("lastUpdated") != "2026-08-10":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("memberProgramRulesUrl") != MEMBER_PROGRAM_URL:
         raise SiteCheckError(f"{label}: wrong memberProgramRulesUrl")
@@ -13686,8 +13717,10 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: member access brief must require review")
     if member_program.get("status") != "account-ledger-path-live-manual-benefit-review":
         raise SiteCheckError(f"{label}: unexpected member program status")
-    if member_program.get("supportIntake", {}).get("status") != "public-support-intake-published":
+    if member_program.get("supportIntake", {}).get("status") != "live-structured-account-service-intake-and-manual-email-support":
         raise SiteCheckError(f"{label}: unexpected support intake status")
+    if member_program.get("supportIntake", {}).get("directSubmissionEndpointConfigured") is not True:
+        raise SiteCheckError(f"{label}: project support intake must mark structured submission live")
     if member_program.get("ledgerSchema", {}).get("status") != "public-member-ledger-workers-d1-live":
         raise SiteCheckError(f"{label}: unexpected member ledger schema status")
     if member_program.get("privacyAndTerms", {}).get("status") != "public-privacy-and-terms-published":
@@ -14500,7 +14533,7 @@ def validate_member_program_json(text: str) -> None:
 
     if payload.get("schema") != MEMBER_PROGRAM_URL:
         raise SiteCheckError(f"{label}: wrong schema")
-    if payload.get("status") != "rules-published-public-claim-not-connected":
+    if payload.get("status") != "member-account-and-reviewed-service-workflow-live":
         raise SiteCheckError(f"{label}: wrong status")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
@@ -14542,8 +14575,8 @@ def validate_member_program_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong member benefit")
     if member_tier.get("refreshCadence") != "30 days after activation, or earlier if the user requests a manual recheck":
         raise SiteCheckError(f"{label}: wrong member refresh cadence")
-    if verification.get("directSubmissionEndpointConfigured") is not False:
-        raise SiteCheckError(f"{label}: direct submission must remain false")
+    if verification.get("directSubmissionEndpointConfigured") is not True:
+        raise SiteCheckError(f"{label}: direct account submission must be live")
     preview = verification.get("browserPreview", {})
     local_backend = verification.get("localOperatorBackend", {})
     if local_backend.get("status") != "local-only-backend-available":
@@ -14588,8 +14621,10 @@ def validate_member_program_json(text: str) -> None:
         raise SiteCheckError(f"{label}: member access page must not require another controlled UI")
     if verification.get("publicLedgerSchemaUrl") != MEMBER_LEDGER_URL:
         raise SiteCheckError(f"{label}: wrong public ledger schema URL")
-    if verification.get("preparedMemberBenefitTransferEndpoint") != "/gca/member-benefit-transfers":
+    if verification.get("liveMemberBenefitTransferEndpoint") != "/gca/member-benefit-transfers":
         raise SiteCheckError(f"{label}: wrong member benefit transfer endpoint")
+    if verification.get("liveAccountServiceRequestEndpoint") != "/gca/account-service-requests":
+        raise SiteCheckError(f"{label}: wrong account service request endpoint")
     if privacy_terms.get("status") != "public-privacy-and-terms-published":
         raise SiteCheckError(f"{label}: wrong privacy and terms status")
     if privacy_terms.get("privacyNoticeUrl") != PRIVACY_NOTICE_PAGE_URL:
@@ -14600,14 +14635,16 @@ def validate_member_program_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong participation terms URL")
     if privacy_terms.get("participationTermsJsonUrl") != PARTICIPATION_TERMS_URL:
         raise SiteCheckError(f"{label}: wrong terms JSON URL")
-    if support_intake.get("status") != "public-support-intake-published":
+    if support_intake.get("status") != "live-structured-account-service-intake-and-manual-email-support":
         raise SiteCheckError(f"{label}: wrong support intake status")
     if support_intake.get("pageUrl") != SUPPORT_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong support page URL")
     if support_intake.get("url") != SUPPORT_URL:
         raise SiteCheckError(f"{label}: wrong support JSON URL")
-    if support_intake.get("directSubmissionEndpointConfigured") is not False:
-        raise SiteCheckError(f"{label}: support direct submission must remain false")
+    if support_intake.get("directSubmissionEndpointConfigured") is not True:
+        raise SiteCheckError(f"{label}: structured support submission must be live")
+    if support_intake.get("accountServiceRequestEndpoint") != "/gca/account-service-requests":
+        raise SiteCheckError(f"{label}: wrong support service request endpoint")
     if support.get("contactEmail") != "support@gcagochina.com":
         raise SiteCheckError(f"{label}: wrong support contact")
     if "ledger_recorded" not in support.get("reviewStatuses", []):
@@ -15204,7 +15241,7 @@ def validate_market_quality_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong pageUrl")
     if payload.get("status") != "early-stage-market-quality-plan":
         raise SiteCheckError(f"{label}: wrong status")
-    if payload.get("lastUpdated") != "2026-07-23":
+    if payload.get("lastUpdated") != "2026-08-10":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
@@ -15222,7 +15259,7 @@ def validate_market_quality_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong CoinGecko status")
     if current.get("coinMarketCapTrackedListing") != "defer":
         raise SiteCheckError(f"{label}: wrong CoinMarketCap status")
-    if current.get("memberUtilityAccess") != "live-account-and-ledger-workflows-service-delivery-staged":
+    if current.get("memberUtilityAccess") != "live-account-ledger-and-manual-reviewed-service-delivery":
         raise SiteCheckError(f"{label}: wrong member utility access status")
     utility_delivery = next(
         (item for item in payload.get("legitimateActions", []) if item.get("id") == "utility-delivery"),
@@ -15230,7 +15267,7 @@ def validate_market_quality_json(text: str) -> None:
     )
     if utility_delivery.get("status") != "live-and-iterating":
         raise SiteCheckError(f"{label}: wrong utility delivery status")
-    if "Operate the live GCA member and 100-credit account path while improving reviewed service delivery." not in utility_delivery.get("actions", []):
+    if "Operate the live GCA member, 100-credit, and manually reviewed service-delivery path." not in utility_delivery.get("actions", []):
         raise SiteCheckError(f"{label}: missing current utility delivery action")
     if "artificial activity" not in payload.get("doNotUse", []):
         raise SiteCheckError(f"{label}: missing artificial activity boundary")
@@ -15252,7 +15289,7 @@ def validate_market_quality_page(text: str) -> None:
     assert_contains(text, "Self-trading or wash trading", label)
     assert_contains(text, "Misleading volume", label)
     assert_contains(text, "CoinGecko or CoinMarketCap submission", label)
-    assert_contains(text, "Account and eligible ledger path live; reviewed service delivery staged", label)
+    assert_contains(text, "Account, eligible ledgers, and manually reviewed service delivery live", label)
     assert_contains(text, "Live and iterating", label)
     assert_contains(text, "Track live account intake, read-only wallet verification, eligible ledger records", label)
     assert_not_contains(text, "Controlled account UI in progress", label)
@@ -17195,7 +17232,7 @@ def validate_sitemap(text: str) -> None:
         "roadmap.html",
         "roadmap.json",
     ):
-        assert_sitemap_lastmod(path, "2026-07-27")
+        assert_sitemap_lastmod(path, "2026-08-10")
     for path in (
         "access-api.html",
         "access-api.json",
@@ -17227,8 +17264,6 @@ def validate_sitemap(text: str) -> None:
         assert_sitemap_lastmod(path, "2026-07-24")
     for path in (
         "action-plan.html",
-        "liquidation-replay-001.html",
-        "liquidation-replay-001.json",
     ):
         assert_sitemap_lastmod(path, "2026-06-11")
     for path in (
@@ -17259,7 +17294,6 @@ def validate_sitemap(text: str) -> None:
         "research-notes.html",
         "reviewer-kit.html",
         "reviewer-kit.json",
-        "terms.html",
         "token-safety.html",
         "trade-journal.html",
         "trade-plans.html",
@@ -17272,11 +17306,7 @@ def validate_sitemap(text: str) -> None:
     ):
         assert_sitemap_lastmod(path, "2026-07-18")
     for path in (
-        "",
         "member-workspace.html",
-        "product.html",
-        "product.json",
-        "project.json",
         "risk-passport.html",
         "workspace-vault.html",
         "site-map.html",
@@ -17284,6 +17314,27 @@ def validate_sitemap(text: str) -> None:
         "zh-site-map.html",
     ):
         assert_sitemap_lastmod(path, "2026-07-19")
+    for path in (
+        "",
+        "access.html",
+        "access.json",
+        "liquidation-replay-001.html",
+        "liquidation-replay-001.json",
+        "market-quality.html",
+        "market-quality.json",
+        "member-program.html",
+        "member-program.json",
+        "privacy.html",
+        "privacy.json",
+        "product.html",
+        "product.json",
+        "project.json",
+        "support.html",
+        "support.json",
+        "terms.html",
+        "terms.json",
+    ):
+        assert_sitemap_lastmod(path, "2026-08-10")
 
 
 def validate_robots(text: str) -> None:

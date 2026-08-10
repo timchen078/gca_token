@@ -1,18 +1,22 @@
 {
   "schema": "https://gcagochina.com/terms.json",
   "pageUrl": "https://gcagochina.com/terms.html",
-  "lastUpdated": "2026-05-20",
+  "lastUpdated": "2026-08-10",
   "status": "public-participation-terms-published",
-  "scope": "GCA public website, member pre-registration, planned 100 credits, planned GCA Member status, GCA AI Quant Access account path",
+  "scope": "GCA public website, legacy member pre-registration, live controlled accounts, read-only wallet verification, eligible credit and member ledgers, and manually reviewed GCA AI Quant Access services",
   "network": "Base Mainnet",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "participationBoundaries": {
     "emailRegistrationLive": true,
     "emailContactSuppressionLive": true,
-    "preRegistrationOnly": true,
+    "legacyPreRegistrationOnly": true,
+    "controlledAccountUiLive": true,
+    "readOnlyWalletVerificationLive": true,
+    "eligibleLedgerWritesLive": true,
+    "reviewedServiceRequestsLive": true,
     "publicSelfServiceClaimConnected": false,
-    "createsLiveGcaAiQuantAccessAccount": false,
+    "emailRegistrationCreatesLiveGcaAiQuantAccessAccount": false,
     "activatesLiveTradingPermission": false,
     "emailRegistrationTransfersTokens": false,
     "emailContactSuppressionChangesChainState": false,
@@ -55,9 +59,10 @@
   "programTerms": {
     "holderBonus": {
       "minimumHolding": "10000 GCA",
-      "plannedCredit": "100 GCA AI Quant Access credits",
+      "creditAmount": "100 GCA AI Quant Access credits",
       "creditUseWindow": "180 days after ledger activation unless a later published policy extends it",
-      "currentPublicClaimStatus": "not-connected",
+      "currentPublicClaimStatus": "live-for-eligible-account-ledger-records",
+      "settlementRule": "credits are deducted only after prior manual approval and completed delivery, at most once per service request",
       "scope": [
         "reports",
         "backtests",
@@ -74,7 +79,7 @@
       "memberBenefit": "one-time 10,000 GCA member benefit after holding-period verification and member ledger activation",
       "memberBenefitSource": "project or owner-held reserve transfer only; no new minting",
       "refreshCadence": "30 days after activation, or earlier if the user requests a manual recheck",
-      "currentPublicClaimStatus": "not-connected",
+      "currentPublicClaimStatus": "live-eligible-member-ledger-with-manual-benefit-review",
       "scope": [
         "one-time 10,000 GCA member benefit review",
         "higher utility credit limits",
@@ -82,8 +87,23 @@
         "priority report queue",
         "member training sessions",
         "priority support"
-      ]
+      ],
+      "memberBenefitAutomatic": false,
+      "memberBenefitRequiresManualReview": true
     }
+  },
+  "reviewedServiceTerms": {
+    "status": "live-manual-review-and-delivery",
+    "accessPage": "https://gcagochina.com/gca/member-access/",
+    "requestEndpoint": "/gca/account-service-requests",
+    "statusEndpoint": "/gca/account-service-requests/status",
+    "followupEndpoint": "/gca/account-service-requests/follow-ups",
+    "rules": [
+      "service requests require manual review",
+      "approval is not completed delivery",
+      "credit usage is recorded only after approved completed delivery",
+      "service access does not create trading permission or bypass risk controls"
+    ]
   },
   "externalStatus": {
     "baseScanSource": "verified",
@@ -133,6 +153,7 @@
     "verify": "https://gcagochina.com/verify.html",
     "risk": "https://gcagochina.com/risk.html",
     "members": "https://gcagochina.com/members.html",
+    "controlledMemberAccess": "https://gcagochina.com/gca/member-access/",
     "memberProgramRules": "https://gcagochina.com/member-program.json",
     "memberLedgerPage": "https://gcagochina.com/member-ledger.html",
     "memberLedgerSchema": "https://gcagochina.com/member-ledger.json",

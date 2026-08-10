@@ -300,13 +300,14 @@
     <main class="shell">
       <section aria-labelledby="title">
         <h1 id="title">GCA Privacy Notice</h1>
-        <p class="lead">This notice explains how the public GCA website handles live email registration, contact suppression, local member pre-registration packets, wallet balance verification data, and controlled HTTPS intake for the GCA AI Quant Access account layer.</p>
+        <p class="lead">This notice explains how the public GCA website handles live email registration, contact suppression, legacy local member packets, controlled HTTPS account intake, read-only wallet verification, account status, reviewed service requests, and member/credit ledgers.</p>
         <div class="actions">
           <a class="button" href="register.html">Email Registration</a>
           <a class="button" href="unsubscribe.html">Email Unsubscribe</a>
           <a class="button" href="terms.html">Participation Terms</a>
           <a class="button" href="support.html">Support & Intake</a>
           <a class="button" href="members.html">Member Pre-Registration</a>
+          <a class="button" href="gca/member-access/">Member Access</a>
           <a class="button" href="member-ledger.html">Member Ledger</a>
           <a class="button" href="#technicalEvidence">Technical Evidence</a>
         </div>
@@ -319,7 +320,7 @@
         </div>
         <div class="fact">
           <span class="label">Current Site Mode</span>
-          <span class="value">Email API live / member packet local</span>
+          <span class="value">Workers + D1 account services live</span>
         </div>
         <div class="fact">
           <span class="label">Contact</span>
@@ -327,7 +328,7 @@
         </div>
         <div class="fact">
           <span class="label">Last Updated</span>
-          <span class="value">2026-05-20</span>
+          <span class="value">2026-08-10</span>
         </div>
       </section>
 
@@ -337,22 +338,23 @@
           <p class="note"><a href="register.html">Email registration</a> submits email, optional display name, source, language, interest tags, contact-consent acknowledgement, and no-secrets acknowledgement to the GCA Cloudflare Workers + D1 email API.</p>
           <p class="note" style="margin-top: 10px;"><a href="unsubscribe.html">Email unsubscribe</a> submits email, reason, source, contact-suppression acknowledgement, and no-secrets acknowledgement to the GCA Cloudflare Workers + D1 contact-suppression API.</p>
           <p class="note" style="margin-top: 10px;">The <a href="members.html">member pre-registration page</a> still creates a local pre-registration packet in the browser. That packet can include email, Telegram handle, Base wallet address, declared GCA balance, program intent, consent flags, generated registration ID, and timestamp.</p>
+          <p class="note" style="margin-top: 10px;">The live <a href="gca/member-access/">Member Access</a> page submits controlled account intake, read-only wallet verification, eligible credit/member ledger records, and device-key service requests to Cloudflare Workers + D1. Service follow-up text is stored for authorized operator review but is never returned in public account history.</p>
         </div>
         <div class="panel">
           <h2>When Data Leaves The Browser</h2>
           <p class="note">Email registration and email unsubscribe requests leave the browser when the user submits those forms on <code>gcagochina.com</code>; the production API base is <code>https://gca-registration-api.gcagochina.workers.dev</code>.</p>
-          <p class="note" style="margin-top: 10px;">Member pre-registration data leaves the browser only when a user copies it, downloads it, emails it to <a href="mailto:support@gcagochina.com">support@gcagochina.com</a>, or later submits it through a controlled HTTPS account UI after that flow is published.</p>
+          <p class="note" style="margin-top: 10px;">Legacy member pre-registration data leaves the browser only when a user copies, downloads, or emails that local packet. Controlled account, wallet, status, service request, follow-up, cancellation, and delivery-receipt data leaves the browser when the user submits the corresponding live Member Access action.</p>
         </div>
       </section>
 
       <section class="section two" aria-label="Verification and storage">
         <div class="panel">
           <h2>Wallet Verification</h2>
-          <p class="note">Wallet verification is planned as a read-only ERC-20 <code>balanceOf</code> check against the GCA contract on Base Mainnet. GCA does not need private keys, seed phrases, exchange API secrets, withdrawal permission, or custody to verify a public wallet balance.</p>
+          <p class="note">Wallet verification is live as a read-only ERC-20 <code>balanceOf</code> check against the GCA contract on Base Mainnet. GCA does not need private keys, seed phrases, exchange API secrets, withdrawal permission, or custody to verify a public wallet balance.</p>
         </div>
         <div class="panel">
-          <h2>Future Controlled Intake</h2>
-          <p class="note">After controlled HTTPS account UI is live, GCA may store pre-registration fields, wallet verification results, holding-period evidence, credit ledger records, GCA Member status, member benefit status, review statuses, operational logs, and support notes needed to run the account path.</p>
+          <h2>Live Controlled Account Storage</h2>
+          <p class="note">The controlled HTTPS account UI stores account fields, wallet verification results, holding-period evidence, credit/member ledgers, service requests, public review prompts, private follow-up responses, delivery records, operational logs, and support notes needed to run the reviewed account path. Device status keys remain in the browser; D1 stores only their SHA-256 hashes.</p>
         </div>
       </section>
 
@@ -388,12 +390,12 @@
 
       <section class="section panel" aria-labelledby="boundariesTitle">
         <h2 id="boundariesTitle">Public Safety Boundary</h2>
-        <p class="note">No private key, seed phrase, exchange API secret, withdrawal permission, or custody request is part of the GCA member flow. Pre-registration data does not create a live GCA AI Quant Access account, does not make credits claimable from this static page, and does not override wallet balance checks or risk controls.</p>
+        <p class="note">No private key, seed phrase, exchange API secret, withdrawal permission, or custody request is part of the GCA member flow. The legacy local packet is not account approval. Live service requests remain manually reviewed, do not create trading permission, and cannot override wallet balance checks or risk controls.</p>
       </section>
     </main>
 
     <footer>
-      <div class="shell">GCA privacy notice for live email registration, email unsubscribe, public pre-registration, and controlled HTTPS account intake.</div>
+      <div class="shell">GCA privacy notice for live email, controlled account, read-only wallet, ledger, and manually reviewed service workflows.</div>
     </footer>
   </body>
 </html>

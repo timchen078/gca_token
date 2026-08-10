@@ -277,7 +277,10 @@ class GcaWorkerStatusConsistencyTests(unittest.TestCase):
             "worker-routes-handoff.html": ("Production-live and protected", "HTTP 401"),
             "release-gates.html": ("review follow-up + idempotent settlement live", "2026-08-10"),
             "zh-release-gates.html": ("已经正式上线", "HTTP 401"),
-            "market-quality.html": ("Account and eligible ledger path live", "Live and iterating"),
+            "market-quality.html": (
+                "Account, eligible ledgers, and manually reviewed service delivery live",
+                "Live and iterating",
+            ),
         }
         for name, expected_fragments in public_pages.items():
             text = (ROOT / "site" / name).read_text(encoding="utf-8")

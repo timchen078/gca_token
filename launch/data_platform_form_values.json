@@ -79,8 +79,8 @@
       "url": "https://x.com/GCAAIGoChina"
     }
   ],
-  "shortDescription": "GCA, short for Go China Access, is a fixed-supply ERC-20 token on Base Mainnet with live account intake, read-only wallet verification, eligible member/credit ledger records, and staged non-custodial quant risk tools.",
-  "longDescription": "GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stands for Go China Access, a concept-stage community direction focused on the Go China macro narrative, bilingual Web3 education, public market research, live account intake, read-only wallet verification, eligible member/credit ledger records, and staged non-custodial quant risk tools. The published GCA AI Quant Access layer makes GCA an access and membership layer for liquidation replay reports, risk-warning credits, realistic backtests, ENTRY_READY signal review, position-size calculators, subscription discounts, risk-control training, and a reserve-funded 10000 GCA member benefit review for verified users who bought and continuously held at least 1000000 GCA for 30 days. The contract created 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls. The official public pool is the Base Mainnet Uniswap v4 GCA/USDT pool, and the project has a disclosed owner-held reserve wallet. Third-party audit quote requests were submitted and then deferred by owner decision. The project is early-stage and should not be described as externally audited, price-backed, yield-bearing, or backed by guaranteed liquidity.",
+  "shortDescription": "GCA, short for Go China Access, is a fixed-supply ERC-20 token on Base Mainnet with live account intake, read-only wallet verification, eligible member/credit ledgers, manually reviewed services, and ten browser-only risk tools; connected market-data and trading modules remain staged.",
+  "longDescription": "GCA is a fixed-supply ERC-20 token deployed on Base Mainnet. GCA currently stands for Go China Access, a concept-stage community direction focused on the Go China macro narrative, bilingual Web3 education, public market research, live account intake, read-only wallet verification, eligible member/credit ledger records, manually reviewed service requests, and ten live browser-only risk and research tools. The published GCA AI Quant Access layer connects those tools to liquidation replay reports, risk-warning credits, realistic backtests, ENTRY_READY signal review, position-size calculators, risk-control training, and a reserve-funded 10000 GCA member benefit review for verified users who bought and continuously held at least 1000000 GCA for 30 days. Connected market-data and trading modules remain staged behind release gates. The contract created 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls. The official public pool is the Base Mainnet Uniswap v4 GCA/USDT pool, and the project has a disclosed owner-held reserve wallet. Third-party audit quote requests were submitted and then deferred by owner decision. The project is early-stage and should not be described as externally audited, price-backed, yield-bearing, or backed by guaranteed liquidity.",
   "utilityPositioning": {
     "status": "public-utility-bridge-spec-published",
     "specUrl": "https://gcagochina.com/utility.json",
@@ -140,17 +140,20 @@
       "status": "public-privacy-and-terms-published"
     },
     "supportIntake": {
-      "status": "public-support-intake-published",
+      "status": "live-structured-account-service-intake-and-manual-email-support",
       "pageUrl": "https://gcagochina.com/support.html",
       "url": "https://gcagochina.com/support.json",
       "officialEmail": "support@gcagochina.com",
-      "directSubmissionEndpointConfigured": false
+      "directSubmissionEndpointConfigured": true,
+      "accountServiceRequestEndpoint": "/gca/account-service-requests",
+      "accountServiceRequestStatusEndpoint": "/gca/account-service-requests/status",
+      "genericSupportEmailManual": true
     },
     "roadmap": {
       "status": "public-roadmap-published",
       "pageUrl": "https://gcagochina.com/roadmap.html",
       "url": "https://gcagochina.com/roadmap.json",
-      "currentStage": "account-ledger-and-browser-tools-live-connected-services-staged",
+      "currentStage": "account-ledger-browser-tools-and-reviewed-services-live-connected-market-data-and-trading-staged",
       "publicEligibilitySubmissionLive": true
     },
     "communityKit": {
@@ -297,7 +300,7 @@
   "productSpecPositioning": {
     "status": "public-product-spec-published",
     "productName": "GCA AI Quant Access",
-    "currentStage": "account-ledger-and-browser-tools-live-connected-services-staged",
+    "currentStage": "account-ledger-browser-tools-and-reviewed-services-live-connected-market-data-and-trading-staged",
     "publicAccountUiLive": true,
     "liveTradingEnabled": false,
     "modules": [

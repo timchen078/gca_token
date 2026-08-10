@@ -129,7 +129,7 @@ UTILITY_PAGE_URL = "https://gcagochina.com/utility.html"
 UTILITY_URL = "https://gcagochina.com/utility.json"
 PRODUCT_PAGE_URL = "https://gcagochina.com/product.html"
 PRODUCT_URL = "https://gcagochina.com/product.json"
-PRODUCT_STAGE = "account-ledger-and-browser-tools-live-connected-services-staged"
+PRODUCT_STAGE = "account-ledger-browser-tools-and-reviewed-services-live-connected-market-data-and-trading-staged"
 ACCESS_PAGE_URL = "https://gcagochina.com/access.html"
 ACCESS_URL = "https://gcagochina.com/access.json"
 OPERATIONS_PAGE_URL = "https://gcagochina.com/operations.html"
@@ -3018,7 +3018,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Go China macro narrative", site)
         self.assertIn("GCA AI Quant Access quant research", site)
         self.assertIn("live browser-only previews for liquidation replay, backtesting, risk alerts, ENTRY_READY review, position sizing, research, planning, portfolio risk, training, and journaling", site)
-        self.assertIn("Connected services remain staged behind release gates", site)
+        self.assertIn("connected trading and market-data modules remain staged behind release gates", site)
         self.assertIn("controlled HTTPS member access page", site)
         self.assertIn("Verified Utility: GCA AI Quant Access Layer", site)
         self.assertIn("Product Release Gates", site)
@@ -3396,7 +3396,7 @@ class LaunchPackageTests(unittest.TestCase):
         rules = json.loads((ROOT / "site" / "member-program.json").read_text())
 
         self.assertEqual(rules["schema"], MEMBER_PROGRAM_URL)
-        self.assertEqual(rules["status"], "rules-published-public-claim-not-connected")
+        self.assertEqual(rules["status"], "member-account-and-reviewed-service-workflow-live")
         self.assertEqual(rules["chainId"], 8453)
         self.assertEqual(rules["token"]["contractAddress"], MAINNET_ADDRESS)
         self.assertEqual(rules["holderBonus"]["minimumHolding"], "10000 GCA")
@@ -3412,7 +3412,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("10,000 GCA member benefit", rules["memberTier"]["memberBenefit"])
         self.assertIn("priority support", rules["memberTier"]["accessScope"])
         self.assertIn("risk-control bypass", " ".join(rules["memberTier"]["accessRules"]))
-        self.assertFalse(rules["verification"]["directSubmissionEndpointConfigured"])
+        self.assertTrue(rules["verification"]["directSubmissionEndpointConfigured"])
         self.assertEqual(rules["verification"]["browserPreview"]["status"], "live-member-access-wallet-read")
         self.assertEqual(rules["verification"]["browserPreview"]["pageUrl"], MEMBER_ACCESS_PAGE_URL)
         self.assertEqual(rules["verification"]["browserPreview"]["method"], "MetaMask eth_call ERC-20 balanceOf on Base Mainnet")
@@ -3441,7 +3441,8 @@ class LaunchPackageTests(unittest.TestCase):
             rules["verification"]["localOperatorBackend"]["transferReceiptVerificationMethod"],
             "Base Mainnet public RPC eth_getTransactionReceipt ERC-20 Transfer log",
         )
-        self.assertEqual(rules["verification"]["preparedMemberBenefitTransferEndpoint"], "/gca/member-benefit-transfers")
+        self.assertEqual(rules["verification"]["liveMemberBenefitTransferEndpoint"], "/gca/member-benefit-transfers")
+        self.assertEqual(rules["verification"]["liveAccountServiceRequestEndpoint"], "/gca/account-service-requests")
         self.assertEqual(rules["publicPages"]["memberAccessPreview"], MEMBER_ACCESS_PAGE_URL)
         self.assertEqual(rules["publicPages"]["memberLedger"], MEMBER_LEDGER_PAGE_URL)
         self.assertEqual(rules["publicPages"]["memberLedgerSchema"], MEMBER_LEDGER_URL)
@@ -3459,10 +3460,11 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(rules["privacyAndTerms"]["privacyNoticeJsonUrl"], PRIVACY_NOTICE_URL)
         self.assertEqual(rules["privacyAndTerms"]["participationTermsUrl"], PARTICIPATION_TERMS_PAGE_URL)
         self.assertEqual(rules["privacyAndTerms"]["participationTermsJsonUrl"], PARTICIPATION_TERMS_URL)
-        self.assertEqual(rules["supportIntake"]["status"], "public-support-intake-published")
+        self.assertEqual(rules["supportIntake"]["status"], "live-structured-account-service-intake-and-manual-email-support")
         self.assertEqual(rules["supportIntake"]["pageUrl"], SUPPORT_PAGE_URL)
         self.assertEqual(rules["supportIntake"]["url"], SUPPORT_URL)
-        self.assertFalse(rules["supportIntake"]["directSubmissionEndpointConfigured"])
+        self.assertTrue(rules["supportIntake"]["directSubmissionEndpointConfigured"])
+        self.assertEqual(rules["supportIntake"]["accountServiceRequestEndpoint"], "/gca/account-service-requests")
         self.assertEqual(rules["supportWorkflow"]["contactEmail"], "support@gcagochina.com")
         self.assertIn("not a guarantee", rules["supportWorkflow"]["targetFirstResponse"])
         self.assertIn("ledger_recorded", rules["supportWorkflow"]["reviewStatuses"])
@@ -3486,7 +3488,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertNotIn('href="data.html"', privacy_page)
         self.assertIn("live email registration", privacy_page)
         self.assertIn("contact suppression", privacy_page)
-        self.assertIn("Email API live / member packet local", privacy_page)
+        self.assertIn("Workers + D1 account services live", privacy_page)
         self.assertIn("Email Registration", privacy_page)
         self.assertIn("Email Unsubscribe", privacy_page)
         self.assertIn("register.html", privacy_page)
@@ -3510,6 +3512,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertTrue(privacy["currentStaticSiteBehavior"]["emailRegistrationDirectSubmissionEndpointConfigured"])
         self.assertTrue(privacy["currentStaticSiteBehavior"]["contactSuppressionDirectSubmissionEndpointConfigured"])
         self.assertFalse(privacy["currentStaticSiteBehavior"]["memberPreRegistrationDirectSubmissionEndpointConfigured"])
+        self.assertTrue(privacy["currentStaticSiteBehavior"]["controlledAccountDirectSubmissionEndpointConfigured"])
+        self.assertTrue(privacy["currentStaticSiteBehavior"]["accountServiceRequestDirectSubmissionEndpointConfigured"])
         self.assertEqual(privacy["currentStaticSiteBehavior"]["emailRegistrationEndpoint"], "/gca/email-registrations")
         self.assertEqual(privacy["currentStaticSiteBehavior"]["contactSuppressionEndpoint"], "/gca/contact-suppressions")
         self.assertEqual(privacy["walletVerification"]["chainId"], 8453)
@@ -3517,7 +3521,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertFalse(privacy["walletVerification"]["requiresPrivateKey"])
         self.assertFalse(privacy["walletVerification"]["requiresSeedPhrase"])
         self.assertFalse(privacy["walletVerification"]["requiresWithdrawalPermission"])
-        self.assertEqual(privacy["futureControlledIntake"]["preparedIntakeEndpoint"], "/gca/pre-registrations")
+        self.assertEqual(privacy["controlledAccountIntake"]["intakeEndpoint"], "/gca/member-access")
+        self.assertEqual(privacy["controlledAccountIntake"]["serviceRequestEndpoint"], "/gca/account-service-requests")
+        self.assertFalse(privacy["securityBoundary"]["accountServiceHistoryReturnsFollowupResponseText"])
         self.assertIn("private key", privacy["securityBoundary"]["neverAskFor"])
         self.assertEqual(privacy["publicLinks"]["support"], SUPPORT_PAGE_URL)
         self.assertEqual(privacy["publicLinks"]["supportJson"], SUPPORT_URL)
@@ -3533,7 +3539,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertNotIn("Platform-Only Evidence Path", terms_page)
         self.assertNotIn("Data Room", terms_page)
         self.assertNotIn('href="data.html"', terms_page)
-        self.assertIn("Pre-Registration Only", terms_page)
+        self.assertIn("Legacy Pre-Registration", terms_page)
+        self.assertIn("Live with manual review", terms_page)
+        self.assertIn("Eligible ledger records live", terms_page)
         self.assertIn("Email Registration", terms_page)
         self.assertIn("Email Unsubscribe", terms_page)
         self.assertIn("register.html", terms_page)
@@ -3557,6 +3565,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(terms["contractAddress"], MAINNET_ADDRESS)
         self.assertTrue(terms["participationBoundaries"]["emailRegistrationLive"])
         self.assertTrue(terms["participationBoundaries"]["emailContactSuppressionLive"])
+        self.assertTrue(terms["participationBoundaries"]["controlledAccountUiLive"])
+        self.assertTrue(terms["participationBoundaries"]["reviewedServiceRequestsLive"])
         self.assertFalse(terms["participationBoundaries"]["publicSelfServiceClaimConnected"])
         self.assertFalse(terms["participationBoundaries"]["emailRegistrationTransfersTokens"])
         self.assertFalse(terms["participationBoundaries"]["emailContactSuppressionChangesChainState"])
@@ -3565,6 +3575,15 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(terms["programTerms"]["gcaMember"]["minimumHolding"], "1000000 GCA")
         self.assertEqual(terms["programTerms"]["gcaMember"]["minimumHoldingPeriod"], "30 consecutive days")
         self.assertEqual(terms["programTerms"]["gcaMember"]["memberBenefitAmount"], "10000 GCA")
+        self.assertEqual(
+            terms["programTerms"]["holderBonus"]["currentPublicClaimStatus"],
+            "live-for-eligible-account-ledger-records",
+        )
+        self.assertEqual(
+            terms["programTerms"]["gcaMember"]["currentPublicClaimStatus"],
+            "live-eligible-member-ledger-with-manual-benefit-review",
+        )
+        self.assertEqual(terms["reviewedServiceTerms"]["status"], "live-manual-review-and-delivery")
         self.assertEqual(terms["emailRegistrationTerms"]["endpoint"], "https://gca-registration-api.gcagochina.workers.dev/gca/email-registrations")
         self.assertIn("token transfer", terms["emailRegistrationTerms"]["doesNotCreate"])
         self.assertEqual(terms["emailContactSuppressionTerms"]["endpoint"], "https://gca-registration-api.gcagochina.workers.dev/gca/contact-suppressions")
@@ -3633,8 +3652,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(support["chainId"], 8453)
         self.assertEqual(support["contractAddress"], MAINNET_ADDRESS)
         self.assertEqual(support["officialEmail"], "support@gcagochina.com")
-        self.assertFalse(support["currentSubmissionMode"]["directSubmissionEndpointConfigured"])
-        self.assertFalse(support["currentSubmissionMode"]["controlledHttpsAccountUiLive"])
+        self.assertTrue(support["currentSubmissionMode"]["directSubmissionEndpointConfigured"])
+        self.assertTrue(support["currentSubmissionMode"]["controlledHttpsAccountUiLive"])
         self.assertIn("member pre-registration packet review", support["supportedRequestTypes"])
         self.assertIn("redacted local review package request", support["supportedRequestTypes"])
         self.assertIn("wallet-warning screenshot", support["safeIntakeFields"])
@@ -3646,7 +3665,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("seed phrase", support["doNotSend"])
         self.assertIn("exchange API secret", support["doNotSend"])
         self.assertIn("withdrawal permission", support["doNotSend"])
-        self.assertEqual(support["supportWorkflow"]["preparedIntakeEndpoint"], "/gca/pre-registrations")
+        self.assertEqual(support["supportWorkflow"]["liveIntakeEndpoint"], "/gca/member-access")
+        self.assertEqual(support["supportWorkflow"]["liveAccountServiceRequestEndpoint"], "/gca/account-service-requests")
         self.assertEqual(support["supportWorkflow"]["memberPacketVersion"], "gca_member_preregistration_v2")
         self.assertIn("holdingStartDate", support["supportWorkflow"]["memberBenefitReviewEvidenceFields"])
         self.assertIn("evidenceTxHashFormatOk", support["supportWorkflow"]["memberBenefitReviewEvidenceFields"])
@@ -3690,8 +3710,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertNotIn('href="data.html"', page)
         self.assertIn("Review follow-up and reviewed delivery live; connected market modules staged", page)
         self.assertIn("Phase 3: Browser-Local Product Suite", page)
-        self.assertIn("ten GCA risk and research tools, the Member Workspace priority queue", page)
-        self.assertIn("privacy-minimized Risk Passport workflow report", page)
+        self.assertIn("ten browser-only GCA risk and research tools, the Member Workspace", page)
+        self.assertIn("Risk Passport, encrypted Workspace Vault", page)
         self.assertIn('href="risk-passport.html"', page)
         self.assertIn("Controlled HTTPS member account UI", page)
         self.assertIn("Live at", page)
@@ -4670,7 +4690,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(report["pageUrl"], LIQUIDATION_REPLAY_001_PAGE_URL)
         self.assertEqual(report["status"], "liquidation-replay-001-published-sample")
         self.assertEqual(report["reportId"], "liquidation-replay-001")
-        self.assertEqual(report["lastUpdated"], "2026-06-11")
+        self.assertEqual(report["lastUpdated"], "2026-08-10")
         self.assertEqual(report["chainId"], 8453)
         self.assertEqual(report["contractAddress"], MAINNET_ADDRESS)
         self.assertTrue(report["sampleOnly"])
@@ -4686,7 +4706,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Define a fixed account-level loss budget before entry.", report["saferReplayTemplate"])
         self.assertIn("100 credits", report["accountCreditUse"]["holderBonus"])
         self.assertIn("1,000,000 GCA / 30-day eligibility", report["accountCreditUse"]["gcaMember"])
-        self.assertIn("Cloudflare deploy permission", report["accountCreditUse"]["serviceRouteStatus"])
+        self.assertIn("are live through Workers + D1", report["accountCreditUse"]["serviceRouteStatus"])
+        self.assertIn("report production remains manual", report["accountCreditUse"]["serviceRouteStatus"])
         self.assertTrue(any("private keys" in item for item in report["releaseBoundaries"]))
         self.assertIn("GCA has published Liquidation Replay Sample 001 as an education and product-proof report format.", report["publicClaimBoundaries"]["safeClaims"])
         self.assertIn("Liquidation Replay predicts price", report["publicClaimBoundaries"]["doNotClaim"])
@@ -5667,7 +5688,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(access["status"], "public-access-portal-live")
         self.assertEqual(access["chainId"], 8453)
         self.assertEqual(access["contractAddress"], MAINNET_ADDRESS)
-        self.assertEqual(access["currentState"]["currentStage"], "controlled-account-ui-and-device-status-live")
+        self.assertEqual(access["currentState"]["currentStage"], "controlled-account-ui-device-status-and-reviewed-services-live")
         self.assertFalse(access["currentState"]["blueprintOnly"])
         self.assertTrue(access["currentState"]["controlledHttpsAccountUiLive"])
         self.assertTrue(access["currentState"]["directSubmissionEndpointConfigured"])
@@ -7946,7 +7967,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(project["wellKnownTokenIdentityUrl"], WELL_KNOWN_TOKEN_URL)
         self.assertEqual(project["walletSecurityProfileUrl"], WALLET_SECURITY_PROFILE_URL)
         self.assertEqual(project["securityContactUrl"], SECURITY_CONTACT_URL)
-        self.assertEqual(project["lastUpdated"], "2026-07-19")
+        self.assertEqual(project["lastUpdated"], "2026-08-10")
         self.assertEqual(project["marketPageUrl"], MARKET_PAGE_URL)
         self.assertEqual(project["supplyPageUrl"], SUPPLY_PAGE_URL)
         self.assertEqual(project["securityPageUrl"], SECURITY_PAGE_URL)
@@ -8023,10 +8044,10 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(project["trustCenter"]["url"], TRUST_CENTER_URL)
         self.assertIn("Consolidated public verification hub", project["trustCenter"]["useCase"])
         self.assertEqual(project["memberProgram"]["status"], "account-ledger-path-live-manual-benefit-review")
-        self.assertEqual(project["memberProgram"]["supportIntake"]["status"], "public-support-intake-published")
+        self.assertEqual(project["memberProgram"]["supportIntake"]["status"], "live-structured-account-service-intake-and-manual-email-support")
         self.assertEqual(project["memberProgram"]["supportIntake"]["pageUrl"], SUPPORT_PAGE_URL)
         self.assertEqual(project["memberProgram"]["supportIntake"]["url"], SUPPORT_URL)
-        self.assertFalse(project["memberProgram"]["supportIntake"]["directSubmissionEndpointConfigured"])
+        self.assertTrue(project["memberProgram"]["supportIntake"]["directSubmissionEndpointConfigured"])
         self.assertEqual(project["memberProgram"]["privacyAndTerms"]["status"], "public-privacy-and-terms-published")
         self.assertEqual(project["memberProgram"]["privacyAndTerms"]["privacyNoticePageUrl"], PRIVACY_NOTICE_PAGE_URL)
         self.assertEqual(project["memberProgram"]["privacyAndTerms"]["privacyNoticeUrl"], PRIVACY_NOTICE_URL)
@@ -9310,7 +9331,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Self-trading or wash trading", page)
         self.assertIn("Misleading volume", page)
         self.assertIn("CoinGecko or CoinMarketCap submission", page)
-        self.assertIn("Account and eligible ledger path live; reviewed service delivery staged", page)
+        self.assertIn("Account, eligible ledgers, and manually reviewed service delivery live", page)
         self.assertIn("Live and iterating", page)
         self.assertNotIn("Controlled account UI in progress", page)
         self.assertIn(MAINNET_ADDRESS, page)
@@ -9323,7 +9344,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(quality["schema"], MARKET_QUALITY_URL)
         self.assertEqual(quality["pageUrl"], MARKET_QUALITY_PAGE_URL)
         self.assertEqual(quality["status"], "early-stage-market-quality-plan")
-        self.assertEqual(quality["lastUpdated"], "2026-07-23")
+        self.assertEqual(quality["lastUpdated"], "2026-08-10")
         self.assertEqual(quality["chainId"], 8453)
         self.assertEqual(quality["contractAddress"], MAINNET_ADDRESS)
         self.assertEqual(quality["officialMarket"]["pair"], "GCA/USDT")
@@ -9336,14 +9357,14 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(quality["currentState"]["coinMarketCapTrackedListing"], "defer")
         self.assertEqual(
             quality["currentState"]["memberUtilityAccess"],
-            "live-account-and-ledger-workflows-service-delivery-staged",
+            "live-account-ledger-and-manual-reviewed-service-delivery",
         )
         utility_delivery = next(
             action for action in quality["legitimateActions"] if action["id"] == "utility-delivery"
         )
         self.assertEqual(utility_delivery["status"], "live-and-iterating")
         self.assertIn(
-            "Operate the live GCA member and 100-credit account path while improving reviewed service delivery.",
+            "Operate the live GCA member, 100-credit, and manually reviewed service-delivery path.",
             utility_delivery["actions"],
         )
         self.assertIn("metadata-consistency", {action["id"] for action in quality["legitimateActions"]})
@@ -11142,10 +11163,10 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["utilityPositioning"]["privacyAndTerms"]["privacyNoticeUrl"], PRIVACY_NOTICE_URL)
         self.assertEqual(values["utilityPositioning"]["privacyAndTerms"]["participationTermsPageUrl"], PARTICIPATION_TERMS_PAGE_URL)
         self.assertEqual(values["utilityPositioning"]["privacyAndTerms"]["participationTermsUrl"], PARTICIPATION_TERMS_URL)
-        self.assertEqual(values["utilityPositioning"]["supportIntake"]["status"], "public-support-intake-published")
+        self.assertEqual(values["utilityPositioning"]["supportIntake"]["status"], "live-structured-account-service-intake-and-manual-email-support")
         self.assertEqual(values["utilityPositioning"]["supportIntake"]["pageUrl"], SUPPORT_PAGE_URL)
         self.assertEqual(values["utilityPositioning"]["supportIntake"]["url"], SUPPORT_URL)
-        self.assertFalse(values["utilityPositioning"]["supportIntake"]["directSubmissionEndpointConfigured"])
+        self.assertTrue(values["utilityPositioning"]["supportIntake"]["directSubmissionEndpointConfigured"])
         self.assertEqual(values["utilityPositioning"]["roadmap"]["status"], "public-roadmap-published")
         self.assertEqual(values["utilityPositioning"]["roadmap"]["pageUrl"], ROADMAP_PAGE_URL)
         self.assertEqual(values["utilityPositioning"]["roadmap"]["url"], ROADMAP_URL)
