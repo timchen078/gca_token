@@ -94,6 +94,8 @@ Allow: /narrative.html
 Allow: /narrative.json
 Allow: /radar.html
 Allow: /radar.json
+Allow: /radar-issue-006.html
+Allow: /radar-issue-006.json
 Allow: /radar-issue-005.html
 Allow: /radar-issue-005.json
 Allow: /radar-issue-004.html

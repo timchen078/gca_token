@@ -226,6 +226,43 @@ class PublicStatusConsistencyTests(unittest.TestCase):
         ):
             self.assertNotIn(marker, zh_members)
 
+    def test_weekly_radar_current_pointer_matches_issue_006_archive(self):
+        radar = self.load_json("site/radar.json")
+        archive = self.load_json("site/radar-issue-006.json")
+        narrative = self.load_json("site/narrative.json")
+        project = self.load_json("site/project.json")
+        tokenlist = self.load_json("site/tokenlist.json")
+        current_page = (SITE / "radar.html").read_text()
+
+        self.assertEqual(radar["status"], "weekly-go-china-radar-issue-006-published")
+        self.assertEqual(radar["issue"], "issue-006")
+        self.assertEqual(radar["issueDate"], "2026-08-11")
+        self.assertEqual(radar["archivePageUrl"], archive["pageUrl"])
+        self.assertEqual(radar["archiveUrl"], archive["schema"])
+        self.assertEqual(archive["status"], radar["status"])
+        self.assertEqual(archive["issue"], radar["issue"])
+        self.assertEqual(archive["issueDate"], radar["issueDate"])
+        self.assertEqual(narrative["weeklyRadar"]["status"], radar["status"])
+        self.assertEqual(narrative["weeklyRadar"]["issue"], radar["issue"])
+        self.assertEqual(project["weeklyGoChinaRadar"]["status"], radar["status"])
+        self.assertEqual(project["weeklyGoChinaRadar"]["issue"], radar["issue"])
+        self.assertEqual(
+            tokenlist["tokens"][0]["extensions"]["weeklyRadarStatus"],
+            radar["status"],
+        )
+
+        for stale_marker in (
+            "Issue 003 / 2026-05-16",
+            "member pre-registration and read-only balance preview as preparation only",
+            "Member utility readiness",
+        ):
+            self.assertNotIn(stale_marker, current_page)
+            self.assertNotIn(stale_marker, json.dumps(radar))
+
+        self.assertTrue(radar["copyReadyPost"]["requiresOperatorReview"])
+        self.assertIn("automatic token claim", radar["publicClaimBoundaries"]["doNotClaim"])
+        self.assertEqual(radar["officialMarket"]["snapshotStatus"], "live-browser-read-only")
+
     def test_updated_public_documents_share_current_date_and_sitemap(self):
         json_paths = (
             "access.json",
