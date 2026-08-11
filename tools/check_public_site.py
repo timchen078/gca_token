@@ -3747,7 +3747,7 @@ def validate_zh_api_status_page(text: str) -> None:
         "设备密钥轮换",
         "15 分钟",
         "assets/api-health.css?v=20260727",
-        "assets/api-health.js?v=20260810",
+        "assets/api-health.js?v=20260811",
     ):
         assert_contains(text, expected, label)
     assert_no_public_data_room_terms(text, label)
@@ -10824,7 +10824,7 @@ def validate_api_status_page(text: str) -> None:
         "data-gca-api-health",
         "data-locale=\"en\"",
         "data-api-live-fact",
-        "Eleven GET routes, including service follow-ups, member reviews, holding evidence, benefit-transfer evidence, and recovery requests, must reject anonymous access with HTTP 401",
+        "Ten GET routes, including member reviews, holding evidence, benefit-transfer evidence, and recovery requests, must reject anonymous access with HTTP 401",
         "Service requests, reviews, follow-up responses, and credit usage are live; HTTP 401 confirms anonymous reads are rejected",
         "Delivery requires prior approval",
         "at most one linked credit usage record",
@@ -10833,7 +10833,7 @@ def validate_api_status_page(text: str) -> None:
         "gca_account_status_rotation_v1",
         "/gca/account-status/rotate",
         "15-minute same-rotation retry",
-        "assets/api-health.js?v=20260810",
+        "assets/api-health.js?v=20260811",
     ):
         assert_contains(text, expected, label)
     assert_no_forbidden_public_claims(text, label)
@@ -11578,8 +11578,8 @@ def validate_api_health_script(text: str) -> None:
         "boundaries.memberBenefitSelfServiceTransfer === false",
         "boundaries.automaticMemberActivationFromSubmittedDate === false",
         "result.status === 401",
-        "result.status === 404",
-        "core-healthy-pending-routes-undeployed",
+        "const SERVICE_PATHS",
+        "serviceStatuses",
         "all-checked-routes-protected",
         "No records were written",
         "本次检查没有写入记录",
@@ -11593,6 +11593,9 @@ def validate_api_health_script(text: str) -> None:
         "document.cookie",
         "ethereum.request",
         "eth_sendTransaction",
+        "PENDING_PATHS",
+        "prepared routes are not deployed",
+        "准备中路由尚未部署",
     ):
         assert_not_contains(text, forbidden, label)
 

@@ -290,6 +290,7 @@ class GcaWorkerStatusConsistencyTests(unittest.TestCase):
         checked_paths = [
             ROOT / "docs" / "gca_registration_backend.md",
             ROOT / "docs" / "gca_worker_pending_routes_deploy_handoff.md",
+            ROOT / "site" / "assets" / "api-health.js",
             *[ROOT / "site" / name for name in public_pages],
             *[
                 ROOT / "site" / name
@@ -314,6 +315,7 @@ class GcaWorkerStatusConsistencyTests(unittest.TestCase):
             "prepared-worker-deploy-permission-pending",
             "prepared-worker-deploy-pending",
             "准备中路由尚未部署",
+            "prepared routes are not deployed",
         )
         for path in checked_paths:
             text = path.read_text(encoding="utf-8")
