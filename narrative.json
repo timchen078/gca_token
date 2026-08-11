@@ -142,16 +142,18 @@
   ],
   "buildNext": [
     "monitor all production service routes in the daily public Worker check",
-    "operator review and social publication decision for Weekly Go China Radar issues 004 and 005",
+    "manual social publication decision for Weekly Go China Radar issue 006 and continued archive cadence",
     "release-gated connected research market data without wallet or trading permissions"
   ],
   "weeklyRadar": {
-    "status": "weekly-go-china-radar-issue-003-published",
+    "status": "weekly-go-china-radar-issue-006-published",
     "pageUrl": "https://gcagochina.com/radar.html",
     "url": "https://gcagochina.com/radar.json",
-    "issue": "issue-003",
-    "issueDate": "2026-05-16",
-    "issueTitle": "Public Activity Without Artificial Volume"
+    "archivePageUrl": "https://gcagochina.com/radar-issue-006.html",
+    "archiveUrl": "https://gcagochina.com/radar-issue-006.json",
+    "issue": "issue-006",
+    "issueDate": "2026-08-11",
+    "issueTitle": "Live Access and Verifiable Market Context"
   },
   "officialMarket": {
     "pair": "GCA/USDT",
@@ -185,6 +187,8 @@
     "narrative": "https://gcagochina.com/narrative.json",
     "weeklyRadarPage": "https://gcagochina.com/radar.html",
     "weeklyRadar": "https://gcagochina.com/radar.json",
+    "radarIssue006Page": "https://gcagochina.com/radar-issue-006.html",
+    "radarIssue006": "https://gcagochina.com/radar-issue-006.json",
     "utilityThesis": "https://gcagochina.com/utility.html",
     "roadmap": "https://gcagochina.com/roadmap.html",
     "community": "https://gcagochina.com/community.html",

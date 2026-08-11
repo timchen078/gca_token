@@ -44,6 +44,8 @@
   "narrativeUrl": "https://gcagochina.com/narrative.json",
   "weeklyRadarPageUrl": "https://gcagochina.com/radar.html",
   "weeklyRadarUrl": "https://gcagochina.com/radar.json",
+  "radarIssue006PageUrl": "https://gcagochina.com/radar-issue-006.html",
+  "radarIssue006Url": "https://gcagochina.com/radar-issue-006.json",
   "radarIssue005PageUrl": "https://gcagochina.com/radar-issue-005.html",
   "radarIssue005Url": "https://gcagochina.com/radar-issue-005.json",
   "radarIssue004PageUrl": "https://gcagochina.com/radar-issue-004.html",
@@ -364,8 +366,9 @@
     "timChenProfessionalProfile": "https://gcagochina.com/tim-chen.html",
     "geckoTerminalTokenInfo": "approved-2026-05-11",
     "narrativeSystem": "public-narrative-system-published",
-    "weeklyGoChinaRadar": "weekly-go-china-radar-issue-003-published",
+    "weeklyGoChinaRadar": "weekly-go-china-radar-issue-006-published",
     "weeklyGoChinaRadarIssue005": "weekly-go-china-radar-issue-005-ready-for-review",
+    "weeklyGoChinaRadarIssue006": "weekly-go-china-radar-issue-006-published",
     "utilityBridge": "public-utility-bridge-spec-published",
     "coinGeckoTrackedListing": "not-submitted",
     "coinMarketCapTrackedListing": "not-submitted",
@@ -518,14 +521,16 @@
     ]
   },
   "weeklyGoChinaRadar": {
-    "status": "weekly-go-china-radar-issue-003-published",
+    "status": "weekly-go-china-radar-issue-006-published",
     "pageUrl": "https://gcagochina.com/radar.html",
     "url": "https://gcagochina.com/radar.json",
-    "issue": "issue-003",
-    "issueDate": "2026-05-16",
-    "scope": "Issue 003 research format for public activity cadence, no-artificial-volume boundaries, official route verification, member utility readiness, and reviewer links.",
+    "archivePageUrl": "https://gcagochina.com/radar-issue-006.html",
+    "archiveUrl": "https://gcagochina.com/radar-issue-006.json",
+    "issue": "issue-006",
+    "issueDate": "2026-08-11",
+    "scope": "Issue 006 documents live controlled account, read-only wallet, eligible ledger, reviewed-service, and identity-pinned read-only official-pool snapshot workflows with explicit manual and external-review boundaries.",
     "notFinancialAdvice": true,
-    "issueTitle": "Public Activity Without Artificial Volume"
+    "issueTitle": "Live Access and Verifiable Market Context"
   },
   "weeklyGoChinaRadarIssue004": {
     "status": "weekly-go-china-radar-issue-004-ready-for-review",
@@ -544,6 +549,17 @@
     "issueDate": "2026-06-14",
     "operatorReviewRequired": true,
     "scope": "Access foundation, public account intake, read-only wallet verification, utility credits, GCA Member review, BaseScan follow-up readiness, and release gates.",
+    "notBuySellSignal": true,
+    "notFinancialAdvice": true
+  },
+  "weeklyGoChinaRadarIssue006": {
+    "status": "weekly-go-china-radar-issue-006-published",
+    "pageUrl": "https://gcagochina.com/radar-issue-006.html",
+    "url": "https://gcagochina.com/radar-issue-006.json",
+    "issue": "issue-006",
+    "issueDate": "2026-08-11",
+    "operatorReviewRequiredBeforeSocialPosting": true,
+    "scope": "Live access, read-only wallet verification, eligible utility records, manual GCA Member review, reviewed services, and verifiable official-pool context.",
     "notBuySellSignal": true,
     "notFinancialAdvice": true
   },

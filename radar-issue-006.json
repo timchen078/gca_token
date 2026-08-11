@@ -1,15 +1,15 @@
 {
-  "schema": "https://gcagochina.com/radar.json",
-  "pageUrl": "https://gcagochina.com/radar.html",
-  "archivePageUrl": "https://gcagochina.com/radar-issue-006.html",
-  "archiveUrl": "https://gcagochina.com/radar-issue-006.json",
+  "schema": "https://gcagochina.com/radar-issue-006.json",
+  "pageUrl": "https://gcagochina.com/radar-issue-006.html",
+  "currentPageUrl": "https://gcagochina.com/radar.html",
+  "currentUrl": "https://gcagochina.com/radar.json",
   "status": "weekly-go-china-radar-issue-006-published",
   "issue": "issue-006",
   "issueDate": "2026-08-11",
   "publicationStatus": "published-on-official-site-social-post-requires-manual-review",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
-  "title": "Weekly Go China Radar",
+  "title": "Weekly Go China Radar Issue 006",
   "issueTitle": "Live Access and Verifiable Market Context",
   "subtitle": "Useful access, public evidence, and risk-first boundaries.",
   "scope": "Issue 006 records the GCA account, read-only wallet verification, eligible credits ledger, manual GCA Member review, reviewed-service workflow, and identity-pinned official-pool snapshot that are now live. The market snapshot is a browser-time third-party aggregate, not a wallet quote, executable price, buy or sell signal, transaction, price forecast, or return promise.",
@@ -87,14 +87,6 @@
     "Independent third-party audit remains not completed",
     "Connected trading and automated execution remain outside the released product"
   ],
-  "trustSignals": [
-    "BaseScan source verification and deployer-wallet ownership verification are complete.",
-    "GeckoTerminal token information was approved on 2026-05-11.",
-    "The official-domain support email and public professional profile are published for reviewer use.",
-    "The official public market route remains the Base Mainnet Uniswap v4 GCA/USDT pool.",
-    "The public account and reviewed-service workflows expose bounded, non-custodial states without public ledger reads.",
-    "The market snapshot validates chain, token, quote asset, pool, and venue identity before rendering data."
-  ],
   "copyReadyPost": {
     "targetDate": "2026-08-11",
     "channels": [
@@ -149,21 +141,13 @@
       "artificial volume, self-trading, wash trading, or misleading market activity"
     ]
   },
-  "publicActivityPlan": [
-    "Publish product and risk updates with exact public evidence links rather than artificial market activity.",
-    "Direct users to the live controlled account path for registration, read-only verification, eligible ledger status, and reviewed-service requests.",
-    "Use the markets page only as identity-pinned read-only context and direct executable actions to the user's chosen wallet interface.",
-    "Keep GCA Member approval and the 10,000 GCA member-benefit evidence workflow manual and protected.",
-    "Publish future liquidity, listing, audit, or product changes only after verifiable public evidence exists."
-  ],
   "officialLinks": {
-    "radarPage": "https://gcagochina.com/radar.html",
-    "radar": "https://gcagochina.com/radar.json",
     "radarIssue006Page": "https://gcagochina.com/radar-issue-006.html",
     "radarIssue006": "https://gcagochina.com/radar-issue-006.json",
     "radarIssue005Page": "https://gcagochina.com/radar-issue-005.html",
-    "narrativePage": "https://gcagochina.com/narrative.html",
-    "narrative": "https://gcagochina.com/narrative.json",
+    "radarIssue005": "https://gcagochina.com/radar-issue-005.json",
+    "currentRadarPage": "https://gcagochina.com/radar.html",
+    "currentRadar": "https://gcagochina.com/radar.json",
     "accessPortal": "https://gcagochina.com/gca/member-access/",
     "credits": "https://gcagochina.com/credits.html",
     "memberLedger": "https://gcagochina.com/member-ledger.html",

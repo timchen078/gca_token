@@ -23,7 +23,7 @@
     "Official verification: https://gcagochina.com/verify.html",
     "Narrative system: https://gcagochina.com/narrative.html",
     "Weekly Go China Radar: https://gcagochina.com/radar.html",
-    "Latest Weekly Go China Radar: Issue 003, Public Activity Without Artificial Volume: https://gcagochina.com/radar.html",
+    "Latest Weekly Go China Radar: Issue 006, Live Access and Verifiable Market Context: https://gcagochina.com/radar.html",
     "Positioning: Narrative meets risk control. GCA connects Go China Access, China Narrative Radar, Liquidation Replay, ENTRY_READY Review, GCA Member Club, and Risk First Trading.",
     "Roadmap: https://gcagochina.com/roadmap.html",
     "Official market route: GCA/USDT on Base Mainnet.",
@@ -96,7 +96,7 @@
       "Not custody. No return promises. Not financial advice."
     ],
     "threadFollowUpDrafts": [
-      "Weekly Go China Radar 003 is live: Public Activity Without Artificial Volume. Verify first: Base Mainnet contract, official GCA/USDT route, wallet evidence, market-quality boundaries, risk notes, and member utility readiness. https://gcagochina.com/radar.html Not financial advice.",
+      "Weekly Go China Radar 006 is published: Live Access and Verifiable Market Context. Review the controlled account path, read-only wallet verification, eligible utility records, manual member workflow, official GCA/USDT context, and risk boundaries. https://gcagochina.com/radar.html",
       "GCA is building around Go China Access, China Narrative Radar, Liquidation Replay, ENTRY_READY Review, GCA Member Club, and risk-first Web3 education. Roadmap: https://gcagochina.com/roadmap.html Weekly Radar: https://gcagochina.com/radar.html",
       "Risk notes: GCA is on Base Mainnet only. No third-party audit has been completed. Liquidity is starter-depth only. Owner observed no wallet risk warning visible on 2026-05-14; this is not security-vendor approval. Check the verification page before using any link or pool."
     ],
@@ -116,16 +116,17 @@
       "Do not post market-price claims, external audit claims, warning-removal claims, or listing-approval claims."
     ],
     "latestRadarIssue": {
-      "issue": "issue-003",
-      "title": "Public Activity Without Artificial Volume",
+      "issue": "issue-006",
+      "title": "Live Access and Verifiable Market Context",
       "url": "https://gcagochina.com/radar.html",
-      "issueDate": "2026-05-16"
+      "archiveUrl": "https://gcagochina.com/radar-issue-006.html",
+      "issueDate": "2026-08-11"
     }
   },
   "moderatorReplyTemplates": {
     "walletWarning": "A Blockaid / MetaMask false-positive report was submitted on 2026-05-10. The owner observed no wallet risk warning visible on 2026-05-14, but this is not permanent security-vendor approval. Verify the contract, pool, and official links before taking any action.",
     "priceDisplay": "Wallets and data platforms decide when to index prices. The official market route is GCA/USDT on Base Mainnet, and current liquidity remains starter-depth only.",
-    "memberAccess": "The member flow currently creates local packets and support context. Public self-service claiming starts only after controlled HTTPS account UI and read-only wallet verification are live.",
+    "memberAccess": "The controlled account UI and read-only wallet verification are live. Eligible credits and member records are account-level utility records; member approval and any 10,000 GCA benefit evidence review remain manual, with no automatic token claim.",
     "auditStatus": "No third-party audit has been completed. Internal review is not the same as an independent audit."
   },
   "doNotPost": [
@@ -150,6 +151,8 @@
     "narrative": "https://gcagochina.com/narrative.json",
     "weeklyRadarPage": "https://gcagochina.com/radar.html",
     "weeklyRadar": "https://gcagochina.com/radar.json",
+    "radarIssue006Page": "https://gcagochina.com/radar-issue-006.html",
+    "radarIssue006": "https://gcagochina.com/radar-issue-006.json",
     "radarIssue004Page": "https://gcagochina.com/radar-issue-004.html",
     "radarIssue004": "https://gcagochina.com/radar-issue-004.json",
     "memberAccessBrief001Page": "https://gcagochina.com/member-access-brief-001.html",
