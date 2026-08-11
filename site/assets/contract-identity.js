@@ -46,14 +46,30 @@
     },
   ]);
 
-  const COPY = {
-    checking: "Reading the pinned contract from Base Mainnet...",
-    ready: "Live identity matched: Base Mainnet, contract code, GCA metadata, and fixed total supply all agree.",
-    mismatch: "Identity mismatch detected. Stop and verify the contract through the official BaseScan link before interacting.",
-    failed: "Live read-only check is temporarily unavailable. The public Base RPC is rate-limited; use the official BaseScan link to verify.",
-    unavailable: "Unavailable",
-    refresh: "Refresh check",
-  };
+  const isChinese = (document.documentElement.lang || "").toLowerCase().startsWith("zh");
+  const COPY = isChinese
+    ? {
+        checking: "正在从 Base Mainnet 读取固定合约……",
+        ready: "实时身份一致：Base Mainnet、合约代码、GCA 元数据和固定总量全部匹配。",
+        mismatch: "检测到身份不一致。请停止操作，并通过官方 BaseScan 合约链接核对。",
+        failed: "实时只读检查暂时不可用。Base 公共 RPC 有频率限制，请通过官方 BaseScan 链接核对。",
+        unavailable: "暂不可用",
+        refresh: "刷新检查",
+        source: "Base 公共 RPC",
+        locale: "zh-CN",
+        codePresent: (bytes) => `存在 / ${bytes.toLocaleString("zh-CN")} 字节`,
+      }
+    : {
+        checking: "Reading the pinned contract from Base Mainnet...",
+        ready: "Live identity matched: Base Mainnet, contract code, GCA metadata, and fixed total supply all agree.",
+        mismatch: "Identity mismatch detected. Stop and verify the contract through the official BaseScan link before interacting.",
+        failed: "Live read-only check is temporarily unavailable. The public Base RPC is rate-limited; use the official BaseScan link to verify.",
+        unavailable: "Unavailable",
+        refresh: "Refresh check",
+        source: "Base public RPC",
+        locale: "en",
+        codePresent: (bytes) => `Present / ${bytes.toLocaleString("en-US")} bytes`,
+      };
 
   function setText(container, field, value) {
     const element = container.querySelector(`[data-contract-field="${field}"]`);
@@ -199,19 +215,19 @@
   }
 
   function renderIdentity(container, identity) {
-    const checkedAt = new Intl.DateTimeFormat("en", {
+    const checkedAt = new Intl.DateTimeFormat(COPY.locale, {
       dateStyle: "medium",
       timeStyle: "medium",
     }).format(new Date());
     const supply = identity.totalSupplyRaw / (10n ** identity.decimals);
 
     setText(container, "network", `Base Mainnet / ${identity.chainId}`);
-    setText(container, "code", `Present / ${identity.codeBytes.toLocaleString("en-US")} bytes`);
+    setText(container, "code", COPY.codePresent(identity.codeBytes));
     setText(container, "name", identity.name);
     setText(container, "symbol", identity.symbol);
     setText(container, "decimals", identity.decimals.toString());
     setText(container, "supply", `${supply.toLocaleString("en-US")} GCA`);
-    setText(container, "source", `Base public RPC / ${checkedAt}`);
+    setText(container, "source", `${COPY.source} / ${checkedAt}`);
     setSummary(container, identity.matches ? "good" : "bad", identity.matches ? COPY.ready : COPY.mismatch);
   }
 

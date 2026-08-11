@@ -585,7 +585,8 @@ def validate_verify(text: str) -> None:
     assert_contains(text, "data-contract-action", label)
     assert_contains(text, "data-contract-field=\"network\"", label)
     assert_contains(text, "data-contract-field=\"supply\"", label)
-    assert_contains(text, "assets/contract-identity.js?v=20260811-1", label)
+    assert_contains(text, "assets/contract-identity.js?v=20260811-2", label)
+    assert_contains(text, 'href="zh-wallet-verify.html"', label)
     assert_contains(text, "does not connect a wallet, request permissions or signatures, or submit a transaction", label)
     assert_contains(text, "official Base public RPC is rate-limited", label)
     assert_contains(text, "Returned 2026-05-23; final package refreshed 2026-08-10; Handoff and Chinese owner flow ready for one support@gcagochina.com submission", label)
@@ -4117,7 +4118,20 @@ def validate_zh_wallet_verify_page(text: str) -> None:
     assert_social_preview_meta(text, label, ZH_WALLET_VERIFY_PAGE_URL)
     for expected in (
         "GCA 中文只读钱包验证",
-        "只读钱包验证 / 2026-05-20",
+        "只读钱包验证 / 2026-08-11",
+        "链上实时核验",
+        "GCA 合约身份",
+        "data-gca-contract-identity",
+        "data-contract-summary",
+        "data-contract-action",
+        'data-contract-field="network"',
+        'data-contract-field="supply"',
+        "assets/contract-identity.js?v=20260811-2",
+        "这一项核验合约身份，不读取个人钱包余额",
+        "不会连接钱包、申请权限、请求签名或发送交易",
+        "Base 公共 RPC 有频率限制",
+        "官方 BaseScan 合约页",
+        'href="verify.html"',
         "公开账户入口、只读钱包验证和符合条件的 100 credits / GCA Member 账本写入已经上线",
         "Base Mainnet / chainId 8453",
         MAINNET_ADDRESS,
@@ -11771,6 +11785,13 @@ def validate_contract_identity_script(text: str) -> None:
         "Live identity matched",
         "Identity mismatch detected",
         "public Base RPC is rate-limited",
+        "正在从 Base Mainnet 读取固定合约",
+        "实时身份一致",
+        "检测到身份不一致",
+        "实时只读检查暂时不可用",
+        'source: "Base 公共 RPC"',
+        'locale: "zh-CN"',
+        "COPY.codePresent",
     ):
         assert_contains(text, expected, label)
 
@@ -17476,6 +17497,7 @@ def validate_sitemap(text: str) -> None:
         "markets.html",
         "zh-markets.html",
         "verify.html",
+        "zh-wallet-verify.html",
     ):
         assert_sitemap_lastmod(path, "2026-08-11")
     for path in (

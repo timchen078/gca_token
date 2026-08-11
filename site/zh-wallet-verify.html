@@ -4,21 +4,21 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>GCA 中文只读钱包验证 | Go China Access</title>
-    <meta name="description" content="GCA 中文只读钱包验证说明：Base Mainnet、GCA 合约、eth_call、balanceOf、会员审核资料、100 credits、GCA Member 和安全边界。">
+    <meta name="description" content="GCA 中文只读验证：实时核对 Base Mainnet 合约身份，并说明 balanceOf 钱包余额验证、会员审核资料、100 credits、GCA Member 和安全边界。">
     <link rel="canonical" href="https://gcagochina.com/zh-wallet-verify.html">
     <link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">
     <link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="GCA | Go China Access">
     <meta property="og:title" content="GCA 中文只读钱包验证 | Go China Access">
-    <meta property="og:description" content="说明 GCA 只读余额验证、已上线账户入口、会员审核资料和不会索要的敏感信息。">
+    <meta property="og:description" content="实时核对 Base Mainnet GCA 合约身份，并说明只读余额验证、账户入口、会员审核资料和安全边界。">
     <meta property="og:url" content="https://gcagochina.com/zh-wallet-verify.html">
     <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="GCA 中文只读钱包验证 | Go China Access">
-    <meta name="twitter:description" content="说明 GCA 只读余额验证、已上线账户入口、会员审核资料和不会索要的敏感信息。">
+    <meta name="twitter:description" content="实时核对 Base Mainnet GCA 合约身份，并说明只读余额验证、账户入口、会员审核资料和安全边界。">
     <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
     <style>
       :root {
@@ -210,6 +210,33 @@
 
       .good { color: var(--green); }
       .pending { color: var(--gold); }
+      .bad { color: #b42318; }
+
+      .contract-live-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 18px;
+      }
+
+      .contract-live-summary {
+        margin: 18px 0 0;
+        padding: 12px 14px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--soft);
+        font-weight: 800;
+      }
+
+      .contract-live-summary.good {
+        border-color: #a9dbc9;
+        background: #f0faf6;
+      }
+
+      .contract-live-summary.bad {
+        border-color: #f0b5ae;
+        background: #fff4f2;
+      }
 
       .list {
         display: grid;
@@ -279,10 +306,20 @@
         .row strong {
           text-align: left;
         }
+
+        .contract-live-header {
+          align-items: stretch;
+          flex-direction: column;
+        }
+
+        .contract-live-header .button {
+          width: 100%;
+        }
       }
     </style>
       <link rel="stylesheet" href="assets/gca-site.css?v=20260711">
     <script src="assets/gca-site.js?v=20260711" defer></script>
+    <script src="assets/contract-identity.js?v=20260811-2" defer></script>
   </head>
   <body>
     <header>
@@ -305,7 +342,7 @@
 
     <main class="shell">
       <section aria-labelledby="title">
-        <p class="eyebrow">只读钱包验证 / 2026-05-20</p>
+        <p class="eyebrow">只读钱包验证 / 2026-08-11</p>
         <h1 id="title">GCA 中文只读钱包验证</h1>
         <p class="lead">这一页说明 GCA 会员和 credits 审核里的钱包验证方式。核心原则是只读：读取公开链上余额，不要求签名，不发起交易，不授权转移资产。</p>
         <p class="lead">公开账户入口、只读钱包验证和符合条件的 100 credits / GCA Member 账本写入已经上线。用户可以用 MetaMask 等钱包提交公开钱包地址、购买交易哈希、持有开始日期和基础资料；10,000 GCA 会员权益仍需要后续人工审核和储备钱包处理。</p>
@@ -318,6 +355,7 @@
           <a class="button secondary" href="zh-release-gates.html">中文上线门槛</a>
           <a class="button secondary" href="zh-support.html">中文支持和资料提交</a>
           <a class="button" href="gca/member-access/">打开账户入口</a>
+          <a class="button" href="verify.html">英文合约验证</a>
         </div>
       </section>
 
@@ -338,6 +376,28 @@
           <span class="label">官方池</span>
           <span class="value good">GCA/USDT 0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0</span>
         </div>
+      </section>
+
+      <section class="section panel" data-gca-contract-identity aria-labelledby="liveContractTitle">
+        <div class="contract-live-header">
+          <div>
+            <p class="eyebrow">链上实时核验</p>
+            <h2 id="liveContractTitle">GCA 合约身份</h2>
+            <p class="note">浏览器直接读取固定的 GCA 合约，核对 Base 主网、已部署代码、ERC-20 名称、符号、精度和固定总量。这一项核验合约身份，不读取个人钱包余额。</p>
+          </div>
+          <button class="button secondary" type="button" data-contract-action>重新检查</button>
+        </div>
+        <p class="contract-live-summary pending" data-contract-summary data-state="pending" aria-live="polite">等待 Base Mainnet 实时检查……</p>
+        <div class="list">
+          <div class="row"><span>网络响应</span><strong data-contract-field="network">检查中……</strong></div>
+          <div class="row"><span>合约代码</span><strong data-contract-field="code">检查中……</strong></div>
+          <div class="row"><span>代币名称</span><strong data-contract-field="name">检查中……</strong></div>
+          <div class="row"><span>代币符号</span><strong data-contract-field="symbol">检查中……</strong></div>
+          <div class="row"><span>精度</span><strong data-contract-field="decimals">检查中……</strong></div>
+          <div class="row"><span>固定总量</span><strong data-contract-field="supply">检查中……</strong></div>
+          <div class="row"><span>读取来源</span><strong data-contract-field="source">检查中……</strong></div>
+        </div>
+        <p class="note" style="margin-top: 14px;"><strong>只读边界：</strong>不会连接钱包、申请权限、请求签名或发送交易。Base 公共 RPC 有频率限制；如果临时读取失败，请通过 <a href="https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6" target="_blank" rel="noreferrer">官方 BaseScan 合约页</a>核对。</p>
       </section>
 
       <section class="section grid" aria-label="验证方式">
