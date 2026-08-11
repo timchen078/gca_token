@@ -150,6 +150,7 @@
         "official email is support@gcagochina.com",
         "public email switch alignment passes",
         "domain email snapshot alignment passes",
+        "daily status reviewer reference alignment passes",
         "reviewer URLs are reachable"
       ],
       "boundaries": [
@@ -202,7 +203,8 @@
         "official email is support@gcagochina.com",
         "domain email evidence packet is complete",
         "public email switch alignment passes",
-        "domain email snapshot alignment passes"
+        "domain email snapshot alignment passes",
+        "daily status reviewer reference alignment passes"
       ],
       "outputs": [
         "launch/basescan_final_submission_package.json",
