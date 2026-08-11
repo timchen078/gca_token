@@ -1456,6 +1456,7 @@ def run_checks(
             "publicOnly": public_only,
             "adminReadTokenRequired": not public_only,
             "tokenProtectedAdminReadChecked": not public_only,
+            "serviceRoutesIncluded": include_pending_routes,
             "pendingWorkerRoutesIncluded": include_pending_routes,
         },
     }
@@ -1468,7 +1469,13 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--public-only", action="store_true", help="Skip token-protected admin reads. Suitable for public CI without secrets.")
     parser.add_argument("--origin", default=DEFAULT_ORIGIN, help=f"CORS origin to verify. Default: {DEFAULT_ORIGIN}")
     parser.add_argument("--limit", type=int, default=5, help="Maximum admin records to count, 1-100. Default: 5.")
-    parser.add_argument("--include-pending-routes", action="store_true", help="Also check prepared Worker routes that may not be deployed live yet.")
+    parser.add_argument(
+        "--include-service-routes",
+        "--include-pending-routes",
+        dest="include_pending_routes",
+        action="store_true",
+        help="Also check the production service request, review, follow-up, and credit usage routes.",
+    )
     parser.add_argument("--timeout", type=float, default=20, help="HTTP timeout in seconds. Default: 20.")
     parser.add_argument("--cafile", default="", help=f"Optional CA bundle path. Default fallback: {DEFAULT_CA_FILE}")
     return parser.parse_args(argv)

@@ -696,6 +696,15 @@ def validate_markets(text: str) -> None:
     assert_contains(text, "Market Quality", label)
     assert_contains(text, BASE_USDT_ADDRESS, label)
     assert_contains(text, OFFICIAL_GECKOTERMINAL_URL, label)
+    assert_contains(text, "Live Read-Only Pool Snapshot", label)
+    assert_contains(text, 'data-gca-market-snapshot', label)
+    assert_contains(text, 'data-market-field="price"', label)
+    assert_contains(text, 'data-market-field="reserve"', label)
+    assert_contains(text, 'data-market-field="volume"', label)
+    assert_contains(text, 'data-market-field="trades"', label)
+    assert_contains(text, 'data-market-field="change"', label)
+    assert_contains(text, 'assets/market-snapshot.js?v=20260811-1', label)
+    assert_contains(text, "not a wallet quote, executable price, trading signal, or guarantee", label)
     assert_current_pool_text(text, label)
 
 
@@ -3436,6 +3445,8 @@ def validate_zh_roadmap_page(text: str) -> None:
         "Backtesting and Risk Alerts",
         "ENTRY_READY Review",
         "GCA AI Quant Access utility access",
+        "官方 GCA/USDT 池快照",
+        "已上线：浏览器只读聚合数据，不连接钱包或生成交易",
         "10,000 GCA 持有者",
         "100 GCA AI Quant Access credits",
         "1,000,000 GCA 持有者",
@@ -3708,9 +3719,9 @@ def validate_zh_api_status_page(text: str) -> None:
         "python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth",
         "生产接口验收",
         "远端 D1 migration",
-        "--include-pending-routes",
-        "python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes",
-        "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes",
+        "--include-service-routes",
+        "python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-service-routes",
+        "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-service-routes",
         "api.gcagochina.com",
         "python3 tools/check_gca_registration_api.py --public-only --timeout 30",
         "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5",
@@ -6073,6 +6084,8 @@ def validate_roadmap_page(text: str) -> None:
     assert_contains(text, "Local unsigned export and retained-head comparison live", label)
     assert_contains(text, "Bilingual live API health panel", label)
     assert_contains(text, "Read-only identity and anonymous-access checks live", label)
+    assert_contains(text, "Official GCA/USDT pool snapshot", label)
+    assert_contains(text, "Live browser-time GeckoTerminal aggregate; identity-pinned and read-only", label)
     assert_contains(text, "Member-benefit transfer evidence", label)
     assert_contains(text, "Live and token-protected; verifies existing exact 10,000 GCA reserve transfers only", label)
     assert_contains(text, 'href="api-status.html"', label)
@@ -6134,6 +6147,11 @@ def validate_roadmap_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing controlled account UI priority")
     if not any(priority.get("id") == "utility-credit-ledger" for priority in payload.get("nextBuildPriorities", [])):
         raise SiteCheckError(f"{label}: missing utility credit ledger priority")
+    pool_snapshot_milestone = next((milestone for milestone in payload.get("completedMilestones", []) if milestone.get("id") == "official-pool-read-only-snapshot-live"), None)
+    if not pool_snapshot_milestone:
+        raise SiteCheckError(f"{label}: missing official pool snapshot milestone")
+    if pool_snapshot_milestone.get("completedAt") != "2026-08-11":
+        raise SiteCheckError(f"{label}: wrong official pool snapshot completion date")
     transfer_priority = next(
         (priority for priority in payload.get("nextBuildPriorities", []) if priority.get("id") == "member-benefit-transfer-evidence"),
         {},
@@ -6978,7 +6996,9 @@ def validate_narrative_page(text: str) -> None:
     assert_contains(text, "100 credits ledger", label)
     assert_contains(text, "GCA Member ledger", label)
     assert_contains(text, "Reviewed service workflow", label)
-    assert_contains(text, "Connected market data", label)
+    assert_contains(text, "Official GCA/USDT pool snapshot", label)
+    assert_contains(text, "Live, browser-time and read-only", label)
+    assert_contains(text, "Connected research market data", label)
     assert_contains(text, "at-most-once credit settlement", label)
     assert_contains(text, "Service request / credit usage routes", label)
     assert_contains(text, "Production-live and token-protected", label)
@@ -7013,6 +7033,8 @@ def validate_narrative_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong pageUrl")
     if payload.get("status") != "public-narrative-system-published":
         raise SiteCheckError(f"{label}: wrong status")
+    if payload.get("lastUpdated") != "2026-08-10":
+        raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
     if payload.get("contractAddress") != MAINNET_ADDRESS:
@@ -7097,6 +7119,14 @@ def validate_narrative_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong Worker Routes Handoff public URL")
     if "live, token-protected, and verified" not in live_workflows.get("worker-routes-handoff", {}).get("claimBoundary", ""):
         raise SiteCheckError(f"{label}: missing Worker Routes Handoff boundary")
+    if live_workflows.get("official-pool-market-snapshot", {}).get("status") != "live-browser-read-only":
+        raise SiteCheckError(f"{label}: official pool snapshot should be live and read-only")
+    if live_workflows.get("official-pool-market-snapshot", {}).get("verifiedAt") != "2026-08-11":
+        raise SiteCheckError(f"{label}: wrong official pool snapshot verification date")
+    if live_workflows.get("official-pool-market-snapshot", {}).get("publicUrl") != "https://gcagochina.com/markets.html":
+        raise SiteCheckError(f"{label}: wrong official pool snapshot URL")
+    if "not a wallet quote, executable price, trading signal, transaction, or guarantee" not in live_workflows.get("official-pool-market-snapshot", {}).get("claimBoundary", ""):
+        raise SiteCheckError(f"{label}: missing official pool snapshot boundary")
     if product_proofs.get("worker-routes-handoff", {}).get("status") != "production-live-verified":
         raise SiteCheckError(f"{label}: missing Worker Routes Handoff published proof")
     if product_proofs.get("worker-routes-handoff", {}).get("pageUrl") != WORKER_ROUTES_HANDOFF_PAGE_URL:
@@ -7107,10 +7137,12 @@ def validate_narrative_json(text: str) -> None:
         raise SiteCheckError(f"{label}: Liquidation Replay should no longer be in buildNext")
     if "operator-reviewed service delivery playbook" in payload.get("buildNext", []):
         raise SiteCheckError(f"{label}: Service Delivery Playbook should no longer be in buildNext")
-    if "operate and monitor the live token-protected service request Worker route" not in payload.get("buildNext", []):
-        raise SiteCheckError(f"{label}: missing service request operations priority")
-    if "operate and monitor the live token-protected credit usage Worker route" not in payload.get("buildNext", []):
-        raise SiteCheckError(f"{label}: missing credit usage operations priority")
+    if "monitor all production service routes in the daily public Worker check" not in payload.get("buildNext", []):
+        raise SiteCheckError(f"{label}: missing production service route monitoring priority")
+    if "operator review and social publication decision for Weekly Go China Radar issues 004 and 005" not in payload.get("buildNext", []):
+        raise SiteCheckError(f"{label}: missing Weekly Radar review priority")
+    if "release-gated connected research market data without wallet or trading permissions" not in payload.get("buildNext", []):
+        raise SiteCheckError(f"{label}: missing connected research market-data priority")
     if market.get("pair") != "GCA/USDT":
         raise SiteCheckError(f"{label}: wrong pair")
     if market.get("poolAddress") != OFFICIAL_POOL_ADDRESS:
@@ -7858,8 +7890,8 @@ def validate_service_delivery_playbook_json(text: str) -> None:
         "Worker deploy permission passes",
         "remote D1 migrations apply successfully",
         "wrangler deploy succeeds",
-        "public smoke check passes with --include-pending-routes",
-        "admin smoke check passes with --include-pending-routes",
+        "public smoke check passes with --include-service-routes",
+        "admin smoke check passes with --include-service-routes",
     ):
         if gate not in route_status.get("releaseGates", []):
             raise SiteCheckError(f"{label}: missing release gate {gate}")
@@ -7924,8 +7956,8 @@ def validate_worker_routes_handoff_page(text: str) -> None:
         "python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth",
         "npx wrangler d1 migrations apply gca_registration --remote",
         "npx wrangler deploy",
-        "python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes",
-        "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes",
+        "python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-service-routes",
+        "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-service-routes",
         "Stop Conditions",
         "Copy-Ready Status Summary",
         "device-key protected manual-review queueing",
@@ -8041,9 +8073,9 @@ def validate_worker_routes_handoff_json(text: str) -> None:
     ):
         if migration not in expected_migrations:
             raise SiteCheckError(f"{label}: missing migration {migration}")
-    if "--include-pending-routes" not in gate_map.get("post-deploy-public-smoke", {}).get("command", ""):
+    if "--include-service-routes" not in gate_map.get("post-deploy-public-smoke", {}).get("command", ""):
         raise SiteCheckError(f"{label}: missing pending-route public smoke flag")
-    if "--include-pending-routes" not in gate_map.get("post-deploy-admin-smoke", {}).get("command", ""):
+    if "--include-service-routes" not in gate_map.get("post-deploy-admin-smoke", {}).get("command", ""):
         raise SiteCheckError(f"{label}: missing pending-route admin smoke flag")
 
     for gate in (
@@ -8052,8 +8084,8 @@ def validate_worker_routes_handoff_json(text: str) -> None:
         "Worker deploy permission passes",
         "remote D1 migrations apply successfully",
         "wrangler deploy succeeds",
-        "public smoke check passes with --include-pending-routes",
-        "admin smoke check passes with --include-pending-routes",
+        "public smoke check passes with --include-service-routes",
+        "admin smoke check passes with --include-service-routes",
     ):
         if gate not in payload.get("statusUpdateAllowedAfter", []):
             raise SiteCheckError(f"{label}: missing status gate {gate}")
@@ -9509,16 +9541,16 @@ def validate_operations_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong Worker version")
     if member_ops.get("productionRoutesVerifiedAt") != PENDING_WORKER_ADMIN_ROUTE_AT:
         raise SiteCheckError(f"{label}: wrong production route verification timestamp")
-    if member_ops.get("pendingRoutePostDeployPublicSmokeCommand") != "python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes":
+    if member_ops.get("pendingRoutePostDeployPublicSmokeCommand") != "python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-service-routes":
         raise SiteCheckError(f"{label}: wrong pending public smoke command")
-    if member_ops.get("pendingRoutePostDeployAdminSmokeCommand") != "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes":
+    if member_ops.get("pendingRoutePostDeployAdminSmokeCommand") != "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-service-routes":
         raise SiteCheckError(f"{label}: wrong pending admin smoke command")
     for gate in (
         "cloudflare-auth-session passes",
         "D1 visibility passes",
         "Worker deploy permission passes",
-        "public smoke check passes with --include-pending-routes",
-        "admin smoke check passes with --include-pending-routes",
+        "public smoke check passes with --include-service-routes",
+        "admin smoke check passes with --include-service-routes",
     ):
         if gate not in member_ops.get("pendingRouteReleaseGates", []):
             raise SiteCheckError(f"{label}: missing pending route release gate {gate}")
@@ -10246,16 +10278,16 @@ def validate_access_api_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong Worker version")
     if production_email_backend.get("productionRoutesVerifiedAt") != PENDING_WORKER_ADMIN_ROUTE_AT:
         raise SiteCheckError(f"{label}: wrong production route verification timestamp")
-    if production_email_backend.get("pendingRoutePostDeployPublicSmokeCommand") != "python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes":
+    if production_email_backend.get("pendingRoutePostDeployPublicSmokeCommand") != "python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-service-routes":
         raise SiteCheckError(f"{label}: wrong pending route public smoke command")
-    if production_email_backend.get("pendingRoutePostDeployAdminSmokeCommand") != "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes":
+    if production_email_backend.get("pendingRoutePostDeployAdminSmokeCommand") != "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-service-routes":
         raise SiteCheckError(f"{label}: wrong pending route admin smoke command")
     for gate in (
         "cloudflare-auth-session passes",
         "D1 visibility passes",
         "Worker deploy permission passes",
-        "public smoke check passes with --include-pending-routes",
-        "admin smoke check passes with --include-pending-routes",
+        "public smoke check passes with --include-service-routes",
+        "admin smoke check passes with --include-service-routes",
     ):
         if gate not in production_email_backend.get("pendingRouteReleaseGates", []):
             raise SiteCheckError(f"{label}: missing pending route release gate {gate}")
@@ -11441,9 +11473,9 @@ def validate_api_status_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong pending routes handoff routes")
     if handoff.get("readOnlyGateCommand") != "python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth":
         raise SiteCheckError(f"{label}: wrong pending routes gate command")
-    if handoff.get("postDeployPublicSmokeCommand") != "python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes":
+    if handoff.get("postDeployPublicSmokeCommand") != "python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-service-routes":
         raise SiteCheckError(f"{label}: wrong pending routes public smoke command")
-    if handoff.get("postDeployAdminSmokeCommand") != "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes":
+    if handoff.get("postDeployAdminSmokeCommand") != "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-service-routes":
         raise SiteCheckError(f"{label}: wrong pending routes admin smoke command")
     for gate in (
         "cloudflare-auth-session passes",
@@ -11451,8 +11483,8 @@ def validate_api_status_json(text: str) -> None:
         "Worker deploy permission passes",
         "remote D1 migrations apply successfully",
         "wrangler deploy succeeds",
-        "public smoke check passes with --include-pending-routes",
-        "admin smoke check passes with --include-pending-routes",
+        "public smoke check passes with --include-service-routes",
+        "admin smoke check passes with --include-service-routes",
     ):
         if gate not in handoff.get("statusUpdateAllowedAfter", []):
             raise SiteCheckError(f"{label}: missing pending routes status gate {gate}")
@@ -11596,6 +11628,54 @@ def validate_api_health_script(text: str) -> None:
         "PENDING_PATHS",
         "prepared routes are not deployed",
         "准备中路由尚未部署",
+    ):
+        assert_not_contains(text, forbidden, label)
+
+
+def validate_market_snapshot_script(text: str) -> None:
+    label = "/assets/market-snapshot.js"
+    for expected in (
+        'const NETWORK = "base"',
+        'const POOL_ADDRESS = "0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0"',
+        'const GCA_ADDRESS = "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6"',
+        'const USDT_ADDRESS = "0xfde4c96c8593536e31f229ea8f37b2ada2699bb2"',
+        'const DEX_ID = "uniswap-v4-base"',
+        'const API_VERSION = "20230302"',
+        "https://api.geckoterminal.com/api/v2/networks/",
+        "const REQUEST_TIMEOUT_MS = 8000",
+        "const MAX_RESPONSE_BYTES = 65536",
+        'method: "GET"',
+        'mode: "cors"',
+        'credentials: "omit"',
+        'cache: "no-store"',
+        'redirect: "error"',
+        "response.text()",
+        'data.type !== "pool"',
+        "relationships?.base_token?.data?.id",
+        "relationships?.quote_token?.data?.id",
+        "relationships?.dex?.data?.id",
+        "base_token_price_usd",
+        "reserve_in_usd",
+        "volume_usd?.h24",
+        "transactions?.h24?.buys",
+        "transactions?.h24?.sells",
+        "price_change_percentage?.h24",
+        "data-market-summary",
+        "textContent",
+        "not a finite number",
+    ):
+        assert_contains(text, expected, label)
+    for forbidden in (
+        'method: "POST"',
+        "authorization:",
+        "innerHTML",
+        "localStorage",
+        "sessionStorage",
+        "document.cookie",
+        "ethereum.request",
+        "eth_sendTransaction",
+        "wallet_addEthereumChain",
+        "eval(",
     ):
         assert_not_contains(text, forbidden, label)
 
@@ -12409,16 +12489,16 @@ def validate_credits_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong usage ledger public smoke timestamp")
     if usage_ledger.get("adminSmokePassedAt") != PENDING_WORKER_ADMIN_ROUTE_AT:
         raise SiteCheckError(f"{label}: wrong usage ledger admin smoke timestamp")
-    if usage_ledger.get("postDeployPublicSmokeCommand") != "python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes":
+    if usage_ledger.get("postDeployPublicSmokeCommand") != "python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-service-routes":
         raise SiteCheckError(f"{label}: wrong usage ledger public smoke command")
-    if usage_ledger.get("postDeployAdminSmokeCommand") != "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes":
+    if usage_ledger.get("postDeployAdminSmokeCommand") != "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-service-routes":
         raise SiteCheckError(f"{label}: wrong usage ledger admin smoke command")
     for gate in (
         "cloudflare-auth-session passes",
         "D1 visibility passes",
         "Worker deploy permission passes",
-        "public smoke check passes with --include-pending-routes",
-        "admin smoke check passes with --include-pending-routes",
+        "public smoke check passes with --include-service-routes",
+        "admin smoke check passes with --include-service-routes",
     ):
         if gate not in usage_ledger.get("releaseGatesBeforeLive", []):
             raise SiteCheckError(f"{label}: missing usage ledger release gate {gate}")
@@ -12453,16 +12533,16 @@ def validate_credits_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong service request public smoke timestamp")
     if service_request_queue.get("adminSmokePassedAt") != PENDING_WORKER_ADMIN_ROUTE_AT:
         raise SiteCheckError(f"{label}: wrong service request admin smoke timestamp")
-    if service_request_queue.get("postDeployPublicSmokeCommand") != "python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes":
+    if service_request_queue.get("postDeployPublicSmokeCommand") != "python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-service-routes":
         raise SiteCheckError(f"{label}: wrong service request public smoke command")
-    if service_request_queue.get("postDeployAdminSmokeCommand") != "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes":
+    if service_request_queue.get("postDeployAdminSmokeCommand") != "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-service-routes":
         raise SiteCheckError(f"{label}: wrong service request admin smoke command")
     for gate in (
         "cloudflare-auth-session passes",
         "D1 visibility passes",
         "Worker deploy permission passes",
-        "public smoke check passes with --include-pending-routes",
-        "admin smoke check passes with --include-pending-routes",
+        "public smoke check passes with --include-service-routes",
+        "admin smoke check passes with --include-service-routes",
     ):
         if gate not in service_request_queue.get("releaseGatesBeforeLive", []):
             raise SiteCheckError(f"{label}: missing service request release gate {gate}")
@@ -17739,6 +17819,7 @@ CHECKS: list[EndpointCheck] = [
     ("/api-status.json", validate_api_status_json),
     ("/assets/api-health.js", validate_api_health_script),
     ("/assets/api-health.css", validate_api_health_styles),
+    ("/assets/market-snapshot.js", validate_market_snapshot_script),
     ("/daily-status.html", validate_daily_status_page),
     ("/daily-status.json", validate_daily_status_json),
     ("/review-queue.html", validate_review_queue_page),

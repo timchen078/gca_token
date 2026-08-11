@@ -30,8 +30,8 @@ class GcaWorkerRoutesDeploymentTests(unittest.TestCase):
             "gca_account_service_request_cancellation_v1",
             "gca_account_service_request_followup_v1",
             "npx wrangler deploy",
-            "python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes",
-            "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes",
+            "python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-service-routes",
+            "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-service-routes",
             "Do not publish full user records.",
         ]
         for expected in expected_fragments:
@@ -40,8 +40,8 @@ class GcaWorkerRoutesDeploymentTests(unittest.TestCase):
         readiness_index = record.index("python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth")
         migration_index = record.index("npx wrangler d1 migrations apply gca_registration --remote")
         deploy_index = record.index("\nnpx wrangler deploy\n")
-        public_smoke_index = record.index("python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes")
-        admin_smoke_index = record.index("python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes")
+        public_smoke_index = record.index("python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-service-routes")
+        admin_smoke_index = record.index("python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-service-routes")
 
         self.assertLess(readiness_index, migration_index)
         self.assertLess(migration_index, deploy_index)
@@ -130,7 +130,7 @@ class GcaWorkerRoutesDeploymentTests(unittest.TestCase):
             "Worker Routes Deployment Record",
             "production-live",
             "HTTP 401",
-            "--include-pending-routes",
+            "--include-service-routes",
             "/gca/service-requests",
             "/gca/service-request-reviews",
             "/gca/credit-usage",

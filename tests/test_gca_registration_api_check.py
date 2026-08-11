@@ -2,7 +2,7 @@ import json
 import unittest
 from urllib.parse import urlparse
 
-from tools.check_gca_registration_api import ApiCheckError, run_checks
+from tools.check_gca_registration_api import ApiCheckError, parse_args, run_checks
 
 
 HEALTH_PAYLOAD = {
@@ -395,6 +395,7 @@ class GcaRegistrationApiCheckTests(unittest.TestCase):
         )
 
         self.assertTrue(result["ok"])
+        self.assertTrue(result["boundaries"]["serviceRoutesIncluded"])
         self.assertTrue(result["boundaries"]["pendingWorkerRoutesIncluded"])
         health = next(item for item in result["checks"] if item["id"] == "health")
         self.assertEqual(health["workerRelease"], "gca-registration-worker-2026-08-10-request-followup-v1")
@@ -407,6 +408,13 @@ class GcaRegistrationApiCheckTests(unittest.TestCase):
         self.assertIn(("GET", "/gca/service-requests"), {(item["method"], item["path"]) for item in seen})
         self.assertIn(("GET", "/gca/service-request-reviews"), {(item["method"], item["path"]) for item in seen})
         self.assertIn(("GET", "/gca/service-request-followups"), {(item["method"], item["path"]) for item in seen})
+
+    def test_service_route_flag_keeps_legacy_alias(self):
+        current = parse_args(["--public-only", "--include-service-routes"])
+        legacy = parse_args(["--public-only", "--include-pending-routes"])
+
+        self.assertTrue(current.include_pending_routes)
+        self.assertTrue(legacy.include_pending_routes)
 
     def test_admin_mode_requires_token(self):
         with self.assertRaises(ApiCheckError):

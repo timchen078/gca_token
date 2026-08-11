@@ -197,6 +197,7 @@ def build_export_payload(
         "datasets": datasets,
         "datasetCount": len(datasets),
         "recordCount": sum(int(item.get("recordsReturned", 0)) for item in datasets.values()),
+        "serviceRoutesIncluded": pending_routes_included,
         "pendingWorkerRoutesIncluded": pending_routes_included,
         "boundaries": {
             "localOperatorExportOnly": True,
@@ -281,7 +282,13 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         default="all",
         help="Dataset to export. Default: all.",
     )
-    parser.add_argument("--include-pending-routes", action="store_true", help="Include Worker routes that are prepared locally but not yet deployed live.")
+    parser.add_argument(
+        "--include-service-routes",
+        "--include-pending-routes",
+        dest="include_pending_routes",
+        action="store_true",
+        help="Include the production service request, review, follow-up, and credit usage datasets.",
+    )
     parser.add_argument("--limit", type=int, default=100, help="Maximum records per dataset, 1-100. Default: 100.")
     parser.add_argument("--email", default="", help="Optional email filter. Supported only by member-access.")
     parser.add_argument("--wallet-address", default="", help="Optional Base wallet filter for member datasets.")

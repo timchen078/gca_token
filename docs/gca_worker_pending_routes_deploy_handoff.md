@@ -113,7 +113,7 @@ Run from repo root:
 
 ```bash
 cd /Users/abc/Desktop/gca_token
-python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes
+python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-service-routes
 ```
 
 This verifies public health/config version fields, CORS, and unauthenticated admin-read rejection for the service queue, service review, service follow-up, and credit usage routes. It does not need `ADMIN_READ_TOKEN` and does not write test records.
@@ -124,7 +124,7 @@ Run from repo root:
 
 ```bash
 cd /Users/abc/Desktop/gca_token
-python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes
+python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-service-routes
 ```
 
 This checks token-protected reads for the live and newly deployed operator routes. It prints only counts and check statuses; it must not print the token or user records.
@@ -138,7 +138,7 @@ cd /Users/abc/Desktop/gca_token
 python3 tools/export_cloudflare_member_access.py \
   --token-file cloudflare/gca-registration-worker/.env.admin.local \
   --limit 100 \
-  --include-pending-routes \
+  --include-service-routes \
   --output .gca_access_data/cloudflare_member_access_export.json
 ```
 
@@ -156,7 +156,7 @@ Gates 1 through 5 passed for the 2026-08-10 deployment. For future deployments:
 cd /Users/abc/Desktop/gca_token
 python3 -m unittest discover tests
 python3 tools/check_public_site.py --base-url http://127.0.0.1:8799
-python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes
+python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-service-routes
 ```
 
 4. Commit and push only after the checks pass.

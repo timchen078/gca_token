@@ -6,6 +6,7 @@ from tools.export_cloudflare_email_registrations import ExportError
 from tools.export_cloudflare_member_access import (
     build_admin_url,
     export_datasets,
+    parse_args,
     redact_record,
 )
 
@@ -25,6 +26,13 @@ class FakeResponse:
 
 
 class CloudflareMemberAccessExportTests(unittest.TestCase):
+    def test_service_route_flag_keeps_legacy_alias(self):
+        current = parse_args(["--include-service-routes"])
+        legacy = parse_args(["--include-pending-routes"])
+
+        self.assertTrue(current.include_pending_routes)
+        self.assertTrue(legacy.include_pending_routes)
+
     def test_build_admin_url_supports_wallet_and_email_filters(self):
         url = build_admin_url(
             "https://worker.example/",
@@ -96,6 +104,7 @@ class CloudflareMemberAccessExportTests(unittest.TestCase):
         self.assertNotIn("Private User", serialized)
         self.assertFalse(payload["boundaries"]["writesProductionData"])
         self.assertFalse(payload["boundaries"]["automaticTokenTransfer"])
+        self.assertFalse(payload["serviceRoutesIncluded"])
         self.assertFalse(payload["pendingWorkerRoutesIncluded"])
 
     def test_export_can_include_pending_service_request_dataset_explicitly(self):
@@ -117,6 +126,7 @@ class CloudflareMemberAccessExportTests(unittest.TestCase):
         self.assertEqual(payload["datasetCount"], 6)
         self.assertIn("/gca/service-requests", {item["path"] for item in seen})
         self.assertIn("/gca/credit-usage", {item["path"] for item in seen})
+        self.assertTrue(payload["serviceRoutesIncluded"])
         self.assertTrue(payload["pendingWorkerRoutesIncluded"])
 
     def test_redacted_export_removes_email_and_display_name(self):

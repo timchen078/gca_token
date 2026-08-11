@@ -47,7 +47,7 @@ jobs:
           export SSL_CERT_FILE="$(python -c 'import certifi; print(certifi.where())')"
 
           for attempt in {1..20}; do
-            if python tools/check_gca_registration_api.py --public-only --timeout 30; then
+            if python tools/check_gca_registration_api.py --public-only --timeout 30 --include-service-routes; then
               exit 0
             fi
 
@@ -55,4 +55,4 @@ jobs:
             sleep 15
           done
 
-          python tools/check_gca_registration_api.py --public-only --timeout 30
+          python tools/check_gca_registration_api.py --public-only --timeout 30 --include-service-routes

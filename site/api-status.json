@@ -648,16 +648,16 @@
     "readOnlyGateCommand": "python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth",
     "remoteMigrationCommand": "cd cloudflare/gca-registration-worker && npx wrangler d1 migrations apply gca_registration --remote",
     "deployCommand": "cd cloudflare/gca-registration-worker && npx wrangler deploy",
-    "postDeployPublicSmokeCommand": "python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes",
-    "postDeployAdminSmokeCommand": "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes",
+    "postDeployPublicSmokeCommand": "python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-service-routes",
+    "postDeployAdminSmokeCommand": "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-service-routes",
     "statusUpdateAllowedAfter": [
       "cloudflare-auth-session passes",
       "D1 visibility passes",
       "Worker deploy permission passes",
       "remote D1 migrations apply successfully",
       "wrangler deploy succeeds",
-      "public smoke check passes with --include-pending-routes",
-      "admin smoke check passes with --include-pending-routes"
+      "public smoke check passes with --include-service-routes",
+      "admin smoke check passes with --include-service-routes"
     ],
     "boundaries": {
       "operatorOnly": true,

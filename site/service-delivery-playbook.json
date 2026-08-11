@@ -229,8 +229,8 @@
       "Worker deploy permission passes",
       "remote D1 migrations apply successfully",
       "wrangler deploy succeeds",
-      "public smoke check passes with --include-pending-routes",
-      "admin smoke check passes with --include-pending-routes"
+      "public smoke check passes with --include-service-routes",
+      "admin smoke check passes with --include-service-routes"
     ],
     "remoteMigrations": "applied",
     "workerDeploy": "passed",

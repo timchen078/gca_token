@@ -159,7 +159,7 @@
     {
       "gate": 4,
       "id": "post-deploy-public-smoke",
-      "command": "python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes",
+      "command": "python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-service-routes",
       "requiredAfter": "worker-deploy",
       "requiresAdminReadToken": false,
       "writesTestRecords": false
@@ -167,7 +167,7 @@
     {
       "gate": 5,
       "id": "post-deploy-admin-smoke",
-      "command": "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes",
+      "command": "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-service-routes",
       "requiredAfter": "post-deploy-public-smoke",
       "requiresAdminReadToken": true,
       "printsAdminReadToken": false,
@@ -180,8 +180,8 @@
     "Worker deploy permission passes",
     "remote D1 migrations apply successfully",
     "wrangler deploy succeeds",
-    "public smoke check passes with --include-pending-routes",
-    "admin smoke check passes with --include-pending-routes"
+    "public smoke check passes with --include-service-routes",
+    "admin smoke check passes with --include-service-routes"
   ],
   "stopConditions": [
     "Wrangler is not logged in or readiness returns Authentication error [code: 10000]",
